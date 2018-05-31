@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!-- saved from url=(0051)https://humanbrainproject-testing.herokuapp.com/en/ -->
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Knowledge Graph Search</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1;maximum-scale=1; minimum-scale=1;">
+    <meta name="description" content="">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,400i,600" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="icon" href="https://sos-ch-dk-2.exo.io/public-website-production/img/favicon.ico">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+    <!--[if IE]><link rel="shortcut icon" href="https://sos-ch-dk-2.exo.io/public-website-production/img/favicon.ico"><![endif]-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser-polyfill.min.js"></script>
+    <script>
+        // Polyfill custom event if necessary since we kinda need it
+        // https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent#Polyfill
+        (function () {
+            if (typeof window['CustomEvent'] !== "function") {
+                function CustomEvent(event, params) {
+                    params = params || {
+                        bubbles: false,
+                        cancelable: false,
+                        detail: undefined
+                    };
+                    var evt = document.createEvent('CustomEvent');
+                    evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+                    return evt;
+                }
+                CustomEvent.prototype = window['Event'].prototype;
+                window['CustomEvent'] = CustomEvent;
+            }
+        })();
+    </script>
+    <script>
+        window.SearchApiHost = ""; // "https://kg.humanbrainproject.org"
+    </script>
+    <script>
+        var Cookielaw = {
+            createCookielawCookie: function () {
+                document.getElementById('CookielawBanner').style.display = 'none';
+                document.cookie = 'ok' + new Date().getTime();
+            }
+        }
+    </script>
+    <!-- django CMS toolbar adjustment -->
+</head>
+<body id="page-top" class="noscript lang-en tpl-base" style="background-color: #e7e7e7; color: #777;">
+    <div id="CookielawBanner">
+        <div class="container">
+            <h6>Cookies disclaimer</h6>
+            <p>
+                <a class="btn btn-primary pull-right" onclick="javascript:Cookielaw.createCookielawCookie();">I agree</a>
+                Our site saves small pieces of text information (cookies) on your device in order to deliver better content and for statistical
+                purposes. You can disable the usage of cookies by changing the settings of your browser. By browsing our
+                website without changing the browser settings you grant us permission to store that information on your device.
+            </p>
+        </div>
+    </div>
+    <script>
+        if (document.cookie !== "")
+            document.querySelector('#CookielawBanner').style.display = "none";
+    </script>
+    <header class="navbar navbar-default navbar-head">
+        <div class="container">
+            <div class="navbar-header">
+                <h1 class="subsite-title">
+                    <span>&lt;integration in a Django website title&gt;</span>
+                </h1>
+            </div>
+            <div class="navbar-collapse collapse js-navbar-header">
+                <nav class="nav navbar-main navbar-right" id="page-navigation" role="navigation">
+                    <h6 class="subsite-title" style="margin-top: 36px;">
+                        <span style="font-size: 14px; font-weight: bold;">&lt;website menu&gt;</span>
+                    </h6>
+                </nav>
+            </div>
+        </div>
+        <div class="hidden-sm hidden-xs">
+            <nav class="nav navbar navbar-lower navbar-subpage">
+                <h4 class="subsite-title" style="padding-left: 15px;">
+                    <span>&lt;website navigation links&gt;</span>
+                </h4>
+            </nav>
+        </div>
+        <header>
+            <div class="subsite_header  explore">
+                <div class="container-fluid">
+                    <h2 class="subsite-title">
+                        <span>&lt;knowledge graph search title&gt;</span>
+                    </h2>
+                    <div class="subsite-tagline"></div>
+                </div>
+            </div>
+        </header>
+        <nav class="navbar" style="min-height: 0; margin-bottom: 0;">
+            <ul class="container-fluid nav nav-tabs"></ul>
+        </nav>
+    </header>
+    <hr class="sr-only" id="page-content" />
+    <div class="main-content">
+        <div class="container">
+            <div id="root"></div>
+        </div>
+        <div class="container-fluid">
+        </div>
+    </div>
+    <hr class="sr-only" />
+    <div class="container">
+        <div style="height: 60px; padding-top: 30px;">
+            <span>&lt;website footer logo&gt;</span>
+        </div>
+    </div>
+    <footer class="footer" role="contentinfo">
+        <div class="rainbow-row">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <h5 class="sr-only" id="page-footer">Sitemap</h5>
+        <div class="container sitemap">
+            <ul>
+                <div style="height: 400px;">
+                    <span>&lt;website footer navigation&gt;</span>
+                </div>
+            </ul>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 social-networks">
+                </div>
+                <div class="col-md-18">
+                    <p class="copyright">
+                        ©2018 Human Brain Project. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <div class="browser-outdated" id="outdated" hidden="hidden">
+        <noscript>
+            <h3>Please enable JavaScript</h3>
+        </noscript>
+        <h3>Your browser is out-of-date!</h3>
+        <p>Update your browser to view this website correctly.</p>
+        <p>
+            <a href="http://outdatedbrowser.com/" class="btn btn-lg btn-outline" id="btnUpdateBrowser">
+                Update my browser now
+            </a>
+        </p>
+        <p class="last">
+            <a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a>
+        </p>
+    </div>
+    <!-- full:1526050453 -->
+</body>
+</html>

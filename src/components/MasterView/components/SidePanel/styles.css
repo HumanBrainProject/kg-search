@@ -1,0 +1,144 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-sidebar__button {
+    display: none;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    color: rgb(108, 115, 121);
+    background-color: white;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease-in, color 0.2s ease-in;
+}
+
+.kgs-sidebar__button:hover {
+    color: rgb(51, 51, 51);     
+    -webkit-box-shadow: 3px 3px 6px #cbc9c9;
+    box-shadow: 3px 3px 6px #cbc9c9;
+}
+
+[data-sidepanel="collapsed"] .kgs-sidebar__button {
+    display: block;
+}
+
+.kgs-sidebar__button-icon {
+
+}
+
+.kgs-sidebar {
+    position: relative;
+    -ms-flex: unset;
+    flex: unset;
+    max-width: unset;
+    transition: height 0.5s cubic-bezier(.34,1.06,.63,.93);
+}
+
+[data-sidepanel="collapsed"] .kgs-sidebar {
+    height: 0;
+}
+
+.kgs-sidebar-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.kgs-sidebar__toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    padding: 7px 4px 7px 0;
+    border: 0;
+    text-align: right;
+    color: rgb(108, 115, 121);
+    background-color: white;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease-in, color 0.2s ease-in;
+}         
+
+.kgs-sidebar__toggle:hover {
+    color: rgb(51, 51, 51);     
+    -webkit-box-shadow: 3px 3px 6px #cbc9c9;
+    box-shadow: 3px 3px 6px #cbc9c9;
+}
+
+.kgs-sidebar__toggle-icon {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    -webkit-transform-origin-y: center;
+    -webkit-transform-origin-x: center;
+    transform: translate(-26px, -8px);
+    transition: transform ease-in-out .25s;
+}
+
+[data-sidepanel="collapsed"] .kgs-sidebar__toggle {
+    display: none;
+}
+
+@media (min-width: 992px) {
+    [data-sidepanel="collapsed"] .kgs-sidebar__button {
+        display: none;
+    }
+    [data-sidepanel="collapsed"] .kgs-sidebar__toggle {
+        display: block;
+    }
+    .kgs-sidebar {
+        height: auto;
+        height: unset;
+        -ms-flex: 0 0 246px;
+        flex: 0 0 246px;
+        transition: -ms-flex-basis ease-in-out .25s, flex-basis ease-in-out .25s;
+    }
+    [data-sidepanel="collapsed"] .kgs-sidebar {
+        height: auto;
+        height: unset;
+        flex-basis: 0;
+    }
+    [data-sidepanel="collapsed"] .kgs-sidebar-container {
+        width: 0;
+    }
+    .kgs-sidebar__toggle {
+        top: 15px;
+        right: 5px;
+        padding: 7px 0;
+    }
+    [data-sidepanel="collapsed"] .kgs-sidebar__toggle {
+        top: 20px;
+        right: -19px;
+        height: calc(100% - 40px);
+        padding-top: 21px;
+        -webkit-box-shadow: none;
+        box-shadow: 3px 3px 6px none;
+    }
+    .kgs-sidebar__toggle-icon {
+        display: block;
+        top: 25px;
+        transform: translate(16px, -10px) rotate(-90deg);
+    }
+    [data-sidepanel="collapsed"] .kgs-sidebar__toggle-icon {
+        display: block;
+        transform: translate(22px, 0) rotate(-90deg) rotateX(180deg);
+    }
+}
+
+.filter--facet_type .sk-item-list-option[data-key="$all"]{
+    display:none;
+}

@@ -1,0 +1,11 @@
+node_modules
+bower_components
+build
+dist
+.tmp
+.DS_Store
+.sass-cache
+.vscode
+.idea/
+.cache
+.env
