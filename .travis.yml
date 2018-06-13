@@ -1,0 +1,7 @@
+language: scala
+scala:
+   - 2.12.3
+install:
+  - sbt compile
+script:
+  - sbt ++$TRAVIS_SCALA_VERSION test
