@@ -25,7 +25,7 @@ const getConfig = () => {
         throw new Error("search service has not been initalized");
 
     //return fetch(srvSettings.host + '/search/kg_labels/labels/labels')
-    return fetch(srvSettings.host + '/api/proxy/kg_labels/labels/labels')
+    return fetch(srvSettings.host + '/proxy/kg_labels/labels/labels')
     .then(response => {
         if (!response.ok) 
             return Promise.reject(response.statusText);
@@ -135,7 +135,7 @@ const getIndexes = () => {
             })
         };
     }
-    return fetch(srvSettings.host + '/api/groups', options)
+    return fetch(srvSettings.host + '/auth/groups', options)
     .then(response => {
         if (!response.ok)
             throw response.statusText;
@@ -166,7 +166,7 @@ const getHitByReference = (reference, index) => {
         };
     }
 
-    return fetch(srvSettings.host + '/api/proxy/kg/' + reference, options)
+    return fetch(srvSettings.host + '/proxy/kg/' + reference, options)
     .then(response => {
         if (!response.ok)
             throw response.statusText;
