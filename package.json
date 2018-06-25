@@ -4,12 +4,17 @@
   "private": true,
   "homepage": "https://kg.humanbrainproject.org/webapp",
   "proxy": {
-    "/api": {
+    "/proxy": {
       "target": "https://kg.humanbrainproject.org",
       "changeOrigin": true,
       "ws": true
     },
     "/search": {
+      "target": "https://kg.humanbrainproject.org",
+      "changeOrigin": true,
+      "ws": true
+    },
+    "/auth": {
       "target": "https://kg.humanbrainproject.org",
       "changeOrigin": true,
       "ws": true

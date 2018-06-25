@@ -62,7 +62,7 @@ class App extends Component {
 
     const { config } = props;
 
-    const searchKitUrl = config.searchApiHost + '/api/smartproxy/kg';
+    const searchKitUrl = config.searchApiHost + '/proxy/kg'; //+ '/api/smartproxy/kg';
     this.searchkit = new SearchkitManager(searchKitUrl, {
       multipleSearchers:false,
       timeout: 10000,
