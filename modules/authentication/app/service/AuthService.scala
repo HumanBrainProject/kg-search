@@ -15,13 +15,14 @@
 *   limitations under the License.
 */
 
-import com.github.stijndehaes.playprometheusfilters.filters.{LatencyFilter, StatusCounterFilter}
-import com.google.inject.Inject
-import play.api.http.DefaultHttpFilters
-import play.filters.gzip.GzipFilter
+package service.authentication
 
-class Filters @Inject()(
-   latencyFilter: LatencyFilter,
-   statusCounterFilter: StatusCounterFilter,
-   gzipFilter:GzipFilter
- ) extends DefaultHttpFilters(latencyFilter, statusCounterFilter, gzipFilter)
+import play.api.mvc.Headers
+
+import scala.concurrent.Future
+
+trait AuthService {
+  type U
+
+  def getUserInfo(headers: Headers): Future[U]
+}

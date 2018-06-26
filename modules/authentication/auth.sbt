@@ -1,0 +1,3 @@
+name := "auth"
+
+Common.playSettings

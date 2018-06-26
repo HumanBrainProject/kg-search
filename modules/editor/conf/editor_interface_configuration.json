@@ -1,0 +1,837 @@
+{
+  "datacite": {
+    "core": {
+      "doi": {
+        "v0.0.1": {
+          "label": "DOI",
+          "fields": {
+            "http://schema.org/citation": {
+              "type": "TextArea",
+              "label": "Citation",
+              "readOnly": true,
+              "disabled": true
+            },
+            "http://hbp.eu/minds#dataset": {
+              "type": "DropdownSelect",
+              "label": "Reference",
+              "optionsUrl": "/api/instances/minds/core/dataset/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "readOnly": true,
+              "disabled": true
+            },
+            "http://hbp.eu/minds#doi": {
+              "type": "InputText",
+              "label": "DOI",
+              "readOnly": true,
+              "disabled": true
+            }
+          },
+          "editable": false,
+          "ui_info": {
+            "summary": [
+              "http://hbp.eu/minds#doi"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "minds": {
+    "core": {
+      "activity": {
+        "v0.0.4": {
+          "label": "Activity",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            },
+            "http://schema.org/description": {
+              "type": "TextArea",
+              "label": "Description",
+              "value": "http://schema.org/description"
+            },
+            "http://hbp.eu/minds#ethicsApproval": {
+              "type": "DropdownSelect",
+              "label": "Approval",
+              "optionsUrl": "/api/instances/minds/ethics/approval/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#ethicsAuthority": {
+              "type": "DropdownSelect",
+              "label": "Authority",
+              "optionsUrl": "/api/instances/minds/ethics/authority/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#methods": {
+              "type": "DropdownSelect",
+              "label": "Methods",
+              "optionsUrl": "/api/instances/minds/experiment/methods/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#preparation": {
+              "type": "DropdownSelect",
+              "label": "Preparation",
+              "optionsUrl": "/api/instances/minds/core/preparation/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#protocols": {
+              "type": "DropdownSelect",
+              "label": "Protocols",
+              "optionsUrl": "/api/instances/minds/experiment/protocol/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name",
+              "http://schema.org/description"
+            ]
+          }
+        }
+      },
+      "agecategory": {
+        "v0.0.4": {
+          "label": "Age category",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "dataset": {
+        "v0.0.4": {
+          "label": "Dataset",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            },
+            "http://schema.org/description": {
+              "type": "TextArea",
+              "label": "Description",
+              "value": "http://schema.org/description"
+            },
+            "http://hbp.eu/minds#activity": {
+              "type": "DropdownSelect",
+              "label": "Activities",
+              "optionsUrl": "/api/instances/minds/core/activity/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#component": {
+              "type": "DropdownSelect",
+              "label": "Project",
+              "optionsUrl": "/api/instances/minds/core/placomponent/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://schema.org/container_url": {
+              "type": "InputText",
+              "label": "Container Url"
+            },
+            "http://hbp.eu/minds#contributors": {
+              "type": "DropdownSelect",
+              "label": "Contributors",
+              "optionsUrl": "/api/instances/minds/core/person/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://schema.org/datalink": {
+              "type": "InputText",
+              "label": "Data link"
+            },
+            "http://hbp.eu/minds#datasetDOI": {
+              "type": "DropdownSelect",
+              "label": "DOI",
+              "optionsUrl": "/api/instances/datacite/core/doi/v0.0.1",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true,
+              "readOnly": true,
+              "disabled": true
+            },
+            "http://hbp.eu/minds#embargo_status": {
+              "type": "DropdownSelect",
+              "label": "Embargo Status",
+              "optionsUrl": "/api/instances/minds/core/embargostatus/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#formats": {
+              "type": "DropdownSelect",
+              "label": "Formats",
+              "optionsUrl": "/api/instances/minds/core/format/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#license_info": {
+              "type": "DropdownSelect",
+              "label": "License",
+              "optionsUrl": "/api/instances/licenses/core/information/v0.0.1",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "value": "licenses/core/information/v0.0.1"
+            },
+            "http://hbp.eu/minds#owners": {
+              "type": "DropdownSelect",
+              "label": "Owners",
+              "optionsUrl": "/api/instances/minds/core/person/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#parcellationAtlas": {
+              "type": "DropdownSelect",
+              "label": "Parcellation atlas",
+              "optionsUrl": "/api/instances/minds/core/parcellationatlas/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#parcellationRegion": {
+              "type": "DropdownSelect",
+              "label": "Parcellation region",
+              "optionsUrl": "/api/instances/minds/core/parcellationregion/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#publications": {
+              "type": "DropdownSelect",
+              "label": "Publications",
+              "optionsUrl": "/api/instances/minds/core/publication/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#reference_space": {
+              "type": "DropdownSelect",
+              "label": "Reference space",
+              "optionsUrl": "/api/instances/minds/core/referencespace/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#specimen_group": {
+              "type": "DropdownSelect",
+              "label": "Specimen Groups",
+              "optionsUrl": "/api/instances/minds/core/specimengroup/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name",
+              "http://schema.org/description"
+            ]
+          }
+        }
+      },
+      "embargostatus": {
+        "v0.0.4": {
+          "label": "Embargo Status",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "file": {
+        "v0.0.4": {
+          "label": "File",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            }
+          },
+          "editable": false,
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "fileassociation": {
+        "v0.0.4": {
+          "label": "File Association",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            },
+            "http://hbp.eu/minds#associated_entity": {
+              "type": "DropdownSelect",
+              "label": "Associated entity",
+              "optionsUrl": "/api/instances/minds/core/placomponent/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#file": {
+              "type": "DropdownSelect",
+              "label": "File",
+              "optionsUrl": "/api/instances/minds/core/file/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "value": "minds/core/file/v0.0.4"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "format": {
+        "v0.0.4": {
+          "label": "Format",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "licensetype": {
+        "v0.0.4": {
+          "label": "License Type",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "method": {
+        "v0.0.4": {
+          "label": "Method",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "parcellationatlas": {
+        "v0.0.4": {
+          "label": "Parcellation Atlas",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "parcellationregion": {
+        "v0.0.4": {
+          "label": "Parcellation Region",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "person": {
+        "v0.0.4": {
+          "label": "Person",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            },
+            "http://schema.org/shortName": {
+              "type": "InputText",
+              "label": "Shortname",
+              "value": "http://schema.org/shortName"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "placomponent": {
+        "v0.0.4": {
+          "label": "PLA Component",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            },
+            "http://schema.org/description": {
+              "type": "TextArea",
+              "label": "Description",
+              "value": "http://schema.org/description"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name",
+              "http://schema.org/description"
+            ]
+          }
+        }
+      },
+      "preparation": {
+        "v0.0.4": {
+          "label": "Preparation",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "publication": {
+        "v0.0.4": {
+          "label": "Publication",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            },
+            "http://hbp.eu/minds#doi": {
+              "type": "InputText",
+              "label": "DOI",
+              "readOnly": true,
+              "disabled": true
+            },
+            "http://hbp.eu/minds#authors": {
+              "type": "DropdownSelect",
+              "label": "Authors",
+              "optionsUrl": "/api/instances/minds/core/person/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#cite": {
+              "type": "TextArea",
+              "label": "Cite",
+              "value": "http://hbp.eu/minds#cite"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "referencespace": {
+        "v0.0.4": {
+          "label": "Reference space",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "sex": {
+        "v0.0.4": {
+          "label": "Sex",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "softwareagent": {
+        "v0.0.4": {
+          "label": "Software agent",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            },
+            "http://schema.org/description": {
+              "type": "TextArea",
+              "label": "Description",
+              "value": "http://schema.org/description"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name",
+              "http://schema.org/description"
+            ]
+          }
+        }
+      },
+      "species": {
+        "v0.0.4": {
+          "label": "Species",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "specimengroup": {
+        "v0.0.4": {
+          "label": "Specimen group",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            },
+            "http://hbp.eu/minds#subjects": {
+              "type": "DropdownSelect",
+              "label": "Subjects",
+              "optionsUrl": "/api/instances/minds/experiment/subject/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      }
+    },
+    "ethics": {
+      "approval": {
+        "v0.0.4": {
+          "label": "Approval",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            },
+            "http://hbp.eu/minds#generatedBy": {
+              "type": "DropdownSelect",
+              "label": "Generated by",
+              "optionsUrl": "/api/instances/minds/ethics/authority/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "authority": {
+        "v0.0.4": {
+          "label": "Authority",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      }
+    },
+    "experiment": {
+      "method": {
+        "v0.0.4": {
+          "label": "Method",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "protocol": {
+        "v0.0.4": {
+          "label": "Protocol",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "sample": {
+        "v0.0.4": {
+          "label": "Sample",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            },
+            "http://hbp.eu/minds#methods": {
+              "type": "DropdownSelect",
+              "label": "Methods",
+              "optionsUrl": "/api/instances/minds/experiment/method/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#parcellationAtlas": {
+              "type": "DropdownSelect",
+              "label": "Parcellation atlas",
+              "optionsUrl": "/api/instances/minds/core/parcellationatlas/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#parcellationRegion": {
+              "type": "DropdownSelect",
+              "label": "Parcellation region",
+              "optionsUrl": "/api/instances/minds/core/parcellationregion/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "subject": {
+        "v0.0.4": {
+          "label": "Subject",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            },
+            "http://hbp.eu/minds#age": {
+              "type": "InputText",
+              "label": "Age",
+              "value": "http://hbp.eu/minds#age"
+            },
+            "http://hbp.eu/minds#age_category": {
+              "type": "DropdownSelect",
+              "label": "Age category",
+              "optionsUrl": "/api/instances/minds/core/agecategory/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#genotype": {
+              "type": "InputText",
+              "label": "Genotype",
+              "value": "http://hbp.eu/minds#genotype"
+            },
+            "http://hbp.eu/minds#sex": {
+              "type": "DropdownSelect",
+              "label": "Sex",
+              "optionsUrl": "/api/instances/minds/core/sex/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#species": {
+              "type": "DropdownSelect",
+              "label": "Species",
+              "optionsUrl": "/api/instances/minds/core/species/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            },
+            "http://hbp.eu/minds#strain": {
+              "type": "InputText",
+              "label": "Strain",
+              "value": "http://hbp.eu/minds#strain"
+            },
+            "http://hbp.eu/minds#weight": {
+              "type": "InputText",
+              "label": "Weight",
+              "value": "http://hbp.eu/minds#weight"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      }
+    },
+    "prov": {
+      "release": {
+        "v0.0.4": {
+          "label": "Release",
+          "fields": {
+            "http://hbp.eu/minds#releasestate": {
+              "type": "InputText",
+              "label": "Release state",
+              "value": "http://hbp.eu/minds#releasestate"
+            },
+            "http://hbp.eu/minds#releaseinstance": {
+              "type": "DropdownSelect",
+              "label": "Release instance",
+              "optionsUrl": "/api/instances/minds/core/fileassociation/v0.0.4",
+              "mappingValue": "id",
+              "mappingLabel": "label",
+              "isLink": true
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      },
+      "role": {
+        "v0.0.4": {
+          "label": "Role",
+          "fields": {
+            "http://schema.org/name": {
+              "type": "InputText",
+              "label": "Name",
+              "value": "http://schema.org/name"
+            }
+          },
+          "ui_info": {
+            "summary": [
+              "http://schema.org/name"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

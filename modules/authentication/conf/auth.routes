@@ -1,0 +1,3 @@
+GET     /groups                         controllers.authentication.OIDCController.groups
+OPTIONS /groups                         controllers.authentication.OIDCController.groupsOptions
+

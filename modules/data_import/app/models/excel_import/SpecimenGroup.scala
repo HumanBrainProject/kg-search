@@ -15,13 +15,17 @@
 *   limitations under the License.
 */
 
-import com.github.stijndehaes.playprometheusfilters.filters.{LatencyFilter, StatusCounterFilter}
-import com.google.inject.Inject
-import play.api.http.DefaultHttpFilters
-import play.filters.gzip.GzipFilter
+package data_import.models.excel_import
 
-class Filters @Inject()(
-   latencyFilter: LatencyFilter,
-   statusCounterFilter: StatusCounterFilter,
-   gzipFilter:GzipFilter
- ) extends DefaultHttpFilters(latencyFilter, statusCounterFilter, gzipFilter)
+import CommonVars._
+
+case class SpecimenGroup(id: String, subjects: Seq[Subject]) {
+
+  // retrieve species from first subject species
+  val globalSpecies = speciesMapping(subjects.head.details(speciesLabel).head)
+  def toJsonString() = {
+    val subjectsContent = subjects.map(_.toJsonString()).mkString(jsonSeparator)
+    val innerSubjectsContent = Formatter.getJsonStringFromKV(subjectsLabel, Seq(globalSpecies), Some(subjectsContent))
+    Formatter.getJsonStringFromKV(specimenGroupLabel, Seq(id), Some(innerSubjectsContent))
+  }
+}

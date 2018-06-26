@@ -1,4 +1,3 @@
-
 /*
 *   Copyright (c) 2018, EPFL/Human Brain Project PCO
 *
@@ -14,14 +13,8 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
+package models.authentication
 
-import com.github.stijndehaes.playprometheusfilters.filters.{LatencyFilter, StatusCounterFilter}
-import com.google.inject.Inject
-import play.api.http.DefaultHttpFilters
-import play.filters.gzip.GzipFilter
+import play.api.mvc.{Request, WrappedRequest}
 
-class Filters @Inject()(
-   latencyFilter: LatencyFilter,
-   statusCounterFilter: StatusCounterFilter,
-   gzipFilter:GzipFilter
- ) extends DefaultHttpFilters(latencyFilter, statusCounterFilter, gzipFilter)
+class UserRequest[A](val user: Option[UserInfo], request: Request[A]) extends WrappedRequest[A](request)

@@ -1,0 +1,3 @@
+name := "common"
+
+Common.playSettings

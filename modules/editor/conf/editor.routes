@@ -1,0 +1,7 @@
+GET    /api/nodetypes                  editor.controllers.NexusEditorController.listEntities( privateSpace: String ?= "minds")
+GET    /api/instances/*nodetype         editor.controllers.NexusEditorController.listInstances(nodetype: String)
+GET    /api/instance/*id                 editor.controllers.NexusEditorController.getInstance(id: String)
+POST   /api/instance/*id                 editor.controllers.NexusEditorController.updateInstance(id: String)
+GET    /api/revisions/*id                      editor.controllers.NexusEditorController.getInstanceNumberOfAvailableRevisions(id: String)
+
+GET    /api/reconciled/:id              editor.controllers.NexusEditorController.getSpecificReconciledInstance(id: String ,rev:Int ?= 1)

@@ -1,0 +1,3 @@
+
+POST    /privatespace                   nexus.controllers.NexusCommonController.createPrivateSpace()
+POST   /api/schema/:organization/:domain/:entityType/:version  nexus.controllers.NexusCommonController.createSchema(organization: String, domain: String, entityType: String, version: String)

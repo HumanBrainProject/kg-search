@@ -15,13 +15,29 @@
 *   limitations under the License.
 */
 
-import com.github.stijndehaes.playprometheusfilters.filters.{LatencyFilter, StatusCounterFilter}
-import com.google.inject.Inject
-import play.api.http.DefaultHttpFilters
-import play.filters.gzip.GzipFilter
+package common.helpers
 
-class Filters @Inject()(
-   latencyFilter: LatencyFilter,
-   statusCounterFilter: StatusCounterFilter,
-   gzipFilter:GzipFilter
- ) extends DefaultHttpFilters(latencyFilter, statusCounterFilter, gzipFilter)
+import play.api.libs.json.JsValue
+import play.api.libs.ws.WSClient
+
+import scala.concurrent.{ExecutionContext, Future}
+
+object ESHelper {
+
+  val publicIndex: String = "kg_public"
+  val indicesPath : String = "_cat/indices"
+
+  def filterNexusGroups(groups: Seq[String], formatName: String => String = ESHelper.formatGroupName): Seq[String] = {
+
+    groups.filter(s => s.startsWith("nexus-") && !s.endsWith("-admin")).map(formatName)
+  }
+
+  def formatGroupName(name: String):String = {
+    name.replace("nexus-", "")
+  }
+
+  def transformToIndex(s: String): String = {
+    s"kg_$s"
+  }
+
+}

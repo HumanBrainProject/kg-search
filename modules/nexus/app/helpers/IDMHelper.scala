@@ -15,13 +15,8 @@
 *   limitations under the License.
 */
 
-import com.github.stijndehaes.playprometheusfilters.filters.{LatencyFilter, StatusCounterFilter}
-import com.google.inject.Inject
-import play.api.http.DefaultHttpFilters
-import play.filters.gzip.GzipFilter
+package nexus.helpers
 
-class Filters @Inject()(
-   latencyFilter: LatencyFilter,
-   statusCounterFilter: StatusCounterFilter,
-   gzipFilter:GzipFilter
- ) extends DefaultHttpFilters(latencyFilter, statusCounterFilter, gzipFilter)
+object IDMHelper {
+  val nexusAdmin = "nexus-admin"
+}

@@ -15,13 +15,21 @@
 *   limitations under the License.
 */
 
-import com.github.stijndehaes.playprometheusfilters.filters.{LatencyFilter, StatusCounterFilter}
-import com.google.inject.Inject
-import play.api.http.DefaultHttpFilters
-import play.filters.gzip.GzipFilter
+package common.models
 
-class Filters @Inject()(
-   latencyFilter: LatencyFilter,
-   statusCounterFilter: StatusCounterFilter,
-   gzipFilter:GzipFilter
- ) extends DefaultHttpFilters(latencyFilter, statusCounterFilter, gzipFilter)
+case class NexusPath(org: String, domain:String, schema: String, version:String) {
+
+  override def toString() = {
+    Seq(org, domain, schema, version).mkString("/")
+  }
+}
+
+object NexusPath {
+    def apply(args: Seq[String]): NexusPath = {
+      NexusPath(args(0), args(1), args(2), args(3))
+    }
+
+    def apply(fullPath: String): NexusPath = {
+      NexusPath(fullPath.split("/"))
+    }
+}

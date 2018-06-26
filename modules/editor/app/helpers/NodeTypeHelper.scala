@@ -15,13 +15,20 @@
 *   limitations under the License.
 */
 
-import com.github.stijndehaes.playprometheusfilters.filters.{LatencyFilter, StatusCounterFilter}
-import com.google.inject.Inject
-import play.api.http.DefaultHttpFilters
-import play.filters.gzip.GzipFilter
+package editor.helpers
 
-class Filters @Inject()(
-   latencyFilter: LatencyFilter,
-   statusCounterFilter: StatusCounterFilter,
-   gzipFilter:GzipFilter
- ) extends DefaultHttpFilters(latencyFilter, statusCounterFilter, gzipFilter)
+import common.models.NexusPath
+import play.api.libs.json.{JsArray, Json}
+
+object NodeTypeHelper {
+
+  def formatNodetypeList(jsArray: JsArray): JsArray = {
+  val r = jsArray.value.map { js =>
+  val tempId = (js \ "schema" \ "value").as[String]
+  val path: String = tempId.split("v0/schemas/").tail.head
+  val label = NexusPath.apply(path.split("/").toList).schema
+  Json.obj("label" -> label.capitalize, "path" -> path)
+}.sortBy( js => (js \ "label").as[String])(Ordering.fromLessThan[String]( _ < _ ))
+  Json.toJson(r).as[JsArray]
+}
+}
