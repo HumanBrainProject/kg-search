@@ -116,14 +116,14 @@ export class SearchKitHelpers {
             const terms = getTerms(tree);
             let maxWildcard = maxWildcardConfig < 0?terms.length:terms.length<maxWildcardConfig?terms.length:maxWildcardConfig;
             let maxFuzzySearch = maxFuzzySearchConfig < 0?terms.length:terms.length<maxFuzzySearchConfig?terms.length:maxFuzzySearchConfig;
-            const filteredTerms = terms.filter(term => {
+            const filteredTerms = terms.length === 1?terms:(terms.filter(term => {
                 return (term.length >= queryTweaking.wildcard.minNbOfChars || term.length >= queryTweaking.fuzzySearch.minNbOfChars)
                     && !term.includes(".") 
                     && !["a", "above", "all", "an", "are", "as", "any", "because", "below", "besides", "but", "by", "eg", "either", "for", "hence", "how", "which", "where", "who", "ie", "in", "instead", "is", "none", "of", "one", "other", "over", "same", "that", "the", "then", "thereby", "therefore", "this", "though", "thus", "to", "under", "until", "when", "why"].includes(term);   
-            })
+            }));
             if (terms.length <= queryTweaking.maxNbOfTermsTrigger) {
                 filteredTerms.forEach((term, idx) => {
-                    const wildcardCondition = idx < maxWildcard && term.length >= queryTweaking.wildcard.minNbOfChars;
+                    const wildcardCondition = terms.length === 1 || (idx < maxWildcard && term.length >= queryTweaking.wildcard.minNbOfChars);
                     const fuzzySearchCondition = idx < maxFuzzySearch && term.length >= queryTweaking.fuzzySearch.minNbOfChars;
                     if (wildcardCondition || fuzzySearchCondition) {
                         const re1 = new RegExp('([ "\\[\\]{}()][+\\-]?)' + term + '([ "\\[\\]{}()])', "gi");
