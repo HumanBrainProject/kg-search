@@ -75,35 +75,62 @@ class NexusEditorController @Inject()(cc: ControllerComponents, authenticatedUse
          |    ?reconciled <http://hbp.eu/reconciled#original_parent> ?instance .
          |  	?reconciled a <https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/Instance> .
          |  ?reconciled <https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/deprecated> false .
-         |  ?reconciled <https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/schema> <https://nexus-dev.humanbrainproject.org/v0/schemas/reconciled/poc/${nexusPath.schema}/v0.0.4> .
+         |  ?reconciled <https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/schema> <https://nexus-dev.humanbrainproject.org/v0/schemas/reconciled/poc/${nexusPath.schema}/${nexusPath.version}> .
          |
          |  }
          |}
          |
       """.stripMargin
+
+    val manualUserCreatedQuery = s"""SELECT DISTINCT ?instance ?name  ?description
+                                   |WHERE {
+                                   |	?instance a <https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/Instance> .
+                                   |  ?instance <https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/deprecated> false .
+                                   |    ?instance <http://hbp.eu/manual#user_created> true .
+                                   |  ?instance <https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/schema> <https://nexus-dev.humanbrainproject.org/v0/schemas/manual/poc/${nexusPath.schema}/${nexusPath.version}> .
+                                   |    ?instance <http://schema.org/name> ?name .
+                                   |      OPTIONAL{ ?instance <http://schema.org/description> ?description .}
+                                   |}""".stripMargin
     val start = System.currentTimeMillis()
-    val res = ws.url(s"$sparqlEndpoint/bigdata/namespace/$blazegraphNameSpace/sparql").withQueryStringParameters("query" -> sparqlPayload, "format" -> "json").get().map[Result] {
+    
+    ws.url(s"$sparqlEndpoint/bigdata/namespace/$blazegraphNameSpace/sparql").withQueryStringParameters("query" -> sparqlPayload, "format" -> "json").get().flatMap[Result] {
       res =>
         res.status match {
           case 200 =>
-            val arr = BlazegraphHelper.extractResult(res.json)
-            val duration = System.currentTimeMillis() - start
-            println(s"sparql query: \n$sparqlPayload\n\nduration: ${duration}ms")
-            Ok(Json.obj(
-              "data" -> InstanceHelper.formatInstanceList(arr),
-              "label" -> JsString((FormHelper.formRegistry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String].getOrElse(datatype)))
-            )
+            ws.url(s"$sparqlEndpoint/bigdata/namespace/$blazegraphNameSpace/sparql").withQueryStringParameters("query" -> manualUserCreatedQuery, "format" -> "json").get().map[Result]{
+              manualRes =>
+                manualRes.status match {
+                  case 200 =>
+                    val manualArr = BlazegraphHelper.extractResult(manualRes.json)
+                    val arr = BlazegraphHelper.extractResult(res.json)
+                    val duration = System.currentTimeMillis() - start
+                    logger.debug(s"sparql query: \n$sparqlPayload\n\nduration: ${duration}ms")
+                    Ok(Json.obj(
+                      "data" -> InstanceHelper.formatInstanceList(arr ++ manualArr),
+                      "label" -> JsString((FormHelper.formRegistry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String].getOrElse(datatype)))
+                    )
+                  case _ =>
+                    Result(
+                      ResponseHeader(
+                        manualRes.status,
+                        flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](manualRes.headers))
+                      ),
+                      HttpEntity.Strict(manualRes.bodyAsBytes, getContentType(manualRes.headers))
+                    )
+                }
+            }
           case _ =>
-            Result(
-              ResponseHeader(
-                res.status,
-                flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](res.headers))
-              ),
-              HttpEntity.Strict(res.bodyAsBytes, getContentType(res.headers))
+            Future.successful(
+              Result(
+                ResponseHeader(
+                  res.status,
+                  flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](res.headers))
+                ),
+                HttpEntity.Strict(res.bodyAsBytes, getContentType(res.headers))
+              )
             )
         }
     }
-    res
   }
 
   def getInstance(org: String, domain:String, datatype: String, version:String, id: String): Action[AnyContent] = Action.async { implicit request =>
@@ -244,6 +271,7 @@ class NexusEditorController @Inject()(cc: ControllerComponents, authenticatedUse
       .+("@type" -> JsString(s"http://hbp.eu/manual#${datatype.capitalize}"))
       .+("http://schema.org/identifier" -> JsString(md5HashString((instance \ "http://schema.org/name").as[String] )))
       .+("http://hbp.eu/manual#origin", JsString(""))
+      .+("http://hbp.eu/manual#user_created", JsBoolean(true))
     // Save instance to nexus
     createManualSchemaIfNeeded(nexusEndpoint, typedInstance, instancePath, token, inMemoryManualSpaceSchemas, manualSpace, "manual").flatMap[Result]{
       schemaCreated =>
