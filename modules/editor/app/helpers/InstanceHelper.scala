@@ -160,7 +160,7 @@ object InstanceHelper {
          */
         val Diff(changedFromOrg, addedFromOrg, deletedFromOrg) = JsonParser.parse(originalInstance.content.toString()).diff(newJson)
         if (deletedFromOrg != JsonAST.JNothing) {
-          println(s"""PARTIAL FORM DEFINITION - missing fields from form: ${deletedFromOrg.toString}""")
+          logger.debug(s"""PARTIAL FORM DEFINITION - missing fields from form: ${deletedFromOrg.toString}""")
         }
         changedFromOrg.merge(addedFromOrg)
     }
@@ -171,9 +171,13 @@ object InstanceHelper {
       ("http://hbp.eu/manual#parent", Json.obj("@id" -> (originalInstance.content \ "links" \ "self").get.as[JsString]))
   }
 
-  def buildInstanceFromForm(original: JsObject, formContent: JsObject): JsObject = {
-    val flattened = JsFlattener(formContent)
-    applyChanges(original, flattened)
+  def buildInstanceFromForm(original: JsObject, formContent: JsObject, nexusEndpoint: String): JsObject = {
+//    val flattened = JsFlattener(formContent)
+//    applyChanges(original, flattened)
+    val cleanForm = FormHelper.removeKey(formContent.as[JsValue])
+    val formWithID = cleanForm.toString().replaceAll("""id":"""", s"""@id":"${nexusEndpoint}/v0/data/""")
+    val res= original.deepMerge(Json.parse(formWithID).as[JsObject])
+    res
   }
 
   def buildNewInstanceFromForm(formContent: JsObject): JsObject = {
@@ -312,10 +316,17 @@ object InstanceHelper {
   // return an updated JsObject or the src object in case of failure
   def updateJson(instance: JsObject, path: JsPath, newValue: JsValue): JsObject = {
     val simpleUpdateTransformer = path.json.update(
-      of[JsValue].map { _ => newValue }
+      of[JsValue].map { js =>
+          newValue
+        }
     )
-    val res = instance.transform(simpleUpdateTransformer).getOrElse(instance)
-    res
+
+    if(instance.transform(simpleUpdateTransformer).isError){
+      logger.error(s"Could not transform $newValue")
+    }else{
+      logger.debug(s"Ok no worries $newValue")
+    }
+    instance
   }
 
   def buildMapOfSortedManualUpdates(manualUpdates: IndexedSeq[Map[String, JsValue]]): Map[String, SortedSet[(JsValue, Int)]] = {

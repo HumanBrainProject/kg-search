@@ -92,7 +92,7 @@ class NexusEditorController @Inject()(cc: ControllerComponents, authenticatedUse
                                    |      OPTIONAL{ ?instance <http://schema.org/description> ?description .}
                                    |}""".stripMargin
     val start = System.currentTimeMillis()
-    
+
     ws.url(s"$sparqlEndpoint/bigdata/namespace/$blazegraphNameSpace/sparql").withQueryStringParameters("query" -> sparqlPayload, "format" -> "json").get().flatMap[Result] {
       res =>
         res.status match {
@@ -221,7 +221,7 @@ class NexusEditorController @Inject()(cc: ControllerComponents, authenticatedUse
 
             // As we cannot pass / in the name of a field we have replaced them with %nexus-slash%
             val updateFromUI = Json.parse(FormHelper.unescapeSlash(newValue.toString())).as[JsObject] - "id"
-            val updatedInstance = buildInstanceFromForm(originalInstance.content, updateFromUI)
+            val updatedInstance = buildInstanceFromForm(originalInstance.content, updateFromUI, nexusEndpoint)
             val userInfo = request.user
             val updateToBeStoredInManual = buildDiffEntity(currentInstanceDisplayed, updatedInstance.toString, originalInstance) + ("@type", JsString(s"http://hbp.eu/manual#${originalInstance.nexusPath.schema.capitalize}"))
             consolidateFromManualSpace(manualSpace, originalInstance, incomingLinks, updateToBeStoredInManual) match {
@@ -273,22 +273,45 @@ class NexusEditorController @Inject()(cc: ControllerComponents, authenticatedUse
       .+("http://hbp.eu/manual#origin", JsString(""))
       .+("http://hbp.eu/manual#user_created", JsBoolean(true))
     // Save instance to nexus
-    createManualSchemaIfNeeded(nexusEndpoint, typedInstance, instancePath, token, inMemoryManualSpaceSchemas, manualSpace, "manual").flatMap[Result]{
-      schemaCreated =>
-        if(schemaCreated){
-          ws.url(s"$nexusEndpoint/v0/data/$manualSpace/${instancePath.schema}/${instancePath.version}").post(typedInstance).map{
-            res =>
-              Result(
-                ResponseHeader(res.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](res.headers))),
-                HttpEntity.Strict(res.bodyAsBytes, getContentType(res.headers))
-              )
-          }
-        }else{
-          Future.successful(BadRequest("Cannot create the schema"))
+
+    for {
+      manualSchema <- createManualSchemaIfNeeded(nexusEndpoint, typedInstance, instancePath, token, inMemoryManualSpaceSchemas, manualSpace, "manual")
+      reconciledSchema <- createManualSchemaIfNeeded(nexusEndpoint, typedInstance, instancePath, token, inMemoryManualSpaceSchemas, manualSpace, "reconciled")
+      manualRes <- ws.url(s"$nexusEndpoint/v0/data/$manualSpace/${instancePath.schema}/${instancePath.version}").post(typedInstance)
+      reconciledRes <- createReconcileInstance(nexusEndpoint, reconciledSpace, typedInstance, instancePath.schema, instancePath.version, token)
+    } yield {
+      if(manualSchema && reconciledSchema){
+        (manualRes.status, reconciledRes.status) match {
+          case (CREATED, CREATED) =>
+            Result(
+              ResponseHeader(reconciledRes.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](reconciledRes.headers))),
+              HttpEntity.Strict(reconciledRes.bodyAsBytes, getContentType(reconciledRes.headers))
+            )
+          case (_ , CREATED) =>
+            Result(
+              ResponseHeader(manualRes.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](manualRes.headers))),
+              HttpEntity.Strict(manualRes.bodyAsBytes, getContentType(manualRes.headers))
+            )
+          case (_, _) =>
+            Result(
+              ResponseHeader(reconciledRes.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](reconciledRes.headers))),
+              HttpEntity.Strict(reconciledRes.bodyAsBytes, getContentType(reconciledRes.headers))
+            )
         }
+      }else{
+        BadRequest("Cannot create the schema")
+      }
     }
   }
 
+  /**
+    * Returns an empty form for a specific instance type
+    * @param org
+    * @param domain
+    * @param datatype
+    * @param version
+    * @return
+    */
   def getEmptyForm(org: String, domain: String, datatype: String, version: String): Action[AnyContent] = Action {
     implicit request =>
       val nexusPath = NexusPath(org, domain, datatype, version)
