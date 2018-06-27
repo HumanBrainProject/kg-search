@@ -170,7 +170,7 @@ object InstanceHelper {
       ("http://hbp.eu/manual#origin", JsString((originalInstance.content \ "links" \ "self").as[String].split("/").last)) +
       ("http://hbp.eu/manual#parent", Json.obj("@id" -> (originalInstance.content \ "links" \ "self").get.as[JsString]))
   }
-
+  
   def buildInstanceFromForm(original: JsObject, formContent: JsObject, nexusEndpoint: String): JsObject = {
 //    val flattened = JsFlattener(formContent)
 //    applyChanges(original, flattened)
