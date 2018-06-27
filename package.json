@@ -5,17 +5,17 @@
   "homepage": "https://kg.humanbrainproject.org/webapp",
   "proxy": {
     "/proxy": {
-      "target": "https://kg-dev.humanbrainproject.org",
+      "target": "https://kg.humanbrainproject.org",
       "changeOrigin": true,
       "ws": true
     },
     "/search": {
-      "target": "https://kg-dev.humanbrainproject.org",
+      "target": "https://kg.humanbrainproject.org",
       "changeOrigin": true,
       "ws": true
     },
     "/auth": {
-      "target": "https://kg-dev.humanbrainproject.org",
+      "target": "https://kg.humanbrainproject.org",
       "changeOrigin": true,
       "ws": true
     }

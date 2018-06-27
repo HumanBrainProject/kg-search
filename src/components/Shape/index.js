@@ -87,6 +87,8 @@ export function Shape({detailViewMode, data}) {
           } else if(description.length > 220){
             description = description.substring(0, 217) + "...";
           }
+        } else {
+          mapping.fields["description"].collapsible = true;
         }
       }
       if (mapping && mapping.fields["description"]) 

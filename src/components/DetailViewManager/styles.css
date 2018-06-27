@@ -15,7 +15,7 @@
 */
 
 .kgs-detailViewManager {
-    z-index: 1200;
+    z-index: 200;
     display: block;
     position: fixed;
     top: 100%;  

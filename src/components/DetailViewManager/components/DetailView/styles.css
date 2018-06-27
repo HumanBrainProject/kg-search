@@ -15,7 +15,7 @@
 */
 
 .kgs-detailView {
-    z-index: 1200;
+    z-index: 200;
     display: block;
     position: absolute;
     top: 0;
@@ -333,7 +333,7 @@
 }
 
 .kgs-detailView__navigation {
-    z-index: 1200;
+    z-index: 200;
     position: fixed;
     width: calc(100% - 20px);
     height: 50px;
@@ -406,7 +406,7 @@
     color: rgb(108, 115, 121);
     text-align: center;
     transition: box-shadow 0.2s ease-in, color 0.2s ease-in;
-    z-index: 1500;
+    z-index: 500;
 }
 
 .kgs-detailView__closeButton:hover {
