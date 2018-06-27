@@ -143,7 +143,7 @@ object ExcelImportHelper {
 
     val currentContentHash = hash(payload.toString())
     // check if it's an insert or update
-    retrieveEntityDetails(s"$nexusEndpoint/v0/data/dataworkbench/core/$entityType/v0.0.1", payloadId, token).flatMap {
+    retrieveEntityDetails(s"$nexusEndpoint/v0/data/excel/core/$entityType/v0.0.1", payloadId, token).flatMap {
       entityDetails =>
         entityDetails match {
           case Some((entityLink, revNumber, previousContent)) =>
@@ -157,7 +157,7 @@ object ExcelImportHelper {
               Future(-1, Some(JsObject(Seq(("@id", JsString(entityLink))))))
             }
           case None =>
-            wSClient.url(s"${nexusEndpoint}/v0/data/dataworkbench/core/$entityType/v0.0.1")
+            wSClient.url(s"${nexusEndpoint}/v0/data/excel/core/$entityType/v0.0.1")
               .addHttpHeaders("Authorization" -> token).post(payload).map{
               result =>
                 (result.status, Some(result.json.as[JsObject]))
