@@ -77,7 +77,7 @@ export class ValueField extends Component {
                 const html = converter.makeHtml(value.value);
                 valueTag = <span className="markdown" dangerouslySetInnerHTML={{__html:html}}></span>;
                 } else {
-                valueTag = value.value.replace(/<\/?em>/gi,"");
+                valueTag = value.value;
                 }
             }
             if (value.detail) {

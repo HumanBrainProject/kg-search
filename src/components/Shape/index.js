@@ -21,6 +21,31 @@ import { Field } from './components/Field';
 import { HighlightsField} from './components/HighlightsField';
 import './styles.css';
 
+const markdownEscapedChars = {
+  "&#x2F;": "\\",
+  "&#x60;": "`",
+  "&#x2a;": "*",
+  "&#x5f;": "_",
+  "&#x7b;": "{",
+  "&#x7d;": "}",
+  "&#x5b;": "[",
+  "&#x5d;": "]",
+  "&#x28;": "(",
+  "&#x29;": ")",
+  "&#x23;": "#",
+  "&#x2b;": "+",
+  "&#x2d;": "-",
+  "&#x2e;": ".",
+  "&#x21;": "!"
+};
+
+const replaceMarkdownEscapedChars = (str) => {
+  Object.entries(markdownEscapedChars).forEach(([key, val]) => {
+    str = str.replace(new RegExp(key, "g"), val);
+  });
+  return str.replace(/<\/?em>/gi,"");
+};
+
 export function Shape({detailViewMode, data}) {
   
   const state = store.getState();
@@ -57,7 +82,7 @@ export function Shape({detailViewMode, data}) {
         description = source.description.value;
         if(!detailViewMode){
           if(data.highlight && data.highlight["description.value"] && data.highlight["description.value"].length > 0){
-            description = data.highlight["description.value"][0];
+            description = replaceMarkdownEscapedChars(data.highlight["description.value"][0]);
             description += "...";
           } else if(description.length > 220){
             description = description.substring(0, 217) + "...";
@@ -69,7 +94,7 @@ export function Shape({detailViewMode, data}) {
 
       let title = source.title && source.title.value;
       if(data.highlight && data.highlight["title.value"] && data.highlight["title.value"].length > 0)
-        title = data.highlight["title.value"][0];
+        title = replaceMarkdownEscapedChars(data.highlight["title.value"][0]);
       if (mapping && mapping.fields["title"]) 
         delete  mapping.fields["title"].value;
 
