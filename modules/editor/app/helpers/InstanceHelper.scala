@@ -20,6 +20,7 @@ package editor.helper
 
 import common.helpers.JsFlattener
 import common.models.NexusPath
+import editor.helpers.FormHelper
 import editor.models.{InMemoryKnowledge, Instance}
 import models.authentication.UserInfo
 import nexus.helpers.NexusHelper
@@ -127,8 +128,8 @@ object InstanceHelper {
     }
   }
 
-  def retrieveOriginalInstance(nexusEndpoint:String, id: String, token: String)(implicit ws: WSClient, ec: ExecutionContext): Future[Either[WSResponse, Instance]] = {
-    ws.url(s"$nexusEndpoint/v0/data/$id?fields=all").addHttpHeaders("Authorization" -> token).get().map {
+  def retrieveOriginalInstance(nexusEndpoint:String, path: NexusPath, id:String, token: String)(implicit ws: WSClient, ec: ExecutionContext): Future[Either[WSResponse, Instance]] = {
+    ws.url(s"$nexusEndpoint/v0/data/${path.toString()}/$id?fields=all").addHttpHeaders("Authorization" -> token).get().map {
       res =>
         res.status match {
           case OK =>
@@ -175,8 +176,26 @@ object InstanceHelper {
     applyChanges(original, flattened)
   }
 
-  def getTokenFromRequest(request: Request[AnyContent]): String = {
-    request.headers.toMap.getOrElse("Authorization", Seq("")).head
+  def buildNewInstanceFromForm(formContent: JsObject): JsObject = {
+    val m = formContent.value.map{ case (k, v) =>
+      (v \ "type").as[String] match {
+        case "DropdownSelect" =>
+          FormHelper.unescapeSlash(k) -> Json.obj("@id" -> (v \ "value").as[JsString])
+        case _ =>
+          FormHelper.unescapeSlash(k) -> (v \ "value").as[JsString]
+      }
+    }
+    Json.toJson(m).as[JsObject]
+  }
+
+  def md5HashString(s: String): String = {
+    import java.security.MessageDigest
+    import java.math.BigInteger
+    val md = MessageDigest.getInstance("MD5")
+    val digest = md.digest(s.getBytes)
+    val bigInt = new BigInteger(1,digest)
+    val hashedString = bigInt.toString(16)
+    hashedString
   }
 
   def upsertReconciledInstance(
@@ -200,7 +219,7 @@ object InstanceHelper {
     } else {
       val parentRevision = (originalInstance.content \ "nxv:rev").as[Int]
       val payload = generateReconciledInstance(manualSpace, consolidatedInstance, instances, manualEntity, userInfo, parentRevision, parentId, token)
-      createManualSchemaIfNeeded(nexusEndpoint, updatedValue, originalInstance, token, inMemoryReconciledSpaceSchemas, reconciledSpace, "reconciled").flatMap {
+      createManualSchemaIfNeeded(nexusEndpoint, updatedValue, originalInstance.nexusPath, token, inMemoryReconciledSpaceSchemas, reconciledSpace, "reconciled").flatMap {
         res =>
           createReconcileInstance(nexusEndpoint, reconciledSpace, payload, consolidatedInstance.nexusPath.schema, consolidatedInstance.nexusPath.version, token)
       }
@@ -210,7 +229,7 @@ object InstanceHelper {
   def createManualSchemaIfNeeded(
                                   nexusEndpoint:String,
                                   manualEntity: JsObject,
-                                  originalInstance: Instance,
+                                  originalInstanceNexusPath: NexusPath,
                                   token: String,
                                   schemasHashMap: InMemoryKnowledge,
                                  space: String,
@@ -222,13 +241,13 @@ object InstanceHelper {
       if (schemasHashMap.manualSchema.isEmpty) { // initial load
         schemasHashMap.loadManualSchemaList(token)
       }
-      if (!schemasHashMap.manualSchema.contains(s"$nexusEndpoint/v0/schemas/$space/${originalInstance.nexusPath.schema}/${originalInstance.nexusPath.version}")) {
-        NexusHelper.createSchema(nexusEndpoint, destinationOrg, originalInstance.nexusPath.schema.capitalize, space, originalInstance.nexusPath.version, token).map {
+      if (!schemasHashMap.manualSchema.contains(s"$nexusEndpoint/v0/schemas/$space/${originalInstanceNexusPath.schema}/${originalInstanceNexusPath.version}")) {
+        NexusHelper.createSchema(nexusEndpoint, destinationOrg, originalInstanceNexusPath.schema.capitalize, space, originalInstanceNexusPath.version, token).map {
           response =>
             response.status match {
               case OK => schemasHashMap.loadManualSchemaList(token)
                 logger.info(s"Schema created properly for : " +
-                  s"$space/${originalInstance.nexusPath.schema}/${originalInstance.nexusPath.version}")
+                  s"$space/${originalInstanceNexusPath.schema}/${originalInstanceNexusPath.version}")
                 Future.successful(true)
               case _ => logger.error(s"ERROR - schema does not exist and " +
                 s"automatic creation failed - ${response.body}")

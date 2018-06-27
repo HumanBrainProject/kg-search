@@ -62,39 +62,52 @@ object FormHelper {
   }
 
   def getFormStructure(entityType: NexusPath, data: JsValue): JsValue = {
-    val nexusId = (data \ "@id").as[String]
     // retrieve form template
     val formTemplateOpt = (formRegistry \ entityType.org \ entityType.domain \ entityType.schema \ entityType.version).asOpt[JsObject]
 
     formTemplateOpt match {
       case Some(formTemplate) =>
-        // fill template with data
-        val idFields = Json.obj(
-          ("id" -> Json.obj(
-            ("value" -> Json.obj(
-              ("path" -> entityType.toString()),
-              ("nexus_id" -> JsString(nexusId)))))))
+        if(data != JsNull){
 
-        val fields = (formTemplate \ "fields").as[JsObject].fields.foldLeft(idFields) {
-          case (filledTemplate, (key, fieldContent)) =>
-            if (data.as[JsObject].keys.contains(key)) {
-              val newValue = (fieldContent \ "type").asOpt[String].getOrElse("") match {
-                case "DropdownSelect" =>
-                  fieldContent.as[JsObject] + ("value", transformToArray(key, data))
-                case _ =>
-                  fieldContent.as[JsObject] + ("value", (data \ key).get)
+          val nexusId = (data \ "@id").as[String]
+          // fill template with data
+          val idFields = Json.obj(
+            ("id" -> Json.obj(
+              ("value" -> Json.obj(
+                ("path" -> entityType.toString()),
+                ("nexus_id" -> JsString(nexusId)))))))
+
+          val fields = (formTemplate \ "fields").as[JsObject].fields.foldLeft(idFields) {
+            case (filledTemplate, (key, fieldContent)) =>
+              if (data.as[JsObject].keys.contains(key)) {
+                val newValue = (fieldContent \ "type").asOpt[String].getOrElse("") match {
+                  case "DropdownSelect" =>
+                    fieldContent.as[JsObject] + ("value", transformToArray(key, data))
+                  case _ =>
+                    fieldContent.as[JsObject] + ("value", (data \ key).get)
+                }
+                filledTemplate + (escapeSlash(key), newValue)
+              } else {
+                filledTemplate
               }
-              filledTemplate + (escapeSlash(key), newValue)
-            } else {
-              filledTemplate
-            }
+          }
+          Json.obj("fields" -> fields) +
+            ("label", (formTemplate \ "label").get) +
+            ("editable", JsBoolean((formTemplate.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true))) +
+            ("ui_info", (formTemplate \ "ui_info").getOrElse(JsObject.empty)) +
+            ("alternatives", (data \ "http://hbp.eu/reconciled#alternatives").asOpt[JsObject].getOrElse(Json.obj()) )
+         }else {
+          //Returning a blank template
+          val escapedForm = ( formTemplate \ "fields" ).as[JsObject].value.map{
+            case (key, value) =>
+              (escapeSlash(key) , value)
+          }
+          Json.obj("fields" -> Json.toJson(escapedForm)) +
+            ("label", (formTemplate \ "label").get) +
+            ("editable", JsBoolean((formTemplate.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true))) +
+            ("ui_info", (formTemplate \ "ui_info").getOrElse(JsObject.empty)) +
+            ("alternatives", Json.obj())
         }
-        Json.obj("fields" -> fields) +
-          ("label", (formTemplate \ "label").get) +
-          ("editable", JsBoolean((formTemplate.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true))) +
-          ("ui_info", (formTemplate \ "ui_info").getOrElse(JsObject.empty)) +
-          ("alternatives", (data \ "http://hbp.eu/reconciled#alternatives").asOpt[JsObject].getOrElse(Json.obj()) )
-
       case None =>
         JsNull
     }
