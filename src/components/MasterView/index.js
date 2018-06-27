@@ -73,7 +73,7 @@ export class MasterView extends Component {
       }
     }
     render() {
-      const { hitCount, hitsPerPage, queryFields, searchkit, currentIndex, indexes, onIndexChange, onSearchError} = this.props;
+      const { hitCount, hitsPerPage, searchThrottleTime, queryFields, searchkit, currentIndex, indexes, onIndexChange, onSearchError} = this.props;
 
       const NoHitsDisplay = (props) => {
         return null;
@@ -105,7 +105,7 @@ export class MasterView extends Component {
         <div className="kgs-masterView"  data-layoutMode={this.state.gridLayoutMode?"grid":"list"} data-hasHits={hitCount > 0} data-sidepanel={this.state.sidepanel} >
           <SearchkitProvider searchkit={searchkit}>
             <Layout>
-              <SearchPanel queryFields={queryFields} onSidePanelToggle={this.toggleSidePanel} relatedElements={searchPanelRelatedElements} />
+              <SearchPanel searchThrottleTime={searchThrottleTime} queryFields={queryFields} onSidePanelToggle={this.toggleSidePanel} relatedElements={searchPanelRelatedElements} />
               <TermsShortNotice show={this.state.showTermsShortNotice} onAgree={this.agreeTermsShortNotice} />
               <LayoutBody>
                 <SidePanel currentIndex={currentIndex} indexes={indexes} onIndexChange={onIndexChange} searchkit={searchkit} onToggle={this.toggleSidePanel} /> 

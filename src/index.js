@@ -25,7 +25,18 @@ const SearchApiHostEnvKey        = "SearchApiHost";        // "https://kg.humanb
 // APP PARAMETERS
 const hitsPerPage = 20;
 const searchOnLoad = true; // when set to true it will trigger an initial search after initilizsation
-const enableAutoWildcardAndFuzzySearch = true;
+const queryTweaking = {
+  wildcard: {
+    maxNbOfTerms: 2, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
+    minNbOfChars: 3 // nb of character under which wildcard is not applied
+  },
+  fuzzySearch: {
+    maxNbOfTerms: 3, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
+    minNbOfChars: 4 // nb of character under which fuzzy search is not applied
+  },
+  maxNbOfTermsTrigger: 4 // maximum number of terms before tweaking is turned off
+};
+const searchThrottleTime = 750 // nb of ms after which a request to elasticsearch will only be invoked
 const oidcUri = "https://services.humanbrainproject.eu/oidc/authorize";
 const oidcClientId = "nexus-kg-search";
 
@@ -33,7 +44,8 @@ const config = {
   searchApiHost: window[SearchApiHostEnvKey]?window[SearchApiHostEnvKey]:"",
   hitsPerPage: hitsPerPage,
   searchOnLoad: searchOnLoad,
-  enableAutoWildcardAndFuzzySearch,
+  queryTweaking: queryTweaking,
+  searchThrottleTime: searchThrottleTime,
   oidcUri: oidcUri,
   oidcClientId: oidcClientId
 };

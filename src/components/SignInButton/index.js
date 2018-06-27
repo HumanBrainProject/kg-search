@@ -64,8 +64,10 @@ export class SignInButton extends Component {
         this.interval = null;
     }
     componentWillReceiveProps(nextProps) {
-        const state = Object.assign({}, this.state, {style: {display: nextProps.show?"block":"none"}});
-        this.setState(state);
+        if (nextProps.show !== this.props.show) {
+            const state = Object.assign({}, this.state, {style: {display: nextProps.show?"block":"none"}});
+            this.setState(state);
+        }
     }
     shouldComponentUpdate(nextProps, nextState) {
         return nextProps.show !== this.props.show || nextState.style.display !== this.state.style.display || nextState.style.top !== this.state.style.top;

@@ -139,7 +139,7 @@ export class SearchPanel extends Component {
         }
     }
     render() {
-        const { queryFields, onSidePanelToggle } = this.props;
+        const { searchThrottleTime, queryFields, onSidePanelToggle } = this.props;
         const isMobile = ( navigator.userAgent.match(/Android/i)
                     || navigator.userAgent.match(/webOS/i)
                     || navigator.userAgent.match(/iPhone/i)
@@ -148,7 +148,7 @@ export class SearchPanel extends Component {
         return ( 
             <div className={this.state.className} style={this.state.style}>
                 <TopBar>
-                    <SearchBox placeholder="Search (e.g. brain AND hippocampus)" autofocus={true} searchOnChange={!isMobile} queryFields={queryFields} queryBuilder={QueryString} />
+                    <SearchBox placeholder="Search (e.g. brain AND hippocampus)" autofocus={true} searchThrottleTime={searchThrottleTime} searchOnChange={!isMobile} queryFields={queryFields} queryBuilder={QueryString} />
                     <a href="http://lucene.apache.org/core/2_9_4/queryparsersyntax.html" target="blank" className="kgs-help__button" title="Help">
                         <i className="fa fa-info-circle kgs-help__button-icon"></i>
                     </a>

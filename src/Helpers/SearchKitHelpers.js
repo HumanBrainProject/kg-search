@@ -24,7 +24,21 @@ export class SearchKitHelpers {
     #
     # http://stackoverflow.com/questions/16205341/symbols-in-query-string-for-elasticsearch
     #*/
-    static sanitizeString(q, enableAutoWildcardAndFuzzySearch) {
+    static sanitizeString(q, queryTweaking) {
+
+        const defaultQueryTweakingConfig = {
+            wildcard: {
+                maxNbOfTerms: 2, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
+                minNbOfChars: 3 // nb of character under which wildcard is not applied
+            },
+            fuzzySearch: {
+                maxNbOfTerms: 3, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
+                minNbOfChars: 4 // nb of character under which fuzzy search is not applied
+            },
+            maxNbOfTermsTrigger: 4 // maximum number of terms before tweaking is turned off
+        };
+
+        queryTweaking = Object.assign({}, defaultQueryTweakingConfig, queryTweaking);
 
         function getTerms(node) {
             function addTermsFromExpression(node, terms) {
@@ -60,7 +74,7 @@ export class SearchKitHelpers {
                         return;
 
                     if (node.term && Number.isNaN(Number(node.term)) && !/.+\*$/.test(node.term) && !/.+\?$/.test(node.term) && !/\s/.test(node.term))
-                        terms.push(node.term); 
+                        terms.push(node.term.toLowerCase()); 
                 }
 
                 if (!node)
@@ -89,19 +103,52 @@ export class SearchKitHelpers {
             const tree = parser.parse(str);
 
             //Adds wildcard to the input box search term
-            if (enableAutoWildcardAndFuzzySearch) {          
-                const terms = getTerms(tree);
-                terms.forEach(term => {
-                    const re1 = new RegExp('([ "\\[\\]{}()][+\\-]?)' + term + '([ "\\[\\]{}()])', "g");
-                    const re2 = new RegExp('^([+\\-]?)' + term + '([ "\\[\\]{}()])', "g");
-                    const re3 = new RegExp('([ "\\[\\]{}()][+\\-]?)' + term + '$', "g");
-                    const re4 = new RegExp('^([+\\-]?)' + term + '$', "g");
-                    str = str.replace(re1, "$1(" + term + "* OR " + term + "~)$2");
-                    str = str.replace(re2, "$1(" + term + "* OR " + term + "~)$2");
-                    str = str.replace(re3, "$1(" + term + "* OR " + term + "~)");
-                    str = str.replace(re4, "$1(" + term + "* OR " + term + "~)");
-                });   
-            } 
+            let maxWildcardConfig = Number(queryTweaking.wildcard.maxNbOfTerms);
+            if (isNaN(maxWildcardConfig)) {
+                maxWildcardConfig = -1;
+            }
+            maxWildcardConfig = Math.floor(maxWildcardConfig);
+            let maxFuzzySearchConfig = Number(queryTweaking.fuzzySearch.maxNbOfTerms);
+            if (isNaN(maxFuzzySearchConfig)) {
+                maxFuzzySearchConfig = -1;
+            }
+            maxFuzzySearchConfig = Math.floor(maxFuzzySearchConfig);
+            const terms = getTerms(tree);
+            let maxWildcard = maxWildcardConfig < 0?terms.length:terms.length<maxWildcardConfig?terms.length:maxWildcardConfig;
+            let maxFuzzySearch = maxFuzzySearchConfig < 0?terms.length:terms.length<maxFuzzySearchConfig?terms.length:maxFuzzySearchConfig;
+            const filteredTerms = terms.filter(term => {
+                return (term.length >= queryTweaking.wildcard.minNbOfChars || term.length >= queryTweaking.fuzzySearch.minNbOfChars)
+                    && !term.includes(".") 
+                    && !["a", "above", "all", "an", "are", "as", "any", "because", "below", "besides", "but", "by", "eg", "either", "for", "hence", "how", "which", "where", "who", "ie", "in", "instead", "is", "none", "of", "one", "other", "over", "same", "that", "the", "then", "thereby", "therefore", "this", "though", "thus", "to", "under", "until", "when", "why"].includes(term);   
+            })
+            if (terms.length <= queryTweaking.maxNbOfTermsTrigger) {
+                filteredTerms.forEach((term, idx) => {
+                    const wildcardCondition = idx < maxWildcard && term.length >= queryTweaking.wildcard.minNbOfChars;
+                    const fuzzySearchCondition = idx < maxFuzzySearch && term.length >= queryTweaking.fuzzySearch.minNbOfChars;
+                    if (wildcardCondition || fuzzySearchCondition) {
+                        const re1 = new RegExp('([ "\\[\\]{}()][+\\-]?)' + term + '([ "\\[\\]{}()])', "gi");
+                        const re2 = new RegExp('^([+\\-]?)' + term + '([ "\\[\\]{}()])', "gi");
+                        const re3 = new RegExp('([ "\\[\\]{}()][+\\-]?)' + term + '$', "gi");
+                        const re4 = new RegExp('^([+\\-]?)' + term + '$', "gi");
+                        if (wildcardCondition && fuzzySearchCondition) {
+                            str = str.replace(re1, "$1(" + term + "* OR " + term + "~)$2");
+                            str = str.replace(re2, "$1(" + term + "* OR " + term + "~)$2");
+                            str = str.replace(re3, "$1(" + term + "* OR " + term + "~)");
+                            str = str.replace(re4, "$1(" + term + "* OR " + term + "~)");
+                        } else if (wildcardCondition) {
+                            str = str.replace(re1, "$1" + term + "*$2");
+                            str = str.replace(re2, "$1" + term + "*$2");
+                            str = str.replace(re3, "$1" + term + "*");
+                            str = str.replace(re4, "$1" + term + "*");
+                        } else if (fuzzySearchCondition) {
+                            str = str.replace(re1, "$1" + term + "~$2");
+                            str = str.replace(re2, "$1" + term + "~$2");
+                            str = str.replace(re3, "$1" + term + "~");
+                            str = str.replace(re4, "$1" + term + "~");
+                        }
+                    }
+                }) 
+            }
         } catch (e) {
 
             //Special character is not supported in parser
@@ -119,7 +166,7 @@ export class SearchKitHelpers {
         }
         return str;
     }
-    static getQueryProcessor(searchkit, enableAutoWildcardAndFuzzySearch, onBeforeQuerySearchEventHandler) {
+    static getQueryProcessor(searchkit, queryTweaking, onBeforeQuerySearchEventHandler) {
 
         /*
         function buildTypeBoostsQuery() {
@@ -174,10 +221,10 @@ export class SearchKitHelpers {
             if (plainQueryObject) {
                 if (plainQueryObject.query) {
                     if (plainQueryObject.query.simple_query_string && plainQueryObject.query.simple_query_string.query) {
-                        plainQueryObject.query.simple_query_string.query = SearchKitHelpers.sanitizeString(plainQueryObject.query.simple_query_string.query, enableAutoWildcardAndFuzzySearch);
+                        plainQueryObject.query.simple_query_string.query = SearchKitHelpers.sanitizeString(plainQueryObject.query.simple_query_string.query, queryTweaking);
                     }
                     if (plainQueryObject.query.query_string && plainQueryObject.query.query_string.query) {
-                        plainQueryObject.query.query_string.query = SearchKitHelpers.sanitizeString(plainQueryObject.query.query_string.query, enableAutoWildcardAndFuzzySearch);
+                        plainQueryObject.query.query_string.query = SearchKitHelpers.sanitizeString(plainQueryObject.query.query_string.query, queryTweaking);
                         plainQueryObject.query.query_string.lenient = true; //Makes ES ignore search on non text fields
                     }
                 } 

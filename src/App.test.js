@@ -24,7 +24,18 @@ const config = {
   searchApiDataIndex: "kg", 
   hitsPerPage: 20,
   searchOnLoad: true,
-  enableAutoWildcardAndFuzzySearch: true
+  queryTweaking: {
+    wildcard: {
+      maxNbOfTerms: 2, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
+      minNbOfChars: 3 // nb of character under which wildcard is not applied
+    },
+    fuzzySearch: {
+      maxNbOfTerms: 3, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
+      minNbOfChars: 4 // nb of character under which fuzzy search is not applied
+    },
+    maxNbOfTermsTrigger: 4, // maximum number of terms before tweaking is turned off
+  },
+  searchThrottleTime: 750 // nb of ms after which a request to elasticsearch will only be invoked
 };
 
 it('renders without crashing', () => {
