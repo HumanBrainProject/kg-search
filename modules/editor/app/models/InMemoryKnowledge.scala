@@ -22,6 +22,7 @@ import nexus.helpers.NexusHelper
 import play.api.Configuration
 import play.api.libs.json.JsObject
 import play.api.libs.ws.WSClient
+import services.NexusService
 
 import concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext}
@@ -35,11 +36,11 @@ class InMemoryKnowledge(endpoint: String, space: String) {
 
 
   // This must be called by controller whenever it's needed to refresh known schema list
-  def loadManualSchemaList(token: String)(implicit ws: WSClient, ec: ExecutionContext) = {
+  def loadManualSchemaList(token: String, nexusService: NexusService) = {
     val schemaUrl = s"$nexusEndpoint/v0/schemas/$space"
     // wait for schemas call to finish before going on
     val currentSchemas =Await.result(
-      NexusHelper.listAllNexusResult(schemaUrl, token),
+      nexusService.listAllNexusResult(schemaUrl, token),
       1.seconds)
 
     if (currentSchemas.nonEmpty){
