@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class NexusCommonController @Inject()(cc: ControllerComponents, config:Configuration, nexusService: NexusService, nexusSpaceService: NexusSpaceService)(implicit ec: ExecutionContext)
   extends AbstractController(cc) {
   val logger = Logger(this.getClass)
-  val apiEndpoint = config.get[String]("idm.api")
+  val apiEndpoint = s"${config.get[String]("auth.endpoint")}/idm/v1/api"
   val nexusEndpoint = config.get[String]("nexus.endpoint")
   val iamEndpoint = config.get[String]("nexus.iam")
   val orgNamePattern = "[a-z0-9]{3,}"

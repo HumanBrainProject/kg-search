@@ -30,7 +30,7 @@ import services.ESService
 import scala.concurrent.{ExecutionContext, Future}
 
 class OIDCAuthService @Inject()(config: Configuration, eSService: ESService)(implicit ec: ExecutionContext, ws: WSClient) extends AuthService {
-  val oidcUserInfoEndpoint = config.get[String]("auth.userinfo")
+  val oidcUserInfoEndpoint = s"${config.get[String]("auth.endpoint")}/oidc/userinfo"
   val logger = Logger(this.getClass)
 
   override type U = Option[UserInfo]

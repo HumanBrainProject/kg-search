@@ -21,7 +21,7 @@ package editor.helper
 import common.helpers.JsFlattener
 import common.models.NexusPath
 import editor.helpers.FormHelper
-import editor.models.{InMemoryKnowledge, Instance}
+import editor.models.{InMemoryKnowledge, IncomingLinksInstances, Instance}
 import models.authentication.UserInfo
 import nexus.helpers.NexusHelper
 import org.joda.time.DateTime
@@ -46,10 +46,10 @@ object InstanceHelper {
                                   nexusEndpoint: String,
                                   manualSpace:String,
                                   originalInstance: Instance,
-                                  incomingLinks: IndexedSeq[Instance],
+                                  incomingLinks: IncomingLinksInstances,
                                   updateToBeStoredInManual: JsObject
                                 ): (Instance, Option[IndexedSeq[UpdateInfo]]) = {
-    val manualUpdates = incomingLinks.filter(instance => instance.nexusPath.toString() contains manualSpace)
+    val manualUpdates = incomingLinks.manualInstances
     logger.debug(s"Result from incoming links $manualUpdates")
     if (manualUpdates.nonEmpty) {
       val manualUpdateDetails = manualUpdates.map(manualEntity => manualEntity.extractUpdateInfo())
@@ -98,7 +98,7 @@ object InstanceHelper {
 //    val flattened = JsFlattener(formContent)
 //    applyChanges(original, flattened)
     val cleanForm = FormHelper.removeKey(formContent.as[JsValue])
-    val formWithID = cleanForm.toString().replaceAll("""id":"""", s"""@id":"${nexusEndpoint}/v0/data/""")
+    val formWithID = cleanForm.toString().replaceAll(""""id":"""", s""""@id":"${nexusEndpoint}/v0/data/""")
     val res= original.deepMerge(Json.parse(formWithID).as[JsObject])
     res
   }

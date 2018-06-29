@@ -18,7 +18,7 @@ package helpers
 
 import common.models.NexusPath
 import editor.helper.InstanceHelper.{cleanUpInstanceForSave, generateAlternatives, getPriority, toReconcileFormat}
-import editor.models.Instance
+import editor.models.{IncomingLinksInstances, Instance}
 import models.authentication.UserInfo
 import org.joda.time.DateTime
 import play.api.libs.json._
@@ -47,7 +47,7 @@ object ReconciledInstanceHelper {
   def generateReconciledInstance(
                                   manualSpace: String,
                                   reconciledInstance: Instance,
-                                  manualUpdates: IndexedSeq[Instance],
+                                  manualUpdates: IncomingLinksInstances,
                                   manualEntityToBestored: JsObject,
                                   userInfo: UserInfo,
                                   parentRevision: Int,
@@ -92,10 +92,10 @@ object ReconciledInstanceHelper {
 
   def addManualUpdateLinksToReconcileInstance(manualSpace: String,
                                               reconciledInstance: Instance,
-                                              incomingLinks: IndexedSeq[Instance],
+                                              incomingLinks: IncomingLinksInstances,
                                               manualEntityToBeStored: JsObject
                                              ): Instance = {
-    val manualUpdates: IndexedSeq[Instance] = incomingLinks.filter(instance => instance.nexusPath.toString() contains manualSpace)
+    val manualUpdates: IndexedSeq[Instance] = incomingLinks.manualInstances
     val currentParent = (reconciledInstance.content \ "http://hbp.eu/reconciled#parents").asOpt[List[JsValue]].getOrElse(List[JsValue]())
     val updatedParents: List[JsValue] = manualUpdates.foldLeft(currentParent) { (acc, manual) =>
       val manualId = Json.obj("@id" -> (manual.content \ "@id").as[String])
