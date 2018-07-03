@@ -18,6 +18,7 @@
 package controllers.authentication
 
 import com.google.inject.Inject
+import helpers.authentication.OIDCHelper
 import javax.inject.Singleton
 import models.authentication.{AuthenticatedUserAction, UserRequest}
 import play.api.libs.json.Json
@@ -39,9 +40,12 @@ class OIDCController @Inject()(cc: ControllerComponents,
   val esHost: String = config.get[String]("es.host")
   val logger = Logger(this.getClass)
 
-  def groups(): Action[AnyContent] = authenticatedUserAction.async { implicit request: UserRequest[AnyContent] =>
-    logger.debug(s"Authenticated user ${request.user}")
-    authService.groups(request.user).map( l => Ok(Json.toJson(l)))
+  def groups(): Action[AnyContent] = Action.async { implicit request =>
+    authService.getUserInfoFromToken(OIDCHelper.getTokenFromRequest(request)).flatMap{
+      userinfo =>
+        logger.debug(s"Authenticated user ${userinfo}")
+        authService.groups(userinfo).map( l => Ok(Json.toJson(l)))
+    }
   }
 
   def groupsOptions(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>

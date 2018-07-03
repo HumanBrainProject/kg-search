@@ -24,14 +24,15 @@ import play.api.{Configuration, Logger}
 import play.api.http.HttpEntity
 import play.api.libs.ws.WSClient
 import play.api.mvc._
+import services.{NexusService, NexusSpaceService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class NexusCommonController @Inject()(cc: ControllerComponents, config:Configuration)(implicit ec: ExecutionContext, ws: WSClient)
+class NexusCommonController @Inject()(cc: ControllerComponents, config:Configuration, nexusService: NexusService, nexusSpaceService: NexusSpaceService)(implicit ec: ExecutionContext)
   extends AbstractController(cc) {
   val logger = Logger(this.getClass)
-  val apiEndpoint = config.get[String]("idm.api")
+  val apiEndpoint = s"${config.get[String]("auth.endpoint")}/idm/v1/api"
   val nexusEndpoint = config.get[String]("nexus.endpoint")
   val iamEndpoint = config.get[String]("nexus.iam")
   val orgNamePattern = "[a-z0-9]{3,}"
@@ -48,9 +49,9 @@ class NexusCommonController @Inject()(cc: ControllerComponents, config:Configura
             val nexusGroupName = s"nexus-$groupName"
             val adminGroupName = nexusGroupName + "-admin"
             for {
-              nexusGroups <- NexusSpaceHandler.createGroups(nexusGroupName, adminGroupName, description, token, apiEndpoint)
-              nexusOrg <- NexusSpaceHandler.createNexusOrg(groupName, token, nexusEndpoint)
-              iamRights <- NexusSpaceHandler.grantIAMrights(groupName, token, iamEndpoint)
+              nexusGroups <- nexusSpaceService.createGroups(nexusGroupName, adminGroupName, description, token, apiEndpoint)
+              nexusOrg <- nexusSpaceService.createNexusOrg(groupName, token, nexusEndpoint)
+              iamRights <- nexusSpaceService.grantIAMrights(groupName, token, iamEndpoint)
             } yield {
               val res = List(s"OIDC group creation result: ${nexusGroups.statusText}\t content: ${nexusGroups.body}",
                 s"Nexus organization creation result: ${nexusOrg.statusText}\t content: ${nexusOrg.body}",
@@ -72,7 +73,7 @@ class NexusCommonController @Inject()(cc: ControllerComponents, config:Configura
     val tokenOpt = request.headers.toSimpleMap.get("Authorization")
     tokenOpt match {
       case Some(token) =>
-        NexusHelper.createSchema(nexusEndpoint, organization, entityType, s"$organization/$domain", version, token).map {
+        nexusService.createSchema(nexusEndpoint, organization, entityType, s"$organization/$domain", version, token).map {
             response =>
               response.status match {
                 case 200 =>

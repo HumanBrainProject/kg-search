@@ -1,3 +1,6 @@
+package helpers.authentication
+
+
 /*
 *   Copyright (c) 2018, EPFL/Human Brain Project PCO
 *
@@ -13,8 +16,11 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package models.authentication
 
-import play.api.mvc.{Request, WrappedRequest}
+import play.api.mvc.{AnyContent, Request}
 
-class UserRequest[A](val user: UserInfo, request: Request[A]) extends WrappedRequest[A](request)
+object OIDCHelper {
+  def getTokenFromRequest(request: Request[AnyContent]): String = {
+    request.headers.toMap.getOrElse("Authorization", Seq("")).head
+  }
+}

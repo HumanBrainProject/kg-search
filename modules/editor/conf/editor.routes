@@ -1,7 +1,12 @@
 GET    /api/nodetypes                  editor.controllers.NexusEditorController.listEntities( privateSpace: String ?= "minds")
-GET    /api/instances/*nodetype         editor.controllers.NexusEditorController.listInstances(nodetype: String)
-GET    /api/instance/*id                 editor.controllers.NexusEditorController.getInstance(id: String)
-POST   /api/instance/*id                 editor.controllers.NexusEditorController.updateInstance(id: String)
-GET    /api/revisions/*id                      editor.controllers.NexusEditorController.getInstanceNumberOfAvailableRevisions(id: String)
 
-GET    /api/reconciled/:id              editor.controllers.NexusEditorController.getSpecificReconciledInstance(id: String ,rev:Int ?= 1)
+GET    /api/instances/:org/:domain/:datatype/:version         editor.controllers.NexusEditorController.listInstances(org: String, domain:String, datatype: String, version:String)
+
+GET    /api/instance/:org/:domain/:datatype/:version/:id                 editor.controllers.NexusEditorController.getInstance(org: String, domain:String, datatype: String, version:String, id: String)
+GET    /api/instance/:org/:domain/:datatype/:version                 editor.controllers.NexusEditorController.getEmptyForm(org: String, domain:String, datatype: String, version:String)
+PUT   /api/instance/:org/:domain/:datatype/:version/:id                editor.controllers.NexusEditorController.updateInstance(org: String, domain:String, datatype: String, version:String, id: String)
+POST   /api/instance/:org/:domain/:datatype/:version                editor.controllers.NexusEditorController.createInstance(org: String, domain:String, datatype: String, version:String)
+
+GET    /api/revisions/:org/:domain/:datatype/:version/:id                       editor.controllers.NexusEditorController.getInstanceNumberOfAvailableRevisions(org: String, domain:String, datatype: String, version:String, id: String)
+
+GET    /api/reconciled/:org/:domain/:datatype/:version/:id              editor.controllers.NexusEditorController.getSpecificReconciledInstance(org: String, domain:String, datatype: String, version:String, id: String ,rev:Int ?= 1)

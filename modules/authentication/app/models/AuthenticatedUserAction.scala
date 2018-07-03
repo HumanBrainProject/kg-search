@@ -19,6 +19,7 @@ package models.authentication
 
 import com.google.inject.Inject
 import play.api.mvc._
+import play.api.mvc.Results._
 import service.authentication.OIDCAuthService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,8 +33,12 @@ class AuthenticatedUserAction @Inject()(val parser: BodyParsers.Default, authpro
   private val logger = play.api.Logger(this.getClass)
   override def invokeBlock[A](request: Request[A],
                               block: (UserRequest[A]) => Future[Result]): Future[Result] = {
-    authprovider.getUserInfo(request.headers).flatMap{ res =>
-      block(new UserRequest(res, request))
+    authprovider.getUserInfo(request.headers).flatMap{ user =>
+      if(user.isDefined){
+        block(new UserRequest(user.get, request))
+      }else{
+        Future.successful(Unauthorized("You must be logged in to execute this request"))
+      }
     }
   }
 
