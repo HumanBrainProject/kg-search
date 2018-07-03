@@ -19,8 +19,8 @@ package proxy.controllers
 
 import akka.stream.Materializer
 import akka.util.ByteString
-import common.helpers.{ResponseHelper, ESHelper}
-import play.api.cache.{AsyncCacheApi, NamedCache}
+import common.helpers.{ESHelper, ResponseHelper}
+import helpers.authentication.OIDCHelper
 import play.api.{Configuration, Logger}
 import javax.inject.{Inject, Singleton}
 import models.authentication.UserInfo
@@ -29,6 +29,7 @@ import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, PlayBodyParsers, RawBuffer, Request, ResponseHeader, Result}
 import play.api.{Configuration, Logger}
+import proxy.services.ProxyService
 import proxy.utils.JsonHandler
 import service.authentication.OIDCAuthService
 
@@ -36,15 +37,15 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
 @Singleton
 class SearchProxy @Inject()(
-                             @NamedCache("groups-cache") cache: AsyncCacheApi,
                              cc: ControllerComponents,
                              playBodyParsers: PlayBodyParsers,
                              mat: Materializer,
-                             authService: OIDCAuthService
+                             authService: OIDCAuthService,
+                             proxyService: ProxyService
                            )(implicit ec: ExecutionContext, ws: WSClient, config: Configuration)
   extends AbstractController(cc) {
   val es_host = config.get[String]("es.host")
-  implicit val cacheExpiration = config.get[FiniteDuration]("proxy.cache.expiration")
+
   val logger: Logger = Logger(this.getClass)
 
 
@@ -57,20 +58,39 @@ class SearchProxy @Inject()(
     Ok("").withHeaders("Allow" -> "GET, POST, OPTIONS")
   }
 
-  def processRequest(index: String, proxyUrl: String, transformInputFunc: ByteString => ByteString = identity)(implicit request: Request[RawBuffer]): Future[Result]  = {
+  def processRequest(index: String,
+                     proxyUrl: String,
+                     transformInputFunc: ByteString => ByteString = identity
+                    )(implicit request: Request[RawBuffer]): Future[Result]  = {
     logger.debug(s"Index: $index, proxy: $proxyUrl")
     val opts: (Option[String], Option[String]) = (request.headers.get("index-hint"), request.headers.get("Authorization"))
     opts match {
       case (Some(hints), Some(auth)) =>
-        SearchProxy.retrieveNexusGroups(auth, cache, authService).flatMap {
+        authService.getUserInfo(request.headers).flatMap {
           case Some(userInfo) =>
-            val esIndex = SearchProxy.getESIndex(userInfo, hints)
-            SearchProxy.queryIndexAndPropagate(esIndex, proxyUrl, es_host, transformInputFunc)
+            val esIndex = OIDCHelper.getESIndex(userInfo, hints)
+            val (wsRequest, index) = proxyService.queryIndex(esIndex, proxyUrl, es_host, transformInputFunc)
+            propagateRequest(wsRequest, index)
           case _ =>
-            SearchProxy.queryIndexAndPropagate(ESHelper.publicIndex, proxyUrl, es_host, transformInputFunc)
+            val (wsRequest, index) = proxyService.queryIndex(ESHelper.publicIndex, proxyUrl, es_host, transformInputFunc)
+            propagateRequest(wsRequest, index)
         }
-      case _ => SearchProxy.queryIndexAndPropagate(ESHelper.publicIndex, proxyUrl, es_host, transformInputFunc)
+      case _ =>
+        val (wsRequest, index) =  proxyService.queryIndex(ESHelper.publicIndex, proxyUrl, es_host, transformInputFunc)
+        propagateRequest(wsRequest, index)
     }
+  }
+
+  def propagateRequest(request: WSRequest, headers: Map[String, String] = Map()): Future[Result] = {
+    request
+      .execute()
+      .map { case (response: request.Response) => // we want to read the raw bytes for the body
+        Result(
+          // keep original response header except content type and length that need specific handling
+          ResponseHeader(response.status, ResponseHelper.flattenHeaders(ResponseHelper.filterContentTypeAndLengthFromHeaders[Seq[String]](response.headers)) ++ headers),
+          HttpEntity.Strict(response.bodyAsBytes, ResponseHelper.getContentType(response.headers))
+        )
+      }
   }
 
   def proxySearch(index: String, proxyUrl: String): Action[RawBuffer] = Action.async(playBodyParsers.raw) { implicit request =>
@@ -98,7 +118,7 @@ class SearchProxy @Inject()(
 
   def labels(proxyUrl: String): Action[AnyContent] = Action.async { request =>
     val wsRequestBase: WSRequest = ws.url(es_host + "/kg_labels/" + proxyUrl)
-    SearchProxy.propagateRequest(wsRequestBase)
+    propagateRequest(wsRequestBase)
   }
 
   def labelsOptions(proxyUrl: String): Action[AnyContent] = Action {
@@ -111,77 +131,6 @@ object SearchProxy {
   val parentCountLabel = "temporary_parent_doc_count"
   val docCountLabel = "doc_count"
   val parentDocCountObj = Json.parse(s"""{\"aggs\": {\"$parentCountLabel\": {\"reverse_nested\": {}}}}""").as[JsObject]
-
-  def modifyQuery(newUrl: String, indexHint: String)(implicit ws: WSClient, request: Request[RawBuffer]): WSRequest = {
-    ws.url(newUrl) // set the proxy path
-      .withMethod(request.method) // set our HTTP  method
-      .addHttpHeaders("index-hint" -> indexHint) // Set our headers, function takes var args so we need to "explode" the Seq to var args
-      .addQueryStringParameters(request.queryString.mapValues(_.head).toSeq: _*) // similarly for query strings
-  }
-
-
-  def getESIndex(userInfo: UserInfo, hints:String)(implicit executionContext: ExecutionContext): String = {
-    val groups = OIDCAuthService.extractNexusGroup(userInfo.groups)
-    val h = hints.trim
-    if (groups.contains(h)) {
-      ESHelper.transformToIndex(h)
-    } else ESHelper.publicIndex
-  }
-
-  def replaceESIndex(esIndex: String, proxyUrl: String): String = {
-    s"$esIndex/$proxyUrl"
-  }
-
-  def queryIndexAndPropagate(esIndex: String, proxyUrl: String, es_host: String, transformInputFunc: ByteString => ByteString = identity)(implicit request: Request[RawBuffer], ws: WSClient, executionContext: ExecutionContext) = {
-    val newUrl = es_host + "/" + SearchProxy.replaceESIndex(esIndex, proxyUrl)
-    logger.debug(s"Modified URL: $newUrl")
-    val wsRequestBase: WSRequest = SearchProxy.modifyQuery(newUrl, esIndex)(ws, request)
-    // depending on whether we have a body, append it in our request
-
-    val wsRequest: WSRequest = request.body.asBytes() match {
-      case Some(bytes) =>
-        wsRequestBase.withBody(transformInputFunc(bytes))
-      case None => wsRequestBase
-    }
-    SearchProxy.propagateRequest(wsRequest, Map("selected_index" -> esIndex))
-  }
-
-  def propagateRequest(request: WSRequest, headers: Map[String, String] = Map())(implicit executionContext: ExecutionContext): Future[Result] = {
-    request
-      .execute()
-      .map { case (response: request.Response) => // we want to read the raw bytes for the body
-      Result(
-        // keep original response header except content type and length that need specific handling
-        ResponseHeader(response.status, ResponseHelper.flattenHeaders(ResponseHelper.filterContentTypeAndLengthFromHeaders[Seq[String]](response.headers)) ++ headers),
-        HttpEntity.Strict(response.bodyAsBytes, ResponseHelper.getContentType(response.headers))
-      )
-    }
-  }
-
-  /**
-    * Retrieve groups from OIDC or from cache
-    * @param auth The token from the user
-    * @param cache The cache used
-    * @param ec
-    * @param ws
-    * @param config
-    * @return Either a WSResponse if the status is not successful or the groups as Json
-    */
-  def retrieveNexusGroups(auth: String, cache: AsyncCacheApi, authService: OIDCAuthService)(implicit ec: ExecutionContext, ws: WSClient, config: Configuration, cacheExpiration: FiniteDuration): Future[Option[UserInfo]]  = {
-    cache.get[UserInfo](auth).flatMap{
-      case Some(userInfo) =>
-        logger.debug(s"Groups fetched from cache ${userInfo.id}")
-        Future.successful(Some(userInfo))
-      case _ =>
-        authService.getUserInfoFromToken(auth).map{
-          case Some(userInfo) =>
-            cache.set(auth, userInfo, cacheExpiration)
-            Some(userInfo)
-          case _ =>
-            None
-        }
-    }
-  }
 
   def adaptEsQueryForNestedDocument(payload: ByteString): ByteString = {
     try {

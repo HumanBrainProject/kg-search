@@ -332,7 +332,9 @@ class NexusEditorController @Inject()(
          |}GROUP BY ?schema
       """.stripMargin
     val start = System.currentTimeMillis()
-    val res = ws.url(s"$sparqlEndpoint/bigdata/namespace/$blazegraphNameSpace/sparql").withQueryStringParameters("query" -> sparqlPayload, "format" -> "json").get().map[Result] {
+    val res = ws
+      .url(s"$sparqlEndpoint/bigdata/namespace/$blazegraphNameSpace/sparql")
+      .withQueryStringParameters("query" -> sparqlPayload, "format" -> "json").get().map[Result] {
       res =>
         res.status match {
           case 200 =>

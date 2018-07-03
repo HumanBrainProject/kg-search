@@ -19,6 +19,13 @@ package models.authentication
 
 import play.api.libs.json.JsObject
 
+/**
+  * The user information gathered from the OIDC API
+  * @param id
+  * @param name
+  * @param email
+  * @param groups
+  */
 case class UserInfo(id: String, name:String, email:String, groups:Seq[String])
 object UserInfo {
   def apply(json: JsObject) = {
