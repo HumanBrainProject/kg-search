@@ -40,13 +40,18 @@ class OIDCController @Inject()(cc: ControllerComponents,
   val esHost: String = config.get[String]("es.host")
   val logger = Logger(this.getClass)
 
+  /**
+    * Fetch the accesbible ES index for a specific user
+    * @return A list of accessible ES index
+    */
   def groups(): Action[AnyContent] = Action.async { implicit request =>
-    authService.getUserInfoFromToken(OIDCHelper.getTokenFromRequest(request)).flatMap{
+    authService.getUserInfo(request.headers).flatMap{
       userinfo =>
         logger.debug(s"Authenticated user ${userinfo}")
         authService.groups(userinfo).map( l => Ok(Json.toJson(l)))
     }
   }
+
 
   def groupsOptions(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     Ok("").withHeaders("Allow" -> "GET, OPTIONS")

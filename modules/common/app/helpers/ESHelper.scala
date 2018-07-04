@@ -28,7 +28,6 @@ object ESHelper {
   val indicesPath : String = "_cat/indices"
 
   def filterNexusGroups(groups: Seq[String], formatName: String => String = ESHelper.formatGroupName): Seq[String] = {
-
     groups.filter(s => s.startsWith("nexus-") && !s.endsWith("-admin")).map(formatName)
   }
 
@@ -38,6 +37,10 @@ object ESHelper {
 
   def transformToIndex(s: String): String = {
     s"kg_$s"
+  }
+
+  def replaceESIndex(esIndex: String, proxyUrl: String): String = {
+    s"$esIndex/$proxyUrl"
   }
 
 }

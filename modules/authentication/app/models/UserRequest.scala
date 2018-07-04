@@ -17,4 +17,10 @@ package models.authentication
 
 import play.api.mvc.{Request, WrappedRequest}
 
+/**
+  * A helper case class for logged in users
+  * @param user
+  * @param request
+  * @tparam A
+  */
 class UserRequest[A](val user: UserInfo, request: Request[A]) extends WrappedRequest[A](request)
