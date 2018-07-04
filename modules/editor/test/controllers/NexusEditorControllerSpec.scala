@@ -21,7 +21,7 @@ import common.models.NexusPath
 import editor.helper.InstanceHelper
 import editor.models.Instance
 import mockws.{MockWS, MockWSHelpers}
-import models.authentication.AuthenticatedUserAction
+import authentication.models.AuthenticatedUserAction
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play._

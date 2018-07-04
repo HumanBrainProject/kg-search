@@ -15,11 +15,11 @@
 *   limitations under the License.
 */
 
-package service.authentication
+package authentication.service
 
 import com.google.inject.Inject
 import common.helpers.ESHelper
-import models.authentication.UserInfo
+import authentication.models.UserInfo
 import play.api.cache.{AsyncCacheApi, NamedCache}
 import play.api.{Configuration, Logger}
 import play.api.http.Status._

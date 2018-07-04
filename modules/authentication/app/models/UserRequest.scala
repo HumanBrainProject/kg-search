@@ -13,7 +13,7 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package models.authentication
+package authentication.models
 
 import play.api.mvc.{Request, WrappedRequest}
 

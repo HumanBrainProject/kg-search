@@ -1,4 +1,4 @@
-package controllers
+package authentication.controllers
 
 import mockws.{MockWS, MockWSHelpers}
 import org.scalatestplus.play._
@@ -9,7 +9,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Results.Ok
 import play.api.mvc._
 import play.api.test._
-import models.authentication.UserInfo
+import authentication.models.UserInfo
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext}
 

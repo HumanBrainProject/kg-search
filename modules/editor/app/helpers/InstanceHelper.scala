@@ -22,7 +22,7 @@ import common.helpers.JsFlattener
 import common.models.NexusPath
 import editor.helpers.FormHelper
 import editor.models.{InMemoryKnowledge, IncomingLinksInstances, Instance}
-import models.authentication.UserInfo
+import authentication.models.UserInfo
 import nexus.helpers.NexusHelper
 import org.joda.time.DateTime
 import org.json4s.native.{JsonMethods, JsonParser}

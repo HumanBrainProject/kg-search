@@ -19,7 +19,7 @@ package helpers
 import common.models.NexusPath
 import editor.helper.InstanceHelper.{cleanUpInstanceForSave, generateAlternatives, getPriority, toReconcileFormat}
 import editor.models.{IncomingLinksInstances, Instance}
-import models.authentication.UserInfo
+import authentication.models.UserInfo
 import org.joda.time.DateTime
 import play.api.libs.json._
 

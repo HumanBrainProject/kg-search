@@ -22,7 +22,7 @@ import common.models.NexusPath
 import editor.helper.InstanceHelper._
 import editor.models.{InMemoryKnowledge, IncomingLinksInstances, Instance}
 import helpers.ReconciledInstanceHelper
-import models.authentication.UserInfo
+import authentication.models.UserInfo
 import nexus.helpers.NexusHelper
 import play.api.{Configuration, Logger}
 import play.api.http.Status.OK

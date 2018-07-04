@@ -20,10 +20,10 @@ package proxy.controllers
 import akka.stream.Materializer
 import akka.util.ByteString
 import common.helpers.{ESHelper, ResponseHelper}
-import helpers.authentication.OIDCHelper
+import authentication.helpers.OIDCHelper
 import play.api.{Configuration, Logger}
 import javax.inject.{Inject, Singleton}
-import models.authentication.UserInfo
+import authentication.models.UserInfo
 import play.api.http.HttpEntity
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
@@ -31,7 +31,7 @@ import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponent
 import play.api.{Configuration, Logger}
 import proxy.services.ProxyService
 import proxy.utils.JsonHandler
-import service.authentication.OIDCAuthService
+import authentication.service.OIDCAuthService
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._

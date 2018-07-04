@@ -15,7 +15,7 @@
 *   limitations under the License.
 */
 
-package models.authentication
+package authentication.models
 
 import play.api.libs.json.JsObject
 
@@ -28,6 +28,7 @@ import play.api.libs.json.JsObject
   */
 case class UserInfo(id: String, name:String, email:String, groups:Seq[String])
 object UserInfo {
+
   def apply(json: JsObject) = {
     new UserInfo(
       id = (json \ idLabel).asOpt[String].getOrElse(""),
@@ -41,4 +42,5 @@ object UserInfo {
   val emailLabel = "email"
   val groupsLabel = "groups"
   val mandatoryFields = Seq(idLabel, nameLabel, emailLabel, groupsLabel)
+
 }

@@ -22,12 +22,13 @@ import common.helpers.ResponseHelper._
 import editor.helper.InstanceHelper._
 import common.models.NexusPath
 import editor.helper.InstanceHelper
-import editor.helpers.{FormHelper, NodeTypeHelper}
+import editor.helpers.{EditorSpaceHelper, FormHelper, NodeTypeHelper}
 import editor.models.{InMemoryKnowledge, IncomingLinksInstances, Instance}
 import helpers.ReconciledInstanceHelper
-import helpers.authentication.OIDCHelper
+import authentication.helpers.OIDCHelper
 import javax.inject.{Inject, Singleton}
-import models.authentication.AuthenticatedUserAction
+import authentication.models.AuthenticatedUserAction
+import editor.actions.EditorUserAction
 import play.api.{Configuration, Logger}
 import play.api.http.HttpEntity
 import play.api.http.Status.OK
@@ -62,7 +63,8 @@ class NexusEditorController @Inject()(
   val logger = Logger(this.getClass)
 
   // TODO Check for authentication and groups as for now everybody could see the whole graph
-  def listInstances(org: String, domain:String, datatype: String, version:String): Action[AnyContent] = Action.async { implicit request =>
+  def listInstances(org: String, domain:String, datatype: String, version:String): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction).async  { implicit request =>
+    logger.debug(s"User info ${request.user}")
     val nexusPath = NexusPath(org, domain, datatype, version)
     val sparqlPayload =
       s"""
@@ -355,6 +357,14 @@ class NexusEditorController @Inject()(
   def listEntities(privateSpace: String): Action[AnyContent] = Action {
     // Editable instance types are the one for which form creation is known
     Ok(FormHelper.editableEntitiyTypes)
+  }
+
+  /**
+    * Retrieve the list of groups accessible for the editor
+    * @return
+    */
+  def getEditorGroups(): Action[AnyContent] = authenticatedUserAction { implicit request =>
+    Ok(Json.toJson(EditorSpaceHelper.editorGroups(request.user)))
   }
 }
 

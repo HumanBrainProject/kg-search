@@ -14,11 +14,11 @@
 *   limitations under the License.
 */
 
-package helpers.authentication
+package authentication.helpers
 
 import common.helpers.ESHelper
 import common.helpers.ESHelper.filterNexusGroups
-import models.authentication.UserInfo
+import authentication.models.UserInfo
 import play.api.mvc.{AnyContent, Request}
 
 object OIDCHelper {

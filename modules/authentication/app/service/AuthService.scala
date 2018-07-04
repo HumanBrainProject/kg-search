@@ -15,7 +15,7 @@
 *   limitations under the License.
 */
 
-package service.authentication
+package authentication.service
 
 import play.api.mvc.Headers
 
