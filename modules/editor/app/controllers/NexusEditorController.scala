@@ -36,6 +36,7 @@ import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.mvc._
 import services.InstanceService
+import akka.util.ByteString
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -283,9 +284,15 @@ class NexusEditorController @Inject()(
       if(manualSchema && reconciledSchema){
         (manualRes.status, reconciledRes.status) match {
           case (CREATED, CREATED) =>
+            // reformat ouput to keep it consistent with update
+            val output = manualRes.json.as[JsObject]
+              .+("id", JsString((manualRes.json.as[JsObject] \ "@id").as[String].split("data/").tail.mkString("data/")))
+              .-("@id")
+              .-("@context")
+              .-("nxv:rev")
             Result(
-              ResponseHeader(reconciledRes.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](reconciledRes.headers))),
-              HttpEntity.Strict(reconciledRes.bodyAsBytes, getContentType(reconciledRes.headers))
+              ResponseHeader(manualRes.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](manualRes.headers))),
+              HttpEntity.Strict(ByteString(output.toString.getBytes("UTF-8")), getContentType(manualRes.headers))
             )
           case (_ , CREATED) =>
             Result(
