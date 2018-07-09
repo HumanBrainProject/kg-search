@@ -261,7 +261,7 @@ class NexusEditorController @Inject()(
   def createInstance(org: String, domain:String, datatype: String, version:String): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     val instanceForm = request.body.asJson.get.as[JsObject]
     val instancePath = NexusPath(org, domain, datatype, version)
-    val instance = buildNewInstanceFromForm( (instanceForm \ "fields").as[JsObject])
+    val instance = Json.parse(FormHelper.unescapeSlash(instanceForm.toString)).as[JsObject]
     val token = OIDCHelper.getTokenFromRequest(request)
     // TODO Get data type from the form
     val typedInstance = instance
