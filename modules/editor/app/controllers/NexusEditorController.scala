@@ -36,6 +36,7 @@ import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.mvc._
 import services.InstanceService
+import akka.util.ByteString
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -261,7 +262,7 @@ class NexusEditorController @Inject()(
   def createInstance(org: String, domain:String, datatype: String, version:String): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     val instanceForm = request.body.asJson.get.as[JsObject]
     val instancePath = NexusPath(org, domain, datatype, version)
-    val instance = buildNewInstanceFromForm( (instanceForm \ "fields").as[JsObject])
+    val instance = Json.parse(FormHelper.unescapeSlash(instanceForm.toString)).as[JsObject]
     val token = OIDCHelper.getTokenFromRequest(request)
     // TODO Get data type from the form
     val typedInstance = instance
@@ -283,9 +284,15 @@ class NexusEditorController @Inject()(
       if(manualSchema && reconciledSchema){
         (manualRes.status, reconciledRes.status) match {
           case (CREATED, CREATED) =>
+            // reformat ouput to keep it consistent with update
+            val output = manualRes.json.as[JsObject]
+              .+("id", JsString((manualRes.json.as[JsObject] \ "@id").as[String].split("data/").tail.mkString("data/")))
+              .-("@id")
+              .-("@context")
+              .-("nxv:rev")
             Result(
-              ResponseHeader(reconciledRes.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](reconciledRes.headers))),
-              HttpEntity.Strict(reconciledRes.bodyAsBytes, getContentType(reconciledRes.headers))
+              ResponseHeader(manualRes.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](manualRes.headers))),
+              HttpEntity.Strict(ByteString(output.toString.getBytes("UTF-8")), getContentType(manualRes.headers))
             )
           case (_ , CREATED) =>
             Result(
