@@ -38,6 +38,8 @@ class InstanceService @Inject()(wSClient: WSClient,
 
   val logger = Logger(this.getClass)
   val nexusEndpoint = config.get[String]("nexus.endpoint")
+  val reconciledPrefix: String = config.getOptional[String]("nexus.reconciled.prefix").getOrElse("reconciled")
+  val editorPrefix: String = config.getOptional[String]("nexus.editor.prefix").getOrElse("editor")
   def retrieveIncomingLinks(nexusEndpoint:String, originalInstance: Instance,
                             token: String): Future[IndexedSeq[Instance]] = {
     val filter =
@@ -45,11 +47,11 @@ class InstanceService @Inject()(wSClient: WSClient,
         |{"op":"or","value": [{
         |   "op":"eq",
         |   "path":"$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/organization",
-        |   "value": "$nexusEndpoint/v0/organizations/reconciled"
+        |   "value": "$nexusEndpoint/v0/organizations/${originalInstance.nexusPath.org}${reconciledPrefix}"
         | }, {
         |   "op":"eq",
         |   "path":"$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/organization",
-        |   "value": "$nexusEndpoint/v0/organizations/manual"
+        |   "value": "$nexusEndpoint/v0/organizations/${originalInstance.nexusPath.org}${editorPrefix}"
         | }
         | ]
         |}

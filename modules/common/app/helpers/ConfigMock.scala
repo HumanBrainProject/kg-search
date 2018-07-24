@@ -10,6 +10,8 @@ object ConfigMock {
   val idm = "https://services.humanbrainproject.eu/idm/v1/api"
   val userInfo = "https://userinfo.com"
   val esHost = "https://eshost.com"
+  val reconciledPrefix = "reconciled"
+  val editorPrefix = "editor"
 
   val fakeApplicationConfig = GuiceApplicationBuilder().configure(
     "play.http.filters" -> "play.api.http.NoHttpFilters",
@@ -19,6 +21,8 @@ object ConfigMock {
     "blazegraph.endpoint" -> sparqlEndpoint,
     "idm.api" -> idm,
     "auth.userinfo" -> userInfo,
-    "es.host" -> esHost
+    "es.host" -> esHost,
+    "nexus.reconciled.prefix" -> reconciledPrefix,
+    "nexus.editor.prefix" -> editorPrefix
   )
 }

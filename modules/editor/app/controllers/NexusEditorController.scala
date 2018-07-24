@@ -218,21 +218,34 @@ class NexusEditorController @Inject()(
               val updateFromUI = Json.parse(FormHelper.unescapeSlash(newValue.toString())).as[JsObject] - "id"
               val updatedInstance = buildInstanceFromForm(originalInstance.content, updateFromUI, nexusEndpoint)
               val userInfo = request.user
-              val updateToBeStoredInManual = buildDiffEntity(currentInstanceDisplayed, updatedInstance.toString, originalInstance) + ("@type", JsString(s"http://hbp.eu/manual#${originalInstance.nexusPath.schema.capitalize}"))
+              val updateToBeStoredInManual = buildDiffEntity(currentInstanceDisplayed, updatedInstance.toString, originalInstance) + ("@type", JsString(s"http://hbp.eu/${originalInstance.nexusPath.org}#${originalInstance.nexusPath.schema.capitalize}"))
               consolidateFromManualSpace(nexusEndpoint, editorSpace, originalInstance, incominglinkInstances, updateToBeStoredInManual) match {
                 case (consolidatedInstance, manualEntitiesDetailsOpt) =>
                   logger.debug(s"Consolidated instance $updatedInstance")
                   val preppedEntityForStorage = InstanceHelper.prepareManualEntityForStorage(updateToBeStoredInManual, userInfo)
 
                   val createEditorDomain = nexusService.createDomain(nexusEndpoint, editorSpace, originalInstance.nexusPath.domain, "", token)
-                  val manualSchema = instanceService.createManualSchemaIfNeeded(nexusEndpoint, updateToBeStoredInManual, originalInstance.nexusPath, token, editorSpace, "manual")
-                  val manualUpsert = instanceService.upsertUpdateInManualSpace(nexusEndpoint, editorSpace, manualEntitiesDetailsOpt, userInfo, originalInstance.nexusPath, preppedEntityForStorage, token)
                   val createReconciledDomain = nexusService.createDomain(nexusEndpoint, reconciledSpace, originalInstance.nexusPath.domain, "", reconciledToken)
-                  val reconciledSchema = instanceService.createManualSchemaIfNeeded(nexusEndpoint, updatedInstance, originalInstance.nexusPath, reconciledToken, reconciledSpace, "reconciled")
-                  val reconciledUpsert = instanceService.upsertReconciledInstance(nexusEndpoint, reconciledSpace, editorSpace, incominglinkInstances, originalInstance, preppedEntityForStorage, updatedInstance, consolidatedInstance, reconciledToken, userInfo)
 
-                  val manualRes: Future[WSResponse] = createEditorDomain.flatMap( re => manualSchema.flatMap(res => manualUpsert))
-                  val reconciledRes: Future[WSResponse] = createReconciledDomain.flatMap( re => reconciledSchema.flatMap(res => reconciledUpsert))
+                  val manualRes: Future[WSResponse] = createEditorDomain.flatMap{ re =>
+                    val manualSchema = instanceService.createManualSchemaIfNeeded(nexusEndpoint, updateToBeStoredInManual, originalInstance.nexusPath, token, editorSpace, "manual", EditorSpaceHelper.nexusEditorContext("manual"))
+                    manualSchema.flatMap { res =>
+                      val manualUpsert = instanceService.upsertUpdateInManualSpace(nexusEndpoint, editorSpace, manualEntitiesDetailsOpt, userInfo, originalInstance.nexusPath, preppedEntityForStorage, token)
+                      manualUpsert.map{ res =>
+                        logger.debug(res.body)
+                        res
+                      }
+                    }
+                  }
+                  val reconciledRes: Future[WSResponse] = createReconciledDomain.flatMap{ re =>
+                    val reconciledSchema = instanceService.createManualSchemaIfNeeded(nexusEndpoint, updatedInstance, originalInstance.nexusPath, reconciledToken, reconciledSpace, "reconciled", EditorSpaceHelper.nexusEditorContext("reconciled"))
+                    reconciledSchema.flatMap{res =>
+                      val reconciledUpsert = instanceService.upsertReconciledInstance(nexusEndpoint, reconciledSpace, editorSpace, incominglinkInstances, originalInstance, preppedEntityForStorage, updatedInstance, consolidatedInstance, reconciledToken, userInfo)
+                      reconciledUpsert.map{ res =>
+                        res
+                      }
+                    }
+                  }
                   manualRes.flatMap{ res =>
                     logger.debug(s"Creation of manual update ${res.body}")
                     res.status match {
@@ -269,10 +282,15 @@ class NexusEditorController @Inject()(
 
   }
 
-  def createInstance(org: String, domain:String, datatype: String, version:String): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(org)).async { implicit request =>
-    val instanceForm = request.body.asJson.get.as[JsObject]
+  def createInstance(
+                      org: String,
+                      domain:String,
+                      datatype: String,
+                      version:String
+                    ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(org)).async { implicit request =>
+    val newInstance = request.body.asJson.get.as[JsObject]
     val instancePath = NexusPath(org, domain, datatype, version)
-    val instance = buildNewInstanceFromForm( (instanceForm \ "fields").as[JsObject])
+    val instance = buildNewInstanceFromForm( instancePath, FormHelper.formRegistry, newInstance )
     val token = OIDCHelper.getTokenFromRequest(request)
     val reconciledTokenFut = oIDCAuthService.getTechAccessToken()
     val editorSpace = EditorSpaceHelper.getGroupName(request.editorGroup, editorPrefix)
@@ -288,27 +306,40 @@ class NexusEditorController @Inject()(
     val createEditorDomain = nexusService.createDomain(nexusEndpoint, editorSpace, instancePath.domain, "", token)
     reconciledTokenFut.flatMap{ reconciledToken =>
       val createReconciledDomain = nexusService.createDomain(nexusEndpoint, reconciledSpace, instancePath.domain, "", reconciledToken)
-
       createEditorDomain flatMap{res =>
         logger.debug(res.body)
-        val createEditorSchema = instanceService.createManualSchemaIfNeeded(nexusEndpoint, typedInstance, instancePath, token, editorSpace, "manual", EditorSpaceHelper.nexusEditorContext("manual"))
+        val createEditorSchema = instanceService
+          .createManualSchemaIfNeeded(nexusEndpoint, typedInstance, instancePath, token, editorSpace, "manual", EditorSpaceHelper.nexusEditorContext("manual"))
         createEditorSchema.flatMap{ res =>
           logger.debug(res.toString)
           createReconciledDomain.flatMap{ res =>
             logger.debug(res.body)
-            val createReconciledSchema = instanceService.createManualSchemaIfNeeded(nexusEndpoint, typedInstance, instancePath, reconciledToken, reconciledSpace, "reconciled", EditorSpaceHelper.nexusEditorContext("reconciled"))
+            val createReconciledSchema = instanceService.
+              createManualSchemaIfNeeded(nexusEndpoint, typedInstance, instancePath, reconciledToken, reconciledSpace, "reconciled", EditorSpaceHelper.nexusEditorContext("reconciled"))
             createReconciledSchema.flatMap{ res =>
               logger.debug(res.toString)
               val insertNewInstance = instanceService.insertNewInstance(nexusEndpoint,editorSpace, typedInstance, instancePath, token)
               insertNewInstance.flatMap { instance =>
                 logger.debug(instance.body)
                 val reconciledInstance = ReconciledInstanceHelper.addReconciledMandatoryFields(typedInstance, instancePath, request.user, (instance.json \ "@id").as[String])
-                instanceService.createReconcileInstance(nexusEndpoint, reconciledSpace, reconciledInstance, instancePath.domain, instancePath.schema, instancePath.version, reconciledToken).map { res =>
+                instanceService
+                  .createReconcileInstance(nexusEndpoint, reconciledSpace, reconciledInstance, instancePath.domain, instancePath.schema, instancePath.version, reconciledToken).map { res =>
                   logger.debug(res.body)
-                  Result(
-                    ResponseHeader(res.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](res.headers))),
-                    HttpEntity.Strict(res.bodyAsBytes, getContentType(res.headers))
-                  )
+                  res.status match {
+                    case CREATED => // reformat ouput to keep it consistent with update
+                      val output = res.json.as[JsObject]
+                        .+("id", JsString((res.json.as[JsObject] \ "@id").as[String].split("data/").tail.mkString("data/")))
+                        .-("@id")
+                        .-("@context")
+                        .-("nxv:rev")
+                      Created(output)
+                    case _ =>
+                      Result(
+                        ResponseHeader(res.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](res.headers))),
+                        HttpEntity.Strict(res.bodyAsBytes, getContentType(res.headers))
+                      )
+                  }
+
                 }
               }
             }
