@@ -17,9 +17,12 @@
 
 package authentication.service
 
+import java.util.concurrent.TimeUnit
+
 import com.google.inject.Inject
 import common.helpers.ESHelper
 import authentication.models.UserInfo
+import common.services.{ClientCredentials, CredentialsService}
 import play.api.cache.{AsyncCacheApi, NamedCache}
 import play.api.{Configuration, Logger}
 import play.api.http.Status._
@@ -28,16 +31,21 @@ import play.api.libs.ws.WSClient
 import play.api.mvc.Headers
 import services.ESService
 
+import scala.concurrent.duration.FiniteDuration._
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
 
 class OIDCAuthService @Inject()(
                                  config: Configuration,
                                  eSService: ESService,
+                                 credentialsService: CredentialsService,
                                  @NamedCache("userinfo-cache") cache: AsyncCacheApi,
                                  ws: WSClient
                                )(implicit ec: ExecutionContext) extends AuthService {
-  val oidcUserInfoEndpoint = s"${config.get[String]("auth.endpoint")}/oidc/userinfo"
+  val oidcEndpoint = s"${config.get[String]("auth.endpoint")}/oidc"
+  val oidcUserInfoEndpoint = s"$oidcEndpoint/userinfo"
+  val oidcTokenEndpoint= s"$oidcEndpoint/token"
+  private val techAccessToken = "techAccessToken"
   val logger = Logger(this.getClass)
   val cacheExpiration = config.get[FiniteDuration]("proxy.cache.expiration")
 
@@ -110,5 +118,32 @@ class OIDCAuthService @Inject()(
             None
         }
     }
+  }
+
+  def getTechAccessToken(): Future[String] = {
+    cache.get[String](techAccessToken).flatMap {
+      case Some(token) => Future.successful(token)
+      case _ =>
+        val clientCred = credentialsService.getClientCredentials()
+        refreshAccessToken(clientCred)
+    }
+  }
+
+  def refreshAccessToken(clientCredentials: ClientCredentials): Future[String] = {
+    ws.url(oidcTokenEndpoint)
+      .withQueryStringParameters( "client_id" -> clientCredentials.clientId, "client_secret" -> clientCredentials.clientSecret, "refresh_token" -> clientCredentials.refreshToken, "grant_type" -> "refresh_token")
+      .get()
+      .map{
+        result =>
+          result.status match{
+            case OK =>
+              val token = s"Bearer ${(result.json \ "access_token").as[String]}"
+              cache.set(techAccessToken, token, FiniteDuration(20, TimeUnit.MINUTES))
+              token
+            case _ =>
+              logger.error(s"Error: while fetching tech account access token $result")
+              throw new Exception("Could not fetch access token for tech account")
+          }
+      }
   }
 }

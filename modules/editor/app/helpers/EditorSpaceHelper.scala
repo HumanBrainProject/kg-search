@@ -24,6 +24,18 @@ object EditorSpaceHelper {
   private val nexusPrefix = "nexus-"
   private val pattern = s"""$nexusPrefix(\\w+)$editorSuffix""".r
 
+  def nexusEditorContext(org: String): String = {
+    if(org != "manual"){
+      s""""${org}":"http://hbp.eu/${org}#",
+         |"manual":"http://hbp.eu/manual#",
+       """.stripMargin
+    } else {
+      s""""${org}":"http://hbp.eu/${org}#","""
+    }
+  }
+
+
+
   /**
     * From the user info return the list of groups that have an editor space
     * @param userInfo
@@ -49,7 +61,10 @@ object EditorSpaceHelper {
     * @return true if the group is an editor group
     */
   def isEditorGroup(userInfo: UserInfo, hintedGroup: String): Boolean = {
-    val editorGroupName = s"$nexusPrefix$hintedGroup$editorSuffix"
-    userInfo.groups.contains(editorGroupName)
+    editorGroups(userInfo).contains(hintedGroup)
+  }
+
+  def getGroupName(group:String, suffix:String) : String = {
+    s"$group$suffix"
   }
 }

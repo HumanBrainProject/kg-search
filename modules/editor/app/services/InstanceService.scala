@@ -63,15 +63,17 @@ class InstanceService @Inject()(wSClient: WSClient,
   }
 
   def createReconcileInstance(nexusEndpoint:String,
-                              reconciledSpace: String,
+                              destinationOrg: String,
                               instance: JsObject,
+                              domain: String,
                               schema: String,
                               version: String,
                               token: String
                              ): Future[WSResponse] = {
     wSClient
-      .url(s"$nexusEndpoint/v0/data/$reconciledSpace/${schema}/${version}")
-      .withHttpHeaders("Authorization" -> token).post(instance)
+      .url(s"$nexusEndpoint/v0/data/$destinationOrg/$domain/${schema}/${version}")
+      .withHttpHeaders("Authorization" -> token)
+      .post(instance)
   }
 
   def updateReconcileInstance(nexusEndpoint:String,
@@ -106,10 +108,10 @@ class InstanceService @Inject()(wSClient: WSClient,
 
   def upsertUpdateInManualSpace(
                                  nexusEndpoint:String,
-                                 manualSpace: String,
+                                 destinationOrg: String,
                                  manualEntitiesDetailsOpt: Option[IndexedSeq[UpdateInfo]],
                                  userInfo: UserInfo,
-                                 schema: String,
+                                 instancePath: NexusPath,
                                  manualEntity: JsObject,
                                  token: String
                                ): Future[WSResponse] = {
@@ -122,10 +124,22 @@ class InstanceService @Inject()(wSClient: WSClient,
           )
       }
     }.getOrElse {
-      wSClient.url(s"$nexusEndpoint/v0/data/$manualSpace/${schema}/v0.0.4").addHttpHeaders("Authorization" -> token).post(
+      wSClient.url(s"$nexusEndpoint/v0/data/$destinationOrg/${instancePath.domain}/${instancePath.schema}/${instancePath.version}").addHttpHeaders("Authorization" -> token).post(
         manualEntity + ("http://hbp.eu/manual#updater_id", JsString(userInfo.id))
       )
     }
+  }
+
+  def insertNewInstance(
+                     nexusEndoint: String,
+                     destinationOrg: String,
+                     newInstance: JsObject,
+                     instancePath: NexusPath,
+                     token:String
+                     ): Future[WSResponse] = {
+    wSClient
+      .url(s"$nexusEndoint/v0/data/$destinationOrg/${instancePath.domain}/${instancePath.schema}/${instancePath.version}")
+      .addHttpHeaders("Authorization" -> token).post(newInstance)
   }
 
   def createManualSchemaIfNeeded(
@@ -133,39 +147,37 @@ class InstanceService @Inject()(wSClient: WSClient,
                                   manualEntity: JsObject,
                                   originalInstanceNexusPath: NexusPath,
                                   token: String,
-                                  schemasHashMap: InMemoryKnowledge,
-                                  space: String,
-                                  destinationOrg: String
+                                  destinationOrg: String,
+                                  editorOrg: String,
+                                  editorContext: String = ""
                                 ): Future[Boolean] = {
     // ensure schema related to manual update exists or create it
     if (manualEntity != JsNull) {
-      if (schemasHashMap.manualSchema.isEmpty) { // initial load
-        schemasHashMap.loadManualSchemaList(token, nexusService)
+      nexusService.createSchema(
+        nexusEndpoint,
+        destinationOrg,
+        originalInstanceNexusPath.org,
+        originalInstanceNexusPath.schema.capitalize,
+        originalInstanceNexusPath.domain,
+        originalInstanceNexusPath.version,
+        editorOrg,
+        token,
+        editorContext
+      ).map {
+        response =>
+          response.status match {
+            case OK =>
+              logger.info(s"Schema created properly for : " +
+                s"$destinationOrg/${originalInstanceNexusPath.domain}/${originalInstanceNexusPath.schema}/${originalInstanceNexusPath.version}")
+              true
+            case _ => logger.error(s"ERROR - schema does not exist and " +
+              s"automatic creation failed - ${response.body}")
+              false
+          }
       }
-      if (!schemasHashMap.manualSchema.contains(s"$nexusEndpoint/v0/schemas/$space/${originalInstanceNexusPath.schema}/${originalInstanceNexusPath.version}")) {
-        nexusService.createSchema(
-          nexusEndpoint,
-          destinationOrg,
-          originalInstanceNexusPath.schema.capitalize,
-          space,
-          originalInstanceNexusPath.version,
-          token
-        ).map {
-          response =>
-            response.status match {
-              case OK => schemasHashMap.loadManualSchemaList(token, nexusService)
-                logger.info(s"Schema created properly for : " +
-                  s"$space/${originalInstanceNexusPath.schema}/${originalInstanceNexusPath.version}")
-                Future.successful(true)
-              case _ => logger.error(s"ERROR - schema does not exist and " +
-                s"automatic creation failed - ${response.body}")
-                Future.successful(false)
-            }
-        }
-
-      }
+    }else {
+      Future.successful(true)
     }
-    Future.successful(true)
   }
 
   def upsertReconciledInstance(
@@ -195,6 +207,7 @@ class InstanceService @Inject()(wSClient: WSClient,
         nexusEndpoint,
         reconciledSpace,
         payload,
+        consolidatedInstance.nexusPath.domain,
         consolidatedInstance.nexusPath.schema,
         consolidatedInstance.nexusPath.version,
         token

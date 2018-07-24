@@ -47,6 +47,7 @@ object NexusHelper {
               "@type": "@id"
           },
           "${org}": "http://hbp.eu/${org}#",
+          ${editorContext}
           "schema": "http://schema.org/",
           "sh": "http://www.w3.org/ns/shacl#",
           "owl": "http://www.w3.org/2002/07/owl#",
@@ -64,7 +65,7 @@ object NexusHelper {
           "property": [
             {
               "datatype": "xsd:string",
-              "path": "${org}:origin"
+              "path": "${editorOrg}:origin"
             }
           ],
           "targetClass": "${org}:${entityType}"
