@@ -14,7 +14,7 @@
             "http://hbp.eu/minds#dataset": {
               "type": "DropdownSelect",
               "label": "Reference",
-              "optionsUrl": "/api/instances/minds/core/dataset/v0.0.4",
+              "instancesPath": "minds/core/dataset/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "readOnly": true,
@@ -56,7 +56,7 @@
             "http://hbp.eu/minds#ethicsApproval": {
               "type": "DropdownSelect",
               "label": "Approval",
-              "optionsUrl": "/api/instances/minds/ethics/approval/v0.0.4",
+              "instancesPath": "minds/ethics/approval/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -65,7 +65,7 @@
             "http://hbp.eu/minds#ethicsAuthority": {
               "type": "DropdownSelect",
               "label": "Authority",
-              "optionsUrl": "/api/instances/minds/ethics/authority/v0.0.4",
+              "instancesPath": "minds/ethics/authority/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -74,7 +74,7 @@
             "http://hbp.eu/minds#methods": {
               "type": "DropdownSelect",
               "label": "Methods",
-              "optionsUrl": "/api/instances/minds/experiment/methods/v0.0.4",
+              "instancesPath": "minds/experiment/methods/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -83,7 +83,7 @@
             "http://hbp.eu/minds#preparation": {
               "type": "DropdownSelect",
               "label": "Preparation",
-              "optionsUrl": "/api/instances/minds/core/preparation/v0.0.4",
+              "instancesPath": "minds/core/preparation/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -92,7 +92,7 @@
             "http://hbp.eu/minds#protocols": {
               "type": "DropdownSelect",
               "label": "Protocols",
-              "optionsUrl": "/api/instances/minds/experiment/protocol/v0.0.4",
+              "instancesPath": "minds/experiment/protocol/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -141,7 +141,7 @@
             "http://hbp.eu/minds#activity": {
               "type": "DropdownSelect",
               "label": "Activities",
-              "optionsUrl": "/api/instances/minds/core/activity/v0.0.4",
+              "instancesPath": "minds/core/activity/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -150,7 +150,7 @@
             "http://hbp.eu/minds#component": {
               "type": "DropdownSelect",
               "label": "Project",
-              "optionsUrl": "/api/instances/minds/core/placomponent/v0.0.4",
+              "instancesPath": "minds/core/placomponent/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -163,7 +163,7 @@
             "http://hbp.eu/minds#contributors": {
               "type": "DropdownSelect",
               "label": "Contributors",
-              "optionsUrl": "/api/instances/minds/core/person/v0.0.4",
+              "instancesPath": "minds/core/person/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -176,7 +176,7 @@
             "http://hbp.eu/minds#datasetDOI": {
               "type": "DropdownSelect",
               "label": "DOI",
-              "optionsUrl": "/api/instances/datacite/core/doi/v0.0.1",
+              "instancesPath": "datacite/core/doi/v0.0.1",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -187,7 +187,7 @@
             "http://hbp.eu/minds#embargo_status": {
               "type": "DropdownSelect",
               "label": "Embargo Status",
-              "optionsUrl": "/api/instances/minds/core/embargostatus/v0.0.4",
+              "instancesPath": "minds/core/embargostatus/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -196,7 +196,7 @@
             "http://hbp.eu/minds#formats": {
               "type": "DropdownSelect",
               "label": "Formats",
-              "optionsUrl": "/api/instances/minds/core/format/v0.0.4",
+              "instancesPath": "minds/core/format/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -205,7 +205,7 @@
             "http://hbp.eu/minds#license_info": {
               "type": "DropdownSelect",
               "label": "License",
-              "optionsUrl": "/api/instances/licenses/core/information/v0.0.1",
+              "instancesPath": "licenses/core/information/v0.0.1",
               "mappingValue": "id",
               "mappingLabel": "label",
               "value": "licenses/core/information/v0.0.1"
@@ -213,7 +213,7 @@
             "http://hbp.eu/minds#owners": {
               "type": "DropdownSelect",
               "label": "Owners",
-              "optionsUrl": "/api/instances/minds/core/person/v0.0.4",
+              "instancesPath": "minds/core/person/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -222,7 +222,7 @@
             "http://hbp.eu/minds#parcellationAtlas": {
               "type": "DropdownSelect",
               "label": "Parcellation atlas",
-              "optionsUrl": "/api/instances/minds/core/parcellationatlas/v0.0.4",
+              "instancesPath": "minds/core/parcellationatlas/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -231,7 +231,7 @@
             "http://hbp.eu/minds#parcellationRegion": {
               "type": "DropdownSelect",
               "label": "Parcellation region",
-              "optionsUrl": "/api/instances/minds/core/parcellationregion/v0.0.4",
+              "instancesPath": "minds/core/parcellationregion/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -240,7 +240,7 @@
             "http://hbp.eu/minds#publications": {
               "type": "DropdownSelect",
               "label": "Publications",
-              "optionsUrl": "/api/instances/minds/core/publication/v0.0.4",
+              "instancesPath": "minds/core/publication/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -249,7 +249,7 @@
             "http://hbp.eu/minds#reference_space": {
               "type": "DropdownSelect",
               "label": "Reference space",
-              "optionsUrl": "/api/instances/minds/core/referencespace/v0.0.4",
+              "instancesPath": "minds/core/referencespace/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -258,7 +258,7 @@
             "http://hbp.eu/minds#specimen_group": {
               "type": "DropdownSelect",
               "label": "Specimen Groups",
-              "optionsUrl": "/api/instances/minds/core/specimengroup/v0.0.4",
+              "instancesPath": "minds/core/specimengroup/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -321,7 +321,7 @@
             "http://hbp.eu/minds#associated_entity": {
               "type": "DropdownSelect",
               "label": "Associated entity",
-              "optionsUrl": "/api/instances/minds/core/placomponent/v0.0.4",
+              "instancesPath": "minds/core/placomponent/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -330,7 +330,7 @@
             "http://hbp.eu/minds#file": {
               "type": "DropdownSelect",
               "label": "File",
-              "optionsUrl": "/api/instances/minds/core/file/v0.0.4",
+              "instancesPath": "minds/core/file/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "value": "minds/core/file/v0.0.4"
@@ -508,7 +508,7 @@
             "http://hbp.eu/minds#authors": {
               "type": "DropdownSelect",
               "label": "Authors",
-              "optionsUrl": "/api/instances/minds/core/person/v0.0.4",
+              "instancesPath": "minds/core/person/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -613,7 +613,7 @@
             "http://hbp.eu/minds#subjects": {
               "type": "DropdownSelect",
               "label": "Subjects",
-              "optionsUrl": "/api/instances/minds/experiment/subject/v0.0.4",
+              "instancesPath": "minds/experiment/subject/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -641,7 +641,7 @@
             "http://hbp.eu/minds#generatedBy": {
               "type": "DropdownSelect",
               "label": "Generated by",
-              "optionsUrl": "/api/instances/minds/ethics/authority/v0.0.4",
+              "instancesPath": "minds/ethics/authority/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -720,7 +720,7 @@
             "http://hbp.eu/minds#methods": {
               "type": "DropdownSelect",
               "label": "Methods",
-              "optionsUrl": "/api/instances/minds/experiment/method/v0.0.4",
+              "instancesPath": "minds/experiment/method/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -729,7 +729,7 @@
             "http://hbp.eu/minds#parcellationAtlas": {
               "type": "DropdownSelect",
               "label": "Parcellation atlas",
-              "optionsUrl": "/api/instances/minds/core/parcellationatlas/v0.0.4",
+              "instancesPath": "minds/core/parcellationatlas/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -738,7 +738,7 @@
             "http://hbp.eu/minds#parcellationRegion": {
               "type": "DropdownSelect",
               "label": "Parcellation region",
-              "optionsUrl": "/api/instances/minds/core/parcellationregion/v0.0.4",
+              "instancesPath": "minds/core/parcellationregion/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -769,7 +769,7 @@
             "http://hbp.eu/minds#age_category": {
               "type": "DropdownSelect",
               "label": "Age category",
-              "optionsUrl": "/api/instances/minds/core/agecategory/v0.0.4",
+              "instancesPath": "minds/core/agecategory/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -783,7 +783,7 @@
             "http://hbp.eu/minds#sex": {
               "type": "DropdownSelect",
               "label": "Sex",
-              "optionsUrl": "/api/instances/minds/core/sex/v0.0.4",
+              "instancesPath": "minds/core/sex/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -792,7 +792,7 @@
             "http://hbp.eu/minds#species": {
               "type": "DropdownSelect",
               "label": "Species",
-              "optionsUrl": "/api/instances/minds/core/species/v0.0.4",
+              "instancesPath": "minds/core/species/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
@@ -830,7 +830,7 @@
             "http://hbp.eu/minds#releaseinstance": {
               "type": "DropdownSelect",
               "label": "Release instance",
-              "optionsUrl": "/api/instances/minds/core/fileassociation/v0.0.4",
+              "instancesPath": "minds/core/fileassociation/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
