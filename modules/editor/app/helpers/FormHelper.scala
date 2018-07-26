@@ -54,7 +54,7 @@ object FormHelper {
                       "path" -> JsString(s"$organization/$domain/$schema/$version"),
                       "label" -> (formDetails.as[JsObject] \ "label").get,
                       "editable" -> JsBoolean((formDetails.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true)),
-                      "ui_info" -> (formDetails.as[JsObject] \ "ui_info").get)
+                      "ui_info" -> (formDetails.as[JsObject] \ "ui_info").asOpt[JsObject].getOrElse(Json.obj()) )
                 }
             }
         }
