@@ -29,7 +29,8 @@
           },
           "editable": false,
           "ui_info": {
-            "summary": [
+            "labelField": "http://hbp.eu/minds#doi",
+            "promotedFields": [
               "http://hbp.eu/minds#doi"
             ]
           }
@@ -45,13 +46,11 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://schema.org/description": {
               "type": "TextArea",
-              "label": "Description",
-              "value": "http://schema.org/description"
+              "label": "Description"
             },
             "http://hbp.eu/minds#ethicsApproval": {
               "type": "DropdownSelect",
@@ -100,7 +99,8 @@
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name",
               "http://schema.org/description"
             ]
@@ -113,12 +113,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -130,13 +130,11 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://schema.org/description": {
               "type": "TextArea",
-              "label": "Description",
-              "value": "http://schema.org/description"
+              "label": "Description"
             },
             "http://hbp.eu/minds#activity": {
               "type": "DropdownSelect",
@@ -207,8 +205,7 @@
               "label": "License",
               "instancesPath": "licenses/core/information/v0.0.1",
               "mappingValue": "id",
-              "mappingLabel": "label",
-              "value": "licenses/core/information/v0.0.1"
+              "mappingLabel": "label"
             },
             "http://hbp.eu/minds#owners": {
               "type": "DropdownSelect",
@@ -267,7 +264,8 @@
           },
           "ui_info": {
             "promote": true,
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name",
               "http://schema.org/description"
             ]
@@ -280,12 +278,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -297,13 +295,13 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "editable": false,
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -315,8 +313,7 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://hbp.eu/minds#associated_entity": {
               "type": "DropdownSelect",
@@ -332,12 +329,12 @@
               "label": "File",
               "instancesPath": "minds/core/file/v0.0.4",
               "mappingValue": "id",
-              "mappingLabel": "label",
-              "value": "minds/core/file/v0.0.4"
+              "mappingLabel": "label"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -349,12 +346,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -366,12 +363,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -383,12 +380,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -400,12 +397,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -417,12 +414,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -434,17 +431,16 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://schema.org/shortName": {
               "type": "InputText",
-              "label": "Shortname",
-              "value": "http://schema.org/shortName"
+              "label": "Shortname"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -456,17 +452,16 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://schema.org/description": {
               "type": "TextArea",
-              "label": "Description",
-              "value": "http://schema.org/description"
+              "label": "Description"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name",
               "http://schema.org/description"
             ]
@@ -479,12 +474,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -496,8 +491,7 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://hbp.eu/minds#doi": {
               "type": "InputText",
@@ -516,12 +510,12 @@
             },
             "http://hbp.eu/minds#cite": {
               "type": "TextArea",
-              "label": "Cite",
-              "value": "http://hbp.eu/minds#cite"
+              "label": "Cite"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -533,12 +527,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -550,12 +544,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -567,17 +561,16 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://schema.org/description": {
               "type": "TextArea",
-              "label": "Description",
-              "value": "http://schema.org/description"
+              "label": "Description"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name",
               "http://schema.org/description"
             ]
@@ -590,12 +583,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -607,8 +600,7 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://hbp.eu/minds#subjects": {
               "type": "DropdownSelect",
@@ -621,7 +613,8 @@
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -635,8 +628,7 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://hbp.eu/minds#generatedBy": {
               "type": "DropdownSelect",
@@ -649,7 +641,8 @@
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -661,12 +654,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -680,12 +673,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -697,12 +690,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -714,8 +707,7 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://hbp.eu/minds#methods": {
               "type": "DropdownSelect",
@@ -746,7 +738,8 @@
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -758,13 +751,11 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://hbp.eu/minds#age": {
               "type": "InputText",
-              "label": "Age",
-              "value": "http://hbp.eu/minds#age"
+              "label": "Age"
             },
             "http://hbp.eu/minds#age_category": {
               "type": "DropdownSelect",
@@ -777,8 +768,7 @@
             },
             "http://hbp.eu/minds#genotype": {
               "type": "InputText",
-              "label": "Genotype",
-              "value": "http://hbp.eu/minds#genotype"
+              "label": "Genotype"
             },
             "http://hbp.eu/minds#sex": {
               "type": "DropdownSelect",
@@ -800,17 +790,16 @@
             },
             "http://hbp.eu/minds#strain": {
               "type": "InputText",
-              "label": "Strain",
-              "value": "http://hbp.eu/minds#strain"
+              "label": "Strain"
             },
             "http://hbp.eu/minds#weight": {
               "type": "InputText",
-              "label": "Weight",
-              "value": "http://hbp.eu/minds#weight"
+              "label": "Weight"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -824,8 +813,7 @@
           "fields": {
             "http://hbp.eu/minds#releasestate": {
               "type": "InputText",
-              "label": "Release state",
-              "value": "http://hbp.eu/minds#releasestate"
+              "label": "Release state"
             },
             "http://hbp.eu/minds#releaseinstance": {
               "type": "DropdownSelect",
@@ -838,7 +826,8 @@
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -850,12 +839,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
