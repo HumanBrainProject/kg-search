@@ -14,7 +14,7 @@
             "http://hbp.eu/minds#dataset": {
               "type": "DropdownSelect",
               "label": "Reference",
-              "optionsUrl": "/api/instances/minds/core/dataset/v0.0.4",
+              "instancesPath": "minds/core/dataset/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "readOnly": true,
@@ -29,7 +29,8 @@
           },
           "editable": false,
           "ui_info": {
-            "summary": [
+            "labelField": "http://hbp.eu/minds#doi",
+            "promotedFields": [
               "http://hbp.eu/minds#doi"
             ]
           }
@@ -45,57 +46,61 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://schema.org/description": {
               "type": "TextArea",
-              "label": "Description",
-              "value": "http://schema.org/description"
+              "label": "Description"
             },
             "http://hbp.eu/minds#ethicsApproval": {
               "type": "DropdownSelect",
               "label": "Approval",
-              "optionsUrl": "/api/instances/minds/ethics/approval/v0.0.4",
+              "instancesPath": "minds/ethics/approval/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#ethicsAuthority": {
               "type": "DropdownSelect",
               "label": "Authority",
-              "optionsUrl": "/api/instances/minds/ethics/authority/v0.0.4",
+              "instancesPath": "minds/ethics/authority/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#methods": {
               "type": "DropdownSelect",
               "label": "Methods",
-              "optionsUrl": "/api/instances/minds/experiment/methods/v0.0.4",
+              "instancesPath": "minds/experiment/methods/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#preparation": {
               "type": "DropdownSelect",
               "label": "Preparation",
-              "optionsUrl": "/api/instances/minds/core/preparation/v0.0.4",
+              "instancesPath": "minds/core/preparation/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#protocols": {
               "type": "DropdownSelect",
               "label": "Protocols",
-              "optionsUrl": "/api/instances/minds/experiment/protocol/v0.0.4",
+              "instancesPath": "minds/experiment/protocol/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name",
               "http://schema.org/description"
             ]
@@ -108,12 +113,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -125,29 +130,29 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://schema.org/description": {
               "type": "TextArea",
-              "label": "Description",
-              "value": "http://schema.org/description"
+              "label": "Description"
             },
             "http://hbp.eu/minds#activity": {
               "type": "DropdownSelect",
               "label": "Activities",
-              "optionsUrl": "/api/instances/minds/core/activity/v0.0.4",
+              "instancesPath": "minds/core/activity/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#component": {
               "type": "DropdownSelect",
               "label": "Project",
-              "optionsUrl": "/api/instances/minds/core/placomponent/v0.0.4",
+              "instancesPath": "minds/core/placomponent/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://schema.org/container_url": {
               "type": "InputText",
@@ -156,10 +161,11 @@
             "http://hbp.eu/minds#contributors": {
               "type": "DropdownSelect",
               "label": "Contributors",
-              "optionsUrl": "/api/instances/minds/core/person/v0.0.4",
+              "instancesPath": "minds/core/person/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://schema.org/datalink": {
               "type": "InputText",
@@ -168,88 +174,98 @@
             "http://hbp.eu/minds#datasetDOI": {
               "type": "DropdownSelect",
               "label": "DOI",
-              "optionsUrl": "/api/instances/datacite/core/doi/v0.0.1",
+              "instancesPath": "datacite/core/doi/v0.0.1",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
+              "allowCustomValues": true,
               "readOnly": true,
               "disabled": true
             },
             "http://hbp.eu/minds#embargo_status": {
               "type": "DropdownSelect",
               "label": "Embargo Status",
-              "optionsUrl": "/api/instances/minds/core/embargostatus/v0.0.4",
+              "instancesPath": "minds/core/embargostatus/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#formats": {
               "type": "DropdownSelect",
               "label": "Formats",
-              "optionsUrl": "/api/instances/minds/core/format/v0.0.4",
+              "instancesPath": "minds/core/format/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#license_info": {
               "type": "DropdownSelect",
               "label": "License",
-              "optionsUrl": "/api/instances/licenses/core/information/v0.0.1",
+              "instancesPath": "licenses/core/information/v0.0.1",
               "mappingValue": "id",
-              "mappingLabel": "label",
-              "value": "licenses/core/information/v0.0.1"
+              "mappingLabel": "label"
             },
             "http://hbp.eu/minds#owners": {
               "type": "DropdownSelect",
               "label": "Owners",
-              "optionsUrl": "/api/instances/minds/core/person/v0.0.4",
+              "instancesPath": "minds/core/person/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#parcellationAtlas": {
               "type": "DropdownSelect",
               "label": "Parcellation atlas",
-              "optionsUrl": "/api/instances/minds/core/parcellationatlas/v0.0.4",
+              "instancesPath": "minds/core/parcellationatlas/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#parcellationRegion": {
               "type": "DropdownSelect",
               "label": "Parcellation region",
-              "optionsUrl": "/api/instances/minds/core/parcellationregion/v0.0.4",
+              "instancesPath": "minds/core/parcellationregion/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#publications": {
               "type": "DropdownSelect",
               "label": "Publications",
-              "optionsUrl": "/api/instances/minds/core/publication/v0.0.4",
+              "instancesPath": "minds/core/publication/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#reference_space": {
               "type": "DropdownSelect",
               "label": "Reference space",
-              "optionsUrl": "/api/instances/minds/core/referencespace/v0.0.4",
+              "instancesPath": "minds/core/referencespace/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#specimen_group": {
               "type": "DropdownSelect",
               "label": "Specimen Groups",
-              "optionsUrl": "/api/instances/minds/core/specimengroup/v0.0.4",
+              "instancesPath": "minds/core/specimengroup/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             }
           },
           "ui_info": {
-            "summary": [
+            "promote": true,
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name",
               "http://schema.org/description"
             ]
@@ -262,12 +278,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -279,13 +295,13 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "editable": false,
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -297,28 +313,28 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://hbp.eu/minds#associated_entity": {
               "type": "DropdownSelect",
               "label": "Associated entity",
-              "optionsUrl": "/api/instances/minds/core/placomponent/v0.0.4",
+              "instancesPath": "minds/core/placomponent/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#file": {
               "type": "DropdownSelect",
               "label": "File",
-              "optionsUrl": "/api/instances/minds/core/file/v0.0.4",
+              "instancesPath": "minds/core/file/v0.0.4",
               "mappingValue": "id",
-              "mappingLabel": "label",
-              "value": "minds/core/file/v0.0.4"
+              "mappingLabel": "label"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -330,12 +346,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -347,12 +363,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -364,12 +380,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -381,12 +397,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -398,12 +414,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -415,17 +431,16 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://schema.org/shortName": {
               "type": "InputText",
-              "label": "Shortname",
-              "value": "http://schema.org/shortName"
+              "label": "Shortname"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -437,17 +452,16 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://schema.org/description": {
               "type": "TextArea",
-              "label": "Description",
-              "value": "http://schema.org/description"
+              "label": "Description"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name",
               "http://schema.org/description"
             ]
@@ -460,12 +474,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -477,8 +491,7 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://hbp.eu/minds#doi": {
               "type": "InputText",
@@ -489,19 +502,20 @@
             "http://hbp.eu/minds#authors": {
               "type": "DropdownSelect",
               "label": "Authors",
-              "optionsUrl": "/api/instances/minds/core/person/v0.0.4",
+              "instancesPath": "minds/core/person/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#cite": {
               "type": "TextArea",
-              "label": "Cite",
-              "value": "http://hbp.eu/minds#cite"
+              "label": "Cite"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -513,12 +527,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -530,12 +544,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -547,17 +561,16 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://schema.org/description": {
               "type": "TextArea",
-              "label": "Description",
-              "value": "http://schema.org/description"
+              "label": "Description"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name",
               "http://schema.org/description"
             ]
@@ -570,12 +583,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -587,20 +600,21 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://hbp.eu/minds#subjects": {
               "type": "DropdownSelect",
               "label": "Subjects",
-              "optionsUrl": "/api/instances/minds/experiment/subject/v0.0.4",
+              "instancesPath": "minds/experiment/subject/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -614,20 +628,21 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://hbp.eu/minds#generatedBy": {
               "type": "DropdownSelect",
               "label": "Generated by",
-              "optionsUrl": "/api/instances/minds/ethics/authority/v0.0.4",
+              "instancesPath": "minds/ethics/authority/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -639,12 +654,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -658,12 +673,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -675,12 +690,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -692,36 +707,39 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://hbp.eu/minds#methods": {
               "type": "DropdownSelect",
               "label": "Methods",
-              "optionsUrl": "/api/instances/minds/experiment/method/v0.0.4",
+              "instancesPath": "minds/experiment/method/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#parcellationAtlas": {
               "type": "DropdownSelect",
               "label": "Parcellation atlas",
-              "optionsUrl": "/api/instances/minds/core/parcellationatlas/v0.0.4",
+              "instancesPath": "minds/core/parcellationatlas/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#parcellationRegion": {
               "type": "DropdownSelect",
               "label": "Parcellation region",
-              "optionsUrl": "/api/instances/minds/core/parcellationregion/v0.0.4",
+              "instancesPath": "minds/core/parcellationregion/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -733,56 +751,55 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             },
             "http://hbp.eu/minds#age": {
               "type": "InputText",
-              "label": "Age",
-              "value": "http://hbp.eu/minds#age"
+              "label": "Age"
             },
             "http://hbp.eu/minds#age_category": {
               "type": "DropdownSelect",
               "label": "Age category",
-              "optionsUrl": "/api/instances/minds/core/agecategory/v0.0.4",
+              "instancesPath": "minds/core/agecategory/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#genotype": {
               "type": "InputText",
-              "label": "Genotype",
-              "value": "http://hbp.eu/minds#genotype"
+              "label": "Genotype"
             },
             "http://hbp.eu/minds#sex": {
               "type": "DropdownSelect",
               "label": "Sex",
-              "optionsUrl": "/api/instances/minds/core/sex/v0.0.4",
+              "instancesPath": "minds/core/sex/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#species": {
               "type": "DropdownSelect",
               "label": "Species",
-              "optionsUrl": "/api/instances/minds/core/species/v0.0.4",
+              "instancesPath": "minds/core/species/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             },
             "http://hbp.eu/minds#strain": {
               "type": "InputText",
-              "label": "Strain",
-              "value": "http://hbp.eu/minds#strain"
+              "label": "Strain"
             },
             "http://hbp.eu/minds#weight": {
               "type": "InputText",
-              "label": "Weight",
-              "value": "http://hbp.eu/minds#weight"
+              "label": "Weight"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -796,20 +813,21 @@
           "fields": {
             "http://hbp.eu/minds#releasestate": {
               "type": "InputText",
-              "label": "Release state",
-              "value": "http://hbp.eu/minds#releasestate"
+              "label": "Release state"
             },
             "http://hbp.eu/minds#releaseinstance": {
               "type": "DropdownSelect",
               "label": "Release instance",
-              "optionsUrl": "/api/instances/minds/core/fileassociation/v0.0.4",
+              "instancesPath": "minds/core/fileassociation/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
-              "isLink": true
+              "isLink": true,
+              "allowCustomValues": true
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
@@ -821,12 +839,12 @@
           "fields": {
             "http://schema.org/name": {
               "type": "InputText",
-              "label": "Name",
-              "value": "http://schema.org/name"
+              "label": "Name"
             }
           },
           "ui_info": {
-            "summary": [
+            "labelField": "http://schema.org/name",
+            "promotedFields": [
               "http://schema.org/name"
             ]
           }
