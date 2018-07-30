@@ -19,7 +19,7 @@ package helpers
 import common.models.NexusPath
 import editor.helper.InstanceHelper.{cleanUpInstanceForSave, generateAlternatives, getPriority, toReconcileFormat}
 import editor.models.{IncomingLinksInstances, Instance}
-import models.authentication.UserInfo
+import authentication.models.UserInfo
 import org.joda.time.DateTime
 import play.api.libs.json._
 
@@ -75,14 +75,15 @@ object ReconciledInstanceHelper {
     * @param parentRevision   The revision of the parent instance at the time of the save
     * @return The instance with all the mandatory fields
     */
-  def addReconciledMandatoryFields(originalInstance: JsObject,
-                                   originalPath: NexusPath,
-                                   userInfo: UserInfo,
-                                   parentId: String,
-                                   parentRevision: Int = 1
+  def addReconciledMandatoryFields(
+                                    originalInstance: JsObject,
+                                    originalPath: NexusPath,
+                                    userInfo: UserInfo,
+                                    parentId: String,
+                                    parentRevision: Int = 1
                                   ): JsObject = {
     originalInstance +
-      ("@type" -> JsString(s"http://hbp.eu/reconciled#${originalPath.schema.capitalize}")) +
+      ("@type" -> JsString(s"http://hbp.eu/${originalPath.org}#${originalPath.schema.capitalize}")) +
       ("http://hbp.eu/reconciled#updater_id", JsString(userInfo.id)) +
       ("http://hbp.eu/reconciled#original_rev", JsNumber(parentRevision)) +
       ("http://hbp.eu/reconciled#original_parent", Json.obj("@id" -> JsString(parentId))) +

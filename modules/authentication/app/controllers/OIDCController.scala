@@ -15,17 +15,17 @@
 *   limitations under the License.
 */
 
-package controllers.authentication
+package authentication.controllers
 
 import com.google.inject.Inject
-import helpers.authentication.OIDCHelper
+import authentication.helpers.OIDCHelper
 import javax.inject.Singleton
-import models.authentication.{AuthenticatedUserAction, UserRequest}
+import authentication.models.{AuthenticatedUserAction, UserRequest}
 import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 import play.api.{Configuration, Logger}
-import service.authentication.OIDCAuthService
+import authentication.service.OIDCAuthService
 
 import scala.concurrent.ExecutionContext
 
@@ -35,7 +35,7 @@ class OIDCController @Inject()(cc: ControllerComponents,
                                authenticatedUserAction: AuthenticatedUserAction,
                                config: Configuration
                               )
-                              (implicit ec: ExecutionContext, ws: WSClient)
+                              (implicit ec: ExecutionContext)
   extends AbstractController(cc) {
   val esHost: String = config.get[String]("es.host")
   val logger = Logger(this.getClass)
@@ -45,6 +45,7 @@ class OIDCController @Inject()(cc: ControllerComponents,
     * @return A list of accessible ES index
     */
   def groups(): Action[AnyContent] = Action.async { implicit request =>
+
     authService.getUserInfo(request.headers).flatMap{
       userinfo =>
         logger.debug(s"Authenticated user ${userinfo}")

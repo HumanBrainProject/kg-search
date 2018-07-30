@@ -22,7 +22,7 @@ import common.helpers.JsFlattener
 import common.models.NexusPath
 import editor.helpers.FormHelper
 import editor.models.{InMemoryKnowledge, IncomingLinksInstances, Instance}
-import models.authentication.UserInfo
+import authentication.models.UserInfo
 import nexus.helpers.NexusHelper
 import org.joda.time.DateTime
 import org.json4s.native.{JsonMethods, JsonParser}
@@ -103,13 +103,19 @@ object InstanceHelper {
     res
   }
 
-  def buildNewInstanceFromForm(formContent: JsObject): JsObject = {
-    val m = formContent.value.map{ case (k, v) =>
-      (v \ "type").as[String] match {
+  def buildNewInstanceFromForm(instancePath: NexusPath, formRegistry: JsObject, newInstance: JsObject): JsObject = {
+    val fields = (formRegistry \ instancePath.org \ instancePath.domain \ instancePath.schema \ instancePath.version \ "fields").as[JsObject].value
+    val m = newInstance.value.map{ case (k, v) =>
+      val key = FormHelper.unescapeSlash(k)
+
+      val formObjectType = (fields(key) \ "type").as[String]
+
+      formObjectType match {
         case "DropdownSelect" =>
-          FormHelper.unescapeSlash(k) -> Json.obj("@id" -> (v \ "value").as[JsString])
+          val arr = v.as[JsArray].value.map(item => Json.obj("@id" -> (item.as[JsObject] \ "id" ).as[JsValue]))
+          key -> Json.toJson(arr)
         case _ =>
-          FormHelper.unescapeSlash(k) -> (v \ "value").as[JsString]
+          key -> v
       }
     }
     Json.toJson(m).as[JsObject]

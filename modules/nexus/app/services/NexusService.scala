@@ -1,3 +1,20 @@
+
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
 package services
 
 import com.google.inject.Inject
@@ -10,15 +27,33 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class NexusService @Inject()(wSClient: WSClient)(implicit executionContext: ExecutionContext) {
 
-  def createSchema(nexusUrl:String, org: String, entityType: String, space: String, version: String, token: String): Future[WSResponse] = {
+  /**
+    * Create a schema and publish it if it does not exists
+    * @param nexusUrl The base url of the nexus instance
+    * @param destinationOrg the organization where the schema should be created
+    * @param org the organisation oof the entity
+    * @param entityType the datatype of the entity
+    * @param domain the domain of the entity
+    * @param version the version of the entity
+    * @param editorOrg is used for extended information on the entity such as the origin, the updater id (is usually the same as org)
+    * @param token the access token
+    * @return
+    */
+  def createSchema(nexusUrl:String, destinationOrg: String,  org: String, entityType: String, domain: String, version: String, editorOrg: String, token: String, editorContext:String = ""): Future[WSResponse] = {
 
-    val schemaUrl = s"${nexusUrl}/v0/schemas/${space}/${entityType.toLowerCase}/${version}"
+    val schemaUrl = s"${nexusUrl}/v0/schemas/${destinationOrg}/${domain}/${entityType.toLowerCase}/${version}"
     wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).get().flatMap{
       response => response.status match {
         case 200 => // schema exists already
           Future.successful(response)
         case 404 => // schema not found, create it
-          val schemaContent = Json.parse(schemaDefinition.replace("${entityType}", entityType).replace("${org}", org))
+          val newSchemaDef = if(editorOrg != org){
+            schemaDefinition.replace("${editorContext}", editorContext)
+          }else {
+            schemaDefinition.replace("${editorContext}", "")
+          }
+          val schemaContent = Json.parse(newSchemaDef.replace("${entityType}", entityType)
+            .replace("${org}", org).replace("${editorOrg}", editorOrg).replaceAll("\r\n", ""))
           wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).put(schemaContent).flatMap{
             schemaCreationResponse => schemaCreationResponse.status match {
               case 201 => // schema created, publish it

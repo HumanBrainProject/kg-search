@@ -15,14 +15,16 @@
 *   limitations under the License.
 */
 
-package authentication.service
+package editor.models
 
-import play.api.mvc.Headers
+import authentication.models.UserInfo
+import play.api.mvc.{Request, WrappedRequest}
 
-import scala.concurrent.Future
-
-trait AuthService {
-  type U
-
-  def getUserInfo(headers: Headers): Future[U]
-}
+/**
+  *
+  * @param user
+  * @param editorGroup
+  * @param request
+  * @tparam A
+  */
+case class EditorUserRequest[A](user: UserInfo, editorGroup: String, request: Request[A]) extends WrappedRequest[A](request)
