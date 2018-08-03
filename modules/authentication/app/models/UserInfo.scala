@@ -29,6 +29,12 @@ import play.api.libs.json.JsObject
 case class UserInfo(id: String, name:String, email:String, groups:Seq[String])
 object UserInfo {
 
+  val idLabel = "sub"
+  val nameLabel = "name"
+  val emailLabel = "email"
+  val groupsLabel = "groups"
+  val mandatoryFields = Seq(idLabel, nameLabel, emailLabel, groupsLabel)
+
   def apply(json: JsObject) = {
     new UserInfo(
       id = (json \ idLabel).asOpt[String].getOrElse(""),
@@ -37,10 +43,6 @@ object UserInfo {
       groups = (json \ groupsLabel).asOpt[String].getOrElse("").split(",").toSeq
     )
   }
-  val idLabel = "sub"
-  val nameLabel = "name"
-  val emailLabel = "email"
-  val groupsLabel = "groups"
-  val mandatoryFields = Seq(idLabel, nameLabel, emailLabel, groupsLabel)
+
 
 }

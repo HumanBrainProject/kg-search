@@ -19,7 +19,7 @@ package data_import.controllers
 
 import java.io.FileInputStream
 
-import data_import.helpers.excel_import.ExcelImportHelper
+import data_import.helpers.excel_import.{ExcelUnimindsImportHelper,ExcelImportHelper}
 import javax.inject.{Inject, Singleton}
 import org.apache.poi.xssf.usermodel._
 import play.api.libs.json._
@@ -66,6 +66,40 @@ class ExcelImportController @Inject()(cc: ControllerComponents)(implicit ec: Exe
 
     }
   }
+
+
+  def extractUnimindsDataFromExcel(action: Option[String]) = Action.async(parse.temporaryFile) { request =>
+    val path = request.body.path
+    val fis = new FileInputStream(path.toFile)
+
+    val wb = new XSSFWorkbook(fis)
+    ExcelImportHelper.formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator()
+    val jsonData = ExcelUnimindsImportHelper.buildJsonUnimindsDataFromExcel(wb)
+
+    action.getOrElse(ExcelImportHelper.actionPreview) match {
+      case ExcelImportHelper.actionInsert =>
+        val tokenOpt = request.headers.toSimpleMap.get("Authorization")
+        tokenOpt match {
+          case Some(token) =>
+            ExcelImportHelper.insertEntities(jsonData, nexusEndpoint, token).map {
+              res =>
+                Ok(JsObject(Seq(("insertion result", JsArray(res)))))
+            }
+
+          case None =>
+            Future.successful(Ok(
+              Json.parse("{\"error\": \"You're not allowed to write in KG dataworkbench space. Please check your access token\"}")
+                .as[JsObject]))
+        }
+
+      case _ =>
+        // show elements SpecimenGroup, Activity and Dataset from jsonData
+        Future.successful(Ok(jsonData))
+
+    }
+  }
+
+
 }
 
 

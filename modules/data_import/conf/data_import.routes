@@ -1,3 +1,4 @@
 
 
 POST    /dataworkbench/extractDataFromExcel           controllers.ExcelImportController.extractDataFromExcel(action: Option[String])
+POST    /extract/uniminds                             controllers.ExcelImportController.extractUnimindsDataFromExcel(action: Option[String])
