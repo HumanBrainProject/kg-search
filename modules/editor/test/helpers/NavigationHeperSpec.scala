@@ -27,7 +27,7 @@ class NavigationHeperSpec  extends PlaySpec with GuiceOneAppPerSuite{
     "return the path with the original org" in {
       val path = NexusPath("minds", "test", "schema", "v0.0.3")
       val expected = NexusPath("minds", "test", "schema", "v0.0.3")
-      val res = NavigationHelper.formatBackLinkOrg(path, "reconciled")
+      val res = NavigationHelper.formatBackLinkOrg(path," reconciled")
       assert(res == expected)
     }
     "modify the org if needed" in {

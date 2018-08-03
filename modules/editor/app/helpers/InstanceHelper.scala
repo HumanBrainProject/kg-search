@@ -20,7 +20,7 @@ package editor.helper
 
 import common.helpers.JsFlattener
 import common.models.NexusPath
-import editor.helpers.FormHelper
+import editor.helpers.{FormHelper, NavigationHelper}
 import editor.models.{InMemoryKnowledge, IncomingLinksInstances, Instance}
 import authentication.models.UserInfo
 import nexus.helpers.NexusHelper
@@ -46,28 +46,22 @@ object InstanceHelper {
                                   nexusEndpoint: String,
                                   manualSpace:String,
                                   originalInstance: Instance,
-                                  incomingLinks: IncomingLinksInstances,
+                                  editorInstances: List[Instance],
                                   updateToBeStoredInManual: JsObject
-                                ): (Instance, Option[IndexedSeq[UpdateInfo]]) = {
-    val manualUpdates = incomingLinks.manualInstances
-    logger.debug(s"Result from incoming links $manualUpdates")
-    if (manualUpdates.nonEmpty) {
-      val manualUpdateDetails = manualUpdates.map(manualEntity => manualEntity.extractUpdateInfo())
-      //Call reconcile API
-      val originJson = originalInstance.content
-      val updatesByPriority = buildManualUpdatesFieldsFrequency(manualUpdates, updateToBeStoredInManual)
-      //TODO Check the result is correct this works
-      val result = Instance(reconcilationLogic(updatesByPriority, originJson))
-      logger.debug(s"Reconciled instance $result")
-      (result, Some(manualUpdateDetails))
-    } else {
-      val consolidatedInstance = buildInstanceFromForm(originalInstance.content, updateToBeStoredInManual, nexusEndpoint)
-      (Instance(consolidatedInstance), None)
-    }
+                                ): (Instance, Option[List[UpdateInfo]]) = {
+    logger.debug(s"Result from incoming links $editorInstances")
+    assert(editorInstances.nonEmpty)
+    val manualUpdateDetails = editorInstances.map(manualEntity => manualEntity.extractUpdateInfo())
+    //Call reconcile API
+    val updatesByPriority = buildManualUpdatesFieldsFrequency(editorInstances, updateToBeStoredInManual)
+    val result = Instance(reconcilationLogic(updatesByPriority, originalInstance.content))
+    logger.debug(s"Reconciled instance $result")
+    (result, Some(manualUpdateDetails))
+
   }
 
 
-  def buildDiffEntity(consolidatedResponse: Instance, newValue: String, originalInstance: Instance): JsObject = {
+  def buildDiffEntity(consolidatedResponse: Instance, newValue: String, originalInstanceContent: JsValue): JsObject = {
     val consolidatedJson = JsonParser.parse(cleanInstanceManual(consolidatedResponse.content).toString())
     val newJson = JsonParser.parse(newValue)
     val Diff(changed, added, deleted) = consolidatedJson.diff(newJson)
@@ -81,17 +75,14 @@ object InstanceHelper {
          * final diff is then an addition/update from original view
          * this allows partially defined form (some field are then not updatable)
          */
-        val Diff(changedFromOrg, addedFromOrg, deletedFromOrg) = JsonParser.parse(originalInstance.content.toString()).diff(newJson)
+        val Diff(changedFromOrg, addedFromOrg, deletedFromOrg) = JsonParser.parse(originalInstanceContent.toString()).diff(newJson)
         if (deletedFromOrg != JsonAST.JNothing) {
           logger.debug(s"""PARTIAL FORM DEFINITION - missing fields from form: ${deletedFromOrg.toString}""")
         }
         changedFromOrg.merge(addedFromOrg)
     }
 
-    Json.parse(
-      JsonMethods.compact(JsonMethods.render(diff))).as[JsObject] +
-      ("http://hbp.eu/manual#origin", JsString((originalInstance.content \ "links" \ "self").as[String].split("/").last)) +
-      ("http://hbp.eu/manual#parent", Json.obj("@id" -> (originalInstance.content \ "links" \ "self").get.as[JsString]))
+    Json.parse(JsonMethods.compact(JsonMethods.render(diff))).as[JsObject]
   }
 
   def buildInstanceFromForm(original: JsObject, formContent: JsObject, nexusEndpoint: String): JsObject = {
@@ -131,15 +122,15 @@ object InstanceHelper {
     hashedString
   }
 
-  def buildManualUpdatesFieldsFrequency(manualUpdates: IndexedSeq[Instance], currentUpdate: JsObject): Map[String, SortedSet[(JsValue, Int)]] = {
-    val cleanMap: IndexedSeq[Map[String, JsValue]] = currentUpdate.as[Map[String, JsValue]] +: cleanListManualData(manualUpdates)
+  def buildManualUpdatesFieldsFrequency(manualUpdates: List[Instance], currentUpdate: JsObject): Map[String, SortedSet[(JsValue, Int)]] = {
+    val cleanMap: List[Map[String, JsValue]] = currentUpdate.as[Map[String, JsValue]] +: cleanListManualData(manualUpdates)
     buildMapOfSortedManualUpdates(cleanMap)
   }
 
   // build reconciled view from updates statistics
   def reconcilationLogic(frequencies: Map[String, SortedSet[(JsValue, Int)]], origin: JsObject): JsObject = {
     // simple logic: keep the most frequent
-    val transformations = frequencies.map {
+    val transformations = frequencies.filterKeys(key => !key.startsWith("http://hbp.eu/manual#")).map {
       case (pathString, freqs) => (JsFlattener.buildJsPathFromString(pathString), freqs.last._1)
     }.toSeq
     applyChanges(origin, transformations)
@@ -162,16 +153,14 @@ object InstanceHelper {
           newValue
         }
     )
-
-    if(instance.transform(simpleUpdateTransformer).isError){
-      logger.error(s"Could not transform $newValue")
-    }else{
-      logger.debug(s"Ok no worries $newValue")
+    instance.transform(simpleUpdateTransformer) match {
+      case s: JsSuccess[JsObject] => s.get
+      case e: JsError => logger.error(s"Could not apply json update - ${JsError.toJson(e).toString()}")
+        throw new Exception("Could not apply update")
     }
-    instance
   }
 
-  def buildMapOfSortedManualUpdates(manualUpdates: IndexedSeq[Map[String, JsValue]]): Map[String, SortedSet[(JsValue, Int)]] = {
+  def buildMapOfSortedManualUpdates(manualUpdates: List[Map[String, JsValue]]): Map[String, SortedSet[(JsValue, Int)]] = {
     implicit val order = Ordering.fromLessThan[(JsValue, Int)](_._2 < _._2)
     // For each update
     val tempMap = manualUpdates.foldLeft(Map.empty[String, List[JsValue]]) {
@@ -208,7 +197,7 @@ object InstanceHelper {
     }
   }
 
-  def cleanListManualData(manualUpdates: IndexedSeq[Instance]): IndexedSeq[Map[String, JsValue]] = {
+  def cleanListManualData(manualUpdates: List[Instance]): List[Map[String, JsValue]] = {
     manualUpdates.map(el => cleanManualDataFromNexus(el.content))
   }
 
@@ -217,12 +206,16 @@ object InstanceHelper {
   }
 
   def cleanManualData(jsObject: JsObject): JsObject = {
-    jsObject.-("@id").-("@type").-("links").-("nxv:rev").-("nxv:deprecated")
+    jsObject - ("@context") - ("@id") - ("@type") - ("links") - ("nxv:rev") - ("nxv:deprecated")
   }
 
   def cleanUpInstanceForSave(instance: Instance): JsObject = {
     val jsonObj = instance.content
-    jsonObj - ("@context") - ("@type") - ("@id") - ("nxv:rev") - ("nxv:deprecated") - ("links")
+    cleanManualData(jsonObj)
+  }
+
+  def removeNexusFields(jsObject: JsObject): JsObject = {
+    jsObject - ("@context") - ("@type") - ("links") - ("nxv:deprecated")
   }
 
   def prepareManualEntityForStorage(manualEntity: JsObject, userInfo: UserInfo): JsObject = {
@@ -243,28 +236,33 @@ object InstanceHelper {
       .-("http://hbp.eu/manual#updater_id")
   }
 
-  def formatInstanceList(jsArray: JsArray): JsValue = {
+  def formatInstanceList(jsArray: JsArray, reconciledSuffix:String): JsValue = {
 
     val arr = jsArray.value.map { el =>
-      val id = (el \ "instance" \ "value").as[String]
+      val url = (el \ "instance" \ "value").as[String]
       val name = (el \ "name" \ "value").as[JsString]
       val description: JsString = if ((el \ "description").isDefined) {
         (el \ "description" \ "value").as[JsString]
       } else {
         JsString("")
       }
-      Json.obj("id" -> Instance.getIdfromURL(id), "description" -> description, "label" -> name)
+      val pathString = url.split("v0/data/").tail.head
+      val id = url.split("/").last
+      val formattedId = NavigationHelper
+        .formatBackLinkOrg(NexusPath(pathString), reconciledSuffix)
+        .toString() + "/" + id
+      Json.obj("id" -> formattedId, "description" -> description, "label" -> name)
     }
     Json.toJson(arr)
   }
 
-  def formatFromNexusToOption(jsObject: JsObject): JsObject = {
+  def formatFromNexusToOption(jsObject: JsObject, reconciledSuffix: String): JsObject = {
     val id = (jsObject \ "@id").as[String]
     val name = (jsObject \ "http://schema.org/name").as[JsString]
     val description: JsString = if ((jsObject \ "http://schema.org/description").isDefined) {
       (jsObject \ "http://schema.org/description").as[JsString]
     } else { JsString("") }
-    Json.obj("id" -> Instance.getIdfromURL(id), "description" -> description, "label" -> name)
+    Json.obj("id" -> Instance.getIdForEditor(id, reconciledSuffix), "description" -> description, "label" -> name)
   }
 
   def toReconcileFormat(jsValue: JsValue, privateSpace: String): JsObject = {
@@ -292,7 +290,7 @@ object InstanceHelper {
     }
   }
 
-  def generateAlternatives(manualUpdates: IndexedSeq[JsObject]): JsValue = {
+  def generateAlternatives(manualUpdates: List[JsObject]): JsValue = {
     // Alternatives are added per user
     // So for each key we have a list of object containing the user id and the value
     val alternatives: Map[String, Seq[(String, JsValue)]] = manualUpdates

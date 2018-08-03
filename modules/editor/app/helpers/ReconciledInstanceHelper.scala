@@ -47,21 +47,24 @@ object ReconciledInstanceHelper {
   def generateReconciledInstance(
                                   manualSpace: String,
                                   reconciledInstance: Instance,
-                                  manualUpdates: IncomingLinksInstances,
+                                  editorInstances: List[Instance],
                                   manualEntityToBestored: JsObject,
+                                  originalEntitPath: NexusPath,
+                                  newManualUpdateId: String,
                                   userInfo: UserInfo,
                                   parentRevision: Int,
                                   parentId: String,
                                   token: String
                                 ): JsObject = {
-    val recInstanceWithParents = addManualUpdateLinksToReconcileInstance(
+    val recInstanceWithParents = addAlternatives(
       manualSpace,
       reconciledInstance,
-      manualUpdates,
+      editorInstances,
       manualEntityToBestored
     )
-    val cleanUpObject = cleanUpInstanceForSave(recInstanceWithParents)
-    addReconciledMandatoryFields(cleanUpObject, recInstanceWithParents.nexusPath, userInfo, parentId, parentRevision)
+    val recWithNewManualUpdate = updateManualLinks(recInstanceWithParents, newManualUpdateId)
+    val cleanUpObject = cleanUpInstanceForSave(recWithNewManualUpdate)
+    addReconciledMandatoryFields(cleanUpObject, originalEntitPath, userInfo, parentId, parentRevision)
 
   }
 
@@ -91,27 +94,28 @@ object ReconciledInstanceHelper {
       ("http://hbp.eu/reconciled#update_timestamp", JsNumber(new DateTime().getMillis))
   }
 
-  def addManualUpdateLinksToReconcileInstance(manualSpace: String,
-                                              reconciledInstance: Instance,
-                                              incomingLinks: IncomingLinksInstances,
-                                              manualEntityToBeStored: JsObject
+  def addAlternatives(manualSpace: String,
+                      reconciledInstance: Instance,
+                      editorInstances: List[Instance],
+                      manualEntityToBeStored: JsObject
                                              ): Instance = {
-    val manualUpdates: IndexedSeq[Instance] = incomingLinks.manualInstances
-    val currentParent = (reconciledInstance.content \ "http://hbp.eu/reconciled#parents").asOpt[List[JsValue]].getOrElse(List[JsValue]())
-    val updatedParents: List[JsValue] = manualUpdates.foldLeft(currentParent) { (acc, manual) =>
-      val manualId = Json.obj("@id" -> (manual.content \ "@id").as[String])
-      manualId :: acc
-    }
-    val jsArray = Json.toJson(updatedParents)
     val currentUpdater = (manualEntityToBeStored \ "http://hbp.eu/manual#updater_id").as[String]
     val altJson = generateAlternatives(
-      manualUpdates.map(cleanUpInstanceForSave)
+      editorInstances.map(cleanUpInstanceForSave)
         .filter(js => (js \ "http://hbp.eu/manual#updater_id").as[String] != currentUpdater)
         .+:(manualEntityToBeStored)
     )
     val res = reconciledInstance.content
-      .+("http://hbp.eu/reconciled#parents" -> jsArray)
       .+("http://hbp.eu/reconciled#alternatives", altJson)
     Instance(reconciledInstance.nexusUUID, reconciledInstance.nexusPath, res)
+  }
+
+  def updateManualLinks(reconciledInstance: Instance, newManualUpdateId: String): Instance = {
+    val currentParent = (reconciledInstance.content \ "http://hbp.eu/reconciled#parents").asOpt[List[JsObject]].getOrElse(List[JsObject]())
+    val jsArray = Json.toJson( (Json.obj("@id" -> newManualUpdateId) +: currentParent).distinct)
+    val res = reconciledInstance.content
+      .+("http://hbp.eu/reconciled#parents" -> jsArray)
+    Instance(reconciledInstance.nexusUUID, reconciledInstance.nexusPath, res)
+
   }
 }

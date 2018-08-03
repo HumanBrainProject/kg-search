@@ -18,6 +18,7 @@
 package editor.models
 
 import common.models.NexusPath
+import editor.helpers.NavigationHelper
 import play.api.libs.json.{JsObject, JsValue}
 
 case class Instance(nexusUUID: String, nexusPath: NexusPath, content:JsObject){
@@ -52,6 +53,14 @@ object Instance {
     url.split("v0/data/").tail.head
   }
 
+  def getIdForEditor(url: String, reconciledPrefix: String): String = {
+    assert(url contains "v0/data/")
+    val pathString = url.split("v0/data/").tail.head
+    val id = pathString.split("/").last
+    NavigationHelper
+      .formatBackLinkOrg(NexusPath(pathString), reconciledPrefix)
+      .toString() + "/" + id
+  }
   // extract id, rev and userId of updator for this update
 
 }

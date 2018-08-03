@@ -19,12 +19,14 @@ package editor.helpers
 
 import common.models.NexusPath
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
+
+import scala.reflect.internal.util.NoPosition
 object NavigationHelper {
   val backLinkField = "back_link"
 
-  def formatBackLinkOrg(path:NexusPath, reconciledSuffix : String): NexusPath = {
+  def formatBackLinkOrg(path:NexusPath,reconciledSuffix : String): NexusPath = {
     val org = if(path.org.endsWith(reconciledSuffix)){
-      val editorReconciled = s"""^(.+)$reconciledSuffix""".r
+      val editorReconciled = s"""^(.+)$reconciledSuffix$$""".r
       path.org match {
         case editorReconciled(originalOrg) => originalOrg
       }
@@ -39,7 +41,7 @@ object NavigationHelper {
     instance + backLink
   }
 
-  def generateBackLink(path:NexusPath, reconciledSuffix:String): String = {
+  def generateBackLink(path:NexusPath,reconciledSuffix:String): String = {
     val formattedPath = formatBackLinkOrg(path, reconciledSuffix)
     (FormHelper.formRegistry \ formattedPath.org \ formattedPath.domain \ formattedPath.schema).asOpt[JsObject] match {
       case Some(schema) =>
@@ -48,7 +50,7 @@ object NavigationHelper {
     }
   }
 
-  def resultWithBackLink(instance: JsObject, path: NexusPath, reconciledSuffix: String): JsObject = {
+  def resultWithBackLink(instance: JsObject, path: NexusPath,reconciledSuffix: String): JsObject = {
     val backLink = generateBackLink(path, reconciledSuffix)
     addBackLink(instance, backLink)
   }
@@ -58,6 +60,10 @@ object NavigationHelper {
       case res: String => Json.obj("message" -> JsString(res) , backLinkField -> backLink)
       case res: JsValue => Json.obj("messages" -> res, backLinkField -> backLink)
     }
+  }
+
+  def addSuffixToOrg(org:String, reconciledSuffix: String):String = {
+    org + reconciledSuffix
   }
 
 }
