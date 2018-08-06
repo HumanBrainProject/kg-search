@@ -106,7 +106,7 @@ class NexusEditorController @Inject()(
           case 200 =>
             val arr = BlazegraphHelper.extractResult(res.json)
             val duration = System.currentTimeMillis() - start
-            logger.debug(s"sparql query: \n$sparqlPayload\n\nduration: ${duration}ms")
+//            logger.debug(s"sparql query: \n$sparqlPayload\n\nduration: ${duration}ms")
             Ok(Json.obj(
               "data" -> InstanceHelper.formatInstanceList(arr, reconciledPrefix),
               "label" -> JsString((FormHelper.formRegistry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String].getOrElse(nexusPath.toString())))
@@ -145,23 +145,34 @@ class NexusEditorController @Inject()(
     val reconciledPath = NexusPath(NavigationHelper.addSuffixToOrg(org, reconciledPrefix), domain,schema, version)
     instanceService.retrieveInstance(reconciledPath, id, token).flatMap[Result] {
       case Left(_) => // Check in the original space
-        instanceService.retrieveInstance(nexusPath, id, token).map[Result]{
-          case Left(r) =>
-            logger.error(s"Error: Could not fetch instance : ${nexusPath.toString()}/$id - ${r.body}")
-            val resultBackLink = NavigationHelper.errorMessageWithBackLink(r.body, NavigationHelper.generateBackLink(nexusPath,  reconciledPrefix))
-            Result(ResponseHeader(r.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](r.headers))),
-            HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json")))
-          case Right(originalInstance) =>
-            val instanceForm = FormHelper.getFormStructure(nexusPath, originalInstance.content, reconciledPrefix)
-            Ok(NavigationHelper.resultWithBackLink(instanceForm.as[JsObject], nexusPath, reconciledPrefix))
+        instanceService.retrieveReconciledFromOriginal(nexusPath, NavigationHelper.addSuffixToOrg(org, reconciledPrefix), id, token).flatMap[Result]{
+          case Left(_) =>
+            Future.successful(InternalServerError(NavigationHelper.errorMessageWithBackLink("Could not fetch the requested data", NavigationHelper.generateBackLink(nexusPath,  reconciledPrefix))))
+          case Right(reconciledInstance) =>
+            if(reconciledInstance.isDefined) {
+              InstanceHelper.modificationOfLinks(nexusEndpoint, reconciledInstance.get, reconciledPrefix) match {
+                case JsSuccess(data, path) =>
+                  val instanceForm = FormHelper.getFormStructure(nexusPath, data, reconciledPrefix)
+                  Future.successful(
+                    Ok(NavigationHelper.resultWithBackLink(instanceForm.as[JsObject], nexusPath, reconciledPrefix))
+                  )
+                case _ => Future.successful(InternalServerError(NavigationHelper.errorMessageWithBackLink("Could not fetch the requested data", NavigationHelper.generateBackLink(nexusPath, reconciledPrefix))))
+              }
+            }else{
+              instanceService.retrieveInstance(nexusPath, id, token).map[Result]{
+                case Left(r) =>
+                  logger.error(s"Error: Could not fetch instance : ${nexusPath.toString()}/$id - ${r.body}")
+                  val resultBackLink = NavigationHelper.errorMessageWithBackLink(r.body, NavigationHelper.generateBackLink(nexusPath,  reconciledPrefix))
+                  Result(ResponseHeader(r.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](r.headers))),
+                    HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json")))
+                case Right(originalInstance) =>
+                  val instanceForm = FormHelper.getFormStructure(nexusPath, originalInstance.content, reconciledPrefix)
+                  Ok(NavigationHelper.resultWithBackLink(instanceForm.as[JsObject], nexusPath, reconciledPrefix))
+              }
+            }
         }
       case Right(instance) =>
-        val id = (instance.content \ "@id").as[String]
-        val correctedId = s"$nexusEndpoint/v0/data/${Instance.getIdForEditor(id, reconciledPrefix)}"
-        val jsonTransformer = (__ ).json.update(
-          __.read[JsObject].map{ o => o ++ Json.obj("@id" -> correctedId)}
-        )
-        instance.content.transform(jsonTransformer) match {
+        InstanceHelper.modificationOfLinks(nexusEndpoint, instance, reconciledPrefix) match {
           case JsSuccess(data, path) =>
             val instanceForm = FormHelper.getFormStructure(nexusPath, data, reconciledPrefix)
             Future.successful(
@@ -450,7 +461,8 @@ class NexusEditorController @Inject()(
                     ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(org)).async { implicit request =>
     val newInstance = request.body.asJson.get.as[JsObject]
     val instancePath = NexusPath(org, domain, datatype, version)
-    val instance = buildNewInstanceFromForm( instancePath, FormHelper.formRegistry, newInstance )
+    val instance = buildNewInstanceFromForm(nexusEndpoint, instancePath, FormHelper.formRegistry, newInstance )
+
     val token = OIDCHelper.getTokenFromRequest(request)
     val reconciledTokenFut = oIDCAuthService.getTechAccessToken()
     val editorSpace = EditorSpaceHelper.getGroupName(request.editorGroup, editorPrefix)
@@ -487,8 +499,9 @@ class NexusEditorController @Inject()(
                   logger.debug(res.body)
                   res.status match {
                     case CREATED => // reformat ouput to keep it consistent with update
+                      val id:String = (res.json.as[JsObject] \ "@id").as[String].split("v0/data/").last.split("/").last
                       val output = res.json.as[JsObject]
-                        .+("id", JsString((res.json.as[JsObject] \ "@id").as[String].split("data/").tail.mkString("data/")))
+                        .+("id", JsString(instancePath.toString() + "/" +id))
                         .-("@id")
                         .-("@context")
                         .-("nxv:rev")

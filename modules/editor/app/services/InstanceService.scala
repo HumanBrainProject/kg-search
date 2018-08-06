@@ -112,11 +112,23 @@ class InstanceService @Inject()(wSClient: WSClient,
   }
 
   def retrieveReconciledFromOriginal(originalPath: NexusPath, reconciledOrg:String, id: String, token: String): Future[Either[WSResponse, Option[Instance]]] = {
+    val editorOrg = NavigationHelper.addSuffixToOrg(originalPath.org, editorPrefix)
     val filter =
       s"""{
-         |   "op":"eq",
-         |   "path":"http://hbp.eu/reconciled#original_parent",
-         |   "value": "$nexusEndpoint/v0/data/${originalPath.toString()}/$id"
+         |    "op": "or",
+         |    "value": [
+         |      {
+         |        "op":"eq",
+         |        "path":"http://hbp.eu/reconciled#original_parent",
+         |        "value": "$nexusEndpoint/v0/data/${originalPath.toString()}/$id"
+         |      },
+         |      {
+         |        "op":"eq",
+         |        "path":"http://hbp.eu/reconciled#original_parent",
+         |        "value": "$nexusEndpoint/v0/data/${editorOrg}/${originalPath.domain}/${originalPath.schema}/${originalPath.version}/$id"
+         |      }
+         |    ]
+
          | }
       """.stripMargin.stripLineEnd.replaceAll("\r\n", "")
     wSClient

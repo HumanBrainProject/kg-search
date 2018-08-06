@@ -84,8 +84,18 @@ object InstanceHelper {
         }
         changedFromOrg.merge(addedFromOrg)
     }
-
-    Json.parse(JsonMethods.compact(JsonMethods.render(diff))).as[JsObject]
+    val rendered = Json.parse(JsonMethods.compact(JsonMethods.render(diff))).as[JsObject]
+    val newValues = Json.parse(newValue)
+    val diffWithCompleteArray = rendered.value.map{
+      case (k, v) =>
+        val value = ( newValues \ k).asOpt[JsValue]
+        if(v.asOpt[JsArray].isDefined && value.isDefined){
+          k -> value.get
+        }else{
+          k -> v
+        }
+    }
+    Json.toJson(diffWithCompleteArray).as[JsObject]
   }
 
   def buildInstanceFromForm(original: JsObject, formContent: JsObject, nexusEndpoint: String): JsObject = {
@@ -97,19 +107,33 @@ object InstanceHelper {
     res
   }
 
-  def buildNewInstanceFromForm(instancePath: NexusPath, formRegistry: JsObject, newInstance: JsObject): JsObject = {
+  def buildNewInstanceFromForm(nexusEndpoint: String, instancePath: NexusPath, formRegistry: JsObject, newInstance: JsObject): JsObject = {
+
+    def addNexusEndpointToLinks(item: JsValue): JsObject = {
+      val id = (item.as[JsObject] \ "id" ).as[String]
+      if(!id.startsWith("http://")){
+        Json.obj("@id" ->  JsString(s"$nexusEndpoint/v0/data/$id"))
+      }else{
+        Json.obj("@id" ->  JsString(id))
+      }
+    }
+
     val fields = (formRegistry \ instancePath.org \ instancePath.domain \ instancePath.schema \ instancePath.version \ "fields").as[JsObject].value
     val m = newInstance.value.map{ case (k, v) =>
       val key = FormHelper.unescapeSlash(k)
-
       val formObjectType = (fields(key) \ "type").as[String]
-
       formObjectType match {
         case "DropdownSelect" =>
-          val arr = v.as[JsArray].value.map(item => Json.obj("@id" -> (item.as[JsObject] \ "id" ).as[JsValue]))
+          val arr: IndexedSeq[JsValue] = v.as[JsArray].value.map{ item =>
+            addNexusEndpointToLinks(item)
+          }
           key -> Json.toJson(arr)
         case _ =>
-          key -> v
+          if( (fields(key) \ "isLink").asOpt[Boolean].getOrElse(false)){
+            key -> addNexusEndpointToLinks(v)
+          } else{
+            key -> v
+          }
       }
     }
     Json.toJson(m).as[JsObject]
@@ -324,6 +348,15 @@ object InstanceHelper {
         .-("http://hbp.eu/manual#update_timestamp")
         .-("http://hbp.eu/manual#updater_id")
     )
+  }
+
+  def modificationOfLinks(nexusEndpoint: String, instance: Instance, reconciledPrefix: String): JsResult[JsObject] = {
+    val id = (instance.content \ "@id").as[String]
+    val correctedId = s"$nexusEndpoint/v0/data/${Instance.getIdForEditor(id, reconciledPrefix)}"
+    val jsonTransformer = (__ ).json.update(
+      __.read[JsObject].map{ o => o ++ Json.obj("@id" -> correctedId)}
+    )
+    instance.content.transform(jsonTransformer)
   }
 
 
