@@ -67,7 +67,7 @@
     font-weight: normal;
 }
 
-.kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key="ellipsis*"] [data-qa="label"]{
+.kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key*="ellipsis"] [data-qa="label"]{
     transform: translateY(-5px);
     display: inline-block;
     font-weight: bold;
