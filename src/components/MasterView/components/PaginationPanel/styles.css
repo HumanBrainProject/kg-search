@@ -72,3 +72,15 @@
     display: inline-block;
     font-weight: bold;
 }
+
+.kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key="previous"] [data-qa="label"], 
+.kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key="next"] [data-qa="label"] {
+    font-family: FontAwesome;
+}
+.kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key="previous"] [data-qa="label"]:before {
+    content: "\f053";
+} 
+
+.kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key="next"] [data-qa="label"]:before {
+    content: "\f054";
+}
