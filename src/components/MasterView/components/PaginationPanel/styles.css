@@ -1,0 +1,74 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-paging {
+    display: inline-block;
+    text-align: center;
+}
+
+.kgs-paging .sk-pagination-navigation.is-numbered  {
+    display: inline-block;
+    margin: 3px 0 0 0;
+    background-color: transparent;
+}
+
+.kgs-paging .sk-pagination-navigation .sk-toggle {
+    display: inline-block;
+    max-height: 40px;
+    margin-left: 20px;    
+    background-color: transparent;
+}
+
+.kgs-paging .sk-pagination-navigation .sk-toggle-option {
+    flex: none;
+    background-color: white;
+    padding: 5px 15px;
+    color: #ED5554;
+}
+
+.kgs-paging .sk-pagination-navigation .sk-toggle-option.is-active {
+    color: white;
+}
+
+.kgs-paging .sk-pagination-navigation .sk-toggle-option.is-disabled {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.kgs-paging .sk-pagination-navigation .sk-toggle-option + .sk-toggle-option {
+    margin-left: 5px;
+}
+
+.kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key="previous"], 
+.kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key="next"] {
+    flex: none;
+}
+
+.kgs-paging .sk-pagination-navigation .sk-toggle-option.is-disabled[data-key="previous"], 
+.kgs-paging .sk-pagination-navigation .sk-toggle-option.is-disabled[data-key="next"] {
+    display: none;
+}
+
+.kgs-paging .sk-pagination-navigation .sk-toggle-option [data-qa="label"] {
+    font-size: 22px;
+    font-weight: normal;
+}
+
+.kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key="ellipsis*"] [data-qa="label"]{
+    transform: translateY(-5px);
+    display: inline-block;
+    font-weight: bold;
+}

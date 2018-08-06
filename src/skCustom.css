@@ -151,6 +151,20 @@ header + header + nav + hr + .main-content .sk-layout__body {
     }
 }
 
+.sk-select select {
+    background-color: white;
+    border-color: white;
+    color: #ED5554;
+}
+
+.sk-select:after {
+    border-top-color: #ED5554;
+}
+
+.sk-select select:focus {
+    box-shadow: 0 0 1px 3px #88C1FB;
+}
+
 .sk-layout__results {
     min-height: auto;
     min-height: unset;
@@ -166,11 +180,21 @@ header + header + nav + hr + .main-content .sk-layout__body {
 }
 
 [data-layoutMode] .sk-results-list__action-bar {
-    background-color: white;
+    background-color: transparent;
     margin: 0 20px;
     padding: 15px;
-    -webkit-box-shadow: #c9c9c9 2px 2px 4px;
-    box-shadow: #c9c9c9 2px 2px 4px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.sk-toggle .sk-toggle-option {
+    background-color: white;
+    border-color: white;
+}
+
+.sk-toggle .sk-toggle-option.is-active {
+    background-color: #ED5554;
+    border-color: #ED5554;
 }
 
 .sk-pagination-navigation .sk-toggle-option[data-key] {

@@ -14,20 +14,20 @@
 *   limitations under the License.
 */
 
-import React from 'react';
-import './styles.css';
+import React from "react";
+import "./styles.css";
 
 function LayoutModeSwitcherToggleItem(props) {
   const handleClick = () => {
     props.onClick(props.value);
   }
   return (
-    <button className={'sk-toggle-option sk-toggle__item' + (props.isActive? ' is-active':'')}  disabled={props.isActive} onClick={handleClick} >
+    <button className={"sk-toggle-option sk-toggle__item" + (props.isActive? " is-active":"")}  disabled={props.isActive} onClick={handleClick} >
       <label className="sk-toggle-option__text">{props.label}</label>
     </button>
   );
 }
-  
+
 export function LayoutModeSwitcherToggle(props) {
   const handleClick = (layoutMode) => {
     props.onToggle(layoutMode === "grid");

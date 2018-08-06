@@ -16,7 +16,8 @@
 
 .kgs-sorting-selector {
     display: block;
-    margin-top: 20px;
+    margin-top: 20px;    
+    margin-left: 30px;
 }
 
 @media (min-width: 576px) {
@@ -26,23 +27,30 @@
     }
 }
 
-.kgs-sorting-selector .sk-toggle::before {
-    content: "Sort by:";
-    margin-right: 5px;
-    margin-left: -15px;
-    font-size: 14px;
+.kgs-sorting-selector .sk-select::before {
+    content: "Sort by";
+    margin-right: 20px;
+    font-size: 22px;
     line-height: 30px;
-    color: #777;
+    color: #555;
 }
 
-@media (min-width: 576px) {
-    .kgs-sorting-selector .sk-toggle::before {
-        margin-left: 0;
-    }
+.kgs-sorting-selector .sk-select::after {
+    right: 15px;
+    margin-top: 5px;
+}
+
+.kgs-sorting-selector .sk-select select {
+    font-size: 22px;
+    font-weight: normal;
+    padding: 9px 50px 9px 25px;
 }
 
 .sk-results-list__action-bar .sk-action-bar-row .sk-hits-stats__info {    
+    margin-top: 8px;
     white-space: nowrap;
+    font-size: 22px;
+    color: #555;
 }
 
 .sk-results-list__action-bar .sk-action-bar-row .kgs-share-links {    

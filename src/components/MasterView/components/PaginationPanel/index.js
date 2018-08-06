@@ -15,15 +15,14 @@
 */
 
 import React from "react";
-import { Select, SortingSelector} from "searchkit";
-import { store } from "../../../../../../store";
+import { Pagination } from "searchkit";
+import { TabEnablerComponent } from "../../../../containers/TabEnabler";
+import "./styles.css";
 
-export function SortingTab() {
-  const state = store.getState();
-  const sortFields = state.configuration.sortFields;
-
-  if (sortFields.length > 0) {
-    return <span className="kgs-sorting-selector"><SortingSelector key="sortingSelector" listComponent={Select} options={sortFields} /></span>;
-  }
-  return null;
+export function PaginationPanel() {
+  return (
+    <TabEnablerComponent className={"kgs-paging"} containerSelector={".kgs-paging"} itemSelector={".sk-toggle-option"} activeItemSelector={".is-active"} disabledItemSelector={".is-disabled"} >
+      <Pagination showNumbers={true} showLast={true} translations={{"pagination.previous": <i className="fa fa-chevron-left"></i>, "pagination.next": <i className="fa fa-chevron-right"></i>}}/>
+    </TabEnablerComponent>
+  );
 }

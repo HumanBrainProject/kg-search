@@ -14,11 +14,11 @@
 *   limitations under the License.
 */
 
-import React, { Component } from 'react';
-import { isMobile, tabAblesSelectors } from '../../../../Helpers/BrowserHelpers';
-import { ShareBar } from '../../../ShareBar';
-import { Shape } from '../../../Shape';
-import './styles.css';
+import React, { Component } from "react";
+import { isMobile, tabAblesSelectors } from "../../../../Helpers/BrowserHelpers";
+import { ShareBar } from "../../../ShareBar";
+import { Shape } from "../../../Shape";
+import "./styles.css";
 
 export class DetailView extends Component {
   constructor(props) {
@@ -27,20 +27,21 @@ export class DetailView extends Component {
       tabAbles: []
     };
   }
-  componentWillUpdate(nextProps, nextState) {
+  UNSAFE_componentWillUpdate() {
     this.componentContext.tabAbles.forEach(e => {
-      if (e.tabIndex >= 0)
+      if (e.tabIndex >= 0) {
         e.node.setAttribute("tabIndex", e.tabIndex);
-      else
+      } else {
         e.node.removeAttribute("tabIndex");
+      }
     });
   }
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     if (!isMobile) {
       //console.log(new Date().toLocaleTimeString() + ": view=" + this.props.viewId + ", tabs active=" + this.props.isActive);
       if (!this.props.isActive) {
-        const rootNode = document.body.querySelector('.kgs-detailView[data-viewId="' + this.props.viewId + '"]');
-        this.componentContext.tabAbles = Object.values(rootNode.querySelectorAll(tabAblesSelectors.join(',')))
+        const rootNode = document.body.querySelector(".kgs-detailView[data-viewId=\"" + this.props.viewId + "\"]");
+        this.componentContext.tabAbles = Object.values(rootNode.querySelectorAll(tabAblesSelectors.join(",")))
           .map(node => ({node: node, tabIndex: node.tabIndex}));
         this.componentContext.tabAbles
           .forEach(e => e.node.setAttribute("tabIndex", -1));
@@ -54,13 +55,13 @@ export class DetailView extends Component {
         <div className="kgs-detailView__outerPanel">
           <div className="kgs-detailView__navigation">
             <div className="kgs-detailView__navigation-panel">
-            <button className="kgs-detailView__previousButton" onClick={onPreviousClick}>
-              <i className="fa fa-chevron-left" /> Previous
-            </button>
-            <ShareBar/>
-            <button className="kgs-detailView__closeButton" onClick={onCloseClick}>
-              <i className="fa fa-close" />
-            </button>
+              <button className="kgs-detailView__previousButton" onClick={onPreviousClick}>
+                <i className="fa fa-chevron-left" /> Previous
+              </button>
+              <ShareBar/>
+              <button className="kgs-detailView__closeButton" onClick={onCloseClick}>
+                <i className="fa fa-close" />
+              </button>
             </div>
           </div>
           <div className="kgs-detailView__innerPanel" tabIndex={-1}>

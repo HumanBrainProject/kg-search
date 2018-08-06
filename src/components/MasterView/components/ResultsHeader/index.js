@@ -14,26 +14,22 @@
 *   limitations under the License.
 */
 
-import React from 'react';
-import { ActionBar, ActionBarRow, HitsStats } from 'searchkit';
-import { ShareBar } from '../../../ShareBar';
-import { TabEnablerComponent } from '../../../../containers/TabEnabler';
-import { LayoutModeSwitcherToggle } from './components/LayoutModeSwitcherToggle';
-import { SortingTab } from './containers/SortingTab';
-import './styles.css';
+import React from "react";
+import { ActionBar, ActionBarRow, HitsStats } from "searchkit";
+import { LayoutModeSwitcherToggle } from "./components/LayoutModeSwitcherToggle";
+import { PaginationPanel } from "../PaginationPanel";
+import { SortingTab } from "./containers/SortingTab";
+import "./styles.css";
 
-export function ResultsHeader({hitCount, gridLayoutMode, onGridLayoutModeToogle}) {
-    return (
-        <ActionBar>
-            <ActionBarRow>
-                <HitsStats translations={{"hitstats.results_found":"{hitCount} results found"}} />
-                <LayoutModeSwitcherToggle gridLayoutMode={gridLayoutMode} onToggle={onGridLayoutModeToogle} /> 
-                <TabEnablerComponent className={'kgs-sorting-selector'} containerSelector={'.kgs-sorting-selector'} itemSelector={'.sk-toggle-option'} activeItemSelector={'.is-active'} disabledItemSelector={'.is-disabled'} >
-                    <SortingTab/>
-                </TabEnablerComponent>
-                <ShareBar/>
-            </ActionBarRow>
-        </ActionBar>
-    );
+export function ResultsHeader({gridLayoutMode, onGridLayoutModeToogle}) {
+  return (
+    <ActionBar>
+      <ActionBarRow>
+        <HitsStats translations={{"hitstats.results_found": "Viewing {hitCount} results"}} />
+        <PaginationPanel/>
+        <LayoutModeSwitcherToggle gridLayoutMode={gridLayoutMode} onToggle={onGridLayoutModeToogle} />
+        <SortingTab/>
+      </ActionBarRow>
+    </ActionBar>
+  );
 }
-  

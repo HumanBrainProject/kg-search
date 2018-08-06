@@ -26,7 +26,26 @@
     border-top: 1px solid #ccc;
 }
 
-.kgs-paging {
-    display: inline-block;
-    width: 100%;
+.kgs-result-footer-nav {
+    display: flex;
+    padding: 14px 0 14px 0;
+    background-color: #f4f4f4;
+}
+
+.kgs-result-footer-nav .kgs-paging {
+    flex: 1;
+}
+
+.kgs-result-footer-nav .kgs-share-links {
+    position: absolute;
+    top: 20px;
+    right: 140px;
+}
+
+.kgs-result-footer-panel .kgs-result-footer-nav .kgs-share-links {
+    right: 20px;
+}
+
+.kgs-result-footer-nav .kgs-share-links .kgs-share-links-panel:before {
+    background-color: #f4f4f4;
 }
