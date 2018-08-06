@@ -62,7 +62,7 @@ object FormHelper {
     Json.obj("data" -> JsArray(res))
   }
 
-  def getFormStructure(entityType: NexusPath, data: JsValue): JsValue = {
+  def getFormStructure(entityType: NexusPath, data: JsValue, reconciledSuffix: String): JsValue = {
     // retrieve form template
     val formTemplateOpt = (formRegistry \ entityType.org \ entityType.domain \ entityType.schema \ entityType.version).asOpt[JsObject]
 
@@ -83,10 +83,11 @@ object FormHelper {
               if (data.as[JsObject].keys.contains(key)) {
                 val newValue = (fieldContent \ "type").asOpt[String].getOrElse("") match {
                   case "DropdownSelect" =>
-                    fieldContent.as[JsObject] + ("value", transformToArray(key, data))
+                    fieldContent.as[JsObject] + ("value", transformToArray(key, data, reconciledSuffix))
                   case _ =>
                     fieldContent.as[JsObject] + ("value", (data \ key).get)
                 }
+
                 filledTemplate + (escapeSlash(key), newValue)
               } else {
                 filledTemplate
@@ -122,16 +123,18 @@ object FormHelper {
     string.replaceAll(slashEscaper, "/")
   }
 
-  def transformToArray(key: String, data: JsValue): JsArray = {
+  def transformToArray(key: String, data: JsValue, reconciledSuffix: String): JsArray = {
     if ((data \ key \ "@list").isDefined) {
-      transformID((data \ key \ "@list").as[JsArray])
+      transformID((data \ key \ "@list").as[JsArray], reconciledSuffix)
     } else if ((data \ key ).validate[JsArray].isSuccess){
-      transformID((data \ key ).as[JsArray])
+      transformID((data \ key ).as[JsArray], reconciledSuffix)
     }else {
       if ((data \ key \ "@id").isDefined) {
         val linkToInstance = (data \ key \ "@id").as[String]
         if (linkToInstance.contains("http")){
-          JsArray().+:(Json.obj("id" -> Instance.getIdfromURL(linkToInstance)))
+          val(id, path) = Instance.extractIdAndPathFromString(linkToInstance)
+          val instancePath = NavigationHelper.formatBackLinkOrg(path, reconciledSuffix)
+          JsArray().+:(Json.obj("id" -> JsString(instancePath.toString() + s"/$id")))
         } else {
           JsArray()
         }
@@ -141,12 +144,13 @@ object FormHelper {
     }
   }
 
-  def transformID(jsArray: JsArray):JsArray = {
+  def transformID(jsArray: JsArray, reconciledSuffix: String):JsArray = {
     Json.toJson(
       jsArray.value.collect{
         case el if ((el \ "@id").as[String] contains "http") =>
-          Json.obj(
-            "id" -> Instance.getIdfromURL((el \ "@id").as[String]))
+          val(id, path) = Instance.extractIdAndPathFromString((el \ "@id").as[String])
+          val instancePath = NavigationHelper.formatBackLinkOrg(path, reconciledSuffix)
+          Json.obj("id" -> JsString(instancePath.toString() + s"/$id"))
         }
     ).as[JsArray]
   }

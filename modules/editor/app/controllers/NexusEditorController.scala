@@ -29,7 +29,7 @@ import editor.models.{EditorUserRequest, InMemoryKnowledge, IncomingLinksInstanc
 import authentication.helpers.OIDCHelper
 import helpers.ReconciledInstanceHelper
 import javax.inject.{Inject, Singleton}
-import authentication.models.{AuthenticatedUserAction, UserRequest}
+import authentication.models.{AuthenticatedUserAction, UserInfo, UserRequest}
 import authentication.service.OIDCAuthService
 import editor.actions.EditorUserAction
 import play.api.{Configuration, Logger}
@@ -152,7 +152,7 @@ class NexusEditorController @Inject()(
             Result(ResponseHeader(r.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](r.headers))),
             HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json")))
           case Right(originalInstance) =>
-            val instanceForm = FormHelper.getFormStructure(nexusPath, originalInstance.content)
+            val instanceForm = FormHelper.getFormStructure(nexusPath, originalInstance.content, reconciledPrefix)
             Ok(NavigationHelper.resultWithBackLink(instanceForm.as[JsObject], nexusPath, reconciledPrefix))
         }
       case Right(instance) =>
@@ -163,7 +163,7 @@ class NexusEditorController @Inject()(
         )
         instance.content.transform(jsonTransformer) match {
           case JsSuccess(data, path) =>
-            val instanceForm = FormHelper.getFormStructure(nexusPath, data)
+            val instanceForm = FormHelper.getFormStructure(nexusPath, data, reconciledPrefix)
             Future.successful(
               Ok(NavigationHelper.resultWithBackLink(instanceForm.as[JsObject], nexusPath, reconciledPrefix))
             )
@@ -208,7 +208,7 @@ class NexusEditorController @Inject()(
             val nexusId = Instance.getIdForEditor((json \ "http://hbp.eu/reconciled#original_parent" \ "@id").as[String],  reconciledPrefix)
             val datatype = nexusId.splitAt(nexusId.lastIndexOf("/"))
             val originalDatatype = NexusPath(datatype._1.split("/").toList)
-            FormHelper.getFormStructure(originalDatatype, response.json) match {
+            FormHelper.getFormStructure(originalDatatype, response.json, reconciledPrefix) match {
               case JsNull => NotImplemented(NavigationHelper.errorMessageWithBackLink("Form not implemented", NavigationHelper.generateBackLink(nexusPath, reconciledPrefix) ))
               case json => Ok(NavigationHelper.resultWithBackLink(json.as[JsObject], nexusPath,reconciledPrefix))
             }
@@ -226,6 +226,13 @@ class NexusEditorController @Inject()(
     }
   }
 
+  /**
+    * This private method is called when it is the first time an update is done on an instance.
+    * This method will create if needed the correct organizations, domains and schemas, for the editor space.
+    * @param originalInstance The instance currently displayed (which is not from a reconciled space)
+    * @param request The current user request
+    * @return The updated instance or an error from nexus. Every response has a black link for the UI.
+    */
   private def initialUpdate(originalInstance: Instance)(implicit request: EditorUserRequest[AnyContent]) = {
     val token = OIDCHelper.getTokenFromRequest(request)
     val reconciledTokenFut = oIDCAuthService.getTechAccessToken()
@@ -234,18 +241,27 @@ class NexusEditorController @Inject()(
     val editorSpace = EditorSpaceHelper.getGroupName(request.editorGroup, editorPrefix)
     val reconciledSpace = EditorSpaceHelper.getGroupName(request.editorGroup, reconciledPrefix)
     reconciledTokenFut.flatMap { reconciledToken =>
-      val originLink = (originalInstance.content \ "@id").as[JsValue]
-      // As we cannot pass / in the name of a field we have replaced them with %nexus-slash%
-      val updateFromUI = Json.parse(FormHelper.unescapeSlash(newValue.toString())).as[JsObject] - "id"
-      val updatedInstance = buildInstanceFromForm(originalInstance.content, updateFromUI, nexusEndpoint)
-      val updateToBeStoredInManual = buildDiffEntity(originalInstance, updatedInstance.toString, originalInstance.content) +
-        ("@type", JsString(s"http://hbp.eu/${originalInstance.nexusPath.org}#${originalInstance.nexusPath.schema.capitalize}"))
+      val originalInstanceCleaned = Instance(removeNexusFields(originalInstance.content))
+      val originLink = (originalInstance.content \ "@id").as[String]
+      val (
+        updatedInstance,
+        updateToBeStoredInManual,
+        preppedEntityForStorage
+        ) = NexusEditorController.preppingEntitesForSave(
+        nexusEndpoint,
+        newValue,
+        originalInstanceCleaned.content,
+        originalInstanceCleaned,
+        originalInstanceCleaned.nexusPath,
+        originLink,
+        request.user,
+        reconciledPrefix,
+        instanceService,
+        token
+      )
+
       val consolidatedInstance = buildInstanceFromForm(originalInstance.content, updateToBeStoredInManual, nexusEndpoint)
       logger.debug(s"Consolidated instance $consolidatedInstance")
-      val preppedEntityForStorage = InstanceHelper.prepareManualEntityForStorage(updateToBeStoredInManual, request.user) +
-        ("http://hbp.eu/manual#origin", originLink) +
-        ("http://hbp.eu/manual#parent", Json.obj("@id" -> originLink))
-
       val createEditorDomain = nexusService.createDomain(nexusEndpoint, editorSpace, originalInstance.nexusPath.domain, "", token)
       val createReconciledDomain = nexusService.createDomain(nexusEndpoint, reconciledSpace, originalInstance.nexusPath.domain, "", reconciledToken)
 
@@ -274,31 +290,23 @@ class NexusEditorController @Inject()(
                    val id = (re.json \ "@id").as[JsString]
                   Ok(NavigationHelper.resultWithBackLink(InstanceHelper.formatFromNexusToOption(updatedInstance, reconciledPrefix), instancePath, reconciledPrefix))
                 case _ =>
-                  val resultBackLink = NavigationHelper.errorMessageWithBackLink(re.body, NavigationHelper.generateBackLink(instancePath, reconciledPrefix))
-                  Result(
-                    ResponseHeader(
-                      re.status,
-                      flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](re.headers))
-                    ),
-                    HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json"))
-                  )
+                  NexusEditorController.errorResultWithBackLink(re.status, re.headers, re.body, instancePath, reconciledPrefix)
               }
             }
           case _ =>
-            val resultBackLink = NavigationHelper.errorMessageWithBackLink(res.body, NavigationHelper.generateBackLink(instancePath, reconciledPrefix))
-            Future.successful(Result(
-              ResponseHeader(
-                res.status,
-                flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](res.headers))
-              ),
-              HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json"))
-            ))
+            Future.successful(NexusEditorController.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, reconciledPrefix) )
         }
-
       }
     }
   }
 
+  /**
+    * This private method is called if the instance currently being updated is from a reconciled space
+    * @param currentInstanceDisplayed The instance on which the update is performed
+    * @param originalPath The path of the original instance (could be from a original organization or an editor space)
+    * @param request The current user request
+    * @return The updated instance or an error from nexus. Every response has a black link for the UI.
+    */
   private def updateWithReconciled(currentInstanceDisplayed: Instance, originalPath: NexusPath)(implicit request: EditorUserRequest[AnyContent]) = {
     val token = OIDCHelper.getTokenFromRequest(request)
     val reconciledTokenFut = oIDCAuthService.getTechAccessToken()
@@ -308,9 +316,11 @@ class NexusEditorController @Inject()(
     // Get the original instance either in the Editor space or the original space
     instanceService.retrieveInstance(originalIdAndPath._2, originalIdAndPath._1, token).flatMap {
       case Right(instanceFromOriginalSpace) =>
-        val originalInstance = Instance(removeNexusFields(instanceFromOriginalSpace.content))
+        val originalInstance = Instance(originalIdAndPath._1, originalPath, removeNexusFields(instanceFromOriginalSpace.content))
         // Get the editor instances
-        val editorInstanceIds = (currentInstanceDisplayed.content \ "http://hbp.eu/reconciled#parents").as[List[JsObject]]
+
+        val editorInstanceIds = (currentInstanceDisplayed.content \ "http://hbp.eu/reconciled#parents").asOpt[List[JsObject]]
+          .getOrElse(List())
           .map(js => Instance.extractIdAndPath(js)._1)
         reconciledTokenFut.flatMap { reconciledToken =>
           instanceService.retrieveInstances(editorInstanceIds, NexusPath(NavigationHelper.addSuffixToOrg(originalPath.org, editorPrefix), originalPath.domain, originalPath.schema, originalPath.version), token).flatMap[Result] {
@@ -320,17 +330,25 @@ class NexusEditorController @Inject()(
                 val reconciledInstanceCleaned = removeNexusFields(currentInstanceDisplayed.content)
                 //Create the manual update
                 // As we cannot pass / in the name of a field we have replaced them with %nexus-slash%
-                val updateFromUI = Json.parse(FormHelper.unescapeSlash(newValue.toString())).as[JsObject] - "id"
-                val updatedInstance = buildInstanceFromForm(reconciledInstanceCleaned, updateFromUI, nexusEndpoint)
-                logger.debug(s"Consolidated instance $updatedInstance")
+                val reconciledLink =  (currentInstanceDisplayed.content \ "@id").as[String]
                 //Generate the data that should be stored in the manual space
-                val diffEntity = buildDiffEntity(currentInstanceDisplayed, updatedInstance.toString, originalInstance.content) + ("@type", JsString(s"http://hbp.eu/${originalPath.org}#${originalPath.schema.capitalize}"))
-                val reconciledLink =  (currentInstanceDisplayed.content \ "@id").as[JsString]
-                val updateToBeStoredInManual = diffEntity  +
-                  ("http://hbp.eu/manual#origin", reconciledLink) +
-                  ("http://hbp.eu/manual#parent", Json.obj("@id" -> reconciledLink))
-
-                val preppedEntityForStorage = InstanceHelper.prepareManualEntityForStorage(updateToBeStoredInManual, request.user)
+                val (
+                  updatedInstance,
+                  updateToBeStoredInManual,
+                  preppedEntityForStorage
+                  ) = NexusEditorController.preppingEntitesForSave(
+                  nexusEndpoint,
+                  newValue,
+                  reconciledInstanceCleaned,
+                  currentInstanceDisplayed,
+                  originalPath,
+                  reconciledLink,
+                  request.user,
+                  reconciledPrefix,
+                  instanceService,
+                  token
+                )
+                logger.debug(s"Consolidated instance $updatedInstance")
 
                 consolidateFromManualSpace(nexusEndpoint, editorSpace, currentInstanceDisplayed, editorInstances, updateToBeStoredInManual) match {
                   case (consolidatedInstance, manualEntitiesDetailsOpt) =>
@@ -348,27 +366,12 @@ class NexusEditorController @Inject()(
                               case recStatus if recStatus < 300 =>
                                 Ok(NavigationHelper.resultWithBackLink(InstanceHelper.formatFromNexusToOption(consolidatedInstance.content, reconciledPrefix), originalPath, reconciledPrefix))
                               case _ =>
-                                val resultBackLink = NavigationHelper.errorMessageWithBackLink(re.body, NavigationHelper.generateBackLink(originalPath, reconciledPrefix))
-                                Result(
-                                  ResponseHeader(
-                                    re.status,
-                                    flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](re.headers))
-                                  ),
-                                  HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json"))
-                                )
+                                NexusEditorController.errorResultWithBackLink(re.status, re.headers, re.body, originalPath, reconciledPrefix)
                             }
                           }
                         case _ =>
-                          val resultBackLink = NavigationHelper.errorMessageWithBackLink(res.body, NavigationHelper.generateBackLink(originalPath, reconciledPrefix))
-                          Future.successful(Result(
-                            ResponseHeader(
-                              res.status,
-                              flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](res.headers))
-                            ),
-                            HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json"))
-                          ))
+                          Future.successful(NexusEditorController.errorResultWithBackLink(res.status, res.headers, res.body, originalPath, reconciledPrefix))
                       }
-
                     }
                 }
               } else {
@@ -376,29 +379,12 @@ class NexusEditorController @Inject()(
                   case Left(res) => Some(res)
                   case _ => None
                 }.filter(_.isDefined).map(_.get)
-                val resultBackLink = NavigationHelper.errorMessageWithBackLink(errors.head.body, NavigationHelper.generateBackLink(originalPath, reconciledPrefix))
                 logger.error(s"Could not fetch editor instances ${errors}")
-                Future.successful(Result(
-                  ResponseHeader(
-                    errors.head.status,
-                    flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](errors.head.headers))
-                  ),
-                  HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json"))
-                ))
+                Future.successful(NexusEditorController.errorResultWithBackLink(errors.head.status, errors.head.headers,errors.head.body, originalPath, reconciledPrefix))
               }
           }
         }
-      case Left(res) =>
-        Future{
-          val resultBackLink = NavigationHelper.errorMessageWithBackLink(res.body, NavigationHelper.generateBackLink(originalPath,reconciledPrefix))
-          Result(
-            ResponseHeader(
-              res.status,
-              flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](res.headers))
-            ),
-            HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json"))
-          )
-        }
+      case Left(res) => Future.successful( NexusEditorController.errorResultWithBackLink(res.status, res.headers, res.body, originalPath, reconciledPrefix) )
     }
   }
 
@@ -536,7 +522,7 @@ class NexusEditorController @Inject()(
   def getEmptyForm(org: String, domain: String, datatype: String, version: String): Action[AnyContent] = Action {
     implicit request =>
       val nexusPath = NexusPath(org, domain, datatype, version)
-      val form = FormHelper.getFormStructure(nexusPath, JsNull)
+      val form = FormHelper.getFormStructure(nexusPath, JsNull, reconciledPrefix)
       Ok(form)
   }
 
@@ -578,5 +564,84 @@ class NexusEditorController @Inject()(
     Ok(FormHelper.editableEntitiyTypes)
   }
 }
+
+object NexusEditorController {
+
+  /**
+    * This function returns a Play Result with a back link
+    * @param status The status of the response
+    * @param headers The headers of the response
+    * @param errorMsg The body of the response (could be either a String or JsValue)
+    * @param originalPath The path of the instance
+    * @param reconciledPrefix The reconciled prefix
+    * @return A Play result with back link
+    */
+  def errorResultWithBackLink(status: Int, headers: Map[String, Seq[String]], errorMsg:Any, originalPath: NexusPath, reconciledPrefix: String): Result = {
+    val resultBackLink = NavigationHelper.errorMessageWithBackLink(errorMsg, NavigationHelper.generateBackLink(originalPath,reconciledPrefix))
+    Result(
+      ResponseHeader(
+        status,
+        flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](headers))
+      ),
+      HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json"))
+    )
+  }
+
+  def preppingEntitesForSave(nexusEndpoint: String, formValues: JsValue, cleanInstance: JsObject, currentlyDisplayedInstance: Instance, originalPath:NexusPath, originLink: String, userInfo: UserInfo, reconciledPrefix: String, instanceService: InstanceService, token:String) = {
+    val updateFromUI = Json.parse(FormHelper.unescapeSlash(formValues.toString())).as[JsObject] - "id"
+    val updatedInstance = buildInstanceFromForm(cleanInstance, updateFromUI, nexusEndpoint)
+    val diffEntity = buildDiffEntity(currentlyDisplayedInstance, updatedInstance.toString, cleanInstance) +
+      ("@type", JsString(s"http://hbp.eu/${originalPath.org}#${originalPath.schema.capitalize}"))
+    val correctedLinks = Json.toJson(diffEntity.value.map{
+      case (k, v) => recursiveCheckOfIds(k, v, reconciledPrefix, instanceService, token)
+    }).as[JsObject]
+    val preppedEntityForStorage = InstanceHelper.prepareManualEntityForStorage(correctedLinks,userInfo) +
+      ("http://hbp.eu/manual#origin", JsString(originLink)) +
+      ("http://hbp.eu/manual#parent", Json.obj("@id" -> JsString(originLink)))
+
+    (updatedInstance, correctedLinks, preppedEntityForStorage)
+  }
+
+  def recursiveCheckOfIds(k: String, v: JsValue, reconciledPrefix: String, instanceService: InstanceService, token: String): (String, JsValue) = {
+    if (k == "@id") {
+      val url = v.as[String]
+      val base = url.split("v0/data/").head
+      val (id, path) = Instance.extractIdAndPathFromString(url)
+      val reconciledPath = NexusPath(NavigationHelper.addSuffixToOrg(path.org, reconciledPrefix), path.domain, path.schema, path.version)
+      val res = Await.result(instanceService.retrieveInstance(reconciledPath, id, token), 10.seconds)
+      if (res.isRight) {
+        k -> JsString(s"${base}v0/data/${reconciledPath.toString()}/${id}")
+      } else {
+        k -> JsString(s"${base}v0/data/${path.toString()}/${id}")
+      }
+    } else {
+      v match {
+        case v if v.asOpt[JsObject].isDefined =>
+          val obj = v.as[JsObject].value.map {
+            case (childK, childV) =>
+              recursiveCheckOfIds(childK, childV, reconciledPrefix, instanceService, token)
+          }
+          k -> Json.toJson(obj)
+        case v if v.asOpt[JsArray].isDefined =>
+          val arr = v.as[JsArray].value.map { item =>
+            if (item.asOpt[JsObject].isDefined) {
+              val r = item.as[JsObject].value.map {
+                case (childK, childV) =>
+                  recursiveCheckOfIds(childK, childV, reconciledPrefix, instanceService, token)
+              }
+              Json.toJson(r)
+            } else {
+              item
+            }
+          }
+          k -> Json.toJson(arr)
+        case v => k -> v
+      }
+    }
+
+  }
+}
+
+
 
 

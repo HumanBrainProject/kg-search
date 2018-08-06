@@ -43,7 +43,11 @@ object Instance {
 
   def extractIdAndPath(jsValue: JsValue): (String, NexusPath) = {
     val nexusUrl = (jsValue \ "@id").as[String]
-    val nexusId = getIdfromURL(nexusUrl)
+    extractIdAndPathFromString(nexusUrl)
+  }
+
+  def extractIdAndPathFromString(url: String): (String, NexusPath) = {
+    val nexusId = getIdfromURL(url)
     val datatype = nexusId.splitAt(nexusId.lastIndexOf("/"))
     val nexusType = NexusPath(datatype._1.split("/").toList)
     (datatype._2.substring(1) , nexusType)

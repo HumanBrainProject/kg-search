@@ -50,14 +50,17 @@ object InstanceHelper {
                                   updateToBeStoredInManual: JsObject
                                 ): (Instance, Option[List[UpdateInfo]]) = {
     logger.debug(s"Result from incoming links $editorInstances")
-    assert(editorInstances.nonEmpty)
-    val manualUpdateDetails = editorInstances.map(manualEntity => manualEntity.extractUpdateInfo())
-    //Call reconcile API
     val updatesByPriority = buildManualUpdatesFieldsFrequency(editorInstances, updateToBeStoredInManual)
     val result = Instance(reconcilationLogic(updatesByPriority, originalInstance.content))
-    logger.debug(s"Reconciled instance $result")
-    (result, Some(manualUpdateDetails))
-
+    val manualUpdateDetailsOpt = if(editorInstances.isEmpty){
+      None
+    }else{
+      //Call reconcile API
+      logger.debug(s"Reconciled instance $result")
+      val manualUpdateDetails = editorInstances.map(manualEntity => manualEntity.extractUpdateInfo())
+      Some(manualUpdateDetails)
+    }
+    (result, manualUpdateDetailsOpt)
   }
 
 
