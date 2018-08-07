@@ -23,18 +23,22 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
 class NavigationHeperSpec  extends PlaySpec with GuiceOneAppPerSuite{
 
-  "NavigationHelper#formatOrg" should{
-    "return the path with the original org" in {
-      val path = NexusPath("minds", "test", "schema", "v0.0.3")
-      val expected = NexusPath("minds", "test", "schema", "v0.0.3")
-      val res = NavigationHelper.formatBackLinkOrg(path," reconciled")
-      assert(res == expected)
+  "NavigationHelper#generateBackLink" should{
+    "return a correctly formatted back link" in {
+      val path = NexusPath("minds", "core", "dataset", "v0.0.4")
+      val expected = "minds/core/dataset"
+      assert(expected == NavigationHelper.generateBackLink(path, "reconciled"))
     }
-    "modify the org if needed" in {
-      val path = NexusPath("mindsreconciled", "test", "schema", "v0.0.3")
-      val expected = NexusPath("minds", "test", "schema", "v0.0.3")
-      val res = NavigationHelper.formatBackLinkOrg(path, "reconciled")
-      assert(res == expected)
+    "return an empty string if the path is not valid" in {
+      val path = NexusPath("this", "doesnot", "exists", "v0.0.4")
+      val expected = ""
+      assert(expected == NavigationHelper.generateBackLink(path, "reconciled"))
+    }
+    "return a path with an original organization" in {
+      val path = NexusPath("mindsreconciled", "core", "dataset", "v0.0.4")
+      val expected = "minds/core/dataset"
+      assert(expected == NavigationHelper.generateBackLink(path, "reconciled"))
     }
   }
+
 }

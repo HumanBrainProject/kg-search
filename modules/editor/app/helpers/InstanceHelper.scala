@@ -47,12 +47,16 @@ object InstanceHelper {
                                   manualSpace:String,
                                   originalInstance: Instance,
                                   editorInstances: List[Instance],
-                                  updateToBeStoredInManual: JsObject
+                                  updateToBeStoredInManual: JsObject,
+                                  user: UserInfo
                                 ): (Instance, Option[List[UpdateInfo]]) = {
     logger.debug(s"Result from incoming links $editorInstances")
-    val updatesByPriority = buildManualUpdatesFieldsFrequency(editorInstances, updateToBeStoredInManual)
+    val updatesByPriority = buildManualUpdatesFieldsFrequency(
+      editorInstances.filter( item => (item.content \ "http://hbp.eu/manual#updater_id").as[String] != user.id
+      ), updateToBeStoredInManual)
     val result = Instance(reconcilationLogic(updatesByPriority, originalInstance.content))
     val manualUpdateDetailsOpt = if(editorInstances.isEmpty){
+      logger.debug("creating new editor instace")
       None
     }else{
       //Call reconcile API
@@ -275,8 +279,8 @@ object InstanceHelper {
       }
       val pathString = url.split("v0/data/").tail.head
       val id = url.split("/").last
-      val formattedId = NavigationHelper
-        .formatBackLinkOrg(NexusPath(pathString), reconciledSuffix)
+      val formattedId = NexusPath(pathString)
+        .originalPath(reconciledSuffix)
         .toString() + "/" + id
       Json.obj("id" -> formattedId, "description" -> description, "label" -> name)
     }
@@ -350,14 +354,6 @@ object InstanceHelper {
     )
   }
 
-  def modificationOfLinks(nexusEndpoint: String, instance: Instance, reconciledPrefix: String): JsResult[JsObject] = {
-    val id = (instance.content \ "@id").as[String]
-    val correctedId = s"$nexusEndpoint/v0/data/${Instance.getIdForEditor(id, reconciledPrefix)}"
-    val jsonTransformer = (__ ).json.update(
-      __.read[JsObject].map{ o => o ++ Json.obj("@id" -> correctedId)}
-    )
-    instance.content.transform(jsonTransformer)
-  }
 
 
 }

@@ -15,9 +15,10 @@
 *   limitations under the License.
 */
 
-package services
+package editor.services
 
 import java.net.URLEncoder
+import java.security.Policy.Parameters
 
 import com.google.inject.Inject
 import common.models.NexusPath
@@ -25,12 +26,14 @@ import editor.helper.InstanceHelper._
 import editor.models.{InMemoryKnowledge, IncomingLinksInstances, Instance}
 import helpers.ReconciledInstanceHelper
 import authentication.models.UserInfo
+import editor.controllers.NexusEditorController
 import editor.helper.InstanceHelper
-import editor.helpers.NavigationHelper
+import editor.helpers.{FormHelper, NavigationHelper}
 import nexus.helpers.NexusHelper
+import nexus.services.NexusService
 import play.api.{Configuration, Logger}
 import play.api.http.Status.OK
-import play.api.libs.json.{JsNull, JsObject, JsString, JsValue}
+import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -95,12 +98,39 @@ class InstanceService @Inject()(wSClient: WSClient,
       .withHttpHeaders("Authorization" -> token).put(instance)
   }
 
-  def retrieveInstance(path: NexusPath, id: String, token: String): Future[Either[WSResponse, Instance]] = {
-    getInstance(path, id, token)
+
+  /**
+    * Return a instance by its nexus ID
+    * Starting by checking if this instance is coming from a reconciled space.
+    * Otherwise we try to return the instance from the original organization
+    * @param path
+    * @param id The id of the instance
+    * @param token The user access token
+    * @return An error response or an the instance
+    */
+  def retrieveInstance(path: NexusPath, id: String, token: String, parameters: List[(String, String)] = List()): Future[Either[WSResponse, Instance]] = {
+    val reconciledPath = path.reconciledPath(reconciledPrefix)
+    getInstance(reconciledPath, id, token, parameters).flatMap[Either[WSResponse, Instance]] {
+      case Left(_) => // Check in the original space
+        retrieveReconciledFromOriginal(path, reconciledPath.org, id, token, parameters).flatMap[Either[WSResponse, Instance]] {
+          case Left(r) =>
+            Future.successful(Left(r))
+          case Right(reconciledInstance) =>
+            if (reconciledInstance.isDefined) {
+              Future.successful(Right(reconciledInstance.get))
+            } else {
+              getInstance(path, id, token, parameters)
+            }
+        }
+      case Right(instance) =>
+        Future.successful(Right(instance))
+    }
   }
 
-  private def getInstance(path: NexusPath, id: String, token: String) = {
-    wSClient.url(s"$nexusEndpoint/v0/data/${path.toString()}/$id?fields=all&deprecated=false").addHttpHeaders("Authorization" -> token).get().map {
+  def getInstance(path: NexusPath, id: String, token: String, parameters: List[(String, String)] = List()):Future[Either[WSResponse, Instance]] = {
+    wSClient.url(s"$nexusEndpoint/v0/data/${path.toString()}/$id?fields=all&deprecated=false")
+      .withQueryStringParameters( parameters: _*)
+      .addHttpHeaders("Authorization" -> token).get().map {
       res =>
         res.status match {
           case OK =>
@@ -111,8 +141,8 @@ class InstanceService @Inject()(wSClient: WSClient,
     }
   }
 
-  def retrieveReconciledFromOriginal(originalPath: NexusPath, reconciledOrg:String, id: String, token: String): Future[Either[WSResponse, Option[Instance]]] = {
-    val editorOrg = NavigationHelper.addSuffixToOrg(originalPath.org, editorPrefix)
+  def retrieveReconciledFromOriginal(originalPath: NexusPath, reconciledOrg:String, id: String, token: String, parameters: List[(String, String)] = List()): Future[Either[WSResponse, Option[Instance]]] = {
+    val editorOrg = NexusPath.addSuffixToOrg(originalPath.org, editorPrefix)
     val filter =
       s"""{
          |    "op": "or",
@@ -133,6 +163,7 @@ class InstanceService @Inject()(wSClient: WSClient,
       """.stripMargin.stripLineEnd.replaceAll("\r\n", "")
     wSClient
       .url(s"$nexusEndpoint/v0/data/${reconciledOrg}/${originalPath.domain}/${originalPath.schema}/${originalPath.version}/?deprecated=false&fields=all&size=1&filter=${URLEncoder.encode(filter, "utf-8")}")
+      .withQueryStringParameters( parameters: _*)
       .addHttpHeaders("Authorization" -> token)
       .get()
       .map {

@@ -133,7 +133,7 @@ object FormHelper {
         val linkToInstance = (data \ key \ "@id").as[String]
         if (linkToInstance.contains("http")){
           val(id, path) = Instance.extractIdAndPathFromString(linkToInstance)
-          val instancePath = NavigationHelper.formatBackLinkOrg(path, reconciledSuffix)
+          val instancePath = path.originalPath(reconciledSuffix)
           JsArray().+:(Json.obj("id" -> JsString(instancePath.toString() + s"/$id")))
         } else {
           JsArray()
@@ -149,7 +149,7 @@ object FormHelper {
       jsArray.value.collect{
         case el if ((el \ "@id").as[String] contains "http") =>
           val(id, path) = Instance.extractIdAndPathFromString((el \ "@id").as[String])
-          val instancePath = NavigationHelper.formatBackLinkOrg(path, reconciledSuffix)
+          val instancePath = path.originalPath(reconciledSuffix)
           Json.obj("id" -> JsString(instancePath.toString() + s"/$id"))
         }
     ).as[JsArray]

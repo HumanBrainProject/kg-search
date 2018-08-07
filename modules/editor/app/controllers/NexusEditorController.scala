@@ -40,7 +40,8 @@ import play.api.libs.json.Reads._
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.mvc._
-import services.{InstanceService, NexusService}
+import editor.services.InstanceService
+import nexus.services.NexusService
 
 import scala.concurrent.duration._
 import scala.concurrent.duration.FiniteDuration
@@ -67,70 +68,75 @@ class NexusEditorController @Inject()(
 
   val logger = Logger(this.getClass)
 
-  // TODO Check for authentication and groups as for now everybody could see the whole graph
   def listInstances(org: String, domain:String, datatype: String, version:String): Action[AnyContent] = authenticatedUserAction.async  { implicit request =>
-    logger.debug(s"User info ${request.user}")
     val nexusPath = NexusPath(org, domain, datatype, version)
-    val sparqlPayload =
-      s"""
-         |SELECT DISTINCT ?instance ?name  ?description
-         |WHERE {
-         |  {
-         |    ?instance <http://schema.org/name> ?name .
-         |	?instance a <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/Instance> .
-         |  ?instance <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/deprecated> false .
-         |  ?instance <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/schema> <$nexusEndpoint/v0/schemas/${nexusPath.toString()}> .
-         |      OPTIONAL{ ?instance <http://schema.org/description> ?description .}
-         |    FILTER(!EXISTS{?i <http://hbp.eu/reconciled#original_parent> ?instance}) .
-         |    }
-         |   UNION {
-         |	   ?instance <http://schema.org/name> ?name .
-         |    OPTIONAL{ ?instance <http://schema.org/description> ?description .}
-         |  	?instance a <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/Instance> .
-         |  ?instance <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/deprecated> false .
-         |  ?instance <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/schema> <$nexusEndpoint/v0/schemas/${nexusPath.org}reconciled/${nexusPath.domain}/${nexusPath.schema}/${nexusPath.version}> .
-         |  ?original   <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/schema> ?originalSchema .
-         |     ?instance <http://hbp.eu/reconciled#original_parent> ?original .
-         |     FILTER( ?originalSchema IN(<$nexusEndpoint/v0/schemas/${nexusPath.toString()}>, <$nexusEndpoint/v0/schemas/${nexusPath.org}editor/${nexusPath.domain}/${nexusPath.schema}/${nexusPath.version}>) )
-         |  }
-         |}
-         |
-      """.stripMargin
-
-    val start = System.currentTimeMillis()
-
-    ws.url(s"$sparqlEndpoint/bigdata/namespace/$blazegraphNameSpace/sparql")
-      .withQueryStringParameters("query" -> sparqlPayload, "format" -> "json").get().map[Result] {
+    ws.url(s"$nexusEndpoint/v0/organizations/$org").addHttpHeaders("Authorization" -> request.headers.get("Authorization").getOrElse("")).get().flatMap{
       res =>
         res.status match {
-          case 200 =>
-            val arr = BlazegraphHelper.extractResult(res.json)
-            val duration = System.currentTimeMillis() - start
-//            logger.debug(s"sparql query: \n$sparqlPayload\n\nduration: ${duration}ms")
-            Ok(Json.obj(
-              "data" -> InstanceHelper.formatInstanceList(arr, reconciledPrefix),
-              "label" -> JsString((FormHelper.formRegistry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String].getOrElse(nexusPath.toString())))
+          case UNAUTHORIZED =>
+            val resultBackLink = NavigationHelper.errorMessageWithBackLink("You are not allowed to perform this request")
+            Future.successful(
+              Unauthorized(resultBackLink)
             )
-          case _ =>
-            Result(
-              ResponseHeader(
-                res.status,
-                flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](res.headers))
-              ),
-              HttpEntity.Strict(res.bodyAsBytes, getContentType(res.headers))
-            )
+          case OK =>
+            val sparqlPayload =
+              s"""
+                 |SELECT DISTINCT ?instance ?name  ?description
+                 |WHERE {
+                 |  {
+                 |    ?instance <http://schema.org/name> ?name .
+                 |	?instance a <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/Instance> .
+                 |  ?instance <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/deprecated> false .
+                 |  ?instance <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/schema> <$nexusEndpoint/v0/schemas/${nexusPath.toString()}> .
+                 |      OPTIONAL{ ?instance <http://schema.org/description> ?description .}
+                 |    FILTER(!EXISTS{?i <http://hbp.eu/reconciled#original_parent> ?instance}) .
+                 |    }
+                 |   UNION {
+                 |	   ?instance <http://schema.org/name> ?name .
+                 |    OPTIONAL{ ?instance <http://schema.org/description> ?description .}
+                 |  	?instance a <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/Instance> .
+                 |  ?instance <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/deprecated> false .
+                 |  ?instance <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/schema> <$nexusEndpoint/v0/schemas/${nexusPath.org}reconciled/${nexusPath.domain}/${nexusPath.schema}/${nexusPath.version}> .
+                 |  ?original   <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/schema> ?originalSchema .
+                 |     ?instance <http://hbp.eu/reconciled#original_parent> ?original .
+                 |     FILTER( ?originalSchema IN(<$nexusEndpoint/v0/schemas/${nexusPath.toString()}>, <$nexusEndpoint/v0/schemas/${nexusPath.org}editor/${nexusPath.domain}/${nexusPath.schema}/${nexusPath.version}>) )
+                 |  }
+                 |}
+                 |
+        """.stripMargin
+
+            val start = System.currentTimeMillis()
+
+            ws.url(s"$sparqlEndpoint/bigdata/namespace/$blazegraphNameSpace/sparql")
+              .withQueryStringParameters("query" -> sparqlPayload, "format" -> "json").get().map[Result] {
+              res =>
+                res.status match {
+                  case OK =>
+                    val arr = BlazegraphHelper.extractResult(res.json)
+                    val duration = System.currentTimeMillis() - start
+                    Ok(
+                      Json.obj(
+                        "data" -> InstanceHelper.formatInstanceList(arr, reconciledPrefix),
+                        "label" -> JsString(
+                          (FormHelper.formRegistry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String]
+                            .getOrElse(nexusPath.toString())
+                        )
+                      )
+                    )
+                  case _ =>
+                    NexusEditorController.forwardResultResponse(res)
+                }
+            }
         }
     }
   }
 
   /**
     * Return a instance by its nexus ID
-    * Stating by checking if this instance is coming from a reconciled space.
-    * Otherwise we try to return the instance from the original organization
-    * All responses are sent with a json object "back_link" with the path of the schema of the instance
+    * The response is sent with a json object "back_link" with the path of the schema of the instance
     * if the schema exists returns e.g myorg/mydomain/myschema otherwise returns an empty string
     *
-    * @param org The org of the instance
+    * @param org The organization of the instance
     * @param domain The domain of the instance
     * @param schema The schema of the instance
     * @param version The version of the schema
@@ -138,58 +144,36 @@ class NexusEditorController @Inject()(
     * @return An error message with a back_link or a form configuration populated with the instance information
     */
 
-  def getInstance(org: String, domain:String, schema: String, version:String, id: String): Action[AnyContent] = Action.async { implicit request =>
+  def getInstance(org: String, domain: String, schema: String, version: String, id: String): Action[AnyContent] = Action.async { implicit request =>
     val token = request.headers.get("Authorization").getOrElse("")
     val nexusPath = NexusPath(org, domain, schema, version)
     //Check if instance is from Reconciled space
-    val reconciledPath = NexusPath(NavigationHelper.addSuffixToOrg(org, reconciledPrefix), domain,schema, version)
-    instanceService.retrieveInstance(reconciledPath, id, token).flatMap[Result] {
-      case Left(_) => // Check in the original space
-        instanceService.retrieveReconciledFromOriginal(nexusPath, NavigationHelper.addSuffixToOrg(org, reconciledPrefix), id, token).flatMap[Result]{
-          case Left(_) =>
-            Future.successful(InternalServerError(NavigationHelper.errorMessageWithBackLink("Could not fetch the requested data", NavigationHelper.generateBackLink(nexusPath,  reconciledPrefix))))
-          case Right(reconciledInstance) =>
-            if(reconciledInstance.isDefined) {
-              InstanceHelper.modificationOfLinks(nexusEndpoint, reconciledInstance.get, reconciledPrefix) match {
-                case JsSuccess(data, path) =>
-                  val instanceForm = FormHelper.getFormStructure(nexusPath, data, reconciledPrefix)
-                  Future.successful(
-                    Ok(NavigationHelper.resultWithBackLink(instanceForm.as[JsObject], nexusPath, reconciledPrefix))
-                  )
-                case _ => Future.successful(InternalServerError(NavigationHelper.errorMessageWithBackLink("Could not fetch the requested data", NavigationHelper.generateBackLink(nexusPath, reconciledPrefix))))
-              }
-            }else{
-              instanceService.retrieveInstance(nexusPath, id, token).map[Result]{
-                case Left(r) =>
-                  logger.error(s"Error: Could not fetch instance : ${nexusPath.toString()}/$id - ${r.body}")
-                  val resultBackLink = NavigationHelper.errorMessageWithBackLink(r.body, NavigationHelper.generateBackLink(nexusPath,  reconciledPrefix))
-                  Result(ResponseHeader(r.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](r.headers))),
-                    HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json")))
-                case Right(originalInstance) =>
-                  val instanceForm = FormHelper.getFormStructure(nexusPath, originalInstance.content, reconciledPrefix)
-                  Ok(NavigationHelper.resultWithBackLink(instanceForm.as[JsObject], nexusPath, reconciledPrefix))
-              }
-            }
-        }
+    instanceService.retrieveInstance(nexusPath, id, token).map[Result] {
+      case Left(r) =>
+        logger.error(s"Error: Could not fetch instance : ${nexusPath.toString()}/$id - ${r.body}")
+        NexusEditorController.errorResultWithBackLink(r.status, r.headers, r.body, nexusPath, reconciledPrefix)
       case Right(instance) =>
-        InstanceHelper.modificationOfLinks(nexusEndpoint, instance, reconciledPrefix) match {
-          case JsSuccess(data, path) =>
-            val instanceForm = FormHelper.getFormStructure(nexusPath, data, reconciledPrefix)
-            Future.successful(
-              Ok(NavigationHelper.resultWithBackLink(instanceForm.as[JsObject], nexusPath, reconciledPrefix))
+        val instanceWithCorrectLinks = instance.modificationOfLinks(nexusEndpoint, reconciledPrefix)
+        FormHelper.getFormStructure(nexusPath, instanceWithCorrectLinks.content, reconciledPrefix) match {
+          case JsNull =>
+            NotImplemented(
+              NavigationHelper.errorMessageWithBackLink("Form not implemented", NavigationHelper.generateBackLink(nexusPath, reconciledPrefix))
             )
-          case _ => Future.successful(InternalServerError(NavigationHelper.errorMessageWithBackLink("Could not fetch the requested data", NavigationHelper.generateBackLink(nexusPath,  reconciledPrefix))))
+          case instanceForm =>
+            Ok(NavigationHelper.resultWithBackLink(instanceForm.as[JsObject], nexusPath, reconciledPrefix))
         }
-
     }
   }
 
-  def getInstanceNumberOfAvailableRevisions(org: String, domain:String, datatype: String, version:String, id: String): Action[AnyContent] = Action.async { implicit request =>
+  def getInstanceNumberOfAvailableRevisions(org: String, domain:String, datatype: String, version:String, id: String): Action[AnyContent] =
+    Action.async { implicit request =>
     val token = request.headers.get("Authorization").getOrElse("")
     val nexusPath = NexusPath(org, domain, datatype, version)
     instanceService.retrieveInstance(nexusPath, id, token).flatMap[Result] {
-      case Left(res) => Future.successful(Result(ResponseHeader(res.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](res.headers))),
-        HttpEntity.Strict(res.bodyAsBytes, getContentType(res.headers))))
+      case Left(res) =>
+        Future.successful(
+          NexusEditorController.forwardResultResponse(res)
+        )
       case Right(originalInstance) =>
         val nbRevision = (originalInstance.content \ "nxv:rev").as[JsNumber]
         Future.successful(Ok(
@@ -202,39 +186,30 @@ class NexusEditorController @Inject()(
   def getSpecificReconciledInstance(
                                      org: String,
                                      domain: String,
-                                     datatype: String,
+                                     schema: String,
                                      version: String,
                                      id: String,
                                      revision: Int
                                    ): Action[AnyContent] = Action.async { implicit request =>
     val token = request.headers.get("Authorization").getOrElse("")
-    val nexusPath = NexusPath(org, domain, datatype, version)
-    ws
-      .url(s"https://$nexusEndpoint/v0/data/${nexusPath.toString()}/$id?rev=$revision&deprecated=false&fields=all")
-      .withHttpHeaders("Authorization" -> token).get().map {
-      response =>
-        response.status match {
-          case OK =>
-            val json = response.json
-            val nexusId = Instance.getIdForEditor((json \ "http://hbp.eu/reconciled#original_parent" \ "@id").as[String],  reconciledPrefix)
-            val datatype = nexusId.splitAt(nexusId.lastIndexOf("/"))
-            val originalDatatype = NexusPath(datatype._1.split("/").toList)
-            FormHelper.getFormStructure(originalDatatype, response.json, reconciledPrefix) match {
-              case JsNull => NotImplemented(NavigationHelper.errorMessageWithBackLink("Form not implemented", NavigationHelper.generateBackLink(nexusPath, reconciledPrefix) ))
-              case json => Ok(NavigationHelper.resultWithBackLink(json.as[JsObject], nexusPath,reconciledPrefix))
-            }
-          case _ =>
-            val resultBackLink = NavigationHelper.errorMessageWithBackLink(response.body, NavigationHelper.generateBackLink(nexusPath,reconciledPrefix))
-            Result(
-              ResponseHeader(
-                response.status,
-                flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](response.headers))
-              ),
-              HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json"))
+    val nexusPath = NexusPath(org, domain, schema, version)
+    instanceService.retrieveInstance(nexusPath, id, token, List( ("rev", revision.toString) ) ).map {
+      case Right(instance) =>
+        val json = instance.content
+        val nexusId = Instance.getIdForEditor((json \ "http://hbp.eu/reconciled#original_parent" \ "@id").as[String], reconciledPrefix)
+        val datatype = nexusId.splitAt(nexusId.lastIndexOf("/"))
+        val originalDatatype = NexusPath(datatype._1.split("/").toList)
+        FormHelper.getFormStructure(originalDatatype, json, reconciledPrefix) match {
+          case JsNull =>
+            NotImplemented(
+              NavigationHelper.errorMessageWithBackLink("Form not implemented", NavigationHelper.generateBackLink(nexusPath, reconciledPrefix))
             )
+          case instanceContent => Ok(NavigationHelper.resultWithBackLink(instanceContent.as[JsObject], nexusPath, reconciledPrefix))
         }
-
+      case Left(response) =>
+        NexusEditorController.errorResultWithBackLink(response.status, response.headers, response.body, nexusPath, reconciledPrefix)
     }
+
   }
 
   /**
@@ -282,7 +257,6 @@ class NexusEditorController @Inject()(
           instanceService.upsertUpdateInManualSpace(editorSpace, None,  request.user, originalInstance.nexusPath, preppedEntityForStorage, token)
         }
       }
-
       manualRes.flatMap { res =>
         logger.debug(s"Creation of manual update ${res.body}")
         res.status match {
@@ -325,16 +299,15 @@ class NexusEditorController @Inject()(
     val editorSpace = EditorSpaceHelper.getGroupName(request.editorGroup, editorPrefix)
     val originalIdAndPath = Instance.extractIdAndPath((currentInstanceDisplayed.content \ "http://hbp.eu/reconciled#original_parent").as[JsValue])
     // Get the original instance either in the Editor space or the original space
-    instanceService.retrieveInstance(originalIdAndPath._2, originalIdAndPath._1, token).flatMap {
+    instanceService.getInstance(originalIdAndPath._2, originalIdAndPath._1, token).flatMap {
       case Right(instanceFromOriginalSpace) =>
         val originalInstance = Instance(originalIdAndPath._1, originalPath, removeNexusFields(instanceFromOriginalSpace.content))
         // Get the editor instances
-
         val editorInstanceIds = (currentInstanceDisplayed.content \ "http://hbp.eu/reconciled#parents").asOpt[List[JsObject]]
           .getOrElse(List())
           .map(js => Instance.extractIdAndPath(js)._1)
         reconciledTokenFut.flatMap { reconciledToken =>
-          instanceService.retrieveInstances(editorInstanceIds, NexusPath(NavigationHelper.addSuffixToOrg(originalPath.org, editorPrefix), originalPath.domain, originalPath.schema, originalPath.version), token).flatMap[Result] {
+          instanceService.retrieveInstances(editorInstanceIds, originalPath.reconciledPath(editorPrefix), token).flatMap[Result] {
             editorInstancesRes =>
               if (editorInstancesRes.forall(_.isRight)) {
                 val editorInstances = editorInstancesRes.map { e => e.toOption.get}
@@ -360,10 +333,8 @@ class NexusEditorController @Inject()(
                   token
                 )
                 logger.debug(s"Consolidated instance $updatedInstance")
-
-                consolidateFromManualSpace(nexusEndpoint, editorSpace, currentInstanceDisplayed, editorInstances, updateToBeStoredInManual) match {
+                consolidateFromManualSpace(nexusEndpoint, editorSpace, currentInstanceDisplayed, editorInstances, updateToBeStoredInManual, request.user) match {
                   case (consolidatedInstance, manualEntitiesDetailsOpt) =>
-
                     val manualUpsert = instanceService.upsertUpdateInManualSpace(editorSpace, manualEntitiesDetailsOpt, request.user, originalPath, preppedEntityForStorage, token)
                     manualUpsert.flatMap { res =>
                       logger.debug(s"Creation of manual update ${res.body}")
@@ -399,6 +370,15 @@ class NexusEditorController @Inject()(
     }
   }
 
+  /**
+    * Entry point when updating an instance
+    * @param org The organization of the instance
+    * @param domain The domain of the instance
+    * @param schema The schema of the instance
+    * @param version The version of the schema
+    * @param id The id of the instance
+    * @return A result with the instance updated or an error message
+    */
   def updateInstance(org: String,
                      domain: String,
                      schema: String,
@@ -408,47 +388,18 @@ class NexusEditorController @Inject()(
 
       val token = OIDCHelper.getTokenFromRequest(request)
       val instancePath = NexusPath(org, domain, schema, version)
-      val reconciledPath = NexusPath(NavigationHelper.addSuffixToOrg(org, reconciledPrefix), domain, schema, version)
-      instanceService.retrieveInstance(reconciledPath, id, token).flatMap[Result] {
+      instanceService.retrieveInstance(instancePath, id, token).flatMap[Result] {
         case Left(res) =>
-          instanceService.retrieveReconciledFromOriginal(instancePath, reconciledPath.org, id, token).flatMap {
-            case Left(r) =>
-              val resultBackLink = NavigationHelper
-                .errorMessageWithBackLink(r.body, NavigationHelper.generateBackLink(instancePath, reconciledPrefix))
-              Future.successful(Result(
-                ResponseHeader(
-                  r.status,
-                  flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](r.headers))
-                ),
-                HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json"))
-              ))
-            case Right(reconciledInstance) =>
-              reconciledInstance match {
-                case Some(instance) =>
-                  logger.debug("It is an original instance but a reconciled instance exists already")
-                  updateWithReconciled(instance, instancePath)
-                case _ =>
-                  instanceService.retrieveInstance(instancePath, id, token).flatMap {
-                    case Left(response) =>
-                      val resultBackLink = NavigationHelper
-                        .errorMessageWithBackLink(response.body, NavigationHelper.generateBackLink(instancePath, reconciledPrefix))
-                      Future.successful(Result(
-                        ResponseHeader(
-                          response.status,
-                          flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](response.headers))
-                        ),
-                        HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json"))
-                      ))
-                    case Right(originalInstance) =>
-                      initialUpdate(originalInstance)
-                  }
-
-              }
-
-          }
+          Future.successful(
+            NexusEditorController.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, reconciledPrefix)
+          )
         case Right(currentInstanceDisplayed) =>
-          logger.debug("It is a reconciled instance")
-          updateWithReconciled(currentInstanceDisplayed, instancePath)
+          if(currentInstanceDisplayed.nexusPath.isReconciled(reconciledPrefix)){
+            logger.debug("It is a reconciled instance")
+            updateWithReconciled(currentInstanceDisplayed, instancePath)
+          } else {
+            initialUpdate(currentInstanceDisplayed)
+          }
       }
     }
 
@@ -507,14 +458,8 @@ class NexusEditorController @Inject()(
                         .-("nxv:rev")
                       Created(NavigationHelper.resultWithBackLink(output.as[JsObject], instancePath, reconciledPrefix))
                     case _ =>
-                      val resultBackLink = NavigationHelper.errorMessageWithBackLink(res.body, NavigationHelper.generateBackLink(instancePath, reconciledPrefix))
-                      Result(
-                        ResponseHeader(res.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](res.headers))),
-                        HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json"))
-                      )
+                      NexusEditorController.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, reconciledPrefix)
                   }
-
-
                 }
               }
             }
@@ -526,15 +471,15 @@ class NexusEditorController @Inject()(
 
   /**
     * Returns an empty form for a specific instance type
-    * @param org
-    * @param domain
-    * @param datatype
-    * @param version
+    * @param org The organization of the instance
+    * @param domain The domain of the instance
+    * @param schema The schema of the instance
+    * @param version The version of the schema
     * @return
     */
-  def getEmptyForm(org: String, domain: String, datatype: String, version: String): Action[AnyContent] = Action {
+  def getEmptyForm(org: String, domain: String, schema: String, version: String): Action[AnyContent] = Action {
     implicit request =>
-      val nexusPath = NexusPath(org, domain, datatype, version)
+      val nexusPath = NexusPath(org, domain, schema, version)
       val form = FormHelper.getFormStructure(nexusPath, JsNull, reconciledPrefix)
       Ok(form)
   }
@@ -563,10 +508,7 @@ class NexusEditorController @Inject()(
             println(s"sparql query: \n$sparqlPayload\n\nduration: ${duration}ms")
             Ok(NodeTypeHelper.formatNodetypeList(arr))
           case _ =>
-            Result(
-              ResponseHeader(res.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](res.headers))),
-              HttpEntity.Strict(res.bodyAsBytes, getContentType(res.headers))
-            )
+            NexusEditorController.forwardResultResponse(res)
         }
     }
     res
@@ -600,6 +542,18 @@ object NexusEditorController {
     )
   }
 
+  /**
+    * This function forward a reponse as a Play Result
+    * @param res The response to be forwarded
+    * @return A result reflecting the response
+    */
+  def forwardResultResponse(res: WSResponse): Result = {
+    Result(
+      ResponseHeader(res.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](res.headers))),
+      HttpEntity.Strict(res.bodyAsBytes, getContentType(res.headers))
+    )
+  }
+
   def preppingEntitesForSave(nexusEndpoint: String, formValues: JsValue, cleanInstance: JsObject, currentlyDisplayedInstance: Instance, originalPath:NexusPath, originLink: String, userInfo: UserInfo, reconciledPrefix: String, instanceService: InstanceService, token:String) = {
     val updateFromUI = Json.parse(FormHelper.unescapeSlash(formValues.toString())).as[JsObject] - "id"
     val updatedInstance = buildInstanceFromForm(cleanInstance, updateFromUI, nexusEndpoint)
@@ -611,7 +565,6 @@ object NexusEditorController {
     val preppedEntityForStorage = InstanceHelper.prepareManualEntityForStorage(correctedLinks,userInfo) +
       ("http://hbp.eu/manual#origin", JsString(originLink)) +
       ("http://hbp.eu/manual#parent", Json.obj("@id" -> JsString(originLink)))
-
     (updatedInstance, correctedLinks, preppedEntityForStorage)
   }
 
@@ -620,8 +573,8 @@ object NexusEditorController {
       val url = v.as[String]
       val base = url.split("v0/data/").head
       val (id, path) = Instance.extractIdAndPathFromString(url)
-      val reconciledPath = NexusPath(NavigationHelper.addSuffixToOrg(path.org, reconciledPrefix), path.domain, path.schema, path.version)
-      val res = Await.result(instanceService.retrieveInstance(reconciledPath, id, token), 10.seconds)
+      val reconciledPath = path.reconciledPath(reconciledPrefix)
+      val res = Await.result(instanceService.getInstance(reconciledPath, id, token), 10.seconds)
       if (res.isRight) {
         k -> JsString(s"${base}v0/data/${reconciledPath.toString()}/${id}")
       } else {

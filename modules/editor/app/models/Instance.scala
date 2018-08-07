@@ -19,7 +19,7 @@ package editor.models
 
 import common.models.NexusPath
 import editor.helpers.NavigationHelper
-import play.api.libs.json.{JsObject, JsValue}
+import play.api.libs.json._
 
 case class Instance(nexusUUID: String, nexusPath: NexusPath, content:JsObject){
 
@@ -33,6 +33,16 @@ case class Instance(nexusUUID: String, nexusPath: NexusPath, content:JsObject){
       (this.content \ "http://hbp.eu/manual#updater_id").asOpt[String].getOrElse("")
     )
   }
+
+  def modificationOfLinks(nexusEndpoint: String, reconciledPrefix: String): Instance = {
+    val id = (this.content \ "@id").as[String]
+    val correctedId = s"$nexusEndpoint/v0/data/${Instance.getIdForEditor(id, reconciledPrefix)}"
+    val jsonTransformer = (__ ).json.update(
+      __.read[JsObject].map{ o => o ++ Json.obj("@id" -> correctedId)}
+    )
+    Instance(this.nexusUUID, this.nexusPath, this.content.transform(jsonTransformer).get)
+  }
+
 }
 
 object Instance {
@@ -61,8 +71,8 @@ object Instance {
     assert(url contains "v0/data/")
     val pathString = url.split("v0/data/").tail.head
     val id = pathString.split("/").last
-    NavigationHelper
-      .formatBackLinkOrg(NexusPath(pathString), reconciledPrefix)
+    NexusPath(pathString)
+      .originalPath(reconciledPrefix)
       .toString() + "/" + id
   }
   // extract id, rev and userId of updator for this update

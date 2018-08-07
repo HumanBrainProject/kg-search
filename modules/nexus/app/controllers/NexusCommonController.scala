@@ -20,11 +20,11 @@ package nexus.controllers
 import common.helpers.ResponseHelper._
 import javax.inject.{Inject, Singleton}
 import nexus.helpers.{NexusHelper, NexusSpaceHandler}
+import nexus.services.{NexusService, NexusSpaceService}
 import play.api.{Configuration, Logger}
 import play.api.http.HttpEntity
 import play.api.libs.ws.WSClient
 import play.api.mvc._
-import services.{NexusService, NexusSpaceService}
 
 import scala.concurrent.{ExecutionContext, Future}
 

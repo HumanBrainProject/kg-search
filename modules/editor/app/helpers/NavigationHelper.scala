@@ -20,29 +20,23 @@ package editor.helpers
 import common.models.NexusPath
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 
-import scala.reflect.internal.util.NoPosition
 object NavigationHelper {
   val backLinkField = "back_link"
-
-  def formatBackLinkOrg(path:NexusPath,reconciledSuffix : String): NexusPath = {
-    val org = if(path.org.endsWith(reconciledSuffix)){
-      val editorReconciled = s"""^(.+)$reconciledSuffix$$""".r
-      path.org match {
-        case editorReconciled(originalOrg) => originalOrg
-      }
-    }else{
-      path.org
-    }
-    NexusPath(org, path.domain, path.schema, path.version)
-  }
 
   def addBackLink(instance:JsObject, backLinkStr: String): JsObject = {
     val backLink = backLinkField -> JsString(backLinkStr)
     instance + backLink
   }
 
+  /**
+    * This method provides a back_link based on the instance path
+    * This back_link is used in the UI navigation
+    * @param path The path of the instance
+    * @param reconciledSuffix The term used to identify a reconciled space
+    * @return A path as a string
+    */
   def generateBackLink(path:NexusPath,reconciledSuffix:String): String = {
-    val formattedPath = formatBackLinkOrg(path, reconciledSuffix)
+    val formattedPath = path.originalPath(reconciledSuffix)
     (FormHelper.formRegistry \ formattedPath.org \ formattedPath.domain \ formattedPath.schema).asOpt[JsObject] match {
       case Some(schema) =>
         s"${formattedPath.org}/${formattedPath.domain}/${formattedPath.schema}"
@@ -62,8 +56,6 @@ object NavigationHelper {
     }
   }
 
-  def addSuffixToOrg(org:String, reconciledSuffix: String):String = {
-    org + reconciledSuffix
-  }
+
 
 }

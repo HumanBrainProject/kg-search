@@ -21,9 +21,12 @@ import editor.helper.InstanceHelper.{cleanUpInstanceForSave, generateAlternative
 import editor.models.{IncomingLinksInstances, Instance}
 import authentication.models.UserInfo
 import org.joda.time.DateTime
+import play.api.Logger
 import play.api.libs.json._
 
 object ReconciledInstanceHelper {
+
+  val logger = Logger(this.getClass)
 
 
   // NOTE

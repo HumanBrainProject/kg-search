@@ -17,15 +17,11 @@
 
 package editor.models
 
-
-import nexus.helpers.NexusHelper
-import play.api.Configuration
+import nexus.services.NexusService
 import play.api.libs.json.JsObject
-import play.api.libs.ws.WSClient
-import services.NexusService
 
 import concurrent.duration._
-import scala.concurrent.{Await, ExecutionContext}
+import scala.concurrent.Await
 import scala.collection.immutable.HashSet
 
 class InMemoryKnowledge(endpoint: String, space: String) {
@@ -39,11 +35,11 @@ class InMemoryKnowledge(endpoint: String, space: String) {
   def loadManualSchemaList(token: String, nexusService: NexusService) = {
     val schemaUrl = s"$nexusEndpoint/v0/schemas/$space"
     // wait for schemas call to finish before going on
-    val currentSchemas =Await.result(
+    val currentSchemas = Await.result(
       nexusService.listAllNexusResult(schemaUrl, token),
       1.seconds)
 
-    if (currentSchemas.nonEmpty){
+    if (currentSchemas.nonEmpty) {
       val schemasIds = currentSchemas.map(js => (js.as[JsObject] \ "resultId").as[String])
       manualSchema = seqToHashSet[String](schemasIds)
     }
