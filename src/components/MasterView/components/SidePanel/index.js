@@ -15,24 +15,22 @@
 */
 
 import React from "react";
-import { ResetFilters, SideBar } from "searchkit";
+import { ResetFilters } from "searchkit";
 import { Select } from "../../../Select";
 import { FacetList } from "./containers/FacetList";
 import "./styles.css";
 
-export function SidePanel({onToggle, currentIndex, indexes, onIndexChange, searchkit}) {
+export function SidePanel({currentIndex, indexes, onIndexChange, searchkit}) {
   return (
     <div className="kgs-sidebar">
-      <div className="kgs-sidebar-container">
-        <SideBar>
-          {indexes.length > 1?<Select label="Group" value={currentIndex} list={indexes} onChange={onIndexChange} />:null}
-          <ResetFilters options={{query:false, filter:true, pagination:true}} translations={{"reset.clear_all":"clear extended filters"}}/>
-          <FacetList searchkit={searchkit} /> 
-        </SideBar>
+      <div className="kgs-filters">
+        <div className="kgs-filters__header">
+          <div className="kgs-filters__title">Filters</div>
+          <div className="kgs-filters__reset"><ResetFilters options={{query:false, filter:true, pagination:true}} translations={{"reset.clear_all":"Reset"}}/></div>
+        </div>
+        {indexes.length > 1?<Select label="Group" value={currentIndex} list={indexes} onChange={onIndexChange} />:null}
+        <FacetList searchkit={searchkit} />
       </div>
-      <button className="kgs-sidebar__toggle" onClick={onToggle} title="toggle faceted search">
-        <i className="fa fa-angle-double-up kgs-sidebar__toggle-icon"></i>
-      </button>
     </div>
   );
 }

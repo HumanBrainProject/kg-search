@@ -37,6 +37,16 @@
     background-color: white;
     padding: 5px 15px;
     color: #ED5554;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;    
+    -webkit-transition: -webkit-box-shadow 0.2s ease-in;
+    transition: -webkit-box-shadow 0.2s ease-in;
+    -o-transition: box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
 }
 
 .kgs-paging .sk-pagination-navigation .sk-toggle-option.is-active {
@@ -46,6 +56,18 @@
 .kgs-paging .sk-pagination-navigation .sk-toggle-option.is-disabled {
     background-color: transparent;
     border-color: transparent;
+}
+
+
+.kgs-paging .sk-pagination-navigation .sk-toggle-option:not(.is-disabled):hover,
+.kgs-paging .sk-pagination-navigation .sk-toggle-option:not(.is-disabled):focus  {
+   /*
+    -webkit-box-shadow: 3px 3px 6px #8f8a8a;
+    box-shadow: 3px 3px 6px #8f8a8a;    
+    */
+    -webkit-box-shadow: 3px 3px 6px #cbc9c9;
+    box-shadow: 3px 3px 6px #cbc9c9;
+    z-index: 1;
 }
 
 .kgs-paging .sk-pagination-navigation .sk-toggle-option + .sk-toggle-option {

@@ -32,14 +32,12 @@ export class MasterView extends Component {
     this.state = {
       showTermsShortNotice: typeof Storage === "undefined" || localStorage.getItem("hbp.kgs-terms-conditions-consent") !== "true",
       gridLayoutMode: true,
-      sidepanel: document.documentElement.clientWidth >= 992? "expanded": "collapsed"
     };
     this.componentContext = {
       tabAbles: []
     };
     this.agreeTermsShortNotice = this.agreeTermsShortNotice.bind(this);
     this.setLayoutMode = this.setLayoutMode.bind(this);
-    this.toggleSidePanel = this.toggleSidePanel.bind(this);
   }
   agreeTermsShortNotice() {
     if (typeof(Storage) !== "undefined") {
@@ -50,9 +48,6 @@ export class MasterView extends Component {
   }
   setLayoutMode(gridLayoutMode) {
     this.setState({ gridLayoutMode: !!gridLayoutMode});
-  }
-  toggleSidePanel() {
-    this.setState({ sidepanel: this.state.sidepanel==="collapsed"?"expanded":"collapsed"});
   }
   UNSAFE_componentWillUpdate() {
     this.componentContext.tabAbles.forEach(e => {
@@ -105,14 +100,14 @@ export class MasterView extends Component {
     ];
 
     return (
-      <div className="kgs-masterView"  data-layoutMode={this.state.gridLayoutMode?"grid":"list"} data-hasHits={hitCount > 0} data-sidepanel={this.state.sidepanel} >
+      <div className="kgs-masterView"  data-layoutMode={this.state.gridLayoutMode?"grid":"list"} data-hasHits={hitCount > 0} >
         <SearchkitProvider searchkit={searchkit}>
           <Layout>
-            <SearchPanel searchThrottleTime={searchThrottleTime} queryFields={queryFields} onSidePanelToggle={this.toggleSidePanel} relatedElements={searchPanelRelatedElements} />
+            <SearchPanel searchThrottleTime={searchThrottleTime} queryFields={queryFields} relatedElements={searchPanelRelatedElements} />
             <TermsShortNotice show={this.state.showTermsShortNotice} onAgree={this.agreeTermsShortNotice} />
             <ShapesFilterPanel/>
             <LayoutBody>
-              <SidePanel currentIndex={currentIndex} indexes={indexes} onIndexChange={onIndexChange} searchkit={searchkit} onToggle={this.toggleSidePanel} /> 
+              <SidePanel currentIndex={currentIndex} indexes={indexes} onIndexChange={onIndexChange} searchkit={searchkit} />
               <LayoutResults>
                 <ResultsHeader gridLayoutMode={this.state.gridLayoutMode} onGridLayoutModeToogle={this.setLayoutMode} />
                 <Results hitsPerPage={hitsPerPage} />
