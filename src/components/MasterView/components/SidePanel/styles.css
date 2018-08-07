@@ -138,7 +138,3 @@
         transform: translate(22px, 0) rotate(-90deg) rotateX(180deg);
     }
 }
-
-.filter--facet_type .sk-item-list-option[data-key="$all"]{
-    display:none;
-}

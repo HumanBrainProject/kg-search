@@ -18,6 +18,7 @@ import React, { Component } from "react";
 import { SearchkitProvider, Layout, LayoutBody, LayoutResults, NoHits } from "searchkit";
 import { isMobile, tabAblesSelectors } from "../../Helpers/BrowserHelpers";
 import { SearchPanel } from "./components/SearchPanel";
+import { ShapesFilterPanel } from "./components/ShapesFilterPanel";
 import { SidePanel } from "./components/SidePanel";
 import { ResultsHeader } from "./components/ResultsHeader";
 import { Results } from "./components/Results";
@@ -109,6 +110,7 @@ export class MasterView extends Component {
           <Layout>
             <SearchPanel searchThrottleTime={searchThrottleTime} queryFields={queryFields} onSidePanelToggle={this.toggleSidePanel} relatedElements={searchPanelRelatedElements} />
             <TermsShortNotice show={this.state.showTermsShortNotice} onAgree={this.agreeTermsShortNotice} />
+            <ShapesFilterPanel/>
             <LayoutBody>
               <SidePanel currentIndex={currentIndex} indexes={indexes} onIndexChange={onIndexChange} searchkit={searchkit} onToggle={this.toggleSidePanel} /> 
               <LayoutResults>
