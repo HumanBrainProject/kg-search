@@ -64,11 +64,13 @@
 }
 
 .kgs-filters .sk-panel__content .sk-item-list .sk-item-list-option .sk-item-list-option__checkbox {
+    -moz-appearance: none;
     -webkit-appearance: none;
     transform: scale(0.9);
 }
 
 .kgs-filters .sk-panel__content .sk-item-list .sk-item-list-option .sk-item-list-option__checkbox:after {
+    position: absolute;
     content: "";
     display: inline-block;
     width: 20px;
