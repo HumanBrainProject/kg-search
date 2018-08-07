@@ -19,8 +19,43 @@ package common.models
 
 case class NexusPath(org: String, domain:String, schema: String, version:String) {
 
-  override def toString() = {
+  override def toString(): String = {
     Seq(org, domain, schema, version).mkString("/")
+  }
+
+  /**
+    * This method returns the path of the instance with the original organization instead of the reconciled space
+    * @param reconciledSuffix The term used to identify the reconciled space
+    * @return A NexusPath object with an original (non reconciled) organization
+    */
+  def originalPath(reconciledSuffix: String): NexusPath = {
+    val org = if(this.isReconciled(reconciledSuffix)){
+      val editorReconciled = s"""^(.+)$reconciledSuffix$$""".r
+      this.org match {
+        case editorReconciled(originalOrg) => originalOrg
+      }
+    }else{
+      this.org
+    }
+    NexusPath(org, this.domain, this.schema, this.version)
+  }
+
+  /**
+    * This method return a path with a reconciled organization
+    * @param reconciledSuffix The term used to identify the reconciled space
+    * @return A NexusPath object with an reconciled organization
+    */
+  def reconciledPath(reconciledSuffix: String): NexusPath = {
+    val org = if(this.org.endsWith(reconciledSuffix)){
+      this.org
+    }else {
+      NexusPath.addSuffixToOrg(this.org, reconciledSuffix)
+    }
+    NexusPath(org, this.domain, this.schema, this.version)
+  }
+
+  def isReconciled(reconciledSuffix:String): Boolean = {
+    this.org.endsWith(reconciledSuffix)
   }
 }
 
@@ -31,5 +66,9 @@ object NexusPath {
 
     def apply(fullPath: String): NexusPath = {
       NexusPath(fullPath.split("/"))
+    }
+
+    def addSuffixToOrg(org:String, reconciledSuffix: String):String = {
+      org + reconciledSuffix
     }
 }

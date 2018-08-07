@@ -1,4 +1,4 @@
-package controllers
+package editor.controllers
 
 import authentication.models.{AuthenticatedUserAction, UserInfo, UserRequest}
 import authentication.service.OIDCAuthService
@@ -6,6 +6,7 @@ import com.google.inject.Inject
 import play.api.mvc.{BodyParsers, Request, Result}
 
 import scala.concurrent.{ExecutionContext, Future}
+
 
 class TestAuthenticatedUserAction @Inject()(
                                              override val parser: BodyParsers.Default,

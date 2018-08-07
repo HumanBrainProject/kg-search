@@ -15,7 +15,7 @@
 *   limitations under the License.
 */
 
-package services
+package nexus.services
 
 import com.google.inject.Inject
 import nexus.helpers.NexusHelper.{domainDefinition, schemaDefinition}
