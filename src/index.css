@@ -22,12 +22,6 @@ html, body {
     overflow-x: hidden;
 }
 
-@-moz-document url-prefix() {
-    body {
-        font-weight: lighter !important;
-    }
-}
-  
 .navbar-default {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -45,7 +39,29 @@ html, body {
     text-rendering: optimizeLegibility;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
+    font-weight: 400;
     font-family: 'Montserrat', sans-serif;
+}
+
+/* Droid Sans, Gill Sans, Montserrat, Poppins, Proxima Nova fonts weight too heavy fix */
+@-moz-document url-prefix() {
+    .kgs-app {
+        font-weight: lighter !important;
+    }
+}
+
+/* Internet Explorer 10 & 11 */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .kgs-app {
+        text-rendering: initial;
+    }
+}
+
+/* Microsoft Edge 12 : Can use the @supports rule Here is a link with all the info about this rule */
+@supports (-ms-accelerator:true) {
+    .kgs-app {
+        text-rendering: initial;
+    }
 }
 
 .kgs-app input[type="button"],
