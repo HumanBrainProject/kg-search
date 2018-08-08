@@ -16,11 +16,10 @@
 
 import React from "react";
 import { ResetFilters } from "searchkit";
-import { Select } from "../../../Select";
 import { FacetList } from "./containers/FacetList";
 import "./styles.css";
 
-export function SidePanel({currentIndex, indexes, onIndexChange, searchkit}) {
+export function SidePanel({searchkit}) {
   return (
     <div className="kgs-sidebar">
       <div className="kgs-filters">
@@ -28,7 +27,7 @@ export function SidePanel({currentIndex, indexes, onIndexChange, searchkit}) {
           <div className="kgs-filters__title">Filters</div>
           <div className="kgs-filters__reset"><ResetFilters options={{query:false, filter:true, pagination:true}} translations={{"reset.clear_all":"Reset"}}/></div>
         </div>
-        {indexes.length > 1?<Select label="Group" value={currentIndex} list={indexes} onChange={onIndexChange} />:null}
+        {/* {indexes.length > 1?<Select label="Group" value={currentIndex} list={indexes} onChange={onIndexChange} />:null} */}
         <FacetList searchkit={searchkit} />
       </div>
     </div>

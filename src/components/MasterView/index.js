@@ -71,7 +71,7 @@ export class MasterView extends Component {
     }
   }
   render() {
-    const { hitCount, hitsPerPage, searchThrottleTime, queryFields, searchkit, currentIndex, indexes, onIndexChange, onSearchError} = this.props;
+    const { hitCount, hitsPerPage, searchThrottleTime, queryFields, searchkit, currentIndex, indexes, onIndexChange, onSearchError, config} = this.props;
 
     const NoHitsDisplay = () => {
       return null;
@@ -107,11 +107,11 @@ export class MasterView extends Component {
             <TermsShortNotice show={this.state.showTermsShortNotice} onAgree={this.agreeTermsShortNotice} />
             <ShapesFilterPanel/>
             <LayoutBody>
-              <SidePanel currentIndex={currentIndex} indexes={indexes} onIndexChange={onIndexChange} searchkit={searchkit} />
+              <SidePanel searchkit={searchkit} />
               <LayoutResults>
                 <ResultsHeader gridLayoutMode={this.state.gridLayoutMode} onGridLayoutModeToogle={this.setLayoutMode} />
                 <Results hitsPerPage={hitsPerPage} />
-                <ResultsFooter hasPaging={hitCount > hitsPerPage} relatedElements={resultFooterRelatedElements} showTermsShortNotice={this.state.showTermsShortNotice} onAgreeTermsShortNotice={this.agreeTermsShortNotice} />
+                <ResultsFooter currentIndex={currentIndex} indexes={indexes} onIndexChange={onIndexChange} hasPaging={hitCount > hitsPerPage} relatedElements={resultFooterRelatedElements} showTermsShortNotice={this.state.showTermsShortNotice} onAgreeTermsShortNotice={this.agreeTermsShortNotice} config={config}/>
               </LayoutResults>
             </LayoutBody>
             <NoHits component={NoHitsDisplay} errorComponent={NoHitsErrorDisplay}/>

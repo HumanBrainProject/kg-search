@@ -22,8 +22,8 @@ export class SignInButton extends Component {
         super(props);
         this.state = {
             style: {
-                display: "none",
-                top: "-9999px",
+                display: props.show?"block":"none",
+                top: "25px",
             }
         };
         this.eventState = {
@@ -38,7 +38,6 @@ export class SignInButton extends Component {
         this.initialized = false;
         this.observer = null;
         this.interval = null;
-        this.adjustLayout = this.adjustLayout.bind(this);
         this.handleResizeEvent = this.handleResizeEvent.bind(this);
         this.handleOrientationChangeEvent = this.handleOrientationChangeEvent.bind(this);
         this.handleMutationEvent = this.handleMutationEvent.bind(this);
@@ -63,7 +62,7 @@ export class SignInButton extends Component {
         clearInterval(this.interval);
         this.interval = null;
     }
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.show !== this.props.show) {
             const state = Object.assign({}, this.state, {style: {display: nextProps.show?"block":"none"}});
             this.setState(state);
@@ -81,64 +80,12 @@ export class SignInButton extends Component {
     handleMutationEvent() {
         this.eventState.didMute = true;
     }
-    adjustLayout() {
-        const {relatedElements} = this.props;
-        let height = 0;
-        const needSizeCalculation = !this.initialized || this.eventState.didResize || this.eventState.didOrientationChange || this.eventState.didMute;
-        const eventWasTriggered = needSizeCalculation;
-        this.eventState = {
-            didResize: false,
-            didOrientationChange: false,
-            didMute: false
-        };
-        this.initialized = true;
-        let cookieChange = false;
-        relatedElements.forEach(e => {
-            let doCalc = e.height === undefined || needSizeCalculation;
-            if (e.cookieKey && (e.cookieValue === undefined || e.cookieValue === "")) {
-                let value = document.cookie;
-                if (typeof e.cookieKey === "string") {
-                    value = "";
-                    const cookie = "; " + document.cookie;
-                    const parts = cookie.split("; " + e.cookieKey + "=");
-                    if (parts.length === 2)
-                        value = parts.pop().split(";").shift();
-                }
-                if (e.cookieValue !== value) {
-                    e.cookieValue = value;
-                    cookieChange = true;
-                    if (value !== "")
-                        e.height = 0;
-                    else 
-                        doCalc = true;
-                }
-            }
-            if (doCalc) {
-                e.height = 0;
-                if (!e.conditionQuerySelector || document.querySelector(e.conditionQuerySelector)) {
-                    if (!e.nodes || !e.nodes.length)
-                        e.nodes = document.querySelectorAll(e.querySelector);
-                    e.nodes.forEach(n => {
-                        e.height += n.offsetHeight;
-                    });
-                }
-            }
-            height += e.height;
-        });
-        if (this.buttonRef) 
-            height -= (this.buttonRef.offsetHeight + 10);
-        if (cookieChange || eventWasTriggered) {
-            this.setState({style: {top: height + "px"}});
-        }
-    }
     render() {
         const { show, onClick } = this.props;
-        const button = show?<a ref={this.setButtonRef} href={onClick} style={this.state.style}>Login</a>:null;
-        if (!show)
-            return null;
-
+        const button = <a ref={this.setButtonRef} href={onClick} style={this.state.style}>Login</a>;
         return (
-            <div ref={this.setButtonRef} className="kgs-sign-in" style={this.state.style}>{button}</div>
+           show?<div ref={this.setButtonRef} className="kgs-sign-in" style={this.state.style}>{button}</div>:null
         );
+
     }
 }
