@@ -81,7 +81,7 @@ export class MasterView extends Component {
       if (searchkit.error) {
         const status = searchkit.error.response && searchkit.error.response.status;
         const nonce = searchkit.transport && searchkit.transport.axios && searchkit.transport.axios.defaults && searchkit.transport.axios.defaults.headers && searchkit.transport.axios.defaults.headers.post && searchkit.transport.axios.defaults.headers.post.nonce;
-        onSearchError && onSearchError(status, nonce); 
+        onSearchError && onSearchError(status, nonce);
         delete searchkit.error;
       }
       return null;
@@ -96,9 +96,8 @@ export class MasterView extends Component {
     const resultFooterRelatedElements = [
       {querySelector: ".sk-layout__body + .terms-short-notice", localStorageKey: "hbp.kgs-terms-conditions-consent"},
       {querySelector: ".main-content + hr + .container"},
-      {querySelector: "footer.footer[role=\"contentinfo"}
+      {querySelector: "footer.footer[role=\"contentinfo\"]"}
     ];
-
     return (
       <div className="kgs-masterView"  data-layoutMode={this.state.gridLayoutMode?"grid":"list"} data-hasHits={hitCount > 0} >
         <SearchkitProvider searchkit={searchkit}>

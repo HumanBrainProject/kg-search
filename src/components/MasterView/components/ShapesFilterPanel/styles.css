@@ -64,9 +64,12 @@
     width: 100%;
     grid-template-areas: "icon label"
                          "icon count";
+    -ms-grid-template-areas: "icon label"
+                             "icon count";
 }
 
 .kgs-shapesFilter .kgs-shape__icon {
+    -ms-grid-area: icon;
     grid-area: icon;
     width: 50px;
     margin-right: 5px;
@@ -84,6 +87,7 @@
 }
 
 .kgs-shapesFilter .kgs-shape__label {
+    -ms-grid-area: label;
     grid-area: label;
     text-align: left;
     font-size: 26px;
@@ -96,16 +100,12 @@
 }
 
 .kgs-shapesFilter .kgs-shape__count {
+    -ms-grid-area: count;
     grid-area: count;
     text-align: left;
     font-size: 18px;
     color: #999;
     white-space: nowrap;
-}
-
-.kgs-shapesFilter .kgs-shape__active {
-    grid-area: active;
-    background-color: transparent;
 }
 
 /* 

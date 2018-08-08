@@ -81,7 +81,7 @@ export class ResultsFooter extends Component {
     this.setState(state);
   }
   shouldComponentUpdate(nextProps, nextState) {
-    return  nextProps.hasPaging !== this.props.hasPaging || nextState.className !== this.state.className || nextState.style.display !== this.state.style.display || nextState.style.position !== this.state.style.position || nextState.style.bottom !== this.state.style.bottom || nextState.style.left !== this.state.style.left;
+    return  nextProps.showTermsShortNotice !== this.props.showTermsShortNotice || nextProps.hasPaging !== this.props.hasPaging || nextState.className !== this.state.className || nextState.style.display !== this.state.style.display || nextState.style.position !== this.state.style.position || nextState.style.bottom !== this.state.style.bottom || nextState.style.left !== this.state.style.left;
   }
   handleScrollEvent() {
     this.eventState.didScroll = true;

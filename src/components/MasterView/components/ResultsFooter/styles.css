@@ -28,6 +28,7 @@
 
 .kgs-result-footer-nav {
     display: flex;
+    position: relative;
     padding: 14px 0 14px 0;
     background-color: #f4f4f4;
 }

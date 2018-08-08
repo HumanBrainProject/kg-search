@@ -53,6 +53,7 @@
     color: transparent;
     background-color: transparent;
     transition: color 0.25s cubic-bezier(.34,1.06,.63,.93), background-color 0.25s cubic-bezier(.34,1.06,.63,.93),margin-top 0.5s cubic-bezier(.34,1.06,.63,.93);
+    transform: scale(0);
 }
 
 [data-hashits] .kgs-copy-confirmation,
@@ -61,6 +62,7 @@
 }
 
 [show="true"] + .kgs-copy-confirmation{
+    transform: scale(1);
     margin-top: 5px;
     color: #333;
     background-color: #ffeeaa;
