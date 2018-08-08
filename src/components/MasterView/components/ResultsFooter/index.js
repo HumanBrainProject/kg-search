@@ -129,7 +129,7 @@ export class ResultsFooter extends Component {
           if (!e.nodes || !e.nodes.length) {
             e.nodes = document.querySelectorAll(e.querySelector);
           }
-          e.nodes.forEach(n => {
+          [].forEach.call(e.nodes, n => {
             e.height += n.offsetHeight;
           });
         }
