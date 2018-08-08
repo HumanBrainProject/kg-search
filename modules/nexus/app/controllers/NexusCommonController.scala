@@ -73,7 +73,7 @@ class NexusCommonController @Inject()(cc: ControllerComponents, config:Configura
     val tokenOpt = request.headers.toSimpleMap.get("Authorization")
     tokenOpt match {
       case Some(token) =>
-        nexusService.createSchema(nexusEndpoint, organization, organization, entityType, domain, version, organization, token).map {
+        nexusService.createSimpleSchema(nexusEndpoint, organization, entityType, domain, version, token).map {
             response =>
               response.status match {
                 case 200 =>

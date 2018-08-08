@@ -19,19 +19,24 @@ package data_import.controllers
 
 import java.io.FileInputStream
 
-import data_import.helpers.excel_import.{ExcelUnimindsImportHelper,ExcelImportHelper}
+import data_import.helpers.excel_import.{ExcelImportHelper, ExcelMindsImportHelper, ExcelUnimindsImportHelper}
+import data_import.services.InsertionService
 import javax.inject.{Inject, Singleton}
 import org.apache.poi.xssf.usermodel._
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 import play.api.{Configuration, Logger}
+import nexus.services.NexusService
 
 import scala.concurrent.{ExecutionContext, Future}
 
 
 @Singleton
-class ExcelImportController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionContext, ws: WSClient, config: Configuration)
+class ExcelImportController @Inject()(cc: ControllerComponents,
+                                      insertionService: InsertionService,
+                                      nexusService: NexusService)
+                                     (implicit ec: ExecutionContext, ws: WSClient, config: Configuration)
   extends AbstractController(cc) {
   val logger = Logger(this.getClass)
   val nexusEndpoint = config.get[String]("nexus.endpoint")
@@ -42,14 +47,14 @@ class ExcelImportController @Inject()(cc: ControllerComponents)(implicit ec: Exe
 
     val wb = new XSSFWorkbook(fis)
     ExcelImportHelper.formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator()
-    val jsonData = ExcelImportHelper.buildJsonMindsDataFromExcel(wb)
+    val jsonData = ExcelMindsImportHelper.buildJsonMindsDataFromExcel(wb)
 
     action.getOrElse(ExcelImportHelper.actionPreview) match {
       case ExcelImportHelper.actionInsert =>
         val tokenOpt = request.headers.toSimpleMap.get("Authorization")
         tokenOpt match {
           case Some(token) =>
-            ExcelImportHelper.insertEntities(jsonData, nexusEndpoint, token).map {
+            ExcelMindsImportHelper.insertEntities(jsonData, nexusEndpoint, token).map {
               res =>
                 Ok(JsObject(Seq(("insertion result", JsArray(res)))))
             }
@@ -72,18 +77,27 @@ class ExcelImportController @Inject()(cc: ControllerComponents)(implicit ec: Exe
     val path = request.body.path
     val fis = new FileInputStream(path.toFile)
 
-    val wb = new XSSFWorkbook(fis)
-    ExcelImportHelper.formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator()
-    val jsonData = ExcelUnimindsImportHelper.buildJsonUnimindsDataFromExcel(wb)
+    val workbook = new XSSFWorkbook(fis)
+    ExcelImportHelper.formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator()
+    val unimindsSheet = workbook.getSheetAt(0)
+    val data = ExcelUnimindsImportHelper.extractCoreData(unimindsSheet)
+
+
 
     action.getOrElse(ExcelImportHelper.actionPreview) match {
       case ExcelImportHelper.actionInsert =>
         val tokenOpt = request.headers.toSimpleMap.get("Authorization")
         tokenOpt match {
           case Some(token) =>
-            ExcelImportHelper.insertEntities(jsonData, nexusEndpoint, token).map {
+            ExcelUnimindsImportHelper.insertUnimindsDataInKG(nexusEndpoint, data, token, nexusService, insertionService).map{
               res =>
-                Ok(JsObject(Seq(("insertion result", JsArray(res)))))
+                Ok(JsObject(Map(
+                  "insertion result" -> JsArray(res.zipWithIndex.sortWith(_._1 < _._1).map{
+                    case (status, idx) =>
+                      val idxPad3 = f"${idx}%03d"
+                      (JsString(s"(${idxPad3}) $status"))
+                  })))
+                )
             }
 
           case None =>
@@ -93,8 +107,7 @@ class ExcelImportController @Inject()(cc: ControllerComponents)(implicit ec: Exe
         }
 
       case _ =>
-        // show elements SpecimenGroup, Activity and Dataset from jsonData
-        Future.successful(Ok(jsonData))
+        Future.successful(Ok(ExcelUnimindsImportHelper.buildJsonUnimindsDataFromExcel(data)))
 
     }
   }

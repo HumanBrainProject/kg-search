@@ -25,7 +25,55 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object NexusHelper {
 
-  val schemaDefinition = """
+  val minimalSchemaDefinition = """
+    {
+      "@type": "owl:Ontology",
+      "@context": {
+          "datatype": {
+              "@id": "sh:datatype",
+              "@type": "@id"
+          },
+          "name": "sh:name",
+          "path": {
+              "@id": "sh:path",
+              "@type": "@id"
+          },
+          "property": {
+              "@id": "sh:property",
+              "@type": "@id"
+          },
+          "targetClass": {
+              "@id": "sh:targetClass",
+              "@type": "@id"
+          },
+          "${org}": "http://hbp.eu/${org}#",
+          "schema": "http://schema.org/",
+          "sh": "http://www.w3.org/ns/shacl#",
+          "owl": "http://www.w3.org/2002/07/owl#",
+          "xsd": "http://www.w3.org/2001/XMLSchema#",
+          "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+          "shapes": {
+              "@reverse": "rdfs:isDefinedBy",
+              "@type": "@id"
+          }
+      },
+      "shapes": [
+        {
+          "@id": "${org}:${entityType}Shape",
+          "@type": "sh:NodeShape",
+          "property": [
+            {
+              "datatype": "xsd:string",
+              "path": "schema:identifier"
+            }
+          ],
+          "targetClass": "${org}:${entityType}"
+        }
+      ]
+    }
+    """
+
+  val schemaDefinitionForEditor = """
     {
       "@type": "owl:Ontology",
       "@context": {

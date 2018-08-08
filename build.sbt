@@ -9,6 +9,7 @@ lazy val common = (project in file("modules/common"))
 
 lazy val data_import = (project in file("modules/data_import"))
   .enablePlugins(PlayScala)
+  .dependsOn(nexus)
 
 lazy val auth = (project in file("modules/authentication"))
   .enablePlugins(PlayScala)
@@ -34,7 +35,7 @@ lazy val kg_service = (project in file("."))
 Common.settings
 
 // Adds additional packages into Twirl
-//TwirlKeys.templateImports += "eu.humanbrainproject.controllers._"
+// TwirlKeys.templateImports += "eu.humanbrainproject.controllers._"
 
 // Adds additional packages into conf/routes
 // play.sbt.routes.RoutesKeys.routesImport += "eu.humanbrainproject.binders._"
