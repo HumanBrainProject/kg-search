@@ -20,8 +20,7 @@ import { PaginationPanel } from "../PaginationPanel";
 import { TermsShortNotice } from "../TermsShortNotice";
 import "./styles.css";
 import { SignInButton } from "../../../SignInButton";
-import { store, dispatch } from "../../../../store";
-import * as actions from "../../../../actions";
+import { store } from "../../../../store";
 import { Select } from "../../../Select";
 import { generateKey } from "../../../../Helpers/OIDCHelpers";
 
@@ -91,7 +90,7 @@ export class ResultsFooter extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if(prevState.configuration.indexes.length != store.getState().configuration){
+    if(prevState.configuration.indexes.length !== store.getState().configuration.indexes.length){
       const state = Object.assign({}, this.state, {configuration: store.getState().configuration});
       this.setState(state);
     }
@@ -186,8 +185,6 @@ export class ResultsFooter extends Component {
       {querySelector: 'body>header.navbar>.container'},
       {querySelector: '#CookielawBanner', cookieKey: 'cookielaw_accepted'}
     ];
-    
-
 
     return (
       <div className={this.state.className} style={this.state.style}>
