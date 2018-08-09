@@ -19,7 +19,8 @@ object Common {
     "de.leanovate.play-mockws" %% "play-mockws" % "2.6.2" % Test,
     "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test,
     "org.mockito" % "mockito-core" % "2.19.0" % Test,
-    "com.github.stijndehaes" %% "play-prometheus-filters" % "0.3.2"
+    "com.github.stijndehaes" %% "play-prometheus-filters" % "0.3.2"//,
+    //"org.restfulscala" %% "play-content-negotiation" % "0.4.0"
   )
 
   val playDependencies = Seq(

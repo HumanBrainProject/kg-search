@@ -121,15 +121,18 @@ class NexusService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
   }
 
 
-  def insertOrUpdateInstance(nexusUrl:String, org: String, domain: String, entityType: String, version: String,
-                             payload: JsValue, identifier: String, token: String): Future[(String, Option[String], Option[Future[WSResponse]])] = {
+  def retrieveInstanceById(nexusUrl:String, org: String, domain: String, entityType: String, version: String,
+                           identifier: String, token: String): Future[WSResponse] = {
     val instanceUrl = s"${nexusUrl}/v0/data/${org}/${domain}/${entityType.toLowerCase}/${version}"
     val filterQuery = s"""filter={"path":"http://schema.org/identifier","op":"eq","value":"$identifier"}&fields=all&deprecated=false"""
     wSClient.url(s"${instanceUrl}?$filterQuery")
       .addHttpHeaders("Authorization" -> token)
-      //.addQueryStringParameters(("fields", "all"))
       .get()
-      .flatMap {
+  }
+
+  def insertOrUpdateInstance(nexusUrl:String, org: String, domain: String, entityType: String, version: String,
+                             payload: JsValue, identifier: String, token: String): Future[(String, Option[String], Option[Future[WSResponse]])] = {
+    retrieveInstanceById(nexusUrl, org, domain, entityType, version, identifier, token).flatMap{
       response =>
         response.status match {
           case 200 => // analyze response

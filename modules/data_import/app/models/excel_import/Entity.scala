@@ -1,4 +1,3 @@
-
 /*
 *   Copyright (c) 2018, EPFL/Human Brain Project PCO
 *
@@ -14,15 +13,19 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-
 package models.excel_import
 
+
+import java.awt.Color
+
+import data_import.helpers.excel_import.ExcelImportHelper
 import play.api.libs.json.{JsArray, JsObject, JsString, JsValue}
 import Entity._
-import data_import.helpers.excel_import.ExcelImportHelper
-import play.libs.Json
+import org.apache.poi.ss.usermodel.CellStyle
+import org.apache.poi.xssf.usermodel.XSSFSheet
 
-case class Entity(rawType: String, id: String, rawContent: Map[String, Value]){
+
+case class Entity(rawType: String, id: String, rawContent: Map[String, Value], status: Option[String] = None){
   def `type` = rawType.toLowerCase.trim
 
   // make key valid
@@ -52,7 +55,7 @@ case class Entity(rawType: String, id: String, rawContent: Map[String, Value]){
     val originalContent = content.flatMap{
       case (key, value) =>
         if (isLink(key)) {
-          val links = value.toStringSeq().flatMap(linksRef.get(_))
+          val links = value.toStringSeq().flatMap(tuple => linksRef.get(tuple._1))
           if (links.isEmpty) {
             None
           } else {
@@ -80,12 +83,63 @@ case class Entity(rawType: String, id: String, rawContent: Map[String, Value]){
     )
   }
 
-  def addContent(key: String, newValue: String): Entity = {
-    SingleValue(newValue).getNonEmtpy() match {
+  def resolveLinksAndStatus(linksRef: collection.mutable.Map[String,String], newStatus: Option[String] = None): Entity = {
+    val idLink = linksRef.getOrElse(id, EMPTY_LINK)
+
+    val newContent = rawContent.map{
+      case (key, value) =>
+        if (isLink(key)) {
+          val newValue = value.resolveValue(linksRef)
+          (key, newValue)
+        } else {
+          (key, value)
+        }
+    }.+((ID_LABEL, SingleValue(idLink, None, newStatus)))
+    this.copy(rawContent = newContent, status = newStatus)
+  }
+
+  /*
+   * insert entity data at idx row and return index of next row to be used
+   */
+  def toExcelRows(sheet: XSSFSheet, idx: Int, styleOpt: Option[CellStyle] = None): Int =  {
+    content.toSeq.sortWith(_._1 < _._1).foldLeft(0) {
+      case (count, (key, value)) =>
+        val valuesString = value.toStringSeq()
+        valuesString.foldLeft(0) {
+          case (subcount, (valueString, unit, status)) =>
+            val row = sheet.createRow(idx+count+subcount)
+            Seq(`type`, id, key, valueString, unit, status).zipWithIndex.foreach {
+              case (value, colIdx) =>
+                val cell = row.createCell(colIdx)
+                cell.setCellValue(value)
+                styleOpt.map(cell.setCellStyle(_))
+            }
+            subcount + 1
+        } + count
+    } + idx
+  }
+
+  /*
+   * header is: block name / block id /	key /	value /	unit of value / status
+   */
+  def toCsv(): Seq[String] = {
+    content.toSeq.sortWith(_._1 < _._1).flatMap{
+      case (key, value) =>
+        val valuesString = value.toStringSeq()
+        valuesString.map {
+          case (valueString, unit, status) =>
+            s"${Seq(`type`, id, key, valueString, unit, status).mkString(CSV_SEP)}\n"
+        }
+    }
+  }
+
+
+  def addContent(key: String, newValue: String, unit: Option[String] = None): Entity = {
+    SingleValue(newValue, unit).getNonEmtpy() match {
       case Some(nonEmptyValue) =>
         val newContent = content.get(key) match {
           case Some(value) =>
-            content + (key -> value.addValue(newValue))
+            content + (key -> value.addValue(newValue, unit))
           case None =>
             content + (key -> nonEmptyValue)
         }
@@ -95,19 +149,20 @@ case class Entity(rawType: String, id: String, rawContent: Map[String, Value]){
   }
 
   def isLink(key: String): Boolean = {
-    key.startsWith(link_prefix) && key != ID_LABEL
+    key.startsWith(LINK_PREFIX) && key != ID_LABEL
   }
 
   def getLinkedIds(): Seq[String] = {
     content.collect{
       case (key, value) if isLink(key) =>
-          value.toStringSeq()
+          value.toStringSeq().map(_._1)
     }.flatten.toSeq
   }
 }
 
 object Entity {
-  def link_prefix = "_"
-  def ID_LABEL = "_ID"
-  def EMPTY_LINK = "./"
+  val LINK_PREFIX = "_"
+  val ID_LABEL = "_ID"
+  val EMPTY_LINK = "./"
+  val CSV_SEP = "^"
 }

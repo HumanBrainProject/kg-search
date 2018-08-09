@@ -1,4 +1,3 @@
-
 /*
 *   Copyright (c) 2018, EPFL/Human Brain Project PCO
 *
@@ -14,20 +13,13 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-
 package data_import.helpers.excel_import
-
-import java.security.MessageDigest
-import java.util.Calendar
 
 import data_import.models.excel_import._
 import data_import.models.excel_import.CommonVars._
-import org.apache.poi.ss.usermodel.{CellType, DataFormatter}
+import java.util.Calendar
 import org.apache.poi.xssf.usermodel._
 import play.api.libs.json._
-import play.api.libs.ws.WSClient
-
-import scala.concurrent.{ExecutionContext, Future}
 import ExcelImportHelper._
 
 
@@ -44,45 +36,6 @@ object ExcelMindsImportHelper {
       case None => mainContent
     }
     JsObject(fullContent)
-  }
-
-  def insertEntities(jsonData: JsObject, nexusEndpoint: String, token: String)
-                    (implicit wSClient: WSClient, executionContext: ExecutionContext): Future[Seq[JsObject]] = {
-    val activityPayload = formatEntityPayload((jsonData \ activityLabel).as[JsObject], activityLabel)
-    val specimenGroupPayload = formatEntityPayload((jsonData \ specimenGroupLabel).as[JsObject], specimengroupLabel)
-
-    val firstTodo = Seq((activityPayload, activityLabel.toLowerCase),
-      (specimenGroupPayload, specimenGroupLabel.toLowerCase))
-    // use foldleft to ensure sequential ingestion of resources and build a valid archive
-    val firstResultFuture = firstTodo.foldLeft(Future.successful[Seq[JsObject]](Seq.empty[JsObject])) {
-      case (futureRes, (payload, entityType)) =>
-        futureRes.flatMap {
-          res =>
-            buildinsertionResult(payload, entityType, insertEntity(payload, nexusEndpoint, s"excel/core/$entityType/v0.0.1", token)).map{
-              result =>
-                res :+ result
-            }
-        }
-    }
-    firstResultFuture.flatMap{
-      firstResult =>
-        val parentLinks = firstResult.flatMap{
-          res =>
-            if (res.keys.contains("link")){
-              Some(JsObject(Seq(
-                ("@id", (res \ "link").as[JsString]))))
-            } else {
-              None
-            }
-        }
-        val parentBlock = if (parentLinks.nonEmpty) Some(JsArray(parentLinks)) else None
-        val datasetPayload = formatEntityPayload((jsonData \ datasetLabel).as[JsObject], datasetLabel, parentBlock)
-        buildinsertionResult(datasetPayload, datasetLabel.toLowerCase,
-          insertEntity(datasetPayload, nexusEndpoint, s"excel/core/${datasetLabel.toLowerCase}/v0.0.1", token)).map{
-          result =>
-            firstResult :+ result
-        }
-    }
   }
 
   def extractGlobalInfo(sheet: XSSFSheet): Map[String, String] = {
@@ -163,15 +116,17 @@ object ExcelMindsImportHelper {
       """).as[JsObject]
   }
 
-
   def buildJsonEntity(contentJson: String, insertionDateTime: String, creator: String, componentId: String) = {
+    // hashcode is computed on spec content to avoid update because of insertionDateTime change
+    // TODO consider state as well when it will not be harcoded anymore
     s"""
       {
         "created_timestamp": "${insertionDateTime}",
         "creator": "${creator}",
         "state": "1",
         "component_id": $componentId,
-        "Specification": $contentJson
+        "Specification": $contentJson,
+        "http://hbp.eu/internal#hashcode": ${hash(contentJson)}
       }
       """
   }
@@ -251,5 +206,4 @@ object ExcelMindsImportHelper {
         }
     }
   }
-
 }

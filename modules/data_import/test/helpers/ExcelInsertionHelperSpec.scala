@@ -13,16 +13,16 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package dataimport.helpers
+package data_import.helpers
 
-import dataimport.helpers.excel_import.InsertionHelper
+import data_import.helpers.excel_import.ExcelInsertionHelper
 import models.excel_import.{Entity, SingleValue}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
 import scala.collection.immutable.HashSet
 
-class InsertionHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
+class ExcelInsertionHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "InsertionHelper" should {
 
@@ -55,7 +55,7 @@ class InsertionHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
 
 
     "build graph from seq of entities" in {
-      val (rootRes, usedRes) = InsertionHelper.buildGraphFromEntity(entitiesRef.getOrElse("S01", null), usedEntities, entitiesRef)
+      val (rootRes, usedRes) = ExcelInsertionHelper.buildGraphFromEntity(entitiesRef.getOrElse("S01", null), usedEntities, entitiesRef)
       assert(rootRes.entity.id == "S01")
       assert(rootRes.children.size == 1)
       assert(rootRes.children.head.entity.id == "MainSG")
@@ -63,22 +63,22 @@ class InsertionHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "build graph seq from all entities" in {
-      val graphRoots = InsertionHelper.buildGraphsFromEntities(entitiesRef)
+      val graphRoots = ExcelInsertionHelper.buildGraphsFromEntities(entitiesRef)
 
       assert(graphRoots.size == 2)
 
     }
 
     "build entities seq from a graph of entities" in {
-      val graphRoots = InsertionHelper.buildGraphsFromEntities(entitiesRef)
-      val entitiesList = InsertionHelper.buildEntitySeqFromGraph(graphRoots.head)
+      val graphRoots = ExcelInsertionHelper.buildGraphsFromEntities(entitiesRef)
+      val entitiesList = ExcelInsertionHelper.buildEntitySeqFromGraph(graphRoots.head)
 
       assert(entitiesList.size == 2)
     }
 
 
     "build entities seq from entities ref" in {
-      val entitiesList = InsertionHelper.buildInsertableEntitySeq(entitiesRef)
+      val entitiesList = ExcelInsertionHelper.buildInsertableEntitySeq(entitiesRef)
 
       assert(entitiesList.size == entitiesRef.size)
 
