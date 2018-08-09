@@ -90,7 +90,7 @@ export class ResultsFooter extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if(prevState.configuration.indexes.length != store.getState().configuration){
+    if(prevState.configuration.indexes.length !== store.getState().configuration.indexes.length){
       const state = Object.assign({}, this.state, {configuration: store.getState().configuration});
       this.setState(state);
     }
