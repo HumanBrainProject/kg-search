@@ -16,14 +16,15 @@
 
 import React from "react";
 import { Select, SortingSelector} from "searchkit";
-import { store } from "../../../../../../store";
+import { store } from "../../../../store";
+import "./styles.css";
 
-export function SortingTab() {
+export function SortByPanel() {
   const state = store.getState();
   const sortFields = state.configuration.sortFields;
 
   if (sortFields.length > 0) {
-    return <span className="kgs-sorting-selector"><SortingSelector key="sortingSelector" listComponent={Select} options={sortFields} /></span>;
+    return <span className="kgs-sortby-panel"><SortingSelector key="sortingSelector" listComponent={Select} options={sortFields} /></span>;
   }
   return null;
 }

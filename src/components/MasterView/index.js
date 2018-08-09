@@ -19,9 +19,9 @@ import { SearchkitProvider, Layout, LayoutBody, LayoutResults, NoHits } from "se
 import { isMobile, tabAblesSelectors } from "../../Helpers/BrowserHelpers";
 import { SearchPanel } from "./components/SearchPanel";
 import { ShapesFilterPanel } from "./components/ShapesFilterPanel";
-import { SidePanel } from "./components/SidePanel";
+import { FiltersPanel } from "./components/FiltersPanel";
 import { ResultsHeader } from "./components/ResultsHeader";
-import { Results } from "./components/Results";
+import { ResultsPanel } from "./components/ResultsPanel";
 import { ResultsFooter } from "./components/ResultsFooter";
 import { TermsShortNotice } from "./components/TermsShortNotice";
 import "./styles.css";
@@ -106,10 +106,10 @@ export class MasterView extends Component {
             <TermsShortNotice show={this.state.showTermsShortNotice} onAgree={this.agreeTermsShortNotice} />
             <ShapesFilterPanel/>
             <LayoutBody>
-              <SidePanel searchkit={searchkit} />
+              <FiltersPanel searchkit={searchkit} />
               <LayoutResults>
                 <ResultsHeader gridLayoutMode={this.state.gridLayoutMode} onGridLayoutModeToogle={this.setLayoutMode} />
-                <Results hitsPerPage={hitsPerPage} />
+                <ResultsPanel hitsPerPage={hitsPerPage} />
                 <ResultsFooter currentIndex={currentIndex} indexes={indexes} onIndexChange={onIndexChange} hasPaging={hitCount > hitsPerPage} relatedElements={resultFooterRelatedElements} showTermsShortNotice={this.state.showTermsShortNotice} onAgreeTermsShortNotice={this.agreeTermsShortNotice} config={config}/>
               </LayoutResults>
             </LayoutBody>

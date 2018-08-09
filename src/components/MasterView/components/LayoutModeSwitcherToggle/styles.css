@@ -14,14 +14,26 @@
 *   limitations under the License.
 */
 
-.sk-toggle.kgs-layout-mode-switcher-toggle {
+.kgs-layout-mode-switcher-toggle  {
     display: none;
     max-height: 40px;
     margin-top: 4px;
     margin-left: 30px;    
 }
 
-.sk-toggle.kgs-layout-mode-switcher-toggle:before {
+@media (min-width: 992px) { 
+    :not([data-hasHits="false"]) .kgs-layout-mode-switcher-toggle {
+        display: inline-block
+    }
+}
+
+.kgs-layout-mode-switcher-toggle .sk-toggle  {
+    display: -ms-flexbox;
+    display: flex;
+    max-height: none;
+}
+
+.kgs-layout-mode-switcher-toggle .sk-toggle:before {
     content: "View as";
     margin-top: 4px;
     margin-right: 20px;
@@ -30,18 +42,10 @@
     color: #555;
 }
 
-@media (min-width: 992px) { 
-    .sk-toggle.kgs-layout-mode-switcher-toggle {
-        display: -ms-flexbox;
-        display: flex;
-    }
-    [data-hasHits="false"] .sk-toggle.kgs-layout-mode-switcher-toggle {
-        display: none;
-    }
-}
-
-.kgs-layout-mode-switcher-toggle button {
+.kgs-layout-mode-switcher-toggle .sk-toggle button.sk-toggle-option {
     padding: 3px 35px; 
+    background-color: white;
+    border-color: white;
     -webkit-transition: -webkit-box-shadow 0.2s ease-in;
     transition: -webkit-box-shadow 0.2s ease-in;
     -o-transition: box-shadow 0.2s ease-in;
@@ -49,8 +53,13 @@
     transition: box-shadow 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
 }
 
-.kgs-layout-mode-switcher-toggle button:not(.is-active):not(.is-disabled):hover,
-.kgs-layout-mode-switcher-toggle button:not(.is-active):not(.is-disabled):not([disabled]):focus  {
+.kgs-layout-mode-switcher-toggle .sk-toggle button.sk-toggle-option.is-active {
+    background-color: #ED5554;
+    border-color: #ED5554;
+}
+
+.kgs-layout-mode-switcher-toggle .sk-toggle button.sk-toggle-option:not(.is-active):not(.is-disabled):hover,
+.kgs-layout-mode-switcher-toggle .sk-toggle button.sk-toggle-option:not(.is-active):not(.is-disabled):not([disabled]):focus  {
     /*
     -webkit-box-shadow: 3px 3px 6px #8f8a8a;
     box-shadow: 3px 3px 6px #8f8a8a;    
@@ -60,12 +69,12 @@
     z-index: 1;
 }
 
-.kgs-layout-mode-switcher-toggle  button label {
+.kgs-layout-mode-switcher-toggle .sk-toggle button.sk-toggle-option label {
     font-size: 22px;
     font-weight: normal;
     color: #aaa;
 }
 
-.kgs-layout-mode-switcher-toggle button.is-active label {
+.kgs-layout-mode-switcher-toggle .sk-toggle button.sk-toggle-option.is-active label {
     color: white;
 }

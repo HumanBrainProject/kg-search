@@ -14,81 +14,12 @@
 *   limitations under the License.
 */
 
-.kgs-sorting-selector {
-    display: block;
-    margin-top: 20px;    
-    margin-left: 30px;
-}
-
-@media (min-width: 576px) {
-    .kgs-sorting-selector {
-        display: inline;
-        margin-top: 0;
-    }
-}
-
-.kgs-sorting-selector .sk-select::before {
-    content: "Sort by";
-    margin-right: 20px;
-    font-size: 22px;
-    line-height: 30px;
-    color: #555;
-}
-
-.kgs-sorting-selector .sk-select::after {
-    right: 15px;
-    margin-top: 5px;
-}
-
-.kgs-sorting-selector .sk-select select {
-    font-size: 22px;
-    font-weight: normal;
-    padding: 9px 50px 9px 25px;
-    cursor: pointer;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none; 
-    -webkit-transition: -webkit-box-shadow 0.2s ease-in;
-    transition: -webkit-box-shadow 0.2s ease-in;
-    -o-transition: box-shadow 0.2s ease-in;
-    transition: box-shadow 0.2s ease-in;
-    transition: box-shadow 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
-}
-
-.kgs-sorting-selector .sk-select select:hover,
-.kgs-sorting-selector .sk-select select:focus  {
-    /*
-    -webkit-box-shadow: 3px 3px 6px #8f8a8a;
-    box-shadow: 3px 3px 6px #8f8a8a;    
-    */
-    -webkit-box-shadow: 3px 3px 6px #cbc9c9;
-    box-shadow: 3px 3px 6px #cbc9c9;
-    z-index: 1;
-}
 
 .sk-results-list__action-bar .sk-action-bar-row .sk-hits-stats__info {    
     margin-top: 8px;
     white-space: nowrap;
     font-size: 22px;
     color: #555;
-}
-
-.sk-results-list__action-bar .sk-action-bar-row .kgs-share-links {    
-    position: absolute;
-    right: 40px;
-    margin-left: 15px;
-    margin-top: -7px;
-    transform: translateY(3px);
-}
-
-@media (min-width: 576px) {
-    .sk-results-list__action-bar .sk-action-bar-row .kgs-share-links {  
-        position: relative;
-        right: auto;
-        right: unset;
-    }
 }
 
 @media screen and (min-width:0\0) {  

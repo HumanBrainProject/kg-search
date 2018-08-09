@@ -16,9 +16,9 @@
 
 import React from "react";
 import { ActionBar, ActionBarRow, HitsStats } from "searchkit";
-import { LayoutModeSwitcherToggle } from "./components/LayoutModeSwitcherToggle";
+import { LayoutModeSwitcherToggle } from "../LayoutModeSwitcherToggle";
 import { PaginationPanel } from "../PaginationPanel";
-import { SortingTab } from "./containers/SortingTab";
+import { SortByPanel } from "../SortByPanel";
 import "./styles.css";
 
 export function ResultsHeader({gridLayoutMode, onGridLayoutModeToogle}) {
@@ -28,7 +28,7 @@ export function ResultsHeader({gridLayoutMode, onGridLayoutModeToogle}) {
         <HitsStats translations={{"hitstats.results_found": "Viewing {hitCount} results"}} />
         <PaginationPanel/>
         <LayoutModeSwitcherToggle gridLayoutMode={gridLayoutMode} onToggle={onGridLayoutModeToogle} />
-        <SortingTab/>
+        <SortByPanel/>
       </ActionBarRow>
     </ActionBar>
   );

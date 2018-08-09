@@ -15,14 +15,45 @@
 */
 
 .kgs-paging {
+    flex: 1;
     display: inline-block;
     text-align: center;
 }
 
+.kgs-paging .sk-pagination-navigation {
+    width: 100%;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
 .kgs-paging .sk-pagination-navigation.is-numbered  {
     display: inline-block;
+    width: 100%;
     margin: 3px 0 0 0;
+    padding: 0 20px;
     background-color: transparent;
+}
+
+@media (min-width: 576px) {
+    .kgs-paging .sk-pagination-navigation,
+    .kgs-paging .sk-pagination-navigation.is-numbered {
+        padding: 0;
+    }
+    .kgs-paging .sk-pagination-navigation {
+        width: 45%;
+    }
+    .kgs-paging .sk-pagination-navigation.is-numbered {
+        width: 80%;
+    }
+}
+
+@media (min-width: 992px) {
+    .kgs-paging .sk-pagination-navigation {
+        width: 300px;
+    }
+    .kgs-paging .sk-pagination-navigation.is-numbered {
+        width: 600px;
+    }
 }
 
 .kgs-paging .sk-pagination-navigation .sk-toggle {
@@ -35,6 +66,7 @@
 .kgs-paging .sk-pagination-navigation .sk-toggle-option {
     flex: none;
     background-color: white;
+    border-color: white;
     padding: 5px 15px;
     color: #ED5554;
     -webkit-touch-callout: none;
@@ -51,6 +83,8 @@
 
 .kgs-paging .sk-pagination-navigation .sk-toggle-option.is-active {
     color: white;
+    background-color: #ED5554;
+    border-color: #ED5554;
 }
 
 .kgs-paging .sk-pagination-navigation .sk-toggle-option.is-disabled {
@@ -76,6 +110,7 @@
 
 .kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key="previous"], 
 .kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key="next"] {
+    display: inline-block;
     flex: none;
 }
 
@@ -105,4 +140,14 @@
 
 .kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key="next"] [data-qa="label"]:before {
     content: "\f054";
+}
+
+@media (min-width: 576px) {
+    .kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key] {
+        display: inline-block;
+    }
+    .kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key="previous"],
+    .kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key="next"] {
+        flex: 4 1;
+    }
 }

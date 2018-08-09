@@ -34,9 +34,11 @@ export function LayoutModeSwitcherToggle(props) {
   };
 
   return (
-    <div className="sk-toggle kgs-layout-mode-switcher-toggle">
-      <LayoutModeSwitcherToggleItem label="Grid" value="grid" onClick={handleClick} isActive={props.gridLayoutMode} />
-      <LayoutModeSwitcherToggleItem label="List" value="list" onClick={handleClick} isActive={!props.gridLayoutMode} />
+    <div className="kgs-layout-mode-switcher-toggle">
+      <div className="sk-toggle">
+        <LayoutModeSwitcherToggleItem label="Grid" value="grid" onClick={handleClick} isActive={props.gridLayoutMode} />
+        <LayoutModeSwitcherToggleItem label="List" value="list" onClick={handleClick} isActive={!props.gridLayoutMode} />
+      </div>
     </div>
   );
 }

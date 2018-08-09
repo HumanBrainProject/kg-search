@@ -55,20 +55,6 @@ header + header + nav + hr + .main-content .sk-layout__body {
     }
 }
 
-.sk-select select {
-    background-color: white;
-    border-color: white;
-    color: #ED5554;
-}
-
-.sk-select:after {
-    border-top-color: #ED5554;
-}
-
-.sk-select select:focus {
-    box-shadow: 0 0 1px 3px #88C1FB;
-}
-
 .sk-layout__results {
     min-height: auto;
     min-height: unset;
@@ -91,57 +77,6 @@ header + header + nav + hr + .main-content .sk-layout__body {
     box-shadow: none;
 }
 
-.sk-toggle .sk-toggle-option {
-    background-color: white;
-    border-color: white;
-}
-
-.sk-toggle .sk-toggle-option.is-active {
-    background-color: #ED5554;
-    border-color: #ED5554;
-}
-
-.sk-pagination-navigation .sk-toggle-option[data-key] {
-    display: none;
-}
-
-.sk-pagination-navigation .sk-toggle-option[data-key="previous"],
-.sk-pagination-navigation .sk-toggle-option[data-key="next"] {
-    display: inline-block;
-    flex: 1;
-}
-
-.sk-pagination-navigation,
-.sk-pagination-navigation.is-numbered {
-    width: 100%;
-    margin: 20px auto;
-    padding: 0 20px;
-}
-
-@media (min-width: 576px) {
-    .sk-pagination-navigation,
-    .sk-pagination-navigation.is-numbered {
-        padding: 0;
-    }
-    .sk-pagination-navigation {
-        width: 45%;
-    }
-    .sk-pagination-navigation.is-numbered {
-        width: 80%;
-    }
-    .sk-pagination-navigation .sk-toggle-option[data-key] {
-        display: inline-block;
-    }
-    .sk-pagination-navigation .sk-toggle-option[data-key="previous"],
-    .sk-pagination-navigation .sk-toggle-option[data-key="next"] {
-        flex: 4 1;
-    }
-}
-
-.sk-calendar-picker {
-    z-index: 100;
-}
-
 @media (min-width: 992px) {
     [data-layoutMode="list"] .sk-layout__results {
         background: #fff;
@@ -157,11 +92,5 @@ header + header + nav + hr + .main-content .sk-layout__body {
         padding: 0;
         -webkit-box-shadow: none;
         box-shadow: none;
-    }
-    .sk-pagination-navigation {
-        width: 300px;
-    }
-    .sk-pagination-navigation.is-numbered {
-        width: 600px;
     }
 }

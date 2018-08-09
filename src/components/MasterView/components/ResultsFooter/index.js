@@ -15,14 +15,14 @@
 */
 
 import React, { Component } from "react";
+import { generateKey } from "../../../../Helpers/OIDCHelpers";
+import { store } from "../../../../store";
 import { ShareBar } from "../../../ShareBar";
 import { PaginationPanel } from "../PaginationPanel";
+import { Select } from "../../../Select";
+import { SignInButton } from "../../../SignInButton";
 import { TermsShortNotice } from "../TermsShortNotice";
 import "./styles.css";
-import { SignInButton } from "../../../SignInButton";
-import { store } from "../../../../store";
-import { Select } from "../../../Select";
-import { generateKey } from "../../../../Helpers/OIDCHelpers";
 
 const windowHeight = () => {
   const w = window,

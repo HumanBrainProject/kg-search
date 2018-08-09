@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-.kgs-sidebar {
+.kgs-filters {
     position: relative;
     width: 400px;
     margin: 35px 10px 10px 30px;
@@ -52,6 +52,10 @@
 
 .kgs-filters .sk-panel {
     margin-top: 35px;
+}
+
+.kgs-filters .sk-panel .sk-calendar-picker {
+    z-index: 100;
 }
 
 .kgs-filters .sk-panel__content .sk-item-list .sk-item-list-option + .sk-item-list-option {
