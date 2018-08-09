@@ -89,7 +89,8 @@
 
 .kgs-shapesFilter .kgs-shape__icon div svg {
     display: block;
-    -ms-transform: translate(-5px, -50px);
+    -ms-transform: translate(-5px, -50px) scale(1.5);
+    transform: translate(0, 5px) scale(1.5);
 }
 
 .kgs-shapesFilter .kgs-shape__label {

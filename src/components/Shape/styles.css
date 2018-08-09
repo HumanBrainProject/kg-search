@@ -114,6 +114,9 @@
     }
 }
 
+[data-type] .kgs-shape__icon>div>svg {
+    transform: translate(8px, 8px) scale(1.4);
+}
 
 [data-type] .kgs-shape__type {
     width: auto;

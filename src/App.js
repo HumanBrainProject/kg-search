@@ -26,22 +26,9 @@ import { MasterView } from './components/MasterView';
 import { DetailViewManager } from './components/DetailViewManager';
 import { FetchingPanel } from './components/FetchingPanel';
 import { ErrorPanel } from './components/ErrorPanel';
-import { SignInButton } from './components/SignInButton';
+import { generateKey} from './Helpers/OIDCHelpers';
 
 const LOADING_TIMER = 200;
-
-const generateKey = () => {
-  let key = "";
-  const chars = "ABCDEF0123456789";
-  for (let i=0; i<4; i++) {
-      if (key !== "")
-        key += "-";
-      for (let j=0; j<5; j++) {
-          key += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-  }
-  return key;
-};
 
 class App extends Component {
   constructor(props) {
@@ -68,6 +55,8 @@ class App extends Component {
       timeout: 10000,
       searchOnLoad: false // keep this to false, initialization takes care of it
     });
+
+ 
  
     const header = this.searchkit.transport.axios.defaults.headers.post;
     const componentContext = this.componentContext;
@@ -114,16 +103,7 @@ class App extends Component {
     if (this.componentContext.accessToken && !state.configuration.isIndexesReady && !state.configuration.isIndexesLoading)
       dispatch(actions.loadIndexes());
   }
-  getOidcUrl() {
-    const { config } = this.props;
 
-    const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
-    const stateKey = generateKey();
-    const nonceKey = generateKey();
-    const oidcUrl = `${config.oidcUri}?response_type=id_token%20token&client_id=${config.oidcClientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`;
-
-    return oidcUrl;
-  }
   setIndex(newIndex) {
     //console.log("new index: " + newIndex);
     dispatch(actions.setIndex(newIndex));
@@ -220,7 +200,8 @@ class App extends Component {
         if (!nextState.fetching.active && !nextState.error.message)
           this.loadIndexes();
 
-      } else {
+      } 
+      if(nextState.configuration.isConfigReady && nextState.configuration.isIndexesReady) {
           this.componentContext.appStarted = true;
           
           // Initialize the search
@@ -350,27 +331,18 @@ class App extends Component {
   render() {
     const { config } = this.props; 
 
-    const signInRelatedElements = [
-      {querySelector: 'body>header', conditionQuerySelector: 'body>header + nav.navbar'},
-      {querySelector: 'body>header + nav.navbar'},
-      {querySelector: 'body>header.navbar>.container'},
-      {querySelector: '#CookielawBanner', cookieKey: 'cookielaw_accepted'}
-    ];
-
-
     return (
       <div className="kgs-app" data-showDetail={!!this.state.hits.currentHit}>
         {this.state.configuration.isConfigReady && (
           <span>
             <MobileKeyboardHandler inputSelector={'.sk-top-bar__content .sk-search-box__text'}>
-              <MasterView isActive={!this.state.hits.currentHit} hitCount={(this.state.search.results && this.state.search.results.hits && this.state.search.results.hits.total)?this.state.search.results.hits.total:-1} hitsPerPage={config.hitsPerPage} searchThrottleTime={config.searchThrottleTime} queryFields={this.state.configuration.queryFields} currentIndex={this.state.search.index} indexes={this.state.configuration.indexes} onIndexChange={this.setIndex} searchkit={this.searchkit} onSearchError={this.onSearchError} />
+              <MasterView isActive={!this.state.hits.currentHit} hitCount={(this.state.search.results && this.state.search.results.hits && this.state.search.results.hits.total)?this.state.search.results.hits.total:-1} hitsPerPage={config.hitsPerPage} searchThrottleTime={config.searchThrottleTime} queryFields={this.state.configuration.queryFields} currentIndex={this.state.search.index} indexes={this.state.configuration.indexes} onIndexChange={this.setIndex} searchkit={this.searchkit} onSearchError={this.onSearchError} config={this.props.config} />
             </MobileKeyboardHandler>
             <DetailViewManager />
           </span>)
         }
         <FetchingPanel show={!!this.state.fetching.active} message={this.state.fetching.message} />
         <ErrorPanel show={!!this.state.error.message} message={this.state.error.message} retryLabel={this.state.error.retry && this.state.error.retry.label} onRetry={() => this.performUserAction(this.state.error.retry && this.state.error.retry.action)}  cancelLabel={this.state.error.cancel && this.state.error.cancel.label} onCancel={() => this.performUserAction(this.state.error.cancel && this.state.error.cancel.action)} />
-        <SignInButton show={this.state.configuration.indexes.length <= 1} onClick={this.getOidcUrl()}  relatedElements={signInRelatedElements} />
       </div>
     );
   }

@@ -14,53 +14,12 @@
 *   limitations under the License.
 */
 
-.kgs-app .kgs-sign-in {
+.kgs-sign-in {
     position: absolute;
-    top: -9999px;
-    right: 10px;
-    margin-top: -45px;
-    padding: 4px 6px;
-    z-index: 100;
+    top: 25px;
+    right: 145px;
 }
 
-body[class*="mobile"] .kgs-app .kgs-sign-in {
-    right: 18px;
-    margin-top: 8px;
-}
-
-@supports (-ms-ime-align:auto) {
-    /*only for edge*/
-    .kgs-app .kgs-sign-in {
-        margin-top: 40px;
-    }
-}
-
-@media (min-width: 992px) {
-    .kgs-app .kgs-sign-in {
-        margin-top: 0;
-    }
-}
-
-header + header + nav + hr + .main-content .kgs-sign-in {
-    left: auto;
-    right: 2px;
-    margin-top: 0;
-}
-
-header.navbar + hr + .main-content .kgs-app .kgs-sign-in a {
-    color: #777;
-    font-weight: bold;
-}
-
-header.navbar + hr + .main-content .kgs-app .kgs-sign-in a:hover,
-header.navbar + hr + .main-content .kgs-app .kgs-sign-in a:focus {
-    color: #333;
-    background-color: transparent;
-}
-
-body[class*="mobile"] header.navbar + hr + .main-content .kgs-app .kgs-sign-in a,
-body[class*="mobile"] header.navbar + hr + .main-content .kgs-app .kgs-sign-in a:hover,
-body[class*="mobile"] header.navbar + hr + .main-content .kgs-app .kgs-sign-in a:focus {
-    color: black;
-    font-weight: 500;
+.kgs-sign-in a {
+   font-size: 20px;
 }

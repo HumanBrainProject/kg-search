@@ -40,6 +40,7 @@
 
 .kgs-filters .kgs-filters__header .kgs-filters__reset .sk-reset-filters {
     padding: 0;
+    color: #30b0e0;
 }
 
 .kgs-filters .sk-panel__header {
@@ -118,4 +119,5 @@
 
 .kgs-filters .sk-panel__content [data-qa="show-more"] {
     margin-top: 10px;
+    color: #30b0e0;
 }
