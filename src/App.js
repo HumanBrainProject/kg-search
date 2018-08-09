@@ -362,7 +362,7 @@ class App extends Component {
       <div className="kgs-app" data-showDetail={!!this.state.hits.currentHit}>
         {this.state.configuration.isConfigReady && (
           <span>
-            <MobileKeyboardHandler inputSelector={'.sk-top-bar__content .sk-search-box__text'}>
+            <MobileKeyboardHandler inputSelector={'.kgs-search .sk-search-box .sk-search-box__text'}>
               <MasterView isActive={!this.state.hits.currentHit} hitCount={(this.state.search.results && this.state.search.results.hits && this.state.search.results.hits.total)?this.state.search.results.hits.total:-1} hitsPerPage={config.hitsPerPage} searchThrottleTime={config.searchThrottleTime} queryFields={this.state.configuration.queryFields} currentIndex={this.state.search.index} indexes={this.state.configuration.indexes} onIndexChange={this.setIndex} searchkit={this.searchkit} onSearchError={this.onSearchError} />
             </MobileKeyboardHandler>
             <DetailViewManager />

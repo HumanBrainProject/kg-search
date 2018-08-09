@@ -14,20 +14,15 @@
 *   limitations under the License.
 */
 
-import React, { Component } from "react";
-import { TopBar, SearchBox, QueryString } from "searchkit";
+import React from "react";
+import { SearchkitComponent, SearchBox, QueryString } from "searchkit";
 import "./styles.css";
 
-export class SearchPanel extends Component {
+export class SearchPanel extends SearchkitComponent {
   constructor(props) {
     super(props);
     this.state = {
-      className: "kgs-search-panel",
-      style: {
-        display: "none",
-        position: "",
-        top: "-99999px",
-      }
+      isFloating: false
     };
     this.eventState = {
       didScroll: false,
@@ -71,7 +66,7 @@ export class SearchPanel extends Component {
     this.interval = null;
   }
   shouldComponentUpdate(nextProps, nextState) {
-    return nextState.style.display !== this.state.style.display || nextState.style.position !== this.state.style.position || nextState.style.top !== this.state.style.top;
+    return nextState.isFloating !== this.state.isFloating;
   }
   handleScrollEvent() {
     this.eventState.didScroll = true;
@@ -135,27 +130,26 @@ export class SearchPanel extends Component {
     });
     if (cookieChange || eventWasTriggered) {
       if (document.documentElement.scrollTop < height) {
-        this.setState({className: "kgs-search", style: {position: "absolute", top: height + "px"}});
+        this.setState({isFloating: false});
       } else {
-        this.setState({className: "kgs-search kgs-search-panel", style: {position: "fixed", top: "0"}});
+        this.setState({isFloating: true});
       }
     }
   }
   render() {
     const { searchThrottleTime, queryFields } = this.props;
-    const isMobile = ( navigator.userAgent.match(/Android/i)
-                    || navigator.userAgent.match(/webOS/i)
-                    || navigator.userAgent.match(/iPhone/i)
-                    || navigator.userAgent.match(/iPad/i)
-                    || navigator.userAgent.match(/iPod/i));
+
+    const handleSearch = () => {
+      this.searchkit.search();
+    };
+
     return (
-      <div className={this.state.className} style={this.state.style}>
-        <TopBar>
-          <SearchBox placeholder="Search (e.g. brain AND hippocampus)" autofocus={true} searchThrottleTime={searchThrottleTime} searchOnChange={!isMobile} queryFields={queryFields} queryBuilder={QueryString} />
-          <a href="http://lucene.apache.org/core/2_9_4/queryparsersyntax.html" target="blank" className="kgs-help__button" title="Help">
-            <i className="fa fa-info-circle kgs-help__button-icon"></i>
-          </a>
-        </TopBar>
+      <div className={`kgs-search${this.state.isFloating?" is-fixed-position":""}`}>
+        <SearchBox placeholder="Search (e.g. brain AND hippocampus)" autofocus={true} searchThrottleTime={searchThrottleTime} searchOnChange={false} queryFields={queryFields} queryBuilder={QueryString} />
+        <button className="kgs-search-button" onClick={handleSearch}>Search</button>
+        <a href="http://lucene.apache.org/core/2_9_4/queryparsersyntax.html" target="blank" className="kgs-search-help__button" title="Help">
+          <i className="fa fa-info-circle fa-2x"></i>
+        </a>
       </div>
     );
   }
