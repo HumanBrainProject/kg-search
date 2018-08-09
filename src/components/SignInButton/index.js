@@ -14,8 +14,8 @@
 *   limitations under the License.
 */
 
-import React, { Component } from 'react';
-import './styles.css';
+import React, { Component } from "react";
+import "./styles.css";
 
 export class SignInButton extends Component {
     constructor(props) {
@@ -42,25 +42,23 @@ export class SignInButton extends Component {
         this.handleOrientationChangeEvent = this.handleOrientationChangeEvent.bind(this);
         this.handleMutationEvent = this.handleMutationEvent.bind(this);
     }
-    componentDidMount() {
-        window.addEventListener('resize', this.handleResizeEvent);
-        window.addEventListener('orientationchange', this.handleOrientationChangeEvent);
-        if (window.MutationObserver) {
-            this.observer = new MutationObserver(this.handleMutationEvent);
-            this.observer.observe(document.body, { attributes: true, childList: true });
-        }
-        this.interval = setInterval(this.adjustLayout, 250);
+    this.interval = setInterval(this.adjustLayout, 250);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleResizeEvent);
+    window.removeEventListener("orientationchange", this.handleOrientationChangeEvent);
+    if (this.observer) {
+      this.observer.disconnect();
+      delete this.observer;
+      this.observer = null;
     }
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.handleResizeEvent);
-        window.removeEventListener('orientationchange', this.handleOrientationChangeEvent);
-        if (this.observer) {
-            this.observer.disconnect();
-            delete this.observer;
-            this.observer = null;
-        }
-        clearInterval(this.interval);
-        this.interval = null;
+    clearInterval(this.interval);
+    this.interval = null;
+  }
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.show !== this.props.show) {
+      const state = Object.assign({}, this.state, {style: {display: nextProps.show?"block":"none"}});
+      this.setState(state);
     }
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.show !== this.props.show) {
@@ -88,4 +86,8 @@ export class SignInButton extends Component {
         );
 
     }
+    return (
+      <div ref={this.setButtonRef} className="kgs-sign-in" style={this.state.style}>{button}</div>
+    );
+  }
 }

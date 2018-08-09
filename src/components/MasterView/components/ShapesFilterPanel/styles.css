@@ -60,15 +60,22 @@
 }
 
 .kgs-shapesFilter .kgs-shape button.kgs-shape__button > div {
+    display: -ms-grid;
     display: grid;
-    width: 100%;
+    -ms-grid-columns: auto auto;
+    -ms-grid-rows: auto auto;
     grid-template-areas: "icon label"
                          "icon count";
+    width: 100%;
 }
 
 .kgs-shapesFilter .kgs-shape__icon {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+    -ms-grid-row-span: 2;
     grid-area: icon;
     width: 50px;
+    height: 50px;
     margin-right: 5px;
     padding-top: 5px;
 }
@@ -77,13 +84,17 @@
     position: absolute;
     margin-top: 5px;
     margin-left: -20px;
+    -ms-transform: translate(20px, 0);
 }
 
 .kgs-shapesFilter .kgs-shape__icon div svg {
     display: block;
+    -ms-transform: translate(-5px, -50px);
 }
 
 .kgs-shapesFilter .kgs-shape__label {
+    -ms-grid-column: 2;
+    -ms-grid-row: 1;
     grid-area: label;
     text-align: left;
     font-size: 26px;
@@ -96,16 +107,13 @@
 }
 
 .kgs-shapesFilter .kgs-shape__count {
+    -ms-grid-column: 2;
+    -ms-grid-row: 2;
     grid-area: count;
     text-align: left;
     font-size: 18px;
     color: #999;
     white-space: nowrap;
-}
-
-.kgs-shapesFilter .kgs-shape__active {
-    grid-area: active;
-    background-color: transparent;
 }
 
 /* 
