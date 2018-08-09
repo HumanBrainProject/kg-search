@@ -22,20 +22,35 @@ import "./styles.css";
 export function ShapesFilterPanel() {
 
   const state = store.getState();
-
+  const highlightColor = "#ED5554";
+  const defaultColor = "#4D4D4D";
   // {itemKey, label, count, rawCount, listDocCount, active, disabled, showCount, bemBlocks, onClick}
   const itemComponent = ({itemKey, label, count, rawCount, listDocCount, active, disabled, showCount, bemBlocks, onClick}) => {
-
-    let iconTag = <div width="100%" height="100%"><i className="fa fa-tag fa-3x" /></div>;
+    let iconTag = <div width="100%" height="100%"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="40px" height="40px" viewBox="0 0 40 40" enableBackground="new 0 0 40 40" xmlSpace="preserve"><g>
+    <line fill="none" stroke={defaultColor} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" x1="9.25" y1="9.168" x2="31.25" y2="9.168"/>
+    <line fill="none" stroke={defaultColor} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" x1="9.25" y1="31.168" x2="31.25" y2="31.168"/>
+    <line fill="none" stroke={defaultColor} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" x1="9.25" y1="16.168" x2="31.25" y2="16.168"/>
+    <line fill="none" stroke={defaultColor} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" x1="9.25" y1="24.168" x2="31.25" y2="24.168"/>
+</g>
+</svg></div>;
     if (itemKey === "$all") {
-      iconTag = <div width="100%" height="100%"><i className="fa fa-bars fa-3x" /></div>;
+      iconTag = <div width="100%" height="100%">
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="40px" height="40px" viewBox="0 0 40 40" enableBackground="new 0 0 40 40" xmlSpace="preserve"><g>
+        <line fill="none" stroke={active? highlightColor:defaultColor} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" x1="9.25" y1="9.168" x2="31.25" y2="9.168"/>
+        <line fill="none" stroke={active? highlightColor:defaultColor} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" x1="9.25" y1="31.168" x2="31.25" y2="31.168"/>
+        <line fill="none" stroke={active? highlightColor:defaultColor} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" x1="9.25" y1="16.168" x2="31.25" y2="16.168"/>
+        <line fill="none" stroke={active? highlightColor:defaultColor} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" x1="9.25" y1="24.168" x2="31.25" y2="24.168"/>
+        </g>
+        </svg>
+      </div>;
     } else {
       const mapping = state.configuration.shapeMappings[itemKey];
       if (mapping) {
         if (mapping.image && mapping.image.url) {
           iconTag = <img src={mapping.image.url} alt={label} width="100%" height="100%" />;
         } else if (mapping.icon) {
-          iconTag = <div dangerouslySetInnerHTML={{__html: mapping.icon}} width="100%" height="100%" />;
+          let icon = active ? mapping.icon.replace(/#4D4D4D/g, highlightColor): mapping.icon;
+          iconTag = <div dangerouslySetInnerHTML={{__html:icon}} width="100%" height="100%" />;
         }
       }
     }
