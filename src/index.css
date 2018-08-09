@@ -98,6 +98,17 @@ html, body {
     cursor: default;
 }
 
+.kgs-app a,
+.kgs-app a:visited {
+    color: #30b0e0;
+}
+
+.kgs-app a:hover,
+.kgs-app a:focus,
+.kgs-app a:active {
+    color:#0088cc;
+}
+
 .kgs-app .kgs-spinner {
     display: inline-block;
     width: 40px;
