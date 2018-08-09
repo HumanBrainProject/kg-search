@@ -109,7 +109,7 @@ export function Shape({detailViewMode, data}) {
             }
           }, 
           mapping: {
-            visible: true
+            visible: false
           } 
         },
         {
@@ -179,10 +179,12 @@ export function Shape({detailViewMode, data}) {
 
   return (
     <div className={"kgs-shape__panel"} >
-      <div className={"kgs-shape__field kgs-shape__icon"}>
-        {iconTag}
+      <div className={"kgs-shape__field kgs-shape__header"}>
+        <div className={"kgs-shape__field kgs-shape__icon"}>
+          {iconTag}
+        </div>
+        {fieldsTag}
       </div>
-      {fieldsTag}
       {noDataTag}
     </div>
   );
