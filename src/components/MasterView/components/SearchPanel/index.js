@@ -16,7 +16,28 @@
 
 import React from "react";
 import { SearchkitComponent, SearchBox, QueryString } from "searchkit";
+import { isMobile } from "../../../../Helpers/BrowserHelpers";
 import "./styles.css";
+
+let searchInputClickedTimestamp = null;
+const searchInput = {
+  get element() {
+    return  document.querySelector(".kgs-search .sk-search-box .sk-top-bar__content .sk-search-box__text");
+  },
+  blur() {
+    const input = this.element;
+    if (input && document.activeElement === input && (!searchInputClickedTimestamp ||  ((new Date() - searchInputClickedTimestamp) > 500))) {
+      input.blur();
+    }
+  },
+  focus() {
+    const input = this.element;
+    if (input && document.activeElement !== input) {
+      input.focus();
+    }
+    searchInputClickedTimestamp = new Date();
+  }
+};
 
 export class SearchPanel extends SearchkitComponent {
   constructor(props) {
@@ -34,12 +55,16 @@ export class SearchPanel extends SearchkitComponent {
     this.observer = null;
     this.interval = null;
     this.adjustLayout = this.adjustLayout.bind(this);
+    this.handleMouseDownEvent = this.handleMouseDownEvent.bind(this);
     this.handleScrollEvent = this.handleScrollEvent.bind(this);
     this.handleResizeEvent = this.handleResizeEvent.bind(this);
     this.handleOrientationChangeEvent = this.handleOrientationChangeEvent.bind(this);
     this.handleMutationEvent = this.handleMutationEvent.bind(this);
   }
   componentDidMount() {
+    if (isMobile) {
+      window.addEventListener("mousedown", this.handleMouseDownEvent, false);
+    }
     window.addEventListener("scroll", this.handleScrollEvent);
     window.addEventListener("resize", this.handleResizeEvent);
     window.addEventListener("orientationchange", this.handleOrientationChangeEvent);
@@ -52,6 +77,9 @@ export class SearchPanel extends SearchkitComponent {
     this.interval = setInterval(this.adjustLayout, 250);
   }
   componentWillUnmount() {
+    if (isMobile) {
+      window.removeEventListener("mousedown", this.handleMouseDownEvent);
+    }
     window.removeEventListener("scroll", this.handleScrollEvent);
     window.removeEventListener("resize", this.handleResizeEvent);
     window.removeEventListener("orientationchange", this.handleOrientationChangeEvent);
@@ -68,7 +96,13 @@ export class SearchPanel extends SearchkitComponent {
   shouldComponentUpdate(nextProps, nextState) {
     return nextState.isFloating !== this.state.isFloating;
   }
+  handleMouseDownEvent() {
+    searchInput.focus();
+  }
   handleScrollEvent() {
+    if (isMobile) {
+      searchInput.blur();
+    }
     this.eventState.didScroll = true;
   }
   handleResizeEvent() {

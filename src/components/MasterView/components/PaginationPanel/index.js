@@ -16,7 +16,7 @@
 
 import React from "react";
 import { Pagination } from "searchkit";
-import { TabEnablerComponent } from "../../../../containers/TabEnabler";
+import { TabEnablerComponent } from "../../../TabEnabler";
 import "./styles.css";
 
 export function PaginationPanel() {

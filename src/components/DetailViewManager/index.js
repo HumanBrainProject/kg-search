@@ -143,7 +143,7 @@ export class DetailViewManager extends Component {
   }
   componentDidUpdate(prevProps, prevState) {
     if (!isMobile) {
-      //console.log(new Date().toLocaleTimeString() + ": view manager active=" + !!this.state.hits.currentHit + ", view=" + this.state.detail.currentViewId);
+      //window.console.log(new Date().toLocaleTimeString() + ": view manager active=" + !!this.state.hits.currentHit + ", view=" + this.state.detail.currentViewId);
     }
   }
   render() {

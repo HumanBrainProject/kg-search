@@ -115,9 +115,9 @@ const getConfig = () => {
     })
     .catch(error => { 
         if (Array.isArray(error))
-            error.forEach(e => console.log(e));
+            error.forEach(e => window.console.log(e));
         else 
-            console.log(error);
+            window.console.log(error);
         throw error;
     });
 };
@@ -144,9 +144,9 @@ const getIndexes = () => {
     })
     .catch(error => { 
         if (Array.isArray(error))
-            error.forEach(e => console.log(e));
+            error.forEach(e => window.console.log(e));
         else 
-            console.log(error);
+            window.console.log(error);
         throw error;
     });
 };
@@ -175,9 +175,9 @@ const getHitByReference = (reference, index) => {
     })
     .catch(error => { 
         if (Array.isArray(error))
-            error.forEach(e => console.log(e));
+            error.forEach(e => window.console.log(e));
         else 
-            console.log(error);
+            window.console.log(error);
         throw error;
     });
 };

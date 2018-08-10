@@ -60,7 +60,7 @@ export class MasterView extends Component {
   }
   componentDidUpdate() {
     if (!isMobile) {
-      //console.log(new Date().toLocaleTimeString() + ": master tabs active=" + this.props.isActive);
+      //window.console.log(new Date().toLocaleTimeString() + ": master tabs active=" + this.props.isActive);
       if (!this.props.isActive) {
         const rootNode = document.body.querySelector(".kgs-masterView");
         this.componentContext.tabAbles = Object.values(rootNode.querySelectorAll(tabAblesSelectors.join(",")))

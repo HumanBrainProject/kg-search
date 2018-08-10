@@ -38,7 +38,7 @@ export class DetailView extends Component {
   }
   componentDidUpdate() {
     if (!isMobile) {
-      //console.log(new Date().toLocaleTimeString() + ": view=" + this.props.viewId + ", tabs active=" + this.props.isActive);
+      //window.console.log(new Date().toLocaleTimeString() + ": view=" + this.props.viewId + ", tabs active=" + this.props.isActive);
       if (!this.props.isActive) {
         const rootNode = document.body.querySelector(".kgs-detailView[data-viewId=\"" + this.props.viewId + "\"]");
         this.componentContext.tabAbles = Object.values(rootNode.querySelectorAll(tabAblesSelectors.join(",")))

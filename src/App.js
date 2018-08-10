@@ -14,19 +14,18 @@
 *   limitations under the License.
 */
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { store, dispatch } from "./store";
 import * as actionTypes from "./actions.types";
 import * as actions from "./actions";
-import { isMobile, isFirefox, tabAblesSelectors } from './Helpers/BrowserHelpers';
-import { SearchkitManager } from 'searchkit';
-import { SearchKitHelpers } from './Helpers/SearchKitHelpers';
-import { MobileKeyboardHandler } from './containers/MobileKeyboardHandler';
-import { MasterView } from './components/MasterView';
-import { DetailViewManager } from './components/DetailViewManager';
-import { FetchingPanel } from './components/FetchingPanel';
-import { ErrorPanel } from './components/ErrorPanel';
-import { generateKey} from './Helpers/OIDCHelpers';
+import { isMobile, isFirefox, tabAblesSelectors } from "./Helpers/BrowserHelpers";
+import { SearchkitManager } from "searchkit";
+import { SearchKitHelpers } from "./Helpers/SearchKitHelpers";
+import { MasterView } from "./components/MasterView";
+import { DetailViewManager } from "./components/DetailViewManager";
+import { FetchingPanel } from "./components/FetchingPanel";
+import { ErrorPanel } from "./components/ErrorPanel";
+import { generateKey} from "./Helpers/OIDCHelpers";
 
 const LOADING_TIMER = 200;
 
@@ -49,7 +48,7 @@ class App extends Component {
 
     const { config } = props;
 
-    const searchKitUrl = config.searchApiHost + '/proxy/kg'; //+ '/api/smartproxy/kg';
+    const searchKitUrl = config.searchApiHost + "/proxy/kg"; //+ '/api/smartproxy/kg';
     this.searchkit = new SearchkitManager(searchKitUrl, {
       multipleSearchers:false,
       timeout: 10000,
@@ -66,15 +65,16 @@ class App extends Component {
       if (componentContext.accessToken) {
         header.Authorization = "Bearer " + componentContext.accessToken;
         const state = store.getState();
-        if (state.search.index != null)
-            header['index-hint'] = state.search.index;
-        else
-            delete header['index-hint'];
+        if (state.search.index != null) {
+          header["index-hint"] = state.search.index;
+        } else {
+          delete header["index-hint"];
+        }
       }
       dispatch(actions.loadSearchRequest());
-    }; 
+    };
     const onSearchResult = results => {
-      //console.log("result " + new Date().getTime());
+      //window.console.log("result " + new Date().getTime());
       dispatch(actions.loadSearchResult(results));
     };
 
@@ -100,68 +100,73 @@ class App extends Component {
   }
   loadIndexes() {
     const state = store.getState();
-    if (this.componentContext.accessToken && !state.configuration.isIndexesReady && !state.configuration.isIndexesLoading)
+    if (this.componentContext.accessToken && !state.configuration.isIndexesReady && !state.configuration.isIndexesLoading) {
       dispatch(actions.loadIndexes());
+    }
   }
 
   setIndex(newIndex) {
-    //console.log("new index: " + newIndex);
+    //window.console.log("new index: " + newIndex);
     dispatch(actions.setIndex(newIndex));
   }
   performUserAction(action) {
     switch (action) {
-      case actionTypes.LOAD_CONFIG:
-        this.loadConfig();
-        break;
-      case actionTypes.LOAD_INDEXES:
-        this.loadIndexes();
-        break;
-      case actionTypes.LOAD_SEARCH:
-        this.searchkit.reloadSearch();
-        break;
-      case actionTypes.CANCEL_SEARCH:
-        dispatch(actions.cancelSearch());
-        break;
-      case actionTypes.LOAD_HIT:
-        const state = store.getState();
-        if (state.hits.nextHitReference)
-          dispatch(actions.loadHit(state.hits.nextHitReference, state.search.index));
-        break;
-      case actionTypes.CANCEL_HIT_LOADING:
-        dispatch(actions.cancelHitLoading());
-        break;
-      case actionTypes.AUTHENTICATE:
-        window.location.href = this.getOidcUrl();
-        break;
-      default:
-        console.log("unkown user action '" + action + "'");
-        break;
+    case actionTypes.LOAD_CONFIG:
+      this.loadConfig();
+      break;
+    case actionTypes.LOAD_INDEXES:
+      this.loadIndexes();
+      break;
+    case actionTypes.LOAD_SEARCH:
+      this.searchkit.reloadSearch();
+      break;
+    case actionTypes.CANCEL_SEARCH:
+      dispatch(actions.cancelSearch());
+      break;
+    case actionTypes.LOAD_HIT: {
+      const state = store.getState();
+      if (state.hits.nextHitReference) {
+        dispatch(actions.loadHit(state.hits.nextHitReference, state.search.index));
+      }
+      break;
+    }
+    case actionTypes.CANCEL_HIT_LOADING:
+      dispatch(actions.cancelHitLoading());
+      break;
+    case actionTypes.AUTHENTICATE:
+      window.location.href = this.getOidcUrl();
+      break;
+    default:
+      window.console.log("unkown user action '" + action + "'");
+      break;
     }
   }
   onSearchError(status, nonce) {
     if (nonce && this.componentContext.nonce && nonce === this.componentContext.nonce) {
       this.componentContext.nonce = null;
       switch (status) {
-        case 401: // Unauthorized
-        case 403: // Forbidden
-        case 511: // Network Authentication Required
-          dispatch(actions.loadSearchSessionFailure(status));
-          break;
-        default:
+      case 401: // Unauthorized
+      case 403: // Forbidden
+      case 511: // Network Authentication Required
+        dispatch(actions.loadSearchSessionFailure(status));
+        break;
+      default: {
         const state = store.getState();
-          dispatch(actions.loadSearchServiceFailure(status, state.search.index));
+        dispatch(actions.loadSearchServiceFailure(status, state.search.index));
+      }
       }
     }
   }
   setCurrentHitFromBrowserLocation() {
-    if (this.componentContext.appStarted)
+    if (this.componentContext.appStarted) {
       dispatch(actions.setCurrentHitFromBrowserLocation());
+    }
   }
   catchBrowserNavigationChange() {
     if (this.componentContext.isEventFiredByAppNav) {
       this.componentContext.isEventFiredByAppNav = false;
     } else {
-      //console.log(new Date().toLocaleTimeString() + ": nav change");
+      //window.console.log(new Date().toLocaleTimeString() + ": nav change");
       this.componentContext.isEventFiredByBrowserNav = true;
       this.setCurrentHitFromBrowserLocation();
     }
@@ -190,50 +195,53 @@ class App extends Component {
         }
       }
       if (!nextState.configuration.isConfigReady) {
-        
+
         // load config
-        if (!nextState.fetching.active && !nextState.error.message)
+        if (!nextState.fetching.active && !nextState.error.message) {
           this.loadConfig();
+        }
 
       } else if (this.componentContext.accessToken && !nextState.configuration.isIndexesReady) {
-      
-        if (!nextState.fetching.active && !nextState.error.message)
-          this.loadIndexes();
 
-      } 
+        if (!nextState.fetching.active && !nextState.error.message) {
+          this.loadIndexes();
+        }
+
+      }
       if(nextState.configuration.isConfigReady && nextState.configuration.isIndexesReady) {
-          this.componentContext.appStarted = true;
-          
-          // Initialize the search
-          if (this.props.config.searchOnLoad){
-            //We force this searchkit option so the initial search is made with URL parameters
-            this.searchkit.options.searchOnLoad = true;
-            if (this.componentContext.accessToken)
-              this.searchkit.runInitialSearch();
+        this.componentContext.appStarted = true;
+
+        // Initialize the search
+        if (this.props.config.searchOnLoad){
+          //We force this searchkit option so the initial search is made with URL parameters
+          this.searchkit.options.searchOnLoad = true;
+          if (this.componentContext.accessToken) {
+            this.searchkit.runInitialSearch();
           }
+        }
       }
 
     // Load initial hit if set
     } else if (this.componentContext.initialHitReference) {
-      
+
       dispatch(actions.loadHit(this.componentContext.initialHitReference, nextState.search.index));
       this.componentContext.initialHitReference = null;
 
     } else {
 
-      //console.log("new index: " + nextState.search.index + ", old index: " + this.state.search.index);
+      //window.console.log("new index: " + nextState.search.index + ", old index: " + this.state.search.index);
       if (nextState.search.index !== this.state.search.index && nextState.search.index !== this.componentContext.index) {
         this.componentContext.index = nextState.search.index;
         this.searchkit.reloadSearch();
       }
 
       //Remove the ability to scroll the body when the modal is open
-      if(!!nextState.hits.currentHit){
-        document.documentElement.style.overflow = "hidden";
-        document.body.style.overflow = "hidden";
-      } else {
+      if (!nextState.hits.currentHit) {
         document.documentElement.style.overflow = "";
         document.body.style.overflow = "";
+      } else {
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
       }
 
       // store detail view laucher button in order to set back focus to it when detail popup close
@@ -252,26 +260,28 @@ class App extends Component {
           return 0;
         }
         let backs = currentState.hits.previousHits.length - nextState.hits.previousHits.length;
-        if (backs < 0)
+        if (backs < 0) {
           backs = 0;
-        if (currentState.hits.currentHit && !nextState.hits.currentHit)
+        }
+        if (currentState.hits.currentHit && !nextState.hits.currentHit) {
           backs++;
+        }
         return backs<0?0:backs;
       })(this.componentContext, this.state, nextState);
 
       // apply history todos
       if (pauseSearchkitHistoryListening) {
         this.searchkit.unlistenHistory();
-      } 
+      }
       if (pushHistoryState) {
-          //console.log(new Date().toLocaleTimeString() + ": new history");
-          const historyState = window.history.state;
-          window.history.pushState(historyState, "Knowledge Graph Search", window.location.href.replace(/#.*$/,"") + "#" + nextState.hits.currentHit._type + "/" + nextState.hits.currentHit._id);
+        //window.console.log(new Date().toLocaleTimeString() + ": new history");
+        const historyState = window.history.state;
+        window.history.pushState(historyState, "Knowledge Graph Search", window.location.href.replace(/#.*$/,"") + "#" + nextState.hits.currentHit._type + "/" + nextState.hits.currentHit._id);
       }
       if (backHistoryCounts) {
-          //console.log(new Date().toLocaleTimeString() + ": back history: " + backHistoryCounts);
-          this.componentContext.isEventFiredByAppNav = true;
-          [...Array(backHistoryCounts)].forEach(() => window.history.back());
+        //window.console.log(new Date().toLocaleTimeString() + ": back history: " + backHistoryCounts);
+        this.componentContext.isEventFiredByAppNav = true;
+        [...Array(backHistoryCounts)].forEach(() => window.history.back());
       }
       if (resumeSearchkitHistoryListening) {
         setTimeout(() => this.searchkit.listenToHistory(),0);
@@ -285,59 +295,60 @@ class App extends Component {
     setTimeout(() => {
       this.setState(nextState);
     }, withDelay?LOADING_TIMER:0);
-  
+
   }
   componentDidMount() {
     if (!isMobile) {
-      if (isFirefox)
+      if (isFirefox) {
         document.body.setAttribute("isFirefox", true);
-      const rootNode = document.body.querySelector('.kgs-app');
-      this.componentContext.tabAbles = Object.values(document.body.querySelectorAll(tabAblesSelectors.join(',')))
+      }
+      const rootNode = document.body.querySelector(".kgs-app");
+      this.componentContext.tabAbles = Object.values(document.body.querySelectorAll(tabAblesSelectors.join(",")))
         .filter(e => !rootNode.contains(e))
         .map(node => ({node: node, tabIndex: node.tabIndex}));
     }
     window.addEventListener("hashchange", this.catchBrowserNavigationChange.bind(this), false);
-    document.addEventListener('state', this.applyStateChange.bind(this), false);
+    document.addEventListener("state", this.applyStateChange.bind(this), false);
     this.applyStateChange();
   }
   componentWillUnmount() {
     window.removeEventListener("hashchange", this.catchBrowserNavigationChange);
-    document.removeEventListener('state', this.applyStateChange);
+    document.removeEventListener("state", this.applyStateChange);
   }
   componentDidUpdate(prevProps, prevState) {
-    //console.log(new Date().toLocaleTimeString() + ": app update");
+    //window.console.log(new Date().toLocaleTimeString() + ": app update");
     if (!isMobile) {
       if (!this.state.hits.currentHit && prevState.hits.currentHit) {
-        //console.log(new Date().toLocaleTimeString() + ": app enable tabs=" + this.componentContext.tabAbles.length);
+        //window.console.log(new Date().toLocaleTimeString() + ": app enable tabs=" + this.componentContext.tabAbles.length);
         this.componentContext.tabAbles.forEach(e => {
-          if (e.tabIndex >= 0)
+          if (e.tabIndex >= 0) {
             e.node.setAttribute("tabIndex", e.tabIndex);
-          else
+          } else {
             e.node.removeAttribute("tabIndex");
+          }
         });
       } else if (this.state.hits.currentHit && !prevState.hits.currentHit) {
-          //console.log(new Date().toLocaleTimeString() + ": app disable tabs=" + this.componentContext.tabAbles.length);
-          this.componentContext.tabAbles.forEach(e => e.node.setAttribute("tabIndex", -1));
+        //window.console.log(new Date().toLocaleTimeString() + ": app disable tabs=" + this.componentContext.tabAbles.length);
+        this.componentContext.tabAbles.forEach(e => e.node.setAttribute("tabIndex", -1));
       }
     }
 
     // on detail popup close put back focus to issuer
     if (!this.state.hits.currentHit && prevState.hits.currentHit && this.componentContext.hitIssuer) {
-      const hitIssuer = document.body.querySelector('button[data-type="' + this.componentContext.hitIssuer._type + '"][data-id="' + this.componentContext.hitIssuer._id +'"]');
-      if (hitIssuer)
+      const hitIssuer = document.body.querySelector("button[data-type=\"" + this.componentContext.hitIssuer._type + "\"][data-id=\"" + this.componentContext.hitIssuer._id +"\"]");
+      if (hitIssuer) {
         hitIssuer.focus();
+      }
     }
   }
   render() {
-    const { config } = this.props; 
+    const { config } = this.props;
 
     return (
       <div className="kgs-app" data-showDetail={!!this.state.hits.currentHit}>
         {this.state.configuration.isConfigReady && (
           <span>
-            <MobileKeyboardHandler inputSelector={'.sk-top-bar__content .sk-search-box__text'}>
-              <MasterView isActive={!this.state.hits.currentHit} hitCount={(this.state.search.results && this.state.search.results.hits && this.state.search.results.hits.total)?this.state.search.results.hits.total:-1} hitsPerPage={config.hitsPerPage} searchThrottleTime={config.searchThrottleTime} queryFields={this.state.configuration.queryFields} currentIndex={this.state.search.index} indexes={this.state.configuration.indexes} onIndexChange={this.setIndex} searchkit={this.searchkit} onSearchError={this.onSearchError} config={this.props.config} />
-            </MobileKeyboardHandler>
+            <MasterView isActive={!this.state.hits.currentHit} hitCount={(this.state.search.results && this.state.search.results.hits && this.state.search.results.hits.total)?this.state.search.results.hits.total:-1} hitsPerPage={config.hitsPerPage} searchThrottleTime={config.searchThrottleTime} queryFields={this.state.configuration.queryFields} currentIndex={this.state.search.index} indexes={this.state.configuration.indexes} onIndexChange={this.setIndex} searchkit={this.searchkit} onSearchError={this.onSearchError} config={this.props.config} />
             <DetailViewManager />
           </span>)
         }
