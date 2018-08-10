@@ -26,7 +26,7 @@ export function ResultsHeader({gridLayoutMode, onGridLayoutModeToogle}) {
     <ActionBar>
       <ActionBarRow>
         <HitsStats translations={{"hitstats.results_found": "Viewing {hitCount} results"}} />
-        <PaginationPanel/>
+        <PaginationPanel className="kgs-header-pagination" />
         <LayoutModeSwitcherToggle gridLayoutMode={gridLayoutMode} onToggle={onGridLayoutModeToogle} />
         <SortByPanel/>
       </ActionBarRow>

@@ -19,9 +19,9 @@ import { Pagination } from "searchkit";
 import { TabEnablerComponent } from "../../../TabEnabler";
 import "./styles.css";
 
-export function PaginationPanel() {
+export function PaginationPanel({className}) {
   return (
-    <TabEnablerComponent className={"kgs-paging"} containerSelector={".kgs-paging"} itemSelector={".sk-toggle-option"} activeItemSelector={".is-active"} disabledItemSelector={".is-disabled"} >
+    <TabEnablerComponent className={`kgs-paging ${className?className:""}`} containerSelector={className?("." + className):".kgs-paging"} itemSelector={".sk-toggle-option"} activeItemSelector={".is-active"} disabledItemSelector={".is-disabled"} >
       <Pagination showNumbers={true} showLast={true} translations={{"pagination.previous": " ", "pagination.next": " "}}/>
     </TabEnablerComponent>
   );

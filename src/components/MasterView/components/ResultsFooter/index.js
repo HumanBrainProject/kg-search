@@ -190,7 +190,7 @@ export class ResultsFooter extends Component {
       <div className={this.state.className} style={this.state.style}>
         <TermsShortNotice show={showTermsShortNotice} onAgree={onAgreeTermsShortNotice} />
         <div className="kgs-result-footer-nav">
-          <PaginationPanel/>
+          <PaginationPanel className="kgs-footer-pagination" />
           {this.props.indexes.length > 1?<div className="kgs-result-footer-group"><Select label="Group" value={this.props.currentIndex} list={this.props.indexes} onChange={this.props.onIndexChange} /></div>:null}
           <SignInButton show={this.state.configuration.indexes.length <= 1} onClick={ this.getOidcUrl()} relatedElements={signInRelatedElements} />
           <ShareBar/>
