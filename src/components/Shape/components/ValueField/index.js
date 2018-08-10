@@ -98,6 +98,9 @@ export class ValueField extends Component {
               {!this.state.showMore[mapping.value] && <button onClick={() => this.showMore(mapping.value)}>more...</button>}
             </span>;
           }
+          if(mapping && mapping.tag_icon){
+            valueTag = <span className="field-value__tag"><div dangerouslySetInnerHTML={{__html:mapping.tag_icon}} /><div>{value.value}</div></span>
+          }
         }
       }
       if (value.detail) {

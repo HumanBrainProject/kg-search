@@ -33,3 +33,9 @@
     text-decoration: none;
     color: #08c;
 }
+
+.list-tag{
+    display: flex;
+    padding: 0;
+    flex-wrap: wrap;
+}
