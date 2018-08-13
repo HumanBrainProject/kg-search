@@ -93,8 +93,8 @@
 [data-type] .kgs-shape__icon {
     width: 35px;
     height: 35px;
-    flex-basis: 13%;
-    max-width: 50px;
+    max-width: 60px;
+    flex-grow: 1;
 }
 
 [data-type] .kgs-shape__icon>i {
@@ -141,6 +141,15 @@
     display:flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+}
+
+[data-layoutMode="list"] .kgs-shape__protocol{
+    flex-grow:1;
+    max-width: 50%;
+}
+[data-layoutMode="list"] .kgs-shape__methods{
+    flex-grow:1;
+    max-width: 50%;
 }
 
 /**********************************************************************************************************************/
