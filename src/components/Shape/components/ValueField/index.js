@@ -51,7 +51,7 @@ export class ValueField extends Component {
     this.setState({showMore: showMore});
   }
   render() {
-    const {value, mapping, showSmartContent} = this.props;
+    const {value, mapping, showSmartContent, displayValue} = this.props;
 
     if (!mapping || !mapping.visible)
       {return null;}
@@ -86,6 +86,9 @@ export class ValueField extends Component {
             valueTag = <span className="markdown" dangerouslySetInnerHTML={{__html:html}}></span>;
           } else {
             valueTag = value.value;
+            if(displayValue){
+              valueTag = displayValue
+            }
           }
           if (showSmartContent && mapping.collapsible && value.value.length >= 1600) {
             valueTag = <span className="collapsible">
@@ -110,7 +113,7 @@ export class ValueField extends Component {
     }
 
     return (
-      <span className="field-value" data-showDetail={this.state.showDetails}>{valueTag}{detailsButton}{detailsContent}</span>
+      <div className="field-value" data-showDetail={this.state.showDetails}>{valueTag}{detailsButton}{detailsContent}</div>
     );
   }
 }

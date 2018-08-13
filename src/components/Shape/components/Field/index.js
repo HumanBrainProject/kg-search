@@ -24,7 +24,10 @@ export function Field({name, data, mapping, showSmartContent}) {
 
   if (!mapping || !mapping.visible || !(mapping.showIfEmpty || data[name]))
     return null;
-
+  let displayValue;
+  if(name === 'component'){
+    displayValue = "From the " + data[name].value + " project";
+  }
   let labelTag = null;
   let valueTag = null;
   let objectTag = null;
@@ -46,7 +49,6 @@ export function Field({name, data, mapping, showSmartContent}) {
     }
   }
 
-
   if(mapping.hint)
     hintTag = <HintField value = {mapping.hint} label = {mapping.value} />;
 
@@ -55,7 +57,7 @@ export function Field({name, data, mapping, showSmartContent}) {
     if (Array.isArray(value)) {
       listTag = <ListField items={value} mapping={mapping} showSmartContent={showSmartContent} />;
     } else {
-      valueTag = <ValueField value={value} mapping={mapping} showSmartContent={showSmartContent} />;
+      valueTag = <ValueField value={value} mapping={mapping} showSmartContent={showSmartContent} displayValue={displayValue}/>;
       if (mapping && mapping.children) {
         objectTag = <ObjectField data={value.children} mapping={mapping} showSmartContent={showSmartContent} />;
       }
