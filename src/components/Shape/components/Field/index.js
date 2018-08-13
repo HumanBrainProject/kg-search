@@ -30,10 +30,23 @@ export function Field({name, data, mapping, showSmartContent}) {
   let objectTag = null;
   let listTag = null;
   let hintTag = null;
+  let order = null;
 
-  if (mapping.value)
-    labelTag = <span className="field-label">{mapping.value}</span>;
-  
+  if(mapping.order && !showSmartContent){
+    order = {
+      "order": mapping.order
+    };
+  }
+
+  if (mapping.value){
+    if(mapping.label_hidden && !showSmartContent){
+      labelTag = null;
+    } else {
+      labelTag = <div className="field-label">{mapping.value}</div>;
+    }
+  }
+
+
   if(mapping.hint)
     hintTag = <HintField value = {mapping.hint} label = {mapping.value} />;
 
@@ -50,7 +63,7 @@ export function Field({name, data, mapping, showSmartContent}) {
   };
 
   return (
-    <span className={"kgs-shape__field" + (name?" kgs-shape__" + name:"")}>
+    <span style={order} className={"kgs-shape__field" + (name?" kgs-shape__" + name:"")}>
       {labelTag}
       {hintTag}
       {valueTag}
