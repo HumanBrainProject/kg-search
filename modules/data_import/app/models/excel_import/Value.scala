@@ -19,7 +19,7 @@ package models.excel_import
 import nexus.services.NexusService
 import play.api.libs.json._
 
-import scala.concurrent.{Await, ExecutionContext}
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
 import Entity.isNexusLink
 import Value._
@@ -32,7 +32,7 @@ sealed trait Value {
   def getNonEmtpy(): Option[Value]
   def resolveValue(linkRef: collection.mutable.Map[String, String]): Value
   def validateValue(token: String, nexusService: NexusService)
-                   (implicit executionContext: ExecutionContext): Value
+                   (implicit executionContext: ExecutionContext): Future[Value]
 }
 
 case class SingleValue(value: String, unit: Option[String] = None, status: Option[String] = None) extends Value{
@@ -81,17 +81,18 @@ case class SingleValue(value: String, unit: Option[String] = None, status: Optio
   }
 
   override def validateValue(token: String, nexusService: NexusService)
-                            (implicit ec: ExecutionContext): SingleValue = {
+                            (implicit ec: ExecutionContext): Future[SingleValue] = {
     if (Entity.isNexusLink(value)){
       // check validity
-      Await.result(nexusService.getInstance(value,token).map(_.status)(ec), new DurationInt(3).seconds) match {
+      nexusService.getInstance(value,token).map(
+        _.status match {
         case 200 =>
           this.copy(status = Some(VALID))
         case _ =>
           this.copy(status = Some(INVALID))
-      }
+      })
     } else {
-      this
+      Future.successful(this)
     }
   }
 }
@@ -129,11 +130,15 @@ case class ArrayValue(values: Seq[SingleValue]) extends Value{
   }
 
   override def validateValue(token: String, nexusService: NexusService)
-                            (implicit executionContext: ExecutionContext): ArrayValue = {
-    val newValues = values.map{
-      value => value.validateValue(token, nexusService)
+                            (implicit executionContext: ExecutionContext): Future[ArrayValue] = {
+    val newValues = values.foldLeft(Future.successful(Seq.empty[SingleValue])){
+      case (valuesFut, value) =>
+        valuesFut.flatMap(
+          values =>
+            value.validateValue(token, nexusService).map(values :+ _)
+        )
     }
-    this.copy(values = newValues)
+    newValues.map(singleValues => this.copy(values = singleValues))
   }
 }
 

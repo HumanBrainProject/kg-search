@@ -195,32 +195,31 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService,
     val linksRef = collection.mutable.Map.empty[String, String]
     insertSeq.foldLeft(Future.successful(Seq.empty[Entity])) {
       case (statusSeqFut, entity) =>
-        statusSeqFut.flatMap {
-          statusSeq =>
-            val resolvedEntity = entity.resolveLinks(linksRef)
-            insertUnimindsEntity(nexusEndPoint, resolvedEntity, token, nexusService).map {
-              insertionResponse => insertionResponse match {
-                case Left((operation, jsonResponse)) =>
-                  val instanceLink = (jsonResponse \ "@id").as[String]
-                  linksRef.put(entity.localId, instanceLink)
-                  val status = operation match {
-                    case SKIP => s"NO CHANGE"
-                    case INSERT | UPDATE => s"${operation} OK"
-                    case _ => DEFAULT_RESOLUTION_STATUS
-                  }
-                  val updatedEntity = resolvedEntity.validateLinksAndStatus(Some(instanceLink), Some(status), token, nexusService)
-                  statusSeq :+ updatedEntity
+        statusSeqFut.flatMap { statusSeq =>
+          val resolvedEntity = entity.resolveLinks(linksRef)
+          insertUnimindsEntity(nexusEndPoint, resolvedEntity, token, nexusService).flatMap {
+            insertionResponse => insertionResponse match {
+              case Left((operation, jsonResponse)) =>
+                val instanceLink = (jsonResponse \ "@id").as[String]
+                linksRef.put(entity.localId, instanceLink)
+                val status = operation match {
+                  case SKIP => s"NO CHANGE"
+                  case INSERT | UPDATE => s"${operation} OK"
+                  case _ => DEFAULT_RESOLUTION_STATUS
+                }
+                val updatedEntity = resolvedEntity.validateLinksAndStatus(Some(instanceLink), Some(status), token, nexusService)
+                updatedEntity.map(statusSeq :+ _)
 
-                case Right(insertionError) =>
-                  val errorMsg = try {
-                    (Json.parse(insertionError).as[JsObject] \ "code").as[String]
-                  } catch {
-                    case _:Throwable  => insertionError
-                  }
-                  val updatedEntity = resolvedEntity.validateLinksAndStatus(None, Some(s"ERROR: $errorMsg"), token, nexusService)
-                  statusSeq :+ updatedEntity
-              }
+              case Right(insertionError) =>
+                val errorMsg = try {
+                  (Json.parse(insertionError).as[JsObject] \ "code").as[String]
+                } catch {
+                  case _:Throwable  => insertionError
+                }
+                val updatedEntity = resolvedEntity.validateLinksAndStatus(None, Some(s"ERROR: $errorMsg"), token, nexusService)
+                updatedEntity.map(statusSeq :+ _)
             }
+          }
         }
     }
   }

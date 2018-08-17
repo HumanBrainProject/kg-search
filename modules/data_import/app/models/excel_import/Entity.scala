@@ -22,7 +22,7 @@ import nexus.services.NexusService
 import org.apache.poi.ss.usermodel.CellStyle
 import org.apache.poi.xssf.usermodel.XSSFSheet
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 
 case class Entity(rawType: String, localId: String, rawContent: Map[String, Value], status: Option[String] = None){
@@ -91,26 +91,29 @@ case class Entity(rawType: String, localId: String, rawContent: Map[String, Valu
 
   def validateLinksAndStatus(entityLink: Option[String], newStatus: Option[String] = None,
                              token: String, nexusService :NexusService)
-                            (implicit ec: ExecutionContext): Entity = {
+                            (implicit ec: ExecutionContext): Future[Entity] = {
     // links validation
-    val validatedContent = content.map{
-      case (key, value) =>
-        if (isLink(key)) {
-          (key, value.validateValue(token, nexusService))
-        } else {
-          (key, value)
-        }
+    val validatedContentFut = content.foldLeft(Future.successful(Map.empty[String, Value])){
+      case (contentFut, (key, value)) =>
+        contentFut.flatMap( content =>
+          if (isLink(key)) {
+            value.validateValue(token, nexusService).map( value => content.+((key, value)))
+          } else {
+            Future.successful(content.+((key, value)))
+          })
     }
 
     // indirect externalId update if needed
-    val newContent = entityLink match {
-      case Some(idLink) =>
-        validatedContent + ((ID_LABEL, SingleValue(idLink)))
-      case None =>
-        validatedContent
+    validatedContentFut.map {
+      validatedContent =>
+        val newContent = entityLink match {
+          case Some(idLink) =>
+            validatedContent + ((ID_LABEL, SingleValue(idLink)))
+          case None =>
+            validatedContent
+        }
+        copyWithID(newContent, newStatus)
     }
-
-    copyWithID(newContent, newStatus)
   }
 
   def getExternalIdAsSingleValue(): SingleValue = {
