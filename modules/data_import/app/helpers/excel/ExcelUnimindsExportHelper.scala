@@ -20,6 +20,7 @@ import java.awt.Color
 import models.excel_import.Entity
 import org.apache.poi.xssf.usermodel.{XSSFCellStyle, XSSFColor, XSSFSheet, XSSFWorkbook}
 
+
 object ExcelUnimindsExportHelper {
 
   val GREY = new XSSFColor(new Color(0xEF, 0xEF, 0xEF))

@@ -21,8 +21,6 @@ import data_import.helpers.excel_import.{ExcelImportHelper, ExcelMindsImportHelp
 import data_import.helpers.excel.ExcelUnimindsExportHelper
 import data_import.services.InsertionService
 import java.io.{ByteArrayOutputStream, FileInputStream}
-import java.sql.Time
-
 import javax.inject.{Inject, Singleton}
 import models.excel_import.Entity
 import nexus.services.NexusService
@@ -33,7 +31,6 @@ import play.api.libs.json._
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 import play.api.{Configuration, Logger}
-
 import scala.concurrent.{ExecutionContext, Future}
 
 

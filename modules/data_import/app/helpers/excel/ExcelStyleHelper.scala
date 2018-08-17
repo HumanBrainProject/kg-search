@@ -18,6 +18,7 @@ package data_import.helpers.excel
 import org.apache.poi.ss.usermodel.{BorderStyle, FillPatternType}
 import org.apache.poi.xssf.usermodel.{XSSFCellStyle, XSSFColor}
 
+
 object ExcelStyleHelper {
 
   def setAllThinBorders(cellStyle: XSSFCellStyle): Unit = {

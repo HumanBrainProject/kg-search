@@ -16,13 +16,12 @@
 package models.excel_import
 
 import play.api.libs.json._
-import Entity._
 import nexus.helpers.NexusHelper
 import nexus.services.NexusService
 import org.apache.poi.ss.usermodel.CellStyle
 import org.apache.poi.xssf.usermodel.XSSFSheet
-
 import scala.concurrent.{ExecutionContext, Future}
+import Entity._
 
 
 case class Entity(rawType: String, localId: String, rawContent: Map[String, Value], status: Option[String] = None){

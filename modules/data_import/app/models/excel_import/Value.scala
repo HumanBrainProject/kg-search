@@ -15,14 +15,12 @@
 */
 package models.excel_import
 
-
 import nexus.services.NexusService
 import play.api.libs.json._
-
-import scala.concurrent.{Await, ExecutionContext, Future}
-import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ExecutionContext, Future}
 import Entity.isNexusLink
 import Value._
+
 
 sealed trait Value {
   def toJson(): JsValue

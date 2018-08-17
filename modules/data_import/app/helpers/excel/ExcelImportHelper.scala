@@ -16,12 +16,8 @@
 package data_import.helpers.excel_import
 
 import data_import.models.excel_import.CommonVars._
-import java.security.MessageDigest
 import org.apache.poi.ss.usermodel.{Cell, CellType, DataFormatter}
 import org.apache.poi.xssf.usermodel._
-import play.api.libs.json._
-import play.api.libs.ws.WSClient
-import scala.concurrent.{ExecutionContext, Future}
 
 
 object ExcelImportHelper {
