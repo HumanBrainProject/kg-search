@@ -132,10 +132,12 @@ class ExcelImportController @Inject()(cc: ControllerComponents,
   }
 
   def renderCsv(outputFileBaseName: String, data: Seq[Entity]): Result = {
+    val start = System.currentTimeMillis()
     val csvContent =(
       Seq("block name^block id^key^value^unit of value^resolution status\n") ++
         data.flatMap(_.toCsv())
       ).map(line => ByteString(line.getBytes()))
+    logger.info(s"[uniminds][csv] Generated in ${System.currentTimeMillis() - start} ms")
 
     Result(
       header = ResponseHeader(
@@ -149,7 +151,7 @@ class ExcelImportController @Inject()(cc: ControllerComponents,
   def renderExcel(outputFileBaseName: String, data: Seq[Entity]): Result = {
     val start = System.currentTimeMillis()
     val workbook = ExcelUnimindsExportHelper.buildExcelFromEntities(data)
-    logger.info(s"[uniminds][Excel] Generated in ${System.currentTimeMillis() - start} ms")
+    logger.info(s"[uniminds][excel] Generated in ${System.currentTimeMillis() - start} ms")
     val byteArrayOutputStream = new ByteArrayOutputStream()
     workbook.write(byteArrayOutputStream)
     val byteString = ByteString(byteArrayOutputStream.toByteArray)

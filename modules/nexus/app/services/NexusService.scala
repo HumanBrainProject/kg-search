@@ -261,8 +261,8 @@ class NexusService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
 }
 
 object NexusService {
-  val UPDATE = "update"
-  val INSERT = "insert"
-  val SKIP = "skip"
-  val ERROR = "error"
+  val UPDATE = "UPDATE"
+  val INSERT = "INSERT"
+  val SKIP = "SKIP"
+  val ERROR = "ERROR"
 }

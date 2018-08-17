@@ -7,9 +7,10 @@ import data_import.models.excel_import.CommonVars.{activityLabel, datasetLabel, 
 import models.excel_import.{Entity, Value}
 import nexus.services.NexusService
 import nexus.services.NexusService._
-import play.api.Configuration
+import play.api.{Configuration, Logger}
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
+
 import scala.concurrent.{ExecutionContext, Future}
 import Entity.isNexusLink
 import Entity.ID_LABEL
@@ -19,6 +20,7 @@ import Value.DEFAULT_RESOLUTION_STATUS
 class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService,config: Configuration)
                                 (implicit executionContext: ExecutionContext) {
 
+  val logger = Logger(this.getClass)
 
   def nexusResponseToStatus(nexusResponse: Future[WSResponse], operation: String): Future[Either[(String, JsValue), String]]= {
     nexusResponse.map { response =>
@@ -207,8 +209,12 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService,
                   case INSERT | UPDATE => s"${operation} OK"
                   case _ => DEFAULT_RESOLUTION_STATUS
                 }
+                logger.info(s"[uniminds][insertion][${status}] ${resolvedEntity.`type`}.${resolvedEntity.localId}")
                 val updatedEntity = resolvedEntity.validateLinksAndStatus(Some(instanceLink), Some(status), token, nexusService)
-                updatedEntity.map(statusSeq :+ _)
+                updatedEntity.map{
+                  logger.info(s"[uniminds][validation][DONE]${resolvedEntity.`type`}.${resolvedEntity.localId}")
+                  statusSeq :+ _
+                }
 
               case Right(insertionError) =>
                 val errorMsg = try {
@@ -216,8 +222,12 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService,
                 } catch {
                   case _:Throwable  => insertionError
                 }
-                val updatedEntity = resolvedEntity.validateLinksAndStatus(None, Some(s"ERROR: $errorMsg"), token, nexusService)
-                updatedEntity.map(statusSeq :+ _)
+                logger.info(s"[uniminds][insertion][${errorMsg}] ${resolvedEntity.`type`}.${resolvedEntity.localId}")
+                val updatedEntity = resolvedEntity.validateLinksAndStatus(None, Some(s"${ERROR}: $errorMsg"), token, nexusService)
+                updatedEntity.map{
+                  logger.info(s"[uniminds][validation][DONE]${resolvedEntity.`type`}.${resolvedEntity.localId}")
+                  statusSeq :+ _
+                }
             }
           }
         }
