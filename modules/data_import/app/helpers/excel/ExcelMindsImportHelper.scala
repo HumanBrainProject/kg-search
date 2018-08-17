@@ -118,15 +118,14 @@ object ExcelMindsImportHelper {
 
   def buildJsonEntity(contentJson: String, insertionDateTime: String, creator: String, componentId: String) = {
     // hashcode is computed on spec content to avoid update because of insertionDateTime change
-    // TODO consider state as well when it will not be harcoded anymore
+    // TODO consider state
     s"""
       {
         "created_timestamp": "${insertionDateTime}",
         "creator": "${creator}",
         "state": "1",
         "component_id": $componentId,
-        "Specification": $contentJson,
-        "http://hbp.eu/internal#hashcode": ${hash(contentJson)}
+        "Specification": $contentJson
       }
       """
   }

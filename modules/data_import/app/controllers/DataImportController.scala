@@ -21,6 +21,8 @@ import data_import.helpers.excel_import.{ExcelImportHelper, ExcelMindsImportHelp
 import data_import.helpers.excel.ExcelUnimindsExportHelper
 import data_import.services.InsertionService
 import java.io.{ByteArrayOutputStream, FileInputStream}
+import java.sql.Time
+
 import javax.inject.{Inject, Singleton}
 import models.excel_import.Entity
 import nexus.services.NexusService
@@ -31,6 +33,7 @@ import play.api.libs.json._
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 import play.api.{Configuration, Logger}
+
 import scala.concurrent.{ExecutionContext, Future}
 
 
@@ -137,21 +140,23 @@ class ExcelImportController @Inject()(cc: ControllerComponents,
     Result(
       header = ResponseHeader(
         OK,
-        Map("Content-Disposition" -> s"attachment; filename=${outputFileBaseName}.csv")),
+        Map("Content-Disposition" -> s"attachment; filename=${outputFileBaseName}.csv; filename*=utf-8''${outputFileBaseName}.csv")),
       body = HttpEntity.Streamed(Source[ByteString](collection.immutable.Iterable(csvContent:_*)),
         Some(csvContent.size.toLong), Some("text/csv"))
     )
   }
 
   def renderExcel(outputFileBaseName: String, data: Seq[Entity]): Result = {
+    val start = System.currentTimeMillis()
     val workbook = ExcelUnimindsExportHelper.buildExcelFromEntities(data)
+    logger.info(s"[uniminds][Excel] Generated in ${System.currentTimeMillis() - start} ms")
     val byteArrayOutputStream = new ByteArrayOutputStream()
     workbook.write(byteArrayOutputStream)
     val byteString = ByteString(byteArrayOutputStream.toByteArray)
     Result(
       header = ResponseHeader(
         OK,
-        Map("Content-Disposition" -> s"attachment; filename=${outputFileBaseName}.xlsx")),
+        Map("Content-Disposition" -> s"attachment; filename=${outputFileBaseName}.xlsx; filename*=utf-8''${outputFileBaseName}.xlsx")),
       body = HttpEntity.Streamed(Source[ByteString](collection.immutable.Iterable(byteString)),
         Some(byteString.size.toLong), Some(xlsxMime))
     )
@@ -160,16 +165,11 @@ class ExcelImportController @Inject()(cc: ControllerComponents,
   def renderJson(data: Seq[Entity]): Result = {
     Ok(JsArray(
         data.zipWithIndex.sortWith{
-          case ((e1, _), (e2, _)) => s"${e1.`type`}_${e1.id}" < s"${e2.`type`}_${e2.id}"}
+          case ((e1, _), (e2, _)) => s"${e1.`type`}_${e1.localId}" < s"${e2.`type`}_${e2.localId}"}
         .map {
           case (entity, idx) =>
-            JsObject(Map(
-              "type" -> JsString(entity.`type`),
-              "id" -> JsString(entity.id),
-              "insertion_seqNum" -> JsString(idx.toString),
-              "insertion_status" -> JsString(entity.status.getOrElse("")),
-              "content" -> entity.toJson()
-            ))
+            entity.toJson() +
+              ("insertion_seqNum" -> JsString(idx.toString))
         })
     )
   }
@@ -182,7 +182,7 @@ class ExcelImportController @Inject()(cc: ControllerComponents,
         // sort output
         val data = res.sortWith{
           case (e1, e2) =>
-            s"${e1.`type`}_${e1.id}" < s"${e2.`type`}_${e2.id}"
+            s"${e1.`type`}_${e1.localId}" < s"${e2.`type`}_${e2.localId}"
         }
         render {
           case AcceptsXlsx() | AcceptsXls() =>

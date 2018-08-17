@@ -17,6 +17,8 @@
 
 package nexus.helpers
 
+import java.security.MessageDigest
+
 import play.api.http.Status._
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
@@ -126,6 +128,10 @@ object NexusHelper {
     Json.obj(
       "description" -> description
     )
+  }
+
+  def hash(payload: String): String = {
+    MessageDigest.getInstance("MD5").digest(payload.getBytes).map(0xFF & _).map { "%02x".format(_) }.foldLeft("") {_ + _}
   }
 
 }

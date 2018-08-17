@@ -56,9 +56,9 @@ class ExcelInsertionHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     "build graph from seq of entities" in {
       val (rootRes, usedRes) = ExcelInsertionHelper.buildGraphFromEntity(entitiesRef.getOrElse("S01", null), usedEntities, entitiesRef)
-      assert(rootRes.entity.id == "S01")
+      assert(rootRes.entity.localId == "S01")
       assert(rootRes.children.size == 1)
-      assert(rootRes.children.head.entity.id == "MainSG")
+      assert(rootRes.children.head.entity.localId == "MainSG")
       assert(rootRes.children.head.children.isEmpty == true)
     }
 

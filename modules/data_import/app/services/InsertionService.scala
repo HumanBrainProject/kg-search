@@ -1,39 +1,58 @@
 package data_import.services
 
 import com.google.inject.Inject
-import data_import.helpers.excel_import.ExcelImportHelper.hash
 import data_import.helpers.excel_import.ExcelInsertionHelper
 import data_import.helpers.excel_import.ExcelMindsImportHelper.formatEntityPayload
 import data_import.models.excel_import.CommonVars.{activityLabel, datasetLabel, specimenGroupLabel, specimengroupLabel}
-import models.excel_import.Entity
-import play.api.Configuration
-import play.api.libs.json._
-import play.api.libs.ws.WSClient
+import models.excel_import.{Entity, Value}
 import nexus.services.NexusService
 import nexus.services.NexusService._
-
+import play.api.Configuration
+import play.api.libs.json._
+import play.api.libs.ws.{WSClient, WSResponse}
 import scala.concurrent.{ExecutionContext, Future}
+import Entity.isNexusLink
+import Entity.ID_LABEL
+import Value.DEFAULT_RESOLUTION_STATUS
+
 
 class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService,config: Configuration)
                                 (implicit executionContext: ExecutionContext) {
 
 
+  def nexusResponseToStatus(nexusResponse: Future[WSResponse], operation: String): Future[Either[(String, JsValue), String]]= {
+    nexusResponse.map { response =>
+      response.status match {
+        case 200 | 201 =>
+          Left((operation, response.json))
+        case _ =>
+          Right(response.bodyAsBytes.utf8String)
+      }
+    }
+  }
+
   def insertEntity(nexusUrl:String, org: String, domain: String, instanceType: String, version: String, payload: JsObject,
-                   instanceId: String, token: String, nexusService: NexusService): Future[Either[(String, JsValue), String]] = {
-    // insert entity
+                           instanceId: String, token: String, nexusService: NexusService): Future[Either[(String, JsValue), String]] = {
+    nexusResponseToStatus(
+      nexusService.insertInstance(nexusUrl, org, domain, instanceType, version, payload, token),
+      INSERT)
+  }
+
+  def updateEntity(instanceLink:String, rev: Option[Long], payload: JsObject, token: String, nexusService: NexusService): Future[Either[(String, JsValue), String]] = {
+      nexusService.updateInstance(instanceLink, rev, payload, token).flatMap{
+        case (operation, response) =>
+          nexusResponseToStatus(Future.successful(response), operation)
+      }
+  }
+
+  def insertOrUpdateEntity(nexusUrl:String, org: String, domain: String, instanceType: String, version: String, payload: JsObject,
+                           instanceId: String, token: String, nexusService: NexusService): Future[Either[(String, JsValue), String]] = {
     val identifier = (payload \ "http://schema.org/identifier").as[String]
     nexusService.insertOrUpdateInstance(nexusUrl, org, domain, instanceType, version, payload, identifier, token).flatMap{
       case (operation, idOpt, responseOpt) =>
         responseOpt match {
           case Some(response) =>
-            response.map { resp =>
-              resp.status match {
-                case 200 | 201 =>
-                  Left((operation, resp.json))
-                case _ =>
-                  Right(resp.bodyAsBytes.utf8String)
-              }
-            }
+            nexusResponseToStatus(response, operation)
           case None => // corresponds to ignore operation. Manually build JsValue to forward needed info like id
             Future.successful(Left((operation, JsObject(Map("@id" -> JsString(idOpt.getOrElse("")))))))
         }
@@ -41,20 +60,33 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService,
   }
 
   /*
-  * Right (url) or Left (error message)
+  * Output: Right (url) or Left (error message)
+  *
+  * Logic:
+  *   if _ID is a link
+  *     try to update linked entity
+  *   else
+  *     create a new entity
+  *
   */
-  def insertUnimindsEntity(nexusUrl:String, entity: Entity, linksRef: collection.mutable.Map[String, String],
-                           token: String, nexusService: NexusService): Future[Either[(String, JsValue), String]] = {
-    // insert entity
-    val payload = entity.toKGPayload(linksRef)
-    insertEntity(nexusUrl, "uniminds", "core", entity.`type`, "v0.0.1", payload, entity.id, token, nexusService)
+  def insertUnimindsEntity(nexusUrl:String, entity: Entity,token: String,
+                           nexusService: NexusService):Future[Either[(String, JsValue), String]] = {
+    val payload = entity.toJsonLd()
+    entity.externalId match {
+      case Some (idValue) =>
+         if (isNexusLink(idValue)){
+          updateEntity(idValue, None, payload, token, nexusService)
+        } else {
+          insertEntity(nexusUrl, "uniminds", "core", entity.`type`, "v0.0.1", payload, entity.localId, token, nexusService)
+        }
+      case None => // INSERT
+        insertEntity(nexusUrl, "uniminds", "core", entity.`type`, "v0.0.1", payload, entity.localId, token, nexusService)
+    }
   }
 
   def insertMindsEntity(nexusUrl: String, entityType:String, payload: JsObject, token: String): Future[Either[(String, JsValue), String]] = {
-    val r = insertEntity(nexusUrl, "excel", "core", entityType, "v0.0.1", payload, "", token, nexusService)
-    r
-
-  }
+    insertOrUpdateEntity(nexusUrl, "excel", "core", entityType, "v0.0.1", payload, "", token, nexusService)
+    }
 
   def insertMindsEntities(jsonData: JsObject, nexusEndpoint: String, token: String): Future[Seq[JsObject]] = {
     val activityPayload = formatEntityPayload((jsonData \ activityLabel).as[JsObject], activityLabel)
@@ -146,7 +178,7 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService,
   def insertUnimindsDataInKG(nexusEndPoint: String, data: Seq[Entity], token: String, nexusService: NexusService,
                              insertionService: InsertionService): Future[Seq[Entity]] = {
 
-    val dataRef = data.map(e => (e.id, e)).toMap
+    val dataRef = data.map(e => (e.localId, e)).toMap
     val insertSeq = ExcelInsertionHelper.buildInsertableEntitySeq(dataRef)
 
     // create schemas if needed
@@ -165,18 +197,18 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService,
       case (statusSeqFut, entity) =>
         statusSeqFut.flatMap {
           statusSeq =>
-            insertionService.insertUnimindsEntity(nexusEndPoint, entity, linksRef, token, nexusService).map {
+            val resolvedEntity = entity.resolveLinks(linksRef)
+            insertUnimindsEntity(nexusEndPoint, resolvedEntity, token, nexusService).map {
               insertionResponse => insertionResponse match {
                 case Left((operation, jsonResponse)) =>
                   val instanceLink = (jsonResponse \ "@id").as[String]
-                  linksRef.put(entity.id, instanceLink)
+                  linksRef.put(entity.localId, instanceLink)
                   val status = operation match {
-                    case SKIP =>
-                      s"NO CHANGE"
-                    case INSERT | UPDATE =>
-                      s"${operation} OK"
+                    case SKIP => s"NO CHANGE"
+                    case INSERT | UPDATE => s"${operation} OK"
+                    case _ => DEFAULT_RESOLUTION_STATUS
                   }
-                  val updatedEntity = entity.resolveLinksAndStatus(linksRef, Some(status))
+                  val updatedEntity = resolvedEntity.validateLinksAndStatus(Some(instanceLink), Some(status), token, nexusService)
                   statusSeq :+ updatedEntity
 
                 case Right(insertionError) =>
@@ -185,12 +217,11 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService,
                   } catch {
                     case _:Throwable  => insertionError
                   }
-                  val updatedEntity = entity.resolveLinksAndStatus(linksRef, Some(s"ERROR: $errorMsg"))
+                  val updatedEntity = resolvedEntity.validateLinksAndStatus(None, Some(s"ERROR: $errorMsg"), token, nexusService)
                   statusSeq :+ updatedEntity
               }
             }
         }
     }
   }
-
 }

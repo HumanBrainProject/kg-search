@@ -31,10 +31,6 @@ object ExcelImportHelper {
   val dataFormatter = new DataFormatter()
   var formulaEvaluator = new XSSFWorkbook().getCreationHelper().createFormulaEvaluator()
 
-  def hash(payload: String): String = {
-    MessageDigest.getInstance("MD5").digest(payload.getBytes).map(0xFF & _).map { "%02x".format(_) }.foldLeft("") {_ + _}
-  }
-
   def nbFilledCellsInRow(row: XSSFRow): Int = {
     var filledCell = 0
     val it = row.cellIterator()

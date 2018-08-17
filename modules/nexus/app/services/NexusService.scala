@@ -19,11 +19,13 @@ package nexus.services
 
 import com.google.inject.Inject
 import nexus.helpers.NexusHelper.{domainDefinition, minimalSchemaDefinition, schemaDefinitionForEditor}
-import NexusService._
+import nexus.helpers.NexusHelper.hash
 import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import scala.concurrent.{ExecutionContext, Future}
+import NexusService._
+
 
 class NexusService @Inject()(wSClient: WSClient)(implicit executionContext: ExecutionContext) {
 
@@ -130,9 +132,13 @@ class NexusService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
       .get()
   }
 
+  def getInstance(instanceUrl: String, token: String): Future[WSResponse] = {
+    wSClient.url(instanceUrl).addHttpHeaders("Authorization" -> token).get()
+  }
+
   def insertOrUpdateInstance(nexusUrl:String, org: String, domain: String, entityType: String, version: String,
                              payload: JsValue, identifier: String, token: String): Future[(String, Option[String], Option[Future[WSResponse]])] = {
-    retrieveInstanceById(nexusUrl, org, domain, entityType, version, identifier, token).flatMap{
+    retrieveInstanceById(nexusUrl, org, domain, entityType, version, identifier, token).flatMap {
       response =>
         response.status match {
           case 200 => // analyze response
@@ -140,26 +146,22 @@ class NexusService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
             total match {
               case 1 =>
                 val id = (response.json \ "results" \ 0 \ "resultId").as[String]
-                val prevHashCode = (response.json \ "results" \ 0 \ "source" \ "http://hbp.eu/internal#hashcode").asOpt[String].getOrElse("")
-                val curHashCode = (payload \ "http://hbp.eu/internal#hashcode").as[String]
                 val revision = (response.json \ "results" \ 0 \ "source" \ "nxv:rev").as[Long]
-                if (prevHashCode != curHashCode) {
-                  Future.successful(UPDATE, None, Some(updateInstance(id, revision, payload, token)))
-                } else {
-                  Future.successful(SKIP, Some(id), None)
+                updateInstance(id, Some(revision), payload, token).map {
+                  case (operation, response) =>
+                    (operation, Some(id), Some(Future.successful(response)))
                 }
-              case _ => // no result or several, just insert a new one
-                Future.successful(INSERT, None, Some(insertInstance(nexusUrl, org, domain, entityType, version, payload, token)))
+              case _ => // forward error message from nexus
+                Future.successful(ERROR, None, Some(Future.successful(response)))
             }
-          case _ => // forward error message from nexus
-            Future.successful(ERROR, None, Some(Future.successful(response)))
         }
     }
   }
 
   def insertInstance(nexusUrl:String, org: String, domain: String, entityType: String, version: String, payload: JsValue, token: String): Future[WSResponse] = {
     val instanceUrl = s"${nexusUrl}/v0/data/${org}/${domain}/${entityType.toLowerCase}/${version}"
-    wSClient.url(instanceUrl).addHttpHeaders("Authorization" -> token).post(payload).flatMap{
+    val payloadWihtHash = payload.as[JsObject].+("http://hbp.eu/internal#hashcode", JsString(hash(payload.toString())))
+    wSClient.url(instanceUrl).addHttpHeaders("Authorization" -> token).post(payloadWihtHash).flatMap{
       response => response.status match {
         case 200 | 201 => // instance inserted
           Future.successful(response)
@@ -170,20 +172,50 @@ class NexusService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
     }
   }
 
-  def updateInstance(instanceUrl: String, rev: Long, payload: JsValue, token: String): Future[WSResponse] = {
-    wSClient.url(instanceUrl).addQueryStringParameters(("rev", rev.toString) ).addHttpHeaders("Authorization" -> token).put(payload).flatMap{
-      response => response.status match {
-        case 200 | 201 => // instance updated
-          Future.successful(response)
-
-        case _ => // forward error message from nexus
-          Future.successful(response)
+  def updateInstanceLastRev(instanceUrl: String, payload: JsValue, token: String): Future[(String, WSResponse)] = {
+    getInstance(instanceUrl, token).flatMap{
+      response =>
+        try {
+          val rev = (response.json \ "nxv:rev").as[Long]
+          updateInstance(instanceUrl, Some(rev), payload, token)
+        } catch {
+          case _: Throwable =>
+            Future.successful(UPDATE, response)
+        }
       }
+  }
+
+  def updateInstance(instanceUrl: String, revOpt: Option[Long], payload: JsValue, token: String): Future[(String, WSResponse)] = {
+    revOpt match {
+      case Some(rev) =>
+        getInstance(instanceUrl, token).flatMap {
+          case response =>
+            val prevHashCode = (response.json \ "http://hbp.eu/internal#hashcode").asOpt[String].getOrElse("")
+            val curHashCode = (payload \ "http://hbp.eu/internal#hashcode").asOpt[String].getOrElse(hash(payload.toString()))
+            if (prevHashCode != curHashCode) {
+              val payloadWithHash = payload.as[JsObject].+("http://hbp.eu/internal#hashcode", JsString(curHashCode))
+              wSClient.url(instanceUrl)
+                .addQueryStringParameters(("rev", rev.toString) )
+                .addHttpHeaders("Authorization" -> token)
+                .put(payloadWithHash).map{
+                  updateRes => updateRes.status match {
+                  case 200 | 201 => // instance updated
+                    (UPDATE, updateRes)
+                  case _ => // forward error message from nexus
+                    (SKIP, updateRes)
+                }
+              }
+            } else {
+              Future.successful(SKIP, response)
+            }
+          }
+      case None =>
+        updateInstanceLastRev(instanceUrl, payload, token)
     }
   }
 
   def listAllNexusResult(url: String, token: String): Future[Seq[JsValue]] = {
-    val sizeLimit = 5
+    val sizeLimit = 50
     val initialUrl = (url.contains("?size="), url.contains("&size=")) match {
       case (true, _) => url
       case (_ , true) => url
@@ -226,8 +258,6 @@ class NexusService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
       }
     }
   }
-
-
 }
 
 object NexusService {
