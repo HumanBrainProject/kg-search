@@ -38,7 +38,7 @@
     margin-top: 20px;
 }
 
-.kgs-result-header .sk-results-list__action-bar .kgs-sorting-selector {
+.kgs-result-header .sk-results-list__action-bar .kgs-sortby-panel {
     margin-top: 15px;
 }
 
@@ -47,7 +47,7 @@
     .kgs-result-header .sk-results-list__action-bar .kgs-hitStats {
         flex: 2;
     }
-    .kgs-result-header .sk-results-list__action-bar .kgs-sorting-selector {
+    .kgs-result-header .sk-results-list__action-bar .kgs-sortby-panel {
         flex: auto;
     }
     .kgs-result-header .sk-results-list__action-bar .sk-action-bar-row .kgs-layout-mode-switcher-toggle {

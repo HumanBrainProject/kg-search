@@ -31,6 +31,10 @@ body > header.navbar {
     box-sizing: border-box;
 }
 
+.main-content {
+	margin-top: 0;
+}
+
 .main-content .container {
 	width:100%;
 	padding-left:0;
