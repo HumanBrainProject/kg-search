@@ -17,7 +17,7 @@
 .kgs-result-header .sk-results-list__action-bar {
     background-color: transparent;
     margin: 0;
-    padding: 3px 0 30px 0;
+    padding: 3px 0 20px 0;
     -webkit-box-shadow: none;
     box-shadow: none;
 }
@@ -28,6 +28,7 @@
 
 .kgs-result-header .sk-results-list__action-bar .kgs-hitStats {
     margin-top: 15px;
+    margin-left: 10px;
 }
 
 .kgs-result-header .sk-results-list__action-bar .kgs-paging.kgs-header-pagination {
