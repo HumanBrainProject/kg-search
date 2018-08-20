@@ -29,11 +29,18 @@ sealed trait Value {
   def toStringSeq(): Seq[(String, String, String)]
   def getNonEmtpy(): Option[Value]
   def resolveValue(linkRef: collection.mutable.Map[String, String]): Value
+  def needsValidation(): Boolean = true
   def validateValue(token: String, nexusService: NexusService)
                    (implicit executionContext: ExecutionContext): Future[Value]
 }
 
 case class SingleValue(value: String, unit: Option[String] = None, status: Option[String] = None) extends Value{
+
+  override def needsValidation(): Boolean = {
+    // if value has a status already validation is not needed
+    status == None
+  }
+
   override def toJson(): JsValue = {
     JsObject(Map(
       "value" -> JsString(value),
@@ -80,8 +87,8 @@ case class SingleValue(value: String, unit: Option[String] = None, status: Optio
 
   override def validateValue(token: String, nexusService: NexusService)
                             (implicit ec: ExecutionContext): Future[SingleValue] = {
-    if (Entity.isNexusLink(value)){
-      // check validity
+    if (Entity.isNexusLink(value) && needsValidation()){
+      // check validity only if needed
       nexusService.getInstance(value,token).map(
         _.status match {
         case 200 =>
