@@ -2,20 +2,20 @@
   "name": "kg-search-ui",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://kg.humanbrainproject.org/webapp",
+  "homepage": "https://kg-dev.humanbrainproject.org/webapp",
   "proxy": {
     "/proxy": {
-      "target": "https://kg.humanbrainproject.org",
+      "target": "https://kg-dev.humanbrainproject.org",
       "changeOrigin": true,
       "ws": true
     },
     "/search": {
-      "target": "https://kg.humanbrainproject.org",
+      "target": "https://kg-dev.humanbrainproject.org",
       "changeOrigin": true,
       "ws": true
     },
     "/auth": {
-      "target": "https://kg.humanbrainproject.org",
+      "target": "https://kg-dev.humanbrainproject.org",
       "changeOrigin": true,
       "ws": true
     }

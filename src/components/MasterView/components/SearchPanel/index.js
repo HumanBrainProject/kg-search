@@ -23,7 +23,7 @@ import "./styles.css";
 const SearchPanelComponent = ({isFloating, queryFields, onSearch}) => {
   return (
     <div className={`kgs-search${isFloating?" is-fixed-position":""}`}>
-      <SearchBox placeholder="Search (e.g. brain OR neuroscience)" autofocus={true} searchOnChange={false} queryFields={queryFields} queryBuilder={QueryString} />
+      <SearchBox placeholder="Search (e.g. brain or neuroscience)" autofocus={true} searchOnChange={false} queryFields={queryFields} queryBuilder={QueryString} />
       <button className="kgs-search-button" onClick={onSearch}>Search</button>
       <a href="http://lucene.apache.org/core/2_9_4/queryparsersyntax.html" target="blank" className="kgs-search-help__button" title="Help">
         <i className="fa fa-info-circle fa-2x"></i>
