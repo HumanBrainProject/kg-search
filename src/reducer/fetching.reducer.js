@@ -17,48 +17,51 @@
 import * as types from "../actions.types";
 
 const initialState = {
-    message: null,
-    active: false
+  message: null,
+  active: false
 };
 
-
-export function reducer(state = initialState, action) {
-    switch (action.type) {
-        case types.LOAD_CONFIG_REQUEST:
-            return {
-                message: "Initializing search engine...",
-                active: true
-            };
-        case types.LOAD_INDEXES_REQUEST:
-            return {
-                message: "Retrieving your profile...",
-                active: true
-            };
-        case types.LOAD_SEARCH_REQUEST:
-            return {
-                message: "Performing search request...",
-                active: true
-            };
-        case types.LOAD_HIT_REQUEST:
-            return {
-                message: "Performing search request...",
-                active: true
-            };
-        case types.LOAD_CONFIG_SUCCESS:
-        case types.LOAD_INDEXES_SUCCESS:
-        case types.LOAD_SEARCH_SUCCESS:
-        case types.LOAD_HIT_SUCCESS:
-        case types.LOAD_CONFIG_FAILURE:
-        case types.LOAD_INDEXES_FAILURE:
-        case types.LOAD_SEARCH_SERVICE_FAILURE:
-        case types.LOAD_HIT_NO_DATA:
-        case types.LOAD_HIT_FAILURE:
-        case types.CANCEL_HIT_LOADING:
-            return {
-                message: null,
-                active: false
-            };
-        default:
-            return state;
-      }
-};
+export function reducer(state = initialState, action = {}) {
+  switch (action.type) {
+  case types.LOAD_DEFINITION_REQUEST:
+    return {
+      message: "Initializing search engine...",
+      active: true
+    };
+  case types.LOAD_INDEXES_REQUEST:
+    return {
+      message: "Retrieving your profile...",
+      active: true
+    };
+  case types.LOAD_SEARCH_REQUEST:
+    return {
+      message: "Performing search request...",
+      active: true
+    };
+  case types.LOAD_HIT_REQUEST:
+    return {
+      message: "Performing search request...",
+      active: true
+    };
+  case types.LOAD_DEFINITION:
+  case types.LOAD_DEFINITION_SUCCESS:
+  case types.LOAD_DEFINITION_FAILURE:
+  case types.LOAD_INDEXES:
+  case types.LOAD_INDEXES_SUCCESS:
+  case types.LOAD_INDEXES_FAILURE:
+  case types.LOAD_SEARCH_SUCCESS:
+  case types.LOAD_SEARCH_BAD_REQUEST:
+  case types.LOAD_SEARCH_SERVICE_FAILURE:
+  case types.LOAD_HIT:
+  case types.LOAD_HIT_SUCCESS:
+  case types.LOAD_HIT_NO_DATA:
+  case types.LOAD_HIT_FAILURE:
+  case types.CANCEL_HIT_LOADING:
+    return {
+      message: null,
+      active: false
+    };
+  default:
+    return state;
+  }
+}

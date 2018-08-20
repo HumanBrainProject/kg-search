@@ -14,15 +14,27 @@
 *   limitations under the License.
 */
 
-import React, { Component } from "react";
-import { generateKey } from "../../../../Helpers/OIDCHelpers";
-import { store } from "../../../../store";
+import React, { PureComponent } from "react";
 import { ShareBar } from "../../../ShareBar";
 import { PaginationPanel } from "../PaginationPanel";
-import { Select } from "../../../Select";
+import { GroupSelectionPanel } from "../GroupSelectionPanel";
 import { SignInButton } from "../../../SignInButton";
-import { TermsShortNotice } from "../TermsShortNotice";
+import { TermsShortNotice } from "../../../TermsShortNotice";
 import "./styles.css";
+
+const ResultFooterComponent = ({isFloating}) => {
+  return (
+    <div className={`kgs-result-footer${isFloating?" is-fixed-position":""}`}>
+      <TermsShortNotice />
+      <div className="kgs-result-footer-nav">
+        <PaginationPanel className="kgs-footer-pagination" />
+        <GroupSelectionPanel/>
+        <SignInButton/>
+        <ShareBar/>
+      </div>
+    </div>
+  );
+};
 
 const windowHeight = () => {
   const w = window,
@@ -33,19 +45,11 @@ const windowHeight = () => {
   //return $(window).height();
 };
 
-export class ResultsFooter extends Component {
+export class ResultsFooter extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      className: "kgs-result-footer",
-      style: {
-        display: "none"
-      },
-      configuration: store.getState().configuration
-    };
-    this.componentContext = {
-      accessToken: null,
-      index: null,
+      isFloating: false
     };
     this.eventState = {
       scrollTop: 0,
@@ -62,9 +66,7 @@ export class ResultsFooter extends Component {
     this.handleResizeEvent = this.handleResizeEvent.bind(this);
     this.handleOrientationChangeEvent = this.handleOrientationChangeEvent.bind(this);
     this.handleMutationEvent = this.handleMutationEvent.bind(this);
-    this.getOidcUrl = this.getOidcUrl.bind(this);
   }
-
   componentDidMount() {
     window.addEventListener("scroll", this.handleScrollEvent);
     window.addEventListener("resize", this.handleResizeEvent);
@@ -88,20 +90,6 @@ export class ResultsFooter extends Component {
     clearInterval(this.interval);
     this.interval = null;
   }
-
-  componentDidUpdate(prevProps, prevState) {
-    if(prevState.configuration.indexes.length !== store.getState().configuration.indexes.length){
-      const state = Object.assign({}, this.state, {configuration: store.getState().configuration});
-      this.setState(state);
-    }
-  }
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const state = Object.assign({}, this.state, {style: {display: nextProps.hasPaging?"block":"none"}});
-    this.setState(state);
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    return  nextProps.showTermsShortNotice !== this.props.showTermsShortNotice || nextProps.hasPaging !== this.props.hasPaging || nextState.className !== this.state.className || nextState.style.display !== this.state.style.display || nextState.style.position !== this.state.style.position || nextState.style.bottom !== this.state.style.bottom || nextState.style.left !== this.state.style.left;
-  }
   handleScrollEvent() {
     this.eventState.didScroll = true;
   }
@@ -114,17 +102,6 @@ export class ResultsFooter extends Component {
   handleMutationEvent() {
     this.eventState.didMute = true;
   }
-
-  getOidcUrl() {
-    const {config} = this.props;
-    const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
-    const stateKey = generateKey();
-    const nonceKey = generateKey();
-    const oidcUrl = `${config.oidcUri}?response_type=id_token%20token&client_id=${config.oidcClientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`;
-
-    return oidcUrl;
-  }
-
   adjustLayout() {
     const {relatedElements} = this.props;
     let height = 0;
@@ -171,31 +148,15 @@ export class ResultsFooter extends Component {
       const fixedLayout = document.documentElement.scrollHeight - this.eventState.scrollTop - windowHeight() < height;
       this.eventState.scrollTop = document.documentElement.scrollTop;
       if (scrollDown && fixedLayout) {
-        this.setState({className: "kgs-result-footer", style: {}});
+        this.setState({isFloating: false});
       } else if (!scrollDown && !fixedLayout) {
-        this.setState({className: "kgs-result-footer kgs-result-footer-panel", style: {position: "fixed", bottom: "0", left: "0"}});
+        this.setState({isFloating: true});
       }
     }
   }
   render() {
-    const { showTermsShortNotice, onAgreeTermsShortNotice } = this.props;
-    const signInRelatedElements = [
-      {querySelector: 'body>header', conditionQuerySelector: 'body>header + nav.navbar'},
-      {querySelector: 'body>header + nav.navbar'},
-      {querySelector: 'body>header.navbar>.container'},
-      {querySelector: '#CookielawBanner', cookieKey: 'cookielaw_accepted'}
-    ];
-
     return (
-      <div className={this.state.className} style={this.state.style}>
-        <TermsShortNotice show={showTermsShortNotice} onAgree={onAgreeTermsShortNotice} />
-        <div className="kgs-result-footer-nav">
-          <PaginationPanel className="kgs-footer-pagination" />
-          {this.props.indexes.length > 1?<div className="kgs-result-footer-group"><Select label="Group" value={this.props.currentIndex} list={this.props.indexes} onChange={this.props.onIndexChange} /></div>:null}
-          <SignInButton show={this.state.configuration.indexes.length <= 1} onClick={ this.getOidcUrl()} relatedElements={signInRelatedElements} />
-          <ShareBar/>
-        </div>
-      </div>
+      <ResultFooterComponent isFloating={this.state.isFloating} />
     );
   }
 }

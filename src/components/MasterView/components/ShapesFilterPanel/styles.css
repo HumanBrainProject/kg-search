@@ -15,16 +15,26 @@
 */
 
 .kgs-shapesFilter {
-    margin: 60px 30px 0 30px;
+    margin: 10px 0 0 0
 }
+
+.kgs-shapesFilter > .sk-panel > .sk-panel__content > .sk-item-list {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    align-content: flex-start;
+    -ms-flex-flow: row wrap;
+    flex-wrap: wrap;
+}
+
 
 .kgs-shapesFilter .kgs-shape {
     display: inline-block;
+    margin: 20px 25px 0 0;
     border-bottom: 5px solid transparent;
-}
-
-.kgs-shapesFilter .kgs-shape  + .kgs-shape {
-    margin-left: 25px;
 }
 
 .kgs-shapesFilter .kgs-shape.is-active {

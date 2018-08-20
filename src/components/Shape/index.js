@@ -57,7 +57,7 @@ export function Shape({detailViewMode, data}) {
   const source = data && !(data.found === false) && data._type && data._source;
   if (source) {
 
-    const mapping = state.configuration.shapeMappings[data._type];
+    const mapping = state.definition.shapeMappings[data._type];
     if (!mapping) {
 
       if (source.image && source.image.url)

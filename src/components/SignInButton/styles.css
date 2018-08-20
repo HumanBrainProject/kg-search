@@ -14,12 +14,18 @@
 *   limitations under the License.
 */
 
-.kgs-sign-in {
-    position: absolute;
-    top: 25px;
-    right: 145px;
+.kgs-sign-in button {    
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    color: #30b0e0;
+    font-size: 20px;
+    white-space: nowrap;
+    outline: none;
 }
 
-.kgs-sign-in a {
-   font-size: 20px;
+.kgs-sign-in button:hover,
+.kgs-sign-in button:focus {
+    color:#0088cc;
 }

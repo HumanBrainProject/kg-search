@@ -14,22 +14,54 @@
 *   limitations under the License.
 */
 
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
+import { store, dispatch } from "../../store";
+import * as actions from "../../actions";
 import "./styles.css";
 
-export class SignInButton extends Component {
+export class SignInButton extends PureComponent {
   constructor(props) {
     super(props);
+    this.state = this.getState();
     this.buttonRef = null;
     this.setButtonRef = element => {
       this.buttonRef = element;
     };
   }
+  getState() {
+    const globalState = store.getState();
+    return {
+      isAuthenticated: globalState.auth.isAuthenticated
+    };
+  }
+  handleStateChange() {
+    setTimeout(() => {
+      const nextState = this.getState();
+      this.setState(nextState);
+    });
+  }
+  componentDidMount() {
+    document.addEventListener("state", this.handleStateChange.bind(this), false);
+    this.handleStateChange();
+  }
+  componentWillUnmount() {
+    document.removeEventListener("state", this.handleStateChange);
+  }
   render() {
-    const { show, onClick } = this.props;
-    const button = <a ref={this.setButtonRef} href={onClick}>Log in</a>;
+    const login = () => {
+      dispatch(actions.requestAuthentication());
+    };
+    const logout = () => {
+      dispatch(actions.logout());
+    };
     return (
-      show?<div ref={this.setButtonRef} className="kgs-sign-in">{button}</div>:null
+      <div className="kgs-sign-in">
+        {this.state.isAuthenticated?
+          <button onClick={logout}>Log out</button>
+          :
+          <button onClick={login}>Log in</button>
+        }
+      </div>
     );
   }
 }

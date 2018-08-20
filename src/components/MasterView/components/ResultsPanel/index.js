@@ -14,8 +14,8 @@
 *   limitations under the License.
 */
 
-import React from "react";
-import { SearchkitComponent, Hits} from "searchkit";
+import React, { PureComponent } from "react";
+import { SearchkitComponent, Hits } from "searchkit";
 import { store, dispatch } from "../../../../store";
 import * as actions from "../../../../actions";
 import { Shape } from "../../../Shape";
@@ -46,12 +46,6 @@ class SummaryList extends SearchkitComponent {
       item: `${blockName}-hit`
     };
   }
-  shouldComponentUpdate(nextProps) {
-    if (nextProps.hits === this.props.hits) {
-      return false;
-    }
-    return true;
-  }
   render() {
     const {hits} = this.props;
     const bemBlocks = this.bemBlocks;
@@ -80,7 +74,7 @@ class SummaryList extends SearchkitComponent {
         const average = StatsHelpers.average(values);
         const standardDeviation = StatsHelpers.standardDeviation(values);
         limit = average + 2 * standardDeviation;
-        //window.console.log("average: " + average + ", standard deviation: "  + standardDeviation + ", limit: " + limit);
+        //window.console.debug("average: " + average + ", standard deviation: "  + standardDeviation + ", limit: " + limit);
       } catch (e) {
         window.console.debug("Failed to calculate stats");
       }
@@ -111,30 +105,65 @@ class SummaryList extends SearchkitComponent {
   }
 }
 
-export function ResultsPanel({hitsPerPage}) {
-  const state = store.getState();
+export class ResultsPanel extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = this.getState();
+  }
+  getState() {
+    const globalState = store.getState();
+    return {
+      gridLayoutMode: globalState.application.gridLayoutMode,
+      hitsPerPage: globalState.configuration.hitsPerPage
+    };
+  }
+  handleStateChange() {
+    setTimeout(() => {
+      const nextState = this.getState();
+      this.setState(nextState);
+    });
+  }
+  componentDidMount() {
+    document.addEventListener("state", this.handleStateChange.bind(this), false);
+    this.handleStateChange();
+  }
+  componentWillUnmount() {
+    document.removeEventListener("state", this.handleStateChange);
+  }
+  render() {
+    //window.console.debug("ResultsPanel rendering...");
 
-  const summaryList = props => <SummaryList hits={props.hits} />;
+    /*
+    const highlights = {};
+    globalState.definition.queryFields.forEach(field => {
+      highlights[field.replace(/^(.*?)\^.*$/g,"$1")] = {};
+    });
+    */
+    const highlights = {
+      "fields": {
+        "title.value": {},
+        "description.value": {},
+        "contributors.value": {},
+        "owners.value": {},
+        "component.value": {},
+        "created_at.value": {},
+        "releasedate.value": {},
+        "activities.value": {}
+      },
+      "encoder": "html"
+    };
 
-  let highlights = {};
-
-  state.configuration.queryFields.forEach(field => {
-    highlights[field.replace(/^(.*?)\^.*$/g,"$1")] = {};
-  });
-
-  highlights = {
-    "fields": {
-      "title.value": {},
-      "description.value": {},
-      "contributors.value": {},
-      "owners.value": {},
-      "component.value": {},
-      "created_at.value": {},
-      "releasedate.value": {},
-      "activities.value": {}
-    },
-    "encoder": "html"
-  };
-
-  return <Hits customHighlight={highlights} hitsPerPage={hitsPerPage} listComponent={summaryList} scrollTo="body" />;
+    /*
+    <NoHits translations={{
+            "NoHits.NoResultsFound":"No results were found for {query}",
+            "NoHits.DidYouMean":"Search for {suggestion}",
+            "NoHits.SearchWithoutFilters":"Search for {query} without filters"
+          }} suggestionsField="all"/>
+    */
+    return (
+      <span className={`kgs-result-layout ${this.state.gridLayoutMode?"is-grid":"is-list"}`}>
+        <Hits customHighlight={highlights} hitsPerPage={this.state.hitsPerPage} listComponent={SummaryList} scrollTo="body" />
+      </span>
+    );
+  }
 }

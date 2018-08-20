@@ -14,30 +14,38 @@
 *   limitations under the License.
 */
 
+import { reducer as application } from "./application.reducer";
 import { reducer as configuration } from "./configuration.reducer";
+import { reducer as definition } from "./definition.reducer";
+import { reducer as indexes } from "./indexes.reducer";
 import { reducer as search } from "./search.reducer";
 import { reducer as hits } from "./hits.reducer";
 import { reducer as error } from "./error.reducer";
 import { reducer as fetching } from "./fetching.reducer";
+import { reducer as auth } from "./auth.reducer";
 
 const combineReducers = reducers => {
-    return (state, action) => {
-        let nextState = {};
-        Object.keys(reducers)
-        .map(k => {
-            return {p: k, reducer: reducers[k]};
-        })
-        .forEach(({p, reducer}) => {
-            nextState[p] = reducer(state?state[p]:undefined, action);
-        });
-        return nextState;
-    }
+  return (state, action) => {
+    let nextState = {};
+    Object.keys(reducers)
+      .map(k => {
+        return {p: k, reducer: reducers[k]};
+      })
+      .forEach(({p, reducer}) => {
+        nextState[p] = reducer(state?state[p]:undefined, action);
+      });
+    return nextState;
+  };
 };
 
 export const rootReducer = combineReducers({
-    configuration: configuration,
-    search: search,
-    hits: hits,
-    error: error,
-    fetching: fetching
+  configuration: configuration,
+  application: application,
+  definition: definition,
+  indexes: indexes,
+  search: search,
+  hits: hits,
+  error: error,
+  fetching: fetching,
+  auth: auth
 });

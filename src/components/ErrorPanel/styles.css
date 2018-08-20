@@ -15,7 +15,7 @@
 */
 
 .kgs-error-container {
-    display: none;
+    display: block;
     position: fixed;
     top: 0;
     width: 100%;
@@ -24,14 +24,10 @@
     z-index: 1800;
 }
 
-.kgs-error-container[data-show="true"]  {
-    display: block;
-}
-
 .kgs-error-panel {
     position: absolute;
     width: 360px;
-    margin-top: -200px;
+    margin-top: calc(40% - 60px);
     margin-left: calc(50% - 180px);
     padding: 20px;
     border-radius: 4px;
@@ -42,11 +38,7 @@
     box-shadow: 3px 3px 6px #8f8a8a;
 }
 
-.kgs-error-container[data-show="true"] .kgs-error-panel {
-    margin-top: calc(40% - 60px);
-}
-
-[data-showdetail="true"] .kgs-error-container[data-show="true"] .kgs-error-panel {
+[data-showdetail="true"] .kgs-error-container .kgs-error-panel {
     margin-top: 200px;
 } 
 

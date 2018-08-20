@@ -16,75 +16,43 @@
 
 import * as types from "../actions.types";
 
+const hitsPerPage = 20;
+const timeout = 5000;
+const searchOnLoad = true; // when set to true it will trigger an initial search after initilizsation
+const queryTweaking = {
+  wildcard: {
+    maxNbOfTerms: -1, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
+    minNbOfChars: 3 // nb of character under which wildcard is not applied
+  },
+  fuzzySearch: {
+    maxNbOfTerms: -1, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
+    minNbOfChars: 4 // nb of character under which fuzzy search is not applied
+  },
+  maxNbOfTermsTrigger: Number.MAX_VALUE // maximum number of terms before tweaking is turned off
+};
+const oidcUri = "https://services.humanbrainproject.eu/oidc/authorize";
+const oidcClientId = "nexus-kg-search";
+
 const initialState = {
-        isIndexesReady: true,
-        indexes: [],
-        isConfigReady: false,
-        shapeMappings: {},
-        queryFields: ["title", "description"],
-        facetFields: [],
-        sortFields: []
+  isReady: false,
+  searchApiHost: "",
+  timeout: timeout,
+  hitsPerPage: hitsPerPage,
+  searchOnLoad: searchOnLoad,
+  queryTweaking: queryTweaking,
+  oidcUri: oidcUri,
+  oidcClientId: oidcClientId
 };
 
-const loadConfigRequest = (state, action) => {
-    return Object.assign({}, state, { 
-        isConfigReady: false,
-        isIndexesReady: !action.accessToken
-    });
+const initializeConfig = (state, action) => {
+  return Object.assign({}, state, action.options, {isReady: true});
 };
 
-const loadConfigSuccess  = (state, action) => {
-    return Object.assign({}, state, { 
-        isConfigReady: true
-    },
-    action.config);
-};
-
-const loadConfigFailure  = (state, action) => {
-    return Object.assign({}, state, { 
-        isConfigReady: false
-    });
-};
-
-const loadIndexesRequest = (state, action) => {
-    return Object.assign({}, state, { 
-        isIndexesReady: false
-    });
-};
-
-const loadIndexesSuccess  = (state, action) => {
-
-    let indexes = (action.indexes instanceof Array)?[...action.indexes.map(e => ({label: e, value: e}))]:[];
-
-    return Object.assign({}, state, { 
-        isIndexesReady: true,
-        indexes: indexes
-    });
-};
-
-const loadIndexesFailure  = (state, action) => {
-    return Object.assign({}, state, { 
-        isIndexesReady: false,
-        hasIndexesError: true, // action.error
-        isIndexesLoading: false,
-    });
-};
-
-export function reducer(state = initialState, action) {
-    switch (action.type) {
-        case types.LOAD_CONFIG_REQUEST:
-            return loadConfigRequest(state, action);
-        case types.LOAD_CONFIG_SUCCESS:
-            return loadConfigSuccess(state, action);
-        case types.LOAD_CONFIG_FAILURE:
-            return loadConfigFailure(state, action);
-        case types.LOAD_INDEXES_REQUEST:
-            return loadIndexesRequest(state, action);
-        case types.LOAD_INDEXES_SUCCESS:
-            return loadIndexesSuccess(state, action);
-        case types.LOAD_INDEXES_FAILURE:
-            return loadIndexesFailure(state, action);
-        default:
-            return state;
-      }
-};
+export function reducer(state = initialState, action = {}) {
+  switch (action.type) {
+  case types.INITIALIZE_CONFIG:
+    return initializeConfig(state, action);
+  default:
+    return state;
+  }
+}

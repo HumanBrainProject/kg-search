@@ -25,26 +25,26 @@ describe('confirguration reducer', () => {
             expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
         });
     });
-    describe('load config request', () => {
+    describe('load definition request', () => {
         it('should set message to null', () => {
             const state = {message: "test"};
-            const action = actions.loadConfigRequest();
+            const action = actions.loadDefinitionRequest();
             const newState = errorReducer(state, action);
             expect(newState.message).toBe(null);
         });
     });
-    describe('load config success', () => {
+    describe('load definition success', () => {
         it('should set message to null', () => {
             const state = {message: "test"};
-            const action = actions.loadConfigSuccess(null);
+            const action = actions.loadDefinitionSuccess(null);
             const newState = errorReducer(state, action);
             expect(newState.message).toBe(null);
         });
     });
-    describe('load config failure', () => {
+    describe('load definition failure', () => {
         it('should set message to non null', () => {
             const state = {message: null};
-            const action = actions.loadConfigFailure("error");
+            const action = actions.loadDefinitionFailure("error");
             const newState = errorReducer(state, action);
             expect(newState.message).not.toBe(null);
         });

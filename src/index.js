@@ -14,16 +14,17 @@
 *   limitations under the License.
 */
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+import "./index.css";
 
 // GLOBAL CONSTANTS DEFINED OUTSIDE THE APP
 const SearchApiHostEnvKey        = "SearchApiHost";        // "https://kg.humanbrainproject.org"
 
 // APP PARAMETERS
 const hitsPerPage = 20;
+const timeout = 10000;
 const searchOnLoad = true; // when set to true it will trigger an initial search after initilizsation
 const queryTweaking = {
   wildcard: {
@@ -36,21 +37,20 @@ const queryTweaking = {
   },
   maxNbOfTermsTrigger: 4 // maximum number of terms before tweaking is turned off
 };
-const searchThrottleTime = 750 // nb of ms after which a request to elasticsearch will only be invoked
 const oidcUri = "https://services.humanbrainproject.eu/oidc/authorize";
 const oidcClientId = "nexus-kg-search";
 
 const config = {
   searchApiHost: window[SearchApiHostEnvKey]?window[SearchApiHostEnvKey]:"",
+  timeout: timeout,
   hitsPerPage: hitsPerPage,
   searchOnLoad: searchOnLoad,
   queryTweaking: queryTweaking,
-  searchThrottleTime: searchThrottleTime,
   oidcUri: oidcUri,
   oidcClientId: oidcClientId
 };
 
 ReactDOM.render(
   <App config={config} />,
-  document.getElementById('root')
+  document.getElementById("root")
 );

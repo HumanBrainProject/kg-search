@@ -14,19 +14,64 @@
 *   limitations under the License.
 */
 
-import React from 'react';
-import './styles.css';
+import React, { PureComponent } from "react";
+import { store, dispatch } from "../../store";
+import "./styles.css";
 
-export function ErrorPanel({show, message, retryLabel, onRetry, cancelLabel, onCancel}) {
+export class ErrorPanel extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = this.getState();
+  }
+  getState() {
+    const globalState = store.getState();
+    return {
+      show: globalState.error && globalState.error.message,
+      message: globalState.error && globalState.error.message,
+      retryLabel: globalState.error && globalState.error.retry && globalState.error.retry.label,
+      retryAction: globalState.error && globalState.error.retry && globalState.error.retry.action,
+      cancelLabel: globalState.error && globalState.error.cancel && globalState.error.cancel.label,
+      cancelAction: globalState.error && globalState.error.cancel && globalState.error.cancel.action,
+    };
+  }
+  handleStateChange() {
+    setTimeout(() => {
+      const nextState = this.getState();
+      this.setState(nextState);
+    });
+  }
+  componentDidMount() {
+    document.addEventListener("state", this.handleStateChange.bind(this), false);
+    this.handleStateChange();
+  }
+  componentWillUnmount() {
+    document.removeEventListener("state", this.handleStateChange);
+  }
+  render() {
+    if (!this.state.show) {
+      return null;
+    }
+    const onRetry = () => {
+      dispatch({
+        type: this.state.retryAction
+      });
+    };
+    const onCancel = () => {
+      dispatch({
+        type: this.state.cancelAction
+      });
+    };
+    //window.console.debug("ErrorPanel rendering...");
     return (
-        <div className="kgs-error-container" data-show={show}>
-            <div className="kgs-error-panel">
-                <span className="kgs-error-message">{message}</span>
-                <div className="kgs-error-navigation">
-                    <button onClick={onRetry} data-show={!!retryLabel}>{retryLabel}</button>
-                    <button onClick={onCancel} data-show={!!cancelLabel}>{cancelLabel}</button>
-                </div>
-            </div>
+      <div className="kgs-error-container">
+        <div className="kgs-error-panel">
+          <span className="kgs-error-message">{this.state.message}</span>
+          <div className="kgs-error-navigation">
+            <button onClick={onRetry} data-show={!!this.state.retryLabel}>{this.state.retryLabel}</button>
+            <button onClick={onCancel} data-show={!!this.state.cancelLabel}>{this.state.cancelLabel}</button>
+          </div>
         </div>
+      </div>
     );
+  }
 }

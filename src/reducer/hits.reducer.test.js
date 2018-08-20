@@ -28,7 +28,7 @@ describe('hits reducer', () => {
     describe('load hit request', () => {
         it('should set next hit reference', () => {
             const state = {nextHitReference: null, currentHit: 567, previousHits:[234, 345, 456]};
-            const action = actions.loadHitRequest(678);
+            const action = actions.loadHit(678);
             const newState = hitsReducer(state, action);
             expect(newState.nextHitReference).toBe(678);
         });

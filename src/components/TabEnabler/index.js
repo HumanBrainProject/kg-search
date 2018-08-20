@@ -33,16 +33,18 @@ export class TabEnablerComponent extends SearchkitComponent {
     if (!isMobile) {
       const {containerSelector, itemSelector, activeItemSelector, disabledItemSelector} = this.props;
       const container = document.body.querySelector(containerSelector);
-      const activeNodes = Object.values(container.querySelectorAll(activeItemSelector));
-      const disabledNodes = Object.values(container.querySelectorAll(disabledItemSelector));
-      const nodeList = container.querySelectorAll(itemSelector);
-      [].forEach.call(nodeList, e => {
-        if (activeNodes.some(a => a === e) || disabledNodes.some(d => d === e)) {
-          e.removeAttribute("tabIndex");
-        } else {
-          e.setAttribute("tabIndex", 0);
-        }
-      });
+      if (container) {
+        const activeNodes = Object.values(container.querySelectorAll(activeItemSelector));
+        const disabledNodes = Object.values(container.querySelectorAll(disabledItemSelector));
+        const nodeList = container.querySelectorAll(itemSelector);
+        [].forEach.call(nodeList, e => {
+          if (activeNodes.some(a => a === e) || disabledNodes.some(d => d === e)) {
+            e.removeAttribute("tabIndex");
+          } else {
+            e.setAttribute("tabIndex", 0);
+          }
+        });
+      }
     }
   }
   render() {

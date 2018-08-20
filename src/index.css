@@ -16,19 +16,21 @@
 
 @import url('../node_modules/searchkit/release/theme.css');
 @import url('../node_modules/searchkit-datefilter/release/theme.css');
-@import url('./skCustom.css');
 
 html, body {
     overflow-x: hidden;
+}
+
+body > header.navbar {
+    margin-bottom: 0;
+    border-bottom: 0;
 }
 
 .navbar-default {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
-.main-content {
-    margin-top: -5px;
-}
+
 .main-content .container {
 	width:100%;
 	padding-left:0;

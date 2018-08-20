@@ -15,20 +15,22 @@
 */
 
 export class StatsHelpers {
-    static average(values) {
-        if (!(values instanceof Array) || values.length === 0)
-            return 0;
-        return values.reduce((sum, value) => sum + value, 0) / values.length;
+  static average(values) {
+    if (!(values instanceof Array) || values.length === 0) {
+      return 0;
     }
-    static standardDeviation(values){   
-        if (!(values instanceof Array) || values.length === 0)
-            return 0;
-
-        const avg = StatsHelpers.average(values);
-        const squareDiffs = values.map(value => value - avg).map(val => val * val);
-        const avgSquareDiff = StatsHelpers.average(squareDiffs);
-        const stdDev = Math.sqrt(avgSquareDiff);
-
-        return stdDev;
+    return values.reduce((sum, value) => sum + value, 0) / values.length;
+  }
+  static standardDeviation(values){
+    if (!(values instanceof Array) || values.length === 0) {
+      return 0;
     }
+
+    const avg = StatsHelpers.average(values);
+    const squareDiffs = values.map(value => value - avg).map(val => val * val);
+    const avgSquareDiff = StatsHelpers.average(squareDiffs);
+    const stdDev = Math.sqrt(avgSquareDiff);
+
+    return stdDev;
+  }
 }

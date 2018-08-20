@@ -37,7 +37,7 @@
         width: 100%;
         overflow: hidden;
     }
-    [data-layoutMode="list"] .sk-hits-list .kgs-shape__panel {
+    .kgs-result-layout.is-list .sk-hits-list .kgs-shape__panel {
         height: auto;
         height: unset;
         overflow: auto;
@@ -94,6 +94,7 @@
     width: 35px;
     height: 35px;
     flex-basis: 13%;
+    max-width: 50px;
 }
 
 [data-type] .kgs-shape__icon>i {

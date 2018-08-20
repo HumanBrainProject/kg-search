@@ -16,26 +16,58 @@
 
 import * as types from "../actions.types";
 
+const default_index = "public";
+
 const initialState = {
-    index: "public",
-    results: {}
+  isReady: false,
+  hasRequest: false,
+  isLoading: false,
+  nonce: null,
+  index: default_index,
+  results: {},
+  from: 0
+};
+
+const setSearchReady = (state, action) => {
+  return Object.assign({}, state, {
+    isReady: action.isReady
+  });
 };
 
 const setIndex = (state, action) => {
-    return Object.assign({}, state, {index: action.index});
+  return Object.assign({}, state, {hasRequest: action.index !== state.index, index: action.index});
+};
+
+const loadSearch = state => {
+  return Object.assign({}, state, {hasRequest: !state.isLoading});
+};
+
+const loadSearchRequest = (state, action) => {
+  return Object.assign({}, state, {isLoading: true, hasRequest: false, nonce: action.nonce});
 };
 
 const loadSearchResult = (state, action) => {
-    return Object.assign({}, state, {results: action.results});
+  return Object.assign({}, state, {isLoading: false, nonce: null, index:action.index?action.index:state.index, results: action.results, from: action.from?Number(action.from):0});
 };
 
-export function reducer(state = initialState, action) {
-    switch (action.type) {
-        case types.SET_INDEX:
-            return setIndex(state, action);
-        case types.LOAD_SEARCH_SUCCESS:
-            return loadSearchResult(state, action);
-        default:
-            return state;
-      }
-};
+export function reducer(state = initialState, action = {}) {
+  switch (action.type) {
+  case types.SET_SEARCH_READY:
+    return setSearchReady(state, action);
+  case types.SET_INDEX:
+    return setIndex(state, action);
+  case types.LOAD_SEARCH:
+    return loadSearch(state, action);
+  case types.LOAD_SEARCH_REQUEST:
+    return loadSearchRequest(state, action);
+  case types.LOAD_SEARCH_SUCCESS:
+    return loadSearchResult(state, action);
+  case types.LOAD_SEARCH_BAD_REQUEST:
+  case types.LOAD_SEARCH_SESSION_FAILURE:
+    return loadSearchResult(state, {results: []});
+  case types.LOGOUT:
+    return setIndex(state, {index: default_index});
+  default:
+    return state;
+  }
+}

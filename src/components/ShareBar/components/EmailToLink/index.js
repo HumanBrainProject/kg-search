@@ -14,62 +14,68 @@
 *   limitations under the License.
 */
 
-import React, { Component } from 'react';
-import './styles.css';
+import React, { PureComponent } from "react";
+import "./styles.css";
 
 function EmailToLink(props) {
 
-    let title = "Send search link by email";
-    if (props.title)
-        title = props.title;
+  let title = "Send search link by email";
+  if (props.title) {
+    title = props.title;
+  }
 
-    let iconClassName = "fa fa-envelope-o";
-    if (props.icon)
-        iconClassName = props.icon;
+  let iconClassName = "fa fa-envelope-o";
+  if (props.icon) {
+    iconClassName = props.icon;
+  }
 
-    let icon = null;
-    let text = null;
-    if (props.text) {
-        if (props.icon)
-            icon = <i className={iconClassName}></i>;
-        text = <span>{props.text}</span>;
-    } else {
-        icon = <i className={iconClassName}></i>;
+  let icon = null;
+  let text = null;
+  if (props.text) {
+    if (props.icon) {
+      icon = <i className={iconClassName}></i>;
     }
-
-    return <a className="kgs-email-link" href={props.emailToLink} title={title}>{icon}{text}</a>
+    text = <span>{props.text}</span>;
+  } else {
+    icon = <i className={iconClassName}></i>;
+  }
+  return <a className="kgs-email-link" href={props.emailToLink} title={title}>{icon}{text}</a>;
 }
 
 
-export class EmailToLinkContainer extends Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        emailToLink: ''
-      };
-    }
-    getEmailToLinkFromBrowserLocation(
-        to= '',
-        subject= 'Knowledge Graph Search Request',
-        body = 'Please have a look to the following Knowledge Graph search request') {
-      
-      return `mailto:${to}?subject=${subject}&body=${body} ${window.location.href}.`;
-    }
-    applyStateChange() {
-      this.setState({
+export class EmailToLinkContainer extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      emailToLink: this.getEmailToLinkFromBrowserLocation()
+    };
+    this.shouldhandleStateChange = false;
+  }
+  getEmailToLinkFromBrowserLocation() {
+    const to= "";
+    const subject= "Knowledge Graph Search Request";
+    const body = "Please have a look to the following Knowledge Graph search request";
+    return `mailto:${to}?subject=${subject}&body=${body} ${escape(window.location.href)}.`;
+  }
+  handleStateChange() {
+    setTimeout(() => {
+      this.shouldhandleStateChange && this.setState({
         emailToLink: this.getEmailToLinkFromBrowserLocation()
       });
-    }
-    componentDidMount() {
-      document.addEventListener('state', this.applyStateChange.bind(this), false);
-      this.applyStateChange();
-    }
-    componentWillUnmount() {
-      document.removeEventListener('state', this.applyStateChange);
-    }
-    render() {
-      return (
-        <EmailToLink emailToLink={this.state.emailToLink} icon={this.props.icon} title={this.props.title} />
-      );
-    }
+    }, 250);
+  }
+  componentDidMount() {
+    this.shouldhandleStateChange = true;
+    document.addEventListener("state", this.handleStateChange.bind(this), false);
+    this.handleStateChange();
+  }
+  componentWillUnmount() {
+    this.shouldhandleStateChange = false;
+    document.removeEventListener("state", this.handleStateChange);
+  }
+  render() {
+    return (
+      <EmailToLink emailToLink={this.state.emailToLink} icon={this.props.icon} title={this.props.title} />
+    );
+  }
 }

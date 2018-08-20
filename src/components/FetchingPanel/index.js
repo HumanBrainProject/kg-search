@@ -14,18 +14,49 @@
 *   limitations under the License.
 */
 
-import React from 'react';
-import './styles.css';
+import React, { PureComponent } from "react";
+import { store } from "../../store";
+import "./styles.css";
 
-export function FetchingPanel({show, message}) {
+export class FetchingPanel extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = this.getState();
+  }
+  getState() {
+    const globalState = store.getState();
+    return {
+      show: globalState.fetching.active,
+      message: globalState.fetching.message
+    };
+  }
+  handleStateChange() {
+    setTimeout(() => {
+      const nextState = this.getState();
+      this.setState(nextState);
+    });
+  }
+  componentDidMount() {
+    document.addEventListener("state", this.handleStateChange.bind(this), false);
+    this.handleStateChange();
+  }
+  componentWillUnmount() {
+    document.removeEventListener("state", this.handleStateChange);
+  }
+  render() {
+    if (!this.state.show) {
+      return null;
+    }
+    //window.console.debug("FetchingPanel rendering...");
     return (
-        <div className="kgs-fetching-container" data-show={show}>
-            <div className="kgs-fetching-panel">
-                <span className="kgs-spinner">
-                    <div className="kgs-spinner-logo"></div> 
-                </span>
-                <span className="kgs-spinner-label">{message}</span>
-            </div>
+      <div className="kgs-fetching-container" >
+        <div className="kgs-fetching-panel">
+          <span className="kgs-spinner">
+            <div className="kgs-spinner-logo"></div>
+          </span>
+          <span className="kgs-spinner-label">{this.state.message}</span>
         </div>
+      </div>
     );
+  }
 }

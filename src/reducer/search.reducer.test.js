@@ -27,7 +27,7 @@ describe('search reducer', () => {
     });
     describe('load search result', () => {
         it('should set results', () => {
-            const state = null;
+            const state = searchReducer();;
             const results = "foo";
             const action = actions.loadSearchResult(results);
             const newState = searchReducer(state, action);

@@ -17,6 +17,7 @@
 .kgs-paging {
     flex: 1;
     display: inline-block;
+    min-width: 250px;
     text-align: center;
 }
 
@@ -38,21 +39,7 @@
     .kgs-paging .sk-pagination-navigation,
     .kgs-paging .sk-pagination-navigation.is-numbered {
         padding: 0;
-    }
-    .kgs-paging .sk-pagination-navigation {
-        width: 45%;
-    }
-    .kgs-paging .sk-pagination-navigation.is-numbered {
-        width: 80%;
-    }
-}
-
-@media (min-width: 992px) {
-    .kgs-paging .sk-pagination-navigation {
-        width: 300px;
-    }
-    .kgs-paging .sk-pagination-navigation.is-numbered {
-        width: 600px;
+        flex: 1;
     }
 }
 

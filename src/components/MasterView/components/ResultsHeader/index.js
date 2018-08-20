@@ -15,21 +15,24 @@
 */
 
 import React from "react";
-import { ActionBar, ActionBarRow, HitsStats } from "searchkit";
-import { LayoutModeSwitcherToggle } from "../LayoutModeSwitcherToggle";
+import { ActionBar, ActionBarRow } from "searchkit";
+import { HitStatsPanel } from "../HitStatsPanel";
 import { PaginationPanel } from "../PaginationPanel";
+import { LayoutModeSwitcherToggle } from "../LayoutModeSwitcherToggle";
 import { SortByPanel } from "../SortByPanel";
 import "./styles.css";
 
-export function ResultsHeader({gridLayoutMode, onGridLayoutModeToogle}) {
+export function ResultsHeader() {
   return (
-    <ActionBar>
-      <ActionBarRow>
-        <HitsStats translations={{"hitstats.results_found": "Viewing {hitCount} results"}} />
-        <PaginationPanel className="kgs-header-pagination" />
-        <LayoutModeSwitcherToggle gridLayoutMode={gridLayoutMode} onToggle={onGridLayoutModeToogle} />
-        <SortByPanel/>
-      </ActionBarRow>
-    </ActionBar>
+    <div className="kgs-result-header">
+      <ActionBar>
+        <ActionBarRow>
+          <HitStatsPanel/>
+          <PaginationPanel className="kgs-header-pagination" />
+          <LayoutModeSwitcherToggle/>
+          <SortByPanel/>
+        </ActionBarRow>
+      </ActionBar>
+    </div>
   );
 }

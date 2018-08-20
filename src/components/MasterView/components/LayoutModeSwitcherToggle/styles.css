@@ -22,7 +22,7 @@
 }
 
 @media (min-width: 992px) { 
-    :not([data-hasHits="false"]) .kgs-layout-mode-switcher-toggle {
+    .kgs-layout-mode-switcher-toggle {
         display: inline-block
     }
 }
@@ -73,6 +73,10 @@
     font-size: 22px;
     font-weight: normal;
     color: #aaa;
+}
+
+.kgs-layout-mode-switcher-toggle .sk-toggle button.sk-toggle-option:not(.is-active):hover label {
+    color: #555;
 }
 
 .kgs-layout-mode-switcher-toggle .sk-toggle button.sk-toggle-option.is-active label {

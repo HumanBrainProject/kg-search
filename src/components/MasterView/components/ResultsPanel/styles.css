@@ -19,15 +19,15 @@ ul.sk-hits-list {
     display: block;
     -ms-flex-flow: unset;
     flex-flow: unset;
-    margin: 10px 10px 20px;
+    margin: 0;
     padding: 0;
 }
 
-[data-layoutMode="list"] .sk-hits-list {
+
+.kgs-result-layout.is-list .sk-hits-list {
     display: block;
     -ms-flex-flow: unset;
     flex-flow: unset;
-    margin: 10px 15px 20px;
 }
 
 .kgs-other-result-title {
@@ -39,7 +39,7 @@ ul.sk-hits-list {
     color: #777;
 }
 
-[data-layoutMode="list"] .kgs-other-result-title {
+.kgs-result-layout.is-list .kgs-other-result-title {
     margin-top: 40px;
     padding-bottom: 20px;
 }
@@ -86,30 +86,24 @@ ul.sk-hits-list {
 
 @media (min-width: 992px) {
     ul.sk-hits-list {
+        display: -ms-flexbox;
         display: flex;
-        -ms-flex-flow: row wrap;
-        flex-flow: row wrap;
+        -ms-flex-pack: start;
+        justify-content: flex-start;
+        -ms-flex-align: start;
         align-items: flex-start;
-        justify-content: center;
+        align-content: flex-start;
+        -ms-flex-flow: row wrap;
+        flex-wrap: wrap;
     }
     .sk-hits-list-hit {
         width: 440px;
         height: 440px;
     }
-    [data-layoutMode="list"] .sk-hits-list-hit {
+    .kgs-result-layout.is-list .sk-hits-list-hit {
         width: 100%;
         height: auto;
         height: unset;
-        margin: 1px;
-        border: 1px solid transparent;
-        background-color: transparent;
-        -webkit-box-shadow: none;
-        box-shadow: none;
-    }
-    [data-layoutMode="list"] .sk-hits-list-hit:nth-child(odd) {
-        background-color: #f4f4f4;
-    }
-    [data-layoutMode="list"] .sk-hits-list-hit:hover {
-        border-color: rgb(108, 115, 121);
+        margin: 0 0 20px 0;
     }
 }

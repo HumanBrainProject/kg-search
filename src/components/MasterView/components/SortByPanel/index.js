@@ -21,7 +21,7 @@ import "./styles.css";
 
 export function SortByPanel() {
   const state = store.getState();
-  const sortFields = state.configuration.sortFields;
+  const sortFields = state.definition.sortFields;
 
   if (sortFields.length > 0) {
     return <span className="kgs-sortby-panel"><SortingSelector key="sortingSelector" listComponent={Select} options={sortFields} /></span>;

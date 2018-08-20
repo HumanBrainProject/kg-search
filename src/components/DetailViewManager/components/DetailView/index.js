@@ -38,7 +38,7 @@ export class DetailView extends Component {
   }
   componentDidUpdate() {
     if (!isMobile) {
-      //window.console.log(new Date().toLocaleTimeString() + ": view=" + this.props.viewId + ", tabs active=" + this.props.isActive);
+      //window.console.debug(new Date().toLocaleTimeString() + ": view=" + this.props.viewId + ", tabs active=" + this.props.isActive);
       if (!this.props.isActive) {
         const rootNode = document.body.querySelector(".kgs-detailView[data-viewId=\"" + this.props.viewId + "\"]");
         this.componentContext.tabAbles = Object.values(rootNode.querySelectorAll(tabAblesSelectors.join(",")))
@@ -51,8 +51,8 @@ export class DetailView extends Component {
   render() {
     const {viewId, data, onPreviousClick, onCloseClick} = this.props;
     return (
-      <div className="kgs-detailView" data-type={data && data._type} data-viewId={viewId} >  
-        <div className="kgs-detailView__outerPanel">
+      <div className="kgs-detailView" data-type={data && data._type} data-viewId={viewId} >
+        {data && <div className="kgs-detailView__outerPanel">
           <div className="kgs-detailView__navigation">
             <div className="kgs-detailView__navigation-panel">
               <button className="kgs-detailView__previousButton" onClick={onPreviousClick}>
@@ -67,7 +67,7 @@ export class DetailView extends Component {
           <div className="kgs-detailView__innerPanel" tabIndex={-1}>
             <Shape data={data} detailViewMode={true} />
           </div>
-        </div>
+        </div>}
       </div>
     );
   }

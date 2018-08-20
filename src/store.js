@@ -18,37 +18,40 @@ import { rootReducer } from "./reducer/root.reducer";
 
 const createStore = reducer => {
 
-    let state = reducer(null, {});
+  let state = reducer(null, {});
 
-    document.addEventListener('action', function(e) {
-        const nextState = reducer(state, e.detail);
-        if (JSON.stringify(nextState) !== JSON.stringify(state)) {
-            state = nextState;
-            document.dispatchEvent(new CustomEvent('state'));
-        }
-    }, false);
+  document.addEventListener("action", e => {
+    setTimeout(() => {
+      const nextState = reducer(state, e.detail);
+      if (JSON.stringify(nextState) !== JSON.stringify(state)) {
+        state = nextState;
+        document.dispatchEvent(new CustomEvent("state"));
+      }
+    });
+  }, false);
 
-    let store = {
-        getState: () => {
-            return state;
-        }
-    };
+  let store = {
+    getState: () => {
+      return state;
+    }
+  };
 
-    const dispatch = (payload) => {
-        setTimeout(() => {
-            if (typeof payload === 'function') {
-                payload(dispatch, store.getState);
-            } else {
-                document.dispatchEvent(
-                    new CustomEvent('action', { detail: payload})
-                );
-            }
-        });
-    };
+  const dispatch = (payload) => {
+    setTimeout(() => {
+      if (typeof payload === "function") {
+        payload(dispatch, store.getState);
+      } else {
+        document.dispatchEvent(
+          new CustomEvent("action", { detail: payload})
+        );
+      }
+    });
+  };
 
-    store.dispatch = dispatch;
-    return store;
-}
+  store.dispatch = dispatch;
+  return store;
+};
+
 export const store = createStore(rootReducer);
 
 export const dispatch = store.dispatch;

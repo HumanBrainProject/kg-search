@@ -15,35 +15,54 @@
 */
 
 import React from "react";
+import { store } from "../../../../store";
 import { SearchkitComponent, SearchBox, QueryString } from "searchkit";
 import { isMobile } from "../../../../Helpers/BrowserHelpers";
 import "./styles.css";
 
-let searchInputClickedTimestamp = null;
-const searchInput = {
+const SearchPanelComponent = ({isFloating, queryFields, onSearch}) => {
+  return (
+    <div className={`kgs-search${isFloating?" is-fixed-position":""}`}>
+      <SearchBox placeholder="Search (e.g. brain OR neuroscience)" autofocus={true} searchOnChange={false} queryFields={queryFields} queryBuilder={QueryString} />
+      <button className="kgs-search-button" onClick={onSearch}>Search</button>
+      <a href="http://lucene.apache.org/core/2_9_4/queryparsersyntax.html" target="blank" className="kgs-search-help__button" title="Help">
+        <i className="fa fa-info-circle fa-2x"></i>
+      </a>
+    </div>
+  );
+};
+
+class SearchInput {
+  constructor(querySelector) {
+    this.timestamp = null;
+    this.querySelector = querySelector;
+  }
   get element() {
-    return  document.querySelector(".kgs-search .sk-search-box .sk-top-bar__content .sk-search-box__text");
-  },
+    return  document.querySelector(this.querySelector);
+  }
   blur() {
     const input = this.element;
-    if (input && document.activeElement === input && (!searchInputClickedTimestamp ||  ((new Date() - searchInputClickedTimestamp) > 500))) {
+    if (input && document.activeElement === input && (!this.timestamp ||  ((new Date() - this.timestamp) > 500))) {
       input.blur();
     }
-  },
+  }
   focus() {
     const input = this.element;
     if (input && document.activeElement !== input) {
       input.focus();
     }
-    searchInputClickedTimestamp = new Date();
+    this.timestamp = new Date();
   }
-};
+}
+
+const searchInput = new SearchInput(".kgs-search .sk-search-box .sk-top-bar__content .sk-search-box__text");
 
 export class SearchPanel extends SearchkitComponent {
   constructor(props) {
     super(props);
     this.state = {
-      isFloating: false
+      isFloating: false,
+      queryFields: null
     };
     this.eventState = {
       didScroll: false,
@@ -61,7 +80,15 @@ export class SearchPanel extends SearchkitComponent {
     this.handleOrientationChangeEvent = this.handleOrientationChangeEvent.bind(this);
     this.handleMutationEvent = this.handleMutationEvent.bind(this);
   }
+  handleStateChange() {
+    setTimeout(() => {
+      const globalState = store.getState();
+      this.setState({queryFields: globalState.definition.queryFields});
+    });
+  }
   componentDidMount() {
+    document.addEventListener("state", this.handleStateChange.bind(this), false);
+    this.handleStateChange();
     if (isMobile) {
       window.addEventListener("mousedown", this.handleMouseDownEvent, false);
     }
@@ -77,6 +104,7 @@ export class SearchPanel extends SearchkitComponent {
     this.interval = setInterval(this.adjustLayout, 250);
   }
   componentWillUnmount() {
+    document.removeEventListener("state", this.handleStateChange);
     if (isMobile) {
       window.removeEventListener("mousedown", this.handleMouseDownEvent);
     }
@@ -92,9 +120,6 @@ export class SearchPanel extends SearchkitComponent {
     window.$ && window.$(".js-navbar-header").off("hidden.bs.collapse.kgs-search-panel", this.handleResizeEvent);
     clearInterval(this.interval);
     this.interval = null;
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextState.isFloating !== this.state.isFloating;
   }
   handleMouseDownEvent() {
     searchInput.focus();
@@ -171,20 +196,11 @@ export class SearchPanel extends SearchkitComponent {
     }
   }
   render() {
-    const { searchThrottleTime, queryFields } = this.props;
-
-    const handleSearch = () => {
+    const searchHandler = () => {
       this.searchkit.search();
     };
-
     return (
-      <div className={`kgs-search${this.state.isFloating?" is-fixed-position":""}`}>
-        <SearchBox placeholder="Search (e.g. brain AND hippocampus)" autofocus={true} searchThrottleTime={searchThrottleTime} searchOnChange={false} queryFields={queryFields} queryBuilder={QueryString} />
-        <button className="kgs-search-button" onClick={handleSearch}>Search</button>
-        <a href="http://lucene.apache.org/core/2_9_4/queryparsersyntax.html" target="blank" className="kgs-search-help__button" title="Help">
-          <i className="fa fa-info-circle fa-2x"></i>
-        </a>
-      </div>
+      <SearchPanelComponent isFloating={this.state.isFloating} queryFields={this.state.queryFields} onSearch={searchHandler} />
     );
   }
 }

@@ -21,16 +21,16 @@ export const isMobile = (navigator.userAgent.match(/Android/i)
                 || navigator.userAgent.match(/iPod/i));
 
 export const tabAblesSelectors = [
-    'input',
-    'select',
-    'a[href]',
-    'textarea',
-    'button',
-    '[tabindex]',
+  "input",
+  "select",
+  "a[href]",
+  "textarea",
+  "button",
+  "[tabindex]",
 ];
 
-export const isOpera = (navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) !== -1;
+export const isOpera = (navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf("OPR")) !== -1;
 export const isChrome = navigator.userAgent.indexOf("Chrome") !== -1;
 export const isSafari = navigator.userAgent.indexOf("Safari") !== -1;
-export const isFirefox = navigator.userAgent.indexOf("Firefox") !== -1; 
+export const isFirefox = navigator.userAgent.indexOf("Firefox") !== -1;
 export const isIE = navigator.userAgent.indexOf("MSIE") !== -1  || !!document.documentMode;
