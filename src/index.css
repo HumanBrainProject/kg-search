@@ -26,6 +26,27 @@ body > header.navbar {
     border-bottom: 0;
 }
 
+.navbar {
+    background: #F4F4F4;
+}
+
+.navbar .nav-tabs {
+    background: white;
+}
+
+.navbar .nav-tabs>li>a 
+.navbar .nav-tabs>li>a:hover, 
+.navbar .nav-tabs>li>a:focus {
+    background: white;
+    border-color: white;
+}
+
+.navbar .nav-tabs>li.active>a, 
+.navbar .nav-tabs>li.active>a:hover, 
+.navbar .nav-tabs>li.active>a:focus {
+    background: #F4F4F4;
+}
+
 .navbar-default {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
