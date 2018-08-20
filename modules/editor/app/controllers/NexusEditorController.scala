@@ -518,6 +518,48 @@ class NexusEditorController @Inject()(
     // Editable instance types are the one for which form creation is known
     Ok(FormHelper.editableEntitiyTypes)
   }
+
+
+  def graphEntities(
+                     org: String, domain: String, schema: String, version: String, id:String
+                   ): Action[AnyContent] = Action.async {
+    def idFormat(id : String): String= {
+      val l = id.split("/")
+      val path = l.head.replaceAll("-", "/").replaceAll("_",".")
+      val i = l.last
+      s"$path/$i"
+    }
+    ws.url(s"http://localhost:8089/arango/graph/$org/$domain/$schema/$version/$id").addHttpHeaders(CONTENT_TYPE -> "application/json").get().map{
+      allRelations =>
+        val j = allRelations.json.as[List[JsObject]]
+        val edges: List[JsObject] = j.flatMap(el =>
+          (el \ "edges").as[List[JsObject]].map(j =>
+            Json.obj(
+              "from" -> idFormat((j \ "_from").as[String]),
+              "to" -> idFormat((j \ "_to").as[String]),
+              "id" -> (j \ "_id").as[String]
+            )
+          )
+        ).distinct
+        val camelCase = """(?=[A-Z])"""
+        val vertices = j.flatMap { el =>
+            val vertices = (el \ "vertices").as[List[JsValue]]
+            vertices.map {
+                case v: JsObject =>
+                  val dataType = (v \ "@type").as[String].split("#").last.capitalize
+                  val label = dataType.split(camelCase).mkString(" ")
+                  Json.obj(
+                    "id" -> Json.toJson(idFormat((v \ "_id").as[String])),
+                    "label" -> JsString(label),
+                    "dataType" -> JsString(dataType),
+                    "title" -> Json.stringify(v)
+                  )
+                case _ => JsNull
+            }.filter( v => v != JsNull).map(_.as[JsObject])
+        }.distinct
+        Ok(Json.obj("edges" -> edges, "vertices" -> vertices))
+    }
+  }
 }
 
 object NexusEditorController {

@@ -51,7 +51,6 @@ object EditorSpaceHelper {
       .filter(_.isDefined)
       .map(_.get)
       .toList
-      .filter(group => userInfo.groups.contains(s"$nexusPrefix$group"))
   }
 
   /**
