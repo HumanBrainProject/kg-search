@@ -66,17 +66,27 @@
 }
 
 .kgs-shape__field .field-label {
+    display: inline-block;
     font-weight: bold;
     font-size: 14px;
     color: #555;
 }
 
+.kgs-shape__field .field-label.as-block {
+    display: block;
+}
+
 .kgs-shape__field .field-label::after {
+    content: ":";
     display: inline-block;
     padding: 0 8px 0 3px;
     font-weight: bold;
     font-size: 14px;
     color: #555;
+}
+
+.kgs-shape__field .field-label.as-block::after {
+    display: none;
 }
 
 .kgs-shape__field ul > li > ul {

@@ -45,7 +45,7 @@ export function Field({name, data, mapping, showSmartContent}) {
     if(mapping.label_hidden && !showSmartContent){
       labelTag = null;
     } else {
-      labelTag = <div className="field-label">{mapping.value}</div>;
+      labelTag = <div className={`field-label ${mapping.tag_icon?"as-block":""}`}>{mapping.value}</div>;
     }
   }
 
