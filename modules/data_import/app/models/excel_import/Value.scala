@@ -17,6 +17,7 @@ package models.excel_import
 
 import nexus.services.NexusService
 import play.api.libs.json._
+import scala.collection.immutable.HashSet
 import scala.concurrent.{ExecutionContext, Future}
 import Entity.isNexusLink
 import Value._
@@ -30,11 +31,19 @@ sealed trait Value {
   def getNonEmtpy(): Option[Value]
   def resolveValue(linkRef: collection.mutable.Map[String, String]): Value
   def needsValidation(): Boolean = true
+  def checkInternalLinksValidity(dataRef: HashSet[String]): Value
   def validateValue(token: String, nexusService: NexusService)
                    (implicit executionContext: ExecutionContext): Future[Value]
 }
 
 case class SingleValue(value: String, unit: Option[String] = None, status: Option[String] = None) extends Value{
+
+  override def checkInternalLinksValidity(linksRef: HashSet[String]): SingleValue = {
+    val newStatus = if (isNexusLink(value)) {
+      DEFAULT_RESOLUTION_STATUS
+    } else if (linksRef.contains(value)) FOUND else NOT_FOUND
+    this.copy(status = Some(newStatus))
+  }
 
   override def needsValidation(): Boolean = {
     // if value has a status already validation is not needed
@@ -78,7 +87,7 @@ case class SingleValue(value: String, unit: Option[String] = None, status: Optio
     } else {
       linksRef.get(value) match {
         case Some(foundLink) =>
-          this.copy(value = foundLink, status = Some(RESOLVED))
+          this.copy(value = foundLink, status = Some(FOUND))
         case None =>
           this.copy(status = Some(NOT_FOUND))
       }
@@ -104,6 +113,12 @@ case class SingleValue(value: String, unit: Option[String] = None, status: Optio
 
 
 case class ArrayValue(values: Seq[SingleValue]) extends Value{
+
+  override def checkInternalLinksValidity(dataRef: HashSet[String]): ArrayValue = {
+    val newValues = values.map(_.checkInternalLinksValidity(dataRef))
+    this.copy(values = newValues)
+  }
+
   override def toJson(): JsValue = {
     JsArray(values.map(_.toJson))
   }
@@ -150,6 +165,7 @@ case class ArrayValue(values: Seq[SingleValue]) extends Value{
 object Value {
   val DEFAULT_UNIT = ""
   val RESOLVED = "RESOLVED"
+  val FOUND = "FOUND"
   val NOT_FOUND = "NOT FOUND"
   val VALID = "VALID"
   val INVALID = "INVALID LINK"

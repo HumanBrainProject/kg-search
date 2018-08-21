@@ -31,6 +31,7 @@ import play.api.libs.json._
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 import play.api.{Configuration, Logger}
+import scala.collection.immutable.HashSet
 import scala.concurrent.{ExecutionContext, Future}
 
 
@@ -197,14 +198,16 @@ class ExcelImportController @Inject()(cc: ControllerComponents,
   def handlePreviewRequest(fileName: String, data: Seq[Entity])
                           (implicit request: Request[MultipartFormData[Files.TemporaryFile]]): Future[Result] = {
     val outputFileBaseName = fileName.substring(0, fileName.indexOf('.'))
+    val refData = HashSet(data.map(_.localId):_*)
+    val previewValidatedData = data.map(e => e.checkInternalLinksValidity(refData))
     Future.successful(
       render {
         case AcceptsXlsx() | AcceptsXls() =>
-          renderExcel(outputFileBaseName, data)
+          renderExcel(outputFileBaseName, previewValidatedData)
         case AcceptsCsv() =>
-          renderCsv(outputFileBaseName, data)
+          renderCsv(outputFileBaseName, previewValidatedData)
         case _ =>
-          renderJson(data)
+          renderJson(previewValidatedData)
       }
     )
   }

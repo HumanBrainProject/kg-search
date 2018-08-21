@@ -20,6 +20,7 @@ import nexus.helpers.NexusHelper
 import nexus.services.NexusService
 import org.apache.poi.ss.usermodel.CellStyle
 import org.apache.poi.xssf.usermodel.XSSFSheet
+import scala.collection.immutable.HashSet
 import scala.concurrent.{ExecutionContext, Future}
 import Entity._
 
@@ -113,6 +114,18 @@ case class Entity(rawType: String, localId: String, rawContent: Map[String, Valu
         }
         copyWithID(newContent, newStatus)
     }
+  }
+
+  def checkInternalLinksValidity(dataRef: HashSet[String]): Entity = {
+    val checkedContent = content.map{
+      case (key, value) =>
+        if (isLink(key)) {
+          (key, value.checkInternalLinksValidity(dataRef))
+        } else {
+          (key, value)
+        }
+    }
+    copyWithID(checkedContent)
   }
 
   def getExternalIdAsSingleValue(): SingleValue = {
