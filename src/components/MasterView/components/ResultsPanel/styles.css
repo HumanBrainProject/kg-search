@@ -55,6 +55,10 @@ ul.sk-hits-list {
     width: calc(100% - 20px);
 }
 
+.kgs-result-layout.is-grid .sk-hits-list-hit {
+    margin: 10px 20px 10px 0;
+}
+
 .sk-hits-list-hit:hover {
     -webkit-box-shadow: 3px 3px 6px #8f8a8a;
     /* #cbc9c9; */
