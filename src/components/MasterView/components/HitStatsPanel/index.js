@@ -25,7 +25,7 @@ export class HitStatsPanel extends Component {
   }
   getState() {
     const globalState = store.getState();
-    const from = globalState.search.from?globalState.search.from:0;
+    const from = (globalState.search.from?globalState.search.from:0) + 1;
     const count = globalState.search.results?(globalState.search.results.hits?(globalState.search.results.hits.hits?globalState.search.results.hits.hits.length:0):0):0;
     const to = from + count - 1;
     return {
