@@ -17,3 +17,65 @@
 .kgs-group-selection {
     min-width: 300px;
 }
+
+
+.kgs-group-selection .kgs-select {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    white-space: nowrap;
+}
+
+.kgs-group-selection .kgs-select div {
+    display: inline-block;
+    margin-right: 20px;
+    color: #555;
+    font-size: 22px;
+    font-weight: normal;
+    line-height: 30px;
+}
+
+.kgs-group-selection .kgs-select select {
+    width: auto;
+    background-color: white;
+    border-color: white;
+    color: #ED5554;
+    font-size: 22px;
+    font-weight: normal;
+    padding: 9px 50px 9px 25px;
+    cursor: pointer;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -o-transition: box-shadow 0.2s ease-in;
+    -webkit-transition: -webkit-box-shadow 0.2s ease-in;
+    transition: -webkit-box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    text-transform: capitalize;
+}
+
+.kgs-group-selection .kgs-select select:hover,
+.kgs-group-selection .kgs-select select:focus {
+    -webkit-box-shadow: 3px 3px 6px #cbc9c9;
+    box-shadow: 3px 3px 6px #cbc9c9;
+    z-index: 1;
+}
+
+.kgs-group-selection .kgs-select:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    width: 0;
+    height: 0;
+    margin-top: -3px;
+    border-top: 6px solid #ED5554;
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+    pointer-events: none;
+}

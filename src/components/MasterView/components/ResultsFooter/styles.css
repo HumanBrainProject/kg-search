@@ -27,7 +27,6 @@
     left: 0;
     bottom: 0;
     border-top: 1px solid #ccc;
-    background-color: white;
     z-index: 1;
 }
 
@@ -58,6 +57,6 @@
     padding-left: 30px;
 }
 
-.kgs-result-footer:not(.is-fixed-position) .kgs-result-footer-nav .kgs-share-links .kgs-share-links-panel:before {
+.kgs-result-footer .kgs-result-footer-nav .kgs-share-links .kgs-share-links-panel:before {
    background-color: #f4f4f4;
 }
