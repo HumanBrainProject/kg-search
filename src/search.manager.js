@@ -66,7 +66,7 @@ export default class SearchManager {
       const headers = config.headers;
       const nonce = headers.nonce;
       const state = store.getState();
-      if (!state.search.nonce || (nonce && state.search.nonce && nonce === state.search.nonce)) {
+      if (!state.search.nonce || (nonce && state.search.nonce && nonce === state.search.nonce)) {
         switch (status) {
         case 400: // Bad Request
         case 404: // Not Found

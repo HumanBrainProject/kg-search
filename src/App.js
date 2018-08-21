@@ -72,7 +72,7 @@ export class Views extends PureComponent {
 
         //window.console.debug(new Date().toLocaleTimeString() + ": app disable tabs=" + this.tabAbles.length);
         this.tabAbles.forEach(e => e.node.setAttribute("tabIndex", -1));
-          
+
       }
     }
   }

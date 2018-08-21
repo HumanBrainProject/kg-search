@@ -53,8 +53,9 @@ export class ValueField extends Component {
   render() {
     const {value, mapping, showSmartContent, displayValue} = this.props;
 
-    if (!mapping || !mapping.visible)
-      {return null;}
+    if (!mapping || !mapping.visible) {
+      return null;
+    }
 
     const handleClick = () => {
       const state = store.getState();
@@ -71,10 +72,11 @@ export class ValueField extends Component {
         if (value.url.substr(0,7).toLowerCase() === "mailto:") {
           valueTag = <a href={value.url}>{value.value}</a>;
         } else {
-          if (value.detail)
-            {valueTag = <a href={value.url} target="_blank">{value.value}</a>;}
-          else
-            {valueTag = <a href={value.url} target="_blank">{value.value}</a>;}
+          if (value.detail) {
+            valueTag = <a href={value.url} rel="noopener noreferrer" target="_blank">{value.value}</a>;
+          } else {
+            valueTag = <a href={value.url} rel="noopener noreferrer" target="_blank">{value.value}</a>;
+          }
         }
       } else {
         const timestamp = value.value && mapping && mapping.type === "date" && Date.parse(value.value);
@@ -87,7 +89,7 @@ export class ValueField extends Component {
           } else {
             valueTag = value.value;
             if(displayValue){
-              valueTag = displayValue
+              valueTag = displayValue;
             }
           }
           if (showSmartContent && mapping.collapsible && value.value.length >= 1600) {
@@ -99,7 +101,7 @@ export class ValueField extends Component {
             </span>;
           }
           if(mapping && mapping.tag_icon){
-            valueTag = <span className="field-value__tag"><div dangerouslySetInnerHTML={{__html:mapping.tag_icon}} /><div>{value.value}</div></span>
+            valueTag = <span className="field-value__tag"><div dangerouslySetInnerHTML={{__html:mapping.tag_icon}} /><div>{value.value}</div></span>;
           }
         }
       }

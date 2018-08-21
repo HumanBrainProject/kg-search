@@ -14,10 +14,10 @@
 *   limitations under the License.
 */
 
-import React, { Component } from 'react';
-import { ObjectField } from '../ObjectField';
-import { ValueField } from '../ValueField';
-import './styles.css';
+import React, { Component } from "react";
+import { ObjectField } from "../ObjectField";
+import { ValueField } from "../ValueField";
+import "./styles.css";
 
 export class ListField extends Component {
   constructor(props) {
@@ -31,20 +31,14 @@ export class ListField extends Component {
     const {items} = this.props;
     let size = 5;
     switch (this.state.size) {
-      case 5:
-        if (items.length > 10)
-          size = 10;
-        else
-          size = Number.POSITIVE_INFINITY;
-        break;
-      case 10:
-        if (items.length > 10)
-          size = Number.POSITIVE_INFINITY;
-        else  
-          size = 5;
-        break;
-      default:
-        size = 5;
+    case 5:
+      size = (items.length > 10)?10:Number.POSITIVE_INFINITY;
+      break;
+    case 10:
+      size = (items.length > 10)?Number.POSITIVE_INFINITY:5;
+      break;
+    default:
+      size = 5;
     }
     this.setState({ size: size});
   }
@@ -53,7 +47,6 @@ export class ListField extends Component {
     const {items, mapping, showSmartContent} = this.props;
     const keys = {};
     const generateList = () => {
-      
       let res =  items.map((item, index) => {
         if ((this.state.size === Number.POSITIVE_INFINITY || index < this.state.size) && (showSmartContent || index < 5)) {
           let value = null;
@@ -70,20 +63,21 @@ export class ListField extends Component {
           }
           let itemType;
           if(mapping.overview_max_display){
-            itemType = <div key={key}>{value}</div>
+            itemType = <div key={key}>{value}</div>;
           }else{
-            itemType = <li key={key}>{value}</li>
+            itemType = <li key={key}>{value}</li>;
           }
           return itemType;
         } else {
           return null;
         }
-      })
+      });
       return res;
-    }
-    
-    if (!mapping || !mapping.visible)
+    };
+
+    if (!mapping || !mapping.visible) {
       return null;
+    }
 
     if (mapping.separator) {
       const keys = {};
@@ -121,33 +115,33 @@ export class ListField extends Component {
             viewMore = <button className="kgs-shape__viewMore-button" onClick={this.handleShowMoreClick} role="link">view less</button>;
           }
         } else {
-            dotsMore = <li key="-1" className="kgs-shape__more">...</li>;
+          dotsMore = <li key="-1" className="kgs-shape__more">...</li>;
         }
       }
 
-      
+
       let displayNumber = items.length;
       let listItems ;
-      if( mapping.overview_max_display){
-        if(!showSmartContent){
+      if (mapping.overview_max_display){
+        if (!showSmartContent){
           displayNumber = mapping.overview_max_display;
         }
-        listItems = <div  className='list-tag'>
-              {generateList().slice(0, displayNumber)}
-              {dotsMore}
-            </div>
-      }else{
+        listItems = <div className='list-tag'>
+          {generateList().slice(0, displayNumber)}
+          {dotsMore}
+        </div>;
+      } else {
         listItems = <ul>
-              {generateList()}
-              {dotsMore}
-            </ul>
+          {generateList()}
+          {dotsMore}
+        </ul>;
       }
 
       return (
-          <span>
-            {listItems}
-            {viewMore}
-            </span>
+        <span>
+          {listItems}
+          {viewMore}
+        </span>
       );
     }
   }
