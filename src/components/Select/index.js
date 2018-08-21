@@ -14,16 +14,16 @@
 *   limitations under the License.
 */
 
-import React from 'react';
-import './styles.css';
+import React from "react";
+import "./styles.css";
 
 export function Select({label, value, list, onChange}) {
-    return (
-        <div className="kgs-select">
-            {label?<div>{label}</div>:null}
-            <select onChange={e => onChange(e.target.value || null)} value={value || ''}>
-                {list.map(e => <option value={e.value} key={e.value}>{e.label}</option>)}
-            </select>
-        </div>
-    )
+  return (
+    <div className="kgs-select">
+      {label?<div>{label}</div>:null}
+      <select onChange={e => onChange(e.target.value || null)} value={value || ""}>
+        {list.map(e => <option value={e.value} key={e.value}>{e.label}</option>)}
+      </select>
+    </div>
+  );
 }

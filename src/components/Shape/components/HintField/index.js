@@ -14,20 +14,17 @@
 *   limitations under the License.
 */
 
-import React from 'react';
-import ReactTooltip from 'react-tooltip';
+import React from "react";
+import ReactTooltip from "react-tooltip";
 
 export function HintField({value, label}) {
-    const hintfield_id = "field-hint_content-" + encodeURI(label);
-    return (
-      <span className="field-hint">
-        <i className="fa fa-info-circle" data-tip data-for={hintfield_id} aria-hidden="true"></i>
-        <ReactTooltip id={hintfield_id} place="right" type="dark" effect="solid">
-          <span>{value}</span>
-        </ReactTooltip>
-      </span>
-  
-    );
-  
-  }
-  
+  const hintfield_id = "field-hint_content-" + encodeURI(label);
+  return (
+    <span className="field-hint">
+      <i className="fa fa-info-circle" data-tip data-for={hintfield_id} aria-hidden="true"></i>
+      <ReactTooltip id={hintfield_id} place="right" type="dark" effect="solid">
+        <span>{value}</span>
+      </ReactTooltip>
+    </span>
+  );
+}

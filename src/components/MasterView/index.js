@@ -57,7 +57,7 @@ export class MasterView extends PureComponent {
 
         //window.console.debug(new Date().toLocaleTimeString() + ": masterView disable tabs=" + this.tabAbles.length);
         this.tabAbles.forEach(e => e.node.setAttribute("tabIndex", -1));
-        
+
       }
     }
   }
@@ -74,7 +74,7 @@ export class MasterView extends PureComponent {
     }
   }
   render() {
-    
+
     const searchPanelRelatedElements = [
       {querySelector: "body>header"},
       {querySelector: "body>header + nav.navbar"},

@@ -14,18 +14,19 @@
 *   limitations under the License.
 */
 
-import React from 'react';
-import { ListField } from '../ListField';
-import { ObjectField } from '../ObjectField';
-import { ValueField } from '../ValueField';
-import { HintField} from '../HintField';
+import React from "react";
+import { ListField } from "../ListField";
+import { ObjectField } from "../ObjectField";
+import { ValueField } from "../ValueField";
+import { HintField} from "../HintField";
 
 export function Field({name, data, mapping, showSmartContent}) {
-
-  if (!mapping || !mapping.visible || !(mapping.showIfEmpty || data[name]))
+  if (!mapping || !mapping.visible || !(mapping.showIfEmpty || data[name])) {
     return null;
+  }
+
   let displayValue;
-  if(name === 'component'){
+  if(name === "component"){
     displayValue = "From the " + data[name].value + " project";
   }
   let labelTag = null;
@@ -49,8 +50,9 @@ export function Field({name, data, mapping, showSmartContent}) {
     }
   }
 
-  if(mapping.hint)
+  if (mapping.hint) {
     hintTag = <HintField value = {mapping.hint} label = {mapping.value} />;
+  }
 
   const value = data && name && data[name];
   if (value) {
@@ -62,7 +64,7 @@ export function Field({name, data, mapping, showSmartContent}) {
         objectTag = <ObjectField data={value.children} mapping={mapping} showSmartContent={showSmartContent} />;
       }
     }
-  };
+  }
 
   return (
     <span style={order} className={"kgs-shape__field" + (name?" kgs-shape__" + name:"")}>

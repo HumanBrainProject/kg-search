@@ -14,51 +14,51 @@
 *   limitations under the License.
 */
 
-import React from 'react';
-import { Field } from '../Field';
-import './styles.css';
+import React from "react";
+import { Field } from "../Field";
+import "./styles.css";
 
 export function ObjectField({data, mapping, showSmartContent}) {
-    if (!mapping || !mapping.visible)
-      return null;
-  
-    if (mapping.separator) {
-      return (
-        <span>
-          {
-            Object.entries(mapping.children)
-              .map(([name, mapping]) => ({
-                name: name,
-                mapping: mapping
-              }))
-              .filter(e => 
-                    e.mapping
-                  && (e.mapping.showIfEmpty || data[e.name])
-                  && e.mapping.visible
-              )
-              .map((e, index) => <span key={e.name}>{index===0?"":mapping.separator}<Field name={e.name} data={data} mapping={e.mapping} showSmartContent={showSmartContent} /></span>)
-            }
-        </span>
-      );
-    } else {
-      return (
-        <ul className="kgs-shape__object">
-          {
-            Object.entries(mapping.children)
-              .map(([name, mapping]) => ({
-                name: name,
-                mapping: mapping
-              }))
-              .filter(e => 
-                    e.mapping
-                  && (e.mapping.showIfEmpty || data[e.name])
-                  && e.mapping.visible
-              )
-              .map(e => <li key={e.name}><Field name={e.name} data={data} mapping={e.mapping} showSmartContent={showSmartContent} /></li>)
-            }
-        </ul>
-      );
-    }
+  if (!mapping || !mapping.visible) {
+    return null;
   }
-  
-  
+
+  if (mapping.separator) {
+    return (
+      <span>
+        {
+          Object.entries(mapping.children)
+            .map(([name, mapping]) => ({
+              name: name,
+              mapping: mapping
+            }))
+            .filter(e =>
+              e.mapping
+                  && (e.mapping.showIfEmpty || data[e.name])
+                  && e.mapping.visible
+            )
+            .map((e, index) => <span key={e.name}>{index===0?"":mapping.separator}<Field name={e.name} data={data} mapping={e.mapping} showSmartContent={showSmartContent} /></span>)
+        }
+      </span>
+    );
+  } else {
+    return (
+      <ul className="kgs-shape__object">
+        {
+          Object.entries(mapping.children)
+            .map(([name, mapping]) => ({
+              name: name,
+              mapping: mapping
+            }))
+            .filter(e =>
+              e.mapping
+                  && (e.mapping.showIfEmpty || data[e.name])
+                  && e.mapping.visible
+            )
+            .map(e => <li key={e.name}><Field name={e.name} data={data} mapping={e.mapping} showSmartContent={showSmartContent} /></li>)
+        }
+      </ul>
+    );
+  }
+}
+

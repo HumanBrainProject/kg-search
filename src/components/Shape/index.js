@@ -14,12 +14,12 @@
 *   limitations under the License.
 */
 
-import React from 'react';
+import React from "react";
 import { store } from "../../store";
-import { Summary } from './components/Summary';
-import { Field } from './components/Field';
-import { HighlightsField} from './components/HighlightsField';
-import './styles.css';
+import { Summary } from "./components/Summary";
+import { Field } from "./components/Field";
+import { HighlightsField} from "./components/HighlightsField";
+import "./styles.css";
 
 const markdownEscapedChars = {
   "&#x2F;": "\\",
@@ -47,7 +47,7 @@ const replaceMarkdownEscapedChars = (str) => {
 };
 
 export function Shape({detailViewMode, data}) {
-  
+
   const state = store.getState();
 
   let iconTag = <i className="fa fa-tag" />;
@@ -60,9 +60,9 @@ export function Shape({detailViewMode, data}) {
     const mapping = state.definition.shapeMappings[data._type];
     if (!mapping) {
 
-      if (source.image && source.image.url)
+      if (source.image && source.image.url) {
         iconTag = <img src={source.image.url} alt={data._type} width="100%" height="100%" />;
-    
+      }
       noDataTag = <div className="kgs-shape__no-data">This type of data is currently not supported.</div>;
 
       fieldsTag = <Field name="type" data={{type: {value: data._type}}} mapping={{visible: true}} showSmartContent={false} />;
@@ -91,62 +91,65 @@ export function Shape({detailViewMode, data}) {
           mapping.fields["description"].collapsible = true;
         }
       }
-      if (mapping && mapping.fields["description"]) 
+      if (mapping && mapping.fields["description"]) {
         delete  mapping.fields["description"].value;
+      }
 
       let title = source.title && source.title.value;
-      if(data.highlight && data.highlight["title.value"] && data.highlight["title.value"].length > 0)
+      if(data.highlight && data.highlight["title.value"] && data.highlight["title.value"].length > 0) {
         title = replaceMarkdownEscapedChars(data.highlight["title.value"][0]);
-      if (mapping && mapping.fields["title"]) 
+      }
+      if (mapping && mapping.fields["title"]) {
         delete  mapping.fields["title"].value;
+      }
 
       fieldsTag = [
         {
-          name: "type", 
+          name: "type",
           data: {
             type: {
               value: mapping.label?mapping.label:data._type
             }
-          }, 
+          },
           mapping: {
             visible: false
-          } 
+          }
         },
         {
-          name: "title", 
+          name: "title",
           data: title?{
             title: {
               value: title
             }
-          }:{}, 
-          mapping: mapping && mapping.fields["title"] 
+          }:{},
+          mapping: mapping && mapping.fields["title"]
         }
       ].map(e => <Field name={e.name} data={e.data} mapping={e.mapping} key={e.name} showSmartContent={detailViewMode} />);
-      
+
       if (detailViewMode) {
         fieldsTag.push(<Summary data={source} mapping={mapping} key="summary" />);
       }
 
       fieldsTag.push(...[
         {
-          name: "description", 
+          name: "description",
           data: (description !== "")?{
             description: {
               value: description
             }
-          }:{}, 
+          }:{},
           mapping: mapping && mapping.fields["description"]
         }
       ].map(e => <Field name={e.name} data={e.data} mapping={e.mapping} key={e.name} showSmartContent={detailViewMode} />));
-    
+
       if (mapping.fields) {
         fieldsTag.push(...(Object.entries(mapping.fields)
           .map(([name, mapping]) => ({
             name: name,
             mapping: mapping
           }))
-          .filter(e => 
-                e.mapping
+          .filter(e =>
+            e.mapping
               && (detailViewMode || e.mapping.overview)
               && (e.mapping.showIfEmpty || source[e.name])
               && ["image", "title", "description"].indexOf(e.name) === -1
@@ -162,12 +165,12 @@ export function Shape({detailViewMode, data}) {
               return;
             }
             if(!highlightFields){
-              highlightFields = {}
+              highlightFields = {};
             }
             highlightFields[field] = data.highlight[field];
           });
         }
-        
+
         if(highlightFields){
           fieldsTag.push(
             <HighlightsField mapping={mapping} highlights={highlightFields} key={"highlightFields"}/>//[{name: "description", data: description}].map(e => <Field name={e.name} data={e.data} key={e.name} />)
