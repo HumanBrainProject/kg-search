@@ -38,7 +38,3 @@
     -webkit-box-shadow: 3px 3px 6px #8f8a8a;
     box-shadow: 3px 3px 6px #8f8a8a;
 }
-
-[data-showdetail="true"] .kgs-fetching-container .kgs-fetching-panel {
-    margin-top: 200px;
-}

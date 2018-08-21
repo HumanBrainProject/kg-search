@@ -38,10 +38,6 @@
     box-shadow: 3px 3px 6px #8f8a8a;
 }
 
-[data-showdetail="true"] .kgs-error-container .kgs-error-panel {
-    margin-top: 200px;
-} 
-
 .kgs-error-message {
     position: relative;
 }

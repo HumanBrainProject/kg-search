@@ -152,11 +152,11 @@
     justify-content: flex-start;
 }
 
-[data-layoutMode="list"] .kgs-shape__protocol{
+.kgs-result-layout.is-list .kgs-shape__protocol{
     flex-grow:1;
     max-width: 50%;
 }
-[data-layoutMode="list"] .kgs-shape__methods{
+.kgs-result-layout.is-list .kgs-shape__methods{
     flex-grow:1;
     max-width: 50%;
 }
