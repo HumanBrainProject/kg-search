@@ -65,6 +65,7 @@ class NexusEditorController @Inject()(
   val reconciledPrefix: String = config.getOptional[String]("nexus.reconciled.prefix").getOrElse("reconciled")
   val editorPrefix: String = config.getOptional[String]("nexus.editor.prefix").getOrElse("editor")
   val sparqlEndpoint: String = config.getOptional[String]("blazegraph.endpoint").getOrElse("http://localhost:9999")
+  val kgQueryEndpoint: String = config.getOptional[String]("kgquery.endpoint").getOrElse("http://localhost:8600")
 
   val logger = Logger(this.getClass)
 
@@ -521,7 +522,7 @@ class NexusEditorController @Inject()(
 
 
   def graphEntities(
-                     org: String, domain: String, schema: String, version: String, id:String
+                     org: String, domain: String, schema: String, version: String, id:String, step: Int
                    ): Action[AnyContent] = Action.async {
     def idFormat(id : String): String= {
       val l = id.split("/")
@@ -529,7 +530,7 @@ class NexusEditorController @Inject()(
       val i = l.last
       s"$path/$i"
     }
-    ws.url(s"http://localhost:8089/arango/graph/$org/$domain/$schema/$version/$id").addHttpHeaders(CONTENT_TYPE -> "application/json").get().map{
+    ws.url(s"${kgQueryEndpoint}/arango/graph/$org/$domain/$schema/$version/$id?step=$step").addHttpHeaders(CONTENT_TYPE -> "application/json").get().map{
       allRelations =>
         val j = allRelations.json.as[List[JsObject]]
         val edges: List[JsObject] = j.flatMap(el =>
@@ -548,11 +549,12 @@ class NexusEditorController @Inject()(
                 case v: JsObject =>
                   val dataType = (v \ "@type").as[String].split("#").last.capitalize
                   val label = dataType.split(camelCase).mkString(" ")
+                  val title = if ((v \"http://schema.org/name").asOpt[JsString].isDefined ) {(v \"http://schema.org/name").as[JsString]} else {Json.toJson(v)}
                   Json.obj(
                     "id" -> Json.toJson(idFormat((v \ "_id").as[String])),
                     "label" -> JsString(label),
                     "dataType" -> JsString(dataType),
-                    "title" -> Json.stringify(v)
+                    "title" -> title
                   )
                 case _ => JsNull
             }.filter( v => v != JsNull).map(_.as[JsObject])
