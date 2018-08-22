@@ -2,13 +2,14 @@
   GET     /kg_labels/*proxyUrl      proxy.controllers.SearchProxy.labels(proxyUrl:String)
   OPTIONS /kg_labels/*proxyUrl      proxy.controllers.SearchProxy.labelsOptions(proxyUrl:String)
 
-  GET     /:index/_search/*proxyUrl         proxy.controllers.SearchProxy.proxySearch(index:String, proxyUrl:String)
-  POST    /:index/_search/*proxyUrl         proxy.controllers.SearchProxy.proxySearch(index:String, proxyUrl:String)
+  GET     /search/*indexWithProxyUrl      proxy.controllers.SearchProxy.proxySearch(indexWithProxyUrl:String)
+  POST    /search/*indexWithProxyUrl      proxy.controllers.SearchProxy.proxySearch(indexWithProxyUrl:String)
 
-  GET     /:index/*proxyUrl         proxy.controllers.SearchProxy.proxy(index:String, proxyUrl:String)
-  POST    /:index/*proxyUrl         proxy.controllers.SearchProxy.proxy(index:String, proxyUrl:String)
+  GET     /default/*indexWithProxyUrl         proxy.controllers.SearchProxy.proxy(indexWithProxyUrl:String)
+  POST    /default/*indexWithProxyUrl         proxy.controllers.SearchProxy.proxy(indexWithProxyUrl:String)
 
-  OPTIONS   /:index/*proxyUrl         proxy.controllers.SearchProxy.proxyOptions(index:String, proxyUrl:String)
+  OPTIONS   /search/:index/*proxyUrl         proxy.controllers.SearchProxy.proxyOptions(index:String, proxyUrl:String)
+  OPTIONS   /default/:index/*proxyUrl         proxy.controllers.SearchProxy.proxyOptions(index:String, proxyUrl:String)
 
 # Export service
   GET     /export                         proxy.controllers.ExportContainerController.exportContainer(container: String, filter: Option[String])
