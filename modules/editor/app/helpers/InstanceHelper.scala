@@ -21,7 +21,7 @@ package editor.helper
 import common.helpers.JsFlattener
 import common.models.NexusPath
 import editor.helpers.{FormHelper, NavigationHelper}
-import editor.models.{InMemoryKnowledge, IncomingLinksInstances, Instance}
+import editor.models.{InMemoryKnowledge, IncomingLinksInstances, Instance, ReleaseStatus}
 import authentication.models.UserInfo
 import nexus.helpers.NexusHelper
 import org.joda.time.DateTime
@@ -282,7 +282,7 @@ object InstanceHelper {
       val formattedId = NexusPath(pathString)
         .originalPath(reconciledSuffix)
         .toString() + "/" + id
-      Json.obj("id" -> formattedId, "description" -> description, "label" -> name)
+      Json.obj("id" -> formattedId, "description" -> description, "label" -> name, "status" -> ReleaseStatus.getRandomStatus(), "childrenStatus" -> ReleaseStatus.getRandomChildrenStatus())
     }
     Json.toJson(arr)
   }
@@ -293,7 +293,7 @@ object InstanceHelper {
     val description: JsString = if ((jsObject \ "http://schema.org/description").isDefined) {
       (jsObject \ "http://schema.org/description").as[JsString]
     } else { JsString("") }
-    Json.obj("id" -> Instance.getIdForEditor(id, reconciledSuffix), "description" -> description, "label" -> name)
+    Json.obj("id" -> Instance.getIdForEditor(id, reconciledSuffix), "description" -> description, "label" -> name, "status" -> ReleaseStatus.getRandomStatus(), "childrenStatus" -> ReleaseStatus.getRandomChildrenStatus())
   }
 
   def toReconcileFormat(jsValue: JsValue, privateSpace: String): JsObject = {

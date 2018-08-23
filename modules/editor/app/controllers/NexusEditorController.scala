@@ -25,7 +25,7 @@ import common.models.NexusPath
 import editor.actions.EditorUserAction
 import editor.helper.InstanceHelper
 import editor.helpers.{EditorSpaceHelper, FormHelper, NavigationHelper, NodeTypeHelper}
-import editor.models.{EditorUserRequest, InMemoryKnowledge, IncomingLinksInstances, Instance}
+import editor.models._
 import authentication.helpers.OIDCHelper
 import helpers.ReconciledInstanceHelper
 import javax.inject.{Inject, Singleton}
@@ -160,7 +160,8 @@ class NexusEditorController @Inject()(
               NavigationHelper.errorMessageWithBackLink("Form not implemented", NavigationHelper.generateBackLink(nexusPath, reconciledPrefix))
             )
           case instanceForm =>
-            Ok(NavigationHelper.resultWithBackLink(instanceForm.as[JsObject], nexusPath, reconciledPrefix))
+            val i = instanceForm.as[JsObject] + ("status" -> ReleaseStatus.getRandomStatus()) + ("childrenStatus" -> ReleaseStatus.getRandomChildrenStatus())
+            Ok(NavigationHelper.resultWithBackLink(i, nexusPath, reconciledPrefix))
         }
     }
   }
