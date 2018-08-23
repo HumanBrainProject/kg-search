@@ -485,6 +485,64 @@ class NexusEditorController @Inject()(
       Ok(form)
   }
 
+  def getReleaseDataStructure(org: String, domain: String, schema: String, version: String, id:String) = Action {
+    implicit request =>
+      val res = s"""
+          |{
+          |   "label": "My Dataset to be released",
+          |   "type": "Dataset",
+          |   "status": ${ReleaseStatus.getRandomStatus()},
+          |   "children": [
+          |     {
+          |         "linkType": ["activity"],
+          |         "label": "My Activity",
+          |         "type": "Activity",
+          |         "status": ${ReleaseStatus.getRandomStatus()},
+          |         "children": []
+          |     },
+          |     {
+          |         "linkType": ["activity"],
+          |         "label": "My 2nd Activity ",
+          |         "type": "Activity",
+          |         "status": ${ReleaseStatus.getRandomStatus()},
+          |         "children": [
+          |             {
+          |                 "linkType": ["specimenGroup"],
+                  |         "label": "My SpecimenGroup" ,
+                  |         "type": "SpecimenGroup",
+                  |         "status": ${ReleaseStatus.getRandomStatus()},
+                  |         "children": [
+          |                   {
+                  |
+            |                   "linkType": "Subject",
+            |                   "label": "My Subject",
+            |                   "type": "Subject",
+            |                   "status": ${ReleaseStatus.getRandomStatus()},
+            |                   "children": []
+            |                   }
+          |                 ]
+                  |     }
+          |         ]
+          |     },
+          |     {
+          |       "linkType": ["owner",  "contributor"],
+        |         "label": "John Doe",
+        |         "type": "Person",
+        |         "status": ${ReleaseStatus.getRandomStatus()},
+        |         "children": []
+          |     },
+          |     {
+          |       "linkType": ["contributor"],
+          |         "label": "Jane Doe",
+          |         "type": "Person",
+          |         "status": ${ReleaseStatus.getRandomStatus()},
+          |         "children": []
+          |     }
+          |   ]
+          |}
+        """.stripMargin
+      Ok(Json.parse(res))
+  }
 
   // TODO Check for authentication and groups as for now everybody could see the whole graph
   def listWithBlazeGraph(privateSpace: String): Action[AnyContent] = Action.async { implicit request =>
