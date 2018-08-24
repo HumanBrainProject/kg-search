@@ -89,90 +89,97 @@ export default class SearchManager {
     this.searchkit.setQueryProcessor(queryProcessorFunction);
   }
   handleStateChange() {
-    setTimeout(() => {
-      const state = store.getState();
+    //setTimeout(() => {
+    const state = store.getState();
 
-      if (state.configuration.isReady && !state.search.isReady) {
-        this.initializeSearchKit(state.configuration);
-        dispatch(actions.setSearchReady(true));
-        return;
-      }
+    if (state.configuration.isReady && !state.search.isReady) {
+      this.initializeSearchKit(state.configuration);
+      dispatch(actions.setSearchReady(true));
+      return;
+    }
 
-      if (state.search.hasRequest) {
-        this.reloadSearch();
-      }
-      if (state.definition.hasRequest) {
-        this.loadDefinition();
-      }
-      if (state.indexes.hasRequest) {
-        this.loadIndexes();
-      }
-      if (state.hits.hasRequest) {
-        this.loadInstance(state.hits.nextHitReference);
-      }
-    });
+    if (state.search.hasRequest) {
+      this.reloadSearch();
+    }
+    if (state.definition.hasRequest) {
+      this.loadDefinition();
+    }
+    if (state.indexes.hasRequest) {
+      this.loadIndexes();
+    }
+    if (state.hits.hasRequest) {
+      this.loadInstance(state.hits.nextHitReference);
+    }
+    //});
   }
   loadDefinition() {
     const state = store.getState();
     if (!state.definition.isReady && !state.definition.isLoading) {
       dispatch(actions.loadDefinitionRequest());
-      API.fetch(API.endpoints.definition(state.configuration.searchApiHost))
-        .then(definition => {
-          dispatch(actions.loadDefinitionSuccess(definition));
-        })
-        .catch(error => {
-          dispatch(actions.loadDefinitionFailure(error));
-        });
+      setTimeout(() => {
+        API.fetch(API.endpoints.definition(state.configuration.searchApiHost))
+          .then(definition => {
+            dispatch(actions.loadDefinitionSuccess(definition));
+          })
+          .catch(error => {
+            dispatch(actions.loadDefinitionFailure(error));
+          });
+      });
     }
   }
   loadIndexes() {
     const state = store.getState();
     if (!state.indexes.isReady && !state.indexes.isLoading) {
-      if (state.auth.accessToken) {
-        const options = {
-          method: "get",
-          headers: new Headers({
-            "Authorization": "Bearer " + state.auth.accessToken
-          })
-        };
-        dispatch(actions.loadIndexesRequest());
-        API.fetch(API.endpoints.indexes(state.configuration.searchApiHost), options)
-          .then(indexes => {
-            dispatch(actions.loadIndexesSuccess(indexes));
-          })
-          .catch(error => {
-            dispatch(actions.loadIndexesFailure(error));
-          });
-      } else {
-        dispatch(actions.loadIndexesSuccess([]));
-      }
+      dispatch(actions.loadIndexesRequest());
+      setTimeout(() => {
+        if (state.auth.accessToken) {
+          const options = {
+            method: "get",
+            headers: new Headers({
+              "Authorization": "Bearer " + state.auth.accessToken
+            })
+          };
+          API.fetch(API.endpoints.indexes(state.configuration.searchApiHost), options)
+            .then(indexes => {
+              dispatch(actions.loadIndexesSuccess(indexes));
+            })
+            .catch(error => {
+              dispatch(actions.loadIndexesFailure(error));
+            });
+        } else {
+          dispatch(actions.loadIndexesSuccess([]));
+        }
+      });
     }
   }
   loadInstance(id) {
+    //window.console.debug("SearchManager loadInstance: " + id);
     const state = store.getState();
     if (!state.hits.isLoading) {
-      let options = null;
-      if (state.auth.accessToken) {
-        options = {
-          method: "get",
-          headers: new Headers({
-            "Authorization": "Bearer " + state.auth.accessToken,
-            "index-hint": state.search.index
-          })
-        };
-      }
       dispatch(actions.loadHitRequest());
-      API.fetch(API.endpoints.instance(state.configuration.searchApiHost, id), options)
-        .then(data => {
-          if (data.found) {
-            dispatch(actions.loadHitSuccess(data));
-          } else {
-            dispatch(actions.loadHitNoData(id));
-          }
-        })
-        .catch(error => {
-          dispatch(actions.loadHitFailure(error));
-        });
+      setTimeout(() => {
+        let options = null;
+        if (state.auth.accessToken) {
+          options = {
+            method: "get",
+            headers: new Headers({
+              "Authorization": "Bearer " + state.auth.accessToken,
+              "index-hint": state.search.index
+            })
+          };
+        }
+        API.fetch(API.endpoints.instance(state.configuration.searchApiHost, id), options)
+          .then(data => {
+            if (data.found) {
+              dispatch(actions.loadHitSuccess(data));
+            } else {
+              dispatch(actions.loadHitNoData(id));
+            }
+          })
+          .catch(error => {
+            dispatch(actions.loadHitFailure(id, error));
+          });
+      });
     }
   }
   reloadSearch() {

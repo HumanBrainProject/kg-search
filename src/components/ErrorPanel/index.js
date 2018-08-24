@@ -14,64 +14,47 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
-import { store, dispatch } from "../../store";
+import React from "react";
+import { dispatch } from "../../store";
+import { withStoreStateSubscription} from "../withStoreStateSubscription";
 import "./styles.css";
 
-export class ErrorPanel extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = this.getState();
+const ErrorPanelComponent = ({show, message, retryLabel, retryAction, cancelLabel, cancelAction}) => {
+  if (!show) {
+    return null;
   }
-  getState() {
-    const globalState = store.getState();
-    return {
-      show: globalState.error && globalState.error.message,
-      message: globalState.error && globalState.error.message,
-      retryLabel: globalState.error && globalState.error.retry && globalState.error.retry.label,
-      retryAction: globalState.error && globalState.error.retry && globalState.error.retry.action,
-      cancelLabel: globalState.error && globalState.error.cancel && globalState.error.cancel.label,
-      cancelAction: globalState.error && globalState.error.cancel && globalState.error.cancel.action,
-    };
-  }
-  handleStateChange() {
-    setTimeout(() => {
-      const nextState = this.getState();
-      this.setState(nextState);
+  const onRetry = () => {
+    dispatch({
+      type: retryAction
     });
-  }
-  componentDidMount() {
-    document.addEventListener("state", this.handleStateChange.bind(this), false);
-    this.handleStateChange();
-  }
-  componentWillUnmount() {
-    document.removeEventListener("state", this.handleStateChange);
-  }
-  render() {
-    if (!this.state.show) {
-      return null;
-    }
-    const onRetry = () => {
-      dispatch({
-        type: this.state.retryAction
-      });
-    };
-    const onCancel = () => {
-      dispatch({
-        type: this.state.cancelAction
-      });
-    };
-    //window.console.debug("ErrorPanel rendering...");
-    return (
-      <div className="kgs-error-container">
-        <div className="kgs-error-panel">
-          <span className="kgs-error-message">{this.state.message}</span>
-          <div className="kgs-error-navigation">
-            <button onClick={onRetry} data-show={!!this.state.retryLabel}>{this.state.retryLabel}</button>
-            <button onClick={onCancel} data-show={!!this.state.cancelLabel}>{this.state.cancelLabel}</button>
-          </div>
+  };
+  const onCancel = () => {
+    dispatch({
+      type: cancelAction
+    });
+  };
+  //window.console.debug("ErrorPanel rendering...");
+  return (
+    <div className="kgs-error-container">
+      <div className="kgs-error-panel">
+        <span className="kgs-error-message">{message}</span>
+        <div className="kgs-error-navigation">
+          <button onClick={onRetry} data-show={!!retryLabel}>{retryLabel}</button>
+          <button onClick={onCancel} data-show={!!cancelLabel}>{cancelLabel}</button>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export const ErrorPanel = withStoreStateSubscription(
+  ErrorPanelComponent,
+  data => ({
+    show: data.error && data.error.message,
+    message: data.error && data.error.message,
+    retryLabel: data.error && data.error.retry && data.error.retry.label,
+    retryAction: data.error && data.error.retry && data.error.retry.action,
+    cancelLabel: data.error && data.error.cancel && data.error.cancel.label,
+    cancelAction: data.error && data.error.cancel && data.error.cancel.action,
+  })
+);

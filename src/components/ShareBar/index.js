@@ -16,7 +16,7 @@
 
 import React from "react";
 import { CopyToClipboardButton } from "./components/CopyToClipboardButton";
-import { EmailToLinkContainer } from "./components/EmailToLink";
+import { EmailToLink} from "./components/EmailToLink";
 import "./styles.css";
 
 export function ShareBar() {
@@ -24,7 +24,7 @@ export function ShareBar() {
     <span className="kgs-share-links">
       <span className="kgs-share-links-panel">
         <CopyToClipboardButton icon="fa fa-clipboard" title="Copy search link to clipboard" />
-        <EmailToLinkContainer icon="fa fa-envelope-o" title="Send search link by email" />
+        <EmailToLink icon="fa fa-envelope-o" title="Send search link by email" />
       </span>
     </span>
   );

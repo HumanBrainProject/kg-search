@@ -14,10 +14,11 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
+import React from "react";
 import { SearchkitComponent, Hits } from "searchkit";
-import { store, dispatch } from "../../../../store";
+import { dispatch } from "../../../../store";
 import * as actions from "../../../../actions";
+import { withStoreStateSubscription} from "../../../withStoreStateSubscription";
 import { Shape } from "../../../Shape";
 import { StatsHelpers } from "../../../../Helpers/StatsHelpers";
 import "./styles.css";
@@ -105,65 +106,47 @@ class SummaryList extends SearchkitComponent {
   }
 }
 
-export class ResultsPanel extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = this.getState();
-  }
-  getState() {
-    const globalState = store.getState();
-    return {
-      gridLayoutMode: globalState.application.gridLayoutMode,
-      hitsPerPage: globalState.configuration.hitsPerPage
-    };
-  }
-  handleStateChange() {
-    setTimeout(() => {
-      const nextState = this.getState();
-      this.setState(nextState);
-    });
-  }
-  componentDidMount() {
-    document.addEventListener("state", this.handleStateChange.bind(this), false);
-    this.handleStateChange();
-  }
-  componentWillUnmount() {
-    document.removeEventListener("state", this.handleStateChange);
-  }
-  render() {
-    //window.console.debug("ResultsPanel rendering...");
+const ResultsPanelComponent = ({gridLayoutMode, hitsPerPage}) => {
+  //window.console.debug("ResultsPanel rendering...");
 
-    /*
-    const highlights = {};
-    globalState.definition.queryFields.forEach(field => {
-      highlights[field.replace(/^(.*?)\^.*$/g,"$1")] = {};
-    });
-    */
-    const highlights = {
-      "fields": {
-        "title.value": {},
-        "description.value": {},
-        "contributors.value": {},
-        "owners.value": {},
-        "component.value": {},
-        "created_at.value": {},
-        "releasedate.value": {},
-        "activities.value": {}
-      },
-      "encoder": "html"
-    };
+  const highlights = {
+    "fields": {
+      "title.value": {},
+      "description.value": {},
+      "contributors.value": {},
+      "owners.value": {},
+      "component.value": {},
+      "created_at.value": {},
+      "releasedate.value": {},
+      "activities.value": {}
+    },
+    "encoder": "html"
+  };
 
-    /*
-    <NoHits translations={{
-            "NoHits.NoResultsFound":"No results were found for {query}",
-            "NoHits.DidYouMean":"Search for {suggestion}",
-            "NoHits.SearchWithoutFilters":"Search for {query} without filters"
-          }} suggestionsField="all"/>
-    */
-    return (
-      <span className={`kgs-result-layout ${this.state.gridLayoutMode?"is-grid":"is-list"}`}>
-        <Hits customHighlight={highlights} hitsPerPage={this.state.hitsPerPage} listComponent={SummaryList} scrollTo="body" />
-      </span>
-    );
-  }
-}
+  /*
+  <NoHits translations={{
+          "NoHits.NoResultsFound":"No results were found for {query}",
+          "NoHits.DidYouMean":"Search for {suggestion}",
+          "NoHits.SearchWithoutFilters":"Search for {query} without filters"
+        }} suggestionsField="all"/>
+  */
+  return (
+    <span className={`kgs-result-layout ${gridLayoutMode?"is-grid":"is-list"}`}>
+      <Hits customHighlight={highlights} hitsPerPage={hitsPerPage} listComponent={SummaryList} scrollTo="body" />
+    </span>
+  );
+};
+
+/*
+const highlights = {};
+data.definition.queryFields.forEach(field => {
+  highlights[field.replace(/^(.*?)\^.*$/g,"$1")] = {};
+});
+*/
+export const ResultsPanel = withStoreStateSubscription(
+  ResultsPanelComponent,
+  data => ({
+    gridLayoutMode: data.application.gridLayoutMode,
+    hitsPerPage: data.configuration.hitsPerPage
+  })
+);

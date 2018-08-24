@@ -14,49 +14,32 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
-import { store, dispatch } from "../../../../store";
+import React from "react";
+import { dispatch } from "../../../../store";
 import * as actions from "../../../../actions";
+import { withStoreStateSubscription} from "../../../withStoreStateSubscription";
 import { Select } from "../../../Select";
 import "./styles.css";
 
-export class GroupSelectionPanel extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = this.getState();
+const GroupSelectionPanelComponent = ({value, list}) => {
+  const handleChange = newValue => {
+    //window.console.debug("new group: " + newValue);
+    dispatch(actions.setIndex(newValue));
+  };
+  if (list.length <= 1) {
+    return null;
   }
-  getState() {
-    const globalState = store.getState();
-    return {
-      group: globalState.search.index,
-      groups: globalState.indexes.indexes?globalState.indexes.indexes:[]
-    };
-  }
-  handleStateChange() {
-    setTimeout(() => {
-      const nextState = this.getState();
-      this.setState(nextState);
-    });
-  }
-  componentDidMount() {
-    document.addEventListener("state", this.handleStateChange.bind(this), false);
-    this.handleStateChange();
-  }
-  componentWillUnmount() {
-    document.removeEventListener("state", this.handleStateChange);
-  }
-  render() {
-    const handleGroupChange = group => {
-      //window.console.debug("new group: " + group);
-      dispatch(actions.setIndex(group));
-    };
-    if (this.state.groups.length <= 1) {
-      return null;
-    }
-    return (
-      <div className="kgs-group-selection">
-        <Select label="Group" value={this.state.group} list={this.state.groups} onChange={handleGroupChange} />
-      </div>
-    );
-  }
-}
+  return (
+    <div className="kgs-group-selection">
+      <Select label="Group" value={value} list={list} onChange={handleChange} />
+    </div>
+  );
+};
+
+export const GroupSelectionPanel = withStoreStateSubscription(
+  GroupSelectionPanelComponent,
+  data => ({
+    value: data.search.index,
+    list: data.indexes.indexes?data.indexes.indexes:[]
+  })
+);

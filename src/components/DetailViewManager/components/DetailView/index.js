@@ -27,29 +27,30 @@ export class DetailView extends Component {
       tabAbles: []
     };
   }
-  UNSAFE_componentWillUpdate() {
-    this.componentContext.tabAbles.forEach(e => {
-      if (e.tabIndex >= 0) {
-        e.node.setAttribute("tabIndex", e.tabIndex);
-      } else {
-        e.node.removeAttribute("tabIndex");
-      }
-    });
-  }
   componentDidUpdate() {
     if (!isMobile) {
-      //window.console.debug(new Date().toLocaleTimeString() + ": view=" + this.props.viewId + ", tabs active=" + this.props.isActive);
+      //window.console.debug(new Date().toLocaleTimeString() + ": view=" + this.props.viewId + ", tabs active=" + this.props.isActive + " did update");
       if (!this.props.isActive) {
         const rootNode = document.body.querySelector(".kgs-detailView[data-viewId=\"" + this.props.viewId + "\"]");
-        this.componentContext.tabAbles = Object.values(rootNode.querySelectorAll(tabAblesSelectors.join(",")))
+        const tabAbles = rootNode?rootNode.querySelectorAll(tabAblesSelectors.join(",")):[];
+        this.componentContext.tabAbles = Object.values(tabAbles)
           .map(node => ({node: node, tabIndex: node.tabIndex}));
         this.componentContext.tabAbles
           .forEach(e => e.node.setAttribute("tabIndex", -1));
+      } else {
+        this.componentContext.tabAbles.forEach(e => {
+          if (e.tabIndex >= 0) {
+            e.node.setAttribute("tabIndex", e.tabIndex);
+          } else {
+            e.node.removeAttribute("tabIndex");
+          }
+        });
       }
     }
   }
   render() {
     const {viewId, data, onPreviousClick, onCloseClick} = this.props;
+    //window.console.debug(new Date().toLocaleTimeString() + " DetailView: view=" + this.props.viewId + ", tabs active=" + this.props.isActive + " rendering...");
     return (
       <div className="kgs-detailView" data-type={data && data._type} data-viewId={viewId} >
         {data && <div className="kgs-detailView__outerPanel">

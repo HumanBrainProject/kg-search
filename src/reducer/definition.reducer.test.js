@@ -27,7 +27,7 @@ describe('confirguration reducer', () => {
     });
     describe('load definition', () => {
         it('should set has request to true', () => {
-            const state = null;
+            const state = undefined;
             const action = actions.loadDefinition();
             const newState = definitionReducer(state, action);
             expect(newState.hasRequest).toBe(true);
@@ -35,7 +35,7 @@ describe('confirguration reducer', () => {
     });
     describe('load definition success', () => {
         it('should set current definition', () => {
-            const state = null
+            const state = undefined;
             const definition = {};
             const action = actions.loadDefinitionSuccess(definition);
             const newState = definitionReducer(state, action);

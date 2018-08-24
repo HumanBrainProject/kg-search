@@ -14,15 +14,19 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
-import { store, dispatch } from "../../store";
+import React from "react";
+import { dispatch } from "../../store";
 import * as actions from "../../actions";
+import { withStoreStateSubscription} from "../withStoreStateSubscription";
 import "./styles.css";
 
-const TermsShortNoticeComponent = ({show, onAgree}) => {
+const TermsShortNoticeComponent = ({show}) => {
   if (!show) {
     return null;
   }
+  const onAgree = () => {
+    dispatch(actions.agreeTermsShortNotice());
+  };
   return (
     <span className="terms-short-notice">
       <span className="terms-short-notice-content">
@@ -37,36 +41,9 @@ const TermsShortNoticeComponent = ({show, onAgree}) => {
   );
 };
 
-export class TermsShortNotice extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = this.getState();
-  }
-  getState() {
-    const globalState = store.getState();
-    return {
-      show: globalState.application.showTermsShortNotice
-    };
-  }
-  handleStateChange() {
-    setTimeout(() => {
-      const nextState = this.getState();
-      this.setState(nextState);
-    });
-  }
-  componentDidMount() {
-    document.addEventListener("state", this.handleStateChange.bind(this), false);
-    this.handleStateChange();
-  }
-  componentWillUnmount() {
-    document.removeEventListener("state", this.handleStateChange);
-  }
-  agreeTermsShortNotice() {
-    dispatch(actions.agreeTermsShortNotice());
-  }
-  render() {
-    return (
-      <TermsShortNoticeComponent show={this.state.show} onAgree={this.agreeTermsShortNotice} />
-    );
-  }
-}
+export const TermsShortNotice = withStoreStateSubscription(
+  TermsShortNoticeComponent,
+  data => ({
+    show: data.application.showTermsShortNotice
+  })
+);

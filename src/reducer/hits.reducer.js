@@ -19,25 +19,28 @@ import * as types from "../actions.types";
 const initialState = {
   hasRequest: false,
   isLoading: false,
-  hasError: false,
+  loadingReference: null,
   currentHit: null,
   previousHits: [],
   nextHitReference: null
 };
 
 const loadHit = (state, action) => {
+  const reference = action.reference || state.loadingReference;
   return Object.assign({}, state, {
-    hasRequest: !!action.reference,
+    hasRequest: !!reference,
     isLoading: false,
-    hasError: false,
-    nextHitReference: action.reference
+    loadingReference: null,
+    nextHitReference: reference
   });
 };
 
 const loadHitRequest = state => {
   return Object.assign({}, state, {
     hasRequest: false,
-    isLoading: true
+    isLoading: true,
+    loadingReference: state.nextHitReference,
+    nextHitReference: null
   });
 };
 
@@ -47,9 +50,16 @@ const loadHitSuccess = (state, action) => {
   return Object.assign({}, state, {
     hasRequest: false,
     isLoading: false,
+    loadingReference: null,
     currentHit: action.data,
-    previousHits: previousHits,
-    nextHitReference: null
+    previousHits: previousHits
+  });
+};
+
+const loadHitFailure = state => {
+  return Object.assign({}, state, {
+    hasRequest: false,
+    isLoading: false
   });
 };
 
@@ -57,7 +67,7 @@ const cancelHitLoading = state => {
   return Object.assign({}, state, {
     hasRequest: false,
     isLoading: false,
-    hasError: false,
+    loadingReference: null,
     nextHitReference: null
   });
 };
@@ -71,7 +81,6 @@ const setHit = (state, action) => {
   return Object.assign({}, state, {
     hasRequest: false,
     isLoading: false,
-    hasError: false,
     currentHit: action.data,
     previousHits: previousHits,
     nextHitReference: null
@@ -85,7 +94,6 @@ const setPreviousHit = state => {
     return Object.assign({}, state, {
       hasRequest: false,
       isLoading: false,
-      hasError: false,
       currentHit: currentHit,
       previousHits: previousHits,
       nextHitReference: null
@@ -99,7 +107,6 @@ const clearAllHits = state => {
   return Object.assign({}, state, {
     hasRequest: false,
     isLoading: false,
-    hasError: false,
     currentHit: null,
     previousHits: [],
     nextHitReference: null
@@ -121,7 +128,6 @@ const setCurrentHitFromBrowserLocation = state => {
     return Object.assign({}, state, {
       hasRequest: false,
       isLoading: false,
-      hasError: false,
       previousHits: [],
       currentHit: null
     });
@@ -157,7 +163,6 @@ const setCurrentHitFromBrowserLocation = state => {
   return Object.assign({}, state, {
     hasRequest: false,
     isLoading: false,
-    hasError: false,
     previousHits: [],
     currentHit: null
   });
@@ -171,6 +176,8 @@ export function reducer(state = initialState, action = {}) {
     return loadHitRequest(state, action);
   case types.LOAD_HIT_SUCCESS:
     return loadHitSuccess(state, action);
+  case types.LOAD_HIT_FAILURE:
+    return loadHitFailure(state, action);
   case types.CANCEL_HIT_LOADING:
     return cancelHitLoading(state, action);
   case types.SET_HIT:

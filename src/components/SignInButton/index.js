@@ -14,54 +14,33 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
-import { store, dispatch } from "../../store";
+import React from "react";
+import { dispatch } from "../../store";
 import * as actions from "../../actions";
+import { withStoreStateSubscription} from "../withStoreStateSubscription";
 import "./styles.css";
 
-export class SignInButton extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = this.getState();
-    this.buttonRef = null;
-    this.setButtonRef = element => {
-      this.buttonRef = element;
-    };
-  }
-  getState() {
-    const globalState = store.getState();
-    return {
-      isAuthenticated: globalState.auth.isAuthenticated
-    };
-  }
-  handleStateChange() {
-    setTimeout(() => {
-      const nextState = this.getState();
-      this.setState(nextState);
-    });
-  }
-  componentDidMount() {
-    document.addEventListener("state", this.handleStateChange.bind(this), false);
-    this.handleStateChange();
-  }
-  componentWillUnmount() {
-    document.removeEventListener("state", this.handleStateChange);
-  }
-  render() {
-    const login = () => {
-      dispatch(actions.requestAuthentication());
-    };
-    const logout = () => {
-      dispatch(actions.logout());
-    };
-    return (
-      <div className="kgs-sign-in">
-        {this.state.isAuthenticated?
-          <button onClick={logout}>Log out</button>
-          :
-          <button onClick={login}>Log in</button>
-        }
-      </div>
-    );
-  }
-}
+const SignInButtonComponent = ({isAuthenticated}) => {
+  const login = () => {
+    dispatch(actions.requestAuthentication());
+  };
+  const logout = () => {
+    dispatch(actions.logout());
+  };
+  return (
+    <div className="kgs-sign-in">
+      {isAuthenticated?
+        <button onClick={logout}>Log out</button>
+        :
+        <button onClick={login}>Log in</button>
+      }
+    </div>
+  );
+};
+
+export const SignInButton = withStoreStateSubscription(
+  SignInButtonComponent,
+  data => ({
+    isAuthenticated: data.auth.isAuthenticated
+  })
+);

@@ -14,6 +14,15 @@
 *   limitations under the License.
 */
 
+export const windowHeight = () => {
+  const w = window,
+    d = document,
+    e = d.documentElement,
+    g = d.getElementsByTagName("body")[0];
+  return w.innerHeight || e.clientHeight || g.clientHeight;
+  //return $(window).height();
+};
+
 export const isMobile = (navigator.userAgent.match(/Android/i)
                 || navigator.userAgent.match(/webOS/i)
                 || navigator.userAgent.match(/iPhone/i)

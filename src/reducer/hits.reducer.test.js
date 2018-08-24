@@ -35,7 +35,7 @@ describe('hits reducer', () => {
     });
     describe('load hit success', () => {
         it('should set current hit', () => {
-            const state = null;
+            const state = undefined;;
             const action = actions.loadHitSuccess(123);
             const newState = hitsReducer(state, action);
             expect(newState.currentHit).toBe(123);
@@ -69,7 +69,7 @@ describe('hits reducer', () => {
     });
     describe('set hit', () => {
         it('should set current hit', () => {
-            const state = null;
+            const state = undefined;;
             const action = actions.setHit(123);
             const newState = hitsReducer(state, action);
             expect(newState.currentHit).toBe(123);

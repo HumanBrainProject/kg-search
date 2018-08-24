@@ -27,3 +27,8 @@ export const generateKey = () => {
   }
   return key;
 };
+
+export const getAuthUrl = (host, clientId, stateKey, nonceKey) => {
+  const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+  return `${host}?response_type=id_token%20token&client_id=${clientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`;
+};
