@@ -18,29 +18,29 @@ import * as types from "../actions.types";
 
 const initialState = {
   hasRequest: false,
+  requestReference: null,
   isLoading: false,
   loadingReference: null,
   currentHit: null,
-  previousHits: [],
-  nextHitReference: null
+  previousHits: []
 };
 
 const loadHit = (state, action) => {
   const reference = action.reference || state.loadingReference;
   return Object.assign({}, state, {
     hasRequest: !!reference,
+    requestReference: reference,
     isLoading: false,
-    loadingReference: null,
-    nextHitReference: reference
+    loadingReference: null
   });
 };
 
 const loadHitRequest = state => {
   return Object.assign({}, state, {
     hasRequest: false,
+    requestReference: null,
     isLoading: true,
-    loadingReference: state.nextHitReference,
-    nextHitReference: null
+    loadingReference: state.requestReference
   });
 };
 
@@ -49,6 +49,7 @@ const loadHitSuccess = (state, action) => {
   previousHits = (state && state.currentHit)?[...previousHits,state.currentHit]:[...previousHits];
   return Object.assign({}, state, {
     hasRequest: false,
+    requestReference: null,
     isLoading: false,
     loadingReference: null,
     currentHit: action.data,
@@ -59,6 +60,7 @@ const loadHitSuccess = (state, action) => {
 const loadHitFailure = state => {
   return Object.assign({}, state, {
     hasRequest: false,
+    requestReference: null,
     isLoading: false
   });
 };
@@ -66,9 +68,9 @@ const loadHitFailure = state => {
 const cancelHitLoading = state => {
   return Object.assign({}, state, {
     hasRequest: false,
+    requestReference: null,
     isLoading: false,
-    loadingReference: null,
-    nextHitReference: null
+    loadingReference: null
   });
 };
 
@@ -80,10 +82,11 @@ const setHit = (state, action) => {
   previousHits = (state && state.currentHit)?[...previousHits,state.currentHit]:[...previousHits];
   return Object.assign({}, state, {
     hasRequest: false,
+    requestReference: null,
     isLoading: false,
+    loadingReference: null,
     currentHit: action.data,
-    previousHits: previousHits,
-    nextHitReference: null
+    previousHits: previousHits
   });
 };
 
@@ -93,10 +96,11 @@ const setPreviousHit = state => {
     const currentHit = previousHits.pop() || null;
     return Object.assign({}, state, {
       hasRequest: false,
+      requestReference: null,
       isLoading: false,
+      loadingReference: null,
       currentHit: currentHit,
-      previousHits: previousHits,
-      nextHitReference: null
+      previousHits: previousHits
     });
   }
 
@@ -106,10 +110,11 @@ const setPreviousHit = state => {
 const clearAllHits = state => {
   return Object.assign({}, state, {
     hasRequest: false,
+    requestReference: null,
     isLoading: false,
+    loadingReference: null,
     currentHit: null,
-    previousHits: [],
-    nextHitReference: null
+    previousHits: []
   });
 };
 
@@ -127,9 +132,11 @@ const setCurrentHitFromBrowserLocation = state => {
   if (!hitType || !hitId) {
     return Object.assign({}, state, {
       hasRequest: false,
+      requestReference: null,
       isLoading: false,
-      previousHits: [],
-      currentHit: null
+      loadingReference: null,
+      currentHit: null,
+      previousHits: []
     });
   }
 
@@ -141,8 +148,12 @@ const setCurrentHitFromBrowserLocation = state => {
   // no previous hits available, unset current hit
   if (!state || !state.previousHits.length) {
     return Object.assign({}, state, {
-      previousHits: [],
-      currentHit: null
+      hasRequest: false,
+      requestReference: null,
+      isLoading: false,
+      loadingReference: null,
+      currentHit: null,
+      previousHits: []
     });
   }
 
@@ -154,17 +165,21 @@ const setCurrentHitFromBrowserLocation = state => {
   if (hit && hit._type === hitType && hit._id === hitId) {
     return Object.assign({}, state, {
       hasRequest: false,
+      requestReference: null,
       isLoading: false,
-      previousHits: previousHits,
-      currentHit: hit
+      loadingReference: null,
+      currentHit: hit,
+      previousHits: previousHits
     });
   }
 
   return Object.assign({}, state, {
     hasRequest: false,
+    requestReference: null,
     isLoading: false,
-    previousHits: [],
-    currentHit: null
+    loadingReference: null,
+    currentHit: null,
+    previousHits: []
   });
 };
 

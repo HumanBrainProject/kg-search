@@ -108,7 +108,7 @@ export default class SearchManager {
       this.loadIndexes();
     }
     if (state.hits.hasRequest) {
-      this.loadInstance(state.hits.nextHitReference);
+      this.loadInstance(state.hits.requestReference);
     }
     //});
   }
