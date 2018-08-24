@@ -1,4 +1,3 @@
-
 /*
 *   Copyright (c) 2018, EPFL/Human Brain Project PCO
 *
@@ -14,18 +13,15 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package data_import.models.excel_import
-
-import CommonVars._
+package models.excel_import
 
 
-case class SpecimenGroup(id: String, subjects: Seq[Subject]) {
+/*
+ * This class represent a node in a graph of linked Entities, used 1 step insertion
+ */
+case class GraphNode (entity: Entity, children: Seq[GraphNode] = Seq.empty[GraphNode]){
 
-  // retrieve species from first subject species
-  val globalSpecies = speciesMapping(subjects.head.details(speciesLabel).head)
-  def toJsonString() = {
-    val subjectsContent = subjects.map(_.toJsonString()).mkString(jsonSeparator)
-    val innerSubjectsContent = Formatter.getJsonStringFromKV(subjectsLabel, Seq(globalSpecies), Some(subjectsContent))
-    Formatter.getJsonStringFromKV(specimenGroupLabel, Seq(id), Some(innerSubjectsContent))
+  def addChild(newChild: GraphNode): GraphNode = {
+    this.copy(children= children :+ newChild)
   }
 }

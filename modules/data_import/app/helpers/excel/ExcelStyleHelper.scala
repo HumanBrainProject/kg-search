@@ -1,4 +1,3 @@
-
 /*
 *   Copyright (c) 2018, EPFL/Human Brain Project PCO
 *
@@ -14,18 +13,23 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package data_import.models.excel_import
+package data_import.helpers.excel
 
-import CommonVars._
+import org.apache.poi.ss.usermodel.{BorderStyle, FillPatternType}
+import org.apache.poi.xssf.usermodel.{XSSFCellStyle, XSSFColor}
 
 
-case class SpecimenGroup(id: String, subjects: Seq[Subject]) {
+object ExcelStyleHelper {
 
-  // retrieve species from first subject species
-  val globalSpecies = speciesMapping(subjects.head.details(speciesLabel).head)
-  def toJsonString() = {
-    val subjectsContent = subjects.map(_.toJsonString()).mkString(jsonSeparator)
-    val innerSubjectsContent = Formatter.getJsonStringFromKV(subjectsLabel, Seq(globalSpecies), Some(subjectsContent))
-    Formatter.getJsonStringFromKV(specimenGroupLabel, Seq(id), Some(innerSubjectsContent))
+  def setAllThinBorders(cellStyle: XSSFCellStyle): Unit = {
+    cellStyle.setBorderBottom(BorderStyle.THIN)
+    cellStyle.setBorderLeft(BorderStyle.THIN)
+    cellStyle.setBorderTop(BorderStyle.THIN)
+    cellStyle.setBorderRight(BorderStyle.THIN)
+  }
+
+  def setCellColor(cellStyle: XSSFCellStyle, color: XSSFColor): Unit = {
+    cellStyle.setFillForegroundColor(color)
+    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND)
   }
 }
