@@ -97,7 +97,9 @@ export class ValueField extends Component {
               <span className={"collapse" + (this.state.showMore[mapping.value]?" in":"")}>
                 {valueTag}
               </span>
-              {!this.state.showMore[mapping.value] && <button onClick={() => this.showMore(mapping.value)}>more...</button>}
+              {!this.state.showMore[mapping.value] && (
+                <button onClick={() => this.showMore(mapping.value)}>more...</button>
+              )}
             </span>;
           }
           if(mapping && mapping.tag_icon){

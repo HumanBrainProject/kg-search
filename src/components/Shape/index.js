@@ -181,9 +181,9 @@ export function Shape({detailViewMode, data}) {
   }
 
   return (
-    <div className={"kgs-shape__panel"} >
-      <div className={"kgs-shape__field kgs-shape__header"}>
-        <div className={"kgs-shape__field kgs-shape__icon"}>
+    <div className="kgs-shape" data-type={data && data._type}>
+      <div className="kgs-shape__field kgs-shape__header">
+        <div className="kgs-shape__field kgs-shape__icon">
           {iconTag}
         </div>
         {fieldsTag}

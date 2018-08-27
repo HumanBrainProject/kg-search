@@ -20,7 +20,7 @@ import { withStoreStateSubscription} from "./components/withStoreStateSubscripti
 import { withTabKeyNavigation } from "./components/withTabKeyNavigation";
 import { SearchkitProvider } from "searchkit";
 import { MasterView } from "./components/MasterView";
-import { DetailViewManager } from "./components/DetailViewManager";
+import { DetailView } from "./components/DetailView";
 import { TermsShortNotice } from "./components/TermsShortNotice";
 import { FetchingPanel } from "./components/FetchingPanel";
 import { ErrorPanel } from "./components/ErrorPanel";
@@ -39,7 +39,7 @@ const ViewsComponent = ({show, manager}) => {
       <SearchkitProvider searchkit={manager.searchkit}>
         <MasterView />
       </SearchkitProvider>
-      <DetailViewManager/>
+      <DetailView/>
     </span>
   );
 };
@@ -48,7 +48,7 @@ const ViewsWithTabKeyNavigation = withTabKeyNavigation(
   ViewsComponent,
   data => !data.hits.currentHit,
   null,
-  ".kgs-masterView"
+  ".kgs-app"
 );
 
 const Views = withStoreStateSubscription(
