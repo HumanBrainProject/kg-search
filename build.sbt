@@ -34,11 +34,6 @@ lazy val kg_service = (project in file("."))
 
 Common.settings
 
-// Adds additional packages into Twirl
-// TwirlKeys.templateImports += "eu.humanbrainproject.controllers._"
-
-// Adds additional packages into conf/routes
-// play.sbt.routes.RoutesKeys.routesImport += "eu.humanbrainproject.binders._"
 sources in (Compile, doc) := Seq.empty
 
 publishArtifact in (Compile, packageDoc) := false

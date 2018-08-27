@@ -1,4 +1,3 @@
-
 /*
 *   Copyright (c) 2018, EPFL/Human Brain Project PCO
 *
@@ -19,24 +18,23 @@ package proxy.controllers
 
 import akka.stream.Materializer
 import akka.util.ByteString
-import common.helpers.{ESHelper, ResponseHelper}
+import authentication.service.OIDCAuthService
 import authentication.helpers.OIDCHelper
-import play.api.{Configuration, Logger}
+import common.helpers.{ESHelper, ResponseHelper}
 import javax.inject.{Inject, Singleton}
-import authentication.models.UserInfo
 import play.api.http.HttpEntity
 import play.api.libs.json._
-import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
+import play.api.libs.ws.{WSClient, WSRequest}
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, PlayBodyParsers, RawBuffer, Request, ResponseHeader, Result}
 import play.api.{Configuration, Logger}
 import proxy.services.ProxyService
 import proxy.utils.JsonHandler
-import authentication.service.OIDCAuthService
-
 import scala.concurrent.{ExecutionContext, Future}
-import scala.concurrent.duration._
+
+
 @Singleton
-class SearchProxy @Inject()(
+class SearchProxy @Inject()
+(
                              cc: ControllerComponents,
                              playBodyParsers: PlayBodyParsers,
                              mat: Materializer,
@@ -47,7 +45,6 @@ class SearchProxy @Inject()(
   val es_host = config.get[String]("es.host")
 
   val logger: Logger = Logger(this.getClass)
-
 
   def proxy(index: String, proxyUrl: String): Action[RawBuffer] = Action.async(playBodyParsers.raw) {
     implicit request =>
@@ -92,6 +89,7 @@ class SearchProxy @Inject()(
         )
       }
   }
+
 
   def proxySearch(index: String, proxyUrl: String): Action[RawBuffer] = Action.async(playBodyParsers.raw) { implicit request =>
     logger.debug(s"smartproxy query - Index: $index, proxy: $proxyUrl")
@@ -216,7 +214,6 @@ object SearchProxy {
       case e: Exception =>
         logger.info(s"Exception in json response update. Error:\n${e.getMessage}\nInput is used:\n${jsonSrc.toString}")
         jsonSrc
-
     }
   }
 }
