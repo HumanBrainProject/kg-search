@@ -1,3 +1,45 @@
 
+###
+#  summary: create a private space
+#  parameters:
+#  - name: Authorization
+#    in: header
+#    description: Authorization token
+#    required: false
+#    type: string
+###
 POST   /privatespace                                            nexus.controllers.NexusCommonController.createPrivateSpace()
-POST   /schema/:organization/:domain/:entityType/:version   nexus.controllers.NexusCommonController.createSchema(organization: String, domain: String, entityType: String, version: String)
+
+
+###
+#  summary: create a schema where http://schema.org/identifier only is mandatory
+#  tags:
+#    - nexus
+#  parameters:
+#  - name: organization
+#    in: path
+#    description: organization of schema to create
+#    required: true
+#    type: string
+#  - name: domain
+#    in: path
+#    description: domain of schema to create
+#    required: true
+#    type: string
+#  - name: schema
+#    in: path
+#    description: schema name
+#    required: true
+#    type: string
+#  - name: version
+#    in: path
+#    description: version of schema to create
+#    required: true
+#    type: string
+#  - name: Authorization
+#    in: header
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+POST   /schema/:organization/:domain/:schema/:version   nexus.controllers.NexusCommonController.createSchema(organization: String, domain: String, schema: String, version: String)

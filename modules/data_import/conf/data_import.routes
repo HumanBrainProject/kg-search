@@ -1,2 +1,20 @@
+###
+#  summary: create a private space
+#  parameters:
+#  - name: Authorization
+#    in: header
+#    description: Authorization token
+#    required: false
+#    type: string
+###
 POST    /dataworkbench/extractDataFromExcel           controllers.ExcelImportController.extractMindsDataFromExcel(action: Option[String])
+###
+#  summary: create a private space
+#  parameters:
+#  - name: Authorization
+#    in: header
+#    description: Authorization token
+#    required: false
+#    type: string
+###
 POST    /extract/uniminds                             controllers.ExcelImportController.extractUnimindsDataFromExcel(action: Option[String])

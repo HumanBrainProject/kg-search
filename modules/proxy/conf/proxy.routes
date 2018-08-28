@@ -2,10 +2,46 @@
   GET     /kg_labels/*proxyUrl      proxy.controllers.SearchProxy.labels(proxyUrl:String)
   OPTIONS /kg_labels/*proxyUrl      proxy.controllers.SearchProxy.labelsOptions(proxyUrl:String)
 
+  ###
+  #  summary: create a private space
+  #  parameters:
+  #  - name: Authorization
+  #    in: header
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  ###
   GET     /search/*indexWithProxyUrl      proxy.controllers.SearchProxy.proxySearch(indexWithProxyUrl:String)
+  ###
+  #  summary: create a private space
+  #  parameters:
+  #  - name: Authorization
+  #    in: header
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  ###
   POST    /search/*indexWithProxyUrl      proxy.controllers.SearchProxy.proxySearch(indexWithProxyUrl:String)
 
+  ###
+  #  summary: create a private space
+  #  parameters:
+  #  - name: Authorization
+  #    in: header
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  ###
   GET     /default/*indexWithProxyUrl         proxy.controllers.SearchProxy.proxy(indexWithProxyUrl:String)
+  ###
+  #  summary: create a private space
+  #  parameters:
+  #  - name: Authorization
+  #    in: header
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  ###
   POST    /default/*indexWithProxyUrl         proxy.controllers.SearchProxy.proxy(indexWithProxyUrl:String)
 
   OPTIONS   /search/:index/*proxyUrl         proxy.controllers.SearchProxy.proxyOptions(index:String, proxyUrl:String)
