@@ -3,20 +3,20 @@
   OPTIONS /kg_labels/*proxyUrl      proxy.controllers.SearchProxy.labelsOptions(proxyUrl:String)
 
   ###
-  #  summary: create a private space
+  #  summary: ES query proxy with smart handling of nested fields query
   #  parameters:
-  #  - name: Authorization
-  #    in: header
+  #  - in: header
+  #    name: Authorization
   #    description: Authorization token
   #    required: false
   #    type: string
   ###
   GET     /search/*indexWithProxyUrl      proxy.controllers.SearchProxy.proxySearch(indexWithProxyUrl:String)
   ###
-  #  summary: create a private space
+  #  summary: ES query proxy with smart handling of nested fields query
   #  parameters:
-  #  - name: Authorization
-  #    in: header
+  #  - in: header
+  #    name: Authorization
   #    description: Authorization token
   #    required: false
   #    type: string
@@ -24,20 +24,20 @@
   POST    /search/*indexWithProxyUrl      proxy.controllers.SearchProxy.proxySearch(indexWithProxyUrl:String)
 
   ###
-  #  summary: create a private space
+  #  summary: ES query proxy without any query manipulation
   #  parameters:
-  #  - name: Authorization
-  #    in: header
+  #  - in: header
+  #    name: Authorization
   #    description: Authorization token
   #    required: false
   #    type: string
   ###
   GET     /default/*indexWithProxyUrl         proxy.controllers.SearchProxy.proxy(indexWithProxyUrl:String)
   ###
-  #  summary: create a private space
+  #  summary: ES query proxy without any query manipulation
   #  parameters:
-  #  - name: Authorization
-  #    in: header
+  #  - in: header
+  #    name: Authorization
   #    description: Authorization token
   #    required: false
   #    type: string
