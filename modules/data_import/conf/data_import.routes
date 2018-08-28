@@ -1,20 +1,37 @@
 ###
-#  summary: create a private space
+#  summary: insert rodent minds data from excel file
 #  parameters:
-#  - name: Authorization
-#    in: header
+#  - in: header
+#    name: Authorization
 #    description: Authorization token
 #    required: false
 #    type: string
 ###
 POST    /dataworkbench/extractDataFromExcel           controllers.ExcelImportController.extractMindsDataFromExcel(action: Option[String])
+
 ###
-#  summary: create a private space
+#  summary: insert uniminds data from excel file
+#  consumes:
+#    - multipart/form-data
+#  produces:
+#    - application/json
+#    - text/csv
+#    - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 #  parameters:
-#  - name: Authorization
-#    in: header
+#  - in: formData
+#    name: inputFile
+#    type: file
+#    description: Excel file following Uniminds format.
+#  - in: header
+#    name: Authorization
 #    description: Authorization token
 #    required: false
 #    type: string
+#  responses:
+#    200:
+#      description: "Ok"
 ###
 POST    /extract/uniminds                             controllers.ExcelImportController.extractUnimindsDataFromExcel(action: Option[String])
+
+
+

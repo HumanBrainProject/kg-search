@@ -2,8 +2,8 @@
 ###
 #  summary: create a private space
 #  parameters:
-#  - name: Authorization
-#    in: header
+#  - in: header
+#    name: Authorization
 #    description: Authorization token
 #    required: false
 #    type: string
@@ -36,8 +36,8 @@ POST   /privatespace                                            nexus.controller
 #    description: version of schema to create
 #    required: true
 #    type: string
-#  - name: Authorization
-#    in: header
+#  - in: header
+#    name: Authorization
 #    description: Authorization token
 #    required: false
 #    type: string

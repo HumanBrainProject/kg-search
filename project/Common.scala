@@ -20,7 +20,7 @@ object Common {
     "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test,
     "org.mockito" % "mockito-core" % "2.19.0" % Test,
     "com.github.stijndehaes" %% "play-prometheus-filters" % "0.3.2",
-    "org.webjars" % "swagger-ui" % "2.2.0",
+    "org.webjars" % "swagger-ui" % "3.18.1",
     "com.iheart" %% "play-swagger" % "0.7.4"
   )
 
