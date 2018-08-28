@@ -46,7 +46,9 @@ class SearchProxy @Inject()
 
   val logger: Logger = Logger(this.getClass)
 
-  def proxy(index: String, proxyUrl: String): Action[RawBuffer] = Action.async(playBodyParsers.raw) {
+  def proxy(indexWithProxyUrl: String): Action[RawBuffer] = Action.async(playBodyParsers.raw) {
+    val segments = indexWithProxyUrl.split("/")
+    val (index, proxyUrl) = (segments.head, segments.tail.mkString("/"))
     implicit request =>
       processRequest(index, proxyUrl)
   }
@@ -90,8 +92,9 @@ class SearchProxy @Inject()
       }
   }
 
-
-  def proxySearch(index: String, proxyUrl: String): Action[RawBuffer] = Action.async(playBodyParsers.raw) { implicit request =>
+  def proxySearch(indexWithProxyUrl: String): Action[RawBuffer] = Action.async(playBodyParsers.raw) { implicit request =>
+    val segments = indexWithProxyUrl.split("/")
+    val (index, proxyUrl) = (segments.head, segments.tail.mkString("/"))
     logger.debug(s"smartproxy query - Index: $index, proxy: $proxyUrl")
     updateEsResponseWithNestedDocument(
       processRequest(index, proxyUrl, transformInputFunc = SearchProxy.adaptEsQueryForNestedDocument))
@@ -153,7 +156,6 @@ object SearchProxy {
                   }
               }
             case _ => // There is no nested aggregation. Nothing to do on this input
-
           }
       }
       ByteString(json.toString().getBytes)
