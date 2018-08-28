@@ -534,17 +534,22 @@ class NexusEditorController @Inject()(
       allRelations =>
         allRelations.status match {
           case OK =>
+            val camelCase = """(?=[A-Z])"""
             val j = allRelations.json.as[List[JsObject]]
             val edges: List[JsObject] = j.flatMap(el =>
-              (el \ "edges").as[List[JsObject]].map(j =>
+              (el \ "edges").as[List[JsObject]].map { j =>
+                val id = (j \ "_id").as[String]
+                val titleRegex = id.split("/").head
+                val title = titleRegex.splitAt(titleRegex.lastIndexOf("-"))._2.substring(1).replaceAll("_", " ").split(camelCase).mkString(" ").capitalize
                 Json.obj(
-                  "from" -> idFormat((j \ "_from").as[String]),
-                  "to" -> idFormat((j \ "_to").as[String]),
-                  "id" -> (j \ "_id").as[String]
+                  "source" -> idFormat((j \ "_from").as[String]),
+                  "target" -> idFormat((j \ "_to").as[String]),
+                  "id" -> id,
+                  "title" -> title
                 )
-              )
+              }
             ).distinct
-            val camelCase = """(?=[A-Z])"""
+
             val vertices = j.flatMap { el =>
               val vertices = (el \ "vertices").as[List[JsValue]]
               vertices.map {
@@ -554,14 +559,14 @@ class NexusEditorController @Inject()(
                   val title = if ((v \"http://schema.org/name").asOpt[JsString].isDefined ) {(v \"http://schema.org/name").as[JsString]} else {Json.toJson(v)}
                   Json.obj(
                     "id" -> Json.toJson(idFormat((v \ "_id").as[String])),
-                    "label" -> JsString(label),
+                    "name" -> JsString(label),
                     "dataType" -> JsString(dataType),
                     "title" -> title
                   )
                 case _ => JsNull
               }.filter( v => v != JsNull).map(_.as[JsObject])
             }.distinct
-            Ok(Json.obj("edges" -> edges, "vertices" -> vertices))
+            Ok(Json.obj("links" -> edges, "nodes" -> vertices))
           case _ => NexusEditorController.forwardResultResponse(allRelations)
         }
     }
