@@ -83,11 +83,10 @@
     -ms-grid-column: 1;
     -ms-grid-row: 1;
     -ms-grid-row-span: 2;
-    grid-area: icon;
-    width: 12px;
+    grid-area: icon;    
     height: 50px;
-    margin-right: 5px;
-    padding-top: 7px;
+    margin-right: 10px;
+    padding-top: 10px;
 }
 
 .kgs-shapesFilter .kgs-shapesFilter__icon div i {
@@ -99,8 +98,6 @@
 
 .kgs-shapesFilter .kgs-shapesFilter__icon div svg {
     display: block;
-    -ms-transform: translate(-5px, -50px) scale(1.2);
-    transform: translate(0, 5px) scale(1.2);
 }
 
 .kgs-shapesFilter .kgs-shapesFilter__label {

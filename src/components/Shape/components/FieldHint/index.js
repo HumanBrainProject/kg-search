@@ -14,19 +14,20 @@
 *   limitations under the License.
 */
 
-.kgs-shape__field ul.kgs-shape__object > li {
-    display: block;
-}
+import React from "react";
+import ReactTooltip from "react-tooltip";
 
-.kgs-shape__field > ul.kgs-shape__object > li:first-child {
-    display: list-item;
-}
-
-.kgs-shape__field span.kgs-shape__object > span {
-    display: inline-block;
-    white-space: nowrap;
-}
-
-.kgs-shape__field span.kgs-shape__object > span > .kgs-shape__field {
-    display: inline-block;
+export function FieldHint({show, value, label}) {
+  if (!show) {
+    return null;
+  }
+  const fieldHint_id = "field-hint_content-" + encodeURI(label);
+  return (
+    <span className="field-hint">
+      <i className="fa fa-info-circle" data-tip data-for={fieldHint_id} aria-hidden="true"></i>
+      <ReactTooltip id={fieldHint_id} place="right" type="dark" effect="solid">
+        <span>{value}</span>
+      </ReactTooltip>
+    </span>
+  );
 }

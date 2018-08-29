@@ -1,8 +1,8 @@
 const endpoints = {
   "definition": (host) => `${host}/proxy/kg_labels/labels/labels`,
   "indexes": (host) => `${host}/auth/groups`,
-  "search": (host) => `${host}/proxy/kg`,
-  "instance": (host, id) => `${host}/proxy/kg/${id}`
+  "search": (host) => `${host}/proxy/search/kg`,
+  "instance": (host, id) => `${host}/proxy/default/kg/${id}`
 };
 
 class API{

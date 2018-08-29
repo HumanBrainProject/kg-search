@@ -15,16 +15,12 @@
 */
 
 import React from "react";
-import ReactTooltip from "react-tooltip";
 
-export function HintField({value, label}) {
-  const hintfield_id = "field-hint_content-" + encodeURI(label);
+export const FieldLabel = ({show, showAsBlock, value}) => {
+  if (!show) {
+    return null;
+  }
   return (
-    <span className="field-hint">
-      <i className="fa fa-info-circle" data-tip data-for={hintfield_id} aria-hidden="true"></i>
-      <ReactTooltip id={hintfield_id} place="right" type="dark" effect="solid">
-        <span>{value}</span>
-      </ReactTooltip>
-    </span>
+    <div className={`field-label ${showAsBlock?"as-block":""}`}>{value}</div>
   );
-}
+};

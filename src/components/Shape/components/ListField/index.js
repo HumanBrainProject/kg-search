@@ -44,16 +44,19 @@ export class ListField extends Component {
   }
 
   render() {
-    const {items, mapping, showSmartContent} = this.props;
+    const {show, items, mapping, showSmartContent} = this.props;
+    if (!show) {
+      return null;
+    }
     const keys = {};
     const generateList = () => {
       let res =  items.map((item, index) => {
         if ((this.state.size === Number.POSITIVE_INFINITY || index < this.state.size) && (showSmartContent || index < 5)) {
           let value = null;
           if (item.children) {
-            value = <ObjectField data={item.children} mapping={mapping} showSmartContent={showSmartContent} />;
+            value = <ObjectField show={true} data={item.children} mapping={mapping} showSmartContent={showSmartContent} />;
           } else {
-            value = <ValueField value={item} mapping={mapping} showSmartContent={showSmartContent} />;
+            value = <ValueField show={true} value={item} mapping={mapping} showSmartContent={showSmartContent} />;
           }
           let key = item.reference?item.reference:item.value;
           if (key && !keys[key]) {
@@ -86,9 +89,9 @@ export class ListField extends Component {
           {items.map((item, index) => {
             let value = null;
             if (item.children) {
-              value = <ObjectField data={item.children} mapping={mapping} showSmartContent={showSmartContent} />;
+              value = <ObjectField show={true} data={item.children} mapping={mapping} showSmartContent={showSmartContent} />;
             } else {
-              value = <ValueField value={item} mapping={mapping} showSmartContent={showSmartContent} />;
+              value = <ValueField show={true} value={item} mapping={mapping} showSmartContent={showSmartContent} />;
             }
             let key = item.value;
             if (key && !keys[key]) {

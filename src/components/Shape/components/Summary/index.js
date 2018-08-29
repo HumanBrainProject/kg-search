@@ -17,7 +17,10 @@
 import React from "react";
 import "./styles.css";
 
-export function Summary({data, mapping}) {
+export function Summary({show, data, mapping}) {
+  if (!show) {
+    return null;
+  }
 
   const stats = {};
 
