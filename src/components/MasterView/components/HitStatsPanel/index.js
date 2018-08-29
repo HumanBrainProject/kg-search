@@ -14,51 +14,35 @@
 *   limitations under the License.
 */
 
-import React, { Component } from "react";
-import { store } from "../../../../store";
+import React from "react";
+import { withStoreStateSubscription} from "../../../withStoreStateSubscription";
 import "./styles.css";
 
-export class HitStatsPanel extends Component {
-  constructor(props) {
-    super(props);
-    this.state = this.getState();
+const HitStatsPanelComponent = ({show, hitCount, from, to}) => {
+  if (!show) {
+    return null;
   }
-  getState() {
-    const globalState = store.getState();
-    const from = (globalState.search.from?globalState.search.from:0) + 1;
-    const count = globalState.search.results?(globalState.search.results.hits?(globalState.search.results.hits.hits?globalState.search.results.hits.hits.length:0):0):0;
+  if (hitCount === 0) {
+    return (
+      <span className="kgs-hitStats">No results were found. Please refine your search.</span>
+    );
+  }
+  return (
+    <span className="kgs-hitStats">Viewing <span className="kgs-hitStats-highlight">{from}-{to}</span> of <span className="kgs-hitStats-highlight">{hitCount}</span> results</span>
+  );
+};
+
+export const HitStatsPanel = withStoreStateSubscription(
+  HitStatsPanelComponent,
+  data => {
+    const from = (data.search.from?data.search.from:0) + 1;
+    const count = data.search.results?(data.search.results.hits?(data.search.results.hits.hits?data.search.results.hits.hits.length:0):0):0;
     const to = from + count - 1;
     return {
-      show: globalState.search.isReady && !globalState.search.isLoading,
-      hitCount: globalState.search.results?(globalState.search.results.hits?globalState.search.results.hits.total:0):0,
+      show: data.search.isReady && data.search.initialRequestDone && !data.search.isLoading,
+      hitCount: data.search.results?(data.search.results.hits?data.search.results.hits.total:0):0,
       from: from,
       to: to
     };
   }
-  handleStateChange() {
-    setTimeout(() => {
-      const nextState = this.getState();
-      this.setState(nextState);
-    });
-  }
-  componentDidMount() {
-    document.addEventListener("state", this.handleStateChange.bind(this), false);
-    this.handleStateChange();
-  }
-  componentWillUnmount() {
-    document.removeEventListener("state", this.handleStateChange);
-  }
-  render() {
-    if (!this.state.show) {
-      return null;
-    }
-    if (this.state.hitCount === 0) {
-      return (
-        <span className="kgs-hitStats">No results were found. Please refine your search.</span>
-      );
-    }
-    return (
-      <span className="kgs-hitStats">Viewing <span className="kgs-hitStats-highlight">{this.state.from}-{this.state.to}</span> of <span className="kgs-hitStats-highlight">{this.state.hitCount}</span> results</span>
-    );
-  }
-}
+);

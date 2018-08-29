@@ -55,15 +55,17 @@ export function ShapesFilterPanel() {
       }
     }
 
-    return  <div className={`kgs-shape${active?" is-active":""}${disabled?" is-disabled":""}`}>
-      <button key={itemKey} onClick={onClick} className="kgs-shape__button" disabled={disabled}>
-        <div>
-          <div className="kgs-shape__icon">{iconTag}</div>
-          <div className="kgs-shape__label">{label}</div>
-          <div className="kgs-shape__count">{count} Results</div>
-        </div>
-      </button>
-    </div>;
+    return (
+      <div className={`kgs-shapesFilter__shape${active?" is-active":""}${disabled?" is-disabled":""}`}>
+        <button key={itemKey} onClick={onClick} className="kgs-shapesFilter__button" disabled={disabled}>
+          <div>
+            <div className="kgs-shapesFilter__icon">{iconTag}</div>
+            <div className="kgs-shapesFilter__label">{label}</div>
+            <div className="kgs-shapesFilter__count">{count} Results</div>
+          </div>
+        </button>
+      </div>
+    );
   };
 
   return (

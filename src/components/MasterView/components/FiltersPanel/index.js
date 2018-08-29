@@ -18,7 +18,7 @@ import React from "react";
 import { ResetFilters } from "searchkit";
 import { SearchkitComponent, RefinementListFilter, InputFilter, CheckboxFilter, RangeFilter } from "searchkit";
 import { DateRangeFilter, DateRangeCalendar } from "searchkit-datefilter";
-import { store } from "../../../../store";
+import { withStoreStateSubscription} from "../../../withStoreStateSubscription";
 import "./styles.css";
 
 const Facet = ({id, name, facet}) => {
@@ -93,7 +93,10 @@ const Facet = ({id, name, facet}) => {
   return null;
 };
 
-const FiltersPanelComponent = ({isVisible, facets}) => {
+const FiltersPanelComponent = ({show, isVisible, facets}) => {
+  if (!show) {
+    return null;
+  }
   return (
     <div className={`kgs-filters ${!isVisible?"is-hidden":""}`}>
       <div className="kgs-filters__header">
@@ -111,16 +114,12 @@ const FiltersPanelComponent = ({isVisible, facets}) => {
   );
 };
 
-export class FiltersPanel extends SearchkitComponent {
-  constructor(props) {
-    super(props);
-    this.state = this.getState();
-  }
-  getState() {
-    const globalState = store.getState();
-    const facetFields = globalState.definition.facetFields;
+const FiltersPanelWithStoreStateSubscription = withStoreStateSubscription(
+  FiltersPanelComponent,
+  (data, {searchkit}) => {
+    const facetFields = data.definition.facetFields;
     const facets = [];
-    const selectedType = this.searchkit && this.searchkit.state && this.searchkit.state.facet_type && this.searchkit.state.facet_type.length > 0 ? this.searchkit.state.facet_type[0]: "";
+    const selectedType = searchkit && searchkit.state && searchkit.state.facet_type && searchkit.state.facet_type.length > 0 ? searchkit.state.facet_type[0]: "";
     Object.entries(facetFields).forEach(([type, typedFacets]) => {
       const isMatchingSelectedType = selectedType === type;
       Object.entries(typedFacets).forEach(([name, facet])=>{
@@ -135,34 +134,17 @@ export class FiltersPanel extends SearchkitComponent {
     const isVisible = facets.some(f => f.isVisible);
     return {
       type: selectedType,
-      show: globalState.definition.isReady && facets.length > 0,
+      show: data.definition.isReady && facets.length > 0,
       isVisible: isVisible,
       facets: facets
     };
   }
-  handleStateChange() {
-    setTimeout(() => {
-      const nextState = this.getState();
-      this.setState(nextState);
-    });
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    // facets are only inpacted when type change
-    return nextState.type !== this.state.type || nextState.show !== this.state.show || nextState.isVisible !== this.state.isVisible;
-  }
-  componentDidMount() {
-    document.addEventListener("state", this.handleStateChange.bind(this), false);
-    this.handleStateChange();
-  }
-  componentWillUnmount() {
-    document.removeEventListener("state", this.handleStateChange);
-  }
+);
+
+export class FiltersPanel extends SearchkitComponent {
   render() {
-    if (!this.state.show) {
-      return null;
-    }
     return (
-      <FiltersPanelComponent isVisible={this.state.isVisible} facets={this.state.facets} />
+      <FiltersPanelWithStoreStateSubscription searchkit={this.searchkit} {...this.props} />
     );
   }
 }

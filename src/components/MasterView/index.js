@@ -14,10 +14,9 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent }from "react";
-import { store } from "../../store";
+import React from "react";
+import { withTabKeyNavigation } from "../withTabKeyNavigation";
 import { Layout, LayoutBody, LayoutResults } from "searchkit";
-import { isMobile, tabAblesSelectors } from "../../Helpers/BrowserHelpers";
 import { SearchPanel } from "./components/SearchPanel";
 import { ShapesFilterPanel } from "./components/ShapesFilterPanel";
 import { FiltersPanel } from "./components/FiltersPanel";
@@ -27,82 +26,44 @@ import { ResultsFooter } from "./components/ResultsFooter";
 import { TermsShortNotice } from "../TermsShortNotice";
 import "./styles.css";
 
-export class MasterView extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.tabAbles = [];
-    this.isActive = true;
-  }
-  handleStateChange() {
-    const state = store.getState();
-    const isActive = !state.hits.currentHit;
-    if (isActive !== this.isActive) {
-      this.isActive = isActive;
-      if (this.isActive) {
+const MasterViewComponent = () => {
+  const searchPanelRelatedElements = [
+    {querySelector: "body>header"},
+    {querySelector: "body>header + nav.navbar"},
+    {querySelector: "#CookielawBanner", cookieKey: "cookielaw_accepted"}
+  ];
 
-        //window.console.debug(new Date().toLocaleTimeString() + ": masterView enable tabs=" + this.tabAbles.length);
-        this.tabAbles.forEach(e => {
-          if (e.tabIndex >= 0) {
-            e.node.setAttribute("tabIndex", e.tabIndex);
-          } else {
-            e.node.removeAttribute("tabIndex");
-          }
-        });
+  const resultFooterRelatedElements = [
+    {querySelector: ".sk-layout__body + .terms-short-notice", localStorageKey: "hbp.kgs-terms-conditions-consent"},
+    {querySelector: ".main-content + hr + .container"},
+    {querySelector: "footer.footer[role=\"contentinfo\"]"}
+  ];
 
-      } else {
+  //window.console.debug("MasterView rendering...");
+  return (
+    <div className="kgs-masterView">
+      <Layout>
+        <SearchPanel floatingPosition="top" relatedElements={searchPanelRelatedElements} />
+        <TermsShortNotice/>
+        <ShapesFilterPanel/>
+        <LayoutBody>
+          <FiltersPanel/>
+          <LayoutResults>
+            <ResultsHeader/>
+            <ResultsPanel/>
+            <ResultsFooter floatingPosition="bottom" relatedElements={resultFooterRelatedElements} />
+          </LayoutResults>
+        </LayoutBody>
+      </Layout>
+    </div>
+  );
+};
 
-        const rootNode = document.body.querySelector(".kgs-masterView");
-        this.tabAbles = Object.values(rootNode.querySelectorAll(tabAblesSelectors.join(",")))
-          .map(node => ({node: node, tabIndex: node.tabIndex}));
+export const MasterView = withTabKeyNavigation(
+  MasterViewComponent,
+  data => !data.hits.currentHit,
+  ".kgs-masterView",
+  null
+);
 
-        //window.console.debug(new Date().toLocaleTimeString() + ": masterView disable tabs=" + this.tabAbles.length);
-        this.tabAbles.forEach(e => e.node.setAttribute("tabIndex", -1));
 
-      }
-    }
-  }
-  componentDidMount() {
-    //window.console.debug("MasterView mount");
-    if (!isMobile) {
-      document.addEventListener("state", this.handleStateChange.bind(this), false);
-      this.handleStateChange();
-    }
-  }
-  componentWillUnmount() {
-    if (!isMobile) {
-      document.removeEventListener("state", this.handleStateChange);
-    }
-  }
-  render() {
-
-    const searchPanelRelatedElements = [
-      {querySelector: "body>header"},
-      {querySelector: "body>header + nav.navbar"},
-      {querySelector: "#CookielawBanner", cookieKey: "cookielaw_accepted"}
-    ];
-
-    const resultFooterRelatedElements = [
-      {querySelector: ".sk-layout__body + .terms-short-notice", localStorageKey: "hbp.kgs-terms-conditions-consent"},
-      {querySelector: ".main-content + hr + .container"},
-      {querySelector: "footer.footer[role=\"contentinfo\"]"}
-    ];
-    //window.console.debug("MasterView rendering...");
-    return (
-      <div className="kgs-masterView">
-        <Layout>
-          <SearchPanel relatedElements={searchPanelRelatedElements} />
-          <TermsShortNotice/>
-          <ShapesFilterPanel/>
-          <LayoutBody>
-            <FiltersPanel/>
-            <LayoutResults>
-              <ResultsHeader/>
-              <ResultsPanel/>
-              <ResultsFooter relatedElements={resultFooterRelatedElements} />
-            </LayoutResults>
-          </LayoutBody>
-        </Layout>
-      </div>
-    );
-  }
-}

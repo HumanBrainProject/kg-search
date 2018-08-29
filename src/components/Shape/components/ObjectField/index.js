@@ -18,47 +18,58 @@ import React from "react";
 import { Field } from "../Field";
 import "./styles.css";
 
-export function ObjectField({data, mapping, showSmartContent}) {
+const DefaultList = ({className, children}) => {
+  return (
+    <ul className={className}>
+      {children}
+    </ul>
+  );
+};
+
+const CustomList = ({className, children}) => (
+  <span className={className}>
+    {children}
+  </span>
+);
+
+const DefaultListItem = ({children}) => (
+  <li>
+    {children}
+  </li>
+);
+
+const CustomListItem = ({index, separator, children}) => (
+  <span>
+    {index===0?null:separator}
+    {children}
+  </span>
+);
+
+export function ObjectField({show, data, mapping, showSmartContent}) {
+  if (!show) {
+    return null;
+  }
   if (!mapping || !mapping.visible) {
     return null;
   }
-
-  if (mapping.separator) {
-    return (
-      <span>
-        {
-          Object.entries(mapping.children)
-            .map(([name, mapping]) => ({
-              name: name,
-              mapping: mapping
-            }))
-            .filter(e =>
-              e.mapping
-                  && (e.mapping.showIfEmpty || data[e.name])
-                  && e.mapping.visible
-            )
-            .map((e, index) => <span key={e.name}>{index===0?"":mapping.separator}<Field name={e.name} data={data} mapping={e.mapping} showSmartContent={showSmartContent} /></span>)
-        }
-      </span>
-    );
-  } else {
-    return (
-      <ul className="kgs-shape__object">
-        {
-          Object.entries(mapping.children)
-            .map(([name, mapping]) => ({
-              name: name,
-              mapping: mapping
-            }))
-            .filter(e =>
-              e.mapping
-                  && (e.mapping.showIfEmpty || data[e.name])
-                  && e.mapping.visible
-            )
-            .map(e => <li key={e.name}><Field name={e.name} data={data} mapping={e.mapping} showSmartContent={showSmartContent} /></li>)
-        }
-      </ul>
-    );
-  }
+  const separator = mapping.separator;
+  const List = separator?CustomList:DefaultList;
+  const ListItem = separator?CustomListItem:DefaultListItem;
+  return (
+    <List className="kgs-shape__object">
+      {
+        Object.entries(mapping.children)
+          .filter(([name, mapping]) =>
+            mapping
+            && (mapping.showIfEmpty || (data && data[name]))
+            && mapping.visible
+          )
+          .map(([name, mapping], index) => (
+            <ListItem key={name} separator={separator} index={index}>
+              <Field name={name} data={data} mapping={mapping} showSmartContent={showSmartContent} />
+            </ListItem>
+          ))
+      }
+    </List>
+  );
 }
-

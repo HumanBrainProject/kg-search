@@ -20,6 +20,7 @@ const default_index = "public";
 
 const initialState = {
   isReady: false,
+  initialRequestDone: false,
   hasRequest: false,
   isLoading: false,
   nonce: null,
@@ -47,7 +48,11 @@ const loadSearchRequest = (state, action) => {
 };
 
 const loadSearchResult = (state, action) => {
-  return Object.assign({}, state, {isLoading: false, nonce: null, index:action.index?action.index:state.index, results: action.results, from: action.from?Number(action.from):0});
+  return Object.assign({}, state, {initialRequestDone: true, isLoading: false, nonce: null, index:action.index?action.index:state.index, results: action.results, from: action.from?Number(action.from):0});
+};
+
+const loadSearchFail = state => {
+  return Object.assign({}, state, {isLoading: false, nonce: null, index:state.index, results: [], from: 0});
 };
 
 export function reducer(state = initialState, action = {}) {
@@ -64,7 +69,7 @@ export function reducer(state = initialState, action = {}) {
     return loadSearchResult(state, action);
   case types.LOAD_SEARCH_BAD_REQUEST:
   case types.LOAD_SEARCH_SESSION_FAILURE:
-    return loadSearchResult(state, {results: []});
+    return loadSearchFail(state, action);
   case types.LOGOUT:
     return setIndex(state, {index: default_index});
   default:

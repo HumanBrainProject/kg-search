@@ -14,49 +14,31 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
-import { store } from "../../store";
+import React from "react";
+import { withStoreStateSubscription} from "../withStoreStateSubscription";
 import "./styles.css";
 
-export class FetchingPanel extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = this.getState();
+const FetchingPanelComponent = ({show, message}) => {
+  if (!show) {
+    return null;
   }
-  getState() {
-    const globalState = store.getState();
-    return {
-      show: globalState.fetching.active,
-      message: globalState.fetching.message
-    };
-  }
-  handleStateChange() {
-    setTimeout(() => {
-      const nextState = this.getState();
-      this.setState(nextState);
-    });
-  }
-  componentDidMount() {
-    document.addEventListener("state", this.handleStateChange.bind(this), false);
-    this.handleStateChange();
-  }
-  componentWillUnmount() {
-    document.removeEventListener("state", this.handleStateChange);
-  }
-  render() {
-    if (!this.state.show) {
-      return null;
-    }
-    //window.console.debug("FetchingPanel rendering...");
-    return (
-      <div className="kgs-fetching-container" >
-        <div className="kgs-fetching-panel">
-          <span className="kgs-spinner">
-            <div className="kgs-spinner-logo"></div>
-          </span>
-          <span className="kgs-spinner-label">{this.state.message}</span>
-        </div>
+  //window.console.debug("FetchingPanel rendering...");
+  return (
+    <div className="kgs-fetching-container" >
+      <div className="kgs-fetching-panel">
+        <span className="kgs-spinner">
+          <div className="kgs-spinner-logo"></div>
+        </span>
+        <span className="kgs-spinner-label">{message}</span>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export const FetchingPanel = withStoreStateSubscription(
+  FetchingPanelComponent,
+  data => ({
+    show: data.fetching.active,
+    message: data.fetching.message
+  })
+);

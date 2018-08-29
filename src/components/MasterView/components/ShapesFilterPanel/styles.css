@@ -31,17 +31,17 @@
 }
 
 
-.kgs-shapesFilter .kgs-shape {
+.kgs-shapesFilter .kgs-shapesFilter__shape {
     display: inline-block;
     margin: 20px 25px 0 0;
     border-bottom: 5px solid transparent;
 }
 
-.kgs-shapesFilter .kgs-shape.is-active {
+.kgs-shapesFilter .kgs-shapesFilter__shape.is-active {
     border-bottom-color: #ED5554;
 }
 
-.kgs-shapesFilter .kgs-shape button.kgs-shape__button {
+.kgs-shapesFilter .kgs-shapesFilter__shape button.kgs-shapesFilter__button {
     min-width: 220px;
     padding: 16px 20px;
     border: 1px solid white;
@@ -53,13 +53,13 @@
     transition: box-shadow 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
 }
   
-.kgs-shapesFilter .kgs-shape.is-disabled  button.kgs-shape__button {
+.kgs-shapesFilter .kgs-shapesFilter__shape.is-disabled  button.kgs-shapesFilter__button {
     opacity: 0.5;
 }
 
-.kgs-shapesFilter .kgs-shape button.kgs-shape__button:focus,
-.kgs-shapesFilter .kgs-shape button.kgs-shape__button:hover:not([disabled]),
-.kgs-shapesFilter .kgs-shape:not([is-disabled]) button.kgs-shape__button:hover {
+.kgs-shapesFilter .kgs-shapesFilter__shape button.kgs-shapesFilter__button:focus,
+.kgs-shapesFilter .kgs-shapesFilter__shape button.kgs-shapesFilter__button:hover:not([disabled]),
+.kgs-shapesFilter .kgs-shapesFilter__shape:not([is-disabled]) button.kgs-shapesFilter__button:hover {
     /*
     -webkit-box-shadow: 3px 3px 6px #8f8a8a;
     box-shadow: 3px 3px 6px #8f8a8a;    
@@ -69,7 +69,7 @@
     z-index: 1;
 }
 
-.kgs-shapesFilter .kgs-shape button.kgs-shape__button > div {
+.kgs-shapesFilter .kgs-shapesFilter__shape button.kgs-shapesFilter__button > div {
     display: -ms-grid;
     display: grid;
     -ms-grid-columns: auto auto;
@@ -79,31 +79,28 @@
     width: 100%;
 }
 
-.kgs-shapesFilter .kgs-shape__icon {
+.kgs-shapesFilter .kgs-shapesFilter__icon {
     -ms-grid-column: 1;
     -ms-grid-row: 1;
     -ms-grid-row-span: 2;
-    grid-area: icon;
-    width: 12px;
+    grid-area: icon;    
     height: 50px;
-    margin-right: 5px;
-    padding-top: 7px;
+    margin-right: 10px;
+    padding-top: 10px;
 }
 
-.kgs-shapesFilter .kgs-shape__icon div i {
+.kgs-shapesFilter .kgs-shapesFilter__icon div i {
     position: absolute;
     margin-top: 5px;
     margin-left: -20px;
     -ms-transform: translate(20px, 0);
 }
 
-.kgs-shapesFilter .kgs-shape__icon div svg {
+.kgs-shapesFilter .kgs-shapesFilter__icon div svg {
     display: block;
-    -ms-transform: translate(-5px, -50px) scale(1.2);
-    transform: translate(0, 5px) scale(1.2);
 }
 
-.kgs-shapesFilter .kgs-shape__label {
+.kgs-shapesFilter .kgs-shapesFilter__label {
     -ms-grid-column: 2;
     -ms-grid-row: 1;
     grid-area: label;
@@ -113,11 +110,11 @@
     white-space: nowrap;
 }
 
-.kgs-shapesFilter .kgs-shape.is-active:not(.is-disabled) .kgs-shape__label {
+.kgs-shapesFilter .kgs-shapesFilter__shape.is-active:not(.is-disabled) .kgs-shapesFilter__label {
     color: #ED5554;
 }
 
-.kgs-shapesFilter .kgs-shape__count {
+.kgs-shapesFilter .kgs-shapesFilter__count {
     -ms-grid-column: 2;
     -ms-grid-row: 2;
     grid-area: count;

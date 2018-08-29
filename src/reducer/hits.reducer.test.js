@@ -25,26 +25,34 @@ describe('hits reducer', () => {
             expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
         });
     });
-    describe('load hit request', () => {
-        it('should set next hit reference', () => {
-            const state = {nextHitReference: null, currentHit: 567, previousHits:[234, 345, 456]};
+    describe('load hit', () => {
+        it('should set request reference', () => {
+            const state = {requestReference: null, currentHit: 567, previousHits:[234, 345, 456]};
             const action = actions.loadHit(678);
             const newState = hitsReducer(state, action);
-            expect(newState.nextHitReference).toBe(678);
+            expect(newState.requestReference).toBe(678);
+        });
+    });
+    describe('load hit request', () => {
+        it('should set loading reference', () => {
+            const state = {loadingReference: null, requestReference: 678, currentHit: 567, previousHits:[234, 345, 456]};
+            const action = actions.loadHitRequest();
+            const newState = hitsReducer(state, action);
+            expect(newState.loadingReference).toBe(678);
         });
     });
     describe('load hit success', () => {
         it('should set current hit', () => {
-            const state = null;
+            const state = undefined;;
             const action = actions.loadHitSuccess(123);
             const newState = hitsReducer(state, action);
             expect(newState.currentHit).toBe(123);
         });
-        it('should reset next hit reference', () => {
-            const state = {nextHitReference: 678, currentHit: 567, previousHits:[234, 345, 456]};
+        it('should reset loading reference', () => {
+            const state = {requestReference: 678, currentHit: 567, previousHits:[234, 345, 456]};
             const action = actions.loadHitSuccess(678);
             const newState = hitsReducer(state, action);
-            expect(newState.nextHitReference).toBe(null);
+            expect(newState.loadingReference).toBe(null);
         });
         it('should increase previous hits array length', () => {
             const state = {currentHit: 567, previousHits:[234, 345, 456]};
@@ -61,24 +69,24 @@ describe('hits reducer', () => {
     });
     describe('cancel hit loading', () => {
         it('should set next hit reference to null', () => {
-            const state = {nextHitReference: 678, currentHit: 567, previousHits:[234, 345, 456]};
+            const state = {requestReference: 678, currentHit: 567, previousHits:[234, 345, 456]};
             const action = actions.cancelHitLoading();
             const newState = hitsReducer(state, action);
-            expect(newState.nextHitReference).toBe(null);
+            expect(newState.requestReference).toBe(null);
         });
     });
     describe('set hit', () => {
         it('should set current hit', () => {
-            const state = null;
+            const state = undefined;;
             const action = actions.setHit(123);
             const newState = hitsReducer(state, action);
             expect(newState.currentHit).toBe(123);
         });
         it('should reset next hit reference', () => {
-            const state = {nextHitReference: 678, currentHit: 567, previousHits:[234, 345, 456]};
+            const state = {requestReference: 678, currentHit: 567, previousHits:[234, 345, 456]};
             const action = actions.setHit(678);
             const newState = hitsReducer(state, action);
-            expect(newState.nextHitReference).toBe(null);
+            expect(newState.requestReference).toBe(null);
         });
         it('should increase previous hits array length', () => {
             const state = {currentHit: 567, previousHits:[234, 345, 456]};
@@ -121,10 +129,10 @@ describe('hits reducer', () => {
             expect(newState.previousHits.length).toBe(0);
         });
         it('should set next hit reference to null', () => {
-            const state = {nextHitReference: 678, currentHit: 567, previousHits:[234, 345, 456]};
+            const state = {requestReference: 678, currentHit: 567, previousHits:[234, 345, 456]};
             const action = actions.clearAllHits();
             const newState = hitsReducer(state, action);
-            expect(newState.nextHitReference).toBe(null);
+            expect(newState.requestReference).toBe(null);
         });
     });
 });

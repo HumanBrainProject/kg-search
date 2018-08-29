@@ -180,9 +180,10 @@ export const loadHitNoData = reference => {
   };
 };
 
-export const loadHitFailure = error => {
+export const loadHitFailure = (id, error) => {
   return {
     type: types.LOAD_HIT_FAILURE,
+    id: id,
     error: error
   };
 };

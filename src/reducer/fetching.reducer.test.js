@@ -93,8 +93,8 @@ describe('confirguration reducer', () => {
     });
     describe('load hit request', () => {
         it('should set is active to true', () => {
-            const state = {active: false, nextHitReference: null, currentHit: 567, previousHits:[234, 345, 456]};
-            const action = actions.loadHitRequest(678);
+            const state = {active: false, requestReference: 678, currentHit: 567, previousHits:[234, 345, 456]};
+            const action = actions.loadHitRequest();
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(true);
         });

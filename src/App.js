@@ -15,96 +15,48 @@
 */
 
 import React, { PureComponent } from "react";
-import { store } from "./store";
 import AppManager from "./app.manager";
-import { isMobile, isFirefox, tabAblesSelectors } from "./Helpers/BrowserHelpers";
+import { withStoreStateSubscription} from "./components/withStoreStateSubscription";
+import { withTabKeyNavigation } from "./components/withTabKeyNavigation";
 import { SearchkitProvider } from "searchkit";
 import { MasterView } from "./components/MasterView";
-import { DetailViewManager } from "./components/DetailViewManager";
+import { DetailView } from "./components/DetailView";
 import { TermsShortNotice } from "./components/TermsShortNotice";
 import { FetchingPanel } from "./components/FetchingPanel";
 import { ErrorPanel } from "./components/ErrorPanel";
 
-export class Views extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = store.getState();
-    this.tabAbles = [];
-    this.isActive = true;
+const ViewsComponent = ({show, manager}) => {
+  if (!show) {
+    return null;
   }
-  getState() {
-    const globalState = store.getState();
-    return {
-      isReady: globalState.application.isReady
-    };
+  if (!manager || !manager.searchkit) {
+    window.console.error("application failed to instanciate searchkit");
+    return null;
   }
-  handleStateChange() {
-    if (!isMobile) {
-      this.handleTabAbles();
-    }
-    setTimeout(() => {
-      const nextState = this.getState();
-      this.setState(nextState);
-    });
-  }
-  handleTabAbles() {
-    const state = store.getState();
-    const isActive = !state.hits.currentHit;
-    if (isActive !== this.isActive) {
-      this.isActive = isActive;
-      if (this.isActive) {
+  //window.console.debug("Views rendering...");
+  return (
+    <span>
+      <SearchkitProvider searchkit={manager.searchkit}>
+        <MasterView />
+      </SearchkitProvider>
+      <DetailView/>
+    </span>
+  );
+};
 
-        //window.console.debug(new Date().toLocaleTimeString() + ": app enable tabs=" + this.tabAbles.length);
-        this.tabAbles.forEach(e => {
-          if (e.tabIndex >= 0) {
-            e.node.setAttribute("tabIndex", e.tabIndex);
-          } else {
-            e.node.removeAttribute("tabIndex");
-          }
-        });
+const ViewsWithTabKeyNavigation = withTabKeyNavigation(
+  ViewsComponent,
+  data => !data.hits.currentHit,
+  null,
+  ".kgs-app"
+);
 
-      } else {
-
-        const rootNode = document.body.querySelector(".kgs-app");
-        this.tabAbles = Object.values(document.body.querySelectorAll(tabAblesSelectors.join(",")))
-          .filter(e => !rootNode.contains(e))
-          .map(node => ({node: node, tabIndex: node.tabIndex}));
-
-        //window.console.debug(new Date().toLocaleTimeString() + ": app disable tabs=" + this.tabAbles.length);
-        this.tabAbles.forEach(e => e.node.setAttribute("tabIndex", -1));
-
-      }
-    }
-  }
-  componentDidMount() {
-    document.addEventListener("state", this.handleStateChange.bind(this), false);
-    this.handleStateChange();
-  }
-  componentWillUnmount() {
-    document.removeEventListener("state", this.handleStateChange);
-  }
-  get searchkit() {
-    return this.props.manager && this.props.manager.searchkit;
-  }
-  render() {
-    if (!this.state.isReady) {
-      return null;
-    }
-    if (!this.searchkit) {
-      window.console.error("application failed to instanciate searchkit");
-      return null;
-    }
-    //window.console.debug("Views rendering...");
-    return (
-      <span>
-        <SearchkitProvider searchkit={this.searchkit}>
-          <MasterView />
-        </SearchkitProvider>
-        <DetailViewManager/>
-      </span>
-    );
-  }
-}
+const Views = withStoreStateSubscription(
+  ViewsWithTabKeyNavigation,
+  data => ({
+    show: data.application.isReady
+  })
+);
 
 export class App extends PureComponent {
   constructor(props) {
@@ -112,11 +64,6 @@ export class App extends PureComponent {
     this.manager = new AppManager(props.config || {});
   }
   componentDidMount() {
-    if (!isMobile) {
-      if (isFirefox) {
-        document.body.setAttribute("isFirefox", true);
-      }
-    }
     this.manager.start();
   }
   componentWillUnmount() {

@@ -18,10 +18,18 @@ import * as types from "../actions.types";
 
 const TermsShortNoticeLocalStorageKey = "hbp.kgs-terms-conditions-consent";
 
+const getShareEmailToLink = () => {
+  const to= "";
+  const subject= "Knowledge Graph Search Request";
+  const body = "Please have a look to the following Knowledge Graph search request";
+  return `mailto:${to}?subject=${subject}&body=${body} ${escape(window.location.href)}.`;
+};
+
 const initialState = {
   isReady: false,
   showTermsShortNotice: typeof Storage === "undefined" || localStorage.getItem(TermsShortNoticeLocalStorageKey) !== "true",
-  gridLayoutMode: true
+  gridLayoutMode: true,
+  shareEmailToLink: getShareEmailToLink()
 };
 
 const setApplicationReady = (state, action) => {
@@ -46,6 +54,12 @@ const setLayoutMode = (state, action) => {
   });
 };
 
+const updateShareEmailToLink = state => {
+  return Object.assign({}, state, {
+    shareEmailToLink: getShareEmailToLink()
+  });
+};
+
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case types.SET_APPLICATION_READY:
@@ -54,6 +68,14 @@ export function reducer(state = initialState, action = {}) {
     return agreeTermsShortNotice(state, action);
   case types.SET_LAYOUT_MODE:
     return setLayoutMode(state, action);
+  case types.LOAD_SEARCH_REQUEST:
+  case types.LOAD_HIT_REQUEST:
+  case types.CANCEL_HIT_LOADING:
+  case types.SET_HIT:
+  case types.SET_PREVIOUS_HIT:
+  case types.CLEAR_ALL_HITS:
+  case types.SET_CURRENT_HIT_FROM_BROWSER_LOCATION:
+    return updateShareEmailToLink(state, action);
   default:
     return state;
   }

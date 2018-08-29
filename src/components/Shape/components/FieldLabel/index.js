@@ -14,32 +14,13 @@
 *   limitations under the License.
 */
 
-.kgs-detailViewManager {
-    z-index: 1200;
-    display: block;
-    position: fixed;
-    top: 0;  
-    left: 0;  
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    box-sizing: border-box;
-    box-sizing: border-box;
-    background-color: rgba(0,0,0,0.5);
-}
+import React from "react";
 
-.kgs-detailViewManager__views {
-    display: block;
-    position: relative;
-    width: calc(100% - 20px);
-    height: calc(100% - 20px);
-    margin-top: 10px;
-    margin-left: 10px;
-}
-
-@media (min-width: 992px) {
-    .kgs-detailViewManager__views {
-        width: 992px;
-        margin-left: calc(50% - 496px);
-    }
-}
+export const FieldLabel = ({show, showAsBlock, value}) => {
+  if (!show) {
+    return null;
+  }
+  return (
+    <div className={`field-label ${showAsBlock?"as-block":""}`}>{value}</div>
+  );
+};

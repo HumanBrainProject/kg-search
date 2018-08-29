@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-.kgs-shape__panel {
+.kgs-shape {
     display: -ms-flexbox;
     display: flex;
     -ms-flex-flow: row wrap;
@@ -25,19 +25,19 @@
     word-break: break-word;
 }
 
-.sk-hits-list .kgs-shape__panel {
+.sk-hits-list .kgs-shape {
     height: 100%;
 }
 
 @media (min-width: 992px) {
-    .kgs-shape__panel {
+    .kgs-shape {
         width: 70%;
     }
-    .sk-hits-list .kgs-shape__panel {
+    .sk-hits-list .kgs-shape {
         width: 100%;
         overflow: hidden;
     }
-    .kgs-result-layout.is-list .sk-hits-list .kgs-shape__panel {
+    .kgs-result-layout.is-list .sk-hits-list .kgs-shape {
         height: auto;
         height: unset;
         overflow: auto;
@@ -103,7 +103,6 @@
     width: 35px;
     height: 35px;
     max-width: 60px;
-    flex-grow: 1;
 }
 
 [data-type] .kgs-shape__icon>i {
@@ -127,11 +126,15 @@
 [data-type] .kgs-shape__type {
     width: auto;
     width: unset;
-    margin-top: 12px;
-    padding-left: 10px;
+    padding: 0 10px;
     font-size: 30px;
     font-weight: 300;
     color: #555;
+}
+
+[data-type] .kgs-shape__icon + .kgs-shape__type {
+    margin-top: 0;
+    flex: 1;
 }
 
 [data-type] .kgs-shape__title {
@@ -140,6 +143,10 @@
     font-weight: 400;
     color: #0088cc;
     flex-basis: 87%;
+}
+
+.kgs-result-layout.is-list [data-type] .kgs-shape__title {
+    margin-top: 12px;
 }
 
 [data-type] .kgs-shape__description {

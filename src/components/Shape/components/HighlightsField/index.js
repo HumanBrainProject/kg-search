@@ -16,13 +16,15 @@
 
 import React from "react";
 
-export function HighlightsField({highlights, mapping}) {
-
+export function HighlightsField({fields, mapping}) {
+  if (!fields) {
+    return null;
+  }
   let valueTag = [];
 
-  Object.keys(highlights).forEach(field => {
+  Object.keys(fields).forEach(field => {
     let shortKey = field.replace(/^(.*?)\..*$/g, "$1");
-    valueTag.push(<p key={shortKey}>{mapping.fields[shortKey].value}: <span dangerouslySetInnerHTML={{__html:highlights[field].join(", ")}}></span></p>);
+    valueTag.push(<p key={shortKey}>{mapping.fields[shortKey].value}: <span dangerouslySetInnerHTML={{__html:fields[field].join(", ")}}></span></p>);
   });
 
   return (

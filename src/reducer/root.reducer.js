@@ -26,6 +26,11 @@ import { reducer as auth } from "./auth.reducer";
 
 const combineReducers = reducers => {
   return (state, action) => {
+    /*
+    if (action.type) {
+      window.console.debug("Reducer action: " + action.type);
+    }
+    */
     let nextState = {};
     Object.keys(reducers)
       .map(k => {

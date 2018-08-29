@@ -17,7 +17,8 @@
 import { store, dispatch } from "./store";
 import * as actions from "./actions";
 import SearchManager from "./search.manager";
-import { generateKey } from "./Helpers/OIDCHelpers";
+import { isMobile, isFirefox } from "./Helpers/BrowserHelpers";
+import { generateKey, getAuthUrl } from "./Helpers/OIDCHelpers";
 
 export default class AppManager {
   constructor(options) {
@@ -28,6 +29,12 @@ export default class AppManager {
     this.previousStateHits = store.getState().hits;
     this.isEventFiredByBrowserNav = false;
     this.isEventFiredByAppNav = false;
+    this.locationHref = window.location.href;
+
+    // Firefox css styling issue fix
+    if (isFirefox && !isMobile) {
+      document.body.setAttribute("isFirefox", true);
+    }
 
     // check initial hit reference in url
     const m = window.location.href.match(/(.*)#(.*)$/);
@@ -63,54 +70,55 @@ export default class AppManager {
     return this.search && this.search.searchkit;
   }
   handleStateChange() {
-    setTimeout(() => {
-      const state = store.getState();
+    //setTimeout(() => {
+    const state = store.getState();
 
-      if (state.auth.authenticate) {
-        const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
-        const stateKey = generateKey();
-        const nonceKey = generateKey();
-        const oidcUrl = `${state.configuration.oidcUri}?response_type=id_token%20token&client_id=${state.configuration.oidcClientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`;
-        window.location.href = oidcUrl;
-      }
+    if (state.auth.authenticate) {
+      const stateKey = generateKey();
+      const nonceKey = generateKey();
+      window.location.href = getAuthUrl(state.configuration.oidcUri, state.configuration.oidcClientId, stateKey, nonceKey);
+    }
 
-      if (!state.application.isReady) {
+    if (!state.application.isReady) {
 
-        if (state.search.isReady) {
+      if (state.search.isReady) {
 
-          if (!state.definition.isReady) {
-            if (!state.definition.hasRequest && !state.definition.isLoading && !state.definition.hasError) {
-              dispatch(actions.loadDefinition());
-            }
-            return;
+        if (!state.definition.isReady) {
+          if (!state.definition.hasRequest && !state.definition.isLoading && !state.definition.hasError) {
+            dispatch(actions.loadDefinition());
           }
-
-          if (!state.indexes.isReady) {
-            if (!state.indexes.hasRequest && !state.indexes.isLoading && !state.indexes.hasError) {
-              dispatch(actions.loadIndexes());
-            }
-            return;
-          }
-
-          dispatch(actions.setApplicationReady(true));
-
-          if (this.initialHitReference) {
-            dispatch(actions.loadHit(this.initialHitReference));
-            this.initialHitReference = null;
-          }
+          return;
         }
 
-        return;
+        if (!state.indexes.isReady) {
+          if (!state.indexes.hasRequest && !state.indexes.isLoading && !state.indexes.hasError) {
+            dispatch(actions.loadIndexes());
+          }
+          return;
+        }
+
+        dispatch(actions.setApplicationReady(true));
       }
 
-      //Remove the ability to scroll the body when the modal is open
-      this.setBodyScrolling(!state.hits.currentHit);
+      return;
+    }
 
-      // store detail view laucher button in order to set back focus to it when detail popup close
-      this.manageHitFocus(state.hits.currentHit);
+    if (state.search.initialRequestDone && this.initialHitReference) {
+      //window.console.log("AppManager load initial Hit: " + this.initialHitReference);
+      dispatch(actions.loadHit(this.initialHitReference));
+      this.initialHitReference = null;
 
-      this.manageHistory(state);
-    });
+      return;
+    }
+
+    //Remove the ability to scroll the body when the modal is open
+    this.setBodyScrolling(!state.hits.currentHit);
+
+    // store detail view laucher button in order to set back focus to it when detail popup close
+    this.manageHitFocus(state.hits.currentHit);
+
+    this.manageHistory(state);
+    //});
   }
   setBodyScrolling(enableScrolling) {
     //Remove the ability to scroll the body when the modal is open

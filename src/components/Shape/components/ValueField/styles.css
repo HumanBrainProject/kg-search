@@ -210,6 +210,8 @@
 
 [data-type] .kgs-shape__type .field-value {
     text-transform: capitalize;
+    word-break: keep-all;
+    white-space: nowrap;
 }
 
 .field-value__tag{
