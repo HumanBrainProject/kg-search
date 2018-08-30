@@ -492,12 +492,14 @@ class NexusEditorController @Inject()(
           |   "label": "My Dataset to be released",
           |   "type": "Dataset",
           |   "status": ${ReleaseStatus.getRandomStatus()},
+          |   "id": "8667ujt"
           |   "children": [
           |     {
           |         "linkType": ["activity"],
           |         "label": "My Activity",
           |         "type": "Activity",
           |         "status": ${ReleaseStatus.getRandomStatus()},
+          |         "id": "4rz54564"
           |         "children": []
           |     },
           |     {
@@ -505,12 +507,14 @@ class NexusEditorController @Inject()(
           |         "label": "My 2nd Activity ",
           |         "type": "Activity",
           |         "status": ${ReleaseStatus.getRandomStatus()},
+          |         "id": "7548"
           |         "children": [
           |             {
           |                 "linkType": ["specimenGroup"],
                   |         "label": "My SpecimenGroup" ,
                   |         "type": "SpecimenGroup",
                   |         "status": ${ReleaseStatus.getRandomStatus()},
+                  |         "id": "876543"
                   |         "children": [
           |                   {
                   |
@@ -518,6 +522,7 @@ class NexusEditorController @Inject()(
             |                   "label": "My Subject",
             |                   "type": "Subject",
             |                   "status": ${ReleaseStatus.getRandomStatus()},
+            |                   "id": "621634"
             |                   "children": []
             |                   }
           |                 ]
@@ -529,6 +534,7 @@ class NexusEditorController @Inject()(
         |         "label": "John Doe",
         |         "type": "Person",
         |         "status": ${ReleaseStatus.getRandomStatus()},
+        |         "id": "53454354"
         |         "children": []
           |     },
           |     {
@@ -536,6 +542,7 @@ class NexusEditorController @Inject()(
           |         "label": "Jane Doe",
           |         "type": "Person",
           |         "status": ${ReleaseStatus.getRandomStatus()},
+          |         "id": "32321"
           |         "children": []
           |     }
           |   ]
