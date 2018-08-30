@@ -142,16 +142,22 @@ class NexusService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
           case 200 => // analyze response
             val total = (response.json \ "total").as[Int]
             total match {
-              case 1 =>
+              case 1 => // update
                 val id = (response.json \ "results" \ 0 \ "resultId").as[String]
                 val revision = (response.json \ "results" \ 0 \ "source" \ "nxv:rev").as[Long]
                 updateInstance(id, Some(revision), payload, token).map {
                   case (operation, response) =>
                     (operation, Some(id), Some(Future.successful(response)))
                 }
-              case _ => // forward error message from nexus
-                Future.successful(ERROR, None, Some(Future.successful(response)))
+              case _ => // insert if not or ambiguous
+                insertInstance(nexusUrl, org, domain, entityType, version, payload, token).map{ insertResp =>
+                  val id = (insertResp.json.as[JsObject] \ "@id").asOpt[String]
+                  (INSERT, id, Some(Future.successful(insertResp)))
+                }
             }
+          case _ => // error looking for instance, forward ERROR
+            Future.successful(ERROR, None, Some(Future.successful(response)))
+
         }
     }
   }

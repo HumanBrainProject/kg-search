@@ -134,7 +134,7 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService,
         val parentBlock = if (parentLinks.nonEmpty) Some(JsArray(parentLinks)) else None
         val datasetPayload = formatEntityPayload((jsonData \ datasetLabel).as[JsObject], datasetLabel, parentBlock)
         buildinsertionResult(datasetPayload, datasetLabel.toLowerCase,
-          insertMindsEntity(nexusEndpoint, s"excel/core/${datasetLabel.toLowerCase}/v0.0.1", datasetPayload, token)).map{
+          insertMindsEntity(nexusEndpoint, datasetLabel.toLowerCase, datasetPayload, token)).map{
           result =>
             firstResult :+ result
         }
