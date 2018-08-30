@@ -48,7 +48,6 @@ object NexusHelper {
               "@id": "sh:targetClass",
               "@type": "@id"
           },
-          "${org}": "http://hbp.eu/${org}#",
           "schema": "http://schema.org/",
           "sh": "http://www.w3.org/ns/shacl#",
           "owl": "http://www.w3.org/2002/07/owl#",
@@ -61,7 +60,7 @@ object NexusHelper {
       },
       "shapes": [
         {
-          "@id": "${org}:${entityType}Shape",
+          "@id": "${nameSpace}#${entityType}Shape",
           "@type": "sh:NodeShape",
           "property": [
             {
@@ -69,7 +68,7 @@ object NexusHelper {
               "path": "schema:identifier"
             }
           ],
-          "targetClass": "${org}:${entityType}"
+          "targetClass": "${nameSpace}#${entityType}"
         }
       ]
     }

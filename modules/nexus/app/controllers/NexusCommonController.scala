@@ -65,11 +65,11 @@ class NexusCommonController @Inject()(cc: ControllerComponents, config:Configura
   }
 
 
-  def createSchema(organization: String, domain: String, entityType: String, version: String): Action[AnyContent] = Action.async { implicit request =>
+  def createSchema(organization: String, domain: String, entityType: String, version: String, nameSpace: Option[String]): Action[AnyContent] = Action.async { implicit request =>
     val tokenOpt = request.headers.toSimpleMap.get("Authorization")
     tokenOpt match {
       case Some(token) =>
-        nexusService.createSimpleSchema(nexusEndpoint, organization, domain, entityType, version, token).map {
+        nexusService.createSimpleSchema(nexusEndpoint, organization, domain, entityType, version, token, nameSpace).map {
             response =>
               response.status match {
                 case 200 =>
