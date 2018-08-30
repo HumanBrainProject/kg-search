@@ -1,11 +1,51 @@
-GET     /kg_labels/*proxyUrl      proxy.controllers.SearchProxy.labels(proxyUrl:String)
-OPTIONS /kg_labels/*proxyUrl      proxy.controllers.SearchProxy.labelsOptions(proxyUrl:String)
+# proxy service
+  GET     /kg_labels/*proxyUrl      proxy.controllers.SearchProxy.labels(proxyUrl:String)
+  OPTIONS /kg_labels/*proxyUrl      proxy.controllers.SearchProxy.labelsOptions(proxyUrl:String)
 
-GET     /:index/_search/*proxyUrl         proxy.controllers.SearchProxy.proxySearch(index:String, proxyUrl:String)
-POST    /:index/_search/*proxyUrl         proxy.controllers.SearchProxy.proxySearch(index:String, proxyUrl:String)
+  ###
+  #  summary: ES query proxy with smart handling of nested fields query
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  ###
+  GET     /search/*indexWithProxyUrl      proxy.controllers.SearchProxy.proxySearch(indexWithProxyUrl:String)
+  ###
+  #  summary: ES query proxy with smart handling of nested fields query
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  ###
+  POST    /search/*indexWithProxyUrl      proxy.controllers.SearchProxy.proxySearch(indexWithProxyUrl:String)
 
-GET     /:index/*proxyUrl         proxy.controllers.SearchProxy.proxy(index:String, proxyUrl:String)
-POST    /:index/*proxyUrl         proxy.controllers.SearchProxy.proxy(index:String, proxyUrl:String)
+  ###
+  #  summary: ES query proxy without any query manipulation
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  ###
+  GET     /default/*indexWithProxyUrl         proxy.controllers.SearchProxy.proxy(indexWithProxyUrl:String)
+  ###
+  #  summary: ES query proxy without any query manipulation
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  ###
+  POST    /default/*indexWithProxyUrl         proxy.controllers.SearchProxy.proxy(indexWithProxyUrl:String)
 
-OPTIONS   /:index/*proxyUrl         proxy.controllers.SearchProxy.proxyOptions(index:String, proxyUrl:String)
+  OPTIONS   /search/:index/*proxyUrl         proxy.controllers.SearchProxy.proxyOptions(index:String, proxyUrl:String)
+  OPTIONS   /default/:index/*proxyUrl         proxy.controllers.SearchProxy.proxyOptions(index:String, proxyUrl:String)
 
+# Export service
+  GET     /export                         proxy.controllers.ExportContainerController.exportContainer(container: String, filter: Option[String])

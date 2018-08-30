@@ -1,4 +1,3 @@
-
 /*
 *   Copyright (c) 2018, EPFL/Human Brain Project PCO
 *
@@ -14,16 +13,13 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-
 package nexus.controllers
 
 import common.helpers.ResponseHelper._
 import javax.inject.{Inject, Singleton}
-import nexus.helpers.{NexusHelper, NexusSpaceHandler}
 import nexus.services.{NexusService, NexusSpaceService}
 import play.api.{Configuration, Logger}
 import play.api.http.HttpEntity
-import play.api.libs.ws.WSClient
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -73,7 +69,7 @@ class NexusCommonController @Inject()(cc: ControllerComponents, config:Configura
     val tokenOpt = request.headers.toSimpleMap.get("Authorization")
     tokenOpt match {
       case Some(token) =>
-        nexusService.createSchema(nexusEndpoint, organization, organization, entityType, domain, version, organization, token).map {
+        nexusService.createSimpleSchema(nexusEndpoint, organization, domain, entityType, version, token).map {
             response =>
               response.status match {
                 case 200 =>
