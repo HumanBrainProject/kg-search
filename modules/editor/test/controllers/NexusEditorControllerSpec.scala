@@ -23,10 +23,8 @@ import editor.models.Instance
 import mockws.{MockWS, MockWSHelpers}
 import authentication.models.UserInfo
 import authentication.service.OIDCAuthService
-import editor.controllers.TestAuthenticatedUserAction
 import editor.services.InstanceService
 import nexus.services.NexusService
-import org.scalatest._
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play._
@@ -37,7 +35,6 @@ import play.api.mvc.Results.Ok
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import play.api.mvc._
-import org.mockito.Mockito._
 import play.api.libs.ws.WSResponse
 
 import scala.concurrent.Future

@@ -1,4 +1,3 @@
-
 /*
 *   Copyright (c) 2018, EPFL/Human Brain Project PCO
 *
@@ -14,49 +13,17 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-
 package data_import.helpers.excel_import
-
-import java.security.MessageDigest
-import java.util.Calendar
 
 import data_import.models.excel_import._
 import data_import.models.excel_import.CommonVars._
-import org.apache.poi.ss.usermodel.{CellType, DataFormatter}
+import java.util.Calendar
 import org.apache.poi.xssf.usermodel._
 import play.api.libs.json._
-import play.api.libs.ws.WSClient
-
-import scala.concurrent.{ExecutionContext, Future}
+import ExcelImportHelper._
 
 
-
-object ExcelImportHelper {
-
-  val actionPreview = "preview"
-  val actionInsert = "insert"
-  val dataFormatter = new DataFormatter()
-  var formulaEvaluator = new XSSFWorkbook().getCreationHelper().createFormulaEvaluator()
-
-  def hash(payload: String): String = {
-    MessageDigest.getInstance("MD5").digest(payload.getBytes).toString
-  }
-
-  def retrieveEntityDetails(url: String, id: String, token: String)(implicit wSClient: WSClient, executionContext: ExecutionContext): Future[Option[(String, Int, JsObject)]] = {
-    wSClient.url(s"""$url/?deprecated=false&fields=all&filter={"op":"eq","path":"http://schema.org/identifier","value":"$id"}""").addHttpHeaders(
-      "Authorization" -> token
-    ).get().map {
-      result =>
-        val content = result.json.as[JsObject]
-        val total = (content \ "total").as[Int]
-        if (total == 0) {
-          None
-        } else {
-          val firstResult = (content \ "results").as[JsArray].value.head.as[JsObject]
-          Some(((firstResult \ "resultId").as[String], (firstResult \ "source" \ "nxv:rev").as[Int], (firstResult \ "source").as[JsObject] - "links" - "@id" - "nxv:rev" - "nxv:deprecated"))
-        }
-    }
-  }
+object ExcelMindsImportHelper {
 
   def formatEntityPayload(payload: JsObject, entityType: String, parent: Option[JsValue] = None): JsObject = {
     val payloadId = (payload \ "Specification" \ valueLabel).as[String]
@@ -69,101 +36,6 @@ object ExcelImportHelper {
       case None => mainContent
     }
     JsObject(fullContent)
-  }
-
-  def buildinsertionResult(payload: JsObject, entityType: String, result: Future[(Int, Option[JsObject])])
-                          (implicit wSClient: WSClient, executionContext: ExecutionContext): Future[JsObject] = {
-    result.map {
-      case (status, bodyOpt) =>
-        val (statusString, linkOpt) = status match {
-          case -1 => ("skipped", Some((bodyOpt.get \ "@id").as[String]))
-          case 200 => ("updated", Some((bodyOpt.get \ "@id").as[String]))
-          case 201 => ("inserted", Some((bodyOpt.get \ "@id").as[String]))
-          case _ => ("failed", None)
-        }
-        val entityId = (payload \ "http://schema.org/identifier").as[String]
-        val linkSting = linkOpt match {
-          case Some(link) => s""" "link": "$link", """
-          case None => ""
-        }
-        Json.parse(
-          s"""
-          {
-            $linkSting
-            "id":  "$entityId",
-            "type": "$entityType",
-            "status": "$statusString"
-          }
-          """).as[JsObject]
-    }
-  }
-
-  def insertEntities(jsonData: JsObject, nexusEndpoint: String, token: String)
-                    (implicit wSClient: WSClient, executionContext: ExecutionContext): Future[Seq[JsObject]] = {
-    val activityPayload = formatEntityPayload((jsonData \ activityLabel).as[JsObject], activityLabel)
-    val specimenGroupPayload = formatEntityPayload((jsonData \ specimenGroupLabel).as[JsObject], specimengroupLabel)
-
-    val firstTodo = Seq((activityPayload, activityLabel.toLowerCase),
-      (specimenGroupPayload, specimenGroupLabel.toLowerCase))
-    // use foldleft to ensure sequential ingestion of resources and build a valid archive
-    val firstResultFuture = firstTodo.foldLeft(Future.successful[Seq[JsObject]](Seq.empty[JsObject])) {
-      case (futureRes, (payload, entityType)) =>
-        futureRes.flatMap {
-          res =>
-            buildinsertionResult(payload, entityType, insertEntity(payload, nexusEndpoint, entityType, token)).map{
-              result =>
-                res :+ result
-            }
-        }
-    }
-    firstResultFuture.flatMap{
-      firstResult =>
-        val parentLinks = firstResult.flatMap{
-          res =>
-            if (res.keys.contains("link")){
-              Some(JsObject(Seq(
-                ("@id", (res \ "link").as[JsString]))))
-            } else {
-              None
-            }
-        }
-        val parentBlock = if (parentLinks.nonEmpty) Some(JsArray(parentLinks)) else None
-        val datasetPayload = formatEntityPayload((jsonData \ datasetLabel).as[JsObject], datasetLabel, parentBlock)
-        buildinsertionResult(datasetPayload, datasetLabel.toLowerCase,
-          insertEntity(datasetPayload, nexusEndpoint, datasetLabel.toLowerCase, token)).map{
-          result =>
-            firstResult :+ result
-        }
-    }
-  }
-
-  def insertEntity(payload: JsObject, nexusEndpoint: String, entityType:String, token: String)
-                  (implicit wSClient: WSClient, executionContext: ExecutionContext): Future[(Int, Option[JsObject])] = {
-    val payloadId = (payload \ "http://schema.org/identifier").as[String]
-
-    val currentContentHash = hash(payload.toString())
-    // check if it's an insert or update
-    retrieveEntityDetails(s"$nexusEndpoint/v0/data/excel/core/$entityType/v0.0.1", payloadId, token).flatMap {
-      entityDetails =>
-        entityDetails match {
-          case Some((entityLink, revNumber, previousContent)) =>
-            val previousContentHash = hash(previousContent.toString())
-            if (previousContentHash != currentContentHash) {
-              wSClient.url(s"${entityLink}?rev=${revNumber}").addHttpHeaders("Authorization" -> token).put(payload).map{
-                result=>
-                  (result.status, Some(result.json.as[JsObject]))
-              }
-            } else {
-              Future(-1, Some(JsObject(Seq(("@id", JsString(entityLink))))))
-            }
-          case None =>
-            wSClient.url(s"${nexusEndpoint}/v0/data/excel/core/$entityType/v0.0.1")
-              .addHttpHeaders("Authorization" -> token).post(payload).map{
-              result =>
-                (result.status, Some(result.json.as[JsObject]))
-            }
-        }
-    }
   }
 
   def extractGlobalInfo(sheet: XSSFSheet): Map[String, String] = {
@@ -245,6 +117,8 @@ object ExcelImportHelper {
   }
 
   def buildJsonEntity(contentJson: String, insertionDateTime: String, creator: String, componentId: String) = {
+    // hashcode is computed on spec content to avoid update because of insertionDateTime change
+    // TODO consider state
     s"""
       {
         "created_timestamp": "${insertionDateTime}",
@@ -254,15 +128,6 @@ object ExcelImportHelper {
         "Specification": $contentJson
       }
       """
-  }
-
-  def nbFilledCellsInRow(row: XSSFRow): Int = {
-    var filledCell = 0
-    val it = row.cellIterator()
-    while(it.hasNext){
-      if (getCellContentAsString(it.next.asInstanceOf[XSSFCell]) != empty) filledCell +=1
-    }
-    filledCell
   }
 
   def getNumberOfInstancesInBlock(from: Int, to:Int, sheet: XSSFSheet): Int = {
@@ -313,31 +178,6 @@ object ExcelImportHelper {
 
   }
 
-  def getCellContentAsString(cell: XSSFCell): String = {
-    cell.getCellTypeEnum match {
-      case CellType.BOOLEAN =>
-        cell.getBooleanCellValue.toString
-      case CellType.NUMERIC =>
-        dataFormatter.formatCellValue(cell)
-      case CellType.STRING =>
-        cell.getStringCellValue
-      case CellType.FORMULA =>
-        formulaEvaluator.evaluateInCell(cell)
-        getCellContentAsString(cell)
-      case _ =>
-        cell.toString
-    }
-  }
-
-  def isEmptyRow(row: XSSFRow): Boolean = {
-    val it = row.cellIterator()
-    while (it.hasNext()){
-      if (getCellContentAsString(it.next().asInstanceOf[XSSFCell]) != empty)
-        return false
-    }
-    return true
-  }
-
   def getContentBlocks(sheet: XSSFSheet): Seq[(String, Int, Int)] = {
     val fr = Math.max(sheet.getFirstRowNum, globalInfoLastIdx +1)
     val lr = sheet.getLastRowNum
@@ -365,5 +205,4 @@ object ExcelImportHelper {
         }
     }
   }
-
 }

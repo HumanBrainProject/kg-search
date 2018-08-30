@@ -1,4 +1,3 @@
-
 /*
 *   Copyright (c) 2018, EPFL/Human Brain Project PCO
 *
@@ -18,6 +17,7 @@
 package data_import.models.excel_import
 
 import CommonVars._
+
 
 case class Activity(id: String, detailsRaw: Map[String, Seq[String]]){
 

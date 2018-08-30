@@ -14,10 +14,10 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-
 package data_import.models.excel_import
 
 import CommonVars._
+
 
 case class Dataset(id: String, description: String, detailsRaw: Map[String, Seq[String]]) {
 
