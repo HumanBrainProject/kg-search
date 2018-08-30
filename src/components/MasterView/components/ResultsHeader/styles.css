@@ -14,62 +14,54 @@
 *   limitations under the License.
 */
 
-.kgs-sorting-selector {
-    display: block;
+.kgs-result-header .sk-results-list__action-bar {
+    background-color: transparent;
+    margin: 0;
+    padding: 3px 0 20px 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.kgs-result-header .sk-results-list__action-bar .sk-action-bar-row {  
+    padding: 0;
+}
+
+.kgs-result-header .sk-results-list__action-bar .kgs-hitStats {
+    margin-top: 15px;
+}
+
+.kgs-result-header .sk-results-list__action-bar .kgs-paging.kgs-header-pagination {
+    margin-top: 15px;
+}
+
+.kgs-result-header .sk-results-list__action-bar .kgs-layout-mode-switcher-toggle {
     margin-top: 20px;
 }
 
-@media (min-width: 576px) {
-    .kgs-sorting-selector {
-        display: inline;
-        margin-top: 0;
-    }
-}
-
-.kgs-sorting-selector .sk-toggle::before {
-    content: "Sort by:";
-    margin-right: 5px;
-    margin-left: -15px;
-    font-size: 14px;
-    line-height: 30px;
-    color: #777;
-}
-
-@media (min-width: 576px) {
-    .kgs-sorting-selector .sk-toggle::before {
-        margin-left: 0;
-    }
-}
-
-.sk-results-list__action-bar .sk-action-bar-row .sk-hits-stats__info {    
-    white-space: nowrap;
-}
-
-.sk-results-list__action-bar .sk-action-bar-row .kgs-share-links {    
-    position: absolute;
-    right: 40px;
-    margin-left: 15px;
-    margin-top: -7px;
-    transform: translateY(3px);
-}
-
-@media (min-width: 576px) {
-    .sk-results-list__action-bar .sk-action-bar-row .kgs-share-links {  
-        position: relative;
-        right: auto;
-        right: unset;
-    }
+.kgs-result-header .sk-results-list__action-bar .kgs-sortby-panel {
+    margin-top: 15px;
 }
 
 @media screen and (min-width:0\0) {  
     /* IE9 and IE10 rule sets go here */  
-    .sk-results-list__action-bar .sk-hits-stats {
+    .kgs-result-header .sk-results-list__action-bar .kgs-hitStats {
         flex: 2;
     }
-    .sk-results-list__action-bar .kgs-sorting-selector {
+    .kgs-result-header .sk-results-list__action-bar .kgs-sortby-panel {
         flex: auto;
     }
-    .sk-results-list__action-bar .sk-action-bar-row .kgs-layout-mode-switcher-toggle {
+    .kgs-result-header .sk-results-list__action-bar .sk-action-bar-row .kgs-layout-mode-switcher-toggle {
         flex: auto;
+    }
+}
+
+.kgs-result-header .kgs-paging.kgs-header-pagination {
+    display: none;
+}
+
+@media (min-width: 1800px) {
+    .kgs-result-header .kgs-paging.kgs-header-pagination {
+        display: inline-block;
+        flex: 1;
     }
 }

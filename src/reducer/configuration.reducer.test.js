@@ -16,44 +16,13 @@
 
 import * as actions from "../actions";
 import { reducer as configurationReducer} from "./configuration.reducer";
-describe('confirguration reducer', () => {
+describe('configuration reducer', () => {
     describe('unknown action', () => {
         it('should return same state', () => {
             const state = {a: {c: 1, d: 2}, b: [{e:3}, {e:4}]};
             const action = {type: "ABCDEFGH"};
             const newState = configurationReducer(state, action);
             expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
-        });
-    });
-    describe('load config request', () => {
-        it('should set is ready to false', () => {
-            const state = null;
-            const action = actions.loadConfigRequest();
-            const newState = configurationReducer(state, action);
-            expect(newState.isConfigReady).toBe(false);
-        });
-    });
-    describe('load config success', () => {
-        it('should set current config', () => {
-            const state = null;
-            const config = {foo: "bar"};
-            const action = actions.loadConfigSuccess(config);
-            const newState = configurationReducer(state, action);
-            expect(newState.foo).toBe(config.foo);
-        });
-        it('should set is ready to true', () => {
-            const state = {isConfigReady: false};
-            const action = actions.loadConfigSuccess(null);
-            const newState = configurationReducer(state, action);
-            expect(newState.isConfigReady).toBe(true);
-        });
-    });
-    describe('load config failure', () => {
-        it('should set ready to false', () => {
-            const state = {isConfigReady: true};
-            const action = actions.loadConfigFailure("error");
-            const newState = configurationReducer(state, action);
-            expect(newState.isConfigReady).toBe(false);
         });
     });
 });

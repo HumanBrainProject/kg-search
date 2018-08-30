@@ -51,11 +51,14 @@ export class ValueField extends Component {
     this.setState({showMore: showMore});
   }
   render() {
-    const {value, mapping, showSmartContent} = this.props;
+    const {show, value, mapping, showSmartContent} = this.props;
+    if (!show) {
+      return null;
+    }
 
-    if (!mapping || !mapping.visible)
-      {return null;}
-
+    if (!mapping || !mapping.visible) {
+      return null;
+    }
     const handleClick = () => {
       const state = store.getState();
       dispatch(actions.loadHit(value.reference, state.search.index));
@@ -71,10 +74,11 @@ export class ValueField extends Component {
         if (value.url.substr(0,7).toLowerCase() === "mailto:") {
           valueTag = <a href={value.url}>{value.value}</a>;
         } else {
-          if (value.detail)
-            {valueTag = <a href={value.url} target="_blank">{value.value}</a>;}
-          else
-            {valueTag = <a href={value.url} target="_blank">{value.value}</a>;}
+          if (value.detail) {
+            valueTag = <a href={value.url} rel="noopener noreferrer" target="_blank">{value.value}</a>;
+          } else {
+            valueTag = <a href={value.url} rel="noopener noreferrer" target="_blank">{value.value}</a>;
+          }
         }
       } else {
         const timestamp = value.value && mapping && mapping.type === "date" && Date.parse(value.value);
@@ -92,8 +96,13 @@ export class ValueField extends Component {
               <span className={"collapse" + (this.state.showMore[mapping.value]?" in":"")}>
                 {valueTag}
               </span>
-              {!this.state.showMore[mapping.value] && <button onClick={() => this.showMore(mapping.value)}>more...</button>}
+              {!this.state.showMore[mapping.value] && (
+                <button onClick={() => this.showMore(mapping.value)}>more...</button>
+              )}
             </span>;
+          }
+          if(mapping && mapping.tag_icon){
+            valueTag = <span className="field-value__tag"><div dangerouslySetInnerHTML={{__html:mapping.tag_icon}} /><div>{value.value}</div></span>;
           }
         }
       }
@@ -110,7 +119,7 @@ export class ValueField extends Component {
     }
 
     return (
-      <span className="field-value" data-showDetail={this.state.showDetails}>{valueTag}{detailsButton}{detailsContent}</span>
+      <div className="field-value" data-showDetail={this.state.showDetails}>{valueTag}{detailsButton}{detailsContent}</div>
     );
   }
 }

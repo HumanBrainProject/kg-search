@@ -25,26 +25,26 @@ describe('confirguration reducer', () => {
             expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
         });
     });
-    describe('load config request', () => {
+    describe('load definition request', () => {
         it('should set is active to true', () => {
             const state = {active: false};
-            const action = actions.loadConfigRequest();
+            const action = actions.loadDefinitionRequest();
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(true);
         });
     });
-    describe('load config success', () => {
+    describe('load definition success', () => {
         it('should set is active to false', () => {
             const state = {active: true};
-            const action = actions.loadConfigSuccess(null);
+            const action = actions.loadDefinitionSuccess(null);
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(false);
         });
     });
-    describe('load config failure', () => {
+    describe('load definition failure', () => {
         it('should set is active to false', () => {
             const state = {active: true};
-            const action = actions.loadConfigFailure("error");
+            const action = actions.loadDefinitionFailure("error");
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(false);
         });
@@ -93,8 +93,8 @@ describe('confirguration reducer', () => {
     });
     describe('load hit request', () => {
         it('should set is active to true', () => {
-            const state = {active: false, nextHitReference: null, currentHit: 567, previousHits:[234, 345, 456]};
-            const action = actions.loadHitRequest(678);
+            const state = {active: false, requestReference: 678, currentHit: 567, previousHits:[234, 345, 456]};
+            const action = actions.loadHitRequest();
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(true);
         });

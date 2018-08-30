@@ -14,20 +14,18 @@
 *   limitations under the License.
 */
 
-import React from 'react';
-import { CopyToClipboardButton } from './components/CopyToClipboardButton';
-import { EmailToLinkContainer } from './components/EmailToLink';
-import './styles.css';
+import React from "react";
+import { CopyToClipboardButton } from "./components/CopyToClipboardButton";
+import { EmailToLink} from "./components/EmailToLink";
+import "./styles.css";
 
-export function ShareBar(props) {
-    return (
-        <span className="kgs-share-links">
-            <span className="kgs-share-links-panel">
-                <CopyToClipboardButton icon="fa fa-clipboard" title="Copy search link to clipboard" />
-                <EmailToLinkContainer icon="fa fa-envelope-o" title="Send search link by email" />
-            </span>
-        </span>
-    )
+export function ShareBar() {
+  return (
+    <span className="kgs-share-links">
+      <span className="kgs-share-links-panel">
+        <CopyToClipboardButton icon="fa fa-clipboard" title="Copy search link to clipboard" />
+        <EmailToLink icon="fa fa-envelope-o" title="Send search link by email" />
+      </span>
+    </span>
+  );
 }
-
-  

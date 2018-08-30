@@ -14,18 +14,31 @@
 *   limitations under the License.
 */
 
-import React from 'react';
-import './styles.css';
+import React from "react";
+import { withStoreStateSubscription} from "../withStoreStateSubscription";
+import "./styles.css";
 
-export function FetchingPanel({show, message}) {
-    return (
-        <div className="kgs-fetching-container" data-show={show}>
-            <div className="kgs-fetching-panel">
-                <span className="kgs-spinner">
-                    <div className="kgs-spinner-logo"></div> 
-                </span>
-                <span className="kgs-spinner-label">{message}</span>
-            </div>
-        </div>
-    );
-}
+const FetchingPanelComponent = ({show, message}) => {
+  if (!show) {
+    return null;
+  }
+  //window.console.debug("FetchingPanel rendering...");
+  return (
+    <div className="kgs-fetching-container" >
+      <div className="kgs-fetching-panel">
+        <span className="kgs-spinner">
+          <div className="kgs-spinner-logo"></div>
+        </span>
+        <span className="kgs-spinner-label">{message}</span>
+      </div>
+    </div>
+  );
+};
+
+export const FetchingPanel = withStoreStateSubscription(
+  FetchingPanelComponent,
+  data => ({
+    show: data.fetching.active,
+    message: data.fetching.message
+  })
+);

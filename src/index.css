@@ -16,19 +16,46 @@
 
 @import url('../node_modules/searchkit/release/theme.css');
 @import url('../node_modules/searchkit-datefilter/release/theme.css');
-@import url('./skCustom.css');
 
 html, body {
     overflow-x: hidden;
+}
+
+body > header.navbar {
+    margin-bottom: 0;
+    border-bottom: 0;
+}
+
+.navbar {
+    background: #F4F4F4;
+}
+
+.navbar .nav-tabs {
+    background: white;
+}
+
+.navbar .nav-tabs>li>a 
+.navbar .nav-tabs>li>a:hover, 
+.navbar .nav-tabs>li>a:focus {
+    background: white;
+    border-color: white;
+}
+
+.navbar .nav-tabs>li.active>a, 
+.navbar .nav-tabs>li.active>a:hover, 
+.navbar .nav-tabs>li.active>a:focus {
+    background: #F4F4F4;
 }
 
 .navbar-default {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
+
 .main-content {
-    margin-top: -5px;
+	margin-top: 0;
 }
+
 .main-content .container {
 	width:100%;
 	padding-left:0;
@@ -37,8 +64,31 @@ html, body {
 
 .kgs-app {
     text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
+    font-weight: 400;
     font-family: 'Montserrat', sans-serif;
+}
+
+/* Droid Sans, Gill Sans, Montserrat, Poppins, Proxima Nova fonts weight too heavy fix */
+@-moz-document url-prefix() {
+    .kgs-app {
+        font-weight: lighter !important;
+    }
+}
+
+/* Internet Explorer 10 & 11 */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .kgs-app {
+        text-rendering: initial;
+    }
+}
+
+/* Microsoft Edge 12 : Can use the @supports rule Here is a link with all the info about this rule */
+@supports (-ms-accelerator:true) {
+    .kgs-app {
+        text-rendering: initial;
+    }
 }
 
 .kgs-app input[type="button"],
@@ -73,6 +123,17 @@ html, body {
 
 .kgs-app button[disabled] * {
     cursor: default;
+}
+
+.kgs-app a,
+.kgs-app a:visited {
+    color: #30b0e0;
+}
+
+.kgs-app a:hover,
+.kgs-app a:focus,
+.kgs-app a:active {
+    color:#0088cc;
 }
 
 .kgs-app .kgs-spinner {

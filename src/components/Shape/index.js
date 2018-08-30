@@ -14,12 +14,12 @@
 *   limitations under the License.
 */
 
-import React from 'react';
+import React from "react";
 import { store } from "../../store";
-import { Summary } from './components/Summary';
-import { Field } from './components/Field';
-import { HighlightsField} from './components/HighlightsField';
-import './styles.css';
+import { Summary } from "./components/Summary";
+import { Field } from "./components/Field";
+import { HighlightsField} from "./components/HighlightsField";
+import "./styles.css";
 
 const markdownEscapedChars = {
   "&#x2F;": "\\",
@@ -46,144 +46,249 @@ const replaceMarkdownEscapedChars = (str) => {
   return str.replace(/<\/?em>/gi,"");
 };
 
-export function Shape({detailViewMode, data}) {
-  
-  const state = store.getState();
+const getTypeField = (type, data) => {
 
-  let iconTag = <i className="fa fa-tag" />;
-  let noDataTag = <div className="kgs-shape__no-data">This data is currently not available.</div>;
-  let fieldsTag = null;
+  // type is not present in the data
+  const fieldData = Object.assign({}, data);
+  fieldData.type = {
+    value: type
+  };
 
-  const source = data && !(data.found === false) && data._type && data._source;
-  if (source) {
+  return {
+    name: "type",
+    data: fieldData,
+    mapping: {visible: true},
+    showSmartContent: false
+  };
+};
 
-    const mapping = state.configuration.shapeMappings[data._type];
-    if (!mapping) {
+const getTitleField = (data, highlight, mapping, showSmartContent) => {
 
-      if (source.image && source.image.url)
-        iconTag = <img src={source.image.url} alt={data._type} width="100%" height="100%" />;
-    
-      noDataTag = <div className="kgs-shape__no-data">This type of data is currently not supported.</div>;
+  // remove title
+  const fieldMapping = mapping && Object.assign({}, mapping);
+  fieldMapping && delete fieldMapping.value; // no deep cloning needed as only first level is modified
 
-      fieldsTag = <Field name="type" data={{type: {value: data._type}}} mapping={{visible: true}} showSmartContent={false} />;
+  let fieldData = data;
 
-    } else {
+  let value = data && data.title && data.title.value;
 
-      noDataTag = null;
+  if (highlight && highlight["title.value"] && highlight["title.value"].length > 0) {
+    value = replaceMarkdownEscapedChars(highlight["title.value"][0]);
 
-      if (source.image && source.image.url) {
-        iconTag = <img src={source.image.url} alt={data._type} width="100%" height="100%" />;
-      } else if (mapping.icon) {
-        iconTag = <div dangerouslySetInnerHTML={{__html: mapping.icon}} width="100%" height="100%" />;
-      }
+    fieldData = Object.assign({}, data);
+    fieldData.title = Object.assign({}, data.title); // assuming data.title children are values
+    fieldData.title.value = value;
+  }
 
-      let description  = "";
-      if (source.description && source.description.value) {
-        description = source.description.value;
-        if(!detailViewMode){
-          if(data.highlight && data.highlight["description.value"] && data.highlight["description.value"].length > 0){
-            description = replaceMarkdownEscapedChars(data.highlight["description.value"][0]);
-            description += "...";
-          } else if(description.length > 220){
-            description = description.substring(0, 217) + "...";
-          }
-        } else {
-          mapping.fields["description"].collapsible = true;
-        }
-      }
-      if (mapping && mapping.fields["description"]) 
-        delete  mapping.fields["description"].value;
+  return {
+    name: "title",
+    data: fieldData,
+    mapping: fieldMapping,
+    showSmartContent: showSmartContent
+  };
+};
 
-      let title = source.title && source.title.value;
-      if(data.highlight && data.highlight["title.value"] && data.highlight["title.value"].length > 0)
-        title = replaceMarkdownEscapedChars(data.highlight["title.value"][0]);
-      if (mapping && mapping.fields["title"]) 
-        delete  mapping.fields["title"].value;
+const getDescriptionField = (data, highlight, mapping, showSmartContent) => {
 
-      fieldsTag = [
-        {
-          name: "type", 
-          data: {
-            type: {
-              value: mapping.label?mapping.label:data._type
-            }
-          }, 
-          mapping: {
-            visible: true
-          } 
-        },
-        {
-          name: "title", 
-          data: title?{
-            title: {
-              value: title
-            }
-          }:{}, 
-          mapping: mapping && mapping.fields["title"] 
-        }
-      ].map(e => <Field name={e.name} data={e.data} mapping={e.mapping} key={e.name} showSmartContent={detailViewMode} />);
-      
-      if (detailViewMode) {
-        fieldsTag.push(<Summary data={source} mapping={mapping} key="summary" />);
-      }
+  // remove title
+  const fieldMapping = mapping && Object.assign({}, mapping, {collapsible: !!showSmartContent});
+  fieldMapping && delete fieldMapping.value; // no deep cloning needed as only first level is modified
 
-      fieldsTag.push(...[
-        {
-          name: "description", 
-          data: (description !== "")?{
-            description: {
-              value: description
-            }
-          }:{}, 
-          mapping: mapping && mapping.fields["description"]
-        }
-      ].map(e => <Field name={e.name} data={e.data} mapping={e.mapping} key={e.name} showSmartContent={detailViewMode} />));
-    
-      if (mapping.fields) {
-        fieldsTag.push(...(Object.entries(mapping.fields)
-          .map(([name, mapping]) => ({
-            name: name,
-            mapping: mapping
-          }))
-          .filter(e => 
-                e.mapping
-              && (detailViewMode || e.mapping.overview)
-              && (e.mapping.showIfEmpty || source[e.name])
-              && ["image", "title", "description"].indexOf(e.name) === -1
-          )
-          .map(e => <Field name={e.name} data={source} mapping={e.mapping} showSmartContent={detailViewMode} key={e.name} />)));
-      }
+  let fieldData = data;
 
-      if(!detailViewMode){
-        let highlightFields;
-        if(data.highlight){
-          Object.keys(data.highlight).forEach(field => {
-            if(["title.value","description.value"].indexOf(field) !== -1){
-              return;
-            }
-            if(!highlightFields){
-              highlightFields = {}
-            }
-            highlightFields[field] = data.highlight[field];
-          });
-        }
-        
-        if(highlightFields){
-          fieldsTag.push(
-            <HighlightsField mapping={mapping} highlights={highlightFields} key={"highlightFields"}/>//[{name: "description", data: description}].map(e => <Field name={e.name} data={e.data} key={e.name} />)
-          );
-        }
-      }
+  if(!showSmartContent){
+
+    const value = data && data.description && data.description.value;
+    let modifiedValue = value;
+
+    if (highlight && highlight["description.value"] && highlight["description.value"].length > 0) {
+      modifiedValue = replaceMarkdownEscapedChars(highlight["description.value"][0]);
+      modifiedValue += "...";
+    } else if(value && value.length > 220) {
+      modifiedValue = value.substring(0, 217) + "...";
+    }
+
+    if (modifiedValue !== value) {
+      fieldData = Object.assign({}, data);
+      fieldData.description = Object.assign({}, data.description); // assuming data.description children are values
+      fieldData.description.value = modifiedValue;
     }
   }
 
+  return {
+    name: "description",
+    data: fieldData,
+    mapping: fieldMapping,
+    showSmartContent: showSmartContent
+  };
+};
+
+const getComponentField = (data, mapping, showSmartContent) => {
+  let fieldData = data;
+  let fieldMapping = mapping;
+  if (!showSmartContent && data && data.component && data.component.value) {
+    fieldData = Object.assign({}, data);
+    fieldData.component = Object.assign({}, data.component); // assuming data.component children are values
+    fieldData.component.value = "From the " + data.component.value + " project";
+
+    // remove title
+    fieldMapping = mapping && Object.assign({}, mapping);
+    fieldMapping && delete fieldMapping.value; // no deep cloning needed as only first level is modified
+  }
+
+  return {
+    name: "component",
+    data: fieldData,
+    mapping: fieldMapping,
+    showSmartContent: showSmartContent
+  };
+};
+
+const getField = (type, name, data, highlight, mapping, showSmartContent) => {
+  switch (name) {
+  case "type":
+    return getTypeField(type, data);
+  case "title":
+    return getTitleField(data, highlight, mapping, showSmartContent);
+  case "description":
+    return getDescriptionField(data, highlight, mapping, showSmartContent);
+  case "component":
+    return getComponentField(data, mapping, showSmartContent);
+  default:
+    return {
+      name: name,
+      data: data,
+      mapping: mapping,
+      showSmartContent: showSmartContent
+    };
+  }
+};
+
+const getFields = (type, data, highlight, mapping, showSmartContent) => {
+  if (!data || !mapping) {
+    return [];
+  }
+
+  const primaryFiels = ["title", "description"];
+  const fields = [
+    ["type", {}],
+    ...(primaryFiels
+      .map(name => ([name, mapping.fields && mapping.fields[name]]))
+      .filter(([,mapping]) => mapping)
+    ),
+    ...(Object.entries(mapping.fields || {})
+      .filter(([name, mapping]) =>
+        mapping
+        && (showSmartContent || mapping.overview)
+        && (mapping.showIfEmpty || (data && data[name]))
+        && !primaryFiels.includes(name) // exclude above "manually" defined fields
+      )
+    )
+  ].map(([name, mapping]) => getField(type, name, data, highlight, mapping, showSmartContent));
+
+  return fields;
+};
+
+const filterHighlightFields = (data, excludeFieldNames) => {
+  if (!data) {
+    return null;
+  }
+  if (!Array.isArray(excludeFieldNames) || excludeFieldNames.length === 0) {
+    return data;
+  }
+  let hasFields = false;
+  const fields = Object.entries(data)
+    .filter(([name,]) => {
+      return !(excludeFieldNames.includes(name));
+    })
+    .reduce((result, [name, field]) => {
+      hasFields = true;
+      result[name] = field;
+      return result;
+    }, {});
+  return hasFields?fields:null;
+};
+
+const Icon = ({title, url, inline}) => {
+  if (url) {
+    return (
+      <img src={url} alt={title} width="100%" height="100%" />
+    );
+  }
+  if (inline) {
+    return (
+      <div dangerouslySetInnerHTML={{__html: inline}} width="100%" height="100%" />
+    );
+  }
   return (
-    <div className={"kgs-shape__panel"} >
-      <div className={"kgs-shape__field kgs-shape__icon"}>
-        {iconTag}
+    <i className="fa fa-tag" />
+  );
+};
+
+const NoData = ({show}) => {
+  if (!show) {
+    return null;
+  }
+  return (
+    <div className="kgs-shape__no-data">This data is currently not available.</div>
+  );
+};
+
+const UnknownData = ({show}) => {
+  if (!show) {
+    return null;
+  }
+  return (
+    <div className="kgs-shape__no-data">This type of data is currently not supported.</div>
+  );
+};
+
+const ShapeComponent = ({type, hasNoData, hasUnknownData, icon, summary, fields, highlightsField}) => {
+  return (
+    <div className="kgs-shape" data-type={type}>
+      <div className="kgs-shape__field kgs-shape__header">
+        <div className="kgs-shape__field kgs-shape__icon">
+          <Icon {...icon}/>
+        </div>
+        {fields.map(({name, data, mapping, showSmartContent}) => (
+          <Field key={name} name={name} data={data} mapping={mapping} showSmartContent={showSmartContent} />
+        ))}
+        <Summary {...summary} />
+        <HighlightsField {...highlightsField} />
       </div>
-      {fieldsTag}
-      {noDataTag}
+      <NoData show={hasNoData} />
+      <UnknownData show={hasUnknownData} />
     </div>
+  );
+};
+
+export function Shape({data, detailViewMode}) {
+
+  const state = store.getState();
+  const source = data && !(data.found === false) && data._type && data._source;
+  const mapping = source && state.definition.shapeMappings[data._type];
+
+  const shapeProps = {
+    type: data && data._type,
+    hasNoData: !source,
+    hasUnknownData: !mapping,
+    icon: {
+      title: data && data._type,
+      url: source && source.image && source.image.url,
+      inline: mapping && mapping.icon
+    },
+    summary: {
+      show: !!detailViewMode,
+      data: source,
+      mapping: mapping
+    },
+    fields: getFields(data && data._type, source, data && data.highlight, mapping, !!detailViewMode),
+    highlightsField: {
+      fields: filterHighlightFields(data && data.highlight, ["title.value","description.value"]),
+      mapping: mapping
+    }
+  };
+  return (
+    <ShapeComponent {...shapeProps} />
   );
 }

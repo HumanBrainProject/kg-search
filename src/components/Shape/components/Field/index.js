@@ -14,48 +14,58 @@
 *   limitations under the License.
 */
 
-import React from 'react';
-import { ListField } from '../ListField';
-import { ObjectField } from '../ObjectField';
-import { ValueField } from '../ValueField';
-import { HintField} from '../HintField';
+import React from "react";
+import { FieldLabel} from "../FieldLabel";
+import { FieldHint} from "../FieldHint";
+import { ListField } from "../ListField";
+import { ObjectField } from "../ObjectField";
+import { ValueField } from "../ValueField";
 
 export function Field({name, data, mapping, showSmartContent}) {
-
-  if (!mapping || !mapping.visible || !(mapping.showIfEmpty || data[name]))
-    return null;
-
-  let labelTag = null;
-  let valueTag = null;
-  let objectTag = null;
-  let listTag = null;
-  let hintTag = null;
-
-  if (mapping.value)
-    labelTag = <span className="field-label">{mapping.value}</span>;
-  
-  if(mapping.hint)
-    hintTag = <HintField value = {mapping.hint} label = {mapping.value} />;
-
   const value = data && name && data[name];
-  if (value) {
-    if (Array.isArray(value)) {
-      listTag = <ListField items={value} mapping={mapping} showSmartContent={showSmartContent} />;
-    } else {
-      valueTag = <ValueField value={value} mapping={mapping} showSmartContent={showSmartContent} />;
-      if (mapping && mapping.children) {
-        objectTag = <ObjectField data={value.children} mapping={mapping} showSmartContent={showSmartContent} />;
-      }
-    }
-  };
+  if (!mapping || !mapping.visible || !(value || mapping.showIfEmpty)) {
+    return null;
+  }
 
+  const isList = Array.isArray(value);
+  const style = (mapping.order && !showSmartContent)?{order: mapping.order}:null;
+  const className = "kgs-shape__field" + (name?" kgs-shape__" + name:"");
+
+  const labelProps = {
+    show: mapping.value && (!mapping.label_hidden || showSmartContent),
+    showAsBlock: mapping.tag_icon,
+    value: mapping.value
+  };
+  const hintProps = {
+    show: mapping.value && mapping.hint,
+    value: mapping.hint,
+    label: mapping.value
+  };
+  const listProps = {
+    show: isList,
+    items: value,
+    mapping: mapping,
+    showSmartContent: showSmartContent
+  };
+  const valueProps = {
+    show: !isList,
+    value: value,
+    mapping: mapping,
+    showSmartContent: showSmartContent
+  };
+  const objectProps = {
+    show: !isList && mapping.children,
+    value: value && value.children,
+    mapping: mapping,
+    showSmartContent: showSmartContent
+  };
   return (
-    <span className={"kgs-shape__field" + (name?" kgs-shape__" + name:"")}>
-      {labelTag}
-      {hintTag}
-      {valueTag}
-      {objectTag}
-      {listTag}
+    <span style={style} className={className}>
+      <FieldLabel {...labelProps} />
+      <FieldHint {...hintProps} />
+      <ValueField {...valueProps} />
+      <ListField {...listProps} />
+      <ObjectField {...objectProps} />
     </span>
   );
 }

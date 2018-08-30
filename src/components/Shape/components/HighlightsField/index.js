@@ -14,21 +14,23 @@
 *   limitations under the License.
 */
 
-import React from 'react';
+import React from "react";
 
-export function HighlightsField({highlights, mapping}) {
-
-    let valueTag = [];
-  
-    Object.keys(highlights).forEach(field => {
-      let shortKey = field.replace(/^(.*?)\..*$/g, "$1");
-      valueTag.push(<p key={shortKey}>{mapping.fields[shortKey].value}: <span dangerouslySetInnerHTML={{__html:highlights[field].join(", ")}}></span></p>);
-    });
-  
-    return (
-      <div className="kgs-shape__field kgs-shape__highlights">
-        <div className="field-label">Search matches</div>
-        <div className="field-value">{valueTag}</div>
-      </div>
-    );
+export function HighlightsField({fields, mapping}) {
+  if (!fields) {
+    return null;
   }
+  let valueTag = [];
+
+  Object.keys(fields).forEach(field => {
+    let shortKey = field.replace(/^(.*?)\..*$/g, "$1");
+    valueTag.push(<p key={shortKey}>{mapping.fields[shortKey].value}: <span dangerouslySetInnerHTML={{__html:fields[field].join(", ")}}></span></p>);
+  });
+
+  return (
+    <div className="kgs-shape__field kgs-shape__highlights">
+      <div className="field-label">Search matches</div>
+      <div className="field-value">{valueTag}</div>
+    </div>
+  );
+}

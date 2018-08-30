@@ -19,9 +19,6 @@ import App from './App';
 
 const config = {
   searchApiHost: "https://kg.humanbrainproject.org",
-  searchApiPath: "/search/",
-  searchApiConfigIndex: "kg_labels",
-  searchApiDataIndex: "kg", 
   hitsPerPage: 20,
   searchOnLoad: true,
   queryTweaking: {
@@ -34,8 +31,7 @@ const config = {
       minNbOfChars: 4 // nb of character under which fuzzy search is not applied
     },
     maxNbOfTermsTrigger: 4, // maximum number of terms before tweaking is turned off
-  },
-  searchThrottleTime: 750 // nb of ms after which a request to elasticsearch will only be invoked
+  }
 };
 
 it('renders without crashing', () => {

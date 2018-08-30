@@ -1,0 +1,131 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-shapesFilter {
+    margin: 10px 0 0 0
+}
+
+.kgs-shapesFilter > .sk-panel > .sk-panel__content > .sk-item-list {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    align-content: flex-start;
+    -ms-flex-flow: row wrap;
+    flex-wrap: wrap;
+}
+
+
+.kgs-shapesFilter .kgs-shapesFilter__shape {
+    display: inline-block;
+    margin: 20px 25px 0 0;
+    border-bottom: 5px solid transparent;
+}
+
+.kgs-shapesFilter .kgs-shapesFilter__shape.is-active {
+    border-bottom-color: #ED5554;
+}
+
+.kgs-shapesFilter .kgs-shapesFilter__shape button.kgs-shapesFilter__button {
+    min-width: 220px;
+    padding: 16px 20px;
+    border: 1px solid white;
+    background-color: white; 
+    -webkit-transition: -webkit-box-shadow 0.2s ease-in;
+    transition: -webkit-box-shadow 0.2s ease-in;
+    -o-transition: box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
+}
+  
+.kgs-shapesFilter .kgs-shapesFilter__shape.is-disabled  button.kgs-shapesFilter__button {
+    opacity: 0.5;
+}
+
+.kgs-shapesFilter .kgs-shapesFilter__shape button.kgs-shapesFilter__button:focus,
+.kgs-shapesFilter .kgs-shapesFilter__shape button.kgs-shapesFilter__button:hover:not([disabled]),
+.kgs-shapesFilter .kgs-shapesFilter__shape:not([is-disabled]) button.kgs-shapesFilter__button:hover {
+    /*
+    -webkit-box-shadow: 3px 3px 6px #8f8a8a;
+    box-shadow: 3px 3px 6px #8f8a8a;    
+    */
+    -webkit-box-shadow: 3px 3px 6px #cbc9c9;
+    box-shadow: 3px 3px 6px #cbc9c9;
+    z-index: 1;
+}
+
+.kgs-shapesFilter .kgs-shapesFilter__shape button.kgs-shapesFilter__button > div {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: auto auto;
+    -ms-grid-rows: auto auto;
+    grid-template-areas: "icon label"
+                         "icon count";
+    width: 100%;
+}
+
+.kgs-shapesFilter .kgs-shapesFilter__icon {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+    -ms-grid-row-span: 2;
+    grid-area: icon;    
+    height: 50px;
+    margin-right: 10px;
+    padding-top: 10px;
+}
+
+.kgs-shapesFilter .kgs-shapesFilter__icon div i {
+    position: absolute;
+    margin-top: 5px;
+    margin-left: -20px;
+    -ms-transform: translate(20px, 0);
+}
+
+.kgs-shapesFilter .kgs-shapesFilter__icon div svg {
+    display: block;
+}
+
+.kgs-shapesFilter .kgs-shapesFilter__label {
+    -ms-grid-column: 2;
+    -ms-grid-row: 1;
+    grid-area: label;
+    text-align: left;
+    font-size: 26px;
+    color: #555;
+    white-space: nowrap;
+}
+
+.kgs-shapesFilter .kgs-shapesFilter__shape.is-active:not(.is-disabled) .kgs-shapesFilter__label {
+    color: #ED5554;
+}
+
+.kgs-shapesFilter .kgs-shapesFilter__count {
+    -ms-grid-column: 2;
+    -ms-grid-row: 2;
+    grid-area: count;
+    text-align: left;
+    font-size: 18px;
+    color: #999;
+    white-space: nowrap;
+}
+
+/* 
+.filter--facet_type .sk-item-list-option[data-key="$all"]{
+    display:none;
+}
+*/

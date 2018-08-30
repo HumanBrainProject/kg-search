@@ -14,10 +14,10 @@
 *   limitations under the License.
 */
 
-import React, { Component } from 'react';
-import { ObjectField } from '../ObjectField';
-import { ValueField } from '../ValueField';
-import './styles.css';
+import React, { Component } from "react";
+import { ObjectField } from "../ObjectField";
+import { ValueField } from "../ValueField";
+import "./styles.css";
 
 export class ListField extends Component {
   constructor(props) {
@@ -31,28 +31,56 @@ export class ListField extends Component {
     const {items} = this.props;
     let size = 5;
     switch (this.state.size) {
-      case 5:
-        if (items.length > 10)
-          size = 10;
-        else
-          size = Number.POSITIVE_INFINITY;
-        break;
-      case 10:
-        if (items.length > 10)
-          size = Number.POSITIVE_INFINITY;
-        else  
-          size = 5;
-        break;
-      default:
-        size = 5;
+    case 5:
+      size = (items.length > 10)?10:Number.POSITIVE_INFINITY;
+      break;
+    case 10:
+      size = (items.length > 10)?Number.POSITIVE_INFINITY:5;
+      break;
+    default:
+      size = 5;
     }
     this.setState({ size: size});
   }
+
   render() {
-    const {items, mapping, showSmartContent} = this.props;
-    
-    if (!mapping || !mapping.visible)
+    const {show, items, mapping, showSmartContent} = this.props;
+    if (!show) {
       return null;
+    }
+    const keys = {};
+    const generateList = () => {
+      let res =  items.map((item, index) => {
+        if ((this.state.size === Number.POSITIVE_INFINITY || index < this.state.size) && (showSmartContent || index < 5)) {
+          let value = null;
+          if (item.children) {
+            value = <ObjectField show={true} data={item.children} mapping={mapping} showSmartContent={showSmartContent} />;
+          } else {
+            value = <ValueField show={true} value={item} mapping={mapping} showSmartContent={showSmartContent} />;
+          }
+          let key = item.reference?item.reference:item.value;
+          if (key && !keys[key]) {
+            keys[key] = true;
+          } else {
+            key = index;
+          }
+          let itemType;
+          if(mapping.overview_max_display){
+            itemType = <div key={key}>{value}</div>;
+          }else{
+            itemType = <li key={key}>{value}</li>;
+          }
+          return itemType;
+        } else {
+          return null;
+        }
+      });
+      return res;
+    };
+
+    if (!mapping || !mapping.visible) {
+      return null;
+    }
 
     if (mapping.separator) {
       const keys = {};
@@ -61,9 +89,9 @@ export class ListField extends Component {
           {items.map((item, index) => {
             let value = null;
             if (item.children) {
-              value = <ObjectField data={item.children} mapping={mapping} showSmartContent={showSmartContent} />;
+              value = <ObjectField show={true} data={item.children} mapping={mapping} showSmartContent={showSmartContent} />;
             } else {
-              value = <ValueField value={item} mapping={mapping} showSmartContent={showSmartContent} />;
+              value = <ValueField show={true} value={item} mapping={mapping} showSmartContent={showSmartContent} />;
             }
             let key = item.value;
             if (key && !keys[key]) {
@@ -90,37 +118,33 @@ export class ListField extends Component {
             viewMore = <button className="kgs-shape__viewMore-button" onClick={this.handleShowMoreClick} role="link">view less</button>;
           }
         } else {
-            dotsMore = <li key="-1" className="kgs-shape__more">...</li>;
+          dotsMore = <li key="-1" className="kgs-shape__more">...</li>;
         }
       }
 
-      const keys = {};
+
+      let displayNumber = items.length;
+      let listItems ;
+      if (mapping.overview_max_display){
+        if (!showSmartContent){
+          displayNumber = mapping.overview_max_display;
+        }
+        listItems = <div className='list-tag'>
+          {generateList().slice(0, displayNumber)}
+          {dotsMore}
+        </div>;
+      } else {
+        listItems = <ul>
+          {generateList()}
+          {dotsMore}
+        </ul>;
+      }
+
       return (
-          <span>
-            <ul>
-              {items.map((item, index) => {
-                if ((this.state.size === Number.POSITIVE_INFINITY || index < this.state.size) && (showSmartContent || index < 5)) {
-                  let value = null;
-                  if (item.children) {
-                    value = <ObjectField data={item.children} mapping={mapping} showSmartContent={showSmartContent} />;
-                  } else {
-                    value = <ValueField value={item} mapping={mapping} showSmartContent={showSmartContent} />;
-                  }
-                  let key = item.reference?item.reference:item.value;
-                  if (key && !keys[key]) {
-                    keys[key] = true;
-                  } else {
-                    key = index;
-                  }
-                  return <li key={key}>{value}</li>;
-                } else {
-                  return null;
-                }
-              })}
-              {dotsMore}
-            </ul>
-            {viewMore}
-          </span>
+        <span>
+          {listItems}
+          {viewMore}
+        </span>
       );
     }
   }

@@ -15,188 +15,225 @@
 */
 
 import * as types from "./actions.types";
-import {searchService} from "./search.service";
 
-export const loadConfigRequest = accessToken => {  
-    return {
-        type: types.LOAD_CONFIG_REQUEST,
-        accessToken: accessToken
-    };
+export const setApplicationReady = isReady => {
+  return {
+    type: types.SET_APPLICATION_READY,
+    isReady: isReady
+  };
 };
 
-export const loadConfigSuccess = config => {  
-    return {
-        type: types.LOAD_CONFIG_SUCCESS, 
-        config: config
-    };
+export const agreeTermsShortNotice = () => {
+  return {
+    type: types.AGREE_TERMS_SHORT_NOTICE
+  };
 };
 
-export const loadConfigFailure = error => {  
-    return {
-        type: types.LOAD_CONFIG_FAILURE, 
-        error: error
-    };
+export const setLayoutMode = gridLayoutMode => {
+  return {
+    type: types.SET_LAYOUT_MODE,
+    gridLayoutMode: gridLayoutMode
+  };
 };
 
-export const loadConfig = settings => {  
-    return dispatch => {
-        dispatch(loadConfigRequest(settings.accessToken));
-        searchService.initialize(settings);
-        searchService.getConfig()
-        .then(config => {
-            dispatch(loadConfigSuccess(config));
-        })
-        .catch(error => {
-            dispatch(loadConfigFailure(error));
-        });
-    };
+export const initializeConfig = options => {
+  return {
+    type: types.INITIALIZE_CONFIG,
+    options: options
+  };
 };
 
-export const loadIndexesRequest = () => {  
-    return {
-        type: types.LOAD_INDEXES_REQUEST 
-    };
+export const loadDefinition = () => {
+  return {
+    type: types.LOAD_DEFINITION
+  };
 };
 
-export const loadIndexesSuccess = indexes => {  
-    return {
-        type: types.LOAD_INDEXES_SUCCESS, 
-        indexes: indexes
-    };
+export const loadDefinitionRequest = () => {
+  return {
+    type: types.LOAD_DEFINITION_REQUEST
+  };
 };
 
-export const loadIndexesFailure = error => {  
-    return {
-        type: types.LOAD_INDEXES_FAILURE, 
-        error: error
-    };
+export const loadDefinitionSuccess = definition => {
+  return {
+    type: types.LOAD_DEFINITION_SUCCESS,
+    definition: definition
+  };
+};
+
+export const loadDefinitionFailure = error => {
+  return {
+    type: types.LOAD_DEFINITION_FAILURE,
+    error: error
+  };
 };
 
 export const loadIndexes = () => {
-    return dispatch => {
-        dispatch(loadIndexesRequest());
-        searchService.getIndexes()
-        .then(indexes => {
-            dispatch(loadIndexesSuccess(indexes));
-        })
-        .catch(error => {
-            dispatch(loadIndexesFailure(error));
-        });
-    };
-}
-
-export const loadSearchServiceFailure = (status, index) => {  
-    return {
-        type: types.LOAD_SEARCH_SERVICE_FAILURE,
-        status: status,
-        index: index
-    };
+  return {
+    type: types.LOAD_INDEXES
+  };
 };
 
-export const loadSearchSessionFailure = status => {  
-    return {
-        type: types.LOAD_SEARCH_SESSION_FAILURE,
-        status: status
-    };
+export const loadIndexesRequest = () => {
+  return {
+    type: types.LOAD_INDEXES_REQUEST
+  };
 };
 
-export const loadSearchRequest = () => {  
-    return {
-        type: types.LOAD_SEARCH_REQUEST
-    };
+export const loadIndexesSuccess = indexes => {
+  return {
+    type: types.LOAD_INDEXES_SUCCESS,
+    indexes: indexes
+  };
 };
 
-export const loadSearchResult = results => {  
-    return {
-        type: types.LOAD_SEARCH_SUCCESS,
-        results: results
-    };
+export const loadIndexesFailure = error => {
+  return {
+    type: types.LOAD_INDEXES_FAILURE,
+    error: error
+  };
 };
 
-export const cancelSearch = () => {  
-    return {
-        type: types.CANCEL_SEARCH
-    };
+export const setSearchReady = isReady => {
+  return {
+    type: types.SET_SEARCH_READY,
+    isReady: isReady
+  };
 };
 
-export const setIndex = index => {  
-    return {
-        type: types.SET_INDEX,
-        index: index
-    };
+export const loadSearchBadRequest = status => {
+  return {
+    type: types.LOAD_SEARCH_BAD_REQUEST,
+    status: status
+  };
 };
 
-export const loadHitRequest = reference => {  
-    return {
-        type: types.LOAD_HIT_REQUEST, 
-        reference: reference
-    };
+export const loadSearchServiceFailure = (status, index) => {
+  return {
+    type: types.LOAD_SEARCH_SERVICE_FAILURE,
+    status: status,
+    index: index
+  };
 };
 
-export const loadHitSuccess = data => {  
-    return {
-        type: types.LOAD_HIT_SUCCESS, 
-        data: data
-    };
+export const loadSearchSessionFailure = status => {
+  return {
+    type: types.LOAD_SEARCH_SESSION_FAILURE,
+    status: status
+  };
 };
 
-export const loadHitNoData = reference => {  
-    return {
-        type: types.LOAD_HIT_NO_DATA, 
-        reference: reference
-    };
+export const loadSearchRequest = nonce => {
+  return {
+    type: types.LOAD_SEARCH_REQUEST,
+    nonce: nonce
+  };
 };
 
-export const loadHitFailure = error => {   
-    return {
-        type: types.LOAD_HIT_FAILURE, 
-        error: error
-    };
+export const loadSearchResult = (results, index, from) => {
+  return {
+    type: types.LOAD_SEARCH_SUCCESS,
+    results: results,
+    index: index,
+    from: from
+  };
 };
 
-export const loadHit = (reference, index) => {  
-    return dispatch => {
-        dispatch(loadHitRequest(reference));
-        searchService.getHitByReference(reference, index)
-        .then(data => {
-            if (data.found)
-                dispatch(loadHitSuccess(data));
-            else
-                dispatch(loadHitNoData(reference));
-        })
-        .catch(error => {
-            dispatch(loadHitFailure(error));
-        });
-    };
+export const cancelSearch = () => {
+  return {
+    type: types.CANCEL_SEARCH
+  };
 };
 
-export const setHit = data => {  
-    return {
-        type: types.SET_HIT, 
-        data: data
-    };
+export const setIndex = index => {
+  return {
+    type: types.SET_INDEX,
+    index: index
+  };
 };
 
-export const cancelHitLoading = () => {  
-    return {
-        type: types.CANCEL_HIT_LOADING
-    };
+export const loadHit = reference => {
+  return {
+    type: types.LOAD_HIT,
+    reference: reference
+  };
 };
 
-export const setPreviousHit = () => {  
-    return {
-        type: types.SET_PREVIOUS_HIT
-    };
+export const loadHitRequest = () => {
+  return {
+    type: types.LOAD_HIT_REQUEST
+  };
 };
 
-export const clearAllHits = () => {  
-    return {
-        type: types.CLEAR_ALL_HITS
-    };
+export const loadHitSuccess = data => {
+  return {
+    type: types.LOAD_HIT_SUCCESS,
+    data: data
+  };
 };
 
-export const setCurrentHitFromBrowserLocation = () => {  
-    return {
-        type: types.SET_CURRENT_HIT_FROM_BROWSER_LOCATION
-    };
+export const loadHitNoData = reference => {
+  return {
+    type: types.LOAD_HIT_NO_DATA,
+    reference: reference
+  };
+};
+
+export const loadHitFailure = (id, error) => {
+  return {
+    type: types.LOAD_HIT_FAILURE,
+    id: id,
+    error: error
+  };
+};
+
+export const setHit = data => {
+  return {
+    type: types.SET_HIT,
+    data: data
+  };
+};
+
+export const cancelHitLoading = () => {
+  return {
+    type: types.CANCEL_HIT_LOADING
+  };
+};
+
+export const setPreviousHit = () => {
+  return {
+    type: types.SET_PREVIOUS_HIT
+  };
+};
+
+export const clearAllHits = () => {
+  return {
+    type: types.CLEAR_ALL_HITS
+  };
+};
+
+export const setCurrentHitFromBrowserLocation = () => {
+  return {
+    type: types.SET_CURRENT_HIT_FROM_BROWSER_LOCATION
+  };
+};
+
+export const authenticate = accessToken => {
+  return {
+    type: types.AUTHENTICATE,
+    accessToken: accessToken
+  };
+};
+
+export const requestAuthentication = () => {
+  return {
+    type: types.REQUEST_AUTHENTICATION
+  };
+};
+
+export const logout = () => {
+  return {
+    type: types.LOGOUT
+  };
 };

@@ -14,69 +14,72 @@
 *   limitations under the License.
 */
 
-import React from 'react';
-import './styles.css';
+import React from "react";
+import "./styles.css";
 
 export function CopyToClipboardButton(props) {
 
-    const clickHandler = (event) => {
+  const clickHandler = (event) => {
 
-        var textArea = document.createElement("textarea");
-        textArea.style.position = 'absolute';
-        textArea.style.top = 0;
-        textArea.style.left = 0;
-        textArea.style.width = '2em';
-        textArea.style.height = '2em';
-        textArea.style.padding = 0;
-        textArea.style.margin = 0;
-        textArea.style.border = 'none';
-        textArea.style.outline = 'none';
-        textArea.style.boxShadow = 'none';
-        textArea.style.background = 'transparent';
-        textArea.style.color = 'transparent';
+    var textArea = document.createElement("textarea");
+    textArea.style.position = "absolute";
+    textArea.style.top = 0;
+    textArea.style.left = 0;
+    textArea.style.width = "2em";
+    textArea.style.height = "2em";
+    textArea.style.padding = 0;
+    textArea.style.margin = 0;
+    textArea.style.border = "none";
+    textArea.style.outline = "none";
+    textArea.style.boxShadow = "none";
+    textArea.style.background = "transparent";
+    textArea.style.color = "transparent";
 
-        textArea.value = window.location.href;
+    textArea.value = window.location.href;
 
-        const button = event.currentTarget;
-        
-        button.appendChild(textArea);
+    const button = event.currentTarget;
 
-        textArea.select();
+    button.appendChild(textArea);
 
-        try {
-            document.execCommand('copy');
+    textArea.select();
 
-            button.setAttribute("show", "true");
-            setTimeout(() => button.removeAttribute("show"), 1000);
-            
-        } catch (e) {}
+    try {
+      document.execCommand("copy");
 
-        button.removeChild(textArea);
-    };
+      button.setAttribute("show", "true");
+      setTimeout(() => button.removeAttribute("show"), 1000);
 
-    let title = "Copy search link to clipboard";
-    if (props.title)
-        title = props.title;
-
-    let iconClassName = "fa fa-clipboard";
-    if (props.icon)
-        iconClassName = props.icon;
-
-    let icon = null;
-    let text = null;
-    if (props.text) {
-        if (props.icon)
-            icon = <i className={iconClassName}></i>;
-        text = <span>{props.text}</span>;
-    } else {
-        icon = <i className={iconClassName}></i>;
+    } catch (e) {
+      //window.console.debug("could not run execCommand copy");
     }
 
-    return (
-        <span className="kgs-copy-to-clipboard">
-            <button role="link" onClick={clickHandler} title={title}>{icon}{text}</button>
-            <div className="kgs-copy-confirmation">search link copied to clipoard</div>
-        </span>
-    );
-}  
-  
+    button.removeChild(textArea);
+  };
+
+  let title = "Copy search link to clipboard";
+  if (props.title) {
+    title = props.title;
+  }
+
+  let iconClassName = "fa fa-clipboard";
+  if (props.icon) {
+    iconClassName = props.icon;
+  }
+
+  let icon = null;
+  let text = null;
+  if (props.text) {
+    if (props.icon)
+    {icon = <i className={iconClassName}></i>;}
+    text = <span>{props.text}</span>;
+  } else {
+    icon = <i className={iconClassName}></i>;
+  }
+
+  return (
+    <span className="kgs-copy-to-clipboard">
+      <button role="link" onClick={clickHandler} title={title}>{icon}{text}</button>
+      <div className="kgs-copy-confirmation">search link copied to clipoard</div>
+    </span>
+  );
+}
