@@ -72,7 +72,8 @@ class NexusService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
   }
 
 
-  def createSimpleSchema(nexusUrl:String, org: String, domain: String, entityType: String, version: String, token: String): Future[WSResponse] = {
+  def createSimpleSchema(nexusUrl:String, org: String, domain: String, entityType: String, version: String, token: String, namespaceOpt: Option[String] = None): Future[WSResponse] = {
+    val nameSpace = namespaceOpt.getOrElse(s"http://hbp.eu/$org").replaceAll("#$", "") // use org by default
     val schemaUrl = s"${nexusUrl}/v0/schemas/${org}/${domain}/${entityType.toLowerCase}/${version}"
     wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).get().flatMap{
       response =>
@@ -81,7 +82,7 @@ class NexusService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
           Future.successful(response)
         case 404 => // schema not found, create it
           val schemaContent = Json.parse(minimalSchemaDefinition.replace("${entityType}", entityType)
-            .replace("${org}", org).replaceAll("\r\n", ""))
+            .replace("${nameSpace}", nameSpace).replaceAll("\r\n", ""))
           wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).put(schemaContent).flatMap{
             schemaCreationResponse => schemaCreationResponse.status match {
               case 201 => // schema created, publish it
