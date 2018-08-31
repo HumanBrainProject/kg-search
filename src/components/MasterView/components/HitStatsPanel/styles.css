@@ -20,6 +20,7 @@
     line-height: 48px;
     color: #555;
     white-space: nowrap;
+    flex: 1;
 }
 
 .kgs-hitStats .kgs-hitStats-highlight {
