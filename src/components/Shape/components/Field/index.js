@@ -55,10 +55,11 @@ export function Field({name, data, mapping, showSmartContent}) {
   };
   const objectProps = {
     show: !isList && mapping.children,
-    value: value && value.children,
+    data: value && value.children,
     mapping: mapping,
     showSmartContent: showSmartContent
   };
+
   return (
     <span style={style} className={className}>
       <FieldLabel {...labelProps} />
