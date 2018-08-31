@@ -15,7 +15,6 @@
 */
 
 import React from "react";
-import { ResetFilters } from "searchkit";
 import { SearchkitComponent, RefinementListFilter, InputFilter, CheckboxFilter, RangeFilter } from "searchkit";
 import { DateRangeFilter, DateRangeCalendar } from "searchkit-datefilter";
 import { withStoreStateSubscription} from "../../../withStoreStateSubscription";
@@ -92,6 +91,32 @@ const Facet = ({id, name, facet}) => {
   }
   return null;
 };
+
+class ResetFilters extends SearchkitComponent {
+  render() {
+    const handleClick = () => {
+      const allFilters = this.searchkit.query && this.searchkit.query.getSelectedFilters();
+      const filters = allFilters?
+        allFilters.filter(filter => filter.id !== "facet_type")
+        :
+        [];
+      const accessorsIds = Object.values(filters.reduce((res, filter) => {
+        res[filter.id] = filter.id;
+        return res;
+      }, {}));
+      accessorsIds
+        .forEach(id => {
+          const accessor = this.searchkit.accessors.statefulAccessors[id];
+          accessor && accessor.resetState();
+        });
+      filters.forEach(filter => filter.remove());
+      this.searchkit.reloadSearch();
+    };
+    return (
+      <button type="button" className="kgs-filters__reset-button" onClick={handleClick}>Reset</button>
+    );
+  }
+}
 
 const FiltersPanelComponent = ({show, hasFilters, facets}) => {
   if (!show) {
