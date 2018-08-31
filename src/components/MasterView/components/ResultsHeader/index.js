@@ -17,7 +17,6 @@
 import React from "react";
 import { ActionBar, ActionBarRow } from "searchkit";
 import { HitStatsPanel } from "../HitStatsPanel";
-import { PaginationPanel } from "../PaginationPanel";
 import { LayoutModeSwitcherToggle } from "../LayoutModeSwitcherToggle";
 import { SortByPanel } from "../SortByPanel";
 import "./styles.css";
@@ -28,7 +27,6 @@ export function ResultsHeader() {
       <ActionBar>
         <ActionBarRow>
           <HitStatsPanel/>
-          <PaginationPanel className="kgs-header-pagination" />
           <LayoutModeSwitcherToggle/>
           <SortByPanel/>
         </ActionBarRow>
