@@ -80,7 +80,7 @@ const Icon = ({label, shape, active}) => {
     const mapping = state.definition.shapeMappings[shape];
     if (mapping) {
       if (mapping.image && mapping.image.url) {
-        imageUrl == mapping.image.url;
+        imageUrl = mapping.image.url;
       } else if (mapping.icon) {
         icon = active?replaceColorInSvg(mapping.icon, defaultColor, highlightColor):mapping.icon;
       } else {
