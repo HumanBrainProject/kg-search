@@ -45,11 +45,15 @@ export class DetailViewComponent extends PureComponent {
     if (!isMobile) {
       window.addEventListener("keyup", this._keyupHandler.bind(this), false);
     }
+    dispatch(actions.updateEmailToLink());
   }
   componentWillUnmount() {
     if (!isMobile) {
       window.removeEventListener("keyup", this._keyupHandler);
     }
+  }
+  componentDidUpdate() {
+    dispatch(actions.updateEmailToLink());
   }
   render() {
     const {show, currentViewId, data, hasPrevious} = this.props;

@@ -75,6 +75,7 @@ export function reducer(state = initialState, action = {}) {
   case types.SET_PREVIOUS_HIT:
   case types.CLEAR_ALL_HITS:
   case types.SET_CURRENT_HIT_FROM_BROWSER_LOCATION:
+  case types.UPDATE_EMAIL_TO_LINK:
     return updateShareEmailToLink(state, action);
   default:
     return state;
