@@ -27,6 +27,61 @@ import NexusService._
 
 class NexusService @Inject()(wSClient: WSClient)(implicit executionContext: ExecutionContext) {
 
+  def releaseInstance(instanceData: JsValue, token: String): Future[JsObject] = {
+    val jsonObj = instanceData.as[JsObject]
+    val instanceUrl = (jsonObj \ "@id").as[String]
+    // check if this instance is attached to a release instance already
+    isReleased(instanceUrl, token).flatMap{ releasedId =>
+      releasedId match {
+        case Some(releaseId) =>
+        Future.successful(JsObject(Map(
+          "status" -> JsString(RELEASE_ALREADY),
+          "released_id" -> JsString(releaseId)
+        )))
+        case None =>
+          createReleaseInstance(instanceUrl, token).map{ response =>
+            response.status match {
+              case 200 | 201 =>
+                JsObject(Map(
+                  "status" -> JsString(RELEASE_OK),
+                  "released_id" -> (response.json.as[JsObject] \ "@id").as[JsString]
+                ))
+              case _ =>
+                JsObject(Map(
+                  "status" -> JsString(RELEASE_KO)
+                ))
+            }
+          }
+      }
+    }
+  }
+
+  def isReleased(instanceUrl: String, token: String): Future[Option[String]] = {
+    listAllNexusResult(s"${instanceUrl}/incoming", token).map{ incomingsLinks =>
+        val found = incomingsLinks.find(
+          result => (result.as[JsObject] \ "resultId").as[String].contains("prov/release"))
+        found.map(value => (value.as[JsObject] \ "resultId").as[String])
+    }
+  }
+
+  def createReleaseInstance(instanceUrl: String, token: String): Future[WSResponse] = {
+    val (Seq(id, version, schema, domain, org, apiVersion, data), baseUrlSeq) = instanceUrl.split("/").reverse.toSeq.splitAt(7)
+    val baseUrl = baseUrlSeq.reverse.mkString("/")
+    val releaseIdentifier = hash(instanceUrl)
+    val payload = Json.parse(s"""
+      {
+        "@type": "http://hbp.eu/minds#Release",
+        "http://hbp.eu/minds#releaseinstance": [
+          {
+            "@id": "${instanceUrl}"
+          }
+        ],
+        "http://hbp.eu/minds#releasestate": "released",
+        "http://schema.org/identifier": "${releaseIdentifier}"
+      }""")
+    insertInstance(baseUrl, org, "prov", "release", "v0.0.1", payload, token)
+  }
+
   /**
     * Create a schema and publish it if it does not exists
     * @param nexusUrl The base url of the nexus instance
@@ -270,4 +325,8 @@ object NexusService {
   val INSERT = "INSERT"
   val SKIP = "SKIP"
   val ERROR = "ERROR"
+
+  val RELEASE_OK = "RELEASED WITH SUCCESS"
+  val RELEASE_KO = "ERROR IN RELEASING INSTANCE"
+  val RELEASE_ALREADY = "INSTANCE ALREADY RELEASED"
 }
