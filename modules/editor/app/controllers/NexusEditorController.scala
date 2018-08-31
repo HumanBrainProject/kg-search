@@ -65,6 +65,7 @@ class NexusEditorController @Inject()(
   val reconciledPrefix: String = config.getOptional[String]("nexus.reconciled.prefix").getOrElse("reconciled")
   val editorPrefix: String = config.getOptional[String]("nexus.editor.prefix").getOrElse("editor")
   val sparqlEndpoint: String = config.getOptional[String]("blazegraph.endpoint").getOrElse("http://localhost:9999")
+  val kgQueryEndpoint: String = config.getOptional[String]("kgquery.endpoint").getOrElse("http://localhost:8600")
 
   val logger = Logger(this.getClass)
 
@@ -583,6 +584,87 @@ class NexusEditorController @Inject()(
   def listEntities(privateSpace: String): Action[AnyContent] = Action {
     // Editable instance types are the one for which form creation is known
     Ok(FormHelper.editableEntitiyTypes)
+  }
+
+  def idFormat(id : String): String= {
+    val l = id.split("/")
+    val path = l.head.replaceAll("-", "/").replaceAll("_",".")
+    val i = l.last
+    s"$path/$i"
+  }
+
+  def graphEntities(
+                     org: String, domain: String, schema: String, version: String, id:String, step: Int
+                   ): Action[AnyContent] = Action.async {
+
+    ws.url(s"${kgQueryEndpoint}/arango/graph/$org/$domain/$schema/$version/$id?step=$step").addHttpHeaders(CONTENT_TYPE -> "application/json").get().map{
+      allRelations =>
+        allRelations.status match {
+          case OK =>
+            val camelCase = """(?=[A-Z])"""
+            val j = allRelations.json.as[List[JsObject]]
+            val edges: List[JsObject] = j.flatMap(el =>
+              (el \ "edges").as[List[JsObject]].map { j =>
+                val id = (j \ "_id").as[String]
+                val titleRegex = id.split("/").head
+                val title = titleRegex.splitAt(titleRegex.lastIndexOf("-"))._2.substring(1).replaceAll("_", " ").split(camelCase).mkString(" ").capitalize
+                Json.obj(
+                  "source" -> idFormat((j \ "_from").as[String]),
+                  "target" -> idFormat((j \ "_to").as[String]),
+                  "id" -> id,
+                  "title" -> title
+                )
+              }
+            ).distinct
+
+            val vertices = j.flatMap { el =>
+              val vertices = (el \ "vertices").as[List[JsValue]]
+              vertices.map {
+                case v: JsObject =>
+                  val dataType = (v \ "@type").as[String].split("#").last.capitalize
+                  val label = dataType.split(camelCase).mkString(" ")
+                  val title = if ((v \"http://schema.org/name").asOpt[JsString].isDefined ) {(v \"http://schema.org/name").as[JsString]} else {Json.toJson(v)}
+                  Json.obj(
+                    "id" -> Json.toJson(idFormat((v \ "_id").as[String])),
+                    "name" -> JsString(label),
+                    "dataType" -> JsString(dataType),
+                    "title" -> title
+                  )
+                case _ => JsNull
+              }.filter( v => v != JsNull).map(_.as[JsObject])
+            }.distinct
+            Ok(Json.obj("links" -> edges, "nodes" -> vertices))
+          case _ => NexusEditorController.forwardResultResponse(allRelations)
+        }
+    }
+  }
+
+
+
+  def releaseStatus(
+                     org: String, domain: String, schema: String, version: String, id:String
+                   ): Action[AnyContent] = Action.async{ implicit request =>
+
+    def specs(item: JsObject): collection.Map[String, JsValue] = {
+      item.value.map{ k =>
+          k._1 match {
+            case "http://schema.org/name" => "label" -> k._2
+            case "@type" => "type" -> JsString(k._2.as[String].split("#").last)
+            case "children" => k._1 -> Json.toJson(k._2.as[JsArray].value.map( j => specs(j.as[JsObject]))).as[JsValue]
+            case _ => k._1 -> k._2
+          }
+      }
+    }
+    ws.url(s"${kgQueryEndpoint}/arango/release/$org/$domain/$schema/$version/$id").addHttpHeaders(CONTENT_TYPE -> "application/json").get().map{
+      res => res.status match{
+        case OK =>
+          val item = res.json.as[JsArray].value.head
+          val spec = specs(item.as[JsObject])
+          Ok(Json.toJson(spec))
+        case _ => logger.error(res.body)
+          NexusEditorController.forwardResultResponse(res)
+      }
+    }
   }
 }
 

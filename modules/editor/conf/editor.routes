@@ -11,6 +11,7 @@ GET    /api/revisions/:org/:domain/:datatype/:version/:id                       
 
 GET    /api/reconciled/:org/:domain/:datatype/:version/:id              editor.controllers.NexusEditorController.getSpecificReconciledInstance(org: String, domain:String, datatype: String, version:String, id: String ,rev:Int ?= 1)
 
+GET    /api/graph/:org/:domain/:datatype/:version/:id   editor.controllers.NexusEditorController.graphEntities(org: String, domain:String, datatype: String, version:String, id: String, step:Int ?= 2)
 
 ###
 #  summary: get release information on an entity and its children
@@ -48,4 +49,4 @@ GET    /api/reconciled/:org/:domain/:datatype/:version/:id              editor.c
 #    required: false
 #    type: string
 ###
-GET    /api/release/:org/:domain/:datatype/:version/:id             editor.controllers.NexusEditorController.getReleaseDataStructure(org: String, domain:String, datatype: String, version:String, id: String )
+GET    /api/release/:org/:domain/:datatype/:version/:id             editor.controllers.NexusEditorController.releaseStatus(org: String, domain:String, datatype: String, version:String, id: String )
