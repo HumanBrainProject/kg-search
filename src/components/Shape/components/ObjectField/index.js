@@ -45,31 +45,41 @@ const CustomListItem = ({index, separator, children}) => (
   </span>
 );
 
-export function ObjectField({show, data, mapping, showSmartContent}) {
-  if (!show) {
-    return null;
-  }
-  if (!mapping || !mapping.visible) {
-    return null;
-  }
-  const separator = mapping.separator;
+const ObjectFieldComponent = ({fields, separator}) => {
   const List = separator?CustomList:DefaultList;
   const ListItem = separator?CustomListItem:DefaultListItem;
   return (
     <List className="kgs-shape__object">
       {
-        Object.entries(mapping.children)
-          .filter(([name, mapping]) =>
-            mapping
-            && (mapping.showIfEmpty || (data && data[name]))
-            && mapping.visible
-          )
-          .map(([name, mapping], index) => (
-            <ListItem key={name} separator={separator} index={index}>
-              <Field name={name} data={data} mapping={mapping} showSmartContent={showSmartContent} />
-            </ListItem>
-          ))
+        fields.map(({name, value, mapping, showSmartContent}, index) => (
+          <ListItem key={name} separator={separator} index={index}>
+            <Field name={name} value={value} mapping={mapping} showSmartContent={showSmartContent} />
+          </ListItem>
+        ))
       }
     </List>
+  );
+};
+
+export function ObjectField({show, data, mapping, showSmartContent}) {
+  if (!show || !mapping || !mapping.visible) {
+    return null;
+  }
+
+  const fields = Object.entries(mapping.children)
+    .filter(([name, mapping]) =>
+      mapping
+            && (mapping.showIfEmpty || (data && data[name]))
+            && mapping.visible
+    )
+    .map(([name, mapping]) => ({
+      name: name,
+      value: data && data[name],
+      mapping: mapping,
+      showSmartContent: showSmartContent
+    }));
+
+  return (
+    <ObjectFieldComponent show={show} fields={fields} separator={mapping.separator} />
   );
 }
