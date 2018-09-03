@@ -21,8 +21,7 @@ import { ListField } from "../ListField";
 import { ObjectField } from "../ObjectField";
 import { ValueField } from "../ValueField";
 
-export function Field({name, data, mapping, showSmartContent}) {
-  const value = data && name && data[name];
+export function Field({name, value, mapping, showSmartContent}) {
   if (!mapping || !mapping.visible || !(value || mapping.showIfEmpty)) {
     return null;
   }
@@ -32,12 +31,12 @@ export function Field({name, data, mapping, showSmartContent}) {
   const className = "kgs-shape__field" + (name?" kgs-shape__" + name:"");
 
   const labelProps = {
-    show: mapping.value && (!mapping.label_hidden || showSmartContent),
+    show: !!mapping.value && (!mapping.label_hidden || showSmartContent),
     showAsBlock: mapping.tag_icon,
     value: mapping.value
   };
   const hintProps = {
-    show: mapping.value && mapping.hint,
+    show: !!mapping.value && !!mapping.hint,
     value: mapping.hint,
     label: mapping.value
   };
@@ -54,11 +53,12 @@ export function Field({name, data, mapping, showSmartContent}) {
     showSmartContent: showSmartContent
   };
   const objectProps = {
-    show: !isList && mapping.children,
-    value: value && value.children,
+    show: !isList && !!mapping.children,
+    data: value && value.children,
     mapping: mapping,
     showSmartContent: showSmartContent
   };
+
   return (
     <span style={style} className={className}>
       <FieldLabel {...labelProps} />

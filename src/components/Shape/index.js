@@ -46,90 +46,75 @@ const replaceMarkdownEscapedChars = (str) => {
   return str.replace(/<\/?em>/gi,"");
 };
 
-const getTypeField = (type, data) => {
+const getTypeField = type => ({
+  name: "type",
+  value: {value: type},
+  mapping: {visible: true},
+  showSmartContent: false
+});
 
-  // type is not present in the data
-  const fieldData = Object.assign({}, data);
-  fieldData.type = {
-    value: type
-  };
-
-  return {
-    name: "type",
-    data: fieldData,
-    mapping: {visible: true},
-    showSmartContent: false
-  };
-};
-
-const getTitleField = (data, highlight, mapping, showSmartContent) => {
+const getTitleField = (value, highlight, mapping, showSmartContent) => {
 
   // remove title
   const fieldMapping = mapping && Object.assign({}, mapping);
   fieldMapping && delete fieldMapping.value; // no deep cloning needed as only first level is modified
 
-  let fieldData = data;
-
-  let value = data && data.title && data.title.value;
+  let fieldValue = value;
 
   if (highlight && highlight["title.value"] && highlight["title.value"].length > 0) {
-    value = replaceMarkdownEscapedChars(highlight["title.value"][0]);
-
-    fieldData = Object.assign({}, data);
-    fieldData.title = Object.assign({}, data.title); // assuming data.title children are values
-    fieldData.title.value = value;
+    const strValue = replaceMarkdownEscapedChars(highlight["title.value"][0]);
+    fieldValue = Object.assign({}, value);
+    fieldValue.value = strValue;
   }
 
   return {
     name: "title",
-    data: fieldData,
+    value: fieldValue,
     mapping: fieldMapping,
     showSmartContent: showSmartContent
   };
 };
 
-const getDescriptionField = (data, highlight, mapping, showSmartContent) => {
+const getDescriptionField = (value, highlight, mapping, showSmartContent) => {
 
   // remove title
   const fieldMapping = mapping && Object.assign({}, mapping, {collapsible: !!showSmartContent});
   fieldMapping && delete fieldMapping.value; // no deep cloning needed as only first level is modified
 
-  let fieldData = data;
+  let fieldValue = value;
 
   if(!showSmartContent){
 
-    const value = data && data.description && data.description.value;
-    let modifiedValue = value;
+    const strValue = value && value.value;
+    let modifiedValue = strValue;
 
     if (highlight && highlight["description.value"] && highlight["description.value"].length > 0) {
       modifiedValue = replaceMarkdownEscapedChars(highlight["description.value"][0]);
       modifiedValue += "...";
-    } else if(value && value.length > 220) {
-      modifiedValue = value.substring(0, 217) + "...";
+    } else if (strValue && strValue.length > 220) {
+      modifiedValue = strValue.substring(0, 217) + "...";
     }
 
-    if (modifiedValue !== value) {
-      fieldData = Object.assign({}, data);
-      fieldData.description = Object.assign({}, data.description); // assuming data.description children are values
-      fieldData.description.value = modifiedValue;
+    if (modifiedValue !== strValue) {
+      fieldValue = Object.assign({}, value);
+      fieldValue.value = modifiedValue;
     }
   }
 
   return {
     name: "description",
-    data: fieldData,
+    value: fieldValue,
     mapping: fieldMapping,
     showSmartContent: showSmartContent
   };
 };
 
-const getComponentField = (data, mapping, showSmartContent) => {
-  let fieldData = data;
+const getComponentField = (value, mapping, showSmartContent) => {
+  let fieldValue = value;
   let fieldMapping = mapping;
-  if (!showSmartContent && data && data.component && data.component.value) {
-    fieldData = Object.assign({}, data);
-    fieldData.component = Object.assign({}, data.component); // assuming data.component children are values
-    fieldData.component.value = "From the " + data.component.value + " project";
+  if (!showSmartContent && value && value.value) {
+    fieldValue = Object.assign({}, value); // assuming value children are values
+    fieldValue.value = "From the " + value.value + " project";
 
     // remove title
     fieldMapping = mapping && Object.assign({}, mapping);
@@ -138,26 +123,26 @@ const getComponentField = (data, mapping, showSmartContent) => {
 
   return {
     name: "component",
-    data: fieldData,
+    data: fieldValue,
     mapping: fieldMapping,
     showSmartContent: showSmartContent
   };
 };
 
-const getField = (type, name, data, highlight, mapping, showSmartContent) => {
+const getField = (type, name, value, highlight, mapping, showSmartContent) => {
   switch (name) {
   case "type":
-    return getTypeField(type, data);
+    return getTypeField(type);
   case "title":
-    return getTitleField(data, highlight, mapping, showSmartContent);
+    return getTitleField(value, highlight, mapping, showSmartContent);
   case "description":
-    return getDescriptionField(data, highlight, mapping, showSmartContent);
+    return getDescriptionField(value, highlight, mapping, showSmartContent);
   case "component":
-    return getComponentField(data, mapping, showSmartContent);
+    return getComponentField(value, mapping, showSmartContent);
   default:
     return {
       name: name,
-      data: data,
+      value: value,
       mapping: mapping,
       showSmartContent: showSmartContent
     };
@@ -184,7 +169,7 @@ const getFields = (type, data, highlight, mapping, showSmartContent) => {
         && !primaryFiels.includes(name) // exclude above "manually" defined fields
       )
     )
-  ].map(([name, mapping]) => getField(type, name, data, highlight, mapping, showSmartContent));
+  ].map(([name, mapping]) => getField(type, name, data[name], highlight, mapping, showSmartContent));
 
   return fields;
 };
@@ -250,8 +235,8 @@ const ShapeComponent = ({type, hasNoData, hasUnknownData, icon, summary, fields,
         <div className="kgs-shape__field kgs-shape__icon">
           <Icon {...icon}/>
         </div>
-        {fields.map(({name, data, mapping, showSmartContent}) => (
-          <Field key={name} name={name} data={data} mapping={mapping} showSmartContent={showSmartContent} />
+        {fields.map(({name, value, mapping, showSmartContent}) => (
+          <Field key={name} name={name} value={value} mapping={mapping} showSmartContent={showSmartContent} />
         ))}
         <Summary {...summary} />
         <HighlightsField {...highlightsField} />
@@ -266,7 +251,7 @@ export function Shape({data, detailViewMode}) {
 
   const state = store.getState();
   const source = data && !(data.found === false) && data._type && data._source;
-  const mapping = source && state.definition.shapeMappings[data._type];
+  const mapping = source && state.definition && state.definition.shapeMappings && state.definition.shapeMappings[data._type];
 
   const shapeProps = {
     type: data && data._type,

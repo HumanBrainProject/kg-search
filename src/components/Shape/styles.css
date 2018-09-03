@@ -132,6 +132,10 @@
     color: #555;
 }
 
+.kgs-result-layout [data-type] .kgs-shape__type {
+    display: none;
+}
+
 [data-type] .kgs-shape__icon + .kgs-shape__type {
     margin-top: 0;
     flex: 1;
@@ -143,6 +147,10 @@
     font-weight: 400;
     color: #0088cc;
     flex-basis: 87%;
+}
+
+.kgs-result-layout [data-type] .kgs-shape__title {
+    margin-left: 12px;
 }
 
 .kgs-result-layout.is-list [data-type] .kgs-shape__title {

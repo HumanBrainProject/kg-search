@@ -23,11 +23,10 @@
     */
 }
 
-.kgs-filters.is-hidden {
-    position: absolute;
-    width: 0;
-    margin-right: 0;
-    overflow: hidden;
+.kgs-filters .kgs-filters__no-filters {
+    display: inline-block;
+    width: 100%;
+    margin-top: 65px;
 }
 
 .kgs-filters .kgs-filters__header {
@@ -48,8 +47,10 @@
     right: 0;
 }
 
-.kgs-filters .kgs-filters__header .kgs-filters__reset .sk-reset-filters {
+.kgs-filters .kgs-filters__header .kgs-filters__reset .kgs-filters__reset-button {
     padding: 0;
+    border: 0;
+    background-color: transparent;
     color: #30b0e0;
 }
 

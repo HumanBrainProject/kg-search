@@ -15,7 +15,6 @@
 */
 
 import React from "react";
-import { ResetFilters } from "searchkit";
 import { SearchkitComponent, RefinementListFilter, InputFilter, CheckboxFilter, RangeFilter } from "searchkit";
 import { DateRangeFilter, DateRangeCalendar } from "searchkit-datefilter";
 import { withStoreStateSubscription} from "../../../withStoreStateSubscription";
@@ -93,22 +92,56 @@ const Facet = ({id, name, facet}) => {
   return null;
 };
 
-const FiltersPanelComponent = ({show, isVisible, facets}) => {
+class ResetFilters extends SearchkitComponent {
+  render() {
+    const handleClick = () => {
+      const allFilters = this.searchkit.query && this.searchkit.query.getSelectedFilters();
+      const filters = allFilters?
+        allFilters.filter(filter => filter.id !== "facet_type")
+        :
+        [];
+      const accessorsIds = Object.values(filters.reduce((res, filter) => {
+        res[filter.id] = filter.id;
+        return res;
+      }, {}));
+      accessorsIds
+        .forEach(id => {
+          const accessor = this.searchkit.accessors.statefulAccessors[id];
+          accessor && accessor.resetState();
+        });
+      filters.forEach(filter => filter.remove());
+      this.searchkit.reloadSearch();
+    };
+    return (
+      <button type="button" className="kgs-filters__reset-button" onClick={handleClick}>Reset</button>
+    );
+  }
+}
+
+const FiltersPanelComponent = ({show, hasFilters, facets}) => {
   if (!show) {
     return null;
   }
   return (
-    <div className={`kgs-filters ${!isVisible?"is-hidden":""}`}>
-      <div className="kgs-filters__header">
-        <div className="kgs-filters__title">Filters</div>
-        <div className="kgs-filters__reset"><ResetFilters options={{query:false, filter:true, pagination:true}} translations={{"reset.clear_all":"Reset"}}/></div>
-      </div>
+    <div className="kgs-filters">
       <span>
-        {facets.map(f => (
-          <div className={f.isVisible?null:"hidden"} key={f.id}>
-            <Facet id={f.id} name={f.name} facet={f.facet} />
-          </div>
-        ))}
+        <div className="kgs-filters__header">
+          <div className="kgs-filters__title">Filters</div>
+          {hasFilters && (
+            <div className="kgs-filters__reset"><ResetFilters options={{query:false, filter:true, pagination:true}} translations={{"reset.clear_all":"Reset"}}/></div>
+          )}
+        </div>
+        {hasFilters?
+          <span>
+            {facets.map(f => (
+              <div className={f.isVisible?null:"hidden"} key={f.id}>
+                <Facet id={f.id} name={f.name} facet={f.facet} />
+              </div>
+            ))}
+          </span>
+          :
+          <span className="kgs-filters__no-filters">No filters available for your current search.</span>
+        }
       </span>
     </div>
   );
@@ -131,11 +164,11 @@ const FiltersPanelWithStoreStateSubscription = withStoreStateSubscription(
         });
       });
     });
-    const isVisible = facets.some(f => f.isVisible);
+    const hasFilters = facets.some(f => f.isVisible);
     return {
       type: selectedType,
       show: data.definition.isReady && facets.length > 0,
-      isVisible: isVisible,
+      hasFilters: hasFilters,
       facets: facets
     };
   }
