@@ -621,15 +621,21 @@ class NexusEditorController @Inject()(
               val vertices = (el \ "vertices").as[List[JsValue]]
               vertices.map {
                 case v: JsObject =>
-                  val dataType = (v \ "@type").as[String].split("#").last.capitalize
-                  val label = dataType.split(camelCase).mkString(" ")
-                  val title = if ((v \"http://schema.org/name").asOpt[JsString].isDefined ) {(v \"http://schema.org/name").as[JsString]} else {Json.toJson(v)}
-                  Json.obj(
-                    "id" -> Json.toJson(idFormat((v \ "_id").as[String])),
-                    "name" -> JsString(label),
-                    "dataType" -> JsString(dataType),
-                    "title" -> title
-                  )
+                  (v \ "@type").asOpt[String].map { d =>
+                    val dataType = d.split("#").last.capitalize
+                    val label = dataType.split(camelCase).mkString(" ")
+                    val title = if ((v \ "http://schema.org/name").asOpt[JsString].isDefined) {
+                      (v \ "http://schema.org/name").as[JsString]
+                    } else {
+                      Json.toJson(v)
+                    }
+                    Json.obj(
+                      "id" -> Json.toJson(idFormat((v \ "_id").as[String])),
+                      "name" -> JsString(label),
+                      "dataType" -> JsString(dataType),
+                      "title" -> title
+                    )
+                  }.getOrElse(JsNull)
                 case _ => JsNull
               }.filter( v => v != JsNull).map(_.as[JsObject])
             }.distinct
