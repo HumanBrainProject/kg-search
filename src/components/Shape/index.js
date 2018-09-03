@@ -123,7 +123,7 @@ const getComponentField = (value, mapping, showSmartContent) => {
 
   return {
     name: "component",
-    data: fieldValue,
+    value: fieldValue,
     mapping: fieldMapping,
     showSmartContent: showSmartContent
   };
