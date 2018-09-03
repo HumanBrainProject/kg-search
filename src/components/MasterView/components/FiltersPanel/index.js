@@ -131,17 +131,16 @@ const FiltersPanelComponent = ({show, hasFilters, facets}) => {
             <div className="kgs-filters__reset"><ResetFilters options={{query:false, filter:true, pagination:true}} translations={{"reset.clear_all":"Reset"}}/></div>
           )}
         </div>
-        {hasFilters?
-          <span>
-            {facets.map(f => (
-              <div className={f.isVisible?null:"hidden"} key={f.id}>
-                <Facet id={f.id} name={f.name} facet={f.facet} />
-              </div>
-            ))}
-          </span>
-          :
+        <span>
+          {facets.map(f => (
+            <div className={f.isVisible?null:"hidden"} key={f.id}>
+              <Facet id={f.id} name={f.name} facet={f.facet} />
+            </div>
+          ))}
+        </span>
+        {!hasFilters && (
           <span className="kgs-filters__no-filters">No filters available for your current search.</span>
-        }
+        )}
       </span>
     </div>
   );
