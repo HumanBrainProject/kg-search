@@ -657,8 +657,21 @@ class NexusEditorController @Inject()(
             case "http://schema.org/name" => "label" -> k._2
             case "@type" => "type" -> JsString(k._2.as[String].split("#").last)
             case "children" => k._1 -> Json.toJson(k._2.as[JsArray]
-              .value.map( j => specs(j.as[JsObject]))).as[JsValue]
-            case "edgeType" => "linkType" -> Json.toJson(List(k._2.as[String].split("/").head.split("-").last))
+              .value.groupBy(js => (js \ "id").as[String]).map{
+              case (k,v) =>
+                val data = if (v.size > 1) {
+                  val edgeTypes = v.foldLeft(List[String]()) {
+                    case (list, js) => (js \ "edgeType").as[String].split("/").head.split("-").last :: list
+                  }
+                  val transformer = (__ \ 'edgeType).json.put(Json.toJson(edgeTypes))
+                  val el = v.head.transform(transformer)
+                  v.head.as[JsObject] ++ el.get
+                } else {
+                  v.head
+                }
+                k -> data
+            }.values.map( j => specs(j.as[JsObject]))).as[JsValue]
+            case "edgeType" => "linkType" -> k._2
             case _ => k._1 -> k._2
           }
       }

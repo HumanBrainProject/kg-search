@@ -85,8 +85,10 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
       val nexusService = mock[NexusService]
       val controller = new NexusEditorController(mockCC, authMock,instanceService, oidcAuthService,fakeApplication().configuration, nexusService, ws)(ec)
       val response = controller.listInstances(datatype.org, datatype.domain, datatype.schema, datatype.version).apply(FakeRequest())
-      val res = contentAsString(response)
-      res mustBe """{"data":[{"id":"data/core/datatype/v0.0.4/123","description":"","label":"dataname1"},{"id":"data/core/datatype/v0.0.4/321","description":"","label":"dataname2"}],"label":"data/core/datatype/v0.0.4"}"""
+      val res = contentAsJson(response).as[JsObject]
+      val arr = (res \  "data").as[List[JsObject]].map(js => js - "status" - "childrenStatus")
+      val formattedRes = res ++ Json.obj("data" -> arr)
+      formattedRes.toString mustBe """{"data":[{"id":"data/core/datatype/v0.0.4/123","description":"","label":"dataname1"},{"id":"data/core/datatype/v0.0.4/321","description":"","label":"dataname2"}],"label":"data/core/datatype/v0.0.4"}"""
 
     }
 
