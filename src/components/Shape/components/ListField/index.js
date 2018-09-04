@@ -157,11 +157,11 @@ export class ListField extends PureComponent {
     }
 
     if (sizeStop === LIST_SMALL_SIZE_STOP) {
-      return (items.length > LIST_MIDDLE_SIZE_STOP)?VIEW_MORE_LABEL:VIEW_ALL_LABEL;
+      return (this.maxSizeStop > LIST_MIDDLE_SIZE_STOP)?VIEW_MORE_LABEL:VIEW_ALL_LABEL;
     }
 
     if (sizeStop === LIST_MIDDLE_SIZE_STOP) {
-      return (items.length > LIST_MIDDLE_SIZE_STOP)?VIEW_ALL_LABEL:VIEW_LESS_LABEL;
+      return (this.maxSizeStop > LIST_MIDDLE_SIZE_STOP)?VIEW_ALL_LABEL:VIEW_LESS_LABEL;
     }
 
     return VIEW_LESS_LABEL;
@@ -181,10 +181,10 @@ export class ListField extends PureComponent {
     if (!Array.isArray(items) || (mapping && mapping.separator)) {
       return false;
     }
+    const maxSizeStop = this.maxSizeStop;
+    const nbToDisplay = Math.min(maxSizeStop, sizeStop);
 
-    const nbToDisplay = Math.min(this.maxSizeStop, sizeStop);
-
-    return items.length > nbToDisplay;
+    return maxSizeStop > nbToDisplay;
   }
 
   handleShowMoreClick() {
