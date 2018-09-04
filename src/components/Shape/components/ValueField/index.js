@@ -51,7 +51,7 @@ export class ValueField extends Component {
     this.setState({showMore: showMore});
   }
   render() {
-    const {show, value, mapping, showSmartContent} = this.props;
+    const {show, data, mapping, showSmartContent} = this.props;
     if (!show) {
       return null;
     }
@@ -61,37 +61,37 @@ export class ValueField extends Component {
     }
     const handleClick = () => {
       const state = store.getState();
-      dispatch(actions.loadHit(value.reference, state.search.index));
+      dispatch(actions.loadHit(data.reference, state.search.index));
     };
 
     let valueTag = null;
     let detailsButton = null;
     let detailsContent = null;
-    if (value) {
-      if (value.reference && showSmartContent) {
-        valueTag = <button onClick={handleClick} role="link">{value.value}</button>;
-      } else if (value.url && showSmartContent) {
-        if (value.url.substr(0,7).toLowerCase() === "mailto:") {
-          valueTag = <a href={value.url}>{value.value}</a>;
+    if (data) {
+      if (data.reference && showSmartContent) {
+        valueTag = <button onClick={handleClick} role="link">{data.value}</button>;
+      } else if (data.url && showSmartContent) {
+        if (data.url.substr(0,7).toLowerCase() === "mailto:") {
+          valueTag = <a href={data.url}>{data.value}</a>;
         } else {
-          if (value.detail) {
-            valueTag = <a href={value.url} rel="noopener noreferrer" target="_blank">{value.value}</a>;
+          if (data.detail) {
+            valueTag = <a href={data.url} rel="noopener noreferrer" target="_blank">{data.value}</a>;
           } else {
-            valueTag = <a href={value.url} rel="noopener noreferrer" target="_blank">{value.value}</a>;
+            valueTag = <a href={data.url} rel="noopener noreferrer" target="_blank">{data.value}</a>;
           }
         }
       } else {
-        const timestamp = value.value && mapping && mapping.type === "date" && Date.parse(value.value);
+        const timestamp = data.value && mapping && mapping.type === "date" && Date.parse(data.value);
         if (timestamp && !isNaN(timestamp)) {
           valueTag = new Date(timestamp).toLocaleDateString();
         } else {
           if (showSmartContent && mapping && mapping.markdown) {
-            const html = converter.makeHtml(value.value);
+            const html = converter.makeHtml(data.value);
             valueTag = <span className="markdown" dangerouslySetInnerHTML={{__html:html}}></span>;
           } else {
-            valueTag = value.value;
+            valueTag = data.value;
           }
-          if (showSmartContent && mapping.collapsible && value.value.length >= 1600) {
+          if (showSmartContent && mapping.collapsible && data.value.length >= 1600) {
             valueTag = <span className="collapsible">
               <span className={"collapse" + (this.state.showMore[mapping.value]?" in":"")}>
                 {valueTag}
@@ -102,12 +102,12 @@ export class ValueField extends Component {
             </span>;
           }
           if(mapping && mapping.tag_icon){
-            valueTag = <span className="field-value__tag"><div dangerouslySetInnerHTML={{__html:mapping.tag_icon}} /><div>{value.value}</div></span>;
+            valueTag = <span className="field-value__tag"><div dangerouslySetInnerHTML={{__html:mapping.tag_icon}} /><div>{data.value}</div></span>;
           }
         }
       }
-      if (value.detail) {
-        const html = converter.makeHtml(value.detail);
+      if (data.detail) {
+        const html = converter.makeHtml(data.detail);
         detailsButton = <button className="toggle-details-button" onClick={this.toggleDetails}><i className="fa fa-exclamation-circle"></i>{mapping && mapping.detail_label?<span>{mapping.detail_label}</span>:null}</button>;
         detailsContent = <div className="details-panel">
           <div className="details-inner-panel">
