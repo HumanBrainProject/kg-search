@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import showdown from "showdown";
 /*import FilterXSS from 'xss';*/
 import xssFilter from "showdown-xss-filter";
@@ -24,102 +24,211 @@ import "./styles.css";
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 
-export class ValueField extends Component {
+const Text = ({content, isMarkdown}) => {
+  if (!content) {
+    return null;
+  }
+  if (!isMarkdown) {
+    return (
+      <span>{content}</span>
+    );
+  }
+
+  const html = converter.makeHtml(content);
+  return (
+    <span className="field-markdown" dangerouslySetInnerHTML={{__html:html}}></span>
+  );
+};
+
+class CollapsibleText extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      showDetails: false,
-      showMore: {},
+      collapsed: true,
     };
-    this.toggleDetails = this.toggleDetails.bind(this);
-    this.hideDetails = this.hideDetails.bind(this);
-    this.showDetails = this.showDetails.bind(this);
-    this.showMore = this.showMore.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
-  toggleDetails(expand) {
-    this.setState({showDetails: expand===false||expand===true?expand:!this.state.showDetails});
+  handleClick() {
+    this.setState({collapsed: !this.state.collapsed});
   }
-  hideDetails() {
-    this.toggleDetails(false);
-  }
-  showDetails() {
-    this.toggleDetails(true);
-  }
-  showMore(key) {
-    const showMore = Object.assign({}, this.state.showMore);
-    showMore[key] = true;
-    this.setState({showMore: showMore});
-  }
+
   render() {
-    const {show, value, mapping, showSmartContent} = this.props;
-    if (!show) {
+    const {content, isMarkdown} = this.props;
+
+    if (!content) {
       return null;
     }
 
-    if (!mapping || !mapping.visible) {
-      return null;
-    }
-    const handleClick = () => {
-      const state = store.getState();
-      dispatch(actions.loadHit(value.reference, state.search.index));
-    };
-
-    let valueTag = null;
-    let detailsButton = null;
-    let detailsContent = null;
-    if (value) {
-      if (value.reference && showSmartContent) {
-        valueTag = <button onClick={handleClick} role="link">{value.value}</button>;
-      } else if (value.url && showSmartContent) {
-        if (value.url.substr(0,7).toLowerCase() === "mailto:") {
-          valueTag = <a href={value.url}>{value.value}</a>;
-        } else {
-          if (value.detail) {
-            valueTag = <a href={value.url} rel="noopener noreferrer" target="_blank">{value.value}</a>;
-          } else {
-            valueTag = <a href={value.url} rel="noopener noreferrer" target="_blank">{value.value}</a>;
-          }
-        }
-      } else {
-        const timestamp = value.value && mapping && mapping.type === "date" && Date.parse(value.value);
-        if (timestamp && !isNaN(timestamp)) {
-          valueTag = new Date(timestamp).toLocaleDateString();
-        } else {
-          if (showSmartContent && mapping && mapping.markdown) {
-            const html = converter.makeHtml(value.value);
-            valueTag = <span className="markdown" dangerouslySetInnerHTML={{__html:html}}></span>;
-          } else {
-            valueTag = value.value;
-          }
-          if (showSmartContent && mapping.collapsible && value.value.length >= 1600) {
-            valueTag = <span className="collapsible">
-              <span className={"collapse" + (this.state.showMore[mapping.value]?" in":"")}>
-                {valueTag}
-              </span>
-              {!this.state.showMore[mapping.value] && (
-                <button onClick={() => this.showMore(mapping.value)}>more...</button>
-              )}
-            </span>;
-          }
-          if(mapping && mapping.tag_icon){
-            valueTag = <span className="field-value__tag"><div dangerouslySetInnerHTML={{__html:mapping.tag_icon}} /><div>{value.value}</div></span>;
-          }
-        }
-      }
-      if (value.detail) {
-        const html = converter.makeHtml(value.detail);
-        detailsButton = <button className="toggle-details-button" onClick={this.toggleDetails}><i className="fa fa-exclamation-circle"></i>{mapping && mapping.detail_label?<span>{mapping.detail_label}</span>:null}</button>;
-        detailsContent = <div className="details-panel">
-          <div className="details-inner-panel">
-            <span className="details-markdown" dangerouslySetInnerHTML={{__html:html}}></span>
-            <button className="collapse-details-button" onClick={this.hideDetails} title="close"><i className="fa fa-2x fa-close"></i></button>
-          </div>
-        </div>;
-      }
-    }
-
+    const className = `collapse ${this.state.collapsed?"":"in"}`;
     return (
-      <div className="field-value" data-showDetail={this.state.showDetails}>{valueTag}{detailsButton}{detailsContent}</div>
+      <span className="field-text collapsible">
+        <span className={className}>
+          <Text content={content} isMarkdown={isMarkdown} />
+        </span>
+        {this.state.collapsed && (
+          <button onClick={this.handleClick}>more...</button>
+        )}
+      </span>
     );
   }
+}
+
+const Reference = ({reference, label}) => {
+  if (!reference) {
+    return null;
+  }
+
+  const text = label?label:reference;
+
+  const handleClick = () => {
+    const state = store.getState();
+    dispatch(actions.loadHit(reference, state.search.index));
+  };
+
+  return (
+    <button onClick={handleClick} role="link">{text}</button>
+  );
+};
+
+const Link = ({url, label, isMailToLink}) => {
+  if (!url) {
+    return null;
+  }
+
+  const text = label?label:url;
+
+  const aProps = !isMailToLink?null:{
+    rel: "noopener noreferrer",
+    target: "_blank"
+  };
+
+  return (
+    <a href={url} {...aProps}>{text}</a>
+  );
+};
+
+const Tag = ({icon, value}) => {
+  if (!icon && !value) {
+    return null;
+  }
+
+  return (
+    <span className="field-value__tag">
+      <div dangerouslySetInnerHTML={{__html:icon}} />
+      <div>{value}</div>
+    </span>
+  );
+};
+
+class Details extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      collapsed: true
+    };
+    this.handleToggle = this.handleToggle.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+  }
+  handleToggle() {
+    this.setState({collapsed: !this.state.collapsed});
+  }
+  handleClose() {
+    this.setState({collapsed: true});
+  }
+  render() {
+    const {toggleLabel, content} = this.props;
+
+    if (!content) {
+      return null;
+    }
+
+    const className = `toggle ${this.state.collapsed?"":"in"}`;
+    return (
+      <span className="field-details">
+        <button className={className} onClick={this.handleToggle}>
+          <i className="fa fa-exclamation-circle"></i>
+          {toggleLabel && (
+            <span>{toggleLabel}</span>
+          )}
+        </button>
+        <div className="collapsible">
+          <div className="field-details__panel">
+            <Text content={content} isMarkdown={true} />
+            <button className="field-details__close-button" onClick={this.handleClose} title="close"><i className="fa fa-2x fa-close"></i></button>
+          </div>
+        </div>
+      </span>
+    );
+  }
+}
+
+export function ValueField({show, data, mapping, showSmartContent}) {
+  if (!show  || !data|| !mapping || !mapping.visible) {
+    return null;
+  }
+
+  const hasReference = showSmartContent && !!data.reference;
+  const hasLink =  showSmartContent && !!data.url;
+  const hasMailToLink = showSmartContent && data.url === "string" &&  data.url.substr(0,7).toLowerCase() === "mailto:";
+  const hasAnyLink = hasReference || hasMailToLink || hasLink;
+  const isTag = !hasAnyLink && !!mapping.tag_icon;
+  const isMarkdown = showSmartContent && !hasAnyLink && !isTag && !!mapping.markdown;
+  const isCollapsible = showSmartContent && !hasAnyLink && !isTag && mapping.collapsible && typeof data.value === "string" && data.value.length >= 1600;
+
+  let value = data.value;
+  if (data.value && mapping.type === "date") {
+    const timestamp = Date.parse(data.value);
+    if (timestamp && !isNaN(timestamp)) {
+      value = new Date(timestamp).toLocaleDateString();
+    }
+  }
+
+  let ValueComponent = null;
+  let valueProps = null;
+  if (hasReference) {
+    ValueComponent = Reference;
+    valueProps = {
+      reference: data.reference,
+      label: value
+    };
+  } else if (hasLink) {
+    ValueComponent = Link;
+    valueProps = {
+      url: data.url,
+      label: value,
+      isMailToLink: hasMailToLink
+    };
+  } else if (isTag) {
+    ValueComponent = Tag;
+    valueProps = {
+      icon: mapping.tag_icon,
+      value: value
+    };
+  } else if (isCollapsible) {
+    ValueComponent = CollapsibleText;
+    valueProps = {
+      content: value,
+      isMarkdown: isMarkdown
+    };
+  } else {
+    ValueComponent = Text;
+    valueProps = {
+      content: value,
+      isMarkdown: isMarkdown
+    };
+  }
+
+  const detailsProps = {
+    toggleLabel: mapping.detail_label,
+    content: data.detail
+  };
+
+  return (
+    <div className="field-value">
+      <ValueComponent {...valueProps} />
+      {data.detail && (
+        <Details {...detailsProps} />
+      )}
+    </div>
+  );
 }

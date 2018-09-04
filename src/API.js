@@ -13,7 +13,12 @@ class API{
     return fetch(url, options)
       .then(response => {
         if (!response.ok) {
-          throw response.statusText;
+          try {
+            const data = response.json();
+            return data;
+          } catch (e) {
+            throw response.statusText;
+          }
         }
         return response.json();
       })

@@ -14,138 +14,198 @@
 *   limitations under the License.
 */
 
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { ObjectField } from "../ObjectField";
 import { ValueField } from "../ValueField";
 import "./styles.css";
 
-export class ListField extends Component {
+const DefaultList = ({children}) => {
+  return (
+    <ul>
+      {children}
+    </ul>
+  );
+};
+
+const CustomList = ({className, children}) => (
+  <span className={className}>
+    {children}
+  </span>
+);
+
+const DefaultListItem = ({children}) => (
+  <li>
+    {children}
+  </li>
+);
+
+const CustomListItem = ({index, separator, children}) => (
+  <span>
+    {index?separator:null}
+    {children}
+  </span>
+);
+
+const ListFieldComponent = ({list, separator, showAsTag, showToggle, toggleHandler, toggleLabel, hasMore}) => {
+  const isCustom = separator || showAsTag;
+  const List = isCustom?CustomList:DefaultList;
+  const ListItem = isCustom?CustomListItem:DefaultListItem;
+  const className =  `kgs-shape__list ${showAsTag?"items-as-tags":""}`;
+  return (
+    <span>
+      <List className={className}>
+        {
+          list.map(({isObject, key, data, mapping, showSmartContent}, index) => (
+            <ListItem key={key} separator={separator} index={index}>
+              {isObject?
+                <ObjectField show={true} data={data} mapping={mapping} showSmartContent={showSmartContent} />
+                :
+                <ValueField show={true} data={data} mapping={mapping} showSmartContent={showSmartContent} />
+              }
+            </ListItem>
+          ))
+        }
+        {showToggle && hasMore && (
+          <ListItem key={-1} className="kgs-shape__more">...</ListItem>
+        )}
+      </List>
+      {showToggle && (
+        <button className="kgs-shape__viewMore-button" onClick={toggleHandler} role="link">{toggleLabel}</button>
+      )}
+    </span>
+  );
+};
+
+const LIST_SMALL_SIZE_STOP = 5;
+const LIST_MIDDLE_SIZE_STOP = 10;
+
+const VIEW_MORE_LABEL = "view more";
+const VIEW_LESS_LABEL = "view less";
+const VIEW_ALL_LABEL = "view all";
+
+export class ListField extends PureComponent {
   constructor(props) {
     super(props);
+    const sizeStop = this.getNextSizeStop(Number.POSITIVE_INFINITY);
     this.state = {
-      size: 5,
+      sizeStop: sizeStop,
+      items: this.getFilteredItems(sizeStop),
+      hasShowMoreToggle: this.hasShowMoreToggle,
+      showMoreLabel: this.getShowMoreLabel(sizeStop),
+      hasMore: this.hasMore(sizeStop)
     };
     this.handleShowMoreClick = this.handleShowMoreClick.bind(this);
   }
-  handleShowMoreClick() {
-    const {items} = this.props;
-    let size = 5;
-    switch (this.state.size) {
-    case 5:
-      size = (items.length > 10)?10:Number.POSITIVE_INFINITY;
-      break;
-    case 10:
-      size = (items.length > 10)?Number.POSITIVE_INFINITY:5;
-      break;
-    default:
-      size = 5;
+
+  get maxSizeStop() {
+    const {items, mapping, showSmartContent} = this.props;
+
+    if (!Array.isArray(items)) {
+      return 0;
     }
-    this.setState({ size: size});
+
+    if (!showSmartContent && mapping && mapping.overview_max_display && mapping.overview_max_display < items.length) {
+      return mapping.overview_max_display;
+    }
+    return items.length;
+  }
+
+  getNextSizeStop(sizeStop) {
+    const {items, mapping} = this.props;
+
+    if (!Array.isArray(items) || (mapping && mapping.separator)) {
+      return Number.POSITIVE_INFINITY;
+    }
+
+    if (sizeStop === LIST_SMALL_SIZE_STOP) {
+      return (items.length > LIST_MIDDLE_SIZE_STOP)?LIST_MIDDLE_SIZE_STOP:Number.POSITIVE_INFINITY;
+    }
+
+    if (sizeStop === LIST_MIDDLE_SIZE_STOP) {
+      return (items && items.length > LIST_MIDDLE_SIZE_STOP)?Number.POSITIVE_INFINITY:LIST_SMALL_SIZE_STOP;
+    }
+
+    return LIST_SMALL_SIZE_STOP;
+  }
+
+  getFilteredItems(sizeStop) {
+    const {items, mapping, showSmartContent} = this.props;
+
+    if (!Array.isArray(items)) {
+      return [];
+    }
+
+    const nbToDisplay = Math.min(this.maxSizeStop, sizeStop);
+    return items
+      .filter((item, index) => {
+        return index < nbToDisplay;
+      })
+      .map((item, index) => ({
+        isObject: !!item.children,
+        key: item.reference?item.reference:item.value?item.value:index,
+        show: true,
+        data: item.children?item.children:item,
+        mapping: mapping,
+        showSmartContent: showSmartContent
+      }));
+  }
+
+  getShowMoreLabel(sizeStop) {
+    const {items, mapping} = this.props;
+    if (!Array.isArray(items) || (mapping && mapping.separator)) {
+      return null;
+    }
+
+    if (sizeStop === LIST_SMALL_SIZE_STOP) {
+      return (this.maxSizeStop > LIST_MIDDLE_SIZE_STOP)?VIEW_MORE_LABEL:VIEW_ALL_LABEL;
+    }
+
+    if (sizeStop === LIST_MIDDLE_SIZE_STOP) {
+      return (this.maxSizeStop > LIST_MIDDLE_SIZE_STOP)?VIEW_ALL_LABEL:VIEW_LESS_LABEL;
+    }
+
+    return VIEW_LESS_LABEL;
+  }
+
+  get hasShowMoreToggle() {
+    const {items, mapping, showSmartContent} = this.props;
+    if (!Array.isArray(items) || (mapping && mapping.separator) || !showSmartContent) {
+      return false;
+    }
+
+    return this.maxSizeStop > LIST_SMALL_SIZE_STOP;
+  }
+
+  hasMore(sizeStop) {
+    const {items, mapping} = this.props;
+    if (!Array.isArray(items) || (mapping && mapping.separator)) {
+      return false;
+    }
+    const maxSizeStop = this.maxSizeStop;
+    const nbToDisplay = Math.min(maxSizeStop, sizeStop);
+
+    return maxSizeStop > nbToDisplay;
+  }
+
+  handleShowMoreClick() {
+    const nextSizeStop = this.getNextSizeStop(this.state.sizeStop);
+    this.setState({
+      sizeStop: nextSizeStop,
+      items: this.getFilteredItems(nextSizeStop),
+      hasShowMoreToggle: this.hasShowMoreToggle,
+      showMoreLabel: this.getShowMoreLabel(nextSizeStop),
+      hasMore: this.hasMore(nextSizeStop)
+    });
   }
 
   render() {
-    const {show, items, mapping, showSmartContent} = this.props;
+    const {show, mapping} = this.props;
     if (!show) {
       return null;
     }
-    const keys = {};
-    const generateList = () => {
-      let res =  items.map((item, index) => {
-        if ((this.state.size === Number.POSITIVE_INFINITY || index < this.state.size) && (showSmartContent || index < 5)) {
-          let value = null;
-          if (item.children) {
-            value = <ObjectField show={true} data={item.children} mapping={mapping} showSmartContent={showSmartContent} />;
-          } else {
-            value = <ValueField show={true} value={item} mapping={mapping} showSmartContent={showSmartContent} />;
-          }
-          let key = item.reference?item.reference:item.value;
-          if (key && !keys[key]) {
-            keys[key] = true;
-          } else {
-            key = index;
-          }
-          let itemType;
-          if(mapping.overview_max_display){
-            itemType = <div key={key}>{value}</div>;
-          }else{
-            itemType = <li key={key}>{value}</li>;
-          }
-          return itemType;
-        } else {
-          return null;
-        }
-      });
-      return res;
-    };
 
-    if (!mapping || !mapping.visible) {
-      return null;
-    }
-
-    if (mapping.separator) {
-      const keys = {};
-      return (
-        <span>
-          {items.map((item, index) => {
-            let value = null;
-            if (item.children) {
-              value = <ObjectField show={true} data={item.children} mapping={mapping} showSmartContent={showSmartContent} />;
-            } else {
-              value = <ValueField show={true} value={item} mapping={mapping} showSmartContent={showSmartContent} />;
-            }
-            let key = item.value;
-            if (key && !keys[key]) {
-              keys[key] = true;
-            } else {
-              key = index;
-            }
-            return <span key={key}>{index===0?"":mapping.separator}{value}</span>;
-          })}
-        </span>
-      );
-
-    } else {
-
-      let viewMore = null;
-      let dotsMore = null;
-      if (items.length > 5) {
-        if (showSmartContent) {
-          if (this.state.size === 5 && items.length > 10) {
-            viewMore = <button className="kgs-shape__viewMore-button" onClick={this.handleShowMoreClick} role="link">view more</button>;
-          } else if (this.state.size !== Number.POSITIVE_INFINITY) {
-            viewMore = <button className="kgs-shape__viewMore-button" onClick={this.handleShowMoreClick} role="link">view all</button>;
-          } else {
-            viewMore = <button className="kgs-shape__viewMore-button" onClick={this.handleShowMoreClick} role="link">view less</button>;
-          }
-        } else {
-          dotsMore = <li key="-1" className="kgs-shape__more">...</li>;
-        }
-      }
-
-
-      let displayNumber = items.length;
-      let listItems ;
-      if (mapping.overview_max_display){
-        if (!showSmartContent){
-          displayNumber = mapping.overview_max_display;
-        }
-        listItems = <div className='list-tag'>
-          {generateList().slice(0, displayNumber)}
-          {dotsMore}
-        </div>;
-      } else {
-        listItems = <ul>
-          {generateList()}
-          {dotsMore}
-        </ul>;
-      }
-
-      return (
-        <span>
-          {listItems}
-          {viewMore}
-        </span>
-      );
-    }
+    return (
+      <ListFieldComponent list={this.state.items} separator={mapping && mapping.separator && !mapping.tag_icon} showAsTag={mapping && !!mapping.tag_icon} showToggle={this.state.hasShowMoreToggle} toggleHandler={this.handleShowMoreClick} toggleLabel={this.state.showMoreLabel} hasMore={this.state.hasMore}/>
+    );
   }
 }

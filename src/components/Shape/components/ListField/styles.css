@@ -34,8 +34,12 @@
     color: #08c;
 }
 
-.list-tag{
+.kgs-shape__field .kgs-shape__list.items-as-tags {
     display: flex;
     padding: 0;
     flex-wrap: wrap;
+}
+
+.kgs-shape__field .kgs-shape__list.items-as-tags > span {
+    display: block;
 }
