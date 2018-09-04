@@ -55,12 +55,12 @@ const ListFieldComponent = ({list, separator, showAsTag, showToggle, toggleHandl
     <span>
       <List className={className}>
         {
-          list.map(({isObject, key, value, data, mapping, showSmartContent}, index) => (
+          list.map(({isObject, key, data, mapping, showSmartContent}, index) => (
             <ListItem key={key} separator={separator} index={index}>
               {isObject?
                 <ObjectField show={true} data={data} mapping={mapping} showSmartContent={showSmartContent} />
                 :
-                <ValueField show={true} value={value} mapping={mapping} showSmartContent={showSmartContent} />
+                <ValueField show={true} data={data} mapping={mapping} showSmartContent={showSmartContent} />
               }
             </ListItem>
           ))
@@ -144,8 +144,7 @@ export class ListField extends PureComponent {
         isObject: !!item.children,
         key: item.reference?item.reference:item.value?item.value:index,
         show: true,
-        data: item.children,
-        value: item,
+        data: item.children?item.children:item,
         mapping: mapping,
         showSmartContent: showSmartContent
       }));

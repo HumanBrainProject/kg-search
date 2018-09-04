@@ -21,12 +21,12 @@ import { ListField } from "../ListField";
 import { ObjectField } from "../ObjectField";
 import { ValueField } from "../ValueField";
 
-export function Field({name, value, mapping, showSmartContent}) {
-  if (!mapping || !mapping.visible || !(value || mapping.showIfEmpty)) {
+export function Field({name, data, mapping, showSmartContent}) {
+  if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
     return null;
   }
 
-  const isList = Array.isArray(value);
+  const isList = Array.isArray(data);
   const style = (mapping.order && !showSmartContent)?{order: mapping.order}:null;
   const className = "kgs-shape__field" + (name?" kgs-shape__" + name:"");
 
@@ -42,19 +42,19 @@ export function Field({name, value, mapping, showSmartContent}) {
   };
   const listProps = {
     show: isList,
-    items: value,
+    items: data,
     mapping: mapping,
     showSmartContent: showSmartContent
   };
   const valueProps = {
     show: !isList,
-    value: value,
+    data: data,
     mapping: mapping,
     showSmartContent: showSmartContent
   };
   const objectProps = {
     show: !isList && !!mapping.children,
-    data: value && value.children,
+    data: data && data.children,
     mapping: mapping,
     showSmartContent: showSmartContent
   };

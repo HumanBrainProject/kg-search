@@ -51,9 +51,9 @@ const ObjectFieldComponent = ({fields, separator}) => {
   return (
     <List className="kgs-shape__object">
       {
-        fields.map(({name, value, mapping, showSmartContent}, index) => (
+        fields.map(({name, data, mapping, showSmartContent}, index) => (
           <ListItem key={name} separator={separator} index={index}>
-            <Field name={name} value={value} mapping={mapping} showSmartContent={showSmartContent} />
+            <Field name={name} data={data} mapping={mapping} showSmartContent={showSmartContent} />
           </ListItem>
         ))
       }
@@ -74,7 +74,7 @@ export function ObjectField({show, data, mapping, showSmartContent}) {
     )
     .map(([name, mapping]) => ({
       name: name,
-      value: data && data[name],
+      data: data && data[name],
       mapping: mapping,
       showSmartContent: showSmartContent
     }));
