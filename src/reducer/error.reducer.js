@@ -84,7 +84,7 @@ export function reducer(state = initialState, action = {}) {
   }
   case types.LOAD_HIT_NO_DATA: {
     return {
-      message: "This data is currently not available.",
+      message: `${(typeof action.reference === "string")?action.reference.replace(/\//g, " "):"This data"} is currently not available.`,
       retry: {
         label: "Retry",
         action: types.LOAD_HIT
