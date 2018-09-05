@@ -24,13 +24,10 @@
     align-content: flex-start;
     word-break: break-word;
     height: 100%;
+    overflow: hidden;
 }
 
 @media (min-width: 992px) {
-    .kgs-hit {
-        width: 100%;
-        overflow: hidden;
-    }
     .kgs-result-layout.is-list .kgs-hit {
         height: auto;
         height: unset;
