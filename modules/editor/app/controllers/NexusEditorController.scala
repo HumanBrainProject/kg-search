@@ -680,8 +680,13 @@ class NexusEditorController @Inject()(
       res => res.status match{
         case OK =>
           val item = res.json.as[JsArray].value.head
-          val spec = specs(item.as[JsObject])
-          Ok(Json.toJson(spec))
+          if(item != null){
+            val spec = specs(item.as[JsObject])
+            Ok(Json.toJson(spec))
+          }else{
+            NotFound("The requested object was not found. Please contact the support.")
+          }
+
         case _ => logger.error(res.body)
           NexusEditorController.forwardResultResponse(res)
       }
