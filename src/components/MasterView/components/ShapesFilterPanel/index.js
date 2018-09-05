@@ -105,14 +105,14 @@ const Icon = ({label, shape, active}) => {
 // {itemKey, label, count, rawCount, listDocCount, active, disabled, showCount, bemBlocks, onClick}
 const itemComponent = ({itemKey, label, count, active, disabled, onClick}) => {
   return (
-    <div className={`kgs-shapesFilter__shape${active?" is-active":""}${disabled?" is-disabled":""}`}>
-      <button key={itemKey} onClick={onClick} className="kgs-shapesFilter__button" disabled={disabled}>
+    <div className={`kgs-fieldsFilter__shape${active?" is-active":""}${disabled?" is-disabled":""}`}>
+      <button key={itemKey} onClick={onClick} className="kgs-fieldsFilter__button" disabled={disabled}>
         <div>
-          <div className="kgs-shapesFilter__icon">
+          <div className="kgs-fieldsFilter__icon">
             <Icon label={label} shape={itemKey} active={active} />
           </div>
-          <div className="kgs-shapesFilter__label">{label}</div>
-          <div className="kgs-shapesFilter__count">{count} Results</div>
+          <div className="kgs-fieldsFilter__label">{label}</div>
+          <div className="kgs-fieldsFilter__count">{count} Results</div>
         </div>
       </button>
     </div>
@@ -121,7 +121,7 @@ const itemComponent = ({itemKey, label, count, active, disabled, onClick}) => {
 
 export function ShapesFilterPanel() {
   return (
-    <div className="kgs-shapesFilter">
+    <div className="kgs-fieldsFilter">
       <MenuFilter field={"_type"} id="facet_type" itemComponent={itemComponent}/>
     </div>
   );

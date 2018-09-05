@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { Field } from "../Field";
+import { Field } from "../../../Field";
 import "./styles.css";
 
 const DefaultList = ({className, children}) => {
@@ -49,7 +49,7 @@ const ObjectFieldComponent = ({fields, separator}) => {
   const List = separator?CustomList:DefaultList;
   const ListItem = separator?CustomListItem:DefaultListItem;
   return (
-    <List className="kgs-shape__object">
+    <List className="kgs-field__object">
       {
         fields.map(({name, data, mapping, showSmartContent}, index) => (
           <ListItem key={name} separator={separator} index={index}>
