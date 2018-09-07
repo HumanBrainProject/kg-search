@@ -197,7 +197,3 @@ body > header.navbar {
         transform: rotateZ(360deg);
     }
 }
-
-.kgs-shape__field p.field-value button[role="link"]{
-    text-align: left;
-}

@@ -15,11 +15,12 @@
 */
 
 import React from "react";
-import { FieldLabel} from "../FieldLabel";
-import { FieldHint} from "../FieldHint";
-import { ListField } from "../ListField";
-import { ObjectField } from "../ObjectField";
-import { ValueField } from "../ValueField";
+import { FieldLabel} from "./components/FieldLabel";
+import { FieldHint} from "./components/FieldHint";
+import { ListField } from "./components/ListField";
+import { ObjectField } from "./components/ObjectField";
+import { ValueField } from "./components/ValueField";
+import "./styles.css";
 
 export function Field({name, data, mapping, showSmartContent}) {
   if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
@@ -28,7 +29,7 @@ export function Field({name, data, mapping, showSmartContent}) {
 
   const isList = Array.isArray(data);
   const style = (mapping.order && !showSmartContent)?{order: mapping.order}:null;
-  const className = "kgs-shape__field" + (name?" kgs-shape__" + name:"");
+  const className = "kgs-field" + (name?" kgs-field__" + name:"");
 
   const labelProps = {
     show: !!mapping.value && (!mapping.label_hidden || showSmartContent),
@@ -36,7 +37,7 @@ export function Field({name, data, mapping, showSmartContent}) {
     value: mapping.value
   };
   const hintProps = {
-    show: !!mapping.value && !!mapping.hint,
+    show: showSmartContent && !!mapping.value && !!mapping.hint,
     value: mapping.hint,
     label: mapping.value
   };

@@ -19,11 +19,11 @@ import { SearchkitComponent, Hits } from "searchkit";
 import { dispatch } from "../../../../store";
 import * as actions from "../../../../actions";
 import { withStoreStateSubscription} from "../../../withStoreStateSubscription";
-import { Shape } from "../../../Shape";
+import { Hit } from "../Hit";
 import { StatsHelpers } from "../../../../Helpers/StatsHelpers";
 import "./styles.css";
 
-function SummaryItem({bemBlocks, data}) {
+function HitItem({bemBlocks, data}) {
 
   const openDetail = (event) => {
     dispatch(actions.setHit(data, event.currentTarget));
@@ -32,14 +32,14 @@ function SummaryItem({bemBlocks, data}) {
   return (
     <li className={bemBlocks.item().mix(bemBlocks.container("item"))} >
       <button role="link" onClick={openDetail} data-type={data._type} data-id={data._id}>
-        <Shape data={data} detailViewMode={false} />
+        <Hit data={data} />
         <span className={bemBlocks.item("chevron")}><i className="fa fa-chevron-right"></i></span>
       </button>
     </li>
   );
 }
 
-class SummaryList extends SearchkitComponent {
+class HitList extends SearchkitComponent {
   defineBEMBlocks() {
     const blockName = "sk-hits-list";
     return {
@@ -85,7 +85,7 @@ class SummaryList extends SearchkitComponent {
     const moreHits = [];
     hits.forEach((hit, index) => {
       if (hit) {
-        const item = <SummaryItem bemBlocks={bemBlocks} data={hit} key={hit._type?(hit._type + "/" + hit._id):index} />;
+        const item = <HitItem bemBlocks={bemBlocks} data={hit} key={hit._type?(hit._type + "/" + hit._id):index} />;
         if (limit !== -1 && hit._score >= limit) {
           topMatchHits.push(item);
         } else {
@@ -132,7 +132,7 @@ const ResultsPanelComponent = ({gridLayoutMode, hitsPerPage}) => {
   */
   return (
     <span className={`kgs-result-layout ${gridLayoutMode?"is-grid":"is-list"}`}>
-      <Hits customHighlight={highlights} hitsPerPage={hitsPerPage} listComponent={SummaryList} scrollTo="body" />
+      <Hits customHighlight={highlights} hitsPerPage={hitsPerPage} listComponent={HitList} scrollTo="body" />
     </span>
   );
 };

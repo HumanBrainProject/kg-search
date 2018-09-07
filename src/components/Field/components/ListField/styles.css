@@ -14,11 +14,11 @@
 *   limitations under the License.
 */
 
-.kgs-shape__more {
+.kgs-field__more {
     display: inline-block;
 }
 
-.kgs-shape__field button[role="link"].kgs-shape__viewMore-button {
+.kgs-field button[role="link"].kgs-field__viewMore-button {
     -webkit-appearance: none;
     margin: 0 0 0 20px;
     padding: 0;
@@ -29,17 +29,17 @@
     color: #08c;
 }
 
-.kgs-shape__field button[role="link"].kgs-shape__viewMore-button:hover {
+.kgs-field button[role="link"].kgs-field__viewMore-button:hover {
     text-decoration: none;
     color: #08c;
 }
 
-.kgs-shape__field .kgs-shape__list.items-as-tags {
+.kgs-field .kgs-field__list.items-as-tags {
     display: flex;
     padding: 0;
     flex-wrap: wrap;
 }
 
-.kgs-shape__field .kgs-shape__list.items-as-tags > span {
+.kgs-field .kgs-field__list.items-as-tags > span {
     display: block;
 }

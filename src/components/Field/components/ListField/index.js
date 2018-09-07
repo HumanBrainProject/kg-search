@@ -50,7 +50,7 @@ const ListFieldComponent = ({list, separator, showAsTag, showToggle, toggleHandl
   const isCustom = separator || showAsTag;
   const List = isCustom?CustomList:DefaultList;
   const ListItem = isCustom?CustomListItem:DefaultListItem;
-  const className =  `kgs-shape__list ${showAsTag?"items-as-tags":""}`;
+  const className =  `kgs-field__list ${showAsTag?"items-as-tags":""}`;
   return (
     <span>
       <List className={className}>
@@ -66,11 +66,11 @@ const ListFieldComponent = ({list, separator, showAsTag, showToggle, toggleHandl
           ))
         }
         {showToggle && hasMore && (
-          <ListItem key={-1} className="kgs-shape__more">...</ListItem>
+          <ListItem key={-1} className="kgs-field__more">...</ListItem>
         )}
       </List>
       {showToggle && (
-        <button className="kgs-shape__viewMore-button" onClick={toggleHandler} role="link">{toggleLabel}</button>
+        <button className="kgs-field__viewMore-button" onClick={toggleHandler} role="link">{toggleLabel}</button>
       )}
     </span>
   );
