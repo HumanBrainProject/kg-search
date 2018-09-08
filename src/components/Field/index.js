@@ -22,22 +22,22 @@ import { ObjectField } from "./components/ObjectField";
 import { ValueField } from "./components/ValueField";
 import "./styles.css";
 
-export function Field({name, data, mapping, showSmartContent}) {
+export function Field({name, data, mapping, renderUserInteractions}) {
   if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
     return null;
   }
 
   const isList = Array.isArray(data);
-  const style = (mapping.order && !showSmartContent)?{order: mapping.order}:null;
-  const className = "kgs-field" + (name?" kgs-field__" + name:"");
+  const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
+  const className = "kgs-field" + (name?" kgs-field__" + name:"") + (mapping.layout?" kgs-field__layout-" + mapping.layout:"");
 
   const labelProps = {
-    show: !!mapping.value && (!mapping.label_hidden || showSmartContent),
+    show: !!mapping.value && (!mapping.label_hidden || !!renderUserInteractions),
     showAsBlock: mapping.tag_icon,
     value: mapping.value
   };
   const hintProps = {
-    show: showSmartContent && !!mapping.value && !!mapping.hint,
+    show: renderUserInteractions && !!mapping.value && !!mapping.hint,
     value: mapping.hint,
     label: mapping.value
   };
@@ -45,19 +45,19 @@ export function Field({name, data, mapping, showSmartContent}) {
     show: isList,
     items: data,
     mapping: mapping,
-    showSmartContent: showSmartContent
+    renderUserInteractions: !!renderUserInteractions
   };
   const valueProps = {
     show: !isList,
     data: data,
     mapping: mapping,
-    showSmartContent: showSmartContent
+    renderUserInteractions: !!renderUserInteractions
   };
   const objectProps = {
     show: !isList && !!mapping.children,
     data: data && data.children,
     mapping: mapping,
-    showSmartContent: showSmartContent
+    renderUserInteractions: !!renderUserInteractions
   };
 
   return (

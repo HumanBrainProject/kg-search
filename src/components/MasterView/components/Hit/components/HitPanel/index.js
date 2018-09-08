@@ -26,7 +26,7 @@ export function HitPanel({type, hasNoData, hasUnknownData, icon, fields, highlig
       <div className="kgs-hit__content">
         <FieldIcon {...icon}/>
         {fields.map(({name, data, mapping}) => (
-          <Field key={name} name={name} data={data} mapping={mapping} showSmartContent={false} />
+          <Field key={name} name={name} data={data} mapping={mapping} renderUserInteractions={false} />
         ))}
         <HighlightsField {...highlightsField} />
       </div>
