@@ -55,12 +55,12 @@ const ListFieldComponent = ({list, separator, showAsTag, showToggle, toggleHandl
     <span>
       <List className={className}>
         {
-          list.map(({isObject, key, data, mapping, showSmartContent}, index) => (
+          list.map(({isObject, key, data, mapping, renderUserInteractions}, index) => (
             <ListItem key={key} separator={separator} index={index}>
               {isObject?
-                <ObjectField show={true} data={data} mapping={mapping} showSmartContent={showSmartContent} />
+                <ObjectField show={true} data={data} mapping={mapping} renderUserInteractions={renderUserInteractions} />
                 :
-                <ValueField show={true} data={data} mapping={mapping} showSmartContent={showSmartContent} />
+                <ValueField show={true} data={data} mapping={mapping} renderUserInteractions={renderUserInteractions} />
               }
             </ListItem>
           ))
@@ -98,13 +98,13 @@ export class ListField extends PureComponent {
   }
 
   get maxSizeStop() {
-    const {items, mapping, showSmartContent} = this.props;
+    const {items, mapping, renderUserInteractions} = this.props;
 
     if (!Array.isArray(items)) {
       return 0;
     }
 
-    if (!showSmartContent && mapping && mapping.overview_max_display && mapping.overview_max_display < items.length) {
+    if (!renderUserInteractions && mapping && mapping.overview_max_display && mapping.overview_max_display < items.length) {
       return mapping.overview_max_display;
     }
     return items.length;
@@ -129,7 +129,7 @@ export class ListField extends PureComponent {
   }
 
   getFilteredItems(sizeStop) {
-    const {items, mapping, showSmartContent} = this.props;
+    const {items, mapping, renderUserInteractions} = this.props;
 
     if (!Array.isArray(items)) {
       return [];
@@ -146,7 +146,7 @@ export class ListField extends PureComponent {
         show: true,
         data: item.children?item.children:item,
         mapping: mapping,
-        showSmartContent: showSmartContent
+        renderUserInteractions: renderUserInteractions
       }));
   }
 
@@ -168,8 +168,8 @@ export class ListField extends PureComponent {
   }
 
   get hasShowMoreToggle() {
-    const {items, mapping, showSmartContent} = this.props;
-    if (!Array.isArray(items) || (mapping && mapping.separator) || !showSmartContent) {
+    const {items, mapping, renderUserInteractions} = this.props;
+    if (!Array.isArray(items) || (mapping && mapping.separator) || !renderUserInteractions) {
       return false;
     }
 

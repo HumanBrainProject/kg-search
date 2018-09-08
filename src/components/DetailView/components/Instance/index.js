@@ -52,26 +52,18 @@ const getField = (type, name, data, mapping) => {
   }
 };
 
-const getFields = (type, data, mapping) => {
+const getFields = (type, data, mapping, filter) => {
   if (!data || !mapping) {
     return [];
   }
 
-  const primaryFiels = ["title", "description"];
-  const fields = [
-    ["type", {}],
-    ...(primaryFiels
-      .map(name => ([name, mapping.fields && mapping.fields[name]]))
-      .filter(([,mapping]) => mapping)
-    ),
-    ...(Object.entries(mapping.fields || {})
-      .filter(([name, mapping]) =>
-        mapping
+  const fields = Object.entries(mapping.fields || {})
+    .filter(([name, mapping]) =>
+      mapping
         && (mapping.showIfEmpty || (data && data[name]))
-        && !primaryFiels.includes(name) // exclude above "manually" defined fields
-      )
+        && (!filter || (typeof filter === "function" && filter(type, name, data[name], mapping)))
     )
-  ].map(([name, mapping]) => getField(type, name, data[name], mapping));
+    .map(([name, mapping]) => getField(type, name, data[name], mapping));
 
   return fields;
 };
@@ -86,12 +78,18 @@ export function Instance({data}) {
     type: data && data._type,
     hasNoData: !source,
     hasUnknownData: !mapping,
-    icon: {
-      title: data && data._type,
-      url: source && source.image && source.image.url,
-      inline: mapping && mapping.icon
+    header: {
+      icon: {
+        title: data && data._type,
+        url: source && source.image && source.image.url,
+        inline: mapping && mapping.icon
+      },
+      type: data && data._type,
+      title: getField(data && data._type, "title", source["title"], mapping && mapping.fields && mapping.fields["title"])
     },
-    fields: getFields(data && data._type, source, mapping)
+    main: getFields(data && data._type, source, mapping, (type, name) => name !== "title"),
+    summary: getFields(data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "summary" && name !== "title"),
+    groups: getFields(data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title")
   };
   return (
     <InstancePanel {...instanceProps} />

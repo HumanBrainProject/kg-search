@@ -162,18 +162,18 @@ class Details extends PureComponent {
   }
 }
 
-export function ValueField({show, data, mapping, showSmartContent}) {
+export function ValueField({show, data, mapping, renderUserInteractions}) {
   if (!show  || !data|| !mapping || !mapping.visible) {
     return null;
   }
 
-  const hasReference = showSmartContent && !!data.reference;
-  const hasLink =  showSmartContent && !!data.url;
-  const hasMailToLink = showSmartContent && data.url === "string" &&  data.url.substr(0,7).toLowerCase() === "mailto:";
+  const hasReference = renderUserInteractions && !!data.reference;
+  const hasLink =  renderUserInteractions && !!data.url;
+  const hasMailToLink = renderUserInteractions && data.url === "string" &&  data.url.substr(0,7).toLowerCase() === "mailto:";
   const hasAnyLink = hasReference || hasMailToLink || hasLink;
   const isTag = !hasAnyLink && !!mapping.tag_icon;
-  const isMarkdown = showSmartContent && !hasAnyLink && !isTag && !!mapping.markdown;
-  const isCollapsible = showSmartContent && !hasAnyLink && !isTag && mapping.collapsible && typeof data.value === "string" && data.value.length >= 1600;
+  const isMarkdown = renderUserInteractions && !hasAnyLink && !isTag && !!mapping.markdown;
+  const isCollapsible = renderUserInteractions && !hasAnyLink && !isTag && mapping.collapsible && typeof data.value === "string" && data.value.length >= 1600;
 
   let value = data.value;
   if (data.value && mapping.type === "date") {

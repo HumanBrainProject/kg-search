@@ -134,22 +134,14 @@ const getFields = (type, data, highlight, mapping) => {
   if (!data || !mapping) {
     return [];
   }
-
   const primaryFiels = ["title", "description"];
-  const fields = [
-    ...(primaryFiels
-      .map(name => ([name, mapping.fields && mapping.fields[name]]))
-      .filter(([,mapping]) => mapping)
-    ),
-    ...(Object.entries(mapping.fields || {})
-      .filter(([name, mapping]) =>
-        mapping
-        && mapping.overview
-        && (mapping.showIfEmpty || (data && data[name]))
-        && !primaryFiels.includes(name) // exclude above "manually" defined fields
-      )
+  const fields = Object.entries(mapping.fields || {})
+    .filter(([name, mapping]) =>
+      mapping
+      && (mapping.overview || primaryFiels.includes(name))
+      && (mapping.showIfEmpty || (data && data[name]))
     )
-  ].map(([name, mapping]) => getField(type, name, data[name], highlight, mapping));
+    .map(([name, mapping]) => getField(type, name, data[name], highlight, mapping));
 
   return fields;
 };

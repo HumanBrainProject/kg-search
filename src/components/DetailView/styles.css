@@ -44,6 +44,12 @@
     }
 }
 
+@media (min-width: 1400px) {
+    .kgs-detailView__views {
+        width: 1200px;
+        margin-left: calc(50% - 600px);
+    }
+}
 
 .kgs-detailView__view {
     z-index: 1200;
@@ -386,6 +392,12 @@
 @media (min-width: 992px) {
     .kgs-detailView__navigation {
         width: 992px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .kgs-detailView__navigation {
+        width: 1200px;
     }
 }
 
