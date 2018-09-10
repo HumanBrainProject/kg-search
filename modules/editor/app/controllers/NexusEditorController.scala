@@ -27,7 +27,7 @@ import editor.helper.InstanceHelper
 import editor.helpers.{EditorSpaceHelper, FormHelper, NavigationHelper, NodeTypeHelper}
 import editor.models._
 import authentication.helpers.OIDCHelper
-import helpers.ReconciledInstanceHelper
+import helpers.{ReconciledInstanceHelper, ResponseHelper}
 import javax.inject.{Inject, Singleton}
 import authentication.models.{AuthenticatedUserAction, UserInfo, UserRequest}
 import authentication.service.OIDCAuthService
@@ -42,6 +42,7 @@ import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.mvc._
 import editor.services.InstanceService
 import nexus.services.NexusService
+import editor.services.ReleaseService
 
 import scala.concurrent.duration._
 import scala.concurrent.duration.FiniteDuration
@@ -56,6 +57,7 @@ class NexusEditorController @Inject()(
                                        oIDCAuthService: OIDCAuthService,
                                        config: Configuration,
                                        nexusService: NexusService,
+                                       releaseService: ReleaseService,
                                        ws: WSClient
                                      )(implicit ec: ExecutionContext)
   extends AbstractController(cc) {
@@ -125,7 +127,7 @@ class NexusEditorController @Inject()(
                       )
                     )
                   case _ =>
-                    NexusEditorController.forwardResultResponse(res)
+                    ResponseHelper.forwardResultResponse(res)
                 }
             }
         }
@@ -152,7 +154,7 @@ class NexusEditorController @Inject()(
     instanceService.retrieveInstance(nexusPath, id, token).map[Result] {
       case Left(r) =>
         logger.error(s"Error: Could not fetch instance : ${nexusPath.toString()}/$id - ${r.body}")
-        NexusEditorController.errorResultWithBackLink(r.status, r.headers, r.body, nexusPath, reconciledPrefix)
+        ResponseHelper.errorResultWithBackLink(r.status, r.headers, r.body, nexusPath, reconciledPrefix)
       case Right(instance) =>
         val instanceWithCorrectLinks = instance.modificationOfLinks(nexusEndpoint, reconciledPrefix)
         FormHelper.getFormStructure(nexusPath, instanceWithCorrectLinks.content, reconciledPrefix) match {
@@ -174,7 +176,7 @@ class NexusEditorController @Inject()(
     instanceService.retrieveInstance(nexusPath, id, token).flatMap[Result] {
       case Left(res) =>
         Future.successful(
-          NexusEditorController.forwardResultResponse(res)
+          ResponseHelper.forwardResultResponse(res)
         )
       case Right(originalInstance) =>
         val nbRevision = (originalInstance.content \ "nxv:rev").as[JsNumber]
@@ -209,7 +211,7 @@ class NexusEditorController @Inject()(
           case instanceContent => Ok(NavigationHelper.resultWithBackLink(instanceContent.as[JsObject], nexusPath, reconciledPrefix))
         }
       case Left(response) =>
-        NexusEditorController.errorResultWithBackLink(response.status, response.headers, response.body, nexusPath, reconciledPrefix)
+        ResponseHelper.errorResultWithBackLink(response.status, response.headers, response.body, nexusPath, reconciledPrefix)
     }
 
   }
@@ -277,11 +279,11 @@ class NexusEditorController @Inject()(
                    val id = (re.json \ "@id").as[JsString]
                   Ok(NavigationHelper.resultWithBackLink(InstanceHelper.formatFromNexusToOption(updatedInstance, reconciledPrefix), instancePath, reconciledPrefix))
                 case _ =>
-                  NexusEditorController.errorResultWithBackLink(re.status, re.headers, re.body, instancePath, reconciledPrefix)
+                  ResponseHelper.errorResultWithBackLink(re.status, re.headers, re.body, instancePath, reconciledPrefix)
               }
             }
           case _ =>
-            Future.successful(NexusEditorController.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, reconciledPrefix) )
+            Future.successful(ResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, reconciledPrefix) )
         }
       }
     }
@@ -350,11 +352,11 @@ class NexusEditorController @Inject()(
                               case recStatus if recStatus < 300 =>
                                 Ok(NavigationHelper.resultWithBackLink(InstanceHelper.formatFromNexusToOption(consolidatedInstance.content, reconciledPrefix), originalPath, reconciledPrefix))
                               case _ =>
-                                NexusEditorController.errorResultWithBackLink(re.status, re.headers, re.body, originalPath, reconciledPrefix)
+                                ResponseHelper.errorResultWithBackLink(re.status, re.headers, re.body, originalPath, reconciledPrefix)
                             }
                           }
                         case _ =>
-                          Future.successful(NexusEditorController.errorResultWithBackLink(res.status, res.headers, res.body, originalPath, reconciledPrefix))
+                          Future.successful(ResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, originalPath, reconciledPrefix))
                       }
                     }
                 }
@@ -364,11 +366,11 @@ class NexusEditorController @Inject()(
                   case _ => None
                 }.filter(_.isDefined).map(_.get)
                 logger.error(s"Could not fetch editor instances ${errors}")
-                Future.successful(NexusEditorController.errorResultWithBackLink(errors.head.status, errors.head.headers,errors.head.body, originalPath, reconciledPrefix))
+                Future.successful(ResponseHelper.errorResultWithBackLink(errors.head.status, errors.head.headers,errors.head.body, originalPath, reconciledPrefix))
               }
           }
         }
-      case Left(res) => Future.successful( NexusEditorController.errorResultWithBackLink(res.status, res.headers, res.body, originalPath, reconciledPrefix) )
+      case Left(res) => Future.successful( ResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, originalPath, reconciledPrefix) )
     }
   }
 
@@ -393,7 +395,7 @@ class NexusEditorController @Inject()(
       instanceService.retrieveInstance(instancePath, id, token).flatMap[Result] {
         case Left(res) =>
           Future.successful(
-            NexusEditorController.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, reconciledPrefix)
+            ResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, reconciledPrefix)
           )
         case Right(currentInstanceDisplayed) =>
           if(currentInstanceDisplayed.nexusPath.isReconciled(reconciledPrefix)){
@@ -460,7 +462,7 @@ class NexusEditorController @Inject()(
                         .-("nxv:rev")
                       Created(NavigationHelper.resultWithBackLink(output.as[JsObject], instancePath, reconciledPrefix))
                     case _ =>
-                      NexusEditorController.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, reconciledPrefix)
+                      ResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, reconciledPrefix)
                   }
                 }
               }
@@ -575,7 +577,7 @@ class NexusEditorController @Inject()(
             println(s"sparql query: \n$sparqlPayload\n\nduration: ${duration}ms")
             Ok(NodeTypeHelper.formatNodetypeList(arr))
           case _ =>
-            NexusEditorController.forwardResultResponse(res)
+            ResponseHelper.forwardResultResponse(res)
         }
     }
     res
@@ -640,89 +642,36 @@ class NexusEditorController @Inject()(
               }.filter( v => v != JsNull).map(_.as[JsObject])
             }.distinct
             Ok(Json.obj("links" -> edges, "nodes" -> vertices))
-          case _ => NexusEditorController.forwardResultResponse(allRelations)
+          case _ => ResponseHelper.forwardResultResponse(allRelations)
         }
     }
   }
 
 
-
+  /**
+    * Retrieve up to 6 level of an instance child with their release status
+    * @param org
+    * @param domain
+    * @param schema
+    * @param version
+    * @param id
+    * @return
+    */
   def releaseStatus(
                      org: String, domain: String, schema: String, version: String, id:String
-                   ): Action[AnyContent] = Action.async{ implicit request =>
-
-    def specs(item: JsObject): collection.Map[String, JsValue] = {
-      item.value.map{ k =>
-          k._1 match {
-            case "http://schema.org/name" => "label" -> k._2
-            case "@type" => "type" -> JsString(k._2.as[String].split("#").last)
-            case "children" => k._1 -> Json.toJson(k._2.as[JsArray]
-              .value.groupBy(js => (js \ "@id").as[String]).map{
-              case (k,v) =>
-                  val edgeTypes = v.foldLeft(List[String]()) {
-                    case (list, js) => (js \ "linkType").as[String].split("/").head.split("-").last :: list
-                  }
-                  val transformer = (__ \ 'linkType).json.put(Json.toJson(edgeTypes))
-                  val linkType = v.head.transform(transformer)
-                  k -> v.head.as[JsObject].++(linkType.get)
-            }.values.map( j => specs(j.as[JsObject]))).as[JsValue]
-            case "linkType" =>
-              k._1 -> k._2
-            case _ => k._1 -> k._2
-          }
-      }
+                   ): Action[AnyContent] = Action.async { implicit request =>
+    releaseService.releaseStatus(org, domain, schema, version, id).map{
+      case Left(None) => ResponseHelper.errorResultWithBackLink(NOT_FOUND, request.headers.toMap, "Could not find main instance.", NexusPath(org, domain,schema, version), reconciledPrefix)
+      case Left(Some(res)) => ResponseHelper.forwardResultResponse(res)
+      case Right(data) => Ok(Json.toJson(data))
     }
-    ws.url(s"${kgQueryEndpoint}/arango/release/$org/$domain/$schema/$version/$id").addHttpHeaders(CONTENT_TYPE -> "application/json").get().map{
-      res => res.status match{
-        case OK =>
-          val item = res.json.as[JsObject]
-          if(item != null){
-            val spec = specs(item)
-            Ok(Json.toJson(spec))
-          }else{
-            NotFound("The requested object was not found. Please contact the support.")
-          }
 
-        case _ => logger.error(res.body)
-          NexusEditorController.forwardResultResponse(res)
-      }
-    }
   }
+
+
 }
 
 object NexusEditorController {
-
-  /**
-    * This function returns a Play Result with a back link
-    * @param status The status of the response
-    * @param headers The headers of the response
-    * @param errorMsg The body of the response (could be either a String or JsValue)
-    * @param originalPath The path of the instance
-    * @param reconciledPrefix The reconciled prefix
-    * @return A Play result with back link
-    */
-  def errorResultWithBackLink(status: Int, headers: Map[String, Seq[String]], errorMsg:Any, originalPath: NexusPath, reconciledPrefix: String): Result = {
-    val resultBackLink = NavigationHelper.errorMessageWithBackLink(errorMsg, NavigationHelper.generateBackLink(originalPath,reconciledPrefix))
-    Result(
-      ResponseHeader(
-        status,
-        flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](headers))
-      ),
-      HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json"))
-    )
-  }
-
-  /**
-    * This function forward a reponse as a Play Result
-    * @param res The response to be forwarded
-    * @return A result reflecting the response
-    */
-  def forwardResultResponse(res: WSResponse): Result = {
-    Result(
-      ResponseHeader(res.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](res.headers))),
-      HttpEntity.Strict(res.bodyAsBytes, getContentType(res.headers))
-    )
-  }
 
   def preppingEntitesForSave(nexusEndpoint: String, formValues: JsValue, cleanInstance: JsObject, currentlyDisplayedInstance: Instance, originalPath:NexusPath, originLink: String, userInfo: UserInfo, reconciledPrefix: String, instanceService: InstanceService, token:String) = {
     val updateFromUI = Json.parse(FormHelper.unescapeSlash(formValues.toString())).as[JsObject] - "id"
