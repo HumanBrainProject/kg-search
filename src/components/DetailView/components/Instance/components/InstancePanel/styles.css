@@ -105,7 +105,7 @@
 }
 
 .kgs-instance[data-type] .kgs-field__type .field-value {
-    line-height: 40px;
+    margin-top: 8px;
 }
 
 .kgs-instance[data-type] .kgs-field__icon + .kgs-field__type {
