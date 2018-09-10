@@ -62,11 +62,7 @@ export function Instance({data}) {
     hasNoData: !source,
     hasUnknownData: !mapping,
     header: {
-      icon: {
-        title: data && data._type,
-        url: source && source.image && source.image.url,
-        inline: mapping && mapping.icon
-      },
+      icon:  getField(data && data._type, "icon", {value: data && data._type, image: {url: source && source.image && source.image.url}}, {visible: true, type: "icon", icon: mapping && mapping.icon}),
       type:  getField(data && data._type, "type"),
       title: getField(data && data._type, "title", source["title"], mapping && mapping.fields && mapping.fields["title"])
     },

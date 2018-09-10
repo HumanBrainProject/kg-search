@@ -15,7 +15,6 @@
 */
 
 import React from "react";
-import { FieldIcon } from "../../../../../Field/components/FieldIcon";
 import { Field } from "../../../../../Field";
 import { HighlightsField} from "../HighlightsField";
 import "./styles.css";
@@ -24,7 +23,7 @@ export function HitPanel({type, hasNoData, hasUnknownData, icon, fields, highlig
   return (
     <div className="kgs-hit" data-type={type}>
       <div className="kgs-hit__content">
-        <FieldIcon {...icon}/>
+        <Field key={icon && icon.name} {...icon}/>
         {fields.map(({name, data, mapping}) => (
           <Field key={name} name={name} data={data} mapping={mapping} renderUserInteractions={false} />
         ))}

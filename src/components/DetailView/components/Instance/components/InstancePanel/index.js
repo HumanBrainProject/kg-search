@@ -15,7 +15,6 @@
 */
 
 import React from "react";
-import { FieldIcon } from "../../../../../Field/components/FieldIcon";
 import { Field } from "../../../../../Field";
 import { FieldsPanel } from "../FieldsPanel";
 import { FieldsTabs } from "../FieldsTabs";
@@ -27,7 +26,7 @@ export function InstancePanel({type, hasNoData, hasUnknownData, header, main, su
       <div className="kgs-instance__content">
         <div className="kgs-instance__header">
           <div>
-            <FieldIcon {...header.icon} />
+            <Field {...header.icon} />
             <Field {...header.type} />
           </div>
           <div>

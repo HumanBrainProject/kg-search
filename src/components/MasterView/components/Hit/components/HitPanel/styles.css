@@ -74,6 +74,10 @@
     display: none;
 }
 
+[data-type] .kgs-hit .kgs-field__title .field-value {
+    line-height: 35px;
+}
+
 [data-type] .kgs-hit .kgs-field__description {
     text-align: justify;
 }

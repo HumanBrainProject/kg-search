@@ -168,11 +168,7 @@ export function Hit({data}) {
     type: data && data._type,
     hasNoData: !source,
     hasUnknownData: !mapping,
-    icon: {
-      title: data && data._type,
-      url: source && source.image && source.image.url,
-      inline: mapping && mapping.icon
-    },
+    icon:  getField(data && data._type, "icon", {value: data && data._type, image: {url: source && source.image && source.image.url}}, null, {visible: true, type: "icon", icon: mapping && mapping.icon}),
     fields: getFields(data && data._type, source, data && data.highlight, mapping, false),
     highlightsField: {
       fields: filterHighlightFields(data && data.highlight, ["title.value","description.value"]),

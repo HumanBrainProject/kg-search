@@ -104,6 +104,10 @@
     color: #888;
 }
 
+.kgs-instance[data-type] .kgs-field__type .field-value {
+    line-height: 40px;
+}
+
 .kgs-instance[data-type] .kgs-field__icon + .kgs-field__type {
     margin-top: 0;
     flex: 1;
