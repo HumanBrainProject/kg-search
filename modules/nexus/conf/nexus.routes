@@ -36,7 +36,7 @@ POST   /privatespace                                            nexus.controller
 #    required: true
 #    type: string
 #  - in: query
-#    name: nameSpace
+#    name: namespace
 #    description: namespace the entity linked to this schema will belong to
 #    required: false
 #    type: string
@@ -46,7 +46,7 @@ POST   /privatespace                                            nexus.controller
 #    required: false
 #    type: string
 ###
-POST   /schema/:organization/:domain/:schema/:version   nexus.controllers.NexusCommonController.createSchema(organization: String, domain: String, schema: String, version: String, nameSpace: Option[String])
+POST   /schema/:organization/:domain/:schema/:version   nexus.controllers.NexusCommonController.createSchema(organization: String, domain: String, schema: String, version: String, namespace: Option[String])
 
 ###
 #  summary: create a schema where http://schema.org/identifier only is mandatory

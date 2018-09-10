@@ -657,21 +657,17 @@ class NexusEditorController @Inject()(
             case "http://schema.org/name" => "label" -> k._2
             case "@type" => "type" -> JsString(k._2.as[String].split("#").last)
             case "children" => k._1 -> Json.toJson(k._2.as[JsArray]
-              .value.groupBy(js => (js \ "id").as[String]).map{
+              .value.groupBy(js => (js \ "@id").as[String]).map{
               case (k,v) =>
-                val data = if (v.size > 1) {
                   val edgeTypes = v.foldLeft(List[String]()) {
-                    case (list, js) => (js \ "edgeType").as[String].split("/").head.split("-").last :: list
+                    case (list, js) => (js \ "linkType").as[String].split("/").head.split("-").last :: list
                   }
-                  val transformer = (__ \ 'edgeType).json.put(Json.toJson(edgeTypes))
-                  val el = v.head.transform(transformer)
-                  v.head.as[JsObject] ++ el.get
-                } else {
-                  v.head
-                }
-                k -> data
+                  val transformer = (__ \ 'linkType).json.put(Json.toJson(edgeTypes))
+                  val linkType = v.head.transform(transformer)
+                  k -> v.head.as[JsObject].++(linkType.get)
             }.values.map( j => specs(j.as[JsObject]))).as[JsValue]
-            case "edgeType" => "linkType" -> k._2
+            case "linkType" =>
+              k._1 -> k._2
             case _ => k._1 -> k._2
           }
       }
@@ -679,9 +675,9 @@ class NexusEditorController @Inject()(
     ws.url(s"${kgQueryEndpoint}/arango/release/$org/$domain/$schema/$version/$id").addHttpHeaders(CONTENT_TYPE -> "application/json").get().map{
       res => res.status match{
         case OK =>
-          val item = res.json.as[JsArray].value.head
+          val item = res.json.as[JsObject]
           if(item != null){
-            val spec = specs(item.as[JsObject])
+            val spec = specs(item)
             Ok(Json.toJson(spec))
           }else{
             NotFound("The requested object was not found. Please contact the support.")

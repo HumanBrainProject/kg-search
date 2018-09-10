@@ -53,6 +53,7 @@ object NexusHelper {
           "owl": "http://www.w3.org/2002/07/owl#",
           "xsd": "http://www.w3.org/2001/XMLSchema#",
           "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+          "org": "${nameSpace}/",
           "shapes": {
               "@reverse": "rdfs:isDefinedBy",
               "@type": "@id"
@@ -60,7 +61,7 @@ object NexusHelper {
       },
       "shapes": [
         {
-          "@id": "${nameSpace}#${entityType}Shape",
+          "@id": "org:${entityType}Shape",
           "@type": "sh:NodeShape",
           "property": [
             {
@@ -68,7 +69,7 @@ object NexusHelper {
               "path": "schema:identifier"
             }
           ],
-          "targetClass": "${nameSpace}#${entityType}"
+          "targetClass": "org:${entityType}"
         }
       ]
     }
@@ -95,7 +96,7 @@ object NexusHelper {
               "@id": "sh:targetClass",
               "@type": "@id"
           },
-          "${org}": "http://hbp.eu/${org}#",
+          "${org}": "http://hbp.eu/${org}/",
           ${editorContext}
           "schema": "http://schema.org/",
           "sh": "http://www.w3.org/ns/shacl#",
