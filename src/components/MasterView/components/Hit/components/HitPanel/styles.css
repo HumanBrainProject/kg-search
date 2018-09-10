@@ -54,6 +54,11 @@
     text-align: center;
 }
 
+[data-type] .kgs-hit .kgs-field {
+    color: #333;
+    font-weight: normal;
+}
+
 /**********************************************************************************************************************/
 
 [data-type] .kgs-hit .kgs-field__title {

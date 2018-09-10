@@ -75,6 +75,7 @@
 
 .kgs-field .field-hint {
     margin-right: 10px;
+    color: #333;
 }
 
 .kgs-field__highlights{
@@ -210,9 +211,11 @@
 /**********************************************************************************************************************/
 
 [data-type] .kgs-field__type .field-value {
-    text-transform: capitalize;
+    text-transform: uppercase;
     word-break: keep-all;
     white-space: nowrap;
+    font-size: 18px;
+    line-height: 35px;
 }
 
 .field-value__tag{

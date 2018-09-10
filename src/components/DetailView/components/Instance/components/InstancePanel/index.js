@@ -26,8 +26,13 @@ export function InstancePanel({type, hasNoData, hasUnknownData, header, main, su
     <div className="kgs-instance" data-type={type}>
       <div className="kgs-instance__content">
         <div className="kgs-instance__header">
-          <FieldIcon {...header.icon} />
-          <Field {...header.title} />
+          <div>
+            <FieldIcon {...header.icon} />
+            <Field {...header.type} />
+          </div>
+          <div>
+            <Field {...header.title} />
+          </div>
         </div>
         <div className="kgs-instance__body">
           <FieldsPanel className="kgs-instance__main" fields={main} />

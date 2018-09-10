@@ -84,7 +84,7 @@ export function Instance({data}) {
         url: source && source.image && source.image.url,
         inline: mapping && mapping.icon
       },
-      type: data && data._type,
+      type:  getField(data && data._type, "type"),
       title: getField(data && data._type, "title", source["title"], mapping && mapping.fields && mapping.fields["title"])
     },
     main: getFields(data && data._type, source, mapping, (type, name) => name !== "title"),
