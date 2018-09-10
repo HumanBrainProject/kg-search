@@ -18,19 +18,6 @@ import React from "react";
 import { store } from "../../../../store";
 import { InstancePanel } from "./components/InstancePanel";
 
-const removedTitleField = (name, data, mapping) => {
-
-  // remove title
-  const fieldMapping = mapping && Object.assign({}, mapping);
-  fieldMapping && delete fieldMapping.value; // no deep cloning needed as only first level is modified
-
-  return {
-    name: name,
-    data: data,
-    mapping: fieldMapping
-  };
-};
-
 const getField = (type, name, data, mapping) => {
   switch (name) {
   case "type":
@@ -39,10 +26,6 @@ const getField = (type, name, data, mapping) => {
       data: {value: type},
       mapping: {visible: true}
     };
-  case "title":
-    return removedTitleField(name, data, mapping);
-  case "description":
-    return removedTitleField(name, data, mapping);
   default:
     return {
       name: name,

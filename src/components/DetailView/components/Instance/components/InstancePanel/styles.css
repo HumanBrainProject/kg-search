@@ -115,6 +115,10 @@
     font-weight: 500;
 }
 
+.kgs-instance[data-type] .kgs-field__title .field-label {
+    display: none;
+}
+
 .kgs-instance[data-type] .kgs-field__description {
     text-align: justify;
 }
