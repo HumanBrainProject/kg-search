@@ -37,19 +37,17 @@
 }
 
 .kgs-instance__header {
+}
+
+.kgs-instance__header > div {
     display: -ms-flexbox;
     display: flex;
     width: 100%;
 }
 
-.kgs-instance__header .kgs-field__title {
-    flex: 1;
-    padding-left: 10px;
-}
-
 .kgs-instance__body {
     width: 100%;
-    padding-top: 20px;
+    padding-top: 10px;
 }
 
 .kgs-instance__summary {
@@ -101,9 +99,13 @@
     width: auto;
     width: unset;
     padding: 0 10px;
-    font-size: 26px;
-    font-weight: 300;
-    color: #555;
+    font-size: 26px;    
+    font-weight: 400;
+    color: #888;
+}
+
+.kgs-instance[data-type] .kgs-field__type .field-value {
+    margin-top: 8px;
 }
 
 .kgs-instance[data-type] .kgs-field__icon + .kgs-field__type {
@@ -112,11 +114,13 @@
 }
 
 .kgs-instance[data-type] .kgs-field__title {
-    margin-top: 2px;
-    font-size: 20px;
-    font-weight: 400;
-    color: #0088cc;
-    flex-basis: 87%;
+    margin-top: 10px;
+    font-size: 26px;
+    font-weight: 500;
+}
+
+.kgs-instance[data-type] .kgs-field__title .field-label {
+    display: none;
 }
 
 .kgs-instance[data-type] .kgs-field__description {

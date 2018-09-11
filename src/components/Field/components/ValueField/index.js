@@ -20,6 +20,7 @@ import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
 import { store, dispatch } from "../../../../store";
 import * as actions from "../../../../actions";
+import { Icon } from "../../../Icon";
 import "./styles.css";
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
@@ -171,9 +172,10 @@ export function ValueField({show, data, mapping, renderUserInteractions}) {
   const hasLink =  renderUserInteractions && !!data.url;
   const hasMailToLink = renderUserInteractions && data.url === "string" &&  data.url.substr(0,7).toLowerCase() === "mailto:";
   const hasAnyLink = hasReference || hasMailToLink || hasLink;
-  const isTag = !hasAnyLink && !!mapping.tag_icon;
-  const isMarkdown = renderUserInteractions && !hasAnyLink && !isTag && !!mapping.markdown;
-  const isCollapsible = renderUserInteractions && !hasAnyLink && !isTag && mapping.collapsible && typeof data.value === "string" && data.value.length >= 1600;
+  const isIcon = mapping.type === "icon" && ((data.image && data.image.url) || mapping.icon);
+  const isTag = !hasAnyLink && !isIcon && !!mapping.tag_icon;
+  const isMarkdown = renderUserInteractions && !hasAnyLink && !isIcon && !isTag && !!mapping.markdown;
+  const isCollapsible = renderUserInteractions && !hasAnyLink && !isIcon && !isTag && mapping.collapsible && typeof data.value === "string" && data.value.length >= 1600;
 
   let value = data.value;
   if (data.value && mapping.type === "date") {
@@ -197,6 +199,13 @@ export function ValueField({show, data, mapping, renderUserInteractions}) {
       url: data.url,
       label: value,
       isMailToLink: hasMailToLink
+    };
+  } else if (isIcon) {
+    ValueComponent = Icon;
+    valueProps = {
+      title: value,
+      url: data && data.image && data.image.url,
+      inline: mapping && mapping.icon
     };
   } else if (isTag) {
     ValueComponent = Tag;

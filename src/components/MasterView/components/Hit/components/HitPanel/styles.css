@@ -54,6 +54,11 @@
     text-align: center;
 }
 
+[data-type] .kgs-hit .kgs-field {
+    color: #333;
+    font-weight: normal;
+}
+
 /**********************************************************************************************************************/
 
 [data-type] .kgs-hit .kgs-field__title {
@@ -65,8 +70,20 @@
     flex-basis: 87%;
 }
 
+[data-type] .kgs-hit .kgs-field__title .field-label {
+    display: none;
+}
+
+[data-type] .kgs-hit .kgs-field__title .field-value {
+    margin-top: 4px;
+}
+
 [data-type] .kgs-hit .kgs-field__description {
     text-align: justify;
+}
+
+[data-type] .kgs-hit .kgs-field__description .field-label {
+    display: none;
 }
 
 @media (min-width: 1600px) {

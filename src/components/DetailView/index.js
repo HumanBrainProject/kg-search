@@ -90,7 +90,7 @@ export class DetailViewComponent extends PureComponent {
                       </div>
                     )}
                   </div>
-                  <div className="kgs-detailView__innerPanel" tabIndex={-1}>
+                  <div className="kgs-detailView__innerPanel">
                     {show && (
                       <Instance data={data} />
                     )}

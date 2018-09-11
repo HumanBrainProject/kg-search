@@ -205,7 +205,7 @@ export class ListField extends PureComponent {
     }
 
     return (
-      <ListFieldComponent list={this.state.items} separator={mapping && mapping.separator && !mapping.tag_icon} showAsTag={mapping && !!mapping.tag_icon} showToggle={this.state.hasShowMoreToggle} toggleHandler={this.handleShowMoreClick} toggleLabel={this.state.showMoreLabel} hasMore={this.state.hasMore}/>
+      <ListFieldComponent list={this.state.items} separator={mapping && !mapping.tag_icon && mapping.separator} showAsTag={mapping && !!mapping.tag_icon} showToggle={this.state.hasShowMoreToggle} toggleHandler={this.handleShowMoreClick} toggleLabel={this.state.showMoreLabel} hasMore={this.state.hasMore}/>
     );
   }
 }

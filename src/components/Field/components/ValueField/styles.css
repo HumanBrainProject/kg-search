@@ -75,6 +75,7 @@
 
 .kgs-field .field-hint {
     margin-right: 10px;
+    color: #333;
 }
 
 .kgs-field__highlights{
@@ -210,9 +211,10 @@
 /**********************************************************************************************************************/
 
 [data-type] .kgs-field__type .field-value {
-    text-transform: capitalize;
+    text-transform: uppercase;
     word-break: keep-all;
     white-space: nowrap;
+    font-size: 18px;
 }
 
 .field-value__tag{
@@ -232,5 +234,30 @@
     height: 20px;
     margin-right: 5px;
 }
+
+.kgs-field.kgs-field__icon {
+    width: 35px;
+    height: 35px;
+    max-width: 60px;
+}
+
+.kgs-field__icon>i {
+    font-size: 50px;
+    color: #707070;
+    padding: 5px 9px;
+}
+
+@media screen and (min-width:0\0) {  
+    /* IE9 and IE10 rule sets go here */  
+    .kgs-field__icon>div {
+        margin-top: -46px;
+    }
+}
+
+.kgs-field__icon>div>svg {
+    width:35px;
+    height:35px;
+}
+
 
 /**********************************************************************************************************************/
