@@ -16,12 +16,10 @@
 
 .kgs-layout-mode-switcher-toggle  {
     display: none;
-    max-height: 40px;
-    margin-top: 4px;
-    margin-left: 30px;    
+    max-height: 40px;   
 }
 
-@media (min-width: 992px) { 
+@media (min-width: 1600px) { /* 992 without left filters panel */ 
     .kgs-layout-mode-switcher-toggle {
         display: inline-block
     }

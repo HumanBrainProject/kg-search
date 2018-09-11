@@ -15,14 +15,24 @@
 */
 
 .kgs-masterView {
-    padding: 0 50px;
+    padding: 0 20px;
     background: #f4f4f4;
+}
+
+@media (min-width: 576px) {
+    .kgs-masterView {
+        padding: 0 50px;
+    }
 }
 
 .kgs-masterView .sk-layout__body {
     display: block;
     flex-direction: column;
     margin: 0;
+    min-width: 100%;
+}
+
+@media (min-width: 576px) {
     min-width: 355px;
 }
 

@@ -17,6 +17,7 @@
 .kgs-paging {
     flex: 1;
     display: inline-block;
+    margin: 0 -15px;
     min-width: 315px;
     text-align: center;
 }
@@ -24,30 +25,37 @@
 .kgs-paging .sk-pagination-navigation {
     width: 100%;
     margin: 20px auto;
-    padding: 0 20px;
+    padding: 0;
 }
 
 .kgs-paging .sk-pagination-navigation.is-numbered  {
     display: inline-block;
     width: 100%;
     margin: 3px 0 0 0;
-    padding: 0 20px;
     background-color: transparent;
-}
-
-@media (min-width: 576px) {
-    .kgs-paging .sk-pagination-navigation,
-    .kgs-paging .sk-pagination-navigation.is-numbered {
-        padding: 0;
-        flex: 1;
-    }
 }
 
 .kgs-paging .sk-pagination-navigation .sk-toggle {
-    display: inline-block;
-    max-height: 40px;
-    margin-left: 20px;    
+    max-height: 40px;  
     background-color: transparent;
+    justify-content: center;
+}
+
+@media (min-width: 576px) {
+    .kgs-paging {
+        margin: 0;
+    }
+    
+    .kgs-paging .sk-pagination-navigation,
+    .kgs-paging .sk-pagination-navigation.is-numbered {
+        flex: 1;
+    }
+
+    .kgs-paging .sk-pagination-navigation .sk-toggle {
+        display: inline-block;
+        margin-left: 20px;   
+    }
+    
 }
 
 .kgs-paging .sk-pagination-navigation .sk-toggle-option {
@@ -111,7 +119,11 @@
     font-weight: normal;
 }
 
-.kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key*="ellipsis"] [data-qa="label"]{
+.kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key^="ellipsis"]{
+    padding: 5px;
+}
+
+.kgs-paging .sk-pagination-navigation .sk-toggle-option[data-key^="ellipsis"] [data-qa="label"]{
     transform: translateY(-5px);
     display: inline-block;
     font-weight: bold;

@@ -14,17 +14,8 @@
 *   limitations under the License.
 */
 
-.kgs-sortby-panel {
-    display: block;
-    margin-top: 20px;    
-    margin-left: 30px;
-}
-
-@media (min-width: 576px) {
-    .kgs-sortby-panel {
-        display: inline;
-        margin-top: 0;
-    }
+.sk-action-bar .kgs-sortby-panel .sk-select {
+    margin-left: 0;
 }
 
 .kgs-sortby-panel .sk-select::before {

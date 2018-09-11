@@ -27,15 +27,13 @@
 }
 
 .kgs-result-header .sk-results-list__action-bar .kgs-hitStats {
-    margin-top: 15px;
-}
-
-.kgs-result-header .sk-results-list__action-bar .kgs-paging.kgs-header-pagination {
-    margin-top: 15px;
+    margin-top: 15px;  
+    margin-right: 30px;
 }
 
 .kgs-result-header .sk-results-list__action-bar .kgs-layout-mode-switcher-toggle {
     margin-top: 20px;
+    margin-right: 30px; 
 }
 
 .kgs-result-header .sk-results-list__action-bar .kgs-sortby-panel {
@@ -52,16 +50,5 @@
     }
     .kgs-result-header .sk-results-list__action-bar .sk-action-bar-row .kgs-layout-mode-switcher-toggle {
         flex: auto;
-    }
-}
-
-.kgs-result-header .kgs-paging.kgs-header-pagination {
-    display: none;
-}
-
-@media (min-width: 1800px) {
-    .kgs-result-header .kgs-paging.kgs-header-pagination {
-        display: inline-block;
-        flex: 1;
     }
 }
