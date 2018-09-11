@@ -164,11 +164,25 @@ export function Hit({data}) {
   const source = data && !(data.found === false) && data._type && data._source;
   const mapping = source && state.definition && state.definition.shapeMappings && state.definition.shapeMappings[data._type];
 
+  const ribbonData = mapping.ribbon && mapping.ribbon.framed && mapping.ribbon.framed.data_field && source[mapping.ribbon.framed.data_field];
+  const iconData = {
+    value: data && data._type, 
+    image: {
+      url: source && source.image && source.image.url
+    }
+  };
+  const iconMapping = {
+    visible: true,
+    type: "icon",
+    icon: mapping && mapping.icon
+  };
+
   const hitProps = {
     type: data && data._type,
     hasNoData: !source,
     hasUnknownData: !mapping,
-    icon:  getField(data && data._type, "icon", {value: data && data._type, image: {url: source && source.image && source.image.url}}, null, {visible: true, type: "icon", icon: mapping && mapping.icon}),
+    ribbon: getField(data && data._type, "ribbon", ribbonData, null, mapping.ribbon),
+    icon:  getField(data && data._type, "icon", iconData, null, iconMapping),
     fields: getFields(data && data._type, source, data && data.highlight, mapping, false),
     highlightsField: {
       fields: filterHighlightFields(data && data.highlight, ["title.value","description.value"]),

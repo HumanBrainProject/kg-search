@@ -16,12 +16,14 @@
 
 import React from "react";
 import { Field } from "../../../../../Field";
+import { Ribbon } from "../../../../../Ribbon";
 import { HighlightsField} from "../HighlightsField";
 import "./styles.css";
 
-export function HitPanel({type, hasNoData, hasUnknownData, icon, fields, highlightsField}) {
+export function HitPanel({type, hasNoData, hasUnknownData, ribbon, icon, fields, highlightsField}) {
   return (
     <div className="kgs-hit" data-type={type}>
+      <Ribbon {...ribbon} />
       <div className="kgs-hit__content">
         <Field key={icon && icon.name} {...icon}/>
         {fields.map(({name, data, mapping}) => (
