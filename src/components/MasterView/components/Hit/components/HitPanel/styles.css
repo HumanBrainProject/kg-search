@@ -36,6 +36,20 @@
     }
 }
 
+.kgs-hit .ribbon-container {
+    display: none;
+    position: absolute;
+    right:0px;
+    min-width: 200px;
+    width: 17%; 
+}
+
+@media (min-width: 992px) {
+    .kgs-result-layout.is-list .kgs-hit .ribbon-container {
+        display: block;
+    }
+}
+
 .kgs-hit__content {
     display: flex;
     flex-wrap: wrap;
@@ -67,7 +81,7 @@
     font-size: 20px;
     font-weight: 400;
     color: #0088cc;
-    flex-basis: 87%;
+    flex-basis: 80%;
 }
 
 [data-type] .kgs-hit .kgs-field__title .field-label {

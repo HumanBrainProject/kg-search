@@ -15,12 +15,7 @@
 */
 
 .kgs-hits {
-    list-style-type: none;
-    display: block;
-    -ms-flex-flow: unset;
-    flex-flow: unset;
-    margin: 0;
-    padding: 0;
+    position: relative;
 }
 
 .kgs-hits > ul {
