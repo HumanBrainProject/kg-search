@@ -21,7 +21,6 @@ import { TabEnablerComponent } from "../../../TabEnabler";
 import "./styles.css";
 
 export function PaginationPanelComponent({pageScope, className}) {
-  window.console.debug(pageScope);
   return (
     <TabEnablerComponent className={`kgs-paging ${className?className:""}`} containerSelector={className?("." + className):".kgs-paging"} itemSelector={".sk-toggle-option"} activeItemSelector={".is-active"} disabledItemSelector={".is-disabled"} >
       <Pagination showNumbers={true} pageScope={pageScope} showLast={false} translations={{"pagination.previous": " ", "pagination.next": " "}}/>
@@ -49,7 +48,6 @@ export class PaginationPanel extends PureComponent {
   }
   get pageScope() {
     const width = windowWidth();
-    window.console.debug(width);
     return (width >= 1800)?3:(width >= 1600)?2:1;
   }
   updatePageScope() {

@@ -165,7 +165,7 @@
    color: #ED5554;
 }
 
-@media (min-width: 576px) {
+@media (min-width: 992px) {
     .kgs-search .kgs-search-button {
         display: inline-block;
     }
