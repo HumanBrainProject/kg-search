@@ -63,3 +63,10 @@
     box-shadow: 3px 3px 6px #cbc9c9;
     z-index: 1;
 }
+
+/* Internet Explorer 10 & 11 */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .kgs-sortby-panel .sk-select select {
+        padding: 9px;
+    }
+}
