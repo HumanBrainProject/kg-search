@@ -156,8 +156,6 @@
         display: grid;
         -ms-grid-columns: min-content min-content min-content min-content auto min-content;
         grid-auto-columns: min-content min-content min-content min-content auto min-content;
-        -ms-grid-rows: auto;
-        grid-auto-rows: auto;
         grid-template-areas: "login group space paging space2 share"
                              "space3 space3 space3 space4 space5 space6";
     }
@@ -205,8 +203,6 @@
         display: grid;
         -ms-grid-columns: min-content min-content min-content min-content auto min-content;
         grid-auto-columns: min-content min-content min-content min-content auto min-content;
-        -ms-grid-rows: auto;
-        grid-auto-rows: auto;
         grid-template-areas: "login group space paging space2 share"
                              "space3 space3 space3 space4 space5 space6";
     }
