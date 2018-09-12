@@ -36,9 +36,9 @@
 }
 
 .kgs-paging .sk-pagination-navigation .sk-toggle {
-    max-height: 40px;  
     background-color: transparent;
     justify-content: center;
+    max-height: 46px;
 }
 
 @media (min-width: 576px) {
@@ -53,7 +53,6 @@
 
     .kgs-paging .sk-pagination-navigation .sk-toggle {
         display: inline-block;
-        margin-left: 20px;   
     }
     
 }
@@ -108,12 +107,12 @@
     display: inline-block;
     flex: none;
 }
-
+/*
 .kgs-paging .sk-pagination-navigation .sk-toggle-option.is-disabled[data-key="previous"], 
 .kgs-paging .sk-pagination-navigation .sk-toggle-option.is-disabled[data-key="next"] {
     display: none;
 }
-
+*/
 .kgs-paging .sk-pagination-navigation .sk-toggle-option [data-qa="label"] {
     font-size: 22px;
     font-weight: normal;
