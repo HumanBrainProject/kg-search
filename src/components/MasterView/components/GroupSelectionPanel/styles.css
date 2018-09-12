@@ -80,3 +80,13 @@
     border-left: 6px solid transparent;
     pointer-events: none;
 }
+
+/* Internet Explorer 10 & 11 */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .kgs-group-selection .kgs-select select {
+        padding: 9px;
+    }
+    .kgs-group-selection .kgs-select:after {
+        display: none;
+    }
+}
