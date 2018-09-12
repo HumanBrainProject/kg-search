@@ -14,32 +14,19 @@
 *   limitations under the License.
 */
 
-.kgs-shape__more {
-    display: inline-block;
-}
-
-.kgs-shape__field button[role="link"].kgs-shape__viewMore-button {
-    -webkit-appearance: none;
-    margin: 0 0 0 20px;
-    padding: 0;
-    border: 0;
-    background-color: transparent;
-    text-decoration: none;
-    font-size: 12px;
-    color: #08c;
-}
-
-.kgs-shape__field button[role="link"].kgs-shape__viewMore-button:hover {
-    text-decoration: none;
-    color: #08c;
-}
-
-.kgs-shape__field .kgs-shape__list.items-as-tags {
-    display: flex;
-    padding: 0;
-    flex-wrap: wrap;
-}
-
-.kgs-shape__field .kgs-shape__list.items-as-tags > span {
+.kgs-field ul.kgs-field__object > li {
     display: block;
+}
+
+.kgs-field > ul.kgs-field__object > li:first-child {
+    display: list-item;
+}
+
+.kgs-field span.kgs-field__object > span {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.kgs-field span.kgs-field__object > span > .kgs-field {
+    display: inline-block;
 }

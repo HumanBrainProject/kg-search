@@ -15,14 +15,19 @@
 */
 
 import React from "react";
-import { Pagination } from "searchkit";
-import { TabEnablerComponent } from "../../../TabEnabler";
-import "./styles.css";
 
-export function PaginationPanel({className}) {
+export function Icon({title, url, inline}) {
+  if (url) {
+    return (
+      <img src={url} alt={title} width="100%" height="100%" />
+    );
+  }
+  if (inline) {
+    return (
+      <div dangerouslySetInnerHTML={{__html: inline}} width="100%" height="100%" />
+    );
+  }
   return (
-    <TabEnablerComponent className={`kgs-paging ${className?className:""}`} containerSelector={className?("." + className):".kgs-paging"} itemSelector={".sk-toggle-option"} activeItemSelector={".is-active"} disabledItemSelector={".is-disabled"} >
-      <Pagination showNumbers={true} pageScope={1} showLast={false} translations={{"pagination.previous": " ", "pagination.next": " "}}/>
-    </TabEnablerComponent>
+    <i className="fa fa-tag" />
   );
 }

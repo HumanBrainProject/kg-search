@@ -15,14 +15,22 @@
 */
 
 import React from "react";
-import { Pagination } from "searchkit";
-import { TabEnablerComponent } from "../../../TabEnabler";
-import "./styles.css";
 
-export function PaginationPanel({className}) {
+export function HighlightsField({fields, mapping}) {
+  if (!fields) {
+    return null;
+  }
+  let valueTag = [];
+
+  Object.keys(fields).forEach(field => {
+    let shortKey = field.replace(/^(.*?)\..*$/g, "$1");
+    valueTag.push(<p key={shortKey}>{mapping.fields[shortKey].value}: <span dangerouslySetInnerHTML={{__html:fields[field].join(", ")}}></span></p>);
+  });
+
   return (
-    <TabEnablerComponent className={`kgs-paging ${className?className:""}`} containerSelector={className?("." + className):".kgs-paging"} itemSelector={".sk-toggle-option"} activeItemSelector={".is-active"} disabledItemSelector={".is-disabled"} >
-      <Pagination showNumbers={true} pageScope={1} showLast={false} translations={{"pagination.previous": " ", "pagination.next": " "}}/>
-    </TabEnablerComponent>
+    <div className="kgs-field kgs-field__highlights">
+      <div className="field-label">Search matches</div>
+      <div className="field-value">{valueTag}</div>
+    </div>
   );
 }

@@ -32,6 +32,7 @@ const ResultsFooterComponent = ({isFloating}) => {
         <GroupSelectionPanel/>
         <SignInButton/>
         <ShareBar/>
+        <div className="kgs-space" />
       </div>
     </div>
   );

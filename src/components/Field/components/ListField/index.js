@@ -50,27 +50,27 @@ const ListFieldComponent = ({list, separator, showAsTag, showToggle, toggleHandl
   const isCustom = separator || showAsTag;
   const List = isCustom?CustomList:DefaultList;
   const ListItem = isCustom?CustomListItem:DefaultListItem;
-  const className =  `kgs-shape__list ${showAsTag?"items-as-tags":""}`;
+  const className =  `kgs-field__list ${showAsTag?"items-as-tags":""}`;
   return (
     <span>
       <List className={className}>
         {
-          list.map(({isObject, key, data, mapping, showSmartContent}, index) => (
+          list.map(({isObject, key, data, mapping, renderUserInteractions}, index) => (
             <ListItem key={key} separator={separator} index={index}>
               {isObject?
-                <ObjectField show={true} data={data} mapping={mapping} showSmartContent={showSmartContent} />
+                <ObjectField show={true} data={data} mapping={mapping} renderUserInteractions={renderUserInteractions} />
                 :
-                <ValueField show={true} data={data} mapping={mapping} showSmartContent={showSmartContent} />
+                <ValueField show={true} data={data} mapping={mapping} renderUserInteractions={renderUserInteractions} />
               }
             </ListItem>
           ))
         }
         {showToggle && hasMore && (
-          <ListItem key={-1} className="kgs-shape__more">...</ListItem>
+          <ListItem key={-1} className="kgs-field__more">...</ListItem>
         )}
       </List>
       {showToggle && (
-        <button className="kgs-shape__viewMore-button" onClick={toggleHandler} role="link">{toggleLabel}</button>
+        <button className="kgs-field__viewMore-button" onClick={toggleHandler} role="link">{toggleLabel}</button>
       )}
     </span>
   );
@@ -98,13 +98,13 @@ export class ListField extends PureComponent {
   }
 
   get maxSizeStop() {
-    const {items, mapping, showSmartContent} = this.props;
+    const {items, mapping, renderUserInteractions} = this.props;
 
     if (!Array.isArray(items)) {
       return 0;
     }
 
-    if (!showSmartContent && mapping && mapping.overview_max_display && mapping.overview_max_display < items.length) {
+    if (!renderUserInteractions && mapping && mapping.overview_max_display && mapping.overview_max_display < items.length) {
       return mapping.overview_max_display;
     }
     return items.length;
@@ -129,7 +129,7 @@ export class ListField extends PureComponent {
   }
 
   getFilteredItems(sizeStop) {
-    const {items, mapping, showSmartContent} = this.props;
+    const {items, mapping, renderUserInteractions} = this.props;
 
     if (!Array.isArray(items)) {
       return [];
@@ -146,7 +146,7 @@ export class ListField extends PureComponent {
         show: true,
         data: item.children?item.children:item,
         mapping: mapping,
-        showSmartContent: showSmartContent
+        renderUserInteractions: renderUserInteractions
       }));
   }
 
@@ -168,8 +168,8 @@ export class ListField extends PureComponent {
   }
 
   get hasShowMoreToggle() {
-    const {items, mapping, showSmartContent} = this.props;
-    if (!Array.isArray(items) || (mapping && mapping.separator) || !showSmartContent) {
+    const {items, mapping, renderUserInteractions} = this.props;
+    if (!Array.isArray(items) || (mapping && mapping.separator) || !renderUserInteractions) {
       return false;
     }
 
@@ -205,7 +205,7 @@ export class ListField extends PureComponent {
     }
 
     return (
-      <ListFieldComponent list={this.state.items} separator={mapping && mapping.separator && !mapping.tag_icon} showAsTag={mapping && !!mapping.tag_icon} showToggle={this.state.hasShowMoreToggle} toggleHandler={this.handleShowMoreClick} toggleLabel={this.state.showMoreLabel} hasMore={this.state.hasMore}/>
+      <ListFieldComponent list={this.state.items} separator={mapping && !mapping.tag_icon && mapping.separator} showAsTag={mapping && !!mapping.tag_icon} showToggle={this.state.hasShowMoreToggle} toggleHandler={this.handleShowMoreClick} toggleLabel={this.state.showMoreLabel} hasMore={this.state.hasMore}/>
     );
   }
 }

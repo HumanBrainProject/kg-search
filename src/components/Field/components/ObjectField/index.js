@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { Field } from "../Field";
+import { Field } from "../../../Field";
 import "./styles.css";
 
 const DefaultList = ({className, children}) => {
@@ -49,11 +49,11 @@ const ObjectFieldComponent = ({fields, separator}) => {
   const List = separator?CustomList:DefaultList;
   const ListItem = separator?CustomListItem:DefaultListItem;
   return (
-    <List className="kgs-shape__object">
+    <List className="kgs-field__object">
       {
-        fields.map(({name, data, mapping, showSmartContent}, index) => (
+        fields.map(({name, data, mapping, renderUserInteractions}, index) => (
           <ListItem key={name} separator={separator} index={index}>
-            <Field name={name} data={data} mapping={mapping} showSmartContent={showSmartContent} />
+            <Field name={name} data={data} mapping={mapping} renderUserInteractions={renderUserInteractions} />
           </ListItem>
         ))
       }
@@ -61,7 +61,7 @@ const ObjectFieldComponent = ({fields, separator}) => {
   );
 };
 
-export function ObjectField({show, data, mapping, showSmartContent}) {
+export function ObjectField({show, data, mapping, renderUserInteractions}) {
   if (!show || !mapping || !mapping.visible) {
     return null;
   }
@@ -76,7 +76,7 @@ export function ObjectField({show, data, mapping, showSmartContent}) {
       name: name,
       data: data && data[name],
       mapping: mapping,
-      showSmartContent: showSmartContent
+      renderUserInteractions: renderUserInteractions
     }));
 
   return (

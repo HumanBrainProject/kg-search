@@ -37,6 +37,7 @@
 
 .kgs-group-selection .kgs-select select {
     width: auto;
+    min-width: 250px;
     background-color: white;
     border-color: white;
     color: #ED5554;
@@ -78,4 +79,15 @@
     border-right: 6px solid transparent;
     border-left: 6px solid transparent;
     pointer-events: none;
+}
+
+/* Internet Explorer 10 & 11 */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .kgs-group-selection .kgs-select select {
+        padding: 9px;
+    }
+    
+    .kgs-group-selection .kgs-select:after {
+        display: none;
+    }
 }

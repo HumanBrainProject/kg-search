@@ -20,7 +20,7 @@ import * as actions from "../../actions";
 import { withStoreStateSubscription} from "../withStoreStateSubscription";
 import { isMobile } from "../../Helpers/BrowserHelpers";
 import { ShareBar } from "../ShareBar";
-import { Shape } from "../Shape";
+import { Instance } from "./components/Instance";
 import "./styles.css";
 
 export class DetailViewComponent extends PureComponent {
@@ -90,9 +90,9 @@ export class DetailViewComponent extends PureComponent {
                       </div>
                     )}
                   </div>
-                  <div className="kgs-detailView__innerPanel" tabIndex={-1}>
+                  <div className="kgs-detailView__innerPanel">
                     {show && (
-                      <Shape data={data} detailViewMode={true} />
+                      <Instance data={data} />
                     )}
                   </div>
                 </div>

@@ -19,37 +19,48 @@ import { SearchkitComponent, Hits } from "searchkit";
 import { dispatch } from "../../../../store";
 import * as actions from "../../../../actions";
 import { withStoreStateSubscription} from "../../../withStoreStateSubscription";
-import { Shape } from "../../../Shape";
+import { Hit } from "../Hit";
 import { StatsHelpers } from "../../../../Helpers/StatsHelpers";
 import "./styles.css";
 
-function SummaryItem({bemBlocks, data}) {
+const HitItem = ({data, onClick}) => {
 
-  const openDetail = (event) => {
-    dispatch(actions.setHit(data, event.currentTarget));
+  const handleClick = (event) => {
+    onClick(data, event.currentTarget);
   };
 
   return (
-    <li className={bemBlocks.item().mix(bemBlocks.container("item"))} >
-      <button role="link" onClick={openDetail} data-type={data._type} data-id={data._id}>
-        <Shape data={data} detailViewMode={false} />
-        <span className={bemBlocks.item("chevron")}><i className="fa fa-chevron-right"></i></span>
+    <li>
+      <button role="link" onClick={handleClick} data-type={data._type} data-id={data._id}>
+        <Hit data={data} />
+        <span className="kgs-hit__chevron"><i className="fa fa-chevron-right"></i></span>
       </button>
     </li>
   );
-}
+};
 
-class SummaryList extends SearchkitComponent {
-  defineBEMBlocks() {
-    const blockName = "sk-hits-list";
-    return {
-      container: blockName,
-      item: `${blockName}-hit`
-    };
+const HitListComponent = ({title, hits, onClick}) => {
+  if (!Array.isArray(hits) || hits.length === 0) {
+    return null;
   }
+
+  return (
+    <div className="kgs-hits">
+      {title && (
+        <div>{title}</div>
+      )}
+      <ul>
+        {hits.map((hit, index) => (
+          <HitItem key={hit._type?(hit._type + "/" + hit._id):index} data={hit} onClick={onClick} />
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+class HitList extends SearchkitComponent {
   render() {
     const {hits} = this.props;
-    const bemBlocks = this.bemBlocks;
 
     let trySplitResult = true;
     try {
@@ -83,25 +94,25 @@ class SummaryList extends SearchkitComponent {
 
     const topMatchHits = [];
     const moreHits = [];
-    hits.forEach((hit, index) => {
-      if (hit) {
-        const item = <SummaryItem bemBlocks={bemBlocks} data={hit} key={hit._type?(hit._type + "/" + hit._id):index} />;
-        if (limit !== -1 && hit._score >= limit) {
-          topMatchHits.push(item);
-        } else {
-          moreHits.push(item);
-        }
+    hits.forEach(hit => {
+      if (limit !== -1 && hit._score >= limit) {
+        topMatchHits.push(hit);
+      } else {
+        moreHits.push(hit);
       }
     });
 
-    const moreHitsTitle = (topMatchHits.length && moreHits.length)?<li className="kgs-other-result-title">Other results </li>:null;
+    const moreHitsTitle = (topMatchHits.length && moreHits.length)?"Other results":null;
+
+    const onClick = (data, target) => {
+      dispatch(actions.setHit(data, target));
+    };
 
     return (
-      <ul className={bemBlocks.container()}>
-        {topMatchHits}
-        {moreHitsTitle}
-        {moreHits}
-      </ul>
+      <span>
+        <HitListComponent hits={topMatchHits} onClick={onClick} />
+        <HitListComponent hits={moreHits} onClick={onClick} title={moreHitsTitle} />
+      </span>
     );
   }
 }
@@ -132,7 +143,7 @@ const ResultsPanelComponent = ({gridLayoutMode, hitsPerPage}) => {
   */
   return (
     <span className={`kgs-result-layout ${gridLayoutMode?"is-grid":"is-list"}`}>
-      <Hits customHighlight={highlights} hitsPerPage={hitsPerPage} listComponent={SummaryList} scrollTo="body" />
+      <Hits customHighlight={highlights} hitsPerPage={hitsPerPage} listComponent={HitList} scrollTo="body" />
     </span>
   );
 };

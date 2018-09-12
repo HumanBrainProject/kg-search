@@ -14,19 +14,18 @@
 *   limitations under the License.
 */
 
-.kgs-shape__field ul.kgs-shape__object > li {
-    display: block;
-}
+import React from "react";
+import { Field } from "../../../../../Field";
 
-.kgs-shape__field > ul.kgs-shape__object > li:first-child {
-    display: list-item;
-}
-
-.kgs-shape__field span.kgs-shape__object > span {
-    display: inline-block;
-    white-space: nowrap;
-}
-
-.kgs-shape__field span.kgs-shape__object > span > .kgs-shape__field {
-    display: inline-block;
+export function FieldsPanel({className, fields}) {
+  if (!fields || !fields.length) {
+    return null;
+  }
+  return (
+    <div className={className}>
+      {fields && fields.map(({name, data, mapping}) => (
+        <Field key={name} name={name} data={data} mapping={mapping} renderUserInteractions={true} />
+      ))}
+    </div>
+  );
 }

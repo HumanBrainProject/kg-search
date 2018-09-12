@@ -1,0 +1,72 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.ribbon-container {
+    width: 200px;
+}
+
+.ribbon-inner-container {
+    position: relative;
+}
+
+.ribbon-inner-container > div {
+    height:40px;
+}
+
+.ribbon-inner {
+    background: rgb(167, 167, 167);
+    position: relative;
+    display: block;
+    left: 12px;
+    top: 0;
+    z-index: 2;
+}
+
+.ribbon-inner-content{
+    color: white;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    flex-direction: row;
+    justify-content: flex-start;
+    height:100%;
+    padding: 0 10px 0px 10px;
+}
+
+.ribbon-inner-content div {
+    margin-right:20px;
+    font-size:90%;
+    word-break: initial;
+}
+
+.ribbon-inner-content-framed{
+    background-color: #555;
+    padding: 3px 5px 3px 5px;
+    font-size: 80%;
+}
+
+.skew {
+    position: absolute;
+    background: rgb(109, 109, 109);
+    width: 12px;
+    top: -2px;
+    z-index: 1;
+}
+
+.skew.r {
+    right: -12px;
+    transform: skew(00deg,20deg);
+}
