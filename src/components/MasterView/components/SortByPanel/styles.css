@@ -69,4 +69,8 @@
     .kgs-sortby-panel .sk-select select {
         padding: 9px;
     }
+    
+    .kgs-sortby-panel .kgs-select:after {
+        display: none;
+    }
 }

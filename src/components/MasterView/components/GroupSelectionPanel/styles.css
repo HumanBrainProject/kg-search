@@ -86,4 +86,8 @@
     .kgs-group-selection .kgs-select select {
         padding: 9px;
     }
+    
+    .kgs-group-selection .kgs-select:after {
+        display: none;
+    }
 }

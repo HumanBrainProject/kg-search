@@ -28,10 +28,3 @@
     width: 100%;
     font-size: 14px;
 }
-
-/* Internet Explorer 10 & 11 */
-@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-    .kgs-select:after {
-        display: none;
-    }
-}
