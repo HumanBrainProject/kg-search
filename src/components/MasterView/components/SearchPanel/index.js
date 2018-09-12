@@ -16,7 +16,7 @@
 
 import React from "react";
 import { withStoreStateSubscription} from "../../../withStoreStateSubscription";
-import { withEventsSubscription} from "../../../withEventsSubscription";
+import { withFloatingScrollEventsSubscription} from "../../../withFloatingScrollEventsSubscription";
 import { SearchkitComponent, SearchBox, QueryString } from "searchkit";
 import { isMobile } from "../../../../Helpers/BrowserHelpers";
 import "./styles.css";
@@ -82,7 +82,7 @@ class SearchPanelComponent extends SearchkitComponent {
 }
 
 export const SearchPanel = withStoreStateSubscription(
-  withEventsSubscription(SearchPanelComponent),
+  withFloatingScrollEventsSubscription(SearchPanelComponent),
   data => ({
     queryFields: data.definition.queryFields
   })

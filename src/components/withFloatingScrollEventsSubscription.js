@@ -20,7 +20,7 @@ import { windowHeight } from "../Helpers/BrowserHelpers";
 
 const jQuerCollapsibleMenuQuerySelector = ".js-navbar-header";
 
-export function withEventsSubscription(WrappedComponent) {
+export function withFloatingScrollEventsSubscription(WrappedComponent) {
   class withEvents extends PureComponent {
     constructor(props) {
       super(props);

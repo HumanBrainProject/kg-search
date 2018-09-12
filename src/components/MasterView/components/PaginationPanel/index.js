@@ -14,15 +14,48 @@
 *   limitations under the License.
 */
 
-import React from "react";
+import React, { PureComponent } from "react";
 import { Pagination } from "searchkit";
+import { windowWidth } from "../../../../Helpers/BrowserHelpers";
 import { TabEnablerComponent } from "../../../TabEnabler";
 import "./styles.css";
 
-export function PaginationPanel({className}) {
+export function PaginationPanelComponent({pageScope, className}) {
+  window.console.debug(pageScope);
   return (
     <TabEnablerComponent className={`kgs-paging ${className?className:""}`} containerSelector={className?("." + className):".kgs-paging"} itemSelector={".sk-toggle-option"} activeItemSelector={".is-active"} disabledItemSelector={".is-disabled"} >
-      <Pagination showNumbers={true} pageScope={1} showLast={false} translations={{"pagination.previous": " ", "pagination.next": " "}}/>
+      <Pagination showNumbers={true} pageScope={pageScope} showLast={false} translations={{"pagination.previous": " ", "pagination.next": " "}}/>
     </TabEnablerComponent>
   );
+}
+export class PaginationPanel extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pageScope: this.pageScope
+    };
+    this.timer = null;
+    this.handleResizeEvent = this.handleResizeEvent.bind(this);
+  }
+  componentDidMount() {
+    window.addEventListener("resize", this.handleResizeEvent);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleResizeEvent);
+  }
+  handleResizeEvent() {
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => this.updatePageScope(), 250);
+  }
+  get pageScope() {
+    const width = windowWidth();
+    window.console.debug(width);
+    return (width >= 1800)?3:(width >= 1600)?2:1;
+  }
+  updatePageScope() {
+    this.setState({pageScope: this.pageScope});
+  }
+  render() {
+    return <PaginationPanelComponent pageScope={this.state.pageScope} className={this.props.className} />;
+  }
 }

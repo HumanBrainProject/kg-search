@@ -23,6 +23,15 @@ export const windowHeight = () => {
   //return $(window).height();
 };
 
+export const windowWidth = () => {
+  const w = window,
+    d = document,
+    e = d.documentElement,
+    g = d.getElementsByTagName("body")[0];
+  return w.innerWidth || e.clientWidth || g.clientWidth;
+  //return $(window).height();
+};
+
 export const isMobile = (navigator.userAgent.match(/Android/i)
                 || navigator.userAgent.match(/webOS/i)
                 || navigator.userAgent.match(/iPhone/i)
