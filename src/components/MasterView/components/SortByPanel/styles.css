@@ -14,17 +14,8 @@
 *   limitations under the License.
 */
 
-.kgs-sortby-panel {
-    display: block;
-    margin-top: 20px;    
-    margin-left: 30px;
-}
-
-@media (min-width: 576px) {
-    .kgs-sortby-panel {
-        display: inline;
-        margin-top: 0;
-    }
+.sk-action-bar .kgs-sortby-panel .sk-select {
+    margin-left: 0;
 }
 
 .kgs-sortby-panel .sk-select::before {
@@ -35,7 +26,7 @@
     color: #555;
 }
 
-.kgs-sortby-panel .sk-select::after {
+.kgs-sortby-panel .sk-select:after {
     right: 15px;
     margin-top: 5px;
     border-top-color: #ED5554;
@@ -71,4 +62,15 @@
     -webkit-box-shadow: 3px 3px 6px #cbc9c9;
     box-shadow: 3px 3px 6px #cbc9c9;
     z-index: 1;
+}
+
+/* Internet Explorer 10 & 11 */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .kgs-sortby-panel .sk-select select {
+        padding: 9px;
+    }
+    
+    .kgs-sortby-panel .sk-select:after {
+        display: none;
+    }
 }

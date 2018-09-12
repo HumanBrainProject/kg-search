@@ -164,9 +164,9 @@ export function Hit({data}) {
   const source = data && !(data.found === false) && data._type && data._source;
   const mapping = source && state.definition && state.definition.shapeMappings && state.definition.shapeMappings[data._type];
 
-  const ribbonData = mapping.ribbon && mapping.ribbon.framed && mapping.ribbon.framed.data_field && source[mapping.ribbon.framed.data_field];
+  const ribbonData = mapping && mapping.ribbon && mapping.ribbon.framed && mapping.ribbon.framed.data_field && source[mapping.ribbon.framed.data_field];
   const iconData = {
-    value: data && data._type, 
+    value: data && data._type,
     image: {
       url: source && source.image && source.image.url
     }
@@ -181,7 +181,7 @@ export function Hit({data}) {
     type: data && data._type,
     hasNoData: !source,
     hasUnknownData: !mapping,
-    ribbon: getField(data && data._type, "ribbon", ribbonData, null, mapping.ribbon),
+    ribbon: getField(data && data._type, "ribbon", ribbonData, null, mapping && mapping.ribbon),
     icon:  getField(data && data._type, "icon", iconData, null, iconMapping),
     fields: getFields(data && data._type, source, data && data.highlight, mapping, false),
     highlightsField: {

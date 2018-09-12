@@ -44,7 +44,7 @@
     width: 17%; 
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1600px) { /* 992 without left filters panel */ 
     .kgs-result-layout.is-list .kgs-hit .ribbon-container {
         display: block;
     }

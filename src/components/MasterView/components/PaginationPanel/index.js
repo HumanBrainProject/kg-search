@@ -22,7 +22,7 @@ import "./styles.css";
 export function PaginationPanel({className}) {
   return (
     <TabEnablerComponent className={`kgs-paging ${className?className:""}`} containerSelector={className?("." + className):".kgs-paging"} itemSelector={".sk-toggle-option"} activeItemSelector={".is-active"} disabledItemSelector={".is-disabled"} >
-      <Pagination showNumbers={true} showLast={true} translations={{"pagination.previous": " ", "pagination.next": " "}}/>
+      <Pagination showNumbers={true} pageScope={1} showLast={false} translations={{"pagination.previous": " ", "pagination.next": " "}}/>
     </TabEnablerComponent>
   );
 }
