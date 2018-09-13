@@ -14,11 +14,6 @@
 *   limitations under the License.
 */
 
-.kgs-group-selection {
-    min-width: 300px;
-}
-
-
 .kgs-group-selection .kgs-select {
     display: inline-block;
     position: relative;
@@ -36,8 +31,8 @@
 }
 
 .kgs-group-selection .kgs-select select {
-    width: auto;
-    min-width: 250px;
+    min-width: 215px;
+    width: calc(100% - 70px);
     background-color: white;
     border-color: white;
     color: #ED5554;
