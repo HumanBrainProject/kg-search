@@ -22,9 +22,9 @@
     display: -ms-grid;
     display: grid;
     -ms-grid-columns: min-content;
-    grid-auto-columns: min-content;
-    -ms-grid-rows: auto auto;
-    grid-auto-rows: auto auto;
+    grid-template-columns: min-content;
+    -ms-grid-rows: auto auto auto;
+    grid-template-rows: auto auto auto;
     grid-template-areas: "stats"
                          "layout"
                          "sorting";
@@ -36,6 +36,7 @@
     grid-area: stats;
     display: block;
     margin-top: 15px;  
+    white-space: nowrap;
 }
 
 .kgs-result-header .kgs-layout-mode-switcher-toggle {
@@ -67,9 +68,9 @@
 
     .kgs-result-header > div {
         -ms-grid-columns: auto min-content;
-        grid-auto-columns: auto min-content;
+        grid-template-columns: auto min-content;
         -ms-grid-rows: auto auto;
-        grid-auto-rows: auto auto;
+        grid-template-rows: auto auto;
         grid-template-areas: "stats sorting"
                              "layout space";
     }
@@ -99,9 +100,9 @@
     
     .kgs-result-header > div {
         -ms-grid-columns: min-content;
-        grid-auto-columns: min-content;
-        -ms-grid-rows: auto auto;
-        grid-auto-rows: auto auto;
+        grid-template-columns: min-content;
+        -ms-grid-rows: auto auto auto;
+        grid-template-rows: auto auto auto;
         grid-template-areas: "stats"
                              "layout"
                              "sorting";
@@ -128,9 +129,9 @@
 
     .kgs-result-header > div {
         -ms-grid-columns: auto min-content min-content;
-        grid-auto-columns: auto min-content min-content;
+        grid-template-columns: auto min-content min-content;
         -ms-grid-rows: auto;
-        grid-auto-rows: auto;
+        grid-template-rows: auto;
         grid-template-areas: "stats layout sorting";
     }
     

@@ -17,7 +17,7 @@
 import { store, dispatch } from "./store";
 import * as actions from "./actions";
 import SearchManager from "./search.manager";
-import { isMobile, isFirefox } from "./Helpers/BrowserHelpers";
+import { isMobile } from "./Helpers/BrowserHelpers";
 import { generateKey, getAuthUrl } from "./Helpers/OIDCHelpers";
 
 export default class AppManager {
@@ -30,11 +30,6 @@ export default class AppManager {
     this.isEventFiredByBrowserNav = false;
     this.isEventFiredByAppNav = false;
     this.locationHref = window.location.href;
-
-    // Firefox css styling issue fix
-    if (isFirefox && !isMobile) {
-      document.body.setAttribute("isFirefox", true);
-    }
 
     // check initial hit reference in url
     const m = window.location.href.match(/(.*)#(.*)$/);
