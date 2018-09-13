@@ -17,7 +17,6 @@
 import { store, dispatch } from "./store";
 import * as actions from "./actions";
 import SearchManager from "./search.manager";
-import { isMobile } from "./Helpers/BrowserHelpers";
 import { generateKey, getAuthUrl } from "./Helpers/OIDCHelpers";
 
 export default class AppManager {
