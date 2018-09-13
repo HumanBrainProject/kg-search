@@ -16,11 +16,11 @@
 
 import React from "react";
 
-export const FieldLabel = ({show, showAsBlock, value}) => {
+export const FieldLabel = ({show, showAsBlock, value, counter}) => {
   if (!show) {
     return null;
   }
   return (
-    <div className={`field-label ${showAsBlock?"as-block":""}`}>{value}</div>
+    <div className={`field-label ${showAsBlock?"as-block":""}`}>{value}{counter?` (${counter})`:""}</div>
   );
 };
