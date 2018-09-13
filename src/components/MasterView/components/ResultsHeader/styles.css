@@ -111,7 +111,6 @@
     .kgs-result-header .kgs-hitStats {
         -ms-grid-column: 1;
         -ms-grid-row: 1;
-        margin-right: 0;
     }
     
     .kgs-result-header .kgs-layout-mode-switcher-toggle {
