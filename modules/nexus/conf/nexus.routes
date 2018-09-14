@@ -36,7 +36,7 @@ POST   /privatespace                                            nexus.controller
 #    required: true
 #    type: string
 #  - in: query
-#    name: nameSpace
+#    name: namespace
 #    description: namespace the entity linked to this schema will belong to
 #    required: false
 #    type: string
@@ -46,30 +46,5 @@ POST   /privatespace                                            nexus.controller
 #    required: false
 #    type: string
 ###
-POST   /schema/:organization/:domain/:schema/:version   nexus.controllers.NexusCommonController.createSchema(organization: String, domain: String, schema: String, version: String, nameSpace: Option[String])
+POST   /schema/:organization/:domain/:schema/:version   nexus.controllers.NexusCommonController.createSchema(organization: String, domain: String, schema: String, version: String, namespace: Option[String])
 
-###
-#  summary: create a schema where http://schema.org/identifier only is mandatory
-#  parameters:
-#  - in: body
-#    name: instances
-#    description: JsArray of entities to release
-#    schema:
-#      type: array
-#      items:
-#        type: object
-#        required:
-#          - "@id"
-#        properties:
-#          "@id":
-#            type: string
-#  - in: header
-#    name: Authorization
-#    description: Authorization token
-#    required: false
-#    type: string
-#  responses:
-#    200:
-#      description: "Ok"
-###
-POST   /release                                        nexus.controllers.NexusCommonController.releaseInstances

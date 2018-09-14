@@ -12,6 +12,7 @@ object ConfigMock {
   val esHost = "https://eshost.com"
   val reconciledPrefix = "reconciled"
   val editorPrefix = "editor"
+  val kgQueryEndpoint = "kgqueryEndpoint"
 
   val fakeApplicationConfig = GuiceApplicationBuilder().configure(
     "play.http.filters" -> "play.api.http.NoHttpFilters",
@@ -23,6 +24,7 @@ object ConfigMock {
     "auth.userinfo" -> userInfo,
     "es.host" -> esHost,
     "nexus.reconciled.prefix" -> reconciledPrefix,
-    "nexus.editor.prefix" -> editorPrefix
+    "nexus.editor.prefix" -> editorPrefix,
+    "kgquery.endpoint" -> kgQueryEndpoint
   )
 }

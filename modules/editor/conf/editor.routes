@@ -10,3 +10,72 @@ POST   /api/instance/:org/:domain/:datatype/:version                editor.contr
 GET    /api/revisions/:org/:domain/:datatype/:version/:id                       editor.controllers.NexusEditorController.getInstanceNumberOfAvailableRevisions(org: String, domain:String, datatype: String, version:String, id: String)
 
 GET    /api/reconciled/:org/:domain/:datatype/:version/:id              editor.controllers.NexusEditorController.getSpecificReconciledInstance(org: String, domain:String, datatype: String, version:String, id: String ,rev:Int ?= 1)
+
+GET    /api/graph/:org/:domain/:datatype/:version/:id   editor.controllers.NexusEditorController.graphEntities(org: String, domain:String, datatype: String, version:String, id: String, step:Int ?= 2)
+
+###
+#  summary: get release information on an entity and its children
+#  tags:
+#    - editor
+#  parameters:
+#  - name: organization
+#    in: path
+#    description: organization the instance to retrieve
+#    required: true
+#    type: string
+#  - name: domain
+#    in: path
+#    description: domain of the instance to retrieve
+#    required: true
+#    type: string
+#  - name: schema
+#    in: path
+#    description: schema name
+#    required: true
+#    type: string
+#  - name: version
+#    in: path
+#    description: version of the instance to retrieve
+#    required: true
+#    type: string
+#  - name: id
+#    in: path
+#    description: id of the instance to retrieve
+#    required: true
+#    type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+GET    /api/release/:org/:domain/:datatype/:version/:id             editor.controllers.NexusEditorController.releaseStatus(org: String, domain:String, datatype: String, version:String, id: String )
+
+###
+#  summary: create a schema where http://schema.org/identifier and the revision only is mandatory
+#  parameters:
+#  - in: body
+#    name: instances
+#    description: JsArray of entities to release
+#    schema:
+#      type: array
+#      items:
+#        type: object
+#        required:
+#          - "id"
+#          - "rev"
+#        properties:
+#          "id":
+#            type: string
+#          "rev":
+#            type: number
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+#  responses:
+#    200:
+#      description: "Ok"
+###
+POST   /release                                          editor.controllers.NexusEditorController.releaseInstances

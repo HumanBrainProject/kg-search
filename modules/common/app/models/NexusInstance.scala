@@ -15,17 +15,17 @@
 *   limitations under the License.
 */
 
-package editor.models
+package common.models
 
-import common.models.NexusPath
-import editor.helpers.NavigationHelper
 import play.api.libs.json._
 
-case class Instance(nexusUUID: String, nexusPath: NexusPath, content:JsObject){
-
+class Instance(nexusUUID: String, nexusPath: NexusPath, content:JsObject){
   def id():String = {
     s"${this.nexusPath}/${this.nexusUUID}"
   }
+}
+
+case class NexusInstance(nexusUUID: String, nexusPath: NexusPath, content:JsObject) extends Instance(nexusUUID, nexusPath, content) {
 
   def extractUpdateInfo(): (String, Int, String) = {
     ((this.content \"@id").as[String],
@@ -34,21 +34,21 @@ case class Instance(nexusUUID: String, nexusPath: NexusPath, content:JsObject){
     )
   }
 
-  def modificationOfLinks(nexusEndpoint: String, reconciledPrefix: String): Instance = {
+  def modificationOfLinks(nexusEndpoint: String, reconciledPrefix: String): NexusInstance = {
     val id = (this.content \ "@id").as[String]
-    val correctedId = s"$nexusEndpoint/v0/data/${Instance.getIdForEditor(id, reconciledPrefix)}"
+    val correctedId = s"$nexusEndpoint/v0/data/${NexusInstance.getIdForEditor(id, reconciledPrefix)}"
     val jsonTransformer = (__ ).json.update(
       __.read[JsObject].map{ o => o ++ Json.obj("@id" -> correctedId)}
     )
-    Instance(this.nexusUUID, this.nexusPath, this.content.transform(jsonTransformer).get)
+    NexusInstance(this.nexusUUID, this.nexusPath, this.content.transform(jsonTransformer).get)
   }
 
 }
 
-object Instance {
-  def apply(jsValue: JsValue): Instance = {
+object NexusInstance {
+  def apply(jsValue: JsValue): NexusInstance = {
     val (id, path) = extractIdAndPath(jsValue)
-    new Instance(id, path , jsValue.as[JsObject])
+    new NexusInstance(id, path , jsValue.as[JsObject])
   }
 
   def extractIdAndPath(jsValue: JsValue): (String, NexusPath) = {

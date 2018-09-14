@@ -21,8 +21,9 @@ package editor.helper
 import common.helpers.JsFlattener
 import common.models.NexusPath
 import editor.helpers.{FormHelper, NavigationHelper}
-import editor.models.{InMemoryKnowledge, IncomingLinksInstances, Instance}
+import editor.models.{InMemoryKnowledge, IncomingLinksInstances, ReleaseStatus}
 import authentication.models.UserInfo
+import common.models.NexusInstance
 import nexus.helpers.NexusHelper
 import org.joda.time.DateTime
 import org.json4s.native.{JsonMethods, JsonParser}
@@ -45,16 +46,16 @@ object InstanceHelper {
   def consolidateFromManualSpace(
                                   nexusEndpoint: String,
                                   manualSpace:String,
-                                  originalInstance: Instance,
-                                  editorInstances: List[Instance],
+                                  originalInstance: NexusInstance,
+                                  editorInstances: List[NexusInstance],
                                   updateToBeStoredInManual: JsObject,
                                   user: UserInfo
-                                ): (Instance, Option[List[UpdateInfo]]) = {
+                                ): (NexusInstance, Option[List[UpdateInfo]]) = {
     logger.debug(s"Result from incoming links $editorInstances")
     val updatesByPriority = buildManualUpdatesFieldsFrequency(
       editorInstances.filter( item => (item.content \ "http://hbp.eu/manual#updater_id").as[String] != user.id
       ), updateToBeStoredInManual)
-    val result = Instance(reconcilationLogic(updatesByPriority, originalInstance.content))
+    val result = NexusInstance(reconcilationLogic(updatesByPriority, originalInstance.content))
     val manualUpdateDetailsOpt = if(editorInstances.isEmpty){
       logger.debug("creating new editor instace")
       None
@@ -68,7 +69,7 @@ object InstanceHelper {
   }
 
 
-  def buildDiffEntity(consolidatedResponse: Instance, newValue: String, originalInstanceContent: JsValue): JsObject = {
+  def buildDiffEntity(consolidatedResponse: NexusInstance, newValue: String, originalInstanceContent: JsValue): JsObject = {
     val consolidatedJson = JsonParser.parse(cleanInstanceManual(consolidatedResponse.content).toString())
     val newJson = JsonParser.parse(newValue)
     val Diff(changed, added, deleted) = consolidatedJson.diff(newJson)
@@ -153,7 +154,7 @@ object InstanceHelper {
     hashedString
   }
 
-  def buildManualUpdatesFieldsFrequency(manualUpdates: List[Instance], currentUpdate: JsObject): Map[String, SortedSet[(JsValue, Int)]] = {
+  def buildManualUpdatesFieldsFrequency(manualUpdates: List[NexusInstance], currentUpdate: JsObject): Map[String, SortedSet[(JsValue, Int)]] = {
     val cleanMap: List[Map[String, JsValue]] = currentUpdate.as[Map[String, JsValue]] +: cleanListManualData(manualUpdates)
     buildMapOfSortedManualUpdates(cleanMap)
   }
@@ -228,7 +229,7 @@ object InstanceHelper {
     }
   }
 
-  def cleanListManualData(manualUpdates: List[Instance]): List[Map[String, JsValue]] = {
+  def cleanListManualData(manualUpdates: List[NexusInstance]): List[Map[String, JsValue]] = {
     manualUpdates.map(el => cleanManualDataFromNexus(el.content))
   }
 
@@ -240,7 +241,7 @@ object InstanceHelper {
     jsObject - ("@context") - ("@id") - ("@type") - ("links") - ("nxv:rev") - ("nxv:deprecated")
   }
 
-  def cleanUpInstanceForSave(instance: Instance): JsObject = {
+  def cleanUpInstanceForSave(instance: NexusInstance): JsObject = {
     val jsonObj = instance.content
     cleanManualData(jsonObj)
   }
@@ -270,19 +271,22 @@ object InstanceHelper {
   def formatInstanceList(jsArray: JsArray, reconciledSuffix:String): JsValue = {
 
     val arr = jsArray.value.map { el =>
-      val url = (el \ "instance" \ "value").as[String]
-      val name = (el \ "name" \ "value").as[JsString]
-      val description: JsString = if ((el \ "description").isDefined) {
-        (el \ "description" \ "value").as[JsString]
+      val url = (el \ "@id").as[String]
+      val name: JsString = (el \ "http://schema.org/name")
+        .asOpt[JsString].getOrElse(
+        (el \"http://hbp.eu/minds#alias" ).asOpt[JsString].getOrElse( (el \ "http://hbp.eu/minds#title").asOpt[JsString].getOrElse(JsString("")))
+      )
+      val description: JsString = if ((el \ "http://schema.org/description").isDefined) {
+        (el \ "http://schema.org/description").as[JsString]
       } else {
         JsString("")
       }
-      val pathString = url.split("v0/data/").tail.head
+
       val id = url.split("/").last
-      val formattedId = NexusPath(pathString)
+      val formattedId = NexusPath(url)
         .originalPath(reconciledSuffix)
         .toString() + "/" + id
-      Json.obj("id" -> formattedId, "description" -> description, "label" -> name)
+      Json.obj("id" -> formattedId, "description" -> description, "label" -> name, "status" -> ReleaseStatus.getRandomStatus(), "childrenStatus" -> ReleaseStatus.getRandomChildrenStatus())
     }
     Json.toJson(arr)
   }
@@ -293,7 +297,7 @@ object InstanceHelper {
     val description: JsString = if ((jsObject \ "http://schema.org/description").isDefined) {
       (jsObject \ "http://schema.org/description").as[JsString]
     } else { JsString("") }
-    Json.obj("id" -> Instance.getIdForEditor(id, reconciledSuffix), "description" -> description, "label" -> name)
+    Json.obj("id" -> NexusInstance.getIdForEditor(id, reconciledSuffix), "description" -> description, "label" -> name, "status" -> ReleaseStatus.getRandomStatus(), "childrenStatus" -> ReleaseStatus.getRandomChildrenStatus())
   }
 
   def toReconcileFormat(jsValue: JsValue, privateSpace: String): JsObject = {
@@ -309,7 +313,7 @@ object InstanceHelper {
     }
   }
 
-  def getCurrentInstanceDisplayed(currentReconciledInstances: Seq[Instance], originalInstance: Instance): Instance = {
+  def getCurrentInstanceDisplayed(currentReconciledInstances: Seq[NexusInstance], originalInstance: NexusInstance): NexusInstance = {
     if (currentReconciledInstances.nonEmpty) {
       val sorted = currentReconciledInstances.sortWith { (left, right) =>
         (left.content \ "http://hbp.eu/reconciled#update_timestamp").as[Long] >
