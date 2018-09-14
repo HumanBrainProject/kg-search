@@ -92,10 +92,10 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService,
          if (isNexusLink(idValue)){
           updateEntity(idValue, None, payload, token, nexusService)
         } else {
-          insertEntity(nexusUrl, "exceluniminds", "core", entity.`type`, "v0.0.1", payload, entity.localId, token, nexusService)
+          insertEntity(nexusUrl, "exceluniminds", "core", entity.`type`, "v1.0.0", payload, entity.localId, token, nexusService)
         }
       case None => // INSERT
-        insertEntity(nexusUrl, "exceluniminds", "core", entity.`type`, "v0.0.1", payload, entity.localId, token, nexusService)
+        insertEntity(nexusUrl, "exceluniminds", "core", entity.`type`, "v1.0.0", payload, entity.localId, token, nexusService)
     }
   }
 
