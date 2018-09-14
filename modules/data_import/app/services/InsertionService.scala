@@ -200,7 +200,7 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService,
     val schemas = data.map(_.`type`).distinct
     schemas.foldLeft (Future.successful("")) {
       case (_, schema) =>
-        nexusService.createSimpleSchema(nexusEndPoint, "uniminds", "core", schema, "v0.0.1", token).map{
+        nexusService.createSimpleSchema(nexusEndPoint, "uniminds", "core", schema, "v1.0.0", token).map{
           response =>
             s"${response.status}: ${response.body}"
         }
