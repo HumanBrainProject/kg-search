@@ -21,9 +21,9 @@ import java.net.URLEncoder
 import java.security.Policy.Parameters
 
 import com.google.inject.Inject
-import common.models.NexusPath
+import common.models.{NexusInstance, NexusPath}
 import editor.helper.InstanceHelper._
-import editor.models.{InMemoryKnowledge, IncomingLinksInstances, Instance}
+import editor.models.{InMemoryKnowledge, IncomingLinksInstances}
 import helpers.ReconciledInstanceHelper
 import authentication.models.UserInfo
 import editor.controllers.NexusEditorController
@@ -52,7 +52,7 @@ class InstanceService @Inject()(wSClient: WSClient,
                              originalId: String,
                              originalOrg: String,
                              token: String
-                           ): Future[IndexedSeq[Instance]] = {
+                           ): Future[IndexedSeq[NexusInstance]] = {
     val filter =
       s"""
          |{"op":"or","value": [{
@@ -71,7 +71,7 @@ class InstanceService @Inject()(wSClient: WSClient,
       .listAllNexusResult(s"$nexusEndpoint/v0/data/${originalId}/incoming?deprecated=false&fields=all&size=50&filter=$filter", token)
       .map {
         incomingLinks =>
-          incomingLinks.map(el => Instance((el \ "source").as[JsValue])).toIndexedSeq
+          incomingLinks.map(el => NexusInstance((el \ "source").as[JsValue])).toIndexedSeq
       }
   }
 
@@ -108,11 +108,11 @@ class InstanceService @Inject()(wSClient: WSClient,
     * @param token The user access token
     * @return An error response or an the instance
     */
-  def retrieveInstance(path: NexusPath, id: String, token: String, parameters: List[(String, String)] = List()): Future[Either[WSResponse, Instance]] = {
+  def retrieveInstance(path: NexusPath, id: String, token: String, parameters: List[(String, String)] = List()): Future[Either[WSResponse, NexusInstance]] = {
     val reconciledPath = path.reconciledPath(reconciledPrefix)
-    getInstance(reconciledPath, id, token, parameters).flatMap[Either[WSResponse, Instance]] {
+    getInstance(reconciledPath, id, token, parameters).flatMap[Either[WSResponse, NexusInstance]] {
       case Left(_) => // Check in the original space
-        retrieveReconciledFromOriginal(path, reconciledPath.org, id, token, parameters).flatMap[Either[WSResponse, Instance]] {
+        retrieveReconciledFromOriginal(path, reconciledPath.org, id, token, parameters).flatMap[Either[WSResponse, NexusInstance]] {
           case Left(r) =>
             Future.successful(Left(r))
           case Right(reconciledInstance) =>
@@ -127,21 +127,21 @@ class InstanceService @Inject()(wSClient: WSClient,
     }
   }
 
-  def getInstance(path: NexusPath, id: String, token: String, parameters: List[(String, String)] = List()):Future[Either[WSResponse, Instance]] = {
+  def getInstance(path: NexusPath, id: String, token: String, parameters: List[(String, String)] = List()):Future[Either[WSResponse, NexusInstance]] = {
     wSClient.url(s"$nexusEndpoint/v0/data/${path.toString()}/$id?fields=all&deprecated=false")
       .withQueryStringParameters( parameters: _*)
       .addHttpHeaders("Authorization" -> token).get().map {
       res =>
         res.status match {
           case OK =>
-            Right(Instance(res.json))
+            Right(NexusInstance(res.json))
           case _ =>
             Left(res)
         }
     }
   }
 
-  def retrieveReconciledFromOriginal(originalPath: NexusPath, reconciledOrg:String, id: String, token: String, parameters: List[(String, String)] = List()): Future[Either[WSResponse, Option[Instance]]] = {
+  def retrieveReconciledFromOriginal(originalPath: NexusPath, reconciledOrg:String, id: String, token: String, parameters: List[(String, String)] = List()): Future[Either[WSResponse, Option[NexusInstance]]] = {
     val editorOrg = NexusPath.addSuffixToOrg(originalPath.org, editorPrefix)
     val filter =
       s"""{
@@ -172,7 +172,7 @@ class InstanceService @Inject()(wSClient: WSClient,
             case OK =>
               if( (res.json \"total").as[Int] > 0){
                 Right(
-                  Some( Instance(InstanceHelper.removeNexusFields( ((res.json \ "results").as[List[JsValue]].head \ "source").as[JsObject])))
+                  Some( NexusInstance(InstanceHelper.removeNexusFields( ((res.json \ "results").as[List[JsValue]].head \ "source").as[JsObject])))
                 )
               }else{
                 Right(None)
@@ -183,7 +183,7 @@ class InstanceService @Inject()(wSClient: WSClient,
       }
   }
 
-  def retrieveInstances(ids: List[String], path: NexusPath, token: String): Future[List[Either[WSResponse, Instance]]] = {
+  def retrieveInstances(ids: List[String], path: NexusPath, token: String): Future[List[Either[WSResponse, NexusInstance]]] = {
     val listOfRes = for {id <- ids} yield {
       getInstance(path, id, token)
     }
@@ -203,7 +203,7 @@ class InstanceService @Inject()(wSClient: WSClient,
       // find manual entry corresponding to the user
       manualEntitiesDetails.filter(_._3 == userInfo.id).headOption.map {
         case (manualEntityId, manualEntityRevision, _) =>
-          wSClient.url(s"$nexusEndpoint/v0/data/${Instance.getIdfromURL(manualEntityId)}/?rev=$manualEntityRevision").addHttpHeaders("Authorization" -> token).put(
+          wSClient.url(s"$nexusEndpoint/v0/data/${NexusInstance.getIdfromURL(manualEntityId)}/?rev=$manualEntityRevision").addHttpHeaders("Authorization" -> token).put(
             manualEntity
           )
       }
@@ -254,9 +254,9 @@ class InstanceService @Inject()(wSClient: WSClient,
 
   def updateReconciledInstance(
                                 manualSpace: String,
-                                currentReconciledInstance: Instance,
-                                editorInstances: List[Instance],
-                                originalInstance: Instance,
+                                currentReconciledInstance: NexusInstance,
+                                editorInstances: List[NexusInstance],
+                                originalInstance: NexusInstance,
                                 manualEntity: JsObject,
                                 manualEntityId: String,
                                 updatedValue: JsObject,
@@ -267,7 +267,7 @@ class InstanceService @Inject()(wSClient: WSClient,
     val parentId = (originalInstance.content \ "@id").as[String]
     val revision = (currentReconciledInstance.content \ "nxv:rev").as[Int]
     val parentRevision = (originalInstance.content \ "nxv:rev").as[Int]
-    val payload = ReconciledInstanceHelper.generateReconciledInstance(manualSpace, Instance(updatedValue), editorInstances, manualEntity, originalInstance.nexusPath, manualEntityId, userInfo, parentRevision, parentId, token)
+    val payload = ReconciledInstanceHelper.generateReconciledInstance(manualSpace, NexusInstance(updatedValue), editorInstances, manualEntity, originalInstance.nexusPath, manualEntityId, userInfo, parentRevision, parentId, token)
     updateReconcileInstance( payload, currentReconciledInstance.nexusPath, currentReconciledInstance.nexusUUID, revision, token)
 
   }
@@ -275,7 +275,7 @@ class InstanceService @Inject()(wSClient: WSClient,
   def insertReconciledInstance(
                                 destinationOrg: String,
                                 manualSpace: String,
-                                originalInstance: Instance,
+                                originalInstance: NexusInstance,
                                 manualEntity: JsObject,
                                 manualEntityId: String,
                                 updatedValue: JsObject,
@@ -284,7 +284,7 @@ class InstanceService @Inject()(wSClient: WSClient,
                               ): Future[WSResponse] = {
     val parentRevision = (originalInstance.content \ "nxv:rev").as[Int]
     val parentId = (originalInstance.content \ "@id").as[String]
-    val payload = ReconciledInstanceHelper.generateReconciledInstance(manualSpace, Instance(updatedValue), List(), manualEntity, originalInstance.nexusPath, manualEntityId, userInfo, parentRevision, parentId, token)
+    val payload = ReconciledInstanceHelper.generateReconciledInstance(manualSpace, NexusInstance(updatedValue), List(), manualEntity, originalInstance.nexusPath, manualEntityId, userInfo, parentRevision, parentId, token)
     insertInstance(
       destinationOrg,
       payload,

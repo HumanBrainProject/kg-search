@@ -17,10 +17,12 @@
 
 package editor.models
 
-case class IncomingLinksInstances(reconciledInstances: IndexedSeq[Instance], manualInstances: IndexedSeq[Instance])
+import common.models.NexusInstance
+
+case class IncomingLinksInstances(reconciledInstances: IndexedSeq[NexusInstance], manualInstances: IndexedSeq[NexusInstance])
 
 object IncomingLinksInstances {
-  def apply(incomingLinks: IndexedSeq[Instance], originalInstanceId: String): IncomingLinksInstances = {
+  def apply(incomingLinks: IndexedSeq[NexusInstance], originalInstanceId: String): IncomingLinksInstances = {
     val rec = incomingLinks.filter( instance => (instance.content \ "http://hbp.eu/reconciled#original_parent" \ "@id").asOpt[String].getOrElse("") == originalInstanceId)
     val man = incomingLinks.filter( instance => (instance.content \ "http://hbp.eu/manual#parent" \ "@id").asOpt[String].getOrElse("") == originalInstanceId)
     new IncomingLinksInstances(rec, man)

@@ -16,9 +16,9 @@
 */
 package helpers
 
-import common.models.NexusPath
+import common.models.{NexusInstance, NexusPath}
 import editor.helper.InstanceHelper.{cleanUpInstanceForSave, generateAlternatives, getPriority, toReconcileFormat}
-import editor.models.{IncomingLinksInstances, Instance}
+import editor.models.IncomingLinksInstances
 import authentication.models.UserInfo
 import org.joda.time.DateTime
 import play.api.Logger
@@ -49,8 +49,8 @@ object ReconciledInstanceHelper {
 
   def generateReconciledInstance(
                                   manualSpace: String,
-                                  reconciledInstance: Instance,
-                                  editorInstances: List[Instance],
+                                  reconciledInstance: NexusInstance,
+                                  editorInstances: List[NexusInstance],
                                   manualEntityToBestored: JsObject,
                                   originalEntitPath: NexusPath,
                                   newManualUpdateId: String,
@@ -98,10 +98,10 @@ object ReconciledInstanceHelper {
   }
 
   def addAlternatives(manualSpace: String,
-                      reconciledInstance: Instance,
-                      editorInstances: List[Instance],
+                      reconciledInstance: NexusInstance,
+                      editorInstances: List[NexusInstance],
                       manualEntityToBeStored: JsObject
-                                             ): Instance = {
+                                             ): NexusInstance = {
     val currentUpdater = (manualEntityToBeStored \ "http://hbp.eu/manual#updater_id").as[String]
     val altJson = generateAlternatives(
       editorInstances.map(cleanUpInstanceForSave)
@@ -110,15 +110,15 @@ object ReconciledInstanceHelper {
     )
     val res = reconciledInstance.content
       .+("http://hbp.eu/reconciled#alternatives", altJson)
-    Instance(reconciledInstance.nexusUUID, reconciledInstance.nexusPath, res)
+    NexusInstance(reconciledInstance.nexusUUID, reconciledInstance.nexusPath, res)
   }
 
-  def updateManualLinks(reconciledInstance: Instance, newManualUpdateId: String): Instance = {
+  def updateManualLinks(reconciledInstance: NexusInstance, newManualUpdateId: String): NexusInstance = {
     val currentParent = (reconciledInstance.content \ "http://hbp.eu/reconciled#parents").asOpt[List[JsObject]].getOrElse(List[JsObject]())
     val jsArray = Json.toJson( (Json.obj("@id" -> newManualUpdateId) +: currentParent).distinct)
     val res = reconciledInstance.content
       .+("http://hbp.eu/reconciled#parents" -> jsArray)
-    Instance(reconciledInstance.nexusUUID, reconciledInstance.nexusPath, res)
+    NexusInstance(reconciledInstance.nexusUUID, reconciledInstance.nexusPath, res)
 
   }
 }

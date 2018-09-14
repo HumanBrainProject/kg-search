@@ -50,3 +50,32 @@ GET    /api/graph/:org/:domain/:datatype/:version/:id   editor.controllers.Nexus
 #    type: string
 ###
 GET    /api/release/:org/:domain/:datatype/:version/:id             editor.controllers.NexusEditorController.releaseStatus(org: String, domain:String, datatype: String, version:String, id: String )
+
+###
+#  summary: create a schema where http://schema.org/identifier and the revision only is mandatory
+#  parameters:
+#  - in: body
+#    name: instances
+#    description: JsArray of entities to release
+#    schema:
+#      type: array
+#      items:
+#        type: object
+#        required:
+#          - "id"
+#          - "rev"
+#        properties:
+#          "id":
+#            type: string
+#          "rev":
+#            type: number
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+#  responses:
+#    200:
+#      description: "Ok"
+###
+POST   /release                                          editor.controllers.NexusEditorController.releaseInstances

@@ -21,25 +21,46 @@ import nexus.helpers.NexusHelper.hash
 import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
+
 import scala.concurrent.{ExecutionContext, Future}
 import NexusService._
+import common.models.ReleaseInstance
+import play.api.Configuration
 
 
-class NexusService @Inject()(wSClient: WSClient)(implicit executionContext: ExecutionContext) {
-
+class NexusService @Inject()(wSClient: WSClient, config:Configuration)(implicit executionContext: ExecutionContext) {
+  val nexusEndpoint: String = config.getOptional[String]("nexus.endpoint").getOrElse("https://nexus-dev.humanbrainproject.org")
   def releaseInstance(instanceData: JsValue, token: String): Future[JsObject] = {
     val jsonObj = instanceData.as[JsObject]
-    val instanceUrl = (jsonObj \ "@id").as[String]
+    val instanceUrl = s"$nexusEndpoint/v0/data/${(jsonObj \ "id").as[String]}"
+    val instanceRev = (jsonObj \ "rev").as[Long]
     // check if this instance is attached to a release instance already
-    isReleased(instanceUrl, token).flatMap{ releasedId =>
+    isReleased(instanceUrl, instanceRev, token).flatMap{ releasedId =>
       releasedId match {
-        case Some(releaseId) =>
-        Future.successful(JsObject(Map(
-          "status" -> JsString(RELEASE_ALREADY),
-          "released_id" -> JsString(releaseId)
-        )))
+        case Some(releaseInstance) =>
+          if (releaseInstance.instanceRevision == instanceRev){
+            Future.successful(JsObject(Map(
+              "status" -> JsString(RELEASE_ALREADY),
+              "released_id" -> JsString(releaseInstance.id())
+            )))
+          }else{
+            updateReleaseInstance(instanceUrl, s"$nexusEndpoint/v0/data/${releaseInstance.id()}", instanceRev,releaseInstance.revision, token).map{
+              case (status, response) =>
+                response.status match {
+                  case 200 | 201 =>
+                    JsObject(Map(
+                      "status" -> JsString(RELEASE_OK),
+                      "released_id" -> (response.json.as[JsObject] \ "@id").as[JsString]
+                    ))
+                  case _ =>
+                    JsObject(Map(
+                      "status" -> JsString(RELEASE_KO)
+                    ))
+                }
+            }
+          }
         case None =>
-          createReleaseInstance(instanceUrl, token).map{ response =>
+          createReleaseInstance(instanceUrl, instanceRev, token).map{ response =>
             response.status match {
               case 200 | 201 =>
                 JsObject(Map(
@@ -56,30 +77,26 @@ class NexusService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
     }
   }
 
-  def isReleased(instanceUrl: String, token: String): Future[Option[String]] = {
-    listAllNexusResult(s"${instanceUrl}/incoming", token).map{ incomingsLinks =>
+  def isReleased(instanceUrl: String, instanceRev: Long, token: String): Future[Option[ReleaseInstance]] = {
+    listAllNexusResult(s"${instanceUrl}/incoming?deprecated=false&fields=all", token).map{ incomingsLinks =>
         val found = incomingsLinks.find(
           result => (result.as[JsObject] \ "resultId").as[String].contains("prov/release"))
-        found.map(value => (value.as[JsObject] \ "resultId").as[String])
+        found.map(value => ReleaseInstance((value.as[JsObject] \ "source" ).as[JsObject]))
     }
   }
 
-  def createReleaseInstance(instanceUrl: String, token: String): Future[WSResponse] = {
+  def createReleaseInstance(instanceUrl: String, instanceRev:Long, token: String): Future[WSResponse] = {
     val (Seq(id, version, schema, domain, org, apiVersion, data), baseUrlSeq) = instanceUrl.split("/").reverse.toSeq.splitAt(7)
     val baseUrl = baseUrlSeq.reverse.mkString("/")
     val releaseIdentifier = hash(instanceUrl)
-    val payload = Json.parse(s"""
-      {
-        "@type": "http://hbp.eu/minds#Release",
-        "http://hbp.eu/minds#releaseinstance": [
-          {
-            "@id": "${instanceUrl}"
-          }
-        ],
-        "http://hbp.eu/minds#releasestate": "released",
-        "http://schema.org/identifier": "${releaseIdentifier}"
-      }""")
+    val payload = Json.parse(ReleaseInstance.template(instanceUrl, releaseIdentifier, instanceRev))
     insertInstance(baseUrl, org, "prov", "release", "v0.0.1", payload, token)
+  }
+
+  def updateReleaseInstance(instanceUrl: String, releaseUrl: String, instanceRev:Long, releaseRev:Long, token: String): Future[(String, WSResponse)] = {
+    val releaseIdentifier = hash(instanceUrl)
+    val payload = Json.parse(ReleaseInstance.template(instanceUrl, releaseIdentifier, instanceRev))
+    updateInstance(releaseUrl, Some(releaseRev), payload, token)
   }
 
   /**

@@ -35,27 +35,6 @@ class NexusCommonController @Inject()(cc: ControllerComponents, config:Configura
   val orgNamePattern = "[a-z0-9]{3,}"
 
 
-  def releaseInstances(): Action[AnyContent] = Action.async { implicit request =>
-    val tokenOpt = request.headers.toSimpleMap.get("Authorization")
-    tokenOpt match {
-      case Some(token) =>
-        request.body.asJson.map { jsonBody =>
-          val releasedInstancesResult = jsonBody.as[JsArray].value.map(instanceData => nexusService.releaseInstance(instanceData, token))
-          releasedInstancesResult.foldLeft(Future.successful(JsArray.empty)) {
-            case (accF, resF) =>
-              resF.flatMap { res =>
-                accF.map { acc =>
-                  acc.:+(res)
-                }
-              }
-          }.map(array => Ok(array))
-        }.getOrElse(Future.successful(NoContent))
-      case None =>
-        Future.successful(Unauthorized("You need a valid Token to release instances"))
-    }
-  }
-
-
   def createPrivateSpace(): Action[AnyContent] = Action.async { implicit request =>
     val tokenOpt = request.headers.toSimpleMap.get("Authorization")
     tokenOpt match {

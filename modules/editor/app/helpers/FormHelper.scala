@@ -17,8 +17,7 @@
 
 package editor.helpers
 
-import common.models.NexusPath
-import editor.models.Instance
+import common.models.{NexusInstance, NexusPath}
 import play.Play
 import play.api.libs.json._
 
@@ -132,7 +131,7 @@ object FormHelper {
       if ((data \ key \ "@id").isDefined) {
         val linkToInstance = (data \ key \ "@id").as[String]
         if (linkToInstance.contains("http")){
-          val(id, path) = Instance.extractIdAndPathFromString(linkToInstance)
+          val(id, path) = NexusInstance.extractIdAndPathFromString(linkToInstance)
           val instancePath = path.originalPath(reconciledSuffix)
           JsArray().+:(Json.obj("id" -> JsString(instancePath.toString() + s"/$id")))
         } else {
@@ -148,7 +147,7 @@ object FormHelper {
     Json.toJson(
       jsArray.value.collect{
         case el if ((el \ "@id").as[String] contains "http") =>
-          val(id, path) = Instance.extractIdAndPathFromString((el \ "@id").as[String])
+          val(id, path) = NexusInstance.extractIdAndPathFromString((el \ "@id").as[String])
           val instancePath = path.originalPath(reconciledSuffix)
           Json.obj("id" -> JsString(instancePath.toString() + s"/$id"))
         }
