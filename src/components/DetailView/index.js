@@ -23,7 +23,7 @@ import { ShareBar } from "../ShareBar";
 import { Instance } from "./components/Instance";
 import "./styles.css";
 
-export class DetailViewComponent extends PureComponent {
+class DetailViewComponent extends PureComponent {
   setPreviousHit() {
     dispatch(actions.setPreviousHit());
   }

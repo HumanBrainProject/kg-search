@@ -37,7 +37,7 @@ export class PaginationPanel extends PureComponent {
     this.handleResizeEvent = this.handleResizeEvent.bind(this);
   }
   componentDidMount() {
-    window.addEventListener("resize", this.handleResizeEvent);
+    window.addEventListener("resize", this.handleResizeEvent, false);
   }
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResizeEvent);

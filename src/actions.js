@@ -29,6 +29,13 @@ export const agreeTermsShortNotice = () => {
   };
 };
 
+export const setInfo = text => {
+  return {
+    type: types.SET_INFO,
+    text: text
+  };
+};
+
 export const setLayoutMode = gridLayoutMode => {
   return {
     type: types.SET_LAYOUT_MODE,

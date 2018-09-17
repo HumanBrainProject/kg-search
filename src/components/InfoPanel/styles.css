@@ -1,0 +1,93 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-info {
+    display: block;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.15);    
+    z-index: 2000;
+}
+
+.kgs-info__panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    box-sizing: border-box;
+    background-color: white;
+}
+
+.kgs-info__container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 50px 0 20px 0;
+}
+
+.kgs-info__content {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0 20px;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.kgs-info__closeButton {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    margin: 0;
+    background-color: transparent;
+    color: rgb(108, 115, 121);
+    text-align: center;
+    transition: box-shadow 0.2s ease-in, color 0.2s ease-in;
+    z-index: 1500;
+}
+
+@media (min-width:768px) { 
+    .kgs-info__panel {
+        top: 20px;
+        right: 20px;
+        bottom: 20px;
+        left: 20px;
+        border-radius: 4px;
+        -webkit-box-shadow: 3px 3px 6px #8f8a8a;
+        box-shadow: 3px 3px 6px #8f8a8a;
+    }
+    
+    .kgs-info__container {
+        padding: 50px 0;
+    }
+    
+    .kgs-info__content {
+        padding: 0 50px;
+    }
+}
+
+@media (min-width: 992px) {
+    .kgs-info__panel {
+        width: 992px;
+        margin-left: calc(50% - 496px);
+    }
+}
