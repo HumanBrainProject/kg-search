@@ -61,7 +61,7 @@ const MasterViewComponent = () => {
 
 export const MasterView = withTabKeyNavigation(
   MasterViewComponent,
-  data => !data.hits.currentHit,
+  data => !data.hits.currentHit && !data.application.info,
   ".kgs-masterView",
   null
 );

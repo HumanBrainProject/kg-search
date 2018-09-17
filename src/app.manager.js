@@ -106,7 +106,7 @@ export default class AppManager {
     }
 
     //Remove the ability to scroll the body when the modal is open
-    this.setBodyScrolling(!state.hits.currentHit);
+    this.setBodyScrolling(!state.hits.currentHit && !state.application.info);
 
     // store detail view laucher button in order to set back focus to it when detail popup close
     this.manageHitFocus(state.hits.currentHit);

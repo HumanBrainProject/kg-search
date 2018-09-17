@@ -16,6 +16,7 @@
 
 import React, { PureComponent } from "react";
 import AppManager from "./app.manager";
+import { InfoPanel } from "./components/InfoPanel";
 import { withStoreStateSubscription} from "./components/withStoreStateSubscription";
 import { withTabKeyNavigation } from "./components/withTabKeyNavigation";
 import { SearchkitProvider } from "searchkit";
@@ -77,6 +78,7 @@ export class App extends PureComponent {
         <TermsShortNotice/>
         <FetchingPanel/>
         <ErrorPanel/>
+        <InfoPanel/>
       </div>
     );
   }
