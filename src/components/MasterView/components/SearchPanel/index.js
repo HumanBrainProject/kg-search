@@ -15,8 +15,11 @@
 */
 
 import React from "react";
+import { dispatch } from "../../../../store";
+import * as actions from "../../../../actions";
+import { help } from "../../../../help.js";
 import { withStoreStateSubscription} from "../../../withStoreStateSubscription";
-import { withEventsSubscription} from "../../../withEventsSubscription";
+import { withFloatingScrollEventsSubscription} from "../../../withFloatingScrollEventsSubscription";
 import { SearchkitComponent, SearchBox, QueryString } from "searchkit";
 import { isMobile } from "../../../../Helpers/BrowserHelpers";
 import "./styles.css";
@@ -66,23 +69,26 @@ class SearchPanelComponent extends SearchkitComponent {
   }
   render() {
     const {isFloating, queryFields} = this.props;
-    const hanldeClick = () => {
+    const hanldeSearchClick = () => {
       this.searchkit.search();
+    };
+    const handleHelpClick = () => {
+      dispatch(actions.setInfo(help));
     };
     return (
       <div className={`kgs-search${isFloating?" is-fixed-position":""}`}>
         <SearchBox placeholder="Search (e.g. brain or neuroscience)" autofocus={true} searchOnChange={false} queryFields={queryFields} queryBuilder={QueryString} />
-        <button className="kgs-search-button" onClick={hanldeClick}>Search</button>
-        <a href="http://lucene.apache.org/core/2_9_4/queryparsersyntax.html" target="blank" className="kgs-search-help__button" title="Help">
+        <button className="kgs-search-button" onClick={hanldeSearchClick}>Search</button>
+        <button type="button" className="kgs-search-help__button" title="Help" onClick={handleHelpClick}>
           <i className="fa fa-info-circle fa-2x"></i>
-        </a>
+        </button>
       </div>
     );
   }
 }
 
 export const SearchPanel = withStoreStateSubscription(
-  withEventsSubscription(SearchPanelComponent),
+  withFloatingScrollEventsSubscription(SearchPanelComponent),
   data => ({
     queryFields: data.definition.queryFields
   })

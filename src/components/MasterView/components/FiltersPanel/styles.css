@@ -23,7 +23,13 @@
     */
 }
 
-@media (min-width: 576px) {
+@media (min-width: 500px) {
+    .kgs-filters {  
+        min-width: 400px;
+    }
+}
+
+@media (min-width: 992px) {
     .kgs-filters {
         width: 400px;
         margin: 30px 30px 30px 0;

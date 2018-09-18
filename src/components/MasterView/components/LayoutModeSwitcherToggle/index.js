@@ -25,8 +25,8 @@ const LayoutModeSwitcherToggleItemComponent = ({label, value, isActive, onClick}
     onClick(value);
   };
   return (
-    <button className={"sk-toggle-option sk-toggle__item" + (isActive? " is-active":"")}  disabled={isActive} onClick={handleClick} >
-      <label className="sk-toggle-option__text">{label}</label>
+    <button type="button" className={(isActive?"is-active":"")}  disabled={isActive} onClick={handleClick} >
+      <label>{label}</label>
     </button>
   );
 };
@@ -41,7 +41,7 @@ const LayoutModeSwitcherToggleComponent = ({show, gridLayoutMode}) => {
   };
   return (
     <div className="kgs-layout-mode-switcher-toggle">
-      <div className="sk-toggle">
+      <div>
         <LayoutModeSwitcherToggleItemComponent label="Grid" value="grid" onClick={handleClick} isActive={gridLayoutMode} />
         <LayoutModeSwitcherToggleItemComponent label="List" value="list" onClick={handleClick} isActive={!gridLayoutMode} />
       </div>

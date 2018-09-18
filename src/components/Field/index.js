@@ -34,7 +34,8 @@ export function Field({name, data, mapping, renderUserInteractions}) {
   const labelProps = {
     show: !!mapping.value && (!mapping.label_hidden || !!renderUserInteractions),
     showAsBlock: mapping.tag_icon,
-    value: mapping.value
+    value: mapping.value,
+    counter: (mapping.layout === "group" && isList)?data.length:0
   };
   const hintProps = {
     show: renderUserInteractions && !!mapping.value && !!mapping.hint,

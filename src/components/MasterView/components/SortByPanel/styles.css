@@ -14,7 +14,11 @@
 *   limitations under the License.
 */
 
-.sk-action-bar .kgs-sortby-panel .sk-select {
+.kgs-sortby-panel .sk-select {
+    white-space: nowrap;
+}
+
+.kgs-sortby-panel .sk-select {
     margin-left: 0;
 }
 
@@ -24,6 +28,7 @@
     font-size: 22px;
     line-height: 30px;
     color: #555;
+    white-space: nowrap;
 }
 
 .kgs-sortby-panel .sk-select:after {

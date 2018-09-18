@@ -18,13 +18,13 @@ import { Field } from "../../../../../Field";
 import { FieldHint } from "../../../../../Field/components/FieldHint";
 import "./styles.css";
 
-const Tab = ({name, title, total, hint, active, onClick}) => {
+const Tab = ({name, title, counter, hint, active, onClick}) => {
   const handleClick = () => {
     typeof onClick === "function" && onClick(name);
   };
   const className = `kgs-field__tab ${active?"is-active":""}`;
   return (
-    <button type="button" className={className} onClick={handleClick}>{title} {total?`(${total})`:""} <FieldHint {...hint} /></button>
+    <button type="button" className={className} onClick={handleClick}>{title} {counter?`(${counter})`:""} <FieldHint {...hint} /></button>
   );
 };
 
@@ -67,7 +67,7 @@ export class FieldsTabs extends PureComponent {
       return {
         name: field.name,
         title: (field.mapping && field.mapping.value)?field.mapping.value:field.name,
-        total: Array.isArray(field.data)?field.data.length:0,
+        counter: Array.isArray(field.data)?field.data.length:0,
         hint: field.mapping?{
           show: !!field.mapping.value && !!field.mapping.hint,
           value: field.mapping.hint,

@@ -27,6 +27,7 @@ const getShareEmailToLink = () => {
 
 const initialState = {
   isReady: false,
+  info: null,
   showTermsShortNotice: typeof Storage === "undefined" || localStorage.getItem(TermsShortNoticeLocalStorageKey) !== "true",
   gridLayoutMode: true,
   shareEmailToLink: getShareEmailToLink()
@@ -54,6 +55,12 @@ const setLayoutMode = (state, action) => {
   });
 };
 
+const setInfo = (state, action) => {
+  return Object.assign({}, state, {
+    info: action.text
+  });
+};
+
 const updateShareEmailToLink = state => {
   return Object.assign({}, state, {
     shareEmailToLink: getShareEmailToLink()
@@ -68,6 +75,8 @@ export function reducer(state = initialState, action = {}) {
     return agreeTermsShortNotice(state, action);
   case types.SET_LAYOUT_MODE:
     return setLayoutMode(state, action);
+  case types.SET_INFO:
+    return setInfo(state, action);
   case types.LOAD_SEARCH_REQUEST:
   case types.LOAD_HIT_REQUEST:
   case types.CANCEL_HIT_LOADING:

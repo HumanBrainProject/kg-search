@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { withEventsSubscription} from "../../../withEventsSubscription";
+import { withFloatingScrollEventsSubscription} from "../../../withFloatingScrollEventsSubscription";
 import { ShareBar } from "../../../ShareBar";
 import { PaginationPanel } from "../PaginationPanel";
 import { GroupSelectionPanel } from "../GroupSelectionPanel";
@@ -33,9 +33,10 @@ const ResultsFooterComponent = ({isFloating}) => {
         <SignInButton/>
         <ShareBar/>
         <div className="kgs-space" />
+        <div className="kgs-space2" />
       </div>
     </div>
   );
 };
 
-export const ResultsFooter = withEventsSubscription(ResultsFooterComponent);
+export const ResultsFooter = withFloatingScrollEventsSubscription(ResultsFooterComponent);

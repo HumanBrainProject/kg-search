@@ -15,7 +15,6 @@
 */
 
 import React from "react";
-import { ActionBar, ActionBarRow } from "searchkit";
 import { HitStatsPanel } from "../HitStatsPanel";
 import { LayoutModeSwitcherToggle } from "../LayoutModeSwitcherToggle";
 import { SortByPanel } from "../SortByPanel";
@@ -24,13 +23,11 @@ import "./styles.css";
 export function ResultsHeader() {
   return (
     <div className="kgs-result-header">
-      <ActionBar>
-        <ActionBarRow>
-          <HitStatsPanel/>
-          <LayoutModeSwitcherToggle/>
-          <SortByPanel/>
-        </ActionBarRow>
-      </ActionBar>
+      <div>
+        <HitStatsPanel/>
+        <LayoutModeSwitcherToggle/>
+        <SortByPanel/>
+      </div>
     </div>
   );
 }

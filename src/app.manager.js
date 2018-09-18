@@ -17,7 +17,6 @@
 import { store, dispatch } from "./store";
 import * as actions from "./actions";
 import SearchManager from "./search.manager";
-import { isMobile, isFirefox } from "./Helpers/BrowserHelpers";
 import { generateKey, getAuthUrl } from "./Helpers/OIDCHelpers";
 
 export default class AppManager {
@@ -30,11 +29,6 @@ export default class AppManager {
     this.isEventFiredByBrowserNav = false;
     this.isEventFiredByAppNav = false;
     this.locationHref = window.location.href;
-
-    // Firefox css styling issue fix
-    if (isFirefox && !isMobile) {
-      document.body.setAttribute("isFirefox", true);
-    }
 
     // check initial hit reference in url
     const m = window.location.href.match(/(.*)#(.*)$/);
@@ -112,7 +106,7 @@ export default class AppManager {
     }
 
     //Remove the ability to scroll the body when the modal is open
-    this.setBodyScrolling(!state.hits.currentHit);
+    this.setBodyScrolling(!state.hits.currentHit && !state.application.info);
 
     // store detail view laucher button in order to set back focus to it when detail popup close
     this.manageHitFocus(state.hits.currentHit);

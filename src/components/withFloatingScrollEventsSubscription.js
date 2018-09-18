@@ -20,7 +20,7 @@ import { windowHeight } from "../Helpers/BrowserHelpers";
 
 const jQuerCollapsibleMenuQuerySelector = ".js-navbar-header";
 
-export function withEventsSubscription(WrappedComponent) {
+export function withFloatingScrollEventsSubscription(WrappedComponent) {
   class withEvents extends PureComponent {
     constructor(props) {
       super(props);
@@ -45,9 +45,9 @@ export function withEventsSubscription(WrappedComponent) {
       this.handleMutationEvent = this.handleMutationEvent.bind(this);
     }
     componentDidMount() {
-      window.addEventListener("scroll", this.handleScrollEvent);
-      window.addEventListener("resize", this.handleResizeEvent);
-      window.addEventListener("orientationchange", this.handleOrientationChangeEvent);
+      window.addEventListener("scroll", this.handleScrollEvent, false);
+      window.addEventListener("resize", this.handleResizeEvent, false);
+      window.addEventListener("orientationchange", this.handleOrientationChangeEvent, false);
       if (window.MutationObserver) {
         this.observer = new MutationObserver(this.handleMutationEvent);
         this.observer.observe(document.body, { attributes: true, childList: true });

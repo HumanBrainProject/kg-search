@@ -73,7 +73,7 @@ body > header.navbar {
 /* Droid Sans, Gill Sans, Montserrat, Poppins, Proxima Nova fonts weight too heavy fix */
 @-moz-document url-prefix() {
     .kgs-app {
-        font-weight: lighter !important;
+        font-weight: 300 !important;
     }
 }
 
@@ -100,23 +100,28 @@ body > header.navbar {
     -ms-user-select: none;
     user-select: none;
 }
-[isFirefox="true"] .kgs-app input:not([disabled]):not([type="text"]):focus,
-[isFirefox="true"] .kgs-app button:not([disabled]):focus,
-[isFirefox="true"] .kgs-app a[href]:not([disabled]):focus,
-[isFirefox="true"] .kgs-app textarea:not([disabled]):focus,
-[isFirefox="true"] .kgs-app select:not([disabled]):focus,
-[isFirefox="true"] .kgs-app [tabindex]:not([tabindex="-1"]):focus {
-    /*
-    outline-color: #88C1FB;
-    outline-offset: -2px;
-    outline-style: auto;
-    outline-width: 5px;
-    */
-    outline-color: black;
-    outline-offset: -2px;
-    outline-style: dotted;
-    outline-width: 1px;
+
+/* Firefox fix */
+@-moz-document url-prefix() {
+    .kgs-app input:not([disabled]):not([type="text"]):focus,
+    .kgs-app button:not([disabled]):focus,
+    .kgs-app a[href]:not([disabled]):focus,
+    .kgs-app textarea:not([disabled]):focus,
+    .kgs-app select:not([disabled]):focus,
+    .kgs-app [tabindex]:not([tabindex="-1"]):focus {
+        /*
+        outline-color: #88C1FB;
+        outline-offset: -2px;
+        outline-style: auto;
+        outline-width: 5px;
+        */
+        outline-color: black;
+        outline-offset: -2px;
+        outline-style: dotted;
+        outline-width: 1px;
+    }
 }
+
 .kgs-app button * {
     cursor: pointer;
 }
