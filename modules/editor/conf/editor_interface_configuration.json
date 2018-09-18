@@ -73,7 +73,7 @@
             "http://hbp.eu/minds#methods": {
               "type": "DropdownSelect",
               "label": "Methods",
-              "instancesPath": "minds/experiment/methods/v0.0.4",
+              "instancesPath": "minds/experiment/method/v0.0.4",
               "mappingValue": "id",
               "mappingLabel": "label",
               "isLink": true,
