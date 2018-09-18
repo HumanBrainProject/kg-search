@@ -16,10 +16,9 @@
 */
 package helpers
 
-import common.models.{NexusInstance, NexusPath}
+import common.models.{NexusInstance, NexusPath, User}
 import editor.helper.InstanceHelper.{cleanUpInstanceForSave, generateAlternatives, getPriority, toReconcileFormat}
 import editor.models.IncomingLinksInstances
-import authentication.models.UserInfo
 import org.joda.time.DateTime
 import play.api.Logger
 import play.api.libs.json._
@@ -54,7 +53,7 @@ object ReconciledInstanceHelper {
                                   manualEntityToBestored: JsObject,
                                   originalEntitPath: NexusPath,
                                   newManualUpdateId: String,
-                                  userInfo: UserInfo,
+                                  userInfo: User,
                                   parentRevision: Int,
                                   parentId: String,
                                   token: String
@@ -84,7 +83,7 @@ object ReconciledInstanceHelper {
   def addReconciledMandatoryFields(
                                     originalInstance: JsObject,
                                     originalPath: NexusPath,
-                                    userInfo: UserInfo,
+                                    userInfo: User,
                                     parentId: String,
                                     parentRevision: Int = 1
                                   ): JsObject = {

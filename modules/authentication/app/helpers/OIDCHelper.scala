@@ -18,7 +18,7 @@ package authentication.helpers
 
 import common.helpers.ESHelper
 import common.helpers.ESHelper.filterNexusGroups
-import authentication.models.UserInfo
+import common.models.OIDCUser
 import play.api.mvc.{AnyContent, Request}
 
 object OIDCHelper {
@@ -39,7 +39,7 @@ object OIDCHelper {
     * @param hints The requested ES index
     * @return The requested ES index or the public index
     */
-  def getESIndex(userInfo: UserInfo, hints:String): String = {
+  def getESIndex(userInfo: OIDCUser, hints:String): String = {
     val groups = filterNexusGroups(userInfo.groups)
     val h = hints.trim
     if (groups.contains(h)) {

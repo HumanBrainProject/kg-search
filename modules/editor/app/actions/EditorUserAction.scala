@@ -20,7 +20,6 @@ package editor.actions
 import authentication.models.UserRequest
 import play.api.mvc._
 import play.api.mvc.Results._
-import com.google.inject.Inject
 import editor.helpers.EditorSpaceHelper
 import editor.models.EditorUserRequest
 import play.api.Logger

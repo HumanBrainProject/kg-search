@@ -17,14 +17,13 @@
 
 package editor.models
 
-import authentication.models.UserInfo
+import common.models.OIDCUser
 import play.api.mvc.{Request, WrappedRequest}
 
 /**
-  *
   * @param user
   * @param editorGroup
   * @param request
   * @tparam A
   */
-case class EditorUserRequest[A](user: UserInfo, editorGroup: String, request: Request[A]) extends WrappedRequest[A](request)
+case class EditorUserRequest[A](user: OIDCUser, editorGroup: String, request: Request[A]) extends WrappedRequest[A](request)

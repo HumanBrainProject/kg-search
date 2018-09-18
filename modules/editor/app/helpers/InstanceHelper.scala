@@ -19,11 +19,9 @@ package editor.helper
 
 
 import common.helpers.JsFlattener
-import common.models.NexusPath
+import common.models.{NexusInstance, NexusPath, User}
 import editor.helpers.{FormHelper, NavigationHelper}
 import editor.models.{InMemoryKnowledge, IncomingLinksInstances, ReleaseStatus}
-import authentication.models.UserInfo
-import common.models.NexusInstance
 import nexus.helpers.NexusHelper
 import org.joda.time.DateTime
 import org.json4s.native.{JsonMethods, JsonParser}
@@ -49,7 +47,7 @@ object InstanceHelper {
                                   originalInstance: NexusInstance,
                                   editorInstances: List[NexusInstance],
                                   updateToBeStoredInManual: JsObject,
-                                  user: UserInfo
+                                  user: User
                                 ): (NexusInstance, Option[List[UpdateInfo]]) = {
     logger.debug(s"Result from incoming links $editorInstances")
     val updatesByPriority = buildManualUpdatesFieldsFrequency(
@@ -250,7 +248,7 @@ object InstanceHelper {
     jsObject - ("@context") - ("@type") - ("links") - ("nxv:deprecated")
   }
 
-  def prepareManualEntityForStorage(manualEntity: JsObject, userInfo: UserInfo): JsObject = {
+  def prepareManualEntityForStorage(manualEntity: JsObject, userInfo: User): JsObject = {
     manualEntity.+("http://hbp.eu/manual#updater_id", JsString(userInfo.id))
       .+("http://hbp.eu/manual#update_timestamp", JsNumber(new DateTime().getMillis))
       .-("@context")

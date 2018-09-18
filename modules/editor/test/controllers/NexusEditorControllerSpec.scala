@@ -17,10 +17,9 @@ package editor.controllers
 
 import common.helpers.ConfigMock
 import common.helpers.ConfigMock._
-import common.models.{NexusInstance, NexusPath}
+import common.models.{NexusInstance, NexusPath, OIDCUser}
 import editor.helper.InstanceHelper
 import mockws.{MockWS, MockWSHelpers}
-import authentication.models.UserInfo
 import authentication.service.OIDCAuthService
 import editor.services.{InstanceService, ReleaseService}
 import nexus.services.NexusService
@@ -35,6 +34,7 @@ import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import play.api.mvc._
 import play.api.libs.ws.WSResponse
+import editor.services.EditorUserService
 
 import scala.concurrent.Future
 
@@ -77,12 +77,13 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
       val instanceService = mock[InstanceService]
 
       val oidcAuthService = mock[OIDCAuthService]
-      val userInfo = UserInfo("123", "name", "email", Seq("group1", "group2"))
+      val userInfo = new OIDCUser("123", "name", "email", Seq("group1", "group2"))
       val bodyParser = mock[BodyParsers.Default]
       val authMock = new TestAuthenticatedUserAction(bodyParser, authprovider = oidcAuthService, userInfo = userInfo)(ec)
       val nexusService = mock[NexusService]
       val releaseService = mock[ReleaseService]
-      val controller = new NexusEditorController(mockCC, authMock, instanceService, oidcAuthService, fakeApplication().configuration, nexusService, releaseService, ws)(ec)
+      val editorUserService = mock[EditorUserService]
+      val controller = new NexusEditorController(mockCC, authMock, instanceService, oidcAuthService, fakeApplication().configuration, nexusService, releaseService,editorUserService, ws)(ec)
       val response = controller.listInstances(datatype.org, datatype.domain, datatype.schema, datatype.version).apply(FakeRequest())
       val res = contentAsJson(response).as[JsObject]
       val arr = (res \ "data").as[List[JsObject]].map(js => js - "status" - "childrenStatus")
@@ -162,7 +163,7 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
       val mockCC = stubControllerComponents()
       val ec = global
       val oidcAuthService = mock[OIDCAuthService]
-      val userInfo = UserInfo("123", "name", "email", Seq("group1", "group2"))
+      val userInfo = new OIDCUser("123", "name", "email", Seq("group1", "group2"))
       val bodyParser = mock[BodyParsers.Default]
       val authMock = new TestAuthenticatedUserAction(bodyParser, authprovider = oidcAuthService, userInfo = userInfo)(ec)
       val nexusService = mock[NexusService]
@@ -170,7 +171,8 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
       val instanceService = new InstanceService(ws, nexusService, fakeApplication().configuration) {
         override def retrieveInstance(path: NexusPath, id: String, token: String, parameters: List[(String, String)]): Future[Either[WSResponse, NexusInstance]] = Future.successful(Right(NexusInstance(instance)))
       }
-      val controller = new NexusEditorController(mockCC, authMock, instanceService, oidcAuthService, fakeApplication().configuration, nexusService, releaseService, ws)(ec)
+      val editorUserService = mock[EditorUserService]
+      val controller = new NexusEditorController(mockCC, authMock, instanceService, oidcAuthService, fakeApplication().configuration, nexusService, releaseService, editorUserService, ws)(ec)
       val res = contentAsString(controller.getSpecificReconciledInstance(nexusPath.org, nexusPath.domain, nexusPath.schema, nexusPath.version, id, revision).apply(FakeRequest()))
       res mustBe s"""{"fields":{"id":{"value":{"path":"minds/core/activity/v0.0.4","nexus_id":"https://nexus-dev.humanbrainproject.org/v0/data/mindsreconciled/core/activity/v0.0.4/123"}},"http:%nexus-slash%%nexus-slash%schema.org%nexus-slash%name":{"type":"InputText","label":"Name","value":"365.A.e.#2"},"http:%nexus-slash%%nexus-slash%schema.org%nexus-slash%description":{"type":"TextArea","label":"Description","value":"The setting"},"http:%nexus-slash%%nexus-slash%hbp.eu%nexus-slash%minds#ethicsApproval":{"type":"DropdownSelect","label":"Approval","instancesPath":"minds/ethics/approval/v0.0.4","mappingValue":"id","mappingLabel":"label","isLink":true,"allowCustomValues":true,"value":[{"id":"minds/ethics/approval/v0.0.4/94383d63-7587-4bc0-a834-629a9be757e9"}]},"http:%nexus-slash%%nexus-slash%hbp.eu%nexus-slash%minds#ethicsAuthority":{"type":"DropdownSelect","label":"Authority","instancesPath":"minds/ethics/authority/v0.0.4","mappingValue":"id","mappingLabel":"label","isLink":true,"allowCustomValues":true,"value":[{"id":"minds/ethics/authority/v0.0.4/9bfc1378-44ca-4630-97b0-927266a0de73"}]},"http:%nexus-slash%%nexus-slash%hbp.eu%nexus-slash%minds#methods":{"type":"DropdownSelect","label":"Methods","instancesPath":"minds/experiment/methods/v0.0.4","mappingValue":"id","mappingLabel":"label","isLink":true,"allowCustomValues":true,"value":[{"id":"minds/experiment/method/v0.0.4/5481f012-fa64-4b0a-8614-648f09002519"}]},"http:%nexus-slash%%nexus-slash%hbp.eu%nexus-slash%minds#preparation":{"type":"DropdownSelect","label":"Preparation","instancesPath":"minds/core/preparation/v0.0.4","mappingValue":"id","mappingLabel":"label","isLink":true,"allowCustomValues":true,"value":[{"id":"minds/core/preparation/v0.0.4/33f9c5e0-0336-41c9-838a-e0a2dd74bd76"}]},"http:%nexus-slash%%nexus-slash%hbp.eu%nexus-slash%minds#protocols":{"type":"DropdownSelect","label":"Protocols","instancesPath":"minds/experiment/protocol/v0.0.4","mappingValue":"id","mappingLabel":"label","isLink":true,"allowCustomValues":true,"value":[{"id":"minds/experiment/protocol/v0.0.4/68f34f9a-37e3-48fd-a098-86c68e1fea9d"}]}},"label":"Activity","editable":true,"ui_info":{"labelField":"http://schema.org/name","promotedFields":["http://schema.org/name","http://schema.org/description"]},"alternatives":{},"back_link":"minds/core/activity"}"""
     }
