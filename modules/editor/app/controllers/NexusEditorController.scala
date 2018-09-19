@@ -57,7 +57,6 @@ class NexusEditorController @Inject()(
                                        config: Configuration,
                                        nexusService: NexusService,
                                        releaseService: ReleaseService,
-                                       editorUserService: EditorUserService,
                                        ws: WSClient
                                      )(implicit ec: ExecutionContext)
   extends AbstractController(cc) {

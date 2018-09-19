@@ -18,13 +18,17 @@ package editor.services
 
 import authentication.service.OIDCAuthService
 import com.google.inject.Inject
-import common.models.{EditorUser, NexusPath}
+import common.models.{EditorUser, Favorite, NexusPath}
+import editor.helper.InstanceHelper
 import helpers.ResponseHelper
 import nexus.services.NexusService
 import play.api.{Configuration, Logger}
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
+import play.api.http.HeaderNames._
+import play.api.http.ContentTypes._
+
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,15 +38,17 @@ class EditorUserService @Inject()(configuration: Configuration, wSClient: WSClie
   val logger = Logger(this.getClass)
 
   def getUser(id: String): Future[Option[EditorUser]] = {
-    wSClient.url(s"$kgQueryEndpoint/query/").post(EditorUserService.kgQueryGetQuery()).map{
+    wSClient.url(s"$kgQueryEndpoint/query").withHttpHeaders(CONTENT_TYPE -> JSON).post(EditorUserService.kgQueryGetQuery()).map{
       res => res.status match {
-        case OK => (res.json \ "results").as[List[EditorUser]].headOption
-        case _ => None
+        case OK => (res.json \ "results").as[List[EditorUser]].find(user => user.id == id)
+        case _ =>
+          logger.error(s"Could not fetch the user with ID $id " + res.body)
+          None
       }
     }
   }
 
-  def createUser(user: EditorUser): Future[WSResponse] = {
+  def createUser(userId: String): Future[Option[EditorUser]] = {
     oIDCAuthService.getTechAccessToken().flatMap {
       token =>
         // Create the user in the nexus
@@ -52,93 +58,81 @@ class EditorUserService @Inject()(configuration: Configuration, wSClient: WSClie
           EditorUserService.editorUserPath.domain,
           EditorUserService.editorUserPath.schema,
           EditorUserService.editorUserPath.version,
-          EditorUserService.userToNexusStruct(user),
+          EditorUserService.userToNexusStruct(userId),
           token
-        ).flatMap{
+        ).map{
           res =>
             res.status match {
               case OK | CREATED =>
-                val userId = (res.json \ "@id").as[String]
-                // Create all the favorite instance
-                Future.sequence(
-                  user.favorites.map { f =>
-                    val payload = EditorUserService.favoriteToNexusStruct(s"$nexusEndpoint/v0/data/$f", userId)
-                    nexusService.insertInstance(
-                      nexusEndpoint,
-                      EditorUserService.favoritePath.org,
-                      EditorUserService.favoritePath.domain,
-                      EditorUserService.favoritePath.schema,
-                      EditorUserService.favoritePath.version,
-                      payload,
-                      token
-                    )
-                  }
-                ).map{resList =>
-                  val (successes, failures) = resList.span(el => el.status == OK || el.status == CREATED)
-                  if(failures.isEmpty) {
-                    successes.head
-                  } else {
-                    failures.foreach(el => logger.error(el.body))
-                    failures.head
-                  }
-                }
-              case _ => Future {res}
+                val nexusId = (res.json \ "@id").as[String]
+                Some(EditorUser(nexusId, userId, Seq()))
+              case _ => None
             }
         }
     }
   }
 
-  def addFavorite(userId: String, instance: String): Future[WSResponse] = {
+  def addFavorite(userId: String, instance: String): Future[Option[Favorite]] = {
     oIDCAuthService.getTechAccessToken().flatMap {
       token =>
-        val payload = EditorUserService.favoriteToNexusStruct(s"$nexusEndpoint/v0/data/$instance", userId)
-        nexusService.insertInstance(
+        getUser(userId).flatMap{
+          case Some(user) =>
+            val payload = EditorUserService.favoriteToNexusStruct(s"$nexusEndpoint/v0/data/$instance", s"$nexusEndpoint/v0/data/${user.nexusId}")
+            nexusService.insertInstance(
+              nexusEndpoint,
+              EditorUserService.favoritePath.org,
+              EditorUserService.favoritePath.domain,
+              EditorUserService.favoritePath.schema,
+              EditorUserService.favoritePath.version,
+              payload,
+              token
+            ).map{
+              res => res.status match{
+                case CREATED => Some(Favorite((res.json \ "@id").as[String].split("v0/data").last, instance))
+                case _ =>
+                  logger.error("Error while creating a favorite " + res.body)
+                  None
+              }
+            }
+          case None =>
+            logger.error("Error while creating a favorite. User not found")
+            Future{None}
+        }
+
+    }
+  }
+
+  def removeFavorite(favoriteId : String): Future[WSResponse] = {
+    oIDCAuthService.getTechAccessToken().flatMap {
+      token =>
+        nexusService.deprecateInstance(
           nexusEndpoint,
           EditorUserService.favoritePath.org,
           EditorUserService.favoritePath.domain,
           EditorUserService.favoritePath.schema,
           EditorUserService.favoritePath.version,
-          payload,
+          favoriteId,
           token
         )
     }
   }
 
-//  def removeFavorite(userId: String, instance: String): Future[WSResponse] = {
-//    oIDCAuthService.getTechAccessToken().flatMap {
-//      token =>
-//        val payload = EditorUserService.favoriteToNexusStruct(s"$nexusEndpoint/v0/data/$instance", userId)
-//        nexusService.deprecateInstance(
-//          nexusEndpoint,
-//          EditorUserService.favoritePath.org,
-//          EditorUserService.favoritePath.domain,
-//          EditorUserService.favoritePath.schema,
-//          EditorUserService.favoritePath.version,
-//          payload,
-//          token
-//        )
-//    }
-//  }
-
-  def getOrCreate(user: EditorUser): Future[Option[EditorUser]] = {
-    this.getUser(user.id).flatMap{
-      case None => this.createUser(user).map{ res =>
-        res.status match {
-          case OK | CREATED => Some(user)
-          case _ => None
-        }
-      }
+  def getOrCreate(userId: String ): Future[Option[EditorUser]] = {
+    this.getUser(userId).flatMap{
+      case None => this.createUser(userId)
       case Some(u) => Future{Some(u)}
     }
   }
+
+
 }
 
 object EditorUserService {
   val editorUserPath = NexusPath("kgeditor", "core", "user", "v0.0.2")
-  val favoritePath = NexusPath("kgeditor", "core", "favorite", "v0.0.1")
+  val favoritePath = NexusPath("kgeditor", "core", "favorite", "v0.0.2")
 
   def kgQueryGetQuery() =
-    """
+    s"""
       |{
       |  "@context": {
       |    "@vocab": "http://schema.hbp.eu/graph_query/",
@@ -166,8 +160,13 @@ object EditorUserService {
       |    }
       |  },
       |  "schema:name": "",
-      |  "root_schema": "nexus_instance:${instance}",
+      |  "root_schema": "nexus_instance:${editorUserPath.toString()}",
       |  "fields": [
+      |    {
+      |      "fieldname": "nexusId",
+      |      "required": true,
+      |      "relative_path": "@id"
+      |    },
       |    {
       |      "fieldname": "id",
       |      "required": true,
@@ -180,22 +179,24 @@ object EditorUserService {
       |                "@id": "kgeditor:user",
       |                "reverse":true
       |            },
-      |            "kgeditor:instance"
+      |            "kgeditor:instance",
+      |            "@id"
       |        ]
       |    }
       |  ]
       |}
     """.stripMargin
 
-  def userToNexusStruct(user: EditorUser) = {
+  def userToNexusStruct(userId: String) = {
     Json.obj(
-      "http://schema.org/identifier" -> user.id,
+      "http://schema.org/identifier" -> userId,
       "@type" -> "http://hbp.eu/kgeditor/User"
     )
   }
 
   def favoriteToNexusStruct(favorite: String, userNexusId: String) = {
     Json.obj(
+      "http://schema.org/identifier" -> InstanceHelper.md5HashString(userNexusId + favorite),
       "http://hbp.eu/kgeditor/user" -> Json.obj("@id" -> s"$userNexusId"),
       "http://hbp.eu/kgeditor/instance" -> Json.obj("@id" -> s"$favorite"),
       "@type" -> "http://hbp.eu/kgeditor/Favorite"

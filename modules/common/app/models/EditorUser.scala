@@ -14,26 +14,32 @@
 *   limitations under the License.
 */
 package common.models
+
 import play.api.libs.json._
 
 
-case class EditorUser(id: String, favorites: Seq[String] ) {
-
-}
+case class EditorUser(nexusId: String, id: String, favorites: Seq[Favorite])
 
 object EditorUser {
+
+
   import play.api.libs.functional.syntax._
+
+
   implicit val editorUserWrites = new Writes[EditorUser] {
     def writes(user: EditorUser) = Json.obj(
+      "nexusId" -> user.nexusId,
       "id" -> user.id,
-      "favorites" -> user.favorites
+      "favorites" -> Json.toJson(user.favorites)
     )
   }
 
   implicit val editorUserReads: Reads[EditorUser] = (
-    (JsPath \ "id").read[String] and
-      (JsPath \ "favorites").read[Seq[String]]
-  )(EditorUser.apply _)
+    (JsPath \ "nexusId").read[String] and
+      (JsPath \ "id").read[String] and
+      (JsPath \ "favorites").read[Seq[Favorite]]
+        .orElse(Reads.pure(Seq[Favorite]()))
+        .flatMap(seq => Reads.pure(seq.map(fav => fav.copy(nexusId = fav.nexusId.split("v0/data/").last))))
+    ) (EditorUser.apply _)
 
 }
-

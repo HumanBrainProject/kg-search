@@ -335,6 +335,11 @@ class NexusService @Inject()(wSClient: WSClient, config:Configuration)(implicit 
       }
     }
   }
+
+  def deprecateInstance(nexusEndpoint: String, org: String, domain: String, schema: String, version: String, id: String, token: String): Future[WSResponse] = {
+    val instanceUrl = s"${nexusEndpoint}/v0/data/${org}/${domain}/${schema.toLowerCase}/${version}/${id}"
+    wSClient.url(instanceUrl).withHttpHeaders("Authorization" -> token).delete()
+  }
 }
 
 object NexusService {
