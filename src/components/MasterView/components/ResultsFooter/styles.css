@@ -18,8 +18,6 @@
     display: block;
     position: relative;
     width: 100%;
-    background-color: #f4f4f4;
-    transform: translate3d(0,0,0);
 }
 
 .kgs-result-footer.is-fixed-position {
@@ -46,6 +44,7 @@
 
 .kgs-result-footer.is-fixed-position .kgs-result-footer-nav {
     padding: 14px 20px;
+    background-color: #f4f4f4;
 }
 
 .kgs-result-footer-nav .kgs-paging {
@@ -175,64 +174,6 @@
 }
 
 @media (min-width:992px) {
-    .kgs-result-footer.is-fixed-position .kgs-result-footer-nav {
-        display: -ms-grid;
-        display: grid;
-        -ms-grid-columns: min-content min-content min-content min-content min-content auto min-content;
-        grid-template-columns: min-content min-content min-content min-content min-content auto min-content;
-        grid-template-areas: "login space group space2 paging space3 share"
-                             "space4 space4 space4 space4 space5 space6 space7";
-    }
-
-    .kgs-result-footer.is-fixed-position .kgs-result-footer-nav .kgs-paging {
-        -ms-grid-column: 5;
-        -ms-grid-row: 1;
-        -ms-grid-column-span: 1;
-        min-width: 290px;
-    }
-
-    .kgs-result-footer.is-fixed-position .kgs-result-footer-nav .kgs-group-selection {
-        -ms-grid-column: 3;
-        -ms-grid-row: 1;
-        margin-top: 0;
-        padding-left: 15px;
-    }
-
-    .kgs-result-footer.is-fixed-position .kgs-result-footer-nav .kgs-sign-in {
-        -ms-grid-column: 1;
-        -ms-grid-row: 1;
-        margin-top: 0;
-    }
-
-    .kgs-result-footer.is-fixed-position .kgs-result-footer-nav .kgs-share-links {
-        -ms-grid-column: 7;
-        -ms-grid-row: 1;
-        margin-top: 0;
-        padding-left: 0;
-    }
-
-    .kgs-result-footer.is-fixed-position .kgs-result-footer-nav .kgs-space {
-        -ms-grid-column: 1;
-        -ms-grid-row: 2;
-        -ms-grid-column-span: 4;
-        grid-area: space4;
-        display: block;
-        width: 430px;
-        height: 0;
-    }
-
-    .kgs-result-footer.is-fixed-position .kgs-result-footer-nav .kgs-space2 {
-        -ms-grid-column: 4;
-        -ms-grid-row: 1;
-        grid-area: space2;
-        display: block;
-        width: 30px;
-        height: 0;
-    }
-}
-
-@media (min-width:1200px) {
-    .kgs-result-footer.is-fixed-position .kgs-result-footer-nav, 
     .kgs-result-footer-nav {
         display: -ms-grid;
         display: grid;
@@ -242,15 +183,12 @@
                              "space4 space4 space4 space4 space5 space6 space7";
     }
 
-    .kgs-result-footer.is-fixed-position .kgs-result-footer-nav .kgs-paging, 
     .kgs-result-footer-nav .kgs-paging {
         -ms-grid-column: 5;
         -ms-grid-row: 1;
         -ms-grid-column-span: 1;
-        min-width: 430px;
     }
 
-    .kgs-result-footer.is-fixed-position .kgs-result-footer-nav .kgs-group-selection,
     .kgs-result-footer-nav .kgs-group-selection {
         -ms-grid-column: 3;
         -ms-grid-row: 1;
@@ -258,14 +196,12 @@
         padding-left: 15px;
     }
 
-    .kgs-result-footer.is-fixed-position .kgs-result-footer-nav .kgs-sign-in,
     .kgs-result-footer-nav .kgs-sign-in {
         -ms-grid-column: 1;
         -ms-grid-row: 1;
         margin-top: 0;
     }
 
-    .kgs-result-footer.is-fixed-position .kgs-result-footer-nav .kgs-share-links,
     .kgs-result-footer-nav .kgs-share-links {
         -ms-grid-column: 7;
         -ms-grid-row: 1;
@@ -273,7 +209,6 @@
         padding-left: 0;
     }
 
-    .kgs-result-footer.is-fixed-position .kgs-result-footer-nav .kgs-space,
     .kgs-result-footer-nav .kgs-space {
         -ms-grid-column: 1;
         -ms-grid-row: 2;
@@ -284,7 +219,6 @@
         height: 0;
     }
 
-    .kgs-result-footer.is-fixed-position .kgs-result-footer-nav .kgs-space2,
     .kgs-result-footer-nav .kgs-space2 {
         -ms-grid-column: 4;
         -ms-grid-row: 1;
@@ -295,16 +229,30 @@
     }
 }
 
-@media (min-width:1600px) {
-    .kgs-result-footer-nav .kgs-paging,
-    .kgs-result-footer.is-fixed-position .kgs-result-footer-nav .kgs-paging {
+.kgs-result-footer-nav .kgs-paging .sk-pagination-navigation .sk-toggle {
+    width: 100%;
+}
+
+@media (min-width:992px) {
+    .kgs-result-footer-nav .kgs-paging .sk-pagination-navigation .sk-toggle {
+        width: auto;
+    }
+}
+
+@media (min-width:1050px) {
+    .kgs-result-footer-nav .kgs-paging {
+        min-width: 400px;
+    }
+}
+
+@media (min-width:1200px) {
+    .kgs-result-footer-nav .kgs-paging {
         min-width: 550px;
     }
 }
 
-@media (min-width:1800px) {
-    .kgs-result-footer-nav .kgs-paging,
-    .kgs-result-footer.is-fixed-position .kgs-result-footer-nav .kgs-paging {
-        min-width: 670px;
+@media (min-width:1400px) {
+    .kgs-result-footer-nav .kgs-paging {
+        min-width: 680px;
     }
 }

@@ -146,16 +146,17 @@ export function withFloatingScrollEventsSubscription(WrappedComponent) {
       });
       if (localStorageChange || cookieChange || eventWasTriggered) {
         const floatingPosition = this.props.floatingPosition?this.props.floatingPosition.toLowerCase():null;
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
         if (floatingPosition === "top") {
-          if (document.documentElement.scrollTop < height) {
+          if (scrollTop < height) {
             this.setState({isFloating: false});
           } else {
             this.setState({isFloating: true});
           }
         } else if (floatingPosition === "bottom") {
-          const scrollDown = (document.documentElement.scrollTop - this.eventState.scrollTop) > 0;
+          const scrollDown = (scrollTop - this.eventState.scrollTop) > 0;
           const fixedLayout = document.documentElement.scrollHeight - this.eventState.scrollTop - windowHeight() < height;
-          this.eventState.scrollTop = document.documentElement.scrollTop;
+          this.eventState.scrollTop = scrollTop;
           if (scrollDown && fixedLayout) {
             this.setState({isFloating: false});
           } else if (!scrollDown && !fixedLayout) {

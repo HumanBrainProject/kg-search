@@ -63,11 +63,14 @@ body > header.navbar {
 }
 
 .kgs-app {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
     text-rendering: optimizeLegibility;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     font-weight: 400;
-    font-family: 'Montserrat', sans-serif;
+    /* font-family: 'Montserrat', sans-serif; */
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
 }
 
 /* Droid Sans, Gill Sans, Montserrat, Poppins, Proxima Nova fonts weight too heavy fix */

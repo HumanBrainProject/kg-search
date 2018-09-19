@@ -48,7 +48,7 @@ export class PaginationPanel extends PureComponent {
   }
   get pageScope() {
     const width = windowWidth();
-    return (width >= 1800)?3:(width >= 1600)?2:(width >= 1200)?1:0;
+    return (width >= 1400)?3:(width >= 1200)?2:(width >= 1050)?1:(width >= 992)?0:(width >= 750)?3:(width >= 650)?2:(width >= 460)?1:0;
   }
   updatePageScope() {
     this.setState({pageScope: this.pageScope});
