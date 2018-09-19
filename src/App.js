@@ -22,7 +22,6 @@ import { withTabKeyNavigation } from "./components/withTabKeyNavigation";
 import { SearchkitProvider } from "searchkit";
 import { MasterView } from "./components/MasterView";
 import { DetailView } from "./components/DetailView";
-import { TermsShortNotice } from "./components/TermsShortNotice";
 import { FetchingPanel } from "./components/FetchingPanel";
 import { ErrorPanel } from "./components/ErrorPanel";
 
@@ -75,7 +74,6 @@ export class App extends PureComponent {
     return (
       <div className="kgs-app">
         <Views manager={this.manager} />
-        <TermsShortNotice/>
         <FetchingPanel/>
         <ErrorPanel/>
         <InfoPanel/>
