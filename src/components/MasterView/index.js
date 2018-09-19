@@ -16,7 +16,6 @@
 
 import React from "react";
 import { withTabKeyNavigation } from "../withTabKeyNavigation";
-import { Layout, LayoutBody, LayoutResults } from "searchkit";
 import { SearchPanel } from "./components/SearchPanel";
 import { ShapesFilterPanel } from "./components/ShapesFilterPanel";
 import { FiltersPanel } from "./components/FiltersPanel";
@@ -34,7 +33,6 @@ const MasterViewComponent = () => {
   ];
 
   const resultFooterRelatedElements = [
-    {querySelector: ".sk-layout__body + .terms-short-notice", localStorageKey: "hbp.kgs-terms-conditions-consent"},
     {querySelector: ".main-content + hr + .container"},
     {querySelector: "footer.footer[role=\"contentinfo\"]"}
   ];
@@ -42,19 +40,17 @@ const MasterViewComponent = () => {
   //window.console.debug("MasterView rendering...");
   return (
     <div className="kgs-masterView">
-      <Layout>
-        <SearchPanel floatingPosition="top" relatedElements={searchPanelRelatedElements} />
-        <TermsShortNotice/>
-        <ShapesFilterPanel/>
-        <LayoutBody>
-          <FiltersPanel/>
-          <LayoutResults>
-            <ResultsHeader/>
-            <ResultsPanel/>
-            <ResultsFooter floatingPosition="bottom" relatedElements={resultFooterRelatedElements} />
-          </LayoutResults>
-        </LayoutBody>
-      </Layout>
+      <SearchPanel floatingPosition="top" relatedElements={searchPanelRelatedElements} />
+      <TermsShortNotice/>
+      <ShapesFilterPanel/>
+      <div className="kgs-masterView__panel">
+        <FiltersPanel/>
+        <div>
+          <ResultsHeader/>
+          <ResultsPanel/>
+        </div>
+      </div>
+      <ResultsFooter floatingPosition="bottom" relatedElements={resultFooterRelatedElements} />
     </div>
   );
 };

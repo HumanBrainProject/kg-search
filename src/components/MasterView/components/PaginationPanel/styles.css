@@ -57,6 +57,13 @@
     
 }
 
+@media (min-width: 576px) {
+    .kgs-paging .sk-pagination-navigation
+     {
+        text-align: left;
+    }
+}
+
 .kgs-paging .sk-pagination-navigation .sk-toggle-option {
     flex: none;
     background-color: white;
