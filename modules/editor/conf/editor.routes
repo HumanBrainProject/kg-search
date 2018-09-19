@@ -79,3 +79,70 @@ GET    /api/release/:org/:domain/:datatype/:version/:id             editor.contr
 #      description: "Ok"
 ###
 POST   /release                                          editor.controllers.NexusEditorController.releaseInstances
+
+
+###
+#  summary: Create the current user as an Editor User
+#  parameters:
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+#  responses:
+#    201:
+#      description: "Created"
+###
+POST   /user                                          editor.controllers.NexusEditorUserController.createCurrentUser
+
+###
+#  summary: Get the current user as an Editor User
+#  parameters:
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+#  responses:
+#    200:
+#      description: "Ok"
+###
+GET   /user                                          editor.controllers.NexusEditorUserController.getCurrentUser
+
+###
+#  summary: Create a new favorite for the the current user
+#  parameters:
+#  - in: body
+#    name: instanceId
+#    required: true
+#    description: the instance to be added as favorite
+#    schema:
+#      type: object
+#      properties:
+#        instanceId:
+#          type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+#  responses:
+#    201:
+#      description: "Created"
+###
+POST   /user/favorite          editor.controllers.NexusEditorUserController.addFavorite
+
+
+###
+#  summary: Remove a favorite
+#  parameters:
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+#  responses:
+#    200:
+#      description: "Ok"
+###
+DELETE   /user/favorite/:org/:domain/:datatype/:version/:id           editor.controllers.NexusEditorUserController.deleteFavorite(org: String, domain:String, datatype: String, version:String, id: String)

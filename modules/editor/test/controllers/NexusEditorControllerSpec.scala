@@ -17,10 +17,9 @@ package editor.controllers
 
 import common.helpers.ConfigMock
 import common.helpers.ConfigMock._
-import common.models.{NexusInstance, NexusPath}
+import common.models.{NexusInstance, NexusPath, OIDCUser}
 import editor.helper.InstanceHelper
 import mockws.{MockWS, MockWSHelpers}
-import authentication.models.UserInfo
 import authentication.service.OIDCAuthService
 import editor.services.{InstanceService, ReleaseService}
 import nexus.services.NexusService
@@ -35,6 +34,7 @@ import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import play.api.mvc._
 import play.api.libs.ws.WSResponse
+import editor.services.EditorUserService
 
 import scala.concurrent.Future
 
@@ -77,7 +77,7 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
       val instanceService = mock[InstanceService]
 
       val oidcAuthService = mock[OIDCAuthService]
-      val userInfo = UserInfo("123", "name", "email", Seq("group1", "group2"))
+      val userInfo = new OIDCUser("123", "name", "email", Seq("group1", "group2"))
       val bodyParser = mock[BodyParsers.Default]
       val authMock = new TestAuthenticatedUserAction(bodyParser, authprovider = oidcAuthService, userInfo = userInfo)(ec)
       val nexusService = mock[NexusService]
@@ -162,7 +162,7 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
       val mockCC = stubControllerComponents()
       val ec = global
       val oidcAuthService = mock[OIDCAuthService]
-      val userInfo = UserInfo("123", "name", "email", Seq("group1", "group2"))
+      val userInfo = new OIDCUser("123", "name", "email", Seq("group1", "group2"))
       val bodyParser = mock[BodyParsers.Default]
       val authMock = new TestAuthenticatedUserAction(bodyParser, authprovider = oidcAuthService, userInfo = userInfo)(ec)
       val nexusService = mock[NexusService]

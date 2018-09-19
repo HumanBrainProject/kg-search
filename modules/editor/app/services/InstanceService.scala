@@ -21,11 +21,10 @@ import java.net.URLEncoder
 import java.security.Policy.Parameters
 
 import com.google.inject.Inject
-import common.models.{NexusInstance, NexusPath}
+import common.models.{NexusInstance, NexusPath, User}
 import editor.helper.InstanceHelper._
 import editor.models.{InMemoryKnowledge, IncomingLinksInstances}
 import helpers.ReconciledInstanceHelper
-import authentication.models.UserInfo
 import editor.controllers.NexusEditorController
 import editor.helper.InstanceHelper
 import editor.helpers.{FormHelper, NavigationHelper}
@@ -194,7 +193,7 @@ class InstanceService @Inject()(wSClient: WSClient,
   def upsertUpdateInManualSpace(
                                  destinationOrg: String,
                                  manualEntitiesDetailsOpt: Option[List[UpdateInfo]],
-                                 userInfo: UserInfo,
+                                 userInfo: User,
                                  instancePath: NexusPath,
                                  manualEntity: JsObject,
                                  token: String
@@ -261,7 +260,7 @@ class InstanceService @Inject()(wSClient: WSClient,
                                 manualEntityId: String,
                                 updatedValue: JsObject,
                                 token: String,
-                                userInfo: UserInfo
+                                userInfo: User
                               ): Future[WSResponse] = {
 
     val parentId = (originalInstance.content \ "@id").as[String]
@@ -280,7 +279,7 @@ class InstanceService @Inject()(wSClient: WSClient,
                                 manualEntityId: String,
                                 updatedValue: JsObject,
                                 token: String,
-                                userInfo: UserInfo
+                                userInfo: User
                               ): Future[WSResponse] = {
     val parentRevision = (originalInstance.content \ "nxv:rev").as[Int]
     val parentId = (originalInstance.content \ "@id").as[String]

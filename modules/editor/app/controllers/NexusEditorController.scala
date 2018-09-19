@@ -21,7 +21,7 @@ import akka.util.ByteString
 import common.helpers.BlazegraphHelper
 import common.helpers.ResponseHelper._
 import editor.helper.InstanceHelper._
-import common.models.{NexusInstance, NexusPath}
+import common.models.{NexusInstance, NexusPath, User}
 import editor.actions.EditorUserAction
 import editor.helper.InstanceHelper
 import editor.helpers.{EditorSpaceHelper, FormHelper, NavigationHelper, NodeTypeHelper}
@@ -29,7 +29,7 @@ import editor.models._
 import authentication.helpers.OIDCHelper
 import helpers.{ReconciledInstanceHelper, ResponseHelper}
 import javax.inject.{Inject, Singleton}
-import authentication.models.{AuthenticatedUserAction, UserInfo, UserRequest}
+import authentication.models.{AuthenticatedUserAction, UserRequest}
 import authentication.service.OIDCAuthService
 import editor.actions.EditorUserAction
 import play.api.{Configuration, Logger}
@@ -40,9 +40,8 @@ import play.api.libs.json.Reads._
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.mvc._
-import editor.services.InstanceService
+import editor.services.{EditorUserService, InstanceService, ReleaseService}
 import nexus.services.NexusService
-import editor.services.ReleaseService
 
 import scala.concurrent.duration._
 import scala.concurrent.duration.FiniteDuration
@@ -660,7 +659,7 @@ class NexusEditorController @Inject()(
 
 object NexusEditorController {
 
-  def preppingEntitesForSave(nexusEndpoint: String, formValues: JsValue, cleanInstance: JsObject, currentlyDisplayedInstance: NexusInstance, originalPath:NexusPath, originLink: String, userInfo: UserInfo, reconciledPrefix: String, instanceService: InstanceService, token:String) = {
+  def preppingEntitesForSave(nexusEndpoint: String, formValues: JsValue, cleanInstance: JsObject, currentlyDisplayedInstance: NexusInstance, originalPath:NexusPath, originLink: String, userInfo: User, reconciledPrefix: String, instanceService: InstanceService, token:String) = {
     val updateFromUI = Json.parse(FormHelper.unescapeSlash(formValues.toString())).as[JsObject] - "id"
     val updatedInstance = buildInstanceFromForm(cleanInstance, updateFromUI, nexusEndpoint)
     val diffEntity = buildDiffEntity(currentlyDisplayedInstance, updatedInstance.toString, cleanInstance) +

@@ -15,7 +15,7 @@
 *   limitations under the License.
 */
 
-package authentication.models
+package common.models
 
 import play.api.libs.json.JsObject
 
@@ -26,8 +26,10 @@ import play.api.libs.json.JsObject
   * @param email
   * @param groups
   */
-case class UserInfo(id: String, name:String, email:String, groups:Seq[String])
-object UserInfo {
+class OIDCUser(val id: String,val name:String, val email:String, val groups:Seq[String]) extends User with Serializable {
+
+}
+object OIDCUser {
 
   val idLabel = "sub"
   val nameLabel = "name"
@@ -36,13 +38,15 @@ object UserInfo {
   val mandatoryFields = Seq(idLabel, nameLabel, emailLabel, groupsLabel)
 
   def apply(json: JsObject) = {
-    new UserInfo(
+    new OIDCUser(
       id = (json \ idLabel).asOpt[String].getOrElse(""),
       name = (json \ nameLabel).asOpt[String].getOrElse(""),
       email = (json \ emailLabel).asOpt[String].getOrElse(""),
       groups = (json \ groupsLabel).asOpt[String].getOrElse("").split(",").toSeq
     )
   }
+
+  def unapply(arg: OIDCUser): Option[(String, String, String, Seq[String])] = Some((arg.id, arg.name, arg.email, arg.groups))
 
 
 }

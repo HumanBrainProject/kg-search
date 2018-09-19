@@ -13,15 +13,26 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package authentication.models
+package common.models
 
-import common.models.OIDCUser
-import play.api.mvc.{Request, WrappedRequest}
+import play.api.libs.json._
 
-/**
-  * A helper case class for logged in users
-  * @param user
-  * @param request
-  * @tparam A
-  */
-class UserRequest[A](val user: OIDCUser, request: Request[A]) extends WrappedRequest[A](request)
+case class Favorite(nexusId: String, instanceId: String)
+
+object Favorite {
+
+    import play.api.libs.functional.syntax._
+
+    implicit val editorUserWrites = new Writes[Favorite] {
+      def writes(favorite: Favorite): JsObject = Json.obj(
+        "nexusId" -> favorite.nexusId.split("v0/data/").last,
+        "instanceId" -> favorite.instanceId,
+      )
+    }
+    implicit val editorUserReads: Reads[Favorite] = (
+      (JsPath \ "nexusId").read[String] and
+        (JsPath \ "instanceId").read[String]
+      ) (Favorite.apply _)
+
+}
+
