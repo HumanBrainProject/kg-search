@@ -623,15 +623,39 @@ class NexusEditorController @Inject()(
     * @param id
     * @return
     */
-  def releaseStatus(
+  def releaseInstance(
                      org: String, domain: String, schema: String, version: String, id:String
                    ): Action[AnyContent] = Action.async { implicit request =>
-    releaseService.releaseStatus(org, domain, schema, version, id).map{
+    releaseService.releaseInstance(org, domain, schema, version, id).map{
       case Left(None) => ResponseHelper.errorResultWithBackLink(NOT_FOUND, request.headers.toMap, "Could not find main instance.", NexusPath(org, domain,schema, version), reconciledPrefix)
       case Left(Some(res)) => ResponseHelper.forwardResultResponse(res)
       case Right(data) => Ok(Json.toJson(data))
     }
 
+  }
+
+  def releaseStatus(): Action[AnyContent] = Action.async { implicit request =>
+    request.body.asJson match {
+      case Some(json) =>
+        val instances = json.as[List[String]]
+        val futList = instances.map { id =>
+          val path = id.split("/")
+          releaseService.releaseStatus(path(0), path(1), path(2), path(3), path(4))
+        }
+        val array: Future[List[JsObject]] = Future.sequence(futList).map {
+          _.foldLeft(List[JsObject]()) {
+            (arr, response) =>
+              response match {
+                case Left((id, res)) => arr.+:(Json.obj("id" -> id, "error" -> res.body))
+                case Right(json) => arr.+:(json)
+              }
+          }
+        }
+        array.map(l => Ok(Json.toJson(l)))
+      case None => Future {
+        BadRequest("No data provided")
+      }
+    }
   }
 
   /**

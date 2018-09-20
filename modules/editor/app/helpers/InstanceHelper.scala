@@ -284,7 +284,7 @@ object InstanceHelper {
       val formattedId = NexusPath(url)
         .originalPath(reconciledSuffix)
         .toString() + "/" + id
-      Json.obj("id" -> formattedId, "description" -> description, "label" -> name, "status" -> ReleaseStatus.getRandomStatus(), "childrenStatus" -> ReleaseStatus.getRandomChildrenStatus())
+      Json.obj("id" -> formattedId, "description" -> description, "label" -> name)
     }
     Json.toJson(arr)
   }
