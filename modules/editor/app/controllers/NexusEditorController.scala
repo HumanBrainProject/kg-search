@@ -40,8 +40,9 @@ import play.api.libs.json.Reads._
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.mvc._
-import editor.services.{EditorUserService, InstanceService, ReleaseService}
+import editor.services.{InstanceService, ReleaseService}
 import nexus.services.NexusService
+import editor.services.ArangoQueryService
 
 import scala.concurrent.duration._
 import scala.concurrent.duration.FiniteDuration
@@ -57,6 +58,7 @@ class NexusEditorController @Inject()(
                                        config: Configuration,
                                        nexusService: NexusService,
                                        releaseService: ReleaseService,
+                                       arangoQueryService: ArangoQueryService,
                                        ws: WSClient
                                      )(implicit ec: ExecutionContext)
   extends AbstractController(cc) {
@@ -454,162 +456,20 @@ class NexusEditorController @Inject()(
       Ok(form)
   }
 
-  def getReleaseDataStructure(org: String, domain: String, schema: String, version: String, id:String) = Action {
-    implicit request =>
-      val res = s"""
-          |{
-          |   "label": "My Dataset to be released",
-          |   "type": "Dataset",
-          |   "status": ${ReleaseStatus.getRandomStatus()},
-          |   "id": "8667ujt"
-          |   "children": [
-          |     {
-          |         "linkType": ["activity"],
-          |         "label": "My Activity",
-          |         "type": "Activity",
-          |         "status": ${ReleaseStatus.getRandomStatus()},
-          |         "id": "4rz54564"
-          |         "children": []
-          |     },
-          |     {
-          |         "linkType": ["activity"],
-          |         "label": "My 2nd Activity ",
-          |         "type": "Activity",
-          |         "status": ${ReleaseStatus.getRandomStatus()},
-          |         "id": "7548"
-          |         "children": [
-          |             {
-          |                 "linkType": ["specimenGroup"],
-                  |         "label": "My SpecimenGroup" ,
-                  |         "type": "SpecimenGroup",
-                  |         "status": ${ReleaseStatus.getRandomStatus()},
-                  |         "id": "876543"
-                  |         "children": [
-          |                   {
-                  |
-            |                   "linkType": "Subject",
-            |                   "label": "My Subject",
-            |                   "type": "Subject",
-            |                   "status": ${ReleaseStatus.getRandomStatus()},
-            |                   "id": "621634"
-            |                   "children": []
-            |                   }
-          |                 ]
-                  |     }
-          |         ]
-          |     },
-          |     {
-          |       "linkType": ["owner",  "contributor"],
-        |         "label": "John Doe",
-        |         "type": "Person",
-        |         "status": ${ReleaseStatus.getRandomStatus()},
-        |         "id": "53454354"
-        |         "children": []
-          |     },
-          |     {
-          |       "linkType": ["contributor"],
-          |         "label": "Jane Doe",
-          |         "type": "Person",
-          |         "status": ${ReleaseStatus.getRandomStatus()},
-          |         "id": "32321"
-          |         "children": []
-          |     }
-          |   ]
-          |}
-        """.stripMargin
-      Ok(Json.parse(res))
-  }
-
-  // TODO Check for authentication and groups as for now everybody could see the whole graph
-  def listWithBlazeGraph(privateSpace: String): Action[AnyContent] = Action.async { implicit request =>
-    val sparqlPayload =
-      s"""
-         |SELECT ?schema  WHERE {
-         |  ?instance a <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/Instance> .
-         |  ?instance <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/deprecated> false .
-         |  ?instance <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/schema> ?schema .
-         |  ?schema <$nexusEndpoint/vocabs/nexus/core/terms/v0.1.0/organization> <$nexusEndpoint/v0/organizations/$privateSpace> .
-         |}GROUP BY ?schema
-      """.stripMargin
-    val start = System.currentTimeMillis()
-    val res = ws
-      .url(s"$sparqlEndpoint/bigdata/namespace/$blazegraphNameSpace/sparql")
-      .withQueryStringParameters("query" -> sparqlPayload, "format" -> "json").get().map[Result] {
-      res =>
-        res.status match {
-          case OK =>
-            val arr = BlazegraphHelper.extractResult(res.json)
-            val duration = System.currentTimeMillis() - start
-            println(s"sparql query: \n$sparqlPayload\n\nduration: ${duration}ms")
-            Ok(NodeTypeHelper.formatNodetypeList(arr))
-          case _ =>
-            ResponseHelper.forwardResultResponse(res)
-        }
-    }
-    res
-  }
-
   def listEntities(privateSpace: String): Action[AnyContent] = Action {
     // Editable instance types are the one for which form creation is known
     Ok(FormHelper.editableEntitiyTypes)
   }
 
-  def idFormat(id : String): String= {
-    val l = id.split("/")
-    val path = l.head.replaceAll("-", "/").replaceAll("_",".")
-    val i = l.last
-    s"$path/$i"
-  }
+
 
   def graphEntities(
                      org: String, domain: String, schema: String, version: String, id:String, step: Int
-                   ): Action[AnyContent] = Action.async {
-
-    ws.url(s"${kgQueryEndpoint}/arango/graph/$org/$domain/$schema/$version/$id?step=$step").addHttpHeaders(CONTENT_TYPE -> "application/json").get().map{
-      allRelations =>
-        allRelations.status match {
-          case OK =>
-            val camelCase = """(?=[A-Z])"""
-            val j = allRelations.json.as[List[JsObject]]
-            val edges: List[JsObject] = j.flatMap(el =>
-              (el \ "edges").as[List[JsObject]].map { j =>
-                val id = (j \ "_id").as[String]
-                val titleRegex = id.split("/").head
-                val title = titleRegex.splitAt(titleRegex.lastIndexOf("-"))._2.substring(1).replaceAll("_", " ").split(camelCase).mkString(" ").capitalize
-                Json.obj(
-                  "source" -> idFormat((j \ "_from").as[String]),
-                  "target" -> idFormat((j \ "_to").as[String]),
-                  "id" -> id,
-                  "title" -> title
-                )
-              }
-            ).distinct
-
-            val vertices = j.flatMap { el =>
-              val vertices = (el \ "vertices").as[List[JsValue]]
-              vertices.map {
-                case v: JsObject =>
-                  (v \ "@type").asOpt[String].map { d =>
-                    val dataType = d.split("#").last.capitalize
-                    val label = dataType.split(camelCase).mkString(" ")
-                    val title = if ((v \ "http://schema.org/name").asOpt[JsString].isDefined) {
-                      (v \ "http://schema.org/name").as[JsString]
-                    } else {
-                      Json.toJson(v)
-                    }
-                    Json.obj(
-                      "id" -> Json.toJson(idFormat((v \ "_id").as[String])),
-                      "name" -> JsString(label),
-                      "dataType" -> JsString(dataType),
-                      "title" -> title
-                    )
-                  }.getOrElse(JsNull)
-                case _ => JsNull
-              }.filter( v => v != JsNull).map(_.as[JsObject])
-            }.distinct
-            Ok(Json.obj("links" -> edges, "nodes" -> vertices))
-          case _ => ResponseHelper.forwardResultResponse(allRelations)
-        }
+                   ): Action[AnyContent] = authenticatedUserAction.async { implicit  request =>
+    val token = request.headers.toSimpleMap.get("Authorization").getOrElse("")
+    arangoQueryService.graphEntities(org,domain, schema, version, id, step, token).map{
+      case Right(json) => Ok(json)
+      case Left(response) => ResponseHelper.forwardResultResponse(response)
     }
   }
 
