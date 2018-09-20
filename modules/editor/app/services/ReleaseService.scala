@@ -18,6 +18,8 @@
 package editor.services
 
 import com.google.inject.Inject
+import common.models.NexusPath
+import nexus.services.NexusService
 import play.api.{Configuration, Logger}
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
@@ -29,14 +31,27 @@ import scala.concurrent.{ExecutionContext, Future}
 import play.api.mvc.Results._
 
 class ReleaseService @Inject()(ws: WSClient,
+                               nexusService: NexusService,
                               config: Configuration
                              )(implicit executionContext: ExecutionContext) {
   val kgQueryEndpoint: String = config.getOptional[String]("kgquery.endpoint").getOrElse("http://localhost:8600")
+  val reconciledPrefix: String = config.getOptional[String]("nexus.reconciled.prefix").getOrElse("reconciled")
   val logger = Logger(this.getClass)
 
-  def releaseInstance(org: String, domain: String, schema: String, version: String, id:String):Future[Either[Option[WSResponse],  collection.Map[String, JsValue]]] = {
+  def releaseInstance(nexusPath: NexusPath, id:String, token: String)
+  :Future[Either[Option[WSResponse],  collection.Map[String, JsValue]]] = {
+    val reconciledPath = nexusPath.reconciledPath(reconciledPrefix)
+    nexusService.getInstance(s"${nexusService.nexusEndpoint}/v0/data/${reconciledPath.toString()}/$id", token).flatMap{
+      res => res.status match {
+        case NOT_FOUND => this.getReleaseInstance(nexusPath, id)
+        case _ => this.getReleaseInstance(reconciledPath, id)
+      }
+    }
 
-    ws.url(s"${kgQueryEndpoint}/arango/release/$org/$domain/$schema/$version/$id").addHttpHeaders(CONTENT_TYPE -> JSON).get().map{
+  }
+
+  private def getReleaseInstance(nexusPath: NexusPath, id: String): Future[Either[Option[WSResponse],  collection.Map[String, JsValue]]] = {
+    ws.url(s"${kgQueryEndpoint}/arango/release/${nexusPath.toString()}/$id").addHttpHeaders(CONTENT_TYPE -> JSON).get().map{
       res => res.status match{
         case OK =>
           val item = res.json.as[JsObject]

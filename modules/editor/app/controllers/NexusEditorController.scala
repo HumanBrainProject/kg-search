@@ -486,7 +486,9 @@ class NexusEditorController @Inject()(
   def releaseInstance(
                      org: String, domain: String, schema: String, version: String, id:String
                    ): Action[AnyContent] = Action.async { implicit request =>
-    releaseService.releaseInstance(org, domain, schema, version, id).map{
+    val token = request.headers.toSimpleMap("Authorization")
+    val path = NexusPath(org, domain, schema, version)
+    releaseService.releaseInstance(path, id, token).map{
       case Left(None) => ResponseHelper.errorResultWithBackLink(NOT_FOUND, request.headers.toMap, "Could not find main instance.", NexusPath(org, domain,schema, version), reconciledPrefix)
       case Left(Some(res)) => ResponseHelper.forwardResultResponse(res)
       case Right(data) => Ok(Json.toJson(data))
