@@ -17,6 +17,7 @@ package editor.services
 
 import authentication.service.OIDCAuthService
 import com.google.inject.Inject
+import common.models.NexusPath
 import editor.helpers.FormHelper
 import nexus.services.NexusService
 import play.api.Configuration
@@ -34,17 +35,31 @@ class ArangoQueryService @Inject()(
                                     oIDCAuthService: OIDCAuthService
                                   )(implicit executionContext: ExecutionContext) {
   val kgQueryEndpoint: String = configuration.getOptional[String]("kgquery.endpoint").getOrElse("http://localhost:8600")
+  val reconciledPrefix: String = configuration.getOptional[String]("nexus.reconciled.prefix").getOrElse("reconciled")
 
   def graphEntities(org: String,
                     domain: String,
                     schema: String,
                     version: String,
                     id: String,
-                    step: Int
+                    step: Int,
+                    token: String
                    ): Future[Either[WSResponse, JsObject]] = {
-    // TODO Check if instance is from reconciled space
+    val path = NexusPath(org, domain, schema, version)
+    val reconciledPath = path.reconciledPath(reconciledPrefix)
+    nexusService.getInstance(s"${nexusService.nexusEndpoint}/v0/data/${reconciledPath.toString()}/$id", token).flatMap{
+      res => res.status match {
+        case NOT_FOUND => this.graph(path, id, step)
+        case OK => this.graph(reconciledPath, id, step)
+        case _ => Future{Left(res)}
+      }
+    }
+
+  }
+
+  private def graph(nexusPath: NexusPath, id:String, step:Int): Future[Either[WSResponse, JsObject]] = {
     wSClient
-      .url(s"${kgQueryEndpoint}/arango/graph/$org/$domain/$schema/$version/$id?step=$step")
+      .url(s"${kgQueryEndpoint}/arango/graph/${nexusPath.toString}/$id?step=$step")
       .addHttpHeaders(CONTENT_TYPE -> "application/json").get().map {
       allRelations =>
         allRelations.status match {
@@ -52,8 +67,8 @@ class ArangoQueryService @Inject()(
 
             val j = allRelations.json.as[List[JsObject]]
             val edges: List[JsObject] = j.flatMap { el =>
-                ArangoQueryService.formatEdges((el \ "edges").as[List[JsObject]])
-              }.distinct
+              ArangoQueryService.formatEdges((el \ "edges").as[List[JsObject]])
+            }.distinct
             val vertices = j.flatMap { el =>
               ArangoQueryService.formatVertices((el \ "vertices").as[List[JsValue]])
             }.distinct

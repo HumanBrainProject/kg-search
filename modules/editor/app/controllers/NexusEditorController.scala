@@ -465,9 +465,9 @@ class NexusEditorController @Inject()(
 
   def graphEntities(
                      org: String, domain: String, schema: String, version: String, id:String, step: Int
-                   ): Action[AnyContent] = authenticatedUserAction.async {
-
-    arangoQueryService.graphEntities(org,domain, schema, version, id, step).map{
+                   ): Action[AnyContent] = authenticatedUserAction.async { implicit  request =>
+    val token = request.headers.toSimpleMap.get("Authorization").getOrElse("")
+    arangoQueryService.graphEntities(org,domain, schema, version, id, step, token).map{
       case Right(json) => Ok(json)
       case Left(response) => ResponseHelper.forwardResultResponse(response)
     }
