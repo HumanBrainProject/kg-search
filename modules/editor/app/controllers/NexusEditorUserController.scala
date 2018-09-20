@@ -20,6 +20,7 @@ package editor.controllers
 import authentication.models.AuthenticatedUserAction
 import authentication.service.OIDCAuthService
 import com.google.inject.Inject
+import common.models.FavoriteGroup
 import editor.services.EditorUserService
 import helpers.ResponseHelper
 import play.api.Configuration
@@ -53,7 +54,8 @@ class NexusEditorUserController @Inject()(
 
   def addFavorite(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     val instanceId = (request.body.asJson.get \ "instanceId").as[String]
-    editorUserService.addFavorite(request.user.id, instanceId).map {
+    val favoriteGroupNexusId = (request.body.asJson.get \ "favoriteGroupNexusId").as[String]
+    editorUserService.addFavorite(favoriteGroupNexusId, instanceId).map {
       case Some(favorite) => Created(Json.toJson(favorite))
       case None => InternalServerError("An error occured while creating a favorite")
     }
@@ -65,4 +67,13 @@ class NexusEditorUserController @Inject()(
       res => ResponseHelper.forwardResultResponse(res)
     }
   }
+
+  def createFavoriteGroup(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
+    val name = (request.body.asJson.get \ "name").as[String]
+    editorUserService.createFavoriteGroup(name, request.user.id).map {
+      case Some(favoriteGroup) => Created(Json.toJson(favoriteGroup))
+      case None => InternalServerError("An error occured while creating a favorite group")
+    }
+  }
+
 }

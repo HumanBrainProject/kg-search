@@ -121,6 +121,8 @@ GET   /user                                          editor.controllers.NexusEdi
 #      properties:
 #        instanceId:
 #          type: string
+#        favoriteGroupNexusId:
+#           type: string
 #  - in: header
 #    name: Authorization
 #    description: Authorization token
@@ -146,3 +148,27 @@ POST   /user/favorite          editor.controllers.NexusEditorUserController.addF
 #      description: "Ok"
 ###
 DELETE   /user/favorite/:org/:domain/:datatype/:version/:id           editor.controllers.NexusEditorUserController.deleteFavorite(org: String, domain:String, datatype: String, version:String, id: String)
+
+
+###
+#  summary: Create a new favorite group for the the current user
+#  parameters:
+#  - in: body
+#    name: name
+#    required: true
+#    description: the name of the favorite group to create
+#    schema:
+#      type: object
+#      properties:
+#        name:
+#          type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+#  responses:
+#    201:
+#      description: "Created"
+###
+POST   /user/favoritegroup         editor.controllers.NexusEditorUserController.createFavoriteGroup

@@ -18,7 +18,7 @@ package common.models
 import play.api.libs.json._
 
 
-case class EditorUser(nexusId: String, id: String, favorites: Seq[Favorite])
+case class EditorUser(nexusId: String, id: String, favoriteGroups: Seq[FavoriteGroup])
 
 object EditorUser {
 
@@ -30,15 +30,15 @@ object EditorUser {
     def writes(user: EditorUser) = Json.obj(
       "nexusId" -> user.nexusId,
       "id" -> user.id,
-      "favorites" -> Json.toJson(user.favorites)
+      "favoriteGroups" -> Json.toJson(user.favoriteGroups)
     )
   }
 
   implicit val editorUserReads: Reads[EditorUser] = (
     (JsPath \ "nexusId").read[String] and
       (JsPath \ "id").read[String] and
-      (JsPath \ "favorites").read[Seq[Favorite]]
-        .orElse(Reads.pure(Seq[Favorite]()))
+      (JsPath \ "favoriteGroups").read[Seq[FavoriteGroup]]
+        .orElse(Reads.pure(Seq[FavoriteGroup]()))
         .flatMap(seq => Reads.pure(seq.map(fav => fav.copy(nexusId = fav.nexusId.split("v0/data/").last))))
     ) (EditorUser.apply _)
 
