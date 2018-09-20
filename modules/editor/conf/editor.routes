@@ -1,6 +1,6 @@
 GET    /api/nodetypes                  editor.controllers.NexusEditorController.listEntities( privateSpace: String ?= "minds")
 
-GET    /api/instances/:org/:domain/:datatype/:version         editor.controllers.NexusEditorController.listInstances(org: String, domain:String, datatype: String, version:String)
+GET    /api/instances/:org/:domain/:datatype/:version         editor.controllers.NexusEditorController.listInstances(org: String, domain:String, datatype: String, version:String, from:Int?=0, size:Int?=20)
 
 GET    /api/instance/:org/:domain/:datatype/:version/:id                 editor.controllers.NexusEditorController.getInstance(org: String, domain:String, datatype: String, version:String, id: String)
 GET    /api/instance/:org/:domain/:datatype/:version                 editor.controllers.NexusEditorController.getEmptyForm(org: String, domain:String, datatype: String, version:String)
@@ -49,7 +49,27 @@ GET    /api/graph/:org/:domain/:datatype/:version/:id   editor.controllers.Nexus
 #    required: false
 #    type: string
 ###
-GET    /api/release/:org/:domain/:datatype/:version/:id             editor.controllers.NexusEditorController.releaseStatus(org: String, domain:String, datatype: String, version:String, id: String )
+GET    /api/release/:org/:domain/:datatype/:version/:id             editor.controllers.NexusEditorController.releaseInstance(org: String, domain:String, datatype: String, version:String, id: String )
+
+###
+#  summary: get release information on an entity and its children
+#  tags:
+#    - editor
+#  parameters:
+#  - in: body
+#    name: instances
+#    description: JsArray of entities to retrieve the status
+#    schema:
+#      type: array
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+POST    /api/releasestatus            editor.controllers.NexusEditorController.releaseStatus
+
+
 
 ###
 #  summary: create a schema where http://schema.org/identifier and the revision only is mandatory
