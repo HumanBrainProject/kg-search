@@ -15,10 +15,9 @@
 */
 
 import React from "react";
-import { SearchkitComponent, Hits } from "searchkit";
-import { dispatch } from "../../../../store";
+import { Hits } from "searchkit";
+import { connect } from "../../../../store";
 import * as actions from "../../../../actions";
-import { withStoreStateSubscription} from "../../../withStoreStateSubscription";
 import { Hit } from "../Hit";
 import { StatsHelpers } from "../../../../Helpers/StatsHelpers";
 import "./styles.css";
@@ -58,64 +57,69 @@ const HitListComponent = ({title, hits, onClick}) => {
   );
 };
 
-class HitList extends SearchkitComponent {
-  render() {
-    const {hits} = this.props;
+const HitListPanel = ({topMatchHits, moreHits, moreHitsTitle, onClick}) => (
+  <span>
+    <HitListComponent hits={topMatchHits} onClick={onClick} />
+    <HitListComponent hits={moreHits} onClick={onClick} title={moreHitsTitle} />
+  </span>
+);
 
-    let trySplitResult = true;
+const mapStateToProps = (state, props) => {
+  const {hits} = props;
+
+  let trySplitResult = true;
+  try {
+    const params = window.location.search
+      .substring(1)
+      .split("&")
+      .map(s => s.split("="))
+      .reduce((obj, a) => {
+        obj[a[0]] = a[1];
+        return obj;
+      }, {});
+    const page = params["p"];
+    const sort = params["sort"]; //
+    trySplitResult = !(page && page !== "1") && !(sort && sort !== "_score_desc");
+  } catch (e) {
+    window.console.debug("Failed to calculate stats");
+  }
+
+  let limit = -1;
+  if (trySplitResult) {
     try {
-      const params = window.location.search
-        .substring(1)
-        .split("&")
-        .map(s => s.split("="))
-        .reduce((obj, a) => {
-          obj[a[0]] = a[1];
-          return obj;
-        }, {});
-      const page = params["p"];
-      const sort = params["sort"]; //
-      trySplitResult = !(page && page !== "1") && !(sort && sort !== "_score_desc");
+      const values = hits.map(hit => hit._score);
+      const average = StatsHelpers.average(values);
+      const standardDeviation = StatsHelpers.standardDeviation(values);
+      limit = average + 2 * standardDeviation;
+      //window.console.debug("average: " + average + ", standard deviation: "  + standardDeviation + ", limit: " + limit);
     } catch (e) {
       window.console.debug("Failed to calculate stats");
     }
-
-    let limit = -1;
-    if (trySplitResult) {
-      try {
-        const values = hits.map(hit => hit._score);
-        const average = StatsHelpers.average(values);
-        const standardDeviation = StatsHelpers.standardDeviation(values);
-        limit = average + 2 * standardDeviation;
-        //window.console.debug("average: " + average + ", standard deviation: "  + standardDeviation + ", limit: " + limit);
-      } catch (e) {
-        window.console.debug("Failed to calculate stats");
-      }
-    }
-
-    const topMatchHits = [];
-    const moreHits = [];
-    hits.forEach(hit => {
-      if (limit !== -1 && hit._score >= limit) {
-        topMatchHits.push(hit);
-      } else {
-        moreHits.push(hit);
-      }
-    });
-
-    const moreHitsTitle = (topMatchHits.length && moreHits.length)?"Other results":null;
-
-    const onClick = (data, target) => {
-      dispatch(actions.setHit(data, target));
-    };
-
-    return (
-      <span>
-        <HitListComponent hits={topMatchHits} onClick={onClick} />
-        <HitListComponent hits={moreHits} onClick={onClick} title={moreHitsTitle} />
-      </span>
-    );
   }
-}
+
+  const topMatchHits = [];
+  const moreHits = [];
+  hits.forEach(hit => {
+    if (limit !== -1 && hit._score >= limit) {
+      topMatchHits.push(hit);
+    } else {
+      moreHits.push(hit);
+    }
+  });
+
+  return {
+    topMatchHits: topMatchHits,
+    moreHits: moreHits,
+    moreHitsTitle: (topMatchHits.length && moreHits.length)?"Other results":null
+  };
+};
+
+export const HitList = connect(
+  mapStateToProps,
+  dispatch => ({
+    onClick: (data, target) => dispatch(actions.setHit(data, target))
+  })
+)(HitListPanel);
 
 const ResultsPanelComponent = ({gridLayoutMode, hitsPerPage}) => {
   //window.console.debug("ResultsPanel rendering...");
@@ -150,14 +154,13 @@ const ResultsPanelComponent = ({gridLayoutMode, hitsPerPage}) => {
 
 /*
 const highlights = {};
-data.definition.queryFields.forEach(field => {
+state.definition.queryFields.forEach(field => {
   highlights[field.replace(/^(.*?)\^.*$/g,"$1")] = {};
 });
 */
-export const ResultsPanel = withStoreStateSubscription(
-  ResultsPanelComponent,
-  data => ({
-    gridLayoutMode: data.application.gridLayoutMode,
-    hitsPerPage: data.configuration.hitsPerPage
+export const ResultsPanel = connect(
+  state => ({
+    gridLayoutMode: state.application.gridLayoutMode,
+    hitsPerPage: state.configuration.hitsPerPage
   })
-);
+)(ResultsPanelComponent);

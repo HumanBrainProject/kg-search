@@ -15,32 +15,28 @@
 */
 
 import React from "react";
-import { dispatch } from "../../store";
+import { connect } from "../../store";
 import * as actions from "../../actions";
-import { withStoreStateSubscription} from "../withStoreStateSubscription";
 import "./styles.css";
 
-const SignInButtonComponent = ({isAuthenticated}) => {
-  const login = () => {
-    dispatch(actions.requestAuthentication());
-  };
-  const logout = () => {
-    dispatch(actions.logout());
-  };
+const SignInButtonComponent = ({isAuthenticated, onLogin, onLogout}) => {
   return (
     <div className="kgs-sign-in">
       {isAuthenticated?
-        <button onClick={logout}>Log out</button>
+        <button onClick={onLogout}>Log out</button>
         :
-        <button onClick={login}>Log in</button>
+        <button onClick={onLogin}>Log in</button>
       }
     </div>
   );
 };
 
-export const SignInButton = withStoreStateSubscription(
-  SignInButtonComponent,
-  data => ({
-    isAuthenticated: data.auth.isAuthenticated
+export const SignInButton = connect(
+  state => ({
+    isAuthenticated: state.auth.isAuthenticated
+  }),
+  dispatch => ({
+    onLogin: () => dispatch(actions.requestAuthentication()),
+    onLogout: () => dispatch(actions.logout())
   })
-);
+)(SignInButtonComponent);

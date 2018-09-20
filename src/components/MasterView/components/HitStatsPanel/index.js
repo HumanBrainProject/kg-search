@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { withStoreStateSubscription} from "../../../withStoreStateSubscription";
+import { connect } from "../../../../store";
 import "./styles.css";
 
 const HitStatsPanelComponent = ({show, hitCount, from, to}) => {
@@ -32,17 +32,16 @@ const HitStatsPanelComponent = ({show, hitCount, from, to}) => {
   );
 };
 
-export const HitStatsPanel = withStoreStateSubscription(
-  HitStatsPanelComponent,
-  data => {
-    const from = (data.search.from?data.search.from:0) + 1;
-    const count = data.search.results?(data.search.results.hits?(data.search.results.hits.hits?data.search.results.hits.hits.length:0):0):0;
+export const HitStatsPanel = connect(
+  state => {
+    const from = (state.search.from?state.search.from:0) + 1;
+    const count = state.search.results?(state.search.results.hits?(state.search.results.hits.hits?state.search.results.hits.hits.length:0):0):0;
     const to = from + count - 1;
     return {
-      show: data.search.isReady && data.search.initialRequestDone && !data.search.isLoading,
-      hitCount: data.search.results?(data.search.results.hits?data.search.results.hits.total:0):0,
+      show: state.search.isReady && state.search.initialRequestDone && !state.search.isLoading,
+      hitCount: state.search.results?(state.search.results.hits?state.search.results.hits.total:0):0,
       from: from,
       to: to
     };
   }
-);
+)(HitStatsPanelComponent);

@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import { store, dispatch } from "./store";
+import { store } from "./store";
 import * as actions from "./actions";
 import SearchManager from "./search.manager";
 import { generateKey, getAuthUrl } from "./Helpers/OIDCHelpers";
@@ -29,6 +29,7 @@ export default class AppManager {
     this.isEventFiredByBrowserNav = false;
     this.isEventFiredByAppNav = false;
     this.locationHref = window.location.href;
+    this.unsubscribe = null;
 
     // check initial hit reference in url
     const m = window.location.href.match(/(.*)#(.*)$/);
@@ -37,7 +38,7 @@ export default class AppManager {
         const m2 = m[2].match(/^access_token=([^&]+)&.*$/);
         if (m2 && m2.length === 2) {
           const accessToken = m2[1];
-          dispatch(actions.authenticate(accessToken));
+          store.dispatch(actions.authenticate(accessToken));
         }
       } else {
         this.initialHitReference = m[2];
@@ -51,20 +52,19 @@ export default class AppManager {
   start(options) {
     if (!this.isStarted) {
       this.isStarted = true;
-      document.addEventListener("state", this.handleStateChange.bind(this), false);
+      this.unsubscribe = store.subscribe(() => {this.handleStateChange();});
       window.addEventListener("hashchange", this.catchBrowserNavigationChange.bind(this), false);
-      dispatch(actions.initializeConfig(options));
+      store.dispatch(actions.initializeConfig(options));
     }
   }
   stop() {
-    document.removeEventListener("state", this.handleStateChange);
+    this.unsubscribe && this.unsubscribe();
     window.removeEventListener("hashchange", this.catchBrowserNavigationChange);
   }
   get searchkit() {
     return this.search && this.search.searchkit;
   }
-  handleStateChange() {
-    //setTimeout(() => {
+  handleStateChange = () => {
     const state = store.getState();
 
     if (state.auth.authenticate) {
@@ -79,19 +79,19 @@ export default class AppManager {
 
         if (!state.definition.isReady) {
           if (!state.definition.hasRequest && !state.definition.isLoading && !state.definition.hasError) {
-            dispatch(actions.loadDefinition());
+            store.dispatch(actions.loadDefinition());
           }
           return;
         }
 
         if (!state.indexes.isReady) {
           if (!state.indexes.hasRequest && !state.indexes.isLoading && !state.indexes.hasError) {
-            dispatch(actions.loadIndexes());
+            store.dispatch(actions.loadIndexes());
           }
           return;
         }
 
-        dispatch(actions.setApplicationReady(true));
+        store.dispatch(actions.setApplicationReady(true));
       }
 
       return;
@@ -99,7 +99,7 @@ export default class AppManager {
 
     if (state.search.initialRequestDone && this.initialHitReference) {
       //window.console.log("AppManager load initial Hit: " + this.initialHitReference);
-      dispatch(actions.loadHit(this.initialHitReference));
+      store.dispatch(actions.loadHit(this.initialHitReference));
       this.initialHitReference = null;
 
       return;
@@ -112,7 +112,6 @@ export default class AppManager {
     this.manageHitFocus(state.hits.currentHit);
 
     this.manageHistory(state);
-    //});
   }
   setBodyScrolling(enableScrolling) {
     //Remove the ability to scroll the body when the modal is open
@@ -180,7 +179,7 @@ export default class AppManager {
   }
   setCurrentHitFromBrowserLocation() {
     if (this.isStarted) {
-      dispatch(actions.setCurrentHitFromBrowserLocation());
+      store.dispatch(actions.setCurrentHitFromBrowserLocation());
     }
   }
   catchBrowserNavigationChange() {

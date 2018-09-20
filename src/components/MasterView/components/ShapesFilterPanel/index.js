@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { store } from "../../../../store";
+import { connect } from "../../../../store";
 import { MenuFilter } from "searchkit";
 import "./styles.css";
 
@@ -65,42 +65,39 @@ const IconComponent = ({label, imageUrl, icon}) => {
   return null;
 };
 
-const Icon = ({label, shape, active}) => {
+const Icon = connect(
+  (state, {label, shape, active}) => {
 
-  const highlightColor = "#ED5554";
-  const defaultColor = "#4D4D4D";
+    const highlightColor = "#ED5554";
+    const defaultColor = "#4D4D4D";
 
-  let imageUrl = null;
-  let icon = null;
+    let imageUrl = null;
+    let icon = null;
 
-  if (shape === "$all") {
-    icon = allSvg(active?highlightColor:defaultColor);
-  } else {
-    const state = store.getState();
-    const mapping = state.definition.shapeMappings[shape];
-    if (mapping) {
-      if (mapping.image && mapping.image.url) {
-        imageUrl = mapping.image.url;
-      } else if (mapping.icon) {
-        icon = active?replaceColorInSvg(mapping.icon, defaultColor, highlightColor):mapping.icon;
+    if (shape === "$all") {
+      icon = allSvg(active?highlightColor:defaultColor);
+    } else {
+      const mapping = state.definition.shapeMappings[shape];
+      if (mapping) {
+        if (mapping.image && mapping.image.url) {
+          imageUrl = mapping.image.url;
+        } else if (mapping.icon) {
+          icon = active?replaceColorInSvg(mapping.icon, defaultColor, highlightColor):mapping.icon;
+        } else {
+          icon = defaultSvg(active?highlightColor:defaultColor);
+        }
       } else {
         icon = defaultSvg(active?highlightColor:defaultColor);
       }
-    } else {
-      icon = defaultSvg(active?highlightColor:defaultColor);
     }
+
+    return {
+      label: label,
+      imageUrl: imageUrl,
+      icon: icon
+    };
   }
-
-  const iconProps = {
-    label: label,
-    imageUrl: imageUrl,
-    icon: icon
-  };
-
-  return (
-    <IconComponent {...iconProps} />
-  );
-};
+)(IconComponent);
 
 // {itemKey, label, count, rawCount, listDocCount, active, disabled, showCount, bemBlocks, onClick}
 const itemComponent = ({itemKey, label, count, active, disabled, onClick}) => {

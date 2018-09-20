@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { withStoreStateSubscription} from "../withStoreStateSubscription";
+import { connect} from "../../store";
 import "./styles.css";
 
 const FetchingPanelComponent = ({show, message}) => {
@@ -35,10 +35,9 @@ const FetchingPanelComponent = ({show, message}) => {
   );
 };
 
-export const FetchingPanel = withStoreStateSubscription(
-  FetchingPanelComponent,
-  data => ({
-    show: data.fetching.active,
-    message: data.fetching.message
+export const FetchingPanel = connect(
+  state => ({
+    show: state.fetching.active,
+    message: state.fetching.message
   })
-);
+)(FetchingPanelComponent);

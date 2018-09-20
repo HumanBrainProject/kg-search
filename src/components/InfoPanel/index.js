@@ -18,14 +18,17 @@ import React from "react";
 import showdown from "showdown";
 /*import FilterXSS from 'xss';*/
 import xssFilter from "showdown-xss-filter";
-import { dispatch } from "../../store";
+import { connect } from "../../store";
 import * as actions from "../../actions";
-import { withStoreStateSubscription} from "../withStoreStateSubscription";
 import "./styles.css";
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 
 const InfoPanelComponent = ({text, onClose}) => {
+  if (!text) {
+    return null;
+  }
+
   const html = converter.makeHtml(text);
   return (
     <div className="kgs-info">
@@ -41,23 +44,11 @@ const InfoPanelComponent = ({text, onClose}) => {
   );
 };
 
-const InfoPanelContainerComponent = ({text}) => {
-  if (!text) {
-    return null;
-  }
-
-  const handleClick = () => {
-    dispatch(actions.setInfo());
-  };
-
-  return (
-    <InfoPanelComponent text={text} onClose={handleClick} />
-  );
-};
-
-export const InfoPanel = withStoreStateSubscription(
-  InfoPanelContainerComponent,
-  data => ({
-    text: data.application.info
+export const InfoPanel = connect(
+  state => ({
+    text: state.application.info
+  }),
+  dispatch => ({
+    onClose: () => dispatch(actions.setInfo())
   })
-);
+)(InfoPanelComponent);

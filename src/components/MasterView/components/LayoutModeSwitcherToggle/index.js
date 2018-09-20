@@ -15,9 +15,8 @@
 */
 
 import React from "react";
-import { dispatch } from "../../../../store";
+import { connect } from "../../../../store";
 import * as actions from "../../../../actions";
-import { withStoreStateSubscription} from "../../../withStoreStateSubscription";
 import "./styles.css";
 
 const LayoutModeSwitcherToggleItemComponent = ({label, value, isActive, onClick}) => {
@@ -31,28 +30,27 @@ const LayoutModeSwitcherToggleItemComponent = ({label, value, isActive, onClick}
   );
 };
 
-const LayoutModeSwitcherToggleComponent = ({show, gridLayoutMode}) => {
+const LayoutModeSwitcherToggleComponent = ({show, gridLayoutMode, onClick}) => {
   if (!show) {
     return null;
   }
-  //window.console.debug("LayoutModeSwitcherToggle rendering...");
-  const handleClick = (layoutMode) => {
-    dispatch(actions.setLayoutMode(layoutMode === "grid"));
-  };
+
   return (
     <div className="kgs-layout-mode-switcher-toggle">
       <div>
-        <LayoutModeSwitcherToggleItemComponent label="Grid" value="grid" onClick={handleClick} isActive={gridLayoutMode} />
-        <LayoutModeSwitcherToggleItemComponent label="List" value="list" onClick={handleClick} isActive={!gridLayoutMode} />
+        <LayoutModeSwitcherToggleItemComponent label="Grid" value="grid" onClick={onClick} isActive={gridLayoutMode} />
+        <LayoutModeSwitcherToggleItemComponent label="List" value="list" onClick={onClick} isActive={!gridLayoutMode} />
       </div>
     </div>
   );
 };
 
-export const LayoutModeSwitcherToggle = withStoreStateSubscription(
-  LayoutModeSwitcherToggleComponent,
-  data => ({
-    gridLayoutMode: data.application.gridLayoutMode,
-    show: data.search.results && data.search.results.hits && data.search.results.hits.total > 0
+export const LayoutModeSwitcherToggle = connect(
+  state => ({
+    gridLayoutMode: state.application.gridLayoutMode,
+    show: state.search.results && state.search.results.hits && state.search.results.hits.total > 0
+  }),
+  dispatch => ({
+    onClick: layoutMode => dispatch(actions.setLayoutMode(layoutMode === "grid"))
   })
-);
+)(LayoutModeSwitcherToggleComponent);

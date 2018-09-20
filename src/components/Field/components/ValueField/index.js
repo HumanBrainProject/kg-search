@@ -18,7 +18,7 @@ import React, { PureComponent } from "react";
 import showdown from "showdown";
 /*import FilterXSS from 'xss';*/
 import xssFilter from "showdown-xss-filter";
-import { store, dispatch } from "../../../../store";
+import { connect } from "../../../../store";
 import * as actions from "../../../../actions";
 import { Icon } from "../../../Icon";
 import "./styles.css";
@@ -74,22 +74,30 @@ class CollapsibleText extends PureComponent {
   }
 }
 
-const Reference = ({reference, label}) => {
+const ReferenceComponent = ({text, reference, index, onClick}) => {
   if (!reference) {
     return null;
   }
 
-  const text = label?label:reference;
-
   const handleClick = () => {
-    const state = store.getState();
-    dispatch(actions.loadHit(reference, state.search.index));
+    typeof onClick === "function" && onClick(reference, index);
   };
 
   return (
     <button onClick={handleClick} role="link">{text}</button>
   );
 };
+
+const Reference = connect(
+  (state, props) => ({
+    text: props.label?props.label:props.reference,
+    reference: props.reference,
+    index: state.search.index
+  }),
+  dispatch => ({
+    onClick: (reference, index) => dispatch(actions.loadHit(reference, index))
+  })
+)(ReferenceComponent);
 
 const Link = ({url, label, isMailToLink}) => {
   if (!url) {

@@ -16,62 +16,45 @@
 
 import React, { PureComponent } from "react";
 import { isMobile, tabAblesSelectors } from "../Helpers/BrowserHelpers";
-import { store } from "../store";
 
-export function withTabKeyNavigation(WrappedComponent, isContentActive, rootNodeQuerySelector, excludeNodeQuerySelector) {
-  class withTabKey extends PureComponent {
+export const withTabKeyNavigation = (propKey, rootNodeQuerySelector, excludeNodeQuerySelector) => WrappedComponent => {
+
+  class WithTabKey extends PureComponent {
     constructor(props) {
       super(props);
-      this.shouldHandleChange = false;
       this.handleChange = this.handleChange.bind(this);
       this.tabAbles = [];
-      this.isActive = this.isContentActive();
     }
     componentDidMount() {
-      if (!isMobile) {
-        this.shouldHandleChange = true;
-        document.addEventListener("state", this.handleChange.bind(this), false);
-        this.handleChange();
-      }
+      this.handleChange();
     }
-    componentWillUnmount() {
-      if (!isMobile) {
-        this.shouldHandleChange = false;
-        document.removeEventListener("state", this.handleChange);
-      }
-    }
-    isContentActive() {
-      const storeState = store.getState();
-      const active = isContentActive(storeState, this.props);
-      return active;
+    componentDidUpdate() {
+      this.handleChange();
     }
     handleChange() {
-      const isActive = this.isContentActive();
-      if (isActive !== this.isActive) {
-        this.isActive = isActive;
-        if (this.isActive) {
+      const isActive = !propKey || !!this.props[propKey];
+      if (isActive) {
 
-          //window.console.debug(new Date().toLocaleTimeString() + ": enable tabs", this.tabAbles);
-          this.tabAbles.forEach(e => {
-            if (e.tabIndex >= 0) {
-              e.node.setAttribute("tabIndex", e.tabIndex);
-            } else {
-              e.node.removeAttribute("tabIndex");
-            }
-          });
-
-        } else {
-
-          const excludeNode = excludeNodeQuerySelector?document.body.querySelector(excludeNodeQuerySelector):null;
-          const rootNode = rootNodeQuerySelector?document.body.querySelector(rootNodeQuerySelector):document.body;
-          if (rootNode) {
-            this.tabAbles = Object.values(rootNode.querySelectorAll(tabAblesSelectors.join(",")))
-              .filter(e => !excludeNode || !excludeNode.contains(e))
-              .map(node => ({node: node, tabIndex: node.tabIndex}));
-
-            //window.console.debug(new Date().toLocaleTimeString() + ": masterView disable tabs", this.tabAbles);
-            this.tabAbles.forEach(e => e.node.setAttribute("tabIndex", -1));
+        //window.console.debug(new Date().toLocaleTimeString() + ": enable tabs", this.tabAbles);
+        this.tabAbles.forEach(e => {
+          if (e.tabIndex >= 0) {
+            e.node.setAttribute("tabIndex", e.tabIndex);
+          } else {
+            e.node.removeAttribute("tabIndex");
           }
+        });
+
+      } else {
+
+        const excludeNode = excludeNodeQuerySelector?document.body.querySelector(excludeNodeQuerySelector):null;
+        const rootNode = rootNodeQuerySelector?document.body.querySelector(rootNodeQuerySelector):document.body;
+        if (rootNode) {
+          this.tabAbles = Object.values(rootNode.querySelectorAll(tabAblesSelectors.join(",")))
+            .filter(e => !excludeNode || !excludeNode.contains(e))
+            .map(node => ({node: node, tabIndex: node.tabIndex}));
+
+          //window.console.debug(new Date().toLocaleTimeString() + ": masterView disable tabs", this.tabAbles);
+          this.tabAbles.forEach(e => e.node.setAttribute("tabIndex", -1));
         }
       }
     }
@@ -79,5 +62,10 @@ export function withTabKeyNavigation(WrappedComponent, isContentActive, rootNode
       return <WrappedComponent {...this.props} />;
     }
   }
-  return withTabKey;
-}
+
+  if (isMobile) {
+    return WrappedComponent;
+  }
+
+  return WithTabKey;
+};

@@ -23,43 +23,46 @@ import { ResultsHeader } from "./components/ResultsHeader";
 import { ResultsPanel } from "./components/ResultsPanel";
 import { ResultsFooter } from "./components/ResultsFooter";
 import { TermsShortNotice } from "../TermsShortNotice";
+import { connect } from "../../store";
 import "./styles.css";
 
-const MasterViewComponent = () => {
-  const searchPanelRelatedElements = [
-    {querySelector: "body>header"},
-    {querySelector: "body>header + nav.navbar"},
-    {querySelector: "#CookielawBanner", cookieKey: "cookielaw_accepted"}
-  ];
+const searchPanelRelatedElements = [
+  {querySelector: "body>header"},
+  {querySelector: "body>header + nav.navbar"},
+  {querySelector: "#CookielawBanner", cookieKey: "cookielaw_accepted"}
+];
 
-  const resultFooterRelatedElements = [
-    {querySelector: ".main-content + hr + .container"},
-    {querySelector: "footer.footer[role=\"contentinfo\"]"}
-  ];
+const resultFooterRelatedElements = [
+  {querySelector: ".main-content + hr + .container"},
+  {querySelector: "footer.footer[role=\"contentinfo\"]"}
+];
 
-  //window.console.debug("MasterView rendering...");
-  return (
-    <div className="kgs-masterView">
-      <SearchPanel floatingPosition="top" relatedElements={searchPanelRelatedElements} />
-      <TermsShortNotice/>
-      <ShapesFilterPanel/>
-      <div className="kgs-masterView__panel">
-        <FiltersPanel/>
-        <div>
-          <ResultsHeader/>
-          <ResultsPanel/>
-        </div>
+const MasterViewComponent = () => (
+  <div className="kgs-masterView">
+    <SearchPanel floatingPosition="top" relatedElements={searchPanelRelatedElements} />
+    <TermsShortNotice/>
+    <ShapesFilterPanel/>
+    <div className="kgs-masterView__panel">
+      <FiltersPanel/>
+      <div>
+        <ResultsHeader/>
+        <ResultsPanel/>
       </div>
-      <ResultsFooter floatingPosition="bottom" relatedElements={resultFooterRelatedElements} />
     </div>
-  );
-};
+    <ResultsFooter floatingPosition="bottom" relatedElements={resultFooterRelatedElements} />
+  </div>
+);
 
-export const MasterView = withTabKeyNavigation(
-  MasterViewComponent,
-  data => !data.hits.currentHit && !data.application.info,
+export const TabKeyNavigationMasterView = withTabKeyNavigation(
+  "isActive",
   ".kgs-masterView",
   null
-);
+)(MasterViewComponent);
+
+export const MasterView = connect(
+  state => ({
+    isActive: !state.hits.currentHit && !state.application.info
+  })
+)(TabKeyNavigationMasterView);
 
 

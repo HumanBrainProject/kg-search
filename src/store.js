@@ -14,6 +14,7 @@
 *   limitations under the License.
 */
 
+import React, { PureComponent } from "react";
 import { rootReducer } from "./reducer/root.reducer";
 
 const createStore = reducer => {
@@ -36,10 +37,10 @@ const createStore = reducer => {
     }
   };
 
-  const dispatch = (payload) => {
+  const dispatch = payload => {
     setTimeout(() => {
       if (typeof payload === "function") {
-        payload(dispatch, store.getState);
+        payload(dispatch, store.getState());
       } else {
         document.dispatchEvent(
           new CustomEvent("action", { detail: payload})
@@ -48,10 +49,61 @@ const createStore = reducer => {
     });
   };
 
+  const subscribe = subscriber => {
+
+    if (typeof subscriber === "function") {
+      //document.addEventListener("state", setTimeout(subscriber), false);
+      document.addEventListener("state", subscriber, false);
+    }
+
+    const unsubscribe = () => {
+      if (typeof subscriber === "function") {
+        document.removeEventListener("state", subscriber);
+      }
+    };
+    return unsubscribe;
+  };
+
   store.dispatch = dispatch;
+  store.subscribe = subscribe;
   return store;
 };
 
 export const store = createStore(rootReducer);
 
-export const dispatch = store.dispatch;
+export const connect = (mapStateToProps, mapDispatchToProps) => WrappedComponent => {
+  class withStoreState extends PureComponent {
+    constructor(props) {
+      super(props);
+      this.shouldHandleChange = false;
+      this.unsubscribe = null;
+      this.state = {
+        props: this.getProps()
+      };
+      this.dispatchProps = typeof mapDispatchToProps === "function" && mapDispatchToProps(store.dispatch);
+    }
+    componentDidMount() {
+      this.shouldHandleChange = true;
+      this.unsubscribe = store.subscribe(() => {this.handleChange();});
+      this.handleChange();
+    }
+    componentWillUnmount() {
+      this.shouldHandleChange = false;
+      this.unsubscribe && this.unsubscribe();
+    }
+    getProps() {
+      const storeState = store.getState();
+      const data = typeof mapStateToProps === "function" && mapStateToProps(storeState, this.props);
+      return data;
+    }
+    handleChange = () => {
+      this.shouldHandleChange && this.setState({
+        props: this.getProps()
+      });
+    }
+    render() {
+      return <WrappedComponent {...this.state.props} {...this.dispatchProps} />;
+    }
+  }
+  return withStoreState;
+};

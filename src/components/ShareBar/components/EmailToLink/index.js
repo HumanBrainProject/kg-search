@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { withStoreStateSubscription} from "../../../withStoreStateSubscription";
+import { connect } from "../../../../store";
 import "./styles.css";
 
 const EmailToLinkComponent = ({title = "Send search link by email", text, icon = "fa fa-envelope-o", link}) => {
@@ -24,9 +24,8 @@ const EmailToLinkComponent = ({title = "Send search link by email", text, icon =
   );
 };
 
-export const EmailToLink = withStoreStateSubscription(
-  EmailToLinkComponent,
-  data => ({
-    link: data.application.shareEmailToLink
+export const EmailToLink = connect(
+  state => ({
+    link: state.application.shareEmailToLink
   })
-);
+)(EmailToLinkComponent);

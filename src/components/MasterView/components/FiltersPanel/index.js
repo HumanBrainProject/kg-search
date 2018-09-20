@@ -17,7 +17,7 @@
 import React from "react";
 import { SearchkitComponent, RefinementListFilter, InputFilter, CheckboxFilter, RangeFilter } from "searchkit";
 import { DateRangeFilter, DateRangeCalendar } from "searchkit-datefilter";
-import { withStoreStateSubscription} from "../../../withStoreStateSubscription";
+import { connect } from "../../../../store";
 import "./styles.css";
 
 const Facet = ({id, name, facet}) => {
@@ -92,7 +92,7 @@ const Facet = ({id, name, facet}) => {
   return null;
 };
 
-class ResetFilters extends SearchkitComponent {
+class ResetFiltersButton extends SearchkitComponent {
   render() {
     const handleClick = () => {
       const allFilters = this.searchkit.query && this.searchkit.query.getSelectedFilters();
@@ -128,7 +128,7 @@ const FiltersPanelComponent = ({show, hasFilters, facets}) => {
         <div className="kgs-filters__header">
           <div className="kgs-filters__title">Filters</div>
           {hasFilters && (
-            <div className="kgs-filters__reset"><ResetFilters options={{query:false, filter:true, pagination:true}} translations={{"reset.clear_all":"Reset"}}/></div>
+            <div className="kgs-filters__reset"><ResetFiltersButton/></div>
           )}
         </div>
         <span>
@@ -146,37 +146,39 @@ const FiltersPanelComponent = ({show, hasFilters, facets}) => {
   );
 };
 
-const FiltersPanelWithStoreStateSubscription = withStoreStateSubscription(
-  FiltersPanelComponent,
-  (data, {searchkit}) => {
-    const facetFields = data.definition.facetFields;
-    const facets = [];
-    const selectedType = searchkit && searchkit.state && searchkit.state.facet_type && searchkit.state.facet_type.length > 0 ? searchkit.state.facet_type[0]: "";
-    Object.entries(facetFields).forEach(([type, typedFacets]) => {
-      const isMatchingSelectedType = selectedType === type;
-      Object.entries(typedFacets).forEach(([name, facet])=>{
-        facets.push({
-          id: "facet_" + type + "_" + name,
-          name: name,
-          facet: facet,
-          isVisible: isMatchingSelectedType
-        });
+const mapStateToProps = (state, props) => {
+  const { searchkit } = props;
+  const facetFields = state.definition.facetFields;
+  const facets = [];
+  const selectedType = searchkit && searchkit.state && searchkit.state.facet_type && searchkit.state.facet_type.length > 0 ? searchkit.state.facet_type[0]: "";
+  Object.entries(facetFields).forEach(([type, typedFacets]) => {
+    const isMatchingSelectedType = selectedType === type;
+    Object.entries(typedFacets).forEach(([name, facet])=>{
+      facets.push({
+        id: "facet_" + type + "_" + name,
+        name: name,
+        facet: facet,
+        isVisible: isMatchingSelectedType
       });
     });
-    const hasFilters = facets.some(f => f.isVisible);
-    return {
-      type: selectedType,
-      show: data.definition.isReady && facets.length > 0,
-      hasFilters: hasFilters,
-      facets: facets
-    };
-  }
-);
+  });
+  const hasFilters = facets.some(f => f.isVisible);
+  return {
+    type: selectedType,
+    show: state.definition.isReady && facets.length > 0,
+    hasFilters: hasFilters,
+    facets: facets
+  };
+};
+
+const FiltersPanelContainer = connect(
+  mapStateToProps
+)(FiltersPanelComponent);
 
 export class FiltersPanel extends SearchkitComponent {
   render() {
     return (
-      <FiltersPanelWithStoreStateSubscription searchkit={this.searchkit} {...this.props} />
+      <FiltersPanelContainer searchkit={this.searchkit} {...this.props} />
     );
   }
 }

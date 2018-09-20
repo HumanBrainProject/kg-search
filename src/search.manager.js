@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import { store, dispatch } from "./store";
+import { store } from "./store";
 import * as actions from "./actions";
 import API from "./API";
 import { SearchkitManager } from "searchkit";
@@ -24,7 +24,7 @@ import { generateKey} from "./Helpers/OIDCHelpers";
 export default class SearchManager {
   constructor(){
     this.searchkit = null;
-    document.addEventListener("state", this.handleStateChange.bind(this), false);
+    store.subscribe(() => {this.handleStateChange();});
     this.fromParamRequest = 0;
   }
   initializeSearchKit({searchApiHost="", timeout=5000, queryTweaking, searchOnLoad}) {
@@ -46,7 +46,7 @@ export default class SearchManager {
       if (state.auth.accessToken && state.search.index !== null) {
         header["index-hint"] = state.search.index;
       }
-      dispatch(actions.loadSearchRequest(nonce));
+      store.dispatch(actions.loadSearchRequest(nonce));
       return config;
     }, err => {
       return Promise.reject(err);
@@ -56,7 +56,7 @@ export default class SearchManager {
       const {data, headers} = response;
       const reg = /^kg_(.*)$/;
       const [,index] = reg.test(headers.selected_index)?headers.selected_index.match(reg):[];
-      dispatch(actions.loadSearchResult(data, index, this.fromParamRequest));
+      store.dispatch(actions.loadSearchResult(data, index, this.fromParamRequest));
       return response;
     }, error => {
       //const {config, request, response} = error;
@@ -70,15 +70,15 @@ export default class SearchManager {
         switch (status) {
         case 400: // Bad Request
         case 404: // Not Found
-          dispatch(actions.loadSearchBadRequest(status));
+          store.dispatch(actions.loadSearchBadRequest(status));
           break;
         case 401: // Unauthorized
         case 403: // Forbidden
         case 511: // Network Authentication Required
-          dispatch(actions.loadSearchSessionFailure(status));
+          store.dispatch(actions.loadSearchSessionFailure(status));
           break;
         default: {
-          dispatch(actions.loadSearchServiceFailure(status, state.search.index));
+          store.dispatch(actions.loadSearchServiceFailure(status, state.search.index));
         }
         }
       }
@@ -88,13 +88,12 @@ export default class SearchManager {
     const queryProcessorFunction = SearchKitHelpers.getQueryProcessor(this.searchkit, queryTweaking);
     this.searchkit.setQueryProcessor(queryProcessorFunction);
   }
-  handleStateChange() {
-    //setTimeout(() => {
+  handleStateChange = () => {
     const state = store.getState();
 
     if (state.configuration.isReady && !state.search.isReady) {
       this.initializeSearchKit(state.configuration);
-      dispatch(actions.setSearchReady(true));
+      store.dispatch(actions.setSearchReady(true));
       return;
     }
 
@@ -110,19 +109,18 @@ export default class SearchManager {
     if (state.hits.hasRequest) {
       this.loadInstance(state.hits.requestReference);
     }
-    //});
   }
   loadDefinition() {
     const state = store.getState();
     if (!state.definition.isReady && !state.definition.isLoading) {
-      dispatch(actions.loadDefinitionRequest());
+      store.dispatch(actions.loadDefinitionRequest());
       setTimeout(() => {
         API.fetch(API.endpoints.definition(state.configuration.searchApiHost))
           .then(definition => {
-            dispatch(actions.loadDefinitionSuccess(definition));
+            store.dispatch(actions.loadDefinitionSuccess(definition));
           })
           .catch(error => {
-            dispatch(actions.loadDefinitionFailure(error));
+            store.dispatch(actions.loadDefinitionFailure(error));
           });
       });
     }
@@ -130,7 +128,7 @@ export default class SearchManager {
   loadIndexes() {
     const state = store.getState();
     if (!state.indexes.isReady && !state.indexes.isLoading) {
-      dispatch(actions.loadIndexesRequest());
+      store.dispatch(actions.loadIndexesRequest());
       setTimeout(() => {
         if (state.auth.accessToken) {
           const options = {
@@ -141,13 +139,13 @@ export default class SearchManager {
           };
           API.fetch(API.endpoints.indexes(state.configuration.searchApiHost), options)
             .then(indexes => {
-              dispatch(actions.loadIndexesSuccess(indexes));
+              store.dispatch(actions.loadIndexesSuccess(indexes));
             })
             .catch(error => {
-              dispatch(actions.loadIndexesFailure(error));
+              store.dispatch(actions.loadIndexesFailure(error));
             });
         } else {
-          dispatch(actions.loadIndexesSuccess([]));
+          store.dispatch(actions.loadIndexesSuccess([]));
         }
       });
     }
@@ -156,7 +154,7 @@ export default class SearchManager {
     //window.console.debug("SearchManager loadInstance: " + id);
     const state = store.getState();
     if (!state.hits.isLoading) {
-      dispatch(actions.loadHitRequest());
+      store.dispatch(actions.loadHitRequest());
       setTimeout(() => {
         let options = null;
         if (state.auth.accessToken) {
@@ -171,13 +169,13 @@ export default class SearchManager {
         API.fetch(API.endpoints.instance(state.configuration.searchApiHost, id), options)
           .then(data => {
             if (data.found) {
-              dispatch(actions.loadHitSuccess(data));
+              store.dispatch(actions.loadHitSuccess(data));
             } else {
-              dispatch(actions.loadHitNoData(id));
+              store.dispatch(actions.loadHitNoData(id));
             }
           })
           .catch(error => {
-            dispatch(actions.loadHitFailure(id, error));
+            store.dispatch(actions.loadHitFailure(id, error));
           });
       });
     }

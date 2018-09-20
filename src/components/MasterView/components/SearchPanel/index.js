@@ -15,14 +15,23 @@
 */
 
 import React from "react";
-import { dispatch } from "../../../../store";
+import { connect } from "../../../../store";
 import * as actions from "../../../../actions";
 import { help } from "../../../../help.js";
-import { withStoreStateSubscription} from "../../../withStoreStateSubscription";
 import { withFloatingScrollEventsSubscription} from "../../../withFloatingScrollEventsSubscription";
 import { SearchkitComponent, SearchBox, QueryString } from "searchkit";
 import { isMobile } from "../../../../Helpers/BrowserHelpers";
 import "./styles.css";
+
+const SearchPanelComponent = ({isFloating, queryFields, onHelp, onSearch}) => (
+  <div className={`kgs-search${isFloating?" is-fixed-position":""}`}>
+    <SearchBox placeholder="Search (e.g. brain or neuroscience)" autofocus={true} searchOnChange={false} queryFields={queryFields} queryBuilder={QueryString} />
+    <button className="kgs-search-button" onClick={onSearch}>Search</button>
+    <button type="button" className="kgs-search-help__button" title="Help" onClick={onHelp}>
+      <i className="fa fa-info-circle fa-2x"></i>
+    </button>
+  </div>
+);
 
 class SearchInput {
   constructor(querySelector) {
@@ -49,7 +58,7 @@ class SearchInput {
 
 const searchInput = new SearchInput(".kgs-search .sk-search-box .sk-top-bar__content .sk-search-box__text");
 
-class SearchPanelComponent extends SearchkitComponent {
+class SearchkitSeachPanelContainer extends SearchkitComponent {
   componentDidMount() {
     if (isMobile) {
       window.addEventListener("mousedown", this.handleMouseDownEvent, false);
@@ -68,28 +77,23 @@ class SearchPanelComponent extends SearchkitComponent {
     searchInput.blur();
   }
   render() {
-    const {isFloating, queryFields} = this.props;
-    const hanldeSearchClick = () => {
+    const {isFloating, queryFields, onHelp} = this.props;
+    const handleSearch = () => {
       this.searchkit.search();
     };
-    const handleHelpClick = () => {
-      dispatch(actions.setInfo(help));
-    };
     return (
-      <div className={`kgs-search${isFloating?" is-fixed-position":""}`}>
-        <SearchBox placeholder="Search (e.g. brain or neuroscience)" autofocus={true} searchOnChange={false} queryFields={queryFields} queryBuilder={QueryString} />
-        <button className="kgs-search-button" onClick={hanldeSearchClick}>Search</button>
-        <button type="button" className="kgs-search-help__button" title="Help" onClick={handleHelpClick}>
-          <i className="fa fa-info-circle fa-2x"></i>
-        </button>
-      </div>
+      <SearchPanelComponent isFloating={isFloating} queryFields={queryFields} onHelp={onHelp} onSearch={handleSearch} />
     );
   }
 }
 
-export const SearchPanel = withStoreStateSubscription(
-  withFloatingScrollEventsSubscription(SearchPanelComponent),
-  data => ({
-    queryFields: data.definition.queryFields
+export const SearchPanel = connect(
+  (state, props) => ({
+    floatingPosition: props.floatingPosition,
+    relatedElements: props.relatedElements,
+    queryFields: state.definition.queryFields
+  }),
+  dispatch => ({
+    onHelp: () => dispatch(actions.setInfo(help))
   })
-);
+)(withFloatingScrollEventsSubscription(SearchkitSeachPanelContainer));

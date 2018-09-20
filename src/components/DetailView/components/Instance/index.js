@@ -14,8 +14,7 @@
 *   limitations under the License.
 */
 
-import React from "react";
-import { store } from "../../../../store";
+import { connect } from "../../../../store";
 import { InstancePanel } from "./components/InstancePanel";
 
 const getField = (type, name, data, mapping) => {
@@ -51,26 +50,24 @@ const getFields = (type, data, mapping, filter) => {
   return fields;
 };
 
-export function Instance({data}) {
+export const Instance = connect(
+  (state, {data}) => {
 
-  const state = store.getState();
-  const source = data && !(data.found === false) && data._type && data._source;
-  const mapping = source && state.definition && state.definition.shapeMappings && state.definition.shapeMappings[data._type];
+    const source = data && !(data.found === false) && data._type && data._source;
+    const mapping = source && state.definition && state.definition.shapeMappings && state.definition.shapeMappings[data._type];
 
-  const instanceProps = {
-    type: data && data._type,
-    hasNoData: !source,
-    hasUnknownData: !mapping,
-    header: {
-      icon:  getField(data && data._type, "icon", {value: data && data._type, image: {url: source && source.image && source.image.url}}, {visible: true, type: "icon", icon: mapping && mapping.icon}),
-      type:  getField(data && data._type, "type"),
-      title: getField(data && data._type, "title", source["title"], mapping && mapping.fields && mapping.fields["title"])
-    },
-    main: getFields(data && data._type, source, mapping, (type, name) => name !== "title"),
-    summary: getFields(data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "summary" && name !== "title"),
-    groups: getFields(data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title")
-  };
-  return (
-    <InstancePanel {...instanceProps} />
-  );
-}
+    return {
+      type: data && data._type,
+      hasNoData: !source,
+      hasUnknownData: !mapping,
+      header: {
+        icon:  getField(data && data._type, "icon", {value: data && data._type, image: {url: source && source.image && source.image.url}}, {visible: true, type: "icon", icon: mapping && mapping.icon}),
+        type:  getField(data && data._type, "type"),
+        title: getField(data && data._type, "title", source["title"], mapping && mapping.fields && mapping.fields["title"])
+      },
+      main: getFields(data && data._type, source, mapping, (type, name) => name !== "title"),
+      summary: getFields(data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "summary" && name !== "title"),
+      groups: getFields(data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title")
+    };
+  }
+)(InstancePanel);

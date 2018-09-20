@@ -17,7 +17,7 @@
 import React, { PureComponent } from "react";
 import AppManager from "./app.manager";
 import { InfoPanel } from "./components/InfoPanel";
-import { withStoreStateSubscription} from "./components/withStoreStateSubscription";
+import { connect } from "./store";
 import { withTabKeyNavigation } from "./components/withTabKeyNavigation";
 import { SearchkitProvider } from "searchkit";
 import { MasterView } from "./components/MasterView";
@@ -44,19 +44,20 @@ const ViewsComponent = ({show, manager}) => {
   );
 };
 
-const ViewsWithTabKeyNavigation = withTabKeyNavigation(
-  ViewsComponent,
-  data => !data.hits.currentHit,
+const TabKeyNavigationViews = withTabKeyNavigation(
+  "isActive",
   null,
   ".kgs-app"
-);
+)(ViewsComponent);
 
-const Views = withStoreStateSubscription(
-  ViewsWithTabKeyNavigation,
-  data => ({
-    show: data.application.isReady
+const Views = connect(
+  (state, props) => ({
+    isActive: !state.hits.currentHit,
+    manager: props.manager,
+    show: state.application.isReady
   })
-);
+)(TabKeyNavigationViews);
+
 
 export class App extends PureComponent {
   constructor(props) {

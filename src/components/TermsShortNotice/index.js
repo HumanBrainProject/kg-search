@@ -15,18 +15,15 @@
 */
 
 import React from "react";
-import { dispatch } from "../../store";
+import { connect } from "../../store";
 import * as actions from "../../actions";
-import { withStoreStateSubscription} from "../withStoreStateSubscription";
 import "./styles.css";
 
-const TermsShortNoticeComponent = ({show}) => {
+const TermsShortNoticeComponent = ({show, onAgree}) => {
   if (!show) {
     return null;
   }
-  const onAgree = () => {
-    dispatch(actions.agreeTermsShortNotice());
-  };
+
   return (
     <span className="terms-short-notice">
       <span className="terms-short-notice-content">
@@ -41,9 +38,11 @@ const TermsShortNoticeComponent = ({show}) => {
   );
 };
 
-export const TermsShortNotice = withStoreStateSubscription(
-  TermsShortNoticeComponent,
-  data => ({
-    show: data.application.showTermsShortNotice
+export const TermsShortNotice = connect(
+  state => ({
+    show: !!state.application.showTermsShortNotice
+  }),
+  dispatch => ({
+    onAgree: () => dispatch(actions.agreeTermsShortNotice())
   })
-);
+)(TermsShortNoticeComponent);

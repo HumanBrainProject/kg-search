@@ -15,23 +15,18 @@
 */
 
 import React from "react";
-import { dispatch } from "../../store";
-import { withStoreStateSubscription} from "../withStoreStateSubscription";
+import { connect } from "../../store";
 import "./styles.css";
 
-const ErrorPanelComponent = ({show, message, retryLabel, retryAction, cancelLabel, cancelAction}) => {
+const ErrorPanelComponent = ({show, message, retryLabel, retryAction, cancelLabel, cancelAction, onAction}) => {
   if (!show) {
     return null;
   }
   const onRetry = () => {
-    dispatch({
-      type: retryAction
-    });
+    typeof onAction === "function" && onAction(retryAction);
   };
   const onCancel = () => {
-    dispatch({
-      type: cancelAction
-    });
+    typeof onAction === "function" && onAction(cancelAction);
   };
   //window.console.debug("ErrorPanel rendering...");
   return (
@@ -47,14 +42,16 @@ const ErrorPanelComponent = ({show, message, retryLabel, retryAction, cancelLabe
   );
 };
 
-export const ErrorPanel = withStoreStateSubscription(
-  ErrorPanelComponent,
-  data => ({
-    show: data.error && data.error.message,
-    message: data.error && data.error.message,
-    retryLabel: data.error && data.error.retry && data.error.retry.label,
-    retryAction: data.error && data.error.retry && data.error.retry.action,
-    cancelLabel: data.error && data.error.cancel && data.error.cancel.label,
-    cancelAction: data.error && data.error.cancel && data.error.cancel.action,
+export const ErrorPanel = connect(
+  state => ({
+    show: state.error && state.error.message,
+    message: state.error && state.error.message,
+    retryLabel: state.error && state.error.retry && state.error.retry.label,
+    retryAction: state.error && state.error.retry && state.error.retry.action,
+    cancelLabel: state.error && state.error.cancel && state.error.cancel.label,
+    cancelAction: state.error && state.error.cancel && state.error.cancel.action,
+  }),
+  dispatch => ({
+    onAction:  action => dispatch({type: action})
   })
-);
+)(ErrorPanelComponent);

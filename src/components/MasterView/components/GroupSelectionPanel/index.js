@@ -15,31 +15,28 @@
 */
 
 import React from "react";
-import { dispatch } from "../../../../store";
+import { connect } from "../../../../store";
 import * as actions from "../../../../actions";
-import { withStoreStateSubscription} from "../../../withStoreStateSubscription";
 import { Select } from "../../../Select";
 import "./styles.css";
 
-const GroupSelectionPanelComponent = ({value, list}) => {
-  const handleChange = newValue => {
-    //window.console.debug("new group: " + newValue);
-    dispatch(actions.setIndex(newValue));
-  };
-  if (list.length <= 1) {
+const GroupSelectionPanelComponent = ({value, list, onChange}) => {
+  if (!Array.isArray(list) || list.length <= 1) {
     return null;
   }
   return (
     <div className="kgs-group-selection">
-      <Select label="Group" value={value} list={list} onChange={handleChange} />
+      <Select label="Group" value={value} list={list} onChange={onChange} />
     </div>
   );
 };
 
-export const GroupSelectionPanel = withStoreStateSubscription(
-  GroupSelectionPanelComponent,
-  data => ({
-    value: data.search.index,
-    list: data.indexes.indexes?data.indexes.indexes:[]
+export const GroupSelectionPanel = connect(
+  state => ({
+    value: state.search.index,
+    list: state.indexes.indexes?state.indexes.indexes:[]
+  }),
+  dispatch => ({
+    onChange: value => dispatch(actions.setIndex(value))
   })
-);
+)(GroupSelectionPanelComponent);

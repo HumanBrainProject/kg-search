@@ -14,8 +14,7 @@
 *   limitations under the License.
 */
 
-import React from "react";
-import { store } from "../../../../store";
+import { connect } from "../../../../store";
 import { HitPanel} from "./components/HitPanel";
 
 const markdownEscapedChars = {
@@ -158,38 +157,35 @@ const filterHighlightFields = (data, excludeFieldNames) => {
   return hasFields?fields:null;
 };
 
-export function Hit({data}) {
+export const Hit = connect(
+  (state, {data}) => {
+    const source = data && !(data.found === false) && data._type && data._source;
+    const mapping = source && state.definition && state.definition.shapeMappings && state.definition.shapeMappings[data._type];
 
-  const state = store.getState();
-  const source = data && !(data.found === false) && data._type && data._source;
-  const mapping = source && state.definition && state.definition.shapeMappings && state.definition.shapeMappings[data._type];
+    const ribbonData = mapping && mapping.ribbon && mapping.ribbon.framed && mapping.ribbon.framed.data_field && source[mapping.ribbon.framed.data_field];
+    const iconData = {
+      value: data && data._type,
+      image: {
+        url: source && source.image && source.image.url
+      }
+    };
+    const iconMapping = {
+      visible: true,
+      type: "icon",
+      icon: mapping && mapping.icon
+    };
 
-  const ribbonData = mapping && mapping.ribbon && mapping.ribbon.framed && mapping.ribbon.framed.data_field && source[mapping.ribbon.framed.data_field];
-  const iconData = {
-    value: data && data._type,
-    image: {
-      url: source && source.image && source.image.url
-    }
-  };
-  const iconMapping = {
-    visible: true,
-    type: "icon",
-    icon: mapping && mapping.icon
-  };
-
-  const hitProps = {
-    type: data && data._type,
-    hasNoData: !source,
-    hasUnknownData: !mapping,
-    ribbon: getField(data && data._type, "ribbon", ribbonData, null, mapping && mapping.ribbon),
-    icon:  getField(data && data._type, "icon", iconData, null, iconMapping),
-    fields: getFields(data && data._type, source, data && data.highlight, mapping, false),
-    highlightsField: {
-      fields: filterHighlightFields(data && data.highlight, ["title.value","description.value"]),
-      mapping: mapping
-    }
-  };
-  return (
-    <HitPanel {...hitProps} />
-  );
-}
+    return {
+      type: data && data._type,
+      hasNoData: !source,
+      hasUnknownData: !mapping,
+      ribbon: getField(data && data._type, "ribbon", ribbonData, null, mapping && mapping.ribbon),
+      icon:  getField(data && data._type, "icon", iconData, null, iconMapping),
+      fields: getFields(data && data._type, source, data && data.highlight, mapping, false),
+      highlightsField: {
+        fields: filterHighlightFields(data && data.highlight, ["title.value","description.value"]),
+        mapping: mapping
+      }
+    };
+  }
+)(HitPanel);
