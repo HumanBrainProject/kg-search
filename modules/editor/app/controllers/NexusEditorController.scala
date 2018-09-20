@@ -70,7 +70,7 @@ class NexusEditorController @Inject()(
 
   val logger = Logger(this.getClass)
 
-  def listInstances(org: String, domain:String, datatype: String, version:String): Action[AnyContent] = authenticatedUserAction.async  { implicit request =>
+  def listInstances(org: String, domain:String, datatype: String, version:String, from: Int, size: Int): Action[AnyContent] = authenticatedUserAction.async  { implicit request =>
     val nexusPath = NexusPath(org, domain, datatype, version)
     ws.url(s"$nexusEndpoint/v0/organizations/$org").addHttpHeaders("Authorization" -> request.headers.get("Authorization").getOrElse("")).get().flatMap{
       res =>
@@ -82,7 +82,7 @@ class NexusEditorController @Inject()(
             )
           case OK =>
             val start = System.currentTimeMillis()
-            ws.url(s"$kgQueryEndpoint/arango/instances/${nexusPath.toString()}").get().map{
+            ws.url(s"$kgQueryEndpoint/arango/instances/${nexusPath.toString()}?from=$from&size=$size").get().map{
               res =>
                 res.status match {
                   case OK =>
