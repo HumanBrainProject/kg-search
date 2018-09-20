@@ -18,7 +18,7 @@ package editor.services
 
 import authentication.service.OIDCAuthService
 import com.google.inject.Inject
-import common.models.{EditorUser, Favorite, NexusPath}
+import common.models.{EditorUser, Favorite, FavoriteGroup, NexusPath}
 import editor.helper.InstanceHelper
 import helpers.ResponseHelper
 import nexus.services.NexusService
@@ -29,7 +29,6 @@ import play.api.http.Status._
 import play.api.http.HeaderNames._
 import play.api.http.ContentTypes._
 
-
 import scala.concurrent.{ExecutionContext, Future}
 
 class EditorUserService @Inject()(configuration: Configuration, wSClient: WSClient, nexusService: NexusService, oIDCAuthService: OIDCAuthService)(implicit executionContext: ExecutionContext) {
@@ -38,7 +37,10 @@ class EditorUserService @Inject()(configuration: Configuration, wSClient: WSClie
   val logger = Logger(this.getClass)
 
   def getUser(id: String): Future[Option[EditorUser]] = {
-    wSClient.url(s"$kgQueryEndpoint/query").withHttpHeaders(CONTENT_TYPE -> JSON).post(EditorUserService.kgQueryGetQuery()).map{
+    wSClient
+      .url(s"$kgQueryEndpoint/query")
+      .withHttpHeaders(CONTENT_TYPE -> JSON)
+      .post(EditorUserService.kgQueryGetUserQuery).map{
       res => res.status match {
         case OK => (res.json \ "results").as[List[EditorUser]].find(user => user.id == id)
         case _ =>
@@ -72,31 +74,28 @@ class EditorUserService @Inject()(configuration: Configuration, wSClient: WSClie
     }
   }
 
-  def addFavorite(userId: String, instance: String): Future[Option[Favorite]] = {
+  def addFavorite(favoriteGroupId: String, instance: String): Future[Option[Favorite]] = {
     oIDCAuthService.getTechAccessToken().flatMap {
       token =>
-        getUser(userId).flatMap{
-          case Some(user) =>
-            val payload = EditorUserService.favoriteToNexusStruct(s"$nexusEndpoint/v0/data/$instance", s"$nexusEndpoint/v0/data/${user.nexusId}")
-            nexusService.insertInstance(
-              nexusEndpoint,
-              EditorUserService.favoritePath.org,
-              EditorUserService.favoritePath.domain,
-              EditorUserService.favoritePath.schema,
-              EditorUserService.favoritePath.version,
-              payload,
-              token
-            ).map{
-              res => res.status match{
-                case CREATED => Some(Favorite((res.json \ "@id").as[String].split("v0/data").last, instance))
-                case _ =>
-                  logger.error("Error while creating a favorite " + res.body)
-                  None
-              }
-            }
-          case None =>
-            logger.error("Error while creating a favorite. User not found")
-            Future{None}
+
+        val payload = EditorUserService.favoriteToNexusStruct(
+          s"$nexusEndpoint/v0/data/$instance",
+          s"$nexusEndpoint/v0/data/${favoriteGroupId}")
+        nexusService.insertInstance(
+          nexusEndpoint,
+          EditorUserService.favoritePath.org,
+          EditorUserService.favoritePath.domain,
+          EditorUserService.favoritePath.schema,
+          EditorUserService.favoritePath.version,
+          payload,
+          token
+        ).map{
+          res => res.status match{
+            case CREATED => Some(Favorite((res.json \ "@id").as[String].split("v0/data/").last, instance))
+            case _ =>
+              logger.error("Error while creating a favorite " + res.body)
+              None
+          }
         }
 
     }
@@ -117,6 +116,36 @@ class EditorUserService @Inject()(configuration: Configuration, wSClient: WSClie
     }
   }
 
+  def createFavoriteGroup(name: String, userId:String): Future[Option[FavoriteGroup]]  = {
+    oIDCAuthService.getTechAccessToken().flatMap {
+      token =>
+        getUser(userId).flatMap{
+          case Some(user) =>
+            val payload = EditorUserService.favoriteGroupToNexusStruct(name, s"$nexusEndpoint/v0/data/${user.nexusId}" )
+            nexusService.insertInstance(
+              nexusEndpoint,
+              EditorUserService.favoriteGroupPath.org,
+              EditorUserService.favoriteGroupPath.domain,
+              EditorUserService.favoriteGroupPath.schema,
+              EditorUserService.favoriteGroupPath.version,
+              payload,
+              token
+            ).map{
+              res => res.status match{
+                case CREATED => Some(FavoriteGroup((res.json \ "@id").as[String].split("v0/data/").last, name, Seq()))
+                case _ =>
+                  logger.error("Error while creating a favorite " + res.body)
+                  None
+              }
+            }
+          case None =>
+            logger.error("Error while creating a favorite. User not found")
+            Future{None}
+        }
+    }
+
+  }
+
   def getOrCreate(userId: String ): Future[Option[EditorUser]] = {
     this.getUser(userId).flatMap{
       case None => this.createUser(userId)
@@ -129,63 +158,94 @@ class EditorUserService @Inject()(configuration: Configuration, wSClient: WSClie
 
 object EditorUserService {
   val editorUserPath = NexusPath("kgeditor", "core", "user", "v0.0.2")
+  val favoriteGroupPath = NexusPath("kgeditor", "core", "favoriteGroup", "v0.0.1")
   val favoritePath = NexusPath("kgeditor", "core", "favorite", "v0.0.2")
 
-  def kgQueryGetQuery() =
+  val kgQueryGetUserQuery =
     s"""
-      |{
-      |  "@context": {
-      |    "@vocab": "http://schema.hbp.eu/graph_query/",
-      |    "schema": "http://schema.org/",
-      |    "kgeditor": "http://hbp.eu/kgeditor/",
-      |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
-      |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
-      |    "this": "http://schema.hbp.eu/instances/",
-      |    "searchui": "http://schema.hbp.eu/search_ui/",
-      |    "fieldname": {
-      |      "@id": "fieldname",
-      |      "@type": "@id"
-      |    },
-      |    "merge": {
-      |      "@id": "merge",
-      |      "@type": "@id"
-      |    },
-      |    "relative_path": {
-      |      "@id": "relative_path",
-      |      "@type": "@id"
-      |    },
-      |    "root_schema": {
-      |      "@id": "root_schema",
-      |      "@type": "@id"
-      |    }
-      |  },
-      |  "schema:name": "",
-      |  "root_schema": "nexus_instance:${editorUserPath.toString()}",
-      |  "fields": [
-      |    {
-      |      "fieldname": "nexusId",
-      |      "required": true,
-      |      "relative_path": "@id"
-      |    },
-      |    {
-      |      "fieldname": "id",
-      |      "required": true,
-      |      "relative_path": "schema:identifier"
-      |    },
-      |    {
-      |        "fieldname": "favorites",
-      |        "relative_path": [
-      |            {
-      |                "@id": "kgeditor:user",
-      |                "reverse":true
-      |            },
-      |            "kgeditor:instance",
-      |            "@id"
-      |        ]
-      |    }
-      |  ]
-      |}
+       |{
+       |  "@context": {
+       |    "@vocab": "http://schema.hbp.eu/graph_query/",
+       |    "schema": "http://schema.org/",
+       |    "kgeditor": "http://hbp.eu/kgeditor/",
+       |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
+       |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
+       |    "this": "http://schema.hbp.eu/instances/",
+       |    "searchui": "http://schema.hbp.eu/search_ui/",
+       |    "fieldname": {
+       |      "@id": "fieldname",
+       |      "@type": "@id"
+       |    },
+       |    "merge": {
+       |      "@id": "merge",
+       |      "@type": "@id"
+       |    },
+       |    "relative_path": {
+       |      "@id": "relative_path",
+       |      "@type": "@id"
+       |    },
+       |    "root_schema": {
+       |      "@id": "root_schema",
+       |      "@type": "@id"
+       |    }
+       |  },
+       |  "schema:name": "",
+       |  "root_schema": "nexus_instance:${editorUserPath.toString()}",
+       |  "fields": [
+       |    {
+       |      "fieldname": "nexusId",
+       |      "required": true,
+       |      "relative_path": "@id"
+       |    },
+       |    {
+       |      "fieldname": "id",
+       |      "required": true,
+       |      "relative_path": "schema:identifier"
+       |    },
+       |    {
+       |        "fieldname": "favoriteGroups",
+       |        "relative_path": {
+       |                "@id": "kgeditor:user",
+       |                "reverse":true
+       |        },
+       |        "fields": [
+       |           {
+       |             "fieldname": "name",
+       |             "relative_path": "schema:name",
+       |             "required": true
+       |           },
+       |           {
+       |             "fieldname": "nexusId",
+       |             "relative_path": "@id",
+       |             "required": true
+       |           },
+       |           {
+       |             "fieldname": "favorites",
+       |             "relative_path": {
+       |                 "@id": "kgeditor:favoriteGroup",
+       |                 "reverse":true
+       |               },
+       |               "fields":[
+       |               		{
+       |               			"fieldname":"nexusId",
+       |               			"relative_path": "@id"
+       |               		},
+       |               		{
+       |               			"fieldname":"instance",
+       |               			"relative_path": [
+       |               				"kgeditor:instance"
+       |               			]
+       |               		}
+       |
+       |               	]
+       |
+       |           }
+       |        ]
+       |    }
+       |  ]
+       |}
     """.stripMargin
+
 
   def userToNexusStruct(userId: String) = {
     Json.obj(
@@ -194,12 +254,21 @@ object EditorUserService {
     )
   }
 
-  def favoriteToNexusStruct(favorite: String, userNexusId: String) = {
+  def favoriteToNexusStruct(favorite: String, favoriteGroupNexusId: String) = {
     Json.obj(
-      "http://schema.org/identifier" -> InstanceHelper.md5HashString(userNexusId + favorite),
-      "http://hbp.eu/kgeditor/user" -> Json.obj("@id" -> s"$userNexusId"),
+      "http://schema.org/identifier" -> InstanceHelper.md5HashString(favoriteGroupNexusId + favorite),
+      "http://hbp.eu/kgeditor/favoriteGroup" -> Json.obj("@id" -> s"$favoriteGroupNexusId"),
       "http://hbp.eu/kgeditor/instance" -> Json.obj("@id" -> s"$favorite"),
       "@type" -> "http://hbp.eu/kgeditor/Favorite"
+    )
+  }
+
+  def favoriteGroupToNexusStruct(name:String, userNexusId: String) = {
+    Json.obj(
+      "http://schema.org/identifier" -> InstanceHelper.md5HashString(userNexusId + name),
+      "http://schema.org/name" -> name,
+      "http://hbp.eu/kgeditor/user" -> Json.obj("@id" -> s"$userNexusId"),
+      "@type" -> "http://hbp.eu/kgeditor/FavoriteGroup"
     )
   }
 }
