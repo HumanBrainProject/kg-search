@@ -17,7 +17,7 @@
 
 package editor.helpers
 
-import authentication.models.UserInfo
+import common.models.OIDCUser
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
@@ -41,7 +41,7 @@ class EditorSpaceHelperSpec  extends PlaySpec with GuiceOneAppPerSuite{
         "minds",
         "group1"
       )
-      val userInfo = UserInfo("123", "John Doe", "john@doe.com", originalGroups)
+      val userInfo =  new OIDCUser("123", "John Doe", "john@doe.com", originalGroups)
       val resGroups = EditorSpaceHelper.editorGroups(userInfo)
       assert(resGroups == expectedGroups)
     }

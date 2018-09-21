@@ -13,26 +13,26 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
+package common.models
 
-package common.services
+import play.api.libs.json._
 
-import common.helpers.ESHelper
-import javax.inject.Inject
-import play.api.Configuration
-import play.api.libs.json.JsValue
-import play.api.libs.ws.WSClient
+case class Favorite(nexusId: String, instanceId: String)
 
-import scala.concurrent.{ExecutionContext, Future}
+object Favorite {
 
-class ESService @Inject()(wSClient: WSClient, configuration: ConfigurationService)(implicit ec: ExecutionContext) {
+    import play.api.libs.functional.syntax._
 
-  def getEsIndices(): Future[List[String]] = {
-    wSClient.url(configuration.esHost + s"/${ESHelper.indicesPath}?format=json").get().map { res =>
-      val j = res.json
-      j.as[List[JsValue]].map(json =>
-        (json \ "index").as[String]
+    implicit val editorUserWrites = new Writes[Favorite] {
+      def writes(favorite: Favorite): JsObject = Json.obj(
+        "nexusId" -> favorite.nexusId.split("v0/data/").last,
+        "instanceId" -> favorite.instanceId,
       )
     }
-  }
+    implicit val editorUserReads: Reads[Favorite] = (
+      (JsPath \ "nexusId").read[String] and
+        (JsPath \ "instanceId").read[String]
+      ) (Favorite.apply _)
 
 }
+

@@ -30,7 +30,7 @@ import Entity.isNexusLink
 import Value.DEFAULT_RESOLUTION_STATUS
 
 
-class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService,config: Configuration)
+class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService)
                                 (implicit executionContext: ExecutionContext) {
 
   val logger = Logger(this.getClass)

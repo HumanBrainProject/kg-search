@@ -1,6 +1,6 @@
 GET    /api/nodetypes                  editor.controllers.NexusEditorController.listEntities( privateSpace: String ?= "minds")
 
-GET    /api/instances/:org/:domain/:datatype/:version         editor.controllers.NexusEditorController.listInstances(org: String, domain:String, datatype: String, version:String)
+GET    /api/instances/:org/:domain/:datatype/:version         editor.controllers.NexusEditorController.listInstances(org: String, domain:String, datatype: String, version:String, from:Int?=0, size:Int?=20, search:String?="")
 
 GET    /api/instance/:org/:domain/:datatype/:version/:id                 editor.controllers.NexusEditorController.getInstance(org: String, domain:String, datatype: String, version:String, id: String)
 GET    /api/instance/:org/:domain/:datatype/:version                 editor.controllers.NexusEditorController.getEmptyForm(org: String, domain:String, datatype: String, version:String)
@@ -49,7 +49,27 @@ GET    /api/graph/:org/:domain/:datatype/:version/:id   editor.controllers.Nexus
 #    required: false
 #    type: string
 ###
-GET    /api/release/:org/:domain/:datatype/:version/:id             editor.controllers.NexusEditorController.releaseStatus(org: String, domain:String, datatype: String, version:String, id: String )
+GET    /api/release/:org/:domain/:datatype/:version/:id             editor.controllers.NexusEditorController.releaseInstance(org: String, domain:String, datatype: String, version:String, id: String )
+
+###
+#  summary: get release information on an entity and its children
+#  tags:
+#    - editor
+#  parameters:
+#  - in: body
+#    name: instances
+#    description: JsArray of entities to retrieve the status
+#    schema:
+#      type: array
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+POST    /api/releasestatus            editor.controllers.NexusEditorController.releaseStatus
+
+
 
 ###
 #  summary: create a schema where http://schema.org/identifier and the revision only is mandatory
@@ -79,3 +99,96 @@ GET    /api/release/:org/:domain/:datatype/:version/:id             editor.contr
 #      description: "Ok"
 ###
 POST   /release                                          editor.controllers.NexusEditorController.releaseInstances
+
+
+###
+#  summary: Create the current user as an Editor User
+#  parameters:
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+#  responses:
+#    201:
+#      description: "Created"
+###
+POST   /user                                          editor.controllers.NexusEditorUserController.createCurrentUser
+
+###
+#  summary: Get the current user as an Editor User
+#  parameters:
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+#  responses:
+#    200:
+#      description: "Ok"
+###
+GET   /user                                          editor.controllers.NexusEditorUserController.getCurrentUser
+
+###
+#  summary: Create a new favorite for the the current user
+#  parameters:
+#  - in: body
+#    name: instanceId
+#    required: true
+#    description: the instance to be added as favorite
+#    schema:
+#      type: object
+#      properties:
+#        instanceId:
+#          type: string
+#        favoriteGroupNexusId:
+#           type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+#  responses:
+#    201:
+#      description: "Created"
+###
+POST   /user/favorite          editor.controllers.NexusEditorUserController.addFavorite
+
+
+###
+#  summary: Remove a favorite
+#  parameters:
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+#  responses:
+#    200:
+#      description: "Ok"
+###
+DELETE   /user/favorite/:org/:domain/:datatype/:version/:id           editor.controllers.NexusEditorUserController.deleteFavorite(org: String, domain:String, datatype: String, version:String, id: String)
+
+
+###
+#  summary: Create a new favorite group for the the current user
+#  parameters:
+#  - in: body
+#    name: name
+#    required: true
+#    description: the name of the favorite group to create
+#    schema:
+#      type: object
+#      properties:
+#        name:
+#          type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+#  responses:
+#    201:
+#      description: "Created"
+###
+POST   /user/favoritegroup         editor.controllers.NexusEditorUserController.createFavoriteGroup

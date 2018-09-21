@@ -19,11 +19,9 @@ package editor.helper
 
 
 import common.helpers.JsFlattener
-import common.models.NexusPath
+import common.models.{NexusInstance, NexusPath, User}
 import editor.helpers.{FormHelper, NavigationHelper}
 import editor.models.{InMemoryKnowledge, IncomingLinksInstances, ReleaseStatus}
-import authentication.models.UserInfo
-import common.models.NexusInstance
 import nexus.helpers.NexusHelper
 import org.joda.time.DateTime
 import org.json4s.native.{JsonMethods, JsonParser}
@@ -49,7 +47,7 @@ object InstanceHelper {
                                   originalInstance: NexusInstance,
                                   editorInstances: List[NexusInstance],
                                   updateToBeStoredInManual: JsObject,
-                                  user: UserInfo
+                                  user: User
                                 ): (NexusInstance, Option[List[UpdateInfo]]) = {
     logger.debug(s"Result from incoming links $editorInstances")
     val updatesByPriority = buildManualUpdatesFieldsFrequency(
@@ -83,11 +81,18 @@ object InstanceHelper {
          * final diff is then an addition/update from original view
          * this allows partially defined form (some field are then not updatable)
          */
-        val Diff(changedFromOrg, addedFromOrg, deletedFromOrg) = JsonParser.parse(originalInstanceContent.toString()).diff(newJson)
+        val originalContent = JsonParser.parse(originalInstanceContent.toString())
+        val Diff(changedFromOrg, addedFromOrg, deletedFromOrg) = originalContent.diff(newJson)
         if (deletedFromOrg != JsonAST.JNothing) {
           logger.debug(s"""PARTIAL FORM DEFINITION - missing fields from form: ${deletedFromOrg.toString}""")
+          // Here we try to get the diff as being the array without the deleted element
+          val Diff(_, add, _) = deletedFromOrg.diff(originalContent)
+          val Diff(ch, _ ,_ ) = newJson.diff(add)
+          changedFromOrg.merge(ch)
+        }else{
+          changedFromOrg.merge(addedFromOrg)
         }
-        changedFromOrg.merge(addedFromOrg)
+
     }
     val rendered = Json.parse(JsonMethods.compact(JsonMethods.render(diff))).as[JsObject]
     val newValues = Json.parse(newValue)
@@ -250,7 +255,7 @@ object InstanceHelper {
     jsObject - ("@context") - ("@type") - ("links") - ("nxv:deprecated")
   }
 
-  def prepareManualEntityForStorage(manualEntity: JsObject, userInfo: UserInfo): JsObject = {
+  def prepareManualEntityForStorage(manualEntity: JsObject, userInfo: User): JsObject = {
     manualEntity.+("http://hbp.eu/manual#updater_id", JsString(userInfo.id))
       .+("http://hbp.eu/manual#update_timestamp", JsNumber(new DateTime().getMillis))
       .-("@context")
@@ -286,7 +291,7 @@ object InstanceHelper {
       val formattedId = NexusPath(url)
         .originalPath(reconciledSuffix)
         .toString() + "/" + id
-      Json.obj("id" -> formattedId, "description" -> description, "label" -> name, "status" -> ReleaseStatus.getRandomStatus(), "childrenStatus" -> ReleaseStatus.getRandomChildrenStatus())
+      Json.obj("id" -> formattedId, "description" -> description, "label" -> name)
     }
     Json.toJson(arr)
   }

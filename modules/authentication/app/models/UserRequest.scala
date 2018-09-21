@@ -15,6 +15,7 @@
 */
 package authentication.models
 
+import common.models.OIDCUser
 import play.api.mvc.{Request, WrappedRequest}
 
 /**
@@ -23,4 +24,4 @@ import play.api.mvc.{Request, WrappedRequest}
   * @param request
   * @tparam A
   */
-class UserRequest[A](val user: UserInfo, request: Request[A]) extends WrappedRequest[A](request)
+class UserRequest[A](val user: OIDCUser, request: Request[A]) extends WrappedRequest[A](request)

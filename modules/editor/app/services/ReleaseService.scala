@@ -1,6 +1,25 @@
+
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
 package editor.services
 
 import com.google.inject.Inject
+import common.models.NexusPath
+import nexus.services.NexusService
 import play.api.{Configuration, Logger}
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
@@ -10,16 +29,29 @@ import play.api.http.ContentTypes._
 
 import scala.concurrent.{ExecutionContext, Future}
 import play.api.mvc.Results._
+import common.services.ConfigurationService
 
-class ReleaseService @Inject()(ws: WSClient,
-                              config: Configuration
-                             )(implicit executionContext: ExecutionContext) {
-  val kgQueryEndpoint: String = config.getOptional[String]("kgquery.endpoint").getOrElse("http://localhost:8600")
+class ReleaseService @Inject()(
+                                ws: WSClient,
+                                nexusService: NexusService,
+                                config: ConfigurationService
+                              )(implicit executionContext: ExecutionContext) {
   val logger = Logger(this.getClass)
 
-  def releaseStatus(org: String, domain: String, schema: String, version: String, id:String):Future[Either[Option[WSResponse],  collection.Map[String, JsValue]]] = {
+  def releaseInstance(nexusPath: NexusPath, id:String, token: String)
+  :Future[Either[Option[WSResponse],  collection.Map[String, JsValue]]] = {
+    val reconciledPath = nexusPath.reconciledPath(config.reconciledPrefix)
+    nexusService.getInstance(s"${config.nexusEndpoint}/v0/data/${reconciledPath.toString()}/$id", token).flatMap{
+      res => res.status match {
+        case NOT_FOUND => this.getReleaseInstance(nexusPath, id)
+        case _ => this.getReleaseInstance(reconciledPath, id)
+      }
+    }
 
-    ws.url(s"${kgQueryEndpoint}/arango/release/$org/$domain/$schema/$version/$id").addHttpHeaders(CONTENT_TYPE -> JSON).get().map{
+  }
+
+  private def getReleaseInstance(nexusPath: NexusPath, id: String): Future[Either[Option[WSResponse],  collection.Map[String, JsValue]]] = {
+    ws.url(s"${config.kgQueryEndpoint}/arango/release/${nexusPath.toString()}/$id").addHttpHeaders(CONTENT_TYPE -> JSON).get().map{
       res => res.status match{
         case OK =>
           val item = res.json.as[JsObject]
@@ -31,6 +63,21 @@ class ReleaseService @Inject()(ws: WSClient,
           }
         case _ => logger.error(res.body)
           Left(Some(res))
+      }
+    }
+  }
+
+  // TOFIX change the graph api to something more appropriate
+  def releaseStatus(org: String, domain: String, schema: String, version: String, id:String):Future[Either[(String, WSResponse), JsObject]] = {
+
+    ws.url(s"${config.kgQueryEndpoint}/arango/releasestatus/$org/$domain/$schema/$version/$id").addHttpHeaders(CONTENT_TYPE -> JSON).get().map{
+      res => res.status match{
+        case OK =>
+          val item = res.json.as[JsObject]
+          val spec = ReleaseService.reduceChildrenStatus(item)
+          Right(spec)
+        case _ => logger.error(res.body)
+          Left((s"$org/$domain/$schema/$version/$id",res))
       }
     }
   }
@@ -58,5 +105,22 @@ object ReleaseService {
         case _ => k._1 -> k._2
       }
     }
+  }
+
+  def getWorstChildrenStatus(item: JsObject):String = {
+    val childrenStatus = (item \ "child_status").as[List[String]]
+    if(childrenStatus.isEmpty || childrenStatus.contains("NOT_RELEASED")){
+      "NOT_RELEASED"
+    }else if(childrenStatus.contains("HAS_CHANGED")){
+      "HAS_CHANGED"
+    }else {
+      "RELEASED"
+    }
+  }
+
+  def reduceChildrenStatus(item:JsObject): JsObject = {
+    val childrenStatus = getWorstChildrenStatus(item)
+    val id = (item \ "id").as[String].replaceAll("_", ".").replaceAll("-", "/")
+    item +("childrenStatus" -> JsString(childrenStatus)) - "child_status" + ("id" -> JsString(id))
   }
 }

@@ -17,7 +17,8 @@
 
 package editor.helpers
 
-import authentication.models.UserInfo
+import common.models.OIDCUser
+
 
 object EditorSpaceHelper {
   private val editorSuffix = "-editor"
@@ -41,7 +42,7 @@ object EditorSpaceHelper {
     * @param userInfo
     * @return
     */
-  def editorGroups(userInfo: UserInfo):List[String] = {
+  def editorGroups(userInfo: OIDCUser):List[String] = {
     userInfo.groups
       .filter( group => group.startsWith(nexusPrefix) && group.endsWith(editorSuffix))
       .map{
@@ -60,7 +61,7 @@ object EditorSpaceHelper {
     * @param hintedGroup The group the user wants to use
     * @return true if the group is an editor group
     */
-  def isEditorGroup(userInfo: UserInfo, hintedGroup: String): Boolean = {
+  def isEditorGroup(userInfo: OIDCUser, hintedGroup: String): Boolean = {
     editorGroups(userInfo).contains(hintedGroup)
   }
 

@@ -22,16 +22,20 @@ import play.api.{Configuration, Logger}
 import play.api.http.HttpEntity
 import play.api.libs.json.JsArray
 import play.api.mvc._
+import common.services.ConfigurationService
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class NexusCommonController @Inject()(cc: ControllerComponents, config:Configuration, nexusService: NexusService, nexusSpaceService: NexusSpaceService)(implicit ec: ExecutionContext)
+class NexusCommonController @Inject()(
+                                       cc: ControllerComponents,
+                                       config: ConfigurationService,
+                                       nexusService: NexusService,
+                                       nexusSpaceService: NexusSpaceService
+                                     )(implicit ec: ExecutionContext)
   extends AbstractController(cc) {
   val logger = Logger(this.getClass)
-  val apiEndpoint = s"${config.get[String]("auth.endpoint")}/idm/v1/api"
-  val nexusEndpoint = config.get[String]("nexus.endpoint")
-  val iamEndpoint = config.get[String]("nexus.iam")
+  val apiEndpoint = s"${config.authEndpoint}/idm/v1/api"
   val orgNamePattern = "[a-z0-9]{3,}"
 
 
@@ -48,8 +52,8 @@ class NexusCommonController @Inject()(cc: ControllerComponents, config:Configura
             val adminGroupName = nexusGroupName + "-admin"
             for {
               nexusGroups <- nexusSpaceService.createGroups(nexusGroupName, adminGroupName, description, token, apiEndpoint)
-              nexusOrg <- nexusSpaceService.createNexusOrg(groupName, token, nexusEndpoint)
-              iamRights <- nexusSpaceService.grantIAMrights(groupName, token, iamEndpoint)
+              nexusOrg <- nexusSpaceService.createNexusOrg(groupName, token, config.nexusEndpoint)
+              iamRights <- nexusSpaceService.grantIAMrights(groupName, token, config.iamEndpoint)
             } yield {
               val res = List(s"OIDC group creation result: ${nexusGroups.statusText}\t content: ${nexusGroups.body}",
                 s"Nexus organization creation result: ${nexusOrg.statusText}\t content: ${nexusOrg.body}",
@@ -67,20 +71,38 @@ class NexusCommonController @Inject()(cc: ControllerComponents, config:Configura
   }
 
 
-  def createSchema(organization: String, domain: String, entityType: String, version: String, namespace: Option[String]): Action[AnyContent] = Action.async { implicit request =>
+  def createSchema(
+                    organization: String,
+                    domain: String,
+                    entityType: String,
+                    version: String,
+                    namespace: Option[String]
+                  ): Action[AnyContent] = Action.async { implicit request =>
     val tokenOpt = request.headers.toSimpleMap.get("Authorization")
     tokenOpt match {
       case Some(token) =>
-        nexusService.createSimpleSchema(nexusEndpoint, organization, domain, entityType, version, token, namespace).map {
-            response =>
-              response.status match {
-                case 200 =>
-                  Ok(response.body)
-                case _ =>
-                  Result(ResponseHeader(response.status, flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](response.headers))),
-                    HttpEntity.Strict(response.bodyAsBytes, getContentType(response.headers)))
-              }
-          }
+        nexusService.createSimpleSchema(
+          config.nexusEndpoint,
+          organization,
+          domain,
+          entityType,
+          version,
+          token,
+          namespace
+        ).map {
+          response =>
+            response.status match {
+              case 200 =>
+                Ok(response.body)
+              case _ =>
+                Result(
+                  ResponseHeader(
+                    response.status,
+                    flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](response.headers))
+                  ),
+                  HttpEntity.Strict(response.bodyAsBytes, getContentType(response.headers)))
+            }
+        }
       case None =>
         Future.successful(Unauthorized)
     }

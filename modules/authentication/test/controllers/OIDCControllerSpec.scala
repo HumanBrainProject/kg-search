@@ -1,5 +1,6 @@
 package authentication.controllers
 
+import common.models.OIDCUser
 import mockws.{MockWS, MockWSHelpers}
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
@@ -9,7 +10,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Results.Ok
 import play.api.mvc._
 import play.api.test._
-import authentication.models.UserInfo
+
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext}
 
@@ -33,7 +34,7 @@ class OIDCControllerSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHe
       implicit val config = app.injector.instanceOf[Configuration]
       implicit val ec = app.injector.instanceOf[ExecutionContext]
       val userinfo = Some(
-        UserInfo(
+        new OIDCUser(
           "123",
           "name",
           "email",

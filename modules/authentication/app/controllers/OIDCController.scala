@@ -26,6 +26,7 @@ import play.api.libs.ws.WSClient
 import play.api.mvc._
 import play.api.{Configuration, Logger}
 import authentication.service.OIDCAuthService
+import common.services.ConfigurationService
 
 import scala.concurrent.ExecutionContext
 
@@ -33,11 +34,10 @@ import scala.concurrent.ExecutionContext
 class OIDCController @Inject()(cc: ControllerComponents,
                                authService: OIDCAuthService,
                                authenticatedUserAction: AuthenticatedUserAction,
-                               config: Configuration
+                               config: ConfigurationService
                               )
                               (implicit ec: ExecutionContext)
   extends AbstractController(cc) {
-  val esHost: String = config.get[String]("es.host")
   val logger = Logger(this.getClass)
 
   /**
@@ -45,7 +45,6 @@ class OIDCController @Inject()(cc: ControllerComponents,
     * @return A list of accessible ES index
     */
   def groups(): Action[AnyContent] = Action.async { implicit request =>
-
     authService.getUserInfo(request.headers).flatMap{
       userinfo =>
         logger.debug(s"Authenticated user ${userinfo}")

@@ -2,6 +2,8 @@ package common.helpers
 
 import play.api.inject.guice.GuiceApplicationBuilder
 
+import scala.concurrent.duration.FiniteDuration
+
 object ConfigMock {
   val nexusEndpoint: String = "http://www.nexus.com"
   val reconcileEndpoint: String = "http://www.reconcile.com"
@@ -13,6 +15,10 @@ object ConfigMock {
   val reconciledPrefix = "reconciled"
   val editorPrefix = "editor"
   val kgQueryEndpoint = "kgqueryEndpoint"
+  val refreshTokenFile = "/opt/tokenfolder"
+  val authEndpoint = "auth.com"
+  val cacheExpiration = FiniteDuration(10, "min")
+  val nexusIam = "nexus-iam.com"
 
   val fakeApplicationConfig = GuiceApplicationBuilder().configure(
     "play.http.filters" -> "play.api.http.NoHttpFilters",
@@ -25,6 +31,10 @@ object ConfigMock {
     "es.host" -> esHost,
     "nexus.reconciled.prefix" -> reconciledPrefix,
     "nexus.editor.prefix" -> editorPrefix,
-    "kgquery.endpoint" -> kgQueryEndpoint
+    "kgquery.endpoint" -> kgQueryEndpoint,
+    "auth.refreshTokenFile" -> refreshTokenFile,
+    "auth.endpoint"-> authEndpoint,
+    "proxy.cache.expiration" -> cacheExpiration.toMillis,
+    "nexus.iam" -> nexusIam
   )
 }
