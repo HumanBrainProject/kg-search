@@ -26,13 +26,14 @@ import scala.concurrent.{ExecutionContext, Future}
 import NexusService._
 import common.models.ReleaseInstance
 import play.api.Configuration
+import common.services.ConfigurationService
 
 
-class NexusService @Inject()(wSClient: WSClient, config:Configuration)(implicit executionContext: ExecutionContext) {
-  val nexusEndpoint: String = config.getOptional[String]("nexus.endpoint").getOrElse("https://nexus-dev.humanbrainproject.org")
+class NexusService @Inject()(wSClient: WSClient, config:ConfigurationService)(implicit executionContext: ExecutionContext) {
+
   def releaseInstance(instanceData: JsValue, token: String): Future[JsObject] = {
     val jsonObj = instanceData.as[JsObject]
-    val instanceUrl = s"$nexusEndpoint/v0/data/${(jsonObj \ "id").as[String]}"
+    val instanceUrl = s"${config.nexusEndpoint}/v0/data/${(jsonObj \ "id").as[String]}"
     val instanceRev = (jsonObj \ "rev").as[Long]
     // check if this instance is attached to a release instance already
     isReleased(instanceUrl, instanceRev, token).flatMap{ releasedId =>
@@ -44,7 +45,7 @@ class NexusService @Inject()(wSClient: WSClient, config:Configuration)(implicit 
               "released_id" -> JsString(releaseInstance.id())
             )))
           }else{
-            updateReleaseInstance(instanceUrl, s"$nexusEndpoint/v0/data/${releaseInstance.id()}", instanceRev,releaseInstance.revision, token).map{
+            updateReleaseInstance(instanceUrl, s"${config.nexusEndpoint}/v0/data/${releaseInstance.id()}", instanceRev,releaseInstance.revision, token).map{
               case (status, response) =>
                 response.status match {
                   case 200 | 201 =>

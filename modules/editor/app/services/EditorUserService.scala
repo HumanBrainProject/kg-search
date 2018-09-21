@@ -19,6 +19,7 @@ package editor.services
 import authentication.service.OIDCAuthService
 import com.google.inject.Inject
 import common.models.{EditorUser, Favorite, FavoriteGroup, NexusPath}
+import common.services.ConfigurationService
 import editor.helper.InstanceHelper
 import helpers.ResponseHelper
 import nexus.services.NexusService
@@ -31,14 +32,16 @@ import play.api.http.ContentTypes._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class EditorUserService @Inject()(configuration: Configuration, wSClient: WSClient, nexusService: NexusService, oIDCAuthService: OIDCAuthService)(implicit executionContext: ExecutionContext) {
-  val nexusEndpoint: String = configuration.getOptional[String]("nexus.endpoint").getOrElse("https://nexus-dev.humanbrainproject.org")
-  val kgQueryEndpoint: String = configuration.getOptional[String]("kgquery.endpoint").getOrElse("http://localhost:8600")
+class EditorUserService @Inject()(config: ConfigurationService,
+                                  wSClient: WSClient,
+                                  nexusService: NexusService,
+                                  oIDCAuthService: OIDCAuthService
+                                 )(implicit executionContext: ExecutionContext) {
   val logger = Logger(this.getClass)
 
   def getUser(id: String): Future[Option[EditorUser]] = {
     wSClient
-      .url(s"$kgQueryEndpoint/query")
+      .url(s"${config.kgQueryEndpoint}/query")
       .withHttpHeaders(CONTENT_TYPE -> JSON)
       .post(EditorUserService.kgQueryGetUserQuery).map{
       res => res.status match {
@@ -55,7 +58,7 @@ class EditorUserService @Inject()(configuration: Configuration, wSClient: WSClie
       token =>
         // Create the user in the nexus
         nexusService.insertInstance(
-          nexusEndpoint,
+          config.nexusEndpoint,
           EditorUserService.editorUserPath.org,
           EditorUserService.editorUserPath.domain,
           EditorUserService.editorUserPath.schema,
@@ -79,10 +82,10 @@ class EditorUserService @Inject()(configuration: Configuration, wSClient: WSClie
       token =>
 
         val payload = EditorUserService.favoriteToNexusStruct(
-          s"$nexusEndpoint/v0/data/$instance",
-          s"$nexusEndpoint/v0/data/${favoriteGroupId}")
+          s"${config.nexusEndpoint}/v0/data/$instance",
+          s"${config.nexusEndpoint}/v0/data/${favoriteGroupId}")
         nexusService.insertInstance(
-          nexusEndpoint,
+          config.nexusEndpoint,
           EditorUserService.favoritePath.org,
           EditorUserService.favoritePath.domain,
           EditorUserService.favoritePath.schema,
@@ -105,7 +108,7 @@ class EditorUserService @Inject()(configuration: Configuration, wSClient: WSClie
     oIDCAuthService.getTechAccessToken().flatMap {
       token =>
         nexusService.deprecateInstance(
-          nexusEndpoint,
+          config.nexusEndpoint,
           EditorUserService.favoritePath.org,
           EditorUserService.favoritePath.domain,
           EditorUserService.favoritePath.schema,
@@ -121,9 +124,9 @@ class EditorUserService @Inject()(configuration: Configuration, wSClient: WSClie
       token =>
         getUser(userId).flatMap{
           case Some(user) =>
-            val payload = EditorUserService.favoriteGroupToNexusStruct(name, s"$nexusEndpoint/v0/data/${user.nexusId}" )
+            val payload = EditorUserService.favoriteGroupToNexusStruct(name, s"${config.nexusEndpoint}/v0/data/${user.nexusId}" )
             nexusService.insertInstance(
-              nexusEndpoint,
+              config.nexusEndpoint,
               EditorUserService.favoriteGroupPath.org,
               EditorUserService.favoriteGroupPath.domain,
               EditorUserService.favoriteGroupPath.schema,

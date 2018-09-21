@@ -29,25 +29,22 @@ import play.api.http.Status._
 import play.api.libs.json.JsObject
 import play.api.libs.ws.WSClient
 import play.api.mvc.Headers
-import services.ESService
+import common.services.{ConfigurationService, ESService}
 
 import scala.concurrent.duration.FiniteDuration._
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
 
 class OIDCAuthService @Inject()(
-                                 config: Configuration,
+                                 config: ConfigurationService,
                                  eSService: ESService,
                                  credentialsService: CredentialsService,
                                  @NamedCache("userinfo-cache") cache: AsyncCacheApi,
                                  ws: WSClient
                                )(implicit ec: ExecutionContext) extends AuthService {
-  val oidcEndpoint = s"${config.get[String]("auth.endpoint")}/oidc"
-  val oidcUserInfoEndpoint = s"$oidcEndpoint/userinfo"
-  val oidcTokenEndpoint= s"$oidcEndpoint/token"
+
   private val techAccessToken = "techAccessToken"
   val logger = Logger(this.getClass)
-  val cacheExpiration = config.get[FiniteDuration]("proxy.cache.expiration")
 
   override type U = Option[OIDCUser]
 
@@ -68,7 +65,7 @@ class OIDCAuthService @Inject()(
     * @return An option with the UserInfo object
     */
   def getUserInfoFromToken(token:String): Future[Option[OIDCUser]] = {
-    ws.url(oidcUserInfoEndpoint).addHttpHeaders("Authorization" -> token).get().map {
+    ws.url(config.oidcUserInfoEndpoint).addHttpHeaders("Authorization" -> token).get().map {
       res =>
         res.status match {
           case OK =>
@@ -112,7 +109,7 @@ class OIDCAuthService @Inject()(
       case _ =>
         getUserInfoFromToken(token).map{
           case Some(userInfo) =>
-            cache.set(token, userInfo, cacheExpiration)
+            cache.set(token, userInfo, config.cacheExpiration)
             Some(userInfo)
           case _ =>
             None
@@ -130,7 +127,7 @@ class OIDCAuthService @Inject()(
   }
 
   def refreshAccessToken(clientCredentials: ClientCredentials): Future[String] = {
-    ws.url(oidcTokenEndpoint)
+    ws.url(config.oidcTokenEndpoint)
       .withQueryStringParameters( "client_id" -> clientCredentials.clientId, "client_secret" -> clientCredentials.clientSecret, "refresh_token" -> clientCredentials.refreshToken, "grant_type" -> "refresh_token")
       .get()
       .map{

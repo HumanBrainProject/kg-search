@@ -4,6 +4,7 @@ import authentication.service.OIDCAuthService
 import common.helpers.ConfigMock
 import common.helpers.ConfigMock._
 import common.models.{EditorUser, Favorite, FavoriteGroup}
+import common.services.ConfigurationService
 import mockws.{MockWS, MockWSHelpers}
 import nexus.services.NexusService
 import org.scalatest.mockito.MockitoSugar
@@ -64,7 +65,8 @@ class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockW
       val ec = global
       val oidcService = mock[OIDCAuthService]
       val nexusService = mock[NexusService]
-      val service = new EditorUserService(fakeApplication().configuration, ws,nexusService,oidcService)(ec)
+      val configService = mock[ConfigurationService]
+      val service = new EditorUserService(configService, ws,nexusService,oidcService)(ec)
 
       val res = Await.result(service.getUser(id), FiniteDuration(10 ,"s"))
 

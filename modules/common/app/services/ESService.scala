@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-package services
+package common.services
 
 import common.helpers.ESHelper
 import javax.inject.Inject
@@ -24,11 +24,10 @@ import play.api.libs.ws.WSClient
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ESService @Inject()(wSClient: WSClient, configuration: Configuration)(implicit ec: ExecutionContext) {
-  val esHost: String = configuration.get[String]("es.host")
+class ESService @Inject()(wSClient: WSClient, configuration: ConfigurationService)(implicit ec: ExecutionContext) {
 
   def getEsIndices(): Future[List[String]] = {
-    wSClient.url(esHost + s"/${ESHelper.indicesPath}?format=json").get().map { res =>
+    wSClient.url(configuration.esHost + s"/${ESHelper.indicesPath}?format=json").get().map { res =>
       val j = res.json
       j.as[List[JsValue]].map(json =>
         (json \ "index").as[String]

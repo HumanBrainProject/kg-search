@@ -32,8 +32,6 @@ import scala.concurrent.ExecutionContext
 class NexusEditorUserController @Inject()(
                                            cc: ControllerComponents,
                                            authenticatedUserAction: AuthenticatedUserAction,
-                                           oIDCAuthService: OIDCAuthService,
-                                           config: Configuration,
                                            editorUserService: EditorUserService,
                                          )(implicit ec: ExecutionContext)
   extends AbstractController(cc) {

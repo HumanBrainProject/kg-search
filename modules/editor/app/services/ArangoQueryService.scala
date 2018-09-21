@@ -25,17 +25,16 @@ import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
 import play.api.http.HeaderNames._
+import common.services.ConfigurationService
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class ArangoQueryService @Inject()(
-                                    configuration: Configuration,
+                                    config: ConfigurationService,
                                     wSClient: WSClient,
                                     nexusService: NexusService,
                                     oIDCAuthService: OIDCAuthService
                                   )(implicit executionContext: ExecutionContext) {
-  val kgQueryEndpoint: String = configuration.getOptional[String]("kgquery.endpoint").getOrElse("http://localhost:8600")
-  val reconciledPrefix: String = configuration.getOptional[String]("nexus.reconciled.prefix").getOrElse("reconciled")
 
   def graphEntities(org: String,
                     domain: String,
@@ -46,8 +45,8 @@ class ArangoQueryService @Inject()(
                     token: String
                    ): Future[Either[WSResponse, JsObject]] = {
     val path = NexusPath(org, domain, schema, version)
-    val reconciledPath = path.reconciledPath(reconciledPrefix)
-    nexusService.getInstance(s"${nexusService.nexusEndpoint}/v0/data/${reconciledPath.toString()}/$id", token).flatMap{
+    val reconciledPath = path.reconciledPath(config.reconciledPrefix)
+    nexusService.getInstance(s"${config.nexusEndpoint}/v0/data/${reconciledPath.toString()}/$id", token).flatMap{
       res => res.status match {
         case NOT_FOUND => this.graph(path, id, step)
         case OK => this.graph(reconciledPath, id, step)
@@ -59,7 +58,7 @@ class ArangoQueryService @Inject()(
 
   private def graph(nexusPath: NexusPath, id:String, step:Int): Future[Either[WSResponse, JsObject]] = {
     wSClient
-      .url(s"${kgQueryEndpoint}/arango/graph/${nexusPath.toString}/$id?step=$step")
+      .url(s"${config.kgQueryEndpoint}/arango/graph/${nexusPath.toString}/$id?step=$step")
       .addHttpHeaders(CONTENT_TYPE -> "application/json").get().map {
       allRelations =>
         allRelations.status match {

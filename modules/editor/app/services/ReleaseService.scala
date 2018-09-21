@@ -29,19 +29,19 @@ import play.api.http.ContentTypes._
 
 import scala.concurrent.{ExecutionContext, Future}
 import play.api.mvc.Results._
+import common.services.ConfigurationService
 
-class ReleaseService @Inject()(ws: WSClient,
-                               nexusService: NexusService,
-                              config: Configuration
-                             )(implicit executionContext: ExecutionContext) {
-  val kgQueryEndpoint: String = config.getOptional[String]("kgquery.endpoint").getOrElse("http://localhost:8600")
-  val reconciledPrefix: String = config.getOptional[String]("nexus.reconciled.prefix").getOrElse("reconciled")
+class ReleaseService @Inject()(
+                                ws: WSClient,
+                                nexusService: NexusService,
+                                config: ConfigurationService
+                              )(implicit executionContext: ExecutionContext) {
   val logger = Logger(this.getClass)
 
   def releaseInstance(nexusPath: NexusPath, id:String, token: String)
   :Future[Either[Option[WSResponse],  collection.Map[String, JsValue]]] = {
-    val reconciledPath = nexusPath.reconciledPath(reconciledPrefix)
-    nexusService.getInstance(s"${nexusService.nexusEndpoint}/v0/data/${reconciledPath.toString()}/$id", token).flatMap{
+    val reconciledPath = nexusPath.reconciledPath(config.reconciledPrefix)
+    nexusService.getInstance(s"${config.nexusEndpoint}/v0/data/${reconciledPath.toString()}/$id", token).flatMap{
       res => res.status match {
         case NOT_FOUND => this.getReleaseInstance(nexusPath, id)
         case _ => this.getReleaseInstance(reconciledPath, id)
@@ -51,7 +51,7 @@ class ReleaseService @Inject()(ws: WSClient,
   }
 
   private def getReleaseInstance(nexusPath: NexusPath, id: String): Future[Either[Option[WSResponse],  collection.Map[String, JsValue]]] = {
-    ws.url(s"${kgQueryEndpoint}/arango/release/${nexusPath.toString()}/$id").addHttpHeaders(CONTENT_TYPE -> JSON).get().map{
+    ws.url(s"${config.kgQueryEndpoint}/arango/release/${nexusPath.toString()}/$id").addHttpHeaders(CONTENT_TYPE -> JSON).get().map{
       res => res.status match{
         case OK =>
           val item = res.json.as[JsObject]
@@ -70,7 +70,7 @@ class ReleaseService @Inject()(ws: WSClient,
   // TOFIX change the graph api to something more appropriate
   def releaseStatus(org: String, domain: String, schema: String, version: String, id:String):Future[Either[(String, WSResponse), JsObject]] = {
 
-    ws.url(s"${kgQueryEndpoint}/arango/releasestatus/$org/$domain/$schema/$version/$id").addHttpHeaders(CONTENT_TYPE -> JSON).get().map{
+    ws.url(s"${config.kgQueryEndpoint}/arango/releasestatus/$org/$domain/$schema/$version/$id").addHttpHeaders(CONTENT_TYPE -> JSON).get().map{
       res => res.status match{
         case OK =>
           val item = res.json.as[JsObject]
