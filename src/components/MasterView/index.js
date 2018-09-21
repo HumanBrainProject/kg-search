@@ -44,7 +44,7 @@ const MasterViewComponent = () => (
     <ShapesFilterPanel/>
     <div className="kgs-masterView__panel">
       <FiltersPanel/>
-      <div>
+      <div className="kgs-masterView__main">
         <ResultsHeader/>
         <ResultsPanel/>
       </div>

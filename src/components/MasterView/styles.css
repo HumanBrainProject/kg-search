@@ -39,11 +39,20 @@ body[class*="mobile"] .kgs-masterView .kgs-masterView__panel {
     margin-top: 30px;
 }
 
+.kgs-masterView .kgs-masterView__main {
+    width: 100%;
+}
+
 @media (min-width: 992px) {
     .kgs-masterView .kgs-masterView__panel {
         display: -ms-flexbox;
         display: flex;
         flex-direction: row;
         min-height: calc(100vh - 358px);
+    }
+
+    .kgs-masterView .kgs-masterView__main {
+        width: unset;
+        flex: 1;
     }
 }
