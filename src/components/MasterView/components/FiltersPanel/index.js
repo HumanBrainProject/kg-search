@@ -16,7 +16,8 @@
 
 import React from "react";
 import { SearchkitComponent, RefinementListFilter, InputFilter, CheckboxFilter, RangeFilter } from "searchkit";
-import { DateRangeFilter, DateRangeCalendar } from "searchkit-datefilter";
+/* No date range filter: package removed for now */
+/* import { DateRangeFilter, DateRangeCalendar } from "searchkit-datefilter"; */
 import { connect } from "../../../../store";
 import "./styles.css";
 
@@ -69,6 +70,7 @@ const Facet = ({id, name, facet}) => {
     );
   }
   if(facet.filterType === "range"){
+    /*
     if(facet.fieldType === "date") {
       return (
         <DateRangeFilter
@@ -79,6 +81,7 @@ const Facet = ({id, name, facet}) => {
           title={facet.fieldLabel} />
       );
     }
+    */
     return (
       <RangeFilter
         id={id}
