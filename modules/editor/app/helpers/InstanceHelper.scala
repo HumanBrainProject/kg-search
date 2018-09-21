@@ -81,11 +81,18 @@ object InstanceHelper {
          * final diff is then an addition/update from original view
          * this allows partially defined form (some field are then not updatable)
          */
-        val Diff(changedFromOrg, addedFromOrg, deletedFromOrg) = JsonParser.parse(originalInstanceContent.toString()).diff(newJson)
+        val originalContent = JsonParser.parse(originalInstanceContent.toString())
+        val Diff(changedFromOrg, addedFromOrg, deletedFromOrg) = originalContent.diff(newJson)
         if (deletedFromOrg != JsonAST.JNothing) {
           logger.debug(s"""PARTIAL FORM DEFINITION - missing fields from form: ${deletedFromOrg.toString}""")
+          // Here we try to get the diff as being the array without the deleted element
+          val Diff(_, add, _) = deletedFromOrg.diff(originalContent)
+          val Diff(ch, _ ,_ ) = newJson.diff(add)
+          changedFromOrg.merge(ch)
+        }else{
+          changedFromOrg.merge(addedFromOrg)
         }
-        changedFromOrg.merge(addedFromOrg)
+
     }
     val rendered = Json.parse(JsonMethods.compact(JsonMethods.render(diff))).as[JsObject]
     val newValues = Json.parse(newValue)
