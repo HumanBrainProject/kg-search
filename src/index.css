@@ -15,7 +15,8 @@
 */
 
 @import url('../node_modules/searchkit/release/theme.css');
-@import url('../node_modules/searchkit-datefilter/release/theme.css');
+/* No date range filter: package removed for now */
+/* @import url('../node_modules/searchkit-datefilter/release/theme.css'); */
 
 html, body {
     overflow-x: hidden;
