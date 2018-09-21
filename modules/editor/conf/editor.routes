@@ -1,6 +1,6 @@
 GET    /api/nodetypes                  editor.controllers.NexusEditorController.listEntities( privateSpace: String ?= "minds")
 
-GET    /api/instances/:org/:domain/:datatype/:version         editor.controllers.NexusEditorController.listInstances(org: String, domain:String, datatype: String, version:String, from:Int?=0, size:Int?=20)
+GET    /api/instances/:org/:domain/:datatype/:version         editor.controllers.NexusEditorController.listInstances(org: String, domain:String, datatype: String, version:String, from:Int?=0, size:Int?=20, search:String?="")
 
 GET    /api/instance/:org/:domain/:datatype/:version/:id                 editor.controllers.NexusEditorController.getInstance(org: String, domain:String, datatype: String, version:String, id: String)
 GET    /api/instance/:org/:domain/:datatype/:version                 editor.controllers.NexusEditorController.getEmptyForm(org: String, domain:String, datatype: String, version:String)
