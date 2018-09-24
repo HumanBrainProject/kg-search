@@ -67,9 +67,19 @@ class NexusEditorController @Inject()(
 
   val logger = Logger(this.getClass)
 
-  def listInstances(org: String, domain:String, datatype: String, version:String, from: Int, size: Int, search:String): Action[AnyContent] = authenticatedUserAction.async  { implicit request =>
+  def listInstances(
+                     org: String,
+                     domain: String,
+                     datatype: String,
+                     version: String,
+                     from: Option[Int],
+                     size: Option[Int],
+                     search: String
+                   ): Action[AnyContent] = authenticatedUserAction.async  { implicit request =>
     val nexusPath = NexusPath(org, domain, datatype, version)
-    ws.url(s"${config.nexusEndpoint}/v0/organizations/$org").addHttpHeaders("Authorization" -> request.headers.get("Authorization").getOrElse("")).get().flatMap{
+    ws.url(s"${config.nexusEndpoint}/v0/organizations/$org")
+      .addHttpHeaders("Authorization" -> request.headers.get("Authorization").getOrElse(""))
+      .get().flatMap{
       res =>
         res.status match {
           case UNAUTHORIZED =>
@@ -79,7 +89,8 @@ class NexusEditorController @Inject()(
             )
           case OK =>
             val start = System.currentTimeMillis()
-            ws.url(s"${config.kgQueryEndpoint}/arango/instances/${nexusPath.toString()}?search=$search").get().map{
+            ws.url(s"${config.kgQueryEndpoint}/arango/instances/${nexusPath.toString()}")
+              .withQueryStringParameters(("search", search), ("from", from.getOrElse("").toString), ("size", size.getOrElse("").toString)).get().map{
               res =>
                 res.status match {
                   case OK =>

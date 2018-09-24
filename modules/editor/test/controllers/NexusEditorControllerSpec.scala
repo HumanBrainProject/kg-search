@@ -85,7 +85,7 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
       val arangoQueryService = mock[ArangoQueryService]
       val configService = new ConfigurationService(fakeApplication().configuration)
       val controller = new NexusEditorController(mockCC, authMock, instanceService, oidcAuthService, configService, nexusService, releaseService, arangoQueryService, ws)(ec)
-      val response = controller.listInstances(datatype.org, datatype.domain, datatype.schema, datatype.version, 0, 20, "").apply(FakeRequest())
+      val response = controller.listInstances(datatype.org, datatype.domain, datatype.schema, datatype.version, "0", "20", "").apply(FakeRequest())
       val res = contentAsJson(response).as[JsObject]
       val arr = (res \ "data").as[List[JsObject]].map(js => js - "status" - "childrenStatus")
       val formattedRes = res ++ Json.obj("data" -> arr)
