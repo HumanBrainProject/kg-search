@@ -222,7 +222,7 @@ object EditorUserService {
        |               			"relative_path": "@id"
        |               		},
        |               		{
-       |               			"fieldname":"instance",
+       |               			"fieldname":"favoriteInstance",
        |               			"relative_path": [
        |               				"kgeditor:favoriteInstance"
        |               			]

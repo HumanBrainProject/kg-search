@@ -37,15 +37,10 @@ object FavoriteGroup {
       (JsPath \ "name").read[String] and
       (JsPath \ "favorites").read[Seq[JsObject]]
         .map(jss => jss.map{js =>
-            val instanceId = (js \ "instance" \ "@id").as[String].split("v0/data/").last
+            val instanceId = (js \ "favoriteInstance").as[String]
             val nexusId = (js \ "nexusId").as[String]
             Favorite(nexusId, instanceId)
           })
         .orElse(Reads.pure(Seq[Favorite]()))
     ) (FavoriteGroup.apply _)
-
-  val valuesTransformer = __.read[JsArray].map[JsArray] {
-    case JsArray(values) =>
-      JsArray(values.map { e => Json.obj("instance" -> (e \ "@id").as[JsString], "nexusId" -> (e \ "nexusId").as[JsString])})
-  }
 }
