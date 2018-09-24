@@ -20,14 +20,13 @@ package editor.controllers
 import akka.util.ByteString
 import common.helpers.BlazegraphHelper
 import common.helpers.ResponseHelper._
-import editor.helper.InstanceHelper._
+import helpers.InstanceHelper._
 import common.models.{NexusInstance, NexusPath, User}
 import editor.actions.EditorUserAction
-import editor.helper.InstanceHelper
 import editor.helpers.{EditorSpaceHelper, FormHelper, NavigationHelper, NodeTypeHelper}
 import editor.models._
 import authentication.helpers.OIDCHelper
-import helpers.{ReconciledInstanceHelper, ResponseHelper}
+import helpers.{InstanceHelper, ReconciledInstanceHelper, ResponseHelper}
 import javax.inject.{Inject, Singleton}
 import authentication.models.{AuthenticatedUserAction, UserRequest}
 import authentication.service.OIDCAuthService

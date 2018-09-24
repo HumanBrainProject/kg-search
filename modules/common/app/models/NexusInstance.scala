@@ -19,20 +19,14 @@ package common.models
 
 import play.api.libs.json._
 
-class Instance(nexusUUID: String, nexusPath: NexusPath, content:JsObject){
+
+case class NexusInstance(nexusUUID: String, nexusPath: NexusPath, content:JsObject) {
+
   def id():String = {
     s"${this.nexusPath}/${this.nexusUUID}"
   }
-}
 
-case class NexusInstance(nexusUUID: String, nexusPath: NexusPath, content:JsObject) extends Instance(nexusUUID, nexusPath, content) {
-
-  def extractUpdateInfo(): (String, Int, String) = {
-    ((this.content \"@id").as[String],
-      (this.content \ "nxv:rev").as[Int],
-      (this.content \ "http://hbp.eu/manual#updater_id").asOpt[String].getOrElse("")
-    )
-  }
+  def getField(fieldName: String): JsValue = content.value(fieldName)
 
   def modificationOfLinks(nexusEndpoint: String, reconciledPrefix: String): NexusInstance = {
     val id = (this.content \ "@id").as[String]
@@ -76,6 +70,11 @@ object NexusInstance {
       .toString() + "/" + id
   }
   // extract id, rev and userId of updator for this update
+
+  object Fields{
+    val nexusId = "@id"
+    val nexusRev = "nxv:rev"
+  }
 
 }
 

@@ -22,11 +22,10 @@ import java.security.Policy.Parameters
 
 import com.google.inject.Inject
 import common.models.{NexusInstance, NexusPath, User}
-import editor.helper.InstanceHelper._
+import helpers.InstanceHelper._
 import editor.models.{InMemoryKnowledge, IncomingLinksInstances}
-import helpers.ReconciledInstanceHelper
+import helpers.{InstanceHelper, ReconciledInstanceHelper}
 import editor.controllers.NexusEditorController
-import editor.helper.InstanceHelper
 import editor.helpers.{FormHelper, NavigationHelper}
 import nexus.helpers.NexusHelper
 import nexus.services.NexusService

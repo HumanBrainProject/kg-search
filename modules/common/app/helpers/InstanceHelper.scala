@@ -15,27 +15,18 @@
 *   limitations under the License.
 */
 
-package editor.helper
+package common.helpers
 
-
-import common.helpers.JsFlattener
-import common.models.{NexusInstance, NexusPath, User}
-import editor.helpers.{FormHelper, NavigationHelper}
-import editor.models.{InMemoryKnowledge, IncomingLinksInstances, ReleaseStatus}
-import nexus.helpers.NexusHelper
+import common.models.{EditorInstance, NexusInstance, NexusPath, User}
 import org.joda.time.DateTime
+import org.json4s.JsonAST.{JField, JNull, JObject, JValue}
+import org.json4s.{Diff, JsonAST}
 import org.json4s.native.{JsonMethods, JsonParser}
-import org.json4s.native.JsonMethods._
-import org.json4s._
 import play.api.Logger
 import play.api.libs.json.Reads.of
 import play.api.libs.json._
-import play.api.libs.ws.{WSClient, WSResponse}
-import play.api.mvc.{AnyContent, Request}
-import play.api.http.Status._
 
 import scala.collection.immutable.SortedSet
-import scala.concurrent.{ExecutionContext, Future}
 
 object InstanceHelper {
     val logger = Logger(this.getClass)
@@ -46,14 +37,15 @@ object InstanceHelper {
                                   nexusEndpoint: String,
                                   manualSpace:String,
                                   originalInstance: NexusInstance,
-                                  editorInstances: List[NexusInstance],
+                                  editorInstances: List[EditorInstance],
                                   updateToBeStoredInManual: JsObject,
                                   user: User
                                 ): (NexusInstance, Option[List[UpdateInfo]]) = {
     logger.debug(s"Result from incoming links $editorInstances")
     val updatesByPriority = buildManualUpdatesFieldsFrequency(
-      editorInstances.filter( item => (item.content \ "http://hbp.eu/manual#updater_id").as[String] != user.id
-      ), updateToBeStoredInManual)
+      editorInstances.filter( item => item.updaterId != user.id),
+      updateToBeStoredInManual
+    )
     val result = NexusInstance(reconcilationLogic(updatesByPriority, originalInstance.content))
     val manualUpdateDetailsOpt = if(editorInstances.isEmpty){
       logger.debug("creating new editor instace")
@@ -158,8 +150,8 @@ object InstanceHelper {
   }
 
   def md5HashString(s: String): String = {
-    import java.security.MessageDigest
     import java.math.BigInteger
+    import java.security.MessageDigest
     val md = MessageDigest.getInstance("MD5")
     val digest = md.digest(s.getBytes)
     val bigInt = new BigInteger(1,digest)
@@ -167,8 +159,8 @@ object InstanceHelper {
     hashedString
   }
 
-  def buildManualUpdatesFieldsFrequency(manualUpdates: List[NexusInstance], currentUpdate: JsObject): Map[String, SortedSet[(JsValue, Int)]] = {
-    val cleanMap: List[Map[String, JsValue]] = currentUpdate.as[Map[String, JsValue]] +: cleanListManualData(manualUpdates)
+  def buildManualUpdatesFieldsFrequency(manualUpdates: List[EditorInstance], currentUpdate: JsObject): Map[String, SortedSet[(JsValue, Int)]] = {
+    val cleanMap: List[Map[String, JsValue]] = currentUpdate.as[Map[String, JsValue]] +: manualUpdates.map(s => cleanManualDataFromNexus(s.nexusInstance.content))
     buildMapOfSortedManualUpdates(cleanMap)
   }
 
@@ -240,10 +232,6 @@ object InstanceHelper {
         }
       }
     }
-  }
-
-  def cleanListManualData(manualUpdates: List[NexusInstance]): List[Map[String, JsValue]] = {
-    manualUpdates.map(el => cleanManualDataFromNexus(el.content))
   }
 
   def cleanManualDataFromNexus(jsObject: JsObject): Map[String, JsValue] = {
@@ -338,15 +326,15 @@ object InstanceHelper {
     }
   }
 
-  def generateAlternatives(manualUpdates: List[JsObject]): JsValue = {
+  def generateAlternatives(manualUpdates: List[EditorInstance]): JsValue = {
     // Alternatives are added per user
     // So for each key we have a list of object containing the user id and the value
     val alternatives: Map[String, Seq[(String, JsValue)]] = manualUpdates
       .map { instance =>
-        val dataMap: Map[String, JsValue] = instance
-          .-("http://hbp.eu/manual#parent")
-          .-("http://hbp.eu/manual#origin").as[Map[String, JsValue]]
-        val userId: String = dataMap("http://hbp.eu/manual#updater_id").as[String]
+        val dataMap: Map[String, JsValue] = instance.nexusInstance.content
+          .-(EditorInstance.Fields.parent)
+          .-(EditorInstance.Fields.origin).as[Map[String, JsValue]]
+        val userId: String = dataMap(EditorInstance.Fields.updaterId).as[String]
         dataMap.map { case (k, v) => k -> ( userId, v) }
       }.foldLeft(Map.empty[String, Seq[(String, JsValue)]]) { case (map, instance) =>
       //Grouping per field in order to have a map with the field and the list of different alternatives on this field
@@ -366,8 +354,8 @@ object InstanceHelper {
     }
     Json.toJson(
       perValue.-("@type")
-        .-("http://hbp.eu/manual#update_timestamp")
-        .-("http://hbp.eu/manual#updater_id")
+        .-(EditorInstance.Fields.updateTimeStamp)
+        .-(EditorInstance.Fields.updaterId)
     )
   }
 

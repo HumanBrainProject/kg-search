@@ -18,11 +18,11 @@ package editor.controllers
 import common.helpers.ConfigMock
 import common.helpers.ConfigMock._
 import common.models.{NexusInstance, NexusPath, OIDCUser}
-import editor.helper.InstanceHelper
 import mockws.{MockWS, MockWSHelpers}
 import authentication.service.OIDCAuthService
 import common.services.ConfigurationService
 import editor.services.{ArangoQueryService, EditorUserService, InstanceService, ReleaseService}
+import helpers.InstanceHelper
 import nexus.services.NexusService
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar

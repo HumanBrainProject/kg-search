@@ -17,7 +17,7 @@
 package helpers
 
 import common.models.{NexusInstance, NexusPath, User}
-import editor.helper.InstanceHelper.{cleanUpInstanceForSave, generateAlternatives, getPriority, toReconcileFormat}
+import InstanceHelper.{cleanUpInstanceForSave, generateAlternatives, getPriority, toReconcileFormat}
 import editor.models.IncomingLinksInstances
 import org.joda.time.DateTime
 import play.api.Logger
@@ -96,28 +96,5 @@ object ReconciledInstanceHelper {
       ("http://hbp.eu/reconciled#update_timestamp", JsNumber(new DateTime().getMillis))
   }
 
-  def addAlternatives(manualSpace: String,
-                      reconciledInstance: NexusInstance,
-                      editorInstances: List[NexusInstance],
-                      manualEntityToBeStored: JsObject
-                                             ): NexusInstance = {
-    val currentUpdater = (manualEntityToBeStored \ "http://hbp.eu/manual#updater_id").as[String]
-    val altJson = generateAlternatives(
-      editorInstances.map(cleanUpInstanceForSave)
-        .filter(js => (js \ "http://hbp.eu/manual#updater_id").as[String] != currentUpdater)
-        .+:(manualEntityToBeStored)
-    )
-    val res = reconciledInstance.content
-      .+("http://hbp.eu/reconciled#alternatives", altJson)
-    NexusInstance(reconciledInstance.nexusUUID, reconciledInstance.nexusPath, res)
-  }
 
-  def updateManualLinks(reconciledInstance: NexusInstance, newManualUpdateId: String): NexusInstance = {
-    val currentParent = (reconciledInstance.content \ "http://hbp.eu/reconciled#parents").asOpt[List[JsObject]].getOrElse(List[JsObject]())
-    val jsArray = Json.toJson( (Json.obj("@id" -> newManualUpdateId) +: currentParent).distinct)
-    val res = reconciledInstance.content
-      .+("http://hbp.eu/reconciled#parents" -> jsArray)
-    NexusInstance(reconciledInstance.nexusUUID, reconciledInstance.nexusPath, res)
-
-  }
 }
