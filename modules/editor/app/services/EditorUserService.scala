@@ -189,7 +189,7 @@ object EditorUserService {
        |      "relative_path": "@id"
        |    },
        |    {
-       |      "fieldname": "id",
+       |      "fieldname": "userId",
        |      "required": true,
        |      "relative_path": "schema:identifier"
        |    },
@@ -224,7 +224,7 @@ object EditorUserService {
        |               		{
        |               			"fieldname":"instance",
        |               			"relative_path": [
-       |               				"kgeditor:instance"
+       |               				"kgeditor:favoriteInstance"
        |               			]
        |               		}
        |
@@ -249,7 +249,8 @@ object EditorUserService {
     Json.obj(
       "http://schema.org/identifier" -> InstanceHelper.md5HashString(favoriteGroupNexusId + favorite),
       "http://hbp.eu/kgeditor/favoriteGroup" -> Json.obj("@id" -> s"$favoriteGroupNexusId"),
-      "http://hbp.eu/kgeditor/instance" -> Json.obj("@id" -> s"$favorite"),
+      "http://hbp.eu/kgeditor/favoriteInstanceLink" -> Json.obj("@id" -> s"$favorite"),
+      "http://hbp.eu/kgeditor/favoriteInstance" -> s"${favorite.split("/v0/data/").last}",
       "@type" -> "http://hbp.eu/kgeditor/Favorite"
     )
   }

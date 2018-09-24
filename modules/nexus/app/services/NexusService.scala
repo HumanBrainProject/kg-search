@@ -123,7 +123,7 @@ class NexusService @Inject()(wSClient: WSClient, config:ConfigurationService)(im
           }else {
             schemaDefinitionForEditor.replace("${editorContext}", "")
           }
-          val schemaContent = Json.parse(newSchemaDef.replace("${entityType}", nexusPath.schema)
+          val schemaContent = Json.parse(newSchemaDef.replace("${entityType}", nexusPath.schema.capitalize)
             .replace("${org}", nexusPath.org).replace("${editorOrg}", editorOrg).replaceAll("\r\n", ""))
           wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).put(schemaContent).flatMap{
             schemaCreationResponse => schemaCreationResponse.status match {
@@ -151,7 +151,7 @@ class NexusService @Inject()(wSClient: WSClient, config:ConfigurationService)(im
         case 200 => // schema exists already
           Future.successful(response)
         case 404 => // schema not found, create it
-          val schemaContent = Json.parse(minimalSchemaDefinition.replace("${entityType}", nexusPath.schema)
+          val schemaContent = Json.parse(minimalSchemaDefinition.replace("${entityType}", nexusPath.schema.capitalize)
             .replace("${nameSpace}", nameSpace).replaceAll("\r\n", ""))
           wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).put(schemaContent).flatMap{
             schemaCreationResponse => schemaCreationResponse.status match {
