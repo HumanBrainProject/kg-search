@@ -25,7 +25,8 @@ import editor.models.{InMemoryKnowledge, IncomingLinksInstances, ReleaseStatus}
 import nexus.helpers.NexusHelper
 import org.joda.time.DateTime
 import org.json4s.native.{JsonMethods, JsonParser}
-import org.json4s.{Diff, JsonAST}
+import org.json4s.native.JsonMethods._
+import org.json4s._
 import play.api.Logger
 import play.api.libs.json.Reads.of
 import play.api.libs.json._
@@ -68,7 +69,7 @@ object InstanceHelper {
 
 
   def buildDiffEntity(consolidatedResponse: NexusInstance, newValue: String, originalInstanceContent: JsValue): JsObject = {
-    val consolidatedJson = JsonParser.parse(cleanInstanceManual(consolidatedResponse.content).toString())
+    val consolidatedJson = JsonParser.parse(removeNexusFields(cleanInstanceManual(consolidatedResponse.content)).toString())
     val newJson = JsonParser.parse(newValue)
     val Diff(changed, added, deleted) = consolidatedJson.diff(newJson)
     val diff: JsonAST.JValue = (deleted, changed) match {
@@ -76,6 +77,22 @@ object InstanceHelper {
         consolidatedJson
       case (JsonAST.JNothing, _) =>
         changed.merge(added)
+      case (_, JsonAST.JNothing) =>
+        val originalContent = JsonParser.parse(originalInstanceContent.toString())
+        val Diff(changedFromOrg, addedFromOrg, deletedFromOrg) = originalContent.diff(newJson)
+        logger.debug(s"""PARTIAL FORM DEFINITION - missing fields from form: ${deletedFromOrg.toString}""")
+        // Here we try to get the diff as being the array without the deleted element
+        val Diff(_, add, _) = deletedFromOrg.diff(originalContent)
+        val Diff(ch, _ ,_ ) = newJson.diff(add)
+        if(ch == JsonAST.JNothing){
+          // This means we should display an empty field
+          val map: Map[String, JValue] = deletedFromOrg.values.asInstanceOf[Map[String, Any]].map{
+            case (k, _) => k -> JNull
+          }
+          JObject(map.toList.map(x => JField(x._1, x._2)))
+        }else{
+          changedFromOrg.merge(ch)
+        }
       case _ =>
         /* fields deletion. Deletion are allowed on manual space ONLY
          * final diff is then an addition/update from original view
@@ -83,16 +100,7 @@ object InstanceHelper {
          */
         val originalContent = JsonParser.parse(originalInstanceContent.toString())
         val Diff(changedFromOrg, addedFromOrg, deletedFromOrg) = originalContent.diff(newJson)
-        if (deletedFromOrg != JsonAST.JNothing) {
-          logger.debug(s"""PARTIAL FORM DEFINITION - missing fields from form: ${deletedFromOrg.toString}""")
-          // Here we try to get the diff as being the array without the deleted element
-          val Diff(_, add, _) = deletedFromOrg.diff(originalContent)
-          val Diff(ch, _ ,_ ) = newJson.diff(add)
-          changedFromOrg.merge(ch)
-        }else{
-          changedFromOrg.merge(addedFromOrg)
-        }
-
+        changedFromOrg.merge(addedFromOrg)
     }
     val rendered = Json.parse(JsonMethods.compact(JsonMethods.render(diff))).as[JsObject]
     val newValues = Json.parse(newValue)
