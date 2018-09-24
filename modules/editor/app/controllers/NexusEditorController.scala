@@ -414,7 +414,6 @@ class NexusEditorController @Inject()(
                 val reconciledInstance = ReconciledInstanceHelper.addReconciledMandatoryFields(typedInstance, instancePath, request.user, (instance.json \ "@id").as[String])
                 instanceService
                   .insertInstance(reconciledSpace, reconciledInstance, instancePath, reconciledToken).map { res =>
-                  logger.debug(res.body)
                   res.status match {
                     case CREATED => // reformat ouput to keep it consistent with update
                       val id:String = (res.json.as[JsObject] \ "@id").as[String].split("v0/data/").last.split("/").last
@@ -425,6 +424,7 @@ class NexusEditorController @Inject()(
                         .-("nxv:rev")
                       Created(NavigationHelper.resultWithBackLink(output.as[JsObject], instancePath, config.reconciledPrefix))
                     case _ =>
+                      logger.error(res.body)
                       ResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, config.reconciledPrefix)
                   }
                 }

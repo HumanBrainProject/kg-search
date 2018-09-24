@@ -59,10 +59,7 @@ class EditorUserService @Inject()(config: ConfigurationService,
         // Create the user in the nexus
         nexusService.insertInstance(
           config.nexusEndpoint,
-          EditorUserService.editorUserPath.org,
-          EditorUserService.editorUserPath.domain,
-          EditorUserService.editorUserPath.schema,
-          EditorUserService.editorUserPath.version,
+          EditorUserService.editorUserPath,
           EditorUserService.userToNexusStruct(userId),
           token
         ).map{
@@ -86,10 +83,7 @@ class EditorUserService @Inject()(config: ConfigurationService,
           s"${config.nexusEndpoint}/v0/data/${favoriteGroupId}")
         nexusService.insertInstance(
           config.nexusEndpoint,
-          EditorUserService.favoritePath.org,
-          EditorUserService.favoritePath.domain,
-          EditorUserService.favoritePath.schema,
-          EditorUserService.favoritePath.version,
+          EditorUserService.favoritePath,
           payload,
           token
         ).map{
@@ -109,10 +103,7 @@ class EditorUserService @Inject()(config: ConfigurationService,
       token =>
         nexusService.deprecateInstance(
           config.nexusEndpoint,
-          EditorUserService.favoritePath.org,
-          EditorUserService.favoritePath.domain,
-          EditorUserService.favoritePath.schema,
-          EditorUserService.favoritePath.version,
+          EditorUserService.favoritePath,
           favoriteId,
           token
         )
@@ -127,10 +118,7 @@ class EditorUserService @Inject()(config: ConfigurationService,
             val payload = EditorUserService.favoriteGroupToNexusStruct(name, s"${config.nexusEndpoint}/v0/data/${user.nexusId}" )
             nexusService.insertInstance(
               config.nexusEndpoint,
-              EditorUserService.favoriteGroupPath.org,
-              EditorUserService.favoriteGroupPath.domain,
-              EditorUserService.favoriteGroupPath.schema,
-              EditorUserService.favoriteGroupPath.version,
+              EditorUserService.favoriteGroupPath,
               payload,
               token
             ).map{

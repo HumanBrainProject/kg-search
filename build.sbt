@@ -9,7 +9,7 @@ lazy val common = (project in file("modules/common"))
 
 lazy val data_import = (project in file("modules/data_import"))
   .enablePlugins(PlayScala)
-  .dependsOn(nexus)
+  .dependsOn(common, nexus)
 
 lazy val auth = (project in file("modules/authentication"))
   .enablePlugins(PlayScala)

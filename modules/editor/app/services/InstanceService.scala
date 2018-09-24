@@ -225,10 +225,7 @@ class InstanceService @Inject()(wSClient: WSClient,
       nexusService.createSchema(
         config.nexusEndpoint,
         destinationOrg,
-        originalInstanceNexusPath.org,
-        originalInstanceNexusPath.schema.capitalize,
-        originalInstanceNexusPath.domain,
-        originalInstanceNexusPath.version,
+        originalInstanceNexusPath,
         editorOrg,
         token,
         editorContext
