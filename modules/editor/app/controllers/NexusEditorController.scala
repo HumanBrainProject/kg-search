@@ -94,12 +94,19 @@ class NexusEditorController @Inject()(
               res =>
                 res.status match {
                   case OK =>
+                    val total = if((res.json \ "fullCount").as[Long] == 0){
+                      (res.json \ "count").as[Long]
+                    }else{
+                      (res.json \ "fullCount").as[Long]
+                    }
                     Ok(
-                    Json.obj("data" -> InstanceHelper.formatInstanceList(res.json.as[JsArray], config.reconciledPrefix),
+                    Json.obj("data" -> InstanceHelper.formatInstanceList( (res.json \ "data").as[JsArray], config.reconciledPrefix),
                       "label" -> JsString(
                         (FormHelper.formRegistry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String]
                           .getOrElse(nexusPath.toString())
-                      ))
+                      ),
+                      "total" -> total
+                    )
                   )
                   case _ => ResponseHelper.forwardResultResponse(res)
                 }
