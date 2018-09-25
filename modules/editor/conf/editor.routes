@@ -1,6 +1,37 @@
 GET    /api/nodetypes                  editor.controllers.NexusEditorController.listEntities( privateSpace: String ?= "minds")
 
-GET    /api/instances/:org/:domain/:datatype/:version         editor.controllers.NexusEditorController.listInstances(org: String, domain:String, datatype: String, version:String, from:Int?=0, size:Int?=20, search:String?="")
+###
+#  summary: get the list of entity
+#  tags:
+#    - editor
+#  parameters:
+#  - name: org
+#    in: path
+#    description: organization the instance to retrieve
+#    required: true
+#    type: string
+#  - name: domain
+#    in: path
+#    description: domain of the instance to retrieve
+#    required: true
+#    type: string
+#  - name: schema
+#    in: path
+#    description: schema name
+#    required: true
+#    type: string
+#  - name: version
+#    in: path
+#    description: version of the instance to retrieve
+#    required: true
+#    type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+GET    /api/instances/:org/:domain/:schema/:version         editor.controllers.NexusEditorController.listInstances(org: String, domain:String, schema: String, version:String, from:Option[Int], size:Option[Int], search:String?="")
 
 GET    /api/instance/:org/:domain/:datatype/:version/:id                 editor.controllers.NexusEditorController.getInstance(org: String, domain:String, datatype: String, version:String, id: String)
 GET    /api/instance/:org/:domain/:datatype/:version                 editor.controllers.NexusEditorController.getEmptyForm(org: String, domain:String, datatype: String, version:String)
