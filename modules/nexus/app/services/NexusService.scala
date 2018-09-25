@@ -39,7 +39,7 @@ class NexusService @Inject()(wSClient: WSClient, config:ConfigurationService)(im
     isReleased(instanceUrl, instanceRev, token).flatMap{ releasedId =>
       releasedId match {
         case Some(releaseInstance) =>
-          if (releaseInstance.instanceRevision == instanceRev){
+          if (releaseInstance.getRevision() == instanceRev){
             Future.successful(JsObject(Map(
               "status" -> JsString(RELEASE_ALREADY),
               "released_id" -> JsString(releaseInstance.id())

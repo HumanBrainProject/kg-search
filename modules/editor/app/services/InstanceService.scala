@@ -22,11 +22,9 @@ import java.security.Policy.Parameters
 
 import com.google.inject.Inject
 import common.models.{NexusInstance, NexusPath, User}
-import helpers.InstanceHelper._
-import editor.models.{InMemoryKnowledge, IncomingLinksInstances}
-import helpers.{InstanceHelper, ReconciledInstanceHelper}
+import editor.models.{EditorInstance, InMemoryKnowledge, IncomingLinksInstances, ReconciledInstance}
 import editor.controllers.NexusEditorController
-import editor.helpers.{FormHelper, NavigationHelper}
+import editor.helpers.{FormHelper, InstanceHelper, NavigationHelper, ReconciledInstanceHelper}
 import nexus.helpers.NexusHelper
 import nexus.services.NexusService
 import play.api.{Configuration, Logger}
@@ -34,6 +32,7 @@ import play.api.http.Status.OK
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import common.services.ConfigurationService
+import editor.helpers.InstanceHelper.UpdateInfo
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -67,7 +66,7 @@ class InstanceService @Inject()(wSClient: WSClient,
       .listAllNexusResult(s"${config.nexusEndpoint}/v0/data/${originalId}/incoming?deprecated=false&fields=all&size=50&filter=$filter", token)
       .map {
         incomingLinks =>
-          incomingLinks.map(el => NexusInstance((el \ "source").as[JsValue])).toIndexedSeq
+          incomingLinks.map(el => (el \ "source").as[NexusInstance]).toIndexedSeq
       }
   }
 
@@ -113,7 +112,7 @@ class InstanceService @Inject()(wSClient: WSClient,
             Future.successful(Left(r))
           case Right(reconciledInstance) =>
             if (reconciledInstance.isDefined) {
-              Future.successful(Right(reconciledInstance.get))
+              Future.successful(Right(reconciledInstance.get.nexusInstance))
             } else {
               getInstance(path, id, token, parameters)
             }
@@ -130,14 +129,14 @@ class InstanceService @Inject()(wSClient: WSClient,
       res =>
         res.status match {
           case OK =>
-            Right(NexusInstance(res.json))
+            Right(res.json.as[NexusInstance])
           case _ =>
             Left(res)
         }
     }
   }
 
-  def retrieveReconciledFromOriginal(originalPath: NexusPath, reconciledOrg:String, id: String, token: String, parameters: List[(String, String)] = List()): Future[Either[WSResponse, Option[NexusInstance]]] = {
+  def retrieveReconciledFromOriginal(originalPath: NexusPath, reconciledOrg:String, id: String, token: String, parameters: List[(String, String)] = List()): Future[Either[WSResponse, Option[ReconciledInstance]]] = {
     val editorOrg = NexusPath.addSuffixToOrg(originalPath.org, config.editorPrefix)
     val filter =
       s"""{
@@ -168,7 +167,7 @@ class InstanceService @Inject()(wSClient: WSClient,
             case OK =>
               if( (res.json \"total").as[Int] > 0){
                 Right(
-                  Some( NexusInstance(InstanceHelper.removeNexusFields( ((res.json \ "results").as[List[JsValue]].head \ "source").as[JsObject])))
+                  Some( ((res.json \ "results").as[List[JsValue]].head \ "source").as[ReconciledInstance])
                 )
               }else{
                 Right(None)
@@ -247,23 +246,23 @@ class InstanceService @Inject()(wSClient: WSClient,
 
   def updateReconciledInstance(
                                 manualSpace: String,
-                                currentReconciledInstance: NexusInstance,
-                                editorInstances: List[NexusInstance],
+                                currentReconciledInstance: ReconciledInstance ,
+                                editorInstances: List[EditorInstance],
                                 originalInstance: NexusInstance,
-                                manualEntity: JsObject,
+                                manualEntity: EditorInstance,
                                 manualEntityId: String,
                                 updatedValue: JsObject,
                                 token: String,
                                 userInfo: User
                               ): Future[WSResponse] = {
 
-    val parentId = (originalInstance.content \ "@id").as[String]
-    val revision = (currentReconciledInstance.content \ "nxv:rev").as[Int]
-    val parentRevision = (originalInstance.content \ "nxv:rev").as[Int]
+    val parentId = originalInstance.id()
+    val revision = currentReconciledInstance.nexusInstance.getRevision()
+    val parentRevision = originalInstance.getRevision()
     val payload = ReconciledInstanceHelper
       .generateReconciledInstance(
         manualSpace,
-        NexusInstance(updatedValue),
+        ReconciledInstance(updatedValue.as[NexusInstance]),
         editorInstances,
         manualEntity,
         originalInstance.nexusPath,
@@ -292,7 +291,7 @@ class InstanceService @Inject()(wSClient: WSClient,
     val payload = ReconciledInstanceHelper
       .generateReconciledInstance(
         manualSpace,
-        NexusInstance(updatedValue),
+        updatedValue.as[NexusInstance],
         List(),
         manualEntity,
         originalInstance.nexusPath,

@@ -14,11 +14,10 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package helpers
+package editor.helpers
 
 import common.models.{NexusInstance, NexusPath, User}
-import InstanceHelper.{cleanUpInstanceForSave, generateAlternatives, getPriority, toReconcileFormat}
-import editor.models.IncomingLinksInstances
+import editor.models.{EditorInstance, IncomingLinksInstances, ReconciledInstance}
 import org.joda.time.DateTime
 import play.api.Logger
 import play.api.libs.json._
@@ -48,24 +47,23 @@ object ReconciledInstanceHelper {
 
   def generateReconciledInstance(
                                   manualSpace: String,
-                                  reconciledInstance: NexusInstance,
-                                  editorInstances: List[NexusInstance],
-                                  manualEntityToBestored: JsObject,
+                                  reconciledInstance: ReconciledInstance,
+                                  editorInstances: List[EditorInstance],
+                                  manualEntityToBestored: EditorInstance,
                                   originalEntitPath: NexusPath,
                                   newManualUpdateId: String,
                                   userInfo: User,
-                                  parentRevision: Int,
+                                  parentRevision: Long,
                                   parentId: String,
                                   token: String
                                 ): JsObject = {
-    val recInstanceWithParents = addAlternatives(
+    val recInstanceWithParents = reconciledInstance.addAlternatives(
       manualSpace,
-      reconciledInstance,
       editorInstances,
       manualEntityToBestored
     )
-    val recWithNewManualUpdate = updateManualLinks(recInstanceWithParents, newManualUpdateId)
-    val cleanUpObject = cleanUpInstanceForSave(recWithNewManualUpdate)
+    val recWithNewManualUpdate = recInstanceWithParents.updateManualLinks(newManualUpdateId)
+    val cleanUpObject = recWithNewManualUpdate.c
     addReconciledMandatoryFields(cleanUpObject, originalEntitPath, userInfo, parentId, parentRevision)
 
   }

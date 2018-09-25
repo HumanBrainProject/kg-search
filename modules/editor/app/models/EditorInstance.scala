@@ -13,9 +13,10 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package common.models
+package editor.models
 
-import play.api.libs.json.{JsNumber, JsObject, JsString}
+import common.models.NexusInstance
+import play.api.libs.json.{JsObject, JsValue}
 
 case class EditorInstance(nexusInstance: NexusInstance){
 
@@ -28,6 +29,25 @@ case class EditorInstance(nexusInstance: NexusInstance){
       (this.nexusInstance.content \ EditorInstance.Fields.updaterId).asOpt[String].getOrElse("")
     )
   }
+
+  def cleanManualData(): EditorInstance = {
+    this.copy(this.nexusInstance.cleanManualData())
+  }
+
+  def contentToMap(): Map[String, JsValue] = {
+    this.nexusInstance.content.fields.toMap
+  }
+
+  def cleanInstanceManual(): EditorInstance = {
+    this.copy(
+      this.nexusInstance.copy(
+        content = this.nexusInstance.content.-(EditorInstance.Fields.parent)
+      .-(EditorInstance.Fields.origin)
+      .-(EditorInstance.Fields.updaterId)
+      )
+    )
+  }
+
 
 }
 

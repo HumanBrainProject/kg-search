@@ -20,13 +20,12 @@ package editor.controllers
 import akka.util.ByteString
 import common.helpers.BlazegraphHelper
 import common.helpers.ResponseHelper._
-import helpers.InstanceHelper._
 import common.models.{NexusInstance, NexusPath, User}
 import editor.actions.EditorUserAction
-import editor.helpers.{EditorSpaceHelper, FormHelper, NavigationHelper, NodeTypeHelper}
+import editor.helpers._
 import editor.models._
 import authentication.helpers.OIDCHelper
-import helpers.{InstanceHelper, ReconciledInstanceHelper, ResponseHelper}
+import helpers.ResponseHelper
 import javax.inject.{Inject, Singleton}
 import authentication.models.{AuthenticatedUserAction, UserRequest}
 import authentication.service.OIDCAuthService
@@ -204,7 +203,7 @@ class NexusEditorController @Inject()(
     val editorSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.editorPrefix)
     val reconciledSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.reconciledPrefix)
     reconciledTokenFut.flatMap { reconciledToken =>
-      val originalInstanceCleaned = NexusInstance(removeNexusFields(originalInstance.content))
+      val originalInstanceCleaned = originalInstance.removeNexusFields()
       val originLink = (originalInstance.content \ "@id").as[String]
       val (
         updatedInstance,
@@ -213,7 +212,7 @@ class NexusEditorController @Inject()(
         ) = NexusEditorController.preppingEntitesForSave(
         config.nexusEndpoint,
         newValue,
-        originalInstanceCleaned.content,
+        originalInstanceCleaned,
         originalInstanceCleaned,
         originalInstanceCleaned.nexusPath,
         originLink,
@@ -223,7 +222,7 @@ class NexusEditorController @Inject()(
         token
       )
 
-      val consolidatedInstance = buildInstanceFromForm(originalInstance.content, updateToBeStoredInManual, config.nexusEndpoint)
+      val consolidatedInstance = InstanceHelper.buildInstanceFromForm(originalInstance, updateToBeStoredInManual, config.nexusEndpoint)
       logger.debug(s"Consolidated instance $consolidatedInstance")
       val createEditorDomain = nexusService.createDomain(config.nexusEndpoint, editorSpace, originalInstance.nexusPath.domain, "", token)
       val createReconciledDomain = nexusService.createDomain(config.nexusEndpoint, reconciledSpace, originalInstance.nexusPath.domain, "", reconciledToken)
@@ -269,29 +268,29 @@ class NexusEditorController @Inject()(
     * @param request The current user request
     * @return The updated instance or an error from nexus. Every response has a black link for the UI.
     */
-  private def updateWithReconciled(currentInstanceDisplayed: NexusInstance, originalPath: NexusPath)(implicit request: EditorUserRequest[AnyContent]) = {
+  private def updateWithReconciled(currentInstanceDisplayed: ReconciledInstance, originalPath: NexusPath)(implicit request: EditorUserRequest[AnyContent]) = {
     val token = OIDCHelper.getTokenFromRequest(request)
     val reconciledTokenFut = oIDCAuthService.getTechAccessToken()
     val newValue = request.body.asJson.get
     val editorSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.editorPrefix)
-    val originalIdAndPath = NexusInstance.extractIdAndPath((currentInstanceDisplayed.content \ "http://hbp.eu/reconciled#original_parent").as[JsValue])
+    val originalIdAndPath = NexusInstance.extractIdAndPath(currentInstanceDisplayed.getOriginalParent())
     // Get the original instance either in the Editor space or the original space
     instanceService.getInstance(originalIdAndPath._2, originalIdAndPath._1, token).flatMap {
       case Right(instanceFromOriginalSpace) =>
-        val originalInstance = NexusInstance(originalIdAndPath._1, originalPath, removeNexusFields(instanceFromOriginalSpace.content))
+        val originalInstance =  instanceFromOriginalSpace.removeNexusFields().copy(nexusUUID = originalIdAndPath._1, nexusPath = originalIdAndPath._2)
         // Get the editor instances
-        val editorInstanceIds = (currentInstanceDisplayed.content \ "http://hbp.eu/reconciled#parents").asOpt[List[JsObject]]
+        val editorInstanceIds = currentInstanceDisplayed.getEditorInstanceIds()
           .getOrElse(List())
           .map(js => NexusInstance.extractIdAndPath(js)._1)
         reconciledTokenFut.flatMap { reconciledToken =>
           instanceService.retrieveInstances(editorInstanceIds, originalPath.reconciledPath(config.editorPrefix), token).flatMap[Result] {
             editorInstancesRes =>
               if (editorInstancesRes.forall(_.isRight)) {
-                val editorInstances = editorInstancesRes.map { e => e.toOption.get}
-                val reconciledInstanceCleaned = removeNexusFields(currentInstanceDisplayed.content)
+                val editorInstances = editorInstancesRes.map { e => EditorInstance(e.toOption.get)}
+                val reconciledInstanceCleaned = currentInstanceDisplayed.removeNexusFields()
                 //Create the manual update
                 // As we cannot pass / in the name of a field we have replaced them with %nexus-slash%
-                val reconciledLink =  (currentInstanceDisplayed.content \ "@id").as[String]
+                val reconciledLink =  currentInstanceDisplayed.id()
                 //Generate the data that should be stored in the manual space
                 val (
                   updatedInstance,
@@ -300,8 +299,8 @@ class NexusEditorController @Inject()(
                   ) = NexusEditorController.preppingEntitesForSave(
                   config.nexusEndpoint,
                   newValue,
-                  reconciledInstanceCleaned,
-                  currentInstanceDisplayed,
+                  reconciledInstanceCleaned.nexusInstance,
+                  currentInstanceDisplayed.nexusInstance,
                   originalPath,
                   reconciledLink,
                   request.user,
@@ -310,7 +309,7 @@ class NexusEditorController @Inject()(
                   token
                 )
                 logger.debug(s"Consolidated instance $updatedInstance")
-                consolidateFromManualSpace(config.nexusEndpoint, editorSpace, currentInstanceDisplayed, editorInstances, updateToBeStoredInManual, request.user) match {
+                InstanceHelper.consolidateFromManualSpace(config.nexusEndpoint, editorSpace, currentInstanceDisplayed.nexusInstance, editorInstances, updateToBeStoredInManual, request.user) match {
                   case (consolidatedInstance, manualEntitiesDetailsOpt) =>
                     val manualUpsert = instanceService.upsertUpdateInManualSpace(editorSpace, manualEntitiesDetailsOpt, request.user, originalPath, preppedEntityForStorage, token)
                     manualUpsert.flatMap { res =>
@@ -373,7 +372,7 @@ class NexusEditorController @Inject()(
         case Right(currentInstanceDisplayed) =>
           if(currentInstanceDisplayed.nexusPath.isReconciled(config.reconciledPrefix)){
             logger.debug("It is a reconciled instance")
-            updateWithReconciled(currentInstanceDisplayed, instancePath)
+            updateWithReconciled(ReconciledInstance(currentInstanceDisplayed), instancePath)
           } else {
             initialUpdate(currentInstanceDisplayed)
           }
@@ -389,7 +388,7 @@ class NexusEditorController @Inject()(
                     ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(org)).async { implicit request =>
     val newInstance = request.body.asJson.get.as[JsObject]
     val instancePath = NexusPath(org, domain, datatype, version)
-    val instance = buildNewInstanceFromForm(config.nexusEndpoint, instancePath, FormHelper.formRegistry, newInstance )
+    val instance = InstanceHelper.buildNewInstanceFromForm(config.nexusEndpoint, instancePath, FormHelper.formRegistry, newInstance )
 
     val token = OIDCHelper.getTokenFromRequest(request)
     val reconciledTokenFut = oIDCAuthService.getTechAccessToken()
@@ -398,7 +397,7 @@ class NexusEditorController @Inject()(
     // TODO Get data type from the form
     val typedInstance = instance
       .+("@type" -> JsString(s"http://hbp.eu/${org}#${datatype.capitalize}"))
-      .+("http://schema.org/identifier" -> JsString(md5HashString((instance \ "http://schema.org/name").as[String] )))
+      .+("http://schema.org/identifier" -> JsString(InstanceHelper.md5HashString((instance \ "http://schema.org/name").as[String] )))
       .+("http://hbp.eu/manual#origin", JsString(""))
       .+("http://hbp.eu/manual#user_created", JsBoolean(true))
       .+("http://hbp.eu/manual#original_path", JsString(instancePath.toString()))
@@ -557,7 +556,7 @@ object NexusEditorController {
 
   def preppingEntitesForSave(nexusEndpoint: String,
                              formValues: JsValue,
-                             cleanInstance: JsObject,
+                             cleanInstance: NexusInstance,
                              currentlyDisplayedInstance: NexusInstance,
                              originalPath:NexusPath,
                              originLink: String,
@@ -567,8 +566,8 @@ object NexusEditorController {
                              token:String
                             ): (JsObject, JsObject, JsObject) = {
     val updateFromUI = Json.parse(FormHelper.unescapeSlash(formValues.toString())).as[JsObject] - "id"
-    val updatedInstance = buildInstanceFromForm(cleanInstance, updateFromUI, nexusEndpoint)
-    val diffEntity = buildDiffEntity(currentlyDisplayedInstance, updatedInstance.toString, cleanInstance) +
+    val updatedInstance = InstanceHelper.buildInstanceFromForm(cleanInstance, updateFromUI, nexusEndpoint)
+    val diffEntity = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, updatedInstance.toString, cleanInstance) +
       ("@type", JsString(s"http://hbp.eu/${originalPath.org}#${originalPath.schema.capitalize}"))
     val correctedLinks = Json.toJson(diffEntity.value.map{
       case (k, v) => recursiveCheckOfIds(k, v, reconciledPrefix, instanceService, token)

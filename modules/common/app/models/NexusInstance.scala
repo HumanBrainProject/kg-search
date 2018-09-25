@@ -37,13 +37,32 @@ case class NexusInstance(nexusUUID: String, nexusPath: NexusPath, content:JsObje
     NexusInstance(this.nexusUUID, this.nexusPath, this.content.transform(jsonTransformer).get)
   }
 
+//  def cleanManualDataFromNexus(): Map[String, JsValue] = {
+//    cleanManualData().content.fields.toMap
+//  }
+
+  def cleanManualData(): NexusInstance = {
+    this.content - ("@context") - ("@id") - ("@type") - ("links") - ("nxv:rev") - ("nxv:deprecated")
+    this.copy(content = this.content)
+  }
+
+
+  def removeNexusFields(): NexusInstance = {
+    this.content - ("@context") - ("@type") - ("links") - ("nxv:deprecated")
+    this.copy(content = this.content)
+  }
+
+  def getRevision(): Long ={
+    this.getField(NexusInstance.Fields.nexusRev).as[Long]
+  }
+
 }
 
 object NexusInstance {
-  def apply(jsValue: JsValue): NexusInstance = {
-    val (id, path) = extractIdAndPath(jsValue)
-    new NexusInstance(id, path , jsValue.as[JsObject])
-  }
+//  def apply(jsValue: JsValue): NexusInstance = {
+//    val (id, path) = extractIdAndPath(jsValue)
+//    new NexusInstance(id, path , jsValue.as[JsObject])
+//  }
 
   def extractIdAndPath(jsValue: JsValue): (String, NexusPath) = {
     val nexusUrl = (jsValue \ "@id").as[String]
@@ -56,6 +75,7 @@ object NexusInstance {
     val nexusType = NexusPath(datatype._1.split("/").toList)
     (datatype._2.substring(1) , nexusType)
   }
+
   def getIdfromURL(url: String): String = {
     assert(url contains "v0/data/")
     url.split("v0/data/").tail.head
@@ -75,6 +95,15 @@ object NexusInstance {
     val nexusId = "@id"
     val nexusRev = "nxv:rev"
   }
+
+  import play.api.libs.functional.syntax._
+
+  implicit val editorUserReads: Reads[NexusInstance] = (
+    (JsPath \ "@id").read[String].map(extractIdAndPathFromString(_)._1) and
+      (JsPath \ "@id").read[String].map(extractIdAndPathFromString(_)._2) and
+      JsPath.read[JsObject]
+    ) (NexusInstance.apply _)
+
 
 }
 
