@@ -17,9 +17,10 @@
 
 package editor.models
 
-import common.models.NexusInstance
+import common.models.{NexusInstance, NexusPath, User}
 import editor.helpers.InstanceHelper
-import play.api.libs.json.{JsObject, JsValue, Json}
+import org.joda.time.DateTime
+import play.api.libs.json._
 
 case class ReconciledInstance( nexusInstance: NexusInstance){
 
@@ -30,6 +31,9 @@ case class ReconciledInstance( nexusInstance: NexusInstance){
     this.copy(
       this.nexusInstance.copy(content = this.nexusInstance.content + (ReconciledInstance.Fields.parents -> jsArray))
     )
+  }
+  def cleanManualData(): ReconciledInstance = {
+    this.copy(this.nexusInstance.cleanManualData())
   }
 
   def addAlternatives(manualSpace: String,
@@ -95,6 +99,34 @@ case class ReconciledInstance( nexusInstance: NexusInstance){
     this.nexusInstance.id()
   }
 
+  /**
+    * This method adds all the necessary fields to save an instance to the reconciled space
+    *
+    * @param originalPath     The original nexus path of the instance
+    * @param userInfo         The user perfoming the save
+    * @param parentId         The id of the instance (this could be a instance from a private space (update) or the manual space (create) )
+    * @param parentRevision   The revision of the parent instance at the time of the save
+    * @return The instance with all the mandatory fields
+    */
+  def addReconciledMandatoryFields(
+                                    originalPath: NexusPath,
+                                    userInfo: User,
+                                    parentId: String,
+                                    parentRevision: Long = 1L
+                                  ): ReconciledInstance = {
+    this.copy(
+      this.nexusInstance.copy(
+        content = this.nexusInstance.content +
+          ("@type" -> JsString(s"http://hbp.eu/${originalPath.org}#${originalPath.schema.capitalize}")) +
+          (ReconciledInstance.Fields.updaterId, JsString(userInfo.id)) +
+          (ReconciledInstance.Fields.originalRev, JsNumber(parentRevision)) +
+          (ReconciledInstance.Fields.originalParent, Json.obj("@id" -> JsString(parentId))) +
+          (ReconciledInstance.Fields.origin, JsString(parentId)) +
+          (ReconciledInstance.Fields.updateTimeStamp, JsNumber(new DateTime().getMillis))
+      )
+    )
+  }
+
 
 }
 
@@ -105,6 +137,10 @@ object ReconciledInstance {
     val parents = s"${contextOrg}parents"
     val alternatives = s"${contextOrg}alternatives"
     val originalParent =  s"${contextOrg}original_parent"
+    val updaterId = s"${contextOrg}updater_id"
+    val origin = s"${contextOrg}origin"
+    val updateTimeStamp = s"${contextOrg}update_timestamp"
+    val originalRev = s"${contextOrg}original_rev"
   }
 
 

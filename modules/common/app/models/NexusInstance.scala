@@ -20,10 +20,10 @@ package common.models
 import play.api.libs.json._
 
 
-case class NexusInstance(nexusUUID: String, nexusPath: NexusPath, content:JsObject) {
+case class NexusInstance(nexusUUID: Option[String], nexusPath: NexusPath, content:JsObject) {
 
-  def id():String = {
-    s"${this.nexusPath}/${this.nexusUUID}"
+  def id():Option[String] = {
+    this.nexusUUID.map(s => s"${this.nexusPath}/${s}")
   }
 
   def getField(fieldName: String): JsValue = content.value(fieldName)
@@ -99,7 +99,7 @@ object NexusInstance {
   import play.api.libs.functional.syntax._
 
   implicit val editorUserReads: Reads[NexusInstance] = (
-    (JsPath \ "@id").read[String].map(extractIdAndPathFromString(_)._1) and
+    (JsPath \ "@id").readNullable[String].map(s => s.map( id =>  extractIdAndPathFromString(id)._1)) and
       (JsPath \ "@id").read[String].map(extractIdAndPathFromString(_)._2) and
       JsPath.read[JsObject]
     ) (NexusInstance.apply _)

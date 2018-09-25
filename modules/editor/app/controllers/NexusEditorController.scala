@@ -92,12 +92,19 @@ class NexusEditorController @Inject()(
               res =>
                 res.status match {
                   case OK =>
+                    val total = if((res.json \ "fullCount").as[Long] == 0){
+                      (res.json \ "count").as[Long]
+                    }else{
+                      (res.json \ "fullCount").as[Long]
+                    }
                     Ok(
-                    Json.obj("data" -> InstanceHelper.formatInstanceList(res.json.as[JsArray], config.reconciledPrefix),
+                    Json.obj("data" -> InstanceHelper.formatInstanceList( (res.json \ "data").as[JsArray], config.reconciledPrefix),
                       "label" -> JsString(
                         (FormHelper.formRegistry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String]
                           .getOrElse(nexusPath.toString())
-                      ))
+                      ),
+                      "total" -> total
+                    )
                   )
                   case _ => ResponseHelper.forwardResultResponse(res)
                 }
@@ -209,7 +216,7 @@ class NexusEditorController @Inject()(
         updatedInstance,
         updateToBeStoredInManual,
         preppedEntityForStorage
-        ) = NexusEditorController.preppingEntitesForSave(
+        ) = NexusEditorController.preppingEntitiesForSave(
         config.nexusEndpoint,
         newValue,
         originalInstanceCleaned,
@@ -228,7 +235,15 @@ class NexusEditorController @Inject()(
       val createReconciledDomain = nexusService.createDomain(config.nexusEndpoint, reconciledSpace, originalInstance.nexusPath.domain, "", reconciledToken)
 
       val manualRes: Future[WSResponse] = createEditorDomain.flatMap { re =>
-        val manualSchema = instanceService.createManualSchemaIfNeeded(updateToBeStoredInManual, originalInstance.nexusPath, token, editorSpace, "manual", EditorSpaceHelper.nexusEditorContext("manual"))
+        val manualSchema = instanceService.createManualSchemaIfNeeded(
+          updateToBeStoredInManual,
+          originalInstance.nexusPath,
+          token,
+          editorSpace,
+          "manual",
+          EditorSpaceHelper.nexusEditorContext("manual")
+        )
+
         manualSchema.flatMap { res =>
           instanceService.upsertUpdateInManualSpace(editorSpace, None,  request.user, originalInstance.nexusPath, preppedEntityForStorage, token)
         }
@@ -296,7 +311,7 @@ class NexusEditorController @Inject()(
                   updatedInstance,
                   updateToBeStoredInManual,
                   preppedEntityForStorage
-                  ) = NexusEditorController.preppingEntitesForSave(
+                  ) = NexusEditorController.preppingEntitiesForSave(
                   config.nexusEndpoint,
                   newValue,
                   reconciledInstanceCleaned.nexusInstance,
@@ -317,7 +332,17 @@ class NexusEditorController @Inject()(
                       res.status match {
                         case status if status < 300 =>
                           val newManualUpdateId = (res.json \ "@id").as[String]
-                          val reconciledUpsert = instanceService.updateReconciledInstance(editorSpace, currentInstanceDisplayed, editorInstances, originalInstance, preppedEntityForStorage, newManualUpdateId, consolidatedInstance.content, reconciledToken, request.user)
+                          val reconciledUpsert = instanceService.updateReconciledInstance(
+                            editorSpace,
+                            currentInstanceDisplayed,
+                            editorInstances,
+                            originalInstance,
+                            preppedEntityForStorage,
+                            newManualUpdateId,
+                            consolidatedInstance.content,
+                            reconciledToken,
+                            request.user
+                          )
                           reconciledUpsert.map { re =>
                             logger.debug(s"Creation of reconciled update ${re.body}")
                             re.status match {
@@ -554,7 +579,7 @@ class NexusEditorController @Inject()(
 
 object NexusEditorController {
 
-  def preppingEntitesForSave(nexusEndpoint: String,
+  def preppingEntitiesForSave(nexusEndpoint: String,
                              formValues: JsValue,
                              cleanInstance: NexusInstance,
                              currentlyDisplayedInstance: NexusInstance,
@@ -564,7 +589,7 @@ object NexusEditorController {
                              reconciledPrefix: String,
                              instanceService: InstanceService,
                              token:String
-                            ): (JsObject, JsObject, JsObject) = {
+                            ): (JsObject, JsObject, EditorInstance) = {
     val updateFromUI = Json.parse(FormHelper.unescapeSlash(formValues.toString())).as[JsObject] - "id"
     val updatedInstance = InstanceHelper.buildInstanceFromForm(cleanInstance, updateFromUI, nexusEndpoint)
     val diffEntity = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, updatedInstance.toString, cleanInstance) +
@@ -575,7 +600,7 @@ object NexusEditorController {
     val preppedEntityForStorage = InstanceHelper.prepareManualEntityForStorage(correctedLinks,userInfo) +
       ("http://hbp.eu/manual#origin", JsString(originLink)) +
       ("http://hbp.eu/manual#parent", Json.obj("@id" -> JsString(originLink)))
-    (updatedInstance, correctedLinks, preppedEntityForStorage)
+    (updatedInstance, correctedLinks, EditorInstance(preppedEntityForStorage.as[NexusInstance]))
   }
 
   def recursiveCheckOfIds(k: String,
