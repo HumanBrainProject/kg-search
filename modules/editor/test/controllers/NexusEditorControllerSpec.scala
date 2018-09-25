@@ -68,7 +68,7 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
       val fakeEndpoint = s"$kgQueryEndpoint/arango/instances/${datatype.toString()}"
       implicit val ws = MockWS {
         case (GET, fakeEndpoint) => Action {
-          Ok(instances)
+          Ok(Json.obj("data" -> instances, "fullCount" -> 0, "count" -> 2))
         }
       }
 
@@ -85,11 +85,11 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
       val arangoQueryService = mock[ArangoQueryService]
       val configService = new ConfigurationService(fakeApplication().configuration)
       val controller = new NexusEditorController(mockCC, authMock, instanceService, oidcAuthService, configService, nexusService, releaseService, arangoQueryService, ws)(ec)
-      val response = controller.listInstances(datatype.org, datatype.domain, datatype.schema, datatype.version, "0", "20", "").apply(FakeRequest())
+      val response = controller.listInstances(datatype.org, datatype.domain, datatype.schema, datatype.version, Some(0), Some(20), "").apply(FakeRequest())
       val res = contentAsJson(response).as[JsObject]
       val arr = (res \ "data").as[List[JsObject]].map(js => js - "status" - "childrenStatus")
       val formattedRes = res ++ Json.obj("data" -> arr)
-      formattedRes.toString mustBe """{"data":[{"id":"data/core/datatype/v0.0.4/123","description":"","label":"dataname1"},{"id":"data/core/datatype/v0.0.4/321","description":"","label":"dataname2"}],"label":"data/core/datatype/v0.0.4"}"""
+      formattedRes.toString mustBe """{"data":[{"id":"data/core/datatype/v0.0.4/123","description":"","label":"dataname1"},{"id":"data/core/datatype/v0.0.4/321","description":"","label":"dataname2"}],"label":"data/core/datatype/v0.0.4","total":2}"""
 
     }
 
