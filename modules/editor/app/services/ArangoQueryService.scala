@@ -18,15 +18,13 @@ package editor.services
 import authentication.service.OIDCAuthService
 import com.google.inject.Inject
 import common.models.NexusPath
-import editor.helpers.FormHelper
+import editor.helpers.{FormHelper, InstanceHelper}
 import nexus.services.NexusService
-import play.api.Configuration
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
 import play.api.http.HeaderNames._
 import common.services.ConfigurationService
-import editor.helper.InstanceHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
