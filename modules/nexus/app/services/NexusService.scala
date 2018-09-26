@@ -36,8 +36,7 @@ class NexusService @Inject()(wSClient: WSClient, config:ConfigurationService)(im
     val instanceUrl = s"${config.nexusEndpoint}/v0/data/${(jsonObj \ "id").as[String]}"
     val instanceRev = (jsonObj \ "rev").as[Long]
     // check if this instance is attached to a release instance already
-    isReleased(instanceUrl, instanceRev, token).flatMap{ releasedId =>
-      releasedId match {
+    isReleased(instanceUrl, instanceRev, token).flatMap{
         case Some(releaseInstance) =>
           if (releaseInstance.getRevision() == instanceRev){
             Future.successful(JsObject(Map(
@@ -74,7 +73,6 @@ class NexusService @Inject()(wSClient: WSClient, config:ConfigurationService)(im
                 ))
             }
           }
-      }
     }
   }
 

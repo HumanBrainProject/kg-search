@@ -102,6 +102,18 @@ object ReleaseService {
         }.values.map( j => specs(j.as[JsObject]))).as[JsValue]
         case "linkType" =>
           k._1 -> k._2
+        case "status" =>
+          val arr = k._2.as[List[String]]
+          val status = if(arr.isEmpty){
+            "NOT_RELEASED"
+          }else{
+            if(arr.contains("released")){
+              "RELEASED"
+            }else{
+              "NOT_RELEASED"
+            }
+          }
+          k._1 -> JsString(status)
         case _ => k._1 -> k._2
       }
     }
