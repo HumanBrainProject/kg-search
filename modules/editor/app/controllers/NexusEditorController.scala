@@ -496,7 +496,7 @@ class NexusEditorController @Inject()(
     * @param id
     * @return
     */
-  def releaseInstance(
+  def releaseInstanceStatus(
                      org: String, domain: String, schema: String, version: String, id:String
                    ): Action[AnyContent] = Action.async { implicit request =>
     val token = request.headers.toSimpleMap("Authorization")
@@ -509,7 +509,8 @@ class NexusEditorController @Inject()(
         config.reconciledPrefix
       )
       case Left(Some(res)) => ResponseHelper.forwardResultResponse(res)
-      case Right(data) => Ok(Json.toJson(data))
+      case Right(data) =>
+        Ok(Json.toJson(data))
     }
 
   }

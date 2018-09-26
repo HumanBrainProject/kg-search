@@ -80,7 +80,7 @@ GET    /api/graph/:org/:domain/:datatype/:version/:id   editor.controllers.Nexus
 #    required: false
 #    type: string
 ###
-GET    /api/release/:org/:domain/:datatype/:version/:id             editor.controllers.NexusEditorController.releaseInstance(org: String, domain:String, datatype: String, version:String, id: String )
+GET    /api/release/:org/:domain/:datatype/:version/:id             editor.controllers.NexusEditorController.releaseInstanceStatus(org: String, domain:String, datatype: String, version:String, id: String )
 
 ###
 #  summary: get release information on an entity and its children
