@@ -42,14 +42,12 @@ case class NexusInstance(nexusUUID: Option[String], nexusPath: NexusPath, conten
 //  }
 
   def cleanManualData(): NexusInstance = {
-    this.content - ("@context") - ("@id") - ("@type") - ("links") - ("nxv:rev") - ("nxv:deprecated")
-    this.copy(content = this.content)
+    this.copy(content = this.content - ("@context") - ("@id") - ("@type") - ("links") - ("nxv:rev") - ("nxv:deprecated"))
   }
 
 
   def removeNexusFields(): NexusInstance = {
-    this.content - ("@context") - ("@type") - ("links") - ("nxv:deprecated")
-    this.copy(content = this.content)
+    this.copy(content =  this.content - ("@context") - ("@type") - ("links") - ("nxv:deprecated"))
   }
 
   def getRevision(): Long ={
