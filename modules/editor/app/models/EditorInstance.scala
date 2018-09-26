@@ -16,11 +16,12 @@
 package editor.models
 
 import common.models.NexusInstance
-import play.api.libs.json.{JsObject, JsValue}
+import editor.helpers.InstanceHelper
+import play.api.libs.json.{JsBoolean, JsObject, JsString, JsValue}
 
 case class EditorInstance(nexusInstance: NexusInstance){
 
-  lazy val updaterId = nexusInstance.getField(EditorInstance.Fields.updaterId).as[String]
+  lazy val updaterId = nexusInstance.getField(EditorInstance.Fields.updaterId).get.as[String]
 
 
   def extractUpdateInfo(): (String, Int, String) = {
@@ -47,8 +48,6 @@ case class EditorInstance(nexusInstance: NexusInstance){
       )
     )
   }
-
-
 }
 
 object EditorInstance {
@@ -58,5 +57,17 @@ object EditorInstance {
     val updateTimeStamp = s"${contextOrg}update_timestamp"
     val parent = s"${contextOrg}parent"
     val origin = s"${contextOrg}origin"
+    val originalPath = s"${contextOrg}original_path"
+    val userCreated = s"${contextOrg}user_created"
+  }
+
+  def generateInstance(nexusInstance: NexusInstance,org: String, datatype: String, identifier: String, originalPath: String): EditorInstance = {
+    val content = nexusInstance.content
+      .+("@type" -> JsString(s"http://hbp.eu/${org}#${datatype.capitalize}"))
+      .+("http://schema.org/identifier" -> JsString(identifier))
+      .+(Fields.origin, JsString(""))
+      .+(Fields.userCreated, JsBoolean(true))
+      .+(Fields.originalPath, JsString(originalPath))
+    EditorInstance(nexusInstance.copy(content=content))
   }
 }

@@ -62,9 +62,9 @@ object InstanceHelper {
   }
 
 
-  def buildDiffEntity(consolidatedResponse: NexusInstance, newValue: String, originalInstance: NexusInstance): JsObject = {
+  def buildDiffEntity(consolidatedResponse: NexusInstance, newValue: NexusInstance, originalInstance: NexusInstance): JsObject = {
     val consolidatedJson = JsonParser.parse(consolidatedResponse.removeNexusFields().content.toString())
-    val newJson = JsonParser.parse(newValue)
+    val newJson = JsonParser.parse(newValue.content.toString())
     val Diff(changed, added, deleted) = consolidatedJson.diff(newJson)
     val diff: JsonAST.JValue = (deleted, changed) match {
       case (JsonAST.JNothing, JsonAST.JNothing) =>
@@ -97,10 +97,9 @@ object InstanceHelper {
         changedFromOrg.merge(addedFromOrg)
     }
     val rendered = Json.parse(JsonMethods.compact(JsonMethods.render(diff))).as[JsObject]
-    val newValues = Json.parse(newValue)
     val diffWithCompleteArray = rendered.value.map{
       case (k, v) =>
-        val value = ( newValues \ k).asOpt[JsValue]
+        val value = ( newValue.content \ k).asOpt[JsValue]
         if(v.asOpt[JsArray].isDefined && value.isDefined){
           k -> value.get
         }else{
@@ -110,13 +109,13 @@ object InstanceHelper {
     Json.toJson(diffWithCompleteArray).as[JsObject]
   }
 
-  def buildInstanceFromForm(original: NexusInstance, formContent: JsObject, nexusEndpoint: String): JsObject = {
+  def buildInstanceFromForm(original: NexusInstance, formContent: JsObject, nexusEndpoint: String): NexusInstance = {
 //    val flattened = JsFlattener(formContent)
 //    applyChanges(original, flattened)
     val cleanForm = FormHelper.removeKey(formContent.as[JsValue])
     val formWithID = cleanForm.toString().replaceAll(""""id":"""", s""""@id":"${nexusEndpoint}/v0/data/""")
     val res= original.content.deepMerge(Json.parse(formWithID).as[JsObject])
-    res
+    original.copy(content = res)
   }
 
   def buildNewInstanceFromForm(nexusEndpoint: String, instancePath: NexusPath, formRegistry: JsObject, newInstance: JsObject): JsObject = {
@@ -276,14 +275,6 @@ object InstanceHelper {
     Json.toJson(arr)
   }
 
-  def formatFromNexusToOption(jsObject: JsObject, reconciledSuffix: String): JsObject = {
-    val id = (jsObject \ "@id").as[String]
-    val name = (jsObject \ "http://schema.org/name").as[JsString]
-    val description: JsString = if ((jsObject \ "http://schema.org/description").isDefined) {
-      (jsObject \ "http://schema.org/description").as[JsString]
-    } else { JsString("") }
-    Json.obj("id" -> NexusInstance.getIdForEditor(id, reconciledSuffix), "description" -> description, "label" -> name, "status" -> ReleaseStatus.getRandomStatus(), "childrenStatus" -> ReleaseStatus.getRandomChildrenStatus())
-  }
 
   def toReconcileFormat(jsValue: JsValue, privateSpace: String): JsObject = {
     Json.obj("src" -> privateSpace, "content" -> jsValue.as[JsObject].-("@context"))

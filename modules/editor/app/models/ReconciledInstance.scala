@@ -95,7 +95,7 @@ case class ReconciledInstance( nexusInstance: NexusInstance){
     this.copy(this.nexusInstance.removeNexusFields())
   }
 
-  def id(): String = {
+  def id(): Option[String]= {
     this.nexusInstance.id()
   }
 

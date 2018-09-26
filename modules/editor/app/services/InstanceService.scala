@@ -82,7 +82,7 @@ class InstanceService @Inject()(wSClient: WSClient,
   }
 
   def updateReconcileInstance(
-                               instance: JsObject,
+                               instance: ReconciledInstance,
                                nexusPath: NexusPath,
                                id: String,
                                revision: Long,
@@ -90,7 +90,7 @@ class InstanceService @Inject()(wSClient: WSClient,
                              ): Future[WSResponse] = {
     wSClient
       .url(s"${config.nexusEndpoint}/v0/data/${nexusPath.toString()}/$id?rev=${revision}")
-      .withHttpHeaders("Authorization" -> token).put(instance)
+      .withHttpHeaders("Authorization" -> token).put(instance.nexusInstance.content)
   }
 
 
@@ -258,13 +258,13 @@ class InstanceService @Inject()(wSClient: WSClient,
                                 currentReconciledInstance: ReconciledInstance ,
                                 editorInstances: List[EditorInstance],
                                 originalInstance: NexusInstance,
+                                originalPath: NexusPath,
                                 manualEntity: EditorInstance,
                                 manualEntityId: String,
                                 updatedValue: JsObject,
                                 token: String,
                                 userInfo: User
                               ): Future[WSResponse] = {
-
     val parentId = originalInstance.id()
     val revision = currentReconciledInstance.nexusInstance.getRevision()
     val parentRevision = originalInstance.getRevision()
@@ -274,14 +274,20 @@ class InstanceService @Inject()(wSClient: WSClient,
         ReconciledInstance(updatedValue.as[NexusInstance]),
         editorInstances,
         manualEntity,
-        originalInstance.nexusPath,
+        originalPath,
         manualEntityId,
         userInfo,
         parentRevision,
-        parentId,
+        parentId.get,
         token
       )
-    updateReconcileInstance( payload, currentReconciledInstance.nexusInstance.nexusPath, currentReconciledInstance.nexusInstance.nexusUUID, revision, token)
+    updateReconcileInstance(
+      payload,
+      currentReconciledInstance.nexusInstance.nexusPath,
+      currentReconciledInstance.nexusInstance.nexusUUID.get,
+      revision,
+      token
+    )
 
   }
 
@@ -291,7 +297,7 @@ class InstanceService @Inject()(wSClient: WSClient,
                                 originalInstance: NexusInstance,
                                 manualEntity: EditorInstance,
                                 manualEntityId: String,
-                                updatedValue: JsObject,
+                                updatedValue: ReconciledInstance,
                                 token: String,
                                 userInfo: User
                               ): Future[WSResponse] = {
@@ -311,7 +317,7 @@ class InstanceService @Inject()(wSClient: WSClient,
         token)
     insertInstance(
       destinationOrg,
-      payload,
+      payload.nexusInstance.content,
       originalInstance.nexusPath,
       token
     )

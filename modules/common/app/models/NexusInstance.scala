@@ -26,7 +26,7 @@ case class NexusInstance(nexusUUID: Option[String], nexusPath: NexusPath, conten
     this.nexusUUID.map(s => s"${this.nexusPath}/${s}")
   }
 
-  def getField(fieldName: String): JsValue = content.value(fieldName)
+  def getField(fieldName: String): Option[JsValue] = content.value.get(fieldName)
 
   def modificationOfLinks(nexusEndpoint: String, reconciledPrefix: String): NexusInstance = {
     val id = (this.content \ "@id").as[String]
@@ -53,8 +53,16 @@ case class NexusInstance(nexusUUID: Option[String], nexusPath: NexusPath, conten
   }
 
   def getRevision(): Long ={
-    this.getField(NexusInstance.Fields.nexusRev).as[Long]
+    this.getField(NexusInstance.Fields.nexusRev).getOrElse(JsNumber(1)).as[Long]
   }
+
+  def formatFromNexusToOption(reconciledSuffix: String): JsObject = {
+    val id = this.getField("@id").get.as[String]
+    val name = this.getField("http://schema.org/name").getOrElse(JsString("")).as[JsString]
+    val description: JsString = this.getField("http://schema.org/description").getOrElse(JsString("")).as[JsString]
+    Json.obj("id" -> NexusInstance.getIdForEditor(id, reconciledSuffix), "description" -> description, "label" -> name)
+  }
+
 
 }
 
@@ -99,8 +107,8 @@ object NexusInstance {
   import play.api.libs.functional.syntax._
 
   implicit val editorUserReads: Reads[NexusInstance] = (
-    (JsPath \ "@id").readNullable[String].map(s => s.map( id =>  extractIdAndPathFromString(id)._1)) and
-      (JsPath \ "@id").read[String].map(extractIdAndPathFromString(_)._2) and
+    (JsPath \ Fields.nexusId).read[String].map(extractIdAndPathFromString(_)._1).map(Some(_)) and
+      (JsPath \ Fields.nexusId).read[String].map(extractIdAndPathFromString(_)._2) and
       JsPath.read[JsObject]
     ) (NexusInstance.apply _)
 
