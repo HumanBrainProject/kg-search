@@ -19,20 +19,14 @@ package common.models
 
 import play.api.libs.json._
 
-class Instance(nexusUUID: String, nexusPath: NexusPath, content:JsObject){
-  def id():String = {
-    s"${this.nexusPath}/${this.nexusUUID}"
-  }
-}
 
-case class NexusInstance(nexusUUID: String, nexusPath: NexusPath, content:JsObject) extends Instance(nexusUUID, nexusPath, content) {
+case class NexusInstance(nexusUUID: Option[String], nexusPath: NexusPath, content:JsObject) {
 
-  def extractUpdateInfo(): (String, Int, String) = {
-    ((this.content \"@id").as[String],
-      (this.content \ "nxv:rev").as[Int],
-      (this.content \ "http://hbp.eu/manual#updater_id").asOpt[String].getOrElse("")
-    )
+  def id():Option[String] = {
+    this.nexusUUID.map(s => s"${this.nexusPath}/${s}")
   }
+
+  def getField(fieldName: String): Option[JsValue] = content.value.get(fieldName)
 
   def modificationOfLinks(nexusEndpoint: String, reconciledPrefix: String): NexusInstance = {
     val id = (this.content \ "@id").as[String]
@@ -43,13 +37,38 @@ case class NexusInstance(nexusUUID: String, nexusPath: NexusPath, content:JsObje
     NexusInstance(this.nexusUUID, this.nexusPath, this.content.transform(jsonTransformer).get)
   }
 
+//  def cleanManualDataFromNexus(): Map[String, JsValue] = {
+//    cleanManualData().content.fields.toMap
+//  }
+
+  def cleanManualData(): NexusInstance = {
+    this.copy(content = this.content - ("@context") - ("@id") - ("@type") - ("links") - ("nxv:rev") - ("nxv:deprecated"))
+  }
+
+
+  def removeNexusFields(): NexusInstance = {
+    this.copy(content =  this.content - ("@context") - ("@type") - ("links") - ("nxv:deprecated"))
+  }
+
+  def getRevision(): Long ={
+    this.getField(NexusInstance.Fields.nexusRev).getOrElse(JsNumber(1)).as[Long]
+  }
+
+  def formatFromNexusToOption(reconciledSuffix: String): JsObject = {
+    val id = this.getField("@id").get.as[String]
+    val name = this.getField("http://schema.org/name").getOrElse(JsString("")).as[JsString]
+    val description: JsString = this.getField("http://schema.org/description").getOrElse(JsString("")).as[JsString]
+    Json.obj("id" -> NexusInstance.getIdForEditor(id, reconciledSuffix), "description" -> description, "label" -> name)
+  }
+
+
 }
 
 object NexusInstance {
-  def apply(jsValue: JsValue): NexusInstance = {
-    val (id, path) = extractIdAndPath(jsValue)
-    new NexusInstance(id, path , jsValue.as[JsObject])
-  }
+//  def apply(jsValue: JsValue): NexusInstance = {
+//    val (id, path) = extractIdAndPath(jsValue)
+//    new NexusInstance(id, path , jsValue.as[JsObject])
+//  }
 
   def extractIdAndPath(jsValue: JsValue): (String, NexusPath) = {
     val nexusUrl = (jsValue \ "@id").as[String]
@@ -62,6 +81,7 @@ object NexusInstance {
     val nexusType = NexusPath(datatype._1.split("/").toList)
     (datatype._2.substring(1) , nexusType)
   }
+
   def getIdfromURL(url: String): String = {
     assert(url contains "v0/data/")
     url.split("v0/data/").tail.head
@@ -76,6 +96,20 @@ object NexusInstance {
       .toString() + "/" + id
   }
   // extract id, rev and userId of updator for this update
+
+  object Fields{
+    val nexusId = "@id"
+    val nexusRev = "nxv:rev"
+  }
+
+  import play.api.libs.functional.syntax._
+
+  implicit val editorUserReads: Reads[NexusInstance] = (
+    (JsPath \ Fields.nexusId).read[String].map(extractIdAndPathFromString(_)._1).map(Some(_)) and
+      (JsPath \ Fields.nexusId).read[String].map(extractIdAndPathFromString(_)._2) and
+      JsPath.read[JsObject]
+    ) (NexusInstance.apply _)
+
 
 }
 

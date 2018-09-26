@@ -18,12 +18,13 @@ package common.models
 
 import play.api.libs.json.JsObject
 
-case class ReleaseInstance( nexusUUID : String,nexusPath: NexusPath, content: JsObject, instanceRevision: Long) extends Instance(nexusUUID ,nexusPath, content){
+class ReleaseInstance(
+                       override val nexusUUID : Option[String],
+                       override val  nexusPath: NexusPath,
+                       override val  content: JsObject,
+                       instanceRevision: Long
+                     ) extends NexusInstance(nexusUUID ,nexusPath, content){
   lazy val revision = this.getRevision()
-
-  def getRevision():Long = {
-    (content \ "nxv:rev").as[Long]
-  }
 }
 
 object ReleaseInstance {
@@ -31,7 +32,7 @@ object ReleaseInstance {
     val id = (jsObject \ "@id").as[String]
     val (uuid, nexusPath) = NexusInstance.extractIdAndPathFromString(id)
     val rev = (jsObject \ "http://hbp.eu/instanceRev").asOpt[Long].getOrElse(1L)
-    new ReleaseInstance(uuid, nexusPath, jsObject, rev)
+    new ReleaseInstance(Some(uuid), nexusPath, jsObject, rev)
   }
 
   def template(instanceUrl: String, releaseIdentifier: String, instanceRev:Long ): String = s"""

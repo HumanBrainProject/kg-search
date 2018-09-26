@@ -20,7 +20,7 @@ import authentication.service.OIDCAuthService
 import com.google.inject.Inject
 import common.models.{EditorUser, Favorite, FavoriteGroup, NexusPath}
 import common.services.ConfigurationService
-import editor.helper.InstanceHelper
+import editor.helpers.InstanceHelper
 import helpers.ResponseHelper
 import nexus.services.NexusService
 import play.api.{Configuration, Logger}

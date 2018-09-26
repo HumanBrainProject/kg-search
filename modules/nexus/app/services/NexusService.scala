@@ -38,10 +38,10 @@ class NexusService @Inject()(wSClient: WSClient, config:ConfigurationService)(im
     // check if this instance is attached to a release instance already
     isReleased(instanceUrl, instanceRev, token).flatMap{
         case Some(releaseInstance) =>
-          if (releaseInstance.instanceRevision == instanceRev){
+          if (releaseInstance.getRevision() == instanceRev){
             Future.successful(JsObject(Map(
               "status" -> JsString(RELEASE_ALREADY),
-              "released_id" -> JsString(releaseInstance.id())
+              "released_id" -> JsString(releaseInstance.id().get)
             )))
           }else{
             updateReleaseInstance(instanceUrl, s"${config.nexusEndpoint}/v0/data/${releaseInstance.id()}", instanceRev,releaseInstance.revision, token).map{
