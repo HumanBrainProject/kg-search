@@ -110,8 +110,7 @@ class NexusEditorController @Inject()(
               NavigationHelper.errorMessageWithBackLink("Form not implemented", NavigationHelper.generateBackLink(nexusPath, config.reconciledPrefix))
             )
           case instanceForm =>
-            val i = instanceForm.as[JsObject] + ("status" -> ReleaseStatus.getRandomStatus()) + ("childrenStatus" -> ReleaseStatus.getRandomChildrenStatus())
-            Ok(NavigationHelper.resultWithBackLink(i, nexusPath, config.reconciledPrefix))
+            Ok(NavigationHelper.resultWithBackLink(instanceForm.as[JsObject], nexusPath, config.reconciledPrefix))
         }
     }
   }
@@ -174,19 +173,24 @@ class NexusEditorController @Inject()(
     val token = OIDCHelper.getTokenFromRequest(request)
     val reconciledTokenFut = oIDCAuthService.getTechAccessToken()
     val instancePath = originalInstance.nexusPath
-    val newValue = request.body.asJson.get
+    val modificationFromUser = request.body.asJson.get
+
+
     val editorSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.editorPrefix)
     val reconciledSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.reconciledPrefix)
     reconciledTokenFut.flatMap { reconciledToken =>
       val originalInstanceCleaned = originalInstance.removeNexusFields()
       val originLink = (originalInstance.content \ "@id").as[String]
+
+      val updateFromUI = Json.parse(FormHelper.unescapeSlash(modificationFromUser.toString())).as[JsObject] - "id"
+      val updatedInstance = InstanceHelper.buildInstanceFromForm(originalInstanceCleaned, updateFromUI, config.nexusEndpoint)
+
       val (
-        updatedInstance,
         updateToBeStoredInManual,
         preppedEntityForStorage
         ) = NexusEditorController.preppingEntitiesForSave(
         config.nexusEndpoint,
-        newValue,
+        updatedInstance,
         originalInstanceCleaned,
         originalInstanceCleaned,
         originalInstanceCleaned.nexusPath,
@@ -290,7 +294,7 @@ class NexusEditorController @Inject()(
                                   )(implicit request: EditorUserRequest[AnyContent]) = {
     val token = OIDCHelper.getTokenFromRequest(request)
     val reconciledTokenFut = oIDCAuthService.getTechAccessToken()
-    val newValue = request.body.asJson.get
+    val modificationFromUser = request.body.asJson.get
     val editorSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.editorPrefix)
     val originalIdAndPath = NexusInstance.extractIdAndPath(currentInstanceDisplayed.getOriginalParent())
     // Get the original instance either in the Editor space or the original space
@@ -307,17 +311,20 @@ class NexusEditorController @Inject()(
               if (editorInstancesRes.forall(_.isRight)) {
                 val editorInstances = editorInstancesRes.map { e => EditorInstance(e.toOption.get)}
                 val reconciledInstanceCleaned = currentInstanceDisplayed.removeNexusFields()
+
+                val updateFromUI = Json.parse(FormHelper.unescapeSlash(modificationFromUser.toString())).as[JsObject] - "id"
+                val updatedInstance = InstanceHelper.buildInstanceFromForm(reconciledInstanceCleaned.nexusInstance, updateFromUI, config.nexusEndpoint)
+
                 //Create the manual update
                 // As we cannot pass / in the name of a field we have replaced them with %nexus-slash%
                 val reconciledLink =  currentInstanceDisplayed.id().get
                 //Generate the data that should be stored in the manual space
                 val (
-                  updatedInstance,
                   updateToBeStoredInManual,
                   preppedEntityForStorage
                   ) = NexusEditorController.preppingEntitiesForSave(
                   config.nexusEndpoint,
-                  newValue,
+                  updatedInstance,
                   reconciledInstanceCleaned.nexusInstance,
                   currentInstanceDisplayed.nexusInstance,
                   originalPath,
@@ -595,7 +602,7 @@ object NexusEditorController {
 
   def preppingEntitiesForSave(
                                nexusEndpoint: String,
-                               formValues: JsValue,
+                               updatedInstance: NexusInstance,
                                cleanInstance: NexusInstance,
                                currentlyDisplayedInstance: NexusInstance,
                                originalPath: NexusPath,
@@ -605,9 +612,10 @@ object NexusEditorController {
                                editorPrefix: String,
                                instanceService: InstanceService,
                                token: String
-                            ): (NexusInstance, JsObject, EditorInstance) = {
-    val updateFromUI = Json.parse(FormHelper.unescapeSlash(formValues.toString())).as[JsObject] - "id"
-    val updatedInstance = InstanceHelper.buildInstanceFromForm(cleanInstance, updateFromUI, nexusEndpoint)
+                            ): (JsObject, EditorInstance) = {
+//    val updateFromUI = Json.parse(FormHelper.unescapeSlash(formValues.toString())).as[JsObject] - "id"
+//    val updatedInstance = InstanceHelper.buildInstanceFromForm(cleanInstance, updateFromUI, nexusEndpoint)
+
     val diffEntity = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, updatedInstance, cleanInstance) +
       ("@type", JsString(s"http://hbp.eu/${originalPath.org}#${originalPath.schema.capitalize}"))
     val correctedLinks = Json.toJson(diffEntity.value.map{
@@ -616,7 +624,7 @@ object NexusEditorController {
     val preppedEntityForStorage = InstanceHelper.prepareManualEntityForStorage(correctedLinks,userInfo) +
       ("http://hbp.eu/manual#origin", JsString(originLink)) +
       ("http://hbp.eu/manual#parent", Json.obj("@id" -> JsString(originLink)))
-    (updatedInstance, correctedLinks, EditorInstance(NexusInstance(None, originalPath.reconciledPath(editorPrefix), preppedEntityForStorage)))
+    (correctedLinks, EditorInstance(NexusInstance(None, originalPath.reconciledPath(editorPrefix), preppedEntityForStorage)))
   }
 
   def recursiveCheckOfIds(k: String,
