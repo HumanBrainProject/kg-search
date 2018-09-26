@@ -74,7 +74,7 @@ class ReleaseService @Inject()(
       res => res.status match{
         case OK =>
           val item = res.json.as[JsObject]
-          val spec = ReleaseService.reduceChildrenStatus(item)
+          val spec = ReleaseService.reduceChildrenStatus(item, s"${NexusPath(org, domain, schema,version).toString()}/$id")
           Right(spec)
         case _ => logger.error(res.body)
           Left((s"$org/$domain/$schema/$version/$id",res))
@@ -130,9 +130,8 @@ object ReleaseService {
     }
   }
 
-  def reduceChildrenStatus(item:JsObject): JsObject = {
+  def reduceChildrenStatus(item:JsObject, originalId: String): JsObject = {
     val childrenStatus = getWorstChildrenStatus(item)
-    val id = (item \ "id").as[String].replaceAll("_", ".").replaceAll("-", "/")
-    item +("childrenStatus" -> JsString(childrenStatus)) - "child_status" + ("id" -> JsString(id))
+    item +("childrenStatus" -> JsString(childrenStatus)) - "child_status" + ("id" -> JsString(originalId))
   }
 }
