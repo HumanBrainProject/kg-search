@@ -121,7 +121,9 @@ object ReleaseService {
 
   def getWorstChildrenStatus(item: JsObject):String = {
     val childrenStatus = (item \ "child_status").as[List[String]]
-    if(childrenStatus.isEmpty || childrenStatus.contains("NOT_RELEASED")){
+    if(childrenStatus.isEmpty){
+      ""
+    } else if(childrenStatus.contains("NOT_RELEASED")){
       "NOT_RELEASED"
     }else if(childrenStatus.contains("HAS_CHANGED")){
       "HAS_CHANGED"
