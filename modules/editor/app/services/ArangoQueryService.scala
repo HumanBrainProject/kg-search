@@ -26,6 +26,7 @@ import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
 import play.api.http.HeaderNames._
 import common.services.ConfigurationService
+import editor.helper.InstanceHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -54,6 +55,33 @@ class ArangoQueryService @Inject()(
       }
     }
 
+  }
+
+  def listInstances(nexusPath: NexusPath, from: Option[Int], size: Option[Int], search: String): Future[Either[WSResponse, JsObject]] = {
+    wSClient.url(s"${config.kgQueryEndpoint}/arango/instances/${nexusPath.toString()}")
+      .withQueryStringParameters(("search", search), ("from", from.getOrElse("").toString), ("size", size.getOrElse("").toString)).get().map{
+      res =>
+        res.status match {
+          case OK =>
+            val total = if((res.json \ "fullCount").as[Long] == 0){
+              (res.json \ "count").as[Long]
+            }else{
+              (res.json \ "fullCount").as[Long]
+            }
+            val data = (res.json \ "data").as[JsArray]
+            Right(
+              Json.obj("data" -> InstanceHelper.formatInstanceList( data, config.reconciledPrefix),
+                "label" -> JsString(
+                  (FormHelper.formRegistry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String]
+                    .getOrElse(nexusPath.toString())
+                ),
+                "dataType" -> (data.value.head \ "@type").as[JsString],
+                "total" -> total
+              )
+            )
+          case _ => Left(res)
+        }
+    }
   }
 
   private def graph(nexusPath: NexusPath, id:String, step:Int): Future[Either[WSResponse, JsObject]] = {
@@ -103,7 +131,7 @@ object ArangoQueryService {
             Json.obj(
               "id" -> Json.toJson(ArangoQueryService.idFormat((v \ "_id").as[String])),
               "name" -> JsString(label),
-              "dataType" -> JsString(dataType),
+              "dataType" -> JsString(d),
               "title" -> title
             )
           }.getOrElse(JsNull)

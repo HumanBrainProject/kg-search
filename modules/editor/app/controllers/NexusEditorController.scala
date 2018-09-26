@@ -77,41 +77,9 @@ class NexusEditorController @Inject()(
                      search: String
                    ): Action[AnyContent] = authenticatedUserAction.async  { implicit request =>
     val nexusPath = NexusPath(org, domain, datatype, version)
-    ws.url(s"${config.nexusEndpoint}/v0/organizations/$org")
-      .addHttpHeaders("Authorization" -> request.headers.get("Authorization").getOrElse(""))
-      .get().flatMap{
-      res =>
-        res.status match {
-          case UNAUTHORIZED =>
-            val resultBackLink = NavigationHelper.errorMessageWithBackLink("You are not allowed to perform this request")
-            Future.successful(
-              Unauthorized(resultBackLink)
-            )
-          case OK =>
-            val start = System.currentTimeMillis()
-            ws.url(s"${config.kgQueryEndpoint}/arango/instances/${nexusPath.toString()}")
-              .withQueryStringParameters(("search", search), ("from", from.getOrElse("").toString), ("size", size.getOrElse("").toString)).get().map{
-              res =>
-                res.status match {
-                  case OK =>
-                    val total = if((res.json \ "fullCount").as[Long] == 0){
-                      (res.json \ "count").as[Long]
-                    }else{
-                      (res.json \ "fullCount").as[Long]
-                    }
-                    Ok(
-                    Json.obj("data" -> InstanceHelper.formatInstanceList( (res.json \ "data").as[JsArray], config.reconciledPrefix),
-                      "label" -> JsString(
-                        (FormHelper.formRegistry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String]
-                          .getOrElse(nexusPath.toString())
-                      ),
-                      "total" -> total
-                    )
-                  )
-                  case _ => ResponseHelper.forwardResultResponse(res)
-                }
-            }
-        }
+    arangoQueryService.listInstances(nexusPath, from, size, search).map{
+      case Right(json) => Ok(json)
+      case Left(res) => ResponseHelper.forwardResultResponse(res)
     }
   }
 
