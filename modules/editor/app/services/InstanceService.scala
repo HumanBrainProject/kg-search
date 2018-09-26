@@ -22,12 +22,9 @@ import java.security.Policy.Parameters
 
 import com.google.inject.Inject
 import common.models.{NexusInstance, NexusPath, User}
-import editor.helper.InstanceHelper._
-import editor.models.{InMemoryKnowledge, IncomingLinksInstances}
-import helpers.ReconciledInstanceHelper
+import editor.models.{EditorInstance, InMemoryKnowledge, IncomingLinksInstances, ReconciledInstance}
 import editor.controllers.NexusEditorController
-import editor.helper.InstanceHelper
-import editor.helpers.{FormHelper, NavigationHelper}
+import editor.helpers.{FormHelper, InstanceHelper, NavigationHelper, ReconciledInstanceHelper}
 import nexus.helpers.NexusHelper
 import nexus.services.NexusService
 import play.api.{Configuration, Logger}
@@ -35,6 +32,7 @@ import play.api.http.Status.OK
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import common.services.ConfigurationService
+import editor.helpers.InstanceHelper.UpdateInfo
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -68,7 +66,7 @@ class InstanceService @Inject()(wSClient: WSClient,
       .listAllNexusResult(s"${config.nexusEndpoint}/v0/data/${originalId}/incoming?deprecated=false&fields=all&size=50&filter=$filter", token)
       .map {
         incomingLinks =>
-          incomingLinks.map(el => NexusInstance((el \ "source").as[JsValue])).toIndexedSeq
+          incomingLinks.map(el => (el \ "source").as[NexusInstance]).toIndexedSeq
       }
   }
 
@@ -84,15 +82,15 @@ class InstanceService @Inject()(wSClient: WSClient,
   }
 
   def updateReconcileInstance(
-                               instance: JsObject,
+                               instance: ReconciledInstance,
                                nexusPath: NexusPath,
                                id: String,
-                               revision: Int,
+                               revision: Long,
                                token: String
                              ): Future[WSResponse] = {
     wSClient
       .url(s"${config.nexusEndpoint}/v0/data/${nexusPath.toString()}/$id?rev=${revision}")
-      .withHttpHeaders("Authorization" -> token).put(instance)
+      .withHttpHeaders("Authorization" -> token).put(instance.nexusInstance.content)
   }
 
 
@@ -114,7 +112,7 @@ class InstanceService @Inject()(wSClient: WSClient,
             Future.successful(Left(r))
           case Right(reconciledInstance) =>
             if (reconciledInstance.isDefined) {
-              Future.successful(Right(reconciledInstance.get))
+              Future.successful(Right(reconciledInstance.get.nexusInstance))
             } else {
               getInstance(path, id, token, parameters)
             }
@@ -131,14 +129,20 @@ class InstanceService @Inject()(wSClient: WSClient,
       res =>
         res.status match {
           case OK =>
-            Right(NexusInstance(res.json))
+            Right(res.json.as[NexusInstance])
           case _ =>
             Left(res)
         }
     }
   }
 
-  def retrieveReconciledFromOriginal(originalPath: NexusPath, reconciledOrg:String, id: String, token: String, parameters: List[(String, String)] = List()): Future[Either[WSResponse, Option[NexusInstance]]] = {
+  def retrieveReconciledFromOriginal(
+                                      originalPath: NexusPath,
+                                      reconciledOrg: String,
+                                      id: String,
+                                      token: String,
+                                      parameters: List[(String, String)] = List()
+                                    ): Future[Either[WSResponse, Option[ReconciledInstance]]] = {
     val editorOrg = NexusPath.addSuffixToOrg(originalPath.org, config.editorPrefix)
     val filter =
       s"""{
@@ -159,7 +163,8 @@ class InstanceService @Inject()(wSClient: WSClient,
          | }
       """.stripMargin.stripLineEnd.replaceAll("\r\n", "")
     wSClient
-      .url(s"${config.nexusEndpoint}/v0/data/${reconciledOrg}/${originalPath.domain}/${originalPath.schema}/${originalPath.version}/?deprecated=false&fields=all&size=1&filter=${URLEncoder.encode(filter, "utf-8")}")
+      .url(s"${config.nexusEndpoint}/v0/data/${reconciledOrg}/${originalPath.domain}/" +
+        s"${originalPath.schema}/${originalPath.version}/?deprecated=false&fields=all&size=1&filter=${URLEncoder.encode(filter, "utf-8")}")
       .withQueryStringParameters( parameters: _*)
       .addHttpHeaders("Authorization" -> token)
       .get()
@@ -169,7 +174,7 @@ class InstanceService @Inject()(wSClient: WSClient,
             case OK =>
               if( (res.json \"total").as[Int] > 0){
                 Right(
-                  Some( NexusInstance(InstanceHelper.removeNexusFields( ((res.json \ "results").as[List[JsValue]].head \ "source").as[JsObject])))
+                  Some( ReconciledInstance(((res.json \ "results").as[List[JsValue]].head \ "source").as[NexusInstance]))
                 )
               }else{
                 Right(None)
@@ -193,20 +198,22 @@ class InstanceService @Inject()(wSClient: WSClient,
                                  manualEntitiesDetailsOpt: Option[List[UpdateInfo]],
                                  userInfo: User,
                                  instancePath: NexusPath,
-                                 manualEntity: JsObject,
+                                 manualEntity: EditorInstance,
                                  token: String
                                ): Future[WSResponse] = {
     manualEntitiesDetailsOpt.flatMap { manualEntitiesDetails =>
       // find manual entry corresponding to the user
       manualEntitiesDetails.filter(_._3 == userInfo.id).headOption.map {
         case (manualEntityId, manualEntityRevision, _) =>
-          wSClient.url(s"${config.nexusEndpoint}/v0/data/${NexusInstance.getIdfromURL(manualEntityId)}/?rev=$manualEntityRevision").addHttpHeaders("Authorization" -> token).put(
-            manualEntity
+          wSClient.url(s"${config.nexusEndpoint}/v0/data/${NexusInstance.getIdfromURL(manualEntityId)}/?rev=$manualEntityRevision")
+            .addHttpHeaders("Authorization" -> token).put(
+            manualEntity.nexusInstance.content
           )
       }
     }.getOrElse {
-      wSClient.url(s"${config.nexusEndpoint}/v0/data/$destinationOrg/${instancePath.domain}/${instancePath.schema}/${instancePath.version}").addHttpHeaders("Authorization" -> token).post(
-        manualEntity + ("http://hbp.eu/manual#updater_id", JsString(userInfo.id))
+      wSClient.url(s"${config.nexusEndpoint}/v0/data/$destinationOrg/${instancePath.domain}/${instancePath.schema}/${instancePath.version}")
+        .addHttpHeaders("Authorization" -> token).post(
+        manualEntity.nexusInstance.content + ("http://hbp.eu/manual#updater_id", JsString(userInfo.id))
       )
     }
   }
@@ -248,33 +255,39 @@ class InstanceService @Inject()(wSClient: WSClient,
 
   def updateReconciledInstance(
                                 manualSpace: String,
-                                currentReconciledInstance: NexusInstance,
-                                editorInstances: List[NexusInstance],
+                                currentReconciledInstance: ReconciledInstance ,
+                                editorInstances: List[EditorInstance],
                                 originalInstance: NexusInstance,
-                                manualEntity: JsObject,
+                                originalPath: NexusPath,
+                                manualEntity: EditorInstance,
                                 manualEntityId: String,
                                 updatedValue: JsObject,
                                 token: String,
                                 userInfo: User
                               ): Future[WSResponse] = {
-
-    val parentId = (originalInstance.content \ "@id").as[String]
-    val revision = (currentReconciledInstance.content \ "nxv:rev").as[Int]
-    val parentRevision = (originalInstance.content \ "nxv:rev").as[Int]
+    val parentId = originalInstance.id()
+    val revision = currentReconciledInstance.nexusInstance.getRevision()
+    val parentRevision = originalInstance.getRevision()
     val payload = ReconciledInstanceHelper
       .generateReconciledInstance(
         manualSpace,
-        NexusInstance(updatedValue),
+        ReconciledInstance(updatedValue.as[NexusInstance]),
         editorInstances,
         manualEntity,
-        originalInstance.nexusPath,
+        originalPath,
         manualEntityId,
         userInfo,
         parentRevision,
-        parentId,
+        parentId.get,
         token
       )
-    updateReconcileInstance( payload, currentReconciledInstance.nexusPath, currentReconciledInstance.nexusUUID, revision, token)
+    updateReconcileInstance(
+      payload,
+      currentReconciledInstance.nexusInstance.nexusPath,
+      currentReconciledInstance.nexusInstance.nexusUUID.get,
+      revision,
+      token
+    )
 
   }
 
@@ -282,9 +295,9 @@ class InstanceService @Inject()(wSClient: WSClient,
                                 destinationOrg: String,
                                 manualSpace: String,
                                 originalInstance: NexusInstance,
-                                manualEntity: JsObject,
+                                manualEntity: EditorInstance,
                                 manualEntityId: String,
-                                updatedValue: JsObject,
+                                updatedValue: ReconciledInstance,
                                 token: String,
                                 userInfo: User
                               ): Future[WSResponse] = {
@@ -293,7 +306,7 @@ class InstanceService @Inject()(wSClient: WSClient,
     val payload = ReconciledInstanceHelper
       .generateReconciledInstance(
         manualSpace,
-        NexusInstance(updatedValue),
+        updatedValue,
         List(),
         manualEntity,
         originalInstance.nexusPath,
@@ -304,7 +317,7 @@ class InstanceService @Inject()(wSClient: WSClient,
         token)
     insertInstance(
       destinationOrg,
-      payload,
+      payload.nexusInstance.content,
       originalInstance.nexusPath,
       token
     )

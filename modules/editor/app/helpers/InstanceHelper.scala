@@ -15,27 +15,20 @@
 *   limitations under the License.
 */
 
-package editor.helper
-
+package editor.helpers
 
 import common.helpers.JsFlattener
 import common.models.{NexusInstance, NexusPath, User}
-import editor.helpers.{FormHelper, NavigationHelper}
-import editor.models.{InMemoryKnowledge, IncomingLinksInstances, ReleaseStatus}
-import nexus.helpers.NexusHelper
+import editor.models.{EditorInstance, ReleaseStatus}
 import org.joda.time.DateTime
+import org.json4s.JsonAST.{JField, JNull, JObject, JValue}
 import org.json4s.native.{JsonMethods, JsonParser}
-import org.json4s.native.JsonMethods._
-import org.json4s._
+import org.json4s.{Diff, JsonAST}
 import play.api.Logger
 import play.api.libs.json.Reads.of
 import play.api.libs.json._
-import play.api.libs.ws.{WSClient, WSResponse}
-import play.api.mvc.{AnyContent, Request}
-import play.api.http.Status._
 
 import scala.collection.immutable.SortedSet
-import scala.concurrent.{ExecutionContext, Future}
 
 object InstanceHelper {
     val logger = Logger(this.getClass)
@@ -46,15 +39,16 @@ object InstanceHelper {
                                   nexusEndpoint: String,
                                   manualSpace:String,
                                   originalInstance: NexusInstance,
-                                  editorInstances: List[NexusInstance],
+                                  editorInstances: List[EditorInstance],
                                   updateToBeStoredInManual: JsObject,
                                   user: User
                                 ): (NexusInstance, Option[List[UpdateInfo]]) = {
     logger.debug(s"Result from incoming links $editorInstances")
     val updatesByPriority = buildManualUpdatesFieldsFrequency(
-      editorInstances.filter( item => (item.content \ "http://hbp.eu/manual#updater_id").as[String] != user.id
-      ), updateToBeStoredInManual)
-    val result = NexusInstance(reconcilationLogic(updatesByPriority, originalInstance.content))
+      editorInstances.filter( item => item.updaterId != user.id),
+      updateToBeStoredInManual
+    )
+    val result = reconcilationLogic(updatesByPriority, originalInstance.content).as[NexusInstance]
     val manualUpdateDetailsOpt = if(editorInstances.isEmpty){
       logger.debug("creating new editor instace")
       None
@@ -68,9 +62,9 @@ object InstanceHelper {
   }
 
 
-  def buildDiffEntity(consolidatedResponse: NexusInstance, newValue: String, originalInstanceContent: JsValue): JsObject = {
-    val consolidatedJson = JsonParser.parse(removeNexusFields(cleanInstanceManual(consolidatedResponse.content)).toString())
-    val newJson = JsonParser.parse(newValue)
+  def buildDiffEntity(consolidatedResponse: NexusInstance, newValue: NexusInstance, originalInstance: NexusInstance): JsObject = {
+    val consolidatedJson = JsonParser.parse(consolidatedResponse.removeNexusFields().content.toString())
+    val newJson = JsonParser.parse(newValue.content.toString())
     val Diff(changed, added, deleted) = consolidatedJson.diff(newJson)
     val diff: JsonAST.JValue = (deleted, changed) match {
       case (JsonAST.JNothing, JsonAST.JNothing) =>
@@ -78,8 +72,8 @@ object InstanceHelper {
       case (JsonAST.JNothing, _) =>
         changed.merge(added)
       case (_, JsonAST.JNothing) =>
-        val originalContent = JsonParser.parse(originalInstanceContent.toString())
-        val Diff(changedFromOrg, addedFromOrg, deletedFromOrg) = originalContent.diff(newJson)
+        val originalContent = JsonParser.parse(originalInstance.content.toString())
+        val Diff(changedFromOrg, _, deletedFromOrg) = originalContent.diff(newJson)
         logger.debug(s"""PARTIAL FORM DEFINITION - missing fields from form: ${deletedFromOrg.toString}""")
         // Here we try to get the diff as being the array without the deleted element
         val Diff(_, add, _) = deletedFromOrg.diff(originalContent)
@@ -98,15 +92,14 @@ object InstanceHelper {
          * final diff is then an addition/update from original view
          * this allows partially defined form (some field are then not updatable)
          */
-        val originalContent = JsonParser.parse(originalInstanceContent.toString())
+        val originalContent = JsonParser.parse(originalInstance.content.toString())
         val Diff(changedFromOrg, addedFromOrg, deletedFromOrg) = originalContent.diff(newJson)
         changedFromOrg.merge(addedFromOrg)
     }
     val rendered = Json.parse(JsonMethods.compact(JsonMethods.render(diff))).as[JsObject]
-    val newValues = Json.parse(newValue)
     val diffWithCompleteArray = rendered.value.map{
       case (k, v) =>
-        val value = ( newValues \ k).asOpt[JsValue]
+        val value = ( newValue.content \ k).asOpt[JsValue]
         if(v.asOpt[JsArray].isDefined && value.isDefined){
           k -> value.get
         }else{
@@ -116,13 +109,13 @@ object InstanceHelper {
     Json.toJson(diffWithCompleteArray).as[JsObject]
   }
 
-  def buildInstanceFromForm(original: JsObject, formContent: JsObject, nexusEndpoint: String): JsObject = {
+  def buildInstanceFromForm(original: NexusInstance, formContent: JsObject, nexusEndpoint: String): NexusInstance = {
 //    val flattened = JsFlattener(formContent)
 //    applyChanges(original, flattened)
     val cleanForm = FormHelper.removeKey(formContent.as[JsValue])
     val formWithID = cleanForm.toString().replaceAll(""""id":"""", s""""@id":"${nexusEndpoint}/v0/data/""")
-    val res= original.deepMerge(Json.parse(formWithID).as[JsObject])
-    res
+    val res= original.content.deepMerge(Json.parse(formWithID).as[JsObject])
+    original.copy(content = res)
   }
 
   def buildNewInstanceFromForm(nexusEndpoint: String, instancePath: NexusPath, formRegistry: JsObject, newInstance: JsObject): JsObject = {
@@ -158,8 +151,8 @@ object InstanceHelper {
   }
 
   def md5HashString(s: String): String = {
-    import java.security.MessageDigest
     import java.math.BigInteger
+    import java.security.MessageDigest
     val md = MessageDigest.getInstance("MD5")
     val digest = md.digest(s.getBytes)
     val bigInt = new BigInteger(1,digest)
@@ -167,8 +160,8 @@ object InstanceHelper {
     hashedString
   }
 
-  def buildManualUpdatesFieldsFrequency(manualUpdates: List[NexusInstance], currentUpdate: JsObject): Map[String, SortedSet[(JsValue, Int)]] = {
-    val cleanMap: List[Map[String, JsValue]] = currentUpdate.as[Map[String, JsValue]] +: cleanListManualData(manualUpdates)
+  def buildManualUpdatesFieldsFrequency(manualUpdates: List[EditorInstance], currentUpdate: JsObject): Map[String, SortedSet[(JsValue, Int)]] = {
+    val cleanMap: List[Map[String, JsValue]] = currentUpdate.as[Map[String, JsValue]] +: manualUpdates.map(s => s.cleanManualData().contentToMap())
     buildMapOfSortedManualUpdates(cleanMap)
   }
 
@@ -242,26 +235,8 @@ object InstanceHelper {
     }
   }
 
-  def cleanListManualData(manualUpdates: List[NexusInstance]): List[Map[String, JsValue]] = {
-    manualUpdates.map(el => cleanManualDataFromNexus(el.content))
-  }
 
-  def cleanManualDataFromNexus(jsObject: JsObject): Map[String, JsValue] = {
-    cleanManualData(jsObject).fields.toMap
-  }
 
-  def cleanManualData(jsObject: JsObject): JsObject = {
-    jsObject - ("@context") - ("@id") - ("@type") - ("links") - ("nxv:rev") - ("nxv:deprecated")
-  }
-
-  def cleanUpInstanceForSave(instance: NexusInstance): JsObject = {
-    val jsonObj = instance.content
-    cleanManualData(jsonObj)
-  }
-
-  def removeNexusFields(jsObject: JsObject): JsObject = {
-    jsObject - ("@context") - ("@type") - ("links") - ("nxv:deprecated")
-  }
 
   def prepareManualEntityForStorage(manualEntity: JsObject, userInfo: User): JsObject = {
     manualEntity.+("http://hbp.eu/manual#updater_id", JsString(userInfo.id))
@@ -275,11 +250,7 @@ object InstanceHelper {
 
 
 
-  def cleanInstanceManual(jsObject: JsObject): JsObject = {
-    jsObject.-("http://hbp.eu/manual#parent")
-      .-("http://hbp.eu/manual#origin")
-      .-("http://hbp.eu/manual#updater_id")
-  }
+
 
   def formatInstanceList(jsArray: JsArray, reconciledSuffix:String): JsValue = {
 
@@ -304,14 +275,6 @@ object InstanceHelper {
     Json.toJson(arr)
   }
 
-  def formatFromNexusToOption(jsObject: JsObject, reconciledSuffix: String): JsObject = {
-    val id = (jsObject \ "@id").as[String]
-    val name = (jsObject \ "http://schema.org/name").as[JsString]
-    val description: JsString = if ((jsObject \ "http://schema.org/description").isDefined) {
-      (jsObject \ "http://schema.org/description").as[JsString]
-    } else { JsString("") }
-    Json.obj("id" -> NexusInstance.getIdForEditor(id, reconciledSuffix), "description" -> description, "label" -> name, "status" -> ReleaseStatus.getRandomStatus(), "childrenStatus" -> ReleaseStatus.getRandomChildrenStatus())
-  }
 
   def toReconcileFormat(jsValue: JsValue, privateSpace: String): JsObject = {
     Json.obj("src" -> privateSpace, "content" -> jsValue.as[JsObject].-("@context"))
@@ -338,38 +301,7 @@ object InstanceHelper {
     }
   }
 
-  def generateAlternatives(manualUpdates: List[JsObject]): JsValue = {
-    // Alternatives are added per user
-    // So for each key we have a list of object containing the user id and the value
-    val alternatives: Map[String, Seq[(String, JsValue)]] = manualUpdates
-      .map { instance =>
-        val dataMap: Map[String, JsValue] = instance
-          .-("http://hbp.eu/manual#parent")
-          .-("http://hbp.eu/manual#origin").as[Map[String, JsValue]]
-        val userId: String = dataMap("http://hbp.eu/manual#updater_id").as[String]
-        dataMap.map { case (k, v) => k -> ( userId, v) }
-      }.foldLeft(Map.empty[String, Seq[(String, JsValue)]]) { case (map, instance) =>
-      //Grouping per field in order to have a map with the field and the list of different alternatives on this field
-      val tmp: List[(String, Seq[(String, JsValue)])] = instance.map { case (k, v) => (k, Seq(v)) }.toList ++ map.toList
-      tmp.groupBy(_._1).map { case (k, v) => k -> v.flatMap(_._2) }
-    }
 
-    val perValue = alternatives.map{
-      case (k,v) =>
-        val tempMap = v.foldLeft(Map.empty[JsValue, Seq[String]]){case (map, tuple) =>
-          val temp: Seq[String] = map.getOrElse(tuple._2, Seq.empty[String])
-          map.updated(tuple._2, tuple._1 +: temp)
-        }
-        k ->  tempMap.toList.sortWith( (el1, el2) => el1._2.length > el2._2.length).map( el =>
-          Json.obj("value" -> el._1, "updater_id" -> el._2)
-        )
-    }
-    Json.toJson(
-      perValue.-("@type")
-        .-("http://hbp.eu/manual#update_timestamp")
-        .-("http://hbp.eu/manual#updater_id")
-    )
-  }
 
 
 
