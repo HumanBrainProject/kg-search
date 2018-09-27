@@ -67,16 +67,27 @@ class ArangoQueryService @Inject()(
               (res.json \ "fullCount").as[Long]
             }
             val data = (res.json \ "data").as[JsArray]
-            Right(
-              Json.obj("data" -> InstanceHelper.formatInstanceList( data, config.reconciledPrefix),
-                "label" -> JsString(
-                  (FormHelper.formRegistry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String]
-                    .getOrElse(nexusPath.toString())
-                ),
-                "dataType" -> (data.value.head \ "@type").as[JsString],
-                "total" -> total
+            if(data.value.nonEmpty){
+              Right(
+                Json.obj("data" -> InstanceHelper.formatInstanceList( data, config.reconciledPrefix),
+                  "label" -> JsString(
+                    (FormHelper.formRegistry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String]
+                      .getOrElse(nexusPath.toString())
+                  ),
+                  "dataType" -> (data.value.head \ "@type").as[JsString],
+                  "total" -> total
+                )
               )
-            )
+            }else{
+              Right(
+                Json.obj(
+                  "data" -> JsArray(),
+                  "label" -> JsString(""),
+                  "dataType" -> "",
+                  "total" -> 0
+                )
+              )
+            }
           case _ => Left(res)
         }
     }
