@@ -571,8 +571,8 @@ class NexusEditorController @Inject()(
       case Some(json) =>
         val instances = json.as[List[String]]
         val futList = instances.map { url =>
-          val (id, path)= NexusInstance.extractIdAndPathFromString(url)
-          releaseService.releaseStatus(path, id)
+          val (path, id )= url.splitAt(url.lastIndexOf("/"))
+          releaseService.releaseStatus(NexusPath(path.split("/").toSeq), id.replaceFirst("/", ""))
         }
         val array: Future[List[JsObject]] = Future.sequence(futList).map {
           _.foldLeft(List[JsObject]()) {

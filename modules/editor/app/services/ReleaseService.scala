@@ -30,7 +30,7 @@ import play.api.http.ContentTypes._
 import scala.concurrent.{ExecutionContext, Future}
 import play.api.mvc.Results._
 import common.services.ConfigurationService
-import editor.models.ReconciledInstance
+import editor.models.{ReconciledInstance, ReleaseStatus}
 
 class ReleaseService @Inject()(
                                 ws: WSClient,
@@ -128,12 +128,14 @@ object ReleaseService {
     val childrenStatus = (item \ "child_status").as[List[String]]
     if(childrenStatus.isEmpty){
       ""
-    } else if(childrenStatus.contains("NOT_RELEASED")){
-      "NOT_RELEASED"
-    }else if(childrenStatus.contains("HAS_CHANGED")){
-      "HAS_CHANGED"
-    }else {
-      "RELEASED"
+    } else if(childrenStatus.contains(ReleaseStatus.notReleased)){
+      ReleaseStatus.notReleased
+    }else if(childrenStatus.contains(ReleaseStatus.hasChanged)){
+      ReleaseStatus.hasChanged
+    }else if(childrenStatus.contains(ReleaseStatus.released)){
+      ReleaseStatus.released
+    }else{
+      ""
     }
   }
 
