@@ -72,25 +72,25 @@ class InstanceService @Inject()(wSClient: WSClient,
 
   def insertInstance(
                       destinationOrg: String,
-                      newInstance: JsObject,
+                      newInstance: NexusInstance,
                       instancePath: NexusPath,
                       token: String
                     ): Future[WSResponse] = {
     wSClient
       .url(s"${config.nexusEndpoint}/v0/data/$destinationOrg/${instancePath.domain}/${instancePath.schema}/${instancePath.version}")
-      .addHttpHeaders("Authorization" -> token).post(newInstance)
+      .addHttpHeaders("Authorization" -> token).post(newInstance.content)
   }
 
-  def updateReconcileInstance(
-                               instance: ReconciledInstance,
-                               nexusPath: NexusPath,
-                               id: String,
-                               revision: Long,
-                               token: String
-                             ): Future[WSResponse] = {
+  def updateInstance(
+                      instance: NexusInstance,
+                      nexusPath: NexusPath,
+                      id: String,
+                      revision: Long,
+                      token: String
+                    ): Future[WSResponse] = {
     wSClient
       .url(s"${config.nexusEndpoint}/v0/data/${nexusPath.toString()}/$id?rev=${revision}")
-      .withHttpHeaders("Authorization" -> token).put(instance.nexusInstance.content)
+      .withHttpHeaders("Authorization" -> token).put(instance.content)
   }
 
 
@@ -220,7 +220,6 @@ class InstanceService @Inject()(wSClient: WSClient,
 
 
   def createManualSchemaIfNeeded(
-                                  manualEntity: JsObject,
                                   originalInstanceNexusPath: NexusPath,
                                   token: String,
                                   destinationOrg: String,
@@ -228,28 +227,24 @@ class InstanceService @Inject()(wSClient: WSClient,
                                   editorContext: String = ""
                                 ): Future[Boolean] = {
     // ensure schema related to manual update exists or create it
-    if (manualEntity != JsNull) {
-      nexusService.createSchema(
-        config.nexusEndpoint,
-        destinationOrg,
-        originalInstanceNexusPath,
-        editorOrg,
-        token,
-        editorContext
-      ).map {
-        response =>
-          response.status match {
-            case OK =>
-              logger.info(s"Schema created properly for : " +
-                s"$destinationOrg/${originalInstanceNexusPath.domain}/${originalInstanceNexusPath.schema}/${originalInstanceNexusPath.version}")
-              true
-            case _ => logger.error(s"ERROR - schema does not exist and " +
-              s"automatic creation failed - ${response.body}")
-              false
-          }
-      }
-    } else {
-      Future.successful(true)
+    nexusService.createSchema(
+      config.nexusEndpoint,
+      destinationOrg,
+      originalInstanceNexusPath,
+      editorOrg,
+      token,
+      editorContext
+    ).map {
+      response =>
+        response.status match {
+          case OK =>
+            logger.info(s"Schema created properly for : " +
+              s"$destinationOrg/${originalInstanceNexusPath.domain}/${originalInstanceNexusPath.schema}/${originalInstanceNexusPath.version}")
+            true
+          case _ => logger.error(s"ERROR - schema does not exist and " +
+            s"automatic creation failed - ${response.body}")
+            false
+        }
     }
   }
 
@@ -281,8 +276,8 @@ class InstanceService @Inject()(wSClient: WSClient,
         parentId.get,
         token
       )
-    updateReconcileInstance(
-      payload,
+    updateInstance(
+      payload.nexusInstance,
       currentReconciledInstance.nexusInstance.nexusPath,
       currentReconciledInstance.nexusInstance.nexusUUID.get,
       revision,
@@ -317,7 +312,7 @@ class InstanceService @Inject()(wSClient: WSClient,
         token)
     insertInstance(
       destinationOrg,
-      payload.nexusInstance.content,
+      payload.nexusInstance,
       originalInstance.nexusPath,
       token
     )

@@ -15,9 +15,10 @@
 */
 package editor.models
 
-import common.models.NexusInstance
+import common.models.{NexusInstance, User}
 import editor.helpers.InstanceHelper
-import play.api.libs.json.{JsBoolean, JsObject, JsString, JsValue}
+import org.joda.time.DateTime
+import play.api.libs.json._
 
 case class EditorInstance(nexusInstance: NexusInstance){
 
@@ -45,6 +46,21 @@ case class EditorInstance(nexusInstance: NexusInstance){
         content = this.nexusInstance.content.-(EditorInstance.Fields.parent)
       .-(EditorInstance.Fields.origin)
       .-(EditorInstance.Fields.updaterId)
+      )
+    )
+  }
+
+
+  def prepareManualEntityForStorage(userInfo: User, originLink: String): EditorInstance = {
+    this.copy(
+      this.nexusInstance.copy(
+        content = this.nexusInstance
+          .cleanManualData()
+          .content
+          .+(EditorInstance.Fields.updaterId, JsString(userInfo.id))
+          .+(EditorInstance.Fields.updateTimeStamp, JsNumber(new DateTime().getMillis))
+          +(EditorInstance.Fields.origin, JsString(originLink)) +
+          (EditorInstance.Fields.parent, Json.obj("@id" -> JsString(originLink)))
       )
     )
   }

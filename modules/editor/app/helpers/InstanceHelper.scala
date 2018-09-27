@@ -40,7 +40,7 @@ object InstanceHelper {
                                   manualSpace:String,
                                   originalInstance: NexusInstance,
                                   editorInstances: List[EditorInstance],
-                                  updateToBeStoredInManual: JsObject,
+                                  updateToBeStoredInManual: EditorInstance,
                                   user: User
                                 ): (NexusInstance, Option[List[UpdateInfo]]) = {
     logger.debug(s"Result from incoming links $editorInstances")
@@ -160,8 +160,8 @@ object InstanceHelper {
     hashedString
   }
 
-  def buildManualUpdatesFieldsFrequency(manualUpdates: List[EditorInstance], currentUpdate: JsObject): Map[String, SortedSet[(JsValue, Int)]] = {
-    val cleanMap: List[Map[String, JsValue]] = currentUpdate.as[Map[String, JsValue]] +: manualUpdates.map(s => s.cleanManualData().contentToMap())
+  def buildManualUpdatesFieldsFrequency(manualUpdates: List[EditorInstance], currentUpdate: EditorInstance): Map[String, SortedSet[(JsValue, Int)]] = {
+    val cleanMap: List[Map[String, JsValue]] = currentUpdate.contentToMap() +: manualUpdates.map(s => s.cleanManualData().contentToMap())
     buildMapOfSortedManualUpdates(cleanMap)
   }
 
@@ -238,15 +238,6 @@ object InstanceHelper {
 
 
 
-  def prepareManualEntityForStorage(manualEntity: JsObject, userInfo: User): JsObject = {
-    manualEntity.+("http://hbp.eu/manual#updater_id", JsString(userInfo.id))
-      .+("http://hbp.eu/manual#update_timestamp", JsNumber(new DateTime().getMillis))
-      .-("@context")
-      .-("@id")
-      .-("links")
-      .-("nxv:rev")
-      .-("nxv:deprecated")
-  }
 
 
 

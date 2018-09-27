@@ -30,6 +30,7 @@ import play.api.http.ContentTypes._
 import scala.concurrent.{ExecutionContext, Future}
 import play.api.mvc.Results._
 import common.services.ConfigurationService
+import editor.models.ReconciledInstance
 
 class ReleaseService @Inject()(
                                 ws: WSClient,
@@ -68,16 +69,16 @@ class ReleaseService @Inject()(
   }
 
   // TOFIX change the graph api to something more appropriate
-  def releaseStatus(org: String, domain: String, schema: String, version: String, id:String):Future[Either[(String, WSResponse), JsObject]] = {
+  def releaseStatus(nexusPath: NexusPath, id:String):Future[Either[(String, WSResponse), JsObject]] = {
 
-    ws.url(s"${config.kgQueryEndpoint}/arango/releasestatus/$org/$domain/$schema/$version/$id").addHttpHeaders(CONTENT_TYPE -> JSON).get().map{
+    ws.url(s"${config.kgQueryEndpoint}/arango/releasestatus/${nexusPath.toString()}/$id").addHttpHeaders(CONTENT_TYPE -> JSON).get().map{
       res => res.status match{
         case OK =>
           val item = res.json.as[JsObject]
-          val spec = ReleaseService.reduceChildrenStatus(item, s"${NexusPath(org, domain, schema,version).toString()}/$id")
+          val spec = ReleaseService.reduceChildrenStatus(item, s"${nexusPath.toString()}/$id")
           Right(spec)
         case _ => logger.error(res.body)
-          Left((s"$org/$domain/$schema/$version/$id",res))
+          Left((s"${nexusPath.toString()}/$id",res))
       }
     }
   }
@@ -86,37 +87,41 @@ class ReleaseService @Inject()(
 object ReleaseService {
 
   def specs(item: JsObject): collection.Map[String, JsValue] = {
-    item.value.map{ k =>
-      k._1 match {
-        case "http://schema.org/name" => "label" -> k._2
-        case "@type" => "type" -> JsString(k._2.as[String].split("#").last)
-        case "children" => k._1 -> Json.toJson(k._2.as[JsArray]
-          .value.groupBy(js => (js \ "@id").as[String]).map{
-          case (k,v) =>
-            val edgeTypes = v.foldLeft(List[String]()) {
-              case (list, js) => (js \ "linkType").as[String].split("/").head.split("-").last :: list
-            }
-            val transformer = (__ \ 'linkType).json.put(Json.toJson(edgeTypes))
-            val linkType = v.head.transform(transformer)
-            k -> v.head.as[JsObject].++(linkType.get)
-        }.values.map( j => specs(j.as[JsObject]))).as[JsValue]
-        case "linkType" =>
-          k._1 -> k._2
-        case "status" =>
-          val arr = k._2.as[List[String]]
-          val status = if(arr.isEmpty){
-            "NOT_RELEASED"
-          }else{
-            if(arr.contains("released")){
-              "RELEASED"
-            }else{
+    item.value
+      .map { k =>
+        k._1 match {
+          case "http://schema.org/name" => "label" -> k._2
+          case "@type" => "type" -> JsString(k._2.as[String].split("#").last)
+          case "children" => k._1 -> Json.toJson(k._2.as[JsArray]
+            .value
+            .groupBy(js => (js \ "@id").as[String]).map {
+            case (k, v) =>
+              val edgeTypes = v.foldLeft(List[String]()) {
+                case (list, js) => (js \ "linkType").as[String].split("/").head.split("-").last :: list
+              }
+              val transformer = (__ \ 'linkType).json.put(Json.toJson(edgeTypes))
+              val linkType = v.head.transform(transformer)
+              k -> v.head.as[JsObject].++(linkType.get)
+          }.values
+            .filter(js => !(js \ "linkType").as[List[String]].contains("alternatives") && !(js \ "linkType").as[List[String]].contains("parents"))
+            .map(j => specs(j.as[JsObject]))).as[JsValue]
+          case "linkType" =>
+            k._1 -> k._2
+          case "status" =>
+            val arr = k._2.as[List[String]]
+            val status = if (arr.isEmpty) {
               "NOT_RELEASED"
+            } else {
+              if (arr.contains("released")) {
+                "RELEASED"
+              } else {
+                "NOT_RELEASED"
+              }
             }
-          }
-          k._1 -> JsString(status)
-        case _ => k._1 -> k._2
+            k._1 -> JsString(status)
+          case _ => k._1 -> k._2
+        }
       }
-    }
   }
 
   def getWorstChildrenStatus(item: JsObject):String = {
