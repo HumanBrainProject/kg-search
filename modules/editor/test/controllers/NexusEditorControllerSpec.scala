@@ -27,6 +27,7 @@ import editor.services.{ArangoQueryService, InstanceService, ReleaseService}
 import nexus.services.NexusService
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar
+import org.mockito.Mockito._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -35,9 +36,10 @@ import play.api.mvc.Results.Ok
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import play.api.mvc._
-import play.api.libs.ws.WSResponse
+import play.api.libs.ws.{WSClient, WSResponse}
 
 import scala.concurrent.Future
+import scala.reflect.macros.whitebox
 
 class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpers with MockitoSugar with Injecting {
 
@@ -63,15 +65,10 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
       val nexusBase = "http://nexus.org/v0/data"
       import scala.concurrent.ExecutionContext.Implicits._
       val instances = Json.arr(
-        Json.obj("@id" -> s"${datatype.toString()}/123", "http://schema.org/name" -> "dataname1"),
-        Json.obj("@id" -> s"${datatype.toString()}/321", "http://schema.org/name" -> "dataname2")
+        Json.obj("id" -> s"${datatype.toString()}/123", "description"->"","label" -> "dataname1"),
+        Json.obj("id" -> s"${datatype.toString()}/321", "description"->"","label" -> "dataname2")
       )
       val fakeEndpoint = s"$kgQueryEndpoint/arango/instances/${datatype.toString()}"
-      implicit val ws = MockWS {
-        case (GET, fakeEndpoint) => Action {
-          Ok(Json.obj("data" -> instances, "fullCount" -> 0, "count" -> 2))
-        }
-      }
 
       val mockCC = stubControllerComponents()
       val ec = global
@@ -81,16 +78,18 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
       val userInfo = new OIDCUser("123", "name", "email", Seq("group1", "group2"))
       val bodyParser = mock[BodyParsers.Default]
       val authMock = new TestAuthenticatedUserAction(bodyParser, authprovider = oidcAuthService, userInfo = userInfo)(ec)
+      val ws = mock[WSClient]
       val nexusService = mock[NexusService]
       val releaseService = mock[ReleaseService]
       val arangoQueryService = mock[ArangoQueryService]
+      when(arangoQueryService.listInstances(datatype, Some(0), Some(20), "")).thenReturn(Future(Right(Json.obj("data" -> instances, "dataType"-> "http://hbp.eu/minds#Dataset", "label"->"Dataset","total" -> 2))) )
       val configService = new ConfigurationService(fakeApplication().configuration)
       val controller = new NexusEditorController(mockCC, authMock, instanceService, oidcAuthService, configService, nexusService, releaseService, arangoQueryService, ws)(ec)
       val response = controller.listInstances(datatype.org, datatype.domain, datatype.schema, datatype.version, Some(0), Some(20), "").apply(FakeRequest())
       val res = contentAsJson(response).as[JsObject]
       val arr = (res \ "data").as[List[JsObject]].map(js => js - "status" - "childrenStatus")
       val formattedRes = res ++ Json.obj("data" -> arr)
-      formattedRes.toString mustBe """{"data":[{"id":"data/core/datatype/v0.0.4/123","description":"","label":"dataname1"},{"id":"data/core/datatype/v0.0.4/321","description":"","label":"dataname2"}],"label":"data/core/datatype/v0.0.4","total":2}"""
+      formattedRes.toString mustBe """{"data":[{"id":"data/core/datatype/v0.0.4/123","description":"","label":"dataname1"},{"id":"data/core/datatype/v0.0.4/321","description":"","label":"dataname2"}],"dataType":"http://hbp.eu/minds#Dataset","label":"Dataset","total":2}"""
 
     }
 
