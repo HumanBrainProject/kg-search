@@ -244,9 +244,3 @@ export const logout = () => {
     type: types.LOGOUT
   };
 };
-
-export const updateEmailToLink = () => {
-  return {
-    type: types.UPDATE_EMAIL_TO_LINK
-  };
-};

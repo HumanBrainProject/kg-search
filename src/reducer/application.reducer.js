@@ -18,19 +18,11 @@ import * as types from "../actions.types";
 
 const TermsShortNoticeLocalStorageKey = "hbp.kgs-terms-conditions-consent";
 
-const getShareEmailToLink = () => {
-  const to= "";
-  const subject= "Knowledge Graph Search Request";
-  const body = "Please have a look to the following Knowledge Graph search request";
-  return `mailto:${to}?subject=${subject}&body=${body} ${escape(window.location.href)}.`;
-};
-
 const initialState = {
   isReady: false,
   info: null,
   showTermsShortNotice: typeof Storage === "undefined" || localStorage.getItem(TermsShortNoticeLocalStorageKey) !== "true",
-  gridLayoutMode: true,
-  shareEmailToLink: getShareEmailToLink()
+  gridLayoutMode: true
 };
 
 const setApplicationReady = (state, action) => {
@@ -61,12 +53,6 @@ const setInfo = (state, action) => {
   });
 };
 
-const updateShareEmailToLink = state => {
-  return Object.assign({}, state, {
-    shareEmailToLink: getShareEmailToLink()
-  });
-};
-
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case types.SET_APPLICATION_READY:
@@ -84,8 +70,6 @@ export function reducer(state = initialState, action = {}) {
   case types.SET_PREVIOUS_HIT:
   case types.CLEAR_ALL_HITS:
   case types.SET_CURRENT_HIT_FROM_BROWSER_LOCATION:
-  case types.UPDATE_EMAIL_TO_LINK:
-    return updateShareEmailToLink(state, action);
   default:
     return state;
   }
