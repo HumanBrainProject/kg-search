@@ -50,7 +50,7 @@ object InstanceHelper {
     )
     val result = reconcilationLogic(updatesByPriority, originalInstance.content).as[NexusInstance]
     val manualUpdateDetailsOpt = if(editorInstances.isEmpty){
-      logger.debug("creating new editor instace")
+      logger.debug("creating new editor instance")
       None
     }else{
       //Call reconcile API
@@ -68,14 +68,14 @@ object InstanceHelper {
     val Diff(changed, added, deleted) = consolidatedJson.diff(newJson)
     val diff: JsonAST.JValue = (deleted, changed) match {
       case (JsonAST.JNothing, JsonAST.JNothing) =>
-        consolidatedJson
+        added
       case (JsonAST.JNothing, _) =>
         changed.merge(added)
       case (_, JsonAST.JNothing) =>
         val originalContent = JsonParser.parse(originalInstance.content.toString())
         val Diff(changedFromOrg, _, deletedFromOrg) = originalContent.diff(newJson)
         logger.debug(s"""PARTIAL FORM DEFINITION - missing fields from form: ${deletedFromOrg.toString}""")
-        // Here we try to get the diff as being the array without the deleted element
+        // Here we get the diff as being the array without the deleted element
         val Diff(_, add, _) = deletedFromOrg.diff(originalContent)
         val Diff(ch, _ ,_ ) = newJson.diff(add)
         if(ch == JsonAST.JNothing){
@@ -93,7 +93,7 @@ object InstanceHelper {
          * this allows partially defined form (some field are then not updatable)
          */
         val originalContent = JsonParser.parse(originalInstance.content.toString())
-        val Diff(changedFromOrg, addedFromOrg, deletedFromOrg) = originalContent.diff(newJson)
+        val Diff(changedFromOrg, addedFromOrg, _) = originalContent.diff(newJson)
         changedFromOrg.merge(addedFromOrg)
     }
     val rendered = Json.parse(JsonMethods.compact(JsonMethods.render(diff))).as[JsObject]
@@ -114,8 +114,30 @@ object InstanceHelper {
 //    applyChanges(original, flattened)
     val cleanForm = FormHelper.removeKey(formContent.as[JsValue])
     val formWithID = cleanForm.toString().replaceAll(""""id":"""", s""""@id":"${nexusEndpoint}/v0/data/""")
+    val r = JsonParser.parse(original.content.toString()) merge(JsonParser.parse(formWithID))
     val res= original.content.deepMerge(Json.parse(formWithID).as[JsObject])
     original.copy(content = res)
+  }
+
+  def addDefaultFields(instance: NexusInstance,originalPath: NexusPath, formRegistry:JsObject): NexusInstance = {
+    val fields = (formRegistry \ originalPath.org \ originalPath.domain \ originalPath.schema \ originalPath.version \ "fields").as[JsObject].value
+    val m = fields.map { case (k, v) =>
+      val fieldValue =  instance.getField(k)
+      if(fieldValue.isEmpty){
+        val formObjectType = (v \ "type").as[String]
+        formObjectType match {
+          case "DropdownSelect" =>
+            k -> JsArray()
+          case _ =>
+            k -> JsNull
+        }
+      }else{
+        k -> fieldValue.get
+      }
+    }
+    val r = Json.toJson(m).as[JsObject].deepMerge(instance.content)
+    instance.copy(content = Json.toJson(r).as[JsObject])
+
   }
 
   def buildNewInstanceFromForm(nexusEndpoint: String, instancePath: NexusPath, formRegistry: JsObject, newInstance: JsObject): JsObject = {
@@ -168,7 +190,7 @@ object InstanceHelper {
   // build reconciled view from updates statistics
   def reconcilationLogic(frequencies: Map[String, SortedSet[(JsValue, Int)]], origin: JsObject): JsObject = {
     // simple logic: keep the most frequent
-    val transformations = frequencies.filterKeys(key => !key.startsWith("http://hbp.eu/manual#")).map {
+    val transformations = frequencies.filterKeys(key => !key.startsWith(EditorInstance.contextOrg)).map {
       case (pathString, freqs) => (JsFlattener.buildJsPathFromString(pathString), freqs.last._1)
     }.toSeq
     applyChanges(origin, transformations)
@@ -213,9 +235,9 @@ object InstanceHelper {
     }
     val sortedSet = tempMap
       .filter(e => e._1 != "@type" &&
-        e._1 != "http://hbp.eu/manual#parent" &&
-        e._1 != "http://hbp.eu/manual#origin" &&
-        e._1 != "http://hbp.eu/manual#updater_id")
+        e._1 != EditorInstance.Fields.parent &&
+        e._1 != EditorInstance.Fields.origin &&
+        e._1 != EditorInstance.Fields.updaterId)
       .map { el =>
         val e = el._2.groupBy(identity).mapValues(_.size)
         el._1 -> SortedSet(e.toList: _*)

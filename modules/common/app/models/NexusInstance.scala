@@ -61,7 +61,6 @@ case class NexusInstance(nexusUUID: Option[String], nexusPath: NexusPath, conten
     Json.obj("id" -> NexusInstance.getIdForEditor(id, reconciledSuffix), "description" -> description, "label" -> name)
   }
 
-
 }
 
 object NexusInstance {
@@ -83,8 +82,15 @@ object NexusInstance {
   }
 
   def getIdfromURL(url: String): String = {
-    assert(url contains "v0/data/")
-    url.split("v0/data/").tail.head
+    if(url contains "v0/data/"){
+      url.split("v0/data/").tail.head
+    }else{
+      if(url.matches("^\\w+\\/\\w+\\/\\w+\\/v+\\d+\\.\\d+\\.\\d+\\/.+$")){
+        url
+      }else{
+        throw new Exception(s"Could not extract id from url - $url")
+      }
+    }
   }
 
   def getIdForEditor(url: String, reconciledPrefix: String): String = {

@@ -181,7 +181,7 @@ class NexusEditorController @Inject()(
     reconciledTokenFut.flatMap { reconciledToken =>
       val originalInstanceCleaned = originalInstance.removeNexusFields()
       val originLink = (originalInstance.content \ "@id").as[String]
-
+      val originalInstanceWithAllFields = InstanceHelper.buildInstanceFromForm(originalInstanceCleaned, originalInstanceCleaned.content, config.nexusEndpoint)
       val updateFromUI = Json.parse(FormHelper.unescapeSlash(modificationFromUser.toString())).as[JsObject] - "id"
       val updatedInstance = InstanceHelper.buildInstanceFromForm(originalInstanceCleaned, updateFromUI, config.nexusEndpoint)
 
@@ -191,8 +191,8 @@ class NexusEditorController @Inject()(
         ) = NexusEditorController.preppingEntitiesForSave(
         config.nexusEndpoint,
         updatedInstance,
-        originalInstanceCleaned,
-        originalInstanceCleaned,
+        originalInstanceWithAllFields,
+        originalInstanceWithAllFields,
         originalInstanceCleaned.nexusPath,
         originLink,
         request.user,
@@ -272,10 +272,14 @@ class NexusEditorController @Inject()(
               if (editorInstancesRes.forall(_.isRight)) {
                 val editorInstances = editorInstancesRes.map { e => EditorInstance(e.toOption.get)}
                 val reconciledInstanceCleaned = currentInstanceDisplayed.removeNexusFields()
-
                 val updateFromUI = Json.parse(FormHelper.unescapeSlash(modificationFromUser.toString())).as[JsObject] - "id"
                 val updatedInstance = InstanceHelper.buildInstanceFromForm(reconciledInstanceCleaned.nexusInstance, updateFromUI, config.nexusEndpoint)
-
+                val reconciledInstanceWithAllFields = reconciledInstanceCleaned.copy(
+                  InstanceHelper.addDefaultFields(reconciledInstanceCleaned.nexusInstance, originalPath, FormHelper.formRegistry)
+                )
+                val currentInstanceDisplayedWithAllFields = currentInstanceDisplayed.copy(
+                  InstanceHelper.addDefaultFields(currentInstanceDisplayed.nexusInstance, originalPath, FormHelper.formRegistry)
+                )
                 //Create the manual update
                 // As we cannot pass / in the name of a field we have replaced them with %nexus-slash%
                 val reconciledLink =  currentInstanceDisplayed.id().get
@@ -286,8 +290,8 @@ class NexusEditorController @Inject()(
                   ) = NexusEditorController.preppingEntitiesForSave(
                   config.nexusEndpoint,
                   updatedInstance,
-                  reconciledInstanceCleaned.nexusInstance,
-                  currentInstanceDisplayed.nexusInstance,
+                  reconciledInstanceWithAllFields.nexusInstance,
+                  currentInstanceDisplayedWithAllFields.nexusInstance,
                   originalPath,
                   reconciledLink,
                   request.user,
@@ -300,7 +304,7 @@ class NexusEditorController @Inject()(
                 InstanceHelper.consolidateFromManualSpace(
                   config.nexusEndpoint,
                   editorSpace,
-                  currentInstanceDisplayed.nexusInstance,
+                  currentInstanceDisplayedWithAllFields.nexusInstance,
                   editorInstances,
                   updateToBeStoredInManual,
                   request.user
@@ -594,7 +598,7 @@ object NexusEditorController {
       }).as[JsObject])
     )
     val preppedEntityForStorage = correctedLinks.prepareManualEntityForStorage(userInfo, originLink, entityType)
-    (correctedLinks, preppedEntityForStorage)
+    (correctedLinks.cleanReconciledFields(), preppedEntityForStorage.cleanReconciledFields())
   }
 
   def recursiveCheckOfIds(k: String,

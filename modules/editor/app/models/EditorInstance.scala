@@ -65,6 +65,16 @@ case class EditorInstance(nexusInstance: NexusInstance){
       )
     )
   }
+
+  def cleanReconciledFields(): EditorInstance = {
+    this.copy(
+      this.nexusInstance.copy(
+        content = Json.toJson(
+          this.contentToMap().filterKeys( k => !k.contains(ReconciledInstance.contextOrg))
+        ).as[JsObject]
+      )
+    )
+  }
 }
 
 object EditorInstance {
