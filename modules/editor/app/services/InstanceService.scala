@@ -19,12 +19,13 @@ package editor.services
 
 import java.net.URLEncoder
 import java.security.Policy.Parameters
+import java.util.concurrent.Executors
 
 import com.google.inject.Inject
 import common.models.{NexusInstance, NexusPath, User}
 import editor.models.{EditorInstance, InMemoryKnowledge, IncomingLinksInstances, ReconciledInstance}
 import editor.controllers.NexusEditorController
-import editor.helpers.{FormHelper, InstanceHelper, NavigationHelper, ReconciledInstanceHelper}
+import editor.helpers._
 import nexus.helpers.NexusHelper
 import nexus.services.NexusService
 import play.api.{Configuration, Logger}
@@ -34,7 +35,7 @@ import play.api.libs.ws.{WSClient, WSResponse}
 import common.services.ConfigurationService
 import editor.helpers.InstanceHelper.UpdateInfo
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future, blocking}
 
 class InstanceService @Inject()(wSClient: WSClient,
                                 nexusService: NexusService,
@@ -98,8 +99,9 @@ class InstanceService @Inject()(wSClient: WSClient,
     * Return a instance by its nexus ID
     * Starting by checking if this instance is coming from a reconciled space.
     * Otherwise we try to return the instance from the original organization
+    *
     * @param path
-    * @param id The id of the instance
+    * @param id    The id of the instance
     * @param token The user access token
     * @return An error response or an the instance
     */
@@ -122,9 +124,9 @@ class InstanceService @Inject()(wSClient: WSClient,
     }
   }
 
-  def getInstance(path: NexusPath, id: String, token: String, parameters: List[(String, String)] = List()):Future[Either[WSResponse, NexusInstance]] = {
+  def getInstance(path: NexusPath, id: String, token: String, parameters: List[(String, String)] = List()): Future[Either[WSResponse, NexusInstance]] = {
     wSClient.url(s"${config.nexusEndpoint}/v0/data/${path.toString()}/$id?fields=all&deprecated=false")
-      .withQueryStringParameters( parameters: _*)
+      .withQueryStringParameters(parameters: _*)
       .addHttpHeaders("Authorization" -> token).get().map {
       res =>
         res.status match {
@@ -165,18 +167,18 @@ class InstanceService @Inject()(wSClient: WSClient,
     wSClient
       .url(s"${config.nexusEndpoint}/v0/data/${reconciledOrg}/${originalPath.domain}/" +
         s"${originalPath.schema}/${originalPath.version}/?deprecated=false&fields=all&size=1&filter=${URLEncoder.encode(filter, "utf-8")}")
-      .withQueryStringParameters( parameters: _*)
+      .withQueryStringParameters(parameters: _*)
       .addHttpHeaders("Authorization" -> token)
       .get()
       .map {
         res =>
           res.status match {
             case OK =>
-              if( (res.json \"total").as[Int] > 0){
+              if ((res.json \ "total").as[Int] > 0) {
                 Right(
-                  Some( ReconciledInstance(((res.json \ "results").as[List[JsValue]].head \ "source").as[NexusInstance]))
+                  Some(ReconciledInstance(((res.json \ "results").as[List[JsValue]].head \ "source").as[NexusInstance]))
                 )
-              }else{
+              } else {
                 Right(None)
               }
             case _ =>
@@ -250,7 +252,7 @@ class InstanceService @Inject()(wSClient: WSClient,
 
   def updateReconciledInstance(
                                 manualSpace: String,
-                                currentReconciledInstance: ReconciledInstance ,
+                                currentReconciledInstance: ReconciledInstance,
                                 editorInstances: List[EditorInstance],
                                 originalInstance: NexusInstance,
                                 originalPath: NexusPath,
@@ -317,4 +319,44 @@ class InstanceService @Inject()(wSClient: WSClient,
       token
     )
   }
+
+  def createDomainsAndSchemasSync(editorSpace: String, reconciledSpace: String, originalInstancePath: NexusPath, token: String, techToken: String): Future[(Boolean, Boolean)] = {
+
+    val createEditorDomain = nexusService
+      .createDomain(
+        config.nexusEndpoint,
+        editorSpace,
+        originalInstancePath.domain,
+        "",
+        token
+      ).flatMap(res =>
+      createManualSchemaIfNeeded(
+        originalInstancePath,
+        token,
+        editorSpace,
+        "manual",
+        EditorSpaceHelper.nexusEditorContext("manual")
+      )
+    )
+
+    val createReconciledDomain = nexusService
+      .createDomain(
+        config.nexusEndpoint,
+        reconciledSpace,
+        originalInstancePath.domain,
+        "",
+        techToken
+      ).flatMap(res =>
+      createManualSchemaIfNeeded(
+        originalInstancePath,
+        techToken,
+        reconciledSpace,
+        "reconciled",
+        EditorSpaceHelper.nexusEditorContext("reconciled")
+      )
+    )
+    createEditorDomain.flatMap(b1 => createReconciledDomain.map(b2 => (b1,b2)))
+
+  }
+
 }

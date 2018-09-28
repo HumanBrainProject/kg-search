@@ -75,7 +75,8 @@ object FormHelper {
             ("id" -> Json.obj(
               ("value" -> Json.obj(
                 ("path" -> entityType.toString()),
-                ("nexus_id" -> JsString(nexusId)))))))
+                ("nexus_id" -> JsString(nexusId))))))
+          )
 
           val fields = (formTemplate \ "fields").as[JsObject].fields.foldLeft(idFields) {
             case (filledTemplate, (key, fieldContent)) =>
@@ -89,7 +90,7 @@ object FormHelper {
 
                 filledTemplate + (escapeSlash(key), newValue)
               } else {
-                filledTemplate
+                filledTemplate + (escapeSlash(key), fieldContent.as[JsObject] )
               }
           }
           Json.obj("fields" -> fields) +
@@ -155,18 +156,22 @@ object FormHelper {
   }
 
   def removeKey(jsValue: JsValue):JsValue = {
-    if(jsValue.validateOpt[JsObject].isSuccess){
-      val correctedObj = jsValue.as[JsObject] - "description" - "label" - "status" - "childrenStatus"
-      val res = correctedObj.value.map{
-        case (k ,v) =>
-          k -> removeKey(v)
+      if (jsValue.validateOpt[JsObject].isSuccess) {
+        if(jsValue.toString() == "null"){
+          JsNull
+        }else{
+          val correctedObj = jsValue.as[JsObject] - "description" - "label" - "status" - "childrenStatus"
+          val res = correctedObj.value.map {
+            case (k, v) =>
+              k -> removeKey(v)
+          }
+          Json.toJson(res)
+        }
+      } else if (jsValue.validateOpt[JsArray].isSuccess) {
+        Json.toJson(jsValue.as[JsArray].value.map(removeKey))
+      } else {
+        jsValue
       }
-      Json.toJson(res)
-    }else if(jsValue.validateOpt[JsArray].isSuccess){
-      Json.toJson(jsValue.as[JsArray].value.map(removeKey))
-    }else{
-      jsValue
-    }
 
   }
 

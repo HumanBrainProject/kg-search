@@ -51,16 +51,17 @@ case class EditorInstance(nexusInstance: NexusInstance){
   }
 
 
-  def prepareManualEntityForStorage(userInfo: User, originLink: String): EditorInstance = {
+  def prepareManualEntityForStorage(userInfo: User, originLink: String, entityType: String): EditorInstance = {
     this.copy(
       this.nexusInstance.copy(
         content = this.nexusInstance
           .cleanManualData()
-          .content
-          .+(EditorInstance.Fields.updaterId, JsString(userInfo.id))
-          .+(EditorInstance.Fields.updateTimeStamp, JsNumber(new DateTime().getMillis))
-          +(EditorInstance.Fields.origin, JsString(originLink)) +
-          (EditorInstance.Fields.parent, Json.obj("@id" -> JsString(originLink)))
+          .content +
+          (EditorInstance.Fields.updaterId, JsString(userInfo.id)) +
+          (EditorInstance.Fields.updateTimeStamp, JsNumber(new DateTime().getMillis)) +
+          (EditorInstance.Fields.origin, JsString(originLink)) +
+          (EditorInstance.Fields.parent, Json.obj("@id" -> JsString(originLink))) +
+          ("@type", JsString(entityType))
       )
     )
   }

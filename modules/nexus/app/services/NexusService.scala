@@ -25,12 +25,12 @@ import play.api.libs.ws.{WSClient, WSResponse}
 import scala.concurrent.{ExecutionContext, Future}
 import NexusService._
 import common.models.{NexusPath, ReleaseInstance}
-import play.api.Configuration
+import play.api.{Configuration, Logger}
 import common.services.ConfigurationService
 
 
 class NexusService @Inject()(wSClient: WSClient, config:ConfigurationService)(implicit executionContext: ExecutionContext) {
-
+  val logger = Logger(this.getClass)
   def releaseInstance(instanceData: JsValue, token: String): Future[JsObject] = {
     val jsonObj = instanceData.as[JsObject]
     val instanceUrl = s"${config.nexusEndpoint}/v0/data/${(jsonObj \ "id").as[String]}"
@@ -174,6 +174,7 @@ class NexusService @Inject()(wSClient: WSClient, config:ConfigurationService)(im
     wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).get().flatMap{
       response => response.status match {
         case OK => // schema exists already
+          logger.debug("Exists" + org)
           Future.successful(response)
         case NOT_FOUND => // schema not found, create it
           val payload = domainDefinition(domainDescription)

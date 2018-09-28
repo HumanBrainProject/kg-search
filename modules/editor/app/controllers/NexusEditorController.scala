@@ -201,57 +201,21 @@ class NexusEditorController @Inject()(
         instanceService,
         token
       )
-
       val consolidatedInstance = ReconciledInstance(
         InstanceHelper.buildInstanceFromForm(originalInstance, updateToBeStoredInManual.nexusInstance.content, config.nexusEndpoint)
       )
       logger.debug(s"Consolidated instance $consolidatedInstance")
-      val createEditorDomain = nexusService
-        .createDomain(
-          config.nexusEndpoint,
-          editorSpace,
-          originalInstance.nexusPath.domain,
-          "",
-          token
-        )
-      val createReconciledDomain = nexusService
-        .createDomain(
-          config.nexusEndpoint,
-          reconciledSpace,
-          originalInstance.nexusPath.domain,
-          "",
-          reconciledToken
-        )
 
-      val manualRes: Future[WSResponse] = createEditorDomain.flatMap { re =>
-        val manualSchema = instanceService.createManualSchemaIfNeeded(
-          originalInstance.nexusPath,
-          token,
-          editorSpace,
-          "manual",
-          EditorSpaceHelper.nexusEditorContext("manual")
-        )
-        manualSchema.flatMap { res =>
-          instanceService.upsertUpdateInManualSpace(editorSpace, None,  request.user, originalInstance.nexusPath, preppedEntityForStorage, token)
-        }
+      val createDomains = instanceService.createDomainsAndSchemasSync(editorSpace, reconciledSpace, originalInstance.nexusPath, token, reconciledToken)
+      val manualRes = createDomains.flatMap { res =>
+        instanceService.upsertUpdateInManualSpace(editorSpace, None,  request.user, originalInstance.nexusPath, preppedEntityForStorage, token)
       }
       manualRes.flatMap { res =>
         logger.debug(s"Creation of manual update ${res.body}")
         res.status match {
           case status if status < 300 =>
             val newManualUpdateId = (res.json \"@id").as[String]
-            val reconciledRes: Future[WSResponse] = createReconciledDomain.flatMap { re =>
-              val reconciledSchema = instanceService
-                .createManualSchemaIfNeeded(
-                  originalInstance.nexusPath,
-                  reconciledToken,
-                  reconciledSpace,
-                  "reconciled",
-                  EditorSpaceHelper.nexusEditorContext("reconciled")
-                )
-              reconciledSchema.flatMap { res =>
-                instanceService
-                  .insertReconciledInstance(
+            val reconciledRes: Future[WSResponse] = instanceService.insertReconciledInstance(
                     reconciledSpace,
                     editorSpace,
                     originalInstance,
@@ -261,8 +225,6 @@ class NexusEditorController @Inject()(
                     reconciledToken,
                     request.user
                   )
-              }
-            }
             reconciledRes.map { re =>
               logger.debug(s"Creation of reconciled update ${re.body}")
               re.status match {
@@ -628,15 +590,15 @@ object NexusEditorController {
                                instanceService: InstanceService,
                                token: String
                             ): (EditorInstance, EditorInstance) = {
-
+    val entityType = s"http://hbp.eu/${originalPath.org}#${originalPath.schema.capitalize}"
     val diffEntity = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, updatedInstance, cleanInstance) +
-      ("@type", JsString(s"http://hbp.eu/${originalPath.org}#${originalPath.schema.capitalize}"))
+      ("@type", JsString(entityType))
     val correctedLinks = EditorInstance(
       NexusInstance(None, originalPath.reconciledPath(editorPrefix), Json.toJson(diffEntity.value.map {
         case (k, v) => recursiveCheckOfIds(k, v, reconciledPrefix, instanceService, token)
       }).as[JsObject])
     )
-    val preppedEntityForStorage = correctedLinks.prepareManualEntityForStorage(userInfo, originLink)
+    val preppedEntityForStorage = correctedLinks.prepareManualEntityForStorage(userInfo, originLink, entityType)
     (correctedLinks, preppedEntityForStorage)
   }
 
