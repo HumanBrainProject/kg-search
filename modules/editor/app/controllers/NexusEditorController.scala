@@ -181,7 +181,7 @@ class NexusEditorController @Inject()(
     reconciledTokenFut.flatMap { reconciledToken =>
       val originalInstanceCleaned = originalInstance.removeNexusFields()
       val originLink = (originalInstance.content \ "@id").as[String]
-      val originalInstanceWithAllFields = InstanceHelper.buildInstanceFromForm(originalInstanceCleaned, originalInstanceCleaned.content, config.nexusEndpoint)
+      val originalInstanceWithAllFields =  InstanceHelper.addDefaultFields( originalInstanceCleaned,instancePath, FormHelper.formRegistry)
       val updateFromUI = Json.parse(FormHelper.unescapeSlash(modificationFromUser.toString())).as[JsObject] - "id"
       val updatedInstance = InstanceHelper.buildInstanceFromForm(originalInstanceCleaned, updateFromUI, config.nexusEndpoint)
 
@@ -310,13 +310,21 @@ class NexusEditorController @Inject()(
                   request.user
                 ) match {
                   case (consolidatedInstance, manualEntitiesDetailsOpt) =>
-                    val manualUpsert = instanceService.upsertUpdateInManualSpace(editorSpace, manualEntitiesDetailsOpt, request.user, originalPath, preppedEntityForStorage, token)
+                    val manualUpsert = instanceService
+                      .upsertUpdateInManualSpace(
+                        editorSpace,
+                        manualEntitiesDetailsOpt,
+                        request.user,
+                        originalPath,
+                        preppedEntityForStorage,
+                        token
+                      )
                     manualUpsert.flatMap { res =>
                       logger.debug(s"Creation of manual update ${res.body}")
                       res.status match {
                         case status if status < 300 =>
                           val newManualUpdateId = (res.json \ "@id").as[String]
-                          val reconciledUpsert = instanceService.updateReconciledInstance(
+                          instanceService.updateReconciledInstance(
                             editorSpace,
                             currentInstanceDisplayed,
                             editorInstances,
@@ -327,18 +335,33 @@ class NexusEditorController @Inject()(
                             consolidatedInstance.content,
                             reconciledToken,
                             request.user
-                          )
-                          reconciledUpsert.map { re =>
+                          ).map { re =>
                             logger.debug(s"Creation of reconciled update ${re.body}")
                             re.status match {
                               case recStatus if recStatus < 300 =>
-                                Ok(NavigationHelper.resultWithBackLink(consolidatedInstance.formatFromNexusToOption(config.reconciledPrefix), originalPath, config.reconciledPrefix))
+                                Ok(
+                                  NavigationHelper
+                                    .resultWithBackLink(
+                                      consolidatedInstance.formatFromNexusToOption(config.reconciledPrefix),
+                                      originalPath,
+                                      config.reconciledPrefix
+                                    )
+                                )
                               case _ =>
                                 ResponseHelper.errorResultWithBackLink(re.status, re.headers, re.body, originalPath, config.reconciledPrefix)
                             }
                           }
                         case _ =>
-                          Future.successful(ResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, originalPath, config.reconciledPrefix))
+                          Future.successful(
+                            ResponseHelper
+                              .errorResultWithBackLink(
+                                res.status,
+                                res.headers,
+                                res.body,
+                                originalPath,
+                                config.reconciledPrefix
+                              )
+                          )
                       }
                     }
                 }
