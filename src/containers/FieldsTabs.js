@@ -18,7 +18,7 @@ import { Field } from "./Field";
 import { Tabs } from "../components/Tabs";
 
 
-const getTabs = (fields, renderUserInteractions) => {
+const getTabs = fields => {
   if (!Array.isArray(fields)) {
     return [];
   }
@@ -32,16 +32,16 @@ const getTabs = (fields, renderUserInteractions) => {
         value: field.mapping.hint,
         label: field.mapping.value
       }:null,
-      data: Object.assign({}, field, {renderUserInteractions: renderUserInteractions})
+      data: field
     };
   });
 };
 
-export const FieldsTabs = ({fields, renderUserInteractions}) => {
+export const FieldsTabs = ({fields}) => {
   if (!fields || !fields.length) {
     return null;
   }
-  const tabs = getTabs(fields, !!renderUserInteractions);
+  const tabs = getTabs(fields);
   return (
     <Tabs tabs={tabs} viewComponent={Field} />
   );

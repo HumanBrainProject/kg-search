@@ -16,18 +16,18 @@
 
 import React from "react";
 import { connect } from "../../store";
-import { Field } from "../Field";
+import { PrintViewField } from "../Field";
 import { HitRibbon } from "./HitRibbon";
 import { HighlightsField} from "./HighlightsField";
 import "./Hit.css";
 
-export const HitBase = ({type, hasNoData, hasUnknownData, ribbon, icon, fields, highlightsField, renderUserInteractions}) => (
+export const HitBase = ({type, hasNoData, hasUnknownData, ribbon, icon, fields, highlightsField}) => (
   <div className="kgs-hit" data-type={type}>
     <HitRibbon className="kgs-hit__ribbon" {...ribbon} />
     <div className="kgs-hit__content">
-      <Field key={icon && icon.name} {...icon}/>
+      <PrintViewField key={icon && icon.name} {...icon}/>
       {fields.map(({name, data, mapping, index}) => (
-        <Field key={name} name={name} data={data} mapping={mapping} index={index} renderUserInteractions={!!renderUserInteractions} />
+        <PrintViewField key={name} name={name} data={data} mapping={mapping} index={index} />
       ))}
       <HighlightsField {...highlightsField} />
     </div>
@@ -204,7 +204,6 @@ export const Hit = connect(
     };
 
     return {
-      renderUserInteractions: false,
       type: data && data._type,
       hasNoData: !source,
       hasUnknownData: !mapping,

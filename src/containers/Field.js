@@ -17,60 +17,67 @@
 import React from "react";
 import { FieldLabel} from "./Field/FieldLabel";
 import { Hint} from "../components/Hint";
-import { ListField } from "./Field/ListField";
-import { ObjectField } from "./Field/ObjectField";
-import { ValueField } from "./Field/ValueField";
+import { ListField, PrintViewListField } from "./Field/ListField";
+import { ObjectField, PrintViewObjectField } from "./Field/ObjectField";
+import { ValueField, PrintViewValueField } from "./Field/ValueField";
 import "./Field.css";
 
-export function Field({name, data, mapping, index, renderUserInteractions}) {
-  if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
-    return null;
-  }
+const FieldBase = (renderUserInteractions = true) => {
 
-  const isList = Array.isArray(data);
-  const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
-  const className = "kgs-field" + (name?" kgs-field__" + name:"") + (mapping.layout?" kgs-field__layout-" + mapping.layout:"");
+  const ListFieldComponent = renderUserInteractions?ListField:PrintViewListField;
+  const ObjectFieldComponent = renderUserInteractions?ObjectField:PrintViewObjectField;
+  const ValueFieldComponent = renderUserInteractions?ValueField:PrintViewValueField;
 
-  const labelProps = {
-    show: !!mapping.value && (!mapping.label_hidden || !!renderUserInteractions),
-    showAsBlock: mapping.tag_icon,
-    value: mapping.value,
-    counter: (mapping.layout === "group" && isList)?data.length:0
-  };
-  const hintProps = {
-    show: renderUserInteractions && !!mapping.value && !!mapping.hint,
-    value: mapping.hint,
-    label: mapping.value
-  };
-  const listProps = {
-    show: isList,
-    items: data,
-    mapping: mapping,
-    index: index,
-    renderUserInteractions: !!renderUserInteractions
-  };
-  const valueProps = {
-    show: !isList,
-    data: data,
-    mapping: mapping,
-    index: index,
-    renderUserInteractions: !!renderUserInteractions
-  };
-  const objectProps = {
-    show: !isList && !!mapping.children,
-    data: data && data.children,
-    mapping: mapping,
-    index: index,
-    renderUserInteractions: !!renderUserInteractions
-  };
+  return ({name, data, mapping, index}) => {
+    if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
+      return null;
+    }
 
-  return (
-    <span style={style} className={className}>
-      <FieldLabel {...labelProps} />
-      <Hint {...hintProps} />
-      <ValueField {...valueProps} />
-      <ListField {...listProps} />
-      <ObjectField {...objectProps} />
-    </span>
-  );
-}
+    const isList = Array.isArray(data);
+    const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
+    const className = "kgs-field" + (name?" kgs-field__" + name:"") + (mapping.layout?" kgs-field__layout-" + mapping.layout:"");
+
+    const labelProps = {
+      show: !!mapping.value && (!mapping.label_hidden || !!renderUserInteractions),
+      showAsBlock: mapping.tag_icon,
+      value: mapping.value,
+      counter: (mapping.layout === "group" && isList)?data.length:0
+    };
+    const hintProps = {
+      show: renderUserInteractions && !!mapping.value && !!mapping.hint,
+      value: mapping.hint,
+      label: mapping.value
+    };
+    const listProps = {
+      show: isList,
+      items: data,
+      mapping: mapping,
+      index: index
+    };
+    const valueProps = {
+      show: !isList,
+      data: data,
+      mapping: mapping,
+      index: index
+    };
+    const objectProps = {
+      show: !isList && !!mapping.children,
+      data: data && data.children,
+      mapping: mapping,
+      index: index
+    };
+
+    return (
+      <span style={style} className={className}>
+        <FieldLabel {...labelProps} />
+        <Hint {...hintProps} />
+        <ValueFieldComponent {...valueProps} />
+        <ListFieldComponent {...listProps} />
+        <ObjectFieldComponent {...objectProps} />
+      </span>
+    );
+  };
+};
+
+export const Field = FieldBase(true);
+export const PrintViewField = FieldBase(false);

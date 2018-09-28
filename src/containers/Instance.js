@@ -21,7 +21,7 @@ import { FieldsPanel } from "./FieldsPanel";
 import { FieldsTabs } from "./FieldsTabs";
 import "./Instance.css";
 
-export const InstanceBase = ({className, type, hasNoData, hasUnknownData, header, main, summary, groups, renderUserInteractions}) => {
+export const InstanceBase = ({className, type, hasNoData, hasUnknownData, header, main, summary, groups}) => {
   const classNames = ["kgs-instance", className].join(" ");
   return (
     <div className={classNames} data-type={type}>
@@ -36,10 +36,10 @@ export const InstanceBase = ({className, type, hasNoData, hasUnknownData, header
           </div>
         </div>
         <div className="kgs-instance__body">
-          <FieldsPanel className="kgs-instance__main" fields={main} renderUserInteractions={renderUserInteractions} />
-          <FieldsPanel className="kgs-instance__summary" fields={summary} renderUserInteractions={renderUserInteractions} />
+          <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
+          <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
         </div>
-        <FieldsTabs className="kgs-instance__groups" fields={groups} renderUserInteractions={renderUserInteractions} />
+        <FieldsTabs className="kgs-instance__groups" fields={groups} />
       </div>
       {hasNoData && (
         <div className="kgs-instance__no-data">This data is currently not available.</div>
@@ -94,7 +94,6 @@ export const Instance = connect(
     const index = (data && !(data.found === false) && data._index)?data._index:"public";
 
     return {
-      renderUserInteractions: true,
       type: data && data._type,
       hasNoData: !source,
       hasUnknownData: !mapping,

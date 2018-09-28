@@ -15,16 +15,16 @@
 */
 
 import React from "react";
-import { Field } from "./Field";
 
-export function FieldsPanel({className, fields, renderUserInteractions}) {
+export function FieldsPanel({className, fields, fieldComponent}) {
   if (!fields || !fields.length) {
     return null;
   }
+  const FieldComponent = fieldComponent;
   return (
     <div className={className?className:null}>
       {fields && fields.map(({name, data, mapping, index}) => (
-        <Field key={name} name={name} data={data} mapping={mapping} index={index} renderUserInteractions={!!renderUserInteractions} />
+        <FieldComponent key={name} name={name} data={data} mapping={mapping} index={index} />
       ))}
     </div>
   );

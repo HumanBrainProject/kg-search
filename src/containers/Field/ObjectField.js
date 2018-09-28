@@ -15,71 +15,75 @@
 */
 
 import React from "react";
-import { Field } from "../Field";
+import { Field, PrintViewField } from "../Field";
 import "./ObjectField.css";
 
-const DefaultList = ({className, children}) => {
-  return (
-    <ul className={className}>
+const ObjectFieldBase = (renderUserInteractions = true) => {
+
+  const DefaultList = ({className, children}) => {
+    return (
+      <ul className={className}>
+        {children}
+      </ul>
+    );
+  };
+
+  const CustomList = ({className, children}) => (
+    <span className={className}>
       {children}
-    </ul>
+    </span>
   );
+
+  const DefaultListItem = ({children}) => (
+    <li>
+      {children}
+    </li>
+  );
+
+  const CustomListItem = ({isFirst, separator, children}) => (
+    <span>
+      {isFirst?null:separator}
+      {children}
+    </span>
+  );
+
+  const ObjectField = ({show, data, mapping, index}) => {
+    if (!show || !mapping || !mapping.visible) {
+      return null;
+    }
+
+    const List = mapping.separator?CustomList:DefaultList;
+    const ListItem = mapping.separator?CustomListItem:DefaultListItem;
+    const FieldComponent = renderUserInteractions?Field:PrintViewField;
+
+    const fields = Object.entries(mapping.children)
+      .filter(([name, mapping]) =>
+        mapping
+              && (mapping.showIfEmpty || (data && data[name]))
+              && mapping.visible
+      )
+      .map(([name, mapping]) => ({
+        name: name,
+        data: data && data[name],
+        mapping: mapping,
+        index: index
+      }));
+
+    return (
+      <List className="kgs-field__object">
+        {
+          fields.map(({name, data, mapping, index}, idx) => (
+            <ListItem key={name} separator={mapping.separator} isFirst={!idx}>
+              <FieldComponent name={name} data={data} mapping={mapping} index={index} />
+            </ListItem>
+          ))
+        }
+      </List>
+    );
+  };
+
+  return ObjectField;
 };
 
-const CustomList = ({className, children}) => (
-  <span className={className}>
-    {children}
-  </span>
-);
-
-const DefaultListItem = ({children}) => (
-  <li>
-    {children}
-  </li>
-);
-
-const CustomListItem = ({index, separator, children}) => (
-  <span>
-    {index===0?null:separator}
-    {children}
-  </span>
-);
-
-const ObjectFieldComponent = ({fields, separator}) => {
-  const List = separator?CustomList:DefaultList;
-  const ListItem = separator?CustomListItem:DefaultListItem;
-  return (
-    <List className="kgs-field__object">
-      {
-        fields.map(({name, data, mapping, renderUserInteractions}, index) => (
-          <ListItem key={name} separator={separator} index={index}>
-            <Field name={name} data={data} mapping={mapping} renderUserInteractions={!!renderUserInteractions} />
-          </ListItem>
-        ))
-      }
-    </List>
-  );
-};
-
-export function ObjectField({show, data, mapping, renderUserInteractions}) {
-  if (!show || !mapping || !mapping.visible) {
-    return null;
-  }
-
-  const fields = Object.entries(mapping.children)
-    .filter(([name, mapping]) =>
-      mapping
-            && (mapping.showIfEmpty || (data && data[name]))
-            && mapping.visible
-    )
-    .map(([name, mapping]) => ({
-      name: name,
-      data: data && data[name],
-      mapping: mapping,
-      renderUserInteractions: !!renderUserInteractions
-    }));
-
-  return (
-    <ObjectFieldComponent show={show} fields={fields} separator={mapping.separator} />
-  );
-}
+export const ObjectField = ObjectFieldBase(true);
+export const PrintViewObjectField = ObjectFieldBase(false);

@@ -171,82 +171,90 @@ class Details extends PureComponent {
   }
 }
 
-export function ValueField({show, data, mapping, index, renderUserInteractions}) {
-  if (!show  || !data|| !mapping || !mapping.visible) {
-    return null;
-  }
+const ValueFieldBase = (renderUserInteractions = true) => {
 
-  const hasReference = !!renderUserInteractions && !!data.reference;
-  const hasLink =  !!renderUserInteractions && !!data.url;
-  const hasMailToLink = !!renderUserInteractions && data.url === "string" &&  data.url.substr(0,7).toLowerCase() === "mailto:";
-  const hasAnyLink = hasReference || hasMailToLink || hasLink;
-  const isIcon = mapping.type === "icon" && ((data.image && data.image.url) || mapping.icon);
-  const isTag = !hasAnyLink && !isIcon && !!mapping.tag_icon;
-  const isMarkdown = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && !!mapping.markdown;
-  const isCollapsible = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && mapping.collapsible && typeof data.value === "string" && data.value.length >= 1600;
-
-  let value = data.value;
-  if (data.value && mapping.type === "date") {
-    const timestamp = Date.parse(data.value);
-    if (timestamp && !isNaN(timestamp)) {
-      value = new Date(timestamp).toLocaleDateString();
+  const ValueField = ({show, data, mapping, index}) => {
+    if (!show  || !data|| !mapping || !mapping.visible) {
+      return null;
     }
-  }
 
-  let ValueComponent = null;
-  let valueProps = null;
-  if (hasReference) {
-    ValueComponent = Reference;
-    valueProps = {
-      reference: data.reference,
-      index: index,
-      text: value?value:data.reference
-    };
-  } else if (hasLink) {
-    ValueComponent = Link;
-    valueProps = {
-      url: data.url,
-      label: value,
-      isMailToLink: hasMailToLink
-    };
-  } else if (isIcon) {
-    ValueComponent = Icon;
-    valueProps = {
-      title: value,
-      url: data && data.image && data.image.url,
-      inline: mapping && mapping.icon
-    };
-  } else if (isTag) {
-    ValueComponent = Tag;
-    valueProps = {
-      icon: mapping.tag_icon,
-      value: value
-    };
-  } else if (isCollapsible) {
-    ValueComponent = CollapsibleText;
-    valueProps = {
-      content: value,
-      isMarkdown: isMarkdown
-    };
-  } else {
-    ValueComponent = Text;
-    valueProps = {
-      content: value,
-      isMarkdown: isMarkdown
-    };
-  }
+    const hasReference = !!renderUserInteractions && !!data.reference;
+    const hasLink =  !!renderUserInteractions && !!data.url;
+    const hasMailToLink = !!renderUserInteractions && data.url === "string" &&  data.url.substr(0,7).toLowerCase() === "mailto:";
+    const hasAnyLink = hasReference || hasMailToLink || hasLink;
+    const isIcon = mapping.type === "icon" && ((data.image && data.image.url) || mapping.icon);
+    const isTag = !hasAnyLink && !isIcon && !!mapping.tag_icon;
+    const isMarkdown = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && !!mapping.markdown;
+    const isCollapsible = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && mapping.collapsible && typeof data.value === "string" && data.value.length >= 1600;
 
-  const detailsProps = {
-    toggleLabel: mapping.detail_label,
-    content: data.detail
+    let value = data.value;
+    if (data.value && mapping.type === "date") {
+      const timestamp = Date.parse(data.value);
+      if (timestamp && !isNaN(timestamp)) {
+        value = new Date(timestamp).toLocaleDateString();
+      }
+    }
+
+    let ValueComponent = null;
+    let valueProps = null;
+    if (hasReference) {
+      ValueComponent = Reference;
+      valueProps = {
+        reference: data.reference,
+        index: index,
+        text: value?value:data.reference
+      };
+    } else if (hasLink) {
+      ValueComponent = Link;
+      valueProps = {
+        url: data.url,
+        label: value,
+        isMailToLink: hasMailToLink
+      };
+    } else if (isIcon) {
+      ValueComponent = Icon;
+      valueProps = {
+        title: value,
+        url: data && data.image && data.image.url,
+        inline: mapping && mapping.icon
+      };
+    } else if (isTag) {
+      ValueComponent = Tag;
+      valueProps = {
+        icon: mapping.tag_icon,
+        value: value
+      };
+    } else if (isCollapsible) {
+      ValueComponent = CollapsibleText;
+      valueProps = {
+        content: value,
+        isMarkdown: isMarkdown
+      };
+    } else {
+      ValueComponent = Text;
+      valueProps = {
+        content: value,
+        isMarkdown: isMarkdown
+      };
+    }
+
+    const detailsProps = {
+      toggleLabel: mapping.detail_label,
+      content: data.detail
+    };
+
+    return (
+      <div className="field-value">
+        <ValueComponent {...valueProps} />
+        {data.detail && (
+          <Details {...detailsProps} />
+        )}
+      </div>
+    );
   };
 
-  return (
-    <div className="field-value">
-      <ValueComponent {...valueProps} />
-      {data.detail && (
-        <Details {...detailsProps} />
-      )}
-    </div>
-  );
-}
+  return ValueField;
+};
+
+export const ValueField = ValueFieldBase(true);
+export const PrintViewValueField = ValueFieldBase(false);
