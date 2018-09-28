@@ -14,8 +14,24 @@
 *   limitations under the License.
 */
 
+import React from "react";
 import { connect } from "../../store";
-import { HitStats as Component } from "../../components/HitStats";
+import "./HitStats.css";
+
+export const HitStatsBase = ({className, show, hitCount, from, to}) => {
+  if (!show) {
+    return null;
+  }
+  const classNames = ["kgs-hitStats", className].join(" ");
+  if (hitCount === 0) {
+    return (
+      <span className={classNames}>No results were found. Please refine your search.</span>
+    );
+  }
+  return (
+    <span className={classNames}>Viewing <span className="kgs-hitStats-highlight">{from}-{to}</span> of <span className="kgs-hitStats-highlight">{hitCount}</span> results</span>
+  );
+};
 
 export const HitStats = connect(
   state => {
@@ -29,4 +45,4 @@ export const HitStats = connect(
       to: to
     };
   }
-)(Component);
+)(HitStatsBase);

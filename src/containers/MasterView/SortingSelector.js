@@ -14,12 +14,22 @@
 *   limitations under the License.
 */
 
+import React from "react";
 import { connect } from "../../store";
-import { SortingSelector as Component } from "../../components/SortingSelector";
+import { Select, SortingSelector as Component} from "searchkit";
+import "./SortingSelector.css";
+
+export const SortingSelectorBase = ({className, sortFields}) => {
+  if (Array.isArray(sortFields) && sortFields.length) {
+    const classNames = `kgs-sorting-selector ${className}`;
+    return <span className={classNames?classNames:null}><Component listComponent={Select} options={sortFields} /></span>;
+  }
+  return null;
+};
 
 export const SortingSelector = connect(
   (state, props) => ({
     className: props.className,
     sortFields: state.definition.sortFields
   })
-)(Component);
+)(SortingSelectorBase);

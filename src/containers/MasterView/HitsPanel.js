@@ -21,7 +21,7 @@ import { List } from "../../components/List";
 import { Hit } from "./Hit";
 import { StatsHelpers } from "../../helpers/StatsHelpers";
 
-const HitsPanelComponent = ({lists, itemComponent, getKey, layout, onClick}) => (
+const HitsPanelBase = ({lists, itemComponent, getKey, layout, onClick}) => (
   <React.Fragment>
     {lists.map(list =>
       <List key={list.id} title={list.title} items={list.items} itemComponent={itemComponent} getKey={getKey} layout={layout} onClick={onClick} />
@@ -96,4 +96,4 @@ export const HitsPanel = connect(
   dispatch => ({
     onClick: (data, target) => dispatch(actions.setHit(data, target))
   })
-)(HitsPanelComponent);
+)(HitsPanelBase);

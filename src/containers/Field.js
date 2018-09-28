@@ -15,11 +15,11 @@
 */
 
 import React from "react";
-import { FieldLabel} from "./FieldLabel";
-import { Hint} from "./Hint";
-import { ListField } from "./ListField";
-import { ObjectField } from "./ObjectField";
-import { ValueField } from "./ValueField";
+import { FieldLabel} from "./Field/FieldLabel";
+import { Hint} from "../components/Hint";
+import { ListField } from "./Field/ListField";
+import { ObjectField } from "./Field/ObjectField";
+import { ValueField } from "./Field/ValueField";
 import "./Field.css";
 
 export function Field({name, data, mapping, index, renderUserInteractions}) {

@@ -14,8 +14,31 @@
 *   limitations under the License.
 */
 
+import React from "react";
 import { connect } from "../../store";
-import { Hit as Component} from "../../components/Hit";
+import { Field } from "../Field";
+import { HitRibbon } from "./HitRibbon";
+import { HighlightsField} from "./HighlightsField";
+import "./Hit.css";
+
+export const HitBase = ({type, hasNoData, hasUnknownData, ribbon, icon, fields, highlightsField, renderUserInteractions}) => (
+  <div className="kgs-hit" data-type={type}>
+    <HitRibbon className="kgs-hit__ribbon" {...ribbon} />
+    <div className="kgs-hit__content">
+      <Field key={icon && icon.name} {...icon}/>
+      {fields.map(({name, data, mapping, index}) => (
+        <Field key={name} name={name} data={data} mapping={mapping} index={index} renderUserInteractions={!!renderUserInteractions} />
+      ))}
+      <HighlightsField {...highlightsField} />
+    </div>
+    {hasNoData && (
+      <div className="kgs-hit__no-data">This data is currently not available.</div>
+    )}
+    {hasUnknownData && (
+      <div className="kgs-hit__no-data">This type of data is currently not supported.</div>
+    )}
+  </div>
+);
 
 const markdownEscapedChars = {
   "&#x2F;": "\\",
@@ -194,4 +217,4 @@ export const Hit = connect(
       }
     };
   }
-)(Component);
+)(HitBase);

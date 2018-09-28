@@ -16,15 +16,16 @@
 
 import { connect } from "../store";
 import * as actions from "../actions";
-import { TermsShortNotice as Component } from "../components/TermsShortNotice";
+import { Notice } from "../components/Notice";
 import { termsShortNotice } from "../data/termsShortNotice.js";
 
 export const TermsShortNotice = connect(
-  state => ({
+  (state, props) => ({
+    className: props.className,
     show: !!state.application.showTermsShortNotice,
     text: termsShortNotice
   }),
   dispatch => ({
     onAgree: () => dispatch(actions.agreeTermsShortNotice())
   })
-)(Component);
+)(Notice);

@@ -57,12 +57,12 @@ body[class*="mobile"] .kgs-masterView .kgs-masterView__panel {
     }
 }
 
-.kgs-masterView .kgs-search + .terms-short-notice {
+.kgs-masterView__terms-short-notice {
     margin: 30px 0;
 }
 
 @media (min-width: 992px) and (min-height: 900px) {
-    .kgs-masterView .kgs-search + .terms-short-notice {
+    .kgs-masterView__terms-short-notice {
         display: none;
     }
 }
@@ -81,12 +81,12 @@ body[class*="mobile"] .kgs-masterView .kgs-masterView__panel {
     }
 }
 
-.kgs-masterView .kgs-hit .ribbon-container {
+.kgs-masterView .kgs-hit .kgs-hit__ribbon {
     display: none;
 }
 
 @media (min-width: 1600px) { /* 992 without left filters panel */ 
-    .kgs-masterView .kgs-list.is-list .kgs-hit .ribbon-container {
+    .kgs-masterView .kgs-list.is-list .kgs-hit .kgs-hit__ribbon {
         display: block;
     }
 }

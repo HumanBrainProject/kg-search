@@ -18,34 +18,15 @@
 import React from "react";
 import "./Ribbon.css";
 
-export const Ribbon = ({className, data, mapping}) => {
-  if (!mapping || !data) {
-    return null;
-  }
-
-  let counter = 0;
-  let suffix = mapping.framed && mapping.framed.suffix && mapping.framed.suffix.singular;
-  if (mapping.framed) {
-    switch (mapping.framed.aggregation) {
-    case "count":
-      counter = Array.isArray(data)?data.length:0;
-      break;
-    default:
-      counter = 0;
-    }
-  }
-
-  if(Number.isInteger(counter) && counter > 1) {
-    suffix = mapping.framed && mapping.framed.suffix && mapping.framed.suffix.plural;
-  }
+export const Ribbon = ({className, icon, text, counter, suffix}) => {
   const classNames = ["ribbon-container", className].join(" ");
   return (
     <div className={classNames}>
       <div className="ribbon-inner-container">
         <div className="ribbon-inner">
           <div className="ribbon-inner-content">
-            <div dangerouslySetInnerHTML={{__html:mapping.icon}} />
-            <div>{mapping.content}</div>
+            <div dangerouslySetInnerHTML={{__html:icon}} />
+            <div>{text}</div>
             <div className="ribbon-inner-content-framed">{counter} {suffix}</div>
           </div>
         </div>

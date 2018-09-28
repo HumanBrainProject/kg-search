@@ -256,24 +256,30 @@
     }
 }
 
-.kgs-footer .terms-short-notice {
+.kgs-footer__terms-short-notice  {
     display: none;
+}
+
+.kgs-footer__terms-short-notice .kgs-notice-panel {
     background-color: #242628;
     opacity: 0.75;
     padding: 20px 50px 70px 50px;
 }
 
+.kgs-footer__terms-short-notice .kgs-notice-agree-button {
+    right: 50px;
+}
+
 @media (min-width: 992px) and (min-height: 900px) {
-    .kgs-footer .terms-short-notice {
+    .kgs-footer__terms-short-notice {
         display: block;
     }
 }
 
-.kgs-footer:not(.is-fixed-position) .terms-short-notice {
+.kgs-footer:not(.is-fixed-position) .kgs-footer__terms-short-notice {
     position: fixed;
     left: 0;
     bottom: 0;
     right: 0;
-    padding-bottom: 20px;
     z-index: 3;
 }

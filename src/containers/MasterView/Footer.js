@@ -23,10 +23,10 @@ import { SignInButton } from "../SignInButton";
 import { TermsShortNotice } from "../TermsShortNotice";
 import "./Footer.css";
 
-const FooterComponent = ({isFloating}) => {
+const FooterBase = ({isFloating}) => {
   return (
     <div className={`kgs-footer${isFloating?" is-fixed-position":""}`}>
-      <TermsShortNotice />
+      <TermsShortNotice className="kgs-footer__terms-short-notice" />
       <div className="kgs-footer-nav">
         <Pagination className="kgs-footer-pagination" />
         <GroupSelection className="kgs-group-selection"/>
@@ -45,4 +45,4 @@ export const Footer = withFloatingScrollEventsSubscription(
     {querySelector: ".main-content + hr + .container"},
     {querySelector: "footer.footer[role=\"contentinfo\"]"}
   ]
-)(FooterComponent);
+)(FooterBase);

@@ -14,8 +14,42 @@
 *   limitations under the License.
 */
 
+import React from "react";
 import { connect } from "../store";
-import { Instance as Component } from "../components/Instance";
+import { Field } from "./Field";
+import { FieldsPanel } from "./FieldsPanel";
+import { FieldsTabs } from "./FieldsTabs";
+import "./Instance.css";
+
+export const InstanceBase = ({className, type, hasNoData, hasUnknownData, header, main, summary, groups, renderUserInteractions}) => {
+  const classNames = ["kgs-instance", className].join(" ");
+  return (
+    <div className={classNames} data-type={type}>
+      <div className="kgs-instance__content">
+        <div className="kgs-instance__header">
+          <div>
+            <Field {...header.icon} />
+            <Field {...header.type} />
+          </div>
+          <div>
+            <Field {...header.title} />
+          </div>
+        </div>
+        <div className="kgs-instance__body">
+          <FieldsPanel className="kgs-instance__main" fields={main} renderUserInteractions={renderUserInteractions} />
+          <FieldsPanel className="kgs-instance__summary" fields={summary} renderUserInteractions={renderUserInteractions} />
+        </div>
+        <FieldsTabs className="kgs-instance__groups" fields={groups} renderUserInteractions={renderUserInteractions} />
+      </div>
+      {hasNoData && (
+        <div className="kgs-instance__no-data">This data is currently not available.</div>
+      )}
+      {hasUnknownData && (
+        <div className="kgs-instance__no-data">This type of data is currently not supported.</div>
+      )}
+    </div>
+  );
+};
 
 const getField = (index, type, name, data, mapping) => {
   switch (name) {
@@ -74,4 +108,4 @@ export const Instance = connect(
       groups: getFields(index, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title")
     };
   }
-)(Component);
+)(InstanceBase);

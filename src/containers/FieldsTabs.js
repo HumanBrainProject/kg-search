@@ -15,7 +15,7 @@
 */
 import React, { PureComponent } from "react";
 import { Field } from "./Field";
-import { Hint } from "./Hint";
+import { Hint } from "../components/Hint";
 import "./FieldsTabs.css";
 
 const Tab = ({name, title, counter, hint, active, onClick}) => {
@@ -25,25 +25,6 @@ const Tab = ({name, title, counter, hint, active, onClick}) => {
   const className = `kgs-field__tab ${active?"is-active":""}`;
   return (
     <button type="button" className={className} onClick={handleClick}>{title} {counter?`(${counter})`:""} <Hint {...hint} /></button>
-  );
-};
-
-const FieldsTabsComponent = ({className, tabs, field, onClick, renderUserInteractions}) => {
-  if (!Array.isArray(tabs) || !field) {
-    return null;
-  }
-
-  return (
-    <div className={className}>
-      <div className="kgs-fields__tabs">
-        {tabs.map((tab, index) => (
-          <Tab key={tab.name?tab.name:index} {...tab} active={tab.name === field.name} onClick={onClick} />
-        ))}
-      </div>
-      <div className="kgs-fields__tab__content">
-        <Field {...field} renderUserInteractions={!!renderUserInteractions} />
-      </div>
-    </div>
   );
 };
 
@@ -66,7 +47,7 @@ export class FieldsTabs extends PureComponent {
       return {
         name: field.name,
         title: (field.mapping && field.mapping.value)?field.mapping.value:field.name,
-        counter: Array.isArray(field.data)?field.data.length:0,
+        counter: Array.isArray(field.data)?field.data.length:field.data?1:0,
         hint: field.mapping?{
           show: !!field.mapping.value && !!field.mapping.hint,
           value: field.mapping.hint,
@@ -91,12 +72,20 @@ export class FieldsTabs extends PureComponent {
   }
   render() {
     const {className, fields, renderUserInteractions} = this.props;
-    if (!fields || !fields.length) {
+    if (!fields || !fields.length || !this.state.field) {
       return null;
     }
-
     return (
-      <FieldsTabsComponent className={className?className:null} tabs={this.state.tabs} field={this.state.field} onClick={this.handleClick} renderUserInteractions={!!renderUserInteractions} />
+      <div className={className?className:null}>
+        <div className="kgs-fields__tabs">
+          {this.state.tabs.map((tab, index) => (
+            <Tab key={tab.name?tab.name:index} {...tab} active={tab.name === this.state.field.name} onClick={this.handleClick} />
+          ))}
+        </div>
+        <div className="kgs-fields__tab__content">
+          <Field {...this.state.field} renderUserInteractions={!!renderUserInteractions} />
+        </div>
+      </div>
     );
   }
 }

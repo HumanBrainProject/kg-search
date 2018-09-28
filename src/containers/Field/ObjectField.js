@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { Field } from "./Field";
+import { Field } from "../Field";
 import "./ObjectField.css";
 
 const DefaultList = ({className, children}) => {

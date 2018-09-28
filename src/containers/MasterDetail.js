@@ -21,7 +21,7 @@ import { SearchkitProvider } from "searchkit";
 import { MasterView } from "./MasterView";
 import { DetailView } from "./DetailView";
 
-const MasterDetailComponent = ({show, manager}) => {
+const MasterDetailBase = ({show, manager}) => {
   if (!show) {
     return null;
   }
@@ -40,11 +40,11 @@ const MasterDetailComponent = ({show, manager}) => {
   );
 };
 
-const MasterDetailContainer = withTabKeyNavigation(
+const MasterDetailWithTabKeyNavigation = withTabKeyNavigation(
   "isActive",
   null,
   ".kgs-app"
-)(MasterDetailComponent);
+)(MasterDetailBase);
 
 export const MasterDetail = connect(
   (state, props) => ({
@@ -52,4 +52,4 @@ export const MasterDetail = connect(
     manager: props.manager,
     show: state.application.isReady
   })
-)(MasterDetailContainer);
+)(MasterDetailWithTabKeyNavigation);

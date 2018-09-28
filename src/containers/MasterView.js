@@ -26,10 +26,10 @@ import { Footer } from "./MasterView/Footer";
 import { TermsShortNotice } from "./TermsShortNotice";
 import "./MasterView.css";
 
-const MasterViewComponent = () => (
+const MasterViewBase = () => (
   <div className="kgs-masterView">
     <SearchPanel/>
-    <TermsShortNotice/>
+    <TermsShortNotice className="kgs-masterView__terms-short-notice" />
     <ShapesFilterPanel/>
     <div className="kgs-masterView__panel">
       <FiltersPanel/>
@@ -42,16 +42,16 @@ const MasterViewComponent = () => (
   </div>
 );
 
-export const TabKeyNavigationMasterView = withTabKeyNavigation(
+export const MasterViewWithTabKeyNavigation = withTabKeyNavigation(
   "isActive",
   ".kgs-masterView",
   null
-)(MasterViewComponent);
+)(MasterViewBase);
 
 export const MasterView = connect(
   state => ({
     isActive: !state.hits.currentHit && !state.application.info
   })
-)(TabKeyNavigationMasterView);
+)(MasterViewWithTabKeyNavigation);
 
 

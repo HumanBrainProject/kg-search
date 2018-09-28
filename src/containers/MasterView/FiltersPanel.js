@@ -18,7 +18,35 @@ import React from "react";
 import { SearchkitComponent } from "searchkit";
 import { connect } from "../../store";
 import { Facet } from "./Facet";
-import { FiltersPanel as Component } from "../../components/FiltersPanel";
+import "./FiltersPanel.css";
+
+export const FiltersPanelBase = ({className, show, hasFilters, facets, facetComponent, onReset}) => {
+  if (!show) {
+    return null;
+  }
+  const classNames = ["kgs-filters", className].join(" ");
+  const Facet = facetComponent;
+  return (
+    <div className={classNames}>
+      <span>
+        <div className="kgs-filters__header">
+          <div className="kgs-filters__title">Filters</div>
+          {hasFilters && (
+            <div className="kgs-filters__reset"><button type="button" className="kgs-filters__reset-button" onClick={onReset}>Reset</button></div>
+          )}
+        </div>
+        <span>
+          {facets.map(f => (
+            <Facet key={f.id} id={f.id} name={f.name} facet={f.facet} isVisible={f.isVisible} />
+          ))}
+        </span>
+        {!hasFilters && (
+          <span className="kgs-filters__no-filters">No filters available for your current search.</span>
+        )}
+      </span>
+    </div>
+  );
+};
 
 const FiltersPanelContainer = connect(
   (state, props) => {
@@ -47,7 +75,7 @@ const FiltersPanelContainer = connect(
       onReset: props.onReset
     };
   }
-)(Component);
+)(FiltersPanelBase);
 
 export class FiltersPanel extends SearchkitComponent {
   onReset = () => {

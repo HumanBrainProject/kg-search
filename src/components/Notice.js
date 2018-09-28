@@ -18,23 +18,25 @@ import React from "react";
 import showdown from "showdown";
 /*import FilterXSS from 'xss';*/
 import xssFilter from "showdown-xss-filter";
-import "./TermsShortNotice.css";
+import "./Notice.css";
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 
-export const TermsShortNotice = ({show, text, onAgree}) => {
+export const Notice = ({className, show, text, agreeLabel="I agree", onAgree}) => {
   if (!show || !text) {
     return null;
   }
 
   const html = converter.makeHtml(text);
-
+  const classNames = ["kgs-notice", className].join(" ");
   return (
-    <span className="terms-short-notice">
-      <span className="terms-short-notice-content" dangerouslySetInnerHTML={{__html:html}} />
+    <div className={classNames}>
+      <div className="kgs-notice-panel">
+        <span className="kgs-notice-content" dangerouslySetInnerHTML={{__html:html}} />
+      </div>
       {onAgree && (
-        <button className="btn btn-primary pull-right agree-button" onClick={onAgree}>I agree</button>
+        <button className="btn btn-primary kgs-notice-agree-button" onClick={onAgree}>{agreeLabel}</button>
       )}
-    </span>
+    </div>
   );
 };
