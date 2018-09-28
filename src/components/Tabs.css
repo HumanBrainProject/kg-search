@@ -14,12 +14,16 @@
 *   limitations under the License.
 */
 
-.kgs-fields__tabs {
+.kgs-tabs {
+    width: 100%;
+}
+
+.kgs-tabs .kgs-tabs-buttons {
     display: -ms-flexbox;
     display: flex;
 }
 
-.kgs-fields__tabs > button.kgs-field__tab {
+.kgs-tabs .kgs-tabs-buttons > button.kgs-tabs-button {
     flex: 1;
     margin: 0;
     padding: 12px 8px 8px 8px;
@@ -31,36 +35,36 @@
     font-weight: bold;
 }
 
-.kgs-fields__tabs > button.kgs-field__tab.is-active {
+.kgs-tabs .kgs-tabs-buttons > button.kgs-tabs-button.is-active {
     border-bottom-color: #ED5554;
     color: #ED5554;
 }
 
-.kgs-fields__tabs > button.kgs-field__tab + button.kgs-field__tab {
+.kgs-tabs .kgs-tabs-buttons > button.kgs-tabs-button + button.kgs-tabs-button {
     margin-left: 15px;
 }
 
-.kgs-fields__tab__content {
+.kgs-tabs .kgs-tabs-content {
     padding: 20px 20px 0 20px;
 }
 
-.kgs-fields__tab__content > .kgs-field > .field-label {
+.kgs-tabs .kgs-tabs-content > .kgs-field > .field-label {
     display: none;
 }
 
-.kgs-fields__tab__content > .kgs-field > .kgs-hint {
+.kgs-tabs .kgs-tabs-content > .kgs-field > .kgs-hint {
     display: none;
 }
 
-.kgs-fields__tab__content > .kgs-field > span > ul {
+.kgs-tabs .kgs-tabs-content > .kgs-field > span > ul {
     list-style-type: none;
     padding: 0;
 }
 
-.kgs-fields__tab__content > .kgs-field > span > ul > li + li {
+.kgs-tabs .kgs-tabs-content > .kgs-field > span > ul > li + li {
     margin-top: 20px;
 }
 
-.kgs-fields__tab__content > .kgs-field > span > ul + button[role="link"].kgs-field__viewMore-button {
+.kgs-tabs .kgs-tabs-content > .kgs-field > span > ul + button[role="link"].kgs-field__viewMore-button {
     margin-left: 0;
 }
