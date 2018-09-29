@@ -92,7 +92,7 @@ const Reference = connect(
   (state, props) => ({
     text: props.text?props.text:props.reference,
     reference: props.reference,
-    index: state.search.index
+    index: props.index,
   }),
   dispatch => ({
     onClick: (reference, index) => dispatch(actions.loadHit(reference, index))
