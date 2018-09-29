@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import { connect } from "../helpers/react-redux-like";
+import { connect } from "react-redux";
 import { ShareButtons as Component } from "../components/ShareButtons";
 
 const getShareEmailToLink = (removeHash) => {

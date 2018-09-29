@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { connect } from "../../helpers/react-redux-like";
+import { connect } from "react-redux";
 import "./HitStats.css";
 
 export const HitStatsBase = ({className, show, hitCount, from, to}) => {

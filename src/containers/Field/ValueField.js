@@ -18,7 +18,7 @@ import React, { PureComponent } from "react";
 import showdown from "showdown";
 /*import FilterXSS from 'xss';*/
 import xssFilter from "showdown-xss-filter";
-import { connect } from "../../helpers/react-redux-like";
+import { connect } from "react-redux";
 import * as actions from "../../actions";
 import { termsOfUse } from "../../data/termsOfUse.js";
 import { Icon } from "../../components/Icon";
