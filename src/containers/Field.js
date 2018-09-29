@@ -28,7 +28,7 @@ const FieldBase = (renderUserInteractions = true) => {
   const ObjectFieldComponent = renderUserInteractions?ObjectField:PrintViewObjectField;
   const ValueFieldComponent = renderUserInteractions?ValueField:PrintViewValueField;
 
-  return ({name, data, mapping, index}) => {
+  const Field = ({name, data, mapping, index}) => {
     if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
       return null;
     }
@@ -77,6 +77,8 @@ const FieldBase = (renderUserInteractions = true) => {
       </span>
     );
   };
+
+  return Field;
 };
 
 export const Field = FieldBase(true);
