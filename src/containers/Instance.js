@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { connect } from "../helpers/react-redux-like";
+import { connect } from "react-redux";
 import { Field } from "./Field";
 import { FieldsPanel } from "./FieldsPanel";
 import { FieldsTabs } from "./FieldsTabs";

@@ -15,7 +15,7 @@
 */
 
 import * as reducers from "./reducers";
-import { createStore, combineReducers } from "./helpers/redux-like";
+import { createStore, combineReducers } from "redux";
 
 const app = combineReducers(reducers);
 

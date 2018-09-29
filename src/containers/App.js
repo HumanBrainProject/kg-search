@@ -15,7 +15,7 @@
 */
 
 import React, { PureComponent } from "react";
-import { Provider } from "../helpers/react-redux-like";
+import { Provider } from "react-redux";
 import { store } from "../store";
 import AppManager from "../services/app.manager";
 import { MasterDetail } from "./MasterDetail";

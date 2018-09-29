@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import { connect } from "../../helpers/react-redux-like";
+import { connect } from "react-redux";
 import { Toggle } from "../../components/Toggle";
 import * as actions from "../../actions";
 
