@@ -20,6 +20,7 @@ import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
 import { connect } from "../../helpers/react-redux-like";
 import * as actions from "../../actions";
+import { termsOfUse } from "../../data/termsOfUse.js";
 import { Icon } from "../../components/Icon";
 import "./ValueField.css";
 
@@ -238,15 +239,21 @@ const ValueFieldBase = (renderUserInteractions = true) => {
       };
     }
 
+    /*
     const detailsProps = {
       toggleLabel: mapping.detail_label,
       content: data.detail
+    };
+    */
+    const detailsProps = {
+      toggleLabel: "Terms of use",
+      content: termsOfUse
     };
 
     return (
       <div className="field-value">
         <ValueComponent {...valueProps} />
-        {data.detail && (
+        {(data.detail || data.terms_of_use) && (
           <Details {...detailsProps} />
         )}
       </div>
