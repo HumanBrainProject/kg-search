@@ -14,9 +14,18 @@
 *   limitations under the License.
 */
 
-import * as reducers from "./reducers";
-import { createStore, combineReducers } from "./helpers/redux-like";
+import { connect } from "../helpers/react-redux-like";
+import * as actions from "../actions";
+import { Select } from "../components/Select";
 
-const app = combineReducers(reducers);
-
-export const store = createStore(app);
+export const GroupSelection = connect(
+  (state, props) => ({
+    className: props.className,
+    label: "group",
+    value: state.search.index,
+    list: state.indexes.indexes?state.indexes.indexes:[]
+  }),
+  dispatch => ({
+    onChange: value => dispatch(actions.setIndex(value))
+  })
+)(Select);

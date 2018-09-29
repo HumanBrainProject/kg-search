@@ -14,9 +14,20 @@
 *   limitations under the License.
 */
 
-import * as reducers from "./reducers";
-import { createStore, combineReducers } from "./helpers/redux-like";
+import React from "react";
+import { HitStats } from "./HitStats";
+import { LayoutModeToggle } from "./LayoutModeToggle";
+import { SortingSelector } from "./SortingSelector";
+import "./ResultsHeader.css";
 
-const app = combineReducers(reducers);
-
-export const store = createStore(app);
+export function ResultsHeader() {
+  return (
+    <div className="kgs-result-header">
+      <div>
+        <HitStats/>
+        <LayoutModeToggle className="kgs-layout-mode-toggle"/>
+        <SortingSelector/>
+      </div>
+    </div>
+  );
+}

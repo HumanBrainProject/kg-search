@@ -14,9 +14,12 @@
 *   limitations under the License.
 */
 
-import * as reducers from "./reducers";
-import { createStore, combineReducers } from "./helpers/redux-like";
+import { connect } from "../helpers/react-redux-like";
+import { FetchingPanel as  Component } from "../components/FetchingPanel";
 
-const app = combineReducers(reducers);
-
-export const store = createStore(app);
+export const FetchingPanel = connect(
+  state => ({
+    show: state.fetching.active,
+    message: state.fetching.message
+  })
+)(Component);

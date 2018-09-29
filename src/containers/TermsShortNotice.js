@@ -14,9 +14,18 @@
 *   limitations under the License.
 */
 
-import * as reducers from "./reducers";
-import { createStore, combineReducers } from "./helpers/redux-like";
+import { connect } from "../helpers/react-redux-like";
+import * as actions from "../actions";
+import { Notice } from "../components/Notice";
+import { termsShortNotice } from "../data/termsShortNotice.js";
 
-const app = combineReducers(reducers);
-
-export const store = createStore(app);
+export const TermsShortNotice = connect(
+  (state, props) => ({
+    className: props.className,
+    show: !!state.application.showTermsShortNotice,
+    text: termsShortNotice
+  }),
+  dispatch => ({
+    onAgree: () => dispatch(actions.agreeTermsShortNotice())
+  })
+)(Notice);

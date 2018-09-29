@@ -14,9 +14,21 @@
 *   limitations under the License.
 */
 
-import * as reducers from "./reducers";
-import { createStore, combineReducers } from "./helpers/redux-like";
+import { connect } from "../../helpers/react-redux-like";
+import { Toggle } from "../../components/Toggle";
+import * as actions from "../../actions";
 
-const app = combineReducers(reducers);
-
-export const store = createStore(app);
+export const LayoutModeToggle = connect(
+  (state, props) => ({
+    className: props.className,
+    show: state.search.results && state.search.results.hits && state.search.results.hits.total > 0,
+    value: state.application.gridLayoutMode?"grid":"list",
+    items: [
+      {label: "Grid", value: "grid"},
+      {label: "List", value: "list"}
+    ]
+  }),
+  dispatch => ({
+    onClick: layoutMode => dispatch(actions.setLayoutMode(layoutMode === "grid"))
+  })
+)(Toggle);

@@ -1,0 +1,143 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-list {
+    position: relative;
+    margin: 0 -20px;
+}
+
+@media (min-width: 576px) {
+    .kgs-list {
+        margin: 0;
+    }
+}
+
+.kgs-list > ul {
+    list-style-type: none;
+    display: block;
+    -ms-flex-flow: unset;
+    flex-flow: unset;
+    margin: 0;
+    padding: 0;
+}
+
+.kgs-list.is-list > ul {
+    display: block;
+    -ms-flex-flow: unset;
+    flex-flow: unset;
+}
+
+.kgs-list > div {
+    border-top: 1px solid #777;
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px 0;
+    font-size: 14px;
+    color: #777;
+}
+
+.kgs-list.is-list > div {
+    margin-top: 40px;
+    padding-bottom: 20px;
+}
+
+.kgs-list > ul > li {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    margin: 0;
+    border-bottom: 1px solid black;
+    background-color: white;
+}
+
+.kgs-list > ul > li>button {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 20px 40px 20px 20px;
+    border: 0;
+    background-color: transparent;
+    overflow: hidden;
+}
+
+.kgs-list > ul > li>button .kgs-list__chevron {
+    position: absolute;
+    top: calc(50% - 9px);
+    right: 15px;
+    color: rgb(108, 115, 121);
+}
+
+.kgs-list > ul > li>button:hover .kgs-list__chevron {
+    color: rgb(51, 51, 51);
+}
+
+@media (min-width: 576px) {
+    .kgs-list > ul > li {
+        margin: 10px 0 10px 0;
+        border-bottom-width: 0;
+        -webkit-box-shadow: 2px 2px 4px#cbc9c9;
+        box-shadow: 2px 2px 4px#cbc9c9;
+        transition: box-shadow 0.2s ease-in;
+    }
+
+    .kgs-list > ul > li:hover {
+        -webkit-box-shadow: 3px 3px 6px #8f8a8a;
+        /* #cbc9c9; */
+        box-shadow: 3px 3px 6px #8f8a8a;
+        /* #cbc9c9; */
+    }
+}
+
+@media (min-width: 992px) {
+    .kgs-list > ul {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+        grid-row-gap: 25px;
+        -moz-row-gap: 25px;
+        -webkit-row-gap: 25px;
+        row-gap: 25px;
+        grid-column-gap: 25px;
+        -moz-column-gap: 25px;
+        -webkit-column-gap: 25px;
+        column-gap: 25px;
+        margin: 0 0 25px 0;
+        padding: 0;
+    }
+
+    .kgs-list.is-grid > ul > li {
+        margin: 0;
+    }
+
+    .kgs-list.is-list > ul > li {
+        width: 100%;
+        height: auto;
+        height: unset;
+        margin: 0 0 20px 0;
+    }
+
+    .kgs-list > ul > li {
+        height: 440px;
+        margin: 10px;
+    }
+}
+
+/* Internet Explorer 10 & 11 */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) and (min-width: 992px) {
+    .kgs-list.is-grid > ul > li {
+        margin: 10px 20px 10px 0;
+    }
+}

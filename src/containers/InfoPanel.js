@@ -14,9 +14,15 @@
 *   limitations under the License.
 */
 
-import * as reducers from "./reducers";
-import { createStore, combineReducers } from "./helpers/redux-like";
+import { connect } from "../helpers/react-redux-like";
+import * as actions from "../actions";
+import { InfoPanel as  Component } from "../components/InfoPanel";
 
-const app = combineReducers(reducers);
-
-export const store = createStore(app);
+export const InfoPanel = connect(
+  state => ({
+    text: state.application.info
+  }),
+  dispatch => ({
+    onClose: () => dispatch(actions.setInfo())
+  })
+)(Component);

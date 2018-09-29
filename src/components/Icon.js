@@ -14,9 +14,20 @@
 *   limitations under the License.
 */
 
-import * as reducers from "./reducers";
-import { createStore, combineReducers } from "./helpers/redux-like";
+import React from "react";
 
-const app = combineReducers(reducers);
-
-export const store = createStore(app);
+export const Icon = ({className, title, url, inline}) => {
+  if (url) {
+    return (
+      <img className={className?className:null} src={url} alt={title} width="100%" height="100%" />
+    );
+  }
+  if (inline) {
+    return (
+      <div className={className?className:null} dangerouslySetInnerHTML={{__html: inline}} width="100%" height="100%" />
+    );
+  }
+  return (
+    <i className={`fa fa-tag ${className?className:null}`} />
+  );
+};

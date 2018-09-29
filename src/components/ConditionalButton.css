@@ -14,9 +14,19 @@
 *   limitations under the License.
 */
 
-import * as reducers from "./reducers";
-import { createStore, combineReducers } from "./helpers/redux-like";
+button.kgs-conditional-button {    
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    color: #30b0e0;
+    font-size: 20px;
+    white-space: nowrap;
+    outline: none;
+}
 
-const app = combineReducers(reducers);
-
-export const store = createStore(app);
+button.kgs-conditional-button:hover,
+button.kgs-conditional-button:focus {
+    color:#0088cc;
+}

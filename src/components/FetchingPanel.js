@@ -14,9 +14,21 @@
 *   limitations under the License.
 */
 
-import * as reducers from "./reducers";
-import { createStore, combineReducers } from "./helpers/redux-like";
+import React from "react";
+import "./FetchingPanel.css";
 
-const app = combineReducers(reducers);
-
-export const store = createStore(app);
+export const FetchingPanel = ({show, message}) => {
+  if (!show) {
+    return null;
+  }
+  return (
+    <div className="kgs-fetching-container" >
+      <div className="kgs-fetching-panel">
+        <span className="kgs-spinner">
+          <div className="kgs-spinner-logo"></div>
+        </span>
+        <span className="kgs-spinner-label">{message}</span>
+      </div>
+    </div>
+  );
+};

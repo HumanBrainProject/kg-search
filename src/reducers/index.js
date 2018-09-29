@@ -14,9 +14,12 @@
 *   limitations under the License.
 */
 
-import * as reducers from "./reducers";
-import { createStore, combineReducers } from "./helpers/redux-like";
-
-const app = combineReducers(reducers);
-
-export const store = createStore(app);
+export { reducer as application } from "./application.reducer";
+export { reducer as configuration } from "./configuration.reducer";
+export { reducer as definition } from "./definition.reducer";
+export { reducer as indexes } from "./indexes.reducer";
+export { reducer as search } from "./search.reducer";
+export { reducer as hits } from "./hits.reducer";
+export { reducer as error } from "./error.reducer";
+export { reducer as fetching } from "./fetching.reducer";
+export { reducer as auth } from "./auth.reducer";

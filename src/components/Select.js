@@ -14,9 +14,20 @@
 *   limitations under the License.
 */
 
-import * as reducers from "./reducers";
-import { createStore, combineReducers } from "./helpers/redux-like";
+import React from "react";
+import "./Select.css";
 
-const app = combineReducers(reducers);
-
-export const store = createStore(app);
+export function Select({className, label, value, list, onChange}) {
+  if (!Array.isArray(list) || list.length <= 1) {
+    return null;
+  }
+  const classNames = ["kgs-select", className].join(" ");
+  return (
+    <div className={classNames}>
+      {label?<div>{label}</div>:null}
+      <select onChange={e => onChange(e.target.value || null)} value={value || ""}>
+        {list.map(e => <option value={e.value} key={e.value}>{e.label}</option>)}
+      </select>
+    </div>
+  );
+}

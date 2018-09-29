@@ -1,0 +1,103 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-masterView {
+    padding: 0 20px;
+    background: #f4f4f4;
+}
+
+@media (min-width: 576px) {
+    .kgs-masterView {
+        padding: 0 50px;
+    }
+}
+
+.kgs-masterView .kgs-masterView__panel {
+    display: block;
+    flex-direction: column;
+    min-width: 100%;
+}
+
+@media (min-width: 576px) {
+    min-width: 355px;
+}
+
+body[class*="mobile"] .kgs-masterView .kgs-masterView__panel {
+    margin-top: 30px;
+}
+
+.kgs-masterView .kgs-masterView__main {
+    width: 100%;
+}
+
+@media (min-width: 992px) {
+    .kgs-masterView .kgs-masterView__panel {
+        display: -ms-flexbox;
+        display: flex;
+        flex-direction: row;
+        min-height: calc(100vh - 358px);
+    }
+
+    .kgs-masterView .kgs-masterView__main {
+        width: unset;
+        flex: 1;
+    }
+}
+
+.kgs-masterView__terms-short-notice {
+    margin: 30px 0;
+}
+
+@media (min-width: 992px) and (min-height: 900px) {
+    .kgs-masterView__terms-short-notice {
+        display: none;
+    }
+}
+
+.kgs-masterView .kgs-hit {
+    height: 100%;
+    overflow: hidden;
+}
+
+@media (min-width: 992px) {
+    .kgs-masterView .kgs-list.is-list .kgs-hit {
+        height: auto;
+        height: unset;
+        overflow: auto;
+        overflow: unset;
+    }
+}
+
+.kgs-masterView .kgs-hit .kgs-hit__ribbon {
+    display: none;
+}
+
+@media (min-width: 1600px) { /* 992 without left filters panel */ 
+    .kgs-masterView .kgs-list.is-list .kgs-hit .kgs-hit__ribbon {
+        display: block;
+    }
+}
+
+@media (min-width: 1600px) {
+    .kgs-masterView .kgs-list.is-list [data-type] .kgs-hit .kgs-field__protocol{
+        flex-grow:1;
+        max-width: 50%;
+    }
+    .kgs-masterView .kgs-list.is-list [data-type] .kgs-hit .kgs-field__methods{
+        flex-grow:1;
+        max-width: 50%;
+    }
+}

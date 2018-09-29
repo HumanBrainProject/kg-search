@@ -1,0 +1,263 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-field .field-value {
+    display: inline-block;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    /* line-height: 1.25; */
+    word-break: break-word;
+    vertical-align: top;
+}
+
+.kgs-field p.field-value {
+    margin: 0;
+}
+
+.kgs-field .field-value .field-markdown h1,
+.kgs-field .field-value .field-markdown h2,
+.kgs-field .field-value .field-markdown h3 {
+    margin-top: 10px;
+}
+
+.kgs-field .field-value .field-markdown blockquote {
+    font-size: unset;
+}
+
+.kgs-field .field-value .field-markdown>p {
+    margin: 0;
+}
+
+.kgs-field .field-value .field-markdown>p+p {
+    margin-top: 10px;
+}
+
+.kgs-field .field-value button[role="link"] {
+    -webkit-appearance: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    text-decoration: underline;
+    color: #337ab7;
+    text-align: left;
+}
+
+.kgs-field .field-value button[role="link"]:hover {
+    color: #23527c;
+}
+
+.kgs-field .field-value a,
+.kgs-field .field-value a:visited {
+    text-decoration: underline;
+    color: #337ab7;
+}
+
+.kgs-field .field-value a:focus,
+.kgs-field .field-value a:hover {
+    text-decoration: underline;
+    color: #23527c;
+}
+
+.kgs-field .kgs-hint {
+    margin-right: 10px;
+    color: #333;
+}
+
+.kgs-field__highlights{
+    font-size:12px;
+}
+.kgs-field__highlights .field-label {
+    font-size:12px;
+}
+
+.field-value .field-details button.toggle {
+    background-color: transparent;
+    border: 0;
+    margin-left: 6px;
+    color: #f56722;
+    -webkit-transition: color 0.2s ease-in;
+    -o-transition: color 0.2s ease-in;
+    transition: color 0.2s ease-in;
+    /* font-size: 14px; */
+}
+
+.field-value .field-details button.toggle:hover{
+    -webkit-box-shadow: 3px 3px 6px #cbc9c9;
+    box-shadow: 3px 3px 6px #cbc9c9;
+}
+
+.field-value .field-details button.toggle.in {
+    color: black;
+}
+
+.field-value .field-details button.toggle i {
+    margin-right: 3px;
+    -webkit-transition: transform 0.2s ease-in;
+    -o-transition: transform 0.2s ease-in;
+    transition: transform 0.2s ease-in;
+    font: normal normal normal 19px/1 FontAwesome;
+}
+
+.field-value .field-details button.toggle.in i {
+    transform: rotateX(180deg);
+}
+
+.field-value .field-details button.toggle span {
+    display: inline-block;
+    font-size: 11px;
+    vertical-align: middle;
+    transform: translateY(-2px);
+}
+
+.field-value .field-details .collapsible {
+    position: relative;
+    max-height: 0;
+    -webkit-transition: max-height 0.5s ease-in-out;
+    -o-transition: max-height 0.5s ease-in-out;
+    transition: max-height 0.5s ease-in-out;
+    overflow: hidden;
+}
+
+.field-value .field-details button.toggle.in + .collapsible {
+    max-height: 2500px;
+}
+
+@media (min-width: 576px) {
+    .field-value .field-details button.toggle.in + .collapsible {
+        max-height: 1000px;
+    }
+}
+
+.field-value .field-details .field-details__panel {
+    position: relative;
+    margin: 2px 0 6px 0;
+    padding: 10px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    background-color: #f8f9fa;
+    border: 1px solid #a2a9b1;
+    border-radius: 10px;
+    font-family: Verdana,sans-serif;
+    font-size: 11px;
+}
+
+.field-value .field-details button.field-details__close-button {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    padding: 8px;
+    background-color: transparent;
+    border: 0;
+    font-size: 8px;
+    cursor: pointer;
+    color: #6c7379;
+    -webkit-transition: color 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
+    -o-transition: box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in, color 0.2s ease-in, box-shadow 0.2s ease-in;
+}
+
+.field-value .field-details button.field-details__close-button:hover{
+    -webkit-box-shadow: 3px 3px 6px #cbc9c9;
+    box-shadow: 3px 3px 6px #cbc9c9;
+    color: #333333;
+}
+
+.field-value .field-text.collapsible {
+    display: inline-block;
+    position: relative;
+}
+
+.field-value .field-text.collapsible .collapse {
+    display: inline-block;
+    overflow: hidden;
+    transition: all 0.5s ease-in-out;
+    max-height: 220px;
+}
+
+.field-value .field-text.collapsible .collapse.in {
+    max-height: 10000px;
+}
+
+.field-value .field-text.collapsible button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    text-decoration: none;
+    color: #08c;
+    box-shadow: none;    
+    transform: translateY(-5px);
+}
+
+.field-value .field-text.collapsible button:hover,
+.field-value .field-text.collapsible button:active {
+    color: #08c;
+}
+
+/**********************************************************************************************************************/
+
+[data-type] .kgs-field__type .field-value {
+    text-transform: uppercase;
+    word-break: keep-all;
+    white-space: nowrap;
+    font-size: 18px;
+}
+
+.field-value__tag{
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #dddee0;
+    padding: 6px 10px 6px 10px;
+    margin:0 8px 8px 0;
+}
+
+.field-value__tag div svg {
+    display: inline-flex;
+    vertical-align: middle;
+    width:20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+.kgs-field.kgs-field__icon {
+    width: 35px;
+    height: 35px;
+    max-width: 60px;
+}
+
+.kgs-field__icon>i {
+    font-size: 50px;
+    color: #707070;
+    padding: 5px 9px;
+}
+
+@media screen and (min-width:0\0) {  
+    /* IE9 and IE10 rule sets go here */  
+    .kgs-field__icon>div {
+        margin-top: -46px;
+    }
+}
+
+.kgs-field__icon>div>svg {
+    width:35px;
+    height:35px;
+}
+
+
+/**********************************************************************************************************************/

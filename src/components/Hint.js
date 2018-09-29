@@ -14,9 +14,21 @@
 *   limitations under the License.
 */
 
-import * as reducers from "./reducers";
-import { createStore, combineReducers } from "./helpers/redux-like";
+import React from "react";
+import ReactTooltip from "react-tooltip";
 
-const app = combineReducers(reducers);
-
-export const store = createStore(app);
+export const Hint = ({className, show, value, label}) => {
+  if (!show) {
+    return null;
+  }
+  const classNames = ["kgs-hint", className].join(" ");
+  const hint_id = "kgs-hint_content-" + encodeURI(label);
+  return (
+    <span className={classNames}>
+      <i className="fa fa-info-circle" data-tip data-for={hint_id} aria-hidden="true"></i>
+      <ReactTooltip id={hint_id} place="right" type="dark" effect="solid">
+        <span>{value}</span>
+      </ReactTooltip>
+    </span>
+  );
+};

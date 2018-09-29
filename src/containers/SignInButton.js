@@ -14,9 +14,19 @@
 *   limitations under the License.
 */
 
-import * as reducers from "./reducers";
-import { createStore, combineReducers } from "./helpers/redux-like";
+import { connect } from "../helpers/react-redux-like";
+import * as actions from "../actions";
+import { ConditionalButton } from "../components/ConditionalButton";
 
-const app = combineReducers(reducers);
-
-export const store = createStore(app);
+export const SignInButton = connect(
+  (state, props) => ({
+    className: props.className,
+    test: state.auth.isAuthenticated,
+    onLabel: props.signOffLabel,
+    offLabel: props.signInLabel
+  }),
+  dispatch => ({
+    onClick: () => dispatch(actions.logout()),
+    offClick: () => dispatch(actions.requestAuthentication())
+  })
+)(ConditionalButton);

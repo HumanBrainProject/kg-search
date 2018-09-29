@@ -14,9 +14,14 @@
 *   limitations under the License.
 */
 
-import * as reducers from "./reducers";
-import { createStore, combineReducers } from "./helpers/redux-like";
+import React from "react";
+import "./ConditionalButton.css";
 
-const app = combineReducers(reducers);
-
-export const store = createStore(app);
+export const ConditionalButton = ({className, test, onLabel, offLabel, onClick, offClick}) => {
+  const classNames = ["kgs-conditional-button", className].join(" ");
+  const label = test?onLabel:offLabel;
+  const handleClick = test?onClick:offClick;
+  return (
+    <button className={classNames} onClick={handleClick}>{label}</button>
+  );
+};

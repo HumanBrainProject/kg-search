@@ -14,9 +14,12 @@
 *   limitations under the License.
 */
 
-import * as reducers from "./reducers";
-import { createStore, combineReducers } from "./helpers/redux-like";
+import React from "react";
+import "./EmailToLink.css";
 
-const app = combineReducers(reducers);
-
-export const store = createStore(app);
+export const EmailToLink = ({className, title = "Send search link by email", text, icon = "fa fa-envelope-o", link}) => {
+  const classNames = ["kgs-email-link", className].join(" ");
+  return (
+    <a className={classNames} href={link} title={title}><i className={icon}></i><span>{text}</span></a>
+  );
+};

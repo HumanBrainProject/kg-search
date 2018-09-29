@@ -14,9 +14,18 @@
 *   limitations under the License.
 */
 
-import * as reducers from "./reducers";
-import { createStore, combineReducers } from "./helpers/redux-like";
+import React from "react";
 
-const app = combineReducers(reducers);
-
-export const store = createStore(app);
+export function FieldsPanel({className, fields, fieldComponent}) {
+  if (!fields || !fields.length) {
+    return null;
+  }
+  const FieldComponent = fieldComponent;
+  return (
+    <div className={className?className:null}>
+      {fields && fields.map(({name, data, mapping, index}) => (
+        <FieldComponent key={name} name={name} data={data} mapping={mapping} index={index} />
+      ))}
+    </div>
+  );
+}
