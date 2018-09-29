@@ -16,7 +16,7 @@
 
 import React from "react";
 import { SearchkitComponent } from "searchkit";
-import { connect } from "../../store";
+import { connect } from "../../helpers/react-redux-like";
 import { Facet } from "./Facet";
 import "./FiltersPanel.css";
 

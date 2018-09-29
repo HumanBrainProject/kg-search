@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { connect } from "../../store";
+import { connect } from "../../helpers/react-redux-like";
 import { Select, SortingSelector as Component} from "searchkit";
 import "./SortingSelector.css";
 

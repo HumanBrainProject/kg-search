@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { connect } from "../../store";
+import { connect } from "../../helpers/react-redux-like";
 import { PrintViewField } from "../Field";
 import { HitRibbon } from "./HitRibbon";
 import { HighlightsField} from "./HighlightsField";

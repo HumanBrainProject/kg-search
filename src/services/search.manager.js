@@ -90,6 +90,7 @@ export default class SearchManager {
       return Promise.reject(error);
     });
 
+    //const queryProcessorFunction = SearchKitHelpers.getQueryProcessor(store, this.searchkit, queryTweaking);
     const queryProcessorFunction = SearchKitHelpers.getQueryProcessor(this.searchkit, queryTweaking);
     this.searchkit.setQueryProcessor(queryProcessorFunction);
   }

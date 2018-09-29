@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { connect } from "../store";
+import { connect } from "../helpers/react-redux-like";
 import { withTabKeyNavigation } from "../helpers/withTabKeyNavigation";
 import { SearchPanel } from "./MasterView/SearchPanel";
 import { ShapesFilterPanel } from "./MasterView/ShapesFilterPanel";

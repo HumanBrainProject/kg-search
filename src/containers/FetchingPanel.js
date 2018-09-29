@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import { connect } from "../store";
+import { connect } from "../helpers/react-redux-like";
 import { FetchingPanel as  Component } from "../components/FetchingPanel";
 
 export const FetchingPanel = connect(

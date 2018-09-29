@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import { connect } from "../store";
+import { connect } from "../helpers/react-redux-like";
 import * as actions from "../actions";
 import { Notice } from "../components/Notice";
 import { termsShortNotice } from "../data/termsShortNotice.js";

@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { connect } from "../store";
+import { connect } from "../helpers/react-redux-like";
 import { withTabKeyNavigation } from "../helpers/withTabKeyNavigation";
 import { SearchkitProvider } from "searchkit";
 import { MasterView } from "./MasterView";

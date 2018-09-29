@@ -15,7 +15,7 @@
 */
 
 import { Hits } from "searchkit";
-import { connect } from "../../store";
+import { connect } from "../../helpers/react-redux-like";
 import { HitsPanel } from "./HitsPanel";
 
 export const ResultsPanel = connect(

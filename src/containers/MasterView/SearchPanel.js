@@ -16,7 +16,7 @@
 
 import React from "react";
 import { SearchBox, QueryString } from "searchkit";
-import { connect } from "../../store";
+import { connect } from "../../helpers/react-redux-like";
 import * as actions from "../../actions";
 import { help } from "../../data/help.js";
 import { withFloatingScrollEventsSubscription} from "../../helpers/withFloatingScrollEventsSubscription";

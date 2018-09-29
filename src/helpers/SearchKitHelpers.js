@@ -15,7 +15,6 @@
 */
 
 import * as parser from "lucene-query-parser";
-//import { store } from "../store";
 
 export class SearchKitHelpers {
   /*# sanitize a search query for Lucene. Useful if the original
@@ -173,6 +172,7 @@ export class SearchKitHelpers {
     return str;
   }
   static getQueryProcessor(searchkit, queryTweaking) {
+  //static getQueryProcessor(store, searchkit, queryTweaking) {
 
     /*
         function buildTypeBoostsQuery() {

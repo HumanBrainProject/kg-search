@@ -15,17 +15,14 @@
 */
 
 import React, { PureComponent } from "react";
-import * as reducers from "../reducers";
-import { createStore, combineReducers, Provider } from "../store";
+import { Provider } from "../helpers/react-redux-like";
+import { store } from "../store";
 import AppManager from "../services/app.manager";
 import { MasterDetail } from "./MasterDetail";
 import { FetchingPanel } from "./FetchingPanel";
 import { ErrorPanel } from "./ErrorPanel";
 import { InfoPanel } from "./InfoPanel";
 import "./App.css";
-
-export const app = combineReducers(reducers);
-const store = createStore(app);
 
 export default class App extends PureComponent {
   constructor(props) {

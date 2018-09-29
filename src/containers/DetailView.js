@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import { connect } from "../store";
+import { connect } from "../helpers/react-redux-like";
 import * as actions from "../actions";
 import { Carrousel } from "../components/Carrousel";
 import { ShareButtons } from "./ShareButtons";

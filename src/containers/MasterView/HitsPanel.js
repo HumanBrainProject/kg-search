@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { connect } from "../../store";
+import { connect } from "../../helpers/react-redux-like";
 import * as actions from "../../actions";
 import { List } from "../../components/List";
 import { Hit } from "./Hit";
