@@ -14,7 +14,6 @@
 *   limitations under the License.
 */
 
-import { store } from "../store";
 import * as actions from "../actions";
 import API from "./API";
 import { SearchkitManager } from "searchkit";
@@ -22,12 +21,16 @@ import { SearchKitHelpers } from "../helpers/SearchKitHelpers";
 import { generateKey} from "../helpers/OIDCHelpers";
 
 export default class SearchManager {
-  constructor(){
+  constructor(store){
     this.searchkit = null;
+    this.store = store;
     store.subscribe(() => {this.handleStateChange();});
     this.fromParamRequest = 0;
   }
   initializeSearchKit({searchApiHost="", timeout=5000, queryTweaking, searchOnLoad}) {
+
+    const store = this.store;
+
     this.searchkit = new SearchkitManager(API.endpoints.search(searchApiHost), {
       multipleSearchers:false,
       timeout: timeout,
@@ -35,6 +38,7 @@ export default class SearchManager {
     });
 
     this.searchkit.transport.axios.interceptors.request.use(config => {
+      const store = this.store;
       const header = config.headers[config.method];
       const state = store.getState();
       const nonce = generateKey();
@@ -51,6 +55,7 @@ export default class SearchManager {
     }, err => {
       return Promise.reject(err);
     });
+
     this.searchkit.transport.axios.interceptors.response.use(response => {
       //const {config, data, headers, request, status, statusText} = response;
       const {data, headers} = response;
@@ -89,6 +94,7 @@ export default class SearchManager {
     this.searchkit.setQueryProcessor(queryProcessorFunction);
   }
   handleStateChange = () => {
+    const store = this.store;
     const state = store.getState();
 
     if (state.configuration.isReady && !state.search.isReady) {
@@ -111,6 +117,7 @@ export default class SearchManager {
     }
   }
   loadDefinition() {
+    const store = this.store;
     const state = store.getState();
     if (!state.definition.isReady && !state.definition.isLoading) {
       store.dispatch(actions.loadDefinitionRequest());
@@ -126,6 +133,7 @@ export default class SearchManager {
     }
   }
   loadIndexes() {
+    const store = this.store;
     const state = store.getState();
     if (!state.indexes.isReady && !state.indexes.isLoading) {
       store.dispatch(actions.loadIndexesRequest());
@@ -152,6 +160,7 @@ export default class SearchManager {
   }
   loadInstance(id) {
     //window.console.debug("SearchManager loadInstance: " + id);
+    const store = this.store;
     const state = store.getState();
     if (!state.hits.isLoading) {
       store.dispatch(actions.loadHitRequest());

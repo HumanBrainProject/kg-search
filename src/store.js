@@ -15,7 +15,6 @@
 */
 
 import React, { PureComponent } from "react";
-import { rootReducer } from "./reducer/root.reducer";
 
 const isNativeObject = obj => obj !== null && typeof obj === "object" && (!obj.constructor || (obj.constructor && (!obj.constructor.name || obj.constructor.name === "Object")));
 
@@ -44,7 +43,7 @@ const hash = (obj) => {
   return obj.toString();
 };
 
-const createStore = reducer => {
+export const createStore = reducer => {
 
   let state = reducer(null, {});
   let fingerprint = hash(state);
@@ -99,10 +98,35 @@ const createStore = reducer => {
   return store;
 };
 
-export const store = createStore(rootReducer);
+export const combineReducers = reducers => {
+  return (state, action) => {
+    /*
+    if (action.type) {
+      window.console.debug("Reducer action: " + action.type);
+    }
+    */
+    let nextState = {};
+    Object.keys(reducers)
+      .map(k => {
+        return {p: k, reducer: reducers[k]};
+      })
+      .forEach(({p, reducer}) => {
+        nextState[p] = reducer(state?state[p]:undefined, action);
+      });
+    return nextState;
+  };
+};
+
+const StoreContext = React.createContext('myStore');
+
+export const Provider = ({store, children}) => (
+  <StoreContext.Provider value={store}>
+    {children}
+  </StoreContext.Provider>
+);
 
 export const connect = (mapStateToProps, mapDispatchToProps) => WrappedComponent => {
-  class withStoreState extends PureComponent {
+  class WithStore extends PureComponent {
     constructor(props) {
       super(props);
       this.shouldHandleChange = false;
@@ -112,9 +136,11 @@ export const connect = (mapStateToProps, mapDispatchToProps) => WrappedComponent
         props: nextProps
       };
       this.fingerprint = hash(nextProps);
+      const { store } = props;
       this.dispatchProps = typeof mapDispatchToProps === "function" && mapDispatchToProps(store.dispatch);
     }
     componentDidMount() {
+      const { store } = this.props;
       this.shouldHandleChange = true;
       this.unsubscribe = store.subscribe(() => {this.handleChange();});
       this.handleChange();
@@ -127,6 +153,7 @@ export const connect = (mapStateToProps, mapDispatchToProps) => WrappedComponent
       this.handleChange();
     }
     getMapStateToProps(props) {
+      const { store } = this.props;
       const storeState = store.getState();
       const data = typeof mapStateToProps === "function" && mapStateToProps(storeState, props);
       return data;
@@ -148,5 +175,14 @@ export const connect = (mapStateToProps, mapDispatchToProps) => WrappedComponent
       return <WrappedComponent {...this.state.props} {...this.dispatchProps} />;
     }
   }
-  return withStoreState;
+
+  const ConnectedComponent = props => (
+    <StoreContext.Consumer>
+      {store => (
+        <WithStore store={store} {...props} />
+      )}
+    </StoreContext.Consumer>
+  );
+
+  return ConnectedComponent;
 };

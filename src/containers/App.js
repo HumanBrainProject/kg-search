@@ -15,6 +15,8 @@
 */
 
 import React, { PureComponent } from "react";
+import * as reducers from "../reducers";
+import { createStore, combineReducers, Provider } from "../store";
 import AppManager from "../services/app.manager";
 import { MasterDetail } from "./MasterDetail";
 import { FetchingPanel } from "./FetchingPanel";
@@ -22,10 +24,13 @@ import { ErrorPanel } from "./ErrorPanel";
 import { InfoPanel } from "./InfoPanel";
 import "./App.css";
 
+export const app = combineReducers(reducers);
+const store = createStore(app);
+
 export default class App extends PureComponent {
   constructor(props) {
     super(props);
-    this.manager = new AppManager(props.config || {});
+    this.manager = new AppManager(store, props.config || {});
   }
   componentDidMount() {
     this.manager.start();
@@ -36,12 +41,14 @@ export default class App extends PureComponent {
   render() {
     //window.console.debug("App rendering...");
     return (
-      <div className="kgs-app">
-        <MasterDetail manager={this.manager} />
-        <FetchingPanel/>
-        <ErrorPanel/>
-        <InfoPanel/>
-      </div>
+      <Provider store={store}>
+        <div className="kgs-app">
+          <MasterDetail manager={this.manager} />
+          <FetchingPanel/>
+          <ErrorPanel/>
+          <InfoPanel/>
+        </div>
+      </Provider>
     );
   }
 }

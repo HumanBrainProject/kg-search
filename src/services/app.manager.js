@@ -14,14 +14,14 @@
 *   limitations under the License.
 */
 
-import { store } from "../store";
 import * as actions from "../actions";
 import SearchManager from "./search.manager";
 import { generateKey, getAuthUrl } from "../helpers/OIDCHelpers";
 
 export default class AppManager {
-  constructor(options) {
-    this.search = new SearchManager();
+  constructor(store, options) {
+    this.store = store;
+    this.search = new SearchManager(store);
     this.isStarted = false;
     this.initialHitReference = null;
     this.hitIssuer = null;
@@ -52,6 +52,7 @@ export default class AppManager {
   start(options) {
     if (!this.isStarted) {
       this.isStarted = true;
+      const store = this.store;
       this.unsubscribe = store.subscribe(() => {this.handleStateChange();});
       window.addEventListener("hashchange", this.catchBrowserNavigationChange.bind(this), false);
       store.dispatch(actions.initializeConfig(options));
@@ -65,6 +66,7 @@ export default class AppManager {
     return this.search && this.search.searchkit;
   }
   handleStateChange = () => {
+    const store = this.store;
     const state = store.getState();
 
     if (state.auth.authenticate) {
@@ -181,6 +183,7 @@ export default class AppManager {
   }
   setCurrentHitFromBrowserLocation() {
     if (this.isStarted) {
+      const store = this.store;
       store.dispatch(actions.setCurrentHitFromBrowserLocation());
     }
   }
