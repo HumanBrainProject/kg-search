@@ -121,8 +121,8 @@ export default class SearchManager {
     const store = this.store;
     const state = store.getState();
     if (!state.definition.isReady && !state.definition.isLoading) {
-      store.dispatch(actions.loadDefinitionRequest());
       setTimeout(() => {
+        store.dispatch(actions.loadDefinitionRequest());
         API.fetch(API.endpoints.definition(state.configuration.searchApiHost))
           .then(definition => {
             store.dispatch(actions.loadDefinitionSuccess(definition));
@@ -137,8 +137,8 @@ export default class SearchManager {
     const store = this.store;
     const state = store.getState();
     if (!state.indexes.isReady && !state.indexes.isLoading) {
-      store.dispatch(actions.loadIndexesRequest());
       setTimeout(() => {
+        store.dispatch(actions.loadIndexesRequest());
         if (state.auth.accessToken) {
           const options = {
             method: "get",
@@ -164,8 +164,8 @@ export default class SearchManager {
     const store = this.store;
     const state = store.getState();
     if (!state.instances.isLoading) {
-      store.dispatch(actions.loadInstanceRequest());
       setTimeout(() => {
+        store.dispatch(actions.loadInstanceRequest());
         let options = null;
         if (state.auth.accessToken) {
           options = {
