@@ -38,7 +38,7 @@ import play.api.libs.json.Reads._
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.mvc._
-import editor.services.{InstanceService, ReleaseService}
+import editor.services.{EditorService, ReleaseService}
 import nexus.services.NexusService
 import editor.services.ArangoQueryService
 import common.services.ConfigurationService
@@ -52,7 +52,7 @@ import scala.util.{Failure, Success}
 class NexusEditorController @Inject()(
                                        cc: ControllerComponents,
                                        authenticatedUserAction: AuthenticatedUserAction,
-                                       instanceService: InstanceService,
+                                       editorService: EditorService,
                                        oIDCAuthService: OIDCAuthService,
                                        config: ConfigurationService,
                                        nexusService: NexusService,
@@ -98,7 +98,7 @@ class NexusEditorController @Inject()(
     val token = request.headers.get("Authorization").getOrElse("")
     val nexusPath = NexusPath(org, domain, schema, version)
     //Check if instance is from Reconciled space
-    instanceService.retrieveInstance(nexusPath, id, token).map[Result] {
+    editorService.retrieveInstance(nexusPath, id, token).map[Result] {
       case Left(r) =>
         logger.error(s"Error: Could not fetch instance : ${nexusPath.toString()}/$id - ${r.body}")
         ResponseHelper.errorResultWithBackLink(r.status, r.headers, r.body, nexusPath, config.reconciledPrefix)
@@ -119,7 +119,7 @@ class NexusEditorController @Inject()(
     Action.async { implicit request =>
     val token = request.headers.get("Authorization").getOrElse("")
     val nexusPath = NexusPath(org, domain, datatype, version)
-    instanceService.retrieveInstance(nexusPath, id, token).flatMap[Result] {
+    editorService.retrieveInstance(nexusPath, id, token).flatMap[Result] {
       case Left(res) =>
         Future.successful(
           ResponseHelper.forwardResultResponse(res)
@@ -143,7 +143,7 @@ class NexusEditorController @Inject()(
                                    ): Action[AnyContent] = Action.async { implicit request =>
     val token = request.headers.get("Authorization").getOrElse("")
     val nexusPath = NexusPath(org, domain, schema, version)
-    instanceService.retrieveInstance(nexusPath, id, token, List( ("rev", revision.toString) ) ).map {
+    editorService.retrieveInstance(nexusPath, id, token, List( ("rev", revision.toString) ) ).map {
       case Right(instance) =>
         val json = instance.content
         val nexusId = NexusInstance.getIdForEditor((json \ "http://hbp.eu/reconciled#original_parent" \ "@id").as[String], config.reconciledPrefix)
@@ -178,27 +178,22 @@ class NexusEditorController @Inject()(
 
     val editorSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.editorPrefix)
     val reconciledSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.reconciledPrefix)
-    reconciledTokenFut.flatMap { reconciledToken =>
+    reconciledTokenFut.flatMap { techToken =>
       val originalInstanceCleaned = originalInstance.removeNexusFields()
-      val originLink = (originalInstance.content \ "@id").as[String]
       val originalInstanceWithAllFields =  InstanceHelper.addDefaultFields( originalInstanceCleaned,instancePath, FormHelper.formRegistry)
       val updateFromUI = Json.parse(FormHelper.unescapeSlash(modificationFromUser.toString())).as[JsObject] - "id"
       val updatedInstance = InstanceHelper.buildInstanceFromForm(originalInstanceCleaned, updateFromUI, config.nexusEndpoint)
 
-      val (
-        updateToBeStoredInManual,
-        preppedEntityForStorage
-        ) = NexusEditorController.preppingEntitiesForSave(
+      val updateToBeStoredInManual = NexusEditorController.preppingEntitiesForSave(
         config.nexusEndpoint,
         updatedInstance,
         originalInstanceWithAllFields,
         originalInstanceWithAllFields,
         originalInstanceCleaned.nexusPath,
-        originLink,
         request.user,
         config.reconciledPrefix,
         config.editorPrefix,
-        instanceService,
+        editorService,
         token
       )
       val consolidatedInstance = ReconciledInstance(
@@ -206,38 +201,31 @@ class NexusEditorController @Inject()(
       )
       logger.debug(s"Consolidated instance $consolidatedInstance")
 
-      val createDomains = instanceService.createDomainsAndSchemasSync(editorSpace, reconciledSpace, originalInstance.nexusPath, token, reconciledToken)
-      val manualRes = createDomains.flatMap { res =>
-        instanceService.upsertUpdateInManualSpace(editorSpace, None,  request.user, originalInstance.nexusPath, preppedEntityForStorage, token)
-      }
-      manualRes.flatMap { res =>
-        logger.debug(s"Creation of manual update ${res.body}")
-        res.status match {
-          case status if status < 300 =>
-            val newManualUpdateId = (res.json \"@id").as[String]
-            val reconciledRes: Future[WSResponse] = instanceService.insertReconciledInstance(
-                    reconciledSpace,
-                    editorSpace,
-                    originalInstance,
-                    preppedEntityForStorage,
-                    newManualUpdateId,
-                    consolidatedInstance,
-                    reconciledToken,
-                    request.user
-                  )
-            reconciledRes.map { re =>
-              logger.debug(s"Creation of reconciled update ${re.body}")
-              re.status match {
-                case recStatus if recStatus < 300 =>
-                   val id = (re.json \ "@id").as[JsString]
-                  Ok(NavigationHelper.resultWithBackLink(updatedInstance.formatFromNexusToOption(config.reconciledPrefix), instancePath, config.reconciledPrefix))
-                case _ =>
-                  ResponseHelper.errorResultWithBackLink(re.status, re.headers, re.body, instancePath, config.reconciledPrefix)
-              }
-            }
-          case _ =>
-            Future.successful(ResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, config.reconciledPrefix) )
-        }
+      val createDomains = editorService.createDomainsAndSchemasSync(editorSpace, reconciledSpace, originalInstance.nexusPath, token, techToken)
+
+      createDomains.flatMap {
+        case (true, true) =>
+          editorService.saveEditorUpdate(
+            editorSpace,
+            reconciledSpace,
+            request.user,
+            updateToBeStoredInManual,
+            consolidatedInstance,
+            originalInstance,
+            true,
+            None,
+            token,
+            techToken
+          ).map {
+            case Left(res) =>
+              ResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, config.reconciledPrefix)
+            case Right(instance) =>
+              Ok(NavigationHelper.resultWithBackLink(instance.formatFromNexusToOption(config.reconciledPrefix), instancePath, config.reconciledPrefix))
+          }
+        case _ =>
+          Future {
+            InternalServerError(s"An error occurred while creating a schema for the instance - ${originalInstance.id()}")
+          }
       }
     }
   }
@@ -257,17 +245,18 @@ class NexusEditorController @Inject()(
     val reconciledTokenFut = oIDCAuthService.getTechAccessToken()
     val modificationFromUser = request.body.asJson.get
     val editorSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.editorPrefix)
+    val reconciledSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.reconciledPrefix)
     val originalIdAndPath = NexusInstance.extractIdAndPath(currentInstanceDisplayed.getOriginalParent())
     // Get the original instance either in the Editor space or the original space
-    instanceService.getInstance(originalIdAndPath._2, originalIdAndPath._1, token).flatMap {
+    editorService.getInstance(originalIdAndPath._2, originalIdAndPath._1, token).flatMap {
       case Right(instanceFromOriginalSpace) =>
         val originalInstance =  instanceFromOriginalSpace.removeNexusFields().copy(nexusUUID = Some(originalIdAndPath._1), nexusPath = originalIdAndPath._2)
         // Get the editor instances
         val editorInstanceIds = currentInstanceDisplayed.getEditorInstanceIds()
           .getOrElse(List())
           .map(js => NexusInstance.extractIdAndPath(js)._1)
-        reconciledTokenFut.flatMap { reconciledToken =>
-          instanceService.retrieveInstances(editorInstanceIds, originalPath.reconciledPath(config.editorPrefix), token).flatMap[Result] {
+        reconciledTokenFut.flatMap { techToken =>
+          editorService.retrieveInstances(editorInstanceIds, originalPath.reconciledPath(config.editorPrefix), token).flatMap[Result] {
             editorInstancesRes =>
               if (editorInstancesRes.forall(_.isRight)) {
                 val editorInstances = editorInstancesRes.map { e => EditorInstance(e.toOption.get)}
@@ -282,87 +271,53 @@ class NexusEditorController @Inject()(
                 )
                 //Create the manual update
                 // As we cannot pass / in the name of a field we have replaced them with %nexus-slash%
-                val reconciledLink =  currentInstanceDisplayed.id().get
                 //Generate the data that should be stored in the manual space
-                val (
-                  updateToBeStoredInManual,
-                  preppedEntityForStorage
-                  ) = NexusEditorController.preppingEntitiesForSave(
+                val updateToBeStoredInManual = NexusEditorController.preppingEntitiesForSave(
                   config.nexusEndpoint,
                   updatedInstance,
                   reconciledInstanceWithAllFields.nexusInstance,
                   currentInstanceDisplayedWithAllFields.nexusInstance,
                   originalPath,
-                  reconciledLink,
                   request.user,
                   config.reconciledPrefix,
                   config.editorPrefix,
-                  instanceService,
+                  editorService,
                   token
                 )
                 logger.debug(s"Consolidated instance $updatedInstance")
                 InstanceHelper.consolidateFromManualSpace(
                   config.nexusEndpoint,
-                  editorSpace,
+                  config.reconciledPrefix,
                   currentInstanceDisplayedWithAllFields.nexusInstance,
                   editorInstances,
                   updateToBeStoredInManual,
                   request.user
                 ) match {
                   case (consolidatedInstance, manualEntitiesDetailsOpt) =>
-                    val manualUpsert = instanceService
-                      .upsertUpdateInManualSpace(
-                        editorSpace,
-                        manualEntitiesDetailsOpt,
-                        request.user,
-                        originalPath,
-                        preppedEntityForStorage,
-                        token
-                      )
-                    manualUpsert.flatMap { res =>
-                      logger.debug(s"Creation of manual update ${res.body}")
-                      res.status match {
-                        case status if status < 300 =>
-                          val newManualUpdateId = (res.json \ "@id").as[String]
-                          instanceService.updateReconciledInstance(
-                            editorSpace,
-                            currentInstanceDisplayed,
-                            editorInstances,
-                            originalInstance,
-                            originalPath,
-                            preppedEntityForStorage,
-                            newManualUpdateId,
-                            consolidatedInstance.content,
-                            reconciledToken,
-                            request.user
-                          ).map { re =>
-                            logger.debug(s"Creation of reconciled update ${re.body}")
-                            re.status match {
-                              case recStatus if recStatus < 300 =>
-                                Ok(
-                                  NavigationHelper
-                                    .resultWithBackLink(
-                                      consolidatedInstance.formatFromNexusToOption(config.reconciledPrefix),
-                                      originalPath,
-                                      config.reconciledPrefix
-                                    )
-                                )
-                              case _ =>
-                                ResponseHelper.errorResultWithBackLink(re.status, re.headers, re.body, originalPath, config.reconciledPrefix)
-                            }
-                          }
-                        case _ =>
-                          Future.successful(
-                            ResponseHelper
-                              .errorResultWithBackLink(
-                                res.status,
-                                res.headers,
-                                res.body,
-                                originalPath,
-                                config.reconciledPrefix
-                              )
-                          )
-                      }
+
+                    editorService.saveEditorUpdate(
+                      editorSpace,
+                      reconciledSpace,
+                      request.user,
+                      updateToBeStoredInManual,
+                      consolidatedInstance,
+                      originalInstance,
+                      false,
+                      manualEntitiesDetailsOpt,
+                      token,
+                      techToken
+                    ).map{
+                      case Left(res) =>
+                        ResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, originalPath, config.reconciledPrefix)
+                      case Right(instance) =>
+                        Ok(
+                          NavigationHelper
+                            .resultWithBackLink(
+                              instance.formatFromNexusToOption(config.reconciledPrefix),
+                              originalPath,
+                              config.reconciledPrefix
+                            )
+                        )
                     }
                 }
               } else {
@@ -397,7 +352,7 @@ class NexusEditorController @Inject()(
 
       val token = OIDCHelper.getTokenFromRequest(request)
       val instancePath = NexusPath(org, domain, schema, version)
-      instanceService.retrieveInstance(instancePath, id, token).flatMap[Result] {
+      editorService.retrieveInstance(instancePath, id, token).flatMap[Result] {
         case Left(res) =>
           Future.successful(
             ResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, config.reconciledPrefix)
@@ -442,15 +397,15 @@ class NexusEditorController @Inject()(
 
     // Save instance to nexus
     reconciledTokenFut.flatMap { techToken =>
-      val createSchemasAndDomain = instanceService.createDomainsAndSchemasSync(editorSpace, reconciledSpace, instancePath, token, techToken)
+      val createSchemasAndDomain = editorService.createDomainsAndSchemasSync(editorSpace, reconciledSpace, instancePath, token, techToken)
       createSchemasAndDomain.flatMap { res =>
         logger.debug(res.toString)
-        val insertNewInstance = instanceService.insertInstance(editorSpace, typedInstance.nexusInstance, instancePath, token)
+        val insertNewInstance = editorService.insertInstance(editorSpace, typedInstance.nexusInstance, instancePath, token)
         insertNewInstance.flatMap { instance =>
           logger.debug(instance.body)
           val reconciledInstance = ReconciledInstance(typedInstance.nexusInstance)
             .addReconciledMandatoryFields(instancePath, request.user, (instance.json \ "@id").as[String])
-          instanceService
+          editorService
             .insertInstance(reconciledSpace, reconciledInstance.nexusInstance, instancePath, techToken).map { res =>
             res.status match {
               case CREATED => // reformat ouput to keep it consistent with update
@@ -605,29 +560,32 @@ object NexusEditorController {
                                cleanInstance: NexusInstance,
                                currentlyDisplayedInstance: NexusInstance,
                                originalPath: NexusPath,
-                               originLink: String,
                                userInfo: User,
                                reconciledPrefix: String,
                                editorPrefix: String,
-                               instanceService: InstanceService,
+                               instanceService: EditorService,
                                token: String
-                            ): (EditorInstance, EditorInstance) = {
+                            ): EditorInstance = {
     val entityType = s"http://hbp.eu/${originalPath.org}#${originalPath.schema.capitalize}"
-    val diffEntity = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, updatedInstance, cleanInstance) +
-      ("@type", JsString(entityType))
+    val diffEntity = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, updatedInstance)
     val correctedLinks = EditorInstance(
-      NexusInstance(None, originalPath.reconciledPath(editorPrefix), Json.toJson(diffEntity.value.map {
-        case (k, v) => recursiveCheckOfIds(k, v, reconciledPrefix, instanceService, token)
-      }).as[JsObject])
+      NexusInstance(
+        None, originalPath.reconciledPath(editorPrefix), Json.toJson(diffEntity.value.map {
+          case (k, v) => recursiveCheckOfIds(k, v, reconciledPrefix, instanceService, token)
+        }).as[JsObject]
+      )
+    ).prepareManualEntityForStorage(
+      userInfo,
+      s"$nexusEndpoint/v0/data/${currentlyDisplayedInstance.id().get}",
+      entityType
     )
-    val preppedEntityForStorage = correctedLinks.prepareManualEntityForStorage(userInfo, originLink, entityType)
-    (correctedLinks.cleanReconciledFields(), preppedEntityForStorage.cleanReconciledFields())
+    correctedLinks.cleanReconciledFields()
   }
 
   def recursiveCheckOfIds(k: String,
                           v: JsValue,
                           reconciledPrefix: String,
-                          instanceService: InstanceService,
+                          instanceService: EditorService,
                           token: String
                          ): (String, JsValue) = {
     if (k == "@id") {

@@ -16,7 +16,6 @@
 package editor.helpers
 
 import common.models.{NexusInstance, NexusPath}
-import editor.helpers.InstanceHelper
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.libs.json.{JsArray, JsNull, Json}
@@ -42,7 +41,7 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
         )
       )
 
-      val res = InstanceHelper.buildDiffEntity(original, newInstance, original)
+      val res = InstanceHelper.buildDiffEntity(original, newInstance)
 
       res mustBe Json.obj(
         "name" -> "new name"
@@ -52,11 +51,6 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
       val content = Json.obj(
         "name" -> "test",
         "description" -> "description"
-      )
-      val original = NexusInstance(
-        Some(id), path, Json.obj(
-          "name" -> "test"
-        )
       )
 
       val currentlyDisplayedInstance = NexusInstance(
@@ -69,19 +63,13 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
         None, path, content
       )
 
-      val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance, original)
+      val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance)
 
       res mustBe Json.obj(
         "description" -> "description"
       )
     }
     "correctly build a diff when a field is removed" in {
-      val original = NexusInstance(
-        Some(id), path, Json.obj(
-          "name" -> "test",
-          "description" -> "description"
-        )
-      )
       val currentlyDisplayedInstance = NexusInstance(
         Some(reconId), path, Json.obj(
           "name" -> "test",
@@ -96,19 +84,13 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
         )
       )
 
-      val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance, original)
+      val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance)
 
       res mustBe Json.obj(
         "description" -> JsNull
       )
     }
     "correctly manage arrays by returning the final array not its difference" in {
-      val original = NexusInstance(
-        Some(id), path, Json.obj(
-          "name" -> "test",
-          "description" -> "description"
-        )
-      )
       val currentlyDisplayedInstance = NexusInstance(
         Some(reconId), path, Json.obj(
           "name" -> "test",
@@ -149,7 +131,7 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
         )
       )
 
-      val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance, original)
+      val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance)
 
       res mustBe Json.obj(
         "activities" -> Json.toJson(
@@ -161,6 +143,58 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
               "id" -> "activity3"
             )
           )
+        )
+      )
+    }
+    "reflect correct array changes" in {
+      val currentlyDisplayedInstance = NexusInstance(
+        Some(reconId), path, Json.obj(
+          "name" -> "test",
+          "description" -> "description",
+          "activities" -> Json.toJson(
+            List(
+              Json.obj(
+                "id" -> "activity1"
+              ),
+              Json.obj(
+                "id" -> "activity2"
+              ),
+              Json.obj(
+                "id" -> "activity3"
+              )
+
+            )
+          ),
+          "contributors" -> Json.toJson(
+            List(
+              "bill",
+              "james",
+              "jane"
+            )
+          )
+
+        )
+      )
+
+      val newInstance = NexusInstance(
+        None, path, Json.obj(
+          "name" -> "test",
+          "description" -> "description",
+          "activities" -> JsArray(),
+          "contributors" -> Json.toJson(
+            "james",
+            "jane"
+          )
+        )
+      )
+
+      val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance)
+
+      res mustBe Json.obj(
+        "activities" -> JsArray(),
+        "contributors" -> Json.toJson(
+          "james",
+          "jane"
         )
       )
     }

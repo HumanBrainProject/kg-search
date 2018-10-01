@@ -25,10 +25,11 @@ case class EditorInstance(nexusInstance: NexusInstance){
   lazy val updaterId = nexusInstance.getField(EditorInstance.Fields.updaterId).get.as[String]
 
 
-  def extractUpdateInfo(): (String, Int, String) = {
+  def extractUpdateInfo(): (String, Int, String, EditorInstance) = {
     ((this.nexusInstance.content \ NexusInstance.Fields.nexusId).as[String],
       (this.nexusInstance.content \ NexusInstance.Fields.nexusRev).as[Int],
-      (this.nexusInstance.content \ EditorInstance.Fields.updaterId).asOpt[String].getOrElse("")
+      (this.nexusInstance.content \ EditorInstance.Fields.updaterId).asOpt[String].getOrElse(""),
+      this
     )
   }
 

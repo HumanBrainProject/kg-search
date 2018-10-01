@@ -45,28 +45,6 @@ object ReconciledInstanceHelper {
     (contents, priorities)
   }
 
-  def generateReconciledInstance(
-                                  manualSpace: String,
-                                  reconciledInstance: ReconciledInstance,
-                                  editorInstances: List[EditorInstance],
-                                  manualEntityToBestored: EditorInstance,
-                                  originalEntitPath: NexusPath,
-                                  newManualUpdateId: String,
-                                  userInfo: User,
-                                  parentRevision: Long,
-                                  parentId: String,
-                                  token: String
-                                ): ReconciledInstance = {
-    val recInstanceWithParents = reconciledInstance.addAlternatives(
-      manualSpace,
-      editorInstances,
-      manualEntityToBestored
-    )
-    val recWithNewManualUpdate = recInstanceWithParents.updateManualLinks(newManualUpdateId)
-    val cleanUpObject = recWithNewManualUpdate.cleanManualData()
-    cleanUpObject.addReconciledMandatoryFields(originalEntitPath, userInfo, parentId, parentRevision)
-  }
-
 
 
 

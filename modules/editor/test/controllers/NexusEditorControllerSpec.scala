@@ -23,7 +23,7 @@ import authentication.service.OIDCAuthService
 import common.services.ConfigurationService
 import editor.helpers.ReconciledInstanceHelper
 import editor.models.{EditorInstance, ReconciledInstance}
-import editor.services.{ArangoQueryService, InstanceService, ReleaseService}
+import editor.services.{ArangoQueryService, EditorService, ReleaseService}
 import nexus.services.NexusService
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar
@@ -72,7 +72,7 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
 
       val mockCC = stubControllerComponents()
       val ec = global
-      val instanceService = mock[InstanceService]
+      val instanceService = mock[EditorService]
 
       val oidcAuthService = mock[OIDCAuthService]
       val userInfo = new OIDCUser("123", "name", "email", Seq("group1", "group2"))
@@ -171,7 +171,7 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
       val releaseService = mock[ReleaseService]
       val arangoQueryService = mock[ArangoQueryService]
       val configService =  new ConfigurationService(fakeApplication().configuration)
-      val instanceService = new InstanceService(ws, nexusService, configService) {
+      val instanceService = new EditorService(ws, nexusService, configService) {
         override def retrieveInstance(path: NexusPath, id: String, token: String, parameters: List[(String, String)]): Future[Either[WSResponse, NexusInstance]] = Future.successful(Right(NexusInstance(Some(id), nexusPath, instance.as[JsObject])))
       }
       val controller = new NexusEditorController(mockCC, authMock, instanceService, oidcAuthService, configService, nexusService, releaseService, arangoQueryService, ws)(ec)

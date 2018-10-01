@@ -128,6 +128,29 @@ case class ReconciledInstance( nexusInstance: NexusInstance){
   }
 
 
+  def generateReconciledInstance(
+                                  manualSpace: String,
+                                  editorInstances: List[EditorInstance],
+                                  manualEntityToBestored: EditorInstance,
+                                  originalEntityPath: NexusPath,
+                                  newManualUpdateId: String,
+                                  userInfo: User,
+                                  parentRevision: Long,
+                                  parentId: String
+                                ): ReconciledInstance = {
+    this.addAlternatives(
+        manualSpace,
+        editorInstances,
+        manualEntityToBestored
+      )
+      .updateManualLinks(newManualUpdateId)
+      .cleanManualData()
+      .addReconciledMandatoryFields(originalEntityPath, userInfo, parentId, parentRevision)
+  }
+
+
+
+
 }
 
 object ReconciledInstance {

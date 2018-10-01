@@ -29,17 +29,18 @@ import editor.helpers._
 import nexus.helpers.NexusHelper
 import nexus.services.NexusService
 import play.api.{Configuration, Logger}
-import play.api.http.Status.OK
+import play.api.http.Status._
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import common.services.ConfigurationService
 import editor.helpers.InstanceHelper.UpdateInfo
+import nexus.helpers.NexusHelper.hash
 
 import scala.concurrent.{ExecutionContext, Future, blocking}
 
-class InstanceService @Inject()(wSClient: WSClient,
-                                nexusService: NexusService,
-                                config: ConfigurationService
+class EditorService @Inject()(wSClient: WSClient,
+                              nexusService: NexusService,
+                              config: ConfigurationService
                                )(implicit executionContext: ExecutionContext) {
 
   val logger = Logger(this.getClass)
@@ -84,13 +85,12 @@ class InstanceService @Inject()(wSClient: WSClient,
 
   def updateInstance(
                       instance: NexusInstance,
-                      nexusPath: NexusPath,
                       id: String,
                       revision: Long,
                       token: String
                     ): Future[WSResponse] = {
     wSClient
-      .url(s"${config.nexusEndpoint}/v0/data/${nexusPath.toString()}/$id?rev=${revision}")
+      .url(s"${config.nexusEndpoint}/v0/data/$id?rev=${revision}")
       .withHttpHeaders("Authorization" -> token).put(instance.content)
   }
 
@@ -205,17 +205,18 @@ class InstanceService @Inject()(wSClient: WSClient,
                                ): Future[WSResponse] = {
     manualEntitiesDetailsOpt.flatMap { manualEntitiesDetails =>
       // find manual entry corresponding to the user
-      manualEntitiesDetails.filter(_._3 == userInfo.id).headOption.map {
-        case (manualEntityId, manualEntityRevision, _) =>
+      manualEntitiesDetails.find(_._3 == userInfo.id).map {
+        case (manualEntityId, manualEntityRevision, _, editorInstance) =>
+          val userEditorUpdate = editorInstance.cleanManualData().nexusInstance.content.deepMerge(manualEntity.nexusInstance.content)
           wSClient.url(s"${config.nexusEndpoint}/v0/data/${NexusInstance.getIdfromURL(manualEntityId)}/?rev=$manualEntityRevision")
             .addHttpHeaders("Authorization" -> token).put(
-            manualEntity.nexusInstance.content
+            userEditorUpdate
           )
       }
     }.getOrElse {
       wSClient.url(s"${config.nexusEndpoint}/v0/data/$destinationOrg/${instancePath.domain}/${instancePath.schema}/${instancePath.version}")
         .addHttpHeaders("Authorization" -> token).post(
-        manualEntity.nexusInstance.content + ("http://hbp.eu/manual#updater_id", JsString(userInfo.id))
+        manualEntity.nexusInstance.content
       )
     }
   }
@@ -258,29 +259,25 @@ class InstanceService @Inject()(wSClient: WSClient,
                                 originalPath: NexusPath,
                                 manualEntity: EditorInstance,
                                 manualEntityId: String,
-                                updatedValue: JsObject,
+                                updatedValue: ReconciledInstance,
                                 token: String,
                                 userInfo: User
                               ): Future[WSResponse] = {
     val parentId = originalInstance.id()
     val revision = currentReconciledInstance.nexusInstance.getRevision()
     val parentRevision = originalInstance.getRevision()
-    val payload = ReconciledInstanceHelper
-      .generateReconciledInstance(
+    val payload =  updatedValue.generateReconciledInstance(
         manualSpace,
-        ReconciledInstance(updatedValue.as[NexusInstance]),
         editorInstances,
         manualEntity,
         originalPath,
         manualEntityId,
         userInfo,
         parentRevision,
-        parentId.get,
-        token
+        parentId.get
       )
     updateInstance(
       payload.nexusInstance,
-      currentReconciledInstance.nexusInstance.nexusPath,
       currentReconciledInstance.nexusInstance.nexusUUID.get,
       revision,
       token
@@ -300,18 +297,16 @@ class InstanceService @Inject()(wSClient: WSClient,
                               ): Future[WSResponse] = {
     val parentRevision = (originalInstance.content \ "nxv:rev").as[Int]
     val parentId = (originalInstance.content \ "@id").as[String]
-    val payload = ReconciledInstanceHelper
-      .generateReconciledInstance(
-        manualSpace,
-        updatedValue,
-        List(),
-        manualEntity,
-        originalInstance.nexusPath,
-        manualEntityId,
-        userInfo,
-        parentRevision,
-        parentId,
-        token)
+    val payload = updatedValue.generateReconciledInstance(
+      manualSpace,
+      List(),
+      manualEntity,
+      originalInstance.nexusPath,
+      manualEntityId,
+      userInfo,
+      parentRevision,
+      parentId
+    )
     insertInstance(
       destinationOrg,
       payload.nexusInstance,
@@ -357,6 +352,67 @@ class InstanceService @Inject()(wSClient: WSClient,
     )
     createEditorDomain.flatMap(b1 => createReconciledDomain.map(b2 => (b1,b2)))
 
+  }
+
+  def saveEditorUpdate(
+                        editorSpace: String,
+                        reconciledSpace: String,
+                        userInfo: User,
+                        editorSpaceEntityToSave: EditorInstance,
+                        reconciledInstanceToSave: ReconciledInstance,
+                        originalInstance: NexusInstance,
+                        shouldCreateReconciledInstance: Boolean,
+                        manualEntitiesDetailsOpt: Option[List[UpdateInfo]],
+                        token: String,
+                        techToken: String,
+                        editorInstances: List[EditorInstance] = List()
+                      ): Future[Either[WSResponse, NexusInstance]] = {
+    upsertUpdateInManualSpace(editorSpace, manualEntitiesDetailsOpt,  userInfo, originalInstance.nexusPath, editorSpaceEntityToSave, token).flatMap{res =>
+      logger.debug(s"Creation of manual update ${res.body}")
+      res.status match {
+        case status if status < MULTIPLE_CHOICES =>
+          val newManualUpdateId = (res.json \ "@id").as[String]
+          val processReconciledInstance = if(shouldCreateReconciledInstance){
+            insertReconciledInstance(
+              reconciledSpace,
+              editorSpace,
+              originalInstance,
+              editorSpaceEntityToSave,
+              newManualUpdateId,
+              reconciledInstanceToSave,
+              techToken,
+              userInfo
+            )
+          }else{
+            updateReconciledInstance(
+              editorSpace,
+              reconciledInstanceToSave,
+              editorInstances,
+              originalInstance,
+              originalInstance.nexusPath,
+              editorSpaceEntityToSave,
+              newManualUpdateId,
+              reconciledInstanceToSave,
+              token,
+              userInfo
+            )
+          }
+          processReconciledInstance.map { re =>
+            re.status match {
+              case s if s < MULTIPLE_CHOICES =>
+                logger.debug(s"Creation of a reconciled instance ${re.body}")
+                Right(reconciledInstanceToSave.nexusInstance)
+              case _ =>
+                logger.error(s"Error while updating a reconciled instance ${re.body}")
+                Left(re)
+            }
+          }
+        case _ => Future{
+          logger.error(s"Error while updating a editor instances ${res.body}")
+          Left(res)
+        }
+      }
+    }
   }
 
 }

@@ -19,11 +19,11 @@ package editor.helpers
 
 import common.helpers.JsFlattener
 import common.models.{NexusInstance, NexusPath, User}
-import editor.models.{EditorInstance, ReleaseStatus}
+import editor.models.{EditorInstance, ReconciledInstance, ReleaseStatus}
 import org.joda.time.DateTime
-import org.json4s.JsonAST.{JField, JNull, JObject, JValue}
+import org.json4s.JsonAST._
 import org.json4s.native.{JsonMethods, JsonParser}
-import org.json4s.{Diff, JsonAST}
+import org.json4s.{DefaultFormats, Diff, JsonAST}
 import play.api.Logger
 import play.api.libs.json.Reads.of
 import play.api.libs.json._
@@ -33,22 +33,28 @@ import scala.collection.immutable.SortedSet
 object InstanceHelper {
     val logger = Logger(this.getClass)
 
-  type UpdateInfo = (String, Int, String)
+  type UpdateInfo = (String, Int, String, EditorInstance)
 
   def consolidateFromManualSpace(
                                   nexusEndpoint: String,
-                                  manualSpace:String,
+                                  reconciledSuffix:String,
                                   originalInstance: NexusInstance,
                                   editorInstances: List[EditorInstance],
                                   updateToBeStoredInManual: EditorInstance,
                                   user: User
-                                ): (NexusInstance, Option[List[UpdateInfo]]) = {
+                                ): (ReconciledInstance, Option[List[UpdateInfo]]) = {
     logger.debug(s"Result from incoming links $editorInstances")
     val updatesByPriority = buildManualUpdatesFieldsFrequency(
       editorInstances.filter( item => item.updaterId != user.id),
       updateToBeStoredInManual
     )
-    val result = reconcilationLogic(updatesByPriority, originalInstance.content).as[NexusInstance]
+    val result = ReconciledInstance(
+      NexusInstance(
+        originalInstance.id(),
+        originalInstance.nexusPath.reconciledPath(reconciledSuffix),
+        reconcilationLogic(updatesByPriority, originalInstance.content)
+      )
+    )
     val manualUpdateDetailsOpt = if(editorInstances.isEmpty){
       logger.debug("creating new editor instance")
       None
@@ -61,8 +67,35 @@ object InstanceHelper {
     (result, manualUpdateDetailsOpt)
   }
 
+  private def handleDeletion(deleted: JValue, newJson: JValue): JValue = {
+    implicit class JValueExtended(value: JValue) {
+      def has(childString: String): Boolean = {
+        if ((value \ childString) != JNothing) {
+          true
+        } else {
+          false
+        }
+      }
+    }
+    /* fields deletion. Deletion are allowed on manual space ONLY
+     * final diff is then an addition/update from original view
+     * this allows partially defined form (some field are then not updatable)
+     */
+    logger.debug(s"""PARTIAL FORM DEFINITION - missing fields from form: ${deleted.toString}""")
+    // Here we get the diff as being the array without the deleted element
+    val deletion = deleted.values.asInstanceOf[Map[String, Any]].map {
+      case (k, _) =>
+        if (!newJson.has(k)) {
+          k -> JNull
+        } else {
+          k -> newJson \ k
+        }
+    }
+    JObject(deletion.toList.map(x => JField(x._1, x._2)))
 
-  def buildDiffEntity(consolidatedResponse: NexusInstance, newValue: NexusInstance, originalInstance: NexusInstance): JsObject = {
+  }
+
+  def buildDiffEntity(consolidatedResponse: NexusInstance, newValue: NexusInstance): JsObject = {
     val consolidatedJson = JsonParser.parse(consolidatedResponse.removeNexusFields().content.toString())
     val newJson = JsonParser.parse(newValue.content.toString())
     val Diff(changed, added, deleted) = consolidatedJson.diff(newJson)
@@ -72,37 +105,21 @@ object InstanceHelper {
       case (JsonAST.JNothing, _) =>
         changed.merge(added)
       case (_, JsonAST.JNothing) =>
-        val originalContent = JsonParser.parse(originalInstance.content.toString())
-        val Diff(changedFromOrg, _, deletedFromOrg) = originalContent.diff(newJson)
-        logger.debug(s"""PARTIAL FORM DEFINITION - missing fields from form: ${deletedFromOrg.toString}""")
-        // Here we get the diff as being the array without the deleted element
-        val Diff(_, add, _) = deletedFromOrg.diff(originalContent)
-        val Diff(ch, _ ,_ ) = newJson.diff(add)
-        if(ch == JsonAST.JNothing){
-          // This means we should display an empty field
-          val map: Map[String, JValue] = deletedFromOrg.values.asInstanceOf[Map[String, Any]].map{
-            case (k, _) => k -> JNull
-          }
-          JObject(map.toList.map(x => JField(x._1, x._2)))
-        }else{
-          changedFromOrg.merge(ch)
-        }
+
+        val deletion = handleDeletion(deleted, newJson)
+        deletion.merge(added)
       case _ =>
-        /* fields deletion. Deletion are allowed on manual space ONLY
-         * final diff is then an addition/update from original view
-         * this allows partially defined form (some field are then not updatable)
-         */
-        val originalContent = JsonParser.parse(originalInstance.content.toString())
-        val Diff(changedFromOrg, addedFromOrg, _) = originalContent.diff(newJson)
-        changedFromOrg.merge(addedFromOrg)
+
+        val deletion = handleDeletion(deleted, newJson)
+        changed.merge(deletion.merge(added))
     }
     val rendered = Json.parse(JsonMethods.compact(JsonMethods.render(diff))).as[JsObject]
-    val diffWithCompleteArray = rendered.value.map{
+    val diffWithCompleteArray = rendered.value.map {
       case (k, v) =>
-        val value = ( newValue.content \ k).asOpt[JsValue]
-        if(v.asOpt[JsArray].isDefined && value.isDefined){
+        val value = (newValue.content \ k).asOpt[JsValue]
+        if (v.asOpt[JsArray].isDefined && value.isDefined) {
           k -> value.get
-        }else{
+        } else {
           k -> v
         }
     }
