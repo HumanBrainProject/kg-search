@@ -18,7 +18,7 @@ package editor.services
 import authentication.service.OIDCAuthService
 import com.google.inject.Inject
 import common.models.NexusPath
-import editor.helpers.{FormHelper, InstanceHelper}
+import editor.helpers.{FormService, InstanceHelper}
 import nexus.services.NexusService
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
@@ -32,7 +32,8 @@ class ArangoQueryService @Inject()(
                                     config: ConfigurationService,
                                     wSClient: WSClient,
                                     nexusService: NexusService,
-                                    oIDCAuthService: OIDCAuthService
+                                    oIDCAuthService: OIDCAuthService,
+                                    formService: FormService
                                   )(implicit executionContext: ExecutionContext) {
 
   def graphEntities(org: String,
@@ -71,7 +72,7 @@ class ArangoQueryService @Inject()(
               Right(
                 Json.obj("data" -> InstanceHelper.formatInstanceList( data, config.reconciledPrefix),
                   "label" -> JsString(
-                    (FormHelper.formRegistry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String]
+                    (formService.formRegistry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String]
                       .getOrElse(nexusPath.toString())
                   ),
                   "dataType" -> (data.value.head \ "@type").as[JsString],
@@ -106,7 +107,7 @@ class ArangoQueryService @Inject()(
               ArangoQueryService.formatEdges((el \ "edges").as[List[JsObject]])
             }.distinct
             val vertices = j.flatMap { el =>
-              ArangoQueryService.formatVertices((el \ "vertices").as[List[JsValue]])
+              ArangoQueryService.formatVertices((el \ "vertices").as[List[JsValue]], formService)
             }.distinct
             Right(Json.obj("links" -> edges, "nodes" -> vertices))
           case _ => Left(allRelations)
@@ -125,7 +126,7 @@ object ArangoQueryService {
     s"$path/$i"
   }
 
-  def formatVertices(vertices: List[JsValue]): List[JsObject] = {
+  def formatVertices(vertices: List[JsValue], formService: FormService): List[JsObject] = {
     vertices
       .map {
         case v: JsObject =>
@@ -146,7 +147,7 @@ object ArangoQueryService {
           }.getOrElse(JsNull)
         case _ => JsNull
       }
-      .filter(v => v != JsNull && isInSpec( (v \ "id").as[String].splitAt((v \ "id").as[String].lastIndexOf("/"))._1))
+      .filter(v => v != JsNull && isInSpec( (v \ "id").as[String].splitAt((v \ "id").as[String].lastIndexOf("/"))._1, formService))
       .map(_.as[JsObject])
 
   }
@@ -171,8 +172,8 @@ object ArangoQueryService {
     }
   }
 
-  def isInSpec(id:String):Boolean = {
-    val list = (FormHelper.editableEntitiyTypes \ "data")
+  def isInSpec(id:String, formService: FormService):Boolean = {
+    val list = (formService.editableEntitiyTypes \ "data")
       .as[List[JsObject]]
       .map(js => (js  \ "path").as[String])
     list.contains(id)

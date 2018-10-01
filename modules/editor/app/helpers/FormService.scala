@@ -17,27 +17,32 @@
 
 package editor.helpers
 
+import com.google.inject.{Inject, Singleton}
 import common.models.{NexusInstance, NexusPath}
-import play.Play
+import common.services.ConfigurationService
 import play.api.libs.json._
+import play.api.libs.ws.WSClient
 
+import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.{Await, ExecutionContext}
 
-object FormHelper {
+@Singleton
+class FormService @Inject()(
+                             config: ConfigurationService,
+                             ws: WSClient
+                           )(implicit ec: ExecutionContext){
 
   val slashEscaper = "%nexus-slash%"
-  val formRegistry = loadFormConfiguration()
-  val editableEntitiyTypes = buildEditableEntityTypesFromRegistry()
+  lazy val formRegistry = loadFormConfiguration()
+  lazy val editableEntitiyTypes = buildEditableEntityTypesFromRegistry()
+  val timeout = FiniteDuration(15, "sec")
 
-
-  def loadFormConfiguration() = {
-    val confFile = Play.application().classloader.getResourceAsStream("editor_interface_configuration.json")
-    try {
-      Json.parse(confFile).as[JsObject]
-    } catch {
-      case _: Throwable => JsObject.empty
-    } finally {
-      confFile.close()
-    }
+  def loadFormConfiguration(): JsObject = {
+    val spec = Await.result(
+      ws.url(s"${config.kgQueryEndpoint}/arango/document/editor_specifications/minds").get(),
+      timeout
+    )
+    (spec.json \ "uiSpec").as[JsObject]
   }
 
   def buildEditableEntityTypesFromRegistry(): JsObject = {

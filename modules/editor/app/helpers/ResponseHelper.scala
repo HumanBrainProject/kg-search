@@ -3,7 +3,7 @@ package helpers
 import akka.util.ByteString
 import common.helpers.ResponseHelper.{filterContentTypeAndLengthFromHeaders, flattenHeaders, getContentType}
 import common.models.NexusPath
-import editor.helpers.NavigationHelper
+import editor.helpers.{FormService, NavigationHelper}
 import play.api.http.HttpEntity
 import play.api.libs.ws.WSResponse
 import play.api.mvc.{ResponseHeader, Result}
@@ -18,8 +18,8 @@ object ResponseHelper {
     * @param reconciledPrefix The reconciled prefix
     * @return A Play result with back link
     */
-  def errorResultWithBackLink(status: Int, headers: Map[String, Seq[String]], errorMsg:Any, originalPath: NexusPath, reconciledPrefix: String): Result = {
-    val resultBackLink = NavigationHelper.errorMessageWithBackLink(errorMsg, NavigationHelper.generateBackLink(originalPath,reconciledPrefix))
+  def errorResultWithBackLink(status: Int, headers: Map[String, Seq[String]], errorMsg:Any, originalPath: NexusPath, reconciledPrefix: String, formService: FormService): Result = {
+    val resultBackLink = NavigationHelper.errorMessageWithBackLink(errorMsg, NavigationHelper.generateBackLink(originalPath,reconciledPrefix, formService))
     Result(
       ResponseHeader(
         status,

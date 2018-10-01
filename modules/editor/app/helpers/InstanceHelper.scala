@@ -126,10 +126,10 @@ object InstanceHelper {
     Json.toJson(diffWithCompleteArray).as[JsObject]
   }
 
-  def buildInstanceFromForm(original: NexusInstance, formContent: JsObject, nexusEndpoint: String): NexusInstance = {
+  def buildInstanceFromForm(original: NexusInstance, formContent: JsObject, nexusEndpoint: String, formService: FormService): NexusInstance = {
 //    val flattened = JsFlattener(formContent)
 //    applyChanges(original, flattened)
-    val cleanForm = FormHelper.removeKey(formContent.as[JsValue])
+    val cleanForm = formService.removeKey(formContent.as[JsValue])
     val formWithID = cleanForm.toString().replaceAll(""""id":"""", s""""@id":"${nexusEndpoint}/v0/data/""")
     val r = JsonParser.parse(original.content.toString()) merge(JsonParser.parse(formWithID))
     val res= original.content.deepMerge(Json.parse(formWithID).as[JsObject])
@@ -157,7 +157,7 @@ object InstanceHelper {
 
   }
 
-  def buildNewInstanceFromForm(nexusEndpoint: String, instancePath: NexusPath, formRegistry: JsObject, newInstance: JsObject): JsObject = {
+  def buildNewInstanceFromForm(nexusEndpoint: String, instancePath: NexusPath, formRegistry: JsObject, newInstance: JsObject, formService: FormService): JsObject = {
 
     def addNexusEndpointToLinks(item: JsValue): JsObject = {
       val id = (item.as[JsObject] \ "id" ).as[String]
@@ -170,7 +170,7 @@ object InstanceHelper {
 
     val fields = (formRegistry \ instancePath.org \ instancePath.domain \ instancePath.schema \ instancePath.version \ "fields").as[JsObject].value
     val m = newInstance.value.map{ case (k, v) =>
-      val key = FormHelper.unescapeSlash(k)
+      val key = formService.unescapeSlash(k)
       val formObjectType = (fields(key) \ "type").as[String]
       formObjectType match {
         case "DropdownSelect" =>
