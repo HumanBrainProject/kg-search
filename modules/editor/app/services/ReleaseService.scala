@@ -103,7 +103,6 @@ object ReleaseService {
               val linkType = v.head.transform(transformer)
               k -> v.head.as[JsObject].++(linkType.get)
           }.values
-            .filter(js => !(js \ "linkType").as[List[String]].contains("alternatives") && !(js \ "linkType").as[List[String]].contains("parents"))
             .map(j => specs(j.as[JsObject]))).as[JsValue]
           case "linkType" =>
             k._1 -> k._2
