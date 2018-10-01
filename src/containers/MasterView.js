@@ -50,7 +50,7 @@ export const MasterViewWithTabKeyNavigation = withTabKeyNavigation(
 
 export const MasterView = connect(
   state => ({
-    isActive: !state.hits.currentHit && !state.application.info
+    isActive: !state.instances.currentInstance && !state.application.info
   })
 )(MasterViewWithTabKeyNavigation);
 

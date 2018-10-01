@@ -64,12 +64,12 @@ export function reducer(state = initialState, action = {}) {
   case types.SET_INFO:
     return setInfo(state, action);
   case types.LOAD_SEARCH_REQUEST:
-  case types.LOAD_HIT_REQUEST:
-  case types.CANCEL_HIT_LOADING:
-  case types.SET_HIT:
-  case types.SET_PREVIOUS_HIT:
-  case types.CLEAR_ALL_HITS:
-  case types.SET_CURRENT_HIT_FROM_BROWSER_LOCATION:
+  case types.LOAD_INSTANCE_REQUEST:
+  case types.CANCEL_INSTANCE_LOADING:
+  case types.SET_INSTANCE:
+  case types.SET_PREVIOUS_INSTANCE:
+  case types.CLEAR_ALL_INSTANCES:
+  case types.SET_CURRENT_INSTANCE_FROM_BROWSER_LOCATION:
   default:
     return state;
   }

@@ -28,6 +28,6 @@ const getShareEmailToLink = (removeHash) => {
 export const ShareButtons = connect(
   state => ({
     clipboardContent: window.location.href,
-    emailToLink: getShareEmailToLink(!state.hits.currentHit)
+    emailToLink: getShareEmailToLink(!state.instances.currentInstance)
   })
 )(Component);

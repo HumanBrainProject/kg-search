@@ -91,42 +91,42 @@ describe('confirguration reducer', () => {
             expect(newState.active).toBe(false);
         });
     });
-    describe('load hit request', () => {
+    describe('load instance request', () => {
         it('should set is active to true', () => {
-            const state = {active: false, requestReference: 678, currentHit: 567, previousHits:[234, 345, 456]};
-            const action = actions.loadHitRequest();
+            const state = {active: false, requestReference: 678, currentInstance: 567, previousInstances:[234, 345, 456]};
+            const action = actions.loadInstanceRequest();
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(true);
         });
     });
-    describe('load hit success', () => {
+    describe('load instance success', () => {
         it('should set is active to false', () => {
-            const state = {active: true, currentHit: 567, previousHits:[234, 345, 456]};
-            const action = actions.loadHitSuccess(123);
+            const state = {active: true, currentInstance: 567, previousInstances:[234, 345, 456]};
+            const action = actions.loadInstanceSuccess(123);
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(false);
         });
     });
-    describe('load hit no data', () => {
+    describe('load instance no data', () => {
         it('should set is active to false', () => {
             const state = {active: true};
-            const action = actions.loadHitNoData(123);
+            const action = actions.loadInstanceNoData(123);
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(false);
         });
     });
-    describe('load hit failure', () => {
+    describe('load instance failure', () => {
         it('should set is active to false', () => {
             const state = {active: true};
-            const action = actions.loadHitFailure("error");
+            const action = actions.loadInstanceFailure("error");
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(false);
         });
     });
-    describe('cancel hit loading', () => {
+    describe('cancel instance loading', () => {
         it('should set is active to false', () => {
             const state = {active: true};
-            const action = actions.cancelHitLoading();
+            const action = actions.cancelInstanceLoading();
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(false);
         });

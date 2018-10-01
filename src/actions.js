@@ -160,69 +160,69 @@ export const setIndex = index => {
   };
 };
 
-export const loadHit = reference => {
+export const loadInstance = reference => {
   return {
-    type: types.LOAD_HIT,
+    type: types.LOAD_INSTANCE,
     reference: reference
   };
 };
 
-export const loadHitRequest = () => {
+export const loadInstanceRequest = () => {
   return {
-    type: types.LOAD_HIT_REQUEST
+    type: types.LOAD_INSTANCE_REQUEST
   };
 };
 
-export const loadHitSuccess = data => {
+export const loadInstanceSuccess = data => {
   return {
-    type: types.LOAD_HIT_SUCCESS,
+    type: types.LOAD_INSTANCE_SUCCESS,
     data: data
   };
 };
 
-export const loadHitNoData = reference => {
+export const loadInstanceNoData = reference => {
   return {
-    type: types.LOAD_HIT_NO_DATA,
+    type: types.LOAD_INSTANCE_NO_DATA,
     reference: reference
   };
 };
 
-export const loadHitFailure = (id, error) => {
+export const loadInstanceFailure = (id, error) => {
   return {
-    type: types.LOAD_HIT_FAILURE,
+    type: types.LOAD_INSTANCE_FAILURE,
     id: id,
     error: error
   };
 };
 
-export const setHit = data => {
+export const setInstance = data => {
   return {
-    type: types.SET_HIT,
+    type: types.SET_INSTANCE,
     data: data
   };
 };
 
-export const cancelHitLoading = () => {
+export const cancelInstanceLoading = () => {
   return {
-    type: types.CANCEL_HIT_LOADING
+    type: types.CANCEL_INSTANCE_LOADING
   };
 };
 
-export const setPreviousHit = () => {
+export const setPreviousInstance = () => {
   return {
-    type: types.SET_PREVIOUS_HIT
+    type: types.SET_PREVIOUS_INSTANCE
   };
 };
 
-export const clearAllHits = () => {
+export const clearAllInstances = () => {
   return {
-    type: types.CLEAR_ALL_HITS
+    type: types.CLEAR_ALL_INSTANCES
   };
 };
 
-export const setCurrentHitFromBrowserLocation = () => {
+export const setCurrentInstanceFromBrowserLocation = () => {
   return {
-    type: types.SET_CURRENT_HIT_FROM_BROWSER_LOCATION
+    type: types.SET_CURRENT_INSTANCE_FROM_BROWSER_LOCATION
   };
 };
 

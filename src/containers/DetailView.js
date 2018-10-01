@@ -24,16 +24,16 @@ import "./DetailView.css";
 const mapStateToProps = state => {
   return {
     className: "kgs-detailView",
-    show: !!state.hits.currentHit,
-    data: state.hits.currentHit?[...state.hits.previousHits, state.hits.currentHit]:[],
+    show: !!state.instances.currentInstance,
+    data: state.instances.currentInstance?[...state.instances.previousInstances, state.instances.currentInstance]:[],
     itemComponent: Instance,
     navigationComponent: ShareButtons
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  onPrevious: () => dispatch(actions.setPreviousHit()),
-  onClose: () => dispatch(actions.clearAllHits())
+  onPrevious: () => dispatch(actions.setPreviousInstance()),
+  onClose: () => dispatch(actions.clearAllInstances())
 });
 
 export const DetailView = connect(

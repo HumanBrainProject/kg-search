@@ -96,7 +96,7 @@ const Reference = connect(
     index: props.index,
   }),
   dispatch => ({
-    onClick: (reference, index) => dispatch(actions.loadHit(reference, index))
+    onClick: (reference, index) => dispatch(actions.loadInstance(reference, index))
   })
 )(ReferenceComponent);
 
