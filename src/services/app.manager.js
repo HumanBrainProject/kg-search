@@ -136,6 +136,7 @@ export default class AppManager {
       // on detail popup close put back focus to issuer
       const node = document.body.querySelector("button[data-type=\"" + this.hitIssuer._type + "\"][data-id=\"" + this.hitIssuer._id +"\"]");
       node && node.focus();
+      this.hitIssuer = null;
     }
   }
   manageHistory(state) {
