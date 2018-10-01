@@ -38,7 +38,7 @@ export function reducer(state = initialState, action = {}) {
       message: "Performing search request...",
       active: true
     };
-  case types.LOAD_HIT_REQUEST:
+  case types.LOAD_INSTANCE_REQUEST:
     return {
       message: "Performing search request...",
       active: true
@@ -52,11 +52,11 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_SEARCH_SUCCESS:
   case types.LOAD_SEARCH_BAD_REQUEST:
   case types.LOAD_SEARCH_SERVICE_FAILURE:
-  case types.LOAD_HIT:
-  case types.LOAD_HIT_SUCCESS:
-  case types.LOAD_HIT_NO_DATA:
-  case types.LOAD_HIT_FAILURE:
-  case types.CANCEL_HIT_LOADING:
+  case types.LOAD_INSTANCE:
+  case types.LOAD_INSTANCE_SUCCESS:
+  case types.LOAD_INSTANCE_NO_DATA:
+  case types.LOAD_INSTANCE_FAILURE:
+  case types.CANCEL_INSTANCE_LOADING:
     return {
       message: null,
       active: false

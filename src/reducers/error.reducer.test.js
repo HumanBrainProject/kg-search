@@ -74,42 +74,42 @@ describe('confirguration reducer', () => {
             expect(newState.message).not.toBe(null);
         });
     });
-    describe('load hit request', () => {
+    describe('load instance request', () => {
         it('should set message to null', () => {
-            const state = {message: "test", currentHit: 567, previousHits:[234, 345, 456]};
-            const action = actions.loadHitRequest(678);
+            const state = {message: "test", currentInstance: 567, previousInstances:[234, 345, 456]};
+            const action = actions.loadInstanceRequest(678);
             const newState = errorReducer(state, action);
             expect(newState.message).toBe(null);
         });
     });
-    describe('load hit success', () => {
+    describe('load instance success', () => {
         it('should set message to null', () => {
-            const state = {currentHit: 567, previousHits:[234, 345, 456]};
-            const action = actions.loadHitSuccess(123);
+            const state = {currentInstance: 567, previousInstances:[234, 345, 456]};
+            const action = actions.loadInstanceSuccess(123);
             const newState = errorReducer(state, action);
             expect(newState.message).toBe(null);
         });
     });
-    describe('load hit no data', () => {
+    describe('load instance no data', () => {
         it('should set message to null', () => {
             const state = null;
-            const action = actions.loadHitNoData(123);
+            const action = actions.loadInstanceNoData(123);
             const newState = errorReducer(state, action);
             expect(newState.message).not.toBe(null);
         });
     });
-    describe('load hit failure', () => {
+    describe('load instance failure', () => {
         it('should set message to true', () => {
             const state = null;
-            const action = actions.loadHitFailure("error");
+            const action = actions.loadInstanceFailure("error");
             const newState = errorReducer(state, action);
             expect(newState.message).not.toBe(null);
         });
     });
-    describe('cancel hit loading', () => {
+    describe('cancel instance loading', () => {
         it('should set message to null', () => {
             const state = null;
-            const action = actions.cancelHitLoading();
+            const action = actions.cancelInstanceLoading();
             const newState = errorReducer(state, action);
             expect(newState.message).toBe(null);
         });

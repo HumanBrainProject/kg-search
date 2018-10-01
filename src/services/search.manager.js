@@ -113,8 +113,8 @@ export default class SearchManager {
     if (state.indexes.hasRequest) {
       this.loadIndexes();
     }
-    if (state.hits.hasRequest) {
-      this.loadInstance(state.hits.requestReference);
+    if (state.instances.hasRequest) {
+      this.loadInstance(state.instances.requestReference);
     }
   }
   loadDefinition() {
@@ -163,8 +163,8 @@ export default class SearchManager {
     //window.console.debug("SearchManager loadInstance: " + id);
     const store = this.store;
     const state = store.getState();
-    if (!state.hits.isLoading) {
-      store.dispatch(actions.loadHitRequest());
+    if (!state.instances.isLoading) {
+      store.dispatch(actions.loadInstanceRequest());
       setTimeout(() => {
         let options = null;
         if (state.auth.accessToken) {
@@ -179,13 +179,13 @@ export default class SearchManager {
         API.fetch(API.endpoints.instance(state.configuration.searchApiHost, id), options)
           .then(data => {
             if (data.found) {
-              store.dispatch(actions.loadHitSuccess(data));
+              store.dispatch(actions.loadInstanceSuccess(data));
             } else {
-              store.dispatch(actions.loadHitNoData(id));
+              store.dispatch(actions.loadInstanceNoData(id));
             }
           })
           .catch(error => {
-            store.dispatch(actions.loadHitFailure(id, error));
+            store.dispatch(actions.loadInstanceFailure(id, error));
           });
       });
     }

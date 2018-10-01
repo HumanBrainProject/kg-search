@@ -23,15 +23,15 @@ export default class AppManager {
     this.store = store;
     this.search = new SearchManager(store);
     this.isStarted = false;
-    this.initialHitReference = null;
+    this.initialInstanceReference = null;
     this.hitIssuer = null;
-    this.previousStateHits = store.getState().hits;
+    this.previousStateInstances = store.getState().instances;
     this.isEventFiredByBrowserNav = false;
     this.isEventFiredByAppNav = false;
     this.locationHref = window.location.href;
     this.unsubscribe = null;
 
-    // check initial hit reference in url
+    // check initial instance reference in url
     const m = window.location.href.match(/(.*)#(.*)$/);
     if (m && m.length === 3) {
       if (m[2].indexOf("access_token=") !== -1) {
@@ -41,7 +41,7 @@ export default class AppManager {
           store.dispatch(actions.authenticate(accessToken));
         }
       } else {
-        this.initialHitReference = m[2];
+        this.initialInstanceReference = m[2];
       }
       const historyState = window.history.state;
       window.history.replaceState(historyState, "Knowledge Graph Search", m[1]);
@@ -99,10 +99,10 @@ export default class AppManager {
       return;
     }
 
-    if (state.search.initialRequestDone && this.initialHitReference) {
-      //window.console.log("AppManager load initial Hit: " + this.initialHitReference);
-      store.dispatch(actions.loadHit(this.initialHitReference));
-      this.initialHitReference = null;
+    if (state.search.initialRequestDone && this.initialInstanceReference) {
+      //window.console.log("AppManager load initial instance: " + this.initialInstanceReference);
+      store.dispatch(actions.loadInstance(this.initialInstanceReference));
+      this.initialInstanceReference = null;
 
       return;
     }
@@ -110,10 +110,10 @@ export default class AppManager {
     //window.console.debug("App Manager state change", state);
 
     //Remove the ability to scroll the body when the modal is open
-    this.setBodyScrolling(!state.hits.currentHit && !state.application.info);
+    this.setBodyScrolling(!state.instances.currentInstance && !state.application.info);
 
     // store detail view laucher button in order to set back focus to it when detail popup close
-    this.manageHitFocus(state.hits.currentHit);
+    this.manageHitFocus(state.instances.currentInstance);
 
     this.manageHistory(state);
   }
@@ -141,26 +141,26 @@ export default class AppManager {
   }
   manageHistory(state) {
     // check history todos
-    const pauseSearchkitHistoryListening = state.hits.currentHit && !this.previousStateHits.currentHit;
-    const resumeSearchkitHistoryListening = !state.hits.currentHit && this.previousStateHits.currentHit;
-    const pushHistoryState = (state.hits.currentHit && !this.previousStateHits.currentHit)
-        || state.hits.previousHits.length > this.previousStateHits.previousHits.length;
+    const pauseSearchkitHistoryListening = state.instances.currentInstance && !this.previousStateInstances.currentInstance;
+    const resumeSearchkitHistoryListening = !state.instances.currentInstance && this.previousStateInstances.currentInstance;
+    const pushHistoryState = (state.instances.currentInstance && !this.previousStateInstances.currentInstance)
+        || state.instances.previousInstances.length > this.previousStateInstances.previousInstances.length;
     const backHistoryCounts = ((context, previousState, state) => {
       if (context.isEventFiredByBrowserNav) {
         context.isEventFiredByBrowserNav = false;
         return 0;
       }
-      let backs = previousState.previousHits.length - state.previousHits.length;
+      let backs = previousState.previousInstances.length - state.previousInstances.length;
       if (backs < 0) {
         backs = 0;
       }
-      if (previousState.currentHit && !state.currentHit) {
+      if (previousState.currentInstance && !state.currentInstance) {
         backs++;
       }
       return backs<0?0:backs;
-    })(this, this.previousStateHits, state.hits);
+    })(this, this.previousStateInstances, state.instances);
 
-    this.previousStateHits = Object.assign({}, state.hits);
+    this.previousStateInstances = Object.assign({}, state.instances);
 
     // apply history todos
     if (pauseSearchkitHistoryListening) {
@@ -169,7 +169,7 @@ export default class AppManager {
     if (pushHistoryState) {
       //window.console.debug(new Date().toLocaleTimeString() + ": new history");
       const historyState = window.history.state;
-      window.history.pushState(historyState, "Knowledge Graph Search", window.location.href.replace(/#.*$/,"") + "#" + state.hits.currentHit._type + "/" + state.hits.currentHit._id);
+      window.history.pushState(historyState, "Knowledge Graph Search", window.location.href.replace(/#.*$/,"") + "#" + state.instances.currentInstance._type + "/" + state.instances.currentInstance._id);
     }
     if (backHistoryCounts) {
       //window.console.debug(new Date().toLocaleTimeString() + ": back history: " + backHistoryCounts);
@@ -182,10 +182,10 @@ export default class AppManager {
       },0);
     }
   }
-  setCurrentHitFromBrowserLocation() {
+  setCurrentInstanceFromBrowserLocation() {
     if (this.isStarted) {
       const store = this.store;
-      store.dispatch(actions.setCurrentHitFromBrowserLocation());
+      store.dispatch(actions.setCurrentInstanceFromBrowserLocation());
     }
   }
   catchBrowserNavigationChange() {
@@ -194,7 +194,7 @@ export default class AppManager {
     } else {
       //window.console.debug(new Date().toLocaleTimeString() + ": nav change");
       this.isEventFiredByBrowserNav = true;
-      this.setCurrentHitFromBrowserLocation();
+      this.setCurrentInstanceFromBrowserLocation();
     }
   }
 }

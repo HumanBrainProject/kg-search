@@ -94,6 +94,6 @@ const mapStateToProps = (state, props) => {
 export const HitsPanel = connect(
   mapStateToProps,
   dispatch => ({
-    onClick: (data, target) => dispatch(actions.setHit(data, target))
+    onClick: (data, target) => dispatch(actions.setInstance(data, target))
   })
 )(HitsPanelBase);

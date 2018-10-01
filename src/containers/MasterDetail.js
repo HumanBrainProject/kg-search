@@ -48,7 +48,7 @@ const MasterDetailWithTabKeyNavigation = withTabKeyNavigation(
 
 export const MasterDetail = connect(
   (state, props) => ({
-    isActive: !state.hits.currentHit,
+    isActive: !state.instances.currentInstance,
     manager: props.manager,
     show: state.application.isReady
   })

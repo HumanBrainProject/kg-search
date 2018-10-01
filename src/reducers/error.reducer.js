@@ -82,29 +82,29 @@ export function reducer(state = initialState, action = {}) {
       }
     };
   }
-  case types.LOAD_HIT_NO_DATA: {
+  case types.LOAD_INSTANCE_NO_DATA: {
     return {
       message: `${(typeof action.reference === "string")?action.reference.replace(/\//g, " "):"This data"} is currently not available.`,
       retry: {
         label: "Retry",
-        action: types.LOAD_HIT
+        action: types.LOAD_INSTANCE
       },
       cancel: {
         label: "Cancel",
-        action: types.CANCEL_HIT_LOADING
+        action: types.CANCEL_INSTANCE_LOADING
       }
     };
   }
-  case types.LOAD_HIT_FAILURE: {
+  case types.LOAD_INSTANCE_FAILURE: {
     return {
       message: "The search engine is temporary unavailable. Please retry in a moment.",
       retry: {
         label: "Retry",
-        action: types.LOAD_HIT
+        action: types.LOAD_INSTANCE
       },
       cancel: {
         label: "Cancel",
-        action: types.CANCEL_HIT_LOADING
+        action: types.CANCEL_INSTANCE_LOADING
       }
     };
   }
@@ -117,9 +117,9 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_SEARCH_REQUEST:
   case types.LOAD_SEARCH_SUCCESS:
   case types.CANCEL_SEARCH:
-  case types.LOAD_HIT_REQUEST:
-  case types.LOAD_HIT_SUCCESS:
-  case types.CANCEL_HIT_LOADING:
+  case types.LOAD_INSTANCE_REQUEST:
+  case types.LOAD_INSTANCE_SUCCESS:
+  case types.CANCEL_INSTANCE_LOADING:
     return {
       message: null,
       retry: null,
