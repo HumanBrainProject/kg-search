@@ -100,9 +100,10 @@ export default class AppManager {
     }
 
     if (state.search.initialRequestDone && this.initialInstanceReference) {
-      //window.console.log("AppManager load initial instance: " + this.initialInstanceReference);
-      store.dispatch(actions.loadInstance(this.initialInstanceReference));
+      const reference = this.initialInstanceReference;
       this.initialInstanceReference = null;
+      //window.console.log("AppManager load initial instance: " + reference);
+      store.dispatch(actions.loadInstance(reference));
 
       return;
     }
