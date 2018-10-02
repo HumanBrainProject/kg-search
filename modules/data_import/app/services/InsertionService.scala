@@ -16,14 +16,14 @@
 package data_import.services
 
 import com.google.inject.Inject
-import data_import.helpers.excel_import.ExcelInsertionHelper
+import data_import.helpers.excel_import.{ExcelInsertionHelper, ExcelUnimindsImportHelper}
 import data_import.helpers.excel_import.ExcelMindsImportHelper.formatEntityPayload
 import data_import.models.excel_import.CommonVars.{activityLabel, datasetLabel, specimenGroupLabel, specimengroupLabel}
 import models.excel_import.{Entity, Value}
 import nexus.services.NexusService
 import nexus.services.NexusService._
-import play.api.{Logger}
-import play.api.http.Status.{OK, CREATED}
+import play.api.Logger
+import play.api.http.Status.{CREATED, OK}
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 
@@ -89,7 +89,7 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService)
   */
   def insertUnimindsEntity(nexusUrl:String, entity: Entity,token: String):Future[Either[(String, JsValue), String]] = {
     val payload = entity.toJsonLd()
-    val path = NexusPath( "uniminds", "core", entity.`type`, "v0.0.1")
+    val path = NexusPath( ExcelUnimindsImportHelper.unimindsOrg, ExcelUnimindsImportHelper.unimindsDomain, entity.`type`, ExcelUnimindsImportHelper.unimindsVersion)
     entity.externalId match {
       case Some (idValue) =>
          if (isNexusLink(idValue)){
@@ -208,7 +208,7 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService)
     val schemas = data.map(_.`type`).distinct
     schemas.foldLeft (Future.successful("")) {
       case (_, schema) =>
-        val path = NexusPath( "uniminds", "core", schema, "v0.0.1")
+        val path = NexusPath( ExcelUnimindsImportHelper.unimindsOrg, ExcelUnimindsImportHelper.unimindsDomain, schema, ExcelUnimindsImportHelper.unimindsVersion)
         nexusService.createSimpleSchema(nexusEndPoint,path, token).map{
           response =>
             s"${response.status}: ${response.body}"

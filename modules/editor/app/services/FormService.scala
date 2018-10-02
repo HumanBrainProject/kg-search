@@ -20,6 +20,7 @@ package services
 import com.google.inject.{Inject, Singleton}
 import common.models.{NexusInstance, NexusPath, User}
 import common.services.ConfigurationService
+import org.json4s.native.JsonParser
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
 
@@ -32,7 +33,7 @@ class FormService @Inject()(
                              ws: WSClient
                            )(implicit ec: ExecutionContext){
 
-  val slashEscaper = "%nexus-slash%"
+
   lazy val formRegistry = loadFormConfiguration()
 //  private lazy val editableEntityTypes = buildEditableEntityTypesFromRegistry()
   val timeout = FiniteDuration(15, "sec")
@@ -51,29 +52,9 @@ class FormService @Inject()(
     val registry = this.formRegistry.value.filter{
       entity => user.groups.contains(s"nexus-${entity._1}")
     }
-    buildEditableEntityTypesFromRegistry(Json.toJson(registry).as[JsObject])
+    FormService.buildEditableEntityTypesFromRegistry(Json.toJson(registry).as[JsObject])
   }
 
-  def buildEditableEntityTypesFromRegistry(registry: JsObject): JsObject = {
-    val res = registry.value.flatMap{
-      case (organization, organizationDetails) =>
-        organizationDetails.as[JsObject].value.flatMap{
-          case (domain, domainDetails) =>
-            domainDetails.as[JsObject].value.flatMap{
-              case (schema, schemaDetails) =>
-                schemaDetails.as[JsObject].value.map{
-                  case (version, formDetails) =>
-                    Json.obj(
-                      "path" -> JsString(s"$organization/$domain/$schema/$version"),
-                      "label" -> (formDetails.as[JsObject] \ "label").get,
-                      "editable" -> JsBoolean((formDetails.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true)),
-                      "ui_info" -> (formDetails.as[JsObject] \ "ui_info").asOpt[JsObject].getOrElse[JsObject](Json.obj()) )
-                }
-            }
-        }
-    }.toSeq.sortWith{case (jsO1, jsO2) => (jsO1 \ "label").as[String] < ((jsO2 \ "label").as[String])}
-    Json.obj("data" -> JsArray(res))
-  }
 
   def getFormStructure(entityType: NexusPath, data: JsValue, reconciledSuffix: String): JsValue = {
     // retrieve form template
@@ -97,14 +78,14 @@ class FormService @Inject()(
               if (data.as[JsObject].keys.contains(key)) {
                 val newValue = (fieldContent \ "type").asOpt[String].getOrElse("") match {
                   case "DropdownSelect" =>
-                    fieldContent.as[JsObject] + ("value", transformToArray(key, data, reconciledSuffix))
+                    fieldContent.as[JsObject] + ("value", FormService.transformToArray(key, data, reconciledSuffix))
                   case _ =>
                     fieldContent.as[JsObject] + ("value", (data \ key).get)
                 }
 
-                filledTemplate + (escapeSlash(key), newValue)
+                filledTemplate + (FormService.escapeSlash(key), newValue)
               } else {
-                filledTemplate + (escapeSlash(key), fieldContent.as[JsObject] )
+                filledTemplate + (FormService.escapeSlash(key), fieldContent.as[JsObject] )
               }
           }
           Json.obj("fields" -> fields) +
@@ -116,7 +97,7 @@ class FormService @Inject()(
           //Returning a blank template
           val escapedForm = ( formTemplate \ "fields" ).as[JsObject].value.map{
             case (key, value) =>
-              (escapeSlash(key) , value)
+              (FormService.escapeSlash(key) , value)
           }
           Json.obj("fields" -> Json.toJson(escapedForm)) +
             ("label", (formTemplate \ "label").get) +
@@ -126,6 +107,70 @@ class FormService @Inject()(
         }
       case None =>
         JsNull
+    }
+  }
+
+  def buildNewInstanceFromForm(nexusEndpoint: String, instancePath: NexusPath, newInstance: JsObject): JsObject = {
+
+    def addNexusEndpointToLinks(item: JsValue): JsObject = {
+      val id = (item.as[JsObject] \ "id" ).as[String]
+      if(!id.startsWith("http://")){
+        Json.obj("@id" ->  JsString(s"$nexusEndpoint/v0/data/$id"))
+      }else{
+        Json.obj("@id" ->  JsString(id))
+      }
+    }
+
+    val fields = (formRegistry \ instancePath.org \ instancePath.domain \ instancePath.schema \ instancePath.version \ "fields").as[JsObject].value
+    val m = newInstance.value.map{ case (k, v) =>
+      val key = FormService.unescapeSlash(k)
+      val formObjectType = (fields(key) \ "type").as[String]
+      formObjectType match {
+        case "DropdownSelect" =>
+          val arr: IndexedSeq[JsValue] = v.as[JsArray].value.map{ item =>
+            addNexusEndpointToLinks(item)
+          }
+          key -> Json.toJson(arr)
+        case _ =>
+          if( (fields(key) \ "isLink").asOpt[Boolean].getOrElse(false)){
+            key -> addNexusEndpointToLinks(v)
+          } else{
+            key -> v
+          }
+      }
+    }
+    Json.toJson(m).as[JsObject]
+  }
+
+
+  def isInSpec(id:String):Boolean = {
+    val list = (FormService.buildEditableEntityTypesFromRegistry(this.formRegistry) \ "data")
+      .as[List[JsObject]]
+      .map(js => (js  \ "path").as[String])
+    list.contains(id)
+  }
+
+}
+object FormService{
+
+  val slashEscaper = "%nexus-slash%"
+
+  def removeKey(jsValue: JsValue):JsValue = {
+    if (jsValue.validateOpt[JsObject].isSuccess) {
+      if(jsValue.toString() == "null"){
+        JsNull
+      }else{
+        val correctedObj = jsValue.as[JsObject] - "description" - "label" - "status" - "childrenStatus"
+        val res = correctedObj.value.map {
+          case (k, v) =>
+            k -> removeKey(v)
+        }
+        Json.toJson(res)
+      }
+    } else if (jsValue.validateOpt[JsArray].isSuccess) {
+      Json.toJson(jsValue.as[JsArray].value.map(removeKey))
+    } else {
+      jsValue
     }
   }
 
@@ -165,35 +210,41 @@ class FormService @Inject()(
           val(id, path) = NexusInstance.extractIdAndPathFromString((el \ "@id").as[String])
           val instancePath = path.originalPath(reconciledSuffix)
           Json.obj("id" -> JsString(instancePath.toString() + s"/$id"))
-        }
+      }
     ).as[JsArray]
   }
 
-  def removeKey(jsValue: JsValue):JsValue = {
-      if (jsValue.validateOpt[JsObject].isSuccess) {
-        if(jsValue.toString() == "null"){
-          JsNull
-        }else{
-          val correctedObj = jsValue.as[JsObject] - "description" - "label" - "status" - "childrenStatus"
-          val res = correctedObj.value.map {
-            case (k, v) =>
-              k -> removeKey(v)
-          }
-          Json.toJson(res)
+  def buildEditableEntityTypesFromRegistry(registry: JsObject): JsObject = {
+    val res = registry.value.flatMap{
+      case (organization, organizationDetails) =>
+        organizationDetails.as[JsObject].value.flatMap{
+          case (domain, domainDetails) =>
+            domainDetails.as[JsObject].value.flatMap{
+              case (schema, schemaDetails) =>
+                schemaDetails.as[JsObject].value.map{
+                  case (version, formDetails) =>
+                    Json.obj(
+                      "path" -> JsString(s"$organization/$domain/$schema/$version"),
+                      "label" -> (formDetails.as[JsObject] \ "label").get,
+                      "editable" -> JsBoolean((formDetails.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true)),
+                      "ui_info" -> (formDetails.as[JsObject] \ "ui_info").asOpt[JsObject].getOrElse[JsObject](Json.obj()) )
+                }
+            }
         }
-      } else if (jsValue.validateOpt[JsArray].isSuccess) {
-        Json.toJson(jsValue.as[JsArray].value.map(removeKey))
-      } else {
-        jsValue
-      }
-
+    }.toSeq.sortWith{case (jsO1, jsO2) => (jsO1 \ "label").as[String] < ((jsO2 \ "label").as[String])}
+    Json.obj("data" -> JsArray(res))
   }
 
-  def isInSpec(id:String):Boolean = {
-    val list = (buildEditableEntityTypesFromRegistry(this.formRegistry) \ "data")
-      .as[List[JsObject]]
-      .map(js => (js  \ "path").as[String])
-    list.contains(id)
+  def buildInstanceFromForm(original: NexusInstance, modificationFromUser: JsValue, nexusEndpoint: String): NexusInstance = {
+    //    val flattened = JsFlattener(formContent)
+    //    applyChanges(original, flattened)
+    val formContent = Json.parse(FormService.unescapeSlash(modificationFromUser.toString())).as[JsObject] - "id"
+    val cleanForm = FormService.removeKey(formContent.as[JsValue])
+    val formWithID = cleanForm.toString().replaceAll(""""id":"""", s""""@id":"${nexusEndpoint}/v0/data/""")
+    val r = JsonParser.parse(original.content.toString()) merge(JsonParser.parse(formWithID))
+    val res= original.content.deepMerge(Json.parse(formWithID).as[JsObject])
+    original.copy(content = res)
   }
+
 
 }

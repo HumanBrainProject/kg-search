@@ -34,13 +34,14 @@ import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import common.services.ConfigurationService
 import editor.helpers.InstanceHelper.UpdateInfo
-import nexus.helpers.NexusHelper.hash
+import scala.concurrent.duration._
+import scala.concurrent.duration.FiniteDuration
 
-import scala.concurrent.{ExecutionContext, Future, blocking}
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 class EditorService @Inject()(wSClient: WSClient,
                               nexusService: NexusService,
-                              config: ConfigurationService
+                              config: ConfigurationService,
                                )(implicit executionContext: ExecutionContext) {
 
   val logger = Logger(this.getClass)
@@ -138,6 +139,15 @@ class EditorService @Inject()(wSClient: WSClient,
     }
   }
 
+  /**
+    *  Fetch a reconciled instance from an instance in the original space
+    * @param originalPath The original nexus path
+    * @param reconciledOrg The name of the reconcile organization
+    * @param id The id of the original instance
+    * @param token The auth token
+    * @param parameters A list of parameters to append to the NEXUS API query.
+    * @return The Reconciled instance
+    */
   def retrieveReconciledFromOriginal(
                                       originalPath: NexusPath,
                                       reconciledOrg: String,
@@ -253,7 +263,6 @@ class EditorService @Inject()(wSClient: WSClient,
 
   def updateReconciledInstance(
                                 manualSpace: String,
-                                currentReconciledInstance: ReconciledInstance,
                                 editorInstances: List[EditorInstance],
                                 originalInstance: NexusInstance,
                                 originalPath: NexusPath,
@@ -264,7 +273,6 @@ class EditorService @Inject()(wSClient: WSClient,
                                 userInfo: User
                               ): Future[WSResponse] = {
     val parentId = originalInstance.id()
-    val revision = currentReconciledInstance.nexusInstance.getRevision()
     val parentRevision = originalInstance.getRevision()
     val payload =  updatedValue.generateReconciledInstance(
         manualSpace,
@@ -276,9 +284,10 @@ class EditorService @Inject()(wSClient: WSClient,
         parentRevision,
         parentId.get
       )
+    val revision = updatedValue.nexusInstance.getRevision()
     updateInstance(
       payload.nexusInstance,
-      currentReconciledInstance.nexusInstance.nexusUUID.get,
+      updatedValue.nexusInstance.nexusUUID.get,
       revision,
       token
     )
@@ -315,7 +324,24 @@ class EditorService @Inject()(wSClient: WSClient,
     )
   }
 
-  def createDomainsAndSchemasSync(editorSpace: String, reconciledSpace: String, originalInstancePath: NexusPath, token: String, techToken: String): Future[(Boolean, Boolean)] = {
+  /**
+    * Create domains and schemas to prepare the update of an instance.
+    * The calls to the different apis are async but still we ensure that
+    * the creation of the domain is done before the creation of the schema
+    * @param editorSpace
+    * @param reconciledSpace
+    * @param originalInstancePath
+    * @param token
+    * @param techToken
+    * @return
+    */
+  def createDomainsAndSchemasSync(
+                                   editorSpace: String,
+                                   reconciledSpace: String,
+                                   originalInstancePath: NexusPath,
+                                   token: String,
+                                   techToken: String
+                                 ): Future[(Boolean, Boolean)] = {
 
     val createEditorDomain = nexusService
       .createDomain(
@@ -387,7 +413,6 @@ class EditorService @Inject()(wSClient: WSClient,
           }else{
             updateReconciledInstance(
               editorSpace,
-              reconciledInstanceToSave,
               editorInstances,
               originalInstance,
               originalPath,
@@ -415,5 +440,74 @@ class EditorService @Inject()(wSClient: WSClient,
       }
     }
   }
+
+  def preppingEntitiesForSave(
+                               updatedInstance: NexusInstance,
+                               cleanInstance: NexusInstance,
+                               currentlyDisplayedInstance: NexusInstance,
+                               originalPath: NexusPath,
+                               userInfo: User,
+                               token: String
+                             ): EditorInstance = {
+    val entityType = s"http://hbp.eu/${originalPath.org}#${originalPath.schema.capitalize}"
+    val diffEntity = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, updatedInstance)
+    val correctedLinks = EditorInstance(
+      NexusInstance(
+        None, originalPath.reconciledPath(config.editorPrefix), Json.toJson(diffEntity.value.map {
+          case (k, v) => recursiveCheckOfIds(k, v, config.reconciledPrefix, token)
+        }).as[JsObject]
+      )
+    ).prepareManualEntityForStorage(
+      userInfo,
+      s"${config.nexusEndpoint}/v0/data/${currentlyDisplayedInstance.id().get}",
+      entityType
+    )
+    correctedLinks.cleanReconciledFields()
+  }
+
+
+  def recursiveCheckOfIds(k: String,
+                          v: JsValue,
+                          reconciledPrefix: String,
+                          token: String
+                         ): (String, JsValue) = {
+    if (k == "@id") {
+      val url = v.as[String]
+      val base = url.split("v0/data/").head
+      val (id, path) = NexusInstance.extractIdAndPathFromString(url)
+      val reconciledPath = path.reconciledPath(reconciledPrefix)
+      val res = Await.result(getInstance(reconciledPath, id, token), 10.seconds)
+      if (res.isRight) {
+        k -> JsString(s"${base}v0/data/${reconciledPath.toString()}/${id}")
+      } else {
+        k -> JsString(s"${base}v0/data/${path.toString()}/${id}")
+      }
+    } else {
+      v match {
+        case v if v.asOpt[JsObject].isDefined =>
+          val obj = v.as[JsObject].value.map {
+            case (childK, childV) =>
+              recursiveCheckOfIds(childK, childV, reconciledPrefix, token)
+          }
+          k -> Json.toJson(obj)
+        case v if v.asOpt[JsArray].isDefined =>
+          val arr = v.as[JsArray].value.map { item =>
+            if (item.asOpt[JsObject].isDefined) {
+              val r = item.as[JsObject].value.map {
+                case (childK, childV) =>
+                  recursiveCheckOfIds(childK, childV, reconciledPrefix, token)
+              }
+              Json.toJson(r)
+            } else {
+              item
+            }
+          }
+          k -> Json.toJson(arr)
+        case v => k -> v
+      }
+    }
+
+  }
+
 
 }

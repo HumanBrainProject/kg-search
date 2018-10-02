@@ -23,6 +23,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet
 import scala.collection.immutable.HashSet
 import scala.concurrent.{ExecutionContext, Future}
 import Entity._
+import data_import.helpers.excel_import.ExcelUnimindsImportHelper
 
 
 case class Entity(rawType: String, localId: String, rawContent: Map[String, Value], status: Option[String] = None){
@@ -63,7 +64,7 @@ case class Entity(rawType: String, localId: String, rawContent: Map[String, Valu
           val jsonBlock = value.toJsonLd()
           jsonBlock match {
             case JsNull => None
-            case _ => Some((s"http://hbp.eu/uniminds#$key", jsonBlock))
+            case _ => Some((s"http://hbp.eu/${ExcelUnimindsImportHelper.unimindsOrg}#$key", jsonBlock))
           }
         } else {
           Some((key, value.toJsonLd()))
@@ -72,7 +73,7 @@ case class Entity(rawType: String, localId: String, rawContent: Map[String, Valu
     val identifier = JsString(NexusHelper.hash(s"${`type`}$localId"))
     JsObject(
       originalContent :+
-      ("@type", JsString(s"http://hbp.eu/uniminds#${`type`}")) :+
+      ("@type", JsString(s"http://hbp.eu/${ExcelUnimindsImportHelper.unimindsOrg}#${`type`.capitalize}")) :+
       ("http://schema.org/identifier", identifier)
     )
   }

@@ -127,16 +127,6 @@ object InstanceHelper {
     Json.toJson(diffWithCompleteArray).as[JsObject]
   }
 
-  def buildInstanceFromForm(original: NexusInstance, formContent: JsObject, nexusEndpoint: String, formService: FormService): NexusInstance = {
-//    val flattened = JsFlattener(formContent)
-//    applyChanges(original, flattened)
-    val cleanForm = formService.removeKey(formContent.as[JsValue])
-    val formWithID = cleanForm.toString().replaceAll(""""id":"""", s""""@id":"${nexusEndpoint}/v0/data/""")
-    val r = JsonParser.parse(original.content.toString()) merge(JsonParser.parse(formWithID))
-    val res= original.content.deepMerge(Json.parse(formWithID).as[JsObject])
-    original.copy(content = res)
-  }
-
   def addDefaultFields(instance: NexusInstance,originalPath: NexusPath, formRegistry:JsObject): NexusInstance = {
     val fields = (formRegistry \ originalPath.org \ originalPath.domain \ originalPath.schema \ originalPath.version \ "fields").as[JsObject].value
     val m = fields.map { case (k, v) =>
@@ -158,37 +148,6 @@ object InstanceHelper {
 
   }
 
-  def buildNewInstanceFromForm(nexusEndpoint: String, instancePath: NexusPath, formRegistry: JsObject, newInstance: JsObject, formService: FormService): JsObject = {
-
-    def addNexusEndpointToLinks(item: JsValue): JsObject = {
-      val id = (item.as[JsObject] \ "id" ).as[String]
-      if(!id.startsWith("http://")){
-        Json.obj("@id" ->  JsString(s"$nexusEndpoint/v0/data/$id"))
-      }else{
-        Json.obj("@id" ->  JsString(id))
-      }
-    }
-
-    val fields = (formRegistry \ instancePath.org \ instancePath.domain \ instancePath.schema \ instancePath.version \ "fields").as[JsObject].value
-    val m = newInstance.value.map{ case (k, v) =>
-      val key = formService.unescapeSlash(k)
-      val formObjectType = (fields(key) \ "type").as[String]
-      formObjectType match {
-        case "DropdownSelect" =>
-          val arr: IndexedSeq[JsValue] = v.as[JsArray].value.map{ item =>
-            addNexusEndpointToLinks(item)
-          }
-          key -> Json.toJson(arr)
-        case _ =>
-          if( (fields(key) \ "isLink").asOpt[Boolean].getOrElse(false)){
-            key -> addNexusEndpointToLinks(v)
-          } else{
-            key -> v
-          }
-      }
-    }
-    Json.toJson(m).as[JsObject]
-  }
 
   def md5HashString(s: String): String = {
     import java.math.BigInteger
