@@ -162,10 +162,12 @@ class Details extends PureComponent {
           )}
         </button>
         <div className="collapsible">
-          <div className="field-details__panel">
-            <Text content={content} isMarkdown={true} />
-            <button className="field-details__close-button" onClick={this.handleClose} title="close"><i className="fa fa-2x fa-close"></i></button>
-          </div>
+          {!this.state.collapsed && (
+            <div className="field-details__panel">
+              <Text content={content} isMarkdown={true} />
+              <button className="field-details__close-button" onClick={this.handleClose} title="close"><i className="fa fa-2x fa-close"></i></button>
+            </div>
+          )}
         </div>
       </span>
     );
