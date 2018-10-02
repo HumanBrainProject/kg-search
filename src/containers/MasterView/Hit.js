@@ -190,7 +190,7 @@ export const Hit = connect(
     const mapping = source && state.definition && state.definition.shapeMappings && state.definition.shapeMappings[data._type];
     const index = (data && !(data.found === false) && data._index)?data._index:"public";
 
-    const ribbonData = mapping && mapping.ribbon && mapping.ribbon.framed && mapping.ribbon.framed.data_field && source[mapping.ribbon.framed.data_field];
+    const ribbonData = mapping && mapping.ribbon && mapping.ribbon.framed && mapping.ribbon.framed.dataField && source[mapping.ribbon.framed.dataField];
     const iconData = {
       value: data && data._type,
       image: {

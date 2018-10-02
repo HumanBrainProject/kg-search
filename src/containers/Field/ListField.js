@@ -109,8 +109,8 @@ const ListFieldBase = (renderUserInteractions = true) => {
         return 0;
       }
 
-      if (!renderUserInteractions && mapping && mapping.overview_max_display && mapping.overview_max_display < items.length) {
-        return mapping.overview_max_display;
+      if (!renderUserInteractions && mapping && mapping.overviewMaxDisplay && mapping.overviewMaxDisplay < items.length) {
+        return mapping.overviewMaxDisplay;
       }
       return items.length;
     }
@@ -212,7 +212,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
       }
 
       return (
-        <ListFieldComponent list={this.state.items} separator={mapping && !mapping.tag_icon && mapping.separator} showAsTag={mapping && !!mapping.tag_icon} showToggle={this.state.hasShowMoreToggle} toggleHandler={this.handleShowMoreClick} toggleLabel={this.state.showMoreLabel} hasMore={this.state.hasMore}/>
+        <ListFieldComponent list={this.state.items} separator={mapping && !mapping.tagIcon && mapping.separator} showAsTag={mapping && !!mapping.tagIcon} showToggle={this.state.hasShowMoreToggle} toggleHandler={this.handleShowMoreClick} toggleLabel={this.state.showMoreLabel} hasMore={this.state.hasMore}/>
       );
     }
   }

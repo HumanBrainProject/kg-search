@@ -92,8 +92,8 @@ const loadDefinitionSuccess = (state, action) => {
         if(field.facet){
           facetFields[type][fieldName] = {
             filterType: field.facet,
-            filterOrder:field.facet_order,
-            exclusiveSelection: field.facet_exclusive_selection,
+            filterOrder:field.facetOrder,
+            exclusiveSelection: field.facetExclusiveSelection,
             fieldType:  field.type,
             fieldLabel: field.value,
             isChild: false
@@ -105,8 +105,8 @@ const loadDefinitionSuccess = (state, action) => {
             if(child.facet){
               facetFields[type][fieldName+".children."+childName] = {
                 filterType: child.facet,
-                filterOrder:child.facet_order,
-                exclusiveSelection: field.facet_exclusive_selection,
+                filterOrder:child.facetOrder,
+                exclusiveSelection: field.facetExclusiveSelection,
                 fieldType:  child.type,
                 fieldLabel: child.value,
                 isChild: true,
