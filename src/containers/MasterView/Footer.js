@@ -28,9 +28,9 @@ const FooterBase = ({isFloating}) => {
     <div className={`kgs-footer${isFloating?" is-fixed-position":""}`}>
       <TermsShortNotice className="kgs-footer__terms-short-notice" />
       <div className="kgs-footer-nav">
-        <Pagination className="kgs-footer-pagination" />
-        <GroupSelection className="kgs-group-selection"/>
         <SignInButton className="kgs-sign-in" signInLabel="Log in" signOffLabel="Log out"/>
+        <GroupSelection className="kgs-group-selection"/>
+        <Pagination className="kgs-footer-pagination" />
         <ShareButtons/>
         <div className="kgs-space" />
         <div className="kgs-space2" />
