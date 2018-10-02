@@ -42,6 +42,7 @@ import editor.services.{EditorService, ReleaseService}
 import nexus.services.NexusService
 import editor.services.ArangoQueryService
 import common.services.ConfigurationService
+import services.FormService
 
 import scala.concurrent.duration._
 import scala.concurrent.duration.FiniteDuration
@@ -155,7 +156,14 @@ class NexusEditorController @Inject()(
             NotImplemented(
               NavigationHelper.errorMessageWithBackLink("Form not implemented", NavigationHelper.generateBackLink(nexusPath, config.reconciledPrefix, formService))
             )
-          case instanceContent => Ok(NavigationHelper.resultWithBackLink(instanceContent.as[JsObject], nexusPath, config.reconciledPrefix, formService))
+          case instanceContent => Ok(
+            NavigationHelper.resultWithBackLink(
+              instanceContent.as[JsObject],
+              nexusPath,
+              config.reconciledPrefix,
+              formService
+            )
+          )
         }
       case Left(response) =>
         ResponseHelper.errorResultWithBackLink(response.status, response.headers, response.body, nexusPath, config.reconciledPrefix, formService)
@@ -439,7 +447,7 @@ class NexusEditorController @Inject()(
     * @param version The version of the schema
     * @return 200
     */
-  def getEmptyForm(org: String, domain: String, schema: String, version: String): Action[AnyContent] = Action {
+  def getEmptyForm(org: String, domain: String, schema: String, version: String): Action[AnyContent] = authenticatedUserAction {
     implicit request =>
       val nexusPath = NexusPath(org, domain, schema, version)
       val form = formService.getFormStructure(nexusPath, JsNull, config.reconciledPrefix)
@@ -451,9 +459,10 @@ class NexusEditorController @Inject()(
     * @param privateSpace
     * @return 200
     */
-  def listEditableEntityTypes(privateSpace: String): Action[AnyContent] = Action {
+  def listEditableEntityTypes(privateSpace: String): Action[AnyContent] = authenticatedUserAction {
+    implicit request =>
     // Editable instance types are the one for which form creation is known
-    Ok(formService.editableEntitiyTypes)
+    Ok(formService.editableEntities(request.user))
   }
 
 

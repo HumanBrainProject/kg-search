@@ -18,13 +18,14 @@ package editor.services
 import authentication.service.OIDCAuthService
 import com.google.inject.Inject
 import common.models.NexusPath
-import editor.helpers.{FormService, InstanceHelper}
+import editor.helpers.{InstanceHelper}
 import nexus.services.NexusService
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
 import play.api.http.HeaderNames._
 import common.services.ConfigurationService
+import services.FormService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -147,7 +148,7 @@ object ArangoQueryService {
           }.getOrElse(JsNull)
         case _ => JsNull
       }
-      .filter(v => v != JsNull && isInSpec( (v \ "id").as[String].splitAt((v \ "id").as[String].lastIndexOf("/"))._1, formService))
+      .filter(v => v != JsNull && formService.isInSpec( (v \ "id").as[String].splitAt((v \ "id").as[String].lastIndexOf("/"))._1))
       .map(_.as[JsObject])
 
   }
@@ -172,10 +173,5 @@ object ArangoQueryService {
     }
   }
 
-  def isInSpec(id:String, formService: FormService):Boolean = {
-    val list = (formService.editableEntitiyTypes \ "data")
-      .as[List[JsObject]]
-      .map(js => (js  \ "path").as[String])
-    list.contains(id)
-  }
+
 }

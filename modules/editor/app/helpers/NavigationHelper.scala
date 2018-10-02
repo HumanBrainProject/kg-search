@@ -19,6 +19,7 @@ package editor.helpers
 
 import common.models.NexusPath
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
+import services.FormService
 
 object NavigationHelper {
   val backLinkField = "back_link"

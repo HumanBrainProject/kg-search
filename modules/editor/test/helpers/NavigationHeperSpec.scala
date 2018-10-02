@@ -18,26 +18,50 @@
 package editor.helpers
 
 import common.models.NexusPath
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import services.FormService
+import org.mockito.Mockito._
+import play.api.libs.json.{JsObject, Json}
 
-class NavigationHeperSpec  extends PlaySpec with GuiceOneAppPerSuite{
+class NavigationHeperSpec  extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar{
+  val formService = mock[FormService]
+  val registry = Json.parse(
+    """
+      |{
+      | "minds":{
+      |   "core":{
+      |     "dataset":{
+      |       "v0.0.4":{
+      |
+      |       }
+      |     }
+      |   }
+      | }
+      |}
+    """.stripMargin).as[JsObject]
 
   "NavigationHelper#generateBackLink" should{
     "return a correctly formatted back link" in {
       val path = NexusPath("minds", "core", "dataset", "v0.0.4")
       val expected = "minds/core/dataset"
-      assert(expected == NavigationHelper.generateBackLink(path, "reconciled"))
+      when(formService.formRegistry).thenReturn(registry)
+      assert(expected == NavigationHelper.generateBackLink(path, "reconciled", formService))
     }
     "return an empty string if the path is not valid" in {
       val path = NexusPath("this", "doesnot", "exists", "v0.0.4")
       val expected = ""
-      assert(expected == NavigationHelper.generateBackLink(path, "reconciled"))
+      val formService = mock[FormService]
+      when(formService.formRegistry).thenReturn(registry)
+      assert(expected == NavigationHelper.generateBackLink(path, "reconciled", formService))
     }
     "return a path with an original organization" in {
       val path = NexusPath("mindsreconciled", "core", "dataset", "v0.0.4")
       val expected = "minds/core/dataset"
-      assert(expected == NavigationHelper.generateBackLink(path, "reconciled"))
+      val formService = mock[FormService]
+      when(formService.formRegistry).thenReturn(registry)
+      assert(expected == NavigationHelper.generateBackLink(path, "reconciled", formService))
     }
   }
 

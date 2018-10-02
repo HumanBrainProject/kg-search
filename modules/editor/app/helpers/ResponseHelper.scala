@@ -3,10 +3,11 @@ package helpers
 import akka.util.ByteString
 import common.helpers.ResponseHelper.{filterContentTypeAndLengthFromHeaders, flattenHeaders, getContentType}
 import common.models.NexusPath
-import editor.helpers.{FormService, NavigationHelper}
+import editor.helpers.NavigationHelper
 import play.api.http.HttpEntity
 import play.api.libs.ws.WSResponse
 import play.api.mvc.{ResponseHeader, Result}
+import services.FormService
 
 object ResponseHelper {
   /**

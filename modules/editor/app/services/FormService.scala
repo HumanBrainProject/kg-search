@@ -15,10 +15,10 @@
 *   limitations under the License.
 */
 
-package editor.helpers
+package services
 
 import com.google.inject.{Inject, Singleton}
-import common.models.{NexusInstance, NexusPath}
+import common.models.{NexusInstance, NexusPath, User}
 import common.services.ConfigurationService
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
@@ -34,19 +34,28 @@ class FormService @Inject()(
 
   val slashEscaper = "%nexus-slash%"
   lazy val formRegistry = loadFormConfiguration()
-  lazy val editableEntitiyTypes = buildEditableEntityTypesFromRegistry()
+//  private lazy val editableEntityTypes = buildEditableEntityTypesFromRegistry()
   val timeout = FiniteDuration(15, "sec")
 
   def loadFormConfiguration(): JsObject = {
     val spec = Await.result(
-      ws.url(s"${config.kgQueryEndpoint}/arango/document/editor_specifications/minds").get(),
+      ws.url(s"${config.kgQueryEndpoint}/arango/document/editor_specifications").get(),
       timeout
     )
-    (spec.json \ "uiSpec").as[JsObject]
+    spec.json.as[List[JsObject]].foldLeft(Json.obj()) {
+      case (acc, el) => acc ++ (el \ "uiSpec").as[JsObject]
+    }
   }
 
-  def buildEditableEntityTypesFromRegistry(): JsObject = {
-    val res = formRegistry.value.flatMap{
+  def editableEntities(user: User): JsValue = {
+    val registry = this.formRegistry.value.filter{
+      entity => user.groups.contains(s"nexus-${entity._1}")
+    }
+    buildEditableEntityTypesFromRegistry(Json.toJson(registry).as[JsObject])
+  }
+
+  def buildEditableEntityTypesFromRegistry(registry: JsObject): JsObject = {
+    val res = registry.value.flatMap{
       case (organization, organizationDetails) =>
         organizationDetails.as[JsObject].value.flatMap{
           case (domain, domainDetails) =>
@@ -178,6 +187,13 @@ class FormService @Inject()(
         jsValue
       }
 
+  }
+
+  def isInSpec(id:String):Boolean = {
+    val list = (buildEditableEntityTypesFromRegistry(this.formRegistry) \ "data")
+      .as[List[JsObject]]
+      .map(js => (js  \ "path").as[String])
+    list.contains(id)
   }
 
 }
