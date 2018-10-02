@@ -30,3 +30,7 @@ button.kgs-conditional-button:hover,
 button.kgs-conditional-button:focus {
     color:#0088cc;
 }
+
+button.kgs-conditional-button:focus {
+    text-decoration: underline;
+}

@@ -15,10 +15,42 @@
 */
 
 import React, { PureComponent } from "react";
+import { connect } from "react-redux";
 import { isMobile } from "./BrowserHelpers";
 
-export class TabNavEnabler extends PureComponent {
-  _keyUpHandler(event) {
+export class TabNavEnablerBase extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.timer = null;
+  }
+  componentDidUpdate() {
+    this.handleChange();
+  }
+  componentDidMount() {
+    this.handleChange();
+  }
+  handleChange() {
+    if (!isMobile) {
+      const {containerSelector, itemSelector, activeItemSelector, disabledItemSelector} = this.props;
+      const container = document.body.querySelector(containerSelector);
+      if (container) {
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() =>{
+          const activeNodes = Object.values(container.querySelectorAll(activeItemSelector));
+          const disabledNodes = Object.values(container.querySelectorAll(disabledItemSelector));
+          const nodeList = container.querySelectorAll(itemSelector);
+          [].forEach.call(nodeList, e => {
+            if (activeNodes.some(a => a === e) || disabledNodes.some(d => d === e)) {
+              e.removeAttribute("tabIndex");
+            } else {
+              e.setAttribute("tabIndex", 0);
+            }
+          });
+        }, 300);
+      }
+    }
+  }
+  handleKeyUp(event) {
     const {containerSelector} = this.props;
     if (event.keyCode === 13) {
       const container = document.body.querySelector(containerSelector);
@@ -28,27 +60,9 @@ export class TabNavEnabler extends PureComponent {
       }
     }
   }
-  componentDidUpdate() {
-    if (!isMobile) {
-      const {containerSelector, itemSelector, activeItemSelector, disabledItemSelector} = this.props;
-      const container = document.body.querySelector(containerSelector);
-      if (container) {
-        const activeNodes = Object.values(container.querySelectorAll(activeItemSelector));
-        const disabledNodes = Object.values(container.querySelectorAll(disabledItemSelector));
-        const nodeList = container.querySelectorAll(itemSelector);
-        [].forEach.call(nodeList, e => {
-          if (activeNodes.some(a => a === e) || disabledNodes.some(d => d === e)) {
-            e.removeAttribute("tabIndex");
-          } else {
-            e.setAttribute("tabIndex", 0);
-          }
-        });
-      }
-    }
-  }
   render() {
     const {className, children} = this.props;
-    const keyUpHandler = (event) => this._keyUpHandler(event);
+    const keyUpHandler = (event) => this.handleKeyUp(event);
 
     if (isMobile) {
       return  (
@@ -65,3 +79,9 @@ export class TabNavEnabler extends PureComponent {
     }
   }
 }
+
+export const TabNavEnabler = connect(
+  (state, props) => ({
+    key: state && props && Math.random()
+  })
+)(TabNavEnablerBase);

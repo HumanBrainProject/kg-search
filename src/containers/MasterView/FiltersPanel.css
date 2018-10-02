@@ -60,9 +60,19 @@
     right: 0;
 }
 
-.kgs-filters .kgs-filters__header .kgs-filters__reset .kgs-filters__reset-button {
+.kgs-filters .kgs-filters__header .kgs-filters__reset button.kgs-filters__reset-button {
     padding: 0;
     border: 0;
     background-color: transparent;
     color: #30b0e0;
+    outline: none;
 }
+
+.kgs-filters .kgs-filters__header .kgs-filters__reset button.kgs-filters__reset-button:hover,
+.kgs-filters .kgs-filters__header .kgs-filters__reset button.kgs-filters__reset-button:focus {
+    color:#0088cc;
+}
+
+.kgs-filters .kgs-filters__header .kgs-filters__reset button.kgs-filters__reset-button:focus {
+    text-decoration: underline;
+}       
