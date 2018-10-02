@@ -19,28 +19,30 @@ import { isMobile } from "../helpers/BrowserHelpers";
 import "./Carrousel.css";
 
 
-const CarrouselItem = ({data, showPrevious, onPrevious, onClose, itemComponent, navigationComponent}) => {
+const CarrouselItem = ({data, isActive, showPrevious, onPrevious, onClose, itemComponent, navigationComponent}) => {
   const ItemComponent =  itemComponent;
   const NavigationComponent = navigationComponent;
   return (
     <div className="kgs-carrousel__panel">
       <div className="kgs-carrousel__header">
-        {showPrevious && (
+        {isActive && showPrevious && (
           <button className="kgs-carrousel__previous-button" onClick={onPrevious}>
             <i className="fa fa-chevron-left" /> Previous
           </button>
         )}
         <div className="kgs-carrousel__navigation">
-          {data && (
+          {isActive && data && (
             <NavigationComponent/>
           )}
         </div>
-        <button className="kgs-carrousel__close-button" onClick={onClose}>
-          <i className="fa fa-close" />
-        </button>
+        {isActive && (
+          <button className="kgs-carrousel__close-button" onClick={onClose}>
+            <i className="fa fa-close" />
+          </button>
+        )}
       </div>
       <div className="kgs-carrousel__body">
-        {data && (
+        {isActive && data && (
           <ItemComponent data={data} />
         )}
       </div>
@@ -103,7 +105,7 @@ export class Carrousel extends PureComponent {
         <div className="kgs-carrousel__views">
           {views.map(view => (
             <div key={view.id} className="kgs-carrousel__view" data-view={view.id} >
-              <CarrouselItem data={view.data} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />
+              <CarrouselItem isActive={view.id === selectedView} data={view.data} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />
             </div>
           ))}
         </div>
