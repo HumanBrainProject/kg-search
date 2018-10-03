@@ -25,18 +25,4 @@ object ReleaseStatus {
   val notReleased = "NOT_RELEASED"
   val hasChanged = "HAS_CHANGED"
 
-  val status = List(JsString(released), JsString(notReleased), JsString(hasChanged))
-  val childStatus = List(JsString(released), JsString(notReleased), JsString(hasChanged), JsNull)
-
-  val r = scala.util.Random
-  //TODO remove for test only
-  def getRandomStatus(): JsValue ={
-    status(r.nextInt(status.length))
-  }
-
-  def getRandomChildrenStatus(): JsValue = {
-    childStatus(r.nextInt(childStatus.length))
-  }
-
-
 }

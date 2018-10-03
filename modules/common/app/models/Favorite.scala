@@ -26,12 +26,12 @@ object Favorite {
     implicit val editorUserWrites = new Writes[Favorite] {
       def writes(favorite: Favorite): JsObject = Json.obj(
         "nexusId" -> favorite.nexusId.split("v0/data/").last,
-        "instanceId" -> favorite.instanceId,
+        "favoriteInstance" -> favorite.instanceId,
       )
     }
     implicit val editorUserReads: Reads[Favorite] = (
       (JsPath \ "nexusId").read[String] and
-        (JsPath \ "instanceId").read[String]
+        (JsPath \ "favoriteInstance").read[String]
       ) (Favorite.apply _)
 
 }

@@ -1,24 +1,341 @@
-GET    /api/nodetypes                  editor.controllers.NexusEditorController.listEntities( privateSpace: String ?= "minds")
+###
+#  summary: get the list of entity types to display
+#  tags:
+#    - editor
+#  parameters:
+#  - name: privateSpace
+#    in: path
+#    description: organization the instance to retrieve
+#    required: false
+#    type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+GET    /api/nodetypes                  editor.controllers.NexusEditorController.listEditableEntityTypes( privateSpace: String ?= "minds")
 
-GET    /api/instances/:org/:domain/:datatype/:version         editor.controllers.NexusEditorController.listInstances(org: String, domain:String, datatype: String, version:String, from:Int?=0, size:Int?=20, search:String?="")
+###
+#  summary: get the list of entity
+#  tags:
+#    - editor
+#  parameters:
+#  - name: org
+#    in: path
+#    description: organization the instance to retrieve
+#    required: true
+#    type: string
+#  - name: domain
+#    in: path
+#    description: domain of the instance to retrieve
+#    required: true
+#    type: string
+#  - name: schema
+#    in: path
+#    description: schema name
+#    required: true
+#    type: string
+#  - name: version
+#    in: path
+#    description: version of the instance to retrieve
+#    required: true
+#    type: string
+#  - name: from
+#    in: path
+#    description: the offset of the pagination
+#    required: false
+#    type: int
+#  - name: size
+#    in: path
+#    description: the size of the page
+#    required: false
+#    type: int
+#  - name: search
+#    in: path
+#    description: the search query only applied for the name of the instance
+#    required: false
+#    type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+GET    /api/instances/:org/:domain/:schema/:version         editor.controllers.NexusEditorController.listInstances(org: String, domain:String, schema: String, version:String, from:Option[Int], size:Option[Int], search:String?="")
 
-GET    /api/instance/:org/:domain/:datatype/:version/:id                 editor.controllers.NexusEditorController.getInstance(org: String, domain:String, datatype: String, version:String, id: String)
-GET    /api/instance/:org/:domain/:datatype/:version                 editor.controllers.NexusEditorController.getEmptyForm(org: String, domain:String, datatype: String, version:String)
-PUT   /api/instance/:org/:domain/:datatype/:version/:id                editor.controllers.NexusEditorController.updateInstance(org: String, domain:String, datatype: String, version:String, id: String)
-POST   /api/instance/:org/:domain/:datatype/:version                editor.controllers.NexusEditorController.createInstance(org: String, domain:String, datatype: String, version:String)
+###
+#  summary: get a specific entity
+#  tags:
+#    - editor
+#  parameters:
+#  - name: org
+#    in: path
+#    description: organization the instance to retrieve
+#    required: true
+#    type: string
+#  - name: domain
+#    in: path
+#    description: domain of the instance to retrieve
+#    required: true
+#    type: string
+#  - name: schema
+#    in: path
+#    description: schema name
+#    required: true
+#    type: string
+#  - name: version
+#    in: path
+#    description: version of the instance to retrieve
+#    required: true
+#    type: string
+#  - name: id
+#    in: path
+#    description: the UUID of the instance to retrieve
+#    required: true
+#    type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+GET    /api/instance/:org/:domain/:schema/:version/:id                 editor.controllers.NexusEditorController.getInstance(org: String, domain:String, schema: String, version:String, id: String)
 
-GET    /api/revisions/:org/:domain/:datatype/:version/:id                       editor.controllers.NexusEditorController.getInstanceNumberOfAvailableRevisions(org: String, domain:String, datatype: String, version:String, id: String)
+###
+#  summary: return a an empty form for a specific entity type
+#  tags:
+#    - editor
+#  parameters:
+#  - name: org
+#    in: path
+#    description: organization the instance
+#    required: true
+#    type: string
+#  - name: domain
+#    in: path
+#    description: domain of the instance
+#    required: true
+#    type: string
+#  - name: schema
+#    in: path
+#    description: schema name
+#    required: true
+#    type: string
+#  - name: version
+#    in: path
+#    description: version of the instance
+#    required: true
+#    type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+GET    /api/instance/:org/:domain/:schema/:version                 editor.controllers.NexusEditorController.getEmptyForm(org: String, domain:String, schema: String, version:String)
 
-GET    /api/reconciled/:org/:domain/:datatype/:version/:id              editor.controllers.NexusEditorController.getSpecificReconciledInstance(org: String, domain:String, datatype: String, version:String, id: String ,rev:Int ?= 1)
+###
+#  summary: update an instance
+#  tags:
+#    - editor
+#  parameters:
+#  - name: org
+#    in: path
+#    description: organization the instance to update
+#    required: true
+#    type: string
+#  - name: domain
+#    in: path
+#    description: domain of the instance to update
+#    required: true
+#    type: string
+#  - name: schema
+#    in: path
+#    description: schema name
+#    required: true
+#    type: string
+#  - name: version
+#    in: path
+#    description: version of the instance to update
+#    required: true
+#    type: string
+#  - name: id
+#    in: path
+#    description: the UUID of the instance to update
+#    required: true
+#    type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+PUT   /api/instance/:org/:domain/:schema/:version/:id                editor.controllers.NexusEditorController.updateInstance(org: String, domain:String, schema: String, version:String, id: String)
 
-GET    /api/graph/:org/:domain/:datatype/:version/:id   editor.controllers.NexusEditorController.graphEntities(org: String, domain:String, datatype: String, version:String, id: String, step:Int ?= 2)
+###
+#  summary: create a new instance
+#  tags:
+#    - editor
+#  parameters:
+#  - name: org
+#    in: path
+#    description: organization the instance to create
+#    required: true
+#    type: string
+#  - name: domain
+#    in: path
+#    description: domain of the instance to create
+#    required: true
+#    type: string
+#  - name: schema
+#    in: path
+#    description: schema name
+#    required: true
+#    type: string
+#  - name: version
+#    in: path
+#    description: version of the instance to create
+#    required: true
+#    type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+POST   /api/instance/:org/:domain/:schema/:version                editor.controllers.NexusEditorController.createInstance(org: String, domain:String, schema: String, version:String)
+
+###
+#  summary: Get the number of revisions available for a specific instance
+#  tags:
+#    - editor
+#  parameters:
+#  - name: org
+#    in: path
+#    description: organization the instance
+#    required: true
+#    type: string
+#  - name: domain
+#    in: path
+#    description: domain of the instance
+#    required: true
+#    type: string
+#  - name: schema
+#    in: path
+#    description: schema name
+#    required: true
+#    type: string
+#  - name: version
+#    in: path
+#    description: version of the instance
+#    required: true
+#    type: string
+#  - name: id
+#    in: path
+#    description: the UUID of the instance
+#    required: true
+#    type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+GET    /api/revisions/:org/:domain/:schema/:version/:id                       editor.controllers.NexusEditorController.getInstanceNumberOfAvailableRevisions(org: String, domain:String, schema: String, version:String, id: String)
+
+###
+#  summary: Get a specific revision of an instance
+#  tags:
+#    - editor
+#  parameters:
+#  - name: org
+#    in: path
+#    description: organization the instance
+#    required: true
+#    type: string
+#  - name: domain
+#    in: path
+#    description: domain of the instance
+#    required: true
+#    type: string
+#  - name: schema
+#    in: path
+#    description: schema name
+#    required: true
+#    type: string
+#  - name: version
+#    in: path
+#    description: version of the instance
+#    required: true
+#    type: string
+#  - name: id
+#    in: path
+#    description: the UUID of the instance
+#    required: true
+#    type: string
+#  - name: rev
+#    in: path
+#    description: the revision of the instance to retrieve
+#    required: false
+#    type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+GET    /api/reconciled/:org/:domain/:schema/:version/:id              editor.controllers.NexusEditorController.getSpecificReconciledInstance(org: String, domain:String, schema: String, version:String, id: String ,rev:Int ?= 1)
+
+###
+#  summary: Get a graph representation of an instance
+#  tags:
+#    - editor
+#  parameters:
+#  - name: org
+#    in: path
+#    description: organization the instance
+#    required: true
+#    type: string
+#  - name: domain
+#    in: path
+#    description: domain of the instance
+#    required: true
+#    type: string
+#  - name: schema
+#    in: path
+#    description: schema name
+#    required: true
+#    type: string
+#  - name: version
+#    in: path
+#    description: version of the instance
+#    required: true
+#    type: string
+#  - name: id
+#    in: path
+#    description: the UUID of the instance
+#    required: true
+#    type: string
+#  - name: step
+#    in: path
+#    description: the depth of the graph
+#    required: false
+#    type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+GET    /api/graph/:org/:domain/:schema/:version/:id   editor.controllers.NexusEditorController.graphEntities(org: String, domain:String, schema: String, version:String, id: String, step:Int ?= 2)
 
 ###
 #  summary: get release information on an entity and its children
 #  tags:
 #    - editor
 #  parameters:
-#  - name: organization
+#  - name: org
 #    in: path
 #    description: organization the instance to retrieve
 #    required: true
@@ -49,16 +366,16 @@ GET    /api/graph/:org/:domain/:datatype/:version/:id   editor.controllers.Nexus
 #    required: false
 #    type: string
 ###
-GET    /api/release/:org/:domain/:datatype/:version/:id             editor.controllers.NexusEditorController.releaseInstance(org: String, domain:String, datatype: String, version:String, id: String )
+GET    /api/release/:org/:domain/:schema/:version/:id             editor.controllers.NexusEditorController.getInstanceAndChildrenReleaseStatus(org: String, domain:String, schema: String, version:String, id: String )
 
 ###
-#  summary: get release information on an entity and its children
+#  summary: get release information on a list of entity
 #  tags:
 #    - editor
 #  parameters:
 #  - in: body
 #    name: instances
-#    description: JsArray of entities to retrieve the status
+#    description: array of ids of the entities to retrieve
 #    schema:
 #      type: array
 #  - in: header
@@ -67,9 +384,7 @@ GET    /api/release/:org/:domain/:datatype/:version/:id             editor.contr
 #    required: false
 #    type: string
 ###
-POST    /api/releasestatus            editor.controllers.NexusEditorController.releaseStatus
-
-
+POST    /api/releasestatus            editor.controllers.NexusEditorController.getReleaseStatus
 
 ###
 #  summary: create a schema where http://schema.org/identifier and the revision only is mandatory
@@ -167,7 +482,7 @@ POST   /user/favorite          editor.controllers.NexusEditorUserController.addF
 #    200:
 #      description: "Ok"
 ###
-DELETE   /user/favorite/:org/:domain/:datatype/:version/:id           editor.controllers.NexusEditorUserController.deleteFavorite(org: String, domain:String, datatype: String, version:String, id: String)
+DELETE   /user/favorite/:org/:domain/:schema/:version/:id           editor.controllers.NexusEditorUserController.deleteFavorite(org: String, domain:String, schema: String, version:String, id: String)
 
 
 ###

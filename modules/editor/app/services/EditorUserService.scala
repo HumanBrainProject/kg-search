@@ -20,7 +20,7 @@ import authentication.service.OIDCAuthService
 import com.google.inject.Inject
 import common.models.{EditorUser, Favorite, FavoriteGroup, NexusPath}
 import common.services.ConfigurationService
-import editor.helper.InstanceHelper
+import editor.helpers.InstanceHelper
 import helpers.ResponseHelper
 import nexus.services.NexusService
 import play.api.{Configuration, Logger}
@@ -59,10 +59,7 @@ class EditorUserService @Inject()(config: ConfigurationService,
         // Create the user in the nexus
         nexusService.insertInstance(
           config.nexusEndpoint,
-          EditorUserService.editorUserPath.org,
-          EditorUserService.editorUserPath.domain,
-          EditorUserService.editorUserPath.schema,
-          EditorUserService.editorUserPath.version,
+          EditorUserService.editorUserPath,
           EditorUserService.userToNexusStruct(userId),
           token
         ).map{
@@ -86,10 +83,7 @@ class EditorUserService @Inject()(config: ConfigurationService,
           s"${config.nexusEndpoint}/v0/data/${favoriteGroupId}")
         nexusService.insertInstance(
           config.nexusEndpoint,
-          EditorUserService.favoritePath.org,
-          EditorUserService.favoritePath.domain,
-          EditorUserService.favoritePath.schema,
-          EditorUserService.favoritePath.version,
+          EditorUserService.favoritePath,
           payload,
           token
         ).map{
@@ -109,10 +103,7 @@ class EditorUserService @Inject()(config: ConfigurationService,
       token =>
         nexusService.deprecateInstance(
           config.nexusEndpoint,
-          EditorUserService.favoritePath.org,
-          EditorUserService.favoritePath.domain,
-          EditorUserService.favoritePath.schema,
-          EditorUserService.favoritePath.version,
+          EditorUserService.favoritePath,
           favoriteId,
           token
         )
@@ -127,10 +118,7 @@ class EditorUserService @Inject()(config: ConfigurationService,
             val payload = EditorUserService.favoriteGroupToNexusStruct(name, s"${config.nexusEndpoint}/v0/data/${user.nexusId}" )
             nexusService.insertInstance(
               config.nexusEndpoint,
-              EditorUserService.favoriteGroupPath.org,
-              EditorUserService.favoriteGroupPath.domain,
-              EditorUserService.favoriteGroupPath.schema,
-              EditorUserService.favoriteGroupPath.version,
+              EditorUserService.favoriteGroupPath,
               payload,
               token
             ).map{
@@ -201,7 +189,7 @@ object EditorUserService {
        |      "relative_path": "@id"
        |    },
        |    {
-       |      "fieldname": "id",
+       |      "fieldname": "userId",
        |      "required": true,
        |      "relative_path": "schema:identifier"
        |    },
@@ -234,9 +222,9 @@ object EditorUserService {
        |               			"relative_path": "@id"
        |               		},
        |               		{
-       |               			"fieldname":"instance",
+       |               			"fieldname":"favoriteInstance",
        |               			"relative_path": [
-       |               				"kgeditor:instance"
+       |               				"kgeditor:favoriteInstance"
        |               			]
        |               		}
        |
@@ -261,7 +249,8 @@ object EditorUserService {
     Json.obj(
       "http://schema.org/identifier" -> InstanceHelper.md5HashString(favoriteGroupNexusId + favorite),
       "http://hbp.eu/kgeditor/favoriteGroup" -> Json.obj("@id" -> s"$favoriteGroupNexusId"),
-      "http://hbp.eu/kgeditor/instance" -> Json.obj("@id" -> s"$favorite"),
+      "http://hbp.eu/kgeditor/favoriteInstanceLink" -> Json.obj("@id" -> s"$favorite"),
+      "http://hbp.eu/kgeditor/favoriteInstance" -> s"${favorite.split("/v0/data/").last}",
       "@type" -> "http://hbp.eu/kgeditor/Favorite"
     )
   }

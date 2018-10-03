@@ -29,17 +29,16 @@ object EditorUser {
   implicit val editorUserWrites = new Writes[EditorUser] {
     def writes(user: EditorUser) = Json.obj(
       "nexusId" -> user.nexusId,
-      "id" -> user.id,
+      "userId" -> user.id,
       "favoriteGroups" -> Json.toJson(user.favoriteGroups)
     )
   }
 
   implicit val editorUserReads: Reads[EditorUser] = (
     (JsPath \ "nexusId").read[String] and
-      (JsPath \ "id").read[String] and
+      (JsPath \ "userId").read[String] and
       (JsPath \ "favoriteGroups").read[Seq[FavoriteGroup]]
         .orElse(Reads.pure(Seq[FavoriteGroup]()))
-        .flatMap(seq => Reads.pure(seq.map(fav => fav.copy(nexusId = fav.nexusId.split("v0/data/").last))))
     ) (EditorUser.apply _)
 
 }

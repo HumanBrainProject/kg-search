@@ -22,6 +22,8 @@ import data_import.helpers.excel.ExcelUnimindsExportHelper
 import data_import.services.InsertionService
 import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
+
+import common.services.ConfigurationService
 import javax.inject.{Inject, Singleton}
 import models.excel_import.Entity
 import nexus.services.NexusService
@@ -32,15 +34,17 @@ import play.api.libs.json._
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 import play.api.{Configuration, Logger}
+
 import scala.collection.immutable.HashSet
 import scala.concurrent.{ExecutionContext, Future}
 
 
 @Singleton
 class ExcelImportController @Inject()(cc: ControllerComponents,
+                                      config: ConfigurationService,
                                       insertionService: InsertionService,
                                       nexusService: NexusService)
-                                     (implicit ec: ExecutionContext, ws: WSClient, config: Configuration)
+                                     (implicit ec: ExecutionContext, ws: WSClient)
   extends AbstractController(cc) {
 
   val xlsxMime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -51,7 +55,6 @@ class ExcelImportController @Inject()(cc: ControllerComponents,
   val AcceptsCsv = Accepting(csvMime)
 
   val logger = Logger(this.getClass)
-  val nexusEndpoint = config.get[String]("nexus.endpoint")
 
 
   def extractMindsDataFromExcel(action: Option[String]) = Action.async(parse.temporaryFile) { request =>
@@ -67,7 +70,7 @@ class ExcelImportController @Inject()(cc: ControllerComponents,
         val tokenOpt = request.headers.toSimpleMap.get("Authorization")
         tokenOpt match {
           case Some(token) =>
-            insertionService.insertMindsEntities(jsonData, nexusEndpoint, token).map {
+            insertionService.insertMindsEntities(jsonData, config.nexusEndpoint, token).map {
               res =>
                 Ok(JsObject(Seq(("insertion result", JsArray(res)))))
             }
@@ -178,7 +181,7 @@ class ExcelImportController @Inject()(cc: ControllerComponents,
   def handleInsertRequest(inputFilename: String, data: Seq[Entity], token: String)
                          (implicit request: Request[MultipartFormData[Files.TemporaryFile]]): Future[Result] = {
     val outputFileBaseName = inputFilename.substring(0, inputFilename.indexOf('.'))
-    insertionService.insertUnimindsDataInKG(nexusEndpoint, data, token, nexusService, insertionService).map{
+    insertionService.insertUnimindsDataInKG(config.nexusEndpoint, data, token).map{
       res =>
         // sort output
         val data = res.sortWith{

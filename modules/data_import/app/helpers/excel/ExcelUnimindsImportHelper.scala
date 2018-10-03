@@ -28,6 +28,9 @@ object ExcelUnimindsImportHelper{
   val KEY_COL_IDX = 2
   val VALUE_COL_IDX = 3
   val UNIT_COL_IDX = 4
+  val unimindsOrg = "unimindsexcel"
+  val unimindsDomain = "core"
+  val unimindsVersion = "v0.0.2"
 
   object AValidStringOrNone {
     def apply(value: String): Option[String] = {

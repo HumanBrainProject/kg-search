@@ -19,6 +19,7 @@ package editor.helpers
 
 import common.models.NexusPath
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
+import services.FormService
 
 object NavigationHelper {
   val backLinkField = "back_link"
@@ -35,17 +36,17 @@ object NavigationHelper {
     * @param reconciledSuffix The term used to identify a reconciled space
     * @return A path as a string
     */
-  def generateBackLink(path:NexusPath,reconciledSuffix:String): String = {
+  def generateBackLink(path:NexusPath,reconciledSuffix:String, formService: FormService): String = {
     val formattedPath = path.originalPath(reconciledSuffix)
-    (FormHelper.formRegistry \ formattedPath.org \ formattedPath.domain \ formattedPath.schema).asOpt[JsObject] match {
+    (formService.formRegistry \ formattedPath.org \ formattedPath.domain \ formattedPath.schema).asOpt[JsObject] match {
       case Some(schema) =>
         s"${formattedPath.org}/${formattedPath.domain}/${formattedPath.schema}"
       case _ => ""
     }
   }
 
-  def resultWithBackLink(instance: JsObject, path: NexusPath,reconciledSuffix: String): JsObject = {
-    val backLink = generateBackLink(path, reconciledSuffix)
+  def resultWithBackLink(instance: JsObject, path: NexusPath,reconciledSuffix: String, formService: FormService): JsObject = {
+    val backLink = generateBackLink(path, reconciledSuffix, formService)
     addBackLink(instance, backLink)
   }
 

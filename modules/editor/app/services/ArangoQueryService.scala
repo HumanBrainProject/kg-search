@@ -18,14 +18,14 @@ package editor.services
 import authentication.service.OIDCAuthService
 import com.google.inject.Inject
 import common.models.NexusPath
-import editor.helpers.FormHelper
+import editor.helpers.{InstanceHelper}
 import nexus.services.NexusService
-import play.api.Configuration
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
 import play.api.http.HeaderNames._
 import common.services.ConfigurationService
+import services.FormService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,7 +33,8 @@ class ArangoQueryService @Inject()(
                                     config: ConfigurationService,
                                     wSClient: WSClient,
                                     nexusService: NexusService,
-                                    oIDCAuthService: OIDCAuthService
+                                    oIDCAuthService: OIDCAuthService,
+                                    formService: FormService
                                   )(implicit executionContext: ExecutionContext) {
 
   def graphEntities(org: String,
@@ -56,6 +57,44 @@ class ArangoQueryService @Inject()(
 
   }
 
+  def listInstances(nexusPath: NexusPath, from: Option[Int], size: Option[Int], search: String): Future[Either[WSResponse, JsObject]] = {
+    wSClient.url(s"${config.kgQueryEndpoint}/arango/instances/${nexusPath.toString()}")
+      .withQueryStringParameters(("search", search), ("from", from.getOrElse("").toString), ("size", size.getOrElse("").toString)).get().map{
+      res =>
+        res.status match {
+          case OK =>
+            val total = if((res.json \ "fullCount").as[Long] == 0){
+              (res.json \ "count").as[Long]
+            }else{
+              (res.json \ "fullCount").as[Long]
+            }
+            val data = (res.json \ "data").as[JsArray]
+            if(data.value.nonEmpty){
+              Right(
+                Json.obj("data" -> InstanceHelper.formatInstanceList( data, config.reconciledPrefix),
+                  "label" -> JsString(
+                    (formService.formRegistry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String]
+                      .getOrElse(nexusPath.toString())
+                  ),
+                  "dataType" -> (data.value.head \ "@type").as[JsString],
+                  "total" -> total
+                )
+              )
+            }else{
+              Right(
+                Json.obj(
+                  "data" -> JsArray(),
+                  "label" -> JsString(""),
+                  "dataType" -> "",
+                  "total" -> 0
+                )
+              )
+            }
+          case _ => Left(res)
+        }
+    }
+  }
+
   private def graph(nexusPath: NexusPath, id:String, step:Int): Future[Either[WSResponse, JsObject]] = {
     wSClient
       .url(s"${config.kgQueryEndpoint}/arango/graph/${nexusPath.toString}/$id?step=$step")
@@ -69,7 +108,7 @@ class ArangoQueryService @Inject()(
               ArangoQueryService.formatEdges((el \ "edges").as[List[JsObject]])
             }.distinct
             val vertices = j.flatMap { el =>
-              ArangoQueryService.formatVertices((el \ "vertices").as[List[JsValue]])
+              ArangoQueryService.formatVertices((el \ "vertices").as[List[JsValue]], formService)
             }.distinct
             Right(Json.obj("links" -> edges, "nodes" -> vertices))
           case _ => Left(allRelations)
@@ -88,7 +127,7 @@ object ArangoQueryService {
     s"$path/$i"
   }
 
-  def formatVertices(vertices: List[JsValue]): List[JsObject] = {
+  def formatVertices(vertices: List[JsValue], formService: FormService): List[JsObject] = {
     vertices
       .map {
         case v: JsObject =>
@@ -103,13 +142,13 @@ object ArangoQueryService {
             Json.obj(
               "id" -> Json.toJson(ArangoQueryService.idFormat((v \ "_id").as[String])),
               "name" -> JsString(label),
-              "dataType" -> JsString(dataType),
+              "dataType" -> JsString(d),
               "title" -> title
             )
           }.getOrElse(JsNull)
         case _ => JsNull
       }
-      .filter(v => v != JsNull && isInSpec( (v \ "id").as[String].splitAt((v \ "id").as[String].lastIndexOf("/"))._1))
+      .filter(v => v != JsNull && formService.isInSpec( (v \ "id").as[String].splitAt((v \ "id").as[String].lastIndexOf("/"))._1))
       .map(_.as[JsObject])
 
   }
@@ -134,10 +173,5 @@ object ArangoQueryService {
     }
   }
 
-  def isInSpec(id:String):Boolean = {
-    val list = (FormHelper.editableEntitiyTypes \ "data")
-      .as[List[JsObject]]
-      .map(js => (js  \ "path").as[String])
-    list.contains(id)
-  }
+
 }

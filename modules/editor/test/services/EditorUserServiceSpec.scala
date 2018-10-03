@@ -29,9 +29,12 @@ class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockW
       val fakeEndpoint = s"${kgQueryEndpoint}/query/"
 
       val id = "1"
-      val nexusIdUser = "nexusUUID1"
-      val nexusIdFavGroup = "nexusUUID2"
-      val nexusIdFav = "nexusUUID3"
+      val idUser = "nexusUUID1"
+      val idgroup = "nexusUUID2"
+      val idFav = "nexusUUID3"
+      val nexusIdUser = s"http://nexus.com/v0/data/$idUser"
+      val nexusIdFavGroup = s"http://nexus.com/v0/data/$idgroup"
+      val nexusIdFav = s"http://nexus.com/v0/data/$idFav"
       val name = "Group"
       val instanceId = "minds/core/dataset/v0.0.4/123"
       val fav = Favorite(nexusIdFav, instanceId)
@@ -41,7 +44,7 @@ class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockW
         s"""
           |{
           |    "nexusId": "$nexusIdUser",
-          |    "id": "1",
+          |    "userId": "1",
           |    "favoriteGroups": [
           |        {
           |            "nexusId": "$nexusIdFavGroup",
@@ -49,7 +52,7 @@ class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockW
           |            "favorites": [
           |                {
           |                    "nexusId": "$nexusIdFav",
-          |                    "instance": { "@id": "$instanceId"}
+          |                    "favoriteInstance": "$instanceId"
           |                }
           |            ]
           |        }

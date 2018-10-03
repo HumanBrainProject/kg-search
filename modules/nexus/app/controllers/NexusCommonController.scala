@@ -16,6 +16,7 @@
 package nexus.controllers
 
 import common.helpers.ResponseHelper._
+import common.models.NexusPath
 import javax.inject.{Inject, Singleton}
 import nexus.services.{NexusService, NexusSpaceService}
 import play.api.{Configuration, Logger}
@@ -81,18 +82,16 @@ class NexusCommonController @Inject()(
     val tokenOpt = request.headers.toSimpleMap.get("Authorization")
     tokenOpt match {
       case Some(token) =>
+        val path = NexusPath(organization, domain, entityType, version)
         nexusService.createSimpleSchema(
           config.nexusEndpoint,
-          organization,
-          domain,
-          entityType,
-          version,
+          path,
           token,
           namespace
         ).map {
           response =>
             response.status match {
-              case 200 =>
+              case OK =>
                 Ok(response.body)
               case _ =>
                 Result(
