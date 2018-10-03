@@ -29,11 +29,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object EditorUserAction{
   val logger = Logger(this.getClass)
-  def editorUserAction(org: String)(implicit ec: ExecutionContext): ActionRefiner[UserRequest, EditorUserRequest] {
-    def executionContext: ExecutionContext
-
-    def refine[A](input: UserRequest[A]): Future[Either[Result, EditorUserRequest[A]]]
-  } = new ActionRefiner[UserRequest, EditorUserRequest] {
+  def editorUserAction(org: String)(implicit ec: ExecutionContext): ActionRefiner[UserRequest, EditorUserRequest] =
+    new ActionRefiner[UserRequest, EditorUserRequest] {
     def executionContext: ExecutionContext = ec
     def refine[A](input: UserRequest[A]): Future[Either[Result, EditorUserRequest[A]]] = Future.successful {
       if(EditorSpaceHelper.isEditorGroup(input.user, org) ){

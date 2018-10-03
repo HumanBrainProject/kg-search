@@ -20,6 +20,7 @@ package services
 import com.google.inject.{Inject, Singleton}
 import common.models.{NexusInstance, NexusPath, User}
 import common.services.ConfigurationService
+import editor.models.ReconciledInstance
 import org.json4s.native.JsonParser
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
@@ -92,7 +93,7 @@ class FormService @Inject()(
             ("label", (formTemplate \ "label").get) +
             ("editable", JsBoolean((formTemplate.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true))) +
             ("ui_info", (formTemplate \ "ui_info").getOrElse(JsObject.empty)) +
-            ("alternatives", (data \ "http://hbp.eu/reconciled#alternatives").asOpt[JsObject].getOrElse(Json.obj()) )
+            ("alternatives", (data \ ReconciledInstance.Fields.alternatives).asOpt[JsObject].getOrElse(Json.obj()) )
          }else {
           //Returning a blank template
           val escapedForm = ( formTemplate \ "fields" ).as[JsObject].value.map{
@@ -241,7 +242,6 @@ object FormService{
     val formContent = Json.parse(FormService.unescapeSlash(modificationFromUser.toString())).as[JsObject] - "id"
     val cleanForm = FormService.removeKey(formContent.as[JsValue])
     val formWithID = cleanForm.toString().replaceAll(""""id":"""", s""""@id":"${nexusEndpoint}/v0/data/""")
-    val r = JsonParser.parse(original.content.toString()) merge(JsonParser.parse(formWithID))
     val res= original.content.deepMerge(Json.parse(formWithID).as[JsObject])
     original.copy(content = res)
   }

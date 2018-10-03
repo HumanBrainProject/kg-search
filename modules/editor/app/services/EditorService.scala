@@ -431,7 +431,6 @@ class EditorService @Inject()(wSClient: WSClient,
 
   def preppingEntitiesForSave(
                                updatedInstance: NexusInstance,
-                               cleanInstance: NexusInstance,
                                currentlyDisplayedInstance: NexusInstance,
                                originalPath: NexusPath,
                                userInfo: User,

@@ -192,23 +192,19 @@ class NexusEditorController @Inject()(
     val editorSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.editorPrefix)
     val reconciledSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.reconciledPrefix)
     reconciledTokenFut.flatMap { techToken =>
-      val originalInstanceCleaned = originalInstance.removeNexusFields()
-      val originalInstanceWithAllFields =  InstanceHelper.addDefaultFields( originalInstanceCleaned,instancePath, formService.formRegistry)
-      val updatedInstance = FormService.buildInstanceFromForm(originalInstanceCleaned, request.body.asJson.get, config.nexusEndpoint)
+      val originalInstanceWithAllFields =  InstanceHelper.addDefaultFields(originalInstance.removeNexusFields(), instancePath, formService.formRegistry)
+      val updatedInstance = FormService.buildInstanceFromForm(originalInstanceWithAllFields, request.body.asJson.get, config.nexusEndpoint)
 
       val updateToBeStoredInManual = editorService.preppingEntitiesForSave(
         updatedInstance,
         originalInstanceWithAllFields,
-        originalInstanceWithAllFields,
-        originalInstanceCleaned.nexusPath,
+        originalInstanceWithAllFields.nexusPath,
         request.user,
         token
       )
       val consolidatedInstance = ReconciledInstance(
         FormService.buildInstanceFromForm(originalInstance, updateToBeStoredInManual.nexusInstance.content, config.nexusEndpoint)
       )
-      logger.debug(s"Consolidated instance $consolidatedInstance")
-
       val createDomains = editorService.createDomainsAndSchemasSync(editorSpace, reconciledSpace, originalInstance.nexusPath, token, techToken)
 
       createDomains.flatMap {
@@ -274,18 +270,14 @@ class NexusEditorController @Inject()(
                 val reconciledInstanceCleaned = currentInstanceDisplayed.removeNexusFields()
 
                 val updatedInstance = FormService.buildInstanceFromForm(reconciledInstanceCleaned.nexusInstance, request.body.asJson.get, config.nexusEndpoint)
-                val reconciledInstanceWithAllFields = reconciledInstanceCleaned.copy(
-                  InstanceHelper.addDefaultFields(reconciledInstanceCleaned.nexusInstance, originalPath, formService.formRegistry)
-                )
+
                 val currentInstanceDisplayedWithAllFields = currentInstanceDisplayed.copy(
                   InstanceHelper.addDefaultFields(currentInstanceDisplayed.nexusInstance, originalPath, formService.formRegistry)
                 )
-                //Create the manual update
-                // As we cannot pass / in the name of a field we have replaced them with %nexus-slash%
+
                 //Generate the data that should be stored in the manual space
                 val updateToBeStoredInManual = editorService.preppingEntitiesForSave(
                   updatedInstance,
-                  reconciledInstanceWithAllFields.nexusInstance,
                   currentInstanceDisplayedWithAllFields.nexusInstance,
                   originalPath,
                   request.user,

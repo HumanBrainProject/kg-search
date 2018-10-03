@@ -122,28 +122,6 @@ object InstanceHelper {
     Json.toJson(diffWithCompleteArray).as[JsObject]
   }
 
-  def addDefaultFields(instance: NexusInstance,originalPath: NexusPath, formRegistry:JsObject): NexusInstance = {
-    val fields = (formRegistry \ originalPath.org \ originalPath.domain \ originalPath.schema \ originalPath.version \ "fields").as[JsObject].value
-    val m = fields.map { case (k, v) =>
-      val fieldValue =  instance.getField(k)
-      if(fieldValue.isEmpty){
-        val formObjectType = (v \ "type").as[String]
-        formObjectType match {
-          case "DropdownSelect" =>
-            k -> JsArray()
-          case _ =>
-            k -> JsNull
-        }
-      }else{
-        k -> fieldValue.get
-      }
-    }
-    val r = Json.toJson(m).as[JsObject].deepMerge(instance.content)
-    instance.copy(content = Json.toJson(r).as[JsObject])
-
-  }
-
-
   def md5HashString(s: String): String = {
     import java.math.BigInteger
     import java.security.MessageDigest
@@ -217,7 +195,6 @@ object InstanceHelper {
     sortedSet
   }
 
-
   def merge[K, V](maps: Seq[Map[K, V]])(f: (K, V, V) => V): Map[K, V] = {
     maps.foldLeft(Map.empty[K, V]) { case (merged, m) =>
       m.foldLeft(merged) { case (acc, (k, v)) =>
@@ -228,14 +205,6 @@ object InstanceHelper {
       }
     }
   }
-
-
-
-
-
-
-
-
 
   def formatInstanceList(jsArray: JsArray, reconciledSuffix:String): JsValue = {
 
@@ -260,7 +229,6 @@ object InstanceHelper {
     Json.toJson(arr)
   }
 
-
   def toReconcileFormat(jsValue: JsValue, privateSpace: String): JsObject = {
     Json.obj("src" -> privateSpace, "content" -> jsValue.as[JsObject].-("@context"))
   }
@@ -277,8 +245,8 @@ object InstanceHelper {
   def getCurrentInstanceDisplayed(currentReconciledInstances: Seq[NexusInstance], originalInstance: NexusInstance): NexusInstance = {
     if (currentReconciledInstances.nonEmpty) {
       val sorted = currentReconciledInstances.sortWith { (left, right) =>
-        (left.content \ "http://hbp.eu/reconciled#update_timestamp").as[Long] >
-          (right.content \ "http://hbp.eu/reconciled#update_timestamp").as[Long]
+        (left.content \ ReconciledInstance.Fields.updateTimeStamp).as[Long] >
+          (right.content \ ReconciledInstance.Fields.updateTimeStamp).as[Long]
       }
       sorted.head
     } else{
@@ -286,10 +254,24 @@ object InstanceHelper {
     }
   }
 
-
-
-
-
-
+  def addDefaultFields(instance: NexusInstance,originalPath: NexusPath, formRegistry:JsObject): NexusInstance = {
+    val fields = (formRegistry \ originalPath.org \ originalPath.domain \ originalPath.schema \ originalPath.version \ "fields").as[JsObject].value
+    val m = fields.map { case (k, v) =>
+      val fieldValue =  instance.getField(k)
+      if(fieldValue.isEmpty){
+        val formObjectType = (v \ "type").as[String]
+        formObjectType match {
+          case "DropdownSelect" =>
+            k -> JsArray()
+          case _ =>
+            k -> JsNull
+        }
+      }else{
+        k -> fieldValue.get
+      }
+    }
+    val r = Json.toJson(m).as[JsObject].deepMerge(instance.content)
+    instance.copy(content = Json.toJson(r).as[JsObject])
+  }
 
 }
