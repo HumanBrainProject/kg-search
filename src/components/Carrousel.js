@@ -19,44 +19,48 @@ import { isMobile } from "../helpers/BrowserHelpers";
 import "./Carrousel.css";
 
 
-const CarrouselItem = ({data, isActive, showPrevious, onPrevious, onClose, itemComponent, navigationComponent}) => {
+const CarrouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, navigationComponent}) => {
   const ItemComponent =  itemComponent;
   const NavigationComponent = navigationComponent;
   return (
-    <div className="kgs-carrousel__panel">
-      <div className="kgs-carrousel__header">
-        {isActive && showPrevious && (
-          <button className="kgs-carrousel__previous-button" onClick={onPrevious}>
-            <i className="fa fa-chevron-left" /> Previous
-          </button>
-        )}
-        <div className="kgs-carrousel__navigation">
-          {isActive && data && (
-            <NavigationComponent/>
+    <div className={`kgs-carrousel__item position${item.position}`} >
+      <div className="kgs-carrousel__content">
+        <div className="kgs-carrousel__header">
+          {item.isActive && showPrevious && (
+            <button className="kgs-carrousel__previous-button" onClick={onPrevious}>
+              <i className="fa fa-chevron-left" /> Previous
+            </button>
+          )}
+          <div className="kgs-carrousel__navigation">
+            {item.isActive && item.data && (
+              <NavigationComponent/>
+            )}
+          </div>
+          {item.isActive && (
+            <button className="kgs-carrousel__close-button" onClick={onClose}>
+              <i className="fa fa-close" />
+            </button>
           )}
         </div>
-        {isActive && (
-          <button className="kgs-carrousel__close-button" onClick={onClose}>
-            <i className="fa fa-close" />
-          </button>
-        )}
-      </div>
-      <div className="kgs-carrousel__body">
-        {isActive && data && (
-          <ItemComponent data={data} />
-        )}
+        <div className="kgs-carrousel__body">
+          {item.isActive && item.data && (
+            <ItemComponent data={item.data} />
+          )}
+        </div>
       </div>
     </div>
   );
 };
 
-const nbOfViews = 5;
+const nbOfItems = 5;
 
 export class Carrousel extends PureComponent {
   constructor(props) {
     super(props);
-    this.views =  Array.from(Array(nbOfViews)).map((x, i) => ({
-      id: i + 1,
+    this.items =  Array.from(Array(nbOfItems)).map((x, idx) => ({
+      id: idx,
+      position: idx,
+      isActive: false,
       data: null
     }));
   }
@@ -90,23 +94,24 @@ export class Carrousel extends PureComponent {
 
     //window.console.debug("Carrousel rendering...", data);
 
-    const selectedView = (data.length -1) % nbOfViews + 1;
-    const views = this.views;
-    views.forEach((view, idx) => {
-      const idxData = (idx <= selectedView - 1)?data.length - (selectedView - idx):data.length - nbOfViews  +  (idx - selectedView);
-      view.data = idxData >= 0?data[idxData]:null;
+    const currentPosition = (data.length -1) % nbOfItems;
+    const items = this.items;
+    items.forEach((item, idx) => {
+      item.isActive = item.id === currentPosition;
+      const position = (idx <= currentPosition?(nbOfItems - (currentPosition - idx)):(idx - currentPosition)) % 5;
+      item.position = position;
+      const idxData = data.length -1 - (idx <= currentPosition?(currentPosition - idx):(nbOfItems  - (idx - currentPosition)));
+      item.data = idxData >= 0?data[idxData]:null;
     });
     const showPrevious = data.length > 1;
 
     const classNames = ["kgs-carrousel", className].join(" ");
 
     return(
-      <div data-selected={selectedView} className={classNames}>
-        <div className="kgs-carrousel__views">
-          {views.map(view => (
-            <div key={view.id} className="kgs-carrousel__view" data-view={view.id} >
-              <CarrouselItem isActive={view.id === selectedView} data={view.data} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />
-            </div>
+      <div className={classNames}>
+        <div className="kgs-carrousel__panel">
+          {items.map(item => (
+            <CarrouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />
           ))}
         </div>
       </div>
