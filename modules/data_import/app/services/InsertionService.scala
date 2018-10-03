@@ -26,7 +26,6 @@ import play.api.Logger
 import play.api.http.Status.{CREATED, OK}
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
-
 import scala.concurrent.{ExecutionContext, Future}
 import Entity.isNexusLink
 import Value.DEFAULT_RESOLUTION_STATUS
