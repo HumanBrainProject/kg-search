@@ -25,9 +25,9 @@ case class EditorInstance(nexusInstance: NexusInstance){
   lazy val updaterId = nexusInstance.getField(EditorInstance.Fields.updaterId).get.as[String]
 
 
-  def extractUpdateInfo(): (String, Int, String, EditorInstance) = {
-    ((this.nexusInstance.content \ NexusInstance.Fields.nexusId).as[String],
-      (this.nexusInstance.content \ NexusInstance.Fields.nexusRev).as[Int],
+  def extractUpdateInfo(): (Option[String], Int, String, EditorInstance) = {
+    ((this.nexusInstance.content \ NexusInstance.Fields.nexusId).asOpt[String],
+      (this.nexusInstance.content \ NexusInstance.Fields.nexusRev).asOpt[Int].getOrElse(1),
       (this.nexusInstance.content \ EditorInstance.Fields.updaterId).asOpt[String].getOrElse(""),
       this
     )
@@ -35,6 +35,10 @@ case class EditorInstance(nexusInstance: NexusInstance){
 
   def cleanManualData(): EditorInstance = {
     this.copy(this.nexusInstance.cleanManualData())
+  }
+
+  def mergeContent(instance: EditorInstance): EditorInstance = {
+    this.copy(this.nexusInstance.copy(content = this.nexusInstance.content.deepMerge(instance.nexusInstance.content)))
   }
 
   def contentToMap(): Map[String, JsValue] = {

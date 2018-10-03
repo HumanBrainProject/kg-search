@@ -24,7 +24,7 @@ import play.api.libs.ws.{WSClient, WSResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 import NexusService._
-import common.models.{NexusPath, ReleaseInstance}
+import common.models.{NexusInstance, NexusPath, ReleaseInstance}
 import play.api.{Configuration, Logger}
 import common.services.ConfigurationService
 
@@ -333,10 +333,40 @@ class NexusService @Inject()(wSClient: WSClient, config:ConfigurationService)(im
     }
   }
 
+  def getInstance(path: NexusPath, id: String, token: String, parameters: List[(String, String)] = List(("fields", "all"), ("deprecated", "false"))):
+  Future[Either[WSResponse, NexusInstance]] = {
+    wSClient.url(s"${config.nexusEndpoint}/v0/data/${path.toString()}/$id")
+      .withQueryStringParameters(parameters: _*)
+      .addHttpHeaders("Authorization" -> token).get().map {
+      res =>
+        res.status match {
+          case OK =>
+            Right(res.json.as[NexusInstance])
+          case _ =>
+            Left(res)
+        }
+    }
+  }
+
   def deprecateInstance(nexusEndpoint: String, nexusPath: NexusPath, id: String, token: String): Future[WSResponse] = {
     val instanceUrl = s"${nexusEndpoint}/v0/data/${nexusPath.org}/${nexusPath.domain}/${nexusPath.schema.toLowerCase}/${nexusPath.version}/${id}"
     wSClient.url(instanceUrl).withHttpHeaders("Authorization" -> token).delete()
   }
+
+  /**
+    * Retrieve a list of instance by UUID
+    * @param ids list of UUIDs
+    * @param path the path of  the instance
+    * @param token the user token
+    * @return a list of either an instance of an error response
+    */
+  def retrieveInstances(ids: List[String], path: NexusPath, token: String): Future[List[Either[WSResponse, NexusInstance]]] = {
+    val listOfRes = for {id <- ids} yield {
+      getInstance(path, id, token)
+    }
+    Future.sequence(listOfRes)
+  }
+
 }
 
 object NexusService {

@@ -34,21 +34,16 @@ import scala.collection.immutable.SortedSet
 object InstanceHelper {
     val logger = Logger(this.getClass)
 
-  type UpdateInfo = (String, Int, String, EditorInstance)
+  type UpdateInfo = (Option[String], Int, String, EditorInstance)
 
-  def consolidateFromManualSpace(
-                                  nexusEndpoint: String,
-                                  reconciledSuffix:String,
-                                  originalInstance: NexusInstance,
-                                  editorInstances: List[EditorInstance],
-                                  updateToBeStoredInManual: EditorInstance,
-                                  user: User
-                                ): (ReconciledInstance, Option[List[UpdateInfo]]) = {
+  def generateInstanceWithReconciliationLogic(
+                                               nexusEndpoint: String,
+                                               reconciledSuffix:String,
+                                               originalInstance: NexusInstance,
+                                               editorInstances: List[EditorInstance]
+                                             ): (ReconciledInstance, Option[List[UpdateInfo]]) = {
     logger.debug(s"Result from incoming links $editorInstances")
-    val updatesByPriority = buildManualUpdatesFieldsFrequency(
-      editorInstances.filter( item => item.updaterId != user.id),
-      updateToBeStoredInManual
-    )
+    val updatesByPriority = buildManualUpdatesFieldsFrequency(editorInstances)
     val result = ReconciledInstance(
       NexusInstance(
         originalInstance.id(),
@@ -159,8 +154,8 @@ object InstanceHelper {
     hashedString
   }
 
-  def buildManualUpdatesFieldsFrequency(manualUpdates: List[EditorInstance], currentUpdate: EditorInstance): Map[String, SortedSet[(JsValue, Int)]] = {
-    val cleanMap: List[Map[String, JsValue]] = currentUpdate.contentToMap() +: manualUpdates.map(s => s.cleanManualData().contentToMap())
+  def buildManualUpdatesFieldsFrequency(manualUpdates: List[EditorInstance]): Map[String, SortedSet[(JsValue, Int)]] = {
+    val cleanMap: List[Map[String, JsValue]] = manualUpdates.map(s => s.cleanManualData().contentToMap())
     buildMapOfSortedManualUpdates(cleanMap)
   }
 

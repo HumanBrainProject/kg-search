@@ -148,7 +148,7 @@ class NexusEditorController @Inject()(
                                    ): Action[AnyContent] = Action.async { implicit request =>
     val token = request.headers.get("Authorization").getOrElse("")
     val nexusPath = NexusPath(org, domain, schema, version)
-    editorService.retrieveInstance(nexusPath, id, token, List(("rev", revision.toString))).map {
+    editorService.retrieveInstance(nexusPath, id, token, List(("fields", "all"),("deprecated", "false"),("rev", revision.toString))).map {
       case Right(instance) =>
         val json = instance.content
         val nexusId = NexusInstance.getIdForEditor((json \ "http://hbp.eu/reconciled#original_parent" \ "@id").as[String], config.reconciledPrefix)
@@ -259,7 +259,7 @@ class NexusEditorController @Inject()(
     val reconciledSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.reconciledPrefix)
     val originalIdAndPath = NexusInstance.extractIdAndPath(currentInstanceDisplayed.getOriginalParent())
     // Get the original instance either in the Editor space or the original space
-    editorService.getInstance(originalIdAndPath._2, originalIdAndPath._1, token).flatMap {
+    nexusService.getInstance(originalIdAndPath._2, originalIdAndPath._1, token).flatMap {
       case Right(instanceFromOriginalSpace) =>
         val originalInstance =  instanceFromOriginalSpace.removeNexusFields().copy(nexusUUID = Some(originalIdAndPath._1), nexusPath = originalIdAndPath._2)
         // Get the editor instances
@@ -267,7 +267,7 @@ class NexusEditorController @Inject()(
           .getOrElse(List())
           .map(js => NexusInstance.extractIdAndPath(js)._1)
         oIDCAuthService.getTechAccessToken().flatMap { techToken =>
-          editorService.retrieveInstances(editorInstanceIds, originalPath.reconciledPath(config.editorPrefix), token).flatMap[Result] {
+          nexusService.retrieveInstances(editorInstanceIds, originalPath.reconciledPath(config.editorPrefix), token).flatMap[Result] {
             editorInstancesRes =>
               if (editorInstancesRes.forall(_.isRight)) {
                 val editorInstances = editorInstancesRes.map { e => EditorInstance(e.toOption.get)}
@@ -291,14 +291,16 @@ class NexusEditorController @Inject()(
                   request.user,
                   token
                 )
+                val mergedUpdateWithPreviousVersion = editorInstances.find(_.updaterId == request.user.id).map{ instance =>
+                  instance.mergeContent(updateToBeStoredInManual)
+                }.getOrElse(updateToBeStoredInManual)
+                val listOfEditorInstance = mergedUpdateWithPreviousVersion :: editorInstances.filter(_.updaterId != request.user.id)
                 logger.debug(s"Consolidated instance $updatedInstance")
-                InstanceHelper.consolidateFromManualSpace(
+                InstanceHelper.generateInstanceWithReconciliationLogic(
                   config.nexusEndpoint,
                   config.reconciledPrefix,
                   currentInstanceDisplayedWithAllFields.nexusInstance,
-                  editorInstances,
-                  updateToBeStoredInManual,
-                  request.user
+                  listOfEditorInstance
                 ) match {
                   case (consolidatedInstance, manualEntitiesDetailsOpt) =>
 
@@ -306,7 +308,7 @@ class NexusEditorController @Inject()(
                       editorSpace,
                       reconciledSpace,
                       request.user,
-                      updateToBeStoredInManual,
+                      mergedUpdateWithPreviousVersion,
                       consolidatedInstance,
                       originalInstance,
                       originalPath,

@@ -108,7 +108,7 @@ class EditorService @Inject()(wSClient: WSClient,
     */
   def retrieveInstance(path: NexusPath, id: String, token: String, parameters: List[(String, String)] = List()): Future[Either[WSResponse, NexusInstance]] = {
     val reconciledPath = path.reconciledPath(config.reconciledPrefix)
-    getInstance(reconciledPath, id, token, parameters).flatMap[Either[WSResponse, NexusInstance]] {
+    nexusService.getInstance(reconciledPath, id, token, parameters).flatMap[Either[WSResponse, NexusInstance]] {
       case Left(_) => // Check in the original space
         retrieveReconciledFromOriginal(path, reconciledPath.org, id, token, parameters).flatMap[Either[WSResponse, NexusInstance]] {
           case Left(r) =>
@@ -117,7 +117,7 @@ class EditorService @Inject()(wSClient: WSClient,
             if (reconciledInstance.isDefined) {
               Future.successful(Right(reconciledInstance.get.nexusInstance))
             } else {
-              getInstance(path, id, token, parameters)
+              nexusService.getInstance(path, id, token, parameters)
             }
         }
       case Right(instance) =>
@@ -125,19 +125,7 @@ class EditorService @Inject()(wSClient: WSClient,
     }
   }
 
-  def getInstance(path: NexusPath, id: String, token: String, parameters: List[(String, String)] = List()): Future[Either[WSResponse, NexusInstance]] = {
-    wSClient.url(s"${config.nexusEndpoint}/v0/data/${path.toString()}/$id?fields=all&deprecated=false")
-      .withQueryStringParameters(parameters: _*)
-      .addHttpHeaders("Authorization" -> token).get().map {
-      res =>
-        res.status match {
-          case OK =>
-            Right(res.json.as[NexusInstance])
-          case _ =>
-            Left(res)
-        }
-    }
-  }
+
 
   /**
     *  Fetch a reconciled instance from an instance in the original space
@@ -197,13 +185,6 @@ class EditorService @Inject()(wSClient: WSClient,
       }
   }
 
-  def retrieveInstances(ids: List[String], path: NexusPath, token: String): Future[List[Either[WSResponse, NexusInstance]]] = {
-    val listOfRes = for {id <- ids} yield {
-      getInstance(path, id, token)
-    }
-    Future.sequence(listOfRes)
-  }
-
 
   def upsertUpdateInManualSpace(
                                  destinationOrg: String,
@@ -217,11 +198,18 @@ class EditorService @Inject()(wSClient: WSClient,
       // find manual entry corresponding to the user
       manualEntitiesDetails.find(_._3 == userInfo.id).map {
         case (manualEntityId, manualEntityRevision, _, editorInstance) =>
-          val userEditorUpdate = editorInstance.cleanManualData().nexusInstance.content.deepMerge(manualEntity.nexusInstance.content)
-          wSClient.url(s"${config.nexusEndpoint}/v0/data/${NexusInstance.getIdfromURL(manualEntityId)}/?rev=$manualEntityRevision")
-            .addHttpHeaders("Authorization" -> token).put(
-            userEditorUpdate
-          )
+          manualEntityId match{
+            case Some(fullId) =>
+              wSClient.url(s"${config.nexusEndpoint}/v0/data/${NexusInstance.getIdfromURL(fullId)}/?rev=$manualEntityRevision")
+                .addHttpHeaders("Authorization" -> token).put(
+                editorInstance.nexusInstance.content
+              )
+            case None =>
+              wSClient.url(s"${config.nexusEndpoint}/v0/data/$destinationOrg/${instancePath.domain}/${instancePath.schema}/${instancePath.version}")
+                .addHttpHeaders("Authorization" -> token).post(
+                editorInstance.nexusInstance.content
+              )
+          }
       }
     }.getOrElse {
       wSClient.url(s"${config.nexusEndpoint}/v0/data/$destinationOrg/${instancePath.domain}/${instancePath.schema}/${instancePath.version}")
@@ -476,7 +464,7 @@ class EditorService @Inject()(wSClient: WSClient,
       val base = url.split("v0/data/").head
       val (id, path) = NexusInstance.extractIdAndPathFromString(url)
       val reconciledPath = path.reconciledPath(reconciledPrefix)
-      val res = Await.result(getInstance(reconciledPath, id, token), 10.seconds)
+      val res = Await.result(nexusService.getInstance(reconciledPath, id, token), 10.seconds)
       if (res.isRight) {
         k -> JsString(s"${base}v0/data/${reconciledPath.toString()}/${id}")
       } else {
