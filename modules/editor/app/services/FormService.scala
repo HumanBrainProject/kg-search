@@ -236,7 +236,7 @@ object FormService{
 
   def editableEntities(user: NexusUser, formRegistry: JsObject): JsValue = {
     val registry = formRegistry.value.filter{
-      entity => user.groups.contains(s"nexus-${entity._1}")
+      entity => user.organizations.contains(entity._1)
     }
     buildEditableEntityTypesFromRegistry(Json.toJson(registry).as[JsObject])
   }
