@@ -28,7 +28,7 @@ import authentication.helpers.OIDCHelper
 import helpers.ResponseHelper
 import javax.inject.{Inject, Singleton}
 import authentication.models.{AuthenticatedUserAction, UserRequest}
-import authentication.service.OIDCAuthService
+import authentication.service.{IAMAuthService, OIDCAuthService}
 import editor.actions.EditorUserAction
 import play.api.{Configuration, Logger}
 import play.api.http.HttpEntity
@@ -44,7 +44,6 @@ import editor.services.ArangoQueryService
 import common.services.ConfigurationService
 import services.FormService
 
-
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
@@ -58,6 +57,7 @@ class NexusEditorController @Inject()(
                                        nexusService: NexusService,
                                        releaseService: ReleaseService,
                                        arangoQueryService: ArangoQueryService,
+                                       iAMAuthService: IAMAuthService,
                                        formService: FormService,
                                        ws: WSClient
                                      )(implicit ec: ExecutionContext)
@@ -358,7 +358,7 @@ class NexusEditorController @Inject()(
                      schema: String,
                      version: String,
                      id: String): Action[AnyContent] =
-    (authenticatedUserAction andThen EditorUserAction.editorUserAction(org)).async { implicit request =>
+    (authenticatedUserAction andThen EditorUserAction.editorUserAction(org,config.editorPrefix, iAMAuthService)).async { implicit request =>
 
       val token = OIDCHelper.getTokenFromRequest(request)
       val instancePath = NexusPath(org, domain, schema, version)
@@ -390,7 +390,7 @@ class NexusEditorController @Inject()(
                       domain:String,
                       schema: String,
                       version:String
-                    ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(org)).async { implicit request =>
+                    ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(org, config.editorPrefix, iAMAuthService)).async { implicit request =>
     val newInstance = request.body.asJson.get.as[JsObject]
     val instancePath = NexusPath(org, domain, schema, version)
     val editorPath = instancePath.reconciledPath(config.editorPrefix)

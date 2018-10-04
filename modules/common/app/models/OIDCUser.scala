@@ -37,12 +37,14 @@ object OIDCUser {
   val groupsLabel = "groups"
   val mandatoryFields = Seq(idLabel, nameLabel, emailLabel, groupsLabel)
 
-  implicit val readerOidUser=  Reads[EditorUser] = (
-      (JsPath \ idLabel).read[String],
-     (JsPath \ nameLabel).read[String],
-     (JsPath \ emailLabel).read[String],
-    (JsPath \ groupsLabel).read[String].map(_.split(",").toSeq)
-    )(OIDCUser.apply _)
+  import play.api.libs.functional.syntax._
+
+  implicit val readerOidUser : Reads[OIDCUser] = (
+    (JsPath \ idLabel).read[String] and
+      (JsPath \ nameLabel).read[String] and
+      (JsPath \ emailLabel).read[String] and
+      (JsPath \ groupsLabel).read[String].map(_.split(",").toSeq)
+    ) (new OIDCUser(_, _, _,_ ) )
 
 
   def unapply(arg: OIDCUser): Option[(String, String, String, Seq[String])] = Some((arg.id, arg.name, arg.email, arg.groups))

@@ -17,6 +17,17 @@
 
 package common.models
 
-trait UserNexusInfo extends Serializable{
+trait NexusUserInfo {
   val organizations: Seq[String]
+}
+
+class NexusUser(
+                 override val id: String,
+                 override val name:String,
+                 override val email: String,
+                 override val groups: Seq[String],
+                 override val organizations: Seq[String]
+               )
+  extends OIDCUser(id, name, email, groups) with NexusUserInfo with Serializable{
+
 }

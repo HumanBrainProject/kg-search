@@ -18,7 +18,7 @@
 package services
 
 import com.google.inject.{Inject, Singleton}
-import common.models.{NexusInstance, NexusPath, User}
+import common.models.{NexusInstance, NexusPath, NexusUser, User}
 import common.services.ConfigurationService
 import editor.models.ReconciledInstance
 import play.api.libs.json._
@@ -234,7 +234,7 @@ object FormService{
     }
   }
 
-  def editableEntities(user: User, formRegistry: JsObject): JsValue = {
+  def editableEntities(user: NexusUser, formRegistry: JsObject): JsValue = {
     val registry = formRegistry.value.filter{
       entity => user.groups.contains(s"nexus-${entity._1}")
     }

@@ -15,13 +15,17 @@
 */
 package authentication.models
 
-import common.models.{NexusUser}
-import play.api.mvc.{Request, WrappedRequest}
+import play.api.libs.json.{JsPath, Reads}
 
-/**
-  * A helper case class for logged in users
-  * @param user
-  * @param request
-  * @tparam A
-  */
-class UserRequest[A](val user: NexusUser, request: Request[A]) extends WrappedRequest[A](request)
+case class ACLIdentity(id: String, aclType: String, realm: Option[String], group: Option[String])
+
+object ACLIdentity {
+
+  import play.api.libs.functional.syntax._
+  implicit val readIAMACL: Reads[ACLIdentity] = (
+    (JsPath \ "@id").read[String] and
+      (JsPath \ "@type").read[String] and
+      (JsPath \ "realm").readNullable[String] and
+      (JsPath \ "group").readNullable[String]
+    )(ACLIdentity.apply _)
+}

@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit
 
 import com.google.inject.Inject
 import common.helpers.ESHelper
-import common.models.{OIDCUser, UserNexusInfo}
+import common.models.{NexusUser, OIDCUser}
 import common.services.{ClientCredentials, CredentialsService}
 import play.api.cache.{AsyncCacheApi, NamedCache}
 import play.api.{Configuration, Logger}
@@ -30,6 +30,7 @@ import play.api.libs.json.JsObject
 import play.api.libs.ws.WSClient
 import play.api.mvc.Headers
 import common.services.{ConfigurationService, ESService}
+import nexus.services.NexusService
 
 import scala.concurrent.duration.FiniteDuration._
 import scala.concurrent.duration.FiniteDuration
@@ -40,20 +41,21 @@ class OIDCAuthService @Inject()(
                                  eSService: ESService,
                                  credentialsService: CredentialsService,
                                  @NamedCache("userinfo-cache") cache: AsyncCacheApi,
+                                 nexusService: NexusService,
                                  ws: WSClient
                                )(implicit ec: ExecutionContext) extends AuthService {
 
   private val techAccessToken = "techAccessToken"
   val logger = Logger(this.getClass)
 
-  override type U = Option[OIDCUser]
+  override type U = Option[NexusUser]
 
   /**
     * Fetch user info from cache or OIDC API
     * @param headers the header containing the user's token
     * @return An option with the UserInfo object
     */
-  override def getUserInfo(headers: Headers): Future[Option[OIDCUser]] = {
+  override def getUserInfo(headers: Headers): Future[Option[NexusUser]] = {
     val token = headers.get("Authorization").getOrElse("")
     getUserInfoWithCache(token)
   }
@@ -64,15 +66,15 @@ class OIDCAuthService @Inject()(
     * @param token The user's token
     * @return An option with the UserInfo object
     */
-  def getUserInfoFromToken(token:String): Future[Option[OIDCUser]] = {
+  def getUserInfoFromToken(token:String): Future[Option[NexusUser]] = {
     ws.url(config.oidcUserInfoEndpoint).addHttpHeaders("Authorization" -> token).get().flatMap {
       res =>
         res.status match {
           case OK =>
-            ws.url(s"${config.nexusEndpoint}/v0/organizations")
-              .addHttpHeaders("Authorization" -> token)
-              .get().map{ re =>
-              Some( new OIDCUser() with UserNexusInfo)
+            nexusService.listAllNexusResult(s"${config.nexusEndpoint}/v0/organizations?fields=all", token).map{ re =>
+              val orgs = re.map( js => (js \ "source" \ "schema:name").as[String])
+              val oIDCUser = res.json.as[OIDCUser]
+              Some( new NexusUser(oIDCUser.id, oIDCUser.name, oIDCUser.email, oIDCUser.groups, orgs))
             }
           case _ => Future.successful(None)
         }
@@ -84,7 +86,7 @@ class OIDCAuthService @Inject()(
     * @param userInfo The user info
     * @return A list of accessible index in ES
     */
-  def groups(userInfo: Option[OIDCUser]): Future[List[String]] = {
+  def groups(userInfo: Option[NexusUser]): Future[List[String]] = {
     userInfo match {
       case Some(info) =>
         for {
@@ -105,8 +107,8 @@ class OIDCAuthService @Inject()(
     * @param token The token from the user
     * @return An option with the UserInfo object
     */
-  def getUserInfoWithCache(token: String): Future[Option[OIDCUser]]  = {
-    cache.get[OIDCUser](token).flatMap{
+  def getUserInfoWithCache(token: String): Future[Option[NexusUser]]  = {
+    cache.get[NexusUser](token).flatMap{
       case Some(userInfo) =>
         logger.debug(s"User info fetched from cache ${userInfo.id}")
         Future.successful(Some(userInfo))
