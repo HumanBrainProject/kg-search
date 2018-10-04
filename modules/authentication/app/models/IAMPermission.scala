@@ -15,13 +15,17 @@
 */
 package authentication.models
 
-import common.models.{NexusUser}
-import play.api.mvc.{Request, WrappedRequest}
+sealed trait IAMPermission
 
-/**
-  * A helper case class for logged in users
-  * @param user
-  * @param request
-  * @tparam A
-  */
-class UserRequest[A](val user: NexusUser, request: Request[A]) extends WrappedRequest[A](request)
+object IAMPermission {
+  def fromString(s:String): IAMPermission = s match {
+    case "read" => Read
+    case "publish" => Publish
+    case "write" => Write
+    case "own" => Own
+  }
+  case object Read  extends IAMPermission
+  case object Publish  extends IAMPermission
+  case object Write  extends IAMPermission
+  case object Own extends IAMPermission
+}

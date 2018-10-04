@@ -17,7 +17,7 @@
 
 package editor.models
 
-import common.models.OIDCUser
+import common.models.NexusUser
 import play.api.mvc.{Request, WrappedRequest}
 
 /**
@@ -26,4 +26,4 @@ import play.api.mvc.{Request, WrappedRequest}
   * @param request
   * @tparam A
   */
-case class EditorUserRequest[A](user: OIDCUser, editorGroup: String, request: Request[A]) extends WrappedRequest[A](request)
+case class EditorUserRequest[A](user: NexusUser, editorGroup: String, request: Request[A]) extends WrappedRequest[A](request)

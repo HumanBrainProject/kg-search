@@ -1,3 +1,4 @@
+
 /*
 *   Copyright (c) 2018, EPFL/Human Brain Project PCO
 *
@@ -13,15 +14,20 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package authentication.models
 
-import common.models.{NexusUser}
-import play.api.mvc.{Request, WrappedRequest}
+package common.models
 
-/**
-  * A helper case class for logged in users
-  * @param user
-  * @param request
-  * @tparam A
-  */
-class UserRequest[A](val user: NexusUser, request: Request[A]) extends WrappedRequest[A](request)
+trait NexusUserInfo {
+  val organizations: Seq[String]
+}
+
+class NexusUser(
+                 override val id: String,
+                 override val name:String,
+                 override val email: String,
+                 override val groups: Seq[String],
+                 override val organizations: Seq[String]
+               )
+  extends OIDCUser(id, name, email, groups) with NexusUserInfo with Serializable{
+
+}

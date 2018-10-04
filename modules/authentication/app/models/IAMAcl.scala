@@ -15,13 +15,16 @@
 */
 package authentication.models
 
-import common.models.{NexusUser}
-import play.api.mvc.{Request, WrappedRequest}
 
-/**
-  * A helper case class for logged in users
-  * @param user
-  * @param request
-  * @tparam A
-  */
-class UserRequest[A](val user: NexusUser, request: Request[A]) extends WrappedRequest[A](request)
+import play.api.libs.json.{JsPath, Reads}
+
+case class IAMAcl(path: String, identity:ACLIdentity, permissions:List[IAMPermission])
+
+object IAMAcl {
+  import play.api.libs.functional.syntax._
+  implicit val readIAMACL: Reads[IAMAcl] = (
+    (JsPath \ "path").read[String] and
+    (JsPath \ "identity").read[ACLIdentity] and
+    (JsPath \ "permissions").read[List[String]].map(xs => xs.map(x => IAMPermission.fromString(x) ))
+  )(IAMAcl.apply _)
+}
