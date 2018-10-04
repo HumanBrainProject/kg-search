@@ -105,7 +105,7 @@ class NexusEditorController @Inject()(
         ResponseHelper.errorResultWithBackLink(r.status, r.headers, r.body, nexusPath, config.reconciledPrefix, formService)
       case Right(instance) =>
         val instanceWithCorrectLinks = instance.modificationOfLinks(config.nexusEndpoint, config.reconciledPrefix)
-        formService.getFormStructure(nexusPath, instanceWithCorrectLinks.content, config.reconciledPrefix) match {
+        FormService.getFormStructure(nexusPath, instanceWithCorrectLinks.content, config.reconciledPrefix, formService.formRegistry) match {
           case JsNull =>
             NotImplemented(
               NavigationHelper.errorMessageWithBackLink(
@@ -154,7 +154,7 @@ class NexusEditorController @Inject()(
         val nexusId = NexusInstance.getIdForEditor((json \ "http://hbp.eu/reconciled#original_parent" \ "@id").as[String], config.reconciledPrefix)
         val datatype = nexusId.splitAt(nexusId.lastIndexOf("/"))
         val originalDatatype = NexusPath(datatype._1.split("/").toList)
-        formService.getFormStructure(originalDatatype, json, config.reconciledPrefix) match {
+        FormService.getFormStructure(originalDatatype, json, config.reconciledPrefix, formService.formRegistry) match {
           case JsNull =>
             NotImplemented(
               NavigationHelper.errorMessageWithBackLink(
@@ -188,13 +188,11 @@ class NexusEditorController @Inject()(
     val token = OIDCHelper.getTokenFromRequest(request)
     val reconciledTokenFut = oIDCAuthService.getTechAccessToken()
     val instancePath = originalInstance.nexusPath
-
     val editorSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.editorPrefix)
     val reconciledSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.reconciledPrefix)
     reconciledTokenFut.flatMap { techToken =>
       val originalInstanceWithAllFields =  InstanceHelper.addDefaultFields(originalInstance.removeNexusFields(), instancePath, formService.formRegistry)
       val updatedInstance = FormService.buildInstanceFromForm(originalInstanceWithAllFields, request.body.asJson.get, config.nexusEndpoint)
-
       val updateToBeStoredInManual = editorService.preppingEntitiesForSave(
         updatedInstance,
         originalInstanceWithAllFields,
@@ -205,9 +203,9 @@ class NexusEditorController @Inject()(
       val consolidatedInstance = ReconciledInstance(
         FormService.buildInstanceFromForm(originalInstance, updateToBeStoredInManual.nexusInstance.content, config.nexusEndpoint)
       )
-      val createDomains = editorService.createDomainsAndSchemasSync(editorSpace, reconciledSpace, originalInstance.nexusPath, token, techToken)
-
-      createDomains.flatMap {
+      editorService
+        .createDomainsAndSchemasSync(editorSpace, reconciledSpace, originalInstance.nexusPath, token, techToken)
+        .flatMap {
         case (true, true) =>
           editorService.saveEditorUpdate(
             editorSpace,
@@ -250,7 +248,6 @@ class NexusEditorController @Inject()(
                                     originalPath: NexusPath
                                   )(implicit request: EditorUserRequest[AnyContent]) = {
     val token = OIDCHelper.getTokenFromRequest(request)
-
     val editorSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.editorPrefix)
     val reconciledSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.reconciledPrefix)
     val originalIdAndPath = NexusInstance.extractIdAndPath(currentInstanceDisplayed.getOriginalParent())
@@ -268,9 +265,7 @@ class NexusEditorController @Inject()(
               if (editorInstancesRes.forall(_.isRight)) {
                 val editorInstances = editorInstancesRes.map { e => EditorInstance(e.toOption.get)}
                 val reconciledInstanceCleaned = currentInstanceDisplayed.removeNexusFields()
-
                 val updatedInstance = FormService.buildInstanceFromForm(reconciledInstanceCleaned.nexusInstance, request.body.asJson.get, config.nexusEndpoint)
-
                 val currentInstanceDisplayedWithAllFields = currentInstanceDisplayed.copy(
                   InstanceHelper.addDefaultFields(currentInstanceDisplayed.nexusInstance, originalPath, formService.formRegistry)
                 )
@@ -399,7 +394,7 @@ class NexusEditorController @Inject()(
     val newInstance = request.body.asJson.get.as[JsObject]
     val instancePath = NexusPath(org, domain, schema, version)
     val editorPath = instancePath.reconciledPath(config.editorPrefix)
-    val instance = formService.buildNewInstanceFromForm(config.nexusEndpoint, instancePath, newInstance)
+    val instance = FormService.buildNewInstanceFromForm(config.nexusEndpoint, instancePath, newInstance, formService.formRegistry)
 
     val token = OIDCHelper.getTokenFromRequest(request)
     val reconciledTokenFut = oIDCAuthService.getTechAccessToken()
@@ -453,7 +448,7 @@ class NexusEditorController @Inject()(
   def getEmptyForm(org: String, domain: String, schema: String, version: String): Action[AnyContent] = authenticatedUserAction {
     implicit request =>
       val nexusPath = NexusPath(org, domain, schema, version)
-      val form = formService.getFormStructure(nexusPath, JsNull, config.reconciledPrefix)
+      val form = FormService.getFormStructure(nexusPath, JsNull, config.reconciledPrefix, formService.formRegistry)
       Ok(form)
   }
 
@@ -465,7 +460,7 @@ class NexusEditorController @Inject()(
   def listEditableEntityTypes(privateSpace: String): Action[AnyContent] = authenticatedUserAction {
     implicit request =>
     // Editable instance types are the one for which form creation is known
-    Ok(formService.editableEntities(request.user))
+    Ok(FormService.editableEntities(request.user, formService.formRegistry))
   }
 
 

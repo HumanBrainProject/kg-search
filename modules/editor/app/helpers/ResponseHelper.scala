@@ -5,6 +5,7 @@ import common.helpers.ResponseHelper.{filterContentTypeAndLengthFromHeaders, fla
 import common.models.NexusPath
 import editor.helpers.NavigationHelper
 import play.api.http.HttpEntity
+import play.api.http.Status.{UNAUTHORIZED, FORBIDDEN}
 import play.api.libs.ws.WSResponse
 import play.api.mvc.{ResponseHeader, Result}
 import services.FormService
@@ -21,13 +22,23 @@ object ResponseHelper {
     */
   def errorResultWithBackLink(status: Int, headers: Map[String, Seq[String]], errorMsg:Any, originalPath: NexusPath, reconciledPrefix: String, formService: FormService): Result = {
     val resultBackLink = NavigationHelper.errorMessageWithBackLink(errorMsg, NavigationHelper.generateBackLink(originalPath,reconciledPrefix, formService))
-    Result(
-      ResponseHeader(
-        status,
-        flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](headers))
-      ),
-      HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json"))
-    )
+    if(status == UNAUTHORIZED){
+      Result(
+        ResponseHeader(
+          FORBIDDEN,
+          flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](headers))
+        ),
+        HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json"))
+      )
+    }else{
+      Result(
+        ResponseHeader(
+          status,
+          flattenHeaders(filterContentTypeAndLengthFromHeaders[Seq[String]](headers))
+        ),
+        HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json"))
+      )
+    }
   }
 
   /**

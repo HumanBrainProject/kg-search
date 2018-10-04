@@ -407,7 +407,7 @@ class EditorService @Inject()(wSClient: WSClient,
               editorSpaceEntityToSave,
               newManualUpdateId,
               reconciledInstanceToSave,
-              token,
+              techToken,
               userInfo
             )
           }

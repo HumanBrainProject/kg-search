@@ -108,7 +108,7 @@ class ArangoQueryService @Inject()(
               ArangoQueryService.formatEdges((el \ "edges").as[List[JsObject]])
             }.distinct
             val vertices = j.flatMap { el =>
-              ArangoQueryService.formatVertices((el \ "vertices").as[List[JsValue]], formService)
+              ArangoQueryService.formatVertices((el \ "vertices").as[List[JsValue]], formService.formRegistry)
             }.distinct
             Right(Json.obj("links" -> edges, "nodes" -> vertices))
           case _ => Left(allRelations)
@@ -127,7 +127,7 @@ object ArangoQueryService {
     s"$path/$i"
   }
 
-  def formatVertices(vertices: List[JsValue], formService: FormService): List[JsObject] = {
+  def formatVertices(vertices: List[JsValue], formRegistry: JsObject): List[JsObject] = {
     vertices
       .map {
         case v: JsObject =>
@@ -148,7 +148,7 @@ object ArangoQueryService {
           }.getOrElse(JsNull)
         case _ => JsNull
       }
-      .filter(v => v != JsNull && formService.isInSpec( (v \ "id").as[String].splitAt((v \ "id").as[String].lastIndexOf("/"))._1))
+      .filter(v => v != JsNull && FormService.isInSpec( (v \ "id").as[String].splitAt((v \ "id").as[String].lastIndexOf("/"))._1, formRegistry))
       .map(_.as[JsObject])
 
   }

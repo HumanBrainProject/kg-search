@@ -17,7 +17,7 @@
 
 package common.models
 
-import play.api.libs.json.JsObject
+import play.api.libs.json.{JsObject, JsPath, Reads}
 
 /**
   * The user information gathered from the OIDC API
@@ -37,14 +37,13 @@ object OIDCUser {
   val groupsLabel = "groups"
   val mandatoryFields = Seq(idLabel, nameLabel, emailLabel, groupsLabel)
 
-  def apply(json: JsObject) = {
-    new OIDCUser(
-      id = (json \ idLabel).asOpt[String].getOrElse(""),
-      name = (json \ nameLabel).asOpt[String].getOrElse(""),
-      email = (json \ emailLabel).asOpt[String].getOrElse(""),
-      groups = (json \ groupsLabel).asOpt[String].getOrElse("").split(",").toSeq
-    )
-  }
+  implicit val readerOidUser=  Reads[EditorUser] = (
+      (JsPath \ idLabel).read[String],
+     (JsPath \ nameLabel).read[String],
+     (JsPath \ emailLabel).read[String],
+    (JsPath \ groupsLabel).read[String].map(_.split(",").toSeq)
+    )(OIDCUser.apply _)
+
 
   def unapply(arg: OIDCUser): Option[(String, String, String, Seq[String])] = Some((arg.id, arg.name, arg.email, arg.groups))
 

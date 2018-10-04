@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit
 
 import com.google.inject.Inject
 import common.helpers.ESHelper
-import common.models.OIDCUser
+import common.models.{OIDCUser, UserNexusInfo}
 import common.services.{ClientCredentials, CredentialsService}
 import play.api.cache.{AsyncCacheApi, NamedCache}
 import play.api.{Configuration, Logger}
@@ -65,12 +65,16 @@ class OIDCAuthService @Inject()(
     * @return An option with the UserInfo object
     */
   def getUserInfoFromToken(token:String): Future[Option[OIDCUser]] = {
-    ws.url(config.oidcUserInfoEndpoint).addHttpHeaders("Authorization" -> token).get().map {
+    ws.url(config.oidcUserInfoEndpoint).addHttpHeaders("Authorization" -> token).get().flatMap {
       res =>
         res.status match {
           case OK =>
-            Some(OIDCUser(res.json.as[JsObject]))
-          case _ => None
+            ws.url(s"${config.nexusEndpoint}/v0/organizations")
+              .addHttpHeaders("Authorization" -> token)
+              .get().map{ re =>
+              Some( new OIDCUser() with UserNexusInfo)
+            }
+          case _ => Future.successful(None)
         }
     }
   }
