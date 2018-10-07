@@ -15,6 +15,7 @@
 */
 
 import React from "react";
+import PropTypes from "prop-types";
 import { CopyToClipboardButton } from "./CopyToClipboardButton";
 import { EmailToLink} from "./EmailToLink";
 import "./ShareButtons.css";
@@ -24,9 +25,17 @@ export function ShareButtons({className, clipboardContent, emailToLink}) {
   return (
     <span className={classNames}>
       <span className="kgs-share-links-panel">
-        <CopyToClipboardButton icon="fa fa-clipboard" title="Copy search link to clipboard" content={clipboardContent} />
+        <CopyToClipboardButton icon="fa fa-clipboard" title="Copy search link to clipboard" confirmationText="search link copied to clipoard" content={clipboardContent} />
         <EmailToLink icon="fa fa-envelope-o" title="Send search link by email" link={emailToLink} />
       </span>
     </span>
   );
 }
+
+ShareButtons.propTypes = {
+  className: PropTypes.string,
+  clipboardContent: PropTypes.string,
+  emailToLink: PropTypes.string
+};
+
+export default ShareButtons;

@@ -15,6 +15,7 @@
 */
 
 import React from "react";
+import PropTypes from "prop-types";
 import "./Toggle.css";
 
 const ToggleItem = ({label, value, isActive, onClick}) => {
@@ -43,3 +44,13 @@ export const Toggle = ({className, show, value, items, onClick}) => {
     </div>
   );
 };
+
+Toggle.propTypes = {
+  className: PropTypes.string,
+  show: PropTypes.bool,
+  value: PropTypes.any,
+  items: PropTypes.arrayOf(PropTypes.any),
+  onClick: PropTypes.func
+};
+
+export default Toggle;

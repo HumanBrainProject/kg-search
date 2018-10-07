@@ -15,7 +15,7 @@
 */
 
 import React, { PureComponent } from "react";
-import { generateKey } from "../helpers/OIDCHelpers";
+import uniqueId from "lodash/uniqueId";
 import { windowHeight } from "../helpers/BrowserHelpers";
 
 const jQuerCollapsibleMenuQuerySelector = ".js-navbar-header";
@@ -28,7 +28,7 @@ export const withFloatingScrollEventsSubscription = (floatingPosition, relatedEl
   class withEvents extends PureComponent {
     constructor(props) {
       super(props);
-      this.eventId = "kgs-" + generateKey();
+      this.eventId = uniqueId("kgs-");
       this.state = {
         isFloating: false
       };

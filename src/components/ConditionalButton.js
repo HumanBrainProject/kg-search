@@ -15,6 +15,7 @@
 */
 
 import React from "react";
+import PropTypes from "prop-types";
 import "./ConditionalButton.css";
 
 export const ConditionalButton = ({className, test, onLabel, offLabel, onClick, offClick}) => {
@@ -25,3 +26,14 @@ export const ConditionalButton = ({className, test, onLabel, offLabel, onClick, 
     <button className={classNames} onClick={handleClick}>{label}</button>
   );
 };
+
+ConditionalButton.propTypes = {
+  className: PropTypes.string,
+  test: PropTypes.bool,
+  onLabel: PropTypes.string,
+  offLabel: PropTypes.string,
+  onClick: PropTypes.func.isRequired,
+  offClick: PropTypes.func.isRequired
+};
+
+export default ConditionalButton;

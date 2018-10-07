@@ -15,6 +15,7 @@
 */
 
 import React, { PureComponent } from "react";
+import PropTypes from "prop-types";
 import { isMobile } from "../helpers/BrowserHelpers";
 import "./Carrousel.css";
 
@@ -32,7 +33,7 @@ const CarrouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, 
             </button>
           )}
           <div className="kgs-carrousel__navigation">
-            {item.isActive && item.data && (
+            {item.isActive && item.data && NavigationComponent && (
               <NavigationComponent/>
             )}
           </div>
@@ -43,7 +44,7 @@ const CarrouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, 
           )}
         </div>
         <div className="kgs-carrousel__body">
-          {item.isActive && item.data && (
+          {item.isActive && item.data && ItemComponent && (
             <ItemComponent data={item.data} />
           )}
         </div>
@@ -88,7 +89,7 @@ export class Carrousel extends PureComponent {
   }
   render(){
     const {className, show, data, onPrevious, onClose, itemComponent, navigationComponent} = this.props;
-    if (!show || !Array.isArray(data) || !data.length) {
+    if (!show || !Array.isArray(data) || !data.length || !itemComponent) {
       return null;
     }
 
@@ -118,3 +119,21 @@ export class Carrousel extends PureComponent {
     );
   }
 }
+
+Carrousel.propTypes = {
+  className: PropTypes.string,
+  show: PropTypes.bool,
+  data:  PropTypes.arrayOf(PropTypes.any),
+  onPrevious: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  itemComponent: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.func
+  ]).isRequired,
+  navigationComponent: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.func
+  ])
+};
+
+export default Carrousel;

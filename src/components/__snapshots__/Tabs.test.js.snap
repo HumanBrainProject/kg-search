@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tabs component renders initially 1`] = `
+<div
+  className="kgs-tabs className"
+>
+  <div
+    className="kgs-tabs-buttons"
+  >
+    <button
+      className="kgs-tabs-button is-active"
+      onClick={[Function]}
+      type="button"
+    >
+      a label
+       
+      (11)
+       
+      <span
+        className="kgs-hint "
+      >
+        <i
+          aria-hidden="true"
+          className="fa fa-info-circle"
+          data-for="kgs-hint_content-1"
+          data-tip={true}
+        />
+        <div
+          className="__react_component_tooltip place-right type-dark "
+          data-id="tooltip"
+          id="kgs-hint_content-1"
+        >
+          <span>
+            a hint
+          </span>
+        </div>
+      </span>
+    </button>
+    <button
+      className="kgs-tabs-button "
+      onClick={[Function]}
+      type="button"
+    >
+      another label
+       
+      (32)
+       
+      <span
+        className="kgs-hint "
+      >
+        <i
+          aria-hidden="true"
+          className="fa fa-info-circle"
+          data-for="kgs-hint_content-2"
+          data-tip={true}
+        />
+        <div
+          className="__react_component_tooltip place-right type-dark "
+          data-id="tooltip"
+          id="kgs-hint_content-2"
+        >
+          <span>
+            another hint
+          </span>
+        </div>
+      </span>
+    </button>
+  </div>
+  <div
+    className="kgs-tabs-content"
+  />
+</div>
+`;

@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InfoPanel component renders initially 1`] = `
+<div
+  className="kgs-info"
+>
+  <div
+    className="kgs-info__panel"
+  >
+    <div
+      className="kgs-info__container"
+    >
+      <span
+        className="kgs-info__content"
+        dangerouslySetInnerHTML={
+          Object {
+            "__html": "<p>some text</p>",
+          }
+        }
+      />
+      <button
+        className="kgs-info__closeButton"
+        onClick={[Function]}
+      >
+        <i
+          className="fa fa-close"
+        />
+      </button>
+    </div>
+  </div>
+</div>
+`;

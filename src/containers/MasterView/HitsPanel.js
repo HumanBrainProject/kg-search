@@ -15,6 +15,7 @@
 */
 
 import React from "react";
+import uniqueId from "lodash/uniqueId";
 import { connect } from "react-redux";
 import * as actions from "../../actions";
 import { List } from "../../components/List";
@@ -86,7 +87,7 @@ const mapStateToProps = (state, props) => {
       }
     ],
     itemComponent: Hit,
-    getKey: data => `${data._type?data._type:"unknown"}/${data._id?data._id:new Date().getTime() + Math.random()}`,
+    getKey: data => `${data._type?data._type:"unknown"}/${data._id?data._id:uniqueId()}`,
     layout: state.application.gridLayoutMode?"grid":"list"
   };
 };

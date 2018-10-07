@@ -15,6 +15,7 @@
 */
 
 import React from "react";
+import PropTypes from "prop-types";
 import showdown from "showdown";
 /*import FilterXSS from 'xss';*/
 import xssFilter from "showdown-xss-filter";
@@ -40,3 +41,13 @@ export const Notice = ({className, show, text, agreeLabel="I agree", onAgree}) =
     </div>
   );
 };
+
+Notice.propTypes = {
+  className: PropTypes.string,
+  show: PropTypes.bool,
+  text: PropTypes.string,
+  agreeLabel: PropTypes.string,
+  onAgree: PropTypes.func
+};
+
+export default Notice;

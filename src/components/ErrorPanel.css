@@ -49,7 +49,7 @@
 }
 
 .kgs-error-navigation button {
-    display: none;
+    display: inline-block;
     margin: 15px 20px 0px 20px;
     border-radius: 3px;
     padding: 4px 16px;
@@ -62,8 +62,4 @@
     color: #333;    
     -webkit-box-shadow: 3px 3px 6px #cbc9c9;
     box-shadow: 3px 3px 6px #cbc9c9;
-}
-
-.kgs-error-navigation button[data-show="true"] {
-    display: inline-block;
 }

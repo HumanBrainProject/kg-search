@@ -15,6 +15,7 @@
 */
 
 import React from "react";
+import PropTypes from "prop-types";
 
 export const Icon = ({className, title, url, inline}) => {
   if (url) {
@@ -31,3 +32,12 @@ export const Icon = ({className, title, url, inline}) => {
     <i className={`fa fa-tag ${className?className:null}`} />
   );
 };
+
+Icon.propTypes = {
+  className: PropTypes.string,
+  title: PropTypes.string,
+  url: PropTypes.string,
+  inline: PropTypes.string
+};
+
+export default Icon;

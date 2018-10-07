@@ -15,6 +15,7 @@
 */
 
 import React from "react";
+import PropTypes from "prop-types";
 import "./CopyToClipboardButton.css";
 
 export const CopyToClipboardButton = props => {
@@ -56,9 +57,14 @@ export const CopyToClipboardButton = props => {
     button.removeChild(textArea);
   };
 
-  let title = "Copy search link to clipboard";
+  let title = "Send to clipboard";
   if (props.title) {
     title = props.title;
+  }
+
+  let confirmationText = "sent to clipoard";
+  if (props.confirmationText) {
+    confirmationText = props.confirmationText;
   }
 
   let iconClassName = "fa fa-clipboard";
@@ -69,8 +75,9 @@ export const CopyToClipboardButton = props => {
   let icon = null;
   let text = null;
   if (props.text) {
-    if (props.icon)
-    {icon = <i className={iconClassName}></i>;}
+    if (props.icon) {
+      icon = <i className={iconClassName}></i>;
+    }
     text = <span>{props.text}</span>;
   } else {
     icon = <i className={iconClassName}></i>;
@@ -81,7 +88,16 @@ export const CopyToClipboardButton = props => {
   return (
     <span className={classNames}>
       <button role="link" onClick={clickHandler} title={title}>{icon}{text}</button>
-      <div className="kgs-copy-confirmation">search link copied to clipoard</div>
+      <div className="kgs-copy-confirmation">{confirmationText}</div>
     </span>
   );
 };
+
+CopyToClipboardButton.propTypes = {
+  content: PropTypes.string,
+  title: PropTypes.string,
+  confirmationText: PropTypes.string,
+  icon: PropTypes.string
+};
+
+export default CopyToClipboardButton;

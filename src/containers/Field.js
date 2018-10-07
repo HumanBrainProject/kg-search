@@ -44,9 +44,8 @@ const FieldBase = (renderUserInteractions = true) => {
       counter: (mapping.layout === "group" && isList)?data.length:0
     };
     const hintProps = {
-      show: renderUserInteractions && !!mapping.value && !!mapping.hint,
-      value: mapping.hint,
-      label: mapping.value
+      show: renderUserInteractions && !!mapping.hint,
+      value: mapping.hint
     };
     const listProps = {
       show: isList,

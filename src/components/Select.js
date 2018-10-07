@@ -15,6 +15,7 @@
 */
 
 import React from "react";
+import PropTypes from "prop-types";
 import "./Select.css";
 
 export function Select({className, label, value, list, onChange}) {
@@ -24,10 +25,25 @@ export function Select({className, label, value, list, onChange}) {
   const classNames = ["kgs-select", className].join(" ");
   return (
     <div className={classNames}>
-      {label?<div>{label}</div>:null}
+      {label && (
+        <div>{label}</div>
+      )}
       <select onChange={e => onChange(e.target.value || null)} value={value || ""}>
         {list.map(e => <option value={e.value} key={e.value}>{e.label}</option>)}
       </select>
     </div>
   );
 }
+
+Select.propTypes = {
+  className: PropTypes.string,
+  label: PropTypes.string,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
+  list:  PropTypes.arrayOf(PropTypes.any),
+  onChange: PropTypes.func
+};
+
+export default Select;

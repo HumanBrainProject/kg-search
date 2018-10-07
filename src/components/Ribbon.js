@@ -16,6 +16,7 @@
 
 
 import React from "react";
+import PropTypes from "prop-types";
 import "./Ribbon.css";
 
 export const Ribbon = ({className, icon, text, counter, suffix}) => {
@@ -35,3 +36,16 @@ export const Ribbon = ({className, icon, text, counter, suffix}) => {
     </div>
   );
 };
+
+Ribbon.propTypes = {
+  className: PropTypes.string,
+  icon: PropTypes.string,
+  text: PropTypes.string,
+  counter: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
+  suffix: PropTypes.string
+};
+
+export default Ribbon;

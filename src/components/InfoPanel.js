@@ -15,6 +15,7 @@
 */
 
 import React from "react";
+import PropTypes from "prop-types";
 import showdown from "showdown";
 /*import FilterXSS from 'xss';*/
 import xssFilter from "showdown-xss-filter";
@@ -40,3 +41,10 @@ export const InfoPanel = ({text, onClose}) => {
     </div>
   );
 };
+
+InfoPanel.propTypes = {
+  text: PropTypes.string,
+  onClose: PropTypes.func
+};
+
+export default InfoPanel;
