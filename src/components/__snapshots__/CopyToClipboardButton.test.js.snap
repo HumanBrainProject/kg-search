@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CopyToClipboardButton component renders initially 1`] = `
+<span
+  className="kgs-copy-to-clipboard className"
+>
+  <button
+    onClick={[Function]}
+    role="link"
+    title="title"
+  >
+    <i
+      className="iconClassName"
+    />
+    <span>
+      text
+    </span>
+  </button>
+  <div
+    className="kgs-copy-confirmation"
+  >
+    confirmation text
+  </div>
+</span>
+`;

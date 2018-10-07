@@ -15,6 +15,7 @@
 */
 
 import React from "react";
+import PropTypes from "prop-types";
 import "./EmailToLink.css";
 
 export const EmailToLink = ({className, title = "Send search link by email", text, icon = "fa fa-envelope-o", link}) => {
@@ -23,3 +24,12 @@ export const EmailToLink = ({className, title = "Send search link by email", tex
     <a className={classNames} href={link} title={title}><i className={icon}></i><span>{text}</span></a>
   );
 };
+
+EmailToLink.propTypes = {
+  className: PropTypes.string,
+  title: PropTypes.string,
+  text: PropTypes.string,
+  icon: PropTypes.string
+};
+
+export default EmailToLink;

@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Carrousel component renders initially 1`] = `
+<div
+  className="kgs-carrousel className"
+>
+  <div
+    className="kgs-carrousel__panel"
+  >
+    <div
+      className="kgs-carrousel__item position4"
+    >
+      <div
+        className="kgs-carrousel__content"
+      >
+        <div
+          className="kgs-carrousel__header"
+        >
+          <div
+            className="kgs-carrousel__navigation"
+          />
+        </div>
+        <div
+          className="kgs-carrousel__body"
+        />
+      </div>
+    </div>
+    <div
+      className="kgs-carrousel__item position0"
+    >
+      <div
+        className="kgs-carrousel__content"
+      >
+        <div
+          className="kgs-carrousel__header"
+        >
+          <button
+            className="kgs-carrousel__previous-button"
+            onClick={[Function]}
+          >
+            <i
+              className="fa fa-chevron-left"
+            />
+             Previous
+          </button>
+          <div
+            className="kgs-carrousel__navigation"
+          />
+          <button
+            className="kgs-carrousel__close-button"
+            onClick={[Function]}
+          >
+            <i
+              className="fa fa-close"
+            />
+          </button>
+        </div>
+        <div
+          className="kgs-carrousel__body"
+        />
+      </div>
+    </div>
+    <div
+      className="kgs-carrousel__item position1"
+    >
+      <div
+        className="kgs-carrousel__content"
+      >
+        <div
+          className="kgs-carrousel__header"
+        >
+          <div
+            className="kgs-carrousel__navigation"
+          />
+        </div>
+        <div
+          className="kgs-carrousel__body"
+        />
+      </div>
+    </div>
+    <div
+      className="kgs-carrousel__item position2"
+    >
+      <div
+        className="kgs-carrousel__content"
+      >
+        <div
+          className="kgs-carrousel__header"
+        >
+          <div
+            className="kgs-carrousel__navigation"
+          />
+        </div>
+        <div
+          className="kgs-carrousel__body"
+        />
+      </div>
+    </div>
+    <div
+      className="kgs-carrousel__item position3"
+    >
+      <div
+        className="kgs-carrousel__content"
+      >
+        <div
+          className="kgs-carrousel__header"
+        >
+          <div
+            className="kgs-carrousel__navigation"
+          />
+        </div>
+        <div
+          className="kgs-carrousel__body"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

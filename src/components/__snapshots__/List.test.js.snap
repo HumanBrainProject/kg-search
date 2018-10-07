@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`List component renders initially 1`] = `
+<div
+  className="kgs-list className is-list"
+>
+  <div>
+    a title
+  </div>
+  <ul>
+    <li>
+      <button
+        data-reference="1"
+        onClick={[Function]}
+        role="link"
+      >
+        <span
+          className="kgs-list__chevron"
+        >
+          <i
+            className="fa fa-chevron-right"
+          />
+        </span>
+      </button>
+    </li>
+    <li>
+      <button
+        data-reference="2"
+        onClick={[Function]}
+        role="link"
+      >
+        <span
+          className="kgs-list__chevron"
+        >
+          <i
+            className="fa fa-chevron-right"
+          />
+        </span>
+      </button>
+    </li>
+  </ul>
+</div>
+`;

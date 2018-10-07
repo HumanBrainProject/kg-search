@@ -14,6 +14,7 @@
 *   limitations under the License.
 */
 import React, { PureComponent } from "react";
+import PropTypes from "prop-types";
 import { Hint } from "./Hint";
 import "./Tabs.css";
 
@@ -45,7 +46,7 @@ export class Tabs extends PureComponent {
   }
   render() {
     const { className, tabs, viewComponent } = this.props;
-    if (!Array.isArray(tabs)) {
+    if (!Array.isArray(tabs) || !tabs.length) {
       return null;
     }
     const classNames = ["kgs-tabs", className].join(" ");
@@ -58,7 +59,7 @@ export class Tabs extends PureComponent {
           ))}
         </div>
         <div className="kgs-tabs-content">
-          {this.state.value && this.state.value.data && (
+          {this.state.value && this.state.value.data && Component && (
             <Component key={this.state.value.id} {...this.state.value.data} />
           )}
         </div>
@@ -66,3 +67,14 @@ export class Tabs extends PureComponent {
     );
   }
 }
+
+Tabs.propTypes = {
+  className: PropTypes.string,
+  tabs:  PropTypes.arrayOf(PropTypes.any),
+  viewComponent: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.func
+  ]).isRequired
+};
+
+export default Tabs;

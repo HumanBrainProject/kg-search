@@ -28,9 +28,8 @@ const getTabs = fields => {
       title: (field.mapping && field.mapping.value)?field.mapping.value:field.name,
       counter: Array.isArray(field.data)?field.data.length:field.data?1:0,
       hint: field.mapping?{
-        show: !!field.mapping.value && !!field.mapping.hint,
-        value: field.mapping.hint,
-        label: field.mapping.value
+        show: !!field.mapping.hint,
+        value: field.mapping.hint
       }:null,
       data: field
     };

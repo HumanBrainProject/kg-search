@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EmailToLink component renders initially 1`] = `
+<a
+  className="kgs-email-link test"
+  href="link"
+  title="title"
+>
+  <i
+    className="icon"
+  />
+  <span>
+    text
+  </span>
+</a>
+`;

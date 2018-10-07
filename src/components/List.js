@@ -15,9 +15,10 @@
 */
 
 import React from "react";
+import PropTypes from "prop-types";
 import "./List.css";
 
-const ListItem = ({data, itemComponent, onClick}) => {
+const ListItem = ({reference, data, itemComponent, onClick}) => {
 
   const handleClick = (event) => {
     onClick(data, event.currentTarget);
@@ -26,7 +27,7 @@ const ListItem = ({data, itemComponent, onClick}) => {
   const Component = itemComponent;
   return (
     <li>
-      <button role="link" onClick={handleClick} data-type={data._type} data-id={data._id}>
+      <button role="link" onClick={handleClick} data-reference={reference}>
         <Component data={data} />
         <span className="kgs-list__chevron"><i className="fa fa-chevron-right"></i></span>
       </button>
@@ -45,10 +46,28 @@ export const List = ({className, title, items, itemComponent, layout, getKey, on
         <div>{title}</div>
       )}
       <ul>
-        {items.map(item => (
-          <ListItem key={getKey(item)} data={item} itemComponent={itemComponent} onClick={onClick} />
-        ))}
+        {items.map(item => {
+          const key = getKey(item);
+          return (
+            <ListItem key={key} reference={key} data={item} itemComponent={itemComponent} onClick={onClick} />
+          );
+        })}
       </ul>
     </div>
   );
 };
+
+List.propTypes = {
+  className: PropTypes.string,
+  title: PropTypes.string,
+  items:  PropTypes.arrayOf(PropTypes.any),
+  itemComponent: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.func
+  ]).isRequired,
+  layout: PropTypes.string,
+  getKey: PropTypes.func.isRequired,
+  onClick: PropTypes.func
+};
+
+export default List;

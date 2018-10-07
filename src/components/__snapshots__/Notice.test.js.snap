@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Notice component renders initially 1`] = `
+<div
+  className="kgs-notice className"
+>
+  <div
+    className="kgs-notice-panel"
+  >
+    <span
+      className="kgs-notice-content"
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "<p>some text</p>",
+        }
+      }
+    />
+  </div>
+  <button
+    className="btn btn-primary kgs-notice-agree-button"
+    onClick={[Function]}
+  >
+    agree label
+  </button>
+</div>
+`;

@@ -15,14 +15,16 @@
 */
 
 import React from "react";
+import PropTypes from "prop-types";
+import uniqueId from "lodash/uniqueId";
 import ReactTooltip from "react-tooltip";
 
-export const Hint = ({className, show, value, label}) => {
+export const Hint = ({className, show, value}) => {
   if (!show) {
     return null;
   }
   const classNames = ["kgs-hint", className].join(" ");
-  const hint_id = "kgs-hint_content-" + encodeURI(label);
+  const hint_id = encodeURI(uniqueId("kgs-hint_content-"));
   return (
     <span className={classNames}>
       <i className="fa fa-info-circle" data-tip data-for={hint_id} aria-hidden="true"></i>
@@ -32,3 +34,11 @@ export const Hint = ({className, show, value, label}) => {
     </span>
   );
 };
+
+Hint.propTypes = {
+  className: PropTypes.string,
+  show: PropTypes.bool,
+  value: PropTypes.string
+};
+
+export default Hint;

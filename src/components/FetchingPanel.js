@@ -15,6 +15,7 @@
 */
 
 import React from "react";
+import PropTypes from "prop-types";
 import "./FetchingPanel.css";
 
 export const FetchingPanel = ({show, message}) => {
@@ -32,3 +33,10 @@ export const FetchingPanel = ({show, message}) => {
     </div>
   );
 };
+
+FetchingPanel.propTypes = {
+  show: PropTypes.bool,
+  message: PropTypes.string
+};
+
+export default FetchingPanel;

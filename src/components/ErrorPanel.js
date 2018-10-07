@@ -15,6 +15,7 @@
 */
 
 import React from "react";
+import PropTypes from "prop-types";
 import "./ErrorPanel.css";
 
 export const ErrorPanel = ({show, message, retryLabel, retryAction, cancelLabel, cancelAction, onAction}) => {
@@ -33,10 +34,25 @@ export const ErrorPanel = ({show, message, retryLabel, retryAction, cancelLabel,
       <div className="kgs-error-panel">
         <span className="kgs-error-message">{message}</span>
         <div className="kgs-error-navigation">
-          <button onClick={onRetry} data-show={!!retryLabel}>{retryLabel}</button>
-          <button onClick={onCancel} data-show={!!cancelLabel}>{cancelLabel}</button>
+          {retryLabel && (
+            <button onClick={onRetry}>{retryLabel}</button>
+          )}
+          {cancelLabel && (
+            <button onClick={onCancel}>{cancelLabel}</button>
+          )}
         </div>
       </div>
     </div>
   );
 };
+
+ErrorPanel.propTypes = {
+  show: PropTypes.bool,
+  cancelLabel: PropTypes.string,
+  cancelAction: PropTypes.string,
+  retryLabel: PropTypes.string,
+  retryAction: PropTypes.string,
+  onAction: PropTypes.func
+};
+
+export default ErrorPanel;
