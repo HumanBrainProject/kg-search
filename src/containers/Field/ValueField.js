@@ -186,7 +186,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     const hasMailToLink = !!renderUserInteractions && data.url === "string" &&  data.url.substr(0,7).toLowerCase() === "mailto:";
     const hasAnyLink = hasReference || hasMailToLink || hasLink;
     const isIcon = mapping.type === "icon" && ((data.image && data.image.url) || mapping.icon);
-    const isTag = !hasAnyLink && !isIcon && !!mapping.tag_icon;
+    const isTag = !hasAnyLink && !isIcon && !!mapping.tagIcon;
     const isMarkdown = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && !!mapping.markdown;
     const isCollapsible = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && mapping.collapsible && typeof data.value === "string" && data.value.length >= 1600;
 
@@ -224,7 +224,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     } else if (isTag) {
       ValueComponent = Tag;
       valueProps = {
-        icon: mapping.tag_icon,
+        icon: mapping.tagIcon,
         value: value
       };
     } else if (isCollapsible) {
@@ -241,22 +241,11 @@ const ValueFieldBase = (renderUserInteractions = true) => {
       };
     }
 
-    /*
-    const detailsProps = {
-      toggleLabel: mapping.detail_label,
-      content: data.detail
-    };
-    */
-    const detailsProps = {
-      toggleLabel: "Terms of use",
-      content: termsOfUse
-    };
-
     return (
       <div className="field-value">
         <ValueComponent {...valueProps} />
-        {(data.detail || data.terms_of_use) && (
-          <Details {...detailsProps} />
+        {!!mapping.termsOfUse && (
+          <Details toggleLabel="Terms of use" content={termsOfUse} />
         )}
       </div>
     );
