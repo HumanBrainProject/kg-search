@@ -50,14 +50,14 @@
     text-align: center;
 }
 
-[data-type] .kgs-hit .kgs-field {
+.kgs-hit[data-type] .kgs-field {
     color: #333;
     font-weight: normal;
 }
 
 /**********************************************************************************************************************/
 
-[data-type] .kgs-hit .kgs-field__title {
+.kgs-hit[data-type] .kgs-field__title {
     margin-top: 2px;
     margin-left: 12px;
     font-size: 20px;
@@ -66,19 +66,19 @@
     flex-basis: 80%;
 }
 
-[data-type] .kgs-hit .kgs-field__title .field-label {
+.kgs-hit[data-type] .kgs-field__title .field-label {
     display: none;
 }
 
-[data-type] .kgs-hit .kgs-field__title .field-value {
+.kgs-hit[data-type] .kgs-field__title .field-value {
     margin-top: 4px;
 }
 
-[data-type] .kgs-hit .kgs-field__description {
+.kgs-hit[data-type] .kgs-field__description {
     text-align: justify;
 }
 
-[data-type] .kgs-hit .kgs-field__description .field-label {
+.kgs-hit[data-type] .kgs-field__description .field-label {
     display: none;
 }
 
