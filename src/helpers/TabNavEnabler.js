@@ -18,7 +18,7 @@ import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import { isMobile } from "./BrowserHelpers";
 
-export class TabNavEnablerBase extends PureComponent {
+class TabNavEnablerBase extends PureComponent {
   constructor(props) {
     super(props);
     this.timer = null;

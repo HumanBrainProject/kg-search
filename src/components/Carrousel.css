@@ -28,30 +28,31 @@
     background-color: rgba(0,0,0,0.5);
 }
 
-.kgs-carrousel__views {
+.kgs-carrousel__panel {
     display: block;
     position: relative;
     width: calc(100% - 20px);
     height: calc(100% - 20px);
     margin-top: 10px;
     margin-left: 10px;
+    border-radius: 3px;
 }
 
 @media (min-width: 992px) {
-    .kgs-carrousel__views {
+    .kgs-carrousel__panel {
         width: 992px;
         margin-left: calc(50% - 496px);
     }
 }
 
 @media (min-width: 1400px) {
-    .kgs-carrousel__views {
+    .kgs-carrousel__panel {
         width: 1200px;
         margin-left: calc(50% - 600px);
     }
 }
 
-.kgs-carrousel__view {
+.kgs-carrousel__item {
     z-index: 1200;
     display: block;
     position: absolute;
@@ -59,304 +60,103 @@
     left: 200%;
     width: 100%;
     height: 100%;
-    border: 1px solid #ccc;
+    border-radius: 3px;
     background-color: white;
     transition: left 0.25s ease-in;
     transform: translate3D(0,0,0);
 }
 
-/*
-.kgs-carrousel__view[data-view="1"] .kgs-carrousel__body {
-    background-color: red;
-}
-
-.kgs-carrousel__view[data-view="2"] .kgs-carrousel__body {
-    background-color: green;
-}
-
-.kgs-carrousel__view[data-view="3"] .kgs-carrousel__body {
-    background-color: blue;
-}
-
-.kgs-carrousel__view[data-view="4"] .kgs-carrousel__body {
-    background-color: yellow;
-}
-
-.kgs-carrousel__view[data-view="5"] .kgs-carrousel__body {
-    background-color: maroon;
-}
-*/
-
-.kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="1"] {
+.kgs-carrousel .kgs-carrousel__item.position0 {
     left: 0;
     display: block;
 }
 
-.kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="2"] {
+.kgs-carrousel .kgs-carrousel__item.position1 {
     left: 105%;
     display: block;
 }
 
-.kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="3"] {
+.kgs-carrousel .kgs-carrousel__item.position2 {
     left: 105%;
     display: none;
 }
 
-.kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="4"] {
+.kgs-carrousel .kgs-carrousel__item.position3 {
     left: -105%;
     display: none;
 }
 
-.kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="5"] {
+.kgs-carrousel .kgs-carrousel__item.position4 {
     left: -105%;
-    display: block;
-}
-
-.kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="1"] {
-    left: -105%;
-    display: block;
-}
-
-.kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="2"] {
-    left: 0;
-    display: block;
-}
-
-.kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="3"] {
-    left: 105%;
-    display: block;
-}
-   
-.kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="4"] {
-    left: 105%;
-    display: none;
-}
-   
-.kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="5"] {
-    left: -105%;
-    display: none;
-}
-    
-.kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="1"] {
-    left: -105%;
-    display: none;
-}
-
-.kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="2"] {
-    left: -105%;
-    display: block;
-}
-
-.kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="3"] {
-    left: 0;
-    display: block;
-}
-
-.kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="4"] {
-    left: 105%;
-    display: block;
-}
-
-.kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="5"] {
-    left: 105%;
-    display: none;
-}
-    
-.kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="1"] {
-    left: 105%;
-    display: none;
-}
-
-.kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="2"] {
-    left: -105%;
-    display: none;
-}
-
-.kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="3"] {
-    left: -105%;
-    display: block;
-}
-
-.kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="4"] {
-    left: 0;
-    display: block;
-}
-
-.kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="5"] {
-    left: 105%;
-    display: block;
-}
-    
-.kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="1"] {
-    left: 105%;
-    display: block;
-}
-
-.kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="2"] {
-    left: 105%;
-    display: none;
-}
-
-.kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="3"] {
-    left: -105%;
-    display: none;
-}
-
-.kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="4"] {
-    left: -105%;
-    display: block;
-}
-
-.kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="5"] {
-    left: 0;
     display: block;
 }
 
 @media (min-width: 992px) {
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="2"],
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="4"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="4"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="2"] {
+    .kgs-carrousel .kgs-carrousel__item.position1,
+    .kgs-carrousel .kgs-carrousel__item.position2 {
         left: 205%;
     }
     
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="4"],
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="2"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="2"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="4"] {
+    .kgs-carrousel .kgs-carrousel__item.position3,
+    .kgs-carrousel .kgs-carrousel__item.position4 {
         left: -205%;
     }
 }
 
 @media (min-width: 1984px) {
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="2"],
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="4"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="4"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="2"] {
+    .kgs-carrousel .kgs-carrousel__item.position1,
+    .kgs-carrousel .kgs-carrousel__item.position2 {
         left: 305%;
     }
     
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="4"],
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="2"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="2"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="4"] {
+    .kgs-carrousel .kgs-carrousel__item.position3,
+    .kgs-carrousel .kgs-carrousel__item.position4 {
         left: -305%;
     }
 }
 
 @media (min-width: 2976px) {
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="2"],
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="4"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="4"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="2"] {
+    .kgs-carrousel .kgs-carrousel__item.position1,
+    .kgs-carrousel .kgs-carrousel__item.position2 {
         left: 405%;
     }
     
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="4"],
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="2"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="2"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="4"] {
+    .kgs-carrousel .kgs-carrousel__item.position3,
+    .kgs-carrousel .kgs-carrousel__item.position4 {
         left: -405%;
     }
 }
 
 @media (min-width: 3968px) {
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="2"],
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="4"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="4"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="2"] {
+    .kgs-carrousel .kgs-carrousel__item.position1,
+    .kgs-carrousel .kgs-carrousel__item.position2 {
         left: 505%;
     }
     
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="4"],
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="2"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="2"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="4"] {
+    .kgs-carrousel .kgs-carrousel__item.position3,
+    .kgs-carrousel .kgs-carrousel__item.position4 {
         left: -505%;
     }
 }
 
 @media (min-width: 4960px) {
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="2"],
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="4"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="4"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="2"] {
+    .kgs-carrousel .kgs-carrousel__item.position1,
+    .kgs-carrousel .kgs-carrousel__item.position2 {
         left: 605%;
     }
     
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="4"],
-    .kgs-carrousel[data-selected="1"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="2"] .kgs-carrousel__view[data-view="5"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="1"],
-    .kgs-carrousel[data-selected="3"] .kgs-carrousel__view[data-view="2"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="2"],
-    .kgs-carrousel[data-selected="4"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="3"],
-    .kgs-carrousel[data-selected="5"] .kgs-carrousel__view[data-view="4"] {
+    .kgs-carrousel .kgs-carrousel__item.position3,
+    .kgs-carrousel .kgs-carrousel__item.position4 {
         left: -605%;
     }
 }
 
-.kgs-carrousel__panel {
+.kgs-carrousel__content {
     position: relative;
     width: 100%;
     height: 100%;
     background-color: white;
+    border-radius: 3px;
 }
 
 .kgs-carrousel__body {
@@ -368,10 +168,32 @@
     overflow-y: auto;
 }
 
+/*
+.kgs-carrousel .kgs-carrousel__item.position0 .kgs-carrousel__body {
+    background-color: red;
+}
+
+.kgs-carrousel .kgs-carrousel__item.position1 .kgs-carrousel__body {
+    background-color: green;
+}
+
+.kgs-carrousel .kgs-carrousel__item.position2 .kgs-carrousel__body {
+    background-color: blue;
+}
+
+.kgs-carrousel .kgs-carrousel__item.position3 .kgs-carrousel__body {
+    background-color: yellow;
+}
+
+.kgs-carrousel .kgs-carrousel__item.position4 .kgs-carrousel__body {
+    background-color: maroon;
+}
+*/
+
 .kgs-carrousel__header {
     display: flex;
     position: relative;
-    width: calc(100% - 20px);
+    width: 100%;
     height: 50px;
     box-sizing: border-box;    
     /*
