@@ -32,6 +32,8 @@ import play.api.mvc.Results._
 import common.services.ConfigurationService
 import editor.models.{ReconciledInstance, ReleaseStatus}
 
+import scala.annotation.tailrec
+
 class ReleaseService @Inject()(
                                 ws: WSClient,
                                 nexusService: NexusService,
@@ -57,8 +59,8 @@ class ReleaseService @Inject()(
         case OK =>
           val item = res.json.as[JsObject]
           if(item != null){
-            val spec = ReleaseService.specs(item)
-            Right(spec)
+            val spec = ReleaseService.recSpec(item)
+            Right(spec.as[JsObject].value)
           }else{
             Left(None)
           }
@@ -85,42 +87,51 @@ class ReleaseService @Inject()(
 }
 
 object ReleaseService {
-
-  def specs(item: JsObject): collection.Map[String, JsValue] = {
-    item.value
-      .map { k =>
-        k._1 match {
-          case "http://schema.org/name" => "label" -> k._2
-          case "@type" => "type" -> JsString(k._2.as[String].split("#").last)
-          case "children" => k._1 -> Json.toJson(k._2.as[JsArray]
-            .value
-            .groupBy(js => (js \ "@id").as[String]).map {
-            case (k, v) =>
-              val edgeTypes = v.foldLeft(List[String]()) {
-                case (list, js) => (js \ "linkType").as[String].split("/").head.split("-").last :: list
-              }
-              val transformer = (__ \ 'linkType).json.put(Json.toJson(edgeTypes))
-              val linkType = v.head.transform(transformer)
-              k -> v.head.as[JsObject].++(linkType.get)
-          }.values
-            .map(j => specs(j.as[JsObject]))).as[JsValue]
-          case "linkType" =>
-            k._1 -> k._2
-          case "status" =>
-            val arr = k._2.as[List[String]]
-            val status = if (arr.isEmpty) {
-              "NOT_RELEASED"
-            } else {
-              if (arr.contains("released")) {
-                "RELEASED"
-              } else {
-                "NOT_RELEASED"
-              }
+  def recSpec(js: JsValue): JsValue = {
+    js match {
+      case js: JsObject =>
+        Json.toJson(
+          js.as[JsObject].value.map {
+            case (k, v) => k match {
+              case "http://schema.org/name" => "label" -> v
+              case "@type" => "type" -> JsString(v.as[String].split("#").last)
+              case "children" => k -> recSpec(v)
+              case "status" =>
+                val arr = v.as[List[String]]
+                val status = if (arr.isEmpty) {
+                  "NOT_RELEASED"
+                } else {
+                  if (arr.contains("released")) {
+                    "RELEASED"
+                  } else {
+                    "NOT_RELEASED"
+                  }
+                }
+                k -> JsString(status)
+              case _ => k -> v
             }
-            k._1 -> JsString(status)
-          case _ => k._1 -> k._2
-        }
-      }
+          }
+        )
+      case js: JsArray =>
+        Json.toJson(
+          js.as[List[JsValue]]
+            .filter(j => j != null && j != JsNull)
+            .map(recSpec)
+            .groupBy(js => (js \ "@id").as[String])
+            .map {
+              case (k, v) =>
+                val edgeTypes = v.foldLeft(List[String]()) {
+                  case (list, j) => (j \ "linkType").as[String].split("/").head.split("-").last :: list
+                }
+                val transformer = (__ \ 'linkType).json.put(Json.toJson(edgeTypes))
+                val linkType = v.head.transform(transformer)
+                k -> v.head.as[JsObject].++(linkType.get)
+            }
+            .values.toList
+            .sortBy(js => ((js \ "type").asOpt[String].getOrElse(""), (js \ "@id").asOpt[String].getOrElse("")) )
+        )
+      case el => el
+    }
   }
 
   def getWorstChildrenStatus(item: JsObject):String = {
