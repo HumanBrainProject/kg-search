@@ -122,7 +122,12 @@ case class ReconciledInstance( nexusInstance: NexusInstance){
           (ReconciledInstance.Fields.originalRev, JsNumber(parentRevision)) +
           (ReconciledInstance.Fields.originalParent, Json.obj("@id" -> JsString(parentId))) +
           (ReconciledInstance.Fields.origin, JsString(parentId)) +
-          (ReconciledInstance.Fields.updateTimeStamp, JsNumber(new DateTime().getMillis))
+          (ReconciledInstance.Fields.updateTimeStamp, JsNumber(new DateTime().getMillis)) -
+          EditorInstance.Fields.origin -
+          EditorInstance.Fields.updateTimeStamp -
+          EditorInstance.Fields.parent -
+          EditorInstance.Fields.updaterId
+
       )
     )
   }

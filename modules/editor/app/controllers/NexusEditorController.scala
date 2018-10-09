@@ -196,6 +196,7 @@ class NexusEditorController @Inject()(
       val updateToBeStoredInManual = editorService.preppingEntitiesForSave(
         updatedInstance,
         originalInstanceWithAllFields,
+        originalInstanceWithAllFields.id().get,
         originalInstanceWithAllFields.nexusPath,
         request.user,
         token
@@ -274,6 +275,7 @@ class NexusEditorController @Inject()(
                 val updateToBeStoredInManual = editorService.preppingEntitiesForSave(
                   updatedInstance,
                   currentInstanceDisplayedWithAllFields.nexusInstance,
+                  s"${originalIdAndPath._2.toString()}/${originalIdAndPath._1}",
                   originalPath,
                   request.user,
                   token
