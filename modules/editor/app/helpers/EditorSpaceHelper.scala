@@ -17,13 +17,11 @@
 
 package editor.helpers
 
-import common.models.OIDCUser
+import common.models.{NexusUser, OIDCUser}
 
 
 object EditorSpaceHelper {
-  private val editorSuffix = "-editor"
-  private val nexusPrefix = "nexus-"
-  private val pattern = s"""$nexusPrefix(\\w+)$editorSuffix""".r
+  private val editorSuffix = "editor"
 
   def nexusEditorContext(org: String): String = {
     if(org != "manual"){
@@ -38,31 +36,13 @@ object EditorSpaceHelper {
 
 
   /**
-    * From the user info return the list of groups that have an editor space
-    * @param userInfo
-    * @return
-    */
-  def editorGroups(userInfo: OIDCUser):List[String] = {
-    userInfo.groups
-      .filter( group => group.startsWith(nexusPrefix) && group.endsWith(editorSuffix))
-      .map{
-          case pattern(editorGroup) => Some(editorGroup)
-          case _ => None
-      }
-      .filter(_.isDefined)
-      .map(_.get)
-      .toList
-      .filter(group => userInfo.groups.contains(s"$nexusPrefix$group"))
-  }
-
-  /**
     * Check if the group is an editor group
     * @param userInfo UserInfo with all the groups
     * @param hintedGroup The group the user wants to use
     * @return true if the group is an editor group
     */
-  def isEditorGroup(userInfo: OIDCUser, hintedGroup: String): Boolean = {
-    editorGroups(userInfo).contains(hintedGroup)
+  def isEditorGroup(userInfo: NexusUser, hintedGroup: String): Boolean = {
+    userInfo.organizations.contains(s"${hintedGroup}")
   }
 
   def getGroupName(group:String, suffix:String) : String = {

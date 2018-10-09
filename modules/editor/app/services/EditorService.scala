@@ -270,7 +270,7 @@ class EditorService @Inject()(wSClient: WSClient,
         manualEntityId,
         userInfo,
         parentRevision,
-        parentId.get
+      s"${config.nexusEndpoint}/v0/data/${parentId.get}"
       )
     val revision = updatedValue.nexusInstance.getRevision()
     updateInstance(
@@ -432,6 +432,7 @@ class EditorService @Inject()(wSClient: WSClient,
   def preppingEntitiesForSave(
                                updatedInstance: NexusInstance,
                                currentlyDisplayedInstance: NexusInstance,
+                               originalParentId: String,
                                originalPath: NexusPath,
                                userInfo: User,
                                token: String
@@ -441,12 +442,16 @@ class EditorService @Inject()(wSClient: WSClient,
     val correctedLinks = EditorInstance(
       NexusInstance(
         None, originalPath.reconciledPath(config.editorPrefix), Json.toJson(diffEntity.value.map {
-          case (k, v) => recursiveCheckOfIds(k, v, config.reconciledPrefix, token)
+          case (k, v) => if(!k.startsWith(EditorInstance.contextOrg) && k.startsWith(ReconciledInstance.contextOrg)) {
+            recursiveCheckOfIds(k, v, config.reconciledPrefix, token)
+          }else{
+            k -> v
+          }
         }).as[JsObject]
       )
     ).prepareManualEntityForStorage(
       userInfo,
-      s"${config.nexusEndpoint}/v0/data/${currentlyDisplayedInstance.id().get}",
+      s"${config.nexusEndpoint}/v0/data/${originalParentId}",
       entityType
     )
     correctedLinks.cleanReconciledFields()

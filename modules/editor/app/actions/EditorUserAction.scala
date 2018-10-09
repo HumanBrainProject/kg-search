@@ -17,7 +17,8 @@
 
 package editor.actions
 
-import authentication.models.UserRequest
+import authentication.models.{IAMPermission, UserRequest}
+import authentication.service.IAMAuthService
 import play.api.mvc._
 import play.api.mvc.Results._
 import editor.helpers.EditorSpaceHelper
@@ -29,15 +30,29 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object EditorUserAction{
   val logger = Logger(this.getClass)
-  def editorUserAction(org: String)(implicit ec: ExecutionContext): ActionRefiner[UserRequest, EditorUserRequest] =
+  def editorUserAction(org: String, editorSuffix: String, iAMAuthService: IAMAuthService)
+                      (implicit ec: ExecutionContext): ActionRefiner[UserRequest, EditorUserRequest] =
     new ActionRefiner[UserRequest, EditorUserRequest] {
     def executionContext: ExecutionContext = ec
-    def refine[A](input: UserRequest[A]): Future[Either[Result, EditorUserRequest[A]]] = Future.successful {
-      if(EditorSpaceHelper.isEditorGroup(input.user, org) ){
-        Right(EditorUserRequest(input.user, org, input))
+    def refine[A](input: UserRequest[A]): Future[Either[Result, EditorUserRequest[A]]] = {
+      val editorOrg = if(org.endsWith(editorSuffix)) org else org + editorSuffix
+      if(EditorSpaceHelper.isEditorGroup(input.user, editorOrg) ){
+        iAMAuthService.getAcls(editorOrg, Seq(("self", "true"), ("parents", "true"))).map {
+          case Right(acls) =>
+            if (IAMAuthService.hasAccess(acls, IAMPermission.Write)) {
+              Right(EditorUserRequest(input.user, org, input))
+            } else {
+              Left(Forbidden("You do not have sufficient access rights to proceed"))
+            }
+          case Left(response) =>
+            logger.error(s"Fetching permission failed - ${response.body}")
+            Left(InternalServerError("An error occurred while fetching permission"))
+        }
       }else{
-        logger.debug(s"Not allowed: ${input.user} for index: $org")
-        Left(Forbidden("You are not allowed to perform this request"))
+        Future.successful {
+          logger.debug(s"Not allowed: ${input.user} for index: $org")
+          Left(Forbidden("You are not allowed to perform this request"))
+        }
       }
     }
   }

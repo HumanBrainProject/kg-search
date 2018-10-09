@@ -17,9 +17,9 @@ package editor.controllers
 
 import common.helpers.ConfigMock
 import common.helpers.ConfigMock._
-import common.models.{NexusInstance, NexusPath, OIDCUser}
+import common.models.{NexusInstance, NexusPath, NexusUser, OIDCUser}
 import mockws.{MockWS, MockWSHelpers}
-import authentication.service.OIDCAuthService
+import authentication.service.{IAMAuthService, OIDCAuthService}
 import common.services.ConfigurationService
 import editor.helpers.ReconciledInstanceHelper
 import editor.models.{EditorInstance, ReconciledInstance}
@@ -75,7 +75,7 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
       val instanceService = mock[EditorService]
 
       val oidcAuthService = mock[OIDCAuthService]
-      val userInfo = new OIDCUser("123", "name", "email", Seq("group1", "group2"))
+      val userInfo = new NexusUser("123", "name", "email", Seq("group1", "group2"), Seq())
       val bodyParser = mock[BodyParsers.Default]
       val authMock = new TestAuthenticatedUserAction(bodyParser, authprovider = oidcAuthService, userInfo = userInfo)(ec)
       val ws = mock[WSClient]
@@ -85,7 +85,8 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
       when(arangoQueryService.listInstances(datatype, Some(0), Some(20), "")).thenReturn(Future(Right(Json.obj("data" -> instances, "dataType"-> "http://hbp.eu/minds#Dataset", "label"->"Dataset","total" -> 2))) )
       val configService = new ConfigurationService(fakeApplication().configuration)
       val formService = mock[FormService]
-      val controller = new NexusEditorController(mockCC, authMock, instanceService, oidcAuthService, configService, nexusService, releaseService, arangoQueryService,formService, ws)(ec)
+      val iamAuth = mock[IAMAuthService]
+      val controller = new NexusEditorController(mockCC, authMock, instanceService, oidcAuthService, configService, nexusService, releaseService, arangoQueryService, iamAuth, formService, ws)(ec)
       val response = controller.listInstances(datatype.org, datatype.domain, datatype.schema, datatype.version, Some(0), Some(20), "").apply(FakeRequest())
       val res = contentAsJson(response).as[JsObject]
       val arr = (res \ "data").as[List[JsObject]].map(js => js - "status" - "childrenStatus")
