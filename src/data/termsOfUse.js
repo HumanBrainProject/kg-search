@@ -1,4 +1,4 @@
-export const termsOfUse = `###GillesHBP Knowledge Graph Data Platform Citation Requirements
+export const termsOfUse = `###HBP Knowledge Graph Data Platform Citation Requirements
 This text is provided to describe the requirements for citing data found via HBP Knowledge Graph Data Platform (KG): [https://www.humanbrainproject.eu/explore-the-brain/search](https://www.humanbrainproject.eu/explore-the-brain/search). It is meant to provide a more human-readable form of key parts of the KG Terms of Service, but in the event of disagreement between the [KG Terms of Service](https://www.humanbrainproject.eu/en/explore-the-brain/search-terms-of-use/) and these Citation Requirements, the former is to be taken as authoritative.
 
 ####Dataset licensing
