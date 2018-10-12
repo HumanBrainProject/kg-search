@@ -191,10 +191,10 @@ object FormService{
           val nexusId = (data \ "@id").as[String]
           // fill template with data
           val idFields = Json.obj(
-            ("id" -> Json.obj(
-              ("value" -> Json.obj(
-                ("path" -> entityType.toString()),
-                ("nexus_id" -> JsString(nexusId))))))
+            "id" -> Json.obj(
+              "value" -> Json.obj(
+                "path" -> entityType.toString()),
+              "nexus_id" -> JsString(nexusId))
           )
 
           val fields = (formTemplate \ "fields").as[JsObject].fields.foldLeft(idFields) {
@@ -212,33 +212,35 @@ object FormService{
                 filledTemplate + (FormService.escapeSlash(key), fieldContent.as[JsObject] )
               }
           }
-          Json.obj("fields" -> fields) +
-            ("label", (formTemplate \ "label").get) +
-            ("editable", JsBoolean((formTemplate.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true))) +
-            ("ui_info", (formTemplate \ "ui_info").getOrElse(JsObject.empty)) +
-            ("alternatives", (data \ ReconciledInstance.Fields.alternatives).asOpt[JsObject].getOrElse(Json.obj()) )
+          fillFormTemplate(fields, formTemplate, (data \ ReconciledInstance.Fields.alternatives).asOpt[JsObject].getOrElse(Json.obj()) )
+
         }else {
           //Returning a blank template
           val escapedForm = ( formTemplate \ "fields" ).as[JsObject].value.map{
             case (key, value) =>
               (FormService.escapeSlash(key) , value)
           }
-          Json.obj("fields" -> Json.toJson(escapedForm)) +
-            ("label", (formTemplate \ "label").get) +
-            ("editable", JsBoolean((formTemplate.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true))) +
-            ("ui_info", (formTemplate \ "ui_info").getOrElse(JsObject.empty)) +
-            ("alternatives", Json.obj())
+          fillFormTemplate(Json.toJson(escapedForm), formTemplate, Json.obj() )
         }
       case None =>
         JsNull
     }
   }
 
+
+  def fillFormTemplate(fields: JsValue, formTemplate:JsValue, alternatives: JsObject = Json.obj()): JsValue ={
+    Json.obj("fields" -> fields) +
+      ("label", (formTemplate \ "label").get) +
+      ("editable", JsBoolean((formTemplate.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true))) +
+      ("ui_info", (formTemplate \ "ui_info").getOrElse(JsObject.empty)) +
+      ("alternatives", alternatives )
+  }
+
   def editableEntities(user: NexusUser, formRegistry: JsObject): JsValue = {
     val registry = formRegistry.value.filter{
       entity => user.organizations.contains(entity._1)
     }
-    buildEditableEntityTypesFromRegistry(Json.toJson(registry).as[JsObject])
+    buildEditableEntityTypesFromRegistry(Json.toJson(registry).asOpt[JsObject].getOrElse(Json.obj()))
   }
 
 

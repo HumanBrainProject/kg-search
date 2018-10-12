@@ -37,7 +37,8 @@ object EditorUserAction{
     def refine[A](input: UserRequest[A]): Future[Either[Result, EditorUserRequest[A]]] = {
       val editorOrg = if(org.endsWith(editorSuffix)) org else org + editorSuffix
       if(EditorSpaceHelper.isEditorGroup(input.user, editorOrg) ){
-        iAMAuthService.getAcls(editorOrg, Seq(("self", "true"), ("parents", "true"))).map {
+        val token = input.request.headers.toSimpleMap.getOrElse("Authorization", "")
+        iAMAuthService.getAcls(editorOrg, Seq(("self", "true"), ("parents", "true")), token).map {
           case Right(acls) =>
             if (IAMAuthService.hasAccess(acls, IAMPermission.Write)) {
               Right(EditorUserRequest(input.user, org, input))

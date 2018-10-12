@@ -25,10 +25,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class IAMAuthService @Inject()(wSClient: WSClient, config: ConfigurationService)(implicit ec: ExecutionContext) {
 
-  def getAcls(path: String, parameters: Seq[(String, String)]): Future[Either[WSResponse, List[IAMAcl]]] = {
+  def getAcls(path: String, parameters: Seq[(String, String)], token: String): Future[Either[WSResponse, List[IAMAcl]]] = {
     wSClient.url(s"${config.iamEndpoint}/v0/acls/kg/${path}")
       .withQueryStringParameters(parameters: _*)
-      .get()
+      .withHttpHeaders( ("Authorization", token))
+        .get()
       .map {
         res =>
           res.status match {
