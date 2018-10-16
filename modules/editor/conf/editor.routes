@@ -413,7 +413,7 @@ POST    /api/releasestatus            editor.controllers.NexusEditorController.g
 #    200:
 #      description: "Ok"
 ###
-POST   /release                                          editor.controllers.NexusEditorController.releaseInstances
+POST   /api/release                                          editor.controllers.NexusEditorController.releaseInstances
 
 
 ###
@@ -428,7 +428,7 @@ POST   /release                                          editor.controllers.Nexu
 #    201:
 #      description: "Created"
 ###
-POST   /user                                          editor.controllers.NexusEditorUserController.createCurrentUser
+POST   /api/user                                          editor.controllers.NexusEditorUserController.createCurrentUser
 
 ###
 #  summary: Get the current user as an Editor User
@@ -442,7 +442,7 @@ POST   /user                                          editor.controllers.NexusEd
 #    200:
 #      description: "Ok"
 ###
-GET   /user                                          editor.controllers.NexusEditorUserController.getCurrentUser
+GET   /api/user                                          editor.controllers.NexusEditorUserController.getCurrentUser
 
 ###
 #  summary: Create a new favorite for the the current user
@@ -467,7 +467,7 @@ GET   /user                                          editor.controllers.NexusEdi
 #    201:
 #      description: "Created"
 ###
-POST   /user/favorite          editor.controllers.NexusEditorUserController.addFavorite
+POST   /api/user/favorite          editor.controllers.NexusEditorUserController.addFavorite
 
 
 ###
@@ -482,7 +482,7 @@ POST   /user/favorite          editor.controllers.NexusEditorUserController.addF
 #    200:
 #      description: "Ok"
 ###
-DELETE   /user/favorite/:org/:domain/:schema/:version/:id           editor.controllers.NexusEditorUserController.deleteFavorite(org: String, domain:String, schema: String, version:String, id: String)
+DELETE   /api/user/favorite/:org/:domain/:schema/:version/:id           editor.controllers.NexusEditorUserController.deleteFavorite(org: String, domain:String, schema: String, version:String, id: String)
 
 
 ###
@@ -506,4 +506,4 @@ DELETE   /user/favorite/:org/:domain/:schema/:version/:id           editor.contr
 #    201:
 #      description: "Created"
 ###
-POST   /user/favoritegroup         editor.controllers.NexusEditorUserController.createFavoriteGroup
+POST   /api/user/favoritegroup         editor.controllers.NexusEditorUserController.createFavoriteGroup
