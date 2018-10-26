@@ -192,50 +192,51 @@ object EditorUserService {
        |      "fieldname": "userId",
        |      "required": true,
        |      "relative_path": "schema:identifier"
-       |    },
-       |    {
-       |        "fieldname": "favoriteGroups",
-       |        "relative_path": {
-       |                "@id": "kgeditor:user",
-       |                "reverse":true
-       |        },
-       |        "fields": [
-       |           {
-       |             "fieldname": "name",
-       |             "relative_path": "schema:name",
-       |             "required": true
-       |           },
-       |           {
-       |             "fieldname": "nexusId",
-       |             "relative_path": "@id",
-       |             "required": true
-       |           },
-       |           {
-       |             "fieldname": "favorites",
-       |             "relative_path": {
-       |                 "@id": "kgeditor:favoriteGroup",
-       |                 "reverse":true
-       |               },
-       |               "fields":[
-       |               		{
-       |               			"fieldname":"nexusId",
-       |               			"relative_path": "@id"
-       |               		},
-       |               		{
-       |               			"fieldname":"favoriteInstance",
-       |               			"relative_path": [
-       |               				"kgeditor:favoriteInstance"
-       |               			]
-       |               		}
-       |
-       |               	]
-       |
-       |           }
-       |        ]
        |    }
        |  ]
        |}
     """.stripMargin
+
+//  {
+//    "fieldname": "favoriteGroups",
+//    "relative_path": {
+//      "@id": "kgeditor:user",
+//      "reverse":true
+//    },
+//    "fields": [
+//    {
+//      "fieldname": "name",
+//      "relative_path": "schema:name",
+//      "required": true
+//    },
+//    {
+//      "fieldname": "nexusId",
+//      "relative_path": "@id",
+//      "required": true
+//    },
+//    {
+//      "fieldname": "favorites",
+//      "relative_path": {
+//        "@id": "kgeditor:favoriteGroup",
+//        "reverse":true
+//      },
+//      "fields":[
+//      {
+//        "fieldname":"nexusId",
+//        "relative_path": "@id"
+//      },
+//      {
+//        "fieldname":"favoriteInstance",
+//        "relative_path": [
+//        "kgeditor:favoriteInstance"
+//        ]
+//      }
+//
+//      ]
+//
+//    }
+//    ]
+//  }
 
 
   def userToNexusStruct(userId: String) = {

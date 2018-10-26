@@ -21,6 +21,7 @@ import com.google.inject.{Inject, Singleton}
 import common.models.{NexusInstance, NexusPath, NexusUser, User}
 import common.services.ConfigurationService
 import editor.models.ReconciledInstance
+import editor.models.EditorUserList.{ListUISpec, NODETYPE, UserFolder, UserList}
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
 
@@ -110,8 +111,8 @@ object FormService{
     ).as[JsArray]
   }
 
-  def buildEditableEntityTypesFromRegistry(registry: JsObject): JsObject = {
-    val res = registry.value.flatMap{
+  def buildEditableEntityTypesFromRegistry(registry: JsObject): List[UserList] = {
+    registry.value.flatMap{
       case (organization, organizationDetails) =>
         organizationDetails.as[JsObject].value.flatMap{
           case (domain, domainDetails) =>
@@ -119,16 +120,20 @@ object FormService{
               case (schema, schemaDetails) =>
                 schemaDetails.as[JsObject].value.map{
                   case (version, formDetails) =>
-                    Json.obj(
-                      "path" -> JsString(s"$organization/$domain/$schema/$version"),
-                      "label" -> (formDetails.as[JsObject] \ "label").get,
-                      "editable" -> JsBoolean((formDetails.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true)),
-                      "ui_info" -> (formDetails.as[JsObject] \ "ui_info").asOpt[JsObject].getOrElse[JsObject](Json.obj()) )
+                    UserList(
+                      s"$organization/$domain/$schema/$version",
+                      (formDetails.as[JsObject] \ "label").as[String],
+                      Some(
+                        ListUISpec(
+                          (formDetails.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true),
+                          (formDetails.as[JsObject] \ "ui_info").asOpt[JsObject].getOrElse[JsObject](Json.obj())
+                        )
+                      )
+                    )
                 }
             }
         }
-    }.toSeq.sortWith{case (jsO1, jsO2) => (jsO1 \ "label").as[String] < ((jsO2 \ "label").as[String])}
-    Json.obj("data" -> JsArray(res))
+    }.toSeq.sortWith{case (jsO1, jsO2) => jsO1.name < jsO2.name}.toList
   }
 
   def buildInstanceFromForm(original: NexusInstance, modificationFromUser: JsValue, nexusEndpoint: String): NexusInstance = {
@@ -142,9 +147,8 @@ object FormService{
   }
 
   def isInSpec(id:String, registry: JsObject):Boolean = {
-    val list = (FormService.buildEditableEntityTypesFromRegistry(registry) \ "data")
-      .as[List[JsObject]]
-      .map(js => (js  \ "path").as[String])
+    val list = (FormService.buildEditableEntityTypesFromRegistry(registry))
+      .map(l => l.id)
     list.contains(id)
   }
 
@@ -236,7 +240,7 @@ object FormService{
       ("alternatives", alternatives )
   }
 
-  def editableEntities(user: NexusUser, formRegistry: JsObject): JsValue = {
+  def editableEntities(user: NexusUser, formRegistry: JsObject): List[UserList] = {
     val registry = formRegistry.value.filter{
       entity => user.organizations.contains(entity._1)
     }

@@ -21,7 +21,7 @@ import authentication.models.AuthenticatedUserAction
 import authentication.service.OIDCAuthService
 import com.google.inject.Inject
 import common.models.FavoriteGroup
-import editor.services.EditorUserService
+import editor.services.{EditorUserListService, EditorUserService}
 import helpers.ResponseHelper
 import play.api.Configuration
 import play.api.libs.json.Json
@@ -33,6 +33,7 @@ class NexusEditorUserController @Inject()(
                                            cc: ControllerComponents,
                                            authenticatedUserAction: AuthenticatedUserAction,
                                            editorUserService: EditorUserService,
+                                           editorUserListService: EditorUserListService
                                          )(implicit ec: ExecutionContext)
   extends AbstractController(cc) {
 
@@ -50,28 +51,35 @@ class NexusEditorUserController @Inject()(
     }
   }
 
-  def addFavorite(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
-    val instanceId = (request.body.asJson.get \ "instanceId").as[String]
-    val favoriteGroupNexusId = (request.body.asJson.get \ "favoriteGroupNexusId").as[String]
-    editorUserService.addFavorite(favoriteGroupNexusId, instanceId).map {
-      case Some(favorite) => Created(Json.toJson(favorite))
-      case None => InternalServerError("An error occured while creating a favorite")
+  def getUserLists():Action[AnyContent] = authenticatedUserAction.async { implicit request =>
+    editorUserListService.getUserLists(request.user).map {
+      case Right(lists) => Ok(Json.toJson(lists))
+      case Left(res) => InternalServerError(s"An error occurred while retrieving the user lists ${res.body}")
     }
   }
 
-  def deleteFavorite(org: String, domain:String, schema: String, version:String, id: String): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
-    val instanceId = s"$org/$domain/$schema/$version/$id"
-    editorUserService.removeFavorite(instanceId).map {
-      res => ResponseHelper.forwardResultResponse(res)
-    }
-  }
-
-  def createFavoriteGroup(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
-    val name = (request.body.asJson.get \ "name").as[String]
-    editorUserService.createFavoriteGroup(name, request.user.id).map {
-      case Some(favoriteGroup) => Created(Json.toJson(favoriteGroup))
-      case None => InternalServerError("An error occured while creating a favorite group")
-    }
-  }
+//  def addFavorite(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
+//    val instanceId = (request.body.asJson.get \ "instanceId").as[String]
+//    val favoriteGroupNexusId = (request.body.asJson.get \ "favoriteGroupNexusId").as[String]
+//    editorUserService.addFavorite(favoriteGroupNexusId, instanceId).map {
+//      case Some(favorite) => Created(Json.toJson(favorite))
+//      case None => InternalServerError("An error occured while creating a favorite")
+//    }
+//  }
+//
+//  def deleteFavorite(org: String, domain:String, schema: String, version:String, id: String): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
+//    val instanceId = s"$org/$domain/$schema/$version/$id"
+//    editorUserService.removeFavorite(instanceId).map {
+//      res => ResponseHelper.forwardResultResponse(res)
+//    }
+//  }
+//
+//  def createFavoriteGroup(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
+//    val name = (request.body.asJson.get \ "name").as[String]
+//    editorUserService.createFavoriteGroup(name, request.user.id).map {
+//      case Some(favoriteGroup) => Created(Json.toJson(favoriteGroup))
+//      case None => InternalServerError("An error occured while creating a favorite group")
+//    }
+//  }
 
 }

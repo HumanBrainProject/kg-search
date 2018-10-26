@@ -1,22 +1,4 @@
 ###
-#  summary: get the list of entity types to display
-#  tags:
-#    - editor
-#  parameters:
-#  - name: privateSpace
-#    in: path
-#    description: organization the instance to retrieve
-#    required: false
-#    type: string
-#  - in: header
-#    name: Authorization
-#    description: Authorization token
-#    required: false
-#    type: string
-###
-GET    /api/nodetypes                  editor.controllers.NexusEditorController.listEditableEntityTypes( privateSpace: String ?= "minds")
-
-###
 #  summary: get the list of entity
 #  tags:
 #    - editor
@@ -443,67 +425,28 @@ POST   /api/user                                          editor.controllers.Nex
 #      description: "Ok"
 ###
 GET   /api/user                                          editor.controllers.NexusEditorUserController.getCurrentUser
-
 ###
-#  summary: Create a new favorite for the the current user
-#  parameters:
-#  - in: body
-#    name: instanceId
-#    required: true
-#    description: the instance to be added as favorite
-#    schema:
-#      type: object
-#      properties:
-#        instanceId:
+#tags:
+#        - editor
+#      summary: Returns the lists of instance regrouped by folders
+#      parameters:
+#        - in: header
+#          name: Authorization
+#          description: Authorization token
+#          required: false
 #          type: string
-#        favoriteGroupNexusId:
-#           type: string
-#  - in: header
-#    name: Authorization
-#    description: Authorization token
-#    required: false
-#    type: string
-#  responses:
-#    201:
-#      description: "Created"
+#      responses:
+#        '200':
+#          description: Ok
+#          example:
+#           data:
+#             - folderName: example
+#               folderType: BOOKMARK|NODETYPE|...
+#               lists:
+#                 - id: ...
+#                   name: name of the list
+#                   editable: true | false
+#                   uiSpec: 'A JSON object containing info specific for the UI'
+#
 ###
-POST   /api/user/favorite          editor.controllers.NexusEditorUserController.addFavorite
-
-
-###
-#  summary: Remove a favorite
-#  parameters:
-#  - in: header
-#    name: Authorization
-#    description: Authorization token
-#    required: false
-#    type: string
-#  responses:
-#    200:
-#      description: "Ok"
-###
-DELETE   /api/user/favorite/:org/:domain/:schema/:version/:id           editor.controllers.NexusEditorUserController.deleteFavorite(org: String, domain:String, schema: String, version:String, id: String)
-
-
-###
-#  summary: Create a new favorite group for the the current user
-#  parameters:
-#  - in: body
-#    name: name
-#    required: true
-#    description: the name of the favorite group to create
-#    schema:
-#      type: object
-#      properties:
-#        name:
-#          type: string
-#  - in: header
-#    name: Authorization
-#    description: Authorization token
-#    required: false
-#    type: string
-#  responses:
-#    201:
-#      description: "Created"
-###
-POST   /api/user/favoritegroup         editor.controllers.NexusEditorUserController.createFavoriteGroup
+GET /api/userLists                              editor.controllers.NexusEditorUserController.getUserLists

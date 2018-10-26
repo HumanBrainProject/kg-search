@@ -454,16 +454,16 @@ class NexusEditorController @Inject()(
       Ok(form)
   }
 
-  /**
-    *  Return the list of entity types available for the editor
-    * @param privateSpace
-    * @return 200
-    */
-  def listEditableEntityTypes(privateSpace: String): Action[AnyContent] = authenticatedUserAction {
-    implicit request =>
-    // Editable instance types are the one for which form creation is known
-    Ok(FormService.editableEntities(request.user, formService.formRegistry))
-  }
+//  /**
+//    *  Return the list of entity types available for the editor
+//    * @param privateSpace
+//    * @return 200
+//    */
+//  def listEditableEntityTypes(privateSpace: String): Action[AnyContent] = authenticatedUserAction {
+//    implicit request =>
+//    // Editable instance types are the one for which form creation is known
+//    Ok()
+//  }
 
 
   /**
