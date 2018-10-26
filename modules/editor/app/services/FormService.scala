@@ -21,7 +21,7 @@ import com.google.inject.{Inject, Singleton}
 import common.models.{NexusInstance, NexusPath, NexusUser, User}
 import common.services.ConfigurationService
 import editor.models.ReconciledInstance
-import editor.models.EditorUserList.{ListUISpec, NODETYPE, UserFolder, UserList}
+import editor.models.EditorUserList.{ListUISpec, NODETYPE, UserFolder, UserInstanceList}
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
 
@@ -111,7 +111,7 @@ object FormService{
     ).as[JsArray]
   }
 
-  def buildEditableEntityTypesFromRegistry(registry: JsObject): List[UserList] = {
+  def buildEditableEntityTypesFromRegistry(registry: JsObject): List[UserInstanceList] = {
     registry.value.flatMap{
       case (organization, organizationDetails) =>
         organizationDetails.as[JsObject].value.flatMap{
@@ -120,7 +120,7 @@ object FormService{
               case (schema, schemaDetails) =>
                 schemaDetails.as[JsObject].value.map{
                   case (version, formDetails) =>
-                    UserList(
+                    UserInstanceList(
                       s"$organization/$domain/$schema/$version",
                       (formDetails.as[JsObject] \ "label").as[String],
                       Some(
@@ -240,7 +240,7 @@ object FormService{
       ("alternatives", alternatives )
   }
 
-  def editableEntities(user: NexusUser, formRegistry: JsObject): List[UserList] = {
+  def editableEntities(user: NexusUser, formRegistry: JsObject): List[UserInstanceList] = {
     val registry = formRegistry.value.filter{
       entity => user.organizations.contains(entity._1)
     }

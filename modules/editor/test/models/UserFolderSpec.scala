@@ -16,7 +16,7 @@
 */
 package editor.models
 
-import editor.models.EditorUserList.{BOOKMARK, UserFolder, UserList}
+import editor.models.EditorUserList.{BOOKMARK, UserFolder, UserInstanceList}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsString, Json}
 
@@ -28,12 +28,12 @@ class UserFolderSpec extends PlaySpec{
         "name",
         BOOKMARK,
         List(
-          UserList(
+          UserInstanceList(
             "id",
             "myList",
             None
           ),
-          UserList(
+          UserInstanceList(
             "id2",
             "my 2nd List",
             None

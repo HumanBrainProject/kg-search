@@ -28,6 +28,12 @@ object ListUISpec {
   import play.api.libs.json._
   import play.api.libs.functional.syntax._
 
+  implicit val listSpecReads: Reads[ListUISpec] = (
+    (JsPath \ "editable").read[Boolean] and
+      (JsPath \ "uiSpec").read[JsObject] and
+      (JsPath \ "color").readNullable[String]
+    )(ListUISpec.apply _)
+
   implicit val listSpecWrites: Writes[ListUISpec] = (
     (JsPath \ "editable").write[Boolean] and
       (JsPath \ "uiSpec").write[JsObject] and

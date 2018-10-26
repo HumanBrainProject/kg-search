@@ -13,32 +13,32 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package common.models
+package editor.models
 
+import editor.models.EditorUserList.UserFolder
 import play.api.libs.json._
 
 
-case class EditorUser(nexusId: String, id: String, favoriteGroups: Seq[FavoriteGroup])
+case class EditorUser(nexusId: String, id: String, userFolders: List[UserFolder])
 
 object EditorUser {
 
 
   import play.api.libs.functional.syntax._
 
-
   implicit val editorUserWrites = new Writes[EditorUser] {
     def writes(user: EditorUser) = Json.obj(
       "nexusId" -> user.nexusId,
       "userId" -> user.id,
-      "favoriteGroups" -> Json.toJson(user.favoriteGroups)
+      "userFolders" -> Json.toJson(user.userFolders)
     )
   }
 
   implicit val editorUserReads: Reads[EditorUser] = (
     (JsPath \ "nexusId").read[String] and
       (JsPath \ "userId").read[String] and
-      (JsPath \ "favoriteGroups").read[Seq[FavoriteGroup]]
-        .orElse(Reads.pure(Seq[FavoriteGroup]()))
+      (JsPath \ "userFolders").read[List[UserFolder]]
+        .orElse(Reads.pure(List[UserFolder]()))
     ) (EditorUser.apply _)
 
 }

@@ -17,16 +17,23 @@
 package editor.models.EditorUserList
 
 
-case class UserFolder(folderName: String, folderType: FolderType, userLists: List[UserList] )
+case class UserFolder(id:String, folderName: String, folderType: FolderType, userLists: List[UserInstanceList] )
 
 object UserFolder {
 
   import play.api.libs.json._
   import play.api.libs.functional.syntax._
+  implicit val userFolderReads: Reads[UserFolder] = (
+    (JsPath \ "id").read[String] and
+    (JsPath \ "folderName").read[String] and
+      (JsPath \ "folderType").read[FolderType] and
+      (JsPath \ "lists").read[List[UserInstanceList]]
+    )(UserFolder.apply _)
 
   implicit val userFolderWrites: Writes[UserFolder] = (
+    (JsPath \ "id").write[String] and
     (JsPath \ "folderName").write[String] and
       JsPath.write[FolderType] and
-      (JsPath \ "lists").write[List[UserList]]
+      (JsPath \ "lists").write[List[UserInstanceList]]
     )(unlift(UserFolder.unapply))
 }

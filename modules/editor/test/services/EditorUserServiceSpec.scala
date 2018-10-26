@@ -19,7 +19,7 @@ package editor.services
 import authentication.service.OIDCAuthService
 import common.helpers.ConfigMock
 import common.helpers.ConfigMock._
-import common.models.{EditorUser, Favorite, FavoriteGroup}
+import common.models.{Favorite, FavoriteGroup}
 import common.services.ConfigurationService
 import mockws.{MockWS, MockWSHelpers}
 import nexus.services.NexusService

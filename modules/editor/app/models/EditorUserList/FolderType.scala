@@ -30,6 +30,8 @@ object FolderType {
 
   import play.api.libs.json._
   import play.api.libs.functional.syntax._
+  implicit val folderTypeReads: Reads[FolderType] =
+    (JsPath \ "folderType").read[String].map(s => FolderType(s))
 
   implicit val folderTypeWrites: Writes[FolderType] =
     (JsPath \ "folderType").write[String].contramap(_.t)

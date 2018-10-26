@@ -66,22 +66,6 @@ class NexusEditorController @Inject()(
 
   val logger = Logger(this.getClass)
 
-  def listInstances(
-                     org: String,
-                     domain: String,
-                     datatype: String,
-                     version: String,
-                     from: Option[Int],
-                     size: Option[Int],
-                     search: String
-                   ): Action[AnyContent] = authenticatedUserAction.async  { implicit request =>
-    val nexusPath = NexusPath(org, domain, datatype, version)
-    arangoQueryService.listInstances(nexusPath, from, size, search).map{
-      case Right(json) => Ok(json)
-      case Left(res) => ResponseHelper.forwardResultResponse(res)
-    }
-  }
-
   /**
     * Return a instance by its nexus ID
     * The response is sent with a json object "back_link" with the path of the schema of the instance

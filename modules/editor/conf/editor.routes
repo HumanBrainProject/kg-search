@@ -1,52 +1,4 @@
 ###
-#  summary: get the list of entity
-#  tags:
-#    - editor
-#  parameters:
-#  - name: org
-#    in: path
-#    description: organization the instance to retrieve
-#    required: true
-#    type: string
-#  - name: domain
-#    in: path
-#    description: domain of the instance to retrieve
-#    required: true
-#    type: string
-#  - name: schema
-#    in: path
-#    description: schema name
-#    required: true
-#    type: string
-#  - name: version
-#    in: path
-#    description: version of the instance to retrieve
-#    required: true
-#    type: string
-#  - name: from
-#    in: path
-#    description: the offset of the pagination
-#    required: false
-#    type: int
-#  - name: size
-#    in: path
-#    description: the size of the page
-#    required: false
-#    type: int
-#  - name: search
-#    in: path
-#    description: the search query only applied for the name of the instance
-#    required: false
-#    type: string
-#  - in: header
-#    name: Authorization
-#    description: Authorization token
-#    required: false
-#    type: string
-###
-GET    /api/instances/:org/:domain/:schema/:version         editor.controllers.NexusEditorController.listInstances(org: String, domain:String, schema: String, version:String, from:Option[Int], size:Option[Int], search:String?="")
-
-###
 #  summary: get a specific entity
 #  tags:
 #    - editor
@@ -426,7 +378,7 @@ POST   /api/user                                          editor.controllers.Nex
 ###
 GET   /api/user                                          editor.controllers.NexusEditorUserController.getCurrentUser
 ###
-#tags:
+#      tags:
 #        - editor
 #      summary: Returns the lists of instance regrouped by folders
 #      parameters:
@@ -450,3 +402,70 @@ GET   /api/user                                          editor.controllers.Nexu
 #
 ###
 GET /api/userLists                              editor.controllers.NexusEditorUserController.getUserLists
+
+###
+#tags:
+#  - editor
+#summary: Returns the instances  by schema - paginated - filterable
+#parameters:
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+#  - name: org
+#    in: path
+#    description: organization the instance to retrieve
+#    required: true
+#    type: string
+#  - name: domain
+#    in: path
+#    description: domain of the instance to retrieve
+#    required: true
+#    type: string
+#  - name: schema
+#    in: path
+#    description: schema name
+#    required: true
+#    type: string
+#  - name: version
+#    in: path
+#    description: version of the instance to retrieve
+#    required: true
+#    type: string
+#  - name: from
+#    in: path
+#    description: the offset of the pagination
+#    required: false
+#    type: int
+#  - name: size
+#    in: path
+#    description: the size of the page
+#    required: false
+#    type: int
+#  - name: search
+#    in: path
+#    description: the search query only applied for the name of the instance
+#    required: false
+#    type: string
+#    responses:
+#      '200':
+#        description: Ok
+###
+GET /api/userList/:org/:domain/:schema/:version     editor.controllers.NexusEditorUserController.getUserListBySchema(org: String, domain:String, schema: String, version:String, from:Option[Int], size:Option[Int], search:String?="")
+
+###
+# tags:
+#   - editor
+#  summary: Returns the instances of a list - paginated - filterable
+#  parameters:
+#    - in: header
+#      name: Authorization
+#      description: Authorization token
+#      required: false
+#      type: string
+#      responses:
+#        '200':
+#          description: Ok
+###
+#GET /api/userList/:id                           editor.controllers.NexusEditorUserController.getUserLists(id: String)
