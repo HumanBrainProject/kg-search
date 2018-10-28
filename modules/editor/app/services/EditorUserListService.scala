@@ -184,6 +184,7 @@ object EditorUserListService {
      |           },
      |           {
      |             "fieldname": "lists",
+     |             "required": true,
      |             "relative_path": {
      |                 "@id": "kgeditor:userFolder",
      |                 "reverse":true

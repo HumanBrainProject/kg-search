@@ -21,6 +21,7 @@ import common.helpers.ConfigMock
 import common.helpers.ConfigMock._
 import common.models.{Favorite, FavoriteGroup}
 import common.services.ConfigurationService
+import editor.models.EditorUser
 import mockws.{MockWS, MockWSHelpers}
 import nexus.services.NexusService
 import org.scalatest.mockito.MockitoSugar
@@ -46,33 +47,14 @@ class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockW
 
       val id = "1"
       val idUser = "nexusUUID1"
-      val idgroup = "nexusUUID2"
-      val idFav = "nexusUUID3"
       val nexusIdUser = s"http://nexus.com/v0/data/$idUser"
-      val nexusIdFavGroup = s"http://nexus.com/v0/data/$idgroup"
-      val nexusIdFav = s"http://nexus.com/v0/data/$idFav"
-      val name = "Group"
-      val instanceId = "minds/core/dataset/v0.0.4/123"
-      val fav = Favorite(nexusIdFav, instanceId)
-      val favGroup = FavoriteGroup(nexusIdFavGroup, name, Seq(fav))
-      val user = EditorUser(nexusIdUser, id,  Seq(favGroup))
+
+      val user = EditorUser(nexusIdUser, id)
       val endpointResponse = Json.parse(
         s"""
           |{
           |    "nexusId": "$nexusIdUser",
-          |    "userId": "1",
-          |    "favoriteGroups": [
-          |        {
-          |            "nexusId": "$nexusIdFavGroup",
-          |            "name": "$name",
-          |            "favorites": [
-          |                {
-          |                    "nexusId": "$nexusIdFav",
-          |                    "favoriteInstance": "$instanceId"
-          |                }
-          |            ]
-          |        }
-          |    ]
+          |    "userId": "$id"
           |}
         """.stripMargin
       )

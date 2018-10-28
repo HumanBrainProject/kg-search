@@ -24,7 +24,9 @@ class UserFolderSpec extends PlaySpec{
 
   "UserFolder#toJson" should {
     "contain the correct fields" in {
+      val folderId = "folderId"
       val uFolder = UserFolder(
+        folderId,
         "name",
         BOOKMARK,
         List(
@@ -42,6 +44,7 @@ class UserFolderSpec extends PlaySpec{
       )
 
       val expected = Json.obj(
+        "id" -> JsString(folderId),
         "folderName" -> JsString("name"),
         "folderType" -> JsString("BOOKMARK"),
         "lists" -> Json.arr(

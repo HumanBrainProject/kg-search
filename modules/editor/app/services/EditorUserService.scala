@@ -74,7 +74,7 @@ class EditorUserService @Inject()(config: ConfigurationService,
             res.status match {
               case OK | CREATED =>
                 val (id, path) = NexusInstance.extractIdAndPath(res.json)
-                Some(EditorUser(s"${path.toString}/$id", userId, List()))
+                Some(EditorUser(s"${path.toString}/$id", userId))
               case _ => None
             }
           }

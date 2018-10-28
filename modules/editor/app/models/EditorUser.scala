@@ -19,7 +19,7 @@ import editor.models.EditorUserList.UserFolder
 import play.api.libs.json._
 
 
-case class EditorUser(nexusId: String, id: String, userFolders: List[UserFolder])
+case class EditorUser(nexusId: String, id: String)
 
 object EditorUser {
 
@@ -29,16 +29,13 @@ object EditorUser {
   implicit val editorUserWrites = new Writes[EditorUser] {
     def writes(user: EditorUser) = Json.obj(
       "nexusId" -> user.nexusId,
-      "userId" -> user.id,
-      "userFolders" -> Json.toJson(user.userFolders)
+      "userId" -> user.id
     )
   }
 
   implicit val editorUserReads: Reads[EditorUser] = (
     (JsPath \ "nexusId").read[String] and
-      (JsPath \ "userId").read[String] and
-      (JsPath \ "userFolders").read[List[UserFolder]]
-        .orElse(Reads.pure(List[UserFolder]()))
+      (JsPath \ "userId").read[String]
     ) (EditorUser.apply _)
 
 }

@@ -26,8 +26,8 @@ object UserFolder {
   implicit val userFolderReads: Reads[UserFolder] = (
     (JsPath \ "id").read[String] and
     (JsPath \ "folderName").read[String] and
-      (JsPath \ "folderType").read[FolderType] and
-      (JsPath \ "lists").read[List[UserInstanceList]]
+      JsPath.read[FolderType] and
+      (JsPath \ "lists").read[List[UserInstanceList]].or(Reads.pure(List[UserInstanceList]()))
     )(UserFolder.apply _)
 
   implicit val userFolderWrites: Writes[UserFolder] = (
