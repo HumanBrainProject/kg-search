@@ -23,12 +23,13 @@ import editor.helpers.InstanceHelper
 import editor.models.EditorUserList._
 import editor.models.{EditorUser, FormRegistry}
 import editor.services.EditorUserService.{editorNameSpace, editorUserPath}
+import models.EditorUserList.Bookmark
 import nexus.services.NexusService
 import play.api.Logger
 import play.api.http.ContentTypes._
 import play.api.http.HeaderNames.CONTENT_TYPE
 import play.api.http.Status._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSClient, WSResponse}
 import services.FormService
 
@@ -153,6 +154,71 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
     }
   }
 
+  def addInstanceToBookmarkLists(
+                                  instanceFullId: String,
+                                  bookmarkListIds: List[String],
+                                  token: String
+                                ):
+  Future[List[WSResponse]] = {
+    nexusService.createSimpleSchema(
+      config.nexusEndpoint,
+      EditorBookmarkService.bookmarkPath,
+      token,
+      Some(EditorUserService.editorNameSpace)
+    ).flatMap { res =>
+      res.status match {
+        case OK | CREATED | CONFLICT =>
+          val queries = bookmarkListIds.map { id =>
+            val toInsert = EditorBookmarkService.bookmarkToNexusStruct(instanceFullId, id)
+            nexusService.insertInstance(
+              config.nexusEndpoint,
+              EditorBookmarkService.bookmarkPath,
+              toInsert,
+              token
+            )
+          }
+          Future.sequence(queries)
+        case _ =>
+          logger.error("Could created schema for Bookmark" + res.body)
+          Future(List(res))
+      }
+    }
+  }
+
+  def removeInstanceFromBookmarkLists(
+                                  instancePath: NexusPath,
+                                  instanceId: String,
+                                  bookmarkListIds: List[String],
+                                  token: String
+                                ):
+  Future[List[WSResponse]] = {
+    // Get the ids of the bookmarks
+    wSClient
+      .url(s"${config.kgQueryEndpoint}/query/${instancePath.toString()}/$instanceId")
+      .withHttpHeaders(CONTENT_TYPE -> JSON)
+      .post(EditorBookmarkService.kgQueryGetInstanceBookmarks(instancePath)).flatMap {
+      res =>
+        res.status match {
+          case OK =>
+              (res.json \ "bookmarks" ).asOpt[List[JsValue]] match{
+                case Some(ids) => //Delete the bookmarks
+                  val listResponses = ids
+                    .filter(id => bookmarkListIds
+                      .exists( bookmarkListId => (id \ "bookmarkListId" \ "@id").asOpt[String].getOrElse("").contains(bookmarkListId) )
+                    )
+                    .map { id =>
+                      val str = (id \ "id").as[String]
+                      val (path, nexusId) = str.splitAt(str.lastIndexOf("/"))
+                      nexusService.deprecateInstance(config.nexusEndpoint,NexusPath(path), nexusId.substring(1), 1, token)
+                    }
+                  Future.sequence(listResponses)
+                case None => Future(List(res))
+            }
+          case _ => Future(List(res))
+        }
+
+    }
+  }
 
 }
 
@@ -232,6 +298,57 @@ object EditorBookmarkService {
      |     }
      |  ]
      |}
+    """.stripMargin
+
+  def kgQueryGetInstanceBookmarks(instancePath: NexusPath) = s"""
+    |{
+    |  "@context": {
+    |    "@vocab": "http://schema.hbp.eu/graph_query/",
+    |    "schema": "http://schema.org/",
+    |    "kgeditor": "http://hbp.eu/kgeditor/",
+    |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
+    |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
+    |    "this": "http://schema.hbp.eu/instances/",
+    |    "searchui": "http://schema.hbp.eu/search_ui/",
+    |    "fieldname": {
+    |      "@id": "fieldname",
+    |      "@type": "@id"
+    |    },
+    |    "merge": {
+    |      "@id": "merge",
+    |      "@type": "@id"
+    |    },
+    |    "relative_path": {
+    |      "@id": "relative_path",
+    |      "@type": "@id"
+    |    },
+    |    "root_schema": {
+    |      "@id": "root_schema",
+    |      "@type": "@id"
+    |    }
+    |  },
+    |  "schema:name": "",
+    |  "root_schema": "nexus_instance:${instancePath.toString()}",
+    |  "fields": [
+    |    {
+    |        "fieldname": "bookmarks",
+    |        "relative_path": {
+    |            "@id": "kgeditor:bookmarkInstanceLink",
+    |            "reverse":true
+    |        },
+    |        "fields":[
+    |               		{
+    |               			"fieldname":"id",
+    |               			"relative_path": "@id"
+    |               		},
+    |               		{
+    |               			"fieldname":"bookmarkListId",
+    |               			"relative_path": "kgeditor:bookmarkList"
+    |               		}
+    |              ]
+    |     }
+    |  ]
+    |}
     """.stripMargin
 
   def bookmarkToNexusStruct(bookmark: String, userBookMarkListNexusId: String) = {

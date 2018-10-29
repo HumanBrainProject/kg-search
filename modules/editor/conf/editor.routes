@@ -501,3 +501,68 @@ GET /api/bookmarkListInstances/:org/:domain/:schema/:version     editor.controll
 #    description: Created
 ###
 POST /api/bookmarkList                                      editor.controllers.NexusEditorUserController.createBookmarkList
+
+###
+#tags:
+#  - editor
+#summary: Bind an instance to multiple bookmarks
+#parameters:
+#  - in: path
+#    name: org
+#    type: string
+#    required: true
+#  - in: path
+#    name: domain
+#    type: string
+#    required: true
+#  - in: path
+#    name: schema
+#    type: string
+#    required: true
+#  - in: path
+#    name: version
+#    type: string
+#    required: true
+#  - in: path
+#    name: id
+#    type: string
+#    required: true
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+#  - in: body
+#    description: A list of bookmark IDs
+#    required: false
+#    type: array
+#responses:
+#  '200':
+#    description: Ok
+###
+PUT /api/instance/:org/:domain/:schema/:version/:id/bookmarks    editor.controllers.NexusEditorUserController.createBookmarks(org: String, domain:String, schema: String, version:String, id: String)
+
+###
+#  tags:
+#    - editor
+#  summary: Deletes a bookmark from a bookmark lists
+#  parameters:
+#    - in: path
+#      name: id
+#      type: string
+#      required: true
+#      description: the bookmark id to be deleted
+#    - in: body
+#      description: A list of bookmark IDs
+#      required: false
+#      type: array
+#    - in: header
+#      name: Authorization
+#      description: Authorization token
+#      required: true
+#      type: string
+#  responses:
+#    '200':
+#      description: Ok
+##
+DELETE /api/instance/:org/:domain/:schema/:version/:id/bookmarks editor.controllers.NexusEditorUserController.deleteBookmarks(org: String, domain:String, schema: String, version:String, id: String)

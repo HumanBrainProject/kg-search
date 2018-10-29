@@ -29,7 +29,7 @@ import editor.services.{ArangoQueryService, EditorBookmarkService, EditorUserSer
 import helpers.ResponseHelper
 import nexus.services.NexusService
 import play.api.{Configuration, Logger}
-import play.api.libs.json.{JsPath, Json}
+import play.api.libs.json.{JsArray, JsPath, Json}
 import play.api.mvc._
 import services.FormService
 
@@ -141,4 +141,61 @@ class NexusEditorUserController @Inject()(
         case _ => Future(BadRequest("Missing parameters"))
       }
   }
+
+  def createBookmarks(org: String, domain:String, schema: String, version:String, id: String): Action[AnyContent] =
+    (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
+      val bookmarkIds = for{
+        json <- request.body.asJson
+        arrayOfIds <- json.asOpt[List[String]]
+      } yield arrayOfIds
+
+      bookmarkIds match {
+        case Some(ids) =>
+          val path = NexusPath(org, domain, schema, version)
+          val fullIds  = ids.map(i => s"${config.nexusEndpoint}/v0/data/${i}")
+          val futList = for {
+            token <- oIDCAuthService.getTechAccessToken()
+            listResult <- editorUserListService
+              .addInstanceToBookmarkLists(s"${config.nexusEndpoint}/v0/data/${path.toString()}/${id}", fullIds, token)
+          } yield listResult
+
+          futList.map{ listResponse =>
+            if(listResponse.forall(_.status == CREATED)){
+              Ok("Bookmarks created")
+            }else{
+              val errors = listResponse.filter(_.status >= BAD_REQUEST).mkString("\n")
+              InternalServerError(s"Could not create all the bookmarks - $errors")
+            }
+          }
+        case None => Future(BadRequest("Missing body content"))
+      }
+    }
+
+  def deleteBookmarks(org: String, domain:String, schema: String, version:String, id: String): Action[AnyContent] =
+    (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
+      val bookmarkIds = for {
+        json <- request.body.asJson
+        arrayOfIds <- json.asOpt[List[String]]
+      } yield arrayOfIds
+      bookmarkIds match {
+        case Some(ids) =>
+          val path = NexusPath(org, domain, schema, version)
+          val fullIds = ids.map(i => s"${config.nexusEndpoint}/v0/data/${i}")
+          val futList = for {
+            token <- oIDCAuthService.getTechAccessToken()
+            listResult <- editorUserListService
+              .removeInstanceFromBookmarkLists(path, id , fullIds, token)
+          } yield listResult
+          futList.map { listResponse =>
+            if (listResponse.forall(_.status == OK)) {
+              Ok("Bookmarks removed")
+            } else {
+              val errors = listResponse.filter(_.status >= BAD_REQUEST).mkString("\n")
+              InternalServerError(s"Could not remove all the bookmarks - $errors")
+            }
+          }
+
+        case None => Future(BadRequest("Missing body content"))
+      }
+    }
 }

@@ -31,7 +31,7 @@ trait EditorBookmarkServiceInterface {
 
   def createBookmarkList(bookmarkListName: String, folderId: String, token: String): Future[Either[WSResponse, BookmarkList]]
 
-//  def addInstanceToBookmarkLists(editorUser: EditorUser, instancePath: NexusPath, instanceId: String, bookmarkListIds: List[String], token:String)
+  def addInstanceToBookmarkLists(instanceFullId: String, bookmarkListIds: List[String], token:String):Future[List[WSResponse]]
 
-
+  def removeInstanceFromBookmarkLists(instancePath: NexusPath, instanceId: String, bookmarkListIds: List[String], token: String):Future[List[WSResponse]]
 }
