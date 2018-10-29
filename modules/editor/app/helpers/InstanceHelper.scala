@@ -19,7 +19,7 @@ package editor.helpers
 
 import common.helpers.JsFlattener
 import common.models.{NexusInstance, NexusPath, User}
-import editor.models.{EditorInstance, ReconciledInstance, ReleaseStatus}
+import editor.models.{EditorInstance, FormRegistry, ReconciledInstance, ReleaseStatus}
 import org.joda.time.DateTime
 import org.json4s.JsonAST._
 import org.json4s.native.{JsonMethods, JsonParser}
@@ -254,8 +254,8 @@ object InstanceHelper {
     }
   }
 
-  def addDefaultFields(instance: NexusInstance,originalPath: NexusPath, formRegistry:JsObject): NexusInstance = {
-    val fields = (formRegistry \ originalPath.org \ originalPath.domain \ originalPath.schema \ originalPath.version \ "fields").as[JsObject].value
+  def addDefaultFields(instance: NexusInstance,originalPath: NexusPath, formRegistry:FormRegistry): NexusInstance = {
+    val fields = (formRegistry.registry \ originalPath.org \ originalPath.domain \ originalPath.schema \ originalPath.version \ "fields").as[JsObject].value
     val m = fields.map { case (k, v) =>
       val fieldValue =  instance.getField(k)
       if(fieldValue.isEmpty){

@@ -168,7 +168,7 @@ class NexusEditorController @Inject()(
     * @param request The current user request
     * @return The updated instance or an error from nexus. Every response has a black link for the UI.
     */
-  private def initialUpdate(originalInstance: NexusInstance)(implicit request: EditorUserRequest[AnyContent]) = {
+  private def initialUpdate(originalInstance: NexusInstance)(implicit request: EditorUserWriteRequest[AnyContent]) = {
     val token = OIDCHelper.getTokenFromRequest(request)
     val reconciledTokenFut = oIDCAuthService.getTechAccessToken()
     val instancePath = originalInstance.nexusPath
@@ -231,7 +231,7 @@ class NexusEditorController @Inject()(
   private def updateWithReconciled(
                                     currentInstanceDisplayed: ReconciledInstance,
                                     originalPath: NexusPath
-                                  )(implicit request: EditorUserRequest[AnyContent]) = {
+                                  )(implicit request: EditorUserWriteRequest[AnyContent]) = {
     val token = OIDCHelper.getTokenFromRequest(request)
     val editorSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.editorPrefix)
     val reconciledSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.reconciledPrefix)
@@ -344,7 +344,7 @@ class NexusEditorController @Inject()(
                      schema: String,
                      version: String,
                      id: String): Action[AnyContent] =
-    (authenticatedUserAction andThen EditorUserAction.editorUserAction(org,config.editorPrefix, iAMAuthService)).async { implicit request =>
+    (authenticatedUserAction andThen EditorUserAction.editorUserWriteAction(org,config.editorPrefix, iAMAuthService)).async { implicit request =>
 
       val token = OIDCHelper.getTokenFromRequest(request)
       val instancePath = NexusPath(org, domain, schema, version)
@@ -376,7 +376,7 @@ class NexusEditorController @Inject()(
                       domain:String,
                       schema: String,
                       version:String
-                    ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(org, config.editorPrefix, iAMAuthService)).async { implicit request =>
+                    ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserWriteAction(org, config.editorPrefix, iAMAuthService)).async { implicit request =>
     val newInstance = request.body.asJson.get.as[JsObject]
     val instancePath = NexusPath(org, domain, schema, version)
     val editorPath = instancePath.reconciledPath(config.editorPrefix)

@@ -17,23 +17,23 @@
 package editor.models.EditorUserList
 
 
-case class UserFolder(id:String, folderName: String, folderType: FolderType, userLists: List[UserInstanceList] )
+case class BookmarkListFolder(id:String, folderName: String, folderType: FolderType, userLists: List[BookmarkList] )
 
-object UserFolder {
+object BookmarkListFolder {
 
   import play.api.libs.json._
   import play.api.libs.functional.syntax._
-  implicit val userFolderReads: Reads[UserFolder] = (
+  implicit val userFolderReads: Reads[BookmarkListFolder] = (
     (JsPath \ "id").read[String] and
     (JsPath \ "folderName").read[String] and
       JsPath.read[FolderType] and
-      (JsPath \ "lists").read[List[UserInstanceList]].or(Reads.pure(List[UserInstanceList]()))
-    )(UserFolder.apply _)
+      (JsPath \ "lists").read[List[BookmarkList]].or(Reads.pure(List[BookmarkList]()))
+    )(BookmarkListFolder.apply _)
 
-  implicit val userFolderWrites: Writes[UserFolder] = (
+  implicit val userFolderWrites: Writes[BookmarkListFolder] = (
     (JsPath \ "id").write[String] and
     (JsPath \ "folderName").write[String] and
       JsPath.write[FolderType] and
-      (JsPath \ "lists").write[List[UserInstanceList]]
-    )(unlift(UserFolder.unapply))
+      (JsPath \ "lists").write[List[BookmarkList]]
+    )(unlift(BookmarkListFolder.unapply))
 }

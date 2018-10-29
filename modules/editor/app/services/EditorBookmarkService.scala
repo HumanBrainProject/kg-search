@@ -16,96 +16,89 @@
 */
 package editor.services
 
-import authentication.service.OIDCAuthService
 import com.google.inject.Inject
-import common.models.{NexusInstance, NexusUser}
+import common.models.{NexusInstance, NexusPath, NexusUser}
 import common.services.ConfigurationService
-import editor.models.EditorUser
+import editor.helpers.InstanceHelper
 import editor.models.EditorUserList._
-import editor.services.EditorUserService.editorUserPath
-import helpers.ResponseHelper
+import editor.models.{EditorUser, FormRegistry}
+import editor.services.EditorUserService.{editorNameSpace, editorUserPath}
 import nexus.services.NexusService
 import play.api.Logger
-import play.api.http.HeaderNames.CONTENT_TYPE
 import play.api.http.ContentTypes._
+import play.api.http.HeaderNames.CONTENT_TYPE
 import play.api.http.Status._
-import play.api.libs.json.{JsArray, JsValue}
+import play.api.libs.json.Json
 import play.api.libs.ws.{WSClient, WSResponse}
 import services.FormService
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
 
-class EditorUserListService @Inject()(config: ConfigurationService,
+class EditorBookmarkService @Inject()(config: ConfigurationService,
                                       wSClient: WSClient,
-                                      formService: FormService,
-                                      editorUserService: EditorUserService,
-                                      oIDCAuthService: OIDCAuthService,
                                       nexusService: NexusService
-                                 )(implicit executionContext: ExecutionContext) {
+                                 )(implicit executionContext: ExecutionContext) extends EditorBookmarkServiceInterface {
   val logger = Logger(this.getClass)
 
-  def getUserLists(nexusUser: NexusUser, user: EditorUser): Future[Either[WSResponse, List[UserFolder]]] = {
+  def getUserLists(editorUser: EditorUser, formRegistry: FormRegistry): Future[Either[WSResponse, List[BookmarkListFolder]]] = {
     wSClient
-      .url(s"${config.kgQueryEndpoint}/query/${user.nexusId}")
+      .url(s"${config.kgQueryEndpoint}/query/${editorUser.nexusId}")
       .withHttpHeaders(CONTENT_TYPE -> JSON)
-      .post(EditorUserListService.kgQueryGetUserFoldersQuery).map {
+      .post(EditorBookmarkService.kgQueryGetUserFoldersQuery).map {
       res =>
         res.status match {
           case OK =>
-            val folders = (res.json \ "userFolders").as[List[UserFolder]]
+            val folders = (res.json \ "userFolders").as[List[BookmarkListFolder]]
             // Concatenate with form service lists
-            val r = getEditableEntities(nexusUser)
+            val r = getEditableEntities(editorUser.nexusUser, formRegistry)
             Right(folders ::: r)
           case _ =>
-            logger.error(s"Could not fetch the user with ID ${user.id} ${res.body}")
+            logger.error(s"Could not fetch the user with ID ${editorUser.nexusUser.id} ${res.body}")
             Left(res)
         }
     }
-
-
   }
 
-  private def getEditableEntities(nexusUser: NexusUser) = {
-    val allEditableEntities = FormService.editableEntities(nexusUser, formService.formRegistry)
-      .foldLeft((List[UserInstanceList](), List[UserInstanceList]())) {
+  private def getEditableEntities(nexusUser: NexusUser, formRegistry: FormRegistry) = {
+    val allEditableEntities = FormService.editableEntities(nexusUser, formRegistry)
+      .foldLeft((List[BookmarkList](), List[BookmarkList]())) {
         case (acc, userList) =>
-          if (EditorUserListService.commonNodeTypes.contains(userList.id)) {
+          if (EditorBookmarkService.commonNodeTypes.contains(userList.id)) {
             (userList :: acc._1, acc._2)
           } else {
             (acc._1, userList :: acc._2)
           }
       }
     List(
-      UserFolder(
+      BookmarkListFolder(
         "commonNodeTypes",
         "Common node types",
-        NODETYPE,
+        NODETYPEFOLDER,
         allEditableEntities._1
       ),
-      UserFolder(
+      BookmarkListFolder(
         "otherNodeTypes",
         "Other node types",
-        NODETYPE,
+        NODETYPEFOLDER,
         allEditableEntities._2
       )
     )
 
   }
 
-  def createUserFolder(user: EditorUser, name: String, folderType: FolderType = BOOKMARK, token: String): Future[Option[UserFolder]] = {
+  def createBookmarkListFolder(user: EditorUser, name: String, folderType: FolderType = BOOKMARKFOLDER, token: String): Future[Option[BookmarkListFolder]] = {
     nexusService.createSimpleSchema(
       config.nexusEndpoint,
-      EditorUserService.userFolderPath,
+      EditorBookmarkService.bookmarkListFolderPath,
       token,
       Some(EditorUserService.editorNameSpace)
     ).flatMap { res =>
       res.status match {
         case OK | CREATED | CONFLICT =>
-          val payload = EditorUserService.userFolderToNexusStruct(name, s"${config.nexusEndpoint}/v0/data/${user.nexusId}", folderType)
+          val payload = EditorBookmarkService.bookmarkListFolderToNexusStruct(name, s"${config.nexusEndpoint}/v0/data/${user.nexusId}", folderType)
           nexusService.insertInstance(
             config.nexusEndpoint,
-            EditorUserService.userFolderPath,
+            EditorBookmarkService.bookmarkListFolderPath,
             payload,
             token
           ).map {
@@ -113,7 +106,7 @@ class EditorUserListService @Inject()(config: ConfigurationService,
               res.status match {
                 case CREATED =>
                   val (id, path) = NexusInstance.extractIdAndPath(res.json)
-                  Some(UserFolder(s"${path.toString()}/$id", name, folderType, List()))
+                  Some(BookmarkListFolder(s"${path.toString()}/$id", name, folderType, List()))
                 case _ =>
                   logger.error("Error while creating a user folder " + res.body)
                   None
@@ -125,10 +118,49 @@ class EditorUserListService @Inject()(config: ConfigurationService,
       }
     }
   }
+
+  def createBookmarkList(bookmarkListName: String, folderId: String, token: String): Future[Either[WSResponse, BookmarkList]] = {
+    nexusService.createSimpleSchema(
+      config.nexusEndpoint,
+      EditorBookmarkService.bookmarkListPath,
+      token,
+      Some(EditorUserService.editorNameSpace)
+    ).flatMap{ res =>
+      res.status match {
+        case OK | CREATED | CONFLICT =>
+          val payload = EditorBookmarkService.bookmarkListToNexusStruct(bookmarkListName, s"${config.nexusEndpoint}/v0/data/${folderId}")
+          nexusService.insertInstance(
+            config.nexusEndpoint,
+            EditorBookmarkService.bookmarkListPath,
+            payload,
+            token
+          ).map {
+            res =>
+              res.status match {
+                case CREATED =>
+                  val (id, path) = NexusInstance.extractIdAndPath(res.json)
+                  Right(BookmarkList(s"${path.toString()}/$id", bookmarkListName, None))
+                case _ =>
+                  logger.error("Error while creating a bookmark list " + res.body)
+                  Left(res)
+              }
+          }
+        case _ =>
+          logger.error("Could created schema for Bookmark list" + res.body)
+          Future(Left(res))
+      }
+
+    }
+  }
+
+
 }
 
-object EditorUserListService {
+object EditorBookmarkService {
   val commonNodeTypes = List("minds/core/dataset/v0.0.4")
+  val bookmarkListFolderPath = NexusPath("kgeditor", "core", "bookmarklistfolder", "v0.0.1")
+  val bookmarkListPath = NexusPath("kgeditor", "core", "bookmarklist", "v0.0.1")
+  val bookmarkPath = NexusPath("kgeditor", "core", "bookmark", "v0.0.1")
 
   val kgQueryGetUserFoldersQuery = s"""
      |{
@@ -201,4 +233,32 @@ object EditorUserListService {
      |  ]
      |}
     """.stripMargin
+
+  def bookmarkToNexusStruct(bookmark: String, userBookMarkListNexusId: String) = {
+    Json.obj(
+      "http://schema.org/identifier" -> InstanceHelper.md5HashString(userBookMarkListNexusId + bookmark),
+      "http://hbp.eu/kgeditor/bookmarkList" -> Json.obj("@id" -> s"$userBookMarkListNexusId"),
+      "http://hbp.eu/kgeditor/bookmarkInstanceLink" -> Json.obj("@id" -> s"$bookmark"),
+      "@type" -> s"${editorNameSpace}Bookmark"
+    )
+  }
+
+  def bookmarkListToNexusStruct(name:String, userFolderId: String) = {
+    Json.obj(
+      "http://schema.org/identifier" -> InstanceHelper.md5HashString(userFolderId + name),
+      "http://schema.org/name" -> name,
+      "http://hbp.eu/kgeditor/bookmarkListFolder" -> Json.obj("@id" -> s"$userFolderId"),
+      "@type" -> s"${editorNameSpace}Bookmarklist"
+    )
+  }
+
+  def bookmarkListFolderToNexusStruct(name:String, userNexusId: String, folderType: FolderType) = {
+    Json.obj(
+      "http://schema.org/identifier" -> InstanceHelper.md5HashString(userNexusId + name),
+      "http://schema.org/name" -> name,
+      "http://hbp.eu/kgeditor/user" -> Json.obj("@id" -> s"$userNexusId"),
+      "http://hbp.eu/kgeditor/folderType" -> folderType.t,
+      "@type" -> s"${editorNameSpace}Bookmarklistfolder"
+    )
+  }
 }

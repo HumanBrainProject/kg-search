@@ -26,4 +26,6 @@ import play.api.mvc.{Request, WrappedRequest}
   * @param request
   * @tparam A
   */
-case class EditorUserRequest[A](user: NexusUser, editorGroup: String, request: Request[A]) extends WrappedRequest[A](request)
+case class EditorUserWriteRequest[A](user: NexusUser, editorGroup: String, request: Request[A]) extends WrappedRequest[A](request)
+
+case class EditorUserRequest[A](editorUser: EditorUser, request: Request[A]) extends WrappedRequest[A](request)

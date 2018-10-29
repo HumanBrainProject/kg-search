@@ -1,3 +1,4 @@
+
 /*
 *   Copyright (c) 2018, EPFL/Human Brain Project PCO
 *
@@ -15,21 +16,17 @@
 */
 package editor.models
 
-import common.models.NexusUser
-import editor.models.EditorUserList.BookmarkListFolder
-import play.api.libs.json._
+import play.api.libs.json.{JsObject, Json}
 
+case class FormRegistry(registry: JsObject)
 
-case class EditorUser(nexusId: String, nexusUser: NexusUser)
+trait FormRegistryService {
 
-object EditorUser {
-
-
-  import play.api.libs.functional.syntax._
-
-  implicit val editorUserWrites: Writes[EditorUser] = (
-    (JsPath \ "nexusId").write[String] and
-      JsPath.write[NexusUser]
-    )(unlift(EditorUser.unapply))
-
+  def filterOrgs(formRegistry: FormRegistry, orgs: Seq[String]): FormRegistry = {
+    formRegistry.copy(
+        registry = Json.toJson(formRegistry.registry.value.filter{
+        entity => orgs.contains(entity._1)
+      }).asOpt[JsObject].getOrElse(Json.obj())
+    )
+  }
 }

@@ -19,7 +19,7 @@ package editor.services
 import authentication.service.OIDCAuthService
 import common.helpers.ConfigMock
 import common.helpers.ConfigMock._
-import common.models.{Favorite, FavoriteGroup}
+import common.models.{Favorite, FavoriteGroup, NexusUser}
 import common.services.ConfigurationService
 import editor.models.EditorUser
 import mockws.{MockWS, MockWSHelpers}
@@ -48,8 +48,14 @@ class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockW
       val id = "1"
       val idUser = "nexusUUID1"
       val nexusIdUser = s"http://nexus.com/v0/data/$idUser"
-
-      val user = EditorUser(nexusIdUser, id)
+      val nexusUser = NexusUser(
+        nexusIdUser,
+        "",
+        "",
+        Seq(),
+        Seq()
+      )
+      val user = EditorUser(nexusIdUser, nexusUser)
       val endpointResponse = Json.parse(
         s"""
           |{
@@ -69,7 +75,7 @@ class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockW
       val configService = mock[ConfigurationService]
       val service = new EditorUserService(configService, ws,nexusService,oidcService)(ec)
 
-      val res = Await.result(service.getUser(id), FiniteDuration(10 ,"s"))
+      val res = Await.result(service.getUser(nexusUser), FiniteDuration(10 ,"s"))
 
       res.isDefined mustBe true
       res.get mustBe user

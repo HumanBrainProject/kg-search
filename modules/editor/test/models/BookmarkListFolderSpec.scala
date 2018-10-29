@@ -16,26 +16,26 @@
 */
 package editor.models
 
-import editor.models.EditorUserList.{BOOKMARK, UserFolder, UserInstanceList}
+import editor.models.EditorUserList.{ BOOKMARKFOLDER, BookmarkList, BookmarkListFolder}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsString, Json}
 
-class UserFolderSpec extends PlaySpec{
+class BookmarkListFolderSpec extends PlaySpec{
 
   "UserFolder#toJson" should {
     "contain the correct fields" in {
       val folderId = "folderId"
-      val uFolder = UserFolder(
+      val uFolder = BookmarkListFolder(
         folderId,
         "name",
-        BOOKMARK,
+        BOOKMARKFOLDER,
         List(
-          UserInstanceList(
+          BookmarkList(
             "id",
             "myList",
             None
           ),
-          UserInstanceList(
+          BookmarkList(
             "id2",
             "my 2nd List",
             None

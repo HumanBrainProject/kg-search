@@ -24,8 +24,8 @@ object FolderType {
   def unapply(f: FolderType): Option[String] = Some(f.t)
 
   def apply(s: String): FolderType = s match {
-    case "BOOKMARK" => BOOKMARK
-    case "NODETYPE" => NODETYPE
+    case "BOOKMARK" => BOOKMARKFOLDER
+    case "NODETYPE" => NODETYPEFOLDER
   }
 
   import play.api.libs.json._
@@ -36,10 +36,10 @@ object FolderType {
   implicit val folderTypeWrites: Writes[FolderType] =
     (JsPath \ "folderType").write[String].contramap(_.t)
 }
-case object BOOKMARK extends FolderType {
+case object BOOKMARKFOLDER extends FolderType {
   override val t = "BOOKMARK"
 }
 
-case object NODETYPE extends FolderType {
+case object NODETYPEFOLDER extends FolderType {
   override val t = "NODETYPE"
 }

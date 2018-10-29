@@ -16,22 +16,22 @@
 package editor.models.EditorUserList
 
 
-case class UserInstanceList(id: String, name: String, uiSpec: Option[ListUISpec])
+case class BookmarkList(id: String, name: String, uiSpec: Option[ListUISpec])
 
-object UserInstanceList {
+object BookmarkList {
 
   import play.api.libs.json._
   import play.api.libs.functional.syntax._
 
-  implicit val userListReads: Reads[UserInstanceList] = (
+  implicit val userListReads: Reads[BookmarkList] = (
     (JsPath \ "id").read[String] and
       (JsPath \ "name").read[String] and
       JsPath.readNullable[ListUISpec]
-    )(UserInstanceList.apply _ )
+    )(BookmarkList.apply _ )
 
-  implicit val userListWrites: Writes[UserInstanceList] = (
+  implicit val userListWrites: Writes[BookmarkList] = (
     (JsPath \ "id").write[String] and
       (JsPath \ "name").write[String] and
       JsPath.writeNullable[ListUISpec]
-    )(unlift(UserInstanceList.unapply))
+    )(unlift(BookmarkList.unapply))
 }

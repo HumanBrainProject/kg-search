@@ -349,21 +349,6 @@ POST    /api/releasestatus            editor.controllers.NexusEditorController.g
 ###
 POST   /api/release                                          editor.controllers.NexusEditorController.releaseInstances
 
-
-###
-#  summary: Create the current user as an Editor User
-#  parameters:
-#  - in: header
-#    name: Authorization
-#    description: Authorization token
-#    required: false
-#    type: string
-#  responses:
-#    201:
-#      description: "Created"
-###
-POST   /api/user                                          editor.controllers.NexusEditorUserController.createCurrentUser
-
 ###
 #  summary: Get the current user as an Editor User
 #  parameters:
@@ -376,7 +361,8 @@ POST   /api/user                                          editor.controllers.Nex
 #    200:
 #      description: "Ok"
 ###
-GET   /api/user                                          editor.controllers.NexusEditorUserController.getCurrentUser
+GET   /api/user                                          editor.controllers.NexusEditorUserController.getOrCreateCurrentUser
+
 ###
 #      tags:
 #        - editor
@@ -401,7 +387,7 @@ GET   /api/user                                          editor.controllers.Nexu
 #                   uiSpec: 'A JSON object containing info specific for the UI'
 #
 ###
-GET /api/userLists                              editor.controllers.NexusEditorUserController.getUserLists
+GET /api/bookmarkListFolders                              editor.controllers.NexusEditorUserController.getBookmarkListFolders
 
 ###
 #tags:
@@ -452,20 +438,66 @@ GET /api/userLists                              editor.controllers.NexusEditorUs
 #      '200':
 #        description: Ok
 ###
-GET /api/userList/:org/:domain/:schema/:version     editor.controllers.NexusEditorUserController.getUserListBySchema(org: String, domain:String, schema: String, version:String, from:Option[Int], size:Option[Int], search:String?="")
+GET /api/bookmarkListInstances/:org/:domain/:schema/:version     editor.controllers.NexusEditorUserController.getBookmarkListBySchema(org: String, domain:String, schema: String, version:String, from:Option[Int], size:Option[Int], search:String?="")
 
 ###
-# tags:
-#   - editor
-#  summary: Returns the instances of a list - paginated - filterable
-#  parameters:
-#    - in: header
-#      name: Authorization
-#      description: Authorization token
-#      required: false
-#      type: string
+#tags:
+#  - editor
+#summary: Returns the instances of a list - paginated - filterable
+#parameters:
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+#  - in: path
+#    name: id
+#    description: Id of the bookmark list
+#    required: true
+#    type: string
+#  - name: from
+#    in: path
+#    description: the offset of the pagination
+#    required: false
+#    type: int
+#  - name: size
+#    in: path
+#    description: the size of the page
+#    required: false
+#    type: int
+#  - name: search
+#    in: path
+#    description: the search query only applied for the name of the instance
+#    required: false
+#    type: string
 #      responses:
 #        '200':
 #          description: Ok
 ###
-#GET /api/userList/:id                           editor.controllers.NexusEditorUserController.getUserLists(id: String)
+#GET /api/bookmarkListInstances/:id                           editor.controllers.NexusEditorUserController.getBookmarkList(id: String, from:Option[Int], size:Option[Int], search:String?="")
+
+###
+#tags:
+#  - editor
+#summary: Creates a bookmark list for the current user and returns its ID
+#parameters:
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: true
+#    type: string
+#  - in: body
+#    name: name
+#    description: The new bookmark list's name
+#    required: true
+#    type: string
+#  - in: body
+#    name: folderId
+#    description: The folder to which to bookmark list will be held
+#    required: true
+#    type: string
+#responses:
+#  '201':
+#    description: Created
+###
+POST /api/bookmarkList                                      editor.controllers.NexusEditorUserController.createBookmarkList
