@@ -1,4 +1,70 @@
 ###
+#  summary: get the list of entity types to display
+#  tags:
+#    - editor
+#  parameters:
+#  - name: privateSpace
+#    in: path
+#    description: organization the instance to retrieve
+#    required: false
+#    type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+GET    /api/nodetypes                  editor.controllers.NexusEditorController.listEditableEntityTypes( privateSpace: String ?= "minds")
+
+###
+#  summary: get the list of entity
+#  tags:
+#    - editor
+#  parameters:
+#  - name: org
+#    in: path
+#    description: organization the instance to retrieve
+#    required: true
+#    type: string
+#  - name: domain
+#    in: path
+#    description: domain of the instance to retrieve
+#    required: true
+#    type: string
+#  - name: schema
+#    in: path
+#    description: schema name
+#    required: true
+#    type: string
+#  - name: version
+#    in: path
+#    description: version of the instance to retrieve
+#    required: true
+#    type: string
+#  - name: from
+#    in: path
+#    description: the offset of the pagination
+#    required: false
+#    type: int
+#  - name: size
+#    in: path
+#    description: the size of the page
+#    required: false
+#    type: int
+#  - name: search
+#    in: path
+#    description: the search query only applied for the name of the instance
+#    required: false
+#    type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+GET    /api/instances/:org/:domain/:schema/:version         editor.controllers.NexusEditorController.listInstances(org: String, domain:String, schema: String, version:String, from:Option[Int], size:Option[Int], search:String?="")
+
+###
 #  summary: get a specific entity
 #  tags:
 #    - editor
@@ -347,7 +413,22 @@ POST    /api/releasestatus            editor.controllers.NexusEditorController.g
 #    200:
 #      description: "Ok"
 ###
-POST   /api/release                                          editor.controllers.NexusEditorController.releaseInstances
+POST   /release                                          editor.controllers.NexusEditorController.releaseInstances
+
+
+###
+#  summary: Create the current user as an Editor User
+#  parameters:
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+#  responses:
+#    201:
+#      description: "Created"
+###
+POST   /user                                          editor.controllers.NexusEditorUserController.createCurrentUser
 
 ###
 #  summary: Get the current user as an Editor User
@@ -361,246 +442,68 @@ POST   /api/release                                          editor.controllers.
 #    200:
 #      description: "Ok"
 ###
-GET   /api/user                                          editor.controllers.NexusEditorUserController.getOrCreateCurrentUser
+GET   /user                                          editor.controllers.NexusEditorUserController.getCurrentUser
 
 ###
-#      tags:
-#        - editor
-#      summary: Returns the lists of instance regrouped by folders
-#      parameters:
-#        - in: header
-#          name: Authorization
-#          description: Authorization token
-#          required: false
+#  summary: Create a new favorite for the the current user
+#  parameters:
+#  - in: body
+#    name: instanceId
+#    required: true
+#    description: the instance to be added as favorite
+#    schema:
+#      type: object
+#      properties:
+#        instanceId:
 #          type: string
-#      responses:
-#        '200':
-#          description: Ok
-#          example:
-#           data:
-#             - folderName: example
-#               folderType: BOOKMARK|NODETYPE|...
-#               lists:
-#                 - id: ...
-#                   name: name of the list
-#                   editable: true | false
-#                   uiSpec: 'A JSON object containing info specific for the UI'
-#
-###
-GET /api/bookmarkListFolders                              editor.controllers.NexusEditorUserController.getBookmarkListFolders
-
-###
-#tags:
-#  - editor
-#summary: Returns the instances  by schema - paginated - filterable
-#parameters:
+#        favoriteGroupNexusId:
+#           type: string
 #  - in: header
 #    name: Authorization
 #    description: Authorization token
 #    required: false
 #    type: string
-#  - name: org
-#    in: path
-#    description: organization the instance to retrieve
-#    required: true
-#    type: string
-#  - name: domain
-#    in: path
-#    description: domain of the instance to retrieve
-#    required: true
-#    type: string
-#  - name: schema
-#    in: path
-#    description: schema name
-#    required: true
-#    type: string
-#  - name: version
-#    in: path
-#    description: version of the instance to retrieve
-#    required: true
-#    type: string
-#  - name: from
-#    in: path
-#    description: the offset of the pagination
-#    required: false
-#    type: int
-#  - name: size
-#    in: path
-#    description: the size of the page
-#    required: false
-#    type: int
-#  - name: search
-#    in: path
-#    description: the search query only applied for the name of the instance
-#    required: false
-#    type: string
-#    responses:
-#      '200':
-#        description: Ok
+#  responses:
+#    201:
+#      description: "Created"
 ###
-GET /api/bookmarkListInstances/:org/:domain/:schema/:version     editor.controllers.NexusEditorUserController.getInstancesOfBookmarkListBySchema(org: String, domain:String, schema: String, version:String, from:Int=0, size:Int=20, search:String?="")
+POST   /user/favorite          editor.controllers.NexusEditorUserController.addFavorite
+
 
 ###
-#tags:
-#  - editor
-#summary: Returns the instances of a list - paginated - filterable
-#parameters:
+#  summary: Remove a favorite
+#  parameters:
 #  - in: header
 #    name: Authorization
 #    description: Authorization token
 #    required: false
 #    type: string
-#  - name: org
-#    in: path
-#    description: organization the instance to retrieve
-#    required: true
-#    type: string
-#  - name: domain
-#    in: path
-#    description: domain of the instance to retrieve
-#    required: true
-#    type: string
-#  - name: schema
-#    in: path
-#    description: schema name
-#    required: true
-#    type: string
-#  - name: version
-#    in: path
-#    description: version of the instance to retrieve
-#    required: true
-#    type: string
-#  - in: path
-#    name: id
-#    description: Id of the bookmark list
-#    required: true
-#    type: string
-#  - name: from
-#    in: path
-#    description: the offset of the pagination
-#    required: false
-#    type: int
-#  - name: size
-#    in: path
-#    description: the size of the page
-#    required: false
-#    type: int
-#  - name: search
-#    in: path
-#    description: the search query only applied for the name of the instance
-#    required: false
-#    type: string
-#      responses:
-#        '200':
-#          description: Ok
+#  responses:
+#    200:
+#      description: "Ok"
 ###
-GET /api/bookmarkListInstances/:org/:domain/:schema/:version/:id                           editor.controllers.NexusEditorUserController.getInstancesbyBookmarkList(org: String, domain:String, schema: String, version:String, id: String, from:Int=0, size:Int=20, search:String?="")
+DELETE   /user/favorite/:org/:domain/:schema/:version/:id           editor.controllers.NexusEditorUserController.deleteFavorite(org: String, domain:String, schema: String, version:String, id: String)
+
 
 ###
-#tags:
-#  - editor
-#summary: Creates a bookmark list for the current user and returns its ID
-#parameters:
-#  - in: header
-#    name: Authorization
-#    description: Authorization token
-#    required: true
-#    type: string
+#  summary: Create a new favorite group for the the current user
+#  parameters:
 #  - in: body
 #    name: name
-#    description: The new bookmark list's name
 #    required: true
-#    type: string
-#  - in: body
-#    name: folderId
-#    description: The folder to which to bookmark list will be held
-#    required: true
-#    type: string
-#responses:
-#  '201':
-#    description: Created
-###
-POST /api/bookmarkList                                      editor.controllers.NexusEditorUserController.createBookmarkList
-
-###
-#tags:
-#  - editor
-#summary: Bind an instance to multiple bookmarks
-#parameters:
-#  - in: path
-#    name: org
-#    type: string
-#    required: true
-#  - in: path
-#    name: domain
-#    type: string
-#    required: true
-#  - in: path
-#    name: schema
-#    type: string
-#    required: true
-#  - in: path
-#    name: version
-#    type: string
-#    required: true
-#  - in: path
-#    name: id
-#    type: string
-#    required: true
+#    description: the name of the favorite group to create
+#    schema:
+#      type: object
+#      properties:
+#        name:
+#          type: string
 #  - in: header
 #    name: Authorization
 #    description: Authorization token
 #    required: false
 #    type: string
-#  - in: body
-#    description: A list of bookmark IDs
-#    required: false
-#    type: array
-#responses:
-#  '200':
-#    description: Ok
-###
-PUT /api/instance/:org/:domain/:schema/:version/:id/bookmarks    editor.controllers.NexusEditorUserController.createBookmarks(org: String, domain:String, schema: String, version:String, id: String)
-
-###
-#  tags:
-#    - editor
-#  summary: Deletes a bookmark from a bookmark lists
-#  parameters:
-#    - in: path
-#      name: id
-#      type: string
-#      required: true
-#      description: the bookmark id to be deleted
-#    - in: body
-#      description: A list of bookmark IDs
-#      required: false
-#      type: array
-#    - in: header
-#      name: Authorization
-#      description: Authorization token
-#      required: true
-#      type: string
 #  responses:
-#    '200':
-#      description: Ok
+#    201:
+#      description: "Created"
 ###
-DELETE /api/instance/:org/:domain/:schema/:version/:id/bookmarks editor.controllers.NexusEditorUserController.deleteBookmarks(org: String, domain:String, schema: String, version:String, id: String)
-
-###
-#  tags:
-#    - editor
-#  summary: get bookmark information of a list of instances - similar to releasestatus
-#  parameters:
-#    - in: body
-#      name: instances
-#      description: array of ids of the entities to retrieve
-#      schema:
-#        type: array
-#    - in: header
-#      name: Authorization
-#      description: Authorization token
-#      required: false
-#      type: string
-###
-POST /api/bookmarks                                             editor.controllers.NexusEditorUserController.retrieveBookmarkLists
+POST   /user/favoritegroup         editor.controllers.NexusEditorUserController.createFavoriteGroup

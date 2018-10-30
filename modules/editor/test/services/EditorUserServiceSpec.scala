@@ -1,27 +1,10 @@
-
-/*
-*   Copyright (c) 2018, EPFL/Human Brain Project PCO
-*
-*   Licensed under the Apache License, Version 2.0 (the "License");
-*   you may not use this file except in compliance with the License.
-*   You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-*
-*   Unless required by applicable law or agreed to in writing, software
-*   distributed under the License is distributed on an "AS IS" BASIS,
-*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*   See the License for the specific language governing permissions and
-*   limitations under the License.
-*/
 package editor.services
 
 import authentication.service.OIDCAuthService
 import common.helpers.ConfigMock
 import common.helpers.ConfigMock._
-import common.models.{Favorite, FavoriteGroup, NexusUser}
+import common.models.{EditorUser, Favorite, FavoriteGroup}
 import common.services.ConfigurationService
-import editor.models.EditorUser
 import mockws.{MockWS, MockWSHelpers}
 import nexus.services.NexusService
 import org.scalatest.mockito.MockitoSugar
@@ -47,20 +30,33 @@ class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockW
 
       val id = "1"
       val idUser = "nexusUUID1"
+      val idgroup = "nexusUUID2"
+      val idFav = "nexusUUID3"
       val nexusIdUser = s"http://nexus.com/v0/data/$idUser"
-      val nexusUser = NexusUser(
-        id,
-        "",
-        "",
-        Seq(),
-        Seq()
-      )
-      val user = EditorUser(nexusIdUser, nexusUser)
+      val nexusIdFavGroup = s"http://nexus.com/v0/data/$idgroup"
+      val nexusIdFav = s"http://nexus.com/v0/data/$idFav"
+      val name = "Group"
+      val instanceId = "minds/core/dataset/v0.0.4/123"
+      val fav = Favorite(nexusIdFav, instanceId)
+      val favGroup = FavoriteGroup(nexusIdFavGroup, name, Seq(fav))
+      val user = EditorUser(nexusIdUser, id,  Seq(favGroup))
       val endpointResponse = Json.parse(
         s"""
           |{
           |    "nexusId": "$nexusIdUser",
-          |    "userId": "$id"
+          |    "userId": "1",
+          |    "favoriteGroups": [
+          |        {
+          |            "nexusId": "$nexusIdFavGroup",
+          |            "name": "$name",
+          |            "favorites": [
+          |                {
+          |                    "nexusId": "$nexusIdFav",
+          |                    "favoriteInstance": "$instanceId"
+          |                }
+          |            ]
+          |        }
+          |    ]
           |}
         """.stripMargin
       )
@@ -75,7 +71,7 @@ class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockW
       val configService = mock[ConfigurationService]
       val service = new EditorUserService(configService, ws,nexusService,oidcService)(ec)
 
-      val res = Await.result(service.getUser(nexusUser), FiniteDuration(10 ,"s"))
+      val res = Await.result(service.getUser(id), FiniteDuration(10 ,"s"))
 
       res.isDefined mustBe true
       res.get mustBe user

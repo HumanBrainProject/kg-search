@@ -3,7 +3,6 @@ package services
 import common.helpers.ConfigMock
 import common.models.NexusPath
 import common.services.ConfigurationService
-import editor.models.FormRegistry
 import mockws.MockWSHelpers
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -99,12 +98,11 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
           val id = "123"
           val revision = 2
           import scala.concurrent.ExecutionContext.Implicits._
-          val formRegistry = FormRegistry(registry.as[JsObject])
 
           val config = new ConfigurationService(fakeApplication().configuration)
           val mockWs = mock[WSClient]
           val formService = new FormService(config, mockWs ){
-            override def loadFormConfiguration(): FormRegistry = formRegistry
+            override def loadFormConfiguration(): JsObject = registry.as[JsObject]
           }
           val data = Json.parse(
             s"""{
@@ -126,10 +124,10 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
               |    }
               |    """.stripMargin)
 
-          val res = FormService.getFormStructure(originalDatatype, data.as[JsObject], config.reconciledPrefix, formRegistry)
+          val res = FormService.getFormStructure(originalDatatype, data.as[JsObject], config.reconciledPrefix, registry.as[JsObject])
           val expected = Json.parse(
             """
-              | {"fields":{"id":{"value":{"path":"minds/core/activity/v0.0.4"},"nexus_id":"https://nexus-dev.humanbrainproject.org/v0/data/mindsreconciled/core/activity/v0.0.4/123"},"http://schema.org/name":{"type":"InputText","label":"Name","value":"365.A.e.#2"},"http://schema.org/description":{"type":"TextArea","label":"Description"},"http://hbp.eu/minds#ethicsApproval":{"type":"DropdownSelect","label":"Approval","instancesPath":"minds/ethics/approval/v0.0.4","mappingValue":"id","mappingLabel":"label","isLink":true,"allowCustomValues":true,"value":[{"id":"minds/ethics/approval/v0.0.4/94383d63-7587-4bc0-a834-629a9be757e9"}]},"http://hbp.eu/minds#ethicsAuthority":{"type":"DropdownSelect","label":"Authority","instancesPath":"minds/ethics/authority/v0.0.4","mappingValue":"id","mappingLabel":"label","isLink":true,"allowCustomValues":true,"value":[{"id":"minds/ethics/authority/v0.0.4/9bfc1378-44ca-4630-97b0-927266a0de73"}]},"http://hbp.eu/minds#methods":{"type":"DropdownSelect","label":"Methods","instancesPath":"minds/experiment/method/v0.0.4","mappingValue":"id","mappingLabel":"label","isLink":true,"allowCustomValues":true,"value":[{"id":"minds/experiment/method/v0.0.4/5481f012-fa64-4b0a-8614-648f09002519"}]},"http://hbp.eu/minds#preparation":{"type":"DropdownSelect","label":"Preparation","instancesPath":"minds/core/preparation/v0.0.4","mappingValue":"id","mappingLabel":"label","isLink":true,"allowCustomValues":true},"http://hbp.eu/minds#protocols":{"type":"DropdownSelect","label":"Protocols","instancesPath":"minds/experiment/protocol/v0.0.4","mappingValue":"id","mappingLabel":"label","isLink":true,"allowCustomValues":true}},"label":"Activity","editable":true,"ui_info":{"labelField":"http://schema.org/name","promotedFields":["http://schema.org/name","http://schema.org/description"]},"alternatives":{}}
+              | {"fields":{"id":{"value":{"path":"minds/core/activity/v0.0.4","nexus_id":"https://nexus-dev.humanbrainproject.org/v0/data/mindsreconciled/core/activity/v0.0.4/123"}},"http:%nexus-slash%%nexus-slash%schema.org%nexus-slash%name":{"type":"InputText","label":"Name","value":"365.A.e.#2"},"http:%nexus-slash%%nexus-slash%schema.org%nexus-slash%description":{"type":"TextArea","label":"Description"},"http:%nexus-slash%%nexus-slash%hbp.eu%nexus-slash%minds#ethicsApproval":{"type":"DropdownSelect","label":"Approval","instancesPath":"minds/ethics/approval/v0.0.4","mappingValue":"id","mappingLabel":"label","isLink":true,"allowCustomValues":true,"value":[{"id":"minds/ethics/approval/v0.0.4/94383d63-7587-4bc0-a834-629a9be757e9"}]},"http:%nexus-slash%%nexus-slash%hbp.eu%nexus-slash%minds#ethicsAuthority":{"type":"DropdownSelect","label":"Authority","instancesPath":"minds/ethics/authority/v0.0.4","mappingValue":"id","mappingLabel":"label","isLink":true,"allowCustomValues":true,"value":[{"id":"minds/ethics/authority/v0.0.4/9bfc1378-44ca-4630-97b0-927266a0de73"}]},"http:%nexus-slash%%nexus-slash%hbp.eu%nexus-slash%minds#methods":{"type":"DropdownSelect","label":"Methods","instancesPath":"minds/experiment/method/v0.0.4","mappingValue":"id","mappingLabel":"label","isLink":true,"allowCustomValues":true,"value":[{"id":"minds/experiment/method/v0.0.4/5481f012-fa64-4b0a-8614-648f09002519"}]},"http:%nexus-slash%%nexus-slash%hbp.eu%nexus-slash%minds#preparation":{"type":"DropdownSelect","label":"Preparation","instancesPath":"minds/core/preparation/v0.0.4","mappingValue":"id","mappingLabel":"label","isLink":true,"allowCustomValues":true},"http:%nexus-slash%%nexus-slash%hbp.eu%nexus-slash%minds#protocols":{"type":"DropdownSelect","label":"Protocols","instancesPath":"minds/experiment/protocol/v0.0.4","mappingValue":"id","mappingLabel":"label","isLink":true,"allowCustomValues":true}},"label":"Activity","editable":true,"ui_info":{"labelField":"http://schema.org/name","promotedFields":["http://schema.org/name","http://schema.org/description"]},"alternatives":{}}
             """.stripMargin)
           res mustBe expected
         }

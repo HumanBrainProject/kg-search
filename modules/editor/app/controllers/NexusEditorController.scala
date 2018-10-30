@@ -66,6 +66,22 @@ class NexusEditorController @Inject()(
 
   val logger = Logger(this.getClass)
 
+  def listInstances(
+                     org: String,
+                     domain: String,
+                     datatype: String,
+                     version: String,
+                     from: Option[Int],
+                     size: Option[Int],
+                     search: String
+                   ): Action[AnyContent] = authenticatedUserAction.async  { implicit request =>
+    val nexusPath = NexusPath(org, domain, datatype, version)
+    arangoQueryService.listInstances(nexusPath, from, size, search).map{
+      case Right(json) => Ok(json)
+      case Left(res) => ResponseHelper.forwardResultResponse(res)
+    }
+  }
+
   /**
     * Return a instance by its nexus ID
     * The response is sent with a json object "back_link" with the path of the schema of the instance
@@ -168,7 +184,7 @@ class NexusEditorController @Inject()(
     * @param request The current user request
     * @return The updated instance or an error from nexus. Every response has a black link for the UI.
     */
-  private def initialUpdate(originalInstance: NexusInstance)(implicit request: EditorUserWriteRequest[AnyContent]) = {
+  private def initialUpdate(originalInstance: NexusInstance)(implicit request: EditorUserRequest[AnyContent]) = {
     val token = OIDCHelper.getTokenFromRequest(request)
     val reconciledTokenFut = oIDCAuthService.getTechAccessToken()
     val instancePath = originalInstance.nexusPath
@@ -231,7 +247,7 @@ class NexusEditorController @Inject()(
   private def updateWithReconciled(
                                     currentInstanceDisplayed: ReconciledInstance,
                                     originalPath: NexusPath
-                                  )(implicit request: EditorUserWriteRequest[AnyContent]) = {
+                                  )(implicit request: EditorUserRequest[AnyContent]) = {
     val token = OIDCHelper.getTokenFromRequest(request)
     val editorSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.editorPrefix)
     val reconciledSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.reconciledPrefix)
@@ -344,7 +360,7 @@ class NexusEditorController @Inject()(
                      schema: String,
                      version: String,
                      id: String): Action[AnyContent] =
-    (authenticatedUserAction andThen EditorUserAction.editorUserWriteAction(org,config.editorPrefix, iAMAuthService)).async { implicit request =>
+    (authenticatedUserAction andThen EditorUserAction.editorUserAction(org,config.editorPrefix, iAMAuthService)).async { implicit request =>
 
       val token = OIDCHelper.getTokenFromRequest(request)
       val instancePath = NexusPath(org, domain, schema, version)
@@ -376,7 +392,7 @@ class NexusEditorController @Inject()(
                       domain:String,
                       schema: String,
                       version:String
-                    ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserWriteAction(org, config.editorPrefix, iAMAuthService)).async { implicit request =>
+                    ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(org, config.editorPrefix, iAMAuthService)).async { implicit request =>
     val newInstance = request.body.asJson.get.as[JsObject]
     val instancePath = NexusPath(org, domain, schema, version)
     val editorPath = instancePath.reconciledPath(config.editorPrefix)
@@ -438,16 +454,16 @@ class NexusEditorController @Inject()(
       Ok(form)
   }
 
-//  /**
-//    *  Return the list of entity types available for the editor
-//    * @param privateSpace
-//    * @return 200
-//    */
-//  def listEditableEntityTypes(privateSpace: String): Action[AnyContent] = authenticatedUserAction {
-//    implicit request =>
-//    // Editable instance types are the one for which form creation is known
-//    Ok()
-//  }
+  /**
+    *  Return the list of entity types available for the editor
+    * @param privateSpace
+    * @return 200
+    */
+  def listEditableEntityTypes(privateSpace: String): Action[AnyContent] = authenticatedUserAction {
+    implicit request =>
+    // Editable instance types are the one for which form creation is known
+    Ok(FormService.editableEntities(request.user, formService.formRegistry))
+  }
 
 
   /**

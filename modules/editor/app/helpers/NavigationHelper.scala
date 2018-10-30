@@ -38,7 +38,7 @@ object NavigationHelper {
     */
   def generateBackLink(path:NexusPath,reconciledSuffix:String, formService: FormService): String = {
     val formattedPath = path.originalPath(reconciledSuffix)
-    (formService.formRegistry.registry \ formattedPath.org \ formattedPath.domain \ formattedPath.schema).asOpt[JsObject] match {
+    (formService.formRegistry \ formattedPath.org \ formattedPath.domain \ formattedPath.schema).asOpt[JsObject] match {
       case Some(schema) =>
         s"${formattedPath.org}/${formattedPath.domain}/${formattedPath.schema}"
       case _ => ""

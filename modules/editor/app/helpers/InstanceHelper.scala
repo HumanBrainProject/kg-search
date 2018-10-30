@@ -18,8 +18,8 @@
 package editor.helpers
 
 import common.helpers.JsFlattener
-import common.models.{NexusInstance, NexusPath, PreviewInstance, User}
-import editor.models.{EditorInstance, FormRegistry, ReconciledInstance, ReleaseStatus}
+import common.models.{NexusInstance, NexusPath, User}
+import editor.models.{EditorInstance, ReconciledInstance, ReleaseStatus}
 import org.joda.time.DateTime
 import org.json4s.JsonAST._
 import org.json4s.native.{JsonMethods, JsonParser}
@@ -206,26 +206,27 @@ object InstanceHelper {
     }
   }
 
-  def formatInstanceList(jsArray: JsArray, reconciledSuffix:String): List[PreviewInstance] = {
+  def formatInstanceList(jsArray: JsArray, reconciledSuffix:String): JsValue = {
 
-    jsArray.value.map { el =>
+    val arr = jsArray.value.map { el =>
       val url = (el \ "@id").as[String]
-      val name: String = (el \ "http://schema.org/name")
-        .asOpt[String].getOrElse(
-        (el \"http://hbp.eu/minds#alias" ).asOpt[String].getOrElse( (el \ "http://hbp.eu/minds#title").asOpt[String].getOrElse(""))
+      val name: JsString = (el \ "http://schema.org/name")
+        .asOpt[JsString].getOrElse(
+        (el \"http://hbp.eu/minds#alias" ).asOpt[JsString].getOrElse( (el \ "http://hbp.eu/minds#title").asOpt[JsString].getOrElse(JsString("")))
       )
-      val description: String = if ((el \ "http://schema.org/description").isDefined) {
-        (el \ "http://schema.org/description").as[String]
+      val description: JsString = if ((el \ "http://schema.org/description").isDefined) {
+        (el \ "http://schema.org/description").as[JsString]
       } else {
-        ""
+        JsString("")
       }
 
       val id = url.split("/").last
       val formattedId = NexusPath(url)
         .originalPath(reconciledSuffix)
         .toString() + "/" + id
-      PreviewInstance(formattedId,name, Some(description))
-    }.toList
+      Json.obj("id" -> formattedId, "description" -> description, "label" -> name)
+    }
+    Json.toJson(arr)
   }
 
   def toReconcileFormat(jsValue: JsValue, privateSpace: String): JsObject = {
@@ -234,7 +235,7 @@ object InstanceHelper {
 
   //TODO make it dynamic :D
   def getPriority(id: String): Int = {
-    if (id contains "editor/") {
+    if (id contains "manual/poc") {
       3
     } else {
       1
@@ -253,8 +254,8 @@ object InstanceHelper {
     }
   }
 
-  def addDefaultFields(instance: NexusInstance,originalPath: NexusPath, formRegistry:FormRegistry): NexusInstance = {
-    val fields = (formRegistry.registry \ originalPath.org \ originalPath.domain \ originalPath.schema \ originalPath.version \ "fields").as[JsObject].value
+  def addDefaultFields(instance: NexusInstance,originalPath: NexusPath, formRegistry:JsObject): NexusInstance = {
+    val fields = (formRegistry \ originalPath.org \ originalPath.domain \ originalPath.schema \ originalPath.version \ "fields").as[JsObject].value
     val m = fields.map { case (k, v) =>
       val fieldValue =  instance.getField(k)
       if(fieldValue.isEmpty){
