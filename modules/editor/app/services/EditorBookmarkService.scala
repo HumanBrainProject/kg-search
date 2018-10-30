@@ -88,21 +88,17 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
 
   def getInstanceOfBookmarkList(bookmarkListId: String, start:Int, size:Int, search:String):Future[Either[WSResponse, List[PreviewInstance]]] = {
     wSClient
-      .url(s"${config.kgQueryEndpoint}/query/${bookmarkListId}")
-//      .withQueryStringParameters( "start" -> start.toString, "size" -> size.toString, "search" -> search)
+      .url(s"${config.kgQueryEndpoint}/arango/bookmarkList/${bookmarkListId}")
+      .withQueryStringParameters( "start" -> start.toString, "size" -> size.toString, "search" -> search)
       .withHttpHeaders(CONTENT_TYPE -> JSON)
-      .post(EditorBookmarkService.kgQueryGetInstances(EditorBookmarkService.bookmarkListPath)).map {
+      .get().map {
       res =>
         res.status match {
           case OK =>
-            (res.json \ "result").asOpt[List[JsValue]] match{
-              case Some(l) => Right(l.headOption.map(js => (js \ "instanceList").asOpt[List[PreviewInstance]].getOrElse(List()) ).getOrElse(List()))
-              case None => Right(List())
-            }
+            Right(res.json.asOpt[List[PreviewInstance]].getOrElse(List()))
           case _ => Left(res)
         }
     }
-
   }
 
   def createBookmarkListFolder(user: EditorUser, name: String, folderType: FolderType = BOOKMARKFOLDER, token: String): Future[Option[BookmarkListFolder]] = {
