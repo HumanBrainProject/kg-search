@@ -18,7 +18,7 @@ package editor.models.EditorUserList
 import play.api.libs.json.JsObject
 
 
-case class BookmarkList(id: String, name: String, editable: Option[Boolean], uiSpect: Option[JsObject], color:Option[String])
+case class BookmarkList(id: String, name: String, editable: Option[Boolean], uiSpec: Option[JsObject], color:Option[String])
 
 object BookmarkList {
 

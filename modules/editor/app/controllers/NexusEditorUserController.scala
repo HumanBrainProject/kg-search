@@ -24,13 +24,13 @@ import common.models.{FavoriteGroup, NexusInstance, NexusPath, NexusUser}
 import common.services.ConfigurationService
 import editor.actions.EditorUserAction
 import editor.models.EditorUser
-import editor.models.EditorUserList.BOOKMARKFOLDER
+import editor.models.EditorUserList.{BOOKMARKFOLDER, BookmarkList}
 import editor.services.{ArangoQueryService, EditorBookmarkService, EditorUserService}
 import helpers.ResponseHelper
 import nexus.services.NexusService
 import play.api.{Configuration, Logger}
 import play.api.libs.json._
-import play.api.mvc._
+import play.api.mvc.{AnyContent, _}
 import services.FormService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -145,6 +145,37 @@ class NexusEditorUserController @Inject()(
         case _ => Future(BadRequest("Missing parameters"))
       }
   }
+
+  def updateBookmarkList(
+                          org: String,
+                          domain: String,
+                          datatype: String,
+                          version: String,
+                          id: String,
+                        ):Action[AnyContent] =
+    (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
+      val opts = for {
+        json <- request.body.asJson
+        name <- (json \ "name").asOpt[String]
+      } yield name
+      opts match {
+        case Some (newName)  =>
+          val path = NexusPath(org, domain, datatype, version)
+          for {
+            token <- oIDCAuthService.getTechAccessToken()
+            result <- editorUserListService.getBookmarkListById(path, id).flatMap[Result]{
+              case Left(r) => Future(ResponseHelper.forwardResultResponse(r))
+              case Right((bookmarkList, rev, userFolderId) ) =>
+                val updatedBookmarkList = bookmarkList.copy(name = newName)
+                editorUserListService.updateBookmarkList(updatedBookmarkList, userFolderId, rev, token).map[Result]{
+                  case Left(response) => ResponseHelper.forwardResultResponse(response)
+                  case Right(_) => NoContent
+                }
+            }
+      } yield result
+        case _ => Future(BadRequest("Missing parameters"))
+      }
+    }
 
   def createBookmarks(org: String, domain:String, schema: String, version:String, id: String): Action[AnyContent] =
     (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>

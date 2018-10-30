@@ -24,6 +24,7 @@ import editor.models.EditorUserList._
 import editor.models.{APIEditorError, EditorUser, FormRegistry}
 import editor.services.EditorUserService.{editorNameSpace, editorUserPath}
 import nexus.services.NexusService
+import nexus.services.NexusService.{UPDATE, SKIP}
 import play.api.Logger
 import play.api.http.ContentTypes._
 import play.api.http.HeaderNames.CONTENT_TYPE
@@ -165,6 +166,38 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
           Future(Left(res))
       }
 
+    }
+  }
+
+  def getBookmarkListById(instancePath: NexusPath, instanceId: String): Future[Either[WSResponse, (BookmarkList, Long, String)]] = {
+    wSClient
+      .url(s"${config.kgQueryEndpoint}/query/${instancePath.toString}/$instanceId")
+      .withHttpHeaders(CONTENT_TYPE -> JSON)
+      .post(EditorBookmarkService.kgQueryGetBookmarkListByIdQuery(instancePath)).map {
+        res =>
+          res.status match {
+            case OK =>
+              val bookmarkList = res.json.as[BookmarkList]
+              val rev = (res.json \ "revision").as[Long]
+              val userFolderId = (res.json \ "userFolderId" \ "@id").as[String]
+              Right((bookmarkList, rev, userFolderId))
+            case _ =>
+              logger.error(s"Could not fetch the bookmark list  with ID ${instanceId} ${res.body}")
+              Left(res)
+          }
+    }
+  }
+
+  def updateBookmarkList(bookmarkList: BookmarkList, userFolderId:String, revision: Long, token: String): Future[Either[WSResponse, BookmarkList]] = {
+    nexusService.updateInstance(
+      s"${config.nexusEndpoint}/v0/data/${bookmarkList.id}",
+      Some(revision),
+      EditorBookmarkService.bookmarkListToNexusStruct(bookmarkList.name, userFolderId), token
+    ).map{
+      res => res._1 match {
+        case UPDATE => Right(bookmarkList)
+        case SKIP => Left(res._2)
+      }
     }
   }
 
@@ -330,6 +363,10 @@ object EditorBookmarkService {
      |               		{
      |               			"fieldname":"id",
      |               			"relative_path": "@id"
+     |               		},
+     |                  {
+     |               			"fieldname":"name",
+     |               			"relative_path": "schema:name"
      |               		}
      |              ]
      |          }
@@ -513,6 +550,58 @@ object EditorBookmarkService {
        |               				]
        |               		}
        |              ]
+       |     }
+       |  ]
+       |}
+    """.stripMargin
+
+  def kgQueryGetBookmarkListByIdQuery(bookmarkListPath: NexusPath) =
+    s"""
+       |{
+       |  "@context": {
+       |    "@vocab": "http://schema.hbp.eu/graph_query/",
+       |    "schema": "http://schema.org/",
+       |    "kgeditor": "http://hbp.eu/kgeditor/",
+       |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
+       |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
+       |    "this": "http://schema.hbp.eu/instances/",
+       |    "searchui": "http://schema.hbp.eu/search_ui/",
+       |    "internal": "http://schema.hbp.eu/internal#",
+       |    "fieldname": {
+       |      "@id": "fieldname",
+       |      "@type": "@id"
+       |    },
+       |    "merge": {
+       |      "@id": "merge",
+       |      "@type": "@id"
+       |    },
+       |    "relative_path": {
+       |      "@id": "relative_path",
+       |      "@type": "@id"
+       |    },
+       |    "root_schema": {
+       |      "@id": "root_schema",
+       |      "@type": "@id"
+       |    }
+       |  },
+       |  "schema:name": "",
+       |  "root_schema": "nexus_instance:${bookmarkListPath.toString()}",
+       |  "fields": [
+       |     {
+       |      "fieldname":"name",
+       |      "relative_path":"schema:name"
+       |     },
+       |     {
+       |        "fieldname":"id",
+       |       "relative_path":"@id"
+       |     },
+       |     {
+       |       "fieldname":"revision",
+       |       "relative_path":"internal:rev"
+       |     },
+       |     {
+       |       "fieldname":"userFolderId",
+       |       "relative_path":"kgeditor:bookmarkListFolder"
        |     }
        |  ]
        |}
