@@ -16,7 +16,7 @@
 */
 package editor.services
 
-import common.models.NexusPath
+import common.models.{NexusPath, PreviewInstance}
 import editor.models.{APIEditorError, EditorUser, FormRegistry}
 import editor.models.EditorUserList.{BOOKMARKFOLDER, BookmarkList, BookmarkListFolder, FolderType}
 import play.api.libs.ws.WSResponse
@@ -26,6 +26,8 @@ import scala.concurrent.Future
 trait EditorBookmarkServiceInterface {
 
   def getUserLists(editorUser: EditorUser, formRegistry: FormRegistry): Future[Either[WSResponse, List[BookmarkListFolder]]]
+
+  def getInstanceOfBookmarkList(bookmarkListId: String, start:Int, size:Int, search:String):Future[Either[WSResponse, List[PreviewInstance]]]
 
   def createBookmarkListFolder(editorUser: EditorUser, name: String, folderType: FolderType = BOOKMARKFOLDER, token: String): Future[Option[BookmarkListFolder]]
 

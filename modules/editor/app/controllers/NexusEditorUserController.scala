@@ -92,13 +92,13 @@ class NexusEditorUserController @Inject()(
   }
 
 
-  def getBookmarkListBySchema(
+  def getInstancesOfBookmarkListBySchema(
                      org: String,
                      domain: String,
                      datatype: String,
                      version: String,
-                     from: Option[Int],
-                     size: Option[Int],
+                     from: Int,
+                     size: Int,
                      search: String
                    ): Action[AnyContent] = authenticatedUserAction.async  { implicit request =>
     val nexusPath = NexusPath(org, domain, datatype, version)
@@ -108,18 +108,22 @@ class NexusEditorUserController @Inject()(
     }
   }
 
-//  def getBookmarkListById(
-//                               id: String,
-//                               from: Option[Int],
-//                               size: Option[Int],
-//                               search: String
-//                             ): Action[AnyContent] = authenticatedUserAction.async  { implicit request =>
-//    val nexusPath = NexusPath(org, domain, datatype, version)
-//    arangoQueryService.listInstances(nexusPath, from, size, search).map{
-//      case Right(json) => Ok(json)
-//      case Left(res) => ResponseHelper.forwardResultResponse(res)
-//    }
-//  }
+  def getInstancesbyBookmarkList(
+                               org: String,
+                               domain: String,
+                               datatype: String,
+                               version: String,
+                               id: String,
+                               from: Int,
+                               size: Int,
+                               search: String
+                             ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
+    val nexusPath = NexusPath(org, domain, datatype, version)
+    editorUserListService.getInstanceOfBookmarkList(s"${nexusPath.toString()}/$id", from, size, search).map{
+      case Right(instances) => Ok(Json.toJson(instances))
+      case Left(res) => ResponseHelper.forwardResultResponse(res)
+    }
+  }
 
   def createBookmarkList : Action[AnyContent] =
     (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>

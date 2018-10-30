@@ -58,9 +58,9 @@ class ArangoQueryService @Inject()(
 
   }
 
-  def listInstances(nexusPath: NexusPath, from: Option[Int], size: Option[Int], search: String): Future[Either[WSResponse, JsObject]] = {
+  def listInstances(nexusPath: NexusPath, from: Int, size: Int, search: String): Future[Either[WSResponse, JsObject]] = {
     wSClient.url(s"${config.kgQueryEndpoint}/arango/instances/${nexusPath.toString()}")
-      .withQueryStringParameters(("search", search), ("from", from.getOrElse("").toString), ("size", size.getOrElse("").toString)).get().map{
+      .withQueryStringParameters(("search", search), ("from", from.toString), ("size", size.toString)).get().map{
       res =>
         res.status match {
           case OK =>
@@ -72,7 +72,7 @@ class ArangoQueryService @Inject()(
             val data = (res.json \ "data").as[JsArray]
             if(data.value.nonEmpty){
               Right(
-                Json.obj("data" -> InstanceHelper.formatInstanceList( data, config.reconciledPrefix),
+                Json.obj("data" -> Json.toJson(InstanceHelper.formatInstanceList( data, config.reconciledPrefix)),
                   "label" -> JsString(
                     (formService.formRegistry.registry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String]
                       .getOrElse(nexusPath.toString())
