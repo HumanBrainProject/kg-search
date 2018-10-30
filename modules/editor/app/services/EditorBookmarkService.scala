@@ -128,7 +128,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
               }
           }
         case _ =>
-          logger.error("Could created schema for User folder")
+          logger.error("Could not created schema for User folder")
           Future(None)
       }
     }

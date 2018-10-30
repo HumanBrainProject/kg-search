@@ -490,9 +490,9 @@ GET /api/bookmarkListInstances/:org/:domain/:schema/:version     editor.controll
 #    description: the search query only applied for the name of the instance
 #    required: false
 #    type: string
-#      responses:
-#        '200':
-#          description: Ok
+#responses:
+#  '200':
+#    description: Ok
 ###
 GET /api/bookmarkListInstances/:org/:domain/:schema/:version/:id                           editor.controllers.NexusEditorUserController.getInstancesbyBookmarkList(org: String, domain:String, schema: String, version:String, id: String, from:Int=0, size:Int=20, search:String?="")
 
