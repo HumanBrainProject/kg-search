@@ -598,6 +598,24 @@ PUT /api/bookmarkList/:org/:domain/:schema/:version/:id                         
 ###
 #tags:
 #  - editor
+#summary: Delete a bookmark and all its bookmarks
+#parameters:
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: true
+#    type: string
+#responses:
+#  '204':
+#    description: No Content
+###
+DELETE /api/bookmarkList/:org/:domain/:schema/:version/:id                                      editor.controllers.NexusEditorUserController.deleteBookmarkList(org: String, domain:String, schema: String, version:String, id: String)
+
+
+
+###
+#tags:
+#  - editor
 #summary: Bind an instance to multiple bookmarks
 #parameters:
 #  - in: path

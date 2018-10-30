@@ -17,9 +17,11 @@
 
 package editor.controllers
 
+import akka.util.ByteString
 import authentication.models.{AuthenticatedUserAction, UserRequest}
 import authentication.service.OIDCAuthService
 import com.google.inject.Inject
+import common.helpers.ResponseHelper.{filterContentTypeAndLengthFromHeaders, flattenHeaders, getContentType}
 import common.models.{FavoriteGroup, NexusInstance, NexusPath, NexusUser}
 import common.services.ConfigurationService
 import editor.actions.EditorUserAction
@@ -28,6 +30,7 @@ import editor.models.EditorUserList.{BOOKMARKFOLDER, BookmarkList}
 import editor.services.{ArangoQueryService, EditorBookmarkService, EditorUserService}
 import helpers.ResponseHelper
 import nexus.services.NexusService
+import play.api.http.HttpEntity
 import play.api.{Configuration, Logger}
 import play.api.libs.json._
 import play.api.mvc.{AnyContent, _}
@@ -61,7 +64,7 @@ class NexusEditorUserController @Inject()(
               case None =>
                 logger.info(s"Deleting editor user with id : ${request.user.id}")
                 nexusService.deprecateInstance(config.nexusEndpoint, EditorUserService.editorUserPath,
-                  NexusInstance.extractIdAndPath(Json.obj("@id" -> editorUser.nexusId))._1, 1, token
+                  NexusInstance.extractIdAndPath(Json.obj("@id" -> editorUser.nexusId))._1, 1L, token
                 )
                 None
             }
@@ -175,6 +178,18 @@ class NexusEditorUserController @Inject()(
       } yield result
         case _ => Future(BadRequest("Missing parameters"))
       }
+    }
+
+  def deleteBookmarkList(org: String, domain:String, schema: String, version:String, id: String): Action[AnyContent] =
+    (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
+      val path = NexusPath(org, domain, schema, version)
+      for{
+        token <- oIDCAuthService.getTechAccessToken()
+        result <- editorUserListService.deleteBookmarkList(path, id, token).map {
+          case Left(response) => InternalServerError(Json.toJson(response))
+          case Right(()) => NoContent
+        }
+      } yield result
     }
 
   def createBookmarks(org: String, domain:String, schema: String, version:String, id: String): Action[AnyContent] =
