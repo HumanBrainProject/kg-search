@@ -13,32 +13,23 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package common.models
+package editor.models
 
-import play.api.libs.json._
+case class APIEditorError(status:Int, msg: String)
 
-
-case class EditorUser(nexusId: String, id: String, favoriteGroups: Seq[FavoriteGroup])
-
-object EditorUser {
-
-
+object APIEditorError {
+  import play.api.libs.json._
   import play.api.libs.functional.syntax._
 
 
-  implicit val editorUserWrites = new Writes[EditorUser] {
-    def writes(user: EditorUser) = Json.obj(
-      "nexusId" -> user.nexusId,
-      "userId" -> user.id,
-      "favoriteGroups" -> Json.toJson(user.favoriteGroups)
-    )
+  implicit val userListWrites = new Writes[APIEditorError] {
+    def writes(error: APIEditorError): JsValue ={
+      Json.obj(
+        "error" -> Json.obj(
+          "status" -> error.status,
+          "message" -> error.msg
+        )
+      )
+    }
   }
-
-  implicit val editorUserReads: Reads[EditorUser] = (
-    (JsPath \ "nexusId").read[String] and
-      (JsPath \ "userId").read[String] and
-      (JsPath \ "favoriteGroups").read[Seq[FavoriteGroup]]
-        .orElse(Reads.pure(Seq[FavoriteGroup]()))
-    ) (EditorUser.apply _)
-
 }

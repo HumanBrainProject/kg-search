@@ -22,7 +22,8 @@ import authentication.service.IAMAuthService
 import play.api.mvc._
 import play.api.mvc.Results._
 import editor.helpers.EditorSpaceHelper
-import editor.models.EditorUserRequest
+import editor.models.{EditorUserRequest, EditorUserWriteRequest}
+import editor.services.EditorUserService
 import play.api.Logger
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,18 +31,18 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object EditorUserAction{
   val logger = Logger(this.getClass)
-  def editorUserAction(org: String, editorSuffix: String, iAMAuthService: IAMAuthService)
-                      (implicit ec: ExecutionContext): ActionRefiner[UserRequest, EditorUserRequest] =
-    new ActionRefiner[UserRequest, EditorUserRequest] {
+  def editorUserWriteAction(org: String, editorSuffix: String, iAMAuthService: IAMAuthService)
+                           (implicit ec: ExecutionContext): ActionRefiner[UserRequest, EditorUserWriteRequest] =
+    new ActionRefiner[UserRequest, EditorUserWriteRequest] {
     def executionContext: ExecutionContext = ec
-    def refine[A](input: UserRequest[A]): Future[Either[Result, EditorUserRequest[A]]] = {
+    def refine[A](input: UserRequest[A]): Future[Either[Result, EditorUserWriteRequest[A]]] = {
       val editorOrg = if(org.endsWith(editorSuffix)) org else org + editorSuffix
       if(EditorSpaceHelper.isEditorGroup(input.user, editorOrg) ){
         val token = input.request.headers.toSimpleMap.getOrElse("Authorization", "")
         iAMAuthService.getAcls(editorOrg, Seq(("self", "true"), ("parents", "true")), token).map {
           case Right(acls) =>
             if (IAMAuthService.hasAccess(acls, IAMPermission.Write)) {
-              Right(EditorUserRequest(input.user, org, input))
+              Right(EditorUserWriteRequest(input.user, org, input))
             } else {
               Left(Forbidden("You do not have sufficient access rights to proceed"))
             }
@@ -57,5 +58,18 @@ object EditorUserAction{
       }
     }
   }
+
+  def editorUserAction(editorUserService: EditorUserService)
+                      (implicit ec: ExecutionContext): ActionRefiner[UserRequest, EditorUserRequest] =
+    new ActionRefiner[UserRequest, EditorUserRequest] {
+      def executionContext: ExecutionContext = ec
+      def refine[A](input: UserRequest[A]): Future[Either[Result, EditorUserRequest[A]]] = {
+        editorUserService.getUser(input.user).map{
+          case Some(editorUser) => Right(EditorUserRequest(editorUser, input))
+          case None => logger.error(s"Fetching editor user failed")
+            Left(InternalServerError("An error occurred while fetching user information"))
+        }
+      }
+    }
 
 }

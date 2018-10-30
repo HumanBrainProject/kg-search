@@ -1,4 +1,3 @@
-
 /*
 *   Copyright (c) 2018, EPFL/Human Brain Project PCO
 *
@@ -14,16 +13,23 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-
 package editor.models
 
 import common.models.NexusUser
-import play.api.mvc.{Request, WrappedRequest}
+import editor.models.EditorUserList.BookmarkListFolder
+import play.api.libs.json._
 
-/**
-  * @param user
-  * @param editorGroup
-  * @param request
-  * @tparam A
-  */
-case class EditorUserRequest[A](user: NexusUser, editorGroup: String, request: Request[A]) extends WrappedRequest[A](request)
+
+case class EditorUser(nexusId: String, nexusUser: NexusUser)
+
+object EditorUser {
+
+
+  import play.api.libs.functional.syntax._
+
+  implicit val editorUserWrites: Writes[EditorUser] = (
+    (JsPath \ "nexusId").write[String] and
+      JsPath.write[NexusUser]
+    )(unlift(EditorUser.unapply))
+
+}
