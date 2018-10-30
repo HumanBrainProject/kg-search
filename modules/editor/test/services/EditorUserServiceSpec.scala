@@ -49,7 +49,7 @@ class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockW
       val idUser = "nexusUUID1"
       val nexusIdUser = s"http://nexus.com/v0/data/$idUser"
       val nexusUser = NexusUser(
-        nexusIdUser,
+        id,
         "",
         "",
         Seq(),

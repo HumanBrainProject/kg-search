@@ -29,7 +29,7 @@ import editor.services.{ArangoQueryService, EditorBookmarkService, EditorUserSer
 import helpers.ResponseHelper
 import nexus.services.NexusService
 import play.api.{Configuration, Logger}
-import play.api.libs.json.{JsArray, JsPath, Json}
+import play.api.libs.json._
 import play.api.mvc._
 import services.FormService
 
@@ -195,6 +195,27 @@ class NexusEditorUserController @Inject()(
             }
           }
 
+        case None => Future(BadRequest("Missing body content"))
+      }
+    }
+
+  def retrieveBookmarkLists : Action[AnyContent] =
+    (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
+      import EditorBookmarkService.JsEither._
+      val instanceList = for{
+        json <- request.body.asJson
+        instances <- json.asOpt[List[String]]
+      } yield  instances
+
+      instanceList match {
+        case Some(l) =>
+          val formattedList = l.distinct.map{ s =>
+            val (path, id )= s.splitAt(s.lastIndexOf("/"))
+            (NexusPath(path), id.replaceFirst("/", ""))
+          }
+          editorUserListService.retrieveBookmarkList(formattedList).map{
+            res => Ok(Json.toJson(res))
+          }
         case None => Future(BadRequest("Missing body content"))
       }
     }

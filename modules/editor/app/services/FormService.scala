@@ -21,7 +21,7 @@ import com.google.inject.{Inject, Singleton}
 import common.models.{NexusInstance, NexusPath, NexusUser, User}
 import common.services.ConfigurationService
 import editor.models.{FormRegistry, FormRegistryService, ReconciledInstance}
-import editor.models.EditorUserList.{ListUISpec, BookmarkList, BookmarkListFolder}
+import editor.models.EditorUserList.{BookmarkList, BookmarkListFolder}
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
 
@@ -126,12 +126,9 @@ object FormService{
                     BookmarkList(
                       s"$organization/$domain/$schema/$version",
                       (formDetails.as[JsObject] \ "label").as[String],
-                      Some(
-                        ListUISpec(
-                          (formDetails.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true),
-                          (formDetails.as[JsObject] \ "ui_info").asOpt[JsObject].getOrElse[JsObject](Json.obj())
-                        )
-                      )
+                      Some((formDetails.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true)),
+                      (formDetails.as[JsObject] \ "ui_info").asOpt[JsObject],
+                      (formDetails.as[JsObject] \ "color").asOpt[String]
                     )
                 }
             }

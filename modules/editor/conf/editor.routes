@@ -564,5 +564,23 @@ PUT /api/instance/:org/:domain/:schema/:version/:id/bookmarks    editor.controll
 #  responses:
 #    '200':
 #      description: Ok
-##
+###
 DELETE /api/instance/:org/:domain/:schema/:version/:id/bookmarks editor.controllers.NexusEditorUserController.deleteBookmarks(org: String, domain:String, schema: String, version:String, id: String)
+
+###
+#  tags:
+#    - editor
+#  summary: get bookmark information of a list of instances - similar to releasestatus
+#  parameters:
+#    - in: body
+#      name: instances
+#      description: array of ids of the entities to retrieve
+#      schema:
+#        type: array
+#    - in: header
+#      name: Authorization
+#      description: Authorization token
+#      required: false
+#      type: string
+###
+POST /api/bookmarks                                             editor.controllers.NexusEditorUserController.retrieveBookmarkLists

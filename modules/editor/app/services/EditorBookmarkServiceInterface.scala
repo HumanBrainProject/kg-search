@@ -17,7 +17,7 @@
 package editor.services
 
 import common.models.NexusPath
-import editor.models.{EditorUser, FormRegistry}
+import editor.models.{APIEditorError, EditorUser, FormRegistry}
 import editor.models.EditorUserList.{BOOKMARKFOLDER, BookmarkList, BookmarkListFolder, FolderType}
 import play.api.libs.ws.WSResponse
 
@@ -34,4 +34,6 @@ trait EditorBookmarkServiceInterface {
   def addInstanceToBookmarkLists(instanceFullId: String, bookmarkListIds: List[String], token:String):Future[List[WSResponse]]
 
   def removeInstanceFromBookmarkLists(instancePath: NexusPath, instanceId: String, bookmarkListIds: List[String], token: String):Future[List[WSResponse]]
+
+  def retrieveBookmarkList(instanceIds: List[(NexusPath, String)]):Future[Map[String, Either[APIEditorError, List[BookmarkList]]]]
 }

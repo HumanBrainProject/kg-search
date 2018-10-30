@@ -15,8 +15,10 @@
 */
 package editor.models.EditorUserList
 
+import play.api.libs.json.JsObject
 
-case class BookmarkList(id: String, name: String, uiSpec: Option[ListUISpec])
+
+case class BookmarkList(id: String, name: String, editable: Option[Boolean], uiSpect: Option[JsObject], color:Option[String])
 
 object BookmarkList {
 
@@ -26,12 +28,16 @@ object BookmarkList {
   implicit val userListReads: Reads[BookmarkList] = (
     (JsPath \ "id").read[String] and
       (JsPath \ "name").read[String] and
-      JsPath.readNullable[ListUISpec]
+      (JsPath \ "editable").readNullable[Boolean] and
+      (JsPath \ "uiSpec").readNullable[JsObject] and
+      (JsPath \ "color").readNullable[String]
     )(BookmarkList.apply _ )
 
   implicit val userListWrites: Writes[BookmarkList] = (
     (JsPath \ "id").write[String] and
       (JsPath \ "name").write[String] and
-      JsPath.writeNullable[ListUISpec]
+      (JsPath \ "editable").writeNullable[Boolean] and
+      (JsPath \ "uiSpec").writeNullable[JsObject] and
+      (JsPath \ "color").writeNullable[String]
     )(unlift(BookmarkList.unapply))
 }

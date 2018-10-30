@@ -13,8 +13,23 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package editor.models.EditorUserList
+package editor.models
 
-import common.models.NexusPath
+case class APIEditorError(status:Int, msg: String)
 
-case class Bookmark(instancePath: NexusPath, instanceId: String, bookmarkListId: String)
+object APIEditorError {
+  import play.api.libs.json._
+  import play.api.libs.functional.syntax._
+
+
+  implicit val userListWrites = new Writes[APIEditorError] {
+    def writes(error: APIEditorError): JsValue ={
+      Json.obj(
+        "error" -> Json.obj(
+          "status" -> error.status,
+          "message" -> error.msg
+        )
+      )
+    }
+  }
+}

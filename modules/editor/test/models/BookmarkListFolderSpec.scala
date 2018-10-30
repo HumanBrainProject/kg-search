@@ -33,11 +33,15 @@ class BookmarkListFolderSpec extends PlaySpec{
           BookmarkList(
             "id",
             "myList",
+            None,
+            None,
             None
           ),
           BookmarkList(
             "id2",
             "my 2nd List",
+            None,
+            None,
             None
           )
         )
