@@ -74,13 +74,13 @@ object FormService{
     }
   }
 
-  def escapeSlash(string: String): String = {
-    string.replaceAll("/", slashEscaper)
-  }
-
-  def unescapeSlash(string: String): String = {
-    string.replaceAll(slashEscaper, "/")
-  }
+//  def escapeSlash(string: String): String = {
+//    string.replaceAll("/", slashEscaper)
+//  }
+//
+//  def unescapeSlash(string: String): String = {
+//    string.replaceAll(slashEscaper, "/")
+//  }
 
   def transformToArray(key: String, data: JsValue, reconciledSuffix: String): JsArray = {
     if ((data \ key \ "@list").isDefined) {
@@ -139,7 +139,7 @@ object FormService{
   def buildInstanceFromForm(original: NexusInstance, modificationFromUser: JsValue, nexusEndpoint: String): NexusInstance = {
     //    val flattened = JsFlattener(formContent)
     //    applyChanges(original, flattened)
-    val formContent = Json.parse(FormService.unescapeSlash(modificationFromUser.toString())).as[JsObject] - "id"
+    val formContent = Json.parse(modificationFromUser.toString()).as[JsObject] - "id"
     val cleanForm = FormService.removeKey(formContent.as[JsValue])
     val formWithID = cleanForm.toString().replaceAll(""""id":"""", s""""@id":"${nexusEndpoint}/v0/data/""")
     val res= original.content.deepMerge(Json.parse(formWithID).as[JsObject])
@@ -164,8 +164,7 @@ object FormService{
     }
 
     val fields = (registry.registry \ instancePath.org \ instancePath.domain \ instancePath.schema \ instancePath.version \ "fields").as[JsObject].value
-    val m = newInstance.value.map{ case (k, v) =>
-      val key = FormService.unescapeSlash(k)
+    val m = newInstance.value.map{ case (key, v) =>
       val formObjectType = (fields(key) \ "type").as[String]
       formObjectType match {
         case "DropdownSelect" =>
@@ -211,9 +210,9 @@ object FormService{
                     fieldContent.as[JsObject] + ("value", (data \ key).get)
                 }
 
-                filledTemplate + (FormService.escapeSlash(key), newValue)
+                filledTemplate + (key, newValue)
               } else {
-                filledTemplate + (FormService.escapeSlash(key), fieldContent.as[JsObject] )
+                filledTemplate + (key, fieldContent.as[JsObject] )
               }
           }
           fillFormTemplate(fields, formTemplate, (data \ ReconciledInstance.Fields.alternatives).asOpt[JsObject].getOrElse(Json.obj()) )
@@ -222,7 +221,7 @@ object FormService{
           //Returning a blank template
           val escapedForm = ( formTemplate \ "fields" ).as[JsObject].value.map{
             case (key, value) =>
-              (FormService.escapeSlash(key) , value)
+              (key , value)
           }
           fillFormTemplate(Json.toJson(escapedForm), formTemplate, Json.obj() )
         }
