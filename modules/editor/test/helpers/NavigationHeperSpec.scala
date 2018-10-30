@@ -18,7 +18,6 @@
 package editor.helpers
 
 import common.models.NexusPath
-import editor.models.FormRegistry
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -47,21 +46,21 @@ class NavigationHeperSpec  extends PlaySpec with GuiceOneAppPerSuite with Mockit
     "return a correctly formatted back link" in {
       val path = NexusPath("minds", "core", "dataset", "v0.0.4")
       val expected = "minds/core/dataset"
-      when(formService.formRegistry).thenReturn(FormRegistry(registry))
+      when(formService.formRegistry).thenReturn(registry)
       assert(expected == NavigationHelper.generateBackLink(path, "reconciled", formService))
     }
     "return an empty string if the path is not valid" in {
       val path = NexusPath("this", "doesnot", "exists", "v0.0.4")
       val expected = ""
       val formService = mock[FormService]
-      when(formService.formRegistry).thenReturn(FormRegistry(registry))
+      when(formService.formRegistry).thenReturn(registry)
       assert(expected == NavigationHelper.generateBackLink(path, "reconciled", formService))
     }
     "return a path with an original organization" in {
       val path = NexusPath("mindsreconciled", "core", "dataset", "v0.0.4")
       val expected = "minds/core/dataset"
       val formService = mock[FormService]
-      when(formService.formRegistry).thenReturn(FormRegistry(registry))
+      when(formService.formRegistry).thenReturn(registry)
       assert(expected == NavigationHelper.generateBackLink(path, "reconciled", formService))
     }
   }
