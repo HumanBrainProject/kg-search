@@ -24,6 +24,7 @@ import editor.models.EditorUserList._
 import editor.models.{APIEditorError, EditorUser, FormRegistry}
 import editor.services.EditorUserService.{editorNameSpace, editorUserPath}
 import nexus.services.NexusService
+import nexus.services.NexusService.{UPDATE, SKIP}
 import play.api.Logger
 import play.api.http.ContentTypes._
 import play.api.http.HeaderNames.CONTENT_TYPE
@@ -168,6 +169,87 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
     }
   }
 
+  def getBookmarkListById(instancePath: NexusPath, instanceId: String): Future[Either[WSResponse, (BookmarkList, Long, String)]] = {
+    wSClient
+      .url(s"${config.kgQueryEndpoint}/query/${instancePath.toString}/$instanceId")
+      .withHttpHeaders(CONTENT_TYPE -> JSON)
+      .post(EditorBookmarkService.kgQueryGetBookmarkListByIdQuery(instancePath)).map {
+        res =>
+          res.status match {
+            case OK =>
+              val bookmarkList = res.json.as[BookmarkList]
+              val rev = (res.json \ "revision").as[Long]
+              val userFolderId = (res.json \ "userFolderId" \ "@id").as[String]
+              Right((bookmarkList, rev, userFolderId))
+            case _ =>
+              logger.error(s"Could not fetch the bookmark list  with ID ${instanceId} ${res.body}")
+              Left(res)
+          }
+    }
+  }
+
+  def updateBookmarkList(bookmarkList: BookmarkList, userFolderId:String, revision: Long, token: String): Future[Either[WSResponse, BookmarkList]] = {
+    nexusService.updateInstance(
+      s"${config.nexusEndpoint}/v0/data/${bookmarkList.id}",
+      Some(revision),
+      EditorBookmarkService.bookmarkListToNexusStruct(bookmarkList.name, userFolderId), token
+    ).map{
+      res => res._1 match {
+        case UPDATE => Right(bookmarkList)
+        case SKIP => Left(res._2)
+      }
+    }
+  }
+
+
+  def deleteBookmarkList(bookmarkListPath: NexusPath, instanceId: String, token: String): Future[Either[APIEditorError, Unit]] = {
+    // Get all bookmarks link to the bookmark list and their revision
+    wSClient
+      .url(s"${config.kgQueryEndpoint}/query/${bookmarkListPath.toString}/$instanceId")
+      .withHttpHeaders(CONTENT_TYPE -> JSON)
+      .post(EditorBookmarkService.kgQueryGetBookmarksForDeletion ).flatMap {
+      res =>
+        res.status match {
+          case OK =>
+            val bookmarkListToDelete = ((res.json \ "id").as[String] , (res.json \ "rev").as[Long])
+            val bookmarksToDelete = (res.json \ "bookmarks").as[List[JsObject]].map( js => ((js \ "id").as[String], (js \ "rev").as[Long] ))
+          // Delete all bookmarks
+            val listOfFuture = for {
+              (identifier, rev) <- bookmarksToDelete
+            } yield {
+              val (pathAsString, id) = identifier.splitAt(identifier.lastIndexOf("/"))
+              val path = NexusPath(pathAsString)
+              val cleanId = id.replaceFirst("/", "")
+              nexusService.deprecateInstance(config.nexusEndpoint, path, cleanId, rev, token)
+            }
+            Future.sequence(listOfFuture).flatMap[Either[APIEditorError, Unit]]{
+              listOfResponse =>
+                if(listOfResponse.forall(res => res.status == OK)){
+                  logger.debug("All the bookmarks are deleted. We can safely delete the bookmark list")
+                  // Delete the bookmark list
+                  nexusService.deprecateInstance(config.nexusEndpoint, bookmarkListPath, instanceId, bookmarkListToDelete._2, token).map {
+                    res =>
+                      res.status match {
+                        case OK => Right(())
+                        case _ => Left(APIEditorError(res.status, res.body))
+                      }
+                  }
+                }else{
+                  logger.error("Could not delete all the bookmarks")
+                  val compiledMessage = listOfResponse
+                    .filterNot(res => res.status == OK)
+                    .map(res => s"${res.status} - ${res.statusText} - ${res.body}").mkString("\n")
+                  Future(Left(APIEditorError(INTERNAL_SERVER_ERROR, compiledMessage)))
+                }
+            }
+          case _ =>
+            logger.error(s"Could not fetch the bookmarks to be deleted ${res.body}")
+            Future(Left(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch delete the data")))
+
+        }
+    }
+  }
+
   def addInstanceToBookmarkLists(
                                   instanceFullId: String,
                                   bookmarkListIds: List[String],
@@ -223,7 +305,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
                     .map { id =>
                       val str = (id \ "id").as[String]
                       val (path, nexusId) = str.splitAt(str.lastIndexOf("/"))
-                      nexusService.deprecateInstance(config.nexusEndpoint,NexusPath(path), nexusId.substring(1), 1, token)
+                      nexusService.deprecateInstance(config.nexusEndpoint,NexusPath(path), nexusId.substring(1), 1L, token)
                     }
                   Future.sequence(listResponses)
                 case None => Future(List(res))
@@ -330,6 +412,10 @@ object EditorBookmarkService {
      |               		{
      |               			"fieldname":"id",
      |               			"relative_path": "@id"
+     |               		},
+     |                  {
+     |               			"fieldname":"name",
+     |               			"relative_path": "schema:name"
      |               		}
      |              ]
      |          }
@@ -339,7 +425,7 @@ object EditorBookmarkService {
      |}
     """.stripMargin
 
-  def kgQueryGetInstanceBookmarks(instancePath: NexusPath) = s"""
+  def kgQueryGetInstanceBookmarks(instancePath: NexusPath): String = s"""
     |{
     |  "@context": {
     |    "@vocab": "http://schema.hbp.eu/graph_query/",
@@ -390,7 +476,7 @@ object EditorBookmarkService {
     |}
     """.stripMargin
 
-  def kgQueryGetInstanceBookmarkLists(instancePath: NexusPath) =
+  def kgQueryGetInstanceBookmarkLists(instancePath: NexusPath): String =
     s"""
     |{
     |  "@context": {
@@ -453,7 +539,7 @@ object EditorBookmarkService {
     |}
     """.stripMargin
 
-  def kgQueryGetInstances(bookmarkListPath: NexusPath) =
+  def kgQueryGetInstances(bookmarkListPath: NexusPath): String =
     s"""
        |{
        |  "@context": {
@@ -517,6 +603,119 @@ object EditorBookmarkService {
        |  ]
        |}
     """.stripMargin
+
+  def kgQueryGetBookmarkListByIdQuery(bookmarkListPath: NexusPath): String =
+    s"""
+       |{
+       |  "@context": {
+       |    "@vocab": "http://schema.hbp.eu/graph_query/",
+       |    "schema": "http://schema.org/",
+       |    "kgeditor": "http://hbp.eu/kgeditor/",
+       |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
+       |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
+       |    "this": "http://schema.hbp.eu/instances/",
+       |    "searchui": "http://schema.hbp.eu/search_ui/",
+       |    "internal": "http://schema.hbp.eu/internal#",
+       |    "fieldname": {
+       |      "@id": "fieldname",
+       |      "@type": "@id"
+       |    },
+       |    "merge": {
+       |      "@id": "merge",
+       |      "@type": "@id"
+       |    },
+       |    "relative_path": {
+       |      "@id": "relative_path",
+       |      "@type": "@id"
+       |    },
+       |    "root_schema": {
+       |      "@id": "root_schema",
+       |      "@type": "@id"
+       |    }
+       |  },
+       |  "schema:name": "",
+       |  "root_schema": "nexus_instance:${bookmarkListPath.toString()}",
+       |  "fields": [
+       |     {
+       |      "fieldname":"name",
+       |      "relative_path":"schema:name"
+       |     },
+       |     {
+       |        "fieldname":"id",
+       |       "relative_path":"@id"
+       |     },
+       |     {
+       |       "fieldname":"revision",
+       |       "relative_path":"internal:rev"
+       |     },
+       |     {
+       |       "fieldname":"userFolderId",
+       |       "relative_path":"kgeditor:bookmarkListFolder"
+       |     }
+       |  ]
+       |}
+    """.stripMargin
+
+  def kgQueryGetBookmarksForDeletion: String =
+    s"""
+       |{
+       |  "@context": {
+       |    "@vocab": "http://schema.hbp.eu/graph_query/",
+       |    "schema": "http://schema.org/",
+       |    "kgeditor": "http://hbp.eu/kgeditor/",
+       |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
+       |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
+       |    "this": "http://schema.hbp.eu/instances/",
+       |    "searchui": "http://schema.hbp.eu/search_ui/",
+       |    "internal": "http://schema.hbp.eu/internal#",
+       |    "fieldname": {
+       |      "@id": "fieldname",
+       |      "@type": "@id"
+       |    },
+       |    "merge": {
+       |      "@id": "merge",
+       |      "@type": "@id"
+       |    },
+       |    "relative_path": {
+       |      "@id": "relative_path",
+       |      "@type": "@id"
+       |    },
+       |    "root_schema": {
+       |      "@id": "root_schema",
+       |      "@type": "@id"
+       |    }
+       |  },
+       |  "schema:name": "",
+       |  "root_schema": "nexus_instance:${bookmarkListPath.toString()}",
+       |  "fields": [
+       |  {
+       |       "fieldname":"id",
+       |       "relative_path": "@id"
+       |       },
+       |      {
+       |        "fieldname":"rev",
+       |       	"relative_path": "internal:rev"
+       |      },
+       |    {
+       |        "fieldname": "bookmarks",
+       |        "relative_path": {
+       |            "@id": "kgeditor:bookmarkList",
+       |            "reverse":true
+       |        },
+       |        "fields":[
+       |               		{
+       |               			"fieldname":"id",
+       |               			"relative_path": "@id"
+       |               		},
+       |               		{
+       |               			"fieldname":"rev",
+       |               			"relative_path": "internal:rev"
+       |               		}
+       |              ]
+       |     }
+       |  ]
+       |}
+     """.stripMargin
 
   def bookmarkToNexusStruct(bookmark: String, userBookMarkListNexusId: String) = {
     Json.obj(
