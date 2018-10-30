@@ -59,43 +59,43 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
       //      }
     }
   }
-  "InstanceController#list" should {
-    "return a 200 with a correctly formatted result" in {
-      val datatype = NexusPath("data/core/datatype/v0.0.4".split("/"))
-      val nexusBase = "http://nexus.org/v0/data"
-      import scala.concurrent.ExecutionContext.Implicits._
-      val instances = Json.arr(
-        Json.obj("id" -> s"${datatype.toString()}/123", "description"->"","label" -> "dataname1"),
-        Json.obj("id" -> s"${datatype.toString()}/321", "description"->"","label" -> "dataname2")
-      )
-      val fakeEndpoint = s"$kgQueryEndpoint/arango/instances/${datatype.toString()}"
-
-      val mockCC = stubControllerComponents()
-      val ec = global
-      val instanceService = mock[EditorService]
-
-      val oidcAuthService = mock[OIDCAuthService]
-      val userInfo = new NexusUser("123", "name", "email", Seq("group1", "group2"), Seq())
-      val bodyParser = mock[BodyParsers.Default]
-      val authMock = new TestAuthenticatedUserAction(bodyParser, authprovider = oidcAuthService, userInfo = userInfo)(ec)
-      val ws = mock[WSClient]
-      val nexusService = mock[NexusService]
-      val releaseService = mock[ReleaseService]
-      val arangoQueryService = mock[ArangoQueryService]
-      when(arangoQueryService.listInstances(datatype, Some(0), Some(20), "")).thenReturn(Future(Right(Json.obj("data" -> instances, "dataType"-> "http://hbp.eu/minds#Dataset", "label"->"Dataset","total" -> 2))) )
-      val configService = new ConfigurationService(fakeApplication().configuration)
-      val formService = mock[FormService]
-      val iamAuth = mock[IAMAuthService]
-      val controller = new NexusEditorController(mockCC, authMock, instanceService, oidcAuthService, configService, nexusService, releaseService, arangoQueryService, iamAuth, formService, ws)(ec)
-      val response = controller.listInstances(datatype.org, datatype.domain, datatype.schema, datatype.version, Some(0), Some(20), "").apply(FakeRequest())
-      val res = contentAsJson(response).as[JsObject]
-      val arr = (res \ "data").as[List[JsObject]].map(js => js - "status" - "childrenStatus")
-      val formattedRes = res ++ Json.obj("data" -> arr)
-      formattedRes.toString mustBe """{"data":[{"id":"data/core/datatype/v0.0.4/123","description":"","label":"dataname1"},{"id":"data/core/datatype/v0.0.4/321","description":"","label":"dataname2"}],"dataType":"http://hbp.eu/minds#Dataset","label":"Dataset","total":2}"""
-
-    }
-
-  }
+//  "InstanceController#list" should {
+//    "return a 200 with a correctly formatted result" in {
+//      val datatype = NexusPath("data/core/datatype/v0.0.4".split("/"))
+//      val nexusBase = "http://nexus.org/v0/data"
+//      import scala.concurrent.ExecutionContext.Implicits._
+//      val instances = Json.arr(
+//        Json.obj("id" -> s"${datatype.toString()}/123", "description"->"","label" -> "dataname1"),
+//        Json.obj("id" -> s"${datatype.toString()}/321", "description"->"","label" -> "dataname2")
+//      )
+//      val fakeEndpoint = s"$kgQueryEndpoint/arango/instances/${datatype.toString()}"
+//
+//      val mockCC = stubControllerComponents()
+//      val ec = global
+//      val instanceService = mock[EditorService]
+//
+//      val oidcAuthService = mock[OIDCAuthService]
+//      val userInfo = new NexusUser("123", "name", "email", Seq("group1", "group2"), Seq())
+//      val bodyParser = mock[BodyParsers.Default]
+//      val authMock = new TestAuthenticatedUserAction(bodyParser, authprovider = oidcAuthService, userInfo = userInfo)(ec)
+//      val ws = mock[WSClient]
+//      val nexusService = mock[NexusService]
+//      val releaseService = mock[ReleaseService]
+//      val arangoQueryService = mock[ArangoQueryService]
+//      when(arangoQueryService.listInstances(datatype, Some(0), Some(20), "")).thenReturn(Future(Right(Json.obj("data" -> instances, "dataType"-> "http://hbp.eu/minds#Dataset", "label"->"Dataset","total" -> 2))) )
+//      val configService = new ConfigurationService(fakeApplication().configuration)
+//      val formService = mock[FormService]
+//      val iamAuth = mock[IAMAuthService]
+//      val controller = new NexusEditorController(mockCC, authMock, instanceService, oidcAuthService, configService, nexusService, releaseService, arangoQueryService, iamAuth, formService, ws)(ec)
+//      val response = controller.listInstances(datatype.org, datatype.domain, datatype.schema, datatype.version, Some(0), Some(20), "").apply(FakeRequest())
+//      val res = contentAsJson(response).as[JsObject]
+//      val arr = (res \ "data").as[List[JsObject]].map(js => js - "status" - "childrenStatus")
+//      val formattedRes = res ++ Json.obj("data" -> arr)
+//      formattedRes.toString mustBe """{"data":[{"id":"data/core/datatype/v0.0.4/123","description":"","label":"dataname1"},{"id":"data/core/datatype/v0.0.4/321","description":"","label":"dataname2"}],"dataType":"http://hbp.eu/minds#Dataset","label":"Dataset","total":2}"""
+//
+//    }
+//
+//  }
 
   "Generate alternatives" should {
     "return a JsValue with alternatives per field" in {

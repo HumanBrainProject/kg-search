@@ -66,15 +66,18 @@ class OIDCAuthService @Inject()(
     * @param token The user's token
     * @return An option with the UserInfo object
     */
-  def getUserInfoFromToken(token:String): Future[Option[NexusUser]] = {
+  def getUserInfoFromToken(token: String): Future[Option[NexusUser]] = {
     ws.url(config.oidcUserInfoEndpoint).addHttpHeaders("Authorization" -> token).get().flatMap {
       res =>
         res.status match {
           case OK =>
-            nexusService.listAllNexusResult(s"${config.nexusEndpoint}/v0/organizations?fields=all", token).map{ re =>
-              val orgs = re.map( js => (js \ "source" \ "schema:name").as[String])
+            nexusService.listAllNexusResult(s"${config.nexusEndpoint}/v0/organizations?fields=all", token).map { re =>
+              val orgs = re.map { js =>
+                val s = (js \ "source" \ "@id").as[String]
+                s.splitAt(s.lastIndexOf("/"))._2.substring(1)
+              }
               val oIDCUser = res.json.as[OIDCUser]
-              Some( new NexusUser(oIDCUser.id, oIDCUser.name, oIDCUser.email, oIDCUser.groups, orgs))
+              Some(new NexusUser(oIDCUser.id, oIDCUser.name, oIDCUser.email, oIDCUser.groups, orgs))
             }
           case _ => Future.successful(None)
         }

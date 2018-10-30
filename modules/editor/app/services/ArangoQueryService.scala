@@ -18,13 +18,14 @@ package editor.services
 import authentication.service.OIDCAuthService
 import com.google.inject.Inject
 import common.models.NexusPath
-import editor.helpers.{InstanceHelper}
+import editor.helpers.InstanceHelper
 import nexus.services.NexusService
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
 import play.api.http.HeaderNames._
 import common.services.ConfigurationService
+import editor.models.FormRegistry
 import services.FormService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -57,9 +58,9 @@ class ArangoQueryService @Inject()(
 
   }
 
-  def listInstances(nexusPath: NexusPath, from: Option[Int], size: Option[Int], search: String): Future[Either[WSResponse, JsObject]] = {
+  def listInstances(nexusPath: NexusPath, from: Int, size: Int, search: String): Future[Either[WSResponse, JsObject]] = {
     wSClient.url(s"${config.kgQueryEndpoint}/arango/instances/${nexusPath.toString()}")
-      .withQueryStringParameters(("search", search), ("from", from.getOrElse("").toString), ("size", size.getOrElse("").toString)).get().map{
+      .withQueryStringParameters(("search", search), ("from", from.toString), ("size", size.toString)).get().map{
       res =>
         res.status match {
           case OK =>
@@ -71,9 +72,9 @@ class ArangoQueryService @Inject()(
             val data = (res.json \ "data").as[JsArray]
             if(data.value.nonEmpty){
               Right(
-                Json.obj("data" -> InstanceHelper.formatInstanceList( data, config.reconciledPrefix),
+                Json.obj("data" -> Json.toJson(InstanceHelper.formatInstanceList( data, config.reconciledPrefix)),
                   "label" -> JsString(
-                    (formService.formRegistry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String]
+                    (formService.formRegistry.registry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String]
                       .getOrElse(nexusPath.toString())
                   ),
                   "dataType" -> (data.value.head \ "@type").as[JsString],
@@ -127,7 +128,7 @@ object ArangoQueryService {
     s"$path/$i"
   }
 
-  def formatVertices(vertices: List[JsValue], formRegistry: JsObject): List[JsObject] = {
+  def formatVertices(vertices: List[JsValue], formRegistry: FormRegistry): List[JsObject] = {
     vertices
       .map {
         case v: JsObject =>

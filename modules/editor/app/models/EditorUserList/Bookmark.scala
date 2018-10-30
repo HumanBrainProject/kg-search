@@ -13,15 +13,8 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package authentication.models
+package editor.models.EditorUserList
 
-import common.models.{NexusUser}
-import play.api.mvc.{Request, WrappedRequest}
+import common.models.NexusPath
 
-/**
-  * A helper case class for logged in users
-  * @param user
-  * @param request
-  * @tparam A
-  */
-class UserRequest[A](val user: NexusUser, val request: Request[A]) extends WrappedRequest[A](request)
+case class Bookmark(instancePath: NexusPath, instanceId: String, bookmarkListId: String)

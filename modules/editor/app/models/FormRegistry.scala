@@ -1,3 +1,4 @@
+
 /*
 *   Copyright (c) 2018, EPFL/Human Brain Project PCO
 *
@@ -13,15 +14,19 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package authentication.models
+package editor.models
 
-import common.models.{NexusUser}
-import play.api.mvc.{Request, WrappedRequest}
+import play.api.libs.json.{JsObject, Json}
 
-/**
-  * A helper case class for logged in users
-  * @param user
-  * @param request
-  * @tparam A
-  */
-class UserRequest[A](val user: NexusUser, val request: Request[A]) extends WrappedRequest[A](request)
+case class FormRegistry(registry: JsObject)
+
+trait FormRegistryService {
+
+  def filterOrgs(formRegistry: FormRegistry, orgs: Seq[String]): FormRegistry = {
+    formRegistry.copy(
+        registry = Json.toJson(formRegistry.registry.value.filter{
+        entity => orgs.contains(entity._1)
+      }).asOpt[JsObject].getOrElse(Json.obj())
+    )
+  }
+}

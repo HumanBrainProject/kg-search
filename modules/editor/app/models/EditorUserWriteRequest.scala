@@ -1,3 +1,4 @@
+
 /*
 *   Copyright (c) 2018, EPFL/Human Brain Project PCO
 *
@@ -13,15 +14,18 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package authentication.models
 
-import common.models.{NexusUser}
+package editor.models
+
+import common.models.NexusUser
 import play.api.mvc.{Request, WrappedRequest}
 
 /**
-  * A helper case class for logged in users
   * @param user
+  * @param editorGroup
   * @param request
   * @tparam A
   */
-class UserRequest[A](val user: NexusUser, val request: Request[A]) extends WrappedRequest[A](request)
+case class EditorUserWriteRequest[A](user: NexusUser, editorGroup: String, request: Request[A]) extends WrappedRequest[A](request)
+
+case class EditorUserRequest[A](editorUser: EditorUser, request: Request[A]) extends WrappedRequest[A](request)
