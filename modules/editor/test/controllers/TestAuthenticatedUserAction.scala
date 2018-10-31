@@ -1,10 +1,10 @@
 package editor.controllers
 
-import authentication.models.{AuthenticatedUserAction, UserRequest}
-import authentication.service.OIDCAuthService
 import com.google.inject.Inject
-import models.user.{NexusUser, OIDCUser}
+import models.{AuthenticatedUserAction, UserRequest}
+import models.user.NexusUser
 import play.api.mvc.{BodyParsers, Request, Result}
+import services.OIDCAuthService
 
 import scala.concurrent.{ExecutionContext, Future}
 

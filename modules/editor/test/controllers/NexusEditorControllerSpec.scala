@@ -13,34 +13,19 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package editor.controllers
+package controllers
 
-import common.helpers.ConfigMock
-import common.helpers.ConfigMock._
-import common.models.{NexusInstance, NexusPath}
-import mockws.{MockWS, MockWSHelpers}
-import authentication.service.{IAMAuthService, OIDCAuthService}
-import common.services.ConfigurationService
-import editor.helpers.ReconciledInstanceHelper
-import editor.models.{EditorInstance, ReconciledInstance}
-import editor.services.{ArangoQueryService, EditorService, ReleaseService}
-import nexus.services.NexusService
+import helpers.ConfigMock
+import mockws.MockWSHelpers
+import models.NexusPath
+import models.instance.{EditorInstance, NexusInstance, ReconciledInstance}
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar
-import org.mockito.Mockito._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.libs.json._
-import play.api.mvc.Results.Ok
-import play.api.test.Helpers._
-import play.api.test.{FakeRequest, Injecting}
-import play.api.mvc._
-import play.api.libs.ws.{WSClient, WSResponse}
-import services.FormService
-
-import scala.concurrent.Future
-import scala.reflect.macros.whitebox
+import play.api.test.Injecting
 
 class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpers with MockitoSugar with Injecting {
 

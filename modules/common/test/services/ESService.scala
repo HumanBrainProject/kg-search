@@ -1,17 +1,16 @@
-package common.services
+package services
 
 
-import common.helpers.ConfigMock
-import common.helpers.ConfigMock._
+import helpers.ConfigMock
+import helpers.ConfigMock._
 import mockws.{MockWS, MockWSHelpers}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
-import play.api.Configuration
 import play.api.libs.json.Json
-import play.api.mvc.Action
 import play.api.mvc.Results.Ok
 import play.api.test.Injecting
+import services.{ConfigurationService, ESService}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext}

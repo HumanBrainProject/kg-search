@@ -1,20 +1,16 @@
 package services
 
-import common.helpers.ConfigMock
-import common.models.NexusPath
-import common.services.ConfigurationService
-import editor.models.FormRegistry
+import helpers.ConfigMock
 import mockws.MockWSHelpers
+import models.{FormRegistry, NexusPath}
+import org.scalatest.Matchers._
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.libs.json.{JsObject, Json}
-import play.api.test.Injecting
-import play.api.test.Helpers._
-import org.scalatest.Matchers._
-import org.scalatest.mockito.MockitoSugar
-import org.mockito.Mockito._
 import play.api.libs.ws.WSClient
+import play.api.test.Injecting
 
 class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpers with MockitoSugar with Injecting {
   override def fakeApplication(): Application = ConfigMock.fakeApplicationConfig.build()

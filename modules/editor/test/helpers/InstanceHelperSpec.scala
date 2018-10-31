@@ -15,7 +15,9 @@
 */
 package editor.helpers
 
-import common.models.{NexusInstance, NexusPath}
+import helpers.InstanceHelper
+import models.NexusPath
+import models.instance.NexusInstance
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.libs.json.{JsArray, JsNull, Json}

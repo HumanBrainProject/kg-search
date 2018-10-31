@@ -16,7 +16,7 @@
 */
 package editor.models
 
-import editor.models.EditorUserList.{ BOOKMARKFOLDER, BookmarkList, BookmarkListFolder}
+import models.editorUserList.{BOOKMARKFOLDER, BookmarkList, BookmarkListFolder}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsString, Json}
 

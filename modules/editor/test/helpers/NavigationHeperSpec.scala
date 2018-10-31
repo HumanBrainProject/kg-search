@@ -17,14 +17,14 @@
 
 package editor.helpers
 
-import common.models.NexusPath
-import editor.models.FormRegistry
+import helpers.NavigationHelper
+import models.{FormRegistry, NexusPath}
+import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import services.FormService
-import org.mockito.Mockito._
 import play.api.libs.json.{JsObject, Json}
+import services.FormService
 
 class NavigationHeperSpec  extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar{
   val formService = mock[FormService]

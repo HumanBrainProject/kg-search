@@ -15,7 +15,7 @@
 *   limitations under the License.
 */
 
-package common.models
+package models
 
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite

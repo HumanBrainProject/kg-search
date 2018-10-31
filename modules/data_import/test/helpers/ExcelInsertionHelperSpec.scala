@@ -13,9 +13,9 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package data_import.helpers
+package helpers
 
-import data_import.helpers.excel_import.ExcelInsertionHelper
+import helpers.excel.ExcelInsertionHelper
 import models.excel.{Entity, SingleValue}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
