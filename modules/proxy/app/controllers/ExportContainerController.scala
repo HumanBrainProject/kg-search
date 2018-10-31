@@ -15,27 +15,23 @@
 *   limitations under the License.
 */
 
-package proxy.controllers
+package controllers
 
 import java.io._
 import java.util.zip.{ZipEntry, ZipOutputStream}
 
 import akka.Done
+import akka.stream.Materializer
 import akka.stream.scaladsl.{Sink, StreamConverters}
 import akka.util.ByteString
 import com.google.inject.Inject
-import play.api.Configuration
+import controllers.ExportContainerController.MAX_CONTAINER_SIZE
+import play.api.{Configuration, Logger}
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
 import play.api.mvc._
-import akka.stream.Materializer
-import java.net.URL
-
-import proxy.controllers.ExportContainerController.MAX_CONTAINER_SIZE
-import play.api.Logger
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.io.Source
 
 
 class ExportContainerController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionContext, ws: WSClient, config: Configuration, mat: Materializer)

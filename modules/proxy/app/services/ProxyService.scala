@@ -15,11 +15,11 @@
 *   limitations under the License.
 */
 
-package proxy.services
+package services
 
 import akka.util.ByteString
 import com.google.inject.Inject
-import common.helpers.ESHelper
+import helpers.ESHelper
 import play.api.Logger
 import play.api.libs.ws.{WSClient, WSRequest}
 import play.api.mvc.{RawBuffer, Request}

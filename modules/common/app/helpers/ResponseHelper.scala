@@ -15,9 +15,10 @@
 *   limitations under the License.
 */
 
-package common.helpers
+package helpers
 
 object ResponseHelper {
+
   def getContentType(headers: Map[String, Seq[String]]): Option[String] = {
     headers.get("content-type") match {
       case Some(stringList) => Some(stringList.head)

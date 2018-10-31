@@ -15,7 +15,7 @@
 *   limitations under the License.
 */
 
-package nexus.helpers
+package helpers
 
 import play.api.Logger
 import play.api.libs.json.{JsArray, JsObject, JsString, Json}

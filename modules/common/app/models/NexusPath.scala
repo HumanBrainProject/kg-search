@@ -15,7 +15,7 @@
 *   limitations under the License.
 */
 
-package common.models
+package models
 
 case class NexusPath(org: String, domain:String, schema: String, version:String) {
 

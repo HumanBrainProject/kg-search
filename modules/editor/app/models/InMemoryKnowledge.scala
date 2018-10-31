@@ -15,9 +15,9 @@
 *   limitations under the License.
 */
 
-package editor.models
+package models
 
-import nexus.services.NexusService
+import services.NexusService
 import play.api.libs.json.JsObject
 
 import concurrent.duration._
@@ -32,7 +32,7 @@ class InMemoryKnowledge(endpoint: String, space: String) {
 
 
   // This must be called by controller whenever it's needed to refresh known schema list
-  def loadManualSchemaList(token: String, nexusService: NexusService) = {
+  def loadManualSchemaList(token: String, nexusService: NexusService): Unit = {
     val schemaUrl = s"$nexusEndpoint/v0/schemas/$space"
     // wait for schemas call to finish before going on
     val currentSchemas = Await.result(

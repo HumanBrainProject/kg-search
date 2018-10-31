@@ -13,23 +13,23 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package data_import.services
+package services
 
 import com.google.inject.Inject
-import data_import.helpers.excel_import.{ExcelInsertionHelper, ExcelUnimindsImportHelper}
-import data_import.helpers.excel_import.ExcelMindsImportHelper.formatEntityPayload
-import data_import.models.excel_import.CommonVars.{activityLabel, datasetLabel, specimenGroupLabel, specimengroupLabel}
-import models.excel_import.{Entity, Value}
-import nexus.services.NexusService
-import nexus.services.NexusService._
+import models.excel.{Entity, Value}
+import models.excel.CommonVars._
 import play.api.Logger
 import play.api.http.Status.{CREATED, OK}
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
+
 import scala.concurrent.{ExecutionContext, Future}
 import Entity.isNexusLink
 import Value.DEFAULT_RESOLUTION_STATUS
-import common.models.NexusPath
+import helpers.excel.{ExcelInsertionHelper, ExcelUnimindsImportHelper}
+import models.NexusPath
+import services.NexusService._
+import helpers.excel.ExcelMindsImportHelper._
 
 
 class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService)

@@ -15,28 +15,22 @@
 *   limitations under the License.
 */
 
-package editor.services
+package services
 
 import java.net.URLEncoder
-import java.security.Policy.Parameters
-import java.util.concurrent.Executors
 
 import com.google.inject.Inject
-import common.models.{NexusInstance, NexusPath, User}
-import editor.models.{EditorInstance, InMemoryKnowledge, IncomingLinksInstances, ReconciledInstance}
-import editor.controllers.NexusEditorController
-import editor.helpers._
-import nexus.helpers.NexusHelper
-import nexus.services.NexusService
-import play.api.{Configuration, Logger}
+import helpers.InstanceHelper.UpdateInfo
+import helpers._
+import models.NexusPath
+import models.instance.{EditorInstance, NexusInstance, ReconciledInstance}
+import models.user.User
+import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
-import common.services.ConfigurationService
-import editor.helpers.InstanceHelper.UpdateInfo
-import scala.concurrent.duration._
-import scala.concurrent.duration.FiniteDuration
 
+import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, Future}
 
 class EditorService @Inject()(wSClient: WSClient,

@@ -15,19 +15,16 @@
 *   limitations under the License.
 */
 
-package editor.helpers
+package helpers
 
-import common.helpers.JsFlattener
-import common.models.{NexusInstance, NexusPath, PreviewInstance, User}
-import editor.models.{EditorInstance, FormRegistry, ReconciledInstance, ReleaseStatus}
-import org.joda.time.DateTime
+import models._
+import models.instance.{EditorInstance, NexusInstance, PreviewInstance, ReconciledInstance}
 import org.json4s.JsonAST._
 import org.json4s.native.{JsonMethods, JsonParser}
-import org.json4s.{DefaultFormats, Diff, JsonAST}
+import org.json4s.{Diff, JsonAST}
 import play.api.Logger
 import play.api.libs.json.Reads.of
 import play.api.libs.json._
-import services.FormService
 
 import scala.collection.immutable.SortedSet
 

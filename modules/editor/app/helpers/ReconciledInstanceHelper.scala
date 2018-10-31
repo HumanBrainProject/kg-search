@@ -14,11 +14,8 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package editor.helpers
+package helpers
 
-import common.models.{NexusInstance, NexusPath, User}
-import editor.models.{EditorInstance, IncomingLinksInstances, ReconciledInstance}
-import org.joda.time.DateTime
 import play.api.Logger
 import play.api.libs.json._
 

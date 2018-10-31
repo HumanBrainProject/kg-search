@@ -15,24 +15,18 @@
 *   limitations under the License.
 */
 
-package editor.services
+package services
 
 import com.google.inject.Inject
-import common.models.NexusPath
-import nexus.services.NexusService
-import play.api.{Configuration, Logger}
+import models.{NexusPath, ReleaseStatus}
+import play.api.Logger
+import play.api.http.ContentTypes._
+import play.api.http.HeaderNames._
+import play.api.http.Status._
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
-import play.api.http.Status._
-import play.api.http.HeaderNames._
-import play.api.http.ContentTypes._
 
 import scala.concurrent.{ExecutionContext, Future}
-import play.api.mvc.Results._
-import common.services.ConfigurationService
-import editor.models.{ReconciledInstance, ReleaseStatus}
-
-import scala.annotation.tailrec
 
 class ReleaseService @Inject()(
                                 ws: WSClient,

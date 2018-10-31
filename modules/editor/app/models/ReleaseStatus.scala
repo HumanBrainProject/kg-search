@@ -15,7 +15,7 @@
 *   limitations under the License.
 */
 
-package editor.models
+package models
 
 import play.api.libs.json.{JsNull, JsString, JsValue}
 import play.libs.Json

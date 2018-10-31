@@ -13,20 +13,15 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package editor.services
+package services
 
-import authentication.service.OIDCAuthService
 import com.google.inject.Inject
-import common.models.NexusPath
-import editor.helpers.InstanceHelper
-import nexus.services.NexusService
+import helpers.InstanceHelper
+import models.{FormRegistry, NexusPath}
+import play.api.http.HeaderNames._
+import play.api.http.Status._
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
-import play.api.http.Status._
-import play.api.http.HeaderNames._
-import common.services.ConfigurationService
-import editor.models.FormRegistry
-import services.FormService
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -15,9 +15,9 @@
 *   limitations under the License.
 */
 
-package editor.helpers
+package helpers
 
-import common.models.NexusPath
+import models.NexusPath
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import services.FormService
 

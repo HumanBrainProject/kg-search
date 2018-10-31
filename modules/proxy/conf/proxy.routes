@@ -1,6 +1,6 @@
 # proxy service
-  GET     /kg_labels/*proxyUrl      proxy.controllers.SearchProxy.labels(proxyUrl:String)
-  OPTIONS /kg_labels/*proxyUrl      proxy.controllers.SearchProxy.labelsOptions(proxyUrl:String)
+  GET     /kg_labels/*proxyUrl      controllers.SearchProxy.labels(proxyUrl:String)
+  OPTIONS /kg_labels/*proxyUrl      controllers.SearchProxy.labelsOptions(proxyUrl:String)
 
   ###
   #  summary: ES query proxy with smart handling of nested fields query
@@ -11,7 +11,7 @@
   #    required: false
   #    type: string
   ###
-  GET     /search/*indexWithProxyUrl      proxy.controllers.SearchProxy.proxySearch(indexWithProxyUrl:String)
+  GET     /search/*indexWithProxyUrl      controllers.SearchProxy.proxySearch(indexWithProxyUrl:String)
   ###
   #  summary: ES query proxy with smart handling of nested fields query
   #  parameters:
@@ -21,7 +21,7 @@
   #    required: false
   #    type: string
   ###
-  POST    /search/*indexWithProxyUrl      proxy.controllers.SearchProxy.proxySearch(indexWithProxyUrl:String)
+  POST    /search/*indexWithProxyUrl      controllers.SearchProxy.proxySearch(indexWithProxyUrl:String)
 
   ###
   #  summary: ES query proxy without any query manipulation
@@ -32,7 +32,7 @@
   #    required: false
   #    type: string
   ###
-  GET     /default/*indexWithProxyUrl         proxy.controllers.SearchProxy.proxy(indexWithProxyUrl:String)
+  GET     /default/*indexWithProxyUrl         controllers.SearchProxy.proxy(indexWithProxyUrl:String)
   ###
   #  summary: ES query proxy without any query manipulation
   #  parameters:
@@ -42,10 +42,10 @@
   #    required: false
   #    type: string
   ###
-  POST    /default/*indexWithProxyUrl         proxy.controllers.SearchProxy.proxy(indexWithProxyUrl:String)
+  POST    /default/*indexWithProxyUrl         controllers.SearchProxy.proxy(indexWithProxyUrl:String)
 
-  OPTIONS   /search/:index/*proxyUrl         proxy.controllers.SearchProxy.proxyOptions(index:String, proxyUrl:String)
-  OPTIONS   /default/:index/*proxyUrl         proxy.controllers.SearchProxy.proxyOptions(index:String, proxyUrl:String)
+  OPTIONS   /search/:index/*proxyUrl         controllers.SearchProxy.proxyOptions(index:String, proxyUrl:String)
+  OPTIONS   /default/:index/*proxyUrl         controllers.SearchProxy.proxyOptions(index:String, proxyUrl:String)
 
 # Export service
-  GET     /export                         proxy.controllers.ExportContainerController.exportContainer(container: String, filter: Option[String])
+  GET     /export                         controllers.ExportContainerController.exportContainer(container: String, filter: Option[String])

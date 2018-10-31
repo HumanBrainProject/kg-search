@@ -13,7 +13,7 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package editor.models
+package models
 
 case class APIEditorError(status:Int, msg: String)
 

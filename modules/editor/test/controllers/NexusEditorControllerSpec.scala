@@ -17,7 +17,7 @@ package editor.controllers
 
 import common.helpers.ConfigMock
 import common.helpers.ConfigMock._
-import common.models.{NexusInstance, NexusPath, NexusUser, OIDCUser}
+import common.models.{NexusInstance, NexusPath}
 import mockws.{MockWS, MockWSHelpers}
 import authentication.service.{IAMAuthService, OIDCAuthService}
 import common.services.ConfigurationService

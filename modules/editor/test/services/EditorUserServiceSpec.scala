@@ -19,10 +19,11 @@ package editor.services
 import authentication.service.OIDCAuthService
 import common.helpers.ConfigMock
 import common.helpers.ConfigMock._
-import common.models.{Favorite, FavoriteGroup, NexusUser}
+import common.models.{Favorite, FavoriteGroup}
 import common.services.ConfigurationService
 import editor.models.EditorUser
 import mockws.{MockWS, MockWSHelpers}
+import models.user.NexusUser
 import nexus.services.NexusService
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec

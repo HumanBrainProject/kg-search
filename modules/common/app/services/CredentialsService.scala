@@ -15,7 +15,7 @@
 *   limitations under the License.
 */
 
-package common.services
+package services
 
 import java.io.FileInputStream
 

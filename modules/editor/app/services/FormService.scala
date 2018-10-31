@@ -18,10 +18,10 @@
 package services
 
 import com.google.inject.{Inject, Singleton}
-import common.models.{NexusInstance, NexusPath, NexusUser, User}
-import common.services.ConfigurationService
-import editor.models.{FormRegistry, FormRegistryService, ReconciledInstance}
-import editor.models.EditorUserList.{BookmarkList, BookmarkListFolder}
+import models.editorUserList.BookmarkList
+import models._
+import models.instance.{NexusInstance, ReconciledInstance}
+import models.user.NexusUser
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
 

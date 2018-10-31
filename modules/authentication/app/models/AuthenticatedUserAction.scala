@@ -15,12 +15,12 @@
 *   limitations under the License.
 */
 
-package authentication.models
+package models
 
 import com.google.inject.Inject
 import play.api.mvc._
 import play.api.mvc.Results._
-import authentication.service.OIDCAuthService
+import services.OIDCAuthService
 
 import scala.concurrent.{ExecutionContext, Future}
 

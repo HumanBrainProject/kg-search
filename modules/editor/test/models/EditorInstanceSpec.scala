@@ -2,6 +2,7 @@ package models
 
 import common.models.{NexusInstance, NexusPath}
 import editor.models.EditorInstance
+import models.instance.{EditorInstance, NexusInstance}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 

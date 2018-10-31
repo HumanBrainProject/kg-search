@@ -14,7 +14,7 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package proxy.utils
+package utils
 
 import play.api.libs.json._
 

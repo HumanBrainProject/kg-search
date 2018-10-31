@@ -7,7 +7,7 @@
 #    required: false
 #    type: string
 ###
-POST   /privatespace                                            nexus.controllers.NexusCommonController.createPrivateSpace()
+POST   /privatespace                                            controllers.NexusCommonController.createPrivateSpace()
 
 
 ###
@@ -46,5 +46,5 @@ POST   /privatespace                                            nexus.controller
 #    required: false
 #    type: string
 ###
-POST   /schema/:organization/:domain/:schema/:version   nexus.controllers.NexusCommonController.createSchema(organization: String, domain: String, schema: String, version: String, namespace: Option[String])
+POST   /schema/:organization/:domain/:schema/:version   controllers.NexusCommonController.createSchema(organization: String, domain: String, schema: String, version: String, namespace: Option[String])
 

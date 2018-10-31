@@ -1,7 +1,7 @@
 package authentication.controllers
 
-import common.models.OIDCUser
 import mockws.{MockWS, MockWSHelpers}
+import models.user.OIDCUser
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
 import play.api.Configuration

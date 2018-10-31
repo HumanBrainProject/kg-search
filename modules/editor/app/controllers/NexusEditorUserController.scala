@@ -15,26 +15,19 @@
 *   limitations under the License.
 */
 
-package editor.controllers
+package controllers
 
-import akka.util.ByteString
-import authentication.models.{AuthenticatedUserAction, UserRequest}
-import authentication.service.OIDCAuthService
+import actions.EditorUserAction
 import com.google.inject.Inject
-import common.helpers.ResponseHelper.{filterContentTypeAndLengthFromHeaders, flattenHeaders, getContentType}
-import common.models.{FavoriteGroup, NexusInstance, NexusPath, NexusUser}
-import common.services.ConfigurationService
-import editor.actions.EditorUserAction
-import editor.models.EditorUser
-import editor.models.EditorUserList.{BOOKMARKFOLDER, BookmarkList}
-import editor.services.{ArangoQueryService, EditorBookmarkService, EditorUserService}
-import helpers.ResponseHelper
-import nexus.services.NexusService
-import play.api.http.HttpEntity
-import play.api.{Configuration, Logger}
+import helpers.EditorResponseHelper
+import models.editorUserList.BOOKMARKFOLDER
+import models.instance.NexusInstance
+import models.{AuthenticatedUserAction, NexusPath, UserRequest}
+import play.api.Logger
 import play.api.libs.json._
 import play.api.mvc.{AnyContent, _}
-import services.FormService
+import services._
+import services.bookmark.EditorBookmarkService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -88,7 +81,7 @@ class NexusEditorUserController @Inject()(
   def getBookmarkListFolders():Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
     for{
       res <-  editorUserListService.getUserLists(request.editorUser, formService.formRegistry).map {
-          case Left(r) => ResponseHelper.forwardResultResponse(r)
+          case Left(r) => EditorResponseHelper.forwardResultResponse(r)
           case Right(l) => Ok(Json.toJson(l))
         }
     } yield res
@@ -107,7 +100,7 @@ class NexusEditorUserController @Inject()(
     val nexusPath = NexusPath(org, domain, datatype, version)
     arangoQueryService.listInstances(nexusPath, from, size, search).map{
       case Right(json) => Ok(json)
-      case Left(res) => ResponseHelper.forwardResultResponse(res)
+      case Left(res) => EditorResponseHelper.forwardResultResponse(res)
     }
   }
 
@@ -124,7 +117,7 @@ class NexusEditorUserController @Inject()(
     val nexusPath = NexusPath(org, domain, datatype, version)
     editorUserListService.getInstanceOfBookmarkList(s"${nexusPath.toString()}/$id", from, size, search).map{
       case Right(instances) => Ok(Json.toJson(instances))
-      case Left(res) => ResponseHelper.forwardResultResponse(res)
+      case Left(res) => EditorResponseHelper.forwardResultResponse(res)
     }
   }
 
@@ -140,7 +133,7 @@ class NexusEditorUserController @Inject()(
           for {
             token <- oIDCAuthService.getTechAccessToken()
             result <- editorUserListService.createBookmarkList(n, id, token).map{
-              case Left(r) => ResponseHelper.forwardResultResponse(r)
+              case Left(r) => EditorResponseHelper.forwardResultResponse(r)
               case Right(bookmarkList) => Created(Json.toJson(bookmarkList))
             }
           } yield result
@@ -167,11 +160,11 @@ class NexusEditorUserController @Inject()(
           for {
             token <- oIDCAuthService.getTechAccessToken()
             result <- editorUserListService.getBookmarkListById(path, id).flatMap[Result]{
-              case Left(r) => Future(ResponseHelper.forwardResultResponse(r))
+              case Left(r) => Future(EditorResponseHelper.forwardResultResponse(r))
               case Right((bookmarkList, rev, userFolderId) ) =>
                 val updatedBookmarkList = bookmarkList.copy(name = newName)
                 editorUserListService.updateBookmarkList(updatedBookmarkList, userFolderId, rev, token).map[Result]{
-                  case Left(response) => ResponseHelper.forwardResultResponse(response)
+                  case Left(response) => EditorResponseHelper.forwardResultResponse(response)
                   case Right(_) => NoContent
                 }
             }

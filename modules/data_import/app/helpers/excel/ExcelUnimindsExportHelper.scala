@@ -13,11 +13,11 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package data_import.helpers.excel
+package helpers.excel
 
-import data_import.helpers.excel.ExcelStyleHelper.{setAllThinBorders, setCellColor}
+import helpers.excel.ExcelStyleHelper.{setAllThinBorders, setCellColor}
 import java.awt.Color
-import models.excel_import.Entity
+import models.excel.Entity
 import org.apache.poi.xssf.usermodel.{XSSFCellStyle, XSSFColor, XSSFSheet, XSSFWorkbook}
 
 

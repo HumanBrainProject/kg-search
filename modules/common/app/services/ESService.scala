@@ -14,9 +14,9 @@
 *   limitations under the License.
 */
 
-package common.services
+package services
 
-import common.helpers.ESHelper
+import helpers.ESHelper
 import javax.inject.Inject
 import play.api.Configuration
 import play.api.libs.json.JsValue

@@ -15,37 +15,22 @@
 *   limitations under the License.
 */
 
-package editor.controllers
+package controllers
 
-import akka.util.ByteString
-import common.helpers.BlazegraphHelper
-import common.helpers.ResponseHelper._
-import common.models.{NexusInstance, NexusPath, User}
-import editor.actions.EditorUserAction
-import editor.helpers._
-import editor.models._
-import authentication.helpers.OIDCHelper
-import helpers.ResponseHelper
+import actions.EditorUserAction
+import helpers._
 import javax.inject.{Inject, Singleton}
-import authentication.models.{AuthenticatedUserAction, UserRequest}
-import authentication.service.{IAMAuthService, OIDCAuthService}
-import editor.actions.EditorUserAction
-import play.api.{Configuration, Logger}
-import play.api.http.HttpEntity
-import play.api.http.Status.OK
-import play.api.libs.json
+import models._
+import models.instance.{EditorInstance, NexusInstance, ReconciledInstance}
+import models.user.EditorUserWriteRequest
+import play.api.Logger
 import play.api.libs.json.Reads._
 import play.api.libs.json._
-import play.api.libs.ws.{WSClient, WSResponse}
+import play.api.libs.ws.WSClient
 import play.api.mvc._
-import editor.services.{EditorService, ReleaseService}
-import nexus.services.NexusService
-import editor.services.ArangoQueryService
-import common.services.ConfigurationService
-import services.FormService
+import services._
 
-import scala.concurrent.{Await, ExecutionContext, Future}
-import scala.util.{Failure, Success}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class NexusEditorController @Inject()(
@@ -86,7 +71,7 @@ class NexusEditorController @Inject()(
     editorService.retrieveInstance(nexusPath, id, token).map[Result] {
       case Left(r) =>
         logger.error(s"Error: Could not fetch instance : ${nexusPath.toString()}/$id - ${r.body}")
-        ResponseHelper.errorResultWithBackLink(r.status, r.headers, r.body, nexusPath, config.reconciledPrefix, formService)
+        EditorResponseHelper.errorResultWithBackLink(r.status, r.headers, r.body, nexusPath, config.reconciledPrefix, formService)
       case Right(instance) =>
         val instanceWithCorrectLinks = instance.modificationOfLinks(config.nexusEndpoint, config.reconciledPrefix)
         FormService.getFormStructure(nexusPath, instanceWithCorrectLinks.content, config.reconciledPrefix, formService.formRegistry) match {
@@ -110,7 +95,7 @@ class NexusEditorController @Inject()(
     editorService.retrieveInstance(nexusPath, id, token).flatMap[Result] {
       case Left(res) =>
         Future.successful(
-          ResponseHelper.forwardResultResponse(res)
+          EditorResponseHelper.forwardResultResponse(res)
         )
       case Right(originalInstance) =>
         val nbRevision = (originalInstance.content \ "nxv:rev").as[JsNumber]
@@ -156,7 +141,7 @@ class NexusEditorController @Inject()(
           )
         }
       case Left(response) =>
-        ResponseHelper.errorResultWithBackLink(response.status, response.headers, response.body, nexusPath, config.reconciledPrefix, formService)
+        EditorResponseHelper.errorResultWithBackLink(response.status, response.headers, response.body, nexusPath, config.reconciledPrefix, formService)
     }
 
   }
@@ -206,7 +191,7 @@ class NexusEditorController @Inject()(
             techToken
           ).map {
             case Left(res) =>
-              ResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, config.reconciledPrefix, formService)
+              EditorResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, config.reconciledPrefix, formService)
             case Right(instance) =>
               Ok(
                 NavigationHelper
@@ -291,7 +276,7 @@ class NexusEditorController @Inject()(
                       techToken
                     ).map{
                       case Left(res) =>
-                        ResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, originalPath, config.reconciledPrefix, formService)
+                        EditorResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, originalPath, config.reconciledPrefix, formService)
                       case Right(instance) =>
                         Ok(
                           NavigationHelper
@@ -311,7 +296,7 @@ class NexusEditorController @Inject()(
                 }.filter(_.isDefined).map(_.get)
                 logger.error(s"Could not fetch editor instances ${errors}")
                 Future.successful(
-                  ResponseHelper
+                  EditorResponseHelper
                     .errorResultWithBackLink(
                       errors.head.status,
                       errors.head.headers,
@@ -325,7 +310,7 @@ class NexusEditorController @Inject()(
           }
         }
       case Left(res) => Future.successful(
-        ResponseHelper
+        EditorResponseHelper
           .errorResultWithBackLink(res.status, res.headers, res.body, originalPath, config.reconciledPrefix, formService) )
     }
   }
@@ -351,7 +336,7 @@ class NexusEditorController @Inject()(
       editorService.retrieveInstance(instancePath, id, token).flatMap[Result] {
         case Left(res) =>
           Future.successful(
-            ResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, config.reconciledPrefix, formService)
+            EditorResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, config.reconciledPrefix, formService)
           )
         case Right(currentInstanceDisplayed) =>
           if(currentInstanceDisplayed.nexusPath.isReconciled(config.reconciledPrefix)){
@@ -414,7 +399,7 @@ class NexusEditorController @Inject()(
                 Created(NavigationHelper.resultWithBackLink(output.as[JsObject], instancePath, config.reconciledPrefix, formService))
               case _ =>
                 logger.error(res.body)
-                ResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, config.reconciledPrefix, formService)
+                EditorResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, config.reconciledPrefix, formService)
 
             }
           }
@@ -465,7 +450,7 @@ class NexusEditorController @Inject()(
     val token = request.headers.toSimpleMap.getOrElse("Authorization", "")
     arangoQueryService.graphEntities(org,domain, schema, version, id, step, token).map{
       case Right(json) => Ok(json)
-      case Left(response) => ResponseHelper.forwardResultResponse(response)
+      case Left(response) => EditorResponseHelper.forwardResultResponse(response)
     }
   }
 
@@ -485,14 +470,14 @@ class NexusEditorController @Inject()(
     val token = request.headers.toSimpleMap("Authorization")
     val path = NexusPath(org, domain, schema, version)
     releaseService.releaseInstance(path, id, token).map{
-      case Left(None) => ResponseHelper.errorResultWithBackLink(NOT_FOUND,
+      case Left(None) => EditorResponseHelper.errorResultWithBackLink(NOT_FOUND,
         request.headers.toMap,
         "Could not find main instance.",
         NexusPath(org, domain,schema, version),
         config.reconciledPrefix,
         formService
       )
-      case Left(Some(res)) => ResponseHelper.forwardResultResponse(res)
+      case Left(Some(res)) => EditorResponseHelper.forwardResultResponse(res)
       case Right(data) =>
         Ok(Json.toJson(data))
     }

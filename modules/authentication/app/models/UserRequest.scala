@@ -13,9 +13,9 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package authentication.models
+package models
 
-import common.models.{NexusUser}
+import models.user.NexusUser
 import play.api.mvc.{Request, WrappedRequest}
 
 /**

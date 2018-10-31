@@ -15,16 +15,15 @@
 *   limitations under the License.
 */
 
-package editor.actions
+package actions
 
-import authentication.models.{IAMPermission, UserRequest}
-import authentication.service.IAMAuthService
-import play.api.mvc._
-import play.api.mvc.Results._
-import editor.helpers.EditorSpaceHelper
-import editor.models.{EditorUserRequest, EditorUserWriteRequest}
-import editor.services.EditorUserService
+import helpers.EditorSpaceHelper
+import models.user.{EditorUserRequest, EditorUserWriteRequest}
+import models.{IAMPermission, UserRequest, user}
 import play.api.Logger
+import play.api.mvc.Results._
+import play.api.mvc._
+import services.{EditorUserService, IAMAuthService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -65,7 +64,7 @@ object EditorUserAction{
       def executionContext: ExecutionContext = ec
       def refine[A](input: UserRequest[A]): Future[Either[Result, EditorUserRequest[A]]] = {
         editorUserService.getUser(input.user).map{
-          case Some(editorUser) => Right(EditorUserRequest(editorUser, input))
+          case Some(editorUser) => Right(user.EditorUserRequest(editorUser, input))
           case None => logger.error(s"Fetching editor user failed")
             Left(InternalServerError("An error occurred while fetching user information"))
         }

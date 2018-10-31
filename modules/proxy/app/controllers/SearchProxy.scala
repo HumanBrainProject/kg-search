@@ -14,21 +14,21 @@
 *   limitations under the License.
 */
 
-package proxy.controllers
+package controllers
 
 import akka.stream.Materializer
 import akka.util.ByteString
-import authentication.service.OIDCAuthService
-import authentication.helpers.OIDCHelper
-import common.helpers.{ESHelper, ResponseHelper}
+import services.OIDCAuthService
+import helpers.{ESHelper, OIDCHelper, ResponseHelper}
 import javax.inject.{Inject, Singleton}
 import play.api.http.HttpEntity
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSRequest}
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, PlayBodyParsers, RawBuffer, Request, ResponseHeader, Result}
 import play.api.{Configuration, Logger}
-import proxy.services.ProxyService
-import proxy.utils.JsonHandler
+import services.ProxyService
+import utils.JsonHandler
+
 import scala.concurrent.{ExecutionContext, Future}
 
 

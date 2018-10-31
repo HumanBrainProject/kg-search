@@ -13,9 +13,9 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package data_import.helpers.excel_import
+package helpers.excel
 
-import data_import.models.excel_import.CommonVars._
+import models.excel.CommonVars._
 import org.apache.poi.ss.usermodel.{Cell, CellType, DataFormatter}
 import org.apache.poi.xssf.usermodel._
 

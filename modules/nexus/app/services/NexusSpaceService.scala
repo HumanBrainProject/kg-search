@@ -15,10 +15,10 @@
 *   limitations under the License.
 */
 
-package nexus.services
+package services
 
 import com.google.inject.Inject
-import nexus.helpers.{IDMHelper, NexusSpaceHandler}
+import helpers.{IDMHelper, NexusSpaceHandler}
 import play.api.Logger
 import play.api.libs.json.{JsArray, JsObject, JsString, Json}
 import play.api.libs.ws.{EmptyBody, WSClient, WSResponse}

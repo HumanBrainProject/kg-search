@@ -15,7 +15,7 @@
 *   limitations under the License.
 */
 
-package nexus.helpers
+package helpers
 
 import java.security.MessageDigest
 

@@ -13,7 +13,7 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package data_import.helpers.excel
+package helpers.excel
 
 import org.apache.poi.ss.usermodel.{BorderStyle, FillPatternType}
 import org.apache.poi.xssf.usermodel.{XSSFCellStyle, XSSFColor}

@@ -16,7 +16,7 @@
 package data_import.helpers
 
 import data_import.helpers.excel_import.ExcelInsertionHelper
-import models.excel_import.{Entity, SingleValue}
+import models.excel.{Entity, SingleValue}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
