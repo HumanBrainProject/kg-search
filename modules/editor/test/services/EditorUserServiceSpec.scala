@@ -38,13 +38,13 @@ class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockW
 
   override def fakeApplication(): Application = ConfigMock.fakeApplicationConfig.build()
 
-  "EditorUserService#getUser" should{
+  "getUser" should{
     "return an editor user" in {
       val fakeEndpoint = s"${kgQueryEndpoint}/query/"
 
       val id = "1"
       val idUser = "nexusUUID1"
-      val nexusIdUser = s"http://nexus.com/v0/data/$idUser"
+      val nexusIdUser = s"${EditorUserService.editorUserPath.toString()}/$idUser"
       val nexusUser = NexusUser(
         id,
         "",
@@ -70,7 +70,8 @@ class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockW
       val oidcService = mock[OIDCAuthService]
       val nexusService = mock[NexusService]
       val configService = mock[ConfigurationService]
-      val service = new EditorUserService(configService, ws,nexusService,oidcService)(ec)
+      val nexusExt = mock[NexusExtensionService]
+      val service = new EditorUserService(configService, ws,nexusService,nexusExt,oidcService)(ec)
 
       val res = Await.result(service.getUser(nexusUser), FiniteDuration(10 ,"s"))
 

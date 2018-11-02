@@ -16,6 +16,7 @@
 package models.editorUserList
 
 import play.api.libs.json.JsObject
+import services.bookmark.EditorBookmarkService
 
 
 case class BookmarkList(id: String, name: String, editable: Option[Boolean], uiSpec: Option[JsObject], color:Option[String])
@@ -26,7 +27,7 @@ object BookmarkList {
   import play.api.libs.functional.syntax._
 
   implicit val userListReads: Reads[BookmarkList] = (
-    (JsPath \ "id").read[String] and
+    (JsPath \ "id").read[String].map(id => s"${EditorBookmarkService.bookmarkListPath.toString()}/${id.split("/").last}") and
       (JsPath \ "name").read[String] and
       (JsPath \ "editable").readNullable[Boolean] and
       (JsPath \ "uiSpec").readNullable[JsObject] and

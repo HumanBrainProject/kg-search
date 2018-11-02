@@ -37,3 +37,5 @@ Common.settings
 sources in (Compile, doc) := Seq.empty
 
 publishArtifact in (Compile, packageDoc) := false
+
+scalacOptions += "-Ypartial-unification"

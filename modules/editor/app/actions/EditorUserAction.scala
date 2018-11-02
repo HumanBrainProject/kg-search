@@ -66,7 +66,7 @@ object EditorUserAction{
         editorUserService.getUser(input.user).map{
           case Some(editorUser) => Right(user.EditorUserRequest(editorUser, input))
           case None => logger.error(s"Fetching editor user failed")
-            Left(InternalServerError("An error occurred while fetching user information"))
+            Left(NotFound("An error occurred while fetching user information"))
         }
       }
     }

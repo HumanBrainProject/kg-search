@@ -10,7 +10,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.libs.json.Json
 import play.api.mvc.Results.Ok
 import play.api.test.Injecting
-import services.{ConfigurationService, ESService}
+
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext}

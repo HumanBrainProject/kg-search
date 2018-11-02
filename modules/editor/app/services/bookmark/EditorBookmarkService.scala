@@ -138,14 +138,11 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
   }
 
   def createBookmarkList(bookmarkListName: String, folderId: String, token: String): Future[Either[WSResponse, BookmarkList]] = {
-    nexusService.createSimpleSchema(
-      config.nexusEndpoint,
+    nexusExtensionService.createSimpleSchema(
       EditorBookmarkService.bookmarkListPath,
-      token,
-      Some(EditorUserService.editorNameSpace)
-    ).flatMap{ res =>
-      res.status match {
-        case OK | CREATED | CONFLICT =>
+      Some(config.editorSubSpace)
+    ).flatMap{
+      case Right(()) =>
           val payload = EditorBookmarkService.bookmarkListToNexusStruct(bookmarkListName, s"${config.nexusEndpoint}/v0/data/${folderId}")
           nexusService.insertInstance(
             config.nexusEndpoint,
@@ -156,17 +153,16 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
             res =>
               res.status match {
                 case CREATED =>
-                  val (id, path) = NexusInstance.extractIdAndPath(res.json)
-                  Right(BookmarkList(s"${path.toString()}/$id", bookmarkListName, None, None, None))
+                  val (id, _) = NexusInstance.extractIdAndPath(res.json)
+                  Right(BookmarkList(s"${EditorBookmarkService.bookmarkListPath.toString()}/$id", bookmarkListName, None, None, None))
                 case _ =>
                   logger.error("Error while creating a bookmark list " + res.body)
                   Left(res)
               }
           }
-        case _ =>
+        case Left(res) =>
           logger.error("Could created schema for Bookmark list" + res.body)
           Future(Left(res))
-      }
 
     }
   }
@@ -190,16 +186,24 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
     }
   }
 
-  def updateBookmarkList(bookmarkList: BookmarkList, bookmarkListPath: NexusPath, bookmarkListId: String, userFolderId:String, revision: Long, token: String): Future[Either[WSResponse, BookmarkList]] = {
+  def updateBookmarkList(
+                          bookmarkList: BookmarkList,
+                          bookmarkListPath: NexusPath,
+                          bookmarkListId: String,
+                          userFolderId: String,
+                          revision: Long,
+                          token: String)
+  : Future[Either[WSResponse, BookmarkList]] = {
     nexusService.updateInstance(
       s"${config.nexusEndpoint}/v0/data/${bookmarkListPath.toString()}$bookmarkListId",
       Some(revision),
       EditorBookmarkService.bookmarkListToNexusStruct(bookmarkList.name, userFolderId), token
-    ).map{
-      res => res._1 match {
-        case UPDATE => Right(bookmarkList)
-        case SKIP => Left(res._2)
-      }
+    ).map {
+      res =>
+        res._1 match {
+          case UPDATE => Right(bookmarkList)
+          case SKIP => Left(res._2)
+        }
     }
   }
 
@@ -264,14 +268,11 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
                                   token: String
                                 ):
   Future[List[WSResponse]] = {
-    nexusService.createSimpleSchema(
-      config.nexusEndpoint,
+    nexusExtensionService.createSimpleSchema(
       EditorBookmarkService.bookmarkPath,
-      token,
-      Some(EditorUserService.editorNameSpace)
-    ).flatMap { res =>
-      res.status match {
-        case OK | CREATED | CONFLICT =>
+      Some(config.editorSubSpace)
+    ).flatMap {
+        case Right(()) =>
           val queries = bookmarkListIds.map { id =>
             val toInsert = EditorBookmarkService.bookmarkToNexusStruct(instanceFullId, id)
             nexusService.insertInstance(
@@ -282,10 +283,9 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
             )
           }
           Future.sequence(queries)
-        case _ =>
+        case Left(res) =>
           logger.error("Could created schema for Bookmark" + res.body)
           Future(List(res))
-      }
     }
   }
 
@@ -385,10 +385,9 @@ object EditorBookmarkService {
       |    }
       |  }
     """.stripMargin
-
   def kgQueryGetUserFoldersQuery(userPath: NexusPath, context: String = context): String = s"""
      |{
-     |  "@context": ,
+     |  "@context": $context,
      |  "schema:name": "",
      |  "root_schema": "nexus_instance:${userPath.toString()}",
      |  "fields": [
@@ -406,7 +405,7 @@ object EditorBookmarkService {
      |           },
      |           {
      |             "fieldname": "id",
-     |             "relative_path": "@id",
+     |             "relative_path": "_originalId",
      |             "required": true
      |           },
      |           {
@@ -416,7 +415,6 @@ object EditorBookmarkService {
      |           },
      |           {
      |             "fieldname": "lists",
-     |             "required": true,
      |             "relative_path": {
      |                 "@id": "kgeditor:bookmarkListFolder",
      |                 "reverse":true
@@ -424,7 +422,7 @@ object EditorBookmarkService {
      |               "fields":[
      |               		{
      |               			"fieldname":"id",
-     |               			"relative_path": "@id"
+     |               			"relative_path": "_originalId"
      |               		},
      |                  {
      |               			"fieldname":"name",
@@ -453,7 +451,7 @@ object EditorBookmarkService {
     |        "fields":[
     |               		{
     |               			"fieldname":"id",
-    |               			"relative_path": "@id"
+    |               			"relative_path": "_originalId"
     |               		},
     |               		{
     |               			"fieldname":"bookmarkListId",
@@ -492,7 +490,7 @@ object EditorBookmarkService {
     |               				},
     |               				{
     |               					"fieldname":"id",
-    |               					"relative_path":"@id"
+    |               					"relative_path":"_originalId"
     |               				}
     |               				]
     |
@@ -535,7 +533,7 @@ object EditorBookmarkService {
        |               				},
        |               				{
        |               					"fieldname":"id",
-       |               					"relative_path":"@id"
+       |               					"relative_path":"_originalId"
        |               				}
        |               				]
        |               		}
@@ -559,10 +557,6 @@ object EditorBookmarkService {
        |     {
        |        "fieldname":"idWithRevision",
        |       "relative_path":"_originalId"
-       |     },
-       |     {
-       |       "fieldname":"revision",
-       |       "relative_path":"internal:rev"
        |     },
        |     {
        |       "fieldname":"userFolderId",

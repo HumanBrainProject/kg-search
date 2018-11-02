@@ -45,7 +45,9 @@ class EditorUserService @Inject()(config: ConfigurationService,
       res => res.status match {
         case OK => (res.json \ "results").as[List[JsObject]]
           .find(js => (js \ "userId").asOpt[String].getOrElse("") == nexusUser.id)
-          .map(js => EditorUser( (js \ "nexusId").as[String], nexusUser))
+          .map{js =>
+            val id = (js \ "nexusId").as[String].split("/").last
+            EditorUser( s"${EditorUserService.editorUserPath.toString()}/$id" , nexusUser)}
         case _ =>
           logger.error(s"Could not fetch the user with ID ${nexusUser.id} " + res.body)
           None
@@ -68,7 +70,7 @@ class EditorUserService @Inject()(config: ConfigurationService,
             res.status match {
               case OK | CREATED =>
                 val (id, path) = NexusInstance.extractIdAndPath(res.json)
-                Some(EditorUser(s"${path.toString}/$id", nexusUser))
+                 Some(EditorUser(s"${path.toString}/$id", nexusUser))
               case _ => None
             }
           }
