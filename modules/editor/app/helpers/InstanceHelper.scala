@@ -98,11 +98,9 @@ object InstanceHelper {
       case (JsonAST.JNothing, _) =>
         changed.merge(added)
       case (_, JsonAST.JNothing) =>
-
         val deletion = handleDeletion(deleted, newJson)
         deletion.merge(added)
       case _ =>
-
         val deletion = handleDeletion(deleted, newJson)
         changed.merge(deletion.merge(added))
     }

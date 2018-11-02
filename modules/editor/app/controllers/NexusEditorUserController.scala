@@ -163,7 +163,7 @@ class NexusEditorUserController @Inject()(
               case Left(r) => Future(EditorResponseHelper.forwardResultResponse(r))
               case Right((bookmarkList, rev, userFolderId) ) =>
                 val updatedBookmarkList = bookmarkList.copy(name = newName)
-                editorUserListService.updateBookmarkList(updatedBookmarkList, userFolderId, rev, token).map[Result]{
+                editorUserListService.updateBookmarkList(updatedBookmarkList, path.withSpecificSubspace(config.editorSubSpace), id, userFolderId, rev, token).map[Result]{
                   case Left(response) => EditorResponseHelper.forwardResultResponse(response)
                   case Right(_) => NoContent
                 }

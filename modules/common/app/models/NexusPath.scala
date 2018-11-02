@@ -23,6 +23,10 @@ case class NexusPath(org: String, domain:String, schema: String, version:String)
     Seq(org, domain, schema, version).mkString("/")
   }
 
+  def withSpecificSubspace(subspace: String):NexusPath = {
+    this.copy(org= org + subspace)
+  }
+
   /**
     * This method returns the path of the instance with the original organization instead of the reconciled space
     * @param reconciledSuffix The term used to identify the reconciled space

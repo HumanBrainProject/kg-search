@@ -32,6 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class EditorUserService @Inject()(config: ConfigurationService,
                                   wSClient: WSClient,
                                   nexusService: NexusService,
+                                  nexusExtensionService: NexusExtensionService,
                                   oIDCAuthService: OIDCAuthService,
                                  )(implicit executionContext: ExecutionContext) {
   val logger = Logger(this.getClass)
@@ -40,13 +41,13 @@ class EditorUserService @Inject()(config: ConfigurationService,
     wSClient
       .url(s"${config.kgQueryEndpoint}/query")
       .withHttpHeaders(CONTENT_TYPE -> JSON)
-      .post(EditorUserService.kgQueryGetUserQuery).map{
+      .post(EditorUserService.kgQueryGetUserQuery(EditorUserService.editorUserPath)).map{
       res => res.status match {
         case OK => (res.json \ "results").as[List[JsObject]]
           .find(js => (js \ "userId").asOpt[String].getOrElse("") == nexusUser.id)
           .map(js => EditorUser( (js \ "nexusId").as[String], nexusUser))
         case _ =>
-          logger.error(s"Could not fetch the user with ID $nexusUser.id " + res.body)
+          logger.error(s"Could not fetch the user with ID ${nexusUser.id} " + res.body)
           None
       }
     }
@@ -54,17 +55,13 @@ class EditorUserService @Inject()(config: ConfigurationService,
 
 
   def createUser(nexusUser: NexusUser, token: String): Future[Option[EditorUser]] = {
-    nexusService.createSimpleSchema(
-      config.nexusEndpoint,
-      EditorUserService.editorUserPath,
-      token,
-      Some(EditorUserService.editorNameSpace)
-    ).flatMap{ res =>
-      res.status match {
-        case OK | CREATED | CONFLICT =>
+    nexusExtensionService
+      .createSimpleSchema(EditorUserService.editorUserPath, Some(config.editorSubSpace))
+      .flatMap {
+        case Right(()) =>
           nexusService.insertInstance(
             config.nexusEndpoint,
-            EditorUserService.editorUserPath,
+            EditorUserService.editorUserPath.withSpecificSubspace(config.editorSubSpace),
             EditorUserService.userToNexusStruct(nexusUser.id),
             token
           ).map { res =>
@@ -75,54 +72,57 @@ class EditorUserService @Inject()(config: ConfigurationService,
               case _ => None
             }
           }
-        case _ =>
-          logger.error("Could not create editor User schema")
+        case Left(res) =>
+          logger.error(s"Could not create editor User schema - ${res.body}")
           Future(None)
       }
-    }
-
   }
 }
 
 object EditorUserService {
-  val editorUserPath = NexusPath("kgeditor", "core", "user", "v0.0.1")
+  val editorUserPath = NexusPath("kg", "core", "user", "v0.0.1")
   val editorNameSpace = "http://hbp.eu/kgeditor/"
 
-  val kgQueryGetUserQuery =
+  val context =
+    """
+      |{
+      |    "@vocab": "https://schema.hbp.eu/graphQuery/",
+      |    "schema": "http://schema.org/",
+      |    "kgeditor": "http://hbp.eu/kgeditor/",
+      |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
+      |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
+      |    "this": "http://schema.hbp.eu/instances/",
+      |    "searchui": "http://schema.hbp.eu/search_ui/",
+      |    "fieldname": {
+      |      "@id": "fieldname",
+      |      "@type": "@id"
+      |    },
+      |    "merge": {
+      |      "@id": "merge",
+      |      "@type": "@id"
+      |    },
+      |    "relative_path": {
+      |      "@id": "relative_path",
+      |      "@type": "@id"
+      |    },
+      |    "root_schema": {
+      |      "@id": "root_schema",
+      |      "@type": "@id"
+      |    }
+      |  }
+    """.stripMargin
+
+  def kgQueryGetUserQuery (editorUserPath: NexusPath, context: String = context): String =
     s"""
        |{
-       |  "@context": {
-       |    "@vocab": "http://schema.hbp.eu/graph_query/",
-       |    "schema": "http://schema.org/",
-       |    "kgeditor": "http://hbp.eu/kgeditor/",
-       |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
-       |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
-       |    "this": "http://schema.hbp.eu/instances/",
-       |    "searchui": "http://schema.hbp.eu/search_ui/",
-       |    "fieldname": {
-       |      "@id": "fieldname",
-       |      "@type": "@id"
-       |    },
-       |    "merge": {
-       |      "@id": "merge",
-       |      "@type": "@id"
-       |    },
-       |    "relative_path": {
-       |      "@id": "relative_path",
-       |      "@type": "@id"
-       |    },
-       |    "root_schema": {
-       |      "@id": "root_schema",
-       |      "@type": "@id"
-       |    }
-       |  },
+       |  "@context": $context,
        |  "schema:name": "",
        |  "root_schema": "nexus_instance:${editorUserPath.toString()}",
        |  "fields": [
        |    {
        |      "fieldname": "nexusId",
        |      "required": true,
-       |      "relative_path": "@id"
+       |      "relative_path": "_originalId"
        |    },
        |    {
        |      "fieldname": "userId",

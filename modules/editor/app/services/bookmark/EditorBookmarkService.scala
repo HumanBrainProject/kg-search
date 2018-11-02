@@ -28,7 +28,7 @@ import play.api.http.HeaderNames.CONTENT_TYPE
 import play.api.http.Status._
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
-import services.EditorUserService.{editorNameSpace, editorUserPath}
+import services.EditorUserService.editorNameSpace
 import services.NexusService.{SKIP, UPDATE}
 import services._
 
@@ -36,7 +36,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class EditorBookmarkService @Inject()(config: ConfigurationService,
                                       wSClient: WSClient,
-                                      nexusService: NexusService
+                                      nexusService: NexusService,
+                                      nexusExtensionService: NexusExtensionService
                                  )(implicit executionContext: ExecutionContext) extends EditorBookmarkServiceInterface {
   val logger = Logger(this.getClass)
 
@@ -44,7 +45,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
     wSClient
       .url(s"${config.kgQueryEndpoint}/query/${editorUser.nexusId}")
       .withHttpHeaders(CONTENT_TYPE -> JSON)
-      .post(EditorBookmarkService.kgQueryGetUserFoldersQuery).map {
+      .post(EditorBookmarkService.kgQueryGetUserFoldersQuery(EditorUserService.editorUserPath)).map {
       res =>
         res.status match {
           case OK =>
@@ -108,35 +109,31 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
   }
 
   def createBookmarkListFolder(user: EditorUser, name: String, folderType: FolderType = BOOKMARKFOLDER, token: String): Future[Option[BookmarkListFolder]] = {
-    nexusService.createSimpleSchema(
-      config.nexusEndpoint,
+    nexusExtensionService.createSimpleSchema(
       EditorBookmarkService.bookmarkListFolderPath,
-      token,
-      Some(EditorUserService.editorNameSpace)
-    ).flatMap { res =>
-      res.status match {
-        case OK | CREATED | CONFLICT =>
-          val payload = EditorBookmarkService.bookmarkListFolderToNexusStruct(name, s"${config.nexusEndpoint}/v0/data/${user.nexusId}", folderType)
-          nexusService.insertInstance(
-            config.nexusEndpoint,
-            EditorBookmarkService.bookmarkListFolderPath,
-            payload,
-            token
-          ).map {
-            res =>
-              res.status match {
-                case CREATED =>
-                  val (id, path) = NexusInstance.extractIdAndPath(res.json)
-                  Some(BookmarkListFolder(s"${path.toString()}/$id", name, folderType, List()))
-                case _ =>
-                  logger.error("Error while creating a user folder " + res.body)
-                  None
-              }
-          }
-        case _ =>
-          logger.error("Could not created schema for User folder")
-          Future(None)
-      }
+      Some(config.editorSubSpace)
+    ).flatMap {
+      case Right(()) =>
+        val payload = EditorBookmarkService.bookmarkListFolderToNexusStruct(name, s"${config.nexusEndpoint}/v0/data/${user.nexusId}", folderType)
+        nexusService.insertInstance(
+          config.nexusEndpoint,
+          EditorBookmarkService.bookmarkListFolderPath.withSpecificSubspace(config.editorSubSpace),
+          payload,
+          token
+        ).map {
+          res =>
+            res.status match {
+              case CREATED =>
+                val (id, path) = NexusInstance.extractIdAndPath(res.json)
+                Some(BookmarkListFolder(s"${path.toString()}/$id", name, folderType, List()))
+              case _ =>
+                logger.error("Error while creating a user folder " + res.body)
+                None
+            }
+        }
+      case Left(res) =>
+        logger.error(s"Could not created schema for User folder ${res.body}")
+        Future(None)
     }
   }
 
@@ -152,7 +149,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
           val payload = EditorBookmarkService.bookmarkListToNexusStruct(bookmarkListName, s"${config.nexusEndpoint}/v0/data/${folderId}")
           nexusService.insertInstance(
             config.nexusEndpoint,
-            EditorBookmarkService.bookmarkListPath,
+            EditorBookmarkService.bookmarkListPath.withSpecificSubspace(config.editorSubSpace),
             payload,
             token
           ).map {
@@ -193,9 +190,9 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
     }
   }
 
-  def updateBookmarkList(bookmarkList: BookmarkList, userFolderId:String, revision: Long, token: String): Future[Either[WSResponse, BookmarkList]] = {
+  def updateBookmarkList(bookmarkList: BookmarkList, bookmarkListPath: NexusPath, bookmarkListId: String, userFolderId:String, revision: Long, token: String): Future[Either[WSResponse, BookmarkList]] = {
     nexusService.updateInstance(
-      s"${config.nexusEndpoint}/v0/data/${bookmarkList.id}",
+      s"${config.nexusEndpoint}/v0/data/${bookmarkListPath.toString()}$bookmarkListId",
       Some(revision),
       EditorBookmarkService.bookmarkListToNexusStruct(bookmarkList.name, userFolderId), token
     ).map{
@@ -208,16 +205,23 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
 
 
   def deleteBookmarkList(bookmarkListPath: NexusPath, instanceId: String, token: String): Future[Either[APIEditorError, Unit]] = {
+    val pattern = """(.+)\?rev=(\d+)""".r
+    def extractIdAndRev(s:String): (String, Long) = s match {
+      case pattern(id, rev) => (id, rev.toLong)
+      case id => (id, 1L)
+    }
     // Get all bookmarks link to the bookmark list and their revision
     wSClient
-      .url(s"${config.kgQueryEndpoint}/query/${bookmarkListPath.toString}/$instanceId")
+      .url(s"${config.kgQueryEndpoint}/query/${bookmarkListPath.toString()}/$instanceId")
       .withHttpHeaders(CONTENT_TYPE -> JSON)
-      .post(EditorBookmarkService.kgQueryGetBookmarksForDeletion ).flatMap {
+      .post(EditorBookmarkService.kgQueryGetBookmarksForDeletion(bookmarkListPath) ).flatMap {
       res =>
         res.status match {
           case OK =>
-            val bookmarkListToDelete = ((res.json \ "id").as[String] , (res.json \ "rev").as[Long])
-            val bookmarksToDelete = (res.json \ "bookmarks").as[List[JsObject]].map( js => ((js \ "id").as[String], (js \ "rev").as[Long] ))
+            val bookmarkListToDelete = extractIdAndRev((res.json \ "originalId").as[String])
+            val bookmarksToDelete = (res.json \ "bookmarks").as[List[JsObject]].map{ js =>
+              extractIdAndRev((js \ "originalId").as[String])
+            }
           // Delete all bookmarks
             val listOfFuture = for {
               (identifier, rev) <- bookmarksToDelete
@@ -250,7 +254,6 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
           case _ =>
             logger.error(s"Could not fetch the bookmarks to be deleted ${res.body}")
             Future(Left(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch delete the data")))
-
         }
     }
   }
@@ -273,7 +276,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
             val toInsert = EditorBookmarkService.bookmarkToNexusStruct(instanceFullId, id)
             nexusService.insertInstance(
               config.nexusEndpoint,
-              EditorBookmarkService.bookmarkPath,
+              EditorBookmarkService.bookmarkPath.withSpecificSubspace(config.editorSubSpace),
               toInsert,
               token
             )
@@ -350,39 +353,44 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
 
 object EditorBookmarkService {
   val commonNodeTypes = List("minds/core/dataset/v0.0.4")
-  val bookmarkListFolderPath = NexusPath("kgeditor", "core", "bookmarklistfolder", "v0.0.1")
-  val bookmarkListPath = NexusPath("kgeditor", "core", "bookmarklist", "v0.0.1")
-  val bookmarkPath = NexusPath("kgeditor", "core", "bookmark", "v0.0.1")
+  val bookmarkListFolderPath = NexusPath("kg", "core", "bookmarklistfolder", "v0.0.1")
+  val bookmarkListPath = NexusPath("kg", "core", "bookmarklist", "v0.0.1")
+  val bookmarkPath = NexusPath("kg", "core", "bookmark", "v0.0.1")
 
-  val kgQueryGetUserFoldersQuery = s"""
+  val context =
+    """
+      |{
+      |    "@vocab": "https://schema.hbp.eu/graphQuery/",
+      |    "schema": "http://schema.org/",
+      |    "kgeditor": "http://hbp.eu/kgeditor/",
+      |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
+      |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
+      |    "this": "http://schema.hbp.eu/instances/",
+      |    "searchui": "http://schema.hbp.eu/search_ui/",
+      |    "fieldname": {
+      |      "@id": "fieldname",
+      |      "@type": "@id"
+      |    },
+      |    "merge": {
+      |      "@id": "merge",
+      |      "@type": "@id"
+      |    },
+      |    "relative_path": {
+      |      "@id": "relative_path",
+      |      "@type": "@id"
+      |    },
+      |    "root_schema": {
+      |      "@id": "root_schema",
+      |      "@type": "@id"
+      |    }
+      |  }
+    """.stripMargin
+
+  def kgQueryGetUserFoldersQuery(userPath: NexusPath, context: String = context): String = s"""
      |{
-     |  "@context": {
-     |    "@vocab": "http://schema.hbp.eu/graph_query/",
-     |    "schema": "http://schema.org/",
-     |    "kgeditor": "http://hbp.eu/kgeditor/",
-     |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
-     |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
-     |    "this": "http://schema.hbp.eu/instances/",
-     |    "searchui": "http://schema.hbp.eu/search_ui/",
-     |    "fieldname": {
-     |      "@id": "fieldname",
-     |      "@type": "@id"
-     |    },
-     |    "merge": {
-     |      "@id": "merge",
-     |      "@type": "@id"
-     |    },
-     |    "relative_path": {
-     |      "@id": "relative_path",
-     |      "@type": "@id"
-     |    },
-     |    "root_schema": {
-     |      "@id": "root_schema",
-     |      "@type": "@id"
-     |    }
-     |  },
+     |  "@context": ,
      |  "schema:name": "",
-     |  "root_schema": "nexus_instance:${editorUserPath.toString()}",
+     |  "root_schema": "nexus_instance:${userPath.toString()}",
      |  "fields": [
      |    {
      |        "fieldname": "userFolders",
@@ -430,33 +438,9 @@ object EditorBookmarkService {
      |}
     """.stripMargin
 
-  def kgQueryGetInstanceBookmarks(instancePath: NexusPath): String = s"""
+  def kgQueryGetInstanceBookmarks(instancePath: NexusPath,  context: String = context): String = s"""
     |{
-    |  "@context": {
-    |    "@vocab": "http://schema.hbp.eu/graph_query/",
-    |    "schema": "http://schema.org/",
-    |    "kgeditor": "http://hbp.eu/kgeditor/",
-    |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
-    |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
-    |    "this": "http://schema.hbp.eu/instances/",
-    |    "searchui": "http://schema.hbp.eu/search_ui/",
-    |    "fieldname": {
-    |      "@id": "fieldname",
-    |      "@type": "@id"
-    |    },
-    |    "merge": {
-    |      "@id": "merge",
-    |      "@type": "@id"
-    |    },
-    |    "relative_path": {
-    |      "@id": "relative_path",
-    |      "@type": "@id"
-    |    },
-    |    "root_schema": {
-    |      "@id": "root_schema",
-    |      "@type": "@id"
-    |    }
-    |  },
+    |  "@context": $context,
     |  "schema:name": "",
     |  "root_schema": "nexus_instance:${instancePath.toString()}",
     |  "fields": [
@@ -481,34 +465,10 @@ object EditorBookmarkService {
     |}
     """.stripMargin
 
-  def kgQueryGetInstanceBookmarkLists(instancePath: NexusPath): String =
+  def kgQueryGetInstanceBookmarkLists(instancePath: NexusPath,  context: String = context): String =
     s"""
     |{
-    |  "@context": {
-    |    "@vocab": "http://schema.hbp.eu/graph_query/",
-    |    "schema": "http://schema.org/",
-    |    "kgeditor": "http://hbp.eu/kgeditor/",
-    |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
-    |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
-    |    "this": "http://schema.hbp.eu/instances/",
-    |    "searchui": "http://schema.hbp.eu/search_ui/",
-    |    "fieldname": {
-    |      "@id": "fieldname",
-    |      "@type": "@id"
-    |    },
-    |    "merge": {
-    |      "@id": "merge",
-    |      "@type": "@id"
-    |    },
-    |    "relative_path": {
-    |      "@id": "relative_path",
-    |      "@type": "@id"
-    |    },
-    |    "root_schema": {
-    |      "@id": "root_schema",
-    |      "@type": "@id"
-    |    }
-    |  },
+    |  "@context": $context,
     |  "schema:name": "",
     |  "root_schema": "nexus_instance:${instancePath.toString()}",
     |  "fields": [
@@ -544,34 +504,10 @@ object EditorBookmarkService {
     |}
     """.stripMargin
 
-  def kgQueryGetInstances(bookmarkListPath: NexusPath): String =
+  def kgQueryGetInstances(bookmarkListPath: NexusPath,  context: String = context): String =
     s"""
        |{
-       |  "@context": {
-       |    "@vocab": "http://schema.hbp.eu/graph_query/",
-       |    "schema": "http://schema.org/",
-       |    "kgeditor": "http://hbp.eu/kgeditor/",
-       |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
-       |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
-       |    "this": "http://schema.hbp.eu/instances/",
-       |    "searchui": "http://schema.hbp.eu/search_ui/",
-       |    "fieldname": {
-       |      "@id": "fieldname",
-       |      "@type": "@id"
-       |    },
-       |    "merge": {
-       |      "@id": "merge",
-       |      "@type": "@id"
-       |    },
-       |    "relative_path": {
-       |      "@id": "relative_path",
-       |      "@type": "@id"
-       |    },
-       |    "root_schema": {
-       |      "@id": "root_schema",
-       |      "@type": "@id"
-       |    }
-       |  },
+       |  "@context": $context,
        |  "schema:name": "",
        |  "root_schema": "nexus_instance:${bookmarkListPath.toString()}",
        |  "fields": [
@@ -609,35 +545,10 @@ object EditorBookmarkService {
        |}
     """.stripMargin
 
-  def kgQueryGetBookmarkListByIdQuery(bookmarkListPath: NexusPath): String =
+  def kgQueryGetBookmarkListByIdQuery(bookmarkListPath: NexusPath,  context: String = context): String =
     s"""
        |{
-       |  "@context": {
-       |    "@vocab": "http://schema.hbp.eu/graph_query/",
-       |    "schema": "http://schema.org/",
-       |    "kgeditor": "http://hbp.eu/kgeditor/",
-       |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
-       |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
-       |    "this": "http://schema.hbp.eu/instances/",
-       |    "searchui": "http://schema.hbp.eu/search_ui/",
-       |    "internal": "http://schema.hbp.eu/internal#",
-       |    "fieldname": {
-       |      "@id": "fieldname",
-       |      "@type": "@id"
-       |    },
-       |    "merge": {
-       |      "@id": "merge",
-       |      "@type": "@id"
-       |    },
-       |    "relative_path": {
-       |      "@id": "relative_path",
-       |      "@type": "@id"
-       |    },
-       |    "root_schema": {
-       |      "@id": "root_schema",
-       |      "@type": "@id"
-       |    }
-       |  },
+       |  "@context": $context,
        |  "schema:name": "",
        |  "root_schema": "nexus_instance:${bookmarkListPath.toString()}",
        |  "fields": [
@@ -646,8 +557,8 @@ object EditorBookmarkService {
        |      "relative_path":"schema:name"
        |     },
        |     {
-       |        "fieldname":"id",
-       |       "relative_path":"@id"
+       |        "fieldname":"idWithRevision",
+       |       "relative_path":"_originalId"
        |     },
        |     {
        |       "fieldname":"revision",
@@ -661,46 +572,17 @@ object EditorBookmarkService {
        |}
     """.stripMargin
 
-  def kgQueryGetBookmarksForDeletion: String =
+  def kgQueryGetBookmarksForDeletion(bookmarkListPath: NexusPath,  context: String = context): String =
     s"""
        |{
-       |  "@context": {
-       |    "@vocab": "http://schema.hbp.eu/graph_query/",
-       |    "schema": "http://schema.org/",
-       |    "kgeditor": "http://hbp.eu/kgeditor/",
-       |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
-       |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
-       |    "this": "http://schema.hbp.eu/instances/",
-       |    "searchui": "http://schema.hbp.eu/search_ui/",
-       |    "internal": "http://schema.hbp.eu/internal#",
-       |    "fieldname": {
-       |      "@id": "fieldname",
-       |      "@type": "@id"
-       |    },
-       |    "merge": {
-       |      "@id": "merge",
-       |      "@type": "@id"
-       |    },
-       |    "relative_path": {
-       |      "@id": "relative_path",
-       |      "@type": "@id"
-       |    },
-       |    "root_schema": {
-       |      "@id": "root_schema",
-       |      "@type": "@id"
-       |    }
-       |  },
+       |  "@context": $context,
        |  "schema:name": "",
        |  "root_schema": "nexus_instance:${bookmarkListPath.toString()}",
        |  "fields": [
        |  {
-       |       "fieldname":"id",
-       |       "relative_path": "@id"
-       |       },
-       |      {
-       |        "fieldname":"rev",
-       |       	"relative_path": "internal:rev"
-       |      },
+       |       "fieldname":"originalId",
+       |       "relative_path": "_originalId"
+       |       }
        |    {
        |        "fieldname": "bookmarks",
        |        "relative_path": {
@@ -709,12 +591,8 @@ object EditorBookmarkService {
        |        },
        |        "fields":[
        |               		{
-       |               			"fieldname":"id",
-       |               			"relative_path": "@id"
-       |               		},
-       |               		{
-       |               			"fieldname":"rev",
-       |               			"relative_path": "internal:rev"
+       |               			"fieldname":"originalId",
+       |               			"relative_path": "_originalId"
        |               		}
        |              ]
        |     }
@@ -722,7 +600,7 @@ object EditorBookmarkService {
        |}
      """.stripMargin
 
-  def bookmarkToNexusStruct(bookmark: String, userBookMarkListNexusId: String) = {
+  def bookmarkToNexusStruct(bookmark: String, userBookMarkListNexusId: String): JsObject = {
     Json.obj(
       "http://schema.org/identifier" -> InstanceHelper.md5HashString(userBookMarkListNexusId + bookmark),
       "http://hbp.eu/kgeditor/bookmarkList" -> Json.obj("@id" -> s"$userBookMarkListNexusId"),
@@ -731,7 +609,7 @@ object EditorBookmarkService {
     )
   }
 
-  def bookmarkListToNexusStruct(name:String, userFolderId: String) = {
+  def bookmarkListToNexusStruct(name:String, userFolderId: String): JsObject = {
     Json.obj(
       "http://schema.org/identifier" -> InstanceHelper.md5HashString(userFolderId + name),
       "http://schema.org/name" -> name,
@@ -740,7 +618,7 @@ object EditorBookmarkService {
     )
   }
 
-  def bookmarkListFolderToNexusStruct(name:String, userNexusId: String, folderType: FolderType) = {
+  def bookmarkListFolderToNexusStruct(name:String, userNexusId: String, folderType: FolderType): JsObject = {
     Json.obj(
       "http://schema.org/identifier" -> InstanceHelper.md5HashString(userNexusId + name),
       "http://schema.org/name" -> name,
