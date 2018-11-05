@@ -161,9 +161,9 @@ class NexusEditorUserController @Inject()(
             token <- oIDCAuthService.getTechAccessToken()
             result <- editorUserListService.getBookmarkListById(path, id).flatMap[Result]{
               case Left(r) => Future(EditorResponseHelper.forwardResultResponse(r))
-              case Right((bookmarkList, rev, userFolderId) ) =>
+              case Right((bookmarkList, userFolderId) ) =>
                 val updatedBookmarkList = bookmarkList.copy(name = newName)
-                editorUserListService.updateBookmarkList(updatedBookmarkList, path.withSpecificSubspace(config.editorSubSpace), id, userFolderId, rev, token).map[Result]{
+                editorUserListService.updateBookmarkList(updatedBookmarkList, path.withSpecificSubspace(config.editorSubSpace), id, userFolderId, token).map[Result]{
                   case Left(response) => EditorResponseHelper.forwardResultResponse(response)
                   case Right(_) => NoContent
                 }

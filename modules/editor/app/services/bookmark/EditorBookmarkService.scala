@@ -168,7 +168,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
     }
   }
 
-  def getBookmarkListById(instancePath: NexusPath, instanceId: String): Future[Either[WSResponse, (BookmarkList, Long, String)]] = {
+  def getBookmarkListById(instancePath: NexusPath, instanceId: String): Future[Either[WSResponse, (BookmarkList, String)]] = {
     wSClient
       .url(s"${config.kgQueryEndpoint}/query/${instancePath.toString}/$instanceId")
       .withHttpHeaders(CONTENT_TYPE -> JSON)
@@ -176,10 +176,11 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
         res =>
           res.status match {
             case OK =>
-              val bookmarkList = res.json.as[BookmarkList]
-              val rev = (res.json \ "revision").as[Long]
+              val id = (res.json \ "id").as[String].split("/v0/data/").tail.head
+              val name = (res.json \ "name").as[String]
+              val bookmarkList = BookmarkList(id, name, None, None, None )
               val userFolderId = (res.json \ "userFolderId" \ "@id").as[String]
-              Right((bookmarkList, rev, userFolderId))
+              Right((bookmarkList, userFolderId))
             case _ =>
               logger.error(s"Could not fetch the bookmark list  with ID ${instanceId} ${res.body}")
               Left(res)
@@ -192,12 +193,11 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
                           bookmarkListPath: NexusPath,
                           bookmarkListId: String,
                           userFolderId: String,
-                          revision: Long,
                           token: String)
   : Future[Either[WSResponse, BookmarkList]] = {
     nexusService.updateInstance(
-      s"${config.nexusEndpoint}/v0/data/${bookmarkListPath.toString()}$bookmarkListId",
-      Some(revision),
+      s"${config.nexusEndpoint}/v0/data/${bookmarkListPath.withSpecificSubspace(config.editorSubSpace).toString()}$bookmarkListId",
+      None,
       EditorBookmarkService.bookmarkListToNexusStruct(bookmarkList.name, userFolderId), token
     ).map {
       res =>
@@ -556,12 +556,16 @@ object EditorBookmarkService {
        |      "relative_path":"schema:name"
        |     },
        |     {
-       |        "fieldname":"idWithRevision",
-       |       "relative_path":"_originalId"
+       |        "fieldname":"id",
+       |       "relative_path":"@id"
        |     },
        |     {
        |       "fieldname":"userFolderId",
        |       "relative_path":"kgeditor:bookmarkListFolder"
+       |     },
+       |     {
+       |       "fieldname":"_originalId",
+       |       "relative_path":"_originalId"
        |     }
        |  ]
        |}
