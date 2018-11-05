@@ -17,7 +17,7 @@
 
 package helpers
 
-import models.NexusPath
+import models.{EditorResponseObject, NexusPath}
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import services.FormService
 
@@ -45,9 +45,9 @@ object NavigationHelper {
     }
   }
 
-  def resultWithBackLink(instance: JsObject, path: NexusPath,reconciledSuffix: String, formService: FormService): JsObject = {
+  def resultWithBackLink(instance: EditorResponseObject, path: NexusPath, reconciledSuffix: String, formService: FormService): JsObject = {
     val backLink = generateBackLink(path, reconciledSuffix, formService)
-    addBackLink(instance, backLink)
+    addBackLink(Json.toJson(instance).as[JsObject], backLink)
   }
 
   def errorMessageWithBackLink(res: Any, backLink: String = ""): JsObject = {

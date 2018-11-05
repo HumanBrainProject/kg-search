@@ -13,23 +13,9 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package models
+package models.error
 
-case class APIEditorError(status:Int, msg: String)
-
-object APIEditorError {
-  import play.api.libs.json._
-  import play.api.libs.functional.syntax._
-
-
-  implicit val userListWrites = new Writes[APIEditorError] {
-    def writes(error: APIEditorError): JsValue ={
-      Json.obj(
-        "error" -> Json.obj(
-          "status" -> error.status,
-          "message" -> error.msg
-        )
-      )
-    }
-  }
+trait Error {
+  val status: Int
+  val msg: String
 }

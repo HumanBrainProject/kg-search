@@ -75,8 +75,8 @@ class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockW
 
       val res = Await.result(service.getUser(nexusUser), FiniteDuration(10 ,"s"))
 
-      res.isDefined mustBe true
-      res.get mustBe user
+      res.isRight mustBe true
+      res mustBe Right(user)
     }
   }
 

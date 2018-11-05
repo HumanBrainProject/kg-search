@@ -17,6 +17,7 @@
 package services
 
 import com.google.inject.Inject
+import models.errors.APIEditorError
 import models._
 import models.instance.NexusInstance
 import models.user.{EditorUser, NexusUser}
@@ -25,7 +26,7 @@ import play.api.http.ContentTypes._
 import play.api.http.HeaderNames._
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
-import play.api.libs.ws.WSClient
+import play.api.libs.ws.{WSClient, WSResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -37,7 +38,7 @@ class EditorUserService @Inject()(config: ConfigurationService,
                                  )(implicit executionContext: ExecutionContext) {
   val logger = Logger(this.getClass)
 
-  def getUser(nexusUser: NexusUser): Future[Option[EditorUser]] = {
+  def getUser(nexusUser: NexusUser): Future[Either[APIEditorError, EditorUser]] = {
     wSClient
       .url(s"${config.kgQueryEndpoint}/query")
       .withHttpHeaders(CONTENT_TYPE -> JSON)
@@ -47,16 +48,17 @@ class EditorUserService @Inject()(config: ConfigurationService,
           .find(js => (js \ "userId").asOpt[String].getOrElse("") == nexusUser.id)
           .map{js =>
             val id = (js \ "nexusId").as[String].split("/").last
-            EditorUser( s"${EditorUserService.editorUserPath.toString()}/$id" , nexusUser)}
+            Right(EditorUser( s"${EditorUserService.editorUserPath.toString()}/$id" , nexusUser))
+          }.getOrElse(Left(APIEditorError(NOT_FOUND, "Could not find editor user")))
         case _ =>
           logger.error(s"Could not fetch the user with ID ${nexusUser.id} " + res.body)
-          None
+          Left(APIEditorError(NOT_FOUND, "Could not find editor user"))
       }
     }
   }
 
 
-  def createUser(nexusUser: NexusUser, token: String): Future[Option[EditorUser]] = {
+  def createUser(nexusUser: NexusUser, token: String): Future[Either[WSResponse, EditorUser]] = {
     nexusExtensionService
       .createSimpleSchema(EditorUserService.editorUserPath, Some(config.editorSubSpace))
       .flatMap {
@@ -70,13 +72,13 @@ class EditorUserService @Inject()(config: ConfigurationService,
             res.status match {
               case OK | CREATED =>
                 val (id, path) = NexusInstance.extractIdAndPath(res.json)
-                 Some(EditorUser(s"${path.toString}/$id", nexusUser))
-              case _ => None
+                 Right(EditorUser(s"${path.toString}/$id", nexusUser))
+              case _ => Left(res)
             }
           }
         case Left(res) =>
           logger.error(s"Could not create editor User schema - ${res.body}")
-          Future(None)
+          Future(Left(res))
       }
   }
 }

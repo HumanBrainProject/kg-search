@@ -20,7 +20,7 @@ import helpers.NexusHelper.{domainDefinition, hash, minimalSchemaDefinition, sch
 import models.NexusPath
 import models.instance.{NexusInstance, ReleaseInstance}
 import play.api.Logger
-import play.api.http.Status.{NOT_FOUND, OK, CREATED}
+import play.api.http.Status.{NOT_FOUND, OK, CREATED, NO_CONTENT}
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import services.NexusService._
@@ -348,9 +348,14 @@ class NexusService @Inject()(wSClient: WSClient, config:ConfigurationService)(im
     }
   }
 
-  def deprecateInstance(nexusEndpoint: String, nexusPath: NexusPath, id: String, revision: Long, token: String): Future[WSResponse] = {
+  def deprecateInstance(nexusEndpoint: String, nexusPath: NexusPath, id: String, revision: Long, token: String): Future[Either[WSResponse,Unit]] = {
     val instanceUrl = s"${nexusEndpoint}/v0/data/${nexusPath.org}/${nexusPath.domain}/${nexusPath.schema.toLowerCase}/${nexusPath.version}/${id}?rev=$revision"
-    wSClient.url(instanceUrl).withHttpHeaders("Authorization" -> token).delete()
+    wSClient.url(instanceUrl).withHttpHeaders("Authorization" -> token).delete().map{
+      res => res.status match {
+        case OK | NO_CONTENT => Right(())
+        case _ => Left(res)
+      }
+    }
   }
 
   /**

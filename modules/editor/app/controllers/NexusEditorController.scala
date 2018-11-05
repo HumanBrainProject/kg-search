@@ -83,7 +83,7 @@ class NexusEditorController @Inject()(
               )
             )
           case instanceForm =>
-            Ok(NavigationHelper.resultWithBackLink(instanceForm.as[JsObject], nexusPath, config.reconciledPrefix, formService))
+            Ok(NavigationHelper.resultWithBackLink(EditorResponseObject(instanceForm.as[JsObject]), nexusPath, config.reconciledPrefix, formService))
         }
     }
   }
@@ -133,7 +133,7 @@ class NexusEditorController @Inject()(
             )
           case instanceContent => Ok(
             NavigationHelper.resultWithBackLink(
-              instanceContent.as[JsObject],
+              EditorResponseObject(instanceContent),
               nexusPath,
               config.reconciledPrefix,
               formService
@@ -195,7 +195,7 @@ class NexusEditorController @Inject()(
             case Right(instance) =>
               Ok(
                 NavigationHelper
-                  .resultWithBackLink(instance.formatFromNexusToOption(config.reconciledPrefix), instancePath, config.reconciledPrefix, formService)
+                  .resultWithBackLink(EditorResponseObject(instance.formatFromNexusToOption(config.reconciledPrefix)), instancePath, config.reconciledPrefix, formService)
               )
           }
         case _ =>
@@ -281,7 +281,7 @@ class NexusEditorController @Inject()(
                         Ok(
                           NavigationHelper
                             .resultWithBackLink(
-                              instance.formatFromNexusToOption(config.reconciledPrefix),
+                              EditorResponseObject(instance.formatFromNexusToOption(config.reconciledPrefix)),
                               originalPath,
                               config.reconciledPrefix,
                               formService
@@ -396,7 +396,7 @@ class NexusEditorController @Inject()(
                   .-("@id")
                   .-("@context")
                   .-("nxv:rev")
-                Created(NavigationHelper.resultWithBackLink(output.as[JsObject], instancePath, config.reconciledPrefix, formService))
+                Created(NavigationHelper.resultWithBackLink(EditorResponseObject(output), instancePath, config.reconciledPrefix, formService))
               case _ =>
                 logger.error(res.body)
                 EditorResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, config.reconciledPrefix, formService)
@@ -501,7 +501,7 @@ class NexusEditorController @Inject()(
             (arr, response) =>
               response match {
                 case Left((id, res)) => arr.+:(Json.obj("id" -> id, "error" -> res.body))
-                case Right(json) => arr.+:(json)
+                case Right(j) => arr.+:(j)
               }
           }
         }
