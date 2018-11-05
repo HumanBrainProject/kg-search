@@ -241,7 +241,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
                 if(listOfResponse.forall(_.isRight)){
                   logger.debug("All the bookmarks are deleted. We can safely delete the bookmark list")
                   // Delete the bookmark list
-                  nexusService.deprecateInstance(config.nexusEndpoint, bookmarkListPath, instanceId, bookmarkListToDelete._2, token).map {
+                  nexusService.deprecateInstance(config.nexusEndpoint, bookmarkListPath.withSpecificSubspace(config.editorSubSpace), instanceId, bookmarkListToDelete._2, token).map {
                     case Right(()) => Right(())
                     case Left(r) => Left(APIEditorError(r.status, r.body))
                   }
@@ -258,7 +258,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
             }
           case _ =>
             logger.error(s"Could not fetch the bookmarks to be deleted ${res.body}")
-            Future(Left(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch delete the data")))
+            Future(Left(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch data to delete ")))
         }
     }
   }
@@ -581,7 +581,7 @@ object EditorBookmarkService {
        |  {
        |       "fieldname":"originalId",
        |       "relative_path": "_originalId"
-       |       }
+       |       },
        |    {
        |        "fieldname": "bookmarks",
        |        "relative_path": {
