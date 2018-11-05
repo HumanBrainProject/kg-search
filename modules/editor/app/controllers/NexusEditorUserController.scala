@@ -22,7 +22,7 @@ import com.google.inject.Inject
 import helpers.EditorResponseHelper
 import models.editorUserList.BOOKMARKFOLDER
 import models.instance.NexusInstance
-import models.{AuthenticatedUserAction, NexusPath, UserRequest}
+import models.{AuthenticatedUserAction, EditorResponseObject, NexusPath, UserRequest}
 import play.api.Logger
 import play.api.libs.json._
 import play.api.mvc.{AnyContent, _}
@@ -47,10 +47,10 @@ class NexusEditorUserController @Inject()(
 
   private def getOrCreateUserWithUserFolder( token: String)(implicit request: UserRequest[AnyContent] ) = {
     editorUserService.getUser(request.user).flatMap{
-      case Some(editorUser) => Future(Some(editorUser))
-      case None =>
+      case Right(editorUser) => Future(Some(editorUser))
+      case Left(_) =>
         editorUserService.createUser(request.user, token).flatMap{
-          case Some(editorUser) =>
+          case Right(editorUser) =>
             editorUserListService.createBookmarkListFolder(editorUser, "My Bookmarks", BOOKMARKFOLDER, token).map{
               case Some(_) =>
                Some(editorUser)
@@ -61,7 +61,7 @@ class NexusEditorUserController @Inject()(
                 )
                 None
             }
-          case None => Future(None)
+          case Left(_) => Future(None)
         }
     }
   }
@@ -82,7 +82,7 @@ class NexusEditorUserController @Inject()(
     for{
       res <-  editorUserListService.getUserLists(request.editorUser, formService.formRegistry).map {
           case Left(r) => EditorResponseHelper.forwardResultResponse(r)
-          case Right(l) => Ok(Json.toJson(l))
+          case Right(l) => Ok(Json.toJson(EditorResponseObject(Json.toJson(l))))
         }
     } yield res
   }
@@ -99,7 +99,7 @@ class NexusEditorUserController @Inject()(
                    ): Action[AnyContent] = authenticatedUserAction.async  { implicit request =>
     val nexusPath = NexusPath(org, domain, datatype, version)
     arangoQueryService.listInstances(nexusPath, from, size, search).map{
-      case Right(json) => Ok(json)
+      case Right(data) => Ok(Json.toJson(data))
       case Left(res) => EditorResponseHelper.forwardResultResponse(res)
     }
   }
@@ -116,7 +116,7 @@ class NexusEditorUserController @Inject()(
                              ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
     val nexusPath = NexusPath(org, domain, datatype, version)
     editorUserListService.getInstanceOfBookmarkList(s"${nexusPath.toString()}/$id", from, size, search).map{
-      case Right(instances) => Ok(Json.toJson(instances))
+      case Right(instances) => Ok(Json.toJson(EditorResponseObject(Json.toJson(instances))))
       case Left(res) => EditorResponseHelper.forwardResultResponse(res)
     }
   }
@@ -230,10 +230,13 @@ class NexusEditorUserController @Inject()(
               .removeInstanceFromBookmarkLists(path, id , fullIds, token)
           } yield listResult
           futList.map { listResponse =>
-            if (listResponse.forall(_.status == OK)) {
+            if (listResponse.forall(_.isRight)) {
               Ok("Bookmarks removed")
             } else {
-              val errors = listResponse.filter(_.status >= BAD_REQUEST).mkString("\n")
+              val errors = listResponse.filter(_.isLeft).map{
+                case Left(d) => d.body
+                case Right(_) => ""
+              }.mkString("\n")
               InternalServerError(s"Could not remove all the bookmarks - $errors")
             }
           }

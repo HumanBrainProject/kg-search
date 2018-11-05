@@ -17,6 +17,7 @@
 package services.bookmark
 
 import com.google.inject.Inject
+import models.errors.APIEditorError
 import helpers.InstanceHelper
 import models._
 import models.editorUserList._
@@ -237,21 +238,21 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
             }
             Future.sequence(listOfFuture).flatMap[Either[APIEditorError, Unit]]{
               listOfResponse =>
-                if(listOfResponse.forall(res => res.status == OK)){
+                if(listOfResponse.forall(_.isRight)){
                   logger.debug("All the bookmarks are deleted. We can safely delete the bookmark list")
                   // Delete the bookmark list
                   nexusService.deprecateInstance(config.nexusEndpoint, bookmarkListPath, instanceId, bookmarkListToDelete._2, token).map {
-                    res =>
-                      res.status match {
-                        case OK => Right(())
-                        case _ => Left(APIEditorError(res.status, res.body))
-                      }
+                    case Right(()) => Right(())
+                    case Left(r) => Left(APIEditorError(r.status, r.body))
                   }
                 }else{
                   logger.error("Could not delete all the bookmarks")
                   val compiledMessage = listOfResponse
-                    .filterNot(res => res.status == OK)
-                    .map(res => s"${res.status} - ${res.statusText} - ${res.body}").mkString("\n")
+                    .filterNot(_.isRight)
+                    .map{
+                      case Left(res) =>  s"${res.status} - ${res.statusText} - ${res.body}"
+                      case _ => ""
+                    }.mkString("\n")
                   Future(Left(APIEditorError(INTERNAL_SERVER_ERROR, compiledMessage)))
                 }
             }
@@ -295,7 +296,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
                                   bookmarkListIds: List[String],
                                   token: String
                                 ):
-  Future[List[WSResponse]] = {
+  Future[List[Either[WSResponse, Unit]]] = {
     // Get the ids of the bookmarks
     wSClient
       .url(s"${config.kgQueryEndpoint}/query/${instancePath.toString()}/$instanceId")
@@ -316,9 +317,9 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
                       nexusService.deprecateInstance(config.nexusEndpoint,NexusPath(path), nexusId.substring(1), 1L, token)
                     }
                   Future.sequence(listResponses)
-                case None => Future(List(res))
+                case None => Future(List(Left(res)))
             }
-          case _ => Future(List(res))
+          case _ => Future(List(Left(res)))
         }
 
     }

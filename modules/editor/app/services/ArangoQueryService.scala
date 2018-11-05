@@ -17,7 +17,8 @@ package services
 
 import com.google.inject.Inject
 import helpers.InstanceHelper
-import models.{FormRegistry, NexusPath}
+import models.instance.NexusInstance
+import models.{EditorResponseObject, EditorResponseWithCount, FormRegistry, NexusPath}
 import play.api.http.HeaderNames._
 import play.api.http.Status._
 import play.api.libs.json._
@@ -53,7 +54,18 @@ class ArangoQueryService @Inject()(
 
   }
 
-  def listInstances(nexusPath: NexusPath, from: Int, size: Int, search: String): Future[Either[WSResponse, JsObject]] = {
+  def getInstance(nexusPath:NexusPath, id:String): Future[Either[WSResponse, NexusInstance]] = {
+    wSClient.url(s"${config.kgQueryEndpoint}/arango/instance/${nexusPath.toString()}/$id")
+      .get()
+      .map{ res =>
+        res.status match {
+          case OK => Right(res.json.as[NexusInstance])
+          case _ => Left(res)
+        }
+      }
+  }
+
+  def listInstances(nexusPath: NexusPath, from: Int, size: Int, search: String): Future[Either[WSResponse, EditorResponseWithCount]] = {
     wSClient.url(s"${config.kgQueryEndpoint}/arango/instances/${nexusPath.toString()}")
       .withQueryStringParameters(("search", search), ("from", from.toString), ("size", size.toString)).get().map{
       res =>
@@ -66,30 +78,26 @@ class ArangoQueryService @Inject()(
             }
             val data = (res.json \ "data").as[JsArray]
             if(data.value.nonEmpty){
+              val result = EditorResponseWithCount(
+                Json.toJson(InstanceHelper.formatInstanceList( data, config.reconciledPrefix)),
+                (data.value.head \ "@type").as[String],
+                (formService.formRegistry.registry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String]
+                  .getOrElse(nexusPath.toString()),
+                total
+              )
               Right(
-                Json.obj("data" -> Json.toJson(InstanceHelper.formatInstanceList( data, config.reconciledPrefix)),
-                  "label" -> JsString(
-                    (formService.formRegistry.registry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String]
-                      .getOrElse(nexusPath.toString())
-                  ),
-                  "dataType" -> (data.value.head \ "@type").as[JsString],
-                  "total" -> total
-                )
+                result
               )
             }else{
               Right(
-                Json.obj(
-                  "data" -> JsArray(),
-                  "label" -> JsString(""),
-                  "dataType" -> "",
-                  "total" -> 0
-                )
+                EditorResponseWithCount.empty
               )
             }
           case _ => Left(res)
         }
     }
   }
+
 
   private def graph(nexusPath: NexusPath, id:String, step:Int): Future[Either[WSResponse, JsObject]] = {
     wSClient

@@ -50,12 +50,8 @@ case class NexusPath(org: String, domain:String, schema: String, version:String)
     * @return A NexusPath object with an reconciled organization
     */
   def reconciledPath(reconciledSuffix: String): NexusPath = {
-    val org = if(this.org.endsWith(reconciledSuffix)){
-      this.org
-    }else {
-      NexusPath.addSuffixToOrg(this.org, reconciledSuffix)
-    }
-    NexusPath(org, this.domain, this.schema, this.version)
+    assert(!this.org.endsWith(reconciledSuffix))
+    NexusPath( NexusPath.addSuffixToOrg(this.org, reconciledSuffix), this.domain, this.schema, this.version)
   }
 
   def isReconciled(reconciledSuffix:String): Boolean = {

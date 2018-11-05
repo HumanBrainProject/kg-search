@@ -16,6 +16,7 @@
 */
 package services.bookmark
 
+import models.errors.APIEditorError
 import models._
 import models.editorUserList.{BOOKMARKFOLDER, BookmarkList, BookmarkListFolder, FolderType}
 import models.instance.PreviewInstance
@@ -40,7 +41,7 @@ trait EditorBookmarkServiceInterface {
 
   def addInstanceToBookmarkLists(instanceFullId: String, bookmarkListIds: List[String], token:String):Future[List[WSResponse]]
 
-  def removeInstanceFromBookmarkLists(instancePath: NexusPath, instanceId: String, bookmarkListIds: List[String], token: String):Future[List[WSResponse]]
+  def removeInstanceFromBookmarkLists(instancePath: NexusPath, instanceId: String, bookmarkListIds: List[String], token: String):Future[List[Either[WSResponse, Unit]]]
 
   def retrieveBookmarkList(instanceIds: List[(NexusPath, String)]):Future[Map[String, Either[APIEditorError, List[BookmarkList]]]]
 }
