@@ -35,6 +35,7 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 
 class EditorService @Inject()(wSClient: WSClient,
                               nexusService: NexusService,
+                              arangoQueryService: ArangoQueryService,
                               config: ConfigurationService,
                                )(implicit executionContext: ExecutionContext) {
 
@@ -101,21 +102,11 @@ class EditorService @Inject()(wSClient: WSClient,
     * @return An error response or an the instance
     */
   def retrieveInstance(path: NexusPath, id: String, token: String, parameters: List[(String, String)] = List()): Future[Either[WSResponse, NexusInstance]] = {
-    val reconciledPath = path.reconciledPath(config.reconciledPrefix)
-    nexusService.getInstance(reconciledPath, id, token, parameters).flatMap[Either[WSResponse, NexusInstance]] {
-      case Left(_) => // Check in the original space
-        retrieveReconciledFromOriginal(path, reconciledPath.org, id, token, parameters).flatMap[Either[WSResponse, NexusInstance]] {
-          case Left(r) =>
-            Future.successful(Left(r))
-          case Right(reconciledInstance) =>
-            if (reconciledInstance.isDefined) {
-              Future.successful(Right(reconciledInstance.get.nexusInstance))
-            } else {
-              nexusService.getInstance(path, id, token, parameters)
-            }
-        }
+    arangoQueryService.getInstance(path, id).map[Either[WSResponse, NexusInstance]] {
+      case Left(res) => // Check in the original space
+        Left(res)
       case Right(instance) =>
-        Future.successful(Right(instance))
+        Right(instance)
     }
   }
 

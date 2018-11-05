@@ -73,8 +73,8 @@ class NexusEditorController @Inject()(
         logger.error(s"Error: Could not fetch instance : ${nexusPath.toString()}/$id - ${r.body}")
         EditorResponseHelper.errorResultWithBackLink(r.status, r.headers, r.body, nexusPath, config.reconciledPrefix, formService)
       case Right(instance) =>
-        val instanceWithCorrectLinks = instance.modificationOfLinks(config.nexusEndpoint, config.reconciledPrefix)
-        FormService.getFormStructure(nexusPath, instanceWithCorrectLinks.content, config.reconciledPrefix, formService.formRegistry) match {
+//        val instanceWithCorrectLinks = instance.modificationOfLinks(config.nexusEndpoint, config.reconciledPrefix)
+        FormService.getFormStructure(nexusPath, instance.content, config.reconciledPrefix, formService.formRegistry) match {
           case JsNull =>
             NotImplemented(
               NavigationHelper.errorMessageWithBackLink(

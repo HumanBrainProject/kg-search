@@ -243,15 +243,7 @@ class NexusService @Inject()(wSClient: WSClient, config:ConfigurationService)(im
   def insertInstance(nexusUrl:String, nexusPath: NexusPath, payload: JsValue, token: String): Future[WSResponse] = {
     val instanceUrl = s"${nexusUrl}/v0/data/${nexusPath.org}/${nexusPath.domain}/${nexusPath.schema.toLowerCase}/${nexusPath.version}"
     val payloadWihtHash = payload.as[JsObject].+("http://hbp.eu/internal#hashcode", JsString(hash(payload.toString())))
-    wSClient.url(instanceUrl).addHttpHeaders("Authorization" -> token).post(payloadWihtHash).flatMap{
-      response => response.status match {
-        case OK | CREATED => // instance inserted
-          Future.successful(response)
-
-        case _ => // forward error message from nexus
-          Future.successful(response)
-      }
-    }
+    wSClient.url(instanceUrl).addHttpHeaders("Authorization" -> token).post(payloadWihtHash)
   }
 
   def updateInstanceLastRev(instanceUrl: String, payload: JsValue, token: String): Future[(String, WSResponse)] = {

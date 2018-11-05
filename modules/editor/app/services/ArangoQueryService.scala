@@ -17,6 +17,7 @@ package services
 
 import com.google.inject.Inject
 import helpers.InstanceHelper
+import models.instance.NexusInstance
 import models.{FormRegistry, NexusPath}
 import play.api.http.HeaderNames._
 import play.api.http.Status._
@@ -51,6 +52,17 @@ class ArangoQueryService @Inject()(
       }
     }
 
+  }
+
+  def getInstance(nexusPath:NexusPath, id:String): Future[Either[WSResponse, NexusInstance]] = {
+    wSClient.url(s"${config.kgQueryEndpoint}/arango/instance/${nexusPath.toString()}/$id")
+      .get()
+      .map{ res =>
+        res.status match {
+          case OK => Right(res.json.as[NexusInstance])
+          case _ => Left(res)
+        }
+      }
   }
 
   def listInstances(nexusPath: NexusPath, from: Int, size: Int, search: String): Future[Either[WSResponse, JsObject]] = {
@@ -90,6 +102,7 @@ class ArangoQueryService @Inject()(
         }
     }
   }
+
 
   private def graph(nexusPath: NexusPath, id:String, step:Int): Future[Either[WSResponse, JsObject]] = {
     wSClient
