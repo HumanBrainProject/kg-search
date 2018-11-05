@@ -694,4 +694,4 @@ DELETE /api/instance/:org/:domain/:schema/:version/:id/bookmarks    controllers.
 #      required: false
 #      type: string
 ###
-POST /api/bookmarks                                                 controllers.NexusEditorUserController.retrieveBookmarkLists
+POST /api/bookmarks                                                 controllers.NexusEditorUserController.retrieveBookmarks

@@ -43,5 +43,5 @@ trait EditorBookmarkServiceInterface {
 
   def removeInstanceFromBookmarkLists(instancePath: NexusPath, instanceId: String, bookmarkListIds: List[String], token: String):Future[List[Either[WSResponse, Unit]]]
 
-  def retrieveBookmarkList(instanceIds: List[(NexusPath, String)]):Future[Map[String, Either[APIEditorError, List[BookmarkList]]]]
+  def retrieveBookmarkList(instanceIds: List[(NexusPath, String)]):Future[List[(String, Either[APIEditorError, List[BookmarkList]])]]
 }

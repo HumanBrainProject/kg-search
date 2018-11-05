@@ -245,7 +245,7 @@ class NexusEditorUserController @Inject()(
       }
     }
 
-  def retrieveBookmarkLists : Action[AnyContent] =
+  def retrieveBookmarks : Action[AnyContent] =
     (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
       import EditorBookmarkService.JsEither._
       val instanceList = for{
@@ -260,7 +260,9 @@ class NexusEditorUserController @Inject()(
             (NexusPath(path), id.replaceFirst("/", ""))
           }
           editorUserListService.retrieveBookmarkList(formattedList).map{
-            res => Ok(Json.toJson(res))
+            res =>
+              val json = res.map(el => Json.obj("id" -> el._1, "bookmarkLists" -> el._2))
+              Ok(Json.toJson(EditorResponseObject(Json.toJson(json))))
           }
         case None => Future(BadRequest("Missing body content"))
       }

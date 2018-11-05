@@ -325,10 +325,10 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
     }
   }
 
-  def retrieveBookmarkList(instanceIds: List[(NexusPath, String)]): Future[Map[String, Either[APIEditorError, List[BookmarkList]]]] = {
+  def retrieveBookmarkList(instanceIds: List[(NexusPath, String)]): Future[List[(String, Either[APIEditorError, List[BookmarkList]])]] = {
     Future.sequence(instanceIds.map { ids =>
       retrieveBookmarkListSingleInstance(ids._1, ids._2)
-    }).map(_.toMap)
+    })
   }
 
   private def retrieveBookmarkListSingleInstance(instancePath: NexusPath, instanceId: String): Future[(String ,Either[APIEditorError, List[BookmarkList]])] = {
