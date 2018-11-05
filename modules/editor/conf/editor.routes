@@ -489,7 +489,7 @@ GET /api/bookmarkListFolders                                controllers.NexusEdi
 #      '200':
 #        description: Ok
 ###
-GET /api/bookmarkListInstances/:org/:domain/:schema/:version        controllers.NexusEditorUserController.getInstancesOfBookmarkListBySchema(org: String, domain:String, schema: String, version:String, from:Int=0, size:Int=20, search:String?="")
+GET /api/bookmarkListInstances/:org/:domain/:schema/:version        controllers.NexusEditorUserController.getInstancesOfBookmarkListBySchema(org: String, domain:String, schema: String, version:String, from:Int?=0, size:Int?=20, search:String?="")
 
 ###
 #tags:

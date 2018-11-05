@@ -214,12 +214,8 @@ object InstanceHelper {
       } else {
         ""
       }
-
-      val id = url.split("/").last
-      val formattedId = NexusPath(url)
-        .originalPath(reconciledSuffix)
-        .toString() + "/" + id
-      PreviewInstance(formattedId,name, Some(description))
+      val id = url.split("/v0/data/").last
+      PreviewInstance(id,name, Some(description))
     }.toList
   }
 
