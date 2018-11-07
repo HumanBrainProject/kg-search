@@ -15,6 +15,7 @@
 */
 package models.instance
 
+import constants.SchemaFieldsConstants
 import models.user.User
 import org.joda.time.DateTime
 import play.api.libs.json._
@@ -95,7 +96,7 @@ object EditorInstance {
   def generateInstance(nexusInstance: NexusInstance,org: String, datatype: String, identifier: String, originalPath: String): EditorInstance = {
     val content = nexusInstance.content
       .+("@type" -> JsString(s"http://hbp.eu/${org}#${datatype.capitalize}"))
-      .+("http://schema.org/identifier" -> JsString(identifier))
+      .+(SchemaFieldsConstants.IDENTIFIER -> JsString(identifier))
       .+(Fields.origin, JsString(""))
       .+(Fields.userCreated, JsBoolean(true))
       .+(Fields.originalPath, JsString(originalPath))

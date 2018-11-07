@@ -17,6 +17,7 @@
 
 package models.instance
 
+import constants.InternalSchemaFieldsConstants
 import models.NexusPath
 import models.user.User
 import org.joda.time.DateTime
@@ -83,8 +84,8 @@ case class ReconciledInstance( nexusInstance: NexusInstance){
     )
   }
 
-  def getOriginalParent(): JsValue = {
-    (this.nexusInstance.content \ ReconciledInstance.Fields.originalParent).as[JsValue]
+  def getOriginalParent(): String = {
+    (this.nexusInstance.content \ InternalSchemaFieldsConstants.ORIGINALID).as[String]
   }
 
   def getEditorInstanceIds(): Option[List[JsObject]] = {

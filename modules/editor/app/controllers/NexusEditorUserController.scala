@@ -115,8 +115,8 @@ class NexusEditorUserController @Inject()(
                                search: String
                              ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
     val nexusPath = NexusPath(org, domain, datatype, version)
-    editorUserListService.getInstanceOfBookmarkList(s"${nexusPath.toString()}/$id", from, size, search).map{
-      case Right(instances) => Ok(Json.toJson(EditorResponseObject(Json.toJson(instances))))
+    editorUserListService.getInstancesOfBookmarkList(s"${nexusPath.toString()}/$id", from, size, search).map{
+      case Right( (instances, total) ) => Ok(Json.toJson(EditorResponseObject(Json.toJson(instances))).as[JsObject].+("total" -> JsNumber(total)) )
       case Left(res) => EditorResponseHelper.forwardResultResponse(res)
     }
   }

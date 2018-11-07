@@ -17,6 +17,7 @@
 package services
 
 import com.google.inject.Inject
+import constants.{EditorConstants, SchemaFieldsConstants}
 import models.errors.APIEditorError
 import models._
 import models.instance.NexusInstance
@@ -85,14 +86,13 @@ class EditorUserService @Inject()(config: ConfigurationService,
 
 object EditorUserService {
   val editorUserPath = NexusPath("kg", "core", "user", "v0.0.1")
-  val editorNameSpace = "http://hbp.eu/kgeditor/"
 
   val context =
-    """
+    s"""
       |{
       |    "@vocab": "https://schema.hbp.eu/graphQuery/",
       |    "schema": "http://schema.org/",
-      |    "kgeditor": "http://hbp.eu/kgeditor/",
+      |    "kgeditor": "${EditorConstants.EDITORNAMESPACE}",
       |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
       |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
       |    "this": "http://schema.hbp.eu/instances/",
@@ -142,8 +142,8 @@ object EditorUserService {
 
   def userToNexusStruct(userId: String) = {
     Json.obj(
-      "http://schema.org/identifier" -> userId,
-      "@type" -> s"${editorNameSpace}User"
+      SchemaFieldsConstants.IDENTIFIER -> userId,
+      "@type" -> s"${EditorConstants.EDITORNAMESPACE}User"
     )
   }
 

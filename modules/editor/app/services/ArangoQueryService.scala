@@ -16,6 +16,7 @@
 package services
 
 import com.google.inject.Inject
+import constants.SchemaFieldsConstants
 import helpers.InstanceHelper
 import models.instance.NexusInstance
 import models.{EditorResponseObject, EditorResponseWithCount, FormRegistry, NexusPath}
@@ -138,8 +139,8 @@ object ArangoQueryService {
           (v \ "@type").asOpt[String].map { d =>
             val dataType = d.split("#").last.capitalize
             val label = dataType.split(camelCase).mkString(" ")
-            val title = if ((v \ "http://schema.org/name").asOpt[JsString].isDefined) {
-              (v \ "http://schema.org/name").as[JsString]
+            val title = if ((v \ SchemaFieldsConstants.NAME).asOpt[JsString].isDefined) {
+              (v \ SchemaFieldsConstants.NAME).as[JsString]
             } else {
               Json.toJson(v)
             }

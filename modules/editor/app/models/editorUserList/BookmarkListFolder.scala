@@ -16,9 +16,7 @@
 */
 package models.editorUserList
 
-import services.EditorUserService
-import services.bookmark.EditorBookmarkService
-
+import constants.EditorConstants
 
 case class BookmarkListFolder(id:String, folderName: String, folderType: FolderType, userLists: List[BookmarkList] )
 
@@ -27,7 +25,10 @@ object BookmarkListFolder {
   import play.api.libs.json._
   import play.api.libs.functional.syntax._
   implicit val userFolderReads: Reads[BookmarkListFolder] = (
-    (JsPath \ "id").read[String].map(id => s"${EditorBookmarkService.bookmarkListFolderPath.toString()}/${id.split("/").last}") and
+    (JsPath \ "id").read[String].map{id =>
+      val uuid = id.split("/").last.split("\\?rev=").head
+      s"${EditorConstants.bookmarkListFolderPath.toString()}/${uuid}"
+    } and
     (JsPath \ "folderName").read[String] and
       JsPath.read[FolderType] and
       (JsPath \ "lists").read[List[BookmarkList]].or(Reads.pure(List[BookmarkList]()))

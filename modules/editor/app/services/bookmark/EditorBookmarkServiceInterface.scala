@@ -29,7 +29,7 @@ trait EditorBookmarkServiceInterface {
 
   def getUserLists(editorUser: EditorUser, formRegistry: FormRegistry): Future[Either[WSResponse, List[BookmarkListFolder]]]
 
-  def getInstanceOfBookmarkList(bookmarkListId: String, start:Int, size:Int, search:String):Future[Either[WSResponse, List[PreviewInstance]]]
+  def getInstancesOfBookmarkList(bookmarkListId: String, start:Int, size:Int, search:String):Future[Either[WSResponse, (List[PreviewInstance], Long)]]
 
   def createBookmarkListFolder(editorUser: EditorUser, name: String, folderType: FolderType = BOOKMARKFOLDER, token: String): Future[Option[BookmarkListFolder]]
 

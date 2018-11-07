@@ -16,11 +16,12 @@
 package services
 
 import com.google.inject.Inject
+import constants.SchemaFieldsConstants
 import helpers.NexusHelper.{domainDefinition, hash, minimalSchemaDefinition, schemaDefinitionForEditor}
 import models.NexusPath
-import models.instance.{NexusInstance, ReleaseInstance}
+import models.instance.{NexusInstance}
 import play.api.Logger
-import play.api.http.Status.{NOT_FOUND, OK, CREATED, NO_CONTENT}
+import play.api.http.Status.{CREATED, NOT_FOUND, NO_CONTENT, OK}
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import services.NexusService._
@@ -30,73 +31,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class NexusService @Inject()(wSClient: WSClient, config:ConfigurationService)(implicit executionContext: ExecutionContext) {
   val logger = Logger(this.getClass)
-  def releaseInstance(instanceData: JsValue, token: String): Future[JsObject] = {
-    val jsonObj = instanceData.as[JsObject]
-    val instanceUrl = s"${config.nexusEndpoint}/v0/data/${(jsonObj \ "id").as[String]}"
-    val instanceRev = (jsonObj \ "rev").as[Long]
-    // check if this instance is attached to a release instance already
-    isReleased(instanceUrl, instanceRev, token).flatMap{
-        case Some(releaseInstance) =>
-          if (releaseInstance.getRevision() == instanceRev){
-            Future.successful(JsObject(Map(
-              "status" -> JsString(RELEASE_ALREADY),
-              "released_id" -> JsString(releaseInstance.id().get)
-            )))
-          }else{
-            updateReleaseInstance(instanceUrl, s"${config.nexusEndpoint}/v0/data/${releaseInstance.id()}", instanceRev,releaseInstance.revision, token).map{
-              case (status, response) =>
-                response.status match {
-                  case OK | CREATED =>
-                    JsObject(Map(
-                      "status" -> JsString(RELEASE_OK),
-                      "released_id" -> (response.json.as[JsObject] \ "@id").as[JsString]
-                    ))
-                  case _ =>
-                    JsObject(Map(
-                      "status" -> JsString(RELEASE_KO)
-                    ))
-                }
-            }
-          }
-        case None =>
-          createReleaseInstance(instanceUrl, instanceRev, token).map{ response =>
-            response.status match {
-              case OK | CREATED =>
-                JsObject(Map(
-                  "status" -> JsString(RELEASE_OK),
-                  "released_id" -> (response.json.as[JsObject] \ "@id").as[JsString]
-                ))
-              case _ =>
-                JsObject(Map(
-                  "status" -> JsString(RELEASE_KO)
-                ))
-            }
-          }
-    }
-  }
-
-  def isReleased(instanceUrl: String, instanceRev: Long, token: String): Future[Option[ReleaseInstance]] = {
-    listAllNexusResult(s"${instanceUrl}/incoming?deprecated=false&fields=all", token).map{ incomingsLinks =>
-        val found = incomingsLinks.find(
-          result => (result.as[JsObject] \ "resultId").as[String].contains("prov/release"))
-        found.map(value => ReleaseInstance((value.as[JsObject] \ "source" ).as[JsObject]))
-    }
-  }
-
-  def createReleaseInstance(instanceUrl: String, instanceRev:Long, token: String): Future[WSResponse] = {
-    val (Seq(id, version, schema, domain, org, apiVersion, data), baseUrlSeq) = instanceUrl.split("/").reverse.toSeq.splitAt(7)
-    val baseUrl = baseUrlSeq.reverse.mkString("/")
-    val releaseIdentifier = hash(instanceUrl)
-    val payload = Json.parse(ReleaseInstance.template(instanceUrl, releaseIdentifier, instanceRev))
-    val path = NexusPath(org, "prov", "release", "v0.0.1")
-    insertInstance(baseUrl, path, payload, token)
-  }
-
-  def updateReleaseInstance(instanceUrl: String, releaseUrl: String, instanceRev:Long, releaseRev:Long, token: String): Future[(String, WSResponse)] = {
-    val releaseIdentifier = hash(instanceUrl)
-    val payload = Json.parse(ReleaseInstance.template(instanceUrl, releaseIdentifier, instanceRev))
-    updateInstance(releaseUrl, Some(releaseRev), payload, token)
-  }
 
   /**
     * Create a schema and publish it if it does not exists
@@ -202,7 +136,7 @@ class NexusService @Inject()(wSClient: WSClient, config:ConfigurationService)(im
   def retrieveInstanceById(nexusUrl:String,nexusPath: NexusPath,
                            identifier: String, token: String): Future[WSResponse] = {
     val instanceUrl = s"${nexusUrl}/v0/data/${nexusPath.org}/${nexusPath.domain}/${nexusPath.schema.toLowerCase}/${nexusPath.version}"
-    val filterQuery = s"""filter={"path":"http://schema.org/identifier","op":"eq","value":"$identifier"}&fields=all&deprecated=false"""
+    val filterQuery = s"""filter={"path":${SchemaFieldsConstants.IDENTIFIER}","op":"eq","value":"$identifier"}&fields=all&deprecated=false"""
     wSClient.url(s"${instanceUrl}?$filterQuery")
       .addHttpHeaders("Authorization" -> token)
       .get()

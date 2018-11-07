@@ -16,6 +16,9 @@
 */
 package models.instance
 
+import constants.EditorConstants
+import services.bookmark.EditorBookmarkService
+
 case class PreviewInstance(id: String, name:String, description:Option[String])
 
 object PreviewInstance {
@@ -24,7 +27,10 @@ object PreviewInstance {
   import play.api.libs.json._
 
   implicit val previewInstanceReads: Reads[PreviewInstance] = (
-    (JsPath \ "id").read[String] and
+    (JsPath \ "id").read[String].map { id =>
+      val uuid = id.split("/").last.split("\\?rev=").head
+      s"${EditorConstants.bookmarkListPath.toString()}/${uuid}"
+    } and
       (JsPath \ "name").read[String] and
       (JsPath \ "description").readNullable[String]
     ) (PreviewInstance.apply _)

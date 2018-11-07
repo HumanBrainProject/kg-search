@@ -40,7 +40,6 @@ class NexusEditorController @Inject()(
                                        oIDCAuthService: OIDCAuthService,
                                        config: ConfigurationService,
                                        nexusService: NexusService,
-                                       releaseService: ReleaseService,
                                        arangoQueryService: ArangoQueryService,
                                        iAMAuthService: IAMAuthService,
                                        formService: FormService,
@@ -220,11 +219,11 @@ class NexusEditorController @Inject()(
     val token = OIDCHelper.getTokenFromRequest(request)
     val editorSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.editorPrefix)
     val reconciledSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.reconciledPrefix)
-    val originalIdAndPath = NexusInstance.extractIdAndPath(currentInstanceDisplayed.getOriginalParent())
+    val originalIdAndPath = currentInstanceDisplayed.getOriginalParent().splitAt(currentInstanceDisplayed.getOriginalParent().lastIndexOf("/"))
     // Get the original instance either in the Editor space or the original space
-    nexusService.getInstance(originalIdAndPath._2, originalIdAndPath._1, token).flatMap {
+    nexusService.getInstance(NexusPath(originalIdAndPath._1), originalIdAndPath._2, token).flatMap {
       case Right(instanceFromOriginalSpace) =>
-        val originalInstance =  instanceFromOriginalSpace.removeNexusFields().copy(nexusUUID = Some(originalIdAndPath._1), nexusPath = originalIdAndPath._2)
+        val originalInstance =  instanceFromOriginalSpace.removeNexusFields().copy(nexusUUID = Some(originalIdAndPath._2), nexusPath = NexusPath(originalIdAndPath._1))
         // Get the editor instances
         val editorInstanceIds = currentInstanceDisplayed.getEditorInstanceIds()
           .getOrElse(List())
@@ -339,12 +338,12 @@ class NexusEditorController @Inject()(
             EditorResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, config.reconciledPrefix, formService)
           )
         case Right(currentInstanceDisplayed) =>
-          if(currentInstanceDisplayed.nexusPath.isReconciled(config.reconciledPrefix)){
-            logger.debug("It is a reconciled instance")
+//          if(currentInstanceDisplayed.nexusPath.isReconciled(config.reconciledPrefix)){
+//            logger.debug("It is a reconciled instance")
             updateWithReconciled(ReconciledInstance(currentInstanceDisplayed), instancePath)
-          } else {
-            initialUpdate(currentInstanceDisplayed)
-          }
+//          } else {
+//            initialUpdate(currentInstanceDisplayed)
+//          }
       }
     }
 
@@ -423,17 +422,6 @@ class NexusEditorController @Inject()(
       Ok(form)
   }
 
-//  /**
-//    *  Return the list of entity types available for the editor
-//    * @param privateSpace
-//    * @return 200
-//    */
-//  def listEditableEntityTypes(privateSpace: String): Action[AnyContent] = authenticatedUserAction {
-//    implicit request =>
-//    // Editable instance types are the one for which form creation is known
-//    Ok()
-//  }
-
 
   /**
     * @param org The organization of the instance
@@ -452,84 +440,6 @@ class NexusEditorController @Inject()(
       case Right(json) => Ok(json)
       case Left(response) => EditorResponseHelper.forwardResultResponse(response)
     }
-  }
-
-
-  /**
-    * Retrieve up to 6 level of an instance child with their release status
-    * @param org The organization of the instance
-    * @param domain The domain of the instance
-    * @param schema The schema of the instance
-    * @param version The version of the schema
-    * @param id The id of the instance
-    * @return
-    */
-  def getInstanceAndChildrenReleaseStatus(
-                     org: String, domain: String, schema: String, version: String, id:String
-                   ): Action[AnyContent] = Action.async { implicit request =>
-    val token = request.headers.toSimpleMap("Authorization")
-    val path = NexusPath(org, domain, schema, version)
-    releaseService.releaseInstance(path, id, token).map{
-      case Left(None) => EditorResponseHelper.errorResultWithBackLink(NOT_FOUND,
-        request.headers.toMap,
-        "Could not find main instance.",
-        NexusPath(org, domain,schema, version),
-        config.reconciledPrefix,
-        formService
-      )
-      case Left(Some(res)) => EditorResponseHelper.forwardResultResponse(res)
-      case Right(data) =>
-        Ok(Json.toJson(data))
-    }
-
-  }
-
-  /**
-    * Retrieve the release status of a list of instances
-    * @return An array with the id of the instance and its release status
-    */
-  def getReleaseStatus(): Action[AnyContent] = Action.async { implicit request =>
-    request.body.asJson match {
-      case Some(json) =>
-        val instances = json.as[List[String]]
-        val futList = instances.map { url =>
-          val (path, id )= url.splitAt(url.lastIndexOf("/"))
-          releaseService.releaseStatus(NexusPath(path.split("/").toSeq), id.replaceFirst("/", ""))
-        }
-        val array: Future[List[JsObject]] = Future.sequence(futList).map {
-          _.foldLeft(List[JsObject]()) {
-            (arr, response) =>
-              response match {
-                case Left((id, res)) => arr.+:(Json.obj("id" -> id, "error" -> res.body))
-                case Right(j) => arr.+:(j)
-              }
-          }
-        }
-        array.map(l => Ok(Json.toJson(l)))
-      case None => Future {
-        BadRequest("No data provided")
-      }
-    }
-  }
-
-  /**
-    * Releasing a list of instance
-    * @return
-    */
-  def releaseInstances(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
-    val token = request.headers.toSimpleMap("Authorization")
-    request.body.asJson.map {  jsonBody =>
-      // TODO check user access right with EditorSpaceHelper.isEditorGroup()
-      val releasedInstancesResult = jsonBody.as[JsArray].value.map(instanceData => nexusService.releaseInstance(instanceData, token))
-      releasedInstancesResult.foldLeft(Future.successful(JsArray.empty)) {
-        case (accF, resF) =>
-          resF.flatMap { res =>
-            accF.map { acc =>
-              acc.:+(res)
-            }
-          }
-      }.map(array => Ok(array))
-    }.getOrElse(Future.successful(NoContent))
   }
 
 

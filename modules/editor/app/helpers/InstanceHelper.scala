@@ -17,6 +17,7 @@
 
 package helpers
 
+import constants.SchemaFieldsConstants
 import models._
 import models.instance.{EditorInstance, NexusInstance, PreviewInstance, ReconciledInstance}
 import org.json4s.JsonAST._
@@ -205,12 +206,12 @@ object InstanceHelper {
 
     jsArray.value.map { el =>
       val url = (el \ "@id").as[String]
-      val name: String = (el \ "http://schema.org/name")
+      val name: String = (el \ SchemaFieldsConstants.NAME)
         .asOpt[String].getOrElse(
         (el \"http://hbp.eu/minds#alias" ).asOpt[String].getOrElse( (el \ "http://hbp.eu/minds#title").asOpt[String].getOrElse(""))
       )
-      val description: String = if ((el \ "http://schema.org/description").isDefined) {
-        (el \ "http://schema.org/description").as[String]
+      val description: String = if ((el \ SchemaFieldsConstants.DESCRIPTION).isDefined) {
+        (el \ SchemaFieldsConstants.DESCRIPTION).as[String]
       } else {
         ""
       }

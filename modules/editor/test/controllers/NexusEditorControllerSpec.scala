@@ -15,6 +15,7 @@
 */
 package controllers
 
+import constants.SchemaFieldsConstants
 import helpers.ConfigMock
 import mockws.MockWSHelpers
 import models.NexusPath
@@ -91,7 +92,7 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
       val reconciled = ReconciledInstance(NexusInstance(Some("4"),path,Json.parse("""{"@id":"https://nexus-dev.humanbrainproject.org/v0/data/manual/poc/placomponent/v0.0.4/4","@type":"http://hbp.eu/manual#Placomponent","http://hbp.eu/manual#origin":"d34061a2-630b-40bd-99b0-1052cd66f740","http://hbp.eu/manual#parent":{"@id":"https://nexus-dev.humanbrainproject.org/v0/data/minds/core/placomponent/v0.0.4/d34061a2-630b-40bd-99b0-1052cd66f740"},"http://hbp.eu/manual#update_timestamp":1528987889913,"http://hbp.eu/manual#updater_id":"789","http://schema.org/name":"A","nxv:rev":6,"nxv:deprecated":false,"links":{"@context":"https://nexus-dev.humanbrainproject.org/v0/contexts/nexus/core/links/v0.2.0","incoming":"https://nexus-dev.humanbrainproject.org/v0/data/manual/poc/placomponent/v0.0.4/31cffb99-c932-4f03-b17b-799a2525f65e/incoming","outgoing":"https://nexus-dev.humanbrainproject.org/v0/data/manual/poc/placomponent/v0.0.4/31cffb99-c932-4f03-b17b-799a2525f65e/outgoing","schema":"https://nexus-dev.humanbrainproject.org/v0/schemas/manual/poc/placomponent/v0.0.4","self":"https://nexus-dev.humanbrainproject.org/v0/data/manual/poc/placomponent/v0.0.4/31cffb99-c932-4f03-b17b-799a2525f65e"}}""").as[JsObject]))
       val seq = List(instance1, instance2, instance3).map(_.cleanManualData())
       val expectedValue = Json.obj(
-        "http://schema.org/name" -> Json.arr(
+        SchemaFieldsConstants.NAME -> Json.arr(
           Json.obj(
             "value" -> "A",
             "updater_id" -> Json.arr("123", "789")

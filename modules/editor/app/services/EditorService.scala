@@ -112,63 +112,63 @@ class EditorService @Inject()(wSClient: WSClient,
 
 
 
-  /**
-    *  Fetch a reconciled instance from an instance in the original space
-    * @param originalPath The original nexus path
-    * @param reconciledOrg The name of the reconcile organization
-    * @param id The id of the original instance
-    * @param token The auth token
-    * @param parameters A list of parameters to append to the NEXUS API query.
-    * @return The Reconciled instance
-    */
-  def retrieveReconciledFromOriginal(
-                                      originalPath: NexusPath,
-                                      reconciledOrg: String,
-                                      id: String,
-                                      token: String,
-                                      parameters: List[(String, String)] = List()
-                                    ): Future[Either[WSResponse, Option[ReconciledInstance]]] = {
-    val editorOrg = NexusPath.addSuffixToOrg(originalPath.org, config.editorPrefix)
-    val filter =
-      s"""{
-         |    "op": "or",
-         |    "value": [
-         |      {
-         |        "op":"eq",
-         |        "path":"http://hbp.eu/reconciled#original_parent",
-         |        "value": "${config.nexusEndpoint}/v0/data/${originalPath.toString()}/$id"
-         |      },
-         |      {
-         |        "op":"eq",
-         |        "path":"http://hbp.eu/reconciled#original_parent",
-         |        "value": "${config.nexusEndpoint}/v0/data/${editorOrg}/${originalPath.domain}/${originalPath.schema}/${originalPath.version}/$id"
-         |      }
-         |    ]
-
-         | }
-      """.stripMargin.stripLineEnd.replaceAll("\r\n", "")
-    wSClient
-      .url(s"${config.nexusEndpoint}/v0/data/${reconciledOrg}/${originalPath.domain}/" +
-        s"${originalPath.schema}/${originalPath.version}/?deprecated=false&fields=all&size=1&filter=${URLEncoder.encode(filter, "utf-8")}")
-      .withQueryStringParameters(parameters: _*)
-      .addHttpHeaders("Authorization" -> token)
-      .get()
-      .map {
-        res =>
-          res.status match {
-            case OK =>
-              if ((res.json \ "total").as[Int] > 0) {
-                Right(
-                  Some(ReconciledInstance(((res.json \ "results").as[List[JsValue]].head \ "source").as[NexusInstance]))
-                )
-              } else {
-                Right(None)
-              }
-            case _ =>
-              Left(res)
-          }
-      }
-  }
+//  /**
+//    *  Fetch a reconciled instance from an instance in the original space
+//    * @param originalPath The original nexus path
+//    * @param reconciledOrg The name of the reconcile organization
+//    * @param id The id of the original instance
+//    * @param token The auth token
+//    * @param parameters A list of parameters to append to the NEXUS API query.
+//    * @return The Reconciled instance
+//    */
+//  def retrieveReconciledFromOriginal(
+//                                      originalPath: NexusPath,
+//                                      reconciledOrg: String,
+//                                      id: String,
+//                                      token: String,
+//                                      parameters: List[(String, String)] = List()
+//                                    ): Future[Either[WSResponse, Option[ReconciledInstance]]] = {
+//    val editorOrg = NexusPath.addSuffixToOrg(originalPath.org, config.editorPrefix)
+//    val filter =
+//      s"""{
+//         |    "op": "or",
+//         |    "value": [
+//         |      {
+//         |        "op":"eq",
+//         |        "path":"http://hbp.eu/reconciled#original_parent",
+//         |        "value": "${config.nexusEndpoint}/v0/data/${originalPath.toString()}/$id"
+//         |      },
+//         |      {
+//         |        "op":"eq",
+//         |        "path":"http://hbp.eu/reconciled#original_parent",
+//         |        "value": "${config.nexusEndpoint}/v0/data/${editorOrg}/${originalPath.domain}/${originalPath.schema}/${originalPath.version}/$id"
+//         |      }
+//         |    ]
+//
+//         | }
+//      """.stripMargin.stripLineEnd.replaceAll("\r\n", "")
+//    wSClient
+//      .url(s"${config.nexusEndpoint}/v0/data/${reconciledOrg}/${originalPath.domain}/" +
+//        s"${originalPath.schema}/${originalPath.version}/?deprecated=false&fields=all&size=1&filter=${URLEncoder.encode(filter, "utf-8")}")
+//      .withQueryStringParameters(parameters: _*)
+//      .addHttpHeaders("Authorization" -> token)
+//      .get()
+//      .map {
+//        res =>
+//          res.status match {
+//            case OK =>
+//              if ((res.json \ "total").as[Int] > 0) {
+//                Right(
+//                  Some(ReconciledInstance(((res.json \ "results").as[List[JsValue]].head \ "source").as[NexusInstance]))
+//                )
+//              } else {
+//                Right(None)
+//              }
+//            case _ =>
+//              Left(res)
+//          }
+//      }
+//  }
 
 
   def upsertUpdateInManualSpace(
@@ -234,38 +234,38 @@ class EditorService @Inject()(wSClient: WSClient,
     }
   }
 
-  def updateReconciledInstance(
-                                manualSpace: String,
-                                editorInstances: List[EditorInstance],
-                                originalInstance: NexusInstance,
-                                originalPath: NexusPath,
-                                manualEntity: EditorInstance,
-                                manualEntityId: String,
-                                updatedValue: ReconciledInstance,
-                                token: String,
-                                userInfo: User
-                              ): Future[WSResponse] = {
-    val parentId = originalInstance.id()
-    val parentRevision = originalInstance.getRevision()
-    val payload =  updatedValue.generateReconciledInstance(
-        manualSpace,
-        editorInstances,
-        manualEntity,
-        originalPath,
-        manualEntityId,
-        userInfo,
-        parentRevision,
-      s"${config.nexusEndpoint}/v0/data/${parentId.get}"
-      )
-    val revision = updatedValue.nexusInstance.getRevision()
-    updateInstance(
-      payload.nexusInstance,
-      updatedValue.nexusInstance.nexusUUID.get,
-      revision,
-      token
-    )
-
-  }
+//  def updateReconciledInstance(
+//                                manualSpace: String,
+//                                editorInstances: List[EditorInstance],
+//                                originalInstance: NexusInstance,
+//                                originalPath: NexusPath,
+//                                manualEntity: EditorInstance,
+//                                manualEntityId: String,
+//                                updatedValue: ReconciledInstance,
+//                                token: String,
+//                                userInfo: User
+//                              ): Future[WSResponse] = {
+//    val parentId = originalInstance.id()
+//    val parentRevision = originalInstance.getRevision()
+//    val payload =  updatedValue.generateReconciledInstance(
+//        manualSpace,
+//        editorInstances,
+//        manualEntity,
+//        originalPath,
+//        manualEntityId,
+//        userInfo,
+//        parentRevision,
+//      s"${config.nexusEndpoint}/v0/data/${parentId.get}"
+//      )
+//    val revision = updatedValue.nexusInstance.getRevision()
+//    updateInstance(
+//      payload.nexusInstance,
+//      updatedValue.nexusInstance.nexusUUID.get,
+//      revision,
+//      token
+//    )
+//
+//  }
 
   def insertReconciledInstance(
                                 destinationOrg: String,
@@ -367,49 +367,49 @@ class EditorService @Inject()(wSClient: WSClient,
                         techToken: String,
                         editorInstances: List[EditorInstance] = List()
                       ): Future[Either[WSResponse, NexusInstance]] = {
-    upsertUpdateInManualSpace(editorSpace, manualEntitiesDetailsOpt,  userInfo, originalInstance.nexusPath, editorSpaceEntityToSave, token).flatMap{res =>
+    upsertUpdateInManualSpace(editorSpace, manualEntitiesDetailsOpt,  userInfo, originalInstance.nexusPath, editorSpaceEntityToSave, token).map{res =>
       logger.debug(s"Creation of manual update ${res.body}")
       res.status match {
         case status if status < MULTIPLE_CHOICES =>
-          val newManualUpdateId = (res.json \ "@id").as[String]
-          val processReconciledInstance = if(shouldCreateReconciledInstance){
-            insertReconciledInstance(
-              reconciledSpace,
-              editorSpace,
-              originalInstance,
-              editorSpaceEntityToSave,
-              newManualUpdateId,
-              reconciledInstanceToSave,
-              techToken,
-              userInfo
-            )
-          }else{
-            updateReconciledInstance(
-              editorSpace,
-              editorInstances,
-              originalInstance,
-              originalPath,
-              editorSpaceEntityToSave,
-              newManualUpdateId,
-              reconciledInstanceToSave,
-              techToken,
-              userInfo
-            )
-          }
-          processReconciledInstance.map { re =>
-            re.status match {
-              case s if s < MULTIPLE_CHOICES =>
-                logger.debug(s"Creation of a reconciled instance ${re.body}")
-                Right(reconciledInstanceToSave.nexusInstance)
-              case _ =>
-                logger.error(s"Error while updating a reconciled instance ${re.body}")
-                Left(re)
-            }
-          }
-        case _ => Future{
+//          val newManualUpdateId = (res.json \ "@id").as[String]
+//          val processReconciledInstance = if(shouldCreateReconciledInstance){
+//            insertReconciledInstance(
+//              reconciledSpace,
+//              editorSpace,
+//              originalInstance,
+//              editorSpaceEntityToSave,
+//              newManualUpdateId,
+//              reconciledInstanceToSave,
+//              techToken,
+//              userInfo
+//            )
+//          }else{
+//            updateReconciledInstance(
+//              editorSpace,
+//              editorInstances,
+//              originalInstance,
+//              originalPath,
+//              editorSpaceEntityToSave,
+//              newManualUpdateId,
+//              reconciledInstanceToSave,
+//              techToken,
+//              userInfo
+//            )
+//          }
+//          processReconciledInstance.map { re =>
+//            re.status match {
+//              case s if s < MULTIPLE_CHOICES =>
+//                logger.debug(s"Creation of a reconciled instance ${re.body}")
+//                Right(reconciledInstanceToSave.nexusInstance)
+//              case _ =>
+//                logger.error(s"Error while updating a reconciled instance ${re.body}")
+//                Left(re)
+//            }
+//          }
+          Right(reconciledInstanceToSave.nexusInstance)
+        case _ =>
           logger.error(s"Error while updating a editor instances ${res.body}")
           Left(res)
-        }
       }
     }
   }

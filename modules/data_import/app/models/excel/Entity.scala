@@ -20,9 +20,11 @@ import helpers.NexusHelper
 import services.NexusService
 import org.apache.poi.ss.usermodel.CellStyle
 import org.apache.poi.xssf.usermodel.XSSFSheet
+
 import scala.collection.immutable.HashSet
 import scala.concurrent.{ExecutionContext, Future}
 import Entity._
+import constants.SchemaFieldsConstants
 import helpers.excel.ExcelUnimindsImportHelper
 
 
@@ -74,7 +76,7 @@ case class Entity(rawType: String, localId: String, rawContent: Map[String, Valu
     JsObject(
       originalContent :+
       ("@type", JsString(s"http://hbp.eu/${ExcelUnimindsImportHelper.unimindsOrg}#${`type`.capitalize}")) :+
-      ("http://schema.org/identifier", identifier)
+      (SchemaFieldsConstants.IDENTIFIER, identifier)
     )
   }
 

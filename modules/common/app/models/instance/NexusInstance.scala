@@ -17,6 +17,7 @@
 
 package models.instance
 
+import constants.SchemaFieldsConstants
 import models.NexusPath
 import play.api.libs.json._
 
@@ -57,8 +58,8 @@ case class NexusInstance(nexusUUID: Option[String], nexusPath: NexusPath, conten
 
   def formatFromNexusToOption(reconciledSuffix: String): JsObject = {
     val id = this.getField("@id").get.as[String]
-    val name = this.getField("http://schema.org/name").getOrElse(JsString("")).as[JsString]
-    val description: JsString = this.getField("http://schema.org/description").getOrElse(JsString("")).as[JsString]
+    val name = this.getField(SchemaFieldsConstants.NAME).getOrElse(JsString("")).as[JsString]
+    val description: JsString = this.getField(SchemaFieldsConstants.DESCRIPTION).getOrElse(JsString("")).as[JsString]
     Json.obj("id" -> NexusInstance.getIdForEditor(id, reconciledSuffix), "description" -> description, "label" -> name)
   }
 
