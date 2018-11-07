@@ -196,7 +196,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
                           token: String)
   : Future[Either[WSResponse, BookmarkList]] = {
     nexusService.updateInstance(
-      s"${config.nexusEndpoint}/v0/data/${bookmarkListPath.withSpecificSubspace(config.editorSubSpace).toString()}$bookmarkListId",
+      s"${config.nexusEndpoint}/v0/data/${bookmarkListPath.toString()}/$bookmarkListId",
       None,
       EditorBookmarkService.bookmarkListToNexusStruct(bookmarkList.name, userFolderId), token
     ).map {
