@@ -30,17 +30,14 @@ object PreviewInstance {
   import play.api.libs.json._
 
   def fromNexusInstance(nexusInstance: NexusInstance): PreviewInstance = {
-    val id = nexusInstance.getField("@id").get.as[String]
+    val id = NexusInstanceReference.fromUrl(nexusInstance.getField("@id").get.as[String]).toString
     val name = nexusInstance.getField(SchemaFieldsConstants.NAME).getOrElse(JsString("")).as[String]
     val description: Option[String] = nexusInstance.getField(SchemaFieldsConstants.DESCRIPTION).map(_.as[String])
     PreviewInstance(id, name, description)
   }
 
   implicit val previewInstanceReads: Reads[PreviewInstance] = (
-    (JsPath \ "id").read[String].map { id =>
-      val uuid = id.split("/").last.split("\\?rev=").head
-      s"${EditorConstants.bookmarkListPath.toString()}/${uuid}"
-    } and
+    (JsPath \ "id").read[String] and
       (JsPath \ "name").read[String] and
       (JsPath \ "description").readNullable[String]
     ) (PreviewInstance.apply _)
