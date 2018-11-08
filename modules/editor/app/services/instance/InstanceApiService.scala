@@ -27,6 +27,8 @@ import scala.concurrent.{ExecutionContext, Future}
 import play.api.http.Status._
 
 trait InstanceApiService {
+    val instanceEndpoint = "/api/instances"
+
     def get(
            wSClient: WSClient,
            apiBaseEndpoint: String,
@@ -35,7 +37,7 @@ trait InstanceApiService {
            serviceClient: ServiceClient = EditorClient
          )(implicit ec: ExecutionContext): Future[Either[WSResponse, NexusInstance]] = {
     wSClient
-      .url(s"$apiBaseEndpoint/instances/${nexusInstance.toString}")
+      .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.toString}")
       .withHttpHeaders("Authorization" -> token, "client" -> serviceClient.client)
       .get()
       .map { res =>
@@ -56,7 +58,7 @@ trait InstanceApiService {
            serviceClient: ServiceClient = EditorClient
          )(implicit ec: ExecutionContext): Future[Either[WSResponse, Unit]] = {
     wSClient
-      .url(s"$apiBaseEndpoint/instances/${nexusInstance.toString}")
+      .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.toString}")
       .withHttpHeaders("Authorization" -> token, "client" -> serviceClient.client)
       .withQueryStringParameters("clientIdExtension" -> userId)
       .put(editorInstance.nexusInstance.content)
@@ -76,7 +78,7 @@ trait InstanceApiService {
               serviceClient: ServiceClient = EditorClient
             )(implicit ec: ExecutionContext): Future[Either[WSResponse, Unit]] = {
     wSClient
-      .url(s"$apiBaseEndpoint/instances/${nexusInstance.toString}")
+      .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.toString}")
       .withHttpHeaders("Authorization" -> token, "client" -> serviceClient.client)
       .delete()
       .map { res =>
@@ -96,7 +98,7 @@ trait InstanceApiService {
             serviceClient: ServiceClient = EditorClient
           )(implicit ec: ExecutionContext): Future[Either[WSResponse, NexusInstance]] = {
     wSClient
-      .url(s"$apiBaseEndpoint/instances/${nexusPath.toString}")
+      .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusPath.toString}")
       .withHttpHeaders("Authorization" -> token, "client" -> serviceClient.client)
       .post(nexusInstance.content)
       .map { res =>

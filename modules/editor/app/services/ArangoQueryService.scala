@@ -79,9 +79,14 @@ class ArangoQueryService @Inject()(
             }
             val data = (res.json \ "data").as[JsArray]
             if(data.value.nonEmpty){
+              val dataType = if((data.value.head \ "@type").asOpt[List[String]].isDefined){
+                (data.value.head \ "@type").as[List[String]].head
+              }else{
+                (data.value.head \ "@type").as[String]
+              }
               val result = EditorResponseWithCount(
                 Json.toJson(InstanceHelper.formatInstanceList( data, config.reconciledPrefix)),
-                (data.value.head \ "@type").as[String],
+                dataType,
                 (formService.formRegistry.registry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String]
                   .getOrElse(nexusPath.toString()),
                 total

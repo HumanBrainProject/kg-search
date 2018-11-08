@@ -275,25 +275,16 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
                                   token: String
                                 ):
   Future[List[WSResponse]] = {
-    nexusExtensionService.createSimpleSchema(
-      EditorConstants.bookmarkPath,
-      Some(config.editorSubSpace)
-    ).flatMap {
-        case Right(()) =>
-          val queries = bookmarkListIds.map { id =>
-            val toInsert = EditorBookmarkService.bookmarkToNexusStruct(instanceFullId, id)
-            nexusService.insertInstance(
-              config.nexusEndpoint,
-              EditorConstants.bookmarkPath.withSpecificSubspace(config.editorSubSpace),
-              toInsert,
-              token
-            )
-          }
-          Future.sequence(queries)
-        case Left(res) =>
-          logger.error("Could created schema for Bookmark" + res.body)
-          Future(List(res))
-    }
+      val queries = bookmarkListIds.map { id =>
+        val toInsert = EditorBookmarkService.bookmarkToNexusStruct(instanceFullId, id)
+        nexusService.insertInstance(
+          config.nexusEndpoint,
+          EditorConstants.bookmarkPath.withSpecificSubspace(config.editorSubSpace),
+          toInsert,
+          token
+        )
+      }
+      Future.sequence(queries)
   }
 
   def removeInstanceFromBookmarkLists(
