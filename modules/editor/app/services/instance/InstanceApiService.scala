@@ -96,7 +96,7 @@ trait InstanceApiService {
             nexusPath: NexusPath,
             token: String,
             serviceClient: ServiceClient = EditorClient
-          )(implicit ec: ExecutionContext): Future[Either[WSResponse, NexusInstance]] = {
+          )(implicit ec: ExecutionContext): Future[Either[WSResponse, NexusInstanceReference]] = {
     wSClient
       .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusPath.toString}")
       .withHttpHeaders("Authorization" -> token, "client" -> serviceClient.client)
@@ -104,8 +104,7 @@ trait InstanceApiService {
       .map { res =>
         res.status match {
           case OK | CREATED =>
-            val ref = NexusInstanceReference.fromUrl((res.json \ EditorConstants.IDRESPONSEFIELD).as[String])
-            Right(nexusInstance.copy(nexusUUID = Some(ref.id) ))
+            Right(NexusInstanceReference.fromUrl((res.json \ EditorConstants.IDRESPONSEFIELD).as[String]))
           case _ => Left(res)
         }
       }

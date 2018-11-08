@@ -28,6 +28,7 @@ import play.api.http.HeaderNames._
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSClient, WSResponse}
+import services.instance.InstanceApiService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,6 +39,8 @@ class EditorUserService @Inject()(config: ConfigurationService,
                                   oIDCAuthService: OIDCAuthService,
                                  )(implicit executionContext: ExecutionContext) {
   val logger = Logger(this.getClass)
+
+  object instanceApiService extends InstanceApiService
 
   def getUser(nexusUser: NexusUser): Future[Either[APIEditorError, EditorUser]] = {
     wSClient

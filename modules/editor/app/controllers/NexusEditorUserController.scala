@@ -52,9 +52,9 @@ class NexusEditorUserController @Inject()(
         editorUserService.createUser(request.user, token).flatMap{
           case Right(editorUser) =>
             editorUserListService.createBookmarkListFolder(editorUser, "My Bookmarks", BOOKMARKFOLDER, token).map{
-              case Some(_) =>
+              case Right(_) =>
                Some(editorUser)
-              case None =>
+              case Left(res) =>
                 logger.info(s"Deleting editor user with id : ${request.user.id}")
                 nexusService.deprecateInstance(config.nexusEndpoint, EditorUserService.editorUserPath,
                   NexusInstanceReference.fromUrl( editorUser.nexusId).id, 1L, token

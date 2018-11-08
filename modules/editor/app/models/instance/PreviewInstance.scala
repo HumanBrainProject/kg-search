@@ -17,12 +17,8 @@
 package models.instance
 
 import constants.{EditorConstants, SchemaFieldsConstants}
-import services.bookmark.EditorBookmarkService
 
-case class PreviewInstance(id: String, name:String, description:Option[String]){
-
-
-}
+case class PreviewInstance(id: String, name:String, description:Option[String])
 
 object PreviewInstance {
 
@@ -38,7 +34,7 @@ object PreviewInstance {
 
   implicit val previewInstanceReads: Reads[PreviewInstance] = (
     (JsPath \ "id").read[String] and
-      (JsPath \ "name").read[String] and
+      (JsPath \ "name").readNullable[String].map(_.getOrElse("")) and
       (JsPath \ "description").readNullable[String]
     ) (PreviewInstance.apply _)
 

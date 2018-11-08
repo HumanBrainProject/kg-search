@@ -32,6 +32,7 @@ import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import services.NexusService.{SKIP, UPDATE}
 import services._
+import services.instance.InstanceApiService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -41,6 +42,8 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
                                       nexusExtensionService: NexusExtensionService
                                  )(implicit executionContext: ExecutionContext) extends EditorBookmarkServiceInterface {
   val logger = Logger(this.getClass)
+
+  object instanceApiService extends InstanceApiService
 
   def getUserLists(editorUser: EditorUser, formRegistry: FormRegistry): Future[Either[WSResponse, List[BookmarkListFolder]]] = {
     wSClient
@@ -82,13 +85,13 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
         "commonNodeTypes",
         "Common node types",
         NODETYPEFOLDER,
-        allEditableEntities._1
+        allEditableEntities._1.sortBy(b => b.name)
       ),
       BookmarkListFolder(
         "otherNodeTypes",
         "Other node types",
         NODETYPEFOLDER,
-        allEditableEntities._2
+        allEditableEntities._2.sortBy(b => b.name)
       )
     )
 
@@ -107,15 +110,18 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
           case OK =>
             val instances = (res.json \ "data").as[List[PreviewInstance]]
             val total = (res.json \ "count").as[Long]
-//              .filter(js => (js \ "bookmarkListId" \ "id").as[String].split("v0/data/").last == bookmarkListId)
-//              .flatMap(js => (js \ "instances").asOpt[List[PreviewInstance]].getOrElse(List()))
             Right( (instances, total))
           case _ => Left(res)
         }
     }
   }
 
-  def createBookmarkListFolder(user: EditorUser, name: String, folderType: FolderType = BOOKMARKFOLDER, token: String): Future[Option[BookmarkListFolder]] = {
+  def createBookmarkListFolder(
+                                user: EditorUser,
+                                name: String,
+                                folderType: FolderType = BOOKMARKFOLDER,
+                                token: String
+                              ): Future[Either[WSResponse, BookmarkListFolder]] = {
     nexusExtensionService.createSimpleSchema(
       EditorConstants.bookmarkListFolderPath,
       Some(config.editorSubSpace)
@@ -131,16 +137,16 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
           res =>
             res.status match {
               case CREATED =>
-                val ref = NexusInstanceReference.fromUrl( (res.json \ "@id").as[String])
-                Some(BookmarkListFolder(s"${ref.toString}", name, folderType, List()))
+                val ref = NexusInstanceReference.fromUrl((res.json \ "@id").as[String])
+                Right(BookmarkListFolder(s"${EditorConstants.bookmarkListFolderPath.toString()}/${ref.id}", name, folderType, List()))
               case _ =>
                 logger.error("Error while creating a user folder " + res.body)
-                None
+                Left(res)
             }
         }
       case Left(res) =>
         logger.error(s"Could not created schema for User folder ${res.body}")
-        Future(None)
+        Future(Left(res))
     }
   }
 
@@ -182,7 +188,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
         res =>
           res.status match {
             case OK =>
-              val id = (res.json \ "id").as[String].split("/v0/data/").tail.head
+              val id = (res.json \ "id").as[String]
               val name = (res.json \ "name").as[String]
               val bookmarkList = BookmarkList(id, name, None, None, None )
               val userFolderId = (res.json \ "userFolderId" \ "@id").as[String]
@@ -310,8 +316,8 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
                     )
                     .map { id =>
                       val str = (id \ "id").as[String]
-                      val (path, nexusId) = str.splitAt(str.lastIndexOf("/"))
-                      nexusService.deprecateInstance(config.nexusEndpoint,NexusPath(path), nexusId.substring(1), 1L, token)
+                      val ref = NexusInstanceReference.fromUrl(str)
+                      instanceApiService.delete(wSClient, config.kgQueryEndpoint,ref, token)
                     }
                   Future.sequence(listResponses)
                 case None => Future(List(Left(res)))
@@ -399,7 +405,7 @@ object EditorBookmarkService {
      |           },
      |           {
      |             "fieldname": "id",
-     |             "relative_path": "_originalId",
+     |             "relative_path": "_relativeUrl",
      |             "required": true
      |           },
      |           {
@@ -554,15 +560,11 @@ object EditorBookmarkService {
        |     },
        |     {
        |        "fieldname":"id",
-       |       "relative_path":"@id"
+       |       "relative_path":"_relativeUrl"
        |     },
        |     {
        |       "fieldname":"userFolderId",
        |       "relative_path":"kgeditor:bookmarkListFolder"
-       |     },
-       |     {
-       |       "fieldname":"_originalId",
-       |       "relative_path":"_originalId"
        |     }
        |  ]
        |}
