@@ -22,7 +22,7 @@ import models.errors.APIEditorError
 import helpers.InstanceHelper
 import models._
 import models.editorUserList._
-import models.instance.{NexusInstance, PreviewInstance}
+import models.instance.{NexusInstance, NexusInstanceReference, PreviewInstance}
 import models.user.{EditorUser, NexusUser}
 import play.api.Logger
 import play.api.http.ContentTypes._
@@ -131,8 +131,8 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
           res =>
             res.status match {
               case CREATED =>
-                val (id, path) = NexusInstance.extractIdAndPath(res.json)
-                Some(BookmarkListFolder(s"${path.toString()}/$id", name, folderType, List()))
+                val ref = NexusInstanceReference.fromUrl( (res.json \ "@id").as[String])
+                Some(BookmarkListFolder(s"${ref.toString}", name, folderType, List()))
               case _ =>
                 logger.error("Error while creating a user folder " + res.body)
                 None
@@ -160,8 +160,8 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
             res =>
               res.status match {
                 case CREATED =>
-                  val (id, _) = NexusInstance.extractIdAndPath(res.json)
-                  Right(BookmarkList(s"${EditorConstants.bookmarkListPath.toString()}/$id", bookmarkListName, None, None, None))
+                  val ref = NexusInstanceReference.fromUrl( (res.json \ "@id").as[String])
+                  Right(BookmarkList(s"${EditorConstants.bookmarkListPath.toString()}/${ref.id}", bookmarkListName, None, None, None))
                 case _ =>
                   logger.error("Error while creating a bookmark list " + res.body)
                   Left(res)

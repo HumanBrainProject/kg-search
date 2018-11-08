@@ -33,20 +33,18 @@ object NavigationHelper {
     * This method provides a back_link based on the instance path
     * This back_link is used in the UI navigation
     * @param path The path of the instance
-    * @param reconciledSuffix The term used to identify a reconciled space
     * @return A path as a string
     */
-  def generateBackLink(path:NexusPath,reconciledSuffix:String, formService: FormService): String = {
-    val formattedPath = path.originalPath(reconciledSuffix)
-    (formService.formRegistry.registry \ formattedPath.org \ formattedPath.domain \ formattedPath.schema).asOpt[JsObject] match {
-      case Some(schema) =>
-        s"${formattedPath.org}/${formattedPath.domain}/${formattedPath.schema}"
+  def generateBackLink(path:NexusPath,formService: FormService): String = {
+    (formService.formRegistry.registry \ path.org \ path.domain \ path.schema).asOpt[JsObject] match {
+      case Some(_) =>
+        s"${path.org}/${path.domain}/${path.schema}"
       case _ => ""
     }
   }
 
-  def resultWithBackLink(instance: EditorResponseObject, path: NexusPath, reconciledSuffix: String, formService: FormService): JsObject = {
-    val backLink = generateBackLink(path, reconciledSuffix, formService)
+  def resultWithBackLink(instance: EditorResponseObject, path: NexusPath, formService: FormService): JsObject = {
+    val backLink = generateBackLink(path, formService)
     addBackLink(Json.toJson(instance).as[JsObject], backLink)
   }
 

@@ -56,13 +56,6 @@ case class NexusInstance(nexusUUID: Option[String], nexusPath: NexusPath, conten
     this.getField(NexusInstance.Fields.nexusRev).getOrElse(JsNumber(1)).as[Long]
   }
 
-  def formatFromNexusToOption(reconciledSuffix: String): JsObject = {
-    val id = this.getField("@id").get.as[String]
-    val name = this.getField(SchemaFieldsConstants.NAME).getOrElse(JsString("")).as[JsString]
-    val description: JsString = this.getField(SchemaFieldsConstants.DESCRIPTION).getOrElse(JsString("")).as[JsString]
-    Json.obj("id" -> NexusInstance.getIdForEditor(id, reconciledSuffix), "description" -> description, "label" -> name)
-  }
-
 }
 
 object NexusInstance {
@@ -71,29 +64,12 @@ object NexusInstance {
 //    new NexusInstance(id, path , jsValue.as[JsObject])
 //  }
 
-  def extractIdAndPath(jsValue: JsValue): (String, NexusPath) = {
+  def extractIdAndPath(jsValue: JsValue): NexusInstanceReference = {
     val nexusUrl = (jsValue \ "@id").as[String]
-    extractIdAndPathFromString(nexusUrl)
+    NexusInstanceReference.fromUrl(nexusUrl)
   }
 
-  def extractIdAndPathFromString(url: String): (String, NexusPath) = {
-    val nexusId = getIdfromURL(url)
-    val datatype = nexusId.splitAt(nexusId.lastIndexOf("/"))
-    val nexusType = NexusPath(datatype._1.split("/").toList)
-    (datatype._2.substring(1) , nexusType)
-  }
 
-  def getIdfromURL(url: String): String = {
-    if(url contains "v0/data/"){
-      url.split("v0/data/").tail.head
-    }else{
-      if(url.matches("^\\w+\\/\\w+\\/\\w+\\/v+\\d+\\.\\d+\\.\\d+\\/.+$")){
-        url
-      }else{
-        throw new Exception(s"Could not extract id from url - $url")
-      }
-    }
-  }
 
   def getIdForEditor(url: String, reconciledPrefix: String): String = {
     assert(url contains "v0/data/")
@@ -113,8 +89,8 @@ object NexusInstance {
   import play.api.libs.functional.syntax._
 
   implicit val editorUserReads: Reads[NexusInstance] = (
-    (JsPath \ Fields.nexusId).read[String].map(extractIdAndPathFromString(_)._1).map(Some(_)) and
-      (JsPath \ Fields.nexusId).read[String].map(extractIdAndPathFromString(_)._2) and
+    (JsPath \ Fields.nexusId).read[String].map(NexusInstanceReference.fromUrl(_).id).map(Some(_)) and
+      (JsPath \ Fields.nexusId).read[String].map(NexusInstanceReference.fromUrl(_).nexusPath) and
       JsPath.read[JsObject]
     ) (NexusInstance.apply _)
 }

@@ -55,31 +55,10 @@ case class EditorInstance(nexusInstance: NexusInstance){
     )
   }
 
-
-  def prepareManualEntityForStorage(userInfo: User, originLink: String, entityType: String): EditorInstance = {
-    this.copy(
-      this.nexusInstance.copy(
-        content = this.nexusInstance
-          .cleanManualData()
-          .content +
-          (EditorInstance.Fields.updaterId, JsString(userInfo.id)) +
-          (EditorInstance.Fields.updateTimeStamp, JsNumber(new DateTime().getMillis)) +
-          (EditorInstance.Fields.origin, JsString(originLink)) +
-          (EditorInstance.Fields.parent, Json.obj("@id" -> JsString(originLink))) +
-          ("@type", JsString(entityType))
-      )
-    )
+  def removeNexusFields(): EditorInstance = {
+    this.copy(this.nexusInstance.removeNexusFields())
   }
 
-  def cleanReconciledFields(): EditorInstance = {
-    this.copy(
-      this.nexusInstance.copy(
-        content = Json.toJson(
-          this.contentToMap().filterKeys( k => !k.contains(ReconciledInstance.contextOrg))
-        ).as[JsObject]
-      )
-    )
-  }
 }
 
 object EditorInstance {
@@ -93,13 +72,13 @@ object EditorInstance {
     val userCreated = s"${contextOrg}user_created"
   }
 
-  def generateInstance(nexusInstance: NexusInstance,org: String, datatype: String, identifier: String, originalPath: String): EditorInstance = {
-    val content = nexusInstance.content
-      .+("@type" -> JsString(s"http://hbp.eu/${org}#${datatype.capitalize}"))
-      .+(SchemaFieldsConstants.IDENTIFIER -> JsString(identifier))
-      .+(Fields.origin, JsString(""))
-      .+(Fields.userCreated, JsBoolean(true))
-      .+(Fields.originalPath, JsString(originalPath))
-    EditorInstance(nexusInstance.copy(content=content))
-  }
+//  def generateInstance(nexusInstance: NexusInstance,org: String, datatype: String, identifier: String, originalPath: String): EditorInstance = {
+//    val content = nexusInstance.content
+//      .+("@type" -> JsString(s"http://hbp.eu/${org}#${datatype.capitalize}"))
+//      .+(SchemaFieldsConstants.IDENTIFIER -> JsString(identifier))
+//      .+(Fields.origin, JsString(""))
+//      .+(Fields.userCreated, JsBoolean(true))
+//      .+(Fields.originalPath, JsString(originalPath))
+//    EditorInstance(nexusInstance.copy(content=content))
+//  }
 }

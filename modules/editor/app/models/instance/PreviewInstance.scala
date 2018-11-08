@@ -16,15 +16,25 @@
 */
 package models.instance
 
-import constants.EditorConstants
+import constants.{EditorConstants, SchemaFieldsConstants}
 import services.bookmark.EditorBookmarkService
 
-case class PreviewInstance(id: String, name:String, description:Option[String])
+case class PreviewInstance(id: String, name:String, description:Option[String]){
+
+
+}
 
 object PreviewInstance {
 
   import play.api.libs.functional.syntax._
   import play.api.libs.json._
+
+  def fromNexusInstance(nexusInstance: NexusInstance): PreviewInstance = {
+    val id = nexusInstance.getField("@id").get.as[String]
+    val name = nexusInstance.getField(SchemaFieldsConstants.NAME).getOrElse(JsString("")).as[String]
+    val description: Option[String] = nexusInstance.getField(SchemaFieldsConstants.DESCRIPTION).map(_.as[String])
+    PreviewInstance(id, name, description)
+  }
 
   implicit val previewInstanceReads: Reads[PreviewInstance] = (
     (JsPath \ "id").read[String].map { id =>

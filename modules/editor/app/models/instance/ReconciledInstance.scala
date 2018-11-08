@@ -37,52 +37,52 @@ case class ReconciledInstance( nexusInstance: NexusInstance){
     this.copy(this.nexusInstance.cleanManualData())
   }
 
-  def addAlternatives(manualSpace: String,
-                      editorInstances: List[EditorInstance],
-                      manualEntityToBeStored: EditorInstance
-                     ): ReconciledInstance = {
-    val altJson = this.generateAlternatives(
-      editorInstances
-        .filter(instance => instance.updaterId  != manualEntityToBeStored.updaterId)
-        .+:(manualEntityToBeStored)
-        .map(s => s.copy( s.nexusInstance.copy(content = s.cleanManualData().nexusInstance.content)))
-    )
-    val res = this.nexusInstance.content + (ReconciledInstance.Fields.alternatives, altJson)
-    ReconciledInstance(NexusInstance(this.nexusInstance.nexusUUID, this.nexusInstance.nexusPath, res))
-  }
+//  def addAlternatives(manualSpace: String,
+//                      editorInstances: List[EditorInstance],
+//                      manualEntityToBeStored: EditorInstance
+//                     ): ReconciledInstance = {
+//    val altJson = this.generateAlternatives(
+//      editorInstances
+//        .filter(instance => instance.updaterId  != manualEntityToBeStored.updaterId)
+//        .+:(manualEntityToBeStored)
+//        .map(s => s.copy( s.nexusInstance.copy(content = s.cleanManualData().nexusInstance.content)))
+//    )
+//    val res = this.nexusInstance.content + (ReconciledInstance.Fields.alternatives, altJson)
+//    ReconciledInstance(NexusInstance(this.nexusInstance.nexusUUID, this.nexusInstance.nexusPath, res))
+//  }
 
-  def generateAlternatives(manualUpdates: List[EditorInstance]): JsValue = {
-    // Alternatives are added per user
-    // So for each key we have a list of object containing the user id and the value
-    val alternatives: Map[String, Seq[(String, JsValue)]] = manualUpdates
-      .map { instance =>
-        val dataMap: Map[String, JsValue] = instance.nexusInstance.content
-          .-(EditorInstance.Fields.parent)
-          .-(EditorInstance.Fields.origin).as[Map[String, JsValue]]
-        val userId: String = dataMap(EditorInstance.Fields.updaterId).as[String]
-        dataMap.map { case (k, v) => k -> ( userId, v) }
-      }.foldLeft(Map.empty[String, Seq[(String, JsValue)]]) { case (map, instance) =>
-      //Grouping per field in order to have a map with the field and the list of different alternatives on this field
-      val tmp: List[(String, Seq[(String, JsValue)])] = instance.map { case (k, v) => (k, Seq(v)) }.toList ++ map.toList
-      tmp.groupBy(_._1).map { case (k, v) => k -> v.flatMap(_._2) }
-    }
-
-    val perValue = alternatives.map{
-      case (k,v) =>
-        val tempMap = v.foldLeft(Map.empty[JsValue, Seq[String]]){case (map, tuple) =>
-          val temp: Seq[String] = map.getOrElse(tuple._2, Seq.empty[String])
-          map.updated(tuple._2, tuple._1 +: temp)
-        }
-        k ->  tempMap.toList.sortWith( (el1, el2) => el1._2.length > el2._2.length).map( el =>
-          Json.obj("value" -> el._1, "updater_id" -> el._2)
-        )
-    }
-    Json.toJson(
-      perValue.-("@type")
-        .-(EditorInstance.Fields.updateTimeStamp)
-        .-(EditorInstance.Fields.updaterId)
-    )
-  }
+//  def generateAlternatives(manualUpdates: List[EditorInstance]): JsValue = {
+//    // Alternatives are added per user
+//    // So for each key we have a list of object containing the user id and the value
+//    val alternatives: Map[String, Seq[(String, JsValue)]] = manualUpdates
+//      .map { instance =>
+//        val dataMap: Map[String, JsValue] = instance.nexusInstance.content
+//          .-(EditorInstance.Fields.parent)
+//          .-(EditorInstance.Fields.origin).as[Map[String, JsValue]]
+//        val userId: String = dataMap(EditorInstance.Fields.updaterId).as[String]
+//        dataMap.map { case (k, v) => k -> ( userId, v) }
+//      }.foldLeft(Map.empty[String, Seq[(String, JsValue)]]) { case (map, instance) =>
+//      //Grouping per field in order to have a map with the field and the list of different alternatives on this field
+//      val tmp: List[(String, Seq[(String, JsValue)])] = instance.map { case (k, v) => (k, Seq(v)) }.toList ++ map.toList
+//      tmp.groupBy(_._1).map { case (k, v) => k -> v.flatMap(_._2) }
+//    }
+//
+//    val perValue = alternatives.map{
+//      case (k,v) =>
+//        val tempMap = v.foldLeft(Map.empty[JsValue, Seq[String]]){case (map, tuple) =>
+//          val temp: Seq[String] = map.getOrElse(tuple._2, Seq.empty[String])
+//          map.updated(tuple._2, tuple._1 +: temp)
+//        }
+//        k ->  tempMap.toList.sortWith( (el1, el2) => el1._2.length > el2._2.length).map( el =>
+//          Json.obj("value" -> el._1, "updater_id" -> el._2)
+//        )
+//    }
+//    Json.toJson(
+//      perValue.-("@type")
+//        .-(EditorInstance.Fields.updateTimeStamp)
+//        .-(EditorInstance.Fields.updaterId)
+//    )
+//  }
 
   def getOriginalParent(): String = {
     (this.nexusInstance.content \ InternalSchemaFieldsConstants.ORIGINALID).as[String]
@@ -134,26 +134,26 @@ case class ReconciledInstance( nexusInstance: NexusInstance){
   }
 
 
-  def generateReconciledInstance(
-                                  manualSpace: String,
-                                  editorInstances: List[EditorInstance],
-                                  manualEntityToBestored: EditorInstance,
-                                  originalEntityPath: NexusPath,
-                                  newManualUpdateId: String,
-                                  userInfo: User,
-                                  parentRevision: Long,
-                                  parentId: String
-                                ): ReconciledInstance = {
-    this.addAlternatives(
-        manualSpace,
-        editorInstances,
-        manualEntityToBestored
-      )
-      .updateManualLinks(newManualUpdateId)
-      .cleanManualData()
-      .addReconciledMandatoryFields(originalEntityPath, userInfo, parentId, parentRevision)
-  }
-
+//  def generateReconciledInstance(
+//                                  manualSpace: String,
+//                                  editorInstances: List[EditorInstance],
+//                                  manualEntityToBestored: EditorInstance,
+//                                  originalEntityPath: NexusPath,
+//                                  newManualUpdateId: String,
+//                                  userInfo: User,
+//                                  parentRevision: Long,
+//                                  parentId: String
+//                                ): ReconciledInstance = {
+//    this.addAlternatives(
+//        manualSpace,
+//        editorInstances,
+//        manualEntityToBestored
+//      )
+//      .updateManualLinks(newManualUpdateId)
+//      .cleanManualData()
+//      .addReconciledMandatoryFields(originalEntityPath, userInfo, parentId, parentRevision)
+//  }
+//
 
 
 

@@ -21,7 +21,7 @@ import actions.EditorUserAction
 import com.google.inject.Inject
 import helpers.EditorResponseHelper
 import models.editorUserList.BOOKMARKFOLDER
-import models.instance.NexusInstance
+import models.instance.{NexusInstance, NexusInstanceReference}
 import models.{AuthenticatedUserAction, EditorResponseObject, NexusPath, UserRequest}
 import play.api.Logger
 import play.api.libs.json._
@@ -57,7 +57,7 @@ class NexusEditorUserController @Inject()(
               case None =>
                 logger.info(s"Deleting editor user with id : ${request.user.id}")
                 nexusService.deprecateInstance(config.nexusEndpoint, EditorUserService.editorUserPath,
-                  NexusInstance.extractIdAndPath(Json.obj("@id" -> editorUser.nexusId))._1, 1L, token
+                  NexusInstanceReference.fromUrl( editorUser.nexusId).id, 1L, token
                 )
                 None
             }

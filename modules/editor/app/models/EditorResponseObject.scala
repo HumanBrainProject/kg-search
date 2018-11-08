@@ -28,6 +28,8 @@ object EditorResponseObject {
 
   implicit val responseWrites: Writes[EditorResponseObject] =
     (JsPath \ "data").write[JsValue].contramap(_.data)
+
+  def empty: EditorResponseObject = EditorResponseObject(Json.obj())
 }
 
 case class EditorResponseWithCount(override val data: JsValue, dataType: String, label: String, total: Long) extends EditorResponse

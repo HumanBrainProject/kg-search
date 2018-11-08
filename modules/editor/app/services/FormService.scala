@@ -74,26 +74,17 @@ object FormService{
     }
   }
 
-//  def escapeSlash(string: String): String = {
-//    string.replaceAll("/", slashEscaper)
-//  }
-//
-//  def unescapeSlash(string: String): String = {
-//    string.replaceAll(slashEscaper, "/")
-//  }
-
-  def transformToArray(key: String, data: JsValue, reconciledSuffix: String): JsArray = {
+  def transformToArray(key: String, data: JsValue): JsArray = {
     if ((data \ key \ "@list").isDefined) {
-      transformID((data \ key \ "@list").as[JsArray], reconciledSuffix)
+     (data \ key \ "@list").as[JsArray]
     } else if ((data \ key ).validate[JsArray].isSuccess){
-      transformID((data \ key ).as[JsArray], reconciledSuffix)
+      (data \ key ).as[JsArray]
     }else {
       if ((data \ key \ "@id").isDefined) {
         val linkToInstance = (data \ key \ "@id").as[String]
         if (linkToInstance.contains("http")){
-          val(id, path) = NexusInstance.extractIdAndPathFromString(linkToInstance)
-          val instancePath = path.originalPath(reconciledSuffix)
-          JsArray().+:(Json.obj("id" -> JsString(instancePath.toString() + s"/$id")))
+//          val(id, path) = NexusInstance.extractIdAndPathFromString(linkToInstance)
+          JsArray().+:(Json.obj("id" -> JsString(linkToInstance)))
         } else {
           JsArray()
         }
@@ -103,16 +94,16 @@ object FormService{
     }
   }
 
-  def transformID(jsArray: JsArray, reconciledSuffix: String):JsArray = {
-    Json.toJson(
-      jsArray.value.collect{
-        case el if ((el \ "@id").as[String] contains "http") =>
-          val(id, path) = NexusInstance.extractIdAndPathFromString((el \ "@id").as[String])
-          val instancePath = path.originalPath(reconciledSuffix)
-          Json.obj("id" -> JsString(instancePath.toString() + s"/$id"))
-      }
-    ).as[JsArray]
-  }
+//  def transformID(jsArray: JsArray):JsArray = {
+//    Json.toJson(
+//      jsArray.value.collect{
+//        case el if ((el \ "@id").as[String] contains "http") =>
+//          val(id, path) = NexusInstance.extractIdAndPathFromString((el \ "@id").as[String])
+//          val instancePath = path.originalPath(reconciledSuffix)
+//          Json.obj("id" -> JsString(instancePath.toString() + s"/$id"))
+//      }
+//    ).as[JsArray]
+//  }
 
   def buildEditableEntityTypesFromRegistry(registry: FormRegistry): List[BookmarkList] = {
     registry.registry.value.flatMap{
@@ -183,7 +174,7 @@ object FormService{
     Json.toJson(m).as[JsObject]
   }
 
-  def getFormStructure(entityType: NexusPath, data: JsValue, reconciledSuffix: String, formRegistry: FormRegistry): JsValue = {
+  def getFormStructure(entityType: NexusPath, data: JsValue, formRegistry: FormRegistry): JsValue = {
     // retrieve form template
     val formTemplateOpt = (formRegistry.registry \ entityType.org \ entityType.domain \ entityType.schema \ entityType.version).asOpt[JsObject]
 
@@ -205,7 +196,7 @@ object FormService{
               if (data.as[JsObject].keys.contains(key)) {
                 val newValue = (fieldContent \ "type").asOpt[String].getOrElse("") match {
                   case "DropdownSelect" =>
-                    fieldContent.as[JsObject] + ("value", FormService.transformToArray(key, data, reconciledSuffix))
+                    fieldContent.as[JsObject] + ("value", FormService.transformToArray(key, data))
                   case _ =>
                     fieldContent.as[JsObject] + ("value", (data \ key).get)
                 }

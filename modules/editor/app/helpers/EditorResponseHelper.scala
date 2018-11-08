@@ -32,7 +32,6 @@ object EditorResponseHelper {
     * @param headers          The headers of the response
     * @param errorMsg         The body of the response (could be either a String or JsValue)
     * @param originalPath     The path of the instance
-    * @param reconciledPrefix The reconciled prefix
     * @return A Play result with back link
     */
   def errorResultWithBackLink(
@@ -40,11 +39,10 @@ object EditorResponseHelper {
                                headers: Map[String, Seq[String]],
                                errorMsg: Any,
                                originalPath: NexusPath,
-                               reconciledPrefix: String,
                                formService: FormService
                              ): Result = {
     val resultBackLink = NavigationHelper
-      .errorMessageWithBackLink(errorMsg, NavigationHelper.generateBackLink(originalPath, reconciledPrefix, formService))
+      .errorMessageWithBackLink(errorMsg, NavigationHelper.generateBackLink(originalPath, formService))
     if (status == UNAUTHORIZED) {
       Result(
         ResponseHeader(

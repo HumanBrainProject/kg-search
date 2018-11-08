@@ -10,6 +10,8 @@ object EditorConstants {
   val USER = s"${EDITORNAMESPACE}user"
   val FOLDERTYPE = s"${EDITORNAMESPACE}folderType"
 
+  val IDRESPONSEFIELD= "relativeUrl"
+
   val commonNodeTypes = List("minds/core/dataset/v0.0.4")
   val bookmarkListFolderPath = NexusPath("kg", "core", "bookmarklistfolder", "v0.0.1")
   val bookmarkListPath = NexusPath("kg", "core", "bookmarklist", "v0.0.1")

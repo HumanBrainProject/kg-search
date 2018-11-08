@@ -89,8 +89,8 @@ object InstanceHelper {
 
   }
 
-  def buildDiffEntity(consolidatedResponse: NexusInstance, newValue: NexusInstance): JsObject = {
-    val consolidatedJson = JsonParser.parse(consolidatedResponse.removeNexusFields().content.toString())
+  def buildDiffEntity(currentInstance: NexusInstance, newValue: NexusInstance): EditorInstance = {
+    val consolidatedJson = JsonParser.parse(currentInstance.removeNexusFields().content.toString())
     val newJson = JsonParser.parse(newValue.content.toString())
     val Diff(changed, added, deleted) = consolidatedJson.diff(newJson)
     val diff: JsonAST.JValue = (deleted, changed) match {
@@ -115,7 +115,9 @@ object InstanceHelper {
           k -> v
         }
     }
-    Json.toJson(diffWithCompleteArray).as[JsObject]
+    EditorInstance(
+      NexusInstance(currentInstance.nexusUUID, currentInstance.nexusPath, Json.toJson(diffWithCompleteArray).as[JsObject])
+    )
   }
 
   def md5HashString(s: String): String = {
@@ -245,8 +247,9 @@ object InstanceHelper {
     }
   }
 
-  def addDefaultFields(instance: NexusInstance,originalPath: NexusPath, formRegistry:FormRegistry): NexusInstance = {
-    val fields = (formRegistry.registry \ originalPath.org \ originalPath.domain \ originalPath.schema \ originalPath.version \ "fields").as[JsObject].value
+  def addDefaultFields(instance: NexusInstance,formRegistry:FormRegistry): NexusInstance = {
+    val fields = (formRegistry.registry \ instance.nexusPath.org \ instance.nexusPath.domain \ instance.nexusPath.schema \instance.nexusPath.version \ "fields")
+      .as[JsObject].value
     val m = fields.map { case (k, v) =>
       val fieldValue =  instance.getField(k)
       if(fieldValue.isEmpty){

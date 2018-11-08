@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import constants.{EditorConstants, SchemaFieldsConstants}
 import models.errors.APIEditorError
 import models._
-import models.instance.NexusInstance
+import models.instance.{NexusInstance, NexusInstanceReference}
 import models.user.{EditorUser, NexusUser}
 import play.api.Logger
 import play.api.http.ContentTypes._
@@ -72,8 +72,8 @@ class EditorUserService @Inject()(config: ConfigurationService,
           ).map { res =>
             res.status match {
               case OK | CREATED =>
-                val (id, path) = NexusInstance.extractIdAndPath(res.json)
-                 Right(EditorUser(s"${path.toString}/$id", nexusUser))
+                val ref = NexusInstanceReference.fromUrl((res.json \ "@id").as[String])
+                 Right(EditorUser(s"${ref.toString}", nexusUser))
               case _ => Left(res)
             }
           }

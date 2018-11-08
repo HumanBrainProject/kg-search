@@ -48,21 +48,21 @@ class NavigationHeperSpec  extends PlaySpec with GuiceOneAppPerSuite with Mockit
       val path = NexusPath("minds", "core", "dataset", "v0.0.4")
       val expected = "minds/core/dataset"
       when(formService.formRegistry).thenReturn(FormRegistry(registry))
-      assert(expected == NavigationHelper.generateBackLink(path, "reconciled", formService))
+      assert(expected == NavigationHelper.generateBackLink(path,  formService))
     }
     "return an empty string if the path is not valid" in {
       val path = NexusPath("this", "doesnot", "exists", "v0.0.4")
       val expected = ""
       val formService = mock[FormService]
       when(formService.formRegistry).thenReturn(FormRegistry(registry))
-      assert(expected == NavigationHelper.generateBackLink(path, "reconciled", formService))
+      assert(expected == NavigationHelper.generateBackLink(path,  formService))
     }
     "return a path with an original organization" in {
       val path = NexusPath("mindsreconciled", "core", "dataset", "v0.0.4")
       val expected = "minds/core/dataset"
       val formService = mock[FormService]
       when(formService.formRegistry).thenReturn(FormRegistry(registry))
-      assert(expected == NavigationHelper.generateBackLink(path, "reconciled", formService))
+      assert(expected == NavigationHelper.generateBackLink(path, formService))
     }
   }
 
