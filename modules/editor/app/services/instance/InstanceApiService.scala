@@ -103,7 +103,7 @@ trait InstanceApiService {
       .post(nexusInstance.content)
       .map { res =>
         res.status match {
-          case OK | NO_CONTENT =>
+          case OK | CREATED =>
             val ref = NexusInstanceReference.fromUrl((res.json \ EditorConstants.IDRESPONSEFIELD).as[String])
             Right(nexusInstance.copy(nexusUUID = Some(ref.id) ))
           case _ => Left(res)
