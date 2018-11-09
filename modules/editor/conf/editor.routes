@@ -566,32 +566,7 @@ DELETE /api/bookmarkList/:org/:domain/:schema/:version/:id                      
 #  '200':
 #    description: Ok
 ###
-PUT /api/instance/:org/:domain/:schema/:version/:id/bookmarks       controllers.NexusEditorUserController.createBookmarks(org: String, domain:String, schema: String, version:String, id: String)
-
-###
-#  tags:
-#    - editor
-#  summary: Deletes a bookmark from a bookmark lists
-#  parameters:
-#    - in: path
-#      name: id
-#      type: string
-#      required: true
-#      description: the bookmark id to be deleted
-#    - in: body
-#      description: A list of bookmark IDs
-#      required: false
-#      type: array
-#    - in: header
-#      name: Authorization
-#      description: Authorization token
-#      required: true
-#      type: string
-#  responses:
-#    '200':
-#      description: Ok
-###
-DELETE /api/instance/:org/:domain/:schema/:version/:id/bookmarks    controllers.NexusEditorUserController.deleteBookmarks(org: String, domain:String, schema: String, version:String, id: String)
+PUT /api/instance/:org/:domain/:schema/:version/:id/bookmarks       controllers.NexusEditorUserController.updateBookmarks(org: String, domain:String, schema: String, version:String, id: String)
 
 ###
 #  tags:

@@ -19,7 +19,7 @@ package services.bookmark
 import models.errors.APIEditorError
 import models._
 import models.editorUserList.{BOOKMARKFOLDER, BookmarkList, BookmarkListFolder, FolderType}
-import models.instance.PreviewInstance
+import models.instance.{NexusInstanceReference, PreviewInstance}
 import models.user.EditorUser
 import play.api.libs.ws.WSResponse
 
@@ -30,7 +30,7 @@ trait EditorBookmarkServiceInterface {
   def getUserLists(editorUser: EditorUser, formRegistry: FormRegistry):
   Future[Either[WSResponse, List[BookmarkListFolder]]]
 
-  def getInstancesOfBookmarkList(bookmarkListId: String, start: Int, size: Int, search: String):
+  def getInstancesOfBookmarkList(bookmarkListId: NexusInstanceReference, start: Int, size: Int, search: String):
   Future[Either[WSResponse, (List[PreviewInstance], Long)]]
 
   def createBookmarkListFolder(editorUser: EditorUser, name: String, folderType: FolderType = BOOKMARKFOLDER, token: String):
@@ -39,16 +39,29 @@ trait EditorBookmarkServiceInterface {
   def createBookmarkList(bookmarkListName: String, folderId: String, token: String):
   Future[Either[WSResponse, BookmarkList]]
 
-  def updateBookmarkList(bookmarkList: BookmarkList, bookmarkListPath: NexusPath, bookmarkListId: String, userFolderId: String, token: String):
+  def updateBookmarkList(
+                          bookmarkList: BookmarkList,
+                          bookmarkListPath: NexusPath,
+                          bookmarkListId: String,
+                          userFolderId: String,
+                          token: String):
   Future[Either[WSResponse, BookmarkList]]
 
   def deleteBookmarkList(bookmarkListPath: NexusPath, instanceId: String, token: String):
   Future[Either[APIEditorError, Unit]]
 
-  def addInstanceToBookmarkLists(instanceFullId: String, bookmarkListIds: List[String], token: String):
-  Future[List[WSResponse]]
+  def addInstanceToBookmarkLists(
+                                  instanceReference: NexusInstanceReference,
+                                  bookmarkListIds: List[String],
+                                  token: String
+                                ):
+  Future[List[Either[WSResponse, NexusInstanceReference]]]
 
-  def removeInstanceFromBookmarkLists(instancePath: NexusPath, instanceId: String, bookmarkListIds: List[String], token: String):
+  def removeInstanceFromBookmarkLists(
+                                       instanceRef: NexusInstanceReference,
+                                       bookmarkListIds: List[NexusInstanceReference],
+                                       token: String
+                                     ):
   Future[List[Either[WSResponse, Unit]]]
 
   def retrieveBookmarkList(instanceIds: List[(NexusPath, String)]):

@@ -18,7 +18,7 @@ package constants
 import models.NexusPath
 
 object EditorConstants {
-  val EDITORNAMESPACE = "http://hbp.eu/kgeditor/"
+  val EDITORNAMESPACE = "https://schema.hbp.eu/kgeditor/"
   val BOOKMARKLIST = s"${EDITORNAMESPACE}bookmarkList"
   val BOOKMARKINSTANCELINK = s"${EDITORNAMESPACE}bookmarkInstanceLink"
   val BOOKMARKLISTFOLDER = s"${EDITORNAMESPACE}bookmarkListFolder"

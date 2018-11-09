@@ -114,8 +114,8 @@ class NexusEditorUserController @Inject()(
                                size: Int,
                                search: String
                              ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
-    val nexusPath = NexusPath(org, domain, datatype, version)
-    editorUserListService.getInstancesOfBookmarkList(s"${nexusPath.toString()}/$id", from, size, search).map{
+    val nexusRef = NexusInstanceReference(org, domain, datatype, version, id)
+    editorUserListService.getInstancesOfBookmarkList(nexusRef, from, size, search).map{
       case Right( (instances, total) ) => Ok(Json.toJson(EditorResponseObject(Json.toJson(instances))).as[JsObject].+("total" -> JsNumber(total)) )
       case Left(res) => EditorResponseHelper.forwardResultResponse(res)
     }
@@ -185,61 +185,26 @@ class NexusEditorUserController @Inject()(
       } yield result
     }
 
-  def createBookmarks(org: String, domain:String, schema: String, version:String, id: String): Action[AnyContent] =
-    (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
-//      val bookmarkIds = for{
-//        json <- request.body.asJson
-//        arrayOfIds <- json.asOpt[List[String]]
-//      } yield arrayOfIds
-//
-//      bookmarkIds match {
-//        case Some(ids) =>
-//          val path = NexusPath(org, domain, schema, version)
-//          val fullIds  = ids.map(i => s"${config.nexusEndpoint}/v0/data/${i}")
-//          val futList = for {
-//            token <- oIDCAuthService.getTechAccessToken()
-//            listResult <- editorUserListService
-//              .addInstanceToBookmarkLists(s"${config.nexusEndpoint}/v0/data/${path.toString()}/${id}", fullIds, token)
-//          } yield listResult
-//
-//          futList.map{ listResponse =>
-//            if(listResponse.forall(_.status == CREATED)){
-//              Ok("Bookmarks created")
-//            }else{
-//              val errors = listResponse.filter(_.status >= BAD_REQUEST).mkString("\n")
-//              InternalServerError(s"Could not create all the bookmarks - $errors")
-//            }
-//          }
-//        case Some(Nil) =>
-//        case None => Future(BadRequest("Missing body content"))
-//      }
-      ???
-    }
-
-  def deleteBookmarks(org: String, domain:String, schema: String, version:String, id: String): Action[AnyContent] =
+  def updateBookmarks(org: String, domain: String, schema: String, version: String, id: String): Action[AnyContent] =
     (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
       val bookmarkIds = for {
         json <- request.body.asJson
         arrayOfIds <- json.asOpt[List[String]]
       } yield arrayOfIds
+      val instanceReference = NexusInstanceReference(org, domain, schema, version, id)
       bookmarkIds match {
         case Some(ids) =>
-          val path = NexusPath(org, domain, schema, version)
-          val fullIds = ids.map(i => s"${config.nexusEndpoint}/v0/data/${i}")
           val futList = for {
             token <- oIDCAuthService.getTechAccessToken()
-            listResult <- editorUserListService
-              .removeInstanceFromBookmarkLists(path, id , fullIds, token)
+            listResult <- editorUserListService.updateBookmarks(instanceReference, ids, token)
           } yield listResult
+
           futList.map { listResponse =>
             if (listResponse.forall(_.isRight)) {
-              Ok("Bookmarks removed")
+              Ok("Bookmarks created")
             } else {
-              val errors = listResponse.filter(_.isLeft).map{
-                case Left(d) => d.body
-                case Right(_) => ""
-              }.mkString("\n")
-              InternalServerError(s"Could not remove all the bookmarks - $errors")
+              val errors = listResponse.filter(_.isLeft).mkString("\n")
+              InternalServerError(s"Could not update all the bookmarks - $errors")
             }
           }
 
