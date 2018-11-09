@@ -18,6 +18,7 @@
 package services
 
 import com.google.inject.{Inject, Singleton}
+import constants.{EditorConstants, InternalSchemaFieldsConstants}
 import models.editorUserList.BookmarkList
 import models._
 import models.instance.{NexusInstance, ReconciledInstance}
@@ -52,7 +53,6 @@ class FormService @Inject()(
 }
 object FormService{
 
-  val slashEscaper = "%nexus-slash%"
   object FormRegistryService extends FormRegistryService
 
   def removeKey(jsValue: JsValue):JsValue = {
@@ -75,19 +75,13 @@ object FormService{
   }
 
   def transformToArray(key: String, data: JsValue): JsArray = {
-    if ((data \ key \ "@list").isDefined) {
-     (data \ key \ "@list").as[JsArray]
-    } else if ((data \ key ).validate[JsArray].isSuccess){
+    if ((data \ key ).validate[JsArray].isSuccess){
       (data \ key ).as[JsArray]
     }else {
-      if ((data \ key \ "@id").isDefined) {
-        val linkToInstance = (data \ key \ "@id").as[String]
-        if (linkToInstance.contains("http")){
-//          val(id, path) = NexusInstance.extractIdAndPathFromString(linkToInstance)
-          JsArray().+:(Json.obj("id" -> JsString(linkToInstance)))
-        } else {
-          JsArray()
-        }
+      if ((data \ key \ InternalSchemaFieldsConstants.RELATIVEURL).isDefined) {
+        val linkToInstance = (data \ key \ InternalSchemaFieldsConstants.RELATIVEURL).as[String]
+        //          val(id, path) = NexusInstance.extractIdAndPathFromString(linkToInstance)
+        JsArray().+:(Json.obj("id" -> JsString(linkToInstance)))
       } else {
         JsArray()
       }

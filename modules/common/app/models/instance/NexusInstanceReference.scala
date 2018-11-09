@@ -18,7 +18,8 @@
 package models.instance
 
 import models.NexusPath
-import play.api.libs.json.{JsPath, Reads}
+import play.api.libs.functional.syntax.unlift
+import play.api.libs.json.{JsPath, Reads, Writes}
 
 case class NexusInstanceReference(nexusPath: NexusPath, id: String) {
   override def toString: String = s"${this.nexusPath.toString()}/${this.id}"
@@ -47,5 +48,10 @@ object NexusInstanceReference {
     }
   }
 
+  import play.api.libs.json._
+  import play.api.libs.functional.syntax._
+
+  implicit val nexusInstanceReferenceWrites: Writes[NexusInstanceReference] =
+    (JsPath \ "id").write[String].contramap(s => s.toString)
 
 }

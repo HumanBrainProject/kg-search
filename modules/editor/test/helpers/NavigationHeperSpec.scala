@@ -57,13 +57,6 @@ class NavigationHeperSpec  extends PlaySpec with GuiceOneAppPerSuite with Mockit
       when(formService.formRegistry).thenReturn(FormRegistry(registry))
       assert(expected == NavigationHelper.generateBackLink(path,  formService))
     }
-    "return a path with an original organization" in {
-      val path = NexusPath("mindsreconciled", "core", "dataset", "v0.0.4")
-      val expected = "minds/core/dataset"
-      val formService = mock[FormService]
-      when(formService.formRegistry).thenReturn(FormRegistry(registry))
-      assert(expected == NavigationHelper.generateBackLink(path, formService))
-    }
   }
 
 }

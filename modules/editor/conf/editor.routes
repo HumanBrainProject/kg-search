@@ -513,7 +513,7 @@ PUT /api/bookmarkList/:org/:domain/:schema/:version/:id                         
 ###
 #tags:
 #  - editor
-#summary: Delete a bookmark and all its bookmarks
+#summary: Delete a bookmark list and all its bookmarks
 #parameters:
 #  - in: header
 #    name: Authorization

@@ -25,10 +25,10 @@ object EditorConstants {
   val USER = s"${EDITORNAMESPACE}user"
   val FOLDERTYPE = s"${EDITORNAMESPACE}folderType"
 
-  val IDRESPONSEFIELD= "relativeUrl"
+  val RELATIVEURL = "relativeUrl"
 
   val commonNodeTypes = List("minds/core/dataset/v1.0.0")
-  val bookmarkListFolderPath = NexusPath("kg", "core", "bookmarklistfolder", "v0.0.1")
-  val bookmarkListPath = NexusPath("kg", "core", "bookmarklist", "v0.0.1")
-  val bookmarkPath = NexusPath("kg", "core", "bookmark", "v0.0.1")
+  val bookmarkListFolderPath = NexusPath("hbpkg", "core", "bookmarklistfolder", "v0.0.1")
+  val bookmarkListPath = NexusPath("hbpkg", "core", "bookmarklist", "v0.0.1")
+  val bookmarkPath = NexusPath("hbpkg", "core", "bookmark", "v0.0.1")
 }

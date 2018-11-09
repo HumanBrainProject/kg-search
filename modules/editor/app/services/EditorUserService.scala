@@ -17,7 +17,7 @@
 package services
 
 import com.google.inject.Inject
-import constants.{EditorConstants, SchemaFieldsConstants}
+import constants.{EditorConstants, InternalSchemaFieldsConstants, SchemaFieldsConstants}
 import models.errors.APIEditorError
 import models._
 import models.instance.{NexusInstance, NexusInstanceReference}
@@ -51,8 +51,8 @@ class EditorUserService @Inject()(config: ConfigurationService,
         case OK => (res.json \ "results").as[List[JsObject]]
           .find(js => (js \ "userId").asOpt[String].getOrElse("") == nexusUser.id)
           .map{js =>
-            val id = (js \ "nexusId").as[String].split("/").last
-            Right(EditorUser( s"${EditorUserService.editorUserPath.toString()}/$id" , nexusUser))
+            val id = (js \ "nexusId").as[String]
+            Right(EditorUser(id , nexusUser))
           }.getOrElse(Left(APIEditorError(NOT_FOUND, "Could not find editor user")))
         case _ =>
           logger.error(s"Could not fetch the user with ID ${nexusUser.id} " + res.body)
@@ -63,32 +63,21 @@ class EditorUserService @Inject()(config: ConfigurationService,
 
 
   def createUser(nexusUser: NexusUser, token: String): Future[Either[WSResponse, EditorUser]] = {
-    nexusExtensionService
-      .createSimpleSchema(EditorUserService.editorUserPath, Some(config.editorSubSpace))
-      .flatMap {
-        case Right(()) =>
-          nexusService.insertInstance(
-            config.nexusEndpoint,
-            EditorUserService.editorUserPath.withSpecificSubspace(config.editorSubSpace),
-            EditorUserService.userToNexusStruct(nexusUser.id),
-            token
-          ).map { res =>
-            res.status match {
-              case OK | CREATED =>
-                val ref = NexusInstanceReference.fromUrl((res.json \ "@id").as[String])
-                 Right(EditorUser(s"${ref.toString}", nexusUser))
-              case _ => Left(res)
-            }
-          }
-        case Left(res) =>
-          logger.error(s"Could not create editor User schema - ${res.body}")
-          Future(Left(res))
-      }
+    instanceApiService.post(
+      wSClient,
+      config.kgQueryEndpoint,
+      NexusInstance(None, EditorUserService.editorUserPath, EditorUserService.userToNexusStruct(nexusUser.id)),
+      token
+    ).map {
+      case Right(ref) =>
+        Right(EditorUser(s"${ref.toString}", nexusUser))
+      case Left(res) => Left(res)
+    }
   }
 }
 
 object EditorUserService {
-  val editorUserPath = NexusPath("kg", "core", "user", "v0.0.1")
+  val editorUserPath = NexusPath("hbpkg", "core", "user", "v0.0.1")
 
   val context =
     s"""
@@ -98,8 +87,8 @@ object EditorUserService {
       |    "kgeditor": "${EditorConstants.EDITORNAMESPACE}",
       |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
       |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
-      |    "this": "http://schema.hbp.eu/instances/",
-      |    "searchui": "http://schema.hbp.eu/search_ui/",
+      |    "this": "https://schema.hbp.eu/instances/",
+      |    "searchui": "https://schema.hbp.eu/search_ui/",
       |    "fieldname": {
       |      "@id": "fieldname",
       |      "@type": "@id"
@@ -129,12 +118,12 @@ object EditorUserService {
        |    {
        |      "fieldname": "nexusId",
        |      "required": true,
-       |      "relative_path": "_originalId"
+       |      "relative_path": "_relativeUrl"
        |    },
        |    {
        |      "fieldname": "userId",
        |      "required": true,
-       |      "relative_path": "schema:identifier"
+       |      "relative_path": "${SchemaFieldsConstants.USERID}"
        |    }
        |  ]
        |}
@@ -143,10 +132,9 @@ object EditorUserService {
 
 
 
-  def userToNexusStruct(userId: String) = {
+  def userToNexusStruct(userId: String): JsObject = {
     Json.obj(
-      SchemaFieldsConstants.IDENTIFIER -> userId,
-      "@type" -> s"${EditorConstants.EDITORNAMESPACE}User"
+     SchemaFieldsConstants.USERID -> userId
     )
   }
 

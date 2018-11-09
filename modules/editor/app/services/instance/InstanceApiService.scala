@@ -93,18 +93,17 @@ trait InstanceApiService {
             wSClient: WSClient,
             apiBaseEndpoint: String,
             nexusInstance: NexusInstance,
-            nexusPath: NexusPath,
             token: String,
             serviceClient: ServiceClient = EditorClient
           )(implicit ec: ExecutionContext): Future[Either[WSResponse, NexusInstanceReference]] = {
     wSClient
-      .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusPath.toString}")
+      .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.nexusPath.toString()}")
       .withHttpHeaders("Authorization" -> token, "client" -> serviceClient.client)
       .post(nexusInstance.content)
       .map { res =>
         res.status match {
           case OK | CREATED =>
-            Right(NexusInstanceReference.fromUrl((res.json \ EditorConstants.IDRESPONSEFIELD).as[String]))
+            Right(NexusInstanceReference.fromUrl((res.json \ EditorConstants.RELATIVEURL).as[String]))
           case _ => Left(res)
         }
       }

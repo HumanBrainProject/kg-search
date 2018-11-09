@@ -12,7 +12,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class NexusExtensionService @Inject() (config: ConfigurationService,
                                        wSClient: WSClient,
                                       )(implicit executionContext: ExecutionContext){
-  val schemaPath ="/schemas"
+  val schemaPath ="/api/schemas"
 
   def createSimpleSchema(nexusPath: NexusPath, subSpace: Option[String] ): Future[Either[WSResponse, Unit]] = {
     wSClient.url(s"${config.kgQueryEndpoint}$schemaPath/${nexusPath.toString()}")

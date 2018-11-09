@@ -82,13 +82,13 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
       }
     List(
       BookmarkListFolder(
-        "commonNodeTypes",
+        None,
         "Common node types",
         NODETYPEFOLDER,
         allEditableEntities._1.sortBy(b => b.name)
       ),
       BookmarkListFolder(
-        "otherNodeTypes",
+        None,
         "Other node types",
         NODETYPEFOLDER,
         allEditableEntities._2.sortBy(b => b.name)
@@ -122,31 +122,18 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
                                 folderType: FolderType = BOOKMARKFOLDER,
                                 token: String
                               ): Future[Either[WSResponse, BookmarkListFolder]] = {
-    nexusExtensionService.createSimpleSchema(
-      EditorConstants.bookmarkListFolderPath,
-      Some(config.editorSubSpace)
-    ).flatMap {
-      case Right(()) =>
-        val payload = EditorBookmarkService.bookmarkListFolderToNexusStruct(name, s"${config.nexusEndpoint}/v0/data/${user.nexusId}", folderType)
-        nexusService.insertInstance(
-          config.nexusEndpoint,
-          EditorConstants.bookmarkListFolderPath.withSpecificSubspace(config.editorSubSpace),
-          payload,
-          token
-        ).map {
-          res =>
-            res.status match {
-              case CREATED =>
-                val ref = NexusInstanceReference.fromUrl((res.json \ "@id").as[String])
-                Right(BookmarkListFolder(s"${EditorConstants.bookmarkListFolderPath.toString()}/${ref.id}", name, folderType, List()))
-              case _ =>
-                logger.error("Error while creating a user folder " + res.body)
-                Left(res)
-            }
-        }
+    val payload = EditorBookmarkService.bookmarkListFolderToNexusStruct(name, s"${config.nexusEndpoint}/v0/data/${user.nexusId}", folderType)
+    instanceApiService.post(
+      wSClient,
+      config.kgQueryEndpoint,
+      NexusInstance(None, EditorConstants.bookmarkListFolderPath, payload),
+      token
+    ).map {
+      case Right(ref) =>
+        Right(BookmarkListFolder(Some(ref), name, folderType, List()))
       case Left(res) =>
-        logger.error(s"Could not created schema for User folder ${res.body}")
-        Future(Left(res))
+        logger.error("Error while creating a user folder " + res.body)
+        Left(res)
     }
   }
 
@@ -291,7 +278,38 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
         )
       }
       Future.sequence(queries)
+
   }
+
+//  def updateBookmarks(
+//                     instanceRef: NexusInstanceReference,
+//                     bookmarkListIds: List[String],
+//                     token: String
+//                     ): Future[List[WSResponse]] = {
+//    wSClient
+//      .url(s"${config.kgQueryEndpoint}/query/${instanceRef.toString}")
+//      .withHttpHeaders(CONTENT_TYPE -> JSON)
+//      .post(EditorBookmarkService.kgQueryGetInstanceBookmarks(instanceRef.nexusPath)).flatMap {
+//        res =>
+//          res.status match {
+//            case OK =>
+//              (res.json \ "bookmarks" ).asOpt[List[JsValue]] match{
+//                case Some(ids) => //Delete the bookmarks
+//
+//                    val bookmarkToDelete =
+//
+//                    .map { id =>
+//                      val str = (id \ "id").as[String]
+//                      val ref = NexusInstanceReference.fromUrl(str)
+//                      instanceApiService.delete(wSClient, config.kgQueryEndpoint,ref, token)
+//                    }
+//                  Future.sequence(listResponses)
+//            case _ => Future(List(Left(res)))
+//          }
+//    }
+//  }
+
+
 
   def removeInstanceFromBookmarkLists(
                                   instancePath: NexusPath,
@@ -365,8 +383,8 @@ object EditorBookmarkService {
       |    "kgeditor": "${EditorConstants.EDITORNAMESPACE}",
       |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
       |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
-      |    "this": "http://schema.hbp.eu/instances/",
-      |    "searchui": "http://schema.hbp.eu/search_ui/",
+      |    "this": "https://schema.hbp.eu/instances/",
+      |    "searchui": "https://schema.hbp.eu/search_ui/",
       |    "fieldname": {
       |      "@id": "fieldname",
       |      "@type": "@id"

@@ -17,27 +17,27 @@
 package models.editorUserList
 
 import constants.EditorConstants
+import models.instance.NexusInstanceReference
 
-case class BookmarkListFolder(id:String, folderName: String, folderType: FolderType, userLists: List[BookmarkList] )
+case class BookmarkListFolder(id:Option[NexusInstanceReference], folderName: String, folderType: FolderType, userLists: List[BookmarkList] )
 
 object BookmarkListFolder {
 
   import play.api.libs.json._
   import play.api.libs.functional.syntax._
-  implicit val userFolderReads: Reads[BookmarkListFolder] = (
-    (JsPath \ "id").read[String].map{id =>
-      val uuid = id.split("/").last.split("\\?rev=").head
-      s"${EditorConstants.bookmarkListFolderPath.toString()}/${uuid}"
-    } and
+  implicit val bookmarkListFolderReads: Reads[BookmarkListFolder] = (
+    (JsPath \ "id").read[String].map( s => Some(NexusInstanceReference.fromUrl(s))) and
     (JsPath \ "folderName").read[String] and
       JsPath.read[FolderType] and
       (JsPath \ "lists").read[List[BookmarkList]].or(Reads.pure(List[BookmarkList]()))
     )(BookmarkListFolder.apply _)
 
-  implicit val userFolderWrites: Writes[BookmarkListFolder] = (
-    (JsPath \ "id").write[String] and
-    (JsPath \ "folderName").write[String] and
+  implicit val bookmarkListFolderWrites: Writes[BookmarkListFolder] = (
+      JsPath.writeNullable[NexusInstanceReference] and
+      (JsPath \ "folderName").write[String] and
       JsPath.write[FolderType] and
       (JsPath \ "lists").write[List[BookmarkList]]
     )(unlift(BookmarkListFolder.unapply))
+
+
 }

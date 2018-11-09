@@ -17,16 +17,17 @@
 package editor.models
 
 import models.editorUserList.{BOOKMARKFOLDER, BookmarkList, BookmarkListFolder}
+import models.instance.NexusInstanceReference
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsString, Json}
 
 class BookmarkListFolderSpec extends PlaySpec{
 
-  "UserFolder#toJson" should {
+  "toJson" should {
     "contain the correct fields" in {
-      val folderId = "folderId"
+      val folderId = NexusInstanceReference("org", "domain", "schema", "version", "folderId")
       val uFolder = BookmarkListFolder(
-        folderId,
+        Some(folderId),
         "name",
         BOOKMARKFOLDER,
         List(
@@ -48,7 +49,7 @@ class BookmarkListFolderSpec extends PlaySpec{
       )
 
       val expected = Json.obj(
-        "id" -> JsString(folderId),
+        "id" -> JsString(folderId.toString),
         "folderName" -> JsString("name"),
         "folderType" -> JsString("BOOKMARK"),
         "lists" -> Json.arr(

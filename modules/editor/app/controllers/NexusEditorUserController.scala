@@ -187,31 +187,33 @@ class NexusEditorUserController @Inject()(
 
   def createBookmarks(org: String, domain:String, schema: String, version:String, id: String): Action[AnyContent] =
     (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
-      val bookmarkIds = for{
-        json <- request.body.asJson
-        arrayOfIds <- json.asOpt[List[String]]
-      } yield arrayOfIds
-
-      bookmarkIds match {
-        case Some(ids) =>
-          val path = NexusPath(org, domain, schema, version)
-          val fullIds  = ids.map(i => s"${config.nexusEndpoint}/v0/data/${i}")
-          val futList = for {
-            token <- oIDCAuthService.getTechAccessToken()
-            listResult <- editorUserListService
-              .addInstanceToBookmarkLists(s"${config.nexusEndpoint}/v0/data/${path.toString()}/${id}", fullIds, token)
-          } yield listResult
-
-          futList.map{ listResponse =>
-            if(listResponse.forall(_.status == CREATED)){
-              Ok("Bookmarks created")
-            }else{
-              val errors = listResponse.filter(_.status >= BAD_REQUEST).mkString("\n")
-              InternalServerError(s"Could not create all the bookmarks - $errors")
-            }
-          }
-        case None => Future(BadRequest("Missing body content"))
-      }
+//      val bookmarkIds = for{
+//        json <- request.body.asJson
+//        arrayOfIds <- json.asOpt[List[String]]
+//      } yield arrayOfIds
+//
+//      bookmarkIds match {
+//        case Some(ids) =>
+//          val path = NexusPath(org, domain, schema, version)
+//          val fullIds  = ids.map(i => s"${config.nexusEndpoint}/v0/data/${i}")
+//          val futList = for {
+//            token <- oIDCAuthService.getTechAccessToken()
+//            listResult <- editorUserListService
+//              .addInstanceToBookmarkLists(s"${config.nexusEndpoint}/v0/data/${path.toString()}/${id}", fullIds, token)
+//          } yield listResult
+//
+//          futList.map{ listResponse =>
+//            if(listResponse.forall(_.status == CREATED)){
+//              Ok("Bookmarks created")
+//            }else{
+//              val errors = listResponse.filter(_.status >= BAD_REQUEST).mkString("\n")
+//              InternalServerError(s"Could not create all the bookmarks - $errors")
+//            }
+//          }
+//        case Some(Nil) =>
+//        case None => Future(BadRequest("Missing body content"))
+//      }
+      ???
     }
 
   def deleteBookmarks(org: String, domain:String, schema: String, version:String, id: String): Action[AnyContent] =
