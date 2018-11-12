@@ -21,5 +21,12 @@
            transactionalMode="off">
         <persistence strategy="localTempSwap" />
     </cache>
-
+    <cache name="editor-userinfo-cache"
+           maxEntriesLocalHeap="10000"
+           eternal="false"
+           diskSpoolBufferSizeMB="20"
+           memoryStoreEvictionPolicy="FIFO"
+           transactionalMode="off">
+        <persistence strategy="localTempSwap" />
+    </cache>
 </ehcache>

@@ -23,6 +23,7 @@ import models._
 import models.instance.{NexusInstance, NexusInstanceReference}
 import models.user.{EditorUser, NexusUser}
 import play.api.Logger
+import play.api.cache.{AsyncCacheApi, NamedCache}
 import play.api.http.ContentTypes._
 import play.api.http.HeaderNames._
 import play.api.http.Status._
@@ -35,29 +36,38 @@ import scala.concurrent.{ExecutionContext, Future}
 class EditorUserService @Inject()(config: ConfigurationService,
                                   wSClient: WSClient,
                                   nexusService: NexusService,
+                                  @NamedCache("editor-userinfo-cache") cache: AsyncCacheApi,
                                   nexusExtensionService: NexusExtensionService,
                                   oIDCAuthService: OIDCAuthService,
                                  )(implicit executionContext: ExecutionContext) {
   val logger = Logger(this.getClass)
 
   object instanceApiService extends InstanceApiService
+  object cacheService extends CacheService
 
   def getUser(nexusUser: NexusUser): Future[Either[APIEditorError, EditorUser]] = {
-    wSClient
-      .url(s"${config.kgQueryEndpoint}/query")
-      .withHttpHeaders(CONTENT_TYPE -> JSON)
-      .post(EditorUserService.kgQueryGetUserQuery(EditorConstants.editorUserPath)).map{
-      res => res.status match {
-        case OK => (res.json \ "results").as[List[JsObject]]
-          .find(js => (js \ "userId").asOpt[String].getOrElse("") == nexusUser.id)
-          .map{js =>
-            val id = (js \ "nexusId").as[String]
-            Right(EditorUser(id , nexusUser))
-          }.getOrElse(Left(APIEditorError(NOT_FOUND, "Could not find editor user")))
-        case _ =>
-          logger.error(s"Could not fetch the user with ID ${nexusUser.id} " + res.body)
-          Left(APIEditorError(NOT_FOUND, "Could not find editor user"))
+    cacheService.getOrElse[EditorUser](cache, nexusUser.id.toString){
+      wSClient
+        .url(s"${config.kgQueryEndpoint}/query")
+        .withHttpHeaders(CONTENT_TYPE -> JSON)
+        .post(EditorUserService.kgQueryGetUserQuery(EditorConstants.editorUserPath)).map{
+        res => res.status match {
+          case OK => (res.json \ "results").as[List[JsObject]]
+            .find(js => (js \ "userId").asOpt[String].getOrElse("") == nexusUser.id)
+            .map{js =>
+              val id = (js \ "nexusId").as[String]
+              EditorUser(id , nexusUser)
+            }
+          case _ =>
+            logger.error(s"Could not fetch the user with ID ${nexusUser.id} ${res.body}")
+            None
+        }
       }
+    }.map{
+      case Some(editorUser) =>
+        cache.set(editorUser.nexusUser.id, editorUser, config.cacheExpiration)
+        Right(editorUser)
+      case None => Left(APIEditorError(NOT_FOUND, "Could not find editor user"))
     }
   }
 

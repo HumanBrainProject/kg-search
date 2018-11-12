@@ -1,4 +1,3 @@
-
 /*
 *   Copyright (c) 2018, EPFL/Human Brain Project PCO
 *
@@ -17,15 +16,22 @@
 
 package services
 
-import play.api.mvc.Headers
+import play.api.Logger
+import play.api.cache.AsyncCacheApi
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+import scala.reflect.ClassTag
 
-trait AuthService {
-  type U
+trait CacheService {
 
-  def getUserInfo(headers: Headers): Future[U]
-
-
+  val logger = Logger(this.getClass)
+  def getOrElse[A:ClassTag](cache : AsyncCacheApi, key: String)(orElse: => Future[Option[A]])(implicit executionContext: ExecutionContext):Future[Option[A]] = {
+    cache.get[A](key).flatMap{
+      case Some(elem) =>
+        Future(Some(elem))
+      case _ =>
+       orElse
+    }
+  }
 
 }

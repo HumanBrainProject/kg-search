@@ -45,6 +45,8 @@ class OIDCAuthService @Inject()(
   private val techAccessToken = "techAccessToken"
   val logger = Logger(this.getClass)
 
+  object cacheService extends CacheService
+
   override type U = Option[NexusUser]
 
   /**
@@ -108,18 +110,14 @@ class OIDCAuthService @Inject()(
     * @return An option with the UserInfo object
     */
   def getUserInfoWithCache(token: String): Future[Option[NexusUser]]  = {
-    cache.get[NexusUser](token).flatMap{
-      case Some(userInfo) =>
-        logger.debug(s"User info fetched from cache ${userInfo.id}")
-        Future.successful(Some(userInfo))
-      case _ =>
-        getUserInfoFromToken(token).map{
-          case Some(userInfo) =>
-            cache.set(token, userInfo, config.cacheExpiration)
-            Some(userInfo)
-          case _ =>
-            None
-        }
+    cacheService.getOrElse[NexusUser](cache, token){
+      getUserInfoFromToken(token).map{
+        case Some(userInfo) =>
+          cache.set(token, userInfo, config.cacheExpiration)
+          Some(userInfo)
+        case _ =>
+          None
+      }
     }
   }
 
