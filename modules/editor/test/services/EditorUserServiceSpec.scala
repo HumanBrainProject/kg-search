@@ -16,6 +16,7 @@
 */
 package editor.services
 
+import constants.EditorConstants
 import helpers.ConfigMock._
 import helpers.ConfigMock
 import mockws.{MockWS, MockWSHelpers}
@@ -44,7 +45,7 @@ class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockW
 
       val id = "1"
       val idUser = "nexusUUID1"
-      val nexusIdUser = s"${EditorUserService.editorUserPath.toString()}/$idUser"
+      val nexusIdUser = s"${EditorConstants.editorUserPath.toString()}/$idUser"
       val nexusUser = NexusUser(
         id,
         "",
