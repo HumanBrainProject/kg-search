@@ -18,12 +18,15 @@ package constants
 import models.NexusPath
 
 object EditorConstants {
-  val EDITORNAMESPACE = "https://schema.hbp.eu/kgeditor/"
-  val BOOKMARKLIST = s"${EDITORNAMESPACE}bookmarkList"
-  val BOOKMARKINSTANCELINK = s"${EDITORNAMESPACE}bookmarkInstanceLink"
-  val BOOKMARKLISTFOLDER = s"${EDITORNAMESPACE}bookmarkListFolder"
-  val USER = s"${EDITORNAMESPACE}user"
-  val FOLDERTYPE = s"${EDITORNAMESPACE}folderType"
+  val EDITORNAMESPACE = "https://schema.hbp.eu/hbpkg/"
+  val BOOKMARKLIST = "bookmarkList"
+  val BOOKMARKINSTANCELINK = "bookmarkInstanceLink"
+  val BOOKMARKLISTFOLDER = "bookmarkListFolder"
+  val USER = "user"
+  val USERID = "userId"
+  val FOLDERTYPE = "folderType"
+
+
 
   val RELATIVEURL = "relativeUrl"
 
@@ -31,4 +34,39 @@ object EditorConstants {
   val bookmarkListFolderPath = NexusPath("hbpkg", "core", "bookmarklistfolder", "v0.0.1")
   val bookmarkListPath = NexusPath("hbpkg", "core", "bookmarklist", "v0.0.1")
   val bookmarkPath = NexusPath("hbpkg", "core", "bookmark", "v0.0.1")
+
+
+
+  val editorUserPath = NexusPath("hbpkg", "core", "user", "v0.0.1")
+
+
+
+  val context =
+    s"""
+       |{
+       |    "@vocab": "https://schema.hbp.eu/graphQuery/",
+       |    "schema": "http://schema.org/",
+       |    "hbpkg": "${EDITORNAMESPACE}",
+       |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
+       |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
+       |    "this": "https://schema.hbp.eu/instances/",
+       |    "searchui": "https://schema.hbp.eu/search_ui/",
+       |    "fieldname": {
+       |      "@id": "fieldname",
+       |      "@type": "@id"
+       |    },
+       |    "merge": {
+       |      "@id": "merge",
+       |      "@type": "@id"
+       |    },
+       |    "relative_path": {
+       |      "@id": "relative_path",
+       |      "@type": "@id"
+       |    },
+       |    "root_schema": {
+       |      "@id": "root_schema",
+       |      "@type": "@id"
+       |    }
+       |  }
+    """.stripMargin
 }

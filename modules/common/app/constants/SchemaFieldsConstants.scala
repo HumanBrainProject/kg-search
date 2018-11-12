@@ -6,5 +6,5 @@ object SchemaFieldsConstants {
   val NAME = "http://schema.org/name"
   val DESCRIPTION = "http://schema.org/description"
 
-  val USERID = "https://schema.hbp.eu/userId"
+
 }

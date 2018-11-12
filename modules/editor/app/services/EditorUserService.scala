@@ -46,7 +46,7 @@ class EditorUserService @Inject()(config: ConfigurationService,
     wSClient
       .url(s"${config.kgQueryEndpoint}/query")
       .withHttpHeaders(CONTENT_TYPE -> JSON)
-      .post(EditorUserService.kgQueryGetUserQuery(EditorUserService.editorUserPath)).map{
+      .post(EditorUserService.kgQueryGetUserQuery(EditorConstants.editorUserPath)).map{
       res => res.status match {
         case OK => (res.json \ "results").as[List[JsObject]]
           .find(js => (js \ "userId").asOpt[String].getOrElse("") == nexusUser.id)
@@ -66,7 +66,7 @@ class EditorUserService @Inject()(config: ConfigurationService,
     instanceApiService.post(
       wSClient,
       config.kgQueryEndpoint,
-      NexusInstance(None, EditorUserService.editorUserPath, EditorUserService.userToNexusStruct(nexusUser.id)),
+      NexusInstance(None, EditorConstants.editorUserPath, EditorUserService.userToNexusStruct(nexusUser.id)),
       token
     ).map {
       case Right(ref) =>
@@ -77,38 +77,9 @@ class EditorUserService @Inject()(config: ConfigurationService,
 }
 
 object EditorUserService {
-  val editorUserPath = NexusPath("hbpkg", "core", "user", "v0.0.1")
 
-  val context =
-    s"""
-      |{
-      |    "@vocab": "https://schema.hbp.eu/graphQuery/",
-      |    "schema": "http://schema.org/",
-      |    "kgeditor": "${EditorConstants.EDITORNAMESPACE}",
-      |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
-      |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
-      |    "this": "https://schema.hbp.eu/instances/",
-      |    "searchui": "https://schema.hbp.eu/search_ui/",
-      |    "fieldname": {
-      |      "@id": "fieldname",
-      |      "@type": "@id"
-      |    },
-      |    "merge": {
-      |      "@id": "merge",
-      |      "@type": "@id"
-      |    },
-      |    "relative_path": {
-      |      "@id": "relative_path",
-      |      "@type": "@id"
-      |    },
-      |    "root_schema": {
-      |      "@id": "root_schema",
-      |      "@type": "@id"
-      |    }
-      |  }
-    """.stripMargin
 
-  def kgQueryGetUserQuery (editorUserPath: NexusPath, context: String = context): String =
+  def kgQueryGetUserQuery (editorUserPath: NexusPath, context: String = EditorConstants.context): String =
     s"""
        |{
        |  "@context": $context,
@@ -123,7 +94,7 @@ object EditorUserService {
        |    {
        |      "fieldname": "userId",
        |      "required": true,
-       |      "relative_path": "${SchemaFieldsConstants.USERID}"
+       |      "relative_path": "hbpkg:${EditorConstants.USERID}"
        |    }
        |  ]
        |}
@@ -134,7 +105,7 @@ object EditorUserService {
 
   def userToNexusStruct(userId: String): JsObject = {
     Json.obj(
-     SchemaFieldsConstants.USERID -> userId
+      EditorConstants.EDITORNAMESPACE + EditorConstants.USERID -> userId
     )
   }
 

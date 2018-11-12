@@ -16,7 +16,6 @@
 */
 package models.editorUserList
 
-import constants.EditorConstants
 import models.instance.NexusInstanceReference
 
 case class BookmarkListFolder(id:Option[NexusInstanceReference], folderName: String, folderType: FolderType, userLists: List[BookmarkList] )

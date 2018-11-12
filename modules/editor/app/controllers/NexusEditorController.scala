@@ -22,14 +22,12 @@ import helpers._
 import javax.inject.{Inject, Singleton}
 import models._
 import models.instance._
-import models.user.{EditorUserWriteRequest, User}
 import play.api.Logger
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 import services._
-import services.instance.InstanceApiService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -193,52 +191,17 @@ class NexusEditorController @Inject()(
                       version:String
                     ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserWriteAction(org, config.editorPrefix, iAMAuthService)).async { implicit request =>
 
-//    val newInstance = request.body.asJson.get.as[JsObject]
     val token = OIDCHelper.getTokenFromRequest(request)
     val instancePath = NexusPath(org, domain, schema, version)
-    editorService.insertInstance(NexusInstance(None, instancePath, Json.obj()), token)
-    //    val editorPath = instancePath.reconciledPath(config.editorPrefix)
-    //    val instance = FormService.buildNewInstanceFromForm(config.nexusEndpoint, instancePath, newInstance, formService.formRegistry)
-    //
-    //    val reconciledTokenFut = oIDCAuthService.getTechAccessToken()
-    //    val editorSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.editorPrefix)
-//    val reconciledSpace = EditorSpaceHelper.getGroupName(request.editorGroup, config.reconciledPrefix)
-//    import java.util.UUID.randomUUID
-//    val identifier = randomUUID().toString
-//    val originalPath = instancePath.toString()
-//    val typedInstance: EditorInstance = EditorInstance.generateInstance(NexusInstance(None, editorPath, instance), org, schema, identifier, originalPath)
-//
-//    // Save instance to nexus
-//    reconciledTokenFut.flatMap { techToken =>
-//      val createSchemasAndDomain = editorService.createDomainsAndSchemasSync(editorSpace, reconciledSpace, instancePath, token, techToken)
-//      createSchemasAndDomain.flatMap { res =>
-//        logger.debug(res.toString)
-//        val insertNewInstance = editorService.insertInstance(editorSpace, typedInstance.nexusInstance, instancePath, token)
-//        insertNewInstance.flatMap { instance =>
-//          logger.debug(instance.body)
-//          val reconciledInstance = ReconciledInstance(typedInstance.nexusInstance)
-//            .addReconciledMandatoryFields(instancePath, request.user, (instance.json \ "@id").as[String])
-//          editorService
-//            .insertInstance(reconciledSpace, reconciledInstance.nexusInstance, instancePath, techToken).map { res =>
-//            res.status match {
-//              case CREATED => // reformat ouput to keep it consistent with update
-//                val id: String = (res.json.as[JsObject] \ "@id").as[String].split("v0/data/").last.split("/").last
-//                val output = res.json.as[JsObject]
-//                  .+("id", JsString(instancePath.toString() + "/" + id))
-//                  .-("@id")
-//                  .-("@context")
-//                  .-("nxv:rev")
-//                Created(NavigationHelper.resultWithBackLink(EditorResponseObject(output), instancePath, config.reconciledPrefix, formService))
-//              case _ =>
-//                logger.error(res.body)
-//                EditorResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, instancePath, config.reconciledPrefix, formService)
-//
-//            }
-//          }
-//        }
-//      }
-//    }
-    ???
+    editorService.insertInstance(NexusInstance(None, instancePath, Json.obj()), token).map{
+      case Left(res) => EditorResponseHelper.forwardResultResponse(res)
+      case Right(instance) => Created(NavigationHelper
+        .resultWithBackLink(
+          EditorResponseObject(instance.content),
+          instance.nexusPath,
+          formService
+        ))
+    }
   }
 
   /**
