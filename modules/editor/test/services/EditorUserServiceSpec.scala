@@ -20,6 +20,7 @@ import constants.EditorConstants
 import helpers.ConfigMock._
 import helpers.ConfigMock
 import mockws.{MockWS, MockWSHelpers}
+import models.instance.NexusInstanceReference
 import org.mockito.Mockito._
 import models.user.{EditorUser, NexusUser}
 import org.scalatest.mockito.MockitoSugar
@@ -55,7 +56,7 @@ class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockW
         Seq(),
         Seq()
       )
-      val user = EditorUser(nexusIdUser, nexusUser)
+      val user = EditorUser(NexusInstanceReference.fromUrl(nexusIdUser), nexusUser)
       val endpointResponse = Json.parse(
         s"""
           |{
