@@ -15,10 +15,11 @@
 */
 package models.user
 
+import models.instance.NexusInstanceReference
 import play.api.libs.json._
 
 
-case class EditorUser(nexusId: String, nexusUser: NexusUser)
+case class EditorUser(nexusId: NexusInstanceReference, nexusUser: NexusUser)
 
 object EditorUser {
 
@@ -26,7 +27,7 @@ object EditorUser {
   import play.api.libs.functional.syntax._
 
   implicit val editorUserWrites: Writes[EditorUser] = (
-    (JsPath \ "nexusId").write[String] and
+    (JsPath \ "nexusId").write[NexusInstanceReference] and
       JsPath.write[NexusUser]
     )(unlift(EditorUser.unapply))
 

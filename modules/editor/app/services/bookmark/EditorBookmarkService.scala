@@ -47,7 +47,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
 
   def getUserLists(editorUser: EditorUser, formRegistry: FormRegistry): Future[Either[WSResponse, List[BookmarkListFolder]]] = {
     wSClient
-      .url(s"${config.kgQueryEndpoint}/query/${editorUser.nexusId}")
+      .url(s"${config.kgQueryEndpoint}/query/${editorUser.nexusId.nexusPath.toString()}/instances/${editorUser.nexusId.id}")
       .withHttpHeaders(CONTENT_TYPE -> JSON)
       .post(EditorBookmarkService.kgQueryGetUserFoldersQuery(EditorConstants.editorUserPath)).map {
       res =>
@@ -155,7 +155,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
 
   def getBookmarkListById(instancePath: NexusPath, instanceId: String): Future[Either[WSResponse, (BookmarkList, String)]] = {
     wSClient
-      .url(s"${config.kgQueryEndpoint}/query/${instancePath.toString}/$instanceId")
+      .url(s"${config.kgQueryEndpoint}/query/${instancePath.toString}/instances/$instanceId")
       .withHttpHeaders(CONTENT_TYPE -> JSON)
       .post(EditorBookmarkService.kgQueryGetBookmarkListByIdQuery(instancePath)).map {
         res =>
@@ -202,7 +202,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
     }
     // Get all bookmarks link to the bookmark list and their revision
     wSClient
-      .url(s"${config.kgQueryEndpoint}/query/${bookmarkListPath.toString()}/$instanceId")
+      .url(s"${config.kgQueryEndpoint}/query/${bookmarkListPath.toString()}/instances/$instanceId")
       .withHttpHeaders(CONTENT_TYPE -> JSON)
       .post(EditorBookmarkService.kgQueryGetBookmarksForDeletion(bookmarkListPath) ).flatMap {
       res =>
@@ -273,7 +273,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
                      token: String
                      ): Future[List[Either[WSResponse, Unit]]] = {
     wSClient
-      .url(s"${config.kgQueryEndpoint}/query/${instanceRef.toString}")
+      .url(s"${config.kgQueryEndpoint}/query/${instanceRef.nexusPath.toString()}/instances/${instanceRef.id}")
       .withHttpHeaders(CONTENT_TYPE -> JSON)
       .post(EditorBookmarkService.kgQueryGetInstanceBookmarks(instanceRef.nexusPath)).flatMap {
       res =>
@@ -311,6 +311,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
 
                   }
                 }
+              case None => Future(List(Left(res)))
             }
           case _ =>
             logger.error(s"Could not fetch bookmarks - ${res.body}")

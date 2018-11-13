@@ -56,7 +56,7 @@ class EditorUserService @Inject()(config: ConfigurationService,
             .find(js => (js \ "userId").asOpt[String].getOrElse("") == nexusUser.id)
             .map{js =>
               val id = (js \ "nexusId").as[String]
-              EditorUser(id , nexusUser)
+              EditorUser(NexusInstanceReference.fromUrl(id) , nexusUser)
             }
           case _ =>
             logger.error(s"Could not fetch the user with ID ${nexusUser.id} ${res.body}")
@@ -80,7 +80,7 @@ class EditorUserService @Inject()(config: ConfigurationService,
       token
     ).map {
       case Right(ref) =>
-        Right(EditorUser(s"${ref.toString}", nexusUser))
+        Right(EditorUser(ref, nexusUser))
       case Left(res) => Left(res)
     }
   }
