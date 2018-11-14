@@ -47,7 +47,7 @@ trait EditorBookmarkServiceInterface {
                           token: String):
   Future[Either[WSResponse, BookmarkList]]
 
-  def deleteBookmarkList(bookmarkListPath: NexusPath, instanceId: String, token: String):
+  def deleteBookmarkList(bookmarkRef: NexusInstanceReference, token: String):
   Future[Either[APIEditorError, Unit]]
 
   def addInstanceToBookmarkLists(
@@ -64,6 +64,6 @@ trait EditorBookmarkServiceInterface {
                                      ):
   Future[List[Either[WSResponse, Unit]]]
 
-  def retrieveBookmarkList(instanceIds: List[(NexusPath, String)]):
-  Future[List[(String, Either[APIEditorError, List[BookmarkList]])]]
+  def retrieveBookmarkList(instanceIds: List[NexusInstanceReference]):
+  Future[List[(NexusInstanceReference, Either[APIEditorError, List[BookmarkList]])]]
 }

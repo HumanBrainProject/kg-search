@@ -30,6 +30,7 @@ import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSClient, WSResponse}
 import services.instance.InstanceApiService
+import services.query.QueryService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -44,13 +45,16 @@ class EditorUserService @Inject()(config: ConfigurationService,
 
   object instanceApiService extends InstanceApiService
   object cacheService extends CacheService
+  object queryService extends QueryService
 
   def getUser(nexusUser: NexusUser): Future[Either[APIEditorError, EditorUser]] = {
     cacheService.getOrElse[EditorUser](cache, nexusUser.id.toString){
-      wSClient
-        .url(s"${config.kgQueryEndpoint}/query")
-        .withHttpHeaders(CONTENT_TYPE -> JSON)
-        .post(EditorUserService.kgQueryGetUserQuery(EditorConstants.editorUserPath)).map{
+      queryService.getInstances(
+        wSClient,
+        config.kgQueryEndpoint,
+        EditorConstants.editorUserPath,
+        EditorUserService.kgQueryGetUserQuery(EditorConstants.editorUserPath)
+      ).map{
         res => res.status match {
           case OK => (res.json \ "results").as[List[JsObject]]
             .find(js => (js \ "userId").asOpt[String].getOrElse("") == nexusUser.id)

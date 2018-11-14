@@ -157,14 +157,14 @@ class NexusEditorUserController @Inject()(
       } yield name
       opts match {
         case Some (newName)  =>
-          val path = NexusPath(org, domain, datatype, version)
+          val ref = NexusInstanceReference(org, domain, datatype, version, id)
           for {
             token <- oIDCAuthService.getTechAccessToken()
-            result <- editorUserListService.getBookmarkListById(path, id).flatMap[Result]{
+            result <- editorUserListService.getBookmarkListById(ref).flatMap[Result]{
               case Left(r) => Future(EditorResponseHelper.forwardResultResponse(r))
               case Right((bookmarkList, userFolderId) ) =>
                 val updatedBookmarkList = bookmarkList.copy(name = newName)
-                editorUserListService.updateBookmarkList(updatedBookmarkList, path.withSpecificSubspace(config.editorSubSpace), id, userFolderId, token).map[Result]{
+                editorUserListService.updateBookmarkList(updatedBookmarkList, ref.nexusPath.withSpecificSubspace(config.editorSubSpace), id, userFolderId, token).map[Result]{
                   case Left(response) => EditorResponseHelper.forwardResultResponse(response)
                   case Right(_) => NoContent
                 }
@@ -176,10 +176,10 @@ class NexusEditorUserController @Inject()(
 
   def deleteBookmarkList(org: String, domain:String, schema: String, version:String, id: String): Action[AnyContent] =
     (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
-      val path = NexusPath(org, domain, schema, version)
+      val bookmarkRef = NexusInstanceReference(org, domain, schema, version, id)
       for{
         token <- oIDCAuthService.getTechAccessToken()
-        result <- editorUserListService.deleteBookmarkList(path, id, token).map {
+        result <- editorUserListService.deleteBookmarkList(bookmarkRef, token).map {
           case Left(response) => InternalServerError(Json.toJson(response))
           case Right(()) => NoContent
         }
@@ -219,17 +219,12 @@ class NexusEditorUserController @Inject()(
       val instanceList = for{
         json <- request.body.asJson
         instances <- json.asOpt[List[String]]
-      } yield  instances
-
+      } yield  instances.map(l => NexusInstanceReference.fromUrl(l))
       instanceList match {
         case Some(l) =>
-          val formattedList = l.distinct.map{ s =>
-            val (path, id )= s.splitAt(s.lastIndexOf("/"))
-            (NexusPath(path), id.replaceFirst("/", ""))
-          }
-          editorUserListService.retrieveBookmarkList(formattedList).map{
+          editorUserListService.retrieveBookmarkList(l).map{
             res =>
-              val json = res.map(el => Json.obj("id" -> el._1, "bookmarkLists" -> el._2))
+              val json = res.map(el => Json.obj("id" -> el._1.toString, "bookmarkLists" -> el._2))
               Ok(Json.toJson(EditorResponseObject(Json.toJson(json))))
           }
         case None => Future(BadRequest("Missing body content"))
