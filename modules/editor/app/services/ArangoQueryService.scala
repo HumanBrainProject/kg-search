@@ -35,9 +35,17 @@ class ArangoQueryService @Inject()(
                                     formService: FormService
                                   )(implicit executionContext: ExecutionContext) {
 
-  def listInstances(nexusPath: NexusPath, from: Int, size: Int, search: String): Future[Either[WSResponse, EditorResponseWithCount]] = {
+  def listInstances(nexusPath: NexusPath, from: Option[Int], size: Option[Int], search: String): Future[Either[WSResponse, EditorResponseWithCount]] = {
+    val parameters = (from, size) match {
+      case (Some(f), Some(s)) =>  List(("from", f.toString), ("size", s.toString))
+      case (Some(f),_) =>  List(("from", f.toString))
+      case (_, Some(s)) =>  List(("size", s.toString))
+      case _ =>  List()
+    }
     wSClient.url(s"${config.kgQueryEndpoint}/arango/instances/${nexusPath.toString()}")
-      .withQueryStringParameters(("search", search), ("from", from.toString), ("size", size.toString)).get().map{
+      .withQueryStringParameters(("search", search))
+      .withQueryStringParameters(parameters:_*)
+      .get().map{
       res =>
         res.status match {
           case OK =>

@@ -94,8 +94,8 @@ class NexusEditorUserController @Inject()(
                      domain: String,
                      datatype: String,
                      version: String,
-                     from: Int,
-                     size: Int,
+                     from: Option[Int],
+                     size: Option[Int],
                      search: String
                    ): Action[AnyContent] = authenticatedUserAction.async  { implicit request =>
     val nexusPath = NexusPath(org, domain, datatype, version)
