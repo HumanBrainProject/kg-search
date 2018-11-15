@@ -76,7 +76,14 @@ object FormService{
 
   def transformToArray(key: String, data: JsValue): JsArray = {
     if ((data \ key ).validate[JsArray].isSuccess){
-      (data \ key ).as[JsArray]
+      Json.toJson((data \ key ).as[JsArray].value.map{ js =>
+        if ((js \ InternalSchemaFieldsConstants.RELATIVEURL).isDefined) {
+          val linkToInstance = (js \ InternalSchemaFieldsConstants.RELATIVEURL).as[String]
+          Json.obj("id" -> JsString(linkToInstance))
+        } else {
+          js
+        }
+      }).as[JsArray]
     }else {
       if ((data \ key \ InternalSchemaFieldsConstants.RELATIVEURL).isDefined) {
         val linkToInstance = (data \ key \ InternalSchemaFieldsConstants.RELATIVEURL).as[String]
@@ -164,7 +171,7 @@ object FormService{
       case Some(formTemplate) =>
         if(data != JsNull){
 
-          val nexusId = (data \ "@id").as[String]
+          val nexusId = (data \ s"_${EditorConstants.RELATIVEURL}").as[String]
           // fill template with data
           val idFields = Json.obj(
             "id" -> Json.obj(
