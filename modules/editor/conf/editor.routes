@@ -272,48 +272,6 @@ GET    /api/revisions/:org/:domain/:schema/:version/:id                         
 ###
 GET    /api/reconciled/:org/:domain/:schema/:version/:id                controllers.NexusEditorController.getSpecificReconciledInstance(org: String, domain:String, schema: String, version:String, id: String ,rev:Int ?= 1)
 
-###
-#  summary: Get a graph representation of an instance
-#  tags:
-#    - editor
-#  parameters:
-#  - name: org
-#    in: path
-#    description: organization the instance
-#    required: true
-#    type: string
-#  - name: domain
-#    in: path
-#    description: domain of the instance
-#    required: true
-#    type: string
-#  - name: schema
-#    in: path
-#    description: schema name
-#    required: true
-#    type: string
-#  - name: version
-#    in: path
-#    description: version of the instance
-#    required: true
-#    type: string
-#  - name: id
-#    in: path
-#    description: the UUID of the instance
-#    required: true
-#    type: string
-#  - name: step
-#    in: path
-#    description: the depth of the graph
-#    required: false
-#    type: string
-#  - in: header
-#    name: Authorization
-#    description: Authorization token
-#    required: false
-#    type: string
-###
-GET    /api/graph/:org/:domain/:schema/:version/:id     controllers.NexusEditorController.graphEntities(org: String, domain:String, schema: String, version:String, id: String, step:Int ?= 2)
 
 ###
 #  summary: Get the current user as an Editor User

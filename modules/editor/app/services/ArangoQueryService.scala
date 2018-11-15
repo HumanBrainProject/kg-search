@@ -35,37 +35,6 @@ class ArangoQueryService @Inject()(
                                     formService: FormService
                                   )(implicit executionContext: ExecutionContext) {
 
-  def graphEntities(org: String,
-                    domain: String,
-                    schema: String,
-                    version: String,
-                    id: String,
-                    step: Int,
-                    token: String
-                   ): Future[Either[WSResponse, JsObject]] = {
-    val path = NexusPath(org, domain, schema, version)
-    val reconciledPath = path.reconciledPath(config.reconciledPrefix)
-    nexusService.getInstance(s"${config.nexusEndpoint}/v0/data/${reconciledPath.toString()}/$id", token).flatMap{
-      res => res.status match {
-        case NOT_FOUND => this.graph(path, id, step)
-        case OK => this.graph(reconciledPath, id, step)
-        case _ => Future{Left(res)}
-      }
-    }
-
-  }
-
-  def getInstance(nexusPath:NexusPath, id:String): Future[Either[WSResponse, NexusInstance]] = {
-    wSClient.url(s"${config.kgQueryEndpoint}/arango/instance/${nexusPath.toString()}/$id")
-      .get()
-      .map{ res =>
-        res.status match {
-          case OK => Right(res.json.as[NexusInstance])
-          case _ => Left(res)
-        }
-      }
-  }
-
   def listInstances(nexusPath: NexusPath, from: Int, size: Int, search: String): Future[Either[WSResponse, EditorResponseWithCount]] = {
     wSClient.url(s"${config.kgQueryEndpoint}/arango/instances/${nexusPath.toString()}")
       .withQueryStringParameters(("search", search), ("from", from.toString), ("size", size.toString)).get().map{
@@ -103,85 +72,5 @@ class ArangoQueryService @Inject()(
         }
     }
   }
-
-
-  private def graph(nexusPath: NexusPath, id:String, step:Int): Future[Either[WSResponse, JsObject]] = {
-    wSClient
-      .url(s"${config.kgQueryEndpoint}/arango/graph/${nexusPath.toString}/$id?step=$step")
-      .addHttpHeaders(CONTENT_TYPE -> "application/json").get().map {
-      allRelations =>
-        allRelations.status match {
-          case OK =>
-
-            val j = allRelations.json.as[List[JsObject]]
-            val edges: List[JsObject] = j.flatMap { el =>
-              ArangoQueryService.formatEdges((el \ "edges").as[List[JsObject]])
-            }.distinct
-            val vertices = j.flatMap { el =>
-              ArangoQueryService.formatVertices((el \ "vertices").as[List[JsValue]], formService.formRegistry)
-            }.distinct
-            Right(Json.obj("links" -> edges, "nodes" -> vertices))
-          case _ => Left(allRelations)
-        }
-    }
-  }
-}
-
-object ArangoQueryService {
-  val camelCase = """(?=[A-Z])"""
-
-  def idFormat(id: String): String = {
-    val l = id.split("/")
-    val path = l.head.replaceAll("-", "/").replaceAll("_", ".")
-    val i = l.last
-    s"$path/$i"
-  }
-
-  def formatVertices(vertices: List[JsValue], formRegistry: FormRegistry): List[JsObject] = {
-    vertices
-      .map {
-        case v: JsObject =>
-          (v \ "@type").asOpt[String].map { d =>
-            val dataType = d.split("#").last.capitalize
-            val label = dataType.split(camelCase).mkString(" ")
-            val title = if ((v \ SchemaFieldsConstants.NAME).asOpt[JsString].isDefined) {
-              (v \ SchemaFieldsConstants.NAME).as[JsString]
-            } else {
-              Json.toJson(v)
-            }
-            Json.obj(
-              "id" -> Json.toJson(ArangoQueryService.idFormat((v \ "_id").as[String])),
-              "name" -> JsString(label),
-              "dataType" -> JsString(d),
-              "title" -> title
-            )
-          }.getOrElse(JsNull)
-        case _ => JsNull
-      }
-      .filter(v => v != JsNull && FormService.isInSpec( (v \ "id").as[String].splitAt((v \ "id").as[String].lastIndexOf("/"))._1, formRegistry))
-      .map(_.as[JsObject])
-
-  }
-
-  def formatEdges(edges: List[JsObject]): List[JsObject] = {
-    edges.map { j =>
-      val id = (j \ "_id").as[String]
-      val titleRegex = id.split("/").head
-      val title = titleRegex
-        .splitAt(titleRegex.lastIndexOf("-"))
-        ._2.substring(1)
-        .replaceAll("_", " ")
-        .split(camelCase)
-        .mkString(" ")
-        .capitalize
-      Json.obj(
-        "source" -> ArangoQueryService.idFormat((j \ "_from").as[String]),
-        "target" -> ArangoQueryService.idFormat((j \ "_to").as[String]),
-        "id" -> id,
-        "title" -> title
-      )
-    }
-  }
-
 
 }

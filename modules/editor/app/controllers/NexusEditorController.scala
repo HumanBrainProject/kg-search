@@ -219,27 +219,6 @@ class NexusEditorController @Inject()(
       Ok(form)
   }
 
-
-  /**
-    * @param org The organization of the instance
-    * @param domain The domain of the instance
-    * @param schema The schema of the instance
-    * @param version The version of the schema
-    * @param id The id of the instance
-    * @param step  The depth of the graph
-    * @return
-    */
-  def graphEntities(
-                     org: String, domain: String, schema: String, version: String, id:String, step: Int
-                   ): Action[AnyContent] = authenticatedUserAction.async { implicit  request =>
-    val token = request.headers.toSimpleMap.getOrElse("Authorization", "")
-    arangoQueryService.graphEntities(org,domain, schema, version, id, step, token).map{
-      case Right(json) => Ok(json)
-      case Left(response) => EditorResponseHelper.forwardResultResponse(response)
-    }
-  }
-
-
 }
 
 
