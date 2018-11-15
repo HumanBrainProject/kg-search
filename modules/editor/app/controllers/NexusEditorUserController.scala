@@ -191,13 +191,13 @@ class NexusEditorUserController @Inject()(
       val bookmarkIds = for {
         json <- request.body.asJson
         arrayOfIds <- json.asOpt[List[String]]
-      } yield arrayOfIds
+      } yield arrayOfIds.map(NexusInstanceReference.fromUrl)
       val instanceReference = NexusInstanceReference(org, domain, schema, version, id)
       bookmarkIds match {
         case Some(ids) =>
           val futList = for {
             token <- oIDCAuthService.getTechAccessToken()
-            listResult <- editorUserListService.updateBookmarks(instanceReference, ids, token)
+            listResult <- editorUserListService.updateBookmarks(instanceReference, ids, request.editorUser, token)
           } yield listResult
 
           futList.map { listResponse =>
@@ -222,7 +222,7 @@ class NexusEditorUserController @Inject()(
       } yield  instances.map(l => NexusInstanceReference.fromUrl(l))
       instanceList match {
         case Some(l) =>
-          editorUserListService.retrieveBookmarkList(l).map{
+          editorUserListService.retrieveBookmarkList(l, request.editorUser).map{
             res =>
               val json = res.map(el => Json.obj("id" -> el._1.toString, "bookmarkLists" -> el._2))
               Ok(Json.toJson(EditorResponseObject(Json.toJson(json))))

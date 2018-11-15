@@ -103,7 +103,7 @@ object EditorUserService {
        |    {
        |      "fieldname": "nexusId",
        |      "required": true,
-       |      "relative_path": "_relativeUrl"
+       |      "relative_path": "base:${EditorConstants.RELATIVEURL}"
        |    },
        |    {
        |      "fieldname": "userId",

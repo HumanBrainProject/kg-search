@@ -19,7 +19,7 @@ package helpers
 
 import constants.SchemaFieldsConstants
 import models._
-import models.instance.{EditorInstance, NexusInstance, PreviewInstance, ReconciledInstance}
+import models.instance.{EditorInstance, NexusInstance, PreviewInstance}
 import org.json4s.JsonAST._
 import org.json4s.native.{JsonMethods, JsonParser}
 import org.json4s.{Diff, JsonAST}
@@ -34,32 +34,6 @@ object InstanceHelper {
 
   type UpdateInfo = (Option[String], Int, String, EditorInstance)
 
-  def generateInstanceWithReconciliationLogic(
-                                               nexusEndpoint: String,
-                                               reconciledSuffix:String,
-                                               originalInstance: NexusInstance,
-                                               editorInstances: List[EditorInstance]
-                                             ): (ReconciledInstance, Option[List[UpdateInfo]]) = {
-    logger.debug(s"Result from incoming links $editorInstances")
-    val updatesByPriority = buildManualUpdatesFieldsFrequency(editorInstances)
-    val result = ReconciledInstance(
-      NexusInstance(
-        originalInstance.id(),
-        originalInstance.nexusPath.reconciledPath(reconciledSuffix),
-        reconcilationLogic(updatesByPriority, originalInstance.content)
-      )
-    )
-    val manualUpdateDetailsOpt = if(editorInstances.isEmpty){
-      logger.debug("creating new editor instance")
-      None
-    }else{
-      //Call reconcile API
-      logger.debug(s"Reconciled instance $result")
-      val manualUpdateDetails = editorInstances.map(manualEntity => manualEntity.extractUpdateInfo())
-      Some(manualUpdateDetails)
-    }
-    (result, manualUpdateDetailsOpt)
-  }
 
   private def handleDeletion(deleted: JValue, newJson: JValue): JValue = {
     implicit class JValueExtended(value: JValue) {
@@ -130,11 +104,6 @@ object InstanceHelper {
     hashedString
   }
 
-  def buildManualUpdatesFieldsFrequency(manualUpdates: List[EditorInstance]): Map[String, SortedSet[(JsValue, Int)]] = {
-    val cleanMap: List[Map[String, JsValue]] = manualUpdates.map(s => s.cleanManualData().contentToMap())
-    buildMapOfSortedManualUpdates(cleanMap)
-  }
-
   // build reconciled view from updates statistics
   def reconcilationLogic(frequencies: Map[String, SortedSet[(JsValue, Int)]], origin: JsObject): JsObject = {
     // simple logic: keep the most frequent
@@ -168,42 +137,6 @@ object InstanceHelper {
     }
   }
 
-  def buildMapOfSortedManualUpdates(manualUpdates: List[Map[String, JsValue]]): Map[String, SortedSet[(JsValue, Int)]] = {
-    implicit val order = Ordering.fromLessThan[(JsValue, Int)](_._2 < _._2)
-    // For each update
-    val tempMap = manualUpdates.foldLeft(Map.empty[String, List[JsValue]]) {
-      case (merged, m) =>
-        val tempRes: Map[String, List[JsValue]] = m.foldLeft(merged) { case (acc, (k, v)) =>
-          acc.get(k) match {
-            case Some(existing) => acc.updated(k, v :: existing)
-            case None => acc.updated(k, List(v))
-          }
-        }
-        tempRes
-    }
-    val sortedSet = tempMap
-      .filter(e => e._1 != "@type" &&
-        e._1 != EditorInstance.Fields.parent &&
-        e._1 != EditorInstance.Fields.origin &&
-        e._1 != EditorInstance.Fields.updaterId)
-      .map { el =>
-        val e = el._2.groupBy(identity).mapValues(_.size)
-        el._1 -> SortedSet(e.toList: _*)
-      }
-    sortedSet
-  }
-
-  def merge[K, V](maps: Seq[Map[K, V]])(f: (K, V, V) => V): Map[K, V] = {
-    maps.foldLeft(Map.empty[K, V]) { case (merged, m) =>
-      m.foldLeft(merged) { case (acc, (k, v)) =>
-        acc.get(k) match {
-          case Some(existing) => acc.updated(k, f(k, existing, v))
-          case None => acc.updated(k, v)
-        }
-      }
-    }
-  }
-
   def formatInstanceList(jsArray: JsArray, reconciledSuffix:String): List[PreviewInstance] = {
 
     jsArray.value.map { el =>
@@ -220,31 +153,6 @@ object InstanceHelper {
       val id = url.split("/v0/data/").last
       PreviewInstance(id,name, Some(description))
     }.toList
-  }
-
-  def toReconcileFormat(jsValue: JsValue, privateSpace: String): JsObject = {
-    Json.obj("src" -> privateSpace, "content" -> jsValue.as[JsObject].-("@context"))
-  }
-
-  //TODO make it dynamic :D
-  def getPriority(id: String): Int = {
-    if (id contains "editor/") {
-      3
-    } else {
-      1
-    }
-  }
-
-  def getCurrentInstanceDisplayed(currentReconciledInstances: Seq[NexusInstance], originalInstance: NexusInstance): NexusInstance = {
-    if (currentReconciledInstances.nonEmpty) {
-      val sorted = currentReconciledInstances.sortWith { (left, right) =>
-        (left.content \ ReconciledInstance.Fields.updateTimeStamp).as[Long] >
-          (right.content \ ReconciledInstance.Fields.updateTimeStamp).as[Long]
-      }
-      sorted.head
-    } else{
-      originalInstance
-    }
   }
 
   def addDefaultFields(instance: NexusInstance,formRegistry:FormRegistry): NexusInstance = {

@@ -19,6 +19,7 @@ import models.NexusPath
 
 object EditorConstants {
   val EDITORNAMESPACE = "https://schema.hbp.eu/hbpkg/"
+  val BASENAMESPACE = "https://schema.hbp.eu/"
   val BOOKMARKLIST = "bookmarkList"
   val BOOKMARKINSTANCELINK = "bookmarkInstanceLink"
   val BOOKMARKLISTFOLDER = "bookmarkListFolder"
@@ -47,9 +48,10 @@ object EditorConstants {
        |    "@vocab": "https://schema.hbp.eu/graphQuery/",
        |    "schema": "http://schema.org/",
        |    "hbpkg": "${EDITORNAMESPACE}",
+       |    "base":"${BASENAMESPACE}",
        |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
        |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
-       |    "this": "https://schema.hbp.eu/instances/",
+       |    "this": "https://schema.hbp.eu/editor/",
        |    "searchui": "https://schema.hbp.eu/search_ui/",
        |    "fieldname": {
        |      "@id": "fieldname",

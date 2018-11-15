@@ -48,8 +48,7 @@ case class EditorInstance(nexusInstance: NexusInstance){
   def cleanInstanceManual(): EditorInstance = {
     this.copy(
       this.nexusInstance.copy(
-        content = this.nexusInstance.content.-(EditorInstance.Fields.parent)
-      .-(EditorInstance.Fields.origin)
+        content = this.nexusInstance.content
       .-(EditorInstance.Fields.updaterId)
       )
     )
@@ -62,23 +61,10 @@ case class EditorInstance(nexusInstance: NexusInstance){
 }
 
 object EditorInstance {
-  val contextOrg = "http://hbp.eu/manual#"
+  val contextOrg = "http://schema.hbp.eu/hbpkg#"
   object Fields {
     val updaterId = s"${contextOrg}updater_id"
     val updateTimeStamp = s"${contextOrg}update_timestamp"
-    val parent = s"${contextOrg}parent"
-    val origin = s"${contextOrg}origin"
-    val originalPath = s"${contextOrg}original_path"
-    val userCreated = s"${contextOrg}user_created"
+    val alternatives = s"${contextOrg}alternatives"
   }
-
-//  def generateInstance(nexusInstance: NexusInstance,org: String, datatype: String, identifier: String, originalPath: String): EditorInstance = {
-//    val content = nexusInstance.content
-//      .+("@type" -> JsString(s"http://hbp.eu/${org}#${datatype.capitalize}"))
-//      .+(SchemaFieldsConstants.IDENTIFIER -> JsString(identifier))
-//      .+(Fields.origin, JsString(""))
-//      .+(Fields.userCreated, JsBoolean(true))
-//      .+(Fields.originalPath, JsString(originalPath))
-//    EditorInstance(nexusInstance.copy(content=content))
-//  }
 }

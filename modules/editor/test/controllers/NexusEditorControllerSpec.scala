@@ -19,7 +19,7 @@ import constants.SchemaFieldsConstants
 import helpers.ConfigMock
 import mockws.MockWSHelpers
 import models.NexusPath
-import models.instance.{EditorInstance, NexusInstance, ReconciledInstance}
+import models.instance.{EditorInstance, NexusInstance}
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play._

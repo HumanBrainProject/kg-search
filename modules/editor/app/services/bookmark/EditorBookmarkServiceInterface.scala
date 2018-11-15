@@ -52,7 +52,7 @@ trait EditorBookmarkServiceInterface {
 
   def addInstanceToBookmarkLists(
                                   instanceReference: NexusInstanceReference,
-                                  bookmarkListIds: List[String],
+                                  bookmarkListIds: List[NexusInstanceReference],
                                   token: String
                                 ):
   Future[List[Either[WSResponse, NexusInstanceReference]]]
@@ -64,6 +64,6 @@ trait EditorBookmarkServiceInterface {
                                      ):
   Future[List[Either[WSResponse, Unit]]]
 
-  def retrieveBookmarkList(instanceIds: List[NexusInstanceReference]):
+  def retrieveBookmarkList(instanceIds: List[NexusInstanceReference], editorUser: EditorUser):
   Future[List[(NexusInstanceReference, Either[APIEditorError, List[BookmarkList]])]]
 }

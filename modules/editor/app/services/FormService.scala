@@ -21,7 +21,7 @@ import com.google.inject.{Inject, Singleton}
 import constants.{EditorConstants, InternalSchemaFieldsConstants}
 import models.editorUserList.BookmarkList
 import models._
-import models.instance.{NexusInstance, ReconciledInstance}
+import models.instance.{EditorInstance, NexusInstance}
 import models.user.NexusUser
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
@@ -80,24 +80,12 @@ object FormService{
     }else {
       if ((data \ key \ InternalSchemaFieldsConstants.RELATIVEURL).isDefined) {
         val linkToInstance = (data \ key \ InternalSchemaFieldsConstants.RELATIVEURL).as[String]
-        //          val(id, path) = NexusInstance.extractIdAndPathFromString(linkToInstance)
         JsArray().+:(Json.obj("id" -> JsString(linkToInstance)))
       } else {
         JsArray()
       }
     }
   }
-
-//  def transformID(jsArray: JsArray):JsArray = {
-//    Json.toJson(
-//      jsArray.value.collect{
-//        case el if ((el \ "@id").as[String] contains "http") =>
-//          val(id, path) = NexusInstance.extractIdAndPathFromString((el \ "@id").as[String])
-//          val instancePath = path.originalPath(reconciledSuffix)
-//          Json.obj("id" -> JsString(instancePath.toString() + s"/$id"))
-//      }
-//    ).as[JsArray]
-//  }
 
   def buildEditableEntityTypesFromRegistry(registry: FormRegistry): List[BookmarkList] = {
     registry.registry.value.flatMap{
@@ -200,7 +188,7 @@ object FormService{
                 filledTemplate + (key, fieldContent.as[JsObject] )
               }
           }
-          fillFormTemplate(fields, formTemplate, (data \ ReconciledInstance.Fields.alternatives).asOpt[JsObject].getOrElse(Json.obj()) )
+          fillFormTemplate(fields, formTemplate, (data \ EditorInstance.Fields.alternatives).asOpt[JsObject].getOrElse(Json.obj()) )
 
         }else {
           //Returning a blank template
