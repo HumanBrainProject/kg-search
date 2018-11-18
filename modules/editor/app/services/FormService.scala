@@ -171,7 +171,7 @@ object FormService{
       case Some(formTemplate) =>
         if(data != JsNull){
 
-          val nexusId = (data \ s"_${EditorConstants.RELATIVEURL}").as[String]
+          val nexusId = (data \ s"${EditorConstants.BASENAMESPACE}${EditorConstants.RELATIVEURL}").as[String]
           // fill template with data
           val idFields = Json.obj(
             "id" -> Json.obj(
