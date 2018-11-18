@@ -105,7 +105,7 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
             s"""{
               |    "@context": "https://nexus-dev.humanbrainproject.org/v0/contexts/nexus/core/resource/v0.3.0",
               |    "@id": "https://nexus-dev.humanbrainproject.org/v0/data/${originalDatatype.toString()}/$id",
-              |    "_relativeUrl": "${originalDatatype.toString()}/$id",
+              |    "https://schema.hbp.eu/relativeUrl": "${originalDatatype.toString()}/$id",
               |    "@type": "http://hbp.eu/minds#Activity",
               |    "http://hbp.eu/internal#hashcode": "bd374187e78489b9b201bb885490c073",
               |    "http://hbp.eu/minds#created_at": "2018-03-26T15:21:58.362242+00:00",
