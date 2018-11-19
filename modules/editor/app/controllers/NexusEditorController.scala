@@ -195,10 +195,10 @@ class NexusEditorController @Inject()(
     val instancePath = NexusPath(org, domain, schema, version)
     editorService.insertInstance(NexusInstance(None, instancePath, Json.obj()), token).map{
       case Left(res) => EditorResponseHelper.forwardResultResponse(res)
-      case Right(instance) => Created(NavigationHelper
+      case Right(ref) => Created(NavigationHelper
         .resultWithBackLink(
-          EditorResponseObject(instance.content),
-          instance.nexusPath,
+          EditorResponseObject(Json.toJson(ref)),
+          ref.nexusPath,
           formService
         ))
     }

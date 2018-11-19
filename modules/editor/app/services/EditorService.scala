@@ -41,9 +41,9 @@ class EditorService @Inject()(
   def insertInstance(
                       newInstance: NexusInstance,
                       token: String
-                    ): Future[Either[WSResponse, NexusInstance]] = {
+                    ): Future[Either[WSResponse, NexusInstanceReference]] = {
     instanceApiService.post(wSClient, config.kgQueryEndpoint, newInstance, token).map{
-      case Right(ref) => Right(newInstance.copy(nexusUUID = Some(ref.id)))
+      case Right(ref) => Right(ref)
       case Left(res) => Left(res)
     }
   }
