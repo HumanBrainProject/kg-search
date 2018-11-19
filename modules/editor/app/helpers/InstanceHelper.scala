@@ -104,38 +104,38 @@ object InstanceHelper {
     hashedString
   }
 
-  // build reconciled view from updates statistics
-  def reconcilationLogic(frequencies: Map[String, SortedSet[(JsValue, Int)]], origin: JsObject): JsObject = {
-    // simple logic: keep the most frequent
-    val transformations = frequencies.filterKeys(key => !key.startsWith(EditorInstance.contextOrg)).map {
-      case (pathString, freqs) => (JsFlattener.buildJsPathFromString(pathString), freqs.last._1)
-    }.toSeq
-    applyChanges(origin, transformations)
-  }
-
-  // apply a set of transformation to an instance
-  def applyChanges(instance: JsObject, changes: Seq[(JsPath, JsValue)]): JsObject = {
-    val obj = changes.foldLeft(instance) {
-      case (res, (path, value)) =>
-        val updatedJson = updateJson(res, path, value)
-        updatedJson
-    }
-    obj
-  }
+//  // build reconciled view from updates statistics
+//  def reconcilationLogic(frequencies: Map[String, SortedSet[(JsValue, Int)]], origin: JsObject): JsObject = {
+//    // simple logic: keep the most frequent
+//    val transformations = frequencies.filterKeys(key => !key.startsWith(EditorInstance.contextOrg)).map {
+//      case (pathString, freqs) => (JsFlattener.buildJsPathFromString(pathString), freqs.last._1)
+//    }.toSeq
+//    applyChanges(origin, transformations)
+//  }
+//
+//  // apply a set of transformation to an instance
+//  def applyChanges(instance: JsObject, changes: Seq[(JsPath, JsValue)]): JsObject = {
+//    val obj = changes.foldLeft(instance) {
+//      case (res, (path, value)) =>
+//        val updatedJson = updateJson(res, path, value)
+//        updatedJson
+//    }
+//    obj
+//  }
 
   // return an updated JsObject or the src object in case of failure
-  def updateJson(instance: JsObject, path: JsPath, newValue: JsValue): JsObject = {
-    val simpleUpdateTransformer = path.json.update(
-      of[JsValue].map { js =>
-          newValue
-        }
-    )
-    instance.transform(simpleUpdateTransformer) match {
-      case s: JsSuccess[JsObject] => s.get
-      case e: JsError => logger.error(s"Could not apply json update - ${JsError.toJson(e).toString()}")
-        throw new Exception("Could not apply update")
-    }
-  }
+//  def updateJson(instance: JsObject, path: JsPath, newValue: JsValue): JsObject = {
+//    val simpleUpdateTransformer = path.json.update(
+//      of[JsValue].map { js =>
+//          newValue
+//        }
+//    )
+//    instance.transform(simpleUpdateTransformer) match {
+//      case s: JsSuccess[JsObject] => s.get
+//      case e: JsError => logger.error(s"Could not apply json update - ${JsError.toJson(e).toString()}")
+//        throw new Exception("Could not apply update")
+//    }
+//  }
 
   def formatInstanceList(jsArray: JsArray, reconciledSuffix:String): List[PreviewInstance] = {
 

@@ -239,6 +239,54 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       res mustBe expected
     }
+
+    "return a null value if the array was not changed" in {
+      val currentlyDisplayedInstance = NexusInstance(
+        Some(reconId), path, Json.obj(
+          "name" -> "test",
+          "description" -> "description",
+          "activities" -> JsArray(),
+          "contributors" -> Json.toJson(
+            List(
+              "bill",
+              "james",
+              "jane"
+            )
+          )
+
+        )
+      )
+
+      val newInstance = NexusInstance(
+        None, path, Json.obj(
+          "name" -> "test",
+          "description" -> "description",
+          "activities" -> JsArray(),
+          "contributors" -> Json.toJson(
+            "james",
+            "jane"
+          )
+        )
+      )
+
+
+      val expected = EditorInstance(
+        NexusInstance(
+          Some(reconId),
+          path,
+          Json.obj(
+            "contributors" -> Json.toJson(
+              "james",
+              "jane"
+            )
+          )
+        )
+      )
+
+      val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance)
+
+      res mustBe expected
+    }
   }
 
 }

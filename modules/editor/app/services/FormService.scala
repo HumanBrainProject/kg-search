@@ -60,7 +60,7 @@ object FormService{
       if(jsValue.toString() == "null"){
         JsNull
       }else{
-        val correctedObj = jsValue.as[JsObject] - "description" - "label" - "status" - "childrenStatus"
+        val correctedObj = jsValue.as[JsObject] - "description" - "name" - "status" - "childrenStatus"
         val res = correctedObj.value.map {
           case (k, v) =>
             k -> removeKey(v)
