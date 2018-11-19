@@ -33,10 +33,6 @@ case class EditorInstance(nexusInstance: NexusInstance){
     )
   }
 
-  def cleanManualData(): EditorInstance = {
-    this.copy(this.nexusInstance.cleanManualData())
-  }
-
   def mergeContent(instance: EditorInstance): EditorInstance = {
     this.copy(this.nexusInstance.copy(content = this.nexusInstance.content.deepMerge(instance.nexusInstance.content)))
   }
@@ -52,10 +48,6 @@ case class EditorInstance(nexusInstance: NexusInstance){
       .-(EditorInstance.Fields.updaterId)
       )
     )
-  }
-
-  def removeNexusFields(): EditorInstance = {
-    this.copy(this.nexusInstance.removeNexusFields())
   }
 
 }

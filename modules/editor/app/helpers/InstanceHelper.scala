@@ -17,7 +17,7 @@
 
 package helpers
 
-import constants.SchemaFieldsConstants
+import constants.{EditorConstants, SchemaFieldsConstants}
 import models._
 import models.instance.{EditorInstance, NexusInstance, PreviewInstance}
 import org.json4s.JsonAST._
@@ -26,6 +26,7 @@ import org.json4s.{Diff, JsonAST}
 import play.api.Logger
 import play.api.libs.json.Reads.of
 import play.api.libs.json._
+import services.FormService
 
 import scala.collection.immutable.SortedSet
 
@@ -64,7 +65,7 @@ object InstanceHelper {
   }
 
   def buildDiffEntity(currentInstance: NexusInstance, newValue: NexusInstance): EditorInstance = {
-    val consolidatedJson = JsonParser.parse(currentInstance.removeNexusFields().content.toString())
+    val consolidatedJson = JsonParser.parse(currentInstance.content.toString())
     val newJson = JsonParser.parse(newValue.content.toString())
     val Diff(changed, added, deleted) = consolidatedJson.diff(newJson)
     val diff: JsonAST.JValue = (deleted, changed) match {
@@ -80,15 +81,16 @@ object InstanceHelper {
         changed.merge(deletion.merge(added))
     }
     val rendered = Json.parse(JsonMethods.compact(JsonMethods.render(diff))).as[JsObject]
-    val diffWithCompleteArray = rendered.value.map {
-      case (k, v) =>
-        val value = (newValue.content \ k).asOpt[JsValue]
-        if (v.asOpt[JsArray].isDefined && value.isDefined) {
-          k -> value.get
-        } else {
-          k -> v
-        }
-    }
+    val diffWithCompleteArray = rendered.value
+      .map {
+        case (k, v) =>
+          val value = (newValue.content \ k).asOpt[JsValue]
+          if (v.asOpt[JsArray].isDefined && value.isDefined) {
+            k -> value.get
+          } else {
+            k -> v
+          }
+      }
     EditorInstance(
       NexusInstance(currentInstance.nexusUUID, currentInstance.nexusPath, Json.toJson(diffWithCompleteArray).as[JsObject])
     )
@@ -104,38 +106,6 @@ object InstanceHelper {
     hashedString
   }
 
-//  // build reconciled view from updates statistics
-//  def reconcilationLogic(frequencies: Map[String, SortedSet[(JsValue, Int)]], origin: JsObject): JsObject = {
-//    // simple logic: keep the most frequent
-//    val transformations = frequencies.filterKeys(key => !key.startsWith(EditorInstance.contextOrg)).map {
-//      case (pathString, freqs) => (JsFlattener.buildJsPathFromString(pathString), freqs.last._1)
-//    }.toSeq
-//    applyChanges(origin, transformations)
-//  }
-//
-//  // apply a set of transformation to an instance
-//  def applyChanges(instance: JsObject, changes: Seq[(JsPath, JsValue)]): JsObject = {
-//    val obj = changes.foldLeft(instance) {
-//      case (res, (path, value)) =>
-//        val updatedJson = updateJson(res, path, value)
-//        updatedJson
-//    }
-//    obj
-//  }
-
-  // return an updated JsObject or the src object in case of failure
-//  def updateJson(instance: JsObject, path: JsPath, newValue: JsValue): JsObject = {
-//    val simpleUpdateTransformer = path.json.update(
-//      of[JsValue].map { js =>
-//          newValue
-//        }
-//    )
-//    instance.transform(simpleUpdateTransformer) match {
-//      case s: JsSuccess[JsObject] => s.get
-//      case e: JsError => logger.error(s"Could not apply json update - ${JsError.toJson(e).toString()}")
-//        throw new Exception("Could not apply update")
-//    }
-//  }
 
   def formatInstanceList(jsArray: JsArray, reconciledSuffix:String): List[PreviewInstance] = {
 
@@ -174,6 +144,32 @@ object InstanceHelper {
     }
     val r = Json.toJson(m).as[JsObject].deepMerge(instance.content)
     instance.copy(content = Json.toJson(r).as[JsObject])
+  }
+
+  def removeEmptyFieldsNotInOriginal(originalInstance: NexusInstance, updates: EditorInstance): EditorInstance = {
+    val contentUpdate = updates.contentToMap().filter {
+      case (k, v) =>
+        if (((v.asOpt[JsArray].isDefined && v.as[List[JsValue]].isEmpty) ||
+          v == JsNull) &&
+          (originalInstance.content \ k).isEmpty) {
+          false
+        } else if (v.asOpt[JsArray].isDefined && v.as[List[JsValue]].size == 1 &&
+          (originalInstance.content \ k).asOpt[JsValue].isDefined &&
+          v.as[List[JsValue]].head == (originalInstance.content \ k).as[JsValue]
+        ) {
+          false
+        } else {
+          true
+        }
+    }
+    updates.copy(nexusInstance = updates.nexusInstance.copy(content = Json.toJson(contentUpdate).as[JsObject]))
+  }
+
+  def removeInternalFields(instance: NexusInstance): NexusInstance = {
+    instance.copy(content = FormService.removeKey(instance.content).as[JsObject] -
+      s"${EditorConstants.BASENAMESPACE}${EditorConstants.RELATIVEURL}" -
+      s"${EditorConstants.INFERENCESPACE}${EditorConstants.ALTERNATIVES}"
+    )
   }
 
 }

@@ -90,8 +90,10 @@ class EditorService @Inject()(
       case Left(res) =>
         Future(Left(res))
       case Right(currentInstanceDisplayed) =>
-        val instanceUpdateFromUser = FormService.buildInstanceFromForm(currentInstanceDisplayed, updateFromUser, config.nexusEndpoint)
-        val updateToBeStored = InstanceHelper.buildDiffEntity(currentInstanceDisplayed.removeNexusFields(), instanceUpdateFromUser)
+        val cleanedOriginalInstance = InstanceHelper.removeInternalFields(currentInstanceDisplayed)
+        val instanceUpdateFromUser = FormService.buildInstanceFromForm(cleanedOriginalInstance, updateFromUser, config.nexusEndpoint)
+        val removedEmptyFields = InstanceHelper.buildDiffEntity(cleanedOriginalInstance, instanceUpdateFromUser)
+        val updateToBeStored = InstanceHelper.removeEmptyFieldsNotInOriginal(cleanedOriginalInstance, removedEmptyFields)
         updateInstance(updateToBeStored, instanceRef, token, user.id)
     }
   }

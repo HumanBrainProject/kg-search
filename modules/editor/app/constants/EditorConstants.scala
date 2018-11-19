@@ -19,6 +19,7 @@ import models.NexusPath
 
 object EditorConstants {
   val EDITORNAMESPACE = "https://schema.hbp.eu/hbpkg/"
+  val INFERENCESPACE = "https://schema.hbp.eu/inference/"
   val BASENAMESPACE = "https://schema.hbp.eu/"
   val BOOKMARKLIST = "bookmarkList"
   val BOOKMARKINSTANCELINK = "bookmarkInstanceLink"
@@ -26,7 +27,7 @@ object EditorConstants {
   val USER = "user"
   val USERID = "userId"
   val FOLDERTYPE = "folderType"
-
+  val ALTERNATIVES = "alternatives"
 
 
   val RELATIVEURL = "relativeUrl"

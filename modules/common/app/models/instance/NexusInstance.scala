@@ -39,18 +39,6 @@ case class NexusInstance(nexusUUID: Option[String], nexusPath: NexusPath, conten
     NexusInstance(this.nexusUUID, this.nexusPath, this.content.transform(jsonTransformer).get)
   }
 
-//  def cleanManualDataFromNexus(): Map[String, JsValue] = {
-//    cleanManualData().content.fields.toMap
-//  }
-
-  def cleanManualData(): NexusInstance = {
-    this.copy(content = this.content - ("@context") - ("@id") - ("@type") - ("links") - ("nxv:rev") - ("nxv:deprecated"))
-  }
-
-
-  def removeNexusFields(): NexusInstance = {
-    this.copy(content =  this.content - ("@context") - ("@type") - ("links") - ("nxv:deprecated"))
-  }
 
   def getRevision(): Long ={
     this.getField(NexusInstance.Fields.nexusRev).getOrElse(JsNumber(1)).as[Long]
