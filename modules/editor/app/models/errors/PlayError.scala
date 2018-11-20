@@ -18,6 +18,7 @@ package models.errors
 import akka.util.ByteString
 import helpers.ResponseHelper
 import play.api.http.HttpEntity
+import play.api.libs.ws.WSRequest
 import play.api.mvc.{ResponseHeader, Result}
 
 trait PlayError {
@@ -25,7 +26,7 @@ trait PlayError {
   val status: Int
   val msg: String
 
-  def toResult(headers : Map[String, Seq[String]]): Result = {
+  def toResult: Result = {
     Result(
       ResponseHeader(this.status),
       HttpEntity.Strict(ByteString(msg), None)

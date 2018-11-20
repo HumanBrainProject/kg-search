@@ -76,7 +76,7 @@ class EditorUserService @Inject()(config: ConfigurationService,
   }
 
 
-  def createUser(nexusUser: NexusUser, token: String): Future[Either[WSResponse, EditorUser]] = {
+  def createUser(nexusUser: NexusUser, token: String): Future[Either[APIEditorError, EditorUser]] = {
     instanceApiService.post(
       wSClient,
       config.kgQueryEndpoint,
@@ -85,7 +85,7 @@ class EditorUserService @Inject()(config: ConfigurationService,
     ).map {
       case Right(ref) =>
         Right(EditorUser(ref, nexusUser))
-      case Left(res) => Left(res)
+      case Left(res) => Left(APIEditorError(res.status, res.body))
     }
   }
 }

@@ -157,6 +157,7 @@ object InstanceHelper {
           (originalInstance.content \ k).asOpt[JsValue].isDefined &&
           v.as[List[JsValue]].head == (originalInstance.content \ k).as[JsValue]
         ) {
+          // An object and an array with only this object should be considered the same
           false
         } else {
           true

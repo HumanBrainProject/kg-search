@@ -31,25 +31,20 @@ object EditorResponseHelper {
     * @param status           The status of the response
     * @param headers          The headers of the response
     * @param errorMsg         The body of the response (could be either a String or JsValue)
-    * @param originalPath     The path of the instance
     * @return A Play result with back link
     */
-  def errorResultWithBackLink(
+  def errorResult(
                                status: Int,
                                headers: Map[String, Seq[String]],
-                               errorMsg: Any,
-                               originalPath: NexusPath,
-                               formService: FormService
+                               errorMsg: Any
                              ): Result = {
-    val resultBackLink = NavigationHelper
-      .errorMessageWithBackLink(errorMsg, NavigationHelper.generateBackLink(originalPath, formService))
     if (status == UNAUTHORIZED) {
       Result(
         ResponseHeader(
           FORBIDDEN,
           ResponseHelper.flattenHeaders(ResponseHelper.filterContentTypeAndLengthFromHeaders[Seq[String]](headers))
         ),
-        HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json"))
+        HttpEntity.Strict(ByteString(errorMsg.toString()), Some("application/json"))
       )
     } else {
       Result(
@@ -57,7 +52,7 @@ object EditorResponseHelper {
           status,
           ResponseHelper.flattenHeaders(ResponseHelper.filterContentTypeAndLengthFromHeaders[Seq[String]](headers))
         ),
-        HttpEntity.Strict(ByteString(resultBackLink.toString()), Some("application/json"))
+        HttpEntity.Strict(ByteString(errorMsg.toString()), Some("application/json"))
       )
     }
   }

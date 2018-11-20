@@ -27,17 +27,46 @@ import scala.concurrent.Future
 
 trait EditorBookmarkServiceInterface {
 
-  def getUserLists(editorUser: EditorUser, formRegistry: FormRegistry):
-  Future[Either[WSResponse, List[BookmarkListFolder]]]
+  /**
+    * Return the user bookmark list containing  user defined and static lists
+    * @param editorUser the current user
+    * @param formRegistry the registry with the types associated with the user organization
+    * @return The bookmarklists organised by folders
+    */
+  def getUserBookmarkLists(editorUser: EditorUser, formRegistry: FormRegistry):
+  Future[Either[APIEditorError, List[BookmarkListFolder]]]
 
+  /**
+    *  Get the instances contained in a bookmark list paginated and searchable
+    * @param bookmarkListId the id of the bookmark
+    * @param start
+    * @param size
+    * @param search
+    * @return a list of instance
+    */
   def getInstancesOfBookmarkList(bookmarkListId: NexusInstanceReference, start: Int, size: Int, search: String):
-  Future[Either[WSResponse, (List[PreviewInstance], Long)]]
+  Future[Either[APIEditorError, (List[PreviewInstance], Long)]]
 
+  /**
+    * Create a folder for bookmarklist
+    * @param editorUser  the current user
+    * @param name the name of the folder
+    * @param folderType the type of the folder
+    * @param token the token of the tech account
+    * @return The created folder
+    */
   def createBookmarkListFolder(editorUser: EditorUser, name: String, folderType: FolderType = BOOKMARKFOLDER, token: String):
-  Future[Either[WSResponse, BookmarkListFolder]]
+  Future[Either[APIEditorError, BookmarkListFolder]]
 
+  /**
+    *
+    * @param bookmarkListName
+    * @param folderId
+    * @param token
+    * @return
+    */
   def createBookmarkList(bookmarkListName: String, folderId: String, token: String):
-  Future[Either[WSResponse, BookmarkList]]
+  Future[Either[APIEditorError, BookmarkList]]
 
   def updateBookmarkList(
                           bookmarkList: BookmarkList,
@@ -45,7 +74,7 @@ trait EditorBookmarkServiceInterface {
                           bookmarkListId: String,
                           userFolderId: String,
                           token: String):
-  Future[Either[WSResponse, BookmarkList]]
+  Future[Either[APIEditorError, BookmarkList]]
 
   def deleteBookmarkList(bookmarkRef: NexusInstanceReference, token: String):
   Future[Either[APIEditorError, Unit]]
@@ -55,14 +84,14 @@ trait EditorBookmarkServiceInterface {
                                   bookmarkListIds: List[NexusInstanceReference],
                                   token: String
                                 ):
-  Future[List[Either[WSResponse, NexusInstanceReference]]]
+  Future[List[Either[APIEditorError, NexusInstanceReference]]]
 
   def removeInstanceFromBookmarkLists(
                                        instanceRef: NexusInstanceReference,
                                        bookmarkListIds: List[NexusInstanceReference],
                                        token: String
                                      ):
-  Future[List[Either[WSResponse, Unit]]]
+  Future[List[Either[APIEditorError, Unit]]]
 
   def retrieveBookmarkList(instanceIds: List[NexusInstanceReference], editorUser: EditorUser):
   Future[List[(NexusInstanceReference, Either[APIEditorError, List[BookmarkList]])]]

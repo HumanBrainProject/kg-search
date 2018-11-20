@@ -18,6 +18,7 @@ package services
 import com.google.inject.Inject
 import constants.SchemaFieldsConstants
 import helpers.InstanceHelper
+import models.errors.APIEditorError
 import models.instance.NexusInstance
 import models.{EditorResponseObject, EditorResponseWithCount, FormRegistry, NexusPath}
 import play.api.http.HeaderNames._
@@ -35,7 +36,7 @@ class ArangoQueryService @Inject()(
                                     formService: FormService
                                   )(implicit executionContext: ExecutionContext) {
 
-  def listInstances(nexusPath: NexusPath, from: Option[Int], size: Option[Int], search: String): Future[Either[WSResponse, EditorResponseWithCount]] = {
+  def listInstances(nexusPath: NexusPath, from: Option[Int], size: Option[Int], search: String): Future[Either[APIEditorError, EditorResponseWithCount]] = {
     val parameters = (from, size) match {
       case (Some(f), Some(s)) =>  List(("from", f.toString), ("size", s.toString))
       case (Some(f),_) =>  List(("from", f.toString))
@@ -43,8 +44,7 @@ class ArangoQueryService @Inject()(
       case _ =>  List()
     }
     wSClient.url(s"${config.kgQueryEndpoint}/arango/instances/${nexusPath.toString()}")
-      .withQueryStringParameters(("search", search))
-      .withQueryStringParameters(parameters:_*)
+      .withQueryStringParameters(("search", search)::parameters:_*)
       .get().map{
       res =>
         res.status match {
@@ -76,7 +76,7 @@ class ArangoQueryService @Inject()(
                 EditorResponseWithCount.empty
               )
             }
-          case _ => Left(res)
+          case _ => Left(APIEditorError(res.status, res.body))
         }
     }
   }
