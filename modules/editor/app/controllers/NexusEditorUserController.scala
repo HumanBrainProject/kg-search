@@ -55,7 +55,7 @@ class NexusEditorUserController @Inject()(
             editorUserListService.createBookmarkListFolder(editorUser, "My Bookmarks", BOOKMARKFOLDER, token).map{
               case Right(_) =>
                Some(editorUser)
-              case Left(res) =>
+              case Left(_) =>
                 logger.info(s"Deleting editor user with id : ${request.user.id}")
                 nexusService.deprecateInstance(config.nexusEndpoint, EditorConstants.editorUserPath,
                   editorUser.nexusId.id, 1L, token
@@ -82,7 +82,7 @@ class NexusEditorUserController @Inject()(
   def getBookmarkListFolders():Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
     for{
       res <-  editorUserListService.getUserBookmarkLists(request.editorUser, formService.formRegistry).map {
-          case Left(r) => EditorResponseHelper.forwardResultResponse(r)
+          case Left(r) => r.toResult
           case Right(l) => Ok(Json.toJson(EditorResponseObject(Json.toJson(l))))
         }
     } yield res
@@ -101,7 +101,7 @@ class NexusEditorUserController @Inject()(
     val nexusPath = NexusPath(org, domain, datatype, version)
     arangoQueryService.listInstances(nexusPath, from, size, search).map{
       case Right(data) => Ok(Json.toJson(data))
-      case Left(res) => EditorResponseHelper.forwardResultResponse(res)
+      case Left(res) => res.toResult
     }
   }
 
@@ -118,7 +118,7 @@ class NexusEditorUserController @Inject()(
     val nexusRef = NexusInstanceReference(org, domain, datatype, version, id)
     editorUserListService.getInstancesOfBookmarkList(nexusRef, from, size, search).map{
       case Right( (instances, total) ) => Ok(Json.toJson(EditorResponseObject(Json.toJson(instances))).as[JsObject].+("total" -> JsNumber(total)) )
-      case Left(res) => EditorResponseHelper.forwardResultResponse(res)
+      case Left(error) => error.toResult
     }
   }
 
@@ -134,7 +134,7 @@ class NexusEditorUserController @Inject()(
           for {
             token <- oIDCAuthService.getTechAccessToken()
             result <- editorUserListService.createBookmarkList(n, id, token).map{
-              case Left(r) => EditorResponseHelper.forwardResultResponse(r)
+              case Left(r) => r.toResult
               case Right(bookmarkList) => Created(Json.toJson(bookmarkList))
             }
           } yield result
@@ -161,11 +161,11 @@ class NexusEditorUserController @Inject()(
           for {
             token <- oIDCAuthService.getTechAccessToken()
             result <- editorUserListService.getBookmarkListById(ref).flatMap[Result]{
-              case Left(r) => Future(EditorResponseHelper.forwardResultResponse(r))
+              case Left(error) => Future(error.toResult)
               case Right((bookmarkList, userFolderId) ) =>
                 val updatedBookmarkList = bookmarkList.copy(name = newName)
                 editorUserListService.updateBookmarkList(updatedBookmarkList, ref.nexusPath.withSpecificSubspace(config.editorSubSpace), id, userFolderId, token).map[Result]{
-                  case Left(response) => EditorResponseHelper.forwardResultResponse(response)
+                  case Left(error) => error.toResult
                   case Right(_) => NoContent
                 }
             }
@@ -180,7 +180,7 @@ class NexusEditorUserController @Inject()(
       for{
         token <- oIDCAuthService.getTechAccessToken()
         result <- editorUserListService.deleteBookmarkList(bookmarkRef, token).map {
-          case Left(response) => InternalServerError(Json.toJson(response))
+          case Left(error) => InternalServerError(Json.toJson(error))
           case Right(()) => NoContent
         }
       } yield result
@@ -202,7 +202,7 @@ class NexusEditorUserController @Inject()(
 
           futList.map { listResponse =>
             if (listResponse.forall(_.isRight)) {
-              Ok("Bookmarks created")
+              Created("Bookmarks created")
             } else {
               val errors = listResponse.filter(_.isLeft).mkString("\n")
               InternalServerError(s"Could not update all the bookmarks - $errors")
