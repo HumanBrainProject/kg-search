@@ -44,8 +44,7 @@ class ArangoQueryService @Inject()(
       case _ =>  List()
     }
     wSClient.url(s"${config.kgQueryEndpoint}/arango/instances/${nexusPath.toString()}")
-      .withQueryStringParameters(("search", search))
-      .withQueryStringParameters(parameters:_*)
+      .withQueryStringParameters(("search", search)::parameters:_*)
       .get().map{
       res =>
         res.status match {
