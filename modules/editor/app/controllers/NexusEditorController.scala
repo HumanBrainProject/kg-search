@@ -18,6 +18,7 @@
 package controllers
 
 import actions.EditorUserAction
+import cats.data.EitherT
 import helpers._
 import javax.inject.{Inject, Singleton}
 import models._
@@ -68,18 +69,13 @@ class NexusEditorController @Inject()(
     val nexusInstanceReference = NexusInstanceReference(org, domain, schema, version, id)
     editorService.retrieveInstance(nexusInstanceReference, token).map {
       case Left(res) =>  logger.error(s"Error: Could not fetch instance : ${nexusInstanceReference.nexusPath.toString()}/$id - ${res.body}")
-        EditorResponseHelper.errorResultWithBackLink(res.status, res.headers, res.body, nexusInstanceReference.nexusPath, formService)
+        EditorResponseHelper.errorResult(res.status, res.headers, res.body)
       case Right(instance) =>
         FormService.getFormStructure(nexusInstanceReference.nexusPath, instance.content, formService.formRegistry) match {
         case JsNull =>
-          NotImplemented(
-            NavigationHelper.errorMessageWithBackLink(
-              "Form not implemented",
-              NavigationHelper.generateBackLink(nexusInstanceReference.nexusPath, formService)
-            )
-          )
+          NotImplemented("Form not implemented")
         case instanceForm =>
-          Ok(NavigationHelper.resultWithBackLink(EditorResponseObject(instanceForm.as[JsObject]), nexusInstanceReference.nexusPath, formService))
+          Ok(Json.toJson(EditorResponseObject(instanceForm.as[JsObject])))
       }
     }
   }
@@ -163,16 +159,9 @@ class NexusEditorController @Inject()(
       val instanceRef = NexusInstanceReference(org, domain, schema, version, id)
       editorService.generateDiffAndUpdateInstance(instanceRef, request.body.asJson.get, token, request.user, formService.formRegistry).map {
         case Right(()) =>
-          Ok(
-            NavigationHelper
-              .resultWithBackLink(
-                EditorResponseObject.empty,
-                instanceRef.nexusPath,
-                formService
-              )
-          )
+          Ok(Json.toJson(EditorResponseObject.empty))
         case Left(res) => EditorResponseHelper
-          .errorResultWithBackLink(res.status, res.headers, res.body, instanceRef.nexusPath, formService)
+          .errorResult(res.status, res.headers, res.body)
       }
     }
 
@@ -195,12 +184,7 @@ class NexusEditorController @Inject()(
     val instancePath = NexusPath(org, domain, schema, version)
     editorService.insertInstance(NexusInstance(None, instancePath, Json.obj()), token).map{
       case Left(res) => EditorResponseHelper.forwardResultResponse(res)
-      case Right(ref) => Created(NavigationHelper
-        .resultWithBackLink(
-          EditorResponseObject(Json.toJson(ref)),
-          ref.nexusPath,
-          formService
-        ))
+      case Right(ref) => Created(Json.toJson(EditorResponseObject(Json.toJson(ref))))
     }
   }
 
