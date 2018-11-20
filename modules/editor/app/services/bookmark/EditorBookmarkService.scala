@@ -47,7 +47,8 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
   object instanceApiService extends InstanceApiService
   object queryService extends QueryService
 
-  def getUserLists(editorUser: EditorUser, formRegistry: FormRegistry): Future[Either[WSResponse, List[BookmarkListFolder]]] = {
+
+  def getUserBookmarkLists(editorUser: EditorUser, formRegistry: FormRegistry): Future[Either[WSResponse, List[BookmarkListFolder]]] = {
     queryService.getInstancesWithId(
       wSClient,
       config.kgQueryEndpoint,
@@ -101,7 +102,9 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
 
   }
 
-  def getInstancesOfBookmarkList(bookmarkListId: NexusInstanceReference, start:Int, size:Int, search:String):Future[Either[WSResponse, (List[PreviewInstance], Long)]] = {
+
+  def getInstancesOfBookmarkList(bookmarkListId: NexusInstanceReference, start:Int, size:Int, search:String):
+  Future[Either[WSResponse, (List[PreviewInstance], Long)]] = {
     wSClient
       .url(s"${config.kgQueryEndpoint}/arango/bookmarks/${bookmarkListId.toString}")
       .withQueryStringParameters( "from" -> start.toString, "size" -> size.toString, "search" -> search)
@@ -119,6 +122,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
         }
     }
   }
+
 
   def createBookmarkListFolder(
                                 user: EditorUser,
@@ -140,6 +144,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
         Left(res)
     }
   }
+
 
   def createBookmarkList(bookmarkListName: String, folderId: String, token: String): Future[Either[WSResponse, BookmarkList]] = {
     val payload = EditorBookmarkService.bookmarkListToNexusStruct(bookmarkListName, s"${config.nexusEndpoint}/v0/data/${folderId}")

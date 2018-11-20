@@ -81,7 +81,7 @@ class NexusEditorUserController @Inject()(
 
   def getBookmarkListFolders():Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
     for{
-      res <-  editorUserListService.getUserLists(request.editorUser, formService.formRegistry).map {
+      res <-  editorUserListService.getUserBookmarkLists(request.editorUser, formService.formRegistry).map {
           case Left(r) => EditorResponseHelper.forwardResultResponse(r)
           case Right(l) => Ok(Json.toJson(EditorResponseObject(Json.toJson(l))))
         }

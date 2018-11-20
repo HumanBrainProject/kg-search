@@ -27,15 +27,44 @@ import scala.concurrent.Future
 
 trait EditorBookmarkServiceInterface {
 
-  def getUserLists(editorUser: EditorUser, formRegistry: FormRegistry):
+  /**
+    * Return the user bookmark list containing  user defined and static lists
+    * @param editorUser the current user
+    * @param formRegistry the registry with the types associated with the user organization
+    * @return The bookmarklists organised by folders
+    */
+  def getUserBookmarkLists(editorUser: EditorUser, formRegistry: FormRegistry):
   Future[Either[WSResponse, List[BookmarkListFolder]]]
 
+  /**
+    *  Get the instances contained in a bookmark list paginated and searchable
+    * @param bookmarkListId the id of the bookmark
+    * @param start
+    * @param size
+    * @param search
+    * @return a list of instance
+    */
   def getInstancesOfBookmarkList(bookmarkListId: NexusInstanceReference, start: Int, size: Int, search: String):
   Future[Either[WSResponse, (List[PreviewInstance], Long)]]
 
+  /**
+    * Create a folder for bookmarklist
+    * @param editorUser  the current user
+    * @param name the name of the folder
+    * @param folderType the type of the folder
+    * @param token the token of the tech account
+    * @return The created folder
+    */
   def createBookmarkListFolder(editorUser: EditorUser, name: String, folderType: FolderType = BOOKMARKFOLDER, token: String):
   Future[Either[WSResponse, BookmarkListFolder]]
 
+  /**
+    *
+    * @param bookmarkListName
+    * @param folderId
+    * @param token
+    * @return
+    */
   def createBookmarkList(bookmarkListName: String, folderId: String, token: String):
   Future[Either[WSResponse, BookmarkList]]
 
