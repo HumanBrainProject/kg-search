@@ -193,7 +193,11 @@ class NexusEditorController @Inject()(
 
     val token = OIDCHelper.getTokenFromRequest(request)
     val instancePath = NexusPath(org, domain, schema, version)
-    editorService.insertInstance(NexusInstance(None, instancePath, Json.obj()), token).map{
+    val payload = request.body.asJson match {
+      case Some(content) => content.as[JsObject]
+      case None => Json.obj()
+    }
+    editorService.insertInstance(NexusInstance(None, instancePath, payload), token).map{
       case Left(res) => EditorResponseHelper.forwardResultResponse(res)
       case Right(ref) => Created(NavigationHelper
         .resultWithBackLink(
