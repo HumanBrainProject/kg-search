@@ -17,13 +17,14 @@
 
 package editor.helpers
 
-import common.models.NexusPath
+import helpers.NavigationHelper
+import models.{FormRegistry, NexusPath}
+import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import services.FormService
-import org.mockito.Mockito._
 import play.api.libs.json.{JsObject, Json}
+import services.FormService
 
 class NavigationHeperSpec  extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar{
   val formService = mock[FormService]
@@ -46,22 +47,15 @@ class NavigationHeperSpec  extends PlaySpec with GuiceOneAppPerSuite with Mockit
     "return a correctly formatted back link" in {
       val path = NexusPath("minds", "core", "dataset", "v0.0.4")
       val expected = "minds/core/dataset"
-      when(formService.formRegistry).thenReturn(registry)
-      assert(expected == NavigationHelper.generateBackLink(path, "reconciled", formService))
+      when(formService.formRegistry).thenReturn(FormRegistry(registry))
+      assert(expected == NavigationHelper.generateBackLink(path,  formService))
     }
     "return an empty string if the path is not valid" in {
       val path = NexusPath("this", "doesnot", "exists", "v0.0.4")
       val expected = ""
       val formService = mock[FormService]
-      when(formService.formRegistry).thenReturn(registry)
-      assert(expected == NavigationHelper.generateBackLink(path, "reconciled", formService))
-    }
-    "return a path with an original organization" in {
-      val path = NexusPath("mindsreconciled", "core", "dataset", "v0.0.4")
-      val expected = "minds/core/dataset"
-      val formService = mock[FormService]
-      when(formService.formRegistry).thenReturn(registry)
-      assert(expected == NavigationHelper.generateBackLink(path, "reconciled", formService))
+      when(formService.formRegistry).thenReturn(FormRegistry(registry))
+      assert(expected == NavigationHelper.generateBackLink(path,  formService))
     }
   }
 

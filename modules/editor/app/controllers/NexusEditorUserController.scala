@@ -15,63 +15,219 @@
 *   limitations under the License.
 */
 
-package editor.controllers
+package controllers
 
-import authentication.models.AuthenticatedUserAction
-import authentication.service.OIDCAuthService
+import actions.EditorUserAction
 import com.google.inject.Inject
-import common.models.FavoriteGroup
-import editor.services.EditorUserService
-import helpers.ResponseHelper
-import play.api.Configuration
-import play.api.libs.json.Json
-import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
+import constants.EditorConstants
+import helpers.EditorResponseHelper
+import models.editorUserList.BOOKMARKFOLDER
+import models.instance.{NexusInstance, NexusInstanceReference}
+import models.{AuthenticatedUserAction, EditorResponseObject, NexusPath, UserRequest}
+import play.api.Logger
+import play.api.libs.json._
+import play.api.mvc.{AnyContent, _}
+import services._
+import services.bookmark.EditorBookmarkService
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class NexusEditorUserController @Inject()(
                                            cc: ControllerComponents,
+                                           config: ConfigurationService,
                                            authenticatedUserAction: AuthenticatedUserAction,
                                            editorUserService: EditorUserService,
+                                           editorUserListService: EditorBookmarkService,
+                                           arangoQueryService: ArangoQueryService,
+                                           nexusService: NexusService,
+                                           oIDCAuthService: OIDCAuthService,
+                                           formService:FormService
                                          )(implicit ec: ExecutionContext)
   extends AbstractController(cc) {
+  val logger = Logger(this.getClass)
 
-  def createCurrentUser(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
-    editorUserService.createUser(request.user.id).map {
-      case Some(user) => Ok(Json.toJson(user))
-      case None => InternalServerError("An error occurred while creating the user")
+  private def getOrCreateUserWithUserFolder( token: String)(implicit request: UserRequest[AnyContent] ) = {
+    editorUserService.getUser(request.user).flatMap{
+      case Right(editorUser) => Future(Some(editorUser))
+      case Left(_) =>
+        editorUserService.createUser(request.user, token).flatMap{
+          case Right(editorUser) =>
+            editorUserListService.createBookmarkListFolder(editorUser, "My Bookmarks", BOOKMARKFOLDER, token).map{
+              case Right(_) =>
+               Some(editorUser)
+              case Left(res) =>
+                logger.info(s"Deleting editor user with id : ${request.user.id}")
+                nexusService.deprecateInstance(config.nexusEndpoint, EditorConstants.editorUserPath,
+                  editorUser.nexusId.id, 1L, token
+                )
+                None
+            }
+          case Left(_) => Future(None)
+        }
     }
   }
 
-  def getCurrentUser(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
-    editorUserService.getUser(request.user.id).map {
-      case Some(user) => Ok(Json.toJson(user))
-      case None => InternalServerError("An error occurred while retrieving the user")
+  def getOrCreateCurrentUser(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
+    for{
+      token <- oIDCAuthService.getTechAccessToken()
+      u <- getOrCreateUserWithUserFolder(token)
+    } yield {
+      u match {
+        case Some(editorUser) => Ok(Json.toJson(editorUser))
+        case None => InternalServerError("An error occurred while retrieving the user")
+      }
     }
   }
 
-  def addFavorite(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
-    val instanceId = (request.body.asJson.get \ "instanceId").as[String]
-    val favoriteGroupNexusId = (request.body.asJson.get \ "favoriteGroupNexusId").as[String]
-    editorUserService.addFavorite(favoriteGroupNexusId, instanceId).map {
-      case Some(favorite) => Created(Json.toJson(favorite))
-      case None => InternalServerError("An error occured while creating a favorite")
+  def getBookmarkListFolders():Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
+    for{
+      res <-  editorUserListService.getUserLists(request.editorUser, formService.formRegistry).map {
+          case Left(r) => EditorResponseHelper.forwardResultResponse(r)
+          case Right(l) => Ok(Json.toJson(EditorResponseObject(Json.toJson(l))))
+        }
+    } yield res
+  }
+
+
+  def getInstancesOfBookmarkListBySchema(
+                     org: String,
+                     domain: String,
+                     datatype: String,
+                     version: String,
+                     from: Option[Int],
+                     size: Option[Int],
+                     search: String
+                   ): Action[AnyContent] = authenticatedUserAction.async  { implicit request =>
+    val nexusPath = NexusPath(org, domain, datatype, version)
+    arangoQueryService.listInstances(nexusPath, from, size, search).map{
+      case Right(data) => Ok(Json.toJson(data))
+      case Left(res) => EditorResponseHelper.forwardResultResponse(res)
     }
   }
 
-  def deleteFavorite(org: String, domain:String, schema: String, version:String, id: String): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
-    val instanceId = s"$org/$domain/$schema/$version/$id"
-    editorUserService.removeFavorite(instanceId).map {
-      res => ResponseHelper.forwardResultResponse(res)
+  def getInstancesbyBookmarkList(
+                               org: String,
+                               domain: String,
+                               datatype: String,
+                               version: String,
+                               id: String,
+                               from: Int,
+                               size: Int,
+                               search: String
+                             ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
+    val nexusRef = NexusInstanceReference(org, domain, datatype, version, id)
+    editorUserListService.getInstancesOfBookmarkList(nexusRef, from, size, search).map{
+      case Right( (instances, total) ) => Ok(Json.toJson(EditorResponseObject(Json.toJson(instances))).as[JsObject].+("total" -> JsNumber(total)) )
+      case Left(res) => EditorResponseHelper.forwardResultResponse(res)
     }
   }
 
-  def createFavoriteGroup(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
-    val name = (request.body.asJson.get \ "name").as[String]
-    editorUserService.createFavoriteGroup(name, request.user.id).map {
-      case Some(favoriteGroup) => Created(Json.toJson(favoriteGroup))
-      case None => InternalServerError("An error occured while creating a favorite group")
-    }
+  def createBookmarkList : Action[AnyContent] =
+    (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
+      val opts = for {
+        json <- request.body.asJson
+        name <- (json \ "name").asOpt[String]
+        folderId <- (json \ "folderId").asOpt[String]
+      } yield (name, folderId)
+      opts match {
+        case Some ((n, id))  =>
+          for {
+            token <- oIDCAuthService.getTechAccessToken()
+            result <- editorUserListService.createBookmarkList(n, id, token).map{
+              case Left(r) => EditorResponseHelper.forwardResultResponse(r)
+              case Right(bookmarkList) => Created(Json.toJson(bookmarkList))
+            }
+          } yield result
+
+        case _ => Future(BadRequest("Missing parameters"))
+      }
   }
 
+  def updateBookmarkList(
+                          org: String,
+                          domain: String,
+                          datatype: String,
+                          version: String,
+                          id: String,
+                        ):Action[AnyContent] =
+    (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
+      val opts = for {
+        json <- request.body.asJson
+        name <- (json \ "name").asOpt[String]
+      } yield name
+      opts match {
+        case Some (newName)  =>
+          val ref = NexusInstanceReference(org, domain, datatype, version, id)
+          for {
+            token <- oIDCAuthService.getTechAccessToken()
+            result <- editorUserListService.getBookmarkListById(ref).flatMap[Result]{
+              case Left(r) => Future(EditorResponseHelper.forwardResultResponse(r))
+              case Right((bookmarkList, userFolderId) ) =>
+                val updatedBookmarkList = bookmarkList.copy(name = newName)
+                editorUserListService.updateBookmarkList(updatedBookmarkList, ref.nexusPath.withSpecificSubspace(config.editorSubSpace), id, userFolderId, token).map[Result]{
+                  case Left(response) => EditorResponseHelper.forwardResultResponse(response)
+                  case Right(_) => NoContent
+                }
+            }
+      } yield result
+        case _ => Future(BadRequest("Missing parameters"))
+      }
+    }
+
+  def deleteBookmarkList(org: String, domain:String, schema: String, version:String, id: String): Action[AnyContent] =
+    (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
+      val bookmarkRef = NexusInstanceReference(org, domain, schema, version, id)
+      for{
+        token <- oIDCAuthService.getTechAccessToken()
+        result <- editorUserListService.deleteBookmarkList(bookmarkRef, token).map {
+          case Left(response) => InternalServerError(Json.toJson(response))
+          case Right(()) => NoContent
+        }
+      } yield result
+    }
+
+  def updateBookmarks(org: String, domain: String, schema: String, version: String, id: String): Action[AnyContent] =
+    (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
+      val bookmarkIds = for {
+        json <- request.body.asJson
+        arrayOfIds <- json.asOpt[List[String]]
+      } yield arrayOfIds.map(NexusInstanceReference.fromUrl)
+      val instanceReference = NexusInstanceReference(org, domain, schema, version, id)
+      bookmarkIds match {
+        case Some(ids) =>
+          val futList = for {
+            token <- oIDCAuthService.getTechAccessToken()
+            listResult <- editorUserListService.updateBookmarks(instanceReference, ids, request.editorUser, token)
+          } yield listResult
+
+          futList.map { listResponse =>
+            if (listResponse.forall(_.isRight)) {
+              Ok("Bookmarks created")
+            } else {
+              val errors = listResponse.filter(_.isLeft).mkString("\n")
+              InternalServerError(s"Could not update all the bookmarks - $errors")
+            }
+          }
+
+        case None => Future(BadRequest("Missing body content"))
+      }
+    }
+
+  def retrieveBookmarks : Action[AnyContent] =
+    (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
+      import EditorBookmarkService.JsEither._
+      val instanceList = for{
+        json <- request.body.asJson
+        instances <- json.asOpt[List[String]]
+      } yield  instances.map(l => NexusInstanceReference.fromUrl(l))
+      instanceList match {
+        case Some(l) =>
+          editorUserListService.retrieveBookmarkList(l, request.editorUser).map{
+            res =>
+              val json = res.map(el => Json.obj("id" -> el._1.toString, "bookmarkLists" -> el._2))
+              Ok(Json.toJson(EditorResponseObject(Json.toJson(json))))
+          }
+        case None => Future(BadRequest("Missing body content"))
+      }
+    }
 }

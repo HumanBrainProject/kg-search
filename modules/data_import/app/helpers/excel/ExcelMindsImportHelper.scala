@@ -13,15 +13,16 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package data_import.helpers.excel_import
+package helpers.excel
 
-import data_import.models.excel_import._
-import data_import.models.excel_import.CommonVars._
+import models.excel._
+import models.excel.CommonVars._
 import java.util.Calendar
+
 import org.apache.poi.xssf.usermodel._
 import play.api.libs.json._
 import ExcelImportHelper._
-
+import constants.SchemaFieldsConstants
 
 object ExcelMindsImportHelper {
 
@@ -29,7 +30,7 @@ object ExcelMindsImportHelper {
     val payloadId = (payload \ "Specification" \ valueLabel).as[String]
     val mainContent = Seq(
       ("@type", JsString(s"http://hbp.eu/dw#$entityType")),
-      ("http://schema.org/identifier" -> JsString(payloadId)),
+      (SchemaFieldsConstants.IDENTIFIER -> JsString(payloadId)),
       ("http://hbp.eu/dw#raw_content" -> payload))
     val fullContent = parent match {
       case Some(parentObj) => mainContent :+ ("http://hbp.eu/dw#isLinkedWith", parentObj)

@@ -14,11 +14,9 @@
 *   limitations under the License.
 */
 
-package authentication.helpers
+package helpers
 
-import common.helpers.ESHelper
-import common.helpers.ESHelper.filterNexusGroups
-import common.models.OIDCUser
+import models.user.OIDCUser
 import play.api.mvc.{AnyContent, Request}
 
 object OIDCHelper {
@@ -40,7 +38,7 @@ object OIDCHelper {
     * @return The requested ES index or the public index
     */
   def getESIndex(userInfo: OIDCUser, hints:String): String = {
-    val groups = filterNexusGroups(userInfo.groups)
+    val groups = ESHelper.filterNexusGroups(userInfo.groups)
     val h = hints.trim
     if (groups.contains(h)) {
       ESHelper.transformToIndex(h)

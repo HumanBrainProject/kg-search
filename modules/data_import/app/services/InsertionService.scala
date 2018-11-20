@@ -13,23 +13,24 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package data_import.services
+package services
 
 import com.google.inject.Inject
-import data_import.helpers.excel_import.{ExcelInsertionHelper, ExcelUnimindsImportHelper}
-import data_import.helpers.excel_import.ExcelMindsImportHelper.formatEntityPayload
-import data_import.models.excel_import.CommonVars.{activityLabel, datasetLabel, specimenGroupLabel, specimengroupLabel}
-import models.excel_import.{Entity, Value}
-import nexus.services.NexusService
-import nexus.services.NexusService._
+import models.excel.{Entity, Value}
+import models.excel.CommonVars._
 import play.api.Logger
 import play.api.http.Status.{CREATED, OK}
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
+
 import scala.concurrent.{ExecutionContext, Future}
 import Entity.isNexusLink
 import Value.DEFAULT_RESOLUTION_STATUS
-import common.models.NexusPath
+import constants.SchemaFieldsConstants
+import helpers.excel.{ExcelInsertionHelper, ExcelUnimindsImportHelper}
+import models.NexusPath
+import services.NexusService._
+import helpers.excel.ExcelMindsImportHelper._
 
 
 class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService)
@@ -64,7 +65,7 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService)
 
   def insertOrUpdateEntity(nexusUrl:String, nexusPath: NexusPath, payload: JsObject,
                            instanceId: String, token: String): Future[Either[(String, JsValue), String]] = {
-    val identifier = (payload \ "http://schema.org/identifier").as[String]
+    val identifier = (payload \ SchemaFieldsConstants.IDENTIFIER).as[String]
     nexusService.insertOrUpdateInstance(nexusUrl,nexusPath, payload, identifier, token).flatMap{
       case (operation, idOpt, responseOpt) =>
         responseOpt match {
@@ -145,7 +146,7 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService)
   }
 
   def retrieveEntityDetails(url: String, id: String, token: String): Future[Option[(String, Int, JsObject)]] = {
-    wSClient.url(s"""$url/?deprecated=false&fields=all&filter={"op":"eq","path":"http://schema.org/identifier","value":"$id"}""")
+    wSClient.url(s"""$url/?deprecated=false&fields=all&filter={"op":"eq","path":"${SchemaFieldsConstants.IDENTIFIER}","value":"$id"}""")
       .addHttpHeaders(
       "Authorization" -> token)
       .get()
@@ -181,7 +182,7 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService)
           case Right(errorMessage) =>
             ("failed", None)
         }
-          val entityId = (payload \ "http://schema.org/identifier").as[String]
+          val entityId = (payload \ SchemaFieldsConstants.IDENTIFIER).as[String]
           val linkString = linkOpt match {
             case Some(link) => s""" "link": "$link", """
             case None => ""

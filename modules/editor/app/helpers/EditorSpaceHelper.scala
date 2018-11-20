@@ -15,9 +15,9 @@
 *   limitations under the License.
 */
 
-package editor.helpers
+package helpers
 
-import common.models.{NexusUser, OIDCUser}
+import models.user.{NexusUser, OIDCUser}
 
 
 object EditorSpaceHelper {

@@ -1,18 +1,14 @@
-package authentication.controllers
+package controllers
 
-import common.models.OIDCUser
-import mockws.{MockWS, MockWSHelpers}
+import mockws.MockWSHelpers
+import models.user.OIDCUser
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
 import play.api.Configuration
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Json
-import play.api.mvc.Results.Ok
-import play.api.mvc._
 import play.api.test._
 
-import scala.concurrent.duration._
-import scala.concurrent.{Await, ExecutionContext}
+import scala.concurrent.ExecutionContext
 
 /**
   * Add your spec here.

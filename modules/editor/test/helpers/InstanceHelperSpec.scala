@@ -15,7 +15,9 @@
 */
 package editor.helpers
 
-import common.models.{NexusInstance, NexusPath}
+import helpers.InstanceHelper
+import models.NexusPath
+import models.instance.{EditorInstance, NexusInstance}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.libs.json.{JsArray, JsNull, Json}
@@ -41,11 +43,18 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
         )
       )
 
+      val expected = EditorInstance(
+        NexusInstance(
+          Some(id),
+          path,
+          Json.obj(
+            "name" -> "new name"
+          )
+        )
+      )
       val res = InstanceHelper.buildDiffEntity(original, newInstance)
 
-      res mustBe Json.obj(
-        "name" -> "new name"
-      )
+      res mustBe expected
     }
     "correctly build a diff when a field is added" in {
       val content = Json.obj(
@@ -65,9 +74,17 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance)
 
-      res mustBe Json.obj(
-        "description" -> "description"
+      val expected = EditorInstance(
+        NexusInstance(
+          Some(reconId),
+          path,
+          Json.obj(
+            "description" -> "description"
+          )
+        )
       )
+
+      res mustBe expected
     }
     "correctly build a diff when a field is removed" in {
       val currentlyDisplayedInstance = NexusInstance(
@@ -86,9 +103,17 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance)
 
-      res mustBe Json.obj(
-        "description" -> JsNull
+      val expected = EditorInstance(
+        NexusInstance(
+          Some(reconId),
+          path,
+          Json.obj(
+            "description" -> JsNull
+          )
+        )
       )
+
+      res mustBe expected
     }
     "correctly manage arrays by returning the final array not its difference" in {
       val currentlyDisplayedInstance = NexusInstance(
@@ -133,18 +158,26 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance)
 
-      res mustBe Json.obj(
-        "activities" -> Json.toJson(
-          List(
-            Json.obj(
-              "id" -> "activity1"
-            ),
-            Json.obj(
-              "id" -> "activity3"
+      val expected = EditorInstance(
+        NexusInstance(
+          Some(reconId),
+          path,
+          Json.obj(
+            "activities" -> Json.toJson(
+              List(
+                Json.obj(
+                  "id" -> "activity1"
+                ),
+                Json.obj(
+                  "id" -> "activity3"
+                )
+              )
             )
           )
         )
       )
+
+      res mustBe expected
     }
     "reflect correct array changes" in {
       val currentlyDisplayedInstance = NexusInstance(
@@ -188,15 +221,71 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
         )
       )
 
-      val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance)
-
-      res mustBe Json.obj(
-        "activities" -> JsArray(),
-        "contributors" -> Json.toJson(
-          "james",
-          "jane"
+      val expected = EditorInstance(
+        NexusInstance(
+          Some(reconId),
+          path,
+          Json.obj(
+            "activities" -> JsArray(),
+            "contributors" -> Json.toJson(
+              "james",
+              "jane"
+            )
+          )
         )
       )
+
+      val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance)
+
+      res mustBe expected
+    }
+
+    "return a null value if the array was not changed" in {
+      val currentlyDisplayedInstance = NexusInstance(
+        Some(reconId), path, Json.obj(
+          "name" -> "test",
+          "description" -> "description",
+          "activities" -> JsArray(),
+          "contributors" -> Json.toJson(
+            List(
+              "bill",
+              "james",
+              "jane"
+            )
+          )
+
+        )
+      )
+
+      val newInstance = NexusInstance(
+        None, path, Json.obj(
+          "name" -> "test",
+          "description" -> "description",
+          "activities" -> JsArray(),
+          "contributors" -> Json.toJson(
+            "james",
+            "jane"
+          )
+        )
+      )
+
+
+      val expected = EditorInstance(
+        NexusInstance(
+          Some(reconId),
+          path,
+          Json.obj(
+            "contributors" -> Json.toJson(
+              "james",
+              "jane"
+            )
+          )
+        )
+      )
+
+      val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance)
+
+      res mustBe expected
     }
   }
 

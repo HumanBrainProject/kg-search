@@ -13,9 +13,9 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package authentication.models
+package models
 
-import common.models.{NexusUser}
+import models.user.NexusUser
 import play.api.mvc.{Request, WrappedRequest}
 
 /**
@@ -24,4 +24,4 @@ import play.api.mvc.{Request, WrappedRequest}
   * @param request
   * @tparam A
   */
-class UserRequest[A](val user: NexusUser, request: Request[A]) extends WrappedRequest[A](request)
+class UserRequest[A](val user: NexusUser, val request: Request[A]) extends WrappedRequest[A](request)

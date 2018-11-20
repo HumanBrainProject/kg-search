@@ -15,18 +15,15 @@
 *   limitations under the License.
 */
 
-package authentication.controllers
+package controllers
 
 import com.google.inject.Inject
-import authentication.helpers.OIDCHelper
 import javax.inject.Singleton
-import authentication.models.{AuthenticatedUserAction, UserRequest}
+import models.AuthenticatedUserAction
+import play.api.Logger
 import play.api.libs.json.Json
-import play.api.libs.ws.WSClient
 import play.api.mvc._
-import play.api.{Configuration, Logger}
-import authentication.service.OIDCAuthService
-import common.services.ConfigurationService
+import services.{ConfigurationService, OIDCAuthService}
 
 import scala.concurrent.ExecutionContext
 

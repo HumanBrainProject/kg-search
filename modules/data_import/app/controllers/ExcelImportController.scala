@@ -13,20 +13,20 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package data_import.controllers
+package controllers
 
 import akka.stream.scaladsl.Source
 import akka.util.ByteString
-import data_import.helpers.excel_import.{ExcelImportHelper, ExcelMindsImportHelper, ExcelUnimindsImportHelper}
-import data_import.helpers.excel.ExcelUnimindsExportHelper
-import data_import.services.InsertionService
+import helpers.excel.{ExcelImportHelper, ExcelMindsImportHelper, ExcelUnimindsImportHelper}
+import helpers.excel.ExcelUnimindsExportHelper
+import services.InsertionService
 import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
 
-import common.services.ConfigurationService
+import services.ConfigurationService
 import javax.inject.{Inject, Singleton}
-import models.excel_import.Entity
-import nexus.services.NexusService
+import models.excel.Entity
+import services.NexusService
 import org.apache.poi.xssf.usermodel._
 import play.api.http.HttpEntity
 import play.api.libs.Files

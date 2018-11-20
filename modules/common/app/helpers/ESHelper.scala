@@ -15,7 +15,7 @@
 *   limitations under the License.
 */
 
-package common.helpers
+package helpers
 
 import play.api.libs.json.JsValue
 import play.api.libs.ws.WSClient

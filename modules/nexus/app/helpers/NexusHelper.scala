@@ -15,7 +15,7 @@
 *   limitations under the License.
 */
 
-package nexus.helpers
+package helpers
 
 import java.security.MessageDigest
 
@@ -53,7 +53,7 @@ object NexusHelper {
           "owl": "http://www.w3.org/2002/07/owl#",
           "xsd": "http://www.w3.org/2001/XMLSchema#",
           "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-          "org": "${nameSpace}#",
+          "org": "${nameSpace}",
           "shapes": {
               "@reverse": "rdfs:isDefinedBy",
               "@type": "@id"

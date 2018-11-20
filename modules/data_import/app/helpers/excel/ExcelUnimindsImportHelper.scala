@@ -13,10 +13,10 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package data_import.helpers.excel_import
+package helpers.excel
 
 import collection.JavaConverters._
-import models.excel_import.{Entity, SingleValue}
+import models.excel.{Entity, SingleValue}
 import org.apache.poi.xssf.usermodel._
 import ExcelImportHelper._
 

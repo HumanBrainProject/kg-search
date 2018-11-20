@@ -13,17 +13,15 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package nexus.controllers
+package controllers
 
-import common.helpers.ResponseHelper._
-import common.models.NexusPath
+import helpers.ResponseHelper._
 import javax.inject.{Inject, Singleton}
-import nexus.services.{NexusService, NexusSpaceService}
-import play.api.{Configuration, Logger}
+import models.NexusPath
+import play.api.Logger
 import play.api.http.HttpEntity
-import play.api.libs.json.JsArray
 import play.api.mvc._
-import common.services.ConfigurationService
+import services.{ConfigurationService, NexusService, NexusSpaceService}
 
 import scala.concurrent.{ExecutionContext, Future}
 

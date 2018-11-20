@@ -15,15 +15,14 @@
 *   limitations under the License.
 */
 
-package editor.helpers
+package helpers
 
-import common.helpers.JsFlattener
-import common.models.{NexusInstance, NexusPath, User}
-import editor.models.{EditorInstance, ReconciledInstance, ReleaseStatus}
-import org.joda.time.DateTime
+import constants.{EditorConstants, SchemaFieldsConstants}
+import models._
+import models.instance.{EditorInstance, NexusInstance, PreviewInstance}
 import org.json4s.JsonAST._
 import org.json4s.native.{JsonMethods, JsonParser}
-import org.json4s.{DefaultFormats, Diff, JsonAST}
+import org.json4s.{Diff, JsonAST}
 import play.api.Logger
 import play.api.libs.json.Reads.of
 import play.api.libs.json._
@@ -36,32 +35,6 @@ object InstanceHelper {
 
   type UpdateInfo = (Option[String], Int, String, EditorInstance)
 
-  def generateInstanceWithReconciliationLogic(
-                                               nexusEndpoint: String,
-                                               reconciledSuffix:String,
-                                               originalInstance: NexusInstance,
-                                               editorInstances: List[EditorInstance]
-                                             ): (ReconciledInstance, Option[List[UpdateInfo]]) = {
-    logger.debug(s"Result from incoming links $editorInstances")
-    val updatesByPriority = buildManualUpdatesFieldsFrequency(editorInstances)
-    val result = ReconciledInstance(
-      NexusInstance(
-        originalInstance.id(),
-        originalInstance.nexusPath.reconciledPath(reconciledSuffix),
-        reconcilationLogic(updatesByPriority, originalInstance.content)
-      )
-    )
-    val manualUpdateDetailsOpt = if(editorInstances.isEmpty){
-      logger.debug("creating new editor instance")
-      None
-    }else{
-      //Call reconcile API
-      logger.debug(s"Reconciled instance $result")
-      val manualUpdateDetails = editorInstances.map(manualEntity => manualEntity.extractUpdateInfo())
-      Some(manualUpdateDetails)
-    }
-    (result, manualUpdateDetailsOpt)
-  }
 
   private def handleDeletion(deleted: JValue, newJson: JValue): JValue = {
     implicit class JValueExtended(value: JValue) {
@@ -91,8 +64,8 @@ object InstanceHelper {
 
   }
 
-  def buildDiffEntity(consolidatedResponse: NexusInstance, newValue: NexusInstance): JsObject = {
-    val consolidatedJson = JsonParser.parse(consolidatedResponse.removeNexusFields().content.toString())
+  def buildDiffEntity(currentInstance: NexusInstance, newValue: NexusInstance): EditorInstance = {
+    val consolidatedJson = JsonParser.parse(currentInstance.content.toString())
     val newJson = JsonParser.parse(newValue.content.toString())
     val Diff(changed, added, deleted) = consolidatedJson.diff(newJson)
     val diff: JsonAST.JValue = (deleted, changed) match {
@@ -101,25 +74,26 @@ object InstanceHelper {
       case (JsonAST.JNothing, _) =>
         changed.merge(added)
       case (_, JsonAST.JNothing) =>
-
         val deletion = handleDeletion(deleted, newJson)
         deletion.merge(added)
       case _ =>
-
         val deletion = handleDeletion(deleted, newJson)
         changed.merge(deletion.merge(added))
     }
     val rendered = Json.parse(JsonMethods.compact(JsonMethods.render(diff))).as[JsObject]
-    val diffWithCompleteArray = rendered.value.map {
-      case (k, v) =>
-        val value = (newValue.content \ k).asOpt[JsValue]
-        if (v.asOpt[JsArray].isDefined && value.isDefined) {
-          k -> value.get
-        } else {
-          k -> v
-        }
-    }
-    Json.toJson(diffWithCompleteArray).as[JsObject]
+    val diffWithCompleteArray = rendered.value
+      .map {
+        case (k, v) =>
+          val value = (newValue.content \ k).asOpt[JsValue]
+          if (v.asOpt[JsArray].isDefined && value.isDefined) {
+            k -> value.get
+          } else {
+            k -> v
+          }
+      }
+    EditorInstance(
+      NexusInstance(currentInstance.nexusUUID, currentInstance.nexusPath, Json.toJson(diffWithCompleteArray).as[JsObject])
+    )
   }
 
   def md5HashString(s: String): String = {
@@ -132,130 +106,28 @@ object InstanceHelper {
     hashedString
   }
 
-  def buildManualUpdatesFieldsFrequency(manualUpdates: List[EditorInstance]): Map[String, SortedSet[(JsValue, Int)]] = {
-    val cleanMap: List[Map[String, JsValue]] = manualUpdates.map(s => s.cleanManualData().contentToMap())
-    buildMapOfSortedManualUpdates(cleanMap)
-  }
 
-  // build reconciled view from updates statistics
-  def reconcilationLogic(frequencies: Map[String, SortedSet[(JsValue, Int)]], origin: JsObject): JsObject = {
-    // simple logic: keep the most frequent
-    val transformations = frequencies.filterKeys(key => !key.startsWith(EditorInstance.contextOrg)).map {
-      case (pathString, freqs) => (JsFlattener.buildJsPathFromString(pathString), freqs.last._1)
-    }.toSeq
-    applyChanges(origin, transformations)
-  }
+  def formatInstanceList(jsArray: JsArray, reconciledSuffix:String): List[PreviewInstance] = {
 
-  // apply a set of transformation to an instance
-  def applyChanges(instance: JsObject, changes: Seq[(JsPath, JsValue)]): JsObject = {
-    val obj = changes.foldLeft(instance) {
-      case (res, (path, value)) =>
-        val updatedJson = updateJson(res, path, value)
-        updatedJson
-    }
-    obj
-  }
-
-  // return an updated JsObject or the src object in case of failure
-  def updateJson(instance: JsObject, path: JsPath, newValue: JsValue): JsObject = {
-    val simpleUpdateTransformer = path.json.update(
-      of[JsValue].map { js =>
-          newValue
-        }
-    )
-    instance.transform(simpleUpdateTransformer) match {
-      case s: JsSuccess[JsObject] => s.get
-      case e: JsError => logger.error(s"Could not apply json update - ${JsError.toJson(e).toString()}")
-        throw new Exception("Could not apply update")
-    }
-  }
-
-  def buildMapOfSortedManualUpdates(manualUpdates: List[Map[String, JsValue]]): Map[String, SortedSet[(JsValue, Int)]] = {
-    implicit val order = Ordering.fromLessThan[(JsValue, Int)](_._2 < _._2)
-    // For each update
-    val tempMap = manualUpdates.foldLeft(Map.empty[String, List[JsValue]]) {
-      case (merged, m) =>
-        val tempRes: Map[String, List[JsValue]] = m.foldLeft(merged) { case (acc, (k, v)) =>
-          acc.get(k) match {
-            case Some(existing) => acc.updated(k, v :: existing)
-            case None => acc.updated(k, List(v))
-          }
-        }
-        tempRes
-    }
-    val sortedSet = tempMap
-      .filter(e => e._1 != "@type" &&
-        e._1 != EditorInstance.Fields.parent &&
-        e._1 != EditorInstance.Fields.origin &&
-        e._1 != EditorInstance.Fields.updaterId)
-      .map { el =>
-        val e = el._2.groupBy(identity).mapValues(_.size)
-        el._1 -> SortedSet(e.toList: _*)
-      }
-    sortedSet
-  }
-
-  def merge[K, V](maps: Seq[Map[K, V]])(f: (K, V, V) => V): Map[K, V] = {
-    maps.foldLeft(Map.empty[K, V]) { case (merged, m) =>
-      m.foldLeft(merged) { case (acc, (k, v)) =>
-        acc.get(k) match {
-          case Some(existing) => acc.updated(k, f(k, existing, v))
-          case None => acc.updated(k, v)
-        }
-      }
-    }
-  }
-
-  def formatInstanceList(jsArray: JsArray, reconciledSuffix:String): JsValue = {
-
-    val arr = jsArray.value.map { el =>
+    jsArray.value.map { el =>
       val url = (el \ "@id").as[String]
-      val name: JsString = (el \ "http://schema.org/name")
-        .asOpt[JsString].getOrElse(
-        (el \"http://hbp.eu/minds#alias" ).asOpt[JsString].getOrElse( (el \ "http://hbp.eu/minds#title").asOpt[JsString].getOrElse(JsString("")))
+      val name: String = (el \ SchemaFieldsConstants.NAME)
+        .asOpt[String].getOrElse(
+        (el \"http://hbp.eu/minds#alias" ).asOpt[String].getOrElse( (el \ "http://hbp.eu/minds#title").asOpt[String].getOrElse(""))
       )
-      val description: JsString = if ((el \ "http://schema.org/description").isDefined) {
-        (el \ "http://schema.org/description").as[JsString]
+      val description: String = if ((el \ SchemaFieldsConstants.DESCRIPTION).isDefined) {
+        (el \ SchemaFieldsConstants.DESCRIPTION).as[String]
       } else {
-        JsString("")
+        ""
       }
-
-      val id = url.split("/").last
-      val formattedId = NexusPath(url)
-        .originalPath(reconciledSuffix)
-        .toString() + "/" + id
-      Json.obj("id" -> formattedId, "description" -> description, "label" -> name)
-    }
-    Json.toJson(arr)
+      val id = url.split("/v0/data/").last
+      PreviewInstance(id,name, Some(description))
+    }.toList
   }
 
-  def toReconcileFormat(jsValue: JsValue, privateSpace: String): JsObject = {
-    Json.obj("src" -> privateSpace, "content" -> jsValue.as[JsObject].-("@context"))
-  }
-
-  //TODO make it dynamic :D
-  def getPriority(id: String): Int = {
-    if (id contains "manual/poc") {
-      3
-    } else {
-      1
-    }
-  }
-
-  def getCurrentInstanceDisplayed(currentReconciledInstances: Seq[NexusInstance], originalInstance: NexusInstance): NexusInstance = {
-    if (currentReconciledInstances.nonEmpty) {
-      val sorted = currentReconciledInstances.sortWith { (left, right) =>
-        (left.content \ ReconciledInstance.Fields.updateTimeStamp).as[Long] >
-          (right.content \ ReconciledInstance.Fields.updateTimeStamp).as[Long]
-      }
-      sorted.head
-    } else{
-      originalInstance
-    }
-  }
-
-  def addDefaultFields(instance: NexusInstance,originalPath: NexusPath, formRegistry:JsObject): NexusInstance = {
-    val fields = (formRegistry \ originalPath.org \ originalPath.domain \ originalPath.schema \ originalPath.version \ "fields").as[JsObject].value
+  def addDefaultFields(instance: NexusInstance,formRegistry:FormRegistry): NexusInstance = {
+    val fields = (formRegistry.registry \ instance.nexusPath.org \ instance.nexusPath.domain \ instance.nexusPath.schema \instance.nexusPath.version \ "fields")
+      .as[JsObject].value
     val m = fields.map { case (k, v) =>
       val fieldValue =  instance.getField(k)
       if(fieldValue.isEmpty){
@@ -272,6 +144,32 @@ object InstanceHelper {
     }
     val r = Json.toJson(m).as[JsObject].deepMerge(instance.content)
     instance.copy(content = Json.toJson(r).as[JsObject])
+  }
+
+  def removeEmptyFieldsNotInOriginal(originalInstance: NexusInstance, updates: EditorInstance): EditorInstance = {
+    val contentUpdate = updates.contentToMap().filter {
+      case (k, v) =>
+        if (((v.asOpt[JsArray].isDefined && v.as[List[JsValue]].isEmpty) ||
+          v == JsNull) &&
+          (originalInstance.content \ k).isEmpty) {
+          false
+        } else if (v.asOpt[JsArray].isDefined && v.as[List[JsValue]].size == 1 &&
+          (originalInstance.content \ k).asOpt[JsValue].isDefined &&
+          v.as[List[JsValue]].head == (originalInstance.content \ k).as[JsValue]
+        ) {
+          false
+        } else {
+          true
+        }
+    }
+    updates.copy(nexusInstance = updates.nexusInstance.copy(content = Json.toJson(contentUpdate).as[JsObject]))
+  }
+
+  def removeInternalFields(instance: NexusInstance): NexusInstance = {
+    instance.copy(content = FormService.removeKey(instance.content).as[JsObject] -
+      s"${EditorConstants.BASENAMESPACE}${EditorConstants.RELATIVEURL}" -
+      s"${EditorConstants.INFERENCESPACE}${EditorConstants.ALTERNATIVES}"
+    )
   }
 
 }

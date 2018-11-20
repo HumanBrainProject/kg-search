@@ -13,9 +13,9 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package data_import.helpers.excel_import
+package helpers.excel
 
-import models.excel_import.{Entity, GraphNode}
+import models.excel.{Entity, GraphNode}
 import play.api.Logger
 import scala.collection.immutable.HashSet
 
