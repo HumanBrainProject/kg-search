@@ -44,12 +44,9 @@ class FormService @Inject()(
       ws.url(s"${config.kgQueryEndpoint}/arango/document/editor_specifications").get(),
       timeout
     )
-    FormRegistry(
-      spec.json.as[List[JsObject]].foldLeft(Json.obj()) {
-        case (acc, el) => acc ++ (el \ "uiSpec").as[JsObject]
-      }
-    )
+    FormService.getRegistry(spec.json.as[List[JsObject]])
   }
+
 }
 object FormService{
 
@@ -96,24 +93,16 @@ object FormService{
   }
 
   def buildEditableEntityTypesFromRegistry(registry: FormRegistry): List[BookmarkList] = {
-    registry.registry.value.flatMap{
-      case (organization, organizationDetails) =>
-        organizationDetails.as[JsObject].value.flatMap{
-          case (domain, domainDetails) =>
-            domainDetails.as[JsObject].value.flatMap{
-              case (schema, schemaDetails) =>
-                schemaDetails.as[JsObject].value.map{
-                  case (version, formDetails) =>
-                    BookmarkList(
-                      s"$organization/$domain/$schema/$version",
-                      (formDetails.as[JsObject] \ "label").as[String],
-                      Some((formDetails.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true)),
-                      (formDetails.as[JsObject] \ "ui_info").asOpt[JsObject],
-                      (formDetails.as[JsObject] \ "color").asOpt[String]
-                    )
-                }
-            }
-        }
+    registry.registry.map{
+      case (path, formDetails) =>
+        BookmarkList(
+          path.toString(),
+          formDetails.label,
+          Some(formDetails.isEditable.getOrElse(true)),
+          formDetails.uiInfo,
+          formDetails.color
+        )
+
     }.toSeq.sortWith{case (jsO1, jsO2) => jsO1.name < jsO2.name}.toList
   }
 
@@ -145,17 +134,17 @@ object FormService{
       }
     }
 
-    val fields = (registry.registry \ instancePath.org \ instancePath.domain \ instancePath.schema \ instancePath.version \ "fields").as[JsObject].value
+    val fields = registry.registry(instancePath).fields
     val m = newInstance.value.map{ case (key, v) =>
-      val formObjectType = (fields(key) \ "type").as[String]
+      val formObjectType = fields(key).fieldType
       formObjectType match {
-        case "DropdownSelect" =>
+        case DropdownSelect =>
           val arr: IndexedSeq[JsValue] = v.as[JsArray].value.map{ item =>
             addNexusEndpointToLinks(item)
           }
           key -> Json.toJson(arr)
         case _ =>
-          if( (fields(key) \ "isLink").asOpt[Boolean].getOrElse(false)){
+          if( fields(key).isLink.getOrElse(false)){
             key -> addNexusEndpointToLinks(v)
           } else{
             key -> v
@@ -167,7 +156,7 @@ object FormService{
 
   def getFormStructure(entityType: NexusPath, data: JsValue, formRegistry: FormRegistry): JsValue = {
     // retrieve form template
-    val formTemplateOpt = (formRegistry.registry \ entityType.org \ entityType.domain \ entityType.schema \ entityType.version).asOpt[JsObject]
+    val formTemplateOpt = formRegistry.registry.get(entityType)
 
     formTemplateOpt match {
       case Some(formTemplate) =>
@@ -182,26 +171,25 @@ object FormService{
               "nexus_id" -> JsString(nexusId))
           )
 
-          val fields = (formTemplate \ "fields").as[JsObject].fields.foldLeft(idFields) {
-            case (filledTemplate, (key, fieldContent)) =>
-              if (data.as[JsObject].keys.contains(key)) {
-                val newValue = (fieldContent \ "type").asOpt[String].getOrElse("") match {
-                  case "DropdownSelect" =>
-                    fieldContent.as[JsObject] + ("value", FormService.transformToArray(key, data))
+          val fields = formTemplate.fields.foldLeft(idFields) {
+            case (filledTemplate, (id, fieldContent)) =>
+              if (data.as[JsObject].keys.contains(id)) {
+                val newValue = fieldContent.fieldType match {
+                  case DropdownSelect =>
+                    fieldContent.copy(value = Some(FormService.transformToArray(id, data)))
                   case _ =>
-                    fieldContent.as[JsObject] + ("value", (data \ key).get)
+                    fieldContent.copy(value = (data \ id).asOpt[JsValue])
                 }
-
-                filledTemplate + (key, newValue)
+                filledTemplate ++ Json.toJson(newValue).as[JsObject]
               } else {
-                filledTemplate + (key, fieldContent.as[JsObject] )
+                filledTemplate ++ Json.toJson(fieldContent).as[JsObject]
               }
           }
           fillFormTemplate(fields, formTemplate, (data \ EditorInstance.Fields.alternatives).asOpt[JsObject].getOrElse(Json.obj()) )
 
         }else {
           //Returning a blank template
-          val escapedForm = ( formTemplate \ "fields" ).as[JsObject].value.map{
+          val escapedForm = formTemplate.fields.map{
             case (key, value) =>
               (key , value)
           }
@@ -213,11 +201,11 @@ object FormService{
   }
 
 
-  def fillFormTemplate(fields: JsValue, formTemplate:JsValue, alternatives: JsObject = Json.obj()): JsValue ={
+  def fillFormTemplate(fields: JsValue, formTemplate:UISpec, alternatives: JsObject = Json.obj()): JsValue ={
     Json.obj("fields" -> fields) +
-      ("label", (formTemplate \ "label").get) +
-      ("editable", JsBoolean((formTemplate.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true))) +
-      ("ui_info", (formTemplate \ "ui_info").getOrElse(JsObject.empty)) +
+      ("label", JsString(formTemplate.label)) +
+      ("editable", JsBoolean(formTemplate.isEditable.getOrElse(true))) +
+      ("ui_info", formTemplate.uiInfo.map(Json.toJson(_)).getOrElse(Json.obj())) +
       ("alternatives", alternatives )
   }
 
@@ -226,7 +214,36 @@ object FormService{
     buildEditableEntityTypesFromRegistry(registry)
   }
 
+  def getRegistry(js: List[JsObject]): FormRegistry = {
+    FormRegistry(
+      js.foldLeft(Map[NexusPath, UISpec]()) {
+        case (acc, el) =>
+            val listOfMap = (el \ "uiSpec").as[JsObject].value.flatMap {
+              case (org, json) =>
+                json.as[JsObject].value.flatMap{
+                  case (domain, d) =>
+                    d.as[JsObject].value.flatMap{
+                      case (schema, s) =>
+                        s.as[JsObject].value.map{
+                          case (version, v) =>
+                            NexusPath(org, domain, schema, version) -> v.as[UISpec]
+                        }
+                    }
+                }
+            }
+          acc ++ listOfMap
+      }
+    )
+  }
 
-
+  private def mergeKeys(key:String, js:JsObject, level: Int): (String, JsValue) ={
+    if(level < 3){
+      val newJs = js.values.foldLeft(Json.obj())( (obj, a) => obj.deepMerge(a.as[JsObject]))
+      val newKey = s"$key/${js.keys.head}"
+      mergeKeys(newKey, newJs, level + 1)
+    }else{
+      (key, js)
+    }
+  }
 
 }

@@ -14,17 +14,36 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
+
 package models
 
-case class FormRegistry(registry: Map[NexusPath, UISpec])
 
-trait FormRegistryService {
 
-  def filterOrgs(formRegistry: FormRegistry, orgs: Seq[String]): FormRegistry = {
-    formRegistry.copy(
-        registry = formRegistry.registry.filter{
-          case (path, _) => orgs.contains(path.org)
-      }
-    )
+trait FieldType {
+ val t: String
+}
+
+object FieldType {
+
+  def unapply(f: FieldType): Option[String] = Some(f.t)
+
+  def apply(s: String): FieldType = s match {
+    case "DropdownSelect" => DropdownSelect
+    case "InputText" => InputText
+    case "TextArea" => TextArea
   }
+
+}
+
+
+case object DropdownSelect extends FieldType {
+  override val t: String = "DropdownSelect"
+}
+
+case object InputText extends FieldType {
+  override val t: String = "InputText"
+}
+
+case object TextArea extends FieldType {
+  override val t: String = "TextArea"
 }

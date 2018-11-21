@@ -13,34 +13,28 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package models.editorUserList
 
-import constants.EditorConstants
-import models.UIInfo
-import play.api.libs.json.JsObject
-import services.bookmark.EditorBookmarkService
+package models
 
+case class UISpec(label:String, fields:Map[String, EditorFieldSpecification],uiInfo: Option[UIInfo] = None, isEditable: Option[Boolean] = None,  color:Option[String] = None)
 
-case class BookmarkList(id: String, name: String, editable: Option[Boolean], UIInfo: Option[UIInfo], color:Option[String])
-
-object BookmarkList {
-
+object UISpec {
   import play.api.libs.json._
   import play.api.libs.functional.syntax._
 
-  implicit val userListReads: Reads[BookmarkList] = (
-    (JsPath \ "id").read[String].map(id => s"${EditorConstants.bookmarkListPath.toString()}/${id.split("/").last}") and
-      (JsPath \ "name").read[String] and
+  implicit val UISpecReads: Reads[UISpec] = (
+    (JsPath \ "label").read[String] and
+      (JsPath \ "fields").read[Map[String, EditorFieldSpecification]] and
+      (JsPath \ "ui_info").readNullable[UIInfo] and
       (JsPath \ "editable").readNullable[Boolean] and
-      (JsPath \ "uiSpec").readNullable[UIInfo] and
       (JsPath \ "color").readNullable[String]
-    )(BookmarkList.apply _ )
+    )(UISpec.apply _ )
 
-  implicit val userListWrites: Writes[BookmarkList] = (
-    (JsPath \ "id").write[String] and
-      (JsPath \ "name").write[String] and
+  implicit val UISpecWrites: Writes[UISpec] = (
+    (JsPath \ "label").write[String] and
+      (JsPath \ "fields").write[Map[String, EditorFieldSpecification]] and
+      (JsPath \ "ui_info").writeNullable[UIInfo] and
       (JsPath \ "editable").writeNullable[Boolean] and
-      (JsPath \ "uiSpec").writeNullable[UIInfo] and
       (JsPath \ "color").writeNullable[String]
-    )(unlift(BookmarkList.unapply))
+    )(unlift(UISpec.unapply))
 }

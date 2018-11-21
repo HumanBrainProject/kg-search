@@ -126,14 +126,11 @@ object InstanceHelper {
   }
 
   def addDefaultFields(instance: NexusInstance,formRegistry:FormRegistry): NexusInstance = {
-    val fields = (formRegistry.registry \ instance.nexusPath.org \ instance.nexusPath.domain \ instance.nexusPath.schema \instance.nexusPath.version \ "fields")
-      .as[JsObject].value
-    val m = fields.map { case (k, v) =>
+    val m = formRegistry.registry(instance.nexusPath).fields.map { case (k, v) =>
       val fieldValue =  instance.getField(k)
       if(fieldValue.isEmpty){
-        val formObjectType = (v \ "type").as[String]
-        formObjectType match {
-          case "DropdownSelect" =>
+        v.fieldType match {
+          case DropdownSelect =>
             k -> JsArray()
           case _ =>
             k -> JsNull
