@@ -16,9 +16,15 @@
 
 package models
 
-case class UISpec(label:String, fields:Map[String, EditorFieldSpecification],uiInfo: Option[UIInfo] = None, isEditable: Option[Boolean] = None,  color:Option[String] = None)
+case class UISpec(label: String,
+                  fields: Map[String, EditorFieldSpecification],
+                  uiInfo: Option[UIInfo] = None,
+                  isEditable: Option[Boolean] = None,
+                  color: Option[String] = None
+                 )
 
 object UISpec {
+
   import play.api.libs.json._
   import play.api.libs.functional.syntax._
 
@@ -28,7 +34,7 @@ object UISpec {
       (JsPath \ "ui_info").readNullable[UIInfo] and
       (JsPath \ "editable").readNullable[Boolean] and
       (JsPath \ "color").readNullable[String]
-    )(UISpec.apply _ )
+    ) (UISpec.apply _)
 
   implicit val UISpecWrites: Writes[UISpec] = (
     (JsPath \ "label").write[String] and
@@ -36,5 +42,5 @@ object UISpec {
       (JsPath \ "ui_info").writeNullable[UIInfo] and
       (JsPath \ "editable").writeNullable[Boolean] and
       (JsPath \ "color").writeNullable[String]
-    )(unlift(UISpec.unapply))
+    ) (unlift(UISpec.unapply))
 }

@@ -17,6 +17,7 @@
 
 package models
 
+import play.api.libs.json.{JsValue, Json, Writes}
 
 
 trait FieldType {
@@ -33,6 +34,9 @@ object FieldType {
     case "TextArea" => TextArea
   }
 
+  implicit object FieldType extends Writes[FieldType] {
+    def writes(f: FieldType): JsValue = Json.toJson(f.t)
+  }
 }
 
 

@@ -180,9 +180,9 @@ object FormService{
                   case _ =>
                     fieldContent.copy(value = (data \ id).asOpt[JsValue])
                 }
-                filledTemplate ++ Json.toJson(newValue).as[JsObject]
+                filledTemplate ++ Json.obj(id -> newValue)
               } else {
-                filledTemplate ++ Json.toJson(fieldContent).as[JsObject]
+                filledTemplate ++ Json.obj(id -> fieldContent)
               }
           }
           fillFormTemplate(fields, formTemplate, (data \ EditorInstance.Fields.alternatives).asOpt[JsObject].getOrElse(Json.obj()) )
@@ -235,15 +235,4 @@ object FormService{
       }
     )
   }
-
-  private def mergeKeys(key:String, js:JsObject, level: Int): (String, JsValue) ={
-    if(level < 3){
-      val newJs = js.values.foldLeft(Json.obj())( (obj, a) => obj.deepMerge(a.as[JsObject]))
-      val newKey = s"$key/${js.keys.head}"
-      mergeKeys(newKey, newJs, level + 1)
-    }else{
-      (key, js)
-    }
-  }
-
 }

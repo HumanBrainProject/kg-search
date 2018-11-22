@@ -65,7 +65,7 @@ class ArangoQueryService @Inject()(
               val result = EditorResponseWithCount(
                 Json.toJson(InstanceHelper.formatInstanceList( data, config.reconciledPrefix)),
                 dataType,
-                formService.formRegistry.registry(nexusPath).label,
+                formService.formRegistry.registry.get(nexusPath).map(_.label).getOrElse(nexusPath.toString()),
                 total
               )
               Right(

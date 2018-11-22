@@ -37,40 +37,33 @@ case class EditorFieldSpecification(
 object EditorFieldSpecification {
 
   import play.api.libs.json._
+  import play.api.libs.functional.syntax._
 
-  implicit val editorFormInstanceWrites : Writes[EditorFieldSpecification] = new Writes[EditorFieldSpecification] {
-    def writes(x: EditorFieldSpecification) = {
-      Json.obj(
-        "type" -> x.fieldType.t,
-        "closeDropdownAfterInteraction" -> x.closeDropdownAfterInteraction,
-        "label" -> x.label,
-        "instancesPath" -> x.instancesPath,
-        "mappingValue" -> x.mappingValue,
-        "mappingLabel" -> x.mappingLabel,
-        "isLink" -> x.isLink,
-        "allowCustomValues" -> x.allowCustomValues,
-        "isReverse" -> x.isReverse,
-        "reverseTargetField" -> x.reverseTargetField,
-        "value" -> x.value
-      )
-    }
-  }
+  implicit val EditorFieldSpecificationWrites: Writes[EditorFieldSpecification] = (
+    (JsPath \ "label").write[String] and
+      (JsPath \ "instancesPath").writeNullable[String] and
+      (JsPath \ "type").write[FieldType] and
+      (JsPath \ "closeDropdownAfterInteraction").writeNullable[Boolean] and
+      (JsPath \ "mappingValue").writeNullable[String] and
+      (JsPath \ "mappingLabel").writeNullable[String] and
+      (JsPath \ "isLink").writeNullable[Boolean] and
+      (JsPath \ "allowCustomValues").writeNullable[Boolean] and
+      (JsPath \ "isReverse").writeNullable[Boolean] and
+      (JsPath \ "reverseTargetField").writeNullable[String] and
+      (JsPath \ "value").writeNullable[JsValue]
+    )(unlift(EditorFieldSpecification.unapply))
 
-  implicit val editorFormInstanceReads : Reads[EditorFieldSpecification] = new Reads[EditorFieldSpecification] {
-    def reads(value: JsValue) = {
-      val label = (value \ "label").as[String]
-      val closeDropdownAfterInteraction = (value \ "closeDropdownAfterInteraction").asOpt[Boolean]
-      val fieldType = FieldType((value \ "type").as[String])
-      val instancesPath = (value \ "instancesPath").asOpt[String]
-      val mappingValue = (value \ "mappingValue").asOpt[String]
-      val mappingLabel = (value \ "mappingLabel").asOpt[String]
-      val isLink = (value \ "isLink").asOpt[Boolean]
-      val allowCustomValues = (value \ "allowCustomValues").asOpt[Boolean]
-      val isReverse = (value \ "isReverse").asOpt[Boolean]
-      val reverseTargetField = (value \ "reverseTargetField").asOpt[String]
-      val entityValue = (value \ "value").asOpt[JsValue]
-      JsSuccess(EditorFieldSpecification(label, instancesPath, fieldType, closeDropdownAfterInteraction, mappingValue,
-        mappingLabel, isLink, allowCustomValues, isReverse, reverseTargetField, entityValue ))
-    }
-  }
+  implicit val EditorFieldSpecificationReads: Reads[EditorFieldSpecification] = (
+     (JsPath \ "label").read[String] and
+       (JsPath \ "instancesPath").readNullable[String] and
+       (JsPath \ "type").read[String].map(FieldType(_)) and
+       (JsPath \ "closeDropdownAfterInteraction").readNullable[Boolean] and
+      (JsPath \ "mappingValue").readNullable[String] and
+      (JsPath \ "mappingLabel").readNullable[String] and
+      (JsPath \ "isLink").readNullable[Boolean] and
+      (JsPath \ "allowCustomValues").readNullable[Boolean] and
+      (JsPath \ "isReverse").readNullable[Boolean] and
+      (JsPath \ "reverseTargetField").readNullable[String] and
+      (JsPath \ "value").readNullable[JsValue]
+  )(EditorFieldSpecification.apply _)
 }
