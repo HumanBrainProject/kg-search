@@ -68,8 +68,8 @@ class NexusEditorController @Inject()(
     val token = request.headers.get("Authorization").getOrElse("")
     val nexusInstanceReference = NexusInstanceReference(org, domain, schema, version, id)
     editorService.retrieveInstance(nexusInstanceReference, token).map {
-      case Left(res) =>  logger.error(s"Error: Could not fetch instance : ${nexusInstanceReference.nexusPath.toString()}/$id - ${res.body}")
-        EditorResponseHelper.errorResult(res.status, res.headers, res.body)
+      case Left(error) =>  logger.error(s"Error: Could not fetch instance : ${nexusInstanceReference.nexusPath.toString()}/$id - ${error.content}")
+        error.toResult
       case Right(instance) =>
         FormService.getFormStructure(nexusInstanceReference.nexusPath, instance.content, formService.formRegistry) match {
         case JsNull =>
@@ -85,9 +85,9 @@ class NexusEditorController @Inject()(
     val token = request.headers.get("Authorization").getOrElse("")
     val nexusInstanceRef = NexusInstanceReference(org, domain, datatype, version, id)
     editorService.retrieveInstance(nexusInstanceRef, token).flatMap[Result] {
-      case Left(res) =>
+      case Left(error) =>
         Future.successful(
-          EditorResponseHelper.forwardResultResponse(res)
+          error.toResult
         )
       case Right(originalInstance) =>
         val nbRevision = (originalInstance.content \ "nxv:rev").as[JsNumber]
@@ -160,8 +160,7 @@ class NexusEditorController @Inject()(
       editorService.generateDiffAndUpdateInstance(instanceRef, request.body.asJson.get, token, request.user, formService.formRegistry).map {
         case Right(()) =>
           Ok(Json.toJson(EditorResponseObject.empty))
-        case Left(res) => EditorResponseHelper
-          .errorResult(res.status, res.headers, res.body)
+        case Left(error) => error.toResult
       }
     }
 

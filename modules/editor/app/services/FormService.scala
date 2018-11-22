@@ -18,10 +18,10 @@
 package services
 
 import com.google.inject.{Inject, Singleton}
-import constants.{EditorConstants, InternalSchemaFieldsConstants}
+import constants.{EditorConstants, InternalSchemaFieldsConstants, NexusConstants}
 import models.editorUserList.BookmarkList
 import models._
-import models.instance.{EditorInstance, NexusInstance}
+import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
 import models.user.NexusUser
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
@@ -234,5 +234,34 @@ object FormService{
           acc ++ listOfMap
       }
     )
+  }
+
+  def getReverseLinks(instance: EditorInstance, formRegistry: FormRegistry, baseUrl: String): (EditorInstance, List[EditorInstance]) = {
+    val fields = formRegistry.registry(instance.nexusInstance.nexusPath).fields
+    val newContent = instance.copy(nexusInstance =
+      instance.nexusInstance.copy(content =  Json.toJson(instance.contentToMap().filterNot(k => fields(k._1).isReverse.getOrElse(false))).as[JsObject])
+    )
+
+    val instances = for {
+      fieldMap <- instance.contentToMap() if fields(fieldMap._1).isReverse.getOrElse(false)
+      path <- fields(fieldMap._1).instancesPath
+      fieldName <- fields(fieldMap._1).reverseTargetField
+      fullIds = fieldMap._2.as[JsArray].value.map(js => NexusInstanceReference.fromUrl((js \ "@id").as[String]))
+    } yield {
+      fullIds.map{
+        id =>
+          EditorInstance(
+            NexusInstance(
+              Some(id.id),
+              NexusPath(path),
+              Json.obj(
+                fieldName -> Json.obj( "@id" -> JsString(s"$baseUrl/${NexusConstants.dataPath}${instance.nexusInstance.id().get}"))
+              )
+            )
+          )
+      }
+
+    }
+    (newContent, instances.toList.flatten)
   }
 }

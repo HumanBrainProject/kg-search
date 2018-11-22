@@ -313,7 +313,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
                 } yield added ::: deleted
                 results.map{
                   l => l.map{
-                    case Left(error) => logger.error(s"Error while updating bookmarks - ${error.msg}")
+                    case Left(error) => logger.error(s"Error while updating bookmarks - ${error.content}")
                       Left(error)
                     case Right(()) => Right(())
 

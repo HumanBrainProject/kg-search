@@ -19,11 +19,13 @@ package services
 
 import com.google.inject.Inject
 import helpers._
+import models.errors.{APIEditorError, APIEditorMultiError}
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
 import models.user.User
 import models.{FormRegistry, NexusPath}
 import play.api.Logger
 import play.api.libs.json.JsValue
+import play.api.http.Status.INTERNAL_SERVER_ERROR
 import play.api.libs.ws.{WSClient, WSResponse}
 import services.instance.InstanceApiService
 
@@ -62,8 +64,11 @@ class EditorService @Inject()(
                       nexusInstanceReference: NexusInstanceReference,
                       token: String,
                       userId: String
-                    ): Future[Either[WSResponse, Unit]] = {
-    instanceApiService.put(wSClient, config.kgQueryEndpoint, nexusInstanceReference, diffInstance, token, userId)
+                    ): Future[Either[APIEditorError, Unit]] = {
+    instanceApiService.put(wSClient, config.kgQueryEndpoint, nexusInstanceReference, diffInstance, token, userId).map{
+      case Left(res) => Left(APIEditorError(res.status, res.body))
+      case Right(()) => Right(())
+    }
   }
 
   /**
@@ -75,8 +80,11 @@ class EditorService @Inject()(
     * @param token                  The user access token
     * @return An error response or an the instance
     */
-  def retrieveInstance(nexusInstanceReference: NexusInstanceReference, token: String): Future[Either[WSResponse, NexusInstance]] = {
-    instanceApiService.get(wSClient, config.kgQueryEndpoint, nexusInstanceReference, token)
+  def retrieveInstance(nexusInstanceReference: NexusInstanceReference, token: String): Future[Either[APIEditorError, NexusInstance]] = {
+    instanceApiService.get(wSClient, config.kgQueryEndpoint, nexusInstanceReference, token).map{
+      case Left(res) => Left(APIEditorError(res.status, res.body))
+      case Right(instance) => Right(instance)
+    }
   }
 
   def generateDiffAndUpdateInstance(
@@ -85,16 +93,36 @@ class EditorService @Inject()(
                                      token:String,
                                      user: User,
                                      formRegistry: FormRegistry
-                                   ): Future[Either[WSResponse, Unit]] = {
+                                   ): Future[Either[APIEditorMultiError, Unit]] = {
     retrieveInstance(instanceRef, token).flatMap {
-      case Left(res) =>
-        Future(Left(res))
+      case Left(error) =>
+        Future(Left(APIEditorMultiError(error.status, List(error))))
       case Right(currentInstanceDisplayed) =>
         val cleanedOriginalInstance = InstanceHelper.removeInternalFields(currentInstanceDisplayed)
         val instanceUpdateFromUser = FormService.buildInstanceFromForm(cleanedOriginalInstance, updateFromUser, config.nexusEndpoint)
         val removedEmptyFields = InstanceHelper.buildDiffEntity(cleanedOriginalInstance, instanceUpdateFromUser)
         val updateToBeStored = InstanceHelper.removeEmptyFieldsNotInOriginal(cleanedOriginalInstance, removedEmptyFields)
-        updateInstance(updateToBeStored, instanceRef, token, user.id)
+        val (instanceWithoutReverseLinks, reverseEntity) = FormService.getReverseLinks(updateToBeStored, formRegistry, config.nexusEndpoint)
+        val reverseResponses:List[Future[Either[APIEditorError, Unit]]] =
+          reverseEntity.map{ entity =>  updateInstance(entity, NexusInstanceReference.fromUrl(entity.nexusInstance.id().get), token, user.id)}
+
+        Future.sequence(reverseResponses).flatMap{
+          results =>
+            if(results.forall(_.isRight)){
+              if(instanceWithoutReverseLinks.nexusInstance.content.keys.isEmpty){
+                Future(Right(()))
+              }else{
+                updateInstance(instanceWithoutReverseLinks, instanceRef, token, user.id).map{
+                  case Left(e) => Left(APIEditorMultiError(e.status, List(e)))
+                  case Right(()) => Right(())
+                }
+              }
+            }else{
+              val errors = results.filter(_.isLeft).map(_.swap.toOption.get)
+              Future(Left(APIEditorMultiError(INTERNAL_SERVER_ERROR, errors)))
+            }
+        }
+
     }
   }
 }

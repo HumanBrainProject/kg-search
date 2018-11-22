@@ -30,27 +30,18 @@ case class NexusInstance(nexusUUID: Option[String], nexusPath: NexusPath, conten
 
   def getField(fieldName: String): Option[JsValue] = content.value.get(fieldName)
 
-  def modificationOfLinks(nexusEndpoint: String, reconciledPrefix: String): NexusInstance = {
-    val id = (this.content \ "@id").as[String]
-    val correctedId = s"$nexusEndpoint/v0/data/${NexusInstance.getIdForEditor(id, reconciledPrefix)}"
-    val jsonTransformer = (__ ).json.update(
-      __.read[JsObject].map{ o => o ++ Json.obj("@id" -> correctedId)}
-    )
-    NexusInstance(this.nexusUUID, this.nexusPath, this.content.transform(jsonTransformer).get)
-  }
-
-
-  def getRevision(): Long ={
-    this.getField(NexusInstance.Fields.nexusRev).getOrElse(JsNumber(1)).as[Long]
-  }
+//  def modificationOfLinks(nexusEndpoint: String, reconciledPrefix: String): NexusInstance = {
+//    val id = (this.content \ "@id").as[String]
+//    val correctedId = s"$nexusEndpoint/v0/data/${NexusInstance.getIdForEditor(id, reconciledPrefix)}"
+//    val jsonTransformer = (__ ).json.update(
+//      __.read[JsObject].map{ o => o ++ Json.obj("@id" -> correctedId)}
+//    )
+//    NexusInstance(this.nexusUUID, this.nexusPath, this.content.transform(jsonTransformer).get)
+//  }
 
 }
 
 object NexusInstance {
-//  def apply(jsValue: JsValue): NexusInstance = {
-//    val (id, path) = extractIdAndPath(jsValue)
-//    new NexusInstance(id, path , jsValue.as[JsObject])
-//  }
 
   def extractIdAndPath(jsValue: JsValue): NexusInstanceReference = {
     val nexusUrl = (jsValue \ "@id").as[String]
@@ -58,16 +49,15 @@ object NexusInstance {
   }
 
 
-
-  def getIdForEditor(url: String, reconciledPrefix: String): String = {
-    assert(url contains "v0/data/")
-    val pathString = url.split("v0/data/").tail.head
-    val id = pathString.split("/").last
-    NexusPath(pathString)
-      .originalPath(reconciledPrefix)
-      .toString() + "/" + id
-  }
-  // extract id, rev and userId of updator for this update
+//
+//  def getIdForEditor(url: String, reconciledPrefix: String): String = {
+//    assert(url contains "v0/data/")
+//    val pathString = url.split("v0/data/").tail.head
+//    val id = pathString.split("/").last
+//    NexusPath(pathString)
+//      .originalPath(reconciledPrefix)
+//      .toString() + "/" + id
+//  }
 
   object Fields{
     val nexusId = "@id"

@@ -15,20 +15,43 @@
 */
 package models.errors
 
-case class APIEditorError(override val status:Int,override val msg: String) extends PlayError
+import play.api.libs.json.{JsValue, Json}
+
+trait APIEditorErrorInterface[T] extends PlayError[T] {
+  override val status: Int
+  override val content: T
+}
+
+case class APIEditorError(override val status: Int, override val content: String) extends APIEditorErrorInterface[String] {
+
+  override def toJson: JsValue = Json.obj(
+    "error" -> Json.obj(
+      "status" -> status,
+      "message" -> content
+    )
+  )
+}
 
 object APIEditorError {
+
   import play.api.libs.json._
 
 
   implicit val userListWrites = new Writes[APIEditorError] {
-    def writes(error: APIEditorError): JsValue ={
+    def writes(error: APIEditorError): JsValue = {
       Json.obj(
         "error" -> Json.obj(
           "status" -> error.status,
-          "message" -> error.msg
+          "message" -> error.content
         )
       )
     }
   }
+}
+
+case class APIEditorMultiError(override val status: Int, override val content: List[APIEditorError]) extends APIEditorErrorInterface[List[_]] {
+
+  override def toJson: JsValue = Json.obj(
+    "error" -> Json.toJson(content.map(m => Json.obj("status" -> m.status, "message" -> m.content)))
+  )
 }

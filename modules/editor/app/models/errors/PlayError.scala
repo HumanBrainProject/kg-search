@@ -18,18 +18,21 @@ package models.errors
 import akka.util.ByteString
 import helpers.ResponseHelper
 import play.api.http.HttpEntity
+import play.api.libs.json.JsValue
 import play.api.libs.ws.WSRequest
 import play.api.mvc.{ResponseHeader, Result}
 
-trait PlayError {
+trait PlayError[T] {
 
   val status: Int
-  val msg: String
+  val content: T
+
+  def toJson: JsValue
 
   def toResult: Result = {
     Result(
       ResponseHeader(this.status),
-      HttpEntity.Strict(ByteString(msg), None)
+      HttpEntity.Strict(ByteString(toJson.toString()), None)
     )
   }
 

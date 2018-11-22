@@ -65,7 +65,7 @@ object EditorUserAction{
       def refine[A](input: UserRequest[A]): Future[Either[Result, EditorUserRequest[A]]] = {
         editorUserService.getUser(input.user).map{
           case Right(editorUser) => Right(user.EditorUserRequest(editorUser, input))
-          case Left(err) => logger.error(s"Fetching editor user failed - ${err.msg}")
+          case Left(err) => logger.error(s"Fetching editor user failed - ${err.content}")
             Left(NotFound("An error occurred while fetching user information"))
         }
       }

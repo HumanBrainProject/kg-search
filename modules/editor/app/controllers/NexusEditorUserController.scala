@@ -180,7 +180,7 @@ class NexusEditorUserController @Inject()(
       for{
         token <- oIDCAuthService.getTechAccessToken()
         result <- editorUserListService.deleteBookmarkList(bookmarkRef, token).map {
-          case Left(error) => InternalServerError(Json.toJson(error))
+          case Left(error) => InternalServerError(error.toJson)
           case Right(()) => NoContent
         }
       } yield result
@@ -224,7 +224,7 @@ class NexusEditorUserController @Inject()(
         case Some(l) =>
           editorUserListService.retrieveBookmarkList(l, request.editorUser).map{
             res =>
-              val json = res.map(el => Json.obj("id" -> el._1.toString, "bookmarkLists" -> el._2))
+              val json = res.map(el => Json.obj("id" -> el._1.toString, "bookmarkLists" -> Json.toJson(el._2)))
               Ok(Json.toJson(EditorResponseObject(Json.toJson(json))))
           }
         case None => Future(BadRequest("Missing body content"))

@@ -20,6 +20,7 @@ package services
 import helpers.ConfigMock
 import mockws.MockWSHelpers
 import models._
+import models.instance.{EditorInstance, NexusInstance}
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -236,6 +237,64 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
 
       res.registry(NexusPath("minds", "core", "dataset", "v1.0.0")) mustBe expected.registry(NexusPath("minds", "core", "dataset", "v1.0.0"))
       res.registry(NexusPath("minds", "experiment", "protocol", "v1.0.0")) mustBe expected.registry(NexusPath("minds", "experiment", "protocol", "v1.0.0"))
+
+    }
+  }
+  "getReverseLinks" should {
+    "return an editor instance with a link to the main instance" in {
+      val path = NexusPath("org", "domain", "schema", "version")
+      val instanceId = "123"
+      val doiPath = NexusPath("datacite/core/doi/v0.0.4")
+      val targetField = "https://schema.hbp.eu/reference"
+      val baseUrl = "http://nexus-dev.hbp.com"
+      val formRegistry = FormRegistry(
+        Map(
+          path -> UISpec(
+            "Activity", Map(
+              "http://schema.org/name" -> EditorFieldSpecification(
+                "Name", None, InputText, None, None, None, None, None
+              ),
+              "http://hbp.eu/minds#doi" -> EditorFieldSpecification(
+                "Methods", Some("datacite/core/doi/v0.0.4"), DropdownSelect,
+                None, Some("id"), Some("label"), Some(true), Some(true), Some(true), Some(targetField)
+              )
+            ), Some(UIInfo(
+              "http://schema.org/name", List("http://schema.org/name",
+                "http://schema.org/description"), None
+            ))
+          )
+
+        )
+      )
+      val doiId = "456"
+      val instance = EditorInstance(
+        NexusInstance(
+          Some(instanceId),
+          path,
+          Json.obj(
+            "http://schema.org/name" -> "name",
+            "http://hbp.eu/minds#doi"-> Json.obj(
+              "@id" -> s"$baseUrl/v0/data/${doiPath.toString()}/$doiId"
+            )
+          )
+        )
+      )
+
+      val expected = EditorInstance(
+        NexusInstance(
+          Some(doiId),
+          doiPath,
+          Json.obj(
+            targetField-> Json.obj(
+              "@id" -> s"$baseUrl/v0/data/${path.toString()}/$instanceId"
+            )
+          )
+        )
+      )
+
+      val res = FormService.getReverseLinks(instance, formRegistry, baseUrl)
+
+      res mustBe List(expected)
 
     }
   }
