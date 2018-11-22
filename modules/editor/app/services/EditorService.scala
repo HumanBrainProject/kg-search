@@ -44,7 +44,8 @@ class EditorService @Inject()(
                       newInstance: NexusInstance,
                       token: String
                     ): Future[Either[WSResponse, NexusInstanceReference]] = {
-    instanceApiService.post(wSClient, config.kgQueryEndpoint, newInstance, token).map{
+    val modifiedContent = FormService.removeClientKeysCorrectLinks(newInstance.content.as[JsValue], config.nexusEndpoint)
+    instanceApiService.post(wSClient, config.kgQueryEndpoint, newInstance.copy(content = modifiedContent), token).map{
       case Right(ref) => Right(ref)
       case Left(res) => Left(res)
     }

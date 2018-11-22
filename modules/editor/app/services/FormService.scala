@@ -110,10 +110,17 @@ object FormService{
     //    val flattened = JsFlattener(formContent)
     //    applyChanges(original, flattened)
     val formContent = Json.parse(modificationFromUser.toString()).as[JsObject] - "id"
-    val cleanForm = FormService.removeKey(formContent.as[JsValue])
-    val formWithID = cleanForm.toString().replaceAll(""""id":"""", s""""@id":"${nexusEndpoint}/v0/data/""")
-    val res= original.content.deepMerge(Json.parse(formWithID).as[JsObject])
+    val formWithID = removeClientKeysCorrectLinks(formContent, nexusEndpoint)
+//    val cleanForm = FormService.removeKey(formContent.as[JsValue])
+//    val formWithID = cleanForm.toString().replaceAll(""""id":"""", s""""@id":"${nexusEndpoint}/v0/data/""")
+    val res= original.content.deepMerge(formWithID)
     original.copy(content = res)
+  }
+
+  def removeClientKeysCorrectLinks(payload:JsValue, nexusEndpoint:String):JsObject = {
+    val cleanForm = FormService.removeKey(payload)
+    val form = cleanForm.toString().replaceAll(""""id":"""", s""""@id":"${nexusEndpoint}/v0/data/""")
+    Json.parse(form).as[JsObject]
   }
 
   def isInSpec(id:String, registry: FormRegistry):Boolean = {

@@ -80,7 +80,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
     val allEditableEntities = FormService.editableEntities(nexusUser, formRegistry)
       .foldLeft((List[BookmarkList](), List[BookmarkList]())) {
         case (acc, userList) =>
-          if (EditorConstants.commonNodeTypes.contains(userList.id)) {
+          if (EditorConstants.commonNodeTypes.exists(p => userList.id.startsWith(p))) {
             (userList :: acc._1, acc._2)
           } else {
             (acc._1, userList :: acc._2)
