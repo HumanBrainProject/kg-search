@@ -41,7 +41,7 @@ class FormService @Inject()(
 
   def loadFormConfiguration(): FormRegistry = {
     val spec = Await.result(
-      ws.url(s"${config.kgQueryEndpoint}/arango/document/editor_specifications").get(),
+      ws.url(s"${config.kgQueryEndpoint}/arango/internalDocuments/editor_specifications").get(),
       timeout
     )
     FormRegistry(
