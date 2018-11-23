@@ -27,7 +27,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import play.api.http.Status._
 
 trait InstanceApiService {
-    val instanceEndpoint = "/api/instances"
+    val instanceEndpoint = "internal/api/instances"
 
     def get(
            wSClient: WSClient,

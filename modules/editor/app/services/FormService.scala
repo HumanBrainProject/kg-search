@@ -41,7 +41,7 @@ class FormService @Inject()(
 
   def loadFormConfiguration(): FormRegistry = {
     val spec = Await.result(
-      ws.url(s"${config.kgQueryEndpoint}/arango/document/editor_specifications").get(),
+      ws.url(s"${config.kgQueryEndpoint}/arango/internalDocuments/editor_specifications").get(),
       timeout
     )
     FormService.getRegistry(spec.json.as[List[JsObject]])
@@ -243,31 +243,43 @@ object FormService{
     )
   }
 
-  def getReverseLinks(instance: EditorInstance, formRegistry: FormRegistry, baseUrl: String): (EditorInstance, List[EditorInstance]) = {
+  def getReverseLinks(instance: EditorInstance, formRegistry: FormRegistry, originalInstance: NexusInstance, baseUrl: String):
+  (EditorInstance, List[(EditorConstants.Command, EditorInstance, String)]) = {
     val fields = formRegistry.registry(instance.nexusInstance.nexusPath).fields
     val newContent = instance.copy(nexusInstance =
-      instance.nexusInstance.copy(content =  Json.toJson(instance.contentToMap().filterNot(k => fields(k._1).isReverse.getOrElse(false))).as[JsObject])
+      instance.nexusInstance.copy(content = Json.toJson(instance.contentToMap().filterNot(k => fields(k._1).isReverse.getOrElse(false))).as[JsObject])
     )
-
     val instances = for {
       fieldMap <- instance.contentToMap() if fields(fieldMap._1).isReverse.getOrElse(false)
       path <- fields(fieldMap._1).instancesPath
       fieldName <- fields(fieldMap._1).reverseTargetField
       fullIds = fieldMap._2.as[JsArray].value.map(js => NexusInstanceReference.fromUrl((js \ "@id").as[String]))
     } yield {
-      fullIds.map{
-        id =>
-          EditorInstance(
-            NexusInstance(
-              Some(id.id),
-              NexusPath(path),
-              Json.obj(
-                fieldName -> Json.obj( "@id" -> JsString(s"$baseUrl/${NexusConstants.dataPath}${instance.nexusInstance.id().get}"))
+      fullIds.foldLeft(List[(EditorConstants.Command, EditorInstance, String)]()) {
+        case (updatesAndDeletes, ref) =>
+          if (originalInstance.content.value(fieldMap._1).as[JsArray].value.exists(js => (js \ "@id").as[String].contains(ref.id))) {
+            (EditorConstants.DELETE, EditorInstance(
+              NexusInstance(
+                Some(ref.id),
+                NexusPath(path),
+                Json.obj(
+                  fieldName -> Json.obj("@id" -> JsString(s"$baseUrl/${NexusConstants.dataPath}${instance.nexusInstance.id().get}"))
+                )
               )
-            )
-          )
-      }
+            ), fieldMap._1) :: updatesAndDeletes
+          } else {
+            (EditorConstants.UPDATE, EditorInstance(
+              NexusInstance(
+                Some(ref.id),
+                NexusPath(path),
+                Json.obj(
+                  fieldName -> Json.obj("@id" -> JsString(s"$baseUrl/${NexusConstants.dataPath}${instance.nexusInstance.id().get}"))
+                )
+              )
+            ), fieldMap._1 ):: updatesAndDeletes
+          }
 
+      }
     }
     (newContent, instances.toList.flatten)
   }

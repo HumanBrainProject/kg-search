@@ -186,7 +186,7 @@ class NexusEditorController @Inject()(
       case None => Json.obj()
     }
     editorService.insertInstance(NexusInstance(None, instancePath, payload), token).map{
-      case Left(res) => EditorResponseHelper.forwardResultResponse(res)
+      case Left(error) => error.toResult
       case Right(ref) => Created(Json.toJson(EditorResponseObject(Json.toJson(ref))))
     }
   }
