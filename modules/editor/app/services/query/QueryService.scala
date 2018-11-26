@@ -18,7 +18,7 @@ package services.query
 
 import models.NexusPath
 import models.instance.NexusInstanceReference
-import play.api.http.HeaderNames.CONTENT_TYPE
+import play.api.http.HeaderNames._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.ContentTypes._
 
@@ -30,11 +30,12 @@ trait QueryService {
                     wSClient: WSClient,
                     apiEndpoint:String,
                     nexusInstanceReference: NexusInstanceReference,
-                    query: String
+                    query: String,
+                    token: String
                   ): Future[WSResponse] = {
     wSClient
       .url(s"$apiEndpoint/query/${nexusInstanceReference.nexusPath.toString()}/instances/${nexusInstanceReference.id}")
-      .withHttpHeaders(CONTENT_TYPE -> JSON)
+      .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token)
       .post(query)
   }
 
@@ -42,11 +43,12 @@ trait QueryService {
                           wSClient: WSClient,
                           apiEndpoint:String,
                           nexusPath: NexusPath,
-                          query: String
+                          query: String,
+                          token: String
                         ): Future[WSResponse] = {
     wSClient
       .url(s"$apiEndpoint/query/${nexusPath.toString()}/instances")
-      .withHttpHeaders(CONTENT_TYPE -> JSON)
+      .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token)
       .post(query)
   }
 
