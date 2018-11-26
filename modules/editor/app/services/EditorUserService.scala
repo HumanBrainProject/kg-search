@@ -47,13 +47,14 @@ class EditorUserService @Inject()(config: ConfigurationService,
   object cacheService extends CacheService
   object queryService extends QueryService
 
-  def getUser(nexusUser: NexusUser): Future[Either[APIEditorError, EditorUser]] = {
+  def getUser(nexusUser: NexusUser, token:String): Future[Either[APIEditorError, EditorUser]] = {
     cacheService.getOrElse[EditorUser](cache, nexusUser.id.toString){
       queryService.getInstances(
         wSClient,
         config.kgQueryEndpoint,
         EditorConstants.editorUserPath,
-        EditorUserService.kgQueryGetUserQuery(EditorConstants.editorUserPath)
+        EditorUserService.kgQueryGetUserQuery(EditorConstants.editorUserPath),
+        token
       ).map{
         res => res.status match {
           case OK => (res.json \ "results").as[List[JsObject]]
