@@ -379,7 +379,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
                 val userList = result.filter(js => (js \ EditorConstants.USERID).as[List[String]].contains(editorUser.nexusUser.id))
                   .map(_.as[BookmarkList])
                 (instanceReference,  Right(userList))
-              case None => (instanceReference, Left(APIEditorError(NOT_FOUND, "No result found")))
+              case None => (instanceReference, Right(List()))
             }
           case _ => (instanceReference, Left(APIEditorError(res.status, res.body)))
         }
