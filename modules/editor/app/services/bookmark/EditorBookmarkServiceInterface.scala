@@ -33,7 +33,7 @@ trait EditorBookmarkServiceInterface {
     * @param formRegistry the registry with the types associated with the user organization
     * @return The bookmarklists organised by folders
     */
-  def getUserBookmarkLists(editorUser: EditorUser, formRegistry: FormRegistry):
+  def getUserBookmarkLists(editorUser: EditorUser, formRegistry: FormRegistry, token:String):
   Future[Either[APIEditorError, List[BookmarkListFolder]]]
 
   /**
@@ -44,7 +44,7 @@ trait EditorBookmarkServiceInterface {
     * @param search
     * @return a list of instance
     */
-  def getInstancesOfBookmarkList(bookmarkListId: NexusInstanceReference, start: Int, size: Int, search: String):
+  def getInstancesOfBookmarkList(bookmarkListId: NexusInstanceReference, start: Int, size: Int, search: String, token:String):
   Future[Either[APIEditorError, (List[PreviewInstance], Long)]]
 
   /**
@@ -55,7 +55,7 @@ trait EditorBookmarkServiceInterface {
     * @param token the token of the tech account
     * @return The created folder
     */
-  def createBookmarkListFolder(editorUser: EditorUser, name: String, folderType: FolderType = BOOKMARKFOLDER, token: String):
+  def createBookmarkListFolder(editorUser: EditorUser, name: String , token: String, folderType: FolderType = BOOKMARKFOLDER):
   Future[Either[APIEditorError, BookmarkListFolder]]
 
   /**
@@ -93,6 +93,6 @@ trait EditorBookmarkServiceInterface {
                                      ):
   Future[List[Either[APIEditorError, Unit]]]
 
-  def retrieveBookmarkList(instanceIds: List[NexusInstanceReference], editorUser: EditorUser):
+  def retrieveBookmarkList(instanceIds: List[NexusInstanceReference], editorUser: EditorUser, token:String):
   Future[List[(NexusInstanceReference, Either[APIEditorError, List[BookmarkList]])]]
 }

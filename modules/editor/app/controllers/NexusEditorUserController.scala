@@ -22,6 +22,7 @@ import com.google.inject.Inject
 import constants.EditorConstants
 import helpers.EditorResponseHelper
 import models.editorUserList.BOOKMARKFOLDER
+import play.api.http.HeaderNames._
 import models.instance.{NexusInstance, NexusInstanceReference}
 import models.{AuthenticatedUserAction, EditorResponseObject, NexusPath, UserRequest}
 import play.api.Logger
@@ -47,12 +48,12 @@ class NexusEditorUserController @Inject()(
   val logger = Logger(this.getClass)
 
   private def getOrCreateUserWithUserFolder( token: String)(implicit request: UserRequest[AnyContent] ) = {
-    editorUserService.getUser(request.user).flatMap{
+    editorUserService.getUser(request.user, token).flatMap{
       case Right(editorUser) => Future(Some(editorUser))
       case Left(_) =>
         editorUserService.createUser(request.user, token).flatMap{
           case Right(editorUser) =>
-            editorUserListService.createBookmarkListFolder(editorUser, "My Bookmarks", BOOKMARKFOLDER, token).map{
+            editorUserListService.createBookmarkListFolder(editorUser, "My Bookmarks",token, BOOKMARKFOLDER).map{
               case Right(_) =>
                Some(editorUser)
               case Left(_) =>
@@ -79,9 +80,11 @@ class NexusEditorUserController @Inject()(
     }
   }
 
-  def getBookmarkListFolders():Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
+  def getBookmarkListFolders():Action[AnyContent] = (authenticatedUserAction andThen
+    EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
     for{
-      res <-  editorUserListService.getUserBookmarkLists(request.editorUser, formService.formRegistry).map {
+      token <- oIDCAuthService.getTechAccessToken()
+      res <-  editorUserListService.getUserBookmarkLists(request.editorUser, formService.formRegistry, token).map {
           case Left(r) => r.toResult
           case Right(l) => Ok(Json.toJson(EditorResponseObject(Json.toJson(l))))
         }
@@ -99,7 +102,8 @@ class NexusEditorUserController @Inject()(
                      search: String
                    ): Action[AnyContent] = authenticatedUserAction.async  { implicit request =>
     val nexusPath = NexusPath(org, domain, datatype, version)
-    arangoQueryService.listInstances(nexusPath, from, size, search).map{
+    val token = request.headers.toSimpleMap.getOrElse(AUTHORIZATION, "")
+    arangoQueryService.listInstances(nexusPath, from, size, search, token).map{
       case Right(data) => Ok(Json.toJson(data))
       case Left(res) => res.toResult
     }
@@ -116,7 +120,8 @@ class NexusEditorUserController @Inject()(
                                search: String
                              ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
     val nexusRef = NexusInstanceReference(org, domain, datatype, version, id)
-    editorUserListService.getInstancesOfBookmarkList(nexusRef, from, size, search).map{
+    val token = request.headers.toSimpleMap.getOrElse(AUTHORIZATION, "")
+    editorUserListService.getInstancesOfBookmarkList(nexusRef, from, size, search, token).map{
       case Right( (instances, total) ) => Ok(Json.toJson(EditorResponseObject(Json.toJson(instances))).as[JsObject].+("total" -> JsNumber(total)) )
       case Left(error) => error.toResult
     }
@@ -160,7 +165,7 @@ class NexusEditorUserController @Inject()(
           val ref = NexusInstanceReference(org, domain, datatype, version, id)
           for {
             token <- oIDCAuthService.getTechAccessToken()
-            result <- editorUserListService.getBookmarkListById(ref).flatMap[Result]{
+            result <- editorUserListService.getBookmarkListById(ref, token).flatMap[Result]{
               case Left(error) => Future(error.toResult)
               case Right((bookmarkList, userFolderId) ) =>
                 val updatedBookmarkList = bookmarkList.copy(name = newName)
@@ -216,13 +221,14 @@ class NexusEditorUserController @Inject()(
   def retrieveBookmarks : Action[AnyContent] =
     (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
       import EditorBookmarkService.JsEither._
+      val token = request.headers.toSimpleMap.getOrElse(AUTHORIZATION, "")
       val instanceList = for{
         json <- request.body.asJson
         instances <- json.asOpt[List[String]]
       } yield  instances.map(l => NexusInstanceReference.fromUrl(l))
       instanceList match {
         case Some(l) =>
-          editorUserListService.retrieveBookmarkList(l, request.editorUser).map{
+          editorUserListService.retrieveBookmarkList(l, request.editorUser, token).map{
             res =>
               val json = res.map(el => Json.obj("id" -> el._1.toString, "bookmarkLists" -> Json.toJson(el._2)))
               Ok(Json.toJson(EditorResponseObject(Json.toJson(json))))

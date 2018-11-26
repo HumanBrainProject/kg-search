@@ -22,6 +22,7 @@ import models.user.{EditorUserRequest, EditorUserWriteRequest}
 import models.{IAMPermission, UserRequest, user}
 import play.api.Logger
 import play.api.mvc.Results._
+import play.api.http.HeaderNames._
 import play.api.mvc._
 import services.{EditorUserService, IAMAuthService}
 
@@ -63,7 +64,7 @@ object EditorUserAction{
     new ActionRefiner[UserRequest, EditorUserRequest] {
       def executionContext: ExecutionContext = ec
       def refine[A](input: UserRequest[A]): Future[Either[Result, EditorUserRequest[A]]] = {
-        editorUserService.getUser(input.user).map{
+        editorUserService.getUser(input.user, input.request.headers.toSimpleMap.getOrElse(AUTHORIZATION, "")).map{
           case Right(editorUser) => Right(user.EditorUserRequest(editorUser, input))
           case Left(err) => logger.error(s"Fetching editor user failed - ${err.content}")
             Left(NotFound("An error occurred while fetching user information"))
