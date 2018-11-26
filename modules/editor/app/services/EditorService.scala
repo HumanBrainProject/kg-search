@@ -129,6 +129,7 @@ class EditorService @Inject()(
               }
             }else{
               val errors = results.filter(_.isLeft).map(_.swap.toOption.get)
+              logger.error(s"Errors while updating instance - ${errors.map(_.toJson.toString).mkString("\n")}")
               Future(Left(APIEditorMultiError(INTERNAL_SERVER_ERROR, errors)))
             }
         }

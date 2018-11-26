@@ -266,7 +266,7 @@ object FormService{
                   fieldName -> Json.obj("@id" -> JsString(s"$baseUrl/${NexusConstants.dataPath}${instance.nexusInstance.id().get}"))
                 )
               )
-            ), fieldMap._1) :: updatesAndDeletes
+            ), fieldName) :: updatesAndDeletes
           } else {
             (EditorConstants.UPDATE, EditorInstance(
               NexusInstance(
@@ -276,7 +276,7 @@ object FormService{
                   fieldName -> Json.obj("@id" -> JsString(s"$baseUrl/${NexusConstants.dataPath}${instance.nexusInstance.id().get}"))
                 )
               )
-            ), fieldMap._1 ):: updatesAndDeletes
+            ), fieldName ):: updatesAndDeletes
           }
 
       }
