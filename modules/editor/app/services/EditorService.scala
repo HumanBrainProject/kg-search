@@ -19,6 +19,7 @@ package services
 
 import com.google.inject.Inject
 import helpers._
+import models.errors.APIEditorError
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
 import models.user.User
 import models.{FormRegistry, NexusPath}
@@ -41,11 +42,11 @@ class EditorService @Inject()(
   def insertInstance(
                       newInstance: NexusInstance,
                       token: String
-                    ): Future[Either[WSResponse, NexusInstanceReference]] = {
+                    ): Future[Either[APIEditorError, NexusInstanceReference]] = {
     val modifiedContent = FormService.removeClientKeysCorrectLinks(newInstance.content.as[JsValue], config.nexusEndpoint)
     instanceApiService.post(wSClient, config.kgQueryEndpoint, newInstance.copy(content = modifiedContent), token).map{
       case Right(ref) => Right(ref)
-      case Left(res) => Left(res)
+      case Left(res) => Left(APIEditorError(res.status, res.body))
     }
   }
 
@@ -63,8 +64,11 @@ class EditorService @Inject()(
                       nexusInstanceReference: NexusInstanceReference,
                       token: String,
                       userId: String
-                    ): Future[Either[WSResponse, Unit]] = {
-    instanceApiService.put(wSClient, config.kgQueryEndpoint, nexusInstanceReference, diffInstance, token, userId)
+                    ): Future[Either[APIEditorError, Unit]] = {
+    instanceApiService.put(wSClient, config.kgQueryEndpoint, nexusInstanceReference, diffInstance, token, userId).map{
+      case Left(res) => Left(APIEditorError(res.status, res.body))
+      case Right(()) => Right(())
+    }
   }
 
   /**
@@ -76,8 +80,11 @@ class EditorService @Inject()(
     * @param token                  The user access token
     * @return An error response or an the instance
     */
-  def retrieveInstance(nexusInstanceReference: NexusInstanceReference, token: String): Future[Either[WSResponse, NexusInstance]] = {
-    instanceApiService.get(wSClient, config.kgQueryEndpoint, nexusInstanceReference, token)
+  def retrieveInstance(nexusInstanceReference: NexusInstanceReference, token: String): Future[Either[APIEditorError, NexusInstance]] = {
+    instanceApiService.get(wSClient, config.kgQueryEndpoint, nexusInstanceReference, token).map{
+      case Left(res) => Left(APIEditorError(res.status, res.body))
+      case Right(instance) => Right(instance)
+    }
   }
 
   def generateDiffAndUpdateInstance(
@@ -86,10 +93,10 @@ class EditorService @Inject()(
                                      token:String,
                                      user: User,
                                      formRegistry: FormRegistry
-                                   ): Future[Either[WSResponse, Unit]] = {
+                                   ): Future[Either[APIEditorError, Unit]] = {
     retrieveInstance(instanceRef, token).flatMap {
-      case Left(res) =>
-        Future(Left(res))
+      case Left(error) =>
+        Future(Left(error))
       case Right(currentInstanceDisplayed) =>
         val cleanedOriginalInstance = InstanceHelper.removeInternalFields(currentInstanceDisplayed)
         val instanceUpdateFromUser = FormService.buildInstanceFromForm(cleanedOriginalInstance, updateFromUser, config.nexusEndpoint)
