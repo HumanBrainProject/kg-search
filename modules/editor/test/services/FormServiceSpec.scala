@@ -5,6 +5,7 @@ import mockws.MockWSHelpers
 import models.{FormRegistry, NexusPath}
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar
+import org.mockito.Mockito._
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -98,9 +99,8 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
 
           val config = new ConfigurationService(fakeApplication().configuration)
           val mockWs = mock[WSClient]
-          val formService = new FormService(config, mockWs ){
-            override def loadFormConfiguration(): FormRegistry = formRegistry
-          }
+          val formService = mock[FormService]
+          when(formService.loadFormConfiguration) thenReturn formRegistry
           val data = Json.parse(
             s"""{
               |    "@context": "https://nexus-dev.humanbrainproject.org/v0/contexts/nexus/core/resource/v0.3.0",

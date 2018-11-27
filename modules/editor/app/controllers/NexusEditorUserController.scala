@@ -207,9 +207,10 @@ class NexusEditorUserController @Inject()(
 
           futList.map { listResponse =>
             if (listResponse.forall(_.isRight)) {
-              Created("Bookmarks created")
+              Created("Bookmarks updated")
             } else {
               val errors = listResponse.filter(_.isLeft).mkString("\n")
+              logger.error(s"Error while updating bookmark -${errors}")
               InternalServerError(s"Could not update all the bookmarks - $errors")
             }
           }
@@ -228,10 +229,13 @@ class NexusEditorUserController @Inject()(
       } yield  instances.map(l => NexusInstanceReference.fromUrl(l))
       instanceList match {
         case Some(l) =>
-          editorUserListService.retrieveBookmarkList(l, request.editorUser, token).map{
-            res =>
-              val json = res.map(el => Json.obj("id" -> el._1.toString, "bookmarkLists" -> el._2))
-              Ok(Json.toJson(EditorResponseObject(Json.toJson(json))))
+          oIDCAuthService.getTechAccessToken().flatMap{
+            token =>
+              editorUserListService.retrieveBookmarkList(l, request.editorUser, token).map{
+                res =>
+                  val json = res.map(el => Json.obj("id" -> el._1.toString, "bookmarkLists" -> el._2))
+                  Ok(Json.toJson(EditorResponseObject(Json.toJson(json))))
+              }
           }
         case None => Future(BadRequest("Missing body content"))
       }

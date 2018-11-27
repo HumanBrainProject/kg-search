@@ -336,12 +336,12 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
 
   def removeInstanceFromBookmarkLists(
                                   instanceRef: NexusInstanceReference,
-                                  bookmarkListIds: List[NexusInstanceReference],
+                                  bookmarkIds: List[NexusInstanceReference],
                                   token: String
                                 ):
   Future[List[Either[APIEditorError, Unit]]] = {
     // Get the ids of the bookmarks
-    val queries = bookmarkListIds.map{ id =>
+    val queries = bookmarkIds.map{ id =>
       instanceApiService.delete(
         wSClient,
         config.kgQueryEndpoint,
