@@ -152,7 +152,11 @@ object InstanceHelper {
 
     val contentUpdate = updates.contentToMap().filter {
       case (k, v) =>
-        if (((v.asOpt[JsArray].isDefined && v.as[List[JsValue]].isEmpty) ||
+        if(
+          (originalInstance.content \ k).isEmpty
+        ) {
+          true
+        }else if (((v.asOpt[JsArray].isDefined && v.as[List[JsValue]].isEmpty) ||
           v == JsNull) &&
           (originalInstance.content \ k).isEmpty) {
           false
