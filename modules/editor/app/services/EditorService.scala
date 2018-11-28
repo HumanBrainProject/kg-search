@@ -40,6 +40,7 @@ class EditorService @Inject()(
   val logger = Logger(this.getClass)
 
   object instanceApiService extends InstanceApiService
+  object reverseLinkService extends ReverseLinkService
 
   def insertInstance(
                       newInstance: NexusInstance,
@@ -104,24 +105,24 @@ class EditorService @Inject()(
         val instanceUpdateFromUser = FormService.buildInstanceFromForm(cleanedOriginalInstance, updateFromUser, config.nexusEndpoint)
         val removedEmptyFields = InstanceHelper.buildDiffEntity(cleanedOriginalInstance, instanceUpdateFromUser)
         val updateToBeStored = InstanceHelper.removeEmptyFieldsNotInOriginal(cleanedOriginalInstance, removedEmptyFields)
-        val (instanceWithoutReverseLinks, reverseEntities) = FormService.getReverseLinks(updateToBeStored, formRegistry, currentInstanceDisplayed, config.nexusEndpoint)
-        val reverseResponses: List[Future[Either[APIEditorError, Unit]]] =
-          reverseEntities.map {
-            case (DELETE, e, targetField) =>
-              removeLinkFromInstance(NexusInstanceReference(e.nexusInstance.nexusPath, e.nexusInstance.id().get), instanceRef,targetField, token, user.id )
-            case (UPDATE, e, _) => val ref = NexusInstanceReference.fromUrl(e.nexusInstance.id().get)
-              updateInstance(e, ref, token, user.id)
-            case (_, _, _) => Future(Left(APIEditorError(INTERNAL_SERVER_ERROR, "Could not process update.")))
-          }
+        val (instanceWithoutReverseLinks,reverseEntities)  = reverseLinkService.getReverseLinks(updateToBeStored, formRegistry, currentInstanceDisplayed, config.nexusEndpoint)
+        val reverseResponses = reverseEntities.map {
+          case (DELETE, e, targetField) =>
+            removeLinkFromInstance(NexusInstanceReference(e.nexusInstance.nexusPath, e.nexusInstance.id().get), instanceRef,targetField, token, user.id )
+          case (UPDATE, e, _) =>
+            val ref = NexusInstanceReference.fromUrl(e.nexusInstance.id().get)
+            updateInstance(e, ref, token, user.id)
+          case (_, _, _) => Future(Left(APIEditorError(INTERNAL_SERVER_ERROR, "Could not process update.")))
+        }
 
         logger.debug(s"Reverse entities ${reverseEntities.map(s => s"${s._1} - ${s._2.nexusInstance.id()} - ${s._3}" ).mkString("\n")}")
-
         Future.sequence(reverseResponses).flatMap{
           results =>
             if(results.forall(_.isRight)){
               if(instanceWithoutReverseLinks.nexusInstance.content.keys.isEmpty){
                 Future(Right(()))
               }else{
+                //Normal update of the instance without reverse links
                 updateInstance(instanceWithoutReverseLinks, instanceRef, token, user.id).map{
                   case Left(e) => Left(APIEditorMultiError(e.status, List(e)))
                   case Right(()) => Right(())

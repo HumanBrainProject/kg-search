@@ -237,70 +237,21 @@ object FormService{
     FormRegistry(
       js.foldLeft(Map[NexusPath, UISpec]()) {
         case (acc, el) =>
-            val listOfMap = (el \ "uiSpec").as[JsObject].value.flatMap {
-              case (org, json) =>
-                json.as[JsObject].value.flatMap{
-                  case (domain, d) =>
-                    d.as[JsObject].value.flatMap{
-                      case (schema, s) =>
-                        s.as[JsObject].value.map{
-                          case (version, v) =>
-                            NexusPath(org, domain, schema, version) -> v.as[UISpec]
-                        }
-                    }
-                }
-            }
+          val listOfMap = (el \ "uiSpec").as[JsObject].value.flatMap {
+            case (org, json) =>
+              json.as[JsObject].value.flatMap {
+                case (domain, d) =>
+                  d.as[JsObject].value.flatMap {
+                    case (schema, s) =>
+                      s.as[JsObject].value.map {
+                        case (version, v) =>
+                          NexusPath(org, domain, schema, version) -> v.as[UISpec]
+                      }
+                  }
+              }
+          }
           acc ++ listOfMap
       }
     )
-  }
-
-  def getReverseLinks(instance: EditorInstance, formRegistry: FormRegistry, originalInstance: NexusInstance, baseUrl: String):
-  (EditorInstance, List[(EditorConstants.Command, EditorInstance, String)]) = {
-    val fields = formRegistry.registry(instance.nexusInstance.nexusPath).fields
-    val newContent = instance.copy(nexusInstance =
-      instance.nexusInstance.copy(content = Json.toJson(instance.contentToMap().filterNot(k => fields(k._1).isReverse.getOrElse(false))).as[JsObject])
-    )
-    val instances = for {
-      fieldMap <- instance.contentToMap() if fields(fieldMap._1).isReverse.getOrElse(false)
-      path <- fields(fieldMap._1).instancesPath
-      fieldName <- fields(fieldMap._1).reverseTargetField
-    } yield {
-      val fullIds = fieldMap._2.asOpt[JsObject] match {
-        case Some(obj) => List(NexusInstanceReference.fromUrl((obj \ "@id").as[String]))
-        case None => fieldMap._2.asOpt[JsArray].map(
-          _.value.map(js => NexusInstanceReference.fromUrl((js \ "@id").as[String]))
-        ).getOrElse(List())
-      }
-      fullIds.foldLeft(List[(EditorConstants.Command, EditorInstance, String)]()) {
-        case (updatesAndDeletes, ref) =>
-          if (originalInstance.content.value.get(fieldMap._1).isDefined &&
-            originalInstance.content.value(fieldMap._1).asOpt[JsArray].map(_.value.exists(js => (js \ "@id").as[String].contains(ref.id))).getOrElse(
-              originalInstance.content.value(fieldMap._1).asOpt[JsObject].exists(js =>  (js \ "@id").as[String].contains(ref.id)) )
-            ) {
-            (EditorConstants.DELETE, EditorInstance(
-              NexusInstance(
-                Some(ref.id),
-                NexusPath(path),
-                Json.obj(
-                  fieldName -> Json.obj("@id" -> JsString(s"$baseUrl/${NexusConstants.dataPath}${instance.nexusInstance.id().get}"))
-                )
-              )
-            ), fieldName) :: updatesAndDeletes
-          } else {
-            (EditorConstants.UPDATE, EditorInstance(
-              NexusInstance(
-                Some(ref.id),
-                NexusPath(path),
-                Json.obj(
-                  fieldName -> Json.obj("@id" -> JsString(s"$baseUrl/${NexusConstants.dataPath}${instance.nexusInstance.id().get}"))
-                )
-              )
-            ), fieldName ):: updatesAndDeletes
-          }
-
-      }
-    }
-    (newContent, instances.toList.flatten)
   }
 }
