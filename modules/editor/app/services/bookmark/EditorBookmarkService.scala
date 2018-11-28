@@ -355,7 +355,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
     Future.sequence(queries)
   }
 
-  def retrieveBookmarkList(instanceIds: List[NexusInstanceReference], editorUser: EditorUser, token:String):
+  def retrieveBookmarkLists(instanceIds: List[NexusInstanceReference], editorUser: EditorUser, token:String):
   Future[List[(NexusInstanceReference, Either[APIEditorError, List[BookmarkList]])]] = {
     Future.sequence(instanceIds.map { ids =>
       retrieveBookmarkListSingleInstance(ids, editorUser, token)

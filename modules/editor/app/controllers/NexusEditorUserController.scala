@@ -231,7 +231,7 @@ class NexusEditorUserController @Inject()(
         case Some(l) =>
           oIDCAuthService.getTechAccessToken().flatMap{
             token =>
-              editorUserListService.retrieveBookmarkList(l, request.editorUser, token).map{
+              editorUserListService.retrieveBookmarkLists(l, request.editorUser, token).map{
                 res =>
                   val json = res.map(el => Json.obj("id" -> el._1.toString, "bookmarkLists" -> el._2))
                   Ok(Json.toJson(EditorResponseObject(Json.toJson(json))))

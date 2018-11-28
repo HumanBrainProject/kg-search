@@ -93,6 +93,6 @@ trait EditorBookmarkServiceInterface {
                                      ):
   Future[List[Either[APIEditorError, Unit]]]
 
-  def retrieveBookmarkList(instanceIds: List[NexusInstanceReference], editorUser: EditorUser, token:String):
+  def retrieveBookmarkLists(instanceIds: List[NexusInstanceReference], editorUser: EditorUser, token:String):
   Future[List[(NexusInstanceReference, Either[APIEditorError, List[BookmarkList]])]]
 }

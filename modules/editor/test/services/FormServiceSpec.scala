@@ -94,13 +94,10 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
           val originalDatatype = NexusPath("minds/core/activity/v0.0.4")
           val id = "123"
           val revision = 2
-          import scala.concurrent.ExecutionContext.Implicits._
           val formRegistry = FormRegistry(registry.as[JsObject])
 
           val config = new ConfigurationService(fakeApplication().configuration)
           val mockWs = mock[WSClient]
-          val formService = mock[FormService]
-          when(formService.loadFormConfiguration) thenReturn formRegistry
           val data = Json.parse(
             s"""{
               |    "@context": "https://nexus-dev.humanbrainproject.org/v0/contexts/nexus/core/resource/v0.3.0",
