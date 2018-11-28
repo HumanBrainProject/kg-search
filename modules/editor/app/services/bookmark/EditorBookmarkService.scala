@@ -268,7 +268,8 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
   Future[List[Either[APIEditorError, NexusInstanceReference]]] = {
     val queries = bookmarkListIds.map { ref =>
       val toInsert = EditorBookmarkService
-        .bookmarkToNexusStruct(s"${config.nexusEndpoint}/v0/data/${instanceReference.toString}", s"${config.nexusEndpoint}/v0/data/${ref.toString}")
+        .bookmarkToNexusStruct(s"${config.nexusEndpoint}/v0/data/${instanceReference.toString}",
+          s"${config.nexusEndpoint}/v0/data/${ref.toString}")
       instanceApiService.post(
         wSClient,
         config.kgQueryEndpoint,
