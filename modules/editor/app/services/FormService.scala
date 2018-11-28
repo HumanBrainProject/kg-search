@@ -23,9 +23,12 @@ import models.editorUserList.BookmarkList
 import models._
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
 import models.user.NexusUser
+import play.api.Logger
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
+import play.api.http.Status.OK
 
+import scala.annotation.tailrec
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{Await, ExecutionContext}
 
@@ -38,15 +41,24 @@ class FormService @Inject()(
 
   lazy val formRegistry: FormRegistry = loadFormConfiguration()
   val timeout = FiniteDuration(15, "sec")
+  val retryTime = 5000 //ms
+  val logger = Logger(this.getClass)
 
-  def loadFormConfiguration(): FormRegistry = {
+  @tailrec
+  final def loadFormConfiguration(): FormRegistry = {
     val spec = Await.result(
       ws.url(s"${config.kgQueryEndpoint}/arango/internalDocuments/editor_specifications").get(),
       timeout
     )
-    FormService.getRegistry(spec.json.as[List[JsObject]])
-  }
+    spec.status match {
+      case OK => FormService.getRegistry(spec.json.as[List[JsObject]])
+      case _ =>
+        logger.warn(s"Could not load configuration, retrying in ${retryTime / 1000} secs")
+        Thread.sleep(retryTime)
+        loadFormConfiguration()
+    }
 
+  }
 }
 object FormService{
 
@@ -253,11 +265,19 @@ object FormService{
       fieldMap <- instance.contentToMap() if fields(fieldMap._1).isReverse.getOrElse(false)
       path <- fields(fieldMap._1).instancesPath
       fieldName <- fields(fieldMap._1).reverseTargetField
-      fullIds = fieldMap._2.as[JsArray].value.map(js => NexusInstanceReference.fromUrl((js \ "@id").as[String]))
     } yield {
+      val fullIds = fieldMap._2.asOpt[JsObject] match {
+        case Some(obj) => List(NexusInstanceReference.fromUrl((obj \ "@id").as[String]))
+        case None => fieldMap._2.asOpt[JsArray].map(
+          _.value.map(js => NexusInstanceReference.fromUrl((js \ "@id").as[String]))
+        ).getOrElse(List())
+      }
       fullIds.foldLeft(List[(EditorConstants.Command, EditorInstance, String)]()) {
         case (updatesAndDeletes, ref) =>
-          if (originalInstance.content.value(fieldMap._1).as[JsArray].value.exists(js => (js \ "@id").as[String].contains(ref.id))) {
+          if (originalInstance.content.value.get(fieldMap._1).isDefined &&
+            originalInstance.content.value(fieldMap._1).asOpt[JsArray].map(_.value.exists(js => (js \ "@id").as[String].contains(ref.id))).getOrElse(
+              originalInstance.content.value(fieldMap._1).asOpt[JsObject].exists(js =>  (js \ "@id").as[String].contains(ref.id)) )
+            ) {
             (EditorConstants.DELETE, EditorInstance(
               NexusInstance(
                 Some(ref.id),

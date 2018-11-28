@@ -336,12 +336,12 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
 
   def removeInstanceFromBookmarkLists(
                                   instanceRef: NexusInstanceReference,
-                                  bookmarkListIds: List[NexusInstanceReference],
+                                  bookmarkIds: List[NexusInstanceReference],
                                   token: String
                                 ):
   Future[List[Either[APIEditorError, Unit]]] = {
     // Get the ids of the bookmarks
-    val queries = bookmarkListIds.map{ id =>
+    val queries = bookmarkIds.map{ id =>
       instanceApiService.delete(
         wSClient,
         config.kgQueryEndpoint,
@@ -355,7 +355,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
     Future.sequence(queries)
   }
 
-  def retrieveBookmarkList(instanceIds: List[NexusInstanceReference], editorUser: EditorUser, token:String):
+  def retrieveBookmarkLists(instanceIds: List[NexusInstanceReference], editorUser: EditorUser, token:String):
   Future[List[(NexusInstanceReference, Either[APIEditorError, List[BookmarkList]])]] = {
     Future.sequence(instanceIds.map { ids =>
       retrieveBookmarkListSingleInstance(ids, editorUser, token)
@@ -379,7 +379,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
                 val userList = result.filter(js => (js \ EditorConstants.USERID).as[List[String]].contains(editorUser.nexusUser.id))
                   .map(_.as[BookmarkList])
                 (instanceReference,  Right(userList))
-              case None => (instanceReference, Left(APIEditorError(NOT_FOUND, "No result found")))
+              case None => (instanceReference, Right(List()))
             }
           case _ => (instanceReference, Left(APIEditorError(res.status, res.body)))
         }

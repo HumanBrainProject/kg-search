@@ -1,28 +1,13 @@
-
-/*
-*   Copyright (c) 2018, EPFL/Human Brain Project PCO
-*
-*   Licensed under the Apache License, Version 2.0 (the "License");
-*   you may not use this file except in compliance with the License.
-*   You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-*
-*   Unless required by applicable law or agreed to in writing, software
-*   distributed under the License is distributed on an "AS IS" BASIS,
-*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*   See the License for the specific language governing permissions and
-*   limitations under the License.
-*/
-
 package services
 
+import constants.EditorConstants.UPDATE
 import helpers.ConfigMock
 import mockws.MockWSHelpers
 import models._
 import models.instance.{EditorInstance, NexusInstance}
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar
+import org.mockito.Mockito._
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -61,9 +46,6 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
 
       val config = new ConfigurationService(fakeApplication().configuration)
       val mockWs = mock[WSClient]
-      val formService = new FormService(config, mockWs) {
-        override def loadFormConfiguration(): FormRegistry = formRegistry
-      }
       val data = Json.parse(
         s"""{
            |    "@context": "https://nexus-dev.humanbrainproject.org/v0/contexts/nexus/core/resource/v0.3.0",
@@ -267,7 +249,15 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
         )
       )
       val doiId = "456"
-      val instance = EditorInstance(
+      val originalInstance = NexusInstance(
+        Some(instanceId),
+        path,
+        Json.obj(
+          "http://schema.org/name" -> "name"
+        )
+      )
+
+      val update = EditorInstance(
         NexusInstance(
           Some(instanceId),
           path,
@@ -292,9 +282,10 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
         )
       )
 
-      val res = FormService.getReverseLinks(instance, formRegistry, baseUrl)
+      val res = FormService.getReverseLinks(update, formRegistry,originalInstance,  baseUrl)
 
-      res mustBe List(expected)
+      res._1 mustBe EditorInstance(originalInstance)
+      res._2 mustBe List((UPDATE, expected, targetField))
 
     }
   }

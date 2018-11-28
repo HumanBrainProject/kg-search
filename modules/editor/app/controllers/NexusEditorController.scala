@@ -181,13 +181,24 @@ class NexusEditorController @Inject()(
 
     val token = OIDCHelper.getTokenFromRequest(request)
     val instancePath = NexusPath(org, domain, schema, version)
-    val payload = request.body.asJson match {
-      case Some(content) => content.as[JsObject]
-      case None => Json.obj()
-    }
-    editorService.insertInstance(NexusInstance(None, instancePath, payload), token).map{
-      case Left(error) => error.toResult
-      case Right(ref) => Created(Json.toJson(EditorResponseObject(Json.toJson(ref))))
+    editorService.insertInstance(NexusInstance(None, instancePath, Json.obj()), token).flatMap[Result]{
+      case Left(error) => Future(error.toResult)
+      case Right(ref) =>
+        request.body.asJson match {
+          case Some(content) => content.as[JsObject]
+            val nonEmptyInstance = EditorInstance(
+              NexusInstance(
+                Some(ref.id),
+                ref.nexusPath,
+                content.as[JsObject]
+              )
+            )
+            editorService.updateInstance(nonEmptyInstance, ref, token, request.user.id).map[Result]{
+              case Left(error) => error.toResult
+              case Right(()) => Created(Json.toJson(EditorResponseObject(Json.toJson(ref))))
+            }
+          case None => Future(Created(Json.toJson(EditorResponseObject(Json.toJson(ref)))))
+        }
     }
   }
 
