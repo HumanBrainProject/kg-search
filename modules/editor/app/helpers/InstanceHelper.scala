@@ -155,14 +155,16 @@ object InstanceHelper {
 
     val contentUpdate = updates.contentToMap().filter {
       case (k, v) =>
-        if (((v.asOpt[JsArray].isDefined && v.as[List[JsValue]].isEmpty) ||
+       if (((v.asOpt[JsArray].isDefined && v.as[List[JsValue]].isEmpty) ||
           v == JsNull) &&
           (originalInstance.content \ k).isEmpty) {
           false
         } else if (
-          compareUniqueElementObject(v, (originalInstance.content \ k).as[JsValue])
+         ((originalInstance.content \ k).isDefined &&
+          compareUniqueElementObject(v, (originalInstance.content \ k).as[JsValue]))
             ||
-            compareUniqueElementObject((originalInstance.content \ k).as[JsValue], v)
+           ((originalInstance.content \ k).isDefined &&
+          compareUniqueElementObject((originalInstance.content \ k).as[JsValue], v))
         ) {
           // An object and an array with only this object should be considered the same
           false
