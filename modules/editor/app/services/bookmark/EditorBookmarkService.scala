@@ -324,7 +324,14 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
 
                   }
                 }
-              case None => Future(List(Left(APIEditorError(res.status, res.body))))
+              case None => for {
+                added <- addInstanceToBookmarkLists(instanceRef, bookmarksListFromUser, token).map[List[Either[APIEditorError, Unit]]] {
+                  _.map {
+                    case Right(_) => Right(())
+                    case Left(error) => Left(error)
+                  }
+                }
+              } yield added
             }
           case _ =>
             logger.error(s"Could not fetch bookmarks - ${res.body}")
