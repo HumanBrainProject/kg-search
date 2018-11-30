@@ -268,7 +268,8 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
   Future[List[Either[APIEditorError, NexusInstanceReference]]] = {
     val queries = bookmarkListIds.map { ref =>
       val toInsert = EditorBookmarkService
-        .bookmarkToNexusStruct(s"${config.nexusEndpoint}/v0/data/${instanceReference.toString}", s"${config.nexusEndpoint}/v0/data/${ref.toString}")
+        .bookmarkToNexusStruct(s"${config.nexusEndpoint}/v0/data/${instanceReference.toString}",
+          s"${config.nexusEndpoint}/v0/data/${ref.toString}")
       instanceApiService.post(
         wSClient,
         config.kgQueryEndpoint,
@@ -336,12 +337,12 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
 
   def removeInstanceFromBookmarkLists(
                                   instanceRef: NexusInstanceReference,
-                                  bookmarkListIds: List[NexusInstanceReference],
+                                  bookmarkIds: List[NexusInstanceReference],
                                   token: String
                                 ):
   Future[List[Either[APIEditorError, Unit]]] = {
     // Get the ids of the bookmarks
-    val queries = bookmarkListIds.map{ id =>
+    val queries = bookmarkIds.map{ id =>
       instanceApiService.delete(
         wSClient,
         config.kgQueryEndpoint,
@@ -355,7 +356,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
     Future.sequence(queries)
   }
 
-  def retrieveBookmarkList(instanceIds: List[NexusInstanceReference], editorUser: EditorUser, token:String):
+  def retrieveBookmarkLists(instanceIds: List[NexusInstanceReference], editorUser: EditorUser, token:String):
   Future[List[(NexusInstanceReference, Either[APIEditorError, List[BookmarkList]])]] = {
     Future.sequence(instanceIds.map { ids =>
       retrieveBookmarkListSingleInstance(ids, editorUser, token)

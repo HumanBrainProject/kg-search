@@ -36,7 +36,8 @@ class ArangoQueryService @Inject()(
                                     formService: FormService
                                   )(implicit executionContext: ExecutionContext) {
 
-  def listInstances(nexusPath: NexusPath, from: Option[Int], size: Option[Int], search: String, token:String): Future[Either[APIEditorError, EditorResponseWithCount]] = {
+  def listInstances(nexusPath: NexusPath, from: Option[Int], size: Option[Int], search: String, token:String):
+  Future[Either[APIEditorError, EditorResponseWithCount]] = {
     val parameters = (from, size) match {
       case (Some(f), Some(s)) =>  List(("from", f.toString), ("size", s.toString))
       case (Some(f),_) =>  List(("from", f.toString))

@@ -23,9 +23,12 @@ import models.editorUserList.BookmarkList
 import models._
 import models.instance.{EditorInstance, NexusInstance}
 import models.user.NexusUser
+import play.api.Logger
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
+import play.api.http.Status.OK
 
+import scala.annotation.tailrec
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{Await, ExecutionContext}
 
@@ -38,17 +41,27 @@ class FormService @Inject()(
 
   lazy val formRegistry: FormRegistry = loadFormConfiguration()
   val timeout = FiniteDuration(15, "sec")
+  val retryTime = 5000 //ms
+  val logger = Logger(this.getClass)
 
-  def loadFormConfiguration(): FormRegistry = {
+  @tailrec
+  final def loadFormConfiguration(): FormRegistry = {
     val spec = Await.result(
       ws.url(s"${config.kgQueryEndpoint}/arango/internalDocuments/editor_specifications").get(),
       timeout
     )
-    FormRegistry(
-      spec.json.as[List[JsObject]].foldLeft(Json.obj()) {
-        case (acc, el) => acc ++ (el \ "uiSpec").as[JsObject]
-      }
-    )
+    spec.status match {
+      case OK => FormRegistry(
+        spec.json.as[List[JsObject]].foldLeft(Json.obj()) {
+          case (acc, el) => acc ++ (el \ "uiSpec").as[JsObject]
+        }
+      )
+      case _ =>
+        logger.warn(s"Could not load configuration, retrying in ${retryTime / 1000} secs")
+        Thread.sleep(retryTime)
+        loadFormConfiguration()
+    }
+
   }
 }
 object FormService{

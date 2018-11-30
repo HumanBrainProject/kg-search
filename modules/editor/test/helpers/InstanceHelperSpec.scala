@@ -289,4 +289,41 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
   }
 
+  "Remove Internal field" should {
+    "not consider an array of single object or this unique object" in {
+      val path = NexusPath("org", "dom", "schema", "version")
+      val instance = NexusInstance(None, path, Json.obj(
+        "array" -> Json.toJson(List(Json.obj("@id" ->"test")))
+      ))
+
+      val update = EditorInstance(
+        NexusInstance(
+          Some("123"),
+          path,
+          Json.obj("array" -> Json.obj("@id"-> "test"))
+          )
+        )
+
+      val res = InstanceHelper.removeEmptyFieldsNotInOriginal(instance, update)
+
+      res.nexusInstance.content mustBe Json.obj()
+    }
+    "work both ways" in {
+      val path = NexusPath("org", "dom", "schema", "version")
+      val instance = NexusInstance(None, path, Json.obj(
+        "array" ->Json.obj("@id"-> "test"))
+      )
+
+      val update = EditorInstance(
+        NexusInstance(
+          Some("123"),
+          path,
+          Json.obj("array" -> Json.toJson(List(Json.obj("@id" ->"test"))))
+        )
+      )
+      val res = InstanceHelper.removeEmptyFieldsNotInOriginal(instance, update)
+      res.nexusInstance.content mustBe Json.obj()
+    }
+  }
+
 }

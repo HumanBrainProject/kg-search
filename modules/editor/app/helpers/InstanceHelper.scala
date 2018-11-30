@@ -147,15 +147,24 @@ object InstanceHelper {
   }
 
   def removeEmptyFieldsNotInOriginal(originalInstance: NexusInstance, updates: EditorInstance): EditorInstance = {
+    def compareUniqueElementObject(l:JsValue, r:JsValue):Boolean = {
+      r.asOpt[List[JsObject]].isDefined && r.as[List[JsObject]].size == 1 &&
+        l.asOpt[JsObject].isDefined &&
+        r.as[List[JsObject]].head == l.as[JsObject]
+    }
+
     val contentUpdate = updates.contentToMap().filter {
       case (k, v) =>
-        if (((v.asOpt[JsArray].isDefined && v.as[List[JsValue]].isEmpty) ||
+       if (((v.asOpt[JsArray].isDefined && v.as[List[JsValue]].isEmpty) ||
           v == JsNull) &&
           (originalInstance.content \ k).isEmpty) {
           false
-        } else if (v.asOpt[JsArray].isDefined && v.as[List[JsValue]].size == 1 &&
-          (originalInstance.content \ k).asOpt[JsValue].isDefined &&
-          v.as[List[JsValue]].head == (originalInstance.content \ k).as[JsValue]
+        } else if (
+         ((originalInstance.content \ k).isDefined &&
+          compareUniqueElementObject(v, (originalInstance.content \ k).as[JsValue]))
+            ||
+           ((originalInstance.content \ k).isDefined &&
+          compareUniqueElementObject((originalInstance.content \ k).as[JsValue], v))
         ) {
           // An object and an array with only this object should be considered the same
           false

@@ -25,6 +25,7 @@ import play.api.libs.ws.{WSClient, WSResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 import play.api.http.Status._
+import play.api.http.HeaderNames._
 
 trait InstanceApiService {
     val instanceEndpoint = "/internal/api/instances"
@@ -38,7 +39,7 @@ trait InstanceApiService {
          )(implicit ec: ExecutionContext): Future[Either[WSResponse, NexusInstance]] = {
     wSClient
       .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.toString}")
-      .withHttpHeaders("Authorization" -> token, "client" -> serviceClient.client)
+      .withHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
       .get()
       .map { res =>
         res.status match {
@@ -59,7 +60,7 @@ trait InstanceApiService {
          )(implicit ec: ExecutionContext): Future[Either[WSResponse, Unit]] = {
     wSClient
       .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.toString}")
-      .withHttpHeaders("Authorization" -> token, "client" -> serviceClient.client)
+      .withHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
       .withQueryStringParameters("clientIdExtension" -> userId)
       .put(editorInstance.nexusInstance.content)
       .map { res =>
@@ -79,7 +80,7 @@ trait InstanceApiService {
             )(implicit ec: ExecutionContext): Future[Either[WSResponse, Unit]] = {
     wSClient
       .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.toString}")
-      .withHttpHeaders("Authorization" -> token, "client" -> serviceClient.client)
+      .withHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
       .delete()
       .map { res =>
         res.status match {
@@ -98,7 +99,7 @@ trait InstanceApiService {
           )(implicit ec: ExecutionContext): Future[Either[WSResponse, NexusInstanceReference]] = {
     wSClient
       .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.nexusPath.toString()}")
-      .withHttpHeaders("Authorization" -> token, "client" -> serviceClient.client)
+      .withHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
       .post(nexusInstance.content)
       .map { res =>
         res.status match {
