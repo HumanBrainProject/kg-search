@@ -10,7 +10,7 @@
 -> /dataimport data_import.Routes
 
 # KG Editor routes
--> /editor editor.Routes
+-> /editor/api editor.Routes
 
 # Nexus services
 -> /nexus nexus.Routes

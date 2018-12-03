@@ -18,15 +18,18 @@
 package services
 
 import com.google.inject.Inject
+import constants.EditorConstants
 import helpers._
 import models.errors.APIEditorError
-import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
+import play.api.http.Status._
+import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, PreviewInstance}
 import models.user.User
 import models.{FormRegistry, NexusPath}
 import play.api.Logger
 import play.api.libs.json.JsValue
 import play.api.libs.ws.{WSClient, WSResponse}
 import services.instance.InstanceApiService
+import services.query.QueryService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,6 +41,7 @@ class EditorService @Inject()(
   val logger = Logger(this.getClass)
 
   object instanceApiService extends InstanceApiService
+  object queryService extends QueryService
 
   def insertInstance(
                       newInstance: NexusInstance,
@@ -105,4 +109,55 @@ class EditorService @Inject()(
         updateInstance(updateToBeStored, instanceRef, token, user.id)
     }
   }
+
+  def retrieveInstancesByIds(
+                            instanceIds: List[NexusInstanceReference],
+                            token:String
+                            ): Future[Either[APIEditorError, List[PreviewInstance]]] = {
+    val listOfResponse = for{
+      id <- instanceIds
+    } yield queryService.getInstancesWithId(wSClient, config.kgQueryEndpoint, id, EditorService.kgQueryGetPreviewInstance(), token)
+
+    Future.sequence(listOfResponse).map{
+      ls => if(ls.forall(l =>
+        l.status match {
+        case OK => true
+        case _ => false
+      })){
+        Right(ls.map(res => res.json.as[PreviewInstance]))
+      }else{
+        Left(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances" ))
+      }
+    }
+  }
+
+
+}
+
+object EditorService {
+
+
+  def kgQueryGetPreviewInstance(
+                                                  context: String = EditorConstants.context
+                                                ): String =
+    s"""
+       |{
+       |  "@context": $context,
+       |  "schema:name": "",
+       |  "fields": [
+       |    {
+       |      "fieldname": "name",
+       |      "relative_path": "schema:name
+       |    },
+       |    {
+       |      "fieldname": "id",
+       |      "relative_path": "base:relativeUrl
+       |    },
+       |    {
+       |      "fieldname": "description",
+       |      "relative_path": "schema:description
+       |    }
+       |  ]
+       |}
+    """.stripMargin
 }
