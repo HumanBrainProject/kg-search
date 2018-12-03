@@ -18,10 +18,11 @@
 package services
 
 import com.google.inject.Inject
-import constants.EditorClient
+import constants.{EditorClient, EditorConstants, JsonLDConstants, UiConstants}
 import helpers._
 import models.errors.APIEditorError
-import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
+import play.api.http.Status._
+import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, PreviewInstance}
 import models.user.User
 import models.{FormRegistry, NexusPath}
 import play.api.Logger
@@ -29,9 +30,9 @@ import play.api.http.Status._
 import play.api.libs.json.JsValue
 import play.api.libs.ws.{WSClient, WSResponse}
 import services.instance.InstanceApiService
+import services.query.QueryService
 
 import scala.concurrent.{ExecutionContext, Future}
-
 
 class EditorService @Inject()(
                                wSClient: WSClient,
@@ -41,6 +42,7 @@ class EditorService @Inject()(
   val logger = Logger(this.getClass)
 
   object instanceApiService extends InstanceApiService
+  object queryService extends QueryService
 
   def insertInstance(
                       newInstance: NexusInstance,
@@ -119,4 +121,57 @@ class EditorService @Inject()(
         }
     }
   }
+
+  def retrieveInstancesByIds(
+                              instanceIds: List[NexusInstanceReference],
+                              token: String
+                            ): Future[Either[APIEditorError, List[PreviewInstance]]] = {
+    val listOfResponse = for {
+      id <- instanceIds
+    } yield queryService.getInstancesWithId(wSClient, config.kgQueryEndpoint, id, EditorService.kgQueryGetPreviewInstance(), token)
+
+    Future.sequence(listOfResponse).map {
+      ls =>
+        val r = ls.filter(l => l.status == OK)
+        if (r.isEmpty) {
+          Left(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances"))
+        } else {
+          Right(r.map(res => res.json.as[PreviewInstance]))
+        }
+    }
+  }
+
+
+}
+
+object EditorService {
+
+
+  def kgQueryGetPreviewInstance(
+                                 context: String = EditorConstants.context
+                               ): String =
+    s"""
+       |{
+       |  "@context": $context,
+       |  "schema:name": "",
+       |  "fields": [
+       |    {
+       |      "fieldname": "name",
+       |      "relative_path": "schema:name"
+       |    },
+       |    {
+       |      "fieldname": "id",
+       |      "relative_path": "base:relativeUrl"
+       |    },
+       |    {
+       |      "fieldname": "description",
+       |      "relative_path": "schema:description"
+       |    },
+       |    {
+       |      "fieldname": "${UiConstants.DATATYPE}",
+       |      "relative_path": "${JsonLDConstants.TYPE}"
+       |    }
+       |  ]
+       |}
+    """.stripMargin
 }

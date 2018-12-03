@@ -34,7 +34,27 @@
 #    required: false
 #    type: string
 ###
-GET    /api/instance/:org/:domain/:schema/:version/:id                  controllers.NexusEditorController.getInstance(org: String, domain:String, schema: String, version:String, id: String)
+GET    /instance/:org/:domain/:schema/:version/:id                  controllers.NexusEditorController.getInstance(org: String, domain:String, schema: String, version:String, id: String)
+
+
+###
+#  summary: get a list of entities
+#  tags:
+#    - editor
+#  parameters:
+#  - in: body
+#    description: A list of IDs
+#    required: true
+#    type: array
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+POST    /instances                 controllers.NexusEditorController.getInstancesByIds()
+
+
 
 ###
 #tags:
@@ -85,7 +105,7 @@ GET    /api/instance/:org/:domain/:schema/:version/:id                  controll
 #      '200':
 #        description: Ok
 ###
-GET /api/instances/:org/:domain/:schema/:version        controllers.NexusEditorUserController.getInstancesOfBookmarkListBySchema(org: String, domain:String, schema: String, version:String, from:Option[Int], size:Option[Int], search:String?="")
+GET /instances/:org/:domain/:schema/:version        controllers.NexusEditorUserController.getInstancesOfBookmarkListBySchema(org: String, domain:String, schema: String, version:String, from:Option[Int], size:Option[Int], search:String?="")
 
 ###
 #  summary: return a an empty form for a specific entity type
@@ -118,7 +138,7 @@ GET /api/instances/:org/:domain/:schema/:version        controllers.NexusEditorU
 #    required: false
 #    type: string
 ###
-GET    /api/instance/:org/:domain/:schema/:version                  controllers.NexusEditorController.getEmptyForm(org: String, domain:String, schema: String, version:String)
+GET    /instance/:org/:domain/:schema/:version                  controllers.NexusEditorController.getEmptyForm(org: String, domain:String, schema: String, version:String)
 
 ###
 #  summary: update an instance
@@ -156,7 +176,7 @@ GET    /api/instance/:org/:domain/:schema/:version                  controllers.
 #    required: false
 #    type: string
 ###
-PUT   /api/instance/:org/:domain/:schema/:version/:id                   controllers.NexusEditorController.updateInstance(org: String, domain:String, schema: String, version:String, id: String)
+PUT   /instance/:org/:domain/:schema/:version/:id                   controllers.NexusEditorController.updateInstance(org: String, domain:String, schema: String, version:String, id: String)
 
 ###
 #  summary: create a new instance
@@ -189,7 +209,7 @@ PUT   /api/instance/:org/:domain/:schema/:version/:id                   controll
 #    required: false
 #    type: string
 ###
-POST   /api/instance/:org/:domain/:schema/:version                  controllers.NexusEditorController.createInstance(org: String, domain:String, schema: String, version:String)
+POST   /instance/:org/:domain/:schema/:version                  controllers.NexusEditorController.createInstance(org: String, domain:String, schema: String, version:String)
 
 ###
 #  summary: Get the number of revisions available for a specific instance
@@ -227,7 +247,7 @@ POST   /api/instance/:org/:domain/:schema/:version                  controllers.
 #    required: false
 #    type: string
 ###
-GET    /api/revisions/:org/:domain/:schema/:version/:id                         controllers.NexusEditorController.getInstanceNumberOfAvailableRevisions(org: String, domain:String, schema: String, version:String, id: String)
+GET    /revisions/:org/:domain/:schema/:version/:id                         controllers.NexusEditorController.getInstanceNumberOfAvailableRevisions(org: String, domain:String, schema: String, version:String, id: String)
 
 ###
 #  summary: Get a specific revision of an instance
@@ -270,7 +290,7 @@ GET    /api/revisions/:org/:domain/:schema/:version/:id                         
 #    required: false
 #    type: string
 ###
-GET    /api/reconciled/:org/:domain/:schema/:version/:id                controllers.NexusEditorController.getSpecificReconciledInstance(org: String, domain:String, schema: String, version:String, id: String ,rev:Int ?= 1)
+GET    /reconciled/:org/:domain/:schema/:version/:id                controllers.NexusEditorController.getSpecificReconciledInstance(org: String, domain:String, schema: String, version:String, id: String ,rev:Int ?= 1)
 
 
 ###
@@ -285,7 +305,7 @@ GET    /api/reconciled/:org/:domain/:schema/:version/:id                controll
 #    200:
 #      description: "Ok"
 ###
-GET   /api/user                                             controllers.NexusEditorUserController.getOrCreateCurrentUser
+GET   /user                                             controllers.NexusEditorUserController.getOrCreateCurrentUser
 
 ###
 #      tags:
@@ -311,7 +331,7 @@ GET   /api/user                                             controllers.NexusEdi
 #                   uiSpec: 'A JSON object containing info specific for the UI'
 #
 ###
-GET /api/bookmarkListFolders                                controllers.NexusEditorUserController.getBookmarkListFolders
+GET /bookmarkListFolders                                controllers.NexusEditorUserController.getBookmarkListFolders
 
 ###
 #tags:
@@ -362,7 +382,7 @@ GET /api/bookmarkListFolders                                controllers.NexusEdi
 #      '200':
 #        description: Ok
 ###
-GET /api/bookmarkListInstances/:org/:domain/:schema/:version        controllers.NexusEditorUserController.getInstancesOfBookmarkListBySchema(org: String, domain:String, schema: String, version:String, from:Option[Int], size:Option[Int], search:String?="")
+GET /bookmarkListInstances/:org/:domain/:schema/:version        controllers.NexusEditorUserController.getInstancesOfBookmarkListBySchema(org: String, domain:String, schema: String, version:String, from:Option[Int], size:Option[Int], search:String?="")
 
 ###
 #tags:
@@ -418,7 +438,7 @@ GET /api/bookmarkListInstances/:org/:domain/:schema/:version        controllers.
 #  '200':
 #    description: Ok
 ###
-GET /api/bookmarkListInstances/:org/:domain/:schema/:version/:id                            controllers.NexusEditorUserController.getInstancesbyBookmarkList(org: String, domain:String, schema: String, version:String, id: String, from:Int=0, size:Int=20, search:String?="")
+GET /bookmarkListInstances/:org/:domain/:schema/:version/:id                            controllers.NexusEditorUserController.getInstancesbyBookmarkList(org: String, domain:String, schema: String, version:String, id: String, from:Int=0, size:Int=20, search:String?="")
 
 ###
 #tags:
@@ -444,7 +464,7 @@ GET /api/bookmarkListInstances/:org/:domain/:schema/:version/:id                
 #  '201':
 #    description: Created
 ###
-POST /api/bookmarkList                                          controllers.NexusEditorUserController.createBookmarkList
+POST /bookmarkList                                          controllers.NexusEditorUserController.createBookmarkList
 
 ###
 #tags:
@@ -465,7 +485,7 @@ POST /api/bookmarkList                                          controllers.Nexu
 #  '204':
 #    description: No Content
 ###
-PUT /api/bookmarkList/:org/:domain/:schema/:version/:id                                         controllers.NexusEditorUserController.updateBookmarkList(org: String, domain:String, schema: String, version:String, id: String)
+PUT /bookmarkList/:org/:domain/:schema/:version/:id                                         controllers.NexusEditorUserController.updateBookmarkList(org: String, domain:String, schema: String, version:String, id: String)
 
 
 ###
@@ -482,7 +502,7 @@ PUT /api/bookmarkList/:org/:domain/:schema/:version/:id                         
 #  '204':
 #    description: No Content
 ###
-DELETE /api/bookmarkList/:org/:domain/:schema/:version/:id                                          controllers.NexusEditorUserController.deleteBookmarkList(org: String, domain:String, schema: String, version:String, id: String)
+DELETE /bookmarkList/:org/:domain/:schema/:version/:id                                          controllers.NexusEditorUserController.deleteBookmarkList(org: String, domain:String, schema: String, version:String, id: String)
 
 
 
@@ -524,7 +544,7 @@ DELETE /api/bookmarkList/:org/:domain/:schema/:version/:id                      
 #  '200':
 #    description: Ok
 ###
-PUT /api/instance/:org/:domain/:schema/:version/:id/bookmarks       controllers.NexusEditorUserController.updateBookmarks(org: String, domain:String, schema: String, version:String, id: String)
+PUT /instance/:org/:domain/:schema/:version/:id/bookmarks       controllers.NexusEditorUserController.updateBookmarks(org: String, domain:String, schema: String, version:String, id: String)
 
 ###
 #  tags:
@@ -542,4 +562,4 @@ PUT /api/instance/:org/:domain/:schema/:version/:id/bookmarks       controllers.
 #      required: false
 #      type: string
 ###
-POST /api/bookmarks                                                 controllers.NexusEditorUserController.retrieveBookmarks
+POST /bookmarks                                                 controllers.NexusEditorUserController.retrieveBookmarks

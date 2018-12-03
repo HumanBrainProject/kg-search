@@ -46,4 +46,6 @@ object PreviewInstance {
       (JsPath \ UiConstants.DATATYPE).write[String] and
       (JsPath \ "description").writeNullable[String]
     ) (unlift(PreviewInstance.unapply))
+
+
 }
