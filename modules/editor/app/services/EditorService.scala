@@ -18,12 +18,14 @@
 package services
 
 import com.google.inject.Inject
+import constants.EditorClient
 import helpers._
 import models.errors.APIEditorError
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
 import models.user.User
 import models.{FormRegistry, NexusPath}
 import play.api.Logger
+import play.api.http.Status._
 import play.api.libs.json.JsValue
 import play.api.libs.ws.{WSClient, WSResponse}
 import services.instance.InstanceApiService
@@ -101,10 +103,16 @@ class EditorService @Inject()(
       case Right(currentInstanceDisplayed) =>
         val cleanedOriginalInstance = InstanceHelper.removeInternalFields(currentInstanceDisplayed)
         val instanceUpdateFromUser = FormService.buildInstanceFromForm(cleanedOriginalInstance, updateFromUser, config.nexusEndpoint)
-        val removedEmptyFields = InstanceHelper.buildDiffEntity(cleanedOriginalInstance, instanceUpdateFromUser)
-        val updateToBeStored = InstanceHelper.removeEmptyFieldsNotInOriginal(cleanedOriginalInstance, removedEmptyFields)
-        instanceApiService.getPreviousUserUpdate(wSClient, config.kgQueryEndpoint, instanceRef, user, token).flatMap{
-          case Left(err) => Future(Left(err))
+        val diff = InstanceHelper.buildDiffEntity(cleanedOriginalInstance, instanceUpdateFromUser)
+        val updateToBeStored = InstanceHelper.removeEmptyFieldsNotInOriginal(cleanedOriginalInstance, diff)
+        instanceApiService.get(wSClient, config.kgQueryEndpoint, instanceRef, token, EditorClient, Some(user.id)).flatMap{
+          case Left(res) =>
+            res.status match {
+              case NOT_FOUND =>
+                updateInstance(updateToBeStored, instanceRef, token, user.id)
+              case _ =>
+                Future(Left(APIEditorError(res.status, res.body)))
+            }
           case Right(instance) =>
             val mergeInstanceWithPreviousUserUpdate = EditorInstance(instance.merge(updateToBeStored.nexusInstance))
             updateInstance(mergeInstanceWithPreviousUserUpdate, instanceRef, token, user.id)

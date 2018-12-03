@@ -38,15 +38,19 @@ trait InstanceApiService {
            apiBaseEndpoint: String,
            nexusInstance: NexusInstanceReference,
            token: String,
-           serviceClient: ServiceClient = EditorClient
+           serviceClient: ServiceClient = EditorClient,
+           clientExtensionId: Option[String] = None
          )(implicit ec: ExecutionContext): Future[Either[WSResponse, NexusInstance]] = {
+    val params = clientExtensionId.map("clientIdExtension" -> _).getOrElse("" ->"")
     wSClient
       .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.toString}")
       .withHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
+      .addQueryStringParameters(params)
       .get()
       .map { res =>
         res.status match {
-          case OK => Right(NexusInstance(Some(nexusInstance.id), nexusInstance.nexusPath, res.json.as[JsObject]))
+          case OK =>
+            Right(NexusInstance(Some(nexusInstance.id), nexusInstance.nexusPath, res.json.as[JsObject]))
           case _ => Left(res)
         }
       }
@@ -112,27 +116,4 @@ trait InstanceApiService {
         }
       }
   }
-
-  def getPreviousUserUpdate(
-                             wSClient: WSClient,
-                             apiBaseEndpoint:String,
-                             nexusInstanceReference: NexusInstanceReference,
-                             user:User,
-                             token: String,
-                             serviceClient: ServiceClient = EditorClient
-                           ): Future[Either[APIEditorError, NexusInstance]] = {
-    wSClient
-      .url(s"$apiBaseEndpoint$instanceEndpoint/userUpdate/${nexusInstanceReference.toString}")
-      .withHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
-      .get()
-      .map{ res =>
-        res.status match {
-          case OK  =>
-            Right(res.json.as[NexusInstance])
-          case _ => Left(APIEditorError(res.status, res.body))
-        }
-      }
-  }
-
-
 }

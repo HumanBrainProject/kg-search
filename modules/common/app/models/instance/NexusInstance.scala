@@ -17,7 +17,6 @@
 
 package models.instance
 
-import cats.Semigroup
 import models.NexusPath
 import play.api.libs.json._
 
@@ -44,11 +43,11 @@ case class NexusInstance(nexusUUID: Option[String], nexusPath: NexusPath, conten
     this.getField(NexusInstance.Fields.nexusRev).getOrElse(JsNumber(1)).as[Long]
   }
 
+
   def merge(instance: NexusInstance):NexusInstance = {
-    val content = Semigroup[collection.Map[String, JsValue]].combine(this.content.value, instance.content.value)
+    val content = this.content.value ++ instance.content.value
     this.copy(content = Json.toJson(content).as[JsObject])
   }
-
 }
 
 object NexusInstance {
