@@ -64,7 +64,7 @@ class ArangoQueryService @Inject()(
                 (data.value.head \ "@type").as[String]
               }
               val result = EditorResponseWithCount(
-                Json.toJson(InstanceHelper.formatInstanceList( data, config.reconciledPrefix)),
+                Json.toJson(InstanceHelper.formatInstanceList( data,dataType)),
                 dataType,
                 (formService.formRegistry.registry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ "label").asOpt[String]
                   .getOrElse(nexusPath.toString()),

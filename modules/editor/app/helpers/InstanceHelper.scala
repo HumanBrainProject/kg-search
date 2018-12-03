@@ -17,7 +17,7 @@
 
 package helpers
 
-import constants.{EditorConstants, SchemaFieldsConstants}
+import constants.{EditorConstants, JsonLDConsts, SchemaFieldsConstants}
 import models._
 import models.instance.{EditorInstance, NexusInstance, PreviewInstance}
 import org.json4s.JsonAST._
@@ -107,10 +107,10 @@ object InstanceHelper {
   }
 
 
-  def formatInstanceList(jsArray: JsArray, reconciledSuffix:String): List[PreviewInstance] = {
+  def formatInstanceList(jsArray: JsArray, dataType: String): List[PreviewInstance] = {
 
     jsArray.value.map { el =>
-      val url = (el \ "@id").as[String]
+      val url = (el \ JsonLDConsts.ID).as[String]
       val name: String = (el \ SchemaFieldsConstants.NAME)
         .asOpt[String].getOrElse(
         (el \"http://hbp.eu/minds#alias" ).asOpt[String].getOrElse( (el \ "http://hbp.eu/minds#title").asOpt[String].getOrElse(""))
@@ -121,7 +121,7 @@ object InstanceHelper {
         ""
       }
       val id = url.split("/v0/data/").last
-      PreviewInstance(id,name, Some(description))
+      PreviewInstance(id,name, dataType, Some(description))
     }.toList
   }
 

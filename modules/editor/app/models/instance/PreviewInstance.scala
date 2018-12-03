@@ -16,9 +16,9 @@
 */
 package models.instance
 
-import constants.{EditorConstants, SchemaFieldsConstants}
+import constants.{EditorConstants, JsonLDConsts, SchemaFieldsConstants}
 
-case class PreviewInstance(id: String, name:String, description:Option[String])
+case class PreviewInstance(id: String, name:String, intanceType:String, description:Option[String])
 
 object PreviewInstance {
 
@@ -26,21 +26,24 @@ object PreviewInstance {
   import play.api.libs.json._
 
   def fromNexusInstance(nexusInstance: NexusInstance): PreviewInstance = {
-    val id = NexusInstanceReference.fromUrl(nexusInstance.getField("@id").get.as[String]).toString
+    val id = NexusInstanceReference.fromUrl(nexusInstance.getField(JsonLDConsts.ID).get.as[String]).toString
     val name = nexusInstance.getField(SchemaFieldsConstants.NAME).getOrElse(JsString("")).as[String]
     val description: Option[String] = nexusInstance.getField(SchemaFieldsConstants.DESCRIPTION).map(_.as[String])
-    PreviewInstance(id, name, description)
+    val t = nexusInstance.getField(JsonLDConsts.TYPE ).get.as[String]
+    PreviewInstance(id, name, t, description)
   }
 
   implicit val previewInstanceReads: Reads[PreviewInstance] = (
     (JsPath \ "id").read[String] and
       (JsPath \ "name").readNullable[String].map(_.getOrElse("")) and
+      (JsPath \ "dataType").read[String] and
       (JsPath \ "description").readNullable[String]
     ) (PreviewInstance.apply _)
 
   implicit val previewInstanceWrites: Writes[PreviewInstance] = (
     (JsPath \ "id").write[String] and
       (JsPath \ "name").write[String] and
+      (JsPath \ "dataType").write[String] and
       (JsPath \ "description").writeNullable[String]
     ) (unlift(PreviewInstance.unapply))
 }
