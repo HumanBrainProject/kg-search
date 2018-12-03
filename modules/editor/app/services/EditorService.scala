@@ -114,7 +114,7 @@ class EditorService @Inject()(
                 Future(Left(APIEditorError(res.status, res.body)))
             }
           case Right(instance) =>
-            val mergeInstanceWithPreviousUserUpdate = EditorInstance(instance.merge(updateToBeStored.nexusInstance))
+            val mergeInstanceWithPreviousUserUpdate = EditorInstance(InstanceHelper.removeInternalFields(instance).merge(updateToBeStored.nexusInstance))
             updateInstance(mergeInstanceWithPreviousUserUpdate, instanceRef, token, user.id)
         }
     }
