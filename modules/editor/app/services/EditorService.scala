@@ -30,6 +30,7 @@ import services.instance.InstanceApiService
 
 import scala.concurrent.{ExecutionContext, Future}
 
+
 class EditorService @Inject()(
                                wSClient: WSClient,
                                config: ConfigurationService,
@@ -102,7 +103,12 @@ class EditorService @Inject()(
         val instanceUpdateFromUser = FormService.buildInstanceFromForm(cleanedOriginalInstance, updateFromUser, config.nexusEndpoint)
         val removedEmptyFields = InstanceHelper.buildDiffEntity(cleanedOriginalInstance, instanceUpdateFromUser)
         val updateToBeStored = InstanceHelper.removeEmptyFieldsNotInOriginal(cleanedOriginalInstance, removedEmptyFields)
-        updateInstance(updateToBeStored, instanceRef, token, user.id)
+        instanceApiService.getPreviousUserUpdate(wSClient, config.kgQueryEndpoint, instanceRef, user, token).flatMap{
+          case Left(err) => Future(Left(err))
+          case Right(instance) =>
+            val mergeInstanceWithPreviousUserUpdate = EditorInstance(instance.merge(updateToBeStored.nexusInstance))
+            updateInstance(mergeInstanceWithPreviousUserUpdate, instanceRef, token, user.id)
+        }
     }
   }
 }
