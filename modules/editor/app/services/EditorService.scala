@@ -18,15 +18,19 @@
 package services
 
 import com.google.inject.Inject
+import constants.{EditorClient, EditorConstants, JsonLDConstants, UiConstants}
 import helpers._
 import models.errors.APIEditorError
-import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
+import play.api.http.Status._
+import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, PreviewInstance}
 import models.user.User
 import models.{FormRegistry, NexusPath}
 import play.api.Logger
+import play.api.http.Status._
 import play.api.libs.json.JsValue
 import play.api.libs.ws.{WSClient, WSResponse}
 import services.instance.InstanceApiService
+import services.query.QueryService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,6 +42,7 @@ class EditorService @Inject()(
   val logger = Logger(this.getClass)
 
   object instanceApiService extends InstanceApiService
+  object queryService extends QueryService
 
   def insertInstance(
                       newInstance: NexusInstance,
@@ -100,9 +105,73 @@ class EditorService @Inject()(
       case Right(currentInstanceDisplayed) =>
         val cleanedOriginalInstance = InstanceHelper.removeInternalFields(currentInstanceDisplayed)
         val instanceUpdateFromUser = FormService.buildInstanceFromForm(cleanedOriginalInstance, updateFromUser, config.nexusEndpoint)
-        val removedEmptyFields = InstanceHelper.buildDiffEntity(cleanedOriginalInstance, instanceUpdateFromUser)
-        val updateToBeStored = InstanceHelper.removeEmptyFieldsNotInOriginal(cleanedOriginalInstance, removedEmptyFields)
-        updateInstance(updateToBeStored, instanceRef, token, user.id)
+        val diff = InstanceHelper.buildDiffEntity(cleanedOriginalInstance, instanceUpdateFromUser)
+        val updateToBeStored = InstanceHelper.removeEmptyFieldsNotInOriginal(cleanedOriginalInstance, diff)
+        instanceApiService.get(wSClient, config.kgQueryEndpoint, instanceRef, token, EditorClient, Some(user.id)).flatMap{
+          case Left(res) =>
+            res.status match {
+              case NOT_FOUND =>
+                updateInstance(updateToBeStored, instanceRef, token, user.id)
+              case _ =>
+                Future(Left(APIEditorError(res.status, res.body)))
+            }
+          case Right(instance) =>
+            val mergeInstanceWithPreviousUserUpdate = EditorInstance(InstanceHelper.removeInternalFields(instance).merge(updateToBeStored.nexusInstance))
+            updateInstance(mergeInstanceWithPreviousUserUpdate, instanceRef, token, user.id)
+        }
     }
   }
+
+  def retrieveInstancesByIds(
+                              instanceIds: List[NexusInstanceReference],
+                              token: String
+                            ): Future[Either[APIEditorError, List[PreviewInstance]]] = {
+    val listOfResponse = for {
+      id <- instanceIds
+    } yield queryService.getInstancesWithId(wSClient, config.kgQueryEndpoint, id, EditorService.kgQueryGetPreviewInstance(), token)
+
+    Future.sequence(listOfResponse).map {
+      ls =>
+        val r = ls.filter(l => l.status == OK)
+        if (r.isEmpty) {
+          Left(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances"))
+        } else {
+          Right(r.map(res => res.json.as[PreviewInstance]))
+        }
+    }
+  }
+
+
+}
+
+object EditorService {
+
+
+  def kgQueryGetPreviewInstance(
+                                 context: String = EditorConstants.context
+                               ): String =
+    s"""
+       |{
+       |  "@context": $context,
+       |  "schema:name": "",
+       |  "fields": [
+       |    {
+       |      "fieldname": "name",
+       |      "relative_path": "schema:name"
+       |    },
+       |    {
+       |      "fieldname": "id",
+       |      "relative_path": "base:relativeUrl"
+       |    },
+       |    {
+       |      "fieldname": "description",
+       |      "relative_path": "schema:description"
+       |    },
+       |    {
+       |      "fieldname": "${UiConstants.DATATYPE}",
+       |      "relative_path": "${JsonLDConstants.TYPE}"
+       |    }
+       |  ]
+       |}
+    """.stripMargin
 }

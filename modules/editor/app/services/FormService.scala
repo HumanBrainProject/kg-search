@@ -18,7 +18,7 @@
 package services
 
 import com.google.inject.{Inject, Singleton}
-import constants.{EditorConstants, InternalSchemaFieldsConstants}
+import constants.{EditorConstants, InternalSchemaFieldsConstants, JsonLDConstants, UiConstants}
 import models.editorUserList.BookmarkList
 import models._
 import models.instance.{EditorInstance, NexusInstance}
@@ -73,7 +73,7 @@ object FormService{
       if(jsValue.toString() == "null"){
         JsNull
       }else{
-        val correctedObj = jsValue.as[JsObject] - "description" - "name" - "status" - "childrenStatus" -
+        val correctedObj = jsValue.as[JsObject] - "description" - "name" - "status" - "childrenStatus" - UiConstants.DATATYPE -
           s"${EditorConstants.BASENAMESPACE}${EditorConstants.RELATIVEURL}"
         val res = correctedObj.value.map {
           case (k, v) =>
@@ -119,7 +119,7 @@ object FormService{
                   case (version, formDetails) =>
                     BookmarkList(
                       s"$organization/$domain/$schema/$version",
-                      (formDetails.as[JsObject] \ "label").as[String],
+                      (formDetails.as[JsObject] \ UiConstants.LABEL).as[String],
                       Some((formDetails.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true)),
                       (formDetails.as[JsObject] \ "ui_info").asOpt[JsObject],
                       (formDetails.as[JsObject] \ "color").asOpt[String]
@@ -159,13 +159,14 @@ object FormService{
     def addNexusEndpointToLinks(item: JsValue): JsObject = {
       val id = (item.as[JsObject] \ "id" ).as[String]
       if(!id.startsWith("http://")){
-        Json.obj("@id" ->  JsString(s"$nexusEndpoint/v0/data/$id"))
+        Json.obj(JsonLDConstants.ID ->  JsString(s"$nexusEndpoint/v0/data/$id"))
       }else{
-        Json.obj("@id" ->  JsString(id))
+        Json.obj(JsonLDConstants.ID ->  JsString(id))
       }
     }
 
-    val fields = (registry.registry \ instancePath.org \ instancePath.domain \ instancePath.schema \ instancePath.version \ "fields").as[JsObject].value
+    val fields = (registry.registry \ instancePath.org \ instancePath.domain \ instancePath.schema \ instancePath.version \ UiConstants.FIELDS)
+      .as[JsObject].value
     val m = newInstance.value.map{ case (key, v) =>
       val formObjectType = (fields(key) \ "type").as[String]
       formObjectType match {
@@ -202,7 +203,7 @@ object FormService{
               "nexus_id" -> JsString(nexusId))
           )
 
-          val fields = (formTemplate \ "fields").as[JsObject].fields.foldLeft(idFields) {
+          val fields = (formTemplate \ UiConstants.FIELDS).as[JsObject].fields.foldLeft(idFields) {
             case (filledTemplate, (key, fieldContent)) =>
               if (data.as[JsObject].keys.contains(key)) {
                 val newValue = (fieldContent \ "type").asOpt[String].getOrElse("") match {
@@ -221,7 +222,7 @@ object FormService{
 
         }else {
           //Returning a blank template
-          val escapedForm = ( formTemplate \ "fields" ).as[JsObject].value.map{
+          val escapedForm = ( formTemplate \ UiConstants.FIELDS).as[JsObject].value.map{
             case (key, value) =>
               (key , value)
           }
@@ -234,8 +235,8 @@ object FormService{
 
 
   def fillFormTemplate(fields: JsValue, formTemplate:JsValue, alternatives: JsObject = Json.obj()): JsValue ={
-    Json.obj("fields" -> fields) +
-      ("label", (formTemplate \ "label").get) +
+    Json.obj(UiConstants.FIELDS -> fields) +
+      (UiConstants.LABEL, (formTemplate \ UiConstants.LABEL).get) +
       ("editable", JsBoolean((formTemplate.as[JsObject] \ "editable").asOpt[Boolean].getOrElse(true))) +
       ("ui_info", (formTemplate \ "ui_info").getOrElse(JsObject.empty)) +
       ("alternatives", alternatives )
