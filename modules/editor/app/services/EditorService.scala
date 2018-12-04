@@ -37,6 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class EditorService @Inject()(
                                wSClient: WSClient,
                                config: ConfigurationService,
+                               formService: FormService
                              )(implicit executionContext: ExecutionContext) {
 
   val logger = Logger(this.getClass)
@@ -136,7 +137,7 @@ class EditorService @Inject()(
         if (r.isEmpty) {
           Left(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances"))
         } else {
-          Right(r.map(res => res.json.as[PreviewInstance]))
+          Right(r.map(res =>res.json.as[PreviewInstance].setLabel(formService.formRegistry)))
         }
     }
   }
