@@ -51,17 +51,11 @@ case class NexusInstance(nexusUUID: Option[String], nexusPath: NexusPath, conten
 }
 
 object NexusInstance {
-//  def apply(jsValue: JsValue): NexusInstance = {
-//    val (id, path) = extractIdAndPath(jsValue)
-//    new NexusInstance(id, path , jsValue.as[JsObject])
-//  }
 
   def extractIdAndPath(jsValue: JsValue): NexusInstanceReference = {
     val nexusUrl = (jsValue \ "@id").as[String]
     NexusInstanceReference.fromUrl(nexusUrl)
   }
-
-
 
   def getIdForEditor(url: String, reconciledPrefix: String): String = {
     assert(url contains "v0/data/")
@@ -71,7 +65,6 @@ object NexusInstance {
       .originalPath(reconciledPrefix)
       .toString() + "/" + id
   }
-  // extract id, rev and userId of updator for this update
 
   object Fields{
     val nexusId = "@id"

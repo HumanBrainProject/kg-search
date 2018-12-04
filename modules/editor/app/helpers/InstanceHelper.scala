@@ -19,7 +19,7 @@ package helpers
 
 import constants.{EditorConstants, JsonLDConstants, SchemaFieldsConstants, UiConstants}
 import models._
-import models.instance.{EditorInstance, NexusInstance, PreviewInstance}
+import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, PreviewInstance}
 import org.json4s.JsonAST._
 import org.json4s.native.{JsonMethods, JsonParser}
 import org.json4s.{Diff, JsonAST}
@@ -107,7 +107,7 @@ object InstanceHelper {
   }
 
 
-  def formatInstanceList(jsArray: JsArray, dataType: String): List[PreviewInstance] = {
+  def formatInstanceList(jsArray: JsArray, dataType: String, formRegistry: FormRegistry): List[PreviewInstance] = {
 
     jsArray.value.map { el =>
       val url = (el \ JsonLDConstants.ID).as[String]
@@ -121,12 +121,16 @@ object InstanceHelper {
         ""
       }
       val id = url.split("/v0/data/").last
-      PreviewInstance(id,name, dataType, Some(description))
+      val path = NexusInstanceReference.fromUrl(id).nexusPath
+      val label = (formRegistry.registry \ path.org \  path.domain \
+      path.schema \ path.version \ UiConstants.LABEL).asOpt[String].getOrElse(path.toString())
+      PreviewInstance(id,name, dataType, Some(description), Some(label))
     }.toList
   }
 
   def addDefaultFields(instance: NexusInstance,formRegistry:FormRegistry): NexusInstance = {
-    val fields = (formRegistry.registry \ instance.nexusPath.org \ instance.nexusPath.domain \ instance.nexusPath.schema \instance.nexusPath.version \ UiConstants.FIELDS)
+    val fields = (formRegistry.registry \ instance.nexusPath.org \ instance.nexusPath.domain \ instance.nexusPath.schema
+      \instance.nexusPath.version \ UiConstants.FIELDS)
       .as[JsObject].value
     val m = fields.map { case (k, v) =>
       val fieldValue =  instance.getField(k)

@@ -17,34 +17,50 @@
 package models.instance
 
 import constants.{EditorConstants, JsonLDConstants, SchemaFieldsConstants, UiConstants}
+import models.{FormRegistry, NexusPath}
 
-case class PreviewInstance(id: String, name:String, intanceType:String, description:Option[String])
+case class PreviewInstance(id: String, name:String, instanceType:String, description:Option[String], label:Option[String]){
+  def setLabel(formRegistry: FormRegistry): PreviewInstance ={
+    val path = NexusInstanceReference.fromUrl(id).nexusPath
+    val label = (formRegistry.registry \ path.org \  path.domain \
+      path.schema \ path.version \ UiConstants.LABEL).as[String]
+    this.copy(label = Some(label))
+  }
+}
 
 object PreviewInstance {
 
   import play.api.libs.functional.syntax._
   import play.api.libs.json._
 
-  def fromNexusInstance(nexusInstance: NexusInstance): PreviewInstance = {
+  def fromNexusInstance(nexusInstance: NexusInstance, formRegistry:FormRegistry): PreviewInstance = {
     val id = NexusInstanceReference.fromUrl(nexusInstance.getField(JsonLDConstants.ID).get.as[String]).toString
     val name = nexusInstance.getField(SchemaFieldsConstants.NAME).getOrElse(JsString("")).as[String]
     val description: Option[String] = nexusInstance.getField(SchemaFieldsConstants.DESCRIPTION).map(_.as[String])
     val t = nexusInstance.getField(JsonLDConstants.TYPE ).get.as[String]
-    PreviewInstance(id, name, t, description)
+    val label = (formRegistry.registry \ nexusInstance.nexusPath.org \  nexusInstance.nexusPath.domain \
+      nexusInstance.nexusPath.schema \ nexusInstance.nexusPath.version \ UiConstants.LABEL).asOpt[String].getOrElse(nexusInstance.nexusPath.toString())
+    PreviewInstance(id, name, t, description, Some(label))
   }
+
+
 
   implicit val previewInstanceReads: Reads[PreviewInstance] = (
     (JsPath \ "id").read[String] and
       (JsPath \ "name").readNullable[String].map(_.getOrElse("")) and
-      (JsPath \ UiConstants.DATATYPE).read[String] and
-      (JsPath \ "description").readNullable[String]
+      (JsPath \ UiConstants.DATATYPE).read[JsValue].map{
+        js => if(js.asOpt[List[String]].isDefined) js.as[List[String]].head else js.as[String]
+      } and
+      (JsPath \ "description").readNullable[String] and
+      (JsPath \ UiConstants.LABEL).readNullable[String]
     ) (PreviewInstance.apply _)
 
   implicit val previewInstanceWrites: Writes[PreviewInstance] = (
     (JsPath \ "id").write[String] and
       (JsPath \ "name").write[String] and
       (JsPath \ UiConstants.DATATYPE).write[String] and
-      (JsPath \ "description").writeNullable[String]
+      (JsPath \ "description").writeNullable[String] and
+      (JsPath \ UiConstants.LABEL).writeNullable[String]
     ) (unlift(PreviewInstance.unapply))
 
 
