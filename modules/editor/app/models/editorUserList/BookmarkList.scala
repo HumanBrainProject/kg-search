@@ -16,11 +16,12 @@
 package models.editorUserList
 
 import constants.EditorConstants
+import models.specification.UIInfo
 import play.api.libs.json.JsObject
 import services.bookmark.EditorBookmarkService
 
 
-case class BookmarkList(id: String, name: String, editable: Option[Boolean], uiSpec: Option[JsObject], color:Option[String])
+case class BookmarkList(id: String, name: String, editable: Option[Boolean], UIInfo: Option[UIInfo], color:Option[String])
 
 object BookmarkList {
 
@@ -31,7 +32,7 @@ object BookmarkList {
     (JsPath \ "id").read[String].map(id => s"${EditorConstants.bookmarkListPath.toString()}/${id.split("/").last}") and
       (JsPath \ "name").read[String] and
       (JsPath \ "editable").readNullable[Boolean] and
-      (JsPath \ "uiSpec").readNullable[JsObject] and
+      (JsPath \ "uiSpec").readNullable[UIInfo] and
       (JsPath \ "color").readNullable[String]
     )(BookmarkList.apply _ )
 
@@ -39,7 +40,7 @@ object BookmarkList {
     (JsPath \ "id").write[String] and
       (JsPath \ "name").write[String] and
       (JsPath \ "editable").writeNullable[Boolean] and
-      (JsPath \ "uiSpec").writeNullable[JsObject] and
+      (JsPath \ "uiSpec").writeNullable[UIInfo] and
       (JsPath \ "color").writeNullable[String]
     )(unlift(BookmarkList.unapply))
 }

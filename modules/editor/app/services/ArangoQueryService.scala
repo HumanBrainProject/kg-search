@@ -20,11 +20,12 @@ import constants.{JsonLDConstants, SchemaFieldsConstants, UiConstants}
 import helpers.InstanceHelper
 import models.errors.APIEditorError
 import models.instance.NexusInstance
-import models.{EditorResponseObject, EditorResponseWithCount, FormRegistry, NexusPath}
+import models.{EditorResponseObject, EditorResponseWithCount, NexusPath}
 import play.api.http.HeaderNames._
 import play.api.http.Status._
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
+import services.specification.FormService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -66,8 +67,7 @@ class ArangoQueryService @Inject()(
               val result = EditorResponseWithCount(
                 Json.toJson(InstanceHelper.formatInstanceList( data,dataType, formService.formRegistry)),
                 dataType,
-                (formService.formRegistry.registry \ nexusPath.org \ nexusPath.domain \ nexusPath.schema \ nexusPath.version \ UiConstants.LABEL).asOpt[String]
-                  .getOrElse(nexusPath.toString()),
+                formService.formRegistry.registry.get(nexusPath).map(_.label).getOrElse(nexusPath.toString()),
                 total
               )
               Right(

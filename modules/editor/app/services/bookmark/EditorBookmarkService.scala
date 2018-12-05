@@ -23,6 +23,7 @@ import helpers.{BookmarkHelper, InstanceHelper}
 import models._
 import models.editorUserList._
 import models.instance.{NexusInstance, NexusInstanceReference, PreviewInstance}
+import models.specification.FormRegistry
 import models.user.{EditorUser, NexusUser}
 import play.api.Logger
 import play.api.http.ContentTypes._
@@ -34,6 +35,7 @@ import services.NexusService.{SKIP, UPDATE}
 import services._
 import services.instance.InstanceApiService
 import services.query.QueryService
+import services.specification.FormService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -318,7 +320,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
                 } yield added ::: deleted
                 results.map{
                   l => l.map{
-                    case Left(error) => logger.error(s"Error while updating bookmarks - ${error.msg}")
+                    case Left(error) => logger.error(s"Error while updating bookmarks - ${error.content}")
                       Left(error)
                     case Right(()) => Right(())
 

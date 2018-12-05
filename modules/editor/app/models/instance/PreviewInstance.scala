@@ -17,13 +17,13 @@
 package models.instance
 
 import constants.{EditorConstants, JsonLDConstants, SchemaFieldsConstants, UiConstants}
-import models.{FormRegistry, NexusPath}
+import models.NexusPath
+import models.specification.FormRegistry
 
 case class PreviewInstance(id: String, name:String, instanceType:String, description:Option[String], label:Option[String]){
   def setLabel(formRegistry: FormRegistry): PreviewInstance ={
     val path = NexusInstanceReference.fromUrl(id).nexusPath
-    val label = (formRegistry.registry \ path.org \  path.domain \
-      path.schema \ path.version \ UiConstants.LABEL).as[String]
+    val label = formRegistry.registry.get(path).map(_.label).getOrElse(path.toString())
     this.copy(label = Some(label))
   }
 }
@@ -38,8 +38,7 @@ object PreviewInstance {
     val name = nexusInstance.getField(SchemaFieldsConstants.NAME).getOrElse(JsString("")).as[String]
     val description: Option[String] = nexusInstance.getField(SchemaFieldsConstants.DESCRIPTION).map(_.as[String])
     val t = nexusInstance.getField(JsonLDConstants.TYPE ).get.as[String]
-    val label = (formRegistry.registry \ nexusInstance.nexusPath.org \  nexusInstance.nexusPath.domain \
-      nexusInstance.nexusPath.schema \ nexusInstance.nexusPath.version \ UiConstants.LABEL).asOpt[String].getOrElse(nexusInstance.nexusPath.toString())
+    val label = formRegistry.registry.get(nexusInstance.nexusPath).map(_.label).getOrElse(nexusInstance.nexusPath.toString())
     PreviewInstance(id, name, t, description, Some(label))
   }
 

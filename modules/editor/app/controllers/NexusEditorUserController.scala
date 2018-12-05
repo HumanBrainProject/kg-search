@@ -30,6 +30,7 @@ import play.api.libs.json._
 import play.api.mvc.{AnyContent, _}
 import services._
 import services.bookmark.EditorBookmarkService
+import services.specification.FormService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -185,7 +186,7 @@ class NexusEditorUserController @Inject()(
       for{
         token <- oIDCAuthService.getTechAccessToken()
         result <- editorUserListService.deleteBookmarkList(bookmarkRef, token).map {
-          case Left(error) => InternalServerError(Json.toJson(error))
+          case Left(error) => InternalServerError(error.toJson)
           case Right(()) => NoContent
         }
       } yield result
