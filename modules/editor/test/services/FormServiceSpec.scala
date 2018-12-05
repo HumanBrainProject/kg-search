@@ -1,6 +1,5 @@
 package services
 
-import constants.EditorConstants.UPDATE
 import helpers.ConfigMock
 import mockws.MockWSHelpers
 import models._
@@ -15,6 +14,7 @@ import play.api.Application
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.WSClient
 import play.api.test.Injecting
+import services.specification.FormService
 
 class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpers with MockitoSugar with Injecting {
   override def fakeApplication(): Application = ConfigMock.fakeApplicationConfig.build()
