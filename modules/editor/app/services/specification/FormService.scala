@@ -15,18 +15,20 @@
 *   limitations under the License.
 */
 
-package services
+package services.specification
 
 import com.google.inject.{Inject, Singleton}
-import constants.{EditorConstants, InternalSchemaFieldsConstants, NexusConstants, JsonLDConstants, UiConstants}
+import constants.{EditorConstants, InternalSchemaFieldsConstants, JsonLDConstants, UiConstants}
 import models.editorUserList.BookmarkList
-import models._
-import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
+import models.instance.{EditorInstance, NexusInstance}
+import models.specification.{DropdownSelect, FormRegistry, UISpec}
 import models.user.NexusUser
+import models.{specification, _}
 import play.api.Logger
+import play.api.http.Status.OK
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
-import play.api.http.Status.OK
+import services.{ConfigurationService, specification}
 
 import scala.annotation.tailrec
 import scala.concurrent.duration.FiniteDuration
@@ -61,8 +63,6 @@ class FormService @Inject()(
   }
 }
 object FormService{
-
-  object FormRegistryService extends FormRegistryService
 
   def removeKey(jsValue: JsValue):JsValue = {
     if (jsValue.validateOpt[JsObject].isSuccess) {
@@ -119,12 +119,8 @@ object FormService{
   }
 
   def buildInstanceFromForm(original: NexusInstance, modificationFromUser: JsValue, nexusEndpoint: String): NexusInstance = {
-    //    val flattened = JsFlattener(formContent)
-    //    applyChanges(original, flattened)
     val formContent = Json.parse(modificationFromUser.toString()).as[JsObject] - "id"
     val formWithID = removeClientKeysCorrectLinks(formContent, nexusEndpoint)
-//    val cleanForm = FormService.removeKey(formContent.as[JsValue])
-//    val formWithID = cleanForm.toString().replaceAll(""""id":"""", s""""@id":"${nexusEndpoint}/v0/data/""")
     val res= original.content.deepMerge(formWithID)
     original.copy(content = res)
   }
@@ -229,7 +225,7 @@ object FormService{
   }
 
   def editableEntities(user: NexusUser, formRegistry: FormRegistry): List[BookmarkList] = {
-    val registry = FormRegistryService.filterOrgs(formRegistry, user.organizations)
+    val registry = FormRegistry.filterOrgs(formRegistry, user.organizations)
     buildEditableEntityTypesFromRegistry(registry)
   }
 

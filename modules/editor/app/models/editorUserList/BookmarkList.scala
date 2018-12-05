@@ -16,7 +16,7 @@
 package models.editorUserList
 
 import constants.EditorConstants
-import models.UIInfo
+import models.specification.UIInfo
 import play.api.libs.json.JsObject
 import services.bookmark.EditorBookmarkService
 

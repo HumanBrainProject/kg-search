@@ -20,6 +20,7 @@ import models.errors.APIEditorError
 import models._
 import models.editorUserList.{BOOKMARKFOLDER, BookmarkList, BookmarkListFolder, FolderType}
 import models.instance.{NexusInstanceReference, PreviewInstance}
+import models.specification.FormRegistry
 import models.user.EditorUser
 import play.api.libs.ws.WSResponse
 

@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-package models
+package models.specification
 
 case class UISpec(label: String,
                   fields: Map[String, EditorFieldSpecification],
@@ -25,8 +25,8 @@ case class UISpec(label: String,
 
 object UISpec {
 
-  import play.api.libs.json._
   import play.api.libs.functional.syntax._
+  import play.api.libs.json._
 
   implicit val UISpecReads: Reads[UISpec] = (
     (JsPath \ "label").read[String] and

@@ -14,14 +14,14 @@
 *   limitations under the License.
 */
 
-package models
+package models.specification
 
 case class UIInfo(labelField: String, promotedFields: List[String], promote: Option[Boolean])
 
 object UIInfo {
 
-  import play.api.libs.json._
   import play.api.libs.functional.syntax._
+  import play.api.libs.json._
 
   implicit val UIInfoReads: Reads[UIInfo] = (
     (JsPath \ "labelField").read[String] and

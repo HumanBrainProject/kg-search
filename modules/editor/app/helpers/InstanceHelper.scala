@@ -20,13 +20,14 @@ package helpers
 import constants.{EditorConstants, JsonLDConstants, SchemaFieldsConstants, UiConstants}
 import models._
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, PreviewInstance}
+import models.specification.{DropdownSelect, FormRegistry}
 import org.json4s.JsonAST._
 import org.json4s.native.{JsonMethods, JsonParser}
 import org.json4s.{Diff, JsonAST}
 import play.api.Logger
 import play.api.libs.json.Reads.of
 import play.api.libs.json._
-import services.FormService
+import services.specification.FormService
 
 import scala.collection.immutable.SortedSet
 

@@ -14,11 +14,13 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package models
+package models.specification
+
+import models.NexusPath
 
 case class FormRegistry(registry: Map[NexusPath, UISpec])
 
-trait FormRegistryService {
+object FormRegistry{
 
   def filterOrgs(formRegistry: FormRegistry, orgs: Seq[String]): FormRegistry = {
     formRegistry.copy(

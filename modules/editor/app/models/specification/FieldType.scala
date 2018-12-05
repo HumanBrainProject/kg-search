@@ -15,7 +15,7 @@
 *   limitations under the License.
 */
 
-package models
+package models.specification
 
 import play.api.libs.json.{JsValue, Json, Writes}
 

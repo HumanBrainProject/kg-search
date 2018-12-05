@@ -17,7 +17,8 @@
 package models.instance
 
 import constants.{EditorConstants, JsonLDConstants, SchemaFieldsConstants, UiConstants}
-import models.{FormRegistry, NexusPath}
+import models.NexusPath
+import models.specification.FormRegistry
 
 case class PreviewInstance(id: String, name:String, instanceType:String, description:Option[String], label:Option[String]){
   def setLabel(formRegistry: FormRegistry): PreviewInstance ={

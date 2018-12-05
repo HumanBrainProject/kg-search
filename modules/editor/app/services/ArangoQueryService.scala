@@ -20,11 +20,12 @@ import constants.{JsonLDConstants, SchemaFieldsConstants, UiConstants}
 import helpers.InstanceHelper
 import models.errors.APIEditorError
 import models.instance.NexusInstance
-import models.{EditorResponseObject, EditorResponseWithCount, FormRegistry, NexusPath}
+import models.{EditorResponseObject, EditorResponseWithCount, NexusPath}
 import play.api.http.HeaderNames._
 import play.api.http.Status._
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
+import services.specification.FormService
 
 import scala.concurrent.{ExecutionContext, Future}
 

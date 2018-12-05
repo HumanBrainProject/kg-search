@@ -5,6 +5,7 @@ import helpers.ConfigMock
 import mockws.MockWSHelpers
 import models._
 import models.instance.{EditorInstance, NexusInstance}
+import models.specification._
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar
 import org.mockito.Mockito._

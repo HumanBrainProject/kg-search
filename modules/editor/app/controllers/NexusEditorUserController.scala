@@ -30,6 +30,7 @@ import play.api.libs.json._
 import play.api.mvc.{AnyContent, _}
 import services._
 import services.bookmark.EditorBookmarkService
+import services.specification.FormService
 
 import scala.concurrent.{ExecutionContext, Future}
 
