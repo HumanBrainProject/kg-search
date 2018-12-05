@@ -65,7 +65,7 @@ class NexusEditorController @Inject()(
     */
 
   def getInstance(org: String, domain: String, schema: String, version: String, id: String): Action[AnyContent] = Action.async { implicit request =>
-    val token = request.headers.get("Authorization").getOrElse("")
+    val token = OIDCHelper.getTokenFromRequest(request)
     val nexusInstanceReference = NexusInstanceReference(org, domain, schema, version, id)
     editorService.retrieveInstance(nexusInstanceReference, token).map {
       case Left(error) =>  logger.error(s"Error: Could not fetch instance : ${nexusInstanceReference.nexusPath.toString()}/$id - ${error.content}")
@@ -80,9 +80,26 @@ class NexusEditorController @Inject()(
     }
   }
 
+  def getInstancesByIds(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
+    val token = OIDCHelper.getTokenFromRequest(request)
+    val listOfIds = for{
+      bodyContent <- request.body.asJson
+      ids <- bodyContent.asOpt[List[String]]
+    } yield ids.map(NexusInstanceReference.fromUrl)
+
+    listOfIds match {
+      case Some(ids) =>
+        editorService.retrieveInstancesByIds(ids, token).map{
+          case Left(err) => err.toResult
+          case Right(instances) => Ok(Json.toJson(EditorResponseObject(Json.toJson(instances))))
+        }
+      case None => Future(BadRequest("Missing body content"))
+    }
+  }
+
   def getInstanceNumberOfAvailableRevisions(org: String, domain:String, datatype: String, version:String, id: String): Action[AnyContent] =
     Action.async { implicit request =>
-    val token = request.headers.get("Authorization").getOrElse("")
+    val token = OIDCHelper.getTokenFromRequest(request)
     val nexusInstanceRef = NexusInstanceReference(org, domain, datatype, version, id)
     editorService.retrieveInstance(nexusInstanceRef, token).flatMap[Result] {
       case Left(error) =>

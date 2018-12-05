@@ -16,7 +16,7 @@
 package services
 
 import com.google.inject.Inject
-import constants.SchemaFieldsConstants
+import constants.{JsonLDConstants, SchemaFieldsConstants, UiConstants}
 import helpers.InstanceHelper
 import models.errors.APIEditorError
 import models.instance.NexusInstance
@@ -58,13 +58,13 @@ class ArangoQueryService @Inject()(
             }
             val data = (res.json \ "data").as[JsArray]
             if(data.value.nonEmpty){
-              val dataType = if((data.value.head \ "@type").asOpt[List[String]].isDefined){
-                (data.value.head \ "@type").as[List[String]].head
+              val dataType = if((data.value.head \ JsonLDConstants.TYPE).asOpt[List[String]].isDefined){
+                (data.value.head \ JsonLDConstants.TYPE).as[List[String]].head
               }else{
-                (data.value.head \ "@type").as[String]
+                (data.value.head \ JsonLDConstants.TYPE).as[String]
               }
               val result = EditorResponseWithCount(
-                Json.toJson(InstanceHelper.formatInstanceList( data, config.reconciledPrefix)),
+                Json.toJson(InstanceHelper.formatInstanceList( data,dataType, formService.formRegistry)),
                 dataType,
                 formService.formRegistry.registry.get(nexusPath).map(_.label).getOrElse(nexusPath.toString()),
                 total

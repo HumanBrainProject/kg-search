@@ -17,9 +17,9 @@
 
 package helpers
 
-import constants.{EditorConstants, SchemaFieldsConstants}
+import constants.{EditorConstants, JsonLDConstants, SchemaFieldsConstants, UiConstants}
 import models._
-import models.instance.{EditorInstance, NexusInstance, PreviewInstance}
+import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, PreviewInstance}
 import org.json4s.JsonAST._
 import org.json4s.native.{JsonMethods, JsonParser}
 import org.json4s.{Diff, JsonAST}
@@ -107,10 +107,10 @@ object InstanceHelper {
   }
 
 
-  def formatInstanceList(jsArray: JsArray, reconciledSuffix:String): List[PreviewInstance] = {
+  def formatInstanceList(jsArray: JsArray, dataType: String, formRegistry: FormRegistry): List[PreviewInstance] = {
 
     jsArray.value.map { el =>
-      val url = (el \ "@id").as[String]
+      val url = (el \ JsonLDConstants.ID).as[String]
       val name: String = (el \ SchemaFieldsConstants.NAME)
         .asOpt[String].getOrElse(
         (el \"http://hbp.eu/minds#alias" ).asOpt[String].getOrElse( (el \ "http://hbp.eu/minds#title").asOpt[String].getOrElse(""))
@@ -121,7 +121,9 @@ object InstanceHelper {
         ""
       }
       val id = url.split("/v0/data/").last
-      PreviewInstance(id,name, Some(description))
+      val path = NexusInstanceReference.fromUrl(id).nexusPath
+      val label = formRegistry.registry.get(path).map(_.label).getOrElse(path.toString())
+      PreviewInstance(id,name, dataType, Some(description), Some(label))
     }.toList
   }
 
@@ -152,18 +154,16 @@ object InstanceHelper {
 
     val contentUpdate = updates.contentToMap().filter {
       case (k, v) =>
-        if(
-          (originalInstance.content \ k).isEmpty
-        ) {
-          true
-        }else if (((v.asOpt[JsArray].isDefined && v.as[List[JsValue]].isEmpty) ||
+       if (((v.asOpt[JsArray].isDefined && v.as[List[JsValue]].isEmpty) ||
           v == JsNull) &&
           (originalInstance.content \ k).isEmpty) {
           false
         } else if (
-          compareUniqueElementObject(v, (originalInstance.content \ k).as[JsValue])
+         ((originalInstance.content \ k).isDefined &&
+          compareUniqueElementObject(v, (originalInstance.content \ k).as[JsValue]))
             ||
-            compareUniqueElementObject((originalInstance.content \ k).as[JsValue], v)
+           ((originalInstance.content \ k).isDefined &&
+          compareUniqueElementObject((originalInstance.content \ k).as[JsValue], v))
         ) {
           // An object and an array with only this object should be considered the same
           false
@@ -177,7 +177,8 @@ object InstanceHelper {
   def removeInternalFields(instance: NexusInstance): NexusInstance = {
     instance.copy(content = FormService.removeKey(instance.content).as[JsObject] -
       s"${EditorConstants.BASENAMESPACE}${EditorConstants.RELATIVEURL}" -
-      s"${EditorConstants.INFERENCESPACE}${EditorConstants.ALTERNATIVES}"
+      s"${EditorConstants.INFERENCESPACE}${EditorConstants.ALTERNATIVES}" -
+      JsonLDConstants.ID - JsonLDConstants.TYPE - "https://schema.hbp.eu/inference/extends"
     )
   }
 

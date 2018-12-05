@@ -222,7 +222,6 @@ class NexusEditorUserController @Inject()(
   def retrieveBookmarks : Action[AnyContent] =
     (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
       import EditorBookmarkService.JsEither._
-      val token = request.headers.toSimpleMap.getOrElse(AUTHORIZATION, "")
       val instanceList = for{
         json <- request.body.asJson
         instances <- json.asOpt[List[String]]

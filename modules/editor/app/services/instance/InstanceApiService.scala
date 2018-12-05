@@ -19,13 +19,16 @@ package services.instance
 
 import constants.{EditorClient, EditorConstants, ServiceClient}
 import models.NexusPath
+import models.errors.APIEditorError
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
+import models.user.User
 import play.api.libs.json.{JsObject, JsValue}
 import play.api.libs.ws.{WSClient, WSResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 import play.api.http.Status._
 import play.api.http.HeaderNames._
+import play.filters.csrf.CSRF.Token
 
 trait InstanceApiService {
     val instanceEndpoint = "/internal/api/instances"
@@ -35,15 +38,19 @@ trait InstanceApiService {
            apiBaseEndpoint: String,
            nexusInstance: NexusInstanceReference,
            token: String,
-           serviceClient: ServiceClient = EditorClient
+           serviceClient: ServiceClient = EditorClient,
+           clientExtensionId: Option[String] = None
          )(implicit ec: ExecutionContext): Future[Either[WSResponse, NexusInstance]] = {
+    val params = clientExtensionId.map("clientIdExtension" -> _).getOrElse("" ->"")
     wSClient
       .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.toString}")
       .withHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
+      .addQueryStringParameters(params)
       .get()
       .map { res =>
         res.status match {
-          case OK => Right(NexusInstance(Some(nexusInstance.id), nexusInstance.nexusPath, res.json.as[JsObject]))
+          case OK =>
+            Right(NexusInstance(Some(nexusInstance.id), nexusInstance.nexusPath, res.json.as[JsObject]))
           case _ => Left(res)
         }
       }
@@ -109,6 +116,4 @@ trait InstanceApiService {
         }
       }
   }
-
-
 }

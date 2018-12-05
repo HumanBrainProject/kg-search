@@ -17,7 +17,6 @@
 
 package models.instance
 
-import constants.SchemaFieldsConstants
 import models.NexusPath
 import play.api.libs.json._
 
@@ -30,15 +29,25 @@ case class NexusInstance(nexusUUID: Option[String], nexusPath: NexusPath, conten
 
   def getField(fieldName: String): Option[JsValue] = content.value.get(fieldName)
 
-//  def modificationOfLinks(nexusEndpoint: String, reconciledPrefix: String): NexusInstance = {
-//    val id = (this.content \ "@id").as[String]
-//    val correctedId = s"$nexusEndpoint/v0/data/${NexusInstance.getIdForEditor(id, reconciledPrefix)}"
-//    val jsonTransformer = (__ ).json.update(
-//      __.read[JsObject].map{ o => o ++ Json.obj("@id" -> correctedId)}
-//    )
-//    NexusInstance(this.nexusUUID, this.nexusPath, this.content.transform(jsonTransformer).get)
-//  }
+  def modificationOfLinks(nexusEndpoint: String, reconciledPrefix: String): NexusInstance = {
+    val id = (this.content \ "@id").as[String]
+    val correctedId = s"$nexusEndpoint/v0/data/${NexusInstance.getIdForEditor(id, reconciledPrefix)}"
+    val jsonTransformer = (__ ).json.update(
+      __.read[JsObject].map{ o => o ++ Json.obj("@id" -> correctedId)}
+    )
+    NexusInstance(this.nexusUUID, this.nexusPath, this.content.transform(jsonTransformer).get)
+  }
 
+
+  def getRevision(): Long ={
+    this.getField(NexusInstance.Fields.nexusRev).getOrElse(JsNumber(1)).as[Long]
+  }
+
+
+  def merge(instance: NexusInstance):NexusInstance = {
+    val content = this.content.value ++ instance.content.value
+    this.copy(content = Json.toJson(content).as[JsObject])
+  }
 }
 
 object NexusInstance {
@@ -48,16 +57,14 @@ object NexusInstance {
     NexusInstanceReference.fromUrl(nexusUrl)
   }
 
-
-//
-//  def getIdForEditor(url: String, reconciledPrefix: String): String = {
-//    assert(url contains "v0/data/")
-//    val pathString = url.split("v0/data/").tail.head
-//    val id = pathString.split("/").last
-//    NexusPath(pathString)
-//      .originalPath(reconciledPrefix)
-//      .toString() + "/" + id
-//  }
+  def getIdForEditor(url: String, reconciledPrefix: String): String = {
+    assert(url contains "v0/data/")
+    val pathString = url.split("v0/data/").tail.head
+    val id = pathString.split("/").last
+    NexusPath(pathString)
+      .originalPath(reconciledPrefix)
+      .toString() + "/" + id
+  }
 
   object Fields{
     val nexusId = "@id"

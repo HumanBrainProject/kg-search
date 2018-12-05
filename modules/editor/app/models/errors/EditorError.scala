@@ -55,3 +55,7 @@ case class APIEditorMultiError(override val status: Int, override val content: L
     "error" -> Json.toJson(content.map(m => Json.obj("status" -> m.status, "message" -> m.content)))
   )
 }
+
+object APIEditorMultiError {
+  def fromResponse(status: Int, content:String): APIEditorMultiError = APIEditorMultiError(status, List(APIEditorError(status, content)))
+}

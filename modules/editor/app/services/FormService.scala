@@ -18,7 +18,7 @@
 package services
 
 import com.google.inject.{Inject, Singleton}
-import constants.{EditorConstants, InternalSchemaFieldsConstants, NexusConstants}
+import constants.{EditorConstants, InternalSchemaFieldsConstants, NexusConstants, JsonLDConstants, UiConstants}
 import models.editorUserList.BookmarkList
 import models._
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
@@ -69,7 +69,7 @@ object FormService{
       if(jsValue.toString() == "null"){
         JsNull
       }else{
-        val correctedObj = jsValue.as[JsObject] - "description" - "name" - "status" - "childrenStatus" -
+        val correctedObj = jsValue.as[JsObject] - "description" - "name" - "status" - "childrenStatus" - UiConstants.DATATYPE -
           s"${EditorConstants.BASENAMESPACE}${EditorConstants.RELATIVEURL}"
         val res = correctedObj.value.map {
           case (k, v) =>
@@ -147,9 +147,9 @@ object FormService{
     def addNexusEndpointToLinks(item: JsValue): JsObject = {
       val id = (item.as[JsObject] \ "id" ).as[String]
       if(!id.startsWith("http://")){
-        Json.obj("@id" ->  JsString(s"$nexusEndpoint/v0/data/$id"))
+        Json.obj(JsonLDConstants.ID ->  JsString(s"$nexusEndpoint/v0/data/$id"))
       }else{
-        Json.obj("@id" ->  JsString(id))
+        Json.obj(JsonLDConstants.ID ->  JsString(id))
       }
     }
 

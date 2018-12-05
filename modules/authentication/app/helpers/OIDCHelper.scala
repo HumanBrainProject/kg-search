@@ -18,6 +18,7 @@ package helpers
 
 import models.user.OIDCUser
 import play.api.mvc.{AnyContent, Request}
+import play.api.http.HeaderNames._
 
 object OIDCHelper {
   /**
@@ -26,7 +27,7 @@ object OIDCHelper {
     * @return A String containing the token or an empty String
     */
   def getTokenFromRequest(request: Request[AnyContent]): String = {
-    request.headers.toMap.getOrElse("Authorization", Seq("")).head
+    request.headers.toMap.getOrElse(AUTHORIZATION, Seq("")).head
   }
 
   /**
