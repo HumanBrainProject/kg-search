@@ -14,19 +14,19 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-package models
+package models.specification
 
-import play.api.libs.json.{JsObject, Json}
+import models.NexusPath
 
-case class FormRegistry(registry: JsObject)
+case class FormRegistry(registry: Map[NexusPath, UISpec])
 
-trait FormRegistryService {
+object FormRegistry{
 
   def filterOrgs(formRegistry: FormRegistry, orgs: Seq[String]): FormRegistry = {
     formRegistry.copy(
-        registry = Json.toJson(formRegistry.registry.value.filter{
-        entity => orgs.contains(entity._1)
-      }).asOpt[JsObject].getOrElse(Json.obj())
+        registry = formRegistry.registry.filter{
+          case (path, _) => orgs.contains(path.org)
+      }
     )
   }
 }

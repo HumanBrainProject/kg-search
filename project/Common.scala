@@ -11,7 +11,7 @@ object Common {
   val settings: Seq[Setting[_]] = Seq(
     organization := "eu.humanbrainproject",
     version := "1.0.0-SNAPSHOT",
-    scalaVersion := "2.12.3",
+    scalaVersion := "2.12.7",
     libraryDependencies ++= baseDependencies
   )
 

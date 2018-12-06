@@ -17,18 +17,16 @@
 package services
 
 import com.google.inject.Inject
-import constants.{EditorConstants, InternalSchemaFieldsConstants, SchemaFieldsConstants}
-import models.errors.APIEditorError
+import constants.EditorConstants
 import models._
+import models.errors.APIEditorError
 import models.instance.{NexusInstance, NexusInstanceReference}
 import models.user.{EditorUser, NexusUser}
 import play.api.Logger
 import play.api.cache.{AsyncCacheApi, NamedCache}
-import play.api.http.ContentTypes._
-import play.api.http.HeaderNames._
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
-import play.api.libs.ws.{WSClient, WSResponse}
+import play.api.libs.ws.WSClient
 import services.instance.InstanceApiService
 import services.query.QueryService
 
@@ -84,10 +82,22 @@ class EditorUserService @Inject()(config: ConfigurationService,
       NexusInstance(None, EditorConstants.editorUserPath, EditorUserService.userToNexusStruct(nexusUser.id)),
       token
     ).map {
-      case Right(ref) =>
-        Right(EditorUser(ref, nexusUser))
-      case Left(res) => Left(APIEditorError(res.status, res.body))
+      case Right(ref) => Right(EditorUser(ref, nexusUser))
+      case Left(res) =>
+        logger.error(s"Could not create the user with ID ${nexusUser.id} - ${res.body}")
+        Left(APIEditorError(res.status, res.body))
     }
+  }
+
+  def deleteUser(editorUser: EditorUser, token:String): Future[Either[APIEditorError, Unit]] = {
+    instanceApiService
+      .delete(wSClient, config.kgQueryEndpoint, editorUser.nexusId, token)
+      .map{
+        case Right(_) => Right(())
+        case Left(res) =>
+          logger.error(s"Could not delete the user with ID ${editorUser.nexusId.toString} - ${res.body}")
+          Left(APIEditorError(res.status, res.body))
+      }
   }
 }
 

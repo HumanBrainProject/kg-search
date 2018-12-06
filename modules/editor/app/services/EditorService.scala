@@ -19,18 +19,23 @@ package services
 
 import com.google.inject.Inject
 import constants.{EditorClient, EditorConstants, JsonLDConstants, UiConstants}
+import constants.EditorConstants.{DELETE, UPDATE}
 import helpers._
 import models.errors.APIEditorError
 import play.api.http.Status._
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, PreviewInstance}
+import models.errors.{APIEditorError, APIEditorMultiError}
+import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
 import models.user.User
-import models.{FormRegistry, NexusPath}
+import models.NexusPath
+import models.specification.FormRegistry
 import play.api.Logger
 import play.api.http.Status._
-import play.api.libs.json.JsValue
+import play.api.libs.json.{JsArray, JsObject, JsValue, Json}
 import play.api.libs.ws.{WSClient, WSResponse}
 import services.instance.InstanceApiService
 import services.query.QueryService
+import services.specification.FormService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -120,7 +125,9 @@ class EditorService @Inject()(
             val mergeInstanceWithPreviousUserUpdate = EditorInstance(InstanceHelper.removeInternalFields(instance).merge(updateToBeStored.nexusInstance))
             updateInstance(mergeInstanceWithPreviousUserUpdate, instanceRef, token, user.id)
         }
+
     }
+
   }
 
   def retrieveInstancesByIds(

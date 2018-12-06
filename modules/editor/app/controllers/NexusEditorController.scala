@@ -29,6 +29,7 @@ import play.api.libs.json._
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 import services._
+import services.specification.FormService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -68,7 +69,7 @@ class NexusEditorController @Inject()(
     val token = OIDCHelper.getTokenFromRequest(request)
     val nexusInstanceReference = NexusInstanceReference(org, domain, schema, version, id)
     editorService.retrieveInstance(nexusInstanceReference, token).map {
-      case Left(error) =>  logger.error(s"Error: Could not fetch instance : ${nexusInstanceReference.nexusPath.toString()}/$id - ${error.msg}")
+      case Left(error) =>  logger.error(s"Error: Could not fetch instance : ${nexusInstanceReference.nexusPath.toString()}/$id - ${error.content}")
         error.toResult
       case Right(instance) =>
         FormService.getFormStructure(nexusInstanceReference.nexusPath, instance.content, formService.formRegistry) match {
@@ -177,7 +178,7 @@ class NexusEditorController @Inject()(
       editorService.generateDiffAndUpdateInstance(instanceRef, request.body.asJson.get, token, request.user, formService.formRegistry).map {
         case Right(()) =>
           Ok(Json.toJson(EditorResponseObject.empty))
-        case Left(error) =>  error.toResult
+        case Left(error) => error.toResult
       }
     }
 

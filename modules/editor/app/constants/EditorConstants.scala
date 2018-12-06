@@ -49,6 +49,10 @@ object EditorConstants {
 
   val editorUserPath = NexusPath("hbpkg", "core", "user", "v0.0.1")
 
+  trait Command
+  case object DELETE extends Command
+  case object UPDATE extends Command
+
 
 
   val context =

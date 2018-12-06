@@ -19,10 +19,10 @@ package helpers
 import akka.util.ByteString
 import models.NexusPath
 import play.api.http.HttpEntity
-import play.api.http.Status.{UNAUTHORIZED, FORBIDDEN}
+import play.api.http.Status.{FORBIDDEN, UNAUTHORIZED}
 import play.api.libs.ws.WSResponse
 import play.api.mvc.{ResponseHeader, Result}
-import services.FormService
+import services.specification.FormService
 
 object EditorResponseHelper {
   /**
