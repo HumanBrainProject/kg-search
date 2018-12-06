@@ -82,10 +82,22 @@ class EditorUserService @Inject()(config: ConfigurationService,
       NexusInstance(None, EditorConstants.editorUserPath, EditorUserService.userToNexusStruct(nexusUser.id)),
       token
     ).map {
-      case Right(ref) =>
-        Right(EditorUser(ref, nexusUser))
-      case Left(res) => Left(APIEditorError(res.status, res.body))
+      case Right(ref) => Right(EditorUser(ref, nexusUser))
+      case Left(res) =>
+        logger.error(s"Could not create the user with ID ${nexusUser.id} - ${res.body}")
+        Left(APIEditorError(res.status, res.body))
     }
+  }
+
+  def deleteUser(editorUser: EditorUser, token:String): Future[Either[APIEditorError, Unit]] = {
+    instanceApiService
+      .delete(wSClient, config.kgQueryEndpoint, editorUser.nexusId, token)
+      .map{
+        case Right(_) => Right(())
+        case Left(res) =>
+          logger.error(s"Could not delete the user with ID ${editorUser.nexusId.toString} - ${res.body}")
+          Left(APIEditorError(res.status, res.body))
+      }
   }
 }
 

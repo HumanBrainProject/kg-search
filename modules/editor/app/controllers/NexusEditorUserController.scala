@@ -59,9 +59,7 @@ class NexusEditorUserController @Inject()(
                Some(editorUser)
               case Left(_) =>
                 logger.info(s"Deleting editor user with id : ${request.user.id}")
-                nexusService.deprecateInstance(config.nexusEndpoint, EditorConstants.editorUserPath,
-                  editorUser.nexusId.id, 1L, token
-                )
+                editorUserService.deleteUser(editorUser, token)
                 None
             }
           case Left(_) => Future(None)

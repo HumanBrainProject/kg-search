@@ -85,7 +85,7 @@ trait EditorBookmarkServiceInterface {
                                   bookmarkListIds: List[NexusInstanceReference],
                                   token: String
                                 ):
-  Future[List[Either[APIEditorError, NexusInstanceReference]]]
+  Future[List[Either[APIEditorError, Unit]]]
 
   def removeInstanceFromBookmarkLists(
                                        instanceRef: NexusInstanceReference,

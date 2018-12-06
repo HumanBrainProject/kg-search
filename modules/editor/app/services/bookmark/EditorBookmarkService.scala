@@ -267,7 +267,7 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
                                   bookmarkListIds: List[NexusInstanceReference],
                                   token: String
                                 ):
-  Future[List[Either[APIEditorError, NexusInstanceReference]]] = {
+  Future[List[Either[APIEditorError, Unit]]] = {
     val queries = bookmarkListIds.map { ref =>
       val toInsert = EditorBookmarkService
         .bookmarkToNexusStruct(s"${config.nexusEndpoint}/v0/data/${instanceReference.toString}",
@@ -278,8 +278,10 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
         NexusInstance(None, EditorConstants.bookmarkPath, toInsert),
         token
       ).map{
-        case Left(res) => Left(APIEditorError(res.status, res.body))
-        case Right(s) => Right(s)
+        case Left(res) =>
+          logger.error(s"Error while adding bookmarks - ${res.body}")
+          Left(APIEditorError(res.status, res.body))
+        case Right(_) => Right(())
       }
     }
     Future.sequence(queries)
@@ -303,37 +305,20 @@ class EditorBookmarkService @Inject()(config: ConfigurationService,
           case OK =>
             (res.json \ "bookmarks").asOpt[List[JsValue]] match {
               case Some(ids) => //Delete the bookmarks
-                val bookmarksFromDb = ids.filter(js =>  (js \ EditorConstants.USERID).as[List[String]].contains(editorUser.nexusUser.id))
+                val bookmarksFromDb = ids.filter(js => (js \ EditorConstants.USERID).as[List[String]].contains(editorUser.nexusUser.id))
                   .map(js => NexusInstanceReference.fromUrl( (js \ "bookmarkListId").as[List[String]].head))
                 val (bookmarksToAdd, bookmarksListWithBookmarksToDelete) = BookmarkHelper.bookmarksToAddAndDelete(bookmarksFromDb, bookmarksListFromUser)
                 val bookmarksToDelete = ids
-                  .filter( js => bookmarksListWithBookmarksToDelete.map(_.toString).contains( (js \ "bookmarkListId").as[List[String]].head ))
+                  .filter(js => bookmarksListWithBookmarksToDelete.map(_.toString).contains( (js \ "bookmarkListId").as[List[String]].head ))
                   .map( js => NexusInstanceReference.fromUrl((js \ "id").as[String]))
-                val results = for {
-                  added <- addInstanceToBookmarkLists(instanceRef, bookmarksToAdd, token).map[List[Either[APIEditorError, Unit]]] {
-                   _.map {
-                        case Right(_) => Right(())
-                        case Left(error) => Left(error)
-                      }
-                  }
+                for {
+                  added <- addInstanceToBookmarkLists(instanceRef, bookmarksToAdd, token)
                   deleted <- removeInstanceFromBookmarkLists(instanceRef, bookmarksToDelete, token)
                 } yield added ::: deleted
-                results.map{
-                  l => l.map{
-                    case Left(error) => logger.error(s"Error while updating bookmarks - ${error.content}")
-                      Left(error)
-                    case Right(()) => Right(())
-
-                  }
-                }
-              case None => for {
-                added <- addInstanceToBookmarkLists(instanceRef, bookmarksListFromUser, token).map[List[Either[APIEditorError, Unit]]] {
-                  _.map {
-                    case Right(_) => Right(())
-                    case Left(error) => Left(error)
-                  }
-                }
-              } yield added
+              case None =>
+                for {
+                  added <- addInstanceToBookmarkLists(instanceRef, bookmarksListFromUser, token)
+                } yield added
             }
           case _ =>
             logger.error(s"Could not fetch bookmarks - ${res.body}")
