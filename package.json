@@ -30,7 +30,6 @@
     "webpack": "^3.11.0"
   },
   "dependencies": {
-    "js-xss": "0.0.2",
     "lodash": "^4.17.11",
     "lucene-query-parser": "^1.2.0",
     "prop-types": "^15.6.2",
