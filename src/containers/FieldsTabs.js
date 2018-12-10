@@ -36,12 +36,12 @@ const getTabs = fields => {
   });
 };
 
-export const FieldsTabs = ({fields}) => {
+export const FieldsTabs = ({className, fields}) => {
   if (!fields || !fields.length) {
     return null;
   }
   const tabs = getTabs(fields);
   return (
-    <Tabs tabs={tabs} viewComponent={Field} />
+    <Tabs className={className?className:""} tabs={tabs} viewComponent={Field} />
   );
 };
