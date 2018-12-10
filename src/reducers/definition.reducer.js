@@ -204,7 +204,7 @@ function simplifySemanticKeysForField(field) {
   field.type = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "type", null);
   field.detail_label = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "detail_label", null);
   field.facetExclusiveSelection = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "facetExclusiveSelection", false);
-
+  field.count = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "count", false);
 }
 
 
