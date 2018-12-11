@@ -34,4 +34,8 @@ trait CacheService {
     }
   }
 
+  def get[A:ClassTag](cache : AsyncCacheApi, key: String)(implicit executionContext: ExecutionContext):Future[Option[A]] = {
+    cache.get[A](key)
+  }
+
 }

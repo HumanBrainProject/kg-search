@@ -45,33 +45,44 @@ class EditorUserService @Inject()(config: ConfigurationService,
   object cacheService extends CacheService
   object queryService extends QueryService
 
-  def getUser(nexusUser: NexusUser, token:String): Future[Either[APIEditorError, EditorUser]] = {
-    cacheService.getOrElse[EditorUser](cache, nexusUser.id.toString){
-      queryService.getInstances(
-        wSClient,
-        config.kgQueryEndpoint,
-        EditorConstants.editorUserPath,
-        EditorUserService.kgQueryGetUserQuery(EditorConstants.editorUserPath),
-        token
-      ).map{
-        res => res.status match {
-          case OK => (res.json \ "results").as[List[JsObject]]
-            .find(js => (js \ "userId").asOpt[String].getOrElse("") == nexusUser.id)
-            .map{js =>
-              val id = (js \ "nexusId").as[String]
-              EditorUser(NexusInstanceReference.fromUrl(id) , nexusUser)
-            }
-          case _ =>
-            logger.error(s"Could not fetch the user with ID ${nexusUser.id} ${res.body}")
-            None
+  def getUser(nexusUser: NexusUser, token:String): Future[Either[APIEditorError, Option[EditorUser]]] = {
+    cacheService.get[EditorUser](cache, nexusUser.id.toString).flatMap{
+      case None =>
+        queryService.getInstances(
+          wSClient,
+          config.kgQueryEndpoint,
+          EditorConstants.editorUserPath,
+          EditorUserService.kgQueryGetUserQuery(EditorConstants.editorUserPath),
+          token
+        ).map[Either[APIEditorError, Option[EditorUser]]]{
+          res => res.status match {
+            case OK =>
+              (res.json \ "results").as[List[JsObject]]
+                .find(js => (js \ "userId").asOpt[String].getOrElse("") == nexusUser.id).map{
+                  js =>
+                    val id = (js \ "nexusId").as[String]
+                    val editorUser = EditorUser(NexusInstanceReference.fromUrl(id) , nexusUser)
+                    cache.set(editorUser.nexusUser.id, editorUser, config.cacheExpiration)
+                    Right(Some(editorUser))
+              }.getOrElse(Right(None))
+            case _ =>
+              logger.error(s"Could not fetch the user with ID ${nexusUser.id} ${res.body}")
+              Left(APIEditorError(res.status, res.body))
+          }
         }
-      }
-    }.map{
-      case Some(editorUser) =>
-        cache.set(editorUser.nexusUser.id, editorUser, config.cacheExpiration)
-        Right(editorUser)
-      case None => Left(APIEditorError(NOT_FOUND, "Could not find editor user"))
+      case Some(user) => Future(Right(Some(user)))
     }
+  }
+
+  def getOrCreateUser(nexusUser: NexusUser, token: String)(afterCreation: (EditorUser, String) => Future[Either[APIEditorError, EditorUser]]): Future[Either[APIEditorError, EditorUser]] =
+    getUser(nexusUser, token).flatMap{
+      case Right(Some(editorUser)) => Future(Right(editorUser))
+      case Right(None) =>
+        createUser(nexusUser, token).flatMap{
+          case Right(editorUser) => afterCreation(editorUser, token)
+          case Left(e) => Future(Left(e))
+        }
+      case Left(err) => Future(Left(err))
   }
 
 
