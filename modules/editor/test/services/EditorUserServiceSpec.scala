@@ -1,19 +1,18 @@
-
 /*
-*   Copyright (c) 2018, EPFL/Human Brain Project PCO
-*
-*   Licensed under the Apache License, Version 2.0 (the "License");
-*   you may not use this file except in compliance with the License.
-*   You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-*
-*   Unless required by applicable law or agreed to in writing, software
-*   distributed under the License is distributed on an "AS IS" BASIS,
-*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*   See the License for the specific language governing permissions and
-*   limitations under the License.
-*/
+ *   Copyright (c) 2018, EPFL/Human Brain Project PCO
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 package editor.services
 
 import constants.EditorConstants
@@ -38,11 +37,16 @@ import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.FiniteDuration
 
-class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpers with MockitoSugar with Injecting {
+class EditorUserServiceSpec
+    extends PlaySpec
+    with GuiceOneAppPerSuite
+    with MockWSHelpers
+    with MockitoSugar
+    with Injecting {
 
   override def fakeApplication(): Application = ConfigMock.fakeApplicationConfig.build()
 
-  "getUser" should{
+  "getUser" should {
     "return an editor user" in {
       val fakeEndpoint = s"${kgQueryEndpoint}/query/"
 
@@ -66,9 +70,10 @@ class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockW
         """.stripMargin
       )
       implicit val ws = MockWS {
-        case (POST, fakeEndpoint) => Action {
-          Ok(Json.obj("results" -> Json.toJson(List(endpointResponse))))
-        }
+        case (POST, fakeEndpoint) =>
+          Action {
+            Ok(Json.obj("results" -> Json.toJson(List(endpointResponse))))
+          }
       }
       val ec = global
       val oidcService = mock[OIDCAuthService]
@@ -77,14 +82,13 @@ class EditorUserServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockW
       val nexusExt = mock[NexusExtensionService]
       val cache = mock[AsyncCacheApi]
       when(cache.get[EditorUser](id)).thenReturn(Future(None))
-      val service = new EditorUserService(configService, ws,nexusService,cache, nexusExt,oidcService)(ec)
+      val service = new EditorUserService(configService, ws, nexusService, cache, nexusExt, oidcService)(ec)
 
-      val res = Await.result(service.getUser(nexusUser, "token"), FiniteDuration(10 ,"s"))
+      val res = Await.result(service.getUser(nexusUser, "token"), FiniteDuration(10, "s"))
 
       res.isRight mustBe true
-      res mustBe Right(user)
+      res mustBe Right(Some(user))
     }
   }
-
 
 }
