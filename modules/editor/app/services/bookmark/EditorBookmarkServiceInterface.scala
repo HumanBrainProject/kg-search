@@ -1,26 +1,25 @@
-
 /*
-*   Copyright (c) 2018, EPFL/Human Brain Project PCO
-*
-*   Licensed under the Apache License, Version 2.0 (the "License");
-*   you may not use this file except in compliance with the License.
-*   You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-*
-*   Unless required by applicable law or agreed to in writing, software
-*   distributed under the License is distributed on an "AS IS" BASIS,
-*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*   See the License for the specific language governing permissions and
-*   limitations under the License.
-*/
+ *   Copyright (c) 2018, EPFL/Human Brain Project PCO
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 package services.bookmark
 
 import models.errors.APIEditorError
 import models._
 import models.editorUserList.{BOOKMARKFOLDER, BookmarkList, BookmarkListFolder, FolderType}
 import models.instance.{NexusInstanceReference, PreviewInstance}
-import models.specification.FormRegistry
+import models.specification.{FormRegistry, UISpec}
 import models.user.EditorUser
 import play.api.libs.ws.WSResponse
 
@@ -34,8 +33,11 @@ trait EditorBookmarkServiceInterface {
     * @param formRegistry the registry with the types associated with the user organization
     * @return The bookmarklists organised by folders
     */
-  def getUserBookmarkLists(editorUser: EditorUser, formRegistry: FormRegistry, token:String):
-  Future[Either[APIEditorError, List[BookmarkListFolder]]]
+  def getUserBookmarkLists(
+    editorUser: EditorUser,
+    formRegistry: FormRegistry[UISpec],
+    token: String
+  ): Future[Either[APIEditorError, List[BookmarkListFolder]]]
 
   /**
     *  Get the instances contained in a bookmark list paginated and searchable
@@ -45,8 +47,13 @@ trait EditorBookmarkServiceInterface {
     * @param search
     * @return a list of instance
     */
-  def getInstancesOfBookmarkList(bookmarkListId: NexusInstanceReference, start: Int, size: Int, search: String, token:String):
-  Future[Either[APIEditorError, (List[PreviewInstance], Long)]]
+  def getInstancesOfBookmarkList(
+    bookmarkListId: NexusInstanceReference,
+    start: Int,
+    size: Int,
+    search: String,
+    token: String
+  ): Future[Either[APIEditorError, (List[PreviewInstance], Long)]]
 
   /**
     * Create a folder for bookmarklist
@@ -56,8 +63,12 @@ trait EditorBookmarkServiceInterface {
     * @param token the token of the tech account
     * @return The created folder
     */
-  def createBookmarkListFolder(editorUser: EditorUser, name: String , token: String, folderType: FolderType = BOOKMARKFOLDER):
-  Future[Either[APIEditorError, BookmarkListFolder]]
+  def createBookmarkListFolder(
+    editorUser: EditorUser,
+    name: String,
+    token: String,
+    folderType: FolderType = BOOKMARKFOLDER
+  ): Future[Either[APIEditorError, BookmarkListFolder]]
 
   /**
     *
@@ -66,34 +77,37 @@ trait EditorBookmarkServiceInterface {
     * @param token
     * @return
     */
-  def createBookmarkList(bookmarkListName: String, folderId: String, token: String):
-  Future[Either[APIEditorError, BookmarkList]]
+  def createBookmarkList(
+    bookmarkListName: String,
+    folderId: String,
+    token: String
+  ): Future[Either[APIEditorError, BookmarkList]]
 
   def updateBookmarkList(
-                          bookmarkList: BookmarkList,
-                          bookmarkListPath: NexusPath,
-                          bookmarkListId: String,
-                          userFolderId: String,
-                          token: String):
-  Future[Either[APIEditorError, BookmarkList]]
+    bookmarkList: BookmarkList,
+    bookmarkListPath: NexusPath,
+    bookmarkListId: String,
+    userFolderId: String,
+    token: String
+  ): Future[Either[APIEditorError, BookmarkList]]
 
-  def deleteBookmarkList(bookmarkRef: NexusInstanceReference, token: String):
-  Future[Either[APIEditorError, Unit]]
+  def deleteBookmarkList(bookmarkRef: NexusInstanceReference, token: String): Future[Either[APIEditorError, Unit]]
 
   def addInstanceToBookmarkLists(
-                                  instanceReference: NexusInstanceReference,
-                                  bookmarkListIds: List[NexusInstanceReference],
-                                  token: String
-                                ):
-  Future[List[Either[APIEditorError, Unit]]]
+    instanceReference: NexusInstanceReference,
+    bookmarkListIds: List[NexusInstanceReference],
+    token: String
+  ): Future[List[Either[APIEditorError, Unit]]]
 
   def removeInstanceFromBookmarkLists(
-                                       instanceRef: NexusInstanceReference,
-                                       bookmarkListIds: List[NexusInstanceReference],
-                                       token: String
-                                     ):
-  Future[List[Either[APIEditorError, Unit]]]
+    instanceRef: NexusInstanceReference,
+    bookmarkListIds: List[NexusInstanceReference],
+    token: String
+  ): Future[List[Either[APIEditorError, Unit]]]
 
-  def retrieveBookmarkLists(instanceIds: List[NexusInstanceReference], editorUser: EditorUser, token:String):
-  Future[List[(NexusInstanceReference, Either[APIEditorError, List[BookmarkList]])]]
+  def retrieveBookmarkLists(
+    instanceIds: List[NexusInstanceReference],
+    editorUser: EditorUser,
+    token: String
+  ): Future[List[(NexusInstanceReference, Either[APIEditorError, List[BookmarkList]])]]
 }

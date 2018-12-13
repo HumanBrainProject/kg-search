@@ -22,13 +22,15 @@ import play.api.cache.{AsyncCacheApi, NamedCache}
 import play.api.mvc._
 import play.cache.NamedCache
 import services.CacheService
+import services.specification.FormService
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class NexusAdminController @Inject()(
   cc: ControllerComponents,
   @NamedCache("editor-userinfo-cache") editorCache: AsyncCacheApi,
-  @NamedCache("userinfo-cache") userCache: AsyncCacheApi
+  @NamedCache("userinfo-cache") userCache: AsyncCacheApi,
+  formService: FormService
 )(implicit ec: ExecutionContext)
     extends AbstractController(cc) {
   val log = Logger(this.getClass)
@@ -42,6 +44,11 @@ class NexusAdminController @Inject()(
         case UserInfoCache   => cacheService.clearCache(userCache).map(_ => Ok("Cache cleared"))
       }
       .getOrElse(Future(NotFound("Cache not found")))
+  }
+
+  def deleteAndReloadSpecs: Action[AnyContent] = Action { implicit request =>
+    formService.flushSpec
+    Ok("Specification reloaded")
   }
 
 }

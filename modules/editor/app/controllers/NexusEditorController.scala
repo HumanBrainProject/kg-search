@@ -43,6 +43,7 @@ class NexusEditorController @Inject()(
   arangoQueryService: ArangoQueryService,
   iAMAuthService: IAMAuthService,
   formService: FormService,
+  reverseLinkService: ReverseLinkService,
   ws: WSClient
 )(implicit ec: ExecutionContext)
     extends AbstractController(cc) {
@@ -66,7 +67,7 @@ class NexusEditorController @Inject()(
     Action.async { implicit request =>
       val token = OIDCHelper.getTokenFromRequest(request)
       val nexusInstanceReference = NexusInstanceReference(org, domain, schema, version, id)
-      editorService.retrieveInstance(nexusInstanceReference, token).map {
+      editorService.retrieveInstance(nexusInstanceReference, token, formService.queryRegistry).map {
         case Left(error) =>
           logger.error(
             s"Error: Could not fetch instance : ${nexusInstanceReference.nexusPath.toString()}/$id - ${error.content}"
@@ -110,7 +111,7 @@ class NexusEditorController @Inject()(
     Action.async { implicit request =>
       val token = OIDCHelper.getTokenFromRequest(request)
       val nexusInstanceRef = NexusInstanceReference(org, domain, datatype, version, id)
-      editorService.retrieveInstance(nexusInstanceRef, token).flatMap[Result] {
+      editorService.retrieveInstance(nexusInstanceRef, token, formService.queryRegistry).flatMap[Result] {
         case Left(error) =>
           Future.successful(
             error.toResult
@@ -175,21 +176,43 @@ class NexusEditorController @Inject()(
       .async { implicit request =>
         val token = OIDCHelper.getTokenFromRequest(request)
         val instanceRef = NexusInstanceReference(org, domain, schema, version, id)
-        editorService
-          .generateDiffAndUpdateInstance(
-            instanceRef,
-            request.body.asJson.get,
-            token,
-            request.user,
-            formService.formRegistry
-          )
-          .map {
-            case Right(()) =>
-              Ok(Json.toJson(EditorResponseObject.empty))
-            case Left(error) =>
-              logger.error(error.content.mkString("\n"))
-              error.toResult
-          }
+        formService.formRegistry.registry.get(instanceRef.nexusPath) match {
+          case Some(spec) if spec.fields.values.exists(p => p.isReverse.getOrElse(false)) =>
+            reverseLinkService
+              .generateDiffAndUpdateInstanceWithReverseLink(
+                instanceRef,
+                request.body.asJson.get,
+                token,
+                request.user,
+                formService.formRegistry,
+                formService.queryRegistry
+              )
+              .map {
+                case Right(()) =>
+                  Ok(Json.toJson(EditorResponseObject.empty))
+                case Left(error) =>
+                  logger.error(error.content.mkString("\n"))
+                  error.toResult
+              }
+          case _ =>
+            editorService
+              .generateDiffAndUpdateInstance(
+                instanceRef,
+                request.body.asJson.get,
+                token,
+                request.user,
+                formService.formRegistry,
+                formService.queryRegistry
+              )
+              .map {
+                case Right(()) =>
+                  Ok(Json.toJson(EditorResponseObject.empty))
+                case Left(error) =>
+                  logger.error(error.content.mkString("\n"))
+                  error.toResult
+              }
+        }
+
       }
 
   /**

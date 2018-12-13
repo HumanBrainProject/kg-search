@@ -13,19 +13,15 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+
 package models.specification
 
-import models.NexusPath
+import play.api.libs.json.JsObject
 
-case class FormRegistry[A](registry: Map[NexusPath, A])
+case class QuerySpec(query: JsObject)
 
-object FormRegistry {
+object QuerySpec {
+  import play.api.libs.json._
 
-  def filterOrgs(formRegistry: FormRegistry[UISpec], orgs: Seq[String]): FormRegistry[UISpec] = {
-    formRegistry.copy(
-      registry = formRegistry.registry.filter {
-        case (path, _) => orgs.contains(path.org)
-      }
-    )
-  }
+  implicit val reads: Reads[QuerySpec] = __.read[JsValue].map(js => QuerySpec(js.as[JsObject]))
 }
