@@ -13,19 +13,9 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package models.specification
 
-import models.NexusPath
+package constants
 
-case class FormRegistry[A](registry: Map[NexusPath, A])
-
-object FormRegistry {
-
-  def filterOrgs(formRegistry: FormRegistry[UISpec], orgs: Seq[String]): FormRegistry[UISpec] = {
-    formRegistry.copy(
-      registry = formRegistry.registry.filter {
-        case (path, _) => orgs.contains(path.org)
-      }
-    )
-  }
+object NexusConstants {
+  val dataPath = "v0/data/"
 }

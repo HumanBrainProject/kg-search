@@ -1,19 +1,18 @@
-
 /*
-*   Copyright (c) 2018, EPFL/Human Brain Project PCO
-*
-*   Licensed under the Apache License, Version 2.0 (the "License");
-*   you may not use this file except in compliance with the License.
-*   You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-*
-*   Unless required by applicable law or agreed to in writing, software
-*   distributed under the License is distributed on an "AS IS" BASIS,
-*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*   See the License for the specific language governing permissions and
-*   limitations under the License.
-*/
+ *   Copyright (c) 2018, EPFL/Human Brain Project PCO
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 
 package services.instance
 
@@ -31,17 +30,17 @@ import play.api.http.HeaderNames._
 import play.filters.csrf.CSRF.Token
 
 trait InstanceApiService {
-    val instanceEndpoint = "/internal/api/instances"
+  val instanceEndpoint = "/internal/api/instances"
 
-    def get(
-           wSClient: WSClient,
-           apiBaseEndpoint: String,
-           nexusInstance: NexusInstanceReference,
-           token: String,
-           serviceClient: ServiceClient = EditorClient,
-           clientExtensionId: Option[String] = None
-         )(implicit ec: ExecutionContext): Future[Either[WSResponse, NexusInstance]] = {
-    val params = clientExtensionId.map("clientIdExtension" -> _).getOrElse("" ->"")
+  def get(
+    wSClient: WSClient,
+    apiBaseEndpoint: String,
+    nexusInstance: NexusInstanceReference,
+    token: String,
+    serviceClient: ServiceClient = EditorClient,
+    clientExtensionId: Option[String] = None
+  )(implicit ec: ExecutionContext): Future[Either[WSResponse, NexusInstance]] = {
+    val params = clientExtensionId.map("clientIdExtension" -> _).getOrElse("" -> "")
     wSClient
       .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.toString}")
       .withHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
@@ -57,14 +56,14 @@ trait InstanceApiService {
   }
 
   def put(
-           wSClient: WSClient,
-           apiBaseEndpoint: String,
-           nexusInstance: NexusInstanceReference,
-           editorInstance: EditorInstance,
-           token: String,
-           userId: String,
-           serviceClient: ServiceClient = EditorClient
-         )(implicit ec: ExecutionContext): Future[Either[WSResponse, Unit]] = {
+    wSClient: WSClient,
+    apiBaseEndpoint: String,
+    nexusInstance: NexusInstanceReference,
+    editorInstance: EditorInstance,
+    token: String,
+    userId: String,
+    serviceClient: ServiceClient = EditorClient
+  )(implicit ec: ExecutionContext): Future[Either[WSResponse, Unit]] = {
     wSClient
       .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.toString}")
       .withHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
@@ -73,18 +72,18 @@ trait InstanceApiService {
       .map { res =>
         res.status match {
           case OK | CREATED => Right(())
-          case _ => Left(res)
+          case _            => Left(res)
         }
       }
   }
 
   def delete(
-              wSClient: WSClient,
-              apiBaseEndpoint: String,
-              nexusInstance: NexusInstanceReference,
-              token: String,
-              serviceClient: ServiceClient = EditorClient
-            )(implicit ec: ExecutionContext): Future[Either[WSResponse, Unit]] = {
+    wSClient: WSClient,
+    apiBaseEndpoint: String,
+    nexusInstance: NexusInstanceReference,
+    token: String,
+    serviceClient: ServiceClient = EditorClient
+  )(implicit ec: ExecutionContext): Future[Either[WSResponse, Unit]] = {
     wSClient
       .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.toString}")
       .withHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
@@ -92,18 +91,18 @@ trait InstanceApiService {
       .map { res =>
         res.status match {
           case OK | NO_CONTENT => Right(())
-          case _ => Left(res)
+          case _               => Left(res)
         }
       }
   }
 
   def post(
-            wSClient: WSClient,
-            apiBaseEndpoint: String,
-            nexusInstance: NexusInstance,
-            token: String,
-            serviceClient: ServiceClient = EditorClient
-          )(implicit ec: ExecutionContext): Future[Either[WSResponse, NexusInstanceReference]] = {
+    wSClient: WSClient,
+    apiBaseEndpoint: String,
+    nexusInstance: NexusInstance,
+    token: String,
+    serviceClient: ServiceClient = EditorClient
+  )(implicit ec: ExecutionContext): Future[Either[WSResponse, NexusInstanceReference]] = {
     wSClient
       .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.nexusPath.toString()}")
       .withHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)

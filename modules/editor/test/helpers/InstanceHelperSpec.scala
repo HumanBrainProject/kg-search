@@ -1,21 +1,20 @@
 /*
-*   Copyright (c) 2018, EPFL/Human Brain Project PCO
-*
-*   Licensed under the Apache License, Version 2.0 (the "License");
-*   you may not use this file except in compliance with the License.
-*   You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-*
-*   Unless required by applicable law or agreed to in writing, software
-*   distributed under the License is distributed on an "AS IS" BASIS,
-*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*   See the License for the specific language governing permissions and
-*   limitations under the License.
-*/
-package editor.helpers
+ *   Copyright (c) 2018, EPFL/Human Brain Project PCO
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+package helpers
 
-import helpers.InstanceHelper
 import models.NexusPath
 import models.instance.{EditorInstance, NexusInstance}
 import org.scalatestplus.play.PlaySpec
@@ -34,11 +33,15 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
         "name" -> "test"
       )
       val original = NexusInstance(
-        Some(id), path, content
+        Some(id),
+        path,
+        content
       )
 
       val newInstance = NexusInstance(
-        None, path, Json.obj(
+        None,
+        path,
+        Json.obj(
           "name" -> "new name"
         )
       )
@@ -58,18 +61,22 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
     "correctly build a diff when a field is added" in {
       val content = Json.obj(
-        "name" -> "test",
+        "name"        -> "test",
         "description" -> "description"
       )
 
       val currentlyDisplayedInstance = NexusInstance(
-        Some(reconId), path, Json.obj(
+        Some(reconId),
+        path,
+        Json.obj(
           "name" -> "test"
         )
       )
 
       val newInstance = NexusInstance(
-        None, path, content
+        None,
+        path,
+        content
       )
 
       val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance)
@@ -88,15 +95,18 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
     "correctly build a diff when a field is removed" in {
       val currentlyDisplayedInstance = NexusInstance(
-        Some(reconId), path, Json.obj(
-          "name" -> "test",
+        Some(reconId),
+        path,
+        Json.obj(
+          "name"        -> "test",
           "description" -> "description"
-
         )
       )
 
       val newInstance = NexusInstance(
-        None, path, Json.obj(
+        None,
+        path,
+        Json.obj(
           "name" -> "test"
         )
       )
@@ -117,8 +127,10 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
     "correctly manage arrays by returning the final array not its difference" in {
       val currentlyDisplayedInstance = NexusInstance(
-        Some(reconId), path, Json.obj(
-          "name" -> "test",
+        Some(reconId),
+        path,
+        Json.obj(
+          "name"        -> "test",
           "description" -> "description",
           "activities" -> Json.toJson(
             List(
@@ -131,16 +143,16 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
               Json.obj(
                 "id" -> "activity3"
               )
-
             )
           )
-
         )
       )
 
       val newInstance = NexusInstance(
-        None, path, Json.obj(
-          "name" -> "test",
+        None,
+        path,
+        Json.obj(
+          "name"        -> "test",
           "description" -> "description",
           "activities" -> Json.toJson(
             List(
@@ -150,7 +162,6 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
               Json.obj(
                 "id" -> "activity3"
               )
-
             )
           )
         )
@@ -181,8 +192,10 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
     "reflect correct array changes" in {
       val currentlyDisplayedInstance = NexusInstance(
-        Some(reconId), path, Json.obj(
-          "name" -> "test",
+        Some(reconId),
+        path,
+        Json.obj(
+          "name"        -> "test",
           "description" -> "description",
           "activities" -> Json.toJson(
             List(
@@ -195,7 +208,6 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
               Json.obj(
                 "id" -> "activity3"
               )
-
             )
           ),
           "contributors" -> Json.toJson(
@@ -205,15 +217,16 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
               "jane"
             )
           )
-
         )
       )
 
       val newInstance = NexusInstance(
-        None, path, Json.obj(
-          "name" -> "test",
+        None,
+        path,
+        Json.obj(
+          "name"        -> "test",
           "description" -> "description",
-          "activities" -> JsArray(),
+          "activities"  -> JsArray(),
           "contributors" -> Json.toJson(
             "james",
             "jane"
@@ -242,10 +255,12 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     "return a null value if the array was not changed" in {
       val currentlyDisplayedInstance = NexusInstance(
-        Some(reconId), path, Json.obj(
-          "name" -> "test",
+        Some(reconId),
+        path,
+        Json.obj(
+          "name"        -> "test",
           "description" -> "description",
-          "activities" -> JsArray(),
+          "activities"  -> JsArray(),
           "contributors" -> Json.toJson(
             List(
               "bill",
@@ -253,22 +268,22 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
               "jane"
             )
           )
-
         )
       )
 
       val newInstance = NexusInstance(
-        None, path, Json.obj(
-          "name" -> "test",
+        None,
+        path,
+        Json.obj(
+          "name"        -> "test",
           "description" -> "description",
-          "activities" -> JsArray(),
+          "activities"  -> JsArray(),
           "contributors" -> Json.toJson(
             "james",
             "jane"
           )
         )
       )
-
 
       val expected = EditorInstance(
         NexusInstance(
@@ -292,17 +307,21 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
   "Remove Internal field" should {
     "not consider an array of single object or this unique object" in {
       val path = NexusPath("org", "dom", "schema", "version")
-      val instance = NexusInstance(None, path, Json.obj(
-        "array" -> Json.toJson(List(Json.obj("@id" ->"test")))
-      ))
+      val instance = NexusInstance(
+        None,
+        path,
+        Json.obj(
+          "array" -> Json.toJson(List(Json.obj("@id" -> "test")))
+        )
+      )
 
       val update = EditorInstance(
         NexusInstance(
           Some("123"),
           path,
-          Json.obj("array" -> Json.obj("@id"-> "test"))
-          )
+          Json.obj("array" -> Json.obj("@id" -> "test"))
         )
+      )
 
       val res = InstanceHelper.removeEmptyFieldsNotInOriginal(instance, update)
 
@@ -310,15 +329,13 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
     "work both ways" in {
       val path = NexusPath("org", "dom", "schema", "version")
-      val instance = NexusInstance(None, path, Json.obj(
-        "array" ->Json.obj("@id"-> "test"))
-      )
+      val instance = NexusInstance(None, path, Json.obj("array" -> Json.obj("@id" -> "test")))
 
       val update = EditorInstance(
         NexusInstance(
           Some("123"),
           path,
-          Json.obj("array" -> Json.toJson(List(Json.obj("@id" ->"test"))))
+          Json.obj("array" -> Json.toJson(List(Json.obj("@id" -> "test"))))
         )
       )
       val res = InstanceHelper.removeEmptyFieldsNotInOriginal(instance, update)

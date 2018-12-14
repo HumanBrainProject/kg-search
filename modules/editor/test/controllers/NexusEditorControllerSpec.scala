@@ -1,18 +1,18 @@
 /*
-*   Copyright (c) 2018, EPFL/Human Brain Project PCO
-*
-*   Licensed under the Apache License, Version 2.0 (the "License");
-*   you may not use this file except in compliance with the License.
-*   You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-*
-*   Unless required by applicable law or agreed to in writing, software
-*   distributed under the License is distributed on an "AS IS" BASIS,
-*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*   See the License for the specific language governing permissions and
-*   limitations under the License.
-*/
+ *   Copyright (c) 2018, EPFL/Human Brain Project PCO
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 package controllers
 
 import constants.SchemaFieldsConstants
@@ -28,7 +28,12 @@ import play.api.Application
 import play.api.libs.json._
 import play.api.test.Injecting
 
-class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpers with MockitoSugar with Injecting {
+class NexusEditorControllerSpec
+    extends PlaySpec
+    with GuiceOneAppPerSuite
+    with MockWSHelpers
+    with MockitoSugar
+    with Injecting {
 
   override def fakeApplication(): Application = ConfigMock.fakeApplicationConfig.build()
 
@@ -67,7 +72,6 @@ class NexusEditorControllerSpec extends PlaySpec with GuiceOneAppPerSuite with M
 //      val ws = mock[WSClient]
 //      val nexusService = mock[NexusService]
 //      val releaseService = mock[ReleaseService]
-//      val arangoQueryService = mock[ArangoQueryService]
 //      when(arangoQueryService.listInstances(datatype, Some(0), Some(20), "")).thenReturn(Future(Right(Json.obj("data" -> instances, "dataType"-> "http://hbp.eu/minds#Dataset", "label"->"Dataset","total" -> 2))) )
 //      val configService = new ConfigurationService(fakeApplication().configuration)
 //      val formService = mock[FormService]

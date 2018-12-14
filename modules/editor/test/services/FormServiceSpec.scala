@@ -28,27 +28,43 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
       val formRegistry = FormRegistry(
         Map(
           originalDatatype -> UISpec(
-            "Activity", Map(
+            "Activity",
+            Map(
               "http://schema.org/name" -> EditorFieldSpecification(
-                "Name", None, InputText, None, None, None, None, None
+                "Name",
+                None,
+                InputText,
+                None,
+                None,
+                None,
+                None,
+                None
               ),
               "http://hbp.eu/minds#methods" -> EditorFieldSpecification(
-                "Methods", Some("minds/experiment/method/v0.0.4"), DropdownSelect,
-                None, Some("id"), Some("label"), Some(true), Some(true)
+                "Methods",
+                Some("minds/experiment/method/v0.0.4"),
+                DropdownSelect,
+                None,
+                Some("id"),
+                Some("label"),
+                Some(true),
+                Some(true)
               )
-            ), Some(UIInfo(
-              "http://schema.org/name", List("http://schema.org/name",
-                "http://schema.org/description"), None
-            ))
+            ),
+            Some(
+              UIInfo(
+                "http://schema.org/name",
+                List("http://schema.org/name", "http://schema.org/description"),
+                None
+              )
+            )
           )
-
         )
       )
 
       val config = new ConfigurationService(fakeApplication().configuration)
       val mockWs = mock[WSClient]
-      val data = Json.parse(
-        s"""{
+      val data = Json.parse(s"""{
            |    "@context": "https://nexus-dev.humanbrainproject.org/v0/contexts/nexus/core/resource/v0.3.0",
            |    "@id": "https://nexus-dev.humanbrainproject.org/v0/data/${originalDatatype.toString()}/$id",
            |    "https://schema.hbp.eu/relativeUrl": "${originalDatatype.toString()}/$id",
@@ -63,8 +79,7 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
            |    """.stripMargin)
 
       val res = FormService.getFormStructure(originalDatatype, data.as[JsObject], formRegistry)
-      val expected = Json.parse(
-        """
+      val expected = Json.parse("""
           | {
           |  "fields": {
           |    "id": {
@@ -115,8 +130,7 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
   "getRegistry" should {
     "populate the registry from a json object" in {
       val registry =
-        Json.parse(
-          """
+        Json.parse("""
             |{
             |  "_rev": "_XxTeP7K--_",
             |  "uiSpec": {
@@ -183,46 +197,70 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
       val expected = FormRegistry(
         Map(
           NexusPath("minds", "core", "dataset", "v1.0.0") -> UISpec(
-            "Dataset", Map(
+            "Dataset",
+            Map(
               "https://schema.hbp.eu/minds/embargo_status" -> EditorFieldSpecification(
-                "Embargo Status", Some("minds/core/embargostatus/v1.0.0"),
-                DropdownSelect, Some(true), Some("id"), Some("name"), Some(true),
+                "Embargo Status",
+                Some("minds/core/embargostatus/v1.0.0"),
+                DropdownSelect,
+                Some(true),
+                Some("id"),
+                Some("name"),
+                Some(true),
                 Some(true)
               ),
               "http://schema.org/datalink" -> EditorFieldSpecification(
-                "Data link", None,
-                InputText, None, None, None, None, None
+                "Data link",
+                None,
+                InputText,
+                None,
+                None,
+                None,
+                None,
+                None
               )
             ),
-            Some(UIInfo(
-              "http://schema.org/name",
-              List("http://schema.org/name",
-                "http://schema.org/description"),
-              Some(true)
-            ))
+            Some(
+              UIInfo(
+                "http://schema.org/name",
+                List("http://schema.org/name", "http://schema.org/description"),
+                Some(true)
+              )
+            )
           ),
           NexusPath("minds", "experiment", "protocol", "v1.0.0") -> UISpec(
-            "Protocol", Map(
+            "Protocol",
+            Map(
               "http://schema.org/name" -> EditorFieldSpecification(
-                "Name", None,
-                InputText, None, None, None, None, None
+                "Name",
+                None,
+                InputText,
+                None,
+                None,
+                None,
+                None,
+                None
               )
             ),
-            Some(UIInfo(
-              "http://schema.org/name",
-              List("http://schema.org/name"),
-              None
-            ))
+            Some(
+              UIInfo(
+                "http://schema.org/name",
+                List("http://schema.org/name"),
+                None
+              )
+            )
           )
-
         )
       )
 
-      res.registry(NexusPath("minds", "core", "dataset", "v1.0.0")) mustBe expected.registry(NexusPath("minds", "core", "dataset", "v1.0.0"))
-      res.registry(NexusPath("minds", "experiment", "protocol", "v1.0.0")) mustBe expected.registry(NexusPath("minds", "experiment", "protocol", "v1.0.0"))
+      res._1.registry(NexusPath("minds", "core", "dataset", "v1.0.0")) mustBe expected.registry(
+        NexusPath("minds", "core", "dataset", "v1.0.0")
+      )
+      res._1.registry(NexusPath("minds", "experiment", "protocol", "v1.0.0")) mustBe expected.registry(
+        NexusPath("minds", "experiment", "protocol", "v1.0.0")
+      )
 
     }
   }
-
 
 }

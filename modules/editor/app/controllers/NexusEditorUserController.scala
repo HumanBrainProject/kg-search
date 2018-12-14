@@ -22,12 +22,13 @@ import models.editorUserList.BOOKMARKFOLDER
 import models.errors.APIEditorError
 import models.instance.NexusInstanceReference
 import models.user.EditorUser
-import models.{AuthenticatedUserAction, EditorResponseObject, NexusPath, UserRequest}
+import models._
 import play.api.Logger
 import play.api.libs.json._
 import play.api.mvc.{AnyContent, _}
 import services._
 import services.bookmark.EditorBookmarkService
+import services.query.QueryService
 import services.specification.FormService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,15 +37,17 @@ class NexusEditorUserController @Inject()(
   cc: ControllerComponents,
   config: ConfigurationService,
   authenticatedUserAction: AuthenticatedUserAction,
+  editorService: EditorService,
   editorUserService: EditorUserService,
   editorUserListService: EditorBookmarkService,
-  arangoQueryService: ArangoQueryService,
   nexusService: NexusService,
   oIDCAuthService: OIDCAuthService,
   formService: FormService
 )(implicit ec: ExecutionContext)
     extends AbstractController(cc) {
   val logger = Logger(this.getClass)
+
+  object queryService extends QueryService
 
   private def getOrCreateUserWithUserFolder(token: String)(implicit request: UserRequest[AnyContent]) = {
     editorUserService.getOrCreateUser(request.user, token) { postCreation }
@@ -100,10 +103,18 @@ class NexusEditorUserController @Inject()(
   ): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     val nexusPath = NexusPath(org, domain, datatype, version)
     val token = request.headers.toSimpleMap.getOrElse(AUTHORIZATION, "")
-    arangoQueryService.listInstances(nexusPath, from, size, search, token).map {
-      case Right(data) => Ok(Json.toJson(data))
-      case Left(res)   => res.toResult
+    editorService.retrievePreviewInstances(nexusPath, formService.formRegistry, token).map {
+      case Right((data, count)) =>
+        formService.formRegistry.registry.get(nexusPath) match {
+          case Some(spec) => Ok(Json.toJson(EditorResponseWithCount(Json.toJson(data), spec.label, count)))
+          case None       => Ok(Json.toJson(EditorResponseWithCount(Json.toJson(data), nexusPath.toString(), count)))
+        }
+      case Left(res) => res.toResult
     }
+//    arangoQueryService.listInstances(nexusPath, from, size, search, token).map {
+//      case Right(data) => Ok(Json.toJson(data))
+//      case Left(res)   => res.toResult
+//    }
   }
 
   def getInstancesbyBookmarkList(

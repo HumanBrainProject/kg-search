@@ -13,19 +13,19 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package models.specification
 
-import models.NexusPath
+package models.instance
 
-case class FormRegistry[A](registry: Map[NexusPath, A])
+import constants.{JsonLDConstants, NexusConstants}
+import play.api.libs.json.{JsObject, JsPath, Json, Reads}
 
-object FormRegistry {
+case class NexusLink(ref: NexusInstanceReference) {
 
-  def filterOrgs(formRegistry: FormRegistry[UISpec], orgs: Seq[String]): FormRegistry[UISpec] = {
-    formRegistry.copy(
-      registry = formRegistry.registry.filter {
-        case (path, _) => orgs.contains(path.org)
-      }
-    )
-  }
+  def toJson(currentSystemBaseUrl: String): JsObject =
+    Json.obj(JsonLDConstants.ID -> s"$currentSystemBaseUrl/${NexusConstants.dataPath}${ref.toString}")
+}
+
+object NexusLink {
+  implicit val readNexusLink: Reads[NexusLink] =
+    (JsPath \ JsonLDConstants.ID).read[String].map(s => NexusLink(NexusInstanceReference.fromUrl(s)))
 }
