@@ -40,7 +40,6 @@ class NexusEditorUserController @Inject()(
   editorService: EditorService,
   editorUserService: EditorUserService,
   editorUserListService: EditorBookmarkService,
-  arangoQueryService: ArangoQueryService,
   nexusService: NexusService,
   oIDCAuthService: OIDCAuthService,
   formService: FormService

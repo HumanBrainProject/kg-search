@@ -40,7 +40,6 @@ class NexusEditorController @Inject()(
   oIDCAuthService: OIDCAuthService,
   config: ConfigurationService,
   nexusService: NexusService,
-  arangoQueryService: ArangoQueryService,
   iAMAuthService: IAMAuthService,
   formService: FormService,
   reverseLinkService: ReverseLinkService,
