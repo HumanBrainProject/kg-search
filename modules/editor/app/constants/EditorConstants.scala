@@ -50,14 +50,15 @@ object EditorConstants {
   trait Command
   case object DELETE extends Command
   case object UPDATE extends Command
+  case object ADD extends Command
 
-  val context =
+  val context: String =
     s"""
        |{
        |    "@vocab": "https://schema.hbp.eu/graphQuery/",
        |    "schema": "http://schema.org/",
-       |    "hbpkg": "${EDITORNAMESPACE}",
-       |    "base":"${BASENAMESPACE}",
+       |    "hbpkg": "$EDITORNAMESPACE",
+       |    "base":"$BASENAMESPACE",
        |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
        |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
        |    "this": "https://schema.hbp.eu/editor/",

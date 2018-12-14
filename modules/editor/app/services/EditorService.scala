@@ -18,26 +18,16 @@ package services
 
 import com.google.inject.Inject
 import constants.{EditorClient, EditorConstants, JsonLDConstants, UiConstants}
-import constants.EditorConstants.{DELETE, UPDATE}
 import helpers._
-import models.errors.APIEditorError
-import play.api.http.Status._
-import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, PreviewInstance}
+import models.NexusPath
 import models.errors.{APIEditorError, APIEditorMultiError}
-import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
-import models.user.User
-import models.{EditorResponseObject, EditorResponseWithCount, NexusPath}
+import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, PreviewInstance}
 import models.specification.{FormRegistry, QuerySpec, UISpec}
+import models.user.User
 import play.api.Logger
 import play.api.http.Status._
-import play.api.libs.json.{JsArray, JsObject, JsValue, Json}
-import play.api.libs.ws.{WSClient, WSResponse}
-import services.ReverseLinkOP.{
-  handleUpdateOfReverseLink,
-  isRefInOriginalInstanceField,
-  removeReverseLinksFromInstance,
-  ReverseLinks
-}
+import play.api.libs.json.{JsObject, JsValue}
+import play.api.libs.ws.WSClient
 import services.instance.InstanceApiService
 import services.query.QueryService
 import services.specification.FormService
@@ -188,8 +178,8 @@ class EditorService @Inject()(
     *  Update the reverse instance
     * @param instanceRef The reference to the instance being updated
     * @param updateToBeStored The instance being updated
-    * @param user
-    * @param token
+    * @param user The current user
+    * @param token The user token
     * @return
     */
   def processInstanceUpdate(
@@ -290,7 +280,8 @@ object EditorService {
        |    },
        |    {
        |      "fieldname": "this:${UiConstants.DATATYPE}",
-       |      "relative_path": "${JsonLDConstants.TYPE}"
+       |      "relative_path": "${JsonLDConstants.TYPE}",
+       |      "required":true
        |    }
        |  ]
        |}
