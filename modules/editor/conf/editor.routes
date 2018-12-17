@@ -52,7 +52,7 @@ GET    /instance/:org/:domain/:schema/:version/:id                  controllers.
 #    required: false
 #    type: string
 ###
-POST    /instances                 controllers.NexusEditorController.getInstancesByIds()
+POST    /instances                 controllers.NexusEditorController.getInstancesByIds
 
 
 
