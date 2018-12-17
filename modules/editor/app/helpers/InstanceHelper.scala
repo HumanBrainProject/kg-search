@@ -29,58 +29,23 @@ import play.api.libs.json._
 import services.specification.FormService
 
 import scala.collection.immutable.SortedSet
+import gnieh.diffson.playJson._
 
 object InstanceHelper {
   val logger = Logger(this.getClass)
 
   type UpdateInfo = (Option[String], Int, String, EditorInstance)
 
-  private def handleDeletion(deleted: JValue, newJson: JValue): JValue = {
-    implicit class JValueExtended(value: JValue) {
-      def has(childString: String): Boolean = {
-        if ((value \ childString) != JNothing) {
-          true
-        } else {
-          false
-        }
-      }
-    }
-    /* fields deletion. Deletion are allowed on manual space ONLY
-     * final diff is then an addition/update from original view
-     * this allows partially defined form (some field are then not updatable)
-     */
-    logger.debug(s"""PARTIAL FORM DEFINITION - missing fields from form: ${deleted.toString}""")
-    // Here we get the diff as being the array without the deleted element
-    val deletion = deleted.values.asInstanceOf[Map[String, Any]].map {
-      case (k, _) =>
-        if (!newJson.has(k)) {
-          k -> JNull
-        } else {
-          k -> newJson \ k
-        }
-    }
-    JObject(deletion.toList.map(x => JField(x._1, x._2)))
-
-  }
-
   def buildDiffEntity(currentInstance: NexusInstance, newValue: NexusInstance): EditorInstance = {
-    val consolidatedJson = JsonParser.parse(currentInstance.content.toString())
-    val newJson = JsonParser.parse(newValue.content.toString())
-    val Diff(changed, added, deleted) = consolidatedJson.diff(newJson)
-    val diff: JsonAST.JValue = (deleted, changed) match {
-      case (JsonAST.JNothing, JsonAST.JNothing) =>
-        added
-      case (JsonAST.JNothing, _) =>
-        changed.merge(added)
-      case (_, JsonAST.JNothing) =>
-        val deletion = handleDeletion(deleted, newJson)
-        deletion.merge(added)
-      case _ =>
-        val deletion = handleDeletion(deleted, newJson)
-        changed.merge(deletion.merge(added))
-    }
-    val rendered = Json.parse(JsonMethods.compact(JsonMethods.render(diff))).as[JsObject]
-    val diffWithCompleteArray = rendered.value
+
+    val patch: JsonMergePatch = JsonMergeDiff.diff(currentInstance.content, newValue.content)
+    val deleted = patch.toJson
+      .as[JsObject]
+      .value
+      .filter(s => s._2 == JsNull || (s._2.validate[JsArray].isSuccess && s._2.as[JsArray].value.isEmpty))
+    val res: JsObject = patch(Json.obj()).as[JsObject]
+    val withDeletedFields = res.deepMerge(Json.toJson(deleted).as[JsObject])
+    val diffWithCompleteArray = withDeletedFields.value
       .map {
         case (k, v) =>
           val value = (newValue.content \ k).asOpt[JsValue]
