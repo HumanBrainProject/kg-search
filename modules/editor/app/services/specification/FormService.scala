@@ -45,9 +45,10 @@ class FormService @Inject()(
   val retryTime = 5000 //ms
   val logger = Logger(this.getClass)
 
-  val (formRegistry, queryRegistry) = loadFormConfiguration()
+  def formRegistry: FormRegistry[UISpec] = loadFormConfiguration()._1
+  def queryRegistry: FormRegistry[QuerySpec] = loadFormConfiguration()._2
 
-  def flushSpec = stateSpec = None
+  def flushSpec: Unit = stateSpec = None
 
   @tailrec
   final def loadFormConfiguration(): (FormRegistry[UISpec], FormRegistry[QuerySpec]) = {
@@ -59,6 +60,7 @@ class FormService @Inject()(
         )
         spec.status match {
           case OK =>
+            logger.debug("Loaded specification")
             stateSpec = Some(FormService.getRegistry(spec.json.as[List[JsObject]]))
             FormService.getRegistry(spec.json.as[List[JsObject]])
           case _ =>
@@ -147,7 +149,7 @@ object FormService {
 
   def removeClientKeysCorrectLinks(payload: JsValue, nexusEndpoint: String): JsObject = {
     val cleanForm = FormService.removeKey(payload)
-    val form = cleanForm.toString().replaceAll(""""id":"""", s""""@id":"${nexusEndpoint}/v0/data/""")
+    val form = cleanForm.toString().replaceAll(""""id":"""", s""""@id":"$nexusEndpoint/v0/data/""")
     Json.parse(form).as[JsObject]
   }
 

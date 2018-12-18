@@ -25,6 +25,16 @@ import scala.concurrent.Future
 
 trait QueryService {
 
+  def params(p: (String, Option[_])*): List[(String, String)] = {
+    p.foldLeft(List[(String, String)]()) {
+      case (acc, el) =>
+        el._2 match {
+          case Some(e) => (el._1, e.toString) :: acc
+          case _       => acc
+        }
+    }
+  }
+
   def getInstancesWithId(
     wSClient: WSClient,
     apiEndpoint: String,
@@ -33,10 +43,9 @@ trait QueryService {
     token: String,
     vocab: Option[String] = None
   ): Future[WSResponse] = {
-    val params = vocab.map(v => "vocab" -> v).getOrElse(("", ""))
     wSClient
       .url(s"$apiEndpoint/query/${nexusInstanceReference.nexusPath.toString()}/instances/${nexusInstanceReference.id}")
-      .addQueryStringParameters(params)
+      .addQueryStringParameters(params("vocab" -> vocab): _*)
       .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token)
       .post(query)
   }
@@ -47,12 +56,14 @@ trait QueryService {
     nexusPath: NexusPath,
     query: String,
     token: String,
+    from: Option[Int] = None,
+    size: Option[Int] = None,
     vocab: Option[String] = None
   ): Future[WSResponse] = {
-    val params = vocab.map(v => "vocab" -> v).getOrElse(("", ""))
+
     wSClient
       .url(s"$apiEndpoint/query/${nexusPath.toString()}/instances")
-      .addQueryStringParameters(params)
+      .addQueryStringParameters(params("vocab" -> vocab, "from" -> from, "size" -> size): _*)
       .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token)
       .post(query)
   }
