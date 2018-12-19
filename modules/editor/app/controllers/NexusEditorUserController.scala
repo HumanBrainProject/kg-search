@@ -103,7 +103,7 @@ class NexusEditorUserController @Inject()(
   ): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     val nexusPath = NexusPath(org, domain, datatype, version)
     val token = request.headers.toSimpleMap.getOrElse(AUTHORIZATION, "")
-    editorService.retrievePreviewInstances(nexusPath, formService.formRegistry, from, size, token).map {
+    editorService.retrievePreviewInstances(nexusPath, formService.formRegistry, from, size, search, token).map {
       case Right((data, count)) =>
         formService.formRegistry.registry.get(nexusPath) match {
           case Some(spec) => Ok(Json.toJson(EditorResponseWithCount(Json.toJson(data), spec.label, count)))

@@ -189,7 +189,9 @@ class NexusEditorController @Inject()(
         val token = OIDCHelper.getTokenFromRequest(request)
         val instanceRef = NexusInstanceReference(org, domain, schema, version, id)
         formService.formRegistry.registry.get(instanceRef.nexusPath) match {
-          case Some(spec) if spec.fields.values.exists(p => p.isReverse.getOrElse(false)) =>
+          case Some(spec)
+              if spec.fields.values.exists(p => p.isReverse.getOrElse(false)) |
+              spec.fields.values.exists(p => p.isLinkingInstance.getOrElse(false)) =>
             reverseLinkService
               .generateDiffAndUpdateInstanceWithReverseLink(
                 instanceRef,

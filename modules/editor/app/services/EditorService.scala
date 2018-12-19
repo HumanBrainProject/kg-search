@@ -51,6 +51,7 @@ class EditorService @Inject()(
     formRegistry: FormRegistry[UISpec],
     from: Option[Int],
     size: Option[Int],
+    search: String,
     token: String
   ): Future[Either[APIEditorError, (List[PreviewInstance], Long)]] = {
     val promotedField =
@@ -65,6 +66,7 @@ class EditorService @Inject()(
         token,
         from,
         size,
+        search,
         Some(EditorConstants.EDITORVOCAB)
       )
       .map { res =>

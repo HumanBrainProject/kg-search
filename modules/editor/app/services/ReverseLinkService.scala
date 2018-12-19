@@ -16,12 +16,11 @@
 package services
 
 import com.google.inject.Inject
-import constants.EditorConstants.Command
 import helpers.ReverseLinkOP
-import helpers.ReverseLinkOP.removeReverseLinksFromInstance
+import models.commands.Command
 import models.errors.{APIEditorError, APIEditorMultiError}
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, NexusLink}
-import models.specification.{FormRegistry, QuerySpec, UISpec}
+import models.specification.{EditorFieldSpecification, FormRegistry, QuerySpec, UISpec}
 import models.user.User
 import play.api.Logger
 import play.api.http.Status.INTERNAL_SERVER_ERROR
@@ -52,11 +51,22 @@ class ReverseLinkService @Inject()(
       case Right(currentInstanceDisplayed) =>
         val updateToBeStored =
           EditorService.computeUpdateTobeStored(currentInstanceDisplayed, updateFromUser, config.nexusEndpoint)
-        val (instanceWithoutReverseLinks, reverseEntitiesResponses) =
+        val fieldsSpec = formRegistry.registry(updateToBeStored.nexusInstance.nexusPath).fields
+        val instanceWithoutReversLink = ReverseLinkOP.removeLinksFromInstance(
+          updateToBeStored,
+          fieldsSpec,
+          e => e.isReverse.getOrElse(false)
+        )
+        val instanceWithoutLinkingInstance = ReverseLinkOP.removeLinksFromInstance(
+          instanceWithoutReversLink,
+          fieldsSpec,
+          e => e.isLinkingInstance.getOrElse(false)
+        )
+        val reverseEntitiesResponses =
           processReverseLinks(
             updateToBeStored,
             instanceRef,
-            formRegistry,
+            fieldsSpec,
             queryRegistry,
             currentInstanceDisplayed,
             config.nexusEndpoint,
@@ -65,11 +75,11 @@ class ReverseLinkService @Inject()(
           )
         reverseEntitiesResponses.flatMap { results =>
           if (results.forall(_.isRight)) {
-            if (instanceWithoutReverseLinks.nexusInstance.content.keys.isEmpty) {
+            if (instanceWithoutLinkingInstance.nexusInstance.content.keys.isEmpty) {
               Future(Right(()))
             } else {
               //Normal update of the instance without reverse links
-              editorService.processInstanceUpdate(instanceRef, instanceWithoutReverseLinks, user, token)
+              editorService.processInstanceUpdate(instanceRef, instanceWithoutLinkingInstance, user, token)
             }
           } else {
             val errors = results.filter(_.isLeft).map(_.swap.toOption.get)
@@ -82,20 +92,17 @@ class ReverseLinkService @Inject()(
   def processReverseLinks(
     updateToBeStored: EditorInstance,
     updateReference: NexusInstanceReference,
-    formRegistry: FormRegistry[UISpec],
+    fields: Map[String, EditorFieldSpecification],
     queryRegistry: FormRegistry[QuerySpec],
     currentInstanceDisplayed: NexusInstance,
     baseUrl: String,
     user: User,
     token: String
-  ): (EditorInstance, Future[List[Either[APIEditorError, Unit]]]) = {
-    val fields = formRegistry.registry(updateToBeStored.nexusInstance.nexusPath).fields
-    val instanceWithoutReversLink = removeReverseLinksFromInstance(updateToBeStored, fields)
+  ): Future[List[Either[APIEditorError, Unit]]] = {
     val instances = for {
       reverseField <- updateToBeStored.contentToMap()
       if fields(reverseField._1).isReverse.getOrElse(false)
-      reverseFieldPath <- fields(reverseField._1).instancesPath
-      fieldName        <- fields(reverseField._1).reverseTargetField
+      fieldName <- fields(reverseField._1).reverseTargetField
     } yield {
       val fullIds = reverseField._2.asOpt[JsObject] match {
         case Some(obj) =>
@@ -108,57 +115,32 @@ class ReverseLinkService @Inject()(
             )
             .getOrElse(List())
       }
-      val changes = ReverseLinkOP.computeChanges(currentInstanceDisplayed, reverseField, fullIds.toList)
-      changes.map { s =>
-        processCommand(s._1, s._2, updateReference, queryRegistry, fieldName, baseUrl, user, token)
-      }
+      val changes = ReverseLinkOP.computeChanges(
+        currentInstanceDisplayed,
+        reverseField,
+        fieldName,
+        fullIds.toList,
+        editorService,
+        token,
+        baseUrl,
+        user,
+        queryRegistry
+      )
+      changes.map { processCommand }
     }
-    (instanceWithoutReversLink, Future.sequence(instances.toList.flatten))
+    Future.sequence(instances.toList.flatten)
   }
 
   /**
     *  Process the command either ADD or DELETE
-    * @param command either ADD or DELETE
-    * @param reverseInstancelink the link to the reverseInstance
-    * @param currentInstanceRef current instance reference
-    * @param queryRegistry query spec registry
-    * @param targetField the field name in the reverse instance pointing to the current instance or not
-    * @param baseUrl env base url
-    * @param user current user
-    * @param token current user token
+    * @param c The command to execute
     * @return
     */
-  private def processCommand(
-    command: Command,
-    reverseInstancelink: NexusLink,
-    currentInstanceRef: NexusInstanceReference,
-    queryRegistry: FormRegistry[QuerySpec],
-    targetField: String,
-    baseUrl: String,
-    user: User,
-    token: String
-  ): Future[Either[APIEditorError, Unit]] = {
-    editorService.retrieveInstance(reverseInstancelink.ref, token, queryRegistry).flatMap {
-      case Left(error) => Future(Left(error))
-      case Right(reverseInstance) =>
-        val diffToSave =
-          ReverseLinkOP
-            .createContentToUpdate(command, reverseInstance, targetField, currentInstanceRef)
-        diffToSave match {
-          case Right(Some(l)) =>
-            val reverseLinkInstance = EditorInstance(
-              NexusInstance(
-                Some(reverseInstancelink.ref.id),
-                reverseInstancelink.ref.nexusPath,
-                Json.obj(targetField -> Json.toJson(l.map(_.toJson(baseUrl))))
-              )
-            )
-            editorService.updateInstance(reverseLinkInstance, reverseInstancelink.ref, token, user.id)
-          case Right(None) => Future(Right(()))
-          case Left(s)     => Future(Left(APIEditorError(INTERNAL_SERVER_ERROR, s)))
-        }
+  private def processCommand(c: Future[Either[APIEditorError, Command]]): Future[Either[APIEditorError, Unit]] = {
+    c.flatMap {
+      case Left(err)      => Future(Left(err))
+      case Right(command) => command.execute()
     }
-
   }
 
 }

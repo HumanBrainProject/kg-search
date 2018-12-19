@@ -58,12 +58,13 @@ trait QueryService {
     token: String,
     from: Option[Int] = None,
     size: Option[Int] = None,
+    search: String,
     vocab: Option[String] = None
   ): Future[WSResponse] = {
 
     wSClient
       .url(s"$apiEndpoint/query/${nexusPath.toString()}/instances")
-      .addQueryStringParameters(params("vocab" -> vocab, "from" -> from, "size" -> size): _*)
+      .addQueryStringParameters(params("vocab" -> vocab, "from" -> from, "size" -> size, "search" -> Some(search)): _*)
       .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token)
       .post(query)
   }
