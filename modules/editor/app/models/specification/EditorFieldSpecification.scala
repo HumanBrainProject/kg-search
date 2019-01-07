@@ -30,6 +30,8 @@ case class EditorFieldSpecification(
   isReverse: Option[Boolean] = None,
   reverseTargetField: Option[String] = None,
   isLinkingInstance: Option[Boolean] = None,
+  linkingInstanceType: Option[String] = None,
+  linkingInstancePath: Option[String] = None,
   value: Option[JsValue] = None
 )
 
@@ -50,6 +52,8 @@ object EditorFieldSpecification {
     (JsPath \ "isReverse").writeNullable[Boolean] and
     (JsPath \ "reverseTargetField").writeNullable[String] and
     (JsPath \ "isLinkingInstance").writeNullable[Boolean] and
+    (JsPath \ "linkingInstanceType").writeNullable[String] and
+    (JsPath \ "linkingInstancePath").writeNullable[String] and
     (JsPath \ "value").writeNullable[JsValue]
   )(unlift(EditorFieldSpecification.unapply))
 
@@ -65,6 +69,8 @@ object EditorFieldSpecification {
     (JsPath \ "isReverse").readNullable[Boolean] and
     (JsPath \ "reverseTargetField").readNullable[String] and
     (JsPath \ "isLinkingInstance").readNullable[Boolean] and
+    (JsPath \ "linkingInstanceType").readNullable[String] and
+    (JsPath \ "linkingInstancePath").readNullable[String] and
     (JsPath \ "value").readNullable[JsValue]
   )(EditorFieldSpecification.apply _)
 }

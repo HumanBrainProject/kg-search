@@ -167,7 +167,40 @@ class EditorService @Inject()(
             case Right(instance) => Right(instance)
           }
     }
+  }
 
+  def deleteLinkingInstance(
+    from: NexusInstanceReference,
+    to: NexusInstanceReference,
+    linkingInstancePath: NexusPath,
+    token: String
+  ): Future[Either[APIEditorMultiError, Unit]] = {
+    instanceApiService
+      .getLinkingInstance(wSClient, config.kgQueryEndpoint, from, to, linkingInstancePath, token)
+      .flatMap {
+        case Right(ls) =>
+          Future
+            .sequence(
+              ls.map(
+                l =>
+                  instanceApiService
+                    .delete(wSClient, config.kgQueryEndpoint, l, token)
+                    .map[Either[APIEditorError, Unit]] {
+                      case Left(res) => Left(APIEditorError(res.status, res.body))
+                      case Right(_)  => Right(())
+                  }
+              )
+            )
+            .map { f =>
+              val errors = f.filter(_.isLeft)
+              if (errors.isEmpty) {
+                Right(())
+              } else {
+                Left(APIEditorMultiError(INTERNAL_SERVER_ERROR, errors.map(_.swap.toOption.get)))
+              }
+            }
+        case Left(res) => Future(Left(APIEditorMultiError.fromResponse(res.status, res.body)))
+      }
   }
 
   def generateDiffAndUpdateInstance(

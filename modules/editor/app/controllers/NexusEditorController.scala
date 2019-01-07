@@ -226,7 +226,6 @@ class NexusEditorController @Inject()(
                   error.toResult
               }
         }
-
       }
 
   /**

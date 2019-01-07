@@ -21,13 +21,12 @@ import models.NexusPath
 import models.errors.APIEditorError
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
 import models.user.User
-import play.api.libs.json.{JsObject, JsValue}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSClient, WSResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 import play.api.http.Status._
 import play.api.http.HeaderNames._
-import play.filters.csrf.CSRF.Token
 
 trait InstanceApiService {
   val instanceEndpoint = "/internal/api/instances"
@@ -112,6 +111,27 @@ trait InstanceApiService {
           case OK | CREATED =>
             Right(NexusInstanceReference.fromUrl((res.json \ EditorConstants.RELATIVEURL).as[String]))
           case _ => Left(res)
+        }
+      }
+  }
+
+  def getLinkingInstance(
+    wSClient: WSClient,
+    apiBaseEndpoint: String,
+    from: NexusInstanceReference,
+    to: NexusInstanceReference,
+    linkingInstancePath: NexusPath,
+    token: String,
+    serviceClient: ServiceClient = EditorClient
+  )(implicit ec: ExecutionContext): Future[Either[WSResponse, List[NexusInstanceReference]]] = {
+    wSClient
+      .url(s"$apiBaseEndpoint$instanceEndpoint/${from.toString}/links/${to.toString}/${linkingInstancePath.toString()}")
+      .addHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
+      .get()
+      .map { res =>
+        res.status match {
+          case OK => Right(res.json.as[List[NexusInstanceReference]])
+          case _  => Left(res)
         }
       }
   }

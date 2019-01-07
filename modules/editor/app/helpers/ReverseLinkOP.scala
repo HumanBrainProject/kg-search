@@ -48,25 +48,12 @@ object ReverseLinkOP {
     )
   )
 
-  /**
-    * Generate either ADD or DELETE changes to apply on the reverse instance
-    * @param currentInstanceDisplayed current instance
-    * @param reverseField the reverse field
-    * @param fullIds list of links  from the updated instance
-    * @return
-    */
-  def computeChanges(
+  def getAddedAndRemovedLinks(
     currentInstanceDisplayed: NexusInstance,
-    reverseField: (String, JsValue),
-    targetField: String,
-    fullIds: List[NexusLink],
-    editorService: EditorService,
-    token: String,
-    baseUrl: String,
-    user: User,
-    queryRegistry: FormRegistry[QuerySpec]
-  )(implicit executionContext: ExecutionContext): List[Future[Either[APIEditorError, Command]]] = {
-    currentInstanceDisplayed.content.value.get(reverseField._1) match {
+    linkName: String,
+    ids: List[NexusLink]
+  ): (List[NexusLink], List[NexusLink]) = {
+    currentInstanceDisplayed.content.value.get(linkName) match {
       case Some(currentReverseField) =>
         val currentLinks = currentReverseField.asOpt[JsObject] match {
           case Some(obj) =>
@@ -78,63 +65,75 @@ object ReverseLinkOP {
                 _.value.map(js => NexusLink(NexusInstanceReference.fromUrl((js.as[JsObject] \ "id").as[String])))
               )
               .getOrElse(List())
+              .toList
         }
-        val removed = currentLinks.toSet -- fullIds.toSet
-        val added = fullIds.toSet -- currentLinks.toSet
-        removed.map { link =>
-          editorService.retrieveInstance(link.ref, token, queryRegistry).map {
-            case Right(reverseInstance) =>
-              Right(
-                DeleteReverseLinkCommand(
-                  link,
-                  reverseInstance,
-                  targetField,
-                  NexusInstanceReference.fromUrl(currentInstanceDisplayed.id().get),
-                  editorService,
-                  baseUrl,
-                  token,
-                  user
-                )
-              )
-            case Left(error) => Left(error)
-          }
-        }.toList ::: added.map { link =>
-          editorService.retrieveInstance(link.ref, token, queryRegistry).map {
-            case Right(reverseInstance) =>
-              Right(
-                AddReverseLinkCommand(
-                  link,
-                  reverseInstance,
-                  targetField,
-                  NexusInstanceReference.fromUrl(currentInstanceDisplayed.id().get),
-                  editorService,
-                  baseUrl,
-                  token,
-                  user
-                )
-              )
-            case Left(error) => Left(error)
-          }
-        }.toList
-      case None => // Add  all
-        fullIds.map { s =>
-          editorService.retrieveInstance(s.ref, token, queryRegistry).map {
-            case Right(reverseInstance) =>
-              Right(
-                AddReverseLinkCommand(
-                  s,
-                  reverseInstance,
-                  targetField,
-                  NexusInstanceReference.fromUrl(currentInstanceDisplayed.id().get),
-                  editorService,
-                  baseUrl,
-                  token,
-                  user
-                )
-              )
-            case Left(error) => Left(error)
-          }
-        }
+        val removed = currentLinks.toSet -- ids.toSet
+        val added = ids.toSet -- currentLinks.toSet
+        (added.toList, removed.toList)
+      case None => (ids, List())
+    }
+  }
+
+  /**
+    *   Add or delete a reverse link
+    * @param currentInstanceDisplayed
+    * @param linkName The name of the field in the current instance displayed
+    * @param targetField The name of the field in the target instance
+    * @param fullIds the list of ids of the target objects
+    * @param editorService The editor service
+    * @param token the user token
+    * @param baseUrl base url of the system
+    * @param user the current user
+    * @param queryRegistry the registry containing queries
+    * @param executionContext the implicit execution ctx
+    * @return A list of commands to execute
+    */
+  def addOrDeleteReverseLink(
+    currentInstanceDisplayed: NexusInstance,
+    linkName: String,
+    targetField: String,
+    fullIds: List[NexusLink],
+    editorService: EditorService,
+    token: String,
+    baseUrl: String,
+    user: User,
+    queryRegistry: FormRegistry[QuerySpec]
+  )(implicit executionContext: ExecutionContext): List[Future[Either[APIEditorError, Command]]] = {
+    val (added, removed) = getAddedAndRemovedLinks(currentInstanceDisplayed, linkName, fullIds)
+    removed.map { link =>
+      editorService.retrieveInstance(link.ref, token, queryRegistry).map {
+        case Right(reverseInstance) =>
+          Right(
+            DeleteReverseLinkCommand(
+              link,
+              reverseInstance,
+              targetField,
+              NexusInstanceReference.fromUrl(currentInstanceDisplayed.id().get),
+              editorService,
+              baseUrl,
+              token,
+              user
+            )
+          )
+        case Left(error) => Left(error)
+      }
+    } ::: added.map { link =>
+      editorService.retrieveInstance(link.ref, token, queryRegistry).map {
+        case Right(reverseInstance) =>
+          Right(
+            AddReverseLinkCommand(
+              link,
+              reverseInstance,
+              targetField,
+              NexusInstanceReference.fromUrl(currentInstanceDisplayed.id().get),
+              editorService,
+              baseUrl,
+              token,
+              user
+            )
+          )
+        case Left(error) => Left(error)
+      }
     }
   }
 //

@@ -17,7 +17,8 @@ package services
 
 import com.google.inject.Inject
 import helpers.ReverseLinkOP
-import models.commands.Command
+import models.NexusPath
+import models.commands.{AddLinkingInstanceCommand, Command, DeleteLinkingInstanceCommand}
 import models.errors.{APIEditorError, APIEditorMultiError}
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, NexusLink}
 import models.specification.{EditorFieldSpecification, FormRegistry, QuerySpec, UISpec}
@@ -62,18 +63,21 @@ class ReverseLinkService @Inject()(
           fieldsSpec,
           e => e.isLinkingInstance.getOrElse(false)
         )
-        val reverseEntitiesResponses =
-          processReverseLinks(
-            updateToBeStored,
-            instanceRef,
-            fieldsSpec,
-            queryRegistry,
-            currentInstanceDisplayed,
-            config.nexusEndpoint,
-            user,
-            token
-          )
-        reverseEntitiesResponses.flatMap { results =>
+        val reverseLinksToUpdated = updateReverseInstance(
+          updateToBeStored,
+          fieldsSpec,
+          currentInstanceDisplayed,
+          instanceRef,
+          user,
+          queryRegistry,
+          config.nexusEndpoint,
+          token
+        )
+        val linkingInstancesToUpdated =
+          updateLinkingInstances(updateToBeStored, fieldsSpec, currentInstanceDisplayed, instanceRef, token)
+        val responses = reverseLinksToUpdated.map { processCommand } ::: linkingInstancesToUpdated.map(_.execute())
+
+        Future.sequence(responses).flatMap { results =>
           if (results.forall(_.isRight)) {
             if (instanceWithoutLinkingInstance.nexusInstance.content.keys.isEmpty) {
               Future(Right(()))
@@ -89,20 +93,14 @@ class ReverseLinkService @Inject()(
         }
     }
 
-  def processReverseLinks(
+  def filterLinks(
     updateToBeStored: EditorInstance,
-    updateReference: NexusInstanceReference,
     fields: Map[String, EditorFieldSpecification],
-    queryRegistry: FormRegistry[QuerySpec],
-    currentInstanceDisplayed: NexusInstance,
-    baseUrl: String,
-    user: User,
-    token: String
-  ): Future[List[Either[APIEditorError, Unit]]] = {
+    filter: EditorFieldSpecification => Boolean
+  ): List[(String, List[NexusLink])] = {
     val instances = for {
       reverseField <- updateToBeStored.contentToMap()
-      if fields(reverseField._1).isReverse.getOrElse(false)
-      fieldName <- fields(reverseField._1).reverseTargetField
+      if filter(fields(reverseField._1))
     } yield {
       val fullIds = reverseField._2.asOpt[JsObject] match {
         case Some(obj) =>
@@ -115,20 +113,100 @@ class ReverseLinkService @Inject()(
             )
             .getOrElse(List())
       }
-      val changes = ReverseLinkOP.computeChanges(
-        currentInstanceDisplayed,
-        reverseField,
-        fieldName,
-        fullIds.toList,
-        editorService,
-        token,
-        baseUrl,
-        user,
-        queryRegistry
-      )
-      changes.map { processCommand }
+      (reverseField._1, fullIds.toList)
     }
-    Future.sequence(instances.toList.flatten)
+    instances.toList
+  }
+
+  def updateReverseInstance(
+    updateToBeStored: EditorInstance,
+    fieldsSpec: Map[String, EditorFieldSpecification],
+    currentInstanceDisplayed: NexusInstance,
+    instanceRef: NexusInstanceReference,
+    user: User,
+    queryRegistry: FormRegistry[QuerySpec],
+    baseUrl: String,
+    token: String
+  ): List[Future[Either[APIEditorError, Command]]] = {
+    filterLinks(
+      updateToBeStored,
+      fieldsSpec,
+      e => e.isReverse.getOrElse(false)
+    ).flatMap {
+      case (reverseField, ids) =>
+        fieldsSpec(reverseField).reverseTargetField match {
+          case Some(fieldName) =>
+            ReverseLinkOP
+              .addOrDeleteReverseLink(
+                currentInstanceDisplayed,
+                reverseField,
+                fieldName,
+                ids,
+                editorService,
+                token,
+                baseUrl,
+                user,
+                queryRegistry
+              )
+          case None => List()
+        }
+    }
+  }
+
+  /**
+    *  Generate a list of Commands to add or delete a linking instance
+    * @param updateToBeStored the current updated instance
+    * @param fieldsSpec field specification
+    * @param currentInstanceDisplayed the update before update
+    * @param instanceRef the instance reference
+    * @param token the user token
+    * @return list of commands
+    */
+  def updateLinkingInstances(
+    updateToBeStored: EditorInstance,
+    fieldsSpec: Map[String, EditorFieldSpecification],
+    currentInstanceDisplayed: NexusInstance,
+    instanceRef: NexusInstanceReference,
+    token: String
+  ): List[Command] = {
+    filterLinks(
+      updateToBeStored,
+      fieldsSpec,
+      e => e.isLinkingInstance.getOrElse(false)
+    ).flatMap {
+      case (reverseField, ids) =>
+        val opt = for {
+          linkingInstanceType    <- fieldsSpec(reverseField).linkingInstanceType
+          linkingInstancePathStr <- fieldsSpec(reverseField).linkingInstancePath
+        } yield {
+
+          val linkingInstancePath = NexusPath(linkingInstancePathStr)
+          val (added, removed) =
+            ReverseLinkOP.getAddedAndRemovedLinks(currentInstanceDisplayed, reverseField, ids)
+          added.map(
+            id =>
+              AddLinkingInstanceCommand(
+                id,
+                instanceRef,
+                linkingInstanceType,
+                linkingInstancePath,
+                editorService,
+                config.nexusEndpoint,
+                token
+            )
+          ) ::: removed.map(
+            id =>
+              DeleteLinkingInstanceCommand(
+                instanceRef,
+                id.ref,
+                linkingInstancePath,
+                editorService,
+                token
+            )
+          )
+        }
+        opt.getOrElse(List())
+    }
   }
 
   /**
