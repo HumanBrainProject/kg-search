@@ -251,12 +251,17 @@ class NexusEditorController @Inject()(
           case Right(ref) =>
             request.body.asJson match {
               case Some(content) =>
-                content.as[JsObject]
+                val c = FormService.buildNewInstanceFromForm(
+                  config.nexusEndpoint,
+                  instancePath,
+                  content.as[JsObject],
+                  formService.formRegistry
+                )
                 val nonEmptyInstance = EditorInstance(
                   NexusInstance(
                     Some(ref.id),
                     ref.nexusPath,
-                    content.as[JsObject]
+                    c
                   )
                 )
                 editorService.updateInstance(nonEmptyInstance, ref, token, request.user.id).map[Result] {
