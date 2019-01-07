@@ -17,7 +17,7 @@
 package services.specification
 
 import com.google.inject.{Inject, Singleton}
-import constants.{EditorConstants, InternalSchemaFieldsConstants, JsonLDConstants, UiConstants}
+import constants._
 import models.editorUserList.BookmarkList
 import models.instance.{EditorInstance, NexusInstance}
 import models.specification.{DropdownSelect, FormRegistry, QuerySpec, UISpec}
@@ -45,20 +45,23 @@ class FormService @Inject()(
   val retryTime = 5000 //ms
   val logger = Logger(this.getClass)
 
-  val (formRegistry, queryRegistry) = loadFormConfiguration()
+  def formRegistry: FormRegistry[UISpec] = loadFormConfiguration()._1
+  def queryRegistry: FormRegistry[QuerySpec] = loadFormConfiguration()._2
 
-  def flushSpec = stateSpec = None
+  def flushSpec(): Unit = stateSpec = None
 
   @tailrec
   final def loadFormConfiguration(): (FormRegistry[UISpec], FormRegistry[QuerySpec]) = {
     stateSpec match {
       case None =>
+        logger.info("Starting to load specification")
         val spec = Await.result(
           ws.url(s"${config.kgQueryEndpoint}/arango/internalDocuments/editor_specifications").get(),
           timeout
         )
         spec.status match {
           case OK =>
+            logger.info("Specification loaded")
             stateSpec = Some(FormService.getRegistry(spec.json.as[List[JsObject]]))
             FormService.getRegistry(spec.json.as[List[JsObject]])
           case _ =>
@@ -98,8 +101,8 @@ object FormService {
     if ((data \ key).validate[JsArray].isSuccess) {
       Json
         .toJson((data \ key).as[JsArray].value.map { js =>
-          if ((js \ InternalSchemaFieldsConstants.RELATIVEURL).isDefined) {
-            val linkToInstance = (js \ InternalSchemaFieldsConstants.RELATIVEURL).as[String]
+          if ((js \ SchemaFieldsConstants.RELATIVEURL).isDefined) {
+            val linkToInstance = (js \ SchemaFieldsConstants.RELATIVEURL).as[String]
             Json.obj("id" -> JsString(linkToInstance))
           } else {
             js
@@ -107,8 +110,8 @@ object FormService {
         })
         .as[JsArray]
     } else {
-      if ((data \ key \ InternalSchemaFieldsConstants.RELATIVEURL).isDefined) {
-        val linkToInstance = (data \ key \ InternalSchemaFieldsConstants.RELATIVEURL).as[String]
+      if ((data \ key \ SchemaFieldsConstants.RELATIVEURL).isDefined) {
+        val linkToInstance = (data \ key \ SchemaFieldsConstants.RELATIVEURL).as[String]
         JsArray().+:(Json.obj("id" -> JsString(linkToInstance)))
       } else {
         JsArray()
@@ -125,7 +128,8 @@ object FormService {
             formDetails.label,
             Some(formDetails.isEditable.getOrElse(true)),
             formDetails.uiInfo,
-            formDetails.color
+            formDetails.color,
+            formDetails.isCommonType
           )
 
       }
@@ -147,7 +151,7 @@ object FormService {
 
   def removeClientKeysCorrectLinks(payload: JsValue, nexusEndpoint: String): JsObject = {
     val cleanForm = FormService.removeKey(payload)
-    val form = cleanForm.toString().replaceAll(""""id":"""", s""""@id":"${nexusEndpoint}/v0/data/""")
+    val form = cleanForm.toString().replaceAll(""""id":"""", s""""@id":"$nexusEndpoint/v0/data/""")
     Json.parse(form).as[JsObject]
   }
 
@@ -265,19 +269,12 @@ object FormService {
           val listOfMap = (el \ field)
             .asOpt[JsObject]
             .map { f =>
-              f.value.flatMap {
-                case (org, json) =>
-                  json.as[JsObject].value.flatMap {
-                    case (domain, d) =>
-                      d.as[JsObject].value.flatMap {
-                        case (schema, s) =>
-                          s.as[JsObject].value.map {
-                            case (version, v) =>
-                              NexusPath(org, domain, schema, version) -> v.as[A](r)
-                          }
-                      }
-                  }
-              }
+              for {
+                (org, json)  <- f.value
+                (domain, d)  <- json.as[JsObject].value
+                (schema, s)  <- d.as[JsObject].value
+                (version, v) <- s.as[JsObject].value
+              } yield NexusPath(org, domain, schema, version) -> v.as[A](r)
             }
             .getOrElse(List())
           acc ++ listOfMap

@@ -16,12 +16,12 @@
 package services
 
 import com.google.inject.Inject
-import constants.EditorConstants.Command
 import helpers.ReverseLinkOP
-import helpers.ReverseLinkOP.removeReverseLinksFromInstance
+import models.NexusPath
+import models.commands.{AddLinkingInstanceCommand, Command, DeleteLinkingInstanceCommand}
 import models.errors.{APIEditorError, APIEditorMultiError}
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, NexusLink}
-import models.specification.{FormRegistry, QuerySpec, UISpec}
+import models.specification.{EditorFieldSpecification, FormRegistry, QuerySpec, UISpec}
 import models.user.User
 import play.api.Logger
 import play.api.http.Status.INTERNAL_SERVER_ERROR
@@ -52,24 +52,38 @@ class ReverseLinkService @Inject()(
       case Right(currentInstanceDisplayed) =>
         val updateToBeStored =
           EditorService.computeUpdateTobeStored(currentInstanceDisplayed, updateFromUser, config.nexusEndpoint)
-        val (instanceWithoutReverseLinks, reverseEntitiesResponses) =
-          processReverseLinks(
-            updateToBeStored,
-            instanceRef,
-            formRegistry,
-            queryRegistry,
-            currentInstanceDisplayed,
-            config.nexusEndpoint,
-            user,
-            token
-          )
-        reverseEntitiesResponses.flatMap { results =>
+        val fieldsSpec = formRegistry.registry(updateToBeStored.nexusInstance.nexusPath).fields
+        val instanceWithoutReversLink = ReverseLinkOP.removeLinksFromInstance(
+          updateToBeStored,
+          fieldsSpec,
+          e => e.isReverse.getOrElse(false)
+        )
+        val instanceWithoutLinkingInstance = ReverseLinkOP.removeLinksFromInstance(
+          instanceWithoutReversLink,
+          fieldsSpec,
+          e => e.isLinkingInstance.getOrElse(false)
+        )
+        val reverseLinksToUpdated = updateReverseInstance(
+          updateToBeStored,
+          fieldsSpec,
+          currentInstanceDisplayed,
+          instanceRef,
+          user,
+          queryRegistry,
+          config.nexusEndpoint,
+          token
+        )
+        val linkingInstancesToUpdated =
+          updateLinkingInstances(updateToBeStored, fieldsSpec, currentInstanceDisplayed, instanceRef, token)
+        val responses = reverseLinksToUpdated.map { processCommand } ::: linkingInstancesToUpdated.map(_.execute())
+
+        Future.sequence(responses).flatMap { results =>
           if (results.forall(_.isRight)) {
-            if (instanceWithoutReverseLinks.nexusInstance.content.keys.isEmpty) {
+            if (instanceWithoutLinkingInstance.nexusInstance.content.keys.isEmpty) {
               Future(Right(()))
             } else {
               //Normal update of the instance without reverse links
-              editorService.processInstanceUpdate(instanceRef, instanceWithoutReverseLinks, user, token)
+              editorService.processInstanceUpdate(instanceRef, instanceWithoutLinkingInstance, user, token)
             }
           } else {
             val errors = results.filter(_.isLeft).map(_.swap.toOption.get)
@@ -79,23 +93,14 @@ class ReverseLinkService @Inject()(
         }
     }
 
-  def processReverseLinks(
+  def filterLinks(
     updateToBeStored: EditorInstance,
-    updateReference: NexusInstanceReference,
-    formRegistry: FormRegistry[UISpec],
-    queryRegistry: FormRegistry[QuerySpec],
-    currentInstanceDisplayed: NexusInstance,
-    baseUrl: String,
-    user: User,
-    token: String
-  ): (EditorInstance, Future[List[Either[APIEditorError, Unit]]]) = {
-    val fields = formRegistry.registry(updateToBeStored.nexusInstance.nexusPath).fields
-    val instanceWithoutReversLink = removeReverseLinksFromInstance(updateToBeStored, fields)
+    fields: Map[String, EditorFieldSpecification],
+    filter: EditorFieldSpecification => Boolean
+  ): List[(String, List[NexusLink])] = {
     val instances = for {
       reverseField <- updateToBeStored.contentToMap()
-      if fields(reverseField._1).isReverse.getOrElse(false)
-      reverseFieldPath <- fields(reverseField._1).instancesPath
-      fieldName        <- fields(reverseField._1).reverseTargetField
+      if filter(fields(reverseField._1))
     } yield {
       val fullIds = reverseField._2.asOpt[JsObject] match {
         case Some(obj) =>
@@ -108,57 +113,112 @@ class ReverseLinkService @Inject()(
             )
             .getOrElse(List())
       }
-      val changes = ReverseLinkOP.computeChanges(currentInstanceDisplayed, reverseField, fullIds.toList)
-      changes.map { s =>
-        processCommand(s._1, s._2, updateReference, queryRegistry, fieldName, baseUrl, user, token)
-      }
+      (reverseField._1, fullIds.toList)
     }
-    (instanceWithoutReversLink, Future.sequence(instances.toList.flatten))
+    instances.toList
+  }
+
+  def updateReverseInstance(
+    updateToBeStored: EditorInstance,
+    fieldsSpec: Map[String, EditorFieldSpecification],
+    currentInstanceDisplayed: NexusInstance,
+    instanceRef: NexusInstanceReference,
+    user: User,
+    queryRegistry: FormRegistry[QuerySpec],
+    baseUrl: String,
+    token: String
+  ): List[Future[Either[APIEditorError, Command]]] = {
+    filterLinks(
+      updateToBeStored,
+      fieldsSpec,
+      e => e.isReverse.getOrElse(false)
+    ).flatMap {
+      case (reverseField, ids) =>
+        fieldsSpec(reverseField).reverseTargetField match {
+          case Some(fieldName) =>
+            ReverseLinkOP
+              .addOrDeleteReverseLink(
+                currentInstanceDisplayed,
+                reverseField,
+                fieldName,
+                ids,
+                editorService,
+                token,
+                baseUrl,
+                user,
+                queryRegistry
+              )
+          case None => List()
+        }
+    }
+  }
+
+  /**
+    *  Generate a list of Commands to add or delete a linking instance
+    * @param updateToBeStored the current updated instance
+    * @param fieldsSpec field specification
+    * @param currentInstanceDisplayed the update before update
+    * @param instanceRef the instance reference
+    * @param token the user token
+    * @return list of commands
+    */
+  def updateLinkingInstances(
+    updateToBeStored: EditorInstance,
+    fieldsSpec: Map[String, EditorFieldSpecification],
+    currentInstanceDisplayed: NexusInstance,
+    instanceRef: NexusInstanceReference,
+    token: String
+  ): List[Command] = {
+    filterLinks(
+      updateToBeStored,
+      fieldsSpec,
+      e => e.isLinkingInstance.getOrElse(false)
+    ).flatMap {
+      case (reverseField, ids) =>
+        val opt = for {
+          linkingInstanceType    <- fieldsSpec(reverseField).linkingInstanceType
+          linkingInstancePathStr <- fieldsSpec(reverseField).linkingInstancePath
+        } yield {
+
+          val linkingInstancePath = NexusPath(linkingInstancePathStr)
+          val (added, removed) =
+            ReverseLinkOP.getAddedAndRemovedLinks(currentInstanceDisplayed, reverseField, ids)
+          added.map(
+            id =>
+              AddLinkingInstanceCommand(
+                id,
+                instanceRef,
+                linkingInstanceType,
+                linkingInstancePath,
+                editorService,
+                config.nexusEndpoint,
+                token
+            )
+          ) ::: removed.map(
+            id =>
+              DeleteLinkingInstanceCommand(
+                instanceRef,
+                id.ref,
+                linkingInstancePath,
+                editorService,
+                token
+            )
+          )
+        }
+        opt.getOrElse(List())
+    }
   }
 
   /**
     *  Process the command either ADD or DELETE
-    * @param command either ADD or DELETE
-    * @param reverseInstancelink the link to the reverseInstance
-    * @param currentInstanceRef current instance reference
-    * @param queryRegistry query spec registry
-    * @param targetField the field name in the reverse instance pointing to the current instance or not
-    * @param baseUrl env base url
-    * @param user current user
-    * @param token current user token
+    * @param c The command to execute
     * @return
     */
-  private def processCommand(
-    command: Command,
-    reverseInstancelink: NexusLink,
-    currentInstanceRef: NexusInstanceReference,
-    queryRegistry: FormRegistry[QuerySpec],
-    targetField: String,
-    baseUrl: String,
-    user: User,
-    token: String
-  ): Future[Either[APIEditorError, Unit]] = {
-    editorService.retrieveInstance(reverseInstancelink.ref, token, queryRegistry).flatMap {
-      case Left(error) => Future(Left(error))
-      case Right(reverseInstance) =>
-        val diffToSave =
-          ReverseLinkOP
-            .createContentToUpdate(command, reverseInstance, targetField, currentInstanceRef)
-        diffToSave match {
-          case Right(Some(l)) =>
-            val reverseLinkInstance = EditorInstance(
-              NexusInstance(
-                Some(reverseInstancelink.ref.id),
-                reverseInstancelink.ref.nexusPath,
-                Json.obj(targetField -> Json.toJson(l.map(_.toJson(baseUrl))))
-              )
-            )
-            editorService.updateInstance(reverseLinkInstance, reverseInstancelink.ref, token, user.id)
-          case Right(None) => Future(Right(()))
-          case Left(s)     => Future(Left(APIEditorError(INTERNAL_SERVER_ERROR, s)))
-        }
+  private def processCommand(c: Future[Either[APIEditorError, Command]]): Future[Either[APIEditorError, Unit]] = {
+    c.flatMap {
+      case Left(err)      => Future(Left(err))
+      case Right(command) => command.execute()
     }
-
   }
 
 }

@@ -91,7 +91,7 @@ class EditorBookmarkService @Inject()(
       .editableEntities(nexusUser, formRegistry)
       .foldLeft((List[BookmarkList](), List[BookmarkList]())) {
         case (acc, userList) =>
-          if (EditorConstants.commonNodeTypes.exists(p => userList.id.startsWith(p))) {
+          if (userList.isCommonType.getOrElse(false)) {
             (userList :: acc._1, acc._2)
           } else {
             (acc._1, userList :: acc._2)
@@ -181,7 +181,7 @@ class EditorBookmarkService @Inject()(
       )
       .map {
         case Right(ref) =>
-          Right(BookmarkList(ref.toString, bookmarkListName, None, None, None))
+          Right(BookmarkList(ref.toString, bookmarkListName, None, None, None, None))
         case Left(res) =>
           logger.error("Error while creating a bookmark list " + res.body)
           Left(APIEditorError(res.status, res.body))
@@ -205,7 +205,7 @@ class EditorBookmarkService @Inject()(
           case OK =>
             val id = NexusInstanceReference.fromUrl((res.json \ "id").as[String])
             val name = (res.json \ "name").as[String]
-            val bookmarkList = BookmarkList(id.toString(), name, None, None, None)
+            val bookmarkList = BookmarkList(id.toString(), name, None, None, None, None)
             val userFolderId = (res.json \ "userFolderId" \ "@id").as[String]
             Right((bookmarkList, userFolderId))
           case _ =>

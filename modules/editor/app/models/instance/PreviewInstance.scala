@@ -32,6 +32,7 @@ case class PreviewInstance(
     val label = formRegistry.registry.get(path).map(_.label).getOrElse(path.toString())
     this.copy(label = Some(label))
   }
+
 }
 
 object PreviewInstance {

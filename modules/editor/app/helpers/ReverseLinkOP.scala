@@ -16,19 +16,24 @@
 package helpers
 
 import constants.EditorConstants
-import constants.EditorConstants.{ADD, Command, DELETE}
+import models.commands.{AddReverseLinkCommand, Command, DeleteReverseLinkCommand, NullCommand}
+import models.errors.APIEditorError
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, NexusLink}
-import models.specification.EditorFieldSpecification
+import models.specification.{EditorFieldSpecification, FormRegistry, QuerySpec}
+import models.user.User
 import play.api.Logger
 import play.api.libs.json.{JsArray, JsObject, JsValue, Json}
+import services.EditorService
+
+import scala.concurrent.{ExecutionContext, Future}
 
 object ReverseLinkOP {
-  type ReverseLinks = List[(EditorConstants.Command, EditorInstance, String)]
   val log = Logger(this.getClass)
 
-  def removeReverseLinksFromInstance(
+  def removeLinksFromInstance(
     instance: EditorInstance,
-    instanceFieldsSpecs: Map[String, EditorFieldSpecification]
+    instanceFieldsSpecs: Map[String, EditorFieldSpecification],
+    predicate: EditorFieldSpecification => Boolean
   ): EditorInstance = instance.copy(
     nexusInstance = instance.nexusInstance.copy(
       content = Json
@@ -36,28 +41,19 @@ object ReverseLinkOP {
           instance
             .contentToMap()
             .filterNot(
-              k =>
-                instanceFieldsSpecs(k._1).isReverse
-                  .getOrElse(false)
+              k => predicate(instanceFieldsSpecs(k._1))
             )
         )
         .as[JsObject]
     )
   )
 
-  /**
-    * Generate either ADD or DELETE changes to apply on the reverse instance
-    * @param currentInstanceDisplayed current instance
-    * @param reverseField the reverse field
-    * @param fullIds list of links  from the updated instance
-    * @return
-    */
-  def computeChanges(
+  def getAddedAndRemovedLinks(
     currentInstanceDisplayed: NexusInstance,
-    reverseField: (String, JsValue),
-    fullIds: List[NexusLink]
-  ): List[(EditorConstants.Command, NexusLink)] = {
-    currentInstanceDisplayed.content.value.get(reverseField._1) match {
+    linkName: String,
+    ids: List[NexusLink]
+  ): (List[NexusLink], List[NexusLink]) = {
+    currentInstanceDisplayed.content.value.get(linkName) match {
       case Some(currentReverseField) =>
         val currentLinks = currentReverseField.asOpt[JsObject] match {
           case Some(obj) =>
@@ -69,59 +65,122 @@ object ReverseLinkOP {
                 _.value.map(js => NexusLink(NexusInstanceReference.fromUrl((js.as[JsObject] \ "id").as[String])))
               )
               .getOrElse(List())
+              .toList
         }
-        val removed = currentLinks.toSet -- fullIds.toSet
-        val added = fullIds.toSet -- currentLinks.toSet
-        added.toList.map(s => (ADD, s)) ::: removed.toList.map(s => (DELETE, s))
-      case None => // Add  all
-        fullIds.map(s => (ADD, s))
+        val removed = currentLinks.toSet -- ids.toSet
+        val added = ids.toSet -- currentLinks.toSet
+        (added.toList, removed.toList)
+      case None => (ids, List())
     }
   }
 
   /**
-    *  Create the content to update the reverse link instance
-    * @param command Command to decide if we should add or remove the current instance from the reverse instance
-    * @param reverseInstance the reverse instance
-    * @param targetField the field from the reverse instance pointing to the current instance or not
-    * @param currentInstanceRef the current instance
-    * @return
+    *   Add or delete a reverse link
+    * @param currentInstanceDisplayed
+    * @param linkName The name of the field in the current instance displayed
+    * @param targetField The name of the field in the target instance
+    * @param fullIds the list of ids of the target objects
+    * @param editorService The editor service
+    * @param token the user token
+    * @param baseUrl base url of the system
+    * @param user the current user
+    * @param queryRegistry the registry containing queries
+    * @param executionContext the implicit execution ctx
+    * @return A list of commands to execute
     */
-  def createContentToUpdate(
-    command: Command,
-    reverseInstance: NexusInstance,
+  def addOrDeleteReverseLink(
+    currentInstanceDisplayed: NexusInstance,
+    linkName: String,
     targetField: String,
-    currentInstanceRef: NexusInstanceReference
-  ): Either[String, Option[List[NexusLink]]] = {
-    command match {
-      case ADD =>
-        reverseInstance.content.value.get(targetField) match {
-          case Some(fieldValue) =>
-            ReverseLinkOP.addLink(fieldValue, currentInstanceRef, targetField)
-          case None =>
-            //The field does not exists on the reverse instance we add it
-            Right(Some(List(NexusLink(currentInstanceRef))))
-        }
-      case DELETE =>
-        reverseInstance.content.value.get(targetField) match {
-          case Some(fieldValue) => ReverseLinkOP.removeLink(fieldValue, currentInstanceRef, targetField)
-          case None             =>
-            //The field does not exists we do nothing
-            Right(None)
-        }
+    fullIds: List[NexusLink],
+    editorService: EditorService,
+    token: String,
+    baseUrl: String,
+    user: User,
+    queryRegistry: FormRegistry[QuerySpec]
+  )(implicit executionContext: ExecutionContext): List[Future[Either[APIEditorError, Command]]] = {
+    val (added, removed) = getAddedAndRemovedLinks(currentInstanceDisplayed, linkName, fullIds)
+    removed.map { link =>
+      editorService.retrieveInstance(link.ref, token, queryRegistry).map {
+        case Right(reverseInstance) =>
+          Right(
+            DeleteReverseLinkCommand(
+              link,
+              reverseInstance,
+              targetField,
+              NexusInstanceReference.fromUrl(currentInstanceDisplayed.id().get),
+              editorService,
+              baseUrl,
+              token,
+              user
+            )
+          )
+        case Left(error) => Left(error)
+      }
+    } ::: added.map { link =>
+      editorService.retrieveInstance(link.ref, token, queryRegistry).map {
+        case Right(reverseInstance) =>
+          Right(
+            AddReverseLinkCommand(
+              link,
+              reverseInstance,
+              targetField,
+              NexusInstanceReference.fromUrl(currentInstanceDisplayed.id().get),
+              editorService,
+              baseUrl,
+              token,
+              user
+            )
+          )
+        case Left(error) => Left(error)
+      }
     }
   }
+//
+//  /**
+//    *  Create the content to update the reverse link instance
+//    * @param command Command to decide if we should add or remove the current instance from the reverse instance
+//    * @param reverseInstance the reverse instance
+//    * @param targetField the field from the reverse instance pointing to the current instance or not
+//    * @param currentInstanceRef the current instance
+//    * @return
+//    */
+//  def createContentToUpdate(
+//    command: Command,
+//    reverseInstance: NexusInstance,
+//    targetField: String,
+//    currentInstanceRef: NexusInstanceReference
+//  ): Either[String, Option[List[NexusLink]]] = {
+//    command match {
+//      case ADD =>
+//        reverseInstance.content.value.get(targetField) match {
+//          case Some(fieldValue) =>
+//            addLink(fieldValue, currentInstanceRef, targetField)
+//          case None =>
+//            //The field does not exists on the reverse instance we add it
+//            Right(Some(List(NexusLink(currentInstanceRef))))
+//        }
+//      case DELETE =>
+//        reverseInstance.content.value.get(targetField) match {
+//          case Some(fieldValue) => removeLink(fieldValue, currentInstanceRef, targetField)
+//          case None             =>
+//            //The field does not exists we do nothing
+//            Right(None)
+//        }
+//    }
+//  }
 
   def addLink(
     fieldValue: JsValue,
     currentInstanceRef: NexusInstanceReference,
     targetField: String
-  ): Either[String, Some[List[NexusLink]]] = {
+  ): Either[String, List[NexusLink]] = {
     fieldValue match {
       case _ if fieldValue.validate[List[NexusLink]].isSuccess =>
-        Right(Some(NexusLink(currentInstanceRef) :: fieldValue.as[List[NexusLink]]))
+        Right(NexusLink(currentInstanceRef) :: fieldValue.as[List[NexusLink]])
       case _ if fieldValue.validate[NexusLink].isSuccess =>
-        Right(Some(List(NexusLink(currentInstanceRef), fieldValue.as[NexusLink])))
-      case l if l == JsObject.empty || l == JsArray.empty => Right(Some(List(NexusLink(currentInstanceRef))))
+        Right(List(NexusLink(currentInstanceRef), fieldValue.as[NexusLink]))
+      case l if l == JsObject.empty || l == JsArray.empty => Right(List(NexusLink(currentInstanceRef)))
       case _                                              => Left("Cannot read reverse link type")
     }
   }

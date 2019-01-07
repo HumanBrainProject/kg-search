@@ -47,7 +47,7 @@ class NexusAdminController @Inject()(
   }
 
   def deleteAndReloadSpecs: Action[AnyContent] = Action { implicit request =>
-    formService.flushSpec
+    formService.flushSpec()
     Ok("Specification reloaded")
   }
 

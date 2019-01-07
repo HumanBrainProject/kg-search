@@ -83,7 +83,7 @@ class NexusEditorController @Inject()(
       }
     }
 
-  def getInstancesByIds: Action[AnyContent] = authenticatedUserAction.async { implicit request =>
+  def getInstancesByIds(allFields: Boolean): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     val token = OIDCHelper.getTokenFromRequest(request)
     val listOfIds = for {
       bodyContent <- request.body.asJson
@@ -92,9 +92,22 @@ class NexusEditorController @Inject()(
 
     listOfIds match {
       case Some(ids) =>
-        editorService.retrieveInstancesByIds(ids, token).map {
-          case Left(err)        => err.toResult
-          case Right(instances) => Ok(Json.toJson(EditorResponseObject(Json.toJson(instances))))
+        if (allFields) {
+          editorService.retrieveInstancesByIds(ids, formService.queryRegistry, token).map {
+            case Left(err) => err.toResult
+            case Right(ls) =>
+              Ok(Json.toJson(EditorResponseObject(Json.toJson(ls.groupBy(_.id().get).map {
+                case (k, v) =>
+                  FormService
+                    .getFormStructure(v.head.nexusPath, v.head.content, formService.formRegistry)
+                    .as[JsObject]
+              }))))
+          }
+        } else {
+          editorService.retrievePreviewInstancesByIds(ids, formService.queryRegistry, token).map {
+            case Left(err)                        => err.toResult
+            case Right(ls: List[PreviewInstance]) => Ok(Json.toJson(EditorResponseObject(Json.toJson(ls))))
+          }
         }
       case None => Future(BadRequest("Missing body content"))
     }
@@ -176,7 +189,9 @@ class NexusEditorController @Inject()(
         val token = OIDCHelper.getTokenFromRequest(request)
         val instanceRef = NexusInstanceReference(org, domain, schema, version, id)
         formService.formRegistry.registry.get(instanceRef.nexusPath) match {
-          case Some(spec) if spec.fields.values.exists(p => p.isReverse.getOrElse(false)) =>
+          case Some(spec)
+              if spec.fields.values.exists(p => p.isReverse.getOrElse(false)) |
+              spec.fields.values.exists(p => p.isLinkingInstance.getOrElse(false)) =>
             reverseLinkService
               .generateDiffAndUpdateInstanceWithReverseLink(
                 instanceRef,
@@ -211,7 +226,6 @@ class NexusEditorController @Inject()(
                   error.toResult
               }
         }
-
       }
 
   /**
