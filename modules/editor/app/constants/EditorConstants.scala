@@ -32,15 +32,6 @@ object EditorConstants {
 
   val RELATIVEURL = "relativeUrl"
 
-  val commonNodeTypes = List(
-    "minds/core/dataset",
-    "minds/core/subject",
-    "minds/core/person",
-    "minds/core/placomponent",
-    "minds/core/specimengroup",
-    "minds/experiment/sample",
-    "minds/experiment/subject"
-  )
   val bookmarkListFolderPath = NexusPath("hbpkg", "core", "bookmarklistfolder", "v0.0.1")
   val bookmarkListPath = NexusPath("hbpkg", "core", "bookmarklist", "v0.0.1")
   val bookmarkPath = NexusPath("hbpkg", "core", "bookmark", "v0.0.1")

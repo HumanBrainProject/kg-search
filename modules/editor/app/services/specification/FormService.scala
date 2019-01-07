@@ -128,7 +128,8 @@ object FormService {
             formDetails.label,
             Some(formDetails.isEditable.getOrElse(true)),
             formDetails.uiInfo,
-            formDetails.color
+            formDetails.color,
+            formDetails.isCommonType
           )
 
       }

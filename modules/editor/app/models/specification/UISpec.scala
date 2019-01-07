@@ -21,7 +21,8 @@ case class UISpec(
   fields: Map[String, EditorFieldSpecification],
   uiInfo: Option[UIInfo] = None,
   isEditable: Option[Boolean] = None,
-  color: Option[String] = None
+  color: Option[String] = None,
+  isCommonType: Option[Boolean] = None
 )
 
 object UISpec {
@@ -34,7 +35,8 @@ object UISpec {
     (JsPath \ "fields").read[Map[String, EditorFieldSpecification]] and
     (JsPath \ "ui_info").readNullable[UIInfo] and
     (JsPath \ "editable").readNullable[Boolean] and
-    (JsPath \ "color").readNullable[String]
+    (JsPath \ "color").readNullable[String] and
+    (JsPath \ "isCommonType").readNullable[Boolean]
   )(UISpec.apply _)
 
   implicit val UISpecWrites: Writes[UISpec] = (
@@ -42,6 +44,7 @@ object UISpec {
     (JsPath \ "fields").write[Map[String, EditorFieldSpecification]] and
     (JsPath \ "ui_info").writeNullable[UIInfo] and
     (JsPath \ "editable").writeNullable[Boolean] and
-    (JsPath \ "color").writeNullable[String]
+    (JsPath \ "color").writeNullable[String] and
+    (JsPath \ "isCommonType").writeNullable[Boolean]
   )(unlift(UISpec.unapply))
 }
