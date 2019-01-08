@@ -17,6 +17,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./containers/App";
+import TagManager from 'react-gtm-module'
 import "./index.css";
 
 // GLOBAL CONSTANTS DEFINED OUTSIDE THE APP
@@ -49,6 +50,12 @@ const config = {
   oidcUri: oidcUri,
   oidcClientId: oidcClientId
 };
+
+const tagManagerArgs = {
+  gtmId: 'GTM-KLX23XB'
+}
+
+TagManager.initialize(tagManagerArgs)
 
 ReactDOM.render(
   <App config={config} />,

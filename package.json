@@ -35,6 +35,7 @@
     "prop-types": "^15.6.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-gtm-module": "^2.0.2",
     "react-redux": "^5.0.7",
     "react-tooltip": "^3.8.4",
     "redux": "^4.0.0",
