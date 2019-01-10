@@ -89,29 +89,33 @@ class EditorBookmarkService @Inject()(
   ): List[BookmarkListFolder] = {
     val allEditableEntities = FormService
       .editableEntities(nexusUser, formRegistry)
-      .foldLeft((List[BookmarkList](), List[BookmarkList]())) {
-        case (acc, userList) =>
-          if (userList.isCommonType.getOrElse(false)) {
-            (userList :: acc._1, acc._2)
-          } else {
-            (acc._1, userList :: acc._2)
+      .foldLeft(SystemDefinedFolder.getFolders) {
+        case (acc, (path, uiSpec)) =>
+          val userList = BookmarkList(
+            path.toString(),
+            uiSpec.label,
+            uiSpec.isEditable,
+            uiSpec.uiInfo,
+            uiSpec.color
+          )
+          uiSpec.folderID match {
+            case Some(id) =>
+              acc.get(id) match {
+                case Some(folder) =>
+                  acc.updated(id, folder.copy(userLists = userList :: folder.userLists))
+                case None =>
+                  val f = BookmarkListFolder(
+                    None,
+                    uiSpec.folderName.getOrElse(id),
+                    NODETYPEFOLDER,
+                    List(userList)
+                  )
+                  acc.updated(id, f)
+              }
+            case None => SystemDefinedFolder.addToDefaultFolder(acc, userList)
           }
       }
-    List(
-      BookmarkListFolder(
-        None,
-        "Common node types",
-        NODETYPEFOLDER,
-        allEditableEntities._1.sortBy(b => b.name)
-      ),
-      BookmarkListFolder(
-        None,
-        "Other node types",
-        NODETYPEFOLDER,
-        allEditableEntities._2.sortBy(b => b.name)
-      )
-    )
-
+    allEditableEntities.values.toList.sortBy(_.folderName).map(s => s.copy(userLists = s.userLists.sortBy(_.name)))
   }
 
   def getInstancesOfBookmarkList(
@@ -171,7 +175,7 @@ class EditorBookmarkService @Inject()(
     token: String
   ): Future[Either[APIEditorError, BookmarkList]] = {
     val payload =
-      EditorBookmarkService.bookmarkListToNexusStruct(bookmarkListName, s"${config.nexusEndpoint}/v0/data/${folderId}")
+      EditorBookmarkService.bookmarkListToNexusStruct(bookmarkListName, s"${config.nexusEndpoint}/v0/data/$folderId")
     instanceApiService
       .post(
         wSClient,
@@ -181,7 +185,7 @@ class EditorBookmarkService @Inject()(
       )
       .map {
         case Right(ref) =>
-          Right(BookmarkList(ref.toString, bookmarkListName, None, None, None, None))
+          Right(BookmarkList(ref.toString, bookmarkListName, None, None, None))
         case Left(res) =>
           logger.error("Error while creating a bookmark list " + res.body)
           Left(APIEditorError(res.status, res.body))
@@ -205,7 +209,7 @@ class EditorBookmarkService @Inject()(
           case OK =>
             val id = NexusInstanceReference.fromUrl((res.json \ "id").as[String])
             val name = (res.json \ "name").as[String]
-            val bookmarkList = BookmarkList(id.toString(), name, None, None, None, None)
+            val bookmarkList = BookmarkList(id.toString(), name, None, None, None)
             val userFolderId = (res.json \ "userFolderId" \ "@id").as[String]
             Right((bookmarkList, userFolderId))
           case _ =>
