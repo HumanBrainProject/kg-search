@@ -22,7 +22,8 @@ case class UISpec(
   uiInfo: Option[UIInfo] = None,
   isEditable: Option[Boolean] = None,
   color: Option[String] = None,
-  isCommonType: Option[Boolean] = None
+  folderID: Option[String] = None,
+  folderName: Option[String] = None
 )
 
 object UISpec {
@@ -36,7 +37,8 @@ object UISpec {
     (JsPath \ "ui_info").readNullable[UIInfo] and
     (JsPath \ "editable").readNullable[Boolean] and
     (JsPath \ "color").readNullable[String] and
-    (JsPath \ "isCommonType").readNullable[Boolean]
+    (JsPath \ "folderID").readNullable[String] and
+    (JsPath \ "folderName").readNullable[String]
   )(UISpec.apply _)
 
   implicit val UISpecWrites: Writes[UISpec] = (
@@ -45,6 +47,7 @@ object UISpec {
     (JsPath \ "ui_info").writeNullable[UIInfo] and
     (JsPath \ "editable").writeNullable[Boolean] and
     (JsPath \ "color").writeNullable[String] and
-    (JsPath \ "isCommonType").writeNullable[Boolean]
+    (JsPath \ "folderID").writeNullable[String] and
+    (JsPath \ "folderName").writeNullable[String]
   )(unlift(UISpec.unapply))
 }
