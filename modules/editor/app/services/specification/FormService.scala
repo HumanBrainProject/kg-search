@@ -119,22 +119,24 @@ object FormService {
     }
   }
 
-  def buildEditableEntityTypesFromRegistry(registry: FormRegistry[UISpec]): List[BookmarkList] = {
+  def buildEditableEntityTypesFromRegistry(registry: FormRegistry[UISpec]): List[(NexusPath, UISpec)] = {
     registry.registry
       .map {
         case (path, formDetails) =>
-          BookmarkList(
-            path.toString(),
-            formDetails.label,
-            Some(formDetails.isEditable.getOrElse(true)),
-            formDetails.uiInfo,
-            formDetails.color,
-            formDetails.isCommonType
-          )
+          (path, formDetails)
+//          BookmarkList(
+//            path.toString(),
+//            formDetails.label,
+//            Some(formDetails.isEditable.getOrElse(true)),
+//            formDetails.uiInfo,
+//            formDetails.color,
+//            formDetails.folderID,
+//            formDetails.folderName
+//          )
 
       }
       .toSeq
-      .sortWith { case (jsO1, jsO2) => jsO1.name < jsO2.name }
+      .sortWith { case (jsO1, jsO2) => jsO1._1.toString() < jsO2._1.toString() }
       .toList
   }
 
@@ -158,7 +160,7 @@ object FormService {
   def isInSpec(id: String, registry: FormRegistry[UISpec]): Boolean = {
     val list = FormService
       .buildEditableEntityTypesFromRegistry(registry)
-      .map(l => l.id)
+      .map(l => l._1.toString())
     list.contains(id)
   }
 
@@ -254,7 +256,7 @@ object FormService {
     ("alternatives", alternatives)
   }
 
-  def editableEntities(user: NexusUser, formRegistry: FormRegistry[UISpec]): List[BookmarkList] = {
+  def editableEntities(user: NexusUser, formRegistry: FormRegistry[UISpec]): List[(NexusPath, UISpec)] = {
     val registry = FormRegistry.filterOrgs(formRegistry, user.organizations)
     buildEditableEntityTypesFromRegistry(registry)
   }

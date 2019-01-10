@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package editor.models
+package models
 
 import models.editorUserList.{BOOKMARKFOLDER, BookmarkList, BookmarkListFolder}
 import models.instance.NexusInstanceReference
@@ -35,13 +35,11 @@ class BookmarkListFolderSpec extends PlaySpec {
             "myList",
             None,
             None,
-            None,
             None
           ),
           BookmarkList(
             "id2",
             "my 2nd List",
-            None,
             None,
             None,
             None
