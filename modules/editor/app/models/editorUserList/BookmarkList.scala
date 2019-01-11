@@ -17,16 +17,13 @@ package models.editorUserList
 
 import constants.EditorConstants
 import models.specification.UIInfo
-import play.api.libs.json.JsObject
-import services.bookmark.EditorBookmarkService
 
 case class BookmarkList(
   id: String,
   name: String,
   editable: Option[Boolean],
   UIInfo: Option[UIInfo],
-  color: Option[String],
-  isCommonType: Option[Boolean]
+  color: Option[String]
 )
 
 object BookmarkList {
@@ -39,8 +36,7 @@ object BookmarkList {
     (JsPath \ "name").read[String] and
     (JsPath \ "editable").readNullable[Boolean] and
     (JsPath \ "uiSpec").readNullable[UIInfo] and
-    (JsPath \ "color").readNullable[String] and
-    (JsPath \ "isCommonType").readNullable[Boolean]
+    (JsPath \ "color").readNullable[String]
   )(BookmarkList.apply _)
 
   implicit val userListWrites: Writes[BookmarkList] = (
@@ -48,7 +44,6 @@ object BookmarkList {
     (JsPath \ "name").write[String] and
     (JsPath \ "editable").writeNullable[Boolean] and
     (JsPath \ "uiSpec").writeNullable[UIInfo] and
-    (JsPath \ "color").writeNullable[String] and
-    (JsPath \ "isCommonType").writeNullable[Boolean]
+    (JsPath \ "color").writeNullable[String]
   )(unlift(BookmarkList.unapply))
 }
