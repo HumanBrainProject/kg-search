@@ -21,7 +21,7 @@ import com.google.inject.Inject
 import helpers.ESHelper
 import play.api.Logger
 import play.api.libs.ws.{WSClient, WSRequest}
-import play.api.mvc.{AnyContent, Request}
+import play.api.mvc.{AnyContent, BodyParser, RawBuffer, Request}
 
 import scala.concurrent.ExecutionContext
 
@@ -39,9 +39,8 @@ class ProxyService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
     val wsRequestBase: WSRequest = modifyQuery(newUrl, esIndex)
     // depending on whether we have a body, append it in our request
     val byteString = for {
-      raw   <- request.body.asRaw
-      bytes <- raw.asBytes()
-    } yield bytes
+      raw <- request.body.asJson
+    } yield ByteString(raw.toString())
 
     val wsRequest: WSRequest = byteString match {
       case Some(bytes) => wsRequestBase.withBody(transformInputFunc(bytes))

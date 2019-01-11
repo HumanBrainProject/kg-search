@@ -86,7 +86,7 @@ class SearchProxy @Inject()(
   ): Future[Result] = {
     request
       .execute()
-      .map { response: request.Response => // we want to read the raw bytes for the body
+      .map { response => // we want to read the raw bytes for the body
         val count = (response.json \ "hits" \ "total").asOpt[Long].getOrElse(0L)
         logger.info(s"Search query - term: $searchTerm, #results: $count")
         Result(
