@@ -29,6 +29,8 @@ import play.api.{Configuration, Logger}
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
 import play.api.mvc._
+import play.api.http.HeaderNames._
+import play.api.http.ContentTypes._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,56 +42,55 @@ class ExportContainerController @Inject()(cc: ControllerComponents)(
 ) extends AbstractController(cc) {
   private val log = Logger(this.getClass)
 
-  def exportContainer(source: String, filter: Option[String]): Action[AnyContent] = Action.async {
-    implicit request: Request[AnyContent] =>
-      // capture unhandled params to forward them to switf API call
-      val fowardedParams = (request.target.queryMap - "container" - "filter").map(entry => (entry._1, entry._2.head))
+  def exportContainer(source: String, filter: Option[String]): Action[AnyContent] = Action.async { implicit request =>
+    // capture unhandled params to forward them to swift API call
+    val fowardedParams = (request.target.queryMap - "container" - "filter").map(entry => (entry._1, entry._2.head))
 
-      // build url container from source
-      val sourceUrl = if (source.matches("^https://.*")) source else s"https://${source}"
+    // build url container from source
+    val sourceUrl = if (source.matches("^https://.*")) source else s"https://${source}"
 
-      // get container details
-      val containerContent = ExportContainerController.getContainerFilteredContent(sourceUrl, filter, fowardedParams)
+    // get container details
+    val containerContent = ExportContainerController.getContainerFilteredContent(sourceUrl, filter, fowardedParams)
 
-      containerContent.map[Result] {
-        // check containerFilteredSize
-        case filesInfo =>
-          val archiveSizeInMb =
-            filesInfo.foldLeft(0.0)((size, fileInfo) => size + ExportContainerController.getFileSizeInMb(fileInfo))
+    containerContent.map[Result] {
+      // check containerFilteredSize
+      case filesInfo =>
+        val archiveSizeInMb =
+          filesInfo.foldLeft(0.0)((size, fileInfo) => size + ExportContainerController.getFileSizeInMb(fileInfo))
 
-          archiveSizeInMb match {
-            case 0.0 =>
-              BadRequest("Empty export requested")
-            case size if (size > 0.0 && size <= config.get[Double](MAX_CONTAINER_SIZE)) =>
-              log.info(s"Estimated archive size: ${archiveSizeInMb} MB")
-              // create stream redirection
-              val in = new PipedInputStream()
-              val out = new PipedOutputStream(in)
+        archiveSizeInMb match {
+          case 0.0 =>
+            BadRequest("Empty export requested")
+          case size if (size > 0.0 && size <= config.get[Double](MAX_CONTAINER_SIZE)) =>
+            log.info(s"Estimated archive size: ${archiveSizeInMb} MB")
+            // create stream redirection
+            val in = new PipedInputStream()
+            val out = new PipedOutputStream(in)
 
-              // start stream feeding
-              val zipStreamResult = ExportContainerController.streamContainer(sourceUrl, filter, out)
+            // start stream feeding
+            val zipStreamResult = ExportContainerController.streamContainer(sourceUrl, filter, out)
 
-              // close stream to finalize
-              zipStreamResult.andThen {
-                case zipStreamTry =>
-                  zipStreamTry.map {
-                    case zipStream =>
-                      log.info(s"All resources streamed. Closing Zip")
-                      zipStream.close()
-                  }
-              }
+            // close stream to finalize
+            zipStreamResult.andThen {
+              case zipStreamTry =>
+                zipStreamTry.map {
+                  case zipStream =>
+                    log.info(s"All resources streamed. Closing Zip")
+                    zipStream.close()
+                }
+            }
 
-              // Stream output to make download start as soon as possible
-              val filename = sourceUrl.split("\\/").last
-              log.info(s"Container export - source: $sourceUrl, size: ${archiveSizeInMb} MB")
-              Ok.chunked(StreamConverters.fromInputStream(() => in))
-                .withHeaders(
-                  "Content-Disposition" -> s"attachment; filename = ${filename}.zip; filename*=utf-8''${filename}.zip"
-                )
-            case _ =>
-              BadRequest(s"Container content is too big to be downloaded: ${archiveSizeInMb} MB")
-          }
-      }
+            // Stream output to make download start as soon as possible
+            val filename = sourceUrl.split("\\/").last
+            log.info(s"Container export - source: $sourceUrl, size: ${archiveSizeInMb} MB")
+            Ok.chunked(StreamConverters.fromInputStream(() => in))
+              .withHeaders(
+                "Content-Disposition" -> s"attachment; filename = ${filename}.zip; filename*=utf-8''${filename}.zip"
+              )
+          case _ =>
+            BadRequest(s"Container content is too big to be downloaded: ${archiveSizeInMb} MB")
+        }
+    }
   }
 }
 
@@ -97,17 +98,18 @@ object ExportContainerController {
 
   val MAX_CONTAINER_SIZE = "export.max_size_in_mega_bytes"
   val MEGABYTE_BYTES = 1000.0 * 1000.0
+  private val log = Logger(this.getClass)
 
   def getContainerFilteredContent(
     sourceContainer: String,
     filter: Option[String],
     forwardedParams: Map[String, String]
   )(implicit ec: ExecutionContext, ws: WSClient, config: Configuration, mat: Materializer): Future[Seq[JsObject]] = {
-    Logger.info(s"getting following container details: ${sourceContainer}")
+    log.info(s"getting following container details: ${sourceContainer}")
 
     // get json view of container files to keep
     ws.url(sourceContainer)
-      .addHttpHeaders("Accept" -> "application/json")
+      .addHttpHeaders(ACCEPT -> JSON)
       .withQueryStringParameters(forwardedParams.toSeq: _*)
       .get()
       .map[Seq[JsObject]] { queryResponse =>
@@ -123,7 +125,7 @@ object ExportContainerController {
     Logger.info(s"starting export of following container: ${sourceContainer}")
     // get json view of container
     val containerFiles =
-      ws.url(sourceContainer).addHttpHeaders("Accept" -> "application/json").get().map[Seq[JsObject]] { queryResponse =>
+      ws.url(sourceContainer).addHttpHeaders(ACCEPT -> JSON).get().map[Seq[JsObject]] { queryResponse =>
         // Get container's content to zip
         collectFiles(queryResponse.json.as[JsArray], filter)
       }
