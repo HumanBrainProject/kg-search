@@ -78,7 +78,13 @@ class NexusEditorController @Inject()(
             case JsNull =>
               NotImplemented("Form not implemented")
             case instanceForm =>
-              Ok(Json.toJson(EditorResponseObject(instanceForm.as[JsObject])))
+              metadataService.getMetadata(nexusInstanceReference).map {
+                case Right(metadata) =>
+                  Ok(Json.toJson(EditorResponseObject(instanceForm.as[JsObject] ++ metadata)))
+                case Left(error) =>
+                  logger.error(error.toString)
+                  Ok(Json.toJson(EditorResponseObject(instanceForm.as[JsObject])))
+              }
           }
       }
     }
