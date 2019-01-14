@@ -43,6 +43,7 @@ class NexusEditorController @Inject()(
   iAMAuthService: IAMAuthService,
   formService: FormService,
   reverseLinkService: ReverseLinkService,
+  metadataService: MetadataService,
   ws: WSClient
 )(implicit ec: ExecutionContext)
     extends AbstractController(cc) {
@@ -66,21 +67,21 @@ class NexusEditorController @Inject()(
     Action.async { implicit request =>
       val token = OIDCHelper.getTokenFromRequest(request)
       val nexusInstanceReference = NexusInstanceReference(org, domain, schema, version, id)
-      editorService.retrieveInstance(nexusInstanceReference, token, formService.queryRegistry).map {
+      editorService.retrieveInstance(nexusInstanceReference, token, formService.queryRegistry).flatMap {
         case Left(error) =>
           logger.error(
             s"Error: Could not fetch instance : ${nexusInstanceReference.nexusPath.toString()}/$id - ${error.content}"
           )
-          error.toResult
+          Future(error.toResult)
         case Right(instance) =>
           FormService
             .getFormStructure(nexusInstanceReference.nexusPath, instance.content, formService.formRegistry) match {
             case JsNull =>
-              NotImplemented("Form not implemented")
+              Future(NotImplemented("Form not implemented"))
             case instanceForm =>
               metadataService.getMetadata(nexusInstanceReference).map {
                 case Right(metadata) =>
-                  Ok(Json.toJson(EditorResponseObject(instanceForm.as[JsObject] ++ metadata)))
+                  Ok(Json.toJson(EditorResponseObject(instanceForm.as[JsObject] ++ Json.toJson(metadata).as[JsObject])))
                 case Left(error) =>
                   logger.error(error.toString)
                   Ok(Json.toJson(EditorResponseObject(instanceForm.as[JsObject])))
