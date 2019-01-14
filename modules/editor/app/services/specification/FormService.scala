@@ -180,7 +180,7 @@ object FormService {
       }
     }
 
-    val fields = registry.registry(instancePath).fields
+    val fields = registry.registry(instancePath).getFieldsAsMap
     val m = newInstance.value.map {
       case (key, v) =>
         val formObjectType = fields(key).fieldType
@@ -215,7 +215,7 @@ object FormService {
             "id" -> Json.obj("value" -> Json.obj("path" -> entityType.toString()), "nexus_id" -> JsString(nexusId))
           )
 
-          val fields = formTemplate.fields.foldLeft(idFields) {
+          val fields = formTemplate.getFieldsAsLinkedMap.foldLeft(idFields) {
             case (filledTemplate, (id, fieldContent)) =>
               if (data.as[JsObject].keys.contains(id)) {
                 val newValue = fieldContent.fieldType match {
@@ -237,7 +237,7 @@ object FormService {
 
         } else {
           //Returning a blank template
-          val escapedForm = formTemplate.fields.map {
+          val escapedForm = formTemplate.getFieldsAsLinkedMap.map {
             case (key, value) =>
               (key, value)
           }
