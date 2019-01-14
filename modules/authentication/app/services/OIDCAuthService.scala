@@ -23,10 +23,12 @@ import helpers.ESHelper
 import play.api.cache.{AsyncCacheApi, NamedCache}
 import play.api.{Configuration, Logger}
 import play.api.http.Status._
+import play.api.http.HeaderNames.AUTHORIZATION
 import play.api.libs.json.JsObject
 import play.api.libs.ws.WSClient
 import play.api.mvc.Headers
 import models.user.{NexusUser, OIDCUser}
+import play.filters.csrf.CSRF.Token
 
 import scala.concurrent.duration.FiniteDuration._
 import scala.concurrent.duration.FiniteDuration
