@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import constants._
 import models.editorUserList.BookmarkList
 import models.instance.{EditorInstance, NexusInstance}
-import models.specification.{DropdownSelect, FormRegistry, QuerySpec, UISpec}
+import models.specification._
 import models.user.NexusUser
 import models.{specification, _}
 import play.api.Logger
@@ -85,8 +85,7 @@ object FormService {
           .as[JsObject] - "description" - "name" - "status" - "childrenStatus" - UiConstants.DATATYPE -
         s"${EditorConstants.BASENAMESPACE}${EditorConstants.RELATIVEURL}" - UiConstants.LABEL
         val res = correctedObj.value.map {
-          case (k, v) =>
-            k -> removeKey(v)
+          case (k, v) => k -> removeKey(v)
         }
         Json.toJson(res)
       }
@@ -120,24 +119,7 @@ object FormService {
   }
 
   def buildEditableEntityTypesFromRegistry(registry: FormRegistry[UISpec]): List[(NexusPath, UISpec)] = {
-    registry.registry
-      .map {
-        case (path, formDetails) =>
-          (path, formDetails)
-//          BookmarkList(
-//            path.toString(),
-//            formDetails.label,
-//            Some(formDetails.isEditable.getOrElse(true)),
-//            formDetails.uiInfo,
-//            formDetails.color,
-//            formDetails.folderID,
-//            formDetails.folderName
-//          )
-
-      }
-      .toSeq
-      .sortWith { case (jsO1, jsO2) => jsO1._1.toString() < jsO2._1.toString() }
-      .toList
+    registry.registry.toSeq.sortWith { case (jsO1, jsO2) => jsO1._1.toString() < jsO2._1.toString() }.toList
   }
 
   def buildInstanceFromForm(
@@ -180,7 +162,7 @@ object FormService {
       }
     }
 
-    val fields = registry.registry(instancePath).fields
+    val fields = registry.registry(instancePath).getFieldsAsMap
     val m = newInstance.value.map {
       case (key, v) =>
         val formObjectType = fields(key).fieldType
@@ -207,28 +189,8 @@ object FormService {
     formTemplateOpt match {
       case Some(formTemplate) =>
         if (data != JsNull) {
-          val nexusId = (data \ s"${EditorConstants.BASENAMESPACE}${EditorConstants.RELATIVEURL}").as[String]
           // fill template with data
-          val idFields = Json.obj(
-            "id" -> Json.obj("value" -> Json.obj("path" -> entityType.toString()), "nexus_id" -> JsString(nexusId))
-          )
-          val fields = formTemplate.fields.foldLeft(idFields) {
-            case (filledTemplate, (id, fieldContent)) =>
-              if (data.as[JsObject].keys.contains(id)) {
-                val newValue = fieldContent.fieldType match {
-                  case DropdownSelect =>
-                    fieldContent.copy(value = Some(FormService.transformToArray(id, data)))
-                  case _ =>
-                    (data \ id).asOpt[JsValue] match {
-                      case Some(null) => fieldContent.copy(value = None)
-                      case s          => fieldContent.copy(value = s)
-                    }
-                }
-                filledTemplate ++ Json.obj(id -> newValue)
-              } else {
-                filledTemplate ++ Json.obj(id -> fieldContent)
-              }
-          }
+          val fields = fillFields(formTemplate, data, entityType)
           fillFormTemplate(
             fields,
             formTemplate,
@@ -236,10 +198,39 @@ object FormService {
           )
         } else {
           //Returning a blank template
-          fillFormTemplate(Json.toJson(formTemplate), formTemplate, Json.obj())
+          val escapedForm = formTemplate.getFieldsAsLinkedMap.map {
+            case (key, value) =>
+              (key, value)
+          }
+          fillFormTemplate(Json.toJson(escapedForm), formTemplate, Json.obj())
         }
       case None =>
         JsNull
+    }
+  }
+
+  private def fillFields(formTemplate: UISpec, data: JsValue, entityType: NexusPath): JsObject = {
+    val nexusId = (data \ s"${EditorConstants.BASENAMESPACE}${EditorConstants.RELATIVEURL}").as[String]
+    val idFields = Json.obj(
+      "id" -> Json.obj("value" -> Json.obj("path" -> entityType.toString()), "nexus_id" -> JsString(nexusId))
+    )
+    formTemplate.getFieldsAsLinkedMap.foldLeft(idFields) {
+      case (filledTemplate, (id, fieldContent)) =>
+        if (data.as[JsObject].keys.contains(id)) {
+          val newValue = fieldContent.fieldType match {
+            case DropdownSelect =>
+              fieldContent.copy(value = Some(FormService.transformToArray(id, data)))
+            case InputText | InputTextMultiple | TextArea =>
+              fieldContent.copy(value = (data \ id).asOpt[JsValue])
+          }
+          val v = newValue.value match {
+            case Some(JsNull) => newValue.copy(value = None)
+            case _            => newValue
+          }
+          filledTemplate ++ Json.obj(id -> v)
+        } else {
+          filledTemplate ++ Json.obj(id -> fieldContent)
+        }
     }
   }
 
@@ -271,9 +262,7 @@ object FormService {
                 (domain, d)  <- json.as[JsObject].value
                 (schema, s)  <- d.as[JsObject].value
                 (version, v) <- s.as[JsObject].value
-              } yield {
-                NexusPath(org, domain, schema, version) -> v.as[A](r)
-              }
+              } yield NexusPath(org, domain, schema, version) -> v.as[A](r)
             }
             .getOrElse(List())
           acc ++ listOfMap

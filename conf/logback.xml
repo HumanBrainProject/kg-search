@@ -12,8 +12,8 @@
 
   <appender name="SYSLOG" class="ch.qos.logback.classic.net.SyslogAppender">
     <syslogHost>localhost</syslogHost>
-    <facility>kg_service</facility>
-    <suffixPattern>[%thread] %logger %msg</suffixPattern>
+    <facility>LOCAL0</facility>
+    <suffixPattern>kg-service [%thread] %logger %msg</suffixPattern>
   </appender>
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">

@@ -52,7 +52,7 @@ class ReverseLinkService @Inject()(
       case Right(currentInstanceDisplayed) =>
         val updateToBeStored =
           EditorService.computeUpdateTobeStored(currentInstanceDisplayed, updateFromUser, config.nexusEndpoint)
-        val fieldsSpec = formRegistry.registry(updateToBeStored.nexusInstance.nexusPath).fields
+        val fieldsSpec = formRegistry.registry(updateToBeStored.nexusInstance.nexusPath).getFieldsAsMap
         val instanceWithoutReversLink = ReverseLinkOP.removeLinksFromInstance(
           updateToBeStored,
           fieldsSpec,
