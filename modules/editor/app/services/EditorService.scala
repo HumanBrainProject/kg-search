@@ -1,38 +1,33 @@
-
 /*
-*   Copyright (c) 2018, EPFL/Human Brain Project PCO
-*
-*   Licensed under the Apache License, Version 2.0 (the "License");
-*   you may not use this file except in compliance with the License.
-*   You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-*
-*   Unless required by applicable law or agreed to in writing, software
-*   distributed under the License is distributed on an "AS IS" BASIS,
-*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*   See the License for the specific language governing permissions and
-*   limitations under the License.
-*/
+ *   Copyright (c) 2018, EPFL/Human Brain Project PCO
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 
 package services
 
 import com.google.inject.Inject
 import constants.{EditorClient, EditorConstants, JsonLDConstants, UiConstants}
-import constants.EditorConstants.{DELETE, UPDATE}
 import helpers._
-import models.errors.APIEditorError
-import play.api.http.Status._
-import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, PreviewInstance}
-import models.errors.{APIEditorError, APIEditorMultiError}
-import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
-import models.user.User
 import models.NexusPath
-import models.specification.FormRegistry
+import models.errors.{APIEditorError, APIEditorMultiError}
+import models.instance._
+import models.specification.{FormRegistry, QuerySpec, UISpec}
+import models.user.{NexusUser, User}
 import play.api.Logger
 import play.api.http.Status._
-import play.api.libs.json.{JsArray, JsObject, JsValue, Json}
-import play.api.libs.ws.{WSClient, WSResponse}
+import play.api.libs.json.{JsObject, JsValue}
+import play.api.libs.ws.WSClient
 import services.instance.InstanceApiService
 import services.query.QueryService
 import services.specification.FormService
@@ -40,25 +35,70 @@ import services.specification.FormService
 import scala.concurrent.{ExecutionContext, Future}
 
 class EditorService @Inject()(
-                               wSClient: WSClient,
-                               config: ConfigurationService,
-                               formService: FormService
-                             )(implicit executionContext: ExecutionContext) {
+  wSClient: WSClient,
+  config: ConfigurationService,
+  formService: FormService
+)(implicit executionContext: ExecutionContext) {
 
   val logger = Logger(this.getClass)
 
   object instanceApiService extends InstanceApiService
+
   object queryService extends QueryService
 
+  def retrievePreviewInstances(
+    nexusPath: NexusPath,
+    formRegistry: FormRegistry[UISpec],
+    from: Option[Int],
+    size: Option[Int],
+    search: String,
+    token: String
+  ): Future[Either[APIEditorError, (List[PreviewInstance], Long)]] = {
+    val promotedField =
+      formRegistry.registry.get(nexusPath).flatMap(s => s.uiInfo.flatMap(i => i.promotedFields.headOption))
+    val query = EditorService.kgQueryGetPreviewInstance(promotedField)
+    queryService
+      .getInstances(
+        wSClient,
+        config.kgQueryEndpoint,
+        nexusPath,
+        query,
+        token,
+        from,
+        size,
+        search,
+        Some(EditorConstants.EDITORVOCAB)
+      )
+      .map { res =>
+        res.status match {
+          case OK =>
+            Right(
+              (
+                (res.json \ "results")
+                  .as[List[PreviewInstance]]
+                  .map(_.setLabel(formService.formRegistry)),
+                (res.json \ "total").as[Long]
+              )
+            )
+          case _ => Left(APIEditorError(res.status, res.body))
+        }
+
+      }
+  }
+
   def insertInstance(
-                      newInstance: NexusInstance,
-                      token: String
-                    ): Future[Either[APIEditorError, NexusInstanceReference]] = {
-    val modifiedContent = FormService.removeClientKeysCorrectLinks(newInstance.content.as[JsValue], config.nexusEndpoint)
-    instanceApiService.post(wSClient, config.kgQueryEndpoint, newInstance.copy(content = modifiedContent), token).map{
-      case Right(ref) => Right(ref)
-      case Left(res) => Left(APIEditorError(res.status, res.body))
-    }
+    newInstance: NexusInstance,
+    user: Option[User],
+    token: String
+  ): Future[Either[APIEditorError, NexusInstanceReference]] = {
+    val modifiedContent =
+      FormService.removeClientKeysCorrectLinks(newInstance.content.as[JsValue], config.nexusEndpoint)
+    instanceApiService
+      .post(wSClient, config.kgQueryEndpoint, newInstance.copy(content = modifiedContent), user, token)
+      .map {
+        case Right(ref) => Right(ref)
+        case Left(res)  => Left(APIEditorError(res.status, res.body))
+      }
   }
 
   /**
@@ -71,15 +111,17 @@ class EditorService @Inject()(
     * @return The updated instance
     */
   def updateInstance(
-                      diffInstance: EditorInstance,
-                      nexusInstanceReference: NexusInstanceReference,
-                      token: String,
-                      userId: String
-                    ): Future[Either[APIEditorError, Unit]] = {
-    instanceApiService.put(wSClient, config.kgQueryEndpoint, nexusInstanceReference, diffInstance, token, userId).map{
-      case Left(res) => Left(APIEditorError(res.status, res.body))
-      case Right(()) => Right(())
-    }
+    diffInstance: EditorInstance,
+    nexusInstanceReference: NexusInstanceReference,
+    token: String,
+    userId: String
+  ): Future[Either[APIEditorError, Unit]] = {
+    instanceApiService
+      .put(wSClient, config.kgQueryEndpoint, nexusInstanceReference, diffInstance, token, userId)
+      .map {
+        case Left(res) => Left(APIEditorError(res.status, res.body))
+        case Right(()) => Right(())
+      }
   }
 
   /**
@@ -91,93 +133,233 @@ class EditorService @Inject()(
     * @param token                  The user access token
     * @return An error response or an the instance
     */
-  def retrieveInstance(nexusInstanceReference: NexusInstanceReference, token: String): Future[Either[APIEditorError, NexusInstance]] = {
-    instanceApiService.get(wSClient, config.kgQueryEndpoint, nexusInstanceReference, token).map{
-      case Left(res) => Left(APIEditorError(res.status, res.body))
-      case Right(instance) => Right(instance)
+  def retrieveInstance(
+    nexusInstanceReference: NexusInstanceReference,
+    token: String,
+    queryRegistry: FormRegistry[QuerySpec]
+  ): Future[Either[APIEditorError, NexusInstance]] = {
+    queryRegistry.registry.get(nexusInstanceReference.nexusPath) match {
+      case Some(querySpec) =>
+        queryService
+          .getInstancesWithId(
+            wSClient,
+            config.kgQueryEndpoint,
+            nexusInstanceReference,
+            querySpec.query.toString,
+            token,
+            Some(EditorConstants.EDITORVOCAB)
+          )
+          .map { res =>
+            res.status match {
+              case OK =>
+                Right(
+                  NexusInstance(
+                    Some(nexusInstanceReference.id),
+                    nexusInstanceReference.nexusPath,
+                    res.json.as[JsObject]
+                  )
+                )
+              case _ => Left(APIEditorError(res.status, res.body))
+            }
+          }
+      case None =>
+        instanceApiService
+          .get(wSClient, config.kgQueryEndpoint, nexusInstanceReference, token)
+          .map {
+            case Left(res)       => Left(APIEditorError(res.status, res.body))
+            case Right(instance) => Right(instance)
+          }
     }
+  }
+
+  def deleteLinkingInstance(
+    from: NexusInstanceReference,
+    to: NexusInstanceReference,
+    linkingInstancePath: NexusPath,
+    token: String
+  ): Future[Either[APIEditorMultiError, Unit]] = {
+    instanceApiService
+      .getLinkingInstance(wSClient, config.kgQueryEndpoint, from, to, linkingInstancePath, token)
+      .flatMap {
+        case Right(ls) =>
+          Future
+            .sequence(
+              ls.map(
+                l =>
+                  instanceApiService
+                    .delete(wSClient, config.kgQueryEndpoint, l, token)
+                    .map[Either[APIEditorError, Unit]] {
+                      case Left(res) => Left(APIEditorError(res.status, res.body))
+                      case Right(_)  => Right(())
+                  }
+              )
+            )
+            .map { f =>
+              val errors = f.filter(_.isLeft)
+              if (errors.isEmpty) {
+                Right(())
+              } else {
+                Left(APIEditorMultiError(INTERNAL_SERVER_ERROR, errors.map(_.swap.toOption.get)))
+              }
+            }
+        case Left(res) => Future(Left(APIEditorMultiError.fromResponse(res.status, res.body)))
+      }
   }
 
   def generateDiffAndUpdateInstance(
-                                     instanceRef:NexusInstanceReference,
-                                     updateFromUser: JsValue,
-                                     token:String,
-                                     user: User,
-                                     formRegistry: FormRegistry
-                                   ): Future[Either[APIEditorError, Unit]] = {
-    retrieveInstance(instanceRef, token).flatMap {
-      case Left(error) =>
-        Future(Left(error))
-      case Right(currentInstanceDisplayed) =>
-        val cleanedOriginalInstance = InstanceHelper.removeInternalFields(currentInstanceDisplayed)
-        val instanceUpdateFromUser = FormService.buildInstanceFromForm(cleanedOriginalInstance, updateFromUser, config.nexusEndpoint)
-        val diff = InstanceHelper.buildDiffEntity(cleanedOriginalInstance, instanceUpdateFromUser)
-        val updateToBeStored = InstanceHelper.removeEmptyFieldsNotInOriginal(cleanedOriginalInstance, diff)
-        instanceApiService.get(wSClient, config.kgQueryEndpoint, instanceRef, token, EditorClient, Some(user.id)).flatMap{
-          case Left(res) =>
-            res.status match {
-              case NOT_FOUND =>
-                updateInstance(updateToBeStored, instanceRef, token, user.id)
-              case _ =>
-                Future(Left(APIEditorError(res.status, res.body)))
-            }
-          case Right(instance) =>
-            val mergeInstanceWithPreviousUserUpdate = EditorInstance(InstanceHelper.removeInternalFields(instance).merge(updateToBeStored.nexusInstance))
-            updateInstance(mergeInstanceWithPreviousUserUpdate, instanceRef, token, user.id)
+    instanceRef: NexusInstanceReference,
+    updateFromUser: JsValue,
+    token: String,
+    user: User,
+    formRegistry: FormRegistry[UISpec],
+    queryRegistry: FormRegistry[QuerySpec]
+  ): Future[Either[APIEditorMultiError, Unit]] = retrieveInstance(instanceRef, token, queryRegistry).flatMap {
+    case Left(error) =>
+      Future(Left(APIEditorMultiError(error.status, List(error))))
+    case Right(currentInstanceDisplayed) =>
+      val updateToBeStored =
+        EditorService.computeUpdateTobeStored(currentInstanceDisplayed, updateFromUser, config.nexusEndpoint)
+      //Normal update of the instance without reverse links
+      processInstanceUpdate(instanceRef, updateToBeStored, user, token)
+  }
+
+  /**
+    *  Update the reverse instance
+    * @param instanceRef The reference to the instance being updated
+    * @param updateToBeStored The instance being updated
+    * @param user The current user
+    * @param token The user token
+    * @return
+    */
+  def processInstanceUpdate(
+    instanceRef: NexusInstanceReference,
+    updateToBeStored: EditorInstance,
+    user: User,
+    token: String
+  ): Future[Either[APIEditorMultiError, Unit]] =
+    instanceApiService
+      .get(wSClient, config.kgQueryEndpoint, instanceRef, token, EditorClient, Some(user.id))
+      .flatMap {
+        case Left(res) =>
+          res.status match {
+            case NOT_FOUND =>
+              updateInstance(updateToBeStored, instanceRef, token, user.id).map {
+                case Left(err) => Left(APIEditorMultiError(err.status, List(err)))
+                case Right(()) => Right(())
+              }
+            case _ =>
+              Future(Left(APIEditorMultiError.fromResponse(res.status, res.body)))
+          }
+        case Right(instance) =>
+          val mergeInstanceWithPreviousUserUpdate = EditorInstance(
+            InstanceHelper
+              .removeInternalFields(instance)
+              .merge(updateToBeStored.nexusInstance)
+          )
+          updateInstance(mergeInstanceWithPreviousUserUpdate, instanceRef, token, user.id).map {
+            case Left(err) => Left(APIEditorMultiError(err.status, List(err)))
+            case Right(()) => Right(())
+          }
+      }
+
+  def retrievePreviewInstancesByIds(
+    instanceIds: List[NexusInstanceReference],
+    querySpec: FormRegistry[QuerySpec],
+    token: String,
+  ): Future[Either[APIEditorError, List[PreviewInstance]]] = {
+    val listOfResponse = for {
+      id <- instanceIds
+    } yield
+      queryService
+        .getInstancesWithId(
+          wSClient,
+          config.kgQueryEndpoint,
+          id,
+          EditorService.kgQueryGetPreviewInstance(),
+          token,
+          Some(EditorConstants.EDITORVOCAB)
+        )
+        .map { res =>
+          res.status match {
+            case OK => Right(res.json.as[PreviewInstance].setLabel(formService.formRegistry))
+            case _  => Left(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances"))
+          }
         }
 
-    }
+    Future.sequence(listOfResponse).map { ls =>
+      val r = ls.filter(_.isRight)
+      if (r.isEmpty) {
+        Left(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances"))
+      } else {
+        Right(r.collect { case Right(e) => e })
+      }
 
+    }
   }
 
   def retrieveInstancesByIds(
-                              instanceIds: List[NexusInstanceReference],
-                              token: String
-                            ): Future[Either[APIEditorError, List[PreviewInstance]]] = {
+    instanceIds: List[NexusInstanceReference],
+    querySpec: FormRegistry[QuerySpec],
+    token: String,
+  ): Future[Either[APIEditorError, List[NexusInstance]]] = {
     val listOfResponse = for {
       id <- instanceIds
-    } yield queryService.getInstancesWithId(wSClient, config.kgQueryEndpoint, id, EditorService.kgQueryGetPreviewInstance(), token)
+    } yield retrieveInstance(id, token, querySpec)
+    Future.sequence(listOfResponse).map { ls =>
+      val r = ls.filter(_.isRight)
+      if (r.isEmpty) {
+        Left(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances"))
+      } else {
+        Right(r.collect { case Right(e) => e })
+      }
 
-    Future.sequence(listOfResponse).map {
-      ls =>
-        val r = ls.filter(l => l.status == OK)
-        if (r.isEmpty) {
-          Left(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances"))
-        } else {
-          Right(r.map(res =>res.json.as[PreviewInstance].setLabel(formService.formRegistry)))
-        }
     }
   }
-
 
 }
 
 object EditorService {
 
+  def computeUpdateTobeStored(
+    currentInstanceDisplayed: NexusInstance,
+    updateFromUser: JsValue,
+    nexusEndpoint: String
+  ): EditorInstance = {
+    val cleanedOriginalInstance =
+      InstanceHelper.removeInternalFields(currentInstanceDisplayed)
+    val instanceUpdateFromUser =
+      FormService.buildInstanceFromForm(cleanedOriginalInstance, updateFromUser, nexusEndpoint)
+    val diff = InstanceHelper.buildDiffEntity(cleanedOriginalInstance, instanceUpdateFromUser)
+    InstanceHelper.removeEmptyFieldsNotInOriginal(cleanedOriginalInstance, diff)
+  }
 
   def kgQueryGetPreviewInstance(
-                                 context: String = EditorConstants.context
-                               ): String =
+    nameField: Option[String] = None,
+    descriptionField: Option[String] = None,
+    context: String = EditorConstants.context
+  ): String =
     s"""
        |{
        |  "@context": $context,
        |  "schema:name": "",
        |  "fields": [
        |    {
-       |      "fieldname": "name",
-       |      "relative_path": "schema:name"
+       |      "fieldname": "this:name",
+       |      "relative_path": "${nameField.getOrElse("schema:name")}",
+       |      "sort":true
        |    },
        |    {
-       |      "fieldname": "id",
+       |      "fieldname": "this:id",
        |      "relative_path": "base:relativeUrl"
        |    },
        |    {
-       |      "fieldname": "description",
-       |      "relative_path": "schema:description"
+       |      "fieldname": "this:description",
+       |      "relative_path": "${descriptionField.getOrElse("schema:description")}"
        |    },
        |    {
-       |      "fieldname": "${UiConstants.DATATYPE}",
-       |      "relative_path": "${JsonLDConstants.TYPE}"
+       |      "fieldname": "this:${UiConstants.DATATYPE}",
+       |      "relative_path": "${JsonLDConstants.TYPE}",
+       |      "required":true
        |    }
        |  ]
        |}

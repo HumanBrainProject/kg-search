@@ -7,7 +7,13 @@
     <file>${application.home:-.}/logs/application.log</file>
     <encoder>
       <pattern>%date [%level] from %logger in %thread - %message%n%xException</pattern>
-    </encoder>
+    </encoder> /
+  </appender>
+
+  <appender name="SYSLOG" class="ch.qos.logback.classic.net.SyslogAppender">
+    <syslogHost>localhost</syslogHost>
+    <facility>LOCAL0</facility>
+    <suffixPattern>kg-service [%thread] %logger %msg</suffixPattern>
   </appender>
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -37,6 +43,7 @@
   <root level="${LOG_LEVEL:-INFO}">
     <appender-ref ref="ASYNCFILE" />
     <appender-ref ref="ASYNCSTDOUT" />
+    <appender-ref ref="SYSLOG" />
   </root>
 
 </configuration>

@@ -1,0 +1,96 @@
+/*
+ *   Copyright (c) 2019, EPFL/Human Brain Project PCO
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+package services
+
+import com.google.inject.Inject
+import constants.{InternalSchemaFieldsConstants, SchemaFieldsConstants}
+import models.errors.APIEditorError
+import models.instance.{EditorMetadata, NexusInstance, NexusInstanceReference}
+import models.user.IDMUser
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import play.api.libs.json.JsValue
+import play.api.libs.ws.WSClient
+
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
+
+class MetadataService @Inject()(IDMAPIService: IDMAPIService, authService: OIDCAuthService, WSClient: WSClient)(
+  implicit executionContext: ExecutionContext
+) {
+
+  def getMetadata(
+    nexusInstanceReference: NexusInstanceReference,
+    instance: NexusInstance
+  ): Future[Either[APIEditorError, EditorMetadata]] = {
+    val (lastUpdaterIdOpt, createdByIdOpt, partialMetadata) = MetadataService.extractMetadataFromInstance(instance)
+    for {
+      updater   <- MetadataService.getUserFromMetadata(lastUpdaterIdOpt, authService, IDMAPIService)
+      createdBy <- MetadataService.getUserFromMetadata(createdByIdOpt, authService, IDMAPIService)
+    } yield {
+      Right(
+        partialMetadata.copy(
+          lastUpdateBy = updater.map(_.displayName).getOrElse(MetadataService.UNKNOWN_USER),
+          createdBy = createdBy.map(_.displayName).getOrElse(MetadataService.UNKNOWN_USER)
+        )
+      )
+    }
+  }
+}
+
+object MetadataService {
+  val UNKNOWN_USER = "Unknown user"
+  private def parseJsFieldAsDate(instance: NexusInstance, field: String): Try[DateTime] = {
+    Try(
+      DateTimeFormat
+        .forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
+        .parseDateTime((instance.content \ field).as[String])
+    )
+  }
+
+  def getUserFromMetadata(userIdOpt: Option[String], authService: OIDCAuthService, IDMAPIService: IDMAPIService)(
+    implicit executionContext: ExecutionContext
+  ): Future[Option[IDMUser]] = {
+    userIdOpt match {
+      case Some(userIdO) =>
+        for {
+          token <- authService.getTechAccessToken()
+          user  <- IDMAPIService.getUserInfoFromID(userIdO, token)
+        } yield user
+      case None => Future(None)
+    }
+  }
+
+  private def extractUserId(instance: NexusInstance, field: String): Option[String] = {
+    (instance.content \ field).asOpt[String] match {
+      case Some(s) if s.startsWith("https://nexus-iam-dev.humanbrainproject.org") =>
+        Some(s.splitAt(s.lastIndexOf("/"))._2.substring(1))
+      case Some(s) => Some(s)
+      case None    => None
+    }
+  }
+
+  def extractMetadataFromInstance(instance: NexusInstance): (Option[String], Option[String], EditorMetadata) = {
+    val lastUpdater = extractUserId(instance, SchemaFieldsConstants.lastUpater)
+    val lastUpdate =
+      parseJsFieldAsDate(instance, SchemaFieldsConstants.lastUpdate).toOption
+    val numberOfUpdates = (instance.content \ InternalSchemaFieldsConstants.NEXUS_REV).asOpt[Long].getOrElse(-1L)
+    val creationDate =
+      parseJsFieldAsDate(instance, SchemaFieldsConstants.createdAt).toOption
+    val createdBy = extractUserId(instance, SchemaFieldsConstants.createdBy)
+    (lastUpdater, createdBy, EditorMetadata(UNKNOWN_USER, creationDate, UNKNOWN_USER, lastUpdate, numberOfUpdates))
+  }
+}

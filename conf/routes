@@ -6,6 +6,9 @@
 # Auth services
 -> /auth auth.Routes
 
+# Admin services
+-> /admin admin.Routes
+
 # Data import services
 -> /dataimport data_import.Routes
 
@@ -17,6 +20,10 @@
 
 # Proxy services
 -> /proxy proxy.Routes
+
+# Redirect services
+-> /instances instances.Routes
+
 
 
 # Monitoring
