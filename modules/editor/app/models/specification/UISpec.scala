@@ -19,22 +19,25 @@ package models.specification
 import scala.collection.mutable
 
 case class UISpec(
-                   label: String,
-                   fields: List[EditorFieldSpecification],
-                   uiInfo: Option[UIInfo] = None,
-                   isEditable: Option[Boolean] = None,
-                   color: Option[String] = None,
-                   folderID: Option[String] = None,
-                   folderName: Option[String] = None
-                 ){
+  label: String,
+  fields: List[EditorFieldSpecification],
+  uiInfo: Option[UIInfo] = None,
+  isEditable: Option[Boolean] = None,
+  color: Option[String] = None,
+  folderID: Option[String] = None,
+  folderName: Option[String] = None
+) {
 
-
-  def getFieldsAsLinkedMap:mutable.LinkedHashMap[String, EditorFieldSpecification] = {
-     mutable.LinkedHashMap[String, EditorFieldSpecification](fields map {f => (f.key, f)} : _ *)
+  def getFieldsAsLinkedMap: mutable.LinkedHashMap[String, EditorFieldSpecification] = {
+    mutable.LinkedHashMap[String, EditorFieldSpecification](fields map { f =>
+      (f.key, f)
+    }: _*)
   }
 
-  def getFieldsAsMap:Map[String, EditorFieldSpecification] = {
-    Map[String, EditorFieldSpecification](fields map {f => (f.key, f)} : _*)
+  def getFieldsAsMap: Map[String, EditorFieldSpecification] = {
+    Map[String, EditorFieldSpecification](fields map { f =>
+      (f.key, f)
+    }: _*)
   }
 }
 

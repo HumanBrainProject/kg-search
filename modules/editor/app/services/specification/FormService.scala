@@ -227,9 +227,9 @@ object FormService {
             case Some(JsNull) => newValue.copy(value = None)
             case _            => newValue
           }
-          filledTemplate ++ Json.obj(id -> v)
+          filledTemplate ++ newValue.transformToNormalizedJsonStructure()
         } else {
-          filledTemplate ++ Json.obj(id -> fieldContent)
+          filledTemplate ++ fieldContent.transformToNormalizedJsonStructure()
         }
     }
   }
