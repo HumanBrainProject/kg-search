@@ -18,16 +18,15 @@ package services.specification
 
 import com.google.inject.{Inject, Singleton}
 import constants._
-import models.editorUserList.BookmarkList
-import models.instance.{EditorInstance, NexusInstance}
+import models._
+import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
 import models.specification._
 import models.user.NexusUser
-import models.{specification, _}
 import play.api.Logger
 import play.api.http.Status.OK
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
-import services.{specification, ConfigurationService}
+import services.ConfigurationService
 
 import scala.annotation.tailrec
 import scala.concurrent.duration.FiniteDuration
@@ -146,12 +145,21 @@ object FormService {
     list.contains(id)
   }
 
+  /**
+    * Building instance from a form sent by the UI
+    * The Form will be filled with the values passed from the UI except for reverse links and linking instances
+    * @param instanceRef The reference to the instance newly created
+    * @param nexusEndpoint The nexus endpoint used to generate full urls
+    * @param newInstance The new instance which is empty as the instance is created empty then filled with data
+    * @param registry The registry to reflect on UISpec
+    * @return A
+    */
   def buildNewInstanceFromForm(
+    instanceRef: NexusInstanceReference,
     nexusEndpoint: String,
-    instancePath: NexusPath,
     newInstance: JsObject,
     registry: FormRegistry[UISpec]
-  ): JsObject = {
+  ): EditorInstance = {
 
     def addNexusEndpointToLinks(item: JsValue): JsObject = {
       val id = (item.as[JsObject] \ "id").as[String]
@@ -162,7 +170,7 @@ object FormService {
       }
     }
 
-    val fields = registry.registry(instancePath).getFieldsAsMap
+    val fields = registry.registry(instanceRef.nexusPath).getFieldsAsMap
     val m = newInstance.value
       .filterNot(
         s =>
@@ -187,7 +195,13 @@ object FormService {
               }
           }
       }
-    Json.toJson(m).as[JsObject]
+    EditorInstance(
+      NexusInstance(
+        Some(instanceRef.id),
+        instanceRef.nexusPath,
+        Json.toJson(m).as[JsObject]
+      )
+    )
   }
 
   def getFormStructure(entityType: NexusPath, data: JsValue, formRegistry: FormRegistry[UISpec]): JsValue = {
