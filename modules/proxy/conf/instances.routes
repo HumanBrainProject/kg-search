@@ -1,0 +1,2 @@
+
+GET /:datatype/:id      controllers.RedirectController.get(datatype, id)

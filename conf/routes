@@ -21,6 +21,10 @@
 # Proxy services
 -> /proxy proxy.Routes
 
+# Redirect services
+-> /instances instances.Routes
+
+
 
 # Monitoring
 ### NoDocs ###
