@@ -65,8 +65,8 @@ trait InstanceApiService {
   )(implicit ec: ExecutionContext): Future[Either[WSResponse, Unit]] = {
     wSClient
       .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.toString}")
-      .withHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
-      .withQueryStringParameters("clientIdExtension" -> userId)
+      .addHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
+      .addQueryStringParameters("clientIdExtension" -> userId)
       .put(editorInstance.nexusInstance.content)
       .map { res =>
         res.status match {
@@ -99,12 +99,14 @@ trait InstanceApiService {
     wSClient: WSClient,
     apiBaseEndpoint: String,
     nexusInstance: NexusInstance,
+    user: Option[User],
     token: String,
     serviceClient: ServiceClient = EditorClient
   )(implicit ec: ExecutionContext): Future[Either[WSResponse, NexusInstanceReference]] = {
     wSClient
       .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.nexusPath.toString()}")
       .withHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
+      .addQueryStringParameters("clientIdExtension" -> user.map(_.id).getOrElse(""))
       .post(nexusInstance.content)
       .map { res =>
         res.status match {

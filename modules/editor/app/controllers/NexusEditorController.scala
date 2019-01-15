@@ -257,31 +257,33 @@ class NexusEditorController @Inject()(
       .async { implicit request =>
         val token = OIDCHelper.getTokenFromRequest(request)
         val instancePath = NexusPath(org, domain, schema, version)
-        editorService.insertInstance(NexusInstance(None, instancePath, Json.obj()), token).flatMap[Result] {
-          case Left(error) => Future(error.toResult)
-          case Right(ref) =>
-            request.body.asJson match {
-              case Some(content) =>
-                val c = FormService.buildNewInstanceFromForm(
-                  config.nexusEndpoint,
-                  instancePath,
-                  content.as[JsObject],
-                  formService.formRegistry
-                )
-                val nonEmptyInstance = EditorInstance(
-                  NexusInstance(
-                    Some(ref.id),
-                    ref.nexusPath,
-                    c
+        editorService
+          .insertInstance(NexusInstance(None, instancePath, Json.obj()), Some(request.user), token)
+          .flatMap[Result] {
+            case Left(error) => Future(error.toResult)
+            case Right(ref) =>
+              request.body.asJson match {
+                case Some(content) =>
+                  val c = FormService.buildNewInstanceFromForm(
+                    config.nexusEndpoint,
+                    instancePath,
+                    content.as[JsObject],
+                    formService.formRegistry
                   )
-                )
-                editorService.updateInstance(nonEmptyInstance, ref, token, request.user.id).map[Result] {
-                  case Left(error) => error.toResult
-                  case Right(())   => Created(Json.toJson(EditorResponseObject(Json.toJson(ref))))
-                }
-              case None => Future(Created(Json.toJson(EditorResponseObject(Json.toJson(ref)))))
-            }
-        }
+                  val nonEmptyInstance = EditorInstance(
+                    NexusInstance(
+                      Some(ref.id),
+                      ref.nexusPath,
+                      c
+                    )
+                  )
+                  editorService.updateInstance(nonEmptyInstance, ref, token, request.user.id).map[Result] {
+                    case Left(error) => error.toResult
+                    case Right(())   => Created(Json.toJson(EditorResponseObject(Json.toJson(ref))))
+                  }
+                case None => Future(Created(Json.toJson(EditorResponseObject(Json.toJson(ref)))))
+              }
+          }
       }
 
   /**

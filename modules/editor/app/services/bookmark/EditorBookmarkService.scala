@@ -158,6 +158,7 @@ class EditorBookmarkService @Inject()(
         wSClient,
         config.kgQueryEndpoint,
         NexusInstance(None, EditorConstants.bookmarkListFolderPath, payload),
+        None,
         token
       )
       .map {
@@ -181,6 +182,7 @@ class EditorBookmarkService @Inject()(
         wSClient,
         config.kgQueryEndpoint,
         NexusInstance(None, EditorConstants.bookmarkListPath, payload),
+        None,
         token
       )
       .map {
@@ -312,6 +314,7 @@ class EditorBookmarkService @Inject()(
           wSClient,
           config.kgQueryEndpoint,
           NexusInstance(None, EditorConstants.bookmarkPath, toInsert),
+          None,
           token
         )
         .map {

@@ -16,10 +16,13 @@
 package services
 
 import com.google.inject.Inject
+import constants.{InternalSchemaFieldsConstants, SchemaFieldsConstants}
 import models.errors.APIEditorError
 import models.instance.{EditorMetadata, NexusInstance, NexusInstanceReference}
+import models.user.IDMUser
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import play.api.libs.json.JsValue
 import play.api.libs.ws.WSClient
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,50 +36,61 @@ class MetadataService @Inject()(IDMAPIService: IDMAPIService, authService: OIDCA
     nexusInstanceReference: NexusInstanceReference,
     instance: NexusInstance
   ): Future[Either[APIEditorError, EditorMetadata]] = {
-    val (lastUpdaterId, lastUpdate) = MetadataService.extractMetadataFromInstance(instance)
-    val updater = for {
-      token   <- authService.getTechAccessToken()
-      updater <- IDMAPIService.getUserInfoFromID(lastUpdaterId, token)
-    } yield updater
-
-    updater.map {
-      case Some(user) =>
-        Right(
-          EditorMetadata(
-            lastUpdate,
-            None,
-            user.displayName,
-            25
-          )
+    val (lastUpdaterIdOpt, createdByIdOpt, partialMetadata) = MetadataService.extractMetadataFromInstance(instance)
+    for {
+      updater   <- MetadataService.getUserFromMetadata(lastUpdaterIdOpt, authService, IDMAPIService)
+      createdBy <- MetadataService.getUserFromMetadata(createdByIdOpt, authService, IDMAPIService)
+    } yield {
+      Right(
+        partialMetadata.copy(
+          lastUpdateBy = updater.map(_.displayName).getOrElse(MetadataService.UNKNOWN_USER),
+          createdBy = createdBy.map(_.displayName).getOrElse(MetadataService.UNKNOWN_USER)
         )
-      case None =>
-        Right(
-          EditorMetadata(
-            lastUpdate,
-            None,
-            "Unknown user",
-            25
-          )
-        )
+      )
     }
-
   }
 }
 
 object MetadataService {
+  val UNKNOWN_USER = "Unknown user"
+  private def parseJsFieldAsDate(instance: NexusInstance, field: String): Try[DateTime] = {
+    Try(
+      DateTimeFormat
+        .forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
+        .parseDateTime((instance.content \ field).as[String])
+    )
+  }
 
-  def extractMetadataFromInstance(instance: NexusInstance): (String, Option[DateTime]) = {
-    val lastUpdater = (instance.content \ "https://schema.hbp.eu/provenance/lastModificationUserId").as[String] match {
-      case s if s.startsWith("https://nexus-iam-dev.humanbrainproject.org") =>
-        s.splitAt(s.lastIndexOf("/"))._2.substring(1)
-      case s => s
+  def getUserFromMetadata(userIdOpt: Option[String], authService: OIDCAuthService, IDMAPIService: IDMAPIService)(
+    implicit executionContext: ExecutionContext
+  ): Future[Option[IDMUser]] = {
+    userIdOpt match {
+      case Some(userIdO) =>
+        for {
+          token <- authService.getTechAccessToken()
+          user  <- IDMAPIService.getUserInfoFromID(userIdO, token)
+        } yield user
+      case None => Future(None)
     }
+  }
+
+  private def extractUserId(instance: NexusInstance, field: String): Option[String] = {
+    (instance.content \ field).asOpt[String] match {
+      case Some(s) if s.startsWith("https://nexus-iam-dev.humanbrainproject.org") =>
+        Some(s.splitAt(s.lastIndexOf("/"))._2.substring(1))
+      case Some(s) => Some(s)
+      case None    => None
+    }
+  }
+
+  def extractMetadataFromInstance(instance: NexusInstance): (Option[String], Option[String], EditorMetadata) = {
+    val lastUpdater = extractUserId(instance, SchemaFieldsConstants.lastUpater)
     val lastUpdate =
-      Try(
-        DateTimeFormat
-          .forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
-          .parseDateTime((instance.content \ "https://schema.hbp.eu/provenance/modifiedAt").as[String])
-      ).toOption
-    (lastUpdater, lastUpdate)
+      parseJsFieldAsDate(instance, SchemaFieldsConstants.lastUpdate).toOption
+    val numberOfUpdates = (instance.content \ InternalSchemaFieldsConstants.NEXUS_REV).asOpt[Long].getOrElse(-1L)
+    val creationDate =
+      parseJsFieldAsDate(instance, SchemaFieldsConstants.createdAt).toOption
+    val createdBy = extractUserId(instance, SchemaFieldsConstants.createdBy)
+    (lastUpdater, createdBy, EditorMetadata(UNKNOWN_USER, creationDate, UNKNOWN_USER, lastUpdate, numberOfUpdates))
   }
 }

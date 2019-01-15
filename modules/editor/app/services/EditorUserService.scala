@@ -101,6 +101,7 @@ class EditorUserService @Inject()(
         wSClient,
         config.kgQueryEndpoint,
         NexusInstance(None, EditorConstants.editorUserPath, EditorUserService.userToNexusStruct(nexusUser.id)),
+        None,
         token
       )
       .map {

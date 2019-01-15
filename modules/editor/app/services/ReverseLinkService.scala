@@ -74,7 +74,7 @@ class ReverseLinkService @Inject()(
           token
         )
         val linkingInstancesToUpdated =
-          updateLinkingInstances(updateToBeStored, fieldsSpec, currentInstanceDisplayed, instanceRef, token)
+          updateLinkingInstances(updateToBeStored, fieldsSpec, currentInstanceDisplayed, instanceRef, Some(user), token)
         val responses = reverseLinksToUpdated.map { processCommand } ::: linkingInstancesToUpdated.map(_.execute())
 
         Future.sequence(responses).flatMap { results =>
@@ -167,6 +167,7 @@ class ReverseLinkService @Inject()(
     fieldsSpec: Map[String, EditorFieldSpecification],
     currentInstanceDisplayed: NexusInstance,
     instanceRef: NexusInstanceReference,
+    user: Option[User],
     token: String
   ): List[Command] = {
     filterLinks(
@@ -192,6 +193,7 @@ class ReverseLinkService @Inject()(
                 linkingInstancePath,
                 editorService,
                 config.nexusEndpoint,
+                user,
                 token
             )
           ) ::: removed.map(

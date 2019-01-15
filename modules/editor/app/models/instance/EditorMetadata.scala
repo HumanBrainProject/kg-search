@@ -19,9 +19,10 @@ import org.joda.time.DateTime
 import play.api.libs.json.{JsPath, JsString, JsValue, Writes}
 
 case class EditorMetadata(
-  lastUpdate: Option[DateTime],
-  creationDate: Option[DateTime],
-  lastUpdater: String,
+  createdBy: String,
+  createdAt: Option[DateTime],
+  lastUpdateBy: String,
+  lastUpdateAt: Option[DateTime],
   numberOfEdits: Long
 )
 
@@ -33,11 +34,12 @@ object EditorMetadata {
     def writes(d: DateTime): JsValue = JsString(d.toString())
   }
   implicit val responseWithMetaDataWrites: Writes[EditorMetadata] = (
-    (JsPath \ "lastUpdate").writeNullable[DateTime] and
-    (JsPath \ "creationDate").writeNullable[DateTime] and
-    (JsPath \ "lastUpdater").write[String] and
+    (JsPath \ "createdBy").write[String] and
+    (JsPath \ "createdAt").writeNullable[DateTime] and
+    (JsPath \ "lastUpdateBy").write[String] and
+    (JsPath \ "lastUpdateAt").writeNullable[DateTime] and
     (JsPath \ "numberOfEdits").write[Long]
   )(unlift(EditorMetadata.unapply))
 
-  def empty: EditorMetadata = EditorMetadata(None, None, "", 0)
+  def empty: EditorMetadata = EditorMetadata("", None, "", None, 0)
 }

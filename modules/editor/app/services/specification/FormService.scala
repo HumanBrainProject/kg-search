@@ -204,17 +204,14 @@ object FormService {
   def getFormStructure(entityType: NexusPath, data: JsValue, formRegistry: FormRegistry[UISpec]): JsValue = {
     // retrieve form template
     val formTemplateOpt = formRegistry.registry.get(entityType)
-
     formTemplateOpt match {
       case Some(formTemplate) =>
         if (data != JsNull) {
-
           val nexusId = (data \ s"${EditorConstants.BASENAMESPACE}${EditorConstants.RELATIVEURL}").as[String]
           // fill template with data
           val idFields = Json.obj(
             "id" -> Json.obj("value" -> Json.obj("path" -> entityType.toString()), "nexus_id" -> JsString(nexusId))
           )
-
           val fields = formTemplate.fields.foldLeft(idFields) {
             case (filledTemplate, (id, fieldContent)) =>
               if (data.as[JsObject].keys.contains(id)) {
@@ -222,7 +219,10 @@ object FormService {
                   case DropdownSelect =>
                     fieldContent.copy(value = Some(FormService.transformToArray(id, data)))
                   case _ =>
-                    fieldContent.copy(value = (data \ id).asOpt[JsValue])
+                    (data \ id).asOpt[JsValue] match {
+                      case Some(null) => fieldContent.copy(value = None)
+                      case s          => fieldContent.copy(value = s)
+                    }
                 }
                 filledTemplate ++ Json.obj(id -> newValue)
               } else {
@@ -234,14 +234,9 @@ object FormService {
             formTemplate,
             (data \ EditorInstance.Fields.alternatives).asOpt[JsObject].getOrElse(Json.obj())
           )
-
         } else {
           //Returning a blank template
-          val escapedForm = formTemplate.fields.map {
-            case (key, value) =>
-              (key, value)
-          }
-          fillFormTemplate(Json.toJson(escapedForm), formTemplate, Json.obj())
+          fillFormTemplate(Json.toJson(formTemplate), formTemplate, Json.obj())
         }
       case None =>
         JsNull
@@ -276,7 +271,9 @@ object FormService {
                 (domain, d)  <- json.as[JsObject].value
                 (schema, s)  <- d.as[JsObject].value
                 (version, v) <- s.as[JsObject].value
-              } yield NexusPath(org, domain, schema, version) -> v.as[A](r)
+              } yield {
+                NexusPath(org, domain, schema, version) -> v.as[A](r)
+              }
             }
             .getOrElse(List())
           acc ++ listOfMap
