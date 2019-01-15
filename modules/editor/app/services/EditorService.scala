@@ -23,7 +23,7 @@ import models.NexusPath
 import models.errors.{APIEditorError, APIEditorMultiError}
 import models.instance._
 import models.specification.{FormRegistry, QuerySpec, UISpec}
-import models.user.User
+import models.user.{NexusUser, User}
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue}
@@ -86,12 +86,13 @@ class EditorService @Inject()(
 
   def insertInstance(
     newInstance: NexusInstance,
+    user: Option[User],
     token: String
   ): Future[Either[APIEditorError, NexusInstanceReference]] = {
     val modifiedContent =
       FormService.removeClientKeysCorrectLinks(newInstance.content.as[JsValue], config.nexusEndpoint)
     instanceApiService
-      .post(wSClient, config.kgQueryEndpoint, newInstance.copy(content = modifiedContent), token)
+      .post(wSClient, config.kgQueryEndpoint, newInstance.copy(content = modifiedContent), user, token)
       .map {
         case Right(ref) => Right(ref)
         case Left(res)  => Left(APIEditorError(res.status, res.body))

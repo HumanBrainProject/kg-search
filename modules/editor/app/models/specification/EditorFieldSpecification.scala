@@ -19,6 +19,7 @@ package models.specification
 import play.api.libs.json.JsValue
 
 case class EditorFieldSpecification(
+  key: String,
   label: String,
   instancesPath: Option[String],
   fieldType: FieldType,
@@ -41,6 +42,7 @@ object EditorFieldSpecification {
   import play.api.libs.json._
 
   implicit val EditorFieldSpecificationWrites: Writes[EditorFieldSpecification] = (
+    (JsPath \ "key").write[String] and
     (JsPath \ "label").write[String] and
     (JsPath \ "instancesPath").writeNullable[String] and
     (JsPath \ "type").write[FieldType] and
@@ -58,6 +60,7 @@ object EditorFieldSpecification {
   )(unlift(EditorFieldSpecification.unapply))
 
   implicit val EditorFieldSpecificationReads: Reads[EditorFieldSpecification] = (
+    (JsPath \ "key").read[String] and
     (JsPath \ "label").read[String] and
     (JsPath \ "instancesPath").readNullable[String] and
     (JsPath \ "type").read[String].map(FieldType(_)) and

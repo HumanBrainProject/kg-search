@@ -102,7 +102,7 @@ object InstanceHelper {
   }
 
   def addDefaultFields(instance: NexusInstance, formRegistry: FormRegistry[UISpec]): NexusInstance = {
-    val m = formRegistry.registry(instance.nexusPath).fields.map {
+    val m = formRegistry.registry(instance.nexusPath).getFieldsAsMap.map {
       case (k, v) =>
         val fieldValue = instance.getField(k)
         if (fieldValue.isEmpty) {

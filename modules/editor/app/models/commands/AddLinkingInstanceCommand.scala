@@ -18,6 +18,7 @@ package models.commands
 import models.NexusPath
 import models.errors.APIEditorError
 import models.instance.{LinkingInstance, NexusInstance, NexusInstanceReference, NexusLink}
+import models.user.User
 import play.api.Logger
 import services.EditorService
 
@@ -30,6 +31,7 @@ case class AddLinkingInstanceCommand(
   linkingInstancePath: NexusPath,
   editorService: EditorService,
   baseUrl: String,
+  user: Option[User],
   token: String
 ) extends Command {
   val log = Logger(this.getClass)
@@ -39,15 +41,17 @@ case class AddLinkingInstanceCommand(
       s"$baseUrl/v0/data/${targetId.ref.toString}",
       linkingInstanceType
     )
-    editorService.insertInstance(NexusInstance(None, linkingInstancePath, linkingInstance.toNexusFormat), token).map {
-      case Right(i) =>
-        log.debug(
-          s"Added linking instance with id ${i.id}, from ${targetId.ref.toString} - to ${currentInstanceRef.toString}"
-        )
-        Right(())
-      case Left(err) =>
-        log.error(s"Could not add linking instance with to ${currentInstanceRef.toString}")
-        Left(err)
-    }
+    editorService
+      .insertInstance(NexusInstance(None, linkingInstancePath, linkingInstance.toNexusFormat), user, token)
+      .map {
+        case Right(i) =>
+          log.debug(
+            s"Added linking instance with id ${i.id}, from ${targetId.ref.toString} - to ${currentInstanceRef.toString}"
+          )
+          Right(())
+        case Left(err) =>
+          log.error(s"Could not add linking instance with to ${currentInstanceRef.toString}")
+          Left(err)
+      }
   }
 }

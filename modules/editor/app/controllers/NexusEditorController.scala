@@ -43,6 +43,7 @@ class NexusEditorController @Inject()(
   iAMAuthService: IAMAuthService,
   formService: FormService,
   reverseLinkService: ReverseLinkService,
+  metadataService: MetadataService,
   ws: WSClient
 )(implicit ec: ExecutionContext)
     extends AbstractController(cc) {
@@ -66,19 +67,29 @@ class NexusEditorController @Inject()(
     Action.async { implicit request =>
       val token = OIDCHelper.getTokenFromRequest(request)
       val nexusInstanceReference = NexusInstanceReference(org, domain, schema, version, id)
-      editorService.retrieveInstance(nexusInstanceReference, token, formService.queryRegistry).map {
+      editorService.retrieveInstance(nexusInstanceReference, token, formService.queryRegistry).flatMap {
         case Left(error) =>
           logger.error(
             s"Error: Could not fetch instance : ${nexusInstanceReference.nexusPath.toString()}/$id - ${error.content}"
           )
-          error.toResult
+          Future(error.toResult)
         case Right(instance) =>
           FormService
             .getFormStructure(nexusInstanceReference.nexusPath, instance.content, formService.formRegistry) match {
             case JsNull =>
-              NotImplemented("Form not implemented")
+              Future(NotImplemented("Form not implemented"))
             case instanceForm =>
-              Ok(Json.toJson(EditorResponseObject(instanceForm.as[JsObject])))
+              metadataService.getMetadata(nexusInstanceReference, instance).map {
+                case Right(metadata) =>
+                  Ok(
+                    Json.toJson(
+                      EditorResponseObject(instanceForm.as[JsObject] ++ Json.obj("metadata" -> Json.toJson(metadata)))
+                    )
+                  )
+                case Left(error) =>
+                  logger.error(error.toString)
+                  Ok(Json.toJson(EditorResponseObject(instanceForm.as[JsObject])))
+              }
           }
       }
     }
@@ -190,8 +201,8 @@ class NexusEditorController @Inject()(
         val instanceRef = NexusInstanceReference(org, domain, schema, version, id)
         formService.formRegistry.registry.get(instanceRef.nexusPath) match {
           case Some(spec)
-              if spec.fields.values.exists(p => p.isReverse.getOrElse(false)) |
-              spec.fields.values.exists(p => p.isLinkingInstance.getOrElse(false)) =>
+              if spec.getFieldsAsMap.values.exists(p => p.isReverse.getOrElse(false)) |
+              spec.getFieldsAsMap.values.exists(p => p.isLinkingInstance.getOrElse(false)) =>
             reverseLinkService
               .generateDiffAndUpdateInstanceWithReverseLink(
                 instanceRef,
@@ -246,31 +257,33 @@ class NexusEditorController @Inject()(
       .async { implicit request =>
         val token = OIDCHelper.getTokenFromRequest(request)
         val instancePath = NexusPath(org, domain, schema, version)
-        editorService.insertInstance(NexusInstance(None, instancePath, Json.obj()), token).flatMap[Result] {
-          case Left(error) => Future(error.toResult)
-          case Right(ref) =>
-            request.body.asJson match {
-              case Some(content) =>
-                val c = FormService.buildNewInstanceFromForm(
-                  config.nexusEndpoint,
-                  instancePath,
-                  content.as[JsObject],
-                  formService.formRegistry
-                )
-                val nonEmptyInstance = EditorInstance(
-                  NexusInstance(
-                    Some(ref.id),
-                    ref.nexusPath,
-                    c
+        editorService
+          .insertInstance(NexusInstance(None, instancePath, Json.obj()), Some(request.user), token)
+          .flatMap[Result] {
+            case Left(error) => Future(error.toResult)
+            case Right(ref) =>
+              request.body.asJson match {
+                case Some(content) =>
+                  val c = FormService.buildNewInstanceFromForm(
+                    config.nexusEndpoint,
+                    instancePath,
+                    content.as[JsObject],
+                    formService.formRegistry
                   )
-                )
-                editorService.updateInstance(nonEmptyInstance, ref, token, request.user.id).map[Result] {
-                  case Left(error) => error.toResult
-                  case Right(())   => Created(Json.toJson(EditorResponseObject(Json.toJson(ref))))
-                }
-              case None => Future(Created(Json.toJson(EditorResponseObject(Json.toJson(ref)))))
-            }
-        }
+                  val nonEmptyInstance = EditorInstance(
+                    NexusInstance(
+                      Some(ref.id),
+                      ref.nexusPath,
+                      c
+                    )
+                  )
+                  editorService.updateInstance(nonEmptyInstance, ref, token, request.user.id).map[Result] {
+                    case Left(error) => error.toResult
+                    case Right(())   => Created(Json.toJson(EditorResponseObject(Json.toJson(ref))))
+                  }
+                case None => Future(Created(Json.toJson(EditorResponseObject(Json.toJson(ref)))))
+              }
+          }
       }
 
   /**
