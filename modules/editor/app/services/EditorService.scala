@@ -74,7 +74,9 @@ class EditorService @Inject()(
           case OK =>
             Right(
               (
-                (res.json \ "results").as[List[PreviewInstance]].map(_.setLabel(formService.formRegistry)),
+                (res.json \ "results")
+                  .as[List[PreviewInstance]]
+                  .map(_.setLabel(formService.formRegistry)),
                 (res.json \ "total").as[Long]
               )
             )

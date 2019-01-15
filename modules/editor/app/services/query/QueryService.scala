@@ -20,6 +20,7 @@ import models.instance.NexusInstanceReference
 import play.api.http.HeaderNames._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.ContentTypes._
+import constants.QueryConstants._
 
 import scala.concurrent.Future
 
@@ -45,7 +46,7 @@ trait QueryService {
   ): Future[WSResponse] = {
     wSClient
       .url(s"$apiEndpoint/query/${nexusInstanceReference.nexusPath.toString()}/instances/${nexusInstanceReference.id}")
-      .addQueryStringParameters(params("vocab" -> vocab): _*)
+      .addQueryStringParameters(params(VOCAB -> vocab): _*)
       .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token)
       .post(query)
   }
@@ -64,7 +65,7 @@ trait QueryService {
 
     wSClient
       .url(s"$apiEndpoint/query/${nexusPath.toString()}/instances")
-      .addQueryStringParameters(params("vocab" -> vocab, "from" -> from, "size" -> size, "search" -> Some(search)): _*)
+      .addQueryStringParameters(params(VOCAB -> vocab, START -> from, SIZE -> size, SEARCH -> Some(search)): _*)
       .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token)
       .post(query)
   }

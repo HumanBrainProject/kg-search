@@ -35,7 +35,7 @@ import services._
 import services.instance.InstanceApiService
 import services.query.QueryService
 import services.specification.FormService
-
+import constants.QueryConstants._
 import scala.concurrent.{ExecutionContext, Future}
 
 class EditorBookmarkService @Inject()(
@@ -127,7 +127,7 @@ class EditorBookmarkService @Inject()(
   ): Future[Either[APIEditorError, (List[PreviewInstance], Long)]] = {
     wSClient
       .url(s"${config.kgQueryEndpoint}/arango/bookmarks/${bookmarkListId.toString}")
-      .withQueryStringParameters("from" -> start.toString, "size" -> size.toString, "search" -> search)
+      .withQueryStringParameters(START -> start.toString, SIZE -> size.toString, SEARCH -> search)
       .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token)
 //      .post(EditorBookmarkService.kgQueryGetInstances(EditorConstants.bookmarkPath))
       .get()
