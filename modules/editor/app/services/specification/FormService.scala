@@ -163,23 +163,30 @@ object FormService {
     }
 
     val fields = registry.registry(instancePath).getFieldsAsMap
-    val m = newInstance.value.map {
-      case (key, v) =>
-        val formObjectType = fields(key).fieldType
-        formObjectType match {
-          case DropdownSelect =>
-            val arr: IndexedSeq[JsValue] = v.as[JsArray].value.map { item =>
-              addNexusEndpointToLinks(item)
-            }
-            key -> Json.toJson(arr)
-          case _ =>
-            if (fields(key).isLink.getOrElse(false)) {
-              key -> addNexusEndpointToLinks(v)
-            } else {
-              key -> v
-            }
-        }
-    }
+    val m = newInstance.value
+      .filterNot(
+        s =>
+          fields(s._1).isReverse.exists(identity) ||
+          fields(s._1).isLinkingInstance.exists(identity) ||
+          s._1 == InternalSchemaFieldsConstants.ALTERNATIVES
+      )
+      .map {
+        case (key, v) =>
+          val formObjectType = fields(key).fieldType
+          formObjectType match {
+            case DropdownSelect =>
+              val arr: IndexedSeq[JsValue] = v.as[JsArray].value.map { item =>
+                addNexusEndpointToLinks(item)
+              }
+              key -> Json.toJson(arr)
+            case _ =>
+              if (fields(key).isLink.getOrElse(false)) {
+                key -> addNexusEndpointToLinks(v)
+              } else {
+                key -> v
+              }
+          }
+      }
     Json.toJson(m).as[JsObject]
   }
 

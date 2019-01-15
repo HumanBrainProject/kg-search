@@ -18,6 +18,7 @@ package controllers
 
 import actions.EditorUserAction
 import cats.data.EitherT
+import constants.SchemaFieldsConstants
 import helpers._
 import javax.inject.{Inject, Singleton}
 import models._
