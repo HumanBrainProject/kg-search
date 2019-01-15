@@ -29,7 +29,8 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
         Map(
           originalDatatype -> UISpec(
             "Activity",
-            List(EditorFieldSpecification(
+            List(
+              EditorFieldSpecification(
                 "http://schema.org/name",
                 "Name",
                 None,
@@ -38,35 +39,42 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
                 None,
                 None,
                 None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                Some(Json.obj("foo" -> "bar"))
+              ),
+              EditorFieldSpecification(
+                "http://hbp.eu/minds#methods",
+                "Methods",
+                Some("minds/experiment/method/v0.0.4"),
+                DropdownSelect,
+                None,
+                Some("id"),
+                Some("label"),
+                Some(true),
+                Some(true),
                 None
-              ),
-                EditorFieldSpecification(
-                  "http://hbp.eu/minds#methods",
-                  "Methods",
-                  Some("minds/experiment/method/v0.0.4"),
-                  DropdownSelect,
-                  None,
-                  Some("id"),
-                  Some("label"),
-                  Some(true),
-                  Some(true)
-                )
-              ),
-              Some(
-                UIInfo(
-                  "http://schema.org/name",
-                  List("http://schema.org/name", "http://schema.org/description"),
-                  None
-                )
+              )
+            ),
+            Some(
+              UIInfo(
+                "http://schema.org/name",
+                List("http://schema.org/name", "http://schema.org/description"),
+                None
               )
             )
           )
         )
+      )
 
       val config = new ConfigurationService(fakeApplication().configuration)
       val mockWs = mock[WSClient]
-      val data = Json.parse(
-        s"""{
+      val data = Json.parse(s"""{
            |    "@context": "https://nexus-dev.humanbrainproject.org/v0/contexts/nexus/core/resource/v0.3.0",
            |    "@id": "https://nexus-dev.humanbrainproject.org/v0/data/${originalDatatype.toString()}/$id",
            |    "https://schema.hbp.eu/relativeUrl": "${originalDatatype.toString()}/$id",
@@ -81,8 +89,7 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
            |    """.stripMargin)
 
       val res = FormService.getFormStructure(originalDatatype, data.as[JsObject], formRegistry)
-      val expected = Json.parse(
-        """
+      val expected = Json.parse("""
           | {
           |  "fields": {
           |    "id": {
@@ -92,13 +99,12 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
           |      "nexus_id": "minds/core/activity/v0.0.4/123"
           |    },
           |    "http://schema.org/name": {
-          |      "key": "http://schema.org/name",
           |      "type": "InputText",
           |      "label": "Name",
-          |      "value": "365.A.e.#2"
+          |      "value": "365.A.e.#2",
+          |      "foo": "bar"
           |    },
           |    "http://hbp.eu/minds#methods": {
-          |      "key": "http://hbp.eu/minds#methods",
           |      "type": "DropdownSelect",
           |      "label": "Methods",
           |      "instancesPath": "minds/experiment/method/v0.0.4",
@@ -135,8 +141,7 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
   "getRegistry" should {
     "populate the registry from a json object" in {
       val registry =
-        Json.parse(
-          """
+        Json.parse("""
             |{
             |  "_rev": "_XxTeP7K--_",
             |  "uiSpec": {
@@ -215,13 +220,15 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
                 Some("id"),
                 Some("name"),
                 Some(true),
-                Some(true)
+                Some(true),
+                None
               ),
               EditorFieldSpecification(
                 "http://schema.org/datalink",
                 "Data link",
                 None,
                 InputText,
+                None,
                 None,
                 None,
                 None,
@@ -240,11 +247,12 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
           NexusPath("minds", "experiment", "protocol", "v1.0.0") -> UISpec(
             "Protocol",
             List(
-                EditorFieldSpecification(
-                  "http://schema.org/name",
+              EditorFieldSpecification(
+                "http://schema.org/name",
                 "Name",
                 None,
                 InputText,
+                None,
                 None,
                 None,
                 None,

@@ -16,7 +16,7 @@
 
 package models.specification
 
-import play.api.libs.json.JsValue
+import play.api.libs.json.{JsObject, JsValue, Json}
 
 case class EditorFieldSpecification(
   key: String,
@@ -33,8 +33,23 @@ case class EditorFieldSpecification(
   isLinkingInstance: Option[Boolean] = None,
   linkingInstanceType: Option[String] = None,
   linkingInstancePath: Option[String] = None,
-  value: Option[JsValue] = None
-)
+  value: Option[JsValue] = None,
+  uiDirective: Option[JsObject] = None
+) {
+
+  def transformToNormalizedJsonStructure(): JsObject = {
+    val json = Json.toJson(this).as[JsObject]
+    if (uiDirective.isDefined) {
+      val fieldWithDirectives = uiDirective.get.fields.foldLeft(json) {
+        case (f, (k, v)) =>
+          f ++ Json.obj(k -> v)
+      }
+      Json.obj(key -> (fieldWithDirectives - "uiDirective" - "key"))
+    } else {
+      Json.obj(key -> (json - "key"))
+    }
+  }
+}
 
 object EditorFieldSpecification {
 
@@ -56,7 +71,8 @@ object EditorFieldSpecification {
     (JsPath \ "isLinkingInstance").writeNullable[Boolean] and
     (JsPath \ "linkingInstanceType").writeNullable[String] and
     (JsPath \ "linkingInstancePath").writeNullable[String] and
-    (JsPath \ "value").writeNullable[JsValue]
+    (JsPath \ "value").writeNullable[JsValue] and
+    (JsPath \ "uiDirective").writeNullable[JsObject]
   )(unlift(EditorFieldSpecification.unapply))
 
   implicit val EditorFieldSpecificationReads: Reads[EditorFieldSpecification] = (
@@ -74,6 +90,7 @@ object EditorFieldSpecification {
     (JsPath \ "isLinkingInstance").readNullable[Boolean] and
     (JsPath \ "linkingInstanceType").readNullable[String] and
     (JsPath \ "linkingInstancePath").readNullable[String] and
-    (JsPath \ "value").readNullable[JsValue]
+    (JsPath \ "value").readNullable[JsValue] and
+    (JsPath \ "uiDirective").readNullable[JsObject]
   )(EditorFieldSpecification.apply _)
 }
