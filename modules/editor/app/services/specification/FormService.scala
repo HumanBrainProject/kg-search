@@ -223,13 +223,13 @@ object FormService {
             case InputText | InputTextMultiple | TextArea =>
               fieldContent.copy(value = (data \ id).asOpt[JsValue])
           }
-          val v = newValue.value match {
+          val valueWithoutNull = newValue.value match {
             case Some(JsNull) => newValue.copy(value = None)
             case _            => newValue
           }
-          filledTemplate ++ Json.obj(id -> v)
+          filledTemplate ++ valueWithoutNull.transformToNormalizedJsonStructure()
         } else {
-          filledTemplate ++ Json.obj(id -> fieldContent)
+          filledTemplate ++ fieldContent.transformToNormalizedJsonStructure()
         }
     }
   }
