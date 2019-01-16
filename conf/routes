@@ -24,6 +24,9 @@
 # Redirect services
 -> /instances instances.Routes
 
+# Webhook service
+-> /webhook webhook.Routes
+
 
 
 # Monitoring
