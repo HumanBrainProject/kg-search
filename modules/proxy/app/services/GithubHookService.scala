@@ -51,11 +51,13 @@ object GitLabCommitPayload {
 
   implicit val writes = new Writes[GitLabCommitPayload] {
     override def writes(o: GitLabCommitPayload): JsValue = Json.obj(
-      "token"                 -> o.token,
-      "ref"                   -> o.ref,
-      "variables[commit_ref]" -> o.commit_ref,
-      "variables[commit]"     -> o.commit,
-      "variables[commit_msg]" -> o.commit_msg
+      "token" -> o.token,
+      "ref"   -> o.ref,
+      "variables" -> Json.obj(
+        "commit_ref" -> o.commit_ref,
+        "commit"     -> o.commit,
+        "commit_msg" -> o.commit_msg
+      )
     )
   }
 }
