@@ -17,6 +17,28 @@ import React from "react";
 import { Field } from "./Field";
 import { Tabs } from "../components/Tabs";
 
+const getCount = field => {
+  if (field.data && field.mapping && field.mapping.children) {
+    let fieldToCount = null;
+    Object.entries(field.mapping.children).some(([subField, mapping]) => {
+      if (mapping && mapping.count) {
+        fieldToCount = subField;
+        return true;
+      }
+      return false;
+    });
+    if (fieldToCount) {
+      const root = Array.isArray(field.data)?field.data:field.data?[field.data]:[];
+      let counter = 0;
+      root.forEach(item => {
+        const subItems = item.children && item.children[fieldToCount];
+        counter +=  Array.isArray(subItems)?subItems.length:1;
+      });
+      return counter;
+    }
+  }
+  return Array.isArray(field.data)?field.data.length:field.data?1:0;
+};
 
 const getTabs = fields => {
   if (!Array.isArray(fields)) {
@@ -26,7 +48,7 @@ const getTabs = fields => {
     return {
       id: field.name,
       title: (field.mapping && field.mapping.value)?field.mapping.value:field.name,
-      counter: Array.isArray(field.data)?field.data.length:field.data?1:0,
+      counter: getCount(field),
       hint: field.mapping?{
         show: !!field.mapping.hint,
         value: field.mapping.hint
@@ -36,12 +58,12 @@ const getTabs = fields => {
   });
 };
 
-export const FieldsTabs = ({fields}) => {
+export const FieldsTabs = ({className, fields}) => {
   if (!fields || !fields.length) {
     return null;
   }
   const tabs = getTabs(fields);
   return (
-    <Tabs tabs={tabs} viewComponent={Field} />
+    <Tabs className={className?className:""} tabs={tabs} viewComponent={Field} />
   );
 };
