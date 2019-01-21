@@ -564,3 +564,7 @@ PUT /instance/:org/:domain/:schema/:version/:id/bookmarks       controllers.Nexu
 #      type: string
 ###
 POST /bookmarks                                                 controllers.NexusEditorUserController.retrieveBookmarks
+
+
+#Suggestion Routes
+-> /suggestion suggestion.Routes
