@@ -17,7 +17,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./containers/App";
-import TagManager from 'react-gtm-module';
+import TagManager from "react-gtm-module";
 import "./index.css";
 
 // GLOBAL CONSTANTS DEFINED OUTSIDE THE APP
