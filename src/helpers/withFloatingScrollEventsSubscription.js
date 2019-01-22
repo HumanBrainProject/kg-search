@@ -150,7 +150,7 @@ export const withFloatingScrollEventsSubscription = (floatingPosition, relatedEl
       if (localStorageChange || cookieChange || eventWasTriggered) {
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
         if (floatingPosition === "top") {
-          if (scrollTop < height) {
+          if (scrollTop <= height) {
             this.setState(() => ({isFloating: false}));
           } else {
             this.setState(() => ({isFloating: true}));
