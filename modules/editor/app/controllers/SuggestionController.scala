@@ -18,21 +18,30 @@ package controllers
 import akka.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import com.google.inject.Inject
 import helpers.OIDCHelper
-import models.AuthenticatedUserAction
+import models.{AuthenticatedUserAction, EditorResponseObject}
 import models.errors.APIEditorError
+import models.instance.NexusInstanceReference
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import services.IDMAPIService
+import services.instance.InstanceApiService
+import services.specification.FormService
+import services.suggestion.SuggestionService
+import services.suggestion.SuggestionService.UserID
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class SuggestionController @Inject()(
   cc: ControllerComponents,
   IDMAPIService: IDMAPIService,
-  authenticatedUserAction: AuthenticatedUserAction
+  suggestionService: SuggestionService,
+  authenticatedUserAction: AuthenticatedUserAction,
+  formService: FormService
 )(
   implicit executionContext: ExecutionContext,
 ) extends AbstractController(cc) {
+
+  object instanceApiService extends InstanceApiService
 
   def getUsers(size: Int, from: Int, search: String): Action[AnyContent] = authenticatedUserAction.async {
     implicit request =>
@@ -43,9 +52,81 @@ class SuggestionController @Inject()(
       }
   }
 
-  def addUser(org: String, domain: String, schema: String, version: String, instanceId: String) = ???
+  def addUsers(org: String, domain: String, schema: String, version: String, instanceId: String): Action[AnyContent] =
+    authenticatedUserAction.async { implicit request =>
+      val ref = NexusInstanceReference(org, domain, schema, version, instanceId)
+      val token = OIDCHelper.getTokenFromRequest(request)
+      request.request.body.asJson match {
+        case Some(users) if users.asOpt[List[UserID]].isDefined =>
+          suggestionService.addUsersToInstance(ref, users.as[List[UserID]], token).map {
+            case Right(()) => Ok("Users added to suggestion instance")
+            case Left(err) => err.toResult
+          }
+        case _ => Future(BadRequest("Empty content"))
+      }
 
-  def acceptSuggestion(org: String, domain: String, schema: String, version: String, suggestionId: String) = ???
+    }
 
-  def rejectSuggestion(org: String, domain: String, schema: String, version: String, suggestionId: String) = ???
+  def acceptSuggestion(
+    org: String,
+    domain: String,
+    schema: String,
+    version: String,
+    suggestionId: String
+  ): Action[AnyContent] =
+    authenticatedUserAction.async { implicit request =>
+      val token = OIDCHelper.getTokenFromRequest(request)
+      val ref = NexusInstanceReference(org, domain, schema, version, suggestionId)
+      suggestionService.acceptSuggestion(ref, token).map {
+        case Right(()) => Ok("Suggestion accepted")
+        case Left(err) => err.toResult
+      }
+    }
+
+  def rejectSuggestion(
+    org: String,
+    domain: String,
+    schema: String,
+    version: String,
+    suggestionId: String
+  ): Action[AnyContent] =
+    authenticatedUserAction.async { implicit request =>
+      val token = OIDCHelper.getTokenFromRequest(request)
+      val ref = NexusInstanceReference(org, domain, schema, version, suggestionId)
+      suggestionService.rejectSuggestion(ref, token).map {
+        case Right(()) => Ok("Suggestion accepted")
+        case Left(err) => err.toResult
+      }
+    }
+
+  def getUsersSuggestions: Action[AnyContent] = authenticatedUserAction.async { implicit request =>
+    val token = OIDCHelper.getTokenFromRequest(request)
+    suggestionService.getUsersSuggestions(token).map {
+      case Right(l) =>
+        val res = for {
+          i <- l
+        } yield FormService.getFormStructure(i.nexusref.nexusPath, i.content, formService.formRegistry)
+        Ok(Json.toJson(EditorResponseObject(Json.toJson(res))))
+      case Left(err) => err.toResult
+    }
+  }
+
+  def getInstanceSuggestions(
+    org: String,
+    domain: String,
+    schema: String,
+    version: String,
+    instanceId: String
+  ): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
+    val token = OIDCHelper.getTokenFromRequest(request)
+    val ref = NexusInstanceReference(org, domain, schema, version, instanceId)
+    suggestionService.getInstanceSuggestions(ref, token).map {
+      case Right(l) =>
+        val res = for {
+          i <- l
+        } yield FormService.getFormStructure(i.nexusref.nexusPath, i.content, formService.formRegistry)
+        Ok(Json.toJson(EditorResponseObject(Json.toJson(res))))
+      case Left(err) => err.toResult
+    }
+  }
 }

@@ -94,7 +94,7 @@ class EditorService @Inject()(
     val modifiedContent =
       FormService.removeClientKeysCorrectLinks(newInstance.content.as[JsValue], config.nexusEndpoint)
     instanceApiService
-      .post(wSClient, config.kgQueryEndpoint, newInstance.copy(content = modifiedContent), user, token)
+      .post(wSClient, config.kgQueryEndpoint, newInstance.copy(content = modifiedContent), user.map(_.id), token)
       .map {
         case Right(ref) => Right(ref)
         case Left(res)  => Left(APIEditorError(res.status, res.body))
