@@ -65,10 +65,9 @@ class NexusEditorController @Inject()(
     */
 
   def getInstance(org: String, domain: String, schema: String, version: String, id: String): Action[AnyContent] =
-    Action.async { implicit request =>
-      val token = OIDCHelper.getTokenFromRequest(request)
+    authenticatedUserAction.async { implicit request =>
       val nexusInstanceReference = NexusInstanceReference(org, domain, schema, version, id)
-      editorService.retrieveInstance(nexusInstanceReference, token, formService.queryRegistry).flatMap {
+      editorService.retrieveInstance(nexusInstanceReference, request.userToken, formService.queryRegistry).flatMap {
         case Left(error) =>
           logger.error(
             s"Error: Could not fetch instance : ${nexusInstanceReference.nexusPath.toString()}/$id - ${error.content}"
@@ -96,7 +95,6 @@ class NexusEditorController @Inject()(
     }
 
   def getInstancesByIds(allFields: Boolean): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
-    val token = OIDCHelper.getTokenFromRequest(request)
     val listOfIds = for {
       bodyContent <- request.body.asJson
       ids         <- bodyContent.asOpt[List[String]]
@@ -105,7 +103,7 @@ class NexusEditorController @Inject()(
     listOfIds match {
       case Some(ids) =>
         if (allFields) {
-          editorService.retrieveInstancesByIds(ids, formService.queryRegistry, token).map {
+          editorService.retrieveInstancesByIds(ids, formService.queryRegistry, request.userToken).map {
             case Left(err) => err.toResult
             case Right(ls) =>
               Ok(Json.toJson(EditorResponseObject(Json.toJson(ls.groupBy(_.id().get).map {
@@ -116,7 +114,7 @@ class NexusEditorController @Inject()(
               }))))
           }
         } else {
-          editorService.retrievePreviewInstancesByIds(ids, formService.queryRegistry, token).map {
+          editorService.retrievePreviewInstancesByIds(ids, formService.queryRegistry, request.userToken).map {
             case Left(err)                        => err.toResult
             case Right(ls: List[PreviewInstance]) => Ok(Json.toJson(EditorResponseObject(Json.toJson(ls))))
           }
@@ -132,10 +130,9 @@ class NexusEditorController @Inject()(
     version: String,
     id: String
   ): Action[AnyContent] =
-    Action.async { implicit request =>
-      val token = OIDCHelper.getTokenFromRequest(request)
+    authenticatedUserAction.async { implicit request =>
       val nexusInstanceRef = NexusInstanceReference(org, domain, datatype, version, id)
-      editorService.retrieveInstance(nexusInstanceRef, token, formService.queryRegistry).flatMap[Result] {
+      editorService.retrieveInstance(nexusInstanceRef, request.userToken, formService.queryRegistry).flatMap[Result] {
         case Left(error) =>
           Future.successful(
             error.toResult
@@ -198,7 +195,6 @@ class NexusEditorController @Inject()(
   def updateInstance(org: String, domain: String, schema: String, version: String, id: String): Action[AnyContent] =
     (authenticatedUserAction andThen EditorUserAction.editorUserWriteAction(org, config.editorPrefix, iAMAuthService))
       .async { implicit request =>
-        val token = OIDCHelper.getTokenFromRequest(request)
         val instanceRef = NexusInstanceReference(org, domain, schema, version, id)
         formService.formRegistry.registry.get(instanceRef.nexusPath) match {
           case Some(spec)
@@ -208,7 +204,7 @@ class NexusEditorController @Inject()(
               .generateDiffAndUpdateInstanceWithReverseLink(
                 instanceRef,
                 request.body.asJson.get,
-                token,
+                request.userToken,
                 request.user,
                 formService.formRegistry,
                 formService.queryRegistry
@@ -225,7 +221,7 @@ class NexusEditorController @Inject()(
               .generateDiffAndUpdateInstance(
                 instanceRef,
                 request.body.asJson.get,
-                token,
+                request.userToken,
                 request.user,
                 formService.formRegistry,
                 formService.queryRegistry
@@ -256,10 +252,9 @@ class NexusEditorController @Inject()(
   ): Action[AnyContent] =
     (authenticatedUserAction andThen EditorUserAction.editorUserWriteAction(org, config.editorPrefix, iAMAuthService))
       .async { implicit request =>
-        val token = OIDCHelper.getTokenFromRequest(request)
         val instancePath = NexusPath(org, domain, schema, version)
         editorService
-          .insertInstance(NexusInstance(None, instancePath, Json.obj()), Some(request.user), token)
+          .insertInstance(NexusInstance(None, instancePath, Json.obj()), Some(request.user), request.userToken)
           .flatMap[Result] {
             case Left(error) => Future(error.toResult)
             case Right(ref) =>
@@ -271,7 +266,7 @@ class NexusEditorController @Inject()(
                     content.as[JsObject],
                     formService.formRegistry
                   )
-                  editorService.updateInstance(nonEmptyInstance, ref, token, request.user.id).map[Result] {
+                  editorService.updateInstance(nonEmptyInstance, ref, request.userToken, request.user.id).map[Result] {
                     case Left(error) => error.toResult
                     case Right(())   => Created(Json.toJson(EditorResponseObject(Json.toJson(ref))))
                   }

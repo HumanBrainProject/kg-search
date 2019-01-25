@@ -15,6 +15,7 @@
  */
 package controllers
 
+import actions.EditorUserAction
 import akka.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import com.google.inject.Inject
 import helpers.OIDCHelper
@@ -23,7 +24,7 @@ import models.errors.APIEditorError
 import models.instance.NexusInstanceReference
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
-import services.IDMAPIService
+import services.{ConfigurationService, EditorUserService, IAMAuthService, IDMAPIService}
 import services.instance.InstanceApiService
 import services.specification.FormService
 import services.suggestion.SuggestionService
@@ -36,7 +37,8 @@ class SuggestionController @Inject()(
   IDMAPIService: IDMAPIService,
   suggestionService: SuggestionService,
   authenticatedUserAction: AuthenticatedUserAction,
-  formService: FormService
+  formService: FormService,
+  editorUserService: EditorUserService
 )(
   implicit executionContext: ExecutionContext,
 ) extends AbstractController(cc) {
@@ -45,20 +47,18 @@ class SuggestionController @Inject()(
 
   def getUsers(size: Int, from: Int, search: String): Action[AnyContent] = authenticatedUserAction.async {
     implicit request =>
-      val token = OIDCHelper.getTokenFromRequest(request)
-      IDMAPIService.getUsers(size, from, search, token).map {
+      IDMAPIService.getUsers(size, from, search, request.userToken).map {
         case Right((users, pagination)) => Ok(Json.obj("users" -> users, "page" -> pagination))
         case Left(res)                  => APIEditorError(res.status, res.body).toResult
       }
   }
 
   def addUsers(org: String, domain: String, schema: String, version: String, instanceId: String): Action[AnyContent] =
-    authenticatedUserAction.async { implicit request =>
+    (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
       val ref = NexusInstanceReference(org, domain, schema, version, instanceId)
-      val token = OIDCHelper.getTokenFromRequest(request)
       request.request.body.asJson match {
         case Some(users) if users.asOpt[List[UserID]].isDefined =>
-          suggestionService.addUsersToInstance(ref, users.as[List[UserID]], token).map {
+          suggestionService.addUsersToInstance(ref, users.as[List[UserID]], request.userToken).map {
             case Right(()) => Ok("Users added to suggestion instance")
             case Left(err) => err.toResult
           }
@@ -74,14 +74,15 @@ class SuggestionController @Inject()(
     version: String,
     suggestionId: String
   ): Action[AnyContent] =
-    authenticatedUserAction.async { implicit request =>
-      val token = OIDCHelper.getTokenFromRequest(request)
-      val ref = NexusInstanceReference(org, domain, schema, version, suggestionId)
-      suggestionService.acceptSuggestion(ref, token).map {
-        case Right(()) => Ok("Suggestion accepted")
-        case Left(err) => err.toResult
+    (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService) andThen EditorUserAction
+      .curatorUserAction(org))
+      .async { implicit request =>
+        val ref = NexusInstanceReference(org, domain, schema, version, suggestionId)
+        suggestionService.acceptSuggestion(ref, request.userToken).map {
+          case Right(()) => Ok("Suggestion accepted")
+          case Left(err) => err.toResult
+        }
       }
-    }
 
   def rejectSuggestion(
     org: String,
@@ -90,18 +91,17 @@ class SuggestionController @Inject()(
     version: String,
     suggestionId: String
   ): Action[AnyContent] =
-    authenticatedUserAction.async { implicit request =>
-      val token = OIDCHelper.getTokenFromRequest(request)
+    (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService) andThen EditorUserAction
+      .curatorUserAction(org)).async { implicit request =>
       val ref = NexusInstanceReference(org, domain, schema, version, suggestionId)
-      suggestionService.rejectSuggestion(ref, token).map {
+      suggestionService.rejectSuggestion(ref, request.userToken).map {
         case Right(()) => Ok("Suggestion accepted")
         case Left(err) => err.toResult
       }
     }
 
   def getUsersSuggestions: Action[AnyContent] = authenticatedUserAction.async { implicit request =>
-    val token = OIDCHelper.getTokenFromRequest(request)
-    suggestionService.getUsersSuggestions(token).map {
+    suggestionService.getUsersSuggestions(request.userToken).map {
       case Right(l) =>
         val res = for {
           i <- l
@@ -118,9 +118,8 @@ class SuggestionController @Inject()(
     version: String,
     instanceId: String
   ): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
-    val token = OIDCHelper.getTokenFromRequest(request)
     val ref = NexusInstanceReference(org, domain, schema, version, instanceId)
-    suggestionService.getInstanceSuggestions(ref, token).map {
+    suggestionService.getInstanceSuggestions(ref, request.userToken).map {
       case Right(l) =>
         val res = for {
           i <- l
