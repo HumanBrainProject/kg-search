@@ -17,12 +17,11 @@ package services.suggestion
 
 import com.google.inject.Inject
 import models.errors.{APIEditorError, APIEditorMultiError}
-import models.instance.{NexusInstance, NexusInstanceReference, SuggestionInstance}
-import models.user.NexusUser
-import play.api.libs.ws.WSClient
+import models.instance.{NexusInstanceReference, SuggestionInstance}
+import models.user.EditorUser
 import play.api.http.Status._
+import play.api.libs.ws.WSClient
 import services.ConfigurationService
-import services.instance.InstanceApiService
 import services.suggestion.SuggestionService.UserID
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,11 +34,13 @@ class SuggestionService @Inject()(wSClient: WSClient, config: ConfigurationServi
   def addUsersToInstance(
     instance: NexusInstanceReference,
     users: List[UserID],
-    token: String
+    token: String,
+    user: EditorUser
   ): Future[Either[APIEditorMultiError, Unit]] = {
     val f: List[Future[Either[APIEditorError, Unit]]] = for {
       id <- users
-    } yield SuggestionApiService.addUserToSuggestionInstance(wSClient, config.kgQueryEndpoint, instance, id, token)
+    } yield
+      SuggestionApiService.addUserToSuggestionInstance(wSClient, config.kgQueryEndpoint, instance, id, token, user)
 
     Future.sequence(f).map { l =>
       val err = l.collect {

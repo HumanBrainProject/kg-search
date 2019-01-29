@@ -58,7 +58,7 @@ class SuggestionController @Inject()(
       val ref = NexusInstanceReference(org, domain, schema, version, instanceId)
       request.request.body.asJson match {
         case Some(users) if users.asOpt[List[UserID]].isDefined =>
-          suggestionService.addUsersToInstance(ref, users.as[List[UserID]], request.userToken).map {
+          suggestionService.addUsersToInstance(ref, users.as[List[UserID]], request.userToken, request.editorUser).map {
             case Right(()) => Ok("Users added to suggestion instance")
             case Left(err) => err.toResult
           }

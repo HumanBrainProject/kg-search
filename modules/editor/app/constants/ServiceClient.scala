@@ -23,3 +23,7 @@ sealed trait ServiceClient {
 object EditorClient extends ServiceClient {
   override def client: String = "editor"
 }
+
+object SuggestionClient extends ServiceClient {
+  override def client: String = "suggestion"
+}
