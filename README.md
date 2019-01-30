@@ -5,7 +5,7 @@ It's based on Create React App and is using Search Kit (http://www.searchkit.co)
 
 You'll find the code on GitHub at https://github.com/HumanBrainProject/kg-search-ui.
 
-You can then simply start the UI locally with:
+You can then simply start the UI locally with: 
 
 ```
 npm install
