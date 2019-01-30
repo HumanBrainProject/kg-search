@@ -316,6 +316,13 @@ class EditorService @Inject()(
     }
   }
 
+  def deleteInstance(
+    nexusInstanceReference: NexusInstanceReference,
+    token: String
+  ): Future[Either[APIEditorError, Unit]] = {
+    instanceApiService.deleteEditorInstance(wSClient, config.kgQueryEndpoint, nexusInstanceReference, token)
+  }
+
 }
 
 object EditorService {
