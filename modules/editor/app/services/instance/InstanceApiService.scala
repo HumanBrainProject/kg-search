@@ -29,7 +29,8 @@ import play.api.http.Status._
 import play.api.http.HeaderNames._
 
 trait InstanceApiService {
-  val instanceEndpoint = "/internal/api/instances"
+  val instanceEndpoint = "/api/instances"
+  val internalInstanceEndpoint = "/internal/api/instances"
 
   def get(
     wSClient: WSClient,
@@ -41,7 +42,7 @@ trait InstanceApiService {
   )(implicit ec: ExecutionContext): Future[Either[WSResponse, NexusInstance]] = {
     val params = clientExtensionId.map("clientIdExtension" -> _).getOrElse("" -> "")
     wSClient
-      .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.toString}")
+      .url(s"$apiBaseEndpoint$internalInstanceEndpoint/${nexusInstance.toString}")
       .withHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
       .addQueryStringParameters(params)
       .get()
@@ -64,7 +65,7 @@ trait InstanceApiService {
     serviceClient: ServiceClient = EditorClient
   )(implicit ec: ExecutionContext): Future[Either[WSResponse, Unit]] = {
     wSClient
-      .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.toString}")
+      .url(s"$apiBaseEndpoint$internalInstanceEndpoint/${nexusInstance.toString}")
       .addHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
       .addQueryStringParameters("clientIdExtension" -> userId)
       .put(editorInstance.nexusInstance.content)
@@ -95,6 +96,25 @@ trait InstanceApiService {
       }
   }
 
+  def deleteEditorInstance(
+    wSClient: WSClient,
+    apiBaseEndpoint: String,
+    nexusInstance: NexusInstanceReference,
+    token: String,
+    serviceClient: ServiceClient = EditorClient
+  )(implicit ec: ExecutionContext): Future[Either[APIEditorError, Unit]] = {
+    wSClient
+      .url(s"$apiBaseEndpoint$internalInstanceEndpoint/${nexusInstance.toString}")
+      .withHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
+      .delete()
+      .map { res =>
+        res.status match {
+          case OK | NO_CONTENT => Right(())
+          case _               => Left(APIEditorError(res.status, res.body))
+        }
+      }
+  }
+
   def post(
     wSClient: WSClient,
     apiBaseEndpoint: String,
@@ -104,7 +124,7 @@ trait InstanceApiService {
     serviceClient: ServiceClient = EditorClient
   )(implicit ec: ExecutionContext): Future[Either[WSResponse, NexusInstanceReference]] = {
     wSClient
-      .url(s"$apiBaseEndpoint$instanceEndpoint/${nexusInstance.nexusPath.toString()}")
+      .url(s"$apiBaseEndpoint$internalInstanceEndpoint/${nexusInstance.nexusPath.toString()}")
       .withHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
       .addQueryStringParameters("clientIdExtension" -> user.getOrElse(""))
       .post(nexusInstance.content)
@@ -127,7 +147,9 @@ trait InstanceApiService {
     serviceClient: ServiceClient = EditorClient
   )(implicit ec: ExecutionContext): Future[Either[WSResponse, List[NexusInstanceReference]]] = {
     wSClient
-      .url(s"$apiBaseEndpoint$instanceEndpoint/${from.toString}/links/${to.toString}/${linkingInstancePath.toString()}")
+      .url(
+        s"$apiBaseEndpoint$internalInstanceEndpoint/${from.toString}/links/${to.toString}/${linkingInstancePath.toString()}"
+      )
       .addHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
       .get()
       .map { res =>
