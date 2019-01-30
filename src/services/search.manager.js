@@ -58,9 +58,42 @@ export default class SearchManager {
 
     this.searchkit.transport.axios.interceptors.response.use(response => {
       //const {config, data, headers, request, status, statusText} = response;
-      const {data, headers} = response;
-      const reg = /^kg_(.*)$/;
-      const [,index] = reg.test(headers.selected_index)?headers.selected_index.match(reg):[];
+      const {data, headers} = response;      const reg = /^kg_(.*)$/;
+      const state = this.store && this.store.getState();
+      const [,index] = reg.test(headers["x-selected-index"])?headers["x-selected-index"].match(reg):[null,state.search.index];
+      let order = null;
+      if (index && state && state.indexes && state.indexes.indexes && state.indexes.indexes.length) {
+        if (state.indexes.indexSettings && state.indexes.indexSettings[index]) {
+          order = state.indexes.indexSettings[index].facetTypesOrder;
+        }
+      } else {
+        order = state && state.definition && state.definition.facetTypesOrder;
+      }
+      if (order) {
+        data.aggregations.facet_type2._type.buckets.sort((a,b) => {
+          if (order[a.key] !== undefined && order[b.key] !== undefined) {
+            return order[a.key] - order[b.key];
+          }
+          if (order[a.key] !== undefined) {
+            return -1;
+          }
+          if (order[b.key] !== undefined) {
+            return 1;
+          }
+          const aCount = Number(a.doc_count);
+          const bCount = Number(b.doc_count);
+          if (!isNaN(aCount) && !isNaN(bCount)) {
+            return bCount - aCount;
+          }
+          if (!isNaN(bCount)) {
+            return -1;
+          }
+          if (!isNaN(aCount)) {
+            return 1;
+          }
+          return 0;
+        });
+      }
       store.dispatch(actions.loadSearchResult(data, index, this.fromParamRequest));
       return response;
     }, error => {

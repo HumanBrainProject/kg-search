@@ -19,7 +19,7 @@ import { ErrorPanel as  Component } from "../components/ErrorPanel";
 
 export const ErrorPanel = connect(
   state => ({
-    show: state.error && state.error.message,
+    show: !!state.error && !!state.error.message,
     message: state.error && state.error.message,
     retryLabel: state.error && state.error.retry && state.error.retry.label,
     retryAction: state.error && state.error.retry && state.error.retry.action,

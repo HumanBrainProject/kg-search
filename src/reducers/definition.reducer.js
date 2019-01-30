@@ -24,7 +24,9 @@ const initialState = {
   shapeMappings: {},
   queryFields: ["title", "description"],
   facetFields: [],
-  sortFields: []
+  sortFields: [],
+  facetTypesOrder: {},
+  facetDefaultSelectedType: null
 };
 
 const loadDefinition = state => {
@@ -85,9 +87,18 @@ const loadDefinitionSuccess = (state, action) => {
   });
   let facetFields = {};
   let sortFields = {_score: {label: "Relevance", field: "_score", order: "desc", defaultOption: true}};
+  let facetTypesOrder = {};
+  let facetDefaultSelectedType = null;
   if (source) {
     Object.keys(source).forEach(type => {
       facetFields[type] = {};
+      const order = Number(source[type].order);
+      if (!isNaN(order)) {
+        facetTypesOrder[type] = order;
+        if (!facetDefaultSelectedType || facetTypesOrder[type] < facetTypesOrder[facetDefaultSelectedType]) {
+          facetDefaultSelectedType = type;
+        }
+      }
       Object.keys(source[type].fields).forEach(fieldName => {
         const field = source[type].fields[fieldName];
         if (field.facet) {
@@ -132,7 +143,9 @@ const loadDefinitionSuccess = (state, action) => {
     shapeMappings: shapeMappings,
     queryFields: queryFields,
     facetFields: facetFields,
-    sortFields: sortFields
+    sortFields: sortFields,
+    facetTypesOrder: facetTypesOrder,
+    facetDefaultSelectedType: facetDefaultSelectedType
   });
 };
 
@@ -162,6 +175,10 @@ function simplifySemantics(source) {
     Object.keys(source).forEach(key => {
       simplifySemantics(source[key]);
     });
+    if (source[SEARCHUI_NAMESPACE + "order"]) {
+      source.order = source[SEARCHUI_NAMESPACE + "order"];
+      delete source[SEARCHUI_NAMESPACE + "order"];
+    }
     if (source[SEARCHUI_NAMESPACE + "icon"]) {
       source.icon = source[SEARCHUI_NAMESPACE + "icon"];
       delete source[SEARCHUI_NAMESPACE + "icon"];

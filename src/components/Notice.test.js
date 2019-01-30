@@ -60,7 +60,7 @@ test('Notice test button click', () => {
     expect(fn.mock.calls.length).toBe(1);
 });
 
-test('ErrorPanel test button label', () => {
+test('Notice test button label', () => {
     const component = shallow(
         <Notice className="className" show={true} text="some text" agreeLabel="agree label" onAgree={() => {}} />
     );

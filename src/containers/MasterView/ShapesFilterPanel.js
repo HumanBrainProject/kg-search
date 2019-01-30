@@ -16,11 +16,15 @@
 
 import React from "react";
 import { ShapeIcon } from "./ShapeIcon";
-import { MenuFilter } from "searchkit";
+import { connect } from "react-redux";
+import { SearchkitComponent, MenuFilter } from "searchkit";
 import "./ShapesFilterPanel.css";
 
 // {itemKey, label, count, rawCount, listDocCount, active, disabled, showCount, bemBlocks, onClick}
 const ShapeFilter = ({itemKey, label, count, active, disabled, onClick}) => {
+  if (itemKey === "$all") {
+    return null;
+  }
   return (
     <div className={`kgs-fieldsFilter__shape${active?" is-active":""}${disabled?" is-disabled":""}`}>
       <button key={itemKey} onClick={onClick} className="kgs-fieldsFilter__button" disabled={disabled}>
@@ -35,11 +39,63 @@ const ShapeFilter = ({itemKey, label, count, active, disabled, onClick}) => {
     </div>
   );
 };
+class ShapesFilterPanelBase extends SearchkitComponent {
+  constructor(props) {
+    super(props);
+    this.initalized =  false;
+  }
+  componentDidUpdate() {
+    if (!this.initalized) {
+      this.initalized =  true;
+      if (window.location.search === "") {
+        const accessor = this.searchkit.accessors.statefulAccessors["facet_type"];
+        if (accessor && this.props.defaultShape) {
+          accessor.state = accessor.state.setValue([this.props.defaultShape]);
+          this.searchkit.reloadSearch();
+          //window.console.debug("set default type to Dataset");
+        }
+      }
+    }
+  }
+  onReset = () => {
+    const allFilters = this.searchkit.query && this.searchkit.query.getSelectedFilters();
+    const filters = allFilters?
+      allFilters.filter(filter => filter.id !== "facet_type")
+      :
+      [];
+    const accessorsIds = Object.values(filters.reduce((res, filter) => {
+      res[filter.id] = filter.id;
+      return res;
+    }, {}));
+    accessorsIds
+      .forEach(id => {
+        const accessor = this.searchkit.accessors.statefulAccessors[id];
+        accessor && accessor.resetState();
+      });
+    filters.forEach(filter => filter.remove());
+    this.searchkit.reloadSearch();
+  }
+  render() {
+    return (
+      <div className="kgs-fieldsFilter">
+        <MenuFilter field={"_type"} id="facet_type" itemComponent={ShapeFilter}/>
+      </div>
+    );
+  }
+}
 
-export const ShapesFilterPanel = () => {
-  return (
-    <div className="kgs-fieldsFilter">
-      <MenuFilter field={"_type"} id="facet_type" itemComponent={ShapeFilter}/>
-    </div>
-  );
-};
+export const ShapesFilterPanel = connect(
+  state => {
+    let defaultShape = null;
+    if (state && state.search && state.search.index && state.indexes && state.indexes.indexes && state.indexes.indexes.length) {
+      if (state.indexes.indexSettings && state.indexes.indexSettings[state.search.index]) {
+        defaultShape = state.indexes.indexSettings[state.search.index].facetDefaultSelectedType;
+      }
+    } else {
+      defaultShape = state && state.definition && state.definition.facetDefaultSelectedType;
+    }
+    return {
+      defaultShape: defaultShape
+    };
+  }
+)(ShapesFilterPanelBase);

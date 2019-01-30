@@ -21,7 +21,8 @@ const initialState = {
   hasRequest: false,
   isLoading: false,
   hasError: false,
-  indexes: []
+  indexes: [],
+  indexSettings: {}
 };
 
 const loadIndexes = (state) => {
@@ -42,14 +43,25 @@ const loadIndexesRequest = (state) => {
 
 const loadIndexesSuccess  = (state, action) => {
 
-  const indexes = (action.indexes instanceof Array)?[...action.indexes.map(e => ({label: e, value: e}))]:[];
+  const indexes = (action.indexes instanceof Array)?[...action.indexes.map(e => ({label: e.name, value: e.name}))]:[];
+  const indexSettings = {};
+  if (action.indexes instanceof Array) {
+    action.indexes.forEach(index => {
+      if (index.spec && index.spec.order instanceof Array && index.spec.order.length) {
+        const order = {"$all": 0};
+        indexSettings[index.name] = {facetTypesOrder: order, facetDefaultSelectedType: index.spec.order[0]};
+        index.spec.order.forEach((type, index) => order[type] = index + 1);
+      }
+    });
+  }
 
   return Object.assign({}, state, {
     isReady: true,
     hasRequest: false,
     isLoading: false,
     hasError: false,
-    indexes: indexes
+    indexes: indexes,
+    indexSettings: indexSettings
   });
 };
 
@@ -59,7 +71,8 @@ const loadIndexesFailure  = state => {
     hasRequest: false,
     isLoading: false,
     hasError: true,
-    indexes: []
+    indexes: [],
+    indexSettings: {}
   });
 };
 
