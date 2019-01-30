@@ -100,7 +100,7 @@ class SearchProxy @Inject()(
           ResponseHeader(
             response.status,
           ),
-          HttpEntity.Strict(response.bodyAsBytes, None)
+          HttpEntity.Strict(response.bodyAsBytes, ResponseHelper.getContentType(response.headers))
         ).withHeaders(h.toList: _*)
       }
   }
