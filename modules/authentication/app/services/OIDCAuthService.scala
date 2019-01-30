@@ -20,17 +20,14 @@ import java.util.concurrent.TimeUnit
 
 import com.google.inject.Inject
 import helpers.ESHelper
+import models.user.{NexusUser, OIDCUser}
+import models.{MindsGroupSpec, UserGroup}
+import play.api.Logger
 import play.api.cache.{AsyncCacheApi, NamedCache}
-import play.api.{Configuration, Logger}
 import play.api.http.Status._
-import play.api.http.HeaderNames.AUTHORIZATION
-import play.api.libs.json.JsObject
 import play.api.libs.ws.WSClient
 import play.api.mvc.Headers
-import models.user.{NexusUser, OIDCUser}
-import play.filters.csrf.CSRF.Token
 
-import scala.concurrent.duration.FiniteDuration._
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -88,7 +85,7 @@ class OIDCAuthService @Inject()(
     * @param userInfo The user info
     * @return A list of accessible index in ES
     */
-  def groups(userInfo: Option[NexusUser]): Future[List[String]] = {
+  def groups(userInfo: Option[NexusUser]): Future[List[UserGroup]] = {
     userInfo match {
       case Some(info) =>
         for {
@@ -98,7 +95,13 @@ class OIDCAuthService @Inject()(
           val nexusGroups = info.groups
           val resultingGroups = ESHelper.filterNexusGroups(nexusGroups).filter(group => kgIndices.contains(group))
           logger.debug(esIndices + "\n" + kgIndices + "\n " + nexusGroups)
-          resultingGroups.toList
+          resultingGroups.toList.map { groupName =>
+            if (MindsGroupSpec.group.contains(groupName)) {
+              UserGroup(groupName, Some(MindsGroupSpec.v))
+            } else {
+              UserGroup(groupName, None)
+            }
+          }
         }
       case _ => Future.successful(List())
     }
