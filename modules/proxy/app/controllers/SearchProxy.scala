@@ -89,16 +89,19 @@ class SearchProxy @Inject()(
       .map { response => // we want to read the raw bytes for the body
         val count = (response.json \ "hits" \ "total").asOpt[Long].getOrElse(0L)
         logger.info(s"Search query - term: $searchTerm, #results: $count")
+        val h = ResponseHelper
+          .flattenHeaders(
+            ResponseHelper.filterContentTypeAndLengthFromHeaders[Seq[String]](
+              response.headers
+            )
+          ) ++ headers
         Result(
           // keep original response header except content type and length that need specific handling
           ResponseHeader(
             response.status,
-            ResponseHelper.flattenHeaders(
-              ResponseHelper.filterContentTypeAndLengthFromHeaders[Seq[String]](response.headers)
-            ) ++ headers
           ),
-          HttpEntity.Strict(response.bodyAsBytes, ResponseHelper.getContentType(response.headers))
-        )
+          HttpEntity.Strict(response.bodyAsBytes, None)
+        ).withHeaders(h.toList: _*)
       }
   }
 
@@ -118,7 +121,7 @@ class SearchProxy @Inject()(
         // need to get full response back to process it
         rawResponse.body.consumeData(mat).map { bytes =>
           val json = SearchProxy.updateEsResponseWithNestedDocument(Json.parse(bytes.utf8String).as[JsObject])
-          Ok(json)
+          Ok(json).withHeaders(rawResponse.header.headers.toList: _*)
         }
       }
     }
