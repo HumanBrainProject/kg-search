@@ -105,7 +105,7 @@ class SuggestionController @Inject()(
       case Right(l) =>
         val res = for {
           i <- l
-        } yield FormService.getFormStructure(i.nexusref.nexusPath, i.content, formService.formRegistry)
+        } yield FormService.getFormStructure(i.ref.nexusPath, i.content, formService.formRegistry)
         Ok(Json.toJson(EditorResponseObject(Json.toJson(res))))
       case Left(err) => err.toResult
     }
@@ -123,7 +123,7 @@ class SuggestionController @Inject()(
       case Right(l) =>
         val res = for {
           i <- l
-        } yield FormService.getFormStructure(i.nexusref.nexusPath, i.content, formService.formRegistry)
+        } yield FormService.getFormStructure(i.ref.nexusPath, i.content, formService.formRegistry)
         Ok(Json.toJson(EditorResponseObject(Json.toJson(res))))
       case Left(err) => err.toResult
     }

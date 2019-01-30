@@ -15,11 +15,12 @@
  */
 package models.instance
 
-import constants.JsonLDConstants
+import constants.{JsonLDConstants, SchemaFieldsConstants}
 import play.api.libs.json._
 
 case class SuggestionInstance(
-  nexusref: NexusInstanceReference,
+  originalRef: NexusInstanceReference,
+  ref: NexusInstanceReference,
   content: JsObject,
   instanceSuggestionRef: NexusInstanceReference
 )
@@ -30,7 +31,11 @@ object SuggestionInstance {
 
   implicit val suggestReads: Reads[SuggestionInstance] = (
     (JsPath \ JsonLDConstants.ID).read[String].map(NexusInstanceReference.fromUrl) and
+    (JsPath \ JsonLDConstants.ID)
+      .read[String]
+      .map(NexusInstanceReference.fromUrl)
+      .map(r => r.copy(nexusPath = r.nexusPath.copy(org = r.nexusPath.org.replace("editorsug", "")))) and
     JsPath.read[JsObject] and
-    (JsPath \ "instanceSuggested").read[String].map(NexusInstanceReference.fromUrl)
+    (JsPath \ SchemaFieldsConstants.suggestionOf).read[String].map(NexusInstanceReference.fromUrl)
   )(SuggestionInstance.apply _)
 }

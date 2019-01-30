@@ -10,4 +10,5 @@ object SchemaFieldsConstants {
   val lastUpdate = "https://schema.hbp.eu/provenance/modifiedAt"
   val createdBy = "https://schema.hbp.eu/provenance/createdBy"
   val createdAt = "https://schema.hbp.eu/provenance/createdAt"
+  val suggestionOf = "https://schema.hbp.eu/suggestion/suggestionOf"
 }
