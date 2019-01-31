@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2018, EPFL/Human Brain Project PCO
+ *   Copyright (c) 2019, EPFL/Human Brain Project PCO
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -13,16 +13,29 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package models
+package constants
 
-import models.user.NexusUser
-import play.api.mvc.{Request, WrappedRequest}
+sealed trait SuggestionStatus {
+  val status: String
+}
 
-/**
-  * A helper case class for logged in users
-  * @param user
-  * @param request
-  * @tparam A
-  */
-class UserRequest[A](val user: NexusUser, val request: Request[A], val userToken: String)
-    extends WrappedRequest[A](request)
+object SuggestionStatus {
+
+  def fromString(s: String): SuggestionStatus = s match {
+    case "PENDING"  => PENDING
+    case "ACCEPTED" => ACCEPTED
+    case "REJECTED" => REJECTED
+  }
+}
+
+object PENDING extends SuggestionStatus {
+  override val status: String = "PENDING"
+}
+
+object ACCEPTED extends SuggestionStatus {
+  override val status: String = "ACCEPTED"
+}
+
+object REJECTED extends SuggestionStatus {
+  override val status: String = "REJECTED"
+}

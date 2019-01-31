@@ -94,7 +94,7 @@ class EditorService @Inject()(
     val modifiedContent =
       FormService.removeClientKeysCorrectLinks(newInstance.content.as[JsValue], config.nexusEndpoint)
     instanceApiService
-      .post(wSClient, config.kgQueryEndpoint, newInstance.copy(content = modifiedContent), user, token)
+      .post(wSClient, config.kgQueryEndpoint, newInstance.copy(content = modifiedContent), user.map(_.id), token)
       .map {
         case Right(ref) => Right(ref)
         case Left(res)  => Left(APIEditorError(res.status, res.body))
@@ -122,6 +122,44 @@ class EditorService @Inject()(
         case Left(res) => Left(APIEditorError(res.status, res.body))
         case Right(()) => Right(())
       }
+  }
+
+  def updateInstanceFromForm(
+    instanceRef: NexusInstanceReference,
+    form: Option[JsValue],
+    user: NexusUser,
+    token: String,
+    reverseLinkService: ReverseLinkService
+  ): Future[Either[APIEditorMultiError, Unit]] = {
+    form match {
+      case Some(json) =>
+        formService.formRegistry.registry.get(instanceRef.nexusPath) match {
+          case Some(spec)
+              if spec.getFieldsAsMap.values.exists(p => p.isReverse.getOrElse(false)) |
+              spec.getFieldsAsMap.values.exists(p => p.isLinkingInstance.getOrElse(false)) =>
+            reverseLinkService
+              .generateDiffAndUpdateInstanceWithReverseLink(
+                instanceRef,
+                json,
+                token,
+                user,
+                formService.formRegistry,
+                formService.queryRegistry
+              )
+          case _ =>
+            generateDiffAndUpdateInstance(
+              instanceRef,
+              json,
+              token,
+              user,
+              formService.formRegistry,
+              formService.queryRegistry
+            )
+        }
+      case None =>
+        Future(Left(APIEditorMultiError(BAD_REQUEST, List(APIEditorError(BAD_REQUEST, "No content provided")))))
+    }
+
   }
 
   /**
