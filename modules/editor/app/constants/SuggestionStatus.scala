@@ -15,15 +15,27 @@
  */
 package constants
 
-object SchemaFieldsConstants {
+sealed trait SuggestionStatus {
+  val status: String
+}
 
-  val IDENTIFIER = "http://schema.org/identifier"
-  val NAME = "http://schema.org/name"
-  val DESCRIPTION = "http://schema.org/description"
-  val RELATIVEURL = "https://schema.hbp.eu/relativeUrl"
-  val lastUpater = "https://schema.hbp.eu/provenance/lastModificationUserId"
-  val lastUpdate = "https://schema.hbp.eu/provenance/modifiedAt"
-  val createdBy = "https://schema.hbp.eu/provenance/createdBy"
-  val createdAt = "https://schema.hbp.eu/provenance/createdAt"
-  val SUGGESTION_OF = "https://schema.hbp.eu/suggestion/suggestionOf"
+object SuggestionStatus {
+
+  def fromString(s: String): SuggestionStatus = s match {
+    case "PENDING"  => PENDING
+    case "ACCEPTED" => ACCEPTED
+    case "REJECTED" => REJECTED
+  }
+}
+
+object PENDING extends SuggestionStatus {
+  override val status: String = "PENDING"
+}
+
+object ACCEPTED extends SuggestionStatus {
+  override val status: String = "ACCEPTED"
+}
+
+object REJECTED extends SuggestionStatus {
+  override val status: String = "REJECTED"
 }

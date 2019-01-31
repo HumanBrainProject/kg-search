@@ -16,15 +16,14 @@
 package controllers
 
 import actions.EditorUserAction
-import akka.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import com.google.inject.Inject
-import helpers.OIDCHelper
+import constants.{EditorConstants, SchemaFieldsConstants, SuggestionStatus}
 import models.{AuthenticatedUserAction, EditorResponseObject}
 import models.errors.APIEditorError
 import models.instance.NexusInstanceReference
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
-import services.{ConfigurationService, EditorUserService, IAMAuthService, IDMAPIService}
+import services._
 import services.instance.InstanceApiService
 import services.specification.FormService
 import services.suggestion.SuggestionService
@@ -38,7 +37,9 @@ class SuggestionController @Inject()(
   suggestionService: SuggestionService,
   authenticatedUserAction: AuthenticatedUserAction,
   formService: FormService,
-  editorUserService: EditorUserService
+  editorUserService: EditorUserService,
+  editorService: EditorService,
+  reverseLinkService: ReverseLinkService
 )(
   implicit executionContext: ExecutionContext,
 ) extends AbstractController(cc) {
@@ -68,20 +69,23 @@ class SuggestionController @Inject()(
     }
 
   def acceptSuggestion(
-    org: String,
-    domain: String,
-    schema: String,
-    version: String,
+    suggestionOrg: String,
+    suggestionDomain: String,
+    suggestionSchema: String,
+    suggestionVersion: String,
     suggestionId: String
   ): Action[AnyContent] =
     (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService) andThen EditorUserAction
-      .curatorUserAction(org))
+      .curatorUserAction(suggestionOrg))
       .async { implicit request =>
-        val ref = NexusInstanceReference(org, domain, schema, version, suggestionId)
-        suggestionService.acceptSuggestion(ref, request.userToken).map {
-          case Right(()) => Ok("Suggestion accepted")
-          case Left(err) => err.toResult
-        }
+        val suggestionRef =
+          NexusInstanceReference(suggestionOrg, suggestionDomain, suggestionSchema, suggestionVersion, suggestionId)
+        suggestionService
+          .acceptSuggestion(suggestionRef, request.body.asJson, request.editorUser.nexusUser, request.userToken)
+          .map {
+            case Right(()) => Ok("Suggestion created")
+            case Left(err) => err.toResult
+          }
       }
 
   def rejectSuggestion(
@@ -95,17 +99,22 @@ class SuggestionController @Inject()(
       .curatorUserAction(org)).async { implicit request =>
       val ref = NexusInstanceReference(org, domain, schema, version, suggestionId)
       suggestionService.rejectSuggestion(ref, request.userToken).map {
-        case Right(()) => Ok("Suggestion accepted")
+        case Right(()) => Ok("Suggestion rejected")
         case Left(err) => err.toResult
       }
     }
 
-  def getUsersSuggestions: Action[AnyContent] = authenticatedUserAction.async { implicit request =>
-    suggestionService.getUsersSuggestions(request.userToken).map {
+  def getUsersSuggestions(status: String): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
+    val s = SuggestionStatus.fromString(status)
+    suggestionService.getUsersSuggestions(s, request.userToken).map {
       case Right(l) =>
         val res = for {
           i <- l
-        } yield FormService.getFormStructure(i.ref.nexusPath, i.content, formService.formRegistry)
+          suggestionOf = NexusInstanceReference
+            .fromUrl((i.content \ SchemaFieldsConstants.SUGGESTION_OF \ SchemaFieldsConstants.RELATIVEURL).as[String])
+        } yield
+          FormService.getFormStructure(i.ref.nexusPath, i.content, formService.formRegistry).as[JsObject] ++ Json
+            .obj("suggestionOf" -> suggestionOf)
         Ok(Json.toJson(EditorResponseObject(Json.toJson(res))))
       case Left(err) => err.toResult
     }

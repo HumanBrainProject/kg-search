@@ -16,20 +16,29 @@
 package services.suggestion
 
 import com.google.inject.Inject
+import constants.{SchemaFieldsConstants, SuggestionStatus}
 import models.errors.{APIEditorError, APIEditorMultiError}
 import models.instance.{NexusInstanceReference, SuggestionInstance}
-import models.user.EditorUser
+import models.user.{EditorUser, NexusUser}
 import play.api.http.Status._
+import play.api.libs.json.JsValue
 import play.api.libs.ws.WSClient
-import services.ConfigurationService
+import services.{ConfigurationService, EditorService, ReverseLinkService}
 import services.suggestion.SuggestionService.UserID
+import services.instance.InstanceApiService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SuggestionService @Inject()(wSClient: WSClient, config: ConfigurationService)(
+class SuggestionService @Inject()(
+  wSClient: WSClient,
+  config: ConfigurationService,
+  editorService: EditorService,
+  reverseLinkService: ReverseLinkService
+)(
   implicit executionContext: ExecutionContext
 ) {
   object SuggestionApiService extends SuggestionApiService
+  object InstanceApiService extends InstanceApiService
 
   def addUsersToInstance(
     instance: NexusInstanceReference,
@@ -55,10 +64,36 @@ class SuggestionService @Inject()(wSClient: WSClient, config: ConfigurationServi
   }
 
   def acceptSuggestion(
-    nexusInstanceReference: NexusInstanceReference,
+    suggestionRef: NexusInstanceReference,
+    update: Option[JsValue],
+    nexusUser: NexusUser,
     token: String
-  ): Future[Either[APIEditorError, Unit]] = {
-    SuggestionApiService.acceptSuggestion(wSClient, config.kgQueryEndpoint, nexusInstanceReference, token)
+  ): Future[Either[APIEditorMultiError, Unit]] = {
+    InstanceApiService.get(wSClient, config.kgQueryEndpoint, suggestionRef, token).flatMap {
+      case Right(suggestionInstance) =>
+        val instanceUpdateRef = NexusInstanceReference.fromUrl(
+          (suggestionInstance.content \ SchemaFieldsConstants.SUGGESTION_OF \ SchemaFieldsConstants.RELATIVEURL)
+            .as[String]
+        )
+        editorService
+          .updateInstanceFromForm(
+            instanceUpdateRef,
+            update,
+            nexusUser,
+            token,
+            reverseLinkService
+          )
+          .flatMap {
+            case Right(()) =>
+              SuggestionApiService.acceptSuggestion(wSClient, config.kgQueryEndpoint, suggestionRef, token).map {
+                case Right(()) => Right(())
+                case Left(err) => Left(APIEditorMultiError(err.status, List(err)))
+              }
+            case Left(err) => Future(Left(err))
+          }
+      case Left(res) => Future(Left(APIEditorMultiError(res.status, List(APIEditorError(res.status, res.body)))))
+    }
+
   }
 
   def rejectSuggestion(
@@ -68,8 +103,11 @@ class SuggestionService @Inject()(wSClient: WSClient, config: ConfigurationServi
     SuggestionApiService.rejectSuggestion(wSClient, config.kgQueryEndpoint, nexusInstanceReference, token)
   }
 
-  def getUsersSuggestions(token: String): Future[Either[APIEditorError, List[SuggestionInstance]]] = {
-    SuggestionApiService.getUsersSuggestions(wSClient, config.kgQueryEndpoint, token)
+  def getUsersSuggestions(
+    suggestionStatus: SuggestionStatus,
+    token: String
+  ): Future[Either[APIEditorError, List[SuggestionInstance]]] = {
+    SuggestionApiService.getUsersSuggestions(wSClient, config.kgQueryEndpoint, suggestionStatus, token)
   }
 
   def getInstanceSuggestions(

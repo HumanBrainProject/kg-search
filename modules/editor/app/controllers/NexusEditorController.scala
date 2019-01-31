@@ -26,7 +26,6 @@ import models.instance._
 import play.api.Logger
 import play.api.libs.json.Reads._
 import play.api.libs.json._
-import play.api.libs.ws.WSClient
 import play.api.mvc._
 import services._
 import services.specification.FormService
@@ -43,9 +42,8 @@ class NexusEditorController @Inject()(
   nexusService: NexusService,
   iAMAuthService: IAMAuthService,
   formService: FormService,
-  reverseLinkService: ReverseLinkService,
   metadataService: MetadataService,
-  ws: WSClient
+  reverseLinkService: ReverseLinkService
 )(implicit ec: ExecutionContext)
     extends AbstractController(cc) {
 
@@ -206,44 +204,15 @@ class NexusEditorController @Inject()(
     (authenticatedUserAction andThen EditorUserAction.editorUserWriteAction(org, config.editorPrefix, iAMAuthService))
       .async { implicit request =>
         val instanceRef = NexusInstanceReference(org, domain, schema, version, id)
-        formService.formRegistry.registry.get(instanceRef.nexusPath) match {
-          case Some(spec)
-              if spec.getFieldsAsMap.values.exists(p => p.isReverse.getOrElse(false)) |
-              spec.getFieldsAsMap.values.exists(p => p.isLinkingInstance.getOrElse(false)) =>
-            reverseLinkService
-              .generateDiffAndUpdateInstanceWithReverseLink(
-                instanceRef,
-                request.body.asJson.get,
-                request.userToken,
-                request.user,
-                formService.formRegistry,
-                formService.queryRegistry
-              )
-              .map {
-                case Right(()) =>
-                  Ok(Json.toJson(EditorResponseObject.empty))
-                case Left(error) =>
-                  logger.error(error.content.mkString("\n"))
-                  error.toResult
-              }
-          case _ =>
-            editorService
-              .generateDiffAndUpdateInstance(
-                instanceRef,
-                request.body.asJson.get,
-                request.userToken,
-                request.user,
-                formService.formRegistry,
-                formService.queryRegistry
-              )
-              .map {
-                case Right(()) =>
-                  Ok(Json.toJson(EditorResponseObject.empty))
-                case Left(error) =>
-                  logger.error(error.content.mkString("\n"))
-                  error.toResult
-              }
-        }
+        editorService
+          .updateInstanceFromForm(instanceRef, request.body.asJson, request.user, request.userToken, reverseLinkService)
+          .map {
+            case Right(()) =>
+              Ok(Json.toJson(EditorResponseObject.empty))
+            case Left(error) =>
+              logger.error(error.content.mkString("\n"))
+              error.toResult
+          }
       }
 
   /**

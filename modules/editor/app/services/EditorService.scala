@@ -124,6 +124,44 @@ class EditorService @Inject()(
       }
   }
 
+  def updateInstanceFromForm(
+    instanceRef: NexusInstanceReference,
+    form: Option[JsValue],
+    user: NexusUser,
+    token: String,
+    reverseLinkService: ReverseLinkService
+  ): Future[Either[APIEditorMultiError, Unit]] = {
+    form match {
+      case Some(json) =>
+        formService.formRegistry.registry.get(instanceRef.nexusPath) match {
+          case Some(spec)
+              if spec.getFieldsAsMap.values.exists(p => p.isReverse.getOrElse(false)) |
+              spec.getFieldsAsMap.values.exists(p => p.isLinkingInstance.getOrElse(false)) =>
+            reverseLinkService
+              .generateDiffAndUpdateInstanceWithReverseLink(
+                instanceRef,
+                json,
+                token,
+                user,
+                formService.formRegistry,
+                formService.queryRegistry
+              )
+          case _ =>
+            generateDiffAndUpdateInstance(
+              instanceRef,
+              json,
+              token,
+              user,
+              formService.formRegistry,
+              formService.queryRegistry
+            )
+        }
+      case None =>
+        Future(Left(APIEditorMultiError(BAD_REQUEST, List(APIEditorError(BAD_REQUEST, "No content provided")))))
+    }
+
+  }
+
   /**
     * Return a instance by its nexus ID
     * Starting by checking if this instance is coming from a reconciled space.

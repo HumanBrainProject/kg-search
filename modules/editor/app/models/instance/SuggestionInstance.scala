@@ -36,6 +36,8 @@ object SuggestionInstance {
       .map(NexusInstanceReference.fromUrl)
       .map(r => r.copy(nexusPath = r.nexusPath.copy(org = r.nexusPath.org.replace("editorsug", "")))) and
     JsPath.read[JsObject] and
-    (JsPath \ SchemaFieldsConstants.suggestionOf).read[String].map(NexusInstanceReference.fromUrl)
+    (JsPath \ SchemaFieldsConstants.SUGGESTION_OF)
+      .read[JsValue]
+      .map(js => NexusInstanceReference.fromUrl((js \ JsonLDConstants.ID).as[String]))
   )(SuggestionInstance.apply _)
 }

@@ -16,12 +16,11 @@
 
 package actions
 
-import helpers.{EditorSpaceHelper, OIDCHelper}
+import helpers.EditorSpaceHelper
 import models.user.{EditorUser, EditorUserRequest, EditorUserWriteRequest}
 import models.{user, IAMPermission, UserRequest}
 import play.api.Logger
 import play.api.mvc.Results._
-import play.api.http.HeaderNames._
 import play.api.mvc._
 import services.{EditorUserService, IAMAuthService}
 
@@ -77,7 +76,14 @@ object EditorUserAction {
     }
 
   private def isCurator(user: EditorUser, org: String): Boolean = {
-    user.nexusUser.groups.exists(s => s.matches(s"^nexus-$org-curator$$"))
+    val pattern = """^(.+)editorsug$""".r
+    val curatorOrg = org match {
+      case pattern(o) => o
+      case _          => org
+    }
+    // Nexus curator a super group of other curator groups
+    user.nexusUser.groups.contains("nexus-curators") || user.nexusUser.groups
+      .exists(s => s.matches(s"^nexus-$curatorOrg-curator$$"))
   }
 
   def curatorUserAction(

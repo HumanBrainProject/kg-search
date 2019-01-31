@@ -15,7 +15,7 @@
  */
 package services.suggestion
 
-import constants.{EditorClient, ServiceClient, SuggestionClient}
+import constants.{EditorClient, ServiceClient, SuggestionClient, SuggestionStatus}
 import models.errors.APIEditorError
 import models.instance.{NexusInstanceReference, SuggestionInstance}
 import models.user.{EditorUser, User}
@@ -46,7 +46,13 @@ trait SuggestionApiService {
       .map { res =>
         res.status match {
           case CREATED | OK => Right(())
-          case _            => Left(APIEditorError(res.status, res.body))
+          case _ =>
+            Left(
+              APIEditorError(
+                (res.json \ "status").asOpt[Int].getOrElse(res.status),
+                (res.json \ "message").asOpt[String].getOrElse("")
+              )
+            )
         }
       }
   }
@@ -66,7 +72,13 @@ trait SuggestionApiService {
       .map { res =>
         res.status match {
           case CREATED => Right(())
-          case _       => Left(APIEditorError(res.status, res.body))
+          case _ =>
+            Left(
+              APIEditorError(
+                (res.json \ "status").asOpt[Int].getOrElse(res.status),
+                (res.json \ "message").asOpt[String].getOrElse("")
+              )
+            )
         }
       }
   }
@@ -85,8 +97,14 @@ trait SuggestionApiService {
       .post(EmptyBody)
       .map { res =>
         res.status match {
-          case CREATED => Right(())
-          case _       => Left(APIEditorError(res.status, res.body))
+          case OK => Right(())
+          case _ =>
+            Left(
+              APIEditorError(
+                (res.json \ "status").asOpt[Int].getOrElse(res.status),
+                (res.json \ "message").asOpt[String].getOrElse("")
+              )
+            )
         }
       }
   }
@@ -94,6 +112,7 @@ trait SuggestionApiService {
   def getUsersSuggestions(
     WSClient: WSClient,
     baseUrl: String,
+    suggestionStatus: SuggestionStatus,
     token: String,
     serviceClient: ServiceClient = SuggestionClient
   )(
@@ -101,13 +120,20 @@ trait SuggestionApiService {
   ): Future[Either[APIEditorError, List[SuggestionInstance]]] = {
     WSClient
       .url(s"$baseUrl/api/suggestion/user")
+      .addQueryStringParameters("status" -> suggestionStatus.status)
       .addHttpHeaders(AUTHORIZATION -> token)
       .addHttpHeaders("client" -> serviceClient.client)
       .get()
       .map { res =>
         res.status match {
           case OK => Right(res.json.as[List[SuggestionInstance]])
-          case _  => Left(APIEditorError(res.status, res.body))
+          case _ =>
+            Left(
+              APIEditorError(
+                (res.json \ "status").asOpt[Int].getOrElse(res.status),
+                (res.json \ "message").asOpt[String].getOrElse("")
+              )
+            )
         }
       }
   }
@@ -129,7 +155,13 @@ trait SuggestionApiService {
       .map { res =>
         res.status match {
           case OK => Right(res.json.as[List[SuggestionInstance]])
-          case _  => Left(APIEditorError(res.status, res.body))
+          case _ =>
+            Left(
+              APIEditorError(
+                (res.json \ "status").asOpt[Int].getOrElse(res.status),
+                (res.json \ "message").asOpt[String].getOrElse("")
+              )
+            )
         }
       }
   }
