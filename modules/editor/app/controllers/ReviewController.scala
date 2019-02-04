@@ -26,15 +26,15 @@ import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponent
 import services._
 import services.instance.InstanceApiService
 import services.specification.FormService
-import services.suggestion.SuggestionService
-import services.suggestion.SuggestionService.UserID
+import services.suggestion.ReviewService
+import services.suggestion.ReviewService.UserID
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SuggestionController @Inject()(
+class ReviewController @Inject()(
   cc: ControllerComponents,
   IDMAPIService: IDMAPIService,
-  suggestionService: SuggestionService,
+  suggestionService: ReviewService,
   authenticatedUserAction: AuthenticatedUserAction,
   formService: FormService,
   editorUserService: EditorUserService,

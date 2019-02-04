@@ -22,11 +22,11 @@ import models.user.{EditorUser, User}
 import play.api.http.HeaderNames.AUTHORIZATION
 import play.api.http.Status.{CREATED, OK}
 import play.api.libs.ws.{EmptyBody, WSClient}
-import services.suggestion.SuggestionService.UserID
+import services.suggestion.ReviewService.UserID
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait SuggestionApiService {
+trait ReviewApiService {
 
   def addUserToSuggestionInstance(
     WSClient: WSClient,
