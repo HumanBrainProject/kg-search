@@ -26,8 +26,8 @@ import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponent
 import services._
 import services.instance.InstanceApiService
 import services.specification.FormService
-import services.suggestion.ReviewService
-import services.suggestion.ReviewService.UserID
+import services.review.ReviewService
+import services.review.ReviewService.UserID
 
 import scala.concurrent.{ExecutionContext, Future}
 

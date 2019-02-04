@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package services.suggestion
+package services.review
 
 import com.google.inject.Inject
 import constants.{SchemaFieldsConstants, SuggestionStatus}
@@ -24,7 +24,7 @@ import play.api.http.Status._
 import play.api.libs.json.JsValue
 import play.api.libs.ws.WSClient
 import services.{ConfigurationService, EditorService, ReverseLinkService}
-import services.suggestion.ReviewService.UserID
+import services.review.ReviewService.UserID
 import services.instance.InstanceApiService
 
 import scala.concurrent.{ExecutionContext, Future}
