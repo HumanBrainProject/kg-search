@@ -28,7 +28,7 @@ case class EditorInstance(nexusInstance: NexusInstance) {
 }
 
 object EditorInstance {
-  val contextOrg = "http://schema.hbp.eu/hbpkg/"
+  val contextOrg = "https://schema.hbp.eu/inference/"
 
   object Fields {
     val alternatives = s"${contextOrg}alternatives"
