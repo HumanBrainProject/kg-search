@@ -52,7 +52,7 @@ class RedirectController @Inject()(
               body = HttpEntity.Strict(ByteString(res.body), None)
             )
         }
-      case _ => Future(TemporaryRedirect(s"${config.hbpUrl}/webapp/#$dataType/$id"))
+      case _ => Future(TemporaryRedirect(s"${config.hbpPublicUrl}/#$dataType/$id"))
     }
   }
 }
