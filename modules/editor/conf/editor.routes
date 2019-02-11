@@ -35,6 +35,43 @@
 #    type: string
 ###
 GET    /instance/:org/:domain/:schema/:version/:id                  controllers.NexusEditorController.getInstance(org: String, domain:String, schema: String, version:String, id: String)
+###
+#  summary: Delete a specific entity
+#  tags:
+#    - editor
+#  parameters:
+#  - name: org
+#    in: path
+#    description: organization the instance to delete
+#    required: true
+#    type: string
+#  - name: domain
+#    in: path
+#    description: domain of the instance to delete
+#    required: true
+#    type: string
+#  - name: schema
+#    in: path
+#    description: schema name
+#    required: true
+#    type: string
+#  - name: version
+#    in: path
+#    description: version of the instance to delete
+#    required: true
+#    type: string
+#  - name: id
+#    in: path
+#    description: the UUID of the instance to delete
+#    required: true
+#    type: string
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+###
+DELETE    /instance/:org/:domain/:schema/:version/:id                  controllers.NexusEditorController.deleteInstance(org: String, domain:String, schema: String, version:String, id: String)
 
 
 ###
@@ -564,3 +601,7 @@ PUT /instance/:org/:domain/:schema/:version/:id/bookmarks       controllers.Nexu
 #      type: string
 ###
 POST /bookmarks                                                 controllers.NexusEditorUserController.retrieveBookmarks
+
+
+#Review Routes
+-> /review review.Routes

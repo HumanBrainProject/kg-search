@@ -46,7 +46,7 @@ class ProxyService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
       case Some(bytes) => wsRequestBase.withBody(transformInputFunc(bytes))
       case None        => wsRequestBase
     }
-    (wsRequest, Map("selected_index" -> esIndex))
+    (wsRequest, Map("X-Selected-Index" -> esIndex))
   }
 
   def modifyQuery(newUrl: String, indexHint: String)(implicit request: Request[AnyContent]): WSRequest = {

@@ -13,17 +13,26 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package constants
+package models
 
-object SchemaFieldsConstants {
+import play.api.libs.json.{JsValue, Json}
 
-  val IDENTIFIER = "http://schema.org/identifier"
-  val NAME = "http://schema.org/name"
-  val DESCRIPTION = "http://schema.org/description"
-  val RELATIVEURL = "https://schema.hbp.eu/relativeUrl"
-  val lastUpater = "https://schema.hbp.eu/provenance/lastModificationUserId"
-  val lastUpdate = "https://schema.hbp.eu/provenance/modifiedAt"
-  val createdBy = "https://schema.hbp.eu/provenance/createdBy"
-  val createdAt = "https://schema.hbp.eu/provenance/createdAt"
-  val SUGGESTION_OF = "https://schema.hbp.eu/suggestion/suggestionOf"
+case class UserGroup(name: String, displaySpec: Option[Map[String, JsValue]])
+
+object UserGroup {
+  import play.api.libs.json._
+  import play.api.libs.functional.syntax._
+  implicit val userGroupWrites: Writes[UserGroup] = (
+    (JsPath \ "name").write[String] and
+    (JsPath \ "spec").writeNullable[Map[String, JsValue]]
+  )(unlift(UserGroup.unapply))
+
+}
+
+object MindsGroupSpec {
+  val group = List("curated", "public")
+
+  val v: Map[String, JsValue] = Map(
+    "order" -> Json.toJson(List("Dataset", "Person", "Project", "Species", "Sample", "Subject"))
+  )
 }

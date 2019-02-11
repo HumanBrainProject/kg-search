@@ -1,0 +1,255 @@
+###
+# tags:
+# - Suggestion
+# summary: Returns a list of potential suggest user
+# description: Returns a list of potential suggest user
+# operationId: getSuggetsUsers
+# produces:
+# - application/json
+# parameters:
+# - name: size
+#   in: query
+#   description: Number of user returned
+#   type: integer
+# - name: from
+#   in: query
+#   description: Page number
+#   type: integer
+# - name: search
+#   in: query
+#   description: Serch term
+#   type: string
+# - in: header
+#   name: Authorization
+#   description: Authorization token
+#   required: true
+#   type: string
+# responses:
+#   200:
+#     description: successful operation
+#     schema:
+#       type: object
+###
+GET /users          controllers.ReviewController.getUsers(size:Int?=20, from:Int?=0, search:String?="")
+
+###
+# tags:
+# - Suggestion
+# summary: Add users to edit suggest instance
+# operationId: addSuggestUser
+# consumes:
+# - application/json
+# produces:
+# - application/json
+# parameters:
+# - name: org
+#   in: path
+#   description: Org of the instance
+#   required: true
+#   type: string
+# - name: domain
+#   in: path
+#   description: domain of the instance
+#   required: true
+#   type: string
+# - name: schema
+#   in: path
+#   description: schema of the instance
+#   required: true
+#   type: string
+# - name: version
+#   in: path
+#   description: version of the instance
+#   required: true
+#   type: string
+# - name: instanceId
+#   in: path
+#   description: id of the instance
+#   required: true
+#   type: string
+# - name: body
+#   in: body
+#   description: The list of user to add to the suggestion
+#   required: false
+#   schema:
+#     $ref: '#/definitions/SuggestUserId'
+# - in: header
+#   name: Authorization
+#   description: Authorization token
+#   required: true
+#   type: string
+# responses:
+#   404:
+#     description: Instance not found
+#   405:
+#     description: Invalid input
+###
+POST   /users/:org/:domain/:schema/:version/:instanceId               controllers.ReviewController.addUsers(org:String, domain:String, schema:String, version:String, instanceId:String)
+
+###
+# tags:
+# - Suggestion
+# summary: Accept suggestion
+# description: Suggestion will be merge to the update instance of the current user
+# operationId: validateSuggestion
+# produces:
+# - application/json
+# parameters:
+# - name: org
+#   in: path
+#   description: Org of the instance
+#   required: true
+#   type: string
+# - name: domain
+#   in: path
+#   description: domain of the instance
+#   required: true
+#   type: string
+# - name: schema
+#   in: path
+#   description: schema of the instance
+#   required: true
+#   type: string
+# - name: version
+#   in: path
+#   description: version of the instance
+#   required: true
+#   type: string
+# - name: suggestionId
+#   in: path
+#   description: id of the suggestion instance
+#   required: true
+#   type: string
+# - in: header
+#   name: Authorization
+#   description: Authorization token
+#   required: true
+#   type: string
+# responses:
+#   200:
+#     description: successful operation
+#   404:
+#     description: Suggestion not found
+###
+POST   /:suggestionOrg/:suggestionDomain/:suggestionSchema/:suggestionVersion/:suggestionId/accept            controllers.ReviewController.acceptSuggestion(suggestionOrg: String, suggestionDomain:String, suggestionSchema: String, suggestionVersion: String, suggestionId: String)
+
+###
+# tags:
+#   - Suggestion
+# summary: Reject a suggestion
+# description: Suggestion will be discarded
+# operationId: rejectSuggestion
+# produces:
+#   - application/json
+# parameters:
+#   - name: org
+#     in: path
+#     description: Org of the instance
+#     required: true
+#     type: string
+#   - name: domain
+#     in: path
+#     description: domain of the instance
+#     required: true
+#     type: string
+#   - name: schema
+#     in: path
+#     description: schema of the instance
+#     required: true
+#     type: string
+#   - name: version
+#     in: path
+#     description: version of the instance
+#     required: true
+#     type: string
+#   - name: suggestionId
+#     in: path
+#     description: id of the suggestion instance
+#     required: true
+#     type: string
+#   - in: header
+#     name: Authorization
+#     description: Authorization token
+#     required: true
+#     type: string
+# responses:
+#   200:
+#     description: successful operation
+#   404:
+#     description: Suggestion not found
+###
+POST   /:org/:domain/:schema/:version/:suggestionId/reject              controllers.ReviewController.rejectSuggestion(org: String, domain:String, schema: String, version:String, suggestionId: String)
+
+###
+# tags:
+# - Suggestion
+# summary: Retrieve the suggestion  assigned to the user
+# description: Get suggestions assigned to the user
+# operationId: userSuggestions
+# produces:
+# - application/json
+# parameters:
+# - in: header
+#   name: Authorization
+#   description: Authorization token
+#   required: true
+#   type: string
+# - in: path
+#   name: Suggestion status
+#   description: The satus of the suggestion
+#   required: false
+#   type: string
+# responses:
+#   200:
+#       description: successful operation
+#   404:
+#       description: Suggestion not found
+###
+GET / controllers.ReviewController.getUsersSuggestions(status: String ?= "PENDING" )
+
+###
+# tags:
+# - Suggestion
+# summary: Get all suggestions for an instance
+# description: Retrieve all the suggestions made to a specific instance
+# operationId: instanceSuggestions
+# produces:
+# - application/json
+# parameters:
+# - name: org
+#   in: path
+#   description: Org of the instance
+#   required: true
+#   type: string
+# - name: domain
+#   in: path
+#   description: domain of the instance
+#   required: true
+#   type: string
+# - name: schema
+#   in: path
+#   description: schema of the instance
+#   required: true
+#   type: string
+# - name: version
+#   in: path
+#   description: version of the instance
+#   required: true
+#   type: string
+# - name: instanceId
+#   in: path
+#   description: id of the suggestion instance
+#   required: true
+#   type: string
+# - in: header
+#   name: Authorization
+#   description: Authorization token
+#   required: true
+#   type: string
+# responses:
+#   200:
+#     description: successful operation
+#   404:
+#     description: Instance not found
+###
+GET   /:org/:domain/:schema/:version/:instanceId               controllers.ReviewController.getInstanceSuggestions(org: String, domain:String, schema: String, version:String, instanceId: String)
