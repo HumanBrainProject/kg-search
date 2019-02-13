@@ -58,7 +58,7 @@ object PreviewInstance {
         if (js.asOpt[List[String]].isDefined) js.as[List[String]].head else js.as[String]
       case None => ""
     } and
-    (JsPath \ "description").readNullable[String] and
+    (JsPath \ "description").read[JsValue].map(js => js.asOpt[String]) and
     (JsPath \ UiConstants.LABEL).readNullable[String]
   )(PreviewInstance.apply _)
 
