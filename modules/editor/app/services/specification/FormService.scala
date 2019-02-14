@@ -269,9 +269,15 @@ object FormService {
   def stripAlternativeVocab(jsObject: JsObject): JsObject = {
     val m = jsObject.value.map {
       case (k, v) =>
-        k -> v
+        val array = if (v.validate[JsArray].isError) {
+          JsArray().append(v)
+        } else {
+          v
+        }
+        k -> array
           .as[JsArray]
           .value
+          .filter(_.validate[String].isError)
           .map(
             js =>
               js.as[JsObject].value.map {
