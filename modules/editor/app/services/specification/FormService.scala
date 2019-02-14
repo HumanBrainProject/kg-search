@@ -277,7 +277,7 @@ object FormService {
         k -> array
           .as[JsArray]
           .value
-          .filter(_.validate[String].isError)
+          .filter(_.validate[JsObject].isSuccess)
           .map(
             js =>
               js.as[JsObject].value.map {
