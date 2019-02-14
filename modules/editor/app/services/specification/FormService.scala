@@ -244,7 +244,19 @@ object FormService {
             case DropdownSelect =>
               fieldContent.copy(value = Some(FormService.transformToArray(id, data)))
             case InputText | InputTextMultiple | TextArea =>
-              fieldContent.copy(value = (data \ id).asOpt[JsValue])
+              val field = data \ id
+              val textValue = if (field.validate[List[String]].isSuccess) {
+                if (!field.as[List[String]].exists(j => j != null)) {
+                  JsString("")
+                } else {
+                  JsString(field.as[List[String]].head)
+                }
+              } else if (field.as[JsValue] == JsNull) {
+                JsString("")
+              } else {
+                field
+              }
+              fieldContent.copy(value = textValue.asOpt[JsValue])
           }
           val valueWithoutNull = newValue.value match {
             case Some(JsNull) => newValue.copy(value = None)
@@ -275,23 +287,26 @@ object FormService {
           v
         }
         k -> array
-          .as[JsArray]
-          .value
-          .filter(_.validate[JsObject].isSuccess)
+          .as[List[JsValue]]
+          .filterNot(js => js.validate[String].isSuccess && js.as[String].startsWith("embedded/"))
           .map(
             js =>
-              js.as[JsObject].value.map {
-                case (key, value) =>
-                  val newValue = if (key == InternalSchemaFieldsConstants.ALTERNATIVES_USERIDS) {
-                    if (value.validate[JsArray].isError) {
-                      JsArray().append(value)
+              if (js.validate[JsObject].isSuccess) {
+                Json.toJson(js.as[JsObject].value.map {
+                  case (key, value) =>
+                    val newValue = if (key == InternalSchemaFieldsConstants.ALTERNATIVES_USERIDS) {
+                      if (value.validate[JsArray].isError) {
+                        JsArray().append(value)
+                      } else {
+                        value
+                      }
                     } else {
-                      value
+                      formatAlternativeLinks(value)
                     }
-                  } else {
-                    formatAlternativeLinks(value)
-                  }
-                  key.stripPrefix(InternalSchemaFieldsConstants.ALTERNATIVES + "/") -> newValue
+                    key.stripPrefix(InternalSchemaFieldsConstants.ALTERNATIVES + "/") -> newValue
+                })
+              } else {
+                js
             }
           )
     }
