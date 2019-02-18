@@ -54,6 +54,13 @@ class ReviewController @Inject()(
       }
   }
 
+  def getUserById(id: String): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
+    IDMAPIService.getUserInfoFromID(id, request.userToken).map {
+      case Some(user) => Ok(Json.toJson(user))
+      case None       => NotFound("User not found")
+    }
+  }
+
   def addUsers(org: String, domain: String, schema: String, version: String, instanceId: String): Action[AnyContent] =
     (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
       val ref = NexusInstanceReference(org, domain, schema, version, instanceId)

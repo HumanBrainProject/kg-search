@@ -34,6 +34,32 @@ GET /users          controllers.ReviewController.getUsers(size:Int?=20, from:Int
 
 ###
 # tags:
+# - Review User
+# summary: Returns info about a review user
+# description:Returns info about a review user
+# operationId: getReviewUser
+# produces:
+# - application/json
+# parameters:
+# - name: id
+#   in: query
+#   description: The id of the user to return
+#   type: string
+# - in: header
+#   name: Authorization
+#   description: Authorization token
+#   required: true
+#   type: string
+# responses:
+#   200:
+#     description: successful operation
+#     schema:
+#       type: object
+###
+GET /user/:id          controllers.ReviewController.getUserById(id:String)
+
+###
+# tags:
 # - Suggestion
 # summary: Add users to edit suggest instance
 # operationId: addSuggestUser
