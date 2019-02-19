@@ -1,6 +1,6 @@
 ###
 # tags:
-# - Suggestion
+# - Review
 # summary: Returns a list of potential suggest user
 # description: Returns a list of potential suggest user
 # operationId: getSuggetsUsers
@@ -34,7 +34,7 @@ GET /users          controllers.ReviewController.getUsers(size:Int?=20, from:Int
 
 ###
 # tags:
-# - Review User
+# - Review
 # summary: Returns info about a review user
 # description:Returns info about a review user
 # operationId: getReviewUser
@@ -60,7 +60,7 @@ GET /user/:id          controllers.ReviewController.getUserById(id:String)
 
 ###
 # tags:
-# - Suggestion
+# - Review
 # summary: Add users to edit suggest instance
 # operationId: addSuggestUser
 # consumes:
@@ -114,9 +114,9 @@ POST   /users/:org/:domain/:schema/:version/:instanceId               controller
 
 ###
 # tags:
-# - Suggestion
+# - Review
 # summary: Accept suggestion
-# description: Suggestion will be merge to the update instance of the current user
+# description: Review will be merge to the update instance of the current user
 # operationId: validateSuggestion
 # produces:
 # - application/json
@@ -161,7 +161,7 @@ POST   /:suggestionOrg/:suggestionDomain/:suggestionSchema/:suggestionVersion/:s
 
 ###
 # tags:
-#   - Suggestion
+#   - Review
 # summary: Reject a suggestion
 # description: Suggestion will be discarded
 # operationId: rejectSuggestion
@@ -208,7 +208,7 @@ POST   /:org/:domain/:schema/:version/:suggestionId/reject              controll
 
 ###
 # tags:
-# - Suggestion
+# - Review
 # summary: Retrieve the suggestion  assigned to the user
 # description: Get suggestions assigned to the user
 # operationId: userSuggestions
@@ -235,7 +235,7 @@ GET / controllers.ReviewController.getUsersSuggestions(status: String ?= "PENDIN
 
 ###
 # tags:
-# - Suggestion
+# - Review
 # summary: Get all suggestions for an instance
 # description: Retrieve all the suggestions made to a specific instance
 # operationId: instanceSuggestions
