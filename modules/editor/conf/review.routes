@@ -36,7 +36,7 @@ GET /users          controllers.ReviewController.getUsers(size:Int?=20, from:Int
 # tags:
 # - Review
 # summary: Returns info about a review user
-# description:Returns info about a review user
+# description: Returns info about a review user
 # operationId: getReviewUser
 # produces:
 # - application/json
