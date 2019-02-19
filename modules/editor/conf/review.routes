@@ -30,7 +30,7 @@
 #     schema:
 #       type: object
 ###
-GET /users          controllers.ReviewController.getUsers(size:Int?=20, from:Int?=0, search:String?="")
+GET /users          controllers.ReviewController.getUsers(size:Int?=20, search:String?="")
 
 ###
 # tags:

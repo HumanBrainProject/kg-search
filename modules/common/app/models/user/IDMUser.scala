@@ -25,8 +25,9 @@ case class IDMUser(
   familyName: String,
   displayName: String,
   emails: List[Email],
-  picture: Option[String]
-) {}
+  picture: Option[String],
+  isCurator: Option[Boolean]
+)
 
 object IDMUser {
   type ID = String
@@ -37,7 +38,8 @@ object IDMUser {
     (JsPath \ "familyName").read[String] and
     (JsPath \ "displayName").read[String] and
     (JsPath \ "emails").read[List[Email]] and
-    (JsPath \ "picture").readNullable[String]
+    (JsPath \ "picture").readNullable[String] and
+    (JsPath \ "isCurator").readNullable[Boolean]
   )(IDMUser.apply _)
 
   implicit val idmUserWrites: Writes[IDMUser] = (
@@ -47,7 +49,8 @@ object IDMUser {
     (JsPath \ "familyName").write[String] and
     (JsPath \ "displayName").write[String] and
     (JsPath \ "emails").write[List[Email]] and
-    (JsPath \ "picture").writeNullable[String]
+    (JsPath \ "picture").writeNullable[String] and
+    (JsPath \ "isCurator").writeNullable[Boolean]
   )(unlift(IDMUser.unapply))
 }
 
