@@ -60,13 +60,25 @@ class IDMAPIService @Inject()(WSClient: WSClient, config: ConfigurationService)(
         .addHttpHeaders(AUTHORIZATION -> token)
         .addQueryStringParameters("pageSize" -> size.toString, "str" -> searchTerm)
         .get()
-        .map { res =>
+        .flatMap { res =>
           res.status match {
             case OK =>
-              val users = (res.json \ "_embedded" \ "users").as[List[IDMUser]]
-              val pagination = (res.json \ "page").as[Pagination]
-              Right(users, pagination)
-            case _ => Left(res)
+              Future
+                .sequence(
+                  (res.json \ "_embedded" \ "users")
+                    .as[List[IDMUser]]
+                    .map { u =>
+                      isUserPartOfGroups(u, List("nexus-curators"), token).map {
+                        case Right(bool) => u.copy(isCurator = Some(bool))
+                        case Left(_)     => u
+                      }
+                    }
+                )
+                .map { users =>
+                  val pagination = (res.json \ "page").as[Pagination]
+                  Right(users, pagination)
+                }
+            case _ => Future(Left(res))
           }
         }
     } else {
