@@ -17,7 +17,7 @@
 package actions
 
 import helpers.EditorSpaceHelper
-import models.user.{EditorUser, EditorUserRequest, EditorUserWriteRequest}
+import models.user.{EditorUser, EditorUserRequest, EditorUserWriteRequest, NexusUser}
 import models.{user, IAMPermission, UserRequest}
 import play.api.Logger
 import play.api.mvc.Results._
@@ -75,14 +75,14 @@ object EditorUserAction {
       }
     }
 
-  private def isCurator(user: EditorUser, org: String): Boolean = {
+  def isCurator(user: NexusUser, org: String): Boolean = {
     val pattern = """^(.+)editorsug$""".r
     val curatorOrg = org match {
       case pattern(o) => o
       case _          => org
     }
     // Nexus curator a super group of other curator groups
-    user.nexusUser.groups.contains("nexus-curators") || user.nexusUser.groups
+    user.groups.contains("nexus-curators") || user.groups
       .exists(s => s.matches(s"^nexus-$curatorOrg-curator$$"))
   }
 
@@ -93,7 +93,7 @@ object EditorUserAction {
       def executionContext: ExecutionContext = ec
 
       def filter[A](input: EditorUserRequest[A]): Future[Option[Result]] = {
-        Future.successful(if (isCurator(input.editorUser, org)) {
+        Future.successful(if (isCurator(input.editorUser.nexusUser, org)) {
           None
         } else {
           Some(Forbidden("You do not have sufficient access rights to proceed"))

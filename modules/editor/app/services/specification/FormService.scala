@@ -45,6 +45,7 @@ class FormService @Inject()(
   val logger = Logger(this.getClass)
 
   def formRegistry: FormRegistry[UISpec] = loadFormConfiguration()._1
+
   def queryRegistry: FormRegistry[QuerySpec] = loadFormConfiguration()._2
 
   def flushSpec(): Unit = stateSpec = None
@@ -148,10 +149,11 @@ object FormService {
   /**
     * Building instance from a form sent by the UI
     * The Form will be filled with the values passed from the UI except for reverse links and linking instances
-    * @param instanceRef The reference to the instance newly created
+    *
+    * @param instanceRef   The reference to the instance newly created
     * @param nexusEndpoint The nexus endpoint used to generate full urls
-    * @param newInstance The new instance which is empty as the instance is created empty then filled with data
-    * @param registry The registry to reflect on UISpec
+    * @param newInstance   The new instance which is empty as the instance is created empty then filled with data
+    * @param registry      The registry to reflect on UISpec
     * @return A
     */
   def buildNewInstanceFromForm(
@@ -242,7 +244,19 @@ object FormService {
             case DropdownSelect =>
               fieldContent.copy(value = Some(FormService.transformToArray(id, data)))
             case InputText | InputTextMultiple | TextArea =>
-              fieldContent.copy(value = (data \ id).asOpt[JsValue])
+              val field = data \ id
+              val textValue = if (field.validate[List[String]].isSuccess) {
+                if (!field.as[List[String]].exists(j => j != null)) {
+                  JsString("")
+                } else {
+                  JsString(field.as[List[String]].head)
+                }
+              } else if (field.as[JsValue] == JsNull) {
+                JsString("")
+              } else {
+                field
+              }
+              fieldContent.copy(value = textValue.asOpt[JsValue])
           }
           val valueWithoutNull = newValue.value match {
             case Some(JsNull) => newValue.copy(value = None)
@@ -256,11 +270,71 @@ object FormService {
   }
 
   def fillFormTemplate(fields: JsValue, formTemplate: UISpec, alternatives: JsObject = Json.obj()): JsValue = {
+    val alt = stripAlternativeVocab(alternatives)
     Json.obj("fields" -> fields) +
     ("label", JsString(formTemplate.label)) +
     ("editable", JsBoolean(formTemplate.isEditable.getOrElse(true))) +
     ("ui_info", formTemplate.uiInfo.map(Json.toJson(_)).getOrElse(Json.obj())) +
-    ("alternatives", alternatives)
+    ("alternatives", alt)
+  }
+
+  def stripAlternativeVocab(jsObject: JsObject): JsObject = {
+    val m = jsObject.value.map {
+      case (k, v) =>
+        val array = if (v.validate[JsArray].isError) {
+          JsArray().append(v)
+        } else {
+          v
+        }
+        k -> array
+          .as[List[JsValue]]
+          .filterNot(js => js.validate[String].isSuccess && js.as[String].startsWith("embedded/"))
+          .map(
+            js =>
+              if (js.validate[JsObject].isSuccess) {
+                Json.toJson(js.as[JsObject].value.map {
+                  case (key, value) =>
+                    val newValue = if (key == InternalSchemaFieldsConstants.ALTERNATIVES_USERIDS) {
+                      if (value.validate[JsArray].isError) {
+                        JsArray().append(value)
+                      } else {
+                        value
+                      }
+                    } else {
+                      formatAlternativeLinks(value)
+                    }
+                    key.stripPrefix(InternalSchemaFieldsConstants.ALTERNATIVES + "/") -> newValue
+                })
+              } else {
+                js
+            }
+          )
+    }
+    Json.toJson(m).as[JsObject]
+  }
+
+  def formatAlternativeLinks(jsValue: JsValue): JsValue = {
+    jsValue match {
+      case j if j.validate[JsArray].isSuccess =>
+        Json.toJson(j.as[JsArray].value.map { js =>
+          if (js.validate[JsObject].isSuccess) {
+            if (js.as[JsObject].keys.contains(JsonLDConstants.ID)) {
+              Json.obj("id" -> js.as[JsObject].value.get(SchemaFieldsConstants.RELATIVEURL))
+            } else {
+              js
+            }
+          } else {
+            js
+          }
+        })
+      case j if j.validate[JsObject].isSuccess =>
+        if (j.as[JsObject].keys.contains(JsonLDConstants.ID)) {
+          Json.obj("id" -> j.as[JsObject].value.get(SchemaFieldsConstants.RELATIVEURL))
+        } else {
+          j
+        }
+      case j => j
+    }
   }
 
   def editableEntities(user: NexusUser, formRegistry: FormRegistry[UISpec]): List[(NexusPath, UISpec)] = {

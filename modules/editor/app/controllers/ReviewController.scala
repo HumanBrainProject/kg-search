@@ -46,12 +46,18 @@ class ReviewController @Inject()(
 
   object instanceApiService extends InstanceApiService
 
-  def getUsers(size: Int, from: Int, search: String): Action[AnyContent] = authenticatedUserAction.async {
-    implicit request =>
-      IDMAPIService.getUsers(size, from, search, request.userToken).map {
-        case Right((users, pagination)) => Ok(Json.obj("users" -> users, "page" -> pagination))
-        case Left(res)                  => APIEditorError(res.status, res.body).toResult
-      }
+  def getUsers(size: Int, search: String): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
+    IDMAPIService.getUsers(size, search, request.userToken).map {
+      case Right((users, pagination)) => Ok(Json.obj("users" -> users, "page" -> pagination))
+      case Left(res)                  => APIEditorError(res.status, res.body).toResult
+    }
+  }
+
+  def getUserById(id: String): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
+    IDMAPIService.getUserInfoFromID(id, request.userToken).map {
+      case Some(user) => Ok(Json.toJson(user))
+      case None       => NotFound("User not found")
+    }
   }
 
   def addUsers(org: String, domain: String, schema: String, version: String, instanceId: String): Action[AnyContent] =

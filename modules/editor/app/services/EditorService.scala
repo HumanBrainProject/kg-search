@@ -17,7 +17,7 @@
 package services
 
 import com.google.inject.Inject
-import constants.{EditorClient, EditorConstants, JsonLDConstants, UiConstants}
+import constants._
 import helpers._
 import models.NexusPath
 import models.errors.{APIEditorError, APIEditorMultiError}
@@ -26,11 +26,12 @@ import models.specification.{FormRegistry, QuerySpec, UISpec}
 import models.user.{NexusUser, User}
 import play.api.Logger
 import play.api.http.Status._
-import play.api.libs.json.{JsObject, JsValue}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.WSClient
 import services.instance.InstanceApiService
 import services.query.QueryService
 import services.specification.FormService
+import org.joda.time.DateTime
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -116,8 +117,23 @@ class EditorService @Inject()(
     token: String,
     userId: String
   ): Future[Either[APIEditorError, Unit]] = {
+    val contentWithUpdatedTimeStamp = diffInstance.nexusInstance.content.value
+    val content =
+      Json
+        .toJson(
+          contentWithUpdatedTimeStamp
+            .updated(SchemaFieldsConstants.lastUpdate, Json.toJson(new DateTime().toDateTimeISO.toString))
+        )
+        .as[JsObject]
     instanceApiService
-      .put(wSClient, config.kgQueryEndpoint, nexusInstanceReference, diffInstance, token, userId)
+      .put(
+        wSClient,
+        config.kgQueryEndpoint,
+        nexusInstanceReference,
+        diffInstance.copy(nexusInstance = diffInstance.nexusInstance.copy(content = content)),
+        token,
+        userId
+      )
       .map {
         case Left(res) => Left(APIEditorError(res.status, res.body))
         case Right(()) => Right(())

@@ -17,7 +17,7 @@ package models
 
 import play.api.libs.json.{JsPath, Reads, Writes}
 
-case class Pagination(size: Int, totalElements: Int, totalPage: Int, number: Int)
+case class Pagination(size: Int, total: Int, totalPage: Int, number: Int)
 
 object Pagination {
   import play.api.libs.functional.syntax._
@@ -30,8 +30,12 @@ object Pagination {
 
   implicit val previewInstanceWrites: Writes[Pagination] = (
     (JsPath \ "size").write[Int] and
-    (JsPath \ "totalElements").write[Int] and
+    (JsPath \ "total").write[Int] and
     (JsPath \ "totalPages").write[Int] and
     (JsPath \ "number").write[Int]
   )(unlift(Pagination.unapply))
+
+  def empty: Pagination = {
+    Pagination(0, 0, 0, 0)
+  }
 }
