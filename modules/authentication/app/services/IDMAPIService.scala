@@ -53,12 +53,18 @@ class IDMAPIService @Inject()(WSClient: WSClient, config: ConfigurationService)(
     searchTerm: String,
     token: String
   ): Future[Either[WSResponse, (List[IDMUser], Pagination)]] = {
-    val url = s"${config.idmApiEndpoint}/user/searchByText"
+    val url = s"${config.idmApiEndpoint}/user/search"
     if (!searchTerm.isEmpty) {
       WSClient
         .url(url)
         .addHttpHeaders(AUTHORIZATION -> token)
-        .addQueryStringParameters("pageSize" -> size.toString, "str" -> searchTerm)
+        .addQueryStringParameters(
+          "pageSize"    -> size.toString,
+          "displayName" -> s"*$searchTerm*",
+          "email"       -> s"*$searchTerm*",
+          "username"    -> s"*$searchTerm*",
+          "sort"        -> "displayName,asc"
+        )
         .get()
         .flatMap { res =>
           res.status match {
