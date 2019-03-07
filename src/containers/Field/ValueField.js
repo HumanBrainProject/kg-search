@@ -163,7 +163,7 @@ class Thumbnail extends PureComponent {
         {!!this.state.previewUrl && (
           <div className="fa-stack fa-1x kgs-thumbnail--preview" onClick={this.handleToggle.bind(this)}>
             <img src={this.state.previewUrl} />
-            <i class="fa fa-close"></i> 
+            <i className="fa fa-close"></i>
           </div>
         )}
       </div>
