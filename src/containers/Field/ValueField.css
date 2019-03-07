@@ -259,5 +259,176 @@
     height:35px;
 }
 
+.kgs-thumbnail--container {
+    display: inline-block;
+    position: relative;
+}
+
+.kgs-thumbnail--button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: 0;
+    color: #337ab7;
+}
+
+@-ms-keyframes kgs-thumbnail-zoom {
+    0% {
+        -ms-transform: translate(0px, 0px);
+        transform: translate(0px, 0px);
+    }
+    5% {
+        -ms-transform: translate(3px, 3px);
+        transform: translate(3px, 3px);
+    }
+    35% {
+        -ms-transform: translate(-3px, 3px);
+        transform: translate(-3px, 3px);
+    }
+    65% {
+        -ms-transform: translate(-3px, -3px);
+        transform: translate(-3px, -3px);
+    }
+    95% {
+        -ms-transform: translate(3px, -3px);
+        transform: translate(3px, -3px);
+    }
+    100% {
+        -ms-transform: translate(0px, 0px);
+        transform: translate(0px, 0px);
+    }
+}
+
+@-webkit-keyframes kgs-thumbnail-zoom {
+   0% {
+        -ms-transform: translate(0px, 0px);
+        -webkit-transform: translate(0px, 0px);
+        transform: translate(0px, 0px);
+    }
+    5% {
+        -ms-transform: translate(3px, 3px);
+        -webkit-transform: translate(3px, 3px);
+        transform: translate(3px, 3px);
+    }
+    35% {
+        -ms-transform: translate(-3px, 3px);
+        -webkit-transform: translate(-3px, 3px);
+        transform: translate(-3px, 3px);
+    }
+    65% {
+        -ms-transform: translate(-3px, -3px);
+        -webkit-transform: translate(-3px, -3px);
+        transform: translate(-3px, -3px);
+    }
+    95% {
+        -ms-transform: translate(3px, -3px);
+        -webkit-transform: translate(3px, -3px);
+        transform: translate(3px, -3px);
+    }
+    100% {
+        -ms-transform: translate(0px, 0px);
+        -webkit-transform: translate(0px, 0px);
+        transform: translate(0px, 0px);
+    }
+}
+
+@keyframes kgs-thumbnail-zoom {
+    0% {
+        -ms-transform: translate(0px, 0px);
+        -o-transform: translate(0px, 0px);
+        -moz-transform: translate(0px, 0px);
+        -webkit-transform: translate(0px, 0px);
+        transform: translate(0px, 0px);
+    }
+    15% {
+        -ms-transform: translate(3px, 3px);
+        -o-transform: translate(3px, 3px);
+        -moz-transform: translate(3px, 3px);
+        -webkit-transform: translate(3px, 3px);
+        transform: translate(3px, 3px);
+    }
+    40% {
+        -ms-transform: translate(-3px, 3px);
+        -o-transform: translate(-3px, 3px);
+        -moz-transform: translate(-3px, 3px);
+        -webkit-transform: translate(-3px, 3px);
+        transform: translate(-3px, 3px);
+    }
+    65% {
+        -ms-transform: translate(-3px, -3px);
+        -o-transform: translate(-3px, -3px);
+        -moz-transform: translate(-3px, -3px);
+        -webkit-transform: translate(-3px, -3px);
+        transform: translate(-3px, -3px);
+    }
+    90% {
+        -ms-transform: translate(3px, -3px);
+        -o-transform: translate(3px, -3px);
+        -moz-transform: translate(3px, -3px);
+        -webkit-transform: translate(3px, -3px);
+        transform: translate(3px, -3px);
+    }
+    100% {
+        -ms-transform: translate(0px, 0px);
+        -o-transform: translate(0px, 0px);
+        -moz-transform: translate(0px, 0px);
+        -webkit-transform: translate(0px, 0px);
+        transform: translate(0px, 0px);
+    }
+}
+
+.kgs-thumbnail--zoom {
+    -moz-animation: kgs-thumbnail-zoom 3s infinite linear;
+    -webkit-animation: kgs-thumbnail-zoom 3s infinite linear;
+    animation: kgs-thumbnail-zoom 3s infinite linear;
+}
+
+.kgs-thumbnail--preview {
+    z-index: 100;
+    position: absolute;
+    bottom: 0;
+    left: 2em;
+    transform: translateY(50%);
+    width: auto;
+    height: auto;
+    min-height: 58px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.kgs-thumbnail--preview img {
+    display: block;
+    border: 1px groove black;
+    max-width: 60vw;
+    cursor: pointer;
+}
+
+@media (min-width: 992px) {
+    .kgs-thumbnail--preview img {
+        max-width: 800px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .kgs-thumbnail--preview img {
+        max-width: 1000px;
+    }
+}
+
+.kgs-thumbnail--preview i {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s ease-in;
+}
+
+.kgs-thumbnail--preview i:hover {
+    color: #333333;
+}
 
 /**********************************************************************************************************************/

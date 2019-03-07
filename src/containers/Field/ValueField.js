@@ -130,6 +130,47 @@ const Tag = ({icon, value}) => {
   );
 };
 
+class Thumbnail extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      previewUrl: null
+    };
+  }
+  handleToggle() {
+    const { previewUrl } = this.props;
+    this.setState(state => ({ previewUrl: state.previewUrl?null: previewUrl}));
+  }
+  render() {
+    const {hasPreview, previewUrl} = this.props;
+
+    if (!hasPreview || !previewUrl) {
+      return (
+        <span className="fa-stack fa-1x kgs-thumbnail--panel">
+          <i className="fa fa-file-o fa-stack-1x"></i>
+        </span>
+      );
+    }
+
+    return (
+      <div className="fa-stack fa-1x kgs-thumbnail--container">
+        <button className="kgs-thumbnail--button" onClick={this.handleToggle.bind(this)} >
+          <span className="fa-stack fa-1x kgs-thumbnail--panel">
+            <i className="fa fa-file-image-o fa-stack-1x"></i>
+            <i className="fa fa-search fa-stack-1x kgs-thumbnail--zoom"></i>
+          </span>
+        </button>
+        {!!this.state.previewUrl && (
+          <div className="fa-stack fa-1x kgs-thumbnail--preview" onClick={this.handleToggle.bind(this)}>
+            <img src={this.state.previewUrl} />
+            <i class="fa fa-close"></i> 
+          </div>
+        )}
+      </div>
+    );
+  }
+}
+
 class Details extends PureComponent {
   constructor(props) {
     super(props);
@@ -183,12 +224,14 @@ const ValueFieldBase = (renderUserInteractions = true) => {
 
     const hasReference = !!renderUserInteractions && !!data.reference;
     const hasLink =  !!renderUserInteractions && !!data.url;
-    const hasMailToLink = !!renderUserInteractions && data.url === "string" &&  data.url.substr(0,7).toLowerCase() === "mailto:";
+    const hasMailToLink = !!renderUserInteractions && typeof data.url === "string" &&  data.url.substr(0,7).toLowerCase() === "mailto:";
+    const isAFileLink = typeof data.url === "string" && /.*\..{2,4}$/.test(data.url) && !/.+\?.+$/.test(data.url);
     const hasAnyLink = hasReference || hasMailToLink || hasLink;
     const isIcon = mapping.type === "icon" && ((data.image && data.image.url) || mapping.icon);
     const isTag = !hasAnyLink && !isIcon && !!mapping.tagIcon;
     const isMarkdown = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && !!mapping.markdown;
     const isCollapsible = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && mapping.collapsible && typeof data.value === "string" && data.value.length >= 1600;
+    const hasPreview = !!renderUserInteractions && typeof data.previewUrl === "string";
 
     let value = data.value;
     if (data.value && mapping.type === "date") {
@@ -243,6 +286,9 @@ const ValueFieldBase = (renderUserInteractions = true) => {
 
     return (
       <div className="field-value">
+        {isAFileLink && (
+          <Thumbnail hasPreview={hasPreview} previewUrl={data.previewUrl}  />
+        )}
         <ValueComponent {...valueProps} />
         {!!mapping.termsOfUse && (
           <Details toggleLabel="Terms of use" content={termsOfUse} />
