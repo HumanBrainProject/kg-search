@@ -139,10 +139,44 @@ class Thumbnail extends PureComponent {
   }
   handleToggle() {
     const { previewUrl } = this.props;
-    this.setState(state => ({ previewUrl: state.previewUrl?null: previewUrl}));
+    this.setState(state => {
+      const newValue = state.previewUrl?null: previewUrl;
+      if (newValue) {
+        this.listenClickOutHandler();
+      } else {
+        this.unlistenClickOutHandler();
+      }
+      return {
+        previewUrl: newValue
+      };
+    });
   }
+
+  clickOutHandler = e => {
+    if(!this.wrapperRef || !this.wrapperRef.contains(e.target)){
+      this.unlistenClickOutHandler();
+      this.setState({previewUrl: null});
+    }
+  };
+
+  listenClickOutHandler(){
+    window.addEventListener("mouseup", this.clickOutHandler, false);
+    window.addEventListener("touchend", this.clickOutHandler, false);
+    window.addEventListener("keyup", this.clickOutHandler, false);
+  }
+
+  unlistenClickOutHandler(){
+    window.removeEventListener("mouseup", this.clickOutHandler, false);
+    window.removeEventListener("touchend", this.clickOutHandler, false);
+    window.removeEventListener("keyup", this.clickOutHandler, false);
+  }
+
+  componentWillUnmount(){
+    this.unlistenClickOutHandler();
+  }
+
   render() {
-    const {hasPreview, previewUrl} = this.props;
+    const {hasPreview, previewUrl, alt} = this.props;
 
     if (!hasPreview || !previewUrl) {
       return (
@@ -153,7 +187,7 @@ class Thumbnail extends PureComponent {
     }
 
     return (
-      <div className="fa-stack fa-1x kgs-thumbnail--container">
+      <div className="fa-stack fa-1x kgs-thumbnail--container" ref={ref=>this.wrapperRef = ref}>
         <button className="kgs-thumbnail--button" onClick={this.handleToggle.bind(this)} >
           <span className="fa-stack fa-1x kgs-thumbnail--panel">
             <i className="fa fa-file-image-o fa-stack-1x"></i>
@@ -162,7 +196,7 @@ class Thumbnail extends PureComponent {
         </button>
         {!!this.state.previewUrl && (
           <div className="fa-stack fa-1x kgs-thumbnail--preview" onClick={this.handleToggle.bind(this)}>
-            <img src={this.state.previewUrl} />
+            <img src={this.state.previewUrl} alt={alt} />
             <i className="fa fa-close"></i>
           </div>
         )}
@@ -287,7 +321,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     return (
       <div className="field-value">
         {isAFileLink && (
-          <Thumbnail hasPreview={hasPreview} previewUrl={data.previewUrl}  />
+          <Thumbnail hasPreview={hasPreview} previewUrl={data.previewUrl} alt={data.url} />
         )}
         <ValueComponent {...valueProps} />
         {!!mapping.termsOfUse && (
