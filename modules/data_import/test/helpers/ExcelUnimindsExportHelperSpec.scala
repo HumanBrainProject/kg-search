@@ -25,14 +25,15 @@ import org.scalatest._
 import Matchers._
 
 class ExcelUnimindsExportHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
-
+  val defaultValueSingle = "Single value placeholder"
+  val defaultValueLink = "_Link placeholder"
   "Generate entity from spec" should {
     "Create entity with correct fields" in {
       val result =
         ExcelUnimindsExportHelper.generateEntityFromQuerySpec("subjectgroup", Json.parse(singleEntity).as[JsObject])
       val content = Map(
-        "Alias"       -> SingleValue(""),
-        "Description" -> SingleValue("")
+        "Alias"       -> SingleValue(defaultValueSingle),
+        "Description" -> SingleValue(defaultValueSingle)
       )
       val expected = Entity("subjectgroup", "", content)
 
@@ -43,13 +44,13 @@ class ExcelUnimindsExportHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
     "Create entities with correct fields" in {
       val results = ExcelUnimindsExportHelper.generateEntitiesFromQuerySpec(Json.parse(spec).as[JsObject])
       val subjectGroup = Map(
-        "Alias"       -> SingleValue(""),
-        "Description" -> SingleValue("")
+        "Alias"       -> SingleValue(defaultValueSingle),
+        "Description" -> SingleValue(defaultValueSingle)
       )
       val subject = Map(
-        "Alias"           -> SingleValue(""),
-        "Species"         -> ArrayValue(Seq()),
-        "Brain structure" -> ArrayValue(Seq())
+        "Alias"           -> SingleValue(defaultValueSingle),
+        "Species"         -> ArrayValue(Seq(SingleValue(defaultValueLink))),
+        "Brain structure" -> ArrayValue(Seq(SingleValue(defaultValueLink)))
       )
       val expected = Seq(
         Entity("subject", "", subject),
