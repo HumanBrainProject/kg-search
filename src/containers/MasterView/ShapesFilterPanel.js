@@ -27,13 +27,13 @@ const ShapeFilter = ({itemKey, label, count, active, disabled, onClick}) => {
   }
   return (
     <div className={`kgs-fieldsFilter__shape${active?" is-active":""}${disabled?" is-disabled":""}`}>
-      <button key={itemKey} onClick={onClick} className="kgs-fieldsFilter__button" disabled={disabled}>
+      <button key={itemKey} onClick={onClick} className="kgs-fieldsFilter__button" disabled={disabled || active}>
         <div>
           <div className="kgs-fieldsFilter__icon">
             <ShapeIcon label={label} shape={itemKey} active={active} />
           </div>
           <div className="kgs-fieldsFilter__label">{label}</div>
-          <div className="kgs-fieldsFilter__count">{count} Results</div>
+          <div className="kgs-fieldsFilter__count">{`${count?count:0} ${count && count > 1?"Results":"Result"}`}</div>
         </div>
       </button>
     </div>
