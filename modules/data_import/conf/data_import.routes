@@ -34,4 +34,22 @@ POST    /dataworkbench/extractDataFromExcel           controllers.ExcelImportCon
 POST    /extract/uniminds                             controllers.ExcelImportController.extractUnimindsDataFromExcel(action: Option[String])
 
 
-
+###
+#  summary: Get a template export from a specification
+#  produces:
+#    - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+#  parameters:
+#  - in: path
+#    name: org
+#    type: string
+#    description: Excel file following Uniminds format.
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+#  responses:
+#    200:
+#      description: "Ok"
+###
+GET    /extract/:org/template                             controllers.ExcelImportController.exportEmptyEntitiesFromSpec(org: String)
