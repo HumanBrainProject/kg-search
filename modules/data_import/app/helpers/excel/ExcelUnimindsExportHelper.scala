@@ -91,16 +91,19 @@ object ExcelUnimindsExportHelper {
   }
 
   def generateEntitiesFromQuerySpec(querySpec: JsObject): Seq[Entity] = {
-    querySpec.value.flatMap {
-      case (_, v) =>
-        v.as[JsObject].value.flatMap {
-          case (_, data) =>
-            data.as[JsObject].value.map {
-              case (entityName, entityData) =>
-                generateEntityFromQuerySpec(entityName, entityData.as[JsObject])
-            }
-        }
-    }.toSeq
+    querySpec.value
+      .flatMap {
+        case (_, v) =>
+          v.as[JsObject].value.flatMap {
+            case (_, data) =>
+              data.as[JsObject].value.map {
+                case (entityName, entityData) =>
+                  generateEntityFromQuerySpec(entityName, entityData.as[JsObject])
+              }
+          }
+      }
+      .toSeq
+      .sortBy(_.rawType)
   }
 
   def generateEntityFromQuerySpec(entityName: String, querySpec: JsObject): Entity = {
@@ -111,9 +114,11 @@ object ExcelUnimindsExportHelper {
             case (acc, obj) =>
               val key = obj.value("label").as[String]
               val valueType = obj.value("type").as[String] match {
-                case "DropdownSelect" | "GroupSelect" | "InputTextMultiple" | "DataSheet" =>
-                  ArrayValue(Seq(SingleValue("Multivalue placeholder"), SingleValue("Multivalue placeholder")))
-                case _ => SingleValue("Placeholder")
+                case "DropdownSelect" =>
+                  ArrayValue(Seq(SingleValue("_Link placeholder")))
+                case "GroupSelect" | "InputTextMultiple" | "DataSheet" =>
+                  ArrayValue(Seq(SingleValue("Multi value placeholder")))
+                case _ => SingleValue("Single value placeholder")
               }
               acc.updated(key, valueType)
           }
