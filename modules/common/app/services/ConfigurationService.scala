@@ -46,6 +46,6 @@ class ConfigurationService @Inject()(configuration: Configuration) {
 
   val hbpPublicUrl = configuration
     .getOptional[String]("hbp.public.url")
-    .getOrElse("https://www.humanbrainproject.eu/en/explore-the-brain/search/")
+    .getOrElse("https://www.humanbrainproject.eu/en/explore-the-brain/search")
 
 }
