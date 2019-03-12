@@ -26,7 +26,7 @@ object ExcelUnimindsExportHelper {
 
   val GREY = new XSSFColor(new Color(0xEF, 0xEF, 0xEF))
   val WHITE = new XSSFColor(Color.WHITE)
-  val CSV_HEADER = Seq("block name", "block id", "key", "value", "unit of value", "resolution status")
+  val CSV_HEADER = Seq("block name", "block id", "key", "label", "value", "unit of value", "resolution status")
   val HEADER_ROW_IDX = 0
   val FIRST_DATA_ROW_IDX = 1
   val RESOLVED_SHEET_NAME = "resolved data"
@@ -35,9 +35,10 @@ object ExcelUnimindsExportHelper {
     sheet.setColumnWidth(0, 4000)
     sheet.setColumnWidth(1, 3000)
     sheet.setColumnWidth(2, 4500)
-    sheet.setColumnWidth(3, 28000)
-    sheet.setColumnWidth(4, 3000)
-    sheet.setColumnWidth(5, 10000)
+    sheet.setColumnWidth(3, 4500)
+    sheet.setColumnWidth(4, 28000)
+    sheet.setColumnWidth(5, 3000)
+    sheet.setColumnWidth(6, 10000)
 
     sheet.setDefaultRowHeight(300)
   }
@@ -112,13 +113,14 @@ object ExcelUnimindsExportHelper {
         case (_, data) =>
           val content = data.as[JsObject].value("fields").as[List[JsObject]].foldLeft(Map[String, Value]()) {
             case (acc, obj) =>
-              val key = obj.value("label").as[String]
+              val key = obj.value("key").as[String]
+              val label = obj.value("label").as[String]
               val valueType = obj.value("type").as[String] match {
                 case "DropdownSelect" =>
-                  ArrayValue(Seq(SingleValue("_Link placeholder")))
+                  ArrayValue(Seq(SingleValue("_Link placeholder", label = label)))
                 case "GroupSelect" | "InputTextMultiple" | "DataSheet" =>
-                  ArrayValue(Seq(SingleValue("Multi value placeholder")))
-                case _ => SingleValue("Single value placeholder")
+                  ArrayValue(Seq(SingleValue("Multi value placeholder", label = label)))
+                case _ => SingleValue("Single value placeholder", label = label)
               }
               acc.updated(key, valueType)
           }
