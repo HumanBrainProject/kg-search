@@ -32,8 +32,8 @@ class ExcelUnimindsExportHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
       val result =
         ExcelUnimindsExportHelper.generateEntityFromQuerySpec("subjectgroup", Json.parse(singleEntity).as[JsObject])
       val content = Map(
-        "Alias"       -> SingleValue(defaultValueSingle),
-        "Description" -> SingleValue(defaultValueSingle)
+        "http://schema.org/name"        -> SingleValue(defaultValueSingle, None, None, "Alias"),
+        "http://schema.org/description" -> SingleValue(defaultValueSingle, None, None, "Description")
       )
       val expected = Entity("subjectgroup", "", content)
 
@@ -44,13 +44,17 @@ class ExcelUnimindsExportHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
     "Create entities with correct fields" in {
       val results = ExcelUnimindsExportHelper.generateEntitiesFromQuerySpec(Json.parse(spec).as[JsObject])
       val subjectGroup = Map(
-        "Alias"       -> SingleValue(defaultValueSingle),
-        "Description" -> SingleValue(defaultValueSingle)
+        "http://schema.org/name"        -> SingleValue(defaultValueSingle, None, None, "Alias"),
+        "http://schema.org/description" -> SingleValue(defaultValueSingle, None, None, "Description")
       )
       val subject = Map(
-        "Alias"           -> SingleValue(defaultValueSingle),
-        "Species"         -> ArrayValue(Seq(SingleValue(defaultValueLink))),
-        "Brain structure" -> ArrayValue(Seq(SingleValue(defaultValueLink)))
+        "http://schema.org/name" -> SingleValue(defaultValueSingle, None, None, "Alias"),
+        "https://schema.hbp.eu/uniminds/species" -> ArrayValue(
+          Seq(SingleValue(defaultValueLink, None, None, "Species"))
+        ),
+        "https://schema.hbp.eu/uniminds/brainstructure" -> ArrayValue(
+          Seq(SingleValue(defaultValueLink, None, None, "Brain structure"))
+        )
       )
       val expected = Seq(
         Entity("subject", "", subject),
