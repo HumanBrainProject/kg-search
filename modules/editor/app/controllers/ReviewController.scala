@@ -48,14 +48,19 @@ class ReviewController @Inject()(
 
   def getUsers(size: Int, search: String): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     IDMAPIService.getUsers(size, search, request.userToken).map {
-      case Right((users, pagination)) => Ok(Json.obj("users" -> users, "page" -> pagination))
-      case Left(res)                  => APIEditorError(res.status, res.body).toResult
+      case Right((users, pagination)) =>
+        Ok(
+          Json
+            .toJson(EditorResponseObject(Json.obj("users" -> users)))
+            .as[JsObject] ++ Json.toJson(pagination).as[JsObject]
+        )
+      case Left(res) => APIEditorError(res.status, res.body).toResult
     }
   }
 
   def getUserById(id: String): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     IDMAPIService.getUserInfoFromID(id, request.userToken).map {
-      case Some(user) => Ok(Json.toJson(user))
+      case Some(user) => Ok(Json.toJson(EditorResponseObject(Json.toJson(user))))
       case None       => NotFound("User not found")
     }
   }
