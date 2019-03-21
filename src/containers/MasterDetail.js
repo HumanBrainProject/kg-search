@@ -25,10 +25,16 @@ const MasterDetailBase = ({show, manager}) => {
   if (!show) {
     return null;
   }
-  if (!manager || !manager.searchkit) {
-    window.console.error("application failed to instanciate searchkit");
+  if (!manager) {
+    window.console.error("application failed to start");
     return null;
   }
+  if (!manager.searchkit) {
+    return (
+      <DetailView/>
+    );
+  }
+
   //window.console.debug("MasterDetail rendering...");
   return (
     <React.Fragment>

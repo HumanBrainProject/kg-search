@@ -21,7 +21,6 @@ import { generateKey, getAuthUrl } from "../helpers/OIDCHelpers";
 export default class AppManager {
   constructor(store, options) {
     this.store = store;
-    this.search = new SearchManager(store);
     this.isStarted = false;
     this.initialInstanceReference = null;
     this.hitIssuer = null;
@@ -30,21 +29,28 @@ export default class AppManager {
     this.isEventFiredByAppNav = false;
     this.locationHref = window.location.href;
     this.unsubscribe = null;
+    this.searchInterfaceIsEnabled = true;
 
-    // check initial instance reference in url
-    const m = window.location.href.match(/(.*)#(.*)$/);
-    if (m && m.length === 3) {
-      if (m[2].indexOf("access_token=") !== -1) {
-        const m2 = m[2].match(/^access_token=([^&]+)&.*$/);
-        if (m2 && m2.length === 2) {
-          const accessToken = m2[1];
-          store.dispatch(actions.authenticate(accessToken));
-        }
-      } else {
-        this.initialInstanceReference = m[2];
-      }
+    const regStartHistory  = /^([^#]+)#?.*$/;
+    const regAccessToken = /^#access_token=([^&]+)&.*$/;
+    const regReference = /^#(.*)$/;
+    const regSearchInterfaceIsDisabled = /^\?.*&?search=false.*$/;
+
+    const [, startHistory] = regStartHistory.test(window.location.href)? window.location.href.match(regStartHistory):[null, null];
+    const [, accessToken] = regAccessToken.test(window.location.hash)? window.location.hash.match(regAccessToken):[null, null];
+    const [, initialInstanceReference] = !accessToken && regReference.test(window.location.hash)? window.location.hash.match(regReference):[null, null];
+    this.searchInterfaceIsEnabled = !regSearchInterfaceIsDisabled.test(window.location.search);
+
+    this.search = new SearchManager(store, this.searchInterfaceIsEnabled);
+
+    if (accessToken) {
+      store.dispatch(actions.authenticate(accessToken));
+    } else if (initialInstanceReference) {
+      this.initialInstanceReference = initialInstanceReference;
+    }
+    if (startHistory && this.searchInterfaceIsEnabled && (accessToken || initialInstanceReference)) {
       const historyState = window.history.state;
-      window.history.replaceState(historyState, "Knowledge Graph Search", m[1]);
+      window.history.replaceState(historyState, "Knowledge Graph Search", startHistory);
     }
 
     this.start(options);
@@ -99,7 +105,7 @@ export default class AppManager {
       return;
     }
 
-    if (state.search.initialRequestDone && this.initialInstanceReference) {
+    if (this.initialInstanceReference && (!this.searchInterfaceIsEnabled || state.search.initialRequestDone)) {
       const reference = this.initialInstanceReference;
       this.initialInstanceReference = null;
       //window.console.log("AppManager load initial instance: " + reference);
@@ -177,7 +183,7 @@ export default class AppManager {
       this.isEventFiredByAppNav = true;
       [...Array(backHistoryCounts)].forEach(() => window.history.back());
     }
-    if (resumeSearchkitHistoryListening && this.searchkit.history) {
+    if (resumeSearchkitHistoryListening && this.search.searchkit && this.searchkit.history) {
       setTimeout(() => {
         this.search && this.search.searchkit && this.search.searchkit.listenToHistory.call(this.search.searchkit);
       },0);

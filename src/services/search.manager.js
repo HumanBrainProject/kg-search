@@ -21,7 +21,8 @@ import { SearchKitHelpers } from "../helpers/SearchKitHelpers";
 import { generateKey} from "../helpers/OIDCHelpers";
 
 export default class SearchManager {
-  constructor(store){
+  constructor(store, searchInterfaceIsEnabled){
+    this.searchInterfaceIsEnabled = !!searchInterfaceIsEnabled;
     this.searchkit = null;
     this.store = store;
     store.subscribe(() => {this.handleStateChange();});
@@ -132,7 +133,9 @@ export default class SearchManager {
     const state = store.getState();
 
     if (state.configuration.isReady && !state.search.isReady) {
-      this.initializeSearchKit(state.configuration);
+      if (this.searchInterfaceIsEnabled) {
+        this.initializeSearchKit(state.configuration);
+      }
       store.dispatch(actions.setSearchReady(true));
       return;
     }
@@ -224,6 +227,6 @@ export default class SearchManager {
     }
   }
   reloadSearch() {
-    this.searchkit.reloadSearch();
+    this.searchkit && this.searchkit.reloadSearch();
   }
 }
