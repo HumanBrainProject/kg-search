@@ -31,9 +31,15 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, props) => ({
   onPrevious: () => dispatch(actions.setPreviousInstance()),
-  onClose: () => dispatch(actions.clearAllInstances())
+  onClose: () => {
+    if (!props.searchInterfaceIsDisabled) {
+      dispatch(actions.clearAllInstances());
+    } else {
+      window.location.href = window.location.href.replace(window.location.hash,"").replace(window.location.search,"");
+    }
+  }
 });
 
 export const DetailView = connect(
