@@ -31,7 +31,7 @@ const MasterDetailBase = ({show, manager}) => {
   }
   if (!manager.searchkit) {
     return (
-      <DetailView/>
+      <DetailView searchInterfaceIsDisabled={true} />
     );
   }
 

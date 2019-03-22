@@ -29,7 +29,7 @@ export default class AppManager {
     this.isEventFiredByAppNav = false;
     this.locationHref = window.location.href;
     this.unsubscribe = null;
-    this.searchInterfaceIsEnabled = true;
+    this.searchInterfaceIsDisabled = false;
 
     const regStartHistory  = /^([^#]+)#?.*$/;
     const regAccessToken = /^#access_token=([^&]+)&.*$/;
@@ -39,16 +39,16 @@ export default class AppManager {
     const [, startHistory] = regStartHistory.test(window.location.href)? window.location.href.match(regStartHistory):[null, null];
     const [, accessToken] = regAccessToken.test(window.location.hash)? window.location.hash.match(regAccessToken):[null, null];
     const [, initialInstanceReference] = !accessToken && regReference.test(window.location.hash)? window.location.hash.match(regReference):[null, null];
-    this.searchInterfaceIsEnabled = !regSearchInterfaceIsDisabled.test(window.location.search);
+    this.searchInterfaceIsDisabled = initialInstanceReference && regSearchInterfaceIsDisabled.test(window.location.search.toLocaleLowerCase());
 
-    this.search = new SearchManager(store, this.searchInterfaceIsEnabled);
+    this.search = new SearchManager(store, this.searchInterfaceIsDisabled);
 
     if (accessToken) {
       store.dispatch(actions.authenticate(accessToken));
     } else if (initialInstanceReference) {
       this.initialInstanceReference = initialInstanceReference;
     }
-    if (startHistory && this.searchInterfaceIsEnabled && (accessToken || initialInstanceReference)) {
+    if (startHistory && this.searchInterfaceIsDisabled && (accessToken || initialInstanceReference)) {
       const historyState = window.history.state;
       window.history.replaceState(historyState, "Knowledge Graph Search", startHistory);
     }
@@ -105,7 +105,7 @@ export default class AppManager {
       return;
     }
 
-    if (this.initialInstanceReference && (!this.searchInterfaceIsEnabled || state.search.initialRequestDone)) {
+    if (this.initialInstanceReference && (this.searchInterfaceIsDisabled || state.search.initialRequestDone)) {
       const reference = this.initialInstanceReference;
       this.initialInstanceReference = null;
       //window.console.log("AppManager load initial instance: " + reference);
