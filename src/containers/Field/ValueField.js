@@ -259,7 +259,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     const hasReference = !!renderUserInteractions && !!data.reference;
     const hasLink =  !!renderUserInteractions && !!data.url;
     const hasMailToLink = !!renderUserInteractions && typeof data.url === "string" &&  data.url.substr(0,7).toLowerCase() === "mailto:";
-    const isAFileLink = typeof data.url === "string" && /.*\..{2,4}$/.test(data.url) && !/.+\?.+$/.test(data.url);
+    const isAFileLink = typeof data.url === "string" && /^https?:\/\/.+\.cscs\.ch\/.+$/.test(data.url);
     const hasAnyLink = hasReference || hasMailToLink || hasLink;
     const isIcon = mapping.type === "icon" && ((data.image && data.image.url) || mapping.icon);
     const isTag = !hasAnyLink && !isIcon && !!mapping.tagIcon;
