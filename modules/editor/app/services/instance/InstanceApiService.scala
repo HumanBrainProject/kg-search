@@ -148,7 +148,7 @@ trait InstanceApiService {
   )(implicit ec: ExecutionContext): Future[Either[WSResponse, List[NexusInstanceReference]]] = {
     wSClient
       .url(
-        s"$apiBaseEndpoint$internalInstanceEndpoint/${from.toString}/links/${to.toString}/${linkingInstancePath.toString()}"
+        s"$apiBaseEndpoint$internalInstanceEndpoint/${to.toString}/links/${from.toString}/${linkingInstancePath.toString()}"
       )
       .addHttpHeaders(AUTHORIZATION -> token, "client" -> serviceClient.client)
       .get()

@@ -46,7 +46,8 @@ case class AddLinkingInstanceCommand(
       .map {
         case Right(i) =>
           log.debug(
-            s"Added linking instance with id ${i.id}, from ${targetId.ref.toString} - to ${currentInstanceRef.toString}"
+            s"Added linking instance with id ${linkingInstancePath
+              .toString()}/${i.id}, from ${targetId.ref.toString} - to ${currentInstanceRef.toString}"
           )
           Right(())
         case Left(err) =>
