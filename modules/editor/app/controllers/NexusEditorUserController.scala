@@ -74,7 +74,7 @@ class NexusEditorUserController @Inject()(
       u     <- getOrCreateUserWithUserFolder(token)
     } yield {
       u match {
-        case Right(editorUser) => Ok(Json.toJson(editorUser))
+        case Right(editorUser) => Ok(Json.toJson(EditorResponseObject(Json.toJson(editorUser))))
         case Left(error)       => error.toResult
       }
     }
@@ -150,7 +150,7 @@ class NexusEditorUserController @Inject()(
             token <- oIDCAuthService.getTechAccessToken()
             result <- editorUserListService.createBookmarkList(n, id, token).map {
               case Left(r)             => r.toResult
-              case Right(bookmarkList) => Created(Json.toJson(bookmarkList))
+              case Right(bookmarkList) => Created(Json.toJson(EditorResponseObject(Json.toJson(bookmarkList))))
             }
           } yield result
 
