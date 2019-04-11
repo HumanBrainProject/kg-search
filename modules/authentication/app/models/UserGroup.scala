@@ -30,7 +30,7 @@ object UserGroup {
 }
 
 object MindsGroupSpec {
-  val group = List("curated", "public")
+  val group = List()
 
   val v: Map[String, JsValue] = Map(
     "order" -> Json.toJson(List("Dataset", "Person", "Project", "Species", "Sample", "Subject"))
