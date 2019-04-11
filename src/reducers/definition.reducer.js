@@ -90,12 +90,17 @@ const loadDefinitionSuccess = (state, action) => {
   let facetTypesOrder = {};
   let facetDefaultSelectedType = null;
   if (source) {
+    let defaultSelectionDefined = false;
     Object.keys(source).forEach(type => {
       facetFields[type] = {};
       const order = Number(source[type].order);
       if (!isNaN(order)) {
         facetTypesOrder[type] = order;
-        if (!facetDefaultSelectedType || facetTypesOrder[type] < facetTypesOrder[facetDefaultSelectedType]) {
+        if(source[type].defaultSelection){
+          facetDefaultSelectedType = type;
+          defaultSelectionDefined = true;
+        }
+        if (!defaultSelectionDefined && (!facetDefaultSelectedType || facetTypesOrder[type] < facetTypesOrder[facetDefaultSelectedType])) {
           facetDefaultSelectedType = type;
         }
       }
@@ -178,6 +183,10 @@ function simplifySemantics(source) {
     if (source[SEARCHUI_NAMESPACE + "order"]) {
       source.order = source[SEARCHUI_NAMESPACE + "order"];
       delete source[SEARCHUI_NAMESPACE + "order"];
+    }
+    if (source[SEARCHUI_NAMESPACE + "defaultSelection"]) {
+      source.defaultSelection = source[SEARCHUI_NAMESPACE + "defaultSelection"];
+      delete source[SEARCHUI_NAMESPACE + "defaultSelection"];
     }
     if (source[SEARCHUI_NAMESPACE + "icon"]) {
       source.icon = source[SEARCHUI_NAMESPACE + "icon"];
