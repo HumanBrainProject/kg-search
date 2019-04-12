@@ -57,7 +57,7 @@ const loadDefinitionSuccess = (state, action) => {
       const fullFieldName = parent + fieldName;
       let queryField = queryFields[fullFieldName];
       if (!queryField) {
-        queryField = {boost: 1};
+        queryField = { boost: 1 };
         queryFields[fullFieldName] = queryField;
       }
 
@@ -86,8 +86,9 @@ const loadDefinitionSuccess = (state, action) => {
     return fieldName + ".value";
   });
   let facetFields = {};
-  let sortFields = {_score: {label: "Relevance", key:"newestFirst", fields:[{field: "first_release.value",options: {order:"desc", missing: "_last"}},
-   { field:"_score", options:{order: "desc" }}], defaultOption: true}};
+  let sortFields = { _score: { label: "Relevance", key: "newestFirst",
+      fields: [{ field: "first_release.value", options: { order: "desc", missing: "_last" } }, { field: "_score", options: { order: "desc" } }],
+      defaultOption: true } };
   let facetTypesOrder = {};
   let facetDefaultSelectedType = null;
   if (source) {
@@ -129,7 +130,7 @@ const loadDefinitionSuccess = (state, action) => {
           });
         }
         if (field.sort && sortFields[fieldName] === undefined) {
-          sortFields[fieldName] = {label: field.value, field: fieldName + ".value.keyword", order: "asc"};
+          sortFields[fieldName] = { label: field.value, field: fieldName + ".value.keyword", order: "asc" };
         }
       });
     });
@@ -229,15 +230,15 @@ function simplifySemanticKeysForField(field) {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-  case types.LOAD_DEFINITION:
-    return loadDefinition(state, action);
-  case types.LOAD_DEFINITION_REQUEST:
-    return loadDefinitionRequest(state, action);
-  case types.LOAD_DEFINITION_SUCCESS:
-    return loadDefinitionSuccess(state, action);
-  case types.LOAD_DEFINITION_FAILURE:
-    return loadDefinitionFailure(state, action);
-  default:
-    return state;
+    case types.LOAD_DEFINITION:
+      return loadDefinition(state, action);
+    case types.LOAD_DEFINITION_REQUEST:
+      return loadDefinitionRequest(state, action);
+    case types.LOAD_DEFINITION_SUCCESS:
+      return loadDefinitionSuccess(state, action);
+    case types.LOAD_DEFINITION_FAILURE:
+      return loadDefinitionFailure(state, action);
+    default:
+      return state;
   }
 }
