@@ -63,10 +63,8 @@ export default class SearchManager {
       const state = this.store && this.store.getState();
       const [,index] = reg.test(headers["x-selected-index"])?headers["x-selected-index"].match(reg):[null,state.search.index];
       let order = null;
-      if (index && state && state.indexes && state.indexes.indexes && state.indexes.indexes.length) {
-        if (state.indexes.indexSettings && state.indexes.indexSettings[index]) {
-          order = state.indexes.indexSettings[index].facetTypesOrder;
-        }
+      if (index && state && state.indexes && state.indexes.indexes && state.indexes.indexes.length && state.indexes.indexSettings && state.indexes.indexSettings[index]) {
+        order = state.indexes.indexSettings[index].facetTypesOrder;
       } else {
         order = state && state.definition && state.definition.facetTypesOrder;
       }
