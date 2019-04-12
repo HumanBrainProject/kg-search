@@ -86,7 +86,8 @@ const loadDefinitionSuccess = (state, action) => {
     return fieldName + ".value";
   });
   let facetFields = {};
-  let sortFields = {_score: {label: "Relevance", field: "_score", order: "desc", defaultOption: true}};
+  let sortFields = {_score: {label: "Relevance", key:"newestFirst", fields:[{field: "first_release.value",options: {order:"desc", missing: "_last"}},
+   { field:"_score", options:{order: "desc" }}], defaultOption: true}};
   let facetTypesOrder = {};
   let facetDefaultSelectedType = null;
   if (source) {
