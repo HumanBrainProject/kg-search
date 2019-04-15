@@ -25,9 +25,18 @@ const getShareEmailToLink = (removeHash) => {
   return `mailto:${to}?subject=${subject}&body=${body} ${escape(url)}.`;
 };
 
+
+const getClipboardContent = (state, location, isCurrentInstance) => {
+  var href = location.href;
+  if(isCurrentInstance){
+    href =  `instances/${location.hash.substring(1)}`; 
+  }
+  return `${state.configuration.searchApiHost}/${href}`;
+};
+
 export const ShareButtons = connect(
   state => ({
-    clipboardContent: window.location.href,
+    clipboardContent: getClipboardContent(state, window.location, state.instances.currentInstance),
     emailToLink: getShareEmailToLink(!state.instances.currentInstance)
   })
 )(Component);
