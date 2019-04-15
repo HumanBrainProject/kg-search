@@ -15,14 +15,11 @@
  */
 package controllers
 
-import akka.util.ByteString
 import com.google.inject.Inject
-import play.api.http.HeaderNames.USER_AGENT
-import play.api.http.HttpEntity
 import play.api.mvc._
 import services.{ConfigurationService, RedirectService}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class RedirectController @Inject()(
   cc: ControllerComponents,
@@ -33,26 +30,18 @@ class RedirectController @Inject()(
 ) extends AbstractController(cc) {
 
   /**
-    *  if google bot generate static html from es json, else redirect to dynamic url
+    *  redirect to dynamic url
     * @param dataType The type of data requested
     * @param id The id of the instance
-    * @return A redirect to the dynamic page or a html page for the google bot
+    * @return A redirect to the dynamic page
     */
-  def get(dataType: String, id: String): Action[AnyContent] = Action.async { implicit request =>
-    request.headers.toSimpleMap.get(USER_AGENT) match {
-      case Some(u) if u.toLowerCase == "googlebot" =>
-        redirectService.renderHtml(dataType, id).map {
-          case Right(html) => Ok(html)
-          case Left(res) =>
-            Result(
-              header = ResponseHeader(
-                res.status,
-                res.headers.map(s => s._1 -> s._2.mkString(" "))
-              ),
-              body = HttpEntity.Strict(ByteString(res.body), None)
-            )
-        }
-      case _ => Future(TemporaryRedirect(s"${config.hbpPublicUrl}/#$dataType/$id"))
-    }
+  def get(dataType: String, id: String): Action[AnyContent] = Action { implicit request =>
+    Redirect(
+      s"${config.hbpUrl}/webapp/?${RedirectController.searchFalseQueryString}#$dataType/$id"
+    )
   }
+}
+
+object RedirectController {
+  val searchFalseQueryString: String = "search=false"
 }
