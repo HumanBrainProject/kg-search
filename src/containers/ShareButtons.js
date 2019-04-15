@@ -29,7 +29,7 @@ const getShareEmailToLink = (removeHash) => {
 const getClipboardContent = (state, location, isCurrentInstance) => {
   var href = location.href;
   if(isCurrentInstance){
-    href =  `instances/${location.hash.substring(1)}`; 
+    href =  `instances/${location.hash.substring(1)}`;
   }
   return `${state.configuration.searchApiHost}/${href}`;
 };
