@@ -51,8 +51,11 @@ const loadDefinitionSuccess = (state, action) => {
   const source = action.definition && action.definition._source;
   simplifySemantics(source);
   const shapeMappings = source;
-  const serviceUrl = action.definition._source.serviceUrl;
-  delete source.serviceUrl;
+  var serviceUrl = "";
+  if(source && source.serviceUrl){
+    serviceUrl = source.serviceUrl;
+    delete source.serviceUrl;
+  }
 
   const initQueryFieldsRec = (queryFields, shapeFields, parent) => {
     Object.keys(shapeFields).forEach(fieldName => {
