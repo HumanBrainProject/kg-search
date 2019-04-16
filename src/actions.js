@@ -76,9 +76,11 @@ export const loadDefinitionFailure = error => {
   };
 };
 
-export const loadIndexes = () => {
+export const loadIndexes = index => {
   return {
-    type: types.LOAD_INDEXES
+    type: types.LOAD_INDEXES,
+    index: index,
+
   };
 };
 

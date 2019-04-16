@@ -14,9 +14,8 @@
 *   limitations under the License.
 */
 
+import API from "../services/API";
 import * as types from "../actions.types";
-
-const default_index = "public";
 
 const initialState = {
   isReady: false,
@@ -24,7 +23,7 @@ const initialState = {
   hasRequest: false,
   isLoading: false,
   nonce: null,
-  index: default_index,
+  index: API.defaultIndex,
   results: {},
   from: 0
 };
@@ -36,7 +35,10 @@ const setSearchReady = (state, action) => {
 };
 
 const setIndex = (state, action) => {
-  return Object.assign({}, state, {hasRequest: action.index !== state.index, index: action.index});
+  if (action.index) {
+    return Object.assign({}, state, {hasRequest: action.index !== state.index && !action.initialize, index: action.index});
+  }
+  return state;
 };
 
 const loadSearch = state => {
@@ -71,7 +73,9 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_SEARCH_SESSION_FAILURE:
     return loadSearchFail(state, action);
   case types.LOGOUT:
-    return setIndex(state, {index: default_index});
+    return setIndex(state, {index: API.defaultIndex});
+  case types.LOAD_INDEXES:
+    return setIndex(state, {index: action.index, initialize: true});
   default:
     return state;
   }

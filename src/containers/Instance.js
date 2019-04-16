@@ -16,6 +16,7 @@
 
 import React from "react";
 import { connect } from "react-redux";
+import API from "../services/API";
 import { Field } from "./Field";
 import { FieldsPanel } from "./FieldsPanel";
 import { FieldsTabs } from "./FieldsTabs";
@@ -91,7 +92,7 @@ export const Instance = connect(
 
     const source = data && !(data.found === false) && data._type && data._source;
     const mapping = source && state.definition && state.definition.shapeMappings && state.definition.shapeMappings[data._type];
-    const index = (data && !(data.found === false) && data._index)?data._index:"public";
+    const index = (data && !(data.found === false) && data._index)?data._index:API.defaultIndex;
 
     return {
       type: data && data._type,

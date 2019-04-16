@@ -19,6 +19,7 @@ import * as actions from "../actions";
 import { Carrousel } from "../components/Carrousel";
 import { ShareButtons } from "./ShareButtons";
 import { Instance } from "./Instance";
+import { searchToObj } from "../helpers/OIDCHelpers";
 import "./DetailView.css";
 
 const mapStateToProps = state => {
@@ -37,7 +38,9 @@ const mapDispatchToProps = (dispatch, props) => ({
     if (!props.searchInterfaceIsDisabled) {
       dispatch(actions.clearAllInstances());
     } else {
-      window.location.href = window.location.href.replace(window.location.hash,"").replace(window.location.search,"");
+      window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + Object.entries(searchToObj()).reduce((result, [key, value]) => {
+        return (key.toLowerCase() === "search"?result:(result + (result === ""?"?":"&") + key + "=" + value));
+      }, "");
     }
   }
 });
