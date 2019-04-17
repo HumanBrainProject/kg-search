@@ -76,11 +76,9 @@ export const loadDefinitionFailure = error => {
   };
 };
 
-export const loadIndexes = index => {
+export const loadIndexes = () => {
   return {
-    type: types.LOAD_INDEXES,
-    index: index,
-
+    type: types.LOAD_INDEXES
   };
 };
 
@@ -155,10 +153,11 @@ export const cancelSearch = () => {
   };
 };
 
-export const setIndex = index => {
+export const setIndex = (index, initialize) => {
   return {
     type: types.SET_INDEX,
-    index: index
+    index: index,
+    initialize: initialize
   };
 };
 

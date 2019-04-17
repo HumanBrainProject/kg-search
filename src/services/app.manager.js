@@ -131,16 +131,18 @@ export default class AppManager {
 
         if (!state.indexes.isReady) {
           if (!state.indexes.hasRequest && !state.indexes.isLoading && !state.indexes.hasError) {
-            let index = null;
-            if (this.initialIndex) {
-              if (this.initialIndex !== API.defaultIndex) {
-                index = this.initialIndex;
-              }
-              this.initialIndex = null;
-            }
-            store.dispatch(actions.loadIndexes(index));
+            store.dispatch(actions.loadIndexes());
           }
           return;
+        }
+
+        if (state.indexes.isReady && this.initialIndex && this.initialIndex !== API.defaultIndex) {
+          const index = this.initialIndex;
+          this.initialIndex = null;
+          if (state.indexes.indexes.some(e => e.value === index)) {
+            store.dispatch(actions.setIndex(index, true));
+            return;
+          }
         }
 
         store.dispatch(actions.setApplicationReady(true));

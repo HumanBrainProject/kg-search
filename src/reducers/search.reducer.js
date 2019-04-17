@@ -35,10 +35,34 @@ const setSearchReady = (state, action) => {
 };
 
 const setIndex = (state, action) => {
-  if (action.index) {
-    return Object.assign({}, state, {hasRequest: action.index !== state.index && !action.initialize, index: action.index});
+  if (action && action.index) {
+    if (action.index === state.index) {
+      return state;
+    }
+    return Object.assign({}, state, {hasRequest: !action.initialize, index: action.index});
   }
-  return state;
+  // Reset
+  if (state.index === API.defaultIndex) {
+    return state;
+  }
+  return Object.assign({}, state, {hasRequest: !action.initialize, index: API.defaultIndex});
+};
+
+const loadIndexesSuccess = (state, action) => {
+  if (action.indexes instanceof Array && action.indexes.some(e => e.name === state.index)) {
+    return state;
+  }
+  if (state.index === API.defaultIndex) {
+    return state;
+  }
+  return Object.assign({}, state, { index: API.defaultIndex });
+};
+
+const loadIndexesFailure = state => {
+  if (state.index === API.defaultIndex) {
+    return state;
+  }
+  return Object.assign({}, state, { index: API.defaultIndex });
 };
 
 const loadSearch = state => {
@@ -74,8 +98,10 @@ export function reducer(state = initialState, action = {}) {
     return loadSearchFail(state, action);
   case types.LOGOUT:
     return setIndex(state, {index: API.defaultIndex});
-  case types.LOAD_INDEXES:
-    return setIndex(state, {index: action.index, initialize: true});
+  case types.LOAD_INDEXES_SUCCESS:
+    return loadIndexesSuccess(state, action);
+  case types.LOAD_INDEXES_FAILURE:
+    return loadIndexesFailure(state, action);
   default:
     return state;
   }
