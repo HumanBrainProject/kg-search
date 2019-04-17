@@ -26,7 +26,8 @@ const initialState = {
   facetFields: [],
   sortFields: [],
   facetTypesOrder: {},
-  facetDefaultSelectedType: null
+  facetDefaultSelectedType: null,
+  serviceUrl: ""
 };
 
 const loadDefinition = state => {
@@ -48,11 +49,13 @@ const loadDefinitionRequest = state => {
 const loadDefinitionSuccess = (state, action) => {
 
   const source = action.definition && action.definition._source;
-  if (source) {
-    delete source.serviceUrl;
-  }
   simplifySemantics(source);
   const shapeMappings = source;
+  let serviceUrl = "";
+  if(source && source.serviceUrl){
+    serviceUrl = source.serviceUrl;
+    delete source.serviceUrl;
+  }
 
   const initQueryFieldsRec = (queryFields, shapeFields, parent) => {
     Object.keys(shapeFields).forEach(fieldName => {
@@ -153,7 +156,8 @@ const loadDefinitionSuccess = (state, action) => {
     facetFields: facetFields,
     sortFields: sortFields,
     facetTypesOrder: facetTypesOrder,
-    facetDefaultSelectedType: facetDefaultSelectedType
+    facetDefaultSelectedType: facetDefaultSelectedType,
+    serviceUrl: serviceUrl
   });
 };
 
