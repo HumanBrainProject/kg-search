@@ -23,6 +23,7 @@
 
 # Redirect services
 -> /instances instances.Routes
+-> /groups groups.Routes
 
 # Webhook service
 -> /webhook webhook.Routes

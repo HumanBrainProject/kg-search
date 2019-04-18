@@ -40,8 +40,22 @@ class RedirectController @Inject()(
       s"${config.hbpUrl}/webapp/?${RedirectController.searchFalseQueryString}#$dataType/$id"
     )
   }
+
+  /**
+    *  redirect to dynamic url
+    * @param group The group of data requested
+    * @param dataType The type of data requested
+    * @param id The id of the instance
+    * @return A redirect to the dynamic page
+    */
+  def get(group: String, dataType: String, id: String): Action[AnyContent] = Action { implicit request =>
+    Redirect(
+      s"${config.hbpUrl}/webapp/?${RedirectController.groupKeyQueryString}=$group&${RedirectController.searchFalseQueryString}#$dataType/$id"
+    )
+  }
 }
 
 object RedirectController {
   val searchFalseQueryString: String = "search=false"
+  val groupKeyQueryString: String = "index"
 }
