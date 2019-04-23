@@ -56,7 +56,14 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_INSTANCE_SUCCESS:
   case types.LOAD_INSTANCE_NO_DATA:
   case types.LOAD_INSTANCE_FAILURE:
+    return {
+      message: null,
+      active: false
+    };
   case types.CANCEL_INSTANCE_LOADING:
+    if (/[?&]?search=false&?/.test(window.location.search.toLowerCase())) {
+      window.location.href = window.location.href.replace(/(\?)?search=false&?/gi, "$1");
+    }
     return {
       message: null,
       active: false
