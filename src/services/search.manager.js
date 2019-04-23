@@ -38,8 +38,8 @@ export default class SearchManager {
       searchOnLoad: searchOnLoad
     });
 
-    this.indexAccessor = new BaseQueryAccessor("index");
-    this.searchkit.addAccessor(this.indexAccessor);
+    this.groupAccessor = new BaseQueryAccessor("group");
+    this.searchkit.addAccessor(this.groupAccessor);
 
     this.searchkit.transport.axios.interceptors.request.use(config => {
       const store = this.store;
@@ -51,8 +51,8 @@ export default class SearchManager {
       if (state.auth.accessToken) {
         header.Authorization = "Bearer " + state.auth.accessToken;
       }
-      if (state.auth.accessToken && state.search.index !== null) {
-        header["index-hint"] = state.search.index;
+      if (state.auth.accessToken && state.search.group !== null) {
+        header["index-hint"] = state.search.group;
       }
       store.dispatch(actions.loadSearchRequest(nonce));
       return config;
@@ -64,10 +64,10 @@ export default class SearchManager {
       //const {config, data, headers, request, status, statusText} = response;
       const {data, headers} = response;      const reg = /^kg_(.*)$/;
       const state = this.store && this.store.getState();
-      const [,index] = reg.test(headers["x-selected-index"])?headers["x-selected-index"].match(reg):[null,state.search.index];
+      const [,group] = reg.test(headers["x-selected-group"])?headers["x-selected-group"].match(reg):[null,state.search.group];
       let order = null;
-      if (index && state && state.indexes && state.indexes.indexes && state.indexes.indexes.length && state.indexes.indexSettings && state.indexes.indexSettings[index]) {
-        order = state.indexes.indexSettings[index].facetTypesOrder;
+      if (group && state && state.groups && state.groups.groups && state.groups.groups.length && state.groups.groupSettings && state.groups.groupSettings[group]) {
+        order = state.groups.groupSettings[group].facetTypesOrder;
       } else {
         order = state && state.definition && state.definition.facetTypesOrder;
       }
@@ -97,7 +97,7 @@ export default class SearchManager {
           return 0;
         });
       }
-      store.dispatch(actions.loadSearchResult(data, index, this.fromParamRequest));
+      store.dispatch(actions.loadSearchResult(data, group, this.fromParamRequest));
       return response;
     }, error => {
       //const {config, request, response} = error;
@@ -119,7 +119,7 @@ export default class SearchManager {
           store.dispatch(actions.loadSearchSessionFailure(status));
           break;
         default: {
-          store.dispatch(actions.loadSearchServiceFailure(status, state.search.index));
+          store.dispatch(actions.loadSearchServiceFailure(status, state.search.group));
         }
         }
       }
@@ -142,8 +142,8 @@ export default class SearchManager {
       return;
     }
 
-    if (state.search.index && this.indexAccessor && state.search.index !== this.indexAccessor.getQueryString()) {
-      this.indexAccessor.setQueryString(state.search.index === API.defaultIndex?null:state.search.index);
+    if (state.search.group && this.groupAccessor && state.search.group !== this.groupAccessor.getQueryString()) {
+      this.groupAccessor.setQueryString(state.search.group === API.defaultGroup?null:state.search.group);
     }
 
     if (state.search.hasRequest) {
@@ -152,8 +152,8 @@ export default class SearchManager {
     if (state.definition.hasRequest) {
       this.loadDefinition();
     }
-    if (state.indexes.hasRequest) {
-      this.loadIndexes();
+    if (state.groups.hasRequest) {
+      this.loadGroups();
     }
     if (state.instances.hasRequest) {
       this.loadInstance(state.instances.requestReference);
@@ -175,12 +175,12 @@ export default class SearchManager {
       });
     }
   }
-  loadIndexes() {
+  loadGroups() {
     const store = this.store;
     const state = store.getState();
-    if (!state.indexes.isReady && !state.indexes.isLoading) {
+    if (!state.groups.isReady && !state.groups.isLoading) {
       setTimeout(() => {
-        store.dispatch(actions.loadIndexesRequest());
+        store.dispatch(actions.loadGroupsRequest());
         if (state.auth.accessToken) {
           const options = {
             method: "get",
@@ -188,15 +188,15 @@ export default class SearchManager {
               "Authorization": "Bearer " + state.auth.accessToken
             })
           };
-          API.fetch(API.endpoints.indexes(state.configuration.searchApiHost), options)
-            .then(indexes => {
-              store.dispatch(actions.loadIndexesSuccess(indexes));
+          API.fetch(API.endpoints.groups(state.configuration.searchApiHost), options)
+            .then(groups => {
+              store.dispatch(actions.loadGroupsSuccess(groups));
             })
             .catch(error => {
-              store.dispatch(actions.loadIndexesFailure(error));
+              store.dispatch(actions.loadGroupsFailure(error));
             });
         } else {
-          store.dispatch(actions.loadIndexesSuccess([]));
+          store.dispatch(actions.loadGroupsSuccess([]));
         }
       });
     }
@@ -214,7 +214,7 @@ export default class SearchManager {
             method: "get",
             headers: new Headers({
               "Authorization": "Bearer " + state.auth.accessToken,
-              "index-hint": state.search.index
+              "index-hint": state.search.group
             })
           };
         }

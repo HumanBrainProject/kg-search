@@ -28,7 +28,7 @@ export function reducer(state = initialState, action = {}) {
       message: "Initializing search engine...",
       active: true
     };
-  case types.LOAD_INDEXES_REQUEST:
+  case types.LOAD_GROUPS_REQUEST:
     return {
       message: "Retrieving your profile...",
       active: true
@@ -46,9 +46,9 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_DEFINITION:
   case types.LOAD_DEFINITION_SUCCESS:
   case types.LOAD_DEFINITION_FAILURE:
-  case types.LOAD_INDEXES:
-  case types.LOAD_INDEXES_SUCCESS:
-  case types.LOAD_INDEXES_FAILURE:
+  case types.LOAD_GROUPS:
+  case types.LOAD_GROUPS_SUCCESS:
+  case types.LOAD_GROUPS_FAILURE:
   case types.LOAD_SEARCH_SUCCESS:
   case types.LOAD_SEARCH_BAD_REQUEST:
   case types.LOAD_SEARCH_SERVICE_FAILURE:
@@ -56,7 +56,14 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_INSTANCE_SUCCESS:
   case types.LOAD_INSTANCE_NO_DATA:
   case types.LOAD_INSTANCE_FAILURE:
+    return {
+      message: null,
+      active: false
+    };
   case types.CANCEL_INSTANCE_LOADING:
+    if (/[?&]?search=false&?/.test(window.location.search.toLowerCase())) {
+      window.location.href = window.location.href.replace(/(\?)?search=false&?/gi, "$1");
+    }
     return {
       message: null,
       active: false

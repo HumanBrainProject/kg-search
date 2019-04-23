@@ -47,7 +47,7 @@ const ObjectFieldBase = (renderUserInteractions = true) => {
     </span>
   );
 
-  const ObjectField = ({show, data, mapping, index}) => {
+  const ObjectField = ({show, data, mapping, group}) => {
     if (!show || !mapping || !mapping.visible) {
       return null;
     }
@@ -66,15 +66,15 @@ const ObjectFieldBase = (renderUserInteractions = true) => {
         name: name,
         data: data && data[name],
         mapping: mapping,
-        index: index
+        group: group
       }));
 
     return (
       <List className="kgs-field__object">
         {
-          fields.map(({name, data, mapping, index}, idx) => (
+          fields.map(({name, data, mapping, group}, idx) => (
             <ListItem key={name} separator={mapping.separator} isFirst={!idx}>
-              <FieldComponent name={name} data={data} mapping={mapping} index={index} />
+              <FieldComponent name={name} data={data} mapping={mapping} group={group} />
             </ListItem>
           ))
         }

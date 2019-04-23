@@ -75,13 +75,13 @@ class CollapsibleText extends PureComponent {
   }
 }
 
-const ReferenceComponent = ({text, reference, index, onClick}) => {
+const ReferenceComponent = ({text, reference, group, onClick}) => {
   if (!reference) {
     return null;
   }
 
   const handleClick = () => {
-    typeof onClick === "function" && onClick(reference, index);
+    typeof onClick === "function" && onClick(reference, group);
   };
 
   return (
@@ -93,10 +93,10 @@ const Reference = connect(
   (state, props) => ({
     text: props.text?props.text:props.reference,
     reference: props.reference,
-    index: props.index,
+    group: props.group,
   }),
   dispatch => ({
-    onClick: (reference, index) => dispatch(actions.loadInstance(reference, index))
+    onClick: (reference, group) => dispatch(actions.loadInstance(reference, group))
   })
 )(ReferenceComponent);
 
@@ -251,7 +251,7 @@ class Details extends PureComponent {
 
 const ValueFieldBase = (renderUserInteractions = true) => {
 
-  const ValueField = ({show, data, mapping, index}) => {
+  const ValueField = ({show, data, mapping, group}) => {
     if (!show  || !data|| !mapping || !mapping.visible) {
       return null;
     }
@@ -281,7 +281,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
       ValueComponent = Reference;
       valueProps = {
         reference: data.reference,
-        index: index,
+        group: group,
         text: value?value:data.reference
       };
     } else if (hasLink) {

@@ -76,28 +76,28 @@ export const loadDefinitionFailure = error => {
   };
 };
 
-export const loadIndexes = () => {
+export const loadGroups = () => {
   return {
-    type: types.LOAD_INDEXES
+    type: types.LOAD_GROUPS
   };
 };
 
-export const loadIndexesRequest = () => {
+export const loadGroupsRequest = () => {
   return {
-    type: types.LOAD_INDEXES_REQUEST
+    type: types.LOAD_GROUPS_REQUEST
   };
 };
 
-export const loadIndexesSuccess = indexes => {
+export const loadGroupsSuccess = groups => {
   return {
-    type: types.LOAD_INDEXES_SUCCESS,
-    indexes: indexes
+    type: types.LOAD_GROUPS_SUCCESS,
+    groups: groups
   };
 };
 
-export const loadIndexesFailure = error => {
+export const loadGroupsFailure = error => {
   return {
-    type: types.LOAD_INDEXES_FAILURE,
+    type: types.LOAD_GROUPS_FAILURE,
     error: error
   };
 };
@@ -116,11 +116,11 @@ export const loadSearchBadRequest = status => {
   };
 };
 
-export const loadSearchServiceFailure = (status, index) => {
+export const loadSearchServiceFailure = (status, group) => {
   return {
     type: types.LOAD_SEARCH_SERVICE_FAILURE,
     status: status,
-    index: index
+    group: group
   };
 };
 
@@ -138,11 +138,11 @@ export const loadSearchRequest = nonce => {
   };
 };
 
-export const loadSearchResult = (results, index, from) => {
+export const loadSearchResult = (results, group, from) => {
   return {
     type: types.LOAD_SEARCH_SUCCESS,
     results: results,
-    index: index,
+    group: group,
     from: from
   };
 };
@@ -153,10 +153,10 @@ export const cancelSearch = () => {
   };
 };
 
-export const setIndex = (index, initialize) => {
+export const setGroup = (group, initialize) => {
   return {
-    type: types.SET_INDEX,
-    index: index,
+    type: types.SET_GROUP,
+    group: group,
     initialize: initialize
   };
 };

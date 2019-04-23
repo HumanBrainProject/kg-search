@@ -31,19 +31,21 @@ const initialState = {
 };
 
 const loadDefinition = state => {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     hasRequest: true,
     isLoading: false,
     hasError: false
-  });
+  };
 };
 
 const loadDefinitionRequest = state => {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     hasRequest: false,
     isLoading: true,
     hasError: false
-  });
+  };
 };
 
 const loadDefinitionSuccess = (state, action) => {
@@ -93,8 +95,8 @@ const loadDefinitionSuccess = (state, action) => {
   });
   let facetFields = {};
   let sortFields = { _score: { label: "Relevance", key: "newestFirst",
-      fields: [{ field: "_score", options: { order: "desc" } },{ field: "first_release.value", options: { order: "desc", missing: "_last" } } ],
-      defaultOption: true } };
+    fields: [{ field: "_score", options: { order: "desc" } },{ field: "first_release.value", options: { order: "desc", missing: "_last" } } ],
+    defaultOption: true } };
   let facetTypesOrder = {};
   let facetDefaultSelectedType = null;
   if (source) {
@@ -149,7 +151,8 @@ const loadDefinitionSuccess = (state, action) => {
 
   sortFields = Object.values(sortFields);
 
-  return Object.assign({}, state, {
+  return {
+    ...state,
     isReady: true,
     hasRequest: false,
     isLoading: false,
@@ -160,16 +163,17 @@ const loadDefinitionSuccess = (state, action) => {
     facetTypesOrder: facetTypesOrder,
     facetDefaultSelectedType: facetDefaultSelectedType,
     serviceUrl: serviceUrl
-  });
+  };
 };
 
 const loadDefinitionFailure = (state) => {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     isReady: false,
     hasRequest: false,
     isLoading: false,
     hasError: true
-  });
+  };
 };
 
 const GRAPHQUERY_NAMESPACE = "https://schema.hbp.eu/graphQuery/";
@@ -246,15 +250,15 @@ function simplifySemanticKeysForField(field) {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-    case types.LOAD_DEFINITION:
-      return loadDefinition(state, action);
-    case types.LOAD_DEFINITION_REQUEST:
-      return loadDefinitionRequest(state, action);
-    case types.LOAD_DEFINITION_SUCCESS:
-      return loadDefinitionSuccess(state, action);
-    case types.LOAD_DEFINITION_FAILURE:
-      return loadDefinitionFailure(state, action);
-    default:
-      return state;
+  case types.LOAD_DEFINITION:
+    return loadDefinition(state, action);
+  case types.LOAD_DEFINITION_REQUEST:
+    return loadDefinitionRequest(state, action);
+  case types.LOAD_DEFINITION_SUCCESS:
+    return loadDefinitionSuccess(state, action);
+  case types.LOAD_DEFINITION_FAILURE:
+    return loadDefinitionFailure(state, action);
+  default:
+    return state;
   }
 }

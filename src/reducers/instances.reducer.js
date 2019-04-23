@@ -27,51 +27,56 @@ const initialState = {
 
 const loadInstance = (state, action) => {
   const reference = action.reference || state.loadingReference;
-  return Object.assign({}, state, {
+  return {
+    ...state,
     hasRequest: !!reference,
     requestReference: reference,
     isLoading: false,
     loadingReference: null
-  });
+  };
 };
 
 const loadInstanceRequest = state => {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     hasRequest: false,
     requestReference: null,
     isLoading: true,
     loadingReference: state.requestReference
-  });
+  };
 };
 
 const loadInstanceSuccess = (state, action) => {
   let previousInstances = (state && state.previousInstances instanceof Array)?state.previousInstances:[];
   previousInstances = (state && state.currentInstance)?[...previousInstances,state.currentInstance]:[...previousInstances];
-  return Object.assign({}, state, {
+  return  {
+    ...state,
     hasRequest: false,
     requestReference: null,
     isLoading: false,
     loadingReference: null,
     currentInstance: action.data,
     previousInstances: previousInstances
-  });
+  };
 };
 
 const loadInstanceFailure = state => {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     hasRequest: false,
     requestReference: null,
     isLoading: false
-  });
+  };
 };
 
 const cancelInstanceLoading = state => {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     hasRequest: false,
     requestReference: null,
     isLoading: false,
     loadingReference: null
-  });
+  };
 };
 
 const setInstance = (state, action) => {
@@ -80,42 +85,45 @@ const setInstance = (state, action) => {
   }
   let previousInstances = (state && state.previousInstances instanceof Array)?state.previousInstances:[];
   previousInstances = (state && state.currentInstance)?[...previousInstances,state.currentInstance]:[...previousInstances];
-  return Object.assign({}, state, {
+  return {
+    ...state,
     hasRequest: false,
     requestReference: null,
     isLoading: false,
     loadingReference: null,
     currentInstance: action.data,
     previousInstances: previousInstances
-  });
+  };
 };
 
 const setPreviousInstance = state => {
   if (state.currentInstance) {
     const previousInstances = (state && state.previousInstances instanceof Array)?[...state.previousInstances]:[];
     const currentInstance = previousInstances.pop() || null;
-    return Object.assign({}, state, {
+    return {
+      ...state,
       hasRequest: false,
       requestReference: null,
       isLoading: false,
       loadingReference: null,
       currentInstance: currentInstance,
       previousInstances: previousInstances
-    });
+    };
   }
 
   return state;
 };
 
 const clearAllInstances = state => {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     hasRequest: false,
     requestReference: null,
     isLoading: false,
     loadingReference: null,
     currentInstance: null,
     previousInstances: []
-  });
+  };
 };
 
 const setCurrentInstanceFromBrowserLocation = state => {
@@ -130,14 +138,15 @@ const setCurrentInstanceFromBrowserLocation = state => {
 
   // no instance reference available in url, unset current instance
   if (!instanceType || !instanceId) {
-    return Object.assign({}, state, {
+    return {
+      ...state,
       hasRequest: false,
       requestReference: null,
       isLoading: false,
       loadingReference: null,
       currentInstance: null,
       previousInstances: []
-    });
+    };
   }
 
   // instance reference url is already matching current instance, do notthing
@@ -147,14 +156,15 @@ const setCurrentInstanceFromBrowserLocation = state => {
 
   // no previous instances available, unset current instance
   if (!state || !state.previousInstances.length) {
-    return Object.assign({}, state, {
+    return {
+      ...state,
       hasRequest: false,
       requestReference: null,
       isLoading: false,
       loadingReference: null,
       currentInstance: null,
       previousInstances: []
-    });
+    };
   }
 
   const previousInstances = (state && state.previousInstances instanceof Array)?[...state.previousInstances]:[];
@@ -163,24 +173,26 @@ const setCurrentInstanceFromBrowserLocation = state => {
     instance = previousInstances.pop();
   }
   if (instance && instance._type === instanceType && instance._id === instanceId) {
-    return Object.assign({}, state, {
+    return {
+      ...state,
       hasRequest: false,
       requestReference: null,
       isLoading: false,
       loadingReference: null,
       currentInstance: instance,
       previousInstances: previousInstances
-    });
+    };
   }
 
-  return Object.assign({}, state, {
+  return {
+    ...state,
     hasRequest: false,
     requestReference: null,
     isLoading: false,
     loadingReference: null,
     currentInstance: null,
     previousInstances: []
-  });
+  };
 };
 
 export function reducer(state = initialState, action = {}) {

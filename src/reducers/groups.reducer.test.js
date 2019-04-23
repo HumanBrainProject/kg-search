@@ -15,13 +15,13 @@
 */
 
 import * as actions from "../actions";
-import { reducer as indexesReducer} from "./indexes.reducer";
-describe('indexes reducer', () => {
+import { reducer as groupsReducer} from "./groups.reducer";
+describe('groups reducer', () => {
     describe('unknown action', () => {
         it('should return same state', () => {
             const state = {a: {c: 1, d: 2}, b: [{e:3}, {e:4}]};
             const action = {type: "ABCDEFGH"};
-            const newState = indexesReducer(state, action);
+            const newState = groupsReducer(state, action);
             expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
         });
     });

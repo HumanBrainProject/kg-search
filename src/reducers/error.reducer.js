@@ -35,12 +35,12 @@ export function reducer(state = initialState, action = {}) {
       cancel: null
     };
   }
-  case types.LOAD_INDEXES_FAILURE: {
+  case types.LOAD_GROUPS_FAILURE: {
     return {
       message: "The search engine is temporary unavailable. Please retry in a moment.",
       retry: {
         label: "Retry",
-        action: types.LOAD_INDEXES
+        action: types.LOAD_GROUPS
       },
       cancel: null
     };
@@ -57,8 +57,8 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_SEARCH_SERVICE_FAILURE: {
     const serviceStatus = action.status?` [code ${action.status}]`:"";
     let message = `The search engine is temporary unavailable${serviceStatus}. Please retry in a moment.`;
-    if (action.status === 404 && action.index) {
-      message = `The index of group "${action.index}" is temporary not available${serviceStatus}. Please retry in a moment.`;
+    if (action.status === 404 && action.group) {
+      message = `The group of group "${action.group}" is temporary not available${serviceStatus}. Please retry in a moment.`;
     }
     return {
       message: message,
@@ -111,9 +111,9 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_DEFINITION:
   case types.LOAD_DEFINITION_REQUEST:
   case types.LOAD_DEFINITION_SUCCESS:
-  case types.LOAD_INDEXES:
-  case types.LOAD_INDEXES_REQUEST:
-  case types.LOAD_INDEXES_SUCCESS:
+  case types.LOAD_GROUPS:
+  case types.LOAD_GROUPS_REQUEST:
+  case types.LOAD_GROUPS_SUCCESS:
   case types.LOAD_SEARCH_REQUEST:
   case types.LOAD_SEARCH_SUCCESS:
   case types.CANCEL_SEARCH:

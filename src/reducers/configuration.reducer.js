@@ -45,7 +45,10 @@ const initialState = {
 };
 
 const initializeConfig = (state, action) => {
-  return Object.assign({}, state, action.options, {isReady: true});
+  return {
+    ...state,
+    ...action.options,
+    isReady: true};
 };
 
 export function reducer(state = initialState, action = {}) {

@@ -1,14 +1,14 @@
 const endpoints = {
   "definition": (host) => `${host}/proxy/kg_labels/labels/labels`,
-  "indexes": (host) => `${host}/auth/groups`,
+  "groups": (host) => `${host}/auth/groups`,
   "search": (host) => `${host}/proxy/search/kg`,
   "instance": (host, id) => `${host}/proxy/default/kg/${id}`
 };
 
-const default_index = "public";
+const default_group = "public";
 
 class API{
-  defaultIndex = default_index;
+  defaultGroup = default_group;
   get endpoints(){
     return endpoints;
   }

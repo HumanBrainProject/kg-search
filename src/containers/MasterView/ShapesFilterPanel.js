@@ -87,8 +87,8 @@ class ShapesFilterPanelBase extends SearchkitComponent {
 export const ShapesFilterPanel = connect(
   state => {
     let defaultShape = null;
-    if (state && state.search && state.search.index && state.indexes && state.indexes.indexes && state.indexes.indexes.length && state.indexes.indexSettings && state.indexes.indexSettings[state.search.index]) {
-      defaultShape = state.indexes.indexSettings[state.search.index].facetDefaultSelectedType;
+    if (state && state.search && state.search.group && state.groups && state.groups.groups && state.groups.groups.length && state.groups.groupSettings && state.groups.groupSettings[state.search.group]) {
+      defaultShape = state.groups.groupSettings[state.search.group].facetDefaultSelectedType;
     } else {
       defaultShape = state && state.definition && state.definition.facetDefaultSelectedType;
     }

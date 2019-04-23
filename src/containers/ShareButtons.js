@@ -16,28 +16,42 @@
 
 import { connect } from "react-redux";
 import { ShareButtons as Component } from "../components/ShareButtons";
+import API from "../services/API";
 
-const getShareEmailToLink = (url) => {
+const getShareEmailToLink = url => {
   const to= "";
   const subject= "Knowledge Graph Search Request";
   const body = "Please have a look to the following Knowledge Graph search request";
   return `mailto:${to}?subject=${subject}&body=${body} ${escape(url)}.`;
 };
 
-
-const getClipboardContent = (state, location, isCurrentInstance) => {
-  var href = "";
-  if(isCurrentInstance){
-    href =  `instances/${location.hash.substring(1)}`;
-  }else{
-    href = location.search;
+const getClipboardContent = (state, location, currentInstance, currentGroup) => {
+  let href = "";
+  if (currentInstance) {
+    if (currentInstance.found && currentInstance._index && currentInstance._type && currentInstance._id) {
+      const indexReg = /^kg_(.*)$/;
+      const group = indexReg.test(currentInstance._index)?currentInstance._index.match(indexReg)[1]:(currentGroup?currentGroup:null);
+      href = `instances/${currentInstance._type}/${currentInstance._id}${(group && group !== API.defaultGroup)?("?group=" + group):""}`;
+    } else {
+      const instanceId = location.hash.substring(1);
+      if (instanceId) {
+        href = `instances/${instanceId}${(currentGroup && currentGroup !== API.defaultGroup)?("?group=" + currentGroup):""}`;
+      } else {
+        href = `webapp/${location.search}`;
+      }
+    }
+  } else {
+    href = `webapp/${location.search}`;
   }
-  return `${state.definition.serviceUrl}/webapp/${href}`;
+  return `${state.definition.serviceUrl}/${href}`;
 };
 
 export const ShareButtons = connect(
-  state => ({
-    clipboardContent: getClipboardContent(state, window.location, state.instances.currentInstance),
-    emailToLink: getShareEmailToLink(getClipboardContent(state, window.location, state.instances.currentInstance))
-  })
+  state => {
+    const href = getClipboardContent(state, window.location, state.instances.currentInstance, state.search.group);
+    return {
+      clipboardContent: href,
+      emailToLink: getShareEmailToLink(href)
+    };
+  }
 )(Component);
