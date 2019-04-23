@@ -32,7 +32,7 @@ const getClipboardContent = (state, location, currentInstance, currentGroup) => 
       const indexReg = /^kg_(.*)$/;
       const group = indexReg.test(currentInstance._index)?currentInstance._index.match(indexReg)[1]:(currentGroup?currentGroup:null);
       if (group && group !== API.defaultGroup) {
-        href = `groups/${group}/${currentInstance._type}/${currentInstance._id}`;
+        href = `groups/${group}/instances/${currentInstance._type}/${currentInstance._id}`;
       } else {
         href = `instances/${currentInstance._type}/${currentInstance._id}`;
       }
@@ -40,18 +40,18 @@ const getClipboardContent = (state, location, currentInstance, currentGroup) => 
       const instanceId = location.hash.substring(1);
       if (instanceId) {
         if (currentGroup && currentGroup !== API.defaultGroup) {
-          href = `groups/${currentGroup}/${instanceId}`;
+          href = `groups/${currentGroup}/instances/${instanceId}`;
         } else {
           href = `instances/${instanceId}`;
         }
       } else {
-        href = location.search;
+        href = `webapp/${location.search}`;
       }
     }
   } else {
-    href = location.search;
+    href = `webapp/${location.search}`;
   }
-  return `${state.definition.serviceUrl}/webapp/${href}`;
+  return `${state.definition.serviceUrl}/${href}`;
 };
 
 export const ShareButtons = connect(
