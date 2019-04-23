@@ -31,19 +31,11 @@ const getClipboardContent = (state, location, currentInstance, currentGroup) => 
     if (currentInstance.found && currentInstance._index && currentInstance._type && currentInstance._id) {
       const indexReg = /^kg_(.*)$/;
       const group = indexReg.test(currentInstance._index)?currentInstance._index.match(indexReg)[1]:(currentGroup?currentGroup:null);
-      if (group && group !== API.defaultGroup) {
-        href = `groups/${group}/instances/${currentInstance._type}/${currentInstance._id}`;
-      } else {
-        href = `instances/${currentInstance._type}/${currentInstance._id}`;
-      }
+      href = `instances/${currentInstance._type}/${currentInstance._id}${(group && group !== API.defaultGroup)?("?group=" + group):""}`;
     } else {
       const instanceId = location.hash.substring(1);
       if (instanceId) {
-        if (currentGroup && currentGroup !== API.defaultGroup) {
-          href = `groups/${currentGroup}/instances/${instanceId}`;
-        } else {
-          href = `instances/${instanceId}`;
-        }
+        href = `instances/${instanceId}${(currentGroup && currentGroup !== API.defaultGroup)?("?group=" + currentGroup):""}`;
       } else {
         href = `webapp/${location.search}`;
       }
