@@ -57,5 +57,5 @@ class RedirectController @Inject()(
 
 object RedirectController {
   val searchFalseQueryString: String = "search=false"
-  val groupKeyQueryString: String = "index"
+  val groupKeyQueryString: String = "group"
 }
