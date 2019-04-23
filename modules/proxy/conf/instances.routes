@@ -1,2 +1,2 @@
 
-GET /:datatype/:id      controllers.RedirectController.get(datatype, id)
+GET /:datatype/:id      controllers.RedirectController.get(datatype, id, group: Option[String])
