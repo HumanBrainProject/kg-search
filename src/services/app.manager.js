@@ -14,14 +14,18 @@
 *   limitations under the License.
 */
 
+import API from "./API";
 import * as actions from "../actions";
 import SearchManager from "./search.manager";
-import { generateKey, getAuthUrl } from "../helpers/OIDCHelpers";
+import { generateKey, getHashKey, getSearchKey, searchToObj, getAuthUrl } from "../helpers/OIDCHelpers";
+
+const regReference = /^#(.*)$/;
 
 export default class AppManager {
   constructor(store, options) {
     this.store = store;
     this.isStarted = false;
+    this.initialIndex = null;
     this.initialInstanceReference = null;
     this.hitIssuer = null;
     this.previousStateInstances = store.getState().instances;
@@ -30,30 +34,56 @@ export default class AppManager {
     this.locationHref = window.location.href;
     this.unsubscribe = null;
     this.searchInterfaceIsDisabled = false;
-
-    const regStartHistory  = /^([^#]+)#?.*$/;
-    const regAccessToken = /^#access_token=([^&]+)&.*$/;
-    const regReference = /^#(.*)$/;
-    const regSearchInterfaceIsDisabled = /^\?.*&?search=false.*$/;
-
-    const [, startHistory] = regStartHistory.test(window.location.href)? window.location.href.match(regStartHistory):[null, null];
-    const [, accessToken] = regAccessToken.test(window.location.hash)? window.location.hash.match(regAccessToken):[null, null];
-    const [, initialInstanceReference] = !accessToken && regReference.test(window.location.hash)? window.location.hash.match(regReference):[null, null];
-    this.searchInterfaceIsDisabled = initialInstanceReference && regSearchInterfaceIsDisabled.test(window.location.search.toLocaleLowerCase());
-
-    this.search = new SearchManager(store, this.searchInterfaceIsDisabled);
-
+    let startHistory = null;
+    const accessToken = getHashKey("access_token");
+    let initialIndex = null;
+    let initialInstanceReference = null;
     if (accessToken) {
-      store.dispatch(actions.authenticate(accessToken));
-    } else if (initialInstanceReference) {
-      this.initialInstanceReference = initialInstanceReference;
+      const aState = getHashKey("state");
+      const state = aState?JSON.parse(atob(aState)):null;
+      if (state) {
+        if (state.index && state.index !== API.defaultIndex) {
+          initialIndex = state.index;
+        }
+        if (state.instanceReference) {
+          initialInstanceReference = state.instanceReference;
+        }
+        this.searchInterfaceIsDisabled = initialInstanceReference && state.search === "false";
+        startHistory = window.location.protocol + "//" + window.location.host + window.location.pathname + Object.entries(state).reduce((result, [key, value]) => {
+          return (key === "instanceReference"?result:(result + (result === ""?"?":"&") + key + "=" + value));
+        }, "");
+      }
+      //const expiresIn = getHashKey("expires_in");
+    } else {
+      initialIndex = getSearchKey("index");
+      initialInstanceReference = regReference.test(window.location.hash)?window.location.hash.match(regReference)[1]:null;
+      this.searchInterfaceIsDisabled = initialInstanceReference && getSearchKey("search", true) === "false";
+      startHistory = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search;
     }
-    if (startHistory && this.searchInterfaceIsDisabled && (accessToken || initialInstanceReference)) {
+
+    if (!accessToken && initialIndex && initialIndex !== API.defaultIndex) {
+      this.authenticate();
+
+    } else {
+
+      this.search = new SearchManager(store, this.searchInterfaceIsDisabled);
+
+      if (initialIndex) {
+        this.initialIndex = initialIndex;
+      }
+      if (initialInstanceReference) {
+        this.initialInstanceReference = initialInstanceReference;
+      }
+
+      if (accessToken) {
+        store.dispatch(actions.authenticate(accessToken));
+      }
+
       const historyState = window.history.state;
       window.history.replaceState(historyState, "Knowledge Graph Search", startHistory);
-    }
 
-    this.start(options);
+      this.start(options);
+    }
   }
   start(options) {
     if (!this.isStarted) {
@@ -71,14 +101,21 @@ export default class AppManager {
   get searchkit() {
     return this.search && this.search.searchkit;
   }
+  authenticate() {
+    const config = this.store.getState().configuration;
+    const state1 = searchToObj(window.location.search);
+    const state2 = regReference.test(window.location.hash)?{instanceReference: window.location.hash.match(regReference)[1]}:null;
+    const state = Object.assign({}, state1, state2);
+    const stateKey = btoa(JSON.stringify(state));
+    const nonceKey = generateKey();
+    window.location.href = getAuthUrl(config.oidcUri, config.oidcClientId, stateKey, nonceKey);
+  }
   handleStateChange = () => {
     const store = this.store;
     const state = store.getState();
 
     if (state.auth.authenticate) {
-      const stateKey = generateKey();
-      const nonceKey = generateKey();
-      window.location.href = getAuthUrl(state.configuration.oidcUri, state.configuration.oidcClientId, stateKey, nonceKey);
+      this.authenticate();
     }
 
     if (!state.application.isReady) {
@@ -97,6 +134,15 @@ export default class AppManager {
             store.dispatch(actions.loadIndexes());
           }
           return;
+        }
+
+        if (state.indexes.isReady && this.initialIndex && this.initialIndex !== API.defaultIndex) {
+          const index = this.initialIndex;
+          this.initialIndex = null;
+          if (state.indexes.indexes.some(e => e.value === index)) {
+            store.dispatch(actions.setIndex(index, true));
+            return;
+          }
         }
 
         store.dispatch(actions.setApplicationReady(true));

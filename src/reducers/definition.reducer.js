@@ -51,7 +51,7 @@ const loadDefinitionSuccess = (state, action) => {
   const source = action.definition && action.definition._source;
   simplifySemantics(source);
   const shapeMappings = source;
-  var serviceUrl = "";
+  let serviceUrl = "";
   if(source && source.serviceUrl){
     serviceUrl = source.serviceUrl;
     delete source.serviceUrl;

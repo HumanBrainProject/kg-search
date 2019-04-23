@@ -28,6 +28,74 @@ export const generateKey = () => {
   return key;
 };
 
+const regParam = /^(.+)=(.+)$/;
+
+export const searchToObj = search => {
+  if (typeof search !== "string") {
+    search = window.location.search;
+  }
+  if (search.length <= 1) {
+    return {};
+  }
+  return search.replace(/^\??(.*)$/, "$1").split("&").reduce((result, param) => {
+    if (param === "" || !regParam.test(param)) {
+      return result;
+    }
+    const [ , key, value] = param.match(regParam);
+    result[key] = value;
+    return result;
+  }, {});
+};
+
+export const getSearchKey = (key, ignoreCase=false, search) => {
+  if (typeof key !== "string") {
+    return null;
+  }
+  if (!ignoreCase) {
+    return searchToObj(search)[key];
+  }
+  key = key.toLocaleLowerCase();
+  const obj = searchToObj(search);
+  if (obj[key]) {
+    return obj[key];
+  }
+  let result = null;
+  Object.entries(obj).some(([name, value]) => {
+    if (name.toLocaleLowerCase() === key) {
+      result = value;
+      return true;
+    }
+    return false;
+  });
+  return result;
+};
+
+export const getHashKey = (key, hash) => {
+  if (typeof key !== "string") {
+    return null;
+  }
+  if (typeof hash !== "string") {
+    hash = window.location.hash;
+  }
+  const patterns = [
+    `^#${key}=([^&]+)&.+$`,
+    `^.+&${key}=([^&]+)&.+$`,
+    `^#${key}=([^&]+)$`,
+    `^.+&${key}=([^&]+)$`
+  ];
+  let value = null;
+  patterns.some(pattern => {
+    const reg = new RegExp(pattern);
+    const m = hash.match(reg);
+    if (m && m.length === 2) {
+      value = m[1];
+      return true;
+    }
+    return false;
+  });
+  return value;
+};
+
 export const getAuthUrl = (host, clientId, stateKey, nonceKey) => {
   const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
   return `${host}?response_type=id_token%20token&client_id=${clientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`;

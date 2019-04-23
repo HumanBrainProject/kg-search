@@ -14,9 +14,8 @@
 *   limitations under the License.
 */
 
+import API from "../services/API";
 import * as types from "../actions.types";
-
-const default_index = "public";
 
 const initialState = {
   isReady: false,
@@ -24,7 +23,7 @@ const initialState = {
   hasRequest: false,
   isLoading: false,
   nonce: null,
-  index: default_index,
+  index: API.defaultIndex,
   results: {},
   from: 0
 };
@@ -36,7 +35,34 @@ const setSearchReady = (state, action) => {
 };
 
 const setIndex = (state, action) => {
-  return Object.assign({}, state, {hasRequest: action.index !== state.index, index: action.index});
+  if (action && action.index) {
+    if (action.index === state.index) {
+      return state;
+    }
+    return Object.assign({}, state, {hasRequest: !action.initialize, index: action.index});
+  }
+  // Reset
+  if (state.index === API.defaultIndex) {
+    return state;
+  }
+  return Object.assign({}, state, {hasRequest: !action.initialize, index: API.defaultIndex});
+};
+
+const loadIndexesSuccess = (state, action) => {
+  if (action.indexes instanceof Array && action.indexes.some(e => e.name === state.index)) {
+    return state;
+  }
+  if (state.index === API.defaultIndex) {
+    return state;
+  }
+  return Object.assign({}, state, { index: API.defaultIndex });
+};
+
+const loadIndexesFailure = state => {
+  if (state.index === API.defaultIndex) {
+    return state;
+  }
+  return Object.assign({}, state, { index: API.defaultIndex });
 };
 
 const loadSearch = state => {
@@ -71,7 +97,11 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_SEARCH_SESSION_FAILURE:
     return loadSearchFail(state, action);
   case types.LOGOUT:
-    return setIndex(state, {index: default_index});
+    return setIndex(state, {index: API.defaultIndex});
+  case types.LOAD_INDEXES_SUCCESS:
+    return loadIndexesSuccess(state, action);
+  case types.LOAD_INDEXES_FAILURE:
+    return loadIndexesFailure(state, action);
   default:
     return state;
   }

@@ -153,10 +153,11 @@ export const cancelSearch = () => {
   };
 };
 
-export const setIndex = index => {
+export const setIndex = (index, initialize) => {
   return {
     type: types.SET_INDEX,
-    index: index
+    index: index,
+    initialize: initialize
   };
 };
 

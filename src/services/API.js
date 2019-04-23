@@ -5,7 +5,10 @@ const endpoints = {
   "instance": (host, id) => `${host}/proxy/default/kg/${id}`
 };
 
+const default_index = "public";
+
 class API{
+  defaultIndex = default_index;
   get endpoints(){
     return endpoints;
   }

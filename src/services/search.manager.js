@@ -16,7 +16,7 @@
 
 import * as actions from "../actions";
 import API from "./API";
-import { SearchkitManager } from "searchkit";
+import { SearchkitManager, BaseQueryAccessor } from "searchkit";
 import { SearchKitHelpers } from "../helpers/SearchKitHelpers";
 import { generateKey} from "../helpers/OIDCHelpers";
 
@@ -37,6 +37,9 @@ export default class SearchManager {
       timeout: timeout,
       searchOnLoad: searchOnLoad
     });
+
+    this.indexAccessor = new BaseQueryAccessor("index");
+    this.searchkit.addAccessor(this.indexAccessor);
 
     this.searchkit.transport.axios.interceptors.request.use(config => {
       const store = this.store;
@@ -69,7 +72,8 @@ export default class SearchManager {
         order = state && state.definition && state.definition.facetTypesOrder;
       }
       if (order) {
-        data.aggregations.facet_type2._type.buckets.sort((a,b) => {
+        const uuid = this.searchkit.accessors.statefulAccessors["facet_type"] && this.searchkit.accessors.statefulAccessors["facet_type"].uuid;
+        uuid &&  data.aggregations && data.aggregations[uuid] &&  data.aggregations[uuid]._type && data.aggregations[uuid]._type.buckets instanceof Array && data.aggregations[uuid]._type.buckets.sort((a,b) => {
           if (order[a.key] !== undefined && order[b.key] !== undefined) {
             return order[a.key] - order[b.key];
           }
@@ -136,6 +140,10 @@ export default class SearchManager {
       }
       store.dispatch(actions.setSearchReady(true));
       return;
+    }
+
+    if (state.search.index && this.indexAccessor && state.search.index !== this.indexAccessor.getQueryString()) {
+      this.indexAccessor.setQueryString(state.search.index === API.defaultIndex?null:state.search.index);
     }
 
     if (state.search.hasRequest) {
