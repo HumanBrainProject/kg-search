@@ -26,9 +26,10 @@ const initialState = {
 };
 
 const setApplicationReady = (state, action) => {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     isReady: action.isReady
-  });
+  };
 };
 
 const agreeTermsShortNotice = state => {
@@ -36,21 +37,24 @@ const agreeTermsShortNotice = state => {
     localStorage.setItem(TermsShortNoticeLocalStorageKey, true);
   }
   setTimeout(() => window.dispatchEvent(new Event("resize")), 250);
-  return Object.assign({}, state, {
+  return {
+    ...state,
     showTermsShortNotice: false
-  });
+  };
 };
 
 const setLayoutMode = (state, action) => {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     gridLayoutMode: action.gridLayoutMode
-  });
+  };
 };
 
 const setInfo = (state, action) => {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     info: action.text
-  });
+  };
 };
 
 export function reducer(state = initialState, action = {}) {

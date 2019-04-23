@@ -23,27 +23,30 @@ const initialState = {
 };
 
 const requestAuthentication = state => {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     accessToken: null,
     authenticate: true,
     isAuthenticated: false
-  });
+  };
 };
 
 const authenticate = (state, action) => {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     accessToken: action.accessToken,
     authenticate: false,
     isAuthenticated: !!action.accessToken
-  });
+  };
 };
 
 const logout = state => {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     accessToken: null,
     authenticate: false,
     isAuthenticated: null
-  });
+  };
 };
 
 export function reducer(state = initialState, action = {}) {

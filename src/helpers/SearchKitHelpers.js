@@ -37,7 +37,7 @@ export class SearchKitHelpers {
       maxNbOfTermsTrigger: 4 // maximum number of terms before tweaking is turned off
     };
 
-    queryTweaking = Object.assign({}, defaultQueryTweakingConfig, queryTweaking);
+    queryTweaking = {...defaultQueryTweakingConfig, ...queryTweaking};
 
     function getTerms(node) {
       function addTermsFromExpression(node, terms) {

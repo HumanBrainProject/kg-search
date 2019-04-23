@@ -29,9 +29,10 @@ const initialState = {
 };
 
 const setSearchReady = (state, action) => {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     isReady: action.isReady
-  });
+  };
 };
 
 const setGroup = (state, action) => {
@@ -39,13 +40,21 @@ const setGroup = (state, action) => {
     if (action.group === state.group) {
       return state;
     }
-    return Object.assign({}, state, {hasRequest: !action.initialize, group: action.group});
+    return {
+      ...state,
+      hasRequest: !action.initialize,
+      group: action.group
+    };
   }
   // Reset
   if (state.group === API.defaultGroup) {
     return state;
   }
-  return Object.assign({}, state, {hasRequest: !action.initialize, group: API.defaultGroup});
+  return {
+    ...state,
+    hasRequest: !action.initialize,
+    group: API.defaultGroup
+  };
 };
 
 const loadGroupsSuccess = (state, action) => {
@@ -55,30 +64,59 @@ const loadGroupsSuccess = (state, action) => {
   if (state.group === API.defaultGroup) {
     return state;
   }
-  return Object.assign({}, state, { group: API.defaultGroup });
+  return {
+    ...state,
+    group: API.defaultGroup
+  };
 };
 
 const loadGroupsFailure = state => {
   if (state.group === API.defaultGroup) {
     return state;
   }
-  return Object.assign({}, state, { group: API.defaultGroup });
+  return {
+    ...state,
+    group: API.defaultGroup
+  };
 };
 
 const loadSearch = state => {
-  return Object.assign({}, state, {hasRequest: !state.isLoading});
+  return {
+    ...state,
+    hasRequest: !state.isLoading
+  };
 };
 
 const loadSearchRequest = (state, action) => {
-  return Object.assign({}, state, {isLoading: true, hasRequest: false, nonce: action.nonce});
+  return {
+    ...state,
+    isLoading: true,
+    hasRequest: false,
+    nonce: action.nonce
+  };
 };
 
 const loadSearchResult = (state, action) => {
-  return Object.assign({}, state, {initialRequestDone: true, isLoading: false, nonce: null, group:action.group?action.group:state.group, results: action.results, from: action.from?Number(action.from):0});
+  return {
+    ...state,
+    initialRequestDone: true,
+    isLoading: false,
+    nonce: null,
+    group:action.group?action.group:state.group,
+    results: action.results,
+    from: action.from?Number(action.from):0
+  };
 };
 
 const loadSearchFail = state => {
-  return Object.assign({}, state, {isLoading: false, nonce: null, group:state.group, results: [], from: 0});
+  return {
+    ...state,
+    isLoading: false,
+    nonce: null,
+    group:state.group,
+    results: [],
+    from: 0
+  };
 };
 
 export function reducer(state = initialState, action = {}) {

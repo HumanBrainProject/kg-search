@@ -105,7 +105,7 @@ export default class AppManager {
     const config = this.store.getState().configuration;
     const state1 = searchToObj(window.location.search);
     const state2 = regReference.test(window.location.hash)?{instanceReference: window.location.hash.match(regReference)[1]}:null;
-    const state = Object.assign({}, state1, state2);
+    const state = {...state1, ...state2};
     const stateKey = btoa(JSON.stringify(state));
     const nonceKey = generateKey();
     window.location.href = getAuthUrl(config.oidcUri, config.oidcClientId, stateKey, nonceKey);

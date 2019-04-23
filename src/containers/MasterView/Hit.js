@@ -70,8 +70,10 @@ const getTitleField = (group, data, highlight, mapping) => {
   let fieldData = data;
   if (highlight && highlight["title.value"] && highlight["title.value"].length > 0) {
     const value = replaceMarkdownEscapedChars(highlight["title.value"][0]);
-    fieldData = Object.assign({}, data);
-    fieldData.value = value;
+    fieldData = {
+      ...data,
+      value: value
+    };
   }
 
   return {
@@ -84,7 +86,10 @@ const getTitleField = (group, data, highlight, mapping) => {
 
 const getDescriptionField = (group, data, highlight, mapping) => {
 
-  const fieldMapping = mapping && Object.assign({}, mapping, {collapsible: false});
+  const fieldMapping = mapping && {
+    ...mapping,
+    collapsible: false
+  };
 
   let fieldData = data;
 
@@ -99,8 +104,10 @@ const getDescriptionField = (group, data, highlight, mapping) => {
   }
 
   if (modifiedValue !== value) {
-    fieldData = Object.assign({}, data);
-    fieldData.value = modifiedValue;
+    fieldData = {
+      ...data,
+      value: modifiedValue
+    };
   }
 
   return {
@@ -115,11 +122,13 @@ const getComponentField = (group, data, mapping) => {
   let fieldData = data;
   let fieldMapping = mapping;
   if (data && data.value) {
-    fieldData = Object.assign({}, data); // assuming value children are values
-    fieldData.value = "From the " + data.value + " project";
+    fieldData = {
+      ...data, // assuming value children are values
+      value: "From the " + data.value + " project"
+    };
 
     // remove title
-    fieldMapping = mapping && Object.assign({}, mapping);
+    fieldMapping = mapping && {...mapping};
     fieldMapping && delete fieldMapping.value; // no deep cloning needed as only first level is modified
   }
 

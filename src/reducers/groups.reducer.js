@@ -26,19 +26,21 @@ const initialState = {
 };
 
 const loadGroups = state => {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     hasRequest: true,
     isLoading: false,
     hasError: false
-  });
+  };
 };
 
 const loadGroupsRequest = state => {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     hasRequest: false,
     isLoading: true,
     hasError: false
-  });
+  };
 };
 
 const loadGroupsSuccess = (state, action) => {
@@ -55,25 +57,27 @@ const loadGroupsSuccess = (state, action) => {
     });
   }
 
-  return Object.assign({}, state, {
+  return {
+    ...state,
     isReady: true,
     hasRequest: false,
     isLoading: false,
     hasError: false,
     groups: groups,
     groupSettings: groupSettings
-  });
+  };
 };
 
 const loadGroupsFailure = state => {
-  return Object.assign({}, state, {
+  return {
+    ...state,
     isReady: false,
     hasRequest: false,
     isLoading: false,
     hasError: true,
     groups: [],
     groupSettings: {}
-  });
+  };
 };
 
 export function reducer(state = initialState, action = {}) {
