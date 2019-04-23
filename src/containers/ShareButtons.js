@@ -17,17 +17,27 @@
 import { connect } from "react-redux";
 import { ShareButtons as Component } from "../components/ShareButtons";
 
-const getShareEmailToLink = (removeHash) => {
+const getShareEmailToLink = (url) => {
   const to= "";
   const subject= "Knowledge Graph Search Request";
   const body = "Please have a look to the following Knowledge Graph search request";
-  const url = removeHash?window.location.href.replace(window.location.hash, ""):window.location.href;
   return `mailto:${to}?subject=${subject}&body=${body} ${escape(url)}.`;
+};
+
+
+const getClipboardContent = (state, location, isCurrentInstance) => {
+  var href = "";
+  if(isCurrentInstance){
+    href =  `instances/${location.hash.substring(1)}`;
+  }else{
+    href = location.search;
+  }
+  return `${state.definition.serviceUrl}/webapp/${href}`;
 };
 
 export const ShareButtons = connect(
   state => ({
-    clipboardContent: window.location.href,
-    emailToLink: getShareEmailToLink(!state.instances.currentInstance)
+    clipboardContent: getClipboardContent(state, window.location, state.instances.currentInstance),
+    emailToLink: getShareEmailToLink(getClipboardContent(state, window.location, state.instances.currentInstance))
   })
 )(Component);
