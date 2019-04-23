@@ -30,6 +30,8 @@ const HitsPanelBase = ({lists, itemComponent, getKey, layout, onClick}) => (
   </React.Fragment>
 );
 
+const newTagDuration = 28 * 24  * 60 * 60 * 1000; // 28 days
+
 const mapStateToProps = (state, props) => {
   const {hits} = props;
 
@@ -63,10 +65,19 @@ const mapStateToProps = (state, props) => {
     }
   }
 
+  const isNewRelease = (hit) => {
+    if(hit._source.last_release && hit._source.first_release){
+      const lastRelease = new Date(hit._source.last_release.value);
+      const firstRelease = new Date(hit._source.first_release.value);
+      return lastRelease - firstRelease < 60000 && Date.now() - lastRelease < newTagDuration;
+    }
+    return false;
+  };
+
   const topMatchHits = [];
   const moreHits = [];
   hits.forEach(hit => {
-    if (limit !== -1 && hit._score >= limit) {
+    if ( (limit !== -1 && hit._score >= limit) || isNewRelease(hit)) {
       topMatchHits.push(hit);
     } else {
       moreHits.push(hit);

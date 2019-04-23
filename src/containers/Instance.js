@@ -16,6 +16,7 @@
 
 import React from "react";
 import { connect } from "react-redux";
+import API from "../services/API";
 import { Field } from "./Field";
 import { FieldsPanel } from "./FieldsPanel";
 import { FieldsTabs } from "./FieldsTabs";
@@ -27,6 +28,7 @@ export const InstanceBase = ({className, type, hasNoData, hasUnknownData, header
     <div className={classNames} data-type={type}>
       <div className="kgs-instance__content">
         <div className="kgs-instance__header">
+          <h3 className={`kgs-instance__group ${header.index && header.index !== API.defaultIndex?"show":""}`}>Group: <strong>{header.index}</strong></h3>
           <div>
             <Field {...header.icon} />
             <Field {...header.type} />
@@ -89,15 +91,17 @@ const getFields = (index, type, data, mapping, filter) => {
 export const Instance = connect(
   (state, {data}) => {
 
+    const indexReg = /^kg_(.*)$/;
     const source = data && !(data.found === false) && data._type && data._source;
     const mapping = source && state.definition && state.definition.shapeMappings && state.definition.shapeMappings[data._type];
-    const index = (data && !(data.found === false) && data._index)?data._index:"public";
+    const index = (data && indexReg.test(data._index))?data._index.match(indexReg)[1]:API.defaultIndex;
 
     return {
       type: data && data._type,
       hasNoData: !source,
       hasUnknownData: !mapping,
       header: {
+        index: index,
         icon:  getField(index, data && data._type, "icon", {value: data && data._type, image: {url: source && source.image && source.image.url}}, {visible: true, type: "icon", icon: mapping && mapping.icon}),
         type:  getField(index, data && data._type, "type"),
         title: getField(index, data && data._type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"])

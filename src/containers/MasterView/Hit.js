@@ -16,6 +16,7 @@
 
 import React from "react";
 import { connect } from "react-redux";
+import API from "../../services/API";
 import { PrintViewField } from "../Field";
 import { HitRibbon } from "./HitRibbon";
 import { HighlightsField} from "./HighlightsField";
@@ -188,7 +189,7 @@ export const Hit = connect(
   (state, {data}) => {
     const source = data && !(data.found === false) && data._type && data._source;
     const mapping = source && state.definition && state.definition.shapeMappings && state.definition.shapeMappings[data._type];
-    const index = (data && !(data.found === false) && data._index)?data._index:"public";
+    const index = (data && !(data.found === false) && data._index)?data._index:API.defaultIndex;
 
     const ribbonData = mapping && mapping.ribbon && mapping.ribbon.framed && mapping.ribbon.framed.dataField && source[mapping.ribbon.framed.dataField];
     const iconData = {

@@ -25,7 +25,7 @@ const initialState = {
   indexSettings: {}
 };
 
-const loadIndexes = (state) => {
+const loadIndexes = state => {
   return Object.assign({}, state, {
     hasRequest: true,
     isLoading: false,
@@ -33,7 +33,7 @@ const loadIndexes = (state) => {
   });
 };
 
-const loadIndexesRequest = (state) => {
+const loadIndexesRequest = state => {
   return Object.assign({}, state, {
     hasRequest: false,
     isLoading: true,
@@ -41,7 +41,7 @@ const loadIndexesRequest = (state) => {
   });
 };
 
-const loadIndexesSuccess  = (state, action) => {
+const loadIndexesSuccess = (state, action) => {
 
   const indexes = (action.indexes instanceof Array)?[...action.indexes.map(e => ({label: e.name, value: e.name}))]:[];
   const indexSettings = {};
@@ -65,7 +65,7 @@ const loadIndexesSuccess  = (state, action) => {
   });
 };
 
-const loadIndexesFailure  = state => {
+const loadIndexesFailure = state => {
   return Object.assign({}, state, {
     isReady: false,
     hasRequest: false,
