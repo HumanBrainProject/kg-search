@@ -23,8 +23,8 @@ export function FieldsPanel({className, fields, fieldComponent}) {
   const FieldComponent = fieldComponent;
   return (
     <div className={className?className:null}>
-      {fields && fields.map(({name, data, mapping, index}) => (
-        <FieldComponent key={name} name={name} data={data} mapping={mapping} index={index} />
+      {fields && fields.map(({name, data, mapping, group}) => (
+        <FieldComponent key={name} name={name} data={data} mapping={mapping} group={group} />
       ))}
     </div>
   );

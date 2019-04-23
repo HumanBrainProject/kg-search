@@ -50,26 +50,26 @@ describe('confirguration reducer', () => {
         });
     });
 
-    describe('load indexes request', () => {
+    describe('load groups request', () => {
         it('should set is active to true', () => {
             const state = {active: false};
-            const action = actions.loadIndexesRequest();
+            const action = actions.loadGroupsRequest();
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(true);
         });
     });
-    describe('load indexes success', () => {
+    describe('load groups success', () => {
         it('should set is active to false', () => {
             const state = {active: true};
-            const action = actions.loadIndexesSuccess(null);
+            const action = actions.loadGroupsSuccess(null);
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(false);
         });
     });
-    describe('load indexes failure', () => {
+    describe('load groups failure', () => {
         it('should set is active to false', () => {
             const state = {active: true};
-            const action = actions.loadIndexesFailure("error");
+            const action = actions.loadGroupsFailure("error");
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(false);
         });

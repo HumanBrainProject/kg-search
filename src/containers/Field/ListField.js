@@ -67,12 +67,12 @@ const ListFieldBase = (renderUserInteractions = true) => {
       <span>
         <List className={className}>
           {
-            list.map(({isObject, key, data, mapping, index}, idx) => (
+            list.map(({isObject, key, data, mapping, group}, idx) => (
               <ListItem key={key} separator={separator} isFirst={!idx}>
                 {isObject?
-                  <ObjectFieldComponent show={true} data={data} mapping={mapping} index={index} />
+                  <ObjectFieldComponent show={true} data={data} mapping={mapping} group={group} />
                   :
-                  <ValueFieldComponent show={true} data={data} mapping={mapping} index={index} />
+                  <ValueFieldComponent show={true} data={data} mapping={mapping} group={group} />
                 }
               </ListItem>
             ))
@@ -134,7 +134,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
     }
 
     getFilteredItems(sizeStop) {
-      const {items, mapping, index} = this.props;
+      const {items, mapping, group} = this.props;
 
       if (!Array.isArray(items)) {
         return [];
@@ -151,7 +151,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
           show: true,
           data: item.children?item.children:item,
           mapping: mapping,
-          index: index
+          group: group
         }));
     }
 

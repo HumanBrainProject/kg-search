@@ -23,7 +23,7 @@ const initialState = {
   hasRequest: false,
   isLoading: false,
   nonce: null,
-  index: API.defaultIndex,
+  group: API.defaultGroup,
   results: {},
   from: 0
 };
@@ -34,35 +34,35 @@ const setSearchReady = (state, action) => {
   });
 };
 
-const setIndex = (state, action) => {
-  if (action && action.index) {
-    if (action.index === state.index) {
+const setGroup = (state, action) => {
+  if (action && action.group) {
+    if (action.group === state.group) {
       return state;
     }
-    return Object.assign({}, state, {hasRequest: !action.initialize, index: action.index});
+    return Object.assign({}, state, {hasRequest: !action.initialize, group: action.group});
   }
   // Reset
-  if (state.index === API.defaultIndex) {
+  if (state.group === API.defaultGroup) {
     return state;
   }
-  return Object.assign({}, state, {hasRequest: !action.initialize, index: API.defaultIndex});
+  return Object.assign({}, state, {hasRequest: !action.initialize, group: API.defaultGroup});
 };
 
-const loadIndexesSuccess = (state, action) => {
-  if (action.indexes instanceof Array && action.indexes.some(e => e.name === state.index)) {
+const loadGroupsSuccess = (state, action) => {
+  if (action.groups instanceof Array && action.groups.some(e => e.name === state.group)) {
     return state;
   }
-  if (state.index === API.defaultIndex) {
+  if (state.group === API.defaultGroup) {
     return state;
   }
-  return Object.assign({}, state, { index: API.defaultIndex });
+  return Object.assign({}, state, { group: API.defaultGroup });
 };
 
-const loadIndexesFailure = state => {
-  if (state.index === API.defaultIndex) {
+const loadGroupsFailure = state => {
+  if (state.group === API.defaultGroup) {
     return state;
   }
-  return Object.assign({}, state, { index: API.defaultIndex });
+  return Object.assign({}, state, { group: API.defaultGroup });
 };
 
 const loadSearch = state => {
@@ -74,19 +74,19 @@ const loadSearchRequest = (state, action) => {
 };
 
 const loadSearchResult = (state, action) => {
-  return Object.assign({}, state, {initialRequestDone: true, isLoading: false, nonce: null, index:action.index?action.index:state.index, results: action.results, from: action.from?Number(action.from):0});
+  return Object.assign({}, state, {initialRequestDone: true, isLoading: false, nonce: null, group:action.group?action.group:state.group, results: action.results, from: action.from?Number(action.from):0});
 };
 
 const loadSearchFail = state => {
-  return Object.assign({}, state, {isLoading: false, nonce: null, index:state.index, results: [], from: 0});
+  return Object.assign({}, state, {isLoading: false, nonce: null, group:state.group, results: [], from: 0});
 };
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case types.SET_SEARCH_READY:
     return setSearchReady(state, action);
-  case types.SET_INDEX:
-    return setIndex(state, action);
+  case types.SET_GROUP:
+    return setGroup(state, action);
   case types.LOAD_SEARCH:
     return loadSearch(state, action);
   case types.LOAD_SEARCH_REQUEST:
@@ -97,11 +97,11 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_SEARCH_SESSION_FAILURE:
     return loadSearchFail(state, action);
   case types.LOGOUT:
-    return setIndex(state, {index: API.defaultIndex});
-  case types.LOAD_INDEXES_SUCCESS:
-    return loadIndexesSuccess(state, action);
-  case types.LOAD_INDEXES_FAILURE:
-    return loadIndexesFailure(state, action);
+    return setGroup(state, {group: API.defaultGroup});
+  case types.LOAD_GROUPS_SUCCESS:
+    return loadGroupsSuccess(state, action);
+  case types.LOAD_GROUPS_FAILURE:
+    return loadGroupsFailure(state, action);
   default:
     return state;
   }

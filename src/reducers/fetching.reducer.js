@@ -28,7 +28,7 @@ export function reducer(state = initialState, action = {}) {
       message: "Initializing search engine...",
       active: true
     };
-  case types.LOAD_INDEXES_REQUEST:
+  case types.LOAD_GROUPS_REQUEST:
     return {
       message: "Retrieving your profile...",
       active: true
@@ -46,9 +46,9 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_DEFINITION:
   case types.LOAD_DEFINITION_SUCCESS:
   case types.LOAD_DEFINITION_FAILURE:
-  case types.LOAD_INDEXES:
-  case types.LOAD_INDEXES_SUCCESS:
-  case types.LOAD_INDEXES_FAILURE:
+  case types.LOAD_GROUPS:
+  case types.LOAD_GROUPS_SUCCESS:
+  case types.LOAD_GROUPS_FAILURE:
   case types.LOAD_SEARCH_SUCCESS:
   case types.LOAD_SEARCH_BAD_REQUEST:
   case types.LOAD_SEARCH_SERVICE_FAILURE:

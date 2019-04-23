@@ -28,7 +28,7 @@ const FieldBase = (renderUserInteractions = true) => {
   const ObjectFieldComponent = renderUserInteractions?ObjectField:PrintViewObjectField;
   const ValueFieldComponent = renderUserInteractions?ValueField:PrintViewValueField;
 
-  const Field = ({name, data, mapping, index}) => {
+  const Field = ({name, data, mapping, group}) => {
     if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
       return null;
     }
@@ -51,19 +51,19 @@ const FieldBase = (renderUserInteractions = true) => {
       show: isList,
       items: data,
       mapping: mapping,
-      index: index
+      group: group
     };
     const valueProps = {
       show: !isList,
       data: data,
       mapping: mapping,
-      index: index
+      group: group
     };
     const objectProps = {
       show: !isList && !!mapping.children,
       data: data && data.children,
       mapping: mapping,
-      index: index
+      group: group
     };
 
     return (

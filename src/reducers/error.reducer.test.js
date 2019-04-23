@@ -50,26 +50,26 @@ describe('confirguration reducer', () => {
         });
     });
 
-    describe('load indexes request', () => {
+    describe('load groups request', () => {
         it('should set message to null', () => {
             const state = {message: "test"};
-            const action = actions.loadIndexesRequest();
+            const action = actions.loadGroupsRequest();
             const newState = errorReducer(state, action);
             expect(newState.message).toBe(null);
         });
     });
-    describe('load indexes success', () => {
+    describe('load groups success', () => {
         it('should set message to null', () => {
             const state = {message: "test"};
-            const action = actions.loadIndexesSuccess(null);
+            const action = actions.loadGroupsSuccess(null);
             const newState = errorReducer(state, action);
             expect(newState.message).toBe(null);
         });
     });
-    describe('load indexes failure', () => {
+    describe('load groups failure', () => {
         it('should set message to non null', () => {
             const state = {message: null};
-            const action = actions.loadIndexesFailure("error");
+            const action = actions.loadGroupsFailure("error");
             const newState = errorReducer(state, action);
             expect(newState.message).not.toBe(null);
         });

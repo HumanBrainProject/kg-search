@@ -22,10 +22,10 @@ export const GroupSelection = connect(
   (state, props) => ({
     className: props.className,
     label: "group",
-    value: state.search.index,
-    list: state.indexes.indexes?state.indexes.indexes:[]
+    value: state.search.group,
+    list: state.groups.groups?state.groups.groups:[]
   }),
   dispatch => ({
-    onChange: value => dispatch(actions.setIndex(value))
+    onChange: value => dispatch(actions.setGroup(value))
   })
 )(Select);

@@ -27,8 +27,8 @@ export const HitBase = ({type, hasNoData, hasUnknownData, ribbon, icon, fields, 
     <HitRibbon className="kgs-hit__ribbon" {...ribbon} />
     <div className="kgs-hit__content">
       <PrintViewField key={icon && icon.name} {...icon}/>
-      {fields.map(({name, data, mapping, index}) => (
-        <PrintViewField key={name} name={name} data={data} mapping={mapping} index={index} />
+      {fields.map(({name, data, mapping, group}) => (
+        <PrintViewField key={name} name={name} data={data} mapping={mapping} group={group} />
       ))}
       <HighlightsField {...highlightsField} />
     </div>
@@ -66,7 +66,7 @@ const replaceMarkdownEscapedChars = (str) => {
   return str.replace(/<\/?em>/gi,"");
 };
 
-const getTitleField = (index, data, highlight, mapping) => {
+const getTitleField = (group, data, highlight, mapping) => {
   let fieldData = data;
   if (highlight && highlight["title.value"] && highlight["title.value"].length > 0) {
     const value = replaceMarkdownEscapedChars(highlight["title.value"][0]);
@@ -78,11 +78,11 @@ const getTitleField = (index, data, highlight, mapping) => {
     name: "title",
     data: fieldData,
     mapping: mapping,
-    index: index
+    group: group
   };
 };
 
-const getDescriptionField = (index, data, highlight, mapping) => {
+const getDescriptionField = (group, data, highlight, mapping) => {
 
   const fieldMapping = mapping && Object.assign({}, mapping, {collapsible: false});
 
@@ -107,11 +107,11 @@ const getDescriptionField = (index, data, highlight, mapping) => {
     name: "description",
     data: fieldData,
     mapping: fieldMapping,
-    index: index
+    group: group
   };
 };
 
-const getComponentField = (index, data, mapping) => {
+const getComponentField = (group, data, mapping) => {
   let fieldData = data;
   let fieldMapping = mapping;
   if (data && data.value) {
@@ -127,29 +127,29 @@ const getComponentField = (index, data, mapping) => {
     name: "component",
     data: fieldData,
     mapping: fieldMapping,
-    index: index
+    group: group
   };
 };
 
-const getField = (index, type, name, data, highlight, mapping) => {
+const getField = (group, type, name, data, highlight, mapping) => {
   switch (name) {
   case "title":
-    return getTitleField(index, data, highlight, mapping);
+    return getTitleField(group, data, highlight, mapping);
   case "description":
-    return getDescriptionField(index, data, highlight, mapping);
+    return getDescriptionField(group, data, highlight, mapping);
   case "component":
-    return getComponentField(index, data, mapping);
+    return getComponentField(group, data, mapping);
   default:
     return {
       name: name,
       data: data,
       mapping: mapping,
-      index: index
+      group: group
     };
   }
 };
 
-const getFields = (index, type, data, highlight, mapping) => {
+const getFields = (group, type, data, highlight, mapping) => {
   if (!data || !mapping) {
     return [];
   }
@@ -160,7 +160,7 @@ const getFields = (index, type, data, highlight, mapping) => {
       && (mapping.overview || primaryFiels.includes(name))
       && (mapping.showIfEmpty || (data && data[name]))
     )
-    .map(([name, mapping]) => getField(index, type, name, data[name], highlight, mapping));
+    .map(([name, mapping]) => getField(group, type, name, data[name], highlight, mapping));
 
   return fields;
 };
@@ -187,9 +187,11 @@ const filterHighlightFields = (data, excludeFieldNames) => {
 
 export const Hit = connect(
   (state, {data}) => {
+
+    const indexReg = /^kg_(.*)$/;
     const source = data && !(data.found === false) && data._type && data._source;
     const mapping = source && state.definition && state.definition.shapeMappings && state.definition.shapeMappings[data._type];
-    const index = (data && !(data.found === false) && data._index)?data._index:API.defaultIndex;
+    const group = (data && !(data.found === false) && indexReg.test(data._index))?data._index.match(indexReg)[1]:API.defaultGroup;
 
     const ribbonData = mapping && mapping.ribbon && mapping.ribbon.framed && mapping.ribbon.framed.dataField && source[mapping.ribbon.framed.dataField];
     const iconData = {
@@ -208,9 +210,9 @@ export const Hit = connect(
       type: data && data._type,
       hasNoData: !source,
       hasUnknownData: !mapping,
-      ribbon: getField(index, data && data._type, "ribbon", ribbonData, null, mapping && mapping.ribbon),
-      icon:  getField(index, data && data._type, "icon", iconData, null, iconMapping),
-      fields: getFields(index, data && data._type, source, data && data.highlight, mapping, false),
+      ribbon: getField(group, data && data._type, "ribbon", ribbonData, null, mapping && mapping.ribbon),
+      icon:  getField(group, data && data._type, "icon", iconData, null, iconMapping),
+      fields: getFields(group, data && data._type, source, data && data.highlight, mapping, false),
       highlightsField: {
         fields: filterHighlightFields(data && data.highlight, ["title.value","description.value"]),
         mapping: mapping

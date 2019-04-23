@@ -21,11 +21,11 @@ const initialState = {
   hasRequest: false,
   isLoading: false,
   hasError: false,
-  indexes: [],
-  indexSettings: {}
+  groups: [],
+  groupSettings: {}
 };
 
-const loadIndexes = state => {
+const loadGroups = state => {
   return Object.assign({}, state, {
     hasRequest: true,
     isLoading: false,
@@ -33,7 +33,7 @@ const loadIndexes = state => {
   });
 };
 
-const loadIndexesRequest = state => {
+const loadGroupsRequest = state => {
   return Object.assign({}, state, {
     hasRequest: false,
     isLoading: true,
@@ -41,16 +41,16 @@ const loadIndexesRequest = state => {
   });
 };
 
-const loadIndexesSuccess = (state, action) => {
+const loadGroupsSuccess = (state, action) => {
 
-  const indexes = (action.indexes instanceof Array)?[...action.indexes.map(e => ({label: e.name, value: e.name}))]:[];
-  const indexSettings = {};
-  if (action.indexes instanceof Array) {
-    action.indexes.forEach(index => {
-      if (index.spec && index.spec.order instanceof Array && index.spec.order.length) {
+  const groups = (action.groups instanceof Array)?[...action.groups.map(e => ({label: e.name, value: e.name}))]:[];
+  const groupSettings = {};
+  if (action.groups instanceof Array) {
+    action.groups.forEach(group => {
+      if (group.spec && group.spec.order instanceof Array && group.spec.order.length) {
         const order = {"$all": 0};
-        indexSettings[index.name] = {facetTypesOrder: order, facetDefaultSelectedType: index.spec.order[0]};
-        index.spec.order.forEach((type, index) => order[type] = index + 1);
+        groupSettings[group.name] = {facetTypesOrder: order, facetDefaultSelectedType: group.spec.order[0]};
+        group.spec.order.forEach((type, group) => order[type] = group + 1);
       }
     });
   }
@@ -60,34 +60,34 @@ const loadIndexesSuccess = (state, action) => {
     hasRequest: false,
     isLoading: false,
     hasError: false,
-    indexes: indexes,
-    indexSettings: indexSettings
+    groups: groups,
+    groupSettings: groupSettings
   });
 };
 
-const loadIndexesFailure = state => {
+const loadGroupsFailure = state => {
   return Object.assign({}, state, {
     isReady: false,
     hasRequest: false,
     isLoading: false,
     hasError: true,
-    indexes: [],
-    indexSettings: {}
+    groups: [],
+    groupSettings: {}
   });
 };
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-  case types.LOAD_INDEXES:
-    return loadIndexes(state, action);
-  case types.LOAD_INDEXES_REQUEST:
-    return loadIndexesRequest(state, action);
-  case types.LOAD_INDEXES_SUCCESS:
-    return loadIndexesSuccess(state, action);
-  case types.LOAD_INDEXES_FAILURE:
-    return loadIndexesFailure(state, action);
+  case types.LOAD_GROUPS:
+    return loadGroups(state, action);
+  case types.LOAD_GROUPS_REQUEST:
+    return loadGroupsRequest(state, action);
+  case types.LOAD_GROUPS_SUCCESS:
+    return loadGroupsSuccess(state, action);
+  case types.LOAD_GROUPS_FAILURE:
+    return loadGroupsFailure(state, action);
   case types.LOGOUT:
-    return loadIndexesSuccess(state, {indexes: []});
+    return loadGroupsSuccess(state, {groups: []});
   default:
     return state;
   }

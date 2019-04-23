@@ -28,7 +28,7 @@ export const InstanceBase = ({className, type, hasNoData, hasUnknownData, header
     <div className={classNames} data-type={type}>
       <div className="kgs-instance__content">
         <div className="kgs-instance__header">
-          <h3 className={`kgs-instance__group ${header.index && header.index !== API.defaultIndex?"show":""}`}>Group: <strong>{header.index}</strong></h3>
+          <h3 className={`kgs-instance__group ${header.group && header.group !== API.defaultGroup?"show":""}`}>Group: <strong>{header.group}</strong></h3>
           <div>
             <Field {...header.icon} />
             <Field {...header.type} />
@@ -53,26 +53,26 @@ export const InstanceBase = ({className, type, hasNoData, hasUnknownData, header
   );
 };
 
-const getField = (index, type, name, data, mapping) => {
+const getField = (group, type, name, data, mapping) => {
   switch (name) {
   case "type":
     return {
       name: "type",
       data: {value: type},
       mapping: {visible: true},
-      index: index
+      group: group
     };
   default:
     return {
       name: name,
       data: data,
       mapping: mapping,
-      index: index
+      group: group
     };
   }
 };
 
-const getFields = (index, type, data, mapping, filter) => {
+const getFields = (group, type, data, mapping, filter) => {
   if (!data || !mapping) {
     return [];
   }
@@ -83,7 +83,7 @@ const getFields = (index, type, data, mapping, filter) => {
         && (mapping.showIfEmpty || (data && data[name]))
         && (!filter || (typeof filter === "function" && filter(type, name, data[name], mapping)))
     )
-    .map(([name, mapping]) => getField(index, type, name, data[name], mapping));
+    .map(([name, mapping]) => getField(group, type, name, data[name], mapping));
 
   return fields;
 };
@@ -94,21 +94,21 @@ export const Instance = connect(
     const indexReg = /^kg_(.*)$/;
     const source = data && !(data.found === false) && data._type && data._source;
     const mapping = source && state.definition && state.definition.shapeMappings && state.definition.shapeMappings[data._type];
-    const index = (data && indexReg.test(data._index))?data._index.match(indexReg)[1]:API.defaultIndex;
+    const group = (data && indexReg.test(data._index))?data._index.match(indexReg)[1]:API.defaultGroup;
 
     return {
       type: data && data._type,
       hasNoData: !source,
       hasUnknownData: !mapping,
       header: {
-        index: index,
-        icon:  getField(index, data && data._type, "icon", {value: data && data._type, image: {url: source && source.image && source.image.url}}, {visible: true, type: "icon", icon: mapping && mapping.icon}),
-        type:  getField(index, data && data._type, "type"),
-        title: getField(index, data && data._type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"])
+        group: group,
+        icon:  getField(group, data && data._type, "icon", {value: data && data._type, image: {url: source && source.image && source.image.url}}, {visible: true, type: "icon", icon: mapping && mapping.icon}),
+        type:  getField(group, data && data._type, "type"),
+        title: getField(group, data && data._type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"])
       },
-      main: getFields(index, data && data._type, source, mapping, (type, name) => name !== "title"),
-      summary: getFields(index, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "summary" && name !== "title"),
-      groups: getFields(index, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title")
+      main: getFields(group, data && data._type, source, mapping, (type, name) => name !== "title"),
+      summary: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "summary" && name !== "title"),
+      groups: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title")
     };
   }
 )(InstanceBase);

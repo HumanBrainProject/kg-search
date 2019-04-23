@@ -25,7 +25,7 @@ export default class AppManager {
   constructor(store, options) {
     this.store = store;
     this.isStarted = false;
-    this.initialIndex = null;
+    this.initialGroup = null;
     this.initialInstanceReference = null;
     this.hitIssuer = null;
     this.previousStateInstances = store.getState().instances;
@@ -36,14 +36,14 @@ export default class AppManager {
     this.searchInterfaceIsDisabled = false;
     let startHistory = null;
     const accessToken = getHashKey("access_token");
-    let initialIndex = null;
+    let initialGroup = null;
     let initialInstanceReference = null;
     if (accessToken) {
       const aState = getHashKey("state");
       const state = aState?JSON.parse(atob(aState)):null;
       if (state) {
-        if (state.index && state.index !== API.defaultIndex) {
-          initialIndex = state.index;
+        if (state.group && state.group !== API.defaultGroup) {
+          initialGroup = state.group;
         }
         if (state.instanceReference) {
           initialInstanceReference = state.instanceReference;
@@ -55,21 +55,21 @@ export default class AppManager {
       }
       //const expiresIn = getHashKey("expires_in");
     } else {
-      initialIndex = getSearchKey("index");
+      initialGroup = getSearchKey("group");
       initialInstanceReference = regReference.test(window.location.hash)?window.location.hash.match(regReference)[1]:null;
       this.searchInterfaceIsDisabled = initialInstanceReference && getSearchKey("search", true) === "false";
       startHistory = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search;
     }
 
-    if (!accessToken && initialIndex && initialIndex !== API.defaultIndex) {
+    if (!accessToken && initialGroup && initialGroup !== API.defaultGroup) {
       this.authenticate();
 
     } else {
 
       this.search = new SearchManager(store, this.searchInterfaceIsDisabled);
 
-      if (initialIndex) {
-        this.initialIndex = initialIndex;
+      if (initialGroup) {
+        this.initialGroup = initialGroup;
       }
       if (initialInstanceReference) {
         this.initialInstanceReference = initialInstanceReference;
@@ -129,18 +129,18 @@ export default class AppManager {
           return;
         }
 
-        if (!state.indexes.isReady) {
-          if (!state.indexes.hasRequest && !state.indexes.isLoading && !state.indexes.hasError) {
-            store.dispatch(actions.loadIndexes());
+        if (!state.groups.isReady) {
+          if (!state.groups.hasRequest && !state.groups.isLoading && !state.groups.hasError) {
+            store.dispatch(actions.loadGroups());
           }
           return;
         }
 
-        if (state.indexes.isReady && this.initialIndex && this.initialIndex !== API.defaultIndex) {
-          const index = this.initialIndex;
-          this.initialIndex = null;
-          if (state.indexes.indexes.some(e => e.value === index)) {
-            store.dispatch(actions.setIndex(index, true));
+        if (state.groups.isReady && this.initialGroup && this.initialGroup !== API.defaultGroup) {
+          const group = this.initialGroup;
+          this.initialGroup = null;
+          if (state.groups.groups.some(e => e.value === group)) {
+            store.dispatch(actions.setGroup(group, true));
             return;
           }
         }

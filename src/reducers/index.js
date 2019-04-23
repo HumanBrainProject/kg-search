@@ -17,7 +17,7 @@
 export { reducer as application } from "./application.reducer";
 export { reducer as configuration } from "./configuration.reducer";
 export { reducer as definition } from "./definition.reducer";
-export { reducer as indexes } from "./indexes.reducer";
+export { reducer as groups } from "./groups.reducer";
 export { reducer as search } from "./search.reducer";
 export { reducer as instances } from "./instances.reducer";
 export { reducer as error } from "./error.reducer";

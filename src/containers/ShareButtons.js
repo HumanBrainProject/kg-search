@@ -25,22 +25,22 @@ const getShareEmailToLink = url => {
   return `mailto:${to}?subject=${subject}&body=${body} ${escape(url)}.`;
 };
 
-const getClipboardContent = (state, location, currentInstance, currentIndex) => {
+const getClipboardContent = (state, location, currentInstance, currentGroup) => {
   let href = "";
   if (currentInstance) {
     if (currentInstance.found && currentInstance._index && currentInstance._type && currentInstance._id) {
       const indexReg = /^kg_(.*)$/;
-      const index = indexReg.test(currentInstance._index)?currentInstance._index.match(indexReg)[1]:(currentIndex?currentIndex:null);
-      if (index && index !== API.defaultIndex) {
-        href = `groups/${index}/${currentInstance._type}/${currentInstance._id}`;
+      const group = indexReg.test(currentInstance._index)?currentInstance._index.match(indexReg)[1]:(currentGroup?currentGroup:null);
+      if (group && group !== API.defaultGroup) {
+        href = `groups/${group}/${currentInstance._type}/${currentInstance._id}`;
       } else {
         href = `instances/${currentInstance._type}/${currentInstance._id}`;
       }
     } else {
       const instanceId = location.hash.substring(1);
       if (instanceId) {
-        if (currentIndex && currentIndex !== API.defaultIndex) {
-          href = `groups/${currentIndex}/${instanceId}`;
+        if (currentGroup && currentGroup !== API.defaultGroup) {
+          href = `groups/${currentGroup}/${instanceId}`;
         } else {
           href = `instances/${instanceId}`;
         }
@@ -56,7 +56,7 @@ const getClipboardContent = (state, location, currentInstance, currentIndex) => 
 
 export const ShareButtons = connect(
   state => {
-    const href = getClipboardContent(state, window.location, state.instances.currentInstance, state.search.index);
+    const href = getClipboardContent(state, window.location, state.instances.currentInstance, state.search.group);
     return {
       clipboardContent: href,
       emailToLink: getShareEmailToLink(href)
