@@ -1,2 +1,0 @@
-
-GET /:group/instances/:datatype/:id      controllers.RedirectController.get(group, datatype, id)
