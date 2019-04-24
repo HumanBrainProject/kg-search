@@ -48,6 +48,20 @@ class RedirectController @Inject()(
         )
     }
   }
+  /**
+    *  redirect to dynamic url
+    * @param org The org of data requested
+    * @param domain The domain of data requested
+    * @param schema The schema of data requested
+    * @param version The version of data requested
+    * @param id The id of the instance
+    * @return A redirect to the dynamic page
+    */
+  def getFullPath(org: String, domain: String, schema: String, version: String, id: String): Action[AnyContent] = Action { implicit request =>
+    Redirect(
+      s"${config.hbpUrl}/webapp/?#$org/$domain/$schema/$version/$id"
+    )
+  }
 }
 
 object RedirectController {
