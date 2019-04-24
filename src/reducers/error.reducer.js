@@ -22,6 +22,7 @@ const initialState = {
   cancel: null // { label: "", action: null }
 };
 
+const regPreviewReference = /^(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -83,8 +84,9 @@ export function reducer(state = initialState, action = {}) {
     };
   }
   case types.LOAD_INSTANCE_NO_DATA: {
+    const referenceText = regPreviewReference.test(action.reference)?action.reference:(typeof action.reference === "string"?action.reference.replace(/\//g, " "):"This data");
     return {
-      message: `${(typeof action.reference === "string")?action.reference.replace(/\//g, " "):"This data"} is currently not available.`,
+      message: `${referenceText} is currently not available.`,
       retry: {
         label: "Retry",
         action: types.LOAD_INSTANCE

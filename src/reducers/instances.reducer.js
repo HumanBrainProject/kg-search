@@ -25,6 +25,8 @@ const initialState = {
   previousInstances: []
 };
 
+const regPreviewReference = /^(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
+
 const loadInstance = (state, action) => {
   const reference = action.reference || state.loadingReference;
   return {
@@ -70,6 +72,9 @@ const loadInstanceFailure = state => {
 };
 
 const cancelInstanceLoading = state => {
+  if (/[?&]?search=false&?/.test(window.location.search.toLowerCase()) || regPreviewReference.test(state.loadingReference)) {
+    window.location.href = window.location.href.replace(/(\?)?search=false&?/gi, "$1");
+  }
   return {
     ...state,
     hasRequest: false,

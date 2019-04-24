@@ -219,25 +219,21 @@ export default class SearchManager {
             })
           };
         }
-        const [ , , path, , , schema, , id] = reference.match(regPreviewReference);
+        const [ , , path, , , , , id] = reference.match(regPreviewReference);
         API.fetch(API.endpoints.preview(state.configuration.searchApiHost, path, id), options)
-          .then(result => {
-            if (result) {
-              const data = {
-                found: true,
-                _id: reference,
-                _index: "kg_public",
-                _source: result,
-                _type: typeof schema === "string"?schema.charAt(0).toUpperCase() + schema.slice(1):schema,
-                _version: 0
-              };
+          .then(data => {
+            if (data && !data.error) {
+              data._id = reference;
+              //data._source = data._source instanceof Array?(data._source.length >= 1?data._source[0]:{}):data._source;
               store.dispatch(actions.loadInstanceSuccess(data));
+            } else if (data && data.error) {
+              store.dispatch(actions.loadInstanceFailure(reference, data.message?data.message:data.error));
             } else {
               store.dispatch(actions.loadInstanceNoData(reference));
             }
           })
           .catch(error => {
-            if (error.stack === "SyntaxError: Unexpected end of JSON input") {
+            if (error.stack === "SyntaxError: Unexpected end of JSON input" || error.message === "Unexpected end of JSON input") {
               store.dispatch(actions.loadInstanceNoData(reference));
             } else {
               store.dispatch(actions.loadInstanceFailure(reference, error));
