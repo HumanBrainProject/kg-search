@@ -18,6 +18,11 @@
       "target": "https://kg.humanbrainproject.org",
       "changeOrigin": true,
       "ws": true
+    },
+    "/query": {
+      "target": "https://kg.humanbrainproject.org",
+      "changeOrigin": true,
+      "ws": true
     }
   },
   "devDependencies": {

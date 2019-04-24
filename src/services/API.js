@@ -2,7 +2,8 @@ const endpoints = {
   "definition": (host) => `${host}/proxy/kg_labels/labels/labels`,
   "groups": (host) => `${host}/auth/groups`,
   "search": (host) => `${host}/proxy/search/kg`,
-  "instance": (host, id) => `${host}/proxy/default/kg/${id}`
+  "instance": (host, id) => `${host}/proxy/default/kg/${id}`,
+  "preview": (host, path, instanceId) => `${host}/query/${path}/search/templates/searchUi/instances/${instanceId}`
 };
 
 const default_group = "public";

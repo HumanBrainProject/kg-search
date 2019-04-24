@@ -20,6 +20,9 @@ import { SearchkitManager, BaseQueryAccessor } from "searchkit";
 import { SearchKitHelpers } from "../helpers/SearchKitHelpers";
 import { generateKey} from "../helpers/OIDCHelpers";
 
+const regReference = /^((.+)\/(.+))$/;
+const regPreviewReference = /^(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
+
 export default class SearchManager {
   constructor(store, searchInterfaceIsDisabled){
     this.searchInterfaceIsDisabled = !!searchInterfaceIsDisabled;
@@ -201,8 +204,49 @@ export default class SearchManager {
       });
     }
   }
-  loadInstance(id) {
-    //window.console.debug("SearchManager loadInstance: " + id);
+  _loadPreview(reference) {
+    const store = this.store;
+    const state = store.getState();
+    if (!state.instances.isLoading) {
+      setTimeout(() => {
+        store.dispatch(actions.loadInstanceRequest());
+        let options = null;
+        if (state.auth.accessToken) {
+          options = {
+            method: "get",
+            headers: new Headers({
+              "Authorization": "Bearer " + state.auth.accessToken
+            })
+          };
+        }
+        const [ , , path, , , schema, , id] = reference.match(regPreviewReference);
+        API.fetch(API.endpoints.preview(state.configuration.searchApiHost, path, id), options)
+          .then(result => {
+            if (result) {
+              const data = {
+                found: true,
+                _id: reference,
+                _index: "kg_public",
+                _source: result,
+                _type: typeof schema === "string"?schema.charAt(0).toUpperCase() + schema.slice(1):schema,
+                _version: 0
+              };
+              store.dispatch(actions.loadInstanceSuccess(data));
+            } else {
+              store.dispatch(actions.loadInstanceNoData(reference));
+            }
+          })
+          .catch(error => {
+            if (error.stack === "SyntaxError: Unexpected end of JSON input") {
+              store.dispatch(actions.loadInstanceNoData(reference));
+            } else {
+              store.dispatch(actions.loadInstanceFailure(reference, error));
+            }
+          });
+      });
+    }
+  }
+  _loadReference(reference) {
     const store = this.store;
     const state = store.getState();
     if (!state.instances.isLoading) {
@@ -218,18 +262,29 @@ export default class SearchManager {
             })
           };
         }
-        API.fetch(API.endpoints.instance(state.configuration.searchApiHost, id), options)
+        API.fetch(API.endpoints.instance(state.configuration.searchApiHost, reference), options)
           .then(data => {
             if (data.found) {
               store.dispatch(actions.loadInstanceSuccess(data));
             } else {
-              store.dispatch(actions.loadInstanceNoData(id));
+              store.dispatch(actions.loadInstanceNoData(reference));
             }
           })
           .catch(error => {
-            store.dispatch(actions.loadInstanceFailure(id, error));
+            store.dispatch(actions.loadInstanceFailure(reference, error));
           });
       });
+    }
+  }
+  loadInstance(reference) {
+    //window.console.debug("SearchManager loadInstance: " + reference);
+    if (regPreviewReference.test(reference)) {
+      this._loadPreview(reference);
+    } else if (regReference.test(reference)) {
+      this._loadReference(reference);
+    } else {
+      const store = this.store;
+      store.dispatch(actions.loadInstanceNoData(reference));
     }
   }
   reloadSearch() {

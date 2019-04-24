@@ -19,7 +19,8 @@ import * as actions from "../actions";
 import SearchManager from "./search.manager";
 import { generateKey, getHashKey, getSearchKey, searchToObj, getAuthUrl } from "../helpers/OIDCHelpers";
 
-const regReference = /^#(.*)$/;
+const regReferenceHash = /^#(.+)$/;
+const regPreviewReference = /^(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
 
 export default class AppManager {
   constructor(store, options) {
@@ -48,7 +49,7 @@ export default class AppManager {
         if (state.instanceReference) {
           initialInstanceReference = state.instanceReference;
         }
-        this.searchInterfaceIsDisabled = initialInstanceReference && state.search === "false";
+        this.searchInterfaceIsDisabled = initialInstanceReference && (state.search === "false" || regPreviewReference.test(initialInstanceReference));
         startHistory = window.location.protocol + "//" + window.location.host + window.location.pathname + Object.entries(state).reduce((result, [key, value]) => {
           return (key === "instanceReference"?result:(result + (result === ""?"?":"&") + key + "=" + value));
         }, "");
@@ -56,12 +57,12 @@ export default class AppManager {
       //const expiresIn = getHashKey("expires_in");
     } else {
       initialGroup = getSearchKey("group");
-      initialInstanceReference = regReference.test(window.location.hash)?window.location.hash.match(regReference)[1]:null;
+      initialInstanceReference = regReferenceHash.test(window.location.hash)?window.location.hash.match(regReferenceHash)[1]:null;
       this.searchInterfaceIsDisabled = initialInstanceReference && getSearchKey("search", true) === "false";
       startHistory = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search;
     }
 
-    if (!accessToken && initialGroup && initialGroup !== API.defaultGroup) {
+    if (!accessToken && ((initialGroup && initialGroup !== API.defaultGroup) || regPreviewReference.test(initialInstanceReference))) {
       this.authenticate();
 
     } else {
@@ -103,8 +104,9 @@ export default class AppManager {
   }
   authenticate() {
     const config = this.store.getState().configuration;
-    const state1 = searchToObj(window.location.search);
-    const state2 = regReference.test(window.location.hash)?{instanceReference: window.location.hash.match(regReference)[1]}:null;
+    const reference = regReferenceHash.test(window.location.hash)?window.location.hash.match(regReferenceHash)[1]:null;
+    const state1 = regPreviewReference.test(reference)?null:searchToObj(window.location.search);
+    const state2 = reference?{instanceReference: reference}:null;
     const state = {...state1, ...state2};
     const stateKey = btoa(JSON.stringify(state));
     const nonceKey = generateKey();
@@ -222,7 +224,7 @@ export default class AppManager {
     if (pushHistoryState) {
       //window.console.debug(new Date().toLocaleTimeString() + ": new history");
       const historyState = window.history.state;
-      window.history.pushState(historyState, "Knowledge Graph Search", window.location.href.replace(/#.*$/,"") + "#" + state.instances.currentInstance._type + "/" + state.instances.currentInstance._id);
+      window.history.pushState(historyState, "Knowledge Graph Search", window.location.href.replace(/#.*$/,"") + "#" + (regPreviewReference.test(state.instances.currentInstance._id)?state.instances.currentInstance._id:`${state.instances.currentInstance._type }/${state.instances.currentInstance._id}`));
     }
     if (backHistoryCounts) {
       //window.console.debug(new Date().toLocaleTimeString() + ": back history: " + backHistoryCounts);
