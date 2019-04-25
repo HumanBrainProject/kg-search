@@ -1,2 +1,3 @@
 
 GET /:datatype/:id      controllers.RedirectController.get(datatype, id, group: Option[String])
+GET /:org/:domain/:schema/:version/:id      controllers.RedirectController.getFullPath(org, domain, schema, version, id)
