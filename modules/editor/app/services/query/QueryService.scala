@@ -26,11 +26,11 @@ import scala.concurrent.Future
 
 trait QueryService {
 
-  def params(p: (String, Option[_])*): List[(String, String)] = {
-    p.foldLeft(List[(String, String)]()) {
+  def params(p: (String, Option[_])*): Map[String, String] = {
+    p.foldLeft(Map[String, String]()) {
       case (acc, el) =>
         el._2 match {
-          case Some(e) => (el._1, e.toString) :: acc
+          case Some(e) => acc.updated(el._1, e.toString)
           case _       => acc
         }
     }
@@ -46,7 +46,7 @@ trait QueryService {
   ): Future[WSResponse] = {
     wSClient
       .url(s"$apiEndpoint/query/${nexusInstanceReference.nexusPath.toString()}/instances/${nexusInstanceReference.id}")
-      .addQueryStringParameters(params(VOCAB -> vocab): _*)
+      .addQueryStringParameters(params(VOCAB -> vocab).toList: _*)
       .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token)
       .post(query)
   }
@@ -60,14 +60,46 @@ trait QueryService {
     from: Option[Int] = None,
     size: Option[Int] = None,
     search: String,
-    vocab: Option[String] = None
+    vocab: Option[String] = None,
+    parameters: Map[String, String] = Map()
   ): Future[WSResponse] = {
+    val p: List[(String, String)] = parameters ++: params(
+      VOCAB  -> vocab,
+      START  -> from,
+      SIZE   -> size,
+      SEARCH -> Some(search)
+    ).toList
 
     wSClient
       .url(s"$apiEndpoint/query/${nexusPath.toString()}/instances")
-      .addQueryStringParameters(params(VOCAB -> vocab, START -> from, SIZE -> size, SEARCH -> Some(search)): _*)
+      .addQueryStringParameters(p: _*)
       .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token)
       .post(query)
   }
 
+  def getInstancesWithStoredQuery(
+    wSClient: WSClient,
+    apiEndpoint: String,
+    nexusPath: NexusPath,
+    queryId: String,
+    token: String,
+    from: Option[Int] = None,
+    size: Option[Int] = None,
+    search: String,
+    vocab: Option[String] = None,
+    parameters: Map[String, String] = Map()
+  ): Future[WSResponse] = {
+    val p: List[(String, String)] = parameters ++: params(
+      VOCAB  -> vocab,
+      START  -> from,
+      SIZE   -> size,
+      SEARCH -> Some(search)
+    ).toList
+
+    wSClient
+      .url(s"$apiEndpoint/query/${nexusPath.toString()}/$queryId/instances")
+      .addQueryStringParameters(p: _*)
+      .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token)
+      .get()
+  }
 }

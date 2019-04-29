@@ -143,7 +143,7 @@ POST    /instances                 controllers.NexusEditorController.getInstance
 #      '200':
 #        description: Ok
 ###
-GET /instances/:org/:domain/:schema/:version        controllers.NexusEditorUserController.getInstancesOfBookmarkListBySchema(org: String, domain:String, schema: String, version:String, from:Option[Int], size:Option[Int], search:String?="")
+GET /instances/:org/:domain/:schema/:version        controllers.EditorUserController.getInstancesOfBookmarkListBySchema(org: String, domain:String, schema: String, version:String, from:Option[Int], size:Option[Int], search:String?="")
 
 ###
 #  summary: return a an empty form for a specific entity type
@@ -343,7 +343,7 @@ GET    /reconciled/:org/:domain/:schema/:version/:id                controllers.
 #    200:
 #      description: "Ok"
 ###
-GET   /user                                             controllers.NexusEditorUserController.getOrCreateCurrentUser
+GET   /user                                             controllers.EditorUserController.getOrCreateCurrentUser
 
 ###
 #      tags:
@@ -369,7 +369,7 @@ GET   /user                                             controllers.NexusEditorU
 #                   uiSpec: 'A JSON object containing info specific for the UI'
 #
 ###
-GET /bookmarkListFolders                                controllers.NexusEditorUserController.getBookmarkListFolders
+GET /bookmarkListFolders                                controllers.EditorUserController.getBookmarkListFolders
 
 ###
 #tags:
@@ -420,7 +420,7 @@ GET /bookmarkListFolders                                controllers.NexusEditorU
 #      '200':
 #        description: Ok
 ###
-GET /bookmarkListInstances/:org/:domain/:schema/:version        controllers.NexusEditorUserController.getInstancesOfBookmarkListBySchema(org: String, domain:String, schema: String, version:String, from:Option[Int], size:Option[Int], search:String?="")
+GET /bookmarkListInstances/:org/:domain/:schema/:version        controllers.EditorUserController.getInstancesOfBookmarkListBySchema(org: String, domain:String, schema: String, version:String, from:Option[Int], size:Option[Int], search:String?="")
 
 ###
 #tags:
@@ -476,7 +476,7 @@ GET /bookmarkListInstances/:org/:domain/:schema/:version        controllers.Nexu
 #  '200':
 #    description: Ok
 ###
-GET /bookmarkListInstances/:org/:domain/:schema/:version/:id                            controllers.NexusEditorUserController.getInstancesbyBookmarkList(org: String, domain:String, schema: String, version:String, id: String, from:Int=0, size:Int=20, search:String?="")
+GET /bookmarkListInstances/:org/:domain/:schema/:version/:id                            controllers.EditorUserController.getInstancesbyBookmarkList(org: String, domain:String, schema: String, version:String, id: String, from:Int=0, size:Int=20, search:String?="")
 
 ###
 #tags:
@@ -502,7 +502,7 @@ GET /bookmarkListInstances/:org/:domain/:schema/:version/:id                    
 #  '201':
 #    description: Created
 ###
-POST /bookmarkList                                          controllers.NexusEditorUserController.createBookmarkList
+POST /bookmarkList                                          controllers.EditorUserController.createBookmarkList
 
 ###
 #tags:
@@ -523,7 +523,7 @@ POST /bookmarkList                                          controllers.NexusEdi
 #  '204':
 #    description: No Content
 ###
-PUT /bookmarkList/:org/:domain/:schema/:version/:id                                         controllers.NexusEditorUserController.updateBookmarkList(org: String, domain:String, schema: String, version:String, id: String)
+PUT /bookmarkList/:org/:domain/:schema/:version/:id                                         controllers.EditorUserController.updateBookmarkList(org: String, domain:String, schema: String, version:String, id: String)
 
 
 ###
@@ -540,7 +540,7 @@ PUT /bookmarkList/:org/:domain/:schema/:version/:id                             
 #  '204':
 #    description: No Content
 ###
-DELETE /bookmarkList/:org/:domain/:schema/:version/:id                                          controllers.NexusEditorUserController.deleteBookmarkList(org: String, domain:String, schema: String, version:String, id: String)
+DELETE /bookmarkList/:org/:domain/:schema/:version/:id                                          controllers.EditorUserController.deleteBookmarkList(org: String, domain:String, schema: String, version:String, id: String)
 
 
 
@@ -582,7 +582,7 @@ DELETE /bookmarkList/:org/:domain/:schema/:version/:id                          
 #  '200':
 #    description: Ok
 ###
-PUT /instance/:org/:domain/:schema/:version/:id/bookmarks       controllers.NexusEditorUserController.updateBookmarks(org: String, domain:String, schema: String, version:String, id: String)
+PUT /instance/:org/:domain/:schema/:version/:id/bookmarks       controllers.EditorUserController.updateBookmarks(org: String, domain:String, schema: String, version:String, id: String)
 
 ###
 #  tags:
@@ -600,7 +600,7 @@ PUT /instance/:org/:domain/:schema/:version/:id/bookmarks       controllers.Nexu
 #      required: false
 #      type: string
 ###
-POST /bookmarks                                                 controllers.NexusEditorUserController.retrieveBookmarks
+POST /bookmarks                                                 controllers.EditorUserController.retrieveBookmarks
 
 
 #Review Routes

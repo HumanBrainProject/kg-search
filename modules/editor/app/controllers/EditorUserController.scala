@@ -33,7 +33,7 @@ import services.specification.FormService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class NexusEditorUserController @Inject()(
+class EditorUserController @Inject()(
   cc: ControllerComponents,
   config: ConfigurationService,
   authenticatedUserAction: AuthenticatedUserAction,
@@ -49,11 +49,7 @@ class NexusEditorUserController @Inject()(
 
   object queryService extends QueryService
 
-  private def getOrCreateUserWithUserFolder(token: String)(implicit request: UserRequest[AnyContent]) = {
-    editorUserService.getOrCreateUser(request.user, token) { postCreation }
-  }
-
-  def postCreation(editorUser: EditorUser, token: String): Future[Either[APIEditorError, EditorUser]] = {
+  private def postCreation(editorUser: EditorUser, token: String): Future[Either[APIEditorError, EditorUser]] = {
     editorUserListService.createBookmarkListFolder(editorUser, "My Bookmarks", token, BOOKMARKFOLDER).flatMap {
       case Right(_) =>
         Future(Right(editorUser))
@@ -71,7 +67,7 @@ class NexusEditorUserController @Inject()(
   def getOrCreateCurrentUser(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     for {
       token <- oIDCAuthService.getTechAccessToken()
-      u     <- getOrCreateUserWithUserFolder(token)
+      u     <- editorUserService.getOrCreateUser(request.user, token) { postCreation }
     } yield {
       u match {
         case Right(editorUser) => Ok(Json.toJson(EditorResponseObject(Json.toJson(editorUser))))

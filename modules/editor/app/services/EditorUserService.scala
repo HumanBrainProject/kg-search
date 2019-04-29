@@ -50,29 +50,35 @@ class EditorUserService @Inject()(
     cacheService.get[EditorUser](cache, nexusUser.id.toString).flatMap {
       case None =>
         queryService
-          .getInstances(
+          .getInstancesWithStoredQuery(
             wSClient,
             config.kgQueryEndpoint,
             EditorConstants.editorUserPath,
-            EditorUserService.kgQueryGetUserQuery(EditorConstants.editorUserPath),
+            "kguser",
             token,
             None,
             None,
-            ""
+            "",
+            vocab = Some(EditorConstants.editorVocab),
+            Map("userId" -> nexusUser.id)
           )
           .map[Either[APIEditorError, Option[EditorUser]]] { res =>
             res.status match {
               case OK =>
-                (res.json \ "results")
+                val users = (res.json \ "results")
                   .as[List[JsObject]]
-                  .find(js => (js \ "userId").asOpt[String].getOrElse("") == nexusUser.id)
-                  .map { js =>
-                    val id = (js \ "nexusId").as[String]
-                    val editorUser = EditorUser(NexusInstanceReference.fromUrl(id), nexusUser)
-                    cache.set(editorUser.nexusUser.id, editorUser, config.cacheExpiration)
-                    Right(Some(editorUser))
-                  }
-                  .getOrElse(Right(None))
+                if (users.size > 1) {
+                  val msg = s"Multiple user with the same ID detected: ${users.map(js => js \ "nexusId").mkString(" ")}"
+                  logger.error(msg)
+                  Left(APIEditorError(INTERNAL_SERVER_ERROR, msg)) // users.head
+                } else if (users.size == 1) {
+                  val id = (users.head \ "nexusId").as[String]
+                  val editorUser = EditorUser(NexusInstanceReference.fromUrl(id), nexusUser)
+                  cache.set(editorUser.nexusUser.id, editorUser, config.cacheExpiration)
+                  Right(Some(editorUser))
+                } else {
+                  Right(None)
+                }
               case _ =>
                 logger.error(s"Could not fetch the user with ID ${nexusUser.id} ${res.body}")
                 Left(APIEditorError(res.status, res.body))
@@ -125,27 +131,6 @@ class EditorUserService @Inject()(
 }
 
 object EditorUserService {
-
-  def kgQueryGetUserQuery(editorUserPath: NexusPath, context: String = EditorConstants.context): String =
-    s"""
-       |{
-       |  "@context": $context,
-       |  "schema:name": "",
-       |  "root_schema": "nexus_instance:${editorUserPath.toString()}",
-       |  "fields": [
-       |    {
-       |      "fieldname": "nexusId",
-       |      "required": true,
-       |      "relative_path": "base:${EditorConstants.RELATIVEURL}"
-       |    },
-       |    {
-       |      "fieldname": "userId",
-       |      "required": true,
-       |      "relative_path": "hbpkg:${EditorConstants.USERID}"
-       |    }
-       |  ]
-       |}
-    """.stripMargin
 
   def userToNexusStruct(userId: String): JsObject = {
     Json.obj(
