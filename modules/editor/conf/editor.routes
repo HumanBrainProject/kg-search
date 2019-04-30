@@ -34,7 +34,7 @@
 #    required: false
 #    type: string
 ###
-GET    /instance/:org/:domain/:schema/:version/:id                  controllers.NexusEditorController.getInstance(org: String, domain:String, schema: String, version:String, id: String)
+GET    /instance/:org/:domain/:schema/:version/:id                  controllers.NexusEditorController.getInstance(org: String, domain:String, schema: String, version:String, id: String, databaseScope: Option[String])
 ###
 #  summary: Delete a specific entity
 #  tags:
