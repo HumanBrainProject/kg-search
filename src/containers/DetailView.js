@@ -22,13 +22,15 @@ import { Instance } from "./Instance";
 import { searchToObj } from "../helpers/OIDCHelpers";
 import "./DetailView.css";
 
+
 const mapStateToProps = state => {
   return {
     className: "kgs-detailView",
     show: !!state.instances.currentInstance,
     data: state.instances.currentInstance?[...state.instances.previousInstances, state.instances.currentInstance]:[],
     itemComponent: Instance,
-    navigationComponent: ShareButtons
+    navigationComponent: ShareButtons,
+    isPreviewInstance: state.instances.isPreviewInstance
   };
 };
 

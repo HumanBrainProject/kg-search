@@ -49,6 +49,7 @@ const loadInstanceRequest = state => {
 };
 
 const loadInstanceSuccess = (state, action) => {
+  const isPreviewInstance = regPreviewReference.test(state.loadingReference)
   let previousInstances = (state && state.previousInstances instanceof Array)?state.previousInstances:[];
   previousInstances = (state && state.currentInstance)?[...previousInstances,state.currentInstance]:[...previousInstances];
   return  {
@@ -58,7 +59,8 @@ const loadInstanceSuccess = (state, action) => {
     isLoading: false,
     loadingReference: null,
     currentInstance: action.data,
-    previousInstances: previousInstances
+    previousInstances: previousInstances,
+    isPreviewInstance: isPreviewInstance
   };
 };
 
@@ -80,7 +82,8 @@ const cancelInstanceLoading = state => {
     hasRequest: false,
     requestReference: null,
     isLoading: false,
-    loadingReference: null
+    loadingReference: null,
+    isPreviewInstance: false
   };
 };
 
