@@ -40,14 +40,15 @@ class RedirectController @Inject()(
     group match {
       case Some(name) =>
         Redirect(
-          s"${config.hbpUrl}/webapp/?${RedirectController.groupKeyQueryString}=$name&${RedirectController.searchFalseQueryString}#$dataType/$id"
+          s"${config.hbpUrl}/?${RedirectController.groupKeyQueryString}=$name&${RedirectController.searchFalseQueryString}#$dataType/$id"
         )
       case None =>
-       Redirect(
-          s"${config.hbpUrl}/webapp/?${RedirectController.searchFalseQueryString}#$dataType/$id"
+        Redirect(
+          s"${config.hbpUrl}/?${RedirectController.searchFalseQueryString}#$dataType/$id"
         )
     }
   }
+
   /**
     *  redirect to dynamic url
     * @param org The org of data requested
@@ -57,11 +58,12 @@ class RedirectController @Inject()(
     * @param id The id of the instance
     * @return A redirect to the dynamic page
     */
-  def getFullPath(org: String, domain: String, schema: String, version: String, id: String): Action[AnyContent] = Action { implicit request =>
-    Redirect(
-      s"${config.hbpUrl}/webapp/?#$org/$domain/$schema/$version/$id"
-    )
-  }
+  def getFullPath(org: String, domain: String, schema: String, version: String, id: String): Action[AnyContent] =
+    Action { implicit request =>
+      Redirect(
+        s"${config.hbpUrl}/?#$org/$domain/$schema/$version/$id"
+      )
+    }
 }
 
 object RedirectController {
