@@ -42,11 +42,12 @@ trait QueryService {
     nexusInstanceReference: NexusInstanceReference,
     query: String,
     token: String,
+    databaseScope: Option[String] = None,
     vocab: Option[String] = None
   ): Future[WSResponse] = {
     wSClient
       .url(s"$apiEndpoint/query/${nexusInstanceReference.nexusPath.toString()}/instances/${nexusInstanceReference.id}")
-      .addQueryStringParameters(params(VOCAB -> vocab): _*)
+      .addQueryStringParameters(params(VOCAB -> vocab, DATABASE_SCOPE -> databaseScope): _*)
       .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token)
       .post(query)
   }

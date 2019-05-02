@@ -62,34 +62,43 @@ class NexusEditorController @Inject()(
     * @return An error message with a back_link or a form configuration populated with the instance information
     */
 
-  def getInstance(org: String, domain: String, schema: String, version: String, id: String): Action[AnyContent] =
+  def getInstance(
+    org: String,
+    domain: String,
+    schema: String,
+    version: String,
+    id: String,
+    databaseScope: Option[String]
+  ): Action[AnyContent] =
     authenticatedUserAction.async { implicit request =>
       val nexusInstanceReference = NexusInstanceReference(org, domain, schema, version, id)
-      editorService.retrieveInstance(nexusInstanceReference, request.userToken, formService.queryRegistry).flatMap {
-        case Left(error) =>
-          logger.error(
-            s"Error: Could not fetch instance : ${nexusInstanceReference.nexusPath.toString()}/$id - ${error.content}"
-          )
-          Future(error.toResult)
-        case Right(instance) =>
-          FormService
-            .getFormStructure(nexusInstanceReference.nexusPath, instance.content, formService.formRegistry) match {
-            case JsNull =>
-              Future(NotImplemented("Form not implemented"))
-            case instanceForm =>
-              metadataService.getMetadata(nexusInstanceReference, instance).map {
-                case Right(metadata) =>
-                  Ok(
-                    Json.toJson(
-                      EditorResponseObject(instanceForm.as[JsObject] ++ Json.obj("metadata" -> Json.toJson(metadata)))
+      editorService
+        .retrieveInstance(nexusInstanceReference, request.userToken, formService.queryRegistry, databaseScope)
+        .flatMap {
+          case Left(error) =>
+            logger.error(
+              s"Error: Could not fetch instance : ${nexusInstanceReference.nexusPath.toString()}/$id - ${error.content}"
+            )
+            Future(error.toResult)
+          case Right(instance) =>
+            FormService
+              .getFormStructure(nexusInstanceReference.nexusPath, instance.content, formService.formRegistry) match {
+              case JsNull =>
+                Future(NotImplemented("Form not implemented"))
+              case instanceForm =>
+                metadataService.getMetadata(nexusInstanceReference, instance).map {
+                  case Right(metadata) =>
+                    Ok(
+                      Json.toJson(
+                        EditorResponseObject(instanceForm.as[JsObject] ++ Json.obj("metadata" -> Json.toJson(metadata)))
+                      )
                     )
-                  )
-                case Left(error) =>
-                  logger.error(error.toString)
-                  Ok(Json.toJson(EditorResponseObject(instanceForm.as[JsObject])))
-              }
-          }
-      }
+                  case Left(error) =>
+                    logger.error(error.toString)
+                    Ok(Json.toJson(EditorResponseObject(instanceForm.as[JsObject])))
+                }
+            }
+        }
     }
 
   def deleteInstance(org: String, domain: String, schema: String, version: String, id: String): Action[AnyContent] =
