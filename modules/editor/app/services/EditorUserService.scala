@@ -18,7 +18,6 @@ package services
 
 import com.google.inject.Inject
 import constants.EditorConstants
-import models._
 import models.errors.APIEditorError
 import models.instance.{NexusInstance, NexusInstanceReference}
 import models.user.{EditorUser, NexusUser}
@@ -31,6 +30,8 @@ import services.instance.InstanceApiService
 import services.query.QueryService
 
 import scala.concurrent.{ExecutionContext, Future}
+import cats.syntax.either._
+import cats.syntax.option._
 
 class EditorUserService @Inject()(
   config: ConfigurationService,
@@ -62,7 +63,7 @@ class EditorUserService @Inject()(
             vocab = Some(EditorConstants.editorVocab),
             Map("userId" -> nexusUser.id)
           )
-          .map[Either[APIEditorError, Option[EditorUser]]] { res =>
+          .map { res =>
             res.status match {
               case OK =>
                 val users = (res.json \ "results")
@@ -70,35 +71,49 @@ class EditorUserService @Inject()(
                 if (users.size > 1) {
                   val msg = s"Multiple user with the same ID detected: ${users.map(js => js \ "nexusId").mkString(" ")}"
                   logger.error(msg)
-                  Left(APIEditorError(INTERNAL_SERVER_ERROR, msg)) // users.head
+                  val id = (users.head \ "nexusId").as[String]
+                  cacheUser(id, nexusUser).some.asRight
                 } else if (users.size == 1) {
                   val id = (users.head \ "nexusId").as[String]
-                  val editorUser = EditorUser(NexusInstanceReference.fromUrl(id), nexusUser)
-                  cache.set(editorUser.nexusUser.id, editorUser, config.cacheExpiration)
-                  Right(Some(editorUser))
+                  cacheUser(id, nexusUser).some.asRight
                 } else {
-                  Right(None)
+                  None.asRight
                 }
               case _ =>
                 logger.error(s"Could not fetch the user with ID ${nexusUser.id} ${res.body}")
-                Left(APIEditorError(res.status, res.body))
+                APIEditorError(res.status, res.body).asLeft
             }
           }
-      case Some(user) => Future(Right(Some(user)))
+      case Some(user) => Future.successful(user.some.asRight)
     }
+  }
+
+  private def cacheUser(userId: String, nexusUser: NexusUser): EditorUser = {
+    val editorUser = EditorUser(NexusInstanceReference.fromUrl(userId), nexusUser)
+    cache.set(editorUser.nexusUser.id, editorUser, config.cacheExpiration)
+    editorUser
   }
 
   def getOrCreateUser(nexusUser: NexusUser, token: String)(
     afterCreation: (EditorUser, String) => Future[Either[APIEditorError, EditorUser]]
   ): Future[Either[APIEditorError, EditorUser]] =
-    getUser(nexusUser, token).flatMap {
-      case Right(Some(editorUser)) => Future(Right(editorUser))
+    getUser(nexusUser, token).flatMap[Either[APIEditorError, EditorUser]] {
+      case Right(Some(editorUser)) => Future(editorUser.asRight)
       case Right(None) =>
-        createUser(nexusUser, token).flatMap {
-          case Right(editorUser) => afterCreation(editorUser, token)
-          case Left(e)           => Future(Left(e))
+        val r = for {
+          refreshedToken <- oIDCAuthService.getTechAccessToken(true)
+          res            <- getUser(nexusUser, refreshedToken)
+        } yield res
+        r.flatMap {
+          case Right(Some(editorUser)) => Future.successful(editorUser.asRight)
+          case Right(None) =>
+            createUser(nexusUser, token).flatMap {
+              case Right(editorUser) => afterCreation(editorUser, token)
+              case Left(e)           => Future.successful(e.asLeft)
+            }
+          case Left(e) => Future.successful(e.asLeft)
         }
-      case Left(err) => Future(Left(err))
+      case Left(err) => Future.successful(err.asLeft)
     }
 
   def createUser(nexusUser: NexusUser, token: String): Future[Either[APIEditorError, EditorUser]] = {
@@ -111,10 +126,10 @@ class EditorUserService @Inject()(
         token
       )
       .map {
-        case Right(ref) => Right(EditorUser(ref, nexusUser))
+        case Right(ref) => EditorUser(ref, nexusUser).asRight
         case Left(res) =>
           logger.error(s"Could not create the user with ID ${nexusUser.id} - ${res.body}")
-          Left(APIEditorError(res.status, res.body))
+          APIEditorError(res.status, res.body).asLeft
       }
   }
 
@@ -122,10 +137,10 @@ class EditorUserService @Inject()(
     instanceApiService
       .delete(wSClient, config.kgQueryEndpoint, editorUser.nexusId, token)
       .map {
-        case Right(_) => Right(())
+        case Right(_) => ().asRight
         case Left(res) =>
           logger.error(s"Could not delete the user with ID ${editorUser.nexusId.toString} - ${res.body}")
-          Left(APIEditorError(res.status, res.body))
+          APIEditorError(res.status, res.body).asLeft
       }
   }
 }

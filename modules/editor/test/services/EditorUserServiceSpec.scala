@@ -28,8 +28,8 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.cache.AsyncCacheApi
 import play.api.libs.json.Json
-import play.api.mvc.Results.Ok
-import play.api.test.Helpers.POST
+import play.api.mvc.Results._
+import play.api.test.Helpers._
 import play.api.test.Injecting
 import services._
 
@@ -70,7 +70,7 @@ class EditorUserServiceSpec
         """.stripMargin
       )
       implicit val ws = MockWS {
-        case (POST, fakeEndpoint) =>
+        case (GET, fakeEndpoint) =>
           Action {
             Ok(Json.obj("results" -> Json.toJson(List(endpointResponse))))
           }
@@ -88,6 +88,39 @@ class EditorUserServiceSpec
 
       res.isRight mustBe true
       res mustBe Right(Some(user))
+    }
+    "return an error if the query fails" in {
+      val fakeEndpoint = s"${kgQueryEndpoint}/query/"
+
+      val id = "1"
+      val idUser = "nexusUUID1"
+      val nexusIdUser = s"${EditorConstants.editorUserPath.toString()}/$idUser"
+      val nexusUser = NexusUser(
+        id,
+        "",
+        "",
+        Seq(),
+        Seq()
+      )
+
+      implicit val ws = MockWS {
+        case (GET, fakeEndpoint) =>
+          Action {
+            NotFound("User not found")
+          }
+      }
+      val ec = global
+      val oidcService = mock[OIDCAuthService]
+      val nexusService = mock[NexusService]
+      val configService = mock[ConfigurationService]
+      val nexusExt = mock[NexusExtensionService]
+      val cache = mock[AsyncCacheApi]
+      when(cache.get[EditorUser](id)).thenReturn(Future(None))
+      val service = new EditorUserService(configService, ws, nexusService, cache, nexusExt, oidcService)(ec)
+
+      val res = Await.result(service.getUser(nexusUser, "token"), FiniteDuration(10, "s"))
+
+      res.isLeft mustBe true
     }
   }
 
