@@ -20,7 +20,7 @@ import { isMobile } from "../helpers/BrowserHelpers";
 import "./Carrousel.css";
 
 
-const CarrouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, navigationComponent}) => {
+const CarrouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, navigationComponent, isPreviewInstance}) => {
   const ItemComponent =  itemComponent;
   const NavigationComponent = navigationComponent;
   return (
@@ -37,7 +37,7 @@ const CarrouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, 
               <NavigationComponent/>
             )}
           </div>
-          {item.isActive && (
+          {item.isActive && !isPreviewInstance && (
             <button className="kgs-carrousel__close-button" onClick={onClose}>
               <i className="fa fa-close" />
             </button>
@@ -76,9 +76,9 @@ export class Carrousel extends PureComponent {
     }
   }
   _keyupHandler(event) {
-    const {onPrevious, onClose} = this.props;
+    const {onPrevious, onClose, isPreviewInstance} = this.props;
     if (this.props.show) {
-      if (event.keyCode === 27) {
+      if (event.keyCode === 27 && !isPreviewInstance) {
         event.preventDefault();
         typeof onClose === "function" && onClose();
       } else if (event.keyCode === 8) {
@@ -88,7 +88,7 @@ export class Carrousel extends PureComponent {
     }
   }
   render(){
-    const {className, show, data, onPrevious, onClose, itemComponent, navigationComponent} = this.props;
+    const {className, show, data, onPrevious, onClose, itemComponent, navigationComponent, isPreviewInstance} = this.props;
     if (!show || !Array.isArray(data) || !data.length || !itemComponent) {
       return null;
     }
@@ -112,7 +112,7 @@ export class Carrousel extends PureComponent {
       <div className={classNames}>
         <div className="kgs-carrousel__panel">
           {items.map(item => (
-            <CarrouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />
+            <CarrouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} isPreviewInstance={isPreviewInstance} />
           ))}
         </div>
       </div>
