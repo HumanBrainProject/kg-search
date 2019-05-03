@@ -15,6 +15,7 @@
  */
 package editor.services
 
+import akka.actor.ActorSystem
 import constants.EditorConstants
 import helpers.ConfigMock._
 import helpers.ConfigMock
@@ -81,8 +82,10 @@ class EditorUserServiceSpec
       val configService = mock[ConfigurationService]
       val nexusExt = mock[NexusExtensionService]
       val cache = mock[AsyncCacheApi]
+      val actorSystem = mock[ActorSystem]
       when(cache.get[EditorUser](id)).thenReturn(Future(None))
-      val service = new EditorUserService(configService, ws, nexusService, cache, nexusExt, oidcService)(ec)
+      val service =
+        new EditorUserService(configService, ws, nexusService, cache, nexusExt, oidcService)(ec, actorSystem)
 
       val res = Await.result(service.getUser(nexusUser, "token"), FiniteDuration(10, "s"))
 
@@ -115,8 +118,10 @@ class EditorUserServiceSpec
       val configService = mock[ConfigurationService]
       val nexusExt = mock[NexusExtensionService]
       val cache = mock[AsyncCacheApi]
+      val actorSystem = mock[ActorSystem]
       when(cache.get[EditorUser](id)).thenReturn(Future(None))
-      val service = new EditorUserService(configService, ws, nexusService, cache, nexusExt, oidcService)(ec)
+      val service =
+        new EditorUserService(configService, ws, nexusService, cache, nexusExt, oidcService)(ec, actorSystem)
 
       val res = Await.result(service.getUser(nexusUser, "token"), FiniteDuration(10, "s"))
 

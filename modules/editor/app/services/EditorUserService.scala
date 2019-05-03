@@ -16,6 +16,10 @@
 
 package services
 
+import java.util.concurrent.ConcurrentHashMap
+
+import akka.actor.ActorSystem
+import akka.http.scaladsl.model.DateTime
 import com.google.inject.Inject
 import constants.EditorConstants
 import models.errors.APIEditorError
@@ -26,12 +30,33 @@ import play.api.cache.{AsyncCacheApi, NamedCache}
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.WSClient
+import scala.concurrent.duration._
 import services.instance.InstanceApiService
 import services.query.QueryService
 
 import scala.concurrent.{ExecutionContext, Future}
 import cats.syntax.either._
 import cats.syntax.option._
+import monix.eval.Task
+import monix.execution.Scheduler.Implicits.global
+
+object UserRequestMap {
+  private val m = new ConcurrentHashMap[String, (DateTime, Task[Either[APIEditorError, EditorUser]])]
+
+  def put(key: String, value: Task[Either[APIEditorError, EditorUser]]): Task[Either[APIEditorError, EditorUser]] = {
+    this.m.put(key, (DateTime.now, value))._2
+  }
+
+  def get(key: String): Option[Task[Either[APIEditorError, EditorUser]]] = {
+    val f = this.m.get(key)
+    if (f != null) f._2.some else None
+  }
+
+  def cleanMap: Unit = {
+    this.m.values().removeIf(p => p._1 <= DateTime.now.minus(600000L))
+  }
+
+}
 
 class EditorUserService @Inject()(
   config: ConfigurationService,
@@ -40,12 +65,19 @@ class EditorUserService @Inject()(
   @NamedCache("editor-userinfo-cache") cache: AsyncCacheApi,
   nexusExtensionService: NexusExtensionService,
   oIDCAuthService: OIDCAuthService,
-)(implicit executionContext: ExecutionContext) {
+)(implicit executionContext: ExecutionContext, actorSystem: ActorSystem) {
   val logger = Logger(this.getClass)
 
   object instanceApiService extends InstanceApiService
   object cacheService extends CacheService
   object queryService extends QueryService
+
+  lazy val scheduler = scheduled
+
+  def scheduled(implicit actorSystem: ActorSystem) =
+    actorSystem.scheduler.schedule(initialDelay = 10.seconds, interval = 20.minute) {
+      UserRequestMap.cleanMap
+    }
 
   def getUser(nexusUser: NexusUser, token: String): Future[Either[APIEditorError, Option[EditorUser]]] = {
     cacheService.get[EditorUser](cache, nexusUser.id.toString).flatMap {
@@ -94,26 +126,53 @@ class EditorUserService @Inject()(
     editorUser
   }
 
-  def getOrCreateUser(nexusUser: NexusUser, token: String)(
-    afterCreation: (EditorUser, String) => Future[Either[APIEditorError, EditorUser]]
-  ): Future[Either[APIEditorError, EditorUser]] =
-    getUser(nexusUser, token).flatMap[Either[APIEditorError, EditorUser]] {
-      case Right(Some(editorUser)) => Future(editorUser.asRight)
+  private def getUserWithTechTokenRefresh(
+    nexusUser: NexusUser,
+    token: String
+  ): Future[Either[APIEditorError, Option[EditorUser]]] = {
+    getUser(nexusUser, token).flatMap {
+      case Right(Some(editorUser)) => Future.successful(editorUser.some.asRight)
       case Right(None) =>
+        logger.debug("Calling first time get user retruns None")
         val r = for {
           refreshedToken <- oIDCAuthService.getTechAccessToken(true)
           res            <- getUser(nexusUser, refreshedToken)
         } yield res
-        r.flatMap {
-          case Right(Some(editorUser)) => Future.successful(editorUser.asRight)
-          case Right(None) =>
-            createUser(nexusUser, token).flatMap {
-              case Right(editorUser) => afterCreation(editorUser, token)
-              case Left(e)           => Future.successful(e.asLeft)
-            }
-          case Left(e) => Future.successful(e.asLeft)
+        r
+      case Left(error) => Future.successful(error.asLeft)
+    }
+  }
+
+  def getOrCreateUser(nexusUser: NexusUser, token: String)(
+    afterCreation: (EditorUser, String) => Future[Either[APIEditorError, EditorUser]]
+  ): Future[Either[APIEditorError, EditorUser]] =
+    getUserWithTechTokenRefresh(nexusUser, token).flatMap {
+      case Right(Some(editorUser)) => Future.successful(editorUser.asRight)
+      case Right(None) =>
+        logger.debug("Calling second time get user returns None")
+        UserRequestMap
+          .get(nexusUser.id.toString) match {
+          case Some(req) =>
+            logger.debug(s"Fetching request from cache for user ${nexusUser.id.toString}")
+            req.runToFuture
+          case None =>
+            logger.debug(s"Adding request to cache for user ${nexusUser.id.toString}")
+            val task = Task.deferFuture {
+              createUser(nexusUser, token).flatMap {
+                case Right(editorUser) =>
+                  logger.debug("Creating the user")
+                  afterCreation(editorUser, token)
+                case Left(e) => Future.successful(e.asLeft)
+              }
+            }.memoize
+            UserRequestMap.put(
+              nexusUser.id.toString,
+              task
+            )
+            scheduler
+            task.runToFuture
         }
-      case Left(err) => Future.successful(err.asLeft)
+      case Left(e) => Future.successful(e.asLeft)
     }
 
   def createUser(nexusUser: NexusUser, token: String): Future[Either[APIEditorError, EditorUser]] = {
@@ -143,6 +202,7 @@ class EditorUserService @Inject()(
           APIEditorError(res.status, res.body).asLeft
       }
   }
+
 }
 
 object EditorUserService {

@@ -23,6 +23,7 @@ import play.api.http.ContentTypes._
 import constants.QueryConstants._
 
 import scala.concurrent.Future
+import cats.syntax.option._
 
 trait QueryService {
 
@@ -93,7 +94,7 @@ trait QueryService {
       VOCAB  -> vocab,
       START  -> from,
       SIZE   -> size,
-      SEARCH -> Some(search)
+      SEARCH -> search.some
     ).toList
 
     wSClient

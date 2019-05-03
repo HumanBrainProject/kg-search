@@ -65,6 +65,7 @@ class EditorUserController @Inject()(
   }
 
   def getOrCreateCurrentUser(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
+    logger.debug(s"Calling get or create user ${request.user.email} ${request.user.id}")
     for {
       token <- oIDCAuthService.getTechAccessToken()
       u     <- editorUserService.getOrCreateUser(request.user, token) { postCreation }
