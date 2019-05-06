@@ -40,11 +40,11 @@ class RedirectController @Inject()(
     group match {
       case Some(name) =>
         Redirect(
-          s"${config.hbpUrl}/webapp/?${RedirectController.groupKeyQueryString}=$name&${RedirectController.searchFalseQueryString}#$dataType/$id"
+          s"${config.hbpUrl}/?${RedirectController.groupKeyQueryString}=$name&${RedirectController.searchFalseQueryString}#$dataType/$id"
         )
       case None =>
         Redirect(
-          s"${config.hbpUrl}/webapp/?${RedirectController.searchFalseQueryString}#$dataType/$id"
+          s"${config.hbpUrl}/?${RedirectController.searchFalseQueryString}#$dataType/$id"
         )
     }
   }
@@ -61,7 +61,7 @@ class RedirectController @Inject()(
   def getFullPath(org: String, domain: String, schema: String, version: String, id: String): Action[AnyContent] =
     Action { implicit request =>
       Redirect(
-        s"${config.hbpUrl}/webapp/?#$org/$domain/$schema/$version/$id"
+        s"${config.hbpUrl}/?#$org/$domain/$schema/$version/$id"
       )
     }
 }

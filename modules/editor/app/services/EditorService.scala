@@ -190,7 +190,8 @@ class EditorService @Inject()(
   def retrieveInstance(
     nexusInstanceReference: NexusInstanceReference,
     token: String,
-    queryRegistry: FormRegistry[QuerySpec]
+    queryRegistry: FormRegistry[QuerySpec],
+    databaseScope: Option[String] = None
   ): Future[Either[APIEditorError, NexusInstance]] = {
     queryRegistry.registry.get(nexusInstanceReference.nexusPath) match {
       case Some(querySpec) =>
@@ -201,6 +202,7 @@ class EditorService @Inject()(
             nexusInstanceReference,
             querySpec.query.toString,
             token,
+            databaseScope,
             Some(EditorConstants.EDITORVOCAB)
           )
           .map { res =>
