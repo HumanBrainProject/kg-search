@@ -20,9 +20,10 @@ import { isMobile } from "../helpers/BrowserHelpers";
 import "./Carrousel.css";
 
 
-const CarrouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, navigationComponent, noticeComponent, isPreviewInstance}) => {
+const CarrouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, navigationComponent, cookielawBanner, noticeComponent, isPreviewInstance}) => {
   const ItemComponent =  itemComponent;
   const NavigationComponent = navigationComponent;
+  const CookielawBanner = cookielawBanner;
   const NoticeComponent = noticeComponent;
   return (
     <div className={`kgs-carrousel__item position${item.position}`} >
@@ -45,6 +46,7 @@ const CarrouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, 
           )}
         </div>
         <div className="kgs-carrousel__body">
+          <CookielawBanner />
           <NoticeComponent />
           {item.isActive && item.data && ItemComponent && (
             <ItemComponent data={item.data} />
@@ -90,7 +92,7 @@ export class Carrousel extends PureComponent {
     }
   }
   render(){
-    const {className, show, data, onPrevious, onClose, itemComponent, navigationComponent, noticeComponent, isPreviewInstance} = this.props;
+    const {className, show, data, onPrevious, onClose, itemComponent, navigationComponent, cookielawBanner, noticeComponent, isPreviewInstance} = this.props;
     if (!show || !Array.isArray(data) || !data.length || !itemComponent) {
       return null;
     }
@@ -114,7 +116,7 @@ export class Carrousel extends PureComponent {
       <div className={classNames}>
         <div className="kgs-carrousel__panel">
           {items.map(item => (
-            <CarrouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} noticeComponent={noticeComponent} isPreviewInstance={isPreviewInstance} />
+            <CarrouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} cookielawBanner={cookielawBanner} noticeComponent={noticeComponent} isPreviewInstance={isPreviewInstance} />
           ))}
         </div>
       </div>

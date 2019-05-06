@@ -24,7 +24,7 @@ Enzyme.configure({ adapter: new Adapter() });
 
 test('Carrousel component renders initially', () => {
     const component = renderer.create(
-        <Carrousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => null} navigationComponent={() => null} noticeComponent={() => null} />
+        <Carrousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => null} navigationComponent={() => null} cookielawBanner={() => null} noticeComponent={() => null} />
     );
   
     expect(component.toJSON()).toMatchSnapshot();
@@ -32,28 +32,28 @@ test('Carrousel component renders initially', () => {
 
 test('Carrousel test show false"', () => {
     const component = renderer.create(
-        <Carrousel className="className" show={false} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => null} navigationComponent={() => null} noticeComponent={() => null} />
+        <Carrousel className="className" show={false} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => null} navigationComponent={() => null} cookielawBanner={() => null} noticeComponent={() => null} />
     );
     expect(component.toJSON()).toBe(null);
 });
   
 test('Carrousel test className"', () => {
     const component = shallow(
-        <Carrousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => null} navigationComponent={() => null} noticeComponent={() => null} />
+        <Carrousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => null} navigationComponent={() => null} cookielawBanner={() => null} noticeComponent={() => null} />
     );
     expect(component.hasClass("className"));
 });
 
 test('Carrousel test number of items', () => {
     const component = render(
-        <Carrousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => null} navigationComponent={() => null} noticeComponent={() => null} />
+        <Carrousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => null} navigationComponent={() => null} cookielawBanner={() => null} noticeComponent={() => null} />
     );
     expect(component.find(".kgs-carrousel__item").length).toBe(5);
 });
 
 test('Carrousel test items', () => {
     const component = renderer.create(
-        <Carrousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => null} navigationComponent={() => null} noticeComponent={() => null} />
+        <Carrousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => null} navigationComponent={() => null} cookielawBanner={() => null} noticeComponent={() => null} />
     );
     const instance = component.getInstance();
 
@@ -67,7 +67,7 @@ test('Carrousel test navigation buttons', () => {
     const previousFn = jest.fn();
     const closeFn = jest.fn();
     const component = mount(
-        <Carrousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={previousFn} onClose={closeFn} itemComponent={() => null} navigationComponent={() => null} noticeComponent={() => null} />
+        <Carrousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={previousFn} onClose={closeFn} itemComponent={() => null} navigationComponent={() => null} cookielawBanner={() => null} noticeComponent={() => null} />
     );
     expect(component.find(".kgs-carrousel__previous-button").length).toBe(1);
     expect(component.find(".kgs-carrousel__close-button").length).toBe(1);
