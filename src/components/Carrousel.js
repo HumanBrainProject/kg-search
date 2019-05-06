@@ -20,9 +20,10 @@ import { isMobile } from "../helpers/BrowserHelpers";
 import "./Carrousel.css";
 
 
-const CarrouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, navigationComponent, isPreviewInstance}) => {
+const CarrouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, navigationComponent, noticeComponent, isPreviewInstance}) => {
   const ItemComponent =  itemComponent;
   const NavigationComponent = navigationComponent;
+  const NoticeComponent = noticeComponent;
   return (
     <div className={`kgs-carrousel__item position${item.position}`} >
       <div className="kgs-carrousel__content">
@@ -44,6 +45,7 @@ const CarrouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, 
           )}
         </div>
         <div className="kgs-carrousel__body">
+          <NoticeComponent />
           {item.isActive && item.data && ItemComponent && (
             <ItemComponent data={item.data} />
           )}
@@ -88,7 +90,7 @@ export class Carrousel extends PureComponent {
     }
   }
   render(){
-    const {className, show, data, onPrevious, onClose, itemComponent, navigationComponent, isPreviewInstance} = this.props;
+    const {className, show, data, onPrevious, onClose, itemComponent, navigationComponent, noticeComponent, isPreviewInstance} = this.props;
     if (!show || !Array.isArray(data) || !data.length || !itemComponent) {
       return null;
     }
@@ -112,7 +114,7 @@ export class Carrousel extends PureComponent {
       <div className={classNames}>
         <div className="kgs-carrousel__panel">
           {items.map(item => (
-            <CarrouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} isPreviewInstance={isPreviewInstance} />
+            <CarrouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} noticeComponent={noticeComponent} isPreviewInstance={isPreviewInstance} />
           ))}
         </div>
       </div>
@@ -131,6 +133,10 @@ Carrousel.propTypes = {
     PropTypes.func
   ]).isRequired,
   navigationComponent: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.func
+  ]),
+  noticeComponent: PropTypes.oneOfType([
     PropTypes.element,
     PropTypes.func
   ])

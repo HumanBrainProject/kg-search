@@ -17,6 +17,7 @@
 import { connect } from "react-redux";
 import * as actions from "../actions";
 import { Carrousel } from "../components/Carrousel";
+import { TermsShortNotice } from "./TermsShortNotice";
 import { ShareButtons } from "./ShareButtons";
 import { Instance } from "./Instance";
 import { searchToObj } from "../helpers/OIDCHelpers";
@@ -30,6 +31,7 @@ const mapStateToProps = state => {
     data: state.instances.currentInstance?[...state.instances.previousInstances, state.instances.currentInstance]:[],
     itemComponent: Instance,
     navigationComponent: ShareButtons,
+    noticeComponent: TermsShortNotice,
     isPreviewInstance: state.instances.isPreviewInstance
   };
 };

@@ -168,6 +168,11 @@
     overflow-y: auto;
 }
 
+.kgs-carrousel__body .kgs-notice .kgs-notice-panel {
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
 /*
 .kgs-carrousel .kgs-carrousel__item.position0 .kgs-carrousel__body {
     background-color: red;
