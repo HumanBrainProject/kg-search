@@ -134,6 +134,10 @@ Carrousel.propTypes = {
     PropTypes.element,
     PropTypes.func
   ]).isRequired,
+  cookielawBanner: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.func
+  ]),
   navigationComponent: PropTypes.oneOfType([
     PropTypes.element,
     PropTypes.func
