@@ -36,7 +36,7 @@ trait EditorBookmarkServiceInterface {
   def getUserBookmarkLists(
     editorUser: EditorUser,
     formRegistry: FormRegistry[UISpec],
-    token: String
+    token: AccessToken
   ): Future[Either[APIEditorError, List[BookmarkListFolder]]]
 
   /**
@@ -52,7 +52,7 @@ trait EditorBookmarkServiceInterface {
     start: Int,
     size: Int,
     search: String,
-    token: String
+    token: AccessToken
   ): Future[Either[APIEditorError, (List[PreviewInstance], Long)]]
 
   /**
@@ -66,7 +66,7 @@ trait EditorBookmarkServiceInterface {
   def createBookmarkListFolder(
     editorUser: EditorUser,
     name: String,
-    token: String,
+    token: AccessToken,
     folderType: FolderType = BOOKMARKFOLDER
   ): Future[Either[APIEditorError, BookmarkListFolder]]
 
@@ -80,34 +80,34 @@ trait EditorBookmarkServiceInterface {
   def createBookmarkList(
     bookmarkListName: String,
     folderId: String,
-    token: String
+    token: AccessToken
   ): Future[Either[APIEditorError, BookmarkList]]
 
   def updateBookmarkList(
     bookmarkList: BookmarkList,
-    bookmarkListPath: NexusPath,
-    bookmarkListId: String,
+    bookmarkListRef: NexusInstanceReference,
     userFolderId: String,
-    token: String
+    userId: String,
+    token: AccessToken
   ): Future[Either[APIEditorError, BookmarkList]]
 
-  def deleteBookmarkList(bookmarkRef: NexusInstanceReference, token: String): Future[Either[APIEditorError, Unit]]
+  def deleteBookmarkList(bookmarkRef: NexusInstanceReference, token: AccessToken): Future[Either[APIEditorError, Unit]]
 
   def addInstanceToBookmarkLists(
     instanceReference: NexusInstanceReference,
     bookmarkListIds: List[NexusInstanceReference],
-    token: String
+    token: AccessToken
   ): Future[List[Either[APIEditorError, Unit]]]
 
   def removeInstanceFromBookmarkLists(
     instanceRef: NexusInstanceReference,
     bookmarkListIds: List[NexusInstanceReference],
-    token: String
+    token: AccessToken
   ): Future[List[Either[APIEditorError, Unit]]]
 
   def retrieveBookmarkLists(
     instanceIds: List[NexusInstanceReference],
     editorUser: EditorUser,
-    token: String
+    token: AccessToken
   ): Future[List[(NexusInstanceReference, Either[APIEditorError, List[BookmarkList]])]]
 }

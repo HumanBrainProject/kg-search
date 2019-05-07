@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit
 import com.google.inject.Inject
 import helpers.ESHelper
 import models.user.{NexusUser, OIDCUser}
-import models.{MindsGroupSpec, UserGroup}
+import models.{MindsGroupSpec, RefreshAccessToken, UserGroup}
 import play.api.Logger
 import play.api.cache.{AsyncCacheApi, NamedCache}
 import play.api.http.Status._
@@ -124,16 +124,16 @@ class OIDCAuthService @Inject()(
     }
   }
 
-  def getTechAccessToken(): Future[String] = {
+  def getTechAccessToken(): Future[RefreshAccessToken] = {
     cacheService.get[String](cache, techAccessToken).flatMap {
-      case Some(token) => Future.successful(token)
+      case Some(token) => Future.successful(RefreshAccessToken(token))
       case _ =>
         val clientCred = credentialsService.getClientCredentials()
         refreshAccessToken(clientCred)
     }
   }
 
-  def refreshAccessToken(clientCredentials: ClientCredentials): Future[String] = {
+  def refreshAccessToken(clientCredentials: ClientCredentials): Future[RefreshAccessToken] = {
     ws.url(config.oidcTokenEndpoint)
       .withQueryStringParameters(
         "client_id"     -> clientCredentials.clientId,
@@ -147,7 +147,7 @@ class OIDCAuthService @Inject()(
           case OK =>
             val token = s"Bearer ${(result.json \ "access_token").as[String]}"
             cache.set(techAccessToken, token, FiniteDuration(20, TimeUnit.MINUTES))
-            token
+            RefreshAccessToken(token)
           case _ =>
             logger.error(s"Error: while fetching tech account access token $result")
             throw new Exception("Could not fetch access token for tech account")

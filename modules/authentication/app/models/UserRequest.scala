@@ -24,5 +24,5 @@ import play.api.mvc.{Request, WrappedRequest}
   * @param request
   * @tparam A
   */
-class UserRequest[A](val user: NexusUser, val request: Request[A], val userToken: String)
+class UserRequest[A](val user: NexusUser, val request: Request[A], val userToken: BasicAccessToken)
     extends WrappedRequest[A](request)

@@ -16,12 +16,13 @@
 package services.bookmark
 
 import com.google.inject.Inject
+import constants.QueryConstants._
 import constants.{EditorConstants, SchemaFieldsConstants}
-import models.errors.APIEditorError
-import helpers.{BookmarkHelper, InstanceHelper}
+import helpers.BookmarkHelper
 import models._
 import models.editorUserList._
-import models.instance.{NexusInstance, NexusInstanceReference, PreviewInstance}
+import models.errors.APIEditorError
+import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, PreviewInstance}
 import models.specification.{FormRegistry, UISpec}
 import models.user.{EditorUser, NexusUser}
 import play.api.Logger
@@ -29,13 +30,12 @@ import play.api.http.ContentTypes._
 import play.api.http.HeaderNames._
 import play.api.http.Status._
 import play.api.libs.json._
-import play.api.libs.ws.{WSClient, WSResponse}
-import services.NexusService.{SKIP, UPDATE}
+import play.api.libs.ws.WSClient
 import services._
 import services.instance.InstanceApiService
-import services.query.QueryService
+import services.query.{QueryApiParameter, QueryService}
 import services.specification.FormService
-import constants.QueryConstants._
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class EditorBookmarkService @Inject()(
@@ -43,7 +43,7 @@ class EditorBookmarkService @Inject()(
   wSClient: WSClient,
   nexusService: NexusService,
   nexusExtensionService: NexusExtensionService
-)(implicit executionContext: ExecutionContext)
+)(implicit executionContext: ExecutionContext, OIDCAuthService: OIDCAuthService, clientCredentials: CredentialsService)
     extends EditorBookmarkServiceInterface {
   val logger = Logger(this.getClass)
 
@@ -53,7 +53,7 @@ class EditorBookmarkService @Inject()(
   def getUserBookmarkLists(
     editorUser: EditorUser,
     formRegistry: FormRegistry[UISpec],
-    token: String
+    token: AccessToken
   ): Future[Either[APIEditorError, List[BookmarkListFolder]]] = {
     queryService
       .getInstancesWithId(
@@ -61,7 +61,8 @@ class EditorBookmarkService @Inject()(
         config.kgQueryEndpoint,
         editorUser.nexusId,
         EditorBookmarkService.kgQueryGetUserFoldersQuery(EditorConstants.editorUserPath),
-        token
+        token,
+        QueryApiParameter()
       )
       .map { res =>
         res.status match {
@@ -123,29 +124,32 @@ class EditorBookmarkService @Inject()(
     start: Int,
     size: Int,
     search: String,
-    token: String
+    token: AccessToken
   ): Future[Either[APIEditorError, (List[PreviewInstance], Long)]] = {
-    wSClient
+    val q = wSClient
       .url(s"${config.kgQueryEndpoint}/arango/bookmarks/${bookmarkListId.toString}")
       .withQueryStringParameters(START -> start.toString, SIZE -> size.toString, SEARCH -> search)
-      .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token)
-//      .post(EditorBookmarkService.kgQueryGetInstances(EditorConstants.bookmarkPath))
-      .get()
-      .map { res =>
-        res.status match {
-          case OK =>
-            val instances = (res.json \ "data").as[List[PreviewInstance]]
-            val total = (res.json \ "count").as[Long]
-            Right((instances, total))
-          case _ => Left(APIEditorError(res.status, res.body))
-        }
+      .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token.token)
+    val r = token match {
+      case BasicAccessToken(_)   => q.get()
+      case RefreshAccessToken(_) => AuthHttpClient.getWithRetry(q)
+    }
+
+    r.map { res =>
+      res.status match {
+        case OK =>
+          val instances = (res.json \ "data").as[List[PreviewInstance]]
+          val total = (res.json \ "count").as[Long]
+          Right((instances, total))
+        case _ => Left(APIEditorError(res.status, res.body))
       }
+    }
   }
 
   def createBookmarkListFolder(
     user: EditorUser,
     name: String,
-    token: String,
+    token: AccessToken,
     folderType: FolderType = BOOKMARKFOLDER
   ): Future[Either[APIEditorError, BookmarkListFolder]] = {
     val payload = EditorBookmarkService.bookmarkListFolderToNexusStruct(
@@ -173,7 +177,7 @@ class EditorBookmarkService @Inject()(
   def createBookmarkList(
     bookmarkListName: String,
     folderId: String,
-    token: String
+    token: AccessToken
   ): Future[Either[APIEditorError, BookmarkList]] = {
     val payload =
       EditorBookmarkService.bookmarkListToNexusStruct(bookmarkListName, s"${config.nexusEndpoint}/v0/data/$folderId")
@@ -196,7 +200,7 @@ class EditorBookmarkService @Inject()(
 
   def getBookmarkListById(
     instanceReference: NexusInstanceReference,
-    token: String
+    token: AccessToken
   ): Future[Either[APIEditorError, (BookmarkList, String)]] = {
     queryService
       .getInstancesWithId(
@@ -204,7 +208,8 @@ class EditorBookmarkService @Inject()(
         config.kgQueryEndpoint,
         instanceReference,
         EditorBookmarkService.kgQueryGetBookmarkListByIdQuery(instanceReference.nexusPath),
-        token
+        token,
+        QueryApiParameter()
       )
       .map { res =>
         res.status match {
@@ -223,34 +228,44 @@ class EditorBookmarkService @Inject()(
 
   def updateBookmarkList(
     bookmarkList: BookmarkList,
-    bookmarkListPath: NexusPath,
-    bookmarkListId: String,
+    bookmarkListRef: NexusInstanceReference,
     userFolderId: String,
-    token: String
+    userId: String,
+    token: AccessToken
   ): Future[Either[APIEditorError, BookmarkList]] = {
-    nexusService
-      .updateInstance(
-        s"${config.nexusEndpoint}/v0/data/${bookmarkListPath.toString()}/$bookmarkListId",
-        None,
-        EditorBookmarkService.bookmarkListToNexusStruct(bookmarkList.name, userFolderId),
-        token
+    instanceApiService
+      .put(
+        wSClient,
+        config.kgQueryEndpoint,
+        bookmarkListRef,
+        EditorInstance(
+          NexusInstance(
+            Some(bookmarkListRef.id),
+            bookmarkListRef.nexusPath,
+            EditorBookmarkService.bookmarkListToNexusStruct(bookmarkList.name, userFolderId)
+          )
+        ),
+        token,
+        userId
       )
-      .map { res =>
-        res._1 match {
-          case UPDATE => Right(bookmarkList)
-          case SKIP   => Left(APIEditorError(res._2.status, res._2.body))
-        }
+      .map {
+        case Right(()) => Right(bookmarkList)
+        case Left(err) => Left(APIEditorError(err.status, err.body))
       }
   }
 
-  def deleteBookmarkList(bookmarkRef: NexusInstanceReference, token: String): Future[Either[APIEditorError, Unit]] = {
+  def deleteBookmarkList(
+    bookmarkRef: NexusInstanceReference,
+    token: AccessToken
+  ): Future[Either[APIEditorError, Unit]] = {
     queryService
       .getInstancesWithId(
         wSClient,
         config.kgQueryEndpoint,
         bookmarkRef,
         EditorBookmarkService.kgQueryGetBookmarksForDeletion(bookmarkRef.nexusPath),
-        token
+        token,
+        QueryApiParameter()
       )
       .flatMap { res =>
         res.status match {
@@ -301,7 +316,7 @@ class EditorBookmarkService @Inject()(
   def addInstanceToBookmarkLists(
     instanceReference: NexusInstanceReference,
     bookmarkListIds: List[NexusInstanceReference],
-    token: String
+    token: AccessToken
   ): Future[List[Either[APIEditorError, Unit]]] = {
     val queries = bookmarkListIds.map { ref =>
       val toInsert = EditorBookmarkService
@@ -331,7 +346,7 @@ class EditorBookmarkService @Inject()(
     instanceRef: NexusInstanceReference,
     bookmarksListFromUser: List[NexusInstanceReference],
     editorUser: EditorUser,
-    token: String
+    token: AccessToken
   ): Future[List[Either[APIEditorError, Unit]]] = {
     queryService
       .getInstancesWithId(
@@ -339,7 +354,8 @@ class EditorBookmarkService @Inject()(
         config.kgQueryEndpoint,
         instanceRef,
         EditorBookmarkService.kgQueryGetInstanceBookmarksAndBookmarkList(instanceRef.nexusPath),
-        token
+        token,
+        QueryApiParameter()
       )
       .flatMap { res =>
         res.status match {
@@ -378,7 +394,7 @@ class EditorBookmarkService @Inject()(
   def removeInstanceFromBookmarkLists(
     instanceRef: NexusInstanceReference,
     bookmarkIds: List[NexusInstanceReference],
-    token: String
+    token: AccessToken
   ): Future[List[Either[APIEditorError, Unit]]] = {
     // Get the ids of the bookmarks
     val queries = bookmarkIds.map { id =>
@@ -400,7 +416,7 @@ class EditorBookmarkService @Inject()(
   def retrieveBookmarkLists(
     instanceIds: List[NexusInstanceReference],
     editorUser: EditorUser,
-    token: String
+    token: AccessToken
   ): Future[List[(NexusInstanceReference, Either[APIEditorError, List[BookmarkList]])]] = {
     Future.sequence(instanceIds.map { ids =>
       retrieveBookmarkListSingleInstance(ids, editorUser, token)
@@ -410,7 +426,7 @@ class EditorBookmarkService @Inject()(
   private def retrieveBookmarkListSingleInstance(
     instanceReference: NexusInstanceReference,
     editorUser: EditorUser,
-    token: String
+    token: AccessToken
   ): Future[(NexusInstanceReference, Either[APIEditorError, List[BookmarkList]])] = {
     queryService
       .getInstancesWithId(
@@ -418,7 +434,8 @@ class EditorBookmarkService @Inject()(
         config.kgQueryEndpoint,
         instanceReference,
         EditorBookmarkService.kgQueryGetInstanceBookmarkLists(instanceReference.nexusPath),
-        token
+        token,
+        QueryApiParameter()
       )
       .map { res =>
         res.status match {

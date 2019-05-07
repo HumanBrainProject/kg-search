@@ -28,7 +28,7 @@ import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.WSClient
 import services.instance.InstanceApiService
-import services.query.QueryService
+import services.query.{QueryApiParameter, QueryService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,15 +38,14 @@ class EditorUserService @Inject()(
   nexusService: NexusService,
   @NamedCache("editor-userinfo-cache") cache: AsyncCacheApi,
   nexusExtensionService: NexusExtensionService,
-  oIDCAuthService: OIDCAuthService,
-)(implicit executionContext: ExecutionContext) {
+)(implicit executionContext: ExecutionContext, oIDCAuthService: OIDCAuthService, credentials: CredentialsService) {
   val logger = Logger(this.getClass)
 
   object instanceApiService extends InstanceApiService
   object cacheService extends CacheService
   object queryService extends QueryService
 
-  def getUser(nexusUser: NexusUser, token: String): Future[Either[APIEditorError, Option[EditorUser]]] = {
+  def getUser(nexusUser: NexusUser, token: AccessToken): Future[Either[APIEditorError, Option[EditorUser]]] = {
     cacheService.get[EditorUser](cache, nexusUser.id.toString).flatMap {
       case None =>
         queryService
@@ -56,9 +55,7 @@ class EditorUserService @Inject()(
             EditorConstants.editorUserPath,
             EditorUserService.kgQueryGetUserQuery(EditorConstants.editorUserPath),
             token,
-            None,
-            None,
-            ""
+            QueryApiParameter()
           )
           .map[Either[APIEditorError, Option[EditorUser]]] { res =>
             res.status match {
@@ -82,8 +79,8 @@ class EditorUserService @Inject()(
     }
   }
 
-  def getOrCreateUser(nexusUser: NexusUser, token: String)(
-    afterCreation: (EditorUser, String) => Future[Either[APIEditorError, EditorUser]]
+  def getOrCreateUser(nexusUser: NexusUser, token: AccessToken)(
+    afterCreation: (EditorUser, AccessToken) => Future[Either[APIEditorError, EditorUser]]
   ): Future[Either[APIEditorError, EditorUser]] =
     getUser(nexusUser, token).flatMap {
       case Right(Some(editorUser)) => Future(Right(editorUser))
@@ -95,7 +92,7 @@ class EditorUserService @Inject()(
       case Left(err) => Future(Left(err))
     }
 
-  def createUser(nexusUser: NexusUser, token: String): Future[Either[APIEditorError, EditorUser]] = {
+  def createUser(nexusUser: NexusUser, token: AccessToken): Future[Either[APIEditorError, EditorUser]] = {
     instanceApiService
       .post(
         wSClient,
@@ -112,7 +109,7 @@ class EditorUserService @Inject()(
       }
   }
 
-  def deleteUser(editorUser: EditorUser, token: String): Future[Either[APIEditorError, Unit]] = {
+  def deleteUser(editorUser: EditorUser, token: AccessToken): Future[Either[APIEditorError, Unit]] = {
     instanceApiService
       .delete(wSClient, config.kgQueryEndpoint, editorUser.nexusId, token)
       .map {
