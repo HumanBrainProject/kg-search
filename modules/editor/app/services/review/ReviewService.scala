@@ -17,15 +17,16 @@ package services.review
 
 import com.google.inject.Inject
 import constants.{SchemaFieldsConstants, SuggestionStatus}
+import models.AccessToken
 import models.errors.{APIEditorError, APIEditorMultiError}
 import models.instance.{NexusInstanceReference, SuggestionInstance}
 import models.user.{EditorUser, NexusUser}
 import play.api.http.Status._
 import play.api.libs.json.JsValue
 import play.api.libs.ws.WSClient
-import services.{ConfigurationService, EditorService, ReverseLinkService}
-import services.review.ReviewService.UserID
 import services.instance.InstanceApiService
+import services.review.ReviewService.UserID
+import services._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,7 +36,9 @@ class ReviewService @Inject()(
   editorService: EditorService,
   reverseLinkService: ReverseLinkService
 )(
-  implicit executionContext: ExecutionContext
+  implicit executionContext: ExecutionContext,
+  OIDCAuthService: OIDCAuthService,
+  clientCredentials: CredentialsService
 ) {
   object ReviewApiService extends ReviewApiService
   object InstanceApiService extends InstanceApiService
@@ -43,7 +46,7 @@ class ReviewService @Inject()(
   def addUsersToInstance(
     instance: NexusInstanceReference,
     users: List[UserID],
-    token: String,
+    token: AccessToken,
     user: EditorUser
   ): Future[Either[APIEditorMultiError, Unit]] = {
     val f: List[Future[Either[APIEditorError, Unit]]] = for {
@@ -66,7 +69,7 @@ class ReviewService @Inject()(
     suggestionRef: NexusInstanceReference,
     update: Option[JsValue],
     nexusUser: NexusUser,
-    token: String
+    token: AccessToken
   ): Future[Either[APIEditorMultiError, Unit]] = {
     InstanceApiService.get(wSClient, config.kgQueryEndpoint, suggestionRef, token).flatMap {
       case Right(suggestionInstance) =>
@@ -97,21 +100,21 @@ class ReviewService @Inject()(
 
   def rejectSuggestion(
     nexusInstanceReference: NexusInstanceReference,
-    token: String
+    token: AccessToken
   ): Future[Either[APIEditorError, Unit]] = {
     ReviewApiService.rejectSuggestion(wSClient, config.kgQueryEndpoint, nexusInstanceReference, token)
   }
 
   def getUsersSuggestions(
     suggestionStatus: SuggestionStatus,
-    token: String
+    token: AccessToken
   ): Future[Either[APIEditorError, List[SuggestionInstance]]] = {
     ReviewApiService.getUsersSuggestions(wSClient, config.kgQueryEndpoint, suggestionStatus, token)
   }
 
   def getInstanceSuggestions(
     ref: NexusInstanceReference,
-    token: String
+    token: AccessToken
   ): Future[Either[APIEditorError, List[SuggestionInstance]]] = {
     ReviewApiService.getInstanceSuggestions(wSClient, config.kgQueryEndpoint, ref, token)
   }

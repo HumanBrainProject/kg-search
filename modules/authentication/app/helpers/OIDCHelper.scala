@@ -16,9 +16,10 @@
 
 package helpers
 
-import models.user.{NexusUser, OIDCUser}
-import play.api.mvc.{AnyContent, Request}
+import models.BasicAccessToken
+import models.user.OIDCUser
 import play.api.http.HeaderNames._
+import play.api.mvc.Request
 
 object OIDCHelper {
 
@@ -27,8 +28,8 @@ object OIDCHelper {
     * @param request the request
     * @return A String containing the token or an empty String
     */
-  def getTokenFromRequest[A](request: Request[A]): String = {
-    request.headers.toMap.getOrElse(AUTHORIZATION, Seq("")).head
+  def getTokenFromRequest[A](request: Request[A]): BasicAccessToken = {
+    BasicAccessToken(request.headers.toMap.getOrElse(AUTHORIZATION, Seq("")).head)
   }
 
   /**

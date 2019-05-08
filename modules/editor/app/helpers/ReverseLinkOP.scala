@@ -16,6 +16,7 @@
 package helpers
 
 import constants.EditorConstants
+import models.AccessToken
 import models.commands.{AddReverseLinkCommand, Command, DeleteReverseLinkCommand, NullCommand}
 import models.errors.APIEditorError
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, NexusLink}
@@ -94,7 +95,7 @@ object ReverseLinkOP {
     targetField: String,
     fullIds: List[NexusLink],
     editorService: EditorService,
-    token: String,
+    token: AccessToken,
     baseUrl: String,
     user: User,
     queryRegistry: FormRegistry[QuerySpec]

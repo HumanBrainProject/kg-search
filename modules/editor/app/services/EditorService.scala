@@ -19,19 +19,19 @@ package services
 import com.google.inject.Inject
 import constants._
 import helpers._
-import models.NexusPath
 import models.errors.{APIEditorError, APIEditorMultiError}
 import models.instance._
 import models.specification.{FormRegistry, QuerySpec, UISpec}
 import models.user.{NexusUser, User}
+import models.{AccessToken, NexusPath}
+import org.joda.time.DateTime
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.WSClient
 import services.instance.InstanceApiService
-import services.query.QueryService
+import services.query.{QueryApiParameter, QueryService}
 import services.specification.FormService
-import org.joda.time.DateTime
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -39,7 +39,11 @@ class EditorService @Inject()(
   wSClient: WSClient,
   config: ConfigurationService,
   formService: FormService
-)(implicit executionContext: ExecutionContext) {
+)(
+  implicit executionContext: ExecutionContext,
+  OIDCAuthService: OIDCAuthService,
+  clientCredentials: CredentialsService
+) {
 
   val logger = Logger(this.getClass)
 
@@ -53,7 +57,7 @@ class EditorService @Inject()(
     from: Option[Int],
     size: Option[Int],
     search: String,
-    token: String
+    token: AccessToken
   ): Future[Either[APIEditorError, (List[PreviewInstance], Long)]] = {
     val promotedField =
       formRegistry.registry.get(nexusPath).flatMap(s => s.uiInfo.flatMap(i => i.promotedFields.headOption))
@@ -65,10 +69,7 @@ class EditorService @Inject()(
         nexusPath,
         query,
         token,
-        from,
-        size,
-        search,
-        Some(EditorConstants.EDITORVOCAB)
+        QueryApiParameter(vocab = Some(EditorConstants.EDITORVOCAB), size = size, from = from, search = search)
       )
       .map { res =>
         res.status match {
@@ -90,7 +91,7 @@ class EditorService @Inject()(
   def insertInstance(
     newInstance: NexusInstance,
     user: Option[User],
-    token: String
+    token: AccessToken
   ): Future[Either[APIEditorError, NexusInstanceReference]] = {
     val modifiedContent =
       FormService.removeClientKeysCorrectLinks(newInstance.content.as[JsValue], config.nexusEndpoint)
@@ -114,7 +115,7 @@ class EditorService @Inject()(
   def updateInstance(
     diffInstance: EditorInstance,
     nexusInstanceReference: NexusInstanceReference,
-    token: String,
+    token: AccessToken,
     userId: String
   ): Future[Either[APIEditorError, Unit]] = {
     val contentWithUpdatedTimeStamp = diffInstance.nexusInstance.content.value
@@ -144,7 +145,7 @@ class EditorService @Inject()(
     instanceRef: NexusInstanceReference,
     form: Option[JsValue],
     user: NexusUser,
-    token: String,
+    token: AccessToken,
     reverseLinkService: ReverseLinkService
   ): Future[Either[APIEditorMultiError, Unit]] = {
     form match {
@@ -189,7 +190,7 @@ class EditorService @Inject()(
     */
   def retrieveInstance(
     nexusInstanceReference: NexusInstanceReference,
-    token: String,
+    token: AccessToken,
     queryRegistry: FormRegistry[QuerySpec],
     databaseScope: Option[String] = None
   ): Future[Either[APIEditorError, NexusInstance]] = {
@@ -202,8 +203,7 @@ class EditorService @Inject()(
             nexusInstanceReference,
             querySpec.query.toString,
             token,
-            databaseScope,
-            Some(EditorConstants.EDITORVOCAB)
+            QueryApiParameter(vocab = Some(EditorConstants.EDITORVOCAB), databaseScope = databaseScope)
           )
           .map { res =>
             res.status match {
@@ -232,7 +232,7 @@ class EditorService @Inject()(
     from: NexusInstanceReference,
     to: NexusInstanceReference,
     linkingInstancePath: NexusPath,
-    token: String
+    token: AccessToken
   ): Future[Either[APIEditorMultiError, Unit]] = {
     instanceApiService
       .getLinkingInstance(wSClient, config.kgQueryEndpoint, from, to, linkingInstancePath, token)
@@ -265,7 +265,7 @@ class EditorService @Inject()(
   def generateDiffAndUpdateInstance(
     instanceRef: NexusInstanceReference,
     updateFromUser: JsValue,
-    token: String,
+    token: AccessToken,
     user: User,
     formRegistry: FormRegistry[UISpec],
     queryRegistry: FormRegistry[QuerySpec]
@@ -291,7 +291,7 @@ class EditorService @Inject()(
     instanceRef: NexusInstanceReference,
     updateToBeStored: EditorInstance,
     user: User,
-    token: String
+    token: AccessToken
   ): Future[Either[APIEditorMultiError, Unit]] =
     instanceApiService
       .get(wSClient, config.kgQueryEndpoint, instanceRef, token, EditorClient, Some(user.id))
@@ -321,7 +321,7 @@ class EditorService @Inject()(
   def retrievePreviewInstancesByIds(
     instanceIds: List[NexusInstanceReference],
     querySpec: FormRegistry[QuerySpec],
-    token: String,
+    token: AccessToken,
   ): Future[Either[APIEditorError, List[PreviewInstance]]] = {
     val listOfResponse = for {
       id <- instanceIds
@@ -333,7 +333,7 @@ class EditorService @Inject()(
           id,
           EditorService.kgQueryGetPreviewInstance(),
           token,
-          Some(EditorConstants.EDITORVOCAB)
+          QueryApiParameter(vocab = Some(EditorConstants.EDITORVOCAB))
         )
         .map { res =>
           res.status match {
@@ -356,7 +356,7 @@ class EditorService @Inject()(
   def retrieveInstancesByIds(
     instanceIds: List[NexusInstanceReference],
     querySpec: FormRegistry[QuerySpec],
-    token: String,
+    token: AccessToken,
   ): Future[Either[APIEditorError, List[NexusInstance]]] = {
     val listOfResponse = for {
       id <- instanceIds
@@ -374,7 +374,7 @@ class EditorService @Inject()(
 
   def deleteInstance(
     nexusInstanceReference: NexusInstanceReference,
-    token: String
+    token: AccessToken
   ): Future[Either[APIEditorError, Unit]] = {
     instanceApiService.deleteEditorInstance(wSClient, config.kgQueryEndpoint, nexusInstanceReference, token)
   }

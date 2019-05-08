@@ -13,12 +13,25 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package constants
 
-object QueryConstants {
-  val START = "start"
-  val VOCAB = "vocab"
-  val DATABASE_SCOPE = "databaseScope"
-  val SIZE = "size"
-  val SEARCH = "search"
+package services.query
+import constants.QueryConstants._
+case class QueryApiParameter(
+  from: Option[Int] = None,
+  size: Option[Int] = None,
+  search: String = "",
+  vocab: Option[String] = None,
+  databaseScope: Option[String] = None,
+) {
+  private def l = List(START -> from, SIZE -> size, SEARCH -> search, VOCAB -> vocab, DATABASE_SCOPE -> databaseScope)
+
+  def toParams: List[(String, String)] = {
+    l.foldLeft(List[(String, String)]()) {
+      case (acc, el) =>
+        el._2 match {
+          case Some(e) => (el._1, e.toString) :: acc
+          case _       => acc
+        }
+    }
+  }
 }

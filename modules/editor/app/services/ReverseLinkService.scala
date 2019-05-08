@@ -17,7 +17,7 @@ package services
 
 import com.google.inject.Inject
 import helpers.ReverseLinkOP
-import models.NexusPath
+import models.{AccessToken, NexusPath}
 import models.commands.{AddLinkingInstanceCommand, Command, DeleteLinkingInstanceCommand}
 import models.errors.{APIEditorError, APIEditorMultiError}
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, NexusLink}
@@ -41,7 +41,7 @@ class ReverseLinkService @Inject()(
   def generateDiffAndUpdateInstanceWithReverseLink(
     instanceRef: NexusInstanceReference,
     updateFromUser: JsValue,
-    token: String,
+    token: AccessToken,
     user: User,
     formRegistry: FormRegistry[UISpec],
     queryRegistry: FormRegistry[QuerySpec]
@@ -76,7 +76,6 @@ class ReverseLinkService @Inject()(
         val linkingInstancesToUpdated =
           updateLinkingInstances(updateToBeStored, fieldsSpec, currentInstanceDisplayed, instanceRef, Some(user), token)
         val responses = reverseLinksToUpdated.map { processCommand } ::: linkingInstancesToUpdated.map(_.execute())
-
         Future.sequence(responses).flatMap { results =>
           if (results.forall(_.isRight)) {
             if (instanceWithoutLinkingInstance.nexusInstance.content.keys.isEmpty) {
@@ -88,7 +87,7 @@ class ReverseLinkService @Inject()(
           } else {
             val errors = results.filter(_.isLeft).map(_.swap.toOption.get)
             log.error(s"Errors while updating instance - ${errors.map(_.toJson.toString).mkString("\n")}")
-            Future(Left(APIEditorMultiError(INTERNAL_SERVER_ERROR, errors)))
+            Future(Left(APIEditorMultiError(errors.head.status, errors)))
           }
         }
     }
@@ -126,7 +125,7 @@ class ReverseLinkService @Inject()(
     user: User,
     queryRegistry: FormRegistry[QuerySpec],
     baseUrl: String,
-    token: String
+    token: AccessToken
   ): List[Future[Either[APIEditorError, Command]]] = {
     filterLinks(
       updateToBeStored,
@@ -168,7 +167,7 @@ class ReverseLinkService @Inject()(
     currentInstanceDisplayed: NexusInstance,
     instanceRef: NexusInstanceReference,
     user: Option[User],
-    token: String
+    token: AccessToken
   ): List[Command] = {
     filterLinks(
       updateToBeStored,

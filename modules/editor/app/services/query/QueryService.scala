@@ -15,41 +15,39 @@
  */
 package services.query
 
-import models.NexusPath
+import models.{AccessToken, BasicAccessToken, NexusPath, RefreshAccessToken}
 import models.instance.NexusInstanceReference
 import play.api.http.HeaderNames._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.ContentTypes._
-import constants.QueryConstants._
+import services.{AuthHttpClient, CredentialsService, OIDCAuthService}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 trait QueryService {
-
-  def params(p: (String, Option[_])*): List[(String, String)] = {
-    p.foldLeft(List[(String, String)]()) {
-      case (acc, el) =>
-        el._2 match {
-          case Some(e) => (el._1, e.toString) :: acc
-          case _       => acc
-        }
-    }
-  }
 
   def getInstancesWithId(
     wSClient: WSClient,
     apiEndpoint: String,
     nexusInstanceReference: NexusInstanceReference,
     query: String,
-    token: String,
-    databaseScope: Option[String] = None,
-    vocab: Option[String] = None
+    token: AccessToken,
+    queryApiParameters: QueryApiParameter
+  )(
+    implicit ex: ExecutionContext,
+    OIDCAuthService: OIDCAuthService,
+    credentials: CredentialsService
   ): Future[WSResponse] = {
-    wSClient
-      .url(s"$apiEndpoint/query/${nexusInstanceReference.nexusPath.toString()}/instances/${nexusInstanceReference.id}")
-      .addQueryStringParameters(params(VOCAB -> vocab, DATABASE_SCOPE -> databaseScope): _*)
-      .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token)
-      .post(query)
+    val q = wSClient
+      .url(
+        s"$apiEndpoint/query/${nexusInstanceReference.nexusPath.toString()}/instances/${nexusInstanceReference.id}"
+      )
+      .addQueryStringParameters(queryApiParameters.toParams: _*)
+      .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token.token)
+    token match {
+      case BasicAccessToken(_)   => q.post(query)
+      case RefreshAccessToken(_) => AuthHttpClient.postWithRetry(q, query)
+    }
   }
 
   def getInstances(
@@ -57,18 +55,22 @@ trait QueryService {
     apiEndpoint: String,
     nexusPath: NexusPath,
     query: String,
-    token: String,
-    from: Option[Int] = None,
-    size: Option[Int] = None,
-    search: String,
-    vocab: Option[String] = None
+    token: AccessToken,
+    queryApiParameters: QueryApiParameter
+  )(
+    implicit ex: ExecutionContext,
+    OIDCAuthService: OIDCAuthService,
+    credentials: CredentialsService
   ): Future[WSResponse] = {
-
-    wSClient
+    val q = wSClient
       .url(s"$apiEndpoint/query/${nexusPath.toString()}/instances")
-      .addQueryStringParameters(params(VOCAB -> vocab, START -> from, SIZE -> size, SEARCH -> Some(search)): _*)
-      .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token)
-      .post(query)
+      .addQueryStringParameters(queryApiParameters.toParams: _*)
+      .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token.token)
+    token match {
+      case BasicAccessToken(_)   => q.post(query)
+      case RefreshAccessToken(_) => AuthHttpClient.postWithRetry(q, query)
+    }
+
   }
 
 }

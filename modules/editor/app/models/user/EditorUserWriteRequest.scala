@@ -16,6 +16,7 @@
 
 package models.user
 
+import models.AccessToken
 import play.api.mvc.{Request, WrappedRequest}
 
 /**
@@ -24,8 +25,8 @@ import play.api.mvc.{Request, WrappedRequest}
   * @param request
   * @tparam A
   */
-case class EditorUserWriteRequest[A](user: NexusUser, editorGroup: String, request: Request[A], userToken: String)
+case class EditorUserWriteRequest[A](user: NexusUser, editorGroup: String, request: Request[A], userToken: AccessToken)
     extends WrappedRequest[A](request)
 
-case class EditorUserRequest[A](editorUser: EditorUser, request: Request[A], userToken: String)
+case class EditorUserRequest[A](editorUser: EditorUser, request: Request[A], userToken: AccessToken)
     extends WrappedRequest[A](request)

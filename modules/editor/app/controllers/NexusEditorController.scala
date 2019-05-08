@@ -103,9 +103,8 @@ class NexusEditorController @Inject()(
 
   def deleteInstance(org: String, domain: String, schema: String, version: String, id: String): Action[AnyContent] =
     authenticatedUserAction.async { implicit request =>
-      val token = OIDCHelper.getTokenFromRequest(request)
       val nexusInstanceReference = NexusInstanceReference(org, domain, schema, version, id)
-      editorService.deleteInstance(nexusInstanceReference, token).map {
+      editorService.deleteInstance(nexusInstanceReference, request.userToken).map {
         case Right(()) => Ok("Instance has been deleted")
         case Left(err) => err.toResult
       }
