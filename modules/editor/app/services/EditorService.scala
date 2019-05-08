@@ -338,14 +338,15 @@ class EditorService @Inject()(
         .map { res =>
           res.status match {
             case OK => Right(res.json.as[PreviewInstance].setLabel(formService.formRegistry))
-            case _  => Left(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances"))
+            case _  => Left(APIEditorError(res.status, "Could not fetch all the instances"))
           }
         }
 
     Future.sequence(listOfResponse).map { ls =>
       val r = ls.filter(_.isRight)
       if (r.isEmpty) {
-        Left(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances"))
+        val error = ls.head.swap.getOrElse(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances"))
+        Left(error)
       } else {
         Right(r.collect { case Right(e) => e })
       }
@@ -364,7 +365,8 @@ class EditorService @Inject()(
     Future.sequence(listOfResponse).map { ls =>
       val r = ls.filter(_.isRight)
       if (r.isEmpty) {
-        Left(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances"))
+        val error = ls.head.swap.getOrElse(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances"))
+        Left(error)
       } else {
         Right(r.collect { case Right(e) => e })
       }
