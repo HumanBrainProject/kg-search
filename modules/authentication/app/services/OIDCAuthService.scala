@@ -124,12 +124,17 @@ class OIDCAuthService @Inject()(
     }
   }
 
-  def getTechAccessToken(): Future[RefreshAccessToken] = {
-    cacheService.get[String](cache, techAccessToken).flatMap {
-      case Some(token) => Future.successful(RefreshAccessToken(token))
-      case _ =>
-        val clientCred = credentialsService.getClientCredentials()
-        refreshAccessToken(clientCred)
+  def getTechAccessToken(forceRefresh: Boolean = false): Future[RefreshAccessToken] = {
+    if (forceRefresh) {
+      val clientCred = credentialsService.getClientCredentials()
+      refreshAccessToken(clientCred)
+    } else {
+      cacheService.get[String](cache, techAccessToken).flatMap {
+        case Some(token) => Future.successful(RefreshAccessToken(token))
+        case _ =>
+          val clientCred = credentialsService.getClientCredentials()
+          refreshAccessToken(clientCred)
+      }
     }
   }
 
@@ -146,7 +151,7 @@ class OIDCAuthService @Inject()(
         result.status match {
           case OK =>
             val token = s"Bearer ${(result.json \ "access_token").as[String]}"
-            cache.set(techAccessToken, token, FiniteDuration(20, TimeUnit.MINUTES))
+            cache.set(techAccessToken, token, FiniteDuration(5, TimeUnit.MINUTES))
             RefreshAccessToken(token)
           case _ =>
             logger.error(s"Error: while fetching tech account access token $result")

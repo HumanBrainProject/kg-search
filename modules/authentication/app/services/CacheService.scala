@@ -22,6 +22,7 @@ import play.api.cache.AsyncCacheApi
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.ClassTag
+import cats.syntax.option._
 
 trait CacheService {
 
@@ -31,7 +32,7 @@ trait CacheService {
     orElse: => Future[Option[A]]
   )(implicit executionContext: ExecutionContext): Future[Option[A]] = {
     get[A](cache, key).flatMap {
-      case Some(elem) => Future(Some(elem))
+      case Some(elem) => Future(elem.some)
       case None =>
         log.debug("Cache element not found executing orElse")
         orElse
@@ -44,4 +45,9 @@ trait CacheService {
 
   def clearCache(cache: AsyncCacheApi): Future[Done] = cache.removeAll()
 
+  def set[A: ClassTag](cache: AsyncCacheApi, key: String, value: A)(
+    implicit executionContext: ExecutionContext
+  ): Future[Done] = {
+    cache.set(key, value)
+  }
 }

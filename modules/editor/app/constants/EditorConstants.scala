@@ -38,6 +38,8 @@ object EditorConstants {
 
   val editorUserPath = NexusPath("hbpkg", "core", "user", "v0.0.1")
 
+  val editorVocab = "https://schema.hbp.eu/editor/"
+
   val context: String =
     s"""
        |{
@@ -47,7 +49,7 @@ object EditorConstants {
        |    "base":"$BASENAMESPACE",
        |    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
        |    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
-       |    "this": "https://schema.hbp.eu/editor/",
+       |    "this": "$editorVocab",
        |    "searchui": "https://schema.hbp.eu/search_ui/",
        |    "fieldname": {
        |      "@id": "fieldname",

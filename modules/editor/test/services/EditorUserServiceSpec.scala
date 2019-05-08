@@ -15,6 +15,7 @@
  */
 package editor.services
 
+import akka.actor.ActorSystem
 import constants.EditorConstants
 import helpers.ConfigMock._
 import helpers.ConfigMock
@@ -29,8 +30,8 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.cache.AsyncCacheApi
 import play.api.libs.json.Json
-import play.api.mvc.Results.Ok
-import play.api.test.Helpers.POST
+import play.api.mvc.Results._
+import play.api.test.Helpers._
 import play.api.test.Injecting
 import services._
 
@@ -71,7 +72,7 @@ class EditorUserServiceSpec
         """.stripMargin
       )
       implicit val ws = MockWS {
-        case (POST, fakeEndpoint) =>
+        case (GET, fakeEndpoint) =>
           Action {
             Ok(Json.obj("results" -> Json.toJson(List(endpointResponse))))
           }
@@ -83,13 +84,61 @@ class EditorUserServiceSpec
       val configService = mock[ConfigurationService]
       val nexusExt = mock[NexusExtensionService]
       val cache = mock[AsyncCacheApi]
+      val actorSystem = mock[ActorSystem]
       when(cache.get[EditorUser](id)).thenReturn(Future(None))
-      val service = new EditorUserService(configService, ws, nexusService, cache, nexusExt)(ec, oidcService, clientCred)
+      val service =
+        new EditorUserService(configService, ws, nexusService, cache, nexusExt)(
+          ec,
+          oidcService,
+          clientCred,
+          actorSystem
+        )
 
       val res = Await.result(service.getUser(nexusUser, BasicAccessToken("token")), FiniteDuration(10, "s"))
 
       res.isRight mustBe true
       res mustBe Right(Some(user))
+    }
+    "return an error if the query fails" in {
+      val fakeEndpoint = s"${kgQueryEndpoint}/query/"
+
+      val id = "1"
+      val idUser = "nexusUUID1"
+      val nexusIdUser = s"${EditorConstants.editorUserPath.toString()}/$idUser"
+      val nexusUser = NexusUser(
+        id,
+        "",
+        "",
+        Seq(),
+        Seq()
+      )
+
+      implicit val ws = MockWS {
+        case (GET, fakeEndpoint) =>
+          Action {
+            NotFound("User not found")
+          }
+      }
+      val ec = global
+      val oidcService = mock[OIDCAuthService]
+      val nexusService = mock[NexusService]
+      val configService = mock[ConfigurationService]
+      val clientCred = mock[CredentialsService]
+      val nexusExt = mock[NexusExtensionService]
+      val cache = mock[AsyncCacheApi]
+      val actorSystem = mock[ActorSystem]
+      when(cache.get[EditorUser](id)).thenReturn(Future(None))
+      val service =
+        new EditorUserService(configService, ws, nexusService, cache, nexusExt)(
+          ec,
+          oidcService,
+          clientCred,
+          actorSystem
+        )
+
+      val res = Await.result(service.getUser(nexusUser, BasicAccessToken("token")), FiniteDuration(10, "s"))
+
+      res.isLeft mustBe true
     }
   }
 

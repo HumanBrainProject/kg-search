@@ -33,7 +33,7 @@ import services.specification.FormService
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class NexusEditorController @Inject()(
+class EditorController @Inject()(
   cc: ControllerComponents,
   authenticatedUserAction: AuthenticatedUserAction,
   editorService: EditorService,

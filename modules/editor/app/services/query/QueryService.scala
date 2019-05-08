@@ -15,11 +15,11 @@
  */
 package services.query
 
-import models.{AccessToken, BasicAccessToken, NexusPath, RefreshAccessToken}
 import models.instance.NexusInstanceReference
+import models.{AccessToken, BasicAccessToken, NexusPath, RefreshAccessToken}
+import play.api.http.ContentTypes._
 import play.api.http.HeaderNames._
 import play.api.libs.ws.{WSClient, WSResponse}
-import play.api.http.ContentTypes._
 import services.{AuthHttpClient, CredentialsService, OIDCAuthService}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -56,7 +56,8 @@ trait QueryService {
     nexusPath: NexusPath,
     query: String,
     token: AccessToken,
-    queryApiParameters: QueryApiParameter
+    queryApiParameters: QueryApiParameter,
+    parameters: Map[String, String] = Map()
   )(
     implicit ex: ExecutionContext,
     OIDCAuthService: OIDCAuthService,
@@ -64,7 +65,7 @@ trait QueryService {
   ): Future[WSResponse] = {
     val q = wSClient
       .url(s"$apiEndpoint/query/${nexusPath.toString()}/instances")
-      .addQueryStringParameters(queryApiParameters.toParams: _*)
+      .addQueryStringParameters(parameters ++: queryApiParameters.toParams: _*)
       .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token.token)
     token match {
       case BasicAccessToken(_)   => q.post(query)
@@ -73,4 +74,26 @@ trait QueryService {
 
   }
 
+  def getInstancesWithStoredQuery(
+    wSClient: WSClient,
+    apiEndpoint: String,
+    nexusPath: NexusPath,
+    queryId: String,
+    token: AccessToken,
+    queryApiParameters: QueryApiParameter,
+    parameters: Map[String, String] = Map()
+  )(
+    implicit ex: ExecutionContext,
+    OIDCAuthService: OIDCAuthService,
+    credentials: CredentialsService
+  ): Future[WSResponse] = {
+    val q = wSClient
+      .url(s"$apiEndpoint/query/${nexusPath.toString()}/$queryId/instances")
+      .addQueryStringParameters(parameters ++: queryApiParameters.toParams: _*)
+      .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token.token)
+    token match {
+      case BasicAccessToken(_)   => q.get()
+      case RefreshAccessToken(_) => AuthHttpClient.getWithRetry(q)
+    }
+  }
 }
