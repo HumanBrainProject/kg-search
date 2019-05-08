@@ -30,13 +30,15 @@ import play.api.cache.{AsyncCacheApi, NamedCache}
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.WSClient
+
 import scala.concurrent.duration._
 import services.instance.InstanceApiService
-import services.query.QueryService
+import services.query.{QueryApiParameter, QueryService}
 
 import scala.concurrent.{ExecutionContext, Future}
 import cats.syntax.either._
 import cats.syntax.option._
+import models.AccessToken
 import monix.eval.Task
 import monix.execution.Scheduler.Implicits.global
 
@@ -64,8 +66,12 @@ class EditorUserService @Inject()(
   nexusService: NexusService,
   @NamedCache("editor-userinfo-cache") cache: AsyncCacheApi,
   nexusExtensionService: NexusExtensionService,
+)(
+  implicit executionContext: ExecutionContext,
   oIDCAuthService: OIDCAuthService,
-)(implicit executionContext: ExecutionContext, actorSystem: ActorSystem) {
+  credentials: CredentialsService,
+  actorSystem: ActorSystem
+) {
   val logger = Logger(this.getClass)
 
   object instanceApiService extends InstanceApiService
@@ -79,7 +85,7 @@ class EditorUserService @Inject()(
       UserRequestMap.cleanMap
     }
 
-  def getUser(nexusUser: NexusUser, token: String): Future[Either[APIEditorError, Option[EditorUser]]] = {
+  def getUser(nexusUser: NexusUser, token: AccessToken): Future[Either[APIEditorError, Option[EditorUser]]] = {
     cacheService.get[EditorUser](cache, nexusUser.id.toString).flatMap {
       case None =>
         queryService
@@ -89,10 +95,7 @@ class EditorUserService @Inject()(
             EditorConstants.editorUserPath,
             "kguser",
             token,
-            None,
-            None,
-            "",
-            vocab = Some(EditorConstants.editorVocab),
+            QueryApiParameter(vocab = Some(EditorConstants.editorVocab)),
             Map("userId" -> nexusUser.id)
           )
           .map { res =>
@@ -126,27 +129,10 @@ class EditorUserService @Inject()(
     editorUser
   }
 
-  private def getUserWithTechTokenRefresh(
-    nexusUser: NexusUser,
-    token: String
-  ): Future[Either[APIEditorError, Option[EditorUser]]] = {
-    getUser(nexusUser, token).flatMap {
-      case Right(Some(editorUser)) => Future.successful(editorUser.some.asRight)
-      case Right(None) =>
-        logger.debug("Calling first time get user retruns None")
-        val r = for {
-          refreshedToken <- oIDCAuthService.getTechAccessToken(true)
-          res            <- getUser(nexusUser, refreshedToken)
-        } yield res
-        r
-      case Left(error) => Future.successful(error.asLeft)
-    }
-  }
-
-  def getOrCreateUser(nexusUser: NexusUser, token: String)(
-    afterCreation: (EditorUser, String) => Future[Either[APIEditorError, EditorUser]]
+  def getOrCreateUser(nexusUser: NexusUser, token: AccessToken)(
+    afterCreation: (EditorUser, AccessToken) => Future[Either[APIEditorError, EditorUser]]
   ): Future[Either[APIEditorError, EditorUser]] =
-    getUserWithTechTokenRefresh(nexusUser, token).flatMap {
+    getUser(nexusUser, token).flatMap {
       case Right(Some(editorUser)) => Future.successful(editorUser.asRight)
       case Right(None) =>
         logger.debug("Calling second time get user returns None")
@@ -175,7 +161,7 @@ class EditorUserService @Inject()(
       case Left(e) => Future.successful(e.asLeft)
     }
 
-  def createUser(nexusUser: NexusUser, token: String): Future[Either[APIEditorError, EditorUser]] = {
+  def createUser(nexusUser: NexusUser, token: AccessToken): Future[Either[APIEditorError, EditorUser]] = {
     instanceApiService
       .post(
         wSClient,
@@ -192,7 +178,7 @@ class EditorUserService @Inject()(
       }
   }
 
-  def deleteUser(editorUser: EditorUser, token: String): Future[Either[APIEditorError, Unit]] = {
+  def deleteUser(editorUser: EditorUser, token: AccessToken): Future[Either[APIEditorError, Unit]] = {
     instanceApiService
       .delete(wSClient, config.kgQueryEndpoint, editorUser.nexusId, token)
       .map {
@@ -202,7 +188,6 @@ class EditorUserService @Inject()(
           APIEditorError(res.status, res.body).asLeft
       }
   }
-
 }
 
 object EditorUserService {

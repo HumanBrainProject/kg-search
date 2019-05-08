@@ -16,6 +16,7 @@
 package services.review
 
 import constants.{EditorClient, ServiceClient, SuggestionClient, SuggestionStatus}
+import models.AccessToken
 import models.errors.APIEditorError
 import models.instance.{NexusInstanceReference, SuggestionInstance}
 import models.user.{EditorUser, User}
@@ -33,13 +34,13 @@ trait ReviewApiService {
     baseUrl: String,
     nexusInstanceRef: NexusInstanceReference,
     userID: UserID,
-    token: String,
+    token: AccessToken,
     currentUser: EditorUser,
     serviceClient: ServiceClient = SuggestionClient
   )(implicit executionContext: ExecutionContext): Future[Either[APIEditorError, Unit]] = {
     WSClient
       .url(s"$baseUrl/api/suggestion/${nexusInstanceRef.toString()}/instance/$userID")
-      .addHttpHeaders(AUTHORIZATION -> token)
+      .addHttpHeaders(AUTHORIZATION -> token.token)
       .addHttpHeaders("client" -> serviceClient.client)
       .addQueryStringParameters("clientIdExtension" -> currentUser.nexusUser.id)
       .post(EmptyBody)
@@ -61,12 +62,12 @@ trait ReviewApiService {
     WSClient: WSClient,
     baseUrl: String,
     nexusInstanceReference: NexusInstanceReference,
-    token: String,
+    token: AccessToken,
     serviceClient: ServiceClient = SuggestionClient
   )(implicit executionContext: ExecutionContext): Future[Either[APIEditorError, Unit]] = {
     WSClient
       .url(s"$baseUrl/api/suggestion/${nexusInstanceReference.toString()}/accept")
-      .addHttpHeaders(AUTHORIZATION -> token)
+      .addHttpHeaders(AUTHORIZATION -> token.token)
       .addHttpHeaders("client" -> serviceClient.client)
       .post(EmptyBody)
       .map { res =>
@@ -87,12 +88,12 @@ trait ReviewApiService {
     WSClient: WSClient,
     baseUrl: String,
     nexusInstanceReference: NexusInstanceReference,
-    token: String,
+    token: AccessToken,
     serviceClient: ServiceClient = SuggestionClient
   )(implicit executionContext: ExecutionContext): Future[Either[APIEditorError, Unit]] = {
     WSClient
       .url(s"$baseUrl/api/suggestion/${nexusInstanceReference.toString()}/reject")
-      .addHttpHeaders(AUTHORIZATION -> token)
+      .addHttpHeaders(AUTHORIZATION -> token.token)
       .addHttpHeaders("client" -> serviceClient.client)
       .post(EmptyBody)
       .map { res =>
@@ -113,7 +114,7 @@ trait ReviewApiService {
     WSClient: WSClient,
     baseUrl: String,
     suggestionStatus: SuggestionStatus,
-    token: String,
+    token: AccessToken,
     serviceClient: ServiceClient = SuggestionClient
   )(
     implicit executionContext: ExecutionContext
@@ -121,7 +122,7 @@ trait ReviewApiService {
     WSClient
       .url(s"$baseUrl/api/suggestion/user")
       .addQueryStringParameters("status" -> suggestionStatus.status)
-      .addHttpHeaders(AUTHORIZATION -> token)
+      .addHttpHeaders(AUTHORIZATION -> token.token)
       .addHttpHeaders("client" -> serviceClient.client)
       .get()
       .map { res =>
@@ -142,14 +143,14 @@ trait ReviewApiService {
     WSClient: WSClient,
     baseUrl: String,
     ref: NexusInstanceReference,
-    token: String,
+    token: AccessToken,
     serviceClient: ServiceClient = SuggestionClient
   )(
     implicit executionContext: ExecutionContext
   ): Future[Either[APIEditorError, List[SuggestionInstance]]] = {
     WSClient
       .url(s"$baseUrl/api/suggestion/${ref.toString}/instances")
-      .addHttpHeaders(AUTHORIZATION -> token)
+      .addHttpHeaders(AUTHORIZATION -> token.token)
       .addHttpHeaders("client" -> serviceClient.client)
       .get()
       .map { res =>

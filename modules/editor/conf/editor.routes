@@ -34,7 +34,7 @@
 #    required: false
 #    type: string
 ###
-GET    /instance/:org/:domain/:schema/:version/:id                  controllers.NexusEditorController.getInstance(org: String, domain:String, schema: String, version:String, id: String, databaseScope: Option[String])
+GET    /instance/:org/:domain/:schema/:version/:id                  controllers.EditorController.getInstance(org: String, domain:String, schema: String, version:String, id: String, databaseScope: Option[String])
 ###
 #  summary: Delete a specific entity
 #  tags:
@@ -71,7 +71,7 @@ GET    /instance/:org/:domain/:schema/:version/:id                  controllers.
 #    required: false
 #    type: string
 ###
-DELETE    /instance/:org/:domain/:schema/:version/:id                  controllers.NexusEditorController.deleteInstance(org: String, domain:String, schema: String, version:String, id: String)
+DELETE    /instance/:org/:domain/:schema/:version/:id                  controllers.EditorController.deleteInstance(org: String, domain:String, schema: String, version:String, id: String)
 
 
 ###
@@ -89,7 +89,7 @@ DELETE    /instance/:org/:domain/:schema/:version/:id                  controlle
 #    required: false
 #    type: string
 ###
-POST    /instances                 controllers.NexusEditorController.getInstancesByIds(allFields:Boolean?=false)
+POST    /instances                 controllers.EditorController.getInstancesByIds(allFields:Boolean?=false)
 
 
 
@@ -176,7 +176,7 @@ GET /instances/:org/:domain/:schema/:version        controllers.EditorUserContro
 #    required: false
 #    type: string
 ###
-GET    /instance/:org/:domain/:schema/:version                  controllers.NexusEditorController.getEmptyForm(org: String, domain:String, schema: String, version:String)
+GET    /instance/:org/:domain/:schema/:version                  controllers.EditorController.getEmptyForm(org: String, domain:String, schema: String, version:String)
 
 ###
 #  summary: update an instance
@@ -214,7 +214,7 @@ GET    /instance/:org/:domain/:schema/:version                  controllers.Nexu
 #    required: false
 #    type: string
 ###
-PUT   /instance/:org/:domain/:schema/:version/:id                   controllers.NexusEditorController.updateInstance(org: String, domain:String, schema: String, version:String, id: String)
+PUT   /instance/:org/:domain/:schema/:version/:id                   controllers.EditorController.updateInstance(org: String, domain:String, schema: String, version:String, id: String)
 
 ###
 #  summary: create a new instance
@@ -247,7 +247,7 @@ PUT   /instance/:org/:domain/:schema/:version/:id                   controllers.
 #    required: false
 #    type: string
 ###
-POST   /instance/:org/:domain/:schema/:version                  controllers.NexusEditorController.createInstance(org: String, domain:String, schema: String, version:String)
+POST   /instance/:org/:domain/:schema/:version                  controllers.EditorController.createInstance(org: String, domain:String, schema: String, version:String)
 
 ###
 #  summary: Get the number of revisions available for a specific instance
@@ -285,7 +285,7 @@ POST   /instance/:org/:domain/:schema/:version                  controllers.Nexu
 #    required: false
 #    type: string
 ###
-GET    /revisions/:org/:domain/:schema/:version/:id                         controllers.NexusEditorController.getInstanceNumberOfAvailableRevisions(org: String, domain:String, schema: String, version:String, id: String)
+GET    /revisions/:org/:domain/:schema/:version/:id                         controllers.EditorController.getInstanceNumberOfAvailableRevisions(org: String, domain:String, schema: String, version:String, id: String)
 
 ###
 #  summary: Get a specific revision of an instance
@@ -328,7 +328,7 @@ GET    /revisions/:org/:domain/:schema/:version/:id                         cont
 #    required: false
 #    type: string
 ###
-GET    /reconciled/:org/:domain/:schema/:version/:id                controllers.NexusEditorController.getSpecificReconciledInstance(org: String, domain:String, schema: String, version:String, id: String ,rev:Int ?= 1)
+GET    /reconciled/:org/:domain/:schema/:version/:id                controllers.EditorController.getSpecificReconciledInstance(org: String, domain:String, schema: String, version:String, id: String ,rev:Int ?= 1)
 
 
 ###

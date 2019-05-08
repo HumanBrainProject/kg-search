@@ -1,4 +1,4 @@
-DELETE /cache/:name    controllers.NexusAdminController.clearCache(name:String)
+DELETE /cache/:name    controllers.AdminController.clearCache(name:String)
 
 
-DELETE /specs    controllers.NexusAdminController.deleteAndReloadSpecs
+DELETE /specs    controllers.AdminController.deleteAndReloadSpecs

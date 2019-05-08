@@ -49,7 +49,11 @@ class EditorUserController @Inject()(
 
   object queryService extends QueryService
 
-  private def postCreation(editorUser: EditorUser, token: String): Future[Either[APIEditorError, EditorUser]] = {
+  private def getOrCreateUserWithUserFolder(token: AccessToken)(implicit request: UserRequest[AnyContent]) = {
+    editorUserService.getOrCreateUser(request.user, token) { postCreation }
+  }
+
+  def postCreation(editorUser: EditorUser, token: AccessToken): Future[Either[APIEditorError, EditorUser]] = {
     editorUserListService.createBookmarkListFolder(editorUser, "My Bookmarks", token, BOOKMARKFOLDER).flatMap {
       case Right(_) =>
         Future(Right(editorUser))
@@ -65,10 +69,9 @@ class EditorUserController @Inject()(
   }
 
   def getOrCreateCurrentUser(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
-    logger.debug(s"Calling get or create user ${request.user.email} ${request.user.id}")
     for {
       token <- oIDCAuthService.getTechAccessToken()
-      u     <- editorUserService.getOrCreateUser(request.user, token) { postCreation }
+      u     <- getOrCreateUserWithUserFolder(token)
     } yield {
       u match {
         case Right(editorUser) => Ok(Json.toJson(EditorResponseObject(Json.toJson(editorUser))))
@@ -99,19 +102,16 @@ class EditorUserController @Inject()(
     search: String
   ): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     val nexusPath = NexusPath(org, domain, datatype, version)
-    val token = request.headers.toSimpleMap.getOrElse(AUTHORIZATION, "")
-    editorService.retrievePreviewInstances(nexusPath, formService.formRegistry, from, size, search, token).map {
-      case Right((data, count)) =>
-        formService.formRegistry.registry.get(nexusPath) match {
-          case Some(spec) => Ok(Json.toJson(EditorResponseWithCount(Json.toJson(data), spec.label, count)))
-          case None       => Ok(Json.toJson(EditorResponseWithCount(Json.toJson(data), nexusPath.toString(), count)))
-        }
-      case Left(res) => res.toResult
-    }
-//    arangoQueryService.listInstances(nexusPath, from, size, search, token).map {
-//      case Right(data) => Ok(Json.toJson(data))
-//      case Left(res)   => res.toResult
-//    }
+    editorService
+      .retrievePreviewInstances(nexusPath, formService.formRegistry, from, size, search, request.userToken)
+      .map {
+        case Right((data, count)) =>
+          formService.formRegistry.registry.get(nexusPath) match {
+            case Some(spec) => Ok(Json.toJson(EditorResponseWithCount(Json.toJson(data), spec.label, count)))
+            case None       => Ok(Json.toJson(EditorResponseWithCount(Json.toJson(data), nexusPath.toString(), count)))
+          }
+        case Left(res) => res.toResult
+      }
   }
 
   def getInstancesbyBookmarkList(
@@ -126,8 +126,7 @@ class EditorUserController @Inject()(
   ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async {
     implicit request =>
       val nexusRef = NexusInstanceReference(org, domain, datatype, version, id)
-      val token = request.headers.toSimpleMap.getOrElse(AUTHORIZATION, "")
-      editorUserListService.getInstancesOfBookmarkList(nexusRef, from, size, search, token).map {
+      editorUserListService.getInstancesOfBookmarkList(nexusRef, from, size, search, request.userToken).map {
         case Right((instances, total)) =>
           Ok(Json.toJson(EditorResponseObject(Json.toJson(instances))).as[JsObject].+("total" -> JsNumber(total)))
         case Left(error) => error.toResult
@@ -179,9 +178,9 @@ class EditorUserController @Inject()(
                 editorUserListService
                   .updateBookmarkList(
                     updatedBookmarkList,
-                    ref.nexusPath.withSpecificSubspace(config.editorSubSpace),
-                    id,
+                    NexusInstanceReference(ref.nexusPath.withSpecificSubspace(config.editorSubSpace), id),
                     userFolderId,
+                    request.editorUser.nexusUser.id,
                     token
                   )
                   .map[Result] {
@@ -200,7 +199,7 @@ class EditorUserController @Inject()(
       for {
         token <- oIDCAuthService.getTechAccessToken()
         result <- editorUserListService.deleteBookmarkList(bookmarkRef, token).map {
-          case Left(error) => InternalServerError(error.toJson)
+          case Left(error) => error.toResult
           case Right(())   => NoContent
         }
       } yield result

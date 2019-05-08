@@ -15,6 +15,7 @@
  */
 package models.commands
 import helpers.ReverseLinkOP
+import models.AccessToken
 import models.errors.APIEditorError
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, NexusLink}
 import models.user.User
@@ -31,7 +32,7 @@ case class AddReverseLinkCommand(
   currentInstanceRef: NexusInstanceReference,
   editorService: EditorService,
   baseUrl: String,
-  token: String,
+  token: AccessToken,
   user: User
 ) extends Command {
   override def execute()(implicit executionContext: ExecutionContext): Future[Either[APIEditorError, Unit]] = {

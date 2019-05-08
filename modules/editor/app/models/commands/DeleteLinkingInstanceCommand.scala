@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 package models.commands
-import models.NexusPath
+import models.{AccessToken, NexusPath}
 import models.errors.APIEditorError
 import models.instance.NexusInstanceReference
 import play.api.Logger
@@ -27,7 +27,7 @@ case class DeleteLinkingInstanceCommand(
   to: NexusInstanceReference,
   linkingInstancePath: NexusPath,
   editorService: EditorService,
-  token: String
+  token: AccessToken
 ) extends Command {
   private val log = Logger(this.getClass)
   override def execute()(implicit executionContext: ExecutionContext): Future[Either[APIEditorError, Unit]] = {

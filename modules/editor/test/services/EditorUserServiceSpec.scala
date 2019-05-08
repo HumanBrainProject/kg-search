@@ -20,6 +20,7 @@ import constants.EditorConstants
 import helpers.ConfigMock._
 import helpers.ConfigMock
 import mockws.{MockWS, MockWSHelpers}
+import models.BasicAccessToken
 import models.instance.NexusInstanceReference
 import org.mockito.Mockito._
 import models.user.{EditorUser, NexusUser}
@@ -78,6 +79,7 @@ class EditorUserServiceSpec
       }
       val ec = global
       val oidcService = mock[OIDCAuthService]
+      val clientCred = mock[CredentialsService]
       val nexusService = mock[NexusService]
       val configService = mock[ConfigurationService]
       val nexusExt = mock[NexusExtensionService]
@@ -85,9 +87,14 @@ class EditorUserServiceSpec
       val actorSystem = mock[ActorSystem]
       when(cache.get[EditorUser](id)).thenReturn(Future(None))
       val service =
-        new EditorUserService(configService, ws, nexusService, cache, nexusExt, oidcService)(ec, actorSystem)
+        new EditorUserService(configService, ws, nexusService, cache, nexusExt)(
+          ec,
+          oidcService,
+          clientCred,
+          actorSystem
+        )
 
-      val res = Await.result(service.getUser(nexusUser, "token"), FiniteDuration(10, "s"))
+      val res = Await.result(service.getUser(nexusUser, BasicAccessToken("token")), FiniteDuration(10, "s"))
 
       res.isRight mustBe true
       res mustBe Right(Some(user))
@@ -116,14 +123,20 @@ class EditorUserServiceSpec
       val oidcService = mock[OIDCAuthService]
       val nexusService = mock[NexusService]
       val configService = mock[ConfigurationService]
+      val clientCred = mock[CredentialsService]
       val nexusExt = mock[NexusExtensionService]
       val cache = mock[AsyncCacheApi]
       val actorSystem = mock[ActorSystem]
       when(cache.get[EditorUser](id)).thenReturn(Future(None))
       val service =
-        new EditorUserService(configService, ws, nexusService, cache, nexusExt, oidcService)(ec, actorSystem)
+        new EditorUserService(configService, ws, nexusService, cache, nexusExt)(
+          ec,
+          oidcService,
+          clientCred,
+          actorSystem
+        )
 
-      val res = Await.result(service.getUser(nexusUser, "token"), FiniteDuration(10, "s"))
+      val res = Await.result(service.getUser(nexusUser, BasicAccessToken("token")), FiniteDuration(10, "s"))
 
       res.isLeft mustBe true
     }

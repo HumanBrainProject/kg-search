@@ -17,7 +17,7 @@ package services
 
 import com.google.inject.Inject
 import models.user.IDMUser
-import models.Pagination
+import models.{AccessToken, BasicAccessToken, Pagination, RefreshAccessToken}
 import org.slf4j.LoggerFactory
 import play.api.http.HeaderNames.AUTHORIZATION
 import play.api.http.Status._
@@ -27,13 +27,20 @@ import play.api.libs.ws.{WSClient, WSResponse}
 import scala.concurrent.{ExecutionContext, Future}
 
 class IDMAPIService @Inject()(WSClient: WSClient, config: ConfigurationService)(
-  implicit executionContext: ExecutionContext
+  implicit executionContext: ExecutionContext,
+  OIDCAuthService: OIDCAuthService,
+  clientCredentials: CredentialsService
 ) {
   private val log = LoggerFactory.getLogger(this.getClass)
 
-  def getUserInfoFromID(userId: String, token: String): Future[Option[IDMUser]] = {
+  def getUserInfoFromID(userId: String, token: AccessToken): Future[Option[IDMUser]] = {
     val url = s"${config.idmApiEndpoint}/user/$userId"
-    WSClient.url(url).addHttpHeaders(AUTHORIZATION -> token).get().flatMap { res =>
+    val q = WSClient.url(url).addHttpHeaders(AUTHORIZATION -> token.token)
+    val queryResult = token match {
+      case BasicAccessToken(_)   => q.get()
+      case RefreshAccessToken(_) => AuthHttpClient.getWithRetry(q)
+    }
+    queryResult.flatMap { res =>
       res.status match {
         case OK =>
           val user = res.json.as[IDMUser]
@@ -51,13 +58,13 @@ class IDMAPIService @Inject()(WSClient: WSClient, config: ConfigurationService)(
   def getUsers(
     size: Int,
     searchTerm: String,
-    token: String
+    token: AccessToken
   ): Future[Either[WSResponse, (List[IDMUser], Pagination)]] = {
     val url = s"${config.idmApiEndpoint}/user/search"
     if (!searchTerm.isEmpty) {
       WSClient
         .url(url)
-        .addHttpHeaders(AUTHORIZATION -> token)
+        .addHttpHeaders(AUTHORIZATION -> token.token)
         .addQueryStringParameters(
           "pageSize"    -> size.toString,
           "displayName" -> s"*$searchTerm*",
@@ -92,15 +99,23 @@ class IDMAPIService @Inject()(WSClient: WSClient, config: ConfigurationService)(
     }
   }
 
-  def isUserPartOfGroups(user: IDMUser, groups: List[String], token: String): Future[Either[WSResponse, Boolean]] = {
+  def isUserPartOfGroups(
+    user: IDMUser,
+    groups: List[String],
+    token: AccessToken
+  ): Future[Either[WSResponse, Boolean]] = {
     val url = s"${config.idmApiEndpoint}/user/${user.id}/member-groups"
     val queryGroups: List[(String, String)] = groups.map("name" -> _)
-    WSClient.url(url).addHttpHeaders(AUTHORIZATION -> token).addQueryStringParameters(queryGroups: _*).get().map {
-      res =>
-        res.status match {
-          case OK => Right((res.json \ "_embedded" \ "groups").as[List[JsValue]].nonEmpty)
-          case _  => Left(res)
-        }
+    val q = WSClient.url(url).addHttpHeaders(AUTHORIZATION -> token.token).addQueryStringParameters(queryGroups: _*)
+    val r = token match {
+      case BasicAccessToken(_)   => q.get()
+      case RefreshAccessToken(_) => AuthHttpClient.getWithRetry(q)
+    }
+    r.map { res =>
+      res.status match {
+        case OK => Right((res.json \ "_embedded" \ "groups").as[List[JsValue]].nonEmpty)
+        case _  => Left(res)
+      }
     }
 
   }

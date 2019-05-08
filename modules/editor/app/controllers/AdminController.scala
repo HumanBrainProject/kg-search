@@ -26,7 +26,7 @@ import services.specification.FormService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class NexusAdminController @Inject()(
+class AdminController @Inject()(
   cc: ControllerComponents,
   @NamedCache("editor-userinfo-cache") editorCache: AsyncCacheApi,
   @NamedCache("userinfo-cache") userCache: AsyncCacheApi,

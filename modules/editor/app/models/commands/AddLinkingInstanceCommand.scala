@@ -15,7 +15,7 @@
  */
 
 package models.commands
-import models.NexusPath
+import models.{AccessToken, NexusPath}
 import models.errors.APIEditorError
 import models.instance.{LinkingInstance, NexusInstance, NexusInstanceReference, NexusLink}
 import models.user.User
@@ -32,7 +32,7 @@ case class AddLinkingInstanceCommand(
   editorService: EditorService,
   baseUrl: String,
   user: Option[User],
-  token: String
+  token: AccessToken
 ) extends Command {
   val log = Logger(this.getClass)
   override def execute()(implicit executionContext: ExecutionContext): Future[Either[APIEditorError, Unit]] = {
