@@ -23,7 +23,8 @@ case class QueryApiParameter(
   vocab: Option[String] = None,
   databaseScope: Option[String] = None,
 ) {
-  private def l = List(START -> from, SIZE -> size, SEARCH -> search, VOCAB -> vocab, DATABASE_SCOPE -> databaseScope)
+  private def l =
+    List(START -> from, SIZE -> size, SEARCH -> Some(search), VOCAB -> vocab, DATABASE_SCOPE -> databaseScope)
 
   def toParams: List[(String, String)] = {
     l.foldLeft(List[(String, String)]()) {
