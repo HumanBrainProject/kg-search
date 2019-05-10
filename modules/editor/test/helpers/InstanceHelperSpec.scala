@@ -253,7 +253,7 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
       res mustBe expected
     }
 
-    "return a null value if the array was not changed" in {
+    "remove a field in the diff value if the array was not changed" in {
       val currentlyDisplayedInstance = NexusInstance(
         Some(reconId),
         path,
@@ -263,7 +263,6 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
           "activities"  -> JsArray(),
           "contributors" -> Json.toJson(
             List(
-              "bill",
               "james",
               "jane"
             )
@@ -289,12 +288,7 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
         NexusInstance(
           Some(reconId),
           path,
-          Json.obj(
-            "contributors" -> Json.toJson(
-              "james",
-              "jane"
-            )
-          )
+          Json.obj()
         )
       )
 

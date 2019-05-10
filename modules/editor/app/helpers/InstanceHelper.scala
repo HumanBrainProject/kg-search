@@ -36,7 +36,10 @@ object InstanceHelper {
 
   type UpdateInfo = (Option[String], Int, String, EditorInstance)
 
-  def buildDiffEntity(currentInstance: NexusInstance, newValue: NexusInstance): EditorInstance = {
+  def buildDiffEntity(
+    currentInstance: NexusInstance,
+    newValue: NexusInstance,
+  ): EditorInstance = {
 
     val patch: JsonMergePatch = JsonMergeDiff.diff(currentInstance.content, newValue.content)
     val deleted = patch.toJson
@@ -49,10 +52,23 @@ object InstanceHelper {
       .map {
         case (k, v) =>
           val value = (newValue.content \ k).asOpt[JsValue]
-          if (v.asOpt[JsArray].isDefined && value.isDefined) {
-            k -> value.get
+          v match {
+            case arr if arr.asOpt[JsArray].isDefined && value.isDefined => k -> value.get
+            case _                                                      => k -> v
+          }
+      }
+      .filter { // If the value in DB is null and the user sends en empty string we remove it from the diff
+        case (k, v) =>
+          if (v.asOpt[String].isDefined) {
+            if (v.as[String].isEmpty && currentInstance.content.value.get(k).isDefined && currentInstance.content.value(
+                  k
+                ) == JsNull) {
+              false
+            } else {
+              true
+            }
           } else {
-            k -> v
+            true
           }
       }
     EditorInstance(
