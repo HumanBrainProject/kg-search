@@ -59,14 +59,11 @@ object InstanceHelper {
       }
       .filter { // If the value in DB is null and the user sends en empty string we remove it from the diff
         case (k, v) =>
-          if (v.asOpt[String].isDefined) {
-            if (v.as[String].isEmpty && currentInstance.content.value.get(k).isDefined && currentInstance.content.value(
-                  k
-                ) == JsNull) {
-              false
-            } else {
-              true
-            }
+          if (v.asOpt[String].isDefined &&
+              v.as[String].isEmpty &&
+              currentInstance.content.value.get(k).isDefined &&
+              currentInstance.content.value(k) == JsNull) {
+            false
           } else {
             true
           }
