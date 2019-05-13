@@ -71,6 +71,10 @@
     padding-top: 10px;
 }
 
+.kgs-instance__body .carousel .slide .legend {
+    bottom: 10px;    
+}
+
 .kgs-instance__summary {
     display: none;
 }

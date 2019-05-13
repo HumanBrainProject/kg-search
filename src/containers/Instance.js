@@ -16,13 +16,15 @@
 
 import React from "react";
 import { connect } from "react-redux";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import API from "../services/API";
 import { Field } from "./Field";
 import { FieldsPanel } from "./FieldsPanel";
 import { FieldsTabs } from "./FieldsTabs";
 import "./Instance.css";
 
-export const InstanceBase = ({className, type, hasNoData, hasUnknownData, header, main, summary, groups}) => {
+export const InstanceBase = ({className, type, hasNoData, hasUnknownData, header, previews, main, summary, groups}) => {
   const classNames = ["kgs-instance", className].join(" ");
   return (
     <div className={classNames} data-type={type}>
@@ -37,10 +39,33 @@ export const InstanceBase = ({className, type, hasNoData, hasUnknownData, header
             <Field {...header.title} />
           </div>
         </div>
-        <div className="kgs-instance__body">
-          <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
-          <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
-        </div>
+        {(previews && previews.length)?
+          <React.Fragment>
+            <div className="kgs-instance__body">
+              <div className="kgs-instance__main">
+                {previews && previews.length && (
+                  <Carousel autoPlay interval={3000} infiniteLoop={true} showThumbs={true} showIndicators={false} stopOnHover={true} showStatus={false} >
+                    {previews.map(({src, legend}) => (
+                      <div key={src}>
+                        <img src={src} alt={legend?legend:""}/>
+                        {legend && (
+                          <p className="legend">{legend}</p>
+                        )}
+                      </div>
+                    ))}
+                  </Carousel>
+                )}
+              </div>
+              <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
+            </div>
+            <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
+          </React.Fragment>
+          :
+          <div className="kgs-instance__body">
+            <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
+            <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
+          </div>
+        }
         <FieldsTabs className="kgs-instance__groups" fields={groups} />
       </div>
       {hasNoData && (
@@ -88,6 +113,51 @@ const getFields = (group, type, data, mapping, filter) => {
   return fields;
 };
 
+const getPreviews = (data, mapping, idx=0) => {
+  if (data instanceof Array) {
+    const previews = [];
+    data.forEach((elt, idx) => previews.push(...getPreviews(elt, mapping, idx)));
+    return previews;
+  } else if (data && mapping.children) {
+    const previews = [];
+    Object.entries(mapping.children)
+      .filter(([name, mapping]) =>
+        mapping
+        && (mapping.showIfEmpty || (data && data[name]))
+        && mapping.visible
+      )
+      .map(([name, mapping]) => ({
+        data: data && data[name],
+        mapping: mapping
+      }))
+      .forEach(({data, mapping}, idx) => previews.push(...getPreviews(data, mapping, idx)));
+    return previews;
+  } else if (data && typeof data.previewUrl === "string") {
+    return [{
+      src: data.previewUrl,
+      legend: data.url?data.url:(data.value?data.value:null)
+    }];
+  } else if (data && typeof data.url === "string" && /^https?:\/\/.+\.cscs\.ch\/.+$/.test(data.url)) {
+    const cats = [
+      "http://lorempixel.com/output/cats-q-c-640-480-1.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-2.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-3.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-4.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-5.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-6.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-7.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-8.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-9.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-10.jpg"
+    ];
+    return [{
+      src: cats[idx % (cats.length -1)],
+      legend: data.url?data.url:(data.value?data.value:null)
+    }];
+  }
+  return [];
+};
+
 export const Instance = connect(
   (state, {data}) => {
 
@@ -106,6 +176,7 @@ export const Instance = connect(
         type:  getField(group, data && data._type, "type"),
         title: getField(group, data && data._type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"])
       },
+      previews: getPreviews(source, {children: mapping.fields}),
       main: getFields(group, data && data._type, source, mapping, (type, name) => name !== "title"),
       summary: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "summary" && name !== "title"),
       groups: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title")
