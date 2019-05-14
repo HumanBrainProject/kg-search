@@ -227,6 +227,7 @@ function simplifySemanticKeysForField(field) {
   field.markdown = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "markdown", false);
   field.labelHidden = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "labelHidden", false);
   field.tagIcon = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "tag_icon", null);
+  field.linkIcon = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "link_icon", null);
   field.visible = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "visible", true);
   field.showIfEmpty = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "showIfEmpty", false);
   field.layout = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "layout", null);
