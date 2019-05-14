@@ -24,55 +24,51 @@ import { FieldsPanel } from "./FieldsPanel";
 import { FieldsTabs } from "./FieldsTabs";
 import "./Instance.css";
 
-export const InstanceBase = ({className, type, hasNoData, hasUnknownData, header, previews, main, summary, groups}) => {
-  const classNames = ["kgs-instance", className].join(" ");
-  return (
-    <div className={classNames} data-type={type}>
-      <div className="kgs-instance__content">
-        <div className="kgs-instance__header">
-          <h3 className={`kgs-instance__group ${header.group && header.group !== API.defaultGroup?"show":""}`}>Group: <strong>{header.group}</strong></h3>
-          <div>
-            <Field {...header.icon} />
-            <Field {...header.type} />
-          </div>
-          <div>
-            <Field {...header.title} />
-          </div>
-        </div>
-        {(previews && previews.length)?
-          <div className="kgs-instance__grid_body">
-            <div className="kgs-instance__grid_carousel">
-              <Carousel width="300px" autoPlay interval={3000} infiniteLoop={true} showThumbs={true} showIndicators={false} stopOnHover={true} showStatus={false} >
-                {previews.map(({src, legend}) => (
-                  <div key={src}>
-                    <img src={src} alt={legend?legend:""}/>
-                    {legend && (
-                      <p className="legend">{legend}</p>
-                    )}
-                  </div>
-                ))}
-              </Carousel>
-            </div>
-            <FieldsPanel className="kgs-instance__grid_main" fields={main} fieldComponent={Field} />
-            <FieldsPanel className="kgs-instance__grid_summary" fields={summary} fieldComponent={Field} />
-            <FieldsTabs className="kgs-instance__grid_groups" fields={groups} />
-          </div>
-          :
-          <React.Fragment>
-            <div className="kgs-instance__body">
-              <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
-              <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
-            </div>
-            <FieldsTabs className="kgs-instance__groups" fields={groups} />
-          </React.Fragment>
-        }
-      </div>
-      {hasNoData && (
+export const InstanceBase = ({type, hasNoData, hasUnknownData, header, previews, main, summary, groups}) => {
+
+  if (hasNoData) {
+    return (
+      <div className="kgs-instance" data-type={type}>
         <div className="kgs-instance__no-data">This data is currently not available.</div>
-      )}
-      {hasUnknownData && (
+      </div>
+    );
+  }
+  if (hasUnknownData) {
+    return (
+      <div className="kgs-instance" data-type={type}>
         <div className="kgs-instance__no-data">This type of data is currently not supported.</div>
+      </div>
+    );
+  }
+  return (
+    <div className={`kgs-instance kgs-instance__grid ${(previews && previews.length)?"kgs-instance__with-carousel":""}`} data-type={type}>
+      <div className="kgs-instance__header">
+        <h3 className={`kgs-instance__group ${header.group && header.group !== API.defaultGroup?"show":""}`}>Group: <strong>{header.group}</strong></h3>
+        <div>
+          <Field {...header.icon} />
+          <Field {...header.type} />
+        </div>
+        <div>
+          <Field {...header.title} />
+        </div>
+      </div>
+      {previews && !!previews.length && (
+        <div className="kgs-instance__carousel">
+          <Carousel width="300px" autoPlay interval={3000} infiniteLoop={true} showThumbs={true} showIndicators={false} stopOnHover={true} showStatus={false} >
+            {previews.map(({src, legend}) => (
+              <div key={src}>
+                <img src={src} alt={legend?legend:""}/>
+                {legend && (
+                  <p className="legend">{legend}</p>
+                )}
+              </div>
+            ))}
+          </Carousel>
+        </div>
       )}
+      <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
+      <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
+      <FieldsTabs className="kgs-instance__groups" fields={groups} />
     </div>
   );
 };
