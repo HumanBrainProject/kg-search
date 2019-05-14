@@ -110,25 +110,18 @@
 
 .kgs-instance__grid .kgs-instance__main {
     -ms-grid-column: 1;
-    -ms-grid-row: 1;
+    -ms-grid-row: 2;
     grid-area: main;
 }
-
-/* small hack to fix adjustment for ie 11 because of unsupported grid-column-gap */
-@media all and (-ms-high-contrast:none) {
-    .kgs-instance__grid .kgs-instance__main { margin-right: 40px; } /* IE10 */
-    *::-ms-backdrop, .kgs-instance__grid .kgs-instance__main { margin-right: 40px; } /* IE11 */
-}
-
 .kgs-instance__grid .kgs-instance__summary {
     display: none;
     grid-area: summary;
 }
 
-/* small hack to fix adjustment for ie 11 because of unsupported grid-row-gap & grid-column-gap */
+/* small hack to fix adjustment for ie 11 because of unsupported grid-row-gap */
 @media all and (-ms-high-contrast:none) {
-    .kgs-instance__grid .kgs-instance__summary { margin-top: 20px; margin-left: 40px; } /* IE10 */
-    *::-ms-backdrop, .kgs-instance__grid .kgs-instance__summary { margin-top: 20px; margin-left: 40px; } /* IE11 */
+    .kgs-instance__grid .kgs-instance__summary { margin-top: 20px; } /* IE10 */
+    *::-ms-backdrop, .kgs-instance__grid .kgs-instance__summary { margin-top: 20px; } /* IE11 */
 }
 
 .kgs-instance__grid .kgs-instance__groups {
@@ -175,6 +168,24 @@
         -ms-grid-row: 3;
         -ms-grid-column-span: 2;
     } 
+}
+
+/* small hack to fix adjustment for ie 11 */
+@media all and (min-width: 1024px) and (-ms-high-contrast:none) {
+    .kgs-instance__grid { width: calc(100% - 40px); } /* IE10 */
+    *::-ms-backdrop, .kgs-instance__grid { width: calc(100% - 40px); } /* IE11 */
+}
+
+/* small hack to fix adjustment for ie 11 because of unsupported grid-column-gap */
+@media all and (min-width: 1024px) and (-ms-high-contrast:none) {
+    .kgs-instance__grid .kgs-instance__main { margin-right: 40px; } /* IE10 */
+    *::-ms-backdrop, .kgs-instance__grid .kgs-instance__main { margin-right: 40px; } /* IE11 */
+}
+
+/* small hack to fix adjustment for ie 11 because of unsupported  grid-column-gap */
+@media all and (min-width: 1024px) and (-ms-high-contrast:none) {
+    .kgs-instance__grid .kgs-instance__summary { margin-left: 0; } /* IE10 */
+    *::-ms-backdrop, .kgs-instance__grid .kgs-instance__summary { margin-left: 0; } /* IE11 */
 }
 
 .kgs-instance__grid.kgs-instance__with-carousel {
@@ -243,12 +254,18 @@
     }
 }
 
+/* small hack to fix adjustment for ie 11 because of unsupported grid-column-gap */
+@media all and (min-width: 768px) and (-ms-high-contrast:none) {
+    .kgs-instance__grid.kgs-instance__with-carousel .kgs-instance__summary { margin-left: 40px; } /* IE10 */
+    *::-ms-backdrop, .kgs-instance__grid.kgs-instance__with-carousel .kgs-instance__summary { margin-left: 40px; } /* IE11 */
+}
+
 @media (min-width: 1024px) {
     .kgs-instance__grid.kgs-instance__with-carousel {
         -ms-grid-columns: 7fr 3fr;
         grid-template-columns: 7fr 3fr;
-        -ms-grid-rows: max-content max-content;
-        grid-template-rows: max-content max-content;
+        -ms-grid-rows: max-content max-content 1fr;
+        grid-template-rows: max-content max-content 1fr;
         grid-template-areas: "header header"
                             "main carousel"
                             "main summary"
@@ -282,6 +299,18 @@
         -ms-grid-row: 4;
         -ms-grid-column-span: 2;
     } 
+}
+
+/* small hack to fix adjustment for ie 11 */
+@media all and (min-width: 1024px) and (-ms-high-contrast:none) {
+    .kgs-instance__grid.kgs-instance__with-carousel { width: calc(100% - 60px); } /* IE10 */
+    *::-ms-backdrop, .kgs-instance__grid.kgs-instance__with-carousel { width: calc(100% - 60px); } /* IE11 */
+}
+
+/* small hack to fix adjustment for ie 11 because of unsupported grid-column-gap */
+@media all and (min-width: 1024px) and (-ms-high-contrast:none) {
+    .kgs-instance__grid.kgs-instance__with-carousel .kgs-instance__summary { margin-left: 0; } /* IE10 */
+    *::-ms-backdrop, .kgs-instance__grid.kgs-instance__with-carousel .kgs-instance__summary { margin-left: 0; } /* IE11 */
 }
 
 .kgs-footer.is-fixed-position .kgs-footer-nav {

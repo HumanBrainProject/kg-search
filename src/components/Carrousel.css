@@ -238,6 +238,12 @@
     transition: color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
+/* small hack to fix adjustment for ie 11 */
+@media all and (-ms-high-contrast:none) {
+    .kgs-carrousel__close-button { margin-top: -5px; } /* IE10 */
+    *::-ms-backdrop, .kgs-carrousel__close-button { margin-top: -5px; } /* IE11 */
+}
+
 .kgs-carrousel__previous-button:hover {
     -webkit-box-shadow: 3px 3px 6px #cbc9c9;
     box-shadow: 3px 3px 6px #cbc9c9;
@@ -261,6 +267,12 @@
     text-align: center;
     transition: box-shadow 0.2s ease-in, color 0.2s ease-in;
     z-index: 1500;
+}
+
+/* small hack to fix adjustment for ie 11 */
+@media all and (-ms-high-contrast:none) {
+    .kgs-carrousel__close-button { margin-top: -8px; } /* IE10 */
+    *::-ms-backdrop, .kgs-carrousel__close-button { margin-top: -8px; } /* IE11 */
 }
 
 .kgs-carrousel__close-button:hover {
