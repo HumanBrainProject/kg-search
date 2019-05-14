@@ -21,6 +21,7 @@
     color: #333;
     overflow-wrap: break-word;
     word-break: break-word;
+    white-space: pre-wrap;
 }
 
 .kgs-instance__header > div {
@@ -49,11 +50,18 @@
     text-transform: capitalize;
     vertical-align: text-bottom;
 }
+
 .kgs-instance__carousel > div {
     display: inline-block;
-    width: 340px;
-    border: 1px solid #ccc;
-    padding: 20px 20px 10px 20px;
+    width: 300px;
+}
+
+@media (min-width: 400px) {
+    .kgs-instance__carousel > div {
+        width: 340px;
+        border: 1px solid #ccc;
+        padding: 20px 20px 10px 20px;
+    }
 }
 
 .kgs-instance__carousel > div .carousel .thumbs-wrapper {
@@ -72,10 +80,10 @@
 .kgs-instance.kgs-instance__grid {
     display: -ms-grid;
     display: grid;
-    -ms-grid-columns: auto;
-    grid-template-columns: auto;
-    -ms-grid-rows: min-content auto;
-    grid-template-rows: min-content auto;
+    -ms-grid-columns: 1fr;
+    grid-template-columns: 1fr;
+    -ms-grid-rows: max-content 1fr;
+    grid-template-rows: max-content 1fr;
     grid-template-areas: "header"
                         "main";
     grid-row-gap: 20px;
@@ -94,15 +102,33 @@
     text-align: center;
 }
 
+/* small hack to fix adjustment for ie 11 because of unsupported grid-row-gap */
+@media all and (-ms-high-contrast:none) {
+    .kgs-instance__grid .kgs-instance__carousel { margin-top: 20px; } /* IE10 */
+    *::-ms-backdrop, .kgs-instance__grid .kgs-instance__carousel { margin-top: 20px; } /* IE11 */
+}
+
 .kgs-instance__grid .kgs-instance__main {
     -ms-grid-column: 1;
     -ms-grid-row: 1;
     grid-area: main;
 }
 
+/* small hack to fix adjustment for ie 11 because of unsupported grid-column-gap */
+@media all and (-ms-high-contrast:none) {
+    .kgs-instance__grid .kgs-instance__main { margin-right: 40px; } /* IE10 */
+    *::-ms-backdrop, .kgs-instance__grid .kgs-instance__main { margin-right: 40px; } /* IE11 */
+}
+
 .kgs-instance__grid .kgs-instance__summary {
     display: none;
     grid-area: summary;
+}
+
+/* small hack to fix adjustment for ie 11 because of unsupported grid-row-gap & grid-column-gap */
+@media all and (-ms-high-contrast:none) {
+    .kgs-instance__grid .kgs-instance__summary { margin-top: 20px; margin-left: 40px; } /* IE10 */
+    *::-ms-backdrop, .kgs-instance__grid .kgs-instance__summary { margin-top: 20px; margin-left: 40px; } /* IE11 */
 }
 
 .kgs-instance__grid .kgs-instance__groups {
@@ -114,8 +140,8 @@
     .kgs-instance.kgs-instance__grid {
         -ms-grid-columns: 7fr 3fr;
         grid-template-columns: 7fr 3fr;
-        -ms-grid-rows: min-content auto auto;
-        grid-template-rows: min-content auto auto;
+        -ms-grid-rows: max-content max-content 1fr;
+        grid-template-rows: max-content max-content 1fr;
         grid-template-areas: "header header"
                             "main summary"
                             "groups groups";
@@ -147,15 +173,15 @@
         display: block;
         -ms-grid-column: 1;
         -ms-grid-row: 3;
-        -ms-grid-columns-span: 2;
+        -ms-grid-column-span: 2;
     } 
 }
 
 .kgs-instance__grid.kgs-instance__with-carousel {
-    -ms-grid-columns: auto;
-    grid-template-columns: auto;
-    -ms-grid-rows: min-content auto auto;
-    grid-template-rows: min-content auto auto;
+    -ms-grid-columns: 1fr;
+    grid-template-columns: 1fr;
+    -ms-grid-rows: max-content max-content;
+    grid-template-rows: max-content max-content;
     grid-template-areas: "header"
                         "carousel"
                         "main";
@@ -180,10 +206,10 @@
 
 @media (min-width: 768px) {
     .kgs-instance__grid.kgs-instance__with-carousel {
-        -ms-grid-columns: min-content auto ;
-        grid-template-columns: min-content auto;
-        -ms-grid-rows: min-content auto auto;
-        grid-template-rows: min-content auto auto;
+        -ms-grid-columns: min-content 1fr;
+        grid-template-columns: min-content 1fr;
+        -ms-grid-rows: max-content max-content;
+        grid-template-rows: max-content max-content;
         grid-template-areas: "header header"
                             "carousel summary"
                             "main main";
@@ -219,15 +245,14 @@
 
 @media (min-width: 1024px) {
     .kgs-instance__grid.kgs-instance__with-carousel {
-        -ms-grid-columns: auto min-content;
-        grid-template-columns: auto min-content;
-        -ms-grid-rows: auto auto auto;
-        grid-template-rows: auto auto auto;
+        -ms-grid-columns: 7fr 3fr;
+        grid-template-columns: 7fr 3fr;
+        -ms-grid-rows: max-content max-content;
+        grid-template-rows: max-content max-content;
         grid-template-areas: "header header"
                             "main carousel"
                             "main summary"
                             "groups groups";
-        margin-top: 0;
     }
 
     .kgs-instance__grid.kgs-instance__with-carousel .kgs-instance__carousel {
@@ -239,6 +264,7 @@
         -ms-grid-column: 1;
         -ms-grid-row: 2;
         -ms-grid-row-span: 2;
+        -ms-grid-column-span: 1;
     }
 
     .kgs-instance__grid.kgs-instance__with-carousel .kgs-instance__main .kgs-field__layout-group {
@@ -254,7 +280,7 @@
         display: block;
         -ms-grid-column: 1;
         -ms-grid-row: 4;
-        -ms-grid-columns-span: 2;
+        -ms-grid-column-span: 2;
     } 
 }
 
