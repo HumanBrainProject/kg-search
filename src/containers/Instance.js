@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import React from "react";
+import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -24,54 +24,89 @@ import { FieldsPanel } from "./FieldsPanel";
 import { FieldsTabs } from "./FieldsTabs";
 import "./Instance.css";
 
-export const InstanceBase = ({type, hasNoData, hasUnknownData, header, previews, main, summary, groups}) => {
+class InstanceBase extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      carouselZoom: null
+    };
+  }
+  handleZoomCarousel = (index, event) => {
+    if (!Number.isNaN(Number(index)) && event && event.props && event.props.children && event.props.children.length && event.props.children.length > index) {
+      const item = event.props.children[index] && event.props.children[index].props;
+      this.setState({carouselZoom: {
+        previewUrl: item.src,
+        alt: item.alt
+      }});
+    }
+  };
+  handleCloseCarouselZoom = () => {
+    this.setState({carouselZoom: null});
+  }
+  componentWillUnmount() {
+    this.setState({carouselZoom: null});
+  }
+  render() {
+    const {type, hasNoData, hasUnknownData, header, previews, main, summary, groups} = this.props;
 
-  if (hasNoData) {
+    if (hasNoData) {
+      return (
+        <div className="kgs-instance" data-type={type}>
+          <div className="kgs-instance__no-data">This data is currently not available.</div>
+        </div>
+      );
+    }
+    if (hasUnknownData) {
+      return (
+        <div className="kgs-instance" data-type={type}>
+          <div className="kgs-instance__no-data">This type of data is currently not supported.</div>
+        </div>
+      );
+    }
     return (
-      <div className="kgs-instance" data-type={type}>
-        <div className="kgs-instance__no-data">This data is currently not available.</div>
+      <div className={`kgs-instance kgs-instance__grid ${(previews && previews.length)?"kgs-instance__with-carousel":""}`} data-type={type}>
+        <div className="kgs-instance__header">
+          <h3 className={`kgs-instance__group ${header.group && header.group !== API.defaultGroup?"show":""}`}>Group: <strong>{header.group}</strong></h3>
+          <div>
+            <Field {...header.icon} />
+            <Field {...header.type} />
+          </div>
+          <div>
+            <Field {...header.title} />
+          </div>
+        </div>
+        {previews && !!previews.length && (
+          <div className="kgs-instance__carousel">
+            <Carousel width="300px" autoPlay interval={3000} infiniteLoop={true} showThumbs={true} showIndicators={false} stopOnHover={true} showStatus={false} onClickItem={this.handleZoomCarousel} >
+              {previews.map(({src, legend}) => (
+                <div key={src}>
+                  <img src={src} alt={legend?legend:""}/>
+                  {legend && (
+                    <p className="legend">{legend}</p>
+                  )}
+                  {src && (
+                    <div className="kgs-instance_carousel-zoom-button"><i className="fa fa-4x fa-search"></i></div>
+                  )}
+                </div>
+              ))}
+            </Carousel>
+          </div>
+        )}
+        <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
+        <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
+        <FieldsTabs className="kgs-instance__groups" fields={groups} />
+        {previews && !!previews.length && this.state.carouselZoom && this.state.carouselZoom.previewUrl && (
+          <div className="kgs-instance_carousel-zoom" onClick={this.handleCloseCarouselZoom}>
+            <div className="fa-stack fa-1x kgs-instance_carousel-zoom-content">
+              <img src={this.state.carouselZoom.previewUrl} alt={this.state.carouselZoom.legend?this.state.carouselZoom.legend:""}/>
+              <i className="fa fa-close"></i>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
-  if (hasUnknownData) {
-    return (
-      <div className="kgs-instance" data-type={type}>
-        <div className="kgs-instance__no-data">This type of data is currently not supported.</div>
-      </div>
-    );
-  }
-  return (
-    <div className={`kgs-instance kgs-instance__grid ${(previews && previews.length)?"kgs-instance__with-carousel":""}`} data-type={type}>
-      <div className="kgs-instance__header">
-        <h3 className={`kgs-instance__group ${header.group && header.group !== API.defaultGroup?"show":""}`}>Group: <strong>{header.group}</strong></h3>
-        <div>
-          <Field {...header.icon} />
-          <Field {...header.type} />
-        </div>
-        <div>
-          <Field {...header.title} />
-        </div>
-      </div>
-      {previews && !!previews.length && (
-        <div className="kgs-instance__carousel">
-          <Carousel width="300px" autoPlay interval={3000} infiniteLoop={true} showThumbs={true} showIndicators={false} stopOnHover={true} showStatus={false} >
-            {previews.map(({src, legend}) => (
-              <div key={src}>
-                <img src={src} alt={legend?legend:""}/>
-                {legend && (
-                  <p className="legend">{legend}</p>
-                )}
-              </div>
-            ))}
-          </Carousel>
-        </div>
-      )}
-      <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
-      <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
-      <FieldsTabs className="kgs-instance__groups" fields={groups} />
-    </div>
-  );
-};
+}
 
 const getField = (group, type, name, data, mapping) => {
   switch (name) {

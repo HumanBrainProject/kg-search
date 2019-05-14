@@ -15,6 +15,7 @@
 */
 
 .kgs-instance {
+    padding: 15px;
     text-align: left;
     font-size: 16px;
     font-weight: normal;
@@ -75,6 +76,65 @@
 
 .kgs-instance__carousel .carousel .slide .legend {
     bottom: 10px;    
+}
+
+.kgs-instance__carousel .carousel .slide .kgs-instance_carousel-zoom-button {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: scale(3) translate(-10%, -45%);
+    color: white;
+    opacity: 0.3;
+    cursor: pointer;
+}
+
+.kgs-instance__carousel .carousel .slide.selected .kgs-instance_carousel-zoom-button {
+    display: block;
+}
+
+.kgs-instance__carousel .carousel .slide.selected:hover .kgs-instance_carousel-zoom-button,
+.kgs-instance__carousel .carousel .slide.selected .legend:hover .kgs-instance_carousel-zoom-button {
+    opacity: 0.5;
+}
+
+.kgs-instance_carousel-zoom {
+    z-index: 100;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.kgs-instance_carousel-zoom-content {
+    z-index: 100;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
+    min-height: 58px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.kgs-instance_carousel-zoom-content i {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: #ccc;
+    cursor: pointer;
+    -webkit-transition: color 0.2s ease-in;
+    -o-transition: color 0.2s ease-in;
+    transition: color 0.2s ease-in;
 }
 
 .kgs-instance.kgs-instance__grid {
