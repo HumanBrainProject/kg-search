@@ -392,7 +392,12 @@ object EditorService {
       InstanceHelper.removeInternalFields(currentInstanceDisplayed)
     val instanceUpdateFromUser =
       FormService.buildInstanceFromForm(cleanedOriginalInstance, updateFromUser, nexusEndpoint)
-    val diff = InstanceHelper.buildDiffEntity(cleanedOriginalInstance, instanceUpdateFromUser)
+    val currentInstanceWithSameFormatAsNewValue =
+      FormService.removeClientKeysCorrectLinks(cleanedOriginalInstance.content, nexusEndpoint)
+    val diff = InstanceHelper.buildDiffEntity(
+      cleanedOriginalInstance.copy(content = currentInstanceWithSameFormatAsNewValue),
+      instanceUpdateFromUser
+    )
     InstanceHelper.removeEmptyFieldsNotInOriginal(cleanedOriginalInstance, diff)
   }
 
