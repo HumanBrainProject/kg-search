@@ -111,7 +111,7 @@
 .kgs-instance_carousel-zoom-content {
     z-index: 100;
     position: absolute;
-    top: 20%;
+    top: 50%;
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
@@ -124,6 +124,12 @@
     border-radius: 4px;
     background-color: white;
     cursor: pointer;
+}
+
+@media (min-width: 768px) and (min-height: 1000px) {
+    .kgs-instance_carousel-zoom-content {
+        top: 35%;
+    }
 }
 
 .kgs-instance_carousel-zoom-content i {

@@ -31,13 +31,10 @@ class InstanceBase extends PureComponent {
       carouselZoom: null
     };
   }
-  handleZoomCarousel = (index, event) => {
-    if (!Number.isNaN(Number(index)) && event && event.props && event.props.children && event.props.children.length && event.props.children.length > index) {
-      const item = event.props.children[index] && event.props.children[index].props;
-      this.setState({carouselZoom: {
-        previewUrl: item.src,
-        alt: item.alt
-      }});
+  handleZoomCarousel = index => {
+    const { previews } = this.props;
+    if (!Number.isNaN(Number(index)) && previews && previews.length && index < previews.length) {
+      this.setState({carouselZoom: previews[index]});
     }
   };
   handleCloseCarouselZoom = () => {
@@ -78,13 +75,13 @@ class InstanceBase extends PureComponent {
         {previews && !!previews.length && (
           <div className="kgs-instance__carousel">
             <Carousel width="300px" autoPlay interval={3000} infiniteLoop={true} showThumbs={true} showIndicators={false} stopOnHover={true} showStatus={false} onClickItem={this.handleZoomCarousel} >
-              {previews.map(({src, legend}) => (
-                <div key={src}>
-                  <img src={src} alt={legend?legend:""}/>
-                  {legend && (
-                    <p className="legend">{legend}</p>
+              {previews.map(({previewUrl, viewUrl, label}) => (
+                <div key={previewUrl}>
+                  <img src={previewUrl} alt={label?label:""}/>
+                  {label && (
+                    <p className="legend">{label}</p>
                   )}
-                  {src && (
+                  {viewUrl && (
                     <div className="kgs-instance_carousel-zoom-button"><i className="fa fa-4x fa-search"></i></div>
                   )}
                 </div>
@@ -95,10 +92,10 @@ class InstanceBase extends PureComponent {
         <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
         <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
         <FieldsTabs className="kgs-instance__groups" fields={groups} />
-        {previews && !!previews.length && this.state.carouselZoom && this.state.carouselZoom.previewUrl && (
+        {previews && !!previews.length && this.state.carouselZoom && this.state.carouselZoom.viewUrl && (
           <div className="kgs-instance_carousel-zoom" onClick={this.handleCloseCarouselZoom}>
             <div className="fa-stack fa-1x kgs-instance_carousel-zoom-content">
-              <img src={this.state.carouselZoom.previewUrl} alt={this.state.carouselZoom.legend?this.state.carouselZoom.legend:""}/>
+              <img src={this.state.carouselZoom.viewUrl} alt={this.state.carouselZoom.label?this.state.carouselZoom.label:""}/>
               <i className="fa fa-close"></i>
             </div>
           </div>
@@ -164,11 +161,24 @@ const getPreviews = (data, mapping, idx=0) => {
     return previews;
   } else if (data && typeof data.previewUrl === "string") {
     return [{
-      src: data.previewUrl,
-      legend: data.url?data.url:(data.value?data.value:null)
+      previewUrl: data.previewUrl,
+      viewUrl: data.viewUrl,
+      label: data.url?data.url:(data.value?data.value:null)
     }];
   } else if (data && typeof data.url === "string" && /^https?:\/\/.+\.cscs\.ch\/.+$/.test(data.url)) {
     const cats = [
+      "http://lorempixel.com/output/cats-q-c-640-480-1.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-2.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-3.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-4.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-5.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-6.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-7.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-8.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-9.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-10.jpg"
+    ];
+    const dogs = [
       "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-clicker.jpg",
       "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-06.jpg",
       "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-05.jpg",
@@ -180,8 +190,9 @@ const getPreviews = (data, mapping, idx=0) => {
       "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-08.jpg"
     ];
     return [{
-      src: cats[idx % (cats.length -1)],
-      legend: data.url?data.url:(data.value?data.value:null)
+      previewUrl: dogs[idx % (dogs.length -1)],
+      viewUrl: (Math.round(Math.random() * 10) % 2)?cats[idx % (cats.length -1)]:undefined,
+      label: data.url?data.url:(data.value?data.value:null)
     }];
   }
   return [];
