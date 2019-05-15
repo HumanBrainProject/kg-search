@@ -15,6 +15,7 @@
 */
 
 .kgs-instance {
+    position: relative;
     padding: 15px;
     text-align: left;
     font-size: 16px;
@@ -93,8 +94,9 @@
     display: block;
 }
 
+.kgs-instance__carousel .carousel:hover .slide.selected .kgs-instance_carousel-zoom-button,
 .kgs-instance__carousel .carousel .slide.selected:hover .kgs-instance_carousel-zoom-button,
-.kgs-instance__carousel .carousel .slide.selected .legend:hover .kgs-instance_carousel-zoom-button {
+.kgs-instance__carousel .carousel .slide.selected.legend .legend:hover + .kgs-instance_carousel-zoom-button {
     opacity: 0.5;
 }
 
@@ -124,6 +126,36 @@
     border-radius: 4px;
     background-color: white;
     cursor: pointer;
+}
+
+.kgs-instance_carousel-zoom-content .kgs-instance_carousel-zoom-label {
+    -webkit-transition: all .5s ease-in-out;
+    -o-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    margin-left: -45%;
+    width: 90%;
+    border-radius: 10px;
+    background: #000;
+    color: #fff;
+    padding: 10px;
+    font-size: 12px;
+    text-align: center;
+    opacity: .25;
+    -webkit-transition: opacity .35s ease-in-out;
+    -o-transition: opacity .35s ease-in-out;
+    transition: opacity .35s ease-in-out;
+    line-height: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
+    cursor: text;
+}
+
+.kgs-instance_carousel-zoom-content:hover .kgs-instance_carousel-zoom-label {
+    opacity: 1;
 }
 
 @media (min-width: 768px) and (min-height: 1000px) {

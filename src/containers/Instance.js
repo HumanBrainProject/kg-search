@@ -37,7 +37,11 @@ class InstanceBase extends PureComponent {
       this.setState({carouselZoom: previews[index]});
     }
   };
-  handleCloseCarouselZoom = () => {
+  handleCloseCarouselZoom = e => {
+    if (e.target === this.carouselZoomLabelRef) {
+      e.preventDefault();
+      return;
+    }
     this.setState({carouselZoom: null});
   }
   componentWillUnmount() {
@@ -96,6 +100,9 @@ class InstanceBase extends PureComponent {
           <div className="kgs-instance_carousel-zoom" onClick={this.handleCloseCarouselZoom}>
             <div className="fa-stack fa-1x kgs-instance_carousel-zoom-content">
               <img src={typeof this.state.carouselZoom.previewUrl === "string"?this.state.carouselZoom.previewUrl:this.state.carouselZoom.previewUrl.src} alt={this.state.carouselZoom.label?this.state.carouselZoom.label:""}/>
+              {this.state.carouselZoom.label && (
+                <p className="kgs-instance_carousel-zoom-label" ref={ref=>this.carouselZoomLabelRef = ref}>{this.state.carouselZoom.label}</p>
+              )}
               <i className="fa fa-close"></i>
             </div>
           </div>
