@@ -22,6 +22,8 @@ import API from "../services/API";
 import { Field } from "./Field";
 import { FieldsPanel } from "./FieldsPanel";
 import { FieldsTabs } from "./FieldsTabs";
+import { termsOfUse } from "../data/termsOfUse.js";
+import { Details } from "../components/Details";
 import "./Instance.css";
 
 class InstanceBase extends PureComponent {
@@ -49,6 +51,8 @@ class InstanceBase extends PureComponent {
   }
   render() {
     const {type, hasNoData, hasUnknownData, header, previews, main, summary, groups} = this.props;
+
+    const showCarouselZoom = previews && !!previews.length && this.state.carouselZoom && this.state.carouselZoom.previewUrl && (typeof this.state.carouselZoom.previewUrl === "string" || typeof this.state.carouselZoom.previewUrl.src === "string");
 
     if (hasNoData) {
       return (
@@ -78,26 +82,29 @@ class InstanceBase extends PureComponent {
         </div>
         {previews && !!previews.length && (
           <div className="kgs-instance__carousel">
-            <Carousel width="300px" autoPlay interval={3000} infiniteLoop={true} showThumbs={true} showIndicators={false} stopOnHover={true} showStatus={false} onClickItem={this.handleZoomCarousel} >
-              {previews.map(({staticImageUrl, previewUrl, label}) => (
-                <div key={staticImageUrl}>
-                  <img src={staticImageUrl} alt={label?label:""}/>
-                  {label && (
-                    <p className="legend">{label}</p>
-                  )}
-                  {previewUrl && (typeof previewUrl === "string" || typeof previewUrl.src === "string") && (
-                    <div className="kgs-instance_carousel-zoom-button"><i className={`fa fa-4x ${previewUrl.isDynamic?"fa-play":"fa-search"}`}></i></div>
-                  )}
-                </div>
-              ))}
-            </Carousel>
+            <div>
+              <Carousel width="300px" autoPlay interval={3000} infiniteLoop={true} showThumbs={true} showIndicators={false} stopOnHover={true} showStatus={false} onClickItem={this.handleZoomCarousel} >
+                {previews.map(({staticImageUrl, previewUrl, label}) => (
+                  <div key={staticImageUrl}>
+                    <img src={staticImageUrl} alt={label?label:""}/>
+                    {label && (
+                      <p className="legend">{label}</p>
+                    )}
+                    {previewUrl && (typeof previewUrl === "string" || typeof previewUrl.src === "string") && (
+                      <div className="kgs-instance_carousel-zoom-button"><i className={`fa fa-4x ${previewUrl.isDynamic?"fa-play":"fa-search"}`}></i></div>
+                    )}
+                  </div>
+                ))}
+              </Carousel>
+              <Details toggleLabel="Terms of use" content={termsOfUse} asPopup={true} />
+            </div>
           </div>
         )}
         <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
         <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
         <FieldsTabs className="kgs-instance__groups" fields={groups} />
-        {previews && !!previews.length && this.state.carouselZoom && this.state.carouselZoom.previewUrl && (typeof this.state.carouselZoom.previewUrl === "string" || typeof this.state.carouselZoom.previewUrl.src === "string") && (
-          <div className="kgs-instance_carousel-zoom" onClick={this.handleCloseCarouselZoom}>
+        <div className={`kgs-instance_carousel-zoom ${showCarouselZoom?"show":""}`} onClick={this.handleCloseCarouselZoom}>
+          {showCarouselZoom && (
             <div className="fa-stack fa-1x kgs-instance_carousel-zoom-content">
               <img src={typeof this.state.carouselZoom.previewUrl === "string"?this.state.carouselZoom.previewUrl:this.state.carouselZoom.previewUrl.src} alt={this.state.carouselZoom.label?this.state.carouselZoom.label:""}/>
               {this.state.carouselZoom.label && (
@@ -105,8 +112,8 @@ class InstanceBase extends PureComponent {
               )}
               <i className="fa fa-close"></i>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     );
   }

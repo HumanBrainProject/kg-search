@@ -15,32 +15,13 @@
 */
 
 import React, { PureComponent } from "react";
-import showdown from "showdown";
-/*import FilterXSS from 'xss';*/
-import xssFilter from "showdown-xss-filter";
 import { connect } from "react-redux";
 import * as actions from "../../actions";
 import { termsOfUse } from "../../data/termsOfUse.js";
 import { Icon } from "../../components/Icon";
+import { Details } from "../../components/Details";
+import { Text } from "../../components/Text";
 import "./ValueField.css";
-
-const converter = new showdown.Converter({extensions: [xssFilter]});
-
-const Text = ({content, isMarkdown}) => {
-  if (!content) {
-    return null;
-  }
-  if (!isMarkdown) {
-    return (
-      <span>{content}</span>
-    );
-  }
-
-  const html = converter.makeHtml(content);
-  return (
-    <span className="field-markdown" dangerouslySetInnerHTML={{__html:html}}></span>
-  );
-};
 
 class CollapsibleText extends PureComponent {
   constructor(props) {
@@ -201,50 +182,6 @@ class Thumbnail extends PureComponent {
           </div>
         )}
       </div>
-    );
-  }
-}
-
-class Details extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      collapsed: true
-    };
-    this.handleToggle = this.handleToggle.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-  }
-  handleToggle() {
-    this.setState(state => ({ collapsed: !state.collapsed }));
-  }
-  handleClose() {
-    this.setState(() => ({ collapsed: true }));
-  }
-  render() {
-    const {toggleLabel, content} = this.props;
-
-    if (!content) {
-      return null;
-    }
-
-    const className = `toggle ${this.state.collapsed?"":"in"}`;
-    return (
-      <span className="field-details">
-        <button className={className} onClick={this.handleToggle}>
-          <i className="fa fa-exclamation-circle"></i>
-          {toggleLabel && (
-            <span>{toggleLabel}</span>
-          )}
-        </button>
-        <div className="collapsible">
-          {!this.state.collapsed && (
-            <div className="field-details__panel">
-              <Text content={content} isMarkdown={true} />
-              <button className="field-details__close-button" onClick={this.handleClose} title="close"><i className="fa fa-2x fa-close"></i></button>
-            </div>
-          )}
-        </div>
-      </span>
     );
   }
 }
