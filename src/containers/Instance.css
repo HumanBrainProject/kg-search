@@ -76,7 +76,15 @@
 }
 
 .kgs-instance__carousel .carousel .slide .legend {
-    bottom: 10px;    
+    bottom: 0; 
+    width: auto;
+    max-width: 90%;   
+    margin-left: 0;
+    transform: translateX(-50%);
+    overflow-wrap: break-word;
+    word-break: normal;
+    white-space: pre-wrap;
+    text-overflow: ellipsis;
 }
 
 .kgs-instance__carousel .carousel .slide .kgs-instance_carousel-zoom-button {
@@ -144,8 +152,8 @@
     position: absolute;
     bottom: 20px;
     left: 50%;
-    margin-left: -45%;
-    width: 90%;
+    width: auto;
+    max-width: 90%;
     border-radius: 10px;
     background: #000;
     color: #fff;
@@ -158,8 +166,10 @@
     transition: opacity .35s ease-in-out;
     line-height: normal;
     overflow-wrap: break-word;
-    word-break: break-word;
+    word-break: normal;
     white-space: pre-wrap;
+    transform: translateX(-50%);
+    text-overflow: ellipsis;
     cursor: text;
 }
 

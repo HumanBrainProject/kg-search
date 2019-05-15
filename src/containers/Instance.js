@@ -22,8 +22,6 @@ import API from "../services/API";
 import { Field } from "./Field";
 import { FieldsPanel } from "./FieldsPanel";
 import { FieldsTabs } from "./FieldsTabs";
-import { termsOfUse } from "../data/termsOfUse.js";
-import { Details } from "../components/Details";
 import "./Instance.css";
 
 class InstanceBase extends PureComponent {
@@ -82,22 +80,19 @@ class InstanceBase extends PureComponent {
         </div>
         {previews && !!previews.length && (
           <div className="kgs-instance__carousel">
-            <div>
-              <Carousel width="300px" autoPlay interval={3000} infiniteLoop={true} showThumbs={true} showIndicators={false} stopOnHover={true} showStatus={false} onClickItem={this.handleZoomCarousel} >
-                {previews.map(({staticImageUrl, previewUrl, label}) => (
-                  <div key={staticImageUrl}>
-                    <img src={staticImageUrl} alt={label?label:""}/>
-                    {label && (
-                      <p className="legend">{label}</p>
-                    )}
-                    {previewUrl && (typeof previewUrl === "string" || typeof previewUrl.src === "string") && (
-                      <div className="kgs-instance_carousel-zoom-button"><i className={`fa fa-4x ${previewUrl.isDynamic?"fa-play":"fa-search"}`}></i></div>
-                    )}
-                  </div>
-                ))}
-              </Carousel>
-              <Details toggleLabel="Terms of use" content={termsOfUse} asPopup={true} />
-            </div>
+            <Carousel width="300px" autoPlay interval={3000} infiniteLoop={true} showThumbs={true} showIndicators={false} stopOnHover={true} showStatus={false} onClickItem={this.handleZoomCarousel} >
+              {previews.map(({staticImageUrl, previewUrl, label}) => (
+                <div key={staticImageUrl}>
+                  <img src={staticImageUrl} alt={label?label:""}/>
+                  {label && (
+                    <p className="legend">{label}</p>
+                  )}
+                  {previewUrl && (typeof previewUrl === "string" || typeof previewUrl.src === "string") && (
+                    <div className="kgs-instance_carousel-zoom-button"><i className={`fa fa-4x ${previewUrl.isDynamic?"fa-play":"fa-search"}`}></i></div>
+                  )}
+                </div>
+              ))}
+            </Carousel>
           </div>
         )}
         <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
@@ -177,7 +172,7 @@ const getPreviews = (data, mapping, idx=0) => {
     return [{
       staticImageUrl: data.staticImageUrl,
       previewUrl: data.previewUrl,
-      label: data.url?data.url:(data.value?data.value:null)
+      label: data.value?data.value:null
     }];
   } else if (data && typeof data.url === "string" && /^https?:\/\/.+\.cscs\.ch\/.+$/.test(data.url)) {
     const cats = [
@@ -213,7 +208,7 @@ const getPreviews = (data, mapping, idx=0) => {
         src: cats[idx % (cats.length -1)],
         isDynamic: /^.+\.gif$/.test(cats[idx % (cats.length -1)])
       }:undefined,
-      label: data.url?data.url:(data.value?data.value:null)
+      label: data.value?data.value:null
     }];
   }
   return [];
