@@ -75,14 +75,14 @@ class InstanceBase extends PureComponent {
         {previews && !!previews.length && (
           <div className="kgs-instance__carousel">
             <Carousel width="300px" autoPlay interval={3000} infiniteLoop={true} showThumbs={true} showIndicators={false} stopOnHover={true} showStatus={false} onClickItem={this.handleZoomCarousel} >
-              {previews.map(({previewUrl, viewUrl, label}) => (
-                <div key={previewUrl}>
-                  <img src={previewUrl} alt={label?label:""}/>
+              {previews.map(({staticImageUrl, previewUrl, label}) => (
+                <div key={staticImageUrl}>
+                  <img src={staticImageUrl} alt={label?label:""}/>
                   {label && (
                     <p className="legend">{label}</p>
                   )}
-                  {viewUrl && (
-                    <div className="kgs-instance_carousel-zoom-button"><i className="fa fa-4x fa-search"></i></div>
+                  {previewUrl && (typeof previewUrl === "string" || typeof previewUrl.src === "string") && (
+                    <div className="kgs-instance_carousel-zoom-button"><i className={`fa fa-4x ${previewUrl.isDynamic?"fa-play":"fa-search"}`}></i></div>
                   )}
                 </div>
               ))}
@@ -92,10 +92,10 @@ class InstanceBase extends PureComponent {
         <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
         <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
         <FieldsTabs className="kgs-instance__groups" fields={groups} />
-        {previews && !!previews.length && this.state.carouselZoom && this.state.carouselZoom.viewUrl && (
+        {previews && !!previews.length && this.state.carouselZoom && this.state.carouselZoom.previewUrl && (typeof this.state.carouselZoom.previewUrl === "string" || typeof this.state.carouselZoom.previewUrl.src === "string") && (
           <div className="kgs-instance_carousel-zoom" onClick={this.handleCloseCarouselZoom}>
             <div className="fa-stack fa-1x kgs-instance_carousel-zoom-content">
-              <img src={this.state.carouselZoom.viewUrl} alt={this.state.carouselZoom.label?this.state.carouselZoom.label:""}/>
+              <img src={typeof this.state.carouselZoom.previewUrl === "string"?this.state.carouselZoom.previewUrl:this.state.carouselZoom.previewUrl.src} alt={this.state.carouselZoom.label?this.state.carouselZoom.label:""}/>
               <i className="fa fa-close"></i>
             </div>
           </div>
@@ -159,17 +159,21 @@ const getPreviews = (data, mapping, idx=0) => {
       }))
       .forEach(({data, mapping}, idx) => previews.push(...getPreviews(data, mapping, idx)));
     return previews;
-  } else if (data && typeof data.previewUrl === "string") {
+  } else if (data && typeof data.staticImageUrl === "string") {
     return [{
+      staticImageUrl: data.staticImageUrl,
       previewUrl: data.previewUrl,
-      viewUrl: data.viewUrl,
       label: data.url?data.url:(data.value?data.value:null)
     }];
   } else if (data && typeof data.url === "string" && /^https?:\/\/.+\.cscs\.ch\/.+$/.test(data.url)) {
     const cats = [
+      "https://cdn2.thecatapi.com/images/2pb.gif",
       "http://lorempixel.com/output/cats-q-c-640-480-1.jpg",
       "http://lorempixel.com/output/cats-q-c-640-480-2.jpg",
+      "https://cdn2.thecatapi.com/images/18f.gif",
       "http://lorempixel.com/output/cats-q-c-640-480-3.jpg",
+      "https://cdn2.thecatapi.com/images/dbt.gif",
+      "https://cdn2.thecatapi.com/images/d5k.gif",
       "http://lorempixel.com/output/cats-q-c-640-480-4.jpg",
       "http://lorempixel.com/output/cats-q-c-640-480-5.jpg",
       "http://lorempixel.com/output/cats-q-c-640-480-6.jpg",
@@ -190,8 +194,11 @@ const getPreviews = (data, mapping, idx=0) => {
       "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-08.jpg"
     ];
     return [{
-      previewUrl: dogs[idx % (dogs.length -1)],
-      viewUrl: (Math.round(Math.random() * 10) % 2)?cats[idx % (cats.length -1)]:undefined,
+      staticImageUrl: dogs[idx % (dogs.length -1)],
+      previewUrl: (Math.round(Math.random() * 10) % 2)?{
+        src: cats[idx % (cats.length -1)],
+        isDynamic: /^.+\.gif$/.test(cats[idx % (cats.length -1)])
+      }:undefined,
       label: data.url?data.url:(data.value?data.value:null)
     }];
   }
