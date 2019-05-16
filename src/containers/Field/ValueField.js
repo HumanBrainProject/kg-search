@@ -15,70 +15,16 @@
 */
 
 import React from "react";
-import { connect } from "react-redux";
-import * as actions from "../../actions";
 import { termsOfUse } from "../../data/termsOfUse.js";
 import { Icon } from "../../components/Icon";
 import { Details } from "../../components/Details";
 import { Text } from "../../components/Text";
 import { CollapsibleText } from "../../components/CollapsibleText";
+import { Link } from "../../components/Link";
+import { Tag } from "../../components/Tag";
 import { Thumbnail } from "../../components/Thumbnail";
+import { Reference } from "./Reference";
 import "./ValueField.css";
-
-const ReferenceComponent = ({text, reference, group, onClick}) => {
-  if (!reference) {
-    return null;
-  }
-
-  const handleClick = () => {
-    typeof onClick === "function" && onClick(reference, group);
-  };
-
-  return (
-    <button onClick={handleClick} role="link">{text}</button>
-  );
-};
-
-const Reference = connect(
-  (state, props) => ({
-    text: props.text?props.text:props.reference,
-    reference: props.reference,
-    group: props.group,
-  }),
-  dispatch => ({
-    onClick: (reference, group) => dispatch(actions.loadInstance(reference, group))
-  })
-)(ReferenceComponent);
-
-const Link = ({url, label, isMailToLink}) => {
-  if (!url) {
-    return null;
-  }
-
-  const text = label?label:url;
-
-  const props = !isMailToLink?null:{
-    rel: "noopener noreferrer",
-    target: "_blank"
-  };
-
-  return (
-    <a href={url} {...props}>{text}</a>
-  );
-};
-
-const Tag = ({icon, value}) => {
-  if (!icon && !value) {
-    return null;
-  }
-
-  return (
-    <span className="field-value__tag">
-      <div dangerouslySetInnerHTML={{__html:icon}} />
-      <div>{value}</div>
-    </span>
-  );
-};
 
 const ValueFieldBase = (renderUserInteractions = true) => {
 
