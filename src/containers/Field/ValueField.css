@@ -14,6 +14,24 @@
 *   limitations under the License.
 */
 
+.kgs-field .kgs-thumbnail--panel {
+    display: inline-block;
+    position: relative;
+}
+
+.kgs-field .kgs-thumbnail--panel > div {
+    display: inline-block;
+    max-width: 16px;
+    height: 16px;
+    margin: 0 10px;
+    transform: translate(-2px, -4px);
+}
+
+.kgs-field .kgs-thumbnail--panel img {
+    width: auto;
+    height: 100%;
+}
+
 .kgs-field .field-value {
     display: inline-block;
     position: relative;
@@ -163,7 +181,85 @@
     color: #337ab7;
 }
 
-@-ms-keyframes kgs-thumbnail-zoom {
+@-ms-keyframes kgs-thumbnail-zoom-dynamic {
+    0% {
+        color: white;
+    }
+    24% {
+        color: white;
+    }
+    25% {
+        color: red;
+    }
+    50% {
+        color: red;
+    }
+    75% {
+        color: red;
+    }
+    76% {
+        color: white;
+    }
+    100% {
+        color: white;
+    }
+}
+
+@-webkit-keyframes kgs-thumbnail-zoom-dynamic {
+    0% {
+        color: white;
+    }
+    24% {
+        color: white;
+    }
+    25% {
+        color: red;
+    }
+    50% {
+        color: red;
+    }
+    75% {
+        color: red;
+    }
+    76% {
+        color: white;
+    }
+    100% {
+        color: white;
+    }
+}
+
+@keyframes kgs-thumbnail-zoom-dynamic {
+    0% {
+        color: white;
+    }
+    24% {
+        color: white;
+    }
+    25% {
+        color: red;
+    }
+    50% {
+        color: red;
+    }
+    75% {
+        color: red;
+    }
+    76% {
+        color: white;
+    }
+    100% {
+        color: white;
+    }
+}
+
+.kgs-thumbnail--zoom-dynamic {
+    -moz-animation: kgs-thumbnail-zoom-dynamic 0.75s infinite ease-in-out;
+    -webkit-animation: kgs-thumbnail-zoom-dynamic 0.75s infinite ease-in-out;
+    animation: kgs-thumbnail-zoom-dynamic 0.75s infinite ease-in-out;
+}
+
+@-ms-keyframes kgs-thumbnail-zoom-static {
     0% {
         -ms-transform: translate(0px, 0px);
         transform: translate(0px, 0px);
@@ -190,7 +286,7 @@
     }
 }
 
-@-webkit-keyframes kgs-thumbnail-zoom {
+@-webkit-keyframes kgs-thumbnail-zoom-static {
    0% {
         -ms-transform: translate(0px, 0px);
         -webkit-transform: translate(0px, 0px);
@@ -223,7 +319,7 @@
     }
 }
 
-@keyframes kgs-thumbnail-zoom {
+@keyframes kgs-thumbnail-zoom-static {
     0% {
         -ms-transform: translate(0px, 0px);
         -o-transform: translate(0px, 0px);
@@ -268,10 +364,38 @@
     }
 }
 
-.kgs-thumbnail--zoom {
-    -moz-animation: kgs-thumbnail-zoom 3s infinite linear;
-    -webkit-animation: kgs-thumbnail-zoom 3s infinite linear;
-    animation: kgs-thumbnail-zoom 3s infinite linear;
+.kgs-thumbnail--zoom-static {
+    -moz-animation: kgs-thumbnail-zoom-static 3s infinite linear;
+    -webkit-animation: kgs-thumbnail-zoom-static 3s infinite linear;
+    animation: kgs-thumbnail-zoom-static infinite 3s linear;
+}
+
+.kgs-thumbnail--image > .kgs-thumbnail--zoom-dynamic {
+    position: absolute;
+    top: 10px;
+    left: 3px;
+    transform: scale(0.8);
+}
+
+:not(.kgs-thumbnail--image) > .kgs-thumbnail--zoom-dynamic {
+    position: absolute;
+    top: 0px;
+    left: 1px;
+    transform: scale(0.7);
+}
+
+.kgs-thumbnail--image > .kgs-thumbnail--zoom-static {
+    position: absolute;
+    top: 10px;
+    left: 3px;
+    transform: scale(0.8);
+}
+
+:not(.kgs-thumbnail--image) > .kgs-thumbnail--zoom-static {
+    position: absolute;
+    top: 0px;
+    left: 1px;
+    transform: scale(0.8);
 }
 
 .kgs-thumbnail--preview {

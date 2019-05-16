@@ -157,9 +157,16 @@ class Thumbnail extends PureComponent {
   }
 
   render() {
-    const {hasPreview, previewUrl, alt} = this.props;
+    const {thumbnailUrl, showPreview, previewUrl, isDynamic, alt} = this.props;
 
-    if (!hasPreview || !previewUrl) {
+    if (!showPreview || typeof previewUrl !== "string") {
+      if (typeof thumbnailUrl === "string") {
+        return (
+          <span className="kgs-thumbnail--panel">
+            <div><img src={thumbnailUrl} alt={alt} /></div>
+          </span>
+        );
+      }
       return (
         <span className="fa-stack fa-1x kgs-thumbnail--panel">
           <i className="fa fa-file-o fa-stack-1x"></i>
@@ -170,10 +177,27 @@ class Thumbnail extends PureComponent {
     return (
       <div className="fa-stack fa-1x kgs-thumbnail--container" ref={ref=>this.wrapperRef = ref}>
         <button className="kgs-thumbnail--button" onClick={this.handleToggle.bind(this)} >
-          <span className="fa-stack fa-1x kgs-thumbnail--panel">
-            <i className="fa fa-file-image-o fa-stack-1x"></i>
-            <i className="fa fa-search fa-stack-1x kgs-thumbnail--zoom"></i>
-          </span>
+          {typeof thumbnailUrl === "string"?
+            <span className="kgs-thumbnail--panel">
+              <div className="kgs-thumbnail--image">
+                <img src={thumbnailUrl} alt={alt} />
+                {isDynamic?
+                  <i className="fa fa-play kgs-thumbnail--zoom-dynamic"></i>
+                  :
+                  <i className="fa fa-search kgs-thumbnail--zoom-static"></i>
+                }
+              </div>
+            </span>
+            :
+            <span className="fa-stack fa-1x kgs-thumbnail--panel">
+              <i className="fa fa-file-image-o fa-stack-1x"></i>
+              {isDynamic?
+                <i className="fa fa-play fa-stack-1x kgs-thumbnail--zoom-dynamic"></i>
+                :
+                <i className="fa fa-search fa-stack-1x kgs-thumbnail--zoom-static"></i>
+              }
+            </span>
+          }
         </button>
         {!!this.state.previewUrl && (
           <div className="fa-stack fa-1x kgs-thumbnail--preview" onClick={this.handleToggle.bind(this)}>
@@ -193,6 +217,21 @@ const ValueFieldBase = (renderUserInteractions = true) => {
       return null;
     }
 
+    if (Math.round(Math.random() * 10) % 2 === 0) {
+      if (Math.round(Math.random() * 10) % 2 === 0) {
+        data.previewUrl = {
+          src: "https://cdn2.thecatapi.com/images/18f.gif",
+          isDynamic: true
+        };
+      } else {
+        data.previewUrl = {
+          src: "http://lorempixel.com/output/cats-q-c-640-480-3.jpg",
+          isDynamic: false
+        };
+      }
+      data.thumbnailUrl = "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-clicker.jpg";
+    }
+
     const hasReference = !!renderUserInteractions && !!data.reference;
     const hasLink =  !!renderUserInteractions && !!data.url;
     const hasMailToLink = !!renderUserInteractions && typeof data.url === "string" &&  data.url.substr(0,7).toLowerCase() === "mailto:";
@@ -202,7 +241,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     const isTag = !hasAnyLink && !isIcon && !!mapping.tagIcon;
     const isMarkdown = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && !!mapping.markdown;
     const isCollapsible = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && mapping.collapsible && typeof data.value === "string" && data.value.length >= 1600;
-    const hasPreview = !!renderUserInteractions && typeof data.previewUrl === "string";
+    const showPreview = !!renderUserInteractions && data.previewUrl && (typeof data.previewUrl === "string" || typeof data.previewUrl.src === "string");
 
     let value = data.value;
     if (data.value && mapping.type === "date") {
@@ -258,7 +297,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     return (
       <div className="field-value">
         {isAFileLink && (
-          <Thumbnail hasPreview={hasPreview} previewUrl={data.previewUrl} alt={data.url} />
+          <Thumbnail showPreview={showPreview} thumbnailUrl={data.thumbnailUrl} previewUrl={data.previewUrl && (typeof data.previewUrl === "string"?data.previewUrl:data.previewUrl.src)} isDynamic={data.previewUrl && data.previewUrl.isDynamic} alt={data.url} />
         )}
         <ValueComponent {...valueProps} />
         {!!mapping.termsOfUse && (
