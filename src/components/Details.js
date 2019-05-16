@@ -70,3 +70,5 @@ export class Details extends PureComponent {
     );
   }
 }
+
+export default Details;

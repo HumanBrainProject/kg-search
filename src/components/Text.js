@@ -37,3 +37,5 @@ export const Text = ({content, isMarkdown}) => {
     <span className="field-markdown" dangerouslySetInnerHTML={{__html:html}}></span>
   );
 };
+
+export default Text;
