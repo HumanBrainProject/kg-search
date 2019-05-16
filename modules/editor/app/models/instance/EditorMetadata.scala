@@ -53,8 +53,7 @@ object EditorMetadata {
         "createdAt" -> Json.obj("label"->"Created at", "value"->e.createdAt))
       val initialValues:JsObject = Json.obj(
         "createdBy" -> Json.obj("label"->"Created by", "value"->e.createdBy),
-        "lastUpdateBy" -> Json.obj("label"->"Last update by", "value"->e.lastUpdateBy),
-        "numberOfEdits" -> Json.obj("label"->"Number of edits", "value"->e.numberOfEdits)
+        "lastUpdateBy" -> Json.obj("label"->"Last update by", "value"->e.lastUpdateBy)
       )
       valuesToBeAdded.foldLeft(initialValues){
         case(acc, value) =>  if(value._2.value.get("value").map(_.as[Option[DateTime]]).getOrElse(None).isEmpty) {
