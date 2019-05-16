@@ -33,7 +33,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
       return null;
     }
 
-    if (Math.round(Math.random() * 10) % 2 === 0) {
+    if (!data.previewUrl && Math.round(Math.random() * 10) % 2 === 0) {
       if (Math.round(Math.random() * 10) % 2 === 0) {
         data.previewUrl = {
           url: "https://cdn2.thecatapi.com/images/18f.gif",
@@ -45,6 +45,8 @@ const ValueFieldBase = (renderUserInteractions = true) => {
           isAnimated: false
         };
       }
+    }
+    if (!data.thumbnailUrl && Math.round(Math.random() * 10) % 2 === 0) {
       data.thumbnailUrl = {
         url: "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-clicker.jpg",
         isAnimated: false

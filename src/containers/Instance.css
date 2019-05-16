@@ -92,7 +92,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: scale(3) translate(-10%, -45%);
+    transform: scale(3) translate(-10%, -35%);
     color: white;
     opacity: 0.3;
     cursor: pointer;
