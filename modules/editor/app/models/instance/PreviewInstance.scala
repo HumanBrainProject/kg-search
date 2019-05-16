@@ -20,7 +20,7 @@ import models.NexusPath
 import models.specification.{FormRegistry, UISpec}
 
 case class PreviewInstance(
-  id: String,
+  id: NexusInstanceReference,
   name: String,
   instanceType: String,
   description: Option[String],
@@ -28,8 +28,7 @@ case class PreviewInstance(
 ) {
 
   def setLabel(formRegistry: FormRegistry[UISpec]): PreviewInstance = {
-    val path = NexusInstanceReference.fromUrl(id).nexusPath
-    val label = formRegistry.registry.get(path).map(_.label).getOrElse(path.toString())
+    val label = formRegistry.registry.get(id.nexusPath).map(_.label).getOrElse(id.nexusPath.toString())
     this.copy(label = Some(label))
   }
 
@@ -41,7 +40,7 @@ object PreviewInstance {
   import play.api.libs.json._
 
   def fromNexusInstance(nexusInstance: NexusInstance, formRegistry: FormRegistry[UISpec]): PreviewInstance = {
-    val id = NexusInstanceReference.fromUrl(nexusInstance.getField(JsonLDConstants.ID).get.as[String]).toString
+    val id = NexusInstanceReference.fromUrl(nexusInstance.getField(JsonLDConstants.ID).get.as[String])
     val name = nexusInstance.getField(SchemaFieldsConstants.NAME).getOrElse(JsString("")).as[String]
     val description: Option[String] = nexusInstance.getField(SchemaFieldsConstants.DESCRIPTION).map(_.as[String])
     val t = nexusInstance.getField(JsonLDConstants.TYPE).get.as[String]
@@ -51,7 +50,7 @@ object PreviewInstance {
   }
 
   implicit val previewInstanceReads: Reads[PreviewInstance] = (
-    (JsPath \ "id").read[String] and
+    (JsPath \ "id").read[String].map(ref => NexusInstanceReference.fromUrl(ref)) and
     (JsPath \ "name").readNullable[String].map(_.getOrElse("")) and
     (JsPath \ UiConstants.DATATYPE).readNullable[JsValue].map {
       case Some(js) =>
@@ -62,12 +61,15 @@ object PreviewInstance {
     (JsPath \ UiConstants.LABEL).readNullable[String]
   )(PreviewInstance.apply _)
 
-  implicit val previewInstanceWrites: Writes[PreviewInstance] = (
-    (JsPath \ "id").write[String] and
-    (JsPath \ "name").write[String] and
-    (JsPath \ UiConstants.DATATYPE).write[String] and
-    (JsPath \ "description").writeNullable[String] and
-    (JsPath \ UiConstants.LABEL).writeNullable[String]
-  )(unlift(PreviewInstance.unapply))
+  implicit val previewInstanceWrites = new Writes[PreviewInstance] {
 
+    def writes(previewInstance: PreviewInstance) = Json.obj(
+      "id"                 -> previewInstance.id.toString,
+      "name"               -> previewInstance.name,
+      UiConstants.DATATYPE -> previewInstance.instanceType,
+      "description"        -> previewInstance.description,
+      UiConstants.LABEL    -> previewInstance.label,
+      UiConstants.SCHEMA   -> previewInstance.id.nexusPath.toString()
+    )
+  }
 }

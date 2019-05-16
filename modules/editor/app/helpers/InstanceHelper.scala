@@ -108,9 +108,10 @@ object InstanceHelper {
         ""
       }
       val id = url.split("/v0/data/").last
-      val path = NexusInstanceReference.fromUrl(id).nexusPath
-      val label = formRegistry.registry.get(path).map(_.label).getOrElse(path.toString())
-      PreviewInstance(id, name, dataType, Some(description), Some(label))
+      val instanceRef = NexusInstanceReference.fromUrl(id)
+      val label =
+        formRegistry.registry.get(instanceRef.nexusPath).map(_.label).getOrElse(instanceRef.nexusPath.toString())
+      PreviewInstance(instanceRef, name, dataType, Some(description), Some(label))
     }.toList
   }
 
