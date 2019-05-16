@@ -157,7 +157,7 @@ class Thumbnail extends PureComponent {
   }
 
   render() {
-    const {thumbnailUrl, showPreview, previewUrl, isDynamic, alt} = this.props;
+    const {thumbnailUrl, showPreview, previewUrl, isAnimated, alt} = this.props;
 
     if (!showPreview || typeof previewUrl !== "string") {
       if (typeof thumbnailUrl === "string") {
@@ -181,7 +181,7 @@ class Thumbnail extends PureComponent {
             <span className="kgs-thumbnail--panel">
               <div className="kgs-thumbnail--image">
                 <img src={thumbnailUrl} alt={alt} />
-                {isDynamic?
+                {isAnimated?
                   <i className="fa fa-play kgs-thumbnail--zoom-dynamic"></i>
                   :
                   <i className="fa fa-search kgs-thumbnail--zoom-static"></i>
@@ -191,7 +191,7 @@ class Thumbnail extends PureComponent {
             :
             <span className="fa-stack fa-1x kgs-thumbnail--panel">
               <i className="fa fa-file-image-o fa-stack-1x"></i>
-              {isDynamic?
+              {isAnimated?
                 <i className="fa fa-play fa-stack-1x kgs-thumbnail--zoom-dynamic"></i>
                 :
                 <i className="fa fa-search fa-stack-1x kgs-thumbnail--zoom-static"></i>
@@ -220,16 +220,19 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     if (Math.round(Math.random() * 10) % 2 === 0) {
       if (Math.round(Math.random() * 10) % 2 === 0) {
         data.previewUrl = {
-          src: "https://cdn2.thecatapi.com/images/18f.gif",
-          isDynamic: true
+          url: "https://cdn2.thecatapi.com/images/18f.gif",
+          isAnimated: true
         };
       } else {
         data.previewUrl = {
-          src: "http://lorempixel.com/output/cats-q-c-640-480-3.jpg",
-          isDynamic: false
+          url: "http://lorempixel.com/output/cats-q-c-640-480-3.jpg",
+          isAnimated: false
         };
       }
-      data.thumbnailUrl = "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-clicker.jpg";
+      data.thumbnailUrl = {
+        url: "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-clicker.jpg",
+        isAnimated: false
+      };
     }
 
     const hasReference = !!renderUserInteractions && !!data.reference;
@@ -241,7 +244,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     const isTag = !hasAnyLink && !isIcon && !!mapping.tagIcon;
     const isMarkdown = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && !!mapping.markdown;
     const isCollapsible = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && mapping.collapsible && typeof data.value === "string" && data.value.length >= 1600;
-    const showPreview = !!renderUserInteractions && data.previewUrl && (typeof data.previewUrl === "string" || typeof data.previewUrl.src === "string");
+    const showPreview = !!renderUserInteractions && data.previewUrl && (typeof data.previewUrl === "string" || typeof data.previewUrl.url === "string");
 
     let value = data.value;
     if (data.value && mapping.type === "date") {
@@ -297,7 +300,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     return (
       <div className="field-value">
         {isAFileLink && (
-          <Thumbnail showPreview={showPreview} thumbnailUrl={data.thumbnailUrl} previewUrl={data.previewUrl && (typeof data.previewUrl === "string"?data.previewUrl:data.previewUrl.src)} isDynamic={data.previewUrl && data.previewUrl.isDynamic} alt={data.url} />
+          <Thumbnail showPreview={showPreview} thumbnailUrl={data.thumbnailUrl && (typeof data.thumbnailUrl === "string"?data.thumbnailUrl:data.thumbnailUrl.url)} previewUrl={data.previewUrl && (typeof data.previewUrl === "string"?data.previewUrl:data.previewUrl.url)} isAnimated={data.previewUrl && data.previewUrl.isAnimated} alt={data.url} />
         )}
         <ValueComponent {...valueProps} />
         {!!mapping.termsOfUse && (

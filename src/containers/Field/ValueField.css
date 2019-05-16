@@ -183,73 +183,73 @@
 
 @-ms-keyframes kgs-thumbnail-zoom-dynamic {
     0% {
-        color: white;
+        opacity: 1
     }
     24% {
-        color: white;
+        opacity: 1
     }
     25% {
-        color: red;
+        opacity: 0
     }
     50% {
-        color: red;
+        opacity: 0
     }
     75% {
-        color: red;
+        opacity: 0
     }
     76% {
-        color: white;
+        opacity: 1
     }
     100% {
-        color: white;
+        opacity: 1
     }
 }
 
 @-webkit-keyframes kgs-thumbnail-zoom-dynamic {
     0% {
-        color: white;
+        opacity: 1
     }
     24% {
-        color: white;
+        opacity: 1
     }
     25% {
-        color: red;
+        opacity: 0
     }
     50% {
-        color: red;
+        opacity: 0
     }
     75% {
-        color: red;
+        opacity: 0
     }
     76% {
-        color: white;
+        opacity: 1
     }
     100% {
-        color: white;
+        opacity: 1
     }
 }
 
 @keyframes kgs-thumbnail-zoom-dynamic {
     0% {
-        color: white;
+        opacity: 1
     }
     24% {
-        color: white;
+        opacity: 1
     }
     25% {
-        color: red;
+        opacity: 0
     }
     50% {
-        color: red;
+        opacity: 0
     }
     75% {
-        color: red;
+        opacity: 0
     }
     76% {
-        color: white;
+        opacity: 1
     }
     100% {
-        color: white;
+        opacity: 1
     }
 }
 
@@ -257,6 +257,7 @@
     -moz-animation: kgs-thumbnail-zoom-dynamic 0.75s infinite ease-in-out;
     -webkit-animation: kgs-thumbnail-zoom-dynamic 0.75s infinite ease-in-out;
     animation: kgs-thumbnail-zoom-dynamic 0.75s infinite ease-in-out;
+    color: white;
 }
 
 @-ms-keyframes kgs-thumbnail-zoom-static {

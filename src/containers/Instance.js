@@ -50,7 +50,7 @@ class InstanceBase extends PureComponent {
   render() {
     const {type, hasNoData, hasUnknownData, header, previews, main, summary, groups} = this.props;
 
-    const showCarouselZoom = previews && !!previews.length && this.state.carouselZoom && this.state.carouselZoom.previewUrl && (typeof this.state.carouselZoom.previewUrl === "string" || typeof this.state.carouselZoom.previewUrl.src === "string");
+    const showCarouselZoom = previews && !!previews.length && this.state.carouselZoom && this.state.carouselZoom.previewUrl && (typeof this.state.carouselZoom.previewUrl === "string" || typeof this.state.carouselZoom.previewUrl.url === "string");
 
     if (hasNoData) {
       return (
@@ -87,8 +87,8 @@ class InstanceBase extends PureComponent {
                   {label && (
                     <p className="legend">{label}</p>
                   )}
-                  {previewUrl && (typeof previewUrl === "string" || typeof previewUrl.src === "string") && (
-                    <div className="kgs-instance_carousel-zoom-button"><i className={`fa fa-4x ${previewUrl.isDynamic?"fa-play":"fa-search"}`}></i></div>
+                  {previewUrl && (typeof previewUrl === "string" || typeof previewUrl.url === "string") && (
+                    <div className={`kgs-instance_carousel-zoom-button ${previewUrl.isAnimated?"is-animated":""}`}><i className={`fa fa-4x ${previewUrl.isAnimated?"fa-play":"fa-search"}`}></i></div>
                   )}
                 </div>
               ))}
@@ -101,7 +101,7 @@ class InstanceBase extends PureComponent {
         <div className={`kgs-instance_carousel-zoom ${showCarouselZoom?"show":""}`} onClick={this.handleCloseCarouselZoom}>
           {showCarouselZoom && (
             <div className="fa-stack fa-1x kgs-instance_carousel-zoom-content">
-              <img src={typeof this.state.carouselZoom.previewUrl === "string"?this.state.carouselZoom.previewUrl:this.state.carouselZoom.previewUrl.src} alt={this.state.carouselZoom.label?this.state.carouselZoom.label:""}/>
+              <img src={typeof this.state.carouselZoom.previewUrl === "string"?this.state.carouselZoom.previewUrl:this.state.carouselZoom.previewUrl.url} alt={this.state.carouselZoom.label?this.state.carouselZoom.label:""}/>
               {this.state.carouselZoom.label && (
                 <p className="kgs-instance_carousel-zoom-label" ref={ref=>this.carouselZoomLabelRef = ref}>{this.state.carouselZoom.label}</p>
               )}
@@ -170,7 +170,7 @@ const getPreviews = (data, mapping, idx=0) => {
     return previews;
   } else if (data && typeof data.staticImageUrl === "string") {
     return [{
-      staticImageUrl: data.staticImageUrl,
+      staticImageUrl: data.staticImageUrl  && (typeof data.staticImageUrl === "string"?data.staticImageUrl:data.staticImageUrl.url),
       previewUrl: data.previewUrl,
       label: data.value?data.value:null
     }];
@@ -205,8 +205,8 @@ const getPreviews = (data, mapping, idx=0) => {
     return [{
       staticImageUrl: dogs[idx % (dogs.length -1)],
       previewUrl: (Math.round(Math.random() * 10) % 2)?{
-        src: cats[idx % (cats.length -1)],
-        isDynamic: /^.+\.gif$/.test(cats[idx % (cats.length -1)])
+        url: cats[idx % (cats.length -1)],
+        isAnimated: /^.+\.gif$/.test(cats[idx % (cats.length -1)])
       }:undefined,
       label: data.value?data.value:null
     }];
