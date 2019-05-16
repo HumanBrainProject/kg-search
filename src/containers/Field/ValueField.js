@@ -14,48 +14,16 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import * as actions from "../../actions";
 import { termsOfUse } from "../../data/termsOfUse.js";
 import { Icon } from "../../components/Icon";
 import { Details } from "../../components/Details";
 import { Text } from "../../components/Text";
+import { CollapsibleText } from "../../components/CollapsibleText";
 import { Thumbnail } from "../../components/Thumbnail";
 import "./ValueField.css";
-
-class CollapsibleText extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      collapsed: true,
-    };
-    this.handleClick = this.handleClick.bind(this);
-  }
-  handleClick() {
-    this.setState(state => ({ collapsed: !state.collapsed }));
-  }
-
-  render() {
-    const {content, isMarkdown} = this.props;
-
-    if (!content) {
-      return null;
-    }
-
-    const className = `collapse ${this.state.collapsed?"":"in"}`;
-    return (
-      <span className="field-text collapsible">
-        <span className={className}>
-          <Text content={content} isMarkdown={isMarkdown} />
-        </span>
-        {this.state.collapsed && (
-          <button onClick={this.handleClick}>more...</button>
-        )}
-      </span>
-    );
-  }
-}
 
 const ReferenceComponent = ({text, reference, group, onClick}) => {
   if (!reference) {

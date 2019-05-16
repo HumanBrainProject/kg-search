@@ -86,37 +86,6 @@
     font-size:12px;
 }
 
-.field-value .field-text.collapsible {
-    display: inline-block;
-    position: relative;
-}
-
-.field-value .field-text.collapsible .collapse {
-    display: inline-block;
-    overflow: hidden;
-    transition: all 0.5s ease-in-out;
-    max-height: 220px;
-}
-
-.field-value .field-text.collapsible .collapse.in {
-    max-height: 10000px;
-}
-
-.field-value .field-text.collapsible button {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    text-decoration: none;
-    color: #08c;
-    box-shadow: none;    
-    transform: translateY(-5px);
-}
-
-.field-value .field-text.collapsible button:hover,
-.field-value .field-text.collapsible button:active {
-    color: #08c;
-}
-
 /**********************************************************************************************************************/
 
 [data-type] .kgs-field__type .field-value {
