@@ -51,7 +51,11 @@ object PreviewInstance {
 
   implicit val previewInstanceReads: Reads[PreviewInstance] = (
     (JsPath \ "id").read[String].map(ref => NexusInstanceReference.fromUrl(ref)) and
-    (JsPath \ "name").readNullable[String].map(_.getOrElse("")) and
+    (JsPath \ "name").readNullable[JsValue].map {
+      case Some(js) =>
+        if (js.asOpt[List[String]].isDefined) js.as[List[String]].head else js.as[String]
+      case None => ""
+    } and
     (JsPath \ UiConstants.DATATYPE).readNullable[JsValue].map {
       case Some(js) =>
         if (js.asOpt[List[String]].isDefined) js.as[List[String]].head else js.as[String]
