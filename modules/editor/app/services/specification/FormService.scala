@@ -83,7 +83,7 @@ object FormService {
       } else {
         val correctedObj = jsValue
           .as[JsObject] - "description" - "name" - "status" - "childrenStatus" - UiConstants.DATATYPE -
-        s"${EditorConstants.BASENAMESPACE}${EditorConstants.RELATIVEURL}" - UiConstants.LABEL
+        s"${EditorConstants.BASENAMESPACE}${EditorConstants.RELATIVEURL}" - UiConstants.LABEL - UiConstants.SCHEMA
         val res = correctedObj.value.map {
           case (k, v) => k -> removeKey(v)
         }
