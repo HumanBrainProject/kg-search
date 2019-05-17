@@ -14,10 +14,30 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
+import React, { Component } from "react";
 import "./ImagePopup.css";
 
-export class ImagePopup extends PureComponent {
+const getImage = url => {
+  return new Promise((resolve, reject) => {
+    if (typeof url !== "string") {
+      reject(url);
+    }
+    const img = new Image();
+    img.onload = () => {
+      resolve(url);
+    };
+    img.onerror = () => {
+      reject(url);
+    };
+    img.src = url;
+  });
+};
+
+export class ImagePopup extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { src: null, fetched: false, error: false };
+  }
   onClick = e => {
     const { onClick } = this.props;
     if (e.target === this.labelRef) {
@@ -26,17 +46,55 @@ export class ImagePopup extends PureComponent {
     }
     typeof onClick === "function" && onClick();
   };
+  async loadImage() {
+    if (typeof this.props.src === "string") {
+      if (this.props.src !== this.state.src) {
+        this.setState({ src: this.props.src, fetched: false, error: false });
+        try {
+          getImage(this.props.src);
+          this.setState({ fetched: true });
+        } catch (e) {
+          this.setState({ fetched: true, error: true });
+        }
+      }
+    } else if (this.state.fetched || this.state.src) {
+      this.setState({ src: null, fetched: false, error: false });
+    }
+  }
+  componentDidMount() {
+    this.loadImage();
+  }
+  componentDidUpdate() {
+    this.loadImage();
+  }
   render() {
     const { className, src, label } = this.props;
-    const show = typeof src === "string";
+    const show = typeof src === "string"; // && (this.state.src || !this.state.fetched);
     return (
       <div className={`kgs-image_popup ${show?"show":""} ${className?className:""}`} onClick={this.onClick}>
         {show && (
           <div className="fa-stack fa-1x kgs-image_popup-content">
-            <img src={src} alt={label?label:""}/>
-            {label && (
-              <p className="kgs-image_popup-label" ref={ref=>this.labelRef = ref}>{label}</p>
-            )}
+            {!this.state.fetched?
+              <div>
+                <span className="kgs-spinner">
+                  <div className="kgs-spinner-logo"></div>
+                </span>
+                <span className="kgs-spinner-label">{`loading image "${label}" ...`}</span>
+              </div>
+              :
+              this.state.error?
+                <div className="kgs-image_popup-error">
+                  <i className="fa fa-ban"></i>
+                  <span>{`failed to fetch image "${label}" ...`}</span>
+                </div>
+                :
+                <React.Fragment>
+                  <img src={this.state.src} alt={label?label:""}/>
+                  {label && (
+                    <p className="kgs-image_popup-label" ref={ref=>this.labelRef = ref}>{label}</p>
+                  )}
+                </React.Fragment>
+            }
             <i className="fa fa-close"></i>
           </div>
         )}

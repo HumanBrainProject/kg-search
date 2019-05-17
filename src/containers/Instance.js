@@ -133,7 +133,7 @@ const getPreviews = (data, mapping, idx=0) => {
       }))
       .forEach(({data, mapping}, idx) => previews.push(...getPreviews(data, mapping, idx)));
     return previews;
-  } else if (data && typeof data.staticImageUrl === "string") {
+  } else if (data && data.staticImageUrl && (typeof data.staticImageUrl === "string" || typeof data.staticImageUrl.url === "string")) {
     return [{
       staticImageUrl: data.staticImageUrl  && (typeof data.staticImageUrl === "string"?data.staticImageUrl:data.staticImageUrl.url),
       previewUrl: data.previewUrl,
