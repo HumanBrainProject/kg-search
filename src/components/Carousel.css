@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-.kgs-Carousel {
+.kgs-carousel {
     z-index: 1200;
     display: block;
     position: fixed;
@@ -28,7 +28,7 @@
     background-color: rgba(0,0,0,0.5);
 }
 
-.kgs-Carousel__panel {
+.kgs-carousel__panel {
     display: block;
     position: relative;
     width: calc(100% - 20px);
@@ -39,20 +39,20 @@
 }
 
 @media (min-width: 992px) {
-    .kgs-Carousel__panel {
+    .kgs-carousel__panel {
         width: 992px;
         margin-left: calc(50% - 496px);
     }
 }
 
 @media (min-width: 1400px) {
-    .kgs-Carousel__panel {
+    .kgs-carousel__panel {
         width: 1200px;
         margin-left: calc(50% - 600px);
     }
 }
 
-.kgs-Carousel__item {
+.kgs-carousel__item {
     z-index: 1200;
     display: block;
     position: absolute;
@@ -66,92 +66,92 @@
     transform: translate3D(0,0,0);
 }
 
-.kgs-Carousel .kgs-Carousel__item.position0 {
+.kgs-carousel .kgs-carousel__item.position0 {
     left: 0;
     display: block;
 }
 
-.kgs-Carousel .kgs-Carousel__item.position1 {
+.kgs-carousel .kgs-carousel__item.position1 {
     left: 105%;
     display: block;
 }
 
-.kgs-Carousel .kgs-Carousel__item.position2 {
+.kgs-carousel .kgs-carousel__item.position2 {
     left: 105%;
     display: none;
 }
 
-.kgs-Carousel .kgs-Carousel__item.position3 {
+.kgs-carousel .kgs-carousel__item.position3 {
     left: -105%;
     display: none;
 }
 
-.kgs-Carousel .kgs-Carousel__item.position4 {
+.kgs-carousel .kgs-carousel__item.position4 {
     left: -105%;
     display: block;
 }
 
 @media (min-width: 992px) {
-    .kgs-Carousel .kgs-Carousel__item.position1,
-    .kgs-Carousel .kgs-Carousel__item.position2 {
+    .kgs-carousel .kgs-carousel__item.position1,
+    .kgs-carousel .kgs-carousel__item.position2 {
         left: 205%;
     }
     
-    .kgs-Carousel .kgs-Carousel__item.position3,
-    .kgs-Carousel .kgs-Carousel__item.position4 {
+    .kgs-carousel .kgs-carousel__item.position3,
+    .kgs-carousel .kgs-carousel__item.position4 {
         left: -205%;
     }
 }
 
 @media (min-width: 1984px) {
-    .kgs-Carousel .kgs-Carousel__item.position1,
-    .kgs-Carousel .kgs-Carousel__item.position2 {
+    .kgs-carousel .kgs-carousel__item.position1,
+    .kgs-carousel .kgs-carousel__item.position2 {
         left: 305%;
     }
     
-    .kgs-Carousel .kgs-Carousel__item.position3,
-    .kgs-Carousel .kgs-Carousel__item.position4 {
+    .kgs-carousel .kgs-carousel__item.position3,
+    .kgs-carousel .kgs-carousel__item.position4 {
         left: -305%;
     }
 }
 
 @media (min-width: 2976px) {
-    .kgs-Carousel .kgs-Carousel__item.position1,
-    .kgs-Carousel .kgs-Carousel__item.position2 {
+    .kgs-carousel .kgs-carousel__item.position1,
+    .kgs-carousel .kgs-carousel__item.position2 {
         left: 405%;
     }
     
-    .kgs-Carousel .kgs-Carousel__item.position3,
-    .kgs-Carousel .kgs-Carousel__item.position4 {
+    .kgs-carousel .kgs-carousel__item.position3,
+    .kgs-carousel .kgs-carousel__item.position4 {
         left: -405%;
     }
 }
 
 @media (min-width: 3968px) {
-    .kgs-Carousel .kgs-Carousel__item.position1,
-    .kgs-Carousel .kgs-Carousel__item.position2 {
+    .kgs-carousel .kgs-carousel__item.position1,
+    .kgs-carousel .kgs-carousel__item.position2 {
         left: 505%;
     }
     
-    .kgs-Carousel .kgs-Carousel__item.position3,
-    .kgs-Carousel .kgs-Carousel__item.position4 {
+    .kgs-carousel .kgs-carousel__item.position3,
+    .kgs-carousel .kgs-carousel__item.position4 {
         left: -505%;
     }
 }
 
 @media (min-width: 4960px) {
-    .kgs-Carousel .kgs-Carousel__item.position1,
-    .kgs-Carousel .kgs-Carousel__item.position2 {
+    .kgs-carousel .kgs-carousel__item.position1,
+    .kgs-carousel .kgs-carousel__item.position2 {
         left: 605%;
     }
     
-    .kgs-Carousel .kgs-Carousel__item.position3,
-    .kgs-Carousel .kgs-Carousel__item.position4 {
+    .kgs-carousel .kgs-carousel__item.position3,
+    .kgs-carousel .kgs-carousel__item.position4 {
         left: -605%;
     }
 }
 
-.kgs-Carousel__content {
+.kgs-carousel__content {
     position: relative;
     width: 100%;
     height: 100%;
@@ -159,7 +159,7 @@
     border-radius: 3px;
 }
 
-.kgs-Carousel__body {
+.kgs-carousel__body {
     position: relative;
     width: 100%;
     height: calc(100% - 50px);
@@ -167,34 +167,34 @@
     overflow-y: auto;
 }
 
-.kgs-Carousel__body .kgs-notice .kgs-notice-panel {
+.kgs-carousel__body .kgs-notice .kgs-notice-panel {
     border-radius: 10px;
     margin-bottom: 15px;
 }
 
 /*
-.kgs-Carousel .kgs-Carousel__item.position0 .kgs-Carousel__body {
+.kgs-carousel .kgs-carousel__item.position0 .kgs-carousel__body {
     background-color: red;
 }
 
-.kgs-Carousel .kgs-Carousel__item.position1 .kgs-Carousel__body {
+.kgs-carousel .kgs-carousel__item.position1 .kgs-carousel__body {
     background-color: green;
 }
 
-.kgs-Carousel .kgs-Carousel__item.position2 .kgs-Carousel__body {
+.kgs-carousel .kgs-carousel__item.position2 .kgs-carousel__body {
     background-color: blue;
 }
 
-.kgs-Carousel .kgs-Carousel__item.position3 .kgs-Carousel__body {
+.kgs-carousel .kgs-carousel__item.position3 .kgs-carousel__body {
     background-color: yellow;
 }
 
-.kgs-Carousel .kgs-Carousel__item.position4 .kgs-Carousel__body {
+.kgs-carousel .kgs-carousel__item.position4 .kgs-carousel__body {
     background-color: maroon;
 }
 */
 
-.kgs-Carousel__header {
+.kgs-carousel__header {
     display: flex;
     position: relative;
     width: 100%;
@@ -208,24 +208,24 @@
 
 @media screen and (min-width:0\0) {  
     /* IE9 and IE10 rule sets go here */  
-    .kgs-Carousel__header {
+    .kgs-carousel__header {
         top: 10px;
     }
 }
 
 @media (min-width: 992px) {
-    .kgs-Carousel__header {
+    .kgs-carousel__header {
         width: 992px;
     }
 }
 
 @media (min-width: 1400px) {
-    .kgs-Carousel__header {
+    .kgs-carousel__header {
         width: 1200px;
     }
 }
 
-.kgs-Carousel__previous-button {
+.kgs-carousel__previous-button {
     height: 40px;
     margin: 5px 0 0 5px;
     padding: 7px 18px 7px 8px;
@@ -239,23 +239,23 @@
 
 /* small hack to fix adjustment for ie 11 */
 @media all and (-ms-high-contrast:none) {
-    .kgs-Carousel__close-button { margin-top: -5px; } /* IE10 */
-    *::-ms-backdrop, .kgs-Carousel__close-button { margin-top: -5px; } /* IE11 */
+    .kgs-carousel__close-button { margin-top: -5px; } /* IE10 */
+    *::-ms-backdrop, .kgs-carousel__close-button { margin-top: -5px; } /* IE11 */
 }
 
-.kgs-Carousel__previous-button:hover {
+.kgs-carousel__previous-button:hover {
     -webkit-box-shadow: 3px 3px 6px #cbc9c9;
     box-shadow: 3px 3px 6px #cbc9c9;
     color: #1a1a1a
 }
 
-.kgs-Carousel__navigation {
+.kgs-carousel__navigation {
     flex: 1;
     margin: 0 10px;
     text-align: right;
 }
 
-.kgs-Carousel__close-button {
+.kgs-carousel__close-button {
     width: 40px;
     height: 40px;
     margin: 5px 7px 0 0;
@@ -270,18 +270,18 @@
 
 /* small hack to fix adjustment for ie 11 */
 @media all and (-ms-high-contrast:none) {
-    .kgs-Carousel__close-button { margin-top: -8px; } /* IE10 */
-    *::-ms-backdrop, .kgs-Carousel__close-button { margin-top: -8px; } /* IE11 */
+    .kgs-carousel__close-button { margin-top: -8px; } /* IE10 */
+    *::-ms-backdrop, .kgs-carousel__close-button { margin-top: -8px; } /* IE11 */
 }
 
-.kgs-Carousel__close-button:hover {
+.kgs-carousel__close-button:hover {
     -webkit-box-shadow: 3px 3px 6px #cbc9c9;
     box-shadow: 3px 3px 6px #cbc9c9;
     color: rgb(51, 51, 51);
 }
 
 
-.kgs-Carousel__close-button::after {
+.kgs-carousel__close-button::after {
     content: "esc";
     position: absolute;
     transform: translate(-16px, 14px);

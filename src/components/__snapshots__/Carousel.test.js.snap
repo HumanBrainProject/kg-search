@@ -2,40 +2,40 @@
 
 exports[`Carousel component renders initially 1`] = `
 <div
-  className="kgs-Carousel className"
+  className="kgs-carousel className"
 >
   <div
-    className="kgs-Carousel__panel"
+    className="kgs-carousel__panel"
   >
     <div
-      className="kgs-Carousel__item position4"
+      className="kgs-carousel__item position4"
     >
       <div
-        className="kgs-Carousel__content"
+        className="kgs-carousel__content"
       >
         <div
-          className="kgs-Carousel__header"
+          className="kgs-carousel__header"
         >
           <div
-            className="kgs-Carousel__navigation"
+            className="kgs-carousel__navigation"
           />
         </div>
         <div
-          className="kgs-Carousel__body"
+          className="kgs-carousel__body"
         />
       </div>
     </div>
     <div
-      className="kgs-Carousel__item position0"
+      className="kgs-carousel__item position0"
     >
       <div
-        className="kgs-Carousel__content"
+        className="kgs-carousel__content"
       >
         <div
-          className="kgs-Carousel__header"
+          className="kgs-carousel__header"
         >
           <button
-            className="kgs-Carousel__previous-button"
+            className="kgs-carousel__previous-button"
             onClick={[Function]}
           >
             <i
@@ -44,10 +44,10 @@ exports[`Carousel component renders initially 1`] = `
              Previous
           </button>
           <div
-            className="kgs-Carousel__navigation"
+            className="kgs-carousel__navigation"
           />
           <button
-            className="kgs-Carousel__close-button"
+            className="kgs-carousel__close-button"
             onClick={[Function]}
           >
             <i
@@ -56,61 +56,61 @@ exports[`Carousel component renders initially 1`] = `
           </button>
         </div>
         <div
-          className="kgs-Carousel__body"
+          className="kgs-carousel__body"
         />
       </div>
     </div>
     <div
-      className="kgs-Carousel__item position1"
+      className="kgs-carousel__item position1"
     >
       <div
-        className="kgs-Carousel__content"
+        className="kgs-carousel__content"
       >
         <div
-          className="kgs-Carousel__header"
+          className="kgs-carousel__header"
         >
           <div
-            className="kgs-Carousel__navigation"
+            className="kgs-carousel__navigation"
           />
         </div>
         <div
-          className="kgs-Carousel__body"
+          className="kgs-carousel__body"
         />
       </div>
     </div>
     <div
-      className="kgs-Carousel__item position2"
+      className="kgs-carousel__item position2"
     >
       <div
-        className="kgs-Carousel__content"
+        className="kgs-carousel__content"
       >
         <div
-          className="kgs-Carousel__header"
+          className="kgs-carousel__header"
         >
           <div
-            className="kgs-Carousel__navigation"
+            className="kgs-carousel__navigation"
           />
         </div>
         <div
-          className="kgs-Carousel__body"
+          className="kgs-carousel__body"
         />
       </div>
     </div>
     <div
-      className="kgs-Carousel__item position3"
+      className="kgs-carousel__item position3"
     >
       <div
-        className="kgs-Carousel__content"
+        className="kgs-carousel__content"
       >
         <div
-          className="kgs-Carousel__header"
+          className="kgs-carousel__header"
         >
           <div
-            className="kgs-Carousel__navigation"
+            className="kgs-carousel__navigation"
           />
         </div>
         <div
-          className="kgs-Carousel__body"
+          className="kgs-carousel__body"
         />
       </div>
     </div>

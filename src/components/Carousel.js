@@ -26,26 +26,26 @@ const CarouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, n
   const CookielawBanner = cookielawBanner;
   const NoticeComponent = noticeComponent;
   return (
-    <div className={`kgs-Carousel__item position${item.position}`} >
-      <div className="kgs-Carousel__content">
-        <div className="kgs-Carousel__header">
+    <div className={`kgs-carousel__item position${item.position}`} >
+      <div className="kgs-carousel__content">
+        <div className="kgs-carousel__header">
           {item.isActive && showPrevious && (
-            <button className="kgs-Carousel__previous-button" onClick={onPrevious}>
+            <button className="kgs-carousel__previous-button" onClick={onPrevious}>
               <i className="fa fa-chevron-left" /> Previous
             </button>
           )}
-          <div className="kgs-Carousel__navigation">
+          <div className="kgs-carousel__navigation">
             {item.isActive && item.data && NavigationComponent && (
               <NavigationComponent/>
             )}
           </div>
           {item.isActive && !isPreviewInstance && (
-            <button className="kgs-Carousel__close-button" onClick={onClose}>
+            <button className="kgs-carousel__close-button" onClick={onClose}>
               <i className="fa fa-close" />
             </button>
           )}
         </div>
-        <div className="kgs-Carousel__body">
+        <div className="kgs-carousel__body">
           <CookielawBanner />
           <NoticeComponent />
           {item.isActive && item.data && ItemComponent && (
@@ -110,11 +110,11 @@ export class Carousel extends PureComponent {
     });
     const showPrevious = data.length > 1;
 
-    const classNames = ["kgs-Carousel", className].join(" ");
+    const classNames = ["kgs-carousel", className].join(" ");
 
     return(
       <div className={classNames}>
-        <div className="kgs-Carousel__panel">
+        <div className="kgs-carousel__panel">
           {items.map(item => (
             <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} cookielawBanner={cookielawBanner} noticeComponent={noticeComponent} isPreviewInstance={isPreviewInstance} />
           ))}

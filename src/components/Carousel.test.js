@@ -48,7 +48,7 @@ test('Carousel test number of items', () => {
     const component = render(
         <Carousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => null} navigationComponent={() => null} cookielawBanner={() => null} noticeComponent={() => null} />
     );
-    expect(component.find(".kgs-Carousel__item").length).toBe(5);
+    expect(component.find(".kgs-carousel__item").length).toBe(5);
 });
 
 test('Carousel test items', () => {
@@ -69,12 +69,12 @@ test('Carousel test navigation buttons', () => {
     const component = mount(
         <Carousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={previousFn} onClose={closeFn} itemComponent={() => null} navigationComponent={() => null} cookielawBanner={() => null} noticeComponent={() => null} />
     );
-    expect(component.find(".kgs-Carousel__previous-button").length).toBe(1);
-    expect(component.find(".kgs-Carousel__close-button").length).toBe(1);
-    component.find('.kgs-Carousel__previous-button').simulate('click');
+    expect(component.find(".kgs-carousel__previous-button").length).toBe(1);
+    expect(component.find(".kgs-carousel__close-button").length).toBe(1);
+    component.find('.kgs-carousel__previous-button').simulate('click');
     expect(previousFn.mock.calls.length).toBe(1);
     expect(closeFn.mock.calls.length).toBe(0);
-    component.find('.kgs-Carousel__close-button').simulate('click');
+    component.find('.kgs-carousel__close-button').simulate('click');
     expect(previousFn.mock.calls.length).toBe(1);
     expect(closeFn.mock.calls.length).toBe(1);
 });
