@@ -51,7 +51,7 @@ export class ImagePopup extends Component {
       if (this.props.src !== this.state.src) {
         this.setState({ src: this.props.src, fetched: false, error: false });
         try {
-          getImage(this.props.src);
+          await getImage(this.props.src);
           this.setState({ fetched: true });
         } catch (e) {
           this.setState({ fetched: true, error: true });
