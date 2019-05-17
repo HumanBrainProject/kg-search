@@ -16,9 +16,9 @@
 
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import API from "../services/API";
+import { ImagePreviews } from "./ImagePreviews";
+import { ImagePopup } from "../components/ImagePopup";
 import { Field } from "./Field";
 import { FieldsPanel } from "./FieldsPanel";
 import { FieldsTabs } from "./FieldsTabs";
@@ -28,29 +28,20 @@ class InstanceBase extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      carouselZoom: null
+      preview: null
     };
   }
-  handleZoomCarousel = index => {
-    const { previews } = this.props;
-    if (!Number.isNaN(Number(index)) && previews && previews.length && index < previews.length) {
-      this.setState({carouselZoom: previews[index]});
-    }
+  handleShowPreview = preview => {
+    this.setState({preview: preview});
   };
-  handleCloseCarouselZoom = e => {
-    if (e.target === this.carouselZoomLabelRef) {
-      e.preventDefault();
-      return;
-    }
-    this.setState({carouselZoom: null});
+  handleClosePreview = () => {
+    this.setState({preview: null});
   }
   componentWillUnmount() {
-    this.setState({carouselZoom: null});
+    this.setState({preview: null});
   }
   render() {
     const {type, hasNoData, hasUnknownData, header, previews, main, summary, groups} = this.props;
-
-    const showCarouselZoom = previews && !!previews.length && this.state.carouselZoom && this.state.carouselZoom.previewUrl && (typeof this.state.carouselZoom.previewUrl === "string" || typeof this.state.carouselZoom.previewUrl.url === "string");
 
     if (hasNoData) {
       return (
@@ -67,7 +58,7 @@ class InstanceBase extends PureComponent {
       );
     }
     return (
-      <div className={`kgs-instance kgs-instance__grid ${(previews && previews.length)?"kgs-instance__with-carousel":""}`} data-type={type}>
+      <div className={`kgs-instance kgs-instance__grid ${(previews && previews.length)?"kgs-instance__with-previews":""}`} data-type={type}>
         <div className="kgs-instance__header">
           <h3 className={`kgs-instance__group ${header.group && header.group !== API.defaultGroup?"show":""}`}>Group: <strong>{header.group}</strong></h3>
           <div>
@@ -78,37 +69,11 @@ class InstanceBase extends PureComponent {
             <Field {...header.title} />
           </div>
         </div>
-        {previews && !!previews.length && (
-          <div className="kgs-instance__carousel">
-            <Carousel width="300px" autoPlay interval={3000} infiniteLoop={true} showThumbs={true} showIndicators={false} stopOnHover={true} showStatus={false} onClickItem={this.handleZoomCarousel} >
-              {previews.map(({staticImageUrl, previewUrl, label}) => (
-                <div key={staticImageUrl}>
-                  <img src={staticImageUrl} alt={label?label:""}/>
-                  {label && (
-                    <p className="legend">{label}</p>
-                  )}
-                  {previewUrl && (typeof previewUrl === "string" || typeof previewUrl.url === "string") && (
-                    <div className={`kgs-instance_carousel-zoom-button ${previewUrl.isAnimated?"is-animated":""}`}><i className={`fa fa-4x ${previewUrl.isAnimated?"fa-play":"fa-search"}`}></i></div>
-                  )}
-                </div>
-              ))}
-            </Carousel>
-          </div>
-        )}
+        <ImagePreviews className="kgs-instance__previews" width="300px" images={previews} onClick={this.handleShowPreview} />
         <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
         <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
         <FieldsTabs className="kgs-instance__groups" fields={groups} />
-        <div className={`kgs-instance_carousel-zoom ${showCarouselZoom?"show":""}`} onClick={this.handleCloseCarouselZoom}>
-          {showCarouselZoom && (
-            <div className="fa-stack fa-1x kgs-instance_carousel-zoom-content">
-              <img src={typeof this.state.carouselZoom.previewUrl === "string"?this.state.carouselZoom.previewUrl:this.state.carouselZoom.previewUrl.url} alt={this.state.carouselZoom.label?this.state.carouselZoom.label:""}/>
-              {this.state.carouselZoom.label && (
-                <p className="kgs-instance_carousel-zoom-label" ref={ref=>this.carouselZoomLabelRef = ref}>{this.state.carouselZoom.label}</p>
-              )}
-              <i className="fa fa-close"></i>
-            </div>
-          )}
-        </div>
+        <ImagePopup className="kgs-instance__image_popup" src={this.state.preview && this.state.preview.previewUrl && (typeof this.state.preview.previewUrl === "string"?this.state.preview.previewUrl:this.state.preview.previewUrl.url)} label={(this.state.preview && this.state.preview.label)?this.state.preview.label:""} onClick={this.handleClosePreview} />
       </div>
     );
   }
