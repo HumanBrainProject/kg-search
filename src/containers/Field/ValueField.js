@@ -59,6 +59,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     const isAFileLink = typeof data.url === "string" && /^https?:\/\/.+\.cscs\.ch\/.+$/.test(data.url);
     const hasAnyLink = hasReference || hasMailToLink || hasLink;
     const isIcon = mapping.type === "icon" && ((data.image && data.image.url) || mapping.icon);
+    const isLinkWithIcon = mapping.linkIcon && data.url ? true:false;
     const isTag = !hasAnyLink && !isIcon && !!mapping.tagIcon;
     const isMarkdown = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && !!mapping.markdown;
     const isCollapsible = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && mapping.collapsible && typeof data.value === "string" && data.value.length >= 1600;
@@ -81,12 +82,13 @@ const ValueFieldBase = (renderUserInteractions = true) => {
         group: group,
         text: value?value:data.reference
       };
-    } else if (hasLink) {
+    } else if (hasLink || isLinkWithIcon) {
       ValueComponent = Link;
       valueProps = {
         url: data.url,
         label: value,
-        isMailToLink: hasMailToLink
+        isMailToLink: hasMailToLink,
+        icon: mapping.linkIcon
       };
     } else if (isIcon) {
       ValueComponent = Icon;
