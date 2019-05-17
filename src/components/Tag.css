@@ -14,20 +14,20 @@
 *   limitations under the License.
 */
 
-import React from "react";
-import "./Tag.css";
+.field-value__tag {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #dddee0;
+  padding: 6px 10px 6px 10px;
+  margin:0 8px 8px 0;
+}
 
-export const Tag = ({icon, value}) => {
-  if (!icon && !value) {
-    return null;
-  }
-
-  return (
-    <span className="field-value__tag">
-      <div dangerouslySetInnerHTML={{__html:icon}} />
-      <div>{value}</div>
-    </span>
-  );
-};
-
-export default Tag;
+.field-value__tag div svg {
+  display: inline-flex;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}

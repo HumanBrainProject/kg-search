@@ -95,24 +95,6 @@
     font-size: 18px;
 }
 
-.field-value__tag{
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: flex-start;
-    background-color: #dddee0;
-    padding: 6px 10px 6px 10px;
-    margin:0 8px 8px 0;
-}
-
-.field-value__tag div svg {
-    display: inline-flex;
-    vertical-align: middle;
-    width: 20px;
-    height: 20px;
-    margin-right: 5px;
-}
-
 .kgs-field.kgs-field__icon {
     width: 35px;
     height: 35px;
