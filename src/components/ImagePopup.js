@@ -69,7 +69,7 @@ export class ImagePopup extends Component {
   }
   render() {
     const { className, src, label } = this.props;
-    const show = typeof src === "string"; // && (this.state.src || !this.state.fetched);
+    const show = typeof src === "string";
     return (
       <div className={`kgs-image_popup ${show?"show":""} ${className?className:""}`} onClick={this.onClick}>
         {show && (

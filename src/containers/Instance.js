@@ -114,7 +114,8 @@ const getFields = (group, type, data, mapping, filter) => {
   return fields;
 };
 
-const getPreviews = (data, mapping, idx=0) => {
+//const getPreviews = (data, mapping, idx=0) => {
+const getPreviews = (data, mapping) => {
   if (data instanceof Array) {
     const previews = [];
     data.forEach((elt, idx) => previews.push(...getPreviews(elt, mapping, idx)));
@@ -139,6 +140,7 @@ const getPreviews = (data, mapping, idx=0) => {
       previewUrl: data.previewUrl,
       label: data.value?data.value:null
     }];
+  /*
   } else if (data && typeof data.url === "string" && /^https?:\/\/.+\.cscs\.ch\/.+$/.test(data.url)) {
     const cats = [
       "https://cdn2.thecatapi.com/images/2pb.gif",
@@ -175,6 +177,7 @@ const getPreviews = (data, mapping, idx=0) => {
       }:undefined,
       label: data.value?data.value:null
     }];
+  */
   }
   return [];
 };
