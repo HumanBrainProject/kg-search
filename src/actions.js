@@ -245,3 +245,11 @@ export const logout = () => {
     type: types.LOGOUT
   };
 };
+
+export const showImage = (url, label) => {
+  return {
+    type: types.SHOW_IMAGE,
+    url: url,
+    label: label
+  };
+};

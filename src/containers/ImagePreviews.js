@@ -15,6 +15,7 @@
 */
 
 import { connect } from "react-redux";
+import * as actions from "../actions";
 import { ImageCarousel } from "../components/ImageCarousel";
 
 export const ImagePreviews = connect(
@@ -23,7 +24,7 @@ export const ImagePreviews = connect(
       .map(image => ({
         src: image && image.staticImageUrl && (typeof image.staticImageUrl === "string"?image.staticImageUrl:image.staticImageUrl.url),
         label: image && image.label,
-        target: image,
+        target: image && image.previewUrl && (typeof image.previewUrl === "string"?image.previewUrl:image.previewUrl.url),
         hasTarget: !!image && !!image.previewUrl && (typeof image.previewUrl === "string" || typeof image.previewUrl.url === "string"),
         isTargetAnimated: !!image && !!image.previewUrl && !!image.previewUrl.isAnimated
       }))
@@ -31,10 +32,12 @@ export const ImagePreviews = connect(
     return {
       className: props.className,
       width: props.width,
-      images: images,
-      onClick: image => typeof props.onClick === "function" && props.onClick(image.target)
+      images: images
     };
-  }
+  },
+  dispatch => ({
+    onClick: image => image && image.target && typeof image.target === "string" && dispatch(actions.showImage(image.target, image.label))
+  })
 )(ImageCarousel);
 
 export default ImagePreviews;

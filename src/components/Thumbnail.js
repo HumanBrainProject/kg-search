@@ -91,13 +91,13 @@ export class Thumbnail extends PureComponent {
   }
 
   render() {
-    const {thumbnailUrl, showPreview, previewUrl, isAnimated, alt} = this.props;
+    const {url, alt, isAnimated, onClick} = this.props;
 
-    if (!showPreview || typeof previewUrl !== "string") {
-      if (typeof thumbnailUrl === "string") {
+    if (typeof onClick !== "function") {
+      if (typeof url === "string") {
         return (
           <span className="kgs-thumbnail--panel">
-            <div><img src={thumbnailUrl} alt={alt} /></div>
+            <div><img src={url} alt={alt} /></div>
           </span>
         );
       }
@@ -110,11 +110,11 @@ export class Thumbnail extends PureComponent {
 
     return (
       <div className="fa-stack fa-1x kgs-thumbnail--container">
-        <button className="kgs-thumbnail--button" onClick={this.handleToggle} >
-          {typeof thumbnailUrl === "string"?
+        <button className="kgs-thumbnail--button" onClick={onClick} >
+          {typeof url === "string"?
             <span className="kgs-thumbnail--panel">
               <div className="kgs-thumbnail--image">
-                <img src={thumbnailUrl} alt={alt} />
+                <img src={url} alt={alt} />
                 {isAnimated?
                   <i className="fa fa-play kgs-thumbnail--zoom-dynamic"></i>
                   :
@@ -133,33 +133,6 @@ export class Thumbnail extends PureComponent {
             </span>
           }
         </button>
-        {this.state.show && (
-          <div className="kgs-thumbnail--preview" ref={ref=>this.wrapperRef = ref}>
-            {!this.state.fetched?
-              <div className="kgs-thumbnail--preview-fetching">
-                <span className="kgs-spinner">
-                  <div className="kgs-spinner-logo"></div>
-                </span>
-                <span className="kgs-spinner-label">{alt?`loading image "${alt}" ...`:"loading image..."}</span>
-              </div>
-              :
-              this.state.error?
-                <div className="kgs-thumbnail--preview-error">
-                  <i className="fa fa-ban"></i>
-                  <span>{alt?`failed to fetch image "${alt}" ...`:"failed to fetch image..."}</span>
-                </div>
-                :
-                <React.Fragment>
-                  <img src={this.state.src} alt={alt?alt:""} />
-                  {alt && (
-                    <p className="kgs-thumbnail--preview-label">{alt}</p>
-                  )}
-                </React.Fragment>
-            }
-            <i className="fa fa-close kgs-thumbnail--preview-close-btn" onClick={this.handleToggle}></i>
-            <div className="kgs-thumbnail--preview-arrow"></div>
-          </div>
-        )}
       </div>
     );
   }

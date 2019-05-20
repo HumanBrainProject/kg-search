@@ -22,7 +22,7 @@ import { Text } from "../../components/Text";
 import { CollapsibleText } from "../../components/CollapsibleText";
 import { Link } from "../../components/Link";
 import { Tag } from "../../components/Tag";
-import { Thumbnail } from "../../components/Thumbnail";
+import { Thumbnail } from "./Thumbnail";
 import { Reference } from "./Reference";
 import "./ValueField.css";
 
