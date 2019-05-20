@@ -33,6 +33,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
       return null;
     }
 
+    /*
     if (!data.previewUrl && Math.round(Math.random() * 10) % 2 === 0) {
       if (Math.round(Math.random() * 10) % 2 === 0) {
         data.previewUrl = {
@@ -52,6 +53,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
         isAnimated: false
       };
     }
+    */
 
     const hasReference = !!renderUserInteractions && !!data.reference;
     const hasLink =  !!renderUserInteractions && !!data.url;
