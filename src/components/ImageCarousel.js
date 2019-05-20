@@ -36,7 +36,7 @@ export class ImageCarousel extends PureComponent {
             <div key={src}>
               <img src={src} alt={label?label:""}/>
               {label && (
-                <p className="legend">{label}</p>
+                <p className="legend" ref={ref=>this.labelRef = ref}>{label}</p>
               )}
               {typeof onClick === "function" && hasTarget && (
                 <div className={`kgs-image_carousel-icon ${isTargetAnimated?"is-animated":""}`}><i className={`fa fa-4x ${isTargetAnimated?"fa-play":"fa-search"}`}></i></div>

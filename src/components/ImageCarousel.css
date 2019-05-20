@@ -23,6 +23,10 @@
   margin-bottom: 0;
 }
 
+.kgs-image_carousel .carousel .slide  {
+    cursor: pointer;
+}
+  
 .kgs-image_carousel .carousel .slide .legend {
   bottom: 0; 
   width: auto;
@@ -33,6 +37,14 @@
   word-break: normal;
   white-space: pre-wrap;
   text-overflow: ellipsis;
+  -o-transition: all .35s ease-in-out;
+  -webkit-transition: all .35s ease-in-out;
+  transition: all .35s ease-in-out;
+  cursor: pointer;
+}
+
+.kgs-image_carousel .carousel:hover .slide .legend {
+    background-color: rgba(51, 51, 51, 0.85);
 }
 
 .kgs-image_carousel .carousel .slide .kgs-image_carousel-icon {

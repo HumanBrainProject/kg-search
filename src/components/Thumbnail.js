@@ -40,22 +40,25 @@ export class Thumbnail extends PureComponent {
   }
 
   clickOutHandler = e => {
-    if(!this.wrapperRef || !this.wrapperRef.contains(e.target)){
+    if (this.wrapperRef  && this.wrapperRef.contains(e.target)) {
+      e && e.preventDefault();
+    } else {
       this.unlistenClickOutHandler();
       this.setState({previewUrl: null});
     }
   };
 
   listenClickOutHandler(){
-    window.addEventListener("mouseup", this.clickOutHandler, false);
-    window.addEventListener("touchend", this.clickOutHandler, false);
-    window.addEventListener("keyup", this.clickOutHandler, false);
+    this.clickOutHandlerRef = this.clickOutHandler.bind(this);
+    window.addEventListener("mouseup", this.clickOutHandlerRef, false);
+    window.addEventListener("touchend", this.clickOutHandlerRef, false);
+    window.addEventListener("keyup", this.clickOutHandlerRef, false);
   }
 
   unlistenClickOutHandler(){
-    window.removeEventListener("mouseup", this.clickOutHandler, false);
-    window.removeEventListener("touchend", this.clickOutHandler, false);
-    window.removeEventListener("keyup", this.clickOutHandler, false);
+    window.removeEventListener("mouseup", this.clickOutHandlerRef, false);
+    window.removeEventListener("touchend", this.clickOutHandlerRef, false);
+    window.removeEventListener("keyup", this.clickOutHandlerRef, false);
   }
 
   componentWillUnmount(){
@@ -81,7 +84,7 @@ export class Thumbnail extends PureComponent {
     }
 
     return (
-      <div className="fa-stack fa-1x kgs-thumbnail--container" ref={ref=>this.wrapperRef = ref}>
+      <div className="fa-stack fa-1x kgs-thumbnail--container">
         <button className="kgs-thumbnail--button" onClick={this.handleToggle.bind(this)} >
           {typeof thumbnailUrl === "string"?
             <span className="kgs-thumbnail--panel">
@@ -106,9 +109,13 @@ export class Thumbnail extends PureComponent {
           }
         </button>
         {!!this.state.previewUrl && (
-          <div className="fa-stack fa-1x kgs-thumbnail--preview" onClick={this.handleToggle.bind(this)}>
+          <div className="kgs-thumbnail--preview" ref={ref=>this.wrapperRef = ref}>
             <img src={this.state.previewUrl} alt={alt} />
-            <i className="fa fa-close"></i>
+            {alt && (
+              <p className="kgs-thumbnail--preview-label">{alt}</p>
+            )}
+            <i className="fa fa-close" onClick={this.handleToggle.bind(this)}></i>
+            <div className="kgs-thumbnail--preview-arrow"></div>
           </div>
         )}
       </div>

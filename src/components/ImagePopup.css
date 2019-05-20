@@ -48,13 +48,12 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: white;
-  cursor: pointer;
 }
 
 .kgs-image_popup-content .kgs-image_popup-label {
-  -webkit-transition: all .5s ease-in-out;
-  -o-transition: all .5s ease-in-out;
-  transition: all .5s ease-in-out;
+  -o-transition: all .35s ease-in-out;
+  -webkit-transition: all .35s ease-in-out;
+  transition: all .35s ease-in-out;
   position: absolute;
   bottom: 20px;
   left: 50%;
@@ -67,19 +66,16 @@
   font-size: 12px;
   text-align: center;
   opacity: .25;
-  -webkit-transition: opacity .35s ease-in-out;
-  -o-transition: opacity .35s ease-in-out;
-  transition: opacity .35s ease-in-out;
   line-height: normal;
   overflow-wrap: break-word;
   word-break: normal;
   white-space: pre-wrap;
   transform: translateX(-50%);
   text-overflow: ellipsis;
-  cursor: text;
 }
 
 .kgs-image_popup-content:hover .kgs-image_popup-label {
+  background-color: rgba(51, 51, 51, 0.85);
   opacity: 1;
 }
 

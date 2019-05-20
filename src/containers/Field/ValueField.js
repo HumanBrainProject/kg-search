@@ -120,7 +120,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     return (
       <div className="field-value">
         {isAFileLink && (
-          <Thumbnail showPreview={showPreview} thumbnailUrl={data.thumbnailUrl && (typeof data.thumbnailUrl === "string"?data.thumbnailUrl:data.thumbnailUrl.url)} previewUrl={data.previewUrl && (typeof data.previewUrl === "string"?data.previewUrl:data.previewUrl.url)} isAnimated={data.previewUrl && data.previewUrl.isAnimated} alt={data.url} />
+          <Thumbnail showPreview={showPreview} thumbnailUrl={data.thumbnailUrl && (typeof data.thumbnailUrl === "string"?data.thumbnailUrl:data.thumbnailUrl.url)} previewUrl={data.previewUrl && (typeof data.previewUrl === "string"?data.previewUrl:data.previewUrl.url)} isAnimated={data.previewUrl && data.previewUrl.isAnimated} alt={typeof data.value === "string"?data.value:""} />
         )}
         <ValueComponent {...valueProps} />
         {!!mapping.termsOfUse && (

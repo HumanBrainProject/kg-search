@@ -39,12 +39,12 @@ export class ImagePopup extends Component {
     this.state = { src: null, fetched: false, error: false };
   }
   onClick = e => {
-    const { onClick } = this.props;
-    if (e.target === this.labelRef) {
-      e.preventDefault();
-      return;
+    if ((!this.closeBtnRef || (this.closeBtnRef && this.closeBtnRef !== e.target)) && this.wrapperRef && this.wrapperRef.contains(e.target)) {
+      e && e.preventDefault();
+    } else {
+      const { onClick } = this.props;
+      typeof onClick === "function" && onClick();
     }
-    typeof onClick === "function" && onClick();
   };
   async loadImage() {
     if (typeof this.props.src === "string") {
@@ -73,7 +73,7 @@ export class ImagePopup extends Component {
     return (
       <div className={`kgs-image_popup ${show?"show":""} ${className?className:""}`} onClick={this.onClick}>
         {show && (
-          <div className="fa-stack fa-1x kgs-image_popup-content">
+          <div className="fa-stack fa-1x kgs-image_popup-content" ref={ref=>this.wrapperRef = ref} >
             {!this.state.fetched?
               <div>
                 <span className="kgs-spinner">
@@ -91,11 +91,11 @@ export class ImagePopup extends Component {
                 <React.Fragment>
                   <img src={this.state.src} alt={label?label:""}/>
                   {label && (
-                    <p className="kgs-image_popup-label" ref={ref=>this.labelRef = ref}>{label}</p>
+                    <p className="kgs-image_popup-label">{label}</p>
                   )}
                 </React.Fragment>
             }
-            <i className="fa fa-close"></i>
+            <i className="fa fa-close" ref={ref=>this.closeBtnRef = ref} ></i>
           </div>
         )}
       </div>
