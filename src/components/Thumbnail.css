@@ -261,6 +261,28 @@
   line-height: 0;
 }
 
+.kgs-thumbnail--preview-fetching {
+  width: 300px;
+}
+
+.kgs-thumbnail--preview-fetching .kgs-spinner-label {
+  line-height: 2.5rem;
+}
+
+.kgs-thumbnail--preview-error {
+  width: 300px;
+  color: #ED5554;
+}
+
+.kgs-thumbnail--preview-error i {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.kgs-thumbnail--preview-error span {
+  line-height: 2.5rem;
+}
+
 .kgs-thumbnail--preview img {
   display: block;
   border: 1px groove black;
@@ -308,7 +330,7 @@
   opacity: 1;
 }
 
-.kgs-thumbnail--preview i {
+.kgs-thumbnail--preview-close-btn {
   position: absolute;
   top: 4px;
   right: 4px;
@@ -317,7 +339,7 @@
   transition: color 0.2s ease-in;
 }
 
-.kgs-thumbnail--preview i:hover {
+.kgs-thumbnail--preview-close-btn i:hover {
   color: #333333;
 }
 

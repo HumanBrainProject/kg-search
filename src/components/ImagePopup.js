@@ -48,7 +48,7 @@ export class ImagePopup extends Component {
   };
   async loadImage() {
     if (typeof this.props.src === "string") {
-      if (this.props.src !== this.state.src) {
+      if (this.props.src !== this.state.src || this.state.error) {
         this.setState({ src: this.props.src, fetched: false, error: false });
         try {
           await getImage(this.props.src);

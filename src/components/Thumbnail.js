@@ -17,26 +17,51 @@
 import React, { PureComponent } from "react";
 import "./Thumbnail.css";
 
+const getImage = url => {
+  return new Promise((resolve, reject) => {
+    if (typeof url !== "string") {
+      reject(url);
+    }
+    const img = new Image();
+    img.onload = () => {
+      resolve(url);
+    };
+    img.onerror = () => {
+      reject(url);
+    };
+    img.src = url;
+  });
+};
+
 export class Thumbnail extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      previewUrl: null
-    };
+    this.state = { src: null, show: false, fetched: false, error: false };
   }
-  handleToggle() {
-    const { previewUrl } = this.props;
-    this.setState(state => {
-      const newValue = state.previewUrl?null: previewUrl;
-      if (newValue) {
-        this.listenClickOutHandler();
-      } else {
-        this.unlistenClickOutHandler();
+  async loadImage() {
+    if (typeof this.props.previewUrl === "string") {
+      if (this.props.previewUrl !== this.state.src || this.state.error) {
+        this.setState({ src: this.props.previewUrl, fetched: false, error: false });
+        try {
+          await getImage(this.props.previewUrl);
+          this.setState({ fetched: true });
+        } catch (e) {
+          this.setState({ fetched: true, error: true });
+        }
       }
-      return {
-        previewUrl: newValue
-      };
-    });
+    } else if (this.state.fetched || this.state.src) {
+      this.setState({ src: null, fetched: false, error: false });
+    }
+  }
+  handleToggle = () => {
+    if (!this.state.show) {
+      this.setState({ show: true });
+      this.loadImage();
+      this.listenClickOutHandler();
+    } else {
+      this.setState({ show: false });
+      this.unlistenClickOutHandler();
+    }
   }
 
   clickOutHandler = e => {
@@ -85,7 +110,7 @@ export class Thumbnail extends PureComponent {
 
     return (
       <div className="fa-stack fa-1x kgs-thumbnail--container">
-        <button className="kgs-thumbnail--button" onClick={this.handleToggle.bind(this)} >
+        <button className="kgs-thumbnail--button" onClick={this.handleToggle} >
           {typeof thumbnailUrl === "string"?
             <span className="kgs-thumbnail--panel">
               <div className="kgs-thumbnail--image">
@@ -108,13 +133,30 @@ export class Thumbnail extends PureComponent {
             </span>
           }
         </button>
-        {!!this.state.previewUrl && (
+        {this.state.show && (
           <div className="kgs-thumbnail--preview" ref={ref=>this.wrapperRef = ref}>
-            <img src={this.state.previewUrl} alt={alt} />
-            {alt && (
-              <p className="kgs-thumbnail--preview-label">{alt}</p>
-            )}
-            <i className="fa fa-close" onClick={this.handleToggle.bind(this)}></i>
+            {!this.state.fetched?
+              <div className="kgs-thumbnail--preview-fetching">
+                <span className="kgs-spinner">
+                  <div className="kgs-spinner-logo"></div>
+                </span>
+                <span className="kgs-spinner-label">{alt?`loading image "${alt}" ...`:"loading image..."}</span>
+              </div>
+              :
+              this.state.error?
+                <div className="kgs-thumbnail--preview-error">
+                  <i className="fa fa-ban"></i>
+                  <span>{alt?`failed to fetch image "${alt}" ...`:"failed to fetch image..."}</span>
+                </div>
+                :
+                <React.Fragment>
+                  <img src={this.state.src} alt={alt?alt:""} />
+                  {alt && (
+                    <p className="kgs-thumbnail--preview-label">{alt}</p>
+                  )}
+                </React.Fragment>
+            }
+            <i className="fa fa-close kgs-thumbnail--preview-close-btn" onClick={this.handleToggle}></i>
             <div className="kgs-thumbnail--preview-arrow"></div>
           </div>
         )}
