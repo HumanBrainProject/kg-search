@@ -69,7 +69,7 @@ class InstanceBase extends PureComponent {
             <Field {...header.title} />
           </div>
         </div>
-        <ImagePreviews className="kgs-instance__previews" width="300px" images={previews} onClick={this.handleShowPreview} />
+        <ImagePreviews className={`kgs-instance__previews ${(previews && previews.length > 1)?"has-many":""}`} width="300px" images={previews} onClick={this.handleShowPreview} />
         <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
         <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
         <FieldsTabs className="kgs-instance__groups" fields={groups} />

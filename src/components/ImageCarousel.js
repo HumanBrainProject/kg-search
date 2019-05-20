@@ -31,7 +31,7 @@ export class ImageCarousel extends PureComponent {
     }
     return (
       <div className={`kgs-image_carousel ${className?className:""}`}>
-        <Carousel width={width} autoPlay interval={3000} infiniteLoop={true} showThumbs={true} showIndicators={false} stopOnHover={true} showStatus={false} onClickItem={this.onClick} >
+        <Carousel width={width} autoPlay interval={3000} infiniteLoop={true} showThumbs={images.length > 1} showIndicators={false} stopOnHover={true} showStatus={false} onClickItem={this.onClick} >
           {images.map(({src, label, hasTarget, isTargetAnimated}) => (
             <div key={src}>
               <img src={src} alt={label?label:""}/>

@@ -62,6 +62,9 @@
     .kgs-instance__previews > div {
         width: 340px;
         border: 1px solid #ccc;
+        padding: 20px;
+    }
+    .kgs-instance__previews.has-many > div {
         padding: 20px 20px 10px 20px;
     }
 }
