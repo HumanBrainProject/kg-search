@@ -155,7 +155,7 @@
         -ms-grid-row: 2;
     }
 
-    .kgs-instance__grid .kgs-instance__main .kgs-instance__summary,
+    .kgs-instance__grid .kgs-instance__main .kgs-field__layout-summary,
     .kgs-instance__grid .kgs-instance__main .kgs-field__layout-group {
         display: none;
     }
