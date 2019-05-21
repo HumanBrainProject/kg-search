@@ -25,7 +25,7 @@ export const Thumbnail = connect(
     isAnimated: !!props.isAnimated
   }),
   (dispatch, props) => ({
-    onClick: () => !!props.showPreview && typeof props.previewUrl === "string" && dispatch(actions.showImage(props.previewUrl, props.alt))
+    onClick: (props.showPreview && typeof props.previewUrl === "string")?() => dispatch(actions.showImage(props.previewUrl, props.alt)):null
   })
 )(Component);
 
