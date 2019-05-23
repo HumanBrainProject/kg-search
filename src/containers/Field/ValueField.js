@@ -14,243 +14,17 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
-import showdown from "showdown";
-/*import FilterXSS from 'xss';*/
-import xssFilter from "showdown-xss-filter";
-import { connect } from "react-redux";
-import * as actions from "../../actions";
+import React from "react";
 import { termsOfUse } from "../../data/termsOfUse.js";
 import { Icon } from "../../components/Icon";
+import { Details } from "../../components/Details";
+import { Text } from "../../components/Text";
+import { CollapsibleText } from "../../components/CollapsibleText";
+import { Link } from "../../components/Link";
+import { Tag } from "../../components/Tag";
+import { Thumbnail } from "./Thumbnail";
+import { Reference } from "./Reference";
 import "./ValueField.css";
-
-const converter = new showdown.Converter({extensions: [xssFilter]});
-
-const Text = ({content, isMarkdown}) => {
-  if (!content) {
-    return null;
-  }
-  if (!isMarkdown) {
-    return (
-      <span>{content}</span>
-    );
-  }
-
-  const html = converter.makeHtml(content);
-  return (
-    <span className="field-markdown" dangerouslySetInnerHTML={{__html:html}}></span>
-  );
-};
-
-class CollapsibleText extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      collapsed: true,
-    };
-    this.handleClick = this.handleClick.bind(this);
-  }
-  handleClick() {
-    this.setState(state => ({ collapsed: !state.collapsed }));
-  }
-
-  render() {
-    const {content, isMarkdown} = this.props;
-
-    if (!content) {
-      return null;
-    }
-
-    const className = `collapse ${this.state.collapsed?"":"in"}`;
-    return (
-      <span className="field-text collapsible">
-        <span className={className}>
-          <Text content={content} isMarkdown={isMarkdown} />
-        </span>
-        {this.state.collapsed && (
-          <button onClick={this.handleClick}>more...</button>
-        )}
-      </span>
-    );
-  }
-}
-
-const ReferenceComponent = ({text, reference, group, onClick}) => {
-  if (!reference) {
-    return null;
-  }
-
-  const handleClick = () => {
-    typeof onClick === "function" && onClick(reference, group);
-  };
-
-  return (
-    <button onClick={handleClick} role="link">{text}</button>
-  );
-};
-
-const Reference = connect(
-  (state, props) => ({
-    text: props.text?props.text:props.reference,
-    reference: props.reference,
-    group: props.group,
-  }),
-  dispatch => ({
-    onClick: (reference, group) => dispatch(actions.loadInstance(reference, group))
-  })
-)(ReferenceComponent);
-
-const Link = ({url, label, isMailToLink, icon}) => {
-  if (!url) {
-    return null;
-  }
-
-  const text = label?label:url;
-
-  const props = !isMailToLink?null:{
-    rel: "noopener noreferrer",
-    target: "_blank"
-  };
-
-  return (
-    <a href={url} {...props}>
-      {icon?<span className="field-value__link_icon"  dangerouslySetInnerHTML={{__html:icon}} />:null}
-      {text}
-    </a>
-  );
-};
-
-const Tag = ({icon, value}) => {
-  if (!icon && !value) {
-    return null;
-  }
-
-  return (
-    <span className="field-value__tag">
-      <div dangerouslySetInnerHTML={{__html:icon}} />
-      <div>{value}</div>
-    </span>
-  );
-};
-
-class Thumbnail extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      previewUrl: null
-    };
-  }
-  handleToggle() {
-    const { previewUrl } = this.props;
-    this.setState(state => {
-      const newValue = state.previewUrl?null: previewUrl;
-      if (newValue) {
-        this.listenClickOutHandler();
-      } else {
-        this.unlistenClickOutHandler();
-      }
-      return {
-        previewUrl: newValue
-      };
-    });
-  }
-
-  clickOutHandler = e => {
-    if(!this.wrapperRef || !this.wrapperRef.contains(e.target)){
-      this.unlistenClickOutHandler();
-      this.setState({previewUrl: null});
-    }
-  };
-
-  listenClickOutHandler(){
-    window.addEventListener("mouseup", this.clickOutHandler, false);
-    window.addEventListener("touchend", this.clickOutHandler, false);
-    window.addEventListener("keyup", this.clickOutHandler, false);
-  }
-
-  unlistenClickOutHandler(){
-    window.removeEventListener("mouseup", this.clickOutHandler, false);
-    window.removeEventListener("touchend", this.clickOutHandler, false);
-    window.removeEventListener("keyup", this.clickOutHandler, false);
-  }
-
-  componentWillUnmount(){
-    this.unlistenClickOutHandler();
-  }
-
-  render() {
-    const {hasPreview, previewUrl, alt} = this.props;
-
-    if (!hasPreview || !previewUrl) {
-      return (
-        <span className="fa-stack fa-1x kgs-thumbnail--panel">
-          <i className="fa fa-file-o fa-stack-1x"></i>
-        </span>
-      );
-    }
-
-    return (
-      <div className="fa-stack fa-1x kgs-thumbnail--container" ref={ref=>this.wrapperRef = ref}>
-        <button className="kgs-thumbnail--button" onClick={this.handleToggle.bind(this)} >
-          <span className="fa-stack fa-1x kgs-thumbnail--panel">
-            <i className="fa fa-file-image-o fa-stack-1x"></i>
-            <i className="fa fa-search fa-stack-1x kgs-thumbnail--zoom"></i>
-          </span>
-        </button>
-        {!!this.state.previewUrl && (
-          <div className="fa-stack fa-1x kgs-thumbnail--preview" onClick={this.handleToggle.bind(this)}>
-            <img src={this.state.previewUrl} alt={alt} />
-            <i className="fa fa-close"></i>
-          </div>
-        )}
-      </div>
-    );
-  }
-}
-
-class Details extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      collapsed: true
-    };
-    this.handleToggle = this.handleToggle.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-  }
-  handleToggle() {
-    this.setState(state => ({ collapsed: !state.collapsed }));
-  }
-  handleClose() {
-    this.setState(() => ({ collapsed: true }));
-  }
-  render() {
-    const {toggleLabel, content} = this.props;
-
-    if (!content) {
-      return null;
-    }
-
-    const className = `toggle ${this.state.collapsed?"":"in"}`;
-    return (
-      <span className="field-details">
-        <button className={className} onClick={this.handleToggle}>
-          <i className="fa fa-exclamation-circle"></i>
-          {toggleLabel && (
-            <span>{toggleLabel}</span>
-          )}
-        </button>
-        <div className="collapsible">
-          {!this.state.collapsed && (
-            <div className="field-details__panel">
-              <Text content={content} isMarkdown={true} />
-              <button className="field-details__close-button" onClick={this.handleClose} title="close"><i className="fa fa-2x fa-close"></i></button>
-            </div>
-          )}
-        </div>
-      </span>
-    );
-  }
-}
 
 const ValueFieldBase = (renderUserInteractions = true) => {
 
@@ -258,6 +32,28 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     if (!show  || !data|| !mapping || !mapping.visible) {
       return null;
     }
+
+    /*
+    if (!data.previewUrl && Math.round(Math.random() * 10) % 2 === 0) {
+      if (Math.round(Math.random() * 10) % 2 === 0) {
+        data.previewUrl = {
+          url: "https://cdn2.thecatapi.com/images/18f.gif",
+          isAnimated: true
+        };
+      } else {
+        data.previewUrl = {
+          url: "http://lorempixel.com/output/cats-q-c-640-480-3.jpg",
+          isAnimated: false
+        };
+      }
+    }
+    if (!data.thumbnailUrl && Math.round(Math.random() * 10) % 2 === 0) {
+      data.thumbnailUrl = {
+        url: "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-clicker.jpg",
+        isAnimated: false
+      };
+    }
+    */
 
     const hasReference = !!renderUserInteractions && !!data.reference;
     const hasLink =  !!renderUserInteractions && !!data.url;
@@ -269,7 +65,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     const isTag = !hasAnyLink && !isIcon && !!mapping.tagIcon;
     const isMarkdown = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && !!mapping.markdown;
     const isCollapsible = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && mapping.collapsible && typeof data.value === "string" && data.value.length >= 1600;
-    const hasPreview = !!renderUserInteractions && typeof data.previewUrl === "string";
+    const showPreview = !!renderUserInteractions && data.previewUrl && (typeof data.previewUrl === "string" || typeof data.previewUrl.url === "string");
 
     let value = data.value;
     if (data.value && mapping.type === "date") {
@@ -326,7 +122,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     return (
       <div className="field-value">
         {isAFileLink && (
-          <Thumbnail hasPreview={hasPreview} previewUrl={data.previewUrl} alt={data.url} />
+          <Thumbnail showPreview={showPreview} thumbnailUrl={data.thumbnailUrl && (typeof data.thumbnailUrl === "string"?data.thumbnailUrl:data.thumbnailUrl.url)} previewUrl={data.previewUrl && (typeof data.previewUrl === "string"?data.previewUrl:data.previewUrl.url)} isAnimated={data.previewUrl && data.previewUrl.isAnimated} alt={typeof data.value === "string"?data.value:""} />
         )}
         <ValueComponent {...valueProps} />
         {!!mapping.termsOfUse && (

@@ -1,0 +1,246 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-thumbnail--container {
+  display: inline-block;
+  position: relative;
+}
+
+.kgs-thumbnail--button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: 0;
+  color: #337ab7;
+}
+
+@-ms-keyframes kgs-thumbnail-zoom-dynamic {
+  0% {
+      opacity: 1
+  }
+  24% {
+      opacity: 1
+  }
+  25% {
+      opacity: 0
+  }
+  50% {
+      opacity: 0
+  }
+  75% {
+      opacity: 0
+  }
+  76% {
+      opacity: 1
+  }
+  100% {
+      opacity: 1
+  }
+}
+
+@-webkit-keyframes kgs-thumbnail-zoom-dynamic {
+  0% {
+      opacity: 1
+  }
+  24% {
+      opacity: 1
+  }
+  25% {
+      opacity: 0
+  }
+  50% {
+      opacity: 0
+  }
+  75% {
+      opacity: 0
+  }
+  76% {
+      opacity: 1
+  }
+  100% {
+      opacity: 1
+  }
+}
+
+@keyframes kgs-thumbnail-zoom-dynamic {
+  0% {
+      opacity: 1
+  }
+  24% {
+      opacity: 1
+  }
+  25% {
+      opacity: 0
+  }
+  50% {
+      opacity: 0
+  }
+  75% {
+      opacity: 0
+  }
+  76% {
+      opacity: 1
+  }
+  100% {
+      opacity: 1
+  }
+}
+
+.kgs-thumbnail--zoom-dynamic {
+  -moz-animation: kgs-thumbnail-zoom-dynamic 0.75s infinite ease-in-out;
+  -webkit-animation: kgs-thumbnail-zoom-dynamic 0.75s infinite ease-in-out;
+  animation: kgs-thumbnail-zoom-dynamic 0.75s infinite ease-in-out;
+  color: white;
+}
+
+@-ms-keyframes kgs-thumbnail-zoom-static {
+  0% {
+      -ms-transform: translate(0px, 0px);
+      transform: translate(0px, 0px);
+  }
+  5% {
+      -ms-transform: translate(3px, 3px);
+      transform: translate(3px, 3px);
+  }
+  35% {
+      -ms-transform: translate(-3px, 3px);
+      transform: translate(-3px, 3px);
+  }
+  65% {
+      -ms-transform: translate(-3px, -3px);
+      transform: translate(-3px, -3px);
+  }
+  95% {
+      -ms-transform: translate(3px, -3px);
+      transform: translate(3px, -3px);
+  }
+  100% {
+      -ms-transform: translate(0px, 0px);
+      transform: translate(0px, 0px);
+  }
+}
+
+@-webkit-keyframes kgs-thumbnail-zoom-static {
+ 0% {
+      -ms-transform: translate(0px, 0px);
+      -webkit-transform: translate(0px, 0px);
+      transform: translate(0px, 0px);
+  }
+  5% {
+      -ms-transform: translate(3px, 3px);
+      -webkit-transform: translate(3px, 3px);
+      transform: translate(3px, 3px);
+  }
+  35% {
+      -ms-transform: translate(-3px, 3px);
+      -webkit-transform: translate(-3px, 3px);
+      transform: translate(-3px, 3px);
+  }
+  65% {
+      -ms-transform: translate(-3px, -3px);
+      -webkit-transform: translate(-3px, -3px);
+      transform: translate(-3px, -3px);
+  }
+  95% {
+      -ms-transform: translate(3px, -3px);
+      -webkit-transform: translate(3px, -3px);
+      transform: translate(3px, -3px);
+  }
+  100% {
+      -ms-transform: translate(0px, 0px);
+      -webkit-transform: translate(0px, 0px);
+      transform: translate(0px, 0px);
+  }
+}
+
+@keyframes kgs-thumbnail-zoom-static {
+  0% {
+      -ms-transform: translate(0px, 0px);
+      -o-transform: translate(0px, 0px);
+      -moz-transform: translate(0px, 0px);
+      -webkit-transform: translate(0px, 0px);
+      transform: translate(0px, 0px);
+  }
+  15% {
+      -ms-transform: translate(3px, 3px);
+      -o-transform: translate(3px, 3px);
+      -moz-transform: translate(3px, 3px);
+      -webkit-transform: translate(3px, 3px);
+      transform: translate(3px, 3px);
+  }
+  40% {
+      -ms-transform: translate(-3px, 3px);
+      -o-transform: translate(-3px, 3px);
+      -moz-transform: translate(-3px, 3px);
+      -webkit-transform: translate(-3px, 3px);
+      transform: translate(-3px, 3px);
+  }
+  65% {
+      -ms-transform: translate(-3px, -3px);
+      -o-transform: translate(-3px, -3px);
+      -moz-transform: translate(-3px, -3px);
+      -webkit-transform: translate(-3px, -3px);
+      transform: translate(-3px, -3px);
+  }
+  90% {
+      -ms-transform: translate(3px, -3px);
+      -o-transform: translate(3px, -3px);
+      -moz-transform: translate(3px, -3px);
+      -webkit-transform: translate(3px, -3px);
+      transform: translate(3px, -3px);
+  }
+  100% {
+      -ms-transform: translate(0px, 0px);
+      -o-transform: translate(0px, 0px);
+      -moz-transform: translate(0px, 0px);
+      -webkit-transform: translate(0px, 0px);
+      transform: translate(0px, 0px);
+  }
+}
+
+.kgs-thumbnail--zoom-static {
+  -moz-animation: kgs-thumbnail-zoom-static 3s infinite linear;
+  -webkit-animation: kgs-thumbnail-zoom-static 3s infinite linear;
+  animation: kgs-thumbnail-zoom-static infinite 3s linear;
+}
+
+.kgs-thumbnail--image > .kgs-thumbnail--zoom-dynamic {
+  position: absolute;
+  top: 10px;
+  left: 3px;
+  transform: scale(0.8);
+}
+
+:not(.kgs-thumbnail--image) > .kgs-thumbnail--zoom-dynamic {
+  position: absolute;
+  top: 0px;
+  left: 1px;
+  transform: scale(0.7);
+}
+
+.kgs-thumbnail--image > .kgs-thumbnail--zoom-static {
+  position: absolute;
+  top: 10px;
+  left: 3px;
+  transform: scale(0.8);
+}
+
+:not(.kgs-thumbnail--image) > .kgs-thumbnail--zoom-static {
+  position: absolute;
+  top: 0px;
+  left: 1px;
+  transform: scale(0.8);
+}

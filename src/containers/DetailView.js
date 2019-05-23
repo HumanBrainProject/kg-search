@@ -16,7 +16,7 @@
 
 import { connect } from "react-redux";
 import * as actions from "../actions";
-import { Carrousel } from "../components/Carrousel";
+import { Carousel } from "../components/Carousel";
 import { CookielawBanner } from "./CookielawBanner";
 import { TermsShortNotice } from "./TermsShortNotice";
 import { ShareButtons } from "./ShareButtons";
@@ -54,4 +54,4 @@ const mapDispatchToProps = (dispatch, props) => ({
 export const DetailView = connect(
   mapStateToProps,
   mapDispatchToProps
-)(Carrousel);
+)(Carousel);

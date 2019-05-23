@@ -1,0 +1,148 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.field-details button.toggle {
+  background-color: transparent;
+  border: 0;
+  margin-left: 6px;
+  color: #f56722;
+  -webkit-transition: color 0.2s ease-in;
+  -o-transition: color 0.2s ease-in;
+  transition: color 0.2s ease-in;
+  /* font-size: 14px; */
+}
+
+.field-details button.toggle:hover{
+  -webkit-box-shadow: 3px 3px 6px #cbc9c9;
+  box-shadow: 3px 3px 6px #cbc9c9;
+}
+
+.field-details button.toggle.in {
+  color: black;
+}
+
+.field-details button.toggle i {
+  margin-right: 3px;
+  -webkit-transition: transform 0.2s ease-in;
+  -o-transition: transform 0.2s ease-in;
+  transition: transform 0.2s ease-in;
+  font: normal normal normal 19px/1 FontAwesome;
+}
+
+.field-details button.toggle.in i {
+  transform: rotateX(180deg);
+}
+
+.field-details button.toggle span {
+  display: inline-block;
+  font-size: 11px;
+  vertical-align: middle;
+  transform: translateY(-2px);
+}
+
+.field-details .collapsible {
+  position: relative;
+  max-height: 0;
+  -webkit-transition: max-height 0.5s ease-in-out;
+  -o-transition: max-height 0.5s ease-in-out;
+  transition: max-height 0.5s ease-in-out;
+  overflow: hidden;
+}
+
+.field-details .popup {
+  display: none;
+  z-index: 100;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0);
+  -webkit-transition: background-color 0.5s ease-in-out;
+  -o-transition: background-color 0.5s ease-in-out;
+  transition: background-color 0.5s ease-in-out;
+}
+
+.field-details .popup.show {
+  display: block;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.field-details button.toggle.in + .collapsible {
+  max-height: 2500px;
+}
+
+@media (min-width: 576px) {
+  .field-details button.toggle.in + .collapsible {
+      max-height: 1000px;
+  }
+}
+
+.field-details .field-details__panel {
+  padding: 10px;
+  text-align: left;
+  font-family: Verdana,sans-serif;
+  font-size: 11px;
+}
+
+.field-details .collapsible .field-details__panel {
+  position: relative;
+  margin: 2px 0 6px 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  background-color: #f8f9fa;
+  border: 1px solid #a2a9b1;
+  border-radius: 10px;
+}
+
+.field-details .popup .field-details__panel {
+  z-index: 100;
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  -webkit-transform: translate(-50%, 0);
+  -ms-transform: translate(-50%, -0);
+  transform: translate(-50%, 0);
+  width: 80%;
+  height: auto;
+  min-height: 58px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.field-details button.field-details__close-button {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  padding: 8px;
+  background-color: transparent;
+  border: 0;
+  font-size: 8px;
+  cursor: pointer;
+  color: #6c7379;
+  -webkit-transition: color 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
+  -o-transition: box-shadow 0.2s ease-in;
+  transition: box-shadow 0.2s ease-in, color 0.2s ease-in, box-shadow 0.2s ease-in;
+}
+
+.field-details button.field-details__close-button:hover{
+  -webkit-box-shadow: 3px 3px 6px #cbc9c9;
+  box-shadow: 3px 3px 6px #cbc9c9;
+  color: #333333;
+}

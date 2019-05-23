@@ -17,35 +17,35 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { isMobile } from "../helpers/BrowserHelpers";
-import "./Carrousel.css";
+import "./Carousel.css";
 
 
-const CarrouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, navigationComponent, cookielawBanner, noticeComponent, isPreviewInstance}) => {
+const CarouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, navigationComponent, cookielawBanner, noticeComponent, isPreviewInstance}) => {
   const ItemComponent =  itemComponent;
   const NavigationComponent = navigationComponent;
   const CookielawBanner = cookielawBanner;
   const NoticeComponent = noticeComponent;
   return (
-    <div className={`kgs-carrousel__item position${item.position}`} >
-      <div className="kgs-carrousel__content">
-        <div className="kgs-carrousel__header">
+    <div className={`kgs-carousel__item position${item.position}`} >
+      <div className="kgs-carousel__content">
+        <div className="kgs-carousel__header">
           {item.isActive && showPrevious && (
-            <button className="kgs-carrousel__previous-button" onClick={onPrevious}>
+            <button className="kgs-carousel__previous-button" onClick={onPrevious}>
               <i className="fa fa-chevron-left" /> Previous
             </button>
           )}
-          <div className="kgs-carrousel__navigation">
+          <div className="kgs-carousel__navigation">
             {item.isActive && item.data && NavigationComponent && (
               <NavigationComponent/>
             )}
           </div>
           {item.isActive && !isPreviewInstance && (
-            <button className="kgs-carrousel__close-button" onClick={onClose}>
+            <button className="kgs-carousel__close-button" onClick={onClose}>
               <i className="fa fa-close" />
             </button>
           )}
         </div>
-        <div className="kgs-carrousel__body">
+        <div className="kgs-carousel__body">
           <CookielawBanner />
           <NoticeComponent />
           {item.isActive && item.data && ItemComponent && (
@@ -59,7 +59,7 @@ const CarrouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, 
 
 const nbOfItems = 5;
 
-export class Carrousel extends PureComponent {
+export class Carousel extends PureComponent {
   constructor(props) {
     super(props);
     this.items =  Array.from(Array(nbOfItems)).map((x, idx) => ({
@@ -97,7 +97,7 @@ export class Carrousel extends PureComponent {
       return null;
     }
 
-    //window.console.debug("Carrousel rendering...", data);
+    //window.console.debug("Carousel rendering...", data);
 
     const currentPosition = (data.length -1) % nbOfItems;
     const items = this.items;
@@ -110,13 +110,13 @@ export class Carrousel extends PureComponent {
     });
     const showPrevious = data.length > 1;
 
-    const classNames = ["kgs-carrousel", className].join(" ");
+    const classNames = ["kgs-carousel", className].join(" ");
 
     return(
       <div className={classNames}>
-        <div className="kgs-carrousel__panel">
+        <div className="kgs-carousel__panel">
           {items.map(item => (
-            <CarrouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} cookielawBanner={cookielawBanner} noticeComponent={noticeComponent} isPreviewInstance={isPreviewInstance} />
+            <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} cookielawBanner={cookielawBanner} noticeComponent={noticeComponent} isPreviewInstance={isPreviewInstance} />
           ))}
         </div>
       </div>
@@ -124,7 +124,7 @@ export class Carrousel extends PureComponent {
   }
 }
 
-Carrousel.propTypes = {
+Carousel.propTypes = {
   className: PropTypes.string,
   show: PropTypes.bool,
   data:  PropTypes.arrayOf(PropTypes.any),
@@ -148,4 +148,4 @@ Carrousel.propTypes = {
   ])
 };
 
-export default Carrousel;
+export default Carousel;

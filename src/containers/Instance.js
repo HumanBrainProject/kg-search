@@ -17,38 +17,49 @@
 import React from "react";
 import { connect } from "react-redux";
 import API from "../services/API";
+import { ImagePreviews } from "./ImagePreviews";
+import { ImagePopup } from "./ImagePopup";
 import { Field } from "./Field";
 import { FieldsPanel } from "./FieldsPanel";
 import { FieldsTabs } from "./FieldsTabs";
 import "./Instance.css";
 
-export const InstanceBase = ({className, type, hasNoData, hasUnknownData, header, main, summary, groups}) => {
-  const classNames = ["kgs-instance", className].join(" ");
+const InstanceBase = ({type, hasNoData, hasUnknownData, header, previews, main, summary, groups}) => {
+  if (hasNoData) {
+    return (
+      <div className="kgs-instance" data-type={type}>
+        <div className="kgs-instance__no-data">This data is currently not available.</div>
+      </div>
+    );
+  }
+  if (hasUnknownData) {
+    return (
+      <div className="kgs-instance" data-type={type}>
+        <div className="kgs-instance__no-data">This type of data is currently not supported.</div>
+      </div>
+    );
+  }
   return (
-    <div className={classNames} data-type={type}>
-      <div className="kgs-instance__content">
-        <div className="kgs-instance__header">
-          <h3 className={`kgs-instance__group ${header.group && header.group !== API.defaultGroup?"show":""}`}>Group: <strong>{header.group}</strong></h3>
-          <div>
-            <Field {...header.icon} />
-            <Field {...header.type} />
+    <div className="kgs-instance" data-type={type}>
+      <div className="kgs-instance-scroll">
+        <div className={`kgs-instance-content kgs-instance__grid ${(previews && previews.length)?"kgs-instance__with-previews":""}`}>
+          <div className="kgs-instance__header">
+            <h3 className={`kgs-instance__group ${header.group && header.group !== API.defaultGroup?"show":""}`}>Group: <strong>{header.group}</strong></h3>
+            <div>
+              <Field {...header.icon} />
+              <Field {...header.type} />
+            </div>
+            <div>
+              <Field {...header.title} />
+            </div>
           </div>
-          <div>
-            <Field {...header.title} />
-          </div>
-        </div>
-        <div className="kgs-instance__body">
+          <ImagePreviews className={`kgs-instance__previews ${(previews && previews.length > 1)?"has-many":""}`} width="300px" images={previews} />
           <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
           <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
+          <FieldsTabs className="kgs-instance__groups" fields={groups} />
         </div>
-        <FieldsTabs className="kgs-instance__groups" fields={groups} />
       </div>
-      {hasNoData && (
-        <div className="kgs-instance__no-data">This data is currently not available.</div>
-      )}
-      {hasUnknownData && (
-        <div className="kgs-instance__no-data">This type of data is currently not supported.</div>
-      )}
+      <ImagePopup className="kgs-instance__image_popup" />
     </div>
   );
 };
@@ -88,6 +99,74 @@ const getFields = (group, type, data, mapping, filter) => {
   return fields;
 };
 
+//const getPreviews = (data, mapping, idx=0) => {
+const getPreviews = (data, mapping) => {
+  if (data instanceof Array) {
+    const previews = [];
+    data.forEach((elt, idx) => previews.push(...getPreviews(elt, mapping, idx)));
+    return previews;
+  } else if (data && mapping.children) {
+    const previews = [];
+    Object.entries(mapping.children)
+      .filter(([name, mapping]) =>
+        mapping
+        && (mapping.showIfEmpty || (data && data[name]))
+        && mapping.visible
+      )
+      .map(([name, mapping]) => ({
+        data: data && data[name],
+        mapping: mapping
+      }))
+      .forEach(({data, mapping}, idx) => previews.push(...getPreviews(data, mapping, idx)));
+    return previews;
+  } else if (data && data.staticImageUrl && (typeof data.staticImageUrl === "string" || typeof data.staticImageUrl.url === "string")) {
+    return [{
+      staticImageUrl: data.staticImageUrl  && (typeof data.staticImageUrl === "string"?data.staticImageUrl:data.staticImageUrl.url),
+      previewUrl: data.previewUrl,
+      label: data.value?data.value:null
+    }];
+  /*
+  } else if (data && typeof data.url === "string" && /^https?:\/\/.+\.cscs\.ch\/.+$/.test(data.url)) {
+    const cats = [
+      "https://cdn2.thecatapi.com/images/2pb.gif",
+      "http://lorempixel.com/output/cats-q-c-640-480-1.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-2.jpg",
+      "https://cdn2.thecatapi.com/images/18f.gif",
+      "http://lorempixel.com/output/cats-q-c-640-480-3.jpg",
+      "https://cdn2.thecatapi.com/images/dbt.gif",
+      "https://cdn2.thecatapi.com/images/d5k.gif",
+      "http://lorempixel.com/output/cats-q-c-640-480-4.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-5.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-6.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-7.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-8.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-9.jpg",
+      "http://lorempixel.com/output/cats-q-c-640-480-10.jpg"
+    ];
+    const dogs = [
+      "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-clicker.jpg",
+      "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-06.jpg",
+      "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-05.jpg",
+      "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-03.jpg",
+      "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-07.jpg",
+      "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-02.jpg",
+      "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-04.jpg",
+      "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-061-e1340955308953.jpg",
+      "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-08.jpg"
+    ];
+    return [{
+      staticImageUrl: dogs[idx % (dogs.length -1)],
+      previewUrl: (Math.round(Math.random() * 10) % 2)?{
+        url: cats[idx % (cats.length -1)],
+        isAnimated: /^.+\.gif$/.test(cats[idx % (cats.length -1)])
+      }:undefined,
+      label: data.value?data.value:null
+    }];
+  */
+  }
+  return [];
+};
+
 export const Instance = connect(
   (state, {data}) => {
 
@@ -106,6 +185,7 @@ export const Instance = connect(
         type:  getField(group, data && data._type, "type"),
         title: getField(group, data && data._type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"])
       },
+      previews: getPreviews(source, {children: mapping.fields}),
       main: getFields(group, data && data._type, source, mapping, (type, name) => name !== "title"),
       summary: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "summary" && name !== "title"),
       groups: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title")

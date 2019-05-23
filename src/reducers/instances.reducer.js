@@ -22,7 +22,8 @@ const initialState = {
   isLoading: false,
   loadingReference: null,
   currentInstance: null,
-  previousInstances: []
+  previousInstances: [],
+  image: null
 };
 
 const regPreviewReference = /^(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
@@ -34,7 +35,8 @@ const loadInstance = (state, action) => {
     hasRequest: !!reference,
     requestReference: reference,
     isLoading: false,
-    loadingReference: null
+    loadingReference: null,
+    image: null
   };
 };
 
@@ -44,7 +46,8 @@ const loadInstanceRequest = state => {
     hasRequest: false,
     requestReference: null,
     isLoading: true,
-    loadingReference: state.requestReference
+    loadingReference: state.requestReference,
+    image: null
   };
 };
 
@@ -60,7 +63,8 @@ const loadInstanceSuccess = (state, action) => {
     loadingReference: null,
     currentInstance: action.data,
     previousInstances: previousInstances,
-    isPreviewInstance: isPreviewInstance
+    isPreviewInstance: isPreviewInstance,
+    image: null
   };
 };
 
@@ -69,7 +73,8 @@ const loadInstanceFailure = state => {
     ...state,
     hasRequest: false,
     requestReference: null,
-    isLoading: false
+    isLoading: false,
+    image: null
   };
 };
 
@@ -83,7 +88,8 @@ const cancelInstanceLoading = state => {
     requestReference: null,
     isLoading: false,
     loadingReference: null,
-    isPreviewInstance: false
+    isPreviewInstance: false,
+    image: null
   };
 };
 
@@ -100,7 +106,8 @@ const setInstance = (state, action) => {
     isLoading: false,
     loadingReference: null,
     currentInstance: action.data,
-    previousInstances: previousInstances
+    previousInstances: previousInstances,
+    image: null
   };
 };
 
@@ -115,7 +122,8 @@ const setPreviousInstance = state => {
       isLoading: false,
       loadingReference: null,
       currentInstance: currentInstance,
-      previousInstances: previousInstances
+      previousInstances: previousInstances,
+      image: null
     };
   }
 
@@ -130,7 +138,8 @@ const clearAllInstances = state => {
     isLoading: false,
     loadingReference: null,
     currentInstance: null,
-    previousInstances: []
+    previousInstances: [],
+    image: null
   };
 };
 
@@ -153,7 +162,8 @@ const setCurrentInstanceFromBrowserLocation = state => {
       isLoading: false,
       loadingReference: null,
       currentInstance: null,
-      previousInstances: []
+      previousInstances: [],
+      image: null
     };
   }
 
@@ -171,7 +181,8 @@ const setCurrentInstanceFromBrowserLocation = state => {
       isLoading: false,
       loadingReference: null,
       currentInstance: null,
-      previousInstances: []
+      previousInstances: [],
+      image: null
     };
   }
 
@@ -188,7 +199,8 @@ const setCurrentInstanceFromBrowserLocation = state => {
       isLoading: false,
       loadingReference: null,
       currentInstance: instance,
-      previousInstances: previousInstances
+      previousInstances: previousInstances,
+      image: null
     };
   }
 
@@ -199,7 +211,15 @@ const setCurrentInstanceFromBrowserLocation = state => {
     isLoading: false,
     loadingReference: null,
     currentInstance: null,
-    previousInstances: []
+    previousInstances: [],
+    image: null
+  };
+};
+
+const showImage = (state, action) => {
+  return {
+    ...state,
+    image: typeof action.url === "string"?{url: action.url, label: action.label}:null
   };
 };
 
@@ -223,6 +243,8 @@ export function reducer(state = initialState, action = {}) {
     return clearAllInstances(state, action);
   case types.SET_CURRENT_INSTANCE_FROM_BROWSER_LOCATION:
     return setCurrentInstanceFromBrowserLocation(state, action);
+  case types.SHOW_IMAGE:
+    return showImage(state, action);
   default:
     return state;
   }
