@@ -88,6 +88,47 @@ class EditorService @Inject()(
       }
   }
 
+  def retrievePreviewInstancesByIds(
+   instanceIds: List[NexusInstanceReference],
+   formRegistry: FormRegistry[UISpec],
+   querySpec: FormRegistry[QuerySpec],
+   token: AccessToken,
+ ): Future[Either[APIEditorError, List[PreviewInstance]]] = {
+    val listOfResponse = for {
+      id <- instanceIds
+    } yield {
+      val promotedField =
+        formRegistry.registry.get(id.nexusPath).flatMap(s => s.uiInfo.flatMap(i => i.promotedFields.headOption))
+      val query = EditorService.kgQueryGetPreviewInstance(promotedField)
+      queryService
+        .getInstancesWithId(
+          wSClient,
+          config.kgQueryEndpoint,
+          id,
+          query,
+          token,
+          QueryApiParameter(vocab = Some(EditorConstants.EDITORVOCAB))
+        )
+        .map { res =>
+          res.status match {
+            case OK => Right(res.json.as[PreviewInstance].setLabel(formService.formRegistry))
+            case _  => Left(APIEditorError(res.status, "Could not fetch all the instances"))
+          }
+        }
+    }
+
+    Future.sequence(listOfResponse).map { ls =>
+      val r = ls.filter(_.isRight)
+      if (r.isEmpty) {
+        val error = ls.head.swap.getOrElse(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances"))
+        Left(error)
+      } else {
+        Right(r.collect { case Right(e) => e })
+      }
+
+    }
+  }
+
   def insertInstance(
     newInstance: NexusInstance,
     user: Option[User],
@@ -317,42 +358,6 @@ class EditorService @Inject()(
             case Right(()) => Right(())
           }
       }
-
-  def retrievePreviewInstancesByIds(
-    instanceIds: List[NexusInstanceReference],
-    querySpec: FormRegistry[QuerySpec],
-    token: AccessToken,
-  ): Future[Either[APIEditorError, List[PreviewInstance]]] = {
-    val listOfResponse = for {
-      id <- instanceIds
-    } yield
-      queryService
-        .getInstancesWithId(
-          wSClient,
-          config.kgQueryEndpoint,
-          id,
-          EditorService.kgQueryGetPreviewInstance(),
-          token,
-          QueryApiParameter(vocab = Some(EditorConstants.EDITORVOCAB))
-        )
-        .map { res =>
-          res.status match {
-            case OK => Right(res.json.as[PreviewInstance].setLabel(formService.formRegistry))
-            case _  => Left(APIEditorError(res.status, "Could not fetch all the instances"))
-          }
-        }
-
-    Future.sequence(listOfResponse).map { ls =>
-      val r = ls.filter(_.isRight)
-      if (r.isEmpty) {
-        val error = ls.head.swap.getOrElse(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances"))
-        Left(error)
-      } else {
-        Right(r.collect { case Right(e) => e })
-      }
-
-    }
-  }
 
   def retrieveInstancesByIds(
     instanceIds: List[NexusInstanceReference],

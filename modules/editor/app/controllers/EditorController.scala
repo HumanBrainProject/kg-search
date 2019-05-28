@@ -130,7 +130,7 @@ class EditorController @Inject()(
               }))))
           }
         } else {
-          editorService.retrievePreviewInstancesByIds(ids, formService.queryRegistry, request.userToken).map {
+          editorService.retrievePreviewInstancesByIds(ids, formService.formRegistry, formService.queryRegistry, request.userToken).map {
             case Left(err)                        => err.toResult
             case Right(ls: List[PreviewInstance]) => Ok(Json.toJson(EditorResponseObject(Json.toJson(ls))))
           }
