@@ -32,7 +32,18 @@ export const Text = ({content, isMarkdown}) => {
     );
   }
 
-  const html = converter.makeHtml(content).replace(/<\/p>\n<p>/g, "</p><p>");
+  const html = converter.makeHtml(content)
+    .replace(/<p>\s+<\/p>/g, "")
+    .replace(/<\/p>\n<p>/g, "</p><p>")
+    .replace(/<\/li>\n<li>/g, "</li><li>")
+    .replace(/<\/ul>\n<p>/g, "</ul><p>")
+    .replace(/<\/p>\n<ul>/g, "</p><ul>")
+    .replace(/<ul>\n<li>/g, "<ul><li>")
+    .replace(/<\/li>\n<\/ul>/g, "</li></ul>")
+    .replace(/<\/ol>\n<p>/g, "</ol><p>")
+    .replace(/<\/p>\n<ol>/g, "</p><ol>")
+    .replace(/<ol>\n<li>/g, "<ol><li>")
+    .replace(/<\/li>\n<\/ol>/g, "</li></ol>");
 
   return (
     <span className="field-markdown" dangerouslySetInnerHTML={{__html:html}}></span>
