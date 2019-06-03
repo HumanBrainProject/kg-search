@@ -1,0 +1,9 @@
+{
+  "https://schema.hbp.eu/meta/editor/key": "https://schema.hbp.eu/meta/editor/folderID",
+  "https://schema.hbp.eu/meta/editor/label": "Specification folder id",
+  "https://schema.org/name": "Specification folder id",
+  "https://schema.hbp.eu/meta/editor/type": "InputText",
+  "https://schema.hbp.eu/provenance/createdAt": "2019-05-14T14:47:22.372Z",
+  "http://schema.org/identifier": "minds/meta/specificationfield/v0.0.1/folderId",
+  "@type": "https://schema.hbp.eu/minds/Specificationfield"
+}
