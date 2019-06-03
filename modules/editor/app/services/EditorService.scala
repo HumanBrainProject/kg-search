@@ -93,7 +93,7 @@ class EditorService @Inject()(
    formRegistry: FormRegistry[UISpec],
    querySpec: FormRegistry[QuerySpec],
    token: AccessToken,
- ): Future[Either[APIEditorError, List[PreviewInstance]]] = {
+ ): Future[List[PreviewInstance]] = {
     val listOfResponse = for {
       id <- instanceIds
     } yield {
@@ -119,13 +119,7 @@ class EditorService @Inject()(
 
     Future.sequence(listOfResponse).map { ls =>
       val r = ls.filter(_.isRight)
-      if (r.isEmpty) {
-        val error = ls.head.swap.getOrElse(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances"))
-        Left(error)
-      } else {
-        Right(r.collect { case Right(e) => e })
-      }
-
+      r.collect { case Right(e) => e }
     }
   }
 
