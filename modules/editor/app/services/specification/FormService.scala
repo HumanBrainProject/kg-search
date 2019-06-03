@@ -24,9 +24,10 @@ import models.specification._
 import models.user.NexusUser
 import play.api.Logger
 import play.api.http.Status.OK
+import play.api.http.HeaderNames.AUTHORIZATION
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
-import services.ConfigurationService
+import services.{ConfigurationService, OIDCAuthService}
 
 import scala.annotation.tailrec
 import scala.concurrent.duration.FiniteDuration
@@ -35,7 +36,8 @@ import scala.concurrent.{Await, ExecutionContext}
 @Singleton
 class FormService @Inject()(
   config: ConfigurationService,
-  ws: WSClient
+  ws: WSClient,
+  OIDCAuthService: OIDCAuthService
 )(implicit ec: ExecutionContext) {
 
   private var stateSpec: Option[(FormRegistry[UISpec], FormRegistry[QuerySpec])] = None
@@ -55,15 +57,30 @@ class FormService @Inject()(
     stateSpec match {
       case None =>
         logger.info("Starting to load specification")
-        val spec = Await.result(
+        val token = Await.result(OIDCAuthService.getTechAccessToken(true), timeout)
+        val querySpec = Await.result(
           ws.url(s"${config.kgQueryEndpoint}/arango/internalDocuments/editor_specifications").get(),
           timeout
         )
-        spec.status match {
+        val uiSpec = Await.result(
+          ws.url(s"${config.kgQueryEndpoint}/query/minds/meta/core/specification/v0.0.1/instances")
+            .addHttpHeaders(AUTHORIZATION -> token.token)
+            .get(),
+          timeout
+        )
+
+        querySpec.status match {
           case OK =>
             logger.info("Specification loaded")
-            stateSpec = Some(FormService.getRegistry(spec.json.as[List[JsObject]]))
-            FormService.getRegistry(spec.json.as[List[JsObject]])
+
+            FormService.getRegistry(querySpec.json.as[List[JsObject]])
+            uiSpec.status match {
+              case OK =>
+                (uiSpec.json \ "results").as[List[JsObject]]
+
+                stateSpec = Some(FormService.getRegistry(querySpec.json.as[List[JsObject]]))
+            }
+
           case _ =>
             logger.warn(s"Could not load configuration, retrying in ${retryTime / 1000} secs")
             Thread.sleep(retryTime)
@@ -344,8 +361,8 @@ object FormService {
     buildEditableEntityTypesFromRegistry(registry)
   }
 
-  def getRegistry(js: List[JsObject]): (FormRegistry[UISpec], FormRegistry[QuerySpec]) =
-    (extractToRegistry[UISpec](js, "uiSpec"), extractToRegistry[QuerySpec](js, "query"))
+  def getRegistry(js: List[JsObject]): FormRegistry[QuerySpec] =
+    extractToRegistry[QuerySpec](js, "query")
 
   private def extractToRegistry[A](js: List[JsObject], field: String)(implicit r: Reads[A]): FormRegistry[A] = {
     FormRegistry(

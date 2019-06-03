@@ -31,7 +31,8 @@ import play.api.libs.ws.WSClient
 import services.{ConfigurationService, OIDCAuthService}
 
 import scala.collection.immutable
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 case class SpecificationFile(id: String, data: JsObject)
 
@@ -47,6 +48,7 @@ class SpecificationService @Inject()(
   private val specFieldIdQueryPath = NexusPath("minds", "meta", "specificationfield", "v0.0.1")
   private val specFieldIdQueryId = "specificationFieldIdentifier"
   private val log = LoggerFactory.getLogger(this.getClass)
+  private val timeout = FiniteDuration(15, "sec")
 
   init()
 
@@ -58,40 +60,41 @@ class SpecificationService @Inject()(
     val specsIds = fetchSpecificationFieldsFile()
     //Get by identifier all Specification field
     log.debug("INITIALIZATION --- Fetching remote specifications")
-    for {
-      token <- OIDCAuthService.getTechAccessToken(forceRefresh = true)
-      specList <- WSClient
-        .url(s"${config.kgQueryEndpoint}/query/${specFieldIdQueryPath.toString()}/$specFieldIdQueryId/instances")
-        .addHttpHeaders(AUTHORIZATION -> token.token)
-        .addQueryStringParameters(QueryConstants.VOCAB -> "https://schema.hbp.eu/myQuery/")
-        .get()
-        .map { res =>
-          res.status match {
-            case OK =>
-              log.debug("INITIALIZATION --- Computing missing specifications")
-              val arr: List[String] = (res.json \ "results").as[List[JsObject]].foldLeft(List[String]()) {
-                case (l, obj) =>
-                  val tempL = if ((obj \ "identifier").asOpt[String].isDefined) {
-                    List((obj \ "identifier").as[String])
-                  } else {
-                    (obj \ "identifier").as[List[String]]
-                  }
-                  l ::: tempL
+    OIDCAuthService.getTechAccessToken(forceRefresh = true).map { token =>
+      val res = Await.result(
+        WSClient
+          .url(s"${config.kgQueryEndpoint}/query/${specFieldIdQueryPath.toString()}/$specFieldIdQueryId/instances")
+          .addHttpHeaders(AUTHORIZATION -> token.token)
+          .addQueryStringParameters(QueryConstants.VOCAB -> "https://schema.hbp.eu/myQuery/")
+          .get(),
+        timeout
+      )
+      res.status match {
+        case OK =>
+          log.debug("INITIALIZATION --- Computing missing specifications")
+          val arr: List[String] = (res.json \ "results").as[List[JsObject]].foldLeft(List[String]()) {
+            case (l, obj) =>
+              val tempL = if ((obj \ "identifier").asOpt[String].isDefined) {
+                List((obj \ "identifier").as[String])
+              } else {
+                (obj \ "identifier").as[List[String]]
               }
-              // Create if not exists
-              val toCreate: List[SpecificationFile] = specsIds.filterNot(spec => arr.contains(spec.id))
-              log.debug(
-                s"INITIALIZATION --- Creating ${toCreate.size} missing specifications \n ${toCreate.map(_.id).mkString(",")}"
-              )
-              toCreate.map { el =>
-                this.uploadSpec(el, token)
-              }
-            case INTERNAL_SERVER_ERROR => log.error("Could not fetch specification fields")
-            case _                     => log.error(s"Error while fetching Specification fields - ${res.status} : ${res.body}")
+              l ::: tempL
           }
-          ()
-        }
-    } yield specList
+          // Create if not exists
+          val toCreate: List[SpecificationFile] = specsIds.filterNot(spec => arr.contains(spec.id))
+          log.debug(
+            s"INITIALIZATION --- Creating ${toCreate.size} missing specifications \n ${toCreate.map(_.id).mkString(",")}"
+          )
+          toCreate.map { el =>
+            this.uploadSpec(el, token)
+          }
+        case INTERNAL_SERVER_ERROR => log.error("Could not fetch specification fields")
+        case _                     => log.error(s"Error while fetching Specification fields - ${res.status} : ${res.body}")
+      }
+      ()
+
+    }
 
   }
 
