@@ -59,9 +59,14 @@ class EditorService @Inject()(
     search: String,
     token: AccessToken
   ): Future[Either[APIEditorError, (List[PreviewInstance], Long)]] = {
-    val promotedField =
-      formRegistry.registry.get(nexusPath).flatMap(s => s.uiInfo.flatMap(i => i.promotedFields.headOption))
-    val query = EditorService.kgQueryGetPreviewInstance(promotedField)
+    val promotedFields = (for {
+      spec   <- formRegistry.registry.get(nexusPath)
+      uiInfo <- spec.uiInfo
+    } yield {
+      (uiInfo.promotedFields.headOption, uiInfo.promotedFields.tail.headOption)
+    }).getOrElse((None, None))
+
+    val query = EditorService.kgQueryGetPreviewInstance(promotedFields._1, promotedFields._2)
     queryService
       .getInstances(
         wSClient,
@@ -89,17 +94,21 @@ class EditorService @Inject()(
   }
 
   def retrievePreviewInstancesByIds(
-   instanceIds: List[NexusInstanceReference],
-   formRegistry: FormRegistry[UISpec],
-   querySpec: FormRegistry[QuerySpec],
-   token: AccessToken,
- ): Future[List[PreviewInstance]] = {
+    instanceIds: List[NexusInstanceReference],
+    formRegistry: FormRegistry[UISpec],
+    querySpec: FormRegistry[QuerySpec],
+    token: AccessToken,
+  ): Future[List[PreviewInstance]] = {
     val listOfResponse = for {
       id <- instanceIds
     } yield {
-      val promotedField =
-        formRegistry.registry.get(id.nexusPath).flatMap(s => s.uiInfo.flatMap(i => i.promotedFields.headOption))
-      val query = EditorService.kgQueryGetPreviewInstance(promotedField)
+      val promotedFields = (for {
+        spec   <- formRegistry.registry.get(id.nexusPath)
+        uiInfo <- spec.uiInfo
+      } yield {
+        (uiInfo.promotedFields.headOption, uiInfo.promotedFields.tail.headOption)
+      }).getOrElse((None, None))
+      val query = EditorService.kgQueryGetPreviewInstance(promotedFields._1, promotedFields._2)
       queryService
         .getInstancesWithId(
           wSClient,
