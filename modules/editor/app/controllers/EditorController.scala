@@ -158,46 +158,6 @@ class EditorController @Inject()(
       }
     }
 
-  def getSpecificReconciledInstance(
-    org: String,
-    domain: String,
-    schema: String,
-    version: String,
-    id: String,
-    revision: Int
-  ): Action[AnyContent] = Action.async { implicit request =>
-//    val token = request.headers.get("Authorization").getOrElse("")
-//    val nexusPath = NexusPath(org, domain, schema, version)
-//    editorService.retrieveInstance(nexusPath, id, token, List(("fields", "all"),("deprecated", "false"),("rev", revision.toString))).map {
-//      case Right(instance) =>
-//        val json = instance.content
-//        val nexusId = NexusInstance.getIdForEditor((json \ "http://hbp.eu/reconciled#original_parent" \ "@id").as[String], config.reconciledPrefix)
-//        val datatype = nexusId.splitAt(nexusId.lastIndexOf("/"))
-//        val originalDatatype = NexusPath(datatype._1.split("/").toList)
-//        FormService.getFormStructure(originalDatatype, json, config.reconciledPrefix, formService.formRegistry) match {
-//          case JsNull =>
-//            NotImplemented(
-//              NavigationHelper.errorMessageWithBackLink(
-//                "Form not implemented",
-//                NavigationHelper.generateBackLink(nexusPath, config.reconciledPrefix, formService)
-//              )
-//            )
-//          case instanceContent => Ok(
-//            NavigationHelper.resultWithBackLink(
-//              EditorResponseObject(instanceContent),
-//              nexusPath,
-//              config.reconciledPrefix,
-//              formService
-//            )
-//          )
-//        }
-//      case Left(response) =>
-//        EditorResponseHelper.errorResultWithBackLink(response.status, response.headers, response.body, nexusPath, config.reconciledPrefix, formService)
-//    }
-//
-    ???
-  }
-
   /**
     * Entry point when updating an instance
     * @param org The organization of the instance
@@ -213,12 +173,29 @@ class EditorController @Inject()(
         val instanceRef = NexusInstanceReference(org, domain, schema, version, id)
         editorService
           .updateInstanceFromForm(instanceRef, request.body.asJson, request.user, request.userToken, reverseLinkService)
-          .map {
+          .flatMap {
             case Right(()) =>
-              Ok(Json.toJson(EditorResponseObject.empty))
+              editorService.retrieveInstance(instanceRef, request.userToken, formService.queryRegistry).map {
+                case Right(instance) =>
+                  FormService
+                    .getFormStructure(instanceRef.nexusPath, instance.content, formService.formRegistry) match {
+                    case JsNull =>
+                      NotImplemented("Form not implemented")
+                    case instanceForm =>
+                      Ok(
+                        Json.toJson(
+                          EditorResponseObject(instanceForm.as[JsObject])
+                        )
+                      )
+
+                  }
+                case Left(error) =>
+                  logger.error(error.toString)
+                  error.toResult
+              }
             case Left(error) =>
               logger.error(error.content.mkString("\n"))
-              error.toResult
+              Future.successful(error.toResult)
           }
       }
 
