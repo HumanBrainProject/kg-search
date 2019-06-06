@@ -24,10 +24,24 @@
     font-size: unset;
 }
 
-.field-markdown>p {
+.field-markdown>p,
+.field-markdown>ul,
+.field-markdown>ol {
     margin: 0;
 }
 
-.field-markdown>p+p {
+.field-markdown>p+p,
+.field-markdown>ul+ul,
+.field-markdown>ol+ol,
+.field-markdown>p+ul,
+.field-markdown>p+ol,
+.field-markdown>ul+p,
+.field-markdown>ul+ol,
+.field-markdown>ol+p,
+.field-markdown>ol+ul {
     margin-top: 1rem;
+}
+
+.field-markdown li+li {
+    margin-top: 0.3rem;
 }
