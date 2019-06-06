@@ -257,6 +257,8 @@ object FormService {
                 field
               }
               fieldContent.copy(value = textValue.asOpt[JsValue])
+            case _ =>
+              fieldContent.copy(value = (data \ id).asOpt[JsValue])
           }
           val valueWithoutNull = newValue.value match {
             case Some(JsNull) => newValue.copy(value = None)
