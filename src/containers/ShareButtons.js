@@ -30,7 +30,7 @@ const getShareEmailToLink = url => {
 const getClipboardContent = (state, location, currentInstance, currentGroup) => {
   let href = "";
   if (currentInstance) {
-    const reference = regPreviewReference.test(currentInstance._id)?currentInstance._id.match(regPreviewReference)[1]:(currentInstance.found && currentInstance._index && currentInstance._type && currentInstance._id)?`${currentInstance._type}/${currentInstance._id}`:null;
+    const reference = regPreviewReference.test(currentInstance._id)?currentInstance._id.match(regPreviewReference)[1]:(!(currentInstance.found === false) && currentInstance._index && currentInstance._type && currentInstance._id)?`${currentInstance._type}/${currentInstance._id}`:null;
     if (reference) {
       const indexReg = /^kg_(.*)$/;
       const group = indexReg.test(currentInstance._index)?currentInstance._index.match(indexReg)[1]:(currentGroup?currentGroup:null);
