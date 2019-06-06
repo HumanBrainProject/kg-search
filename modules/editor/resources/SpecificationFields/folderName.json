@@ -2,8 +2,7 @@
   "@type": "https://schema.hbp.eu/minds/Specificationfield",
   "https://schema.hbp.eu/meta/editor/key": "https://schema.hbp.eu/meta/editor/folderName",
   "https://schema.hbp.eu/meta/editor/label": "Specification folder name",
-  "https://schema.org/name": "Specification folder name",
+  "http://schema.org/name": "Specification folder name",
   "https://schema.hbp.eu/meta/editor/type": "InputText",
-  "https://schema.hbp.eu/provenance/createdAt": "2019-05-14T14:45:03.414Z",
-  "http://schema.org/identifier": "minds/meta/specificationfield/v0.0.1/folderName"
+  "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specificationfield/v0.0.1/folderName"
 }

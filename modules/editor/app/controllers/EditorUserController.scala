@@ -85,10 +85,12 @@ class EditorUserController @Inject()(
     EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
       for {
         token <- oIDCAuthService.getTechAccessToken()
-        res <- editorUserListService.getUserBookmarkLists(request.editorUser, formService.formRegistry, token).map {
-          case Left(r)  => r.toResult
-          case Right(l) => Ok(Json.toJson(EditorResponseObject(Json.toJson(l))))
-        }
+        res <- editorUserListService
+          .getUserBookmarkLists(request.editorUser, formService.getRegistries().formRegistry, token)
+          .map {
+            case Left(r)  => r.toResult
+            case Right(l) => Ok(Json.toJson(EditorResponseObject(Json.toJson(l))))
+          }
       } yield res
     }
 
@@ -103,10 +105,17 @@ class EditorUserController @Inject()(
   ): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     val nexusPath = NexusPath(org, domain, datatype, version)
     editorService
-      .retrievePreviewInstances(nexusPath, formService.formRegistry, from, size, search, request.userToken)
+      .retrievePreviewInstances(
+        nexusPath,
+        formService.getRegistries().formRegistry,
+        from,
+        size,
+        search,
+        request.userToken
+      )
       .map {
         case Right((data, count)) =>
-          formService.formRegistry.registry.get(nexusPath) match {
+          formService.getRegistries().formRegistry.registry.get(nexusPath) match {
             case Some(spec) => Ok(Json.toJson(EditorResponseWithCount(Json.toJson(data), spec.label, count)))
             case None       => Ok(Json.toJson(EditorResponseWithCount(Json.toJson(data), nexusPath.toString(), count)))
           }

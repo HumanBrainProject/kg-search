@@ -23,7 +23,7 @@ import models._
 import models.editorUserList._
 import models.errors.APIEditorError
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, PreviewInstance}
-import models.specification.{FormRegistry, UISpec}
+import models.specification.{FormRegistry, QuerySpec, UISpec}
 import models.user.{EditorUser, NexusUser}
 import play.api.Logger
 import play.api.http.ContentTypes._
@@ -60,7 +60,9 @@ class EditorBookmarkService @Inject()(
         wSClient,
         config.kgQueryEndpoint,
         editorUser.nexusId,
-        EditorBookmarkService.kgQueryGetUserFoldersQuery(EditorConstants.editorUserPath),
+        QuerySpec(
+          Json.parse(EditorBookmarkService.kgQueryGetUserFoldersQuery(EditorConstants.editorUserPath)).as[JsObject]
+        ),
         token,
         QueryApiParameter()
       )
@@ -207,7 +209,9 @@ class EditorBookmarkService @Inject()(
         wSClient,
         config.kgQueryEndpoint,
         instanceReference,
-        EditorBookmarkService.kgQueryGetBookmarkListByIdQuery(instanceReference.nexusPath),
+        QuerySpec(
+          Json.parse(EditorBookmarkService.kgQueryGetBookmarkListByIdQuery(instanceReference.nexusPath)).as[JsObject]
+        ),
         token,
         QueryApiParameter()
       )
@@ -263,7 +267,9 @@ class EditorBookmarkService @Inject()(
         wSClient,
         config.kgQueryEndpoint,
         bookmarkRef,
-        EditorBookmarkService.kgQueryGetBookmarksForDeletion(bookmarkRef.nexusPath),
+        QuerySpec(
+          Json.parse(EditorBookmarkService.kgQueryGetBookmarksForDeletion(bookmarkRef.nexusPath)).as[JsObject]
+        ),
         token,
         QueryApiParameter()
       )
@@ -353,7 +359,11 @@ class EditorBookmarkService @Inject()(
         wSClient,
         config.kgQueryEndpoint,
         instanceRef,
-        EditorBookmarkService.kgQueryGetInstanceBookmarksAndBookmarkList(instanceRef.nexusPath),
+        QuerySpec(
+          Json
+            .parse(EditorBookmarkService.kgQueryGetInstanceBookmarksAndBookmarkList(instanceRef.nexusPath))
+            .as[JsObject]
+        ),
         token,
         QueryApiParameter()
       )
@@ -433,7 +443,9 @@ class EditorBookmarkService @Inject()(
         wSClient,
         config.kgQueryEndpoint,
         instanceReference,
-        EditorBookmarkService.kgQueryGetInstanceBookmarkLists(instanceReference.nexusPath),
+        QuerySpec(
+          Json.parse(EditorBookmarkService.kgQueryGetInstanceBookmarkLists(instanceReference.nexusPath)).as[JsObject]
+        ),
         token,
         QueryApiParameter()
       )

@@ -1,0 +1,89 @@
+{
+  "@context": {
+    "fieldname": {
+      "@type": "@id",
+      "@id": "fieldname"
+    },
+    "@vocab": "https://schema.hbp.eu/graphQuery/",
+    "merge": {
+      "@type": "@id",
+      "@id": "merge"
+    },
+    "query": "https://schema.hbp.eu/editor/",
+    "relative_path": {
+      "@type": "@id",
+      "@id": "relative_path"
+    }
+  },
+  "label": "Specification",
+  "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specification/v0.0.1/specificationQuery",
+  "description": "fetching all the specifications",
+  "fields": [
+    {
+      "fieldname": "query:folderName",
+      "relative_path": "https://schema.hbp.eu/meta/editor/folderName"
+    },
+    {
+      "fieldname": "query:folderID",
+      "relative_path": "https://schema.hbp.eu/meta/editor/folderID"
+    },
+    {
+      "fieldname": "query:label",
+      "relative_path": "https://schema.hbp.eu/meta/editor/label"
+    },
+    {
+      "fieldname": "query:fields",
+      "relative_path": "https://schema.hbp.eu/meta/editor/fields",
+      "fields": [
+        {
+          "fieldname": "query:key",
+          "relative_path": "https://schema.hbp.eu/meta/editor/key"
+        },
+        {
+          "fieldname": "query:allowCustomValues",
+          "relative_path": "https://schema.hbp.eu/meta/editor/allowCustomValues"
+        },
+        {
+          "fieldname": "query:closeDropdownAfterInteraction",
+          "relative_path": "https://schema.hbp.eu/meta/editor/closeDropdownAfterInteraction"
+        },
+        {
+          "fieldname": "query:instancesPath",
+          "relative_path": "https://schema.hbp.eu/meta/editor/instancesPath"
+        },
+        {
+          "fieldname": "query:isLink",
+          "relative_path": "https://schema.hbp.eu/meta/editor/isLink"
+        },
+        {
+          "fieldname": "query:label",
+          "relative_path": "https://schema.hbp.eu/meta/editor/label"
+        },
+        {
+          "fieldname": "query:mappingLabel",
+          "relative_path": "https://schema.hbp.eu/meta/editor/mappingLabel"
+        },
+        {
+          "fieldname": "query:mappingValue",
+          "relative_path": "https://schema.hbp.eu/meta/editor/mappingValue"
+        },
+        {
+          "fieldname": "query:type",
+          "relative_path": "https://schema.hbp.eu/meta/editor/type"
+        }
+      ]
+    },
+    {
+      "fieldname": "query:targetType",
+      "relative_path": "https://schema.hbp.eu/meta/editor/targetType"
+    },
+    {
+      "fieldname": "query:name",
+      "relative_path": "https://schema.hbp.eu/meta/editor/name"
+    },
+    {
+      "fieldname": "https://schema.hbp.eu/relativeUrl",
+      "relative_path": "https://schema.hbp.eu/relativeUrl"
+    }
+  ]
+}

@@ -30,6 +30,10 @@ object EditorConstants {
   val FOLDERTYPE = "folderType"
   val ALTERNATIVES = "alternatives"
 
+  // META
+  val META = "https://schema.hbp.eu/meta/editor/"
+  val METAIDENTIFIER = s"${META}identifier"
+
   val RELATIVEURL = "relativeUrl"
 
   val bookmarkListFolderPath = NexusPath("hbpkg", "core", "bookmarklistfolder", "v0.0.1")

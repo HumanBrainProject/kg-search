@@ -14,7 +14,9 @@ import play.api.Application
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.WSClient
 import play.api.test.Injecting
-import services.specification.FormService
+import services.specification.{FormService, SpecificationService}
+
+import scala.concurrent.Future
 
 class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpers with MockitoSugar with Injecting {
   override def fakeApplication(): Application = ConfigMock.fakeApplicationConfig.build()
@@ -203,8 +205,10 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
             |  "_key": "minds"
             |}
           """.stripMargin)
-
-      val res = FormService.getRegistry(List(registry.as[JsObject]))
+      val specService = mock[SpecificationService]
+      when(specService.init()).thenReturn(Future.successful(()))
+      when(specService.getOrCreateSpecificationQueries(RefreshAccessToken("123"))).thenReturn(Future.successful(List()))
+      val res = FormService.getRegistry(List(registry.as[JsObject]), specService, RefreshAccessToken("123"))
 
       val expected = FormRegistry(
         Map(

@@ -31,7 +31,7 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.WSClient
 import services.instance.InstanceApiService
 import services.query.{QueryApiParameter, QueryService}
-import services.specification.FormService
+import services.specification.{FormRegistries, FormService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -72,7 +72,7 @@ class EditorService @Inject()(
         wSClient,
         config.kgQueryEndpoint,
         nexusPath,
-        query,
+        QuerySpec(Json.parse(query).as[JsObject]),
         token,
         QueryApiParameter(vocab = Some(EditorConstants.EDITORVOCAB), size = size, from = from, search = search)
       )
@@ -83,7 +83,7 @@ class EditorService @Inject()(
               (
                 (res.json \ "results")
                   .as[List[PreviewInstance]]
-                  .map(_.setLabel(formService.formRegistry)),
+                  .map(_.setLabel(formRegistry)),
                 (res.json \ "total").as[Long]
               )
             )
@@ -95,15 +95,14 @@ class EditorService @Inject()(
 
   def retrievePreviewInstancesByIds(
     instanceIds: List[NexusInstanceReference],
-    formRegistry: FormRegistry[UISpec],
-    querySpec: FormRegistry[QuerySpec],
+    registries: FormRegistries,
     token: AccessToken,
   ): Future[List[PreviewInstance]] = {
     val listOfResponse = for {
       id <- instanceIds
     } yield {
       val promotedFields = (for {
-        spec   <- formRegistry.registry.get(id.nexusPath)
+        spec   <- registries.formRegistry.registry.get(id.nexusPath)
         uiInfo <- spec.uiInfo
       } yield {
         (uiInfo.promotedFields.headOption, uiInfo.promotedFields.tail.headOption)
@@ -114,13 +113,13 @@ class EditorService @Inject()(
           wSClient,
           config.kgQueryEndpoint,
           id,
-          query,
+          QuerySpec(Json.parse(query).as[JsObject]),
           token,
           QueryApiParameter(vocab = Some(EditorConstants.EDITORVOCAB))
         )
         .map { res =>
           res.status match {
-            case OK => Right(res.json.as[PreviewInstance].setLabel(formService.formRegistry))
+            case OK => Right(res.json.as[PreviewInstance].setLabel(registries.formRegistry))
             case _  => Left(APIEditorError(res.status, "Could not fetch all the instances"))
           }
         }
@@ -194,7 +193,7 @@ class EditorService @Inject()(
   ): Future[Either[APIEditorMultiError, Unit]] = {
     form match {
       case Some(json) =>
-        formService.formRegistry.registry.get(instanceRef.nexusPath) match {
+        formService.getRegistries().formRegistry.registry.get(instanceRef.nexusPath) match {
           case Some(spec)
               if spec.getFieldsAsMap.values.exists(p => p.isReverse.getOrElse(false)) |
               spec.getFieldsAsMap.values.exists(p => p.isLinkingInstance.getOrElse(false)) =>
@@ -204,8 +203,7 @@ class EditorService @Inject()(
                 json,
                 token,
                 user,
-                formService.formRegistry,
-                formService.queryRegistry
+                formService.getRegistries()
               )
           case _ =>
             generateDiffAndUpdateInstance(
@@ -213,8 +211,7 @@ class EditorService @Inject()(
               json,
               token,
               user,
-              formService.formRegistry,
-              formService.queryRegistry
+              formService.getRegistries()
             )
         }
       case None =>
@@ -245,7 +242,7 @@ class EditorService @Inject()(
             wSClient,
             config.kgQueryEndpoint,
             nexusInstanceReference,
-            querySpec.query.toString,
+            querySpec,
             token,
             QueryApiParameter(vocab = Some(EditorConstants.EDITORVOCAB), databaseScope = databaseScope)
           )
@@ -311,17 +308,17 @@ class EditorService @Inject()(
     updateFromUser: JsValue,
     token: AccessToken,
     user: User,
-    formRegistry: FormRegistry[UISpec],
-    queryRegistry: FormRegistry[QuerySpec]
-  ): Future[Either[APIEditorMultiError, Unit]] = retrieveInstance(instanceRef, token, queryRegistry).flatMap {
-    case Left(error) =>
-      Future(Left(APIEditorMultiError(error.status, List(error))))
-    case Right(currentInstanceDisplayed) =>
-      val updateToBeStored =
-        EditorService.computeUpdateTobeStored(currentInstanceDisplayed, updateFromUser, config.nexusEndpoint)
-      //Normal update of the instance without reverse links
-      processInstanceUpdate(instanceRef, updateToBeStored, user, token)
-  }
+    registries: FormRegistries
+  ): Future[Either[APIEditorMultiError, Unit]] =
+    retrieveInstance(instanceRef, token, registries.queryRegistry).flatMap {
+      case Left(error) =>
+        Future(Left(APIEditorMultiError(error.status, List(error))))
+      case Right(currentInstanceDisplayed) =>
+        val updateToBeStored =
+          EditorService.computeUpdateTobeStored(currentInstanceDisplayed, updateFromUser, config.nexusEndpoint)
+        //Normal update of the instance without reverse links
+        processInstanceUpdate(instanceRef, updateToBeStored, user, token)
+    }
 
   /**
     *  Update the reverse instance

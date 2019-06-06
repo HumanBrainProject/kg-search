@@ -1,9 +1,8 @@
 {
-  "http://schema.org/identifier": "0fe6e3a3-3049-4079-9b9f-95332d298267",
   "https://schema.hbp.eu/meta/editor/key": "https://schema.hbp.eu/meta/editor/label",
   "https://schema.hbp.eu/meta/editor/label": "Specification field label",
-  "https://schema.org/name": "Specification field label",
+  "http://schema.org/name": "Specification field label",
   "https://schema.hbp.eu/meta/editor/type": "InputText",
-  "http://schema.org/identifier": "minds/meta/specificationfield/v0.0.1/label",
+  "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specificationfield/v0.0.1/label",
   "@type": "https://schema.hbp.eu/minds/Specificationfield"
 }

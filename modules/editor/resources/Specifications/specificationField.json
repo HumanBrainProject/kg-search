@@ -1,0 +1,10 @@
+{
+  "@type": "https://schema.hbp.eu/minds/Specification",
+  "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specification/v0.0.1/field",
+  "https://schema.hbp.eu/meta/editor/folderID": "COMMON_NODE_TYPES",
+  "https://schema.hbp.eu/meta/editor/folderName": "Common node type",
+  "https://schema.hbp.eu/meta/editor/label": "Specification field",
+  "http://schema.org/name": "Specification field",
+  "https://schema.hbp.eu/meta/editor/fields": [{"@id": "minds/meta/specificationfield/v0.0.1/name"},{"@id": "minds/meta/specificationfield/v0.0.1/label"},{"@id":  "minds/meta/specificationfield/v0.0.1/key"}, {"@id": "minds/meta/specificationfield/v0.0.1/type"}],
+  "https://schema.hbp.eu/meta/editor/targetType": "minds/meta/specificationfield/v0.0.1"
+}

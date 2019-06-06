@@ -1,9 +1,9 @@
 package editor
 import com.google.inject.AbstractModule
-import services.specification.SpecificationService
+import services.specification.FormService
 
 class EditorModule extends AbstractModule {
   override def configure(): Unit = {
-    bind(classOf[SpecificationService]).asEagerSingleton()
+    bind(classOf[FormService]).asEagerSingleton()
   }
 }

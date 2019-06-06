@@ -34,23 +34,27 @@ class IDMAPIService @Inject()(WSClient: WSClient, config: ConfigurationService)(
   private val log = LoggerFactory.getLogger(this.getClass)
 
   def getUserInfoFromID(userId: String, token: AccessToken): Future[Option[IDMUser]] = {
-    val url = s"${config.idmApiEndpoint}/user/$userId"
-    val q = WSClient.url(url).addHttpHeaders(AUTHORIZATION -> token.token)
-    val queryResult = token match {
-      case BasicAccessToken(_)   => q.get()
-      case RefreshAccessToken(_) => AuthHttpClient.getWithRetry(q)
-    }
-    queryResult.flatMap { res =>
-      res.status match {
-        case OK =>
-          val user = res.json.as[IDMUser]
-          isUserPartOfGroups(user, List("nexus-curators"), token).map {
-            case Right(bool) => Some(user.copy(isCurator = Some(bool)))
-            case Left(r) =>
-              log.error(s"Could not fetch user groups from IDM API ${r.body}")
-              Some(user)
-          }
-        case _ => Future(None)
+    if (userId.isEmpty) {
+      Future.successful(None)
+    } else {
+      val url = s"${config.idmApiEndpoint}/user/$userId"
+      val q = WSClient.url(url).addHttpHeaders(AUTHORIZATION -> token.token)
+      val queryResult = token match {
+        case BasicAccessToken(_)   => q.get()
+        case RefreshAccessToken(_) => AuthHttpClient.getWithRetry(q)
+      }
+      queryResult.flatMap { res =>
+        res.status match {
+          case OK =>
+            val user = res.json.as[IDMUser]
+            isUserPartOfGroups(user, List("nexus-curators"), token).map {
+              case Right(bool) => Some(user.copy(isCurator = Some(bool)))
+              case Left(r) =>
+                log.error(s"Could not fetch user groups from IDM API ${r.body}")
+                Some(user)
+            }
+          case _ => Future(None)
+        }
       }
     }
   }

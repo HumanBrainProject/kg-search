@@ -124,7 +124,9 @@ class ReviewController @Inject()(
           suggestionOf = NexusInstanceReference
             .fromUrl((i.content \ SchemaFieldsConstants.SUGGESTION_OF \ SchemaFieldsConstants.RELATIVEURL).as[String])
         } yield
-          FormService.getFormStructure(i.ref.nexusPath, i.content, formService.formRegistry).as[JsObject] ++ Json
+          FormService
+            .getFormStructure(i.ref.nexusPath, i.content, formService.getRegistries().formRegistry)
+            .as[JsObject] ++ Json
             .obj("suggestionOf" -> suggestionOf)
         Ok(Json.toJson(EditorResponseObject(Json.toJson(res))))
       case Left(err) => err.toResult
@@ -143,7 +145,7 @@ class ReviewController @Inject()(
       case Right(l) =>
         val res = for {
           i <- l
-        } yield FormService.getFormStructure(i.ref.nexusPath, i.content, formService.formRegistry)
+        } yield FormService.getFormStructure(i.ref.nexusPath, i.content, formService.getRegistries().formRegistry)
         Ok(Json.toJson(EditorResponseObject(Json.toJson(res))))
       case Left(err) => err.toResult
     }

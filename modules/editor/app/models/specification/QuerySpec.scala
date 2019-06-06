@@ -18,7 +18,7 @@ package models.specification
 
 import play.api.libs.json.JsObject
 
-case class QuerySpec(query: JsObject)
+case class QuerySpec(query: JsObject, queryId: Option[String] = None)
 
 object QuerySpec {
   import play.api.libs.json._
