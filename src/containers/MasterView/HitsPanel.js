@@ -36,6 +36,7 @@ const mapStateToProps = (state, props) => {
   const {hits} = props;
 
   let trySplitResult = true;
+  let isSortedByRelevance = false;
   try {
     const params = window.location.search
       .substring(1)
@@ -46,10 +47,11 @@ const mapStateToProps = (state, props) => {
         return obj;
       }, {});
     const page = params["p"];
-    const sort = params["sort"]; //
+    const sort = params["sort"];
+    typeof sort === 'undefined' || sort === "newestFirst" ? isSortedByRelevance = true : isSortedByRelevance = false;
     trySplitResult = !(page && page !== "1") && !(sort && sort !== "_score_desc");
   } catch (e) {
-    window.console.debug("Failed to calculate stats");
+    // window.console.debug("Failed to calculate stats");
   }
 
   let limit = -1;
@@ -61,7 +63,7 @@ const mapStateToProps = (state, props) => {
       limit = average + 2 * standardDeviation;
       //window.console.debug("average: " + average + ", standard deviation: "  + standardDeviation + ", limit: " + limit);
     } catch (e) {
-      window.console.debug("Failed to calculate stats");
+      // window.console.debug("Failed to calculate stats");
     }
   }
 
@@ -76,13 +78,17 @@ const mapStateToProps = (state, props) => {
 
   const topMatchHits = [];
   const moreHits = [];
-  hits.forEach(hit => {
-    if ( (limit !== -1 && hit._score >= limit) || isNewRelease(hit)) {
+  isSortedByRelevance ?
+    hits.forEach(hit => {
+      if ( (limit !== -1 && hit._score > limit) || isNewRelease(hit) ) {
+        topMatchHits.push(hit);
+      } else {
+        moreHits.push(hit);
+      }
+    }):
+    hits.forEach(hit => {
       topMatchHits.push(hit);
-    } else {
-      moreHits.push(hit);
-    }
-  });
+    });
 
   return {
     lists: [
