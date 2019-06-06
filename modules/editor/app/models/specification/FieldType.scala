@@ -30,11 +30,17 @@ object FieldType {
     case "DropdownSelect" => DropdownSelect
     case "InputText"      => InputText
     case "TextArea"       => TextArea
+    case fieldType        => GenericType(fieldType)
   }
 
   implicit object FieldType extends Writes[FieldType] {
     def writes(f: FieldType): JsValue = Json.toJson(f.t)
   }
+}
+
+case class GenericType(fieldType: String) extends FieldType {
+  override val t: String = fieldType
+  val zero = ""
 }
 
 case object DropdownSelect extends FieldType {
