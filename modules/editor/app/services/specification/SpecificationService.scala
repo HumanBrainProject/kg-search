@@ -29,11 +29,10 @@ import play.api.Environment
 import play.api.http.HeaderNames.AUTHORIZATION
 import play.api.http.Status.{CREATED, INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
 import play.api.libs.json.{JsNull, JsObject, JsValue, Json}
-import play.api.libs.ws.WSClient
+import play.api.libs.ws.{WSClient, WSResponse}
 import services.instance.InstanceApiService
 import services.{ConfigurationService, CredentialsService, OIDCAuthService}
 
-import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
 
 case class SpecificationFile(id: String, data: JsObject)
@@ -62,8 +61,8 @@ class SpecificationService @Inject()(
 
     for {
       token <- OIDCAuthService.getTechAccessToken(forceRefresh = true)
-      _     <- getOrCreateSpecificationAndSpecificationFields(token)
       _     <- getOrCreateSpecificationQueries(token)
+      _     <- getOrCreateSpecificationAndSpecificationFields(token)
     } yield { () }
   }
 
@@ -142,12 +141,12 @@ class SpecificationService @Inject()(
                     JsonLDConstants.ID -> s"${config.nexusEndpoint}/v0/data/${fieldsIdMap(js.value(JsonLDConstants.ID).as[String]).toString}"
                 )
               )
-            file.copy(
+            val newFile = file.copy(
               data = Json
                 .toJson(file.data.value.updated("https://schema.hbp.eu/meta/editor/fields", Json.toJson(newFields)))
                 .as[JsObject]
             )
-            uploadSpec(file, token)
+            uploadSpec(newFile, token)
           }
 
           futSpecToCreate.sequence.map { specCreated =>
@@ -228,14 +227,14 @@ class SpecificationService @Inject()(
             WSClient
               .url(s"${config.kgQueryEndpoint}/query/${queryId.toString()}")
               .addHttpHeaders(AUTHORIZATION -> token.token)
-              .addQueryStringParameters(QueryConstants.VOCAB -> QueryConstants.DEFAULT_VOCAB)
+              .addQueryStringParameters(QueryConstants.VOCAB -> EditorConstants.editorVocab)
               .get()
               .map { response =>
                 response.status match {
                   case OK        => (file :: previousResult._1, previousResult._2)
                   case NOT_FOUND => (previousResult._1, file :: previousResult._2)
                   case _ =>
-                    log.error("Could not fetch specification queries")
+                    log.error(s"Could not fetch specification queries - ${response.status} - ${response.body}")
                     previousResult
                 }
               }
@@ -264,4 +263,11 @@ class SpecificationService @Inject()(
     }
   }
 
+  def fetchSpecifications(token: RefreshAccessToken): Future[WSResponse] = {
+    WSClient
+      .url(s"${config.kgQueryEndpoint}/query/minds/meta/specification/v0.0.1/specificationQuery/instances")
+      .addHttpHeaders(AUTHORIZATION -> token.token)
+      .addQueryStringParameters(QueryConstants.VOCAB -> EditorConstants.editorVocab)
+      .get()
+  }
 }

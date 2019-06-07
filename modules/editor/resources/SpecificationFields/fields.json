@@ -10,5 +10,7 @@
   "https://schema.hbp.eu/meta/editor/mappingLabel": "name",
   "https://schema.hbp.eu/meta/editor/mappingValue": "id",
   "https://schema.hbp.eu/meta/editor/type": "DropdownSelect",
-  "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specificationfield/v0.0.1/fields"
+  "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specificationfield/v0.0.1/fields",
+  "https://schema.hbp.eu/meta/editor/value": null
+
 }

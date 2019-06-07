@@ -21,7 +21,7 @@
     }
 
   ],
-  "https://schema.hbp.eu/meta/editor/folderID": "COMMON_NODE_TYPES",
+  "https://schema.hbp.eu/meta/editor/folderId": "COMMONTYPE",
   "https://schema.hbp.eu/meta/editor/folderName": "Common node types",
   "https://schema.hbp.eu/meta/editor/label": "Specification",
   "http://schema.org/name": "Specification",

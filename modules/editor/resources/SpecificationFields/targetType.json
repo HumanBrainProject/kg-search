@@ -4,5 +4,6 @@
   "https://schema.hbp.eu/meta/editor/label": "Specification target type",
   "http://schema.org/name": "Specification target type",
   "https://schema.hbp.eu/meta/editor/type": "InputText",
-  "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specificationfield/v0.0.1/targetType"
+  "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specificationfield/v0.0.1/targetType",
+  "https://schema.hbp.eu/meta/editor/value": null
 }

@@ -24,8 +24,8 @@
       "relative_path": "https://schema.hbp.eu/meta/editor/folderName"
     },
     {
-      "fieldname": "query:folderID",
-      "relative_path": "https://schema.hbp.eu/meta/editor/folderID"
+      "fieldname": "query:folderId",
+      "relative_path": "https://schema.hbp.eu/meta/editor/folderId"
     },
     {
       "fieldname": "query:label",
@@ -70,6 +70,14 @@
         {
           "fieldname": "query:type",
           "relative_path": "https://schema.hbp.eu/meta/editor/type"
+        },
+        {
+          "fieldname": "query:value",
+          "relative_path": "https://schema.hbp.eu/meta/editor/value"
+        },
+        {
+          "fieldname": "http://schema.org/name",
+          "relative_path": "http://schema.org/name"
         }
       ]
     },
@@ -78,12 +86,16 @@
       "relative_path": "https://schema.hbp.eu/meta/editor/targetType"
     },
     {
-      "fieldname": "query:name",
-      "relative_path": "https://schema.hbp.eu/meta/editor/name"
+      "fieldname": "http://schema.org/name",
+      "relative_path": "http://schema.org/name"
     },
     {
       "fieldname": "https://schema.hbp.eu/relativeUrl",
       "relative_path": "https://schema.hbp.eu/relativeUrl"
+    },
+    {
+      "fieldname": "https://schema.hbp.eu/inference/alternatives",
+      "relative_path": "https://schema.hbp.eu/inference/alternatives"
     }
   ]
 }

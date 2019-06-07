@@ -4,5 +4,6 @@
   "https://schema.hbp.eu/meta/editor/label": "Specification folder name",
   "http://schema.org/name": "Specification folder name",
   "https://schema.hbp.eu/meta/editor/type": "InputText",
-  "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specificationfield/v0.0.1/folderName"
+  "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specificationfield/v0.0.1/folderName",
+  "https://schema.hbp.eu/meta/editor/value": null
 }

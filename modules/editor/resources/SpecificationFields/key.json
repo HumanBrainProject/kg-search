@@ -4,5 +4,6 @@
   "https://schema.hbp.eu/meta/editor/label": "Specification field key",
   "http://schema.org/name": "Specification field key",
   "https://schema.hbp.eu/meta/editor/type": "InputText",
-  "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specificationfield/v0.0.1/key"
+  "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specificationfield/v0.0.1/key",
+  "https://schema.hbp.eu/meta/editor/value": null
 }
