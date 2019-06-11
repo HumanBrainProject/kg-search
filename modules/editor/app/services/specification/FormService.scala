@@ -366,14 +366,13 @@ object FormService {
     specificationService: SpecificationService,
     token: RefreshAccessToken
   ): FormRegistries = {
+    val formRegistries = extractRegistries(js)
     val systemQueries = Await.result(specificationService.getOrCreateSpecificationQueries(token), timeout)
-    val configQueries = extractToRegistry[QuerySpec](js, "query")
     val completeQueries = FormRegistry(
-      systemQueries.foldLeft(configQueries.registry) {
+      systemQueries.foldLeft(formRegistries.queryRegistry.registry) {
         case (acc, el) => acc.updated(el.nexusPath, QuerySpec(Json.obj(), Some(el.id)))
       }
     )
-
     val uiSpecResponse = Await.result(specificationService.fetchSpecifications(token), timeout)
     val uiSpecFromDB = uiSpecResponse.status match {
       case OK => (uiSpecResponse.json \ "results").as[List[JsObject]]
@@ -383,9 +382,8 @@ object FormService {
         )
         List()
     }
-    val registry = extractToRegistry[UISpec](js, "uiSpec")
-    val uiSpecRegistry = registry.copy(
-      registry = uiSpecFromDB.foldLeft(registry.registry) {
+    val uiSpecRegistry = formRegistries.formRegistry.copy(
+      registry = uiSpecFromDB.foldLeft(formRegistries.formRegistry.registry) {
         case (acc, el) =>
           if ((el \ "targetType").asOpt[String].isDefined) {
             val path = NexusPath((el \ "targetType").as[String])
@@ -396,6 +394,10 @@ object FormService {
       }
     )
     FormRegistries(uiSpecRegistry, completeQueries)
+  }
+
+  def extractRegistries(js: List[JsObject]): FormRegistries = {
+    FormRegistries(extractToRegistry[UISpec](js, "uiSpec"), extractToRegistry[QuerySpec](js, "query"))
   }
 
   private def extractToRegistry[A](js: List[JsObject], field: String)(implicit r: Reads[A]): FormRegistry[A] = {

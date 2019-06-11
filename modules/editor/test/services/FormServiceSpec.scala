@@ -141,7 +141,7 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
     }
   }
 
-  "getRegistry" should {
+  "extractRegistries" should {
     "populate the registry from a json object" in {
       val registry =
         Json.parse("""
@@ -206,10 +206,7 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
             |  "_key": "minds"
             |}
           """.stripMargin)
-      val specService = mock[SpecificationService]
-      when(specService.init()).thenReturn(Future.successful(Done))
-      when(specService.getOrCreateSpecificationQueries(RefreshAccessToken("123"))).thenReturn(Future.successful(List()))
-      val res = FormService.getRegistry(List(registry.as[JsObject]), specService, RefreshAccessToken("123"))
+      val res = FormService.extractRegistries(List(registry.as[JsObject]))
 
       val expected = FormRegistry(
         Map(
