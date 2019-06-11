@@ -20,6 +20,7 @@ import { Hint} from "../components/Hint";
 import { ListField, PrintViewListField } from "./Field/ListField";
 import { ObjectField, PrintViewObjectField } from "./Field/ObjectField";
 import { ValueField, PrintViewValueField } from "./Field/ValueField";
+import { TableField, PrintViewTableField } from "./Field/TableField";
 import "./Field.css";
 
 const FieldBase = (renderUserInteractions = true) => {
@@ -27,6 +28,7 @@ const FieldBase = (renderUserInteractions = true) => {
   const ListFieldComponent = renderUserInteractions?ListField:PrintViewListField;
   const ObjectFieldComponent = renderUserInteractions?ObjectField:PrintViewObjectField;
   const ValueFieldComponent = renderUserInteractions?ValueField:PrintViewValueField;
+  const TableFieldComponent = renderUserInteractions?TableField:PrintViewTableField;
 
   const Field = ({name, data, mapping, group}) => {
     if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
@@ -34,11 +36,13 @@ const FieldBase = (renderUserInteractions = true) => {
     }
 
     const isList = Array.isArray(data);
+    const isTable = mapping.isTable;
+    const isTableChild = mapping.isTableChild;
     const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
     const className = "kgs-field" + (name?" kgs-field__" + name:"") + (mapping.layout?" kgs-field__layout-" + mapping.layout:"");
 
     const labelProps = {
-      show: !!mapping.value && (!mapping.labelHidden || !!renderUserInteractions),
+      show: !!mapping.value && (!mapping.labelHidden || !!renderUserInteractions) && !isTableChild,
       showAsBlock: mapping.tagIcon,
       value: mapping.value,
       counter: (mapping.layout === "group" && isList)?data.length:0
@@ -48,20 +52,26 @@ const FieldBase = (renderUserInteractions = true) => {
       value: mapping.hint
     };
     const listProps = {
-      show: isList,
+      show: isList && !isTable,
       items: data,
       mapping: mapping,
       group: group
     };
     const valueProps = {
-      show: !isList,
+      show: !isList && !isTable,
       data: data,
       mapping: mapping,
       group: group
     };
     const objectProps = {
-      show: !isList && !!mapping.children,
+      show: !isList && !isTable && !!mapping.children,
       data: data && data.children,
+      mapping: mapping,
+      group: group
+    };
+    const tableProps = {
+      show: isTable,
+      items: data,
       mapping: mapping,
       group: group
     };
@@ -73,6 +83,7 @@ const FieldBase = (renderUserInteractions = true) => {
         <ValueFieldComponent {...valueProps} />
         <ListFieldComponent {...listProps} />
         <ObjectFieldComponent {...objectProps} />
+        <TableFieldComponent {...tableProps} />
       </span>
     );
   };
