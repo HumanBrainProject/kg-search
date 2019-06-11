@@ -1,7 +1,7 @@
 {
   "@context": {
     "@vocab": "https://schema.hbp.eu/graphQuery/",
-    "query": "https://schema.hbp.eu/meta/editor/",
+    "meta": "https://schema.hbp.eu/meta/editor/",
     "fieldname": {
       "@id": "fieldname",
       "@type": "@id"
@@ -16,45 +16,45 @@
     }
   },
   "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specificationfield/v0.0.1/specificationFieldQuery",
-  "fields": [
+  "meta:fields": [
     {
-      "fieldname": "query:instancesPath",
+      "fieldname": "meta:instancesPath",
       "relative_path": "https://schema.hbp.eu/meta/editor/instancesPath"
     },
     {
-      "fieldname": "query:isLink",
+      "fieldname": "meta:isLink",
       "relative_path": "https://schema.hbp.eu/meta/editor/isLink"
     },
     {
-      "fieldname": "query:key",
+      "fieldname": "meta:key",
       "relative_path": "https://schema.hbp.eu/meta/editor/key"
     },
     {
-      "fieldname": "query:label",
+      "fieldname": "meta:label",
       "relative_path": "https://schema.hbp.eu/meta/editor/label"
     },
     {
-      "fieldname": "query:mappingLabel",
+      "fieldname": "meta:mappingLabel",
       "relative_path": "https://schema.hbp.eu/meta/editor/mappingLabel"
     },
     {
-      "fieldname": "query:mappingValue",
+      "fieldname": "meta:mappingValue",
       "relative_path": "https://schema.hbp.eu/meta/editor/mappingValue"
     },
     {
-      "fieldname": "query:type",
+      "fieldname": "meta:type",
       "relative_path": "https://schema.hbp.eu/meta/editor/type"
     },
     {
-      "fieldname": "query:allowCustomValues",
+      "fieldname": "meta:allowCustomValues",
       "relative_path": "https://schema.hbp.eu/meta/editor/allowCustomValues"
     },
     {
-      "fieldname": "query:closeDropdownAfterInteraction",
+      "fieldname": "meta:closeDropdownAfterInteraction",
       "relative_path": "https://schema.hbp.eu/meta/editor/closeDropdownAfterInteraction"
     },
     {
-      "fieldname": "query:identifier",
+      "fieldname": "meta:identifier",
       "relative_path": "http://schema.org/identifier"
     },
     {

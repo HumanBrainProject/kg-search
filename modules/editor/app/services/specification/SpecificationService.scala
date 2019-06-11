@@ -290,7 +290,7 @@ class SpecificationService @Inject()(
     WSClient
       .url(s"${config.kgQueryEndpoint}/query/minds/meta/specification/v0.0.1/specificationQuery/instances")
       .addHttpHeaders(AUTHORIZATION -> token.token)
-      .addQueryStringParameters(QueryConstants.VOCAB -> EditorConstants.editorVocab)
+      .addQueryStringParameters(QueryConstants.VOCAB -> EditorConstants.META)
       .get()
   }
 }

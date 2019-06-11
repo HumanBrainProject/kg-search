@@ -250,12 +250,17 @@ object FormService {
     )
     formTemplate.getFieldsAsLinkedMap.foldLeft(idFields) {
       case (filledTemplate, (id, fieldContent)) =>
-        if (data.as[JsObject].keys.contains(id)) {
+        val idWithouNameSpace = id.replace(EditorConstants.META, "")
+        val metaId =
+          if (id.startsWith(EditorConstants.META) && data.as[JsObject].keys.contains(idWithouNameSpace))
+            idWithouNameSpace
+          else id
+        if (data.as[JsObject].keys.contains(metaId)) {
           val newValue = fieldContent.fieldType match {
             case DropdownSelect =>
-              fieldContent.copy(value = Some(FormService.transformToArray(id, data)))
+              fieldContent.copy(value = Some(FormService.transformToArray(metaId, data)))
             case InputText | InputTextMultiple | TextArea =>
-              val field = data \ id
+              val field = data \ metaId
               val textValue = if (field.validate[List[String]].isSuccess) {
                 if (!field.as[List[String]].exists(j => j != null)) {
                   JsString("")
@@ -269,7 +274,7 @@ object FormService {
               }
               fieldContent.copy(value = textValue.asOpt[JsValue])
             case _ =>
-              fieldContent.copy(value = (data \ id).asOpt[JsValue])
+              fieldContent.copy(value = (data \ metaId).asOpt[JsValue])
           }
           val valueWithoutNull = newValue.value match {
             case Some(JsNull) => newValue.copy(value = None)
