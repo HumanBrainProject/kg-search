@@ -1,5 +1,6 @@
 package services
 
+import akka.Done
 import helpers.ConfigMock
 import mockws.MockWSHelpers
 import models._
@@ -206,7 +207,7 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
             |}
           """.stripMargin)
       val specService = mock[SpecificationService]
-      when(specService.init()).thenReturn(Future.successful(()))
+      when(specService.init()).thenReturn(Future.successful(Done))
       when(specService.getOrCreateSpecificationQueries(RefreshAccessToken("123"))).thenReturn(Future.successful(List()))
       val res = FormService.getRegistry(List(registry.as[JsObject]), specService, RefreshAccessToken("123"))
 
@@ -275,10 +276,10 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
         )
       )
 
-      res._1.registry(NexusPath("minds", "core", "dataset", "v1.0.0")) mustBe expected.registry(
+      res.formRegistry.registry(NexusPath("minds", "core", "dataset", "v1.0.0")) mustBe expected.registry(
         NexusPath("minds", "core", "dataset", "v1.0.0")
       )
-      res._1.registry(NexusPath("minds", "experiment", "protocol", "v1.0.0")) mustBe expected.registry(
+      res.formRegistry.registry(NexusPath("minds", "experiment", "protocol", "v1.0.0")) mustBe expected.registry(
         NexusPath("minds", "experiment", "protocol", "v1.0.0")
       )
 

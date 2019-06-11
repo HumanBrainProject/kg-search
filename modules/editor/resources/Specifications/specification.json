@@ -11,7 +11,7 @@
       "@id": "minds/meta/specificationfield/v0.0.1/label"
     },
     {
-      "@id": "minds/meta/specificationfield/v0.0.1/folderId"
+      "@id": "minds/meta/specificationfield/v0.0.1/folderID"
     },
     {
       "@id": "minds/meta/specificationfield/v0.0.1/folderName"
@@ -19,9 +19,8 @@
     {
       "@id": "minds/meta/specificationfield/v0.0.1/fields"
     }
-
   ],
-  "https://schema.hbp.eu/meta/editor/folderId": "COMMONTYPE",
+  "https://schema.hbp.eu/meta/editor/folderID": "COMMONTYPES",
   "https://schema.hbp.eu/meta/editor/folderName": "Common node types",
   "https://schema.hbp.eu/meta/editor/label": "Specification",
   "http://schema.org/name": "Specification",

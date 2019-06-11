@@ -17,6 +17,7 @@ package services.specification
 
 import java.io.{File, FileInputStream}
 
+import akka.Done
 import cats.implicits._
 import com.google.inject.Inject
 import constants.{EditorConstants, JsonLDConstants, QueryConstants}
@@ -54,109 +55,127 @@ class SpecificationService @Inject()(
   private val log = LoggerFactory.getLogger(this.getClass)
   object instanceApiService extends InstanceApiService
 
-  def init(): Future[Unit] = {
+  def init(): Future[Done] = {
     log.debug("Specification Service INITIALIZATION ---------------------------------")
     //Get by identifier all Specification field
     log.debug("Specification Service INITIALIZATION --- Fetching remote specification fields")
-
-    for {
-      token <- OIDCAuthService.getTechAccessToken(forceRefresh = true)
-      _     <- getOrCreateSpecificationQueries(token)
-      _     <- getOrCreateSpecificationAndSpecificationFields(token)
-    } yield { () }
-  }
-
-  private def getOrCreateSpecificationAndSpecificationFields(token: RefreshAccessToken): Future[Unit] = {
-    for {
-      specFieldResult <- WSClient
-        .url(s"${config.kgQueryEndpoint}/query/${specFieldIdQueryPath.toString()}/$specFieldIdQueryId/instances")
-        .addHttpHeaders(AUTHORIZATION -> token.token)
-        .addQueryStringParameters(QueryConstants.VOCAB -> QueryConstants.DEFAULT_VOCAB)
-        .get()
-    } yield {
-      specFieldResult.status match {
-        case OK =>
-          val specFieldIdentifierMap: Map[String, NexusInstanceReference] =
-            createInitialMapOfSpecificationIds(specFieldResult.json)
-          // load spec from files
-          log.debug("Specification Service INITIALIZATION --- Fetching local specification fields")
-          val specsFieldsIds = fetchFile("SpecificationFields")
-
-          log.debug("Specification Service INITIALIZATION --- Computing missing specification fields")
-          val toCreate: List[SpecificationFile] =
-            specsFieldsIds.filterNot(spec => specFieldIdentifierMap.contains(spec.id))
-          log.debug(
-            s"Specification Service INITIALIZATION --- Creating ${toCreate.size} missing specifications fields \n ${toCreate.map(_.id).mkString(",")}"
-          )
-          // Create if not exists
-          val futToCreate = toCreate.map { el =>
-            this.uploadSpec(el, token)
-          }
-          //Update the map of ids
-          for {
-            fieldIdList <- futToCreate.sequence
-            fieldIdMap = fieldIdList.foldLeft(specFieldIdentifierMap) {
-              case (acc, Right((id, ref))) => acc.updated(id, ref)
-              case (acc, _)                => acc
-            }
-            specs <- getSpecifications(fieldIdMap, token)
-          } yield specs
-        case INTERNAL_SERVER_ERROR =>
-          log.error("Could not fetch specification fields")
-          ()
-        case _ =>
-          log.error(s"Error while fetching Specification fields - ${specFieldResult.status} : ${specFieldResult.body}")
-          ()
+    OIDCAuthService.getTechAccessToken(forceRefresh = true).flatMap { token =>
+      getOrCreateSpecificationQueries(token).flatMap { _ =>
+        log.info(s"Specification Service INITIALIZATION --- Done fetching and creating queries")
+        getOrCreateSpecificationAndSpecificationFields(token).map { s =>
+          Done
+        }
       }
     }
   }
 
-  private def getSpecifications(fieldsIdMap: Map[String, NexusInstanceReference], token: RefreshAccessToken) = {
+  private def getOrCreateSpecificationAndSpecificationFields(token: RefreshAccessToken): Future[Done] = {
+    WSClient
+      .url(s"${config.kgQueryEndpoint}/query/${specFieldIdQueryPath.toString()}/$specFieldIdQueryId/instances")
+      .addHttpHeaders(AUTHORIZATION -> token.token)
+      .addQueryStringParameters(QueryConstants.VOCAB -> QueryConstants.DEFAULT_VOCAB)
+      .get()
+      .flatMap { specFieldResult =>
+        specFieldResult.status match {
+          case OK =>
+            val specFieldIdentifierMap: Map[String, NexusInstanceReference] =
+              createInitialMapOfSpecificationIds(specFieldResult.json)
+            // load spec from files
+            log.debug("Specification Service INITIALIZATION --- Fetching local specification fields")
+            val specsFieldsIds = fetchFile("SpecificationFields")
+
+            log.debug("Specification Service INITIALIZATION --- Computing missing specification fields")
+            val toCreate: List[SpecificationFile] =
+              specsFieldsIds.filterNot(spec => specFieldIdentifierMap.contains(spec.id))
+            log.debug(
+              s"Specification Service INITIALIZATION --- Creating ${toCreate.size} missing specifications fields \n ${toCreate.map(_.id).mkString(",")}"
+            )
+            // Create if not exists
+            val futToCreate = toCreate.map { el =>
+              this.uploadSpec(el, token)
+            }
+            //Update the map of ids
+            val fieldId = for {
+              fieldIdList <- futToCreate.sequence
+              fieldIdMap = fieldIdList.foldLeft(specFieldIdentifierMap) {
+                case (acc, Right((id, ref))) => acc.updated(id, ref)
+                case (acc, _)                => acc
+              }
+            } yield fieldIdMap
+            fieldId.flatMap { fMap =>
+              getSpecifications(fMap, token).map { _ =>
+                log.info(s"Specification Service INITIALIZATION --- Done fetching and creating specification")
+                Done
+              }
+            }
+          case INTERNAL_SERVER_ERROR =>
+            log.error("Could not fetch specification fields")
+            Future.successful(Done)
+          case _ =>
+            log.error(
+              s"Error while fetching Specification fields - ${specFieldResult.status} : ${specFieldResult.body}"
+            )
+            Future.successful(Done)
+        }
+      }
+  }
+
+  private def getSpecifications(
+    fieldsIdMap: Map[String, NexusInstanceReference],
+    token: RefreshAccessToken
+  ): Future[Done] = {
     log.debug("Specification Service INITIALIZATION --- Fetching remote specifications")
-    for {
-      res <- WSClient
+    val futListOfSpecToUpload =
+      WSClient
         .url(s"${config.kgQueryEndpoint}/query/${specIdQueryPath.toString()}/$specQueryId/instances")
         .addHttpHeaders(AUTHORIZATION -> token.token)
         .addQueryStringParameters(QueryConstants.VOCAB -> QueryConstants.DEFAULT_VOCAB)
         .get()
-    } yield {
-      res.status match {
-        case OK =>
-          val specIdentifierMap = createInitialMapOfSpecificationIds(res.json)
-          log.debug("Specification Service INITIALIZATION --- Fetching local specifications")
-          val specsIds = fetchFile("Specifications")
-          log.debug("Specification Service INITIALIZATION --- Computing missing specifications")
-          val toCreate: List[SpecificationFile] =
-            specsIds.filterNot(spec => specIdentifierMap.contains(spec.id))
-          log.debug(
-            s"Specification Service INITIALIZATION --- Creating ${toCreate.size} missing specifications \n ${toCreate.map(_.id).mkString(",")}"
-          )
-          val futSpecToCreate = toCreate.map { file =>
-            val newFields = file.data
-              .value("https://schema.hbp.eu/meta/editor/fields")
-              .as[List[JsObject]]
-              .map(
-                js =>
-                  Json.obj(
-                    JsonLDConstants.ID -> s"${config.nexusEndpoint}/v0/data/${fieldsIdMap(js.value(JsonLDConstants.ID).as[String]).toString}"
+        .map { res =>
+          res.status match {
+            case OK =>
+              val specIdentifierMap = createInitialMapOfSpecificationIds(res.json)
+              log.debug("Specification Service INITIALIZATION --- Fetching local specifications")
+              val specsIds = fetchFile("Specifications")
+              val specToCreate = specsIds.filter(spec => !specIdentifierMap.contains(spec.id))
+              log.debug("Specification Service INITIALIZATION --- Computing missing specifications")
+              val specToUpload = specToCreate.map { file =>
+                val newFields = file.data
+                  .value("https://schema.hbp.eu/meta/editor/fields")
+                  .as[List[JsObject]]
+                  .map(
+                    js =>
+                      Json.obj(
+                        JsonLDConstants.ID -> s"${config.nexusEndpoint}/v0/data/${fieldsIdMap(js.value(JsonLDConstants.ID).as[String]).toString}"
+                    )
+                  )
+                file.copy(
+                  data = Json
+                    .toJson(file.data.value.updated("https://schema.hbp.eu/meta/editor/fields", Json.toJson(newFields)))
+                    .as[JsObject]
                 )
+              }
+              log.info(
+                s"Specification service INITIALIZATION --- Preparing to create ${specToUpload.size} specifications"
               )
-            val newFile = file.copy(
-              data = Json
-                .toJson(file.data.value.updated("https://schema.hbp.eu/meta/editor/fields", Json.toJson(newFields)))
-                .as[JsObject]
-            )
-            uploadSpec(newFile, token)
+              specToUpload
+            case _ =>
+              log.error("Could not fetch specifications")
+              List[SpecificationFile]()
           }
-
-          futSpecToCreate.sequence.map { specCreated =>
-            log.info(s"Specification Service INITIALIZATION --- Creation of specification ${specCreated}")
-            ()
-          }
-        case _ =>
-          log.error("Could not fetch specifications")
-          ()
-      }
+        }
+    futListOfSpecToUpload.flatMap { listOfSpecToUpload =>
+      (listOfSpecToUpload
+        .map { file =>
+          uploadSpec(file, token)
+        })
+        .sequence
+        .map { specCreated =>
+          log.info(
+            s"Specification Service INITIALIZATION --- Creating ${specCreated.size} missing specifications ${specCreated}"
+          )
+          Done
+        }
     }
   }
 
@@ -210,7 +229,11 @@ class SpecificationService @Inject()(
         clientCredentials
       )
       .map {
-        case Left(res)  => Left(APIEditorError(res.status, res.body))
+        case Left(res) =>
+          log.error(
+            s"Specification service --- could not upload specification - ${value.id} - ${res.status} - ${res.body}"
+          )
+          Left(APIEditorError(res.status, res.body))
         case Right(ref) => Right((value.id, ref))
       }
   }

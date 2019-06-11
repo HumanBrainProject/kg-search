@@ -16,6 +16,7 @@
 
 package services.specification
 
+import akka.Done
 import com.google.inject.{Inject, Singleton}
 import constants._
 import models._
@@ -45,9 +46,9 @@ class FormService @Inject()(
 
   private var stateSpec: Option[FormRegistries] = None
 
-  val timeout = FiniteDuration(20, "sec")
+  val timeout = FiniteDuration(60, "sec")
   val retryTime = 5000 //ms
-  val logger = Logger(this.getClass)
+  val logger = LoggerFactory.getLogger(this.getClass)
 
   Await.result(flushSpec(), timeout)
 
@@ -56,14 +57,16 @@ class FormService @Inject()(
     case None      => Await.result(loadFormConfiguration(), timeout).get
   }
 
-  def flushSpec(): Future[Unit] =
-    for {
-      specInit   <- specificationService.init()
-      reloadForm <- loadFormConfiguration()
-    } yield ()
+  def flushSpec(): Future[Done] =
+    specificationService.init().flatMap { _ =>
+      loadFormConfiguration().map { _ =>
+        logger.info(s"Form Service INITIALIZATION --- Done loading form specification")
+        Done
+      }
+    }
 
   final def loadFormConfiguration(): Future[Option[FormRegistries]] = {
-    logger.info("Starting to load specification")
+    logger.info("Form Service INITIALIZATION --- Starting to load specification")
     for {
       token     <- OIDCAuthService.getTechAccessToken(true)
       querySpec <- ws.url(s"${config.kgQueryEndpoint}/arango/internalDocuments/editor_specifications").get()
@@ -72,10 +75,9 @@ class FormService @Inject()(
         case OK =>
           val registries = FormService.getRegistry(querySpec.json.as[List[JsObject]], specificationService, token)
           stateSpec = Some(registries)
-          logger.info("Specification loaded")
           Some(registries)
         case _ =>
-          logger.warn(s"Could not load configuration")
+          logger.warn(s"Form Service INITIALIZATION --- Could not load configuration")
           None
       }
     }

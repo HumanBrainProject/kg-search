@@ -24,8 +24,8 @@
       "relative_path": "https://schema.hbp.eu/meta/editor/folderName"
     },
     {
-      "fieldname": "query:folderId",
-      "relative_path": "https://schema.hbp.eu/meta/editor/folderId"
+      "fieldname": "query:folderID",
+      "relative_path": "https://schema.hbp.eu/meta/editor/folderID"
     },
     {
       "fieldname": "query:label",

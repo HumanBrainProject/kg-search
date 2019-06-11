@@ -16,6 +16,7 @@
 
 package models.specification
 
+import constants.EditorConstants
 import play.api.libs.json.{JsObject, JsValue, Json}
 
 case class EditorFieldSpecification(
