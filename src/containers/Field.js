@@ -37,12 +37,11 @@ const FieldBase = (renderUserInteractions = true) => {
 
     const isList = Array.isArray(data);
     const isTable = mapping.isTable;
-    const isTableChild = mapping.isTableChild;
     const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
     const className = "kgs-field" + (name?" kgs-field__" + name:"") + (mapping.layout?" kgs-field__layout-" + mapping.layout:"");
 
     const labelProps = {
-      show: !!mapping.value && (!mapping.labelHidden || !!renderUserInteractions) && !isTableChild,
+      show: !!mapping.value && (!mapping.labelHidden || !!renderUserInteractions),
       showAsBlock: mapping.tagIcon,
       value: mapping.value,
       counter: (mapping.layout === "group" && isList)?data.length:0
@@ -52,19 +51,19 @@ const FieldBase = (renderUserInteractions = true) => {
       value: mapping.hint
     };
     const listProps = {
-      show: isList && !isTable,
+      show: isList,
       items: data,
       mapping: mapping,
       group: group
     };
     const valueProps = {
-      show: !isList && !isTable,
+      show: !isList,
       data: data,
       mapping: mapping,
       group: group
     };
     const objectProps = {
-      show: !isList && !isTable && !!mapping.children,
+      show: !isList && !!mapping.children,
       data: data && data.children,
       mapping: mapping,
       group: group

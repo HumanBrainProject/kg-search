@@ -30,3 +30,9 @@
 .kgs-field span.kgs-field__object > span > .kgs-field {
     display: inline-block;
 }
+
+@media (min-width: 992px) {
+    .kgs-field__subjects .kgs-field__object {
+        display: none;
+    }
+ }

@@ -17,11 +17,11 @@
 import React, { PureComponent } from "react";
 import { ObjectField, PrintViewObjectField } from "./ObjectField";
 import { ValueField, PrintViewValueField } from "./ValueField";
-import { LIST_SMALL_SIZE_STOP, 
-        getNextSizeStop, 
-        getFilteredItems, 
-        getShowMoreLabel, 
-        hasMore } from "./helpers";
+import { LIST_SMALL_SIZE_STOP,
+  getNextSizeStop,
+  getFilteredItems,
+  getShowMoreLabel,
+  hasMore } from "./helpers";
 import "./ListField.css";
 
 const ListFieldBase = (renderUserInteractions = true) => {
@@ -61,9 +61,10 @@ const ListFieldBase = (renderUserInteractions = true) => {
     const List = isCustom?CustomList:DefaultList;
     const ListItem = isCustom?CustomListItem:DefaultListItem;
     const className =  `kgs-field__list ${showAsTag?"items-as-tags":""}`;
+
     return (
-      <span>
-        <List className={className}>
+      <span className={className}>
+        <List>
           {
             list.map(({isObject, key, data, mapping, group}, idx) => (
               <ListItem key={key} separator={separator} isFirst={!idx}>

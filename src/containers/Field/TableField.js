@@ -16,11 +16,11 @@
 
 import React, { PureComponent } from "react";
 import { Field, PrintViewField } from "../Field";
-import { LIST_SMALL_SIZE_STOP, 
-        getNextSizeStop, 
-        getFilteredItems, 
-        getShowMoreLabel } from "./helpers";
-import "./ListField.css";
+import { LIST_SMALL_SIZE_STOP,
+  getNextSizeStop,
+  getFilteredItems,
+  getShowMoreLabel } from "./helpers";
+import "./TableField.css";
 
 
 const CustomTableRow = ({item, viewComponent}) => {
@@ -55,7 +55,7 @@ const TableFieldBase = (renderUserInteractions = true) => {
 
     return (
       fields && fields[0] ?
-        <table className="table">
+        <table className="table kg-field__table">
           <thead>
             <tr>
               {fields[0].map((el,id) =>
@@ -63,7 +63,7 @@ const TableFieldBase = (renderUserInteractions = true) => {
               )}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="kg-field__table-body">
             {fields.map((item, index) => <CustomTableRow key={`${index}`}  item={item} isFirst={!index} viewComponent={FieldComponent}/>)}
             {showToggle && (
               <tr>

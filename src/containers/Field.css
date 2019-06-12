@@ -58,3 +58,7 @@
 .kgs-field ul > li + li > ul {
     padding-top: 10px;
 }
+
+.kg-field__table .kgs-field .field-label {
+    display: none;
+}

@@ -14,8 +14,8 @@
 *   limitations under the License.
 */
 
-.kgs-field__more {
-    display: inline-block;
+.kg-field__table {
+    width: 100%;
 }
 
 .kgs-field button[role="link"].kgs-field__viewMore-button {
@@ -34,18 +34,18 @@
     color: #08c;
 }
 
-.kgs-field .kgs-field__list.items-as-tags {
-    display: flex;
-    padding: 0;
-    flex-wrap: wrap;
-}
-
-.kgs-field .kgs-field__list.items-as-tags > span {
+.kgs-field__table-body  .kgs-field__samples .kgs-field__list {
     display: block;
 }
 
 @media (min-width: 992px) {
-    .kgs-field__subjects .kgs-field__list {
+    .kg-field__table-body .kgs-field__list {
+        display: block;
+    }
+ }
+
+@media (max-width: 992px) {
+    .kg-field__table {
         display: none;
     }
  }

@@ -39,7 +39,7 @@ export const getNextSizeStop = (sizeStop, props) => {
   }
 
   return LIST_SMALL_SIZE_STOP;
-}
+};
 
 export const getFilteredItems = (sizeStop, maxSizeStop, props) => {
   const {items, mapping, group} = props;
@@ -61,11 +61,11 @@ export const getFilteredItems = (sizeStop, maxSizeStop, props) => {
       mapping: mapping,
       group: group
     }));
-}
+};
 
 export const getShowMoreLabel = (sizeStop, maxSizeStop, props) => {
   const {items, mapping} = props;
-  
+
   if (!Array.isArray(items) || (mapping && mapping.separator)) {
     return null;
   }
@@ -79,15 +79,15 @@ export const getShowMoreLabel = (sizeStop, maxSizeStop, props) => {
   }
 
   return VIEW_LESS_LABEL;
-}
+};
 
 export const hasMore = (sizeStop, maxSizeStop, props) => {
   const {items, mapping} = props;
-  
+
   if (!Array.isArray(items) || (mapping && mapping.separator)) {
     return false;
   }
-  
+
   const nbToDisplay = Math.min(maxSizeStop, sizeStop);
   return maxSizeStop > nbToDisplay;
-}
+};
