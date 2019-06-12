@@ -17,17 +17,17 @@
 import React from "react";
 import "./Link.css";
 
-export const Link = ({url, label, isMailToLink, icon}) => {
+export const Link = ({url, label, isExternalLink, icon}) => {
   if (!url) {
     return null;
   }
 
   const text = label?label:url;
 
-  const props = !isMailToLink?null:{
+  const props = isExternalLink? {
     rel: "noopener noreferrer",
     target: "_blank"
-  };
+  } : null;
 
   return (
     <a href={url} {...props}>

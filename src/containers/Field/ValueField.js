@@ -26,6 +26,13 @@ import { Thumbnail } from "./Thumbnail";
 import { Reference } from "./Reference";
 import "./ValueField.css";
 
+const getUrlLocation = url => {
+  let path = url.split("/");
+  let protocol = path[0];
+  let host = path[2];
+  return `${protocol}//${host}`;
+};
+
 const ValueFieldBase = (renderUserInteractions = true) => {
 
   const ValueField = ({show, data, mapping, group}) => {
@@ -54,11 +61,11 @@ const ValueFieldBase = (renderUserInteractions = true) => {
       };
     }
     */
-
     const hasReference = !!renderUserInteractions && !!data.reference;
     const hasLink =  !!renderUserInteractions && !!data.url;
     const hasMailToLink = !!renderUserInteractions && typeof data.url === "string" &&  data.url.substr(0,7).toLowerCase() === "mailto:";
     const isAFileLink = typeof data.url === "string" && /^https?:\/\/.+\.cscs\.ch\/.+$/.test(data.url);
+    const hasExternalLink = data.url && !isAFileLink && getUrlLocation(data.url) !== window.location.origin;
     const hasAnyLink = hasReference || hasMailToLink || hasLink;
     const isIcon = mapping.type === "icon" && ((data.image && data.image.url) || mapping.icon);
     const isLinkWithIcon = mapping.linkIcon && data.url ? true:false;
@@ -89,7 +96,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
       valueProps = {
         url: data.url,
         label: value,
-        isMailToLink: hasMailToLink,
+        isExternalLink: hasMailToLink || hasExternalLink,
         icon: mapping.linkIcon
       };
     } else if (isIcon) {
