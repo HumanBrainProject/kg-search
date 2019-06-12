@@ -16,6 +16,10 @@
 
 import React, { PureComponent } from "react";
 import { Field, PrintViewField } from "../Field";
+import { LIST_SMALL_SIZE_STOP, 
+        getNextSizeStop, 
+        getFilteredItems, 
+        getShowMoreLabel } from "./helpers";
 import "./ListField.css";
 
 
@@ -32,14 +36,6 @@ const CustomTableRow = ({item, viewComponent}) => {
 };
 
 const TableFieldBase = (renderUserInteractions = true) => {
-
-  const LIST_SMALL_SIZE_STOP = 5;
-  const LIST_MIDDLE_SIZE_STOP = 10;
-
-  const VIEW_MORE_LABEL = "view more";
-  const VIEW_LESS_LABEL = "view less";
-  const VIEW_ALL_LABEL = "view all";
-
 
   const TableFieldComponent = ({list, showToggle, toggleHandler, toggleLabel}) => {
     const FieldComponent = renderUserInteractions?Field:PrintViewField;
@@ -82,13 +78,12 @@ const TableFieldBase = (renderUserInteractions = true) => {
   class TableField extends PureComponent {
     constructor(props) {
       super(props);
-      const sizeStop = this.getNextSizeStop(Number.POSITIVE_INFINITY);
+      const sizeStop = getNextSizeStop(Number.POSITIVE_INFINITY, this.props);
       this.state = {
         sizeStop: sizeStop,
-        items: Array.isArray(this.props.items) ? this.getFilteredItems(sizeStop) : this.getItems(),
+        items: Array.isArray(this.props.items) ? getFilteredItems(sizeStop, this.maxSizeStop, this.props) : this.getItems(),
         hasShowMoreToggle: this.hasShowMoreToggle,
-        showMoreLabel: this.getShowMoreLabel(sizeStop),
-        hasMore: this.hasMore(sizeStop)
+        showMoreLabel: getShowMoreLabel(sizeStop, this.maxSizeStop, this.props)
       };
       this.handleShowMoreClick = this.handleShowMoreClick.bind(this);
     }
@@ -106,43 +101,13 @@ const TableFieldBase = (renderUserInteractions = true) => {
       return items.length;
     }
 
-    getNextSizeStop(sizeStop) {
+    get hasShowMoreToggle() {
       const {items, mapping} = this.props;
-
-      if (!Array.isArray(items) || (mapping && mapping.separator)) {
-        return Number.POSITIVE_INFINITY;
+      if (!Array.isArray(items) || (mapping && mapping.separator) || !renderUserInteractions) {
+        return false;
       }
 
-      if (sizeStop === LIST_SMALL_SIZE_STOP) {
-        return (items.length > LIST_MIDDLE_SIZE_STOP)?LIST_MIDDLE_SIZE_STOP:Number.POSITIVE_INFINITY;
-      }
-
-      if (sizeStop === LIST_MIDDLE_SIZE_STOP) {
-        return (items && items.length > LIST_MIDDLE_SIZE_STOP)?Number.POSITIVE_INFINITY:LIST_SMALL_SIZE_STOP;
-      }
-
-      return LIST_SMALL_SIZE_STOP;
-    }
-
-    getFilteredItems(sizeStop) {
-      const {items, mapping, group} = this.props;
-      if (!Array.isArray(items)) {
-        return [];
-      }
-
-      const nbToDisplay = Math.min(this.maxSizeStop, sizeStop);
-      return items
-        .filter((item, idx) => {
-          return idx < nbToDisplay;
-        })
-        .map((item, idx) => ({
-          isObject: !!item.children,
-          key: item.reference?item.reference:item.value?item.value:idx,
-          show: true,
-          data: item.children?item.children:item,
-          mapping: mapping,
-          group: group
-        }));
+      return this.maxSizeStop > LIST_SMALL_SIZE_STOP;
     }
 
     getItems(){
@@ -159,52 +124,14 @@ const TableFieldBase = (renderUserInteractions = true) => {
       }));
     }
 
-    getShowMoreLabel(sizeStop) {
-      const {items, mapping} = this.props;
-      if (!Array.isArray(items) || (mapping && mapping.separator)) {
-        return null;
-      }
-
-      if (sizeStop === LIST_SMALL_SIZE_STOP) {
-        return (this.maxSizeStop > LIST_MIDDLE_SIZE_STOP)?VIEW_MORE_LABEL:VIEW_ALL_LABEL;
-      }
-
-      if (sizeStop === LIST_MIDDLE_SIZE_STOP) {
-        return (this.maxSizeStop > LIST_MIDDLE_SIZE_STOP)?VIEW_ALL_LABEL:VIEW_LESS_LABEL;
-      }
-
-      return VIEW_LESS_LABEL;
-    }
-
-    get hasShowMoreToggle() {
-      const {items, mapping} = this.props;
-      if (!Array.isArray(items) || (mapping && mapping.separator) || !renderUserInteractions) {
-        return false;
-      }
-
-      return this.maxSizeStop > LIST_SMALL_SIZE_STOP;
-    }
-
-    hasMore(sizeStop) {
-      const {items, mapping} = this.props;
-      if (!Array.isArray(items) || (mapping && mapping.separator)) {
-        return false;
-      }
-      const maxSizeStop = this.maxSizeStop;
-      const nbToDisplay = Math.min(maxSizeStop, sizeStop);
-
-      return maxSizeStop > nbToDisplay;
-    }
-
     handleShowMoreClick() {
-      this.setState(state => {
-        const nextSizeStop = this.getNextSizeStop(state.sizeStop);
+      this.setState((state,props) => {
+        const nextSizeStop = getNextSizeStop(state.sizeStop, props);
         return {
           sizeStop: nextSizeStop,
-          items: this.getFilteredItems(nextSizeStop),
+          items: getFilteredItems(nextSizeStop, this.maxSizeStop, props),
           hasShowMoreToggle: this.hasShowMoreToggle,
-          showMoreLabel: this.getShowMoreLabel(nextSizeStop),
-          hasMore: this.hasMore(nextSizeStop)
+          showMoreLabel: getShowMoreLabel(nextSizeStop, this.maxSizeStop, props)
         };
       });
     }

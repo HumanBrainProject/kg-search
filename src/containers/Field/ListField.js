@@ -17,19 +17,17 @@
 import React, { PureComponent } from "react";
 import { ObjectField, PrintViewObjectField } from "./ObjectField";
 import { ValueField, PrintViewValueField } from "./ValueField";
+import { LIST_SMALL_SIZE_STOP, 
+        getNextSizeStop, 
+        getFilteredItems, 
+        getShowMoreLabel, 
+        hasMore } from "./helpers";
 import "./ListField.css";
 
 const ListFieldBase = (renderUserInteractions = true) => {
 
   const ObjectFieldComponent = renderUserInteractions?ObjectField:PrintViewObjectField;
   const ValueFieldComponent = renderUserInteractions?ValueField:PrintViewValueField;
-
-  const LIST_SMALL_SIZE_STOP = 5;
-  const LIST_MIDDLE_SIZE_STOP = 10;
-
-  const VIEW_MORE_LABEL = "view more";
-  const VIEW_LESS_LABEL = "view less";
-  const VIEW_ALL_LABEL = "view all";
 
   const DefaultList = ({children}) => {
     return (
@@ -91,13 +89,13 @@ const ListFieldBase = (renderUserInteractions = true) => {
   class ListField extends PureComponent {
     constructor(props) {
       super(props);
-      const sizeStop = this.getNextSizeStop(Number.POSITIVE_INFINITY);
+      const sizeStop = getNextSizeStop(Number.POSITIVE_INFINITY, this.props);
       this.state = {
         sizeStop: sizeStop,
-        items: this.getFilteredItems(sizeStop),
+        items: getFilteredItems(sizeStop, this.maxSizeStop, this.props),
         hasShowMoreToggle: this.hasShowMoreToggle,
-        showMoreLabel: this.getShowMoreLabel(sizeStop),
-        hasMore: this.hasMore(sizeStop)
+        showMoreLabel: getShowMoreLabel(sizeStop, this.maxSizeStop, this.props),
+        hasMore: hasMore(sizeStop, this.maxSizeStop, this.props)
       };
       this.handleShowMoreClick = this.handleShowMoreClick.bind(this);
     }
@@ -115,63 +113,6 @@ const ListFieldBase = (renderUserInteractions = true) => {
       return items.length;
     }
 
-    getNextSizeStop(sizeStop) {
-      const {items, mapping} = this.props;
-
-      if (!Array.isArray(items) || (mapping && mapping.separator)) {
-        return Number.POSITIVE_INFINITY;
-      }
-
-      if (sizeStop === LIST_SMALL_SIZE_STOP) {
-        return (items.length > LIST_MIDDLE_SIZE_STOP)?LIST_MIDDLE_SIZE_STOP:Number.POSITIVE_INFINITY;
-      }
-
-      if (sizeStop === LIST_MIDDLE_SIZE_STOP) {
-        return (items && items.length > LIST_MIDDLE_SIZE_STOP)?Number.POSITIVE_INFINITY:LIST_SMALL_SIZE_STOP;
-      }
-
-      return LIST_SMALL_SIZE_STOP;
-    }
-
-    getFilteredItems(sizeStop) {
-      const {items, mapping, group} = this.props;
-
-      if (!Array.isArray(items)) {
-        return [];
-      }
-
-      const nbToDisplay = Math.min(this.maxSizeStop, sizeStop);
-      return items
-        .filter((item, idx) => {
-          return idx < nbToDisplay;
-        })
-        .map((item, idx) => ({
-          isObject: !!item.children,
-          key: item.reference?item.reference:item.value?item.value:idx,
-          show: true,
-          data: item.children?item.children:item,
-          mapping: mapping,
-          group: group
-        }));
-    }
-
-    getShowMoreLabel(sizeStop) {
-      const {items, mapping} = this.props;
-      if (!Array.isArray(items) || (mapping && mapping.separator)) {
-        return null;
-      }
-
-      if (sizeStop === LIST_SMALL_SIZE_STOP) {
-        return (this.maxSizeStop > LIST_MIDDLE_SIZE_STOP)?VIEW_MORE_LABEL:VIEW_ALL_LABEL;
-      }
-
-      if (sizeStop === LIST_MIDDLE_SIZE_STOP) {
-        return (this.maxSizeStop > LIST_MIDDLE_SIZE_STOP)?VIEW_ALL_LABEL:VIEW_LESS_LABEL;
-      }
-
-      return VIEW_LESS_LABEL;
-    }
-
     get hasShowMoreToggle() {
       const {items, mapping} = this.props;
       if (!Array.isArray(items) || (mapping && mapping.separator) || !renderUserInteractions) {
@@ -181,26 +122,15 @@ const ListFieldBase = (renderUserInteractions = true) => {
       return this.maxSizeStop > LIST_SMALL_SIZE_STOP;
     }
 
-    hasMore(sizeStop) {
-      const {items, mapping} = this.props;
-      if (!Array.isArray(items) || (mapping && mapping.separator)) {
-        return false;
-      }
-      const maxSizeStop = this.maxSizeStop;
-      const nbToDisplay = Math.min(maxSizeStop, sizeStop);
-
-      return maxSizeStop > nbToDisplay;
-    }
-
     handleShowMoreClick() {
-      this.setState(state => {
-        const nextSizeStop = this.getNextSizeStop(state.sizeStop);
+      this.setState((state, props) => {
+        const nextSizeStop = getNextSizeStop(state.sizeStop, props);
         return {
           sizeStop: nextSizeStop,
-          items: this.getFilteredItems(nextSizeStop),
+          items: getFilteredItems(nextSizeStop, this.maxSizeStop, props),
           hasShowMoreToggle: this.hasShowMoreToggle,
-          showMoreLabel: this.getShowMoreLabel(nextSizeStop),
-          hasMore: this.hasMore(nextSizeStop)
+          showMoreLabel: getShowMoreLabel(nextSizeStop, this.maxSizeStop, props),
+          hasMore: hasMore(nextSizeStop, this.maxSizeStop, props)
         };
       });
     }
