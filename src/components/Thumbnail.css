@@ -17,6 +17,25 @@
 .kgs-thumbnail--container {
   display: inline-block;
   position: relative;
+  margin-right: 3px;
+}
+
+.kgs-thumbnail--panel {
+  margin-right: 3px;
+}
+
+.kgs-thumbnail--container .kgs-thumbnail--panel {
+  margin-right: 0;
+}
+
+.kgs-thumbnail--panel .fa-file-o {
+  transform: scale(2) translateX(-2px);
+}
+
+.kgs-thumbnail--container .kgs-thumbnail--panel .kgs-thumbnail--image {
+  max-width: 2em;
+  height: 2em;
+  margin: 0 ;
 }
 
 .kgs-thumbnail--button {
@@ -100,10 +119,15 @@
 }
 
 .kgs-thumbnail--zoom-dynamic {
+  color: white;
+  opacity: 0.7;
+}
+
+.kgs-thumbnail--button:hover .kgs-thumbnail--zoom-dynamic {
+  opacity: 1;
   -moz-animation: kgs-thumbnail-zoom-dynamic 0.75s infinite ease-in-out;
   -webkit-animation: kgs-thumbnail-zoom-dynamic 0.75s infinite ease-in-out;
   animation: kgs-thumbnail-zoom-dynamic 0.75s infinite ease-in-out;
-  color: white;
 }
 
 @-ms-keyframes kgs-thumbnail-zoom-static {
@@ -212,16 +236,23 @@
 }
 
 .kgs-thumbnail--zoom-static {
-  -moz-animation: kgs-thumbnail-zoom-static 3s infinite linear;
-  -webkit-animation: kgs-thumbnail-zoom-static 3s infinite linear;
-  animation: kgs-thumbnail-zoom-static infinite 3s linear;
+  color: white;
+  font-weight: bold;
+  opacity: 0.7;
+}
+
+.kgs-thumbnail--button:hover .kgs-thumbnail--zoom-static {
+  opacity: 1;
+  -moz-animation: kgs-thumbnail-zoom-static 5s infinite linear;
+  -webkit-animation: kgs-thumbnail-zoom-static 5s infinite linear;
+  animation: kgs-thumbnail-zoom-static infinite 5s linear;
 }
 
 .kgs-thumbnail--image > .kgs-thumbnail--zoom-dynamic {
   position: absolute;
   top: 10px;
-  left: 3px;
-  transform: scale(0.8);
+  left: 8px;
+  transform: scale(1.2);
 }
 
 :not(.kgs-thumbnail--image) > .kgs-thumbnail--zoom-dynamic {
@@ -234,8 +265,12 @@
 .kgs-thumbnail--image > .kgs-thumbnail--zoom-static {
   position: absolute;
   top: 10px;
-  left: 3px;
-  transform: scale(0.8);
+  left: 6px;
+}
+
+.kgs-thumbnail--image > .kgs-thumbnail--zoom-static:before {
+  transform: scale(1.4);
+  display: inline-block;
 }
 
 :not(.kgs-thumbnail--image) > .kgs-thumbnail--zoom-static {
