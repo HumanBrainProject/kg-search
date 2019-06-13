@@ -38,7 +38,7 @@ const FieldBase = (renderUserInteractions = true) => {
     const isList = Array.isArray(data);
     const isTable = mapping.isTable;
     const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
-    const className = "kgs-field" + (name?" kgs-field__" + name:"") + (mapping.layout?" kgs-field__layout-" + mapping.layout:"");
+    const className = "kgs-field" + (name?" kgs-field__" + name:"") + (mapping.layout?" kgs-field__layout-" + mapping.layout:"") + (isTable?" kgs-field__table":"");
 
     const labelProps = {
       show: !!mapping.value && (!mapping.labelHidden || !!renderUserInteractions),

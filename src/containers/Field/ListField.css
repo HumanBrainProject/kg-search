@@ -45,7 +45,7 @@
 }
 
 @media (min-width: 992px) {
-    .kgs-field__subjects .kgs-field__list {
+    .kgs-field__table > .kgs-field__list {
         display: none;
     }
  }

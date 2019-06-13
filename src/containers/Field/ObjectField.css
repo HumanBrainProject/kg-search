@@ -32,7 +32,7 @@
 }
 
 @media (min-width: 992px) {
-    .kgs-field__subjects .kgs-field__object {
+    .kgs-field__table > .kgs-field__object {
         display: none;
     }
  }

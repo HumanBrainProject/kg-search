@@ -14,8 +14,9 @@
 *   limitations under the License.
 */
 
-.kg-field__table {
+.kgs-field__table .table {
     width: 100%;
+    display: none;
 }
 
 .kgs-field button[role="link"].kgs-field__viewMore-button {
@@ -34,18 +35,12 @@
     color: #08c;
 }
 
-.kgs-field__table-body  .kgs-field__samples .kgs-field__list {
+.kgs-field__table  .table .kgs-field__list {
     display: block;
 }
 
 @media (min-width: 992px) {
-    .kg-field__table-body .kgs-field__list {
-        display: block;
-    }
- }
-
-@media (max-width: 992px) {
-    .kg-field__table {
-        display: none;
+    .kgs-field__table .table {
+        display: table;
     }
  }

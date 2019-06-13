@@ -59,6 +59,6 @@
     padding-top: 10px;
 }
 
-.kg-field__table .kgs-field .field-label {
+.kgs-field__table .table th > .kgs-field > .field-label {
     display: none;
 }

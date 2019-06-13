@@ -55,7 +55,7 @@ const TableFieldBase = (renderUserInteractions = true) => {
 
     return (
       fields && fields[0] ?
-        <table className="table kg-field__table">
+        <table className="table">
           <thead>
             <tr>
               {fields[0].map((el,id) =>
@@ -63,7 +63,7 @@ const TableFieldBase = (renderUserInteractions = true) => {
               )}
             </tr>
           </thead>
-          <tbody className="kg-field__table-body">
+          <tbody>
             {fields.map((item, index) => <CustomTableRow key={`${index}`}  item={item} isFirst={!index} viewComponent={FieldComponent}/>)}
             {showToggle && (
               <tr>
