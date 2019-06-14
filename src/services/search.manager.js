@@ -130,7 +130,7 @@ export default class SearchManager {
     });
 
     //const queryProcessorFunction = SearchKitHelpers.getQueryProcessor(store, this.searchkit, queryTweaking);
-    const queryProcessorFunction = SearchKitHelpers.getQueryProcessor(this.searchkit, queryTweaking);
+    const queryProcessorFunction = SearchKitHelpers.getQueryProcessor(this.searchkit, queryTweaking, store);
     this.searchkit.setQueryProcessor(queryProcessorFunction);
   }
   handleStateChange = () => {

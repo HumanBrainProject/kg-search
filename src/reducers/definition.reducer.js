@@ -60,6 +60,38 @@ const loadDefinitionSuccess = (state, action) => {
   }
 
   const initQueryFieldsRec = (queryFields, shapeFields, parent) => {
+    let key = Object.keys(shapeFields)[0];
+    let newQueryfields = {};
+    let result = {};
+    let children = {};
+    Object.values(shapeFields).forEach(el => {
+      Object.keys(el).forEach(fieldName => {
+        const field = shapeFields[key][fieldName];
+        const fullFieldName = parent + fieldName;
+        let queryField = queryFields[fullFieldName];
+        if (!queryField) {
+          queryField = { boost: 1 };
+          queryFields[fullFieldName] = queryField;
+        }
+
+        if (field && field.boost && field.boost > queryField.boost) {
+          queryField.boost = field.boost;
+        }
+
+        result[fullFieldName] = queryField;
+        newQueryfields[key] = result;
+
+        if (field["children"] !== undefined) {
+          children = initQueryFieldsChildren(field["children"], fullFieldName + ".children.");
+          newQueryfields[key] = Object.assign(result, children);
+        }
+      });
+    });
+    return newQueryfields;
+  };
+
+  const initQueryFieldsChildren = (shapeFields, parent) => {
+    let queryFields = {};
     Object.keys(shapeFields).forEach(fieldName => {
       const field = shapeFields[fieldName];
       const fullFieldName = parent + fieldName;
@@ -72,27 +104,50 @@ const loadDefinitionSuccess = (state, action) => {
       if (field && field.boost && field.boost > queryField.boost) {
         queryField.boost = field.boost;
       }
-
-      if (field["children"] !== undefined) {
-        initQueryFieldsRec(queryFields, field["children"], fullFieldName + ".children.");
-      }
     });
+    return queryFields;
+  };
+
+  const filterShapeFields = (shape, shapeFields) => {
+    const  filteredShapedFields = {};
+    const result = {};
+    for (let [key, value] of Object.entries(shapeFields)) {
+      if(value.ignoreForSearch !== true) {
+        filteredShapedFields[key] = value;
+      }
+    }
+    result[shape] = filteredShapedFields;
+    return result;
   };
 
   let queryFields = {};
+  let queryValuesBoost = [];
   if (source) {
     Object.keys(source).forEach(shape => {
       const shapeFields = source[shape] && source[shape].fields;
-      initQueryFieldsRec(queryFields, shapeFields, "");
+      const filteredShapeFields = filterShapeFields(shape, shapeFields);
+      let n = initQueryFieldsRec(queryFields, filteredShapeFields, "");
+      queryValuesBoost.push(n);
     });
   }
-  queryFields = Object.keys(queryFields).map(fieldName => {
-    const boost = queryFields[fieldName].boost;
-    if (boost) {
-      return fieldName + ".value^" + boost;
-    }
-    return fieldName + ".value";
+
+  queryValuesBoost.map(field => {
+    let key = Object.keys(field)[0];
+    Object.values(field).forEach(fieldObj => {
+      let lastRes = [];
+      Object.keys(fieldObj).forEach(f => {
+        const boost = fieldObj[f].boost;
+        if (boost) {
+          lastRes.push(f + ".value^" + boost);
+        } else {
+          lastRes.push(f + ".value");
+        }
+      });
+      field[key] = lastRes;
+    });
+    return field;
   });
+
   let facetFields = {};
   let sortFields = { _score: { label: "Relevance", key: "newestFirst",
     fields: [{ field: "_score", options: { order: "desc" } },{ field: "first_release.value", options: { order: "desc", missing: "_last" } } ],
@@ -150,14 +205,13 @@ const loadDefinitionSuccess = (state, action) => {
   }
 
   sortFields = Object.values(sortFields);
-
   return {
     ...state,
     isReady: true,
     hasRequest: false,
     isLoading: false,
     shapeMappings: shapeMappings,
-    queryFields: queryFields,
+    queryFields: queryValuesBoost,
     facetFields: facetFields,
     sortFields: sortFields,
     facetTypesOrder: facetTypesOrder,
@@ -246,6 +300,7 @@ function simplifySemanticKeysForField(field) {
   field.facetExclusiveSelection = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "facetExclusiveSelection", false);
   field.count = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "count", false);
   field.collapsible = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "collapsible", false);
+  field.ignoreForSearch = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "ignoreForSearch", false);
 }
 
 

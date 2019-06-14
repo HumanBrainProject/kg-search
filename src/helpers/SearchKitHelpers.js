@@ -171,7 +171,7 @@ export class SearchKitHelpers {
     }
     return str;
   }
-  static getQueryProcessor(searchkit, queryTweaking) {
+  static getQueryProcessor(searchkit, queryTweaking, store) {
   //static getQueryProcessor(store, searchkit, queryTweaking) {
 
     /*
@@ -187,11 +187,11 @@ export class SearchKitHelpers {
             }));
         }
         */
-
     return plainQueryObject => {
-
       //if not type is selected we make sure no other filters are active.
       const selectedType = searchkit.state.facet_type && searchkit.state.facet_type.length > 0 ? searchkit.state.facet_type[0]: "";
+      const queryFields = store.getState().definition.queryFields;
+      const fields = queryFields.filter(field => field[selectedType])[0][selectedType];
 
       if (!selectedType) {
         let activeFilter = false;
@@ -230,6 +230,9 @@ export class SearchKitHelpers {
           if (plainQueryObject.query.query_string && plainQueryObject.query.query_string.query) {
             plainQueryObject.query.query_string.query = SearchKitHelpers.sanitizeString(plainQueryObject.query.query_string.query, queryTweaking);
             plainQueryObject.query.query_string.lenient = true; //Makes ES ignore search on non text fields
+          }
+          if(plainQueryObject.query.query_string.fields) {
+            plainQueryObject.query.query_string.fields = fields;
           }
         }
         /*
