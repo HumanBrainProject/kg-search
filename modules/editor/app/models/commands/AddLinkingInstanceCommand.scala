@@ -24,7 +24,7 @@ import services.EditorService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class AddLinkingInstanceCommand(
+final case class AddLinkingInstanceCommand(
   targetId: NexusLink,
   currentInstanceRef: NexusInstanceReference,
   linkingInstanceType: String,

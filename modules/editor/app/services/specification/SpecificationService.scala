@@ -36,7 +36,7 @@ import services.{ConfigurationService, CredentialsService, OIDCAuthService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class SpecificationFile(id: String, data: JsObject)
+final case class SpecificationFile(id: String, data: JsObject)
 
 @Singleton
 class SpecificationService @Inject()(
@@ -52,6 +52,8 @@ class SpecificationService @Inject()(
   private val specIdQueryPath = NexusPath("minds", "meta", "specification", "v0.0.1")
   private val specFieldIdQueryId = "specificationFieldIdentifier"
   private val specQueryId = "specificationIdentifier"
+  private val specFieldTypeIdQueryPath = NexusPath("minds", "meta", "specificationfieldtype", "v0.0.1")
+  private val specFieldTypeIdQueryId = "specificationFieldTypeIdentifier"
   private val log = LoggerFactory.getLogger(this.getClass)
   object instanceApiService extends InstanceApiService
 
@@ -59,22 +61,21 @@ class SpecificationService @Inject()(
     log.debug("Specification Service INITIALIZATION ---------------------------------")
     //Get by identifier all Specification field
     log.debug("Specification Service INITIALIZATION --- Fetching remote specification fields")
+
     OIDCAuthService.getTechAccessToken(forceRefresh = true).flatMap { token =>
-      getOrCreateSpecificationQueries(token).flatMap { _ =>
-        log.info(s"Specification Service INITIALIZATION --- Done fetching and creating queries")
-        getOrCreateSpecificationAndSpecificationFields(token).map { s =>
-          Done
+      createSpecificationQueries("Queries", token).flatMap { _ =>
+        createSpecificationQueries("SpecificationQueries", token).flatMap { _ =>
+          log.info(s"Specification Service INITIALIZATION --- Done fetching and creating queries")
+          getOrCreateSpecificationAndSpecificationFields(token).map { s =>
+            Done
+          }
         }
       }
     }
   }
 
   private def getOrCreateSpecificationAndSpecificationFields(token: RefreshAccessToken): Future[Done] = {
-    WSClient
-      .url(s"${config.kgQueryEndpoint}/query/${specFieldIdQueryPath.toString()}/$specFieldIdQueryId/instances")
-      .addHttpHeaders(AUTHORIZATION -> token.token)
-      .addQueryStringParameters(QueryConstants.VOCAB -> QueryConstants.DEFAULT_VOCAB)
-      .get()
+    runQuery(s"${specFieldIdQueryPath.toString}/$specFieldIdQueryId/instances", token)
       .flatMap { specFieldResult =>
         specFieldResult.status match {
           case OK =>
@@ -126,11 +127,7 @@ class SpecificationService @Inject()(
   ): Future[Done] = {
     log.debug("Specification Service INITIALIZATION --- Fetching remote specifications")
     val futListOfSpecToUpload =
-      WSClient
-        .url(s"${config.kgQueryEndpoint}/query/${specIdQueryPath.toString()}/$specQueryId/instances")
-        .addHttpHeaders(AUTHORIZATION -> token.token)
-        .addQueryStringParameters(QueryConstants.VOCAB -> QueryConstants.DEFAULT_VOCAB)
-        .get()
+      runQuery(s"${specIdQueryPath.toString}/$specQueryId/instances", token)
         .map { res =>
           res.status match {
             case OK =>
@@ -145,9 +142,14 @@ class SpecificationService @Inject()(
                   .as[List[JsObject]]
                   .map(
                     js =>
-                      Json.obj(
-                        JsonLDConstants.ID -> s"${config.nexusEndpoint}/v0/data/${fieldsIdMap(js.value(JsonLDConstants.ID).as[String]).toString}"
-                    )
+                      js.value
+                        .get(JsonLDConstants.ID)
+                        .map { v =>
+                          Json.obj(
+                            JsonLDConstants.ID -> s"${config.nexusEndpoint}/v0/data/${fieldsIdMap(v.as[String]).toString}"
+                          )
+                        }
+                        .getOrElse(js)
                   )
                 file.copy(
                   data = Json
@@ -160,7 +162,9 @@ class SpecificationService @Inject()(
               )
               specToUpload
             case _ =>
-              log.error("Could not fetch specifications")
+              log.error(
+                s"Specification service INITIALIZATION --- Could not fetch specifications - ${res.status} - ${res.body}"
+              )
               List[SpecificationFile]()
           }
         }
@@ -238,32 +242,46 @@ class SpecificationService @Inject()(
       }
   }
 
-  def getOrCreateSpecificationQueries(token: RefreshAccessToken): Future[List[NexusInstanceReference]] = {
-    log.info("Specification service INITIALIZATION --- Fetching local queries")
-    val futQueriesToCreate =
-      fetchFile("Queries").foldLeft(Future((List[SpecificationFile](), List[SpecificationFile]()))) {
-        //Creating 2 list of spec file one with the one already created
-        // the second one with the ones that should be created
-        case (previousFuture, file) =>
-          val queryId = NexusInstanceReference.fromUrl(file.id)
-          previousFuture.flatMap { previousResult =>
-            WSClient
-              .url(s"${config.kgQueryEndpoint}/query/${queryId.toString()}")
-              .addHttpHeaders(AUTHORIZATION -> token.token)
-              .addQueryStringParameters(QueryConstants.VOCAB -> EditorConstants.editorVocab)
-              .get()
-              .map { response =>
-                response.status match {
-                  case OK        => (file :: previousResult._1, previousResult._2)
-                  case NOT_FOUND => (previousResult._1, file :: previousResult._2)
-                  case _ =>
-                    log.error(s"Could not fetch specification queries - ${response.status} - ${response.body}")
-                    previousResult
-                }
+  /**
+    * Creating 2 lists of spec file one with the one already created
+    * the second one with the ones that should be created
+    * @param token the tech account token
+    * @return
+    */
+  private def getSpecificationQueries(
+    folder: String,
+    token: RefreshAccessToken
+  ): Future[(List[SpecificationFile], List[SpecificationFile])] = {
+    fetchFile(folder).foldLeft(Future((List[SpecificationFile](), List[SpecificationFile]()))) {
+      case (previousFuture, file) =>
+        val queryId = NexusInstanceReference.fromUrl(file.id)
+        previousFuture.flatMap { previousResult =>
+          runQuery(queryId.toString, token)
+            .map { response =>
+              response.status match {
+                case OK        => (file :: previousResult._1, previousResult._2)
+                case NOT_FOUND => (previousResult._1, file :: previousResult._2)
+                case _ =>
+                  log.error(s"Could not fetch specification queries - ${response.status} - ${response.body}")
+                  previousResult
               }
-          }
-      }
+            }
+        }
+    }
+  }
 
+  def fetchSpecificationQueries(token: RefreshAccessToken): Future[List[NexusInstanceReference]] = {
+    getSpecificationQueries("SpecificationQueries", token).map { l =>
+      l._1.map(f => NexusInstanceReference.fromUrl(f.id))
+    }
+  }
+
+  private def createSpecificationQueries(
+    folder: String,
+    token: RefreshAccessToken
+  ): Future[List[NexusInstanceReference]] = {
+    log.info("Specification service INITIALIZATION --- Fetching local queries")
+    val futQueriesToCreate = getSpecificationQueries(folder, token)
     futQueriesToCreate.flatMap { l =>
       log.info(s"Specification service INITIALIZATION --- Creating queries - ${l._2.map(_.id)}")
       val created = l._2.map { file =>
@@ -293,4 +311,16 @@ class SpecificationService @Inject()(
       .addQueryStringParameters(QueryConstants.VOCAB -> EditorConstants.META)
       .get()
   }
+
+  private def runQuery(
+    queryPath: String,
+    token: RefreshAccessToken,
+  ): Future[WSResponse] = {
+    WSClient
+      .url(s"${config.kgQueryEndpoint}/query/$queryPath")
+      .addHttpHeaders(AUTHORIZATION -> token.token)
+      .addQueryStringParameters(QueryConstants.VOCAB -> QueryConstants.DEFAULT_VOCAB)
+      .get()
+  }
+
 }

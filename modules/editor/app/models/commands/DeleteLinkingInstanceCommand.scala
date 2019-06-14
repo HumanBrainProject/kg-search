@@ -22,7 +22,7 @@ import services.EditorService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class DeleteLinkingInstanceCommand(
+final case class DeleteLinkingInstanceCommand(
   from: NexusInstanceReference,
   to: NexusInstanceReference,
   linkingInstancePath: NexusPath,

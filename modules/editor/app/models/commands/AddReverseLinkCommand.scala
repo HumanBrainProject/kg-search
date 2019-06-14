@@ -25,7 +25,7 @@ import services.EditorService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class AddReverseLinkCommand(
+final case class AddReverseLinkCommand(
   reverseInstanceLink: NexusLink,
   reverseInstance: NexusInstance,
   targetField: String,

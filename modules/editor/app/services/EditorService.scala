@@ -193,31 +193,32 @@ class EditorService @Inject()(
   ): Future[Either[APIEditorMultiError, Unit]] = {
     form match {
       case Some(json) =>
-        formService.getRegistries().formRegistry.registry.get(instanceRef.nexusPath) match {
-          case Some(spec)
-              if spec.getFieldsAsMap.values.exists(p => p.isReverse.getOrElse(false)) |
-              spec.getFieldsAsMap.values.exists(p => p.isLinkingInstance.getOrElse(false)) =>
-            reverseLinkService
-              .generateDiffAndUpdateInstanceWithReverseLink(
+        formService.getRegistries().flatMap { registries =>
+          registries.formRegistry.registry.get(instanceRef.nexusPath) match {
+            case Some(spec)
+                if spec.getFieldsAsMap.values.exists(p => p.isReverse.getOrElse(false)) |
+                spec.getFieldsAsMap.values.exists(p => p.isLinkingInstance.getOrElse(false)) =>
+              reverseLinkService
+                .generateDiffAndUpdateInstanceWithReverseLink(
+                  instanceRef,
+                  json,
+                  token,
+                  user,
+                  registries
+                )
+            case _ =>
+              generateDiffAndUpdateInstance(
                 instanceRef,
                 json,
                 token,
                 user,
-                formService.getRegistries()
+                registries
               )
-          case _ =>
-            generateDiffAndUpdateInstance(
-              instanceRef,
-              json,
-              token,
-              user,
-              formService.getRegistries()
-            )
+          }
         }
       case None =>
         Future(Left(APIEditorMultiError(BAD_REQUEST, List(APIEditorError(BAD_REQUEST, "No content provided")))))
     }
-
   }
 
   /**

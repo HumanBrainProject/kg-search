@@ -84,9 +84,10 @@ class EditorUserController @Inject()(
     (authenticatedUserAction andThen
     EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
       for {
-        token <- oIDCAuthService.getTechAccessToken()
+        token      <- oIDCAuthService.getTechAccessToken()
+        registries <- formService.getRegistries()
         res <- editorUserListService
-          .getUserBookmarkLists(request.editorUser, formService.getRegistries().formRegistry, token)
+          .getUserBookmarkLists(request.editorUser, registries.formRegistry, token)
           .map {
             case Left(r)  => r.toResult
             case Right(l) => Ok(Json.toJson(EditorResponseObject(Json.toJson(l))))
@@ -104,23 +105,25 @@ class EditorUserController @Inject()(
     search: String
   ): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     val nexusPath = NexusPath(org, domain, datatype, version)
-    editorService
-      .retrievePreviewInstances(
-        nexusPath,
-        formService.getRegistries().formRegistry,
-        from,
-        size,
-        search,
-        request.userToken
-      )
-      .map {
-        case Right((data, count)) =>
-          formService.getRegistries().formRegistry.registry.get(nexusPath) match {
-            case Some(spec) => Ok(Json.toJson(EditorResponseWithCount(Json.toJson(data), spec.label, count)))
-            case None       => Ok(Json.toJson(EditorResponseWithCount(Json.toJson(data), nexusPath.toString(), count)))
-          }
-        case Left(res) => res.toResult
-      }
+    formService.getRegistries().flatMap { registries =>
+      editorService
+        .retrievePreviewInstances(
+          nexusPath,
+          registries.formRegistry,
+          from,
+          size,
+          search,
+          request.userToken
+        )
+        .map {
+          case Right((data, count)) =>
+            registries.formRegistry.registry.get(nexusPath) match {
+              case Some(spec) => Ok(Json.toJson(EditorResponseWithCount(Json.toJson(data), spec.label, count)))
+              case None       => Ok(Json.toJson(EditorResponseWithCount(Json.toJson(data), nexusPath.toString(), count)))
+            }
+          case Left(res) => res.toResult
+        }
+    }
   }
 
   def getInstancesbyBookmarkList(

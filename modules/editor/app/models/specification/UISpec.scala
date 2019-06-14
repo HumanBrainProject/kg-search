@@ -18,14 +18,15 @@ package models.specification
 
 import scala.collection.mutable
 
-case class UISpec(
+final case class UISpec(
   label: String,
   fields: List[EditorFieldSpecification],
   uiInfo: Option[UIInfo] = None,
   isEditable: Option[Boolean] = None,
   color: Option[String] = None,
   folderID: Option[String] = None,
-  folderName: Option[String] = None
+  folderName: Option[String] = None,
+  refreshSpecification: Option[Boolean] = None
 ) {
 
   def getFieldsAsLinkedMap: mutable.LinkedHashMap[String, EditorFieldSpecification] = {
@@ -53,7 +54,8 @@ object UISpec {
     (JsPath \ "editable").readNullable[Boolean] and
     (JsPath \ "color").readNullable[String] and
     (JsPath \ "folderID").readNullable[String] and
-    (JsPath \ "folderName").readNullable[String]
+    (JsPath \ "folderName").readNullable[String] and
+    (JsPath \ "refreshSpecification").readNullable[Boolean]
   )(UISpec.apply _)
 
   implicit val UISpecWrites: Writes[UISpec] = (
@@ -63,6 +65,7 @@ object UISpec {
     (JsPath \ "editable").writeNullable[Boolean] and
     (JsPath \ "color").writeNullable[String] and
     (JsPath \ "folderID").writeNullable[String] and
-    (JsPath \ "folderName").writeNullable[String]
+    (JsPath \ "folderName").writeNullable[String] and
+    (JsPath \ "refreshSpecification").writeNullable[Boolean]
   )(unlift(UISpec.unapply))
 }

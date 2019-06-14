@@ -17,7 +17,7 @@ package models
 
 import play.api.libs.json.{JsPath, Reads, Writes}
 
-case class Pagination(size: Int, total: Int, totalPage: Int, number: Int)
+final case class Pagination(size: Int, total: Int, totalPage: Int, number: Int)
 
 object Pagination {
   import play.api.libs.functional.syntax._

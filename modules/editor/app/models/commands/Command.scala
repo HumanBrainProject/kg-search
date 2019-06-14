@@ -23,7 +23,7 @@ trait Command {
   def execute()(implicit executionContext: ExecutionContext): Future[Either[APIEditorError, Unit]]
 }
 
-case class NullCommand() extends Command {
+final case class NullCommand() extends Command {
   override def execute()(implicit executionContext: ExecutionContext): Future[Either[APIEditorError, Unit]] =
     Future(Right(()))
 }

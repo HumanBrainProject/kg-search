@@ -1,9 +1,8 @@
 {
   "https://schema.hbp.eu/meta/editor/key": "https://schema.hbp.eu/meta/editor/folderID",
-  "https://schema.hbp.eu/meta/editor/label": "Specification folder id",
-  "http://schema.org/name": "Specification folder id",
+  "https://schema.hbp.eu/meta/editor/label": "Folder ID",
+  "http://schema.org/name": "Folder ID",
   "https://schema.hbp.eu/meta/editor/type": "InputText",
   "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specificationfield/v0.0.1/folderID",
-  "@type": "https://schema.hbp.eu/minds/Specificationfield",
-  "https://schema.hbp.eu/meta/editor/value": null
+  "@type": "https://schema.hbp.eu/minds/Specificationfield"
 }

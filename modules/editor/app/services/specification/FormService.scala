@@ -16,16 +16,16 @@
 
 package services.specification
 
-import akka.Done
 import com.google.inject.{Inject, Singleton}
 import constants._
 import models._
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
 import models.specification._
 import models.user.NexusUser
+import monix.eval.Task
+import monix.execution.Scheduler.Implicits.global
+import org.slf4j
 import org.slf4j.LoggerFactory
-import play.api.Logger
-import play.api.http.HeaderNames.AUTHORIZATION
 import play.api.http.Status.OK
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
@@ -34,7 +34,7 @@ import services.{ConfigurationService, OIDCAuthService}
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{Await, ExecutionContext, Future}
 
-case class FormRegistries(formRegistry: FormRegistry[UISpec], queryRegistry: FormRegistry[QuerySpec])
+final case class FormRegistries(formRegistry: FormRegistry[UISpec], queryRegistry: FormRegistry[QuerySpec])
 
 @Singleton
 class FormService @Inject()(
@@ -46,46 +46,61 @@ class FormService @Inject()(
 
   private var stateSpec: Option[FormRegistries] = None
 
-  val timeout = FiniteDuration(60, "sec")
+  val timeout = FiniteDuration(30, "sec")
   val retryTime = 5000 //ms
-  val logger = LoggerFactory.getLogger(this.getClass)
+  val logger: slf4j.Logger = LoggerFactory.getLogger(this.getClass)
+  Await.result(specificationService.init(), timeout)
 
-  Await.result(flushSpec(), timeout)
-
-  def getRegistries(): FormRegistries = stateSpec match {
-    case Some(reg) => reg
-    case None      => Await.result(loadFormConfiguration(), timeout).get
+  /**
+    * @return the specification and stored queries
+    */
+  def getRegistries(): Future[FormRegistries] = stateSpec match {
+    case Some(spec) => Future.successful(spec)
+    case None       => loadFormConfiguration().runToFuture
   }
 
-  def flushSpec(): Future[Done] =
+  def flushSpec(): Future[FormRegistries] =
     specificationService.init().flatMap { _ =>
-      loadFormConfiguration().map { _ =>
-        logger.info(s"Form Service INITIALIZATION --- Done loading form specification")
-        Done
-      }
+      loadFormConfiguration().runToFuture
     }
 
-  final def loadFormConfiguration(): Future[Option[FormRegistries]] = {
+  private final def loadFormConfiguration(): Task[FormRegistries] = {
     logger.info("Form Service INITIALIZATION --- Starting to load specification")
-    for {
-      token     <- OIDCAuthService.getTechAccessToken(true)
-      querySpec <- ws.url(s"${config.kgQueryEndpoint}/arango/internalDocuments/editor_specifications").get()
-    } yield {
-      querySpec.status match {
-        case OK =>
-          val registries = FormService.getRegistry(querySpec.json.as[List[JsObject]], specificationService, token)
-          stateSpec = Some(registries)
-          Some(registries)
-        case _ =>
-          logger.warn(s"Form Service INITIALIZATION --- Could not load configuration")
-          None
+    Task.deferFuture {
+      OIDCAuthService.getTechAccessToken(true).flatMap { token =>
+        ws.url(s"${config.kgQueryEndpoint}/arango/internalDocuments/editor_specifications").get().flatMap { querySpec =>
+          querySpec.status match {
+            case OK =>
+              FormService.getRegistry(querySpec.json.as[List[JsObject]], specificationService, token).map {
+                registries =>
+                  logger.info(s"Form Service INITIALIZATION --- Done loading form specification")
+                  stateSpec = Some(registries)
+                  registries
+              }
+            case _ =>
+              logger.error(s"Form Service INITIALIZATION --- Could not load configuration")
+              Future.failed(
+                new Exception(s"Form Service INITIALIZATION --- Could not load configuration - ${querySpec.body}")
+              )
+          }
+        }
       }
     }
   }
+
+  def shouldReloadSpecification(path: NexusPath): Future[Boolean] = {
+    this.getRegistries().map { registries =>
+      registries.formRegistry.registry
+        .get(path)
+        .map(spec => spec.refreshSpecification.exists(identity))
+        .exists(identity)
+    }
+  }
+
 }
 
 object FormService {
-  val log = LoggerFactory.getLogger(this.getClass)
+  val log: slf4j.Logger = LoggerFactory.getLogger(this.getClass)
 
   def removeKey(jsValue: JsValue): JsValue = {
     if (jsValue.validateOpt[JsObject].isSuccess) {
@@ -365,35 +380,39 @@ object FormService {
     js: List[JsObject],
     specificationService: SpecificationService,
     token: RefreshAccessToken
-  ): FormRegistries = {
+  )(implicit executionContext: ExecutionContext): Future[FormRegistries] = {
     val formRegistries = extractRegistries(js)
-    val systemQueries = Await.result(specificationService.getOrCreateSpecificationQueries(token), timeout)
-    val completeQueries = FormRegistry(
-      systemQueries.foldLeft(formRegistries.queryRegistry.registry) {
-        case (acc, el) => acc.updated(el.nexusPath, QuerySpec(Json.obj(), Some(el.id)))
+    for {
+      systemQueries  <- specificationService.fetchSpecificationQueries(token)
+      uiSpecResponse <- specificationService.fetchSpecifications(token)
+    } yield {
+      val completeQueries = FormRegistry(
+        systemQueries.foldLeft(formRegistries.queryRegistry.registry) {
+          case (acc, el) => acc.updated(el.nexusPath, QuerySpec(Json.obj(), Some(el.id)))
+        }
+      )
+
+      val uiSpecFromDB = uiSpecResponse.status match {
+        case OK => (uiSpecResponse.json \ "results").as[List[JsObject]]
+        case _ =>
+          log.error(
+            s"Could not fetch specification from DB - Status: ${uiSpecResponse.status} Content: ${uiSpecResponse.body}"
+          )
+          List()
       }
-    )
-    val uiSpecResponse = Await.result(specificationService.fetchSpecifications(token), timeout)
-    val uiSpecFromDB = uiSpecResponse.status match {
-      case OK => (uiSpecResponse.json \ "results").as[List[JsObject]]
-      case _ =>
-        log.error(
-          s"Could not fetch specification from DB - Status: ${uiSpecResponse.status} Content: ${uiSpecResponse.body}"
-        )
-        List()
+      val uiSpecRegistry = formRegistries.formRegistry.copy(
+        registry = uiSpecFromDB.foldLeft(formRegistries.formRegistry.registry) {
+          case (acc, el) =>
+            if ((el \ "targetType").asOpt[String].isDefined) {
+              val path = NexusPath((el \ "targetType").as[String])
+              acc.updated(path, el.as[UISpec])
+            } else {
+              acc
+            }
+        }
+      )
+      FormRegistries(uiSpecRegistry, completeQueries)
     }
-    val uiSpecRegistry = formRegistries.formRegistry.copy(
-      registry = uiSpecFromDB.foldLeft(formRegistries.formRegistry.registry) {
-        case (acc, el) =>
-          if ((el \ "targetType").asOpt[String].isDefined) {
-            val path = NexusPath((el \ "targetType").as[String])
-            acc.updated(path, el.as[UISpec])
-          } else {
-            acc
-          }
-      }
-    )
-    FormRegistries(uiSpecRegistry, completeQueries)
   }
 
   def extractRegistries(js: List[JsObject]): FormRegistries = {

@@ -20,7 +20,7 @@ import constants.JsonLDConstants
 import models.NexusPath
 import play.api.libs.json._
 
-case class NexusInstance(nexusUUID: Option[String], nexusPath: NexusPath, content: JsObject) {
+final case class NexusInstance(nexusUUID: Option[String], nexusPath: NexusPath, content: JsObject) {
 
   def id(): Option[String] = {
     this.nexusUUID.map(s => s"${this.nexusPath}/${s}")

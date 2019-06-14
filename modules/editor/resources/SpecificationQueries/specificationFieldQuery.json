@@ -16,7 +16,10 @@
     }
   },
   "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specificationfield/v0.0.1/specificationFieldQuery",
-  "meta:fields": [
+  "http://schema.org/identifier": "minds/meta/specificationfield/v0.0.1/specificationFieldQuery",
+  "description": "Fetching all the specification fields",
+  "label": "Specification fields",
+  "fields": [
     {
       "fieldname": "meta:instancesPath",
       "relative_path": "https://schema.hbp.eu/meta/editor/instancesPath"
@@ -54,6 +57,10 @@
       "relative_path": "https://schema.hbp.eu/meta/editor/closeDropdownAfterInteraction"
     },
     {
+      "fieldname": "meta:refreshSpecification",
+      "relative_path": "https://schema.hbp.eu/meta/editor/refreshSpecification"
+    },
+    {
       "fieldname": "meta:identifier",
       "relative_path": "http://schema.org/identifier"
     },
@@ -69,5 +76,7 @@
       "fieldname": "https://schema.hbp.eu/inference/alternatives",
       "relative_path": "https://schema.hbp.eu/inference/alternatives"
     }
-  ]
+  ],
+  "meta:refreshSpecification": true,
+  "query:refreshSpecification": true
 }

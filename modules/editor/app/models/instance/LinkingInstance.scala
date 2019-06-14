@@ -18,7 +18,7 @@ package models.instance
 import constants.{InternalSchemaFieldsConstants, JsonLDConstants}
 import play.api.libs.json._
 
-case class LinkingInstance(to: String, from: String, linkingInstanceType: String) {
+final case class LinkingInstance(to: String, from: String, linkingInstanceType: String) {
 
   def toNexusFormat: JsObject = {
     Json.obj(

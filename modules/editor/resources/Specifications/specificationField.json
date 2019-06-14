@@ -17,10 +17,8 @@
     },
     {
       "@id": "minds/meta/specificationfield/v0.0.1/type"
-    },
-    {
-      "@id": "minds/meta/specificationfield/v0.0.1/value"
     }
   ],
-  "https://schema.hbp.eu/meta/editor/targetType": "minds/meta/specificationfield/v0.0.1"
+  "https://schema.hbp.eu/meta/editor/targetType": "minds/meta/specificationfield/v0.0.1",
+  "https://schema.hbp.eu/meta/editor/refreshSpecification": true
 }

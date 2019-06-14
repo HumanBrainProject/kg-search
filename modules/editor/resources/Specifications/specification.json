@@ -25,5 +25,6 @@
   "https://schema.hbp.eu/meta/editor/label": "Specification",
   "http://schema.org/name": "Specification",
   "https://schema.hbp.eu/meta/editor/targetType": "minds/meta/specification/v0.0.1",
-  "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specification/v0.0.1/specification"
+  "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specification/v0.0.1/specification",
+  "https://schema.hbp.eu/meta/editor/refreshSpecification": true
 }
