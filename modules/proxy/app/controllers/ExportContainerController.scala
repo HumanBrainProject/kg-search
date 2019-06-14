@@ -17,6 +17,7 @@
 package controllers
 
 import java.io._
+import java.net.URL
 import java.util.zip.{ZipEntry, ZipOutputStream}
 
 import akka.Done
@@ -85,10 +86,13 @@ class ExportContainerController @Inject()(cc: ControllerComponents)(
                   "Content-Disposition" -> s"attachment; filename = ${filename}.zip; filename*=utf-8''${filename}.zip"
                 )
             case _ =>
+              val sourceUri = new URL(sourceUrl)
+              val containerUrl = new URL(sourceUri.getProtocol, sourceUri.getHost, sourceUri.getPath)
               BadRequest(
                 views.html.fileTooBigTemplate(
                   BigDecimal(archiveSizeInMb).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble,
-                  source
+                  containerUrl.toExternalForm,
+                  filesInfo.filter(i => (i \ "bytes").as[Long] > 0)
                 )
               )
           }
