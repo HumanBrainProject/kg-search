@@ -20,6 +20,7 @@ import { Hint} from "../components/Hint";
 import { ListField, PrintViewListField } from "./Field/ListField";
 import { ObjectField, PrintViewObjectField } from "./Field/ObjectField";
 import { ValueField, PrintViewValueField } from "./Field/ValueField";
+import { TableField, PrintViewTableField } from "./Field/TableField";
 import "./Field.css";
 
 const FieldBase = (renderUserInteractions = true) => {
@@ -27,6 +28,7 @@ const FieldBase = (renderUserInteractions = true) => {
   const ListFieldComponent = renderUserInteractions?ListField:PrintViewListField;
   const ObjectFieldComponent = renderUserInteractions?ObjectField:PrintViewObjectField;
   const ValueFieldComponent = renderUserInteractions?ValueField:PrintViewValueField;
+  const TableFieldComponent = renderUserInteractions?TableField:PrintViewTableField;
 
   const Field = ({name, data, mapping, group}) => {
     if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
@@ -34,8 +36,9 @@ const FieldBase = (renderUserInteractions = true) => {
     }
 
     const isList = Array.isArray(data);
+    const isTable = mapping.isTable;
     const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
-    const className = "kgs-field" + (name?" kgs-field__" + name:"") + (mapping.layout?" kgs-field__layout-" + mapping.layout:"");
+    const className = "kgs-field" + (name?" kgs-field__" + name:"") + (mapping.layout?" kgs-field__layout-" + mapping.layout:"") + (isTable?" kgs-field__table":"");
 
     const labelProps = {
       show: !!mapping.value && (!mapping.labelHidden || !!renderUserInteractions),
@@ -65,6 +68,12 @@ const FieldBase = (renderUserInteractions = true) => {
       mapping: mapping,
       group: group
     };
+    const tableProps = {
+      show: isTable,
+      items: data,
+      mapping: mapping,
+      group: group
+    };
 
     return (
       <span style={style} className={className}>
@@ -73,6 +82,7 @@ const FieldBase = (renderUserInteractions = true) => {
         <ValueFieldComponent {...valueProps} />
         <ListFieldComponent {...listProps} />
         <ObjectFieldComponent {...objectProps} />
+        <TableFieldComponent {...tableProps} />
       </span>
     );
   };

@@ -221,7 +221,6 @@ function simplifySemantics(source) {
 
 
 function simplifySemanticKeysForField(field) {
-
   field.value = getFieldAndRemove(field, GRAPHQUERY_NAMESPACE + "label", null);
   field.sort = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "sort", false);
   field.markdown = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "markdown", false);
@@ -229,6 +228,7 @@ function simplifySemanticKeysForField(field) {
   field.tagIcon = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "tag_icon", null);
   field.linkIcon = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "link_icon", null);
   field.visible = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "visible", true);
+  field.isTable = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isTable", false);
   field.showIfEmpty = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "showIfEmpty", false);
   field.layout = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "layout", null);
   field.hint = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "hint", null);
