@@ -59,11 +59,10 @@ const loadDefinitionSuccess = (state, action) => {
     delete source.serviceUrl;
   }
 
-  const initQueryFieldsRec = (queryFields, shapeFields, parent) => {
+  const initQueryFieldsRec = (shapeFields, parent) => {
     let key = Object.keys(shapeFields)[0];
+    let queryFields = {};
     let newQueryfields = {};
-    let result = {};
-    let children = {};
     Object.values(shapeFields).forEach(el => {
       Object.keys(el).forEach(fieldName => {
         const field = shapeFields[key][fieldName];
@@ -78,12 +77,11 @@ const loadDefinitionSuccess = (state, action) => {
           queryField.boost = field.boost;
         }
 
-        result[fullFieldName] = queryField;
-        newQueryfields[key] = result;
+        newQueryfields[key] = queryFields;
 
         if (field["children"] !== undefined) {
-          children = initQueryFieldsChildren(field["children"], fullFieldName + ".children.");
-          newQueryfields[key] = Object.assign(result, children);
+          let children = initQueryFieldsChildren(field["children"], fullFieldName + ".children.");
+          newQueryfields[key] = Object.assign(queryFields, children);
         }
       });
     });
@@ -91,21 +89,21 @@ const loadDefinitionSuccess = (state, action) => {
   };
 
   const initQueryFieldsChildren = (shapeFields, parent) => {
-    let queryFields = {};
+    let childrenQueryFields = {};
     Object.keys(shapeFields).forEach(fieldName => {
       const field = shapeFields[fieldName];
       const fullFieldName = parent + fieldName;
-      let queryField = queryFields[fullFieldName];
+      let queryField = childrenQueryFields[fullFieldName];
       if (!queryField) {
         queryField = { boost: 1 };
-        queryFields[fullFieldName] = queryField;
+        childrenQueryFields[fullFieldName] = queryField;
       }
 
       if (field && field.boost && field.boost > queryField.boost) {
         queryField.boost = field.boost;
       }
     });
-    return queryFields;
+    return childrenQueryFields;
   };
 
   const filterShapeFields = (shape, shapeFields) => {
@@ -120,14 +118,13 @@ const loadDefinitionSuccess = (state, action) => {
     return result;
   };
 
-  let queryFields = {};
   let queryValuesBoost = [];
   if (source) {
     Object.keys(source).forEach(shape => {
       const shapeFields = source[shape] && source[shape].fields;
       const filteredShapeFields = filterShapeFields(shape, shapeFields);
-      let n = initQueryFieldsRec(queryFields, filteredShapeFields, "");
-      queryValuesBoost.push(n);
+      let initFields = initQueryFieldsRec(filteredShapeFields, "");
+      queryValuesBoost.push(initFields);
     });
   }
 
