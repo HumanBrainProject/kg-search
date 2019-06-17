@@ -48,7 +48,7 @@ const mapStateToProps = (state, props) => {
       }, {});
     const page = params["p"];
     const sort = params["sort"];
-    typeof sort === 'undefined' || sort === "newestFirst" ? isSortedByRelevance = true : isSortedByRelevance = false;
+    typeof sort === "undefined" || sort === "newestFirst" ? isSortedByRelevance = true : isSortedByRelevance = false;
     trySplitResult = !(page && page !== "1") && !(sort && sort !== "_score_desc");
   } catch (e) {
     // window.console.debug("Failed to calculate stats");

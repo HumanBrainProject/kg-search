@@ -68,13 +68,14 @@ class SearchkitSeachPanelContainer extends SearchkitComponent {
     searchInput.blur();
   }
   render() {
-    const {isFloating, queryFields, onHelp} = this.props;
+    const {isFloating, onHelp} = this.props;
     const handleSearch = () => {
       this.searchkit.search();
     };
+
     return (
       <div className={`kgs-search ${isFloating?" is-fixed-position":""}`}>
-        <SearchBox placeholder="Search (e.g. brain or neuroscience)" autofocus={true} searchOnChange={false} queryFields={queryFields} queryBuilder={QueryString} />
+        <SearchBox placeholder="Search (e.g. brain or neuroscience)" autofocus={true} searchOnChange={false} queryBuilder={QueryString} />
         <button className="kgs-search-button" onClick={handleSearch}>Search</button>
         <button type="button" className="kgs-search-help__button" title="Help" onClick={onHelp}>
           <i className="fa fa-info-circle fa-2x"></i>
@@ -87,8 +88,7 @@ class SearchkitSeachPanelContainer extends SearchkitComponent {
 const SearchPanelContainer = connect(
   (state, props) => ({
     isFloating: props.isFloating,
-    relatedElements: props.relatedElements,
-    queryFields: state.definition.queryFields
+    relatedElements: props.relatedElements
   }),
   dispatch => ({
     onHelp: () => dispatch(actions.setInfo(help))
