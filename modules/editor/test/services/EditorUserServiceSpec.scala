@@ -59,6 +59,7 @@ class EditorUserServiceSpec
         id,
         "",
         "",
+        "",
         Seq(),
         Seq()
       )
@@ -107,6 +108,7 @@ class EditorUserServiceSpec
       val nexusIdUser = s"${EditorConstants.editorUserPath.toString()}/$idUser"
       val nexusUser = NexusUser(
         id,
+        "",
         "",
         "",
         Seq(),

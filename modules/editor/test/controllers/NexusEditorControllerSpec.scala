@@ -28,7 +28,7 @@ import play.api.Application
 import play.api.libs.json._
 import play.api.test.Injecting
 
-class EditorControllerSpec
+class NexusEditorControllerSpec
     extends PlaySpec
     with GuiceOneAppPerSuite
     with MockWSHelpers

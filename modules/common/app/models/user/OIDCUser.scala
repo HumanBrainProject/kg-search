@@ -24,9 +24,10 @@ import play.api.libs.json.{JsPath, Reads}
   * @param id
   * @param name
   * @param email
+  * @param picture
   * @param groups
   */
-class OIDCUser(val id: String,val name:String, val email:String, val groups:Seq[String]) extends User with Serializable {
+class OIDCUser(val id: String,val name:String, val email:String, val picture:String, val groups:Seq[String]) extends User with Serializable {
 
 }
 object OIDCUser {
@@ -34,8 +35,9 @@ object OIDCUser {
   val idLabel = "sub"
   val nameLabel = "name"
   val emailLabel = "email"
+  val pictureLabel = "picture"
   val groupsLabel = "groups"
-  val mandatoryFields = Seq(idLabel, nameLabel, emailLabel, groupsLabel)
+  val mandatoryFields = Seq(idLabel, nameLabel, emailLabel, pictureLabel, groupsLabel)
 
   import play.api.libs.functional.syntax._
 
@@ -43,11 +45,12 @@ object OIDCUser {
     (JsPath \ idLabel).read[String] and
       (JsPath \ nameLabel).read[String] and
       (JsPath \ emailLabel).read[String] and
+      (JsPath \ pictureLabel).read[String] and
       (JsPath \ groupsLabel).read[String].map(_.split(",").toSeq)
-    ) (new OIDCUser(_, _, _,_ ) )
+    ) (new OIDCUser(_, _, _, _,_ ) )
 
 
-  def unapply(arg: OIDCUser): Option[(String, String, String, Seq[String])] = Some((arg.id, arg.name, arg.email, arg.groups))
+  def unapply(arg: OIDCUser): Option[(String, String, String, String, Seq[String])] = Some((arg.id, arg.name, arg.email, arg.picture, arg.groups))
 
 
 }
