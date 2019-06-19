@@ -135,10 +135,10 @@ export class SearchKitHelpers {
             const re3 = new RegExp("([ \"\\[\\]{}()][+\\-]?)" + term + "$", "gi");
             const re4 = new RegExp("^([+\\-]?)" + term + "$", "gi");
             if (wildcardCondition && fuzzySearchCondition) {
-              str = str.replace(re1, "$1(" + term + "* OR " + term + "~)$2");
-              str = str.replace(re2, "$1(" + term + "* OR " + term + "~)$2");
-              str = str.replace(re3, "$1(" + term + "* OR " + term + "~)");
-              str = str.replace(re4, "$1(" + term + "* OR " + term + "~)");
+              str = str.replace(re1, "$1(" + term + " OR " + term + "* OR " + term + "~)$2");
+              str = str.replace(re2, "$1(" + term + " OR " + term + "* OR " + term + "~)$2");
+              str = str.replace(re3, "$1(" + term + " OR " + term + "* OR " + term + "~)");
+              str = str.replace(re4, "$1(" + term + " OR " + term + "* OR " + term + "~)");
             } else if (wildcardCondition) {
               str = str.replace(re1, "$1" + term + "*$2");
               str = str.replace(re2, "$1" + term + "*$2");
@@ -227,12 +227,12 @@ export class SearchKitHelpers {
           if (plainQueryObject.query.simple_query_string && plainQueryObject.query.simple_query_string.query) {
             plainQueryObject.query.simple_query_string.query = SearchKitHelpers.sanitizeString(plainQueryObject.query.simple_query_string.query, queryTweaking);
           }
+          if(plainQueryObject.query.query_string && plainQueryObject.query.query_string.fields) {
+            plainQueryObject.query.query_string.fields = fields;
+          }
           if (plainQueryObject.query.query_string && plainQueryObject.query.query_string.query) {
             plainQueryObject.query.query_string.query = SearchKitHelpers.sanitizeString(plainQueryObject.query.query_string.query, queryTweaking);
             plainQueryObject.query.query_string.lenient = true; //Makes ES ignore search on non text fields
-          }
-          if(plainQueryObject.query.query_string.fields) {
-            plainQueryObject.query.query_string.fields = fields;
           }
         }
         /*
