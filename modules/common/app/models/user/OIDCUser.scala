@@ -27,7 +27,7 @@ import play.api.libs.json.{JsPath, Reads}
   * @param picture
   * @param groups
   */
-class OIDCUser(val id: String,val name:String, val email:String, val picture:String, val groups:Seq[String]) extends User with Serializable {
+class OIDCUser(val id: String,val name:String, val email:String, val picture:Option[String], val groups:Seq[String]) extends User with Serializable {
 
 }
 object OIDCUser {
@@ -45,12 +45,12 @@ object OIDCUser {
     (JsPath \ idLabel).read[String] and
       (JsPath \ nameLabel).read[String] and
       (JsPath \ emailLabel).read[String] and
-      (JsPath \ pictureLabel).read[String] and
+      (JsPath \ pictureLabel).readNullable[String] and
       (JsPath \ groupsLabel).read[String].map(_.split(",").toSeq)
     ) (new OIDCUser(_, _, _, _,_ ) )
 
 
-  def unapply(arg: OIDCUser): Option[(String, String, String, String, Seq[String])] = Some((arg.id, arg.name, arg.email, arg.picture, arg.groups))
+  def unapply(arg: OIDCUser): Option[(String, String, String, Option[String], Seq[String])] = Some((arg.id, arg.name, arg.email, arg.picture, arg.groups))
 
 
 }

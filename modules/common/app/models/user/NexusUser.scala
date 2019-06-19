@@ -26,7 +26,7 @@ class NexusUser(
   override val id: String,
   override val name: String,
   override val email: String,
-  override val picture: String,
+  override val picture: Option[String],
   override val groups: Seq[String],
   override val organizations: Seq[String]
 ) extends OIDCUser(id, name, email, picture, groups)
@@ -35,10 +35,10 @@ class NexusUser(
 
 object NexusUser {
 
-  def unapply(user: NexusUser): Option[(String, String, String, String, Seq[String], Seq[String])] =
+  def unapply(user: NexusUser): Option[(String, String, String, Option[String], Seq[String], Seq[String])] =
     Some((user.id, user.name, user.email, user.picture, user.groups, user.organizations))
 
-  def apply(id: String, name: String, email: String, picture: String, groups: Seq[String], organizations: Seq[String]): NexusUser =
+  def apply(id: String, name: String, email: String, picture: Option[String], groups: Seq[String], organizations: Seq[String]): NexusUser =
     new NexusUser(
       id,
       name,
@@ -53,7 +53,7 @@ object NexusUser {
     (JsPath \ "id").write[String] and
     (JsPath \ "name").write[String] and
     (JsPath \ "email").write[String] and
-    (JsPath \ "picture").write[String] and
+    (JsPath \ "picture").writeNullable[String] and
     (JsPath \ "groups").write[Seq[String]] and
     (JsPath \ "organizations").write[Seq[String]]
   )(unlift(NexusUser.unapply))
@@ -62,7 +62,7 @@ object NexusUser {
     (JsPath \ "id").read[String] and
     (JsPath \ "name").read[String] and
     (JsPath \ "email").read[String] and
-    (JsPath \ "picture").read[String] and
+    (JsPath \ "picture").readNullable[String] and
     (JsPath \ "groups").read[Seq[String]] and
     (JsPath \ "organizations").read[Seq[String]]
   )(NexusUser.apply _)
