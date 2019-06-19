@@ -48,11 +48,11 @@ class SpecificationService @Inject()(
 )(
   implicit executionContext: ExecutionContext
 ) {
-  private val specFieldIdQueryPath = NexusPath("minds", "meta", "specificationfield", "v0.0.1")
-  private val specIdQueryPath = NexusPath("minds", "meta", "specification", "v0.0.1")
+  private val specFieldIdQueryPath = NexusPath("meta", "minds", "specificationfield", "v0.0.1")
+  private val specIdQueryPath = NexusPath("meta", "minds", "specification", "v0.0.1")
   private val specFieldIdQueryId = "specificationFieldIdentifier"
   private val specQueryId = "specificationIdentifier"
-  private val specFieldTypeIdQueryPath = NexusPath("minds", "meta", "specificationfieldtype", "v0.0.1")
+  private val specFieldTypeIdQueryPath = NexusPath("meta", "minds", "specificationfieldtype", "v0.0.1")
   private val specFieldTypeIdQueryId = "specificationFieldTypeIdentifier"
   private val log = LoggerFactory.getLogger(this.getClass)
   object instanceApiService extends InstanceApiService
@@ -306,7 +306,7 @@ class SpecificationService @Inject()(
 
   def fetchSpecifications(token: RefreshAccessToken): Future[WSResponse] = {
     WSClient
-      .url(s"${config.kgQueryEndpoint}/query/minds/meta/specification/v0.0.1/specificationQuery/instances")
+      .url(s"${config.kgQueryEndpoint}/query/meta/minds/specification/v0.0.1/specificationQuery/instances")
       .addHttpHeaders(AUTHORIZATION -> token.token)
       .addQueryStringParameters(QueryConstants.VOCAB -> EditorConstants.META)
       .get()

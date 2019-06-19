@@ -1,6 +1,6 @@
 {
-  "http://schema.org/identifier": "minds/meta/specificationfield/v0.0.1/specificationFieldIdentifier",
-  "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specificationfield/v0.0.1/specificationFieldIdentifier",
+  "http://schema.org/identifier": "meta/minds/specificationfield/v0.0.1/specificationFieldIdentifier",
+  "https://schema.hbp.eu/meta/editor/identifier": "meta/minds/specificationfield/v0.0.1/specificationFieldIdentifier",
   "description": "Fetch all the identifiers of the specification fields",
   "label": "Specification Field Identifiers",
   "fields": [

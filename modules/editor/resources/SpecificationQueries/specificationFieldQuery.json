@@ -15,8 +15,8 @@
       "@type": "@id"
     }
   },
-  "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specificationfield/v0.0.1/specificationFieldQuery",
-  "http://schema.org/identifier": "minds/meta/specificationfield/v0.0.1/specificationFieldQuery",
+  "https://schema.hbp.eu/meta/editor/identifier": "meta/minds/specificationfield/v0.0.1/specificationFieldQuery",
+  "http://schema.org/identifier": "meta/minds/specificationfield/v0.0.1/specificationFieldQuery",
   "description": "Fetching all the specification fields",
   "label": "Specification fields",
   "fields": [

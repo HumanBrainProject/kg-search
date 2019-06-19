@@ -1,6 +1,6 @@
 {
-  "https://schema.hbp.eu/meta/editor/identifier": "minds/meta/specification/v0.0.1/specificationQuery",
-  "http://schema.org/identifier": "minds/meta/specification/v0.0.1/specificationQuery",
+  "https://schema.hbp.eu/meta/editor/identifier": "meta/minds/specification/v0.0.1/specificationQuery",
+  "http://schema.org/identifier": "meta/minds/specification/v0.0.1/specificationQuery",
   "description": "fetching all the specifications",
   "label": "Specification",
   "fields": [

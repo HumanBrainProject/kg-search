@@ -22,7 +22,6 @@ import models.instance.{EditorMetadata, NexusInstance, NexusInstanceReference}
 import models.user.IDMUser
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import play.api.libs.json.JsValue
 import play.api.libs.ws.WSClient
 
 import scala.concurrent.{ExecutionContext, Future}
