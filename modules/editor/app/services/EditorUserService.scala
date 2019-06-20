@@ -39,6 +39,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import cats.syntax.either._
 import cats.syntax.option._
 import models.AccessToken
+import models.specification.QuerySpec
 import monix.eval.Task
 import monix.execution.Scheduler.Implicits.global
 
@@ -89,11 +90,11 @@ class EditorUserService @Inject()(
     cacheService.get[EditorUser](cache, nexusUser.id.toString).flatMap {
       case None =>
         queryService
-          .getInstancesWithStoredQuery(
+          .getInstances(
             wSClient,
             config.kgQueryEndpoint,
             EditorConstants.editorUserPath,
-            "kguser",
+            QuerySpec(Json.obj(), Some("kguser")),
             token,
             QueryApiParameter(vocab = Some(EditorConstants.editorVocab)),
             Map("userId" -> nexusUser.id)

@@ -18,7 +18,7 @@ package models.instance
 import constants.{JsonLDConstants, SchemaFieldsConstants}
 import play.api.libs.json._
 
-case class SuggestionInstance(
+final case class SuggestionInstance(
   originalRef: NexusInstanceReference,
   ref: NexusInstanceReference,
   content: JsObject,

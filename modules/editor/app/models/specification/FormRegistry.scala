@@ -17,7 +17,7 @@ package models.specification
 
 import models.NexusPath
 
-case class FormRegistry[A](registry: Map[NexusPath, A])
+final case class FormRegistry[A](registry: Map[NexusPath, A])
 
 object FormRegistry {
 

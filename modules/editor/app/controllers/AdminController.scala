@@ -46,9 +46,10 @@ class AdminController @Inject()(
       .getOrElse(Future(NotFound("Cache not found")))
   }
 
-  def deleteAndReloadSpecs: Action[AnyContent] = Action { implicit request =>
-    formService.flushSpec()
-    Ok("Specification reloaded")
+  def deleteAndReloadSpecs: Action[AnyContent] = Action.async { implicit request =>
+    formService.flushSpec().map { _ =>
+      Ok("Specification reloaded")
+    }
   }
 
 }

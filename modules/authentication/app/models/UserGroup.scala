@@ -17,7 +17,7 @@ package models
 
 import play.api.libs.json.{JsValue, Json}
 
-case class UserGroup(name: String, displaySpec: Option[Map[String, JsValue]])
+final case class UserGroup(name: String, displaySpec: Option[Map[String, JsValue]])
 
 object UserGroup {
   import play.api.libs.json._

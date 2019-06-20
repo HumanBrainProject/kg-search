@@ -19,7 +19,7 @@ package models.instance
 import constants.{JsonLDConstants, NexusConstants}
 import play.api.libs.json.{JsObject, JsPath, Json, Reads}
 
-case class NexusLink(ref: NexusInstanceReference) {
+final case class NexusLink(ref: NexusInstanceReference) {
 
   def toJson(currentSystemBaseUrl: String): JsObject =
     Json.obj(JsonLDConstants.ID -> s"$currentSystemBaseUrl/${NexusConstants.dataPath}${ref.toString}")

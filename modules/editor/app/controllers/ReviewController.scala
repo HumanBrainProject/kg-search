@@ -117,17 +117,21 @@ class ReviewController @Inject()(
 
   def getUsersSuggestions(status: String): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     val s = SuggestionStatus.fromString(status)
-    suggestionService.getUsersSuggestions(s, request.userToken).map {
-      case Right(l) =>
-        val res = for {
-          i <- l
-          suggestionOf = NexusInstanceReference
-            .fromUrl((i.content \ SchemaFieldsConstants.SUGGESTION_OF \ SchemaFieldsConstants.RELATIVEURL).as[String])
-        } yield
-          FormService.getFormStructure(i.ref.nexusPath, i.content, formService.formRegistry).as[JsObject] ++ Json
-            .obj("suggestionOf" -> suggestionOf)
-        Ok(Json.toJson(EditorResponseObject(Json.toJson(res))))
-      case Left(err) => err.toResult
+    formService.getRegistries().flatMap { registries =>
+      suggestionService.getUsersSuggestions(s, request.userToken).map {
+        case Right(l) =>
+          val res = for {
+            i <- l
+            suggestionOf = NexusInstanceReference
+              .fromUrl((i.content \ SchemaFieldsConstants.SUGGESTION_OF \ SchemaFieldsConstants.RELATIVEURL).as[String])
+          } yield
+            FormService
+              .getFormStructure(i.ref.nexusPath, i.content, registries.formRegistry)
+              .as[JsObject] ++ Json
+              .obj("suggestionOf" -> suggestionOf)
+          Ok(Json.toJson(EditorResponseObject(Json.toJson(res))))
+        case Left(err) => err.toResult
+      }
     }
   }
 
@@ -139,13 +143,15 @@ class ReviewController @Inject()(
     instanceId: String
   ): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     val ref = NexusInstanceReference(org, domain, schema, version, instanceId)
-    suggestionService.getInstanceSuggestions(ref, request.userToken).map {
-      case Right(l) =>
-        val res = for {
-          i <- l
-        } yield FormService.getFormStructure(i.ref.nexusPath, i.content, formService.formRegistry)
-        Ok(Json.toJson(EditorResponseObject(Json.toJson(res))))
-      case Left(err) => err.toResult
+    formService.getRegistries().flatMap { registries =>
+      suggestionService.getInstanceSuggestions(ref, request.userToken).map {
+        case Right(l) =>
+          val res = for {
+            i <- l
+          } yield FormService.getFormStructure(i.ref.nexusPath, i.content, registries.formRegistry)
+          Ok(Json.toJson(EditorResponseObject(Json.toJson(res))))
+        case Left(err) => err.toResult
+      }
     }
   }
 }

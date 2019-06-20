@@ -20,7 +20,7 @@ import models.user.User
 import org.joda.time.DateTime
 import play.api.libs.json._
 
-case class EditorInstance(nexusInstance: NexusInstance) {
+final case class EditorInstance(nexusInstance: NexusInstance) {
 
   def contentToMap(): Map[String, JsValue] = {
     this.nexusInstance.content.fields.toMap

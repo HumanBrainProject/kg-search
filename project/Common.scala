@@ -6,8 +6,8 @@ import play.sbt.PlayImport._
 import play.sbt.routes.RoutesKeys.routesGenerator
 import play.routes.compiler.InjectedRoutesGenerator
 
-
 object Common {
+
   val settings: Seq[Setting[_]] = Seq(
     organization := "eu.humanbrainproject",
     version := "1.0.0-SNAPSHOT",
@@ -34,7 +34,8 @@ object Common {
   val playSettings = settings ++ Seq(
     resolvers ++= Seq(
       "Typesafe Simple Repository" at "http://repo.typesafe.com/typesafe/simple/maven-releases/",
-      Resolver.jcenterRepo),
+      Resolver.jcenterRepo
+    ),
     routesGenerator := InjectedRoutesGenerator,
     libraryDependencies ++= playDependencies
   )

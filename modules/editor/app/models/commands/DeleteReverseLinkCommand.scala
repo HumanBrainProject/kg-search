@@ -25,7 +25,7 @@ import services.EditorService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class DeleteReverseLinkCommand(
+final case class DeleteReverseLinkCommand(
   reverseInstanceLink: NexusLink,
   reverseInstance: NexusInstance,
   targetField: String,

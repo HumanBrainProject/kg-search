@@ -72,33 +72,46 @@ class EditorController @Inject()(
   ): Action[AnyContent] =
     authenticatedUserAction.async { implicit request =>
       val nexusInstanceReference = NexusInstanceReference(org, domain, schema, version, id)
-      editorService
-        .retrieveInstance(nexusInstanceReference, request.userToken, formService.queryRegistry, databaseScope)
-        .flatMap {
-          case Left(error) =>
-            logger.error(
-              s"Error: Could not fetch instance : ${nexusInstanceReference.nexusPath.toString()}/$id - ${error.content}"
-            )
-            Future(error.toResult)
-          case Right(instance) =>
-            FormService
-              .getFormStructure(nexusInstanceReference.nexusPath, instance.content, formService.formRegistry) match {
-              case JsNull =>
-                Future(NotImplemented("Form not implemented"))
-              case instanceForm =>
-                metadataService.getMetadata(nexusInstanceReference, instance).map {
-                  case Right(metadata) =>
-                    Ok(
-                      Json.toJson(
-                        EditorResponseObject(instanceForm.as[JsObject] ++ Json.obj("metadata" -> Json.toJson(metadata)))
+      formService.getRegistries().flatMap { registries =>
+        editorService
+          .retrieveInstance(
+            nexusInstanceReference,
+            request.userToken,
+            registries.queryRegistry,
+            databaseScope
+          )
+          .flatMap {
+            case Left(error) =>
+              logger.error(
+                s"Error: Could not fetch instance : ${nexusInstanceReference.nexusPath.toString()}/$id - ${error.content}"
+              )
+              Future(error.toResult)
+            case Right(instance) =>
+              FormService
+                .getFormStructure(
+                  nexusInstanceReference.nexusPath,
+                  instance.content,
+                  registries.formRegistry
+                ) match {
+                case JsNull =>
+                  Future(NotImplemented("Form not implemented"))
+                case instanceForm =>
+                  metadataService.getMetadata(nexusInstanceReference, instance).map {
+                    case Right(metadata) =>
+                      Ok(
+                        Json.toJson(
+                          EditorResponseObject(
+                            instanceForm.as[JsObject] ++ Json.obj("metadata" -> Json.toJson(metadata))
+                          )
+                        )
                       )
-                    )
-                  case Left(error) =>
-                    logger.error(error.toString)
-                    Ok(Json.toJson(EditorResponseObject(instanceForm.as[JsObject])))
-                }
-            }
-        }
+                    case Left(error) =>
+                      logger.error(error.toString)
+                      Ok(Json.toJson(EditorResponseObject(instanceForm.as[JsObject])))
+                  }
+              }
+          }
+      }
     }
 
   def deleteInstance(org: String, domain: String, schema: String, version: String, id: String): Action[AnyContent] =
@@ -115,26 +128,30 @@ class EditorController @Inject()(
       bodyContent <- request.body.asJson
       ids         <- bodyContent.asOpt[List[String]]
     } yield ids.map(NexusInstanceReference.fromUrl)
-
-    listOfIds match {
-      case Some(ids) =>
-        if (allFields) {
-          editorService.retrieveInstancesByIds(ids, formService.queryRegistry, request.userToken).map {
-            case Left(err) => err.toResult
-            case Right(ls) =>
-              Ok(Json.toJson(EditorResponseObject(Json.toJson(ls.groupBy(_.id().get).map {
-                case (k, v) =>
-                  FormService
-                    .getFormStructure(v.head.nexusPath, v.head.content, formService.formRegistry)
-                    .as[JsObject]
-              }))))
+    formService.getRegistries().flatMap { registries =>
+      listOfIds match {
+        case Some(ids) =>
+          if (allFields) {
+            editorService
+              .retrieveInstancesByIds(ids, registries.queryRegistry, request.userToken)
+              .map {
+                case Left(err) => err.toResult
+                case Right(ls) =>
+                  Ok(Json.toJson(EditorResponseObject(Json.toJson(ls.groupBy(_.id().get).map {
+                    case (k, v) =>
+                      FormService
+                        .getFormStructure(v.head.nexusPath, v.head.content, registries.formRegistry)
+                        .as[JsObject]
+                  }))))
+              }
+          } else {
+            editorService.retrievePreviewInstancesByIds(ids, registries, request.userToken).map {
+              ls: List[PreviewInstance] =>
+                Ok(Json.toJson(EditorResponseObject(Json.toJson(ls))))
+            }
           }
-        } else {
-          editorService.retrievePreviewInstancesByIds(ids, formService.formRegistry, formService.queryRegistry, request.userToken).map {
-            ls: List[PreviewInstance] => Ok(Json.toJson(EditorResponseObject(Json.toJson(ls))))
-          }
-        }
-      case None => Future(BadRequest("Missing body content"))
+        case None => Future(BadRequest("Missing body content"))
+      }
     }
   }
 
@@ -147,14 +164,18 @@ class EditorController @Inject()(
   ): Action[AnyContent] =
     authenticatedUserAction.async { implicit request =>
       val nexusInstanceRef = NexusInstanceReference(org, domain, datatype, version, id)
-      editorService.retrieveInstance(nexusInstanceRef, request.userToken, formService.queryRegistry).flatMap[Result] {
-        case Left(error) =>
-          Future.successful(
-            error.toResult
-          )
-        case Right(originalInstance) =>
-          val nbRevision = (originalInstance.content \ "nxv:rev").as[JsNumber]
-          Future.successful(Ok(Json.obj("available_revisions" -> nbRevision, "path" -> id)))
+      formService.getRegistries().flatMap { registries =>
+        editorService
+          .retrieveInstance(nexusInstanceRef, request.userToken, registries.queryRegistry)
+          .flatMap[Result] {
+            case Left(error) =>
+              Future.successful(
+                error.toResult
+              )
+            case Right(originalInstance) =>
+              val nbRevision = (originalInstance.content \ "nxv:rev").as[JsNumber]
+              Future.successful(Ok(Json.obj("available_revisions" -> nbRevision, "path" -> id)))
+          }
       }
     }
 
@@ -175,23 +196,41 @@ class EditorController @Inject()(
           .updateInstanceFromForm(instanceRef, request.body.asJson, request.user, request.userToken, reverseLinkService)
           .flatMap {
             case Right(()) =>
-              editorService.retrieveInstance(instanceRef, request.userToken, formService.queryRegistry).map {
-                case Right(instance) =>
-                  FormService
-                    .getFormStructure(instanceRef.nexusPath, instance.content, formService.formRegistry) match {
-                    case JsNull =>
-                      NotImplemented("Form not implemented")
-                    case instanceForm =>
-                      Ok(
-                        Json.toJson(
-                          EditorResponseObject(instanceForm.as[JsObject])
-                        )
-                      )
+              formService.getRegistries().flatMap { registries =>
+                editorService
+                  .retrieveInstance(instanceRef, request.userToken, registries.queryRegistry)
+                  .flatMap {
+                    case Right(instance) =>
+                      FormService
+                        .getFormStructure(
+                          instanceRef.nexusPath,
+                          instance.content,
+                          registries.formRegistry
+                        ) match {
+                        case JsNull =>
+                          Future.successful(NotImplemented("Form not implemented"))
+                        case instanceForm =>
+                          val specFlush = formService.shouldReloadSpecification(instanceRef.nexusPath).flatMap {
+                            shouldReload =>
+                              if (shouldReload) {
+                                formService.flushSpec()
+                              } else {
+                                Future.successful(())
+                              }
+                          }
+                          specFlush.map { _ =>
+                            Ok(
+                              Json.toJson(
+                                EditorResponseObject(instanceForm.as[JsObject])
+                              )
+                            )
+                          }
 
+                      }
+                    case Left(error) =>
+                      logger.error(error.toString)
+                      Future.successful(error.toResult)
                   }
-                case Left(error) =>
-                  logger.error(error.toString)
-                  error.toResult
               }
             case Left(error) =>
               logger.error(error.content.mkString("\n"))
@@ -223,15 +262,29 @@ class EditorController @Inject()(
             case Right(ref) =>
               request.body.asJson match {
                 case Some(content) =>
-                  val nonEmptyInstance = FormService.buildNewInstanceFromForm(
-                    ref,
-                    config.nexusEndpoint,
-                    content.as[JsObject],
-                    formService.formRegistry
-                  )
-                  editorService.updateInstance(nonEmptyInstance, ref, request.userToken, request.user.id).map[Result] {
-                    case Left(error) => error.toResult
-                    case Right(())   => Created(Json.toJson(EditorResponseObject(Json.toJson(ref))))
+                  formService.getRegistries().flatMap { registries =>
+                    val nonEmptyInstance = FormService.buildNewInstanceFromForm(
+                      ref,
+                      config.nexusEndpoint,
+                      content.as[JsObject],
+                      registries.formRegistry
+                    )
+                    editorService
+                      .updateInstance(nonEmptyInstance, ref, request.userToken, request.user.id)
+                      .flatMap[Result] {
+                        case Right(()) =>
+                          val specFlush = formService.shouldReloadSpecification(instancePath).flatMap { shouldReload =>
+                            if (shouldReload) {
+                              formService.flushSpec()
+                            } else {
+                              Future.successful(())
+                            }
+                          }
+                          specFlush.map { _ =>
+                            Created(Json.toJson(EditorResponseObject(Json.toJson(ref))))
+                          }
+                        case Left(error) => Future.successful(error.toResult)
+                      }
                   }
                 case None => Future(Created(Json.toJson(EditorResponseObject(Json.toJson(ref)))))
               }
@@ -247,10 +300,12 @@ class EditorController @Inject()(
     * @return 200
     */
   def getEmptyForm(org: String, domain: String, schema: String, version: String): Action[AnyContent] =
-    authenticatedUserAction { implicit request =>
+    authenticatedUserAction.async { implicit request =>
       val nexusPath = NexusPath(org, domain, schema, version)
-      val form = FormService.getFormStructure(nexusPath, JsNull, formService.formRegistry)
-      Ok(form)
+      formService.getRegistries().map { registries =>
+        val form = FormService.getFormStructure(nexusPath, JsNull, registries.formRegistry)
+        Ok(form)
+      }
     }
 
 }

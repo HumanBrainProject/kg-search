@@ -21,7 +21,7 @@ import models.NexusPath
 import play.api.libs.functional.syntax.unlift
 import play.api.libs.json.{JsPath, Reads, Writes}
 
-case class NexusInstanceReference(nexusPath: NexusPath, id: String) {
+final case class NexusInstanceReference(nexusPath: NexusPath, id: String) {
   override def toString: String = s"${this.nexusPath.toString()}/${this.id}"
 }
 

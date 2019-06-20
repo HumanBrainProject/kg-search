@@ -26,7 +26,7 @@ import models.user.User
 import play.api.Logger
 import play.api.http.Status.INTERNAL_SERVER_ERROR
 import play.api.libs.json.{JsArray, JsObject, JsValue, Json}
-import services.specification.FormService
+import services.specification.{FormRegistries, FormService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -43,16 +43,15 @@ class ReverseLinkService @Inject()(
     updateFromUser: JsValue,
     token: AccessToken,
     user: User,
-    formRegistry: FormRegistry[UISpec],
-    queryRegistry: FormRegistry[QuerySpec]
+    registries: FormRegistries
   ): Future[Either[APIEditorMultiError, Unit]] =
-    editorService.retrieveInstance(instanceRef, token, queryRegistry).flatMap {
+    editorService.retrieveInstance(instanceRef, token, registries.queryRegistry).flatMap {
       case Left(error) =>
         Future(Left(APIEditorMultiError(error.status, List(error))))
       case Right(currentInstanceDisplayed) =>
         val updateToBeStored =
           EditorService.computeUpdateTobeStored(currentInstanceDisplayed, updateFromUser, config.nexusEndpoint)
-        val fieldsSpec = formRegistry.registry(updateToBeStored.nexusInstance.nexusPath).getFieldsAsMap
+        val fieldsSpec = registries.formRegistry.registry(updateToBeStored.nexusInstance.nexusPath).getFieldsAsMap
         val instanceWithoutReversLink = ReverseLinkOP.removeLinksFromInstance(
           updateToBeStored,
           fieldsSpec,
@@ -69,7 +68,7 @@ class ReverseLinkService @Inject()(
           currentInstanceDisplayed,
           instanceRef,
           user,
-          queryRegistry,
+          registries.queryRegistry,
           config.nexusEndpoint,
           token
         )
