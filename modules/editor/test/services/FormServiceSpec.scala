@@ -11,7 +11,7 @@ import org.mockito.Mockito._
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.libs.ws.WSClient
 import play.api.test.Injecting
 import services.specification.FormService
@@ -55,9 +55,9 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
                 Some("minds/experiment/method/v0.0.4"),
                 DropdownSelect,
                 None,
-                Some("id"),
+                Some(JsString("id")),
                 Some("label"),
-                Some("id"),
+                Some(JsString("id")),
                 Some(true),
                 Some(true),
                 None
@@ -221,9 +221,9 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
                 Some("minds/core/embargostatus/v1.0.0"),
                 DropdownSelect,
                 Some(true),
-                Some("id"),
+                Some(JsString("id")),
                 Some("name"),
-                Some("id"),
+                Some(JsString("id")),
                 Some(true),
                 Some(true),
                 None
