@@ -46,6 +46,7 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
                 None,
                 None,
                 None,
+                None,
                 Some(Json.obj("foo" -> "bar"))
               ),
               EditorFieldSpecification(
@@ -100,17 +101,18 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
           |      "nexus_id": "minds/core/activity/v0.0.4/123"
           |    },
           |    "http://schema.org/name": {
-          |      "type": "InputText",
           |      "label": "Name",
+          |      "type": "InputText",
           |      "value": "365.A.e.#2",
           |      "foo": "bar"
           |    },
           |    "http://hbp.eu/minds#methods": {
-          |      "type": "DropdownSelect",
           |      "label": "Methods",
           |      "instancesPath": "minds/experiment/method/v0.0.4",
+          |      "type": "DropdownSelect",
           |      "mappingValue": "id",
           |      "mappingLabel": "label",
+          |      "mappingReturn": "id",
           |      "isLink": true,
           |      "allowCustomValues": true,
           |      "value": [
@@ -167,6 +169,7 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
             |                "mappingValue": "id",
             |                "closeDropdownAfterInteraction": true,
             |                "mappingLabel": "name",
+            |                "mappingReturn": "id",
             |                "label": "Embargo Status",
             |                "type": "DropdownSelect",
             |                "allowCustomValues": true
@@ -235,6 +238,7 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
                 None,
                 None,
                 None,
+                None,
                 None
               )
             ),
@@ -254,6 +258,7 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
                 "Name",
                 None,
                 InputText,
+                None,
                 None,
                 None,
                 None,
