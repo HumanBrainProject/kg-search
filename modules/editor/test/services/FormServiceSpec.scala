@@ -56,6 +56,7 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
                 None,
                 Some("id"),
                 Some("label"),
+                Some("id"),
                 Some(true),
                 Some(true),
                 None
@@ -219,6 +220,7 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
                 Some(true),
                 Some("id"),
                 Some("name"),
+                Some("id"),
                 Some(true),
                 Some(true),
                 None
