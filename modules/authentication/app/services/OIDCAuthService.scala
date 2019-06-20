@@ -73,7 +73,7 @@ class OIDCAuthService @Inject()(
               s.splitAt(s.lastIndexOf("/"))._2.substring(1)
             }
             val oIDCUser = res.json.as[OIDCUser]
-            Some(new NexusUser(oIDCUser.id, oIDCUser.name, oIDCUser.email, oIDCUser.groups, orgs))
+            Some(new NexusUser(oIDCUser.id, oIDCUser.name, oIDCUser.email, oIDCUser.picture, oIDCUser.groups, orgs))
           }
         case _ => Future.successful(None)
       }

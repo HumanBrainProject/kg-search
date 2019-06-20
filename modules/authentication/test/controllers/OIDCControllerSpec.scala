@@ -34,6 +34,7 @@ class OIDCControllerSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHe
           "123",
           "name",
           "email",
+          Some("picture"),
           Seq("nexus-group1","nexus-group2")
         )
       )

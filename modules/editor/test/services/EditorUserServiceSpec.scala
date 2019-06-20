@@ -59,6 +59,7 @@ class EditorUserServiceSpec
         id,
         "",
         "",
+        None,
         Seq(),
         Seq()
       )
@@ -109,6 +110,7 @@ class EditorUserServiceSpec
         id,
         "",
         "",
+        None,
         Seq(),
         Seq()
       )
