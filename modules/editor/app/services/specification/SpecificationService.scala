@@ -46,8 +46,6 @@ class SpecificationService @Inject()(
   OIDCAuthService: OIDCAuthService,
   clientCredentials: CredentialsService,
   env: Environment
-)(
-  implicit executionContext: ExecutionContext
 ) {
   private val specFieldIdQueryPath = NexusPath("meta", "minds", "specificationfield", "v0.0.1")
   private val specIdQueryPath = NexusPath("meta", "minds", "specification", "v0.0.1")
@@ -229,7 +227,6 @@ class SpecificationService @Inject()(
     val path = NexusInstanceReference.fromUrl(value.id).nexusPath
     instanceApiService
       .post(WSClient, config.kgQueryEndpoint, NexusInstance(None, path, value.data), None, token)(
-        executionContext,
         OIDCAuthService,
         clientCredentials
       )

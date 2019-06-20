@@ -24,13 +24,9 @@ import monix.eval.Task
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import play.api.libs.ws.WSClient
-
-import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
-class MetadataService @Inject()(IDMAPIService: IDMAPIService, authService: OIDCAuthService, WSClient: WSClient)(
-  implicit executionContext: ExecutionContext
-) {
+class MetadataService @Inject()(IDMAPIService: IDMAPIService, authService: OIDCAuthService, WSClient: WSClient) {
 
   def getMetadata(
     nexusInstanceReference: NexusInstanceReference,
@@ -61,8 +57,10 @@ object MetadataService {
     )
   }
 
-  def getUserFromMetadata(userIdOpt: Option[String], authService: OIDCAuthService, IDMAPIService: IDMAPIService)(
-    implicit executionContext: ExecutionContext
+  def getUserFromMetadata(
+    userIdOpt: Option[String],
+    authService: OIDCAuthService,
+    IDMAPIService: IDMAPIService
   ): Task[Option[IDMUser]] = {
     userIdOpt match {
       case Some(userIdO) =>

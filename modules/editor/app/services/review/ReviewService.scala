@@ -37,8 +37,7 @@ class ReviewService @Inject()(
   editorService: EditorService,
   reverseLinkService: ReverseLinkService
 )(
-  implicit executionContext: ExecutionContext,
-  OIDCAuthService: OIDCAuthService,
+  implicit OIDCAuthService: OIDCAuthService,
   clientCredentials: CredentialsService
 ) {
   object ReviewApiService extends ReviewApiService

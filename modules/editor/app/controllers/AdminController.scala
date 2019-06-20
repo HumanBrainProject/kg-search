@@ -17,22 +17,20 @@ package controllers
 
 import com.google.inject.Inject
 import models.{Cache, EditorUserCache, UserInfoCache}
+import monix.eval.Task
 import play.api.Logger
-import play.api.cache.{AsyncCacheApi, NamedCache}
+import play.api.cache.AsyncCacheApi
 import play.api.mvc._
 import play.cache.NamedCache
 import services.CacheService
 import services.specification.FormService
-
-import scala.concurrent.{ExecutionContext, Future}
 
 class AdminController @Inject()(
   cc: ControllerComponents,
   @NamedCache("editor-userinfo-cache") editorCache: AsyncCacheApi,
   @NamedCache("userinfo-cache") userCache: AsyncCacheApi,
   formService: FormService
-)(implicit ec: ExecutionContext)
-    extends AbstractController(cc) {
+) extends AbstractController(cc) {
   val log = Logger(this.getClass)
   object cacheService extends CacheService
   implicit val scheduler = monix.execution.Scheduler.Implicits.global
@@ -40,11 +38,11 @@ class AdminController @Inject()(
   def clearCache(name: String): Action[AnyContent] = Action.async { implicit request =>
     Cache
       .fromString(name)
-      .map {
+      .fold(Task.pure(NotFound("Cache not found"))) {
         case EditorUserCache => cacheService.clearCache(editorCache).map(_ => Ok("Cache cleared"))
         case UserInfoCache   => cacheService.clearCache(userCache).map(_ => Ok("Cache cleared"))
       }
-      .getOrElse(Future(NotFound("Cache not found")))
+      .runToFuture
   }
 
   def deleteAndReloadSpecs: Action[AnyContent] = Action.async { implicit request =>

@@ -32,7 +32,7 @@ class AuthenticatedUserAction @Inject()(val parser: BodyParsers.Default, authpro
   implicit val executionContext: ExecutionContext
 ) extends ActionBuilder[UserRequest, AnyContent] {
   private val logger = play.api.Logger(this.getClass)
-  implicit val s = monix.execution.Scheduler.Implicits.global
+  implicit val scheduler = monix.execution.Scheduler.Implicits.global
 
   /**
     * This action helps us identify a user. If the user is not logged in a 401 is returned

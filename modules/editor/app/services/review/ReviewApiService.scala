@@ -38,7 +38,7 @@ trait ReviewApiService {
     token: AccessToken,
     currentUser: EditorUser,
     serviceClient: ServiceClient = SuggestionClient
-  )(implicit executionContext: ExecutionContext): Task[Either[APIEditorError, Unit]] = {
+  ): Task[Either[APIEditorError, Unit]] = {
     Task
       .deferFuture(
         WSClient
@@ -68,7 +68,7 @@ trait ReviewApiService {
     nexusInstanceReference: NexusInstanceReference,
     token: AccessToken,
     serviceClient: ServiceClient = SuggestionClient
-  )(implicit executionContext: ExecutionContext): Task[Either[APIEditorError, Unit]] = {
+  ): Task[Either[APIEditorError, Unit]] = {
     Task
       .deferFuture(
         WSClient
@@ -97,7 +97,7 @@ trait ReviewApiService {
     nexusInstanceReference: NexusInstanceReference,
     token: AccessToken,
     serviceClient: ServiceClient = SuggestionClient
-  )(implicit executionContext: ExecutionContext): Task[Either[APIEditorError, Unit]] = {
+  ): Task[Either[APIEditorError, Unit]] = {
     Task
       .deferFuture(
         WSClient
@@ -126,8 +126,6 @@ trait ReviewApiService {
     suggestionStatus: SuggestionStatus,
     token: AccessToken,
     serviceClient: ServiceClient = SuggestionClient
-  )(
-    implicit executionContext: ExecutionContext
   ): Task[Either[APIEditorError, List[SuggestionInstance]]] = {
     Task
       .deferFuture(
@@ -158,8 +156,6 @@ trait ReviewApiService {
     ref: NexusInstanceReference,
     token: AccessToken,
     serviceClient: ServiceClient = SuggestionClient
-  )(
-    implicit executionContext: ExecutionContext
   ): Task[Either[APIEditorError, List[SuggestionInstance]]] = {
     Task
       .deferFuture(

@@ -41,8 +41,6 @@ class ReviewController @Inject()(
   editorUserService: EditorUserService,
   editorService: EditorService,
   reverseLinkService: ReverseLinkService
-)(
-  implicit executionContext: ExecutionContext,
 ) extends AbstractController(cc) {
   implicit val scheduler = monix.execution.Scheduler.Implicits.global
   object instanceApiService extends InstanceApiService

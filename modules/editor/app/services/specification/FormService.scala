@@ -32,7 +32,6 @@ import play.api.libs.ws.WSClient
 import services.{ConfigurationService, OIDCAuthService}
 
 import scala.concurrent.duration.FiniteDuration
-import scala.concurrent.{Await, ExecutionContext, Future}
 
 final case class FormRegistries(formRegistry: FormRegistry[UISpec], queryRegistry: FormRegistry[QuerySpec])
 
@@ -42,14 +41,14 @@ class FormService @Inject()(
   ws: WSClient,
   OIDCAuthService: OIDCAuthService,
   specificationService: SpecificationService
-)(implicit ec: ExecutionContext) {
+) {
 
   private var stateSpec: Option[FormRegistries] = None
 
   val timeout = FiniteDuration(30, "sec")
   val retryTime = 5000 //ms
   val logger: slf4j.Logger = LoggerFactory.getLogger(this.getClass)
-  Await.result(specificationService.init().runToFuture, timeout)
+  specificationService.init().runSyncUnsafe(timeout)
 
   /**
     * @return the specification and stored queries

@@ -37,14 +37,12 @@ import services.instance.InstanceApiService
 import services.query.{QueryApiParameter, QueryService}
 import services.specification.FormService
 
-import scala.concurrent.{ExecutionContext, Future}
-
 class EditorBookmarkService @Inject()(
   config: ConfigurationService,
   wSClient: WSClient,
   nexusService: NexusService,
   nexusExtensionService: NexusExtensionService
-)(implicit executionContext: ExecutionContext, OIDCAuthService: OIDCAuthService, clientCredentials: CredentialsService)
+)(implicit OIDCAuthService: OIDCAuthService, clientCredentials: CredentialsService)
     extends EditorBookmarkServiceInterface {
   val logger = Logger(this.getClass)
 

@@ -68,8 +68,7 @@ class EditorUserService @Inject()(
   @NamedCache("editor-userinfo-cache") cache: AsyncCacheApi,
   nexusExtensionService: NexusExtensionService,
 )(
-  implicit executionContext: ExecutionContext,
-  oIDCAuthService: OIDCAuthService,
+  implicit oIDCAuthService: OIDCAuthService,
   credentials: CredentialsService,
   actorSystem: ActorSystem
 ) {

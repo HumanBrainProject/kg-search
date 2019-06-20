@@ -34,15 +34,12 @@ import services.instance.InstanceApiService
 import services.query.{QueryApiParameter, QueryService}
 import services.specification.{FormRegistries, FormService}
 
-import scala.concurrent.{ExecutionContext, Future}
-
 class EditorService @Inject()(
   wSClient: WSClient,
   config: ConfigurationService,
   formService: FormService
 )(
-  implicit executionContext: ExecutionContext,
-  OIDCAuthService: OIDCAuthService,
+  implicit OIDCAuthService: OIDCAuthService,
   clientCredentials: CredentialsService
 ) {
 

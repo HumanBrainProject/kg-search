@@ -27,8 +27,6 @@ import play.api.libs.json.JsObject
 import play.api.libs.ws.{WSClient, WSResponse}
 import services.{AuthHttpClient, CredentialsService, OIDCAuthService}
 
-import scala.concurrent.{ExecutionContext, Future}
-
 trait InstanceApiService {
   val instanceEndpoint = "/api/instances"
   val internalInstanceEndpoint = "/internal/api/instances"
@@ -41,8 +39,7 @@ trait InstanceApiService {
     serviceClient: ServiceClient = EditorClient,
     clientExtensionId: Option[String] = None
   )(
-    implicit ec: ExecutionContext,
-    OIDCAuthService: OIDCAuthService,
+    implicit OIDCAuthService: OIDCAuthService,
     clientCredentials: CredentialsService
   ): Task[Either[WSResponse, NexusInstance]] = {
     val params = clientExtensionId.map("clientIdExtension" -> _).getOrElse("" -> "")
@@ -72,8 +69,7 @@ trait InstanceApiService {
     userId: String,
     serviceClient: ServiceClient = EditorClient
   )(
-    implicit ec: ExecutionContext,
-    OIDCAuthService: OIDCAuthService,
+    implicit OIDCAuthService: OIDCAuthService,
     clientCredentials: CredentialsService
   ): Task[Either[WSResponse, Unit]] = {
     val q = wSClient
@@ -100,8 +96,7 @@ trait InstanceApiService {
     token: AccessToken,
     serviceClient: ServiceClient = EditorClient
   )(
-    implicit ec: ExecutionContext,
-    OIDCAuthService: OIDCAuthService,
+    implicit OIDCAuthService: OIDCAuthService,
     clientCredentials: CredentialsService
   ): Task[Either[WSResponse, Unit]] = {
     val q = wSClient
@@ -126,8 +121,7 @@ trait InstanceApiService {
     token: AccessToken,
     serviceClient: ServiceClient = EditorClient
   )(
-    implicit ec: ExecutionContext,
-    OIDCAuthService: OIDCAuthService,
+    implicit OIDCAuthService: OIDCAuthService,
     clientCredentials: CredentialsService
   ): Task[Either[APIEditorError, Unit]] = {
     val q = wSClient
@@ -153,8 +147,7 @@ trait InstanceApiService {
     token: AccessToken,
     serviceClient: ServiceClient = EditorClient
   )(
-    implicit ec: ExecutionContext,
-    OIDCAuthService: OIDCAuthService,
+    implicit OIDCAuthService: OIDCAuthService,
     clientCredentials: CredentialsService
   ): Task[Either[WSResponse, NexusInstanceReference]] = {
     val q = wSClient
@@ -183,8 +176,7 @@ trait InstanceApiService {
     token: AccessToken,
     serviceClient: ServiceClient = EditorClient
   )(
-    implicit ec: ExecutionContext,
-    OIDCAuthService: OIDCAuthService,
+    implicit OIDCAuthService: OIDCAuthService,
     clientCredentials: CredentialsService
   ): Task[Either[WSResponse, List[NexusInstanceReference]]] = {
     val q = wSClient

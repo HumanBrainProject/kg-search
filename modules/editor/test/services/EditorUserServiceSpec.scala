@@ -17,13 +17,13 @@ package editor.services
 
 import akka.actor.ActorSystem
 import constants.EditorConstants
-import helpers.ConfigMock._
 import helpers.ConfigMock
+import helpers.ConfigMock._
 import mockws.{MockWS, MockWSHelpers}
 import models.BasicAccessToken
 import models.instance.NexusInstanceReference
-import org.mockito.Mockito._
 import models.user.{EditorUser, NexusUser}
+import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -35,8 +35,7 @@ import play.api.test.Helpers._
 import play.api.test.Injecting
 import services._
 
-import scala.concurrent.{Await, Future}
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
 class EditorUserServiceSpec
@@ -78,7 +77,6 @@ class EditorUserServiceSpec
             Ok(Json.obj("results" -> Json.toJson(List(endpointResponse))))
           }
       }
-      val ec = global
       val oidcService = mock[OIDCAuthService]
       val clientCred = mock[CredentialsService]
       val nexusService = mock[NexusService]
@@ -89,13 +87,12 @@ class EditorUserServiceSpec
       when(cache.get[EditorUser](id)).thenReturn(Future(None))
       val service =
         new EditorUserService(configService, ws, nexusService, cache, nexusExt)(
-          ec,
           oidcService,
           clientCred,
           actorSystem
         )
 
-      val res = Await.result(service.getUser(nexusUser, BasicAccessToken("token")).runToFuture, FiniteDuration(10, "s"))
+      val res = service.getUser(nexusUser, BasicAccessToken("token")).runSyncUnsafe(FiniteDuration(10, "s"))
 
       res.isRight mustBe true
       res mustBe Right(Some(user))
@@ -121,7 +118,6 @@ class EditorUserServiceSpec
             NotFound("User not found")
           }
       }
-      val ec = global
       val oidcService = mock[OIDCAuthService]
       val nexusService = mock[NexusService]
       val configService = mock[ConfigurationService]
@@ -132,14 +128,11 @@ class EditorUserServiceSpec
       when(cache.get[EditorUser](id)).thenReturn(Future(None))
       val service =
         new EditorUserService(configService, ws, nexusService, cache, nexusExt)(
-          ec,
           oidcService,
           clientCred,
           actorSystem
         )
-
-      val res = Await.result(service.getUser(nexusUser, BasicAccessToken("token")).runToFuture, FiniteDuration(10, "s"))
-
+      val res = service.getUser(nexusUser, BasicAccessToken("token")).runSyncUnsafe(FiniteDuration(10, "s"))
       res.isLeft mustBe true
     }
   }

@@ -37,8 +37,7 @@ trait QueryService {
     token: AccessToken,
     queryApiParameters: QueryApiParameter
   )(
-    implicit ex: ExecutionContext,
-    OIDCAuthService: OIDCAuthService,
+    implicit OIDCAuthService: OIDCAuthService,
     credentials: CredentialsService
   ): Task[WSResponse] = {
     query match {
