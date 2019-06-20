@@ -35,6 +35,7 @@ class AdminController @Inject()(
     extends AbstractController(cc) {
   val log = Logger(this.getClass)
   object cacheService extends CacheService
+  implicit val scheduler = monix.execution.Scheduler.Implicits.global
 
   def clearCache(name: String): Action[AnyContent] = Action.async { implicit request =>
     Cache
@@ -47,9 +48,12 @@ class AdminController @Inject()(
   }
 
   def deleteAndReloadSpecs: Action[AnyContent] = Action.async { implicit request =>
-    formService.flushSpec().map { _ =>
-      Ok("Specification reloaded")
-    }
+    formService
+      .flushSpec()
+      .map { _ =>
+        Ok("Specification reloaded")
+      }
+      .runToFuture
   }
 
 }

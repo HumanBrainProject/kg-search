@@ -24,6 +24,7 @@ import models.instance._
 import models.specification.{FormRegistry, QuerySpec, UISpec}
 import models.user.{NexusUser, User}
 import models.{AccessToken, NexusPath}
+import monix.eval.Task
 import org.joda.time.DateTime
 import play.api.Logger
 import play.api.http.Status._
@@ -58,7 +59,7 @@ class EditorService @Inject()(
     size: Option[Int],
     search: String,
     token: AccessToken
-  ): Future[Either[APIEditorError, (List[PreviewInstance], Long)]] = {
+  ): Task[Either[APIEditorError, (List[PreviewInstance], Long)]] = {
     val promotedFields = (for {
       spec   <- formRegistry.registry.get(nexusPath)
       uiInfo <- spec.uiInfo
@@ -97,7 +98,7 @@ class EditorService @Inject()(
     instanceIds: List[NexusInstanceReference],
     registries: FormRegistries,
     token: AccessToken,
-  ): Future[List[PreviewInstance]] = {
+  ): Task[List[PreviewInstance]] = {
     val listOfResponse = for {
       id <- instanceIds
     } yield {
@@ -125,7 +126,7 @@ class EditorService @Inject()(
         }
     }
 
-    Future.sequence(listOfResponse).map { ls =>
+    Task.gather(listOfResponse).map { ls =>
       val r = ls.filter(_.isRight)
       r.collect { case Right(e) => e }
     }
@@ -135,7 +136,7 @@ class EditorService @Inject()(
     newInstance: NexusInstance,
     user: Option[User],
     token: AccessToken
-  ): Future[Either[APIEditorError, NexusInstanceReference]] = {
+  ): Task[Either[APIEditorError, NexusInstanceReference]] = {
     val modifiedContent =
       FormService.removeClientKeysCorrectLinks(newInstance.content.as[JsValue], config.nexusEndpoint)
     instanceApiService
@@ -160,7 +161,7 @@ class EditorService @Inject()(
     nexusInstanceReference: NexusInstanceReference,
     token: AccessToken,
     userId: String
-  ): Future[Either[APIEditorError, Unit]] = {
+  ): Task[Either[APIEditorError, Unit]] = {
     val contentWithUpdatedTimeStamp = diffInstance.nexusInstance.content.value
     val content =
       Json
@@ -190,7 +191,7 @@ class EditorService @Inject()(
     user: NexusUser,
     token: AccessToken,
     reverseLinkService: ReverseLinkService
-  ): Future[Either[APIEditorMultiError, Unit]] = {
+  ): Task[Either[APIEditorMultiError, Unit]] = {
     form match {
       case Some(json) =>
         formService.getRegistries().flatMap { registries =>
@@ -217,7 +218,7 @@ class EditorService @Inject()(
           }
         }
       case None =>
-        Future(Left(APIEditorMultiError(BAD_REQUEST, List(APIEditorError(BAD_REQUEST, "No content provided")))))
+        Task.pure(Left(APIEditorMultiError(BAD_REQUEST, List(APIEditorError(BAD_REQUEST, "No content provided")))))
     }
   }
 
@@ -235,7 +236,7 @@ class EditorService @Inject()(
     token: AccessToken,
     queryRegistry: FormRegistry[QuerySpec],
     databaseScope: Option[String] = None
-  ): Future[Either[APIEditorError, NexusInstance]] = {
+  ): Task[Either[APIEditorError, NexusInstance]] = {
     queryRegistry.registry.get(nexusInstanceReference.nexusPath) match {
       case Some(querySpec) =>
         queryService
@@ -275,13 +276,13 @@ class EditorService @Inject()(
     to: NexusInstanceReference,
     linkingInstancePath: NexusPath,
     token: AccessToken
-  ): Future[Either[APIEditorMultiError, Unit]] = {
+  ): Task[Either[APIEditorMultiError, Unit]] = {
     instanceApiService
       .getLinkingInstance(wSClient, config.kgQueryEndpoint, from, to, linkingInstancePath, token)
       .flatMap {
         case Right(ls) =>
-          Future
-            .sequence(
+          Task
+            .gather(
               ls.map(
                 l =>
                   instanceApiService
@@ -300,7 +301,7 @@ class EditorService @Inject()(
                 Left(APIEditorMultiError(INTERNAL_SERVER_ERROR, errors.map(_.swap.toOption.get)))
               }
             }
-        case Left(res) => Future(Left(APIEditorMultiError.fromResponse(res.status, res.body)))
+        case Left(res) => Task.pure(Left(APIEditorMultiError.fromResponse(res.status, res.body)))
       }
   }
 
@@ -310,10 +311,10 @@ class EditorService @Inject()(
     token: AccessToken,
     user: User,
     registries: FormRegistries
-  ): Future[Either[APIEditorMultiError, Unit]] =
+  ): Task[Either[APIEditorMultiError, Unit]] =
     retrieveInstance(instanceRef, token, registries.queryRegistry).flatMap {
       case Left(error) =>
-        Future(Left(APIEditorMultiError(error.status, List(error))))
+        Task.pure(Left(APIEditorMultiError(error.status, List(error))))
       case Right(currentInstanceDisplayed) =>
         val updateToBeStored =
           EditorService.computeUpdateTobeStored(currentInstanceDisplayed, updateFromUser, config.nexusEndpoint)
@@ -334,7 +335,7 @@ class EditorService @Inject()(
     updateToBeStored: EditorInstance,
     user: User,
     token: AccessToken
-  ): Future[Either[APIEditorMultiError, Unit]] =
+  ): Task[Either[APIEditorMultiError, Unit]] =
     instanceApiService
       .get(wSClient, config.kgQueryEndpoint, instanceRef, token, EditorClient, Some(user.id))
       .flatMap {
@@ -346,7 +347,7 @@ class EditorService @Inject()(
                 case Right(()) => Right(())
               }
             case _ =>
-              Future(Left(APIEditorMultiError.fromResponse(res.status, res.body)))
+              Task.pure(Left(APIEditorMultiError.fromResponse(res.status, res.body)))
           }
         case Right(instance) =>
           val mergeInstanceWithPreviousUserUpdate = EditorInstance(
@@ -364,11 +365,11 @@ class EditorService @Inject()(
     instanceIds: List[NexusInstanceReference],
     querySpec: FormRegistry[QuerySpec],
     token: AccessToken,
-  ): Future[Either[APIEditorError, List[NexusInstance]]] = {
+  ): Task[Either[APIEditorError, List[NexusInstance]]] = {
     val listOfResponse = for {
       id <- instanceIds
     } yield retrieveInstance(id, token, querySpec)
-    Future.sequence(listOfResponse).map { ls =>
+    Task.gather(listOfResponse).map { ls =>
       val r = ls.filter(_.isRight)
       if (r.isEmpty) {
         val error = ls.head.swap.getOrElse(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances"))
@@ -383,7 +384,7 @@ class EditorService @Inject()(
   def deleteInstance(
     nexusInstanceReference: NexusInstanceReference,
     token: AccessToken
-  ): Future[Either[APIEditorError, Unit]] = {
+  ): Task[Either[APIEditorError, Unit]] = {
     instanceApiService.deleteEditorInstance(wSClient, config.kgQueryEndpoint, nexusInstanceReference, token)
   }
 

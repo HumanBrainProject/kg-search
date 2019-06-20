@@ -49,26 +49,27 @@ class FormService @Inject()(
   val timeout = FiniteDuration(30, "sec")
   val retryTime = 5000 //ms
   val logger: slf4j.Logger = LoggerFactory.getLogger(this.getClass)
-  Await.result(specificationService.init(), timeout)
+  Await.result(specificationService.init().runToFuture, timeout)
 
   /**
     * @return the specification and stored queries
     */
-  def getRegistries(): Future[FormRegistries] = stateSpec match {
-    case Some(spec) => Future.successful(spec)
-    case None       => loadFormConfiguration().runToFuture
+  def getRegistries(): Task[FormRegistries] = stateSpec match {
+    case Some(spec) => Task.pure(spec)
+    case None       => loadFormConfiguration()
   }
 
-  def flushSpec(): Future[FormRegistries] =
+  def flushSpec(): Task[FormRegistries] =
     specificationService.init().flatMap { _ =>
-      loadFormConfiguration().runToFuture
+      loadFormConfiguration()
     }
 
   private final def loadFormConfiguration(): Task[FormRegistries] = {
     logger.info("Form Service INITIALIZATION --- Starting to load specification")
-    Task.deferFuture {
-      OIDCAuthService.getTechAccessToken(true).flatMap { token =>
-        ws.url(s"${config.kgQueryEndpoint}/arango/internalDocuments/editor_specifications").get().flatMap { querySpec =>
+    OIDCAuthService.getTechAccessToken(true).flatMap { token =>
+      Task
+        .deferFuture(ws.url(s"${config.kgQueryEndpoint}/arango/internalDocuments/editor_specifications").get())
+        .flatMap { querySpec =>
           querySpec.status match {
             case OK =>
               FormService.getRegistry(querySpec.json.as[List[JsObject]], specificationService, token).map {
@@ -79,16 +80,15 @@ class FormService @Inject()(
               }
             case _ =>
               logger.error(s"Form Service INITIALIZATION --- Could not load configuration")
-              Future.failed(
+              Task.raiseError(
                 new Exception(s"Form Service INITIALIZATION --- Could not load configuration - ${querySpec.body}")
               )
           }
         }
-      }
     }
   }
 
-  def shouldReloadSpecification(path: NexusPath): Future[Boolean] = {
+  def shouldReloadSpecification(path: NexusPath): Task[Boolean] = {
     this.getRegistries().map { registries =>
       registries.formRegistry.registry
         .get(path)
@@ -380,7 +380,7 @@ object FormService {
     js: List[JsObject],
     specificationService: SpecificationService,
     token: RefreshAccessToken
-  )(implicit executionContext: ExecutionContext): Future[FormRegistries] = {
+  ): Task[FormRegistries] = {
     val formRegistries = extractRegistries(js)
     for {
       systemQueries  <- specificationService.fetchSpecificationQueries(token)

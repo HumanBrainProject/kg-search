@@ -86,7 +86,7 @@ class EditorUserService @Inject()(
       UserRequestMap.cleanMap
     }
 
-  def getUser(nexusUser: NexusUser, token: AccessToken): Future[Either[APIEditorError, Option[EditorUser]]] = {
+  def getUser(nexusUser: NexusUser, token: AccessToken): Task[Either[APIEditorError, Option[EditorUser]]] = {
     cacheService.get[EditorUser](cache, nexusUser.id.toString).flatMap {
       case None =>
         queryService
@@ -120,7 +120,7 @@ class EditorUserService @Inject()(
                 APIEditorError(res.status, res.body).asLeft
             }
           }
-      case Some(user) => Future.successful(user.some.asRight)
+      case Some(user) => Task.pure(user.some.asRight)
     }
   }
 
@@ -131,25 +131,25 @@ class EditorUserService @Inject()(
   }
 
   def getOrCreateUser(nexusUser: NexusUser, token: AccessToken)(
-    afterCreation: (EditorUser, AccessToken) => Future[Either[APIEditorError, EditorUser]]
-  ): Future[Either[APIEditorError, EditorUser]] =
+    afterCreation: (EditorUser, AccessToken) => Task[Either[APIEditorError, EditorUser]]
+  ): Task[Either[APIEditorError, EditorUser]] =
     getUser(nexusUser, token).flatMap {
-      case Right(Some(editorUser)) => Future.successful(editorUser.asRight)
+      case Right(Some(editorUser)) => Task.pure(editorUser.asRight)
       case Right(None) =>
         logger.debug("Calling second time get user returns None")
         UserRequestMap
           .get(nexusUser.id.toString) match {
           case Some(req) =>
             logger.debug(s"Fetching request from cache for user ${nexusUser.id.toString}")
-            req.runToFuture
+            req
           case None =>
             logger.debug(s"Adding request to cache for user ${nexusUser.id.toString}")
-            val task = Task.deferFuture {
+            val task = Task.from {
               createUser(nexusUser, token).flatMap {
                 case Right(editorUser) =>
                   logger.debug("Creating the user")
                   afterCreation(editorUser, token)
-                case Left(e) => Future.successful(e.asLeft)
+                case Left(e) => Task.pure(e.asLeft)
               }
             }.memoize
             UserRequestMap.put(
@@ -157,12 +157,12 @@ class EditorUserService @Inject()(
               task
             )
             scheduler
-            task.runToFuture
+            task
         }
-      case Left(e) => Future.successful(e.asLeft)
+      case Left(e) => Task.pure(e.asLeft)
     }
 
-  def createUser(nexusUser: NexusUser, token: AccessToken): Future[Either[APIEditorError, EditorUser]] = {
+  def createUser(nexusUser: NexusUser, token: AccessToken): Task[Either[APIEditorError, EditorUser]] = {
     instanceApiService
       .post(
         wSClient,
@@ -179,7 +179,7 @@ class EditorUserService @Inject()(
       }
   }
 
-  def deleteUser(editorUser: EditorUser, token: AccessToken): Future[Either[APIEditorError, Unit]] = {
+  def deleteUser(editorUser: EditorUser, token: AccessToken): Task[Either[APIEditorError, Unit]] = {
     instanceApiService
       .delete(wSClient, config.kgQueryEndpoint, editorUser.nexusId, token)
       .map {

@@ -20,6 +20,7 @@ import models.AccessToken
 import models.errors.APIEditorError
 import models.instance.{NexusInstanceReference, SuggestionInstance}
 import models.user.{EditorUser, User}
+import monix.eval.Task
 import play.api.http.HeaderNames.AUTHORIZATION
 import play.api.http.Status.{CREATED, OK}
 import play.api.libs.ws.{EmptyBody, WSClient}
@@ -37,13 +38,16 @@ trait ReviewApiService {
     token: AccessToken,
     currentUser: EditorUser,
     serviceClient: ServiceClient = SuggestionClient
-  )(implicit executionContext: ExecutionContext): Future[Either[APIEditorError, Unit]] = {
-    WSClient
-      .url(s"$baseUrl/api/suggestion/${nexusInstanceRef.toString()}/instance/$userID")
-      .addHttpHeaders(AUTHORIZATION -> token.token)
-      .addHttpHeaders("client" -> serviceClient.client)
-      .addQueryStringParameters("clientIdExtension" -> currentUser.nexusUser.id)
-      .post(EmptyBody)
+  )(implicit executionContext: ExecutionContext): Task[Either[APIEditorError, Unit]] = {
+    Task
+      .deferFuture(
+        WSClient
+          .url(s"$baseUrl/api/suggestion/${nexusInstanceRef.toString()}/instance/$userID")
+          .addHttpHeaders(AUTHORIZATION -> token.token)
+          .addHttpHeaders("client" -> serviceClient.client)
+          .addQueryStringParameters("clientIdExtension" -> currentUser.nexusUser.id)
+          .post(EmptyBody)
+      )
       .map { res =>
         res.status match {
           case CREATED | OK => Right(())
@@ -64,12 +68,15 @@ trait ReviewApiService {
     nexusInstanceReference: NexusInstanceReference,
     token: AccessToken,
     serviceClient: ServiceClient = SuggestionClient
-  )(implicit executionContext: ExecutionContext): Future[Either[APIEditorError, Unit]] = {
-    WSClient
-      .url(s"$baseUrl/api/suggestion/${nexusInstanceReference.toString()}/accept")
-      .addHttpHeaders(AUTHORIZATION -> token.token)
-      .addHttpHeaders("client" -> serviceClient.client)
-      .post(EmptyBody)
+  )(implicit executionContext: ExecutionContext): Task[Either[APIEditorError, Unit]] = {
+    Task
+      .deferFuture(
+        WSClient
+          .url(s"$baseUrl/api/suggestion/${nexusInstanceReference.toString()}/accept")
+          .addHttpHeaders(AUTHORIZATION -> token.token)
+          .addHttpHeaders("client" -> serviceClient.client)
+          .post(EmptyBody)
+      )
       .map { res =>
         res.status match {
           case CREATED => Right(())
@@ -90,12 +97,15 @@ trait ReviewApiService {
     nexusInstanceReference: NexusInstanceReference,
     token: AccessToken,
     serviceClient: ServiceClient = SuggestionClient
-  )(implicit executionContext: ExecutionContext): Future[Either[APIEditorError, Unit]] = {
-    WSClient
-      .url(s"$baseUrl/api/suggestion/${nexusInstanceReference.toString()}/reject")
-      .addHttpHeaders(AUTHORIZATION -> token.token)
-      .addHttpHeaders("client" -> serviceClient.client)
-      .post(EmptyBody)
+  )(implicit executionContext: ExecutionContext): Task[Either[APIEditorError, Unit]] = {
+    Task
+      .deferFuture(
+        WSClient
+          .url(s"$baseUrl/api/suggestion/${nexusInstanceReference.toString()}/reject")
+          .addHttpHeaders(AUTHORIZATION -> token.token)
+          .addHttpHeaders("client" -> serviceClient.client)
+          .post(EmptyBody)
+      )
       .map { res =>
         res.status match {
           case OK => Right(())
@@ -118,13 +128,16 @@ trait ReviewApiService {
     serviceClient: ServiceClient = SuggestionClient
   )(
     implicit executionContext: ExecutionContext
-  ): Future[Either[APIEditorError, List[SuggestionInstance]]] = {
-    WSClient
-      .url(s"$baseUrl/api/suggestion/user")
-      .addQueryStringParameters("status" -> suggestionStatus.status)
-      .addHttpHeaders(AUTHORIZATION -> token.token)
-      .addHttpHeaders("client" -> serviceClient.client)
-      .get()
+  ): Task[Either[APIEditorError, List[SuggestionInstance]]] = {
+    Task
+      .deferFuture(
+        WSClient
+          .url(s"$baseUrl/api/suggestion/user")
+          .addQueryStringParameters("status" -> suggestionStatus.status)
+          .addHttpHeaders(AUTHORIZATION -> token.token)
+          .addHttpHeaders("client" -> serviceClient.client)
+          .get()
+      )
       .map { res =>
         res.status match {
           case OK => Right(res.json.as[List[SuggestionInstance]])
@@ -147,12 +160,15 @@ trait ReviewApiService {
     serviceClient: ServiceClient = SuggestionClient
   )(
     implicit executionContext: ExecutionContext
-  ): Future[Either[APIEditorError, List[SuggestionInstance]]] = {
-    WSClient
-      .url(s"$baseUrl/api/suggestion/${ref.toString}/instances")
-      .addHttpHeaders(AUTHORIZATION -> token.token)
-      .addHttpHeaders("client" -> serviceClient.client)
-      .get()
+  ): Task[Either[APIEditorError, List[SuggestionInstance]]] = {
+    Task
+      .deferFuture(
+        WSClient
+          .url(s"$baseUrl/api/suggestion/${ref.toString}/instances")
+          .addHttpHeaders(AUTHORIZATION -> token.token)
+          .addHttpHeaders("client" -> serviceClient.client)
+          .get()
+      )
       .map { res =>
         res.status match {
           case OK => Right(res.json.as[List[SuggestionInstance]])

@@ -47,7 +47,7 @@ class EditorUserServiceSpec
     with Injecting {
 
   override def fakeApplication(): Application = ConfigMock.fakeApplicationConfig.build()
-
+  implicit val scheduler = monix.execution.Scheduler.Implicits.global
   "getUser" should {
     "return an editor user" in {
       val fakeEndpoint = s"${kgQueryEndpoint}/query/"
@@ -95,7 +95,7 @@ class EditorUserServiceSpec
           actorSystem
         )
 
-      val res = Await.result(service.getUser(nexusUser, BasicAccessToken("token")), FiniteDuration(10, "s"))
+      val res = Await.result(service.getUser(nexusUser, BasicAccessToken("token")).runToFuture, FiniteDuration(10, "s"))
 
       res.isRight mustBe true
       res mustBe Right(Some(user))
@@ -138,7 +138,7 @@ class EditorUserServiceSpec
           actorSystem
         )
 
-      val res = Await.result(service.getUser(nexusUser, BasicAccessToken("token")), FiniteDuration(10, "s"))
+      val res = Await.result(service.getUser(nexusUser, BasicAccessToken("token")).runToFuture, FiniteDuration(10, "s"))
 
       res.isLeft mustBe true
     }

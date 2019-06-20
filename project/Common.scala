@@ -22,7 +22,8 @@ object Common {
     "com.github.stijndehaes" %% "play-prometheus-filters" % "0.3.2",
     "org.webjars" % "swagger-ui" % "3.18.1",
     "com.iheart" %% "play-swagger" % "0.7.4",
-    "org.typelevel" %% "cats-core" % "1.4.0"
+    "org.typelevel" %% "cats-core" % "1.4.0",
+    "io.monix" %% "monix" % "3.0.0-RC2"
   )
 
   val playDependencies = Seq(

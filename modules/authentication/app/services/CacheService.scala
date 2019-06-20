@@ -23,16 +23,17 @@ import play.api.cache.AsyncCacheApi
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.ClassTag
 import cats.syntax.option._
+import monix.eval.Task
 
 trait CacheService {
 
   val log = Logger(this.getClass)
 
   def getOrElse[A: ClassTag](cache: AsyncCacheApi, key: String)(
-    orElse: => Future[Option[A]]
-  )(implicit executionContext: ExecutionContext): Future[Option[A]] = {
+    orElse: => Task[Option[A]]
+  )(implicit executionContext: ExecutionContext): Task[Option[A]] = {
     get[A](cache, key).flatMap {
-      case Some(elem) => Future(elem.some)
+      case Some(elem) => Task.pure(elem.some)
       case None =>
         log.debug("Cache element not found executing orElse")
         orElse
@@ -41,7 +42,7 @@ trait CacheService {
 
   def get[A: ClassTag](cache: AsyncCacheApi, key: String)(
     implicit executionContext: ExecutionContext
-  ): Future[Option[A]] = cache.get[A](key)
+  ): Task[Option[A]] = Task.deferFuture(cache.get[A](key))
 
   def clearCache(cache: AsyncCacheApi): Future[Done] = cache.removeAll()
 

@@ -21,9 +21,8 @@ import models.editorUserList.{BOOKMARKFOLDER, BookmarkList, BookmarkListFolder, 
 import models.instance.{NexusInstanceReference, PreviewInstance}
 import models.specification.{FormRegistry, UISpec}
 import models.user.EditorUser
+import monix.eval.Task
 import play.api.libs.ws.WSResponse
-
-import scala.concurrent.Future
 
 trait EditorBookmarkServiceInterface {
 
@@ -37,7 +36,7 @@ trait EditorBookmarkServiceInterface {
     editorUser: EditorUser,
     formRegistry: FormRegistry[UISpec],
     token: AccessToken
-  ): Future[Either[APIEditorError, List[BookmarkListFolder]]]
+  ): Task[Either[APIEditorError, List[BookmarkListFolder]]]
 
   /**
     *  Get the instances contained in a bookmark list paginated and searchable
@@ -53,7 +52,7 @@ trait EditorBookmarkServiceInterface {
     size: Int,
     search: String,
     token: AccessToken
-  ): Future[Either[APIEditorError, (List[PreviewInstance], Long)]]
+  ): Task[Either[APIEditorError, (List[PreviewInstance], Long)]]
 
   /**
     * Create a folder for bookmarklist
@@ -68,7 +67,7 @@ trait EditorBookmarkServiceInterface {
     name: String,
     token: AccessToken,
     folderType: FolderType = BOOKMARKFOLDER
-  ): Future[Either[APIEditorError, BookmarkListFolder]]
+  ): Task[Either[APIEditorError, BookmarkListFolder]]
 
   /**
     *
@@ -81,7 +80,7 @@ trait EditorBookmarkServiceInterface {
     bookmarkListName: String,
     folderId: String,
     token: AccessToken
-  ): Future[Either[APIEditorError, BookmarkList]]
+  ): Task[Either[APIEditorError, BookmarkList]]
 
   def updateBookmarkList(
     bookmarkList: BookmarkList,
@@ -89,25 +88,25 @@ trait EditorBookmarkServiceInterface {
     userFolderId: String,
     userId: String,
     token: AccessToken
-  ): Future[Either[APIEditorError, BookmarkList]]
+  ): Task[Either[APIEditorError, BookmarkList]]
 
-  def deleteBookmarkList(bookmarkRef: NexusInstanceReference, token: AccessToken): Future[Either[APIEditorError, Unit]]
+  def deleteBookmarkList(bookmarkRef: NexusInstanceReference, token: AccessToken): Task[Either[APIEditorError, Unit]]
 
   def addInstanceToBookmarkLists(
     instanceReference: NexusInstanceReference,
     bookmarkListIds: List[NexusInstanceReference],
     token: AccessToken
-  ): Future[List[Either[APIEditorError, Unit]]]
+  ): Task[List[Either[APIEditorError, Unit]]]
 
   def removeInstanceFromBookmarkLists(
     instanceRef: NexusInstanceReference,
     bookmarkListIds: List[NexusInstanceReference],
     token: AccessToken
-  ): Future[List[Either[APIEditorError, Unit]]]
+  ): Task[List[Either[APIEditorError, Unit]]]
 
   def retrieveBookmarkLists(
     instanceIds: List[NexusInstanceReference],
     editorUser: EditorUser,
     token: AccessToken
-  ): Future[List[(NexusInstanceReference, Either[APIEditorError, List[BookmarkList]])]]
+  ): Task[List[(NexusInstanceReference, Either[APIEditorError, List[BookmarkList]])]]
 }

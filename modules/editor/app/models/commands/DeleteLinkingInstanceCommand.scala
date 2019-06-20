@@ -14,13 +14,12 @@
  *   limitations under the License.
  */
 package models.commands
-import models.{AccessToken, NexusPath}
 import models.errors.APIEditorError
 import models.instance.NexusInstanceReference
+import models.{AccessToken, NexusPath}
+import monix.eval.Task
 import play.api.Logger
 import services.EditorService
-
-import scala.concurrent.{ExecutionContext, Future}
 
 final case class DeleteLinkingInstanceCommand(
   from: NexusInstanceReference,
@@ -30,7 +29,7 @@ final case class DeleteLinkingInstanceCommand(
   token: AccessToken
 ) extends Command {
   private val log = Logger(this.getClass)
-  override def execute()(implicit executionContext: ExecutionContext): Future[Either[APIEditorError, Unit]] = {
+  override def execute(): Task[Either[APIEditorError, Unit]] = {
     editorService
       .deleteLinkingInstance(
         from,

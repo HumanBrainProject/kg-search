@@ -25,6 +25,7 @@ import javax.inject.Singleton
 import models.errors.APIEditorError
 import models.instance.{NexusInstance, NexusInstanceReference}
 import models.{NexusPath, RefreshAccessToken}
+import monix.eval.Task
 import org.slf4j.LoggerFactory
 import play.api.Environment
 import play.api.http.HeaderNames.AUTHORIZATION
@@ -57,7 +58,7 @@ class SpecificationService @Inject()(
   private val log = LoggerFactory.getLogger(this.getClass)
   object instanceApiService extends InstanceApiService
 
-  def init(): Future[Done] = {
+  def init(): Task[Done] = {
     log.debug("Specification Service INITIALIZATION ---------------------------------")
     //Get by identifier all Specification field
     log.debug("Specification Service INITIALIZATION --- Fetching remote specification fields")
@@ -74,7 +75,7 @@ class SpecificationService @Inject()(
     }
   }
 
-  private def getOrCreateSpecificationAndSpecificationFields(token: RefreshAccessToken): Future[Done] = {
+  private def getOrCreateSpecificationAndSpecificationFields(token: RefreshAccessToken): Task[Done] = {
     runQuery(s"${specFieldIdQueryPath.toString}/$specFieldIdQueryId/instances", token)
       .flatMap { specFieldResult =>
         specFieldResult.status match {
@@ -111,12 +112,12 @@ class SpecificationService @Inject()(
             }
           case INTERNAL_SERVER_ERROR =>
             log.error("Could not fetch specification fields")
-            Future.successful(Done)
+            Task.pure(Done)
           case _ =>
             log.error(
               s"Error while fetching Specification fields - ${specFieldResult.status} : ${specFieldResult.body}"
             )
-            Future.successful(Done)
+            Task.pure(Done)
         }
       }
   }
@@ -124,7 +125,7 @@ class SpecificationService @Inject()(
   private def getSpecifications(
     fieldsIdMap: Map[String, NexusInstanceReference],
     token: RefreshAccessToken
-  ): Future[Done] = {
+  ): Task[Done] = {
     log.debug("Specification Service INITIALIZATION --- Fetching remote specifications")
     val futListOfSpecToUpload =
       runQuery(s"${specIdQueryPath.toString}/$specQueryId/instances", token)
@@ -223,7 +224,7 @@ class SpecificationService @Inject()(
   private def uploadSpec(
     value: SpecificationFile,
     token: RefreshAccessToken
-  ): Future[Either[APIEditorError, (String, NexusInstanceReference)]] = {
+  ): Task[Either[APIEditorError, (String, NexusInstanceReference)]] = {
 
     val path = NexusInstanceReference.fromUrl(value.id).nexusPath
     instanceApiService
@@ -251,8 +252,8 @@ class SpecificationService @Inject()(
   private def getSpecificationQueries(
     folder: String,
     token: RefreshAccessToken
-  ): Future[(List[SpecificationFile], List[SpecificationFile])] = {
-    fetchFile(folder).foldLeft(Future((List[SpecificationFile](), List[SpecificationFile]()))) {
+  ): Task[(List[SpecificationFile], List[SpecificationFile])] = {
+    fetchFile(folder).foldLeft(Task.pure((List[SpecificationFile](), List[SpecificationFile]()))) {
       case (previousFuture, file) =>
         val queryId = NexusInstanceReference.fromUrl(file.id)
         previousFuture.flatMap { previousResult =>
@@ -270,7 +271,7 @@ class SpecificationService @Inject()(
     }
   }
 
-  def fetchSpecificationQueries(token: RefreshAccessToken): Future[List[NexusInstanceReference]] = {
+  def fetchSpecificationQueries(token: RefreshAccessToken): Task[List[NexusInstanceReference]] = {
     getSpecificationQueries("SpecificationQueries", token).map { l =>
       l._1.map(f => NexusInstanceReference.fromUrl(f.id))
     }
@@ -279,17 +280,20 @@ class SpecificationService @Inject()(
   private def createSpecificationQueries(
     folder: String,
     token: RefreshAccessToken
-  ): Future[List[NexusInstanceReference]] = {
+  ): Task[List[NexusInstanceReference]] = {
     log.info("Specification service INITIALIZATION --- Fetching local queries")
     val futQueriesToCreate = getSpecificationQueries(folder, token)
     futQueriesToCreate.flatMap { l =>
       log.info(s"Specification service INITIALIZATION --- Creating queries - ${l._2.map(_.id)}")
       val created = l._2.map { file =>
-        WSClient
-          .url(s"${config.kgQueryEndpoint}/query/${file.id.toString()}")
-          .addHttpHeaders(AUTHORIZATION -> token.token)
-          .addQueryStringParameters(QueryConstants.VOCAB -> QueryConstants.DEFAULT_VOCAB)
-          .put(file.data)
+        Task
+          .deferFuture(
+            WSClient
+              .url(s"${config.kgQueryEndpoint}/query/${file.id.toString()}")
+              .addHttpHeaders(AUTHORIZATION -> token.token)
+              .addQueryStringParameters(QueryConstants.VOCAB -> QueryConstants.DEFAULT_VOCAB)
+              .put(file.data)
+          )
           .map { res =>
             res.status match {
               case OK | CREATED => Some(NexusInstanceReference.fromUrl(file.id))
@@ -304,23 +308,27 @@ class SpecificationService @Inject()(
     }
   }
 
-  def fetchSpecifications(token: RefreshAccessToken): Future[WSResponse] = {
-    WSClient
-      .url(s"${config.kgQueryEndpoint}/query/meta/minds/specification/v0.0.1/specificationQuery/instances")
-      .addHttpHeaders(AUTHORIZATION -> token.token)
-      .addQueryStringParameters(QueryConstants.VOCAB -> EditorConstants.META)
-      .get()
+  def fetchSpecifications(token: RefreshAccessToken): Task[WSResponse] = {
+    Task.deferFuture(
+      WSClient
+        .url(s"${config.kgQueryEndpoint}/query/meta/minds/specification/v0.0.1/specificationQuery/instances")
+        .addHttpHeaders(AUTHORIZATION -> token.token)
+        .addQueryStringParameters(QueryConstants.VOCAB -> EditorConstants.META)
+        .get()
+    )
   }
 
   private def runQuery(
     queryPath: String,
     token: RefreshAccessToken,
-  ): Future[WSResponse] = {
-    WSClient
-      .url(s"${config.kgQueryEndpoint}/query/$queryPath")
-      .addHttpHeaders(AUTHORIZATION -> token.token)
-      .addQueryStringParameters(QueryConstants.VOCAB -> QueryConstants.DEFAULT_VOCAB)
-      .get()
+  ): Task[WSResponse] = {
+    Task.deferFuture(
+      WSClient
+        .url(s"${config.kgQueryEndpoint}/query/$queryPath")
+        .addHttpHeaders(AUTHORIZATION -> token.token)
+        .addQueryStringParameters(QueryConstants.VOCAB -> QueryConstants.DEFAULT_VOCAB)
+        .get()
+    )
   }
 
 }

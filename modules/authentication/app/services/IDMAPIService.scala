@@ -18,29 +18,27 @@ package services
 import com.google.inject.Inject
 import models.user.IDMUser
 import models.{AccessToken, BasicAccessToken, Pagination, RefreshAccessToken}
+import monix.eval.Task
 import org.slf4j.LoggerFactory
 import play.api.http.HeaderNames.AUTHORIZATION
 import play.api.http.Status._
 import play.api.libs.json.JsValue
 import play.api.libs.ws.{WSClient, WSResponse}
 
-import scala.concurrent.{ExecutionContext, Future}
-
 class IDMAPIService @Inject()(WSClient: WSClient, config: ConfigurationService)(
-  implicit executionContext: ExecutionContext,
-  OIDCAuthService: OIDCAuthService,
+  implicit OIDCAuthService: OIDCAuthService,
   clientCredentials: CredentialsService
 ) {
   private val log = LoggerFactory.getLogger(this.getClass)
 
-  def getUserInfoFromID(userId: String, token: AccessToken): Future[Option[IDMUser]] = {
+  def getUserInfoFromID(userId: String, token: AccessToken): Task[Option[IDMUser]] = {
     if (userId.isEmpty) {
-      Future.successful(None)
+      Task.pure(None)
     } else {
       val url = s"${config.idmApiEndpoint}/user/$userId"
       val q = WSClient.url(url).addHttpHeaders(AUTHORIZATION -> token.token)
       val queryResult = token match {
-        case BasicAccessToken(_)   => q.get()
+        case BasicAccessToken(_)   => Task.deferFuture(q.get())
         case RefreshAccessToken(_) => AuthHttpClient.getWithRetry(q)
       }
       queryResult.flatMap { res =>
@@ -53,7 +51,7 @@ class IDMAPIService @Inject()(WSClient: WSClient, config: ConfigurationService)(
                 log.error(s"Could not fetch user groups from IDM API ${r.body}")
                 Some(user)
             }
-          case _ => Future(None)
+          case _ => Task.pure(None)
         }
       }
     }
@@ -63,25 +61,28 @@ class IDMAPIService @Inject()(WSClient: WSClient, config: ConfigurationService)(
     size: Int,
     searchTerm: String,
     token: AccessToken
-  ): Future[Either[WSResponse, (List[IDMUser], Pagination)]] = {
+  ): Task[Either[WSResponse, (List[IDMUser], Pagination)]] = {
     val url = s"${config.idmApiEndpoint}/user/search"
     if (!searchTerm.isEmpty) {
-      WSClient
-        .url(url)
-        .addHttpHeaders(AUTHORIZATION -> token.token)
-        .addQueryStringParameters(
-          "pageSize"    -> size.toString,
-          "displayName" -> s"*$searchTerm*",
-          "email"       -> s"*$searchTerm*",
-          "username"    -> s"*$searchTerm*",
-          "sort"        -> "displayName,asc"
-        )
-        .get()
+      Task
+        .deferFuture {
+          WSClient
+            .url(url)
+            .addHttpHeaders(AUTHORIZATION -> token.token)
+            .addQueryStringParameters(
+              "pageSize"    -> size.toString,
+              "displayName" -> s"*$searchTerm*",
+              "email"       -> s"*$searchTerm*",
+              "username"    -> s"*$searchTerm*",
+              "sort"        -> "displayName,asc"
+            )
+            .get()
+        }
         .flatMap { res =>
           res.status match {
             case OK =>
-              Future
-                .sequence(
+              Task
+                .gather(
                   (res.json \ "_embedded" \ "users")
                     .as[List[IDMUser]]
                     .map { u =>
@@ -95,11 +96,11 @@ class IDMAPIService @Inject()(WSClient: WSClient, config: ConfigurationService)(
                   val pagination = (res.json \ "page").as[Pagination]
                   Right(users, pagination)
                 }
-            case _ => Future(Left(res))
+            case _ => Task.pure(Left(res))
           }
         }
     } else {
-      Future(Right(List(), Pagination.empty))
+      Task.pure(Right(List(), Pagination.empty))
     }
   }
 
@@ -107,12 +108,12 @@ class IDMAPIService @Inject()(WSClient: WSClient, config: ConfigurationService)(
     user: IDMUser,
     groups: List[String],
     token: AccessToken
-  ): Future[Either[WSResponse, Boolean]] = {
+  ): Task[Either[WSResponse, Boolean]] = {
     val url = s"${config.idmApiEndpoint}/user/${user.id}/member-groups"
     val queryGroups: List[(String, String)] = groups.map("name" -> _)
     val q = WSClient.url(url).addHttpHeaders(AUTHORIZATION -> token.token).addQueryStringParameters(queryGroups: _*)
     val r = token match {
-      case BasicAccessToken(_)   => q.get()
+      case BasicAccessToken(_)   => Task.deferFuture(q.get())
       case RefreshAccessToken(_) => AuthHttpClient.getWithRetry(q)
     }
     r.map { res =>
