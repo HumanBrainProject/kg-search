@@ -26,6 +26,7 @@ case class EditorFieldSpecification(
   closeDropdownAfterInteraction: Option[Boolean],
   mappingValue: Option[String],
   mappingLabel: Option[String],
+  mappingReturn: Option[String],
   isLink: Option[Boolean],
   allowCustomValues: Option[Boolean],
   isReverse: Option[Boolean] = None,
@@ -64,6 +65,7 @@ object EditorFieldSpecification {
     (JsPath \ "closeDropdownAfterInteraction").writeNullable[Boolean] and
     (JsPath \ "mappingValue").writeNullable[String] and
     (JsPath \ "mappingLabel").writeNullable[String] and
+    (JsPath \ "mappingReturn").writeNullable[String] and
     (JsPath \ "isLink").writeNullable[Boolean] and
     (JsPath \ "allowCustomValues").writeNullable[Boolean] and
     (JsPath \ "isReverse").writeNullable[Boolean] and
@@ -83,6 +85,7 @@ object EditorFieldSpecification {
     (JsPath \ "closeDropdownAfterInteraction").readNullable[Boolean] and
     (JsPath \ "mappingValue").readNullable[String] and
     (JsPath \ "mappingLabel").readNullable[String] and
+    (JsPath \ "mappingReturn").readNullable[String] and
     (JsPath \ "isLink").readNullable[Boolean] and
     (JsPath \ "allowCustomValues").readNullable[Boolean] and
     (JsPath \ "isReverse").readNullable[Boolean] and
