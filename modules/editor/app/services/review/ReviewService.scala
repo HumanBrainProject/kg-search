@@ -25,11 +25,9 @@ import monix.eval.Task
 import play.api.http.Status._
 import play.api.libs.json.JsValue
 import play.api.libs.ws.WSClient
+import services._
 import services.instance.InstanceApiService
 import services.review.ReviewService.UserID
-import services._
-
-import scala.concurrent.{ExecutionContext, Future}
 
 class ReviewService @Inject()(
   wSClient: WSClient,

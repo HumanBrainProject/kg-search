@@ -19,8 +19,6 @@ package services
 import monix.eval.Task
 import play.api.mvc.Headers
 
-import scala.concurrent.Future
-
 trait AuthService {
   type U
 

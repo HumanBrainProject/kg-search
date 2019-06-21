@@ -15,18 +15,16 @@
  */
 package services.review
 
-import constants.{EditorClient, ServiceClient, SuggestionClient, SuggestionStatus}
+import constants.{ServiceClient, SuggestionClient, SuggestionStatus}
 import models.AccessToken
 import models.errors.APIEditorError
 import models.instance.{NexusInstanceReference, SuggestionInstance}
-import models.user.{EditorUser, User}
+import models.user.EditorUser
 import monix.eval.Task
 import play.api.http.HeaderNames.AUTHORIZATION
 import play.api.http.Status.{CREATED, OK}
 import play.api.libs.ws.{EmptyBody, WSClient}
 import services.review.ReviewService.UserID
-
-import scala.concurrent.{ExecutionContext, Future}
 
 trait ReviewApiService {
 

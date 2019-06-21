@@ -211,7 +211,7 @@ class SpecificationService @Inject()(
     if (dir.exists()) { dir.listFiles.filter(_.isFile).toList } else List()
 
   private def fetchFile(folder: String): List[SpecificationFile] = {
-    val folderPath = new File(env.getFile(s"modules/editor/resources/$folder").getPath)
+    val folderPath = env.getFile(s"conf/resources/$folder")
     getListOfFiles(folderPath).map { file =>
       val stream = new FileInputStream(file)
       val json = try { Json.parse(stream) } finally { stream.close() }

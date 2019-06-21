@@ -20,28 +20,26 @@ import java.util.concurrent.ConcurrentHashMap
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.DateTime
+import cats.syntax.either._
+import cats.syntax.option._
 import com.google.inject.Inject
 import constants.EditorConstants
+import models.AccessToken
 import models.errors.APIEditorError
 import models.instance.{NexusInstance, NexusInstanceReference}
+import models.specification.QuerySpec
 import models.user.{EditorUser, NexusUser}
+import monix.eval.Task
+import monix.execution.Scheduler.Implicits.global
 import play.api.Logger
 import play.api.cache.{AsyncCacheApi, NamedCache}
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.WSClient
-
-import scala.concurrent.duration._
 import services.instance.InstanceApiService
 import services.query.{QueryApiParameter, QueryService}
 
-import scala.concurrent.{ExecutionContext, Future}
-import cats.syntax.either._
-import cats.syntax.option._
-import models.AccessToken
-import models.specification.QuerySpec
-import monix.eval.Task
-import monix.execution.Scheduler.Implicits.global
+import scala.concurrent.duration._
 
 object UserRequestMap {
   private val m = new ConcurrentHashMap[String, (DateTime, Task[Either[APIEditorError, EditorUser]])]
