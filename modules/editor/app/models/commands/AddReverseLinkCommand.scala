@@ -19,13 +19,12 @@ import models.AccessToken
 import models.errors.APIEditorError
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, NexusLink}
 import models.user.User
+import monix.eval.Task
 import play.api.http.Status.INTERNAL_SERVER_ERROR
 import play.api.libs.json.Json
 import services.EditorService
 
-import scala.concurrent.{ExecutionContext, Future}
-
-case class AddReverseLinkCommand(
+final case class AddReverseLinkCommand(
   reverseInstanceLink: NexusLink,
   reverseInstance: NexusInstance,
   targetField: String,
@@ -35,7 +34,7 @@ case class AddReverseLinkCommand(
   token: AccessToken,
   user: User
 ) extends Command {
-  override def execute()(implicit executionContext: ExecutionContext): Future[Either[APIEditorError, Unit]] = {
+  override def execute(): Task[Either[APIEditorError, Unit]] = {
     val diffToSave = reverseInstance.content.value.get(targetField) match {
       case Some(fieldValue) => ReverseLinkOP.addLink(fieldValue, currentInstanceRef, targetField)
       case None             =>
@@ -52,7 +51,7 @@ case class AddReverseLinkCommand(
           )
         )
         editorService.updateInstance(reverseLinkInstance, reverseInstanceLink.ref, token, user.id)
-      case Left(s) => Future(Left(APIEditorError(INTERNAL_SERVER_ERROR, s)))
+      case Left(s) => Task.pure(Left(APIEditorError(INTERNAL_SERVER_ERROR, s)))
     }
 
   }

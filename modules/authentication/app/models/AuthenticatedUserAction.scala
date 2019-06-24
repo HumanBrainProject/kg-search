@@ -32,6 +32,7 @@ class AuthenticatedUserAction @Inject()(val parser: BodyParsers.Default, authpro
   implicit val executionContext: ExecutionContext
 ) extends ActionBuilder[UserRequest, AnyContent] {
   private val logger = play.api.Logger(this.getClass)
+  implicit val scheduler = monix.execution.Scheduler.Implicits.global
 
   /**
     * This action helps us identify a user. If the user is not logged in a 401 is returned
@@ -41,7 +42,7 @@ class AuthenticatedUserAction @Inject()(val parser: BodyParsers.Default, authpro
     * @return The play action with the user info or Unauthorized
     */
   override def invokeBlock[A](request: Request[A], block: (UserRequest[A]) => Future[Result]): Future[Result] = {
-    authprovider.getUserInfo(request.headers).flatMap { user =>
+    authprovider.getUserInfo(request.headers).runToFuture.flatMap { user =>
       val token = OIDCHelper.getTokenFromRequest[A](request)
       if (user.isDefined) {
         block(new UserRequest(user.get, request, token))

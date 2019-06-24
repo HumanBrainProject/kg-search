@@ -38,7 +38,7 @@ object FieldType {
   }
 }
 
-case class GenericType(fieldType: String) extends FieldType {
+final case class GenericType(fieldType: String) extends FieldType {
   override val t: String = fieldType
   val zero = ""
 }

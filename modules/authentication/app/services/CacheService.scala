@@ -17,37 +17,33 @@
 package services
 
 import akka.Done
+import cats.syntax.option._
+import monix.eval.Task
 import play.api.Logger
 import play.api.cache.AsyncCacheApi
 
-import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.ClassTag
-import cats.syntax.option._
 
 trait CacheService {
 
   val log = Logger(this.getClass)
 
   def getOrElse[A: ClassTag](cache: AsyncCacheApi, key: String)(
-    orElse: => Future[Option[A]]
-  )(implicit executionContext: ExecutionContext): Future[Option[A]] = {
+    orElse: => Task[Option[A]]
+  ): Task[Option[A]] = {
     get[A](cache, key).flatMap {
-      case Some(elem) => Future(elem.some)
+      case Some(elem) => Task.pure(elem.some)
       case None =>
         log.debug("Cache element not found executing orElse")
         orElse
     }
   }
 
-  def get[A: ClassTag](cache: AsyncCacheApi, key: String)(
-    implicit executionContext: ExecutionContext
-  ): Future[Option[A]] = cache.get[A](key)
+  def get[A: ClassTag](cache: AsyncCacheApi, key: String): Task[Option[A]] = Task.deferFuture(cache.get[A](key))
 
-  def clearCache(cache: AsyncCacheApi): Future[Done] = cache.removeAll()
+  def clearCache(cache: AsyncCacheApi): Task[Done] = Task.deferFuture(cache.removeAll())
 
-  def set[A: ClassTag](cache: AsyncCacheApi, key: String, value: A)(
-    implicit executionContext: ExecutionContext
-  ): Future[Done] = {
-    cache.set(key, value)
+  def set[A: ClassTag](cache: AsyncCacheApi, key: String, value: A): Task[Done] = {
+    Task.deferFuture(cache.set(key, value))
   }
 }

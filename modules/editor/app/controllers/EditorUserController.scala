@@ -23,6 +23,7 @@ import models.errors.APIEditorError
 import models.instance.NexusInstanceReference
 import models.user.EditorUser
 import models._
+import monix.eval.Task
 import play.api.Logger
 import play.api.libs.json._
 import play.api.mvc.{AnyContent, _}
@@ -48,15 +49,18 @@ class EditorUserController @Inject()(
   val logger = Logger(this.getClass)
 
   object queryService extends QueryService
+  implicit val s = monix.execution.Scheduler.Implicits.global
 
-  private def getOrCreateUserWithUserFolder(token: AccessToken)(implicit request: UserRequest[AnyContent]) = {
+  private def getOrCreateUserWithUserFolder(
+    token: AccessToken
+  )(implicit request: UserRequest[AnyContent]): Task[Either[APIEditorError, EditorUser]] = {
     editorUserService.getOrCreateUser(request.user, token) { postCreation }
   }
 
-  def postCreation(editorUser: EditorUser, token: AccessToken): Future[Either[APIEditorError, EditorUser]] = {
+  def postCreation(editorUser: EditorUser, token: AccessToken): Task[Either[APIEditorError, EditorUser]] = {
     editorUserListService.createBookmarkListFolder(editorUser, "My Bookmarks", token, BOOKMARKFOLDER).flatMap {
       case Right(_) =>
-        Future(Right(editorUser))
+        Task.pure(Right(editorUser))
       case Left(error) =>
         logger.info(s"Deleting editor user with id : ${editorUser.nexusUser.id}")
         editorUserService.deleteUser(editorUser, token).map {
@@ -69,7 +73,7 @@ class EditorUserController @Inject()(
   }
 
   def getOrCreateCurrentUser(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
-    for {
+    (for {
       token <- oIDCAuthService.getTechAccessToken()
       u     <- getOrCreateUserWithUserFolder(token)
     } yield {
@@ -77,19 +81,22 @@ class EditorUserController @Inject()(
         case Right(editorUser) => Ok(Json.toJson(EditorResponseObject(Json.toJson(editorUser))))
         case Left(error)       => error.toResult
       }
-    }
+    }).runToFuture
   }
 
   def getBookmarkListFolders: Action[AnyContent] =
     (authenticatedUserAction andThen
     EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
-      for {
-        token <- oIDCAuthService.getTechAccessToken()
-        res <- editorUserListService.getUserBookmarkLists(request.editorUser, formService.formRegistry, token).map {
-          case Left(r)  => r.toResult
-          case Right(l) => Ok(Json.toJson(EditorResponseObject(Json.toJson(l))))
-        }
-      } yield res
+      (for {
+        token      <- oIDCAuthService.getTechAccessToken()
+        registries <- formService.getRegistries()
+        res <- editorUserListService
+          .getUserBookmarkLists(request.editorUser, registries.formRegistry, token)
+          .map {
+            case Left(r)  => r.toResult
+            case Right(l) => Ok(Json.toJson(EditorResponseObject(Json.toJson(l))))
+          }
+      } yield res).runToFuture
     }
 
   def getInstancesOfBookmarkListBySchema(
@@ -102,16 +109,28 @@ class EditorUserController @Inject()(
     search: String
   ): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     val nexusPath = NexusPath(org, domain, datatype, version)
-    editorService
-      .retrievePreviewInstances(nexusPath, formService.formRegistry, from, size, search, request.userToken)
-      .map {
-        case Right((data, count)) =>
-          formService.formRegistry.registry.get(nexusPath) match {
-            case Some(spec) => Ok(Json.toJson(EditorResponseWithCount(Json.toJson(data), spec.label, count)))
-            case None       => Ok(Json.toJson(EditorResponseWithCount(Json.toJson(data), nexusPath.toString(), count)))
+    formService
+      .getRegistries()
+      .flatMap { registries =>
+        editorService
+          .retrievePreviewInstances(
+            nexusPath,
+            registries.formRegistry,
+            from,
+            size,
+            search,
+            request.userToken
+          )
+          .map {
+            case Right((data, count)) =>
+              registries.formRegistry.registry.get(nexusPath) match {
+                case Some(spec) => Ok(Json.toJson(EditorResponseWithCount(Json.toJson(data), spec.label, count)))
+                case None       => Ok(Json.toJson(EditorResponseWithCount(Json.toJson(data), nexusPath.toString(), count)))
+              }
+            case Left(res) => res.toResult
           }
-        case Left(res) => res.toResult
       }
+      .runToFuture
   }
 
   def getInstancesbyBookmarkList(
@@ -126,11 +145,14 @@ class EditorUserController @Inject()(
   ): Action[AnyContent] = (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async {
     implicit request =>
       val nexusRef = NexusInstanceReference(org, domain, datatype, version, id)
-      editorUserListService.getInstancesOfBookmarkList(nexusRef, from, size, search, request.userToken).map {
-        case Right((instances, total)) =>
-          Ok(Json.toJson(EditorResponseObject(Json.toJson(instances))).as[JsObject].+("total" -> JsNumber(total)))
-        case Left(error) => error.toResult
-      }
+      editorUserListService
+        .getInstancesOfBookmarkList(nexusRef, from, size, search, request.userToken)
+        .map {
+          case Right((instances, total)) =>
+            Ok(Json.toJson(EditorResponseObject(Json.toJson(instances))).as[JsObject].+("total" -> JsNumber(total)))
+          case Left(error) => error.toResult
+        }
+        .runToFuture
   }
 
   def createBookmarkList: Action[AnyContent] =
@@ -140,7 +162,7 @@ class EditorUserController @Inject()(
         name     <- (json \ "name").asOpt[String]
         folderId <- (json \ "folderId").asOpt[String]
       } yield (name, folderId)
-      opts match {
+      val result = opts match {
         case Some((n, id)) =>
           for {
             token <- oIDCAuthService.getTechAccessToken()
@@ -150,8 +172,9 @@ class EditorUserController @Inject()(
             }
           } yield result
 
-        case _ => Future(BadRequest("Missing parameters"))
+        case _ => Task.pure(BadRequest("Missing parameters"))
       }
+      result.runToFuture
     }
 
   def updateBookmarkList(
@@ -166,13 +189,13 @@ class EditorUserController @Inject()(
         json <- request.body.asJson
         name <- (json \ "name").asOpt[String]
       } yield name
-      opts match {
+      val result = opts match {
         case Some(newName) =>
           val ref = NexusInstanceReference(org, domain, datatype, version, id)
           for {
             token <- oIDCAuthService.getTechAccessToken()
             result <- editorUserListService.getBookmarkListById(ref, token).flatMap[Result] {
-              case Left(error) => Future(error.toResult)
+              case Left(error) => Task.pure(error.toResult)
               case Right((bookmarkList, userFolderId)) =>
                 val updatedBookmarkList = bookmarkList.copy(name = newName)
                 editorUserListService
@@ -189,20 +212,22 @@ class EditorUserController @Inject()(
                   }
             }
           } yield result
-        case _ => Future(BadRequest("Missing parameters"))
+        case _ => Task.pure(BadRequest("Missing parameters"))
       }
+      result.runToFuture
     }
 
   def deleteBookmarkList(org: String, domain: String, schema: String, version: String, id: String): Action[AnyContent] =
     (authenticatedUserAction andThen EditorUserAction.editorUserAction(editorUserService)).async { implicit request =>
       val bookmarkRef = NexusInstanceReference(org, domain, schema, version, id)
-      for {
+      val result = for {
         token <- oIDCAuthService.getTechAccessToken()
         result <- editorUserListService.deleteBookmarkList(bookmarkRef, token).map {
           case Left(error) => error.toResult
           case Right(())   => NoContent
         }
       } yield result
+      result.runToFuture
     }
 
   def updateBookmarks(org: String, domain: String, schema: String, version: String, id: String): Action[AnyContent] =
@@ -212,7 +237,7 @@ class EditorUserController @Inject()(
         arrayOfIds <- json.asOpt[List[String]]
       } yield arrayOfIds.map(NexusInstanceReference.fromUrl)
       val instanceReference = NexusInstanceReference(org, domain, schema, version, id)
-      bookmarkIds match {
+      val result = bookmarkIds match {
         case Some(ids) =>
           val futList = for {
             token      <- oIDCAuthService.getTechAccessToken()
@@ -229,8 +254,9 @@ class EditorUserController @Inject()(
             }
           }
 
-        case None => Future(BadRequest("Missing body content"))
+        case None => Task.pure(BadRequest("Missing body content"))
       }
+      result.runToFuture
     }
 
   def retrieveBookmarks: Action[AnyContent] =
@@ -240,7 +266,7 @@ class EditorUserController @Inject()(
         json      <- request.body.asJson
         instances <- json.asOpt[List[String]]
       } yield instances.map(l => NexusInstanceReference.fromUrl(l))
-      instanceList match {
+      val result = instanceList match {
         case Some(l) =>
           oIDCAuthService.getTechAccessToken().flatMap { token =>
             editorUserListService.retrieveBookmarkLists(l, request.editorUser, token).map { res =>
@@ -248,7 +274,8 @@ class EditorUserController @Inject()(
               Ok(Json.toJson(EditorResponseObject(Json.toJson(json))))
             }
           }
-        case None => Future(BadRequest("Missing body content"))
+        case None => Task.pure(BadRequest("Missing body content"))
       }
+      result.runToFuture
     }
 }

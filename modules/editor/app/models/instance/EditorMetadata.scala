@@ -17,9 +17,9 @@ package models.instance
 
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import play.api.libs.json.{JsObject, JsString, JsValue, Json, Writes, Reads, JsNull, Format, JsResult, JsSuccess}
+import play.api.libs.json.{Format, JsNull, JsObject, JsResult, JsString, JsSuccess, JsValue, Json, Reads, Writes}
 
-case class EditorMetadata(
+final case class EditorMetadata(
   createdBy: String,
   createdAt: Option[DateTime],
   lastUpdateBy: String,
@@ -34,11 +34,16 @@ object EditorMetadata {
   }
 
   implicit val jodaDateReads: Reads[DateTime] = new Reads[DateTime] {
-    def reads(d: JsValue): JsResult[DateTime ]= JsSuccess(DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
-      .parseDateTime(d.as[String]))
+
+    def reads(d: JsValue): JsResult[DateTime] =
+      JsSuccess(
+        DateTimeFormat
+          .forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
+          .parseDateTime(d.as[String])
+      )
   }
 
-  implicit def optionFormat[T: Format]: Format[Option[T]] = new Format[Option[T]]{
+  implicit def optionFormat[T: Format]: Format[Option[T]] = new Format[Option[T]] {
     override def reads(json: JsValue): JsResult[Option[T]] = json.validateOpt[T]
 
     override def writes(o: Option[T]): JsValue = o match {
@@ -47,20 +52,24 @@ object EditorMetadata {
     }
   }
 
-  implicit val responseWithMetaDataWrites: Writes[EditorMetadata]= new Writes[EditorMetadata] {
+  implicit val responseWithMetaDataWrites: Writes[EditorMetadata] = new Writes[EditorMetadata] {
+
     def writes(e: EditorMetadata): JsValue = {
-      val valuesToBeAdded:List[(String, JsObject)] = List("lastUpdateAt" -> Json.obj("label"->"Last update at", "value"->e.lastUpdateAt),
-        "createdAt" -> Json.obj("label"->"Created at", "value"->e.createdAt))
-      val initialValues:JsObject = Json.obj(
-        "createdBy" -> Json.obj("label"->"Created by", "value"->e.createdBy),
-        "lastUpdateBy" -> Json.obj("label"->"Last update by", "value"->e.lastUpdateBy)
+      val valuesToBeAdded: List[(String, JsObject)] = List(
+        "lastUpdateAt" -> Json.obj("label" -> "Last update at", "value" -> e.lastUpdateAt),
+        "createdAt"    -> Json.obj("label" -> "Created at", "value"     -> e.createdAt)
       )
-      valuesToBeAdded.foldLeft(initialValues){
-        case(acc, value) =>  if(value._2.value.get("value").map(_.as[Option[DateTime]]).getOrElse(None).isEmpty) {
-          acc
-        } else {
-          acc + value
-        }
+      val initialValues: JsObject = Json.obj(
+        "createdBy"    -> Json.obj("label" -> "Created by", "value"     -> e.createdBy),
+        "lastUpdateBy" -> Json.obj("label" -> "Last update by", "value" -> e.lastUpdateBy)
+      )
+      valuesToBeAdded.foldLeft(initialValues) {
+        case (acc, value) =>
+          if (value._2.value.get("value").map(_.as[Option[DateTime]]).getOrElse(None).isEmpty) {
+            acc
+          } else {
+            acc + value
+          }
       }
     }
   }

@@ -16,14 +16,13 @@
 package models.commands
 
 import models.errors.APIEditorError
-
-import scala.concurrent.{ExecutionContext, Future}
+import monix.eval.Task
 
 trait Command {
-  def execute()(implicit executionContext: ExecutionContext): Future[Either[APIEditorError, Unit]]
+  def execute(): Task[Either[APIEditorError, Unit]]
 }
 
-case class NullCommand() extends Command {
-  override def execute()(implicit executionContext: ExecutionContext): Future[Either[APIEditorError, Unit]] =
-    Future(Right(()))
+final case class NullCommand() extends Command {
+  override def execute(): Task[Either[APIEditorError, Unit]] =
+    Task.pure(Right(()))
 }

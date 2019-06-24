@@ -23,10 +23,11 @@ import models.errors.{APIEditorError, APIEditorMultiError}
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, NexusLink}
 import models.specification.{EditorFieldSpecification, FormRegistry, QuerySpec, UISpec}
 import models.user.User
+import monix.eval.Task
 import play.api.Logger
 import play.api.http.Status.INTERNAL_SERVER_ERROR
 import play.api.libs.json.{JsArray, JsObject, JsValue, Json}
-import services.specification.FormService
+import services.specification.{FormRegistries, FormService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,7 +35,7 @@ class ReverseLinkService @Inject()(
   editorService: EditorService,
   config: ConfigurationService,
   formService: FormService
-)(implicit executionContext: ExecutionContext) {
+) {
 
   val log = Logger(this.getClass)
 
@@ -43,16 +44,15 @@ class ReverseLinkService @Inject()(
     updateFromUser: JsValue,
     token: AccessToken,
     user: User,
-    formRegistry: FormRegistry[UISpec],
-    queryRegistry: FormRegistry[QuerySpec]
-  ): Future[Either[APIEditorMultiError, Unit]] =
-    editorService.retrieveInstance(instanceRef, token, queryRegistry).flatMap {
+    registries: FormRegistries
+  ): Task[Either[APIEditorMultiError, Unit]] =
+    editorService.retrieveInstance(instanceRef, token, registries.queryRegistry).flatMap {
       case Left(error) =>
-        Future(Left(APIEditorMultiError(error.status, List(error))))
+        Task.pure(Left(APIEditorMultiError(error.status, List(error))))
       case Right(currentInstanceDisplayed) =>
         val updateToBeStored =
           EditorService.computeUpdateTobeStored(currentInstanceDisplayed, updateFromUser, config.nexusEndpoint)
-        val fieldsSpec = formRegistry.registry(updateToBeStored.nexusInstance.nexusPath).getFieldsAsMap
+        val fieldsSpec = registries.formRegistry.registry(updateToBeStored.nexusInstance.nexusPath).getFieldsAsMap
         val instanceWithoutReversLink = ReverseLinkOP.removeLinksFromInstance(
           updateToBeStored,
           fieldsSpec,
@@ -69,17 +69,17 @@ class ReverseLinkService @Inject()(
           currentInstanceDisplayed,
           instanceRef,
           user,
-          queryRegistry,
+          registries.queryRegistry,
           config.nexusEndpoint,
           token
         )
         val linkingInstancesToUpdated =
           updateLinkingInstances(updateToBeStored, fieldsSpec, currentInstanceDisplayed, instanceRef, Some(user), token)
         val responses = reverseLinksToUpdated.map { processCommand } ::: linkingInstancesToUpdated.map(_.execute())
-        Future.sequence(responses).flatMap { results =>
+        Task.gather(responses).flatMap { results =>
           if (results.forall(_.isRight)) {
             if (instanceWithoutLinkingInstance.nexusInstance.content.keys.isEmpty) {
-              Future(Right(()))
+              Task.pure(Right(()))
             } else {
               //Normal update of the instance without reverse links
               editorService.processInstanceUpdate(instanceRef, instanceWithoutLinkingInstance, user, token)
@@ -87,7 +87,7 @@ class ReverseLinkService @Inject()(
           } else {
             val errors = results.filter(_.isLeft).map(_.swap.toOption.get)
             log.error(s"Errors while updating instance - ${errors.map(_.toJson.toString).mkString("\n")}")
-            Future(Left(APIEditorMultiError(errors.head.status, errors)))
+            Task.pure(Left(APIEditorMultiError(errors.head.status, errors)))
           }
         }
     }
@@ -126,7 +126,7 @@ class ReverseLinkService @Inject()(
     queryRegistry: FormRegistry[QuerySpec],
     baseUrl: String,
     token: AccessToken
-  ): List[Future[Either[APIEditorError, Command]]] = {
+  ): List[Task[Either[APIEditorError, Command]]] = {
     filterLinks(
       updateToBeStored,
       fieldsSpec,
@@ -215,9 +215,9 @@ class ReverseLinkService @Inject()(
     * @param c The command to execute
     * @return
     */
-  private def processCommand(c: Future[Either[APIEditorError, Command]]): Future[Either[APIEditorError, Unit]] = {
+  private def processCommand(c: Task[Either[APIEditorError, Command]]): Task[Either[APIEditorError, Unit]] = {
     c.flatMap {
-      case Left(err)      => Future(Left(err))
+      case Left(err)      => Task.pure(Left(err))
       case Right(command) => command.execute()
     }
   }

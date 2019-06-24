@@ -1,0 +1,33 @@
+{
+  "http://schema.org/identifier": "meta/minds/specificationfield/v0.0.1/specificationFieldIdentifier",
+  "https://schema.hbp.eu/meta/editor/identifier": "meta/minds/specificationfield/v0.0.1/specificationFieldIdentifier",
+  "description": "Fetch all the identifiers of the specification fields",
+  "label": "Specification Field Identifiers",
+  "fields": [
+    {
+      "fieldname": "query:identifier",
+      "relative_path": "https://schema.hbp.eu/meta/editor/identifier",
+      "required": true
+    },
+    {
+      "fieldname": "query:@id",
+      "relative_path": "@id"
+    }
+  ],
+  "@context": {
+    "@vocab": "https://schema.hbp.eu/graphQuery/",
+    "fieldname": {
+      "@id": "fieldname",
+      "@type": "@id"
+    },
+    "merge": {
+      "@id": "merge",
+      "@type": "@id"
+    },
+    "query": "https://schema.hbp.eu/myQuery/",
+    "relative_path": {
+      "@id": "relative_path",
+      "@type": "@id"
+    }
+  }
+}

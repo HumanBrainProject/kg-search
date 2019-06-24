@@ -21,14 +21,13 @@ import models.AccessToken
 import models.errors.{APIEditorError, APIEditorMultiError}
 import models.instance.{NexusInstanceReference, SuggestionInstance}
 import models.user.{EditorUser, NexusUser}
+import monix.eval.Task
 import play.api.http.Status._
 import play.api.libs.json.JsValue
 import play.api.libs.ws.WSClient
+import services._
 import services.instance.InstanceApiService
 import services.review.ReviewService.UserID
-import services._
-
-import scala.concurrent.{ExecutionContext, Future}
 
 class ReviewService @Inject()(
   wSClient: WSClient,
@@ -36,8 +35,7 @@ class ReviewService @Inject()(
   editorService: EditorService,
   reverseLinkService: ReverseLinkService
 )(
-  implicit executionContext: ExecutionContext,
-  OIDCAuthService: OIDCAuthService,
+  implicit OIDCAuthService: OIDCAuthService,
   clientCredentials: CredentialsService
 ) {
   object ReviewApiService extends ReviewApiService
@@ -48,12 +46,12 @@ class ReviewService @Inject()(
     users: List[UserID],
     token: AccessToken,
     user: EditorUser
-  ): Future[Either[APIEditorMultiError, Unit]] = {
-    val f: List[Future[Either[APIEditorError, Unit]]] = for {
+  ): Task[Either[APIEditorMultiError, Unit]] = {
+    val f: List[Task[Either[APIEditorError, Unit]]] = for {
       id <- users
     } yield ReviewApiService.addUserToSuggestionInstance(wSClient, config.kgQueryEndpoint, instance, id, token, user)
 
-    Future.sequence(f).map { l =>
+    Task.gather(f).map { l =>
       val err = l.collect {
         case Left(e) => e
       }
@@ -70,7 +68,7 @@ class ReviewService @Inject()(
     update: Option[JsValue],
     nexusUser: NexusUser,
     token: AccessToken
-  ): Future[Either[APIEditorMultiError, Unit]] = {
+  ): Task[Either[APIEditorMultiError, Unit]] = {
     InstanceApiService.get(wSClient, config.kgQueryEndpoint, suggestionRef, token).flatMap {
       case Right(suggestionInstance) =>
         val instanceUpdateRef = NexusInstanceReference.fromUrl(
@@ -91,9 +89,9 @@ class ReviewService @Inject()(
                 case Right(()) => Right(())
                 case Left(err) => Left(APIEditorMultiError(err.status, List(err)))
               }
-            case Left(err) => Future(Left(err))
+            case Left(err) => Task.pure(Left(err))
           }
-      case Left(res) => Future(Left(APIEditorMultiError(res.status, List(APIEditorError(res.status, res.body)))))
+      case Left(res) => Task.pure(Left(APIEditorMultiError(res.status, List(APIEditorError(res.status, res.body)))))
     }
 
   }
@@ -101,21 +99,21 @@ class ReviewService @Inject()(
   def rejectSuggestion(
     nexusInstanceReference: NexusInstanceReference,
     token: AccessToken
-  ): Future[Either[APIEditorError, Unit]] = {
+  ): Task[Either[APIEditorError, Unit]] = {
     ReviewApiService.rejectSuggestion(wSClient, config.kgQueryEndpoint, nexusInstanceReference, token)
   }
 
   def getUsersSuggestions(
     suggestionStatus: SuggestionStatus,
     token: AccessToken
-  ): Future[Either[APIEditorError, List[SuggestionInstance]]] = {
+  ): Task[Either[APIEditorError, List[SuggestionInstance]]] = {
     ReviewApiService.getUsersSuggestions(wSClient, config.kgQueryEndpoint, suggestionStatus, token)
   }
 
   def getInstanceSuggestions(
     ref: NexusInstanceReference,
     token: AccessToken
-  ): Future[Either[APIEditorError, List[SuggestionInstance]]] = {
+  ): Task[Either[APIEditorError, List[SuggestionInstance]]] = {
     ReviewApiService.getInstanceSuggestions(wSClient, config.kgQueryEndpoint, ref, token)
   }
 }

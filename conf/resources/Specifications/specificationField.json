@@ -1,0 +1,24 @@
+{
+  "@type": "https://schema.hbp.eu/meta/Specification",
+  "https://schema.hbp.eu/meta/editor/identifier": "meta/minds/specification/v0.0.1/field",
+  "https://schema.hbp.eu/meta/editor/folderID": "SPECIFICATIONS",
+  "https://schema.hbp.eu/meta/editor/folderName": "_Specifications",
+  "https://schema.hbp.eu/meta/editor/label": "Specification field",
+  "http://schema.org/name": "Specification field",
+  "https://schema.hbp.eu/meta/editor/fields": [
+    {
+      "@id": "meta/minds/specificationfield/v0.0.1/name"
+    },
+    {
+      "@id": "meta/minds/specificationfield/v0.0.1/label"
+    },
+    {
+      "@id": "meta/minds/specificationfield/v0.0.1/key"
+    },
+    {
+      "@id": "meta/minds/specificationfield/v0.0.1/type"
+    }
+  ],
+  "https://schema.hbp.eu/meta/editor/targetType": "meta/minds/specificationfield/v0.0.1",
+  "https://schema.hbp.eu/meta/editor/refreshSpecification": true
+}

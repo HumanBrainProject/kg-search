@@ -21,6 +21,7 @@ import akka.util.ByteString
 import services.OIDCAuthService
 import helpers.{ESHelper, OIDCHelper, ResponseHelper}
 import javax.inject.{Inject, Singleton}
+import monix.eval.Task
 import play.api.http.HttpEntity
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSRequest}
@@ -40,13 +41,14 @@ class SearchProxy @Inject()(
 )(implicit ec: ExecutionContext, ws: WSClient, config: Configuration)
     extends AbstractController(cc) {
   val es_host = config.get[String]("es.host")
+  implicit val s = monix.execution.Scheduler.Implicits.global
 
   val logger: Logger = Logger(this.getClass)
 
   def proxy(indexWithProxyUrl: String): Action[AnyContent] = Action.async { implicit request =>
     val segments = indexWithProxyUrl.split("/")
     val (index, proxyUrl) = (segments.head, segments.tail.mkString("/"))
-    processRequest(index, proxyUrl)
+    processRequest(index, proxyUrl).runToFuture
   }
 
   def proxyOptions(index: String, proxyUrl: String): Action[AnyContent] = Action {
@@ -55,7 +57,7 @@ class SearchProxy @Inject()(
 
   def processRequest(index: String, proxyUrl: String, transformInputFunc: ByteString => ByteString = identity)(
     implicit request: Request[AnyContent]
-  ): Future[Result] = {
+  ): Task[Result] = {
     logger.debug(s"Search proxy - Index: $index, proxy: $proxyUrl")
     val searchTerm = request.body.asJson.getOrElse(Json.obj()).as[JsValue]
     val t = (searchTerm \ "query" \\ "query").headOption.map(_.asOpt[String].getOrElse("")).getOrElse("")
@@ -83,9 +85,12 @@ class SearchProxy @Inject()(
     request: WSRequest,
     headers: Map[String, String] = Map(),
     searchTerm: String = ""
-  ): Future[Result] = {
-    request
-      .execute()
+  ): Task[Result] = {
+    Task
+      .deferFuture(
+        request
+          .execute()
+      )
       .map { response => // we want to read the raw bytes for the body
         val count = (response.json \ "hits" \ "total").asOpt[Long].getOrElse(0L)
         logger.info(s"Search query - term: $searchTerm, #results: $count")
@@ -110,16 +115,16 @@ class SearchProxy @Inject()(
     val (index, proxyUrl) = (segments.head, segments.tail.mkString("/"))
     updateEsResponseWithNestedDocument(
       processRequest(index, proxyUrl, transformInputFunc = SearchProxy.adaptEsQueryForNestedDocument)
-    )
+    ).runToFuture
   }
 
-  def updateEsResponseWithNestedDocument(response: Future[Result]): Future[Result] = {
+  def updateEsResponseWithNestedDocument(response: Task[Result]): Task[Result] = {
     response.flatMap[Result] { rawResponse =>
       if (rawResponse.header.status != 200) {
-        Future(rawResponse)
+        Task.pure(rawResponse)
       } else {
         // need to get full response back to process it
-        rawResponse.body.consumeData(mat).map { bytes =>
+        Task.deferFuture(rawResponse.body.consumeData(mat)).map { bytes =>
           val json = SearchProxy.updateEsResponseWithNestedDocument(Json.parse(bytes.utf8String).as[JsObject])
           Ok(json).withHeaders(rawResponse.header.headers.toList: _*)
         }
@@ -129,7 +134,7 @@ class SearchProxy @Inject()(
 
   def labels(proxyUrl: String): Action[AnyContent] = Action.async { implicit request =>
     val wsRequestBase: WSRequest = ws.url(es_host + "/kg_labels/" + proxyUrl)
-    propagateRequest(wsRequestBase)
+    propagateRequest(wsRequestBase).runToFuture
   }
 
   def labelsOptions(proxyUrl: String): Action[AnyContent] = Action {

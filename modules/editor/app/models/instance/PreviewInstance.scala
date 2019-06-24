@@ -19,7 +19,7 @@ import constants.{EditorConstants, JsonLDConstants, SchemaFieldsConstants, UiCon
 import models.NexusPath
 import models.specification.{FormRegistry, UISpec}
 
-case class PreviewInstance(
+final case class PreviewInstance(
   id: NexusInstanceReference,
   name: String,
   instanceType: String,

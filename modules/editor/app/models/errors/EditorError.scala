@@ -22,7 +22,7 @@ trait APIEditorErrorInterface[T] extends PlayError[T] {
   override val content: T
 }
 
-case class APIEditorError(override val status: Int, override val content: String)
+final case class APIEditorError(override val status: Int, override val content: String)
     extends APIEditorErrorInterface[String] {
 
   override def toJson: JsValue = Json.obj(
@@ -52,7 +52,7 @@ object APIEditorError {
   }
 }
 
-case class APIEditorMultiError(override val status: Int, override val content: List[APIEditorError])
+final case class APIEditorMultiError(override val status: Int, override val content: List[APIEditorError])
     extends APIEditorErrorInterface[List[_]] {
 
   override def toJson: JsValue = Json.obj(

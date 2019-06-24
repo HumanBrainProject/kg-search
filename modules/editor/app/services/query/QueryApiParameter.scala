@@ -15,12 +15,13 @@
  */
 
 package services.query
+import constants.QueryConstants
 import constants.QueryConstants._
-case class QueryApiParameter(
+final case class QueryApiParameter(
   from: Option[Int] = None,
   size: Option[Int] = None,
   search: String = "",
-  vocab: Option[String] = None,
+  vocab: Option[String] = Some(QueryConstants.DEFAULT_VOCAB),
   databaseScope: Option[String] = None,
 ) {
   private def l =

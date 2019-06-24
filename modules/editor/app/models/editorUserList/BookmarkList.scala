@@ -18,7 +18,7 @@ package models.editorUserList
 import constants.EditorConstants
 import models.specification.UIInfo
 
-case class BookmarkList(
+final case class BookmarkList(
   id: String,
   name: String,
   editable: Option[Boolean],

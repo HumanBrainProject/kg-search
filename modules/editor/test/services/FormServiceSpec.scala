@@ -1,5 +1,6 @@
 package services
 
+import akka.Done
 import helpers.ConfigMock
 import mockws.MockWSHelpers
 import models._
@@ -14,7 +15,9 @@ import play.api.Application
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.libs.ws.WSClient
 import play.api.test.Injecting
-import services.specification.FormService
+import services.specification.{FormService, SpecificationService}
+
+import scala.concurrent.Future
 
 class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpers with MockitoSugar with Injecting {
   override def fakeApplication(): Application = ConfigMock.fakeApplicationConfig.build()
@@ -141,7 +144,7 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
     }
   }
 
-  "getRegistry" should {
+  "extractRegistries" should {
     "populate the registry from a json object" in {
       val registry =
         Json.parse("""
@@ -207,8 +210,7 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
             |  "_key": "minds"
             |}
           """.stripMargin)
-
-      val res = FormService.getRegistry(List(registry.as[JsObject]))
+      val res = FormService.extractRegistries(List(registry.as[JsObject]))
 
       val expected = FormRegistry(
         Map(
@@ -278,10 +280,10 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
         )
       )
 
-      res._1.registry(NexusPath("minds", "core", "dataset", "v1.0.0")) mustBe expected.registry(
+      res.formRegistry.registry(NexusPath("minds", "core", "dataset", "v1.0.0")) mustBe expected.registry(
         NexusPath("minds", "core", "dataset", "v1.0.0")
       )
-      res._1.registry(NexusPath("minds", "experiment", "protocol", "v1.0.0")) mustBe expected.registry(
+      res.formRegistry.registry(NexusPath("minds", "experiment", "protocol", "v1.0.0")) mustBe expected.registry(
         NexusPath("minds", "experiment", "protocol", "v1.0.0")
       )
 
