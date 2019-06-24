@@ -18,16 +18,17 @@ package services
 
 import helpers.ESHelper
 import javax.inject.Inject
-import play.api.libs.json.JsValue
+import monix.eval.Task
 import play.api.http.Status.OK
+import play.api.libs.json.JsValue
 import play.api.libs.ws.{WSClient, WSResponse}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class ESService @Inject()(wSClient: WSClient, configuration: ConfigurationService)(implicit ec: ExecutionContext) {
 
-  def getEsIndices(): Future[List[String]] = {
-    wSClient.url(s"${configuration.esHost}/${ESHelper.indicesPath}?format=json").get().map { res =>
+  def getEsIndices(): Task[List[String]] = {
+    Task.deferFuture(wSClient.url(s"${configuration.esHost}/${ESHelper.indicesPath}?format=json").get()).map { res =>
       val j = res.json
       j.as[List[JsValue]].map(json => (json \ "index").as[String])
     }
@@ -39,8 +40,8 @@ class ESService @Inject()(wSClient: WSClient, configuration: ConfigurationServic
     * @param id The id of the instance
     * @return a json representation of the instance
     */
-  def getDataById(dataType: String, id: String): Future[Either[WSResponse, JsValue]] = {
-    wSClient.url(s"${configuration.esHost}/kg_public/$dataType/$id?format=json").get().map { res =>
+  def getDataById(dataType: String, id: String): Task[Either[WSResponse, JsValue]] = {
+    Task.deferFuture(wSClient.url(s"${configuration.esHost}/kg_public/$dataType/$id?format=json").get()).map { res =>
       res.status match {
         case OK => Right(res.json)
         case _  => Left(res)

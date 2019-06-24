@@ -15,18 +15,16 @@
  */
 package helpers
 
-import constants.EditorConstants
 import models.AccessToken
-import models.commands.{AddReverseLinkCommand, Command, DeleteReverseLinkCommand, NullCommand}
+import models.commands.{AddReverseLinkCommand, Command, DeleteReverseLinkCommand}
 import models.errors.APIEditorError
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, NexusLink}
 import models.specification.{EditorFieldSpecification, FormRegistry, QuerySpec}
 import models.user.User
+import monix.eval.Task
 import play.api.Logger
 import play.api.libs.json.{JsArray, JsObject, JsValue, Json}
 import services.EditorService
-
-import scala.concurrent.{ExecutionContext, Future}
 
 object ReverseLinkOP {
   val log = Logger(this.getClass)
@@ -86,7 +84,6 @@ object ReverseLinkOP {
     * @param baseUrl base url of the system
     * @param user the current user
     * @param queryRegistry the registry containing queries
-    * @param executionContext the implicit execution ctx
     * @return A list of commands to execute
     */
   def addOrDeleteReverseLink(
@@ -99,7 +96,7 @@ object ReverseLinkOP {
     baseUrl: String,
     user: User,
     queryRegistry: FormRegistry[QuerySpec]
-  )(implicit executionContext: ExecutionContext): List[Future[Either[APIEditorError, Command]]] = {
+  ): List[Task[Either[APIEditorError, Command]]] = {
     val (added, removed) = getAddedAndRemovedLinks(currentInstanceDisplayed, linkName, fullIds)
     removed.map { link =>
       editorService.retrieveInstance(link.ref, token, queryRegistry).map {

@@ -19,6 +19,7 @@ package actions
 import helpers.EditorSpaceHelper
 import models.user.{EditorUser, EditorUserRequest, EditorUserWriteRequest, NexusUser}
 import models.{user, IAMPermission, UserRequest}
+import monix.eval.Task
 import play.api.Logger
 import play.api.mvc.Results._
 import play.api.mvc._
@@ -28,16 +29,18 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object EditorUserAction {
   val logger = Logger(this.getClass)
+  implicit val scheduler = monix.execution.Scheduler.Implicits.global
 
   def editorUserWriteAction(org: String, editorSuffix: String, iAMAuthService: IAMAuthService)(
     implicit ec: ExecutionContext
   ): ActionRefiner[UserRequest, EditorUserWriteRequest] =
     new ActionRefiner[UserRequest, EditorUserWriteRequest] {
+
       def executionContext: ExecutionContext = ec
 
       def refine[A](input: UserRequest[A]): Future[Either[Result, EditorUserWriteRequest[A]]] = {
         val editorOrg = if (org.endsWith(editorSuffix)) org else org + editorSuffix
-        if (EditorSpaceHelper.isEditorGroup(input.user, editorOrg)) {
+        val result = if (EditorSpaceHelper.isEditorGroup(input.user, editorOrg)) {
           iAMAuthService.getAcls(editorOrg, Seq(("self", "true"), ("parents", "true")), input.userToken).map {
             case Right(acls) =>
               if (IAMAuthService.hasAccess(acls, IAMPermission.Write)) {
@@ -50,11 +53,12 @@ object EditorUserAction {
               Left(InternalServerError("An error occurred while fetching permission"))
           }
         } else {
-          Future.successful {
-            logger.debug(s"Not allowed: ${input.user} for index: $org")
+          logger.debug(s"Not allowed: ${input.user} for index: $org")
+          Task.pure {
             Left(Forbidden("You are not allowed to perform this request"))
           }
         }
+        result.runToFuture
       }
     }
 
@@ -65,13 +69,16 @@ object EditorUserAction {
       def executionContext: ExecutionContext = ec
 
       def refine[A](input: UserRequest[A]): Future[Either[Result, EditorUserRequest[A]]] = {
-        editorUserService.getUser(input.user, input.userToken).map {
-          case Right(Some(editorUser)) => Right(user.EditorUserRequest(editorUser, input, input.userToken))
-          case Right(None)             => Left(NotFound("User not found"))
-          case Left(err) =>
-            logger.error(s"Fetching editor user failed - ${err.content}")
-            Left(InternalServerError("An error occurred while fetching user information"))
-        }
+        editorUserService
+          .getUser(input.user, input.userToken)
+          .map {
+            case Right(Some(editorUser)) => Right(user.EditorUserRequest(editorUser, input, input.userToken))
+            case Right(None)             => Left(NotFound("User not found"))
+            case Left(err) =>
+              logger.error(s"Fetching editor user failed - ${err.content}")
+              Left(InternalServerError("An error occurred while fetching user information"))
+          }
+          .runToFuture
       }
     }
 

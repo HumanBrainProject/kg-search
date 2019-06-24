@@ -16,15 +16,14 @@
 package services
 
 import com.google.inject.Inject
+import monix.eval.Task
 import play.api.libs.json.JsObject
 import play.api.libs.ws.WSResponse
 import play.twirl.api.HtmlFormat
 
-import scala.concurrent.{ExecutionContext, Future}
+class RedirectService @Inject()(esClient: ESService) {
 
-class RedirectService @Inject()(esClient: ESService)(implicit executionContext: ExecutionContext) {
-
-  def renderHtml(dataType: String, id: String): Future[Either[WSResponse, HtmlFormat.Appendable]] = {
+  def renderHtml(dataType: String, id: String): Task[Either[WSResponse, HtmlFormat.Appendable]] = {
     esClient.getDataById(dataType, id).map {
       case Right(json) => Right(RedirectService.generateHtml(dataType, id, (json \ "_source").as[JsObject]))
       case Left(res)   => Left(res)

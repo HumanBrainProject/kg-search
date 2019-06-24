@@ -15,26 +15,28 @@
  */
 package services
 
-import models.{AccessToken, IAMAcl, IAMPermission}
 import com.google.inject.Inject
-import play.api.libs.ws.{WSClient, WSResponse}
+import models.{AccessToken, IAMAcl, IAMPermission}
+import monix.eval.Task
 import play.api.http.HeaderNames.AUTHORIZATION
 import play.api.http.Status.OK
+import play.api.libs.ws.{WSClient, WSResponse}
 
-import scala.concurrent.{ExecutionContext, Future}
-
-class IAMAuthService @Inject()(wSClient: WSClient, config: ConfigurationService)(implicit ec: ExecutionContext) {
+class IAMAuthService @Inject()(wSClient: WSClient, config: ConfigurationService) {
 
   def getAcls(
     path: String,
     parameters: Seq[(String, String)],
     token: AccessToken
-  ): Future[Either[WSResponse, List[IAMAcl]]] = {
-    wSClient
-      .url(s"${config.iamEndpoint}/v0/acls/kg/${path}")
-      .withQueryStringParameters(parameters: _*)
-      .withHttpHeaders((AUTHORIZATION, token.token))
-      .get()
+  ): Task[Either[WSResponse, List[IAMAcl]]] = {
+    Task
+      .deferFuture(
+        wSClient
+          .url(s"${config.iamEndpoint}/v0/acls/kg/${path}")
+          .withQueryStringParameters(parameters: _*)
+          .withHttpHeaders((AUTHORIZATION, token.token))
+          .get()
+      )
       .map { res =>
         res.status match {
           case OK => Right((res.json \ "acl").as[List[IAMAcl]])

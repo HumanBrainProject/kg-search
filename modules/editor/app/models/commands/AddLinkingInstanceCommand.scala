@@ -15,14 +15,13 @@
  */
 
 package models.commands
-import models.{AccessToken, NexusPath}
 import models.errors.APIEditorError
 import models.instance.{LinkingInstance, NexusInstance, NexusInstanceReference, NexusLink}
 import models.user.User
+import models.{AccessToken, NexusPath}
+import monix.eval.Task
 import play.api.Logger
 import services.EditorService
-
-import scala.concurrent.{ExecutionContext, Future}
 
 final case class AddLinkingInstanceCommand(
   targetId: NexusLink,
@@ -35,7 +34,7 @@ final case class AddLinkingInstanceCommand(
   token: AccessToken
 ) extends Command {
   val log = Logger(this.getClass)
-  override def execute()(implicit executionContext: ExecutionContext): Future[Either[APIEditorError, Unit]] = {
+  override def execute(): Task[Either[APIEditorError, Unit]] = {
     val linkingInstance = LinkingInstance(
       s"$baseUrl/v0/data/${currentInstanceRef.toString}",
       s"$baseUrl/v0/data/${targetId.ref.toString}",

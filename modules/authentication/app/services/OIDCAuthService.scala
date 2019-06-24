@@ -22,6 +22,7 @@ import com.google.inject.Inject
 import helpers.ESHelper
 import models.user.{NexusUser, OIDCUser}
 import models.{MindsGroupSpec, RefreshAccessToken, UserGroup}
+import monix.eval.Task
 import play.api.Logger
 import play.api.cache.{AsyncCacheApi, NamedCache}
 import play.api.http.Status._
@@ -53,7 +54,7 @@ class OIDCAuthService @Inject()(
     * @param headers the header containing the user's token
     * @return An option with the UserInfo object
     */
-  override def getUserInfo(headers: Headers): Future[Option[NexusUser]] = {
+  override def getUserInfo(headers: Headers): Task[Option[NexusUser]] = {
     val token = headers.get("Authorization").getOrElse("")
     getUserInfoWithCache(token)
   }
@@ -63,20 +64,21 @@ class OIDCAuthService @Inject()(
     * @param token The user's token
     * @return An option with the UserInfo object
     */
-  def getUserInfoFromToken(token: String): Future[Option[NexusUser]] = {
-    ws.url(config.oidcUserInfoEndpoint).addHttpHeaders("Authorization" -> token).get().flatMap { res =>
-      res.status match {
-        case OK =>
-          nexusService.listAllNexusResult(s"${config.nexusEndpoint}/v0/organizations?fields=all", token).map { re =>
-            val orgs = re.map { js =>
-              val s = (js \ "source" \ "@id").as[String]
-              s.splitAt(s.lastIndexOf("/"))._2.substring(1)
+  def getUserInfoFromToken(token: String): Task[Option[NexusUser]] = {
+    Task.deferFuture(ws.url(config.oidcUserInfoEndpoint).addHttpHeaders("Authorization" -> token).get()).flatMap {
+      res =>
+        res.status match {
+          case OK =>
+            nexusService.listAllNexusResult(s"${config.nexusEndpoint}/v0/organizations?fields=all", token).map { re =>
+              val orgs = re.map { js =>
+                val s = (js \ "source" \ "@id").as[String]
+                s.splitAt(s.lastIndexOf("/"))._2.substring(1)
+              }
+              val oIDCUser = res.json.as[OIDCUser]
+              Some(new NexusUser(oIDCUser.id, oIDCUser.name, oIDCUser.email, oIDCUser.picture, oIDCUser.groups, orgs))
             }
-            val oIDCUser = res.json.as[OIDCUser]
-            Some(new NexusUser(oIDCUser.id, oIDCUser.name, oIDCUser.email, oIDCUser.picture, oIDCUser.groups, orgs))
-          }
-        case _ => Future.successful(None)
-      }
+          case _ => Task.pure(None)
+        }
     }
   }
 
@@ -85,7 +87,7 @@ class OIDCAuthService @Inject()(
     * @param userInfo The user info
     * @return A list of accessible index in ES
     */
-  def groups(userInfo: Option[NexusUser]): Future[List[UserGroup]] = {
+  def groups(userInfo: Option[NexusUser]): Task[List[UserGroup]] = {
     userInfo match {
       case Some(info) =>
         for {
@@ -103,7 +105,7 @@ class OIDCAuthService @Inject()(
             }
           }
         }
-      case _ => Future.successful(List())
+      case _ => Task.pure(List())
     }
   }
 
@@ -112,7 +114,7 @@ class OIDCAuthService @Inject()(
     * @param token The token from the user
     * @return An option with the UserInfo object
     */
-  def getUserInfoWithCache(token: String): Future[Option[NexusUser]] = {
+  def getUserInfoWithCache(token: String): Task[Option[NexusUser]] = {
     cacheService.getOrElse[NexusUser](cache, token) {
       getUserInfoFromToken(token).map {
         case Some(userInfo) =>
@@ -124,13 +126,13 @@ class OIDCAuthService @Inject()(
     }
   }
 
-  def getTechAccessToken(forceRefresh: Boolean = false): Future[RefreshAccessToken] = {
+  def getTechAccessToken(forceRefresh: Boolean = false): Task[RefreshAccessToken] = {
     if (forceRefresh) {
       val clientCred = credentialsService.getClientCredentials()
       refreshAccessToken(clientCred)
     } else {
       cacheService.get[String](cache, techAccessToken).flatMap {
-        case Some(token) => Future.successful(RefreshAccessToken(token))
+        case Some(token) => Task.pure(RefreshAccessToken(token))
         case _ =>
           val clientCred = credentialsService.getClientCredentials()
           refreshAccessToken(clientCred)
@@ -138,25 +140,27 @@ class OIDCAuthService @Inject()(
     }
   }
 
-  def refreshAccessToken(clientCredentials: ClientCredentials): Future[RefreshAccessToken] = {
-    ws.url(config.oidcTokenEndpoint)
-      .withQueryStringParameters(
-        "client_id"     -> clientCredentials.clientId,
-        "client_secret" -> clientCredentials.clientSecret,
-        "refresh_token" -> clientCredentials.refreshToken,
-        "grant_type"    -> "refresh_token"
-      )
-      .get()
-      .map { result =>
-        result.status match {
-          case OK =>
-            val token = s"Bearer ${(result.json \ "access_token").as[String]}"
-            cache.set(techAccessToken, token, FiniteDuration(5, TimeUnit.MINUTES))
-            RefreshAccessToken(token)
-          case _ =>
-            logger.error(s"Error: while fetching tech account access token $result")
-            throw new Exception("Could not fetch access token for tech account")
+  def refreshAccessToken(clientCredentials: ClientCredentials): Task[RefreshAccessToken] = {
+    Task.deferFuture {
+      ws.url(config.oidcTokenEndpoint)
+        .withQueryStringParameters(
+          "client_id"     -> clientCredentials.clientId,
+          "client_secret" -> clientCredentials.clientSecret,
+          "refresh_token" -> clientCredentials.refreshToken,
+          "grant_type"    -> "refresh_token"
+        )
+        .get()
+        .map { result =>
+          result.status match {
+            case OK =>
+              val token = s"Bearer ${(result.json \ "access_token").as[String]}"
+              cache.set(techAccessToken, token, FiniteDuration(5, TimeUnit.MINUTES))
+              RefreshAccessToken(token)
+            case _ =>
+              logger.error(s"Error: while fetching tech account access token $result")
+              throw new Exception("Could not fetch access token for tech account")
+          }
         }
-      }
+    }
   }
 }

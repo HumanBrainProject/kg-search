@@ -19,7 +19,8 @@ import com.google.inject.Inject
 import constants.SchemaFieldsConstants
 import helpers.NexusHelper.{domainDefinition, hash, minimalSchemaDefinition, schemaDefinitionForEditor}
 import models.NexusPath
-import models.instance.{NexusInstance}
+import models.instance.NexusInstance
+import monix.eval.Task
 import play.api.Logger
 import play.api.http.Status.{CREATED, NOT_FOUND, NO_CONTENT, OK}
 import play.api.http.HeaderNames.AUTHORIZATION
@@ -270,7 +271,7 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
     }
   }
 
-  def listAllNexusResult(url: String, token: String): Future[Seq[JsValue]] = {
+  def listAllNexusResult(url: String, token: String): Task[Seq[JsValue]] = {
     val sizeLimit = 50
     val initialUrl = (url.contains("?size="), url.contains("&size=")) match {
       case (true, _)      => url
@@ -278,7 +279,7 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
       case (false, false) => if (url.contains("?")) s"$url&size=$sizeLimit" else s"$url?size=$sizeLimit"
     }
 
-    wSClient.url(initialUrl).addHttpHeaders("Authorization" -> token).get().flatMap { response =>
+    Task.deferFuture(wSClient.url(initialUrl).addHttpHeaders("Authorization" -> token).get()).flatMap { response =>
       response.status match {
         case OK =>
           val firstResults = (response.json \ "results").as[JsArray].value
@@ -287,32 +288,33 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
               // compute how many additional call will be needed
               val nbCalls = ((response.json \ "total").as[Int] / (sizeLimit.toDouble)).ceil.toInt
               Range(1, nbCalls)
-                .foldLeft(Future.successful((nextLink, firstResults))) {
+                .foldLeft(Task.pure((nextLink, firstResults))) {
                   case (previousCallState, callIdx) =>
                     previousCallState.flatMap {
                       case (nextUrl, previousResult) =>
                         if (nextUrl.nonEmpty) {
-                          wSClient.url(nextUrl).addHttpHeaders("Authorization" -> token).get().map { response =>
-                            response.status match {
-                              case OK =>
-                                val newUrl = (response.json \ "links" \ "next").asOpt[String].getOrElse("")
-                                val newResults = previousResult ++ (response.json \ "results").as[JsArray].value
-                                (newUrl, newResults)
-                              case _ =>
-                                ("", previousResult)
-                            }
+                          Task.deferFuture(wSClient.url(nextUrl).addHttpHeaders("Authorization" -> token).get()).map {
+                            response =>
+                              response.status match {
+                                case OK =>
+                                  val newUrl = (response.json \ "links" \ "next").asOpt[String].getOrElse("")
+                                  val newResults = previousResult ++ (response.json \ "results").as[JsArray].value
+                                  (newUrl, newResults)
+                                case _ =>
+                                  ("", previousResult)
+                              }
                           }
                         } else {
-                          Future.successful(("", previousResult))
+                          Task.pure(("", previousResult))
                         }
                     }
                 }
                 .map(_._2)
             case _ =>
-              Future.successful(firstResults)
+              Task.pure(firstResults)
           }
         case _ =>
-          Future.successful(Seq.empty[JsValue])
+          Task.pure(Seq.empty[JsValue])
       }
     }
   }

@@ -19,12 +19,13 @@ import constants.QueryConstants
 import models.instance.NexusInstanceReference
 import models.specification.QuerySpec
 import models.{AccessToken, BasicAccessToken, NexusPath, RefreshAccessToken}
+import monix.eval.Task
 import play.api.http.ContentTypes._
 import play.api.http.HeaderNames._
 import play.api.libs.ws.{WSClient, WSResponse}
 import services.{AuthHttpClient, CredentialsService, OIDCAuthService}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 trait QueryService {
 
@@ -36,10 +37,9 @@ trait QueryService {
     token: AccessToken,
     queryApiParameters: QueryApiParameter
   )(
-    implicit ex: ExecutionContext,
-    OIDCAuthService: OIDCAuthService,
+    implicit OIDCAuthService: OIDCAuthService,
     credentials: CredentialsService
-  ): Future[WSResponse] = {
+  ): Task[WSResponse] = {
     query match {
       case QuerySpec(_, Some(queryId)) =>
         val q = wSClient
@@ -49,7 +49,7 @@ trait QueryService {
           .addQueryStringParameters(queryApiParameters.toParams: _*)
           .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token.token)
         token match {
-          case BasicAccessToken(_)   => q.get()
+          case BasicAccessToken(_)   => Task.deferFuture(q.get())
           case RefreshAccessToken(_) => AuthHttpClient.getWithRetry(q)
         }
       case QuerySpec(payload, None) =>
@@ -60,11 +60,10 @@ trait QueryService {
           .addQueryStringParameters(queryApiParameters.toParams: _*)
           .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token.token)
         token match {
-          case BasicAccessToken(_)   => q.post(payload)
+          case BasicAccessToken(_)   => Task.deferFuture(q.post(payload))
           case RefreshAccessToken(_) => AuthHttpClient.postWithRetry(q, payload)
         }
     }
-
   }
 
   def getInstances(
@@ -76,10 +75,9 @@ trait QueryService {
     queryApiParameters: QueryApiParameter,
     parameters: Map[String, String] = Map()
   )(
-    implicit ex: ExecutionContext,
-    OIDCAuthService: OIDCAuthService,
+    implicit OIDCAuthService: OIDCAuthService,
     credentials: CredentialsService
-  ): Future[WSResponse] = {
+  ): Task[WSResponse] = {
     query match {
       case QuerySpec(_, Some(queryId)) =>
         val q = wSClient
@@ -87,7 +85,7 @@ trait QueryService {
           .addQueryStringParameters(parameters ++: queryApiParameters.toParams: _*)
           .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token.token)
         token match {
-          case BasicAccessToken(_)   => q.get()
+          case BasicAccessToken(_)   => Task.deferFuture(q.get())
           case RefreshAccessToken(_) => AuthHttpClient.getWithRetry(q)
         }
       case QuerySpec(payload, None) =>
@@ -96,10 +94,9 @@ trait QueryService {
           .addQueryStringParameters(parameters ++: queryApiParameters.toParams: _*)
           .withHttpHeaders(CONTENT_TYPE -> JSON, AUTHORIZATION -> token.token)
         token match {
-          case BasicAccessToken(_)   => q.post(payload)
+          case BasicAccessToken(_)   => Task.deferFuture(q.post(payload))
           case RefreshAccessToken(_) => AuthHttpClient.postWithRetry(q, payload)
         }
     }
   }
-
 }

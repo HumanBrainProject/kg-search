@@ -16,78 +16,73 @@
 package services
 
 import models.AccessToken
+import monix.eval.Task
 import play.api.http.HeaderNames.AUTHORIZATION
 import play.api.http.Status.UNAUTHORIZED
 import play.api.libs.ws.{BodyWritable, WSRequest, WSResponse}
 
-import scala.concurrent.{ExecutionContext, Future}
-
 object AuthHttpClient {
 
   def postWithRetry[T: BodyWritable](request: WSRequest, body: T)(
-    implicit executionContext: ExecutionContext,
-    oIDCAuthService: OIDCAuthService,
+    implicit oIDCAuthService: OIDCAuthService,
     credentials: CredentialsService
-  ): Future[WSResponse] = {
-    request.post(body).flatMap { res =>
+  ): Task[WSResponse] = {
+    Task.deferFuture(request.post(body)).flatMap { res =>
       res.status match {
         case UNAUTHORIZED =>
           for {
             token <- oIDCAuthService.refreshAccessToken(credentials.getClientCredentials())
-            res   <- refreshToken(request, token).post(body)
+            res   <- Task.deferFuture(refreshToken(request, token).post(body))
           } yield res
-        case _ => Future.successful(res)
+        case _ => Task.pure(res)
       }
     }
   }
 
   def putWithRetry[T: BodyWritable](request: WSRequest, body: T)(
-    implicit executionContext: ExecutionContext,
-    oIDCAuthService: OIDCAuthService,
+    implicit oIDCAuthService: OIDCAuthService,
     credentials: CredentialsService
-  ): Future[WSResponse] = {
-    request.put(body).flatMap { res =>
+  ): Task[WSResponse] = {
+    Task.deferFuture(request.put(body)).flatMap { res =>
       res.status match {
         case UNAUTHORIZED =>
           for {
             token <- oIDCAuthService.refreshAccessToken(credentials.getClientCredentials())
-            res   <- refreshToken(request, token).put(body)
+            res   <- Task.deferFuture(refreshToken(request, token).put(body))
           } yield res
-        case _ => Future.successful(res)
+        case _ => Task.pure(res)
       }
     }
   }
 
   def getWithRetry(request: WSRequest)(
-    implicit executionContext: ExecutionContext,
-    oIDCAuthService: OIDCAuthService,
+    implicit oIDCAuthService: OIDCAuthService,
     credentials: CredentialsService
-  ): Future[WSResponse] = {
-    request.get().flatMap { res =>
+  ): Task[WSResponse] = {
+    Task.deferFuture(request.get()).flatMap { res =>
       res.status match {
         case UNAUTHORIZED =>
           for {
             token <- oIDCAuthService.refreshAccessToken(credentials.getClientCredentials())
-            res   <- refreshToken(request, token).get()
+            res   <- Task.deferFuture(refreshToken(request, token).get())
           } yield res
-        case _ => Future.successful(res)
+        case _ => Task.pure(res)
       }
     }
   }
 
   def deleteWithRetry(request: WSRequest)(
-    implicit executionContext: ExecutionContext,
-    oIDCAuthService: OIDCAuthService,
+    implicit oIDCAuthService: OIDCAuthService,
     credentials: CredentialsService
-  ): Future[WSResponse] = {
-    request.delete().flatMap { res =>
+  ): Task[WSResponse] = {
+    Task.deferFuture(request.delete()).flatMap { res =>
       res.status match {
         case UNAUTHORIZED =>
           for {
             token <- oIDCAuthService.refreshAccessToken(credentials.getClientCredentials())
-            res   <- refreshToken(request, token).delete()
+            res   <- Task.deferFuture(refreshToken(request, token).delete())
           } yield res
-        case _ => Future.successful(res)
+        case _ => Task.pure(res)
       }
     }
   }

@@ -20,21 +20,18 @@ import constants.{InternalSchemaFieldsConstants, SchemaFieldsConstants}
 import models.errors.APIEditorError
 import models.instance.{EditorMetadata, NexusInstance, NexusInstanceReference}
 import models.user.IDMUser
+import monix.eval.Task
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import play.api.libs.ws.WSClient
-
-import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
-class MetadataService @Inject()(IDMAPIService: IDMAPIService, authService: OIDCAuthService, WSClient: WSClient)(
-  implicit executionContext: ExecutionContext
-) {
+class MetadataService @Inject()(IDMAPIService: IDMAPIService, authService: OIDCAuthService, WSClient: WSClient) {
 
   def getMetadata(
     nexusInstanceReference: NexusInstanceReference,
     instance: NexusInstance
-  ): Future[Either[APIEditorError, EditorMetadata]] = {
+  ): Task[Either[APIEditorError, EditorMetadata]] = {
     val (lastUpdaterIdOpt, createdByIdOpt, partialMetadata) = MetadataService.extractMetadataFromInstance(instance)
     for {
       updater   <- MetadataService.getUserFromMetadata(lastUpdaterIdOpt, authService, IDMAPIService)
@@ -60,16 +57,18 @@ object MetadataService {
     )
   }
 
-  def getUserFromMetadata(userIdOpt: Option[String], authService: OIDCAuthService, IDMAPIService: IDMAPIService)(
-    implicit executionContext: ExecutionContext
-  ): Future[Option[IDMUser]] = {
+  def getUserFromMetadata(
+    userIdOpt: Option[String],
+    authService: OIDCAuthService,
+    IDMAPIService: IDMAPIService
+  ): Task[Option[IDMUser]] = {
     userIdOpt match {
       case Some(userIdO) =>
         for {
           token <- authService.getTechAccessToken()
           user  <- IDMAPIService.getUserInfoFromID(userIdO, token)
         } yield user
-      case None => Future(None)
+      case None => Task.pure(None)
     }
   }
 
