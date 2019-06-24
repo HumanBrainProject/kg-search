@@ -155,7 +155,8 @@ object ExportContainerController {
     val sink = Sink.foreach[ByteString] { bytes =>
       zos.write(bytes.toArray)
     }
-
+    val sourceUri = new URL(sourceContainer)
+    val containerBasePath = new URL(sourceUri.getProtocol, sourceUri.getHost, sourceUri.getPath)
     containerFiles
       .map[Future[ZipOutputStream]] {
         case files =>
@@ -164,7 +165,7 @@ object ExportContainerController {
           files.foldLeft(Future.successful[ZipOutputStream](zos)) {
             case (futureRes, fileInfo) =>
               futureRes.flatMap { _ =>
-                streamResourceToArchiveStream(zos, fileInfo, sourceContainer, sink)
+                streamResourceToArchiveStream(zos, fileInfo, containerBasePath.toExternalForm, sink)
                   .map(_ => zos) // simply keep initial zip stream
               }
           }
