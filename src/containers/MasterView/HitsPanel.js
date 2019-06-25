@@ -30,8 +30,6 @@ const HitsPanelBase = ({lists, itemComponent, getKey, layout, onClick}) => (
   </React.Fragment>
 );
 
-const newTagDuration = 28 * 24  * 60 * 60 * 1000; // 28 days
-
 const mapStateToProps = (state, props) => {
   const {hits} = props;
 
