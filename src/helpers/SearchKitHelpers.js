@@ -135,10 +135,10 @@ export class SearchKitHelpers {
             const re3 = new RegExp("([ \"\\[\\]{}()][+\\-]?)" + term + "$", "gi");
             const re4 = new RegExp("^([+\\-]?)" + term + "$", "gi");
             if (wildcardCondition && fuzzySearchCondition) {
-              str = str.replace(re1, "$1(" + term + " OR " + term + "* OR " + term + "~)$2");
-              str = str.replace(re2, "$1(" + term + " OR " + term + "* OR " + term + "~)$2");
-              str = str.replace(re3, "$1(" + term + " OR " + term + "* OR " + term + "~)");
-              str = str.replace(re4, "$1(" + term + " OR " + term + "* OR " + term + "~)");
+              str = str.replace(re1, "$1(" + term + "* OR " + term + "* OR " + term + "~)$2");
+              str = str.replace(re2, "$1(" + term + "* OR " + term + "* OR " + term + "~)$2");
+              str = str.replace(re3, "$1(" + term + "* OR " + term + "* OR " + term + "~)");
+              str = str.replace(re4, "$1(" + term + "* OR " + term + "* OR " + term + "~)");
             } else if (wildcardCondition) {
               str = str.replace(re1, "$1" + term + "*$2");
               str = str.replace(re2, "$1" + term + "*$2");
