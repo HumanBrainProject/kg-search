@@ -15,20 +15,26 @@
  */
 package models.excel
 
-import play.api.libs.json._
+import constants.SchemaFieldsConstants
 import helpers.NexusHelper
-import services.NexusService
+import helpers.excel.ExcelUnimindsImportHelper
+import models.NexusPath
+import models.excel.Entity._
+import monix.eval.Task
 import org.apache.poi.ss.usermodel.CellStyle
 import org.apache.poi.xssf.usermodel.XSSFSheet
+import play.api.libs.json._
+import services.NexusService
 
 import scala.collection.immutable.HashSet
-import scala.concurrent.{ExecutionContext, Future}
-import Entity._
-import constants.SchemaFieldsConstants
-import helpers.excel.ExcelUnimindsImportHelper
-import monix.eval.Task
 
-case class Entity(rawType: String, localId: String, rawContent: Map[String, Value], status: Option[String] = None) {
+case class Entity(
+  rawType: String,
+  localId: String,
+  rawContent: Map[String, Value],
+  path: Option[NexusPath] = None,
+  status: Option[String] = None
+) {
   def `type` = rawType.toLowerCase.trim
 
   def buildValidKey(key: String): String = {
@@ -69,16 +75,25 @@ case class Entity(rawType: String, localId: String, rawContent: Map[String, Valu
           val jsonBlock = value.toJsonLd()
           jsonBlock match {
             case JsNull => None
-            case _      => Some((s"http://hbp.eu/${ExcelUnimindsImportHelper.unimindsOrg}#$key", jsonBlock))
+            case _ =>
+              this.path match {
+                case Some(p) =>
+                  Some((s"http://hbp.eu/${ExcelUnimindsImportHelper.unimindsOrg}/${p.schema.capitalize}", jsonBlock))
+                case None => None
+              }
           }
         } else {
           Some((key, value.toJsonLd()))
         }
     }.toSeq
     val identifier = JsString(NexusHelper.hash(s"${`type`}$localId"))
+    val schemaType = path match {
+      case Some(p) => JsString(s"http://hbp.eu/${ExcelUnimindsImportHelper.unimindsOrg}/${p.schema.capitalize}")
+      case None    => JsString("")
+    }
     JsObject(
       originalContent :+
-      ("@type", JsString(s"http://hbp.eu/${ExcelUnimindsImportHelper.unimindsOrg}#${`type`.capitalize}")) :+
+      ("@type", schemaType) :+
       (SchemaFieldsConstants.IDENTIFIER, identifier)
     )
   }
