@@ -1,23 +1,18 @@
 package services
 
-import akka.Done
 import helpers.ConfigMock
 import mockws.MockWSHelpers
 import models._
-import models.instance.{EditorInstance, NexusInstance}
 import models.specification._
 import org.scalatest.Matchers._
 import org.scalatest.mockito.MockitoSugar
-import org.mockito.Mockito._
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.libs.ws.WSClient
 import play.api.test.Injecting
-import services.specification.{FormService, SpecificationService}
-
-import scala.concurrent.Future
+import services.specification.{FormOp, FormService}
 
 class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpers with MockitoSugar with Injecting {
   override def fakeApplication(): Application = ConfigMock.fakeApplicationConfig.build()
@@ -27,7 +22,6 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
       val originalDatatype = NexusPath("minds/core/activity/v0.0.4")
       val id = "123"
       val revision = 2
-      import scala.concurrent.ExecutionContext.Implicits._
       val formRegistry = FormRegistry(
         Map(
           originalDatatype -> UISpec(
@@ -93,7 +87,7 @@ class FormServiceSpec extends PlaySpec with GuiceOneAppPerSuite with MockWSHelpe
            |    }
            |    """.stripMargin)
 
-      val res = FormService.getFormStructure(originalDatatype, data.as[JsObject], formRegistry)
+      val res = FormOp.getFormStructure(originalDatatype, data.as[JsObject], formRegistry)
       val expected = Json.parse("""
           | {
           |  "fields": {

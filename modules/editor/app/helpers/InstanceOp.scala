@@ -16,22 +16,15 @@
 
 package helpers
 
-import constants.{EditorConstants, JsonLDConstants, SchemaFieldsConstants, UiConstants}
-import models._
+import constants.{EditorConstants, JsonLDConstants, SchemaFieldsConstants}
+import gnieh.diffson.playJson._
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, PreviewInstance}
 import models.specification.{DropdownSelect, FormRegistry, UISpec}
-import org.json4s.JsonAST._
-import org.json4s.native.{JsonMethods, JsonParser}
-import org.json4s.{Diff, JsonAST}
 import play.api.Logger
-import play.api.libs.json.Reads.of
 import play.api.libs.json._
-import services.specification.FormService
+import services.specification.FormOp
 
-import scala.collection.immutable.SortedSet
-import gnieh.diffson.playJson._
-
-object InstanceHelper {
+object InstanceOp {
   val logger = Logger(this.getClass)
 
   type UpdateInfo = (Option[String], Int, String, EditorInstance)
@@ -163,7 +156,7 @@ object InstanceHelper {
 
   def removeInternalFields(instance: NexusInstance): NexusInstance = {
     instance.copy(
-      content = FormService.removeKey(instance.content).as[JsObject] -
+      content = FormOp.removeKey(instance.content).as[JsObject] -
       s"${EditorConstants.BASENAMESPACE}${EditorConstants.RELATIVEURL}" -
       s"${EditorConstants.INFERENCESPACE}${EditorConstants.ALTERNATIVES}" -
       JsonLDConstants.ID - JsonLDConstants.TYPE - "https://schema.hbp.eu/inference/extends"

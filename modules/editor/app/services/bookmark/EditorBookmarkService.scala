@@ -35,7 +35,7 @@ import play.api.libs.ws.WSClient
 import services._
 import services.instance.InstanceApiService
 import services.query.{QueryApiParameter, QueryService}
-import services.specification.FormService
+import services.specification.{FormOp, FormService}
 
 class EditorBookmarkService @Inject()(
   config: ConfigurationService,
@@ -89,7 +89,7 @@ class EditorBookmarkService @Inject()(
     nexusUser: NexusUser,
     formRegistry: FormRegistry[UISpec]
   ): List[BookmarkListFolder] = {
-    val allEditableEntities = FormService
+    val allEditableEntities = FormOp
       .editableEntities(nexusUser, formRegistry)
       .foldLeft(SystemDefinedFolder.getFolders) {
         case (acc, (path, uiSpec)) =>

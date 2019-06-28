@@ -15,12 +15,14 @@
  */
 package models.excel
 
-import services.NexusService
+import models.excel.Entity.isNexusLink
+import models.excel.Value._
+import monix.eval.Task
 import play.api.libs.json._
+import services.NexusService
+import play.api.http.Status.OK
+
 import scala.collection.immutable.HashSet
-import scala.concurrent.{ExecutionContext, Future}
-import Entity.isNexusLink
-import Value._
 
 sealed trait Value {
   val label: String
@@ -33,9 +35,7 @@ sealed trait Value {
   def needsValidation(): Boolean = true
   def checkInternalLinksValidity(dataRef: HashSet[String]): Value
 
-  def validateValue(token: String, nexusService: NexusService)(
-    implicit executionContext: ExecutionContext
-  ): Future[Value]
+  def validateValue(token: String, nexusService: NexusService): Task[Value]
 }
 
 case class SingleValue(
@@ -48,14 +48,13 @@ case class SingleValue(
   override def checkInternalLinksValidity(linksRef: HashSet[String]): SingleValue = {
     val newStatus = if (isNexusLink(value)) {
       DEFAULT_RESOLUTION_STATUS
-    } else if (linksRef.contains(value)) FOUND
-    else NOT_FOUND
+    } else if (linksRef.contains(value)) { FOUND } else NOT_FOUND
     this.copy(status = Some(newStatus))
   }
 
   override def needsValidation(): Boolean = {
     // if value has a status already validation is not needed
-    status == None
+    status.isEmpty
   }
 
   override def toJson(): JsValue = {
@@ -105,21 +104,19 @@ case class SingleValue(
     }
   }
 
-  override def validateValue(token: String, nexusService: NexusService)(
-    implicit ec: ExecutionContext
-  ): Future[SingleValue] = {
+  override def validateValue(token: String, nexusService: NexusService): Task[SingleValue] = {
     if (Entity.isNexusLink(value) && needsValidation()) {
       // check validity only if needed
       nexusService
         .getInstance(value, token)
         .map(_.status match {
-          case 200 =>
+          case OK =>
             this.copy(status = Some(VALID))
           case _ =>
             this.copy(status = Some(INVALID))
         })
     } else {
-      Future.successful(this)
+      Task.pure(this)
     }
   }
 }
@@ -150,7 +147,7 @@ case class ArrayValue(values: Seq[SingleValue], override val label: String = "")
     nonEmptyValues match {
       case Seq()         => None
       case head +: Seq() => Some(nonEmptyValues.head)
-      case head +: tail  => Some(ArrayValue(nonEmptyValues))
+      case head +: _     => Some(ArrayValue(nonEmptyValues))
     }
   }
 
@@ -161,10 +158,8 @@ case class ArrayValue(values: Seq[SingleValue], override val label: String = "")
     this.copy(values = newValues)
   }
 
-  override def validateValue(token: String, nexusService: NexusService)(
-    implicit executionContext: ExecutionContext
-  ): Future[ArrayValue] = {
-    val newValues = values.foldLeft(Future.successful(Seq.empty[SingleValue])) {
+  override def validateValue(token: String, nexusService: NexusService): Task[ArrayValue] = {
+    val newValues = values.foldLeft(Task.pure(Seq.empty[SingleValue])) {
       case (valuesFut, value) =>
         valuesFut.flatMap(
           values => value.validateValue(token, nexusService).map(values :+ _)

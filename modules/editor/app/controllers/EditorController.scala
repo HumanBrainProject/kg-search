@@ -17,9 +17,6 @@
 package controllers
 
 import actions.EditorUserAction
-import cats.data.EitherT
-import constants.SchemaFieldsConstants
-import helpers._
 import javax.inject.{Inject, Singleton}
 import models._
 import models.instance._
@@ -29,9 +26,9 @@ import play.api.libs.json.Reads._
 import play.api.libs.json._
 import play.api.mvc._
 import services._
-import services.specification.FormService
+import services.specification.{FormOp, FormService}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class EditorController @Inject()(
@@ -92,7 +89,7 @@ class EditorController @Inject()(
                 )
                 Task.pure(error.toResult)
               case Right(instance) =>
-                FormService
+                FormOp
                   .getFormStructure(
                     nexusInstanceReference.nexusPath,
                     instance.content,
@@ -150,7 +147,7 @@ class EditorController @Inject()(
                   case Right(ls) =>
                     Ok(Json.toJson(EditorResponseObject(Json.toJson(ls.groupBy(_.id().get).map {
                       case (k, v) =>
-                        FormService
+                        FormOp
                           .getFormStructure(v.head.nexusPath, v.head.content, registries.formRegistry)
                           .as[JsObject]
                     }))))
@@ -216,7 +213,7 @@ class EditorController @Inject()(
                   .retrieveInstance(instanceRef, request.userToken, registries.queryRegistry)
                   .flatMap {
                     case Right(instance) =>
-                      FormService
+                      FormOp
                         .getFormStructure(
                           instanceRef.nexusPath,
                           instance.content,
@@ -278,7 +275,7 @@ class EditorController @Inject()(
               request.body.asJson match {
                 case Some(content) =>
                   formService.getRegistries().flatMap { registries =>
-                    val nonEmptyInstance = FormService.buildNewInstanceFromForm(
+                    val nonEmptyInstance = FormOp.buildNewInstanceFromForm(
                       ref,
                       config.nexusEndpoint,
                       content.as[JsObject],
@@ -321,7 +318,7 @@ class EditorController @Inject()(
       formService
         .getRegistries()
         .map { registries =>
-          val form = FormService.getFormStructure(nexusPath, JsNull, registries.formRegistry)
+          val form = FormOp.getFormStructure(nexusPath, JsNull, registries.formRegistry)
           Ok(form)
         }
         .runToFuture

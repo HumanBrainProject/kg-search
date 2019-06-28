@@ -26,6 +26,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import Entity._
 import constants.SchemaFieldsConstants
 import helpers.excel.ExcelUnimindsImportHelper
+import monix.eval.Task
 
 case class Entity(rawType: String, localId: String, rawContent: Map[String, Value], status: Option[String] = None) {
   def `type` = rawType.toLowerCase.trim
@@ -99,16 +100,16 @@ case class Entity(rawType: String, localId: String, rawContent: Map[String, Valu
     newStatus: Option[String] = None,
     token: String,
     nexusService: NexusService
-  )(implicit ec: ExecutionContext): Future[Entity] = {
+  ): Task[Entity] = {
     // links validation
-    val validatedContentFut = content.foldLeft(Future.successful(Map.empty[String, Value])) {
+    val validatedContentFut = content.foldLeft(Task.pure(Map.empty[String, Value])) {
       case (contentFut, (key, value)) =>
         contentFut.flatMap(
           content =>
             if (isLink(key)) {
               value.validateValue(token, nexusService).map(value => content.+((key, value)))
             } else {
-              Future.successful(content.+((key, value)))
+              Task.pure(content.+((key, value)))
           }
         )
     }
