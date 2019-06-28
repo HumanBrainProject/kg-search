@@ -28,7 +28,7 @@ import monix.eval.Task
 import org.joda.time.DateTime
 import play.api.Logger
 import play.api.http.Status._
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsArray, JsObject, JsValue, Json}
 import play.api.libs.ws.WSClient
 import services.instance.InstanceApiService
 import services.query.{QueryApiParameter, QueryService}
@@ -64,13 +64,12 @@ class EditorService @Inject()(
       (uiInfo.promotedFields.headOption, uiInfo.promotedFields.tail.headOption)
     }).getOrElse((None, None))
 
-    val query = EditorService.kgQueryGetPreviewInstance(promotedFields._1, promotedFields._2)
     queryService
       .getInstances(
         wSClient,
         config.kgQueryEndpoint,
         nexusPath,
-        QuerySpec(Json.parse(query).as[JsObject]),
+        QuerySpec(Json.obj(), Some("editorPreview")),
         token,
         QueryApiParameter(vocab = Some(EditorConstants.EDITORVOCAB), size = size, from = from, search = search)
       )
@@ -87,46 +86,7 @@ class EditorService @Inject()(
             )
           case _ => Left(APIEditorError(res.status, res.body))
         }
-
       }
-  }
-
-  def retrievePreviewInstancesByIds(
-    instanceIds: List[NexusInstanceReference],
-    registries: FormRegistries,
-    token: AccessToken,
-  ): Task[List[PreviewInstance]] = {
-    val listOfResponse = for {
-      id <- instanceIds
-    } yield {
-      val promotedFields = (for {
-        spec   <- registries.formRegistry.registry.get(id.nexusPath)
-        uiInfo <- spec.uiInfo
-      } yield {
-        (uiInfo.promotedFields.headOption, uiInfo.promotedFields.tail.headOption)
-      }).getOrElse((None, None))
-      val query = EditorService.kgQueryGetPreviewInstance(promotedFields._1, promotedFields._2)
-      queryService
-        .getInstancesWithId(
-          wSClient,
-          config.kgQueryEndpoint,
-          id,
-          QuerySpec(Json.parse(query).as[JsObject]),
-          token,
-          QueryApiParameter(vocab = Some(EditorConstants.EDITORVOCAB))
-        )
-        .map { res =>
-          res.status match {
-            case OK => Right(res.json.as[PreviewInstance].setLabel(registries.formRegistry))
-            case _  => Left(APIEditorError(res.status, "Could not fetch all the instances"))
-          }
-        }
-    }
-
-    Task.gather(listOfResponse).map { ls =>
-      val r = ls.filter(_.isRight)
-      r.collect { case Right(e) => e }
-    }
   }
 
   def insertInstance(
@@ -320,11 +280,12 @@ class EditorService @Inject()(
     }
 
   /**
-    *  Update the reverse instance
-    * @param instanceRef The reference to the instance being updated
+    * Update the reverse instance
+    *
+    * @param instanceRef      The reference to the instance being updated
     * @param updateToBeStored The instance being updated
-    * @param user The current user
-    * @param token The user token
+    * @param user             The current user
+    * @param token            The user token
     * @return
     */
   def processInstanceUpdate(
@@ -360,21 +321,53 @@ class EditorService @Inject()(
 
   def retrieveInstancesByIds(
     instanceIds: List[NexusInstanceReference],
-    querySpec: FormRegistry[QuerySpec],
     token: AccessToken,
-  ): Task[Either[APIEditorError, List[NexusInstance]]] = {
-    val listOfResponse = for {
-      id <- instanceIds
-    } yield retrieveInstance(id, token, querySpec)
-    Task.gather(listOfResponse).map { ls =>
-      val r = ls.filter(_.isRight)
-      if (r.isEmpty) {
-        val error = ls.head.swap.getOrElse(APIEditorError(INTERNAL_SERVER_ERROR, "Could not fetch all the instances"))
-        Left(error)
-      } else {
-        Right(r.collect { case Right(e) => e })
+    queryId: String,
+    databaseScope: Option[String] = None
+  ): Task[Either[APIEditorError, Seq[NexusInstance]]] = {
+    instanceApiService
+      .getByIdList(
+        wSClient,
+        config.kgQueryEndpoint,
+        instanceIds,
+        token,
+        queryId,
+        QueryApiParameter(vocab = Some(EditorConstants.EDITORVOCAB), databaseScope = databaseScope)
+      )
+      .map { res =>
+        res.status match {
+          case OK =>
+            Right(
+              res.json
+                .as[JsArray]
+                .value
+                .map(i => {
+                  val ref = NexusInstanceReference.fromUrl(getIdForPayload(i))
+                  NexusInstance(Some(ref.id), ref.nexusPath, i.as[JsObject])
+                })
+            )
+          case _ => Left(APIEditorError(res.status, res.body))
+        }
       }
+  }
 
+  def getIdForPayload(instance: JsValue): String = {
+    val atId = "@id"
+    val relativeURL = s"${EditorConstants.BASENAMESPACE}${EditorConstants.RELATIVEURL}"
+    val editorId = s"${EditorConstants.EDITORVOCAB}id"
+    val simpleId = "id"
+    if ((instance \ atId).isDefined) {
+      (instance \ atId).get.as[String]
+    } else if ((instance \ relativeURL).isDefined) {
+      (instance \ relativeURL).get.as[String]
+    } else if ((instance \ editorId).isDefined) {
+      (instance \ editorId).get.as[String]
+    } else if ((instance \ simpleId).isDefined) {
+      (instance \ simpleId).get.as[String]
+    } else {
+      throw new Exception(
+        s"Was not able to find an id definition of the instance. To make proper use of this endpoint, you need either to define $atId, $relativeURL, $editorId or $simpleId in your query!"
+      )
     }
   }
 
@@ -407,35 +400,4 @@ object EditorService {
     InstanceHelper.removeEmptyFieldsNotInOriginal(cleanedOriginalInstance, diff)
   }
 
-  def kgQueryGetPreviewInstance(
-    nameField: Option[String] = None,
-    descriptionField: Option[String] = None,
-    context: String = EditorConstants.context
-  ): String =
-    s"""
-       |{
-       |  "@context": $context,
-       |  "schema:name": "",
-       |  "fields": [
-       |    {
-       |      "fieldname": "this:name",
-       |      "relative_path": "${nameField.getOrElse("schema:name")}",
-       |      "sort":true
-       |    },
-       |    {
-       |      "fieldname": "this:id",
-       |      "relative_path": "base:relativeUrl"
-       |    },
-       |    {
-       |      "fieldname": "this:description",
-       |      "relative_path": "${descriptionField.getOrElse("schema:description")}"
-       |    },
-       |    {
-       |      "fieldname": "this:${UiConstants.DATATYPE}",
-       |      "relative_path": "${JsonLDConstants.TYPE}",
-       |      "required":true
-       |    }
-       |  ]
-       |}
-    """.stripMargin
 }
