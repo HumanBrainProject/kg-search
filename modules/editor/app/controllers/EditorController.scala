@@ -155,7 +155,10 @@ class EditorController @Inject()(
                           .as[JsObject]
                     }))))
                   } else {
-                    Ok(Json.toJson(ls.map(i => i.content.as[PreviewInstance])))
+                    val previews = ls.map(i => i.content.as[PreviewInstance].setLabel(registries.formRegistry)).toList
+                    Ok(
+                      Json.toJson(EditorResponseObject(Json.toJson(previews)))
+                    )
                   }
               }
           case None => Task.pure(BadRequest("Missing body content"))

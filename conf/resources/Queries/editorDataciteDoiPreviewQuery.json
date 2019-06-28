@@ -24,14 +24,14 @@
       "@type": "@id"
     }
   },
-  "http://schema.org/identifier": "hbpkg/global/queries/v1.0.0/editorPreview",
-  "https://schema.hbp.eu/meta/editor/identifier": "hbpkg/global/queries/v1.0.0/editorPreview",
-  "description": "The global preview query (cross type)",
-  "label": "Editor: Global preview",
+  "http://schema.org/identifier": "datacite/core/doi/v1.0.0/editorPreview",
+  "https://schema.hbp.eu/meta/editor/identifier": "datacite/core/doi/v1.0.0/editorPreview",
+  "description": "The preview query for DOIs",
+  "label": "Editor: DOI preview",
   "fields": [
     {
       "fieldname": "this:name",
-      "relative_path": "http://schema.org/name",
+      "relative_path": "https://schema.hbp.eu/minds/doi",
       "sort": true,
       "filter": {
         "op": "contains",
