@@ -30,7 +30,7 @@ import play.api.libs.Files
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
 import play.api.mvc._
-import services.{ConfigurationService, InsertionService, NexusService}
+import services.{ConfigurationService, InsertionService, NexusService, NexusSpaceService}
 
 import scala.collection.immutable.HashSet
 
@@ -39,7 +39,8 @@ class ExcelImportController @Inject()(
   cc: ControllerComponents,
   config: ConfigurationService,
   insertionService: InsertionService,
-  nexusService: NexusService
+  nexusService: NexusService,
+  nexusSpaceService: NexusSpaceService
 )(ws: WSClient)
     extends AbstractController(cc) {
 
@@ -50,7 +51,7 @@ class ExcelImportController @Inject()(
   val AcceptsXls = Accepting(xlsMime)
   val AcceptsCsv = Accepting(csvMime)
   implicit val scheduler = monix.execution.Scheduler.Implicits.global
-
+  val nexusEndpoint = config.nexusEndpoint
   val logger = Logger(this.getClass)
 
   def extractMindsDataFromExcel(action: Option[String]): Action[Files.TemporaryFile] =
@@ -77,7 +78,7 @@ class ExcelImportController @Inject()(
                 Ok(
                   Json
                     .parse(
-                      "{\"error\": \"You're not allowed to write in KG dataworkbench space. Please check your access token\"}"
+                      "{\"error\": \"You're not allowed to write in KG Excel import space. Please check your access token\"}"
                     )
                     .as[JsObject]
                 )
@@ -100,7 +101,10 @@ class ExcelImportController @Inject()(
               val dataOpt = extractDataFromRequestInput()
               dataOpt match {
                 case Some((filename, data)) =>
-                  handleInsertRequest(filename, data, token)
+                  for {
+                    _      <- nexusSpaceService.createNexusOrg(ExcelUnimindsImportHelper.unimindsOrg, token, nexusEndpoint)
+                    result <- handleInsertRequest(filename, data, token)
+                  } yield result
                 case None =>
                   Task.pure(Ok("ERROR - please provide a file using mulitpart-form with inputFile as key"))
               }
