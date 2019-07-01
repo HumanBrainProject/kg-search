@@ -20,7 +20,7 @@ object QueryConstants {
   val VOCAB = "vocab"
   val DATABASE_SCOPE = "databaseScope"
   val SIZE = "size"
-  val SEARCH = "search"
+  val SEARCH = "nameFilter"
 
   val DEFAULT_VOCAB = "https://schema.hbp.eu/myQuery/"
 }

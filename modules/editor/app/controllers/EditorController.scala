@@ -142,25 +142,25 @@ class EditorController @Inject()(
       .flatMap { registries =>
         listOfIds match {
           case Some(ids) =>
-            if (allFields) {
-              editorService
-                .retrieveInstancesByIds(ids, registries.queryRegistry, request.userToken)
-                .map {
-                  case Left(err) => err.toResult
-                  case Right(ls) =>
+            editorService
+              .retrieveInstancesByIds(ids, request.userToken, if (allFields) "editorFull" else "editorPreview")
+              .map {
+                case Left(err) => err.toResult
+                case Right(ls) =>
+                  if (allFields) {
                     Ok(Json.toJson(EditorResponseObject(Json.toJson(ls.groupBy(_.id().get).map {
                       case (k, v) =>
                         FormService
                           .getFormStructure(v.head.nexusPath, v.head.content, registries.formRegistry)
                           .as[JsObject]
                     }))))
-                }
-            } else {
-              editorService.retrievePreviewInstancesByIds(ids, registries, request.userToken).map {
-                ls: List[PreviewInstance] =>
-                  Ok(Json.toJson(EditorResponseObject(Json.toJson(ls))))
+                  } else {
+                    val previews = ls.map(i => i.content.as[PreviewInstance].setLabel(registries.formRegistry)).toList
+                    Ok(
+                      Json.toJson(EditorResponseObject(Json.toJson(previews)))
+                    )
+                  }
               }
-            }
           case None => Task.pure(BadRequest("Missing body content"))
         }
       }

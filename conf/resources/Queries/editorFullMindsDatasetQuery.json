@@ -1,0 +1,279 @@
+{
+  "@context": {
+    "@vocab": "https://schema.hbp.eu/graphQuery/",
+    "schema": "http://schema.org/",
+    "hbpkg": "https://schema.hbp.eu/hbpkg/",
+    "base": "https://schema.hbp.eu/",
+    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
+    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
+    "this": "https://schema.hbp.eu/editor/",
+    "minds": "https://schema.hbp.eu/minds/",
+    "prov": "https://schema.hbp.eu/provenance/",
+    "neuroglancer": "https://schema.hbp.eu/neuroglancer/",
+    "inference": "https://schema.hbp.eu/inference/",
+    "fieldname": {
+      "@id": "fieldname",
+      "@type": "@id"
+    },
+    "merge": {
+      "@id": "merge",
+      "@type": "@id"
+    },
+    "relative_path": {
+      "@id": "relative_path",
+      "@type": "@id"
+    }
+  },
+  "http://schema.org/identifier": "minds/core/dataset/v1.0.0/editorFull",
+  "https://schema.hbp.eu/meta/editor/identifier": "minds/core/dataset/v1.0.0/editorFull",
+  "description": "Fetch the dataset specification for the editor",
+  "label": "Editor specification: Dataset",
+  "fields": [
+    {
+      "fieldname": "base:relativeUrl",
+      "relative_path": "base:relativeUrl",
+      "required": true
+    },
+    {
+      "fieldname": "schema:name",
+      "label": "Name",
+      "relative_path": "schema:name"
+    },
+    {
+      "fieldname": "schema:description",
+      "label": "Description",
+      "relative_path": "schema:description"
+    },
+    {
+      "fieldname": "minds:datasetDOI",
+      "label": "DOI for these data",
+      "ensure_order": true,
+      "fields": [
+        {
+          "fieldname": "this:id",
+          "relative_path": "base:relativeUrl"
+        }
+      ],
+      "relative_path": {
+        "@id": "minds:doireference",
+        "reverse": true
+      }
+    },
+    {
+      "fieldname": "minds:activity",
+      "label": "Activities",
+      "ensure_order": true,
+      "fields": [
+        {
+          "fieldname": "this:id",
+          "relative_path": "base:relativeUrl"
+        }
+      ],
+      "relative_path": "minds:activity"
+    },
+    {
+      "fieldname": "minds:component",
+      "label": "Project",
+      "ensure_order": true,
+      "fields": [
+        {
+          "fieldname": "this:id",
+          "relative_path": "base:relativeUrl"
+        }
+      ],
+      "relative_path": "minds:component"
+    },
+    {
+      "fieldname": "minds:container_url",
+      "label": "Container Url",
+      "relative_path": "minds:container_url"
+    },
+    {
+      "relative_path": "minds:containerUrlAsZIP"
+    },
+    {
+      "fieldname": "minds:contributors",
+      "ensure_order": true,
+      "label": "Contributors",
+      "fields": [
+        {
+          "fieldname": "this:id",
+          "relative_path": "base:relativeUrl"
+        }
+      ],
+      "relative_path": "minds:contributors"
+    },
+    {
+      "fieldname": "minds:datalink",
+      "label": "Data link",
+      "relative_path": "minds:datalink"
+    },
+    {
+      "fieldname": "minds:embargo_status",
+      "label": "Embargo Status",
+      "ensure_order": true,
+      "fields": [
+        {
+          "fieldname": "this:id",
+          "relative_path": "base:relativeUrl"
+        }
+      ],
+      "relative_path": "minds:embargo_status"
+    },
+    {
+      "fieldname": "minds:formats",
+      "label": "Formats",
+      "ensure_order": true,
+      "fields": [
+        {
+          "fieldname": "this:id",
+          "relative_path": "base:relativeUrl"
+        }
+      ],
+      "relative_path": "minds:formats"
+    },
+    {
+      "fieldname": "minds:license_info",
+      "label": "License",
+      "ensure_order": true,
+      "fields": [
+        {
+          "fieldname": "this:id",
+          "relative_path": "base:relativeUrl"
+        }
+      ],
+      "relative_path": "minds:license_info"
+    },
+    {
+      "fieldname": "minds:owners",
+      "ensure_order": true,
+      "label": "Owners",
+      "fields": [
+        {
+          "fieldname": "this:id",
+          "relative_path": "base:relativeUrl"
+        }
+      ],
+      "relative_path": "minds:owners"
+    },
+    {
+      "fieldname": "minds:parcellationAtlas",
+      "label": "Parcellation atlas",
+      "ensure_order": true,
+      "fields": [
+        {
+          "fieldname": "this:id",
+          "relative_path": "base:relativeUrl"
+        }
+      ],
+      "relative_path": "minds:parcellationAtlas"
+    },
+    {
+      "fieldname": "minds:parcellationRegion",
+      "label": "Parcellation region",
+      "ensure_order": true,
+      "fields": [
+        {
+          "fieldname": "this:id",
+          "relative_path": "base:relativeUrl"
+        }
+      ],
+      "relative_path": "minds:parcellationRegion"
+    },
+    {
+      "fieldname": "minds:publications",
+      "label": "Publications",
+      "ensure_order": true,
+      "fields": [
+        {
+          "fieldname": "this:id",
+          "relative_path": "base:relativeUrl"
+        }
+      ],
+      "relative_path": "minds:publications"
+    },
+    {
+      "fieldname": "minds:reference_space",
+      "label": "Reference space",
+      "ensure_order": true,
+      "fields": [
+        {
+          "fieldname": "this:id",
+          "relative_path": "base:relativeUrl"
+        }
+      ],
+      "relative_path": "minds:reference_space"
+    },
+    {
+      "fieldname": "minds:specimen_group",
+      "label": "Specimen Groups",
+      "ensure_order": true,
+      "fields": [
+        {
+          "fieldname": "this:id",
+          "relative_path": "base:relativeUrl"
+        }
+      ],
+      "relative_path": "minds:specimen_group"
+    },
+    {
+      "fieldname": "prov:lastModificationUserId",
+      "label": "Last updater",
+      "relative_path": "prov:lastModificationUserId"
+    },
+    {
+      "fieldname": "prov:modifiedAt",
+      "label": "Last modification",
+      "relative_path": "prov:modifiedAt"
+    },
+    {
+      "fieldname": "prov:createdAt",
+      "label": "Created by",
+      "relative_path": "prov:createdAt"
+    },
+    {
+      "fieldname": "prov:createdBy",
+      "label": "Created by",
+      "relative_path": "prov:createdBy"
+    },
+    {
+      "fieldname": "_nexusRev",
+      "label": "Number of modifications",
+      "relative_path": "_nexusRev"
+    },
+    {
+      "fieldname": "inference:alternatives",
+      "label": "Alternatives",
+      "relative_path": "inference:alternatives"
+    },
+    {
+      "fieldname": "minds:file",
+      "label": "File",
+      "ensure_order": true,
+      "fields": [
+        {
+          "fieldname": "this:id",
+          "relative_path": "base:relativeUrl"
+        }
+      ],
+      "merge": [
+        {
+          "relative_path": [
+            {
+              "@id": "minds/core/fileassociation/v1.0.0",
+              "reverse": true
+            }
+          ]
+        },
+        {
+          "relative_path": [
+            {
+              "@id": "cscs/core/fileassociation/v1.0.0",
+              "reverse": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

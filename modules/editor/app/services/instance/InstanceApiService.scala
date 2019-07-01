@@ -23,13 +23,37 @@ import models.{AccessToken, BasicAccessToken, NexusPath, RefreshAccessToken}
 import monix.eval.Task
 import play.api.http.HeaderNames._
 import play.api.http.Status._
-import play.api.libs.json.JsObject
+import play.api.libs.json.{JsArray, JsObject, Json}
 import play.api.libs.ws.{WSClient, WSResponse}
+import services.query.QueryApiParameter
 import services.{AuthHttpClient, CredentialsService, OIDCAuthService}
 
 trait InstanceApiService {
   val instanceEndpoint = "/api/instances"
   val internalInstanceEndpoint = "/internal/api/instances"
+
+  def getByIdList(
+    wSClient: WSClient,
+    apiBaseEndpoint: String,
+    instanceIds: List[NexusInstanceReference],
+    token: AccessToken,
+    queryId: String,
+    queryApiParameters: QueryApiParameter
+  )(
+    implicit OIDCAuthService: OIDCAuthService,
+    clientCredentials: CredentialsService
+  ): Task[WSResponse] = {
+
+    val payload = Json.toJson(instanceIds.map(i => i.toString)).as[JsArray]
+    val q = wSClient
+      .url(s"$apiBaseEndpoint$instanceEndpoint/${queryId}")
+      .withHttpHeaders(AUTHORIZATION -> token.token)
+      .addQueryStringParameters(queryApiParameters.toParams: _*)
+    token match {
+      case BasicAccessToken(_)   => Task.deferFuture(q.post(payload))
+      case RefreshAccessToken(_) => AuthHttpClient.postWithRetry(q, payload)
+    }
+  }
 
   def get(
     wSClient: WSClient,
