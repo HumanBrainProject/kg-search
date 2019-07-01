@@ -196,7 +196,7 @@ case class Entity(
 
   /* copy entity with a new rawContent ensuring externalId, computed from rawContent, is not lost */
   def copyWithID(newContent: Map[String, Value], statusOpt: Option[String] = None): Entity = {
-    val newStatus = statusOpt.map(Some(_)).getOrElse(status)
+    val newStatus = statusOpt.orElse(status)
 
     newContent.get(ID_LABEL) match {
       case None if externalId != None =>

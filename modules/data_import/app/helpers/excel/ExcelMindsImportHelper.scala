@@ -1,22 +1,22 @@
 /*
-*   Copyright (c) 2018, EPFL/Human Brain Project PCO
-*
-*   Licensed under the Apache License, Version 2.0 (the "License");
-*   you may not use this file except in compliance with the License.
-*   You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-*
-*   Unless required by applicable law or agreed to in writing, software
-*   distributed under the License is distributed on an "AS IS" BASIS,
-*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*   See the License for the specific language governing permissions and
-*   limitations under the License.
-*/
+ *   Copyright (c) 2018, EPFL/Human Brain Project PCO
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 package helpers.excel
 
 import models.excel._
-import models.excel.CommonVars._
+import CommonVars._
 import java.util.Calendar
 
 import org.apache.poi.xssf.usermodel._
@@ -31,10 +31,11 @@ object ExcelMindsImportHelper {
     val mainContent = Seq(
       ("@type", JsString(s"http://hbp.eu/dw#$entityType")),
       (SchemaFieldsConstants.IDENTIFIER -> JsString(payloadId)),
-      ("http://hbp.eu/dw#raw_content" -> payload))
+      ("http://hbp.eu/dw#raw_content"   -> payload)
+    )
     val fullContent = parent match {
       case Some(parentObj) => mainContent :+ ("http://hbp.eu/dw#isLinkedWith", parentObj)
-      case None => mainContent
+      case None            => mainContent
     }
     JsObject(fullContent)
   }
@@ -91,12 +92,14 @@ object ExcelMindsImportHelper {
     val coreActivityJson = buildJsonEntity(activityContent, insertionDateTime, creator, componentId)
 
     // specimengroup
-    val samplesGroups = res(sampleSectionLabel).map {
-      case sampleDetails =>
-        Sample(sampleDetails(sampleIdLabel).head, sampleDetails)
-    }.groupBy(_.details(subjectIdLabel).head)
+    val samplesGroups = res(sampleSectionLabel)
+      .map {
+        case sampleDetails =>
+          Sample(sampleDetails(sampleIdLabel).head, sampleDetails)
+      }
+      .groupBy(_.details(subjectIdLabel).head)
 
-    val subjects = res(specimenGroupSectionLabel).map{
+    val subjects = res(specimenGroupSectionLabel).map {
       case specimenGroups =>
         val specimenId = specimenGroups(subjectIdLabel).head
         Subject(specimenId, specimenGroups, samplesGroups(specimenId))
@@ -105,7 +108,6 @@ object ExcelMindsImportHelper {
     val specimenGroupId = res(specimenGroupSectionLabel).head(specimenGroupIdLabel).head
     val specimenGroupContentJson = SpecimenGroup(specimenGroupId, subjects).toJsonString()
     val coreSpecimenGroupJson = buildJsonEntity(specimenGroupContentJson, insertionDateTime, creator, componentId)
-
 
     // return a json object containing the 3 main entities
     Json.parse(s"""
@@ -131,7 +133,7 @@ object ExcelMindsImportHelper {
       """
   }
 
-  def getNumberOfInstancesInBlock(from: Int, to:Int, sheet: XSSFSheet): Int = {
+  def getNumberOfInstancesInBlock(from: Int, to: Int, sheet: XSSFSheet): Int = {
     /*
       strongly based on:
          - key value pair template
@@ -139,9 +141,9 @@ object ExcelMindsImportHelper {
          - first row containing block name
          - first row is full in case of multiple instances (used to compute number of instances)
          - first row contain only block title in case of single instance
-    */
+     */
     val row = sheet.getRow(from)
-    val rowNbChildren = Math.max(nbFilledCellsInRow(row) -1, 1)
+    val rowNbChildren = Math.max(nbFilledCellsInRow(row) - 1, 1)
     rowNbChildren
   }
 
@@ -149,38 +151,39 @@ object ExcelMindsImportHelper {
     // detect number of entities in the block
     val nbChildren = getNumberOfInstancesInBlock(from, to, sheet)
 
-    val jsonData = Seq.fill(nbChildren)(scala.collection.mutable.Map.empty[String,Seq[String]])
-    (from+1 to to).foreach{
+    val jsonData = Seq.fill(nbChildren)(scala.collection.mutable.Map.empty[String, Seq[String]])
+    (from + 1 to to).foreach {
       case rowIdx =>
         val row = sheet.getRow(rowIdx)
         val key = getCellContentAsString(row.getCell(columnKeyIdx))
-        (firstValueIdx to firstValueIdx + (nbColumnsBetweenChildren+1)*(nbChildren-1) by nbColumnsBetweenChildren+1).foreach{
-          case colIdx =>
-            val childIdx = colIdx/2 - 1
-            val cellContent = getCellContentAsString(row.getCell(colIdx))
-            val newValue: Seq[String] = jsonData(childIdx).get(key) match {
-              case Some(contentSeq) =>
-                if (contentSeq.forall(_ != empty)) {
-                  if (cellContent != empty) {
-                    contentSeq ++ cellContent.split(cellContentSeparator)
+        (firstValueIdx to firstValueIdx + (nbColumnsBetweenChildren + 1) * (nbChildren - 1) by nbColumnsBetweenChildren + 1)
+          .foreach {
+            case colIdx =>
+              val childIdx = colIdx / 2 - 1
+              val cellContent = getCellContentAsString(row.getCell(colIdx))
+              val newValue: Seq[String] = jsonData(childIdx).get(key) match {
+                case Some(contentSeq) =>
+                  if (contentSeq.forall(_ != empty)) {
+                    if (cellContent != empty) {
+                      contentSeq ++ cellContent.split(cellContentSeparator)
+                    } else {
+                      contentSeq
+                    }
                   } else {
-                    contentSeq
+                    cellContent.split(cellContentSeparator)
                   }
-                } else {
+                case None =>
                   cellContent.split(cellContentSeparator)
-                }
-              case None =>
-                cellContent.split(cellContentSeparator)
-            }
-            jsonData(childIdx).put(key, newValue)
-        }
+              }
+              jsonData(childIdx).put(key, newValue)
+          }
     }
     jsonData.map(_.toMap)
 
   }
 
   def getContentBlocks(sheet: XSSFSheet): Seq[(String, Int, Int)] = {
-    val fr = Math.max(sheet.getFirstRowNum, globalInfoLastIdx +1)
+    val fr = Math.max(sheet.getFirstRowNum, globalInfoLastIdx + 1)
     val lr = sheet.getLastRowNum
 
     (fr to lr).foldLeft(Seq((empty, -1, lr))) {
@@ -190,17 +193,17 @@ object ExcelMindsImportHelper {
         if (!emptyRow) {
           if (curSeq.last._2 == -1) {
             curSeq.dropRight(1) :+ (getCellContentAsString(row.getCell(sectionTitleIdx)), curIdx, lr)
-          } else{
-            if (curSeq.last._3 != lr){
+          } else {
+            if (curSeq.last._3 != lr) {
               curSeq :+ (getCellContentAsString(row.getCell(sectionTitleIdx)), curIdx, lr)
-            } else{
+            } else {
               curSeq
             }
           }
         } else {
           if (curSeq.last._3 == lr) {
             curSeq.dropRight(1) :+ (curSeq.last._1, curSeq.last._2, curIdx - 1)
-          } else{
+          } else {
             curSeq
           }
         }

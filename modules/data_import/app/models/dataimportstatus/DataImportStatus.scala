@@ -13,14 +13,13 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package models.excel
+package models.dataimportstatus
 
-/*
- * This class represent a node in a graph of linked Entities, used 1 step insertion
- */
-case class GraphNode(entity: Entity, children: Seq[GraphNode] = Seq.empty[GraphNode]) {
-
-  def addChild(newChild: GraphNode): GraphNode = {
-    this.copy(children = children :+ newChild)
-  }
+sealed trait DataImportStatus {
+  val label: String
+  val message: String
 }
+
+final case class SuccessStatus(override val label: String, override val message: String = "") extends DataImportStatus
+
+final case class ErrorStatus(override val label: String, override val message: String) extends DataImportStatus

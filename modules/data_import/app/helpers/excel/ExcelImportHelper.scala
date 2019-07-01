@@ -15,9 +15,9 @@
  */
 package helpers.excel
 
-import models.excel.CommonVars._
 import org.apache.poi.ss.usermodel.{Cell, CellType, DataFormatter}
 import org.apache.poi.xssf.usermodel._
+import models.excel.CommonVars._
 
 object ExcelImportHelper {
 
