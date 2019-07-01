@@ -18,9 +18,9 @@ package models.excel
 import models.excel.Entity.isNexusLink
 import models.excel.Value._
 import monix.eval.Task
+import play.api.http.Status.OK
 import play.api.libs.json._
 import services.NexusService
-import play.api.http.Status.OK
 
 import scala.collection.immutable.HashSet
 

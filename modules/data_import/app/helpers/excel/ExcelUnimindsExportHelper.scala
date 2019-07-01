@@ -16,16 +16,15 @@
 package helpers.excel
 
 import helpers.excel.ExcelStyleHelper.{setAllThinBorders, setCellColor}
-import java.awt.Color
-
 import models.excel._
-import org.apache.poi.xssf.usermodel.{XSSFCellStyle, XSSFColor, XSSFSheet, XSSFWorkbook}
+import org.apache.poi.ss.usermodel.IndexedColors
+import org.apache.poi.xssf.usermodel._
 import play.api.libs.json.JsObject
 
 object ExcelUnimindsExportHelper {
 
-  val GREY = new XSSFColor(new Color(0xEF, 0xEF, 0xEF))
-  val WHITE = new XSSFColor(Color.WHITE)
+  val GREY = new XSSFColor(IndexedColors.GREY_25_PERCENT, new DefaultIndexedColorMap())
+  val WHITE = new XSSFColor(IndexedColors.WHITE, new DefaultIndexedColorMap())
   val CSV_HEADER = Seq("block name", "block id", "key", "label", "value", "unit of value", "resolution status")
   val HEADER_ROW_IDX = 0
   val FIRST_DATA_ROW_IDX = 1

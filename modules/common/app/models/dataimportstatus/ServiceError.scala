@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2019, EPFL/Human Brain Project PCO
+ *   Copyright (c) 2018, EPFL/Human Brain Project PCO
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -13,14 +13,6 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package models.excel
+package models.dataimportstatus
 
-/*
- * This class represent a node in a graph of linked Entities, used 1 step insertion
- */
-case class GraphNode(entity: Entity, children: Seq[GraphNode] = Seq.empty[GraphNode]) {
-
-  def addChild(newChild: GraphNode): GraphNode = {
-    this.copy(children = children :+ newChild)
-  }
-}
+final case class ServiceError(override val status: Int, override val msg: String) extends Error

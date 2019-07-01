@@ -139,19 +139,7 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService) {
             .flatMap { schemaCreationResponse =>
               schemaCreationResponse.status match {
                 case CREATED => // schema created, publish it
-                  Task
-                    .deferFuture(
-                      wSClient
-                        .url(s"$schemaUrl/config?rev=1")
-                        .addHttpHeaders("Authorization" -> token)
-                        .patch(
-                          Json.obj("published" -> JsBoolean(true))
-                        )
-                    )
-                    .map { publishResponse =>
-                      logger.debug(s"Publishing schemas ${publishResponse.body}")
-                      publishResponse
-                    }
+                  publishSchema(schemaUrl, token)
                 case _ =>
                   Task.pure(response)
               }
