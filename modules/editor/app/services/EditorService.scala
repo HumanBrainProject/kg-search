@@ -19,6 +19,7 @@ package services
 import com.google.inject.Inject
 import constants._
 import helpers._
+import cats.implicits._
 import models.errors.{APIEditorError, APIEditorMultiError}
 import models.instance._
 import models.specification.{FormRegistry, QuerySpec, UISpec}
@@ -337,38 +338,33 @@ class EditorService @Inject()(
       .map { res =>
         res.status match {
           case OK =>
-            Right(
-              res.json
-                .as[JsArray]
-                .value
-                .map(i => {
-                  val ref = NexusInstanceReference.fromUrl(getIdForPayload(i))
-                  NexusInstance(Some(ref.id), ref.nexusPath, i.as[JsObject])
-                })
-            )
+            res.json
+              .as[JsArray]
+              .value
+              .toList
+              .map(EditorService.getIdForPayload)
+              .sequence match {
+              case Some(listOfIds) =>
+                Right(
+                  listOfIds.map {
+                    case (instance, id) =>
+                      val ref = NexusInstanceReference.fromUrl(id)
+                      NexusInstance(Some(ref.id), ref.nexusPath, instance.as[JsObject])
+                  }
+                )
+              case None =>
+                Left(
+                  APIEditorError(
+                    INTERNAL_SERVER_ERROR,
+                    s"Was not able to find an id definition of the instance. To make proper use of this endpoint, " +
+                    s"you need either to define ${EditorService.atId}, ${EditorService.relativeURL}, " +
+                    s"${EditorService.editorId} or ${EditorService.simpleId} in your query!"
+                  )
+                )
+            }
           case _ => Left(APIEditorError(res.status, res.body))
         }
       }
-  }
-
-  def getIdForPayload(instance: JsValue): String = {
-    val atId = "@id"
-    val relativeURL = s"${EditorConstants.BASENAMESPACE}${EditorConstants.RELATIVEURL}"
-    val editorId = s"${EditorConstants.EDITORVOCAB}id"
-    val simpleId = "id"
-    if ((instance \ atId).isDefined) {
-      (instance \ atId).get.as[String]
-    } else if ((instance \ relativeURL).isDefined) {
-      (instance \ relativeURL).get.as[String]
-    } else if ((instance \ editorId).isDefined) {
-      (instance \ editorId).get.as[String]
-    } else if ((instance \ simpleId).isDefined) {
-      (instance \ simpleId).get.as[String]
-    } else {
-      throw new Exception(
-        s"Was not able to find an id definition of the instance. To make proper use of this endpoint, you need either to define $atId, $relativeURL, $editorId or $simpleId in your query!"
-      )
-    }
   }
 
   def deleteInstance(
@@ -381,6 +377,11 @@ class EditorService @Inject()(
 }
 
 object EditorService {
+
+  val atId = "@id"
+  val relativeURL = s"${EditorConstants.BASENAMESPACE}${EditorConstants.RELATIVEURL}"
+  val editorId = s"${EditorConstants.EDITORVOCAB}id"
+  val simpleId = "id"
 
   def computeUpdateTobeStored(
     currentInstanceDisplayed: NexusInstance,
@@ -398,6 +399,20 @@ object EditorService {
       instanceUpdateFromUser
     )
     InstanceHelper.removeEmptyFieldsNotInOriginal(cleanedOriginalInstance, diff)
+  }
+
+  def getIdForPayload(instance: JsValue): Option[(JsValue, String)] = {
+    if ((instance \ EditorService.atId).isDefined) {
+      Some(instance, (instance \ EditorService.atId).get.as[String])
+    } else if ((instance \ EditorService.relativeURL).isDefined) {
+      Some(instance, (instance \ EditorService.relativeURL).get.as[String])
+    } else if ((instance \ EditorService.editorId).isDefined) {
+      Some(instance, (instance \ EditorService.editorId).get.as[String])
+    } else if ((instance \ EditorService.simpleId).isDefined) {
+      Some(instance, (instance \ EditorService.simpleId).get.as[String])
+    } else {
+      None
+    }
   }
 
 }
