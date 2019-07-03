@@ -17,21 +17,17 @@
 package controllers
 
 import actions.EditorUserAction
-import cats.data.EitherT
-import constants.SchemaFieldsConstants
-import helpers._
 import javax.inject.{Inject, Singleton}
 import models._
 import models.instance._
 import monix.eval.Task
 import play.api.Logger
-import play.api.libs.json.Reads._
 import play.api.libs.json._
 import play.api.mvc._
 import services._
 import services.specification.FormService
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext}
 
 @Singleton
 class EditorController @Inject()(
@@ -51,74 +47,6 @@ class EditorController @Inject()(
   val logger = Logger(this.getClass)
 
   implicit val s = monix.execution.Scheduler.Implicits.global
-
-  /**
-    * Return a instance by its nexus ID
-    * The response is sent with a json object "back_link" with the path of the schema of the instance
-    * if the schema exists returns e.g myorg/mydomain/myschema otherwise returns an empty string
-    *
-    * @param org The organization of the instance
-    * @param domain The domain of the instance
-    * @param schema The schema of the instance
-    * @param version The version of the schema
-    * @param id The id of the instance
-    * @return An error message with a back_link or a form configuration populated with the instance information
-    */
-
-  def getInstance(
-    org: String,
-    domain: String,
-    schema: String,
-    version: String,
-    id: String,
-    databaseScope: Option[String]
-  ): Action[AnyContent] =
-    authenticatedUserAction.async { implicit request =>
-      val nexusInstanceReference = NexusInstanceReference(org, domain, schema, version, id)
-      formService
-        .getRegistries()
-        .flatMap { registries =>
-          editorService
-            .retrieveInstance(
-              nexusInstanceReference,
-              request.userToken,
-              registries.queryRegistry,
-              databaseScope
-            )
-            .flatMap {
-              case Left(error) =>
-                logger.error(
-                  s"Error: Could not fetch instance : ${nexusInstanceReference.nexusPath.toString()}/$id - ${error.content}"
-                )
-                Task.pure(error.toResult)
-              case Right(instance) =>
-                FormService
-                  .getFormStructure(
-                    nexusInstanceReference.nexusPath,
-                    instance.content,
-                    registries.formRegistry
-                  ) match {
-                  case JsNull =>
-                    Task.pure(NotImplemented("Form not implemented"))
-                  case instanceForm =>
-                    metadataService.getMetadata(nexusInstanceReference, instance).map {
-                      case Right(metadata) =>
-                        Ok(
-                          Json.toJson(
-                            EditorResponseObject(
-                              instanceForm.as[JsObject] ++ Json.obj("metadata" -> Json.toJson(metadata))
-                            )
-                          )
-                        )
-                      case Left(error) =>
-                        logger.error(error.toString)
-                        Ok(Json.toJson(EditorResponseObject(instanceForm.as[JsObject])))
-                    }
-                }
-            }
-        }
-        .runToFuture
-    }
 
   def deleteInstance(org: String, domain: String, schema: String, version: String, id: String): Action[AnyContent] =
     authenticatedUserAction.async { implicit request =>
@@ -144,21 +72,38 @@ class EditorController @Inject()(
           case Some(ids) =>
             editorService
               .retrieveInstancesByIds(ids, request.userToken, if (allFields) "editorFull" else "editorPreview")
-              .map {
-                case Left(err) => err.toResult
+              .flatMap {
+                case Left(err) => Task.pure(err.toResult)
                 case Right(ls) =>
                   if (allFields) {
-                    Ok(Json.toJson(EditorResponseObject(Json.toJson(ls.groupBy(_.id().get).map {
+                    val listOfIds: List[Task[Option[JsObject]]] = ls.groupBy(_.id().get).map {
                       case (k, v) =>
-                        FormService
-                          .getFormStructure(v.head.nexusPath, v.head.content, registries.formRegistry)
-                          .as[JsObject]
-                    }))))
+                      val formService: Task[Option[JsObject]] = FormService.getFormStructure(v.head.nexusPath, v.head.content, registries.formRegistry) match {
+                        case JsNull =>
+                          Task.pure(None)
+                        case instanceForm =>
+                          metadataService.getMetadata(v.head).map {
+                            case Right(metadata) =>
+                              Some(instanceForm.as[JsObject] ++ Json.obj("metadata" -> Json.toJson(metadata)))
+                            case Left(error) =>
+                              Some(instanceForm.as[JsObject])
+                          }
+                      }
+                      formService
+                    }.toList
+
+                    Task.sequence(listOfIds).map {
+                      l => val jsonList = l.collect{
+                        case Some(r) =>
+                          r
+                      }
+                        Ok(Json.toJson(EditorResponseObject(Json.toJson(jsonList))))
+                    }
                   } else {
                     val previews = ls.map(i => i.content.as[PreviewInstance].setLabel(registries.formRegistry)).toList
-                    Ok(
+                    Task.pure(Ok(
                       Json.toJson(EditorResponseObject(Json.toJson(previews)))
-                    )
+                    ))
                   }
               }
           case None => Task.pure(BadRequest("Missing body content"))
