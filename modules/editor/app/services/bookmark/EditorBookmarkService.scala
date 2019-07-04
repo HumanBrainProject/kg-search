@@ -233,6 +233,7 @@ class EditorBookmarkService @Inject()(
     bookmarkList: BookmarkList,
     bookmarkListRef: NexusInstanceReference,
     userFolderId: String,
+    newDate: Option[String],
     userId: String,
     token: AccessToken
   ): Task[Either[APIEditorError, BookmarkList]] = {
@@ -245,7 +246,7 @@ class EditorBookmarkService @Inject()(
           NexusInstance(
             Some(bookmarkListRef.id),
             bookmarkListRef.nexusPath,
-            EditorBookmarkService.bookmarkListToNexusStruct(bookmarkList.name, userFolderId)
+            EditorBookmarkService.bookmarkListToNexusStruct(bookmarkList.name, userFolderId, newDate)
           )
         ),
         token,
@@ -706,12 +707,18 @@ object EditorBookmarkService {
     )
   }
 
-  def bookmarkListToNexusStruct(name: String, userFolderId: String): JsObject = {
-    Json.obj(
-      SchemaFieldsConstants.NAME                                           -> name,
-      EditorConstants.EDITORNAMESPACE + EditorConstants.BOOKMARKLISTFOLDER -> Json.obj("@id" -> s"$userFolderId")
-    )
-  }
+  def bookmarkListToNexusStruct(name: String, userFolderId: String, newDate: Option[String] = None): JsObject =
+    newDate match  {
+      case Some(d) => Json.obj(
+        SchemaFieldsConstants.NAME                                           -> name,
+        EditorConstants.EDITORNAMESPACE + EditorConstants.BOOKMARKLISTFOLDER -> Json.obj("@id" -> s"$userFolderId"),
+        SchemaFieldsConstants.lastUpdate -> d
+      )
+      case None => Json.obj(
+        SchemaFieldsConstants.NAME                                           -> name,
+        EditorConstants.EDITORNAMESPACE + EditorConstants.BOOKMARKLISTFOLDER -> Json.obj("@id" -> s"$userFolderId")
+      )
+    }
 
   def bookmarkListFolderToNexusStruct(name: String, userNexusId: String, folderType: FolderType): JsObject = {
     Json.obj(

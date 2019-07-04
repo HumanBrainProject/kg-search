@@ -86,6 +86,7 @@ trait EditorBookmarkServiceInterface {
     bookmarkList: BookmarkList,
     bookmarkListRef: NexusInstanceReference,
     userFolderId: String,
+    newDate: Option[String],
     userId: String,
     token: AccessToken
   ): Task[Either[APIEditorError, BookmarkList]]

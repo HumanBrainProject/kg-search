@@ -24,6 +24,7 @@ import models.instance.NexusInstanceReference
 import models.user.EditorUser
 import models._
 import monix.eval.Task
+import org.joda.time.DateTime
 import play.api.Logger
 import play.api.libs.json._
 import play.api.mvc.{AnyContent, _}
@@ -197,18 +198,20 @@ class EditorUserController @Inject()(
             result <- editorUserListService.getBookmarkListById(ref, token).flatMap[Result] {
               case Left(error) => Task.pure(error.toResult)
               case Right((bookmarkList, userFolderId)) =>
+                val newDate = new DateTime().toDateTimeISO.toString
                 val updatedBookmarkList = bookmarkList.copy(name = newName)
                 editorUserListService
                   .updateBookmarkList(
                     updatedBookmarkList,
                     NexusInstanceReference(ref.nexusPath.withSpecificSubspace(config.editorSubSpace), id),
                     userFolderId,
+                    Some(newDate),
                     request.editorUser.nexusUser.id,
                     token
                   )
                   .map[Result] {
                     case Left(error) => error.toResult
-                    case Right(_)    => NoContent
+                    case Right(r) => Ok(Json.toJson(EditorResponseObject(Json.toJson(r))))
                   }
             }
           } yield result
