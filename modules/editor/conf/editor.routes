@@ -1,41 +1,4 @@
 ###
-#  summary: get a specific entity
-#  tags:
-#    - editor
-#  parameters:
-#  - name: org
-#    in: path
-#    description: organization the instance to retrieve
-#    required: true
-#    type: string
-#  - name: domain
-#    in: path
-#    description: domain of the instance to retrieve
-#    required: true
-#    type: string
-#  - name: schema
-#    in: path
-#    description: schema name
-#    required: true
-#    type: string
-#  - name: version
-#    in: path
-#    description: version of the instance to retrieve
-#    required: true
-#    type: string
-#  - name: id
-#    in: path
-#    description: the UUID of the instance to retrieve
-#    required: true
-#    type: string
-#  - in: header
-#    name: Authorization
-#    description: Authorization token
-#    required: false
-#    type: string
-###
-GET    /instance/:org/:domain/:schema/:version/:id                  controllers.EditorController.getInstance(org: String, domain:String, schema: String, version:String, id: String, databaseScope: Option[String])
-###
 #  summary: Delete a specific entity
 #  tags:
 #    - editor

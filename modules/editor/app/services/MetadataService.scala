@@ -18,7 +18,7 @@ package services
 import com.google.inject.Inject
 import constants.{InternalSchemaFieldsConstants, SchemaFieldsConstants}
 import models.errors.APIEditorError
-import models.instance.{EditorMetadata, NexusInstance, NexusInstanceReference}
+import models.instance.{EditorMetadata, NexusInstance}
 import models.user.IDMUser
 import monix.eval.Task
 import org.joda.time.DateTime
@@ -29,7 +29,6 @@ import scala.util.Try
 class MetadataService @Inject()(IDMAPIService: IDMAPIService, authService: OIDCAuthService, WSClient: WSClient) {
 
   def getMetadata(
-    nexusInstanceReference: NexusInstanceReference,
     instance: NexusInstance
   ): Task[Either[APIEditorError, EditorMetadata]] = {
     val (lastUpdaterIdOpt, createdByIdOpt, partialMetadata) = MetadataService.extractMetadataFromInstance(instance)
