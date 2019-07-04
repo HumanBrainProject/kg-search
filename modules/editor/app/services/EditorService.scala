@@ -58,13 +58,6 @@ class EditorService @Inject()(
     search: String,
     token: AccessToken
   ): Task[Either[APIEditorError, (List[PreviewInstance], Long)]] = {
-    val promotedFields = (for {
-      spec   <- formRegistry.registry.get(nexusPath)
-      uiInfo <- spec.uiInfo
-    } yield {
-      (uiInfo.promotedFields.headOption, uiInfo.promotedFields.tail.headOption)
-    }).getOrElse((None, None))
-
     queryService
       .getInstances(
         wSClient,

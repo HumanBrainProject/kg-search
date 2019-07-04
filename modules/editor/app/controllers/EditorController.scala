@@ -20,6 +20,7 @@ import actions.EditorUserAction
 import javax.inject.{Inject, Singleton}
 import models._
 import models.instance._
+import models.specification.{FormRegistry, UISpec}
 import monix.eval.Task
 import play.api.Logger
 import play.api.libs.json._
@@ -60,6 +61,30 @@ class EditorController @Inject()(
         .runToFuture
     }
 
+  private def getMetaDataByIds(
+    ls: Seq[NexusInstance],
+    formRegistry: FormRegistry[UISpec]
+  ): List[Task[Option[JsObject]]] = {
+    ls.groupBy(_.id().get)
+      .map {
+        case (_, v) =>
+          val formService: Task[Option[JsObject]] =
+            FormOp.getFormStructure(v.head.nexusPath, v.head.content, formRegistry) match {
+              case JsNull =>
+                Task.pure(None)
+              case instanceForm =>
+                metadataService.getMetadata(v.head).map {
+                  case Right(metadata) =>
+                    Some(instanceForm.as[JsObject] ++ Json.obj("metadata" -> Json.toJson(metadata)))
+                  case Left(_) =>
+                    Some(instanceForm.as[JsObject])
+                }
+            }
+          formService
+      }
+      .toList
+  }
+
   def getInstancesByIds(allFields: Boolean): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     val listOfIds = for {
       bodyContent <- request.body.asJson
@@ -76,31 +101,9 @@ class EditorController @Inject()(
                 case Left(err) => Task.pure(err.toResult)
                 case Right(ls) =>
                   if (allFields) {
-                    val listOfIds: List[Task[Option[JsObject]]] = ls
-                      .groupBy(_.id().get)
-                      .map {
-                        case (k, v) =>
-                          val formService: Task[Option[JsObject]] =
-                            FormOp.getFormStructure(v.head.nexusPath, v.head.content, registries.formRegistry) match {
-                              case JsNull =>
-                                Task.pure(None)
-                              case instanceForm =>
-                                metadataService.getMetadata(v.head).map {
-                                  case Right(metadata) =>
-                                    Some(instanceForm.as[JsObject] ++ Json.obj("metadata" -> Json.toJson(metadata)))
-                                  case Left(error) =>
-                                    Some(instanceForm.as[JsObject])
-                                }
-                            }
-                          formService
-                      }
-                      .toList
-
+                    val listOfIds: List[Task[Option[JsObject]]] = getMetaDataByIds(ls, registries.formRegistry)
                     Task.sequence(listOfIds).map { l =>
-                      val jsonList = l.collect {
-                        case Some(r) =>
-                          r
-                      }
+                      val jsonList = l.collect { case Some(r) => r }
                       Ok(Json.toJson(EditorResponseObject(Json.toJson(jsonList))))
                     }
                   } else {
