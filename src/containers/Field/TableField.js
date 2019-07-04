@@ -16,6 +16,7 @@
 
 import React, { PureComponent } from "react";
 import { Field, PrintViewField } from "../Field";
+import { ValueField } from "../Field/ValueField";
 import { LIST_SMALL_SIZE_STOP,
   getNextSizeStop,
   getFilteredItems,
@@ -27,10 +28,18 @@ const CustomTableRow = ({item, viewComponent}) => {
   let Component = viewComponent;
   return (
     <tr>
-      {item.map((i, id) =>
-        <th key={`${i.name}-${id}`}>{i.data ?
-          <Component name={i.name} data={i.data} mapping={i.mapping} group={i.group} />:"-"}</th>
-      )}
+      { Array.isArray(item)?
+        item.map((i, id) =>
+          <th key={`${i.name}-${id}`}>{i.data ?
+            <Component name={i.name} data={i.data} mapping={i.mapping} group={i.group} />:"-"}</th>
+        ):item.data ?
+          <React.Fragment>
+            <th className="kg-table__filecol">
+              <ValueField show={true} data={item.data} mapping={item.mapping} group={item.group} />
+            </th>
+            <th>{item.data.fileSize ? item.data.fileSize:"-"}</th>
+          </React.Fragment>:<th>-</th>
+      }
     </tr>
   );
 };
@@ -39,8 +48,8 @@ const TableFieldBase = (renderUserInteractions = true) => {
 
   const TableFieldComponent = ({list, showToggle, toggleHandler, toggleLabel}) => {
     const FieldComponent = renderUserInteractions?Field:PrintViewField;
-
     const fields = list.map(item =>
+    {return item.isObject ?
       Object.entries(item.mapping.children)
         .filter(([, mapping]) =>
           mapping && mapping.visible
@@ -50,28 +59,46 @@ const TableFieldBase = (renderUserInteractions = true) => {
           data: item.data && item.data[name],
           mapping: mapping,
           group: item.group
-        }))
+        })): item;
+    }
     );
 
     return (
-      fields && fields[0] ?
+      fields && Array.isArray(fields[0]) ?
+        (fields && fields[0] ?
+          <table className="table">
+            <thead>
+              <tr>
+                {fields[0].map((el,id) =>
+                  <th key={`${el.name}-${id}`}>{el.mapping.value}</th>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {fields.map((item, index) => <CustomTableRow key={`${index}`}  item={item} isFirst={!index} viewComponent={FieldComponent} />)}
+              {showToggle && (
+                <tr>
+                  <th><button className="kgs-field__viewMore-button" onClick={toggleHandler} role="link">{toggleLabel}</button></th>
+                </tr>
+              )}
+            </tbody>
+          </table>:null) :
         <table className="table">
           <thead>
             <tr>
-              {fields[0].map((el,id) =>
-                <th key={`${el.name}-${id}`}>{el.mapping.value}</th>
-              )}
+              <th>Filename</th>
+              <th>Size</th>
             </tr>
           </thead>
           <tbody>
-            {fields.map((item, index) => <CustomTableRow key={`${index}`}  item={item} isFirst={!index} viewComponent={FieldComponent}/>)}
+            {fields.map((item, index) => <CustomTableRow key={`${index}`}  item={item} isFirst={!index} viewComponent={FieldComponent} />)}
             {showToggle && (
               <tr>
                 <th><button className="kgs-field__viewMore-button" onClick={toggleHandler} role="link">{toggleLabel}</button></th>
               </tr>
             )}
           </tbody>
-        </table>:null
+        </table>
     );
   };
 

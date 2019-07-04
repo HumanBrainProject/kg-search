@@ -39,8 +39,21 @@
     display: block;
 }
 
+.kgs-field__table .table .field-value > .field-filesize {
+    display: none;
+}
+
+.kg-table__filecol {
+    width: 80%;
+}
+
 @media (min-width: 992px) {
     .kgs-field__table .table {
         display: table;
     }
+
+    .kgs-field__table > .field-value {
+        display: none;
+    }
+
  }
