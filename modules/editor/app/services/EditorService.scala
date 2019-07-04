@@ -33,7 +33,7 @@ import play.api.libs.json.{JsArray, JsObject, JsValue, Json}
 import play.api.libs.ws.WSClient
 import services.instance.InstanceApiService
 import services.query.{QueryApiParameter, QueryService}
-import services.specification.{FormRegistries, FormService}
+import services.specification.{FormOp, FormRegistries, FormService}
 
 class EditorService @Inject()(
   wSClient: WSClient,
@@ -96,7 +96,7 @@ class EditorService @Inject()(
     token: AccessToken
   ): Task[Either[APIEditorError, NexusInstanceReference]] = {
     val modifiedContent =
-      FormService.removeClientKeysCorrectLinks(newInstance.content.as[JsValue], config.nexusEndpoint)
+      FormOp.removeClientKeysCorrectLinks(newInstance.content.as[JsValue], config.nexusEndpoint)
     instanceApiService
       .post(wSClient, config.kgQueryEndpoint, newInstance.copy(content = modifiedContent), user.map(_.id), token)
       .map {
@@ -310,7 +310,7 @@ class EditorService @Inject()(
           }
         case Right(instance) =>
           val mergeInstanceWithPreviousUserUpdate = EditorInstance(
-            InstanceHelper
+            InstanceOp
               .removeInternalFields(instance)
               .merge(updateToBeStored.nexusInstance)
           )
@@ -389,16 +389,16 @@ object EditorService {
     nexusEndpoint: String
   ): EditorInstance = {
     val cleanedOriginalInstance =
-      InstanceHelper.removeInternalFields(currentInstanceDisplayed)
+      InstanceOp.removeInternalFields(currentInstanceDisplayed)
     val instanceUpdateFromUser =
-      FormService.buildInstanceFromForm(cleanedOriginalInstance, updateFromUser, nexusEndpoint)
+      FormOp.buildInstanceFromForm(cleanedOriginalInstance, updateFromUser, nexusEndpoint)
     val currentInstanceWithSameFormatAsNewValue =
-      FormService.removeClientKeysCorrectLinks(cleanedOriginalInstance.content, nexusEndpoint)
-    val diff = InstanceHelper.buildDiffEntity(
+      FormOp.removeClientKeysCorrectLinks(cleanedOriginalInstance.content, nexusEndpoint)
+    val diff = InstanceOp.buildDiffEntity(
       cleanedOriginalInstance.copy(content = currentInstanceWithSameFormatAsNewValue),
       instanceUpdateFromUser
     )
-    InstanceHelper.removeEmptyFieldsNotInOriginal(cleanedOriginalInstance, diff)
+    InstanceOp.removeEmptyFieldsNotInOriginal(cleanedOriginalInstance, diff)
   }
 
   def getIdForPayload(instance: JsValue): Option[(JsValue, String)] = {

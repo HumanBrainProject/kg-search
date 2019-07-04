@@ -21,7 +21,7 @@ import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.libs.json.{JsArray, JsNull, Json}
 
-class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
+class InstanceOpSpec extends PlaySpec with GuiceOneAppPerSuite {
   val id = "123"
   val reconId = "321"
   val path = NexusPath("org", "domain", "schema", "version")
@@ -55,7 +55,7 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
           )
         )
       )
-      val res = InstanceHelper.buildDiffEntity(original, newInstance)
+      val res = InstanceOp.buildDiffEntity(original, newInstance)
 
       res mustBe expected
     }
@@ -79,7 +79,7 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
         content
       )
 
-      val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance)
+      val res = InstanceOp.buildDiffEntity(currentlyDisplayedInstance, newInstance)
 
       val expected = EditorInstance(
         NexusInstance(
@@ -111,7 +111,7 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
         )
       )
 
-      val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance)
+      val res = InstanceOp.buildDiffEntity(currentlyDisplayedInstance, newInstance)
 
       val expected = EditorInstance(
         NexusInstance(
@@ -167,7 +167,7 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
         )
       )
 
-      val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance)
+      val res = InstanceOp.buildDiffEntity(currentlyDisplayedInstance, newInstance)
 
       val expected = EditorInstance(
         NexusInstance(
@@ -248,7 +248,7 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
         )
       )
 
-      val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance)
+      val res = InstanceOp.buildDiffEntity(currentlyDisplayedInstance, newInstance)
 
       res mustBe expected
     }
@@ -292,7 +292,7 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
         )
       )
 
-      val res = InstanceHelper.buildDiffEntity(currentlyDisplayedInstance, newInstance)
+      val res = InstanceOp.buildDiffEntity(currentlyDisplayedInstance, newInstance)
 
       res mustBe expected
     }
@@ -317,7 +317,7 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
         )
       )
 
-      val res = InstanceHelper.removeEmptyFieldsNotInOriginal(instance, update)
+      val res = InstanceOp.removeEmptyFieldsNotInOriginal(instance, update)
 
       res.nexusInstance.content mustBe Json.obj()
     }
@@ -332,7 +332,7 @@ class InstanceHelperSpec extends PlaySpec with GuiceOneAppPerSuite {
           Json.obj("array" -> Json.toJson(List(Json.obj("@id" -> "test"))))
         )
       )
-      val res = InstanceHelper.removeEmptyFieldsNotInOriginal(instance, update)
+      val res = InstanceOp.removeEmptyFieldsNotInOriginal(instance, update)
       res.nexusInstance.content mustBe Json.obj()
     }
   }

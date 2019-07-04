@@ -15,28 +15,24 @@
  */
 package controllers
 
+import java.io.{ByteArrayOutputStream, FileInputStream}
+
 import akka.stream.scaladsl.Source
 import akka.util.ByteString
-import helpers.excel.{ExcelImportHelper, ExcelMindsImportHelper, ExcelUnimindsImportHelper}
-import helpers.excel.ExcelUnimindsExportHelper
-import services.InsertionService
-import java.io.ByteArrayOutputStream
-import java.io.FileInputStream
-
-import services.ConfigurationService
+import helpers.excel.{ExcelImportHelper, ExcelMindsImportHelper, ExcelUnimindsExportHelper, ExcelUnimindsImportHelper}
 import javax.inject.{Inject, Singleton}
 import models.excel.Entity
-import services.NexusService
+import monix.eval.Task
 import org.apache.poi.xssf.usermodel._
+import play.api.Logger
 import play.api.http.HttpEntity
 import play.api.libs.Files
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
 import play.api.mvc._
-import play.api.{Configuration, Logger}
+import services.{ConfigurationService, InsertionService, NexusService}
 
 import scala.collection.immutable.HashSet
-import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ExcelImportController @Inject()(
@@ -44,7 +40,7 @@ class ExcelImportController @Inject()(
   config: ConfigurationService,
   insertionService: InsertionService,
   nexusService: NexusService
-)(implicit ec: ExecutionContext, ws: WSClient)
+)(ws: WSClient)
     extends AbstractController(cc) {
 
   val xlsxMime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -53,71 +49,78 @@ class ExcelImportController @Inject()(
   val AcceptsXlsx = Accepting(xlsxMime)
   val AcceptsXls = Accepting(xlsMime)
   val AcceptsCsv = Accepting(csvMime)
+  implicit val scheduler = monix.execution.Scheduler.Implicits.global
 
   val logger = Logger(this.getClass)
 
-  def extractMindsDataFromExcel(action: Option[String]) = Action.async(parse.temporaryFile) { request =>
-    val path = request.body.path
-    val fis = new FileInputStream(path.toFile)
+  def extractMindsDataFromExcel(action: Option[String]): Action[Files.TemporaryFile] =
+    Action.async(parse.temporaryFile) { request =>
+      val path = request.body.path
+      val fis = new FileInputStream(path.toFile)
 
-    val wb = new XSSFWorkbook(fis)
-    ExcelImportHelper.formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator()
-    val jsonData = ExcelMindsImportHelper.buildJsonMindsDataFromExcel(wb)
+      val wb = new XSSFWorkbook(fis)
+      ExcelImportHelper.formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator()
+      val jsonData = ExcelMindsImportHelper.buildJsonMindsDataFromExcel(wb)
 
-    action.getOrElse(ExcelImportHelper.actionPreview) match {
-      case ExcelImportHelper.actionInsert =>
-        val tokenOpt = request.headers.toSimpleMap.get("Authorization")
-        tokenOpt match {
-          case Some(token) =>
-            insertionService.insertMindsEntities(jsonData, config.nexusEndpoint, token).map { res =>
-              Ok(JsObject(Seq(("insertion result", JsArray(res)))))
-            }
-          case None =>
-            Future.successful(
-              Ok(
-                Json
-                  .parse(
-                    "{\"error\": \"You're not allowed to write in KG dataworkbench space. Please check your access token\"}"
-                  )
-                  .as[JsObject]
+      val result = action.getOrElse(ExcelImportHelper.actionPreview) match {
+        case ExcelImportHelper.actionInsert =>
+          val tokenOpt = request.headers.toSimpleMap.get("Authorization")
+          tokenOpt match {
+            case Some(token) =>
+              insertionService
+                .insertMindsEntities(jsonData, config.nexusEndpoint, token)
+                .map { res =>
+                  Ok(JsObject(Seq(("insertion result", JsArray(res)))))
+                }
+            case None =>
+              Task.pure(
+                Ok(
+                  Json
+                    .parse(
+                      "{\"error\": \"You're not allowed to write in KG dataworkbench space. Please check your access token\"}"
+                    )
+                    .as[JsObject]
+                )
               )
-            )
-        }
-      case _ =>
-        // insert elements SpecimenGroup, Activity and Dataset from jsonData
-        Future.successful(Ok(jsonData))
+          }
+        case _ =>
+          // insert elements SpecimenGroup, Activity and Dataset from jsonData
+          Task.pure(Ok(jsonData))
+      }
+      result.runToFuture
     }
-  }
 
-  def extractUnimindsDataFromExcel(action: Option[String]) = Action.async(parse.multipartFormData) { implicit request =>
-    action.getOrElse(ExcelImportHelper.actionPreview) match {
-      case ExcelImportHelper.actionInsert =>
-        val tokenOpt = request.headers.toSimpleMap.get("Authorization")
-        tokenOpt match {
-          case Some(token) =>
-            val dataOpt = extractDataFromRequestInput()
-            dataOpt match {
-              case Some((filename, data)) =>
-                handleInsertRequest(filename, data, token)
-              case None =>
-                Future.successful(Ok("ERROR - please provide a file using mulitpart-form with inputFile as key"))
-            }
-          case None =>
-            Future.successful(
-              Ok(
-                "ERROR - You're not allowed to write in KG uniminds space. Please check your access token or contact KG admins"
+  def extractUnimindsDataFromExcel(action: Option[String]): Action[MultipartFormData[Files.TemporaryFile]] =
+    Action.async(parse.multipartFormData) { implicit request =>
+      val result = action.getOrElse(ExcelImportHelper.actionPreview) match {
+        case ExcelImportHelper.actionInsert =>
+          val tokenOpt = request.headers.toSimpleMap.get("Authorization")
+          tokenOpt match {
+            case Some(token) =>
+              val dataOpt = extractDataFromRequestInput()
+              dataOpt match {
+                case Some((filename, data)) =>
+                  handleInsertRequest(filename, data, token)
+                case None =>
+                  Task.pure(Ok("ERROR - please provide a file using mulitpart-form with inputFile as key"))
+              }
+            case None =>
+              Task.pure(
+                Ok(
+                  "ERROR - You're not allowed to write in KG uniminds space. Please check your access token or contact KG admins"
+                )
               )
-            )
-        }
-      case _ => // preview output
-        extractDataFromRequestInput() match {
-          case Some((fileName, data)) =>
-            handlePreviewRequest(fileName, data)
-          case None =>
-            Future.successful(Ok("ERROR - please provide a file using mulitpart-form with inputFile as key"))
-        }
+          }
+        case _ => // preview output
+          extractDataFromRequestInput() match {
+            case Some((fileName, data)) =>
+              handlePreviewRequest(fileName, data)
+            case None =>
+              Task.pure(Ok("ERROR - please provide a file using mulitpart-form with inputFile as key"))
+          }
+      }
+      result.runToFuture
     }
-  }
 
   def extractDataFromRequestInput()(
     implicit request: Request[MultipartFormData[Files.TemporaryFile]]
@@ -200,7 +203,7 @@ class ExcelImportController @Inject()(
 
   def handleInsertRequest(inputFilename: String, data: Seq[Entity], token: String)(
     implicit request: Request[MultipartFormData[Files.TemporaryFile]]
-  ): Future[Result] = {
+  ): Task[Result] = {
     val outputFileBaseName = inputFilename.substring(0, inputFilename.indexOf('.'))
     insertionService.insertUnimindsDataInKG(config.nexusEndpoint, data, token).map { res =>
       // sort output
@@ -221,11 +224,11 @@ class ExcelImportController @Inject()(
 
   def handlePreviewRequest(fileName: String, data: Seq[Entity])(
     implicit request: Request[MultipartFormData[Files.TemporaryFile]]
-  ): Future[Result] = {
+  ): Task[Result] = {
     val outputFileBaseName = fileName.substring(0, fileName.indexOf('.'))
     val refData = HashSet(data.map(_.localId): _*)
     val previewValidatedData = data.map(e => e.checkInternalLinksValidity(refData))
-    Future.successful(
+    Task.pure(
       render {
         case AcceptsXlsx() | AcceptsXls() =>
           renderExcel(outputFileBaseName, previewValidatedData)
