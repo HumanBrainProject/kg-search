@@ -22,6 +22,7 @@ import monix.eval.Task
 import play.api.Logger
 import play.api.cache.AsyncCacheApi
 
+import scala.concurrent.duration.Duration
 import scala.reflect.ClassTag
 
 trait CacheService {
@@ -32,7 +33,9 @@ trait CacheService {
     orElse: => Task[Option[A]]
   ): Task[Option[A]] = {
     get[A](cache, key).flatMap {
-      case Some(elem) => Task.pure(elem.some)
+      case Some(elem) =>
+        log.debug(s"Cache element found in cache")
+        Task.pure(elem.some)
       case None =>
         log.debug("Cache element not found executing orElse")
         orElse
@@ -43,7 +46,7 @@ trait CacheService {
 
   def clearCache(cache: AsyncCacheApi): Task[Done] = Task.deferFuture(cache.removeAll())
 
-  def set[A: ClassTag](cache: AsyncCacheApi, key: String, value: A): Task[Done] = {
-    Task.deferFuture(cache.set(key, value))
+  def set[A: ClassTag](cache: AsyncCacheApi, key: String, value: A, ttl: Duration = Duration.Inf): Task[Done] = {
+    Task.deferFuture(cache.set(key, value, ttl))
   }
 }
