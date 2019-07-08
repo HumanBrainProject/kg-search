@@ -11,6 +11,13 @@ POST    /dataworkbench/extractDataFromExcel           controllers.ExcelImportCon
 
 ###
 #  summary: insert uniminds data from excel file
+#  description: |
+#    When importing an Excel sheet through this API be aware:
+#    * the BLOCK IDs should **NOT** contain white spaces.
+#    * self reference is not implemented.
+#    * reference to local instance should be done with the **EXACT** BLOCK ID.
+#    * If needed you can specify a proper sub domain for an instance in the BLOCK NAME colunm as ${DOMAIN}/${DATATYPE} e.g. method/paradigm.
+#    * before inserting data, use the `preview` action to verify the validate of your Excel file. If a local reference is **NOT FOUND** the import may fail.
 #  consumes:
 #    - multipart/form-data
 #  produces:
@@ -18,13 +25,18 @@ POST    /dataworkbench/extractDataFromExcel           controllers.ExcelImportCon
 #    - text/csv
 #    - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 #  parameters:
+#  - in: query
+#    name: action
+#    type: string
+#    enum: [insert, preview]
+#    description: The action the service should undertake.
 #  - in: formData
 #    name: inputFile
 #    type: file
 #    description: Excel file following Uniminds format.
 #  - in: header
 #    name: Authorization
-#    description: Authorization token
+#    description: Authorization token in the format **Bearer YOUR_TOKEN**
 #    required: false
 #    type: string
 #  responses:

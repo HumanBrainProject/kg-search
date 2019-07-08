@@ -15,19 +15,26 @@
  */
 package models.excel
 
-import play.api.libs.json._
+import constants.SchemaFieldsConstants
 import helpers.NexusHelper
-import services.NexusService
+import helpers.excel.ExcelUnimindsImportHelper
+import models.NexusPath
+import models.excel.Entity._
+import monix.eval.Task
 import org.apache.poi.ss.usermodel.CellStyle
 import org.apache.poi.xssf.usermodel.XSSFSheet
+import play.api.libs.json._
+import services.NexusService
 
 import scala.collection.immutable.HashSet
-import scala.concurrent.{ExecutionContext, Future}
-import Entity._
-import constants.SchemaFieldsConstants
-import helpers.excel.ExcelUnimindsImportHelper
 
-case class Entity(rawType: String, localId: String, rawContent: Map[String, Value], status: Option[String] = None) {
+case class Entity(
+  rawType: String,
+  localId: String,
+  rawContent: Map[String, Value],
+  path: Option[NexusPath] = None,
+  status: Option[String] = None
+) {
   def `type` = rawType.toLowerCase.trim
 
   def buildValidKey(key: String): String = {
@@ -68,16 +75,25 @@ case class Entity(rawType: String, localId: String, rawContent: Map[String, Valu
           val jsonBlock = value.toJsonLd()
           jsonBlock match {
             case JsNull => None
-            case _      => Some((s"http://hbp.eu/${ExcelUnimindsImportHelper.unimindsOrg}#$key", jsonBlock))
+            case _ =>
+              this.path match {
+                case Some(p) =>
+                  Some((s"http://hbp.eu/${ExcelUnimindsImportHelper.unimindsOrg}/${p.schema.capitalize}", jsonBlock))
+                case None => None
+              }
           }
         } else {
           Some((key, value.toJsonLd()))
         }
     }.toSeq
     val identifier = JsString(NexusHelper.hash(s"${`type`}$localId"))
+    val schemaType = path match {
+      case Some(p) => JsString(s"http://hbp.eu/${ExcelUnimindsImportHelper.unimindsOrg}/${p.schema.capitalize}")
+      case None    => JsString("")
+    }
     JsObject(
       originalContent :+
-      ("@type", JsString(s"http://hbp.eu/${ExcelUnimindsImportHelper.unimindsOrg}#${`type`.capitalize}")) :+
+      ("@type", schemaType) :+
       (SchemaFieldsConstants.IDENTIFIER, identifier)
     )
   }
@@ -99,16 +115,16 @@ case class Entity(rawType: String, localId: String, rawContent: Map[String, Valu
     newStatus: Option[String] = None,
     token: String,
     nexusService: NexusService
-  )(implicit ec: ExecutionContext): Future[Entity] = {
+  ): Task[Entity] = {
     // links validation
-    val validatedContentFut = content.foldLeft(Future.successful(Map.empty[String, Value])) {
+    val validatedContentFut = content.foldLeft(Task.pure(Map.empty[String, Value])) {
       case (contentFut, (key, value)) =>
         contentFut.flatMap(
           content =>
             if (isLink(key)) {
               value.validateValue(token, nexusService).map(value => content.+((key, value)))
             } else {
-              Future.successful(content.+((key, value)))
+              Task.pure(content.+((key, value)))
           }
         )
     }
@@ -180,7 +196,7 @@ case class Entity(rawType: String, localId: String, rawContent: Map[String, Valu
 
   /* copy entity with a new rawContent ensuring externalId, computed from rawContent, is not lost */
   def copyWithID(newContent: Map[String, Value], statusOpt: Option[String] = None): Entity = {
-    val newStatus = statusOpt.map(Some(_)).getOrElse(status)
+    val newStatus = statusOpt.orElse(status)
 
     newContent.get(ID_LABEL) match {
       case None if externalId != None =>

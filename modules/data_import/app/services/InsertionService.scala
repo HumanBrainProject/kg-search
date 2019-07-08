@@ -16,50 +16,59 @@
 package services
 
 import com.google.inject.Inject
-import models.excel.{Entity, Value}
+import constants.SchemaFieldsConstants
+import helpers.excel.ExcelInsertionHelper
+import helpers.excel.ExcelMindsImportHelper._
+import models.NexusPath
 import models.excel.CommonVars._
+import models.excel.Entity
+import models.excel.Entity.isNexusLink
+import models.excel.Value.DEFAULT_RESOLUTION_STATUS
+import models.dataimportstatus.{DataImportStatus, ErrorStatus, SuccessStatus}
+import monix.eval.Task
 import play.api.Logger
 import play.api.http.Status.{CREATED, OK}
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
-
-import scala.concurrent.{ExecutionContext, Future}
-import Entity.isNexusLink
-import Value.DEFAULT_RESOLUTION_STATUS
-import constants.SchemaFieldsConstants
-import helpers.excel.{ExcelInsertionHelper, ExcelUnimindsImportHelper}
-import models.NexusPath
 import services.NexusService._
-import helpers.excel.ExcelMindsImportHelper._
 
-class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService)(
-  implicit executionContext: ExecutionContext
-) {
+import scala.util.Try
+
+class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService) {
 
   val logger = Logger(this.getClass)
 
   def nexusResponseToStatus(
-    nexusResponse: Future[WSResponse],
+    nexusResponse: Task[WSResponse],
     operation: String
-  ): Future[Either[(String, JsValue), String]] = {
+  ): Task[Either[ErrorStatus, (SuccessStatus, JsValue)]] = {
     nexusResponse.map { response =>
       response.status match {
         case OK | CREATED =>
-          Left((operation, response.json))
+          Right((SuccessStatus(label = operation), response.json))
         case _ =>
-          Right(response.bodyAsBytes.utf8String)
+          logger.debug(response.body)
+          val errorMsg = Try {
+            (Json.parse(response.body).as[JsObject] \ "code").as[String]
+          }.toOption match {
+            case Some(code) => ErrorStatus(label = code, message = response.body)
+            case None       => ErrorStatus(label = operation, message = response.bodyAsBytes.utf8String)
+          }
+          Left(errorMsg)
       }
     }
   }
 
   def insertEntity(
     nexusUrl: String,
-    nexusPath: NexusPath,
+    nexusPath: Option[NexusPath],
     payload: JsObject,
     instanceId: String,
     token: String
-  ): Future[Either[(String, JsValue), String]] = {
-    nexusResponseToStatus(nexusService.insertInstance(nexusUrl, nexusPath, payload, token), INSERT)
+  ): Task[Either[ErrorStatus, (SuccessStatus, JsValue)]] = nexusPath match {
+    case Some(path) =>
+      nexusResponseToStatus(nexusService.insertInstance(nexusUrl, path, payload, token), INSERT)
+    case None => Task.pure(Left(ErrorStatus(label = "Invalid entity path", message = "")))
   }
 
   def updateEntity(
@@ -67,10 +76,10 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService)
     rev: Option[Long],
     payload: JsObject,
     token: String
-  ): Future[Either[(String, JsValue), String]] = {
+  ): Task[Either[ErrorStatus, (SuccessStatus, JsValue)]] = {
     nexusService.updateInstance(instanceLink, rev, payload, token).flatMap {
       case (operation, response) =>
-        nexusResponseToStatus(Future.successful(response), operation)
+        nexusResponseToStatus(Task.pure(response), operation)
     }
   }
 
@@ -80,7 +89,7 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService)
     payload: JsObject,
     instanceId: String,
     token: String
-  ): Future[Either[(String, JsValue), String]] = {
+  ): Task[Either[ErrorStatus, (SuccessStatus, JsValue)]] = {
     val identifier = (payload \ SchemaFieldsConstants.IDENTIFIER).as[String]
     nexusService.insertOrUpdateInstance(nexusUrl, nexusPath, payload, identifier, token).flatMap {
       case (operation, idOpt, responseOpt) =>
@@ -88,7 +97,7 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService)
           case Some(response) =>
             nexusResponseToStatus(response, operation)
           case None => // corresponds to ignore operation. Manually build JsValue to forward needed info like id
-            Future.successful(Left((operation, JsObject(Map("@id" -> JsString(idOpt.getOrElse("")))))))
+            Task.pure(Right((SuccessStatus(label = operation), JsObject(Map("@id" -> JsString(idOpt.getOrElse("")))))))
         }
     }
   }
@@ -107,23 +116,17 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService)
     nexusUrl: String,
     entity: Entity,
     token: String
-  ): Future[Either[(String, JsValue), String]] = {
+  ): Task[Either[ErrorStatus, (SuccessStatus, JsValue)]] = {
     val payload = entity.toJsonLd()
-    val path = NexusPath(
-      ExcelUnimindsImportHelper.unimindsOrg,
-      ExcelUnimindsImportHelper.unimindsDomain,
-      entity.`type`,
-      ExcelUnimindsImportHelper.unimindsVersion
-    )
     entity.externalId match {
       case Some(idValue) =>
         if (isNexusLink(idValue)) {
           updateEntity(idValue, None, payload, token)
         } else {
-          insertEntity(nexusUrl, path, payload, entity.localId, token)
+          insertEntity(nexusUrl, entity.path, payload, entity.localId, token)
         }
       case None => // INSERT
-        insertEntity(nexusUrl, path, payload, entity.localId, token)
+        insertEntity(nexusUrl, entity.path, payload, entity.localId, token)
     }
   }
 
@@ -132,19 +135,19 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService)
     entityType: String,
     payload: JsObject,
     token: String
-  ): Future[Either[(String, JsValue), String]] = {
+  ): Task[Either[ErrorStatus, (SuccessStatus, JsValue)]] = {
     val path = NexusPath("excel", "core", entityType, "v0.0.1")
     insertOrUpdateEntity(nexusUrl, path, payload, "", token)
   }
 
-  def insertMindsEntities(jsonData: JsObject, nexusEndpoint: String, token: String): Future[Seq[JsObject]] = {
+  def insertMindsEntities(jsonData: JsObject, nexusEndpoint: String, token: String): Task[Seq[JsObject]] = {
     val activityPayload = formatEntityPayload((jsonData \ activityLabel).as[JsObject], activityLabel)
     val specimenGroupPayload = formatEntityPayload((jsonData \ specimenGroupLabel).as[JsObject], specimengroupLabel)
 
     val firstTodo =
       Seq((activityPayload, activityLabel.toLowerCase), (specimenGroupPayload, specimenGroupLabel.toLowerCase))
     // use foldleft to ensure sequential ingestion of resources and build a valid archive
-    val firstResultFuture = firstTodo.foldLeft(Future.successful[Seq[JsObject]](Seq.empty[JsObject])) {
+    val firstResultFuture = firstTodo.foldLeft(Task[Seq[JsObject]](Seq.empty[JsObject])) {
       case (futureRes, (payload, entityType)) =>
         futureRes.flatMap { res =>
           buildinsertionResult(payload, entityType, insertMindsEntity(nexusEndpoint, entityType, payload, token)).map {
@@ -173,13 +176,16 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService)
     }
   }
 
-  def retrieveEntityDetails(url: String, id: String, token: String): Future[Option[(String, Int, JsObject)]] = {
-    wSClient
-      .url(
-        s"""$url/?deprecated=false&fields=all&filter={"op":"eq","path":"${SchemaFieldsConstants.IDENTIFIER}","value":"$id"}"""
+  def retrieveEntityDetails(url: String, id: String, token: String): Task[Option[(String, Int, JsObject)]] = {
+    Task
+      .deferFuture(
+        wSClient
+          .url(
+            s"""$url/?deprecated=false&fields=all&filter={"op":"eq","path":"${SchemaFieldsConstants.IDENTIFIER}","value":"$id"}"""
+          )
+          .addHttpHeaders("Authorization" -> token)
+          .get()
       )
-      .addHttpHeaders("Authorization" -> token)
-      .get()
       .map { result =>
         val content = result.json.as[JsObject]
         val total = (content \ "total").as[Int]
@@ -201,18 +207,18 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService)
   def buildinsertionResult(
     payload: JsObject,
     entityType: String,
-    result: Future[Either[(String, JsValue), String]]
-  ): Future[JsObject] = {
+    result: Task[Either[ErrorStatus, (SuccessStatus, JsValue)]]
+  ): Task[JsObject] = {
     result.map { res =>
       val (statusString, linkOpt) = res match {
-        case Left((status, jsonResponse)) =>
-          status match {
+        case Right((status, jsonResponse)) =>
+          status.label match {
             case SKIP   => ("skipped", Some((jsonResponse \ "@id").as[String]))
             case UPDATE => ("updated", Some((jsonResponse \ "@id").as[String]))
             case INSERT => ("inserted", Some((jsonResponse \ "@id").as[String]))
             case ERROR  => (s"failed", None)
           }
-        case Right(errorMessage) =>
+        case Left(_) =>
           ("failed", None)
       }
       val entityId = (payload \ SchemaFieldsConstants.IDENTIFIER).as[String]
@@ -231,65 +237,103 @@ class InsertionService @Inject()(wSClient: WSClient, nexusService: NexusService)
     }
   }
 
-  def insertUnimindsDataInKG(nexusEndPoint: String, data: Seq[Entity], token: String): Future[Seq[Entity]] = {
+  /**
+    *  Create schema if it does not exists and publish it. The domain will also be created if needed
+    * @param paths All the paths of the entities the could contain non existant schemas
+    * @param nexusEndPoint the base url of the DB
+    * @param token the user token
+    * @return A list of schema to insert
+    */
+  private def createSchemas(paths: Seq[NexusPath], nexusEndPoint: String, token: String): Seq[Task[String]] = {
+    paths.foldLeft(Seq[Task[String]]()) {
+      case (l, path) =>
+        val task =
+          nexusService.createDomain(nexusEndPoint, path.org, path.domain, "Domain for ${path.domain}", token).flatMap {
+            _ =>
+              nexusService.createSimpleSchema(nexusEndPoint, path, token).map { response =>
+                logger.debug(s"${response.status}: ${response.body}")
+                s"${response.status}: ${response.body}"
+              }
+          }
+        l :+ task
+    }
+  }
+
+  /**
+    *
+    * @param insertSeq
+    * @param nexusEndPoint
+    * @param token
+    * @return
+    */
+  private def insertEntities(
+    insertSeq: Seq[Entity],
+    nexusEndPoint: String,
+    token: String
+  ): Task[Seq[Entity]] = {
+    val linksRef = collection.mutable.Map.empty[String, String]
+    insertSeq.foldLeft(Task.pure(Seq.empty[Entity])) {
+      case (statusSeqFut, entity) =>
+        statusSeqFut.flatMap { statusSeq =>
+          val resolvedEntity = entity.resolveLinks(linksRef)
+          insertUnimindsEntity(nexusEndPoint, resolvedEntity, token).flatMap {
+            case Right((operation, jsonResponse)) =>
+              val instanceLink = (jsonResponse \ "@id").as[String]
+              linksRef.put(entity.localId, instanceLink)
+              validateLinksAndStatus(operation, resolvedEntity, statusSeq, Some(instanceLink), token)
+            case Left(insertionError) =>
+              validateLinksAndStatus(insertionError, resolvedEntity, statusSeq, None, token)
+
+          }
+        }
+    }
+  }
+
+  private def validateLinksAndStatus(
+    status: DataImportStatus,
+    resolvedEntity: Entity,
+    statusSeq: Seq[Entity],
+    instanceLink: Option[String],
+    token: String
+  ) = {
+    val newStatus = status match {
+      case SuccessStatus(operation, _) =>
+        val statusStr = operation match {
+          case SKIP            => s"NO CHANGE"
+          case INSERT | UPDATE => s"${operation} OK"
+          case _               => DEFAULT_RESOLUTION_STATUS
+        }
+        logger.info(s"[uniminds][insertion][${statusStr}] ${resolvedEntity.`type`}.${resolvedEntity.localId}")
+        statusStr
+      case ErrorStatus(_, message) =>
+        s"${ERROR}: $message"
+    }
+    val updatedEntity = resolvedEntity.validateLinksAndStatus(instanceLink, Some(newStatus), token, nexusService)
+    updatedEntity.map {
+      logger.info(s"[uniminds][validation][DONE]${resolvedEntity.`type`}.${resolvedEntity.localId}")
+      statusSeq :+ _
+    }
+  }
+
+  /**
+    *  Generating a graph structure of local entities and insterting them in order from leaf to root
+    * @param nexusEndPoint base url for insersion
+    * @param data the list of extracted entities
+    * @param token the user token
+    * @return a task describing the insertion of the entities in the DB
+    */
+  def insertUnimindsDataInKG(nexusEndPoint: String, data: Seq[Entity], token: String): Task[Seq[Entity]] = {
 
     val dataRef = data.map(e => (e.localId, e)).toMap
     val insertSeq = ExcelInsertionHelper.buildInsertableEntitySeq(dataRef)
 
     // create schemas if needed
-    val schemas = data.map(_.`type`).distinct
-    schemas.foldLeft(Future.successful("")) {
-      case (_, schema) =>
-        val path = NexusPath(
-          ExcelUnimindsImportHelper.unimindsOrg,
-          ExcelUnimindsImportHelper.unimindsDomain,
-          schema,
-          ExcelUnimindsImportHelper.unimindsVersion
-        )
-        nexusService.createSimpleSchema(nexusEndPoint, path, token).map { response =>
-          s"${response.status}: ${response.body}"
-        }
+    val paths = data.collect { case Entity(_, _, _, Some(path), _) => path }.distinct
+    val createdSchemas = createSchemas(paths, nexusEndPoint, token)
+    Task.gather(createdSchemas).flatMap { _ =>
+      // insert entities
+      insertEntities(insertSeq, nexusEndPoint, token)
     }
 
-    // insert entities
-    val linksRef = collection.mutable.Map.empty[String, String]
-    insertSeq.foldLeft(Future.successful(Seq.empty[Entity])) {
-      case (statusSeqFut, entity) =>
-        statusSeqFut.flatMap { statusSeq =>
-          val resolvedEntity = entity.resolveLinks(linksRef)
-          insertUnimindsEntity(nexusEndPoint, resolvedEntity, token).flatMap { insertionResponse =>
-            insertionResponse match {
-              case Left((operation, jsonResponse)) =>
-                val instanceLink = (jsonResponse \ "@id").as[String]
-                linksRef.put(entity.localId, instanceLink)
-                val status = operation match {
-                  case SKIP            => s"NO CHANGE"
-                  case INSERT | UPDATE => s"${operation} OK"
-                  case _               => DEFAULT_RESOLUTION_STATUS
-                }
-                logger.info(s"[uniminds][insertion][${status}] ${resolvedEntity.`type`}.${resolvedEntity.localId}")
-                val updatedEntity =
-                  resolvedEntity.validateLinksAndStatus(Some(instanceLink), Some(status), token, nexusService)
-                updatedEntity.map {
-                  logger.info(s"[uniminds][validation][DONE]${resolvedEntity.`type`}.${resolvedEntity.localId}")
-                  statusSeq :+ _
-                }
-              case Right(insertionError) =>
-                val errorMsg = try {
-                  (Json.parse(insertionError).as[JsObject] \ "code").as[String]
-                } catch {
-                  case _: Throwable => insertionError
-                }
-                logger.info(s"[uniminds][insertion][${errorMsg}] ${resolvedEntity.`type`}.${resolvedEntity.localId}")
-                val updatedEntity =
-                  resolvedEntity.validateLinksAndStatus(None, Some(s"${ERROR}: $errorMsg"), token, nexusService)
-                updatedEntity.map {
-                  logger.info(s"[uniminds][validation][DONE]${resolvedEntity.`type`}.${resolvedEntity.localId}")
-                  statusSeq :+ _
-                }
-            }
-          }
-        }
-    }
   }
 }

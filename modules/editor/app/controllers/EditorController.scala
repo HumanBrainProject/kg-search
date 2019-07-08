@@ -20,14 +20,15 @@ import actions.EditorUserAction
 import javax.inject.{Inject, Singleton}
 import models._
 import models.instance._
+import models.specification.{FormRegistry, UISpec}
 import monix.eval.Task
 import play.api.Logger
 import play.api.libs.json._
 import play.api.mvc._
 import services._
-import services.specification.FormService
+import services.specification.{FormOp, FormService}
 
-import scala.concurrent.{ExecutionContext}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class EditorController @Inject()(
@@ -60,6 +61,30 @@ class EditorController @Inject()(
         .runToFuture
     }
 
+  private def getMetaDataByIds(
+    ls: Seq[NexusInstance],
+    formRegistry: FormRegistry[UISpec]
+  ): List[Task[Option[JsObject]]] = {
+    ls.groupBy(_.id().get)
+      .map {
+        case (_, v) =>
+          val formService: Task[Option[JsObject]] =
+            FormOp.getFormStructure(v.head.nexusPath, v.head.content, formRegistry) match {
+              case JsNull =>
+                Task.pure(None)
+              case instanceForm =>
+                metadataService.getMetadata(v.head).map {
+                  case Right(metadata) =>
+                    Some(instanceForm.as[JsObject] ++ Json.obj("metadata" -> Json.toJson(metadata)))
+                  case Left(_) =>
+                    Some(instanceForm.as[JsObject])
+                }
+            }
+          formService
+      }
+      .toList
+  }
+
   def getInstancesByIds(allFields: Boolean): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     val listOfIds = for {
       bodyContent <- request.body.asJson
@@ -76,34 +101,18 @@ class EditorController @Inject()(
                 case Left(err) => Task.pure(err.toResult)
                 case Right(ls) =>
                   if (allFields) {
-                    val listOfIds: List[Task[Option[JsObject]]] = ls.groupBy(_.id().get).map {
-                      case (k, v) =>
-                      val formService: Task[Option[JsObject]] = FormService.getFormStructure(v.head.nexusPath, v.head.content, registries.formRegistry) match {
-                        case JsNull =>
-                          Task.pure(None)
-                        case instanceForm =>
-                          metadataService.getMetadata(v.head).map {
-                            case Right(metadata) =>
-                              Some(instanceForm.as[JsObject] ++ Json.obj("metadata" -> Json.toJson(metadata)))
-                            case Left(error) =>
-                              Some(instanceForm.as[JsObject])
-                          }
-                      }
-                      formService
-                    }.toList
-
-                    Task.sequence(listOfIds).map {
-                      l => val jsonList = l.collect{
-                        case Some(r) =>
-                          r
-                      }
-                        Ok(Json.toJson(EditorResponseObject(Json.toJson(jsonList))))
+                    val listOfIds: List[Task[Option[JsObject]]] = getMetaDataByIds(ls, registries.formRegistry)
+                    Task.sequence(listOfIds).map { l =>
+                      val jsonList = l.collect { case Some(r) => r }
+                      Ok(Json.toJson(EditorResponseObject(Json.toJson(jsonList))))
                     }
                   } else {
                     val previews = ls.map(i => i.content.as[PreviewInstance].setLabel(registries.formRegistry)).toList
-                    Task.pure(Ok(
-                      Json.toJson(EditorResponseObject(Json.toJson(previews)))
-                    ))
+                    Task.pure(
+                      Ok(
+                        Json.toJson(EditorResponseObject(Json.toJson(previews)))
+                      )
+                    )
                   }
               }
           case None => Task.pure(BadRequest("Missing body content"))
@@ -161,7 +170,7 @@ class EditorController @Inject()(
                   .retrieveInstance(instanceRef, request.userToken, registries.queryRegistry)
                   .flatMap {
                     case Right(instance) =>
-                      FormService
+                      FormOp
                         .getFormStructure(
                           instanceRef.nexusPath,
                           instance.content,
@@ -223,7 +232,7 @@ class EditorController @Inject()(
               request.body.asJson match {
                 case Some(content) =>
                   formService.getRegistries().flatMap { registries =>
-                    val nonEmptyInstance = FormService.buildNewInstanceFromForm(
+                    val nonEmptyInstance = FormOp.buildNewInstanceFromForm(
                       ref,
                       config.nexusEndpoint,
                       content.as[JsObject],
@@ -266,7 +275,7 @@ class EditorController @Inject()(
       formService
         .getRegistries()
         .map { registries =>
-          val form = FormService.getFormStructure(nexusPath, JsNull, registries.formRegistry)
+          val form = FormOp.getFormStructure(nexusPath, JsNull, registries.formRegistry)
           Ok(form)
         }
         .runToFuture

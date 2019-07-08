@@ -30,9 +30,7 @@ import services.NexusService._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
-  implicit executionContext: ExecutionContext
-) {
+class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService) {
   val logger = Logger(this.getClass)
 
   /**
@@ -51,14 +49,14 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
     editorOrg: String,
     token: String,
     editorContext: String = ""
-  ): Future[WSResponse] = {
+  ): Task[WSResponse] = {
 
     val schemaUrl =
       s"${nexusUrl}/v0/schemas/${destinationOrg}/${nexusPath.domain}/${nexusPath.schema.toLowerCase}/${nexusPath.version}"
-    wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).get().flatMap { response =>
+    Task.deferFuture(wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).get()).flatMap { response =>
       response.status match {
         case OK => // schema exists already
-          Future.successful(response)
+          Task.pure(response)
         case NOT_FOUND => // schema not found, create it
           val newSchemaDef = if (editorOrg != nexusPath.org) {
             schemaDefinitionForEditor.replace("${editorContext}", editorContext)
@@ -72,24 +70,43 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
               .replace("${editorOrg}", editorOrg)
               .replaceAll("\r\n", "")
           )
-          wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).put(schemaContent).flatMap {
-            schemaCreationResponse =>
+          Task
+            .deferFuture(wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).put(schemaContent))
+            .flatMap { schemaCreationResponse =>
               schemaCreationResponse.status match {
                 case CREATED => // schema created, publish it
-                  wSClient
-                    .url(s"$schemaUrl/config?rev=1")
-                    .addHttpHeaders("Authorization" -> token)
-                    .patch(
-                      Json.obj("published" -> JsBoolean(true))
-                    )
+                  Task.deferFuture(
+                    wSClient
+                      .url(s"$schemaUrl/config?rev=1")
+                      .addHttpHeaders("Authorization" -> token)
+                      .patch(
+                        Json.obj("published" -> JsBoolean(true))
+                      )
+                  )
                 case _ =>
-                  Future.successful(response)
+                  Task.pure(response)
               }
-          }
+            }
         case _ =>
-          Future.successful(response)
+          Task.pure(response)
       }
     }
+  }
+
+  private def publishSchema(schemaUrl: String, token: String): Task[WSResponse] = {
+    Task
+      .deferFuture(
+        wSClient
+          .url(s"$schemaUrl/config?rev=1")
+          .addHttpHeaders("Authorization" -> token)
+          .patch(
+            Json.obj("published" -> JsBoolean(true))
+          )
+      )
+      .map { publishResponse =>
+        logger.debug(s"Publishing schemas ${publishResponse.body}")
+        publishResponse
+      }
   }
 
   def createSimpleSchema(
@@ -97,14 +114,19 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
     nexusPath: NexusPath,
     token: String,
     namespaceOpt: Option[String] = None
-  ): Future[WSResponse] = {
-    val nameSpace = namespaceOpt.getOrElse(s"http://hbp.eu/${nexusPath.org}").replaceAll("#$", "") // use org by default
+  ): Task[WSResponse] = {
+    val nameSpace = namespaceOpt.getOrElse(s"http://hbp.eu/${nexusPath.org}/").replaceAll("#$", "") // use org by default
     val schemaUrl =
       s"${nexusUrl}/v0/schemas/${nexusPath.org}/${nexusPath.domain}/${nexusPath.schema.toLowerCase}/${nexusPath.version}"
-    wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).get().flatMap { response =>
+    Task.deferFuture(wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).get()).flatMap { response =>
       response.status match {
         case OK => // schema exists already
-          Future.successful(response)
+          val isPublished = (response.json.as[JsObject] \ "nxv:published").asOpt[Boolean]
+          if (isPublished.exists(b => !b)) {
+            publishSchema(schemaUrl, token)
+          } else {
+            Task.pure(response)
+          }
         case NOT_FOUND => // schema not found, create it
           val schemaContent = Json.parse(
             minimalSchemaDefinition
@@ -112,22 +134,18 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
               .replace("${nameSpace}", nameSpace)
               .replaceAll("\r\n", "")
           )
-          wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).put(schemaContent).flatMap {
-            schemaCreationResponse =>
+          Task
+            .deferFuture(wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).put(schemaContent))
+            .flatMap { schemaCreationResponse =>
               schemaCreationResponse.status match {
                 case CREATED => // schema created, publish it
-                  wSClient
-                    .url(s"$schemaUrl/config?rev=1")
-                    .addHttpHeaders("Authorization" -> token)
-                    .patch(
-                      Json.obj("published" -> JsBoolean(true))
-                    )
+                  publishSchema(schemaUrl, token)
                 case _ =>
-                  Future.successful(response)
+                  Task.pure(response)
               }
-          }
+            }
         case _ =>
-          Future.successful(response)
+          Task.pure(response)
       }
     }
   }
@@ -138,25 +156,25 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
     domain: String,
     domainDescription: String,
     token: String
-  ): Future[WSResponse] = {
+  ): Task[WSResponse] = {
     assert(domain.forall(_.isLetterOrDigit))
     val schemaUrl = s"${nexusUrl}/v0/domains/$org/${domain.toLowerCase}/"
-    wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).get().flatMap { response =>
+    Task.deferFuture(wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).get()).flatMap { response =>
       response.status match {
         case OK => // schema exists already
           logger.debug("Exists" + org)
-          Future.successful(response)
+          Task.pure(response)
         case NOT_FOUND => // schema not found, create it
           val payload = domainDefinition(domainDescription)
-          wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).put(payload).flatMap {
+          Task.deferFuture(wSClient.url(schemaUrl).addHttpHeaders("Authorization" -> token).put(payload)).flatMap {
             domainCreationResponse =>
               domainCreationResponse.status match {
                 case _ =>
-                  Future.successful(response)
+                  Task.pure(response)
               }
           }
         case _ =>
-          Future.successful(response)
+          Task.pure(response)
       }
     }
   }
@@ -166,19 +184,21 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
     nexusPath: NexusPath,
     identifier: String,
     token: String
-  ): Future[WSResponse] = {
+  ): Task[WSResponse] = {
     val instanceUrl =
       s"${nexusUrl}/v0/data/${nexusPath.org}/${nexusPath.domain}/${nexusPath.schema.toLowerCase}/${nexusPath.version}"
     val filterQuery =
       s"""filter={"path":${SchemaFieldsConstants.IDENTIFIER}","op":"eq","value":"$identifier"}&fields=all&deprecated=false"""
-    wSClient
-      .url(s"${instanceUrl}?$filterQuery")
-      .addHttpHeaders("Authorization" -> token)
-      .get()
+    Task.deferFuture(
+      wSClient
+        .url(s"${instanceUrl}?$filterQuery")
+        .addHttpHeaders("Authorization" -> token)
+        .get()
+    )
   }
 
-  def getInstance(instanceUrl: String, token: String): Future[WSResponse] = {
-    wSClient.url(instanceUrl).addHttpHeaders("Authorization" -> token).get()
+  def getInstance(instanceUrl: String, token: String): Task[WSResponse] = {
+    Task.deferFuture(wSClient.url(instanceUrl).addHttpHeaders("Authorization" -> token).get())
   }
 
   def insertOrUpdateInstance(
@@ -187,7 +207,7 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
     payload: JsValue,
     identifier: String,
     token: String
-  ): Future[(String, Option[String], Option[Future[WSResponse]])] = {
+  ): Task[(String, Option[String], Option[Task[WSResponse]])] = {
     retrieveInstanceById(nexusUrl, nexusPath, identifier, token).flatMap { response =>
       response.status match {
         case OK => // analyze response
@@ -198,36 +218,37 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
               val revision = (response.json \ "results" \ 0 \ "source" \ "nxv:rev").as[Long]
               updateInstance(id, Some(revision), payload, token).map {
                 case (operation, response) =>
-                  (operation, Some(id), Some(Future.successful(response)))
+                  (operation, Some(id), Some(Task.pure(response)))
               }
             case _ => // insert if not or ambiguous
               insertInstance(nexusUrl, nexusPath, payload, token).map { insertResp =>
                 val id = (insertResp.json.as[JsObject] \ "@id").asOpt[String]
-                (INSERT, id, Some(Future.successful(insertResp)))
+                (INSERT, id, Some(Task.pure(insertResp)))
               }
           }
         case _ => // error looking for instance, forward ERROR
-          Future.successful(ERROR, None, Some(Future.successful(response)))
+          Task.pure(ERROR, None, Some(Task.pure(response)))
 
       }
     }
   }
 
-  def insertInstance(nexusUrl: String, nexusPath: NexusPath, payload: JsValue, token: String): Future[WSResponse] = {
+  def insertInstance(nexusUrl: String, nexusPath: NexusPath, payload: JsValue, token: String): Task[WSResponse] = {
     val instanceUrl =
       s"${nexusUrl}/v0/data/${nexusPath.org}/${nexusPath.domain}/${nexusPath.schema.toLowerCase}/${nexusPath.version}"
-    val payloadWihtHash = payload.as[JsObject].+("http://hbp.eu/internal#hashcode", JsString(hash(payload.toString())))
-    wSClient.url(instanceUrl).addHttpHeaders("Authorization" -> token).post(payloadWihtHash)
+    val payloadWihtHash =
+      payload.as[JsObject].+("https://schema.hbp.eu/internal/hashcode", JsString(hash(payload.toString())))
+    Task.deferFuture(wSClient.url(instanceUrl).addHttpHeaders("Authorization" -> token).post(payloadWihtHash))
   }
 
-  def updateInstanceLastRev(instanceUrl: String, payload: JsValue, token: String): Future[(String, WSResponse)] = {
+  def updateInstanceLastRev(instanceUrl: String, payload: JsValue, token: String): Task[(String, WSResponse)] = {
     getInstance(instanceUrl, token).flatMap { response =>
       try {
         val rev = (response.json \ "nxv:rev").as[Long]
         updateInstance(instanceUrl, Some(rev), payload, token)
       } catch {
         case _: Throwable =>
-          Future.successful(UPDATE, response)
+          Task.pure(UPDATE, response)
       }
     }
   }
@@ -237,7 +258,7 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
     revOpt: Option[Long],
     payload: JsValue,
     token: String
-  ): Future[(String, WSResponse)] = {
+  ): Task[(String, WSResponse)] = {
     revOpt match {
       case Some(rev) =>
         getInstance(instanceUrl, token).flatMap {
@@ -248,11 +269,14 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
             if (prevHashCode != curHashCode) {
               val payloadWithHash = payload.as[JsObject].+("http://hbp.eu/internal#hashcode", JsString(curHashCode))
 
-              wSClient
-                .url(instanceUrl)
-                .addQueryStringParameters(("rev", rev.toString))
-                .addHttpHeaders(AUTHORIZATION -> token)
-                .put(payloadWithHash)
+              Task
+                .deferFuture(
+                  wSClient
+                    .url(instanceUrl)
+                    .addQueryStringParameters(("rev", rev.toString))
+                    .addHttpHeaders(AUTHORIZATION -> token)
+                    .put(payloadWithHash)
+                )
                 .map { updateRes =>
                   updateRes.status match {
                     case OK | CREATED => // instance updated
@@ -263,7 +287,7 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
 
                 }
             } else {
-              Future.successful(SKIP, response)
+              Task.pure(SKIP, response)
             }
         }
       case None =>
@@ -278,7 +302,6 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
       case (_, true)      => url
       case (false, false) => if (url.contains("?")) s"$url&size=$sizeLimit" else s"$url?size=$sizeLimit"
     }
-
     Task.deferFuture(wSClient.url(initialUrl).addHttpHeaders("Authorization" -> token).get()).flatMap { response =>
       response.status match {
         case OK =>
@@ -287,29 +310,7 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
             case Some(nextLink) =>
               // compute how many additional call will be needed
               val nbCalls = ((response.json \ "total").as[Int] / (sizeLimit.toDouble)).ceil.toInt
-              Range(1, nbCalls)
-                .foldLeft(Task.pure((nextLink, firstResults))) {
-                  case (previousCallState, callIdx) =>
-                    previousCallState.flatMap {
-                      case (nextUrl, previousResult) =>
-                        if (nextUrl.nonEmpty) {
-                          Task.deferFuture(wSClient.url(nextUrl).addHttpHeaders("Authorization" -> token).get()).map {
-                            response =>
-                              response.status match {
-                                case OK =>
-                                  val newUrl = (response.json \ "links" \ "next").asOpt[String].getOrElse("")
-                                  val newResults = previousResult ++ (response.json \ "results").as[JsArray].value
-                                  (newUrl, newResults)
-                                case _ =>
-                                  ("", previousResult)
-                              }
-                          }
-                        } else {
-                          Task.pure(("", previousResult))
-                        }
-                    }
-                }
-                .map(_._2)
+              getNextListsNexusResults(nbCalls, nextLink, firstResults, token).map(_._2)
             case _ =>
               Task.pure(firstResults)
           }
@@ -319,17 +320,49 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
     }
   }
 
+  private def getNextListsNexusResults(
+    nbCalls: Int,
+    nextLink: String,
+    firstResults: IndexedSeq[JsValue],
+    token: String
+  ): Task[(String, IndexedSeq[JsValue])] = {
+    Range(1, nbCalls)
+      .foldLeft(Task.pure((nextLink, firstResults))) {
+        case (previousCallState, callIdx) =>
+          previousCallState.flatMap {
+            case (nextUrl, previousResult) =>
+              if (nextUrl.nonEmpty) {
+                Task.deferFuture(wSClient.url(nextUrl).addHttpHeaders("Authorization" -> token).get()).map { response =>
+                  response.status match {
+                    case OK =>
+                      val newUrl = (response.json \ "links" \ "next").asOpt[String].getOrElse("")
+                      val newResults = previousResult ++ (response.json \ "results").as[JsArray].value
+                      (newUrl, newResults)
+                    case _ =>
+                      ("", previousResult)
+                  }
+                }
+              } else {
+                Task.pure(("", previousResult))
+              }
+          }
+      }
+  }
+
   def getInstance(
     path: NexusPath,
     id: String,
     token: String,
     parameters: List[(String, String)] = List(("fields", "all"), ("deprecated", "false"))
-  ): Future[Either[WSResponse, NexusInstance]] = {
-    wSClient
-      .url(s"${config.nexusEndpoint}/v0/data/${path.toString()}/$id")
-      .withQueryStringParameters(parameters: _*)
-      .addHttpHeaders("Authorization" -> token)
-      .get()
+  ): Task[Either[WSResponse, NexusInstance]] = {
+    Task
+      .deferFuture(
+        wSClient
+          .url(s"${config.nexusEndpoint}/v0/data/${path.toString()}/$id")
+          .withQueryStringParameters(parameters: _*)
+          .addHttpHeaders("Authorization" -> token)
+          .get()
+      )
       .map { res =>
         res.status match {
           case OK =>
@@ -346,10 +379,10 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
     id: String,
     revision: Long,
     token: String
-  ): Future[Either[WSResponse, Unit]] = {
+  ): Task[Either[WSResponse, Unit]] = {
     val instanceUrl =
       s"${nexusEndpoint}/v0/data/${nexusPath.org}/${nexusPath.domain}/${nexusPath.schema.toLowerCase}/${nexusPath.version}/${id}?rev=$revision"
-    wSClient.url(instanceUrl).withHttpHeaders("Authorization" -> token).delete().map { res =>
+    Task.deferFuture(wSClient.url(instanceUrl).withHttpHeaders("Authorization" -> token).delete()).map { res =>
       res.status match {
         case OK | NO_CONTENT => Right(())
         case _               => Left(res)
@@ -368,11 +401,11 @@ class NexusService @Inject()(wSClient: WSClient, config: ConfigurationService)(
     ids: List[String],
     path: NexusPath,
     token: String
-  ): Future[List[Either[WSResponse, NexusInstance]]] = {
+  ): Task[List[Either[WSResponse, NexusInstance]]] = {
     val listOfRes = for { id <- ids } yield {
       getInstance(path, id, token)
     }
-    Future.sequence(listOfRes)
+    Task.gather(listOfRes)
   }
 
 }
