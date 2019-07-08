@@ -20,19 +20,23 @@ sealed trait Cache {
   override def toString: String = this match {
     case UserInfoCache   => Cache.USER_CACHE
     case EditorUserCache => Cache.EDITOR_CACHE
+    case MetadataCache   => Cache.METADATA_CACHE
   }
 }
 
 object Cache {
   val USER_CACHE = "userinfo-cache"
   val EDITOR_CACHE = "editor-userinfo-cache"
+  val METADATA_CACHE = "editor-metadata-cache"
 
   def fromString(s: String): Option[Cache] = s match {
-    case USER_CACHE   => Some(UserInfoCache)
-    case EDITOR_CACHE => Some(EditorUserCache)
-    case _            => None
+    case USER_CACHE     => Some(UserInfoCache)
+    case EDITOR_CACHE   => Some(EditorUserCache)
+    case METADATA_CACHE => Some(MetadataCache)
+    case _              => None
   }
 }
 
 object UserInfoCache extends Cache
 object EditorUserCache extends Cache
+object MetadataCache extends Cache

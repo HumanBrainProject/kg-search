@@ -23,18 +23,27 @@ import models.user.IDMUser
 import monix.eval.Task
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import org.slf4j.LoggerFactory
+import play.api.cache.{AsyncCacheApi, NamedCache}
+import scala.concurrent.duration._
 import play.api.libs.ws.WSClient
+
 import scala.util.Try
 
-class MetadataService @Inject()(IDMAPIService: IDMAPIService, authService: OIDCAuthService, WSClient: WSClient) {
+class MetadataService @Inject()(
+  IDMAPIService: IDMAPIService,
+  authService: OIDCAuthService,
+  WSClient: WSClient,
+  @NamedCache("editor-metadata-cache") cache: AsyncCacheApi
+) {
 
   def getMetadata(
     instance: NexusInstance
   ): Task[Either[APIEditorError, EditorMetadata]] = {
     val (lastUpdaterIdOpt, createdByIdOpt, partialMetadata) = MetadataService.extractMetadataFromInstance(instance)
     for {
-      updater   <- MetadataService.getUserFromMetadata(lastUpdaterIdOpt, authService, IDMAPIService)
-      createdBy <- MetadataService.getUserFromMetadata(createdByIdOpt, authService, IDMAPIService)
+      updater   <- MetadataService.getUserFromMetadata(lastUpdaterIdOpt, authService, IDMAPIService, cache)
+      createdBy <- MetadataService.getUserFromMetadata(createdByIdOpt, authService, IDMAPIService, cache)
     } yield {
       Right(
         partialMetadata.copy(
@@ -47,6 +56,9 @@ class MetadataService @Inject()(IDMAPIService: IDMAPIService, authService: OIDCA
 }
 
 object MetadataService {
+  object cacheService extends CacheService
+  implicit val scheduler = monix.execution.Scheduler.Implicits.global
+  val logger = LoggerFactory.getLogger(this.getClass)
   val UNKNOWN_USER = "Unknown user"
   private def parseJsFieldAsDate(instance: NexusInstance, field: String): Try[DateTime] = {
     Try(
@@ -59,14 +71,26 @@ object MetadataService {
   def getUserFromMetadata(
     userIdOpt: Option[String],
     authService: OIDCAuthService,
-    IDMAPIService: IDMAPIService
+    IDMAPIService: IDMAPIService,
+    cacheApi: AsyncCacheApi
   ): Task[Option[IDMUser]] = {
     userIdOpt match {
       case Some(userIdO) =>
-        for {
-          token <- authService.getTechAccessToken()
-          user  <- IDMAPIService.getUserInfoFromID(userIdO, token)
-        } yield user
+        logger.debug(s"Fetching metadata for user ${userIdO}")
+        cacheService
+          .getOrElse[IDMUser](cacheApi, userIdO) {
+            val u = for {
+              token <- authService.getTechAccessToken()
+              user  <- IDMAPIService.getUserInfoFromID(userIdO, token)
+            } yield user
+            u.flatMap {
+              case Some(idmUser) =>
+                cacheService.set[IDMUser](cacheApi, userIdO, idmUser, 2.hours).map { _ =>
+                  Some(idmUser)
+                }
+              case None => Task.pure(None)
+            }
+          }
       case None => Task.pure(None)
     }
   }

@@ -16,7 +16,7 @@
 package controllers
 
 import com.google.inject.Inject
-import models.{Cache, EditorUserCache, UserInfoCache}
+import models.{Cache, EditorUserCache, MetadataCache, UserInfoCache}
 import monix.eval.Task
 import play.api.Logger
 import play.api.cache.AsyncCacheApi
@@ -29,6 +29,7 @@ class AdminController @Inject()(
   cc: ControllerComponents,
   @NamedCache("editor-userinfo-cache") editorCache: AsyncCacheApi,
   @NamedCache("userinfo-cache") userCache: AsyncCacheApi,
+  @NamedCache("editor-metadata-cache") metadataCache: AsyncCacheApi,
   formService: FormService
 ) extends AbstractController(cc) {
   val log = Logger(this.getClass)
@@ -41,6 +42,7 @@ class AdminController @Inject()(
       .fold(Task.pure(NotFound("Cache not found"))) {
         case EditorUserCache => cacheService.clearCache(editorCache).map(_ => Ok("Cache cleared"))
         case UserInfoCache   => cacheService.clearCache(userCache).map(_ => Ok("Cache cleared"))
+        case MetadataCache   => cacheService.clearCache(metadataCache).map(_ => Ok("Cache cleared"))
       }
       .runToFuture
   }
