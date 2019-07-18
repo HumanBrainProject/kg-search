@@ -28,7 +28,7 @@ import models.AccessToken
 import models.errors.APIEditorError
 import models.instance.{NexusInstance, NexusInstanceReference}
 import models.specification.QuerySpec
-import models.user.{EditorUser, IDMUser, OIDCUser}
+import models.user.{EditorUser, IDMUser}
 import monix.eval.Task
 import monix.execution.Scheduler.Implicits.global
 import play.api.Logger

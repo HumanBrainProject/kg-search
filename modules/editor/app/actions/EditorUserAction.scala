@@ -17,7 +17,7 @@
 package actions
 
 import helpers.EditorSpaceHelper
-import models.user.{EditorUserRequest, EditorUserWriteRequest, IDMUser, OIDCUser}
+import models.user.{EditorUserRequest, EditorUserWriteRequest, IDMUser}
 import models.{user, IAMPermission, UserRequest}
 import monix.eval.Task
 import play.api.Logger

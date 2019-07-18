@@ -16,10 +16,10 @@
 package controllers
 
 import com.google.inject.Inject
-import models.user.{IDMUser, OIDCUser}
+import models.user.IDMUser
 import models.{AuthenticatedUserAction, BasicAccessToken, UserRequest}
 import play.api.mvc.{BodyParsers, Request, Result}
-import services.{IDMAPIService, TokenAuthService}
+import services.IDMAPIService
 
 import scala.concurrent.{ExecutionContext, Future}
 

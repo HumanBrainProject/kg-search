@@ -16,7 +16,7 @@
 
 package helpers
 
-import models.user.{IDMUser, OIDCUser}
+import models.user.IDMUser
 
 object EditorSpaceHelper {
   private val editorSuffix = "editor"

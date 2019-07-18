@@ -20,7 +20,7 @@ import constants._
 import models.NexusPath
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
 import models.specification._
-import models.user.{IDMUser, OIDCUser}
+import models.user.IDMUser
 import play.api.libs.json._
 
 object FormOp {

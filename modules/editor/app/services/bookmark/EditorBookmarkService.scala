@@ -24,7 +24,7 @@ import models.editorUserList._
 import models.errors.APIEditorError
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, PreviewInstance}
 import models.specification.{FormRegistry, QuerySpec, UISpec}
-import models.user.{EditorUser, IDMUser, OIDCUser}
+import models.user.{EditorUser, IDMUser}
 import monix.eval.Task
 import play.api.Logger
 import play.api.http.ContentTypes._
