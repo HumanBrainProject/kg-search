@@ -76,16 +76,21 @@ object MetadataService {
   ): Task[Option[IDMUser]] = {
     userIdOpt match {
       case Some(userIdO) =>
-        logger.debug(s"Fetching metadata for user ${userIdO}")
+        val id = if (userIdO.startsWith("https://")) {
+          userIdO.split("/").last
+        } else {
+          userIdO
+        }
+        logger.debug(s"Fetching metadata for user ${id}")
         cacheService
-          .getOrElse[IDMUser](cacheApi, userIdO) {
+          .getOrElse[IDMUser](cacheApi, id) {
             val u = for {
               token <- authService.getTechAccessToken()
-              user  <- IDMAPIService.getUserInfoFromID(userIdO, token)
+              user  <- IDMAPIService.getUserInfoFromID(id, token)
             } yield user
             u.flatMap {
               case Some(idmUser) =>
-                cacheService.set[IDMUser](cacheApi, userIdO, idmUser, 2.hours).map { _ =>
+                cacheService.set[IDMUser](cacheApi, id, idmUser, 2.hours).map { _ =>
                   Some(idmUser)
                 }
               case None => Task.pure(None)

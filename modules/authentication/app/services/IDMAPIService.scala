@@ -50,16 +50,14 @@ class IDMAPIService @Inject()(
         case BasicAccessToken(_)   => Task.deferFuture(q.get())
         case RefreshAccessToken(_) => AuthHttpClient.getWithRetry(q)
       }
-      val user = for {
-        userRes     <- queryResult
-        userGroups  <- getUserGroups(userId, token)
-        adminGroups <- getUserGroups(userId, token, fetchAdminGroups = true)
-        user = userRes.json.as[IDMUser]
-      } yield user.copy(groups = userGroups ::: adminGroups)
-
-      user.map { u =>
-        Some(u.copy(isCurator = isUserPartOfGroups(u, List("nexus-curators"))))
-      }
+      for {
+        userRes    <- queryResult
+        userGroups <- getUserGroups(userId, token)
+        user = userRes.json.asOpt[IDMUser] match {
+          case Some(u) => Some(u.copy(groups = userGroups, isCurator = isUserPartOfGroups(u, List("nexus-curators"))))
+          case None    => None
+        }
+      } yield user
     }
   }
 
@@ -71,7 +69,7 @@ class IDMAPIService @Inject()(
     cacheService.getOrElse[IDMUser](cache, token.token) {
       getUserInfoFromToken(token).map {
         case Some(userInfo) =>
-          cache.set(token.token, userInfo, config.cacheExpiration)
+          cacheService.set[IDMUser](cache, token.token, userInfo, config.cacheExpiration)
           Some(userInfo)
         case _ =>
           None
@@ -175,16 +173,16 @@ class IDMAPIService @Inject()(
   def getUserGroups(
     userId: String,
     token: AccessToken,
-    fetchAdminGroups: Boolean = false
   ): Task[List[Group]] = {
-    val groupPath = if (fetchAdminGroups) {
-      "admin-groups"
-    } else {
-      "member-groups"
-    }
-    val url = s"${config.idmApiEndpoint}/user/${userId}/$groupPath"
+    for {
+      userGroups <- getGroups(userId, token)
+    } yield userGroups
+  }
+
+  private def getGroups(userId: String, token: AccessToken): Task[List[Group]] = {
+    val url = s"${config.idmApiEndpoint}/user/$userId/member-groups"
     val q =
-      WSClient.url(url).addHttpHeaders(AUTHORIZATION -> token.token).addQueryStringParameters("pageSize" -> "10000")
+      WSClient.url(url).withHttpHeaders(AUTHORIZATION -> token.token).addQueryStringParameters("pageSize" -> "1000")
     val r = token match {
       case BasicAccessToken(_)   => Task.deferFuture(q.get())
       case RefreshAccessToken(_) => AuthHttpClient.getWithRetry(q)
@@ -194,11 +192,10 @@ class IDMAPIService @Inject()(
         case OK =>
           (res.json \ "_embedded" \ "groups").as[List[Group]]
         case _ =>
-          log.error(s"Could not fetch user groups - ${res.body}")
+          log.error(s"Could not fetch user groups - Status:${res.status} - Content:${res.body}")
           List()
       }
     }
-
   }
 
   /**

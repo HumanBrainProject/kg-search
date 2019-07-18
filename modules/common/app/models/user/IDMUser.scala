@@ -24,7 +24,7 @@ final case class IDMUser(
   givenName: String,
   familyName: String,
   displayName: String,
-  emails: List[Email],
+  email: Option[String],
   picture: Option[String],
   isCurator: Boolean = false,
   groups: List[Group] = List()
@@ -39,10 +39,10 @@ object IDMUser {
     (JsPath \ "givenName").read[String] and
     (JsPath \ "familyName").read[String] and
     (JsPath \ "displayName").read[String] and
-    (JsPath \ "emails").read[List[Email]] and
+    (JsPath \ "emails").read[List[Email]].map(l => l.collectFirst { case e if e.primary => e.value }) and
     (JsPath \ "picture").readNullable[String] and
-    (JsPath \ "isCurator").read[Boolean] and
-    (JsPath \ "groups").read[List[Group]]
+    (JsPath \ "isCurator").readNullable[Boolean].map(opt => opt.fold(false)(identity)) and
+    (JsPath \ "groups").readNullable[List[Group]].map(opt => opt.fold(List[Group]())(identity))
   )(IDMUser.apply _)
 
   implicit val idmUserWrites: Writes[IDMUser] = (
@@ -51,7 +51,7 @@ object IDMUser {
     (JsPath \ "givenName").write[String] and
     (JsPath \ "familyName").write[String] and
     (JsPath \ "displayName").write[String] and
-    (JsPath \ "emails").write[List[Email]] and
+    (JsPath \ "email").writeNullable[String] and
     (JsPath \ "picture").writeNullable[String] and
     (JsPath \ "isCurator").write[Boolean] and
     (JsPath \ "groups").write[List[Group]]

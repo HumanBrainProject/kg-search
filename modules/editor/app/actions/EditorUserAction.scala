@@ -39,9 +39,10 @@ object EditorUserAction {
       def executionContext: ExecutionContext = ec
 
       def refine[A](input: UserRequest[A]): Future[Either[Result, EditorUserWriteRequest[A]]] = {
-        val editorOrg = if (org.endsWith(editorSuffix)) org else org + editorSuffix
+        val editorOrg = if (org.endsWith(editorSuffix)) org else org + "-" + editorSuffix
+        val iamOrg = if (org.endsWith(editorSuffix)) org else org + editorSuffix
         val result = if (EditorSpaceHelper.isEditorGroup(input.user, editorOrg)) {
-          iAMAuthService.getAcls(editorOrg, Seq(("self", "true"), ("parents", "true")), input.userToken).map {
+          iAMAuthService.getAcls(iamOrg, Seq(("self", "true"), ("parents", "true")), input.userToken).map {
             case Right(acls) =>
               if (IAMAuthService.hasAccess(acls, IAMPermission.Write)) {
                 Right(EditorUserWriteRequest(input.user, org, input, input.userToken))

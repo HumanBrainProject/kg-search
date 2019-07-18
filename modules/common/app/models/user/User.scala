@@ -17,7 +17,7 @@ package models.user
 
 trait User {
   val id: String
-  val emails: List[Email]
+  val email: Option[String]
   val groups: List[Group]
   val displayName: String
 }
