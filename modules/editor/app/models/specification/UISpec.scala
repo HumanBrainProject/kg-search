@@ -21,15 +21,15 @@ import play.api.libs.json.JsObject
 import scala.collection.mutable
 
 final case class UISpec(
-                         label: String,
-                         fields: List[EditorFieldSpecification],
-                         uiInfo: Option[UIInfo] = None,
-                         uiDirective: Option[JsObject] = None,
-                         isEditable: Option[Boolean] = None,
-                         color: Option[String] = None,
-                         folderID: Option[String] = None,
-                         folderName: Option[String] = None,
-                         refreshSpecification: Option[Boolean] = None
+  label: String,
+  fields: List[EditorFieldSpecification],
+  uiInfo: Option[UIInfo] = None,
+  uiDirective: Option[JsObject] = None,
+  isEditable: Option[Boolean] = None,
+  color: Option[String] = None,
+  folderID: Option[String] = None,
+  folderName: Option[String] = None,
+  refreshSpecification: Option[Boolean] = None
 ) {
 
   def getFieldsAsLinkedMap: mutable.LinkedHashMap[String, EditorFieldSpecification] = {

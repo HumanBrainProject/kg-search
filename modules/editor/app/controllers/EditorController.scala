@@ -86,7 +86,7 @@ class EditorController @Inject()(
       .toList
   }
 
-  def getInstancesByIds(allFields: Boolean): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
+  def getInstancesByIds(allFields: Boolean, databaseScope: Option[String]): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
     val listOfIds = for {
       bodyContent <- request.body.asJson
       ids         <- bodyContent.asOpt[List[String]]
@@ -97,7 +97,7 @@ class EditorController @Inject()(
         listOfIds match {
           case Some(ids) =>
             editorService
-              .retrieveInstancesByIds(ids, request.userToken, if (allFields) "editorFull" else "editorPreview")
+              .retrieveInstancesByIds(ids, request.userToken, if (allFields) "editorFull" else "editorPreview", databaseScope)
               .flatMap {
                 case Left(err) => Task.pure(err.toResult)
                 case Right(ls) =>
