@@ -16,17 +16,20 @@
 
 package models.specification
 
+import play.api.libs.json.JsObject
+
 import scala.collection.mutable
 
 final case class UISpec(
-  label: String,
-  fields: List[EditorFieldSpecification],
-  uiInfo: Option[UIInfo] = None,
-  isEditable: Option[Boolean] = None,
-  color: Option[String] = None,
-  folderID: Option[String] = None,
-  folderName: Option[String] = None,
-  refreshSpecification: Option[Boolean] = None
+                         label: String,
+                         fields: List[EditorFieldSpecification],
+                         uiInfo: Option[UIInfo] = None,
+                         uiDirective: Option[JsObject] = None,
+                         isEditable: Option[Boolean] = None,
+                         color: Option[String] = None,
+                         folderID: Option[String] = None,
+                         folderName: Option[String] = None,
+                         refreshSpecification: Option[Boolean] = None
 ) {
 
   def getFieldsAsLinkedMap: mutable.LinkedHashMap[String, EditorFieldSpecification] = {
@@ -51,6 +54,7 @@ object UISpec {
     (JsPath \ "label").read[String] and
     (JsPath \ "fields").read[List[EditorFieldSpecification]] and
     (JsPath \ "ui_info").readNullable[UIInfo] and
+      (JsPath \ "uiDirective").readNullable[JsObject] and
     (JsPath \ "editable").readNullable[Boolean] and
     (JsPath \ "color").readNullable[String] and
     (JsPath \ "folderID").readNullable[String] and
@@ -62,6 +66,7 @@ object UISpec {
     (JsPath \ "label").write[String] and
     (JsPath \ "fields").write[List[EditorFieldSpecification]] and
     (JsPath \ "ui_info").writeNullable[UIInfo] and
+      (JsPath \ "uiDirective").writeNullable[JsObject] and
     (JsPath \ "editable").writeNullable[Boolean] and
     (JsPath \ "color").writeNullable[String] and
     (JsPath \ "folderID").writeNullable[String] and

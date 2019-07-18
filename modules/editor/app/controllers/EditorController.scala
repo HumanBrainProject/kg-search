@@ -23,6 +23,7 @@ import models.instance._
 import models.specification.{FormRegistry, UISpec}
 import monix.eval.Task
 import play.api.Logger
+import play.api.libs.json.Json.JsValueWrapper
 import play.api.libs.json._
 import play.api.mvc._
 import services._
@@ -120,6 +121,42 @@ class EditorController @Inject()(
       }
       .runToFuture
   }
+
+
+  class MapWrites[T]()(implicit writes: Writes[T]) extends Writes[Map[NexusPath, T]] {
+
+    def writes(map: Map[NexusPath, T]): JsValue =
+      Json.obj(map.map {
+        case (s, o) =>
+          val ret: (String, JsValueWrapper) = s.toString -> Json.toJson(o)
+          ret
+      }.toSeq: _*)
+  }
+
+  def getUiDirectivesMessages(): Action[AnyContent] = authenticatedUserAction.async { implicit request =>
+    formService
+      .getRegistries()
+      .map { registries =>
+        val instancesWithMessages = registries
+          .formRegistry
+          .registry
+          .foldLeft(Map[NexusPath, JsObject]()) {
+            case (acc, (k,v)) =>
+              val m = for {
+                directive <- v.uiDirective
+                messages <- (directive \ "messages").asOpt[JsObject]
+              } yield messages
+              m match {
+                case Some(message) => acc.updated(k, message)
+                case None => acc
+              }
+          }
+
+        Ok(Json.toJson(EditorResponseObject(Json.toJson(instancesWithMessages)(new MapWrites[JsObject]()))))
+      }
+      .runToFuture
+  }
+
 
   def getInstanceNumberOfAvailableRevisions(
     org: String,

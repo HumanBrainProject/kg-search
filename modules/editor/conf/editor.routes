@@ -56,6 +56,14 @@ POST    /instances                 controllers.EditorController.getInstancesById
 
 
 
+###
+#  summary: get messages from ui directive
+#  tags:
+#    - editor
+###
+GET    /directives/messages                controllers.EditorController.getUiDirectivesMessages()
+
+
 
 ###
 #tags:
