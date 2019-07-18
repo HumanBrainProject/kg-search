@@ -60,7 +60,7 @@ class EditorUserServiceSpec
         "",
         "",
         "",
-        List(),
+        Some(""),
         None
       )
       val user = EditorUser(NexusInstanceReference.fromUrl(nexusIdUser), nexusUser)
@@ -109,7 +109,7 @@ class EditorUserServiceSpec
         "",
         "",
         "",
-        List(),
+        Some(""),
         None
       )
 
