@@ -18,7 +18,7 @@ package controllers
 
 import akka.stream.Materializer
 import akka.util.ByteString
-import services.OIDCAuthService
+import services.{IDMAPIService, ProxyService, TokenAuthService}
 import helpers.{ESHelper, OIDCHelper, ResponseHelper}
 import javax.inject.{Inject, Singleton}
 import monix.eval.Task
@@ -27,7 +27,6 @@ import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSRequest}
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, Request, ResponseHeader, Result}
 import play.api.{Configuration, Logger}
-import services.ProxyService
 import utils.JsonHandler
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class SearchProxy @Inject()(
   cc: ControllerComponents,
   mat: Materializer,
-  authService: OIDCAuthService,
+  authService: IDMAPIService,
   proxyService: ProxyService
 )(implicit ec: ExecutionContext, ws: WSClient, config: Configuration)
     extends AbstractController(cc) {
@@ -65,7 +64,8 @@ class SearchProxy @Inject()(
       (request.headers.get("index-hint"), request.headers.get("Authorization"))
     opts match {
       case (Some(hints), Some(auth)) =>
-        authService.getUserInfo(request.headers).flatMap {
+        val token = OIDCHelper.getTokenFromRequest(request)
+        authService.getUserInfo(token).flatMap {
           case Some(userInfo) =>
             val esIndex = OIDCHelper.getESIndex(userInfo, hints)
             val (wsRequest, index) = proxyService.queryIndex(esIndex, proxyUrl, es_host, transformInputFunc)

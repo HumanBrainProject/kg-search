@@ -66,7 +66,6 @@ class NexusEditorControllerSpec
 //      val instanceService = mock[EditorService]
 //
 //      val oidcAuthService = mock[OIDCAuthService]
-//      val userInfo = new NexusUser("123", "name", "email", Some("picture"), Seq("group1", "group2"), Seq())
 //      val bodyParser = mock[BodyParsers.Default]
 //      val authMock = new TestAuthenticatedUserAction(bodyParser, authprovider = oidcAuthService, userInfo = userInfo)(ec)
 //      val ws = mock[WSClient]

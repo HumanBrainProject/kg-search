@@ -32,7 +32,7 @@ import scala.util.Try
 
 class MetadataService @Inject()(
   IDMAPIService: IDMAPIService,
-  authService: OIDCAuthService,
+  authService: TokenAuthService,
   WSClient: WSClient,
   @NamedCache("editor-metadata-cache") cache: AsyncCacheApi
 ) {
@@ -70,7 +70,7 @@ object MetadataService {
 
   def getUserFromMetadata(
     userIdOpt: Option[String],
-    authService: OIDCAuthService,
+    authService: TokenAuthService,
     IDMAPIService: IDMAPIService,
     cacheApi: AsyncCacheApi
   ): Task[Option[IDMUser]] = {

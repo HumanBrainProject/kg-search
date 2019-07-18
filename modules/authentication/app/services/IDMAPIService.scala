@@ -16,20 +16,28 @@
 package services
 
 import com.google.inject.Inject
-import models.user.IDMUser
-import models.{AccessToken, BasicAccessToken, Pagination, RefreshAccessToken}
+import helpers.ESHelper
+import models.user.{Group, IDMUser}
+import models.{AccessToken, BasicAccessToken, MindsGroupSpec, Pagination, RefreshAccessToken, UserGroup}
 import monix.eval.Task
 import org.slf4j.LoggerFactory
+import play.api.cache.{AsyncCacheApi, NamedCache}
 import play.api.http.HeaderNames.AUTHORIZATION
 import play.api.http.Status._
-import play.api.libs.json.JsValue
+import play.api.libs.json.{JsPath, JsValue}
 import play.api.libs.ws.{WSClient, WSResponse}
 
-class IDMAPIService @Inject()(WSClient: WSClient, config: ConfigurationService)(
-  implicit OIDCAuthService: OIDCAuthService,
+class IDMAPIService @Inject()(
+  WSClient: WSClient,
+  config: ConfigurationService,
+  esService: ESService,
+  @NamedCache("userinfo-cache") cache: AsyncCacheApi
+)(
+  implicit OIDCAuthService: TokenAuthService,
   clientCredentials: CredentialsService
 ) {
   private val log = LoggerFactory.getLogger(this.getClass)
+  object cacheService extends CacheService
 
   def getUserInfoFromID(userId: String, token: AccessToken): Task[Option[IDMUser]] = {
     if (userId.isEmpty) {
@@ -37,22 +45,55 @@ class IDMAPIService @Inject()(WSClient: WSClient, config: ConfigurationService)(
     } else {
       val url = s"${config.idmApiEndpoint}/user/$userId"
       val q = WSClient.url(url).addHttpHeaders(AUTHORIZATION -> token.token)
+
       val queryResult = token match {
         case BasicAccessToken(_)   => Task.deferFuture(q.get())
         case RefreshAccessToken(_) => AuthHttpClient.getWithRetry(q)
       }
-      queryResult.flatMap { res =>
-        res.status match {
-          case OK =>
-            val user = res.json.as[IDMUser]
-            isUserPartOfGroups(user, List("nexus-curators"), token).map {
-              case Right(bool) => Some(user.copy(isCurator = Some(bool)))
-              case Left(r) =>
-                log.error(s"Could not fetch user groups from IDM API ${r.body}")
-                Some(user)
-            }
-          case _ => Task.pure(None)
-        }
+      val user = for {
+        userRes     <- queryResult
+        userGroups  <- getUserGroups(userId, token)
+        adminGroups <- getUserGroups(userId, token, fetchAdminGroups = true)
+        user = userRes.json.as[IDMUser]
+      } yield user.copy(groups = userGroups ::: adminGroups)
+
+      user.map { u =>
+        Some(u.copy(isCurator = isUserPartOfGroups(u, List("nexus-curators"))))
+      }
+    }
+  }
+
+  def getUserInfo(token: BasicAccessToken): Task[Option[IDMUser]] = {
+    getUserInfoWithCache(token)
+  }
+
+  private def getUserInfoWithCache(token: BasicAccessToken): Task[Option[IDMUser]] = {
+    cacheService.getOrElse[IDMUser](cache, token.token) {
+      getUserInfoFromToken(token).map {
+        case Some(userInfo) =>
+          cache.set(token.token, userInfo, config.cacheExpiration)
+          Some(userInfo)
+        case _ =>
+          None
+      }
+    }
+  }
+
+  private def getUserInfoFromToken(token: BasicAccessToken): Task[Option[IDMUser]] = {
+    val userRequest = WSClient.url(s"${config.idmApiEndpoint}/user/me").addHttpHeaders(AUTHORIZATION -> token.token)
+    Task.deferFuture(userRequest.get()).flatMap { res =>
+      res.status match {
+        case OK =>
+          res.json.asOpt[IDMUser] match {
+            case Some(u) =>
+              getUserGroups(u.id, token).map { groups =>
+                Some(u.copy(groups = groups))
+              }
+            case None => Task.pure(None)
+          }
+        case _ =>
+          log.error(s"Could not fetch user - ${res.body}")
+          Task.pure(None)
       }
     }
   }
@@ -86,9 +127,11 @@ class IDMAPIService @Inject()(WSClient: WSClient, config: ConfigurationService)(
                   (res.json \ "_embedded" \ "users")
                     .as[List[IDMUser]]
                     .map { u =>
-                      isUserPartOfGroups(u, List("nexus-curators"), token).map {
-                        case Right(bool) => u.copy(isCurator = Some(bool))
-                        case Left(_)     => u
+                      hasUserGroups(u, List("nexus-curators"), token).map {
+                        case Right(bool) => u.copy(isCurator = bool)
+                        case Left(res) =>
+                          log.error(s"Could not verify if user is curator - ${res.body}")
+                          u
                       }
                     }
                 )
@@ -104,7 +147,11 @@ class IDMAPIService @Inject()(WSClient: WSClient, config: ConfigurationService)(
     }
   }
 
-  def isUserPartOfGroups(
+  private def isUserPartOfGroups(user: IDMUser, groups: List[String]): Boolean = {
+    groups.forall(s => user.groups.exists(g => g.name.equals(s)))
+  }
+
+  def hasUserGroups(
     user: IDMUser,
     groups: List[String],
     token: AccessToken
@@ -123,6 +170,62 @@ class IDMAPIService @Inject()(WSClient: WSClient, config: ConfigurationService)(
       }
     }
 
+  }
+
+  def getUserGroups(
+    userId: String,
+    token: AccessToken,
+    fetchAdminGroups: Boolean = false
+  ): Task[List[Group]] = {
+    val groupPath = if (fetchAdminGroups) {
+      "admin-groups"
+    } else {
+      "member-groups"
+    }
+    val url = s"${config.idmApiEndpoint}/user/${userId}/$groupPath"
+    val q =
+      WSClient.url(url).addHttpHeaders(AUTHORIZATION -> token.token).addQueryStringParameters("pageSize" -> "10000")
+    val r = token match {
+      case BasicAccessToken(_)   => Task.deferFuture(q.get())
+      case RefreshAccessToken(_) => AuthHttpClient.getWithRetry(q)
+    }
+    r.map { res =>
+      res.status match {
+        case OK =>
+          (res.json \ "_embedded" \ "groups").as[List[Group]]
+        case _ =>
+          log.error(s"Could not fetch user groups - ${res.body}")
+          List()
+      }
+    }
+
+  }
+
+  /**
+    * From a UserInfo object returns the index accessible in ES
+    * @param userInfo The user info
+    * @return A list of accessible index in ES
+    */
+  def groups(userInfo: Option[IDMUser]): Task[List[UserGroup]] = {
+    userInfo match {
+      case Some(info) =>
+        for {
+          esIndices <- esService.getEsIndices()
+        } yield {
+          val kgIndices = esIndices.filter(_.startsWith("kg_")).map(_.substring(3))
+          val nexusGroups = info.groups
+          val resultingGroups = ESHelper.filterNexusGroups(nexusGroups).filter(group => kgIndices.contains(group))
+          log.debug(esIndices + "\n" + kgIndices + "\n " + nexusGroups)
+          resultingGroups.toList.map { groupName =>
+            if (MindsGroupSpec.group.contains(groupName)) {
+              UserGroup(groupName, Some(MindsGroupSpec.v))
+            } else {
+              UserGroup(groupName, None)
+            }
+          }
+        }
+      case _ => Task.pure(List())
+    }
   }
 
 }

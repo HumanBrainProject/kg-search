@@ -13,11 +13,11 @@ lazy val data_import = (project in file("modules/data_import"))
 
 lazy val auth = (project in file("modules/authentication"))
   .enablePlugins(PlayScala)
-  .dependsOn(common, nexus)
+  .dependsOn(common)
 
 lazy val nexus = (project in file("modules/nexus"))
   .enablePlugins(PlayScala)
-  .dependsOn(common)
+  .dependsOn(common, auth)
 
 lazy val proxy = (project in file("modules/proxy"))
   .enablePlugins(PlayScala)

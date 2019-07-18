@@ -26,7 +26,7 @@ import play.api.mvc.{Request, WrappedRequest}
   * @tparam A
   */
 final case class EditorUserWriteRequest[A](
-  user: NexusUser,
+  user: IDMUser,
   editorGroup: String,
   request: Request[A],
   userToken: AccessToken

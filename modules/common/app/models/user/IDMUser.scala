@@ -26,8 +26,10 @@ final case class IDMUser(
   displayName: String,
   emails: List[Email],
   picture: Option[String],
-  isCurator: Option[Boolean]
-)
+  isCurator: Boolean = false,
+  groups: List[Group] = List()
+) extends User
+    with Serializable {}
 
 object IDMUser {
   type ID = String
@@ -39,7 +41,8 @@ object IDMUser {
     (JsPath \ "displayName").read[String] and
     (JsPath \ "emails").read[List[Email]] and
     (JsPath \ "picture").readNullable[String] and
-    (JsPath \ "isCurator").readNullable[Boolean]
+    (JsPath \ "isCurator").read[Boolean] and
+    (JsPath \ "groups").read[List[Group]]
   )(IDMUser.apply _)
 
   implicit val idmUserWrites: Writes[IDMUser] = (
@@ -50,7 +53,8 @@ object IDMUser {
     (JsPath \ "displayName").write[String] and
     (JsPath \ "emails").write[List[Email]] and
     (JsPath \ "picture").writeNullable[String] and
-    (JsPath \ "isCurator").writeNullable[Boolean]
+    (JsPath \ "isCurator").write[Boolean] and
+    (JsPath \ "groups").write[List[Group]]
   )(unlift(IDMUser.unapply))
 }
 
