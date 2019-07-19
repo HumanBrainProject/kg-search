@@ -1,0 +1,40 @@
+###
+# tags:
+# - Specification
+# summary: Returns a template about a datatype's specification
+# operationId: getSpecificationTemplate
+# produces:
+# - application/json
+# parameters:
+#  - in: path
+#    name: org
+#    type: string
+#    required: true
+#  - in: path
+#    name: domain
+#    type: string
+#    required: true
+#  - in: path
+#    name: schema
+#    type: string
+#    required: true
+#  - in: path
+#    name: version
+#    type: string
+#    required: true
+#  - in: path
+#    name: id
+#    type: string
+#    required: true
+#  - in: header
+#    name: Authorization
+#    description: Authorization token
+#    required: false
+#    type: string
+# responses:
+#   200:
+#     description: successful operation
+#     schema:
+#       type: object
+###
+GET /:org/:domain/:schema/:version/template        controllers.SpecificationController.getTemplate(org: String, domain:String, schema: String, version:String)

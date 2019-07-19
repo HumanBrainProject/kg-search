@@ -532,3 +532,6 @@ POST /bookmarks                                                 controllers.Edit
 
 #Review Routes
 -> /review review.Routes
+
+#Specifications Routes
+-> /specifications specification.Routes
