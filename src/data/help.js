@@ -30,4 +30,9 @@ If you want to save or share your queries, you can simply reuse the URL in your 
 If you own an HBP account, you might be eligible to see and search additional data (depending on your access rights). If so, you can select the "Log in" button on the bottom right of the page. After the login, choose as member of which group you want to browse the Knowledge Graph in the selection box which shows up next to the "Log out" button. If no selection box shows up, this means that you aren't member of one of the extended Knowledge Graph Search spaces. 
 
 ##Further questions and/or feedback
-If you have any further questions and/or feedback, do not hesitate to [contact us by e-mail](mailto:kg-team@humanbrainproject.eu)`;
+If you have any further questions and/or feedback, do not hesitate to [contact us by e-mail](mailto:kg-team@humanbrainproject.eu)
+
+##Acknowledgements
+This open source software code was developed in part or in whole in the Human Brain Project, funded from the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreements No. 720270 and No. 785907(Human Brain Project SGA1 and SGA2).
+
+Powered by [Blue Brain Nexus](https://bluebrainnexus.io/docs/) `;
