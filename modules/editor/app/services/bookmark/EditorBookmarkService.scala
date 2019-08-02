@@ -24,7 +24,7 @@ import models.editorUserList._
 import models.errors.APIEditorError
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference, PreviewInstance}
 import models.specification.{FormRegistry, QuerySpec, UISpec}
-import models.user.{EditorUser, NexusUser}
+import models.user.{EditorUser, IDMUser}
 import monix.eval.Task
 import play.api.Logger
 import play.api.http.ContentTypes._
@@ -35,14 +35,13 @@ import play.api.libs.ws.WSClient
 import services._
 import services.instance.InstanceApiService
 import services.query.{QueryApiParameter, QueryService}
-import services.specification.{FormOp, FormService}
+import services.specification.FormOp
 
 class EditorBookmarkService @Inject()(
   config: ConfigurationService,
   wSClient: WSClient,
-  nexusService: NexusService,
-  nexusExtensionService: NexusExtensionService
-)(implicit OIDCAuthService: OIDCAuthService, clientCredentials: CredentialsService)
+  nexusService: NexusService
+)(implicit OIDCAuthService: TokenAuthService, clientCredentials: CredentialsService)
     extends EditorBookmarkServiceInterface {
   val logger = Logger(this.getClass)
 
@@ -70,10 +69,10 @@ class EditorBookmarkService @Inject()(
           case OK =>
             val folders = (res.json \ "userFolders").as[List[BookmarkListFolder]]
             // Concatenate with form service lists
-            val r = getEditableEntities(editorUser.nexusUser, formRegistry)
+            val r = getEditableEntities(editorUser.user, formRegistry)
             Right(folders ::: r)
           case _ =>
-            logger.error(s"Could not fetch the user with ID ${editorUser.nexusUser.id} ${res.body}")
+            logger.error(s"Could not fetch the user with ID ${editorUser.user.id} ${res.body}")
             Left(APIEditorError(res.status, res.body))
         }
       }
@@ -81,16 +80,16 @@ class EditorBookmarkService @Inject()(
 
   /**
     * Get folder containing static list of bookmarklist
-    * @param nexusUser Nexus user is needed in order to retriev correct access right to entity types
+    * @param user Nexus user is needed in order to retriev correct access right to entity types
     * @param formRegistry The form containing all the entities information
     * @return a list of bookmark folder
     */
   private def getEditableEntities(
-    nexusUser: NexusUser,
+    user: IDMUser,
     formRegistry: FormRegistry[UISpec]
   ): List[BookmarkListFolder] = {
     val allEditableEntities = FormOp
-      .editableEntities(nexusUser, formRegistry)
+      .editableEntities(user, formRegistry)
       .foldLeft(SystemDefinedFolder.getFolders) {
         case (acc, (path, uiSpec)) =>
           val userList = BookmarkList(
@@ -373,7 +372,7 @@ class EditorBookmarkService @Inject()(
             (res.json \ "bookmarks").asOpt[List[JsValue]] match {
               case Some(ids) => //Delete the bookmarks
                 val bookmarksFromDb = ids
-                  .filter(js => (js \ EditorConstants.USERID).as[List[String]].contains(editorUser.nexusUser.id))
+                  .filter(js => (js \ EditorConstants.USERID).as[List[String]].contains(editorUser.user.id))
                   .map(js => NexusInstanceReference.fromUrl((js \ "bookmarkListId").as[List[String]].head))
                 val (bookmarksToAdd, bookmarksListWithBookmarksToDelete) =
                   BookmarkHelper.bookmarksToAddAndDelete(bookmarksFromDb, bookmarksListFromUser)
@@ -455,7 +454,7 @@ class EditorBookmarkService @Inject()(
             (res.json \ "bookmarkList").asOpt[List[JsValue]] match {
               case Some(result) =>
                 val userList = result
-                  .filter(js => (js \ EditorConstants.USERID).as[List[String]].contains(editorUser.nexusUser.id))
+                  .filter(js => (js \ EditorConstants.USERID).as[List[String]].contains(editorUser.user.id))
                   .map(_.as[BookmarkList])
                 (instanceReference, Right(userList))
               case None => (instanceReference, Right(List()))
@@ -708,16 +707,18 @@ object EditorBookmarkService {
   }
 
   def bookmarkListToNexusStruct(name: String, userFolderId: String, newDate: Option[String] = None): JsObject =
-    newDate match  {
-      case Some(d) => Json.obj(
-        SchemaFieldsConstants.NAME                                           -> name,
-        EditorConstants.EDITORNAMESPACE + EditorConstants.BOOKMARKLISTFOLDER -> Json.obj("@id" -> s"$userFolderId"),
-        SchemaFieldsConstants.lastUpdate -> d
-      )
-      case None => Json.obj(
-        SchemaFieldsConstants.NAME                                           -> name,
-        EditorConstants.EDITORNAMESPACE + EditorConstants.BOOKMARKLISTFOLDER -> Json.obj("@id" -> s"$userFolderId")
-      )
+    newDate match {
+      case Some(d) =>
+        Json.obj(
+          SchemaFieldsConstants.NAME                                           -> name,
+          EditorConstants.EDITORNAMESPACE + EditorConstants.BOOKMARKLISTFOLDER -> Json.obj("@id" -> s"$userFolderId"),
+          SchemaFieldsConstants.lastUpdate                                     -> d
+        )
+      case None =>
+        Json.obj(
+          SchemaFieldsConstants.NAME                                           -> name,
+          EditorConstants.EDITORNAMESPACE + EditorConstants.BOOKMARKLISTFOLDER -> Json.obj("@id" -> s"$userFolderId")
+        )
     }
 
   def bookmarkListFolderToNexusStruct(name: String, userNexusId: String, folderType: FolderType): JsObject = {

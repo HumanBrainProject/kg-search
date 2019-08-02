@@ -17,7 +17,7 @@
 package actions
 
 import helpers.EditorSpaceHelper
-import models.user.{EditorUser, EditorUserRequest, EditorUserWriteRequest, NexusUser}
+import models.user.{EditorUserRequest, EditorUserWriteRequest, IDMUser}
 import models.{user, IAMPermission, UserRequest}
 import monix.eval.Task
 import play.api.Logger
@@ -39,9 +39,10 @@ object EditorUserAction {
       def executionContext: ExecutionContext = ec
 
       def refine[A](input: UserRequest[A]): Future[Either[Result, EditorUserWriteRequest[A]]] = {
-        val editorOrg = if (org.endsWith(editorSuffix)) org else org + editorSuffix
+        val editorOrg = if (org.endsWith(editorSuffix)) org else org + "-" + editorSuffix
+        val iamOrg = if (org.endsWith(editorSuffix)) org else org + editorSuffix
         val result = if (EditorSpaceHelper.isEditorGroup(input.user, editorOrg)) {
-          iAMAuthService.getAcls(editorOrg, Seq(("self", "true"), ("parents", "true")), input.userToken).map {
+          iAMAuthService.getAcls(iamOrg, Seq(("self", "true"), ("parents", "true")), input.userToken).map {
             case Right(acls) =>
               if (IAMAuthService.hasAccess(acls, IAMPermission.Write)) {
                 Right(EditorUserWriteRequest(input.user, org, input, input.userToken))
@@ -82,15 +83,14 @@ object EditorUserAction {
       }
     }
 
-  def isCurator(user: NexusUser, org: String): Boolean = {
+  def isCurator(user: IDMUser, org: String): Boolean = {
     val pattern = """^(.+)editorsug$""".r
     val curatorOrg = org match {
       case pattern(o) => o
       case _          => org
     }
     // Nexus curator a super group of other curator groups
-    user.groups.contains("nexus-curators") || user.groups
-      .exists(s => s.matches(s"^nexus-$curatorOrg-curator$$"))
+    user.groups.exists(g => g.name.equals("nexus-curators") || g.name.matches(s"^nexus-$curatorOrg-curator$$"))
   }
 
   def curatorUserAction(
@@ -100,7 +100,7 @@ object EditorUserAction {
       def executionContext: ExecutionContext = ec
 
       def filter[A](input: EditorUserRequest[A]): Future[Option[Result]] = {
-        Future.successful(if (isCurator(input.editorUser.nexusUser, org)) {
+        Future.successful(if (isCurator(input.editorUser.user, org)) {
           None
         } else {
           Some(Forbidden("You do not have sufficient access rights to proceed"))

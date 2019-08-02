@@ -28,7 +28,7 @@ import models.AccessToken
 import models.errors.APIEditorError
 import models.instance.{NexusInstance, NexusInstanceReference}
 import models.specification.QuerySpec
-import models.user.{EditorUser, NexusUser}
+import models.user.{EditorUser, IDMUser}
 import monix.eval.Task
 import monix.execution.Scheduler.Implicits.global
 import play.api.Logger
@@ -64,9 +64,8 @@ class EditorUserService @Inject()(
   wSClient: WSClient,
   nexusService: NexusService,
   @NamedCache("editor-userinfo-cache") cache: AsyncCacheApi,
-  nexusExtensionService: NexusExtensionService,
 )(
-  implicit oIDCAuthService: OIDCAuthService,
+  implicit oIDCAuthService: TokenAuthService,
   credentials: CredentialsService,
   actorSystem: ActorSystem
 ) {
@@ -83,8 +82,8 @@ class EditorUserService @Inject()(
       UserRequestMap.cleanMap
     }
 
-  def getUser(nexusUser: NexusUser, token: AccessToken): Task[Either[APIEditorError, Option[EditorUser]]] = {
-    cacheService.get[EditorUser](cache, nexusUser.id.toString).flatMap {
+  def getUser(user: IDMUser, token: AccessToken): Task[Either[APIEditorError, Option[EditorUser]]] = {
+    cacheService.get[EditorUser](cache, user.id).flatMap {
       case None =>
         queryService
           .getInstances(
@@ -94,7 +93,7 @@ class EditorUserService @Inject()(
             QuerySpec(Json.obj(), Some("kguser")),
             token,
             QueryApiParameter(vocab = Some(EditorConstants.editorVocab)),
-            Map("userId" -> nexusUser.id)
+            Map("userId" -> user.id)
           )
           .map { res =>
             res.status match {
@@ -105,15 +104,15 @@ class EditorUserService @Inject()(
                   val msg = s"Multiple user with the same ID detected: ${users.map(js => js \ "nexusId").mkString(" ")}"
                   logger.error(msg)
                   val id = (users.head \ "nexusId").as[String]
-                  cacheUser(id, nexusUser).some.asRight
+                  cacheUser(id, user).some.asRight
                 } else if (users.size == 1) {
                   val id = (users.head \ "nexusId").as[String]
-                  cacheUser(id, nexusUser).some.asRight
+                  cacheUser(id, user).some.asRight
                 } else {
                   None.asRight
                 }
               case _ =>
-                logger.error(s"Could not fetch the user with ID ${nexusUser.id} ${res.body}")
+                logger.error(s"Could not fetch the user with ID ${user.id} ${res.body}")
                 APIEditorError(res.status, res.body).asLeft
             }
           }
@@ -121,28 +120,28 @@ class EditorUserService @Inject()(
     }
   }
 
-  private def cacheUser(userId: String, nexusUser: NexusUser): EditorUser = {
-    val editorUser = EditorUser(NexusInstanceReference.fromUrl(userId), nexusUser)
-    cache.set(editorUser.nexusUser.id, editorUser, config.cacheExpiration)
+  private def cacheUser(userId: String, user: IDMUser): EditorUser = {
+    val editorUser = EditorUser(NexusInstanceReference.fromUrl(userId), user)
+    cache.set(editorUser.user.id, editorUser, config.cacheExpiration)
     editorUser
   }
 
-  def getOrCreateUser(nexusUser: NexusUser, token: AccessToken)(
+  def getOrCreateUser(user: IDMUser, token: AccessToken)(
     afterCreation: (EditorUser, AccessToken) => Task[Either[APIEditorError, EditorUser]]
   ): Task[Either[APIEditorError, EditorUser]] =
-    getUser(nexusUser, token).flatMap {
+    getUser(user, token).flatMap {
       case Right(Some(editorUser)) => Task.pure(editorUser.asRight)
       case Right(None) =>
         logger.debug("Calling second time get user returns None")
         UserRequestMap
-          .get(nexusUser.id.toString) match {
+          .get(user.id.toString) match {
           case Some(req) =>
-            logger.debug(s"Fetching request from cache for user ${nexusUser.id.toString}")
+            logger.debug(s"Fetching request from cache for user ${user.id.toString}")
             req
           case None =>
-            logger.debug(s"Adding request to cache for user ${nexusUser.id.toString}")
+            logger.debug(s"Adding request to cache for user ${user.id.toString}")
             val task = Task.from {
-              createUser(nexusUser, token).flatMap {
+              createUser(user, token).flatMap {
                 case Right(editorUser) =>
                   logger.debug("Creating the user")
                   afterCreation(editorUser, token)
@@ -150,7 +149,7 @@ class EditorUserService @Inject()(
               }
             }.memoize
             UserRequestMap.put(
-              nexusUser.id.toString,
+              user.id.toString,
               task
             )
             scheduler
@@ -159,19 +158,19 @@ class EditorUserService @Inject()(
       case Left(e) => Task.pure(e.asLeft)
     }
 
-  def createUser(nexusUser: NexusUser, token: AccessToken): Task[Either[APIEditorError, EditorUser]] = {
+  def createUser(user: IDMUser, token: AccessToken): Task[Either[APIEditorError, EditorUser]] = {
     instanceApiService
       .post(
         wSClient,
         config.kgQueryEndpoint,
-        NexusInstance(None, EditorConstants.editorUserPath, EditorUserService.userToNexusStruct(nexusUser.id)),
+        NexusInstance(None, EditorConstants.editorUserPath, EditorUserService.userToNexusStruct(user.id)),
         None,
         token
       )
       .map {
-        case Right(ref) => EditorUser(ref, nexusUser).asRight
+        case Right(ref) => EditorUser(ref, user).asRight
         case Left(res) =>
-          logger.error(s"Could not create the user with ID ${nexusUser.id} - ${res.body}")
+          logger.error(s"Could not create the user with ID ${user.id} - ${res.body}")
           APIEditorError(res.status, res.body).asLeft
       }
   }

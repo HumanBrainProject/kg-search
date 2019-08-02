@@ -22,7 +22,7 @@ import helpers.ConfigMock._
 import mockws.{MockWS, MockWSHelpers}
 import models.BasicAccessToken
 import models.instance.NexusInstanceReference
-import models.user.{EditorUser, NexusUser}
+import models.user.{EditorUser, IDMUser}
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -54,13 +54,14 @@ class EditorUserServiceSpec
       val id = "1"
       val idUser = "nexusUUID1"
       val nexusIdUser = s"${EditorConstants.editorUserPath.toString()}/$idUser"
-      val nexusUser = NexusUser(
+      val nexusUser = new IDMUser(
         id,
         "",
         "",
-        None,
-        Seq(),
-        Seq()
+        "",
+        "",
+        Some(""),
+        None
       )
       val user = EditorUser(NexusInstanceReference.fromUrl(nexusIdUser), nexusUser)
       val endpointResponse = Json.parse(
@@ -77,16 +78,15 @@ class EditorUserServiceSpec
             Ok(Json.obj("results" -> Json.toJson(List(endpointResponse))))
           }
       }
-      val oidcService = mock[OIDCAuthService]
+      val oidcService = mock[TokenAuthService]
       val clientCred = mock[CredentialsService]
       val nexusService = mock[NexusService]
       val configService = mock[ConfigurationService]
-      val nexusExt = mock[NexusExtensionService]
       val cache = mock[AsyncCacheApi]
       val actorSystem = mock[ActorSystem]
       when(cache.get[EditorUser](id)).thenReturn(Future(None))
       val service =
-        new EditorUserService(configService, ws, nexusService, cache, nexusExt)(
+        new EditorUserService(configService, ws, nexusService, cache)(
           oidcService,
           clientCred,
           actorSystem
@@ -103,13 +103,14 @@ class EditorUserServiceSpec
       val id = "1"
       val idUser = "nexusUUID1"
       val nexusIdUser = s"${EditorConstants.editorUserPath.toString()}/$idUser"
-      val nexusUser = NexusUser(
+      val nexusUser = new IDMUser(
         id,
         "",
         "",
-        None,
-        Seq(),
-        Seq()
+        "",
+        "",
+        Some(""),
+        None
       )
 
       implicit val ws = MockWS {
@@ -118,16 +119,15 @@ class EditorUserServiceSpec
             NotFound("User not found")
           }
       }
-      val oidcService = mock[OIDCAuthService]
+      val oidcService = mock[TokenAuthService]
       val nexusService = mock[NexusService]
       val configService = mock[ConfigurationService]
       val clientCred = mock[CredentialsService]
-      val nexusExt = mock[NexusExtensionService]
       val cache = mock[AsyncCacheApi]
       val actorSystem = mock[ActorSystem]
       when(cache.get[EditorUser](id)).thenReturn(Future(None))
       val service =
-        new EditorUserService(configService, ws, nexusService, cache, nexusExt)(
+        new EditorUserService(configService, ws, nexusService, cache)(
           oidcService,
           clientCred,
           actorSystem

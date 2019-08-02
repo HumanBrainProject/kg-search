@@ -43,7 +43,7 @@ class EditorUserController @Inject()(
   editorUserService: EditorUserService,
   editorUserListService: EditorBookmarkService,
   nexusService: NexusService,
-  oIDCAuthService: OIDCAuthService,
+  oIDCAuthService: TokenAuthService,
   formService: FormService
 )(implicit ec: ExecutionContext)
     extends AbstractController(cc) {
@@ -63,11 +63,11 @@ class EditorUserController @Inject()(
       case Right(_) =>
         Task.pure(Right(editorUser))
       case Left(error) =>
-        logger.info(s"Deleting editor user with id : ${editorUser.nexusUser.id}")
+        logger.info(s"Deleting editor user with id : ${editorUser.user.id}")
         editorUserService.deleteUser(editorUser, token).map {
           case Left(err) => Left(err)
           case Right(()) =>
-            logger.info(s"User deleted : ${editorUser.nexusUser.id}")
+            logger.info(s"User deleted : ${editorUser.user.id}")
             Left(error)
         }
     }
@@ -206,12 +206,12 @@ class EditorUserController @Inject()(
                     NexusInstanceReference(ref.nexusPath.withSpecificSubspace(config.editorSubSpace), id),
                     userFolderId,
                     Some(newDate),
-                    request.editorUser.nexusUser.id,
+                    request.editorUser.user.id,
                     token
                   )
                   .map[Result] {
                     case Left(error) => error.toResult
-                    case Right(r) => Ok(Json.toJson(EditorResponseObject(Json.toJson(r))))
+                    case Right(r)    => Ok(Json.toJson(EditorResponseObject(Json.toJson(r))))
                   }
             }
           } yield result

@@ -16,12 +16,12 @@
 
 package services.specification
 
-import constants.{EditorConstants, InternalSchemaFieldsConstants, JsonLDConstants, SchemaFieldsConstants, UiConstants}
+import constants._
 import models.NexusPath
 import models.instance.{EditorInstance, NexusInstance, NexusInstanceReference}
-import models.specification.{DropdownSelect, FormRegistry, InputText, InputTextMultiple, TextArea, UISpec}
-import models.user.NexusUser
-import play.api.libs.json.{JsArray, JsBoolean, JsNull, JsObject, JsString, JsValue, Json}
+import models.specification._
+import models.user.IDMUser
+import play.api.libs.json._
 
 object FormOp {
 
@@ -293,8 +293,8 @@ object FormOp {
     }
   }
 
-  def editableEntities(user: NexusUser, formRegistry: FormRegistry[UISpec]): List[(NexusPath, UISpec)] = {
-    val registry = FormRegistry.filterOrgs(formRegistry, user.organizations)
+  def editableEntities(user: IDMUser, formRegistry: FormRegistry[UISpec]): List[(NexusPath, UISpec)] = {
+    val registry = FormRegistry.filterOrgs(formRegistry, user.groups)
     buildEditableEntityTypesFromRegistry(registry)
   }
 }

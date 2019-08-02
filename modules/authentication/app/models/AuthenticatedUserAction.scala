@@ -18,9 +18,11 @@ package models
 
 import com.google.inject.Inject
 import helpers.OIDCHelper
-import play.api.mvc._
+import monix.eval.Task
+import monix.execution.Scheduler
 import play.api.mvc.Results._
-import services.OIDCAuthService
+import play.api.mvc._
+import services.IDMAPIService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -28,11 +30,10 @@ import scala.concurrent.{ExecutionContext, Future}
   * Cobbled this together from:
   * https://www.playframework.com/documentation/2.6.x/ScalaActionsComposition#Authentication
   */
-class AuthenticatedUserAction @Inject()(val parser: BodyParsers.Default, authprovider: OIDCAuthService)(
+class AuthenticatedUserAction @Inject()(val parser: BodyParsers.Default, authprovider: IDMAPIService)(
   implicit val executionContext: ExecutionContext
 ) extends ActionBuilder[UserRequest, AnyContent] {
-  private val logger = play.api.Logger(this.getClass)
-  implicit val scheduler = monix.execution.Scheduler.Implicits.global
+  implicit val scheduler: Scheduler = monix.execution.Scheduler.Implicits.global
 
   /**
     * This action helps us identify a user. If the user is not logged in a 401 is returned
@@ -42,14 +43,17 @@ class AuthenticatedUserAction @Inject()(val parser: BodyParsers.Default, authpro
     * @return The play action with the user info or Unauthorized
     */
   override def invokeBlock[A](request: Request[A], block: (UserRequest[A]) => Future[Result]): Future[Result] = {
-    authprovider.getUserInfo(request.headers).runToFuture.flatMap { user =>
-      val token = OIDCHelper.getTokenFromRequest[A](request)
-      if (user.isDefined) {
-        block(new UserRequest(user.get, request, token))
-      } else {
-        Future.successful(Unauthorized("You must be logged in to execute this request"))
+    val token = OIDCHelper.getTokenFromRequest[A](request)
+    authprovider
+      .getUserInfo(token)
+      .flatMap { user =>
+        if (user.isDefined) {
+          Task.deferFuture(block(new UserRequest(user.get, request, token)))
+        } else {
+          Task.pure(Unauthorized("You must be logged in to execute this request"))
+        }
       }
-    }
+      .runToFuture
   }
 
 }

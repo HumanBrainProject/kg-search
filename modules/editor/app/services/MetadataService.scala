@@ -32,7 +32,7 @@ import scala.util.Try
 
 class MetadataService @Inject()(
   IDMAPIService: IDMAPIService,
-  authService: OIDCAuthService,
+  authService: TokenAuthService,
   WSClient: WSClient,
   @NamedCache("editor-metadata-cache") cache: AsyncCacheApi
 ) {
@@ -70,22 +70,27 @@ object MetadataService {
 
   def getUserFromMetadata(
     userIdOpt: Option[String],
-    authService: OIDCAuthService,
+    authService: TokenAuthService,
     IDMAPIService: IDMAPIService,
     cacheApi: AsyncCacheApi
   ): Task[Option[IDMUser]] = {
     userIdOpt match {
       case Some(userIdO) =>
-        logger.debug(s"Fetching metadata for user ${userIdO}")
+        val id = if (userIdO.startsWith("https://")) {
+          userIdO.split("/").last
+        } else {
+          userIdO
+        }
+        logger.debug(s"Fetching metadata for user ${id}")
         cacheService
-          .getOrElse[IDMUser](cacheApi, userIdO) {
+          .getOrElse[IDMUser](cacheApi, id) {
             val u = for {
               token <- authService.getTechAccessToken()
-              user  <- IDMAPIService.getUserInfoFromID(userIdO, token)
+              user  <- IDMAPIService.getUserInfoFromID(id, token)
             } yield user
             u.flatMap {
               case Some(idmUser) =>
-                cacheService.set[IDMUser](cacheApi, userIdO, idmUser, 2.hours).map { _ =>
+                cacheService.set[IDMUser](cacheApi, id, idmUser, 2.hours).map { _ =>
                   Some(idmUser)
                 }
               case None => Task.pure(None)

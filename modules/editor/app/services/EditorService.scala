@@ -23,7 +23,7 @@ import cats.implicits._
 import models.errors.{APIEditorError, APIEditorMultiError}
 import models.instance._
 import models.specification.{FormRegistry, QuerySpec, UISpec}
-import models.user.{NexusUser, User}
+import models.user.{IDMUser, User}
 import models.{AccessToken, NexusPath}
 import monix.eval.Task
 import org.joda.time.DateTime
@@ -40,7 +40,7 @@ class EditorService @Inject()(
   config: ConfigurationService,
   formService: FormService
 )(
-  implicit OIDCAuthService: OIDCAuthService,
+  implicit OIDCAuthService: TokenAuthService,
   clientCredentials: CredentialsService
 ) {
 
@@ -139,7 +139,7 @@ class EditorService @Inject()(
   def updateInstanceFromForm(
     instanceRef: NexusInstanceReference,
     form: Option[JsValue],
-    user: NexusUser,
+    user: IDMUser,
     token: AccessToken,
     reverseLinkService: ReverseLinkService
   ): Task[Either[APIEditorMultiError, Unit]] = {

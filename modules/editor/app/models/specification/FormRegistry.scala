@@ -16,15 +16,16 @@
 package models.specification
 
 import models.NexusPath
+import models.user.Group
 
 final case class FormRegistry[A](registry: Map[NexusPath, A])
 
 object FormRegistry {
 
-  def filterOrgs(formRegistry: FormRegistry[UISpec], orgs: Seq[String]): FormRegistry[UISpec] = {
+  def filterOrgs(formRegistry: FormRegistry[UISpec], orgs: List[Group]): FormRegistry[UISpec] = {
     formRegistry.copy(
       registry = formRegistry.registry.filter {
-        case (path, _) => orgs.contains(path.org)
+        case (path, _) => orgs.exists(g => g.name.equals(s"nexus-${path.org}"))
       }
     )
   }

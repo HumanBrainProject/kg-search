@@ -17,17 +17,18 @@
 package controllers
 
 import com.google.inject.Inject
+import helpers.OIDCHelper
 import javax.inject.Singleton
 import models.AuthenticatedUserAction
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
-import services.{ConfigurationService, OIDCAuthService}
+import services.{ConfigurationService, IDMAPIService}
 
 @Singleton
 class OIDCController @Inject()(
   cc: ControllerComponents,
-  authService: OIDCAuthService,
+  authService: IDMAPIService,
   authenticatedUserAction: AuthenticatedUserAction,
   config: ConfigurationService
 ) extends AbstractController(cc) {
@@ -39,8 +40,9 @@ class OIDCController @Inject()(
     * @return A list of accessible ES index
     */
   def groups(): Action[AnyContent] = Action.async { implicit request =>
+    val token = OIDCHelper.getTokenFromRequest(request)
     authService
-      .getUserInfo(request.headers)
+      .getUserInfo(token)
       .flatMap { userinfo =>
         logger.debug(s"Authenticated user ${userinfo}")
         authService.groups(userinfo).map(l => Ok(Json.toJson(l)))

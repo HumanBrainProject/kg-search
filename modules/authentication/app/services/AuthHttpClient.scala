@@ -24,7 +24,7 @@ import play.api.libs.ws.{BodyWritable, WSRequest, WSResponse}
 object AuthHttpClient {
 
   def postWithRetry[T: BodyWritable](request: WSRequest, body: T)(
-    implicit oIDCAuthService: OIDCAuthService,
+    implicit oIDCAuthService: TokenAuthService,
     credentials: CredentialsService
   ): Task[WSResponse] = {
     Task.deferFuture(request.post(body)).flatMap { res =>
@@ -40,7 +40,7 @@ object AuthHttpClient {
   }
 
   def putWithRetry[T: BodyWritable](request: WSRequest, body: T)(
-    implicit oIDCAuthService: OIDCAuthService,
+    implicit oIDCAuthService: TokenAuthService,
     credentials: CredentialsService
   ): Task[WSResponse] = {
     Task.deferFuture(request.put(body)).flatMap { res =>
@@ -56,7 +56,7 @@ object AuthHttpClient {
   }
 
   def getWithRetry(request: WSRequest)(
-    implicit oIDCAuthService: OIDCAuthService,
+    implicit oIDCAuthService: TokenAuthService,
     credentials: CredentialsService
   ): Task[WSResponse] = {
     Task.deferFuture(request.get()).flatMap { res =>
@@ -72,7 +72,7 @@ object AuthHttpClient {
   }
 
   def deleteWithRetry(request: WSRequest)(
-    implicit oIDCAuthService: OIDCAuthService,
+    implicit oIDCAuthService: TokenAuthService,
     credentials: CredentialsService
   ): Task[WSResponse] = {
     Task.deferFuture(request.delete()).flatMap { res =>

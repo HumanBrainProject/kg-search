@@ -16,17 +16,17 @@
 package controllers
 
 import com.google.inject.Inject
+import models.user.IDMUser
 import models.{AuthenticatedUserAction, BasicAccessToken, UserRequest}
-import models.user.NexusUser
 import play.api.mvc.{BodyParsers, Request, Result}
-import services.OIDCAuthService
+import services.IDMAPIService
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class TestAuthenticatedUserAction @Inject()(
   override val parser: BodyParsers.Default,
-  authprovider: OIDCAuthService,
-  userInfo: NexusUser
+  authprovider: IDMAPIService,
+  userInfo: IDMUser
 )(implicit override val executionContext: ExecutionContext)
     extends AuthenticatedUserAction(parser, authprovider)(executionContext) {
   override def invokeBlock[A](request: Request[A], block: (UserRequest[A]) => Future[Result]): Future[Result] = {

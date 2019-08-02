@@ -15,7 +15,7 @@
  */
 package models
 
-import models.user.NexusUser
+import models.user.IDMUser
 import play.api.mvc.{Request, WrappedRequest}
 
 /**
@@ -24,5 +24,5 @@ import play.api.mvc.{Request, WrappedRequest}
   * @param request
   * @tparam A
   */
-class UserRequest[A](val user: NexusUser, val request: Request[A], val userToken: BasicAccessToken)
+class UserRequest[A](val user: IDMUser, val request: Request[A], val userToken: BasicAccessToken)
     extends WrappedRequest[A](request)

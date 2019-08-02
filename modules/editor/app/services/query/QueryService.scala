@@ -23,7 +23,7 @@ import monix.eval.Task
 import play.api.http.ContentTypes._
 import play.api.http.HeaderNames._
 import play.api.libs.ws.{WSClient, WSResponse}
-import services.{AuthHttpClient, CredentialsService, OIDCAuthService}
+import services.{AuthHttpClient, CredentialsService, TokenAuthService}
 
 import scala.concurrent.ExecutionContext
 
@@ -37,7 +37,7 @@ trait QueryService {
     token: AccessToken,
     queryApiParameters: QueryApiParameter
   )(
-    implicit OIDCAuthService: OIDCAuthService,
+    implicit OIDCAuthService: TokenAuthService,
     credentials: CredentialsService
   ): Task[WSResponse] = {
     query match {
@@ -75,7 +75,7 @@ trait QueryService {
     queryApiParameters: QueryApiParameter,
     parameters: Map[String, String] = Map()
   )(
-    implicit OIDCAuthService: OIDCAuthService,
+    implicit OIDCAuthService: TokenAuthService,
     credentials: CredentialsService
   ): Task[WSResponse] = {
     query match {

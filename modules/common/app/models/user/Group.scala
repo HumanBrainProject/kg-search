@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2018, EPFL/Human Brain Project PCO
+ *   Copyright (c) 2019, EPFL/Human Brain Project PCO
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -15,18 +15,24 @@
  */
 package models.user
 
-import models.instance.NexusInstanceReference
 import play.api.libs.json._
 
-final case class EditorUser(nexusId: NexusInstanceReference, user: IDMUser)
+case class Group(name: String, description: Option[String] = None)
 
-object EditorUser {
-
+object Group {
+  val nameLabel = "name"
+  val descriptionLabel = "description"
   import play.api.libs.functional.syntax._
 
-  implicit val editorUserWrites: Writes[EditorUser] = (
-    (JsPath \ "nexusId").write[NexusInstanceReference] and
-    JsPath.write[IDMUser]
-  )(unlift(EditorUser.unapply))
+  implicit val readerUserGroup: Reads[Group] = (
+    (JsPath \ nameLabel).read[String] and
+    (JsPath \ descriptionLabel).readNullable[String]
+  )(Group.apply _)
 
+  implicit val writerUserGroup = new Writes[Group] {
+    override def writes(o: Group): JsValue = Json.obj(
+      nameLabel        -> o.name,
+      descriptionLabel -> o.description,
+    )
+  }
 }

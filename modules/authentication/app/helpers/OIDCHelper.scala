@@ -17,7 +17,7 @@
 package helpers
 
 import models.BasicAccessToken
-import models.user.OIDCUser
+import models.user.IDMUser
 import play.api.http.HeaderNames._
 import play.api.mvc.Request
 
@@ -40,7 +40,7 @@ object OIDCHelper {
     * @param hints The requested ES index
     * @return The requested ES index or the public index
     */
-  def getESIndex(userInfo: OIDCUser, hints: String): String = {
+  def getESIndex(userInfo: IDMUser, hints: String): String = {
     val groups = ESHelper.filterNexusGroups(userInfo.groups)
     val h = hints.trim
     if (groups.contains(h)) {

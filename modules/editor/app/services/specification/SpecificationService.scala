@@ -33,7 +33,7 @@ import play.api.http.Status.{CREATED, INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
 import play.api.libs.json.{JsNull, JsObject, JsValue, Json}
 import play.api.libs.ws.{WSClient, WSResponse}
 import services.instance.InstanceApiService
-import services.{ConfigurationService, CredentialsService, OIDCAuthService}
+import services.{ConfigurationService, CredentialsService, TokenAuthService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -43,7 +43,7 @@ final case class SpecificationFile(id: String, data: JsObject)
 class SpecificationService @Inject()(
   WSClient: WSClient,
   config: ConfigurationService,
-  OIDCAuthService: OIDCAuthService,
+  OIDCAuthService: TokenAuthService,
   clientCredentials: CredentialsService,
   env: Environment
 ) {
