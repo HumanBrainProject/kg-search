@@ -52,7 +52,7 @@ DELETE    /instance/:org/:domain/:schema/:version/:id                  controlle
 #    required: false
 #    type: string
 ###
-POST    /instances                 controllers.EditorController.getInstancesByIds(allFields:Boolean?=false)
+POST    /instances                 controllers.EditorController.getInstancesByIds(allFields:Boolean?=false, databaseScope: Option[String])
 
 
 
