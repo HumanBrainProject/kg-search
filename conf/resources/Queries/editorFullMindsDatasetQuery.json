@@ -205,6 +205,17 @@
       "relative_path": "minds:reference_space"
     },
     {
+                "fieldname": "http://www.w3.org/ns/prov#wasRevisionOf",
+                "ensure_order": true,
+                "fields": [
+                  {
+                    "fieldname": "this:id",
+                    "relative_path": "base:relativeUrl"
+                  }
+                ],
+                "relative_path": "http://www.w3.org/ns/prov#wasRevisionOf"
+    },
+    {
       "fieldname": "minds:specimen_group",
       "label": "Specimen Groups",
       "ensure_order": true,
