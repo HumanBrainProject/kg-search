@@ -1,4 +1,0 @@
-DELETE /cache/:name    controllers.AdminController.clearCache(name:String)
-
-
-DELETE /specs    controllers.AdminController.deleteAndReloadSpecs
