@@ -6,14 +6,8 @@
 # Auth services
 -> /auth auth.Routes
 
-# Admin services
--> /admin admin.Routes
-
 # Data import services
 -> /dataimport data_import.Routes
-
-# KG Editor routes
--> /editor/api editor.Routes
 
 # Nexus services
 -> /nexus nexus.Routes
