@@ -23,7 +23,6 @@ const ListItem = ({ reference, data, itemComponent, onClick }) => {
 
   const handleClick = (event) => {
     onClick(data, event.currentTarget);
-    // ReactPiwik.push(["trackEvent", "Card", "Clicked"]);
   };
 
   const Component = itemComponent;

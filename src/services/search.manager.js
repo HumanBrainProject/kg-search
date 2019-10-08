@@ -18,25 +18,27 @@ import * as actions from "../actions";
 import API from "./API";
 import { SearchkitManager, BaseQueryAccessor } from "searchkit";
 import { SearchKitHelpers } from "../helpers/SearchKitHelpers";
-import { generateKey} from "../helpers/OIDCHelpers";
+import { generateKey } from "../helpers/OIDCHelpers";
+import ReactPiwik from "react-piwik";
+
 
 const regReference = /^((.+)\/(.+))$/;
 const regPreviewReference = /^(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
 
 export default class SearchManager {
-  constructor(store, searchInterfaceIsDisabled){
+  constructor(store, searchInterfaceIsDisabled) {
     this.searchInterfaceIsDisabled = !!searchInterfaceIsDisabled;
     this.searchkit = null;
     this.store = store;
-    store.subscribe(() => {this.handleStateChange();});
+    store.subscribe(() => { this.handleStateChange(); });
     this.fromParamRequest = 0;
   }
-  initializeSearchKit({searchApiHost="", timeout=5000, queryTweaking, searchOnLoad}) {
+  initializeSearchKit({ searchApiHost = "", timeout = 5000, queryTweaking, searchOnLoad }) {
 
     const store = this.store;
 
     this.searchkit = new SearchkitManager(API.endpoints.search(searchApiHost), {
-      multipleSearchers:false,
+      multipleSearchers: false,
       timeout: timeout,
       searchOnLoad: searchOnLoad
     });
@@ -49,7 +51,7 @@ export default class SearchManager {
       const header = config.headers[config.method];
       const state = store.getState();
       const nonce = generateKey();
-      this.fromParamRequest = config.data.from?Number(config.data.from):0;
+      this.fromParamRequest = config.data.from ? Number(config.data.from) : 0;
       header.nonce = nonce;
       if (state.auth.accessToken) {
         header.Authorization = "Bearer " + state.auth.accessToken;
@@ -65,9 +67,9 @@ export default class SearchManager {
 
     this.searchkit.transport.axios.interceptors.response.use(response => {
       //const {config, data, headers, request, status, statusText} = response;
-      const {data, headers} = response;      const reg = /^kg_(.*)$/;
+      const { data, headers } = response; const reg = /^kg_(.*)$/;
       const state = this.store && this.store.getState();
-      const [,group] = reg.test(headers["x-selected-group"])?headers["x-selected-group"].match(reg):[null,state.search.group];
+      const [, group] = reg.test(headers["x-selected-group"]) ? headers["x-selected-group"].match(reg) : [null, state.search.group];
       let order = null;
       if (group && state && state.groups && state.groups.groups && state.groups.groups.length && state.groups.groupSettings && state.groups.groupSettings[group]) {
         order = state.groups.groupSettings[group].facetTypesOrder;
@@ -76,7 +78,7 @@ export default class SearchManager {
       }
       if (order) {
         const uuid = this.searchkit.accessors.statefulAccessors["facet_type"] && this.searchkit.accessors.statefulAccessors["facet_type"].uuid;
-        uuid &&  data.aggregations && data.aggregations[uuid] &&  data.aggregations[uuid]._type && data.aggregations[uuid]._type.buckets instanceof Array && data.aggregations[uuid]._type.buckets.sort((a,b) => {
+        uuid && data.aggregations && data.aggregations[uuid] && data.aggregations[uuid]._type && data.aggregations[uuid]._type.buckets instanceof Array && data.aggregations[uuid]._type.buckets.sort((a, b) => {
           if (order[a.key] !== undefined && order[b.key] !== undefined) {
             return order[a.key] - order[b.key];
           }
@@ -100,30 +102,32 @@ export default class SearchManager {
           return 0;
         });
       }
+      ReactPiwik.push(["setCustomUrl", "/" + window.location.href]);
+      ReactPiwik.push(["trackPageView"]);
       store.dispatch(actions.loadSearchResult(data, group, this.fromParamRequest));
       return response;
     }, error => {
       //const {config, request, response} = error;
-      const {response} = error;
+      const { response } = error;
       // const {config, data, headers, request, status, statusText} = response;
-      const {config, status} = response;
+      const { config, status } = response;
       const headers = config.headers;
       const nonce = headers.nonce;
       const state = store.getState();
       if (!state.search.nonce || (nonce && state.search.nonce && nonce === state.search.nonce)) {
         switch (status) {
-        case 400: // Bad Request
-        case 404: // Not Found
-          store.dispatch(actions.loadSearchBadRequest(status));
-          break;
-        case 401: // Unauthorized
-        case 403: // Forbidden
-        case 511: // Network Authentication Required
-          store.dispatch(actions.loadSearchSessionFailure(status));
-          break;
-        default: {
-          store.dispatch(actions.loadSearchServiceFailure(status, state.search.group));
-        }
+          case 400: // Bad Request
+          case 404: // Not Found
+            store.dispatch(actions.loadSearchBadRequest(status));
+            break;
+          case 401: // Unauthorized
+          case 403: // Forbidden
+          case 511: // Network Authentication Required
+            store.dispatch(actions.loadSearchSessionFailure(status));
+            break;
+          default: {
+            store.dispatch(actions.loadSearchServiceFailure(status, state.search.group));
+          }
         }
       }
       return Promise.reject(error);
@@ -146,7 +150,7 @@ export default class SearchManager {
     }
 
     if (state.search.group && this.groupAccessor && state.search.group !== this.groupAccessor.getQueryString()) {
-      this.groupAccessor.setQueryString(state.search.group === API.defaultGroup?null:state.search.group);
+      this.groupAccessor.setQueryString(state.search.group === API.defaultGroup ? null : state.search.group);
     }
 
     if (state.search.hasRequest) {
@@ -219,7 +223,7 @@ export default class SearchManager {
             })
           };
         }
-        const [ , , path, , , , , id] = reference.match(regPreviewReference);
+        const [, , path, , , , , id] = reference.match(regPreviewReference);
         API.fetch(API.endpoints.preview(state.configuration.searchApiHost, path, id), options)
           .then(data => {
             if (data && !data.error) {
@@ -227,7 +231,7 @@ export default class SearchManager {
               //data._source = data._source instanceof Array?(data._source.length >= 1?data._source[0]:{}):data._source;
               store.dispatch(actions.loadInstanceSuccess(data));
             } else if (data && data.error) {
-              store.dispatch(actions.loadInstanceFailure(reference, data.message?data.message:data.error));
+              store.dispatch(actions.loadInstanceFailure(reference, data.message ? data.message : data.error));
             } else {
               store.dispatch(actions.loadInstanceNoData(reference));
             }

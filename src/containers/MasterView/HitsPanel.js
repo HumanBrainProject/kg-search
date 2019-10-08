@@ -21,8 +21,10 @@ import * as actions from "../../actions";
 import { List } from "../../components/List";
 import { Hit } from "./Hit";
 import { StatsHelpers } from "../../helpers/StatsHelpers";
+import ReactPiwik from "react-piwik";
 
-const HitsPanelBase = ({lists, itemComponent, getKey, layout, onClick}) => (
+
+const HitsPanelBase = ({ lists, itemComponent, getKey, layout, onClick }) => (
   <React.Fragment>
     {lists.map(list =>
       <List key={list.id} title={list.title} items={list.items} itemComponent={itemComponent} getKey={getKey} layout={layout} onClick={onClick} />
@@ -31,7 +33,7 @@ const HitsPanelBase = ({lists, itemComponent, getKey, layout, onClick}) => (
 );
 
 const mapStateToProps = (state, props) => {
-  const {hits} = props;
+  const { hits } = props;
 
   let trySplitResult = true;
   let isSortedByRelevance = false;
@@ -74,7 +76,7 @@ const mapStateToProps = (state, props) => {
       } else {
         moreHits.push(hit);
       }
-    }):
+    }) :
     hits.forEach(hit => {
       topMatchHits.push(hit);
     });
@@ -88,19 +90,22 @@ const mapStateToProps = (state, props) => {
       },
       {
         id: 1,
-        title: (topMatchHits.length && moreHits.length)?"Other results":null,
+        title: (topMatchHits.length && moreHits.length) ? "Other results" : null,
         items: moreHits
       }
     ],
     itemComponent: Hit,
-    getKey: data => `${data._type?data._type:"unknown"}/${data._id?data._id:uniqueId()}`,
-    layout: state.application.gridLayoutMode?"grid":"list"
+    getKey: data => `${data._type ? data._type : "unknown"}/${data._id ? data._id : uniqueId()}`,
+    layout: state.application.gridLayoutMode ? "grid" : "list"
   };
 };
 
 export const HitsPanel = connect(
   mapStateToProps,
   dispatch => ({
-    onClick: (data, target) => dispatch(actions.setInstance(data, target))
+    onClick: (data, target) => {
+      ReactPiwik.push(["trackEvent", "Card", "Clicked"]);
+      dispatch(actions.setInstance(data, target));
+    }
   })
 )(HitsPanelBase);

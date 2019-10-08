@@ -58,12 +58,6 @@ new ReactPiwik({
   enableLingTracking: true
 });
 
-window.addEventListener("hashchange", function () {
-  ReactPiwik.push(["setCustomUrl", "/" + window.location.hash.substr(1)]);
-  ReactPiwik.push(["trackPageView"]);
-});
-
-
 ReactDOM.render(
   <App config={config} />,
   document.getElementById("root")
