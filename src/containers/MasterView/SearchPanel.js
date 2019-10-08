@@ -19,7 +19,7 @@ import { SearchBox, QueryString } from "searchkit";
 import { connect } from "react-redux";
 import * as actions from "../../actions";
 import { help } from "../../data/help.js";
-import { withFloatingScrollEventsSubscription} from "../../helpers/withFloatingScrollEventsSubscription";
+import { withFloatingScrollEventsSubscription } from "../../helpers/withFloatingScrollEventsSubscription";
 import { SearchkitComponent } from "searchkit";
 import { isMobile } from "../../helpers/BrowserHelpers";
 import "./SearchPanel.css";
@@ -30,11 +30,11 @@ class SearchInput {
     this.querySelector = querySelector;
   }
   get element() {
-    return  document.querySelector(this.querySelector);
+    return document.querySelector(this.querySelector);
   }
   blur() {
     const input = this.element;
-    if (input && document.activeElement === input && (!this.timestamp ||  ((new Date() - this.timestamp) > 500))) {
+    if (input && document.activeElement === input && (!this.timestamp || ((new Date() - this.timestamp) > 500))) {
       input.blur();
     }
   }
@@ -68,13 +68,13 @@ class SearchkitSeachPanelContainer extends SearchkitComponent {
     searchInput.blur();
   }
   render() {
-    const {isFloating, onHelp} = this.props;
+    const { isFloating, onHelp } = this.props;
     const handleSearch = () => {
       this.searchkit.search();
     };
 
     return (
-      <div className={`kgs-search ${isFloating?" is-fixed-position":""}`}>
+      <div className={`kgs-search ${isFloating ? " is-fixed-position" : ""}`}>
         <SearchBox placeholder="Search (e.g. brain or neuroscience)" autofocus={true} searchOnChange={false} queryBuilder={QueryString} />
         <button className="kgs-search-button" onClick={handleSearch}>Search</button>
         <button type="button" className="kgs-search-help__button" title="Help" onClick={onHelp}>
@@ -98,8 +98,8 @@ const SearchPanelContainer = connect(
 export const SearchPanel = withFloatingScrollEventsSubscription(
   "top",
   [
-    {querySelector: "body>header"},
-    {querySelector: "body>header + nav.navbar"},
-    {querySelector: "#CookielawBanner", cookieKey: "cookielaw_accepted"}
+    { querySelector: "body>header" },
+    { querySelector: "body>header + nav.navbar" },
+    { querySelector: "#CookielawBanner", cookieKey: "cookielaw_accepted" }
   ]
 )(SearchPanelContainer);

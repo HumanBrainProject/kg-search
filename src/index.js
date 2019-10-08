@@ -17,11 +17,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./containers/App";
-import TagManager from "react-gtm-module";
 import "./index.css";
+import ReactPiwik from 'react-piwik';
 
 // GLOBAL CONSTANTS DEFINED OUTSIDE THE APP
-const SearchApiHostEnvKey        = "SearchApiHost";        // "https://kg.humanbrainproject.org"
+const SearchApiHostEnvKey = "SearchApiHost";        // "https://kg.humanbrainproject.org"
 
 // APP PARAMETERS
 const hitsPerPage = 20;
@@ -42,7 +42,7 @@ const oidcUri = "https://services.humanbrainproject.eu/oidc/authorize";
 const oidcClientId = "nexus-kg-search";
 
 const config = {
-  searchApiHost: window[SearchApiHostEnvKey]?window[SearchApiHostEnvKey]:"",
+  searchApiHost: window[SearchApiHostEnvKey] ? window[SearchApiHostEnvKey] : "",
   timeout: timeout,
   hitsPerPage: hitsPerPage,
   searchOnLoad: searchOnLoad,
@@ -51,11 +51,15 @@ const config = {
   oidcClientId: oidcClientId
 };
 
-const tagManagerArgs = {
-  gtmId: "GTM-KLX23XB"
-};
+new ReactPiwik({
+  url: '//stats-dev.humanbrainproject.eu/',
+  siteId: 4,
+  trackErrors: true,
+  enableLingTracking: true
+});
 
-TagManager.initialize(tagManagerArgs);
+// track the initial pageview
+ReactPiwik.push(['trackPageView'])
 
 ReactDOM.render(
   <App config={config} />,

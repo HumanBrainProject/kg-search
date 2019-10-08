@@ -18,6 +18,7 @@ import React, { PureComponent } from "react";
 import { Text } from "./Text";
 import "./Details.css";
 
+
 export class Details extends PureComponent {
   constructor(props) {
     super(props);
@@ -34,13 +35,13 @@ export class Details extends PureComponent {
     this.setState(() => ({ collapsed: true }));
   }
   render() {
-    const {toggleLabel, content, asPopup} = this.props;
+    const { toggleLabel, content, asPopup } = this.props;
 
     if (!content) {
       return null;
     }
 
-    const className = `toggle ${this.state.collapsed?"":"in"}`;
+    const className = `toggle ${this.state.collapsed ? "" : "in"}`;
     return (
       <span className="field-details">
         <button className={className} onClick={this.handleToggle}>
@@ -49,7 +50,7 @@ export class Details extends PureComponent {
             <span>{toggleLabel}</span>
           )}
         </button>
-        {!asPopup?
+        {!asPopup ?
           <div className="collapsible">
             {!this.state.collapsed && (
               <div className="field-details__panel">
@@ -59,7 +60,7 @@ export class Details extends PureComponent {
             )}
           </div>
           :
-          <div className={`popup ${this.state.collapsed?"":"show"}`}>
+          <div className={`popup ${this.state.collapsed ? "" : "show"}`}>
             <div className="field-details__panel">
               <Text content={content} isMarkdown={true} />
               <button className="field-details__close-button" onClick={this.handleClose} title="close"><i className="fa fa-2x fa-close"></i></button>
