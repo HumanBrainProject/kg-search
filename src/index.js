@@ -58,8 +58,11 @@ new ReactPiwik({
   enableLingTracking: true
 });
 
-// track the initial pageview
-ReactPiwik.push(["trackPageView"]);
+window.addEventListener("hashchange", function () {
+  ReactPiwik.push(["setCustomUrl", "/" + window.location.hash.substr(1)]);
+  ReactPiwik.push(["trackPageView"]);
+});
+
 
 ReactDOM.render(
   <App config={config} />,
