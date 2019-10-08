@@ -91,7 +91,7 @@
 }
 
 .kgs-image_popup-error {
-  color: #ED5554;
+  color: var(--color-1);
 }
 
 .kgs-image_popup-error i {

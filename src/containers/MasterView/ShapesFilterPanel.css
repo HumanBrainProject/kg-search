@@ -39,7 +39,7 @@
 }
 
 .kgs-fieldsFilter .kgs-fieldsFilter__shape.is-active {
-    border-bottom-color: #ED5554;
+    border-bottom-color: var(--color-1);
 }
 
 .kgs-fieldsFilter .kgs-fieldsFilter__shape button.kgs-fieldsFilter__button {
@@ -135,7 +135,7 @@
 }
 
 .kgs-fieldsFilter .kgs-fieldsFilter__shape.is-active:not(.is-disabled) .kgs-fieldsFilter__label {
-    color: #ED5554;
+    color: var(--color-1);
 }
 
 .kgs-fieldsFilter .kgs-fieldsFilter__count {
