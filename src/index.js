@@ -41,6 +41,12 @@ const queryTweaking = {
 const oidcUri = "https://services.humanbrainproject.eu/oidc/authorize";
 const oidcClientId = "nexus-kg-search";
 
+const matomo = new ReactPiwik({
+  url: "//stats-dev.humanbrainproject.eu",
+  siteId: 4,
+  trackErrors: true
+});
+
 const config = {
   searchApiHost: window[SearchApiHostEnvKey] ? window[SearchApiHostEnvKey] : "",
   timeout: timeout,
@@ -48,15 +54,11 @@ const config = {
   searchOnLoad: searchOnLoad,
   queryTweaking: queryTweaking,
   oidcUri: oidcUri,
-  oidcClientId: oidcClientId
+  oidcClientId: oidcClientId,
+  matomo: matomo
 };
 
-new ReactPiwik({
-  url: "//stats-dev.humanbrainproject.eu/",
-  siteId: 4,
-  trackErrors: true,
-  enableLinkTracking: true
-});
+
 
 ReactDOM.render(
   <App config={config} />,

@@ -102,7 +102,7 @@ export default class SearchManager {
           return 0;
         });
       }
-      ReactPiwik.push(["setCustomUrl", "/" + window.location.href]);
+      ReactPiwik.push(["setCustomUrl", window.location.href]);
       ReactPiwik.push(["trackPageView"]);
       store.dispatch(actions.loadSearchResult(data, group, this.fromParamRequest));
       return response;

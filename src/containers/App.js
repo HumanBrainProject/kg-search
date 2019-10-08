@@ -41,9 +41,9 @@ export default class App extends PureComponent {
       <Provider store={store}>
         <div className="kgs-app">
           <MasterDetail manager={this.manager} />
-          <FetchingPanel/>
-          <ErrorPanel/>
-          <InfoPanel/>
+          <FetchingPanel />
+          <ErrorPanel />
+          <InfoPanel />
         </div>
       </Provider>
     );
