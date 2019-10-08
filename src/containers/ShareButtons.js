@@ -21,8 +21,8 @@ import API from "../services/API";
 const regPreviewReference = /^(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
 
 const getShareEmailToLink = url => {
-  const to= "";
-  const subject= "Knowledge Graph Search Request";
+  const to = "";
+  const subject = "Knowledge Graph Search Request";
   const body = "Please have a look to the following Knowledge Graph search request";
   return `mailto:${to}?subject=${subject}&body=${body} ${escape(url)}.`;
 };
@@ -30,21 +30,21 @@ const getShareEmailToLink = url => {
 const getClipboardContent = (state, location, currentInstance, currentGroup) => {
   let href = "";
   if (currentInstance) {
-    const reference = regPreviewReference.test(currentInstance._id)?currentInstance._id.match(regPreviewReference)[1]:(!(currentInstance.found === false) && currentInstance._index && currentInstance._type && currentInstance._id)?`${currentInstance._type}/${currentInstance._id}`:null;
+    const reference = regPreviewReference.test(currentInstance._id) ? currentInstance._id.match(regPreviewReference)[1] : (!(currentInstance.found === false) && currentInstance._index && currentInstance._type && currentInstance._id) ? `${currentInstance._type}/${currentInstance._id}` : null;
     if (reference) {
       const indexReg = /^kg_(.*)$/;
-      const group = indexReg.test(currentInstance._index)?currentInstance._index.match(indexReg)[1]:(currentGroup?currentGroup:null);
-      href = `instances/${reference}${(group && group !== API.defaultGroup)?("?group=" + group):""}`;
+      const group = indexReg.test(currentInstance._index) ? currentInstance._index.match(indexReg)[1] : (currentGroup ? currentGroup : null);
+      href = `instances/${reference}${(group && group !== API.defaultGroup) ? ("?group=" + group) : ""}`;
     } else {
       const instanceId = location.hash.substring(1);
       if (instanceId) {
-        href = `instances/${instanceId}${(currentGroup && currentGroup !== API.defaultGroup)?("?group=" + currentGroup):""}`;
+        href = `instances/${instanceId}${(currentGroup && currentGroup !== API.defaultGroup) ? ("?group=" + currentGroup) : ""}`;
       } else {
-        href = `webapp/${location.search}`;
+        href = `search/${location.search}`;
       }
     }
   } else {
-    href = `webapp/${location.search}`;
+    href = `search/${location.search}`;
   }
   return `${state.definition.serviceUrl}/${href}`;
 };

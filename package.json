@@ -2,7 +2,7 @@
   "name": "kg-search-ui",
   "version": "2.0.0",
   "private": true,
-  "homepage": "https://kg.humanbrainproject.org/webapp",
+  "homepage": "https://kg.humanbrainproject.org/search",
   "proxy": {
     "/proxy": {
       "target": "https://kg.humanbrainproject.org",
