@@ -17,13 +17,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "./List.css";
-import ReactPiwik from 'react-piwik';
+import ReactPiwik from "react-piwik";
 
 const ListItem = ({ reference, data, itemComponent, onClick }) => {
 
   const handleClick = (event) => {
     onClick(data, event.currentTarget);
-    ReactPiwik.push(['trackEvent', 'Card', 'Clicked']);
+    ReactPiwik.push(["trackEvent", "Card", "Clicked"]);
   };
 
   const Component = itemComponent;

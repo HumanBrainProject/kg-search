@@ -18,7 +18,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./containers/App";
 import "./index.css";
-import ReactPiwik from 'react-piwik';
+import ReactPiwik from "react-piwik";
 
 // GLOBAL CONSTANTS DEFINED OUTSIDE THE APP
 const SearchApiHostEnvKey = "SearchApiHost";        // "https://kg.humanbrainproject.org"
@@ -52,14 +52,14 @@ const config = {
 };
 
 new ReactPiwik({
-  url: '//stats-dev.humanbrainproject.eu/',
+  url: "//stats-dev.humanbrainproject.eu/",
   siteId: 4,
   trackErrors: true,
   enableLingTracking: true
 });
 
 // track the initial pageview
-ReactPiwik.push(['trackPageView'])
+ReactPiwik.push(["trackPageView"]);
 
 ReactDOM.render(
   <App config={config} />,
