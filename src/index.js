@@ -55,7 +55,7 @@ new ReactPiwik({
   url: "//stats-dev.humanbrainproject.eu/",
   siteId: 4,
   trackErrors: true,
-  enableLingTracking: true
+  enableLinkTracking: true
 });
 
 ReactDOM.render(
