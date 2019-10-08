@@ -17,7 +17,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "./List.css";
-// import ReactPiwik from "react-piwik";
 
 const ListItem = ({ reference, data, itemComponent, onClick }) => {
 

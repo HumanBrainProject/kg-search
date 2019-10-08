@@ -42,10 +42,12 @@ const oidcUri = "https://services.humanbrainproject.eu/oidc/authorize";
 const oidcClientId = "nexus-kg-search";
 
 const matomo = new ReactPiwik({
-  url: "//stats-dev.humanbrainproject.eu",
+  url: "https://stats-dev.humanbrainproject.eu",
   siteId: 4,
   trackErrors: true
 });
+
+ReactPiwik.push(["trackPageView"]);
 
 const config = {
   searchApiHost: window[SearchApiHostEnvKey] ? window[SearchApiHostEnvKey] : "",

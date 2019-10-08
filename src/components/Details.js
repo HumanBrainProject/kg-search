@@ -19,6 +19,7 @@ import { Text } from "./Text";
 import "./Details.css";
 
 
+
 export class Details extends PureComponent {
   constructor(props) {
     super(props);

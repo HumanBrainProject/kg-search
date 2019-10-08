@@ -21,7 +21,6 @@ import * as actions from "../../actions";
 import { List } from "../../components/List";
 import { Hit } from "./Hit";
 import { StatsHelpers } from "../../helpers/StatsHelpers";
-import ReactPiwik from "react-piwik";
 
 
 const HitsPanelBase = ({ lists, itemComponent, getKey, layout, onClick }) => (
@@ -104,7 +103,6 @@ export const HitsPanel = connect(
   mapStateToProps,
   dispatch => ({
     onClick: (data, target) => {
-      ReactPiwik.push(["trackEvent", "Card", "Clicked"]);
       dispatch(actions.setInstance(data, target));
     }
   })
