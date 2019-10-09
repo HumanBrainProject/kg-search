@@ -32,13 +32,11 @@ export const Link = ({ url, label, isAFileLink, isExternalLink, icon }) => {
 
   const handleClick = () => {
     if (isAFileLink) {
-      console.log("Download");
-      ReactPiwik.push(["trackLink", url, "download"])
+      ReactPiwik.push(["trackLink", url, "download"]);
     } else if (isExternalLink) {
-      console.log("Link");
-      ReactPiwik.push(["trackLink", url, "link"])
+      ReactPiwik.push(["trackLink", url, "link"]);
     }
-  }
+  };
 
   return (
     <a href={url} {...props} onClick={() => handleClick()}>
