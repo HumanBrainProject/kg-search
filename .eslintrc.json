@@ -5,13 +5,17 @@
             "version": "16.5.2"
         }
     },
-    "parser":"babel-eslint",
+    "parser": "babel-eslint",
     "env": {
         "browser": true,
         "commonjs": true,
-        "es6": true
+        "es6": true,
+        "node": true
     },
-    "extends": ["eslint:recommended","plugin:react/recommended"],
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended"
+    ],
     "parserOptions": {
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true,
@@ -48,7 +52,9 @@
             "all"
         ],
         "no-trailing-spaces": "error",
-        "strict":0,
-        "react/prop-types": [0]
+        "strict": 0,
+        "react/prop-types": [
+            0
+        ]
     }
 }

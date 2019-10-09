@@ -2,25 +2,25 @@
   "name": "kg-search-ui",
   "version": "2.0.0",
   "private": true,
-  "homepage": "https://kg.humanbrainproject.org/search",
+  "homepage": "https://kg.ebrains.eu/search/",
   "proxy": {
     "/proxy": {
-      "target": "https://kg.humanbrainproject.org",
+      "target": "https://kg.humanbrainproject.eu",
       "changeOrigin": true,
       "ws": true
     },
     "/search": {
-      "target": "https://kg.humanbrainproject.org",
+      "target": "https://kg.humanbrainproject.eu",
       "changeOrigin": true,
       "ws": true
     },
     "/auth": {
-      "target": "https://kg.humanbrainproject.org",
+      "target": "https://kg.humanbrainproject.eu",
       "changeOrigin": true,
       "ws": true
     },
     "/query": {
-      "target": "https://kg.humanbrainproject.org",
+      "target": "https://kg.humanbrainproject.eu",
       "changeOrigin": true,
       "ws": true
     }
@@ -37,6 +37,7 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "font-awesome": "^4.4.0",
+    "env-cmd": "^10.0.1",
     "lodash": "^4.17.15",
     "lucene-query-parser": "^1.2.0",
     "normalize.css": "^8.0.1",
@@ -54,8 +55,10 @@
     "showdown-xss-filter": "^0.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "env-cmd -f .env.development react-scripts start",
+    "build": "env-cmd -f .env.production react-scripts build",
+    "build:int": "env-cmd -f .env.integration react-scripts build",
+    "build:dev": "env-cmd -f .env.development react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "testCI": "CI=true react-scripts test --env=jsdom",
     "lint": "eslint src/",
