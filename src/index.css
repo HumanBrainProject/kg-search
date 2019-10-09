@@ -14,8 +14,68 @@
 *   limitations under the License.
 */
 
+:root {
+  --color-0: #4D4D4D;
+  --color-1: #45b07c;    
+  --font-stack: "Inter","Helvetica Neue",Arial,sans-serif;
+  --font-stack-bold: "Inter-Bold","Helvetica Neue",Arial,sans-serif;
+  --font-size: 21px;
+  --line-height: 32px;
+  --font-size-small: 14px;
+  --line-height-small: 22px;
+  --regular: 400;
+  --bold: 700;
+}
+
+/* Inter Regular */
+@font-face {
+  font-family: 'Inter';
+  font-display: swap;
+  src: url('/fonts/Inter-Regular.woff2') format('woff2'),
+      url('/fonts/Inter-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Inter Regular Italic */
+@font-face {
+  font-family: 'Inter-Italic';
+  font-display: swap;
+  src: url('/fonts/Inter-Italic.woff2') format('woff2'),
+    url('/fonts/Inter-Italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* Inter Bold */
+@font-face {
+  font-family: 'Inter-Bold';
+  font-display: swap;
+  src: url('/fonts/Inter-Bold.woff2') format('woff2'),
+    url('/fonts/Inter-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Inter Bold Italic */
+@font-face {
+  font-family: 'Inter-Bolditalic';
+  font-display: swap;
+  src: url('/fonts/Inter-Bolditalic.woff2') format('woff2'),
+    url('/fonts/Inter-Bolditalic.woff') format('woff');
+  font-weight: 700;
+  font-style: italic;
+}
+
 html, body {
     overflow-x: hidden;
+    font-family: var(--font-stack);
+    font-weight: var(--regular);
+    font-size: var(--font-size);
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
 }
 
 body > header.navbar {

@@ -58,7 +58,7 @@
 }
 
 .kgs-instance__header h3.kgs-instance__group strong {
-    color: #ED5554;
+    color: var(--color-1);
     font-size: 24px;
     font-weight: normal;
     text-transform: capitalize;

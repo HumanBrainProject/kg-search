@@ -59,7 +59,7 @@
 .kgs-facet .sk-panel__content .sk-item-list .sk-item-list-option.is-active .sk-item-list-option__checkbox:after {
     content: "\f00c";
     border-color: transparent;
-    background-color: #ED5554;
+    background-color: var(--color-1);
     font-family: "FontAwesome";
 }
 
@@ -70,7 +70,7 @@
 }
 
 .kgs-facet .sk-panel__content .sk-item-list .sk-item-list-option.is-active .sk-item-list-option__text {
-    color: #ED5554;
+    color: var(--color-1);
     font-weight: normal;
 }
 .kgs-facet .sk-panel__content .sk-item-list .sk-item-list-option .sk-item-list-option__count {
@@ -84,7 +84,7 @@
 }
 
 .kgs-facet .sk-panel__content .sk-item-list .sk-item-list-option.is-active .sk-item-list-option__count {
-    background-color: #ED5554;
+    background-color: var(--color-1);
 }
 
 .kgs-facet .sk-panel__content [data-qa="show-more"] {
