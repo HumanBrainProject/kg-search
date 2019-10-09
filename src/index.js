@@ -63,8 +63,6 @@ const config = {
   matomo: matomo
 };
 
-
-
 ReactDOM.render(
   <App config={config} />,
   document.getElementById("root")

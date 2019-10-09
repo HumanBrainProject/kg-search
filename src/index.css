@@ -210,6 +210,7 @@ main a:hover, main a:hover:visited {
 }
 
 .site-footer {
+  display: block;
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -246,9 +247,6 @@ main a:hover, main a:hover:visited {
 
 .site-footer .footer__end .footer__social {
   display: flex;
-}
-
-.site-footer .footer__end ul.footer__social{
   list-style: none;
   padding: 0;
 }
