@@ -23,7 +23,7 @@ import { Field } from "./Field";
 import { FieldsPanel } from "./FieldsPanel";
 import { FieldsTabs } from "./FieldsTabs";
 import "./Instance.css";
-import ReactPiwik from 'react-piwik';
+import ReactPiwik from "react-piwik";
 
 
 const InstanceBase = ({ type, hasNoData, hasUnknownData, header, previews, main, summary, groups }) => {

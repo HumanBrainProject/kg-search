@@ -41,7 +41,6 @@ const queryTweaking = {
 const oidcUri = "https://services.humanbrainproject.eu/oidc/authorize";
 const oidcClientId = "nexus-kg-search";
 
-console.log(process.env);
 const matomo = new ReactPiwik({
   url: process.env.REACT_APP_MATOMO_URL,
   siteId: process.env.REACT_APP_MATOMO_SITE_ID,
