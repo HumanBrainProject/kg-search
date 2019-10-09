@@ -35,8 +35,8 @@ const getUrlLocation = url => {
 
 const ValueFieldBase = (renderUserInteractions = true) => {
 
-  const ValueField = ({show, data, mapping, group}) => {
-    if (!show  || !data|| !mapping || !mapping.visible) {
+  const ValueField = ({ show, data, mapping, group }) => {
+    if (!show || !data || !mapping || !mapping.visible) {
       return null;
     }
 
@@ -62,13 +62,13 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     }
     */
     const hasReference = !!renderUserInteractions && !!data.reference;
-    const hasLink =  !!renderUserInteractions && !!data.url;
-    const hasMailToLink = !!renderUserInteractions && typeof data.url === "string" &&  data.url.substr(0,7).toLowerCase() === "mailto:";
+    const hasLink = !!renderUserInteractions && !!data.url;
+    const hasMailToLink = !!renderUserInteractions && typeof data.url === "string" && data.url.substr(0, 7).toLowerCase() === "mailto:";
     const isAFileLink = typeof data.url === "string" && /^https?:\/\/.+\.cscs\.ch\/.+$/.test(data.url);
     const hasExternalLink = data.url && !isAFileLink && getUrlLocation(data.url) !== window.location.origin;
     const hasAnyLink = hasReference || hasMailToLink || hasLink;
     const isIcon = mapping.type === "icon" && ((data.image && data.image.url) || mapping.icon);
-    const isLinkWithIcon = mapping.linkIcon && data.url ? true:false;
+    const isLinkWithIcon = mapping.linkIcon && data.url ? true : false;
     const isTag = !hasAnyLink && !isIcon && !!mapping.tagIcon;
     const isMarkdown = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && !!mapping.markdown;
     const isCollapsible = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && mapping.collapsible && typeof data.value === "string" && data.value.length >= 1600;
@@ -89,13 +89,14 @@ const ValueFieldBase = (renderUserInteractions = true) => {
       valueProps = {
         reference: data.reference,
         group: group,
-        text: value?value:data.reference
+        text: value ? value : data.reference
       };
     } else if (hasLink || isLinkWithIcon) {
       ValueComponent = Link;
       valueProps = {
         url: data.url,
         label: value,
+        isAFileLink: isAFileLink,
         isExternalLink: hasMailToLink || hasExternalLink,
         icon: mapping.linkIcon
       };
@@ -129,12 +130,12 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     return (
       <div className="field-value">
         {isAFileLink && (
-          <Thumbnail showPreview={showPreview} thumbnailUrl={data.thumbnailUrl && (typeof data.thumbnailUrl === "string"?data.thumbnailUrl:data.thumbnailUrl.url)} previewUrl={data.previewUrl && (typeof data.previewUrl === "string"?data.previewUrl:data.previewUrl.url)} isAnimated={data.previewUrl && data.previewUrl.isAnimated} alt={typeof data.value === "string"?data.value:""} />
+          <Thumbnail showPreview={showPreview} thumbnailUrl={data.thumbnailUrl && (typeof data.thumbnailUrl === "string" ? data.thumbnailUrl : data.thumbnailUrl.url)} previewUrl={data.previewUrl && (typeof data.previewUrl === "string" ? data.previewUrl : data.previewUrl.url)} isAnimated={data.previewUrl && data.previewUrl.isAnimated} alt={typeof data.value === "string" ? data.value : ""} />
         )}
         <ValueComponent {...valueProps} />
         {isAFileLink && data.fileSize ?
           <span className="field-filesize">({data.fileSize})</span>
-          :null}
+          : null}
         {!!mapping.termsOfUse && (
           <Details toggleLabel="Terms of use" content={termsOfUse} />
         )}
