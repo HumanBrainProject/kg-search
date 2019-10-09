@@ -26,12 +26,12 @@
     border-radius: 3px;
     background-color: transparent;
     font-weight: 500;
-    font-size: 14px;
     color: rgb(108, 115, 121);
     font-size: 22px;
     text-align: center;
     -webkit-transition: color 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
     transition: box-shadow 0.2s ease-in, color 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
+    line-height: 1.5em;
 }
 
 .kgs-copy-to-clipboard:hover {
@@ -59,6 +59,6 @@
 [show="true"] + .kgs-copy-confirmation{
     transform: scale(1);
     margin-top: 5px;
-    color: #333;
+    color: var(--color-1);
     background-color: #ffeeaa;
 }

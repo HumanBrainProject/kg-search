@@ -54,36 +54,36 @@
     border: 0;
     background-color: transparent;
     text-decoration: underline;
-    color: #337ab7;
+    color: var(--link-color);
     text-align: left;
 }
 
 .kgs-field .field-value button[role="link"]:hover {
-    color: #23527c;
+    color: var(--link-color-active);
 }
 
 .kgs-field .field-value a,
 .kgs-field .field-value a:visited {
     text-decoration: underline;
-    color: #337ab7;
+    color: var(--link-color);
 }
 
 .kgs-field .field-value a:focus,
 .kgs-field .field-value a:hover {
     text-decoration: underline;
-    color: #23527c;
+    color: var(--link-color-active);
 }
 
 .kgs-field .kgs-hint {
     margin-right: 10px;
-    color: #333;
+    color: var(--color-1);
 }
 
 .kgs-field__highlights{
-    font-size:12px;
+    font-size:var(--font-size-smaller);
 }
 .kgs-field__highlights .field-label {
-    font-size:12px;
+    font-size:var(--font-size-smaller);
 }
 
 /**********************************************************************************************************************/
@@ -92,7 +92,7 @@
     text-transform: uppercase;
     word-break: keep-all;
     white-space: nowrap;
-    font-size: 18px;
+    font-size: var(--font-size-big);
 }
 
 .kgs-field.kgs-field__icon {

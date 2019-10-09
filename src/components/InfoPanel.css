@@ -77,11 +77,11 @@
     }
     
     .kgs-info__container {
-        padding: 50px 0;
+        padding: var(--site-margin) 0;
     }
     
     .kgs-info__content {
-        padding: 0 50px;
+        padding: 0 var(--site-margin);
     }
 }
 

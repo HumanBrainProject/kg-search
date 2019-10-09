@@ -63,7 +63,7 @@
   background: #000;
   color: #fff;
   padding: 10px;
-  font-size: 12px;
+  font-size: var(--font-size-smaller);
   text-align: center;
   opacity: .25;
   line-height: normal;
@@ -91,7 +91,7 @@
 }
 
 .kgs-image_popup-error {
-  color: var(--color-1);
+  color: var(--color-selected-1);
 }
 
 .kgs-image_popup-error i {

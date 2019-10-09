@@ -28,7 +28,7 @@
     left: 0;
     padding: 15px 20px;
     border-bottom: 1px solid #ccc;
-    background-color: #f4f4f4;
+    background-color: var(--background-color-1);
     -webkit-box-shadow: 0 4px 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
     box-shadow: 0 4px 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
     z-index: 3;
@@ -62,6 +62,7 @@
 .kgs-search .sk-search-box .sk-search-box__icon {
     position: absolute;
     opacity: 1;
+    margin: 20px 0 0 15px;
 }
 
 .kgs-search .sk-search-box .sk-search-box__icon:before {
@@ -69,7 +70,7 @@
     background: none;
     font-family: FontAwesome;
     font-size: 2em;
-    color: var(--color-1);
+    color: var(--color-selected-1);
 }
 
 .kgs-search .sk-search-box input.sk-search-box__text {
@@ -117,9 +118,9 @@
     display: none;
     margin: 0 30px;
     padding: 10px 40px;
-    border: 1px solid var(--color-1);
+    border: 1px solid var(--color-selected-1);
     border-radius: 2px;
-    background-color: var(--color-1);
+    background-color: var(--color-selected-1);
     color: #f0f0f0;
     font-size: 22px;
     text-transform: uppercase;
@@ -148,7 +149,7 @@
     margin: 0 0 0 20px;
     padding: 16px 0;
     border: 0;
-    color: var(--color-1);
+    color: var(--color-selected-1);
     background-color: white;
     text-align: center;
     cursor: pointer;
@@ -162,7 +163,7 @@
 
 .kgs-search button.kgs-search-help__button i,
 .kgs-search button.kgs-search-help__button:hover i {
-   color: var(--color-1);
+   color: var(--color-selected-1);
 }
 
 @media (min-width: 992px) {

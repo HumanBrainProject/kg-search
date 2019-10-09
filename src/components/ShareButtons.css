@@ -30,14 +30,15 @@
     content: "share";
     display: inline-block;
     position: absolute;
-    top: -8px;
-    left: 8px;
+    top: -3px;
+    left: 10px;
     padding: 0 2px;
     background-color: white;
-    color: #333;
-    font-size: 11px;
+    color: var(--color-1);
+    font-size: var(--font-size-extra-small);
     text-transform: uppercase;
-    transform: scaleY(0.8);
+    transform: scaleY(0.7);
+    line-height: 0.7rem;
 }
 
 

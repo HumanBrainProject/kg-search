@@ -16,166 +16,159 @@
 #  limitations under the License.
 -->
 <html lang="en">
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Knowledge Graph Search</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1, minimum-scale=1">
-    <meta name="description" content="">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,700" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,400i,600" rel="stylesheet">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous">
-    <link rel="icon" href="https://sos-ch-dk-2.exo.io/public-website-production/img/favicon.ico">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="theme-color" content="#ffffff">
-    <!--[if IE]><link rel="shortcut icon" href="https://sos-ch-dk-2.exo.io/public-website-production/img/favicon.ico"><![endif]-->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser-polyfill.min.js"></script>
-    <script>
-        // Polyfill custom event if necessary since we kinda need it
-        // https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent#Polyfill
-        (function () {
-            if (typeof window['CustomEvent'] !== "function") {
-                function CustomEvent(event, params) {
-                    params = params || {
-                        bubbles: false,
-                        cancelable: false,
-                        detail: undefined
-                    };
-                    var evt = document.createEvent('CustomEvent');
-                    evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
-                    return evt;
-                }
-                CustomEvent.prototype = window['Event'].prototype;
-                window['CustomEvent'] = CustomEvent;
-            }
-        })();
-    </script>
-    <script>
-        window.SearchApiHost = ""; // "https://kg.humanbrainproject.org"
-    </script>
-    <script>
-        var Cookielaw = {
-            createCookielawCookie: function () {
-                document.getElementById('CookielawBanner').style.display = 'none';
-                document.cookie = 'cookielaw_accepted=' + new Date().getTime();
-            }
-        }
-    </script>
-    <!-- django CMS toolbar adjustment -->
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Knowledge Graph Search</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1, minimum-scale=1">
+  <meta name="description" content="">
+  <link rel="apple-touch-icon" sizes="180x180" href="static/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="static/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="static/img/favicon-16x16.png">
 </head>
-<body id="page-top" class="noscript lang-en tpl-base" style="background-color: #e7e7e7; color: #777;">
-    <div id="CookielawBanner">
-        <div class="container">
-            <h6>Cookies disclaimer</h6>
-            <p>
-                <a class="btn btn-primary pull-right" onclick="javascript:Cookielaw.createCookielawCookie();">I agree</a>
-                Our site saves small pieces of text information (cookies) on your device in order to deliver better content and for statistical
-                purposes. You can disable the usage of cookies by changing the settings of your browser. By browsing our
-                website without changing the browser settings you grant us permission to store that information on your device.
-            </p>
-        </div>
+
+<body>
+  <div class="site-container">
+    <div class="site-inner">
+      <header class="site-navigation"><a href="https://ebrains.eu" aria-label="Ebrains homepage"
+          class="logo nuxt-link-active"><svg width="172" height="60" viewBox="0 0 600 221" aria-labelledby="box"
+            role="presentation" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M256.987 136.227H294.335V129.664H264.385V108.902H291.949V102.339H264.385V81.6964H293.858V75.1336H256.987V136.227ZM307.192 136.227H329.267C343.705 136.227 349.671 129.187 349.671 119.999C349.671 110.334 342.989 105.084 337.381 104.726V104.129C342.631 102.697 347.285 99.2368 347.285 91.3615C347.285 82.4123 341.319 75.1336 328.551 75.1336H307.192V136.227ZM314.59 129.664V108.425H329.625C337.62 108.425 342.631 113.794 342.631 119.999C342.631 125.368 338.932 129.664 329.267 129.664H314.59ZM314.59 101.981V81.6964H328.551C336.665 81.6964 340.245 85.992 340.245 91.3615C340.245 97.8049 334.994 101.981 328.312 101.981H314.59ZM361.827 136.227H369.225V112.362H382.589C383.126 112.362 383.633 112.362 384.14 112.332L397.027 136.227H405.619L391.807 110.99C399.593 108.335 403.232 101.981 403.232 93.8673C403.232 83.0686 396.789 75.1336 382.47 75.1336H361.827V136.227ZM369.225 105.68V81.6964H382.231C392.135 81.6964 395.953 86.529 395.953 93.8673C395.953 101.206 392.135 105.68 382.351 105.68H369.225ZM418.065 136.227L424.21 118.925H448.91L455.055 136.227H462.811L440.379 75.1336H432.742L410.309 136.227H418.065ZM426.537 112.362L436.322 84.7988H436.799L446.583 112.362H426.537ZM479.725 75.1336H472.327V136.227H479.725V75.1336ZM543.004 75.1336H535.725V123.221H535.128L501.718 75.1336H494.559V136.227H501.957V88.2591H502.553L535.844 136.227H543.004V75.1336ZM591.217 90.4069H598.377C598.049 81.1893 589.547 74.2984 577.734 74.2984C566.04 74.2984 556.852 81.0998 556.852 91.3615C556.852 99.5948 562.819 104.487 572.364 107.231L579.882 109.379C586.325 111.169 592.053 113.436 592.053 119.522C592.053 126.204 585.609 130.619 577.137 130.619C569.859 130.619 563.415 127.397 562.819 120.476H555.182C555.898 130.499 564.012 137.301 577.137 137.301C591.217 137.301 599.212 129.545 599.212 119.641C599.212 108.186 588.354 104.487 582.03 102.816L575.825 101.146C571.29 99.9527 564.012 97.5663 564.012 91.0035C564.012 85.1567 569.381 80.8611 577.495 80.8611C584.893 80.8611 590.501 84.3811 591.217 90.4069Z"
+              fill="currentColor"></path>
+            <path
+              d="M165.486 203.162L205.268 163.571L220.008 108.569L204.992 54.1873L164.531 14.5239L109.457 0.205078L54.5334 15.0715L14.4717 55.1361L0.0078125 109.664L15.0247 164.046L55.0056 203.436L110.007 220.205L165.486 203.162Z"
+              fill="url(#gradient)"></path>
+            <mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="16" y="0" width="204" height="221">
+              <path
+                d="M211.243 145.118C202.515 142.357 193.423 140.448 184.353 139.139C172.271 137.395 160.07 136.345 147.886 135.468C118.479 133.352 79.2278 98.5761 84.4118 62.4391C86.9568 44.7001 93.5297 29.8871 110.211 21.1841C120.968 15.5714 132.458 12.2115 144.062 9.15707M199.924 170.161C191.93 170.638 183.966 172.39 175.999 172.324C165.826 172.24 155.454 171.916 145.543 169.875C129.25 166.519 113.82 160.671 100.578 149.847C88.0948 139.643 77.6278 127.664 67.7608 115.071C56.4348 100.616 51.8168 83.7371 54.9788 66.1101C57.6858 51.0211 63.3068 36.3751 68.4658 21.8261C70.072 17.2972 72.1332 13.3592 74.6473 10.0001M58.5 14.5001C53.748 29.9371 54.4618 27.2481 49.7238 42.6901C45.7598 55.6121 43.6158 68.633 43.7078 82.189C43.7908 94.523 47.1588 105.825 54.1328 115.581C66.7458 133.225 80.3588 150.129 98.2568 162.92C115.118 174.97 133.987 181.46 154.437 184.667C165.754 186.442 176.655 185.251 187.5 183.416M39.5 30.5001C35.455 49.6281 31.3888 66.0371 31.8788 85.7761C32.3328 104.089 37.8738 120.427 50.3628 134.257C63.0478 148.304 74.8148 163.248 90.4808 174.281C108.348 186.865 127.797 196.242 149.115 201.073C155.794 202.587 162.436 202.751 169 202.047M21.5 49.0001C21.432 50.3921 18.7758 74.2201 18.6948 75.6101C18.3228 81.9911 17.6908 88.3651 17.5518 94.7501C17.1408 113.592 20.8888 130.686 34.7118 145.124C56.3688 167.744 80.2757 187.356 106.517 204.36C111.839 207.808 116.532 214.431 120.5 219.5M90.4808 217C81.8668 207.031 70.5588 201.008 59.3208 194.723C49.4278 189.19 40.623 181.744 29 180M213 137.5C200.186 132.909 192.738 129.82 179.528 126.698C168.454 124.081 156.864 123.634 145.497 122.265C119.733 119.162 92.1298 90.6361 95.1088 63.0351C96.1638 53.2691 98.9818 44.7451 105.404 37.3141C115.714 25.3841 130.158 21.3471 144.342 17.1361C149.472 15.613 154.724 14.5022 160 13.469M170 20.0001C159.035 23.1901 145.376 26.1661 134.828 30.3941C125.237 34.2381 116.386 39.8111 111.337 49.8581C104.556 63.3501 107.452 76.0481 115.188 87.4431C124.371 100.968 138.231 107.479 154.467 109.133C174.153 111.139 197.947 117.057 215.5 127.5M180.5 30.3941C171.043 33.0081 151.043 37.3861 142.428 42.5841C137.271 45.6961 132.455 48.7701 129.335 54.0711C124.244 62.7221 126.716 70.2591 131.793 76.7671C138.421 85.2641 147.883 89.7701 158.082 90.9511C182.176 93.7401 199.772 103.589 218.434 118.5M217 97.5001C211.207 91.3431 195.647 75.0971 189.78 69.0071C184.305 63.3231 184.789 60.5021 191.549 56.4721C197 54.0001 201.1 56.106 206 57.5M208.5 153.352C194.906 150.862 181.083 149.597 167.029 149.519C156.853 149.463 146.538 147.232 136.56 144.845C118.867 140.612 105.287 129.608 93.4798 116.267C77.4838 98.1921 69.1718 78.0881 76.0358 53.4591C82.1298 31.5911 93.0437 14.7221 116.773 9.15707C121.216 8.1149 125.613 6.87809 130 5.59778M206.5 160.903C201.371 160.428 196.191 160.252 190.949 160.462C176.354 161.047 161.722 160.836 147.301 158.096C136.443 156.033 125.836 153.066 116.191 147.38C97.9697 136.638 84.4528 121.263 73.1308 103.719C66.5458 93.5151 63.1278 82.0401 64.4868 70.2641C65.7498 59.3231 69.1178 48.4851 72.6728 37.9781C78.8158 19.8201 90.4338 7.07007 110.201 3.18507C112.14 2.80382 114.072 2.3863 116 1.94702"
+                stroke="white" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round">
+              </path>
+            </mask>
+            <g mask="url(#mask0)">
+              <path
+                d="M165.486 203.162L205.268 163.571L220.008 108.569L204.992 54.1873L164.531 14.5239L109.457 0.205078L54.5334 15.0715L14.4717 55.1361L0.0078125 109.664L15.0247 164.046L55.0056 203.436L110.007 220.205L165.486 203.162Z"
+                fill="white"></path>
+            </g>
+            <defs>
+              <linearGradient id="gradient" x1="0.00791232" y1="110.205" x2="220.007" y2="110.205"
+                gradientUnits="userSpaceOnUse">
+                <stop stop-color="#F7DB2E"></stop>
+                <stop offset="1" stop-color="#10A1A2"></stop>
+              </linearGradient>
+            </defs>
+          </svg></a>
+      </header>
+      <main>
+        <div id="root"></div>
+      </main>
     </div>
-    <script>
-        if (document.cookie !== "")
-            document.querySelector('#CookielawBanner').style.display = "none";
-    </script>
-    <header class="navbar navbar-default navbar-head">
-        <div class="container">
-            <div class="navbar-header">
-                <h1 class="subsite-title">
-                    <span>&lt;integration in a Django website title&gt;</span>
-                </h1>
-            </div>
-            <div class="navbar-collapse collapse js-navbar-header">
-                <nav class="nav navbar-main navbar-right" id="page-navigation" role="navigation">
-                    <h6 class="subsite-title" style="margin-top: 36px;">
-                        <span style="font-size: 14px; font-weight: bold;">&lt;website menu&gt;</span>
-                    </h6>
-                </nav>
-            </div>
+    <footer class="site-footer">
+      <div class="footer__content"><a href="/" aria-label="Ebrains homepage" class="logo nuxt-link-active"><svg
+            width="172" height="60" viewBox="0 0 600 221" aria-labelledby="box" role="presentation" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M256.987 136.227H294.335V129.664H264.385V108.902H291.949V102.339H264.385V81.6964H293.858V75.1336H256.987V136.227ZM307.192 136.227H329.267C343.705 136.227 349.671 129.187 349.671 119.999C349.671 110.334 342.989 105.084 337.381 104.726V104.129C342.631 102.697 347.285 99.2368 347.285 91.3615C347.285 82.4123 341.319 75.1336 328.551 75.1336H307.192V136.227ZM314.59 129.664V108.425H329.625C337.62 108.425 342.631 113.794 342.631 119.999C342.631 125.368 338.932 129.664 329.267 129.664H314.59ZM314.59 101.981V81.6964H328.551C336.665 81.6964 340.245 85.992 340.245 91.3615C340.245 97.8049 334.994 101.981 328.312 101.981H314.59ZM361.827 136.227H369.225V112.362H382.589C383.126 112.362 383.633 112.362 384.14 112.332L397.027 136.227H405.619L391.807 110.99C399.593 108.335 403.232 101.981 403.232 93.8673C403.232 83.0686 396.789 75.1336 382.47 75.1336H361.827V136.227ZM369.225 105.68V81.6964H382.231C392.135 81.6964 395.953 86.529 395.953 93.8673C395.953 101.206 392.135 105.68 382.351 105.68H369.225ZM418.065 136.227L424.21 118.925H448.91L455.055 136.227H462.811L440.379 75.1336H432.742L410.309 136.227H418.065ZM426.537 112.362L436.322 84.7988H436.799L446.583 112.362H426.537ZM479.725 75.1336H472.327V136.227H479.725V75.1336ZM543.004 75.1336H535.725V123.221H535.128L501.718 75.1336H494.559V136.227H501.957V88.2591H502.553L535.844 136.227H543.004V75.1336ZM591.217 90.4069H598.377C598.049 81.1893 589.547 74.2984 577.734 74.2984C566.04 74.2984 556.852 81.0998 556.852 91.3615C556.852 99.5948 562.819 104.487 572.364 107.231L579.882 109.379C586.325 111.169 592.053 113.436 592.053 119.522C592.053 126.204 585.609 130.619 577.137 130.619C569.859 130.619 563.415 127.397 562.819 120.476H555.182C555.898 130.499 564.012 137.301 577.137 137.301C591.217 137.301 599.212 129.545 599.212 119.641C599.212 108.186 588.354 104.487 582.03 102.816L575.825 101.146C571.29 99.9527 564.012 97.5663 564.012 91.0035C564.012 85.1567 569.381 80.8611 577.495 80.8611C584.893 80.8611 590.501 84.3811 591.217 90.4069Z"
+              fill="currentColor"></path>
+            <path
+              d="M165.486 203.162L205.268 163.571L220.008 108.569L204.992 54.1873L164.531 14.5239L109.457 0.205078L54.5334 15.0715L14.4717 55.1361L0.0078125 109.664L15.0247 164.046L55.0056 203.436L110.007 220.205L165.486 203.162Z"
+              fill="url(#gradient)"></path>
+            <mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="16" y="0" width="204" height="221">
+              <path
+                d="M211.243 145.118C202.515 142.357 193.423 140.448 184.353 139.139C172.271 137.395 160.07 136.345 147.886 135.468C118.479 133.352 79.2278 98.5761 84.4118 62.4391C86.9568 44.7001 93.5297 29.8871 110.211 21.1841C120.968 15.5714 132.458 12.2115 144.062 9.15707M199.924 170.161C191.93 170.638 183.966 172.39 175.999 172.324C165.826 172.24 155.454 171.916 145.543 169.875C129.25 166.519 113.82 160.671 100.578 149.847C88.0948 139.643 77.6278 127.664 67.7608 115.071C56.4348 100.616 51.8168 83.7371 54.9788 66.1101C57.6858 51.0211 63.3068 36.3751 68.4658 21.8261C70.072 17.2972 72.1332 13.3592 74.6473 10.0001M58.5 14.5001C53.748 29.9371 54.4618 27.2481 49.7238 42.6901C45.7598 55.6121 43.6158 68.633 43.7078 82.189C43.7908 94.523 47.1588 105.825 54.1328 115.581C66.7458 133.225 80.3588 150.129 98.2568 162.92C115.118 174.97 133.987 181.46 154.437 184.667C165.754 186.442 176.655 185.251 187.5 183.416M39.5 30.5001C35.455 49.6281 31.3888 66.0371 31.8788 85.7761C32.3328 104.089 37.8738 120.427 50.3628 134.257C63.0478 148.304 74.8148 163.248 90.4808 174.281C108.348 186.865 127.797 196.242 149.115 201.073C155.794 202.587 162.436 202.751 169 202.047M21.5 49.0001C21.432 50.3921 18.7758 74.2201 18.6948 75.6101C18.3228 81.9911 17.6908 88.3651 17.5518 94.7501C17.1408 113.592 20.8888 130.686 34.7118 145.124C56.3688 167.744 80.2757 187.356 106.517 204.36C111.839 207.808 116.532 214.431 120.5 219.5M90.4808 217C81.8668 207.031 70.5588 201.008 59.3208 194.723C49.4278 189.19 40.623 181.744 29 180M213 137.5C200.186 132.909 192.738 129.82 179.528 126.698C168.454 124.081 156.864 123.634 145.497 122.265C119.733 119.162 92.1298 90.6361 95.1088 63.0351C96.1638 53.2691 98.9818 44.7451 105.404 37.3141C115.714 25.3841 130.158 21.3471 144.342 17.1361C149.472 15.613 154.724 14.5022 160 13.469M170 20.0001C159.035 23.1901 145.376 26.1661 134.828 30.3941C125.237 34.2381 116.386 39.8111 111.337 49.8581C104.556 63.3501 107.452 76.0481 115.188 87.4431C124.371 100.968 138.231 107.479 154.467 109.133C174.153 111.139 197.947 117.057 215.5 127.5M180.5 30.3941C171.043 33.0081 151.043 37.3861 142.428 42.5841C137.271 45.6961 132.455 48.7701 129.335 54.0711C124.244 62.7221 126.716 70.2591 131.793 76.7671C138.421 85.2641 147.883 89.7701 158.082 90.9511C182.176 93.7401 199.772 103.589 218.434 118.5M217 97.5001C211.207 91.3431 195.647 75.0971 189.78 69.0071C184.305 63.3231 184.789 60.5021 191.549 56.4721C197 54.0001 201.1 56.106 206 57.5M208.5 153.352C194.906 150.862 181.083 149.597 167.029 149.519C156.853 149.463 146.538 147.232 136.56 144.845C118.867 140.612 105.287 129.608 93.4798 116.267C77.4838 98.1921 69.1718 78.0881 76.0358 53.4591C82.1298 31.5911 93.0437 14.7221 116.773 9.15707C121.216 8.1149 125.613 6.87809 130 5.59778M206.5 160.903C201.371 160.428 196.191 160.252 190.949 160.462C176.354 161.047 161.722 160.836 147.301 158.096C136.443 156.033 125.836 153.066 116.191 147.38C97.9697 136.638 84.4528 121.263 73.1308 103.719C66.5458 93.5151 63.1278 82.0401 64.4868 70.2641C65.7498 59.3231 69.1178 48.4851 72.6728 37.9781C78.8158 19.8201 90.4338 7.07007 110.201 3.18507C112.14 2.80382 114.072 2.3863 116 1.94702"
+                stroke="white" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round">
+              </path>
+            </mask>
+            <g mask="url(#mask0)">
+              <path
+                d="M165.486 203.162L205.268 163.571L220.008 108.569L204.992 54.1873L164.531 14.5239L109.457 0.205078L54.5334 15.0715L14.4717 55.1361L0.0078125 109.664L15.0247 164.046L55.0056 203.436L110.007 220.205L165.486 203.162Z"
+                fill="white"></path>
+            </g>
+            <defs>
+              <linearGradient id="gradient" x1="0.00791232" y1="110.205" x2="220.007" y2="110.205"
+                gradientUnits="userSpaceOnUse">
+                <stop stop-color="#F7DB2E"></stop>
+                <stop offset="1" stop-color="#10A1A2"></stop>
+              </linearGradient>
+            </defs>
+          </svg></a>
+        <p class="small-text">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit.&lt;br>Morbi pellentesque tincidunt neque, ut.Non
+          blandit lacus etiam enim ornare pellentesque.
+        </p>
+      </div>
+      <div class="footer__end">
+        <div class="footer__copyright">
+          Copyright © <script>document.write(new Date().getFullYear())</script> Ebrains. All rights reserved.
         </div>
-        <div class="hidden-sm hidden-xs">
-            <nav class="nav navbar navbar-lower navbar-subpage">
-                <h4 class="subsite-title" style="padding-left: 15px;">
-                    <span>&lt;website navigation links&gt;</span>
-                </h4>
-            </nav>
-        </div>
-        <header>
-            <div class="subsite_header  explore">
-                <div class="container-fluid">
-                    <h2 class="subsite-title">
-                        <span>&lt;knowledge graph search title&gt;</span>
-                    </h2>
-                    <div class="subsite-tagline"></div>
-                </div>
-            </div>
-        </header>
-        <nav class="navbar" style="min-height: 0; margin-bottom: 0;">
-            <ul class="container-fluid nav nav-tabs"></ul>
-        </nav>
-    </header>
-    <hr class="sr-only" id="page-content" />
-    <div class="main-content">
-        <div class="container">
-            <div id="root"></div>
-        </div>
-        <div class="container-fluid">
-        </div>
-    </div>
-    <hr class="sr-only" />
-    <div class="container">
-        <div style="height: 60px; padding-top: 30px;">
-            <span>&lt;website footer logo&gt;</span>
-        </div>
-    </div>
-    <footer class="footer" role="contentinfo">
-        <div class="rainbow-row">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-        <h5 class="sr-only" id="page-footer">Sitemap</h5>
-        <div class="container sitemap">
-            <ul>
-                <div style="height: 400px;">
-                    <span>&lt;website footer navigation&gt;</span>
-                </div>
-            </ul>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 social-networks">
-                </div>
-                <div class="col-md-18">
-                    <p class="copyright">
-                        ©2018 Human Brain Project. All rights reserved.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <div class="browser-outdated" id="outdated" hidden="hidden">
-        <noscript>
-            <h3>Please enable JavaScript</h3>
-        </noscript>
-        <h3>Your browser is out-of-date!</h3>
-        <p>Update your browser to view this website correctly.</p>
-        <p>
-            <a href="http://outdatedbrowser.com/" class="btn btn-lg btn-outline" id="btnUpdateBrowser">
-                Update my browser now
+        <ul class="footer__social">
+          <li>
+            <a href="https://www.facebook.com/humanbrainproj" target="_blank" rel="noopener">
+              <svg class="sprite-icons" xmlns="http://www.w3.org/2000/svg" id="i-facebook" viewBox="0 0 40 40"
+                fill="none">
+                <path d="M26 10h-3a5 5 0 00-5 5v3h-3v4h3v8h4v-8h3l1-4h-4v-3a1 1 0 011-1h3v-4z" stroke="currentColor"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
             </a>
-        </p>
-        <p class="last">
-            <a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a>
-        </p>
-    </div>
-    <!-- full:1526050453 -->
+          </li>
+          <li>
+            <a href="https://twitter.com/HumanBrainProj" target="_blank" rel="noopener">
+              <svg class="sprite-icons" xmlns="http://www.w3.org/2000/svg" id="i-twitter" viewBox="0 0 40 40"
+                fill="none">
+                <path
+                  d="M31 11a10.897 10.897 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 0111 12s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5 0-.278-.028-.556-.08-.83A7.72 7.72 0 0031 11v0z"
+                  stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/user/TheHumanBrainProject" target="_blank" rel="noopener">
+              <svg class="sprite-icons" xmlns="http://www.w3.org/2000/svg" id="i-instagram" viewBox="0 0 40 40"
+                fill="none">
+                <path d="M25 10H15a5 5 0 00-5 5v10a5 5 0 005 5h10a5 5 0 005-5V15a5 5 0 00-5-5z" stroke="currentColor"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M24 19.37a4 4 0 11-7.914 1.173A4 4 0 0124 19.37zM25.5 14.5h.01" stroke="currentColor"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.instagram.com" target="_blank" rel="noopener">
+              <svg class="sprite-icons" xmlns="http://www.w3.org/2000/svg" id="i-youtube" viewBox="0 0 40 40"
+                fill="none">
+                <path
+                  d="M30.54 14.42a2.78 2.78 0 00-1.94-2C26.88 12 20 12 20 12s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29.001 29.001 0 009 19.75a29 29 0 00.46 5.33A2.78 2.78 0 0011.4 27c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2c.312-1.732.466-3.49.46-5.25a29.005 29.005 0 00-.46-5.33v0z"
+                  stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M17.75 23.02l5.75-3.27-5.75-3.27v6.54z" stroke="currentColor" stroke-linecap="round"
+                  stroke-linejoin="round"></path>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/HumanBrainProject/" target="_blank" rel="noopener">
+              <svg class="sprite-icons" xmlns="http://www.w3.org/2000/svg" id="i-github" viewBox="0 0 40 40"
+                fill="none">
+                <path
+                  d="M24 30v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7a5.44 5.44 0 00-1.5-3.75A5.07 5.07 0 0027.91 9s-1.18-.35-3.91 1.48a13.38 13.38 0 00-7 0C14.27 8.65 13.09 9 13.09 9a5.07 5.07 0 00-.09 3.77 5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7a3.37 3.37 0 00-.94 2.58V30m0-3c-5 1.5-5-2.5-7-3l7 3z"
+                  stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.facebook.com/humanbrainproj" target="_blank" rel="noopener">
+              <svg class="sprite-icons" xmlns="http://www.w3.org/2000/svg" id="i-linkedin" viewBox="0 0 40 40"
+                fill="none">
+                <path
+                  d="M24 16a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6v0zM14 17h-4v12h4V17zM12 14a2 2 0 100-4 2 2 0 000 4z"
+                  stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </footer>
+  </div>
 </body>
+
 </html>

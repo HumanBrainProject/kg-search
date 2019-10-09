@@ -284,7 +284,7 @@
 .kgs-carousel__close-button::after {
     content: "esc";
     position: absolute;
-    transform: translate(-16px, 14px);
-    font-size: 12px;
-    color: #333;
+    transform: translate(-16px,14px);
+    font-size: var(--font-size-smaller);
+    color: var(--color-1);
 }

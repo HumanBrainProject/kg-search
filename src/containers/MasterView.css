@@ -15,14 +15,8 @@
 */
 
 .kgs-masterView {
-    padding: 0 20px;
-    background: #f4f4f4;
-}
-
-@media (min-width: 576px) {
-    .kgs-masterView {
-        padding: 0 50px;
-    }
+    padding: 0 var(--site-margin);
+    background: var(--background-color-1);
 }
 
 .kgs-masterView .kgs-masterView__panel {

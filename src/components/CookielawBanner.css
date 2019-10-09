@@ -19,7 +19,7 @@
   padding: 15px;
   border-radius: 10px;
   background-color: rgb(231, 231, 231);
-  color: #333;
+  color: var(--color-1);
 }
 
 .kgs-cookie a,

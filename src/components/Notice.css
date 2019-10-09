@@ -33,7 +33,7 @@
 }
 
 .kgs-notice-content h6 {
-    font-size: 18px; 
+    font-size: var(--font-size-big); 
 }
 
 .kgs-notice-content p i {

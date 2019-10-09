@@ -50,8 +50,8 @@ const replaceColorInSvg = (icon, colorToReplace, replacementColor) => {
 export const ShapeIcon = connect(
   (state, {label, shape, active}) => {
 
-    const highlightColor = getComputedStyle(document.documentElement).getPropertyValue("--color-1").trim();
-    const defaultColor = getComputedStyle(document.documentElement).getPropertyValue("--color-0").trim();
+    const highlightColor = getComputedStyle(document.documentElement).getPropertyValue("--color-selected-1").trim();
+    const defaultColor = getComputedStyle(document.documentElement).getPropertyValue("--color-unselected-1").trim();
     let imageUrl = null;
     let icon = null;
 

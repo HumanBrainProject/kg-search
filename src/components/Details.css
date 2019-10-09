@@ -22,7 +22,6 @@
   -webkit-transition: color 0.2s ease-in;
   -o-transition: color 0.2s ease-in;
   transition: color 0.2s ease-in;
-  /* font-size: 14px; */
 }
 
 .field-details button.toggle:hover{
@@ -48,7 +47,7 @@
 
 .field-details button.toggle span {
   display: inline-block;
-  font-size: 11px;
+  font-size: var(--font-size-extra-small);
   vertical-align: middle;
   transform: translateY(-2px);
 }
@@ -94,8 +93,7 @@
 .field-details .field-details__panel {
   padding: 10px;
   text-align: left;
-  /* font-family: Verdana,sans-serif; */
-  font-size: 11px;
+  font-size: var(--font-size-extra-small);
 }
 
 .field-details .collapsible .field-details__panel {

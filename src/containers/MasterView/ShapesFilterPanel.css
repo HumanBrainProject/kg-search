@@ -39,12 +39,12 @@
 }
 
 .kgs-fieldsFilter .kgs-fieldsFilter__shape.is-active {
-    border-bottom-color: var(--color-1);
+    border-bottom-color: var(--color-selected-1);
 }
 
 .kgs-fieldsFilter .kgs-fieldsFilter__shape button.kgs-fieldsFilter__button {
     width: 100%;
-    padding: 16px 20px;
+    padding: 16px 20px 12px 20px;
     border: 1px solid white;
     background-color: white; 
     -webkit-transition: -webkit-box-shadow 0.2s ease-in;
@@ -130,12 +130,13 @@
     grid-area: label;
     text-align: left;
     font-size: 26px;
+    line-height: 1.2em;
     color: #555;
     white-space: nowrap;
 }
 
 .kgs-fieldsFilter .kgs-fieldsFilter__shape.is-active:not(.is-disabled) .kgs-fieldsFilter__label {
-    color: var(--color-1);
+    color: var(--color-selected-1);
 }
 
 .kgs-fieldsFilter .kgs-fieldsFilter__count {
@@ -143,7 +144,8 @@
     -ms-grid-row: 2;
     grid-area: count;
     text-align: left;
-    font-size: 18px;
+    font-size: var(--font-size-big);
+    line-height: 2.1em;
     color: #999;
     white-space: nowrap;
 }

@@ -30,9 +30,9 @@
     position: relative;
     padding: 15px;
     text-align: left;
-    font-size: 16px;
+    font-size: var(--font-size);
     font-weight: normal;
-    color: #333;
+    color: var(--color-1);
     overflow-wrap: break-word;
     word-break: break-word;
     white-space: pre-wrap;
@@ -48,7 +48,7 @@
     display: none;
     margin-top: 0;
     font-weight: bold;
-    font-size: 14px;
+    font-size: var(--font-size-small);
     line-height: 24px;
     color: #555;
 }
@@ -58,7 +58,7 @@
 }
 
 .kgs-instance__header h3.kgs-instance__group strong {
-    color: var(--color-1);
+    color: var(--color-selected-1);
     font-size: 24px;
     font-weight: normal;
     text-transform: capitalize;
@@ -333,7 +333,7 @@
     height: 50px;
     margin-top: 50px;
     color: #777777;
-    font-size: 14px;
+    font-size: var(--font-size-small);
     font-weight: normal;
     text-align: center;
 }

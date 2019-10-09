@@ -42,7 +42,7 @@ const FooterBase = ({isFloating}) => {
 export const Footer = withFloatingScrollEventsSubscription(
   "bottom",
   [
-    {querySelector: ".main-content + hr + .container"},
-    {querySelector: "footer.footer[role=\"contentinfo\"]"}
+    {querySelector: "main"},
+    {querySelector: "footer.site-footer"}
   ]
 )(FooterBase);

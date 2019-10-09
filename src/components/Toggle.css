@@ -48,7 +48,8 @@
     border-right: none;
     cursor: pointer;
     font-weight: 500;
-    font-size: 14px;
+    font-size: var(--font-size-small);
+    line-height: 2em;
     color: #000;
     text-decoration: none;
     white-space: nowrap;
@@ -69,8 +70,8 @@
 }
 
 .kgs-toggle > div > button.is-active {
-    background-color: var(--color-1);
-    border-color: var(--color-1);
+    background-color: var(--color-selected-1);
+    border-color: var(--color-selected-1);
     cursor: default;
 }
 

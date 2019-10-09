@@ -44,7 +44,7 @@
 
 .kgs-footer.is-fixed-position .kgs-footer-nav {
     padding: 14px 20px;
-    background-color: #f4f4f4;
+    background-color: var(--background-color-1);
 }
 
 .kgs-footer-nav .kgs-paging {
@@ -87,7 +87,7 @@
 
 
 .kgs-footer .kgs-footer-nav .kgs-share-links .kgs-share-links-panel:before {
-   background-color: #f4f4f4;
+   background-color: var(--background-color-1);
 }
 
 .kgs-footer-nav .kgs-space {

@@ -25,7 +25,7 @@
 .kgs-facet .sk-panel__content .sk-item-list .sk-item-list-option .sk-item-list-option__checkbox {
     margin-top: 4px;
     margin-right: 10px;
-    color: #333;
+    color: var(--color-1);
     -moz-appearance: none;
     -webkit-appearance: none;
     transform: scale(0.9);
@@ -42,7 +42,7 @@
     width: 20px;
     height: 20px;
     padding: 2px;
-    border: 1px solid #333;
+    border: 1px solid var(--color-1);
     background-color: transparent;
     color: white;
     cursor: pointer;
@@ -59,18 +59,18 @@
 .kgs-facet .sk-panel__content .sk-item-list .sk-item-list-option.is-active .sk-item-list-option__checkbox:after {
     content: "\f00c";
     border-color: transparent;
-    background-color: var(--color-1);
+    background-color: var(--color-selected-1);
     font-family: "FontAwesome";
 }
 
 .kgs-facet .sk-panel__content .sk-item-list .sk-item-list-option .sk-item-list-option__text {
     padding-top: 3px;
-    color: #333;
-    font-size: 14px;
+    color: var(--color-1);
+    font-size: var(--font-size-small);
 }
 
 .kgs-facet .sk-panel__content .sk-item-list .sk-item-list-option.is-active .sk-item-list-option__text {
-    color: var(--color-1);
+    color: var(--color-selected-1);
     font-weight: normal;
 }
 .kgs-facet .sk-panel__content .sk-item-list .sk-item-list-option .sk-item-list-option__count {
@@ -79,12 +79,12 @@
     padding: 3px;
     background-color: #bbb;
     color: white;
-    font-size: 14px;
+    font-size: var(--font-size-small);
     text-align: center;
 }
 
 .kgs-facet .sk-panel__content .sk-item-list .sk-item-list-option.is-active .sk-item-list-option__count {
-    background-color: var(--color-1);
+    background-color: var(--color-selected-1);
 }
 
 .kgs-facet .sk-panel__content [data-qa="show-more"] {

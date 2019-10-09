@@ -15,24 +15,50 @@
 */
 
 :root {
-  --color-0: #4D4D4D;
-  --color-1: #45b07c;    
+  --light-color: #f5f5f5;
+  --dark-color: #222;
+  --color-1: #333;
+  --color-2: #4f4f4f;
+  --color-3: #828282;
+  --color-4: #bdbdbd;
+  --color-5: #e0e0e0;
+  --color-6: #f2f2f2;
+  --color-7: #6d6d6d;
+  --color-selected-1: #F88900; 
+  --color-unselected-1: #4D4D4D;
+  --link-color: #337ab7;
+  --link-color-active: #23527c;  
+  --link-color-2: #08c;
+  --light-text: #828282;
+  --background-color-1: #f4f4f4;
   --font-stack: "Inter","Helvetica Neue",Arial,sans-serif;
   --font-stack-bold: "Inter-Bold","Helvetica Neue",Arial,sans-serif;
-  --font-size: 21px;
-  --line-height: 32px;
+  --font-size-bigger: 21px;
+  --font-size-big: 18px;
+  --font-size: 16px;
   --font-size-small: 14px;
-  --line-height-small: 22px;
+  --font-size-smaller: 12px;
+  --font-size-extra-small: 11px;
+  --line-height: 22px;
+  --line-height-extra-big: 32px;
   --regular: 400;
   --bold: 700;
+  --site-margin: 12px;
+  --site-margin-desktop: 42px;
+}
+
+@media (min-width: 576px) {
+  :root {
+    --site-margin: var(--site-margin-desktop)
+  }
 }
 
 /* Inter Regular */
 @font-face {
   font-family: 'Inter';
   font-display: swap;
-  src: url('/fonts/Inter-Regular.woff2') format('woff2'),
-      url('/fonts/Inter-Regular.woff') format('woff');
+  src: url('/static/fonts/Inter-Regular.woff2') format('woff2'),
+      url('/static/fonts/Inter-Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
 }
@@ -41,8 +67,8 @@
 @font-face {
   font-family: 'Inter-Italic';
   font-display: swap;
-  src: url('/fonts/Inter-Italic.woff2') format('woff2'),
-    url('/fonts/Inter-Italic.woff') format('woff');
+  src: url('/static/fonts/Inter-Italic.woff2') format('woff2'),
+    url('/static/fonts/Inter-Italic.woff') format('woff');
   font-weight: 400;
   font-style: italic;
 }
@@ -51,8 +77,8 @@
 @font-face {
   font-family: 'Inter-Bold';
   font-display: swap;
-  src: url('/fonts/Inter-Bold.woff2') format('woff2'),
-    url('/fonts/Inter-Bold.woff') format('woff');
+  src: url('/static/fonts/Inter-Bold.woff2') format('woff2'),
+    url('/static/fonts/Inter-Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
 }
@@ -61,60 +87,185 @@
 @font-face {
   font-family: 'Inter-Bolditalic';
   font-display: swap;
-  src: url('/fonts/Inter-Bolditalic.woff2') format('woff2'),
-    url('/fonts/Inter-Bolditalic.woff') format('woff');
+  src: url('/static/fonts/Inter-Bolditalic.woff2') format('woff2'),
+    url('/static/fonts/Inter-Bolditalic.woff') format('woff');
   font-weight: 700;
   font-style: italic;
 }
 
 html, body {
     overflow-x: hidden;
-    font-family: var(--font-stack);
-    font-weight: var(--regular);
-    font-size: var(--font-size);
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
 }
 
-body > header.navbar {
-    margin-bottom: 0;
-    border-bottom: 0;
+body:before {
+  content: "small";
+  display: none
 }
 
-.navbar {
-    background: #F4F4F4;
+@media (--medium-window) {
+  body:before {
+    content: "medium"
+  }
 }
 
-.navbar .nav-tabs {
-    background: white;
+@media (max-width:1024px) {
+  body:before {
+    content: "large"
+  }
 }
 
-.navbar .nav-tabs>li>a 
-.navbar .nav-tabs>li>a:hover, 
-.navbar .nav-tabs>li>a:focus {
-    background: white;
-    border-color: white;
+html {
+  min-height: 100%
 }
 
-.navbar .nav-tabs>li.active>a, 
-.navbar .nav-tabs>li.active>a:hover, 
-.navbar .nav-tabs>li.active>a:focus {
-    background: #F4F4F4;
+body,
+html {
+  height: 100%
 }
 
-.navbar-default {
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+body {
+  overflow-x: hidden;
+  font-family: var(--font-stack);
+  font-weight: var(--regular);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  color: var(--dark-color);
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased
 }
 
-.main-content {
-	margin-top: 0;
+*,
+:after,
+:before {
+  box-sizing: border-box;
+  margin: 0
 }
 
-.main-content .container {
-	width:100%;
-	padding-left:0;
-	padding-right:0;
+a, a:hover, a:visited {
+  color: currentColor;
+  text-decoration: none;
+}
+
+.site-inner {
+  position: relative;
+  background-color: #fff;
+}
+
+main {
+  min-height: 100vh
+}
+
+main a, main a:visited {
+  color: currentColor;
+  text-decoration: none;
+}
+
+main a:hover, main a:hover:visited {
+  color: currentColor;
+  text-decoration: underline;
+}
+
+.site-navigation {
+  display: flex;
+  align-items: center;
+  height: 100px;
+  width: 100vw;
+  padding: 0 var(--site-margin);
+  z-index: 100;
+  -webkit-transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  transition: all .5s ease-out
+}
+
+.site-navigation.dark-theme {
+  color: #fff
+}
+
+.site-navigation.hidden {
+  transition: transform .3s ease-in, background-color .3s ease-in 2s, color .3s ease-in 2s;
+  transform: translate3d(0, -100%, 0)
+}
+
+.site-navigation.scrolling {
+  color: var(--dark-color);
+  background-color: #fff
+}
+
+.site-navigation .logo {
+  margin: 0 auto 0 0
+}
+
+.site-navigation-mobile {
+  height: 100%;
+  width: 100%
+}
+
+.site-footer {
+  width: 100%;
+  min-height: 400px;
+  padding: 20px var(--site-margin) 0;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--font-size-small);
+  line-height: var(--line-height);
+  color: var(--light-text)
+}
+
+.site-footer .footer__content {
+  margin-bottom: auto
+}
+
+.site-footer .footer__content .logo {
+  color: var(--dark-color)
+}
+
+.site-footer .footer__content p {
+  margin-top: 40px;
+  max-width: 320px
+}
+
+.site-footer .footer__end {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  min-height: 80px
+}
+
+.site-footer .footer__end .footer__social {
+  display: flex
+}
+
+.site-footer .footer__end ul.footer__social{
+  list-style: none;
+  padding: 0;
+}
+
+.site-footer .footer__end .footer__social li {
+  margin: 0 8px
+}
+
+.site-footer .footer__end .footer__social li a:hover {
+  color: var(--dark-color)
+}
+
+@media (max-width:768px) {
+  .site-footer .footer__end {
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-flow: column-reverse;
+    line-height: 50px
+  }
+}
+
+.sprite-icons {
+  width: 40px;
+  height: 40px
 }
