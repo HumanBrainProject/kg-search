@@ -98,8 +98,7 @@ const SearchPanelContainer = connect(
 export const SearchPanel = withFloatingScrollEventsSubscription(
   "top",
   [
-    { querySelector: "body>header" },
-    { querySelector: "body>header + nav.navbar" },
+    { querySelector: "header.site-navigation" },
     { querySelector: "#CookielawBanner", cookieKey: "cookielaw_accepted" }
   ]
 )(SearchPanelContainer);
