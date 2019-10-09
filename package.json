@@ -2,7 +2,7 @@
   "name": "kg-search-ui",
   "version": "2.0.0",
   "private": true,
-  "homepage": "https://kg.ebrains.eu",
+  "homepage": "https://kg.ebrains.eu/search",
   "proxy": {
     "/proxy": {
       "target": "https://kg.humanbrainproject.eu",
@@ -52,10 +52,10 @@
     "showdown-xss-filter": "^0.2.0"
   },
   "scripts": {
-    "start": "env-cmd -f .env.developement react-scripts start",
+    "start": "env-cmd -f .env.development react-scripts start",
     "build": "env-cmd -f .env.production react-scripts build",
     "build:int": "env-cmd -f .env.integration react-scripts build",
-    "build:dev": "env-cmd -f .env.developement react-scripts build",
+    "build:dev": "env-cmd -f .env.development react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "testCI": "CI=true react-scripts test --env=jsdom",
     "lint": "eslint src/",
