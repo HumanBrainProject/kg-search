@@ -160,7 +160,7 @@ main {
   background-color: transparent;
   border-bottom: 1px solid var(--border-color);
   box-shadow: 0 10px 20px 0 rgba(55,55,55,.1);
-  z-index: 20;
+  z-index: 100;
 }
 
 main a, main a:visited {
