@@ -48,7 +48,7 @@
 
 .kgs-filters .kgs-filters__header .kgs-filters__title {
     display: inline-block;
-    color: #555;
+    color: var(--color-15);
     font-size: var(--font-size-big);
     text-transform: uppercase;
 }

@@ -32,7 +32,7 @@
     display: inline-block;
     font-weight: bold;
     font-size: var(--font-size-small);
-    color: #555;
+    color: var(--color-12);
 }
 
 .kgs-field .field-label.as-block {
@@ -45,7 +45,7 @@
     padding: 0 8px 0 3px;
     font-weight: bold;
     font-size: var(--font-size-small);
-    color: #555;
+    color: var(--color-12);
 }
 
 .kgs-field .field-label.as-block::after {
@@ -62,4 +62,13 @@
 
 .kgs-field__table .table th > .kgs-field > .field-label {
     display: none;
+}
+
+.kgs-field__table .table>tbody>tr>td,
+.kgs-field__table .table>tbody>tr>th,
+.kgs-field__table .table>tfoot>tr>td,
+.kgs-field__table .table>tfoot>tr>th,
+.kgs-field__table .table>thead>tr>td,
+.kgs-field__table .table>thead>tr>th {
+    border-color: var(--border-color-6);
 }

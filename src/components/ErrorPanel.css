@@ -59,7 +59,7 @@
 }
 
 .kgs-error-navigation button:hover {
-    color: var(--color-1);    
-    -webkit-box-shadow: 3px 3px 6px #cbc9c9;
-    box-shadow: 3px 3px 6px #cbc9c9;
+    color: var(--color-8);    
+    -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2);
+    box-shadow: 3px 3px 6px var(--box-shadow-2);
 }

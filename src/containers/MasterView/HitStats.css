@@ -18,7 +18,7 @@
     display: inline-block; 
     font-size: 22px;
     line-height: 48px;
-    color: #555;
+    color: var(--color-15);
     white-space: nowrap;
     flex: 1;
 }

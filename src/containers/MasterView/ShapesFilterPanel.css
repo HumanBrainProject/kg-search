@@ -45,8 +45,8 @@
 .kgs-fieldsFilter .kgs-fieldsFilter__shape button.kgs-fieldsFilter__button {
     width: 100%;
     padding: 16px 20px 12px 20px;
-    border: 1px solid white;
-    background-color: white; 
+    border: 1px solid var(--background-color-2);
+    background-color: var(--background-color-2); 
     -webkit-transition: -webkit-box-shadow 0.2s ease-in;
     transition: -webkit-box-shadow 0.2s ease-in;
     -o-transition: box-shadow 0.2s ease-in;
@@ -58,15 +58,11 @@
     opacity: 0.5;
 }
 
-.kgs-fieldsFilter .kgs-fieldsFilter__shape button.kgs-fieldsFilter__button:focus,
-.kgs-fieldsFilter .kgs-fieldsFilter__shape button.kgs-fieldsFilter__button:hover:not([disabled]),
-.kgs-fieldsFilter .kgs-fieldsFilter__shape:not([is-disabled]) button.kgs-fieldsFilter__button:hover {
-    /*
-    -webkit-box-shadow: 3px 3px 6px #8f8a8a;
-    box-shadow: 3px 3px 6px #8f8a8a;    
-    */
-    -webkit-box-shadow: 3px 3px 6px #cbc9c9;
-    box-shadow: 3px 3px 6px #cbc9c9;
+.kgs-fieldsFilter .kgs-fieldsFilter__shape:not(.is-active) button.kgs-fieldsFilter__button:focus,
+.kgs-fieldsFilter .kgs-fieldsFilter__shape:not(.is-active) button.kgs-fieldsFilter__button:hover:not([disabled]),
+.kgs-fieldsFilter .kgs-fieldsFilter__shape:not([is-disabled]):not(.is-active) button.kgs-fieldsFilter__button:hover {
+    -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2); 
+    box-shadow: 3px 3px 6px var(--box-shadow-2); 
     z-index: 1;
 }
 
@@ -131,7 +127,7 @@
     text-align: left;
     font-size: 26px;
     line-height: 1.2em;
-    color: #555;
+    color: var(--color-13);
     white-space: nowrap;
 }
 
@@ -146,7 +142,7 @@
     text-align: left;
     font-size: var(--font-size-big);
     line-height: 2.1em;
-    color: #999;
+    color: var(--color-14);
     white-space: nowrap;
 }
 

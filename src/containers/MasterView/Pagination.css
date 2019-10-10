@@ -66,8 +66,8 @@
 
 .kgs-paging .sk-pagination-navigation .sk-toggle-option {
     flex: none;
-    background-color: white;
-    border-color: white;
+    background-color: var(--background-color-2);
+    border-color: var(--background-color-2);
     padding: 5px 15px;
     color: var(--color-selected-1);
     -webkit-touch-callout: none;
@@ -96,12 +96,8 @@
 
 .kgs-paging .sk-pagination-navigation .sk-toggle-option:not(.is-disabled):hover,
 .kgs-paging .sk-pagination-navigation .sk-toggle-option:not(.is-disabled):focus  {
-   /*
-    -webkit-box-shadow: 3px 3px 6px #8f8a8a;
-    box-shadow: 3px 3px 6px #8f8a8a;    
-    */
-    -webkit-box-shadow: 3px 3px 6px #cbc9c9;
-    box-shadow: 3px 3px 6px #cbc9c9;
+    -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2);
+    box-shadow: 3px 3px 6px var(--box-shadow-2);
     z-index: 1;
 }
 

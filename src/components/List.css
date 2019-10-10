@@ -59,8 +59,7 @@
     display: inline-block;
     width: 100%;
     margin: 0;
-    border-bottom: 1px solid black;
-    background-color: white;
+    background-color: var(--background-color-2);
 }
 
 .kgs-list > ul > li>button {
@@ -89,16 +88,14 @@
     .kgs-list > ul > li {
         margin: 10px 0 10px 0;
         border-bottom-width: 0;
-        -webkit-box-shadow: 2px 2px 4px#cbc9c9;
-        box-shadow: 2px 2px 4px#cbc9c9;
+        -webkit-box-shadow: 2px 2px 4px var(--box-shadow-2);
+        box-shadow: 2px 2px 4px var(--box-shadow-2);
         transition: box-shadow 0.2s ease-in;
     }
 
     .kgs-list > ul > li:hover {
-        -webkit-box-shadow: 3px 3px 6px #8f8a8a;
-        /* #cbc9c9; */
-        box-shadow: 3px 3px 6px #8f8a8a;
-        /* #cbc9c9; */
+        -webkit-box-shadow: 3px 3px 6px var(--box-shadow-3);
+        box-shadow: 3px 3px 6px var(--box-shadow-3);
     }
 }
 

@@ -32,7 +32,7 @@ a.kgs-email-link {
 
 a.kgs-email-link:hover {
     color: rgb(51, 51, 51);
-    -webkit-box-shadow: 3px 3px 6px #cbc9c9;
-    box-shadow: 3px 3px 6px #cbc9c9;
+    -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2);
+    box-shadow: 3px 3px 6px var(--box-shadow-2);
 }
 

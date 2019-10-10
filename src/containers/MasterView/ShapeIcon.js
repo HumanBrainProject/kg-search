@@ -50,25 +50,27 @@ const replaceColorInSvg = (icon, colorToReplace, replacementColor) => {
 export const ShapeIcon = connect(
   (state, {label, shape, active}) => {
 
+    const hardcodedColor = "#4D4D4D";
     const highlightColor = getComputedStyle(document.documentElement).getPropertyValue("--color-selected-1").trim();
     const defaultColor = getComputedStyle(document.documentElement).getPropertyValue("--color-unselected-1").trim();
+    const color = active?highlightColor:defaultColor;
     let imageUrl = null;
     let icon = null;
 
     if (shape === "$all") {
-      icon = allSvg(active?highlightColor:defaultColor);
+      icon = allSvg(color);
     } else {
       const mapping = state.definition.shapeMappings[shape];
       if (mapping) {
         if (mapping.image && mapping.image.url) {
           imageUrl = mapping.image.url;
         } else if (mapping.icon) {
-          icon = active?replaceColorInSvg(mapping.icon, defaultColor, highlightColor):mapping.icon;
+          icon = replaceColorInSvg(mapping.icon, hardcodedColor, color);
         } else {
-          icon = defaultSvg(active?highlightColor:defaultColor);
+          icon = defaultSvg(color);
         }
       } else {
-        icon = defaultSvg(active?highlightColor:defaultColor);
+        icon = defaultSvg(color);
       }
     }
 

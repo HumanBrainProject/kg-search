@@ -25,7 +25,7 @@
 .kgs-facet .sk-panel__content .sk-item-list .sk-item-list-option .sk-item-list-option__checkbox {
     margin-top: 4px;
     margin-right: 10px;
-    color: var(--color-1);
+    color: var(--color-8);
     -moz-appearance: none;
     -webkit-appearance: none;
     transform: scale(0.9);
@@ -42,7 +42,7 @@
     width: 20px;
     height: 20px;
     padding: 2px;
-    border: 1px solid var(--color-1);
+    border: 1px solid var(--color-8);
     background-color: transparent;
     color: white;
     cursor: pointer;
@@ -65,7 +65,7 @@
 
 .kgs-facet .sk-panel__content .sk-item-list .sk-item-list-option .sk-item-list-option__text {
     padding-top: 3px;
-    color: var(--color-1);
+    color: var(--color-8);
     font-size: var(--font-size-small);
 }
 
@@ -77,14 +77,15 @@
     display: inline-block;
     min-width: 42px;
     padding: 3px;
-    background-color: #bbb;
-    color: white;
+    background-color: var(--background-color-4);
+    color: var(--color-17);
     font-size: var(--font-size-small);
     text-align: center;
 }
 
 .kgs-facet .sk-panel__content .sk-item-list .sk-item-list-option.is-active .sk-item-list-option__count {
     background-color: var(--color-selected-1);
+    color: var(--color-18);
 }
 
 .kgs-facet .sk-panel__content [data-qa="show-more"] {

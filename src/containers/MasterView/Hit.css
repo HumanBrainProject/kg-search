@@ -40,7 +40,7 @@
     text-align: left;
     font-size: var(--font-size);
     font-weight: normal;
-    color: var(--color-1);
+    color: var(--color-8);
 }
 
 .kgs-hit__no-data {
@@ -51,7 +51,7 @@
 }
 
 .kgs-hit[data-type] .kgs-field {
-    color: var(--color-1);
+    color: var(--color-8);
     font-weight: normal;
 }
 

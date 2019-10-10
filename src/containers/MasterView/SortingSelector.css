@@ -27,7 +27,7 @@
     margin-right: 20px;
     font-size: 22px;
     line-height: 30px;
-    color: #555;
+    color: var(--color-15);
     white-space: nowrap;
 }
 
@@ -38,8 +38,8 @@
 }
 
 .kgs-sorting-selector .sk-select select {
-    background-color: white;
-    border-color: white;
+    background-color: var(--background-color-2);
+    border-color: var(--background-color-2);
     color: var(--color-selected-1);
     font-size: 22px;
     font-weight: normal;
@@ -59,13 +59,8 @@
 
 .kgs-sorting-selector .sk-select select:hover,
 .kgs-sorting-selector .sk-select select:focus  {
-    /*
-    box-shadow: 0 0 1px 3px #88C1FB;
-    -webkit-box-shadow: 3px 3px 6px #8f8a8a;
-    box-shadow: 3px 3px 6px #8f8a8a;    
-    */
-    -webkit-box-shadow: 3px 3px 6px #cbc9c9;
-    box-shadow: 3px 3px 6px #cbc9c9;
+    -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2);
+    box-shadow: 3px 3px 6px var(--box-shadow-2);
     z-index: 1;
 }
 
