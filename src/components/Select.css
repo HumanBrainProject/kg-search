@@ -40,7 +40,7 @@
     color: var(--color-selected-1);
     font-size: 22px;
     font-weight: normal;
-    padding: 9px 50px 9px 25px;
+    padding: 9px  var(--site-margin) 9px 25px;
     cursor: pointer;
     -moz-user-select: none;
     -ms-user-select: none;

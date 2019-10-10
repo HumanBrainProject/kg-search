@@ -318,7 +318,7 @@
 }
 
 .kgs-footer.is-fixed-position .kgs-footer-nav {
-    padding: 14px 50px;
+    padding: 14px var(--site-margin);
 }
 
 .kgs-footer-nav .kgs-paging {

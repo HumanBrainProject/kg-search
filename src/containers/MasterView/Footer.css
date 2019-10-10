@@ -143,7 +143,7 @@
     }
 
     .kgs-footer.is-fixed-position .kgs-footer-nav {
-        padding: 14px 50px;
+        padding: 14px var(--site-margin);
     }
 
     .kgs-footer-nav .kgs-paging {
@@ -263,11 +263,11 @@
 .kgs-footer__terms-short-notice .kgs-notice-panel {
     background-color: #242628;
     opacity: 0.75;
-    padding: 20px 50px 70px 50px;
+    padding: 20px var(--site-margin) 70px var(--site-margin);
 }
 
 .kgs-footer__terms-short-notice .kgs-notice-agree-button {
-    right: 50px;
+    right: var(--site-margin);
 }
 
 @media (min-width: 992px) and (min-height: 900px) {
