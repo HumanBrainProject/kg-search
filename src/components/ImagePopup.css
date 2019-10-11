@@ -48,7 +48,7 @@
   padding: 20px;
   border: 1px solid var(--border-color-3);
   border-radius: 4px;
-  background-color: white;
+  background-color: var(--background-color-2);
 }
 
 .kgs-image_popup-content .kgs-image_popup-label {
@@ -84,11 +84,16 @@
   position: absolute;
   top: 4px;
   right: 4px;
-  color: #ccc;
+  color: var(--color-19);
   cursor: pointer;
   -webkit-transition: color 0.2s ease-in;
   -o-transition: color 0.2s ease-in;
   transition: color 0.2s ease-in;
+}
+
+
+.kgs-image_popup-content > i:hover {
+  color: var(--color-20);
 }
 
 .kgs-image_popup-error {
