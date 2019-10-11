@@ -64,6 +64,7 @@
     background-color: white;
     transition: left 0.25s ease-in;
     transform: translate3D(0,0,0);
+    background-color: var(--border-color-3);
 }
 
 .kgs-carousel .kgs-carousel__item.position0 {

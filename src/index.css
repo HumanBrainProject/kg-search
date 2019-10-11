@@ -67,6 +67,7 @@
   --border-color-6: #ddd;
   --border-color-7: var(--border-color-3);
   --border-color-8: #000;
+  --border-color-9: rgba(0,0,0,.2);
   --box-shadow-1: rgba(55,55,55,.1);
   --box-shadow-2: #8f8a8a;
   --box-shadow-3: #160606;
@@ -138,7 +139,8 @@
     --border-color-5: #ccc;
     --border-color-6: #555;
     --border-color-7: var(--border-color-1);
-    --border-color-8: #000;
+    --border-color-8: #fff;
+    --border-color-9: rgba(255,255,255,.2);
     --box-shadow-1: rgba(205,205,205,.1);
     --box-shadow-2: #111;
     --box-shadow-3: #000;

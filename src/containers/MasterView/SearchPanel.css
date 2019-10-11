@@ -160,6 +160,11 @@
    color: var(--color-selected);
 }
 
+.kgs-search .sk-search-box .sk-spinning-loader {
+    border-color: var(--border-color-9);
+    border-left-color: var(--border-color-8);
+}
+
 @media (min-width: 992px) {
     .kgs-search .kgs-search-button {
         display: inline-block;
