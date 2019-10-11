@@ -116,18 +116,18 @@ export default class SearchManager {
       const state = store.getState();
       if (!state.search.nonce || (nonce && state.search.nonce && nonce === state.search.nonce)) {
         switch (status) {
-          case 400: // Bad Request
-          case 404: // Not Found
-            store.dispatch(actions.loadSearchBadRequest(status));
-            break;
-          case 401: // Unauthorized
-          case 403: // Forbidden
-          case 511: // Network Authentication Required
-            store.dispatch(actions.loadSearchSessionFailure(status));
-            break;
-          default: {
-            store.dispatch(actions.loadSearchServiceFailure(status, state.search.group));
-          }
+        case 400: // Bad Request
+        case 404: // Not Found
+          store.dispatch(actions.loadSearchBadRequest(status));
+          break;
+        case 401: // Unauthorized
+        case 403: // Forbidden
+        case 511: // Network Authentication Required
+          store.dispatch(actions.loadSearchSessionFailure(status));
+          break;
+        default: {
+          store.dispatch(actions.loadSearchServiceFailure(status, state.search.group));
+        }
         }
       }
       return Promise.reject(error);

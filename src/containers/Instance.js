@@ -70,20 +70,20 @@ const InstanceBase = ({ type, hasNoData, hasUnknownData, header, previews, main,
 
 const getField = (group, type, name, data, mapping) => {
   switch (name) {
-    case "type":
-      return {
-        name: "type",
-        data: { value: type },
-        mapping: { visible: true },
-        group: group
-      };
-    default:
-      return {
-        name: name,
-        data: data,
-        mapping: mapping,
-        group: group
-      };
+  case "type":
+    return {
+      name: "type",
+      data: { value: type },
+      mapping: { visible: true },
+      group: group
+    };
+  default:
+    return {
+      name: name,
+      data: data,
+      mapping: mapping,
+      group: group
+    };
   }
 };
 
