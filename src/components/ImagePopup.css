@@ -33,7 +33,8 @@
   background-color: rgba(0,0,0,0.4);
 }
 
-.kgs-image_popup-content {
+.kgs-image_popup-content, 
+.kgs-image_popup-content.fa-stack {
   z-index: 100;
   position: absolute;
   top: 50%;
