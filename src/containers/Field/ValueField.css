@@ -54,7 +54,7 @@
     border: 0;
     background-color: transparent;
     text-decoration: underline;
-    color: var(--link-color);
+    color: var(--link-color-1);
     text-align: left;
 }
 
@@ -65,7 +65,7 @@
 .kgs-field .field-value a,
 .kgs-field .field-value a:visited {
     text-decoration: underline;
-    color: var(--link-color);
+    color: var(--link-color-1);
 }
 
 .kgs-field .field-value a:focus,
@@ -93,6 +93,7 @@
     word-break: keep-all;
     white-space: nowrap;
     font-size: var(--font-size-big);
+    color: var(--color-24);
 }
 
 .kgs-field.kgs-field__icon {

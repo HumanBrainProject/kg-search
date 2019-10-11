@@ -41,12 +41,18 @@
 }
 
 .kgs-list > div {
-    border-top: 1px solid #777;
+    border-top: 1px solid var(--color-27);
     width: 100%;
     margin-top: 10px;
-    padding: 10px 0;
+    padding: 10px 20px;
     font-size: var(--font-size-small);
-    color: #777;
+    color: var(--color-27);
+}
+
+@media (min-width: 576px) {
+    .kgs-list > div {
+        padding: 10px 0;
+    }
 }
 
 .kgs-list.is-list > div {
@@ -60,6 +66,7 @@
     width: 100%;
     margin: 0;
     background-color: var(--background-color-2);
+    border-bottom: 1px solid var(--border-color-8);
 }
 
 .kgs-list > ul > li>button {
@@ -77,11 +84,11 @@
     position: absolute;
     top: calc(50% - 9px);
     right: 15px;
-    color: rgb(108, 115, 121);
+    color: var(--color-19);
 }
 
 .kgs-list > ul > li>button:hover .kgs-list__chevron {
-    color: rgb(51, 51, 51);
+    color: var(--color-20);
 }
 
 @media (min-width: 576px) {

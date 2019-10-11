@@ -16,6 +16,9 @@
 
 import { connect } from "react-redux";
 import { Icon } from "../../components/Icon";
+import { setIconColor } from "../../helpers/ShapeIconHelper";
+
+const hardcodedColor = "#4D4D4D";
 
 const defaultSvg = color => `
   <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="40px" height="40px" viewBox="0 0 40 40" enableBackground="new 0 0 40 40" xmlSpace="preserve">
@@ -39,45 +42,32 @@ const allSvg = color => `
   </svg>
 `;
 
-const replaceColorInSvg = (icon, colorToReplace, replacementColor) => {
-  if (typeof icon !== "string" || typeof colorToReplace !== "string" || typeof replacementColor !== "string") {
-    return icon;
-  }
-  const reg = new RegExp(colorToReplace, "g");
-  return icon.replace(reg, replacementColor);
-};
-
 export const ShapeIcon = connect(
   (state, {label, shape, active}) => {
-
-    const hardcodedColor = "#4D4D4D";
-    const highlightColor = getComputedStyle(document.documentElement).getPropertyValue("--color-selected-1").trim();
-    const defaultColor = getComputedStyle(document.documentElement).getPropertyValue("--color-unselected-1").trim();
-    const color = active?highlightColor:defaultColor;
     let imageUrl = null;
     let icon = null;
 
     if (shape === "$all") {
-      icon = allSvg(color);
+      icon = allSvg(hardcodedColor);
     } else {
       const mapping = state.definition.shapeMappings[shape];
       if (mapping) {
         if (mapping.image && mapping.image.url) {
           imageUrl = mapping.image.url;
         } else if (mapping.icon) {
-          icon = replaceColorInSvg(mapping.icon, hardcodedColor, color);
+          icon = mapping.icon;
         } else {
-          icon = defaultSvg(color);
+          icon = defaultSvg(hardcodedColor);
         }
       } else {
-        icon = defaultSvg(color);
+        icon = defaultSvg(hardcodedColor);
       }
     }
 
     return {
       title: label,
       url: imageUrl,
-      inline: icon
+      inline: setIconColor(icon, active)
     };
   }
 )(Icon);

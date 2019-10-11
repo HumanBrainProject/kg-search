@@ -18,7 +18,7 @@
   background-color: transparent;
   border: 0;
   margin-left: 6px;
-  color: #f56722;
+  color: var(--color-warning);
   -webkit-transition: color 0.2s ease-in;
   -o-transition: color 0.2s ease-in;
   transition: color 0.2s ease-in;
@@ -30,7 +30,7 @@
 }
 
 .field-details button.toggle.in {
-  color: black;
+  color: var(--color-warning-off);
 }
 
 .field-details button.toggle i {
@@ -101,7 +101,7 @@
   margin: 2px 0 6px 0;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  background-color: #f8f9fa;
+  background-color: var(--background-color-5);
   border: 1px solid #a2a9b1;
   border-radius: 10px;
 }
@@ -118,7 +118,7 @@
   height: auto;
   min-height: 58px;
   padding: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color-3);
   border-radius: 4px;
   background-color: white;
   cursor: pointer;
@@ -133,7 +133,7 @@
   border: 0;
   font-size: 8px;
   cursor: pointer;
-  color: #6c7379;
+  color: var(--color-19);
   -webkit-transition: color 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
   -o-transition: box-shadow 0.2s ease-in;
   transition: box-shadow 0.2s ease-in, color 0.2s ease-in, box-shadow 0.2s ease-in;
@@ -142,5 +142,5 @@
 .field-details button.field-details__close-button:hover{
   -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2);
   box-shadow: 3px 3px 6px var(--box-shadow-2);
-  color: #333333;
+  color: var(--color-20);
 }

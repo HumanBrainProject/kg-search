@@ -64,13 +64,13 @@
     padding: 0;
     border: 0;
     background-color: transparent;
-    color: #30b0e0;
+    color: var(--link-color-1);
     outline: none;
 }
 
 .kgs-filters .kgs-filters__header .kgs-filters__reset button.kgs-filters__reset-button:hover,
 .kgs-filters .kgs-filters__header .kgs-filters__reset button.kgs-filters__reset-button:focus {
-    color:#0088cc;
+    color:var(--link-color-active);
 }
 
 .kgs-filters .kgs-filters__header .kgs-filters__reset button.kgs-filters__reset-button:focus {

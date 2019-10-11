@@ -26,6 +26,16 @@
     overflow-y: scroll;
 }
 
+.kgs-instance .kgs-notice .kgs-notice-panel {
+    border-radius: 10px;
+    margin: 15px;
+    width: calc(100% - 30px);
+}
+
+.kgs-instance .kgs-notice .kgs-notice-agree-button {
+    margin-right: 15px;
+}
+
 .kgs-instance-content {
     position: relative;
     padding: 15px;
@@ -58,7 +68,7 @@
 }
 
 .kgs-instance__header h3.kgs-instance__group strong {
-    color: var(--color-selected-1);
+    color: var(--color-selected);
     font-size: 24px;
     font-weight: normal;
     text-transform: capitalize;
@@ -73,7 +83,7 @@
 @media (min-width: 400px) {
     .kgs-instance__previews > div {
         width: 340px;
-        border: 1px solid #ccc;
+        border: 1px solid var(--border-color-3);
         padding: 20px;
     }
     .kgs-instance__previews.has-many > div {

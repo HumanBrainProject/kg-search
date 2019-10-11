@@ -37,7 +37,7 @@
     width: calc(100% - 70px);
     background-color: white;
     border-color: white;
-    color: var(--color-selected-1);
+    color: var(--color-selected);
     font-size: 22px;
     font-weight: normal;
     padding: 9px  var(--site-margin) 9px 25px;
@@ -72,7 +72,7 @@
     width: 0;
     height: 0;
     margin-top: -3px;
-    border-top: 6px solid var(--color-selected-1);
+    border-top: 6px solid var(--color-selected);
     border-right: 6px solid transparent;
     border-left: 6px solid transparent;
     pointer-events: none;

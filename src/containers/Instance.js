@@ -22,6 +22,7 @@ import { ImagePopup } from "./ImagePopup";
 import { Field } from "./Field";
 import { FieldsPanel } from "./FieldsPanel";
 import { FieldsTabs } from "./FieldsTabs";
+import { TermsShortNotice } from "./TermsShortNotice";
 import "./Instance.css";
 import ReactPiwik from "react-piwik";
 
@@ -46,6 +47,7 @@ const InstanceBase = ({ type, hasNoData, hasUnknownData, header, previews, main,
   return (
     <div className="kgs-instance" data-type={type}>
       <div className="kgs-instance-scroll">
+        <TermsShortNotice />
         <div className={`kgs-instance-content kgs-instance__grid ${(previews && previews.length) ? "kgs-instance__with-previews" : ""}`}>
           <div className="kgs-instance__header">
             <h3 className={`kgs-instance__group ${header.group && header.group !== API.defaultGroup ? "show" : ""}`}>Group: <strong>{header.group}</strong></h3>

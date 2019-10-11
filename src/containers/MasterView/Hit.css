@@ -62,7 +62,7 @@
     margin-left: 12px;
     font-size: var(--font-size-big);
     font-weight: 400;
-    color: #0088cc;
+    color: var(--link-color-1);
     flex-basis: 80%;
     line-height: 1.3em;
 }

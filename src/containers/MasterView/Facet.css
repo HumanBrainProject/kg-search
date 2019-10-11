@@ -59,7 +59,7 @@
 .kgs-facet .sk-panel__content .sk-item-list .sk-item-list-option.is-active .sk-item-list-option__checkbox:after {
     content: "\f00c";
     border-color: transparent;
-    background-color: var(--color-selected-1);
+    background-color: var(--color-selected);
     font-family: "FontAwesome";
 }
 
@@ -70,7 +70,7 @@
 }
 
 .kgs-facet .sk-panel__content .sk-item-list .sk-item-list-option.is-active .sk-item-list-option__text {
-    color: var(--color-selected-1);
+    color: var(--color-selected);
     font-weight: normal;
 }
 .kgs-facet .sk-panel__content .sk-item-list .sk-item-list-option .sk-item-list-option__count {
@@ -84,11 +84,11 @@
 }
 
 .kgs-facet .sk-panel__content .sk-item-list .sk-item-list-option.is-active .sk-item-list-option__count {
-    background-color: var(--color-selected-1);
+    background-color: var(--color-selected);
     color: var(--color-18);
 }
 
 .kgs-facet .sk-panel__content [data-qa="show-more"] {
     margin-top: 10px;
-    color: #30b0e0;
+    color: var(--link-color-1);
 }

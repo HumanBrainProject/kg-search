@@ -16,6 +16,7 @@
 
 import React from "react";
 import { termsOfUse } from "../../data/termsOfUse.js";
+import { setIconColor } from "../../helpers/ShapeIconHelper";
 import { Icon } from "../../components/Icon";
 import { Details } from "../../components/Details";
 import { Text } from "../../components/Text";
@@ -105,7 +106,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
       valueProps = {
         title: value,
         url: data && data.image && data.image.url,
-        inline: mapping && mapping.icon
+        inline: setIconColor(mapping && mapping.icon)
       };
     } else if (isTag) {
       ValueComponent = Tag;

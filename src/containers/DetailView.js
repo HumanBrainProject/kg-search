@@ -17,8 +17,6 @@
 import { connect } from "react-redux";
 import * as actions from "../actions";
 import { Carousel } from "../components/Carousel";
-import { CookielawBanner } from "./CookielawBanner";
-import { TermsShortNotice } from "./TermsShortNotice";
 import { ShareButtons } from "./ShareButtons";
 import { Instance } from "./Instance";
 import { searchToObj } from "../helpers/OIDCHelpers";
@@ -32,8 +30,6 @@ const mapStateToProps = state => {
     data: state.instances.currentInstance?[...state.instances.previousInstances, state.instances.currentInstance]:[],
     itemComponent: Instance,
     navigationComponent: ShareButtons,
-    cookielawBanner: CookielawBanner,
-    noticeComponent: TermsShortNotice,
     isPreviewInstance: state.instances.isPreviewInstance
   };
 };

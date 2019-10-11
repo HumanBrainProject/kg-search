@@ -22,7 +22,7 @@ a.kgs-email-link {
     border-radius: 3px;
     background-color: transparent;
     font-weight: 500;
-    color: rgb(108, 115, 121);
+    color: var(--color-19);
     font-size: 22px;
     text-align: center;
     -webkit-transition: color 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
@@ -31,7 +31,7 @@ a.kgs-email-link {
 }
 
 a.kgs-email-link:hover {
-    color: rgb(51, 51, 51);
+    color: var(--color-20);
     -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2);
     box-shadow: 3px 3px 6px var(--box-shadow-2);
 }

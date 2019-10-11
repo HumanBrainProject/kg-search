@@ -20,7 +20,7 @@ button.kgs-conditional-button {
     padding: 0;
     border: 0;
     background-color: transparent;
-    color: #30b0e0;
+    color: var(--link-color-1);
     font-size: 20px;
     white-space: nowrap;
     outline: none;
@@ -28,7 +28,7 @@ button.kgs-conditional-button {
 
 button.kgs-conditional-button:hover,
 button.kgs-conditional-button:focus {
-    color:#0088cc;
+    color:var(--link-color-active);
 }
 
 button.kgs-conditional-button:focus {

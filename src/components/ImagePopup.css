@@ -45,7 +45,7 @@
   height: auto;
   min-height: 58px;
   padding: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color-3);
   border-radius: 4px;
   background-color: white;
 }
@@ -91,7 +91,7 @@
 }
 
 .kgs-image_popup-error {
-  color: var(--color-selected-1);
+  color: var(--color-selected);
 }
 
 .kgs-image_popup-error i {

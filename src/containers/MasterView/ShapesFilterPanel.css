@@ -39,7 +39,7 @@
 }
 
 .kgs-fieldsFilter .kgs-fieldsFilter__shape.is-active {
-    border-bottom-color: var(--color-selected-1);
+    border-bottom-color: var(--color-selected);
 }
 
 .kgs-fieldsFilter .kgs-fieldsFilter__shape button.kgs-fieldsFilter__button {
@@ -132,8 +132,16 @@
 }
 
 .kgs-fieldsFilter .kgs-fieldsFilter__shape.is-active:not(.is-disabled) .kgs-fieldsFilter__label {
-    color: var(--color-selected-1);
+    color: var(--color-selected);
 }
+
+
+.kgs-fieldsFilter .kgs-fieldsFilter__shape:not(.is-active) button.kgs-fieldsFilter__button:focus .kgs-fieldsFilter__label,
+.kgs-fieldsFilter .kgs-fieldsFilter__shape:not(.is-active) button.kgs-fieldsFilter__button:hover:not([disabled]) .kgs-fieldsFilter__label,
+.kgs-fieldsFilter .kgs-fieldsFilter__shape:not([is-disabled]):not(.is-active) button.kgs-fieldsFilter__button:hover .kgs-fieldsFilter__label {
+    color: var(--color-20);
+}
+
 
 .kgs-fieldsFilter .kgs-fieldsFilter__count {
     -ms-grid-column: 2;

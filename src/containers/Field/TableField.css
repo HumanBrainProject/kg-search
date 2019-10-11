@@ -27,12 +27,12 @@
     background-color: transparent;
     text-decoration: none;
     font-size: var(--font-size-smaller);
-    color: var(--link-color-2);
+    color: var(--link-color-1);
 }
 
 .kgs-field button[role="link"].kgs-field__viewMore-button:hover {
     text-decoration: none;
-    color: var(--link-color-2);
+    color: var(--link-color-active);
 }
 
 .kgs-field__table  .table .kgs-field__list {

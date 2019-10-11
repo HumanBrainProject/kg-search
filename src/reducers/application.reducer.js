@@ -16,7 +16,7 @@
 
 import * as types from "../actions.types";
 
-const TermsShortNoticeLocalStorageKey = "hbp.kgs-terms-conditions-consent";
+const TermsShortNoticeLocalStorageKey = "ebrains-search-terms-conditions-consent";
 
 const initialState = {
   isReady: false,

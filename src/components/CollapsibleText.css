@@ -35,12 +35,12 @@
   padding: 0;
   border: 0;
   text-decoration: none;
-  color: var(--link-color-2);
+  color: var(--link-color-1);
   box-shadow: none;    
   transform: translateY(-5px);
 }
 
 .field-text.collapsible button:hover,
 .field-text.collapsible button:active {
-  color: var(--link-color-2);
+  color: var(--link-color-1);
 }

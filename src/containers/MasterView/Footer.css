@@ -24,7 +24,7 @@
     position: fixed;
     left: 0;
     bottom: 0;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid var(--border-color-7);
     z-index: 3;
 }
 
@@ -261,7 +261,7 @@
 }
 
 .kgs-footer__terms-short-notice .kgs-notice-panel {
-    background-color: #242628;
+    background-color: var(--background-color-7);
     opacity: 0.9;
     padding: 20px var(--site-margin) 70px var(--site-margin);
 }

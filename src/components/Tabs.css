@@ -36,8 +36,8 @@
 }
 
 .kgs-tabs .kgs-tabs-buttons > button.kgs-tabs-button.is-active {
-    border-bottom-color: var(--color-selected-1);
-    color: var(--color-selected-1);
+    border-bottom-color: var(--color-selected);
+    color: var(--color-selected);
 }
 
 .kgs-tabs .kgs-tabs-buttons > button.kgs-tabs-button + button.kgs-tabs-button {

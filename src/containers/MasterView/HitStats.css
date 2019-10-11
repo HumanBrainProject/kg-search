@@ -24,6 +24,6 @@
 }
 
 .kgs-hitStats .kgs-hitStats-highlight {
-    color: var(--color-selected-1);
+    color: var(--color-selected);
     white-space: nowrap;
 }

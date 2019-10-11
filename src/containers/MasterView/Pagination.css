@@ -69,7 +69,7 @@
     background-color: var(--background-color-2);
     border-color: var(--background-color-2);
     padding: 5px 15px;
-    color: var(--color-selected-1);
+    color: var(--color-selected);
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -84,8 +84,8 @@
 
 .kgs-paging .sk-pagination-navigation .sk-toggle-option.is-active {
     color: white;
-    background-color: var(--color-selected-1);
-    border-color: var(--color-selected-1);
+    background-color: var(--color-selected);
+    border-color: var(--color-selected);
 }
 
 .kgs-paging .sk-pagination-navigation .sk-toggle-option.is-disabled {

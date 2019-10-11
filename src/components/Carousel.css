@@ -167,11 +167,6 @@
     overflow-y: auto;
 }
 
-.kgs-carousel__body .kgs-notice .kgs-notice-panel {
-    border-radius: 10px;
-    margin-bottom: 15px;
-}
-
 /*
 .kgs-carousel .kgs-carousel__item.position0 .kgs-carousel__body {
     background-color: red;
