@@ -88,77 +88,79 @@
   --site-margin: 12px;
   --site-margin-desktop: 42px;
 }
+
 /* TODO: Uncomment if you want dark mode enabled */
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --color-1: #fff;
-    --color-2: #4f4f4f;
-    --color-3: #828282;
-    --color-7: #a6a6a6;
-    --color-4: #bdbdbd;
-    --color-5: #e0e0e0;
-    --color-6: #f2f2f2;
-    --color-8: #aaa;
-    --color-9: #f5f5f5;
-    --color-10: #eee;
-    --color-11: var(--color-1);
-    --color-12: #bbb;
-    --color-13: #999;
-    --color-14: #555;
-    --color-15: var(--color-8);
-    --color-16: var(--color-13);
-    --color-17: #aaa;
-    --color-18: var(--color-1);
-    --color-19: #6c7379;
-    --color-20: #bbc0c3;
-    --color-21: var(--color-19);
-    --color-22: var(--color-20);
-    --color-23: var(--color-13);
-    --color-24: var(--color-13);
-    --color-25: #616161;
-    --color-26: var(--color-4);
-    --color-27: var(--color-15);
-    --color-28: var(--color-1);
-    --color-selected: #F88900; 
-    --color-unselected: var(--color-13);
-    --color-warning: #f56722;
-    --color-warning-off: var(--color-1);
-    --code-color: #c7254e;
-    --code-background-color: var(--color-26);
-    --link-color-1: #08c;
-    --link-color-2: #24b6ff;
-    --link-color-active: var(--link-color-2);
-    --light-text: #828282;
-    --background-color-1: #222;
-    --background-color-2: #333;
-    --background-color-3: #444;
-    --background-color-4: var(--background-color-2);
-    --background-color-5: #404040;
-    --background-color-6: rgba(73, 77, 80, 0.75);
-    --background-color-7: #616365;
-    --border-color-1: #555;
-    --border-color-2: #111;
-    --border-color-3: #222;
-    --border-color-4: #828282;
-    --border-color-5: #ccc;
-    --border-color-6: #555;
-    --border-color-7: var(--border-color-1);
-    --border-color-8: #fff;
-    --border-color-9: rgba(255,255,255,.2);
-    --box-shadow-1: rgba(205,205,205,.1);
-    --box-shadow-2: #111;
-    --box-shadow-3: #000;
-    --box-shadow-4: var(--box-shadow-2);
-  }
+/* @media (prefers-color-scheme: dark) { */
+ :root body[theme="dark"] {
+  --color-1: #fff;
+  --color-2: #4f4f4f;
+  --color-3: #828282;
+  --color-7: #a6a6a6;
+  --color-4: #bdbdbd;
+  --color-5: #e0e0e0;
+  --color-6: #f2f2f2;
+  --color-8: #aaa;
+  --color-9: #f5f5f5;
+  --color-10: #eee;
+  --color-11: var(--color-1);
+  --color-12: #bbb;
+  --color-13: #999;
+  --color-14: #555;
+  --color-15: var(--color-8);
+  --color-16: var(--color-13);
+  --color-17: #aaa;
+  --color-18: var(--color-1);
+  --color-19: #6c7379;
+  --color-20: #bbc0c3;
+  --color-21: var(--color-19);
+  --color-22: var(--color-20);
+  --color-23: var(--color-13);
+  --color-24: var(--color-13);
+  --color-25: #616161;
+  --color-26: var(--color-4);
+  --color-27: var(--color-15);
+  --color-28: var(--color-1);
+  --color-selected: #F88900; 
+  --color-unselected: var(--color-13);
+  --color-warning: #f56722;
+  --color-warning-off: var(--color-1);
+  --code-color: #c7254e;
+  --code-background-color: var(--color-26);
+  --link-color-1: #08c;
+  --link-color-2: #24b6ff;
+  --link-color-active: var(--link-color-2);
+  --light-text: #828282;
+  --background-color-1: #222;
+  --background-color-2: #333;
+  --background-color-3: #444;
+  --background-color-4: var(--background-color-2);
+  --background-color-5: #404040;
+  --background-color-6: rgba(73, 77, 80, 0.75);
+  --background-color-7: #616365;
+  --border-color-1: #555;
+  --border-color-2: #111;
+  --border-color-3: #222;
+  --border-color-4: #828282;
+  --border-color-5: #ccc;
+  --border-color-6: #555;
+  --border-color-7: var(--border-color-1);
+  --border-color-8: #fff;
+  --border-color-9: rgba(255,255,255,.2);
+  --box-shadow-1: rgba(205,205,205,.1);
+  --box-shadow-2: #111;
+  --box-shadow-3: #000;
+  --box-shadow-4: var(--box-shadow-2);
+}
 
-  ::-webkit-scrollbar {
-    background: #1a1a1a;
-  }
+body[theme="dark"] ::-webkit-scrollbar {
+  background: #1a1a1a;
+}
 
-  ::-webkit-scrollbar-thumb {
-    background: #444;
-  }
-} */
+body[theme="dark"] ::-webkit-scrollbar-thumb {
+  background: #444;
+}
+
+
 @media (min-width: 576px) {
   :root {
     --site-margin: var(--site-margin-desktop)
