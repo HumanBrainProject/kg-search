@@ -59,7 +59,6 @@
 
 .kgs-sorting-selector .sk-select select:hover,
 .kgs-sorting-selector .sk-select select:focus  {
-    -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2);
     box-shadow: 3px 3px 6px var(--box-shadow-2);
     z-index: 1;
 }

@@ -47,7 +47,6 @@
     color: white;
     cursor: pointer;
     border-radius: 3px;
-    -webkit-box-shadow: 0 0 2px #8f8a8a inset;
     box-shadow: 0 0 2px #8f8a8a inset;
 }
 

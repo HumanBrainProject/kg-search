@@ -25,7 +25,6 @@
 }
 
 .field-details button.toggle:hover{
-  -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2);
   box-shadow: 3px 3px 6px var(--box-shadow-2);
 }
 
@@ -140,7 +139,6 @@
 }
 
 .field-details button.field-details__close-button:hover{
-  -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2);
   box-shadow: 3px 3px 6px var(--box-shadow-2);
   color: var(--color-20);
 }

@@ -36,7 +36,6 @@
 
 .kgs-copy-to-clipboard:hover {
     color: var(--color-20);
-    -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2);
     box-shadow: 3px 3px 6px var(--box-shadow-2);
 }
 

@@ -61,7 +61,6 @@
 .kgs-fieldsFilter .kgs-fieldsFilter__shape:not(.is-active) button.kgs-fieldsFilter__button:focus,
 .kgs-fieldsFilter .kgs-fieldsFilter__shape:not(.is-active) button.kgs-fieldsFilter__button:hover:not([disabled]),
 .kgs-fieldsFilter .kgs-fieldsFilter__shape:not([is-disabled]):not(.is-active) button.kgs-fieldsFilter__button:hover {
-    -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2); 
     box-shadow: 3px 3px 6px var(--box-shadow-2); 
     z-index: 1;
 }

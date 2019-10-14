@@ -34,7 +34,6 @@
     box-sizing: border-box;
     background-color: white;
     transition: margin-top 0.25s ease-in;
-    -webkit-box-shadow: 3px 3px 6px #8f8a8a;
     box-shadow: 3px 3px 6px #8f8a8a;
 }
 
@@ -60,6 +59,5 @@
 
 .kgs-error-navigation button:hover {
     color: var(--color-8);    
-    -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2);
     box-shadow: 3px 3px 6px var(--box-shadow-2);
 }

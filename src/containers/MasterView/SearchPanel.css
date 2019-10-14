@@ -29,7 +29,6 @@
     padding: 15px 20px;
     border-bottom: 1px solid var(--border-color-7);
     background-color: var(--background-color-1);
-    -webkit-box-shadow: 0 4px 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
     box-shadow: 0 4px 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
     z-index: 3;
 }
@@ -131,7 +130,6 @@
 
 .kgs-search .kgs-search-button:hover {
     color: white;
-    -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2);
     box-shadow: 3px 3px 6px var(--box-shadow-2);
     z-index: 1;
 }
@@ -151,7 +149,6 @@
 }
 
 .kgs-search button.kgs-search-help__button:hover {
-    -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2);
     box-shadow: 3px 3px 6px var(--box-shadow-2);
 }
 

@@ -81,13 +81,11 @@
 
 .kgs-toggle > div > button:not(:last-child):not(.is-active):not(.is-disabled):hover,
 .kgs-toggle > div > button:not(:last-child):not(.is-active):not(.is-disabled):not([disabled]):focus  {
-    -webkit-box-shadow: 0px 3px 6px var(--box-shadow-2);
     box-shadow: 0px 3px 6px var(--box-shadow-2);
 }
 
 .kgs-toggle > div > button:last-child:not(.is-active):not(.is-disabled):hover,
 .kgs-toggle > div > button:last-child:not(.is-active):not(.is-disabled):not([disabled]):focus  {
-    -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2);
     box-shadow: 3px 3px 6px var(--box-shadow-2);
 }
 

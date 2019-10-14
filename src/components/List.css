@@ -95,14 +95,12 @@
     .kgs-list > ul > li {
         margin: 10px 0 10px 0;
         border-bottom-width: 0;
-        -webkit-box-shadow: 2px 2px 4px var(--box-shadow-2);
-        box-shadow: 2px 2px 4px var(--box-shadow-2);
+        box-shadow: 2px 2px 4px var(--box-shadow-4);
         transition: box-shadow 0.2s ease-in;
     }
 
     .kgs-list > ul > li:hover {
-        -webkit-box-shadow: 3px 3px 6px var(--box-shadow-3);
-        box-shadow: 3px 3px 6px var(--box-shadow-3);
+        box-shadow: 3px 3px 6px var(--box-shadow-2);
     }
 }
 

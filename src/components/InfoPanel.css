@@ -73,7 +73,6 @@
 
 .kgs-info__closeButton:hover {
     color: var(--color-20);
-    -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2);
     box-shadow: 3px 3px 6px var(--box-shadow-2);
 }
 
@@ -84,7 +83,6 @@
         bottom: 20px;
         left: 20px;
         border-radius: 4px;
-        -webkit-box-shadow: 3px 3px 6px var(--box-shadow-3);
         box-shadow: 3px 3px 6px var(--box-shadow-3);
     }
     

@@ -35,6 +35,5 @@
     box-sizing: border-box;
     background-color: var(--background-color-2);
     transition: margin-top 0.25s ease-in;
-    -webkit-box-shadow: 3px 3px 6px var(--box-shadow-2);
     box-shadow: 3px 3px 6px var(--box-shadow-2);
 }
