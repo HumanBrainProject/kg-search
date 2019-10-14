@@ -42,6 +42,7 @@
   --color-25: #eee;
   --color-26: var(--color-1);
   --color-27: #777;
+  --color-28: var(--color-17);
   --color-selected: #F88900; 
   --color-unselected: var(--color-23);
   --color-warning: #f56722;
@@ -115,6 +116,7 @@
     --color-25: #616161;
     --color-26: var(--color-4);
     --color-27: var(--color-15);
+    --color-28: var(--color-1);
     --color-selected: #F88900; 
     --color-unselected: var(--color-13);
     --color-warning: #f56722;
