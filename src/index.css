@@ -87,7 +87,8 @@
   --site-margin: 12px;
   --site-margin-desktop: 42px;
 }
-@media (prefers-color-scheme: dark) {
+/* TODO: Uncomment if you want dark mode enabled */
+/* @media (prefers-color-scheme: dark) {
   :root {
     --color-1: #fff;
     --color-2: #4f4f4f;
@@ -155,7 +156,7 @@
   ::-webkit-scrollbar-thumb {
     background: #444;
   }
-}
+} */
 @media (min-width: 576px) {
   :root {
     --site-margin: var(--site-margin-desktop)
