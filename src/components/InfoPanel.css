@@ -83,7 +83,7 @@
         bottom: 20px;
         left: 20px;
         border-radius: 4px;
-        box-shadow: 3px 3px 6px var(--box-shadow-3);
+        box-shadow: 3px 3px 6px var(--box-shadow-2);
     }
     
     .kgs-info__container {
