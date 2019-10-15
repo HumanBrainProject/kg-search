@@ -409,6 +409,10 @@
     color: #23527c;
   }
 
+  .kgs-field .field-value button[role="link"] {
+    color: #337ab7;
+  }
+  
   .kgs-field .field-value button[role="link"]:hover {
     color: #23527c;
   }
