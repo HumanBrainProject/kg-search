@@ -268,7 +268,7 @@ a, a:hover, a:visited {
 main {
   position: relative;
   min-height: 100vh;
-  margin-bottom: 400px;
+  margin-bottom: 200px;
   background-color: transparent;
   border-bottom: 1px solid var(--border-color-1);
   box-shadow: 0 10px 20px 0 var(--box-shadow-1);
@@ -323,7 +323,7 @@ main a:hover, main a:hover:visited {
   position: fixed;
   bottom: 0;
   width: 100%;
-  min-height: 400px;
+  min-height: 200px;
   padding: 20px var(--site-margin) 0;
   display: flex;
   flex-direction: column;
