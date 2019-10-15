@@ -30,7 +30,27 @@
   <link rel="icon" type="image/png" sizes="512x512" href="static/img/favicon-512x512.png">
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="msapplication-TileImage" content="static/img/mstile-150x150.png">
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser-polyfill.min.js"></script>
+  <script>
+      // Polyfill custom event if necessary since we kinda need it
+      // https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent#Polyfill
+      (function () {
+          if (typeof window['CustomEvent'] !== "function") {
+              function CustomEvent(event, params) {
+                  params = params || {
+                      bubbles: false,
+                      cancelable: false,
+                      detail: undefined
+                  };
+                  var evt = document.createEvent('CustomEvent');
+                  evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+                  return evt;
+              }
+              CustomEvent.prototype = window['Event'].prototype;
+              window['CustomEvent'] = CustomEvent;
+          }
+      })();
+  </script>
   <style>
     .site-navigation, .site-footer {
       display: none;
