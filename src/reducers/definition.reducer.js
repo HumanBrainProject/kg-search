@@ -55,7 +55,9 @@ const loadDefinitionSuccess = (state, action) => {
   const shapeMappings = source;
   let serviceUrl = "";
   if(source && source.serviceUrl){
-    serviceUrl = source.serviceUrl;
+    //serviceUrl = source.serviceUrl;
+    //TODO We temporarily hard code the url to make it work in parallel for ebrains
+    serviceUrl = "https://kg.ebrains.eu";
     delete source.serviceUrl;
   }
 
