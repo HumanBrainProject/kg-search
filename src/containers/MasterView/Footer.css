@@ -260,16 +260,6 @@
     display: none;
 }
 
-.kgs-footer__terms-short-notice  .kgs-notice-panel a, .kgs-footer__terms-short-notice  .kgs-notice-panel a:hover, .kgs-footer__terms-short-notice .kgs-notice-panel a:visited{
-    color:var(--color-selected);
-}
-
-.kgs-footer__terms-short-notice .kgs-notice-agree-button{
-    background-color: var(--color-selected);
-    border-color: var(--color-warning);
-}
-
-
 .kgs-footer__terms-short-notice .kgs-notice-panel {
     background-color: var(--background-color-7);
     opacity: 0.9;

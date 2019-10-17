@@ -296,6 +296,7 @@ main a:hover, main a:hover:visited {
   -webkit-backface-visibility: hidden;
   transform: translateZ(0);
   transition: all .5s ease-out;
+    background-color: white;
 }
 
 .site-navigation.hidden {
