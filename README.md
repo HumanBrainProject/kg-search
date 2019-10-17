@@ -1,5 +1,5 @@
 # Search UI
-The search UI is available at https://www.humanbrainproject.eu/en/explore-the-brain/search/ 
+The search UI is available at https://kg.ebrains.eu/search 
 
 It's based on Create React App and is using Search Kit (http://www.searchkit.co) library.
 

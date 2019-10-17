@@ -268,7 +268,7 @@ a, a:hover, a:visited {
 main {
   position: relative;
   min-height: 100vh;
-  margin-bottom: 200px;
+  margin-bottom: 320px;
   background-color: transparent;
   border-bottom: 1px solid var(--border-color-1);
   box-shadow: 0 10px 20px 0 var(--box-shadow-1);
@@ -323,7 +323,7 @@ main a:hover, main a:hover:visited {
   position: fixed;
   bottom: 0;
   width: 100%;
-  min-height: 200px;
+  min-height: 270px;
   padding: 20px var(--site-margin) 0;
   display: flex;
   flex-direction: column;
@@ -352,6 +352,7 @@ main a:hover, main a:hover:visited {
   align-items: center;
   width: 100%;
   min-height: 80px;
+  padding-bottom: 70px;
 }
 
 .site-footer .footer__end .footer__social {
@@ -368,6 +369,46 @@ main a:hover, main a:hover:visited {
   color: var(--color-10);
 }
 
+
+.eu-logo{
+    display:inline-block;
+    height: 40px;
+    margin-top: 5px;
+}
+
+.eu-logo img{
+    height: 100%;
+}
+
+.powered-by{
+    display:inline-block;
+    font-size: 0.4em;
+    font-weight: bold;
+    margin-right: 1.5em;
+    text-wrap: none;
+}
+
+.powered-by-intro{
+    font-size: 10px;
+    margin-top:20px;
+}
+
+.powered-by img{
+    height: 50px;
+    width: auto;
+}
+
+.powered-by a, .powered-by a:hover{
+    color: var(--color-1);
+    text-decoration: none;
+}
+
+.credits{
+    float:right;
+    text-align: right;
+}
+
+
 @media (max-width:768px) {
   .site-footer .footer__end {
     flex-wrap: wrap;
@@ -375,9 +416,19 @@ main a:hover, main a:hover:visited {
     flex-flow: column-reverse;
     line-height: 50px;
   }
+
+main{
+    margin-bottom: 450px;
+}
+.credits{
+    max-width: 200px;
+    margin-bottom: 2em;
+}
+
 }
 
 .sprite-icons {
   width: 40px;
   height: 40px;
 }
+
