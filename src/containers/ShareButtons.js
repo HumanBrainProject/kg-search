@@ -34,14 +34,11 @@ const getClipboardContent = (state, location, currentInstance, currentGroup) => 
     if (reference) {
       const indexReg = /^kg_(.*)$/;
       const group = indexReg.test(currentInstance._index) ? currentInstance._index.match(indexReg)[1] : (currentGroup ? currentGroup : null);
-
-      //TODO We temporarily changed instances/ to search/# to make it work in parallel on ebrains
-      href = `search/#${reference}${(group && group !== API.defaultGroup) ? ("?group=" + group) : ""}`;
+      href = `instances/${reference}${(group && group !== API.defaultGroup) ? ("?group=" + group) : ""}`;
     } else {
       const instanceId = location.hash.substring(1);
       if (instanceId) {
-        //TODO We temporarily changed instances/ to search/# to make it work in parallel on ebrains
-        href = `search/#${instanceId}${(currentGroup && currentGroup !== API.defaultGroup) ? ("?group=" + currentGroup) : ""}`;
+        href = `instances/${instanceId}${(currentGroup && currentGroup !== API.defaultGroup) ? ("?group=" + currentGroup) : ""}`;
       } else {
         href = `search/${location.search}`;
       }
