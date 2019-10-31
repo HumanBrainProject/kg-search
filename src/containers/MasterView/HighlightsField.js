@@ -25,7 +25,7 @@ export function HighlightsField({ fields, mapping }) {
 
   Object.keys(fields).forEach(field => {
     let shortKey = field.replace(/^(.*?)\..*$/g, "$1");
-    const content = formatHitForHighlight(fields[field].join(", "))
+    const content = formatHitForHighlight(fields[field].join(", "));
     valueTag.push(<p key={shortKey}>{mapping.fields[shortKey].value}: <span dangerouslySetInnerHTML={{ __html: content }}></span></p>);
   });
 

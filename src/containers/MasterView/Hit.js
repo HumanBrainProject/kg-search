@@ -42,12 +42,10 @@ export const HitBase = ({ type, hasNoData, hasUnknownData, ribbon, icon, fields,
 const insertSearchHightLights = (fields, highlightsField) => {
   // Removing the project field in the card if there is a Search hit on the project
   const hasProjectHit = highlightsField && highlightsField["fields"] && highlightsField["fields"] instanceof Object && Object.keys(highlightsField["fields"]).includes("component.value");
-  const fieldsComponents = fields.filter(({ name }) => !hasProjectHit || name !== "component").map(({ name, data, mapping, group }) => {
-    return (
-      <PrintViewField key={name} name={name} data={data} mapping={mapping} group={group} />
-    )
-  });
-  fieldsComponents.splice(1, 0, <HighlightsField key="highlights" {...highlightsField}></HighlightsField>)
+  const fieldsComponents = fields.filter(({ name }) => !hasProjectHit || name !== "component").map(({ name, data, mapping, group }) =>
+    <PrintViewField key={name} name={name} data={data} mapping={mapping} group={group} />
+  );
+  fieldsComponents.splice(1, 0, <HighlightsField key="highlights" {...highlightsField}></HighlightsField>);
   return fieldsComponents;
 };
 
