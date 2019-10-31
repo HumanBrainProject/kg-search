@@ -37,7 +37,7 @@ export class SearchKitHelpers {
       maxNbOfTermsTrigger: 4 // maximum number of terms before tweaking is turned off
     };
 
-    queryTweaking = {...defaultQueryTweakingConfig, ...queryTweaking};
+    queryTweaking = { ...defaultQueryTweakingConfig, ...queryTweaking };
 
     function getTerms(node) {
       function addTermsFromExpression(node, terms) {
@@ -118,12 +118,12 @@ export class SearchKitHelpers {
       }
       maxFuzzySearchConfig = Math.floor(maxFuzzySearchConfig);
       const terms = getTerms(tree);
-      let maxWildcard = maxWildcardConfig < 0?terms.length:terms.length<maxWildcardConfig?terms.length:maxWildcardConfig;
-      let maxFuzzySearch = maxFuzzySearchConfig < 0?terms.length:terms.length<maxFuzzySearchConfig?terms.length:maxFuzzySearchConfig;
-      const filteredTerms = terms.length === 1?terms:(terms.filter(term => {
+      let maxWildcard = maxWildcardConfig < 0 ? terms.length : terms.length < maxWildcardConfig ? terms.length : maxWildcardConfig;
+      let maxFuzzySearch = maxFuzzySearchConfig < 0 ? terms.length : terms.length < maxFuzzySearchConfig ? terms.length : maxFuzzySearchConfig;
+      const filteredTerms = terms.length === 1 ? terms : (terms.filter(term => {
         return (term.length >= queryTweaking.wildcard.minNbOfChars || term.length >= queryTweaking.fuzzySearch.minNbOfChars)
-                    && !term.includes(".")
-                    && !["a", "above", "all", "an", "are", "as", "any", "because", "below", "besides", "but", "by", "eg", "either", "for", "hence", "how", "which", "where", "who", "ie", "in", "instead", "is", "none", "of", "one", "other", "over", "same", "that", "the", "then", "thereby", "therefore", "this", "though", "thus", "to", "under", "until", "when", "why"].includes(term);
+          && !term.includes(".")
+          && !["a", "above", "all", "an", "are", "as", "any", "because", "below", "besides", "but", "by", "eg", "either", "for", "hence", "how", "which", "where", "who", "ie", "in", "instead", "is", "none", "of", "one", "other", "over", "same", "that", "the", "then", "thereby", "therefore", "this", "though", "thus", "to", "under", "until", "when", "why"].includes(term);
       }));
       if (terms.length <= queryTweaking.maxNbOfTermsTrigger) {
         filteredTerms.forEach((term, idx) => {
@@ -135,10 +135,10 @@ export class SearchKitHelpers {
             const re3 = new RegExp("([ \"\\[\\]{}()][+\\-]?)" + term + "$", "gi");
             const re4 = new RegExp("^([+\\-]?)" + term + "$", "gi");
             if (wildcardCondition && fuzzySearchCondition) {
-              str = str.replace(re1, "$1(" + term + "* OR " + term + "* OR " + term + "~)$2");
-              str = str.replace(re2, "$1(" + term + "* OR " + term + "* OR " + term + "~)$2");
-              str = str.replace(re3, "$1(" + term + "* OR " + term + "* OR " + term + "~)");
-              str = str.replace(re4, "$1(" + term + "* OR " + term + "* OR " + term + "~)");
+              str = str.replace(re1, "$1(" + term + "*^4 OR " + term + "~)$2");
+              str = str.replace(re2, "$1(" + term + "*^4 OR " + term + "~)$2");
+              str = str.replace(re3, "$1(" + term + "*^4 OR " + term + "~)");
+              str = str.replace(re4, "$1(" + term + "*^4 OR " + term + "~)");
             } else if (wildcardCondition) {
               str = str.replace(re1, "$1" + term + "*$2");
               str = str.replace(re2, "$1" + term + "*$2");
@@ -165,14 +165,14 @@ export class SearchKitHelpers {
       str = str.replace(re, "\\$1");
 
       //When odd quotes escape last one
-      if (((str.match(/"/g) || []).length - (str.match(/\\"/g) || []).length) %2 === 1) {
-        str = str.match(/(.*)"([^"]*)$/).reduce((r, s, i) => i===0?"":i===1?r+s+"\\\"":r+s, "");
+      if (((str.match(/"/g) || []).length - (str.match(/\\"/g) || []).length) % 2 === 1) {
+        str = str.match(/(.*)"([^"]*)$/).reduce((r, s, i) => i === 0 ? "" : i === 1 ? r + s + "\\\"" : r + s, "");
       }
     }
     return str;
   }
   static getQueryProcessor(searchkit, queryTweaking, store) {
-  //static getQueryProcessor(store, searchkit, queryTweaking) {
+    //static getQueryProcessor(store, searchkit, queryTweaking) {
 
     /*
         function buildTypeBoostsQuery() {
@@ -189,20 +189,20 @@ export class SearchKitHelpers {
         */
     return plainQueryObject => {
       //if not type is selected we make sure no other filters are active.
-      const selectedType = searchkit.state.facet_type && searchkit.state.facet_type.length > 0 ? searchkit.state.facet_type[0]: "";
+      const selectedType = searchkit.state.facet_type && searchkit.state.facet_type.length > 0 ? searchkit.state.facet_type[0] : "";
       const queryFields = store.getState().definition.queryFields;
       const fields = queryFields.filter(field => field[selectedType])[0][selectedType];
 
       if (!selectedType) {
         let activeFilter = false;
         const activeAccessors = searchkit.accessors.getActiveAccessors();
-        for(let i = 0; i < activeAccessors.length; i++){
+        for (let i = 0; i < activeAccessors.length; i++) {
           const accessor = activeAccessors[i];
-          if(accessor.key !== undefined && accessor.state !== undefined){
+          if (accessor.key !== undefined && accessor.state !== undefined) {
             let hasValue = false;
-            if(accessor.state.value !== null){
-              if(typeof accessor.state.value === "object"){
-                if(Object.keys(accessor.state.value).length > 0){
+            if (accessor.state.value !== null) {
+              if (typeof accessor.state.value === "object") {
+                if (Object.keys(accessor.state.value).length > 0) {
                   hasValue = true;
                 }
               } else {
@@ -210,13 +210,13 @@ export class SearchKitHelpers {
               }
             }
             activeFilter = (accessor.key).match(/^facet_/g) && hasValue;
-            if(activeFilter){
+            if (activeFilter) {
               break;
             }
           }
         }
 
-        if(activeFilter){
+        if (activeFilter) {
           searchkit.getQueryAccessor().keepOnlyQueryState();
           searchkit.query = searchkit.buildQuery();
           plainQueryObject = searchkit.query.getJSON();
@@ -227,7 +227,7 @@ export class SearchKitHelpers {
           if (plainQueryObject.query.simple_query_string && plainQueryObject.query.simple_query_string.query) {
             plainQueryObject.query.simple_query_string.query = SearchKitHelpers.sanitizeString(plainQueryObject.query.simple_query_string.query, queryTweaking);
           }
-          if(plainQueryObject.query.query_string && plainQueryObject.query.query_string.fields) {
+          if (plainQueryObject.query.query_string && plainQueryObject.query.query_string.fields) {
             plainQueryObject.query.query_string.fields = fields;
           }
           if (plainQueryObject.query.query_string && plainQueryObject.query.query_string.query) {

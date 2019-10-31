@@ -60,7 +60,10 @@ const mapStateToProps = (state, props) => {
       const average = StatsHelpers.average(values);
       const standardDeviation = StatsHelpers.standardDeviation(values);
       limit = average + 2 * standardDeviation;
-      //window.console.debug("average: " + average + ", standard deviation: "  + standardDeviation + ", limit: " + limit);
+      if (standardDeviation < 10) {
+        limit = -1;
+      }
+      // window.console.debug(" average: " + average + ", standard deviation: " + standardDeviation + ", limit: " + limit);
     } catch (e) {
       // window.console.debug("Failed to calculate stats");
     }

@@ -76,6 +76,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     const showPreview = !!renderUserInteractions && data.previewUrl && (typeof data.previewUrl === "string" || typeof data.previewUrl.url === "string");
 
     let value = data.value;
+
     if (data.value && mapping.type === "date") {
       const timestamp = Date.parse(data.value);
       if (timestamp && !isNaN(timestamp)) {

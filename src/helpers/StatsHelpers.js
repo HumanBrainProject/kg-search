@@ -21,7 +21,7 @@ export class StatsHelpers {
     }
     return values.reduce((sum, value) => sum + value, 0) / values.length;
   }
-  static standardDeviation(values){
+  static standardDeviation(values) {
     if (!(values instanceof Array) || values.length === 0) {
       return 0;
     }

@@ -19,18 +19,16 @@ import { connect } from "react-redux";
 import API from "../../services/API";
 import { PrintViewField } from "../Field";
 import { HitRibbon } from "./HitRibbon";
-import { HighlightsField} from "./HighlightsField";
+import { HighlightsField } from "./HighlightsField";
+import { formatHitForHighlight } from "../../helpers/HitFormattingHelpers";
 import "./Hit.css";
 
-export const HitBase = ({type, hasNoData, hasUnknownData, ribbon, icon, fields, highlightsField}) => (
+export const HitBase = ({ type, hasNoData, hasUnknownData, ribbon, icon, fields, highlightsField }) => (
   <div className="kgs-hit" data-type={type}>
     <HitRibbon className="kgs-hit__ribbon" {...ribbon} />
     <div className="kgs-hit__content">
-      <PrintViewField key={icon && icon.name} {...icon}/>
-      {fields.map(({name, data, mapping, group}) => (
-        <PrintViewField key={name} name={name} data={data} mapping={mapping} group={group} />
-      ))}
-      <HighlightsField {...highlightsField} />
+      <PrintViewField key={icon && icon.name} {...icon} />
+      {insertSearchHightLights(fields, highlightsField)}
     </div>
     {hasNoData && (
       <div className="kgs-hit__no-data">This data is currently not available.</div>
@@ -40,6 +38,18 @@ export const HitBase = ({type, hasNoData, hasUnknownData, ribbon, icon, fields, 
     )}
   </div>
 );
+
+const insertSearchHightLights = (fields, highlightsField) => {
+  // Removing the project field in the card if there is a Search hit on the project
+  const hasProjectHit = highlightsField && highlightsField["fields"] && highlightsField["fields"] instanceof Object && Object.keys(highlightsField["fields"]).includes("component.value");
+  const fieldsComponents = fields.filter(({ name }) => !hasProjectHit || name !== "component").map(({ name, data, mapping, group }) => {
+    return (
+      <PrintViewField key={name} name={name} data={data} mapping={mapping} group={group} />
+    )
+  });
+  fieldsComponents.splice(1, 0, <HighlightsField key="highlights" {...highlightsField}></HighlightsField>)
+  return fieldsComponents;
+};
 
 const markdownEscapedChars = {
   "&#x2F;": "\\",
@@ -63,7 +73,7 @@ const replaceMarkdownEscapedChars = (str) => {
   Object.entries(markdownEscapedChars).forEach(([key, val]) => {
     str = str.replace(new RegExp(key, "g"), val);
   });
-  return str.replace(/<\/?em>/gi,"");
+  return formatHitForHighlight(str);
 };
 
 const getTitleField = (group, data, highlight, mapping) => {
@@ -127,10 +137,10 @@ const getComponentField = (group, data, mapping) => {
       value: "From the " + data.value + " project"
     };
 
-    // remove title
-    fieldMapping = mapping && {...mapping};
-    fieldMapping && delete fieldMapping.value; // no deep cloning needed as only first level is modified
   }
+  // remove title
+  fieldMapping = mapping && { ...mapping };
+  fieldMapping && delete fieldMapping.value; // no deep cloning needed as only first level is modified
 
   return {
     name: "component",
@@ -142,19 +152,19 @@ const getComponentField = (group, data, mapping) => {
 
 const getField = (group, type, name, data, highlight, mapping) => {
   switch (name) {
-  case "title":
-    return getTitleField(group, data, highlight, mapping);
-  case "description":
-    return getDescriptionField(group, data, highlight, mapping);
-  case "component":
-    return getComponentField(group, data, mapping);
-  default:
-    return {
-      name: name,
-      data: data,
-      mapping: mapping,
-      group: group
-    };
+    case "title":
+      return getTitleField(group, data, highlight, mapping);
+    case "description":
+      return getDescriptionField(group, data, highlight, mapping);
+    case "component":
+      return getComponentField(group, data, mapping, highlight);
+    default:
+      return {
+        name: name,
+        data: data,
+        mapping: mapping,
+        group: group
+      };
   }
 };
 
@@ -191,16 +201,16 @@ const filterHighlightFields = (data, excludeFieldNames) => {
       result[name] = field;
       return result;
     }, {});
-  return hasFields?fields:null;
+  return hasFields ? fields : null;
 };
 
 export const Hit = connect(
-  (state, {data}) => {
+  (state, { data }) => {
 
     const indexReg = /^kg_(.*)$/;
     const source = data && !(data.found === false) && data._type && data._source;
     const mapping = source && state.definition && state.definition.shapeMappings && state.definition.shapeMappings[data._type];
-    const group = (data && !(data.found === false) && indexReg.test(data._index))?data._index.match(indexReg)[1]:API.defaultGroup;
+    const group = (data && !(data.found === false) && indexReg.test(data._index)) ? data._index.match(indexReg)[1] : API.defaultGroup;
 
     const ribbonData = mapping && mapping.ribbon && mapping.ribbon.framed && mapping.ribbon.framed.dataField && source[mapping.ribbon.framed.dataField];
     const iconData = {
@@ -220,10 +230,10 @@ export const Hit = connect(
       hasNoData: !source,
       hasUnknownData: !mapping,
       ribbon: getField(group, data && data._type, "ribbon", ribbonData, null, mapping && mapping.ribbon),
-      icon:  getField(group, data && data._type, "icon", iconData, null, iconMapping),
+      icon: getField(group, data && data._type, "icon", iconData, null, iconMapping),
       fields: getFields(group, data && data._type, source, data && data.highlight, mapping, false),
       highlightsField: {
-        fields: filterHighlightFields(data && data.highlight, ["title.value","description.value"]),
+        fields: filterHighlightFields(data && data.highlight, ["title.value", "description.value"]),
         mapping: mapping
       }
     };

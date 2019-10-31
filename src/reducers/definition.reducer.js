@@ -54,7 +54,7 @@ const loadDefinitionSuccess = (state, action) => {
   simplifySemantics(source);
   const shapeMappings = source;
   let serviceUrl = "";
-  if(source && source.serviceUrl){
+  if (source && source.serviceUrl) {
     serviceUrl = source.serviceUrl;
     delete source.serviceUrl;
   }
@@ -107,10 +107,10 @@ const loadDefinitionSuccess = (state, action) => {
   };
 
   const filterShapeFields = (shape, shapeFields) => {
-    const  filteredShapedFields = {};
+    const filteredShapedFields = {};
     const result = {};
     for (let [key, value] of Object.entries(shapeFields)) {
-      if(value.ignoreForSearch !== true) {
+      if (value.ignoreForSearch !== true) {
         filteredShapedFields[key] = value;
       }
     }
@@ -146,9 +146,13 @@ const loadDefinitionSuccess = (state, action) => {
   });
 
   let facetFields = {};
-  let sortFields = { _score: { label: "Relevance", key: "newestFirst",
-    fields: [{ field: "_score", options: { order: "desc" } },{ field: "first_release.value", options: { order: "desc", missing: "_last" } } ],
-    defaultOption: true } };
+  let sortFields = {
+    _score: {
+      label: "Relevance", key: "newestFirst",
+      fields: [{ field: "_score", options: { order: "desc" } }, { field: "first_release.value", options: { order: "desc", missing: "_last" } }],
+      defaultOption: true
+    }
+  };
   let facetTypesOrder = {};
   let facetDefaultSelectedType = null;
   if (source) {
@@ -158,7 +162,7 @@ const loadDefinitionSuccess = (state, action) => {
       const order = Number(source[type].order);
       if (!isNaN(order)) {
         facetTypesOrder[type] = order;
-        if(source[type].defaultSelection){
+        if (source[type].defaultSelection) {
           facetDefaultSelectedType = type;
           defaultSelectionDefined = true;
         }
@@ -303,15 +307,15 @@ function simplifySemanticKeysForField(field) {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-  case types.LOAD_DEFINITION:
-    return loadDefinition(state, action);
-  case types.LOAD_DEFINITION_REQUEST:
-    return loadDefinitionRequest(state, action);
-  case types.LOAD_DEFINITION_SUCCESS:
-    return loadDefinitionSuccess(state, action);
-  case types.LOAD_DEFINITION_FAILURE:
-    return loadDefinitionFailure(state, action);
-  default:
-    return state;
+    case types.LOAD_DEFINITION:
+      return loadDefinition(state, action);
+    case types.LOAD_DEFINITION_REQUEST:
+      return loadDefinitionRequest(state, action);
+    case types.LOAD_DEFINITION_SUCCESS:
+      return loadDefinitionSuccess(state, action);
+    case types.LOAD_DEFINITION_FAILURE:
+      return loadDefinitionFailure(state, action);
+    default:
+      return state;
   }
 }

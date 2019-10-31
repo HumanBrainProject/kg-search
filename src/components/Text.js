@@ -20,15 +20,17 @@ import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
 import "./Text.css";
 
-const converter = new showdown.Converter({extensions: [xssFilter]});
+const converter = new showdown.Converter({ extensions: [xssFilter] });
 
-export const Text = ({content, isMarkdown}) => {
+export const Text = ({ content, isMarkdown }) => {
   if (!content) {
     return null;
   }
+
   if (!isMarkdown) {
+    const html_text = content.replace(/<[^>]+!span>/g, '');
     return (
-      <span>{content}</span>
+      <span dangerouslySetInnerHTML={{ __html: html_text }}></span>
     );
   }
 
@@ -46,7 +48,7 @@ export const Text = ({content, isMarkdown}) => {
     .replace(/<\/li>\n<\/ol>/g, "</li></ol>");
 
   return (
-    <span className="field-markdown" dangerouslySetInnerHTML={{__html:html}}></span>
+    <span className="field-markdown" dangerouslySetInnerHTML={{ __html: html }}></span>
   );
 };
 
