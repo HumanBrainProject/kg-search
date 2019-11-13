@@ -3,8 +3,6 @@ Access to the data and metadata provided through EBRAINS Knowledge Graph Data Pl
 
 - [Citation requirements](https://kg.ebrains.eu/search-terms-of-use.html#citations)
 
-- [Acknowledgement requirements](https://kg.ebrains.eu/search-terms-of-use.html#acknowledgements)
-
 - These outlines are based on the authoritative [Terms and Conditions](https://kg.ebrains.eu/search-terms-of-use.html)
 
 If you do not accept the Terms &amp; Conditions you are not permitted to access or use the KG to search for, to submit, to post, or to download any materials found there-in.

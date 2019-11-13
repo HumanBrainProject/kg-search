@@ -33,6 +33,6 @@ If you own an HBP account, you might be eligible to see and search additional da
 If you have any further questions and/or feedback, do not hesitate to [contact us by e-mail](mailto:kg@ebrains.eu)
 
 ##Acknowledgements
-This open source software code was developed in part or in whole in the Human Brain Project, funded from the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreements No. 720270 and No. 785907 (Human Brain Project SGA1 and SGA2).
+This open source software code was developed and this service is provided in part or in whole by the Human Brain Project, funded from the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreements No. 720270 and No. 785907 (Human Brain Project SGA1 and SGA2).
 
 Powered by the [Human Brain Project](https://humanbrainproject.eu)`;
