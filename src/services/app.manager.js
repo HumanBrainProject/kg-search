@@ -20,9 +20,16 @@ import SearchManager from "./search.manager";
 import { generateKey, getHashKey, getSearchKey, searchToObj, getAuthUrl } from "../helpers/OIDCHelpers";
 
 const regReferenceHash = /^#(.+)$/;
+const regReferenceById = /.+identifier=(.+)$/;
 const regPreviewReference = /^(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
 
 export default class AppManager {
+
+  extractInstanceFromLocation = () => {
+    return regReferenceHash.test(window.location.hash) ? window.location.hash.match(regReferenceHash)[1] : regReferenceById.test(window.location.search) ? window.location.search.match(regReferenceById)[1] : null;
+  }
+
+
   constructor(store, options) {
     this.store = store;
     this.isStarted = false;
@@ -41,7 +48,7 @@ export default class AppManager {
     let initialInstanceReference = null;
     if (accessToken) {
       const aState = getHashKey("state");
-      const state = aState?JSON.parse(atob(aState)):null;
+      const state = aState ? JSON.parse(atob(aState)) : null;
       if (state) {
         if (state.group && state.group !== API.defaultGroup) {
           initialGroup = state.group;
@@ -51,13 +58,13 @@ export default class AppManager {
         }
         this.searchInterfaceIsDisabled = initialInstanceReference && (state.search === "false" || regPreviewReference.test(initialInstanceReference));
         startHistory = window.location.protocol + "//" + window.location.host + window.location.pathname + Object.entries(state).reduce((result, [key, value]) => {
-          return (key === "instanceReference"?result:(result + (result === ""?"?":"&") + key + "=" + value));
+          return (key === "instanceReference" ? result : (result + (result === "" ? "?" : "&") + key + "=" + value));
         }, "");
       }
       //const expiresIn = getHashKey("expires_in");
     } else {
       initialGroup = getSearchKey("group");
-      initialInstanceReference = regReferenceHash.test(window.location.hash)?window.location.hash.match(regReferenceHash)[1]:null;
+      initialInstanceReference = this.extractInstanceFromLocation();
       this.searchInterfaceIsDisabled = initialInstanceReference && getSearchKey("search", true) === "false";
       startHistory = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search;
     }
@@ -90,7 +97,7 @@ export default class AppManager {
     if (!this.isStarted) {
       this.isStarted = true;
       const store = this.store;
-      this.unsubscribe = store.subscribe(() => {this.handleStateChange();});
+      this.unsubscribe = store.subscribe(() => { this.handleStateChange(); });
       window.addEventListener("hashchange", this.catchBrowserNavigationChange.bind(this), false);
       store.dispatch(actions.initializeConfig(options));
     }
@@ -104,10 +111,10 @@ export default class AppManager {
   }
   authenticate() {
     const config = this.store.getState().configuration;
-    const reference = regReferenceHash.test(window.location.hash)?window.location.hash.match(regReferenceHash)[1]:null;
-    const state1 = regPreviewReference.test(reference)?null:searchToObj(window.location.search);
-    const state2 = reference?{instanceReference: reference}:null;
-    const state = {...state1, ...state2};
+    const reference = this.extractInstanceFromLocation();
+    const state1 = regPreviewReference.test(reference) ? null : searchToObj(window.location.search);
+    const state2 = reference ? { instanceReference: reference } : null;
+    const state = { ...state1, ...state2 };
     const stateKey = btoa(JSON.stringify(state));
     const nonceKey = generateKey();
     window.location.href = getAuthUrl(config.oidcUri, config.oidcClientId, stateKey, nonceKey);
@@ -199,7 +206,7 @@ export default class AppManager {
     const pauseSearchkitHistoryListening = state.instances.currentInstance && !this.previousStateInstances.currentInstance;
     const resumeSearchkitHistoryListening = !state.instances.currentInstance && this.previousStateInstances.currentInstance;
     const pushHistoryState = (state.instances.currentInstance && !this.previousStateInstances.currentInstance)
-        || state.instances.previousInstances.length > this.previousStateInstances.previousInstances.length;
+      || state.instances.previousInstances.length > this.previousStateInstances.previousInstances.length;
     const backHistoryCounts = ((context, previousState, state) => {
       if (context.isEventFiredByBrowserNav) {
         context.isEventFiredByBrowserNav = false;
@@ -212,7 +219,7 @@ export default class AppManager {
       if (previousState.currentInstance && !state.currentInstance) {
         backs++;
       }
-      return backs<0?0:backs;
+      return backs < 0 ? 0 : backs;
     })(this, this.previousStateInstances, state.instances);
 
     this.previousStateInstances = Object.assign({}, state.instances);
@@ -224,7 +231,7 @@ export default class AppManager {
     if (pushHistoryState) {
       //window.console.debug(new Date().toLocaleTimeString() + ": new history");
       const historyState = window.history.state;
-      window.history.pushState(historyState, "Knowledge Graph Search", window.location.href.replace(/#.*$/,"") + "#" + (regPreviewReference.test(state.instances.currentInstance._id)?state.instances.currentInstance._id:`${state.instances.currentInstance._type }/${state.instances.currentInstance._id}`));
+      window.history.pushState(historyState, "Knowledge Graph Search", window.location.href.replace(/#.*$/, "") + "#" + (regPreviewReference.test(state.instances.currentInstance._id) ? state.instances.currentInstance._id : `${state.instances.currentInstance._type}/${state.instances.currentInstance._id}`));
     }
     if (backHistoryCounts) {
       //window.console.debug(new Date().toLocaleTimeString() + ": back history: " + backHistoryCounts);
@@ -234,7 +241,7 @@ export default class AppManager {
     if (resumeSearchkitHistoryListening && this.search.searchkit && this.searchkit.history) {
       setTimeout(() => {
         this.search && this.search.searchkit && this.search.searchkit.listenToHistory.call(this.search.searchkit);
-      },0);
+      }, 0);
     }
   }
   setCurrentInstanceFromBrowserLocation() {
