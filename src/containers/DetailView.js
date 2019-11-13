@@ -27,7 +27,7 @@ const mapStateToProps = state => {
   return {
     className: "kgs-detailView",
     show: !!state.instances.currentInstance,
-    data: state.instances.currentInstance?[...state.instances.previousInstances, state.instances.currentInstance]:[],
+    data: state.instances.currentInstance ? [...state.instances.previousInstances, state.instances.currentInstance] : [],
     itemComponent: Instance,
     navigationComponent: ShareButtons,
     isPreviewInstance: state.instances.isPreviewInstance
@@ -41,7 +41,7 @@ const mapDispatchToProps = (dispatch, props) => ({
       dispatch(actions.clearAllInstances());
     } else {
       window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + Object.entries(searchToObj()).reduce((result, [key, value]) => {
-        return (key.toLowerCase() === "search"?result:(result + (result === ""?"?":"&") + key + "=" + value));
+        return (key.toLowerCase() === "search" || key.toLowerCase() === "identifier" ? result : (result + (result === "" ? "?" : "&") + key + "=" + value));
       }, "");
     }
   }
