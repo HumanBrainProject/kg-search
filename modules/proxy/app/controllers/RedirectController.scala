@@ -40,11 +40,11 @@ class RedirectController @Inject()(
     group match {
       case Some(name) =>
         Redirect(
-          s"${config.hbpUrl}/?${RedirectController.groupKeyQueryString}=$name&${RedirectController.searchFalseQueryString}#$dataType/$id"
+          s"${config.hbpUrl}/?${RedirectController.groupKeyQueryString}=$name&${RedirectController.searchFalseQueryString}=$dataType/$id"
         )
       case None =>
         Redirect(
-          s"${config.hbpUrl}/?${RedirectController.searchFalseQueryString}#$dataType/$id"
+          s"${config.hbpUrl}/?${RedirectController.searchFalseQueryString}=$dataType/$id"
         )
     }
   }
@@ -67,6 +67,6 @@ class RedirectController @Inject()(
 }
 
 object RedirectController {
-  val searchFalseQueryString: String = "search=false"
+  val searchFalseQueryString: String = "identifier"
   val groupKeyQueryString: String = "group"
 }
