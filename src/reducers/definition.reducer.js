@@ -307,15 +307,15 @@ function simplifySemanticKeysForField(field) {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-    case types.LOAD_DEFINITION:
-      return loadDefinition(state, action);
-    case types.LOAD_DEFINITION_REQUEST:
-      return loadDefinitionRequest(state, action);
-    case types.LOAD_DEFINITION_SUCCESS:
-      return loadDefinitionSuccess(state, action);
-    case types.LOAD_DEFINITION_FAILURE:
-      return loadDefinitionFailure(state, action);
-    default:
-      return state;
+  case types.LOAD_DEFINITION:
+    return loadDefinition(state, action);
+  case types.LOAD_DEFINITION_REQUEST:
+    return loadDefinitionRequest(state, action);
+  case types.LOAD_DEFINITION_SUCCESS:
+    return loadDefinitionSuccess(state, action);
+  case types.LOAD_DEFINITION_FAILURE:
+    return loadDefinitionFailure(state, action);
+  default:
+    return state;
   }
 }

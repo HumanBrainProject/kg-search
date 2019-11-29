@@ -64,8 +64,10 @@ export class ImagePopup extends Component {
   componentDidMount() {
     this.loadImage();
   }
-  componentDidUpdate() {
-    this.loadImage();
+  componentDidUpdate(prevProps) {
+    if (this.props.src !== prevProps.src) {
+      this.loadImage();
+    }
   }
   render() {
     const { className, src, label } = this.props;

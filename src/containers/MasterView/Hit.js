@@ -150,19 +150,19 @@ const getComponentField = (group, data, mapping) => {
 
 const getField = (group, type, name, data, highlight, mapping) => {
   switch (name) {
-    case "title":
-      return getTitleField(group, data, highlight, mapping);
-    case "description":
-      return getDescriptionField(group, data, highlight, mapping);
-    case "component":
-      return getComponentField(group, data, mapping, highlight);
-    default:
-      return {
-        name: name,
-        data: data,
-        mapping: mapping,
-        group: group
-      };
+  case "title":
+    return getTitleField(group, data, highlight, mapping);
+  case "description":
+    return getDescriptionField(group, data, highlight, mapping);
+  case "component":
+    return getComponentField(group, data, mapping, highlight);
+  default:
+    return {
+      name: name,
+      data: data,
+      mapping: mapping,
+      group: group
+    };
   }
 };
 

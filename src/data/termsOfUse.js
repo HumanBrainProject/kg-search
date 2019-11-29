@@ -23,7 +23,5 @@ If you use of the software and datasets found via the KG, the KG Pyxus API or KG
 
 Failure to cite data or software used in a publication or presentation constitutes scientific misconduct.   Failure to cite data or software used in a scientific publication must be corrected by issuing an official Erratum and correction of the given article if it is discovered post-publication.
 
-####[Acknowledgement policy](https://kg.ebrains.eu/search-terms-of-use.html#acknowledgements)
-
 ####Final thoughts
 Citations of datasets are essential for encouraging researchers to release their data through the KG or other scientific data sharing platforms. Your citation may help them to get their next job or next grant and will ultimately encourage researchers to produce and release more useful open data. Make science more reproducible and more efficient.`;

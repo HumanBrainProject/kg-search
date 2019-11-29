@@ -5,22 +5,22 @@
   "homepage": "https://kg.ebrains.eu/search/",
   "proxy": {
     "/proxy": {
-      "target": "https://kg.ebrains.eu",
+      "target": "https://kg.humanbrainproject.eu",
       "changeOrigin": true,
       "ws": true
     },
     "/search": {
-      "target": "https://kg.ebrains.eu",
+      "target": "https://kg.humanbrainproject.eu",
       "changeOrigin": true,
       "ws": true
     },
     "/auth": {
-      "target": "https://kg.ebrains.eu",
+      "target": "https://kg.humanbrainproject.eu",
       "changeOrigin": true,
       "ws": true
     },
     "/query": {
-      "target": "https://kg.ebrains.eu",
+      "target": "https://kg.humanbrainproject.eu",
       "changeOrigin": true,
       "ws": true
     }
