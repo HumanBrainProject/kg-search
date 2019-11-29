@@ -71,10 +71,10 @@ export class ImagePopup extends Component {
     const { className, src, label } = this.props;
     const show = typeof src === "string";
     return (
-      <div className={`kgs-image_popup ${show?"show":""} ${className?className:""}`} onClick={this.onClick}>
+      <div className={`kgs-image_popup ${show ? "show" : ""} ${className ? className : ""}`} onClick={this.onClick}>
         {show && (
-          <div className="fa-stack fa-1x kgs-image_popup-content" ref={ref=>this.wrapperRef = ref} >
-            {!this.state.fetched?
+          <div className="fa-stack fa-1x kgs-image_popup-content" ref={ref => this.wrapperRef = ref} >
+            {!this.state.fetched ?
               <div>
                 <span className="kgs-spinner">
                   <div className="kgs-spinner-logo"></div>
@@ -82,20 +82,22 @@ export class ImagePopup extends Component {
                 <span className="kgs-spinner-label">{`loading image "${label}" ...`}</span>
               </div>
               :
-              this.state.error?
+              this.state.error ?
                 <div className="kgs-image_popup-error">
                   <i className="fa fa-ban"></i>
                   <span>{`failed to fetch image "${label}" ...`}</span>
                 </div>
                 :
                 <React.Fragment>
-                  <img src={this.state.src} alt={label?label:""}/>
+                  <video alt={label ? label : ""} width="750" height="250" autoplay>
+                    <source src={this.state.src} type="video/webm" />
+                  </video>
                   {label && (
                     <p className="kgs-image_popup-label">{label}</p>
                   )}
                 </React.Fragment>
             }
-            <i className="fa fa-close" ref={ref=>this.closeBtnRef = ref} ></i>
+            <i className="fa fa-close" ref={ref => this.closeBtnRef = ref} ></i>
           </div>
         )}
       </div>
