@@ -17,7 +17,7 @@
 import * as actions from "../actions";
 import API from "./API";
 import { SearchkitManager, BaseQueryAccessor } from "searchkit";
-import { SearchKitHelpers } from "../helpers/SearchKitHelpers";
+import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
 import { generateKey } from "../helpers/OIDCHelpers";
 import ReactPiwik from "react-piwik";
 
@@ -59,7 +59,7 @@ export default class SearchManager {
       if (state.auth.accessToken && state.search.group !== null) {
         header["index-hint"] = state.search.group;
       }
-      store.dispatch(actions.loadSearchRequest(nonce));
+      // store.dispatch(actions.loadSearchRequest(nonce));
       return config;
     }, err => {
       return Promise.reject(err);
@@ -133,8 +133,8 @@ export default class SearchManager {
       return Promise.reject(error);
     });
 
-    //const queryProcessorFunction = SearchKitHelpers.getQueryProcessor(store, this.searchkit, queryTweaking);
-    const queryProcessorFunction = SearchKitHelpers.getQueryProcessor(this.searchkit, queryTweaking, store);
+    //const queryProcessorFunction = ElasticSearchHelpers.getQueryProcessor(store, this.searchkit, queryTweaking);
+    const queryProcessorFunction = ElasticSearchHelpers.getQueryProcessor(this.searchkit, queryTweaking, store);
     this.searchkit.setQueryProcessor(queryProcessorFunction);
   }
   handleStateChange = () => {
@@ -156,30 +156,11 @@ export default class SearchManager {
     if (state.search.hasRequest) {
       this.reloadSearch();
     }
-    if (state.definition.hasRequest) {
-      this.loadDefinition();
-    }
     if (state.groups.hasRequest) {
       this.loadGroups();
     }
     if (state.instances.hasRequest) {
       this.loadInstance(state.instances.requestReference);
-    }
-  }
-  loadDefinition() {
-    const store = this.store;
-    const state = store.getState();
-    if (!state.definition.isReady && !state.definition.isLoading) {
-      setTimeout(() => {
-        store.dispatch(actions.loadDefinitionRequest());
-        API.fetch(API.endpoints.definition(state.configuration.searchApiHost))
-          .then(definition => {
-            store.dispatch(actions.loadDefinitionSuccess(definition));
-          })
-          .catch(error => {
-            store.dispatch(actions.loadDefinitionFailure(error));
-          });
-      });
     }
   }
   loadGroups() {

@@ -32,7 +32,8 @@ const HitsPanelBase = ({ lists, itemComponent, getKey, layout, onClick }) => (
 );
 
 const mapStateToProps = (state, props) => {
-  const { hits } = props;
+  //const { hits } = props;
+  const hits = state.search.results.hits.hits;
 
   let trySplitResult = true;
   let isSortedByRelevance = false;

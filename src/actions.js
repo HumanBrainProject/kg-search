@@ -15,6 +15,10 @@
 */
 
 import * as types from "./actions.types";
+import API from "./services/API";
+import axios from "axios";
+import { ElasticSearchHelpers } from "./helpers/ElasticSearchHelpers";
+import { State } from "searchkit";
 
 export const setApplicationReady = isReady => {
   return {
@@ -50,9 +54,97 @@ export const initializeConfig = options => {
   };
 };
 
-export const loadDefinition = () => {
-  return {
-    type: types.LOAD_DEFINITION
+export const loadDefinition = searchApiHost => {
+
+  const GRAPHQUERY_NAMESPACE = "https://schema.hbp.eu/graphQuery/";
+  const SEARCHUI_NAMESPACE = "https://schema.hbp.eu/searchUi/";
+
+  const getFieldAndRemove = (field, key, defaultValue) => {
+    let valueFromField = field[key];
+    if (valueFromField !== undefined && valueFromField !== null) {
+      delete field[key];
+      return valueFromField;
+    }
+    return defaultValue;
+  };
+
+  const simplifySemanticKeysForField = field => {
+    field.value = getFieldAndRemove(field, GRAPHQUERY_NAMESPACE + "label", null);
+    field.sort = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "sort", false);
+    field.markdown = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "markdown", false);
+    field.labelHidden = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "labelHidden", false);
+    field.tagIcon = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "tag_icon", null);
+    field.linkIcon = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "link_icon", null);
+    field.visible = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "visible", true);
+    field.isTable = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isTable", false);
+    field.showIfEmpty = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "showIfEmpty", false);
+    field.layout = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "layout", null);
+    field.hint = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "hint", null);
+    field.overviewMaxDisplay = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "overviewMaxDisplay", null);
+    field.termsOfUse = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "termsOfUse", false);
+    field.separator = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "separator", null);
+    field.overview = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "overview", false);
+    field.boost = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "boost", 1);
+    field.order = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "order", null);
+    field.facet = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "facet", null);
+    field.facetOrder = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "facet_order", "bycount");
+    field.aggregate = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "aggregate", null);
+    field.type = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "type", null);
+    field.detail_label = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "detail_label", null);
+    field.facetExclusiveSelection = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "facetExclusiveSelection", false);
+    field.count = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "count", false);
+    field.collapsible = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "collapsible", false);
+    field.ignoreForSearch = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "ignoreForSearch", false);
+  };
+
+  const simplifySemantics = source => {
+    if (source instanceof Object) {
+      Object.keys(source).forEach(key => {
+        simplifySemantics(source[key]);
+      });
+      if (source[SEARCHUI_NAMESPACE + "order"]) {
+        source.order = source[SEARCHUI_NAMESPACE + "order"];
+        delete source[SEARCHUI_NAMESPACE + "order"];
+      }
+      if (source[SEARCHUI_NAMESPACE + "defaultSelection"]) {
+        source.defaultSelection = source[SEARCHUI_NAMESPACE + "defaultSelection"];
+        delete source[SEARCHUI_NAMESPACE + "defaultSelection"];
+      }
+      if (source[SEARCHUI_NAMESPACE + "icon"]) {
+        source.icon = source[SEARCHUI_NAMESPACE + "icon"];
+        delete source[SEARCHUI_NAMESPACE + "icon"];
+      }
+      if (source.fields) {
+        Object.keys(source.fields).forEach(field => {
+          simplifySemanticKeysForField(source.fields[field]);
+        });
+      }
+      if (source.children) {
+        Object.keys(source.children).forEach(field => {
+          simplifySemanticKeysForField(source.children[field]);
+        });
+      }
+
+    }
+  };
+
+  return dispatch => {
+    dispatch(loadDefinitionRequest());
+    axios
+      .get(API.endpoints.definition(searchApiHost))
+      .then(({ data }) => {
+        const definition = data && data._source;
+        let serviceUrl = "";
+        if(definition && definition.serviceUrl){
+          serviceUrl = definition.serviceUrl;
+          delete definition.serviceUrl;
+        }
+        simplifySemantics(definition);
+        dispatch(loadDefinitionSuccess(definition, serviceUrl));
+      })
+      .catch(error =>{
+        dispatch(loadDefinitionFailure(error));
+      });
   };
 };
 
@@ -131,10 +223,9 @@ export const loadSearchSessionFailure = status => {
   };
 };
 
-export const loadSearchRequest = nonce => {
+export const loadSearchRequest = () => {
   return {
-    type: types.LOAD_SEARCH_REQUEST,
-    nonce: nonce
+    type: types.LOAD_SEARCH_REQUEST
   };
 };
 
@@ -251,5 +342,43 @@ export const showImage = (url, label) => {
     type: types.SHOW_IMAGE,
     url: url,
     label: label
+  };
+};
+
+export const setQueryString = value => {
+  return {
+    type: types.SET_QUERY_STRING,
+    queryString: value
+  };
+};
+
+export const doSearch = (searchParams, group, searchApiHost) => {
+  return dispatch => {
+    dispatch(loadSearchRequest());
+    axios
+      .post(API.endpoints.search(searchApiHost) + "/_search", ElasticSearchHelpers.buildRequest(searchParams))
+      .then(response => {
+        const index = response.headers["X-Selected-Index"];
+        dispatch(loadSearchResult(response.data, index ? index.slice(3):group, searchParams.from));
+      })
+      .catch(error =>{
+        const { response } = error;
+        const { status } = response;
+        switch (status) {
+        case 400: // Bad Request
+        case 404: // Not Found
+          dispatch(loadSearchBadRequest(status));
+          break;
+        case 401: // Unauthorized
+        case 403: // Forbidden
+        case 511: // Network Authentication Required
+          dispatch(loadSearchSessionFailure(status));
+          break;
+        default: {
+          const index = response.headers["X-Selected-Index"];
+          dispatch(loadSearchServiceFailure(status, index ? index.slice(3):group));
+        }
+        }
+      });
   };
 };

@@ -16,22 +16,64 @@
 
 import API from "../services/API";
 import * as types from "../actions.types";
+import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
 
 const initialState = {
+  queryFields: ["title", "description"],
+  facets: [],
+  hasFilters: false,
+  sortFields: [],
+  facetTypesOrder: {},
+  facetDefaultSelectedType: null,
   isReady: false,
   initialRequestDone: false,
   hasRequest: false,
   isLoading: false,
+  queryString: "",
+  selectedType: null,
   nonce: null,
   group: API.defaultGroup,
   results: {},
   from: 0
 };
 
+const setupSearch = (state, action) => {
+  const definition = action.definition;
+
+  if (!definition) {
+    return state;
+  } else {
+
+    const queryValuesBoost = ElasticSearchHelpers.getQueryValuesBoost(definition);
+    const sortFields = ElasticSearchHelpers.getSortFields(definition);
+    const facetTypesOrder = ElasticSearchHelpers.getFacetTypesOrder(definition);
+    const selectedType = ElasticSearchHelpers.getDefaultSelectedType(definition, facetTypesOrder);
+    const facets = ElasticSearchHelpers.constructFacets(definition, selectedType);
+    const hasFilters = facets.some(f => f.isVisible);
+
+    return {
+      ...state,
+      queryFields: queryValuesBoost,
+      facets: facets,
+      hasFilters: hasFilters,
+      sortFields: sortFields,
+      facetTypesOrder: facetTypesOrder,
+      facetDefaultSelectedType: selectedType
+    };
+  }
+};
+
 const setSearchReady = (state, action) => {
   return {
     ...state,
     isReady: action.isReady
+  };
+};
+
+const setQueryString= (state, action) => {
+  return {
+    ...state,
+    queryString: action.queryString
   };
 };
 
@@ -121,6 +163,10 @@ const loadSearchFail = state => {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
+  case types.LOAD_DEFINITION_SUCCESS:
+    return setupSearch(state, action);
+  case types.SET_QUERY_STRING:
+    return setQueryString(state, action);
   case types.SET_SEARCH_READY:
     return setSearchReady(state, action);
   case types.SET_GROUP:

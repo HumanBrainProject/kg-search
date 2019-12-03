@@ -15,68 +15,66 @@
 */
 
 import React from "react";
-import { SearchBox, QueryString } from "searchkit";
 import { connect } from "react-redux";
 import * as actions from "../../actions";
 import { help } from "../../data/help.js";
 import { withFloatingScrollEventsSubscription } from "../../helpers/withFloatingScrollEventsSubscription";
-import { SearchkitComponent } from "searchkit";
 import { isMobile } from "../../helpers/BrowserHelpers";
 import "./SearchPanel.css";
+import { ElasticSearchHelpers } from "../../helpers/ElasticSearchHelpers";
 
-class SearchInput {
-  constructor(querySelector) {
-    this.timestamp = null;
-    this.querySelector = querySelector;
+class SeachPanelBaseComponent extends React.Component {
+  constructor(props){
+    super(props);
+    this.ref = React.createRef();
+    this.state = {
+      value: ""
+    };
   }
-  get element() {
-    return document.querySelector(this.querySelector);
-  }
-  blur() {
-    const input = this.element;
-    if (input && document.activeElement === input && (!this.timestamp || ((new Date() - this.timestamp) > 500))) {
-      input.blur();
-    }
-  }
-  focus() {
-    const input = this.element;
-    if (input && document.activeElement !== input) {
-      input.focus();
-    }
-    this.timestamp = new Date();
-  }
-}
 
-const searchInput = new SearchInput(".kgs-search .sk-search-box .sk-top-bar__content .sk-search-box__text");
-
-class SearchkitSeachPanelContainer extends SearchkitComponent {
   componentDidMount() {
     if (isMobile) {
       window.addEventListener("mousedown", this.handleMouseDownEvent, false);
     }
     window.addEventListener("scroll", this.handleScrollEvent);
   }
+
   componentWillUnmount() {
     if (isMobile) {
       window.removeEventListener("mousedown", this.handleMouseDownEvent);
     }
   }
-  handleMouseDownEvent() {
-    searchInput.focus();
+
+  handleMouseDownEvent = () => this.ref.current.focus();
+
+  handleScrollEvent = () => this.ref.current.blur();
+
+  handleChange = e => this.setState({value: e.target.value});
+
+  handleSearch = () => {
+    this.props.onQueryStringChange(this.state.value);
   }
-  handleScrollEvent() {
-    searchInput.blur();
+
+  handleKeyDown = e => {
+    if(e.key === "Enter") {
+      this.props.onQueryStringChange(this.state.value);
+    }
   }
+
   render() {
     const { isFloating, onHelp } = this.props;
-    const handleSearch = () => {
-      this.searchkit.search();
-    };
 
     return (
       <div className={`kgs-search ${isFloating ? " is-fixed-position" : ""}`}>
-        <SearchBox placeholder="Search (e.g. brain or neuroscience)" autofocus={true} searchOnChange={false} queryBuilder={QueryString} />
-        <button className="kgs-search-button" onClick={handleSearch}>Search</button>
+        <i className="fa fa-search kg-search-bar__icon"></i>
+        <input className="kg-search-bar"
+          type="text"
+          placeholder="Search (e.g. brain or neuroscience)"
+          aria-label="Search"
+          onChange={this.handleChange}
+          onKeyDown={this.handleKeyDown}
+          ref={this.ref}  />
+        <button className="kgs-search-button" onClick={this.handleSearch}>Search</button>
         <button type="button" className="kgs-search-help__button" title="Help" onClick={onHelp}>
           <i className="fa fa-info-circle fa-2x"></i>
         </button>
@@ -85,15 +83,44 @@ class SearchkitSeachPanelContainer extends SearchkitComponent {
   }
 }
 
+class SeachPanelComponent extends React.Component {
+
+  componentDidUpdate(prevProps) {
+    if (this.props.queryString !== prevProps.queryString) {
+      this.performSearch();
+    }
+  }
+
+  performSearch = () => {
+    const { searchParams, onSearch, group, searchApiHost } = this.props;
+    onSearch(searchParams, group, searchApiHost);
+  }
+
+  render() {
+    const {isFloating, relatedElements, onQueryStringChange} = this.props;
+    return (
+      <SeachPanelBaseComponent isFloating={isFloating} relatedElements={relatedElements} onQueryStringChange={onQueryStringChange} />
+    );
+  }
+}
+
 const SearchPanelContainer = connect(
-  (state, props) => ({
-    isFloating: props.isFloating,
-    relatedElements: props.relatedElements
-  }),
+  (state, props) => {
+    return {
+      isFloating: props.isFloating,
+      relatedElements: props.relatedElements,
+      queryString: state.search.queryString,
+      searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
+      group: state.search.group,
+      searchApiHost: state.configuration.searchApiHost
+    };
+  },
   dispatch => ({
-    onHelp: () => dispatch(actions.setInfo(help))
+    onHelp: () => dispatch(actions.setInfo(help)),
+    onQueryStringChange: value => dispatch(actions.setQueryString(value)),
+    onSearch: (searchParams, group, searchApiHost) => dispatch(actions.doSearch(searchParams, group, searchApiHost))
   })
-)(SearchkitSeachPanelContainer);
+)(SeachPanelComponent);
 
 export const SearchPanel = withFloatingScrollEventsSubscription(
   "top",

@@ -39,7 +39,7 @@
     }
 }
 
-.kgs-search .sk-search-box {
+.kgs-search .kg-search-bar {
     flex: 1;
     color: var(--color-11);
     background-color: var(--background-color-2);
@@ -48,21 +48,17 @@
     border-radius: 2px;
     transition: border-color ease-in-out .15s;
 }
-.kgs-search .sk-search-box.is-focused {
+.kgs-search .kg-search-bar.is-focused {
     background-color: var(--background-color-2);
 }
 
-.kgs-search .sk-search-box > form {
-    display: inline-block;
-}
-
-.kgs-search .sk-search-box .sk-search-box__icon {
+.kgs-search .kg-search-bar__icon {
     position: absolute;
     opacity: 1;
-    margin: 20px 0 0 15px;
+    margin: 15px 0 0 15px;
 }
 
-.kgs-search .sk-search-box .sk-search-box__icon:before {
+.kgs-search  .kg-search-bar__icon:before {
     content: "\f002";
     background: none;
     font-family: FontAwesome;
@@ -70,7 +66,7 @@
     color: var(--color-selected);
 }
 
-.kgs-search .sk-search-box input.sk-search-box__text {
+.kgs-search input.kg-search-bar {
     display: inline-block;
     width: 100%;
     padding: 15px 35px 15px 60px;
@@ -79,37 +75,25 @@
     font-size: 24px;
 }
 
-.kgs-search .sk-search-box input.sk-search-box__text:hover {
+.kgs-search input.kg-search-bar:hover {
     color: var(--color-11);
 }
 
-.kgs-search .sk-search-box input::-moz-placeholder {
+.kgs-search input.kg-search-bar::-moz-placeholder {
     color: #999 !important;
 }
 
-.kgs-search .sk-search-box input:-moz-placeholder {
+.kgs-search input.kg-search-bar:-moz-placeholder {
     color: #999 !important;
 }
 
-.kgs-search .sk-search-box input:-ms-input-placeholder {
+.kgs-search input.kg-search-bar:-ms-input-placeholder {
     color: #999 !important;
 }
 
-.kgs-search .sk-search-box input::-webkit-input-placeholder {
+.kgs-search input.kg-search-bar::-webkit-input-placeholder {
     color: #999 !important;
 }
-
-.kgs-search .sk-search-box .sk-search-box__loader {
-    position: absolute;
-    right: 5px;
-    top: 10px;
-}
-
-/*
-.kgs-search .sk-search-box .sk-search-box__action {
-
-}
-*/
 
 .kgs-search .kgs-search-button {
     display: none;
@@ -157,7 +141,7 @@
    color: var(--color-selected);
 }
 
-.kgs-search .sk-search-box .sk-spinning-loader {
+.kgs-search .kg-search-bar .sk-spinning-loader {
     border-color: var(--border-color-9);
     border-left-color: var(--border-color-8);
 }

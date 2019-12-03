@@ -16,7 +16,21 @@
 
 import * as parser from "lucene-query-parser";
 
-export class SearchKitHelpers {
+const customHighlight = {
+  "fields": {
+    "title.value": {},
+    "description.value": {},
+    "contributors.value": {},
+    "owners.value": {},
+    "component.value": {},
+    "created_at.value": {},
+    "releasedate.value": {},
+    "activities.value": {}
+  },
+  "encoder": "html"
+};
+
+export class ElasticSearchHelpers {
   /*# sanitize a search query for Lucene. Useful if the original
     # query raises an exception, due to bad adherence to DSL.
     # Taken from here:
@@ -171,6 +185,283 @@ export class SearchKitHelpers {
     }
     return str;
   }
+
+
+  static getFacetTypesOrder = definition => {
+    const facetTypesOrder = {};
+    Object.entries(definition).forEach(([type, typeDefinition]) => {
+      const order = Number(typeDefinition.order);
+      if (!isNaN(order)) {
+        facetTypesOrder[type] = order;
+      }
+    });
+    return facetTypesOrder;
+  };
+
+  static getDefaultSelectedType = (definition, facetTypesOrder) => {
+    let selectedType = null;
+    let defaultSelectionDefined = false;
+    Object.keys(definition).forEach(type => {
+      const order = Number(definition[type].order);
+      if (!isNaN(order)) {
+        facetTypesOrder[type] = order;
+        if(definition[type].defaultSelection){
+          selectedType = type;
+          defaultSelectionDefined = true;
+        }
+        if (!defaultSelectionDefined && (!selectedType || facetTypesOrder[type] < facetTypesOrder[selectedType])) {
+          selectedType = type;
+        }
+      }
+    });
+    return selectedType;
+  };
+
+  static getSortFields = definition => {
+    let sortFields = {
+      _score: {
+        label: "Relevance",
+        key: "newestFirst",
+        fields: [
+          {
+            field: "_score",
+            options: {
+              order: "desc"
+            }
+          },
+          {
+            field: "first_release.value",
+            options: {
+              order: "desc",
+              missing: "_last"
+            }
+          }
+        ],
+        defaultOption: true
+      }
+    };
+    Object.values(definition).forEach(typeDefinition => {
+      Object.entries(typeDefinition.fields).forEach(([fieldName, field]) => {
+        if (field.sort && sortFields[fieldName] === undefined) {
+          sortFields[fieldName] = {
+            label: field.value,
+            field: fieldName + ".value.keyword",
+            order: "asc"
+          };
+        }
+      });
+    });
+    return Object.values(sortFields);
+  };
+
+  static constructFacets = (definition, selectedType) => {
+    const facets = [];
+    Object.entries(definition).forEach(([type, typeDefinition]) => {
+      const isMatchingSelectedType = selectedType === type;
+      Object.entries(typeDefinition.fields).forEach(([name, field]) => {
+        if (field.facet) {
+          facets.push({
+            id: "facet_" + type + "_" + name,
+            name: name,
+            facet: {
+              filterType: field.facet,
+              filterOrder: field.facetOrder,
+              exclusiveSelection: field.facetExclusiveSelection,
+              fieldType: field.type,
+              fieldLabel: field.value,
+              isChild: false,
+              count: 0,
+              active: false
+            },
+            isVisible: isMatchingSelectedType
+          });
+        }
+        if (field.children) {
+          Object.entries(field.children).forEach(([childName, child]) => {
+            if (child.facet) {
+              facets.push({
+                id: "facet_" + type + "_" + name + ".children." + childName,
+                name: name,
+                facet:  {
+                  filterType: child.facet,
+                  filterOrder: child.facetOrder,
+                  exclusiveSelection: field.facetExclusiveSelection,
+                  fieldType: child.type,
+                  fieldLabel: child.value,
+                  isChild: true,
+                  path: name + ".children",
+                  count: 0,
+                  active: false
+                },
+                isVisible: isMatchingSelectedType
+              });
+            }
+          });
+        }
+      });
+    });
+    return facets;
+  };
+
+  static getQueryValuesBoost = definition => {
+
+    const initQueryFieldsRec = (shapeFields, parent) => {
+      let key = Object.keys(shapeFields)[0];
+      let queryFields = {};
+      let newQueryfields = {};
+      Object.values(shapeFields).forEach(el => {
+        Object.keys(el).forEach(fieldName => {
+          const field = shapeFields[key][fieldName];
+          const fullFieldName = parent + fieldName;
+          let queryField = queryFields[fullFieldName];
+          if (!queryField) {
+            queryField = { boost: 1 };
+            queryFields[fullFieldName] = queryField;
+          }
+
+          if (field && field.boost && field.boost > queryField.boost) {
+            queryField.boost = field.boost;
+          }
+
+          newQueryfields[key] = queryFields;
+
+          if (field["children"] !== undefined) {
+            let children = initQueryFieldsChildren(field["children"], fullFieldName + ".children.");
+            newQueryfields[key] = Object.assign(queryFields, children);
+          }
+        });
+      });
+      return newQueryfields;
+    };
+
+    const initQueryFieldsChildren = (shapeFields, parent) => {
+      let childrenQueryFields = {};
+      Object.keys(shapeFields).forEach(fieldName => {
+        const field = shapeFields[fieldName];
+        const fullFieldName = parent + fieldName;
+        let queryField = childrenQueryFields[fullFieldName];
+        if (!queryField) {
+          queryField = { boost: 1 };
+          childrenQueryFields[fullFieldName] = queryField;
+        }
+
+        if (field && field.boost && field.boost > queryField.boost) {
+          queryField.boost = field.boost;
+        }
+      });
+      return childrenQueryFields;
+    };
+
+    const filterShapeFields = (shape, shapeFields) => {
+      const  filteredShapedFields = {};
+      const result = {};
+      for (let [key, value] of Object.entries(shapeFields)) {
+        if(value.ignoreForSearch !== true) {
+          filteredShapedFields[key] = value;
+        }
+      }
+      result[shape] = filteredShapedFields;
+      return result;
+    };
+
+    const queryValuesBoost = [];
+    if (definition) {
+      Object.keys(definition).forEach(shape => {
+        const shapeFields = definition[shape] && definition[shape].fields;
+        const filteredShapeFields = filterShapeFields(shape, shapeFields);
+        const initFields = initQueryFieldsRec(filteredShapeFields, "");
+        queryValuesBoost.push(initFields);
+      });
+    }
+
+    queryValuesBoost.map(field => {
+      let key = Object.keys(field)[0];
+      Object.values(field).forEach(fieldObj => {
+        const lastRes = [];
+        Object.keys(fieldObj).forEach(f => {
+          const boost = fieldObj[f].boost;
+          if (boost) {
+            lastRes.push(f + ".value^" + boost);
+          } else {
+            lastRes.push(f + ".value");
+          }
+        });
+        field[key] = lastRes;
+      });
+      return field;
+    });
+    return queryValuesBoost;
+  };
+
+  static getBoostedTypes = definition => {
+    return Object.entries(definition).map(([type, typeDefinition]) => ({
+      name: type,
+      boost: typeDefinition.boost
+    }));
+  };
+
+  static getSearchParamsFromState = state => {
+    return {
+      queryTweaking: state.configuration.queryTweaking,
+      queryString: state.search.queryString,
+      queryFields: state.search.queryFields,
+      selectedType: state.search.selectedType,
+      facets: state.search.facets,
+      sort: state.search.sort,
+      from: state.search.from,
+      size: state.configuration.hitsPerPage,
+      boostedTypes: [] // ElasticSearchHelpers.getBoostedTypes(state.definition)
+    };
+  };
+
+  static buildRequest({queryTweaking, queryString="", queryFields=[], selectedType="Dataset", facets=[], sort=[], from=0, size=20, boostedTypes=[]}) {
+    selectedType="Dataset";
+    const fields = queryFields.filter(field => field[selectedType])[0][selectedType];
+    const query = {
+      query_string: {
+        fields: fields,
+        query: ElasticSearchHelpers.sanitizeString(queryString, queryTweaking),
+        lenient: true
+      }
+    };
+
+    
+
+    if (boostedTypes.length) {
+      const boostedTypesTerms = boostedTypes.map(type => ({
+        term: {
+          _type: {
+            value: type.name,
+            boost: type.boost
+          }
+        }
+      }));
+
+      return {
+        aggs: {},
+        from: from,
+        highlight: customHighlight,
+        query: {
+          bool: {
+            should: [query, ...boostedTypesTerms]
+          }
+        },
+        post_filter: {},
+        size: size,
+        sort: sort
+      };
+    }
+    return {
+      aggs: {},
+      from: from,
+      highlight: customHighlight,
+      query: query,
+      post_filter: {},
+      size: size,
+      sort: sort
+    };
+  }
+
   static getQueryProcessor(searchkit, queryTweaking, store) {
   //static getQueryProcessor(store, searchkit, queryTweaking) {
 
@@ -191,8 +482,7 @@ export class SearchKitHelpers {
       //if not type is selected we make sure no other filters are active.
       const selectedType = searchkit.state.facet_type && searchkit.state.facet_type.length > 0 ? searchkit.state.facet_type[0]: "";
       const queryFields = store.getState().definition.queryFields;
-      const fields = queryFields.filter(field => field[selectedType])[0][selectedType];
-
+      const fields = [];//queryFields.filter(field => field[selectedType])[0][selectedType];
       if (!selectedType) {
         let activeFilter = false;
         const activeAccessors = searchkit.accessors.getActiveAccessors();
@@ -225,13 +515,13 @@ export class SearchKitHelpers {
       if (plainQueryObject) {
         if (plainQueryObject.query) {
           if (plainQueryObject.query.simple_query_string && plainQueryObject.query.simple_query_string.query) {
-            plainQueryObject.query.simple_query_string.query = SearchKitHelpers.sanitizeString(plainQueryObject.query.simple_query_string.query, queryTweaking);
+            plainQueryObject.query.simple_query_string.query = ElasticSearchHelpers.sanitizeString(plainQueryObject.query.simple_query_string.query, queryTweaking);
           }
           if(plainQueryObject.query.query_string && plainQueryObject.query.query_string.fields) {
             plainQueryObject.query.query_string.fields = fields;
           }
           if (plainQueryObject.query.query_string && plainQueryObject.query.query_string.query) {
-            plainQueryObject.query.query_string.query = SearchKitHelpers.sanitizeString(plainQueryObject.query.query_string.query, queryTweaking);
+            plainQueryObject.query.query_string.query = ElasticSearchHelpers.sanitizeString(plainQueryObject.query.query_string.query, queryTweaking);
             plainQueryObject.query.query_string.lenient = true; //Makes ES ignore search on non text fields
           }
         }

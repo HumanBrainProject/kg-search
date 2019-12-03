@@ -86,6 +86,7 @@ export default class AppManager {
       this.start(options);
     }
   }
+
   start(options) {
     if (!this.isStarted) {
       this.isStarted = true;
@@ -95,13 +96,16 @@ export default class AppManager {
       store.dispatch(actions.initializeConfig(options));
     }
   }
+
   stop() {
     this.unsubscribe && this.unsubscribe();
     window.removeEventListener("hashchange", this.catchBrowserNavigationChange);
   }
+
   get searchkit() {
     return this.search && this.search.searchkit;
   }
+
   authenticate() {
     const config = this.store.getState().configuration;
     const reference = regReferenceHash.test(window.location.hash)?window.location.hash.match(regReferenceHash)[1]:null;
@@ -112,6 +116,7 @@ export default class AppManager {
     const nonceKey = generateKey();
     window.location.href = getAuthUrl(config.oidcUri, config.oidcClientId, stateKey, nonceKey);
   }
+
   handleStateChange = () => {
     const store = this.store;
     const state = store.getState();
@@ -125,8 +130,8 @@ export default class AppManager {
       if (state.search.isReady) {
 
         if (!state.definition.isReady) {
-          if (!state.definition.hasRequest && !state.definition.isLoading && !state.definition.hasError) {
-            store.dispatch(actions.loadDefinition());
+          if (!state.definition.isLoading && !state.definition.hasError) {
+            store.dispatch(actions.loadDefinition(state.configuration.searchApiHost));
           }
           return;
         }
@@ -172,6 +177,7 @@ export default class AppManager {
 
     this.manageHistory(state);
   }
+
   setBodyScrolling(enableScrolling) {
     //Remove the ability to scroll the body when the modal is open
     if (enableScrolling) {
@@ -182,6 +188,7 @@ export default class AppManager {
       document.body.style.overflow = "hidden";
     }
   }
+
   manageHitFocus(hit) {
     if (hit) {
       // store detail view laucher button in order to set back focus to it when detail popup close
@@ -194,6 +201,7 @@ export default class AppManager {
       this.hitIssuer = null;
     }
   }
+
   manageHistory(state) {
     // check history todos
     const pauseSearchkitHistoryListening = state.instances.currentInstance && !this.previousStateInstances.currentInstance;
@@ -237,12 +245,14 @@ export default class AppManager {
       },0);
     }
   }
+
   setCurrentInstanceFromBrowserLocation() {
     if (this.isStarted) {
       const store = this.store;
       store.dispatch(actions.setCurrentInstanceFromBrowserLocation());
     }
   }
+
   catchBrowserNavigationChange() {
     if (this.isEventFiredByAppNav) {
       this.isEventFiredByAppNav = false;

@@ -50,27 +50,11 @@ export const FiltersPanelBase = ({className, show, hasFilters, facets, facetComp
 
 const FiltersPanelContainer = connect(
   (state, props) => {
-    const { searchkit } = props;
-    const facetFields = state.definition.facetFields;
-    const facets = [];
-    const selectedType = searchkit && searchkit.state && searchkit.state.facet_type && searchkit.state.facet_type.length > 0 ? searchkit.state.facet_type[0]: "";
-    Object.entries(facetFields).forEach(([type, typedFacets]) => {
-      const isMatchingSelectedType = selectedType === type;
-      Object.entries(typedFacets).forEach(([name, facet])=>{
-        facets.push({
-          id: "facet_" + type + "_" + name,
-          name: name,
-          facet: facet,
-          isVisible: isMatchingSelectedType
-        });
-      });
-    });
-    const hasFilters = facets.some(f => f.isVisible);
     return {
-      type: selectedType,
-      show: state.definition.isReady && facets.length > 0,
-      hasFilters: hasFilters,
-      facets: facets,
+      type: state.search.type,
+      show: state.definition.isReady && state.search.facets.length > 0,
+      hasFilters: state.search.hasFilters,
+      facets: state.search.facets,
       facetComponent: Facet,
       onReset: props.onReset
     };
