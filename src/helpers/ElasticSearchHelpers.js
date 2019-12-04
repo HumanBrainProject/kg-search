@@ -271,7 +271,7 @@ export class ElasticSearchHelpers {
               fieldLabel: field.value,
               isChild: false,
               count: 0,
-              active: false
+              value: null
             },
             isVisible: isMatchingSelectedType
           });
@@ -290,8 +290,9 @@ export class ElasticSearchHelpers {
                   fieldLabel: child.value,
                   isChild: true,
                   path: name + ".children",
+                  childName: childName,
                   count: 0,
-                  active: false
+                  value: null
                 },
                 isVisible: isMatchingSelectedType
               });
@@ -415,8 +416,214 @@ export class ElasticSearchHelpers {
   };
 
   static buildRequest({queryTweaking, queryString="", queryFields=[], selectedType="Dataset", facets=[], sort=[], from=0, size=20, boostedTypes=[]}) {
-    selectedType="Dataset";
-    const fields = queryFields.filter(field => field[selectedType])[0][selectedType];
+
+    selectedType="Dataset"; // TODO: remove this line
+
+    const typeFacet = {
+      id: "facet_type",
+      name: "_type",
+      facet: {
+        filterType: "_type",
+        value: selectedType
+      }
+    };
+
+    const queryFacets = [...facets, typeFacet];
+
+    const getAllFilters = facets => {
+      const filters = {};
+
+      facets.forEach(facet => {
+        if (facet.facet.filterType !== "_type") {
+          facet.facet.value = false; // TODO: remove this line
+        }
+        if (facet.facet.value) {
+          let filter = null;
+          const facetKey = facet.facet.isChild ? `${facet.name}.${facet.facet.childName}.value.keyword`:`${facet.name}.value.keyword`;
+          switch (facet.facet.filterType) {
+          case "_type": {
+            filter = {
+              term: {}
+            };
+            filter.term[facet.name] = facet.facet.value;
+            break;
+          }
+          case "list": {
+            facet.facet.value = ["foo"]; // TODO: remove this line
+            if(facet.facet.exclusiveSelection === false) { // OR
+              if (facet.facet.value.length > 1) {
+                filter = {
+                  bool: {
+                    should: []
+                  }
+                };
+                facet.facet.value.forEach(v => {
+                  const term = {};
+                  term[facetKey] = v;
+                  filter.bool.should.push({
+                    term: term
+                  });
+                });
+              } else {
+                const term = {};
+                term[facetKey] = facet.facet.value[0];
+                filter = {
+                  term: term
+                };
+              }
+            } else { // AND
+              filter = [];
+              facet.facet.value.forEach(v => {
+                const term = {};
+                term[facetKey] = v;
+                filter.push({
+                  term: term
+                });
+              });
+            }
+            break;
+          }
+          case "exists": {
+            filter = {
+              exists: {
+                field: facetKey
+              }
+            };
+            break;
+          }
+          default:
+            break;
+          }
+          if (filter) {
+            filters[facet.id] = filter;
+          }
+        }
+      });
+      return filters;
+    };
+
+    const setFilters = (filters, key) => {
+      const filtered = key?Object.entries(filters).filter(([id,]) => id !== key):Object.entries(filters);
+      const res = filtered.reduce((acc, [, filter]) => {
+        if (Array.isArray(filter)) {
+          acc.push(...filter);
+        } else {
+          acc.push(filter);
+        }
+        return acc;
+      }, []);
+      if (res.length > 1) {
+        return {
+          bool: {
+            must: res
+          }
+        };
+      } else if (res.length === 1) {
+        return res[0];
+      }
+      return {
+        match_all: {}
+      };
+    };
+
+    const setFacetAggs = (aggs, facets) => {
+
+      const setAggs = (key, count, orderDirection, size) => {
+        const aggs = {};
+        aggs[key] = {
+          terms: {
+            field: key,
+            size: size
+          }
+        };
+        if (orderDirection) {
+          aggs[key].terms.order = {
+            _count: orderDirection
+          };
+        }
+        aggs[count] = {
+          cardinality: {
+            field: key
+          }
+        };
+        return aggs;
+      };
+
+      const setListFacetAggs = (aggs, facet) => {
+
+        const orderKey = facet.facet.filterOrder && facet.facet.filterOrder === "byvalue"? "_term": "_count";
+        const orderDirection = orderKey === "_term"? "asc": "desc";
+
+        if(facet.isChild) {
+          const key = `${facet.name}.${facet.childName}.value.keyword`;
+          const count = `${facet.name}.${facet.childName}.value.keyword_count`;
+          aggs[facet.id] = {
+            aggs:  {
+              inner: {
+                aggs: setAggs(key, count, orderDirection, 10)
+              }
+            }
+          };
+        } else {
+          const key = `${facet.name}.value.keyword`;
+          const count = `${facet.name}.value.keyword_count`;
+          aggs[facet.id] = {
+            aggs: setAggs(key, count, orderDirection, 10)
+          };
+        }
+      };
+
+      facets.forEach(facet => {
+        switch (facet.facet.filterType) {
+        case "_type": {
+          aggs[facet.id] = {
+            aggs: setAggs(facet.name, `${facet.name}_count`, null, 50)
+          };
+          break;
+        }
+        case "list": {
+          setListFacetAggs(aggs, facet);
+          break;
+        }
+        case "exists":
+        default:
+          aggs[facet.id] = {};
+          break;
+        }
+      });
+    };
+
+    const getAggs = (facets, allFilters) => {
+
+      const setFacetFilter = (aggs, facets, facetFilters) => {
+        facets.forEach(facet => {
+          const filters = setFilters(facetFilters, facet.id);
+          if (filters) {
+            aggs[facet.id].filter = filters;
+          } else {
+            aggs[facet.id].filter = {
+              match_all: {}
+            };
+          }
+        });
+      };
+
+      const aggs = {};
+      setFacetAggs(aggs, facets);
+      setFacetFilter(aggs, facets, allFilters);
+
+      const typeFilters = setFilters(allFilters, "facet_type");
+      if (typeFilters) {
+        aggs.facet_type.filter = typeFilters;
+      } else {
+        aggs.facet_type.filter = {
+          match_all: {}
+        };
+      }
+      return aggs;
+    };
+
+    const fields = selectedType?queryFields.filter(field => field[selectedType])[0][selectedType]:[];
     const query = {
       query_string: {
         fields: fields,
@@ -425,7 +632,7 @@ export class ElasticSearchHelpers {
       }
     };
 
-    
+    const allFilters = getAllFilters(queryFacets, selectedType);
 
     if (boostedTypes.length) {
       const boostedTypesTerms = boostedTypes.map(type => ({
@@ -438,7 +645,7 @@ export class ElasticSearchHelpers {
       }));
 
       return {
-        aggs: {},
+        aggs: getAggs(queryFacets, allFilters),
         from: from,
         highlight: customHighlight,
         query: {
@@ -446,17 +653,17 @@ export class ElasticSearchHelpers {
             should: [query, ...boostedTypesTerms]
           }
         },
-        post_filter: {},
+        post_filter: setFilters(allFilters),
         size: size,
         sort: sort
       };
     }
     return {
-      aggs: {},
+      aggs: getAggs(queryFacets, allFilters),
       from: from,
       highlight: customHighlight,
       query: query,
-      post_filter: {},
+      post_filter: setFilters(allFilters),
       size: size,
       sort: sort
     };
