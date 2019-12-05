@@ -20,6 +20,68 @@ import { RefinementListFilter, InputFilter, CheckboxFilter, RangeFilter } from "
 /* import { DateRangeFilter, DateRangeCalendar } from "searchkit-datefilter"; */
 import "./Facet.css";
 
+class FacetCheckbox extends React.Component {
+
+  handleClick = () => this.props.onClick(!this.props.checked);
+
+  render() {
+    const {label, checked, count } = this.props;
+    return (
+      <div className={`kgs-facet-checkbox ${checked?"is-active":""}`} onClick={this.handleClick}>
+        <input type="checkbox" checked={checked}  />
+        <div className="kgs-facet-checkbox__text sk-item-list-option__text">{label}</div>
+        <div className="kgs-facet-checkbox__count sk-item-list-option__count">{count}</div>
+      </div>
+    );
+  }
+}
+
+const FacetListItem = ({item, onClick}) => {
+
+  const _onClick = active => onClick(item.value, active);
+
+  return (
+    <FacetCheckbox label={item.value} count={item.count} onClick={_onClick} />
+  );
+};
+
+const FacetList = ({list, onClick}) => (
+  <div className="kgs-facet-list">
+    {list.map(item => (
+      <FacetListItem key={item.id} item={item} onClick={onClick} />
+    ))}
+  </div>
+);
+
+const FacetPanel = ({title, component: Component, parameters }) => (
+  <div className="kgs-facet-panel">
+    <div className="kgs-facet-title">{title}</div>
+    <Component {...parameters} />
+  </div>
+);
+
+const FacetCheckboxPanel = ({name, title, label, count, onClick }) => {
+  const parameters = {
+    label: label,
+    count: count,
+    onClick: active => onClick(name, active)
+  };
+  return (
+    <FacetPanel title={title} component={FacetCheckbox} parameters={parameters} />
+  );
+};
+
+const FacetListPanel = ({name, title, list, onClick }) => {
+  const parameters = {
+    list: list,
+    onClick: (keyword, active) => onClick(name, keyword, active)
+  };
+  return (
+    <FacetPanel title={title} component={FacetList} parameters={parameters} />
+  );
+};
+
+
 const SearchkitFacet = ({id, name, facet}) => {
   if (facet.filterType === "list") {
     const orderKey = facet.filterOrder && facet.filterOrder === "byvalue"? "_term": "_count";

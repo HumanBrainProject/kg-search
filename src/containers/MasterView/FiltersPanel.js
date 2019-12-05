@@ -48,19 +48,6 @@ export const FiltersPanelBase = ({className, show, hasFilters, facets, facetComp
   );
 };
 
-const FiltersPanelContainer = connect(
-  (state, props) => {
-    return {
-      type: state.search.type,
-      show: state.definition.isReady && state.search.facets.length > 0,
-      hasFilters: state.search.hasFilters,
-      facets: state.search.facets,
-      facetComponent: Facet,
-      onReset: props.onReset
-    };
-  }
-)(FiltersPanelBase);
-
 export class FiltersPanel extends SearchkitComponent {
   onReset = () => {
     const allFilters = this.searchkit.query && this.searchkit.query.getSelectedFilters();
@@ -86,3 +73,16 @@ export class FiltersPanel extends SearchkitComponent {
     );
   }
 }
+
+const FiltersPanelContainer = connect(
+  (state, props) => {
+    return {
+      type: state.search.type,
+      show: state.definition.isReady && state.search.facets.length > 0,
+      hasFilters: state.search.hasFilters,
+      facets: state.search.facets,
+      facetComponent: Facet,
+      onReset: props.onReset
+    };
+  }
+)(FiltersPanelBase);
