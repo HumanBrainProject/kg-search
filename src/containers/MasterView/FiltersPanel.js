@@ -37,7 +37,7 @@ export const FiltersPanelBase = ({className, show, hasFilters, facets, facetComp
         </div>
         <span>
           {facets.map(f => (
-            <Facet key={f.id} id={f.id} name={f.name} facet={f.facet} isVisible={f.isVisible} />
+            <Facet key={f.id} id={f.id} name={f.name} facet={f.facet} visible={f.visible} />
           ))}
         </span>
         {!hasFilters && (

@@ -94,8 +94,8 @@ const SearchkitFacet = ({id, name, facet}) => {
   return null;
 };
 
-export const Facet = ({className, id, name, facet, isVisible}) => {
-  const classNames = ["kgs-facet", className, isVisible?"":"hidden"].join(" ");
+export const Facet = ({className, id, name, facet, visible}) => {
+  const classNames = ["kgs-facet", className, visible?"":"hidden"].join(" ");
   return (
     <div className={classNames}>
       <SearchkitFacet id={id} name={name} facet={facet} />

@@ -273,7 +273,9 @@ export class ElasticSearchHelpers {
               count: 0,
               value: null
             },
-            isVisible: isMatchingSelectedType
+            keywords: [],
+            visible: isMatchingSelectedType,
+            size:10
           });
         }
         if (field.children) {
@@ -294,7 +296,9 @@ export class ElasticSearchHelpers {
                   count: 0,
                   value: null
                 },
-                isVisible: isMatchingSelectedType
+                keywords: [],
+                visible: isMatchingSelectedType,
+                size: 10
               });
             }
           });
@@ -552,13 +556,16 @@ export class ElasticSearchHelpers {
         const orderKey = facet.facet.filterOrder && facet.facet.filterOrder === "byvalue"? "_term": "_count";
         const orderDirection = orderKey === "_term"? "asc": "desc";
 
-        if(facet.isChild) {
-          const key = `${facet.name}.${facet.childName}.value.keyword`;
-          const count = `${facet.name}.${facet.childName}.value.keyword_count`;
+        if(facet.facet.isChild) {
+          const key = `${facet.name}.children.${facet.facet.childName}.value.keyword`;
+          const count = `${facet.name}.children.${facet.facet.childName}.value.keyword_count`;
           aggs[facet.id] = {
             aggs:  {
               inner: {
-                aggs: setAggs(key, count, orderDirection, 10)
+                aggs: setAggs(key, count, orderDirection, facet.size),
+                nested: {
+                  path: `${facet.name}.children`
+                }
               }
             }
           };
@@ -566,7 +573,7 @@ export class ElasticSearchHelpers {
           const key = `${facet.name}.value.keyword`;
           const count = `${facet.name}.value.keyword_count`;
           aggs[facet.id] = {
-            aggs: setAggs(key, count, orderDirection, 10)
+            aggs: setAggs(key, count, orderDirection, facet.size)
           };
         }
       };

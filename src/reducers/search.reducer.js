@@ -55,9 +55,10 @@ const setupSearch = (state, action) => {
       type: type,
       label: typeDefinition.name,
       count: 0,
-      active: type === selectedType
+      active: type === selectedType,
+      visible: true
     }));
-    const hasFilters = facets.some(f => f.isVisible);
+    const hasFilters = facets.some(f => f.visible);
 
     return {
       ...state,
@@ -87,9 +88,9 @@ const setQueryString = (state, action) => {
   };
 };
 
-const setType = (state, action) => {
-  const types = state.types.map(type => {
-    if(type.type === action.value) {
+const getUpdatedTypes = (types, selectedType) => {
+  return Array.isArray(types)?types.map(type => {
+    if(type.type === selectedType) {
       const obj = Object.assign({}, type);
       obj.active = true;
       return obj;
@@ -99,12 +100,15 @@ const setType = (state, action) => {
       return obj;
     }
     return type;
-  });
+  }):[];
+};
 
+const setType = (state, action) => {
+  const selectedType = action.value;
   return {
     ...state,
-    selectedType: action.value,
-    types: types
+    selectedType: selectedType,
+    types: getUpdatedTypes(state.types, selectedType)
   };
 };
 
@@ -113,30 +117,22 @@ const setGroup = (state, action) => {
     if (action.group === state.group) {
       return state;
     }
-    let selectedType = null;
-    if (state.group && state.groups && state.groups.groups && state.groups.groups.length && state.groups.groupSettings && state.groups.groupSettings[action.group]) {
-      selectedType = state.groups.groupSettings[action.group].facetDefaultSelectedType;
-    } else {
-      selectedType = state.facetDefaultSelectedType;
-    }
-    const types = state.types.map(type => {
-      if(type.type === selectedType) {
-        const obj = Object.assign({}, type);
-        obj.active = true;
-        return obj;
-      } else if(type.active) {
-        const obj = Object.assign({}, type);
-        obj.active = false;
-        return obj;
+
+    const getSelectedType = (groups, group, defaultType) => {
+      if (group && groups && groups.groups && groups.groups.length && groups.groupSettings && groups.groupSettings[group]) {
+        return groups.groupSettings[group].facetDefaultSelectedType;
       }
-      return type;
-    });
+      return defaultType;
+    };
+
+    const selectedType = getSelectedType(state.groups, action.group, state.facetDefaultSelectedType);
+
     return {
       ...state,
       hasRequest: !action.initialize,
       group: action.group,
       selectedType: selectedType,
-      types: types
+      types: getUpdatedTypes(state.types, selectedType)
     };
   }
   // Reset
@@ -190,17 +186,54 @@ const loadSearchRequest = (state, action) => {
 };
 
 const loadSearchResult = (state, action) => {
-  const aggs = (action.results && action.results.aggregations)?action.results.aggregations:{};
-  const facets = state.facets.map(f => {
-    return Object.assign({}, f);
-  });
+
+  const getUpdatedFacets = (facets, results) => {
+
+    const getKeywords = (aggs, name) => {
+      const values = aggs && aggs[`${name}.value.keyword`];
+      return (values && Array.isArray(values.buckets))?values.buckets.map(bucket => ({
+        value: bucket.key,
+        count: bucket.doc_count
+      })):[];
+    };
+    const aggs = (results && results.aggregations)?results.aggregations:{};
+    return facets.map(f => {
+      const facet = Object.assign({}, f);
+      const res = aggs[facet.id];
+      if (facet.facet.filterType === "list") {
+        facet.keywords = getKeywords(facet.facet.isChild?(res?res.inner:null):res, facet.name);
+        // TODO: sum_other_doc_count
+      }
+      const count = (res && res.doc_count)?res.doc_count:0;
+      facet.facet.count = count;
+      facet.visible = count > 0;
+      return facet;
+    });
+  };
+
+  const getUpdatedTypes = (types, selectedType, results) => {
+    const buckets = (results && results.aggregations && results.aggregations.facet_type && results.aggregations.facet_type._type && Array.isArray(results.aggregations.facet_type._type.buckets))?results.aggregations.facet_type._type.buckets:[];
+    const counts = buckets.reduce((acc, current) => {
+      acc[current.key] = current.doc_count;
+      return acc;
+    }, {});
+    return types.map(type => {
+      const res = Object.assign({}, type);
+      const count = counts[res.type]?counts[res.type]:0;
+      res.count = count;
+      res.visible = count > 0 || res.type === selectedType;
+      return res;
+    });
+  }
+
   return {
     ...state,
     initialRequestDone: true,
     isLoading: false,
     nonce: null,
     group:action.group?action.group:state.group,
-    facets: facets,
+    facets: getUpdatedFacets(state.facets, action.results),
+    types: getUpdatedTypes(state.types, state.selectedType, action.results),
     hits: (action.results && action.results.hits && Array.isArray(action.results.hits.hits))?action.results.hits.hits:[],
     total: (action.results && action.results.hits && action.results.hits.total)?action.results.hits.total:0,
     from: action.from?Number(action.from):0
