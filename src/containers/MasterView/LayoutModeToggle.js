@@ -21,7 +21,7 @@ import * as actions from "../../actions";
 export const LayoutModeToggle = connect(
   (state, props) => ({
     className: props.className,
-    show: state.search.results && state.search.results.hits && state.search.results.hits.total > 0,
+    show: state.search.total > 0,
     value: state.application.gridLayoutMode?"grid":"list",
     items: [
       {label: "Grid", value: "grid"},

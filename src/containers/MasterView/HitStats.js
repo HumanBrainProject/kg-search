@@ -36,11 +36,11 @@ export const HitStatsBase = ({className, show, hitCount, from, to}) => {
 export const HitStats = connect(
   state => {
     const from = (state.search.from?state.search.from:0) + 1;
-    const count = state.search.results?(state.search.results.hits?(state.search.results.hits.hits?state.search.results.hits.hits.length:0):0):0;
+    const count = state.search.hits?state.search.hits.length:0;
     const to = from + count - 1;
     return {
       show: state.search.isReady && state.search.initialRequestDone && !state.search.isLoading,
-      hitCount: state.search.results?(state.search.results.hits?state.search.results.hits.total:0):0,
+      hitCount: state.search.total?state.search.total:0,
       from: from,
       to: to
     };
