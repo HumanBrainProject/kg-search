@@ -26,7 +26,7 @@ export function ResultsHeader() {
       <div>
         <HitStats/>
         <LayoutModeToggle className="kgs-layout-mode-toggle"/>
-        <SortingSelector/>
+        <SortingSelector className="kgs-sorting-selector"/>
       </div>
     </div>
   );

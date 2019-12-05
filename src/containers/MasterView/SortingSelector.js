@@ -16,20 +16,46 @@
 
 import React from "react";
 import { connect } from "react-redux";
-import { Select, SortingSelector as Component} from "searchkit";
-import "./SortingSelector.css";
+import * as actions from "../../actions";
+import { Select } from "../../components/Select";
+import { ElasticSearchHelpers } from "../../helpers/ElasticSearchHelpers";
 
-export const SortingSelectorBase = ({className, sortFields}) => {
-  if (Array.isArray(sortFields) && sortFields.length) {
-    const classNames = `kgs-sorting-selector ${className}`;
-    return <span className={classNames?classNames:null}><Component listComponent={Select} options={sortFields} /></span>;
+class SortingSelectorComponent extends React.Component {
+
+  componentDidUpdate(prevProps) {
+    if (this.props.value !== prevProps.value) {
+      this.performSearch();
+    }
   }
-  return null;
-};
+
+  performSearch = () => {
+    const { searchParams, onSearch, group, searchApiHost } = this.props;
+    onSearch(searchParams, group, searchApiHost);
+  }
+
+  render() {
+    const {className, label, value, list, onChange} = this.props;
+    return (
+      <Select className={className} label={label} value={value} list={list} onChange={onChange} />
+    );
+  }
+}
 
 export const SortingSelector = connect(
   (state, props) => ({
     className: props.className,
-    sortFields: state.definition.sortFields
+    label: "Sort by",
+    value: state.search.sort?state.search.sort.label:null,
+    list: state.search.sortFields.map(f => ({
+      label: f.label,
+      value: f.key
+    })),
+    searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
+    group: state.search.group,
+    searchApiHost: state.configuration.searchApiHost
+  }),
+  dispatch => ({
+    onChange: value => dispatch(actions.setSort(value)),
+    onSearch: (searchParams, group, searchApiHost) => dispatch(actions.doSearch(searchParams, group, searchApiHost))
   })
-)(SortingSelectorBase);
+)(SortingSelectorComponent);

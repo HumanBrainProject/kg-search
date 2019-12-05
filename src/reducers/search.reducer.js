@@ -23,6 +23,7 @@ const initialState = {
   facets: [],
   types: [],
   hasFilters: false,
+  sort: null,
   sortFields: [],
   facetTypesOrder: {},
   facetDefaultSelectedType: null,
@@ -48,6 +49,7 @@ const setupSearch = (state, action) => {
 
     const queryValuesBoost = ElasticSearchHelpers.getQueryValuesBoost(definition);
     const sortFields = ElasticSearchHelpers.getSortFields(definition);
+    const sort = sortFields.length?sortFields[0]:null;
     const facetTypesOrder = ElasticSearchHelpers.getFacetTypesOrder(definition);
     const selectedType = ElasticSearchHelpers.getDefaultSelectedType(definition, facetTypesOrder);
     const facets = ElasticSearchHelpers.constructFacets(definition, selectedType);
@@ -66,6 +68,7 @@ const setupSearch = (state, action) => {
       facets: facets,
       types: types,
       hasFilters: hasFilters,
+      sort: sort,
       sortFields: sortFields,
       facetTypesOrder: facetTypesOrder,
       selectedType: selectedType,
@@ -101,6 +104,17 @@ const getUpdatedTypes = (types, selectedType) => {
     }
     return type;
   }):[];
+};
+
+const setSort = (state, action) => {
+  const match = state.sortFields.filter(f => f.key === action.value);
+  if (match.length) {
+    return {
+      ...state,
+      sort: match[0]
+    };
+  }
+  return state;
 };
 
 const setType = (state, action) => {
@@ -259,6 +273,8 @@ export function reducer(state = initialState, action = {}) {
     return setQueryString(state, action);
   case types.SET_TYPE:
     return setType(state, action);
+  case types.SET_SORT:
+    return setSort(state, action);
   case types.SET_SEARCH_READY:
     return setSearchReady(state, action);
   case types.SET_GROUP:

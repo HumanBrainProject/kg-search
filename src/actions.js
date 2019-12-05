@@ -364,6 +364,20 @@ export const setQueryString = value => {
   };
 };
 
+export const setType = value => {
+  return {
+    type: types.SET_TYPE,
+    value: value
+  };
+};
+
+export const setSort = value => {
+  return {
+    type: types.SET_SORT,
+    value: value
+  };
+};
+
 export const doSearch = (searchParams, group, searchApiHost) => {
   return dispatch => {
     dispatch(loadSearchRequest());
@@ -392,12 +406,5 @@ export const doSearch = (searchParams, group, searchApiHost) => {
         }
         }
       });
-  };
-};
-
-export const setType = value => {
-  return {
-    type: types.SET_TYPE,
-    value: value
   };
 };

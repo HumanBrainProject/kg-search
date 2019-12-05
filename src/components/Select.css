@@ -34,7 +34,6 @@
 
 .kgs-select select {
     min-width: 215px;
-    width: calc(100% - 70px);
     background-color: white;
     border-color: white;
     color: var(--color-selected);

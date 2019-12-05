@@ -220,18 +220,16 @@ export class ElasticSearchHelpers {
   static getSortFields = definition => {
     let sortFields = {
       _score: {
-        label: "Relevance",
         key: "newestFirst",
+        label: "Relevance",
         fields: [
           {
-            field: "_score",
-            options: {
+            _score: {
               order: "desc"
             }
           },
           {
-            field: "first_release.value",
-            options: {
+            "first_release.value": {
               order: "desc",
               missing: "_last"
             }
@@ -243,10 +241,13 @@ export class ElasticSearchHelpers {
     Object.values(definition).forEach(typeDefinition => {
       Object.entries(typeDefinition.fields).forEach(([fieldName, field]) => {
         if (field.sort && sortFields[fieldName] === undefined) {
+          const key = `${fieldName}.value.keyword`;
+          const res = {};
+          res[key] = "asc";
           sortFields[fieldName] = {
+            key: field.value,
             label: field.value,
-            field: fieldName + ".value.keyword",
-            order: "asc"
+            fields: [res]
           };
         }
       });
@@ -419,7 +420,7 @@ export class ElasticSearchHelpers {
     };
   };
 
-  static buildRequest({queryTweaking, queryString="", queryFields=[], selectedType, facets=[], sort=[], from=0, size=20, boostedTypes=[]}) {
+  static buildRequest({queryTweaking, queryString="", queryFields=[], selectedType, facets=[], sort, from=0, size=20, boostedTypes=[]}) {
 
     const typeFacet = {
       id: "facet_type",
@@ -644,9 +645,12 @@ export class ElasticSearchHelpers {
       from: from,
       highlight: customHighlight,
       post_filter: setFilters(allFilters),
-      size: size,
-      sort: sort
+      size: size
     };
+
+    if (sort && Array.isArray(sort.fields)) {
+      payload.sort = sort.fields;
+    }
 
     if (query) {
       if (boostedTypes.length) {
