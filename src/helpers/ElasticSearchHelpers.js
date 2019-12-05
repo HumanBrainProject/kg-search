@@ -415,9 +415,7 @@ export class ElasticSearchHelpers {
     };
   };
 
-  static buildRequest({queryTweaking, queryString="", queryFields=[], selectedType="Dataset", facets=[], sort=[], from=0, size=20, boostedTypes=[]}) {
-
-    selectedType="Dataset"; // TODO: remove this line
+  static buildRequest({queryTweaking, queryString="", queryFields=[], selectedType, facets=[], sort=[], from=0, size=20, boostedTypes=[]}) {
 
     const typeFacet = {
       id: "facet_type",
@@ -624,49 +622,45 @@ export class ElasticSearchHelpers {
     };
 
     const fields = selectedType?queryFields.filter(field => field[selectedType])[0][selectedType]:[];
-    const query = {
+    const query = queryString?{
       query_string: {
         fields: fields,
         query: ElasticSearchHelpers.sanitizeString(queryString, queryTweaking),
         lenient: true
       }
-    };
+    }:null;
 
     const allFilters = getAllFilters(queryFacets, selectedType);
 
-    if (boostedTypes.length) {
-      const boostedTypesTerms = boostedTypes.map(type => ({
-        term: {
-          _type: {
-            value: type.name,
-            boost: type.boost
-          }
-        }
-      }));
-
-      return {
-        aggs: getAggs(queryFacets, allFilters),
-        from: from,
-        highlight: customHighlight,
-        query: {
-          bool: {
-            should: [query, ...boostedTypesTerms]
-          }
-        },
-        post_filter: setFilters(allFilters),
-        size: size,
-        sort: sort
-      };
-    }
-    return {
+    const payload = {
       aggs: getAggs(queryFacets, allFilters),
       from: from,
       highlight: customHighlight,
-      query: query,
       post_filter: setFilters(allFilters),
       size: size,
       sort: sort
     };
+
+    if (query) {
+      if (boostedTypes.length) {
+        const boostedTypesTerms = boostedTypes.map(type => ({
+          term: {
+            _type: {
+              value: type.name,
+              boost: type.boost
+            }
+          }
+        }));
+        payload.query = {
+          bool: {
+            should: [query, ...boostedTypesTerms]
+          }
+        };
+      } else {
+        payload.query = query;
+      }
+    }
+    return payload;
   }
 
   static getQueryProcessor(searchkit, queryTweaking, store) {

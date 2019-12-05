@@ -15,10 +15,7 @@
 */
 
 .kgs-fieldsFilter {
-    margin: 10px 0 0 0
-}
-
-.kgs-fieldsFilter > .sk-panel > .sk-panel__content > .sk-item-list {
+    margin: 10px 0 0 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     grid-row-gap: 25px;
@@ -67,7 +64,7 @@
 
 /* Internet Explorer 10 & 11 */
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-    .kgs-fieldsFilter > .sk-panel > .sk-panel__content > .sk-item-list {
+    .kgs-fieldsFilter {
         display: -ms-flexbox;
         display: flex;
         -ms-flex-pack: start;

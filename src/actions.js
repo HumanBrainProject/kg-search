@@ -18,7 +18,6 @@ import * as types from "./actions.types";
 import API from "./services/API";
 import axios from "axios";
 import { ElasticSearchHelpers } from "./helpers/ElasticSearchHelpers";
-import { State } from "searchkit";
 
 export const setApplicationReady = isReady => {
   return {
@@ -58,6 +57,7 @@ export const loadDefinition = searchApiHost => {
 
   const GRAPHQUERY_NAMESPACE = "https://schema.hbp.eu/graphQuery/";
   const SEARCHUI_NAMESPACE = "https://schema.hbp.eu/searchUi/";
+  const SCHEMA_ORG = "http://schema.org/";
 
   const getFieldAndRemove = (field, key, defaultValue) => {
     let valueFromField = field[key];
@@ -102,9 +102,21 @@ export const loadDefinition = searchApiHost => {
       Object.keys(source).forEach(key => {
         simplifySemantics(source[key]);
       });
+      if (source[SCHEMA_ORG + "identifier"]) {
+        source.identifier = source[SCHEMA_ORG + "identifier"];
+        delete source[SCHEMA_ORG + "identifier"];
+      }
+      if (source[SCHEMA_ORG + "name"]) {
+        source.name = source[SCHEMA_ORG + "name"];
+        delete source[SCHEMA_ORG + "name"];
+      }
       if (source[SEARCHUI_NAMESPACE + "order"]) {
         source.order = source[SEARCHUI_NAMESPACE + "order"];
         delete source[SEARCHUI_NAMESPACE + "order"];
+      }
+      if (source[SEARCHUI_NAMESPACE + "boost"]) {
+        source.boost = source[SEARCHUI_NAMESPACE + "boost"];
+        delete source[SEARCHUI_NAMESPACE + "boost"];
       }
       if (source[SEARCHUI_NAMESPACE + "defaultSelection"]) {
         source.defaultSelection = source[SEARCHUI_NAMESPACE + "defaultSelection"];
@@ -380,5 +392,12 @@ export const doSearch = (searchParams, group, searchApiHost) => {
         }
         }
       });
+  };
+};
+
+export const setType = value => {
+  return {
+    type: types.SET_TYPE,
+    value: value
   };
 };

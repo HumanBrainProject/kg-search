@@ -21,6 +21,7 @@ import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
 const initialState = {
   queryFields: ["title", "description"],
   facets: [],
+  types: [],
   hasFilters: false,
   sortFields: [],
   facetTypesOrder: {},
@@ -33,7 +34,8 @@ const initialState = {
   selectedType: null,
   nonce: null,
   group: API.defaultGroup,
-  results: {},
+  hits: [],
+  total: 0,
   from: 0
 };
 
@@ -49,15 +51,23 @@ const setupSearch = (state, action) => {
     const facetTypesOrder = ElasticSearchHelpers.getFacetTypesOrder(definition);
     const selectedType = ElasticSearchHelpers.getDefaultSelectedType(definition, facetTypesOrder);
     const facets = ElasticSearchHelpers.constructFacets(definition, selectedType);
+    const types = Object.entries(definition).map(([type, typeDefinition]) => ({
+      type: type,
+      label: typeDefinition.name,
+      count: 0,
+      active: type === selectedType
+    }));
     const hasFilters = facets.some(f => f.isVisible);
 
     return {
       ...state,
       queryFields: queryValuesBoost,
       facets: facets,
+      types: types,
       hasFilters: hasFilters,
       sortFields: sortFields,
       facetTypesOrder: facetTypesOrder,
+      selectedType: selectedType,
       facetDefaultSelectedType: selectedType
     };
   }
@@ -70,10 +80,31 @@ const setSearchReady = (state, action) => {
   };
 };
 
-const setQueryString= (state, action) => {
+const setQueryString = (state, action) => {
   return {
     ...state,
     queryString: action.queryString
+  };
+};
+
+const setType = (state, action) => {
+  const types = state.types.map(type => {
+    if(type.type === action.value) {
+      const obj = Object.assign({}, type);
+      obj.active = true;
+      return obj;
+    } else if(type.active) {
+      const obj = Object.assign({}, type);
+      obj.active = false;
+      return obj;
+    }
+    return type;
+  });
+
+  return {
+    ...state,
+    selectedType: action.value,
+    types: types
   };
 };
 
@@ -82,10 +113,30 @@ const setGroup = (state, action) => {
     if (action.group === state.group) {
       return state;
     }
+    let selectedType = null;
+    if (state.group && state.groups && state.groups.groups && state.groups.groups.length && state.groups.groupSettings && state.groups.groupSettings[action.group]) {
+      selectedType = state.groups.groupSettings[action.group].facetDefaultSelectedType;
+    } else {
+      selectedType = state.facetDefaultSelectedType;
+    }
+    const types = state.types.map(type => {
+      if(type.type === selectedType) {
+        const obj = Object.assign({}, type);
+        obj.active = true;
+        return obj;
+      } else if(type.active) {
+        const obj = Object.assign({}, type);
+        obj.active = false;
+        return obj;
+      }
+      return type;
+    });
     return {
       ...state,
       hasRequest: !action.initialize,
-      group: action.group
+      group: action.group,
+      selectedType: selectedType,
+      types: types
     };
   }
   // Reset
@@ -139,13 +190,19 @@ const loadSearchRequest = (state, action) => {
 };
 
 const loadSearchResult = (state, action) => {
+  const aggs = (action.results && action.results.aggregations)?action.results.aggregations:{};
+  const facets = state.facets.map(f => {
+    return Object.assign({}, f);
+  });
   return {
     ...state,
     initialRequestDone: true,
     isLoading: false,
     nonce: null,
     group:action.group?action.group:state.group,
-    results: action.results,
+    facets: facets,
+    hits: (action.results && action.results.hits && Array.isArray(action.results.hits.hits))?action.results.hits.hits:[],
+    total: (action.results && action.results.hits && action.results.hits.total)?action.results.hits.total:0,
     from: action.from?Number(action.from):0
   };
 };
@@ -167,6 +224,8 @@ export function reducer(state = initialState, action = {}) {
     return setupSearch(state, action);
   case types.SET_QUERY_STRING:
     return setQueryString(state, action);
+  case types.SET_TYPE:
+    return setType(state, action);
   case types.SET_SEARCH_READY:
     return setSearchReady(state, action);
   case types.SET_GROUP:

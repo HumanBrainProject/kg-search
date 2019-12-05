@@ -36,6 +36,7 @@ export const SET_GROUP = "SET_GROUP";
 
 export const SET_SEARCH_READY = "SET_SEARCH_READY";
 export const SET_QUERY_STRING = "SET_QUERY_STRING";
+export const SET_TYPE = "SET_TYPE";
 export const LOAD_SEARCH = "LOAD_SEARCH";
 export const LOAD_SEARCH_REQUEST = "LOAD_SEARCH_REQUEST";
 export const LOAD_SEARCH_SUCCESS = "LOAD_SEARCH_SUCCESS";
