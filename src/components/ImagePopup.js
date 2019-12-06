@@ -17,26 +17,10 @@
 import React, { Component } from "react";
 import "./ImagePopup.css";
 
-const getImage = url => {
-  return new Promise((resolve, reject) => {
-    if (typeof url !== "string") {
-      reject(url);
-    }
-    const img = new Image();
-    img.onload = () => {
-      resolve(url);
-    };
-    img.onerror = () => {
-      reject(url);
-    };
-    img.src = url;
-  });
-};
-
 export class ImagePopup extends Component {
   constructor(props) {
     super(props);
-    this.state = { src: null, fetched: false, error: false };
+    this.state = { src: null, error: false };
   }
   onClick = e => {
     if ((!this.closeBtnRef || (this.closeBtnRef && this.closeBtnRef !== e.target)) && this.wrapperRef && this.wrapperRef.contains(e.target)) {
@@ -46,19 +30,13 @@ export class ImagePopup extends Component {
       typeof onClick === "function" && onClick();
     }
   };
-  async loadImage() {
+  loadImage() {
     if (typeof this.props.src === "string") {
       if (this.props.src !== this.state.src || this.state.error) {
-        this.setState({ src: this.props.src, fetched: false, error: false });
-        try {
-          await getImage(this.props.src);
-          this.setState({ fetched: true });
-        } catch (e) {
-          this.setState({ fetched: true, error: true });
-        }
+        this.setState({ src: this.props.src, error: false });
       }
-    } else if (this.state.fetched || this.state.src) {
-      this.setState({ src: null, fetched: false, error: false });
+    } else {
+      this.setState({ src: null, error: true });
     }
   }
   componentDidMount() {
@@ -76,14 +54,7 @@ export class ImagePopup extends Component {
       <div className={`kgs-image_popup ${show ? "show" : ""} ${className ? className : ""}`} onClick={this.onClick}>
         {show && (
           <div className="fa-stack fa-1x kgs-image_popup-content" ref={ref => this.wrapperRef = ref} >
-            {!this.state.fetched ?
-              <div>
-                <span className="kgs-spinner">
-                  <div className="kgs-spinner-logo"></div>
-                </span>
-                <span className="kgs-spinner-label">{`loading image "${label}" ...`}</span>
-              </div>
-              :
+            {
               this.state.error ?
                 <div className="kgs-image_popup-error">
                   <i className="fa fa-ban"></i>
