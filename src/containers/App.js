@@ -16,7 +16,9 @@
 
 import React, { PureComponent } from "react";
 import { Provider } from "react-redux";
-import { store } from "../store";
+// import { Router, Route, Switch, matchPath } from "react-router-dom";
+import { ConnectedRouter } from "connected-react-router";
+import { store, history } from "../store";
 import AppManager from "../services/app.manager";
 import { MasterDetail } from "./MasterDetail";
 import { FetchingPanel } from "./FetchingPanel";
@@ -29,22 +31,26 @@ export default class App extends PureComponent {
     super(props);
     this.manager = new AppManager(store, props.config || {});
   }
+
   componentDidMount() {
     this.manager.start();
   }
+
   componentWillUnmount() {
     this.manager.stop();
   }
+
   render() {
-    //window.console.debug("App rendering...");
     return (
       <Provider store={store}>
-        <div className="kgs-app">
-          <MasterDetail manager={this.manager} />
-          <FetchingPanel />
-          <ErrorPanel />
-          <InfoPanel />
-        </div>
+        <ConnectedRouter history={history}>
+          <div className="kgs-app">
+            <MasterDetail manager={this.manager} />
+            <FetchingPanel />
+            <ErrorPanel />
+            <InfoPanel />
+          </div>
+        </ConnectedRouter>
       </Provider>
     );
   }

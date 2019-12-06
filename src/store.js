@@ -14,29 +14,27 @@
 *   limitations under the License.
 */
 
-// import * as reducers from "./reducers";
-// import { createStore, combineReducers } from "redux";
-
-// const app = combineReducers(reducers);
-
-// export const store = createStore(app);
-
-
-
-import { combineReducers } from "redux";
 import { createStore, compose, applyMiddleware } from "redux";
 // import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
+import { createBrowserHistory } from "history";
+import { routerMiddleware } from "connected-react-router";
 import thunk from "redux-thunk";
 
-import * as reducers from "./reducers";
+// import * as reducers from "./reducers";
 import { createLogger } from "redux-logger";
 
+import createRootReducer from "./reducers";
+
+
+export const history = createBrowserHistory();
 
 function configureStoreProd(initialState) {
-  const middlewares = [thunk];
+  const reactRouterMiddleware = routerMiddleware(history);
+
+  const middlewares = [reactRouterMiddleware,thunk];
 
   const store = createStore(
-    combineReducers(reducers),
+    createRootReducer(history),
     initialState,
     compose(applyMiddleware(...middlewares))
   );
@@ -45,14 +43,15 @@ function configureStoreProd(initialState) {
 }
 
 function configureStoreDev(initialState) {
+  const reactRouterMiddleware = routerMiddleware(history);
   const loggerMiddleware = createLogger();
 
-  const middlewares = [thunk, loggerMiddleware];
+  const middlewares = [reactRouterMiddleware, thunk, loggerMiddleware];
 
   const composeEnhancers =
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // add support for Redux dev tools
   const store = createStore(
-    combineReducers(reducers),
+    createRootReducer(history),
     initialState,
     composeEnhancers(applyMiddleware(...middlewares))
   );
