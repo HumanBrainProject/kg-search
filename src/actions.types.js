@@ -38,6 +38,8 @@ export const SET_SEARCH_READY = "SET_SEARCH_READY";
 export const SET_QUERY_STRING = "SET_QUERY_STRING";
 export const SET_TYPE = "SET_TYPE";
 export const SET_SORT = "SET_SORT";
+export const SET_FACET = "SET_FACET";
+export const RESET_FACETS = "RESET_FACETS";
 
 export const LOAD_SEARCH = "LOAD_SEARCH";
 export const LOAD_SEARCH_REQUEST = "LOAD_SEARCH_REQUEST";

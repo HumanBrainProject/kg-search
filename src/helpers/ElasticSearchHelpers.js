@@ -255,15 +255,15 @@ export class ElasticSearchHelpers {
     return Object.values(sortFields);
   };
 
-  static constructFacets = (definition, selectedType) => {
+  static constructFacets = definition => {
     const facets = [];
     Object.entries(definition).forEach(([type, typeDefinition]) => {
-      const isMatchingSelectedType = selectedType === type;
       Object.entries(typeDefinition.fields).forEach(([name, field]) => {
         if (field.facet) {
           facets.push({
             id: "facet_" + type + "_" + name,
             name: name,
+            type: type,
             facet: {
               filterType: field.facet,
               filterOrder: field.facetOrder,
@@ -275,7 +275,6 @@ export class ElasticSearchHelpers {
               value: null
             },
             keywords: [],
-            visible: isMatchingSelectedType,
             size:10
           });
         }
@@ -285,6 +284,7 @@ export class ElasticSearchHelpers {
               facets.push({
                 id: "facet_" + type + "_" + name + ".children." + childName,
                 name: name,
+                type: type,
                 facet:  {
                   filterType: child.facet,
                   filterOrder: child.facetOrder,
@@ -298,7 +298,6 @@ export class ElasticSearchHelpers {
                   value: null
                 },
                 keywords: [],
-                visible: isMatchingSelectedType,
                 size: 10
               });
             }
@@ -437,22 +436,18 @@ export class ElasticSearchHelpers {
       const filters = {};
 
       facets.forEach(facet => {
-        if (facet.facet.filterType !== "_type") {
-          facet.facet.value = false; // TODO: remove this line
+        let filter = null;
+        const facetKey = facet.facet.isChild ? `${facet.name}.${facet.facet.childName}.value.keyword`:`${facet.name}.value.keyword`;
+        switch (facet.facet.filterType) {
+        case "_type": {
+          filter = {
+            term: {}
+          };
+          filter.term[facet.name] = facet.facet.value;
+          break;
         }
-        if (facet.facet.value) {
-          let filter = null;
-          const facetKey = facet.facet.isChild ? `${facet.name}.${facet.facet.childName}.value.keyword`:`${facet.name}.value.keyword`;
-          switch (facet.facet.filterType) {
-          case "_type": {
-            filter = {
-              term: {}
-            };
-            filter.term[facet.name] = facet.facet.value;
-            break;
-          }
-          case "list": {
-            facet.facet.value = ["foo"]; // TODO: remove this line
+        case "list": {
+          if (Array.isArray(facet.facet.value) && facet.facet.value.length) {
             if(facet.facet.exclusiveSelection === false) { // OR
               if (facet.facet.value.length > 1) {
                 filter = {
@@ -484,30 +479,46 @@ export class ElasticSearchHelpers {
                 });
               });
             }
-            break;
           }
-          case "exists": {
-            filter = {
-              exists: {
-                field: facetKey
-              }
-            };
-            break;
-          }
-          default:
-            break;
-          }
-          if (filter) {
-            filters[facet.id] = filter;
-          }
+          break;
+        }
+        case "exists": {
+          filter = {
+            exists: {
+              field: facetKey
+            }
+          };
+          break;
+        }
+        default:
+          break;
+        }
+        if (filter) {
+          filters[facet.id] = {
+            filterType: facet.facet.filterType,
+            active: !!facet.facet.value,
+            filter: filter
+          };
         }
       });
       return filters;
     };
 
     const setFilters = (filters, key) => {
-      const filtered = key?Object.entries(filters).filter(([id,]) => id !== key):Object.entries(filters);
-      const res = filtered.reduce((acc, [, filter]) => {
+      const filtered = Object.entries(filters).filter(([id, {filterType, active}]) => {
+        switch (filterType) {
+        case "exists":
+          if (id === key) {
+            return true;
+          }
+          return active && id !== key;
+        case "_type":
+        case "list":
+        default:
+          return active && id !== key;
+        }
+      });
+      const res = filtered.reduce((acc, [, { filter }]) => {
         if (Array.isArray(filter)) {
           acc.push(...filter);
         } else {

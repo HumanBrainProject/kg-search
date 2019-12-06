@@ -22,7 +22,6 @@ const initialState = {
   queryFields: ["title", "description"],
   facets: [],
   types: [],
-  hasFilters: false,
   sort: null,
   sortFields: [],
   facetTypesOrder: {},
@@ -52,7 +51,7 @@ const setupSearch = (state, action) => {
     const sort = sortFields.length?sortFields[0]:null;
     const facetTypesOrder = ElasticSearchHelpers.getFacetTypesOrder(definition);
     const selectedType = ElasticSearchHelpers.getDefaultSelectedType(definition, facetTypesOrder);
-    const facets = ElasticSearchHelpers.constructFacets(definition, selectedType);
+    const facets = ElasticSearchHelpers.constructFacets(definition);
     const types = Object.entries(definition).map(([type, typeDefinition]) => ({
       type: type,
       label: typeDefinition.name,
@@ -60,14 +59,11 @@ const setupSearch = (state, action) => {
       active: type === selectedType,
       visible: true
     }));
-    const hasFilters = facets.some(f => f.visible);
-
     return {
       ...state,
       queryFields: queryValuesBoost,
       facets: facets,
       types: types,
-      hasFilters: hasFilters,
       sort: sort,
       sortFields: sortFields,
       facetTypesOrder: facetTypesOrder,
@@ -94,17 +90,49 @@ const setQueryString = (state, action) => {
 const getUpdatedTypes = (types, selectedType) => {
   return Array.isArray(types)?types.map(type => {
     if(type.type === selectedType) {
-      const obj = Object.assign({}, type);
+      const obj = {...type};
       obj.active = true;
       return obj;
     } else if(type.active) {
-      const obj = Object.assign({}, type);
+      const obj = {...type};
       obj.active = false;
       return obj;
     }
     return type;
   }):[];
 };
+
+const setFacet = (state, action) => {
+  return {
+    ...state,
+    facets: state.facets.map(f => {
+      if (f.name !== action.name) {
+        return f;
+      }
+      if (!action.keyword) {
+        return {...f, facet: {...f.facet, value: action.active}};
+      }
+      const facet = {...f};
+      if (action.active) {
+        const values = Array.isArray(facet.facet.value)?facet.facet.value:[];
+        if (!values.includes(action.keyword)) {
+          values.push(action.keyword);
+        }
+        facet.facet.value = values;
+      } else {
+        if (Array.isArray(facet.facet.value)) {
+          facet.facet.value = facet.facet.value.filter(value => value !== action.keyword);
+        }
+      }
+      return facet;
+    })
+  };
+};
+
+const resetFacets = state => ({
+  ...state,
+  facets: state.facets.map(f => ({...f, facet: {...f.facet, value: null}}))
+});
 
 const setSort = (state, action) => {
   const match = state.sortFields.filter(f => f.key === action.value);
@@ -212,7 +240,7 @@ const loadSearchResult = (state, action) => {
     };
     const aggs = (results && results.aggregations)?results.aggregations:{};
     return facets.map(f => {
-      const facet = Object.assign({}, f);
+      const facet = {...f};
       const res = aggs[facet.id];
       if (facet.facet.filterType === "list") {
         facet.keywords = getKeywords(facet.facet.isChild?(res?res.inner:null):res, facet.name);
@@ -220,7 +248,6 @@ const loadSearchResult = (state, action) => {
       }
       const count = (res && res.doc_count)?res.doc_count:0;
       facet.facet.count = count;
-      facet.visible = count > 0;
       return facet;
     });
   };
@@ -232,13 +259,13 @@ const loadSearchResult = (state, action) => {
       return acc;
     }, {});
     return types.map(type => {
-      const res = Object.assign({}, type);
+      const res = {...type};
       const count = counts[res.type]?counts[res.type]:0;
       res.count = count;
       res.visible = count > 0 || res.type === selectedType;
       return res;
     });
-  }
+  };
 
   return {
     ...state,
@@ -275,6 +302,10 @@ export function reducer(state = initialState, action = {}) {
     return setType(state, action);
   case types.SET_SORT:
     return setSort(state, action);
+  case types.SET_FACET:
+    return setFacet(state, action);
+  case types.RESET_FACETS:
+    return resetFacets(state, action);
   case types.SET_SEARCH_READY:
     return setSearchReady(state, action);
   case types.SET_GROUP:

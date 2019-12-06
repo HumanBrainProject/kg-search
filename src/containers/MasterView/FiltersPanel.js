@@ -15,74 +15,76 @@
 */
 
 import React from "react";
-import { SearchkitComponent } from "searchkit";
 import { connect } from "react-redux";
+import * as actions from "../../actions";
 import { Facet } from "./Facet";
+import { ElasticSearchHelpers } from "../../helpers/ElasticSearchHelpers";
+
 import "./FiltersPanel.css";
 
-export const FiltersPanelBase = ({className, show, hasFilters, facets, facetComponent, onReset}) => {
-  if (!show) {
-    return null;
-  }
-  const classNames = ["kgs-filters", className].join(" ");
-  const Facet = facetComponent;
-  return (
-    <div className={classNames}>
-      <span>
-        <div className="kgs-filters__header">
-          <div className="kgs-filters__title">Filters</div>
-          {hasFilters && (
-            <div className="kgs-filters__reset"><button type="button" className="kgs-filters__reset-button" onClick={onReset}>Reset</button></div>
-          )}
-        </div>
-        <span>
-          {facets.map(f => (
-            <Facet key={f.id} id={f.id} name={f.name} facet={f.facet} visible={f.visible} />
-          ))}
-        </span>
-        {!hasFilters && (
-          <span className="kgs-filters__no-filters">No filters available for your current search.</span>
-        )}
-      </span>
-    </div>
-  );
-};
+class FiltersPanelBase extends React.Component {
 
-export class FiltersPanel extends SearchkitComponent {
-  onReset = () => {
-    const allFilters = this.searchkit.query && this.searchkit.query.getSelectedFilters();
-    const filters = allFilters?
-      allFilters.filter(filter => filter.id !== "facet_type")
-      :
-      [];
-    const accessorsIds = Object.values(filters.reduce((res, filter) => {
-      res[filter.id] = filter.id;
-      return res;
-    }, {}));
-    accessorsIds
-      .forEach(id => {
-        const accessor = this.searchkit.accessors.statefulAccessors[id];
-        accessor && accessor.resetState();
-      });
-    filters.forEach(filter => filter.remove());
-    this.searchkit.reloadSearch();
+  componentDidUpdate(prevProps) {
+    if (this.props.values !== prevProps.values) {
+      this.performSearch();
+    }
   }
+
+  performSearch = () => {
+    const { searchParams, onSearch, group, searchApiHost } = this.props;
+    onSearch(searchParams, group, searchApiHost);
+  }
+
   render() {
+    const {className, show, facets, onChange, onReset } = this.props;
+
+    if (!show) {
+      return null;
+    }
+
+    const hasFilters = facets.length > 0;
+
     return (
-      <FiltersPanelContainer searchkit={this.searchkit} onReset={this.onReset} {...this.props} />
+      <div className={`kgs-filters ${className?className:""}`}>
+        <span>
+          <div className="kgs-filters__header">
+            <div className="kgs-filters__title">Filters</div>
+            {hasFilters && (
+              <div className="kgs-filters__reset"><button type="button" className="kgs-filters__reset-button" onClick={onReset}>Reset</button></div>
+            )}
+          </div>
+          <span>
+            {facets.map(facet => (
+              <Facet key={facet.id} facet={facet} onChange={onChange} />
+            ))}
+          </span>
+          {!hasFilters && (
+            <span className="kgs-filters__no-filters">No filters available for your current search.</span>
+          )}
+        </span>
+      </div>
     );
   }
 }
 
-const FiltersPanelContainer = connect(
-  (state, props) => {
+export const FiltersPanel = connect(
+  state => {
+    const facets = state.search.facets.filter(f => state.search.selectedType === f.type && f.facet.count > 0);
     return {
-      type: state.search.type,
       show: state.definition.isReady && state.search.facets.length > 0,
-      hasFilters: state.search.hasFilters,
-      facets: state.search.facets,
-      facetComponent: Facet,
-      onReset: props.onReset
+      facets: facets,
+      values: state.search.facets.reduce((acc, facet) => {
+        acc += Array.isArray(facet.facet.value)?facet.facet.value.toString():facet.facet.value;
+        return acc;
+      }, ""),
+      searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
+      group: state.search.group,
+      searchApiHost: state.configuration.searchApiHost
     };
-  }
+  },
+  dispatch => ({
+    onChange: (name, active, keyword) => dispatch(actions.setFacet(name, active, keyword)),
+    onReset: () => dispatch(actions.resetFacets()),
+    onSearch: (searchParams, group, searchApiHost) => dispatch(actions.doSearch(searchParams, group, searchApiHost))
+  })
 )(FiltersPanelBase);

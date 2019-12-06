@@ -378,6 +378,21 @@ export const setSort = value => {
   };
 };
 
+export const setFacet = (name, active, keyword) => {
+  return {
+    type: types.SET_FACET,
+    name: name,
+    active: active,
+    keyword: keyword,
+  };
+};
+
+export const resetFacets = () => {
+  return {
+    type: types.RESET_FACETS
+  };
+};
+
 export const doSearch = (searchParams, group, searchApiHost) => {
   return dispatch => {
     dispatch(loadSearchRequest());
