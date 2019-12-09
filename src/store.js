@@ -67,9 +67,8 @@ function configureStoreDev(initialState) {
   return store;
 }
 
-// const configureStore =
-//   process.env.NODE_ENV === "production"
-//     ? configureStoreProd
-//     : configureStoreDev;
-const configureStore = configureStoreDev;
+const configureStore =
+  process.env.NODE_ENV === "production"
+    ? configureStoreProd
+    : configureStoreDev;
 export const store = configureStore();

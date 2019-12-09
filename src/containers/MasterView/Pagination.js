@@ -15,7 +15,6 @@
 */
 
 import React, { PureComponent } from "react";
-import { Pagination as Component } from "searchkit";
 import { windowWidth } from "../../helpers/BrowserHelpers";
 import { TabNavEnabler } from "../../helpers/TabNavEnabler";
 import "./Pagination.css";
@@ -23,7 +22,7 @@ import "./Pagination.css";
 export function PaginationComponent({pageScope, className}) {
   return (
     <TabNavEnabler className={`kgs-paging ${className?className:""}`} containerSelector={className?("." + className):".kgs-paging"} itemSelector={".sk-toggle-option"} activeItemSelector={".is-active"} disabledItemSelector={".is-disabled"} >
-      <Component showNumbers={true} pageScope={pageScope} showLast={false} translations={{"pagination.previous": " ", "pagination.next": " "}}/>
+      {/* <Component showNumbers={true} pageScope={pageScope} showLast={false} translations={{"pagination.previous": " ", "pagination.next": " "}}/> */}
     </TabNavEnabler>
   );
 }
