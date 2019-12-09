@@ -1,24 +1,31 @@
 /*
-*   Copyright (c) 2018, EPFL/Human Brain Project PCO
-*
-*   Licensed under the Apache License, Version 2.0 (the "License");
-*   you may not use this file except in compliance with the License.
-*   You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-*
-*   Unless required by applicable law or agreed to in writing, software
-*   distributed under the License is distributed on an "AS IS" BASIS,
-*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*   See the License for the specific language governing permissions and
-*   limitations under the License.
-*/
+ *   Copyright (c) 2018, EPFL/Human Brain Project PCO
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 
 import * as actions from "../actions";
 import API from "./API";
-import { SearchkitManager, BaseQueryAccessor } from "searchkit";
-import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
-import { generateKey } from "../helpers/OIDCHelpers";
+import {
+  SearchkitManager,
+  BaseQueryAccessor
+} from "searchkit";
+import {
+  ElasticSearchHelpers
+} from "../helpers/ElasticSearchHelpers";
+import {
+  generateKey
+} from "../helpers/OIDCHelpers";
 import ReactPiwik from "react-piwik";
 
 
@@ -30,10 +37,17 @@ export default class SearchManager {
     this.searchInterfaceIsDisabled = !!searchInterfaceIsDisabled;
     this.searchkit = null;
     this.store = store;
-    store.subscribe(() => { this.handleStateChange(); });
+    store.subscribe(() => {
+      this.handleStateChange();
+    });
     this.fromParamRequest = 0;
   }
-  initializeSearchKit({ searchApiHost = "", timeout = 5000, queryTweaking, searchOnLoad }) {
+  initializeSearchKit({
+    searchApiHost = "",
+    timeout = 5000,
+    queryTweaking,
+    searchOnLoad
+  }) {
 
     const store = this.store;
 
@@ -67,7 +81,11 @@ export default class SearchManager {
 
     this.searchkit.transport.axios.interceptors.response.use(response => {
       //const {config, data, headers, request, status, statusText} = response;
-      const { data, headers } = response; const reg = /^kg_(.*)$/;
+      const {
+        data,
+        headers
+      } = response;
+      const reg = /^kg_(.*)$/;
       const state = this.store && this.store.getState();
       const [, group] = reg.test(headers["x-selected-group"]) ? headers["x-selected-group"].match(reg) : [null, state.search.group];
       let order = null;
@@ -108,9 +126,14 @@ export default class SearchManager {
       return response;
     }, error => {
       //const {config, request, response} = error;
-      const { response } = error;
+      const {
+        response
+      } = error;
       // const {config, data, headers, request, status, statusText} = response;
-      const { config, status } = response;
+      const {
+        config,
+        status
+      } = response;
       const headers = config.headers;
       const nonce = headers.nonce;
       const state = store.getState();
@@ -125,7 +148,8 @@ export default class SearchManager {
         case 511: // Network Authentication Required
           store.dispatch(actions.loadSearchSessionFailure(status));
           break;
-        default: {
+        default:
+        {
           store.dispatch(actions.loadSearchServiceFailure(status, state.search.group));
         }
         }
@@ -137,138 +161,135 @@ export default class SearchManager {
     const queryProcessorFunction = ElasticSearchHelpers.getQueryProcessor(this.searchkit, queryTweaking, store);
     this.searchkit.setQueryProcessor(queryProcessorFunction);
   }
-  handleStateChange = () => {
-    const store = this.store;
-    const state = store.getState();
+    handleStateChange = () => {
+      const store = this.store;
+      const state = store.getState();
 
-    if (state.configuration.isReady && !state.search.isReady) {
-      if (!this.searchInterfaceIsDisabled) {
-        this.initializeSearchKit(state.configuration);
+      if (state.configuration.isReady && !state.search.isReady) {
+        if (!this.searchInterfaceIsDisabled) {
+          this.initializeSearchKit(state.configuration);
+        }
+        store.dispatch(actions.setSearchReady(true));
+        return;
       }
-      store.dispatch(actions.setSearchReady(true));
-      return;
-    }
 
-    if (state.search.group && this.groupAccessor && state.search.group !== this.groupAccessor.getQueryString()) {
-      this.groupAccessor.setQueryString(state.search.group === API.defaultGroup ? null : state.search.group);
-    }
+      if (state.search.group && this.groupAccessor && state.search.group !== this.groupAccessor.getQueryString()) {
+        this.groupAccessor.setQueryString(state.search.group === API.defaultGroup ? null : state.search.group);
+      }
 
-    if (state.search.hasRequest) {
-      this.reloadSearch();
+      if (state.groups.hasRequest) {
+        this.loadGroups();
+      }
+      if (state.instances.hasRequest) {
+        this.loadInstance(state.instances.requestReference);
+      }
     }
-    if (state.groups.hasRequest) {
-      this.loadGroups();
+    loadGroups() {
+      const store = this.store;
+      const state = store.getState();
+      if (!state.groups.isReady && !state.groups.isLoading) {
+        setTimeout(() => {
+          store.dispatch(actions.loadGroupsRequest());
+          if (state.auth.accessToken) {
+            const options = {
+              method: "get",
+              headers: new Headers({
+                "Authorization": "Bearer " + state.auth.accessToken
+              })
+            };
+            API.fetch(API.endpoints.groups(state.configuration.searchApiHost), options)
+              .then(groups => {
+                store.dispatch(actions.loadGroupsSuccess(groups));
+              })
+              .catch(error => {
+                store.dispatch(actions.loadGroupsFailure(error));
+              });
+          } else {
+            store.dispatch(actions.loadGroupsSuccess([]));
+          }
+        });
+      }
     }
-    if (state.instances.hasRequest) {
-      this.loadInstance(state.instances.requestReference);
-    }
-  }
-  loadGroups() {
-    const store = this.store;
-    const state = store.getState();
-    if (!state.groups.isReady && !state.groups.isLoading) {
-      setTimeout(() => {
-        store.dispatch(actions.loadGroupsRequest());
-        if (state.auth.accessToken) {
-          const options = {
-            method: "get",
-            headers: new Headers({
-              "Authorization": "Bearer " + state.auth.accessToken
-            })
-          };
-          API.fetch(API.endpoints.groups(state.configuration.searchApiHost), options)
-            .then(groups => {
-              store.dispatch(actions.loadGroupsSuccess(groups));
+    _loadPreview(reference) {
+      const store = this.store;
+      const state = store.getState();
+      if (!state.instances.isLoading) {
+        setTimeout(() => {
+          store.dispatch(actions.loadInstanceRequest());
+          let options = null;
+          if (state.auth.accessToken) {
+            options = {
+              method: "get",
+              headers: new Headers({
+                "Authorization": "Bearer " + state.auth.accessToken
+              })
+            };
+          }
+          const [, , path, , , , , id] = reference.match(regPreviewReference);
+          API.fetch(API.endpoints.preview(state.configuration.searchApiHost, path, id), options)
+            .then(data => {
+              if (data && !data.error) {
+                data._id = reference;
+                //data._source = data._source instanceof Array?(data._source.length >= 1?data._source[0]:{}):data._source;
+                store.dispatch(actions.loadInstanceSuccess(data));
+              } else if (data && data.error) {
+                store.dispatch(actions.loadInstanceFailure(reference, data.message ? data.message : data.error));
+              } else {
+                store.dispatch(actions.loadInstanceNoData(reference));
+              }
             })
             .catch(error => {
-              store.dispatch(actions.loadGroupsFailure(error));
+              if (error.stack === "SyntaxError: Unexpected end of JSON input" || error.message === "Unexpected end of JSON input") {
+                store.dispatch(actions.loadInstanceNoData(reference));
+              } else {
+                store.dispatch(actions.loadInstanceFailure(reference, error));
+              }
             });
-        } else {
-          store.dispatch(actions.loadGroupsSuccess([]));
-        }
-      });
+        });
+      }
     }
-  }
-  _loadPreview(reference) {
-    const store = this.store;
-    const state = store.getState();
-    if (!state.instances.isLoading) {
-      setTimeout(() => {
-        store.dispatch(actions.loadInstanceRequest());
-        let options = null;
-        if (state.auth.accessToken) {
-          options = {
-            method: "get",
-            headers: new Headers({
-              "Authorization": "Bearer " + state.auth.accessToken
-            })
-          };
-        }
-        const [, , path, , , , , id] = reference.match(regPreviewReference);
-        API.fetch(API.endpoints.preview(state.configuration.searchApiHost, path, id), options)
-          .then(data => {
-            if (data && !data.error) {
-              data._id = reference;
-              //data._source = data._source instanceof Array?(data._source.length >= 1?data._source[0]:{}):data._source;
-              store.dispatch(actions.loadInstanceSuccess(data));
-            } else if (data && data.error) {
-              store.dispatch(actions.loadInstanceFailure(reference, data.message ? data.message : data.error));
-            } else {
-              store.dispatch(actions.loadInstanceNoData(reference));
-            }
-          })
-          .catch(error => {
-            if (error.stack === "SyntaxError: Unexpected end of JSON input" || error.message === "Unexpected end of JSON input") {
-              store.dispatch(actions.loadInstanceNoData(reference));
-            } else {
-              store.dispatch(actions.loadInstanceFailure(reference, error));
-            }
-          });
-      });
-    }
-  }
-  _loadReference(reference) {
-    const store = this.store;
-    const state = store.getState();
-    if (!state.instances.isLoading) {
-      setTimeout(() => {
-        store.dispatch(actions.loadInstanceRequest());
-        let options = null;
-        if (state.auth.accessToken) {
-          options = {
-            method: "get",
-            headers: new Headers({
-              "Authorization": "Bearer " + state.auth.accessToken,
-              "index-hint": state.search.group
-            })
-          };
-        }
-        API.fetch(API.endpoints.instance(state.configuration.searchApiHost, reference), options)
-          .then(data => {
-            if (data.found) {
-              store.dispatch(actions.loadInstanceSuccess(data));
-            } else {
-              store.dispatch(actions.loadInstanceNoData(reference));
-            }
-          })
-          .catch(error => {
-            store.dispatch(actions.loadInstanceFailure(reference, error));
-          });
-      });
-    }
-  }
-  loadInstance(reference) {
-    //window.console.debug("SearchManager loadInstance: " + reference);
-    if (regPreviewReference.test(reference)) {
-      this._loadPreview(reference);
-    } else if (regReference.test(reference)) {
-      this._loadReference(reference);
-    } else {
+    _loadReference(reference) {
       const store = this.store;
-      store.dispatch(actions.loadInstanceNoData(reference));
+      const state = store.getState();
+      if (!state.instances.isLoading) {
+        setTimeout(() => {
+          store.dispatch(actions.loadInstanceRequest());
+          let options = null;
+          if (state.auth.accessToken) {
+            options = {
+              method: "get",
+              headers: new Headers({
+                "Authorization": "Bearer " + state.auth.accessToken,
+                "index-hint": state.search.group
+              })
+            };
+          }
+          API.fetch(API.endpoints.instance(state.configuration.searchApiHost, reference), options)
+            .then(data => {
+              if (data.found) {
+                store.dispatch(actions.loadInstanceSuccess(data));
+              } else {
+                store.dispatch(actions.loadInstanceNoData(reference));
+              }
+            })
+            .catch(error => {
+              store.dispatch(actions.loadInstanceFailure(reference, error));
+            });
+        });
+      }
     }
-  }
-  reloadSearch() {
-    this.searchkit && this.searchkit.reloadSearch();
-  }
+    loadInstance(reference) {
+      //window.console.debug("SearchManager loadInstance: " + reference);
+      if (regPreviewReference.test(reference)) {
+        this._loadPreview(reference);
+      } else if (regReference.test(reference)) {
+        this._loadReference(reference);
+      } else {
+        const store = this.store;
+        store.dispatch(actions.loadInstanceNoData(reference));
+      }
+    }
+    reloadSearch() {
+      this.searchkit && this.searchkit.reloadSearch();
+    }
 }
