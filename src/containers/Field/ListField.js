@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
+import React from "react";
 import { ObjectField, PrintViewObjectField } from "./ObjectField";
 import { ValueField, PrintViewValueField } from "./ValueField";
 import { LIST_SMALL_SIZE_STOP,
@@ -87,7 +87,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
     );
   };
 
-  class ListField extends PureComponent {
+  class ListField extends React.Component {
     constructor(props) {
       super(props);
       const sizeStop = getNextSizeStop(Number.POSITIVE_INFINITY, this.props);

@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
+import React from "react";
 import uniqueId from "lodash/uniqueId";
 import { windowHeight } from "../helpers/BrowserHelpers";
 
@@ -25,7 +25,7 @@ export const withFloatingScrollEventsSubscription = (floatingPosition, relatedEl
   floatingPosition = floatingPosition?floatingPosition.toLowerCase():null;
   relatedElements = Array.isArray(relatedElements)?relatedElements:[];
 
-  class withEvents extends PureComponent {
+  class withEvents extends React.Component {
     constructor(props) {
       super(props);
       this.eventId = uniqueId("kgs-");

@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
+import React from "react";
 import { Field, PrintViewField } from "../Field";
 import { ValueField } from "../Field/ValueField";
 import { LIST_SMALL_SIZE_STOP,
@@ -102,7 +102,7 @@ const TableFieldBase = (renderUserInteractions = true) => {
     );
   };
 
-  class TableField extends PureComponent {
+  class TableField extends React.Component {
     constructor(props) {
       super(props);
       const sizeStop = getNextSizeStop(Number.POSITIVE_INFINITY, this.props);

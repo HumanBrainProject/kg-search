@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
+import React from "react";
 import "./Thumbnail.css";
 
 const getImage = url => {
@@ -33,7 +33,7 @@ const getImage = url => {
   });
 };
 
-export class Thumbnail extends PureComponent {
+export class Thumbnail extends React.Component {
   constructor(props) {
     super(props);
     this.state = { src: null, show: false, fetched: false, error: false };

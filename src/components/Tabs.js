@@ -13,7 +13,7 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-import React, { PureComponent } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { Hint } from "./Hint";
 import "./Tabs.css";
@@ -32,7 +32,7 @@ const Tab = ({tab, active, onClick}) => {
   );
 };
 
-export class Tabs extends PureComponent {
+export class Tabs extends React.Component {
   constructor(props) {
     super(props);
     const {tabs} = props;
