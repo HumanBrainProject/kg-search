@@ -181,12 +181,6 @@ export const loadDefinitionFailure = error => {
   };
 };
 
-export const loadGroups = () => {
-  return {
-    type: types.LOAD_GROUPS
-  };
-};
-
 export const loadGroupsRequest = () => {
   return {
     type: types.LOAD_GROUPS_REQUEST
@@ -423,6 +417,77 @@ export const doSearch = (searchParams, group, searchApiHost) => {
           const index = response.headers["X-Selected-Index"];
           dispatch(loadSearchServiceFailure(status, index ? index.slice(3) : group));
         }
+        }
+      });
+  };
+};
+
+export const loadGroups = (groups, token, searchApiHost) => {
+  return dispatch => {
+    if (!groups.isReady && !groups.isLoading) {
+      dispatch(loadGroupsRequest());
+      axios
+        .get(API.endpoints.groups(searchApiHost))
+        .then(response => {
+          dispatch(loadGroupsSuccess(response.groups));
+        })
+        .catch(error => {
+          dispatch(loadGroupsFailure(error));
+        });
+      // dispatch(loadGroupsSuccess([]));// TODO: check if we need that if(!token)
+    }
+  };
+};
+
+export const loadReference = (reference, token, group, searchApiHost) => {
+  return dispatch => {
+    dispatch(loadInstanceRequest());
+    let options = null;
+    if (token) {
+      options = {
+        headers: new Headers({
+          "index-hint": group
+        })
+      };
+    }
+    axios
+      .get(API.endpoints.instance(searchApiHost, reference), options)
+      .then(response => {
+        if (response.data.found) {
+          dispatch(loadInstanceSuccess(response.data));
+        } else {
+          dispatch(loadInstanceNoData(reference));
+        }
+      })
+      .catch(error => {
+        dispatch(loadInstanceFailure(reference, error));
+      });
+  };
+};
+
+
+export const loadPreview = (reference, token, searchApiHost) => {
+  return dispatch => {
+    dispatch(loadInstanceRequest());
+    const path = ""; //TODO: fetch from the router
+    const id = ""; //TODO: fetch from the router
+    axios
+      .get(API.endpoints.preview(searchApiHost, path, id))
+      .then(response => {
+        if (response.data && !response.data.error) {
+          response.data._id = reference;
+          dispatch(loadInstanceSuccess(response.data));
+        } else if (response.data && response.data.error) {
+          dispatch(loadInstanceFailure(reference, response.data.message ? response.data.message : response.data.error));
+        } else {
+          dispatch(loadInstanceNoData(reference));
+        }
+      })
+      .catch(error => {
+        if (error.stack === "SyntaxError: Unexpected end of JSON input" || error.message === "Unexpected end of JSON input") {
+          dispatch(loadInstanceNoData(reference));
+        } else {
+          dispatch(loadInstanceFailure(reference, error));
         }
       });
   };

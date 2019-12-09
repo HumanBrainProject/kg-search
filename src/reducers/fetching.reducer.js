@@ -46,7 +46,6 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_DEFINITION:
   case types.LOAD_DEFINITION_SUCCESS:
   case types.LOAD_DEFINITION_FAILURE:
-  case types.LOAD_GROUPS:
   case types.LOAD_GROUPS_SUCCESS:
   case types.LOAD_GROUPS_FAILURE:
   case types.LOAD_SEARCH_SUCCESS:

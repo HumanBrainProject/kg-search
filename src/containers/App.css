@@ -14,10 +14,6 @@
 *   limitations under the License.
 */
 
-@import url('../../node_modules/searchkit/release/theme.css');
-/* No date range filter: package removed for now */
-/* @import url('../../node_modules/searchkit-datefilter/release/theme.css'); */
-
 .kgs-app {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;

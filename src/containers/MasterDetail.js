@@ -17,7 +17,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withTabKeyNavigation } from "../helpers/withTabKeyNavigation";
-import { SearchkitProvider } from "searchkit";
 import { MasterView } from "./MasterView";
 import { DetailView } from "./DetailView";
 
@@ -35,12 +34,9 @@ const MasterDetailBase = ({show, manager}) => {
     );
   }
 
-  //window.console.debug("MasterDetail rendering...");
   return (
     <React.Fragment>
-      <SearchkitProvider searchkit={manager.searchkit}>
-        <MasterView />
-      </SearchkitProvider>
+      <MasterView />
       <DetailView/>
     </React.Fragment>
   );

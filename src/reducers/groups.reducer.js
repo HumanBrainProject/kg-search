@@ -17,58 +17,51 @@
 import * as types from "../actions.types";
 
 const initialState = {
-    isReady: false,
-    hasRequest: false,
-    isLoading: false,
-    hasError: false,
-    groups: []
+  isReady: false,
+  hasRequest: false,
+  isLoading: false,
+  hasError: false,
+  groups: []
 };
 
-const loadGroups = state => ({
-    ...state,
-    hasRequest: true,
-    isLoading: false,
-    hasError: false
-});
-
-const loadGroupsRequest = state => ({
+const loadGroupsRequest = state => {
+  return {
     ...state,
     hasRequest: false,
     isLoading: true,
     hasError: false
-});
+  };
+};
 
 const loadGroupsSuccess = (state, action) => ({
-    ...state,
-    isReady: true,
-    hasRequest: false,
-    isLoading: false,
-    hasError: false,
-    groups: (action.groups instanceof Array) ? [...action.groups.map(e => ({ label: e.name, value: e.name }))] : []
+  ...state,
+  isReady: true,
+  hasRequest: false,
+  isLoading: false,
+  hasError: false,
+  groups: (action.groups instanceof Array) ? [...action.groups.map(e => ({ label: e.name, value: e.name }))] : []
 });
 
 const loadGroupsFailure = state => ({
-    ...state,
-    isReady: false,
-    hasRequest: false,
-    isLoading: false,
-    hasError: true,
-    groups: []
+  ...state,
+  isReady: false,
+  hasRequest: false,
+  isLoading: false,
+  hasError: true,
+  groups: []
 });
 
 export function reducer(state = initialState, action = {}) {
-    switch (action.type) {
-        case types.LOAD_GROUPS:
-            return loadGroups(state, action);
-        case types.LOAD_GROUPS_REQUEST:
-            return loadGroupsRequest(state, action);
-        case types.LOAD_GROUPS_SUCCESS:
-            return loadGroupsSuccess(state, action);
-        case types.LOAD_GROUPS_FAILURE:
-            return loadGroupsFailure(state, action);
-        case types.LOGOUT:
-            return loadGroupsSuccess(state, { groups: [] });
-        default:
-            return state;
-    }
+  switch (action.type) {
+  case types.LOAD_GROUPS_REQUEST:
+    return loadGroupsRequest(state, action);
+  case types.LOAD_GROUPS_SUCCESS:
+    return loadGroupsSuccess(state, action);
+  case types.LOAD_GROUPS_FAILURE:
+    return loadGroupsFailure(state, action);
+  case types.LOGOUT:
+    return loadGroupsSuccess(state, {groups: []});
+  default:
+    return state;
+  }
 }

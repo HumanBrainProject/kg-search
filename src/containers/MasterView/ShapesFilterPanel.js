@@ -22,27 +22,23 @@ import "./ShapesFilterPanel.css";
 import { ElasticSearchHelpers } from "../../helpers/ElasticSearchHelpers";
 
 // {itemKey, label, count, rawCount, listDocCount, active, disabled, showCount, bemBlocks, onClick}
-const ShapeFilterBase = ({ type: { type, label, count, active, disabled }, onClick }) => ( <
-    div className = { `kgs-fieldsFilter__shape${active ? " is-active" : ""}${disabled ? " is-disabled" : ""}` } >
-    <
-    button onClick = { onClick }
-    className = "kgs-fieldsFilter__button"
-    disabled = { disabled || active } >
-    <
-    div >
-    <
-    div className = "kgs-fieldsFilter__icon" >
-    <
-    ShapeIcon label = { label }
-    shape = { type }
-    active = { active }
-    /> <
-    /div> <
-    div className = "kgs-fieldsFilter__label" > { label } < /div> <
-    div className = "kgs-fieldsFilter__count" > { `${count ? count : 0} ${count && count > 1 ? "Results" : "Result"}` } < /div> <
-    /div> <
-    /button> <
-    /div>
+const ShapeFilterBase = ({ type: { type, label, count, active, disabled }, onClick }) => (
+  <div className = { `kgs-fieldsFilter__shape${active ? " is-active" : ""}${disabled ? " is-disabled" : ""}` } >
+    <button onClick = { onClick }
+      className = "kgs-fieldsFilter__button"
+      disabled = { disabled || active } >
+      <div >
+        <div className = "kgs-fieldsFilter__icon" >
+          <ShapeIcon label = { label }
+            shape = { type }
+            active = { active }
+          />
+        </div>
+        <div className = "kgs-fieldsFilter__label" > { label } </div>
+        <div className = "kgs-fieldsFilter__count" > { `${count ? count : 0} ${count && count > 1 ? "Results" : "Result"}` } </div>
+      </div>
+    </button>
+  </div>
 );
 
 class ShapeFilter extends React.Component {
@@ -50,59 +46,58 @@ class ShapeFilter extends React.Component {
     onClick = () => this.props.onClick(this.props.type.type);
 
     render() {
-        return ( <
-            ShapeFilterBase type = { this.props.type }
-            onClick = { this.onClick }
-            />
-        );
+      return ( <ShapeFilterBase type = { this.props.type }
+        onClick = { this.onClick }
+      />
+      );
     }
 }
 
 class ShapesFilterPanelBase extends React.Component {
 
-    componentDidUpdate(prevProps) {
-        if (this.props.selectedType !== prevProps.selectedType) {
-            this.performSearch();
-        }
+  componentDidUpdate(prevProps) {
+    if (this.props.selectedType !== prevProps.selectedType) {
+      this.performSearch();
     }
+  }
 
     performSearch = () => {
-        const { searchParams, onSearch, group, searchApiHost } = this.props;
-        onSearch(searchParams, group, searchApiHost);
+      const { searchParams, onSearch, group, searchApiHost } = this.props;
+      onSearch(searchParams, group, searchApiHost);
     }
 
     render() {
-        const { types, onClick } = this.props;
-        return ( <
-            div className = "kgs-fieldsFilter" > {
-                types.map(type =>
-                    <
-                    ShapeFilter type = { type }
-                    key = { type.type }
-                    onClick = { onClick }
-                    />
-                )
-            } <
-            /div>
-        );
+      const { types, onClick } = this.props;
+      return (
+        <div className = "kgs-fieldsFilter" >
+          {
+            types.map(type =>
+              <ShapeFilter type = { type }
+                key = { type.type }
+                onClick = { onClick }
+              />
+            )
+          }
+        </div>
+      );
     }
 }
 
 export const ShapesFilterPanel = connect(
-    state => ({
-        selectedType: state.search.selectedType,
-        types: state.search.types
-            .filter(t => t.count > 0 || t.type === state.search.selectedType)
-            .map(t => ({
-                ...t,
-                active: t.type === state.search.selectedType
-            })),
-        searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
-        group: state.search.group,
-        searchApiHost: state.configuration.searchApiHost
-    }),
-    dispatch => ({
-        onClick: value => dispatch(actions.setType(value)),
-        onSearch: (searchParams, group, searchApiHost) => dispatch(actions.doSearch(searchParams, group, searchApiHost))
-    })
+  state => ({
+    selectedType: state.search.selectedType,
+    types: state.search.types
+      .filter(t => t.count > 0 || t.type === state.search.selectedType)
+      .map(t => ({
+        ...t,
+        active: t.type === state.search.selectedType
+      })),
+    searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
+    group: state.search.group,
+    searchApiHost: state.configuration.searchApiHost
+  }),
+  dispatch => ({
+    onClick: value => dispatch(actions.setType(value)),
+    onSearch: (searchParams, group, searchApiHost) => dispatch(actions.doSearch(searchParams, group, searchApiHost))
+  })
 )(ShapesFilterPanelBase);

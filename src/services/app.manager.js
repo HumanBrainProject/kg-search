@@ -102,10 +102,6 @@ export default class AppManager {
     window.removeEventListener("hashchange", this.catchBrowserNavigationChange);
   }
 
-  get searchkit() {
-    return this.search && this.search.searchkit;
-  }
-
   authenticate() {
     const config = this.store.getState().configuration;
     const reference = regReferenceHash.test(window.location.hash)?window.location.hash.match(regReferenceHash)[1]:null;

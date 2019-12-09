@@ -26,30 +26,19 @@ import { Footer } from "./MasterView/Footer";
 import { TermsShortNotice } from "./TermsShortNotice";
 import "./MasterView.css";
 
-const MasterViewBase = () => ( <
-  div className = "kgs-masterView" >
-  <
-    SearchPanel / >
-  <
-    TermsShortNotice className = "kgs-masterView__terms-short-notice" / >
-  <
-    ShapesFilterPanel / >
-  <
-    div className = "kgs-masterView__panel" >
-    <
-      FiltersPanel / >
-    <
-      div className = "kgs-masterView__main" >
-      <
-        ResultsHeader / >
-      <
-        HitsPanel / >
-    <
-    /div> <
-  /div> <
-    Footer / >
-<
-/div>
+const MasterViewBase = () => (
+  <div className = "kgs-masterView" >
+    <SearchPanel />
+    <TermsShortNotice className = "kgs-masterView__terms-short-notice" />
+    <ShapesFilterPanel />
+    <div className = "kgs-masterView__panel" >
+      <FiltersPanel />
+      <div className = "kgs-masterView__main" >
+        <ResultsHeader />
+        <HitsPanel />
+      </div>
+    </div> <Footer />
+  </div>
 );
 
 export const MasterViewWithTabKeyNavigation = withTabKeyNavigation(

@@ -20,89 +20,80 @@ import "./Facet.css";
 class FacetCheckbox extends React.Component {
 
     handleClick = e => {
-        e.stopPropagation();
-        this.props.onClick(!this.props.checked);
+      e.stopPropagation();
+      this.props.onClick(!this.props.checked);
     };
 
     render() {
-        const { label, checked, count } = this.props;
-        window.console.log(label, checked, count);
-        return ( <
-            div className = { `kgs-facet-checkbox ${checked ? "is-active" : ""}` }
-            onClick = { this.handleClick } >
-            <
-            input type = "checkbox"
-            checked = { checked }
-            /> <
-            div className = "kgs-facet-checkbox__text" > { label } < /div> <
-            div className = "kgs-facet-checkbox__count" > { count } < /div> <
-            /div>
-        );
+      const { label, checked, count } = this.props;
+      window.console.log(label, checked, count);
+      return ( <div className = { `kgs-facet-checkbox ${checked ? "is-active" : ""}` }
+        onClick = { this.handleClick } >
+        <input type = "checkbox" checked = { checked } />
+        <div className = "kgs-facet-checkbox__text" > { label } </div>
+        <div className = "kgs-facet-checkbox__count" > { count } </div>
+      </div>
+      );
     }
 }
 
 const FacetListItem = ({ item, onChange }) => {
 
-    const onClick = active => onChange(item.value, active);
+  const onClick = active => onChange(item.value, active);
 
 
-    return ( <
-        FacetCheckbox label = { item.value }
-        checked = { item.checked }
-        count = { item.count }
-        onClick = { onClick }
-        />
-    );
+  return (
+    <FacetCheckbox label = { item.value }
+      checked = { item.checked }
+      count = { item.count }
+      onClick = { onClick }
+    />
+  );
 };
 
-const FacetList = ({ list, onChange }) => ( <
-    div className = "kgs-facet-list" > {
-        list.map(item => ( <
-            FacetListItem key = { item.id }
-            item = { item }
-            onChange = { onChange }
-            />
-        ))
-    } <
-    /div>
+const FacetList = ({ list, onChange }) => (
+  <div className = "kgs-facet-list" > {
+    list.map(item => ( <FacetListItem key = { item.id }
+      item = { item }
+      onChange = { onChange }
+    />
+    ))
+  } </div>
 );
 
 export const Facet = ({ facet, onChange }) => {
-    let Component = null;
-    let parameters = null;
-    switch (facet.filterType) {
-        case "list":
-            Component = FacetList;
-            parameters = {
-                list: facet.keywords.map(keyword => ({
-                    value: keyword.value,
-                    count: keyword.count,
-                    checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false
-                })),
-                onChange: (keyword, active) => onChange(facet.name, active, keyword)
-            };
-            break;
-        case "exists":
-            Component = FacetCheckbox;
-            parameters = {
-                label: facet.name,
-                count: facet.count,
-                checked: !!facet.value,
-                onClick: active => onChange(facet.name, active)
-            };
-            break;
-        default:
-            break;
-    }
-    if (Component) {
-        return ( <
-            div className = "kgs-facet" >
-            <
-            div className = "kgs-facet-title" > { facet.fieldLabel } < /div> <
-            Component {...parameters }
-            /> <
-            /div>
-        );
-    }
-    return null;
+  let Component = null;
+  let parameters = null;
+  switch (facet.filterType) {
+  case "list":
+    Component = FacetList;
+    parameters = {
+      list: facet.keywords.map(keyword => ({
+        value: keyword.value,
+        count: keyword.count,
+        checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false
+      })),
+      onChange: (keyword, active) => onChange(facet.name, active, keyword)
+    };
+    break;
+  case "exists":
+    Component = FacetCheckbox;
+    parameters = {
+      label: facet.name,
+      count: facet.count,
+      checked: !!facet.value,
+      onClick: active => onChange(facet.name, active)
+    };
+    break;
+  default:
+    break;
+  }
+  if (Component) {
+    return ( <div className = "kgs-facet" >
+      <div className = "kgs-facet-title" > { facet.fieldLabel } </div>
+      <Component {...parameters }/>
+    </div>
+    );
+  }
+  return null;
 };
