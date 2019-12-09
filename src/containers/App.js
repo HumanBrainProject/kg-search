@@ -17,7 +17,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { ConnectedRouter } from "connected-react-router";
-import { store, history } from "../store";
+import { history } from "../store";
 import { MasterDetail } from "./MasterDetail";
 import { FetchingPanel } from "./FetchingPanel";
 import { ErrorPanel } from "./ErrorPanel";
@@ -29,7 +29,6 @@ const searchAPIHost = "https://kg.ebrains.eu";
 
 class App extends React.Component {
   componentDidMount() {
-    debugger
     this.props.loadDefinition(searchAPIHost);
   }
 
