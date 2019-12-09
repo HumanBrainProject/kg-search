@@ -17,27 +17,22 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withTabKeyNavigation } from "../helpers/withTabKeyNavigation";
+import { Route, Switch } from "react-router-dom";
 import { MasterView } from "./MasterView";
 import { DetailView } from "./DetailView";
 
-const MasterDetailBase = ({show, manager}) => {
+const MasterDetailBase = ({show}) => {
   if (!show) {
     return null;
-  }
-  if (!manager) {
-    window.console.error("application failed to start");
-    return null;
-  }
-  if (!manager.searchkit) {
-    return (
-      <DetailView searchInterfaceIsDisabled={true} />
-    );
   }
 
   return (
     <React.Fragment>
-      <MasterView />
-      <DetailView/>
+      <Switch>
+        <Route path="/search" exact component={MasterView} />
+        <Route path="/instances/:type/:id" component={DetailView} />
+        {/* <DetailView/> */}
+      </Switch>
     </React.Fragment>
   );
 };
@@ -51,7 +46,6 @@ const MasterDetailWithTabKeyNavigation = withTabKeyNavigation(
 export const MasterDetail = connect(
   (state, props) => ({
     isActive: !state.instances.currentInstance,
-    manager: props.manager,
     show: state.application.isReady
   })
 )(MasterDetailWithTabKeyNavigation);

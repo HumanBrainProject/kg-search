@@ -201,13 +201,6 @@ export const loadGroupsFailure = error => {
   };
 };
 
-export const setSearchReady = isReady => {
-  return {
-    type: types.SET_SEARCH_READY,
-    isReady: isReady
-  };
-};
-
 export const loadSearchBadRequest = status => {
   return {
     type: types.LOAD_SEARCH_BAD_REQUEST,

@@ -94,9 +94,6 @@ const cancelInstanceLoading = state => {
 };
 
 const setInstance = (state, action) => {
-  if (action.searchkit) {
-    action.searchkit.unlistenHistory();
-  }
   let previousInstances = (state && state.previousInstances instanceof Array)?state.previousInstances:[];
   previousInstances = (state && state.currentInstance)?[...previousInstances,state.currentInstance]:[...previousInstances];
   return {

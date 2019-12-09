@@ -93,8 +93,6 @@ export class Carousel extends PureComponent {
       return null;
     }
 
-    //window.console.debug("Carousel rendering...", data);
-
     const currentPosition = (data.length -1) % nbOfItems;
     const items = this.items;
     items.forEach((item, idx) => {

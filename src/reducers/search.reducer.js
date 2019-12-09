@@ -28,7 +28,6 @@ const initialState = {
   sortFields: [],
   facetTypesOrder: {},
   facetDefaultSelectedType: null,
-  isReady: false,
   initialRequestDone: false,
   hasRequest: false,
   isLoading: false,
@@ -72,13 +71,6 @@ const setupSearch = (state, action) => {
       facetDefaultSelectedType: selectedType
     };
   }
-};
-
-const setSearchReady = (state, action) => {
-  return {
-    ...state,
-    isReady: action.isReady
-  };
 };
 
 const setQueryString = (state, action) => {
@@ -350,8 +342,6 @@ export function reducer(state = initialState, action = {}) {
     return setFacet(state, action);
   case types.RESET_FACETS:
     return resetFacets(state, action);
-  case types.SET_SEARCH_READY:
-    return setSearchReady(state, action);
   case types.LOAD_GROUPS:
     return setGroupsSettings(state, action);
   case types.SET_GROUP:

@@ -37,7 +37,8 @@ const MasterViewBase = () => (
         <ResultsHeader />
         <HitsPanel />
       </div>
-    </div> <Footer />
+    </div>
+    <Footer />
   </div>
 );
 
