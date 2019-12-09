@@ -14,11 +14,11 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { isMobile } from "./BrowserHelpers";
 
-class TabNavEnablerBase extends PureComponent {
+class TabNavEnablerBase extends React.Component {
   constructor(props) {
     super(props);
     this.timer = null;

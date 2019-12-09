@@ -14,12 +14,12 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
+import React from "react";
 import { isMobile, tabAblesSelectors } from "../helpers/BrowserHelpers";
 
 export const withTabKeyNavigation = (propKey, rootNodeQuerySelector, excludeNodeQuerySelector) => WrappedComponent => {
 
-  class WithTabKey extends PureComponent {
+  class WithTabKey extends React.Component {
     constructor(props) {
       super(props);
       this.handleChange = this.handleChange.bind(this);

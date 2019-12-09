@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
+import React from "react";
 import { windowWidth } from "../../helpers/BrowserHelpers";
 import { TabNavEnabler } from "../../helpers/TabNavEnabler";
 import "./Pagination.css";
@@ -26,7 +26,7 @@ export function PaginationComponent({pageScope, className}) {
     </TabNavEnabler>
   );
 }
-export class Pagination extends PureComponent {
+export class Pagination extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

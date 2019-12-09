@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { isMobile } from "../helpers/BrowserHelpers";
 import "./Carousel.css";
@@ -55,7 +55,7 @@ const CarouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, n
 
 const nbOfItems = 5;
 
-export class Carousel extends PureComponent {
+export class Carousel extends React.Component {
   constructor(props) {
     super(props);
     this.items =  Array.from(Array(nbOfItems)).map((x, idx) => ({

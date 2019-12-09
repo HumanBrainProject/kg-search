@@ -14,31 +14,43 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
-import { Provider } from "react-redux";
+import React from "react";
+import { connect } from "react-redux";
 import { ConnectedRouter } from "connected-react-router";
 import { store, history } from "../store";
 import { MasterDetail } from "./MasterDetail";
 import { FetchingPanel } from "./FetchingPanel";
 import { ErrorPanel } from "./ErrorPanel";
 import { InfoPanel } from "./InfoPanel";
+import * as actions from "../actions";
 import "./App.css";
 
-export default class App extends PureComponent {
-  componentDidMount() {}
+const searchAPIHost = "https://kg.ebrains.eu";
+
+class App extends React.Component {
+  componentDidMount() {
+    this.props.loadDefinition(searchAPIHost);
+  }
 
   render() {
     return (
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <div className="kgs-app">
-            <MasterDetail />
-            <FetchingPanel />
-            <ErrorPanel />
-            <InfoPanel />
-          </div>
-        </ConnectedRouter>
-      </Provider>
+      <ConnectedRouter history={history}>
+        <div className="kgs-app">
+          <MasterDetail />
+          <FetchingPanel />
+          <ErrorPanel />
+          <InfoPanel />
+        </div>
+      </ConnectedRouter>
     );
   }
 }
+
+const mapDispatchToProps = dispatch => ({
+  loadDefinition: searchAPIHost => dispatch(actions.loadDefinition(searchAPIHost))
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(App);

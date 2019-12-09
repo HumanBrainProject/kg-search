@@ -14,6 +14,8 @@
 *   limitations under the License.
 */
 
+import { Provider } from "react-redux";
+import { store } from "./store";
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./containers/App";
@@ -30,7 +32,6 @@ const SearchApiHostEnvKey = "SearchApiHost";        // "https://kg.humanbrainpro
 // APP PARAMETERS
 const hitsPerPage = 20;
 const timeout = 10000;
-const searchOnLoad = true; // when set to true it will trigger an initial search after initilizsation
 const queryTweaking = {
   wildcard: {
     maxNbOfTerms: 2, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
@@ -57,7 +58,6 @@ const config = {
   searchApiHost: window[SearchApiHostEnvKey] ? window[SearchApiHostEnvKey] : "",
   timeout: timeout,
   hitsPerPage: hitsPerPage,
-  searchOnLoad: searchOnLoad,
   queryTweaking: queryTweaking,
   oidcUri: oidcUri,
   oidcClientId: oidcClientId,
@@ -78,6 +78,8 @@ document.addEventListener("keydown", handleGlobalShortcuts);
 
 
 ReactDOM.render(
-  <App config={config} />,
+  <Provider store={store}>
+    <App config={config} />
+  </Provider>,
   document.getElementById("root")
 );

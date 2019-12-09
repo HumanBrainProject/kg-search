@@ -18,7 +18,6 @@ import * as types from "../actions.types";
 
 const hitsPerPage = 20;
 const timeout = 5000;
-const searchOnLoad = true; // when set to true it will trigger an initial search after initilizsation
 const queryTweaking = {
   wildcard: {
     maxNbOfTerms: -1, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
@@ -38,7 +37,6 @@ const initialState = {
   searchApiHost: "",
   timeout: timeout,
   hitsPerPage: hitsPerPage,
-  searchOnLoad: searchOnLoad,
   queryTweaking: queryTweaking,
   oidcUri: oidcUri,
   oidcClientId: oidcClientId
