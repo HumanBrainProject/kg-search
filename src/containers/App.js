@@ -25,7 +25,7 @@ import { InfoPanel } from "./InfoPanel";
 import * as actions from "../actions";
 import "./App.css";
 
-const searchAPIHost = "https://kg.ebrains.eu";
+const searchAPIHost = "";
 
 class App extends React.Component {
   componentDidMount() {
