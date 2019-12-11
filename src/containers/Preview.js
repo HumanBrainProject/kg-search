@@ -16,38 +16,27 @@
 
 import React from "react";
 import { connect } from "react-redux";
-
-import * as actions from "../actions";
 import { ImagePreviews } from "./ImagePreviews";
 import { ImagePopup } from "./ImagePopup";
 import { TermsShortNotice } from "./TermsShortNotice";
+
 import { mapStateToProps } from "../helpers/InstanceHelper";
 import { Instance as Component } from "../components/Instance";
+import * as actions from "../actions";
 
-import "./Instance.css";
-
-class InstanceComponent extends React.Component {
+class PreviewComponent extends React.Component {
   componentDidMount() {
-    this.props.fetch(this.props.type, this.props.id);
-  }
-
-  componentDidUpdate(previousProps) {
-    if (previousProps.type !== this.props.type || previousProps.id !== this.props.id) {
-      this.props.fetch(this.props.type, this.props.id);
-    }
+    this.props.fetch(this.props.id);
   }
 
   render() {
     return (
-      <div className="kgs-instance-container" >
-        <Component {...this.props} />
-      </div>
+      <Component {...this.props} />
     );
   }
-
 }
 
-export const Instance = connect(
+export const Preview = connect(
   (state, props) => ({
     ...mapStateToProps(state, {
       data: state.instances.currentInstance
@@ -55,10 +44,9 @@ export const Instance = connect(
     ImagePreviewsComponent: ImagePreviews,
     ImagePopupComponent: ImagePopup,
     TermsShortNoticeComponent: TermsShortNotice,
-    id: props.match.params.id,
-    type: props.match.params.type
+    id: props.match.params.id
   }),
   dispatch => ({
-    fetch: (type, id) => dispatch(actions.loadDefinitionAndInstance(type, id))
+    fetch: id => dispatch(actions.loadPreview(id))
   })
-)(InstanceComponent);
+)(PreviewComponent);

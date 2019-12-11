@@ -16,6 +16,18 @@
 
 import * as parser from "lucene-query-parser";
 
+const queryTweaking = {
+  wildcard: {
+    maxNbOfTerms: 2, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
+    minNbOfChars: 3 // nb of character under which wildcard is not applied
+  },
+  fuzzySearch: {
+    maxNbOfTerms: 3, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
+    minNbOfChars: 4 // nb of character under which fuzzy search is not applied
+  },
+  maxNbOfTermsTrigger: 4 // maximum number of terms before tweaking is turned off
+};
+
 const defaultCustomHighlight = {
   "fields": {
     "title.value": {},
@@ -42,21 +54,7 @@ export class ElasticSearchHelpers {
           #
           # http://stackoverflow.com/questions/16205341/symbols-in-query-string-for-elasticsearch
           #*/
-  static sanitizeString(q, queryTweaking) {
-
-    const defaultQueryTweakingConfig = {
-      wildcard: {
-        maxNbOfTerms: 2, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
-        minNbOfChars: 3 // nb of character under which wildcard is not applied
-      },
-      fuzzySearch: {
-        maxNbOfTerms: 3, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
-        minNbOfChars: 4 // nb of character under which fuzzy search is not applied
-      },
-      maxNbOfTermsTrigger: 4 // maximum number of terms before tweaking is turned off
-    };
-
-    queryTweaking = {...defaultQueryTweakingConfig, ...queryTweaking };
+  static sanitizeString = q => {
 
     function getTerms(node) {
       function addTermsFromExpression(node, terms) {
@@ -189,7 +187,7 @@ export class ElasticSearchHelpers {
       }
     }
     return str;
-  }
+  };
 
 
     static getFacetTypesOrder = definition => {
@@ -407,14 +405,13 @@ export class ElasticSearchHelpers {
 
     static getSearchParamsFromState = state => {
       return {
-        queryTweaking: state.configuration.queryTweaking,
         queryString: state.search.queryString,
         queryFields: state.search.queryFields,
         selectedType: state.search.selectedType,
         facets: state.search.facets,
         sort: state.search.sort,
         from: state.search.from,
-        size: state.configuration.hitsPerPage,
+        size: state.search.hitsPerPage,
         boostedTypes: [], // ElasticSearchHelpers.getBoostedTypes(state.definition),
         customHighlight: defaultCustomHighlight
         /*
@@ -426,15 +423,13 @@ export class ElasticSearchHelpers {
       };
     };
 
-    static buildRequest({ queryTweaking, queryString = "", queryFields = [], selectedType, facets = [], sort, from = 0, size = 20, customHighlight, boostedTypes = [] }) {
+    static buildRequest({ queryString = "", queryFields = [], selectedType, facets = [], sort, from = 0, size = 20, customHighlight, boostedTypes = [] }) {
 
       const typeFacet = {
         id: "facet_type",
         name: "_type",
-        facet: {
-          filterType: "_type",
-          value: selectedType
-        }
+        filterType: "_type",
+        value: selectedType
       };
 
       const queryFacets = [...facets, typeFacet];
@@ -656,7 +651,7 @@ export class ElasticSearchHelpers {
       const query = queryString ? {
         query_string: {
           fields: fields,
-          query: ElasticSearchHelpers.sanitizeString(queryString, queryTweaking),
+          query: ElasticSearchHelpers.sanitizeString(queryString),
           lenient: true
         }
       } : null;

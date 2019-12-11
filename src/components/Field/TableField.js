@@ -15,8 +15,8 @@
 */
 
 import React from "react";
-import { Field, PrintViewField } from "../Field";
-import { ValueField } from "../Field/ValueField";
+import { Field, PrintViewField } from ".";
+import { ValueField } from "./ValueField";
 import { LIST_SMALL_SIZE_STOP,
   getNextSizeStop,
   getFilteredItems,

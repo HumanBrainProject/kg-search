@@ -54,16 +54,16 @@ class ShapeFilter extends React.Component {
 }
 
 class ShapesFilterPanelBase extends React.Component {
-
+/*
   componentDidUpdate(prevProps) {
     if (this.props.selectedType !== prevProps.selectedType) {
       this.performSearch();
     }
   }
-
+*/
     performSearch = () => {
-      const { searchParams, onSearch, group, searchApiHost } = this.props;
-      onSearch(searchParams, group, searchApiHost);
+      const { searchParams, onSearch, group } = this.props;
+      onSearch(searchParams, group);
     }
 
     render() {
@@ -93,11 +93,10 @@ export const ShapesFilterPanel = connect(
         active: t.type === state.search.selectedType
       })),
     searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
-    group: state.search.group,
-    searchApiHost: state.configuration.searchApiHost
+    group: state.search.group
   }),
   dispatch => ({
     onClick: value => dispatch(actions.setType(value)),
-    onSearch: (searchParams, group, searchApiHost) => dispatch(actions.doSearch(searchParams, group, searchApiHost))
+    onSearch: (searchParams, group) => dispatch(actions.doSearch(searchParams, group))
   })
 )(ShapesFilterPanelBase);

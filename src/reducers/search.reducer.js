@@ -14,11 +14,10 @@
  *   limitations under the License.
  */
 
-import API from "../services/API";
 import * as types from "../actions.types";
-import {
-  ElasticSearchHelpers
-} from "../helpers/ElasticSearchHelpers";
+import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
+
+const DEFAULT_GROUP = "public";
 
 const initialState = {
   queryFields: ["title", "description"],
@@ -34,8 +33,10 @@ const initialState = {
   queryString: "",
   selectedType: null,
   nonce: null,
+  defaultGroup: DEFAULT_GROUP,
   groupsSettings: {},
-  group: API.defaultGroup,
+  group: DEFAULT_GROUP,
+  hitsPerPage: 20,
   hits: [],
   total: 0,
   from: 0
@@ -87,27 +88,38 @@ const setFacet = (state, action) => {
       if (f.name !== action.name) {
         return f;
       }
-      if (!action.keyword) {
+      switch (f.filterType) {
+      case "list":
+      {
+        if (!action.keyword) {
+          return f;
+        }
+        const facet = {
+          ...f
+        };
+        if (action.active) {
+          const values = Array.isArray(facet.value) ? facet.value : [];
+          if (!values.includes(action.keyword)) {
+            values.push(action.keyword);
+          }
+          facet.value = values;
+        } else {
+          if (Array.isArray(facet.value)) {
+            facet.value = facet.value.filter(value => value !== action.keyword);
+          }
+        }
+        return facet;
+      }
+      case "exists":
+      {
         return {
           ...f,
           value: action.active
         };
       }
-      const facet = {
-        ...f
-      };
-      if (action.active) {
-        const values = Array.isArray(facet.value) ? facet.value : [];
-        if (!values.includes(action.keyword)) {
-          values.push(action.keyword);
-        }
-        facet.value = values;
-      } else {
-        if (Array.isArray(facet.value)) {
-          facet.value = facet.value.filter(value => value !== action.keyword);
-        }
+      default:
+        return f;
       }
-      return facet;
     })
   };
 };
@@ -181,13 +193,13 @@ const setGroup = (state, action) => {
     };
   }
   // Reset
-  if (state.group === API.defaultGroup) {
+  if (state.group === state.defaultGroup) {
     return state;
   }
   return {
     ...state,
     hasRequest: !action.initialize,
-    group: API.defaultGroup
+    group: state.defaultGroup
   };
 };
 
@@ -195,22 +207,22 @@ const loadGroupsSuccess = (state, action) => {
   if (action.groups instanceof Array && action.groups.some(e => e.name === state.group)) {
     return state;
   }
-  if (state.group === API.defaultGroup) {
+  if (state.group === state.defaultGroup) {
     return state;
   }
   return {
     ...state,
-    group: API.defaultGroup
+    group: state.defaultGroup
   };
 };
 
 const loadGroupsFailure = state => {
-  if (state.group === API.defaultGroup) {
+  if (state.group === state.defaultGroup) {
     return state;
   }
   return {
     ...state,
-    group: API.defaultGroup
+    group: state.defaultGroup
   };
 };
 
@@ -357,7 +369,7 @@ export function reducer(state = initialState, action = {}) {
     return loadSearchFail(state, action);
   case types.LOGOUT:
     return setGroup(state, {
-      group: API.defaultGroup
+      group: state.defaultGroup
     });
   case types.LOAD_GROUPS_SUCCESS:
     return loadGroupsSuccess(state, action);

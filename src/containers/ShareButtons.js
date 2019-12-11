@@ -16,7 +16,6 @@
 
 import { connect } from "react-redux";
 import { ShareButtons as Component } from "../components/ShareButtons";
-import API from "../services/API";
 
 const regPreviewReference = /^(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
 
@@ -34,11 +33,11 @@ const getClipboardContent = (state, location, currentInstance, currentGroup) => 
     if (reference) {
       const indexReg = /^kg_(.*)$/;
       const group = indexReg.test(currentInstance._index) ? currentInstance._index.match(indexReg)[1] : (currentGroup ? currentGroup : null);
-      href = `instances/${reference}${(group && group !== API.defaultGroup) ? ("?group=" + group) : ""}`;
+      href = `instances/${reference}${(group && group !== state.search.defaultGroup) ? ("?group=" + group) : ""}`;
     } else {
       const instanceId = location.hash.substring(1);
       if (instanceId) {
-        href = `instances/${instanceId}${(currentGroup && currentGroup !== API.defaultGroup) ? ("?group=" + currentGroup) : ""}`;
+        href = `instances/${instanceId}${(currentGroup && currentGroup !== state.search.defaultGroup) ? ("?group=" + currentGroup) : ""}`;
       } else {
         href = `search/${location.search}`;
       }

@@ -14,15 +14,19 @@
 *   limitations under the License.
 */
 
-import * as actions from "../actions";
-import { reducer as configurationReducer} from "./configuration.reducer";
-describe('configuration reducer', () => {
-    describe('unknown action', () => {
-        it('should return same state', () => {
-            const state = {a: {c: 1, d: 2}, b: [{e:3}, {e:4}]};
-            const action = {type: "ABCDEFGH"};
-            const newState = configurationReducer(state, action);
-            expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
-        });
-    });
-});
+import { connect } from "react-redux";
+import * as actions from "../../actions";
+import { Thumbnail as Component} from "../Thumbnail";
+
+export const Thumbnail = connect(
+  (state, props) => ({
+    url: props.thumbnailUrl,
+    alt: props.alt,
+    isAnimated: !!props.isAnimated
+  }),
+  (dispatch, props) => ({
+    onClick: (props.showPreview && typeof props.previewUrl === "string")?() => dispatch(actions.showImage(props.previewUrl, props.alt)):null
+  })
+)(Component);
+
+export default Thumbnail;

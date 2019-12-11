@@ -13,15 +13,17 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
 
-const config = {
-  
-};
+import React from "react";
+import { Link } from "react-router-dom";
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App config={config} />, div);
-});
+import "./NotFound.css";
+
+export const NotFound = () => (
+  <div className="kgs-notFound">
+    <h3>Page not found</h3>
+    <div>
+      <Link to={"/"}>Go back to search</Link>
+    </div>
+  </div>
+);

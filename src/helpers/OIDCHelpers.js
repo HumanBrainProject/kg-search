@@ -96,7 +96,15 @@ export const getHashKey = (key, hash) => {
   return value;
 };
 
-export const getAuthUrl = (host, clientId, stateKey, nonceKey) => {
-  const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
-  return `${host}?response_type=id_token%20token&client_id=${clientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`;
-};
+const regReferenceHash = /^#(.+)$/;
+const regPreviewReference = /^(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
+
+export const authenticate = () => {
+  const reference = regReferenceHash.test(window.location.hash)?window.location.hash.match(regReferenceHash)[1]:null;
+  const state1 = regPreviewReference.test(reference)?null:searchToObj(window.location.search);
+  const state2 = reference?{instanceReference: reference}:null;
+  const state = {...state1, ...state2};
+  const stateKey = btoa(JSON.stringify(state));
+  const nonceKey = generateKey();
+  //window.location.href = API.endpoints.auth(stateKey, nonceKey);
+}

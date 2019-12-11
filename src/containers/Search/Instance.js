@@ -15,18 +15,18 @@
 */
 
 import { connect } from "react-redux";
-import * as actions from "../../actions";
-import { Thumbnail as Component} from "../../components/Thumbnail";
 
-export const Thumbnail = connect(
+import { mapStateToProps } from "../../helpers/InstanceHelper";
+import { ImagePreviews } from "../ImagePreviews";
+import { ImagePopup } from "../ImagePopup";
+import { TermsShortNotice } from "../TermsShortNotice";
+import { Instance as Component } from "../../components/Instance";
+
+export const Instance = connect(
   (state, props) => ({
-    url: props.thumbnailUrl,
-    alt: props.alt,
-    isAnimated: !!props.isAnimated
-  }),
-  (dispatch, props) => ({
-    onClick: (props.showPreview && typeof props.previewUrl === "string")?() => dispatch(actions.showImage(props.previewUrl, props.alt)):null
+    ...mapStateToProps(state, props),
+    ImagePreviewsComponent: ImagePreviews,
+    ImagePopupComponent: ImagePopup,
+    TermsShortNoticeComponent: TermsShortNotice
   })
 )(Component);
-
-export default Thumbnail;

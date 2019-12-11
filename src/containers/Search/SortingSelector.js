@@ -21,16 +21,16 @@ import { Select } from "../../components/Select";
 import { ElasticSearchHelpers } from "../../helpers/ElasticSearchHelpers";
 
 class SortingSelectorComponent extends React.Component {
-
+/*
   componentDidUpdate(prevProps) {
     if (this.props.value !== prevProps.value) {
       this.performSearch();
     }
   }
-
+*/
   performSearch = () => {
-    const { searchParams, onSearch, group, searchApiHost } = this.props;
-    onSearch(searchParams, group, searchApiHost);
+    const { searchParams, onSearch, group } = this.props;
+    onSearch(searchParams, group);
   }
 
   render() {
@@ -51,11 +51,10 @@ export const SortingSelector = connect(
       value: f.key
     })),
     searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
-    group: state.search.group,
-    searchApiHost: state.configuration.searchApiHost
+    group: state.search.group
   }),
   dispatch => ({
     onChange: value => dispatch(actions.setSort(value)),
-    onSearch: (searchParams, group, searchApiHost) => dispatch(actions.doSearch(searchParams, group, searchApiHost))
+    onSearch: (searchParams, group) => dispatch(actions.doSearch(searchParams, group))
   })
 )(SortingSelectorComponent);

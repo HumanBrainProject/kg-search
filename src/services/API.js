@@ -1,18 +1,22 @@
 import { store } from "../store";
 import axios from "axios";
 
+const oidcUri = "https://services.humanbrainproject.eu/oidc/authorize";
+const oidcClientId = "nexus-kg-search";
+
 const endpoints = {
-  "definition": (host) => `${host}/proxy/kg_labels/labels/labels`,
-  "groups": (host) => `${host}/auth/groups`,
-  "search": (host) => `${host}/proxy/search/kg`,
-  "instance": (host, id) => `${host}/proxy/default/kg/${id}`,
-  "preview": (host, path, instanceId) => `${host}/query/${path}/search/templates/searchUi/libraries/instancesDynamic/instances/${instanceId}`
+  "definition":() => "/proxy/kg_labels/labels/labels",
+  "groups": () => "/auth/groups",
+  "search": () => "/proxy/search/kg/_search",
+  "instance": (type, id) => `/proxy/default/kg/${type}/${id}`,
+  "preview": (path, instanceId) => `/query/${path}/search/templates/searchUi/libraries/instancesDynamic/instances/${instanceId}`,
+  "auth": (stateKey, nonceKey) => {
+    const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+    return `${oidcUri}?response_type=id_token%20token&client_id=${oidcClientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`;
+  }
 };
 
-const default_group = "public";
-
 class API{
-  defaultGroup = default_group;
   constructor() {
     this._axios = axios.create({});
     this._axios.interceptors.request.use(config => {

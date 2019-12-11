@@ -23,20 +23,20 @@ import { ElasticSearchHelpers } from "../../helpers/ElasticSearchHelpers";
 import "./FiltersPanel.css";
 
 class FiltersPanelBase extends React.Component {
-
+/*
   componentDidUpdate(prevProps) {
     if (this.props.values !== prevProps.values) {
       this.performSearch();
     }
   }
-
+*/
     performSearch = () => {
-      const { searchParams, onSearch, group, searchApiHost } = this.props;
-      onSearch(searchParams, group, searchApiHost);
+      const { searchParams, onSearch, group } = this.props;
+      onSearch(searchParams, group);
     }
 
     render() {
-      const { className, show, facets, onChange, onReset } = this.props;
+      const { className, show, facets, loc, onChange, onReset } = this.props;
 
       if (!show) {
         return null;
@@ -61,6 +61,7 @@ class FiltersPanelBase extends React.Component {
                 facets.map(facet => ( <Facet key = { facet.id }
                   facet = { facet }
                   onChange = { onChange }
+                  loc = { loc }
                 />
                 ))
               }
@@ -86,12 +87,12 @@ export const FiltersPanel = connect(
       }, ""),
       searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
       group: state.search.group,
-      searchApiHost: state.configuration.searchApiHost
+      loc: state.router.location
     };
   },
   dispatch => ({
     onChange: (name, active, keyword) => dispatch(actions.setFacet(name, active, keyword)),
     onReset: () => dispatch(actions.resetFacets()),
-    onSearch: (searchParams, group, searchApiHost) => dispatch(actions.doSearch(searchParams, group, searchApiHost))
+    onSearch: (searchParams, group) => dispatch(actions.doSearch(searchParams, group))
   })
 )(FiltersPanelBase);

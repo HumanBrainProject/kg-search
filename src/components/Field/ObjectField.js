@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { Field, PrintViewField } from "../Field";
+import { Field, PrintViewField } from ".";
 import "./ObjectField.css";
 
 const ObjectFieldBase = (renderUserInteractions = true) => {

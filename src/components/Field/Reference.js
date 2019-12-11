@@ -16,14 +16,18 @@
 
 import React from "react";
 import { connect } from "react-redux";
+import { history } from "../../store";
 import * as actions from "../../actions";
 
-const ReferenceComponent = ({text, reference, group, onClick}) => {
+const ReferenceComponent = ({text, reference, group, isExternal, onClick}) => {
   if (!reference) {
     return null;
   }
 
   const handleClick = () => {
+    if (isExternal) {
+      history.push(`/instances/${reference}`);
+    }
     typeof onClick === "function" && onClick(reference, group);
   };
 
@@ -37,6 +41,7 @@ export const Reference = connect(
     text: props.text?props.text:props.reference,
     reference: props.reference,
     group: props.group,
+    isExternal: state.router.location.pathname?state.router.location.pathname.startsWith("/instances/"):false
   }),
   dispatch => ({
     onClick: (reference, group) => dispatch(actions.loadInstance(reference, group))

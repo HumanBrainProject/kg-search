@@ -17,12 +17,12 @@
 import React from "react";
 import { termsOfUse } from "../../data/termsOfUse.js";
 import { setIconColor } from "../../helpers/ShapeIconHelper";
-import { Icon } from "../../components/Icon";
-import { Details } from "../../components/Details";
-import { Text } from "../../components/Text";
-import { CollapsibleText } from "../../components/CollapsibleText";
-import { Link } from "../../components/Link";
-import { Tag } from "../../components/Tag";
+import { Icon } from "../Icon";
+import { Details } from "../Details";
+import { Text } from "../Text";
+import { CollapsibleText } from "../CollapsibleText";
+import { Link } from "../Link";
+import { Tag } from "../Tag";
 import { Thumbnail } from "./Thumbnail";
 import { Reference } from "./Reference";
 import "./ValueField.css";

@@ -16,7 +16,7 @@
 
 import * as actions from "../actions";
 import { reducer as definitionReducer} from "./definition.reducer";
-describe('configuration reducer', () => {
+describe('definition reducer', () => {
     describe('unknown action', () => {
         it('should return same state', () => {
             const state = {a: {c: 1, d: 2}, b: [{e:3}, {e:4}]};

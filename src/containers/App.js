@@ -15,28 +15,30 @@
 */
 
 import React from "react";
-import { connect } from "react-redux";
 import { ConnectedRouter } from "connected-react-router";
+import { Route, Switch } from "react-router-dom";
+
 import { history } from "../store";
-import { MasterDetail } from "./MasterDetail";
+import { Search } from "./Search";
+import { Instance } from "./Instance";
+import { NotFound } from "../components/NotFound";
+import { Preview } from "./Preview";
 import { FetchingPanel } from "./FetchingPanel";
 import { ErrorPanel } from "./ErrorPanel";
 import { InfoPanel } from "./InfoPanel";
-import * as actions from "../actions";
 import "./App.css";
 
-const searchAPIHost = "";
-
 class App extends React.Component {
-  componentDidMount() {
-    this.props.loadDefinition(searchAPIHost);
-  }
-
   render() {
     return (
       <ConnectedRouter history={history}>
         <div className="kgs-app">
-          <MasterDetail />
+          <Switch>
+            <Route path="/instances/:type/:id" exact component={Instance} />
+            <Route path="/previews/:org/:domain/:schema/:version/:id" exact component={Preview} />
+            <Route path="/" exact component={Search} />
+            <Route component={NotFound} />
+          </Switch>
           <FetchingPanel />
           <ErrorPanel />
           <InfoPanel />
@@ -46,11 +48,4 @@ class App extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  loadDefinition: searchAPIHost => dispatch(actions.loadDefinition(searchAPIHost))
-});
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(App);
+export default App;

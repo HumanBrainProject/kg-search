@@ -65,7 +65,7 @@ class SeachPanelBaseComponent extends React.Component {
     const { isFloating, onHelp } = this.props;
 
     return (
-      <div className={`kgs-search ${isFloating ? " is-fixed-position" : ""}`}>
+      <div className={`kgs-search-panel ${isFloating ? " is-fixed-position" : ""}`}>
         <i className="fa fa-search kg-search-bar__icon"></i>
         <input className="kg-search-bar"
           type="text"
@@ -74,8 +74,8 @@ class SeachPanelBaseComponent extends React.Component {
           onChange={this.handleChange}
           onKeyDown={this.handleKeyDown}
           ref={this.ref}  />
-        <button className="kgs-search-button" onClick={this.handleSearch}>Search</button>
-        <button type="button" className="kgs-search-help__button" title="Help" onClick={onHelp}>
+        <button className="kgs-search-panel-button" onClick={this.handleSearch}>Search</button>
+        <button type="button" className="kgs-search-panel-help__button" title="Help" onClick={onHelp}>
           <i className="fa fa-info-circle fa-2x"></i>
         </button>
       </div>
@@ -84,16 +84,16 @@ class SeachPanelBaseComponent extends React.Component {
 }
 
 class SeachPanelComponent extends React.Component {
-
+/*
   componentDidUpdate(prevProps) {
     if (this.props.queryString !== prevProps.queryString) {
       this.performSearch();
     }
   }
-
+*/
   performSearch = () => {
-    const { searchParams, onSearch, group, searchApiHost } = this.props;
-    onSearch(searchParams, group, searchApiHost);
+    const { searchParams, onSearch, group} = this.props;
+    onSearch(searchParams, group);
   }
 
   render() {
@@ -111,14 +111,13 @@ const SearchPanelContainer = connect(
       relatedElements: props.relatedElements,
       queryString: state.search.queryString,
       searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
-      group: state.search.group,
-      searchApiHost: state.configuration.searchApiHost
+      group: state.search.group
     };
   },
   dispatch => ({
     onHelp: () => dispatch(actions.setInfo(help)),
     onQueryStringChange: value => dispatch(actions.setQueryString(value)),
-    onSearch: (searchParams, group, searchApiHost) => dispatch(actions.doSearch(searchParams, group, searchApiHost))
+    onSearch: (searchParams, group) => dispatch(actions.doSearch(searchParams, group))
   })
 )(SeachPanelComponent);
 

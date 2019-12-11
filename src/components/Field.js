@@ -16,7 +16,7 @@
 
 import React from "react";
 import { FieldLabel} from "./Field/FieldLabel";
-import { Hint} from "../components/Hint";
+import { Hint} from "./Hint";
 import { ListField, PrintViewListField } from "./Field/ListField";
 import { ObjectField, PrintViewObjectField } from "./Field/ObjectField";
 import { ValueField, PrintViewValueField } from "./Field/ValueField";

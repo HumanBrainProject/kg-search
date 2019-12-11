@@ -18,7 +18,6 @@ import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
 
 import { reducer as application } from "./application.reducer";
-import { reducer as configuration } from "./configuration.reducer";
 import { reducer as definition } from "./definition.reducer";
 import { reducer as groups } from "./groups.reducer";
 import { reducer as search } from "./search.reducer";
@@ -30,7 +29,6 @@ import { reducer as auth } from "./auth.reducer";
 
 const createRootReducer = (history) => combineReducers({
   application,
-  configuration,
   definition,
   groups,
   search,
