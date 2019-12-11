@@ -15,38 +15,51 @@
 */
 
 export const getUpdatedUrl = (name, checked, value, many, location) => {
+  const isFacetType = name === "facet_type";
   const val = encodeURIComponent(value);
   let found = false;
   let counts = 0;
-  const queryString = Object.entries(location.query).reduce((acc, [key, v]) => {
+  const queryString = !isFacetType ? Object.entries(location.query).reduce((acc, [key, v]) => {
     const m = key.match(/^([^[]+)\[(\d+)\]$/); // name[number]
-    const [, n, k] = m?m:[null, key, null];
-    const current = n === name && (!many || v === val );
+    const [, queryName, queryNumber] = m?m:[null, key, null];
+    const current = queryName === name && (!many || v === val );
     found = found || current;
     if (!current || checked) {
-      const appendix = many?(n === name?`[${counts}]`:`[${k}]`):"";
-      acc += `${(acc.length > 1)?"&":""}${n}${appendix}=${v}`;
-      if (many && n === name) {
+      let appendix = "";
+      if(queryName === "facet_type") {
+        appendix = `[${queryNumber}]`;
+      } else if (!many && queryName === name) {
+        appendix = "";
+      } else {
+        appendix = queryName === name?`[${counts}]`: (queryNumber ? `[${queryNumber}]`: "");
+      }
+      acc += `${(acc.length > 1)?"&":""}${queryName}${appendix}=${v}`;
+      if (many && queryName === name) {
         counts++;
       }
     }
     return acc;
-  }, "?");
+  }, "?"): "?";
 
   let addParam = "";
   if (!found && checked) {
-    const appendix = many?`[${counts}]`:"";
-    addParam = `${(queryString.length > 1)?"&":""}${name}${appendix}=${val}`;
+    if(isFacetType){
+      addParam = `${(queryString.length > 1)?"&":""}${name}[0]=${val}`;
+    } else {
+      const appendix = many?`[${counts}]`:"";
+      addParam = `${(queryString.length > 1)?"&":""}${name}${appendix}=${val}`;
+    }
   }
   return `${location.pathname}${queryString}${addParam}`;
 };
+
 /*
 export const getUpdatedUrl2 = (list, location) => {
   // name, checked, value, manyname, checked, value, many
   const items = list.reduce((acc, item) => {
     acc[item.name] = {
       ...item,
-      key: 
+      key:
       value: encodeURIComponent(item.value),
       index: 0,
       found: false

@@ -40,8 +40,8 @@ class SearchBase extends React.Component {
   }
 
   componentDidUpdate(previousProps) {
-    const { definitionIsReady, searchParams, group, search} = this.props;
-    window.console.log(definitionIsReady, isEqual(previousProps.searchParams, searchParams), previousProps.searchParams, searchParams, previousProps.group, group);
+    const { definitionIsReady, searchParams, group, search, location} = this.props;
+    //if (definitionIsReady && location.search !== previousProps.location.search) {
     if (definitionIsReady && (!isEqual(previousProps.searchParams, searchParams) || previousProps.group !== group)) {
       search(searchParams, group);
     }
@@ -87,7 +87,8 @@ export const Search = connect(
     definitionIsReady: state.definition.isReady,
     definitionIsLoading: state.definition.isLoading,
     searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
-    group: state.search.group
+    group: state.search.group,
+    location: state.router.location
   }),
   dispatch => ({
     loadDefinition: () => dispatch(actions.loadDefinition()),

@@ -19,7 +19,8 @@ import { ShapeIcon } from "./ShapeIcon";
 import { connect } from "react-redux";
 import * as actions from "../../actions";
 import "./ShapesFilterPanel.css";
-import { ElasticSearchHelpers } from "../../helpers/ElasticSearchHelpers";
+import { getUpdatedUrl } from "../../helpers/BrowserHelpers";
+import { history } from "../../store";
 
 // {itemKey, label, count, rawCount, listDocCount, active, disabled, showCount, bemBlocks, onClick}
 const ShapeFilterBase = ({ type: { type, label, count, active, disabled }, onClick }) => (
@@ -54,33 +55,30 @@ class ShapeFilter extends React.Component {
 }
 
 class ShapesFilterPanelBase extends React.Component {
-/*
+
   componentDidUpdate(prevProps) {
-    if (this.props.selectedType !== prevProps.selectedType) {
-      this.performSearch();
+    const { selectedType, location } = this.props;
+    if (selectedType !== prevProps.selectedType) {
+      const url = getUpdatedUrl("facet_type", true, selectedType, true, location);
+      history.push(url);
     }
   }
-*/
-    performSearch = () => {
-      const { searchParams, onSearch, group } = this.props;
-      onSearch(searchParams, group);
-    }
 
-    render() {
-      const { types, onClick } = this.props;
-      return (
-        <div className = "kgs-fieldsFilter" >
-          {
-            types.map(type =>
-              <ShapeFilter type = { type }
-                key = { type.type }
-                onClick = { onClick }
-              />
-            )
-          }
-        </div>
-      );
-    }
+  render() {
+    const { types, onClick } = this.props;
+    return (
+      <div className = "kgs-fieldsFilter" >
+        {
+          types.map(type =>
+            <ShapeFilter type = { type }
+              key = { type.type }
+              onClick = { onClick }
+            />
+          )
+        }
+      </div>
+    );
+  }
 }
 
 export const ShapesFilterPanel = connect(
@@ -92,11 +90,10 @@ export const ShapesFilterPanel = connect(
         ...t,
         active: t.type === state.search.selectedType
       })),
-    searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
-    group: state.search.group
+    group: state.search.group,
+    location: state.router.location
   }),
   dispatch => ({
-    onClick: value => dispatch(actions.setType(value)),
-    onSearch: (searchParams, group) => dispatch(actions.doSearch(searchParams, group))
+    onClick: value => dispatch(actions.setType(value))
   })
 )(ShapesFilterPanelBase);

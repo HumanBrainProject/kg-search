@@ -101,7 +101,7 @@ export const Facet = ({ facet, location, onChange }) => {
     Component = FacetCheckbox;
     parameters = {
       name: facet.id,
-      label: facet.label,
+      label: `Has ${facet.fieldLabel}`,
       count: facet.count,
       value: !!facet.value,
       checked: !!facet.value,
