@@ -14,6 +14,69 @@
 *   limitations under the License.
 */
 
+export const getUpdatedUrl = (name, checked, value, many, location) => {
+  const val = encodeURIComponent(value);
+  let found = false;
+  let counts = 0;
+  const queryString = Object.entries(location.query).reduce((acc, [key, v]) => {
+    const m = key.match(/^([^[]+)\[(\d+)\]$/); // name[number]
+    const [, n, k] = m?m:[null, key, null];
+    const current = n === name && (!many || v === val );
+    found = found || current;
+    if (!current || checked) {
+      const appendix = many?(n === name?`[${counts}]`:`[${k}]`):"";
+      acc += `${(acc.length > 1)?"&":""}${n}${appendix}=${v}`;
+      if (many && n === name) {
+        counts++;
+      }
+    }
+    return acc;
+  }, "?");
+
+  let addParam = "";
+  if (!found && checked) {
+    const appendix = many?`[${counts}]`:"";
+    addParam = `${(queryString.length > 1)?"&":""}${name}${appendix}=${val}`;
+  }
+  return `${location.pathname}${queryString}${addParam}`;
+};
+/*
+export const getUpdatedUrl2 = (list, location) => {
+  // name, checked, value, manyname, checked, value, many
+  const items = list.reduce((acc, item) => {
+    acc[item.name] = {
+      ...item,
+      key: 
+      value: encodeURIComponent(item.value),
+      index: 0,
+      found: false
+    };
+    return acc;
+  }, {});
+  const queryString = Object.entries(location.query).reduce((acc, [key, v]) => {
+    const m = key.match(/^([^[]+)\[(\d+)\]$/); // name[number]
+    const [, n, k] = m?m:[null, key, null];
+    const item = items[n];
+    const current = item && (!many || v ===  item.value );
+    found = found || current;
+    if (!current || checked) {
+      const appendix = many?(n === name?`[${counts}]`:`[${k}]`):"";
+      acc += `${(acc.length > 1)?"&":""}${n}${appendix}=${v}`;
+      if (many && n === name) {
+        counts++;
+      }
+    }
+    return acc;
+  }, "?");
+
+  let addParam = "";
+  if (!found && checked) {
+    const appendix = many?`[${counts}]`:"";
+    addParam = `${(queryString.length > 1)?"&":""}${name}${appendix}=${val}`;
+  }
+  return `${location.pathname}${queryString}${addParam}`;
+};
+*/
 export const windowHeight = () => {
   const w = window,
     d = document,

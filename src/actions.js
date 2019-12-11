@@ -452,14 +452,6 @@ export const loadReference = (type, id) => {
   };
 };
 
-export const loadDefinitionAndInstance = (type, id) => {
-  return dispatch => {
-    return dispatch(loadDefinition()).then(() => {
-      return dispatch(loadReference(type, id));
-    });
-  };
-};
-
 export const loadPreview = reference => {
   return dispatch => {
     dispatch(loadInstanceRequest());

@@ -28,12 +28,16 @@ import "./Instance.css";
 
 class InstanceComponent extends React.Component {
   componentDidMount() {
-    this.props.fetch(this.props.type, this.props.id);
+    const { definitionIsReady, definitionIsLoading, loadDefinition} = this.props;
+    if (!definitionIsReady && !definitionIsLoading) {
+      loadDefinition();
+    }
   }
 
   componentDidUpdate(previousProps) {
-    if (previousProps.type !== this.props.type || previousProps.id !== this.props.id) {
-      this.props.fetch(this.props.type, this.props.id);
+    const { definitionIsReady, instanceIsLoading, instanceError, type, id, currentInstance, fetch} = this.props;
+    if (definitionIsReady && !instanceIsLoading && !instanceError &&  (previousProps.type !== type || previousProps.id !== id || !currentInstance))  {
+      fetch(type, id);
     }
   }
 
@@ -52,6 +56,11 @@ export const Instance = connect(
     ...mapStateToProps(state, {
       data: state.instances.currentInstance
     }),
+    definitionIsReady: state.definition.isReady,
+    definitionIsLoading: state.definition.isLoading,
+    instanceIsLoading: state.instances.isLoading,
+    instanceError: state.instances.error,
+    currentInstance: state.instances.currentInstance,
     ImagePreviewsComponent: ImagePreviews,
     ImagePopupComponent: ImagePopup,
     TermsShortNoticeComponent: TermsShortNotice,
@@ -59,6 +68,7 @@ export const Instance = connect(
     type: props.match.params.type
   }),
   dispatch => ({
-    fetch: (type, id) => dispatch(actions.loadDefinitionAndInstance(type, id))
+    loadDefinition: () => dispatch(actions.loadDefinition()),
+    fetch: (type, id) => dispatch(actions.loadReference(type, id))
   })
 )(InstanceComponent);

@@ -17,6 +17,7 @@
 import * as types from "../actions.types";
 
 const initialState = {
+  error: null,
   hasRequest: false,
   requestReference: null,
   isLoading: false,
@@ -68,9 +69,21 @@ const loadInstanceSuccess = (state, action) => {
   };
 };
 
-const loadInstanceFailure = state => {
+const loadInstanceNoData = state => {
   return {
     ...state,
+    error: "The instance is not available",
+    hasRequest: false,
+    requestReference: null,
+    isLoading: false,
+    image: null
+  };
+};
+
+const loadInstanceFailure = (state, action) => {
+  return {
+    ...state,
+    error: action.error,
     hasRequest: false,
     requestReference: null,
     isLoading: false,
@@ -228,6 +241,8 @@ export function reducer(state = initialState, action = {}) {
     return loadInstanceRequest(state, action);
   case types.LOAD_INSTANCE_SUCCESS:
     return loadInstanceSuccess(state, action);
+  case types.LOAD_INSTANCE_NO_DATA:
+    return loadInstanceNoData(state, action);
   case types.LOAD_INSTANCE_FAILURE:
     return loadInstanceFailure(state, action);
   case types.CANCEL_INSTANCE_LOADING:

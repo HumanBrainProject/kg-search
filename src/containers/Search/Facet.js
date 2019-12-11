@@ -16,38 +16,16 @@
 
 import React from "react";
 import { history } from "../../store";
+import { getUpdatedUrl } from "../../helpers/BrowserHelpers";
 
 import "./Facet.css";
 
 class FacetCheckbox extends React.Component {
 
   componentDidUpdate(previousProps) {
-    const { name, checked, value, many, loc } = this.props;
-    const val = encodeURIComponent(value);
+    const { name, checked, value, many, location } = this.props;
     if (checked !== previousProps.checked) {
-      let found = false;
-      let counts = 0;
-      const queryString = Object.entries(loc.query).reduce((acc, [key, v]) => {
-        const m = key.match(/^([^[]+)\[(\d+)\]$/); // name[number]
-        const [, n, k] = m?m:[null, key, null];
-        const current = n === name && (!many || v === val );
-        found = found || current;
-        if (!current || checked) {
-          const appendix = many?(n === name?`[${counts}]`:`[${k}]`):"";
-          acc += `${(acc.length > 1)?"&":""}${n}${appendix}=${v}`;
-          if (many && n === name) {
-            counts++;
-          }
-        }
-        return acc;
-      }, "?");
-
-      let addParam = "";
-      if (!found && checked) {
-        const appendix = many?`[${counts}]`:"";
-        addParam = `${(queryString.length > 1)?"&":""}${name}${appendix}=${val}`;
-      }
-      const url = `${loc.pathname}${queryString}${addParam}`;
+      const url = getUpdatedUrl(name, checked, value, many, location);
       history.push(url);
     }
   }
@@ -70,7 +48,7 @@ class FacetCheckbox extends React.Component {
   }
 }
 
-const FacetListItem = ({ item, loc, onChange }) => {
+const FacetListItem = ({ item, location, onChange }) => {
 
   const onClick = active => onChange(item.value, active);
 
@@ -83,26 +61,26 @@ const FacetListItem = ({ item, loc, onChange }) => {
       count = { item.count }
       value = { item.value }
       many = { true }
-      loc = { loc }
+      location = { location }
       onClick = { onClick }
     />
   );
 };
 
-const FacetList = ({ list, loc, onChange }) => (
+const FacetList = ({ list, location, onChange }) => (
   <div className = "kgs-facet-list" > {
     list.map(item => (
       <FacetListItem
         key = { item.value }
         item = { item }
         onChange = { onChange }
-        loc = { loc }
+        location = { location }
       />
     ))
   } </div>
 );
 
-export const Facet = ({ facet, loc, onChange }) => {
+export const Facet = ({ facet, location, onChange }) => {
   let Component = null;
   let parameters = null;
   switch (facet.filterType) {
@@ -115,7 +93,7 @@ export const Facet = ({ facet, loc, onChange }) => {
         count: keyword.count,
         checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false
       })),
-      loc: loc,
+      location: location,
       onChange: (keyword, active) => onChange(facet.name, active, keyword)
     };
     break;
@@ -128,7 +106,7 @@ export const Facet = ({ facet, loc, onChange }) => {
       value: !!facet.value,
       checked: !!facet.value,
       many: false,
-      loc: loc,
+      location: location,
       onClick: active => onChange(facet.name, active)
     };
     break;

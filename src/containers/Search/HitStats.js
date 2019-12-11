@@ -39,7 +39,7 @@ export const HitStats = connect(
     const count = state.search.hits?state.search.hits.length:0;
     const to = from + count - 1;
     return {
-      show: state.search.isReady && state.search.initialRequestDone && !state.search.isLoading,
+      show: !state.search.isLoading,
       hitCount: state.search.total?state.search.total:0,
       from: from,
       to: to

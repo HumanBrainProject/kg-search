@@ -22,58 +22,43 @@ import { ElasticSearchHelpers } from "../../helpers/ElasticSearchHelpers";
 
 import "./FiltersPanel.css";
 
-class FiltersPanelBase extends React.Component {
-/*
-  componentDidUpdate(prevProps) {
-    if (this.props.values !== prevProps.values) {
-      this.performSearch();
-    }
+const FiltersPanelBase = ({ className, show, facets, location, onChange, onReset }) => {
+
+  if (!show) {
+    return null;
   }
-*/
-    performSearch = () => {
-      const { searchParams, onSearch, group } = this.props;
-      onSearch(searchParams, group);
-    }
 
-    render() {
-      const { className, show, facets, loc, onChange, onReset } = this.props;
+  const hasFilters = facets.length > 0;
 
-      if (!show) {
-        return null;
-      }
-
-      const hasFilters = facets.length > 0;
-
-      return (
-        <div className = { `kgs-filters ${className ? className : ""}` } >
-          <span>
-            <div className = "kgs-filters__header" >
-              <div className = "kgs-filters__title" > Filters </div>
-              {
-                hasFilters && ( <div className = "kgs-filters__reset" > < button type = "button"
-                  className = "kgs-filters__reset-button"
-                  onClick = { onReset } > Reset </button></div >
-                )
-              }
-            </div>
-            <span>
-              {
-                facets.map(facet => ( <Facet key = { facet.id }
-                  facet = { facet }
-                  onChange = { onChange }
-                  loc = { loc }
-                />
-                ))
-              }
-            </span>
-            {!hasFilters && ( <span className = "kgs-filters__no-filters" > No filters available
-              for your current search. </span>
-            )}
-          </span>
+  return (
+    <div className = { `kgs-filters ${className ? className : ""}` } >
+      <span>
+        <div className = "kgs-filters__header" >
+          <div className = "kgs-filters__title" > Filters </div>
+          {
+            hasFilters && ( <div className = "kgs-filters__reset" > < button type = "button"
+              className = "kgs-filters__reset-button"
+              onClick = { onReset } > Reset </button></div >
+            )
+          }
         </div>
-      );
-    }
-}
+        <span>
+          {
+            facets.map(facet => ( <Facet key = { facet.id }
+              facet = { facet }
+              onChange = { onChange }
+              location = { location }
+            />
+            ))
+          }
+        </span>
+        {!hasFilters && ( <span className = "kgs-filters__no-filters" > No filters available
+          for your current search. </span>
+        )}
+      </span>
+    </div>
+  );
+};
 
 export const FiltersPanel = connect(
   state => {
@@ -87,7 +72,7 @@ export const FiltersPanel = connect(
       }, ""),
       searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
       group: state.search.group,
-      loc: state.router.location
+      location: state.router.location
     };
   },
   dispatch => ({
