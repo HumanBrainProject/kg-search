@@ -21,6 +21,7 @@ const DEFAULT_GROUP = "public";
 
 const initialState = {
   queryFields: ["title", "description"],
+  initial: {},
   facets: [],
   types: [],
   sort: null,
@@ -51,17 +52,55 @@ const setupSearch = (state, action) => {
 
     const queryValuesBoost = ElasticSearchHelpers.getQueryValuesBoost(definition);
     const sortFields = ElasticSearchHelpers.getSortFields(definition);
-    const sort = sortFields.length ? sortFields[0] : null;
     const facetTypesOrder = ElasticSearchHelpers.getFacetTypesOrder(definition);
-    const selectedType = ElasticSearchHelpers.getDefaultSelectedType(definition, facetTypesOrder);
+    const defaultType = ElasticSearchHelpers.getDefaultSelectedType(definition, facetTypesOrder);
     const facets = ElasticSearchHelpers.constructFacets(definition);
     const types = Object.entries(definition).map(([type, typeDefinition]) => ({
       type: type,
       label: typeDefinition.name,
       count: 0
     }));
+
+    const getType = (types, type, defaultType) => {
+      const typeValue = Array.isArray(type)?type[0]:type;
+      if (types.some(t => t.type === typeValue)) {
+        return typeValue;
+      }
+      return defaultType;
+    };
+
+    const getSort = (sortFields, sort) => {
+      const filtered = sortFields.filter(t => t.param === sort);
+      if (filtered.length) {
+        return filtered[0];
+      }
+      if (sortFields.length) {
+        return sortFields[0];
+      }
+      return null;
+    };
+    const queryString = state.initial["q"]?state.initial["q"]:"";
+    const selectedType = getType(types, state.initial["facet_type"], defaultType);
+    const sort = getSort(sortFields, state.initial["sort"]);
+    facets.forEach(facet => {
+      const value = state.initial[facet.id];
+      if (value) {
+        switch (facet.filterType) {
+        case "list":
+          facet.value = Array.isArray(value)?value:[];
+          break;
+        case "exists":
+          facet.value = !!value;
+          break;
+        default:
+          break;
+        }
+      }
+    });
+
     return {
       ...state,
+      queryString:  queryString,
       queryFields: queryValuesBoost,
       facets: facets,
       types: types,
@@ -69,7 +108,7 @@ const setupSearch = (state, action) => {
       sortFields: sortFields,
       facetTypesOrder: facetTypesOrder,
       selectedType: selectedType,
-      facetDefaultSelectedType: selectedType
+      facetDefaultSelectedType: defaultType
     };
   }
 };
@@ -78,6 +117,13 @@ const setQueryString = (state, action) => {
   return {
     ...state,
     queryString: action.queryString
+  };
+};
+
+const setInitial  = (state, action) => {
+  return {
+    ...state,
+    initial: action.initial
   };
 };
 
@@ -343,6 +389,8 @@ const loadSearchFail = state => {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
+  case types.SET_INITIAL:
+    return setInitial(state, action);
   case types.LOAD_DEFINITION_SUCCESS:
     return setupSearch(state, action);
   case types.SET_QUERY_STRING:

@@ -14,11 +14,12 @@
 *   limitations under the License.
 */
 
-export const getUpdatedUrl = (name, checked, value, many, location) => {
+const getUpdatedQuery = (query, name, checked, value, many) => {
+  const result = {};
   const val = encodeURIComponent(value);
   let found = false;
   let counts = 0;
-  const queryString = Object.entries(location.query).reduce((acc, [key, v]) => {
+  Object.entries(query).forEach(([key, v]) => {
     const regParamWithBrackets = /^([^[]+)\[(\d+)\]$/;// name[number]
     const isParamWithBracketsMatchingName = regParamWithBrackets.test(name) && name == key;
     const doesParamHasBrackets = !isParamWithBracketsMatchingName && regParamWithBrackets.test(key);
@@ -26,68 +27,45 @@ export const getUpdatedUrl = (name, checked, value, many, location) => {
     const current = queryName === name && (!many || v === val );
     found = found || current;
     if (!current || checked) {
-      let queryParam = "";
       if (queryName === name) { // same param name
         const queryValue = current ? val:v;
         if (many) {
-          queryParam = `${queryName}[${counts}]=${queryValue}`;
+          result[`${queryName}[${counts}]`] =  queryValue;
           counts++;
         } else {
-          queryParam = `${key}=${queryValue}`;
+          result[key] = queryValue;
         }
       } else { // different param name
-        queryParam = `${key}=${v}`;
-      }
-      acc += `${(acc.length > 1)?"&":""}${queryParam}`;
-    }
-    return acc;
-  }, "?");
-
-  let addParam = "";
-  if (!found && checked) {
-    const appendix = many?`[${counts}]`:"";
-    addParam = `${(queryString.length > 1)?"&":""}${name}${appendix}=${val}`;
-  }
-  return `${location.pathname}${queryString}${addParam}`;
-};
-
-/*
-export const getUpdatedUrl2 = (list, location) => {
-  // name, checked, value, manyname, checked, value, many
-  const items = list.reduce((acc, item) => {
-    acc[item.name] = {
-      ...item,
-      key:
-      value: encodeURIComponent(item.value),
-      index: 0,
-      found: false
-    };
-    return acc;
-  }, {});
-  const queryString = Object.entries(location.query).reduce((acc, [key, v]) => {
-    const m = key.match(/^([^[]+)\[(\d+)\]$/); // name[number]
-    const [, n, k] = m?m:[null, key, null];
-    const item = items[n];
-    const current = item && (!many || v ===  item.value );
-    found = found || current;
-    if (!current || checked) {
-      const appendix = many?(n === name?`[${counts}]`:`[${k}]`):"";
-      acc += `${(acc.length > 1)?"&":""}${n}${appendix}=${v}`;
-      if (many && n === name) {
-        counts++;
+        result[key] = v;
       }
     }
-    return acc;
-  }, "?");
+  });
 
-  let addParam = "";
   if (!found && checked) {
     const appendix = many?`[${counts}]`:"";
-    addParam = `${(queryString.length > 1)?"&":""}${name}${appendix}=${val}`;
+    result[`${name}${appendix}`] =  val;
   }
-  return `${location.pathname}${queryString}${addParam}`;
+  return result;
 };
-*/
+
+const getLocationFromQuery = (query, location) => {
+  const queryString = Object.entries(query).reduce((acc, [key, value]) => {
+    acc += `${(acc.length > 1)?"&":""}${key}=${value}`;
+    return acc;
+  }, "?");
+  return `${location.pathname}${queryString}`;
+};
+
+export const getUpdatedUrl = (name, checked, value, many, location) => {
+  const query = getUpdatedQuery(location.query, name, checked, value, many);
+  return getLocationFromQuery(query, location);
+};
+
+export const getUpdatedUrlForList = (list, location) => {
+  const query = list.reduce((acc, item) => getUpdatedQuery(acc, item.name, item.checked, item.value, item.many), location.query);
+  return getLocationFromQuery(query, location);
+};
+
 export const windowHeight = () => {
   const w = window,
     d = document,

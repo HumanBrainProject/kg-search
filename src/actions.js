@@ -268,6 +268,14 @@ export const setFacet = (id, active, keyword) => {
   };
 };
 
+
+export const setInitial = initial => {
+  return {
+    type: types.SET_INITIAL,
+    initial: initial
+  };
+};
+
 export const resetFacets = () => {
   return {
     type: types.RESET_FACETS
@@ -308,7 +316,7 @@ export const doSearch = (searchParams, group) => {
   };
 };
 
-export const loadDefinition = (onSuccess, onError) => {
+export const loadDefinition = () => {
 
   const GRAPHQUERY_NAMESPACE = "https://schema.hbp.eu/graphQuery/";
   const SEARCHUI_NAMESPACE = "https://schema.hbp.eu/searchUi/";

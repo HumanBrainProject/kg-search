@@ -656,7 +656,22 @@ export class ElasticSearchHelpers {
         return aggs;
       };
 
-      const fields = selectedType ? queryFields.filter(field => field[selectedType])[0][selectedType] : [];
+      const getFields = (fields, type) => {
+        if (!type || !Array.isArray(fields)) {
+          return [];
+        }
+        const filtered = fields.filter(field => field && field[selectedType]);
+        if (!filtered.length){
+          return [];
+        }
+        const first = filtered[0];
+        if (first && Array.isArray(first[type])) {
+          return first[type];
+        }
+        return [];
+      };
+
+      const fields = getFields(queryFields, selectedType);
       const query = queryString ? {
         query_string: {
           fields: fields,

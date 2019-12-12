@@ -16,7 +16,6 @@
 
 import React from "react";
 import { connect } from "react-redux";
-import isEqual from "lodash/isEqual";
 import * as actions from "../actions";
 import { withTabKeyNavigation } from "../helpers/withTabKeyNavigation";
 import { SearchPanel } from "./Search/SearchPanel";
@@ -31,18 +30,34 @@ import { DetailView } from "./Search/DetailView";
 import "./Search.css";
 import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
 
+const regParamWithBrackets = /^([^[]+)\[(\d+)\]$/;// name[number]
+
 class SearchBase extends React.Component {
+
   componentDidMount() {
-    const { definitionIsReady, definitionIsLoading, loadDefinition} = this.props;
+    const { definitionIsReady, definitionIsLoading, loadDefinition, location, setInitial } = this.props;
     if (!definitionIsReady && !definitionIsLoading) {
       loadDefinition();
     }
+    const initial = Object.entries(location.query).reduce((acc, [key, value]) => {
+      const [, name, count] = regParamWithBrackets.test(key)?key.match(regParamWithBrackets):[null, key, null];
+      const val = decodeURIComponent(value);
+      if (count) {
+        if (!acc[name]) {
+          acc[name] = [];
+        }
+        acc[name].push(val);
+      } else {
+        acc[name] = val;
+      }
+      return acc;
+    }, {});
+    setInitial(initial);
   }
 
   componentDidUpdate(previousProps) {
     const { definitionIsReady, searchParams, group, search, location} = this.props;
-    //if (definitionIsReady && location.search !== previousProps.location.search) {
-    if (definitionIsReady && (!isEqual(previousProps.searchParams, searchParams) || previousProps.group !== group)) {
+    if (definitionIsReady  && (definitionIsReady !== previousProps.definitionIsReady || (location.search !== previousProps.location.search))) {
       search(searchParams, group);
     }
   }
@@ -92,6 +107,7 @@ export const Search = connect(
   }),
   dispatch => ({
     loadDefinition: () => dispatch(actions.loadDefinition()),
-    search: (searchParams, group) => dispatch(actions.doSearch(searchParams, group))
+    search: (searchParams, group) => dispatch(actions.doSearch(searchParams, group)),
+    setInitial: initial => dispatch(actions.setInitial(initial))
   })
 )(SearchWithTabKeyNavigation);

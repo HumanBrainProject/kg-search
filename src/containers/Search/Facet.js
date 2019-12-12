@@ -15,20 +15,22 @@
  */
 
 import React from "react";
-import { history } from "../../store";
-import { getUpdatedUrl } from "../../helpers/BrowserHelpers";
 
 import "./Facet.css";
 
 class FacetCheckbox extends React.Component {
 
-  componentDidUpdate(previousProps) {
-    const { name, checked, value, many, location } = this.props;
-    if (checked !== previousProps.checked) {
-      const url = getUpdatedUrl(name, checked, value, many, location);
-      history.push(url);
-    }
-  }
+  // componentDidMount() {
+  //   const { location, name, value, many, onClick } = this.props;
+  //   const checked =
+  //     many?
+  //       Object.entries(location.query).some(([key, val]) => key.replace(/\[\d+\]$/, "") === name && encodeURIComponent(value) === val)
+  //       :
+  //       location.query[name] === value;
+  //   if(checked) {
+  //     onClick(true);
+  //   }
+  // }
 
   handleClick = e => {
     e.stopPropagation();
@@ -37,13 +39,13 @@ class FacetCheckbox extends React.Component {
 
   render() {
     const { label, checked, count } = this.props;
-    //window.console.log(label, checked, count);
-    return ( <div className = { `kgs-facet-checkbox ${checked ? "is-active" : ""}` }
-      onClick = { this.handleClick } >
-      <input type = "checkbox" checked = { checked } />
-      <div className = "kgs-facet-checkbox__text" > { label } </div>
-      <div className = "kgs-facet-checkbox__count" > { count } </div>
-    </div>
+    return (
+      <div className = { `kgs-facet-checkbox ${checked ? "is-active" : ""}` }
+        onClick = { this.handleClick } >
+        <input type = "checkbox" checked = { checked } />
+        <div className = "kgs-facet-checkbox__text" > { label } </div>
+        <div className = "kgs-facet-checkbox__count" > { count } </div>
+      </div>
     );
   }
 }

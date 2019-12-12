@@ -37,6 +37,12 @@ class SeachPanelBaseComponent extends React.Component {
       window.addEventListener("mousedown", this.handleMouseDownEvent, false);
     }
     window.addEventListener("scroll", this.handleScrollEvent);
+    const { location } = this.props;
+    const q = location.query["q"];
+    if(q && q.length) {
+      const queryString = decodeURIComponent(q);
+      this.setState({value: queryString});
+    }
   }
 
   componentWillUnmount() {
@@ -51,9 +57,7 @@ class SeachPanelBaseComponent extends React.Component {
 
   handleChange = e => this.setState({value: e.target.value});
 
-  handleSearch = () => {
-    this.props.onQueryStringChange(this.state.value);
-  }
+  handleSearch = () => this.props.onQueryStringChange(this.state.value);
 
   handleKeyDown = e => {
     if(e.key === "Enter") {
@@ -71,6 +75,7 @@ class SeachPanelBaseComponent extends React.Component {
           type="text"
           placeholder="Search (e.g. brain or neuroscience)"
           aria-label="Search"
+          value={this.state.value}
           onChange={this.handleChange}
           onKeyDown={this.handleKeyDown}
           ref={this.ref}  />
@@ -94,9 +99,9 @@ class SeachPanelComponent extends React.Component {
   }
 
   render() {
-    const {isFloating, relatedElements, onQueryStringChange} = this.props;
+    const {isFloating, relatedElements, onQueryStringChange, location} = this.props;
     return (
-      <SeachPanelBaseComponent isFloating={isFloating} relatedElements={relatedElements} onQueryStringChange={onQueryStringChange} />
+      <SeachPanelBaseComponent isFloating={isFloating} relatedElements={relatedElements} onQueryStringChange={onQueryStringChange} location={location} />
     );
   }
 }
@@ -112,8 +117,7 @@ const SearchPanelContainer = connect(
   },
   dispatch => ({
     onHelp: () => dispatch(actions.setInfo(help)),
-    onQueryStringChange: value => dispatch(actions.setQueryString(value)),
-    onSearch: (searchParams, group) => dispatch(actions.doSearch(searchParams, group))
+    onQueryStringChange: value => dispatch(actions.setQueryString(value))
   })
 )(SeachPanelComponent);
 

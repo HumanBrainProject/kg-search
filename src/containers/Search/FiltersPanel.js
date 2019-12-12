@@ -21,8 +21,47 @@ import { Facet } from "./Facet";
 import { ElasticSearchHelpers } from "../../helpers/ElasticSearchHelpers";
 
 import "./FiltersPanel.css";
+import { getUpdatedUrlForList } from "../../helpers/BrowserHelpers";
+import { history } from "../../store";
 
 class FiltersPanelBase extends React.Component {
+
+  componentDidUpdate(previousProps) {
+    const { facets, values, location } = this.props;
+    if (values !== previousProps.values) {
+      const list = this.calculateFacetList(facets);
+      const url = getUpdatedUrlForList(list, location);
+      history.push(url);
+    }
+  }
+
+  calculateFacetList = facets => {
+    return facets.reduce((acc, facet) => {
+      switch (facet.filterType) {
+      case "list":
+        facet.keywords.map(keyword => {
+          acc.push({
+            name: facet.id,
+            value: keyword.value,
+            checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false,
+            many: true
+          });
+        });
+        break;
+      case "exists":
+        acc.push({
+          name: facet.id,
+          value: !!facet.value,
+          checked: !!facet.value,
+          many: false
+        });
+        break;
+      default:
+        break;
+      }
+      return acc;
+    }, []);
+  }
 
   render(){
     const  { className, show, facets, location, onChange, onReset } = this.props;
@@ -45,11 +84,13 @@ class FiltersPanelBase extends React.Component {
           </div>
           <span>
             {
-              facets.map(facet => ( <Facet key = { facet.id }
-                facet = { facet }
-                onChange = { onChange }
-                location = { location }
-              />
+              facets.map(facet => (
+                <Facet
+                  key = { facet.id }
+                  facet = { facet }
+                  onChange = { onChange }
+                  location = { location }
+                />
               ))
             }
           </span>
@@ -83,7 +124,6 @@ export const FiltersPanel = connect(
   },
   dispatch => ({
     onChange: (id, active, keyword) => dispatch(actions.setFacet(id, active, keyword)),
-    onReset: () => dispatch(actions.resetFacets()),
-    onSearch: (searchParams, group) => dispatch(actions.doSearch(searchParams, group))
+    onReset: () => dispatch(actions.resetFacets())
   })
 )(FiltersPanelBase);

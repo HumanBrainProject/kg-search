@@ -55,7 +55,6 @@ export const SortingSelector = connect(
     location: state.router.location
   }),
   dispatch => ({
-    onChange: value => dispatch(actions.setSort(value)),
-    onSearch: (searchParams, group) => dispatch(actions.doSearch(searchParams, group))
+    onChange: value => dispatch(actions.setSort(value))
   })
 )(SortingSelectorComponent);
