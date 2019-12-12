@@ -45,7 +45,6 @@ function configureStoreProd(initialState) {
 function configureStoreDev(initialState) {
   const reactRouterMiddleware = routerMiddleware(history);
   const loggerMiddleware = createLogger();
-
   const middlewares = [reactRouterMiddleware, thunk, loggerMiddleware];
 
   const composeEnhancers =

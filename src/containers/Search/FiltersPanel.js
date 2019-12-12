@@ -65,7 +65,11 @@ class FiltersPanelBase extends React.Component {
 
 export const FiltersPanel = connect(
   state => {
-    const facets = state.search.facets.filter(f => state.search.selectedType === f.type && f.count > 0);
+    const facets = state.search.facets.filter(f =>
+      state.search.selectedType === f.type &&
+      f.count > 0 &&
+      (f.filterType !== "list" || f.keywords.length)
+    );
     return {
       show: state.definition.isReady && state.search.facets.length > 0,
       facets: facets,

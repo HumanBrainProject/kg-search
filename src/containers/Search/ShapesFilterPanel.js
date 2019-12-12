@@ -59,7 +59,7 @@ class ShapesFilterPanelBase extends React.Component {
   componentDidUpdate(prevProps) {
     const { selectedType, location } = this.props;
     if (selectedType !== prevProps.selectedType) {
-      const url = getUpdatedUrl("facet_type", true, selectedType, true, location);
+      const url = getUpdatedUrl("facet_type[0]", true, selectedType, false, location);
       history.push(url);
     }
   }

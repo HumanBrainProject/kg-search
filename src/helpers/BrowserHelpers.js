@@ -15,40 +15,38 @@
 */
 
 export const getUpdatedUrl = (name, checked, value, many, location) => {
-  const isFacetType = name === "facet_type";
   const val = encodeURIComponent(value);
   let found = false;
   let counts = 0;
-  const queryString = !isFacetType ? Object.entries(location.query).reduce((acc, [key, v]) => {
-    const m = key.match(/^([^[]+)\[(\d+)\]$/); // name[number]
-    const [, queryName, queryNumber] = m?m:[null, key, null];
+  const queryString = Object.entries(location.query).reduce((acc, [key, v]) => {
+    const regParamWithBrackets = /^([^[]+)\[(\d+)\]$/;// name[number]
+    const isParamWithBracketsMatchingName = regParamWithBrackets.test(name) && name == key;
+    const doesParamHasBrackets = !isParamWithBracketsMatchingName && regParamWithBrackets.test(key);
+    const [, queryName] = doesParamHasBrackets?key.match(regParamWithBrackets):[null, key];
     const current = queryName === name && (!many || v === val );
     found = found || current;
     if (!current || checked) {
-      let appendix = "";
-      if(queryName === "facet_type") {
-        appendix = `[${queryNumber}]`;
-      } else if (!many && queryName === name) {
-        appendix = "";
-      } else {
-        appendix = queryName === name?`[${counts}]`: (queryNumber ? `[${queryNumber}]`: "");
+      let queryParam = "";
+      if (queryName === name) { // same param name
+        const queryValue = current ? val:v;
+        if (many) {
+          queryParam = `${queryName}[${counts}]=${queryValue}`;
+          counts++;
+        } else {
+          queryParam = `${key}=${queryValue}`;
+        }
+      } else { // different param name
+        queryParam = `${key}=${v}`;
       }
-      acc += `${(acc.length > 1)?"&":""}${queryName}${appendix}=${v}`;
-      if (many && queryName === name) {
-        counts++;
-      }
+      acc += `${(acc.length > 1)?"&":""}${queryParam}`;
     }
     return acc;
-  }, "?"): "?";
+  }, "?");
 
   let addParam = "";
   if (!found && checked) {
-    if(isFacetType){
-      addParam = `${(queryString.length > 1)?"&":""}${name}[0]=${val}`;
-    } else {
-      const appendix = many?`[${counts}]`:"";
-      addParam = `${(queryString.length > 1)?"&":""}${name}${appendix}=${val}`;
-    }
+    const appendix = many?`[${counts}]`:"";
+    addParam = `${(queryString.length > 1)?"&":""}${name}${appendix}=${val}`;
   }
   return `${location.pathname}${queryString}${addParam}`;
 };

@@ -271,8 +271,9 @@ const loadSearchResult = (state, action) => {
       const res = aggs[facet.id];
       if (facet.filterType === "list") {
         const faggs = facet.isChild ? (res ? res.inner : null) : res;
-        facet.keywords = getKeywords(faggs, facet.name);
-        facet.others = getOthers(faggs, facet.name);
+        const name =  facet.isChild ? `${facet.name}.children.${facet.childName}`:facet.name;
+        facet.keywords = getKeywords(faggs, name);
+        facet.others = getOthers(faggs, name);
       }
       const count = (res && res.doc_count) ? res.doc_count : 0;
       facet.count = count;

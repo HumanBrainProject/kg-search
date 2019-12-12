@@ -19,18 +19,17 @@ import { connect } from "react-redux";
 import * as actions from "../../actions";
 import { Select } from "../../components/Select";
 import { ElasticSearchHelpers } from "../../helpers/ElasticSearchHelpers";
+import { getUpdatedUrl } from "../../helpers/BrowserHelpers";
+import { history } from "../../store";
 
 class SortingSelectorComponent extends React.Component {
-/*
+
   componentDidUpdate(prevProps) {
-    if (this.props.value !== prevProps.value) {
-      this.performSearch();
+    const { param, location } = this.props;
+    if (param !== prevProps.param) {
+      const url = getUpdatedUrl("sort", true, param, false, location);
+      history.push(url);
     }
-  }
-*/
-  performSearch = () => {
-    const { searchParams, onSearch, group } = this.props;
-    onSearch(searchParams, group);
   }
 
   render() {
@@ -46,12 +45,14 @@ export const SortingSelector = connect(
     className: props.className,
     label: "Sort by",
     value: state.search.sort?state.search.sort.label:null,
+    param: state.search.sort?state.search.sort.param:null,
     list: state.search.sortFields.map(f => ({
       label: f.label,
       value: f.key
     })),
     searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
-    group: state.search.group
+    group: state.search.group,
+    location: state.router.location
   }),
   dispatch => ({
     onChange: value => dispatch(actions.setSort(value)),

@@ -224,6 +224,7 @@ export class ElasticSearchHelpers {
       let sortFields = {
         _score: {
           key: "newestFirst",
+          param: "newestFirst",
           label: "Relevance",
           fields: [{
             _score: {
@@ -249,7 +250,8 @@ export class ElasticSearchHelpers {
             sortFields[fieldName] = {
               key: field.value,
               label: field.value,
-              fields: [res]
+              fields: [res],
+              param: `${key}_${res[key]}`
             };
           }
         });
