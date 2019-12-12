@@ -439,9 +439,28 @@ export class ElasticSearchHelpers {
       const getAllFilters = facets => {
         const filters = {};
 
+        const buildFilter  = (facet, key, value) => {
+          const term = {};
+          term[key] = value;
+          if (facet.isChild) {
+            return {
+              nested: {
+                path: `${facet.name}.children`,
+                query: {
+                  term: term
+                }
+              }
+            };
+          }
+
+          return {
+            term: term
+          };
+        };
+
         facets.forEach(facet => {
           let filter = null;
-          const facetKey = facet.isChild ? `${facet.name}.${facet.childName}.value.keyword` : `${facet.name}.value.keyword`;
+          const facetKey = facet.isChild ? `${facet.name}.children.${facet.childName}.value.keyword` : `${facet.name}.value.keyword`;
           switch (facet.filterType) {
           case "_type":
           {
@@ -462,27 +481,15 @@ export class ElasticSearchHelpers {
                     }
                   };
                   facet.value.forEach(v => {
-                    const term = {};
-                    term[facetKey] = v;
-                    filter.bool.should.push({
-                      term: term
-                    });
+                    filter.bool.should.push(buildFilter(facet, facetKey, v));
                   });
                 } else {
-                  const term = {};
-                  term[facetKey] = facet.value[0];
-                  filter = {
-                    term: term
-                  };
+                  filter = buildFilter(facet, facetKey, facet.value[0]);
                 }
               } else { // AND
                 filter = [];
                 facet.value.forEach(v => {
-                  const term = {};
-                  term[facetKey] = v;
-                  filter.push({
-                    term: term
-                  });
+                  filter.push(buildFilter(facet, facetKey, v));
                 });
               }
             }
@@ -502,8 +509,7 @@ export class ElasticSearchHelpers {
           }
           if (filter) {
             filters[facet.id] = {
-              filterType: facet.filterType,
-              active: !!facet.value,
+              facet: facet,
               filter: filter
             };
           }
@@ -512,8 +518,9 @@ export class ElasticSearchHelpers {
       };
 
       const setFilters = (filters, key) => {
-        const filtered = Object.entries(filters).filter(([id, { filterType, active }]) => {
-          switch (filterType) {
+        const filtered = Object.entries(filters).filter(([id, { facet }]) => {
+          const active = !!facet.value;
+          switch (facet.filterType) {
           case "exists":
             if (id === key) {
               return true;

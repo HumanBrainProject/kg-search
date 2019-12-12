@@ -94,7 +94,7 @@ export const Facet = ({ facet, location, onChange }) => {
         checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false
       })),
       location: location,
-      onChange: (keyword, active) => onChange(facet.name, active, keyword)
+      onChange: (keyword, active) => onChange(facet.id, active, keyword)
     };
     break;
   case "exists":
@@ -107,7 +107,7 @@ export const Facet = ({ facet, location, onChange }) => {
       checked: !!facet.value,
       many: false,
       location: location,
-      onClick: active => onChange(facet.name, active)
+      onClick: active => onChange(facet.id, active)
     };
     break;
   default:

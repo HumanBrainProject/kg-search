@@ -259,10 +259,10 @@ export const setSort = value => {
   };
 };
 
-export const setFacet = (name, active, keyword) => {
+export const setFacet = (id, active, keyword) => {
   return {
     type: types.SET_FACET,
-    name: name,
+    id: id,
     active: active,
     keyword: keyword,
   };

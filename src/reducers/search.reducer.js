@@ -85,7 +85,7 @@ const setFacet = (state, action) => {
   return {
     ...state,
     facets: state.facets.map(f => {
-      if (f.name !== action.name) {
+      if (f.id !== action.id) {
         return f;
       }
       switch (f.filterType) {

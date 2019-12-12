@@ -82,7 +82,7 @@ export const FiltersPanel = connect(
     };
   },
   dispatch => ({
-    onChange: (name, active, keyword) => dispatch(actions.setFacet(name, active, keyword)),
+    onChange: (id, active, keyword) => dispatch(actions.setFacet(id, active, keyword)),
     onReset: () => dispatch(actions.resetFacets()),
     onSearch: (searchParams, group) => dispatch(actions.doSearch(searchParams, group))
   })
