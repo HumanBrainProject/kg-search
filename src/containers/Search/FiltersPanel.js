@@ -37,12 +37,11 @@ class FiltersPanelBase extends React.Component {
         <span>
           <div className = "kgs-filters__header" >
             <div className = "kgs-filters__title" > Filters </div>
-            {
-              hasFilters && ( <div className = "kgs-filters__reset" > < button type = "button"
+            <div className = "kgs-filters__reset" >
+              <button type = "button"
                 className = "kgs-filters__reset-button"
-                onClick = { onReset } > Reset </button></div >
-              )
-            }
+                onClick = { onReset } > Reset </button>
+            </div >
           </div>
           <span>
             {

@@ -18,10 +18,10 @@ import React from "react";
 import { connect } from "react-redux";
 import * as actions from "../../actions";
 import { help } from "../../data/help.js";
+import { history } from "../../store";
 import { withFloatingScrollEventsSubscription } from "../../helpers/withFloatingScrollEventsSubscription";
-import { isMobile } from "../../helpers/BrowserHelpers";
+import { isMobile, getUpdatedUrl } from "../../helpers/BrowserHelpers";
 import "./SearchPanel.css";
-import { ElasticSearchHelpers } from "../../helpers/ElasticSearchHelpers";
 
 class SeachPanelBaseComponent extends React.Component {
   constructor(props){
@@ -84,16 +84,13 @@ class SeachPanelBaseComponent extends React.Component {
 }
 
 class SeachPanelComponent extends React.Component {
-/*
+
   componentDidUpdate(prevProps) {
-    if (this.props.queryString !== prevProps.queryString) {
-      this.performSearch();
+    const { queryString, location } = this.props;
+    if (queryString !== prevProps.queryString) {
+      const url = getUpdatedUrl("q", true, queryString, false, location);
+      history.push(url);
     }
-  }
-*/
-  performSearch = () => {
-    const { searchParams, onSearch, group} = this.props;
-    onSearch(searchParams, group);
   }
 
   render() {
@@ -110,8 +107,7 @@ const SearchPanelContainer = connect(
       isFloating: props.isFloating,
       relatedElements: props.relatedElements,
       queryString: state.search.queryString,
-      searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
-      group: state.search.group
+      location: state.router.location
     };
   },
   dispatch => ({
