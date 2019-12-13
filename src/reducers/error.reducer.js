@@ -79,7 +79,7 @@ export function reducer(state = initialState, action = {}) {
       message: `Your session has expired${sessionStatus}. Please login again.`,
       retry: {
         label: "Login",
-        action: types.REQUEST_AUTHENTICATION
+        action: types.AUTHENTICATE
       }
     };
   }

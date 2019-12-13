@@ -19,11 +19,12 @@ import API from "./services/API";
 import axios from "axios";
 import ReactPiwik from "react-piwik";
 import { ElasticSearchHelpers } from "./helpers/ElasticSearchHelpers";
+import { getHashKey, generateKey, getSearchKey } from "./helpers/BrowserHelpers";
+import { history } from "./store";
 
-export const setApplicationReady = isReady => {
+export const setApplicationReady = () => {
   return {
-    type: types.SET_APPLICATION_READY,
-    isReady: isReady
+    type: types.SET_APPLICATION_READY
   };
 };
 
@@ -145,6 +146,15 @@ export const setGroup = (group, initialize) => {
   };
 };
 
+export const resetTypeForGroup = group => {
+  return {
+    type: types.RESET_TYPE_FOR_GROUP,
+    group: group
+  };
+};
+
+
+
 export const loadInstance = reference => {
   return {
     type: types.LOAD_INSTANCE,
@@ -211,16 +221,10 @@ export const setCurrentInstanceFromBrowserLocation = () => {
   };
 };
 
-export const authenticate = accessToken => {
+export const setToken = accessToken => {
   return {
-    type: types.AUTHENTICATE,
+    type: types.SET_TOKEN,
     accessToken: accessToken
-  };
-};
-
-export const requestAuthentication = () => {
-  return {
-    type: types.REQUEST_AUTHENTICATION
   };
 };
 
@@ -484,5 +488,46 @@ export const loadPreview = reference => {
           dispatch(loadInstanceFailure(reference, error));
         }
       });
+  };
+};
+
+export const authenticate = () => {
+  const stateKey= btoa(JSON.stringify({
+    queryString: window.location.search
+  }));
+  const nonceKey=  generateKey();
+  const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+  window.location.href = API.endpoints.auth(redirectUri, stateKey, nonceKey);
+  return {
+    type: types.AUTHENTICATING
+  };
+};
+
+export const initialize = (location, defaultGroup) => {
+  return dispatch => {
+    const accessToken = getHashKey("access_token");
+    if (accessToken) {
+      dispatch(setToken(accessToken));
+      const stateValue = getHashKey("state");
+      const state = stateValue?JSON.parse(atob(stateValue)):{};
+      const queryString = (state && state.queryString)?state.queryString:"";
+      history.replace(`${location.pathname}${queryString}`);
+      dispatch(setApplicationReady());
+    } else {
+      const group = getSearchKey("group");
+
+      // backward compatibility test
+      const instance = location.hash.substr(1);
+      if (location.pathname === "/" && instance) {
+        const url = `/instances/${instance}${group?("?group=" + group):""}`;
+        history.replace(url);
+      }
+
+      if((group && group !== defaultGroup) || location.pathname.startsWith("/previews/"))  {
+        dispatch(authenticate());
+      } else {
+        dispatch(setApplicationReady());
+      }
+    }
   };
 };

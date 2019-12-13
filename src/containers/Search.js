@@ -102,7 +102,7 @@ export const Search = connect(
     definitionIsReady: state.definition.isReady,
     definitionIsLoading: state.definition.isLoading,
     searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
-    group: state.search.group,
+    group: state.groups.group,
     location: state.router.location
   }),
   dispatch => ({

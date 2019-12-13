@@ -22,10 +22,13 @@ export const GroupSelection = connect(
   (state, props) => ({
     className: props.className,
     label: "group",
-    value: state.search.group,
+    value: state.groups.group,
     list: state.groups.groups?state.groups.groups:[]
   }),
   dispatch => ({
-    onChange: value => dispatch(actions.setGroup(value))
+    onChange: value => {
+      dispatch(actions.setGroup(value));
+      dispatch(actions.resetTypeForGroup(value));
+    }
   })
 )(Select);

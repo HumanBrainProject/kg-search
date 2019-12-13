@@ -51,7 +51,7 @@ export const SortingSelector = connect(
       value: f.key
     })),
     searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
-    group: state.search.group,
+    group: state.groups.group,
     location: state.router.location
   }),
   dispatch => ({

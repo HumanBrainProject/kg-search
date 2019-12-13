@@ -50,7 +50,7 @@ const getClipboardContent = (state, location, currentInstance, currentGroup) => 
 
 export const ShareButtons = connect(
   state => {
-    const href = getClipboardContent(state, window.location, state.instances.currentInstance, state.search.group);
+    const href = getClipboardContent(state, window.location, state.instances.currentInstance, state.groups.group);
     return {
       clipboardContent: href,
       emailToLink: getShareEmailToLink(href)

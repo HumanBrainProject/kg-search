@@ -10,10 +10,7 @@ const endpoints = {
   "search": () => "/proxy/search/kg/_search",
   "instance": (type, id) => `/proxy/default/kg/${type}/${id}`,
   "preview": (path, instanceId) => `/query/${path}/search/templates/searchUi/libraries/instancesDynamic/instances/${instanceId}`,
-  "auth": (stateKey, nonceKey) => {
-    const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
-    return `${oidcUri}?response_type=id_token%20token&client_id=${oidcClientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`;
-  }
+  "auth": (redirectUri, stateKey, nonceKey) => `${oidcUri}?response_type=id_token%20token&client_id=${oidcClientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`
 };
 
 class API{
@@ -25,8 +22,8 @@ class API{
       if (state.auth.accessToken) {
         header.Authorization = "Bearer " + state.auth.accessToken;
       }
-      if (state.auth.accessToken && state.search.group !== null) {
-        header["index-hint"] = state.search.group;
+      if (state.auth.accessToken && state.groups.group !== null) {
+        header["index-hint"] = state.groups.group;
       }
       return Promise.resolve(config);
     });

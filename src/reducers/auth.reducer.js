@@ -22,21 +22,21 @@ const initialState = {
   isAuthenticated: false
 };
 
-const requestAuthentication = state => {
-  return {
-    ...state,
-    accessToken: null,
-    authenticate: true,
-    isAuthenticated: false
-  };
-};
-
 const authenticate = (state, action) => {
   return {
     ...state,
     accessToken: action.accessToken,
     authenticate: false,
     isAuthenticated: !!action.accessToken
+  };
+};
+
+const setToken = (state, action) => {
+  return {
+    ...state,
+    accessToken: action.accessToken,
+    authenticate: false,
+    isAuthenticated: true
   };
 };
 
@@ -51,8 +51,8 @@ const logout = state => {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-  case types.REQUEST_AUTHENTICATION:
-    return requestAuthentication(state, action);
+  case types.SET_TOKEN:
+    return setToken(state, action);
   case types.AUTHENTICATE:
     return authenticate(state, action);
   case types.LOAD_SEARCH_SESSION_FAILURE:

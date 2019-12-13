@@ -27,6 +27,6 @@ export const SignInButton = connect(
   }),
   dispatch => ({
     onClick: () => dispatch(actions.logout()),
-    offClick: () => dispatch(actions.requestAuthentication())
+    offClick: () => dispatch(actions.authenticate())
   })
 )(ConditionalButton);

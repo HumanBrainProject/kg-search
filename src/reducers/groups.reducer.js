@@ -16,13 +16,22 @@
 
 import * as types from "../actions.types";
 
+const DEFAULT_GROUP = "public";
+
 const initialState = {
   isReady: false,
   hasRequest: false,
   isLoading: false,
   hasError: false,
-  groups: []
+  groups: [],
+  group: DEFAULT_GROUP,
+  defaultGroup: DEFAULT_GROUP
 };
+
+const setGroup = (state, action) => ({
+  ...state,
+  group: action.group
+});
 
 const loadGroupsRequest = state => {
   return {
@@ -33,13 +42,22 @@ const loadGroupsRequest = state => {
   };
 };
 
-const loadGroupsSuccess = (state, action) => ({
+const loadGroupsSuccess = (state, action) => {
+  const groups = (action.groups instanceof Array) ? [...action.groups.map(e => ({ label: e.name, value: e.name }))] : [];
+  return {
+    ...state,
+    isReady: true,
+    hasRequest: false,
+    isLoading: false,
+    hasError: false,
+    groups: groups
+  };
+};
+
+
+const resetGroups = state => ({
   ...state,
-  isReady: true,
-  hasRequest: false,
-  isLoading: false,
-  hasError: false,
-  groups: (action.groups instanceof Array) ? [...action.groups.map(e => ({ label: e.name, value: e.name }))] : []
+  groups: []
 });
 
 const loadGroupsFailure = state => ({
@@ -53,6 +71,8 @@ const loadGroupsFailure = state => ({
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
+  case types.SET_GROUP:
+    return setGroup(state, action);
   case types.LOAD_GROUPS_REQUEST:
     return loadGroupsRequest(state, action);
   case types.LOAD_GROUPS_SUCCESS:
@@ -60,7 +80,7 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_GROUPS_FAILURE:
     return loadGroupsFailure(state, action);
   case types.LOGOUT:
-    return loadGroupsSuccess(state, {groups: []});
+    return resetGroups(state, action);
   default:
     return state;
   }

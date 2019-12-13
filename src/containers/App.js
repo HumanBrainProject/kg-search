@@ -15,10 +15,10 @@
 */
 
 import React from "react";
-import { ConnectedRouter } from "connected-react-router";
+import { connect } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 
-import { history } from "../store";
+import * as actions from "../actions";
 import { Search } from "./Search";
 import { Instance } from "./Instance";
 import { NotFound } from "../components/NotFound";
@@ -29,23 +29,38 @@ import { InfoPanel } from "./InfoPanel";
 import "./App.css";
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.props.initialize(this.props.location, this.props.defaultGroup);
+  }
+
   render() {
+    if (!this.props.isReady) {
+      return null;
+    }
     return (
-      <ConnectedRouter history={history}>
-        <div className="kgs-app">
-          <Switch>
-            <Route path="/instances/:type/:id" exact component={Instance} />
-            <Route path="/previews/:org/:domain/:schema/:version/:id" exact component={Preview} />
-            <Route path="/" exact component={Search} />
-            <Route component={NotFound} />
-          </Switch>
-          <FetchingPanel />
-          <ErrorPanel />
-          <InfoPanel />
-        </div>
-      </ConnectedRouter>
+      <div className="kgs-app">
+        <Switch>
+          <Route path="/instances/:type/:id" exact component={Instance} />
+          <Route path="/previews/:org/:domain/:schema/:version/:id" exact component={Preview} />
+          <Route path="/" exact component={Search} />
+          <Route component={NotFound} />
+        </Switch>
+        <FetchingPanel />
+        <ErrorPanel />
+        <InfoPanel />
+      </div>
     );
   }
 }
 
-export default App;
+export default connect(
+  state => ({
+    location: state.router.location,
+    defaultGroup: state.groups.defaultGroup,
+    isReady: state.application.isReady
+  }),
+  dispatch => ({
+    initialize: (location, defaultGroup) => dispatch(actions.initialize(location, defaultGroup))
+  })
+)(App);

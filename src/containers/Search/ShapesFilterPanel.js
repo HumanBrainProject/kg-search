@@ -90,7 +90,7 @@ export const ShapesFilterPanel = connect(
         ...t,
         active: t.type === state.search.selectedType
       })),
-    group: state.search.group,
+    group: state.groups.group,
     location: state.router.location
   }),
   dispatch => ({

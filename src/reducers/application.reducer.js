@@ -25,12 +25,10 @@ const initialState = {
   gridLayoutMode: true
 };
 
-const setApplicationReady = (state, action) => {
-  return {
-    ...state,
-    isReady: action.isReady
-  };
-};
+const setApplicationReady = state => ({
+  ...state,
+  isReady: true
+});
 
 const agreeTermsShortNotice = state => {
   if (typeof(Storage) !== "undefined") {

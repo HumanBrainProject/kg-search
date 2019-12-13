@@ -15,12 +15,10 @@
 */
 
 import { createStore, compose, applyMiddleware } from "redux";
-// import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
 import { createBrowserHistory } from "history";
 import { routerMiddleware } from "connected-react-router";
 import thunk from "redux-thunk";
 
-// import * as reducers from "./reducers";
 import { createLogger } from "redux-logger";
 
 import createRootReducer from "./reducers";

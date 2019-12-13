@@ -15,7 +15,8 @@
 */
 
 import { Provider } from "react-redux";
-import { store } from "./store";
+import { ConnectedRouter } from "connected-react-router";
+import { store, history } from "./store";
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./containers/App";
@@ -46,10 +47,11 @@ const handleGlobalShortcuts = (e) => {
 
 document.addEventListener("keydown", handleGlobalShortcuts);
 
-
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <ConnectedRouter history={history}>
+      <App />
+    </ConnectedRouter>
   </Provider>,
   document.getElementById("root")
 );

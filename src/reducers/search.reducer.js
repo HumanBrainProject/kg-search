@@ -17,8 +17,6 @@
 import * as types from "../actions.types";
 import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
 
-const DEFAULT_GROUP = "public";
-
 const initialState = {
   queryFields: ["title", "description"],
   initial: {},
@@ -34,9 +32,7 @@ const initialState = {
   queryString: "",
   selectedType: null,
   nonce: null,
-  defaultGroup: DEFAULT_GROUP,
   groupsSettings: {},
-  group: DEFAULT_GROUP,
   hitsPerPage: 20,
   hits: [],
   total: 0,
@@ -197,6 +193,20 @@ const setType = (state, action) => {
   };
 };
 
+
+const resetTypeForGroup = (state, action) => {
+
+  const getSelectedType = (settings, group, defaultType) => (group && settings && settings[group] && settings[group].facetDefaultSelectedType) ? settings[group].facetDefaultSelectedType : defaultType;
+
+  const selectedType = getSelectedType(state.groupsSettings, action.group, state.facetDefaultSelectedType);
+
+  return {
+    ...state,
+    selectedType: selectedType
+  };
+};
+
+
 const setGroupsSettings = (state, action) => {
 
   const groupsSettings = {};
@@ -218,57 +228,6 @@ const setGroupsSettings = (state, action) => {
   return {
     ...state,
     groupsSettings: groupsSettings
-  };
-};
-
-const setGroup = (state, action) => {
-  if (action && action.group) {
-    if (action.group === state.group) {
-      return state;
-    }
-
-    const getSelectedType = (settings, group, defaultType) => (group && settings && settings[group] && settings[group].facetDefaultSelectedType) ? settings[group].facetDefaultSelectedType : defaultType;
-
-    const selectedType = getSelectedType(state.groupsSettings, action.group, state.facetDefaultSelectedType);
-
-    return {
-      ...state,
-      hasRequest: !action.initialize,
-      group: action.group,
-      selectedType: selectedType
-    };
-  }
-  // Reset
-  if (state.group === state.defaultGroup) {
-    return state;
-  }
-  return {
-    ...state,
-    hasRequest: !action.initialize,
-    group: state.defaultGroup
-  };
-};
-
-const loadGroupsSuccess = (state, action) => {
-  if (action.groups instanceof Array && action.groups.some(e => e.name === state.group)) {
-    return state;
-  }
-  if (state.group === state.defaultGroup) {
-    return state;
-  }
-  return {
-    ...state,
-    group: state.defaultGroup
-  };
-};
-
-const loadGroupsFailure = state => {
-  if (state.group === state.defaultGroup) {
-    return state;
-  }
-  return {
-    ...state,
-    group: state.defaultGroup
   };
 };
 
@@ -367,7 +326,6 @@ const loadSearchResult = (state, action) => {
     initialRequestDone: true,
     isLoading: false,
     nonce: null,
-    group: action.group ? action.group : state.group,
     facets: getUpdatedFacets(state.facets, action.results),
     types: getUpdatedTypes(state.types, state.selectedType, state.group, state.groupsSettings, state.facetTypesOrder, action.results),
     hits: (action.results && action.results.hits && Array.isArray(action.results.hits.hits)) ? action.results.hits.hits : [],
@@ -381,7 +339,6 @@ const loadSearchFail = state => {
     ...state,
     isLoading: false,
     nonce: null,
-    group: state.group,
     results: [],
     from: 0
   };
@@ -397,6 +354,8 @@ export function reducer(state = initialState, action = {}) {
     return setQueryString(state, action);
   case types.SET_TYPE:
     return setType(state, action);
+  case types.RESET_TYPE_FOR_GROUP:
+    return resetTypeForGroup(state, action);
   case types.SET_SORT:
     return setSort(state, action);
   case types.SET_FACET:
@@ -405,8 +364,6 @@ export function reducer(state = initialState, action = {}) {
     return resetFacets(state, action);
   case types.LOAD_GROUPS:
     return setGroupsSettings(state, action);
-  case types.SET_GROUP:
-    return setGroup(state, action);
   case types.LOAD_SEARCH:
     return loadSearch(state, action);
   case types.LOAD_SEARCH_REQUEST:
@@ -416,14 +373,6 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_SEARCH_BAD_REQUEST:
   case types.LOAD_SEARCH_SESSION_FAILURE:
     return loadSearchFail(state, action);
-  case types.LOGOUT:
-    return setGroup(state, {
-      group: state.defaultGroup
-    });
-  case types.LOAD_GROUPS_SUCCESS:
-    return loadGroupsSuccess(state, action);
-  case types.LOAD_GROUPS_FAILURE:
-    return loadGroupsFailure(state, action);
   default:
     return state;
   }

@@ -118,7 +118,7 @@ export const FiltersPanel = connect(
         return acc;
       }, ""),
       searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
-      group: state.search.group,
+      group: state.groups.group,
       location: state.router.location
     };
   },

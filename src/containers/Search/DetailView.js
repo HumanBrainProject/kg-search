@@ -19,7 +19,7 @@ import * as actions from "../../actions";
 import { Carousel } from "../../components/Carousel";
 import { ShareButtons } from "../ShareButtons";
 import { Instance } from "./Instance";
-import { searchToObj } from "../../helpers/OIDCHelpers";
+import { searchToObj } from "../../helpers/BrowserHelpers";
 import "./DetailView.css";
 
 
