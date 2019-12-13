@@ -428,21 +428,17 @@ export const loadDefinition = () => {
   };
 };
 
-
-export const loadGroups = groups => {
+export const loadGroups = () => {
   return dispatch => {
-    if (!groups.isReady && !groups.isLoading) {
-      dispatch(loadGroupsRequest());
-      axios
-        .get(API.endpoints.groups())
-        .then(response => {
-          dispatch(loadGroupsSuccess(response.groups));
-        })
-        .catch(error => {
-          dispatch(loadGroupsFailure(error));
-        });
-      // dispatch(loadGroupsSuccess([]));// TODO: check if we need that if(!token)
-    }
+    dispatch(loadGroupsRequest());
+    axios
+      .get(API.endpoints.groups())
+      .then(response => {
+        dispatch(loadGroupsSuccess(response.groups));
+      })
+      .catch(error => {
+        dispatch(loadGroupsFailure(error));
+      });
   };
 };
 

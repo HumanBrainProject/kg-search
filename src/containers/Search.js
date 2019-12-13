@@ -35,10 +35,7 @@ const regParamWithBrackets = /^([^[]+)\[(\d+)\]$/;// name[number]
 class SearchBase extends React.Component {
 
   componentDidMount() {
-    const { definitionIsReady, definitionIsLoading, loadDefinition, location, setInitial } = this.props;
-    if (!definitionIsReady && !definitionIsLoading) {
-      loadDefinition();
-    }
+    const { location, setInitial } = this.props;
     const initial = Object.entries(location.query).reduce((acc, [key, value]) => {
       const [, name, count] = regParamWithBrackets.test(key)?key.match(regParamWithBrackets):[null, key, null];
       const val = decodeURIComponent(value);
@@ -53,12 +50,26 @@ class SearchBase extends React.Component {
       return acc;
     }, {});
     setInitial(initial);
+    this.start();
   }
 
   componentDidUpdate(previousProps) {
-    const { definitionIsReady, searchParams, group, search, location} = this.props;
-    if (definitionIsReady  && (definitionIsReady !== previousProps.definitionIsReady || (location.search !== previousProps.location.search))) {
+    const { definitionIsReady,  isGroupsReady, shouldLoadGroups, searchParams, group, search, location} = this.props;
+    if (definitionIsReady  && (!shouldLoadGroups || isGroupsReady) && (definitionIsReady !== previousProps.definitionIsReady || isGroupsReady !== previousProps.isGroupsReady || (location.search !== previousProps.location.search))) {
       search(searchParams, group);
+    }
+  }
+
+  start = () => {
+    const { definitionIsReady, definitionIsLoading, loadDefinition, isGroupsReady, isGroupLoading, shouldLoadGroups, loadGroups } = this.props;
+    if (!definitionIsReady) {
+      if (!definitionIsLoading) {
+        loadDefinition();
+      }
+    } else if (shouldLoadGroups && !isGroupsReady) {
+      if (!isGroupLoading) {
+        loadGroups();
+      }
     }
   }
 
@@ -101,13 +112,17 @@ export const Search = connect(
     isActive: !state.instances.currentInstance && !state.application.info,
     definitionIsReady: state.definition.isReady,
     definitionIsLoading: state.definition.isLoading,
+    isGroupsReady: state.groups.isReady,
+    isGroupLoading: state.groups.isLoading,
+    shouldLoadGroups: !!state.auth.accessToken,
     searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
     group: state.groups.group,
     location: state.router.location
   }),
   dispatch => ({
+    setInitial: initial => dispatch(actions.setInitial(initial)),
     loadDefinition: () => dispatch(actions.loadDefinition()),
-    search: (searchParams, group) => dispatch(actions.doSearch(searchParams, group)),
-    setInitial: initial => dispatch(actions.setInitial(initial))
+    loadGroups: () => dispatch(actions.loadGroups()),
+    search: (searchParams, group) => dispatch(actions.doSearch(searchParams, group))
   })
 )(SearchWithTabKeyNavigation);
