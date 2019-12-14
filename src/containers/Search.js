@@ -30,14 +30,32 @@ import { DetailView } from "./Search/DetailView";
 import "./Search.css";
 import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
 
-const regParamWithBrackets = /^([^[]+)\[(\d+)\]$/;// name[number]
-
 class SearchBase extends React.Component {
 
   componentDidMount() {
-    const { location, setInitial } = this.props;
-    const initial = Object.entries(location.query).reduce((acc, [key, value]) => {
-      const [, name, count] = regParamWithBrackets.test(key)?key.match(regParamWithBrackets):[null, key, null];
+    const { setInitialSearchParams, setInitialGroup } = this.props;
+    const params = this.getUrlParmeters();
+    const searchParam = {...params};
+    delete searchParam.group;
+    setInitialSearchParams(searchParam);
+    if (params.group) {
+      setInitialGroup(params.group);
+    }
+    this.search();
+  }
+
+  componentDidUpdate(previousProps) {
+    const { definitionIsReady, isGroupsReady, location } = this.props;
+    if (definitionIsReady !== previousProps.definitionIsReady || isGroupsReady !== previousProps.isGroupsReady || location.search !== previousProps.location.search) {
+      this.search();
+    }
+  }
+
+  getUrlParmeters() {
+    const { location } = this.props;
+    const regParamWithBrackets = /^([^[]+)\[(\d+)\]$/; // name[number]
+    return Object.entries(location.query).reduce((acc, [key, value]) => {
+      const [, name, count] = regParamWithBrackets.test(key) ? key.match(regParamWithBrackets) : [null, key, null];
       const val = decodeURIComponent(value);
       if (count) {
         if (!acc[name]) {
@@ -49,19 +67,10 @@ class SearchBase extends React.Component {
       }
       return acc;
     }, {});
-    setInitial(initial);
-    this.start();
   }
 
-  componentDidUpdate(previousProps) {
-    const { definitionIsReady,  isGroupsReady, shouldLoadGroups, searchParams, group, search, location} = this.props;
-    if (definitionIsReady  && (!shouldLoadGroups || isGroupsReady) && (definitionIsReady !== previousProps.definitionIsReady || isGroupsReady !== previousProps.isGroupsReady || (location.search !== previousProps.location.search))) {
-      search(searchParams, group);
-    }
-  }
-
-  start = () => {
-    const { definitionIsReady, definitionIsLoading, loadDefinition, isGroupsReady, isGroupLoading, shouldLoadGroups, loadGroups } = this.props;
+  search() {
+    const { definitionIsReady, definitionIsLoading, loadDefinition, isGroupsReady, isGroupLoading, shouldLoadGroups, loadGroups, searchParams, group, search } = this.props;
     if (!definitionIsReady) {
       if (!definitionIsLoading) {
         loadDefinition();
@@ -70,6 +79,8 @@ class SearchBase extends React.Component {
       if (!isGroupLoading) {
         loadGroups();
       }
+    } else {
+      search(searchParams, group);
     }
   }
 
@@ -120,7 +131,8 @@ export const Search = connect(
     location: state.router.location
   }),
   dispatch => ({
-    setInitial: initial => dispatch(actions.setInitial(initial)),
+    setInitialSearchParams: params => dispatch(actions.setInitialSearchParams(params)),
+    setInitialGroup: group => dispatch(actions.setInitialGroup(group)),
     loadDefinition: () => dispatch(actions.loadDefinition()),
     loadGroups: () => dispatch(actions.loadGroups()),
     search: (searchParams, group) => dispatch(actions.doSearch(searchParams, group))

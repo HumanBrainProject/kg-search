@@ -51,7 +51,7 @@ const getFields = (group, type, data, mapping, filter) => {
 
 //const getPreviews = (data, mapping, idx=0) => {
 const getPreviews = (data, mapping) => {
-  if (data instanceof Array) {
+  if (Array.isArray(data)) {
     const previews = [];
     data.forEach((elt, idx) => previews.push(...getPreviews(elt, mapping, idx)));
     return previews;

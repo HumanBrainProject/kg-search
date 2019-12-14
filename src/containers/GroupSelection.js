@@ -14,16 +14,39 @@
 *   limitations under the License.
 */
 
+import React from "react";
 import { connect } from "react-redux";
+
 import * as actions from "../actions";
+import { getUpdatedUrl } from "../helpers/BrowserHelpers";
+import { history } from "../store";
 import { Select } from "../components/Select";
+
+class GroupSelectionBase extends React.Component {
+
+  componentDidUpdate(prevProps) {
+    const { value, defaultValue, location } = this.props;
+    if (value !== prevProps.value) {
+      const url = getUpdatedUrl("group", value !== defaultValue, value, false, location);
+      history.push(url);
+    }
+  }
+
+  render() {
+    return (
+      <Select {...this.props} />
+    );
+  }
+}
 
 export const GroupSelection = connect(
   (state, props) => ({
     className: props.className,
     label: "group",
     value: state.groups.group,
-    list: state.groups.groups?state.groups.groups:[]
+    list: state.groups.groups?state.groups.groups:[],
+    defaultValue: state.groups.defaultGroup,
+    location: state.router.location
   }),
   dispatch => ({
     onChange: value => {
@@ -31,4 +54,4 @@ export const GroupSelection = connect(
       dispatch(actions.resetTypeForGroup(value));
     }
   })
-)(Select);
+)(GroupSelectionBase);

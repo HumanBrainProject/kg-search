@@ -19,7 +19,7 @@ import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
 
 const initialState = {
   queryFields: ["title", "description"],
-  initial: {},
+  initialParams: {},
   facets: [],
   types: [],
   sort: null,
@@ -27,7 +27,6 @@ const initialState = {
   facetTypesOrder: {},
   facetDefaultSelectedType: null,
   initialRequestDone: false,
-  hasRequest: false,
   isLoading: false,
   queryString: "",
   selectedType: null,
@@ -75,11 +74,11 @@ const setupSearch = (state, action) => {
       }
       return null;
     };
-    const queryString = state.initial["q"]?state.initial["q"]:"";
-    const selectedType = getType(types, state.initial["facet_type"], defaultType);
-    const sort = getSort(sortFields, state.initial["sort"]);
+    const queryString = state.initialParams["q"]?state.initialParams["q"]:"";
+    const selectedType = getType(types, state.initialParams["facet_type"], defaultType);
+    const sort = getSort(sortFields, state.initialParams["sort"]);
     facets.forEach(facet => {
-      const value = state.initial[facet.id];
+      const value = state.initialParams[facet.id];
       if (value) {
         switch (facet.filterType) {
         case "list":
@@ -116,10 +115,10 @@ const setQueryString = (state, action) => {
   };
 };
 
-const setInitial  = (state, action) => {
+const setInitialSearchParams  = (state, action) => {
   return {
     ...state,
-    initial: action.initial
+    initialParams: action.params
   };
 };
 
@@ -210,9 +209,9 @@ const resetTypeForGroup = (state, action) => {
 const setGroupsSettings = (state, action) => {
 
   const groupsSettings = {};
-  if (action.groups instanceof Array) {
+  if (Array.isArray(action.groups)) {
     action.groups.forEach(group => {
-      if (group.spec && group.spec.order instanceof Array && group.spec.order.length) {
+      if (group.spec && Array.isArray(group.spec.order) && group.spec.order.length) {
         const order = {
           "$all": 0
         };
@@ -231,18 +230,10 @@ const setGroupsSettings = (state, action) => {
   };
 };
 
-const loadSearch = state => {
-  return {
-    ...state,
-    hasRequest: !state.isLoading
-  };
-};
-
 const loadSearchRequest = (state, action) => {
   return {
     ...state,
     isLoading: true,
-    hasRequest: false,
     nonce: action.nonce
   };
 };
@@ -346,8 +337,8 @@ const loadSearchFail = state => {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-  case types.SET_INITIAL:
-    return setInitial(state, action);
+  case types.SET_INITIAL_SEARCH_PARAMS:
+    return setInitialSearchParams(state, action);
   case types.LOAD_DEFINITION_SUCCESS:
     return setupSearch(state, action);
   case types.SET_QUERY_STRING:
@@ -364,8 +355,6 @@ export function reducer(state = initialState, action = {}) {
     return resetFacets(state, action);
   case types.LOAD_GROUPS:
     return setGroupsSettings(state, action);
-  case types.LOAD_SEARCH:
-    return loadSearch(state, action);
   case types.LOAD_SEARCH_REQUEST:
     return loadSearchRequest(state, action);
   case types.LOAD_SEARCH_SUCCESS:

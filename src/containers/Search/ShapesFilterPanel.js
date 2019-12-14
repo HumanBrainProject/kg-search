@@ -15,12 +15,14 @@
  */
 
 import React from "react";
-import { ShapeIcon } from "./ShapeIcon";
 import { connect } from "react-redux";
-import * as actions from "../../actions";
-import "./ShapesFilterPanel.css";
-import { getUpdatedUrl } from "../../helpers/BrowserHelpers";
+
 import { history } from "../../store";
+import { getUpdatedUrl } from "../../helpers/BrowserHelpers";
+import * as actions from "../../actions";
+import { ShapeIcon } from "./ShapeIcon";
+
+import "./ShapesFilterPanel.css";
 
 // {itemKey, label, count, rawCount, listDocCount, active, disabled, showCount, bemBlocks, onClick}
 const ShapeFilterBase = ({ type: { type, label, count, active, disabled }, onClick }) => (

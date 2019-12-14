@@ -16,7 +16,6 @@
 
 import * as types from "./actions.types";
 import API from "./services/API";
-import axios from "axios";
 import ReactPiwik from "react-piwik";
 import { ElasticSearchHelpers } from "./helpers/ElasticSearchHelpers";
 import { getHashKey, generateKey, getSearchKey } from "./helpers/BrowserHelpers";
@@ -138,11 +137,17 @@ export const cancelSearch = () => {
   };
 };
 
-export const setGroup = (group, initialize) => {
+export const setInitialGroup = group => {
+  return {
+    type: types.SET_INITIAL_GROUP,
+    group: group
+  };
+};
+
+export const setGroup = group => {
   return {
     type: types.SET_GROUP,
-    group: group,
-    initialize: initialize
+    group: group
   };
 };
 
@@ -272,11 +277,10 @@ export const setFacet = (id, active, keyword) => {
   };
 };
 
-
-export const setInitial = initial => {
+export const setInitialSearchParams = params => {
   return {
-    type: types.SET_INITIAL,
-    initial: initial
+    type: types.SET_INITIAL_SEARCH_PARAMS,
+    params: params
   };
 };
 
@@ -291,7 +295,7 @@ export const doSearch = (searchParams, group) => {
     dispatch(loadSearchRequest());
     ReactPiwik.push(["setCustomUrl", window.location.href]);
     ReactPiwik.push(["trackPageView"]);
-    axios
+    API.axios
       .post(API.endpoints.search(), ElasticSearchHelpers.buildRequest(searchParams))
       .then(response => {
         const index = response.headers["X-Selected-Index"];
@@ -409,7 +413,7 @@ export const loadDefinition = () => {
 
   return dispatch => {
     dispatch(loadDefinitionRequest());
-    axios
+    API.axios
       .get(API.endpoints.definition())
       .then(({ data }) => {
         const definition = data && data._source;
@@ -431,10 +435,10 @@ export const loadDefinition = () => {
 export const loadGroups = () => {
   return dispatch => {
     dispatch(loadGroupsRequest());
-    axios
+    API.axios
       .get(API.endpoints.groups())
       .then(response => {
-        dispatch(loadGroupsSuccess(response.groups));
+        dispatch(loadGroupsSuccess(response.data));
       })
       .catch(error => {
         dispatch(loadGroupsFailure(error));
@@ -445,7 +449,7 @@ export const loadGroups = () => {
 export const loadReference = (type, id) => {
   return dispatch => {
     dispatch(loadInstanceRequest());
-    axios
+    API.axios
       .get(API.endpoints.instance(type, id))
       .then(response => {
         if (response.data.found) {
@@ -465,7 +469,7 @@ export const loadPreview = reference => {
     dispatch(loadInstanceRequest());
     const path = ""; //TODO: fetch from the router
     const id = ""; //TODO: fetch from the router
-    axios
+    API.axios
       .get(API.endpoints.preview(path, id))
       .then(response => {
         if (response.data && !response.data.error) {

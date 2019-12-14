@@ -20,37 +20,46 @@ const DEFAULT_GROUP = "public";
 
 const initialState = {
   isReady: false,
-  hasRequest: false,
   isLoading: false,
   hasError: false,
   groups: [],
   group: DEFAULT_GROUP,
-  defaultGroup: DEFAULT_GROUP
+  defaultGroup: DEFAULT_GROUP,
+  initialGroup: DEFAULT_GROUP
 };
 
-const setGroup = (state, action) => ({
-  ...state,
-  group: action.group
-});
+const setInitialGroup = (state, action) => {
+  return {
+    ...state,
+    initialGroup: action.group
+  };
+};
+
+const setGroup = (state, action) => {
+  return {
+    ...state,
+    group: action.group
+  };
+};
 
 const loadGroupsRequest = state => {
   return {
     ...state,
-    hasRequest: false,
     isLoading: true,
     hasError: false
   };
 };
 
 const loadGroupsSuccess = (state, action) => {
-  const groups = (action.groups instanceof Array) ? [...action.groups.map(e => ({ label: e.name, value: e.name }))] : [];
+  const groups = Array.isArray(action.groups) ? [...action.groups.map(e => ({ label: e.name, value: e.name }))] : [];
+  const group = (state.initialGroup && groups.some(g => g.value === state.initialGroup))?state.initialGroup:state.defaultGroup;
   return {
     ...state,
     isReady: true,
-    hasRequest: false,
     isLoading: false,
     hasError: false,
-    groups: groups
+    groups: groups,
+    group: group
   };
 };
 
@@ -63,7 +72,6 @@ const resetGroups = state => ({
 const loadGroupsFailure = state => ({
   ...state,
   isReady: false,
-  hasRequest: false,
   isLoading: false,
   hasError: true,
   groups: []
@@ -71,6 +79,8 @@ const loadGroupsFailure = state => ({
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
+  case types.SET_INITIAL_GROUP:
+    return setInitialGroup(state, action);
   case types.SET_GROUP:
     return setGroup(state, action);
   case types.LOAD_GROUPS_REQUEST:

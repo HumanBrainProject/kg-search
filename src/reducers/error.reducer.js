@@ -65,7 +65,7 @@ export function reducer(state = initialState, action = {}) {
       message: message,
       retry: {
         label: "Retry",
-        action: types.LOAD_SEARCH
+        action: types.LOAD_SEARCH_REQUEST
       },
       cancel: {
         label: "Cancel",

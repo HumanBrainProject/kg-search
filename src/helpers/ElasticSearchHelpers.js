@@ -139,8 +139,8 @@ export class ElasticSearchHelpers {
       let maxFuzzySearch = maxFuzzySearchConfig < 0 ? terms.length : terms.length < maxFuzzySearchConfig ? terms.length : maxFuzzySearchConfig;
       const filteredTerms = terms.length === 1 ? terms : (terms.filter(term => {
         return (term.length >= queryTweaking.wildcard.minNbOfChars || term.length >= queryTweaking.fuzzySearch.minNbOfChars) &&
-                    !term.includes(".") &&
-                    !["a", "above", "all", "an", "are", "as", "any", "because", "below", "besides", "but", "by", "eg", "either", "for", "hence", "how", "which", "where", "who", "ie", "in", "instead", "is", "none", "of", "one", "other", "over", "same", "that", "the", "then", "thereby", "therefore", "this", "though", "thus", "to", "under", "until", "when", "why"].includes(term);
+          !term.includes(".") &&
+          !["a", "above", "all", "an", "are", "as", "any", "because", "below", "besides", "but", "by", "eg", "either", "for", "hence", "how", "which", "where", "who", "ie", "in", "instead", "is", "none", "of", "one", "other", "over", "same", "that", "the", "then", "thereby", "therefore", "this", "though", "thus", "to", "under", "until", "when", "why"].includes(term);
       }));
       if (terms.length <= queryTweaking.maxNbOfTermsTrigger) {
         filteredTerms.forEach((term, idx) => {
@@ -189,338 +189,337 @@ export class ElasticSearchHelpers {
     return str;
   };
 
+  static getFacetTypesOrder = definition => {
+    const facetTypesOrder = {};
+    Object.entries(definition).forEach(([type, typeDefinition]) => {
+      const order = Number(typeDefinition.order);
+      if (!isNaN(order)) {
+        facetTypesOrder[type] = order;
+      }
+    });
+    return facetTypesOrder;
+  };
 
-    static getFacetTypesOrder = definition => {
-      const facetTypesOrder = {};
-      Object.entries(definition).forEach(([type, typeDefinition]) => {
-        const order = Number(typeDefinition.order);
-        if (!isNaN(order)) {
-          facetTypesOrder[type] = order;
+  static getDefaultSelectedType = (definition, facetTypesOrder) => {
+    let selectedType = null;
+    let defaultSelectionDefined = false;
+    Object.keys(definition).forEach(type => {
+      const order = Number(definition[type].order);
+      if (!isNaN(order)) {
+        facetTypesOrder[type] = order;
+        if (definition[type].defaultSelection) {
+          selectedType = type;
+          defaultSelectionDefined = true;
+        }
+        if (!defaultSelectionDefined && (!selectedType || facetTypesOrder[type] < facetTypesOrder[selectedType])) {
+          selectedType = type;
+        }
+      }
+    });
+    return selectedType;
+  };
+
+  static getSortFields = definition => {
+    let sortFields = {
+      _score: {
+        key: "newestFirst",
+        param: "newestFirst",
+        label: "Relevance",
+        fields: [{
+          _score: {
+            order: "desc"
+          }
+        },
+        {
+          "first_release.value": {
+            order: "desc",
+            missing: "_last"
+          }
+        }
+        ],
+        defaultOption: true
+      }
+    };
+    Object.values(definition).forEach(typeDefinition => {
+      Object.entries(typeDefinition.fields).forEach(([fieldName, field]) => {
+        if (field.sort && sortFields[fieldName] === undefined) {
+          const key = `${fieldName}.value.keyword`;
+          const res = {};
+          res[key] = "asc";
+          sortFields[fieldName] = {
+            key: field.value,
+            label: field.value,
+            fields: [res],
+            param: `${key}_${res[key]}`
+          };
         }
       });
-      return facetTypesOrder;
-    };
+    });
+    return Object.values(sortFields);
+  };
 
-    static getDefaultSelectedType = (definition, facetTypesOrder) => {
-      let selectedType = null;
-      let defaultSelectionDefined = false;
-      Object.keys(definition).forEach(type => {
-        const order = Number(definition[type].order);
-        if (!isNaN(order)) {
-          facetTypesOrder[type] = order;
-          if (definition[type].defaultSelection) {
-            selectedType = type;
-            defaultSelectionDefined = true;
-          }
-          if (!defaultSelectionDefined && (!selectedType || facetTypesOrder[type] < facetTypesOrder[selectedType])) {
-            selectedType = type;
-          }
+  static constructFacets = definition => {
+    const facets = [];
+    Object.entries(definition).forEach(([type, typeDefinition]) => {
+      Object.entries(typeDefinition.fields).forEach(([name, field]) => {
+        if (field.facet) {
+          facets.push({
+            id: "facet_" + type + "_" + name,
+            name: name,
+            type: type,
+            filterType: field.facet,
+            filterOrder: field.facetOrder,
+            exclusiveSelection: field.facetExclusiveSelection,
+            fieldType: field.type,
+            fieldLabel: field.value,
+            isChild: false,
+            count: 0,
+            value: null,
+            keywords: [],
+            size: ElasticSearchHelpers.listFacetDefaultSize
+          });
         }
-      });
-      return selectedType;
-    };
-
-    static getSortFields = definition => {
-      let sortFields = {
-        _score: {
-          key: "newestFirst",
-          param: "newestFirst",
-          label: "Relevance",
-          fields: [{
-            _score: {
-              order: "desc"
-            }
-          },
-          {
-            "first_release.value": {
-              order: "desc",
-              missing: "_last"
-            }
-          }
-          ],
-          defaultOption: true
-        }
-      };
-      Object.values(definition).forEach(typeDefinition => {
-        Object.entries(typeDefinition.fields).forEach(([fieldName, field]) => {
-          if (field.sort && sortFields[fieldName] === undefined) {
-            const key = `${fieldName}.value.keyword`;
-            const res = {};
-            res[key] = "asc";
-            sortFields[fieldName] = {
-              key: field.value,
-              label: field.value,
-              fields: [res],
-              param: `${key}_${res[key]}`
-            };
-          }
-        });
-      });
-      return Object.values(sortFields);
-    };
-
-    static constructFacets = definition => {
-      const facets = [];
-      Object.entries(definition).forEach(([type, typeDefinition]) => {
-        Object.entries(typeDefinition.fields).forEach(([name, field]) => {
-          if (field.facet) {
-            facets.push({
-              id: "facet_" + type + "_" + name,
-              name: name,
-              type: type,
-              filterType: field.facet,
-              filterOrder: field.facetOrder,
-              exclusiveSelection: field.facetExclusiveSelection,
-              fieldType: field.type,
-              fieldLabel: field.value,
-              isChild: false,
-              count: 0,
-              value: null,
-              keywords: [],
-              size: ElasticSearchHelpers.listFacetDefaultSize
-            });
-          }
-          if (field.children) {
-            Object.entries(field.children).forEach(([childName, child]) => {
-              if (child.facet) {
-                facets.push({
-                  id: "facet_" + type + "_" + name + ".children." + childName,
-                  name: name,
-                  type: type,
-                  filterType: child.facet,
-                  filterOrder: child.facetOrder,
-                  exclusiveSelection: field.facetExclusiveSelection,
-                  fieldType: child.type,
-                  fieldLabel: child.value,
-                  isChild: true,
-                  path: name + ".children",
-                  childName: childName,
-                  count: 0,
-                  value: null,
-                  keywords: [],
-                  size: ElasticSearchHelpers.listFacetDefaultSize
-                });
-              }
-            });
-          }
-        });
-      });
-      return facets;
-    };
-
-    static getQueryValuesBoost = definition => {
-
-      const initQueryFieldsRec = (shapeFields, parent) => {
-        let key = Object.keys(shapeFields)[0];
-        let queryFields = {};
-        let newQueryfields = {};
-        Object.values(shapeFields).forEach(el => {
-          Object.keys(el).forEach(fieldName => {
-            const field = shapeFields[key][fieldName];
-            const fullFieldName = parent + fieldName;
-            let queryField = queryFields[fullFieldName];
-            if (!queryField) {
-              queryField = { boost: 1 };
-              queryFields[fullFieldName] = queryField;
-            }
-
-            if (field && field.boost && field.boost > queryField.boost) {
-              queryField.boost = field.boost;
-            }
-
-            newQueryfields[key] = queryFields;
-
-            if (field["children"] !== undefined) {
-              let children = initQueryFieldsChildren(field["children"], fullFieldName + ".children.");
-              newQueryfields[key] = Object.assign(queryFields, children);
+        if (field.children) {
+          Object.entries(field.children).forEach(([childName, child]) => {
+            if (child.facet) {
+              facets.push({
+                id: "facet_" + type + "_" + name + ".children." + childName,
+                name: name,
+                type: type,
+                filterType: child.facet,
+                filterOrder: child.facetOrder,
+                exclusiveSelection: field.facetExclusiveSelection,
+                fieldType: child.type,
+                fieldLabel: child.value,
+                isChild: true,
+                path: name + ".children",
+                childName: childName,
+                count: 0,
+                value: null,
+                keywords: [],
+                size: ElasticSearchHelpers.listFacetDefaultSize
+              });
             }
           });
-        });
-        return newQueryfields;
-      };
+        }
+      });
+    });
+    return facets;
+  };
 
-      const initQueryFieldsChildren = (shapeFields, parent) => {
-        let childrenQueryFields = {};
-        Object.keys(shapeFields).forEach(fieldName => {
-          const field = shapeFields[fieldName];
+  static getQueryValuesBoost = definition => {
+
+    const initQueryFieldsRec = (shapeFields, parent) => {
+      let key = Object.keys(shapeFields)[0];
+      let queryFields = {};
+      let newQueryfields = {};
+      Object.values(shapeFields).forEach(el => {
+        Object.keys(el).forEach(fieldName => {
+          const field = shapeFields[key][fieldName];
           const fullFieldName = parent + fieldName;
-          let queryField = childrenQueryFields[fullFieldName];
+          let queryField = queryFields[fullFieldName];
           if (!queryField) {
             queryField = { boost: 1 };
-            childrenQueryFields[fullFieldName] = queryField;
+            queryFields[fullFieldName] = queryField;
           }
 
           if (field && field.boost && field.boost > queryField.boost) {
             queryField.boost = field.boost;
           }
-        });
-        return childrenQueryFields;
-      };
 
-      const filterShapeFields = (shape, shapeFields) => {
-        const filteredShapedFields = {};
-        const result = {};
-        for (let [key, value] of Object.entries(shapeFields)) {
-          if (value.ignoreForSearch !== true) {
-            filteredShapedFields[key] = value;
+          newQueryfields[key] = queryFields;
+
+          if (field["children"] !== undefined) {
+            let children = initQueryFieldsChildren(field["children"], fullFieldName + ".children.");
+            newQueryfields[key] = Object.assign(queryFields, children);
           }
-        }
-        result[shape] = filteredShapedFields;
-        return result;
-      };
-
-      const queryValuesBoost = [];
-      if (definition) {
-        Object.keys(definition).forEach(shape => {
-          const shapeFields = definition[shape] && definition[shape].fields;
-          const filteredShapeFields = filterShapeFields(shape, shapeFields);
-          const initFields = initQueryFieldsRec(filteredShapeFields, "");
-          queryValuesBoost.push(initFields);
         });
-      }
-
-      queryValuesBoost.map(field => {
-        let key = Object.keys(field)[0];
-        Object.values(field).forEach(fieldObj => {
-          const lastRes = [];
-          Object.keys(fieldObj).forEach(f => {
-            const boost = fieldObj[f].boost;
-            if (boost) {
-              lastRes.push(f + ".value^" + boost);
-            } else {
-              lastRes.push(f + ".value");
-            }
-          });
-          field[key] = lastRes;
-        });
-        return field;
       });
-      return queryValuesBoost;
+      return newQueryfields;
     };
 
-    static getBoostedTypes = definition => {
-      return Object.entries(definition).map(([type, typeDefinition]) => ({
-        name: type,
-        boost: typeDefinition.boost
-      }));
+    const initQueryFieldsChildren = (shapeFields, parent) => {
+      let childrenQueryFields = {};
+      Object.keys(shapeFields).forEach(fieldName => {
+        const field = shapeFields[fieldName];
+        const fullFieldName = parent + fieldName;
+        let queryField = childrenQueryFields[fullFieldName];
+        if (!queryField) {
+          queryField = { boost: 1 };
+          childrenQueryFields[fullFieldName] = queryField;
+        }
+
+        if (field && field.boost && field.boost > queryField.boost) {
+          queryField.boost = field.boost;
+        }
+      });
+      return childrenQueryFields;
     };
 
-    static getSearchParamsFromState = state => {
-      return {
-        queryString: state.search.queryString,
-        queryFields: state.search.queryFields,
-        selectedType: state.search.selectedType,
-        facets: state.search.facets,
-        sort: state.search.sort,
-        from: state.search.from,
-        size: state.search.hitsPerPage,
-        boostedTypes: [], // ElasticSearchHelpers.getBoostedTypes(state.definition),
-        customHighlight: defaultCustomHighlight
-        /*
-                customHighlight: state.search.queryFields.reduce((result, field) => {
-                  result[field.replace(/^(.*?)\^.*$/g,"$1")] = {};
-                  return result;
-                },[]),
-                */
-      };
+    const filterShapeFields = (shape, shapeFields) => {
+      const filteredShapedFields = {};
+      const result = {};
+      for (let [key, value] of Object.entries(shapeFields)) {
+        if (value.ignoreForSearch !== true) {
+          filteredShapedFields[key] = value;
+        }
+      }
+      result[shape] = filteredShapedFields;
+      return result;
     };
 
-    static buildRequest({ queryString = "", queryFields = [], selectedType, facets = [], sort, from = 0, size = 20, customHighlight, boostedTypes = [] }) {
+    const queryValuesBoost = [];
+    if (definition) {
+      Object.keys(definition).forEach(shape => {
+        const shapeFields = definition[shape] && definition[shape].fields;
+        const filteredShapeFields = filterShapeFields(shape, shapeFields);
+        const initFields = initQueryFieldsRec(filteredShapeFields, "");
+        queryValuesBoost.push(initFields);
+      });
+    }
 
-      const typeFacet = {
-        id: "facet_type",
-        name: "_type",
-        filterType: "_type",
-        value: selectedType
-      };
-
-      const queryFacets = [...facets, typeFacet];
-
-      const getAllFilters = facets => {
-        const filters = {};
-
-        const buildFilter  = (facet, key, value) => {
-          const term = {};
-          term[key] = value;
-          if (facet.isChild) {
-            return {
-              nested: {
-                path: `${facet.name}.children`,
-                query: {
-                  term: term
-                }
-              }
-            };
+    queryValuesBoost.map(field => {
+      let key = Object.keys(field)[0];
+      Object.values(field).forEach(fieldObj => {
+        const lastRes = [];
+        Object.keys(fieldObj).forEach(f => {
+          const boost = fieldObj[f].boost;
+          if (boost) {
+            lastRes.push(f + ".value^" + boost);
+          } else {
+            lastRes.push(f + ".value");
           }
+        });
+        field[key] = lastRes;
+      });
+      return field;
+    });
+    return queryValuesBoost;
+  };
 
+  static getBoostedTypes = definition => {
+    return Object.entries(definition).map(([type, typeDefinition]) => ({
+      name: type,
+      boost: typeDefinition.boost
+    }));
+  };
+
+  static getSearchParamsFromState = state => {
+    return {
+      queryString: state.search.queryString,
+      queryFields: state.search.queryFields,
+      selectedType: state.search.selectedType,
+      facets: state.search.facets,
+      sort: state.search.sort,
+      from: state.search.from,
+      size: state.search.hitsPerPage,
+      boostedTypes: [], // ElasticSearchHelpers.getBoostedTypes(state.definition),
+      customHighlight: defaultCustomHighlight
+      /*
+              customHighlight: state.search.queryFields.reduce((result, field) => {
+                result[field.replace(/^(.*?)\^.*$/g,"$1")] = {};
+                return result;
+              },[]),
+              */
+    };
+  };
+
+  static buildRequest({ queryString = "", queryFields = [], selectedType, facets = [], sort, from = 0, size = 20, customHighlight, boostedTypes = [] }) {
+
+    const typeFacet = {
+      id: "facet_type",
+      name: "_type",
+      filterType: "_type",
+      value: selectedType
+    };
+
+    const queryFacets = [...facets, typeFacet];
+
+    const getAllFilters = facets => {
+      const filters = {};
+
+      const buildFilter = (facet, key, value) => {
+        const term = {};
+        term[key] = value;
+        if (facet.isChild) {
           return {
-            term: term
-          };
-        };
-
-        facets.forEach(facet => {
-          let filter = null;
-          const facetKey = facet.isChild ? `${facet.name}.children.${facet.childName}.value.keyword` : `${facet.name}.value.keyword`;
-          switch (facet.filterType) {
-          case "_type":
-          {
-            filter = {
-              term: {}
-            };
-            filter.term[facet.name] = facet.value;
-            break;
-          }
-          case "list":
-          {
-            if (Array.isArray(facet.value) && facet.value.length) {
-              if (facet.exclusiveSelection === false) { // OR
-                if (facet.value.length > 1) {
-                  filter = {
-                    bool: {
-                      should: []
-                    }
-                  };
-                  facet.value.forEach(v => {
-                    filter.bool.should.push(buildFilter(facet, facetKey, v));
-                  });
-                } else {
-                  filter = buildFilter(facet, facetKey, facet.value[0]);
-                }
-              } else { // AND
-                filter = [];
-                facet.value.forEach(v => {
-                  filter.push(buildFilter(facet, facetKey, v));
-                });
+            nested: {
+              path: `${facet.name}.children`,
+              query: {
+                term: term
               }
             }
-            break;
-          }
-          case "exists":
-          {
-            filter = {
-              exists: {
-                field: facetKey
+          };
+        }
+
+        return {
+          term: term
+        };
+      };
+
+      facets.forEach(facet => {
+        let filter = null;
+        const facetKey = facet.isChild ? `${facet.name}.children.${facet.childName}.value.keyword` : `${facet.name}.value.keyword`;
+        switch (facet.filterType) {
+          case "_type":
+            {
+              filter = {
+                term: {}
+              };
+              filter.term[facet.name] = facet.value;
+              break;
+            }
+          case "list":
+            {
+              if (Array.isArray(facet.value) && facet.value.length) {
+                if (facet.exclusiveSelection === false) { // OR
+                  if (facet.value.length > 1) {
+                    filter = {
+                      bool: {
+                        should: []
+                      }
+                    };
+                    facet.value.forEach(v => {
+                      filter.bool.should.push(buildFilter(facet, facetKey, v));
+                    });
+                  } else {
+                    filter = buildFilter(facet, facetKey, facet.value[0]);
+                  }
+                } else { // AND
+                  filter = [];
+                  facet.value.forEach(v => {
+                    filter.push(buildFilter(facet, facetKey, v));
+                  });
+                }
               }
-            };
-            break;
-          }
+              break;
+            }
+          case "exists":
+            {
+              filter = {
+                exists: {
+                  field: facetKey
+                }
+              };
+              break;
+            }
           default:
             break;
-          }
-          if (filter) {
-            filters[facet.id] = {
-              facet: facet,
-              filter: filter
-            };
-          }
-        });
-        return filters;
-      };
+        }
+        if (filter) {
+          filters[facet.id] = {
+            facet: facet,
+            filter: filter
+          };
+        }
+      });
+      return filters;
+    };
 
-      const setFilters = (filters, key) => {
-        const filtered = Object.entries(filters).filter(([id, { facet }]) => {
-          const active = !!facet.value;
-          switch (facet.filterType) {
+    const setFilters = (filters, key) => {
+      const filtered = Object.entries(filters).filter(([id, { facet }]) => {
+        const active = !!facet.value;
+        switch (facet.filterType) {
           case "exists":
             if (id === key) {
               return true;
@@ -530,189 +529,189 @@ export class ElasticSearchHelpers {
           case "list":
           default:
             return active && id !== key;
-          }
-        });
-        const res = filtered.reduce((acc, [, { filter }]) => {
-          if (Array.isArray(filter)) {
-            acc.push(...filter);
-          } else {
-            acc.push(filter);
-          }
-          return acc;
-        }, []);
-        if (res.length > 1) {
-          return {
-            bool: {
-              must: res
-            }
-          };
-        } else if (res.length === 1) {
-          return res[0];
         }
+      });
+      const res = filtered.reduce((acc, [, { filter }]) => {
+        if (Array.isArray(filter)) {
+          acc.push(...filter);
+        } else {
+          acc.push(filter);
+        }
+        return acc;
+      }, []);
+      if (res.length > 1) {
         return {
-          match_all: {}
+          bool: {
+            must: res
+          }
         };
+      } else if (res.length === 1) {
+        return res[0];
+      }
+      return {
+        match_all: {}
+      };
+    };
+
+    const setFacetAggs = (aggs, facets) => {
+
+      const setAggs = (key, count, orderDirection, size) => {
+        const aggs = {};
+        aggs[key] = {
+          terms: {
+            field: key,
+            size: size
+          }
+        };
+        if (orderDirection) {
+          aggs[key].terms.order = {
+            _count: orderDirection
+          };
+        }
+        aggs[count] = {
+          cardinality: {
+            field: key
+          }
+        };
+        return aggs;
       };
 
-      const setFacetAggs = (aggs, facets) => {
+      const setListFacetAggs = (aggs, facet) => {
 
-        const setAggs = (key, count, orderDirection, size) => {
-          const aggs = {};
-          aggs[key] = {
-            terms: {
-              field: key,
-              size: size
-            }
-          };
-          if (orderDirection) {
-            aggs[key].terms.order = {
-              _count: orderDirection
-            };
-          }
-          aggs[count] = {
-            cardinality: {
-              field: key
-            }
-          };
-          return aggs;
-        };
+        const orderKey = facet.filterOrder && facet.filterOrder === "byvalue" ? "_term" : "_count";
+        const orderDirection = orderKey === "_term" ? "asc" : "desc";
 
-        const setListFacetAggs = (aggs, facet) => {
-
-          const orderKey = facet.filterOrder && facet.filterOrder === "byvalue" ? "_term" : "_count";
-          const orderDirection = orderKey === "_term" ? "asc" : "desc";
-
-          if (facet.isChild) {
-            const key = `${facet.name}.children.${facet.childName}.value.keyword`;
-            const count = `${facet.name}.children.${facet.childName}.value.keyword_count`;
-            aggs[facet.id] = {
-              aggs: {
-                inner: {
-                  aggs: setAggs(key, count, orderDirection, facet.size),
-                  nested: {
-                    path: `${facet.name}.children`
-                  }
+        if (facet.isChild) {
+          const key = `${facet.name}.children.${facet.childName}.value.keyword`;
+          const count = `${facet.name}.children.${facet.childName}.value.keyword_count`;
+          aggs[facet.id] = {
+            aggs: {
+              inner: {
+                aggs: setAggs(key, count, orderDirection, facet.size),
+                nested: {
+                  path: `${facet.name}.children`
                 }
               }
-            };
-          } else {
-            const key = `${facet.name}.value.keyword`;
-            const count = `${facet.name}.value.keyword_count`;
-            aggs[facet.id] = {
-              aggs: setAggs(key, count, orderDirection, facet.size)
-            };
-          }
-        };
+            }
+          };
+        } else {
+          const key = `${facet.name}.value.keyword`;
+          const count = `${facet.name}.value.keyword_count`;
+          aggs[facet.id] = {
+            aggs: setAggs(key, count, orderDirection, facet.size)
+          };
+        }
+      };
 
-        facets.forEach(facet => {
-          switch (facet.filterType) {
+      facets.forEach(facet => {
+        switch (facet.filterType) {
           case "_type":
-          {
-            aggs[facet.id] = {
-              aggs: setAggs(facet.name, `${facet.name}_count`, null, 50)
-            };
-            break;
-          }
+            {
+              aggs[facet.id] = {
+                aggs: setAggs(facet.name, `${facet.name}_count`, null, 50)
+              };
+              break;
+            }
           case "list":
-          {
-            setListFacetAggs(aggs, facet);
-            break;
-          }
+            {
+              setListFacetAggs(aggs, facet);
+              break;
+            }
           case "exists":
           default:
             aggs[facet.id] = {};
             break;
+        }
+      });
+    };
+
+    const getAggs = (facets, allFilters) => {
+
+      const setFacetFilter = (aggs, facets, facetFilters) => {
+        facets.forEach(facet => {
+          const filters = setFilters(facetFilters, facet.id);
+          if (filters) {
+            aggs[facet.id].filter = filters;
+          } else {
+            aggs[facet.id].filter = {
+              match_all: {}
+            };
           }
         });
       };
 
-      const getAggs = (facets, allFilters) => {
+      const aggs = {};
+      setFacetAggs(aggs, facets);
+      setFacetFilter(aggs, facets, allFilters);
 
-        const setFacetFilter = (aggs, facets, facetFilters) => {
-          facets.forEach(facet => {
-            const filters = setFilters(facetFilters, facet.id);
-            if (filters) {
-              aggs[facet.id].filter = filters;
-            } else {
-              aggs[facet.id].filter = {
-                match_all: {}
-              };
-            }
-          });
+      const typeFilters = setFilters(allFilters, "facet_type");
+      if (typeFilters) {
+        aggs.facet_type.filter = typeFilters;
+      } else {
+        aggs.facet_type.filter = {
+          match_all: {}
         };
+      }
+      return aggs;
+    };
 
-        const aggs = {};
-        setFacetAggs(aggs, facets);
-        setFacetFilter(aggs, facets, allFilters);
-
-        const typeFilters = setFilters(allFilters, "facet_type");
-        if (typeFilters) {
-          aggs.facet_type.filter = typeFilters;
-        } else {
-          aggs.facet_type.filter = {
-            match_all: {}
-          };
-        }
-        return aggs;
-      };
-
-      const getFields = (fields, type) => {
-        if (!type || !Array.isArray(fields)) {
-          return [];
-        }
-        const filtered = fields.filter(field => field && field[selectedType]);
-        if (!filtered.length){
-          return [];
-        }
-        const first = filtered[0];
-        if (first && Array.isArray(first[type])) {
-          return first[type];
-        }
+    const getFields = (fields, type) => {
+      if (!type || !Array.isArray(fields)) {
         return [];
-      };
-
-      const fields = getFields(queryFields, selectedType);
-      const query = queryString ? {
-        query_string: {
-          fields: fields,
-          query: ElasticSearchHelpers.sanitizeString(queryString),
-          lenient: true
-        }
-      } : null;
-
-      const allFilters = getAllFilters(queryFacets, selectedType);
-
-      const payload = {
-        aggs: getAggs(queryFacets, allFilters),
-        from: from,
-        highlight: customHighlight,
-        post_filter: setFilters(allFilters),
-        size: size
-      };
-
-      if (sort && Array.isArray(sort.fields)) {
-        payload.sort = sort.fields;
       }
-
-      if (query) {
-        if (boostedTypes.length) {
-          const boostedTypesTerms = boostedTypes.map(type => ({
-            term: {
-              _type: {
-                value: type.name,
-                boost: type.boost
-              }
-            }
-          }));
-          payload.query = {
-            bool: {
-              should: [query, ...boostedTypesTerms]
-            }
-          };
-        } else {
-          payload.query = query;
-        }
+      const filtered = fields.filter(field => field && field[selectedType]);
+      if (!filtered.length) {
+        return [];
       }
-      return payload;
+      const first = filtered[0];
+      if (first && Array.isArray(first[type])) {
+        return first[type];
+      }
+      return [];
+    };
+
+    const fields = getFields(queryFields, selectedType);
+    const query = queryString ? {
+      query_string: {
+        fields: fields,
+        query: ElasticSearchHelpers.sanitizeString(queryString),
+        lenient: true
+      }
+    } : null;
+
+    const allFilters = getAllFilters(queryFacets, selectedType);
+
+    const payload = {
+      aggs: getAggs(queryFacets, allFilters),
+      from: from,
+      highlight: customHighlight,
+      post_filter: setFilters(allFilters),
+      size: size
+    };
+
+    if (sort && Array.isArray(sort.fields)) {
+      payload.sort = sort.fields;
     }
+
+    if (query) {
+      if (boostedTypes.length) {
+        const boostedTypesTerms = boostedTypes.map(type => ({
+          term: {
+            _type: {
+              value: type.name,
+              boost: type.boost
+            }
+          }
+        }));
+        payload.query = {
+          bool: {
+            should: [query, ...boostedTypesTerms]
+          }
+        };
+      } else {
+        payload.query = query;
+      }
+    }
+    return payload;
+  }
 }

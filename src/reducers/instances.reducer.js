@@ -54,7 +54,7 @@ const loadInstanceRequest = state => {
 
 const loadInstanceSuccess = (state, action) => {
   const isPreviewInstance = regPreviewReference.test(state.loadingReference);
-  let previousInstances = (state && state.previousInstances instanceof Array)?state.previousInstances:[];
+  let previousInstances = (state && Array.isArray(state.previousInstances))?state.previousInstances:[];
   previousInstances = (state && state.currentInstance)?[...previousInstances,state.currentInstance]:[...previousInstances];
   return  {
     ...state,
@@ -107,7 +107,7 @@ const cancelInstanceLoading = state => {
 };
 
 const setInstance = (state, action) => {
-  let previousInstances = (state && state.previousInstances instanceof Array)?state.previousInstances:[];
+  let previousInstances = (state && Array.isArray(state.previousInstances))?state.previousInstances:[];
   previousInstances = (state && state.currentInstance)?[...previousInstances,state.currentInstance]:[...previousInstances];
   return {
     ...state,
@@ -123,7 +123,7 @@ const setInstance = (state, action) => {
 
 const setPreviousInstance = state => {
   if (state.currentInstance) {
-    const previousInstances = (state && state.previousInstances instanceof Array)?[...state.previousInstances]:[];
+    const previousInstances = (state && Array.isArray(state.previousInstances))?[...state.previousInstances]:[];
     const currentInstance = previousInstances.pop() || null;
     return {
       ...state,
@@ -196,7 +196,7 @@ const setCurrentInstanceFromBrowserLocation = state => {
     };
   }
 
-  const previousInstances = (state && state.previousInstances instanceof Array)?[...state.previousInstances]:[];
+  const previousInstances = (state && Array.isArray(state.previousInstances))?[...state.previousInstances]:[];
   instance = previousInstances.pop() || null;
   while(previousInstances.length && instance && !(instance._type === instanceType && instance._id === instanceId))  {
     instance = previousInstances.pop();
