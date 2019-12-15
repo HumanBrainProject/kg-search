@@ -9,7 +9,7 @@ const endpoints = {
   "groups": () => "/auth/groups",
   "search": () => "/proxy/search/kg/_search",
   "instance": (type, id) => `/proxy/default/kg/${type}/${id}`,
-  "preview": (path, instanceId) => `/query/${path}/search/templates/searchUi/libraries/instancesDynamic/instances/${instanceId}`,
+  "preview": (type, id) => `/query/${type}/search/templates/searchUi/libraries/instancesDynamic/instances/${id}`,
   "auth": (redirectUri, stateKey, nonceKey) => `${oidcUri}?response_type=id_token%20token&client_id=${oidcClientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`
 };
 

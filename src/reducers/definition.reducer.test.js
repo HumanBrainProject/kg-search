@@ -25,14 +25,6 @@ describe('definition reducer', () => {
             expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
         });
     });
-    describe('load definition', () => {
-        it('should set has request to true', () => {
-            const state = undefined;
-            const action = actions.loadDefinition();
-            const newState = definitionReducer(state, action);
-            expect(newState.hasRequest).toBe(true);
-        });
-    });
     describe('load definition success', () => {
         it('should set current definition', () => {
             const state = undefined;

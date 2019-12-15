@@ -180,16 +180,18 @@ export const loadInstanceSuccess = data => {
   };
 };
 
-export const loadInstanceNoData = reference => {
+export const loadInstanceNoData = (path, id) => {
   return {
     type: types.LOAD_INSTANCE_NO_DATA,
-    reference: reference
+    path: path,
+    id: id
   };
 };
 
-export const loadInstanceFailure = (id, error) => {
+export const loadInstanceFailure = (path, id, error) => {
   return {
     type: types.LOAD_INSTANCE_FAILURE,
+    path: path,
     id: id,
     error: error
   };
@@ -455,37 +457,35 @@ export const loadReference = (type, id) => {
         if (response.data.found) {
           dispatch(loadInstanceSuccess(response.data));
         } else {
-          dispatch(loadInstanceNoData(id));
+          dispatch(loadInstanceNoData(type, id));
         }
       })
       .catch(error => {
-        dispatch(loadInstanceFailure(id, error));
+        dispatch(loadInstanceFailure(type, id, error));
       });
   };
 };
 
-export const loadPreview = reference => {
+export const loadPreview = (type, id) => {
   return dispatch => {
     dispatch(loadInstanceRequest());
-    const path = ""; //TODO: fetch from the router
-    const id = ""; //TODO: fetch from the router
     API.axios
-      .get(API.endpoints.preview(path, id))
+      .get(API.endpoints.preview(type, id))
       .then(response => {
         if (response.data && !response.data.error) {
-          response.data._id = reference;
+          response.data._id = id;
           dispatch(loadInstanceSuccess(response.data));
         } else if (response.data && response.data.error) {
-          dispatch(loadInstanceFailure(reference, response.data.message ? response.data.message : response.data.error));
+          dispatch(loadInstanceFailure(type, id, response.data.message ? response.data.message : response.data.error));
         } else {
-          dispatch(loadInstanceNoData(reference));
+          dispatch(loadInstanceNoData(type, id));
         }
       })
       .catch(error => {
         if (error.stack === "SyntaxError: Unexpected end of JSON input" || error.message === "Unexpected end of JSON input") {
-          dispatch(loadInstanceNoData(reference));
+          dispatch(loadInstanceNoData(type, id));
         } else {
-          dispatch(loadInstanceFailure(reference, error));
+          dispatch(loadInstanceFailure(type, id, error));
         }
       });
   };

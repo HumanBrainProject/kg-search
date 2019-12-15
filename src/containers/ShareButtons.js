@@ -33,11 +33,11 @@ const getClipboardContent = (state, location, currentInstance, currentGroup) => 
     if (reference) {
       const indexReg = /^kg_(.*)$/;
       const group = indexReg.test(currentInstance._index) ? currentInstance._index.match(indexReg)[1] : (currentGroup ? currentGroup : null);
-      href = `instances/${reference}${(group && group !== state.search.defaultGroup) ? ("?group=" + group) : ""}`;
+      href = `instances/${reference}${(group && group !== state.groups.defaultGroup) ? ("?group=" + group) : ""}`;
     } else {
       const instanceId = location.hash.substring(1);
       if (instanceId) {
-        href = `instances/${instanceId}${(currentGroup && currentGroup !== state.search.defaultGroup) ? ("?group=" + currentGroup) : ""}`;
+        href = `instances/${instanceId}${(currentGroup && currentGroup !== state.groups.defaultGroup) ? ("?group=" + currentGroup) : ""}`;
       } else {
         href = `search/${location.search}`;
       }

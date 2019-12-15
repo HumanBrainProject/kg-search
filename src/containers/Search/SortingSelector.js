@@ -18,7 +18,6 @@ import React from "react";
 import { connect } from "react-redux";
 import * as actions from "../../actions";
 import { Select } from "../../components/Select";
-import { ElasticSearchHelpers } from "../../helpers/ElasticSearchHelpers";
 import { getUpdatedUrl } from "../../helpers/BrowserHelpers";
 import { history } from "../../store";
 
@@ -50,8 +49,6 @@ export const SortingSelector = connect(
       label: f.label,
       value: f.key
     })),
-    searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
-    group: state.groups.group,
     location: state.router.location
   }),
   dispatch => ({

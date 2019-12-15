@@ -28,23 +28,43 @@ import "./Instance.css";
 
 class InstanceComponent extends React.Component {
   componentDidMount() {
-    const { definitionIsReady, definitionIsLoading, loadDefinition} = this.props;
-    if (!definitionIsReady && !definitionIsLoading) {
-      loadDefinition();
+    const { setInitialGroup, location } = this.props;
+    const group = location.query.group;
+    if (group) {
+      setInitialGroup(group);
     }
+    this.initialize();
   }
 
   componentDidUpdate(previousProps) {
-    const { definitionIsReady, instanceIsLoading, instanceError, type, id, currentInstance, fetch} = this.props;
-    if (definitionIsReady && !instanceIsLoading && !instanceError &&  (previousProps.type !== type || previousProps.id !== id || !currentInstance))  {
+    const { definitionIsReady, isGroupsReady, group, type, id } = this.props;
+    if (definitionIsReady !== previousProps.definitionIsReady || isGroupsReady !== previousProps.isGroupsReady || previousProps.group !== group || previousProps.type !== type || previousProps.id !== id) {
+      this.initialize();
+    }
+  }
+
+  initialize() {
+    const { definitionIsReady, definitionIsLoading, loadDefinition, isGroupsReady, isGroupLoading, shouldLoadGroups, loadGroups, instanceIsLoading, shouldLoadInstance, type, id, fetch } = this.props;
+    if (!definitionIsReady) {
+      if (!definitionIsLoading) {
+        loadDefinition();
+      }
+    } else if (shouldLoadGroups && !isGroupsReady) {
+      if (!isGroupLoading) {
+        loadGroups();
+      }
+    } else if (shouldLoadInstance && !instanceIsLoading) {
       fetch(type, id);
     }
   }
 
   render() {
+    const { show } = this.props;
     return (
       <div className="kgs-instance-container" >
-        <Component {...this.props} />
+        {show && (
+          <Component {...this.props} />
+        )}
       </div>
     );
   }
@@ -56,19 +76,28 @@ export const Instance = connect(
     ...mapStateToProps(state, {
       data: state.instances.currentInstance
     }),
+    show: state.instances.currentInstance,
     definitionIsReady: state.definition.isReady,
     definitionIsLoading: state.definition.isLoading,
+    isGroupsReady: state.groups.isReady,
+    isGroupLoading: state.groups.isLoading,
+    shouldLoadGroups: !!state.auth.accessToken,
     instanceIsLoading: state.instances.isLoading,
+    shouldLoadInstance: !state.instances.currentInstance || state.instances.currentInstance._type !==  props.match.params.type || state.instances.currentInstance._id !==  props.match.params.id,
     instanceError: state.instances.error,
     currentInstance: state.instances.currentInstance,
     ImagePreviewsComponent: ImagePreviews,
     ImagePopupComponent: ImagePopup,
     TermsShortNoticeComponent: TermsShortNotice,
+    group: state.groups.group,
     id: props.match.params.id,
-    type: props.match.params.type
+    type: props.match.params.type,
+    location: state.router.location
   }),
   dispatch => ({
+    setInitialGroup: group => dispatch(actions.setInitialGroup(group)),
     loadDefinition: () => dispatch(actions.loadDefinition()),
+    loadGroups: () => dispatch(actions.loadGroups()),
     fetch: (type, id) => dispatch(actions.loadReference(type, id))
   })
 )(InstanceComponent);

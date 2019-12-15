@@ -199,7 +199,7 @@ export const Hit = connect(
     const indexReg = /^kg_(.*)$/;
     const source = data && !(data.found === false) && data._type && data._source;
     const mapping = source && state.definition && state.definition.shapeMappings && state.definition.shapeMappings[data._type];
-    const group = (data && !(data.found === false) && indexReg.test(data._index))?data._index.match(indexReg)[1]:state.search.defaultGroup;
+    const group = (data && !(data.found === false) && indexReg.test(data._index))?data._index.match(indexReg)[1]:state.groups.defaultGroup;
 
     const ribbonData = mapping && mapping.ribbon && mapping.ribbon.framed && mapping.ribbon.framed.dataField && source[mapping.ribbon.framed.dataField];
     const iconData = {

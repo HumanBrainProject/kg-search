@@ -18,7 +18,6 @@ import React from "react";
 import { connect } from "react-redux";
 import * as actions from "../../actions";
 import { Facet } from "./Facet";
-import { ElasticSearchHelpers } from "../../helpers/ElasticSearchHelpers";
 
 import "./FiltersPanel.css";
 import { getUpdatedUrlForList } from "../../helpers/BrowserHelpers";
@@ -117,8 +116,6 @@ export const FiltersPanel = connect(
         acc += Array.isArray(facet.value) ? facet.value.toString() : facet.value;
         return acc;
       }, ""),
-      searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
-      group: state.groups.group,
       location: state.router.location
     };
   },

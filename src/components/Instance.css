@@ -73,6 +73,8 @@
     font-weight: normal;
     text-transform: capitalize;
     vertical-align: text-bottom;
+    display: inline-block;
+    transform: translateY(1px);
 }
 
 .kgs-instance__previews > div {

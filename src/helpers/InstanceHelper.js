@@ -124,14 +124,14 @@ export const mapStateToProps = (state, props) => {
   const indexReg = /^kg_(.*)$/;
   const source = data && !(data.found === false) && data._type && data._source;
   const mapping = (source && state.definition && state.definition.shapeMappings && state.definition.shapeMappings[data._type])?state.definition.shapeMappings[data._type]:{};
-  const group = (data && indexReg.test(data._index)) ? data._index.match(indexReg)[1] : state.search.defaultGroup;
+  const group = (data && indexReg.test(data._index)) ? data._index.match(indexReg)[1] : state.groups.group;
 
   return {
     type: data && data._type,
     hasNoData: !source,
     hasUnknownData: !mapping,
     header: {
-      group: (group !== state.search.defaultGroup)?group:null,
+      group: (group !== state.groups.defaultGroup)?group:null,
       icon: getField(group, data && data._type, "icon", { value: data && data._type, image: { url: source && source.image && source.image.url } }, { visible: true, type: "icon", icon: mapping && mapping.icon }),
       type: getField(group, data && data._type, "type"),
       title: getField(group, data && data._type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"])

@@ -18,7 +18,6 @@ import * as types from "../actions.types";
 
 const initialState = {
   error: null,
-  hasRequest: false,
   requestReference: null,
   isLoading: false,
   loadingReference: null,
@@ -33,7 +32,6 @@ const loadInstance = (state, action) => {
   const reference = action.reference || state.loadingReference;
   return {
     ...state,
-    hasRequest: !!reference,
     requestReference: reference,
     isLoading: false,
     loadingReference: null,
@@ -44,7 +42,6 @@ const loadInstance = (state, action) => {
 const loadInstanceRequest = state => {
   return {
     ...state,
-    hasRequest: false,
     requestReference: null,
     isLoading: true,
     loadingReference: state.requestReference,
@@ -58,7 +55,6 @@ const loadInstanceSuccess = (state, action) => {
   previousInstances = (state && state.currentInstance)?[...previousInstances,state.currentInstance]:[...previousInstances];
   return  {
     ...state,
-    hasRequest: false,
     requestReference: null,
     isLoading: false,
     loadingReference: null,
@@ -73,7 +69,6 @@ const loadInstanceNoData = state => {
   return {
     ...state,
     error: "The instance is not available",
-    hasRequest: false,
     requestReference: null,
     isLoading: false,
     image: null
@@ -84,7 +79,6 @@ const loadInstanceFailure = (state, action) => {
   return {
     ...state,
     error: action.error,
-    hasRequest: false,
     requestReference: null,
     isLoading: false,
     image: null
@@ -97,7 +91,6 @@ const cancelInstanceLoading = state => {
   }
   return {
     ...state,
-    hasRequest: false,
     requestReference: null,
     isLoading: false,
     loadingReference: null,
@@ -111,7 +104,6 @@ const setInstance = (state, action) => {
   previousInstances = (state && state.currentInstance)?[...previousInstances,state.currentInstance]:[...previousInstances];
   return {
     ...state,
-    hasRequest: false,
     requestReference: null,
     isLoading: false,
     loadingReference: null,
@@ -127,7 +119,6 @@ const setPreviousInstance = state => {
     const currentInstance = previousInstances.pop() || null;
     return {
       ...state,
-      hasRequest: false,
       requestReference: null,
       isLoading: false,
       loadingReference: null,
@@ -143,7 +134,6 @@ const setPreviousInstance = state => {
 const clearAllInstances = state => {
   return {
     ...state,
-    hasRequest: false,
     requestReference: null,
     isLoading: false,
     loadingReference: null,
@@ -167,7 +157,6 @@ const setCurrentInstanceFromBrowserLocation = state => {
   if (!instanceType || !instanceId) {
     return {
       ...state,
-      hasRequest: false,
       requestReference: null,
       isLoading: false,
       loadingReference: null,
@@ -186,7 +175,6 @@ const setCurrentInstanceFromBrowserLocation = state => {
   if (!state || !state.previousInstances.length) {
     return {
       ...state,
-      hasRequest: false,
       requestReference: null,
       isLoading: false,
       loadingReference: null,
@@ -204,7 +192,6 @@ const setCurrentInstanceFromBrowserLocation = state => {
   if (instance && instance._type === instanceType && instance._id === instanceId) {
     return {
       ...state,
-      hasRequest: false,
       requestReference: null,
       isLoading: false,
       loadingReference: null,
@@ -216,7 +203,6 @@ const setCurrentInstanceFromBrowserLocation = state => {
 
   return {
     ...state,
-    hasRequest: false,
     requestReference: null,
     isLoading: false,
     loadingReference: null,
