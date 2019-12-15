@@ -17,8 +17,6 @@
 import { connect } from "react-redux";
 import { ShareButtons as Component } from "../components/ShareButtons";
 
-const regPreviewReference = /^(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
-
 const getShareEmailToLink = url => {
   const to = "";
   const subject = "Knowledge Graph Search Request";
@@ -26,31 +24,23 @@ const getShareEmailToLink = url => {
   return `mailto:${to}?subject=${subject}&body=${body} ${escape(url)}.`;
 };
 
-const getClipboardContent = (state, location, currentInstance, currentGroup) => {
-  let href = "";
-  if (currentInstance) {
-    const reference = regPreviewReference.test(currentInstance._id) ? currentInstance._id.match(regPreviewReference)[1] : (!(currentInstance.found === false) && currentInstance._index && currentInstance._type && currentInstance._id) ? `${currentInstance._type}/${currentInstance._id}` : null;
-    if (reference) {
-      const indexReg = /^kg_(.*)$/;
-      const group = indexReg.test(currentInstance._index) ? currentInstance._index.match(indexReg)[1] : (currentGroup ? currentGroup : null);
-      href = `instances/${reference}${(group && group !== state.groups.defaultGroup) ? ("?group=" + group) : ""}`;
-    } else {
-      const instanceId = location.hash.substring(1);
-      if (instanceId) {
-        href = `instances/${instanceId}${(currentGroup && currentGroup !== state.groups.defaultGroup) ? ("?group=" + currentGroup) : ""}`;
-      } else {
-        href = `search/${location.search}`;
-      }
+const getClipboardContent = (state, location, currentInstance, currentGroup, defaultGroup) => {
+  if (location.pathname === "/" && currentInstance) {
+    const indexReg = /^kg_(.*)$/;
+    const group = indexReg.test(currentInstance._index) ? currentInstance._index.match(indexReg)[1] : (currentGroup ? currentGroup : null);
+    const type = currentInstance._type;
+    const id = currentInstance._id;
+    if (type && id) {
+      const rootPath = window.location.pathname.substr(0, window.location.pathname.length - location.pathname.length);
+      return `${window.location.protocol}//${window.location.host}${rootPath}/instances/${type}/${id}${group !== defaultGroup?("?group=" + group ):""}`;
     }
-  } else {
-    href = `search/${location.search}`;
   }
-  return `${state.definition.serviceUrl}/${href}`;
+  return window.location.href;
 };
 
 export const ShareButtons = connect(
   state => {
-    const href = getClipboardContent(state, window.location, state.instances.currentInstance, state.groups.group);
+    const href = getClipboardContent(state, state.router.location, state.instances.currentInstance, state.groups.group, state.groups.defaultGroup);
     return {
       clipboardContent: href,
       emailToLink: getShareEmailToLink(href)
