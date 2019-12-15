@@ -235,6 +235,7 @@ html {
 }
 
 body {
+  display: block !important;
   overflow-x: hidden;
   font-family: var(--font-stack);
   font-weight: var(--regular);
@@ -410,7 +411,6 @@ main a:hover, main a:hover:visited {
     text-align: right;
 }
 
-
 @media (max-width:768px) {
   .site-footer .footer__end {
     flex-wrap: wrap;
@@ -419,13 +419,13 @@ main a:hover, main a:hover:visited {
     line-height: 50px;
   }
 
-main{
-    margin-bottom: 450px;
-}
-.credits{
-    max-width: 200px;
-    margin-bottom: 2em;
-}
+  main{
+      margin-bottom: 450px;
+  }
+  .credits{
+      max-width: 200px;
+      margin-bottom: 2em;
+  }
 
 }
 

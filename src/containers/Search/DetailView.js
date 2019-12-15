@@ -19,7 +19,6 @@ import * as actions from "../../actions";
 import { Carousel } from "../../components/Carousel";
 import { ShareButtons } from "../ShareButtons";
 import { Instance } from "./Instance";
-import { searchToObj } from "../../helpers/BrowserHelpers";
 import "./DetailView.css";
 
 
@@ -34,17 +33,9 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = (dispatch, props) => ({
+const mapDispatchToProps = dispatch => ({
   onPrevious: () => dispatch(actions.setPreviousInstance()),
-  onClose: () => {
-    if (!props.searchInterfaceIsDisabled) {
-      dispatch(actions.clearAllInstances());
-    } else {
-      window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + Object.entries(searchToObj()).reduce((result, [key, value]) => {
-        return (key.toLowerCase() === "search"?result:(result + (result === ""?"?":"&") + key + "=" + value));
-      }, "");
-    }
-  }
+  onClose: () => dispatch(actions.clearAllInstances())
 });
 
 export const DetailView = connect(

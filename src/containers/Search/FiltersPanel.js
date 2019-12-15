@@ -39,7 +39,7 @@ class FiltersPanelBase extends React.Component {
     return facets.reduce((acc, facet) => {
       switch (facet.filterType) {
       case "list":
-        facet.keywords.map(keyword => {
+        facet.keywords.forEach(keyword => {
           acc.push({
             name: facet.id,
             value: keyword.value,

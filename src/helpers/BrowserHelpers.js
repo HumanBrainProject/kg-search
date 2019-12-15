@@ -103,7 +103,7 @@ const getUpdatedQuery = (query, name, checked, value, many) => {
   let counts = 0;
   Object.entries(query).forEach(([key, v]) => {
     const regParamWithBrackets = /^([^[]+)\[(\d+)\]$/;// name[number]
-    const isParamWithBracketsMatchingName = regParamWithBrackets.test(name) && name == key;
+    const isParamWithBracketsMatchingName = regParamWithBrackets.test(name) && name === key;
     const doesParamHasBrackets = !isParamWithBracketsMatchingName && regParamWithBrackets.test(key);
     const [, queryName] = doesParamHasBrackets?key.match(regParamWithBrackets):[null, key];
     const current = queryName === name && (!many || v === val );
