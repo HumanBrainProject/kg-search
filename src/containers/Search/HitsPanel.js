@@ -31,7 +31,7 @@ const HitsPanelBase = ({ lists, itemComponent, getKey, layout, onClick }) => (
   </React.Fragment>
 );
 
-const mapStateToProps = (state, props) => {
+const mapStateToProps = state => {
   //const { hits } = props;
   const hits = state.search.hits;
 

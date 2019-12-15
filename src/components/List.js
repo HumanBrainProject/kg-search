@@ -63,7 +63,8 @@ List.propTypes = {
   items: PropTypes.arrayOf(PropTypes.any),
   itemComponent: PropTypes.oneOfType([
     PropTypes.element,
-    PropTypes.func
+    PropTypes.func,
+    PropTypes.object
   ]).isRequired,
   layout: PropTypes.string,
   getKey: PropTypes.func.isRequired,

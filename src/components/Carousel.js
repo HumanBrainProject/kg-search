@@ -126,12 +126,15 @@ Carousel.propTypes = {
   onClose: PropTypes.func.isRequired,
   itemComponent: PropTypes.oneOfType([
     PropTypes.element,
-    PropTypes.func
+    PropTypes.func,
+    PropTypes.object
   ]).isRequired,
   navigationComponent: PropTypes.oneOfType([
     PropTypes.element,
-    PropTypes.func
-  ])
+    PropTypes.func,
+    PropTypes.object
+  ]),
+  isPreviewInstance: PropTypes.bool
 };
 
 export default Carousel;
