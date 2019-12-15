@@ -29,7 +29,6 @@ const mapStateToProps = state => {
     data: state.instances.currentInstance?[...state.instances.previousInstances, state.instances.currentInstance]:[],
     itemComponent: Instance,
     navigationComponent: ShareButtons,
-    isPreviewInstance: state.instances.isPreviewInstance
   };
 };
 

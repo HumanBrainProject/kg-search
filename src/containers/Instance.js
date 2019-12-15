@@ -98,6 +98,6 @@ export const Instance = connect(
     setInitialGroup: group => dispatch(actions.setInitialGroup(group)),
     loadDefinition: () => dispatch(actions.loadDefinition()),
     loadGroups: () => dispatch(actions.loadGroups()),
-    fetch: (type, id) => dispatch(actions.loadReference(type, id))
+    fetch: (type, id) => dispatch(actions.loadInstance(type, id))
   })
 )(InstanceComponent);

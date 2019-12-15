@@ -18,49 +18,32 @@ import * as types from "../actions.types";
 
 const initialState = {
   error: null,
-  requestReference: null,
+  currentInstanceId: null,
+  currentInstanceType: null,
   isLoading: false,
-  loadingReference: null,
   currentInstance: null,
   previousInstances: [],
   image: null
 };
 
-const regPreviewReference = /^(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
-
-const loadInstance = (state, action) => {
-  const reference = action.reference || state.loadingReference;
+const loadInstanceRequest = (state, action) => {
   return {
     ...state,
-    requestReference: reference,
-    isLoading: false,
-    loadingReference: null,
-    image: null
-  };
-};
-
-const loadInstanceRequest = state => {
-  return {
-    ...state,
-    requestReference: null,
+    currentInstanceType: action.instanceType,
+    currentInstanceId: action.instanceId,
     isLoading: true,
-    loadingReference: state.requestReference,
     image: null
   };
 };
 
 const loadInstanceSuccess = (state, action) => {
-  const isPreviewInstance = regPreviewReference.test(state.loadingReference);
   let previousInstances = (state && Array.isArray(state.previousInstances))?state.previousInstances:[];
   previousInstances = (state && state.currentInstance)?[...previousInstances,state.currentInstance]:[...previousInstances];
   return  {
     ...state,
-    requestReference: null,
     isLoading: false,
-    loadingReference: null,
     currentInstance: action.data,
     previousInstances: previousInstances,
-    isPreviewInstance: isPreviewInstance,
     image: null
   };
 };
@@ -69,7 +52,6 @@ const loadInstanceNoData = state => {
   return {
     ...state,
     error: "The instance is not available",
-    requestReference: null,
     isLoading: false,
     image: null
   };
@@ -79,22 +61,7 @@ const loadInstanceFailure = (state, action) => {
   return {
     ...state,
     error: action.error,
-    requestReference: null,
     isLoading: false,
-    image: null
-  };
-};
-
-const cancelInstanceLoading = state => {
-  if (/[?&]?search=false&?/.test(window.location.search.toLowerCase()) || regPreviewReference.test(state.loadingReference)) {
-    window.location.href = window.location.href.replace(/(\?)?search=false&?/gi, "$1");
-  }
-  return {
-    ...state,
-    requestReference: null,
-    isLoading: false,
-    loadingReference: null,
-    isPreviewInstance: false,
     image: null
   };
 };
@@ -104,9 +71,7 @@ const setInstance = (state, action) => {
   previousInstances = (state && state.currentInstance)?[...previousInstances,state.currentInstance]:[...previousInstances];
   return {
     ...state,
-    requestReference: null,
     isLoading: false,
-    loadingReference: null,
     currentInstance: action.data,
     previousInstances: previousInstances,
     image: null
@@ -119,9 +84,9 @@ const setPreviousInstance = state => {
     const currentInstance = previousInstances.pop() || null;
     return {
       ...state,
-      requestReference: null,
       isLoading: false,
-      loadingReference: null,
+      currentInstanceType: (currentInstance && currentInstance._type)?currentInstance._type:null,
+      currentInstanceId: (currentInstance && currentInstance._id)?currentInstance._id:null,
       currentInstance: currentInstance,
       previousInstances: previousInstances,
       image: null
@@ -134,9 +99,9 @@ const setPreviousInstance = state => {
 const clearAllInstances = state => {
   return {
     ...state,
-    requestReference: null,
     isLoading: false,
-    loadingReference: null,
+    currentInstanceType: null,
+    currentInstanceId: null,
     currentInstance: null,
     previousInstances: [],
     image: null
@@ -157,9 +122,9 @@ const setCurrentInstanceFromBrowserLocation = state => {
   if (!instanceType || !instanceId) {
     return {
       ...state,
-      requestReference: null,
       isLoading: false,
-      loadingReference: null,
+      currentInstanceType: null,
+      currentInstanceId: null,
       currentInstance: null,
       previousInstances: [],
       image: null
@@ -175,9 +140,9 @@ const setCurrentInstanceFromBrowserLocation = state => {
   if (!state || !state.previousInstances.length) {
     return {
       ...state,
-      requestReference: null,
       isLoading: false,
-      loadingReference: null,
+      currentInstanceType: null,
+      currentInstanceId: null,
       currentInstance: null,
       previousInstances: [],
       image: null
@@ -192,9 +157,9 @@ const setCurrentInstanceFromBrowserLocation = state => {
   if (instance && instance._type === instanceType && instance._id === instanceId) {
     return {
       ...state,
-      requestReference: null,
       isLoading: false,
-      loadingReference: null,
+      currentInstanceType: (instance && instance._type)?instance._type:null,
+      currentInstanceId: (instance && instance._id)?instance._id:null,
       currentInstance: instance,
       previousInstances: previousInstances,
       image: null
@@ -203,9 +168,9 @@ const setCurrentInstanceFromBrowserLocation = state => {
 
   return {
     ...state,
-    requestReference: null,
     isLoading: false,
-    loadingReference: null,
+    currentInstanceType: null,
+    currentInstanceId: null,
     currentInstance: null,
     previousInstances: [],
     image: null
@@ -221,8 +186,6 @@ const showImage = (state, action) => {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-  case types.LOAD_INSTANCE:
-    return loadInstance(state, action);
   case types.LOAD_INSTANCE_REQUEST:
     return loadInstanceRequest(state, action);
   case types.LOAD_INSTANCE_SUCCESS:
@@ -231,8 +194,6 @@ export function reducer(state = initialState, action = {}) {
     return loadInstanceNoData(state, action);
   case types.LOAD_INSTANCE_FAILURE:
     return loadInstanceFailure(state, action);
-  case types.CANCEL_INSTANCE_LOADING:
-    return cancelInstanceLoading(state, action);
   case types.SET_INSTANCE:
     return setInstance(state, action);
   case types.SET_PREVIOUS_INSTANCE:

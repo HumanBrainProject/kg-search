@@ -20,7 +20,7 @@ import { isMobile } from "../helpers/BrowserHelpers";
 import "./Carousel.css";
 
 
-const CarouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, navigationComponent, isPreviewInstance}) => {
+const CarouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, navigationComponent}) => {
   const ItemComponent =  itemComponent;
   const NavigationComponent = navigationComponent;
   return (
@@ -37,7 +37,7 @@ const CarouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, n
               <NavigationComponent/>
             )}
           </div>
-          {item.isActive && !isPreviewInstance && (
+          {item.isActive && (
             <button className="kgs-carousel__close-button" onClick={onClose}>
               <i className="fa fa-close" />
             </button>
@@ -76,9 +76,9 @@ export class Carousel extends React.Component {
     }
   }
   _keyupHandler(event) {
-    const {onPrevious, onClose, isPreviewInstance} = this.props;
+    const {onPrevious, onClose} = this.props;
     if (this.props.show) {
-      if (event.keyCode === 27 && !isPreviewInstance) {
+      if (event.keyCode === 27) {
         event.preventDefault();
         typeof onClose === "function" && onClose();
       } else if (event.keyCode === 8) {
@@ -88,7 +88,7 @@ export class Carousel extends React.Component {
     }
   }
   render(){
-    const {className, show, data, onPrevious, onClose, itemComponent, navigationComponent, isPreviewInstance} = this.props;
+    const {className, show, data, onPrevious, onClose, itemComponent, navigationComponent } = this.props;
     if (!show || !Array.isArray(data) || !data.length || !itemComponent) {
       return null;
     }
@@ -110,7 +110,7 @@ export class Carousel extends React.Component {
       <div className={classNames}>
         <div className="kgs-carousel__panel">
           {items.map(item => (
-            <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} isPreviewInstance={isPreviewInstance} />
+            <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />
           ))}
         </div>
       </div>
@@ -133,8 +133,7 @@ Carousel.propTypes = {
     PropTypes.element,
     PropTypes.func,
     PropTypes.object
-  ]),
-  isPreviewInstance: PropTypes.bool
+  ])
 };
 
 export default Carousel;

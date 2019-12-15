@@ -19,16 +19,16 @@ import { connect } from "react-redux";
 import { history } from "../../store";
 import * as actions from "../../actions";
 
-const ReferenceComponent = ({text, reference, group, isExternal, onClick}) => {
-  if (!reference) {
+const ReferenceComponent = ({text, type, id, group, isExternal, onClick}) => {
+  if (!type || !id) {
     return null;
   }
 
   const handleClick = () => {
     if (isExternal) {
-      history.push(`/instances/${reference}`);
+      history.push(`/instances/${type}/${id}${group?("?group=" + group ):""}`);
     }
-    typeof onClick === "function" && onClick(reference, group);
+    typeof onClick === "function" && onClick(type, id, group);
   };
 
   return (
@@ -37,14 +37,21 @@ const ReferenceComponent = ({text, reference, group, isExternal, onClick}) => {
 };
 
 export const Reference = connect(
-  (state, props) => ({
-    text: props.text?props.text:props.reference,
-    reference: props.reference,
-    group: props.group,
-    isExternal: state.router.location.pathname?state.router.location.pathname.startsWith("/instances/"):false
-  }),
+  (state, props) => {
+    const [, type, id] = props.reference.match(/^(.+)\/(.+)$/);
+    return {
+      text: props.text?props.text:props.reference,
+      type: type,
+      id: id,
+      group: (props.group !== state.groups.defaultGroup)?props.group:null,
+      isExternal: state.router.location.pathname?state.router.location.pathname.startsWith("/instances/"):false
+    };
+  },
   dispatch => ({
-    onClick: (reference, group) => dispatch(actions.loadInstance(reference, group))
+    onClick: (type, id, group) => {
+      dispatch(actions.setGroup(group));
+      dispatch(actions.loadInstance(type, id));
+    }
   })
 )(ReferenceComponent);
 

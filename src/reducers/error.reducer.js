@@ -86,7 +86,7 @@ export function reducer(state = initialState, action = {}) {
       message: `${action.path} ${action.id} is currently not available.`,
       retry: {
         label: "Retry",
-        action: types.LOAD_INSTANCE
+        action: types.LOAD_INSTANCE_REQUEST
       },
       cancel: {
         label: "Cancel",
@@ -99,7 +99,7 @@ export function reducer(state = initialState, action = {}) {
       message: "The search engine is temporary unavailable. Please retry in a moment.",
       retry: {
         label: "Retry",
-        action: types.LOAD_INSTANCE
+        action: types.LOAD_INSTANCE_REQUEST
       },
       cancel: {
         label: "Cancel",

@@ -158,18 +158,11 @@ export const resetTypeForGroup = group => {
   };
 };
 
-
-
-export const loadInstance = reference => {
+export const loadInstanceRequest = (type, id) => {
   return {
-    type: types.LOAD_INSTANCE,
-    reference: reference
-  };
-};
-
-export const loadInstanceRequest = () => {
-  return {
-    type: types.LOAD_INSTANCE_REQUEST
+    type: types.LOAD_INSTANCE_REQUEST,
+    instanceType: type,
+    instanceId: id
   };
 };
 
@@ -180,19 +173,15 @@ export const loadInstanceSuccess = data => {
   };
 };
 
-export const loadInstanceNoData = (path, id) => {
+export const loadInstanceNoData = () => {
   return {
-    type: types.LOAD_INSTANCE_NO_DATA,
-    path: path,
-    id: id
+    type: types.LOAD_INSTANCE_NO_DATA
   };
 };
 
-export const loadInstanceFailure = (path, id, error) => {
+export const loadInstanceFailure = (error) => {
   return {
     type: types.LOAD_INSTANCE_FAILURE,
-    path: path,
-    id: id,
     error: error
   };
 };
@@ -448,27 +437,27 @@ export const loadGroups = () => {
   };
 };
 
-export const loadReference = (type, id) => {
+export const loadInstance = (type, id) => {
   return dispatch => {
-    dispatch(loadInstanceRequest());
+    dispatch(loadInstanceRequest(type, id));
     API.axios
       .get(API.endpoints.instance(type, id))
       .then(response => {
         if (response.data.found) {
           dispatch(loadInstanceSuccess(response.data));
         } else {
-          dispatch(loadInstanceNoData(type, id));
+          dispatch(loadInstanceNoData());
         }
       })
       .catch(error => {
-        dispatch(loadInstanceFailure(type, id, error));
+        dispatch(loadInstanceFailure(error));
       });
   };
 };
 
 export const loadPreview = (type, id) => {
   return dispatch => {
-    dispatch(loadInstanceRequest());
+    dispatch(loadInstanceRequest(type, id));
     API.axios
       .get(API.endpoints.preview(type, id))
       .then(response => {
@@ -476,16 +465,16 @@ export const loadPreview = (type, id) => {
           response.data._id = id;
           dispatch(loadInstanceSuccess(response.data));
         } else if (response.data && response.data.error) {
-          dispatch(loadInstanceFailure(type, id, response.data.message ? response.data.message : response.data.error));
+          dispatch(loadInstanceFailure(response.data.message ? response.data.message : response.data.error));
         } else {
-          dispatch(loadInstanceNoData(type, id));
+          dispatch(loadInstanceNoData());
         }
       })
       .catch(error => {
         if (error.stack === "SyntaxError: Unexpected end of JSON input" || error.message === "Unexpected end of JSON input") {
-          dispatch(loadInstanceNoData(type, id));
+          dispatch(loadInstanceNoData());
         } else {
-          dispatch(loadInstanceFailure(type, id, error));
+          dispatch(loadInstanceFailure(error));
         }
       });
   };
