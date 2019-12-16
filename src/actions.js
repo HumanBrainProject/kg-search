@@ -259,6 +259,13 @@ export const setSort = value => {
   };
 };
 
+export const setPage = value => {
+  return {
+    type: types.SET_PAGE,
+    value: value
+  };
+};
+
 export const setFacet = (id, active, keyword) => {
   return {
     type: types.SET_FACET,

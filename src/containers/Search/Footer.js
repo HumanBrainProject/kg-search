@@ -30,7 +30,7 @@ const FooterBase = ({isFloating}) => {
       <div className="kgs-footer-nav">
         <SignInButton className="kgs-sign-in" signInLabel="Log in" signOffLabel="Log out"/>
         <GroupSelection className="kgs-group-selection"/>
-        <Pagination className="kgs-footer-pagination" />
+        <Pagination />
         <ShareButtons/>
         <div className="kgs-space" />
         <div className="kgs-space2" />

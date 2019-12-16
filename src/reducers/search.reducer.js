@@ -23,6 +23,8 @@ const initialState = {
   facets: [],
   types: [],
   sort: null,
+  page: 1,
+  totalPages: 0,
   sortFields: [],
   facetTypesOrder: {},
   facetDefaultSelectedType: null,
@@ -77,6 +79,9 @@ const setupSearch = (state, action) => {
     const queryString = state.initialParams["q"]?state.initialParams["q"]:"";
     const selectedType = getType(types, state.initialParams["facet_type"], defaultType);
     const sort = getSort(sortFields, state.initialParams["sort"]);
+    const pageNumber = Number(state.initialParams["p"]);
+    const page = isNaN(pageNumber)?1:(pageNumber > 0?Math.floor(pageNumber):1);
+    const from = (page -1) * state.hitsPerPage;
     facets.forEach(facet => {
       const value = state.initialParams[facet.id];
       if (value) {
@@ -103,7 +108,9 @@ const setupSearch = (state, action) => {
       sortFields: sortFields,
       facetTypesOrder: facetTypesOrder,
       selectedType: selectedType,
-      facetDefaultSelectedType: defaultType
+      facetDefaultSelectedType: defaultType,
+      page: page,
+      from: from
     };
   }
 };
@@ -182,6 +189,14 @@ const setSort = (state, action) => {
     };
   }
   return state;
+};
+
+const setPage = (state, action) => {
+  return {
+    ...state,
+    page: action.value,
+    from: (action.value -1) * state.hitsPerPage
+  };
 };
 
 const setType = (state, action) => {
@@ -312,6 +327,8 @@ const loadSearchResult = (state, action) => {
       });
   };
 
+  const total = (action.results && action.results.hits && action.results.hits.total) ?(isNaN(Number(action.results.hits.total))?0:Number(action.results.hits.total)): 0;
+
   return {
     ...state,
     initialRequestDone: true,
@@ -320,8 +337,8 @@ const loadSearchResult = (state, action) => {
     facets: getUpdatedFacets(state.facets, action.results),
     types: getUpdatedTypes(state.types, state.selectedType, state.group, state.groupsSettings, state.facetTypesOrder, action.results),
     hits: (action.results && action.results.hits && Array.isArray(action.results.hits.hits)) ? action.results.hits.hits : [],
-    total: (action.results && action.results.hits && action.results.hits.total) ? action.results.hits.total : 0,
-    from: action.from ? Number(action.from) : 0
+    total: total,
+    totalPages: Math.ceil(total / state.hitsPerPage)
   };
 };
 
@@ -331,7 +348,9 @@ const loadSearchFail = state => {
     isLoading: false,
     nonce: null,
     results: [],
-    from: 0
+    from: 0,
+    page: 1,
+    totalPages: 0
   };
 };
 
@@ -349,6 +368,8 @@ export function reducer(state = initialState, action = {}) {
     return resetTypeForGroup(state, action);
   case types.SET_SORT:
     return setSort(state, action);
+  case types.SET_PAGE:
+    return setPage(state, action);
   case types.SET_FACET:
     return setFacet(state, action);
   case types.RESET_FACETS:
