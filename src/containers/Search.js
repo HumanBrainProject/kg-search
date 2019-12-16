@@ -19,7 +19,7 @@ import { connect } from "react-redux";
 import * as actions from "../actions";
 import { withTabKeyNavigation } from "../helpers/withTabKeyNavigation";
 import { SearchPanel } from "./Search/SearchPanel";
-import { ShapesFilterPanel } from "./Search/ShapesFilterPanel";
+import { TypesFilterPanel } from "./Search/TypesFilterPanel";
 import { FiltersPanel } from "./Search/FiltersPanel";
 import { ResultsHeader } from "./Search/ResultsHeader";
 import { HitsPanel } from "./Search/HitsPanel";
@@ -96,7 +96,7 @@ class SearchBase extends React.Component {
         <div className = "kgs-search" >
           <SearchPanel />
           <TermsShortNotice className = "kgs-search__terms-short-notice" />
-          <ShapesFilterPanel />
+          <TypesFilterPanel />
           <div className = "kgs-search__panel" >
             <FiltersPanel />
             <div className = "kgs-search__main" >

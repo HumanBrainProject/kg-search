@@ -624,18 +624,18 @@
     border-left-color: #000;
   }
 
-  .kgs-fieldsFilter .kgs-fieldsFilter__shape.is-active {
+  .kgs-fieldsFilter .kgs-fieldsFilter__type.is-active {
     border-bottom-color: #F88900;
   }
 
-  .kgs-fieldsFilter .kgs-fieldsFilter__shape button.kgs-fieldsFilter__button {
+  .kgs-fieldsFilter .kgs-fieldsFilter__type button.kgs-fieldsFilter__button {
     border: 1px solid #fff;
     background-color: #fff; 
   }
 
-  .kgs-fieldsFilter .kgs-fieldsFilter__shape:not(.is-active) button.kgs-fieldsFilter__button:focus,
-  .kgs-fieldsFilter .kgs-fieldsFilter__shape:not(.is-active) button.kgs-fieldsFilter__button:hover:not([disabled]),
-  .kgs-fieldsFilter .kgs-fieldsFilter__shape:not([is-disabled]):not(.is-active) button.kgs-fieldsFilter__button:hover {
+  .kgs-fieldsFilter .kgs-fieldsFilter__type:not(.is-active) button.kgs-fieldsFilter__button:focus,
+  .kgs-fieldsFilter .kgs-fieldsFilter__type:not(.is-active) button.kgs-fieldsFilter__button:hover:not([disabled]),
+  .kgs-fieldsFilter .kgs-fieldsFilter__type:not([is-disabled]):not(.is-active) button.kgs-fieldsFilter__button:hover {
     box-shadow: 3px 3px 6px #8f8a8a; 
   }
 
@@ -643,14 +643,14 @@
     color: #555;
   }
 
-  .kgs-fieldsFilter .kgs-fieldsFilter__shape.is-active:not(.is-disabled) .kgs-fieldsFilter__label {
+  .kgs-fieldsFilter .kgs-fieldsFilter__type.is-active:not(.is-disabled) .kgs-fieldsFilter__label {
     color: #F88900;
   }
 
 
-  .kgs-fieldsFilter .kgs-fieldsFilter__shape:not(.is-active) button.kgs-fieldsFilter__button:focus .kgs-fieldsFilter__label,
-  .kgs-fieldsFilter .kgs-fieldsFilter__shape:not(.is-active) button.kgs-fieldsFilter__button:hover:not([disabled]) .kgs-fieldsFilter__label,
-  .kgs-fieldsFilter .kgs-fieldsFilter__shape:not([is-disabled]):not(.is-active) button.kgs-fieldsFilter__button:hover .kgs-fieldsFilter__label {
+  .kgs-fieldsFilter .kgs-fieldsFilter__type:not(.is-active) button.kgs-fieldsFilter__button:focus .kgs-fieldsFilter__label,
+  .kgs-fieldsFilter .kgs-fieldsFilter__type:not(.is-active) button.kgs-fieldsFilter__button:hover:not([disabled]) .kgs-fieldsFilter__label,
+  .kgs-fieldsFilter .kgs-fieldsFilter__type:not([is-disabled]):not(.is-active) button.kgs-fieldsFilter__button:hover .kgs-fieldsFilter__label {
     color: #333333;
   }
 

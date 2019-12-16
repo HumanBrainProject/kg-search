@@ -20,7 +20,7 @@ const initialState = {
   isReady: false,
   isLoading: false,
   hasError: false,
-  shapeMappings: {},
+  typeMappings: {},
   serviceUrl: ""
 };
 
@@ -37,7 +37,7 @@ const loadDefinitionSuccess = (state, action) => {
     ...state,
     isReady: true,
     isLoading: false,
-    shapeMappings: action.definition,
+    typeMappings: action.definition,
     serviceUrl: action.serviceUrl
   };
 };

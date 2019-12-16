@@ -309,13 +309,13 @@ export class ElasticSearchHelpers {
 
   static getQueryValuesBoost = definition => {
 
-    const initQueryFieldsRec = (shapeFields, parent) => {
-      let key = Object.keys(shapeFields)[0];
+    const initQueryFieldsRec = (typeFields, parent) => {
+      let key = Object.keys(typeFields)[0];
       let queryFields = {};
       let newQueryfields = {};
-      Object.values(shapeFields).forEach(el => {
+      Object.values(typeFields).forEach(el => {
         Object.keys(el).forEach(fieldName => {
-          const field = shapeFields[key][fieldName];
+          const field = typeFields[key][fieldName];
           const fullFieldName = parent + fieldName;
           let queryField = queryFields[fullFieldName];
           if (!queryField) {
@@ -338,10 +338,10 @@ export class ElasticSearchHelpers {
       return newQueryfields;
     };
 
-    const initQueryFieldsChildren = (shapeFields, parent) => {
+    const initQueryFieldsChildren = (typeFields, parent) => {
       let childrenQueryFields = {};
-      Object.keys(shapeFields).forEach(fieldName => {
-        const field = shapeFields[fieldName];
+      Object.keys(typeFields).forEach(fieldName => {
+        const field = typeFields[fieldName];
         const fullFieldName = parent + fieldName;
         let queryField = childrenQueryFields[fullFieldName];
         if (!queryField) {
@@ -356,24 +356,24 @@ export class ElasticSearchHelpers {
       return childrenQueryFields;
     };
 
-    const filterShapeFields = (shape, shapeFields) => {
-      const filteredShapedFields = {};
+    const filterTypeFields = (type, typeFields) => {
+      const filteredTypeFields = {};
       const result = {};
-      for (let [key, value] of Object.entries(shapeFields)) {
+      for (let [key, value] of Object.entries(typeFields)) {
         if (value.ignoreForSearch !== true) {
-          filteredShapedFields[key] = value;
+          filteredTypeFields[key] = value;
         }
       }
-      result[shape] = filteredShapedFields;
+      result[type] = filteredTypeFields;
       return result;
     };
 
     const queryValuesBoost = [];
     if (definition) {
-      Object.keys(definition).forEach(shape => {
-        const shapeFields = definition[shape] && definition[shape].fields;
-        const filteredShapeFields = filterShapeFields(shape, shapeFields);
-        const initFields = initQueryFieldsRec(filteredShapeFields, "");
+      Object.keys(definition).forEach(type => {
+        const typeFields = definition[type] && definition[type].fields;
+        const filteredTypeFields = filterTypeFields(type, typeFields);
+        const initFields = initQueryFieldsRec(filteredTypeFields, "");
         queryValuesBoost.push(initFields);
       });
     }

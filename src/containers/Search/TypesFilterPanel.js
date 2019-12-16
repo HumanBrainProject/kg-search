@@ -20,20 +20,20 @@ import { connect } from "react-redux";
 import { history } from "../../store";
 import { getUpdatedUrl } from "../../helpers/BrowserHelpers";
 import * as actions from "../../actions";
-import { ShapeIcon } from "./ShapeIcon";
+import { TypeIcon } from "./TypeIcon";
 
-import "./ShapesFilterPanel.css";
+import "./TypesFilterPanel.css";
 
 // {itemKey, label, count, rawCount, listDocCount, active, disabled, showCount, bemBlocks, onClick}
-const ShapeFilterBase = ({ type: { type, label, count, active, disabled }, onClick }) => (
-  <div className = { `kgs-fieldsFilter__shape${active ? " is-active" : ""}${disabled ? " is-disabled" : ""}` } >
+const TypeFilterBase = ({ type: { type, label, count, active, disabled }, onClick }) => (
+  <div className = { `kgs-fieldsFilter__type${active ? " is-active" : ""}${disabled ? " is-disabled" : ""}` } >
     <button onClick = { onClick }
       className = "kgs-fieldsFilter__button"
       disabled = { disabled || active } >
       <div >
         <div className = "kgs-fieldsFilter__icon" >
-          <ShapeIcon label = { label }
-            shape = { type }
+          <TypeIcon label = { label }
+            type = { type }
             active = { active }
           />
         </div>
@@ -44,19 +44,19 @@ const ShapeFilterBase = ({ type: { type, label, count, active, disabled }, onCli
   </div>
 );
 
-class ShapeFilter extends React.Component {
+class TypeFilter extends React.Component {
 
     onClick = () => this.props.onClick(this.props.type.type);
 
     render() {
-      return ( <ShapeFilterBase type = { this.props.type }
+      return ( <TypeFilterBase type = { this.props.type }
         onClick = { this.onClick }
       />
       );
     }
 }
 
-class ShapesFilterPanelBase extends React.Component {
+class TypesFilterPanelBase extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { selectedType, location } = this.props;
@@ -72,7 +72,7 @@ class ShapesFilterPanelBase extends React.Component {
       <div className = "kgs-fieldsFilter" >
         {
           types.map(type =>
-            <ShapeFilter type = { type }
+            <TypeFilter type = { type }
               key = { type.type }
               onClick = { onClick }
             />
@@ -83,7 +83,7 @@ class ShapesFilterPanelBase extends React.Component {
   }
 }
 
-export const ShapesFilterPanel = connect(
+export const TypesFilterPanel = connect(
   state => ({
     selectedType: state.search.selectedType,
     types: state.search.types
@@ -98,4 +98,4 @@ export const ShapesFilterPanel = connect(
   dispatch => ({
     onClick: value => dispatch(actions.setType(value))
   })
-)(ShapesFilterPanelBase);
+)(TypesFilterPanelBase);

@@ -16,7 +16,7 @@
 
 import { connect } from "react-redux";
 import { Icon } from "../../components/Icon";
-import { setIconColor } from "../../helpers/ShapeIconHelper";
+import { setIconColor } from "../../helpers/TypeIconHelper";
 
 const hardcodedColor = "#4D4D4D";
 
@@ -42,15 +42,15 @@ const allSvg = color => `
   </svg>
 `;
 
-export const ShapeIcon = connect(
-  (state, {label, shape, active}) => {
+export const TypeIcon = connect(
+  (state, {label, type, active}) => {
     let imageUrl = null;
     let icon = null;
 
-    if (shape === "$all") {
+    if (type === "$all") {
       icon = allSvg(hardcodedColor);
     } else {
-      const mapping = state.definition.shapeMappings[shape];
+      const mapping = state.definition.typeMappings[type];
       if (mapping) {
         if (mapping.image && mapping.image.url) {
           imageUrl = mapping.image.url;
