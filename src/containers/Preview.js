@@ -63,7 +63,7 @@ class PreviewComponent extends React.Component {
     return (
       <div className="kgs-preview-container" >
         {show && (
-          <Component {...this.props} />
+          <Component {...this.props.componentProps} />
         )}
       </div>
     );
@@ -74,10 +74,19 @@ class PreviewComponent extends React.Component {
 export const Preview = connect(
   (state, props) => {
     const type = `${props.match.params.org}/${props.match.params.domain}/${props.match.params.schema}/${props.match.params.version}`;
+    const componentProps = state.instances.currentInstance?
+      {
+        ...mapStateToProps(state, {
+          data: state.instances.currentInstance
+        }),
+        ImagePreviewsComponent: ImagePreviews,
+        ImagePopupComponent: ImagePopup,
+        TermsShortNoticeComponent: TermsShortNotice
+      }
+      :
+      null;
     return {
-      ...mapStateToProps(state, {
-        data: state.instances.currentInstance
-      }),
+      componentProps: componentProps,
       show: state.instances.currentInstance,
       definitionIsReady: state.definition.isReady,
       definitionIsLoading: state.definition.isLoading,
@@ -88,9 +97,6 @@ export const Preview = connect(
       shouldLoadInstance: !state.instances.currentInstance || state.instances.currentInstance._type !==  type || state.instances.currentInstance._id !==  props.match.params.id,
       instanceError: state.instances.error,
       currentInstance: state.instances.currentInstance,
-      ImagePreviewsComponent: ImagePreviews,
-      ImagePopupComponent: ImagePopup,
-      TermsShortNoticeComponent: TermsShortNotice,
       group: state.groups.group,
       id: props.match.params.id,
       type: type,

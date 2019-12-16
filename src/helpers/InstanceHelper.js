@@ -125,8 +125,8 @@ export const mapStateToProps = (state, props) => {
   const source = data && !(data.found === false) && data._type && data._source;
   const mapping = (source && state.definition && state.definition.typeMappings && state.definition.typeMappings[data._type])?state.definition.typeMappings[data._type]:{};
   const group = (data && indexReg.test(data._index)) ? data._index.match(indexReg)[1] : state.groups.group;
-
   return {
+    id: data && data._id,
     type: data && data._type,
     hasNoData: !source,
     hasUnknownData: !mapping,

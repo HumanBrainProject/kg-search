@@ -23,7 +23,7 @@ import { FieldsTabs } from "./FieldsTabs";
 import "./Instance.css";
 
 
-export const Instance = ({ type, hasNoData, hasUnknownData, header, previews, main, summary, groups, ImagePreviewsComponent, ImagePopupComponent, TermsShortNoticeComponent}) => {
+export const Instance = ({ id, type, hasNoData, hasUnknownData, header, previews, main, summary, groups, ImagePreviewsComponent, ImagePopupComponent, TermsShortNoticeComponent}) => {
   if (hasNoData) {
     return (
       <div className="kgs-instance" data-type={type}>
@@ -58,7 +58,7 @@ export const Instance = ({ type, hasNoData, hasUnknownData, header, previews, ma
           <ImagePreviewsComponent className={`kgs-instance__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
           <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
           <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
-          <FieldsTabs className="kgs-instance__groups" fields={groups} />
+          <FieldsTabs className="kgs-instance__groups" id={id} fields={groups} />
         </div>
       </div>
       <ImagePopupComponent className="kgs-instance__image_popup" />

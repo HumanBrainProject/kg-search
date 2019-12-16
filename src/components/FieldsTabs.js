@@ -58,12 +58,12 @@ const getTabs = fields => {
   });
 };
 
-export const FieldsTabs = ({className, fields}) => {
+export const FieldsTabs = ({className, id, fields}) => {
   if (!fields || !fields.length) {
     return null;
   }
   const tabs = getTabs(fields);
   return (
-    <Tabs className={className?className:""} tabs={tabs} viewComponent={Field} />
+    <Tabs className={className?className:""} id={id} tabs={tabs} viewComponent={Field} />
   );
 };

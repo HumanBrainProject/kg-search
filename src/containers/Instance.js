@@ -63,7 +63,7 @@ class InstanceComponent extends React.Component {
     return (
       <div className="kgs-instance-container" >
         {show && (
-          <Component {...this.props} />
+          <Component {...this.props.componentProps} />
         )}
       </div>
     );
@@ -72,28 +72,36 @@ class InstanceComponent extends React.Component {
 }
 
 export const Instance = connect(
-  (state, props) => ({
-    ...mapStateToProps(state, {
-      data: state.instances.currentInstance
-    }),
-    show: state.instances.currentInstance,
-    definitionIsReady: state.definition.isReady,
-    definitionIsLoading: state.definition.isLoading,
-    isGroupsReady: state.groups.isReady,
-    isGroupLoading: state.groups.isLoading,
-    shouldLoadGroups: !!state.auth.accessToken,
-    instanceIsLoading: state.instances.isLoading,
-    shouldLoadInstance: !state.instances.currentInstance || state.instances.currentInstance._type !==  props.match.params.type || state.instances.currentInstance._id !==  props.match.params.id,
-    instanceError: state.instances.error,
-    currentInstance: state.instances.currentInstance,
-    ImagePreviewsComponent: ImagePreviews,
-    ImagePopupComponent: ImagePopup,
-    TermsShortNoticeComponent: TermsShortNotice,
-    group: state.groups.group,
-    id: props.match.params.id,
-    type: props.match.params.type,
-    location: state.router.location
-  }),
+  (state, props) => {
+    const componentProps = state.instances.currentInstance?
+      {
+        ...mapStateToProps(state, {
+          data: state.instances.currentInstance
+        }),
+        ImagePreviewsComponent: ImagePreviews,
+        ImagePopupComponent: ImagePopup,
+        TermsShortNoticeComponent: TermsShortNotice
+      }
+      :
+      null;
+    return {
+      componentProps: componentProps,
+      show: state.instances.currentInstance && !state.instances.isLoading,
+      definitionIsReady: state.definition.isReady,
+      definitionIsLoading: state.definition.isLoading,
+      isGroupsReady: state.groups.isReady,
+      isGroupLoading: state.groups.isLoading,
+      shouldLoadGroups: !!state.auth.accessToken,
+      instanceIsLoading: state.instances.isLoading,
+      shouldLoadInstance: !state.instances.currentInstance || state.instances.currentInstance._type !==  props.match.params.type || state.instances.currentInstance._id !==  props.match.params.id,
+      instanceError: state.instances.error,
+      currentInstance: state.instances.currentInstance,
+      group: state.groups.group,
+      id: props.match.params.id,
+      type: props.match.params.type,
+      location: state.router.location
+    };
+  },
   dispatch => ({
     setInitialGroup: group => dispatch(actions.setInitialGroup(group)),
     loadDefinition: () => dispatch(actions.loadDefinition()),
