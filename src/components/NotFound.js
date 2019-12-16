@@ -23,7 +23,7 @@ export const NotFound = () => (
   <div className="kgs-notFound">
     <h3>Page not found</h3>
     <div>
-      <Link to={"/"}>Go back to search</Link>
+      <Link to="/">Go back to search</Link>
     </div>
   </div>
 );

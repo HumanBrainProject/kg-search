@@ -22,46 +22,68 @@ import { FieldsPanel } from "./FieldsPanel";
 import { FieldsTabs } from "./FieldsTabs";
 import "./Instance.css";
 
+export class Instance extends React.PureComponent {
 
-export const Instance = ({ id, type, hasNoData, hasUnknownData, header, previews, main, summary, groups, ImagePreviewsComponent, ImagePopupComponent, TermsShortNoticeComponent}) => {
-  if (hasNoData) {
-    return (
-      <div className="kgs-instance" data-type={type}>
-        <div className="kgs-instance__no-data">This data is currently not available.</div>
-      </div>
-    );
+  componentDidMount() {
+    this.trackEvent();
   }
-  if (hasUnknownData) {
-    return (
-      <div className="kgs-instance" data-type={type}>
-        <div className="kgs-instance__no-data">This type of data is currently not supported.</div>
-      </div>
-    );
-  }
-  ReactPiwik.push(["trackEvent", "Card", "Opened", `${window.location.search}${window.location.hash}`]);
 
-  return (
-    <div className="kgs-instance" data-type={type}>
-      <div className="kgs-instance-scroll">
-        <TermsShortNoticeComponent />
-        <div className={`kgs-instance-content kgs-instance__grid ${(previews && previews.length) ? "kgs-instance__with-previews" : ""}`}>
-          <div className="kgs-instance__header">
-            <h3 className={`kgs-instance__group ${header.group? "show" : ""}`}>Group: <strong>{header.group}</strong></h3>
-            <div>
-              <Field {...header.icon} />
-              <Field {...header.type} />
-            </div>
-            <div>
-              <Field {...header.title} />
-            </div>
-          </div>
-          <ImagePreviewsComponent className={`kgs-instance__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
-          <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
-          <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
-          <FieldsTabs className="kgs-instance__groups" id={id} fields={groups} />
+  componentDidUpdate(previousProps) {
+    const { id, type, group } = this.props;
+    if (id !== previousProps.id || type !== previousProps.type || group !== previousProps.group) {
+      this.trackEvent();
+    }
+  }
+
+  trackEvent = () => {
+    const { id, type, group, path, defaultGroup } = this.props;
+    const relativeUrl = `${path}${type}/${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
+    window.console.log("trackEvent", "Card", "Opened", relativeUrl);
+    ReactPiwik.push(["trackEvent", "Card", "Opened", relativeUrl]);
+  }
+
+  render() {
+    const { id, type, hasNoData, hasUnknownData, header, previews, main, summary, groups, ImagePreviewsComponent, ImagePopupComponent, TermsShortNoticeComponent } = this.props;
+
+    if (hasNoData) {
+      return (
+        <div className="kgs-instance" data-type={type}>
+          <div className="kgs-instance__no-data">This data is currently not available.</div>
         </div>
+      );
+    }
+
+    if (hasUnknownData) {
+      return (
+        <div className="kgs-instance" data-type={type}>
+          <div className="kgs-instance__no-data">This type of data is currently not supported.</div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="kgs-instance" data-type={type}>
+        <div className="kgs-instance-scroll">
+          <TermsShortNoticeComponent />
+          <div className={`kgs-instance-content kgs-instance__grid ${(previews && previews.length) ? "kgs-instance__with-previews" : ""}`}>
+            <div className="kgs-instance__header">
+              <h3 className={`kgs-instance__group ${header.group? "show" : ""}`}>Group: <strong>{header.group}</strong></h3>
+              <div>
+                <Field {...header.icon} />
+                <Field {...header.type} />
+              </div>
+              <div>
+                <Field {...header.title} />
+              </div>
+            </div>
+            <ImagePreviewsComponent className={`kgs-instance__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
+            <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
+            <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
+            <FieldsTabs className="kgs-instance__groups" id={id} fields={groups} />
+          </div>
+        </div>
+        <ImagePopupComponent className="kgs-instance__image_popup" />
       </div>
-      <ImagePopupComponent className="kgs-instance__image_popup" />
-    </div>
-  );
-};
+    );
+  }
+}

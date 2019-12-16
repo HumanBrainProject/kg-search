@@ -25,6 +25,8 @@ import { Instance as Component } from "../../components/Instance";
 export const Instance = connect(
   (state, props) => ({
     ...mapStateToProps(state, props),
+    path: "/instances/",
+    defaultGroup: state.groups.defaultGroup,
     ImagePreviewsComponent: ImagePreviews,
     ImagePopupComponent: ImagePopup,
     TermsShortNoticeComponent: TermsShortNotice

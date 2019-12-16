@@ -18,3 +18,16 @@
   padding: 0 var(--site-margin);
   background: var(--background-color-1);
 }
+
+.kgs-instance-container__header {
+  display: flex;
+  padding-top: 15px;
+}
+
+.kgs-instance-container .kgs-instance-content {
+  padding: 0;
+}
+
+.kgs-instance-container__left {
+  flex:1;
+}

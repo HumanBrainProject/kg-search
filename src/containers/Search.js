@@ -33,6 +33,7 @@ class SearchBase extends React.Component {
 
   componentDidMount() {
     const { setInitialSearchParams, setInitialGroup } = this.props;
+    document.title = "Knowledge Graph Search";
     const params = this.getUrlParmeters();
     const searchParam = {...params};
     delete searchParam.group;

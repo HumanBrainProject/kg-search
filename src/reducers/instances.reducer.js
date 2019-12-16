@@ -31,6 +31,7 @@ const loadInstanceRequest = (state, action) => {
     ...state,
     currentInstanceType: action.instanceType,
     currentInstanceId: action.instanceId,
+    currentInstance: null,
     isLoading: true,
     image: null
   };

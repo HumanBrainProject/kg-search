@@ -128,6 +128,7 @@ export const mapStateToProps = (state, props) => {
   return {
     id: data && data._id,
     type: data && data._type,
+    group: group,
     hasNoData: !source,
     hasUnknownData: !mapping,
     header: {
