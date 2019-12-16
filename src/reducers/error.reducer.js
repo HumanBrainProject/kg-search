@@ -39,7 +39,7 @@ export function reducer(state = initialState, action = {}) {
       message: "The search engine is temporary unavailable. Please retry in a moment.",
       retry: {
         label: "Retry",
-        action: types.LOAD_DEFINITION_REQUEST //types.LOAD_GROUPS TODO: check this 
+        action: types.LOAD_DEFINITION_REQUEST //types.LOAD_GROUPS TODO: check this
       },
       cancel: null
     };

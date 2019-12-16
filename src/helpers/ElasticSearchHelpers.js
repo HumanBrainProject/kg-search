@@ -461,50 +461,50 @@ export class ElasticSearchHelpers {
         let filter = null;
         const facetKey = facet.isChild ? `${facet.name}.children.${facet.childName}.value.keyword` : `${facet.name}.value.keyword`;
         switch (facet.filterType) {
-          case "_type":
-            {
-              filter = {
-                term: {}
-              };
-              filter.term[facet.name] = facet.value;
-              break;
-            }
-          case "list":
-            {
-              if (Array.isArray(facet.value) && facet.value.length) {
-                if (facet.exclusiveSelection === false) { // OR
-                  if (facet.value.length > 1) {
-                    filter = {
-                      bool: {
-                        should: []
-                      }
-                    };
-                    facet.value.forEach(v => {
-                      filter.bool.should.push(buildFilter(facet, facetKey, v));
-                    });
-                  } else {
-                    filter = buildFilter(facet, facetKey, facet.value[0]);
+        case "_type":
+        {
+          filter = {
+            term: {}
+          };
+          filter.term[facet.name] = facet.value;
+          break;
+        }
+        case "list":
+        {
+          if (Array.isArray(facet.value) && facet.value.length) {
+            if (facet.exclusiveSelection === false) { // OR
+              if (facet.value.length > 1) {
+                filter = {
+                  bool: {
+                    should: []
                   }
-                } else { // AND
-                  filter = [];
-                  facet.value.forEach(v => {
-                    filter.push(buildFilter(facet, facetKey, v));
-                  });
-                }
+                };
+                facet.value.forEach(v => {
+                  filter.bool.should.push(buildFilter(facet, facetKey, v));
+                });
+              } else {
+                filter = buildFilter(facet, facetKey, facet.value[0]);
               }
-              break;
+            } else { // AND
+              filter = [];
+              facet.value.forEach(v => {
+                filter.push(buildFilter(facet, facetKey, v));
+              });
             }
-          case "exists":
-            {
-              filter = {
-                exists: {
-                  field: facetKey
-                }
-              };
-              break;
+          }
+          break;
+        }
+        case "exists":
+        {
+          filter = {
+            exists: {
+              field: facetKey
             }
-          default:
-            break;
+          };
+          break;
+        }
+        default:
+          break;
         }
         if (filter) {
           filters[facet.id] = {
@@ -520,15 +520,15 @@ export class ElasticSearchHelpers {
       const filtered = Object.entries(filters).filter(([id, { facet }]) => {
         const active = !!facet.value;
         switch (facet.filterType) {
-          case "exists":
-            if (id === key) {
-              return true;
-            }
-            return active && id !== key;
-          case "_type":
-          case "list":
-          default:
-            return active && id !== key;
+        case "exists":
+          if (id === key) {
+            return true;
+          }
+          return active && id !== key;
+        case "_type":
+        case "list":
+        default:
+          return active && id !== key;
         }
       });
       const res = filtered.reduce((acc, [, { filter }]) => {
@@ -605,22 +605,22 @@ export class ElasticSearchHelpers {
 
       facets.forEach(facet => {
         switch (facet.filterType) {
-          case "_type":
-            {
-              aggs[facet.id] = {
-                aggs: setAggs(facet.name, `${facet.name}_count`, null, 50)
-              };
-              break;
-            }
-          case "list":
-            {
-              setListFacetAggs(aggs, facet);
-              break;
-            }
-          case "exists":
-          default:
-            aggs[facet.id] = {};
-            break;
+        case "_type":
+        {
+          aggs[facet.id] = {
+            aggs: setAggs(facet.name, `${facet.name}_count`, null, 50)
+          };
+          break;
+        }
+        case "list":
+        {
+          setListFacetAggs(aggs, facet);
+          break;
+        }
+        case "exists":
+        default:
+          aggs[facet.id] = {};
+          break;
         }
       });
     };
