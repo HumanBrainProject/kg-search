@@ -37,24 +37,26 @@ class FacetCheckbox extends React.Component {
   }
 }
 
-const FacetListItem = ({ item, location, onChange }) => {
+class FacetListItem extends React.PureComponent {
 
-  const onClick = active => onChange(item.value, active);
+  onClick = active => this.props.onChange(this.props.item.value, active);
 
-
-  return (
-    <FacetCheckbox
-      name = { item.name }
-      label = { item.value }
-      checked = { item.checked }
-      count = { item.count }
-      value = { item.value }
-      many = { true }
-      location = { location }
-      onClick = { onClick }
-    />
-  );
-};
+  render() {
+    const { item, location } = this.props;
+    return (
+      <FacetCheckbox
+        name = { item.name }
+        label = { item.value }
+        checked = { item.checked }
+        count = { item.count }
+        value = { item.value }
+        many = { true }
+        location = { location }
+        onClick = { this.onClick }
+      />
+    );
+  }
+}
 
 const FacetList = ({ list, location, onChange }) => (
   <div className = "kgs-facet-list" > {

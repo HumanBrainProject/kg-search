@@ -86,6 +86,19 @@
 }
 
 
+.kgs-footer.is-fixed-position .kgs-footer-nav {
+    padding: 14px var(--site-margin);
+}
+
+.kgs-footer-nav .kgs-paging {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+    -ms-grid-column-span: 4;
+}
+
+.kgs-footer-nav .kgs-share-links  {
+    transform: translateY(0);
+}
 .kgs-footer .kgs-footer-nav .kgs-share-links .kgs-share-links-panel:before {
    background-color: var(--background-color-1);
 }

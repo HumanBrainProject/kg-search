@@ -32,7 +32,6 @@ const initialState = {
   isLoading: false,
   queryString: "",
   selectedType: null,
-  nonce: null,
   groupsSettings: {},
   hitsPerPage: 20,
   hits: [],
@@ -245,11 +244,10 @@ const setGroupsSettings = (state, action) => {
   };
 };
 
-const loadSearchRequest = (state, action) => {
+const loadSearchRequest = state => {
   return {
     ...state,
-    isLoading: true,
-    nonce: action.nonce
+    isLoading: true
   };
 };
 
@@ -333,7 +331,6 @@ const loadSearchResult = (state, action) => {
     ...state,
     initialRequestDone: true,
     isLoading: false,
-    nonce: null,
     facets: getUpdatedFacets(state.facets, action.results),
     types: getUpdatedTypes(state.types, state.selectedType, state.group, state.groupsSettings, state.facetTypesOrder, action.results),
     hits: (action.results && action.results.hits && Array.isArray(action.results.hits.hits)) ? action.results.hits.hits : [],
@@ -346,7 +343,6 @@ const loadSearchFail = state => {
   return {
     ...state,
     isLoading: false,
-    nonce: null,
     results: [],
     from: 0,
     page: 1,

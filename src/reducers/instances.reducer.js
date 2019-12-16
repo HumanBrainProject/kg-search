@@ -108,75 +108,6 @@ const clearAllInstances = state => {
   };
 };
 
-const setCurrentInstanceFromBrowserLocation = state => {
-  let instance = state && state.currentInstance;
-
-  // if no current instance
-  if (!instance) {
-    return state;
-  }
-
-  const [,,instanceType, instanceId] = window.location.href.match(/#((.+)\/(.+))$/) || [];
-
-  // no instance reference available in url, unset current instance
-  if (!instanceType || !instanceId) {
-    return {
-      ...state,
-      isLoading: false,
-      currentInstanceType: null,
-      currentInstanceId: null,
-      currentInstance: null,
-      previousInstances: [],
-      image: null
-    };
-  }
-
-  // instance reference url is already matching current instance, do notthing
-  if (instance && instance._type === instanceType && instance._id === instanceId) {
-    return state;
-  }
-
-  // no previous instances available, unset current instance
-  if (!state || !state.previousInstances.length) {
-    return {
-      ...state,
-      isLoading: false,
-      currentInstanceType: null,
-      currentInstanceId: null,
-      currentInstance: null,
-      previousInstances: [],
-      image: null
-    };
-  }
-
-  const previousInstances = (state && Array.isArray(state.previousInstances))?[...state.previousInstances]:[];
-  instance = previousInstances.pop() || null;
-  while(previousInstances.length && instance && !(instance._type === instanceType && instance._id === instanceId))  {
-    instance = previousInstances.pop();
-  }
-  if (instance && instance._type === instanceType && instance._id === instanceId) {
-    return {
-      ...state,
-      isLoading: false,
-      currentInstanceType: (instance && instance._type)?instance._type:null,
-      currentInstanceId: (instance && instance._id)?instance._id:null,
-      currentInstance: instance,
-      previousInstances: previousInstances,
-      image: null
-    };
-  }
-
-  return {
-    ...state,
-    isLoading: false,
-    currentInstanceType: null,
-    currentInstanceId: null,
-    currentInstance: null,
-    previousInstances: [],
-    image: null
-  };
-};
-
 const showImage = (state, action) => {
   return {
     ...state,
@@ -200,8 +131,6 @@ export function reducer(state = initialState, action = {}) {
     return setPreviousInstance(state, action);
   case types.CLEAR_ALL_INSTANCES:
     return clearAllInstances(state, action);
-  case types.SET_CURRENT_INSTANCE_FROM_BROWSER_LOCATION:
-    return setCurrentInstanceFromBrowserLocation(state, action);
   case types.SHOW_IMAGE:
     return showImage(state, action);
   default:

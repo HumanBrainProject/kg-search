@@ -101,11 +101,10 @@ export const loadSearchBadRequest = status => {
   };
 };
 
-export const loadSearchServiceFailure = (status, group) => {
+export const loadSearchServiceFailure = status => {
   return {
     type: types.LOAD_SEARCH_SERVICE_FAILURE,
-    status: status,
-    group: group
+    status: status
   };
 };
 
@@ -122,12 +121,10 @@ export const loadSearchRequest = () => {
   };
 };
 
-export const loadSearchResult = (results, group, from) => {
+export const loadSearchResult = results => {
   return {
     type: types.LOAD_SEARCH_SUCCESS,
-    results: results,
-    group: group,
-    from: from
+    results: results
   };
 };
 
@@ -211,12 +208,6 @@ export const clearAllInstances = () => {
   };
 };
 
-export const setCurrentInstanceFromBrowserLocation = () => {
-  return {
-    type: types.SET_CURRENT_INSTANCE_FROM_BROWSER_LOCATION
-  };
-};
-
 export const setToken = accessToken => {
   return {
     type: types.SET_TOKEN,
@@ -288,7 +279,7 @@ export const resetFacets = () => {
   };
 };
 
-export const doSearch = (searchParams, group) => {
+export const doSearch = searchParams => {
   return dispatch => {
     dispatch(loadSearchRequest());
     ReactPiwik.push(["setCustomUrl", window.location.href]);
@@ -296,8 +287,11 @@ export const doSearch = (searchParams, group) => {
     API.axios
       .post(API.endpoints.search(), ElasticSearchHelpers.buildRequest(searchParams))
       .then(response => {
-        const index = response.headers["X-Selected-Index"];
-        dispatch(loadSearchResult(response.data, index ? index.slice(3) : group, searchParams.from));
+        const index = response.headers["x-selected-index"];
+        if (index) {
+          dispatch(setGroup(index.slice(3)));
+        }
+        dispatch(loadSearchResult(response.data));
       })
       .catch(error => {
         const { response } = error;
@@ -314,8 +308,11 @@ export const doSearch = (searchParams, group) => {
           break;
         default:
         {
-          const index = response.headers["X-Selected-Index"];
-          dispatch(loadSearchServiceFailure(status, index ? index.slice(3) : group));
+          const index = response.headers["x-selected-index"];
+          if (index) {
+            dispatch(setGroup(index.slice(3)));
+          }
+          dispatch(loadSearchServiceFailure(status));
         }
         }
       });

@@ -19,14 +19,14 @@ import { connect } from "react-redux";
 import { history } from "../../store";
 import * as actions from "../../actions";
 
-const ReferenceComponent = ({text, type, id, group, isExternal, onClick}) => {
+const ReferenceComponent = ({text, type, id, group, defaultGroup, isExternal, onClick}) => {
   if (!type || !id) {
     return null;
   }
 
   const handleClick = () => {
     if (isExternal) {
-      history.push(`/instances/${type}/${id}${group?("?group=" + group ):""}`);
+      history.push(`/instances/${type}/${id}${group !== defaultGroup?("?group=" + group ):""}`);
     }
     typeof onClick === "function" && onClick(type, id, group);
   };
@@ -43,7 +43,8 @@ export const Reference = connect(
       text: props.text?props.text:props.reference,
       type: type,
       id: id,
-      group: (props.group !== state.groups.defaultGroup)?props.group:null,
+      group: props.group,
+      defaultGroup: state.groups.defaultGroup,
       isExternal: state.router.location.pathname?state.router.location.pathname.startsWith("/instances/"):false
     };
   },

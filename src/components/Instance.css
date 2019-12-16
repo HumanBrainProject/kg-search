@@ -329,17 +329,6 @@
     *::-ms-backdrop, .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__summary { margin-left: 0; } /* IE11 */
 }
 
-.kgs-footer.is-fixed-position .kgs-footer-nav {
-    padding: 14px var(--site-margin);
-}
-
-.kgs-footer-nav .kgs-paging {
-    -ms-grid-column: 1;
-    -ms-grid-row: 1;
-    -ms-grid-column-span: 4;
-}
-
-
 .kgs-instance__no-data {
     width: 100%;
     height: 50px;

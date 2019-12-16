@@ -70,7 +70,7 @@ class SearchBase extends React.Component {
   }
 
   search() {
-    const { definitionIsReady, definitionIsLoading, loadDefinition, isGroupsReady, isGroupLoading, shouldLoadGroups, loadGroups, searchParams, group, search } = this.props;
+    const { definitionIsReady, definitionIsLoading, loadDefinition, isGroupsReady, isGroupLoading, shouldLoadGroups, loadGroups, searchParams, search } = this.props;
     if (!definitionIsReady) {
       if (!definitionIsLoading) {
         loadDefinition();
@@ -80,7 +80,7 @@ class SearchBase extends React.Component {
         loadGroups();
       }
     } else {
-      search(searchParams, group);
+      search(searchParams);
     }
   }
 
@@ -127,7 +127,6 @@ export const Search = connect(
     isGroupLoading: state.groups.isLoading,
     shouldLoadGroups: !!state.auth.accessToken,
     searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
-    group: state.groups.group,
     location: state.router.location
   }),
   dispatch => ({
@@ -135,6 +134,6 @@ export const Search = connect(
     setInitialGroup: group => dispatch(actions.setInitialGroup(group)),
     loadDefinition: () => dispatch(actions.loadDefinition()),
     loadGroups: () => dispatch(actions.loadGroups()),
-    search: (searchParams, group) => dispatch(actions.doSearch(searchParams, group))
+    search: searchParams => dispatch(actions.doSearch(searchParams))
   })
 )(SearchWithTabKeyNavigation);

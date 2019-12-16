@@ -71,7 +71,6 @@ export function reducer(state = initialState, action = {}) {
   case types.SET_INSTANCE:
   case types.SET_PREVIOUS_INSTANCE:
   case types.CLEAR_ALL_INSTANCES:
-  case types.SET_CURRENT_INSTANCE_FROM_BROWSER_LOCATION:
   default:
     return state;
   }
