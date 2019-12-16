@@ -19,16 +19,19 @@ import { connect } from "react-redux";
 import { history } from "../../store";
 import * as actions from "../../actions";
 
-const ReferenceComponent = ({text, type, id, group, defaultGroup, isExternal, onClick}) => {
+const InstanceLinkComponent = ({text, type, id, group, defaultGroup, isInstance, isPreview, onClick}) => {
   if (!type || !id) {
     return null;
   }
 
   const handleClick = () => {
-    if (isExternal) {
+    if(isInstance){
       history.push(`/instances/${type}/${id}${group !== defaultGroup?("?group=" + group ):""}`);
+    } else if(isPreview) {
+      history.push(`/previews/${type}/${id}${group !== defaultGroup?("?group=" + group ):""}`);
+    } else {
+      typeof onClick === "function" && onClick(type, id, group);
     }
-    typeof onClick === "function" && onClick(type, id, group);
   };
 
   return (
@@ -36,16 +39,16 @@ const ReferenceComponent = ({text, type, id, group, defaultGroup, isExternal, on
   );
 };
 
-export const Reference = connect(
+export const InstanceLink = connect(
   (state, props) => {
-    const [, type, id] = props.reference.match(/^(.+)\/(.+)$/);
     return {
-      text: props.text?props.text:props.reference,
-      type: type,
-      id: id,
+      text: props.text?props.text:`${props.type}/${props.id}`,
+      type: props.type,
+      id: props.id,
       group: props.group,
       defaultGroup: state.groups.defaultGroup,
-      isExternal: state.router.location.pathname?state.router.location.pathname.startsWith("/instances/"):false
+      isInstance: state.router.location.pathname?state.router.location.pathname.startsWith("/instances/"):false,
+      isPreview:  state.router.location.pathname?state.router.location.pathname.startsWith("/previews/"):false
     };
   },
   dispatch => ({
@@ -54,6 +57,6 @@ export const Reference = connect(
       dispatch(actions.loadInstance(type, id));
     }
   })
-)(ReferenceComponent);
+)(InstanceLinkComponent);
 
-export default Reference;
+export default InstanceLink;

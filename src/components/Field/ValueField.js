@@ -24,7 +24,7 @@ import { CollapsibleText } from "../CollapsibleText";
 import { Link } from "../Link";
 import { Tag } from "../Tag";
 import { Thumbnail } from "./Thumbnail";
-import { Reference } from "./Reference";
+import { InstanceLink } from "./InstanceLink";
 import "./ValueField.css";
 
 const getUrlLocation = url => {
@@ -62,12 +62,14 @@ const ValueFieldBase = (renderUserInteractions = true) => {
       };
     }
     */
-    const hasReference = !!renderUserInteractions && !!data.reference;
+    const regInstanceLink = /^(.+)\/(.+)$/;
+    const [, instanceTypeLink, instanceIdLink] = (!!renderUserInteractions && !!data.reference && regInstanceLink.test(data.reference))?data.reference.match(regInstanceLink):[null, null, null];
+    const hasInstanceLink = !!instanceTypeLink && !!instanceIdLink;
     const hasLink = !!renderUserInteractions && !!data.url;
     const hasMailToLink = !!renderUserInteractions && typeof data.url === "string" && data.url.substr(0, 7).toLowerCase() === "mailto:";
     const isAFileLink = typeof data.url === "string" && /^https?:\/\/.+\.cscs\.ch\/.+$/.test(data.url);
     const hasExternalLink = data.url && !isAFileLink && getUrlLocation(data.url) !== window.location.origin;
-    const hasAnyLink = hasReference || hasMailToLink || hasLink;
+    const hasAnyLink = hasInstanceLink || hasMailToLink || hasLink;
     const isIcon = mapping.type === "icon" && ((data.image && data.image.url) || mapping.icon);
     const isLinkWithIcon = mapping.linkIcon && data.url ? true : false;
     const isTag = !hasAnyLink && !isIcon && !!mapping.tagIcon;
@@ -85,12 +87,13 @@ const ValueFieldBase = (renderUserInteractions = true) => {
 
     let ValueComponent = null;
     let valueProps = null;
-    if (hasReference) {
-      ValueComponent = Reference;
+    if (hasInstanceLink) {
+      ValueComponent = InstanceLink;
       valueProps = {
-        reference: data.reference,
+        type: instanceTypeLink,
+        id: instanceIdLink,
         group: group,
-        text: value ? value : data.reference
+        text: value ? value : `${instanceTypeLink}/${instanceIdLink}`
       };
     } else if (hasLink || isLinkWithIcon) {
       ValueComponent = Link;
