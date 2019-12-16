@@ -63,7 +63,7 @@ class FiltersPanelBase extends React.Component {
   }
 
   render(){
-    const  { className, show, facets, location, onChange, onReset } = this.props;
+    const  { className, show, facets, location, onChange, onViewChange, onReset } = this.props;
     if (!show) {
       return null;
     }
@@ -88,6 +88,7 @@ class FiltersPanelBase extends React.Component {
                   key = { facet.id }
                   facet = { facet }
                   onChange = { onChange }
+                  onViewChange = { onViewChange }
                   location = { location }
                 />
               ))
@@ -121,6 +122,7 @@ export const FiltersPanel = connect(
   },
   dispatch => ({
     onChange: (id, active, keyword) => dispatch(actions.setFacet(id, active, keyword)),
+    onViewChange: (id, size) => dispatch(actions.setFacetSize(id, size)),
     onReset: () => dispatch(actions.resetFacets())
   })
 )(FiltersPanelBase);

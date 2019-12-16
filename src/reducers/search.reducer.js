@@ -173,11 +173,44 @@ const setFacet = (state, action) => {
 
 const resetFacets = state => ({
   ...state,
-  facets: state.facets.map(f => ({
-    ...f,
-    value: null
-  }))
+  facets: state.facets.map(f => {
+    switch (f.filterType) {
+    case "list":
+      return {
+        ...f,
+        value: null,
+        size: ElasticSearchHelpers.listFacetDefaultSize
+      };
+    case "exists":
+    default:
+      return {
+        ...f,
+        value: null
+      };
+    }
+  })
 });
+
+const setFacetSize = (state, action) => {
+  return {
+    ...state,
+    facets: state.facets.map(f => {
+      if (f.id !== action.id) {
+        return f;
+      }
+      switch (f.filterType) {
+      case "list":
+        return {
+          ...f,
+          size: action.size
+        };
+      case "exists":
+      default:
+        return f;
+      }
+    })
+  };
+};
 
 const setSort = (state, action) => {
   const match = state.sortFields.filter(f => f.key === action.value);
@@ -368,6 +401,8 @@ export function reducer(state = initialState, action = {}) {
     return setPage(state, action);
   case types.SET_FACET:
     return setFacet(state, action);
+  case types.SET_FACET_SIZE:
+    return setFacetSize(state, action);
   case types.RESET_FACETS:
     return resetFacets(state, action);
   case types.LOAD_GROUPS:

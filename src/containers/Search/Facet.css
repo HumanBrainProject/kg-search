@@ -85,6 +85,7 @@
 .kgs-facet .kgs-facet-checkbox .kgs-facet-checkbox__count {
     display: inline-block;
     min-width: 42px;
+    max-height: 28px;
     padding: 3px;
     background-color: var(--background-color-4);
     color: var(--color-17);
@@ -100,4 +101,20 @@
 .kgs-facet .sk-panel__content [data-qa="show-more"] {
     margin-top: 10px;
     color: var(--link-color-1);
+}
+
+.kgs-facet button.kgs-facet-viewMore-button {
+    display: inline-block;
+    margin: 10px 0 0 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--link-color-1);
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.kgs-facet button.kgs-facet-viewMore-button:hover {
+    color: var(--link-color-active);
 }

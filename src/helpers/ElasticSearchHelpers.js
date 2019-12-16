@@ -276,7 +276,8 @@ export class ElasticSearchHelpers {
             count: 0,
             value: null,
             keywords: [],
-            size: ElasticSearchHelpers.listFacetDefaultSize
+            size: ElasticSearchHelpers.listFacetDefaultSize,
+            defaultSize: ElasticSearchHelpers.listFacetDefaultSize
           });
         }
         if (field.children) {
@@ -297,7 +298,8 @@ export class ElasticSearchHelpers {
                 count: 0,
                 value: null,
                 keywords: [],
-                size: ElasticSearchHelpers.listFacetDefaultSize
+                size: ElasticSearchHelpers.listFacetDefaultSize,
+                defaultSize: ElasticSearchHelpers.listFacetDefaultSize
               });
             }
           });
@@ -404,27 +406,25 @@ export class ElasticSearchHelpers {
     }));
   };
 
-  static getSearchParamsFromState = state => {
-    return {
-      queryString: state.search.queryString,
-      queryFields: state.search.queryFields,
-      selectedType: state.search.selectedType,
-      facets: state.search.facets,
-      sort: state.search.sort,
-      from: state.search.from,
-      size: state.search.hitsPerPage,
-      boostedTypes: [], // ElasticSearchHelpers.getBoostedTypes(state.definition),
-      customHighlight: defaultCustomHighlight
-      /*
-              customHighlight: state.search.queryFields.reduce((result, field) => {
-                result[field.replace(/^(.*?)\^.*$/g,"$1")] = {};
-                return result;
-              },[]),
-              */
-    };
-  };
+  static buildRequest(searchState) {
 
-  static buildRequest({ queryString = "", queryFields = [], selectedType, facets = [], sort, from = 0, size = 20, customHighlight, boostedTypes = [] }) {
+    const queryString = searchState.queryString;
+    const queryFields = searchState.queryFields;
+    const selectedType = searchState.selectedType;
+    const facets = searchState.facets;
+    const sort = searchState.sort;
+    const from = searchState.from;
+    const size = searchState.hitsPerPage;
+    const boostedTypes = []; // ElasticSearchHelpers.getBoostedTypes(state.definition);
+    const customHighlight = defaultCustomHighlight;
+    /*
+    const customHighlight = searchState.queryFields.reduce((result, field) => {
+      result[field.replace(/^(.*?)\^.*$/g,"$1")] = {};
+      return result;
+    },[]);
+    */
+
+
 
     const typeFacet = {
       id: "facet_type",

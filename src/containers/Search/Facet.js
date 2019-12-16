@@ -58,24 +58,43 @@ class FacetListItem extends React.PureComponent {
   }
 }
 
-const FacetList = ({ list, location, onChange }) => (
-  <div className = "kgs-facet-list" > {
-    list.map(item => (
+const FacetList = ({ list, location, onChange, onViewChange, viewText }) => (
+  <div className="kgs-facet-list">
+    {list.map(item => (
       <FacetListItem
         key = { item.value }
         item = { item }
         onChange = { onChange }
         location = { location }
       />
-    ))
-  } </div>
+    ))}
+    {onViewChange && (
+      <button className="kgs-facet-viewMore-button" onClick={onViewChange}>{viewText}</button>
+    )}
+  </div>
 );
 
-export const Facet = ({ facet, location, onChange }) => {
+const viewMoreIncrement = 50;
+
+export const Facet = ({ facet, location, onChange, onViewChange }) => {
   let Component = null;
   let parameters = null;
   switch (facet.filterType) {
   case "list":
+  {
+    let onView = null;
+    let viewText = null;
+    if (facet.others > 0) {
+      onView = () => onViewChange(facet.id, facet.size === facet.defaultSize?viewMoreIncrement:facet.size + viewMoreIncrement);
+      if (viewMoreIncrement >= facet.others) {
+        viewText = "View all";
+      } else {
+        viewText = "View more";
+      }
+    } else if (facet.keywords.length > facet.defaultSize) {
+      onView = () => onViewChange(facet.id, facet.defaultSize);
+      viewText = "View less";
+    }
     Component = FacetList;
     parameters = {
       list: facet.keywords.map(keyword => ({
@@ -85,9 +104,12 @@ export const Facet = ({ facet, location, onChange }) => {
         checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false
       })),
       location: location,
-      onChange: (keyword, active) => onChange(facet.id, active, keyword)
+      onChange: (keyword, active) => onChange(facet.id, active, keyword),
+      onViewChange: onView,
+      viewText: viewText
     };
     break;
+  }
   case "exists":
     Component = FacetCheckbox;
     parameters = {

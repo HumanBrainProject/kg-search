@@ -28,7 +28,6 @@ import { TermsShortNotice } from "./TermsShortNotice";
 import { DetailView } from "./Search/DetailView";
 
 import "./Search.css";
-import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
 
 class SearchBase extends React.Component {
 
@@ -70,7 +69,7 @@ class SearchBase extends React.Component {
   }
 
   search() {
-    const { definitionIsReady, definitionIsLoading, loadDefinition, isGroupsReady, isGroupLoading, shouldLoadGroups, loadGroups, searchParams, search } = this.props;
+    const { definitionIsReady, definitionIsLoading, loadDefinition, isGroupsReady, isGroupLoading, shouldLoadGroups, loadGroups, search } = this.props;
     if (!definitionIsReady) {
       if (!definitionIsLoading) {
         loadDefinition();
@@ -80,7 +79,7 @@ class SearchBase extends React.Component {
         loadGroups();
       }
     } else {
-      search(searchParams);
+      search();
     }
   }
 
@@ -126,7 +125,6 @@ export const Search = connect(
     isGroupsReady: state.groups.isReady,
     isGroupLoading: state.groups.isLoading,
     shouldLoadGroups: !!state.auth.accessToken,
-    searchParams: ElasticSearchHelpers.getSearchParamsFromState(state),
     location: state.router.location
   }),
   dispatch => ({
@@ -134,6 +132,6 @@ export const Search = connect(
     setInitialGroup: group => dispatch(actions.setInitialGroup(group)),
     loadDefinition: () => dispatch(actions.loadDefinition()),
     loadGroups: () => dispatch(actions.loadGroups()),
-    search: searchParams => dispatch(actions.doSearch(searchParams))
+    search: () => dispatch(actions.search())
   })
 )(SearchWithTabKeyNavigation);

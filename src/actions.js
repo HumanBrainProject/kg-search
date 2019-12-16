@@ -266,6 +266,23 @@ export const setFacet = (id, active, keyword) => {
   };
 };
 
+export const resetFacets = () => {
+  return {
+    type: types.RESET_FACETS
+  };
+};
+
+export const setFacetSize = (id, size) => {
+  return dispatch => {
+    dispatch({
+      type: types.SET_FACET_SIZE,
+      id: id,
+      size: size,
+    });
+    dispatch(search());
+  };
+};
+
 export const setInitialSearchParams = params => {
   return {
     type: types.SET_INITIAL_SEARCH_PARAMS,
@@ -273,19 +290,15 @@ export const setInitialSearchParams = params => {
   };
 };
 
-export const resetFacets = () => {
-  return {
-    type: types.RESET_FACETS
-  };
-};
-
-export const doSearch = searchParams => {
-  return dispatch => {
+export const search = () => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const payload = ElasticSearchHelpers.buildRequest(state.search);
     dispatch(loadSearchRequest());
     ReactPiwik.push(["setCustomUrl", window.location.href]);
     ReactPiwik.push(["trackPageView"]);
     API.axios
-      .post(API.endpoints.search(), ElasticSearchHelpers.buildRequest(searchParams))
+      .post(API.endpoints.search(), payload)
       .then(response => {
         const index = response.headers["x-selected-index"];
         if (index) {

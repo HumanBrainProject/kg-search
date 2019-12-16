@@ -44,6 +44,7 @@ export const RESET_TYPE_FOR_GROUP = "RESET_TYPE_FOR_GROUP";
 export const SET_SORT = "SET_SORT";
 export const SET_FACET = "SET_FACET";
 export const RESET_FACETS = "RESET_FACETS";
+export const SET_FACET_SIZE = "SET_FACET_SIZE";
 export const SET_PAGE = "SET_PAGE";
 
 export const LOAD_SEARCH_REQUEST = "LOAD_SEARCH_REQUEST";
