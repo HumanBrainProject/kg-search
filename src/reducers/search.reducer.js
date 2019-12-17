@@ -19,6 +19,7 @@ import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
 
 const initialState = {
   queryFields: ["title", "description"],
+  error: null,
   initialParams: {},
   facets: [],
   types: [],
@@ -372,9 +373,10 @@ const loadSearchResult = (state, action) => {
   };
 };
 
-const loadSearchFail = state => {
+const loadSearchFail = (state, action) => {
   return {
     ...state,
+    error: action.error,
     isLoading: false,
     results: [],
     from: 0,
@@ -412,7 +414,8 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_SEARCH_SUCCESS:
     return loadSearchResult(state, action);
   case types.LOAD_SEARCH_BAD_REQUEST:
-  case types.LOAD_SEARCH_SESSION_FAILURE:
+  case types.LOAD_SEARCH_SERVICE_FAILURE:
+  case types.LOAD_SEARCH_SESSION_FAILURE: //TODO: this will listen to authenticationExpired
     return loadSearchFail(state, action);
   default:
     return state;

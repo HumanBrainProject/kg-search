@@ -19,16 +19,16 @@ import * as types from "../actions.types";
 const initialState = {
   isReady: false,
   isLoading: false,
-  hasError: false,
-  typeMappings: {},
-  serviceUrl: ""
+  error: null,
+  typeMappings: {}
 };
 
 const loadDefinitionRequest = state => {
   return {
     ...state,
+    isReady: false,
     isLoading: true,
-    hasError: false
+    error: null
   };
 };
 
@@ -37,17 +37,22 @@ const loadDefinitionSuccess = (state, action) => {
     ...state,
     isReady: true,
     isLoading: false,
-    typeMappings: action.definition,
-    serviceUrl: action.serviceUrl
+    typeMappings: action.definition
   };
 };
 
-const loadDefinitionFailure = (state) => {
+const loadDefinitionFailure = (state, action) => {
   return {
     ...state,
-    isReady: false,
     isLoading: false,
-    hasError: true
+    error: action.error
+  };
+};
+
+const clearDefinitionError = state => {
+  return {
+    ...state,
+    error: null
   };
 };
 
@@ -59,6 +64,8 @@ export function reducer(state = initialState, action = {}) {
     return loadDefinitionSuccess(state, action);
   case types.LOAD_DEFINITION_FAILURE:
     return loadDefinitionFailure(state, action);
+  case types.CLEAR_DEFINITION_ERROR:
+    return clearDefinitionError(state, action);
   default:
     return state;
   }

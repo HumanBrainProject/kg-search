@@ -20,6 +20,7 @@ import { history } from "../store";
 import { getTitle } from "../helpers/InstanceHelper";
 import { ShareButtons } from "./ShareButtons";
 import { Instance } from "../components/Instance";
+import { DefinitionErrorPanel, GroupErrorPanel, InstanceErrorPanel } from "./ErrorPanel";
 
 import "./InstanceContainer.css";
 
@@ -49,9 +50,12 @@ export class InstanceContainer extends React.Component {
   }
 
   componentDidUpdate(previousProps) {
-    const { definitionIsReady, isGroupsReady, group, type, id } = this.props;
+    const { definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, group, instanceHasError, type, id } = this.props;
     this.setTitle();
-    if (definitionIsReady !== previousProps.definitionIsReady || isGroupsReady !== previousProps.isGroupsReady || previousProps.group !== group || previousProps.type !== type || previousProps.id !== id) {
+    if (definitionIsReady !== previousProps.definitionIsReady || definitionHasError !== previousProps.definitionHasError ||
+       groupsHasError !== previousProps.groupsHasError || isGroupsReady !== previousProps.isGroupsReady || previousProps.group !== group ||
+       previousProps.instanceHasError !== instanceHasError ||
+       previousProps.type !== type || previousProps.id !== id) {
       this.initialize();
     }
   }
@@ -67,17 +71,24 @@ export class InstanceContainer extends React.Component {
   }
 
   initialize() {
-    const { definitionIsReady, definitionIsLoading, loadDefinition, isGroupsReady, isGroupLoading, shouldLoadGroups, loadGroups, instanceIsLoading, shouldLoadInstance, type, id, group, previousInstance, fetch, setPreviousInstance } = this.props;
+    const {
+      definitionIsReady, definitionHasError, definitionIsLoading,
+      isGroupsReady, isGroupLoading, shouldLoadGroups, groupsHasError,
+      instanceIsLoading, shouldLoadInstance, instanceHasError,
+      type, id, group, previousInstance, setPreviousInstance,
+      loadDefinition, loadGroups, fetch
+    } = this.props;
+
     if (!definitionIsReady) {
-      if (!definitionIsLoading) {
+      if (!definitionIsLoading && !definitionHasError) {
         loadDefinition();
       }
     } else if (shouldLoadGroups && !isGroupsReady) {
-      if (!isGroupLoading) {
+      if (!isGroupLoading && !groupsHasError) {
         loadGroups();
       }
     } else {
-      if (shouldLoadInstance && !instanceIsLoading) {
+      if (shouldLoadInstance && !instanceIsLoading && !instanceHasError) {
         if (previousInstance && previousInstance._type === type && previousInstance._id === id) {
           setPreviousInstance();
         } else {
@@ -102,6 +113,9 @@ export class InstanceContainer extends React.Component {
             <Instance {...this.props.instanceProps} />
           </React.Fragment>
         )}
+        <DefinitionErrorPanel />
+        <GroupErrorPanel />
+        <InstanceErrorPanel />
       </div>
     );
   }

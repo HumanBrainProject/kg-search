@@ -26,6 +26,7 @@ import { HitsPanel } from "./Search/HitsPanel";
 import { Footer } from "./Search/Footer";
 import { TermsShortNotice } from "./TermsShortNotice";
 import { DetailView } from "./Search/DetailView";
+import { DefinitionErrorPanel, GroupErrorPanel, SearchInstanceErrorPanel } from "./ErrorPanel";
 
 import "./Search.css";
 
@@ -45,8 +46,10 @@ class SearchBase extends React.Component {
   }
 
   componentDidUpdate(previousProps) {
-    const { definitionIsReady, isGroupsReady, location } = this.props;
-    if (definitionIsReady !== previousProps.definitionIsReady || isGroupsReady !== previousProps.isGroupsReady || location.search !== previousProps.location.search) {
+    const { definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, location } = this.props;
+    if (definitionIsReady !== previousProps.definitionIsReady || definitionHasError !== previousProps.definitionHasError ||
+      groupsHasError !== previousProps.groupsHasError || isGroupsReady !== previousProps.isGroupsReady ||
+      location.search !== previousProps.location.search) {
       this.search();
     }
   }
@@ -70,13 +73,17 @@ class SearchBase extends React.Component {
   }
 
   search() {
-    const { definitionIsReady, definitionIsLoading, loadDefinition, isGroupsReady, isGroupLoading, shouldLoadGroups, loadGroups, search } = this.props;
+    const {
+      definitionIsReady, definitionHasError, definitionIsLoading,
+      isGroupsReady, isGroupLoading, shouldLoadGroups, groupsHasError,
+      loadDefinition, loadGroups, search
+    } = this.props;
     if (!definitionIsReady) {
-      if (!definitionIsLoading) {
+      if (!definitionIsLoading && !definitionHasError) {
         loadDefinition();
       }
     } else if (shouldLoadGroups && !isGroupsReady) {
-      if (!isGroupLoading) {
+      if (!isGroupLoading && !groupsHasError) {
         loadGroups();
       }
     } else {
@@ -107,6 +114,9 @@ class SearchBase extends React.Component {
           <Footer />
         </div>
         <DetailView />
+        <DefinitionErrorPanel />
+        <GroupErrorPanel />
+        <SearchInstanceErrorPanel />
       </div>
     );
   }
@@ -123,6 +133,8 @@ export const Search = connect(
     isActive: !state.instances.currentInstance && !state.application.info,
     definitionIsReady: state.definition.isReady,
     definitionIsLoading: state.definition.isLoading,
+    definitionHasError: !!state.definition.error,
+    groupsHasError: state.groups.hasError,
     isGroupsReady: state.groups.isReady,
     isGroupLoading: state.groups.isLoading,
     shouldLoadGroups: !!state.auth.accessToken,

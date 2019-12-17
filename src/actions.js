@@ -74,6 +74,12 @@ export const loadDefinitionFailure = error => {
   };
 };
 
+export const clearDefinitionError = () => {
+  return {
+    type: types.CLEAR_DEFINITION_ERROR
+  };
+};
+
 export const loadGroupsRequest = () => {
   return {
     type: types.LOAD_GROUPS_REQUEST
@@ -94,24 +100,31 @@ export const loadGroupsFailure = error => {
   };
 };
 
-export const loadSearchBadRequest = status => {
+export const clearGroupError = () => {
+  return {
+    type: types.CLEAR_GROUPS_ERROR
+  };
+};
+
+
+export const loadSearchBadRequest = error => {
   return {
     type: types.LOAD_SEARCH_BAD_REQUEST,
-    status: status
+    error: error
   };
 };
 
-export const loadSearchServiceFailure = status => {
+export const loadSearchServiceFailure = error => {
   return {
     type: types.LOAD_SEARCH_SERVICE_FAILURE,
-    status: status
+    error: error
   };
 };
 
-export const loadSearchSessionFailure = status => {
+export const loadSearchSessionFailure = error => {
   return {
     type: types.LOAD_SEARCH_SESSION_FAILURE,
-    status: status
+    error: error
   };
 };
 
@@ -168,18 +181,26 @@ export const loadInstanceSuccess = data => {
   };
 };
 
-export const loadInstanceNoData = () => {
+export const loadInstanceNoData = error => {
   return {
-    type: types.LOAD_INSTANCE_NO_DATA
+    type: types.LOAD_INSTANCE_NO_DATA,
+    error: error
   };
 };
 
-export const loadInstanceFailure = (error) => {
+export const loadInstanceFailure = error => {
   return {
     type: types.LOAD_INSTANCE_FAILURE,
     error: error
   };
 };
+
+export const clearInstanceError = () => {
+  return {
+    type: types.CLEAR_INSTANCE_ERROR
+  };
+};
+
 
 export const setInstance = data => {
   return {
@@ -304,26 +325,30 @@ export const search = () => {
         }
         dispatch(loadSearchResult(response.data));
       })
-      .catch(error => {
-        const { response } = error;
+      .catch(e => {
+        const { response } = e;
         const { status } = response;
         switch (status) {
         case 400: // Bad Request
-        case 404: // Not Found
-          dispatch(loadSearchBadRequest(status));
+        {
+          const error = `Your search query is not well formed. Please refine your request (${status})`;
+          dispatch(loadSearchBadRequest(error));
           break;
+        }
         case 401: // Unauthorized
         case 403: // Forbidden
         case 511: // Network Authentication Required
-          dispatch(loadSearchSessionFailure(status));
+          dispatch(loadSearchSessionFailure(status)); // TODO: Change this to authenticationExpired action.
           break;
+        case 404:
         default:
         {
           const index = response.headers["x-selected-index"];
           if (index) {
             dispatch(setGroup(index.slice(3)));
           }
-          dispatch(loadSearchServiceFailure(status));
+          const error = `Your search query is not well formed. Please refine your request (${status})`;
+          dispatch(loadSearchServiceFailure(error));
         }
         }
       });
@@ -423,17 +448,15 @@ export const loadDefinition = () => {
       .get(API.endpoints.definition())
       .then(({ data }) => {
         const definition = data && data._source;
-        let serviceUrl = "";
         if (definition && definition.serviceUrl) {
-          serviceUrl = definition.serviceUrl;
           delete definition.serviceUrl;
         }
         simplifySemantics(definition);
-        dispatch(loadDefinitionSuccess(definition, serviceUrl));
+        dispatch(loadDefinitionSuccess(definition));
       })
-      .catch(error => {
+      .catch(e => {
+        const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
         dispatch(loadDefinitionFailure(error));
-        throw error;
       });
   };
 };
@@ -446,7 +469,8 @@ export const loadGroups = () => {
       .then(response => {
         dispatch(loadGroupsSuccess(response.data));
       })
-      .catch(error => {
+      .catch(e => {
+        const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
         dispatch(loadGroupsFailure(error));
       });
   };
@@ -458,13 +482,11 @@ export const loadInstance = (type, id) => {
     API.axios
       .get(API.endpoints.instance(type, id))
       .then(response => {
-        if (response.data.found) {
-          dispatch(loadInstanceSuccess(response.data));
-        } else {
-          dispatch(loadInstanceNoData());
-        }
+        dispatch(loadInstanceSuccess(response.data));
       })
-      .catch(error => {
+      .catch(e => {
+        // if(e.st)
+        const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
         dispatch(loadInstanceFailure(error));
       });
   };
@@ -482,12 +504,13 @@ export const loadPreview = (type, id) => {
         } else if (response.data && response.data.error) {
           dispatch(loadInstanceFailure(response.data.message ? response.data.message : response.data.error));
         } else {
-          dispatch(loadInstanceNoData());
+          const error = `The instance with id ${id} is not available.`;
+          dispatch(loadInstanceNoData(error));
         }
       })
       .catch(error => {
         if (error.stack === "SyntaxError: Unexpected end of JSON input" || error.message === "Unexpected end of JSON input") {
-          dispatch(loadInstanceNoData());
+          dispatch(loadInstanceNoData(error));
         } else {
           dispatch(loadInstanceFailure(error));
         }

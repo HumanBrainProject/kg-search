@@ -24,7 +24,6 @@ import { Instance } from "./Instance";
 import { NotFound } from "../components/NotFound";
 import { Preview } from "./Preview";
 import { FetchingPanel } from "./FetchingPanel";
-import { ErrorPanel } from "./ErrorPanel";
 import { InfoPanel } from "./InfoPanel";
 import "./App.css";
 
@@ -47,7 +46,6 @@ class App extends React.Component {
           <Route component={NotFound} />
         </Switch>
         <FetchingPanel />
-        <ErrorPanel />
         <InfoPanel />
       </div>
     );

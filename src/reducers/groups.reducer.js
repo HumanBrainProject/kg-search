@@ -21,7 +21,7 @@ const DEFAULT_GROUP = "public";
 const initialState = {
   isReady: false,
   isLoading: false,
-  hasError: false,
+  error: null,
   groups: [],
   group: DEFAULT_GROUP,
   defaultGroup: DEFAULT_GROUP,
@@ -45,8 +45,9 @@ const setGroup = (state, action) => {
 const loadGroupsRequest = state => {
   return {
     ...state,
+    isReady: false,
     isLoading: true,
-    hasError: false
+    error: null
   };
 };
 
@@ -57,11 +58,16 @@ const loadGroupsSuccess = (state, action) => {
     ...state,
     isReady: true,
     isLoading: false,
-    hasError: false,
     groups: groups,
     group: group
   };
 };
+
+const loadGroupsFailure = (state, action) => ({
+  ...state,
+  isLoading: false,
+  error: action.error
+});
 
 
 const resetGroups = state => ({
@@ -69,13 +75,12 @@ const resetGroups = state => ({
   groups: []
 });
 
-const loadGroupsFailure = state => ({
-  ...state,
-  isReady: false,
-  isLoading: false,
-  hasError: true,
-  groups: []
-});
+const clearGroupsError = state => {
+  return {
+    ...state,
+    error: null
+  };
+};
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -91,6 +96,8 @@ export function reducer(state = initialState, action = {}) {
     return loadGroupsFailure(state, action);
   case types.LOGOUT:
     return resetGroups(state, action);
+  case types.CLEAR_GROUPS_ERROR:
+    return clearGroupsError(state, action);
   default:
     return state;
   }

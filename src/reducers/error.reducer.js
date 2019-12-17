@@ -24,26 +24,6 @@ const initialState = {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-  case types.LOAD_DEFINITION_FAILURE: {
-    return {
-      message: "The search engine is temporary unavailable. Please retry in a moment.",
-      retry: {
-        label: "Retry",
-        action: types.LOAD_DEFINITION
-      },
-      cancel: null
-    };
-  }
-  case types.LOAD_GROUPS_FAILURE: {
-    return {
-      message: "The search engine is temporary unavailable. Please retry in a moment.",
-      retry: {
-        label: "Retry",
-        action: types.LOAD_DEFINITION_REQUEST //types.LOAD_GROUPS TODO: check this
-      },
-      cancel: null
-    };
-  }
   case types.LOAD_SEARCH_BAD_REQUEST: {
     return {
       message: "Your search query is not well formed. Please refine your request.",
@@ -81,43 +61,56 @@ export function reducer(state = initialState, action = {}) {
       }
     };
   }
-  case types.LOAD_INSTANCE_NO_DATA: {
-    return {
-      message: `${action.path} ${action.id} is currently not available.`,
-      retry: {
-        label: "Retry",
-        action: types.LOAD_INSTANCE_REQUEST
-      },
-      cancel: {
-        label: "Cancel",
-        action: types.CANCEL_INSTANCE_LOADING
-      }
-    };
+    // search interface
+    // return {
+    //   message: `${action.path} ${action.id} is currently not available.`,
+    //   retry: {
+    //     label: "Retry",
+    //     action: types.CLEAR_INSTANCE_ERROR
+    //   },
+    //   cancel: {
+    //     label: "Go back to search",
+    //     action:  //types.CANCEL_INSTANCE_LOADING
+    //   }
+    // };
   }
-  case types.LOAD_INSTANCE_FAILURE: {
-    return {
-      message: "The search engine is temporary unavailable. Please retry in a moment.",
-      retry: {
-        label: "Retry",
-        action: types.LOAD_INSTANCE_REQUEST
-      },
-      cancel: {
-        label: "Cancel",
-        action: types.CANCEL_INSTANCE_LOADING
-      }
-    };
-  }
+  case types.SET_APPLICATION_READY:
+  case types.AGREE_TERMS_SHORT_NOTICE:
+  case types.SET_LAYOUT_MODE:
+  case types.SET_INFO:
+  case types.SHOW_IMAGE:
+  case types.INITIALIZE_CONFIG:
   case types.LOAD_DEFINITION:
   case types.LOAD_DEFINITION_REQUEST:
   case types.LOAD_DEFINITION_SUCCESS:
+  case types.LOAD_GROUPS:
   case types.LOAD_GROUPS_REQUEST:
   case types.LOAD_GROUPS_SUCCESS:
+  case types.SET_INITIAL_SEARCH_PARAMS:
+  case types.SET_INITIAL_GROUP:
+  case types.SET_GROUP:
+  case types.SET_TOKEN:
+  case types.SET_SEARCH_READY:
+  case types.SET_QUERY_STRING:
+  case types.SET_TYPE:
+  case types.RESET_TYPE_FOR_GROUP:
+  case types.SET_SORT:
+  case types.SET_FACET:
+  case types.RESET_FACETS:
+  case types.SET_FACET_SIZE:
+  case types.SET_PAGE:
   case types.LOAD_SEARCH_REQUEST:
   case types.LOAD_SEARCH_SUCCESS:
   case types.CANCEL_SEARCH:
   case types.LOAD_INSTANCE_REQUEST:
   case types.LOAD_INSTANCE_SUCCESS:
   case types.CANCEL_INSTANCE_LOADING:
+  case types.SET_INSTANCE:
+  case types.SET_PREVIOUS_INSTANCE:
+  case types.CLEAR_ALL_INSTANCES:
+  case types.AUTHENTICATE:
+  case types.AUTHENTICATING:
+  case types.LOGOUT:
     return {
       message: null,
       retry: null,

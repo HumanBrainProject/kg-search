@@ -24,7 +24,7 @@ const initialState = {
   image: null
 };
 
-const loadInstanceRequest = (state, action) => {
+const loadInstanceRequest = state => {
   return {
     ...state,
     isLoading: true,
@@ -44,10 +44,10 @@ const loadInstanceSuccess = (state, action) => {
   };
 };
 
-const loadInstanceNoData = state => {
+const loadInstanceNoData = (state, action) => {
   return {
     ...state,
-    error: "The instance is not available",
+    error: action.error,
     isLoading: false,
     image: null
   };
@@ -100,6 +100,13 @@ const clearAllInstances = state => {
   };
 };
 
+const clearInstanceError = state => {
+  return {
+    ...state,
+    error: null
+  };
+};
+
 const showImage = (state, action) => {
   return {
     ...state,
@@ -123,6 +130,8 @@ export function reducer(state = initialState, action = {}) {
     return setPreviousInstance(state, action);
   case types.CLEAR_ALL_INSTANCES:
     return clearAllInstances(state, action);
+  case types.CLEAR_INSTANCE_ERROR:
+    return clearInstanceError(state);
   case types.SHOW_IMAGE:
     return showImage(state, action);
   default:
