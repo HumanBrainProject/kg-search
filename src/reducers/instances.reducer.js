@@ -18,8 +18,6 @@ import * as types from "../actions.types";
 
 const initialState = {
   error: null,
-  currentInstanceId: null,
-  currentInstanceType: null,
   isLoading: false,
   currentInstance: null,
   previousInstances: [],
@@ -29,17 +27,14 @@ const initialState = {
 const loadInstanceRequest = (state, action) => {
   return {
     ...state,
-    currentInstanceType: action.instanceType,
-    currentInstanceId: action.instanceId,
-    currentInstance: null,
     isLoading: true,
     image: null
   };
 };
 
 const loadInstanceSuccess = (state, action) => {
-  let previousInstances = (state && Array.isArray(state.previousInstances))?state.previousInstances:[];
-  previousInstances = (state && state.currentInstance)?[...previousInstances,state.currentInstance]:[...previousInstances];
+  let previousInstances = Array.isArray(state.previousInstances)?state.previousInstances:[];
+  previousInstances = state.currentInstance?[...previousInstances,state.currentInstance]:[...previousInstances];
   return  {
     ...state,
     isLoading: false,
@@ -68,8 +63,8 @@ const loadInstanceFailure = (state, action) => {
 };
 
 const setInstance = (state, action) => {
-  let previousInstances = (state && Array.isArray(state.previousInstances))?state.previousInstances:[];
-  previousInstances = (state && state.currentInstance)?[...previousInstances,state.currentInstance]:[...previousInstances];
+  let previousInstances = Array.isArray(state.previousInstances)?state.previousInstances:[];
+  previousInstances = state.currentInstance?[...previousInstances,state.currentInstance]:[...previousInstances];
   return {
     ...state,
     isLoading: false,
@@ -81,13 +76,11 @@ const setInstance = (state, action) => {
 
 const setPreviousInstance = state => {
   if (state.currentInstance) {
-    const previousInstances = (state && Array.isArray(state.previousInstances))?[...state.previousInstances]:[];
+    const previousInstances = Array.isArray(state.previousInstances)?[...state.previousInstances]:[];
     const currentInstance = previousInstances.pop() || null;
     return {
       ...state,
       isLoading: false,
-      currentInstanceType: (currentInstance && currentInstance._type)?currentInstance._type:null,
-      currentInstanceId: (currentInstance && currentInstance._id)?currentInstance._id:null,
       currentInstance: currentInstance,
       previousInstances: previousInstances,
       image: null
@@ -101,8 +94,6 @@ const clearAllInstances = state => {
   return {
     ...state,
     isLoading: false,
-    currentInstanceType: null,
-    currentInstanceId: null,
     currentInstance: null,
     previousInstances: [],
     image: null

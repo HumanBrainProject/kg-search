@@ -18,20 +18,15 @@ import React from "react";
 import { connect } from "react-redux";
 import { history } from "../../store";
 import * as actions from "../../actions";
+import { getTitle } from "../../helpers/InstanceHelper";
 
-const InstanceLinkComponent = ({text, type, id, group, defaultGroup, isInstance, isPreview, onClick}) => {
+const InstanceLinkComponent = ({text, type, id, group, path, context, onClick}) => {
   if (!type || !id) {
-    return null;
+    return text;
   }
 
   const handleClick = () => {
-    if(isInstance){
-      history.push(`/instances/${type}/${id}${group !== defaultGroup?("?group=" + group ):""}`);
-    } else if(isPreview) {
-      history.push(`/previews/${type}/${id}${group !== defaultGroup?("?group=" + group ):""}`);
-    } else {
-      typeof onClick === "function" && onClick(type, id, group);
-    }
+    typeof onClick === "function" && onClick(type, id, group, path, context);
   };
 
   return (
@@ -41,20 +36,31 @@ const InstanceLinkComponent = ({text, type, id, group, defaultGroup, isInstance,
 
 export const InstanceLink = connect(
   (state, props) => {
+    let path = null;
+    if (state.router.location.pathname.startsWith("/instances/")) {
+      path = "/instances/";
+    } else if (state.router.location.pathname.startsWith("/previews/")) {
+      path = "/previews/";
+    }
     return {
       text: props.text?props.text:`${props.type}/${props.id}`,
       type: props.type,
       id: props.id,
-      group: props.group,
-      defaultGroup: state.groups.defaultGroup,
-      isInstance: state.router.location.pathname?state.router.location.pathname.startsWith("/instances/"):false,
-      isPreview:  state.router.location.pathname?state.router.location.pathname.startsWith("/previews/"):false
+      group: (props.group && props.group !== props.defaultGroup)?props.group:null,
+      path: path,
+      context: {
+        title: getTitle(state.instances.currentInstance)
+      }
     };
   },
   dispatch => ({
-    onClick: (type, id, group) => {
-      dispatch(actions.setGroup(group));
-      dispatch(actions.loadInstance(type, id));
+    onClick: (type, id, group, path, context) => {
+      if (path) {
+        history.push(`${path}${type}/${id}${group?("?group=" + group ):""}`, context);
+      } else {
+        dispatch(actions.setGroup(group));
+        dispatch(actions.loadInstance(type, id));
+      }
     }
   })
 )(InstanceLinkComponent);

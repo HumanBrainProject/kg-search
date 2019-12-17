@@ -17,25 +17,27 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import { history } from "../store";
+import { getTitle } from "../helpers/InstanceHelper";
 import { ShareButtons } from "./ShareButtons";
 import { Instance } from "../components/Instance";
 
 import "./InstanceContainer.css";
 
-const getTitle = (type, id, data) => {
-  if (!type || !id) {
-    return "Knowledge Graph Search";
-  }
-  if (data && data._type && data._id) {
-    if (data._source && data._source.title && data._source.title.value) {
-      return data._source.title.value;
+class BackLinkButton extends React.Component {
+
+  onClick = () => history.goBack();
+
+  render() {
+    const title = history.location.state && history.location.state.title;
+    if (!title) {
+      return null;
     }
-    if (data._type && data._id) {
-      return `${data._type} ${data._id}`;
-    }
+    return (
+      <button className="kgs-container__backButton" onClick={this.onClick}><i className="fa fa-chevron-left"></i>&nbsp;{history.location.state.title}</button>
+    );
   }
-  return `${type} ${id}`;
-};
+}
 
 export class InstanceContainer extends React.Component {
   componentDidMount() {
@@ -57,12 +59,12 @@ export class InstanceContainer extends React.Component {
   }
 
   setTitle() {
-    const { type, id, data } = this.props;
-    document.title = getTitle(type, id, data);
+    const { type, id, currentInstance } = this.props;
+    document.title = getTitle(currentInstance, type, id);
   }
 
   initialize() {
-    const { definitionIsReady, definitionIsLoading, loadDefinition, isGroupsReady, isGroupLoading, shouldLoadGroups, loadGroups, instanceIsLoading, shouldLoadInstance, type, id, fetch } = this.props;
+    const { definitionIsReady, definitionIsLoading, loadDefinition, isGroupsReady, isGroupLoading, shouldLoadGroups, loadGroups, instanceIsLoading, shouldLoadInstance, type, id, group, previousInstance, fetch, setPreviousInstance } = this.props;
     if (!definitionIsReady) {
       if (!definitionIsLoading) {
         loadDefinition();
@@ -73,20 +75,26 @@ export class InstanceContainer extends React.Component {
       }
     } else {
       if (shouldLoadInstance && !instanceIsLoading) {
-        fetch(type, id);
+        if (previousInstance && previousInstance._type === type && previousInstance._id === id) {
+          setPreviousInstance();
+        } else {
+          fetch(type, id, group);
+        }
       }
     }
   }
 
   render() {
-    const { show, group, defaultGroup } = this.props;
+    const { showInstance, group, defaultGroup } = this.props;
     const searchPath = `/${(group && group !== defaultGroup)?("?group=" + group):""}`;
     return (
       <div className="kgs-instance-container" >
-        {show && (
+        {showInstance && (
           <React.Fragment>
             <div className="kgs-instance-container__header">
-              <span className="kgs-instance-container__left"><Link  to={searchPath}><i className="fa fa-chevron-left"></i>&nbsp;Search</Link></span>
+              <div className="kgs-instance-container__left">
+                <Link  to={searchPath}><i className="fa fa-chevron-left"></i><i className="fa fa-chevron-left"></i>&nbsp;Search</Link>&nbsp;<BackLinkButton />
+              </div>
               <ShareButtons/>
             </div>
             <Instance {...this.props.instanceProps} />

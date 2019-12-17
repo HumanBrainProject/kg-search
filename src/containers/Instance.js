@@ -16,6 +16,7 @@
 import { connect } from "react-redux";
 
 import * as actions from "../actions";
+import { history } from "../store";
 import { ImagePreviews } from "./ImagePreviews";
 import { ImagePopup } from "./ImagePopup";
 import { TermsShortNotice } from "./TermsShortNotice";
@@ -39,7 +40,7 @@ export const Instance = connect(
       null;
     return {
       instanceProps: instanceProps,
-      show: state.instances.currentInstance && !state.instances.isLoading,
+      showInstance: state.instances.currentInstance && !state.instances.isLoading,
       definitionIsReady: state.definition.isReady,
       definitionIsLoading: state.definition.isLoading,
       isGroupsReady: state.groups.isReady,
@@ -48,7 +49,8 @@ export const Instance = connect(
       instanceIsLoading: state.instances.isLoading,
       shouldLoadInstance: !state.instances.currentInstance || state.instances.currentInstance._type !==  props.match.params.type || state.instances.currentInstance._id !==  props.match.params.id,
       instanceError: state.instances.error,
-      data: state.instances.currentInstance,
+      currentInstance: state.instances.currentInstance,
+      previousInstance: state.instances.previousInstances.length?state.instances.previousInstances[state.instances.previousInstances.length-1]:null,
       group: state.groups.group,
       defaultGroup: state.groups.defaultGroup,
       id: props.match.params.id,
@@ -60,6 +62,7 @@ export const Instance = connect(
     setInitialGroup: group => dispatch(actions.setInitialGroup(group)),
     loadDefinition: () => dispatch(actions.loadDefinition()),
     loadGroups: () => dispatch(actions.loadGroups()),
-    fetch: (type, id) => dispatch(actions.loadInstance(type, id))
+    fetch: (type, id) => dispatch(actions.loadInstance(type, id)),
+    setPreviousInstance: () => dispatch(actions.setPreviousInstance())
   })
 )(InstanceContainer);

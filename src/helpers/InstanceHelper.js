@@ -14,6 +14,21 @@
 *   limitations under the License.
 */
 
+export const getTitle = (data, type, id) => {
+  if (data && data._type && data._id) {
+    if (data._source && data._source.title && data._source.title.value) {
+      return data._source.title.value;
+    }
+    if (data._type && data._id) {
+      return `${data._type} ${data._id}`;
+    }
+  }
+  if (!type || !id) {
+    return "Knowledge Graph Search";
+  }
+  return `${type} ${id}`;
+};
+
 const getField = (group, type, name, data, mapping) => {
   switch (name) {
   case "type":

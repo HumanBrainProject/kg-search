@@ -17,6 +17,7 @@
 import { connect } from "react-redux";
 
 import * as actions from "../actions";
+import { history } from "../store";
 import { ImagePreviews } from "./ImagePreviews";
 import { ImagePopup } from "./ImagePopup";
 import { TermsShortNotice } from "./TermsShortNotice";
@@ -41,7 +42,7 @@ export const Preview = connect(
       null;
     return {
       instanceProps: instanceProps,
-      show: state.instances.currentInstance,
+      showInstance: state.instances.currentInstance,
       definitionIsReady: state.definition.isReady,
       definitionIsLoading: state.definition.isLoading,
       isGroupsReady: state.groups.isReady,
@@ -50,7 +51,8 @@ export const Preview = connect(
       instanceIsLoading: state.instances.isLoading,
       shouldLoadInstance: !state.instances.currentInstance || state.instances.currentInstance._type !==  type || state.instances.currentInstance._id !==  props.match.params.id,
       instanceError: state.instances.error,
-      data: state.instances.currentInstance,
+      currentInstance: state.instances.currentInstance,
+      previousInstance: state.instances.previousInstances.length?state.instances.previousInstances[state.instances.previousInstances.length-1]:null,
       group: state.groups.group,
       defaultGroup: state.groups.defaultGroup,
       id: props.match.params.id,
@@ -62,6 +64,7 @@ export const Preview = connect(
     setInitialGroup: group => dispatch(actions.setInitialGroup(group)),
     loadDefinition: () => dispatch(actions.loadDefinition()),
     loadGroups: () => dispatch(actions.loadGroups()),
-    fetch: (type, id) => dispatch(actions.loadPreview(type, id))
+    fetch: (type, id) => dispatch(actions.loadPreview(type, id)),
+    setPreviousInstance: () => dispatch(actions.setPreviousInstance())
   })
 )(InstanceContainer);

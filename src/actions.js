@@ -155,11 +155,9 @@ export const resetTypeForGroup = group => {
   };
 };
 
-export const loadInstanceRequest = (type, id) => {
+export const loadInstanceRequest = () => {
   return {
-    type: types.LOAD_INSTANCE_REQUEST,
-    instanceType: type,
-    instanceId: id
+    type: types.LOAD_INSTANCE_REQUEST
   };
 };
 
@@ -456,7 +454,7 @@ export const loadGroups = () => {
 
 export const loadInstance = (type, id) => {
   return dispatch => {
-    dispatch(loadInstanceRequest(type, id));
+    dispatch(loadInstanceRequest());
     API.axios
       .get(API.endpoints.instance(type, id))
       .then(response => {
@@ -474,7 +472,7 @@ export const loadInstance = (type, id) => {
 
 export const loadPreview = (type, id) => {
   return dispatch => {
-    dispatch(loadInstanceRequest(type, id));
+    dispatch(loadInstanceRequest());
     API.axios
       .get(API.endpoints.preview(type, id))
       .then(response => {
