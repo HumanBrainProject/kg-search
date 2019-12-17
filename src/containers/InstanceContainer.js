@@ -15,7 +15,6 @@
 */
 
 import React from "react";
-import { Link } from "react-router-dom";
 
 import { history } from "../store";
 import { getTitle } from "../helpers/InstanceHelper";
@@ -38,7 +37,6 @@ class BackLinkButton extends React.Component {
     );
   }
 }
-
 export class InstanceContainer extends React.Component {
   componentDidMount() {
     const { setInitialGroup, location } = this.props;
@@ -63,6 +61,11 @@ export class InstanceContainer extends React.Component {
     document.title = getTitle(currentInstance, type, id);
   }
 
+  handleGoHome = () => {
+    const { group, defaultGroup, onGoHome} = this.props;
+    onGoHome(`/${(group && group !== defaultGroup)?("?group=" + group):""}`);
+  }
+
   initialize() {
     const { definitionIsReady, definitionIsLoading, loadDefinition, isGroupsReady, isGroupLoading, shouldLoadGroups, loadGroups, instanceIsLoading, shouldLoadInstance, type, id, group, previousInstance, fetch, setPreviousInstance } = this.props;
     if (!definitionIsReady) {
@@ -85,15 +88,14 @@ export class InstanceContainer extends React.Component {
   }
 
   render() {
-    const { showInstance, group, defaultGroup } = this.props;
-    const searchPath = `/${(group && group !== defaultGroup)?("?group=" + group):""}`;
+    const { showInstance } = this.props;
     return (
       <div className="kgs-instance-container" >
         {showInstance && (
           <React.Fragment>
             <div className="kgs-instance-container__header">
               <div className="kgs-instance-container__left">
-                <Link  to={searchPath}><i className="fa fa-chevron-left"></i><i className="fa fa-chevron-left"></i>&nbsp;Search</Link>&nbsp;<BackLinkButton />
+                <button className="kgs-container__backButton" onClick={this.handleGoHome}><i className="fa fa-chevron-left"></i><i className="fa fa-chevron-left"></i>&nbsp;Search</button>&nbsp;<BackLinkButton />
               </div>
               <ShareButtons/>
             </div>

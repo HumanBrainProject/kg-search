@@ -63,6 +63,10 @@ export const Instance = connect(
     loadDefinition: () => dispatch(actions.loadDefinition()),
     loadGroups: () => dispatch(actions.loadGroups()),
     fetch: (type, id) => dispatch(actions.loadInstance(type, id)),
-    setPreviousInstance: () => dispatch(actions.setPreviousInstance())
+    setPreviousInstance: () => dispatch(actions.setPreviousInstance()),
+    onGoHome: path => {
+      dispatch(actions.clearAllInstances());
+      history.push(path);
+    }
   })
 )(InstanceContainer);

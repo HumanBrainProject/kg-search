@@ -99,9 +99,9 @@ class SeachPanelComponent extends React.Component {
   }
 
   render() {
-    const {isFloating, relatedElements, onQueryStringChange, location} = this.props;
+    const {isFloating, relatedElements, onHelp, onQueryStringChange, location} = this.props;
     return (
-      <SeachPanelBaseComponent isFloating={isFloating} relatedElements={relatedElements} onQueryStringChange={onQueryStringChange} location={location} />
+      <SeachPanelBaseComponent isFloating={isFloating} relatedElements={relatedElements} onHelp={onHelp} onQueryStringChange={onQueryStringChange} location={location} />
     );
   }
 }
