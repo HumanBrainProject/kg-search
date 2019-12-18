@@ -44,7 +44,7 @@ export const Preview = connect(
       null;
     return {
       instanceProps: instanceProps,
-      showInstance: state.instances.currentInstance,
+      showInstance: state.instances.currentInstance && !state.instances.error,
       definitionIsReady: state.definition.isReady,
       definitionIsLoading: state.definition.isLoading,
       definitionHasError: !!state.definition.error,

@@ -26,6 +26,7 @@ import { Preview } from "./Preview";
 import { FetchingPanel } from "./FetchingPanel";
 import { InfoPanel } from "./InfoPanel";
 import "./App.css";
+import { SessionExpiredErrorPanel } from "./ErrorPanel";
 
 class App extends React.Component {
   constructor(props) {
@@ -46,6 +47,7 @@ class App extends React.Component {
           <Route component={NotFound} />
         </Switch>
         <FetchingPanel />
+        <SessionExpiredErrorPanel />
         <InfoPanel />
       </div>
     );

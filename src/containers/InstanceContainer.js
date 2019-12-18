@@ -101,22 +101,24 @@ export class InstanceContainer extends React.Component {
   render() {
     const { showInstance } = this.props;
     return (
-      <div className="kgs-instance-container" >
-        {showInstance && (
-          <React.Fragment>
-            <div className="kgs-instance-container__header">
-              <div className="kgs-instance-container__left">
-                <button className="kgs-container__backButton" onClick={this.handleGoHome}><i className="fa fa-chevron-left"></i><i className="fa fa-chevron-left"></i>&nbsp;Search</button>&nbsp;<BackLinkButton />
+      <React.Fragment>
+        <div className="kgs-instance-container" >
+          {showInstance && (
+            <React.Fragment>
+              <div className="kgs-instance-container__header">
+                <div className="kgs-instance-container__left">
+                  <button className="kgs-container__backButton" onClick={this.handleGoHome}><i className="fa fa-chevron-left"></i><i className="fa fa-chevron-left"></i>&nbsp;Search</button>&nbsp;<BackLinkButton />
+                </div>
+                <ShareButtons/>
               </div>
-              <ShareButtons/>
-            </div>
-            <Instance {...this.props.instanceProps} />
-          </React.Fragment>
-        )}
+              <Instance {...this.props.instanceProps} />
+            </React.Fragment>
+          )}
+        </div>
         <DefinitionErrorPanel />
         <GroupErrorPanel />
         <InstanceErrorPanel />
-      </div>
+      </React.Fragment>
     );
   }
 

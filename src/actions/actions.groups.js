@@ -16,6 +16,7 @@
 
 import * as types from "./actions.types";
 import API from "../services/API";
+import { sessionFailure } from "./actions";
 
 export const loadGroupsRequest = () => {
   return {
@@ -73,8 +74,24 @@ export const loadGroups = () => {
         dispatch(loadGroupsSuccess(response.data));
       })
       .catch(e => {
-        const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
-        dispatch(loadGroupsFailure(error));
+        const { response } = e;
+        const { status } = response;
+        switch (status) {
+        case 401: // Unauthorized
+        case 403: // Forbidden
+        case 511: // Network Authentication Required
+        {
+          const error = "Your session has expired. Please login again.";
+          dispatch(sessionFailure(error));
+          break;
+        }
+        case 404:
+        default:
+        {
+          const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
+          dispatch(loadGroupsFailure(error));
+        }
+        }
       });
   };
 };

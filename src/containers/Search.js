@@ -28,7 +28,7 @@ import { HitsPanel } from "./Search/HitsPanel";
 import { Footer } from "./Search/Footer";
 import { TermsShortNotice } from "./TermsShortNotice";
 import { DetailView } from "./Search/DetailView";
-import { DefinitionErrorPanel, GroupErrorPanel, SearchInstanceErrorPanel } from "./ErrorPanel";
+import { DefinitionErrorPanel, GroupErrorPanel, SearchInstanceErrorPanel, SearchErrorPanel } from "./ErrorPanel";
 
 import "./Search.css";
 
@@ -94,7 +94,7 @@ class SearchBase extends React.Component {
   }
 
   render() {
-    const { definitionIsReady } = this.props;
+    const { definitionIsReady, searchHasError } = this.props;
 
     if (!definitionIsReady) {
       return null;
@@ -102,22 +102,25 @@ class SearchBase extends React.Component {
 
     return (
       <div className = "kgs-search-container" >
-        <div className = "kgs-search" >
-          <SearchPanel />
-          <TermsShortNotice className = "kgs-search__terms-short-notice" />
-          <TypesFilterPanel />
-          <div className = "kgs-search__panel" >
-            <FiltersPanel />
-            <div className = "kgs-search__main" >
-              <ResultsHeader />
-              <HitsPanel />
+        {!searchHasError && (
+          <div className = "kgs-search" >
+            <SearchPanel />
+            <TermsShortNotice className = "kgs-search__terms-short-notice" />
+            <TypesFilterPanel />
+            <div className = "kgs-search__panel" >
+              <FiltersPanel />
+              <div className = "kgs-search__main" >
+                <ResultsHeader />
+                <HitsPanel />
+              </div>
             </div>
+            <Footer />
           </div>
-          <Footer />
-        </div>
+        )}
         <DetailView />
         <DefinitionErrorPanel />
         <GroupErrorPanel />
+        <SearchErrorPanel />
         <SearchInstanceErrorPanel />
       </div>
     );
@@ -136,10 +139,11 @@ export const Search = connect(
     definitionIsReady: state.definition.isReady,
     definitionIsLoading: state.definition.isLoading,
     definitionHasError: !!state.definition.error,
-    groupsHasError: state.groups.hasError,
+    groupsHasError: !!state.groups.error,
     isGroupsReady: state.groups.isReady,
     isGroupLoading: state.groups.isLoading,
     shouldLoadGroups: !!state.auth.accessToken,
+    searchHasError: !!state.search.error,
     location: state.router.location
   }),
   dispatch => ({

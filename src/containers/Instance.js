@@ -42,7 +42,7 @@ export const Instance = connect(
       null;
     return {
       instanceProps: instanceProps,
-      showInstance: state.instances.currentInstance && !state.instances.isLoading,
+      showInstance: state.instances.currentInstance && !state.instances.isLoading && !state.instances.error,
       definitionIsReady: state.definition.isReady,
       definitionIsLoading: state.definition.isLoading,
       definitionHasError: !!state.definition.error,

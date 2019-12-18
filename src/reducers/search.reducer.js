@@ -256,7 +256,8 @@ const resetTypeForGroup = (state, action) => {
 const loadSearchRequest = state => {
   return {
     ...state,
-    isLoading: true
+    isLoading: true,
+    error: null
   };
 };
 
@@ -353,7 +354,7 @@ const loadSearchFail = (state, action) => {
     ...state,
     error: action.error,
     isLoading: false,
-    results: [],
+    hits: [],
     from: 0,
     page: 1,
     totalPages: 0

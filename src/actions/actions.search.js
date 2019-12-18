@@ -19,6 +19,7 @@ import * as types from "./actions.types";
 import API from "../services/API";
 import ReactPiwik from "react-piwik";
 import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
+import { sessionFailure } from "./actions";
 
 export const loadSearchBadRequest = error => {
   return {
@@ -30,13 +31,6 @@ export const loadSearchBadRequest = error => {
 export const loadSearchServiceFailure = error => {
   return {
     type: types.LOAD_SEARCH_SERVICE_FAILURE,
-    error: error
-  };
-};
-
-export const loadSearchSessionFailure = error => {
-  return {
-    type: types.LOAD_SEARCH_SESSION_FAILURE,
     error: error
   };
 };
@@ -158,7 +152,7 @@ export const search = () => {
         case 511: // Network Authentication Required
         {
           const error = "Your session has expired. Please login again.";
-          dispatch(loadSearchSessionFailure(error));
+          dispatch(sessionFailure(error));
           break;
         }
         case 404:

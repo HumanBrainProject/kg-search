@@ -51,6 +51,8 @@ export const InstanceErrorPanel = connect(
   state => ({
     show: !!state.instances.error,
     message: state.instances.error,
+    cancelLabel: "Back to search",
+    cancelAction: actionsInstances.goToSearch(state.groups.group, state.groups.defaultGroup),
     retryLabel: "Retry",
     retryAction: actionsInstances.clearInstanceError()
   }),
@@ -64,7 +66,7 @@ export const SearchInstanceErrorPanel = connect(
   state => ({
     show: !!state.instances.error,
     message: state.instances.error,
-    retryLabel: "Retry",
+    retryLabel: "Ok",
     retryAction: actionsInstances.clearInstanceError()
   }),
   dispatch => ({
@@ -77,7 +79,7 @@ export const SearchErrorPanel = connect(
     show: !!state.search.error,
     message: state.search.error,
     retryLabel: "Retry",
-    retryAction: actionsSearch.clearSearchError()
+    retryAction: actionsSearch.search()
   }),
   dispatch => ({
     onAction:  action => dispatch(action)
@@ -89,7 +91,7 @@ export const SessionExpiredErrorPanel = connect(
     show: !!state.auth.error,
     message: state.auth.error,
     retryLabel: "Login",
-    retryAction: actions.authenticate()
+    retryAction: () => actions.authenticate()
   }),
   dispatch => ({
     onAction:  action => dispatch(action)

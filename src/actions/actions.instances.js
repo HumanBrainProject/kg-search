@@ -16,6 +16,9 @@
 
 import * as types from "./actions.types";
 import API from "../services/API";
+import { setGroup } from "./actions.groups";
+import { sessionFailure } from "./actions";
+import { history } from "../store";
 
 export const loadInstanceRequest = () => {
   return {
@@ -76,6 +79,14 @@ export const clearAllInstances = () => {
   };
 };
 
+export const goToSearch = (group, defaultGroup) => {
+  return dispatch => {
+    dispatch(clearInstanceError());
+    dispatch(clearAllInstances());
+    history.replace(`/${(group && group !== defaultGroup)?("?group=" + group):""}`);
+  };
+};
+
 export const loadInstance = (type, id) => {
   return dispatch => {
     dispatch(loadInstanceRequest());
@@ -85,9 +96,34 @@ export const loadInstance = (type, id) => {
         dispatch(loadInstanceSuccess(response.data));
       })
       .catch(e => {
-        // if(e.st)
-        const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
-        dispatch(loadInstanceFailure(error));
+        const { response } = e;
+        const { status } = response;
+        switch (status) {
+        case 400: // Bad Request
+        {
+          const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
+          dispatch(loadInstanceFailure(error));
+          break;
+        }
+        case 401: // Unauthorized
+        case 403: // Forbidden
+        case 511: // Network Authentication Required
+        {
+          const error = "Your session has expired. Please login again.";
+          dispatch(sessionFailure(error));
+          break;
+        }
+        case 404:
+        default:
+        {
+          const index = response.headers["x-selected-index"];
+          if (index) {
+            dispatch(setGroup(index.slice(3)));
+          }
+          const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
+          dispatch(loadInstanceFailure(error));
+        }
+        }
       });
   };
 };
@@ -108,11 +144,28 @@ export const loadPreview = (type, id) => {
           dispatch(loadInstanceNoData(error));
         }
       })
-      .catch(error => {
-        if (error.stack === "SyntaxError: Unexpected end of JSON input" || error.message === "Unexpected end of JSON input") {
-          dispatch(loadInstanceNoData(error));
+      .catch(e => {
+        if (e.stack === "SyntaxError: Unexpected end of JSON input" || e.message === "Unexpected end of JSON input") {
+          dispatch(loadInstanceNoData(e));
         } else {
-          dispatch(loadInstanceFailure(error));
+          const { response } = e;
+          const { status } = response;
+          switch (status) {
+          case 401: // Unauthorized
+          case 403: // Forbidden
+          case 511: // Network Authentication Required
+          {
+            const error = "Your session has expired. Please login again.";
+            dispatch(sessionFailure(error));
+            break;
+          }
+          case 404:
+          default:
+          {
+            const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
+            dispatch(loadInstanceFailure(error));
+          }
+          }
         }
       });
   };

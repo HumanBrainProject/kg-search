@@ -82,7 +82,12 @@ class PaginationComponent extends React.Component {
   }
 
   render() {
-    const { page, totalPages, onClick } = this.props;
+    const { show, page, totalPages, onClick } = this.props;
+
+    if (!show) {
+      return null;
+    }
+
     const pages = [];
     const pageScope = this.state.pageScope;
     const hasPrevious = page > 1;
@@ -161,6 +166,7 @@ class PaginationComponent extends React.Component {
 
 export const Pagination = connect(
   state => ({
+    show: state.search.totalPages > 0,
     totalPages: state.search.totalPages,
     page: state.search.page,
     location: state.router.location

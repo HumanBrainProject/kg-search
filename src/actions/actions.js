@@ -66,15 +66,22 @@ export const showImage = (url, label) => {
   };
 };
 
-export const authenticate = () => {
-  const stateKey= btoa(JSON.stringify({
-    queryString: window.location.search
-  }));
-  const nonceKey=  generateKey();
-  const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
-  window.location.href = API.endpoints.auth(redirectUri, stateKey, nonceKey);
+export const sessionFailure = error => {
   return {
-    type: types.AUTHENTICATING
+    type: types.SESSION_FAILURE,
+    error: error
+  };
+};
+
+
+export const authenticate = () => {
+  return () => {
+    const stateKey= btoa(JSON.stringify({
+      queryString: window.location.search
+    }));
+    const nonceKey=  generateKey();
+    const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+    window.location.href = API.endpoints.auth(redirectUri, stateKey, nonceKey);
   };
 };
 

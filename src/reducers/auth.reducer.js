@@ -66,9 +66,7 @@ export function reducer(state = initialState, action = {}) {
     return setToken(state, action);
   case types.AUTHENTICATE:
     return authenticate(state, action);
-  // case types.LOAD_SEARCH_SESSION_FAILURE:
-  //   return authenticate(state, {});
-  case types.LOAD_SEARCH_SESSION_FAILURE:
+  case types.SESSION_FAILURE:
     return authenticationExpired(state, action);
   case types.LOGOUT:
     return logout(state, action);

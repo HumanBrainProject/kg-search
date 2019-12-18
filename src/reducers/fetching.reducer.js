@@ -69,7 +69,7 @@ export function reducer(state = initialState, action = {}) {
   case types.LOAD_SEARCH_SUCCESS:
   case types.LOAD_SEARCH_BAD_REQUEST:
   case types.LOAD_SEARCH_SERVICE_FAILURE:
-  case types.LOAD_SEARCH_SESSION_FAILURE:
+  case types.SESSION_FAILURE:
   case types.CANCEL_SEARCH:
   case types.LOAD_INSTANCE_SUCCESS:
   case types.LOAD_INSTANCE_NO_DATA:
