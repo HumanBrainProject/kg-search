@@ -397,7 +397,6 @@ export function reducer(state = initialState, action = {}) {
     return clearSearchError(state, action);
   case types.LOAD_SEARCH_BAD_REQUEST:
   case types.LOAD_SEARCH_SERVICE_FAILURE:
-  case types.LOAD_SEARCH_SESSION_FAILURE: //TODO: this will listen to authenticationExpired
     return loadSearchFail(state, action);
   default:
     return state;

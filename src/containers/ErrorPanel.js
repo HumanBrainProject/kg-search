@@ -16,6 +16,7 @@
 
 import { connect } from "react-redux";
 import { ErrorPanel as  Component } from "../components/ErrorPanel";
+import * as actions from "../actions/actions";
 import * as actionsSearch from "../actions/actions.search";
 import * as actionsGroups from "../actions/actions.groups";
 import * as actionsInstances from "../actions/actions.instances";
@@ -77,6 +78,18 @@ export const SearchErrorPanel = connect(
     message: state.search.error,
     retryLabel: "Retry",
     retryAction: actionsSearch.clearSearchError()
+  }),
+  dispatch => ({
+    onAction:  action => dispatch(action)
+  })
+)(Component);
+
+export const SessionExpiredErrorPanel = connect(
+  state => ({
+    show: !!state.auth.error,
+    message: state.auth.error,
+    retryLabel: "Login",
+    retryAction: actions.authenticate()
   }),
   dispatch => ({
     onAction:  action => dispatch(action)

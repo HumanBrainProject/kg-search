@@ -17,6 +17,7 @@
 import * as types from "../actions/actions.types";
 
 const initialState = {
+  error: null,
   accessToken: null,
   authenticate: false,
   isAuthenticated: false
@@ -49,14 +50,26 @@ const logout = state => {
   };
 };
 
+const authenticationExpired = (state, action) => {
+  return {
+    ...state,
+    error: action.error,
+    accessToken: null,
+    authenticate: false,
+    isAuthenticated: null
+  };
+};
+
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case types.SET_TOKEN:
     return setToken(state, action);
   case types.AUTHENTICATE:
     return authenticate(state, action);
+  // case types.LOAD_SEARCH_SESSION_FAILURE:
+  //   return authenticate(state, {});
   case types.LOAD_SEARCH_SESSION_FAILURE:
-    return authenticate(state, {});
+    return authenticationExpired(state, action);
   case types.LOGOUT:
     return logout(state, action);
   default:

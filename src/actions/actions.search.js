@@ -156,8 +156,11 @@ export const search = () => {
         case 401: // Unauthorized
         case 403: // Forbidden
         case 511: // Network Authentication Required
-          dispatch(loadSearchSessionFailure(status)); // TODO: Change this to authenticationExpired action.
+        {
+          const error = "Your session has expired. Please login again.";
+          dispatch(loadSearchSessionFailure(error));
           break;
+        }
         case 404:
         default:
         {
