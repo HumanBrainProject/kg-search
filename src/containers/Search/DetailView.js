@@ -15,7 +15,7 @@
 */
 
 import { connect } from "react-redux";
-import * as actions from "../../actions";
+import * as actionsInstances from "../../actions/actions.instances";
 import { Carousel } from "../../components/Carousel";
 import { ShareButtons } from "../ShareButtons";
 import { Instance } from "./Instance";
@@ -33,8 +33,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  onPrevious: () => dispatch(actions.setPreviousInstance()),
-  onClose: () => dispatch(actions.clearAllInstances())
+  onPrevious: () => dispatch(actionsInstances.setPreviousInstance()),
+  onClose: () => dispatch(actionsInstances.clearAllInstances())
 });
 
 export const DetailView = connect(

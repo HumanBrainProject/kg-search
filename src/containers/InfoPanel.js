@@ -15,7 +15,7 @@
 */
 
 import { connect } from "react-redux";
-import * as actions from "../actions";
+import * as actions from "../actions/actions";
 import { InfoPanel as  Component } from "../components/InfoPanel";
 
 export const InfoPanel = connect(

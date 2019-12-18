@@ -15,7 +15,9 @@
 */
 import { connect } from "react-redux";
 
-import * as actions from "../actions";
+import * as actionsGroups from "../actions/actions.groups";
+import * as actionsInstances from "../actions/actions.instances";
+import * as actionsDefinition from "../actions/actions.definition";
 import { history } from "../store";
 import { ImagePreviews } from "./ImagePreviews";
 import { ImagePopup } from "./ImagePopup";
@@ -61,13 +63,13 @@ export const Instance = connect(
     };
   },
   dispatch => ({
-    setInitialGroup: group => dispatch(actions.setInitialGroup(group)),
-    loadDefinition: () => dispatch(actions.loadDefinition()),
-    loadGroups: () => dispatch(actions.loadGroups()),
-    fetch: (type, id) => dispatch(actions.loadInstance(type, id, "/instances/")),
-    setPreviousInstance: () => dispatch(actions.setPreviousInstance()),
+    setInitialGroup: group => dispatch(actionsGroups.setInitialGroup(group)),
+    loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
+    loadGroups: () => dispatch(actionsGroups.loadGroups()),
+    fetch: (type, id) => dispatch(actionsInstances.loadInstance(type, id, "/instances/")),
+    setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance()),
     onGoHome: path => {
-      dispatch(actions.clearAllInstances());
+      dispatch(actionsInstances.clearAllInstances());
       history.push(path);
     }
   })

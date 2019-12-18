@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import * as types from "../actions.types";
+import * as types from "../actions/actions.types";
 
 const initialState = {
   message: null,
@@ -48,12 +48,9 @@ export function reducer(state = initialState, action = {}) {
   case types.SET_LAYOUT_MODE:
   case types.SET_INFO:
   case types.SHOW_IMAGE:
-  case types.INITIALIZE_CONFIG:
-  case types.LOAD_DEFINITION:
   case types.LOAD_DEFINITION_SUCCESS:
   case types.LOAD_DEFINITION_FAILURE:
   case types.CLEAR_DEFINITION_ERROR:
-  case types.LOAD_GROUPS:
   case types.LOAD_GROUPS_SUCCESS:
   case types.LOAD_GROUPS_FAILURE:
   case types.CLEAR_GROUPS_ERROR:
@@ -61,7 +58,6 @@ export function reducer(state = initialState, action = {}) {
   case types.SET_INITIAL_GROUP:
   case types.SET_GROUP:
   case types.SET_TOKEN:
-  case types.SET_SEARCH_READY:
   case types.SET_QUERY_STRING:
   case types.SET_TYPE:
   case types.RESET_TYPE_FOR_GROUP:

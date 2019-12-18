@@ -16,7 +16,7 @@
 
 import React from "react";
 import { connect } from "react-redux";
-import * as actions from "../../actions";
+import * as actionsSearch from "../../actions/actions.search";
 import { Select } from "../../components/Select";
 import { getUpdatedUrl } from "../../helpers/BrowserHelpers";
 import { history } from "../../store";
@@ -52,6 +52,6 @@ export const SortingSelector = connect(
     location: state.router.location
   }),
   dispatch => ({
-    onChange: value => dispatch(actions.setSort(value))
+    onChange: value => dispatch(actionsSearch.setSort(value))
   })
 )(SortingSelectorComponent);

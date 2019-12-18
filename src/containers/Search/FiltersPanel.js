@@ -16,7 +16,7 @@
 
 import React from "react";
 import { connect } from "react-redux";
-import * as actions from "../../actions";
+import * as actionsSearch from "../../actions/actions.search";
 import { Facet } from "./Facet";
 
 import "./FiltersPanel.css";
@@ -121,8 +121,8 @@ export const FiltersPanel = connect(
     };
   },
   dispatch => ({
-    onChange: (id, active, keyword) => dispatch(actions.setFacet(id, active, keyword)),
-    onViewChange: (id, size) => dispatch(actions.setFacetSize(id, size)),
-    onReset: () => dispatch(actions.resetFacets())
+    onChange: (id, active, keyword) => dispatch(actionsSearch.setFacet(id, active, keyword)),
+    onViewChange: (id, size) => dispatch(actionsSearch.setFacetSize(id, size)),
+    onReset: () => dispatch(actionsSearch.resetFacets())
   })
 )(FiltersPanelBase);

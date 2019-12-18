@@ -16,7 +16,9 @@
 
 import React from "react";
 import { connect } from "react-redux";
-import * as actions from "../actions";
+import * as actionsSearch from "../actions/actions.search";
+import * as actionsGroups from "../actions/actions.groups";
+import * as actionsDefinition from "../actions/actions.definition";
 import { withTabKeyNavigation } from "../helpers/withTabKeyNavigation";
 import { SearchPanel } from "./Search/SearchPanel";
 import { TypesFilterPanel } from "./Search/TypesFilterPanel";
@@ -141,10 +143,10 @@ export const Search = connect(
     location: state.router.location
   }),
   dispatch => ({
-    setInitialSearchParams: params => dispatch(actions.setInitialSearchParams(params)),
-    setInitialGroup: group => dispatch(actions.setInitialGroup(group)),
-    loadDefinition: () => dispatch(actions.loadDefinition()),
-    loadGroups: () => dispatch(actions.loadGroups()),
-    search: () => dispatch(actions.search())
+    setInitialSearchParams: params => dispatch(actionsSearch.setInitialSearchParams(params)),
+    setInitialGroup: group => dispatch(actionsGroups.setInitialGroup(group)),
+    loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
+    loadGroups: () => dispatch(actionsGroups.loadGroups()),
+    search: () => dispatch(actionsSearch.search())
   })
 )(SearchWithTabKeyNavigation);

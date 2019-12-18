@@ -16,7 +16,8 @@
 
 import React from "react";
 import { connect } from "react-redux";
-import * as actions from "../../actions";
+import * as actions from "../../actions/actions";
+import * as actionsSearch from "../../actions/actions.search";
 import { help } from "../../data/help.js";
 import { history } from "../../store";
 import { withFloatingScrollEventsSubscription } from "../../helpers/withFloatingScrollEventsSubscription";
@@ -117,7 +118,7 @@ const SearchPanelContainer = connect(
   },
   dispatch => ({
     onHelp: () => dispatch(actions.setInfo(help)),
-    onQueryStringChange: value => dispatch(actions.setQueryString(value))
+    onQueryStringChange: value => dispatch(actionsSearch.setQueryString(value))
   })
 )(SeachPanelComponent);
 

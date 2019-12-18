@@ -19,7 +19,7 @@ import { connect } from "react-redux";
 
 import { history } from "../../store";
 import { getUpdatedUrl } from "../../helpers/BrowserHelpers";
-import * as actions from "../../actions";
+import * as actionsSearch from "../../actions/actions.search";
 import { TypeIcon } from "./TypeIcon";
 
 import "./TypesFilterPanel.css";
@@ -96,6 +96,6 @@ export const TypesFilterPanel = connect(
     location: state.router.location
   }),
   dispatch => ({
-    onClick: value => dispatch(actions.setType(value))
+    onClick: value => dispatch(actionsSearch.setType(value))
   })
 )(TypesFilterPanelBase);

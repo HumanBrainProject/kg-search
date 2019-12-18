@@ -17,7 +17,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import * as actions from "../actions";
+import * as actionsGroups from "../actions/actions.groups";
 import { getUpdatedUrl } from "../helpers/BrowserHelpers";
 import { history } from "../store";
 import { Select } from "../components/Select";
@@ -50,8 +50,8 @@ export const GroupSelection = connect(
   }),
   dispatch => ({
     onChange: value => {
-      dispatch(actions.setGroup(value));
-      dispatch(actions.resetTypeForGroup(value));
+      dispatch(actionsGroups.setGroup(value));
+      dispatch(actionsGroups.resetTypeForGroup(value));
     }
   })
 )(GroupSelectionBase);

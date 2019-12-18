@@ -17,7 +17,7 @@
 import React from "react";
 import uniqueId from "lodash/uniqueId";
 import { connect } from "react-redux";
-import * as actions from "../../actions";
+import * as actionsInstances from "../../actions/actions.instances";
 import { List } from "../../components/List";
 import { Hit } from "./Hit";
 import { StatsHelpers } from "../../helpers/StatsHelpers";
@@ -104,7 +104,7 @@ export const HitsPanel = connect(
   mapStateToProps,
   dispatch => ({
     onClick: (data, target) => {
-      dispatch(actions.setInstance(data, target));
+      dispatch(actionsInstances.setInstance(data, target));
     }
   })
 )(HitsPanelBase);

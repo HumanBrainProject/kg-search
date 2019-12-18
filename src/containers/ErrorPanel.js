@@ -16,14 +16,17 @@
 
 import { connect } from "react-redux";
 import { ErrorPanel as  Component } from "../components/ErrorPanel";
-import * as actions from "../actions";
+import * as actionsSearch from "../actions/actions.search";
+import * as actionsGroups from "../actions/actions.groups";
+import * as actionsInstances from "../actions/actions.instances";
+import * as actionsDefinition from "../actions/actions.definition";
 
 export const DefinitionErrorPanel = connect(
   state => ({
     show: !!state.definition.error,
     message: state.definition.error,
     retryLabel: "Retry",
-    retryAction: actions.clearDefinitionError()
+    retryAction: actionsDefinition.clearDefinitionError()
   }),
   dispatch => ({
     onAction:  action => dispatch(action)
@@ -35,7 +38,7 @@ export const GroupErrorPanel = connect(
     show: !!state.groups.error,
     message: state.groups.error,
     retryLabel: "Retry",
-    retryAction: actions.clearGroupError()
+    retryAction: actionsGroups.clearGroupError()
   }),
   dispatch => ({
     onAction:  action => dispatch(action)
@@ -48,7 +51,7 @@ export const InstanceErrorPanel = connect(
     show: !!state.instances.error,
     message: state.instances.error,
     retryLabel: "Retry",
-    retryAction: actions.clearInstanceError()
+    retryAction: actionsInstances.clearInstanceError()
   }),
   dispatch => ({
     onAction:  action => dispatch(action)
@@ -61,21 +64,21 @@ export const SearchInstanceErrorPanel = connect(
     show: !!state.instances.error,
     message: state.instances.error,
     retryLabel: "Retry",
-    retryAction: actions.clearInstanceError()
+    retryAction: actionsInstances.clearInstanceError()
   }),
   dispatch => ({
     onAction:  action => dispatch(action)
   })
 )(Component);
 
-// export const SearchErrorPanel = connect(
-//   state => ({
-//     show: !!state.search.error,
-//     message: state.search.error,
-//     retryLabel: "Retry",
-//     retryAction: actions.clearSearchError()
-//   }),
-//   dispatch => ({
-//     onAction:  action => dispatch(action)
-//   })
-// )(Component);
+export const SearchErrorPanel = connect(
+  state => ({
+    show: !!state.search.error,
+    message: state.search.error,
+    retryLabel: "Retry",
+    retryAction: actionsSearch.clearSearchError()
+  }),
+  dispatch => ({
+    onAction:  action => dispatch(action)
+  })
+)(Component);

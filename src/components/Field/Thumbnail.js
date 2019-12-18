@@ -15,7 +15,7 @@
 */
 
 import { connect } from "react-redux";
-import * as actions from "../../actions";
+import * as actions from "../../actions/actions";
 import { Thumbnail as Component} from "../Thumbnail";
 
 export const Thumbnail = connect(

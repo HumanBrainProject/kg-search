@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import * as types from "../actions.types";
+import * as types from "../actions/actions.types";
 
 const initialState = {
   error: null,

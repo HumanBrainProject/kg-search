@@ -18,7 +18,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 
-import * as actions from "../actions";
+import * as actions from "../actions/actions";
 import { Search } from "./Search";
 import { Instance } from "./Instance";
 import { NotFound } from "../components/NotFound";

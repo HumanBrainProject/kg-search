@@ -16,7 +16,7 @@
 
 import { connect } from "react-redux";
 import { Toggle } from "../../components/Toggle";
-import * as actions from "../../actions";
+import * as actions from "../../actions/actions";
 
 export const LayoutModeToggle = connect(
   (state, props) => ({

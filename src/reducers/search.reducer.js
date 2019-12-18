@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-import * as types from "../actions.types";
+import * as types from "../actions/actions.types";
 import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
 
 const initialState = {
@@ -253,31 +253,6 @@ const resetTypeForGroup = (state, action) => {
   };
 };
 
-
-const setGroupsSettings = (state, action) => {
-
-  const groupsSettings = {};
-  if (Array.isArray(action.groups)) {
-    action.groups.forEach(group => {
-      if (group.spec && Array.isArray(group.spec.order) && group.spec.order.length) {
-        const order = {
-          "$all": 0
-        };
-        groupsSettings[group.name] = {
-          facetTypesOrder: order,
-          facetDefaultSelectedType: group.spec.order[0]
-        };
-        group.spec.order.forEach((type, group) => order[type] = group + 1);
-      }
-    });
-  }
-
-  return {
-    ...state,
-    groupsSettings: groupsSettings
-  };
-};
-
 const loadSearchRequest = state => {
   return {
     ...state,
@@ -385,6 +360,13 @@ const loadSearchFail = (state, action) => {
   };
 };
 
+const clearSearchError = state => {
+  return {
+    ...state,
+    error: null
+  };
+};
+
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case types.SET_INITIAL_SEARCH_PARAMS:
@@ -407,12 +389,12 @@ export function reducer(state = initialState, action = {}) {
     return setFacetSize(state, action);
   case types.RESET_FACETS:
     return resetFacets(state, action);
-  case types.LOAD_GROUPS:
-    return setGroupsSettings(state, action);
   case types.LOAD_SEARCH_REQUEST:
     return loadSearchRequest(state, action);
   case types.LOAD_SEARCH_SUCCESS:
     return loadSearchResult(state, action);
+  case types.CLEAR_SEARCH_ERROR:
+    return clearSearchError(state, action);
   case types.LOAD_SEARCH_BAD_REQUEST:
   case types.LOAD_SEARCH_SERVICE_FAILURE:
   case types.LOAD_SEARCH_SESSION_FAILURE: //TODO: this will listen to authenticationExpired

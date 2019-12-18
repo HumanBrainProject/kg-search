@@ -20,7 +20,7 @@ import { connect } from "react-redux";
 import { getUpdatedUrl } from "../../helpers/BrowserHelpers";
 import { history } from "../../store";
 import { windowWidth } from "../../helpers/BrowserHelpers";
-import * as actions from "../../actions";
+import * as actionsSearch from "../../actions/actions.search";
 import "./Pagination.css";
 
 class PageLinkButton extends React.PureComponent {
@@ -166,7 +166,7 @@ export const Pagination = connect(
     location: state.router.location
   }),
   dispatch => ({
-    onClick: value => dispatch(actions.setPage(value))
+    onClick: value => dispatch(actionsSearch.setPage(value))
   })
 )(PaginationComponent);
 

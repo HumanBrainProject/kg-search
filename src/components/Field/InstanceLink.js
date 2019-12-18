@@ -17,7 +17,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { history } from "../../store";
-import * as actions from "../../actions";
+import * as actionsGroups from "../../actions/actions.groups";
+import * as actionsInstances from "../../actions/actions.instances";
 import { getTitle } from "../../helpers/InstanceHelper";
 
 const InstanceLinkComponent = ({text, type, id, group, path, context, onClick}) => {
@@ -58,8 +59,8 @@ export const InstanceLink = connect(
       if (path) {
         history.push(`${path}${type}/${id}${group?("?group=" + group ):""}`, context);
       } else {
-        dispatch(actions.setGroup(group));
-        dispatch(actions.loadInstance(type, id));
+        dispatch(actionsGroups.setGroup(group));
+        dispatch(actionsInstances.loadInstance(type, id));
       }
     }
   })
