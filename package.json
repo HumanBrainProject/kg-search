@@ -40,12 +40,14 @@
     "showdown-xss-filter": "^0.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject",
-    "lint": "eslint src/",
+    "start": "env-cmd -f .env.development react-scripts start",
+    "build": "env-cmd -f .env.production react-scripts build",
+    "build:int": "env-cmd -f .env.integration react-scripts build",
+    "build:dev": "env-cmd -f .env.development react-scripts build",
     "test": "eslint src/",
-    "testCI": "eslint src/"
+    "testCI": "eslint src/",
+    "lint": "eslint src/",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
