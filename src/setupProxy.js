@@ -5,10 +5,6 @@ module.exports = function(app) {
     target: "https://kg.humanbrainproject.eu",
     changeOrigin: true,
     ws: true }));
-  app.use(proxy("/search", {
-    target: "https://kg.humanbrainproject.eu",
-    changeOrigin: true,
-    ws: true }));
   app.use(proxy("/auth", {
     target: "https://kg.humanbrainproject.eu",
     changeOrigin: true,

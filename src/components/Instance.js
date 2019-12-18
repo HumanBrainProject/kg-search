@@ -38,7 +38,7 @@ export class Instance extends React.PureComponent {
   trackEvent = () => {
     const { id, type, group, path, defaultGroup } = this.props;
     const relativeUrl = `${path}${type}/${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
-    window.console.log("trackEvent", "Card", "Opened", relativeUrl);
+    // window.console.log("trackEvent", "Card", "Opened", relativeUrl);
     ReactPiwik.push(["trackEvent", "Card", "Opened", relativeUrl]);
   }
 
