@@ -26,7 +26,7 @@
     display: inline-block;
     margin-bottom: 5px;
     margin-right: 20px;
-    color: #555;
+    color: var(--color-15);
     font-size: 22px;
     font-weight: normal;
     line-height: 30px;
@@ -34,8 +34,8 @@
 
 .kgs-select select {
     min-width: 215px;
-    background-color: white;
-    border-color: white;
+    background-color: var(--background-color-2);
+    border-color: var(--background-color-2);
     color: var(--color-selected);
     font-size: 22px;
     font-weight: normal;
