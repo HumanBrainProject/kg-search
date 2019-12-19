@@ -60,7 +60,7 @@ export const InstanceLink = connect(
         history.push(`${path}${type}/${id}${group?("?group=" + group ):""}`, context);
       } else {
         dispatch(actionsGroups.setGroup(group));
-        dispatch(actionsInstances.loadInstance(type, id));
+        dispatch(actionsInstances.loadInstance(type, id, true));
       }
     }
   })

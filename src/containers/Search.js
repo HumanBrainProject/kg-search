@@ -19,6 +19,7 @@ import { connect } from "react-redux";
 import * as actionsSearch from "../actions/actions.search";
 import * as actionsGroups from "../actions/actions.groups";
 import * as actionsDefinition from "../actions/actions.definition";
+import * as actionsInstances from "../actions/actions.instances";
 import { withTabKeyNavigation } from "../helpers/withTabKeyNavigation";
 import { SearchPanel } from "./Search/SearchPanel";
 import { TypesFilterPanel } from "./Search/TypesFilterPanel";
@@ -31,6 +32,7 @@ import { DetailView } from "./Search/DetailView";
 import { DefinitionErrorPanel, GroupErrorPanel, SearchInstanceErrorPanel, SearchErrorPanel } from "./ErrorPanel";
 
 import "./Search.css";
+import { history } from "../store";
 
 class SearchBase extends React.Component {
 
@@ -44,16 +46,32 @@ class SearchBase extends React.Component {
     if (params.group) {
       setInitialGroup(params.group);
     }
+    this.unlisten = history.listen( location => {
+      const reg = /^#(.+)\/(.+)$/;
+      const [,type, id] = reg.test(location.hash) ? location.hash.match(reg) : [null, null, null];
+      this.props.goBackToInstance(type, id);
+    });
     this.search();
   }
 
   componentDidUpdate(previousProps) {
-    const { definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, location } = this.props;
+    const { definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, location, isActive } = this.props;
     if (definitionIsReady !== previousProps.definitionIsReady || definitionHasError !== previousProps.definitionHasError ||
       groupsHasError !== previousProps.groupsHasError || isGroupsReady !== previousProps.isGroupsReady ||
       location.search !== previousProps.location.search) {
       this.search();
     }
+    if (isActive) {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    } else {
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+    }
+  }
+
+  componentWillUnmount() {
+    this.unlisten();
   }
 
   getUrlParmeters() {
@@ -151,6 +169,7 @@ export const Search = connect(
     setInitialGroup: group => dispatch(actionsGroups.setInitialGroup(group)),
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
-    search: () => dispatch(actionsSearch.search())
+    search: () => dispatch(actionsSearch.search()),
+    goBackToInstance: (type, id) => dispatch(actionsInstances.goBackToInstance(type, id))
   })
 )(SearchWithTabKeyNavigation);

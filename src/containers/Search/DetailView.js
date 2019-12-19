@@ -34,7 +34,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   onPrevious: () => dispatch(actionsInstances.setPreviousInstance()),
-  onClose: () => dispatch(actionsInstances.clearAllInstances())
+  onClose: () => {
+    dispatch(actionsInstances.clearAllInstances());
+    dispatch(actionsInstances.updateLocation());
+  }
 });
 
 export const DetailView = connect(

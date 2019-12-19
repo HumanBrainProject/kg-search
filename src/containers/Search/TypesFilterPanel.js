@@ -57,6 +57,11 @@ class TypeFilter extends React.Component {
 }
 
 class TypesFilterPanelBase extends React.Component {
+  componentDidMount() {
+    const { selectedType, location } = this.props;
+    const url = getUpdatedUrl("facet_type[0]", true, selectedType, false, location);
+    history.push(url);
+  }
 
   componentDidUpdate(prevProps) {
     const { selectedType, location } = this.props;

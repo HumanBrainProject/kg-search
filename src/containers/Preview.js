@@ -68,7 +68,7 @@ export const Preview = connect(
     setInitialGroup: group => dispatch(actionsGroups.setInitialGroup(group)),
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
-    fetch: (type, id) => dispatch(actionsInstances.loadPreview(type, id, "/previews/")),
+    fetch: (type, id) => dispatch(actionsInstances.loadPreview(type, id)),
     setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance()),
     onGoHome: path => {
       dispatch(actionsInstances.clearAllInstances());

@@ -67,7 +67,6 @@ const setInstance = (state, action) => {
   previousInstances = state.currentInstance?[...previousInstances,state.currentInstance]:[...previousInstances];
   return {
     ...state,
-    isLoading: false,
     currentInstance: action.data,
     previousInstances: previousInstances,
     image: null
@@ -80,7 +79,6 @@ const setPreviousInstance = state => {
     const currentInstance = previousInstances.pop() || null;
     return {
       ...state,
-      isLoading: false,
       currentInstance: currentInstance,
       previousInstances: previousInstances,
       image: null
@@ -93,7 +91,6 @@ const setPreviousInstance = state => {
 const clearAllInstances = state => {
   return {
     ...state,
-    isLoading: false,
     currentInstance: null,
     previousInstances: [],
     image: null
@@ -111,6 +108,64 @@ const showImage = (state, action) => {
   return {
     ...state,
     image: typeof action.url === "string"?{url: action.url, label: action.label}:null
+  };
+};
+
+const goBackToInstance = (state, action) => {
+  let instance = state && state.currentInstance;
+
+  // if no current instance
+  if (!instance) {
+    return state;
+  }
+
+  const instanceType = action.instanceType;
+  const instanceId = action.id;
+
+  // no instance reference available in url, unset current instance
+  if (!instanceType || !instanceId) {
+    return {
+      ...state,
+      currentInstance: null,
+      previousInstances: [],
+      image: null
+    };
+  }
+
+  // instance reference url is already matching current instance, do notthing
+  if (instance && instance._type === instanceType && instance._id === instanceId) {
+    return state;
+  }
+
+  // no previous instances available, unset current instance
+  if (!state || !state.previousInstances.length) {
+    return {
+      ...state,
+      currentInstance: null,
+      previousInstances: [],
+      image: null
+    };
+  }
+
+  const previousInstances = (state && state.previousInstances instanceof Array)?[...state.previousInstances]:[];
+  instance = previousInstances.pop() || null;
+  while(previousInstances.length && instance && !(instance._type === instanceType && instance._id === instanceId))  {
+    instance = previousInstances.pop();
+  }
+  if (instance && instance._type === instanceType && instance._id === instanceId) {
+    return {
+      ...state,
+      currentInstance: instance,
+      previousInstances: previousInstances,
+      image: null
+    };
+  }
+
+  return {
+    ...state,
+    currentInstance: null,
+    previousInstances: [],
+    image: null
   };
 };
 
@@ -134,6 +189,8 @@ export function reducer(state = initialState, action = {}) {
     return clearInstanceError(state);
   case types.SHOW_IMAGE:
     return showImage(state, action);
+  case types.GO_BACK_TO_INSTANCE:
+    return goBackToInstance(state, action);
   default:
     return state;
   }

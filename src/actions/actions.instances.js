@@ -79,6 +79,25 @@ export const clearAllInstances = () => {
   };
 };
 
+export const goBackToInstance = (type, id) => {
+  return {
+    type: types.GO_BACK_TO_INSTANCE,
+    instanceType: type,
+    id: id
+  };
+};
+
+export const updateLocation = (type, id) => {
+  if(type && id) {
+    history.push(`/${window.location.search}#${type}/${id}`);
+  } else {
+    history.push(`/${window.location.search}`);
+  }
+  return {
+    type: types.UPDATE_LOCATION
+  };
+};
+
 export const goToSearch = (group, defaultGroup) => {
   return dispatch => {
     dispatch(clearInstanceError());
@@ -87,13 +106,16 @@ export const goToSearch = (group, defaultGroup) => {
   };
 };
 
-export const loadInstance = (type, id) => {
+export const loadInstance = (type, id, shouldUpdateLocation=false) => {
   return dispatch => {
     dispatch(loadInstanceRequest());
     API.axios
       .get(API.endpoints.instance(type, id))
       .then(response => {
         dispatch(loadInstanceSuccess(response.data));
+        if(shouldUpdateLocation) {
+          dispatch(updateLocation(type, id));
+        }
       })
       .catch(e => {
         const { response } = e;
