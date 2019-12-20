@@ -83,7 +83,6 @@ class PaginationComponent extends React.Component {
 
   render() {
     const { show, page, totalPages, onClick } = this.props;
-
     if (!show) {
       return null;
     }
@@ -125,7 +124,7 @@ class PaginationComponent extends React.Component {
     }
 
     for (let p = page - pageScope; p <= page + pageScope; p++) {
-      if (p > 0 && p < totalPages) {
+      if (p > 0 && p <= totalPages) {
         pages.push({
           name: "page",
           title: p,

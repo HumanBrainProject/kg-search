@@ -193,7 +193,8 @@ const getResetFacets = facets => {
 
 const resetFacets = state => ({
   ...state,
-  facets: getResetFacets(state.facets)
+  facets: getResetFacets(state.facets),
+  page: 1
 });
 
 const setFacetSize = (state, action) => {
@@ -240,7 +241,8 @@ const setType = (state, action) => {
   const selectedType = action.value;
   return {
     ...state,
-    selectedType: selectedType
+    selectedType: selectedType,
+    page: 1
   };
 };
 
