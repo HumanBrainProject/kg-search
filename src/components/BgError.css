@@ -18,7 +18,8 @@
     position: absolute !important;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-200px);
+    transform: translate(-50%,-250px);
+    width: 80%;
     text-align: center;
 }
 
@@ -65,3 +66,15 @@
     background-color: var(--button-primary-background-color-hover);
     border-color: var(--button-primary-border-color-hover);
 }
+
+
+
+@media (min-width: 576px) {
+
+    .kgs-bg-error {
+        transform: translate(-50%,-200px);
+        width: auto;
+    }
+    
+  }
+  

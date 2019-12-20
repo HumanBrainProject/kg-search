@@ -16,8 +16,8 @@
 
 import * as types from "./actions.types";
 import API from "../services/API";
-import { setGroup } from "./actions.groups";
-import { sessionFailure } from "./actions";
+import { setGroup, clearGroupError } from "./actions.groups";
+import { sessionFailure, logout } from "./actions";
 import { history } from "../store";
 
 export const loadInstanceRequest = () => {
@@ -100,6 +100,10 @@ export const updateLocation = (type, id) => {
 
 export const goToSearch = (group, defaultGroup) => {
   return dispatch => {
+    if (!group) {
+      dispatch(clearGroupError());
+      dispatch(logout());
+    }
     dispatch(clearInstanceError());
     dispatch(clearAllInstances());
     history.replace(`/${(group && group !== defaultGroup)?("?group=" + group):""}`);

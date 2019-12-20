@@ -78,7 +78,9 @@ const resetGroups = state => ({
 const clearGroupsError = state => {
   return {
     ...state,
-    error: null
+    isReady: false,
+    error: null,
+    group: DEFAULT_GROUP
   };
 };
 

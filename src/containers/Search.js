@@ -112,7 +112,7 @@ class SearchBase extends React.Component {
   }
 
   render() {
-    const { definitionIsReady, searchHasError } = this.props;
+    const { definitionIsReady, searchHasError, groupsHasError } = this.props;
 
     if (!definitionIsReady) {
       return null;
@@ -120,7 +120,7 @@ class SearchBase extends React.Component {
 
     return (
       <div className = "kgs-search-container" >
-        {!searchHasError && (
+        {!searchHasError && !groupsHasError && (
           <div className = "kgs-search" >
             <SearchPanel />
             <TermsShortNotice className = "kgs-search__terms-short-notice" />

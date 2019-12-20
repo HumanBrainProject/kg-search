@@ -172,9 +172,8 @@ const setFacet = (state, action) => {
   };
 };
 
-const resetFacets = state => ({
-  ...state,
-  facets: state.facets.map(f => {
+const getResetFacets = facets => {
+  return facets.map(f => {
     switch (f.filterType) {
     case "list":
       return {
@@ -189,7 +188,12 @@ const resetFacets = state => ({
         value: null
       };
     }
-  })
+  });
+};
+
+const resetFacets = state => ({
+  ...state,
+  facets: getResetFacets(state.facets)
 });
 
 const setFacetSize = (state, action) => {
@@ -249,7 +253,8 @@ const resetTypeForGroup = (state, action) => {
 
   return {
     ...state,
-    selectedType: selectedType
+    selectedType: selectedType,
+    facets: getResetFacets(state.facets)
   };
 };
 

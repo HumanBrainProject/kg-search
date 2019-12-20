@@ -35,17 +35,16 @@ class App extends React.Component {
   }
 
   render() {
-    if (!this.props.isReady) {
-      return null;
-    }
     return (
       <div className="kgs-app">
-        <Switch>
-          <Route path="/instances/:type/:id" exact component={Instance} />
-          <Route path="/previews/:org/:domain/:schema/:version/:id" exact component={Preview} />
-          <Route path="/" exact component={Search} />
-          <Route component={NotFound} />
-        </Switch>
+        {this.props.isReady && (
+          <Switch>
+            <Route path="/instances/:type/:id" exact component={Instance} />
+            <Route path="/previews/:org/:domain/:schema/:version/:id" exact component={Preview} />
+            <Route path="/" exact component={Search} />
+            <Route component={NotFound} />
+          </Switch>
+        )}
         <FetchingPanel />
         <SessionExpiredErrorPanel />
         <InfoPanel />
@@ -58,7 +57,7 @@ export default connect(
   state => ({
     location: state.router.location,
     defaultGroup: state.groups.defaultGroup,
-    isReady: state.application.isReady
+    isReady: state.application.isReady && !state.auth.error
   }),
   dispatch => ({
     initialize: (location, defaultGroup) => dispatch(actions.initialize(location, defaultGroup))

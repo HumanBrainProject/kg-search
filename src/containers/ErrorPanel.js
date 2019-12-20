@@ -40,6 +40,8 @@ export const GroupErrorPanel = connect(
   state => ({
     show: !!state.groups.error,
     message: state.groups.error,
+    cancelLabel: "Back to search",
+    cancelAction: actionsInstances.goToSearch(),
     retryLabel: "Retry",
     retryAction: actionsGroups.clearGroupError(),
     retryStyle: "primary"
@@ -97,7 +99,7 @@ export const SessionExpiredErrorPanel = connect(
     show: !!state.auth.error,
     message: state.auth.error,
     retryLabel: "Login",
-    retryAction: () => actions.authenticate(),
+    retryAction: actions.authenticate(),
     retryStyle: "primary"
   }),
   dispatch => ({
