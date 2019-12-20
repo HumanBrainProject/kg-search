@@ -17,8 +17,6 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { history } from "../../store";
-import { getUpdatedUrl } from "../../helpers/BrowserHelpers";
 import * as actionsSearch from "../../actions/actions.search";
 import { TypeIcon } from "./TypeIcon";
 
@@ -56,49 +54,27 @@ class TypeFilter extends React.Component {
     }
 }
 
-class TypesFilterPanelBase extends React.Component {
-  componentDidMount() {
-    const { selectedType, location } = this.props;
-    const url = getUpdatedUrl("facet_type[0]", true, selectedType, false, location);
-    history.push(url);
-  }
-
-  componentDidUpdate(prevProps) {
-    const { selectedType, location } = this.props;
-    if (selectedType !== prevProps.selectedType) {
-      const url = getUpdatedUrl("facet_type[0]", true, selectedType, false, location);
-      history.push(url);
+const TypesFilterPanelBase = ({ types, onClick }) => (
+  <div className = "kgs-fieldsFilter" >
+    {
+      types.map(type =>
+        <TypeFilter type = { type }
+          key = { type.type }
+          onClick = { onClick }
+        />
+      )
     }
-  }
-
-  render() {
-    const { types, onClick } = this.props;
-    return (
-      <div className = "kgs-fieldsFilter" >
-        {
-          types.map(type =>
-            <TypeFilter type = { type }
-              key = { type.type }
-              onClick = { onClick }
-            />
-          )
-        }
-      </div>
-    );
-  }
-}
+  </div>
+);
 
 export const TypesFilterPanel = connect(
   state => ({
-    selectedType: state.search.selectedType,
     types: state.search.types
       .filter(t => t.count > 0 || t.type === state.search.selectedType)
       .map(t => ({
         ...t,
         active: t.type === state.search.selectedType
-      })),
-    group: state.groups.group,
-    location: state.router.location
+      }))
   }),
   dispatch => ({
     onClick: value => dispatch(actionsSearch.setType(value))

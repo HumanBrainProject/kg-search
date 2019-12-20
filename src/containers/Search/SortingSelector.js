@@ -18,38 +18,20 @@ import React from "react";
 import { connect } from "react-redux";
 import * as actionsSearch from "../../actions/actions.search";
 import { Select } from "../../components/Select";
-import { getUpdatedUrl } from "../../helpers/BrowserHelpers";
-import { history } from "../../store";
 
-class SortingSelectorComponent extends React.Component {
-
-  componentDidUpdate(prevProps) {
-    const { param, location } = this.props;
-    if (param !== prevProps.param) {
-      const url = getUpdatedUrl("sort", true, param, false, location);
-      history.push(url);
-    }
-  }
-
-  render() {
-    const {className, label, value, list, onChange} = this.props;
-    return (
-      <Select className={className} label={label} value={value} list={list} onChange={onChange} />
-    );
-  }
-}
+const SortingSelectorComponent = ({className, label, value, list, onChange}) => (
+  <Select className={className} label={label} value={value} list={list} onChange={onChange} />
+);
 
 export const SortingSelector = connect(
   (state, props) => ({
     className: props.className,
     label: "Sort by",
     value: state.search.sort?state.search.sort.label:null,
-    param: state.search.sort?state.search.sort.param:null,
     list: state.search.sortFields.map(f => ({
       label: f.label,
       value: f.key
-    })),
-    location: state.router.location
+    }))
   }),
   dispatch => ({
     onChange: value => dispatch(actionsSearch.setSort(value))

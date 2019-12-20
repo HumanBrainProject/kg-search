@@ -19,9 +19,8 @@ import { connect } from "react-redux";
 import * as actions from "../../actions/actions";
 import * as actionsSearch from "../../actions/actions.search";
 import { help } from "../../data/help.js";
-import { history } from "../../store";
 import { withFloatingScrollEventsSubscription } from "../../helpers/withFloatingScrollEventsSubscription";
-import { isMobile, getUpdatedUrl } from "../../helpers/BrowserHelpers";
+import { isMobile } from "../../helpers/BrowserHelpers";
 import "./SearchPanel.css";
 
 class SeachPanelBaseComponent extends React.Component {
@@ -89,23 +88,9 @@ class SeachPanelBaseComponent extends React.Component {
   }
 }
 
-class SeachPanelComponent extends React.Component {
-
-  componentDidUpdate(prevProps) {
-    const { queryString, location } = this.props;
-    if (queryString !== prevProps.queryString) {
-      const url = getUpdatedUrl("q", true, queryString, false, location);
-      history.push(url);
-    }
-  }
-
-  render() {
-    const {isFloating, relatedElements, onHelp, onQueryStringChange, location} = this.props;
-    return (
-      <SeachPanelBaseComponent isFloating={isFloating} relatedElements={relatedElements} onHelp={onHelp} onQueryStringChange={onQueryStringChange} location={location} />
-    );
-  }
-}
+const SeachPanelComponent = ({isFloating, relatedElements, onHelp, onQueryStringChange, location}) => (
+  <SeachPanelBaseComponent isFloating={isFloating} relatedElements={relatedElements} onHelp={onHelp} onQueryStringChange={onQueryStringChange} location={location} />
+);
 
 const SearchPanelContainer = connect(
   (state, props) => {

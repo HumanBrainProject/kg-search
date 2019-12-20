@@ -20,88 +20,45 @@ import * as actionsSearch from "../../actions/actions.search";
 import { Facet } from "./Facet";
 
 import "./FiltersPanel.css";
-import { getUpdatedUrlForList } from "../../helpers/BrowserHelpers";
-import { history } from "../../store";
 
-class FiltersPanelBase extends React.Component {
+const FiltersPanelBase = ({ className, show, facets, onChange, onViewChange, onReset }) => {
 
-  componentDidUpdate(previousProps) {
-    const { facets, values, location } = this.props;
-    if (values !== previousProps.values) {
-      const list = this.calculateFacetList(facets);
-      const url = getUpdatedUrlForList(list, location);
-      history.push(url);
-    }
+  if (!show) {
+    return null;
   }
 
-  calculateFacetList = facets => {
-    return facets.reduce((acc, facet) => {
-      switch (facet.filterType) {
-      case "list":
-        facet.keywords.forEach(keyword => {
-          acc.push({
-            name: facet.id,
-            value: keyword.value,
-            checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false,
-            many: true
-          });
-        });
-        break;
-      case "exists":
-        acc.push({
-          name: facet.id,
-          value: !!facet.value,
-          checked: !!facet.value,
-          many: false
-        });
-        break;
-      default:
-        break;
-      }
-      return acc;
-    }, []);
-  }
+  const hasFilters = facets.length > 0;
 
-  render(){
-    const  { className, show, facets, location, onChange, onViewChange, onReset } = this.props;
-    if (!show) {
-      return null;
-    }
-
-    const hasFilters = facets.length > 0;
-
-    return (
-      <div className = { `kgs-filters ${className ? className : ""}` } >
+  return (
+    <div className = { `kgs-filters ${className ? className : ""}` } >
+      <span>
+        <div className = "kgs-filters__header" >
+          <div className = "kgs-filters__title" > Filters </div>
+          <div className = "kgs-filters__reset" >
+            <button type = "button"
+              className = "kgs-filters__reset-button"
+              onClick = { onReset } > Reset </button>
+          </div >
+        </div>
         <span>
-          <div className = "kgs-filters__header" >
-            <div className = "kgs-filters__title" > Filters </div>
-            <div className = "kgs-filters__reset" >
-              <button type = "button"
-                className = "kgs-filters__reset-button"
-                onClick = { onReset } > Reset </button>
-            </div >
-          </div>
-          <span>
-            {
-              facets.map(facet => (
-                <Facet
-                  key = { facet.id }
-                  facet = { facet }
-                  onChange = { onChange }
-                  onViewChange = { onViewChange }
-                  location = { location }
-                />
-              ))
-            }
-          </span>
-          {!hasFilters && ( <span className = "kgs-filters__no-filters" > No filters available
-          for your current search. </span>
-          )}
+          {
+            facets.map(facet => (
+              <Facet
+                key = { facet.id }
+                facet = { facet }
+                onChange = { onChange }
+                onViewChange = { onViewChange }
+              />
+            ))
+          }
         </span>
-      </div>
-    );
-  }
-}
+        {!hasFilters && ( <span className = "kgs-filters__no-filters" > No filters available
+        for your current search. </span>
+        )}
+      </span>
+    </div>
+  );
+};
 
 export const FiltersPanel = connect(
   state => {
@@ -112,12 +69,7 @@ export const FiltersPanel = connect(
     );
     return {
       show: state.definition.isReady && state.search.facets.length > 0,
-      facets: facets,
-      values: state.search.facets.reduce((acc, facet) => {
-        acc += Array.isArray(facet.value) ? facet.value.toString() : facet.value;
-        return acc;
-      }, ""),
-      location: state.router.location
+      facets: facets
     };
   },
   dispatch => ({

@@ -30,9 +30,37 @@ import { Footer } from "./Search/Footer";
 import { TermsShortNotice } from "./TermsShortNotice";
 import { DetailView } from "./Search/DetailView";
 import { DefinitionErrorPanel, GroupErrorPanel, SearchInstanceErrorPanel, SearchErrorPanel } from "./ErrorPanel";
+import { getUpdatedQuery, getLocationFromQuery } from "../helpers/BrowserHelpers";
 
 import "./Search.css";
 import { history } from "../store";
+
+const SearchComponent = ({show}) => (
+  <div className = "kgs-search-container" >
+    {show && (
+      <React.Fragment>
+        <div className = "kgs-search" >
+          <SearchPanel />
+          <TermsShortNotice className = "kgs-search__terms-short-notice" />
+          <TypesFilterPanel />
+          <div className = "kgs-search__panel" >
+            <FiltersPanel />
+            <div className = "kgs-search__main" >
+              <ResultsHeader />
+              <HitsPanel />
+            </div>
+          </div>
+          <Footer />
+        </div>
+        <DetailView />
+      </React.Fragment>
+    )}
+    <DefinitionErrorPanel />
+    <GroupErrorPanel />
+    <SearchErrorPanel />
+    <SearchInstanceErrorPanel />
+  </div>
+);
 
 class SearchBase extends React.Component {
 
@@ -51,16 +79,90 @@ class SearchBase extends React.Component {
       const [,type, id] = reg.test(location.hash) ? location.hash.match(reg) : [null, null, null];
       this.props.goBackToInstance(type, id);
     });
+    //this.updateLocation({});
     this.search();
   }
 
   componentDidUpdate(previousProps) {
-    const { definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, location, isActive } = this.props;
+    const { definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, group, location } = this.props;
+    this.updateLocation(previousProps);
     if (definitionIsReady !== previousProps.definitionIsReady || definitionHasError !== previousProps.definitionHasError ||
-      groupsHasError !== previousProps.groupsHasError || isGroupsReady !== previousProps.isGroupsReady ||
+      groupsHasError !== previousProps.groupsHasError || isGroupsReady !== previousProps.isGroupsReady || group !== previousProps.group ||
       location.search !== previousProps.location.search) {
       this.search();
     }
+    this.updateScrolling();
+  }
+
+  componentWillUnmount() {
+    this.unlisten();
+  }
+
+  calculateFacetList = facets => {
+    return facets.reduce((acc, facet) => {
+      switch (facet.filterType) {
+      case "list":
+        facet.keywords.forEach(keyword => {
+          acc.push({
+            name: facet.id,
+            value: keyword.value,
+            checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false,
+            many: true
+          });
+        });
+        break;
+      case "exists":
+        acc.push({
+          name: facet.id,
+          value: !!facet.value,
+          checked: !!facet.value,
+          many: false
+        });
+        break;
+      default:
+        break;
+      }
+      return acc;
+    }, []);
+  }
+
+  updateLocation = (previousProps) => {
+    const { queryString, selectedType, facets, facetValues, sort, page, group, defaultGroup, location } = this.props;
+    const shouldUpdateQueryString = queryString !== previousProps.queryString;
+    const shouldUpdateType = selectedType !== previousProps.selectedType;
+    const shouldUpdateFacets = facetValues !== previousProps.facetValues;
+    const shouldUpdateSort = sort !== previousProps.sort;
+    const shouldUpdatePage = page !== previousProps.page;
+    const shouldUpdateGroup = group !== previousProps.group;
+
+    if (shouldUpdateQueryString || shouldUpdateType || shouldUpdateFacets || shouldUpdateSort || shouldUpdatePage || shouldUpdateGroup) {
+      let query = location.query;
+      if (shouldUpdateQueryString) {
+        query = getUpdatedQuery(query, "q", queryString !== "", queryString, false);
+      }
+      if (shouldUpdateType) {
+        query = getUpdatedQuery(query, "facet_type[0]", !!selectedType, selectedType, false);
+      }
+      if (shouldUpdateFacets) {
+        const list = this.calculateFacetList(facets);
+        query = list.reduce((acc, item) => getUpdatedQuery(acc, item.name, item.checked, item.value, item.many), query);
+      }
+      if (shouldUpdateSort) {
+        query = getUpdatedQuery(query, "sort", sort && sort !== "newestFirst", sort, false);
+      }
+      if (shouldUpdatePage) {
+        query = getUpdatedQuery(query, "p", page !== 1, page, false);
+      }
+      if (shouldUpdateGroup) {
+        query = getUpdatedQuery(query, "group", group && group !== defaultGroup, group, false);
+      }
+      const url = getLocationFromQuery(query, location);
+      history.push(url);
+    }
+  }
+
+  updateScrolling = () => {
+    const { isActive } = this.props;
     if (isActive) {
       document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
@@ -70,11 +172,7 @@ class SearchBase extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-    this.unlisten();
-  }
-
-  getUrlParmeters() {
+  getUrlParmeters = () => {
     const { location } = this.props;
     const regParamWithBrackets = /^([^[]+)\[(\d+)\]$/; // name[number]
     return Object.entries(location.query).reduce((acc, [key, value]) => {
@@ -112,35 +210,9 @@ class SearchBase extends React.Component {
   }
 
   render() {
-    const { definitionIsReady, searchHasError, groupsHasError } = this.props;
-
-    if (!definitionIsReady) {
-      return null;
-    }
-
+    const { definitionIsReady, definitionHasError, searchHasError, groupsHasError } = this.props;
     return (
-      <div className = "kgs-search-container" >
-        {!searchHasError && !groupsHasError && (
-          <div className = "kgs-search" >
-            <SearchPanel />
-            <TermsShortNotice className = "kgs-search__terms-short-notice" />
-            <TypesFilterPanel />
-            <div className = "kgs-search__panel" >
-              <FiltersPanel />
-              <div className = "kgs-search__main" >
-                <ResultsHeader />
-                <HitsPanel />
-              </div>
-            </div>
-            <Footer />
-          </div>
-        )}
-        <DetailView />
-        <DefinitionErrorPanel />
-        <GroupErrorPanel />
-        <SearchErrorPanel />
-        <SearchInstanceErrorPanel />
-      </div>
+      <SearchComponent show={definitionIsReady && !definitionHasError && !groupsHasError && !searchHasError} />
     );
   }
 }
@@ -157,12 +229,27 @@ export const Search = connect(
     definitionIsReady: state.definition.isReady,
     definitionIsLoading: state.definition.isLoading,
     definitionHasError: !!state.definition.error,
+    group: state.groups.group,
+    defaultGroup: state.groups.defaultGroup,
     groupsHasError: !!state.groups.error,
     isGroupsReady: state.groups.isReady,
     isGroupLoading: state.groups.isLoading,
     shouldLoadGroups: !!state.auth.accessToken,
     searchHasError: !!state.search.error,
-    location: state.router.location
+    location: state.router.location,
+    queryString: state.search.queryString,
+    selectedType: state.search.selectedType,
+    facets: state.search.facets.filter(f =>
+      state.search.selectedType === f.type &&
+      f.count > 0 &&
+      (f.filterType !== "list" || f.keywords.length)
+    ),
+    facetValues: state.search.facets.reduce((acc, facet) => {
+      acc += Array.isArray(facet.value) ? facet.value.toString() : facet.value;
+      return acc;
+    }, ""),
+    sort: state.search.sort?state.search.sort.param:null,
+    page: state.search.page
   }),
   dispatch => ({
     setInitialSearchParams: params => dispatch(actionsSearch.setInitialSearchParams(params)),

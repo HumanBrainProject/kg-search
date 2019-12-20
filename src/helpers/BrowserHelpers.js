@@ -96,7 +96,7 @@ export const getHashKey = (key, hash) => {
   return value;
 };
 
-const getUpdatedQuery = (query, name, checked, value, many) => {
+export const getUpdatedQuery = (query, name, checked, value, many) => {
   const result = {};
   const val = encodeURIComponent(value);
   let found = false;
@@ -130,22 +130,12 @@ const getUpdatedQuery = (query, name, checked, value, many) => {
   return result;
 };
 
-const getLocationFromQuery = (query, location) => {
+export const getLocationFromQuery = (query, location) => {
   const queryString = Object.entries(query).reduce((acc, [key, value]) => {
     acc += `${(acc.length > 1)?"&":""}${key}=${value}`;
     return acc;
   }, "?");
   return `${location.pathname}${queryString}`;
-};
-
-export const getUpdatedUrl = (name, checked, value, many, location) => {
-  const query = getUpdatedQuery(location.query, name, checked, value, many);
-  return getLocationFromQuery(query, location);
-};
-
-export const getUpdatedUrlForList = (list, location) => {
-  const query = list.reduce((acc, item) => getUpdatedQuery(acc, item.name, item.checked, item.value, item.many), location.query);
-  return getLocationFromQuery(query, location);
 };
 
 export const windowHeight = () => {

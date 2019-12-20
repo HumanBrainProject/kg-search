@@ -17,8 +17,6 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { getUpdatedUrl } from "../../helpers/BrowserHelpers";
-import { history } from "../../store";
 import { windowWidth } from "../../helpers/BrowserHelpers";
 import * as actionsSearch from "../../actions/actions.search";
 import "./Pagination.css";
@@ -53,14 +51,6 @@ class PaginationComponent extends React.Component {
 
   componentDidMount() {
     window.addEventListener("resize", this.handleResizeEvent, false);
-  }
-
-  componentDidUpdate(prevProps) {
-    const { page, location } = this.props;
-    if (page !== prevProps.page) {
-      const url = getUpdatedUrl("p", true, page, false, location);
-      history.push(url);
-    }
   }
 
   componentWillUnmount() {
@@ -167,8 +157,7 @@ export const Pagination = connect(
   state => ({
     show: state.search.totalPages > 0,
     totalPages: state.search.totalPages,
-    page: state.search.page,
-    location: state.router.location
+    page: state.search.page
   }),
   dispatch => ({
     onClick: value => dispatch(actionsSearch.setPage(value))

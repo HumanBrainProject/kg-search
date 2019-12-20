@@ -42,7 +42,7 @@ class FacetListItem extends React.PureComponent {
   onClick = active => this.props.onChange(this.props.item.value, active);
 
   render() {
-    const { item, location } = this.props;
+    const { item } = this.props;
     return (
       <FacetCheckbox
         name = { item.name }
@@ -51,21 +51,19 @@ class FacetListItem extends React.PureComponent {
         count = { item.count }
         value = { item.value }
         many = { true }
-        location = { location }
         onClick = { this.onClick }
       />
     );
   }
 }
 
-const FacetList = ({ list, location, onChange, onViewChange, viewText }) => (
+const FacetList = ({ list, onChange, onViewChange, viewText }) => (
   <div className="kgs-facet-list">
     {list.map(item => (
       <FacetListItem
         key = { item.value }
         item = { item }
         onChange = { onChange }
-        location = { location }
       />
     ))}
     {onViewChange && (
@@ -76,7 +74,7 @@ const FacetList = ({ list, location, onChange, onViewChange, viewText }) => (
 
 const viewMoreIncrement = 50;
 
-export const Facet = ({ facet, location, onChange, onViewChange }) => {
+export const Facet = ({ facet, onChange, onViewChange }) => {
   let Component = null;
   let parameters = null;
   switch (facet.filterType) {
@@ -103,7 +101,6 @@ export const Facet = ({ facet, location, onChange, onViewChange }) => {
         count: keyword.count,
         checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false
       })),
-      location: location,
       onChange: (keyword, active) => onChange(facet.id, active, keyword),
       onViewChange: onView,
       viewText: viewText
@@ -119,7 +116,6 @@ export const Facet = ({ facet, location, onChange, onViewChange }) => {
       value: !!facet.value,
       checked: !!facet.value,
       many: false,
-      location: location,
       onClick: active => onChange(facet.id, active)
     };
     break;
