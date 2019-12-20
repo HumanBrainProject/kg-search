@@ -105,7 +105,7 @@ export const HitsPanel = connect(
   dispatch => ({
     onClick: (data, target) => {
       dispatch(actionsInstances.setInstance(data, target));
-      dispatch(actionsInstances.updateLocation(data._type, data._id));
+      dispatch(actionsInstances.updateLocation());
     }
   })
 )(HitsPanelBase);

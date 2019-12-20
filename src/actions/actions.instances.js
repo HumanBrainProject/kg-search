@@ -18,7 +18,7 @@ import * as types from "./actions.types";
 import API from "../services/API";
 import { setGroup, clearGroupError } from "./actions.groups";
 import { sessionFailure, logout } from "./actions";
-import { history } from "../store";
+import { history, store } from "../store";
 
 export const loadInstanceRequest = () => {
   return {
@@ -87,7 +87,10 @@ export const goBackToInstance = (type, id) => {
   };
 };
 
-export const updateLocation = (type, id) => {
+export const updateLocation = () => {
+  const state = store.getState();
+  const type = state.instances.currentInstance && state.instances.currentInstance._type;
+  const id = state.instances.currentInstance && state.instances.currentInstance._id;
   if(type && id) {
     history.push(`/${window.location.search}#${type}/${id}`);
   } else {
@@ -118,7 +121,7 @@ export const loadInstance = (type, id, shouldUpdateLocation=false) => {
       .then(response => {
         dispatch(loadInstanceSuccess(response.data));
         if(shouldUpdateLocation) {
-          dispatch(updateLocation(type, id));
+          dispatch(updateLocation());
         }
       })
       .catch(e => {

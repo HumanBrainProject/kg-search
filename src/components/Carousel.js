@@ -20,7 +20,7 @@ import { isMobile } from "../helpers/BrowserHelpers";
 import "./Carousel.css";
 
 
-const CarouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, navigationComponent}) => {
+const CarouselItem = ({item, showPrevious, onClose, onPrevious, itemComponent, navigationComponent}) => {
   const ItemComponent =  itemComponent;
   const NavigationComponent = navigationComponent;
   return (
@@ -87,6 +87,7 @@ export class Carousel extends React.Component {
       }
     }
   }
+
   render(){
     const {className, show, data, onPrevious, onClose, itemComponent, navigationComponent } = this.props;
     if (!show || !Array.isArray(data) || !data.length || !itemComponent) {
