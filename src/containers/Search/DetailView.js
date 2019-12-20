@@ -33,7 +33,10 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  onPrevious: () => dispatch(actionsInstances.setPreviousInstance()),
+  onPrevious: () => {
+    dispatch(actionsInstances.setPreviousInstance());
+    dispatch(actionsInstances.updateLocation());
+  },
   onClose: () => {
     dispatch(actionsInstances.clearAllInstances());
     dispatch(actionsInstances.updateLocation());

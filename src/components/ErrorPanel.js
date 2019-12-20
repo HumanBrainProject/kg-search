@@ -57,7 +57,10 @@ ErrorPanel.propTypes = {
   cancelLabel: PropTypes.string,
   cancelAction: PropTypes.string,
   retryLabel: PropTypes.string,
-  retryAction: PropTypes.string,
+  retryAction: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.object
+  ]),
   onAction: PropTypes.func
 };
 
