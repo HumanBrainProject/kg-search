@@ -419,6 +419,14 @@ main a:hover, main a:hover:visited {
     flex-flow: column-reverse;
     line-height: 50px;
   }
+    header a{
+        display:none;
+    }
+
+    header a.mobile-link{
+        display:inline-block;
+    }
+
 
 main{
     margin-bottom: 450px;
@@ -435,3 +443,12 @@ main{
   height: 40px;
 }
 
+header a:hover{
+    text-decoration: underline;
+}
+
+header a{
+    margin-left: 2em;
+    font-size: 18px;
+    text-decoration: none;
+}
