@@ -380,7 +380,7 @@ export class ElasticSearchHelpers {
       });
     }
 
-    queryValuesBoost.map(field => {
+    queryValuesBoost.forEach(field => {
       let key = Object.keys(field)[0];
       Object.values(field).forEach(fieldObj => {
         const lastRes = [];
