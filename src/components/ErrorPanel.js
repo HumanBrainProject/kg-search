@@ -55,7 +55,10 @@ export class ErrorPanel extends React.PureComponent {
 ErrorPanel.propTypes = {
   show: PropTypes.bool,
   cancelLabel: PropTypes.string,
-  cancelAction: PropTypes.string,
+  cancelAction: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.object
+  ]),
   retryLabel: PropTypes.string,
   retryAction: PropTypes.oneOfType([
     PropTypes.func,

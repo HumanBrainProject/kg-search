@@ -14,7 +14,10 @@
 *   limitations under the License.
 */
 
-import * as actions from "../actions";
+import * as actionsDefinition from "../actions/actions.definition";
+import * as actionsGroups from "../actions/actions.groups";
+import * as actionsSearch from "../actions/actions.search";
+import * as actionsInstances from "../actions/actions.instances";
 import { reducer as fetchingReducer} from "./fetching.reducer";
 describe('confirguration reducer', () => {
     describe('unknown action', () => {
@@ -28,7 +31,7 @@ describe('confirguration reducer', () => {
     describe('load definition request', () => {
         it('should set is active to true', () => {
             const state = {active: false};
-            const action = actions.loadDefinitionRequest();
+            const action = actionsDefinition.loadDefinitionRequest();
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(true);
         });
@@ -36,7 +39,7 @@ describe('confirguration reducer', () => {
     describe('load definition success', () => {
         it('should set is active to false', () => {
             const state = {active: true};
-            const action = actions.loadDefinitionSuccess(null);
+            const action = actionsDefinition.loadDefinitionSuccess(null);
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(false);
         });
@@ -44,7 +47,7 @@ describe('confirguration reducer', () => {
     describe('load definition failure', () => {
         it('should set is active to false', () => {
             const state = {active: true};
-            const action = actions.loadDefinitionFailure("error");
+            const action = actionsDefinition.loadDefinitionFailure("error");
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(false);
         });
@@ -53,7 +56,7 @@ describe('confirguration reducer', () => {
     describe('load groups request', () => {
         it('should set is active to true', () => {
             const state = {active: false};
-            const action = actions.loadGroupsRequest();
+            const action = actionsGroups.loadGroupsRequest();
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(true);
         });
@@ -61,7 +64,7 @@ describe('confirguration reducer', () => {
     describe('load groups success', () => {
         it('should set is active to false', () => {
             const state = {active: true};
-            const action = actions.loadGroupsSuccess(null);
+            const action = actionsGroups.loadGroupsSuccess(null);
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(false);
         });
@@ -69,7 +72,7 @@ describe('confirguration reducer', () => {
     describe('load groups failure', () => {
         it('should set is active to false', () => {
             const state = {active: true};
-            const action = actions.loadGroupsFailure("error");
+            const action = actionsGroups.loadGroupsFailure("error");
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(false);
         });
@@ -77,7 +80,7 @@ describe('confirguration reducer', () => {
     describe('load search request', () => {
         it('should set is active to true', () => {
             const state = {active: false};
-            const action = actions.loadSearchRequest();
+            const action = actionsSearch.loadSearchRequest();
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(true);
         });
@@ -86,7 +89,7 @@ describe('confirguration reducer', () => {
         it('should set is active to false', () => {
             const state = {active: true};
             const result = "foo";
-            const action = actions.loadSearchResult(result);
+            const action = actionsSearch.loadSearchResult(result);
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(false);
         });
@@ -94,7 +97,7 @@ describe('confirguration reducer', () => {
     describe('load instance request', () => {
         it('should set is active to true', () => {
             const state = {active: false, requestReference: 678, currentInstance: 567, previousInstances:[234, 345, 456]};
-            const action = actions.loadInstanceRequest();
+            const action = actionsInstances.loadInstanceRequest();
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(true);
         });
@@ -102,7 +105,7 @@ describe('confirguration reducer', () => {
     describe('load instance success', () => {
         it('should set is active to false', () => {
             const state = {active: true, currentInstance: 567, previousInstances:[234, 345, 456]};
-            const action = actions.loadInstanceSuccess(123);
+            const action = actionsInstances.loadInstanceSuccess(123);
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(false);
         });
@@ -110,7 +113,7 @@ describe('confirguration reducer', () => {
     describe('load instance no data', () => {
         it('should set is active to false', () => {
             const state = {active: true};
-            const action = actions.loadInstanceNoData(123);
+            const action = actionsInstances.loadInstanceNoData(123);
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(false);
         });
@@ -118,7 +121,7 @@ describe('confirguration reducer', () => {
     describe('load instance failure', () => {
         it('should set is active to false', () => {
             const state = {active: true};
-            const action = actions.loadInstanceFailure("error");
+            const action = actionsInstances.loadInstanceFailure("error");
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(false);
         });
@@ -126,7 +129,7 @@ describe('confirguration reducer', () => {
     describe('cancel instance loading', () => {
         it('should set is active to false', () => {
             const state = {active: true};
-            const action = actions.cancelInstanceLoading();
+            const action = actionsInstances.cancelInstanceLoading();
             const newState = fetchingReducer(state, action);
             expect(newState.active).toBe(false);
         });

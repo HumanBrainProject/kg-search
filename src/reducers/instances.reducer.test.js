@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import * as actions from "../actions";
+import * as actions from "../actions/actions.instances";
 import { reducer as instancesReducer} from "./instances.reducer";
 describe('instances reducer', () => {
     describe('unknown action', () => {
@@ -25,20 +25,12 @@ describe('instances reducer', () => {
             expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
         });
     });
-    describe('load instance', () => {
-        it('should set request reference', () => {
-            const state = {requestReference: null, currentInstance: 567, previousInstances:[234, 345, 456]};
-            const action = actions.loadInstance(678);
-            const newState = instancesReducer(state, action);
-            expect(newState.requestReference).toBe(678);
-        });
-    });
     describe('load instance request', () => {
         it('should set loading reference', () => {
-            const state = {loadingReference: null, requestReference: 678, currentInstance: 567, previousInstances:[234, 345, 456]};
+            const state = {isLoading: false, currentInstance: 567, previousInstances:[234, 345, 456]};
             const action = actions.loadInstanceRequest();
             const newState = instancesReducer(state, action);
-            expect(newState.loadingReference).toBe(678);
+            expect(newState.isLoading).toBe(true);
         });
     });
     describe('load instance success', () => {
@@ -47,12 +39,6 @@ describe('instances reducer', () => {
             const action = actions.loadInstanceSuccess(123);
             const newState = instancesReducer(state, action);
             expect(newState.currentInstance).toBe(123);
-        });
-        it('should reset loading reference', () => {
-            const state = {requestReference: 678, currentInstance: 567, previousInstances:[234, 345, 456]};
-            const action = actions.loadInstanceSuccess(678);
-            const newState = instancesReducer(state, action);
-            expect(newState.loadingReference).toBe(null);
         });
         it('should increase previous instances array length', () => {
             const state = {currentInstance: 567, previousInstances:[234, 345, 456]};
@@ -67,26 +53,12 @@ describe('instances reducer', () => {
             expect(newState.previousInstances[3]).toBe(567);
         });
     });
-    describe('cancel instance loading', () => {
-        it('should set next instance reference to null', () => {
-            const state = {requestReference: 678, currentInstance: 567, previousInstances:[234, 345, 456]};
-            const action = actions.cancelInstanceLoading();
-            const newState = instancesReducer(state, action);
-            expect(newState.requestReference).toBe(null);
-        });
-    });
     describe('set instance', () => {
         it('should set current instance', () => {
             const state = undefined;;
             const action = actions.setInstance(123);
             const newState = instancesReducer(state, action);
             expect(newState.currentInstance).toBe(123);
-        });
-        it('should reset next instance reference', () => {
-            const state = {requestReference: 678, currentInstance: 567, previousInstances:[234, 345, 456]};
-            const action = actions.setInstance(678);
-            const newState = instancesReducer(state, action);
-            expect(newState.requestReference).toBe(null);
         });
         it('should increase previous instance array length', () => {
             const state = {currentInstance: 567, previousInstances:[234, 345, 456]};
@@ -127,12 +99,6 @@ describe('instances reducer', () => {
             const action = actions.clearAllInstances();
             const newState = instancesReducer(state, action);
             expect(newState.previousInstances.length).toBe(0);
-        });
-        it('should set next instance reference to null', () => {
-            const state = {requestReference: 678, currentInstance: 567, previousInstances:[234, 345, 456]};
-            const action = actions.clearAllInstances();
-            const newState = instancesReducer(state, action);
-            expect(newState.requestReference).toBe(null);
         });
     });
 });

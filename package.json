@@ -4,6 +4,9 @@
   "private": true,
   "homepage": "https://kg.ebrains.eu/search/",
   "devDependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.12.1",
     "eslint": "^6.7.2",
@@ -11,9 +14,6 @@
     "react-test-renderer": "^16.8.6"
   },
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.0",
     "bootstrap": "^3.3.7",
     "connected-react-router": "^6.6.1",
@@ -44,8 +44,8 @@
     "build": "env-cmd -f .env.production react-scripts build",
     "build:int": "env-cmd -f .env.integration react-scripts build",
     "build:dev": "env-cmd -f .env.development react-scripts build",
-    "test": "eslint src/",
-    "testCI": "eslint src/",
+    "test": "react-scripts test --env=jsdom",
+    "testCI": "CI=true react-scripts test --env=jsdom",
     "lint": "eslint src/",
     "eject": "react-scripts eject"
   },

@@ -18,12 +18,12 @@ exports[`ErrorPanel component renders initially 1`] = `
       <button
         onClick={[Function]}
       >
-        retry label
+        cancel label
       </button>
       <button
         onClick={[Function]}
       >
-        cancel label
+        retry label
       </button>
     </div>
   </div>

@@ -14,7 +14,8 @@
 *   limitations under the License.
 */
 
-import * as actions from "../actions";
+import * as actionsDefinition from "../actions/actions.definition";
+import * as actionsSearch from "../actions/actions.search";
 import { reducer as searchReducer} from "./search.reducer";
 describe('search reducer', () => {
     describe('unknown action', () => {
@@ -25,13 +26,27 @@ describe('search reducer', () => {
             expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
         });
     });
+    describe('setup search', () => {
+        it('should set current definition', () => {
+            const state = undefined;
+            const definition = {};
+            const action = actionsDefinition.loadDefinitionSuccess(definition);
+            const newState = searchReducer(state, action);
+            expect(newState.queryFields.length).toBe(0);
+        });
+    });
     describe('load search result', () => {
         it('should set results', () => {
             const state = undefined;
-            const results = "foo";
-            const action = actions.loadSearchResult(results);
+            const hits = [2123, 1212, 23423];
+            const results = {
+                hits: {
+                    hits: hits
+                }
+            };
+            const action = actionsSearch.loadSearchResult(results);
             const newState = searchReducer(state, action);
-            expect(newState.results).toBe(results);
+            expect(newState.hits).toBe(hits);
         });
     });
 });
