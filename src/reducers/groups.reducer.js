@@ -72,7 +72,8 @@ const loadGroupsFailure = (state, action) => ({
 
 const resetGroups = state => ({
   ...state,
-  groups: []
+  groups: [],
+  group: DEFAULT_GROUP
 });
 
 const clearGroupsError = state => {
