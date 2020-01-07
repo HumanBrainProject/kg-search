@@ -14,7 +14,6 @@
 *   limitations under the License.
 */
 
-import * as actions from "../actions";
 import { reducer as applicationReducer} from "./application.reducer";
 describe('application reducer', () => {
     describe('unknown action', () => {

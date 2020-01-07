@@ -18,7 +18,7 @@
     display: inline-block;
     position: relative;
     width: 100%;
-    font-size: 14px;
+    font-size: var(--font-size-small);
     white-space: nowrap;
 }
 
@@ -26,7 +26,7 @@
     display: inline-block;
     margin-bottom: 5px;
     margin-right: 20px;
-    color: #555;
+    color: var(--color-15);
     font-size: 22px;
     font-weight: normal;
     line-height: 30px;
@@ -34,13 +34,12 @@
 
 .kgs-select select {
     min-width: 215px;
-    width: calc(100% - 70px);
-    background-color: white;
-    border-color: white;
-    color: #ED5554;
+    background-color: var(--background-color-2);
+    border-color: var(--background-color-2);
+    color: var(--color-selected);
     font-size: 22px;
     font-weight: normal;
-    padding: 9px 50px 9px 25px;
+    padding: 9px  var(--site-margin) 9px 25px;
     cursor: pointer;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -59,8 +58,7 @@
 
 .kgs-select select:hover,
 .kgs-select select:focus {
-    -webkit-box-shadow: 3px 3px 6px #cbc9c9;
-    box-shadow: 3px 3px 6px #cbc9c9;
+    box-shadow: 3px 3px 6px var(--box-shadow-2);
     z-index: 1;
 }
 
@@ -72,7 +70,7 @@
     width: 0;
     height: 0;
     margin-top: -3px;
-    border-top: 6px solid #ED5554;
+    border-top: 6px solid var(--color-selected);
     border-right: 6px solid transparent;
     border-left: 6px solid transparent;
     pointer-events: none;

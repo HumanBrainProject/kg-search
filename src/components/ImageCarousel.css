@@ -27,6 +27,15 @@
     cursor: pointer;
 }
   
+.kgs-image_carousel .carousel .thumb {
+    border-color: var(--background-color-2);
+}
+
+.kgs-image_carousel .carousel .thumb.selected, 
+.kgs-image_carousel .carousel .thumb:hover {
+    border-color: var(--border-color-5);
+}
+
 .kgs-image_carousel .carousel .slide .legend {
   bottom: 0; 
   width: auto;

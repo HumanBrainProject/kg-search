@@ -22,9 +22,8 @@ export function Select({className, label, value, list, onChange}) {
   if (!Array.isArray(list) || list.length <= 1) {
     return null;
   }
-  const classNames = ["kgs-select", className].join(" ");
   return (
-    <div className={classNames}>
+    <div className={`kgs-select ${className?className:""}`}>
       {label && (
         <div>{label}</div>
       )}

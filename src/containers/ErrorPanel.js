@@ -16,17 +16,93 @@
 
 import { connect } from "react-redux";
 import { ErrorPanel as  Component } from "../components/ErrorPanel";
+import { BgError } from "../components/BgError";
+import * as actions from "../actions/actions";
+import * as actionsSearch from "../actions/actions.search";
+import * as actionsGroups from "../actions/actions.groups";
+import * as actionsInstances from "../actions/actions.instances";
+import * as actionsDefinition from "../actions/actions.definition";
 
-export const ErrorPanel = connect(
+export const DefinitionErrorPanel = connect(
   state => ({
-    show: !!state.error && !!state.error.message,
-    message: state.error && state.error.message,
-    retryLabel: state.error && state.error.retry && state.error.retry.label,
-    retryAction: state.error && state.error.retry && state.error.retry.action,
-    cancelLabel: state.error && state.error.cancel && state.error.cancel.label,
-    cancelAction: state.error && state.error.cancel && state.error.cancel.action,
+    show: !!state.definition.error,
+    message: state.definition.error,
+    retryLabel: "Retry",
+    retryAction: actionsDefinition.clearDefinitionError(),
+    retryStyle: "primary"
   }),
   dispatch => ({
-    onAction:  action => dispatch({type: action})
+    onAction:  action => dispatch(action)
+  })
+)(BgError);
+
+export const GroupErrorPanel = connect(
+  state => ({
+    show: !!state.groups.error,
+    message: state.groups.error,
+    cancelLabel: "Back to search",
+    cancelAction: actionsInstances.goToSearch(),
+    retryLabel: "Retry",
+    retryAction: actionsGroups.clearGroupError(),
+    retryStyle: "primary"
+  }),
+  dispatch => ({
+    onAction:  action => dispatch(action)
+  })
+)(BgError);
+
+
+export const InstanceErrorPanel = connect(
+  state => ({
+    show: !!state.instances.error,
+    message: state.instances.error,
+    cancelLabel: "Back to search",
+    cancelAction: actionsInstances.goToSearch(state.groups.group, state.groups.defaultGroup),
+    retryLabel: "Retry",
+    retryAction: actionsInstances.clearInstanceError(),
+    retryStyle: "primary"
+  }),
+  dispatch => ({
+    onAction:  action => dispatch(action)
+  })
+)(BgError);
+
+
+export const SearchInstanceErrorPanel = connect(
+  state => ({
+    show: !!state.instances.error,
+    message: state.instances.error,
+    retryLabel: "Ok",
+    retryAction: actionsInstances.clearInstanceError(),
+    retryStyle: "primary"
+  }),
+  dispatch => ({
+    onAction:  action => dispatch(action)
   })
 )(Component);
+
+export const SearchErrorPanel = connect(
+  state => ({
+    show: !!state.search.error,
+    message: state.search.error,
+    retryLabel: "Retry",
+    retryAction: actionsSearch.search(),
+    retryStyle: "primary"
+  }),
+  dispatch => ({
+    onAction:  action => dispatch(action)
+  })
+)(BgError);
+
+export const SessionExpiredErrorPanel = connect(
+  state => ({
+    show: !!state.auth.error,
+    message: state.auth.error,
+    retryLabel: "Login",
+    retryAction: actions.authenticate(),
+    retryStyle: "primary"
+  }),
+  dispatch => ({
+    onAction:  action => dispatch(action)
+  })
+)(BgError);

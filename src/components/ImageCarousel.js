@@ -14,12 +14,12 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
+import React from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./ImageCarousel.css";
 
-export class ImageCarousel extends PureComponent {
+export class ImageCarousel extends React.Component {
   onClick = index => {
     const { images, onClick } = this.props;
     typeof onClick === "function" && !Number.isNaN(Number(index)) && images && images.length && index < images.length && onClick(images[index]);

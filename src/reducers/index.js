@@ -14,12 +14,27 @@
 *   limitations under the License.
 */
 
-export { reducer as application } from "./application.reducer";
-export { reducer as configuration } from "./configuration.reducer";
-export { reducer as definition } from "./definition.reducer";
-export { reducer as groups } from "./groups.reducer";
-export { reducer as search } from "./search.reducer";
-export { reducer as instances } from "./instances.reducer";
-export { reducer as error } from "./error.reducer";
-export { reducer as fetching } from "./fetching.reducer";
-export { reducer as auth } from "./auth.reducer";
+import { combineReducers } from "redux";
+import { connectRouter } from "connected-react-router";
+
+import { reducer as application } from "./application.reducer";
+import { reducer as definition } from "./definition.reducer";
+import { reducer as groups } from "./groups.reducer";
+import { reducer as search } from "./search.reducer";
+import { reducer as instances } from "./instances.reducer";
+import { reducer as fetching } from "./fetching.reducer";
+import { reducer as auth } from "./auth.reducer";
+
+
+const createRootReducer = (history) => combineReducers({
+  application,
+  definition,
+  groups,
+  search,
+  instances,
+  fetching,
+  auth,
+  router: connectRouter(history)
+});
+
+export default createRootReducer;

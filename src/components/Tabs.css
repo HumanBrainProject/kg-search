@@ -29,15 +29,15 @@
     padding: 12px 8px 8px 8px;
     background: none;
     border: 0;
-    border-bottom: 5px solid #dddee0;
+    border-bottom: 5px solid var(--border-color-4);
     color: #999;
-    font-size: 14px;
+    font-size: var(--font-size-small);
     font-weight: bold;
 }
 
 .kgs-tabs .kgs-tabs-buttons > button.kgs-tabs-button.is-active {
-    border-bottom-color: #ED5554;
-    color: #ED5554;
+    border-bottom-color: var(--color-selected);
+    color: var(--color-selected);
 }
 
 .kgs-tabs .kgs-tabs-buttons > button.kgs-tabs-button + button.kgs-tabs-button {

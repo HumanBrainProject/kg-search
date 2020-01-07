@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./List.css";
 
-const ListItem = ({reference, data, itemComponent, onClick}) => {
+const ListItem = ({ reference, data, itemComponent, onClick }) => {
 
   const handleClick = (event) => {
     onClick(data, event.currentTarget);
@@ -35,11 +35,11 @@ const ListItem = ({reference, data, itemComponent, onClick}) => {
   );
 };
 
-export const List = ({className, title, items, itemComponent, layout, getKey, onClick}) => {
+export const List = ({ className, title, items, itemComponent, layout, getKey, onClick }) => {
   if (!Array.isArray(items) || items.length === 0 || typeof getKey !== "function") {
     return null;
   }
-  const classNames = ["kgs-list", className, layout==="grid"?"is-grid":"is-list"].join(" ");
+  const classNames = ["kgs-list", className, layout === "grid" ? "is-grid" : "is-list"].join(" ");
   return (
     <div className={classNames}>
       {title && (
@@ -60,10 +60,11 @@ export const List = ({className, title, items, itemComponent, layout, getKey, on
 List.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string,
-  items:  PropTypes.arrayOf(PropTypes.any),
+  items: PropTypes.arrayOf(PropTypes.any),
   itemComponent: PropTypes.oneOfType([
     PropTypes.element,
-    PropTypes.func
+    PropTypes.func,
+    PropTypes.object
   ]).isRequired,
   layout: PropTypes.string,
   getKey: PropTypes.func.isRequired,

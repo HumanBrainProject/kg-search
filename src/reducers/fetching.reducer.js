@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import * as types from "../actions.types";
+import * as types from "../actions/actions.types";
 
 const initialState = {
   message: null,
@@ -25,7 +25,7 @@ export function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case types.LOAD_DEFINITION_REQUEST:
     return {
-      message: "Initializing search engine...",
+      message: "Initializing...",
       active: true
     };
   case types.LOAD_GROUPS_REQUEST:
@@ -40,27 +40,48 @@ export function reducer(state = initialState, action = {}) {
     };
   case types.LOAD_INSTANCE_REQUEST:
     return {
-      message: "Performing search request...",
+      message: "Loading instance...",
       active: true
     };
-  case types.LOAD_DEFINITION:
+  case types.SET_APPLICATION_READY:
+  case types.AGREE_TERMS_SHORT_NOTICE:
+  case types.SET_LAYOUT_MODE:
+  case types.SET_INFO:
+  case types.SHOW_IMAGE:
   case types.LOAD_DEFINITION_SUCCESS:
   case types.LOAD_DEFINITION_FAILURE:
-  case types.LOAD_GROUPS:
+  case types.CLEAR_DEFINITION_ERROR:
   case types.LOAD_GROUPS_SUCCESS:
   case types.LOAD_GROUPS_FAILURE:
+  case types.CLEAR_GROUPS_ERROR:
+  case types.SET_INITIAL_SEARCH_PARAMS:
+  case types.SET_INITIAL_GROUP:
+  case types.SET_GROUP:
+  case types.SET_TOKEN:
+  case types.SET_QUERY_STRING:
+  case types.SET_TYPE:
+  case types.RESET_TYPE_FOR_GROUP:
+  case types.SET_SORT:
+  case types.SET_FACET:
+  case types.RESET_FACETS:
+  case types.SET_FACET_SIZE:
+  case types.SET_PAGE:
   case types.LOAD_SEARCH_SUCCESS:
   case types.LOAD_SEARCH_BAD_REQUEST:
   case types.LOAD_SEARCH_SERVICE_FAILURE:
-  case types.LOAD_INSTANCE:
+  case types.SESSION_FAILURE:
+  case types.CANCEL_SEARCH:
   case types.LOAD_INSTANCE_SUCCESS:
   case types.LOAD_INSTANCE_NO_DATA:
   case types.LOAD_INSTANCE_FAILURE:
-    return {
-      message: null,
-      active: false
-    };
+  case types.CLEAR_INSTANCE_ERROR:
   case types.CANCEL_INSTANCE_LOADING:
+  case types.SET_INSTANCE:
+  case types.SET_PREVIOUS_INSTANCE:
+  case types.CLEAR_ALL_INSTANCES:
+  case types.AUTHENTICATE:
+  case types.AUTHENTICATING:
+  case types.LOGOUT:
     return {
       message: null,
       active: false

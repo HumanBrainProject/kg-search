@@ -1,0 +1,107 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-paging {
+    flex: 1;
+    display: inline-block;
+    width: 100%;
+    margin: 21px auto 20px auto;
+    padding: 0;
+    min-width: 315px;
+    text-align: center;
+    justify-content: center;
+    max-height: 46px;
+}
+
+@media (min-width: 576px) {
+    .kgs-paging {
+        margin: 0;
+        text-align: left;
+    }
+}
+
+.kgs-paging button {
+    flex: none;
+    background-color: var(--background-color-2);
+    border-color: var(--background-color-2);
+    padding: 5px 15px;
+    color: var(--color-selected);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;    
+    -webkit-transition: -webkit-box-shadow 0.2s ease-in;
+    transition: -webkit-box-shadow 0.2s ease-in;
+    -o-transition: box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
+    font-size: 22px;
+    font-weight: normal;
+}
+
+.kgs-paging button.is-active {
+    color: white;
+    background-color: var(--color-selected);
+    border-color: var(--color-selected);
+}
+
+.kgs-paging button[disabled] {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+
+.kgs-paging button:not([disabled]):hover,
+.kgs-paging button:not([disabled]):focus  {
+    box-shadow: 3px 3px 6px var(--box-shadow-2);
+    z-index: 1;
+}
+
+.kgs-paging button + button {
+    margin-left: 5px;
+}
+
+.kgs-paging button.is-previous, 
+.kgs-paging button.is-next {
+    display: inline-block;
+    flex: none;
+}
+
+.kgs-paging button.is-ellipsis {
+    padding: 5px;
+    font-weight: bold;
+    transform: translateY(-5px);
+}
+
+.kgs-paging button.is-previous, 
+.kgs-paging button.is-next {
+    font-family: FontAwesome;
+}
+.kgs-paging button.is-previous:before {
+    content: "\f053";
+} 
+
+.kgs-paging button.is-next:before {
+    content: "\f054";
+}
+
+@media (min-width: 576px) {
+    .kgs-paging button.is-previous, 
+    .kgs-paging button.is-next {
+        flex: 4 1;
+    }
+}

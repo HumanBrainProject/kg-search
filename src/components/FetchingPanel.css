@@ -33,8 +33,7 @@
     padding: 20px;
     border-radius: 4px;
     box-sizing: border-box;
-    background-color: white;
+    background-color: var(--background-color-2);
     transition: margin-top 0.25s ease-in;
-    -webkit-box-shadow: 3px 3px 6px #8f8a8a;
-    box-shadow: 3px 3px 6px #8f8a8a;
+    box-shadow: 3px 3px 6px var(--box-shadow-2);
 }

@@ -1,39 +1,40 @@
+import { store } from "../store";
+import axios from "axios";
+
+const oidcUri = "https://services.humanbrainproject.eu/oidc/authorize";
+const oidcClientId = "nexus-kg-search";
+
 const endpoints = {
-  "definition": (host) => `${host}/proxy/kg_labels/labels/labels`,
-  "groups": (host) => `${host}/auth/groups`,
-  "search": (host) => `${host}/proxy/search/kg`,
-  "instance": (host, id) => `${host}/proxy/default/kg/${id}`,
-  "preview": (host, path, instanceId) => `${host}/query/${path}/search/templates/searchUi/libraries/instancesDynamic/instances/${instanceId}`
+  "definition":() => "/proxy/kg_labels/labels/labels",
+  "groups": () => "/auth/groups",
+  "search": () => "/proxy/search/kg/_search",
+  "instance": (type, id) => `/proxy/default/kg/${type}/${id}`,
+  "preview": (type, id) => `/query/${type}/search/templates/searchUi/libraries/instancesDynamic/instances/${id}`,
+  "auth": (redirectUri, stateKey, nonceKey) => `${oidcUri}?response_type=id_token%20token&client_id=${oidcClientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`
 };
 
-const default_group = "public";
-
 class API{
-  defaultGroup = default_group;
+  constructor() {
+    this._axios = axios.create({});
+    this._axios.interceptors.request.use(config => {
+      const state = store.getState();
+      const header = config.headers[config.method];
+      if (state.auth.accessToken) {
+        header.Authorization = "Bearer " + state.auth.accessToken;
+      }
+      if (state.auth.accessToken && state.groups.group !== null) {
+        header["index-hint"] = state.groups.group;
+      }
+      return Promise.resolve(config);
+    });
+  }
+
+  get axios() {
+    return this._axios;
+  }
+
   get endpoints(){
     return endpoints;
-  }
-  fetch(url, options) {
-    return fetch(url, options)
-      .then(response => {
-        if (!response.ok) {
-          try {
-            const data = response.json();
-            return data;
-          } catch (e) {
-            throw response.statusText;
-          }
-        }
-        return response.json();
-      })
-      .catch(error => {
-        if (Array.isArray(error)) {
-          error.forEach(e => window.console.error(e));
-        } else {
-          window.console.error(error);
-        }
-        throw error;
-      });
   }
 }
 

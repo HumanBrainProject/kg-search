@@ -15,23 +15,33 @@
 */
 
 import React from "react";
+import ReactPiwik from "react-piwik";
+
 import "./Link.css";
 
-export const Link = ({url, label, isExternalLink, icon}) => {
+export const Link = ({ url, label, isAFileLink, isExternalLink, icon }) => {
   if (!url) {
     return null;
   }
 
-  const text = label?label:url;
+  const text = label ? label : url;
 
-  const props = isExternalLink? {
+  const props = isExternalLink ? {
     rel: "noopener noreferrer",
     target: "_blank"
   } : null;
 
+  const handleClick = () => {
+    if (isAFileLink) {
+      ReactPiwik.push(["trackLink", url, "download"]);
+    } else if (isExternalLink) {
+      ReactPiwik.push(["trackLink", url, "link"]);
+    }
+  };
+
   return (
-    <a href={url} {...props}>
-      {icon?<span className="field-value__link_icon"  dangerouslySetInnerHTML={{__html:icon}} />:null}
+    <a href={url} {...props} onClick={() => handleClick()}>
+      {icon ? <span className="field-value__link_icon" dangerouslySetInnerHTML={{ __html: icon }} /> : null}
       {text}
     </a>
   );

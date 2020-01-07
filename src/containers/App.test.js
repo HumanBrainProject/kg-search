@@ -15,26 +15,19 @@
 */
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from "react-redux";
+import { ConnectedRouter } from "connected-react-router";
+import { store, history } from "../store";
 import App from './App';
-
-const config = {
-  searchApiHost: "https://kg.humanbrainproject.org",
-  hitsPerPage: 20,
-  searchOnLoad: true,
-  queryTweaking: {
-    wildcard: {
-      maxNbOfTerms: 2, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
-      minNbOfChars: 3 // nb of character under which wildcard is not applied
-    },
-    fuzzySearch: {
-      maxNbOfTerms: 3, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
-      minNbOfChars: 4 // nb of character under which fuzzy search is not applied
-    },
-    maxNbOfTermsTrigger: 4, // maximum number of terms before tweaking is turned off
-  }
-};
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<App config={config} />, div);
+  ReactDOM.render(
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <App />
+      </ConnectedRouter>
+    </Provider>,
+    div
+  );
 });

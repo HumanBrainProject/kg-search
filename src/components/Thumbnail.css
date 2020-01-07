@@ -43,7 +43,7 @@
   padding: 0;
   border: 0;
   background: 0;
-  color: #337ab7;
+  color: var(--link-color-1);
 }
 
 @-ms-keyframes kgs-thumbnail-zoom-dynamic {

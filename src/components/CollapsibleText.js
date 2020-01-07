@@ -14,11 +14,11 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
+import React from "react";
 import { Text } from "./Text";
 import "./CollapsibleText.css";
 
-export class CollapsibleText extends PureComponent {
+export class CollapsibleText extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

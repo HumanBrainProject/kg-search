@@ -21,7 +21,7 @@ The Knowledge Graph Search allows you to find different types of results. If you
 As soon as you have selected a type, you will see a faceted filter panel apear on the left. Faceted filters can be used for restricting your results based on some specific properties of the result sets. The provided filters depend on the type you've chosen, so they will be different if you have chosen persons or datasets.
 
 ##Navigate through the result cards
-After selecting one of the presented results, you will be able to see all the details of this item on a result card. Additionally, you will see links to other result cards (e.g. to the contributors of a dataset). If you select one of these links, the result card of the chosen person will be shown including all details like e.g. other datasets the person has contributed to. This allows you to choose any starting point from the search to navigate through and explore the HBP Knowledge Graph. If you would like to return to your original starting point, you can do so by selecting the **Previous** button on the top left corner of the result card.
+After selecting one of the presented results, you will be able to see all the details of this item on a result card. Additionally, you will see links to other result cards (e.g. to the contributors of a dataset). If you select one of these links, the result card of the chosen person will be shown including all details like e.g. other datasets the person has contributed to. This allows you to choose any starting point from the search to navigate through and explore the EBRAINS Knowledge Graph. If you would like to return to your original starting point, you can do so by selecting the **Previous** button on the top left corner of the result card.
 
 ##Save or share your queries
 If you want to save or share your queries, you can simply reuse the URL in your browser by either bookmarking the current state in your web browser or by using the share buttons (on the bottom right in the main screen, or on the top right in the result card) which allow you to either copy the URL into your clipboard or to generate an e-mail to send the link out to anyone who could be interested in what you've found.
@@ -30,9 +30,9 @@ If you want to save or share your queries, you can simply reuse the URL in your 
 If you own an HBP account, you might be eligible to see and search additional data (depending on your access rights). If so, you can select the "Log in" button on the bottom right of the page. After the login, choose as member of which group you want to browse the Knowledge Graph in the selection box which shows up next to the "Log out" button. If no selection box shows up, this means that you aren't member of one of the extended Knowledge Graph Search spaces. 
 
 ##Further questions and/or feedback
-If you have any further questions and/or feedback, do not hesitate to [contact us by e-mail](mailto:kg-team@humanbrainproject.eu)
+If you have any further questions and/or feedback, do not hesitate to [contact us by e-mail](mailto:kg@ebrains.eu)
 
 ##Acknowledgements
-This open source software code was developed in part or in whole in the Human Brain Project, funded from the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreements No. 720270 and No. 785907 (Human Brain Project SGA1 and SGA2).
+This open source software code was developed and this service is provided in part or in whole by the Human Brain Project, funded from the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreements No. 720270 and No. 785907 (Human Brain Project SGA1 and SGA2).
 
-Powered by [Blue Brain Nexus](https://bluebrainnexus.io/docs/) `;
+Powered by the [Human Brain Project](https://humanbrainproject.eu)`;

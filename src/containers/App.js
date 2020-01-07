@@ -14,38 +14,52 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
-import { Provider } from "react-redux";
-import { store } from "../store";
-import AppManager from "../services/app.manager";
-import { MasterDetail } from "./MasterDetail";
+import React from "react";
+import { connect } from "react-redux";
+import { Route, Switch } from "react-router-dom";
+
+import * as actions from "../actions/actions";
+import { Search } from "./Search";
+import { Instance } from "./Instance";
+import { NotFound } from "../components/NotFound";
+import { Preview } from "./Preview";
 import { FetchingPanel } from "./FetchingPanel";
-import { ErrorPanel } from "./ErrorPanel";
 import { InfoPanel } from "./InfoPanel";
 import "./App.css";
+import { SessionExpiredErrorPanel } from "./ErrorPanel";
 
-export default class App extends PureComponent {
+class App extends React.Component {
   constructor(props) {
     super(props);
-    this.manager = new AppManager(store, props.config || {});
+    this.props.initialize(this.props.location, this.props.defaultGroup);
   }
-  componentDidMount() {
-    this.manager.start();
-  }
-  componentWillUnmount() {
-    this.manager.stop();
-  }
+
   render() {
-    //window.console.debug("App rendering...");
     return (
-      <Provider store={store}>
-        <div className="kgs-app">
-          <MasterDetail manager={this.manager} />
-          <FetchingPanel/>
-          <ErrorPanel/>
-          <InfoPanel/>
-        </div>
-      </Provider>
+      <div className="kgs-app">
+        {this.props.isReady && (
+          <Switch>
+            <Route path="/instances/:type/:id" exact component={Instance} />
+            <Route path="/previews/:org/:domain/:schema/:version/:id" exact component={Preview} />
+            <Route path="/" exact component={Search} />
+            <Route component={NotFound} />
+          </Switch>
+        )}
+        <FetchingPanel />
+        <SessionExpiredErrorPanel />
+        <InfoPanel />
+      </div>
     );
   }
 }
+
+export default connect(
+  state => ({
+    location: state.router.location,
+    defaultGroup: state.groups.defaultGroup,
+    isReady: state.application.isReady && !state.auth.error
+  }),
+  dispatch => ({
+    initialize: (location, defaultGroup) => dispatch(actions.initialize(location, defaultGroup))
+  })
+)(App);

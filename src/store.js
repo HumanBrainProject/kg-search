@@ -14,9 +14,58 @@
 *   limitations under the License.
 */
 
-import * as reducers from "./reducers";
-import { createStore, combineReducers } from "redux";
+import { createStore, compose, applyMiddleware } from "redux";
+import { createBrowserHistory } from "history";
+import { routerMiddleware } from "connected-react-router";
+import thunk from "redux-thunk";
 
-const app = combineReducers(reducers);
+import { createLogger } from "redux-logger";
 
-export const store = createStore(app);
+import createRootReducer from "./reducers";
+
+
+export const history = createBrowserHistory({ basename: "/search" });
+
+function configureStoreProd(initialState) {
+  const reactRouterMiddleware = routerMiddleware(history);
+
+  const middlewares = [reactRouterMiddleware,thunk];
+
+  const store = createStore(
+    createRootReducer(history),
+    initialState,
+    compose(applyMiddleware(...middlewares))
+  );
+
+  return store;
+}
+
+function configureStoreDev(initialState) {
+  const reactRouterMiddleware = routerMiddleware(history);
+  const loggerMiddleware = createLogger();
+  const middlewares = [reactRouterMiddleware, thunk, loggerMiddleware];
+
+  const composeEnhancers =
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // add support for Redux dev tools
+  const store = createStore(
+    createRootReducer(history),
+    initialState,
+    composeEnhancers(applyMiddleware(...middlewares))
+  );
+
+  if (module.hot) {
+    // Enable Webpack hot module replacement for reducers
+    module.hot.accept("./reducers", () => {
+      const nextReducer = require("./reducers").default; // eslint-disable-line global-require
+      store.replaceReducer(nextReducer);
+    });
+  }
+
+  return store;
+}
+
+const configureStore =
+  process.env.NODE_ENV === "production"
+    ? configureStoreProd
+    : configureStoreDev;
+export const store = configureStore();
