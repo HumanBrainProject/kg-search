@@ -13,7 +13,7 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-import React, { PureComponent } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { Hint } from "./Hint";
 import "./Tabs.css";
@@ -32,20 +32,28 @@ const Tab = ({tab, active, onClick}) => {
   );
 };
 
-export class Tabs extends PureComponent {
+export class Tabs extends React.Component {
   constructor(props) {
     super(props);
-    const {tabs} = props;
+    const {tabs} = this.props;
     this.state = {
       value: Array.isArray(tabs) && tabs.length && tabs[0]
     };
-    this.handleClick = this.handleClick.bind(this);
   }
-  handleClick(value) {
-    this.setState(() => ({value: value}));
+
+  componentDidUpdate(previousProps) {
+    const { id, tabs } = this.props;
+    if (previousProps.id !== id) {
+      this.setState({value: Array.isArray(tabs) && tabs.length && tabs[0]});
+    }
+  }
+
+  handleClick = value => {
+    this.setState({value: value});
   }
   render() {
     const { className, tabs, viewComponent } = this.props;
+
     if (!Array.isArray(tabs) || !tabs.length) {
       return null;
     }
@@ -70,6 +78,7 @@ export class Tabs extends PureComponent {
 
 Tabs.propTypes = {
   className: PropTypes.string,
+  id: PropTypes.string,
   tabs:  PropTypes.arrayOf(PropTypes.any),
   viewComponent: PropTypes.oneOfType([
     PropTypes.element,

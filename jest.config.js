@@ -5,4 +5,4 @@ module.exports = {
     "^.+\\.jsx?$": "babel-jest",
     "^.+\\.css$": "<rootDir>/CSSStub.js"
   }
-}
+};

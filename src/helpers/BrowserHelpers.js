@@ -14,6 +14,130 @@
 *   limitations under the License.
 */
 
+export const generateKey = () => {
+  let key = "";
+  const chars = "ABCDEF0123456789";
+  for (let i=0; i<4; i++) {
+    if (key !== "") {
+      key += "-";
+    }
+    for (let j=0; j<5; j++) {
+      key += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+  }
+  return key;
+};
+
+const regParam = /^(.+)=(.+)$/;
+
+export const searchToObj = search => {
+  if (typeof search !== "string") {
+    search = window.location.search;
+  }
+  if (search.length <= 1) {
+    return {};
+  }
+  return search.replace(/^\??(.*)$/, "$1").split("&").reduce((result, param) => {
+    if (param === "" || !regParam.test(param)) {
+      return result;
+    }
+    const [ , key, value] = param.match(regParam);
+    result[key] = value;
+    return result;
+  }, {});
+};
+
+export const getSearchKey = (key, ignoreCase=false, search) => {
+  if (typeof key !== "string") {
+    return null;
+  }
+  if (!ignoreCase) {
+    return searchToObj(search)[key];
+  }
+  key = key.toLocaleLowerCase();
+  const obj = searchToObj(search);
+  if (obj[key]) {
+    return obj[key];
+  }
+  let result = null;
+  Object.entries(obj).some(([name, value]) => {
+    if (name.toLocaleLowerCase() === key) {
+      result = value;
+      return true;
+    }
+    return false;
+  });
+  return result;
+};
+
+export const getHashKey = (key, hash) => {
+  if (typeof key !== "string") {
+    return null;
+  }
+  if (typeof hash !== "string") {
+    hash = window.location.hash;
+  }
+  const patterns = [
+    `^#${key}=([^&]+)&.+$`,
+    `^.+&${key}=([^&]+)&.+$`,
+    `^#${key}=([^&]+)$`,
+    `^.+&${key}=([^&]+)$`
+  ];
+  let value = null;
+  patterns.some(pattern => {
+    const reg = new RegExp(pattern);
+    const m = hash.match(reg);
+    if (m && m.length === 2) {
+      value = m[1];
+      return true;
+    }
+    return false;
+  });
+  return value;
+};
+
+export const getUpdatedQuery = (query, name, checked, value, many) => {
+  const result = {};
+  const val = encodeURIComponent(value);
+  let found = false;
+  let counts = 0;
+  Object.entries(query).forEach(([key, v]) => {
+    const regParamWithBrackets = /^([^[]+)\[(\d+)\]$/;// name[number]
+    const isParamWithBracketsMatchingName = regParamWithBrackets.test(name) && name === key;
+    const doesParamHasBrackets = !isParamWithBracketsMatchingName && regParamWithBrackets.test(key);
+    const [, queryName] = doesParamHasBrackets?key.match(regParamWithBrackets):[null, key];
+    const current = queryName === name && (!many || v === val );
+    found = found || current;
+    if (!current || checked) {
+      if (queryName === name) { // same param name
+        const queryValue = current ? val:v;
+        if (many) {
+          result[`${queryName}[${counts}]`] =  queryValue;
+          counts++;
+        } else {
+          result[key] = queryValue;
+        }
+      } else { // different param name
+        result[key] = v;
+      }
+    }
+  });
+
+  if (!found && checked) {
+    const appendix = many?`[${counts}]`:"";
+    result[`${name}${appendix}`] =  val;
+  }
+  return result;
+};
+
+export const getLocationFromQuery = (query, location) => {
+  const queryString = Object.entries(query).reduce((acc, [key, value]) => {
+    acc += `${(acc.length > 1)?"&":""}${key}=${value}`;
+    return acc;
+  }, "?");
+  return `${location.pathname}${queryString}`;
+};
+
 export const windowHeight = () => {
   const w = window,
     d = document,

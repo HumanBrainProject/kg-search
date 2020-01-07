@@ -14,6 +14,9 @@
 *   limitations under the License.
 */
 
+import { Provider } from "react-redux";
+import { ConnectedRouter } from "connected-react-router";
+import { store, history } from "./store";
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./containers/App";
@@ -24,45 +27,13 @@ import "./index.css";
 import "./ie.css";
 import ReactPiwik from "react-piwik";
 
-// GLOBAL CONSTANTS DEFINED OUTSIDE THE APP
-const SearchApiHostEnvKey = "SearchApiHost";        // "https://kg.humanbrainproject.org"
-
-// APP PARAMETERS
-const hitsPerPage = 20;
-const timeout = 10000;
-const searchOnLoad = true; // when set to true it will trigger an initial search after initilizsation
-const queryTweaking = {
-  wildcard: {
-    maxNbOfTerms: 2, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
-    minNbOfChars: 3 // nb of character under which wildcard is not applied
-  },
-  fuzzySearch: {
-    maxNbOfTerms: 3, // -1 = apply on all terms, 0 = do not apply, positive number n = apply on first n terms
-    minNbOfChars: 4 // nb of character under which fuzzy search is not applied
-  },
-  maxNbOfTermsTrigger: 4 // maximum number of terms before tweaking is turned off
-};
-const oidcUri = "https://services.humanbrainproject.eu/oidc/authorize";
-const oidcClientId = "nexus-kg-search";
-
-const matomo = new ReactPiwik({
+new ReactPiwik({
   url: process.env.REACT_APP_MATOMO_URL,
   siteId: process.env.REACT_APP_MATOMO_SITE_ID,
   trackErrors: true
 });
 
 ReactPiwik.push(["trackPageView"]);
-
-const config = {
-  searchApiHost: window[SearchApiHostEnvKey] ? window[SearchApiHostEnvKey] : "",
-  timeout: timeout,
-  hitsPerPage: hitsPerPage,
-  searchOnLoad: searchOnLoad,
-  queryTweaking: queryTweaking,
-  oidcUri: oidcUri,
-  oidcClientId: oidcClientId,
-  matomo: matomo
-};
 
 const kCode = { step: 0, ref: [38, 38, 40, 40, 37, 39, 37, 39, 66, 65] };
 
@@ -76,8 +47,11 @@ const handleGlobalShortcuts = (e) => {
 
 document.addEventListener("keydown", handleGlobalShortcuts);
 
-
 ReactDOM.render(
-  <App config={config} />,
+  <Provider store={store}>
+    <ConnectedRouter history={history}>
+      <App />
+    </ConnectedRouter>
+  </Provider>,
   document.getElementById("root")
 );

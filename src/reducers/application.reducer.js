@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import * as types from "../actions.types";
+import * as types from "../actions/actions.types";
 
 const TermsShortNoticeLocalStorageKey = "ebrains-search-terms-conditions-consent";
 
@@ -25,12 +25,10 @@ const initialState = {
   gridLayoutMode: true
 };
 
-const setApplicationReady = (state, action) => {
-  return {
-    ...state,
-    isReady: action.isReady
-  };
-};
+const setApplicationReady = state => ({
+  ...state,
+  isReady: true
+});
 
 const agreeTermsShortNotice = state => {
   if (typeof(Storage) !== "undefined") {
@@ -73,7 +71,6 @@ export function reducer(state = initialState, action = {}) {
   case types.SET_INSTANCE:
   case types.SET_PREVIOUS_INSTANCE:
   case types.CLEAR_ALL_INSTANCES:
-  case types.SET_CURRENT_INSTANCE_FROM_BROWSER_LOCATION:
   default:
     return state;
   }

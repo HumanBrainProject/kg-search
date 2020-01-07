@@ -13,188 +13,64 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-
-import React from "react";
 import { connect } from "react-redux";
-import API from "../services/API";
+
+import * as actionsGroups from "../actions/actions.groups";
+import * as actionsInstances from "../actions/actions.instances";
+import * as actionsDefinition from "../actions/actions.definition";
+import { history } from "../store";
 import { ImagePreviews } from "./ImagePreviews";
 import { ImagePopup } from "./ImagePopup";
-import { Field } from "./Field";
-import { FieldsPanel } from "./FieldsPanel";
-import { FieldsTabs } from "./FieldsTabs";
 import { TermsShortNotice } from "./TermsShortNotice";
-import "./Instance.css";
-import ReactPiwik from "react-piwik";
-
-
-const InstanceBase = ({ type, hasNoData, hasUnknownData, header, previews, main, summary, groups }) => {
-  if (hasNoData) {
-    return (
-      <div className="kgs-instance" data-type={type}>
-        <div className="kgs-instance__no-data">This data is currently not available.</div>
-      </div>
-    );
-  }
-  if (hasUnknownData) {
-    return (
-      <div className="kgs-instance" data-type={type}>
-        <div className="kgs-instance__no-data">This type of data is currently not supported.</div>
-      </div>
-    );
-  }
-  ReactPiwik.push(["trackEvent", "Card", "Opened", `${window.location.search}${window.location.hash}`]);
-
-  return (
-    <div className="kgs-instance" data-type={type}>
-      <div className="kgs-instance-scroll">
-        <TermsShortNotice />
-        <div className={`kgs-instance-content kgs-instance__grid ${(previews && previews.length) ? "kgs-instance__with-previews" : ""}`}>
-          <div className="kgs-instance__header">
-            <h3 className={`kgs-instance__group ${header.group && header.group !== API.defaultGroup ? "show" : ""}`}>Group: <strong>{header.group}</strong></h3>
-            <div>
-              <Field {...header.icon} />
-              <Field {...header.type} />
-            </div>
-            <div>
-              <Field {...header.title} />
-            </div>
-          </div>
-          <ImagePreviews className={`kgs-instance__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
-          <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
-          <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
-          <FieldsTabs className="kgs-instance__groups" fields={groups} />
-        </div>
-      </div>
-      <ImagePopup className="kgs-instance__image_popup" />
-    </div>
-  );
-};
-
-const getField = (group, type, name, data, mapping) => {
-  switch (name) {
-  case "type":
-    return {
-      name: "type",
-      data: { value: type },
-      mapping: { visible: true },
-      group: group
-    };
-  default:
-    return {
-      name: name,
-      data: data,
-      mapping: mapping,
-      group: group
-    };
-  }
-};
-
-const getFields = (group, type, data, mapping, filter) => {
-  if (!data || !mapping) {
-    return [];
-  }
-
-  const fields = Object.entries(mapping.fields || {})
-    .filter(([name, mapping]) =>
-      mapping
-      && (mapping.showIfEmpty || (data && data[name]))
-      && (!filter || (typeof filter === "function" && filter(type, name, data[name], mapping)))
-    )
-    .map(([name, mapping]) => getField(group, type, name, data[name], mapping));
-
-  return fields;
-};
-
-//const getPreviews = (data, mapping, idx=0) => {
-const getPreviews = (data, mapping) => {
-  if (data instanceof Array) {
-    const previews = [];
-    data.forEach((elt, idx) => previews.push(...getPreviews(elt, mapping, idx)));
-    return previews;
-  } else if (data && mapping.children) {
-    const previews = [];
-    Object.entries(mapping.children)
-      .filter(([name, mapping]) =>
-        mapping
-        && (mapping.showIfEmpty || (data && data[name]))
-        && mapping.visible
-      )
-      .map(([name, mapping]) => ({
-        data: data && data[name],
-        mapping: mapping
-      }))
-      .forEach(({ data, mapping }, idx) => previews.push(...getPreviews(data, mapping, idx)));
-    return previews;
-  } else if (data && data.staticImageUrl && (typeof data.staticImageUrl === "string" || typeof data.staticImageUrl.url === "string")) {
-    return [{
-      staticImageUrl: data.staticImageUrl && (typeof data.staticImageUrl === "string" ? data.staticImageUrl : data.staticImageUrl.url),
-      previewUrl: data.previewUrl,
-      label: data.value ? data.value : null
-    }];
-    /*
-    } else if (data && typeof data.url === "string" && /^https?:\/\/.+\.cscs\.ch\/.+$/.test(data.url)) {
-      const cats = [
-        "https://cdn2.thecatapi.com/images/2pb.gif",
-        "http://lorempixel.com/output/cats-q-c-640-480-1.jpg",
-        "http://lorempixel.com/output/cats-q-c-640-480-2.jpg",
-        "https://cdn2.thecatapi.com/images/18f.gif",
-        "http://lorempixel.com/output/cats-q-c-640-480-3.jpg",
-        "https://cdn2.thecatapi.com/images/dbt.gif",
-        "https://cdn2.thecatapi.com/images/d5k.gif",
-        "http://lorempixel.com/output/cats-q-c-640-480-4.jpg",
-        "http://lorempixel.com/output/cats-q-c-640-480-5.jpg",
-        "http://lorempixel.com/output/cats-q-c-640-480-6.jpg",
-        "http://lorempixel.com/output/cats-q-c-640-480-7.jpg",
-        "http://lorempixel.com/output/cats-q-c-640-480-8.jpg",
-        "http://lorempixel.com/output/cats-q-c-640-480-9.jpg",
-        "http://lorempixel.com/output/cats-q-c-640-480-10.jpg"
-      ];
-      const dogs = [
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-clicker.jpg",
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-06.jpg",
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-05.jpg",
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-03.jpg",
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-07.jpg",
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-02.jpg",
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-04.jpg",
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-061-e1340955308953.jpg",
-        "https://dogtowndogtraining.com/wp-content/uploads/2012/06/300x300-08.jpg"
-      ];
-      return [{
-        staticImageUrl: dogs[idx % (dogs.length -1)],
-        previewUrl: (Math.round(Math.random() * 10) % 2)?{
-          url: cats[idx % (cats.length -1)],
-          isAnimated: /^.+\.gif$/.test(cats[idx % (cats.length -1)])
-        }:undefined,
-        label: data.value?data.value:null
-      }];
-    */
-  }
-  return [];
-};
+import { mapStateToProps } from "../helpers/InstanceHelper";
+import { InstanceContainer } from "./InstanceContainer";
 
 export const Instance = connect(
-  (state, { data }) => {
-
-    const indexReg = /^kg_(.*)$/;
-    const source = data && !(data.found === false) && data._type && data._source;
-    const mapping = source && state.definition && state.definition.shapeMappings && state.definition.shapeMappings[data._type];
-    const group = (data && indexReg.test(data._index)) ? data._index.match(indexReg)[1] : API.defaultGroup;
-
+  (state, props) => {
+    const instanceProps = state.instances.currentInstance?
+      {
+        ...mapStateToProps(state, {
+          data: state.instances.currentInstance
+        }),
+        path: "/instances/",
+        defaultGroup: state.groups.defaultGroup,
+        ImagePreviewsComponent: ImagePreviews,
+        ImagePopupComponent: ImagePopup,
+        TermsShortNoticeComponent: TermsShortNotice
+      }
+      :
+      null;
     return {
-      type: data && data._type,
-      hasNoData: !source,
-      hasUnknownData: !mapping,
-      header: {
-        group: group,
-        icon: getField(group, data && data._type, "icon", { value: data && data._type, image: { url: source && source.image && source.image.url } }, { visible: true, type: "icon", icon: mapping && mapping.icon }),
-        type: getField(group, data && data._type, "type"),
-        title: getField(group, data && data._type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"])
-      },
-      previews: getPreviews(source, { children: mapping.fields }),
-      main: getFields(group, data && data._type, source, mapping, (type, name) => name !== "title"),
-      summary: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "summary" && name !== "title"),
-      groups: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title")
+      instanceProps: instanceProps,
+      showInstance: state.instances.currentInstance && !state.instances.isLoading && !state.instances.error,
+      definitionIsReady: state.definition.isReady,
+      definitionIsLoading: state.definition.isLoading,
+      definitionHasError: !!state.definition.error,
+      groupsHasError: !!state.groups.error,
+      isGroupsReady: state.groups.isReady,
+      isGroupLoading: state.groups.isLoading,
+      shouldLoadGroups: !!state.auth.accessToken,
+      instanceIsLoading: state.instances.isLoading,
+      shouldLoadInstance: !state.instances.currentInstance || state.instances.currentInstance._type !==  props.match.params.type || state.instances.currentInstance._id !==  props.match.params.id,
+      instanceHasError: !!state.instances.error,
+      currentInstance: state.instances.currentInstance,
+      previousInstance: state.instances.previousInstances.length?state.instances.previousInstances[state.instances.previousInstances.length-1]:null,
+      group: state.groups.group,
+      defaultGroup: state.groups.defaultGroup,
+      id: props.match.params.id,
+      type: props.match.params.type,
+      location: state.router.location
     };
-  }
-)(InstanceBase);
+  },
+  dispatch => ({
+    setInitialGroup: group => dispatch(actionsGroups.setInitialGroup(group)),
+    loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
+    loadGroups: () => dispatch(actionsGroups.loadGroups()),
+    fetch: (type, id) => dispatch(actionsInstances.loadInstance(type, id)),
+    setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance()),
+    onGoHome: path => {
+      dispatch(actionsInstances.clearAllInstances());
+      history.push(path);
+    }
+  })
+)(InstanceContainer);

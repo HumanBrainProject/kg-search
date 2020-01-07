@@ -14,97 +14,59 @@
 *   limitations under the License.
 */
 
-import * as types from "../actions.types";
+import * as types from "../actions/actions.types";
 
 const initialState = {
-  hasRequest: false,
-  requestReference: null,
+  error: null,
   isLoading: false,
-  loadingReference: null,
   currentInstance: null,
   previousInstances: [],
   image: null
 };
 
-const regPreviewReference = /^(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
-
-const loadInstance = (state, action) => {
-  const reference = action.reference || state.loadingReference;
-  return {
-    ...state,
-    hasRequest: !!reference,
-    requestReference: reference,
-    isLoading: false,
-    loadingReference: null,
-    image: null
-  };
-};
-
 const loadInstanceRequest = state => {
   return {
     ...state,
-    hasRequest: false,
-    requestReference: null,
     isLoading: true,
-    loadingReference: state.requestReference,
     image: null
   };
 };
 
 const loadInstanceSuccess = (state, action) => {
-  const isPreviewInstance = regPreviewReference.test(state.loadingReference);
-  let previousInstances = (state && state.previousInstances instanceof Array)?state.previousInstances:[];
-  previousInstances = (state && state.currentInstance)?[...previousInstances,state.currentInstance]:[...previousInstances];
+  let previousInstances = Array.isArray(state.previousInstances)?state.previousInstances:[];
+  previousInstances = state.currentInstance?[...previousInstances,state.currentInstance]:[...previousInstances];
   return  {
     ...state,
-    hasRequest: false,
-    requestReference: null,
     isLoading: false,
-    loadingReference: null,
     currentInstance: action.data,
     previousInstances: previousInstances,
-    isPreviewInstance: isPreviewInstance,
     image: null
   };
 };
 
-const loadInstanceFailure = state => {
+const loadInstanceNoData = (state, action) => {
   return {
     ...state,
-    hasRequest: false,
-    requestReference: null,
+    error: action.error,
     isLoading: false,
     image: null
   };
 };
 
-const cancelInstanceLoading = state => {
-  if (/[?&]?search=false&?/.test(window.location.search.toLowerCase()) || regPreviewReference.test(state.loadingReference)) {
-    window.location.href = window.location.href.replace(/(\?)?search=false&?/gi, "$1");
-  }
+const loadInstanceFailure = (state, action) => {
   return {
     ...state,
-    hasRequest: false,
-    requestReference: null,
+    error: action.error,
     isLoading: false,
-    loadingReference: null,
-    isPreviewInstance: false,
     image: null
   };
 };
 
 const setInstance = (state, action) => {
-  if (action.searchkit) {
-    action.searchkit.unlistenHistory();
-  }
-  let previousInstances = (state && state.previousInstances instanceof Array)?state.previousInstances:[];
-  previousInstances = (state && state.currentInstance)?[...previousInstances,state.currentInstance]:[...previousInstances];
+  let previousInstances = Array.isArray(state.previousInstances)?state.previousInstances:[];
+  previousInstances = state.currentInstance?[...previousInstances,state.currentInstance]:[...previousInstances];
   return {
     ...state,
-    hasRequest: false,
-    requestReference: null,
-    isLoading: false,
-    loadingReference: null,
     currentInstance: action.data,
     previousInstances: previousInstances,
     image: null
@@ -113,14 +75,10 @@ const setInstance = (state, action) => {
 
 const setPreviousInstance = state => {
   if (state.currentInstance) {
-    const previousInstances = (state && state.previousInstances instanceof Array)?[...state.previousInstances]:[];
+    const previousInstances = Array.isArray(state.previousInstances)?[...state.previousInstances]:[];
     const currentInstance = previousInstances.pop() || null;
     return {
       ...state,
-      hasRequest: false,
-      requestReference: null,
-      isLoading: false,
-      loadingReference: null,
       currentInstance: currentInstance,
       previousInstances: previousInstances,
       image: null
@@ -133,17 +91,27 @@ const setPreviousInstance = state => {
 const clearAllInstances = state => {
   return {
     ...state,
-    hasRequest: false,
-    requestReference: null,
-    isLoading: false,
-    loadingReference: null,
     currentInstance: null,
     previousInstances: [],
     image: null
   };
 };
 
-const setCurrentInstanceFromBrowserLocation = state => {
+const clearInstanceError = state => {
+  return {
+    ...state,
+    error: null
+  };
+};
+
+const showImage = (state, action) => {
+  return {
+    ...state,
+    image: typeof action.url === "string"?{url: action.url, label: action.label}:null
+  };
+};
+
+const goBackToInstance = (state, action) => {
   let instance = state && state.currentInstance;
 
   // if no current instance
@@ -151,16 +119,13 @@ const setCurrentInstanceFromBrowserLocation = state => {
     return state;
   }
 
-  const [,,instanceType, instanceId] = window.location.href.match(/#((.+)\/(.+))$/) || [];
+  const instanceType = action.instanceType;
+  const instanceId = action.id;
 
   // no instance reference available in url, unset current instance
   if (!instanceType || !instanceId) {
     return {
       ...state,
-      hasRequest: false,
-      requestReference: null,
-      isLoading: false,
-      loadingReference: null,
       currentInstance: null,
       previousInstances: [],
       image: null
@@ -176,10 +141,6 @@ const setCurrentInstanceFromBrowserLocation = state => {
   if (!state || !state.previousInstances.length) {
     return {
       ...state,
-      hasRequest: false,
-      requestReference: null,
-      isLoading: false,
-      loadingReference: null,
       currentInstance: null,
       previousInstances: [],
       image: null
@@ -194,10 +155,6 @@ const setCurrentInstanceFromBrowserLocation = state => {
   if (instance && instance._type === instanceType && instance._id === instanceId) {
     return {
       ...state,
-      hasRequest: false,
-      requestReference: null,
-      isLoading: false,
-      loadingReference: null,
       currentInstance: instance,
       previousInstances: previousInstances,
       image: null
@@ -206,45 +163,34 @@ const setCurrentInstanceFromBrowserLocation = state => {
 
   return {
     ...state,
-    hasRequest: false,
-    requestReference: null,
-    isLoading: false,
-    loadingReference: null,
     currentInstance: null,
     previousInstances: [],
     image: null
   };
 };
 
-const showImage = (state, action) => {
-  return {
-    ...state,
-    image: typeof action.url === "string"?{url: action.url, label: action.label}:null
-  };
-};
-
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-  case types.LOAD_INSTANCE:
-    return loadInstance(state, action);
   case types.LOAD_INSTANCE_REQUEST:
     return loadInstanceRequest(state, action);
   case types.LOAD_INSTANCE_SUCCESS:
     return loadInstanceSuccess(state, action);
+  case types.LOAD_INSTANCE_NO_DATA:
+    return loadInstanceNoData(state, action);
   case types.LOAD_INSTANCE_FAILURE:
     return loadInstanceFailure(state, action);
-  case types.CANCEL_INSTANCE_LOADING:
-    return cancelInstanceLoading(state, action);
   case types.SET_INSTANCE:
     return setInstance(state, action);
   case types.SET_PREVIOUS_INSTANCE:
     return setPreviousInstance(state, action);
   case types.CLEAR_ALL_INSTANCES:
     return clearAllInstances(state, action);
-  case types.SET_CURRENT_INSTANCE_FROM_BROWSER_LOCATION:
-    return setCurrentInstanceFromBrowserLocation(state, action);
+  case types.CLEAR_INSTANCE_ERROR:
+    return clearInstanceError(state);
   case types.SHOW_IMAGE:
     return showImage(state, action);
+  case types.GO_BACK_TO_INSTANCE:
+    return goBackToInstance(state, action);
   default:
     return state;
   }

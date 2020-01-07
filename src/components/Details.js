@@ -14,13 +14,13 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
+import React from "react";
 import { Text } from "./Text";
 import "./Details.css";
 
 
 
-export class Details extends PureComponent {
+export class Details extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

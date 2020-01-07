@@ -52,6 +52,10 @@
   --code-background-color: #f9f2f4;
   --link-color-1: #337ab7;
   --link-color-2: #23527c;
+  --button-primary-background-color: var(--link-color-1);
+  --button-primary-border-color: #2e6da4;
+  --button-primary-background-color-hover: #286090;
+  --button-primary-border-color-hover: #204d74;
   --link-color-active: var(--link-color-2);
   --light-text: #828282;
   --background-color-1: #f4f4f4;
@@ -129,6 +133,11 @@
   --code-background-color: var(--color-26);
   --link-color-1: #08c;
   --link-color-2: #24b6ff;
+  --link-color-active: var(--link-color-2);
+  --button-primary-background-color: var(--link-color-1);
+  --button-primary-border-color: #2e6da4;
+  --button-primary-background-color-hover: #286090;
+  --button-primary-border-color-hover: #204d74;
   --link-color-active: var(--link-color-2);
   --light-text: #828282;
   --background-color-1: #222;
@@ -237,6 +246,7 @@ html {
 }
 
 body {
+  display: block !important;
   overflow-x: hidden;
   font-family: var(--font-stack);
   font-weight: var(--regular);
@@ -275,6 +285,7 @@ main {
   border-bottom: 1px solid var(--border-color-1);
   box-shadow: 0 10px 20px 0 var(--box-shadow-1);
   z-index: 100;
+  background: var(--background-color-1);
 }
 
 main a, main a:visited {
@@ -298,7 +309,7 @@ main a:hover, main a:hover:visited {
   -webkit-backface-visibility: hidden;
   transform: translateZ(0);
   transition: all .5s ease-out;
-    background-color: white;
+  background: var(--background-color-2);
 }
 
 .site-navigation.hidden {
@@ -411,7 +422,6 @@ main a:hover, main a:hover:visited {
     text-align: right;
 }
 
-
 @media (max-width:768px) {
   .site-footer .footer__end {
     flex-wrap: wrap;
@@ -428,13 +438,13 @@ main a:hover, main a:hover:visited {
     }
 
 
-main{
-    margin-bottom: 450px;
-}
-.credits{
-    max-width: 200px;
-    margin-bottom: 2em;
-}
+  main{
+      margin-bottom: 450px;
+  }
+  .credits{
+      max-width: 200px;
+      margin-bottom: 2em;
+  }
 
 }
 

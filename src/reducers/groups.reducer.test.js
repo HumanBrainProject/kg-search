@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import * as actions from "../actions";
+import * as actions from "../actions/actions.groups";
 import { reducer as groupsReducer} from "./groups.reducer";
 describe('groups reducer', () => {
     describe('unknown action', () => {

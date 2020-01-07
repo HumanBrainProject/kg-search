@@ -15,7 +15,7 @@
 */
 
 import { connect } from "react-redux";
-import * as actions from "../actions";
+import * as actions from "../actions/actions";
 import { ImageCarousel } from "../components/ImageCarousel";
 
 export const ImagePreviews = connect(

@@ -15,7 +15,7 @@
 */
 
 import { connect } from "react-redux";
-import * as actions from "../actions";
+import * as actions from "../actions/actions";
 import { ConditionalButton } from "../components/ConditionalButton";
 
 export const SignInButton = connect(
@@ -27,6 +27,6 @@ export const SignInButton = connect(
   }),
   dispatch => ({
     onClick: () => dispatch(actions.logout()),
-    offClick: () => dispatch(actions.requestAuthentication())
+    offClick: () => dispatch(actions.authenticate())
   })
 )(ConditionalButton);

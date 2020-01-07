@@ -15,8 +15,9 @@
 */
 
 import React from "react";
-import "./Link.css";
 import ReactPiwik from "react-piwik";
+
+import "./Link.css";
 
 export const Link = ({ url, label, isAFileLink, isExternalLink, icon }) => {
   if (!url) {

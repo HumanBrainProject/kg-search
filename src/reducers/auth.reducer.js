@@ -14,21 +14,13 @@
 *   limitations under the License.
 */
 
-import * as types from "../actions.types";
+import * as types from "../actions/actions.types";
 
 const initialState = {
+  error: null,
   accessToken: null,
   authenticate: false,
   isAuthenticated: false
-};
-
-const requestAuthentication = state => {
-  return {
-    ...state,
-    accessToken: null,
-    authenticate: true,
-    isAuthenticated: false
-  };
 };
 
 const authenticate = (state, action) => {
@@ -37,6 +29,15 @@ const authenticate = (state, action) => {
     accessToken: action.accessToken,
     authenticate: false,
     isAuthenticated: !!action.accessToken
+  };
+};
+
+const setToken = (state, action) => {
+  return {
+    ...state,
+    accessToken: action.accessToken,
+    authenticate: false,
+    isAuthenticated: true
   };
 };
 
@@ -49,14 +50,24 @@ const logout = state => {
   };
 };
 
+const authenticationExpired = (state, action) => {
+  return {
+    ...state,
+    error: action.error,
+    accessToken: null,
+    authenticate: false,
+    isAuthenticated: null
+  };
+};
+
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-  case types.REQUEST_AUTHENTICATION:
-    return requestAuthentication(state, action);
+  case types.SET_TOKEN:
+    return setToken(state, action);
   case types.AUTHENTICATE:
     return authenticate(state, action);
-  case types.LOAD_SEARCH_SESSION_FAILURE:
-    return authenticate(state, {});
+  case types.SESSION_FAILURE:
+    return authenticationExpired(state, action);
   case types.LOGOUT:
     return logout(state, action);
   default:

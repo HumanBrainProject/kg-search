@@ -14,13 +14,13 @@
 *   limitations under the License.
 */
 
-import React, { PureComponent } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { isMobile } from "../helpers/BrowserHelpers";
 import "./Carousel.css";
 
 
-const CarouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, navigationComponent, isPreviewInstance}) => {
+const CarouselItem = ({item, showPrevious, onClose, onPrevious, itemComponent, navigationComponent}) => {
   const ItemComponent =  itemComponent;
   const NavigationComponent = navigationComponent;
   return (
@@ -37,7 +37,7 @@ const CarouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, n
               <NavigationComponent/>
             )}
           </div>
-          {item.isActive && !isPreviewInstance && (
+          {item.isActive && (
             <button className="kgs-carousel__close-button" onClick={onClose}>
               <i className="fa fa-close" />
             </button>
@@ -55,7 +55,7 @@ const CarouselItem = ({item, showPrevious, onPrevious, onClose, itemComponent, n
 
 const nbOfItems = 5;
 
-export class Carousel extends PureComponent {
+export class Carousel extends React.Component {
   constructor(props) {
     super(props);
     this.items =  Array.from(Array(nbOfItems)).map((x, idx) => ({
@@ -76,9 +76,9 @@ export class Carousel extends PureComponent {
     }
   }
   _keyupHandler(event) {
-    const {onPrevious, onClose, isPreviewInstance} = this.props;
+    const {onPrevious, onClose} = this.props;
     if (this.props.show) {
-      if (event.keyCode === 27 && !isPreviewInstance) {
+      if (event.keyCode === 27) {
         event.preventDefault();
         typeof onClose === "function" && onClose();
       } else if (event.keyCode === 8) {
@@ -87,13 +87,12 @@ export class Carousel extends PureComponent {
       }
     }
   }
+
   render(){
-    const {className, show, data, onPrevious, onClose, itemComponent, navigationComponent, isPreviewInstance} = this.props;
+    const {className, show, data, onPrevious, onClose, itemComponent, navigationComponent } = this.props;
     if (!show || !Array.isArray(data) || !data.length || !itemComponent) {
       return null;
     }
-
-    //window.console.debug("Carousel rendering...", data);
 
     const currentPosition = (data.length -1) % nbOfItems;
     const items = this.items;
@@ -112,7 +111,7 @@ export class Carousel extends PureComponent {
       <div className={classNames}>
         <div className="kgs-carousel__panel">
           {items.map(item => (
-            <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} isPreviewInstance={isPreviewInstance} />
+            <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />
           ))}
         </div>
       </div>
@@ -128,11 +127,13 @@ Carousel.propTypes = {
   onClose: PropTypes.func.isRequired,
   itemComponent: PropTypes.oneOfType([
     PropTypes.element,
-    PropTypes.func
+    PropTypes.func,
+    PropTypes.object
   ]).isRequired,
   navigationComponent: PropTypes.oneOfType([
     PropTypes.element,
-    PropTypes.func
+    PropTypes.func,
+    PropTypes.object
   ])
 };
 

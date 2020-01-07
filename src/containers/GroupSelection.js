@@ -14,18 +14,29 @@
 *   limitations under the License.
 */
 
+import React from "react";
 import { connect } from "react-redux";
-import * as actions from "../actions";
+
+import * as actionsGroups from "../actions/actions.groups";
+import * as actionsSearch from "../actions/actions.search";
 import { Select } from "../components/Select";
+
+const GroupSelectionBase = props => (
+  <Select {...props} />
+);
 
 export const GroupSelection = connect(
   (state, props) => ({
     className: props.className,
     label: "group",
-    value: state.search.group,
+    value: state.groups.group,
     list: state.groups.groups?state.groups.groups:[]
   }),
   dispatch => ({
-    onChange: value => dispatch(actions.setGroup(value))
+    onChange: value => {
+      dispatch(actionsGroups.setGroup(value));
+      dispatch(actionsGroups.resetTypeForGroup(value));
+      dispatch(actionsSearch.setPage(1));
+    }
   })
-)(Select);
+)(GroupSelectionBase);

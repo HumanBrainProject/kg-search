@@ -18,40 +18,52 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./ErrorPanel.css";
 
-export const ErrorPanel = ({show, message, retryLabel, retryAction, cancelLabel, cancelAction, onAction}) => {
-  if (!show) {
-    return null;
-  }
-  const onRetry = () => {
+export class ErrorPanel extends React.PureComponent {
+  onRetry = () => {
+    const { retryAction, onAction } = this.props;
     typeof onAction === "function" && onAction(retryAction);
   };
-  const onCancel = () => {
+
+  onCancel = () => {
+    const { cancelAction, onAction } = this.props;
     typeof onAction === "function" && onAction(cancelAction);
   };
-  //window.console.debug("ErrorPanel rendering...");
-  return (
-    <div className="kgs-error-container">
-      <div className="kgs-error-panel">
-        <span className="kgs-error-message">{message}</span>
-        <div className="kgs-error-navigation">
-          {retryLabel && (
-            <button onClick={onRetry}>{retryLabel}</button>
-          )}
-          {cancelLabel && (
-            <button onClick={onCancel}>{cancelLabel}</button>
-          )}
+
+  render() {
+    const { show, message, retryLabel, cancelLabel } = this.props;
+    if (!show) {
+      return null;
+    }
+    return (
+      <div className="kgs-error-container">
+        <div className="kgs-error-panel">
+          <span className="kgs-error-message">{message}</span>
+          <div className="kgs-error-navigation">
+            {cancelLabel && (
+              <button onClick={this.onCancel}>{cancelLabel}</button>
+            )}
+            {retryLabel && (
+              <button onClick={this.onRetry}>{retryLabel}</button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 ErrorPanel.propTypes = {
   show: PropTypes.bool,
   cancelLabel: PropTypes.string,
-  cancelAction: PropTypes.string,
+  cancelAction: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.object
+  ]),
   retryLabel: PropTypes.string,
-  retryAction: PropTypes.string,
+  retryAction: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.object
+  ]),
   onAction: PropTypes.func
 };
 
