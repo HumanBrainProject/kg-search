@@ -118,7 +118,9 @@ const setupSearch = (state, action) => {
 const setQueryString = (state, action) => {
   return {
     ...state,
-    queryString: action.queryString
+    queryString: action.queryString,
+    page: 1,
+    from: 0
   };
 };
 
