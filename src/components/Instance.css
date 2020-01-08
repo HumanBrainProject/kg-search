@@ -346,9 +346,10 @@
     width: auto;
     width: unset;
     /* padding: 0 10px; */
-    font-size: 26px;    
+    font-size: 10px;
     font-weight: 400;
     color: #888;
+    line-height: 1em;
 }
 
 .kgs-instance[data-type] .kgs-field__type .field-value {
