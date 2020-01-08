@@ -21,6 +21,7 @@ import { Route, Switch } from "react-router-dom";
 import * as actions from "../actions/actions";
 import { Search } from "./Search";
 import { Instance } from "./Instance";
+import { InstanceEditor } from "./InstanceEditor";
 import { NotFound } from "../components/NotFound";
 import { Preview } from "./Preview";
 import { FetchingPanel } from "./FetchingPanel";
@@ -41,6 +42,7 @@ class App extends React.Component {
           <Switch>
             <Route path="/instances/:type/:id" exact component={Instance} />
             <Route path="/previews/:org/:domain/:schema/:version/:id" exact component={Preview} />
+            <Route path="/instances/:org/:domain/:schema/:version/:id" exact component={InstanceEditor} />
             <Route path="/" exact component={Search} />
             <Route component={NotFound} />
           </Switch>

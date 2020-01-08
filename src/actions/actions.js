@@ -106,14 +106,7 @@ export const initialize = (location, defaultGroup) => {
       }
 
       const regShareEditorReference = /^\/instances\/(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
-      if(regShareEditorReference.test(location.pathname)) { // backward compatibility test when share through the editor
-        let [,,,,,type,,id] = location.pathname.match(regShareEditorReference);
-        type = type.charAt(0).toUpperCase() + type.slice(1);
-        const url = `/instances/${type}/${id}${group?("?group=" + group):""}`;
-        history.replace(url);
-      }
-
-      if((group && group !== defaultGroup) || location.pathname.startsWith("/previews/"))  {
+      if((group && group !== defaultGroup) || location.pathname.startsWith("/previews/") || regShareEditorReference.test(location.pathname))  {
         dispatch(authenticate());
       } else {
         dispatch(setApplicationReady());
