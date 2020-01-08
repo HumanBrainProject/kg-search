@@ -34,7 +34,7 @@ export const Preview = connect(
         ...mapStateToProps(state, {
           data: state.instances.currentInstance
         }),
-        path: "/previews/",
+        path: "/live/",
         defaultGroup: state.groups.defaultGroup,
         ImagePreviewsComponent: ImagePreviews,
         ImagePopupComponent: ImagePopup,

@@ -106,7 +106,7 @@ export const initialize = (location, defaultGroup) => {
       }
 
       const regShareEditorReference = /^\/instances\/(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
-      if((group && group !== defaultGroup) || location.pathname.startsWith("/previews/") || regShareEditorReference.test(location.pathname))  {
+      if((group && group !== defaultGroup) || location.pathname.startsWith("/live/") || regShareEditorReference.test(location.pathname))  {
         dispatch(authenticate());
       } else {
         dispatch(setApplicationReady());

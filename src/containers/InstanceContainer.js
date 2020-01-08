@@ -65,11 +65,6 @@ export class InstanceContainer extends React.Component {
     document.title = getTitle(currentInstance, type, id);
   }
 
-  handleGoHome = () => {
-    const { group, defaultGroup, onGoHome} = this.props;
-    onGoHome(`/${(group && group !== defaultGroup)?("?group=" + group):""}`);
-  }
-
   initialize() {
     const {
       definitionIsReady, definitionHasError, definitionIsLoading,
@@ -107,7 +102,7 @@ export class InstanceContainer extends React.Component {
             <React.Fragment>
               <div className="kgs-instance-container__header">
                 <div className="kgs-instance-container__left">
-                  <button className="kgs-container__backButton" onClick={this.handleGoHome}><i className="fa fa-chevron-left"></i><i className="fa fa-chevron-left"></i>&nbsp;Search</button>&nbsp;<BackLinkButton />
+                  <BackLinkButton />
                 </div>
                 <ShareButtons/>
               </div>

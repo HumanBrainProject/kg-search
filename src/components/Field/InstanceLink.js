@@ -40,8 +40,8 @@ export const InstanceLink = connect(
     let path = null;
     if (state.router.location.pathname.startsWith("/instances/")) {
       path = "/instances/";
-    } else if (state.router.location.pathname.startsWith("/previews/")) {
-      path = "/previews/";
+    } else if (state.router.location.pathname.startsWith("/live/")) {
+      path = "/live/";
     }
     return {
       text: props.text?props.text:`${props.type}/${props.id}`,

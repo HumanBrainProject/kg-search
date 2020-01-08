@@ -41,7 +41,7 @@ class App extends React.Component {
         {this.props.isReady && (
           <Switch>
             <Route path="/instances/:type/:id" exact component={Instance} />
-            <Route path="/previews/:org/:domain/:schema/:version/:id" exact component={Preview} />
+            <Route path="/live/:org/:domain/:schema/:version/:id" exact component={Preview} />
             <Route path="/instances/:org/:domain/:schema/:version/:id" exact component={InstanceEditor} />
             <Route path="/" exact component={Search} />
             <Route component={NotFound} />
