@@ -244,7 +244,8 @@ const setType = (state, action) => {
   return {
     ...state,
     selectedType: selectedType,
-    page: 1
+    page: 1,
+    from: 0
   };
 };
 
