@@ -20,11 +20,19 @@
     text-align: left;
     font-size: var(--font-size);
     font-weight: 500;
-    line-height: 1.3em;
+    line-height: 1.75em;
     color: var(--color-7);
 }
 
 .kgs-field+.kgs-field {
+    margin-top: 20px;
+}
+
+.kgs-hit .kgs-field {
+    line-height: 1.3em;
+}
+
+.kgs-hit .kgs-field+.kgs-field {
     margin-top: 12px;
 }
 

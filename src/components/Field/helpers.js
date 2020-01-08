@@ -16,9 +16,7 @@
 
 
 export const LIST_SMALL_SIZE_STOP = 5;
-const LIST_MIDDLE_SIZE_STOP = 10;
 
-const VIEW_MORE_LABEL = "view more";
 const VIEW_LESS_LABEL = "view less";
 const VIEW_ALL_LABEL = "view all";
 
@@ -31,11 +29,7 @@ export const getNextSizeStop = (sizeStop, props) => {
   }
 
   if (sizeStop === LIST_SMALL_SIZE_STOP) {
-    return (items.length > LIST_MIDDLE_SIZE_STOP)?LIST_MIDDLE_SIZE_STOP:Number.POSITIVE_INFINITY;
-  }
-
-  if (sizeStop === LIST_MIDDLE_SIZE_STOP) {
-    return (items && items.length > LIST_MIDDLE_SIZE_STOP)?Number.POSITIVE_INFINITY:LIST_SMALL_SIZE_STOP;
+    return Number.POSITIVE_INFINITY;
   }
 
   return LIST_SMALL_SIZE_STOP;
@@ -71,11 +65,7 @@ export const getShowMoreLabel = (sizeStop, maxSizeStop, props) => {
   }
 
   if (sizeStop === LIST_SMALL_SIZE_STOP) {
-    return (maxSizeStop > LIST_MIDDLE_SIZE_STOP)?VIEW_MORE_LABEL:VIEW_ALL_LABEL;
-  }
-
-  if (sizeStop === LIST_MIDDLE_SIZE_STOP) {
-    return (maxSizeStop > LIST_MIDDLE_SIZE_STOP)?VIEW_ALL_LABEL:VIEW_LESS_LABEL;
+    return VIEW_ALL_LABEL;
   }
 
   return VIEW_LESS_LABEL;

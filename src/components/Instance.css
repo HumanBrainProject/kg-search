@@ -286,6 +286,7 @@
                             "main carousel"
                             "main summary"
                             "groups groups";
+        grid-column-gap: 100px;
     }
 
     .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__previews {
@@ -344,7 +345,7 @@
 .kgs-instance[data-type] .kgs-field__type {
     width: auto;
     width: unset;
-    padding: 0 10px;
+    /* padding: 0 10px; */
     font-size: 26px;    
     font-weight: 400;
     color: #888;

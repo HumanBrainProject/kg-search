@@ -16,7 +16,6 @@
 
 .kgs-instance-container {
   padding: 0 var(--site-margin);
-  background: var(--background-color-1);
 }
 
 .kgs-instance-container__header {
@@ -31,6 +30,7 @@
 
 .kgs-instance-container .kgs-instance-content {
   padding: 0;
+  margin-bottom: var(--site-margin);
 }
 
 .kgs-instance-container__left > a,
@@ -70,4 +70,16 @@
     margin-top: 0;
   }
 
+}
+
+@media (min-width:1200px) { 
+  .kgs-instance-container {
+    max-width: 1200px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .kgs-instance-container .kgs-instance-content {
+    grid-column-gap: 10%;
+  }
+  
 }

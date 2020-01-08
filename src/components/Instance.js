@@ -69,7 +69,7 @@ export class Instance extends React.PureComponent {
             <div className="kgs-instance__header">
               <h3 className={`kgs-instance__group ${header.group? "show" : ""}`}>Group: <strong>{header.group}</strong></h3>
               <div>
-                <Field {...header.icon} />
+                {/* <Field {...header.icon} /> */}
                 <Field {...header.type} />
               </div>
               <div>
