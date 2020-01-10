@@ -62,7 +62,13 @@ export class ImagePopup extends Component {
                 </div>
                 :
                 <React.Fragment>
-                  <img src={this.state.src} alt={label ? label: ""}/>
+                  {(typeof this.state.src === "string" && this.state.src.endsWith(".mp4"))?
+                    <video alt={label ? label : ""} width="750" height="250" autoPlay loop>
+                      <source src={this.state.src} type="video/mp4" />
+                    </video>
+                    :
+                    <img src={this.state.src} alt={label ? label: ""}/>
+                  }
                   {label && (
                     <p className="kgs-image_popup-label">{label}</p>
                   )}

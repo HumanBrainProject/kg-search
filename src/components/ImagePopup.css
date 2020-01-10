@@ -17,7 +17,7 @@
 .kgs-image_popup {
   display: none;
   z-index: 100;
-  position: absolute;
+  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
