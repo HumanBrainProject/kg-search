@@ -64,12 +64,10 @@ export class Instance extends React.PureComponent {
     return (
       <div className="kgs-instance" data-type={type}>
         <div className="kgs-instance-scroll">
-          <TermsShortNoticeComponent />
           <div className={`kgs-instance-content kgs-instance__grid ${(previews && previews.length) ? "kgs-instance__with-previews" : ""}`}>
             <div className="kgs-instance__header">
               <h3 className={`kgs-instance__group ${header.group? "show" : ""}`}>Group: <strong>{header.group}</strong></h3>
               <div>
-                {/* <Field {...header.icon} /> */}
                 <Field {...header.type} />
               </div>
               <div>
@@ -81,6 +79,7 @@ export class Instance extends React.PureComponent {
             <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
             <FieldsTabs className="kgs-instance__groups" id={id} fields={groups} />
           </div>
+          <TermsShortNoticeComponent />
         </div>
         <ImagePopupComponent className="kgs-instance__image_popup" />
       </div>

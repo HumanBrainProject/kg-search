@@ -26,14 +26,8 @@
     overflow-y: auto;
 }
 
-.kgs-instance .kgs-notice .kgs-notice-panel {
-    border-radius: 10px;
-    margin: 15px;
-    width: calc(100% - 30px);
-}
-
 .kgs-instance .kgs-notice .kgs-notice-agree-button {
-    margin-right: 15px;
+    right: var(--site-margin);
 }
 
 .kgs-instance-content {
