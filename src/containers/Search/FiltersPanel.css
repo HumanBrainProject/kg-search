@@ -18,7 +18,7 @@
     position: relative;
     width: 100%;
     background-color: var(--background-color-2);
-    padding: 20px;
+    padding: 15px;
 }
 
 @media (min-width: 500px) {
@@ -41,13 +41,14 @@
     display: inline-block;
     color: var(--color-15);
     font-size: var(--font-size-big);
+    font-weight: bold;
     text-transform: uppercase;
 }
 
 .kgs-filters .kgs-filters__header .kgs-filters__reset {
     display: inline-block;
     position: absolute;
-    top: 20px;
+    top: 15px;
     right: 20px;
 }
 

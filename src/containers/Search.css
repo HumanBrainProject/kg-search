@@ -15,18 +15,12 @@
 */
 
 .kgs-search {
-    padding: 0 var(--site-margin);
     background: var(--background-color-1);
 }
 
 .kgs-search .kgs-search__panel {
     display: block;
-    min-width: 100%;
-    margin-top: 30px;
-}
-
-body[class*="mobile"] .kgs-search .kgs-search__panel {
-    margin-top: 30px;
+    margin: 30px var(--site-margin) 0 var(--site-margin);
 }
 
 .kgs-search .kgs-search__main {
@@ -38,10 +32,11 @@ body[class*="mobile"] .kgs-search .kgs-search__panel {
         display: grid;
         -ms-grid-columns: 400px 1fr;
         grid-template-columns: 400px 1fr;
-        -ms-grid-rows: max-content 1fr;
-        grid-template-rows: max-content 1fr;
+        -ms-grid-rows: max-content max-content 1fr;
+        grid-template-rows: max-content max-content 1fr;
         grid-template-areas: "types main"
-                            "filters main";
+                            "filters main"
+                            "empty main";
         grid-row-gap: 30px;
         grid-column-gap: 30px;
         min-height: calc(100vh - 358px);

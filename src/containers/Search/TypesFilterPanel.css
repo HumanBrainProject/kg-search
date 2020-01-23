@@ -18,28 +18,35 @@
 .kgs-fieldsFilter {
     width: 100%;
     background-color: var(--background-color-2);
-    padding: 20px;
+    padding: 15px;
 }
 
 .kgs-fieldsFilter .kgs-fieldsFilter-title {
     margin-bottom: 10px;
-    text-transform: uppercase;
     color: var(--color-15);
     font-size: var(--font-size-big);
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.kgs-fieldsFilter .kgs-fieldsFilter-checkbox {
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    cursor: pointer;
+    padding: 3px 5px;
+    border-radius: 5px;
+    line-height: 22px;
+    font-weight: 300;
 }
 
 .kgs-fieldsFilter .kgs-fieldsFilter-checkbox.is-active {
     background-color: var(--color-selected);
 }
 
-.kgs-fieldsFilter .kgs-fieldsFilter-checkbox + .kgs-fieldsFilter-checkbox {
-    margin-top: 6px;
-}
-
 .kgs-fieldsFilter .kgs-fieldsFilter-checkbox .kgs-fieldsFilter-checkbox__text {
     -ms-flex: auto;
     flex: auto;
-    padding-top: 3px;
     color: var(--color-8);
     font-size: var(--font-size);
 }
@@ -51,17 +58,15 @@
 
 .kgs-fieldsFilter .kgs-fieldsFilter-checkbox .kgs-fieldsFilter-checkbox__count {
     display: inline-block;
-    min-width: 42px;
+    min-width: 36px;
     max-height: 28px;
-    padding: 3px;
-    background-color: var(--background-color-4);
-    color: var(--color-17);
+    background-color: var(--background-color-3);
+    color: var(--color-10);
     font-size: var(--font-size-small);
     text-align: center;
 }
 
 .kgs-fieldsFilter .kgs-fieldsFilter-checkbox.is-active .kgs-fieldsFilter-checkbox__count {
-    color: var(--color-18);
     font-weight: bold;
     font-size: var(--font-size);
     background-color: var(--color-selected);

@@ -9,7 +9,7 @@ const replaceColorInSvg = (icon, colorToReplace, replacementColor) => {
 
 export const setIconColor = (icon, active) => {
   const hardcodedColor = "#4D4D4D";
-  const highlightColor = getComputedStyle(document.documentElement).getPropertyValue("--color-selected").trim();
+  const highlightColor = getComputedStyle(document.documentElement).getPropertyValue("--link-highlight-color").trim();
   const defaultColor = getComputedStyle(document.documentElement).getPropertyValue("--color-unselected").trim();
   const color = active?highlightColor:defaultColor;
   return replaceColorInSvg(icon, hardcodedColor, color);

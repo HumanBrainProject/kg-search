@@ -97,7 +97,7 @@
 }
 
 .kgs-image_popup-error {
-  color: var(--color-selected);
+  color: var(--link-highlight-color);
 }
 
 .kgs-image_popup-error i {

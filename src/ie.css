@@ -264,7 +264,7 @@
   }
 
   .kgs-select select {
-    color: #F88900;
+    color: #333;
     padding: 9px  12px 9px 25px;
   }
 
@@ -274,7 +274,7 @@
   }
 
   .kgs-select:after {
-    border-top: 6px solid #F88900;
+    border-top: 6px solid #333;
   }
 
   .kgs-share-links .kgs-share-links-panel:before {
@@ -552,7 +552,7 @@
   }
 
   .kgs-hitStats .kgs-hitStats-highlight {
-    color: #F88900;
+    color: #222;
   }
 
   .kgs-paging .sk-pagination-navigation .sk-toggle-option {
@@ -606,8 +606,8 @@
   }
 
   .kgs-search-panel button.kgs-search-panel-help__button {
-    color: #F88900;
-    background-color: #fff;
+    background-color: #F88900;
+    color: #f0f0f0;
   }
 
   .kgs-search-panel button.kgs-search-panel-help__button:hover {
@@ -616,7 +616,7 @@
 
   .kgs-search-panel button.kgs-search-panel-help__button i,
   .kgs-search-panel button.kgs-search-panel-help__button:hover i {
-  color: #F88900;
+    color: #f0f0f0;
   }
 
   .kgs-search-panel .sk-search-box .sk-spinning-loader {

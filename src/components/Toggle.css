@@ -69,8 +69,8 @@
 }
 
 .kgs-toggle > div > button.is-active {
-    background-color: var(--color-selected);
-    border-color: var(--color-selected);
+    background-color: var(--link-highlight-color);
+    border-color: var(--link-highlight-color);
     cursor: default;
 }
 

@@ -54,16 +54,16 @@
 }
 
 main .kgs-notice a {
-    color: var(--color-selected);
+    color: var(--link-highlight-color);
     text-decoration: underline;
 }
 
 main .kgs-notice a:hover, main .kgs-notice a:visited,  main .kgs-notice a:hover:visited {
-    color: var(--color-selected);
+    color: var(--link-highlight-color);
 }
 
 main .kgs-notice .kgs-notice-agree-button{
-    background-color: var(--color-selected);
+    background-color: var(--link-highlight-color);
     border-color: var(--color-warning);
 }
 

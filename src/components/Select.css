@@ -36,7 +36,7 @@
     min-width: 215px;
     background-color: var(--background-color-2);
     border-color: var(--background-color-2);
-    color: var(--color-selected);
+    color: var(--color-8);
     font-size: 22px;
     font-weight: normal;
     padding: 9px  var(--site-margin) 9px 25px;
@@ -70,7 +70,7 @@
     width: 0;
     height: 0;
     margin-top: -3px;
-    border-top: 6px solid var(--color-selected);
+    border-top: 6px solid var(--color-8);
     border-right: 6px solid transparent;
     border-left: 6px solid transparent;
     pointer-events: none;
