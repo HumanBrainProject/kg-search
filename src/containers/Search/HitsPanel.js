@@ -23,10 +23,10 @@ import { Hit } from "./Hit";
 import { StatsHelpers } from "../../helpers/StatsHelpers";
 
 
-const HitsPanelBase = ({ lists, itemComponent, getKey, layout, onClick }) => (
+const HitsPanelBase = ({ lists, itemComponent, getKey, onClick }) => (
   <React.Fragment>
     {lists.map(list =>
-      <List key={list.id} title={list.title} items={list.items} itemComponent={itemComponent} getKey={getKey} layout={layout} onClick={onClick} />
+      <List key={list.id} title={list.title} items={list.items} itemComponent={itemComponent} getKey={getKey} onClick={onClick} />
     )}
   </React.Fragment>
 );
@@ -98,8 +98,7 @@ const mapStateToProps = state => {
       }
     ],
     itemComponent: Hit,
-    getKey: data => `${data._type ? data._type : "unknown"}/${data._id ? data._id : uniqueId()}`,
-    layout: state.application.gridLayoutMode ? "grid" : "list"
+    getKey: data => `${data._type ? data._type : "unknown"}/${data._id ? data._id : uniqueId()}`
   };
 };
 

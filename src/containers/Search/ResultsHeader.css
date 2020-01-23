@@ -34,8 +34,7 @@
     -ms-grid-column: 1;
     -ms-grid-row: 1;
     grid-area: stats;
-    display: block;
-    margin-top: 15px;  
+    display: block; 
     white-space: nowrap;
 }
 
@@ -53,7 +52,6 @@
     -ms-grid-row: 3;
     grid-area: sorting;
     display: block;
-    margin-top: 15px;
     min-width: 264px;
 }
 
@@ -95,7 +93,7 @@
 @media (min-width:992px) {
 
     .kgs-result-header {
-        margin-bottom: 25px;
+        margin-bottom: 20px;
     }
     
     .kgs-result-header > div {

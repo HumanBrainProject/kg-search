@@ -38,13 +38,6 @@ export const setInfo = text => {
   };
 };
 
-export const setLayoutMode = gridLayoutMode => {
-  return {
-    type: types.SET_LAYOUT_MODE,
-    gridLayoutMode: gridLayoutMode
-  };
-};
-
 export const setToken = accessToken => {
   return {
     type: types.SET_TOKEN,

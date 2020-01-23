@@ -42,8 +42,8 @@ const SearchComponent = ({show}) => (
         <div className = "kgs-search" >
           <SearchPanel />
           <TermsShortNotice className = "kgs-search__terms-short-notice" />
-          <TypesFilterPanel />
           <div className = "kgs-search__panel" >
+            <TypesFilterPanel />
             <FiltersPanel />
             <div className = "kgs-search__main" >
               <ResultsHeader />

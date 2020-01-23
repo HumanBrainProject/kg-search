@@ -45,7 +45,6 @@ export function reducer(state = initialState, action = {}) {
     };
   case types.SET_APPLICATION_READY:
   case types.AGREE_TERMS_SHORT_NOTICE:
-  case types.SET_LAYOUT_MODE:
   case types.SET_INFO:
   case types.SHOW_IMAGE:
   case types.LOAD_DEFINITION_SUCCESS:

@@ -18,27 +18,12 @@ import React from "react";
 import { connect } from "react-redux";
 
 import * as actionsSearch from "../../actions/actions.search";
-import { TypeIcon } from "./TypeIcon";
-
 import "./TypesFilterPanel.css";
 
-// {itemKey, label, count, rawCount, listDocCount, active, disabled, showCount, bemBlocks, onClick}
-const TypeFilterBase = ({ type: { type, label, count, active, disabled }, onClick }) => (
-  <div className = { `kgs-fieldsFilter__type${active ? " is-active" : ""}${disabled ? " is-disabled" : ""}` } >
-    <button onClick = { onClick }
-      className = "kgs-fieldsFilter__button"
-      disabled = { disabled || active } >
-      <div >
-        <div className = "kgs-fieldsFilter__icon" >
-          <TypeIcon label = { label }
-            type = { type }
-            active = { active }
-          />
-        </div>
-        <div className = "kgs-fieldsFilter__label" > { label } </div>
-        <div className = "kgs-fieldsFilter__count" > { `${count ? count : 0} ${count && count > 1 ? "Results" : "Result"}` } </div>
-      </div>
-    </button>
+const TypeFilterBase = ({ type: { label, count, active }, onClick }) => (
+  <div className={`kgs-fieldsFilter-checkbox ${active?"is-active":""}`} onClick = { onClick } >
+    <div className="kgs-fieldsFilter-checkbox__text">{label}</div>
+    <div className="kgs-fieldsFilter-checkbox__count">{count}</div>
   </div>
 );
 
@@ -56,6 +41,7 @@ class TypeFilter extends React.Component {
 
 const TypesFilterPanelBase = ({ types, onClick }) => (
   <div className = "kgs-fieldsFilter" >
+    <div className = "kgs-fieldsFilter-title" > Categories </div>
     {
       types.map(type =>
         <TypeFilter type = { type }

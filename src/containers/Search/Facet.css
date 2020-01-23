@@ -75,7 +75,7 @@
     flex: auto;
     padding-top: 3px;
     color: var(--color-8);
-    font-size: var(--font-size-small);
+    font-size: var(--font-size);
 }
 
 .kgs-facet .kgs-facet-checkbox.is-active .kgs-facet-checkbox__text {

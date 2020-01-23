@@ -21,12 +21,8 @@
 
 .kgs-search .kgs-search__panel {
     display: block;
-    flex-direction: column;
     min-width: 100%;
-}
-
-@media (min-width: 576px) {
-    min-width: 355px;
+    margin-top: 30px;
 }
 
 body[class*="mobile"] .kgs-search .kgs-search__panel {
@@ -39,15 +35,29 @@ body[class*="mobile"] .kgs-search .kgs-search__panel {
 
 @media (min-width: 992px) {
     .kgs-search .kgs-search__panel {
-        display: -ms-flexbox;
-        display: flex;
-        flex-direction: row;
+        display: grid;
+        -ms-grid-columns: 400px 1fr;
+        grid-template-columns: 400px 1fr;
+        -ms-grid-rows: max-content 1fr;
+        grid-template-rows: max-content 1fr;
+        grid-template-areas: "types main"
+                            "filters main";
+        grid-row-gap: 30px;
+        grid-column-gap: 30px;
         min-height: calc(100vh - 358px);
+        
     }
 
-    .kgs-search .kgs-search__main {
-        width: unset;
-        flex: 1;
+    .kgs-search .kgs-search__panel .kgs-search__main {
+        grid-area: main;
+    }
+
+    .kgs-search .kgs-search__panel .kgs-fieldsFilter {
+        grid-area: types;
+    }
+
+    .kgs-search .kgs-search__panel .kgs-filters {
+        grid-area: filters;
     }
 }
 
@@ -67,7 +77,7 @@ body[class*="mobile"] .kgs-search .kgs-search__panel {
 }
 
 @media (min-width: 992px) {
-    .kgs-search .kgs-list.is-list .kgs-hit {
+    .kgs-search .kgs-list .kgs-hit {
         height: auto;
         height: unset;
         overflow: auto;
@@ -80,17 +90,17 @@ body[class*="mobile"] .kgs-search .kgs-search__panel {
 }
 
 @media (min-width: 1600px) { /* 992 without left filters panel */ 
-    .kgs-search .kgs-list.is-list .kgs-hit .kgs-hit__ribbon {
+    .kgs-search .kgs-list .kgs-hit .kgs-hit__ribbon {
         display: block;
     }
 }
 
 @media (min-width: 1600px) {
-    .kgs-search .kgs-list.is-list .kgs-hit[data-type] .kgs-field__protocol{
+    .kgs-search .kgs-list .kgs-hit[data-type] .kgs-field__protocol{
         flex-grow:1;
         max-width: 50%;
     }
-    .kgs-search .kgs-list.is-list .kgs-hit[data-type] .kgs-field__methods{
+    .kgs-search .kgs-list .kgs-hit[data-type] .kgs-field__methods{
         flex-grow:1;
         max-width: 50%;
     }

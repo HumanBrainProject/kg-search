@@ -16,7 +16,6 @@
 
 import React from "react";
 import { HitStats } from "./HitStats";
-import { LayoutModeToggle } from "./LayoutModeToggle";
 import { SortingSelector } from "./SortingSelector";
 import "./ResultsHeader.css";
 
@@ -25,7 +24,6 @@ export function ResultsHeader() {
     <div className="kgs-result-header">
       <div>
         <HitStats/>
-        <LayoutModeToggle className="kgs-layout-mode-toggle"/>
         <SortingSelector className="kgs-sorting-selector"/>
       </div>
     </div>

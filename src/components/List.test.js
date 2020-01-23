@@ -38,20 +38,6 @@ test('List test className"', () => {
     expect(component.hasClass("className"));
 });
 
-test('List test grid layout', () => {
-    const component = shallow(
-        <List className="className" layout="grid" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={() => {}} itemComponent={() => null} />
-    );
-    expect(component.hasClass("is-grid"));
-});
-
-test('List test list layout', () => {
-    const component = shallow(
-        <List className="className" layout="list" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={() => {}} itemComponent={() => null} />
-    );
-    expect(component.hasClass("is-list"));
-});
-
 test('List test title"', () => {
     const component = shallow(
         <List className="className" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={() => {}} itemComponent={() => null} />

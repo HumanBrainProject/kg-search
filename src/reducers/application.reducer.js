@@ -21,8 +21,7 @@ const TermsShortNoticeLocalStorageKey = "ebrains-search-terms-conditions-consent
 const initialState = {
   isReady: false,
   info: null,
-  showTermsShortNotice: typeof Storage === "undefined" || localStorage.getItem(TermsShortNoticeLocalStorageKey) !== "true",
-  gridLayoutMode: true
+  showTermsShortNotice: typeof Storage === "undefined" || localStorage.getItem(TermsShortNoticeLocalStorageKey) !== "true"
 };
 
 const setApplicationReady = state => ({
@@ -41,13 +40,6 @@ const agreeTermsShortNotice = state => {
   };
 };
 
-const setLayoutMode = (state, action) => {
-  return {
-    ...state,
-    gridLayoutMode: action.gridLayoutMode
-  };
-};
-
 const setInfo = (state, action) => {
   return {
     ...state,
@@ -61,8 +53,6 @@ export function reducer(state = initialState, action = {}) {
     return setApplicationReady(state, action);
   case types.AGREE_TERMS_SHORT_NOTICE:
     return agreeTermsShortNotice(state, action);
-  case types.SET_LAYOUT_MODE:
-    return setLayoutMode(state, action);
   case types.SET_INFO:
     return setInfo(state, action);
   case types.LOAD_SEARCH_REQUEST:

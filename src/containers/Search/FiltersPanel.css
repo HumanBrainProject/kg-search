@@ -17,22 +17,13 @@
 .kgs-filters {
     position: relative;
     width: 100%;
-    margin: 20px 0;
-    /*
-    transition: width 0.5s cubic-bezier(.34,1.06,.63,.93), margin-right 0.5s cubic-bezier(.34,1.06,.63,.93);
-    */
+    background-color: var(--background-color-2);
+    padding: 20px;
 }
 
 @media (min-width: 500px) {
     .kgs-filters {  
         min-width: 400px;
-    }
-}
-
-@media (min-width: 992px) {
-    .kgs-filters {
-        width: 400px;
-        margin: 30px 30px 30px 0;
     }
 }
 
@@ -56,8 +47,8 @@
 .kgs-filters .kgs-filters__header .kgs-filters__reset {
     display: inline-block;
     position: absolute;
-    top: 5px;
-    right: 0;
+    top: 20px;
+    right: 20px;
 }
 
 .kgs-filters .kgs-filters__header .kgs-filters__reset button.kgs-filters__reset-button {
