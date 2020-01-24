@@ -16,17 +16,25 @@
 
 import React from "react";
 import { connect } from "react-redux";
+import { getPreviews } from "../../helpers/InstanceHelper";
 import { PrintViewField } from "../../components/Field";
 import { HitRibbon } from "./HitRibbon";
 import { HighlightsField } from "./HighlightsField";
 import { formatHitForHighlight } from "../../helpers/HitFormattingHelpers";
 import "./Hit.css";
 
-export const HitBase = ({ type, hasNoData, hasUnknownData, ribbon, fields, highlightsField }) => (
+export const HitBase = ({ type, hasNoData, hasUnknownData, ribbon, fields, preview, highlightsField }) => (
   <div className="kgs-hit" data-type={type}>
     <HitRibbon className="kgs-hit__ribbon" {...ribbon} />
-    <div className="kgs-hit__content">
-      {insertSearchHightLights(fields, highlightsField)}
+    <div className={`kgs-hit__body ${preview? "has-preview":""}`}>
+      <div className="kgs-hit__content">
+        {insertSearchHightLights(fields, highlightsField)}
+      </div>
+      {!!preview &&
+        <div className="kgs-hit__preview">
+          <img src={preview} alt={preview}/>
+        </div>
+      }
     </div>
     {hasNoData && (
       <div className="kgs-hit__no-data">This data is currently not available.</div>
@@ -208,17 +216,25 @@ export const Hit = connect(
     const mapping = source && state.definition && state.definition.typeMappings && state.definition.typeMappings[data._type];
     const group = (data && !(data.found === false) && indexReg.test(data._index))?data._index.match(indexReg)[1]:state.groups.defaultGroup;
 
+    const getPreview = () => {
+      const previews = getPreviews(source, { children: mapping.fields });
+      if(previews.length && previews[0].staticImageUrl) {
+        return previews[0].staticImageUrl;
+      }
+      return null;
+    };
+
+    //source.allfiles = Array.from(Array(10).keys());
     // mapping.ribbon = {
     //   framed: {
-    //     dataField: “allfiles”,
-    //     aggregation: “count”,
+    //     dataField: "allfiles",
+    //     aggregation: "count",
     //     suffix: {
-    //       singular: “file”,
-    //       plural: “files”
+    //       singular: "file",
+    //       plural: "files"
     //     }
     //   }
     // };
-
     const ribbonData = mapping && mapping.ribbon && mapping.ribbon.framed && mapping.ribbon.framed.dataField && source[mapping.ribbon.framed.dataField];
     return {
       type: data && data._type,
@@ -226,6 +242,7 @@ export const Hit = connect(
       hasUnknownData: !mapping,
       ribbon: getField(group, data && data._type, "ribbon", ribbonData, null, mapping && mapping.ribbon),
       fields: getFields(group, data && data._type, source, data && data.highlight, mapping, false),
+      preview: getPreview(),
       highlightsField: {
         fields: filterHighlightFields(data && data.highlight, ["title.value", "description.value"]),
         mapping: mapping

@@ -19,7 +19,6 @@ import PropTypes from "prop-types";
 import "./List.css";
 
 const ListItem = ({ reference, data, itemComponent, onClick }) => {
-
   const handleClick = (event) => {
     onClick(data, event.currentTarget);
   };
