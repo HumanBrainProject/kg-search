@@ -15,7 +15,7 @@
 */
 
 .kgs-notice {
-    position: fixed;
+    position: relative;
     left: 0;
     bottom: 0;
     border-top: 1px solid var(--border-color-7);
@@ -72,3 +72,9 @@ main .kgs-notice .kgs-notice-agree-button:hover{
     border-color: var(--color-warning);
 }
 
+
+@media (min-width: 992px) {
+    .kgs-notice {
+        position: fixed;
+    }
+}
