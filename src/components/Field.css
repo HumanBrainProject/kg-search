@@ -39,8 +39,8 @@
 .kgs-field .field-label {
     display: inline-block;
     font-weight: bold;
-    font-size: var(--font-size-small);
-    color: var(--color-12);
+    font-size: var(--font-size);
+    color: var(--color-8);
 }
 
 .kgs-field .field-label.as-block {

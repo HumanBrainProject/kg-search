@@ -19,15 +19,15 @@
   flex-wrap: nowrap;
   align-items: center;
   justify-content: flex-start;
-  background-color: var(--background-color-3);
-  padding: 6px 10px 6px 10px;
-  margin:0 8px 8px 0;
+  /* background-color: var(--background-color-3); */
+  /* padding: 6px 10px 6px 10px; */
+  margin:0 8px 8px 10px;
 }
 
 .field-value__tag div svg {
   display: inline-flex;
   vertical-align: middle;
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   margin-right: 5px;
 }

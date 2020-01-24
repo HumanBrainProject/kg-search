@@ -58,11 +58,8 @@
 /**********************************************************************************************************************/
 
 .kgs-hit[data-type] .kgs-field__title {
-    margin-top: 2px;
-    margin-left: 12px;
     font-size: var(--font-size-big);
-    font-weight: 400;
-    color: var(--link-color-1);
+    font-weight: bold;
     flex-basis: 80%;
     line-height: 1.3em;
 }

@@ -44,6 +44,10 @@
     display: block;
 }
 
+.kgs-field__list.items-as-tags > span > span {
+    display: block;
+}
+
 @media (min-width: 992px) {
     .kgs-field__table > .kgs-field__list {
         display: none;

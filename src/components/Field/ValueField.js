@@ -70,11 +70,10 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     const isAFileLink = typeof data.url === "string" && /^https?:\/\/.+\.cscs\.ch\/.+$/.test(data.url);
     const hasExternalLink = data.url && !isAFileLink && getUrlLocation(data.url) !== window.location.origin;
     const hasAnyLink = hasInstanceLink || hasMailToLink || hasLink;
-    const isIcon = mapping.type === "icon" && ((data.image && data.image.url) || mapping.icon);
     const isLinkWithIcon = mapping.linkIcon && data.url ? true : false;
-    const isTag = !hasAnyLink && !isIcon && !!mapping.tagIcon;
-    const isMarkdown = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && !!mapping.markdown;
-    const isCollapsible = !!renderUserInteractions && !hasAnyLink && !isIcon && !isTag && mapping.collapsible && typeof data.value === "string" && data.value.length >= 1600;
+    const isTag = !hasAnyLink && !!mapping.tagIcon;
+    const isMarkdown = !!renderUserInteractions && !hasAnyLink && !isTag && !!mapping.markdown;
+    const isCollapsible = !!renderUserInteractions && !hasAnyLink && !isTag && mapping.collapsible && typeof data.value === "string" && data.value.length >= 1600;
     const showPreview = !!renderUserInteractions && data.previewUrl && (typeof data.previewUrl === "string" || typeof data.previewUrl.url === "string");
 
     let value = data.value;
@@ -104,13 +103,6 @@ const ValueFieldBase = (renderUserInteractions = true) => {
         isAFileLink: isAFileLink,
         isExternalLink: hasMailToLink || hasExternalLink,
         icon: mapping.linkIcon
-      };
-    } else if (isIcon) {
-      ValueComponent = Icon;
-      valueProps = {
-        title: value,
-        url: data && data.image && data.image.url,
-        inline: setIconColor(mapping && mapping.icon)
       };
     } else if (isTag) {
       ValueComponent = Tag;

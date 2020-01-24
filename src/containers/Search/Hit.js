@@ -22,11 +22,10 @@ import { HighlightsField } from "./HighlightsField";
 import { formatHitForHighlight } from "../../helpers/HitFormattingHelpers";
 import "./Hit.css";
 
-export const HitBase = ({ type, hasNoData, hasUnknownData, ribbon, icon, fields, highlightsField }) => (
+export const HitBase = ({ type, hasNoData, hasUnknownData, ribbon, fields, highlightsField }) => (
   <div className="kgs-hit" data-type={type}>
     <HitRibbon className="kgs-hit__ribbon" {...ribbon} />
     <div className="kgs-hit__content">
-      <PrintViewField key={icon && icon.name} {...icon} />
       {insertSearchHightLights(fields, highlightsField)}
     </div>
     {hasNoData && (
@@ -209,25 +208,23 @@ export const Hit = connect(
     const mapping = source && state.definition && state.definition.typeMappings && state.definition.typeMappings[data._type];
     const group = (data && !(data.found === false) && indexReg.test(data._index))?data._index.match(indexReg)[1]:state.groups.defaultGroup;
 
-    const ribbonData = mapping && mapping.ribbon && mapping.ribbon.framed && mapping.ribbon.framed.dataField && source[mapping.ribbon.framed.dataField];
-    const iconData = {
-      value: data && data._type,
-      image: {
-        url: source && source.image && source.image.url
-      }
-    };
-    const iconMapping = {
-      visible: true,
-      type: "icon",
-      icon: mapping && mapping.icon
-    };
+    // mapping.ribbon = {
+    //   framed: {
+    //     dataField: “allfiles”,
+    //     aggregation: “count”,
+    //     suffix: {
+    //       singular: “file”,
+    //       plural: “files”
+    //     }
+    //   }
+    // };
 
+    const ribbonData = mapping && mapping.ribbon && mapping.ribbon.framed && mapping.ribbon.framed.dataField && source[mapping.ribbon.framed.dataField];
     return {
       type: data && data._type,
       hasNoData: !source,
       hasUnknownData: !mapping,
       ribbon: getField(group, data && data._type, "ribbon", ribbonData, null, mapping && mapping.ribbon),
-      icon: getField(group, data && data._type, "icon", iconData, null, iconMapping),
       fields: getFields(group, data && data._type, source, data && data.highlight, mapping, false),
       highlightsField: {
         fields: filterHighlightFields(data && data.highlight, ["title.value", "description.value"]),

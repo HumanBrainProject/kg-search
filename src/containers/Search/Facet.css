@@ -75,7 +75,7 @@
 
 .kgs-facet .kgs-facet-checkbox.is-active .kgs-facet-checkbox__text {
     color: var(--color-selected);
-    font-weight: normal;
+    font-weight: bold;
 }
 .kgs-facet .kgs-facet-checkbox .kgs-facet-checkbox__count {
     display: inline-block;
