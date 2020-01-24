@@ -29,8 +29,9 @@
 }
 
 .kgs-footer-nav {
+    padding: 14px var(--site-margin);
     position: relative;
-    padding: 15px 0 35px 0;
+    /* padding: 15px 0 35px 0; */
     display: -ms-grid;
     display: grid;
     -ms-grid-columns: min-content auto;
