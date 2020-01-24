@@ -21,26 +21,38 @@ import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
 import "./InfoPanel.css";
 
-const converter = new showdown.Converter({extensions: [xssFilter]});
+export class InfoPanel extends React.Component {
+  onClose = e => {
+    if (this.wrapperRef && this.wrapperRef.contains(e.target)) {
+      e && e.preventDefault();
+    } else {
+      const { onClose } = this.props;
+      typeof onClose === "function" && onClose();
+    }
+  };
 
-export const InfoPanel = ({text, onClose}) => {
-  if (!text) {
-    return null;
-  }
-  const html = converter.makeHtml(text);
-  return (
-    <div className="kgs-info">
-      <div className="kgs-info__panel">
-        <div className="kgs-info__container">
-          <span className="kgs-info__content" dangerouslySetInnerHTML={{__html:html}} />
-          <button className="kgs-info__closeButton" onClick={onClose}>
-            <i className="fa fa-close" />
-          </button>
+  render() {
+    const {text, onClose} = this.props;
+    if (!text) {
+      return null;
+    }
+    const converter = new showdown.Converter({extensions: [xssFilter]});
+    const html = converter.makeHtml(text);
+    return (
+      <div className="kgs-info" onClick={this.onClose} >
+        <div className="kgs-info__panel" ref={ref => this.wrapperRef = ref}>
+          <div className="kgs-info__container">
+            <span className="kgs-info__content" dangerouslySetInnerHTML={{__html:html}} />
+            <button className="kgs-info__closeButton" onClick={onClose}>
+              <i className="fa fa-close" />
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
+
 
 InfoPanel.propTypes = {
   text: PropTypes.string,

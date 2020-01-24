@@ -3,6 +3,7 @@
 exports[`InfoPanel component renders initially 1`] = `
 <div
   className="kgs-info"
+  onClick={[Function]}
 >
   <div
     className="kgs-info__panel"
