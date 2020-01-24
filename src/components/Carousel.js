@@ -24,7 +24,7 @@ const CarouselItem = ({item, showPrevious, onClose, onPrevious, itemComponent, n
   const ItemComponent =  itemComponent;
   const NavigationComponent = navigationComponent;
   return (
-    <div className={`kgs-carousel__item position${item.position}`} >
+    <div className={`kgs-carousel__item position${item.position}`}>
       <div className="kgs-carousel__content">
         <div className="kgs-carousel__header">
           {item.isActive && showPrevious && (
@@ -52,6 +52,7 @@ const CarouselItem = ({item, showPrevious, onClose, onPrevious, itemComponent, n
     </div>
   );
 };
+
 
 const nbOfItems = 5;
 
@@ -88,6 +89,15 @@ export class Carousel extends React.Component {
     }
   }
 
+  onClose = e => {
+    if (this.wrapperRef && this.wrapperRef.contains(e.target)) {
+      e && e.preventDefault();
+    } else {
+      const { onClose } = this.props;
+      typeof onClose === "function" && onClose();
+    }
+  };
+
   render(){
     const {className, show, data, onPrevious, onClose, itemComponent, navigationComponent } = this.props;
     if (!show || !Array.isArray(data) || !data.length || !itemComponent) {
@@ -108,8 +118,8 @@ export class Carousel extends React.Component {
     const classNames = ["kgs-carousel", className].join(" ");
 
     return(
-      <div className={classNames}>
-        <div className="kgs-carousel__panel">
+      <div className={classNames} onClick={this.onClose}>
+        <div className="kgs-carousel__panel" ref={ref => this.wrapperRef = ref}>
           {items.map(item => (
             <CarouselItem key={item.id} item={item} showPrevious={showPrevious} onPrevious={onPrevious} onClose={onClose} itemComponent={itemComponent} navigationComponent={navigationComponent} />
           ))}

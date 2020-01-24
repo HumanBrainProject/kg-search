@@ -16,8 +16,6 @@
 
 import React from "react";
 import { termsOfUse } from "../../data/termsOfUse.js";
-import { setIconColor } from "../../helpers/TypeIconHelper";
-import { Icon } from "../Icon";
 import { Details } from "../Details";
 import { Text } from "../Text";
 import { CollapsibleText } from "../CollapsibleText";
