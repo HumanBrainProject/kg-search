@@ -2,7 +2,7 @@
 
 exports[`List component renders initially 1`] = `
 <div
-  className="kgs-list className is-list"
+  className="kgs-list className"
 >
   <div>
     a title
