@@ -63,7 +63,6 @@
     font-weight: bold;
     font-size: var(--font-size-small);
     line-height: 24px;
-    color: #555;
 }
 
 .kgs-instance__header h3.kgs-instance__group.show {
@@ -71,7 +70,6 @@
 }
 
 .kgs-instance__header h3.kgs-instance__group strong {
-    color: var(--color-selected);
     font-size: 24px;
     font-weight: normal;
     text-transform: capitalize;
