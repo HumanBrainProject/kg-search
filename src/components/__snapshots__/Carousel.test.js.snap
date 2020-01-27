@@ -13,107 +13,35 @@ exports[`Carousel component renders initially 1`] = `
     >
       <div
         className="kgs-carousel__content"
-      >
-        <div
-          className="kgs-carousel__header"
-        >
-          <div
-            className="kgs-carousel__navigation"
-          />
-        </div>
-        <div
-          className="kgs-carousel__body"
-        />
-      </div>
+      />
     </div>
     <div
       className="kgs-carousel__item position0"
     >
       <div
         className="kgs-carousel__content"
-      >
-        <div
-          className="kgs-carousel__header"
-        >
-          <button
-            className="kgs-carousel__previous-button"
-            onClick={[Function]}
-          >
-            <i
-              className="fa fa-chevron-left"
-            />
-             Previous
-          </button>
-          <div
-            className="kgs-carousel__navigation"
-          />
-          <button
-            className="kgs-carousel__close-button"
-            onClick={[Function]}
-          >
-            <i
-              className="fa fa-close"
-            />
-          </button>
-        </div>
-        <div
-          className="kgs-carousel__body"
-        />
-      </div>
+      />
     </div>
     <div
       className="kgs-carousel__item position1"
     >
       <div
         className="kgs-carousel__content"
-      >
-        <div
-          className="kgs-carousel__header"
-        >
-          <div
-            className="kgs-carousel__navigation"
-          />
-        </div>
-        <div
-          className="kgs-carousel__body"
-        />
-      </div>
+      />
     </div>
     <div
       className="kgs-carousel__item position2"
     >
       <div
         className="kgs-carousel__content"
-      >
-        <div
-          className="kgs-carousel__header"
-        >
-          <div
-            className="kgs-carousel__navigation"
-          />
-        </div>
-        <div
-          className="kgs-carousel__body"
-        />
-      </div>
+      />
     </div>
     <div
       className="kgs-carousel__item position3"
     >
       <div
         className="kgs-carousel__content"
-      >
-        <div
-          className="kgs-carousel__header"
-        >
-          <div
-            className="kgs-carousel__navigation"
-          />
-        </div>
-        <div
-          className="kgs-carousel__body"
-        />
-      </div>
+      />
     </div>
   </div>
 </div>
