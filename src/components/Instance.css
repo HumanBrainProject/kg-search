@@ -423,7 +423,7 @@
 }
 
 .kgs-instance[data-type] .kgs-field__title {
-    margin-top: 5px;
+    margin-top: 10px;
     font-size: 28px;
     font-weight: 500;
     line-height: 1em;
