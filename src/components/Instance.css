@@ -336,7 +336,7 @@
 }
 
 .kgs-instance__header .kgs-copy-to-clipboard button {
-    color: var(--color-22);
+    color: var(--color-33);
     font-weight: 500;
     box-shadow: none;
     transition: none;
@@ -361,7 +361,7 @@
 
 .kgs-instance__header .kgs-share-links a.kgs-email-link,
 .kgs-instance__header .kgs-share-links a.kgs-email-link:visited {
-    color: var(--color-22);
+    color: var(--color-33);
     transition: none;
     box-shadow: none;
 }
@@ -374,7 +374,7 @@
 
 .kgs-instance__header .kgs-share-links a.kgs-email-link .fa-envelope-o:before,
 .kgs-instance__header .kgs-share-links a.kgs-email-link:visited .fa-envelope-o:before {
-    color: var(--color-22);
+    color: var(--color-33);
 }
 
 .kgs-instance__header .kgs-share-links a.kgs-email-link:hover .fa-envelope-o:before,
@@ -383,22 +383,22 @@
 }
 
 .kgs-instance-container .kgs-instance__header button.kgs-container__backButton {
-    color: var(--color-22);
+    color: var(--color-33);
     font-weight: 500;
 }
 
 .kgs-instance-container .kgs-instance__header button.kgs-container__backButton:hover {
-    color: var(--color-22);
+    color: var(--color-33);
     font-weight: bold;
 }
 
 .kgs-instance-container .kgs-instance__header button.kgs-container__backButton .fa-chevron-left:before {
-    color: var(--color-22);
+    color: var(--color-33);
     font-weight: 500;
 }
 
 .kgs-instance-container .kgs-instance__header button.kgs-container__backButton:hover .fa-chevron-left:before {
-    color: var(--color-22);
+    color: var(--color-33);
     font-weight: bold;
 }
 
@@ -440,9 +440,9 @@
 /**********************************************************************************************************************/
 
 .kgs-instance[data-type] .kgs-instance__header .kgs-field {
-    color: var(--color-22);
+    color: var(--color-33);
 }
 
 .kgs-instance[data-type] .kgs-instance__header .kgs-field__type .field-value {
-    color: var(--color-22);
+    color: var(--color-33);
 }
