@@ -66,10 +66,9 @@ export class Instance extends React.PureComponent {
         <div className="kgs-instance__header">
           <NavigationComponent />
           <div className="kgs-instance__header_fields">
-            <h3 className={`kgs-instance__group ${header.group? "show" : ""}`}>Group: <strong>{header.group}</strong></h3>
-            <div>
-              <Field {...header.type} />
-            </div>
+          <span className="label label-danger">{header.group}</span>
+            {/* <h3 className={`kgs-instance__group ${header.group? "show" : ""}`}>Group: <strong>{header.group}</strong></h3> */}
+            <span className="label label-success">{header.type.data.value}</span>
             <div>
               <Field {...header.title} />
             </div>

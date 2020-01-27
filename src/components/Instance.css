@@ -57,6 +57,10 @@
     padding: 0 35px 15px 35px;
 }
 
+.kgs-instance__header_fields .label{
+    margin-right: 10px;
+}
+
 .kgs-instance__header h3.kgs-instance__group {
     display: none;
     margin-top: 0;
