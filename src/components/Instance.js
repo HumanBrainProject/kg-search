@@ -43,7 +43,7 @@ export class Instance extends React.PureComponent {
   }
 
   render() {
-    const { id, type, hasNoData, hasUnknownData, header, previews, main, summary, groups, ImagePreviewsComponent, ImagePopupComponent, TermsShortNoticeComponent } = this.props;
+    const { id, type, hasNoData, hasUnknownData, header, previews, main, summary, groups, NavigationComponent, ImagePreviewsComponent, ImagePopupComponent, TermsShortNoticeComponent } = this.props;
 
     if (hasNoData) {
       return (
@@ -63,17 +63,20 @@ export class Instance extends React.PureComponent {
 
     return (
       <div className="kgs-instance" data-type={type}>
+        <div className="kgs-instance__header">
+          <NavigationComponent />
+          <div className="kgs-instance__header_fields">
+            <h3 className={`kgs-instance__group ${header.group? "show" : ""}`}>Group: <strong>{header.group}</strong></h3>
+            <div>
+              <Field {...header.type} />
+            </div>
+            <div>
+              <Field {...header.title} />
+            </div>
+          </div>
+        </div>
         <div className="kgs-instance-scroll">
           <div className={`kgs-instance-content kgs-instance__grid ${(previews && previews.length) ? "kgs-instance__with-previews" : ""}`}>
-            <div className="kgs-instance__header">
-              <h3 className={`kgs-instance__group ${header.group? "show" : ""}`}>Group: <strong>{header.group}</strong></h3>
-              <div>
-                <Field {...header.type} />
-              </div>
-              <div>
-                <Field {...header.title} />
-              </div>
-            </div>
             <ImagePreviewsComponent className={`kgs-instance__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
             <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
             <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />

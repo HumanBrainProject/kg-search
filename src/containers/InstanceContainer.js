@@ -38,6 +38,16 @@ class BackLinkButton extends React.Component {
     );
   }
 }
+
+const Navigation = () => (
+  <div className="kgs-instance-container__header">
+    <div className="kgs-instance-container__left">
+      <BackLinkButton />
+    </div>
+    <ShareButtons/>
+  </div>
+);
+
 export class InstanceContainer extends React.Component {
   componentDidMount() {
     const { setInitialGroup, location } = this.props;
@@ -99,15 +109,7 @@ export class InstanceContainer extends React.Component {
       <React.Fragment>
         <div className="kgs-instance-container" >
           {showInstance && (
-            <React.Fragment>
-              <div className="kgs-instance-container__header">
-                <div className="kgs-instance-container__left">
-                  <BackLinkButton />
-                </div>
-                <ShareButtons/>
-              </div>
-              <Instance {...this.props.instanceProps} />
-            </React.Fragment>
+            <Instance {...this.props.instanceProps} NavigationComponent={Navigation} />
           )}
         </div>
         <DefinitionErrorPanel />

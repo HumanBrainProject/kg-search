@@ -19,17 +19,16 @@
 }
 
 .kgs-instance-container__header {
-  padding: 15px 0 10px 0;
+  padding: 15px 15px 10px 35px;
 }
 
 .kgs-instance-container__header .kgs-share-links {
   float: right;
-  margin-top: 15px;
+  margin-top: 2px;
   margin-left: 15px;
 }
 
 .kgs-instance-container .kgs-instance-content {
-  padding: 0;
   margin-bottom: var(--site-margin);
 }
 

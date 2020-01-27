@@ -19,40 +19,44 @@ import PropTypes from "prop-types";
 import { isMobile } from "../helpers/BrowserHelpers";
 import "./Carousel.css";
 
+const getNavigation = (item, showPrevious, onClose, onPrevious, navigationComponent) => {
+  const NavigationComponent = navigationComponent;
+  const Navigation = () => (
+    <div className="kgs-carousel__header">
+      {item.isActive && showPrevious && (
+        <button className="kgs-carousel__previous-button" onClick={onPrevious}>
+          <i className="fa fa-chevron-left" /> Previous
+        </button>
+      )}
+      <div className="kgs-carousel__navigation">
+        {item.isActive && item.data && NavigationComponent && (
+          <NavigationComponent/>
+        )}
+      </div>
+      {item.isActive && (
+        <button className="kgs-carousel__close-button" onClick={onClose}>
+          <i className="fa fa-close" />
+        </button>
+      )}
+    </div>
+  );
+  Navigation.displayName = "Navigation";
+  return Navigation;
+};
 
 const CarouselItem = ({item, showPrevious, onClose, onPrevious, itemComponent, navigationComponent}) => {
   const ItemComponent =  itemComponent;
-  const NavigationComponent = navigationComponent;
+  const NavigationComponent = getNavigation(item, showPrevious, onClose, onPrevious, navigationComponent);
   return (
     <div className={`kgs-carousel__item position${item.position}`}>
       <div className="kgs-carousel__content">
-        <div className="kgs-carousel__header">
-          {item.isActive && showPrevious && (
-            <button className="kgs-carousel__previous-button" onClick={onPrevious}>
-              <i className="fa fa-chevron-left" /> Previous
-            </button>
-          )}
-          <div className="kgs-carousel__navigation">
-            {item.isActive && item.data && NavigationComponent && (
-              <NavigationComponent/>
-            )}
-          </div>
-          {item.isActive && (
-            <button className="kgs-carousel__close-button" onClick={onClose}>
-              <i className="fa fa-close" />
-            </button>
-          )}
-        </div>
-        <div className="kgs-carousel__body">
-          {item.isActive && item.data && ItemComponent && (
-            <ItemComponent data={item.data} />
-          )}
-        </div>
+        {item.isActive && item.data && ItemComponent && (
+          <ItemComponent data={item.data}  NavigationComponent={NavigationComponent}  />
+        )}
       </div>
     </div>
   );
 };
-
 
 const nbOfItems = 5;
 
