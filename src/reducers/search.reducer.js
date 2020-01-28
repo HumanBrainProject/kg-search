@@ -20,6 +20,7 @@ import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
 const initialState = {
   queryFields: ["title", "description"],
   error: null,
+  message: "",
   initialParams: {},
   facets: [],
   types: [],
@@ -267,7 +268,8 @@ const loadSearchRequest = state => {
   return {
     ...state,
     isLoading: true,
-    error: null
+    error: null,
+    message: ""
   };
 };
 
@@ -349,6 +351,7 @@ const loadSearchResult = (state, action) => {
 
   return {
     ...state,
+    message: "",
     initialRequestDone: true,
     isLoading: false,
     facets: getUpdatedFacets(state.facets, action.results),
@@ -359,9 +362,22 @@ const loadSearchResult = (state, action) => {
   };
 };
 
+const loadSearchBadRequest = (state, action) => {
+  return {
+    ...state,
+    message: action.error,
+    isLoading: false,
+    hits: [],
+    from: 0,
+    page: 1,
+    totalPages: 0
+  };
+};
+
 const loadSearchFail = (state, action) => {
   return {
     ...state,
+    message: "",
     error: action.error,
     isLoading: false,
     hits: [],
@@ -407,6 +423,7 @@ export function reducer(state = initialState, action = {}) {
   case types.CLEAR_SEARCH_ERROR:
     return clearSearchError(state, action);
   case types.LOAD_SEARCH_BAD_REQUEST:
+    return loadSearchBadRequest(state, action);
   case types.LOAD_SEARCH_SERVICE_FAILURE:
     return loadSearchFail(state, action);
   default:

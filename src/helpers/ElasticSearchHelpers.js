@@ -159,17 +159,21 @@ export class ElasticSearchHelpers {
       const terms = getTerms(tree);
       let maxWildcard = maxWildcardConfig < 0 ? terms.length : terms.length < maxWildcardConfig ? terms.length : maxWildcardConfig;
       let maxFuzzySearch = maxFuzzySearchConfig < 0 ? terms.length : terms.length < maxFuzzySearchConfig ? terms.length : maxFuzzySearchConfig;
-      const filteredTerms = terms.length === 1 ? terms : (terms.filter(term => {
-        const escapedTerm = escapeSpecialCharacters(term);
-        const doesContainSpecialCharacters = escapedTerm !== term;
-        if (doesContainSpecialCharacters) {
-          const reg = new RegExp(escapedTerm, "g");
-          str = str.replace(reg, escapedTerm);
-        }
-        return !doesContainSpecialCharacters && (term.length >= queryTweaking.wildcard.minNbOfChars || term.length >= queryTweaking.fuzzySearch.minNbOfChars) &&
+      const filteredTerms = (terms.length === 1 ? terms : (terms.filter(term => {
+        return (term.length >= queryTweaking.wildcard.minNbOfChars || term.length >= queryTweaking.fuzzySearch.minNbOfChars) &&
           !term.includes(".") &&
           !["a", "above", "all", "an", "are", "as", "any", "because", "below", "besides", "but", "by", "eg", "either", "for", "hence", "how", "which", "where", "who", "ie", "in", "instead", "is", "none", "of", "one", "other", "over", "same", "that", "the", "then", "thereby", "therefore", "this", "though", "thus", "to", "under", "until", "when", "why"].includes(term);
-      }));
+      }))).filter(term => {
+        const escapedTerm = escapeSpecialCharacters(term);
+        if (escapedTerm !== term) {
+          const reg = new RegExp(escapedTerm, "g");
+          str = str.replace(reg, escapedTerm);
+          return false;
+        }
+        return true;
+      }).filter(term => {
+        return !str.includes(`"${term}"`);
+      });
       if (terms.length <= queryTweaking.maxNbOfTermsTrigger) {
         filteredTerms.forEach((term, idx) => {
           const wildcardCondition = terms.length === 1 || (idx < maxWildcard && term.length >= queryTweaking.wildcard.minNbOfChars);
@@ -201,13 +205,7 @@ export class ElasticSearchHelpers {
     } catch (e) {
       //Special character is not supported in parser
       // try minimal replacements:
-
       str = escapeSpecialCharacters(str);
-
-      //When odd quotes escape last one
-      if (((str.match(/"/g) || []).length - (str.match(/\\"/g) || []).length) % 2 === 1) {
-        str = str.match(/(.*)"([^"]*)$/).reduce((r, s, i) => i === 0 ? "" : i === 1 ? r + s + "\\\"" : r + s, "");
-      }
     }
     return str;
   };

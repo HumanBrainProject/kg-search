@@ -18,11 +18,16 @@ import React from "react";
 import { connect } from "react-redux";
 import "./HitStats.css";
 
-export const HitStatsBase = ({className, show, hitCount, from, to}) => {
+export const HitStatsBase = ({className, show, message, hitCount, from, to}) => {
   if (!show) {
     return null;
   }
   const classNames = ["kgs-hitStats", className].join(" ");
+  if (message) {
+    return (
+      <span className={classNames}>{message}</span>
+    );
+  }
   if (hitCount === 0) {
     return (
       <span className={classNames}>No results were found. Please refine your search.</span>
@@ -40,6 +45,7 @@ export const HitStats = connect(
     const to = from + count - 1;
     return {
       show: !state.search.isLoading,
+      message: state.search.message,
       hitCount: state.search.total?state.search.total:0,
       from: from,
       to: to
