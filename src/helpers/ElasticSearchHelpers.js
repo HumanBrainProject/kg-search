@@ -56,6 +56,27 @@ export class ElasticSearchHelpers {
           #*/
   static sanitizeString = q => {
 
+    // Escape special characters
+    // http://lucene.apache.org/core/old_versioned_docs/versions/2_9_1/queryparsersyntax.html#Escaping Special Characters
+    function escapeSpecialCharacters(str) {
+      const spectialChars = "\\+-&|!(){}[]^~*?:/";
+      const re = new RegExp("([" + spectialChars.split("").map(c => "\\" + c).join("") + "])", "g");
+      return str.replace(re, "\\$1");
+    }
+
+    function trimOperators(str) {
+      let res = str;
+      res = res.replace(/^\s*&&\s*(.*)$/, "$1");
+      res = res.replace(/^\s*\|\|\s*(.*)$/, "$1");
+      res = res.replace(/^(.*)\s*&&\s*$/, "$1");
+      res = res.replace(/^(.*)\s*\|\|\s*$/, "$1");
+      res = res.trim();
+      if (res !== str) {
+        return trimOperators(res);
+      }
+      return res;
+    }
+
     function getTerms(node) {
       function addTermsFromExpression(node, terms) {
 
@@ -113,6 +134,7 @@ export class ElasticSearchHelpers {
     }
 
     let str = q.trim().replace(/\s+/g, " ");
+    str = trimOperators(str);
 
     // Capitalize operator
     ["AND", "OR", "NOT"].forEach(op => {
@@ -138,7 +160,13 @@ export class ElasticSearchHelpers {
       let maxWildcard = maxWildcardConfig < 0 ? terms.length : terms.length < maxWildcardConfig ? terms.length : maxWildcardConfig;
       let maxFuzzySearch = maxFuzzySearchConfig < 0 ? terms.length : terms.length < maxFuzzySearchConfig ? terms.length : maxFuzzySearchConfig;
       const filteredTerms = terms.length === 1 ? terms : (terms.filter(term => {
-        return (term.length >= queryTweaking.wildcard.minNbOfChars || term.length >= queryTweaking.fuzzySearch.minNbOfChars) &&
+        const escapedTerm = escapeSpecialCharacters(term);
+        const doesContainSpecialCharacters = escapedTerm !== term;
+        if (doesContainSpecialCharacters) {
+          const reg = new RegExp(escapedTerm, "g");
+          str = str.replace(reg, escapedTerm);
+        }
+        return !doesContainSpecialCharacters && (term.length >= queryTweaking.wildcard.minNbOfChars || term.length >= queryTweaking.fuzzySearch.minNbOfChars) &&
           !term.includes(".") &&
           !["a", "above", "all", "an", "are", "as", "any", "because", "below", "besides", "but", "by", "eg", "either", "for", "hence", "how", "which", "where", "who", "ie", "in", "instead", "is", "none", "of", "one", "other", "over", "same", "that", "the", "then", "thereby", "therefore", "this", "though", "thus", "to", "under", "until", "when", "why"].includes(term);
       }));
@@ -171,15 +199,10 @@ export class ElasticSearchHelpers {
         });
       }
     } catch (e) {
-
       //Special character is not supported in parser
       // try minimal replacements:
 
-      // Escape special characters
-      // http://lucene.apache.org/core/old_versioned_docs/versions/2_9_1/queryparsersyntax.html#Escaping Special Characters
-      const spectialChars = "\\+-&|!(){}[]^~*?:/";
-      const re = new RegExp("([" + spectialChars.split("").map(c => "\\" + c).join("") + "])", "g");
-      str = str.replace(re, "\\$1");
+      str = escapeSpecialCharacters(str);
 
       //When odd quotes escape last one
       if (((str.match(/"/g) || []).length - (str.match(/\\"/g) || []).length) % 2 === 1) {
