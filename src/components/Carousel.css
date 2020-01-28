@@ -269,6 +269,6 @@
     content: "esc";
     position: absolute;
     transform: translate(-16px,14px);
-    font-size: var(--font-size-smaller);
+    font-size: var(--font-size-extra-small);
     color: var(--color-22);
 }
