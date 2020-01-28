@@ -209,7 +209,7 @@
     background-color: transparent;
     border: 0;
     border-radius: 3px;
-    color: var(--color-22);
+    color: var(--color-33);
     font-weight: 500;
 }
 
@@ -239,7 +239,7 @@
     padding: 1px 7px 2px;
     border: 0;
     background-color: transparent;
-    color: var(--color-22);
+    color: var(--color-33);
     text-align: center;
     font-weight: 500;
     z-index: 1500;
@@ -248,7 +248,6 @@
 .kgs-carousel__close-button .fa-close:before {
     font-weight: 500;
 }
-
 
 /* small hack to fix adjustment for ie 11 */
 @media all and (-ms-high-contrast:none) {
@@ -264,11 +263,10 @@
     font-weight: bold;
 }
 
-
 .kgs-carousel__close-button::after {
     content: "esc";
     position: absolute;
     transform: translate(-16px,14px);
     font-size: var(--font-size-extra-small);
-    color: var(--color-22);
+    color: var(--color-33);
 }

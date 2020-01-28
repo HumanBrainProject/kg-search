@@ -148,7 +148,6 @@ export const mapStateToProps = (state, props) => {
     hasUnknownData: !mapping,
     header: {
       group: (group !== state.groups.defaultGroup)?group:null,
-      icon: getField(group, data && data._type, "icon", { value: data && data._type, image: { url: source && source.image && source.image.url } }, { visible: true, type: "icon", icon: mapping && mapping.icon }),
       type: getField(group, data && data._type, "type"),
       title: getField(group, data && data._type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"])
     },
