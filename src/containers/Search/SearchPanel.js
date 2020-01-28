@@ -72,19 +72,21 @@ class SeachPanelBaseComponent extends React.Component {
       <div className={`kgs-search-panel ${isFloating ? " is-fixed-position" : ""}`}>
         <h1>EBRAINS Knowledge Graph</h1>
         <div>
-          <i className="fa fa-search kg-search-bar__icon"></i>
-          <input className="kg-search-bar"
-            type="text"
-            placeholder="Search (e.g. brain or neuroscience)"
-            aria-label="Search"
-            value={this.state.value}
-            onChange={this.handleChange}
-            onKeyDown={this.handleKeyDown}
-            ref={this.ref}  />
+          <div>
+            <i className="fa fa-search kg-search-bar__icon"></i>
+            <input className="kg-search-bar"
+              type="text"
+              placeholder="Search (e.g. brain or neuroscience)"
+              aria-label="Search"
+              value={this.state.value}
+              onChange={this.handleChange}
+              onKeyDown={this.handleKeyDown}
+              ref={this.ref}  />
+            <button type="button" className="kgs-search-panel-help__button" title="Help" onClick={onHelp}>
+              <i className="fa fa-info-circle fa-2x"></i>
+            </button>
+          </div>
           <button className="kgs-search-panel-button" onClick={this.handleSearch}>Search</button>
-          <button type="button" className="kgs-search-panel-help__button" title="Help" onClick={onHelp}>
-            <i className="fa fa-info-circle fa-2x"></i>
-          </button>
         </div>
       </div>
     );

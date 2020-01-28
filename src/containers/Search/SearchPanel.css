@@ -53,6 +53,11 @@
     width: 100%;
 }
 
+.kgs-search-panel > div > div {
+    position: relative;
+    flex: 1;
+}
+
 @media (min-width: 576px) {
     .kgs-search-panel.is-fixed-position {
         padding: 15px var(--site-margin);
@@ -89,7 +94,7 @@
 .kgs-search-panel input.kg-search-bar {
     display: inline-block;
     width: 100%;
-    padding: 15px 35px 15px 60px;
+    padding: 15px 60px 15px 60px;
     vertical-align: top;
     color: var(--color-11);
     font-size: 24px;
@@ -117,7 +122,7 @@
 
 .kgs-search-panel .kgs-search-panel-button {
     display: none;
-    margin: 0 30px;
+    margin: 0 0 0 30px;
     padding: 10px 40px;
     border: 1px solid var(--link-highlight-color);
     border-radius: 2px;
@@ -140,25 +145,24 @@
 
 .kgs-search-panel button.kgs-search-panel-help__button {
     display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
     width: 60px;
     height: 60px;
-    margin: 0 0 0 20px;
+    margin: 0 ;
     padding: 16px 0;
     border: 0;
-    background-color: var(--link-highlight-color);
-    color: var(--color-32);
+    background-color: transparent;
+    color: var(--link-highlight-color);
     text-align: center;
     cursor: pointer;
     transition: box-shadow 0.2s ease-in, color 0.2s ease-in;
 }
 
-.kgs-search-panel button.kgs-search-panel-help__button:hover {
-    box-shadow: 3px 3px 6px var(--box-shadow-4);
-}
-
 .kgs-search-panel button.kgs-search-panel-help__button i,
 .kgs-search-panel button.kgs-search-panel-help__button:hover i {
-    color: var(--color-32);
+    color: var(--link-highlight-color);
 }
 
 .kgs-search-panel .kg-search-bar .sk-spinning-loader {
@@ -169,9 +173,5 @@
 @media (min-width: 992px) {
     .kgs-search-panel .kgs-search-panel-button {
         display: inline-block;
-    }
-
-    .kgs-search-panel button.kgs-search-panel-help__button {
-        margin: 0;
     }
 }
