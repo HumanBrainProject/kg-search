@@ -448,3 +448,8 @@
 .kgs-instance[data-type] .kgs-instance__header .kgs-field__type .field-value {
     color: var(--color-33);
 }
+
+.kgs-instance[data-type] > div > div > div > .kgs-field {
+    line-height: 1.75em;
+    margin-bottom: 20px;
+}
