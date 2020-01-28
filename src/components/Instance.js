@@ -72,6 +72,7 @@ export class Instance extends React.PureComponent {
             <div>
               <Field {...header.title} />
             </div>
+            <FieldsPanel fields={header.fields} fieldComponent={Field} />
           </div>
         </div>
         <div className="kgs-instance-scroll">

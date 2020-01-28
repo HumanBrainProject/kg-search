@@ -149,10 +149,11 @@ export const mapStateToProps = (state, props) => {
     header: {
       group: (group !== state.groups.defaultGroup)?group:null,
       type: getField(group, data && data._type, "type"),
-      title: getField(group, data && data._type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"])
+      title: getField(group, data && data._type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"]),
+      fields: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "header" && name !== "title"),
     },
     previews: getPreviews(source, { children: mapping.fields }),
-    main: getFields(group, data && data._type, source, mapping, (type, name) => name !== "title"),
+    main: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout !== "header" && name !== "title"),
     summary: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "summary" && name !== "title"),
     groups: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title")
   };
