@@ -106,6 +106,23 @@ export const loadDefinition = () => {
         source.order = source[SEARCHUI_NAMESPACE + "order"];
         delete source[SEARCHUI_NAMESPACE + "order"];
       }
+      if (source[SEARCHUI_NAMESPACE + "ribbon"]) {
+        const ribbon = source[SEARCHUI_NAMESPACE + "ribbon"];
+        const framed = ribbon[SEARCHUI_NAMESPACE + "framed"];
+        const suffix = framed[SEARCHUI_NAMESPACE + "suffix"];
+        delete source[SEARCHUI_NAMESPACE + "ribbon"];
+        const datafield = framed[SEARCHUI_NAMESPACE + "dataField"].split(":");
+        source.ribbon = {
+          framed: {
+            dataField: datafield.length ? datafield[1]: null,
+            aggregation: framed[SEARCHUI_NAMESPACE + "aggregation"],
+            suffix: {
+              singular: suffix[SEARCHUI_NAMESPACE + "singular"],
+              plural: suffix[SEARCHUI_NAMESPACE + "plural"]
+            }
+          }
+        };
+      }
       if (source[SEARCHUI_NAMESPACE + "boost"]) {
         source.boost = source[SEARCHUI_NAMESPACE + "boost"];
         delete source[SEARCHUI_NAMESPACE + "boost"];

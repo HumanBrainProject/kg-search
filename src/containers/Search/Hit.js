@@ -224,7 +224,7 @@ export const Hit = connect(
       return null;
     };
 
-    //source.allfiles = Array.from(Array(10).keys());
+    // source.allfiles = Array.from(Array(10).keys());
     // mapping.ribbon = {
     //   framed: {
     //     dataField: "allfiles",
