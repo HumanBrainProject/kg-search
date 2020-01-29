@@ -68,6 +68,7 @@ export const loadDefinition = () => {
     field.linkIcon = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "link_icon", null);
     field.visible = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "visible", true);
     field.isTable = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isTable", false);
+    field.isButton = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isButton", false);
     field.showIfEmpty = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "showIfEmpty", false);
     field.layout = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "layout", null);
     field.hint = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "hint", null);
