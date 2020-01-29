@@ -294,7 +294,6 @@ a, a:hover, a:visited {
 main {
   position: relative;
   min-height: 100vh;
-  margin-bottom: 320px;
   background-color: transparent;
   border-bottom: 1px solid var(--border-color-1);
   box-shadow: 0 10px 20px 0 var(--box-shadow-1);
@@ -348,10 +347,8 @@ main a:hover, main a:hover:visited {
 
 .site-footer {
   display: block;
-  position: fixed;
   bottom: 0;
   width: 100%;
-  min-height: 270px;
   padding: 20px var(--site-margin) 0;
   display: flex;
   flex-direction: column;
@@ -443,18 +440,7 @@ main a:hover, main a:hover:visited {
     flex-flow: column-reverse;
     line-height: 50px;
   }
-    /* header a{
-        display:none;
-    } */
 
-    header a.mobile-link{
-        display:inline-block;
-    }
-
-
-  main{
-      margin-bottom: 450px;
-  }
   .credits{
       max-width: 200px;
       margin-bottom: 2em;
@@ -467,12 +453,61 @@ main a:hover, main a:hover:visited {
   height: 40px;
 }
 
-header a:hover{
-    text-decoration: underline;
+.kgs-navbar {
+  height: auto;
 }
 
-header a{
-    margin-left: 2em;
-    font-size: 18px;
-    text-decoration: none;
+.kgs-navbar a {
+  font-size: 18px;
+  text-decoration: none; 
+}
+
+.navbar-default .navbar-nav>li>a {
+  color: var(--color-8);
+}
+
+.navbar-default .navbar-nav>li>a:visited {
+  color: currentColor;
+  text-decoration: none;
+}
+
+.navbar-default .navbar-nav>li>a:hover {
+  text-decoration: underline;
+}
+
+.kgs-navbar .container-fluid {
+  padding-right: 0px;
+  padding-left: 0px;
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
+.kgs-navbar .navbar-toggle {
+  margin-top: 35px;
+  margin-bottom: 15px;
+}
+
+@media (min-width: 768px) {
+  main {
+    margin-bottom: 320px;
+  }
+
+  .kgs-navbar {
+    height: 100px;
+  }
+
+  .navbar-right { 
+    margin-top:15px;
+    margin-bottom:-15px;
+  }
+
+  .container-fluid>.navbar-collapse {
+    margin-right: -15px;
+    margin-left: -15px; 
+  }
+
+  .site-footer {
+    position: fixed;
+    min-height: 270px;
+  }
 }

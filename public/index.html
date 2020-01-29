@@ -30,17 +30,33 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="%PUBLIC_URL%/static/img/mstile-150x150.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser-polyfill.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   </head>
   <body style="display: none;">
-    <header class="site-navigation">
-      <a href="https://ebrains.eu" aria-label="EBRAINS homepage" class="logo nuxt-link-active">
-        <img src="%PUBLIC_URL%/static/img/ebrains_logo.svg" alt="ebrains" height="60">
-      </a>
-
-      <a href="/search" class="mobile-link">Search</a>
-      <a href="https://ebrains.eu/services/data-knowledge/share-data"  class="mobile-link" target="_blank">Share data</a>
-      <a href="https://kg.ebrains.eu" class="mobile-link" target="_blank">Product details</a>
-    </header>
+    <nav class="navbar navbar-default kgs-navbar" style="background-color: transparent; border:none; margin-bottom: 0; padding: 0 var(--site-margin)">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse-mobile" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="https://ebrains.eu" aria-label="EBRAINS homepage" class="logo nuxt-link-active navbar-brand">
+            <img src="%PUBLIC_URL%/static/img/ebrains_logo.svg" alt="ebrains" height="60">
+          </a>
+        </div>
+    
+        <div class="collapse navbar-collapse" id="nav-collapse-mobile">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/search" class="mobile-link">Search</a></li>
+            <li><a href="https://ebrains.eu/services/data-knowledge/share-data"  class="mobile-link" target="_blank">Share data</a></li>
+            <li><a href="https://kg.ebrains.eu" class="mobile-link" target="_blank">Product details</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <main>
       <div id="root"></div>
     </main>
