@@ -23,9 +23,7 @@ import "./InfoPanel.css";
 
 export class InfoPanel extends React.Component {
   onClose = e => {
-    if (this.wrapperRef && this.wrapperRef.contains(e.target)) {
-      e && e.preventDefault();
-    } else {
+    if (this.wrapperRef && !this.wrapperRef.contains(e.target)) {
       const { onClose } = this.props;
       typeof onClose === "function" && onClose();
     }
