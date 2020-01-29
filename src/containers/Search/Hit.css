@@ -25,6 +25,10 @@
     word-break: break-word;
 }
 
+.kgs-hit .kgs-hit__body {
+    width: 100%;
+}
+
 .kgs-hit .kgs-hit__ribbon {
     position: absolute;
     right:0px;
