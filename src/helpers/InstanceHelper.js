@@ -29,25 +29,6 @@ export const getTitle = (data, type, id) => {
   return `${type} ${id}`;
 };
 
-const getField = (group, type, name, data, mapping) => {
-  switch (name) {
-  case "type":
-    return {
-      name: "type",
-      data: { value: type },
-      mapping: { visible: true },
-      group: group
-    };
-  default:
-    return {
-      name: name,
-      data: data,
-      mapping: mapping,
-      group: group
-    };
-  }
-};
-
 const getFields = (group, type, data, mapping, filter) => {
   if (!data || !mapping) {
     return [];
