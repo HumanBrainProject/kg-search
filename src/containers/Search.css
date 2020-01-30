@@ -84,7 +84,7 @@
     display: none;
 }
 
-@media (min-width: 1600px) { /* 992 without left filters panel */ 
+@media (min-width: 1200px) { /* 992 without left filters panel */ 
     .kgs-search .kgs-list .kgs-hit .kgs-hit__ribbon {
         display: block;
     }
