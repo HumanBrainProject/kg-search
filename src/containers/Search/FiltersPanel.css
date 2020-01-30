@@ -56,15 +56,16 @@
     padding: 0;
     border: 0;
     background-color: transparent;
-    color: var(--link-color-1);
+    color: var(--link-highlight-color);
     outline: none;
+    font-weight: bolder;
 }
 
 .kgs-filters .kgs-filters__header .kgs-filters__reset button.kgs-filters__reset-button:hover,
 .kgs-filters .kgs-filters__header .kgs-filters__reset button.kgs-filters__reset-button:focus {
-    color:var(--link-color-active);
+    color: var(--link-highlight-color);
 }
 
-.kgs-filters .kgs-filters__header .kgs-filters__reset button.kgs-filters__reset-button:focus {
+/* .kgs-filters .kgs-filters__header .kgs-filters__reset button.kgs-filters__reset-button:focus {
     text-decoration: underline;
-}       
+}        */
