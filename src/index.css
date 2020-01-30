@@ -311,40 +311,6 @@ main a:hover, main a:hover:visited {
   text-decoration: underline;
 }
 
-.site-navigation {
-  display: flex;
-  align-items: center;
-  height: 100px;
-  width: 100vw;
-  padding: 0 var(--site-margin);
-  z-index: 100;
-  -webkit-transform-style: preserve-3d;
-  -webkit-backface-visibility: hidden;
-  transform: translateZ(0);
-  transition: all .5s ease-out;
-  background: var(--background-color-2);
-}
-
-.site-navigation.hidden {
-  transition: transform .3s ease-in, background-color .3s ease-in 2s, color .3s ease-in 2s;
-  transform: translate3d(0, -100%, 0);
-}
-
-.site-navigation.scrolling {
-  color: var(--color-1);
-  background-color: var(--background-color-1);
-}
-
-.site-navigation .logo {
-  margin: 0 auto 0 0;
-  color: var(--color-1);
-}
-
-.site-navigation-mobile {
-  height: 100%;
-  width: 100%;
-}
-
 .site-footer {
   display: block;
   bottom: 0;
@@ -455,6 +421,10 @@ main a:hover, main a:hover:visited {
 
 .kgs-navbar {
   height: auto;
+  background-color: transparent;
+  border: none;
+  margin-bottom: 0;
+  padding: 0 var(--site-margin);
 }
 
 .kgs-navbar a {
@@ -510,4 +480,46 @@ main a:hover, main a:hover:visited {
     position: fixed;
     min-height: 270px;
   }
+}
+
+.logo {
+  margin: 0 auto 0 0;
+  color: var(--color-1);
+  min-width: 200px;
+}
+
+.logo img {
+  display: inline-block;
+}
+
+body[theme="dark"] .logo:after {
+  content: "EBRAINS";
+  display: inline-block;
+  font-size: 19px;
+  font-weight: 600;
+  padding-right: 10px;
+  transform: translate(-87px, 2px);
+  background: var(--background-color-2);
+  color: var(--color-10);
+  -webkit-font-smoothing: auto;
+}
+
+.eu-logo {
+  position: relative;
+}
+
+body[theme="dark"] .eu-logo:after {
+  content: "Co-funded by\A the European Union";
+  display: inline-block;
+  font-size: 10px;
+  background: var(--background-color-2);
+  color: var(--color-10);
+  -webkit-font-smoothing: auto;
+  white-space: pre;
+  position: absolute;
+  top: 12px;
+  left: 2px;
+  line-height: 1.4em;
+  letter-spacing: 0.042em;
+  text-align: right;
 }
