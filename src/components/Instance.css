@@ -442,6 +442,11 @@
     text-align: justify;
 }
 
+.kgs-instance[data-type] .kgs-field + .kgs-field__description {
+    border-top: 1px solid lightgray;
+    padding-top: 10px;
+}
+
 /**********************************************************************************************************************/
 
 .kgs-instance[data-type] .kgs-instance__header .kgs-field {
