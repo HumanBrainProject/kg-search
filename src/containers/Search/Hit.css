@@ -32,9 +32,25 @@
 .kgs-hit .kgs-hit__ribbon {
     position: absolute;
     right:0px;
+    min-width: 125px;
+    width: 10%;
+}
+
+.kgs-hit .kgs-hit__ribbon.ribbon-with-icon {
+    min-width: 185px;
+    width: 17%; 
+}
+
+.kgs-hit .kgs-hit__ribbon.ribbon-with-text {
     min-width: 200px;
     width: 17%; 
 }
+
+.kgs-hit .kgs-hit__ribbon.ribbon-with-icon.ribbon-with-text {
+    min-width: 200px;
+    width: 17%; 
+}
+
 
 .kgs-hit .kgs-hit__body.has-preview .kgs-hit__preview {
     margin-top: 20px;
@@ -90,7 +106,7 @@
 .kgs-hit[data-type] .kgs-field__title {
     font-size: var(--font-size-big);
     font-weight: bold;
-    flex-basis: 80%;
+    flex-basis: 100%;
     line-height: 1.3em;
 }
 

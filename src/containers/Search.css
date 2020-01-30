@@ -89,8 +89,18 @@
         display: block;
     }
 
-    .kgs-hit__ribbon + .kgs-hit__body .kgs-field.kgs-field__title {
+    .kgs-hit__ribbon + .kgs-hit__body .kgs-field__title {
         margin-bottom: 25px;
+        flex-basis: calc(100% - 125px);
+    }
+
+    .kgs-hit__ribbon.ribbon-with-icon .kgs-field__title {
+        flex-basis: calc(100% - 185px);
+    }
+
+    .kgs-hit__ribbon.ribbon-with-text .kgs-field__title,
+    .kgs-hit__ribbon.ribbon-with-icon.ribbon-with-text .kgs-field__title {
+        flex-basis: calc(100% - 200px);
     }
 }
 

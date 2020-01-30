@@ -23,11 +23,18 @@
 }
 
 .ribbon-inner-container > div {
+    height:32px;
+}
+
+
+.ribbon-container.ribbon-with-icon > div {
     height:40px;
 }
 
+
+
 .ribbon-inner {
-    background: rgb(167, 167, 167);
+    background: var(--color-selected);
     position: relative;
     display: block;
     left: 12px;
@@ -36,7 +43,7 @@
 }
 
 .ribbon-inner-content{
-    color: white;
+    color: var(--color-8);
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
@@ -49,11 +56,11 @@
 .ribbon-inner-content div {
     margin-right:20px;
     font-size:90%;
+    font-weight: bold;
     word-break: initial;
 }
 
 .ribbon-inner-content-framed{
-    background-color: #555;
     padding: 3px 5px 3px 5px;
     font-size: 80%;
 }

@@ -20,14 +20,17 @@ import PropTypes from "prop-types";
 import "./Ribbon.css";
 
 export const Ribbon = ({className, icon, text, counter, suffix}) => {
-  const classNames = ["ribbon-container", className].join(" ");
   return (
-    <div className={classNames}>
+    <div className={`ribbon-container ${icon?"ribbon-with-icon":""} ${text?"ribbon-with-text":""}  ${className?className:""}`}>
       <div className="ribbon-inner-container">
         <div className="ribbon-inner">
           <div className="ribbon-inner-content">
-            <div dangerouslySetInnerHTML={{__html:icon}} />
-            <div>{text}</div>
+            {!!icon && (
+              <div dangerouslySetInnerHTML={{__html:icon}} />
+            )}
+            {!!icon && (
+              <div>{text}</div>
+            )}
             <div className="ribbon-inner-content-framed">{counter} {suffix}</div>
           </div>
         </div>
