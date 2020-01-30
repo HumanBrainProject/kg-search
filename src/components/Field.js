@@ -83,9 +83,6 @@ const FieldBase = (renderUserInteractions = true) => {
       mapping: mapping,
       group: group
     };
-    if(isButton) {
-      console.log(buttonProps);
-    }
 
     return (
       <span style={style} className={className}>

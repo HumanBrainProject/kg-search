@@ -171,7 +171,9 @@ const setFacet = (state, action) => {
       default:
         return f;
       }
-    })
+    }),
+    page: 1,
+    from: 0
   };
 };
 
