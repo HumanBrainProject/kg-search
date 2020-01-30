@@ -22,6 +22,7 @@
     z-index: 3;
     background-color: var(--background-color-7);
     opacity: 0.9;
+    white-space: initial;
 }
 
 .kgs-notice-panel {
