@@ -2,7 +2,7 @@
 
 exports[`Ribbon component renders initially 1`] = `
 <div
-  className="ribbon-container className"
+  className="ribbon-container ribbon-with-icon ribbon-with-text  className"
 >
   <div
     className="ribbon-inner-container"
