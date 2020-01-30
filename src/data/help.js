@@ -11,9 +11,6 @@ Please note, that the search also tries to find results if you have entered typo
 ###Multi-term queries
 If you provide multiple terms, the search will treat them as **OR** combinations: if you're looking for \`brain neuroscience\`, results will be provided which contain either \`brain\` or \`neuroscience\` or both. If you rather want to restrict the results to items which contain both words, you can add an **AND** (lower- or uppercase) between your terms. Your query would be \`brain and neuroscience\`.
 
-###Advanced queries
-For more advanced queries, the Knowledge Graph Search supports the [Apache Lucene Syntax](http://lucene.apache.org/core/2_9_4/queryparsersyntax.html) which you can use inside the search bar.
-
 ##Search by type
 The Knowledge Graph Search allows you to find different types of results. If you're e.g. searching by a person's name, your search results will by default contain the person, as well as datasets the person has contributed to as search results. If you already know for what type of result you're looking for, you can restrict your search by clicking on the type selection buttons below the search bar. Please note that this selection list will adapt to your full-text search. If the results of your full-text search don't contain persons, this type will not show up in the selection list anymore.
 

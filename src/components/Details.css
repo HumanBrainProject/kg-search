@@ -93,6 +93,7 @@
   padding: 10px;
   text-align: left;
   font-size: var(--font-size-extra-small);
+  line-height: 1.3em;
 }
 
 .field-details .collapsible .field-details__panel {
