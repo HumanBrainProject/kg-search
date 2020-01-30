@@ -44,7 +44,7 @@ const FieldBase = (renderUserInteractions = true) => {
     const className = "kgs-field" + (name?" kgs-field__" + name:"") + (mapping.layout?" kgs-field__layout-" + mapping.layout:"") + (isTable?" kgs-field__table":"");
 
     const labelProps = {
-      show: !!mapping.value && (!mapping.labelHidden || !!renderUserInteractions) && !isButton,
+      show: !!mapping.value && (!mapping.labelHidden || !renderUserInteractions) && !isButton,
       showAsBlock: mapping.tagIcon,
       value: mapping.value,
       counter: (mapping.layout === "group" && isList)?data.length:0

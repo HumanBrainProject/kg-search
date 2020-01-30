@@ -63,7 +63,7 @@ export const loadDefinition = () => {
     field.value = getFieldAndRemove(field, GRAPHQUERY_NAMESPACE + "label", null);
     field.sort = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "sort", false);
     field.markdown = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "markdown", false);
-    field.labelHidden = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "labelHidden", false);
+    field.labelHidden = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "label_hidden", false);
     field.tagIcon = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "tag_icon", null);
     field.linkIcon = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "link_icon", null);
     field.visible = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "visible", true);
