@@ -88,6 +88,10 @@
     .kgs-search .kgs-list .kgs-hit .kgs-hit__ribbon {
         display: block;
     }
+
+    .kgs-hit__ribbon + .kgs-hit__body .kgs-field.kgs-field__title {
+        margin-bottom: 25px;
+    }
 }
 
 @media (min-width: 1600px) {
