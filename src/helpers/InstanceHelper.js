@@ -153,8 +153,9 @@ export const mapStateToProps = (state, props) => {
       fields: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "header" && name !== "title"),
     },
     previews: getPreviews(source, { children: mapping.fields }),
-    main: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout !== "header" && name !== "title"),
-    summary: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "summary" && name !== "title"),
-    groups: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title")
+    buttons: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.isButton),
+    main: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout !== "header" && name !== "title" && !mapping.isButton),
+    summary: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "summary" && name !== "title" && !mapping.isButton),
+    groups: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title" && !mapping.isButton)
   };
 };

@@ -20,6 +20,8 @@ import ReactPiwik from "react-piwik";
 import { Field } from "./Field";
 import { FieldsPanel } from "./FieldsPanel";
 import { FieldsTabs } from "./FieldsTabs";
+import { FieldsButtons } from "./FieldsButtons";
+
 import "./Instance.css";
 
 export class Instance extends React.PureComponent {
@@ -43,7 +45,7 @@ export class Instance extends React.PureComponent {
   }
 
   render() {
-    const { id, type, hasNoData, hasUnknownData, header, previews, main, summary, groups, NavigationComponent, ImagePreviewsComponent, ImagePopupComponent, TermsShortNoticeComponent } = this.props;
+    const { id, type, hasNoData, hasUnknownData, header, previews, buttons, main, summary, groups, NavigationComponent, ImagePreviewsComponent, ImagePopupComponent, TermsShortNoticeComponent } = this.props;
 
     if (hasNoData) {
       return (
@@ -76,10 +78,13 @@ export class Instance extends React.PureComponent {
           </div>
         </div>
         <div className="kgs-instance-scroll">
-          <div className={`kgs-instance-content kgs-instance__grid ${(previews && previews.length) ? "kgs-instance__with-previews" : ""}`}>
-            <ImagePreviewsComponent className={`kgs-instance__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
+          <div className={`kgs-instance-content kgs-instance__grid ${(buttons && buttons.length) ? "kgs-instance__with-buttons" : ""} ${(previews && previews.length) ? "kgs-instance__with-previews" : ""}`}>
+            <FieldsButtons className="kgs-instance__buttons" fields={buttons} />
+            <div className="kgs-instance__highlights">
+              <ImagePreviewsComponent className={`kgs-instance__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
+              <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
+            </div>
             <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
-            <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
             <FieldsTabs className="kgs-instance__groups" id={id} fields={groups} />
           </div>
           <TermsShortNoticeComponent />

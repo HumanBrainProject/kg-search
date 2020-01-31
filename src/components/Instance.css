@@ -97,27 +97,7 @@
     }
 }
 
-.kgs-instance-content.kgs-instance__grid {
-    display: -ms-grid;
-    display: grid;
-    -ms-grid-columns: 1fr;
-    grid-template-columns: 1fr;
-    -ms-grid-rows: max-content 1fr;
-    grid-template-rows: max-content 1fr;
-    grid-template-areas: "main";
-    grid-row-gap: 20px;
-    grid-column-gap: 40px;
-}
-
-.kgs-instance__grid .kgs-instance__header {
-    -ms-grid-column: 1;
-    -ms-grid-row: 1;
-    grid-area: header;
-}
-
 .kgs-instance__grid .kgs-instance__previews {
-    display: none;
-    grid-area: carousel;
     text-align: center;
 }
 
@@ -127,20 +107,28 @@
     *::-ms-backdrop, .kgs-instance__grid .kgs-instance__previews { margin-top: 20px; } /* IE11 */
 }
 
+.kgs-instance__grid .kgs-instance__buttons {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+    grid-area: buttons;
+    margin-bottom: 20px;
+}
+
+.kgs-instance__grid .kgs-instance__highlights {
+    display: none;
+    grid-area: highlights;
+}
+
 .kgs-instance__grid .kgs-instance__main {
     -ms-grid-column: 1;
     -ms-grid-row: 2;
     grid-area: main;
 }
-.kgs-instance__grid .kgs-instance__summary {
-    display: none;
-    grid-area: summary;
-}
 
 /* small hack to fix adjustment for ie 11 because of unsupported grid-row-gap */
 @media all and (-ms-high-contrast:none) {
-    .kgs-instance__grid .kgs-instance__summary { margin-top: 20px; } /* IE10 */
-    *::-ms-backdrop, .kgs-instance__grid .kgs-instance__summary { margin-top: 20px; } /* IE11 */
+    .kgs-instance__grid .kgs-instance__highlights { margin-top: 20px; } /* IE10 */
+    *::-ms-backdrop, .kgs-instance__grid .kgs-instance__highlights { margin-top: 20px; } /* IE11 */
 }
 
 .kgs-instance__grid .kgs-instance__groups {
@@ -148,25 +136,115 @@
     grid-area: groups;
 } 
 
+.kgs-instance__grid .kgs-instance__summary {
+    display: none;
+}
+
+.kgs-instance__grid.kgs-instance__with-previews .kgs-instance__highlights {
+    display: block;
+}
+
+.kgs-instance__grid.kgs-instance__with-previews .kgs-instance__main {
+    margin-top: 20px;
+}
+
+@media (min-width: 768px) {
+
+    .kgs-instance__grid .kgs-instance__buttons {
+        margin-bottom: 0;
+    }
+    
+    .kgs-instance__grid.kgs-instance__with-previews {
+        display: -ms-grid;
+        display: grid;
+        grid-row-gap: 20px;
+        grid-column-gap: 40px;
+        -ms-grid-columns: 1fr;
+        grid-template-columns: 1fr;
+        -ms-grid-rows: max-content max-content;
+        grid-template-rows: max-content max-content;
+        grid-template-areas: "highlights"
+                            "main";
+    }
+
+    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__highlights {
+        display: flex;
+        -ms-grid-column: 1;
+        -ms-grid-row: 1;
+    }
+
+    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__summary {
+        display: block;
+        margin-left: 40px;
+        flex: 1;
+    }
+
+    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__main {
+        -ms-grid-column: 1;
+        -ms-grid-row: 2;
+    }
+
+    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__main .kgs-field__layout-summary {
+        display: none;
+    }
+
+    .kgs-instance__grid.kgs-instance__with-previews.kgs-instance__with-buttons {
+        display: -ms-grid;
+        display: grid;
+        grid-row-gap: 20px;
+        grid-column-gap: 40px;
+        grid-template-areas: "buttons"
+                            "highlights"
+                            "main";
+    }
+
+    .kgs-instance__grid.kgs-instance__with-previews.kgs-instance__with-buttons .kgs-instance__buttons {
+        -ms-grid-column: 1;
+        -ms-grid-row: 1;
+    }
+
+    .kgs-instance__grid.kgs-instance__with-previews.kgs-instance__with-buttons .kgs-instance__highlights {
+        -ms-grid-row: 2;
+    }
+
+    .kgs-instance__grid.kgs-instance__with-previews.kgs-instance__with-buttons .kgs-instance__highlights {
+        -ms-grid-row: 2;
+    }
+
+    .kgs-instance__grid.kgs-instance__with-previews.kgs-instance__with-buttons .kgs-instance__main {
+        -ms-grid-row: 3;
+    }
+}
+
+/* small hack to fix adjustment for ie 11 because of unsupported grid-column-gap */
+@media all and (min-width: 768px) and (-ms-high-contrast:none) {
+    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__summary { margin-left: 40px; } /* IE10 */
+    *::-ms-backdrop, .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__summary { margin-left: 40px; } /* IE11 */
+}
+
+
 @media (min-width: 1024px) {
+
     .kgs-instance-content.kgs-instance__grid {
+        display: -ms-grid;
+        display: grid;
+        grid-row-gap: 20px;
+        grid-column-gap: 40px;
         -ms-grid-columns: 7fr 3fr;
         grid-template-columns: 7fr 3fr;
-        -ms-grid-rows: max-content 1fr;
+        -ms-grid-rows:  max-content max-content 1fr;
         grid-template-rows: max-content max-content 1fr;
-        grid-template-areas: "main summary"
+        grid-template-areas: "main highlights"
                             "groups groups";
     }
 
-    .kgs-instance__grid .kgs-instance__header {
-        -ms-grid-column: 1;
-        -ms-grid-row: 1;
-        -ms-grid-column-span: 2;
-    }
-    
     .kgs-instance__grid .kgs-instance__main {
         -ms-grid-column: 1;
-        -ms-grid-row: 2;
+        -ms-grid-row: 1;
+    }
+    
+    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__main  {
+        margin-top: 0;
     }
 
     .kgs-instance__grid .kgs-instance__main .kgs-field__layout-summary,
@@ -174,17 +252,52 @@
         display: none;
     }
 
-    .kgs-instance__grid .kgs-instance__summary {
+    .kgs-instance__grid .kgs-instance__highlights {
         display: block;
         -ms-grid-column: 2;
-        -ms-grid-row: 2;
+        -ms-grid-row: 1;
+    }
+
+    .kgs-instance__grid .kgs-instance__summary {
+        display: block;
+    }
+
+    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__highlights  {
+        display: block;
+    }
+
+    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__summary {
+        margin-top: 20px;
+        margin-left: 0;
     }
 
     .kgs-instance__grid .kgs-instance__groups {
         display: block;
         -ms-grid-column: 1;
-        -ms-grid-row: 3;
+        -ms-grid-row: 2;
         -ms-grid-column-span: 2;
+    } 
+
+    .kgs-instance-content.kgs-instance__grid.kgs-instance__with-buttons {
+        -ms-grid-rows:  max-content max-content 1fr;
+        grid-template-rows: max-content max-content 1fr;
+        grid-template-areas: "buttons highlights"
+                             "main highlights"
+                            "groups groups";
+    }
+
+
+    .kgs-instance__grid.kgs-instance__with-buttons .kgs-instance__main {
+        -ms-grid-row: 2;
+    }
+
+    .kgs-instance__grid .kgs-instance__highlights {
+        -ms-grid-column: 2;
+        -ms-grid-row-span: 2;
+    }
+
+    .kgs-instance__grid .kgs-instance__groups {
+        -ms-grid-row: 3;
     } 
 
     .kgs-instance-scroll {
@@ -206,120 +319,21 @@
 
 /* small hack to fix adjustment for ie 11 because of unsupported  grid-column-gap */
 @media all and (min-width: 1024px) and (-ms-high-contrast:none) {
-    .kgs-instance__grid .kgs-instance__summary { margin-left: 0; } /* IE10 */
-    *::-ms-backdrop, .kgs-instance__grid .kgs-instance__summary { margin-left: 0; } /* IE11 */
+    .kgs-instance__grid .kgs-instance__highlights { margin-left: 0; } /* IE10 */
+    *::-ms-backdrop, .kgs-instance__grid .kgs-instance__highlights { margin-left: 0; } /* IE11 */
 }
 
-.kgs-instance__grid.kgs-instance__with-previews {
-    -ms-grid-columns: 1fr;
-    grid-template-columns: 1fr;
-    -ms-grid-rows: max-content max-content;
-    grid-template-rows: max-content max-content;
-    grid-template-areas: "carousel"
-                        "main";
-}
-
-.kgs-instance__grid.kgs-instance__with-previews .kgs-instance__previews {
-    display: block;
-    -ms-grid-column: 1;
-    -ms-grid-row: 1;
-}
-
-.kgs-instance__grid.kgs-instance__with-previews .kgs-instance__main {
-    -ms-grid-column: 1;
-    -ms-grid-row: 2;
-    grid-area: main;
-}
-
-@media (min-width: 768px) {
-    .kgs-instance__grid.kgs-instance__with-previews {
-        -ms-grid-columns: min-content 1fr;
-        grid-template-columns: min-content 1fr;
-        -ms-grid-rows: max-content max-content;
-        grid-template-rows: max-content max-content;
-        grid-template-areas: "carousel summary"
-                            "main main";
-    }
-
-    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__previews {
-        -ms-grid-column: 1;
-        -ms-grid-row: 1;
-    }
-    
-    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__main {
-        -ms-grid-column: 1;
-        -ms-grid-row: 2;
-        -ms-grid-column-span: 2;
-    }
-
-    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__main .kgs-field__layout-summary {
-        display: none;
-    }
-
-    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__summary {
-        display: block;
-        -ms-grid-column: 2;
-        -ms-grid-row: 1;
-    }
-}
-
-/* small hack to fix adjustment for ie 11 because of unsupported grid-column-gap */
-@media all and (min-width: 768px) and (-ms-high-contrast:none) {
-    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__summary { margin-left: 40px; } /* IE10 */
-    *::-ms-backdrop, .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__summary { margin-left: 40px; } /* IE11 */
-}
-
-@media (min-width: 1024px) {
-    .kgs-instance__grid.kgs-instance__with-previews {
-        -ms-grid-columns: 7fr 3fr;
-        grid-template-columns: 7fr 3fr;
-        -ms-grid-rows: max-content 1fr;
-        grid-template-rows: max-content 1fr;
-        grid-template-areas: "main carousel"
-                            "main summary"
-                            "groups groups";
-        grid-column-gap: 100px;
-    }
-
-    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__previews {
-        -ms-grid-column: 2;
-        -ms-grid-row: 1;
-    }
-    
-    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__main {
-        -ms-grid-column: 1;
-        -ms-grid-row: 1;
-        -ms-grid-row-span: 2;
-        -ms-grid-column-span: 1;
-    }
-
-    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__main .kgs-field__layout-group {
-        display: none;
-    }
-
-    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__summary {
-        -ms-grid-column: 2;
-        -ms-grid-row: 2;
-    }
-
-    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__groups {
-        display: block;
-        -ms-grid-column: 1;
-        -ms-grid-row: 3;
-        -ms-grid-column-span: 2;
-    } 
-}
 
 /* small hack to fix adjustment for ie 11 */
 @media all and (min-width: 1024px) and (-ms-high-contrast:none) {
-    .kgs-instance__grid.kgs-instance__with-previews { width: calc(100% - 60px); } /* IE10 */
-    *::-ms-backdrop, .kgs-instance__grid.kgs-instance__with-previews { width: calc(100% - 60px); } /* IE11 */
+    .kgs-instance__grid { width: calc(100% - 60px); } /* IE10 */
+    *::-ms-backdrop, .kgs-instance__grid { width: calc(100% - 60px); } /* IE11 */
 }
 
 /* small hack to fix adjustment for ie 11 because of unsupported grid-column-gap */
 @media all and (min-width: 1024px) and (-ms-high-contrast:none) {
-    .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__summary { margin-left: 0; } /* IE10 */
-    *::-ms-backdrop, .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__summary { margin-left: 0; } /* IE11 */
+    .kgs-instance__grid .kgs-instance__highlights { margin-left: 0; } /* IE10 */
+    *::-ms-backdrop, .kgs-instance__grid .kgs-instance__highlights { margin-left: 0; } /* IE11 */
 }
 
 .kgs-instance__no-data {
