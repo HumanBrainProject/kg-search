@@ -70,7 +70,6 @@ class SeachPanelBaseComponent extends React.Component {
 
     return (
       <div className={`kgs-search-panel ${isFloating ? " is-fixed-position" : ""}`}>
-        <h1>EBRAINS Knowledge Graph</h1>
         <div>
           <div>
             <i className="fa fa-search kg-search-bar__icon"></i>
