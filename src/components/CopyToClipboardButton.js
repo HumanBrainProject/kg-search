@@ -22,7 +22,12 @@ export const CopyToClipboardButton = props => {
 
   const clickHandler = (event) => {
 
-    var textArea = document.createElement("textarea");
+    const div = document.createElement("div");
+    div.innerHTML = props.content;
+
+    const content = div.innerText;
+
+    const textArea = document.createElement("textarea");
     textArea.style.position = "absolute";
     textArea.style.top = 0;
     textArea.style.left = 0;
@@ -36,7 +41,7 @@ export const CopyToClipboardButton = props => {
     textArea.style.background = "transparent";
     textArea.style.color = "transparent";
 
-    textArea.value = props.content;
+    textArea.value = content;
 
     const button = event.currentTarget;
 

@@ -23,12 +23,17 @@
 .field-markdown blockquote {
     font-size: unset;
     border-left-color: var(--color-25);
+    white-space: pre-line;
 }
 
 .field-markdown>p,
 .field-markdown>ul,
-.field-markdown>ol {
+.field-markdown>ol,
+.field-markdown blockquote>p,
+.field-markdown blockquote>ul,
+.field-markdown blockquote>ol {
     margin: 0;
+    line-height: 1.3em;
 }
 
 .field-markdown>p+p,
