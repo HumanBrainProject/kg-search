@@ -49,6 +49,8 @@
   --color-32: var(--color-31);
   --color-33: var(--color-1);
   --color-34: var(--color-1);
+  --color-35: #e6e6e6;
+  --color-36: var(--color-8);
   --color-selected: var(--color-30);
   --color-highlight: #f5d864;
   --color-unselected: var(--color-23);
@@ -56,13 +58,16 @@
   --color-warning-off: var(--color-1);
   --code-color: #c7254e;
   --code-background-color: #f9f2f4;
-  --link-color-1: #337ab7;
-  --link-color-2: #23527c;
+  --link-color-1: #0B69A3;
+  --link-color-2: #035182;
   --link-highlight-color: var(--color-29);
   --button-primary-background-color: var(--link-color-1);
   --button-primary-border-color: #2e6da4;
   --button-primary-background-color-hover: #286090;
   --button-primary-border-color-hover: #204d74;
+  --button-default-background-color: var(--color-35);
+  --button-default-background-color-hover: var(--color-35);
+  --button-default-border-color: var(--color-35);
   --link-color-active: var(--link-color-2);
   --light-text: #828282;
   --background-color-1: #f4f4f4;
@@ -138,6 +143,8 @@
   --color-32: var(--color-31);
   --color-33: var(--color-31);
   --color-34: black;
+  --color-35: #e6e6e6;
+  --color-36: #333;
   --color-selected: var(--color-30);
   --color-highlight: #f5d864;
   --color-unselected: var(--color-13);
@@ -153,6 +160,9 @@
   --button-primary-border-color: #2e6da4;
   --button-primary-background-color-hover: #286090;
   --button-primary-border-color-hover: #204d74;
+  --button-default-background-color: var(--color-35);
+  --button-default-background-color-hover: var(--color-35);
+  --button-default-border-color: var(--color-35);
   --link-color-active: var(--link-color-2);
   --light-text: #828282;
   --background-color-1: #222;

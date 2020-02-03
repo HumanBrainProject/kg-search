@@ -53,7 +53,7 @@
     padding: 0;
     border: 0;
     background-color: transparent;
-    text-decoration: underline;
+    text-decoration: none;
     color: var(--link-color-1);
     text-align: left;
 }
@@ -64,13 +64,13 @@
 
 .kgs-field .field-value a,
 .kgs-field .field-value a:visited {
-    text-decoration: underline;
+    text-decoration: none;
     color: var(--link-color-1);
 }
 
 .kgs-field .field-value a:focus,
 .kgs-field .field-value a:hover {
-    text-decoration: underline;
+    text-decoration: none;
     color: var(--link-color-active);
 }
 

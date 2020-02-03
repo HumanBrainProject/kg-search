@@ -17,6 +17,8 @@
 import React from "react";
 import ReactPiwik from "react-piwik";
 
+import { getTags } from "../helpers/InstanceHelper";
+import { Tags } from "./Tags";
 import { Field } from "./Field";
 import { FieldsPanel } from "./FieldsPanel";
 import { FieldsTabs } from "./FieldsTabs";
@@ -63,14 +65,14 @@ export class Instance extends React.PureComponent {
       );
     }
 
+    const tags = getTags(header);
+
     return (
       <div className="kgs-instance" data-type={type}>
         <div className="kgs-instance__header">
           <NavigationComponent />
           <div className="kgs-instance__header_fields">
-            <span className="label label-danger">{header.group}</span>
-            {/* <h3 className={`kgs-instance__group ${header.group? "show" : ""}`}>Group: <strong>{header.group}</strong></h3> */}
-            <span className="label label-success">{header.type.data.value}</span>
+            <Tags tags={tags} />
             <div>
               <Field {...header.title} />
             </div>

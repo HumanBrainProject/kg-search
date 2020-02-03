@@ -14,6 +14,19 @@
 *   limitations under the License.
 */
 
+export const getTags = header => {
+  const tags = [];
+  if (header) {
+    if (header.group) {
+      tags.push(header.group);
+    }
+    if (header.type && header.type.data && header.type.data.value) {
+      tags.push(header.type.data.value);
+    }
+  }
+  return tags;
+};
+
 export const getTitle = (data, type, id) => {
   if (data && data._type && data._id) {
     if (data._source && data._source.title && data._source.title.value) {

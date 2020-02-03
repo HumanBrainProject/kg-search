@@ -1,18 +1,18 @@
 
 .kgs-fields-buttons .kgs-fields-buttons__button {
   position: relative;
-  background-color: var(--link-highlight-color); 
-  border-color: var(--link-highlight-color);
+  background-color: var(--button-default-background-color); 
+  border-color: var(--button-default-border-color);
   font-size: var(--font-size);
-  color: var(--color-32);
+  color: var(--color-8);
 }
 
 .kgs-fields-buttons .kgs-fields-buttons__button:hover,
 .kgs-fields-buttons .kgs-fields-buttons__button:active,
 .kgs-fields-buttons .kgs-fields-buttons__button:focus {
-    background-color: var(--link-highlight-color); 
-    border-color: var(--link-highlight-color);
-    color: var(--color-32);
+    background-color: var(--button-default-background-color-hover); 
+    border-color: var(--button-default-border-color);
+    color: var(--color-33);
 }
 
 .kgs-fields-buttons .kgs-fields-buttons__button + .kgs-fields-buttons__button  {
@@ -43,7 +43,7 @@
   height: 0;
   border-left: 7px solid transparent;
   border-right: 7px solid transparent;
-  border-top: 7px solid var(--link-highlight-color);
+  border-top: 7px solid var(--button-default-border-color);
 }
 
 .kgs-fields-buttons .kgs-fields-buttons__details {

@@ -69,6 +69,12 @@
     margin-right: 10px;
 }
 
+.kgs-footer-nav button.kgs-sign-in,
+.kgs-footer-nav button.kgs-sign-in:hover {
+    color: var(--link-highlight-color);
+    text-decoration: none;
+}
+
 .kgs-footer-nav .kgs-sign-in {
     display: block;
     -ms-grid-column: 1;

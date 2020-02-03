@@ -19,7 +19,7 @@
 }
 
 .kgs-instance-container__header {
-  padding: 15px 15px 10px 35px;
+  padding: 15px 15px 0 35px;
 }
 
 .kgs-instance-container__header .kgs-share-links {
@@ -39,7 +39,7 @@
 
 .kgs-instance-container button.kgs-container__backButton {
   display: inline-block;
-  margin: 0;
+  margin: 0 0 4px 0;
   padding: 0;
   border: 0;
   background: transparent;

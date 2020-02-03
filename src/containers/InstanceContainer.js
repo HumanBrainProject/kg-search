@@ -17,9 +17,10 @@
 import React from "react";
 
 import { history } from "../store";
-import { getTitle } from "../helpers/InstanceHelper";
+import { getTags, getTitle } from "../helpers/InstanceHelper";
 import { ShareButtons } from "./ShareButtons";
 import { Instance } from "../components/Instance";
+import { Tags } from "../components/Tags";
 import { DefinitionErrorPanel, GroupErrorPanel, InstanceErrorPanel } from "./ErrorPanel";
 
 import "./InstanceContainer.css";
@@ -39,14 +40,24 @@ class BackLinkButton extends React.Component {
   }
 }
 
-const Navigation = () => (
+const NavigationComponent = ({tags}) => (
   <div className="kgs-instance-container__header">
     <div className="kgs-instance-container__left">
-      <BackLinkButton />
+      <Tags tags={tags} />
     </div>
     <ShareButtons/>
   </div>
 );
+
+const getNavigation = header => {
+  const tags = getTags(header);
+
+  const Navigation = () => (
+    <NavigationComponent tags={tags} />
+  );
+  Navigation.displayName = "Navigation";
+  return Navigation;
+};
 
 export class InstanceContainer extends React.Component {
   componentDidMount() {
@@ -104,12 +115,16 @@ export class InstanceContainer extends React.Component {
   }
 
   render() {
-    const { showInstance } = this.props;
+    const { showInstance, instanceProps } = this.props;
+    const NavigationComponent = getNavigation(instanceProps && instanceProps.header);
     return (
       <React.Fragment>
         <div className="kgs-instance-container" >
           {showInstance && (
-            <Instance {...this.props.instanceProps} NavigationComponent={Navigation} />
+            <React.Fragment>
+              <BackLinkButton />
+              <Instance {...this.props.instanceProps} NavigationComponent={NavigationComponent} />
+            </React.Fragment>
           )}
         </div>
         <DefinitionErrorPanel />
