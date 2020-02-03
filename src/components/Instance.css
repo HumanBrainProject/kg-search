@@ -287,7 +287,7 @@
 
     .kgs-instance-content.kgs-instance__grid.kgs-instance__with-buttons {
         -ms-grid-rows:  max-content max-content 1fr;
-        grid-template-rows: max-content max-content 1fr;
+        grid-template-rows: min-content 1fr min-content;
         grid-template-areas: "buttons highlights"
                              "main highlights"
                             "groups groups";
