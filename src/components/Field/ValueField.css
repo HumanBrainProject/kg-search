@@ -30,6 +30,7 @@
 .kgs-field .kgs-thumbnail--panel img {
     width: auto;
     height: 100%;
+    max-width: 32px;
 }
 
 .kgs-field .field-value {
