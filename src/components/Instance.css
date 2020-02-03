@@ -222,6 +222,12 @@
     *::-ms-backdrop, .kgs-instance__grid.kgs-instance__with-previews .kgs-instance__summary { margin-left: 40px; } /* IE11 */
 }
 
+@media (min-height: 900px) {
+
+    .kgs-instance-scroll {
+        overflow-y: auto;
+    }
+}
 
 @media (min-width: 1024px) {
 
@@ -299,10 +305,6 @@
     .kgs-instance__grid .kgs-instance__groups {
         -ms-grid-row: 3;
     } 
-
-    .kgs-instance-scroll {
-        overflow-y: auto;
-    }
 }
 
 /* small hack to fix adjustment for ie 11 */
