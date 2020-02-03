@@ -34,7 +34,7 @@
     display: flex;
     position: relative;
     cursor: pointer;
-    padding: 3px 5px;
+    padding: 5px 5px;
     border-radius: 5px;
     line-height: 22px;
     font-weight: 300;
@@ -60,7 +60,7 @@
     display: inline-block;
     min-width: 36px;
     max-height: 28px;
-    background-color: var(--background-color-3);
+    background-color: var(--background-color-1);
     color: var(--color-10);
     font-size: var(--font-size-small);
     text-align: center;

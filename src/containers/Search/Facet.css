@@ -75,13 +75,13 @@
 
 .kgs-facet .kgs-facet-checkbox.is-active .kgs-facet-checkbox__text {
     color: var(--color-selected);
-    font-weight: bold;
+    font-weight: 900;
 }
 .kgs-facet .kgs-facet-checkbox .kgs-facet-checkbox__count {
     display: inline-block;
     min-width: 36px;
     max-height: 28px;
-    background-color: var(--background-color-3);
+    background-color: var(--background-color-1);
     color: var(--color-10);
     font-size: var(--font-size-small);
     text-align: center;
@@ -89,6 +89,7 @@
 
 .kgs-facet .kgs-facet-checkbox.is-active .kgs-facet-checkbox__count {
     background-color: var(--color-selected);
+    font-weight: 900;
 }
 
 .kgs-facet .sk-panel__content [data-qa="show-more"] {
