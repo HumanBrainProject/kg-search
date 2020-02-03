@@ -209,7 +209,7 @@
     background-color: transparent;
     border: 0;
     border-radius: 3px;
-    color: var(--color-33);
+    color: var(--color-2);
     font-weight: 500;
 }
 
@@ -239,7 +239,7 @@
     padding: 1px 7px 2px;
     border: 0;
     background-color: transparent;
-    color: var(--color-33);
+    color: var(--color-2);
     text-align: center;
     font-weight: 500;
     z-index: 1500;
@@ -268,5 +268,5 @@
     position: absolute;
     transform: translate(-16px,14px);
     font-size: var(--font-size-extra-small);
-    color: var(--color-33);
+    color: var(--color-2);
 }

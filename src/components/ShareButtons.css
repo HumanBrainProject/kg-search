@@ -33,7 +33,7 @@
 }
 
 .kgs-copy-to-clipboard button {
-    color: var(--color-8);
+    color: var(--color-2);
     font-weight: 500;
     box-shadow: none;
     transition: none;
@@ -58,7 +58,7 @@
 
 .kgs-share-links a.kgs-email-link,
 .kgs-share-links a.kgs-email-link:visited {
-    color: var(--color-8);
+    color: var(--color-2);
     transition: none;
     box-shadow: none;
 }
@@ -71,7 +71,7 @@
 
 .kgs-share-links a.kgs-email-link .fa-envelope-o:before,
 .kgs-share-links a.kgs-email-link:visited .fa-envelope-o:before {
-    color: var(--color-8);
+    color: var(--color-2);
 }
 
 .kgs-share-links a.kgs-email-link:hover .fa-envelope-o:before,
