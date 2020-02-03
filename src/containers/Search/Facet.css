@@ -25,6 +25,7 @@
 
 .kgs-facet .kgs-facet-checkbox input[type="checkbox"] {
     margin: 1px 10px 0 1px;
+    border: 0;
     -ms-flex: 0 0 15px;
     flex: 0 0 15px;
     color: var(--color-8);
