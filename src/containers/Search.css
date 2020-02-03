@@ -105,10 +105,6 @@
 }
 
 @media (min-width: 1600px) {
-    .kgs-search-container {
-        width: 1600px;
-        margin: 0 auto;
-    }
 
     .kgs-search .kgs-list .kgs-hit[data-type] .kgs-field__protocol{
         flex-grow:1;
@@ -117,5 +113,13 @@
     .kgs-search .kgs-list .kgs-hit[data-type] .kgs-field__methods{
         flex-grow:1;
         max-width: 50%;
+    }
+}
+
+@media (min-width: 2100px) {
+
+    .kgs-search-container {
+        max-width: 1600px;
+        margin: 0 auto;
     }
 }

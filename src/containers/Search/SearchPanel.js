@@ -26,7 +26,6 @@ import "./SearchPanel.css";
 class SeachPanelBaseComponent extends React.Component {
   constructor(props){
     super(props);
-    this.ref = React.createRef();
     this.state = {
       value: ""
     };
@@ -51,9 +50,9 @@ class SeachPanelBaseComponent extends React.Component {
     }
   }
 
-  handleMouseDownEvent = () => this.ref.current.focus();
+  handleMouseDownEvent = () => this.ref && this.ref.focus();
 
-  handleScrollEvent = () => this.ref.current.blur();
+  handleScrollEvent = () => this.ref && this.ref.blur();
 
   handleChange = e => this.setState({value: e.target.value});
 
@@ -80,7 +79,7 @@ class SeachPanelBaseComponent extends React.Component {
               value={this.state.value}
               onChange={this.handleChange}
               onKeyDown={this.handleKeyDown}
-              ref={this.ref}  />
+              ref={ref => this.ref = ref} />
             <button type="button" className="kgs-search-panel-help__button" title="Help" onClick={onHelp}>
               <i className="fa fa-info-circle fa-2x"></i>
             </button>
