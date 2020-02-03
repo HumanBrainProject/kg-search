@@ -4,7 +4,7 @@
   background-color: var(--button-default-background-color); 
   border-color: var(--button-default-border-color);
   font-size: var(--font-size);
-  color: var(--color-8);
+  color: var(--color-36);
 }
 
 .kgs-fields-buttons .kgs-fields-buttons__button:hover,
@@ -48,9 +48,9 @@
 
 .kgs-fields-buttons .kgs-fields-buttons__details {
   position: relative;
-  margin: 9px 0 2px 6px;
+  margin: 9px 0 2px 0;
   padding: 10px;
-  border: 1px solid #a2a9b1;
+  border: 1px solid var(--default-border-color);
   border-radius: 10px;
   box-sizing: border-box;
   background-color: var(--background-color-5);
@@ -74,13 +74,12 @@
   font-size: 8px;
   cursor: pointer;
   color: var(--color-19);
-  -webkit-transition: color .2s ease-in,-webkit-box-shadow .2s ease-in;
-  -webkit-transition: box-shadow .2s ease-in,color .2s ease-in,box-shadow .2s ease-in;
-  transition: box-shadow .2s ease-in,color .2s ease-in,box-shadow .2s ease-in;
+  -webkit-transition: color .2s ease-in;
+  -webkit-transition: box-shadow .2s ease-in;
+  transition: box-shadow .2s ease-in;
 }
 
 .kgs-fields-buttons .kgs-field-fields-buttons__close-button:hover {
-  box-shadow: 3px 3px 6px var(--box-shadow-2);
   color: var(--color-20);
 }
 
@@ -97,18 +96,10 @@
   margin-right: 6px;
 }
 
-.kgs-fields-buttons .kgs-download > div span a {
-  text-decoration: underline;
-}
-
 .kgs-fields-buttons .kgs-cite {
-  margin: 15px 0 55px 0;
+  margin: 15px 0 15px 0;
   font-size: var(--font-size-small);
   position: relative;
-}
-
-.kgs-fields-buttons .kgs-cite .kgs-cite-content {
-  margin-bottom: 10px;
 }
 
 .kgs-fields-buttons .kgs-cite .kgs-cite-content .field-markdown {
@@ -126,13 +117,14 @@
   right: 10px;
 }
 
-.kgs-fields-buttons .kgs-cite .kgs-cite-clipboard-button {
+.kgs-fields-buttons .kgs-cite-clipboard-button {
   position: absolute;
-  right: 3px;
+  right: 25px;
   background: transparent;
   border: 0;
+  top:5px;
 }
 
-.kgs-fields-buttons .kgs-cite .kgs-cite-clipboard-button button {
+.kgs-fields-buttons .kgs-cite-clipboard-button button {
   font-size: initial;
 }

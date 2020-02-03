@@ -68,6 +68,7 @@
   --button-default-background-color: var(--color-35);
   --button-default-background-color-hover: var(--color-35);
   --button-default-border-color: var(--color-35);
+  --default-border-color: var(--color-35);
   --link-color-active: var(--link-color-2);
   --light-text: #828282;
   --background-color-1: #f4f4f4;
@@ -163,6 +164,7 @@
   --button-default-background-color: var(--color-35);
   --button-default-background-color-hover: var(--color-35);
   --button-default-border-color: var(--color-35);
+  --default-border-color:var(--color-35);
   --link-color-active: var(--link-color-2);
   --light-text: #828282;
   --background-color-1: #222;
@@ -320,7 +322,7 @@ main a, main a:visited {
 
 main a:hover, main a:hover:visited {
   color: currentColor;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .site-footer {

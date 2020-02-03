@@ -54,7 +54,7 @@
 }
 
 .kgs-instance__header_fields {
-    padding: 0 35px 15px 35px;
+    padding: 0 35px 20px 35px;
 }
 
 .kgs-instance__header h3.kgs-instance__group {
@@ -447,7 +447,7 @@
 .kgs-instance[data-type] .kgs-field__title {
     font-size: 30px;
     font-weight: 500;
-    line-height: 1.3em !important;
+    line-height: 1.75em !important;
     margin-bottom: 3px !important;
 }
 

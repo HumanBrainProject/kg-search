@@ -44,6 +44,10 @@
     display: block;
 }
 
+.kgs-field .kgs-field__list.items-as-tags svg path {
+    fill:var(--color-20);
+}
+
 .kgs-field__list.items-as-tags > span > span {
     display: block;
 }

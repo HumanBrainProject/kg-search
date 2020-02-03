@@ -102,7 +102,7 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   background-color: var(--background-color-5);
-  border: 1px solid #a2a9b1;
+  border: 1px solid var(--default-border-color);
   border-radius: 10px;
 }
 
@@ -134,12 +134,11 @@
   font-size: 8px;
   cursor: pointer;
   color: var(--color-19);
-  -webkit-transition: color 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
+  -webkit-transition: color 0.2s ease-in;
   -o-transition: box-shadow 0.2s ease-in;
-  transition: box-shadow 0.2s ease-in, color 0.2s ease-in, box-shadow 0.2s ease-in;
+  transition: box-shadow 0.2s ease-in;
 }
 
 .field-details button.field-details__close-button:hover{
-  box-shadow: 3px 3px 6px var(--box-shadow-2);
   color: var(--color-20);
 }
