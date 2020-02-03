@@ -57,6 +57,10 @@
     padding: 0 35px 20px 35px;
 }
 
+.kgs-instance__header_fields .kgs-tags {
+    padding-bottom: 10px;
+}
+
 .kgs-instance__header h3.kgs-instance__group {
     display: none;
     margin-top: 0;
@@ -447,7 +451,7 @@
 .kgs-instance[data-type] .kgs-field__title {
     font-size: 30px;
     font-weight: 500;
-    line-height: 1.75em !important;
+    line-height: 1.3em !important;
     margin-bottom: 3px !important;
 }
 
