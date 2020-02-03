@@ -40,7 +40,7 @@ class Download extends React.PureComponent {
 
     return (
       <div className="kgs-download">
-        <div><span><i className="fa fa-2x fa-file-o"></i><a href={url}>{label}</a></span></div>
+        <div><a href={url}>{label}</a></div>
         <Text content={termsOfUse} isMarkdown={true} />
       </div>
     );
@@ -59,9 +59,7 @@ class Cite extends React.PureComponent {
     return (
       <div className="kgs-cite">
         <div className="kgs-cite-content">
-          <i className="fa fa-quote-left"></i>
           <Text content={content} isMarkdown={true} />
-          <i className="fa fa-quote-right"></i>
         </div>
         <CopyToClipboardButton className="kgs-cite-clipboard-button" icon="fa fa-2x fa-clipboard" title="Copy text to clipboard" confirmationText="text copied to clipoard" content={content} />
       </div>

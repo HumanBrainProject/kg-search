@@ -37,13 +37,13 @@
 .kgs-fields-buttons .kgs-fields-buttons__button.is-active:after {
   content: "";
   position: absolute;
-  bottom: -10px;
+  bottom: -8px;
   left: calc(50% - 3px);
-  width: 0; 
-  height: 0; 
+  width: 0;
+  height: 0;
   border-left: 7px solid transparent;
   border-right: 7px solid transparent;
-  border-bottom: 7px solid var(--color-8);
+  border-top: 7px solid var(--link-highlight-color);
 }
 
 .kgs-fields-buttons .kgs-fields-buttons__details {
@@ -108,7 +108,7 @@
 }
 
 .kgs-fields-buttons .kgs-cite .kgs-cite-content {
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 }
 
 .kgs-fields-buttons .kgs-cite .kgs-cite-content .field-markdown {

@@ -21,7 +21,6 @@ import { ListField, PrintViewListField } from "./Field/ListField";
 import { ObjectField, PrintViewObjectField } from "./Field/ObjectField";
 import { ValueField, PrintViewValueField } from "./Field/ValueField";
 import { TableField, PrintViewTableField } from "./Field/TableField";
-import { ButtonField, PrintViewButtonField } from "./Field/ButtonField";
 import "./Field.css";
 
 const FieldBase = (renderUserInteractions = true) => {
@@ -30,7 +29,6 @@ const FieldBase = (renderUserInteractions = true) => {
   const ObjectFieldComponent = renderUserInteractions?ObjectField:PrintViewObjectField;
   const ValueFieldComponent = renderUserInteractions?ValueField:PrintViewValueField;
   const TableFieldComponent = renderUserInteractions?TableField:PrintViewTableField;
-  const ButtonFieldComponent = renderUserInteractions?ButtonField:PrintViewButtonField;
 
   const Field = ({name, data, mapping, group}) => {
     if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
@@ -77,12 +75,6 @@ const FieldBase = (renderUserInteractions = true) => {
       mapping: mapping,
       group: group
     };
-    const buttonProps = {
-      show: isButton,
-      items: data,
-      mapping: mapping,
-      group: group
-    };
 
     return (
       <span style={style} className={className}>
@@ -92,7 +84,6 @@ const FieldBase = (renderUserInteractions = true) => {
         <ListFieldComponent {...listProps} />
         <ObjectFieldComponent {...objectProps} />
         <TableFieldComponent {...tableProps} />
-        <ButtonFieldComponent {...buttonProps} />
       </span>
     );
   };
