@@ -20,8 +20,7 @@ import { ValueField, PrintViewValueField } from "./ValueField";
 import { LIST_SMALL_SIZE_STOP,
   getNextSizeStop,
   getFilteredItems,
-  getShowMoreLabel,
-  hasMore } from "./helpers";
+  getShowMoreLabel} from "./helpers";
 import "./ListField.css";
 
 const ListFieldBase = (renderUserInteractions = true) => {
@@ -56,7 +55,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
     </span>
   );
 
-  const ListFieldComponent = ({list, separator, showAsTag, showToggle, toggleHandler, toggleLabel, hasMore}) => {
+  const ListFieldComponent = ({list, separator, showAsTag, showToggle, toggleHandler, toggleLabel}) => {
     const isCustom = separator || showAsTag;
     const List = isCustom?CustomList:DefaultList;
     const ListItem = isCustom?CustomListItem:DefaultListItem;
@@ -76,9 +75,6 @@ const ListFieldBase = (renderUserInteractions = true) => {
               </ListItem>
             ))
           }
-          {showToggle && hasMore && (
-            <ListItem key={-1} className="kgs-field__more">...</ListItem>
-          )}
         </List>
         {showToggle && (
           <button className="kgs-field__viewMore-button" onClick={toggleHandler} role="link">{toggleLabel}</button>
@@ -95,8 +91,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
         sizeStop: sizeStop,
         items: getFilteredItems(sizeStop, this.maxSizeStop, this.props),
         hasShowMoreToggle: this.hasShowMoreToggle,
-        showMoreLabel: getShowMoreLabel(sizeStop, this.maxSizeStop, this.props),
-        hasMore: hasMore(sizeStop, this.maxSizeStop, this.props)
+        showMoreLabel: getShowMoreLabel(sizeStop, this.maxSizeStop, this.props)
       };
       this.handleShowMoreClick = this.handleShowMoreClick.bind(this);
     }
@@ -130,8 +125,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
           sizeStop: nextSizeStop,
           items: getFilteredItems(nextSizeStop, this.maxSizeStop, props),
           hasShowMoreToggle: this.hasShowMoreToggle,
-          showMoreLabel: getShowMoreLabel(nextSizeStop, this.maxSizeStop, props),
-          hasMore: hasMore(nextSizeStop, this.maxSizeStop, props)
+          showMoreLabel: getShowMoreLabel(nextSizeStop, this.maxSizeStop, props)
         };
       });
     }
@@ -143,7 +137,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
       }
 
       return (
-        <ListFieldComponent list={this.state.items} separator={mapping && !mapping.tagIcon && mapping.separator} showAsTag={mapping && !!mapping.tagIcon} showToggle={this.state.hasShowMoreToggle} toggleHandler={this.handleShowMoreClick} toggleLabel={this.state.showMoreLabel} hasMore={this.state.hasMore}/>
+        <ListFieldComponent list={this.state.items} separator={mapping && !mapping.tagIcon && mapping.separator} showAsTag={mapping && !!mapping.tagIcon} showToggle={this.state.hasShowMoreToggle} toggleHandler={this.handleShowMoreClick} toggleLabel={this.state.showMoreLabel} />
       );
     }
   }

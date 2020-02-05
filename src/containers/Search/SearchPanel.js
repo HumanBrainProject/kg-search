@@ -20,21 +20,18 @@ import * as actions from "../../actions/actions";
 import * as actionsSearch from "../../actions/actions.search";
 import { help } from "../../data/help.js";
 import { withFloatingScrollEventsSubscription } from "../../helpers/withFloatingScrollEventsSubscription";
-import { isMobile } from "../../helpers/BrowserHelpers";
 import "./SearchPanel.css";
 
 class SeachPanelBaseComponent extends React.Component {
   constructor(props){
     super(props);
+    this.textInput = React.createRef();
     this.state = {
       value: ""
     };
   }
 
   componentDidMount() {
-    if (isMobile) {
-      window.addEventListener("mousedown", this.handleMouseDownEvent, false);
-    }
     window.addEventListener("scroll", this.handleScrollEvent);
     const { location } = this.props;
     const q = location.query["q"];
@@ -44,17 +41,14 @@ class SeachPanelBaseComponent extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-    if (isMobile) {
-      window.removeEventListener("mousedown", this.handleMouseDownEvent);
-    }
-  }
-
   handleMouseDownEvent = () => this.ref && this.ref.focus();
 
   handleScrollEvent = () => this.ref && this.ref.blur();
 
-  handleChange = e => this.setState({value: e.target.value});
+  handleChange = e => {
+    this.textInput.current.focus();
+    this.setState({value: e.target.value});
+  }
 
   handleSearch = () => this.props.onQueryStringChange(this.state.value);
 
@@ -79,7 +73,7 @@ class SeachPanelBaseComponent extends React.Component {
               value={this.state.value}
               onChange={this.handleChange}
               onKeyDown={this.handleKeyDown}
-              ref={ref => this.ref = ref} />
+              ref={this.textInput} />
             <button type="button" className="kgs-search-panel-help__button" title="Help" onClick={onHelp}>
               <i className="fa fa-info-circle fa-2x"></i>
             </button>

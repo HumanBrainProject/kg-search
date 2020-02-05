@@ -70,14 +70,3 @@ export const getShowMoreLabel = (sizeStop, maxSizeStop, props) => {
 
   return VIEW_LESS_LABEL;
 };
-
-export const hasMore = (sizeStop, maxSizeStop, props) => {
-  const {items, mapping} = props;
-
-  if (!Array.isArray(items) || (mapping && mapping.separator)) {
-    return false;
-  }
-
-  const nbToDisplay = Math.min(maxSizeStop, sizeStop);
-  return maxSizeStop > nbToDisplay;
-};
