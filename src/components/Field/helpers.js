@@ -57,7 +57,7 @@ export const getFilteredItems = (sizeStop, maxSizeStop, props) => {
     }));
 };
 
-export const getShowMoreLabel = (sizeStop, maxSizeStop, props) => {
+export const getShowMoreLabel = (sizeStop, props) => {
   const {items, mapping} = props;
 
   if (!Array.isArray(items) || (mapping && mapping.separator)) {

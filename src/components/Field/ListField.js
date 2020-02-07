@@ -91,7 +91,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
         sizeStop: sizeStop,
         items: getFilteredItems(sizeStop, this.maxSizeStop, this.props),
         hasShowMoreToggle: this.hasShowMoreToggle,
-        showMoreLabel: getShowMoreLabel(sizeStop, this.maxSizeStop, this.props)
+        showMoreLabel: getShowMoreLabel(sizeStop, this.props)
       };
       this.handleShowMoreClick = this.handleShowMoreClick.bind(this);
     }
@@ -125,7 +125,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
           sizeStop: nextSizeStop,
           items: getFilteredItems(nextSizeStop, this.maxSizeStop, props),
           hasShowMoreToggle: this.hasShowMoreToggle,
-          showMoreLabel: getShowMoreLabel(nextSizeStop, this.maxSizeStop, props)
+          showMoreLabel: getShowMoreLabel(nextSizeStop, props)
         };
       });
     }
