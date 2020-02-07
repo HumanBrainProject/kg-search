@@ -69,7 +69,7 @@ class FiltersPanelBase extends React.Component {
       </div>
     );
   }
-};
+}
 
 export const FiltersPanel = connect(
   state => {
