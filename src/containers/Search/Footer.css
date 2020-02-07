@@ -45,9 +45,7 @@
 }
 
 .kgs-footer-nav .kgs-group-selection {
-    display: block;
-    grid-area: group;
-    margin-top: 15px;
+    display: none;
 }
 
 .kgs-footer-nav .kgs-group-selection .kgs-select > div {
@@ -135,6 +133,12 @@
     
     .kgs-footer-nav button.kgs-sign-in {
         display: block;
+    }
+
+    .kgs-footer-nav .kgs-group-selection {
+        display: block;
+        grid-area: group;
+        margin-top: 15px;
     }
 }
 
