@@ -36,6 +36,7 @@
     grid-area: stats;
     display: block; 
     white-space: nowrap;
+    font-size: 20px;
 }
 
 .kgs-result-header .kgs-layout-mode-toggle {

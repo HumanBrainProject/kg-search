@@ -145,7 +145,6 @@
 .kgs-search-panel .kgs-search-panel-button:hover {
     color: var(--color-32);
     box-shadow: 3px 3px 6px var(--box-shadow-4);
-    z-index: 1;
 }
 
 .kgs-search-panel button.kgs-search-panel-help__button {

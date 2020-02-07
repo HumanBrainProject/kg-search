@@ -27,7 +27,7 @@
     margin-bottom: 5px;
     margin-right: 20px;
     color: var(--color-15);
-    font-size: 22px;
+    font-size: 20px;
     font-weight: normal;
     line-height: 30px;
 }
@@ -37,7 +37,7 @@
     background-color: var(--background-color-2);
     border-color: var(--background-color-2);
     color: var(--color-8);
-    font-size: 22px;
+    font-size: 20px;
     font-weight: normal;
     padding: 9px  var(--site-margin) 9px 25px;
     cursor: pointer;
@@ -59,7 +59,6 @@
 .kgs-select select:hover,
 .kgs-select select:focus {
     box-shadow: 3px 3px 6px var(--box-shadow-2);
-    z-index: 1;
 }
 
 .kgs-select:after {
