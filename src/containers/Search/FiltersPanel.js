@@ -21,43 +21,54 @@ import { Facet } from "./Facet";
 
 import "./FiltersPanel.css";
 
-const FiltersPanelBase = ({ className, show, facets, onChange, onViewChange, onReset }) => {
+class FiltersPanelBase extends React.Component {
 
-  if (!show) {
-    return null;
+  constructor(props) {
+    super(props);
+    this.state = {
+      collapsed: true,
+    };
   }
 
-  const hasFilters = facets.length > 0;
+  toggleFilters = () => {
+    this.setState(state => ({ collapsed: !state.collapsed }));
+  }
 
-  return (
-    <div className = { `kgs-filters ${className ? className : ""}` } >
-      <span>
-        <div className = "kgs-filters__header" >
-          <div className = "kgs-filters__title" > Filters </div>
-          <div className = "kgs-filters__reset" >
-            <button type = "button"
-              className = "kgs-filters__reset-button"
-              onClick = { onReset } > Reset </button>
-          </div >
+  render() {
+    const { show, facets, onChange, onViewChange, onReset } = this.props;
+
+    if (!show) {
+      return null;
+    }
+
+    const hasFilters = facets.length > 0;
+
+    return (
+      <div className="kgs-filters collapsible">
+        <div className="kgs-filters__header" >
+          <div className="kgs-filters__title" ><button type="button" className={`kgs-filters__toggle ${this.state.collapsed?"":"in"} ${hasFilters?"hasFilters":""}`}><i className="fa fa-chevron-right" onClick={this.toggleFilters}></i></button> Filters </div>
+          <div className= "kgs-filters__reset" >
+            <button type="button" className="kgs-filters__reset-button" onClick={onReset}>Reset</button>
+          </div>
         </div>
-        <span>
+        <div className={`kgs-filters__body collapse ${this.state.collapsed?"":"in"}`}>
           {
             facets.map(facet => (
               <Facet
-                key = { facet.id }
-                facet = { facet }
-                onChange = { onChange }
-                onViewChange = { onViewChange }
+                key={facet.id}
+                facet={facet}
+                onChange={onChange}
+                onViewChange={onViewChange}
               />
             ))
           }
-        </span>
-        {!hasFilters && ( <span className = "kgs-filters__no-filters" > No filters available
-        for your current search. </span>
+        </div>
+        {!hasFilters && ( <span className="kgs-filters__no-filters" > No filters available
+          for your current search. </span>
         )}
-      </span>
-    </div>
-  );
+      </div>
+    );
+  }
 };
 
 export const FiltersPanel = connect(

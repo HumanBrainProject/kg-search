@@ -1,7 +1,14 @@
 
 .kgs-facet {
     width: 100%;
-    margin-top: 35px;
+    margin-top: 20px;
+}
+
+@media (min-width: 576px) {
+
+    .kgs-facet {
+        margin-top: 35px;
+    }
 }
 
 .kgs-facet .kgs-facet-title {
