@@ -35,7 +35,7 @@
 .kgs-filters .kgs-filters__no-filters {
     display: inline-block;
     width: 100%;
-    margin-top: 65px;
+    margin-top: 15px;
 }
 
 .kgs-filters .kgs-filters__header {
@@ -87,6 +87,11 @@
         max-height: unset;
         overflow: unset;
     }
+
+    .kgs-filters .kgs-filters__no-filters {
+        margin-top: 65px;
+    }
+
 }
 
 .kgs-filters .kgs-filters__header .kgs-filters__title {

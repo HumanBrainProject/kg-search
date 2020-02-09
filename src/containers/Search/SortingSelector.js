@@ -19,12 +19,19 @@ import { connect } from "react-redux";
 import * as actionsSearch from "../../actions/actions.search";
 import { Select } from "../../components/Select";
 
-const SortingSelectorComponent = ({className, label, value, list, onChange}) => (
-  <Select className={className} label={label} value={value} list={list} onChange={onChange} />
-);
+const SortingSelectorComponent = ({show, className, label, value, list, onChange}) => {
+  if (!show) {
+    return null;
+  }
+
+  return (
+    <Select className={className} label={label} value={value} list={list} onChange={onChange} />
+  );
+};
 
 export const SortingSelector = connect(
   (state, props) => ({
+    show: state.search.total && state.search.total > 0,
     className: props.className,
     label: "Sort by",
     value: state.search.sort?state.search.sort.label:null,

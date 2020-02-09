@@ -18,23 +18,22 @@ import React from "react";
 import { connect } from "react-redux";
 import "./HitStats.css";
 
-export const HitStatsBase = ({className, show, message, hitCount, from, to}) => {
+export const HitStatsBase = ({show, message, hitCount, from, to}) => {
   if (!show) {
     return null;
   }
-  const classNames = ["kgs-hitStats", className].join(" ");
   if (message) {
     return (
-      <span className={classNames}>{message}</span>
+      <span className="kgs-hitStats">{message}</span>
     );
   }
   if (hitCount === 0) {
     return (
-      <span className={classNames}>No results were found. Please refine your search.</span>
+      <span className="kgs-hitStats no-hits">No results were found. Please refine your search.</span>
     );
   }
   return (
-    <span className={classNames}>Viewing <span className="kgs-hitStats-highlight">{from}-{to}</span> of <span className="kgs-hitStats-highlight">{hitCount}</span> results</span>
+    <span className="kgs-hitStats">Viewing <span className="kgs-hitStats-highlight">{from}-{to}</span> of <span className="kgs-hitStats-highlight">{hitCount}</span> results</span>
   );
 };
 
