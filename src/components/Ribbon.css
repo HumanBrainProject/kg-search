@@ -43,7 +43,7 @@
 }
 
 .ribbon-inner-content{
-    color: var(--color-8);
+    color: var(--color-36);
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
