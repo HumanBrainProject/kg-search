@@ -469,8 +469,8 @@ main a:hover, main a:hover:visited {
 }
 
 .kgs-navbar .navbar-toggle {
-  margin-top: 35px;
-  margin-bottom: 15px;
+  margin-top: 25px;
+  margin-bottom: 20px;
 }
 
 @media (min-width: 768px) {
@@ -483,8 +483,8 @@ main a:hover, main a:hover:visited {
   }
 
   .navbar-right { 
-    margin-top:15px;
-    margin-bottom:-15px;
+    margin-top: 25px;
+    margin-bottom: -15px;
   }
 
   .container-fluid>.navbar-collapse {
