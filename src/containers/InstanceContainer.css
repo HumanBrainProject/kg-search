@@ -19,7 +19,15 @@
 }
 
 .kgs-instance-container__header {
-  padding: 15px 15px 10px 35px;
+  padding: 15px 15px 10px 25px;
+}
+
+@media (min-width: 900px) {
+
+  .kgs-instance-container__header {
+    padding: 15px 15px 10px 35px;
+  }
+  
 }
 
 .kgs-instance-container__header .kgs-share-links {
@@ -30,6 +38,14 @@
 
 .kgs-instance-container .kgs-instance-content {
   margin-bottom: var(--site-margin);
+  padding: 20px 10px 0 10px;
+}
+
+@media (min-width: 900px) {
+
+  .kgs-instance-container .kgs-instance-content {
+      padding: 35px;
+  }
 }
 
 .kgs-instance-container__left > a,

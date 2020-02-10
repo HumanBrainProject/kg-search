@@ -41,7 +41,15 @@
 
 .kgs-instance-content {
     position: relative;
-    padding: 35px;
+    padding: 25px;
+}
+
+@media (min-width: 900px) {
+
+    .kgs-instance-content {
+        padding: 35px;
+    }
+    
 }
 
 .kgs-instance__header  {
@@ -54,7 +62,15 @@
 }
 
 .kgs-instance__header_fields {
-    padding: 0 35px 20px 35px;
+    padding: 0 25px 20px 25px;
+}
+
+@media (min-width: 900px) {
+
+    .kgs-instance__header_fields {
+        padding: 0 35px 20px 35px;
+    }
+    
 }
 
 .kgs-instance__header_fields .kgs-tags {
@@ -150,10 +166,6 @@
 }
 
 @media (min-width: 768px) {
-
-    .kgs-instance__grid .kgs-instance__buttons {
-        margin-bottom: 0;
-    }
     
     .kgs-instance__grid.kgs-instance__with-previews {
         display: -ms-grid;
@@ -245,6 +257,10 @@
                             "groups groups";
     }
 
+    .kgs-instance__grid .kgs-instance__buttons {
+        margin-bottom: 0;
+    }
+    
     .kgs-instance__grid .kgs-instance__main {
         -ms-grid-column: 1;
         -ms-grid-row: 1;

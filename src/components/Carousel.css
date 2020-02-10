@@ -189,7 +189,7 @@
     width: 100%;
     height: 50px;
     box-sizing: border-box; 
-    padding: 0 0 0 20px;   
+    padding: 0 0 0 10px;   
     /*
     box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
     */
@@ -200,6 +200,14 @@
     .kgs-carousel__header {
         top: 10px;
     }
+}
+
+@media (min-width: 900px) {
+
+    .kgs-carousel__header {
+        padding: 0 0 0 20px; 
+    }
+    
 }
 
 .kgs-carousel__previous-button {
