@@ -64,4 +64,5 @@
     margin-top: 5px;
     color: var(--color-8);
     background-color: #ffeeaa;
+    z-index: 1;
 }
