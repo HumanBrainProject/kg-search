@@ -19,7 +19,13 @@
 }
 
 .kgs-instance-container__header {
-  padding: 15px 15px 10px 25px;
+  display: flex;
+  padding: 10px 15px 10px 25px;
+}
+  
+.kgs-instance-container__left {
+  flex:1;
+  padding-top: 10px;
 }
 
 @media (min-width: 900px) {
@@ -31,7 +37,6 @@
 }
 
 .kgs-instance-container__header .kgs-share-links {
-  float: right;
   margin-top: 2px;
   margin-left: 15px;
 }
@@ -67,24 +72,6 @@
 
 .kgs-instance-container button.kgs-container__backButton:hover {
   color: var(--link-color-active);
-}
-
-@media (min-width:768px) { 
-
-  .kgs-instance-container__header {
-    display: flex;
-  }
-    
-  .kgs-instance-container__left {
-    flex:1;
-    padding-top: 10px;
-  }
-
-  .kgs-instance-container__header .kgs-share-links {
-    float: none;
-    margin-top: 0;
-  }
-
 }
 
 @media (min-width:1200px) { 
