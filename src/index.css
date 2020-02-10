@@ -79,6 +79,7 @@
   --background-color-5: #f8f9fa;
   --background-color-6: rgba(36, 38, 40, 0.75);
   --background-color-7: #242628;
+  --background-color-8: #e4e4e4;
   --border-color-1: #e0e0e0;
   --border-color-2: #fff;
   --border-color-3: #ccc;
@@ -176,6 +177,7 @@
   --background-color-5: #404040;
   --background-color-6: rgba(73, 77, 80, 0.75);
   --background-color-7: #616365;
+  --background-color-8: var(--background-color-1);
   --border-color-1: #555;
   --border-color-2: #111;
   --border-color-3: #222;
@@ -341,6 +343,7 @@ main a:hover, main a:hover:visited {
 }
 
 .site-footer .footer__content {
+  position: relative;
   margin-bottom: auto;
 }
 
@@ -498,6 +501,12 @@ main a:hover, main a:hover:visited {
   }
 }
 
+@media (min-width: 768px) and (max-width: 768px) {
+  main {
+    margin-bottom: 420px;
+  }
+}
+
 .logo {
   margin: 0 auto 0 0;
   color: var(--color-1);
@@ -538,4 +547,23 @@ body[theme="dark"] .eu-logo:after {
   line-height: 1.4em;
   letter-spacing: 0.042em;
   text-align: right;
+}
+
+#rootFooter {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#rootFooter > div {
+  position: relative;
+  text-align: right;
+}
+
+@media (min-width: 768px) {
+  #rootFooter {
+    position: absolute;
+    top: -50px;
+    margin-bottom: 0;
+  }
 }

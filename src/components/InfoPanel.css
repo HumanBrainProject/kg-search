@@ -67,13 +67,11 @@
     background-color: transparent;
     color: var(--color-19);
     text-align: center;
-    transition: box-shadow 0.2s ease-in, color 0.2s ease-in;
     z-index: 1500;
 }
 
 .kgs-info__closeButton:hover {
     color: var(--color-20);
-    box-shadow: 3px 3px 6px var(--box-shadow-2);
 }
 
 @media (min-width:768px) { 

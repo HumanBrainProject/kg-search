@@ -20,6 +20,7 @@ import { store, history } from "./store";
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./containers/App";
+import ThemeToggle from "./components/ThemeToggle";
 import "normalize.css/normalize.css";
 import "font-awesome/css/font-awesome.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -35,18 +36,6 @@ new ReactPiwik({
 
 ReactPiwik.push(["trackPageView"]);
 
-const kCode = { step: 0, ref: [38, 38, 40, 40, 37, 39, 37, 39, 66, 65] };
-
-const handleGlobalShortcuts = (e) => {
-  kCode.step = kCode.ref[kCode.step] === e.keyCode ? kCode.step + 1 : 0;
-  if (kCode.step === kCode.ref.length) {
-    kCode.step = 0;
-    document.body.setAttribute("theme", "dark");
-  }
-};
-
-document.addEventListener("keydown", handleGlobalShortcuts);
-
 ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
@@ -54,4 +43,11 @@ ReactDOM.render(
     </ConnectedRouter>
   </Provider>,
   document.getElementById("root")
+);
+
+ReactDOM.render(
+  <div>
+    <ThemeToggle />
+  </div>,
+  document.getElementById("rootFooter")
 );
