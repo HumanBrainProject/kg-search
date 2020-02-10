@@ -54,7 +54,7 @@
 
 .kgs-footer-nav button.kgs-sign-in,
 .kgs-footer-nav button.kgs-sign-in:hover {
-    color: var(--link-highlight-color);
+    color: var(--color-37);
     text-decoration: none;
 }
 

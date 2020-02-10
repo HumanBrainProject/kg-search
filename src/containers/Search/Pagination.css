@@ -67,7 +67,7 @@
 
 .kgs-paging button:not([disabled]):hover,
 .kgs-paging button:not([disabled]):focus  {
-    box-shadow: 3px 3px 6px var(--box-shadow-2);
+    border-color:var(--link-highlight-color)
 }
 
 .kgs-paging button + button {

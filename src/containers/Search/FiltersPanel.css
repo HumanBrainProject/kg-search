@@ -120,7 +120,7 @@
 
 .kgs-filters .kgs-filters__header .kgs-filters__reset button.kgs-filters__reset-button:hover,
 .kgs-filters .kgs-filters__header .kgs-filters__reset button.kgs-filters__reset-button:focus {
-    color: var(--link-highlight-color);
+    color: var(--color-37);
 }
 
 /* .kgs-filters .kgs-filters__header .kgs-filters__reset button.kgs-filters__reset-button:focus {
