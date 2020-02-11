@@ -127,4 +127,10 @@
 
 .kgs-fields-buttons .kgs-cite-clipboard-button button {
   font-size: initial;
+  color: var(--color-19);
+}
+
+.kgs-fields-buttons .kgs-cite-clipboard-button button:hover {
+  font-size: initial;
+  color: var(--color-20);
 }
