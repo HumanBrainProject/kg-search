@@ -65,7 +65,7 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     const hasInstanceLink = !!instanceTypeLink && !!instanceIdLink;
     const hasLink = !!renderUserInteractions && !!data.url;
     const hasMailToLink = !!renderUserInteractions && typeof data.url === "string" && data.url.substr(0, 7).toLowerCase() === "mailto:";
-    const isAFileLink = typeof data.url === "string" && /^https?:\/\/.+\.cscs\.ch\/.+$/.test(data.url);
+    const isAFileLink = typeof data.url === "string" && data.url.startsWith("https://object.cscs.ch");
     const hasExternalLink = data.url && !isAFileLink && getUrlLocation(data.url) !== window.location.origin;
     const hasAnyLink = hasInstanceLink || hasMailToLink || hasLink;
     const isLinkWithIcon = mapping.linkIcon && data.url ? true : false;
