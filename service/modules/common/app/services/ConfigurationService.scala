@@ -35,13 +35,10 @@ class ConfigurationService @Inject()(configuration: Configuration) {
   val reconciledPrefix: String = configuration.getOptional[String]("nexus.reconciled.prefix").getOrElse("reconciled")
   val editorPrefix: String = configuration.getOptional[String]("nexus.editor.prefix").getOrElse("editor")
 
-  val sparqlEndpoint: String =
-    configuration.getOptional[String]("blazegraph.endpoint").getOrElse("http://localhost:9999")
   val kgQueryEndpoint: String = configuration.getOptional[String]("kgquery.endpoint").getOrElse("http://localhost:8600")
   val iamEndpoint = configuration.get[String]("nexus.iam")
   val authEndpoint = configuration.get[String]("auth.endpoint")
   val idmApiEndpoint = s"$authEndpoint/idm/v1/api"
-  val editorSubSpace = configuration.getOptional[String]("editor.subspace").getOrElse("editor")
   val hbpUrl = configuration.getOptional[String]("hbp.url").getOrElse("https://kg.humanbrainproject.eu/webapp")
 
 }
