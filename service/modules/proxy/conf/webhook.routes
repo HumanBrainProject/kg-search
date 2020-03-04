@@ -1,2 +1,0 @@
-
-POST /github    controllers.WebhookController.github(gitlab_project_id:String, token:String)

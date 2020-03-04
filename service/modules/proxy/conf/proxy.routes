@@ -46,6 +46,3 @@
 
   OPTIONS   /search/:index/*proxyUrl         controllers.SearchProxy.proxyOptions(index:String, proxyUrl:String)
   OPTIONS   /default/:index/*proxyUrl         controllers.SearchProxy.proxyOptions(index:String, proxyUrl:String)
-
-# Export service
-  GET     /export                         controllers.ExportContainerController.exportContainer(container: String, filter: Option[String])

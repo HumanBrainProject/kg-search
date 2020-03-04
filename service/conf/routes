@@ -6,18 +6,8 @@
 # Auth services
 -> /auth auth.Routes
 
-# Data import services
--> /dataimport data_import.Routes
-
-# Nexus services
--> /nexus nexus.Routes
-
 # Proxy services
 -> /proxy proxy.Routes
-
-# Webhook service
--> /webhook webhook.Routes
-
 
 
 # Monitoring
