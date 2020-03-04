@@ -1,0 +1,82 @@
+{
+  "@context": {
+    "@vocab": "https://schema.hbp.eu/graphQuery/",
+    "meta": "https://schema.hbp.eu/meta/editor/",
+    "fieldname": {
+      "@id": "fieldname",
+      "@type": "@id"
+    },
+    "merge": {
+      "@type": "@id",
+      "@id": "merge"
+    },
+    "relative_path": {
+      "@id": "relative_path",
+      "@type": "@id"
+    }
+  },
+  "https://schema.hbp.eu/meta/editor/identifier": "meta/minds/specificationfield/v0.0.1/specificationFieldQuery",
+  "http://schema.org/identifier": "meta/minds/specificationfield/v0.0.1/specificationFieldQuery",
+  "description": "Fetching all the specification fields",
+  "label": "Specification fields",
+  "fields": [
+    {
+      "fieldname": "meta:instancesPath",
+      "relative_path": "https://schema.hbp.eu/meta/editor/instancesPath"
+    },
+    {
+      "fieldname": "meta:isLink",
+      "relative_path": "https://schema.hbp.eu/meta/editor/isLink"
+    },
+    {
+      "fieldname": "meta:key",
+      "relative_path": "https://schema.hbp.eu/meta/editor/key"
+    },
+    {
+      "fieldname": "meta:label",
+      "relative_path": "https://schema.hbp.eu/meta/editor/label"
+    },
+    {
+      "fieldname": "meta:mappingLabel",
+      "relative_path": "https://schema.hbp.eu/meta/editor/mappingLabel"
+    },
+    {
+      "fieldname": "meta:mappingValue",
+      "relative_path": "https://schema.hbp.eu/meta/editor/mappingValue"
+    },
+    {
+      "fieldname": "meta:type",
+      "relative_path": "https://schema.hbp.eu/meta/editor/type"
+    },
+    {
+      "fieldname": "meta:allowCustomValues",
+      "relative_path": "https://schema.hbp.eu/meta/editor/allowCustomValues"
+    },
+    {
+      "fieldname": "meta:closeDropdownAfterInteraction",
+      "relative_path": "https://schema.hbp.eu/meta/editor/closeDropdownAfterInteraction"
+    },
+    {
+      "fieldname": "meta:refreshSpecification",
+      "relative_path": "https://schema.hbp.eu/meta/editor/refreshSpecification"
+    },
+    {
+      "fieldname": "meta:identifier",
+      "relative_path": "http://schema.org/identifier"
+    },
+    {
+      "fieldname": "http://schema.org/name",
+      "relative_path": "http://schema.org/name"
+    },
+    {
+      "fieldname": "https://schema.hbp.eu/relativeUrl",
+      "relative_path": "https://schema.hbp.eu/relativeUrl"
+    },
+    {
+      "fieldname": "https://schema.hbp.eu/inference/alternatives",
+      "relative_path": "https://schema.hbp.eu/inference/alternatives"
+    }
+  ],
+  "meta:refreshSpecification": true,
+  "query:refreshSpecification": true
+}

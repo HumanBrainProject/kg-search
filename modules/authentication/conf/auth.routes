@@ -1,0 +1,3 @@
+GET     /groups                         controllers.OIDCController.groups
+OPTIONS /groups                         controllers.OIDCController.groupsOptions
+

@@ -1,0 +1,106 @@
+{
+  "@context": {
+    "@vocab": "https://schema.hbp.eu/graphQuery/",
+    "schema": "http://schema.org/",
+    "hbpkg": "https://schema.hbp.eu/hbpkg/",
+    "base": "https://schema.hbp.eu/",
+    "nexus": "https://nexus-dev.humanbrainproject.org/vocabs/nexus/core/terms/v0.1.0/",
+    "nexus_instance": "https://nexus-dev.humanbrainproject.org/v0/schemas/",
+    "this": "https://schema.hbp.eu/editor/",
+    "minds": "https://schema.hbp.eu/minds/",
+    "neuroglancer": "https://schema.hbp.eu/neuroglancer/",
+    "prov": "https://schema.hbp.eu/provenance/",
+    "linkinginstance": "https://schema.hbp.eu/linkinginstance",
+    "fieldname": {
+      "@id": "fieldname",
+      "@type": "@id"
+    },
+    "merge": {
+      "@id": "merge",
+      "@type": "@id"
+    },
+    "relative_path": {
+      "@id": "relative_path",
+      "@type": "@id"
+    }
+  },
+
+  "http://schema.org/identifier": "minds/experiment/sample/v1.0.0/editorFull",
+  "https://schema.hbp.eu/meta/editor/identifier": "minds/experiment/sample/v1.0.0/editorFull",
+  "fields": [
+    {
+      "fieldname": "base:relativeUrl",
+      "relative_path": "base:relativeUrl",
+      "required": true
+    },
+    {
+      "fieldname": "schema:name",
+      "label": "Name",
+      "relative_path": "schema:name"
+    },
+    {
+      "fieldname": "minds:methods",
+      "label": "Methods",
+      "relative_path": "minds:methods"
+    },
+    {
+      "fieldname": "minds:parcellationAtlas",
+      "label": "Parcellation atlas",
+      "relative_path": "minds:parcellationAtlas",
+      "ensure_order": true
+    },
+    {
+      "fieldname": "minds:parcellationRegion",
+      "label": "Parcellation region",
+      "relative_path": "minds:parcellationRegion",
+      "ensure_order": true
+    },
+    {
+      "fieldname": "minds:file",
+      "label": "File",
+      "fields": [
+        {
+          "fieldname": "this:id",
+          "relative_path": "base:relativeUrl"
+        }
+      ],
+      "relative_path": [
+        {
+          "@id": "minds/core/fileassociation/v1.0.0",
+          "reverse": true
+        }
+      ],
+      "ensure_order": true
+    },
+    {
+      "fieldname": "prov:lastModificationUserId",
+      "label": "Last updater",
+      "relative_path": "prov:lastModificationUserId"
+    },
+    {
+      "fieldname": "prov:modifiedAt",
+      "label": "Last modification",
+      "relative_path": "prov:modifiedAt"
+    },
+    {
+      "fieldname": "prov:createdBy",
+      "label": "Created by",
+      "relative_path": "prov:createdBy"
+    },
+    {
+      "fieldname": "prov:createdAt",
+      "label": "Created by",
+      "relative_path": "prov:createdAt"
+    },
+    {
+      "fieldname": "_nexusRev",
+      "label": "Number of modifications",
+      "relative_path": "_nexusRev"
+    },
+    {
+      "fieldname": "inference:alternatives",
+      "label": "Alternatives",
+      "relative_path": "inference:alternatives"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+@import play.api.libs.json.JsObject
+@import play.api.libs.json.JsString
+
+@(size: Double, source: String, files: Seq[JsObject])
+<html lang="en">
+    <body style="font-family: Arial, sans-serif;">
+
+        <h2>
+            Container content is too big to be downloaded as a ZIP file: @size MB
+        </h2>
+        <p>Download the individual files instead or use a download manager for your web browser.</p>
+            <table >
+                <tbody>
+                @for(f <- files) {
+                    <tr><td><a style="margin-right: 5em;" href="@source/@((f \ "name").as[JsString].value)">@((f \ "name").as[JsString].value)</a></td>
+                        <td style="text-align: right;">@(org.apache.commons.io.FileUtils.byteCountToDisplaySize((f \ "bytes").as[Long]))</td></tr>
+                }</tbody>
+
+            </table>
+    </body>
+</html>

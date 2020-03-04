@@ -1,0 +1,8 @@
+{
+  "https://schema.hbp.eu/meta/editor/key": "http://schema.org/name",
+  "https://schema.hbp.eu/meta/editor/label": "Name",
+  "http://schema.org/name": "Name",
+  "https://schema.hbp.eu/meta/editor/type": "InputText",
+  "https://schema.hbp.eu/meta/editor/identifier": "meta/minds/specificationfield/v0.0.1/name",
+  "@type": "https://schema.hbp.eu/meta/Specificationfield"
+}

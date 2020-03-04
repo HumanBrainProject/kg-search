@@ -1,0 +1,31 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+# Auth services
+-> /auth auth.Routes
+
+# Data import services
+-> /dataimport data_import.Routes
+
+# Nexus services
+-> /nexus nexus.Routes
+
+# Proxy services
+-> /proxy proxy.Routes
+
+# Webhook service
+-> /webhook webhook.Routes
+
+
+
+# Monitoring
+### NoDocs ###
+GET     /metrics                    com.github.stijndehaes.playprometheusfilters.controllers.PrometheusController.getMetrics
+
+#Swagger
+### NoDocs ###
+GET   /docs/swagger-ui/*file        controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
+### NoDocs ###
+GET   /assets/swagger.json          controllers.swagger.ApiSpecs.specs

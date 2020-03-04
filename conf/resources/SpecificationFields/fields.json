@@ -1,0 +1,14 @@
+{
+  "@type": "https://schema.hbp.eu/meta/Specificationfield",
+  "https://schema.hbp.eu/meta/editor/allowCustomValues": true,
+  "https://schema.hbp.eu/meta/editor/closeDropdownAfterInteraction": true,
+  "https://schema.hbp.eu/meta/editor/instancesPath": "meta/minds/specificationfield/v0.0.1",
+  "https://schema.hbp.eu/meta/editor/isLink": true,
+  "https://schema.hbp.eu/meta/editor/key": "https://schema.hbp.eu/meta/editor/fields",
+  "https://schema.hbp.eu/meta/editor/label": "Fields",
+  "http://schema.org/name": "Fields",
+  "https://schema.hbp.eu/meta/editor/mappingLabel": "name",
+  "https://schema.hbp.eu/meta/editor/mappingValue": "id",
+  "https://schema.hbp.eu/meta/editor/type": "DropdownSelect",
+  "https://schema.hbp.eu/meta/editor/identifier": "meta/minds/specificationfield/v0.0.1/fields"
+}

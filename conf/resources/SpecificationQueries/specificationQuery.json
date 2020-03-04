@@ -1,0 +1,144 @@
+{
+  "https://schema.hbp.eu/meta/editor/identifier": "meta/minds/specification/v0.0.1/specificationQuery",
+  "http://schema.org/identifier": "meta/minds/specification/v0.0.1/specificationQuery",
+  "description": "fetching all the specifications",
+  "label": "Specification",
+  "fields": [
+    {
+      "fieldname": "query:folderName",
+      "relative_path": "https://schema.hbp.eu/meta/editor/folderName"
+    },
+    {
+      "fieldname": "query:folderID",
+      "relative_path": "https://schema.hbp.eu/meta/editor/folderID"
+    },
+    {
+      "fieldname": "query:label",
+      "relative_path": "https://schema.hbp.eu/meta/editor/label"
+    },
+    {
+      "fieldname": "query:fields",
+      "relative_path": "https://schema.hbp.eu/meta/editor/fields",
+      "fields": [
+        {
+          "fieldname": "query:id",
+          "relative_path": "base:relativeUrl"
+        }
+      ]
+    },
+    {
+      "fieldname": "meta:folderName",
+      "relative_path": "https://schema.hbp.eu/meta/editor/folderName"
+    },
+    {
+      "fieldname": "meta:folderID",
+      "relative_path": "https://schema.hbp.eu/meta/editor/folderID"
+    },
+    {
+      "fieldname": "meta:label",
+      "relative_path": "https://schema.hbp.eu/meta/editor/label"
+    },
+    {
+      "fieldname": "meta:fields",
+      "relative_path": "https://schema.hbp.eu/meta/editor/fields",
+      "fields": [
+        {
+          "fieldname": "meta:key",
+          "relative_path": "https://schema.hbp.eu/meta/editor/key"
+        },
+        {
+          "fieldname": "meta:allowCustomValues",
+          "relative_path": "https://schema.hbp.eu/meta/editor/allowCustomValues"
+        },
+        {
+          "fieldname": "meta:closeDropdownAfterInteraction",
+          "relative_path": "https://schema.hbp.eu/meta/editor/closeDropdownAfterInteraction"
+        },
+        {
+          "fieldname": "meta:instancesPath",
+          "relative_path": "https://schema.hbp.eu/meta/editor/instancesPath"
+        },
+        {
+          "fieldname": "meta:isLink",
+          "relative_path": "https://schema.hbp.eu/meta/editor/isLink"
+        },
+        {
+          "fieldname": "meta:label",
+          "relative_path": "https://schema.hbp.eu/meta/editor/label"
+        },
+        {
+          "fieldname": "meta:mappingLabel",
+          "relative_path": "https://schema.hbp.eu/meta/editor/mappingLabel"
+        },
+        {
+          "fieldname": "meta:mappingValue",
+          "relative_path": "https://schema.hbp.eu/meta/editor/mappingValue"
+        },
+        {
+          "fieldname": "meta:type",
+          "relative_path": "https://schema.hbp.eu/meta/editor/type"
+        },
+        {
+          "fieldname": "meta:value",
+          "relative_path": "https://schema.hbp.eu/meta/editor/value"
+        },
+        {
+          "fieldname": "http://schema.org/name",
+          "relative_path": "http://schema.org/name"
+        },
+        {
+          "fieldname": "meta:refreshSpecification",
+          "relative_path": "https://schema.hbp.eu/meta/editor/refreshSpecification"
+        }
+      ]
+    },
+    {
+      "fieldname": "query:targetType",
+      "relative_path": "https://schema.hbp.eu/meta/editor/targetType"
+    },
+    {
+      "fieldname": "meta:targetType",
+      "relative_path": "https://schema.hbp.eu/meta/editor/targetType"
+    },
+    {
+      "fieldname": "query:refreshSpecification",
+      "relative_path": "https://schema.hbp.eu/meta/editor/refreshSpecification"
+    },
+    {
+      "fieldname": "meta:refreshSpecification",
+      "relative_path": "https://schema.hbp.eu/meta/editor/refreshSpecification"
+    },
+    {
+      "fieldname": "http://schema.org/name",
+      "relative_path": "http://schema.org/name"
+    },
+    {
+      "fieldname": "https://schema.hbp.eu/relativeUrl",
+      "relative_path": "https://schema.hbp.eu/relativeUrl"
+    },
+    {
+      "fieldname": "https://schema.hbp.eu/inference/alternatives",
+      "relative_path": "https://schema.hbp.eu/inference/alternatives"
+    }
+  ],
+  "meta:refreshSpecification": true,
+  "query:refreshSpecification": true,
+  "@context": {
+    "fieldname": {
+      "@type": "@id",
+      "@id": "fieldname"
+    },
+    "@vocab": "https://schema.hbp.eu/graphQuery/",
+    "merge": {
+      "@type": "@id",
+      "@id": "merge"
+    },
+    "base":"https://schema.hbp.eu/",
+    "query": "https://schema.hbp.eu/editor/",
+    "meta":"https://schema.hbp.eu/meta/editor/",
+    "relative_path": {
+      "@type": "@id",
+      "@id": "relative_path"
+    }
+  }
+}

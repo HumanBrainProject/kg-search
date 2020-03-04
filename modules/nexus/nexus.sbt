@@ -1,0 +1,3 @@
+name := "nexus"
+
+Common.playSettings

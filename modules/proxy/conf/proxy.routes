@@ -1,0 +1,51 @@
+# proxy service
+  GET     /kg_labels/*proxyUrl      controllers.SearchProxy.labels(proxyUrl:String)
+  OPTIONS /kg_labels/*proxyUrl      controllers.SearchProxy.labelsOptions(proxyUrl:String)
+
+  ###
+  #  summary: ES query proxy with smart handling of nested fields query
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  ###
+  GET     /search/*indexWithProxyUrl      controllers.SearchProxy.proxySearch(indexWithProxyUrl:String)
+  ###
+  #  summary: ES query proxy with smart handling of nested fields query
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  ###
+  POST    /search/*indexWithProxyUrl      controllers.SearchProxy.proxySearch(indexWithProxyUrl:String)
+
+  ###
+  #  summary: ES query proxy without any query manipulation
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  ###
+  GET     /default/*indexWithProxyUrl         controllers.SearchProxy.proxy(indexWithProxyUrl:String)
+  ###
+  #  summary: ES query proxy without any query manipulation
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  ###
+  POST    /default/*indexWithProxyUrl         controllers.SearchProxy.proxy(indexWithProxyUrl:String)
+
+  OPTIONS   /search/:index/*proxyUrl         controllers.SearchProxy.proxyOptions(index:String, proxyUrl:String)
+  OPTIONS   /default/:index/*proxyUrl         controllers.SearchProxy.proxyOptions(index:String, proxyUrl:String)
+
+# Export service
+  GET     /export                         controllers.ExportContainerController.exportContainer(container: String, filter: Option[String])
