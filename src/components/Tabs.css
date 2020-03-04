@@ -1,0 +1,70 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-tabs {
+    width: 100%;
+}
+
+.kgs-tabs .kgs-tabs-buttons {
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.kgs-tabs .kgs-tabs-buttons > button.kgs-tabs-button {
+    flex: 1;
+    margin: 0;
+    padding: 12px 8px 8px 8px;
+    background: none;
+    border: 0;
+    border-bottom: 5px solid var(--border-color-4);
+    color: #999;
+    font-size: var(--font-size-small);
+    font-weight: bold;
+}
+
+.kgs-tabs .kgs-tabs-buttons > button.kgs-tabs-button.is-active {
+    border-bottom-color: var(--link-highlight-color);
+    color: var(--link-highlight-color);
+}
+
+.kgs-tabs .kgs-tabs-buttons > button.kgs-tabs-button + button.kgs-tabs-button {
+    margin-left: 15px;
+}
+
+.kgs-tabs .kgs-tabs-content {
+    padding: 20px 20px 0 20px;
+}
+
+.kgs-tabs .kgs-tabs-content > .kgs-field > .field-label {
+    display: none;
+}
+
+.kgs-tabs .kgs-tabs-content > .kgs-field > .kgs-hint {
+    display: none;
+}
+
+.kgs-tabs .kgs-tabs-content > .kgs-field > span > ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.kgs-tabs .kgs-tabs-content > .kgs-field > span > ul > li + li {
+    margin-top: 20px;
+}
+
+.kgs-tabs .kgs-tabs-content > .kgs-field > span > ul + button[role="link"].kgs-field__viewMore-button {
+    margin-left: 0;
+}

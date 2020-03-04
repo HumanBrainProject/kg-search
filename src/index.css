@@ -1,0 +1,569 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+:root {
+  --color-1: #000;
+  --color-2: #4f4f4f;
+  --color-3: #828282;
+  --color-4: #bdbdbd;
+  --color-5: #e0e0e0;
+  --color-6: #f2f2f2;
+  --color-7: #6d6d6d;
+  --color-8: #333;
+  --color-9: #f5f5f5;
+  --color-10: #222;
+  --color-11: #555;
+  --color-12: var(--color-11);
+  --color-13: var(--color-11);
+  --color-14: #999;
+  --color-15: var(--color-11);
+  --color-16: #aaa;
+  --color-17: #fff;
+  --color-18: var(--color-17);
+  --color-19: #6c7379;
+  --color-20: #333333;
+  --color-21: #545a5f;
+  --color-22: #1a1a1a;
+  --color-23: #4D4D4D;
+  --color-24: #888;
+  --color-25: #eee;
+  --color-26: var(--color-1);
+  --color-27: #777;
+  --color-28: var(--color-17);
+  --color-29: #F88900;
+  --color-30: #fecd07;
+  --color-31: var(--color-17);
+  --color-32: var(--color-31);
+  --color-33: var(--color-1);
+  --color-34: var(--color-1);
+  --color-35: #e6e6e6;
+  --color-36: var(--color-8);
+  --color-37: #ef8503;
+  --color-selected: var(--color-30);
+  --color-highlight: #f5d864;
+  --color-unselected: var(--color-23);
+  --color-warning: #f56722;
+  --color-warning-off: var(--color-1);
+  --code-color: #c7254e;
+  --code-background-color: #f9f2f4;
+  --link-color-1: #0B69A3;
+  --link-color-2: #035182;
+  --link-highlight-color: var(--color-29);
+  --button-primary-background-color: var(--link-color-1);
+  --button-primary-border-color: #2e6da4;
+  --button-primary-background-color-hover: #286090;
+  --button-primary-border-color-hover: #204d74;
+  --button-default-background-color: var(--color-35);
+  --button-default-background-color-hover: var(--color-35);
+  --button-default-border-color: var(--color-35);
+  --default-border-color: var(--color-35);
+  --link-color-active: var(--link-color-2);
+  --light-text: #828282;
+  --background-color-1: #f4f4f4;
+  --background-color-2: #fff;
+  --background-color-3: #dddee0;
+  --background-color-4: #bbb;
+  --background-color-5: #f8f9fa;
+  --background-color-6: rgba(36, 38, 40, 0.75);
+  --background-color-7: #242628;
+  --background-color-8: #e4e4e4;
+  --border-color-1: #e0e0e0;
+  --border-color-2: #fff;
+  --border-color-3: #ccc;
+  --border-color-4: #dddee0;
+  --border-color-5: #333;
+  --border-color-6: #ddd;
+  --border-color-7: var(--border-color-3);
+  --border-color-8: #000;
+  --border-color-9: rgba(0,0,0,.2);
+  --box-shadow-1: rgba(55,55,55,.1);
+  --box-shadow-2: #8f8a8a;
+  --box-shadow-3: #cbc9c9;
+  --box-shadow-4: #111;
+  --font-stack: "Inter","Helvetica Neue",Arial,sans-serif;
+  --font-stack-bold: "Inter-Bold","Helvetica Neue",Arial,sans-serif;
+  --font-size-bigger: 21px;
+  --font-size-big: 18px;
+  --font-size: 16px;
+  --font-size-small: 14px;
+  --font-size-smaller: 12px;
+  --font-size-extra-small: 11px;
+  --line-height: 22px;
+  --line-height-extra-big: 32px;
+  --regular: 400;
+  --bold: 700;
+  --site-margin: 12px;
+  --site-margin-desktop: 42px;
+}
+
+/* TODO: Uncomment if you want dark mode enabled */
+/* @media (prefers-color-scheme: dark) { */
+ :root body[theme="dark"] {
+  --color-1: #fff;
+  --color-2: #4f4f4f;
+  --color-3: #828282;
+  --color-7: #a6a6a6;
+  --color-4: #bdbdbd;
+  --color-5: #e0e0e0;
+  --color-6: #f2f2f2;
+  --color-8: #aaa;
+  --color-9: #f5f5f5;
+  --color-10: #eee;
+  --color-11: var(--color-1);
+  --color-12: #bbb;
+  --color-13: #999;
+  --color-14: #555;
+  --color-15: var(--color-8);
+  --color-16: var(--color-13);
+  --color-17: #aaa;
+  --color-18: var(--color-1);
+  --color-19: #6c7379;
+  --color-20: #bbc0c3;
+  --color-21: var(--color-19);
+  --color-22: var(--color-20);
+  --color-23: var(--color-13);
+  --color-24: var(--color-13);
+  --color-25: #616161;
+  --color-26: var(--color-4);
+  --color-27: var(--color-15);
+  --color-28: var(--color-1);
+  --color-29: #F88900;
+  --color-30: #fecd07;
+  --color-31: #000;
+  --color-32: var(--color-31);
+  --color-33: var(--color-31);
+  --color-34: black;
+  --color-35: #e6e6e6;
+  --color-36: #333;
+  --color-37: #ef8503;
+  --color-selected: var(--color-30);
+  --color-highlight: #f5d864;
+  --color-unselected: var(--color-13);
+  --color-warning: #f56722;
+  --color-warning-off: var(--color-1);
+  --code-color: #c7254e;
+  --code-background-color: var(--color-26);
+  --link-highlight-color: var(--color-29);
+  --link-color-1: #08c;
+  --link-color-2: #24b6ff;
+  --link-color-active: var(--link-color-2);
+  --button-primary-background-color: var(--link-color-1);
+  --button-primary-border-color: #2e6da4;
+  --button-primary-background-color-hover: #286090;
+  --button-primary-border-color-hover: #204d74;
+  --button-default-background-color: var(--color-35);
+  --button-default-background-color-hover: var(--color-35);
+  --button-default-border-color: var(--color-35);
+  --default-border-color:var(--color-35);
+  --link-color-active: var(--link-color-2);
+  --light-text: #828282;
+  --background-color-1: #222;
+  --background-color-2: #333;
+  --background-color-3: #444;
+  --background-color-4: var(--background-color-2);
+  --background-color-5: #404040;
+  --background-color-6: rgba(73, 77, 80, 0.75);
+  --background-color-7: #616365;
+  --background-color-8: var(--background-color-1);
+  --border-color-1: #555;
+  --border-color-2: #111;
+  --border-color-3: #222;
+  --border-color-4: #828282;
+  --border-color-5: #ccc;
+  --border-color-6: #555;
+  --border-color-7: var(--border-color-1);
+  --border-color-8: #fff;
+  --border-color-9: rgba(255,255,255,.2);
+  --box-shadow-1: rgba(205,205,205,.1);
+  --box-shadow-2: #111;
+  --box-shadow-3: var(--box-shadow-2);
+  --box-shadow-4: #111;
+}
+
+body[theme="dark"] ::-webkit-scrollbar {
+  background: #1a1a1a;
+}
+
+body[theme="dark"] ::-webkit-scrollbar-thumb {
+  background: #444;
+}
+
+
+@media (min-width: 576px) {
+  :root {
+    --site-margin: var(--site-margin-desktop)
+  }
+}
+
+/* Inter Regular */
+@font-face {
+  font-family: 'Inter';
+  font-display: swap;
+  src: url('./assets/fonts/Inter-Regular.woff2') format('woff2'),
+      url('/static/fonts/Inter-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Inter Regular Italic */
+@font-face {
+  font-family: 'Inter-Italic';
+  font-display: swap;
+  src: url('./assets/fonts/Inter-Italic.woff2') format('woff2'),
+    url('./assets/fonts/Inter-Italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* Inter Bold */
+@font-face {
+  font-family: 'Inter-Bold';
+  font-display: swap;
+  src: url('./assets/fonts/Inter-Bold.woff2') format('woff2'),
+    url('./assets/fonts/Inter-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Inter Bold Italic */
+@font-face {
+  font-family: 'Inter-Bolditalic';
+  font-display: swap;
+  src: url('./assets/fonts/Inter-BoldItalic.woff2') format('woff2'),
+    url('./assets/fonts/Inter-BoldItalic.woff') format('woff');
+  font-weight: 700;
+  font-style: italic;
+}
+
+html, body {
+    overflow-x: hidden;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+}
+
+body:before {
+  content: "small";
+  display: none;
+}
+
+@media (--medium-window) {
+  body:before {
+    content: "medium";
+  }
+}
+
+@media (max-width:1024px) {
+  body:before {
+    content: "large";
+  }
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  display: block !important;
+  overflow-x: hidden;
+  font-family: var(--font-stack);
+  font-weight: var(--regular);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  background: var(--background-color-2);
+  color: var(--color-1);
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased
+}
+
+*,
+:after,
+:before {
+  box-sizing: border-box;
+  margin: 0
+}
+
+a, a:hover, a:visited {
+  color: currentColor;
+  text-decoration: none;
+}
+
+.site-inner {
+  position: relative;
+  background-color: #fff;
+}
+
+main {
+  position: relative;
+  min-height: 100vh;
+  background-color: transparent;
+  border-bottom: 1px solid var(--border-color-1);
+  box-shadow: 0 10px 20px 0 var(--box-shadow-1);
+  z-index: 100;
+  background: var(--background-color-2);
+}
+
+main a, main a:visited {
+  color: currentColor;
+  text-decoration: none;
+}
+
+main a:hover, main a:hover:visited {
+  color: currentColor;
+  text-decoration: none;
+}
+
+.site-footer {
+  display: block;
+  bottom: 0;
+  width: 100%;
+  padding: 20px var(--site-margin) 0;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--font-size-small);
+  line-height: var(--line-height);
+  color: var(--light-text);
+  z-index: 5;
+}
+
+.site-footer .footer__content {
+  position: relative;
+  margin-bottom: auto;
+}
+
+.site-footer .footer__content .logo {
+  color: var(--color-1);
+}
+
+.site-footer .footer__content p {
+  margin-top: 40px;
+  max-width: 320px;
+}
+
+.site-footer .footer__end {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  min-height: 80px;
+  padding-bottom: 70px;
+}
+
+.site-footer .footer__end .footer__social {
+  display: flex;
+  list-style: none;
+  padding: 0;
+}
+
+.site-footer .footer__end .footer__social li {
+  margin: 0 8px;
+}
+
+.site-footer .footer__end .footer__social li a:hover {
+  color: var(--color-10);
+}
+
+
+.eu-logo{
+    display:inline-block;
+    height: 40px;
+    margin-top: 5px;
+}
+
+.eu-logo img{
+    height: 100%;
+}
+
+.powered-by{
+    display:inline-block;
+    font-size: 0.4em;
+    font-weight: bold;
+    margin-right: 1.5em;
+    text-wrap: none;
+}
+
+.powered-by-intro{
+    font-size: 10px;
+    margin-top:20px;
+}
+
+.powered-by img{
+    height: 50px;
+    width: auto;
+}
+
+.powered-by a, .powered-by a:hover{
+    color: var(--color-1);
+    text-decoration: none;
+}
+
+.credits{
+    float:right;
+    text-align: right;
+}
+
+@media (max-width:768px) {
+  .site-footer .footer__end {
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-flow: column-reverse;
+    line-height: 50px;
+  }
+
+  .credits{
+      max-width: 200px;
+      margin-bottom: 2em;
+  }
+
+}
+
+.sprite-icons {
+  width: 40px;
+  height: 40px;
+}
+
+.kgs-navbar {
+  height: auto;
+  background-color: transparent;
+  border: none;
+  margin-bottom: 0;
+  padding: 0 var(--site-margin);
+}
+
+.kgs-navbar a {
+  font-size: 18px;
+  text-decoration: none; 
+}
+
+.navbar-default .navbar-nav>li>a {
+  color: var(--color-8);
+}
+
+.navbar-default .navbar-nav>li>a:visited {
+  color: currentColor;
+  text-decoration: none;
+}
+
+.navbar-default .navbar-nav>li>a:hover {
+  text-decoration: underline;
+}
+
+.kgs-navbar .container-fluid {
+  padding-right: 0px;
+  padding-left: 0px;
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
+.kgs-navbar .navbar-toggle {
+  margin-top: 25px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  main {
+    margin-bottom: 320px;
+  }
+
+  .kgs-navbar {
+    height: 100px;
+  }
+
+  .navbar-right { 
+    margin-top: 25px;
+    margin-bottom: -15px;
+  }
+
+  .container-fluid>.navbar-collapse {
+    margin-right: -15px;
+    margin-left: -15px; 
+  }
+
+  .site-footer {
+    position: fixed;
+    min-height: 270px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 768px) {
+  main {
+    margin-bottom: 420px;
+  }
+}
+
+.logo {
+  margin: 0 auto 0 0;
+  color: var(--color-1);
+  min-width: 200px;
+}
+
+.logo img {
+  display: inline-block;
+}
+
+body[theme="dark"] .logo:after {
+  content: "EBRAINS";
+  display: inline-block;
+  font-size: 19px;
+  font-weight: 600;
+  padding-right: 10px;
+  transform: translate(-87px, 2px);
+  background: var(--background-color-2);
+  color: var(--color-10);
+  -webkit-font-smoothing: auto;
+}
+
+.eu-logo {
+  position: relative;
+}
+
+body[theme="dark"] .eu-logo:after {
+  content: "Co-funded by\A the European Union";
+  display: inline-block;
+  font-size: 10px;
+  background: var(--background-color-2);
+  color: var(--color-10);
+  -webkit-font-smoothing: auto;
+  white-space: pre;
+  position: absolute;
+  top: 12px;
+  left: 2px;
+  line-height: 1.4em;
+  letter-spacing: 0.042em;
+  text-align: right;
+}
+
+#rootFooter {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#rootFooter > div {
+  position: relative;
+  text-align: right;
+}
+
+@media (min-width: 768px) {
+  #rootFooter {
+    position: absolute;
+    top: -50px;
+    margin-bottom: 0;
+  }
+}

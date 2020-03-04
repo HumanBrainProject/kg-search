@@ -1,0 +1,105 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-toggle  {
+    display: none;
+    max-height: 40px;   
+}
+
+.kgs-toggle > div  {
+    display: -ms-flexbox;
+    display: flex;
+    max-height: 40px;
+    align-content: center;
+    text-align: center;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+/* 
+.kgs-toggle > div:before {
+    content: "View as";
+    margin-top: 4px;
+    margin-right: 20px;
+    font-size: 22px;
+    line-height: 30px;
+    color: var(--color-15);
+    white-space: nowrap;
+} */
+
+.kgs-toggle > div button {
+    -ms-flex: 1 1;
+    flex: 1 1;
+    padding: 3px 35px; 
+    background-color: var(--background-color-2);
+    border: 1px solid var(--background-color-2);
+    border-right: none;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: var(--font-size-small);
+    line-height: 2em;
+    color: #000;
+    text-decoration: none;
+    white-space: nowrap;
+    -webkit-transition: -webkit-box-shadow 0.2s ease-in;
+    transition: -webkit-box-shadow 0.2s ease-in;
+    -o-transition: box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
+}
+
+.kgs-toggle > div > button:first-child {
+    border-radius: 3px 0 0 3px;
+}
+
+.kgs-toggle > div > button:last-child {
+    border-radius: 0 3px 3px 0;
+}
+
+.kgs-toggle > div > button.is-active {
+    background-color: var(--link-highlight-color);
+    border-color: var(--link-highlight-color);
+    cursor: default;
+}
+
+.kgs-toggle > div > button:not(.is-active):not(.is-disabled):hover,
+.kgs-toggle > div > button:not(.is-active):not(.is-disabled):not([disabled]):focus  {
+    z-index: 1;
+}
+
+.kgs-toggle > div > button:not(:last-child):not(.is-active):not(.is-disabled):hover,
+.kgs-toggle > div > button:not(:last-child):not(.is-active):not(.is-disabled):not([disabled]):focus  {
+    box-shadow: 0px 3px 6px var(--box-shadow-2);
+}
+
+.kgs-toggle > div > button:last-child:not(.is-active):not(.is-disabled):hover,
+.kgs-toggle > div > button:last-child:not(.is-active):not(.is-disabled):not([disabled]):focus  {
+    box-shadow: 3px 3px 6px var(--box-shadow-2);
+}
+
+.kgs-toggle > div > button > label {
+    display: inline;
+    font-size: 22px;
+    font-weight: normal;
+    color: var(--color-16);
+}
+
+.kgs-toggle > div > button:not(.is-active):hover > label {
+    color: var(--color-11);
+}
+
+.kgs-toggle > div > button.is-active > label {
+    color: white;
+}

@@ -1,0 +1,136 @@
+
+.kgs-fields-buttons .kgs-fields-buttons__button {
+  position: relative;
+  background-color: var(--button-default-background-color); 
+  border-color: var(--button-default-border-color);
+  font-size: var(--font-size);
+  color: var(--color-36);
+}
+
+.kgs-fields-buttons .kgs-fields-buttons__button:hover,
+.kgs-fields-buttons .kgs-fields-buttons__button:active,
+.kgs-fields-buttons .kgs-fields-buttons__button:focus {
+    background-color: var(--button-default-background-color-hover); 
+    border-color: var(--button-default-border-color);
+    color: var(--color-33);
+}
+
+.kgs-fields-buttons .kgs-fields-buttons__button + .kgs-fields-buttons__button  {
+  margin-left: 10px;
+}
+
+.kgs-fields-buttons .kgs-fields-buttons__button i {
+  margin-right: 5px;
+}
+
+.kgs-fields-buttons .kgs-fields-buttons__button span {
+  display: none;
+}
+
+@media (min-width: 576px) {
+  .kgs-fields-buttons .kgs-fields-buttons__button span {
+    display: inline-block;
+    margin-left: 5px;
+  }
+}
+
+.kgs-fields-buttons .kgs-fields-buttons__button.is-active:after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: calc(50% - 3px);
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 7px solid var(--button-default-border-color);
+}
+
+.kgs-fields-buttons .kgs-fields-buttons__details {
+  position: relative;
+  margin: 9px 0 2px 0;
+  padding: 10px;
+  border: 1px solid var(--default-border-color);
+  border-radius: 10px;
+  box-sizing: border-box;
+  background-color: var(--background-color-5);
+  text-align: left;
+  font-size: var(--font-size-extra-small);
+  font-weight: 500;
+  line-height: 1.3em;
+  color: var(--color-7);
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.kgs-fields-buttons .kgs-field-fields-buttons__close-button {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  padding: 8px;
+  background-color: transparent;
+  border: 0;
+  font-size: 8px;
+  cursor: pointer;
+  color: var(--color-19);
+  -webkit-transition: color .2s ease-in;
+  -webkit-transition: box-shadow .2s ease-in;
+  transition: box-shadow .2s ease-in;
+}
+
+.kgs-fields-buttons .kgs-field-fields-buttons__close-button:hover {
+  color: var(--color-20);
+}
+
+.kgs-fields-buttons .kgs-download > div {
+  margin: 20px 0 30px 0;
+  text-align: center;
+}
+
+.kgs-fields-buttons .kgs-download > div span {
+  font-size: var(--font-size);
+}
+
+.kgs-fields-buttons .kgs-download > div span i {
+  margin-right: 6px;
+}
+
+.kgs-fields-buttons .kgs-cite {
+  margin: 15px 0 15px 0;
+  font-size: var(--font-size-small);
+  position: relative;
+}
+
+.kgs-fields-buttons .kgs-cite .kgs-cite-content .field-markdown {
+  display: inline-block;
+  margin: 10px 20px;
+}
+
+.kgs-fields-buttons .kgs-cite .kgs-cite-content i.fa-quote-left {
+
+}
+
+.kgs-fields-buttons .kgs-cite .kgs-cite-content i.fa-quote-right {
+  position: absolute;
+  bottom: 0;
+  right: 10px;
+}
+
+.kgs-fields-buttons .kgs-cite-clipboard-button {
+  position: absolute;
+  right: 25px;
+  background: transparent;
+  border: 0;
+  top:5px;
+}
+
+.kgs-fields-buttons .kgs-cite-clipboard-button button {
+  font-size: initial;
+  color: var(--color-19);
+}
+
+.kgs-fields-buttons .kgs-cite-clipboard-button button:hover {
+  font-size: initial;
+  color: var(--color-20);
+}

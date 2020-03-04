@@ -1,0 +1,181 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-search-panel {
+    position: relative;
+    width: 100%;
+    padding: 15px var(--site-margin);
+    background-color: var(--color-30);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns%23" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns%23" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="210.91064mm" height="99.02961mm" viewBox="0 0 210.91064 99.029609" version="1.1" id="svg8" inkscape:version="0.92.3 (2405546, 2018-03-11)" sodipodi:docname="bgr.svg"><defs id="defs2"><linearGradient id="linearGradient937" inkscape:collect="always"><stop id="stop933" offset="0" style="stop-color:%23fecd07;stop-opacity:1" /><stop id="stop935" offset="1" style="stop-color:%23f88900;stop-opacity:0" /></linearGradient><linearGradient inkscape:collect="always" id="linearGradient835"><stop style="stop-color:%23ef544f;stop-opacity:1" offset="0" id="stop831" /><stop style="stop-color:%23e01a14;stop-opacity:0;" offset="1" id="stop833" /></linearGradient><radialGradient inkscape:collect="always" xlink:href="%23linearGradient937" id="radialGradient825" cx="26.080359" cy="98.940468" fx="26.080359" fy="98.940468" r="126.62202" gradientTransform="matrix(1.0193498,-0.28235447,0.26074741,0.94134451,-17.685259,34.560761)" gradientUnits="userSpaceOnUse" /><radialGradient inkscape:collect="always" xlink:href="%23linearGradient835" id="radialGradient837" cx="169.33333" cy="116.32738" fx="169.33333" fy="116.32738" r="116.41666" gradientTransform="matrix(1.0644025,0.03263568,-0.048782,1.5910094,-4.4748578,-75.032837)" gradientUnits="userSpaceOnUse" /><clipPath clipPathUnits="userSpaceOnUse" id="clipPath927"><rect style="opacity:1;fill:%23ef544f;fill-opacity:1;stroke:%23fbcb3e;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" id="rect929" width="210.91064" height="99.02961" x="0" y="-0.089400224" /></clipPath><radialGradient inkscape:collect="always" xlink:href="%23linearGradient937" id="radialGradient931" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1.0644025,0.03263568,-0.048782,1.5910094,42.09183,-86.145344)" cx="169.33333" cy="116.32738" fx="169.33333" fy="116.32738" r="116.41666" /></defs><sodipodi:namedview id="base" pagecolor="%23ffffff" bordercolor="%23666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="0.35" inkscape:cx="417.14233" inkscape:cy="-188.57243" inkscape:document-units="mm" inkscape:current-layer="g921" showgrid="false" inkscape:window-width="1853" inkscape:window-height="1144" inkscape:window-x="67" inkscape:window-y="28" inkscape:window-maximized="1" fit-margin-top="0" fit-margin-left="0" fit-margin-right="0" fit-margin-bottom="0" /><metadata id="metadata5"><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1" transform="translate(0,0.08940022)"><ellipse style="opacity:1;fill:%23eb241f;fill-opacity:0;stroke:%23fbcb3e;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" id="path827" cx="221.87201" cy="103.85416" rx="75.217262" ry="49.514877" /><g id="g921" clip-path="url(%23clipPath927)"><path id="rect815" transform="scale(0.26458333)" d="M 0,-0.33789062 V 373.94727 H 797.14258 V -0.33789062 Z" style="opacity:1;fill:%23fecd07;fill-opacity:1;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" inkscape:connector-curvature="0" /><ellipse ry="93.738091" rx="126.62202" cy="107.48272" cx="35.454178" id="path817" style="opacity:1;fill:url(%23radialGradient825);fill-opacity:1;stroke:%23fbcb3e;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" /><ellipse ry="109.61309" rx="116.41666" cy="104.45895" cx="216.6553" id="path829" style="opacity:1;fill:url(%23radialGradient931);fill-opacity:1.0;stroke:%23fbcb3e;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" /></g><ellipse style="opacity:1;fill:%23ef544f;fill-opacity:1;stroke:%23fbcb3e;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" id="path839" cx="-13.229166" cy="167.35417" rx="0.37797621" ry="1.8898809" /></g></svg>');
+    background-size: cover;
+}
+
+.kgs-search-panel.is-fixed-position {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color-7);
+    box-shadow: 0 4px 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
+    z-index: 3;
+}
+
+
+.kgs-search-panel > h1 {
+    color: var(--color-33);
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+.kgs-search-panel.is-fixed-position > h1 {
+    display: none;
+}
+
+.kgs-search-panel > div {
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    width: 100%;
+}
+
+.kgs-search-panel > div > div {
+    position: relative;
+    flex: 1;
+}
+
+@media (min-width: 576px) {
+
+    .kgs-search-panel {
+        padding: 60px var(--site-margin) 60px var(--site-margin);
+    }
+
+    .kgs-search-panel.is-fixed-position {
+        padding: 15px var(--site-margin);
+    }
+}
+
+.kgs-search-panel .kg-search-bar {
+    flex: 1;
+    color: var(--color-11);
+    background-color: var(--background-color-2);
+    background-image: none;
+    border: 1px solid var(--background-color-2);
+    border-radius: 2px;
+    transition: border-color ease-in-out .15s;
+}
+.kgs-search-panel .kg-search-bar.is-focused {
+    background-color: var(--background-color-2);
+}
+
+.kgs-search-panel .kg-search-bar__icon {
+    position: absolute;
+    opacity: 1;
+    margin: 15px 0 0 15px;
+}
+
+.kgs-search-panel  .kg-search-bar__icon:before {
+    content: "\f002";
+    background: none;
+    font-family: FontAwesome;
+    font-size: 2em;
+    color: var(--link-highlight-color);
+}
+
+.kgs-search-panel input.kg-search-bar {
+    display: inline-block;
+    width: 100%;
+    padding: 15px 60px 15px 60px;
+    vertical-align: top;
+    color: var(--color-11);
+    font-size: 24px;
+}
+
+.kgs-search-panel input.kg-search-bar:hover {
+    color: var(--color-11);
+}
+
+.kgs-search-panel input.kg-search-bar::-moz-placeholder {
+    color: #999 !important;
+}
+
+.kgs-search-panel input.kg-search-bar:-moz-placeholder {
+    color: #999 !important;
+}
+
+.kgs-search-panel input.kg-search-bar:-ms-input-placeholder {
+    color: #999 !important;
+}
+
+.kgs-search-panel input.kg-search-bar::-webkit-input-placeholder {
+    color: #999 !important;
+}
+
+.kgs-search-panel .kgs-search-panel-button {
+    display: none;
+    margin: 0 0 0 30px;
+    padding: 10px 40px;
+    border: 1px solid var(--link-highlight-color);
+    border-radius: 2px;
+    background-color: var(--link-highlight-color);
+    color: var(--color-32);
+    font-size: 22px;
+    text-transform: uppercase;
+    -webkit-transition: -webkit-box-shadow 0.2s ease-in;
+    transition: -webkit-box-shadow 0.2s ease-in;
+    -o-transition: box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
+}
+
+.kgs-search-panel .kgs-search-panel-button:hover {
+    color: var(--color-32);
+    background-color: var(--color-37);
+}
+
+.kgs-search-panel button.kgs-search-panel-help__button {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    margin: 0 ;
+    padding: 16px 0;
+    border: 0;
+    background-color: transparent;
+    color: var(--link-highlight-color);
+    text-align: center;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease-in, color 0.2s ease-in;
+}
+
+.kgs-search-panel button.kgs-search-panel-help__button i,
+.kgs-search-panel button.kgs-search-panel-help__button:hover i {
+    color: var(--link-highlight-color);
+}
+
+.kgs-search-panel .kg-search-bar .sk-spinning-loader {
+    border-color: var(--border-color-9);
+    border-left-color: var(--border-color-8);
+}
+
+@media (min-width: 992px) {
+    .kgs-search-panel .kgs-search-panel-button {
+        display: inline-block;
+    }
+}

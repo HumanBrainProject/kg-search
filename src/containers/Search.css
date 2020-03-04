@@ -1,0 +1,150 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-search {
+    background: var(--background-color-1);
+}
+
+.kgs-search .kgs-search__panel {
+    display: block;
+    margin: 15px var(--site-margin) 0 var(--site-margin);
+}
+
+.kgs-search .kgs-search__main {
+    width: 100%;
+}
+
+.kgs-search .kgs-search__panel .kgs-filters {
+    margin-top: 15px;
+}
+
+.kgs-search .kgs-search__panel .kgs-search__main {
+    margin-top: 10px;
+}
+
+@media (min-width: 576px) {
+
+    .kgs-search .kgs-search__panel {
+        margin: 30px var(--site-margin) 0 var(--site-margin);
+    }
+
+    .kgs-search .kgs-search__panel .kgs-filters {
+        margin-top: 30px;
+    }    
+
+    .kgs-search .kgs-search__panel .kgs-search__main {
+        margin-top: 15px;
+    }    
+}
+
+@media (min-width: 992px) {
+    .kgs-search .kgs-search__panel {
+        display: grid;
+        -ms-grid-columns: 400px 1fr;
+        grid-template-columns: 400px 1fr;
+        -ms-grid-rows: max-content max-content 1fr;
+        grid-template-rows: max-content max-content 1fr;
+        grid-template-areas: "types main"
+                            "filters main"
+                            "empty main";
+        grid-row-gap: 30px;
+        grid-column-gap: 30px;
+        min-height: calc(100vh - 358px);
+        
+    }
+
+    .kgs-search .kgs-search__panel .kgs-search__main {
+        grid-area: main;
+        margin-top: 0;
+    }
+
+    .kgs-search .kgs-search__panel .kgs-fieldsFilter {
+        grid-area: types;
+    }
+
+    .kgs-search .kgs-search__panel .kgs-filters {
+        grid-area: filters;
+        margin-top: 0;
+    }
+}
+
+.kgs-search__terms-short-notice {
+    margin: 30px 0;
+}
+
+@media (min-width: 992px) and (min-height: 900px) {
+    .kgs-search__terms-short-notice {
+        display: none;
+    }
+}
+
+.kgs-search .kgs-hit {
+    height: 100%;
+    overflow: hidden;
+}
+
+@media (min-width: 992px) {
+    .kgs-search .kgs-list .kgs-hit {
+        height: auto;
+        height: unset;
+        overflow: auto;
+        overflow: unset;
+    }
+}
+
+.kgs-search .kgs-hit .kgs-hit__ribbon {
+    display: none;
+}
+
+@media (min-width: 1200px) { /* 992 without left filters panel */ 
+    .kgs-search .kgs-list .kgs-hit .kgs-hit__ribbon {
+        display: block;
+    }
+
+    .kgs-hit__ribbon + .kgs-hit__body .kgs-field__title {
+        margin-bottom: 25px;
+        flex-basis: calc(100% - 125px);
+    }
+
+    .kgs-hit__ribbon.ribbon-with-icon .kgs-field__title {
+        flex-basis: calc(100% - 185px);
+    }
+
+    .kgs-hit__ribbon.ribbon-with-text .kgs-field__title,
+    .kgs-hit__ribbon.ribbon-with-icon.ribbon-with-text .kgs-field__title {
+        flex-basis: calc(100% - 200px);
+    }
+}
+
+@media (min-width: 1600px) {
+
+    .kgs-search .kgs-list .kgs-hit[data-type] .kgs-field__protocol{
+        flex-grow:1;
+        max-width: 50%;
+    }
+    .kgs-search .kgs-list .kgs-hit[data-type] .kgs-field__methods{
+        flex-grow:1;
+        max-width: 50%;
+    }
+}
+
+@media (min-width: 2100px) {
+
+    .kgs-search-container {
+        max-width: 2100px;
+        margin: 0 auto;
+    }
+}

@@ -1,0 +1,165 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-image_carousel > div .carousel .thumbs-wrapper {
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+
+.kgs-image_carousel > div .carousel .thumbs-wrapper ul.thumbs {
+  margin-bottom: 0;
+}
+
+.kgs-image_carousel .carousel .slide  {
+    cursor: pointer;
+}
+  
+.kgs-image_carousel .carousel .slide img  {
+    min-height: 300px;
+}
+  
+.kgs-image_carousel .carousel .thumb {
+    border-color: var(--background-color-2);
+    min-height: 80px;
+}
+
+.kgs-image_carousel .carousel .thumb.selected, 
+.kgs-image_carousel .carousel .thumb:hover {
+    border-color: var(--border-color-5);
+}
+
+.kgs-image_carousel .carousel .slide .legend {
+  bottom: 0; 
+  width: auto;
+  max-width: 90%;   
+  margin-left: 0;
+  transform: translateX(-50%);
+  overflow-wrap: break-word;
+  word-break: normal;
+  white-space: pre-wrap;
+  text-overflow: ellipsis;
+  -o-transition: all .35s ease-in-out;
+  -webkit-transition: all .35s ease-in-out;
+  transition: all .35s ease-in-out;
+  cursor: pointer;
+}
+
+.kgs-image_carousel .carousel:hover .slide .legend {
+    background-color: rgba(51, 51, 51, 0.85);
+}
+
+.kgs-image_carousel .carousel .slide .kgs-image_carousel-icon {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: scale(3) translate(-10%, -35%);
+  color: white;
+  opacity: 0.3;
+  cursor: pointer;
+}
+
+.kgs-image_carousel .carousel .slide.selected .kgs-image_carousel-icon {
+  display: block;
+}
+
+
+@-ms-keyframes kgs-image_carousel-icon {
+  0% {
+      opacity: 0.5
+  }
+  24% {
+      opacity: 0.5
+  }
+  25% {
+      opacity: 0.3
+  }
+  50% {
+      opacity: 0.3
+  }
+  75% {
+      opacity: 0.3
+  }
+  76% {
+      opacity: 0.5
+  }
+  100% {
+      opacity: 0.5
+  }
+}
+
+@-webkit-keyframes kgs-image_carousel-icon {
+  0% {
+      opacity: 0.5
+  }
+  24% {
+      opacity: 0.5
+  }
+  25% {
+      opacity: 0.3
+  }
+  50% {
+      opacity: 0.3
+  }
+  75% {
+      opacity: 0.3
+  }
+  76% {
+      opacity: 0.5
+  }
+  100% {
+      opacity: 0.5
+  }
+}
+
+@keyframes kgs-image_carousel-icon {
+  0% {
+      opacity: 0.5
+  }
+  24% {
+      opacity: 0.5
+  }
+  25% {
+      opacity: 0.3
+  }
+  50% {
+      opacity: 0.3
+  }
+  75% {
+      opacity: 0.3
+  }
+  76% {
+      opacity: 0.5
+  }
+  100% {
+      opacity: 0.5
+  }
+}
+
+.kgs-image_carousel .carousel:hover .slide.selected .kgs-image_carousel-icon,
+.kgs-image_carousel .carousel .slide.selected:hover .kgs-image_carousel-icon,
+.kgs-image_carousel .carousel .slide.selected.legend .legend:hover + .kgs-image_carousel-icon {
+  opacity: 0.5;
+}
+
+
+.kgs-image_carousel .carousel:hover .slide.selected .kgs-image_carousel-icon.is-animated,
+.kgs-image_carousel .carousel .slide.selected:hover .kgs-image_carousel-icon.is-animated,
+.kgs-image_carousel .carousel .slide.selected.legend .legend:hover + .kgs-image_carousel-icon.is-animated {
+  -moz-animation: kgs-image_carousel-icon 1s infinite ease-in-out;
+  -webkit-animation: kgs-image_carousel-icon 1s infinite ease-in-out;
+  animation: kgs-image_carousel-icon 1s infinite ease-in-out;
+}

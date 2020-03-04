@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ErrorPanel component renders initially 1`] = `
+<div
+  className="kgs-error-container"
+>
+  <div
+    className="kgs-error-panel"
+  >
+    <span
+      className="kgs-error-message"
+    >
+      some message
+    </span>
+    <div
+      className="kgs-error-navigation"
+    >
+      <button
+        onClick={[Function]}
+      >
+        cancel label
+      </button>
+      <button
+        onClick={[Function]}
+      >
+        retry label
+      </button>
+    </div>
+  </div>
+</div>
+`;

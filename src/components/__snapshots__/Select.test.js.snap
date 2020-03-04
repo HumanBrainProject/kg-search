@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Select component renders initially 1`] = `
+<div
+  className="kgs-select className"
+>
+  <div>
+    a label
+  </div>
+  <select
+    onChange={[Function]}
+    value=""
+  >
+    <option
+      value="a value"
+    >
+      a label
+    </option>
+    <option
+      value="another value"
+    >
+      another label
+    </option>
+  </select>
+</div>
+`;

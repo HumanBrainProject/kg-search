@@ -1,0 +1,158 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-app {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 400;
+    font-family: var(--font-stack);
+}
+
+/* Droid Sans, Gill Sans, Montserrat, Poppins, Proxima Nova fonts weight too heavy fix */
+@-moz-document url-prefix() {
+    .kgs-app {
+        font-weight: 300 !important;
+    }
+}
+
+/* Internet Explorer 10 & 11 */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .kgs-app {
+        text-rendering: initial;
+    }
+}
+
+/* Microsoft Edge 12 : Can use the @supports rule Here is a link with all the info about this rule */
+@supports (-ms-accelerator:true) {
+    .kgs-app {
+        text-rendering: initial;
+    }
+}
+
+.kgs-app input[type="button"],
+.kgs-app button {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Firefox fix */
+@-moz-document url-prefix() {
+    .kgs-app input:not([disabled]):not([type="text"]):focus,
+    .kgs-app button:not([disabled]):focus,
+    .kgs-app a[href]:not([disabled]):focus,
+    .kgs-app textarea:not([disabled]):focus,
+    .kgs-app select:not([disabled]):focus,
+    .kgs-app [tabindex]:not([tabindex="-1"]):focus {
+        /*
+        outline-color: #88C1FB;
+        outline-offset: -2px;
+        outline-style: auto;
+        outline-width: 5px;
+        */
+        outline-color: black;
+        outline-offset: -2px;
+        outline-style: dotted;
+        outline-width: 1px;
+    }
+}
+
+.kgs-app button * {
+    cursor: pointer;
+}
+
+.kgs-app button[disabled] * {
+    cursor: default;
+}
+
+.kgs-app a,
+.kgs-app a:visited {
+    color: var(--link-color-1);
+}
+
+.kgs-app a:hover,
+.kgs-app a:focus,
+.kgs-app a:active {
+    color:var(--link-color-active);
+}
+
+.kgs-app .kgs-spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+}
+
+.kgs-app .kgs-spinner .kgs-spinner-logo {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml;utf8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 221 221" fill="none" enable-background="new 0 0 221 221" xml:space="preserve"  aria-labelledby="box" role="presentation" ><path d="M165.486 203.162L205.268 163.571L220.008 108.569L204.992 54.1873L164.531 14.5239L109.457 0.205078L54.5334 15.0715L14.4717 55.1361L0.0078125 109.664L15.0247 164.046L55.0056 203.436L110.007 220.205L165.486 203.162Z" fill="url(%23gradient)"></path><mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="16" y="0" width="204" height="221"><path d="M211.243 145.118C202.515 142.357 193.423 140.448 184.353 139.139C172.271 137.395 160.07 136.345 147.886 135.468C118.479 133.352 79.2278 98.5761 84.4118 62.4391C86.9568 44.7001 93.5297 29.8871 110.211 21.1841C120.968 15.5714 132.458 12.2115 144.062 9.15707M199.924 170.161C191.93 170.638 183.966 172.39 175.999 172.324C165.826 172.24 155.454 171.916 145.543 169.875C129.25 166.519 113.82 160.671 100.578 149.847C88.0948 139.643 77.6278 127.664 67.7608 115.071C56.4348 100.616 51.8168 83.7371 54.9788 66.1101C57.6858 51.0211 63.3068 36.3751 68.4658 21.8261C70.072 17.2972 72.1332 13.3592 74.6473 10.0001M58.5 14.5001C53.748 29.9371 54.4618 27.2481 49.7238 42.6901C45.7598 55.6121 43.6158 68.633 43.7078 82.189C43.7908 94.523 47.1588 105.825 54.1328 115.581C66.7458 133.225 80.3588 150.129 98.2568 162.92C115.118 174.97 133.987 181.46 154.437 184.667C165.754 186.442 176.655 185.251 187.5 183.416M39.5 30.5001C35.455 49.6281 31.3888 66.0371 31.8788 85.7761C32.3328 104.089 37.8738 120.427 50.3628 134.257C63.0478 148.304 74.8148 163.248 90.4808 174.281C108.348 186.865 127.797 196.242 149.115 201.073C155.794 202.587 162.436 202.751 169 202.047M21.5 49.0001C21.432 50.3921 18.7758 74.2201 18.6948 75.6101C18.3228 81.9911 17.6908 88.3651 17.5518 94.7501C17.1408 113.592 20.8888 130.686 34.7118 145.124C56.3688 167.744 80.2757 187.356 106.517 204.36C111.839 207.808 116.532 214.431 120.5 219.5M90.4808 217C81.8668 207.031 70.5588 201.008 59.3208 194.723C49.4278 189.19 40.623 181.744 29 180M213 137.5C200.186 132.909 192.738 129.82 179.528 126.698C168.454 124.081 156.864 123.634 145.497 122.265C119.733 119.162 92.1298 90.6361 95.1088 63.0351C96.1638 53.2691 98.9818 44.7451 105.404 37.3141C115.714 25.3841 130.158 21.3471 144.342 17.1361C149.472 15.613 154.724 14.5022 160 13.469M170 20.0001C159.035 23.1901 145.376 26.1661 134.828 30.3941C125.237 34.2381 116.386 39.8111 111.337 49.8581C104.556 63.3501 107.452 76.0481 115.188 87.4431C124.371 100.968 138.231 107.479 154.467 109.133C174.153 111.139 197.947 117.057 215.5 127.5M180.5 30.3941C171.043 33.0081 151.043 37.3861 142.428 42.5841C137.271 45.6961 132.455 48.7701 129.335 54.0711C124.244 62.7221 126.716 70.2591 131.793 76.7671C138.421 85.2641 147.883 89.7701 158.082 90.9511C182.176 93.7401 199.772 103.589 218.434 118.5M217 97.5001C211.207 91.3431 195.647 75.0971 189.78 69.0071C184.305 63.3231 184.789 60.5021 191.549 56.4721C197 54.0001 201.1 56.106 206 57.5M208.5 153.352C194.906 150.862 181.083 149.597 167.029 149.519C156.853 149.463 146.538 147.232 136.56 144.845C118.867 140.612 105.287 129.608 93.4798 116.267C77.4838 98.1921 69.1718 78.0881 76.0358 53.4591C82.1298 31.5911 93.0437 14.7221 116.773 9.15707C121.216 8.1149 125.613 6.87809 130 5.59778M206.5 160.903C201.371 160.428 196.191 160.252 190.949 160.462C176.354 161.047 161.722 160.836 147.301 158.096C136.443 156.033 125.836 153.066 116.191 147.38C97.9697 136.638 84.4528 121.263 73.1308 103.719C66.5458 93.5151 63.1278 82.0401 64.4868 70.2641C65.7498 59.3231 69.1178 48.4851 72.6728 37.9781C78.8158 19.8201 90.4338 7.07007 110.201 3.18507C112.14 2.80382 114.072 2.3863 116 1.94702" stroke="white" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></mask><g mask="url(%23mask0)"><path d="M165.486 203.162L205.268 163.571L220.008 108.569L204.992 54.1873L164.531 14.5239L109.457 0.205078L54.5334 15.0715L14.4717 55.1361L0.0078125 109.664L15.0247 164.046L55.0056 203.436L110.007 220.205L165.486 203.162Z" fill="white"></path></g><defs><linearGradient id="gradient" x1="0.00791232" y1="110.205" x2="220.007" y2="110.205" gradientUnits="userSpaceOnUse"><stop stop-color="%23F7DB2E"></stop><stop offset="1" stop-color="%2310A1A2"></stop></linearGradient></defs></svg>');
+    -moz-animation: kgs-rotate 0.5s infinite linear;
+    -webkit-animation: kgs-rotate 0.5s infinite linear;
+    animation: kgs-rotate 0.5s infinite linear;
+    vertical-align: middle;
+}
+
+.kgs-app .kgs-spinner-label {
+    padding-left: 8px;
+}
+
+@-ms-keyframes kgs-rotate {
+    0% {
+        -ms-transform: rotateZ(0deg);
+        transform: rotateZ(0deg);
+    }
+    100% {
+        -ms-transform: rotateZ(360deg);
+        transform: rotateZ(360deg);
+    }
+}
+
+@-webkit-keyframes kgs-rotate {
+    0% {
+        -ms-transform: rotateZ(0deg);
+        -webkit-transform: rotateZ(0deg);
+        transform: rotateZ(0deg);
+    }
+    100% {
+        -ms-transform: rotateZ(360deg);
+        -webkit-transform: rotateZ(360deg);
+        transform: rotateZ(360deg);
+    }
+}
+
+@keyframes kgs-rotate {
+    0% {
+        -ms-transform: rotateZ(0deg);
+        -o-transform: rotateZ(0deg);
+        -moz-transform: rotateZ(0deg);
+        -webkit-transform: rotateZ(0deg);
+        transform: rotateZ(0deg);
+    }
+    100% {
+        -ms-transform: rotateZ(360deg);
+        -o-transform: rotateZ(360deg);
+        -moz-transform: rotateZ(360deg);
+        -webkit-transform: rotateZ(360deg);
+        transform: rotateZ(360deg);
+    }
+}

@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Ribbon component renders initially 1`] = `
+<div
+  className="ribbon-container ribbon-with-icon ribbon-with-text  className"
+>
+  <div
+    className="ribbon-inner-container"
+  >
+    <div
+      className="ribbon-inner"
+    >
+      <div
+        className="ribbon-inner-content"
+      >
+        <div
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "an icon",
+            }
+          }
+        />
+        <div>
+          some text
+        </div>
+        <div
+          className="ribbon-inner-content-framed"
+        >
+          12
+           
+          a suffix
+        </div>
+      </div>
+    </div>
+    <div
+      className="skew r"
+    />
+  </div>
+</div>
+`;

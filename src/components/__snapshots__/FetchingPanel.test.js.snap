@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FetchingPanel component renders initially 1`] = `
+<div
+  className="kgs-fetching-container"
+>
+  <div
+    className="kgs-fetching-panel"
+  >
+    <span
+      className="kgs-spinner"
+    >
+      <div
+        className="kgs-spinner-logo"
+      />
+    </span>
+    <span
+      className="kgs-spinner-label"
+    >
+      some message
+    </span>
+  </div>
+</div>
+`;

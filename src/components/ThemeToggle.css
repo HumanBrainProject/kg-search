@@ -1,0 +1,34 @@
+
+.kgs-theme_toggle {
+  height: 24px;
+  display: inline-grid;
+  grid-template-columns: repeat(2, 24px);
+  margin: 3px 0;
+  background: var(--background-color-8);
+  border-radius: 20px;
+}
+
+.kgs-theme_toggle button.kgs-theme_toggle__button {
+  -webkit-appearance: none;
+  display: inline-block;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  font-size: 0.66em;
+  text-align: center;
+  transition: all .2s ease;
+  background: none;
+  line-height: 24px;
+  color: var(--color-19);
+  outline: none;
+}
+
+.kgs-theme_toggle button.kgs-theme_toggle__button.selected {
+  transform: scale(1.12);
+  font-size: 0.8em;
+  background: var(--color-19);
+  color: white;
+  border-radius: 50%;
+}

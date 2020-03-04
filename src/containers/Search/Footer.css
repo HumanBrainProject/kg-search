@@ -1,0 +1,250 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-footer {
+    display: block;
+    position: relative;
+    width: 100%;
+}
+
+.kgs-footer.is-fixed-position {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    border-top: 1px solid var(--border-color-7);
+    z-index: 3;
+}
+
+.kgs-footer-nav {
+    padding: 14px var(--site-margin);
+    position: relative;
+    display: block;
+}
+
+.kgs-footer.is-fixed-position .kgs-footer-nav {
+    padding: 1px var(--site-margin);
+    background-color: var(--background-color-1);
+}
+
+.kgs-footer-nav .kgs-paging {
+    display: block;
+    grid-area: paging;
+}
+
+.kgs-footer-nav .kgs-group-selection {
+    display: none;
+}
+
+.kgs-footer-nav .kgs-group-selection .kgs-select > div {
+    margin-right: 10px;
+}
+
+.kgs-footer-nav button.kgs-sign-in,
+.kgs-footer-nav button.kgs-sign-in:hover {
+    color: var(--color-37);
+    text-decoration: none;
+}
+
+.kgs-footer-nav .kgs-share-links {
+    display: none;
+}
+
+.kgs-footer-nav button.kgs-sign-in {
+    display: none;
+}
+
+.kgs-footer .kgs-footer-nav .kgs-share-links .kgs-share-links-panel:before {
+   background-color: var(--background-color-1);
+}
+
+.kgs-footer-nav .kgs-space {
+    display: none;
+}
+
+.kgs-footer-nav .kgs-space2 {
+    display: none;
+}
+
+@media (min-width: 576px) {
+    .kgs-footer-nav {
+        display: -ms-grid;
+        display: grid;
+        -ms-grid-columns: min-content auto min-content min-content;
+        grid-template-columns: min-content auto min-content min-content;
+        -ms-grid-rows: auto auto;
+        grid-template-rows: auto auto;
+        grid-template-areas: "paging paging paging paging"
+                             "login space group share";
+    }
+
+    .kgs-footer.is-fixed-position .kgs-footer-nav {
+        padding: 14px var(--site-margin);
+    }
+
+    .kgs-footer-nav .kgs-paging {
+        -ms-grid-column: 1;
+        -ms-grid-row: 1;
+        -ms-grid-column-span: 4;
+    }
+
+    .kgs-footer-nav .kgs-group-selection {
+        min-width: 300px;
+        -ms-grid-column: 3;
+        -ms-grid-row: 2;
+        padding-left: 10px;
+    }
+
+    .kgs-footer-nav .kgs-sign-in {
+        display: block;
+        -ms-grid-column: 1;
+        -ms-grid-row: 2;
+        -ms-grid-column-span: 1;
+        margin-top: 15px;
+        grid-area: login;
+    }
+
+    .kgs-footer-nav .kgs-share-links {
+        -ms-grid-column: 4;
+        -ms-grid-row: 2;
+        padding-left: 10px;
+        display: block;
+        grid-area: share;
+        transform: translateY(0);
+        margin-top: 15px;
+    }
+    
+    .kgs-footer-nav button.kgs-sign-in {
+        display: block;
+    }
+
+    .kgs-footer-nav .kgs-group-selection {
+        display: block;
+        grid-area: group;
+        margin-top: 15px;
+    }
+}
+
+@media (min-width:992px) {
+    .kgs-footer-nav {
+        display: -ms-grid;
+        display: grid;
+        -ms-grid-columns: min-content min-content min-content min-content min-content auto min-content;
+        grid-template-columns: min-content min-content min-content min-content min-content auto min-content;
+        grid-template-areas: "login space group space2 paging space3 share"
+                             "space4 space4 space4 space4 space5 space6 space7";
+    }
+
+    .kgs-footer-nav .kgs-paging {
+        -ms-grid-column: 5;
+        -ms-grid-row: 1;
+        -ms-grid-column-span: 1;
+    }
+
+    .kgs-footer-nav .kgs-group-selection {
+        -ms-grid-column: 3;
+        -ms-grid-row: 1;
+        margin-top: 0;
+        padding-left: 15px;
+    }
+
+    .kgs-footer-nav .kgs-sign-in {
+        -ms-grid-column: 1;
+        -ms-grid-row: 1;
+        margin-top: 0;
+    }
+
+    .kgs-footer-nav .kgs-share-links {
+        -ms-grid-column: 7;
+        -ms-grid-row: 1;
+        margin-top: 0;
+        padding-left: 0;
+    }
+
+    .kgs-footer-nav .kgs-space {
+        -ms-grid-column: 1;
+        -ms-grid-row: 2;
+        -ms-grid-column-span: 4;
+        grid-area: space4;
+        display: block;
+        width: 430px;
+        height: 0;
+    }
+
+    .kgs-footer-nav .kgs-space2 {
+        -ms-grid-column: 4;
+        -ms-grid-row: 1;
+        grid-area: space2;
+        display: block;
+        width: 30px;
+        height: 0;
+    }
+}
+
+.kgs-footer-nav .kgs-paging .sk-pagination-navigation .sk-toggle {
+    width: 100%;
+}
+
+@media (min-width:992px) {
+    .kgs-footer-nav .kgs-paging .sk-pagination-navigation .sk-toggle {
+        width: auto;
+    }
+}
+
+@media (min-width:1050px) {
+    .kgs-footer-nav .kgs-paging {
+        min-width: 400px;
+    }
+}
+
+@media (min-width:1200px) {
+    .kgs-footer-nav .kgs-paging {
+        min-width: 550px;
+    }
+}
+
+@media (min-width:1400px) {
+    .kgs-footer-nav .kgs-paging {
+        min-width: 680px;
+    }
+}
+
+.kgs-footer__terms-short-notice  {
+    display: none;
+}
+
+.kgs-footer__terms-short-notice .kgs-notice-panel {
+    background-color: var(--background-color-7);
+    opacity: 0.9;
+    padding: 20px var(--site-margin) 70px var(--site-margin);
+}
+
+.kgs-footer__terms-short-notice .kgs-notice-agree-button {
+    right: var(--site-margin);
+}
+
+@media (min-width: 992px) and (min-height: 900px) {
+    .kgs-footer__terms-short-notice {
+        display: block;
+    }
+}
+
+.kgs-footer:not(.is-fixed-position) .kgs-footer__terms-short-notice {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 3;
+}

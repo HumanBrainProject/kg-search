@@ -1,0 +1,280 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-carousel {
+    z-index: 1200;
+    display: block;
+    position: fixed;
+    top: 0;  
+    left: 0;  
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    box-sizing: border-box;
+    box-sizing: border-box;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.kgs-carousel__panel {
+    display: block;
+    position: relative;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    margin-top: 10px;
+    margin-left: 10px;
+    border-radius: 3px;
+}
+
+@media (min-width: 992px) {
+    .kgs-carousel__panel {
+        width: 992px;
+        margin-left: calc(50% - 496px);
+    }
+}
+
+@media (min-width: 1400px) {
+    .kgs-carousel__panel {
+        width: 1200px;
+        margin-left: calc(50% - 600px);
+    }
+}
+
+.kgs-carousel__item {
+    z-index: 1200;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 200%;
+    width: 100%;
+    height: 100%;
+    border-radius: 3px;
+    background-color: white;
+    transition: left 0.25s ease-in;
+    transform: translate3D(0,0,0);
+    background-color: var(--border-color-3);
+}
+
+.kgs-carousel .kgs-carousel__item.position0 {
+    left: 0;
+    display: block;
+}
+
+.kgs-carousel .kgs-carousel__item.position1 {
+    left: 105%;
+    display: block;
+}
+
+.kgs-carousel .kgs-carousel__item.position2 {
+    left: 105%;
+    display: none;
+}
+
+.kgs-carousel .kgs-carousel__item.position3 {
+    left: -105%;
+    display: none;
+}
+
+.kgs-carousel .kgs-carousel__item.position4 {
+    left: -105%;
+    display: block;
+}
+
+@media (min-width: 992px) {
+    .kgs-carousel .kgs-carousel__item.position1,
+    .kgs-carousel .kgs-carousel__item.position2 {
+        left: 205%;
+    }
+    
+    .kgs-carousel .kgs-carousel__item.position3,
+    .kgs-carousel .kgs-carousel__item.position4 {
+        left: -205%;
+    }
+}
+
+@media (min-width: 1984px) {
+    .kgs-carousel .kgs-carousel__item.position1,
+    .kgs-carousel .kgs-carousel__item.position2 {
+        left: 305%;
+    }
+    
+    .kgs-carousel .kgs-carousel__item.position3,
+    .kgs-carousel .kgs-carousel__item.position4 {
+        left: -305%;
+    }
+}
+
+@media (min-width: 2976px) {
+    .kgs-carousel .kgs-carousel__item.position1,
+    .kgs-carousel .kgs-carousel__item.position2 {
+        left: 405%;
+    }
+    
+    .kgs-carousel .kgs-carousel__item.position3,
+    .kgs-carousel .kgs-carousel__item.position4 {
+        left: -405%;
+    }
+}
+
+@media (min-width: 3968px) {
+    .kgs-carousel .kgs-carousel__item.position1,
+    .kgs-carousel .kgs-carousel__item.position2 {
+        left: 505%;
+    }
+    
+    .kgs-carousel .kgs-carousel__item.position3,
+    .kgs-carousel .kgs-carousel__item.position4 {
+        left: -505%;
+    }
+}
+
+@media (min-width: 4960px) {
+    .kgs-carousel .kgs-carousel__item.position1,
+    .kgs-carousel .kgs-carousel__item.position2 {
+        left: 605%;
+    }
+    
+    .kgs-carousel .kgs-carousel__item.position3,
+    .kgs-carousel .kgs-carousel__item.position4 {
+        left: -605%;
+    }
+}
+
+.kgs-carousel__content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: var(--background-color-2);
+    border-radius: 3px;
+    overflow-y: auto;
+}
+
+/*
+.kgs-carousel .kgs-carousel__item.position0 .kgs-carousel__body {
+    background-color: red;
+}
+
+.kgs-carousel .kgs-carousel__item.position1 .kgs-carousel__body {
+    background-color: green;
+}
+
+.kgs-carousel .kgs-carousel__item.position2 .kgs-carousel__body {
+    background-color: blue;
+}
+
+.kgs-carousel .kgs-carousel__item.position3 .kgs-carousel__body {
+    background-color: yellow;
+}
+
+.kgs-carousel .kgs-carousel__item.position4 .kgs-carousel__body {
+    background-color: maroon;
+}
+*/
+
+.kgs-carousel__header {
+    display: flex;
+    position: relative;
+    width: 100%;
+    height: 50px;
+    box-sizing: border-box; 
+    padding: 0 0 0 10px;   
+    /*
+    box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
+    */
+}
+
+@media screen and (min-width:0\0) {  
+    /* IE9 and IE10 rule sets go here */  
+    .kgs-carousel__header {
+        top: 10px;
+    }
+}
+
+@media (min-width: 900px) {
+
+    .kgs-carousel__header {
+        padding: 0 0 0 20px; 
+    }
+    
+}
+
+.kgs-carousel__previous-button {
+    height: 40px;
+    margin: 5px 0 0 5px;
+    padding: 7px 18px 7px 8px;
+    background-color: transparent;
+    border: 0;
+    border-radius: 3px;
+    color: var(--color-2);
+    font-weight: 500;
+}
+
+/* small hack to fix adjustment for ie 11 */
+@media all and (-ms-high-contrast:none) {
+    .kgs-carousel__close-button { margin-top: -5px; } /* IE10 */
+    *::-ms-backdrop, .kgs-carousel__close-button { margin-top: -5px; } /* IE11 */
+}
+
+.kgs-carousel__previous-button:hover {
+    font-weight: bold;
+}
+
+.kgs-carousel__previous-button:hover .fa-chevron-left:before {
+    font-weight: bold;
+}
+
+.kgs-carousel__navigation {
+    flex: 1;
+    text-align: right;
+}
+
+.kgs-carousel__close-button {
+    width: 40px;
+    height: 40px;
+    margin: 5px 7px 0 0;
+    padding: 1px 7px 2px;
+    border: 0;
+    background-color: transparent;
+    color: var(--color-2);
+    text-align: center;
+    font-weight: 500;
+    z-index: 1500;
+}
+
+.kgs-carousel__close-button .fa-close:before {
+    font-weight: 500;
+}
+
+/* small hack to fix adjustment for ie 11 */
+@media all and (-ms-high-contrast:none) {
+    .kgs-carousel__close-button { margin-top: -8px; } /* IE10 */
+    *::-ms-backdrop, .kgs-carousel__close-button { margin-top: -8px; } /* IE11 */
+}
+
+.kgs-carousel__close-button:hover {
+    font-weight: bold;
+}
+
+.kgs-carousel__close-button:hover .fa-close:before {
+    font-weight: bold;
+}
+
+.kgs-carousel__close-button::after {
+    content: "esc";
+    position: absolute;
+    transform: translate(-16px,14px);
+    font-size: var(--font-size-extra-small);
+    color: var(--color-2);
+}

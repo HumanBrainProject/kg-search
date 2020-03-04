@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Toggle component renders initially 1`] = `
+<div
+  className="kgs-toggle className"
+>
+  <div>
+    <button
+      className="is-active"
+      disabled={true}
+      onClick={[Function]}
+      type="button"
+    >
+      <label>
+        a label
+      </label>
+    </button>
+    <button
+      className=""
+      disabled={false}
+      onClick={[Function]}
+      type="button"
+    >
+      <label>
+        another label
+      </label>
+    </button>
+  </div>
+</div>
+`;

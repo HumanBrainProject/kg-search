@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Carousel component renders initially 1`] = `
+<div
+  className="kgs-carousel className"
+  onClick={[Function]}
+>
+  <div
+    className="kgs-carousel__panel"
+  >
+    <div
+      className="kgs-carousel__item position4"
+    >
+      <div
+        className="kgs-carousel__content"
+      />
+    </div>
+    <div
+      className="kgs-carousel__item position0"
+    >
+      <div
+        className="kgs-carousel__content"
+      />
+    </div>
+    <div
+      className="kgs-carousel__item position1"
+    >
+      <div
+        className="kgs-carousel__content"
+      />
+    </div>
+    <div
+      className="kgs-carousel__item position2"
+    >
+      <div
+        className="kgs-carousel__content"
+      />
+    </div>
+    <div
+      className="kgs-carousel__item position3"
+    >
+      <div
+        className="kgs-carousel__content"
+      />
+    </div>
+  </div>
+</div>
+`;

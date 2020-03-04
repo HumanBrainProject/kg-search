@@ -1,0 +1,37 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+a.kgs-email-link {
+    display: inline-block;
+    margin: 0;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 3px;
+    background-color: transparent;
+    font-weight: 500;
+    color: var(--color-19);
+    font-size: 22px;
+    text-align: center;
+    -webkit-transition: color 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in, color 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
+    line-height: 1.5em;
+}
+
+a.kgs-email-link:hover {
+    color: var(--color-20);
+    box-shadow: 3px 3px 6px var(--box-shadow-2);
+}
+

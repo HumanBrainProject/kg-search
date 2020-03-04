@@ -1,0 +1,135 @@
+/*
+*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-hit {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    align-content: flex-start;
+    word-break: break-word;
+}
+
+.kgs-hit .kgs-hit__body {
+    width: 100%;
+}
+
+.kgs-hit .kgs-hit__ribbon {
+    position: absolute;
+    right:0px;
+    min-width: 125px;
+    width: 10%;
+}
+
+.kgs-hit .kgs-hit__ribbon.ribbon-with-icon {
+    min-width: 185px;
+    width: 17%; 
+}
+
+.kgs-hit .kgs-hit__ribbon.ribbon-with-text {
+    min-width: 200px;
+    width: 17%; 
+}
+
+.kgs-hit .kgs-hit__ribbon.ribbon-with-icon.ribbon-with-text {
+    min-width: 200px;
+    width: 17%; 
+}
+
+
+.kgs-hit .kgs-hit__body.has-preview .kgs-hit__preview {
+    margin-top: 20px;
+}
+
+@media (min-width: 992px) {
+    .kgs-hit .kgs-hit__body.has-preview {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-column-gap: 10px;
+    }
+
+    .kgs-hit .kgs-hit__body.has-preview .kgs-hit__preview {
+        margin-top: 0;
+    }
+
+    .kgs-hit .ribbon-container.kgs-hit__ribbon + .kgs-hit__body.has-preview .kgs-hit__preview {
+        margin-top: 60px;
+    }
+}
+
+.kgs-hit .kgs-hit__preview img {
+    height: 200px;
+    max-width: 200px;
+}
+
+.kgs-hit__content {
+    display: flex;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    width: 100%;
+    text-align: left;
+    font-size: var(--font-size);
+    font-weight: normal;
+    color: var(--color-8);
+}
+
+.kgs-hit__no-data {
+    width: 100%;
+    height: 50px;
+    margin-top: 50px;
+    text-align: center;
+}
+
+.kgs-hit[data-type] .kgs-field {
+    color: var(--color-8);
+    font-weight: normal;
+}
+
+/**********************************************************************************************************************/
+
+.kgs-hit[data-type] .kgs-field__title {
+    font-size: var(--font-size-big);
+    font-weight: bold;
+    flex-basis: 100%;
+    line-height: 1.3em;
+}
+
+.kgs-hit[data-type] .kgs-field__title .field-label {
+    display: none;
+}
+
+.kgs-hit[data-type] .kgs-field__title .field-value {
+    margin-top: 4px;
+}
+
+.kgs-hit[data-type] .kgs-field__description {
+    text-align: justify;
+}
+
+.kgs-hit[data-type] .kgs-field__description .field-label {
+    display: none;
+}
+
+/**********************************************************************************************************************/
+
+.kgs-hit-highlight {
+    background-color: var(--color-highlight);
+    font-style: italic;
+    color: var(--color-34);
+}
