@@ -1,0 +1,11 @@
+  
+node_modules
+.tmp
+.DS_Store
+.vscode
+.idea/
+.cache
+.env
+build/
+.history/
+.metals
