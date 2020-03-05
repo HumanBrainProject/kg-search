@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk11:jre-11.0.5_10-debian
+FROM adoptopenjdk:11-jre-hotspot
 MAINTAINER David Kunzmann "david.kunzmann@epfl.ch"
 RUN mkdir /app
 COPY target/universal/stage/ /app/
