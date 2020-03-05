@@ -1,4 +1,3 @@
-
 name := """kg-service"""
 organization := "eu.humanbrainproject"
 
@@ -11,19 +10,18 @@ lazy val auth = (project in file("modules/authentication"))
   .enablePlugins(PlayScala)
   .dependsOn(common)
 
-lazy val proxy = (project in file("modules/proxy"))
-  .enablePlugins(PlayScala)
-  .dependsOn(common, auth)
-
 lazy val kg_service = (project in file("."))
   .enablePlugins(PlayScala)
-  .aggregate(common, auth, proxy)
-  .dependsOn(common, auth, proxy)
+  .aggregate(common, auth)
+  .dependsOn(common, auth)
 
 Common.settings
+
+javaOptions in Universal ++= Seq("-Dpidfile.path=/dev/null")
 
 sources in (Compile, doc) := Seq.empty
 
 publishArtifact in (Compile, packageDoc) := false
 
-scalacOptions += "-Ypartial-unification"
+enablePlugins(DockerPlugin)
+dockerBaseImage := "adoptopenjdk:11-jre-hotspot"

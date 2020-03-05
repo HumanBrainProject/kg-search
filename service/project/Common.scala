@@ -17,7 +17,7 @@ object Common {
 
   val baseDependencies = Seq(
     "de.leanovate.play-mockws" %% "play-mockws" % "2.6.2" % Test,
-    "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test,
+    "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
     "org.mockito" % "mockito-core" % "2.19.0" % Test,
     "com.github.stijndehaes" %% "play-prometheus-filters" % "0.3.2",
     "org.webjars" % "swagger-ui" % "3.18.1",
@@ -34,7 +34,7 @@ object Common {
 
   val playSettings = settings ++ Seq(
     resolvers ++= Seq(
-      "Typesafe Simple Repository" at "http://repo.typesafe.com/typesafe/simple/maven-releases/",
+      "Typesafe Simple Repository" at "https://repo.typesafe.com/typesafe/simple/maven-releases/",
       Resolver.jcenterRepo
     ),
     routesGenerator := InjectedRoutesGenerator,
