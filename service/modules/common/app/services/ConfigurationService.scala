@@ -28,7 +28,6 @@ class ConfigurationService @Inject()(configuration: Configuration) {
   val oidcUserInfoEndpoint = s"$oidcEndpoint/userinfo"
   val oidcTokenEndpoint = s"$oidcEndpoint/token"
   val cacheExpiration: FiniteDuration = configuration.get[FiniteDuration]("proxy.cache.expiration")
-  val blazegraphNameSpace: String = configuration.getOptional[String]("blazegraph.namespace").getOrElse("kg")
 
   val nexusEndpoint: String =
     configuration.getOptional[String]("nexus.endpoint").getOrElse("https://nexus-dev.humanbrainproject.org")
