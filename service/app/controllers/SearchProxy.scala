@@ -85,7 +85,7 @@ class SearchProxy @Inject()(
     request: WSRequest,
     headers: Map[String, String] = Map(),
     searchTerm: String = ""
-  ): Task[Result] = {
+  ): Task[Result] =
     Task
       .deferFuture(
         request
@@ -95,20 +95,13 @@ class SearchProxy @Inject()(
         val count = (response.json \ "hits" \ "total").asOpt[Long].getOrElse(0L)
         logger.info(s"Search query - term: $searchTerm, #results: $count")
         val h = ResponseHelper
-          .flattenHeaders(
-            ResponseHelper.filterContentTypeAndLengthFromHeaders[Seq[String]](
-              response.headers
-            )
-          ) ++ headers
+            .flattenHeaders(ResponseHelper.filterContentTypeAndLengthFromHeaders[Seq[String]](response.headers)) ++ headers
         Result(
           // keep original response header except content type and length that need specific handling
-          ResponseHeader(
-            response.status,
-          ),
+          ResponseHeader(response.status),
           HttpEntity.Strict(response.bodyAsBytes, ResponseHelper.getContentType(response.headers))
         ).withHeaders(h.toList: _*)
       }
-  }
 
   def proxySearch(indexWithProxyUrl: String): Action[AnyContent] = Action.async { implicit request =>
     val segments = indexWithProxyUrl.split("/")
@@ -118,7 +111,7 @@ class SearchProxy @Inject()(
     ).runToFuture
   }
 
-  def updateEsResponseWithNestedDocument(response: Task[Result]): Task[Result] = {
+  def updateEsResponseWithNestedDocument(response: Task[Result]): Task[Result] =
     response.flatMap[Result] { rawResponse =>
       if (rawResponse.header.status != 200) {
         Task.pure(rawResponse)
@@ -130,7 +123,6 @@ class SearchProxy @Inject()(
         }
       }
     }
-  }
 
   def labels(proxyUrl: String): Action[AnyContent] = Action.async { implicit request =>
     val wsRequestBase: WSRequest = ws.url(es_host + "/kg_labels/" + proxyUrl)
@@ -148,7 +140,7 @@ object SearchProxy {
   val docCountLabel = "doc_count"
   val parentDocCountObj = Json.parse(s"""{\"aggs\": {\"$parentCountLabel\": {\"reverse_nested\": {}}}}""").as[JsObject]
 
-  def adaptEsQueryForNestedDocument(payload: ByteString): ByteString = {
+  def adaptEsQueryForNestedDocument(payload: ByteString): ByteString =
     try {
       var json = Json.parse(payload.utf8String).as[JsObject]
       // get list of nested objects
@@ -182,9 +174,8 @@ object SearchProxy {
         )
         payload
     }
-  }
 
-  def updateEsResponseWithNestedDocument(jsonSrc: JsObject): JsObject = {
+  def updateEsResponseWithNestedDocument(jsonSrc: JsObject): JsObject =
     try {
       var json = jsonSrc
       val innerList = JsonHandler.findPathForKey(parentCountLabel, __, json)
@@ -231,5 +222,4 @@ object SearchProxy {
         logger.info(s"Exception in json response update. Error:\n${e.getMessage}\nInput is used:\n${jsonSrc.toString}")
         jsonSrc
     }
-  }
 }
