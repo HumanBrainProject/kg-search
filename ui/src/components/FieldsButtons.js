@@ -32,7 +32,7 @@ class Download extends React.PureComponent {
   };
 
   render() {
-    const {url, label} = this.props;
+    const {url, label, showTermsOfUse} = this.props;
 
     if (!url) {
       return null;
@@ -41,7 +41,9 @@ class Download extends React.PureComponent {
     return (
       <div className="kgs-download">
         <div><span><i className="fa fa-2x fa-file-o"></i><a href={url}>{label}</a></span></div>
-        <Text content={termsOfUse} isMarkdown={true} />
+        {showTermsOfUse && (
+          <Text content={termsOfUse} isMarkdown={true} />
+        )}
       </div>
     );
   }
@@ -113,12 +115,13 @@ class Content extends React.PureComponent {
     }
 
     const {url, value} = field.data;
+    const {termsOfUse} = field.mapping;
 
     return (
       <div className="kgs-fields-buttons__details">
         <div className="kgs-field-fields-buttons__details__panel">
           {url?
-            <Download url={url} label={value} />
+            <Download url={url} label={value} showTermsOfUse={!!termsOfUse} />
             :
             <Cite content={value} />
           }
