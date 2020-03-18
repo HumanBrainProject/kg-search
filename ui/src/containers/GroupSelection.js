@@ -28,7 +28,7 @@ const GroupSelectionBase = props => (
 export const GroupSelection = connect(
   (state, props) => ({
     className: props.className,
-    label: "group",
+    label: "view",
     value: state.groups.group,
     list: state.groups.groups?state.groups.groups:[]
   }),

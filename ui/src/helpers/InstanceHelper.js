@@ -17,8 +17,8 @@
 export const getTags = header => {
   const tags = [];
   if (header) {
-    if (header.group) {
-      tags.push(header.group);
+    if (header.groupLabel) {
+      tags.push(header.groupLabel);
     }
     if (header.type && header.type.data && header.type.data.value) {
       tags.push(header.type.data.value);
@@ -145,6 +145,17 @@ export const getPreviews = (data, mapping) => {
   return [];
 };
 
+const getGroupLabel = (groups, name) => {
+  let label = null;
+  groups.some(group => {
+    if (group.value === name) {
+      label = group.label;
+      return true;
+    }
+  });
+  return label;
+};
+
 export const mapStateToProps = (state, props) => {
 
   const { data } = props;
@@ -153,6 +164,7 @@ export const mapStateToProps = (state, props) => {
   const source = data && !(data.found === false) && data._type && data._source;
   const mapping = (source && state.definition && state.definition.typeMappings && state.definition.typeMappings[data._type])?state.definition.typeMappings[data._type]:{};
   const group = (data && indexReg.test(data._index)) ? data._index.match(indexReg)[1] : state.groups.group;
+  
   return {
     id: data && data._id,
     type: data && data._type,
@@ -161,6 +173,7 @@ export const mapStateToProps = (state, props) => {
     hasUnknownData: !mapping,
     header: {
       group: (group !== state.groups.defaultGroup)?group:null,
+      groupLabel: (group !== state.groups.defaultGroup)?getGroupLabel(state.groups.groups, group):null,
       type: getField(group, data && data._type, "type"),
       title: getField(group, data && data._type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"]),
       fields: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "header" && name !== "title"),

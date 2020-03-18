@@ -53,7 +53,7 @@
     transition: box-shadow 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
     -moz-appearance: none;
     -webkit-appearance: none;
-    text-transform: capitalize;
+    /* text-transform: capitalize; */
 }
 
 .kgs-select select:hover,
