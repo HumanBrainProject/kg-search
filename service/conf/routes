@@ -9,9 +9,13 @@
 # Proxy services
 -> /proxy proxy.Routes
 
+
 #Swagger
 ### NoDocs ###
 # docs/swagger-ui/index.html?url=/assets/swagger.json#/
 GET   /docs/swagger-ui/*file        controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
 ### NoDocs ###
 GET   /assets/swagger.json          controllers.swagger.ApiSpecs.specs
+
+-> /indexer indexer.Routes
+
