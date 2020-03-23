@@ -46,6 +46,7 @@ object TemplateEngine extends TemplateEngine[JsValue, JsValue] {
 }
 
 trait DatasetTemplate {
+  type Id[A] = A
   def fileProxy: String
   def dataBaseScope: DatabaseScope
 
@@ -55,13 +56,11 @@ trait DatasetTemplate {
     "contributors" -> ObjectList(
       "contributors",
       ObjectValue(
-        List(
-          Reference(
-            "relativeUrl",
-            TemplateHelper.schemaIdToSearchId("Contributor")
-          ),
-          Value("name")
-        ): _*
+        Reference(
+          "relativeUrl",
+          Value("name"),
+          TemplateHelper.schemaIdToSearchId("Contributor")
+        )
       )
     ),
     "citation" -> Merge(
@@ -87,17 +86,17 @@ trait DatasetTemplate {
     "zip"            -> Value("zip"),
     "dataDescriptor" -> Value("zip"),
     "doi"            -> FirstElement(ValueList("doi")),
-    "license_info"   -> FirstElement(ObjectList("license", ObjectValue(Url("url"), Value("name")))),
+    "license_info"   -> FirstElement(ObjectList("license", Url("url", Value("name")))),
     "component" -> FirstElement(
       ObjectList(
         "component",
-        ObjectValue(List(Reference("relativeUrl", TemplateHelper.schemaIdToSearchId("Project")), Value("name")): _*)
+        Reference("relativeUrl", Value("name"), TemplateHelper.schemaIdToSearchId("Project"))
       )
     ),
     "owners" -> FirstElement(
       ObjectList(
         "owners",
-        ObjectValue(List(Reference("relativeUrl", TemplateHelper.schemaIdToSearchId("Contributor")), Value("name")): _*)
+        Reference("relativeUrl", Value("name"), TemplateHelper.schemaIdToSearchId("Contributor"))
       )
     ),
     "description"      -> Value("description"),
@@ -128,7 +127,7 @@ trait DatasetTemplate {
           ObjectValue(
             List(
               Merge(
-                Url("absolute_path"),
+                Url("absolute_path", Value("name")),
                 Value("private_access"),
                 urlJs =>
                   privateAccessJs => {
@@ -137,28 +136,16 @@ trait DatasetTemplate {
                       privateAccessVal  <- privateAccessObj.value.get("value")
                       privateAccessBool <- privateAccessVal.asOpt[Boolean]
                       if privateAccessBool
-                      urlObj <- urlJs.asOpt[JsObject]
-                      urlVal <- urlObj.value.get("url")
-                      urlStr <- urlVal.asOpt[String]
-                    } yield Json.toJson(Map("url" -> s"$fileProxy/files/cscs?url=$urlStr"))
-                    opt.getOrElse(urlJs)
-                }
-              ),
-              Merge(
-                Value("name"),
-                Value("private_access"),
-                name =>
-                  privateAccess => {
-                    val opt = for {
-                      privateAccessObj  <- privateAccess.asOpt[JsObject]
-                      privateAccessVal  <- privateAccessObj.value.get("value")
-                      privateAccessBool <- privateAccessVal.asOpt[Boolean]
-                      if privateAccessBool
-                      nameOpt <- name.asOpt[JsObject]
-                      nameVal <- nameOpt.value.get("value")
+                      urlObj  <- urlJs.asOpt[JsObject]
+                      urlVal  <- urlObj.value.get("url")
+                      urlStr  <- urlVal.asOpt[String]
+                      nameVal <- urlObj.value.get("value")
                       nameStr <- nameVal.asOpt[String]
-                    } yield Json.toJson(Map("value" -> (s"ACCESS PROTECTED: $nameStr")))
-                    opt.getOrElse(name)
+                    } yield
+                      Json.toJson(
+                        Map("url" -> s"$fileProxy/files/cscs?url=$urlStr", "value" -> (s"ACCESS PROTECTED: $nameStr"))
+                      )
+                    opt.getOrElse(urlJs)
                 }
               ),
               new CustomField {
@@ -192,24 +179,81 @@ trait DatasetTemplate {
         }
       )
     ),
-    "external_datalink" -> ObjectValue(Url("external_datalink"), Value("external_datalink")),
-    "publications"      -> Value("zip"),
-    "atlas"             -> Value("atlas"),
-    "region"            -> Value("zip"),
-    "preparation"       -> ValueList("preparation"),
-    "methods"           -> ValueList("methods"),
-    "protocol"          -> ValueList("protocol"),
-    "viewer" -> OrElse(
+    "external_datalink" ->
+    Url("external_datalink", Value("external_datalink")),
+    "publications" -> ObjectList(
+      "publications",
+      Merge(
+        Value("citation"),
+        Value("doi", doi => {
+          val doiStr = doi.as[String]
+          val url = URLEncoder.encode(doiStr, "UTF-8")
+          JsString(s"\n[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url")
+        }),
+        citation =>
+          doi => {
+            val strOpt = for {
+              citationObj <- citation.asOpt[JsObject]
+              doiObj      <- doi.asOpt[JsObject]
+              citationJs  <- citationObj.value.get("value")
+              doiJs       <- doiObj.value.get("value")
+              citationStr <- citationJs.asOpt[String]
+              doiStr      <- doiJs.asOpt[String]
+            } yield citationStr + doiStr
+            Json.toJson(Map("value" -> strOpt.map(s => JsString(s)).getOrElse(JsNull)))
+        }
+      )
+    ),
+    "atlas"       -> FirstElement(ValueList("parcellationAtlas")),
+    "region"      -> ObjectList("parcellationRegion", Url("url", OrElse(Value("alias"), Value("name")))),
+    "preparation" -> FirstElement(ValueList("preparation")),
+    "methods"     -> ValueList("methods"),
+    "protocol"    -> ValueList("protocol"),
+    "viewer" ->
+    OrElse(
       ObjectList(
         "brainviewer",
-        ObjectValue(Url("url"), Value("name", js => JsString("Show " + js + " in brain atlas viewer")))
+        Url("url", Value("name", js => JsString("Show " + js.as[String] + " in brain atlas viewer")))
       ),
       ObjectList(
         "neuroglancer",
-        ObjectValue(Url("url"), Value("title", js => JsString("Show " + js + " in brain atlas viewer")))
-      ),
+        Url("url", Value("title", js => JsString("Show " + js.as[String] + " in brain atlas viewer")))
+      )
     ),
-    "subjects"      -> Value("zip"),
+    "subjects" -> ObjectList(
+      "subjects",
+      ObjectValue(
+        List(
+          NestedObject(
+            "subject_name",
+            Reference(
+              "identifier",
+              Value("name"),
+              TemplateHelper.refUUIDToSearchId("Subject")
+            )
+          ),
+          NestedObject("species", FirstElement(ValueList("species"))),
+          NestedObject("sex", FirstElement(ValueList("sex"))),
+          NestedObject("age", Value("age")),
+          NestedObject("agecategory", FirstElement(ValueList("agecategory"))),
+          NestedObject("weight", Value("weight")),
+          NestedObject("strain", Optional(Value("strain"))),
+          NestedObject("genotype", Value("genotype")),
+          NestedObject(
+            "samples",
+            ObjectList("samples", Reference("identifier", Value("name"), TemplateHelper.refUUIDToSearchId("Sample")))
+          ),
+        ): _*
+      ),
+      js => {
+        val res = for {
+          obj <- js.asOpt[JsObject]
+        } yield {
+          Map("children" -> obj)
+        }
+        Json.toJson(res)
+      }
+    ),
     "first_release" -> Value("first_release"),
     "last_release"  -> Value("last_release"),
   )

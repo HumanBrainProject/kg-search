@@ -64,6 +64,17 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("embargoForFilter", result, expected)
       assertIsSameJsObject("embargo", result, expected)
       assertIsSameJsObject("files", result, expected)
+      assertIsSameJsObject("external_datalink", result, expected)
+      assertIsSameJsObject("publications", result, expected)
+      assertIsSameJsObject("atlas", result, expected)
+      assertIsSameJsObject("region", result, expected)
+      assertIsSameJsObject("preparation", result, expected)
+      assertIsSameJsObject("methods", result, expected)
+      assertIsSameJsObject("protocols", result, expected)
+      assertIsSameJsObject("viewer", result, expected)
+      assertIsSameJsObject("subjects", result, expected)
+      assertIsSameJsObject("first_release", result, expected)
+      assertIsSameJsObject("last_release", result, expected)
     }
   }
 }

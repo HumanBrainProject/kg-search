@@ -20,7 +20,7 @@ import play.api.libs.json._
 import scala.collection.Map
 
 trait Template {
-  def op(content: Map[String, JsValue]): JsValue = { Json.obj() }
+  def op(content: Map[String, JsValue]): JsValue = JsNull
 }
 
 trait CustomField extends Template {
@@ -28,11 +28,31 @@ trait CustomField extends Template {
   def transform: JsValue => JsValue
   def customField: String
   override def op(content: Map[String, JsValue]): JsValue = {
-    Json.toJson(Map(customField -> content.get(fieldName).map(transform).getOrElse(JsNull)))
+    if (content.contains(fieldName)) {
+      Json.toJson(Map(customField -> content.get(fieldName).map(transform).getOrElse(JsNull)))
+    } else {
+      JsNull
+    }
   }
+
 }
 
-trait IReference extends CustomField
+trait IReference[T <: Template] extends CustomField {
+  def valueField: T
+  override def op(content: Map[String, JsValue]): JsValue = {
+    val reference = content.get(fieldName).map(transform).getOrElse(JsNull)
+    reference match {
+      case JsNull => JsNull
+      case ref =>
+        val resultJsObj = Json.toJson(Map(customField -> ref)).as[JsObject]
+        valueField.op(content).asOpt[JsObject].getOrElse(JsNull) match {
+          case JsNull => resultJsObj
+          case js     => resultJsObj ++ js.as[JsObject]
+        }
+    }
+
+  }
+}
 trait IList extends Template
 
 case class Optional(template: Template) extends Template {
@@ -53,17 +73,24 @@ case class Value(override val fieldName: String, override val transform: JsValue
   override def customField: String = "value"
 }
 
-case class Reference(override val fieldName: String, override val transform: JsValue => JsValue = identity)
-    extends IReference {
+case class Reference[T <: Template](
+  override val fieldName: String,
+  override val valueField: T,
+  override val transform: JsValue => JsValue = identity
+) extends IReference[T] {
   override def customField: String = "reference"
+
 }
 
-case class Url(override val fieldName: String, override val transform: JsValue => JsValue = identity)
-    extends IReference {
+case class Url[T <: Template](
+  override val fieldName: String,
+  override val valueField: T,
+  override val transform: JsValue => JsValue = identity
+) extends IReference[T] {
   override def customField: String = "url"
 }
 
-case class OrElse(left: Template, right: Template) extends Template {
+case class OrElse[T <: Template](left: T, right: T) extends Template {
   override def op(content: Map[String, JsValue]): JsValue = {
     left.op(content) match {
       case JsNull => right.op(content)
@@ -119,7 +146,24 @@ case class ObjectValue[T <: Template](templates: T*) extends Template {
           case None => jsObject
         }
       case (jsObject, template) =>
-        jsObject ++ template.op(content).as[JsObject]
+        val templateContent = template.op(content)
+        templateContent match {
+          case JsNull => jsObject
+          case js     => jsObject ++ js.as[JsObject]
+        }
+    }
+  }
+}
+
+case class NestedObject[T <: Template](fieldName: String, template: T) extends Template {
+  override def op(content: Map[String, JsValue]): JsValue = {
+    template match {
+      case opt @ Optional(_) =>
+        opt.getAsOpt(content) match {
+          case Some(v) => Json.toJson(Map(fieldName -> v))
+          case None    => JsNull
+        }
+      case t => Json.toJson(Map(fieldName -> t.op(content)))
     }
   }
 }
@@ -135,7 +179,7 @@ case class FirstElement(list: IList) extends Template {
   }
 }
 
-case class ObjectList[A <: Template](fieldName: String, el: A) extends IList {
+case class ObjectList[A <: Template](fieldName: String, el: A, transform: JsValue => JsValue = identity) extends IList {
   override def op(content: Map[String, JsValue]): JsValue = {
     val c = content
       .get(fieldName)
@@ -144,11 +188,15 @@ case class ObjectList[A <: Template](fieldName: String, el: A) extends IList {
           case Some(ll) => ll
           case None     => List(l.as[JsObject])
         }
-        Json.toJson(arr.map(js => el.op(js.as[JsObject].value)))
+        val updated = arr.map(js => {
+          val withTemplate = el.op(js.value)
+          val transformed = transform(withTemplate)
+          transformed
+        })
+
+        Json.toJson(updated)
       }
       .getOrElse(JsArray.empty)
     c
   }
 }
-
-case class Children(children: Map[String, Template])

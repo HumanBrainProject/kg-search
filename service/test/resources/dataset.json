@@ -1,5 +1,10 @@
 {
-  "brainviewer": [],
+  "brainviewer": [
+    {
+      "url": "http://cmbn-navigator.uio.no/navigator/filmstripzoom/filmstripzoom.html?atlas=100000&series=1881&preview=ABAMousev2Preview.png",
+      "name": "subject 1952"
+    }
+  ],
   "methods": [
     "Tract Tracing",
     "Confocal Microscopy",
@@ -264,5 +269,14 @@
   "doi": [
     "10.25493/GA16-M2P"
   ],
-  "publications": []
+  "publications": [
+    {
+      "doi": "10.1038/sdata.2019.28",
+      "citation": "Lillehaug, S., Yetman, M.J., Puchades,M.A., Checinska, M.M., Kleven, H., Jankowsky, J.L., Bjaalie, J.G., Leergaard, T.B. (2019). Brain-wide distribution of reporter expression in five transgenic tetracycline-transactivator mouse lines. Scientific Data, 6, 190028."
+    },
+    {
+      "doi": "10.1007/s00429-015-1040-9",
+      "citation": "Yetman, M. J., Lillehaug, S., Bjaalie, J. G., Leergaard, T. B., & Jankowsky, J. L. (2015). Transgene expression in the Nop-tTA driver line is not inherently restricted to the entorhinal cortex. Brain Structure and Function, 221(4), 2231–2249. "
+    }
+  ]
 }

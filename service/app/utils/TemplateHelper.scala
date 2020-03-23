@@ -15,7 +15,7 @@
  */
 package utils
 
-import play.api.libs.json.{JsString, JsValue}
+import play.api.libs.json.{JsNull, JsObject, JsString, JsValue, Json}
 
 object TemplateHelper {
 
@@ -23,5 +23,12 @@ object TemplateHelper {
     val uuidPattern = "(\\w+\\/\\w+\\/\\w+\\/v\\d\\.\\d\\.\\d)".r
     val s = uuidPattern replaceFirstIn (schemaId.as[String], `type`)
     JsString(s)
+  }
+
+  def refUUIDToSearchId(`type`: String): JsValue => JsValue = (reference: JsValue) => {
+    val refOption = for {
+      refStr <- reference.asOpt[String]
+    } yield JsString(s"${`type`}/$refStr")
+    refOption.getOrElse(JsNull)
   }
 }

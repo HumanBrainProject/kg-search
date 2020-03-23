@@ -54,7 +54,14 @@
     "value": "This dataset is temporarily under embargo. The data will become available for download after the embargo period."
   },
   "external_datalink": null,
-  "publications": null,
+  "publications": [
+    {
+      "value": "Lillehaug, S., Yetman, M.J., Puchades,M.A., Checinska, M.M., Kleven, H., Jankowsky, J.L., Bjaalie, J.G., Leergaard, T.B. (2019). Brain-wide distribution of reporter expression in five transgenic tetracycline-transactivator mouse lines. Scientific Data, 6, 190028.\n[DOI: 10.1038/sdata.2019.28]\n[DOI: 10.1038/sdata.2019.28]: https://doi.org/10.1038%2Fsdata.2019.28"
+    },
+    {
+      "value": "Yetman, M. J., Lillehaug, S., Bjaalie, J. G., Leergaard, T. B., & Jankowsky, J. L. (2015). Transgene expression in the Nop-tTA driver line is not inherently restricted to the entorhinal cortex. Brain Structure and Function, 221(4), 2231–2249. \n[DOI: 10.1007/s00429-015-1040-9]\n[DOI: 10.1007/s00429-015-1040-9]: https://doi.org/10.1007%2Fs00429-015-1040-9"
+    }
+  ],
   "atlas": {
     "value": "Allen Mouse Common Coordinate Framework v3 2017"
   },
@@ -93,7 +100,10 @@
       "value": "Retrograde Tracer"
     }
   ],
-  "viewer": null,
+  "viewer": [{
+    "url": "http://cmbn-navigator.uio.no/navigator/filmstripzoom/filmstripzoom.html?atlas=100000&series=1881&preview=ABAMousev2Preview.png",
+    "value": "Show subject 1952 in brain atlas viewer"
+  }],
   "files": [
     {
       "url": "/files/cscs?url=https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/PrivatTest_KGteam/EBRAINS.png",
@@ -139,10 +149,10 @@
         "genotype": {
           "value": "Wild type"
         },
-        "samples": {
+        "samples": [{
           "reference": "Sample/6737588f-8db6-4e7a-a0c1-3e37f4dc3333",
           "value": "sam-G04"
-        }
+        }]
       }
     },
     {
@@ -172,10 +182,10 @@
         "genotype": {
           "value": "Wild type"
         },
-        "samples": {
+        "samples":[ {
           "reference": "Sample/bed38308-13bd-4465-8b0f-1deb1e0dc8a2",
           "value": "sam-G05"
-        }
+        }]
       }
     },
     {
@@ -205,10 +215,10 @@
         "genotype": {
           "value": "Wild type"
         },
-        "samples": {
+        "samples": [{
           "reference": "Sample/84f07c25-92bd-4654-8a66-0e7b8fbb3a53",
           "value": "sam-G06.2"
-        }
+        }]
       }
     },
     {
@@ -238,10 +248,10 @@
         "genotype": {
           "value": "Wild type"
         },
-        "samples": {
+        "samples": [{
           "reference": "Sample/604d2057-ac5d-4ffb-97ed-9a15cff20cbb",
           "value": "sam-G07"
-        }
+        }]
       }
     },
     {
@@ -271,10 +281,10 @@
         "genotype": {
           "value": "Wild type"
         },
-        "samples": {
+        "samples": [{
           "reference": "Sample/5b32a5e2-cbce-4f03-9413-b7fa6e9f449c",
           "value": "sam-G08"
-        }
+        }]
       }
     }
   ],
