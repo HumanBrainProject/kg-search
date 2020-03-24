@@ -19,12 +19,12 @@ import java.util.UUID
 
 import com.google.inject.ImplementedBy
 import javax.inject.Inject
-import models.DatabaseScope
+import models.{DatabaseScope, PaginationParams}
 import models.error.ApiError
 import models.templates.{Template, TemplateType}
 import monix.eval.Task
 import play.api.Configuration
-import play.api.libs.json.JsValue
+import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
 
@@ -33,7 +33,13 @@ trait Indexer[Content, TransformedContent, Effect[_], UploadResult, QueryResult]
 
   def transform(jsonContent: Content, template: Template): TransformedContent
   def load(jsValue: TransformedContent): Effect[UploadResult]
-  def queryByType(templateType: TemplateType, databaseScope: DatabaseScope, token: String): Effect[QueryResult]
+
+  def queryByType(
+    templateType: TemplateType,
+    databaseScope: DatabaseScope,
+    paginationParams: PaginationParams,
+    token: String
+  ): Effect[QueryResult]
 
   def queryByTypeAndId(
     templateType: TemplateType,
@@ -61,8 +67,41 @@ class IndexerImpl @Inject()(
   override def queryByType(
     templateType: TemplateType,
     databaseScope: DatabaseScope,
+    paginationParams: PaginationParams,
     token: String
-  ): Task[Either[ApiError, JsValue]] = ???
+  ): Task[Either[ApiError, JsValue]] = {
+    val schema = TemplateType.toSchema(templateType)
+    Task
+      .deferFuture(
+        WSClient
+          .url(
+            s"$queryEndpoint/query/$schema/search/instances/?vocab=https://schema.hbp.eu/search/&size=${paginationParams.limit}&from=${paginationParams.offset}"
+          )
+          .addHttpHeaders("Authorization" -> s"Bearer $token")
+          .get()
+      )
+      .map { wsresult =>
+        wsresult.status match {
+          case OK =>
+            val maybeListOfResults = for {
+              jsonResponse <- wsresult.json.asOpt[Map[String, JsValue]]
+              results      <- jsonResponse.get("results")
+              resultArray  <- results.asOpt[List[JsObject]]
+            } yield resultArray
+
+            maybeListOfResults match {
+              case Some(listOfResults) =>
+                val template = templateEngine.getTemplateFromType(templateType, databaseScope)
+                val result = listOfResults.map(r => {
+                  transform(r, template)
+                })
+                Right(Json.toJson(result))
+              case None => Left(ApiError(INTERNAL_SERVER_ERROR, "Could not unpack json result"))
+            }
+          case status => Left(ApiError(status, wsresult.body))
+        }
+      }
+  }
 
   override def queryByTypeAndId(
     templateType: TemplateType,

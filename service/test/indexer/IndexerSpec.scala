@@ -17,17 +17,15 @@ package indexer
 
 import java.io.FileInputStream
 
-import cats.Id
-import models.templates.DatasetTemplate
+import controllers.IndexerController
+import models.templates.{Dataset, DatasetTemplate}
 import models.{DatabaseScope, INFERRED}
 import org.scalatest.Assertion
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.libs.json.{JsObject, JsValue, Json}
-import play.api.libs.ws.WSResponse
 import play.api.test.Injecting
-import services.indexer.{Indexer, IndexerImpl}
-import utils.TemplateComponent
+import services.indexer.IndexerImpl
 
 class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
 
@@ -77,5 +75,9 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("first_release", result, expected)
       assertIsSameJsObject("last_release", result, expected)
     }
+  }
+
+  "The endpoint" must {
+    "fetch datasets and apply the template" in {}
   }
 }

@@ -20,7 +20,7 @@ object Common {
     "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
     "org.mockito" % "mockito-core" % "3.3.3" % Test,
     "commons-io" % "commons-io" % "2.6",
-    "org.webjars" % "swagger-ui" % "3.18.1",
+    "org.webjars" % "swagger-ui" % "3.25.0",
     "org.typelevel" %% "cats-core" % "2.1.0",
     "io.monix" %% "monix" % "3.1.0"
   )

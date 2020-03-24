@@ -19,17 +19,15 @@ import java.util.UUID
 
 import akka.util.ByteString
 import javax.inject.Inject
-import models.DatabaseScope
 import models.error.ApiError
 import models.templates.TemplateType
+import models.{DatabaseScope, PaginationParams}
 import monix.eval.Task
 import play.api.http.HttpEntity
 import play.api.libs.json.JsValue
 import play.api.libs.ws.WSResponse
-import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, ResponseHeader, Result}
+import play.api.mvc._
 import services.indexer.Indexer
-
-import scala.concurrent.Future
 
 class IndexerController @Inject()(
   indexer: Indexer[JsValue, JsValue, Task, WSResponse, Either[ApiError, JsValue]],
@@ -39,6 +37,28 @@ class IndexerController @Inject()(
   def indexByType(databaseScope: DatabaseScope, templateType: TemplateType) = ???
 
   def indexByTypeAndId(databaseScope: DatabaseScope, templateType: TemplateType, id: UUID): Action[AnyContent] = ???
+
+  def applyTemplateByType(
+    databaseScope: DatabaseScope,
+    templateType: TemplateType,
+    from: Int,
+    size: Int
+  ): Action[AnyContent] =
+    Action.async { implicit request =>
+      val result = request.headers.toSimpleMap.get("Authorization") match {
+        case Some(token) =>
+          indexer
+            .queryByType(templateType, databaseScope, PaginationParams(from, size), token)
+            .map {
+              case Right(v) => Ok(v)
+              case Left(error) =>
+                Result(ResponseHeader(error.status), HttpEntity.Strict(ByteString(error.message), None))
+            }
+
+        case None => Task.pure(Unauthorized("Please provide credentials"))
+      }
+      result.runToFuture(s)
+    }
 
   def applyTemplateByTypeAndId(
     databaseScope: DatabaseScope,

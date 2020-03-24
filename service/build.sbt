@@ -25,5 +25,5 @@ publishArtifact in (Compile, packageDoc) := false
 
 enablePlugins(DockerPlugin)
 dockerBaseImage := "adoptopenjdk:11-jre-hotspot"
-
+swaggerV3 := true
 swaggerDomainNameSpaces := Seq("models")
