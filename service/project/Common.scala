@@ -11,23 +11,21 @@ object Common {
   val settings: Seq[Setting[_]] = Seq(
     organization := "eu.humanbrainproject",
     version := "1.0.0-SNAPSHOT",
-    scalaVersion := "2.12.7",
+    scalaVersion := "2.13.1",
     libraryDependencies ++= baseDependencies
   )
 
   val baseDependencies = Seq(
-    "de.leanovate.play-mockws" %% "play-mockws" % "2.6.2" % Test,
+    "de.leanovate.play-mockws" %% "play-mockws" % "2.8.0" % Test,
     "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
-    "org.mockito" % "mockito-core" % "2.19.0" % Test,
-    "com.github.stijndehaes" %% "play-prometheus-filters" % "0.3.2",
+    "org.mockito" % "mockito-core" % "3.3.3" % Test,
+    "commons-io" % "commons-io" % "2.6",
     "org.webjars" % "swagger-ui" % "3.18.1",
-    "com.iheart" %% "play-swagger" % "0.7.4",
-    "org.typelevel" %% "cats-core" % "1.4.0",
-    "io.monix" %% "monix" % "3.0.0-RC2"
+    "org.typelevel" %% "cats-core" % "2.1.0",
+    "io.monix" %% "monix" % "3.1.0"
   )
 
   val playDependencies = Seq(
-    "com.typesafe.play" %% "play-iteratees" % "2.6.1",
     guice,
     ws
   )

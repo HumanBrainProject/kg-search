@@ -63,7 +63,7 @@ class SearchProxy @Inject()(
     val opts: (Option[String], Option[String]) =
       (request.headers.get("index-hint"), request.headers.get("Authorization"))
     opts match {
-      case (Some(hints), Some(auth)) =>
+      case (Some(hints), Some(_)) =>
         val token = OIDCHelper.getTokenFromRequest(request)
         authService.getUserInfo(token).flatMap {
           case Some(userInfo) =>
@@ -93,13 +93,17 @@ class SearchProxy @Inject()(
       )
       .map { response => // we want to read the raw bytes for the body
         val count = (response.json \ "hits" \ "total").asOpt[Long].getOrElse(0L)
+        val responseHeaders: Map[String, scala.collection.Seq[String]] = response.headers
         logger.info(s"Search query - term: $searchTerm, #results: $count")
         val h = ResponseHelper
-            .flattenHeaders(ResponseHelper.filterContentTypeAndLengthFromHeaders[Seq[String]](response.headers)) ++ headers
+          .flattenHeaders(
+            ResponseHelper
+              .filterContentTypeAndLengthFromHeaders[scala.collection.Seq[String]](responseHeaders)
+          ) ++ headers
         Result(
           // keep original response header except content type and length that need specific handling
           ResponseHeader(response.status),
-          HttpEntity.Strict(response.bodyAsBytes, ResponseHelper.getContentType(response.headers))
+          HttpEntity.Strict(response.bodyAsBytes, ResponseHelper.getContentType(responseHeaders))
         ).withHeaders(h.toList: _*)
       }
 

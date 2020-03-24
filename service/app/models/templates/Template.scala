@@ -13,22 +13,12 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package utils
+package models.templates
 
-import play.api.libs.json.{JsNull, JsString, JsValue}
+import models.DatabaseScope
+import utils.TemplateComponent
 
-object TemplateHelper {
-
-  def schemaIdToSearchId(`type`: String): JsValue => JsValue = (schemaId: JsValue) => {
-    val uuidPattern = "(\\w+\\/\\w+\\/\\w+\\/v\\d\\.\\d\\.\\d)".r
-    val s = uuidPattern replaceFirstIn (schemaId.as[String], `type`)
-    JsString(s)
-  }
-
-  def refUUIDToSearchId(`type`: String): JsValue => JsValue = (reference: JsValue) => {
-    val refOption = for {
-      refStr <- reference.asOpt[String]
-    } yield JsString(s"${`type`}/$refStr")
-    refOption.getOrElse(JsNull)
-  }
+trait Template {
+  def dataBaseScope: DatabaseScope = dataBaseScope
+  def template: Map[String, TemplateComponent]
 }

@@ -1,2 +1,16 @@
 
 
+  ###
+  #  summary: Apply a template to a single instance this process is the first step of the indexing to the search UI
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  #  - in: path
+  #    name: id
+  #    type: string
+  #    format: uuid
+  ###
+GET /:databaseScope/:templateType/:id  controllers.IndexerController.applyTemplateByTypeAndId(databaseScope: models.DatabaseScope, templateType:models.templates.TemplateType, id: java.util.UUID)

@@ -18,6 +18,7 @@ package indexer
 import java.io.FileInputStream
 
 import cats.Id
+import models.templates.DatasetTemplate
 import models.{DatabaseScope, INFERRED}
 import org.scalatest.Assertion
 import org.scalatestplus.play.PlaySpec
@@ -25,8 +26,8 @@ import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.WSResponse
 import play.api.test.Injecting
-import services.indexer.{DatasetTemplate, Indexer, IndexerImpl}
-import utils.Template
+import services.indexer.{Indexer, IndexerImpl}
+import utils.TemplateComponent
 
 class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
 
@@ -49,7 +50,7 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
         override def fileProxy: String = ""
         override def dataBaseScope: DatabaseScope = INFERRED
       }
-      val result = indexer.transform(payload, template.template)
+      val result = indexer.transform(payload, template)
       val expected = loadResource("/expectedDataset.json")
       assertIsSameJsObject("identifier", result, expected)
       assertIsSameJsObject("contributors", result, expected)
@@ -77,10 +78,4 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("last_release", result, expected)
     }
   }
-}
-
-class IndexerTestImpl extends Indexer[JsValue, JsValue, Id] {
-  override def transform(jsonContent: JsValue, template: Map[String, Template]): JsValue = ???
-
-  override def load(jsValue: JsValue): Id[WSResponse] = ???
 }

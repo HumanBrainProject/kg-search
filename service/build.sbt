@@ -4,14 +4,14 @@ organization := "eu.humanbrainproject"
 version := "1.0-SNAPSHOT"
 
 lazy val common = (project in file("modules/common"))
-  .enablePlugins(PlayScala)
+  .enablePlugins(PlayScala, SwaggerPlugin)
 
 lazy val auth = (project in file("modules/authentication"))
-  .enablePlugins(PlayScala)
+  .enablePlugins(PlayScala, SwaggerPlugin)
   .dependsOn(common)
 
 lazy val kg_service = (project in file("."))
-  .enablePlugins(PlayScala)
+  .enablePlugins(PlayScala, SwaggerPlugin)
   .aggregate(common, auth)
   .dependsOn(common, auth)
 
@@ -25,3 +25,5 @@ publishArtifact in (Compile, packageDoc) := false
 
 enablePlugins(DockerPlugin)
 dockerBaseImage := "adoptopenjdk:11-jre-hotspot"
+
+swaggerDomainNameSpaces := Seq("models")

@@ -19,11 +19,11 @@ import play.api.libs.json._
 
 import scala.collection.Map
 
-trait Template {
+trait TemplateComponent {
   def op(content: Map[String, JsValue]): JsValue = JsNull
 }
 
-trait CustomField extends Template {
+trait CustomField extends TemplateComponent {
   def fieldName: String
   def transform: JsValue => JsValue
   def customField: String
@@ -37,7 +37,7 @@ trait CustomField extends Template {
 
 }
 
-trait IReference[T <: Template] extends CustomField {
+trait IReference[T <: TemplateComponent] extends CustomField {
   def valueField: T
   override def op(content: Map[String, JsValue]): JsValue = {
     val reference = content.get(fieldName).map(transform).getOrElse(JsNull)
@@ -53,9 +53,9 @@ trait IReference[T <: Template] extends CustomField {
 
   }
 }
-trait IList extends Template
+trait IList extends TemplateComponent
 
-case class Optional(template: Template) extends Template {
+case class Optional(template: TemplateComponent) extends TemplateComponent {
   override def op(content: Map[String, JsValue]): JsValue = {
     template.op(content)
   }
@@ -73,7 +73,7 @@ case class Value(override val fieldName: String, override val transform: JsValue
   override def customField: String = "value"
 }
 
-case class Reference[T <: Template](
+case class Reference[T <: TemplateComponent](
   override val fieldName: String,
   override val valueField: T,
   override val transform: JsValue => JsValue = identity
@@ -82,7 +82,7 @@ case class Reference[T <: Template](
 
 }
 
-case class Url[T <: Template](
+case class Url[T <: TemplateComponent](
   override val fieldName: String,
   override val valueField: T,
   override val transform: JsValue => JsValue = identity
@@ -90,7 +90,7 @@ case class Url[T <: Template](
   override def customField: String = "url"
 }
 
-case class OrElse[T <: Template](left: T, right: T) extends Template {
+case class OrElse[T <: TemplateComponent](left: T, right: T) extends TemplateComponent {
   override def op(content: Map[String, JsValue]): JsValue = {
     left.op(content) match {
       case JsNull => right.op(content)
@@ -99,11 +99,11 @@ case class OrElse[T <: Template](left: T, right: T) extends Template {
   }
 }
 
-case class Merge[T <: Template, T2 <: Template](
+case class Merge[T <: TemplateComponent, T2 <: TemplateComponent](
   templateLeft: T,
   templateRight: T2,
   merge: JsValue => JsValue => JsValue
-) extends Template {
+) extends TemplateComponent {
   override def op(content: Map[String, JsValue]): JsValue = {
     merge(templateLeft.op(content))(templateRight.op(content))
   }
@@ -126,17 +126,17 @@ case class ValueList(fieldName: String, transform: JsValue => JsValue = identity
   }
 }
 
-case class EmptyValue(transform: Map[String, JsValue] => JsValue) extends Template {
+case class EmptyValue(transform: Map[String, JsValue] => JsValue) extends TemplateComponent {
   override def op(content: Map[String, JsValue]): JsValue = {
     Json.toJson(Map("value" -> transform(content)))
   }
 }
 
-case class DirectValue(fieldName: String, transform: JsValue => JsValue = identity) extends Template {
+case class DirectValue(fieldName: String, transform: JsValue => JsValue = identity) extends TemplateComponent {
   override def op(content: Map[String, JsValue]): JsValue = content.get(fieldName).map(transform).getOrElse(JsNull)
 }
 
-case class ObjectValue[T <: Template](templates: T*) extends Template {
+case class ObjectValue[T <: TemplateComponent](templates: T*) extends TemplateComponent {
   override def op(content: Map[String, JsValue]): JsValue = {
     templates.foldLeft(Json.obj()) {
       case (jsObject, opt @ Optional(_)) =>
@@ -155,7 +155,7 @@ case class ObjectValue[T <: Template](templates: T*) extends Template {
   }
 }
 
-case class NestedObject[T <: Template](fieldName: String, template: T) extends Template {
+case class NestedObject[T <: TemplateComponent](fieldName: String, template: T) extends TemplateComponent {
   override def op(content: Map[String, JsValue]): JsValue = {
     template match {
       case opt @ Optional(_) =>
@@ -168,7 +168,7 @@ case class NestedObject[T <: Template](fieldName: String, template: T) extends T
   }
 }
 
-case class FirstElement(list: IList) extends Template {
+case class FirstElement(list: IList) extends TemplateComponent {
   override def op(content: Map[String, JsValue]): JsValue = {
     val arr = list.op(content)
     val firstElement = for {
@@ -179,7 +179,8 @@ case class FirstElement(list: IList) extends Template {
   }
 }
 
-case class ObjectList[A <: Template](fieldName: String, el: A, transform: JsValue => JsValue = identity) extends IList {
+case class ObjectList[A <: TemplateComponent](fieldName: String, el: A, transform: JsValue => JsValue = identity)
+    extends IList {
   override def op(content: Map[String, JsValue]): JsValue = {
     val c = content
       .get(fieldName)
