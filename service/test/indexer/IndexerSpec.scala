@@ -77,7 +77,9 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     }
   }
 
-  "The endpoint" must {
-    "fetch datasets and apply the template" in {}
+  "The index endpoint" must {
+    "fetch datasets and apply the template" in {
+      val indexerController = app.injector.instanceOf[IndexerController]
+    }
   }
 }

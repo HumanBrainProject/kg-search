@@ -193,7 +193,7 @@
   "speciesFilter": [
     "Mus musculus"
   ],
-  "external_datalink": null,
+  "external_datalink": "ftp://bigbrain.loris.ca/../BigBrainRelease.2015/2D_Final_Sections/Sagittal/",
   "neuroglancer": [],
   "license": [
     {

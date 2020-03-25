@@ -53,7 +53,10 @@
   "embargo": {
     "value": "This dataset is temporarily under embargo. The data will become available for download after the embargo period."
   },
-  "external_datalink": null,
+  "external_datalink": {
+    "url": "ftp://bigbrain.loris.ca/../BigBrainRelease.2015/2D_Final_Sections/Sagittal/",
+    "value": "ftp://bigbrain.loris.ca/../BigBrainRelease.2015/2D_Final_Sections/Sagittal/"
+  },
   "publications": [
     {
       "value": "Lillehaug, S., Yetman, M.J., Puchades,M.A., Checinska, M.M., Kleven, H., Jankowsky, J.L., Bjaalie, J.G., Leergaard, T.B. (2019). Brain-wide distribution of reporter expression in five transgenic tetracycline-transactivator mouse lines. Scientific Data, 6, 190028.\n[DOI: 10.1038/sdata.2019.28]\n[DOI: 10.1038/sdata.2019.28]: https://doi.org/10.1038%2Fsdata.2019.28"
