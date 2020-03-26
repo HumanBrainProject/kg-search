@@ -1,0 +1,28 @@
+{
+  "identifier": {
+    "value": "2bc61bb7-f4c5-4bee-ba81-2edacfdee69d"
+  },
+  "title": {
+    "value": "Test"
+  },
+  "contributors": null,
+  "citation": null,
+  "doi": null,
+  "license_info": null,
+  "component": null,
+  "owners": null,
+  "description": null,
+  "speciesFilter": null,
+  "embargoForFilter": null,
+  "external_datalink": null,
+  "publications": null,
+  "atlas": null,
+  "region": null,
+  "preparation": null,
+  "methods": null,
+  "protocol": null,
+  "viewer": null,
+  "subjects": null,
+  "first_release": null,
+  "last_release": null
+}

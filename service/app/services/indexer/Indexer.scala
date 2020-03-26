@@ -20,7 +20,7 @@ import java.util.UUID
 import com.google.inject.ImplementedBy
 import javax.inject.Inject
 import models.{DatabaseScope, PaginationParams}
-import models.error.ApiError
+import models.errors.ApiError
 import models.templates.{Template, TemplateType}
 import monix.eval.Task
 import play.api.Configuration

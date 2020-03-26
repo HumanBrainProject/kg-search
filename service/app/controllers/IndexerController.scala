@@ -19,7 +19,7 @@ import java.util.UUID
 
 import akka.util.ByteString
 import javax.inject.Inject
-import models.error.ApiError
+import models.errors.ApiError
 import models.templates.TemplateType
 import models.{DatabaseScope, PaginationParams}
 import monix.eval.Task

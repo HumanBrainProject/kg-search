@@ -29,7 +29,12 @@ trait CustomField extends TemplateComponent {
   def customField: String
   override def op(content: Map[String, JsValue]): JsValue = {
     if (content.contains(fieldName)) {
-      Json.toJson(Map(customField -> content.get(fieldName).map(transform).getOrElse(JsNull)))
+      content.get(fieldName).map(transform) match {
+        case Some(JsNull)  => JsNull
+        case Some(jsValue) => Json.toJson(Map(customField -> jsValue))
+        case None          => JsNull
+      }
+
     } else {
       JsNull
     }
@@ -120,7 +125,11 @@ case class ValueList(fieldName: String, transform: JsValue => JsValue = identity
             val v = transform(el)
             Map("value" -> v)
           }
-        Json.toJson(l)
+        if (l.isEmpty) {
+          JsNull
+        } else {
+          Json.toJson(l)
+        }
       }
       .getOrElse(JsNull)
   }
@@ -194,10 +203,13 @@ case class ObjectList[A <: TemplateComponent](fieldName: String, el: A, transfor
           val transformed = transform(withTemplate)
           transformed
         })
-
-        Json.toJson(updated)
+        if (updated.isEmpty || !updated.forall(js => js == JsNull)) {
+          JsNull
+        } else {
+          Json.toJson(updated)
+        }
       }
-      .getOrElse(JsArray.empty)
+      .getOrElse(JsNull)
     c
   }
 }

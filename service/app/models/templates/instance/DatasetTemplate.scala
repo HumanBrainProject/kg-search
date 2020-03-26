@@ -1,39 +1,11 @@
-/*
- *   Copyright (c) 2018, EPFL/Human Brain Project PCO
- *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
- */
-package models.templates
+package models.templates.instance
 
 import java.net.URLEncoder
 
 import models.DatabaseScope
-import play.api.libs.json.{JsNull, JsObject, JsString, JsValue, Json}
-import utils.{
-  CustomField,
-  FirstElement,
-  Merge,
-  NestedObject,
-  ObjectList,
-  ObjectValue,
-  Optional,
-  OrElse,
-  Reference,
-  TemplateHelper,
-  Url,
-  Value,
-  ValueList
-}
+import models.templates.Template
+import play.api.libs.json._
+import utils._
 
 trait DatasetTemplate extends Template {
   def fileProxy: String
@@ -69,7 +41,12 @@ trait DatasetTemplate extends Template {
             citation    <- citationJs.asOpt[String]
             doi         <- doiJs.asOpt[String]
           } yield citation + doi
-          Json.toJson(Map("value" -> strOpt.map(s => JsString(s)).getOrElse(JsNull)))
+          strOpt match {
+            case Some(v) =>
+              Json.toJson(Map("value" -> JsString(v)))
+            case None => JsNull
+          }
+
       }
     ),
     "zip"            -> Value("zip"),
@@ -91,21 +68,23 @@ trait DatasetTemplate extends Template {
     "description"      -> Value("description"),
     "speciesFilter"    -> FirstElement(ValueList("speciesFilter")),
     "embargoForFilter" -> FirstElement(ValueList("embargoForFilter")),
-    "embargo" -> FirstElement(
-      ValueList(
-        "embargo",
-        embargo => {
-          embargo.asOpt[String].fold[JsValue](JsNull) {
-            case "Embargoed" =>
-              JsString(
-                "This dataset is temporarily under embargo. The data will become available for download after the embargo period."
-              )
-            case "Under review" =>
-              JsString(
-                "This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review."
-              )
+    "embargo" -> Optional(
+      FirstElement(
+        ValueList(
+          "embargo",
+          embargo => {
+            embargo.asOpt[String].fold[JsValue](JsNull) {
+              case "Embargoed" =>
+                JsString(
+                  "This dataset is temporarily under embargo. The data will become available for download after the embargo period."
+                )
+              case "Under review" =>
+                JsString(
+                  "This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review."
+                )
+            }
           }
-        }
+        )
       )
     ),
     "files" -> Optional(

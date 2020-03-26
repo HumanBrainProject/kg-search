@@ -18,7 +18,8 @@ package services.indexer
 import com.google.inject.ImplementedBy
 import javax.inject.Inject
 import models.DatabaseScope
-import models.templates.{Dataset, DatasetTemplate, Template, TemplateType}
+import models.templates.instance.DatasetTemplate
+import models.templates.{Dataset, Template, TemplateType}
 import play.api.Configuration
 import play.api.libs.json._
 import utils._
