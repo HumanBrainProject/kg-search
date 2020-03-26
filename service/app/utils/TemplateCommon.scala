@@ -23,7 +23,10 @@ trait TemplateComponent {
   def op(content: Map[String, JsValue]): JsValue = JsNull
 }
 
-trait CustomField extends TemplateComponent {
+trait TemplateWriter extends TemplateComponent
+trait TemplateReader extends TemplateComponent
+
+trait CustomField extends TemplateWriter {
   def fieldName: String
   def transform: JsValue => JsValue
   def customField: String
@@ -58,9 +61,9 @@ trait IReference[T <: TemplateComponent] extends CustomField {
 
   }
 }
-trait IList extends TemplateComponent
+trait IList extends TemplateWriter
 
-case class Optional(template: TemplateComponent) extends TemplateComponent {
+case class Optional[A <: TemplateWriter](template: A) extends TemplateWriter {
   override def op(content: Map[String, JsValue]): JsValue = {
     template.op(content)
   }
@@ -78,7 +81,7 @@ case class Value(override val fieldName: String, override val transform: JsValue
   override def customField: String = "value"
 }
 
-case class Reference[T <: TemplateComponent](
+case class Reference[T <: TemplateWriter](
   override val fieldName: String,
   override val valueField: T,
   override val transform: JsValue => JsValue = identity
@@ -87,7 +90,7 @@ case class Reference[T <: TemplateComponent](
 
 }
 
-case class Url[T <: TemplateComponent](
+case class Url[T <: TemplateWriter](
   override val fieldName: String,
   override val valueField: T,
   override val transform: JsValue => JsValue = identity
@@ -95,7 +98,7 @@ case class Url[T <: TemplateComponent](
   override def customField: String = "url"
 }
 
-case class OrElse[T <: TemplateComponent](left: T, right: T) extends TemplateComponent {
+case class OrElse[T <: TemplateWriter](left: T, right: T) extends TemplateWriter {
   override def op(content: Map[String, JsValue]): JsValue = {
     left.op(content) match {
       case JsNull => right.op(content)
@@ -108,7 +111,7 @@ case class Merge[T <: TemplateComponent, T2 <: TemplateComponent](
   templateLeft: T,
   templateRight: T2,
   merge: JsValue => JsValue => JsValue
-) extends TemplateComponent {
+) extends TemplateWriter {
   override def op(content: Map[String, JsValue]): JsValue = {
     merge(templateLeft.op(content))(templateRight.op(content))
   }
@@ -135,17 +138,11 @@ case class ValueList(fieldName: String, transform: JsValue => JsValue = identity
   }
 }
 
-case class EmptyValue(transform: Map[String, JsValue] => JsValue) extends TemplateComponent {
-  override def op(content: Map[String, JsValue]): JsValue = {
-    Json.toJson(Map("value" -> transform(content)))
-  }
-}
-
-case class DirectValue(fieldName: String, transform: JsValue => JsValue = identity) extends TemplateComponent {
+case class DirectValue(fieldName: String, transform: JsValue => JsValue = identity) extends TemplateWriter {
   override def op(content: Map[String, JsValue]): JsValue = content.get(fieldName).map(transform).getOrElse(JsNull)
 }
 
-case class ObjectValue[T <: TemplateComponent](templates: T*) extends TemplateComponent {
+case class ObjectValue[T <: TemplateComponent](templates: T*) extends TemplateReader {
   override def op(content: Map[String, JsValue]): JsValue = {
     templates.foldLeft(Json.obj()) {
       case (jsObject, opt @ Optional(_)) =>
@@ -164,7 +161,7 @@ case class ObjectValue[T <: TemplateComponent](templates: T*) extends TemplateCo
   }
 }
 
-case class NestedObject[T <: TemplateComponent](fieldName: String, template: T) extends TemplateComponent {
+case class NestedObject[T <: TemplateWriter](fieldName: String, template: T) extends TemplateWriter {
   override def op(content: Map[String, JsValue]): JsValue = {
     template match {
       case opt @ Optional(_) =>
@@ -177,7 +174,7 @@ case class NestedObject[T <: TemplateComponent](fieldName: String, template: T) 
   }
 }
 
-case class FirstElement(list: IList) extends TemplateComponent {
+case class FirstElement(list: IList) extends TemplateWriter {
   override def op(content: Map[String, JsValue]): JsValue = {
     val arr = list.op(content)
     val firstElement = for {
@@ -189,7 +186,8 @@ case class FirstElement(list: IList) extends TemplateComponent {
 }
 
 case class ObjectList[A <: TemplateComponent](fieldName: String, el: A, transform: JsValue => JsValue = identity)
-    extends IList {
+    extends TemplateReader
+    with IList {
   override def op(content: Map[String, JsValue]): JsValue = {
     val c = content
       .get(fieldName)
@@ -203,7 +201,7 @@ case class ObjectList[A <: TemplateComponent](fieldName: String, el: A, transfor
           val transformed = transform(withTemplate)
           transformed
         })
-        if (updated.isEmpty || !updated.forall(js => js == JsNull)) {
+        if (updated.isEmpty || updated.forall(js => js == JsNull)) {
           JsNull
         } else {
           Json.toJson(updated)
