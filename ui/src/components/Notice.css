@@ -77,5 +77,6 @@ main .kgs-notice .kgs-notice-agree-button:hover{
 @media (min-width: 992px) {
     .kgs-notice {
         position: fixed;
+        width: 100%;
     }
 }

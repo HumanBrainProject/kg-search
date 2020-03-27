@@ -237,6 +237,7 @@
 
 @media (min-width: 992px) and (min-height: 900px) {
     .kgs-footer__terms-short-notice {
+        width: 100%;
         display: block;
     }
 }
