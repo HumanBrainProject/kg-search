@@ -24,7 +24,7 @@ export const TermsShortNotice = connect(
   (state, props) => ({
     className: props.className,
     show: !!state.application.showTermsShortNotice || !!state.application.showTermsShortUpdateNotice,
-    text: !!state.application.showTermsShortUpdateNotice ? termsShortNoticeUpdate : termsShortNotice
+    text: state.application.showTermsShortUpdateNotice ? termsShortNoticeUpdate : termsShortNotice
   }),
   dispatch => ({
     onAgree: () => dispatch(actions.agreeTermsShortNotice())
