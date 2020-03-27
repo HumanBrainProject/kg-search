@@ -13,18 +13,18 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package utils
+package models.templates.entities
+import play.api.libs.json.{JsValue, Json}
 
-import play.api.libs.json.{JsNull, JsString, JsValue}
+case class UrlObject(url: Option[String]) extends TemplateEntity {
+  override def toJson: JsValue = Json.toJson(this)(UrlObject.implicitWrites)
 
-object TemplateHelper {
+  override type T = UrlObject
 
-  def schemaIdToSearchId(`type`: String): String => String = (schemaId: String) => {
-    val uuidPattern = "(\\w+\\/\\w+\\/\\w+\\/v\\d\\.\\d\\.\\d)".r
-    uuidPattern replaceFirstIn (schemaId, `type`)
-  }
+  override def zero: UrlObject = UrlObject.zero
+}
 
-  def refUUIDToSearchId(`type`: String): String => String = (reference: String) => {
-    s"${`type`}/$reference"
-  }
+object UrlObject {
+  implicit val implicitWrites = Json.writes[UrlObject]
+  def zero: UrlObject = UrlObject(None)
 }

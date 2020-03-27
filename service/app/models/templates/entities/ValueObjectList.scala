@@ -13,18 +13,23 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package utils
+package models.templates.entities
+import play.api.libs.json.{JsValue, Json, Writes}
 
-import play.api.libs.json.{JsNull, JsString, JsValue}
+case class ValueObjectList(list: List[ValueObject]) extends TemplateEntity {
+  override def toJson: JsValue = Json.toJson(this)(ValueObjectList.implicitWrites)
 
-object TemplateHelper {
+  override type T = ValueObjectList
 
-  def schemaIdToSearchId(`type`: String): String => String = (schemaId: String) => {
-    val uuidPattern = "(\\w+\\/\\w+\\/\\w+\\/v\\d\\.\\d\\.\\d)".r
-    uuidPattern replaceFirstIn (schemaId, `type`)
-  }
+  override def zero: ValueObjectList = ValueObjectList.zero
+}
 
-  def refUUIDToSearchId(`type`: String): String => String = (reference: String) => {
-    s"${`type`}/$reference"
+object ValueObjectList {
+  def zero: ValueObjectList = ValueObjectList(List())
+  implicit val implicitWrites = new Writes[ValueObjectList] {
+
+    def writes(u: ValueObjectList): JsValue = {
+      Json.toJson(u.list)
+    }
   }
 }

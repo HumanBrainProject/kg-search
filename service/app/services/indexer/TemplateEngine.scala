@@ -38,12 +38,13 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
       case (acc, (k, v)) =>
         v match {
           case opt @ Optional(_) =>
-            opt.getAsOpt(currentContent) match {
-              case Some(js) => acc.updated(k, js)
-              case None     => acc
+            opt.op(currentContent) match {
+              case Some(content) => acc.updated(k, content.toJson)
+              case None          => acc
             }
           case _ =>
-            acc.updated(k, v.op(currentContent))
+            acc.updated(k, v.op(currentContent).getOrElse(v.zero).toJson)
+
         }
     }
     val j = Json.toJson(transformedContent)

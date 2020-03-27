@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2018, EPFL/Human Brain Project PCO
+ *   Copyright (c) 2020, EPFL/Human Brain Project PCO
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -15,180 +15,216 @@
  */
 package utils
 
+import models.templates.entities.{
+  CustomObject,
+  EmptyEntity,
+  EntitySerialization,
+  NestedObject,
+  ObjectValueList,
+  ObjectValueMap,
+  ReferenceObject,
+  TemplateEntity,
+  UrlObject,
+  ValueObject,
+  ValueObjectList
+}
 import play.api.libs.json._
 
 import scala.collection.Map
 
 trait TemplateComponent {
-  def op(content: Map[String, JsValue]): JsValue = JsNull
+  type T <: TemplateEntity
+  def zero: T
+  def op(content: Map[String, JsValue]): Option[T] = None
 }
 
-trait TemplateWriter extends TemplateComponent
-trait TemplateReader extends TemplateComponent
-
-trait CustomField extends TemplateWriter {
-  def fieldName: String
-  def transform: JsValue => JsValue
-  def customField: String
-  override def op(content: Map[String, JsValue]): JsValue = {
-    if (content.contains(fieldName)) {
-      content.get(fieldName).map(transform) match {
-        case Some(JsNull)  => JsNull
-        case Some(jsValue) => Json.toJson(Map(customField -> jsValue))
-        case None          => JsNull
-      }
-
-    } else {
-      JsNull
-    }
-  }
+trait TemplateWriter extends TemplateComponent {
+  override type T <: TemplateEntity
 
 }
 
-trait IReference[T <: TemplateComponent] extends CustomField {
-  def valueField: T
-  override def op(content: Map[String, JsValue]): JsValue = {
-    val reference = content.get(fieldName).map(transform).getOrElse(JsNull)
-    reference match {
-      case JsNull => JsNull
-      case ref =>
-        val resultJsObj = Json.toJson(Map(customField -> ref)).as[JsObject]
-        valueField.op(content).asOpt[JsObject].getOrElse(JsNull) match {
-          case JsNull => resultJsObj
-          case js     => resultJsObj ++ js.as[JsObject]
-        }
-    }
-
-  }
+trait TemplateReader extends TemplateComponent {
+  override type T <: TemplateEntity
 }
 trait IList extends TemplateWriter
 
+case class CustomField(fieldName: String, customField: String) extends TemplateWriter {
+  override type T = CustomObject
+  override def op(content: Map[String, JsValue]): Option[CustomObject] = {
+    if (content.contains(fieldName)) {
+      for {
+        v <- content.get(fieldName)
+      } yield CustomObject(customField, v.asOpt[String])
+    } else {
+      None
+    }
+  }
+  override def zero: CustomObject = CustomObject.zero
+
+}
+
 case class Optional[A <: TemplateWriter](template: A) extends TemplateWriter {
-  override def op(content: Map[String, JsValue]): JsValue = {
+  override type T = template.T
+  override def op(content: Map[String, JsValue]): Option[T] = {
     template.op(content)
   }
 
-  def getAsOpt(content: Map[String, JsValue]): Option[JsValue] = {
-    this.op(content) match {
-      case JsNull => None
-      case js     => Some(js)
+  override def zero: template.T = template.zero
+}
+
+case class Value(fieldName: String, transform: ValueObject => ValueObject = identity) extends TemplateWriter {
+  override type T = ValueObject
+
+  override def op(content: Map[String, JsValue]): Option[ValueObject] = {
+    if (content.contains(fieldName)) {
+      for {
+        v <- content.get(fieldName)
+      } yield transform(ValueObject(v.asOpt[String]))
+    } else {
+      None
     }
   }
+
+  override def zero: ValueObject = ValueObject.zero
 }
 
-case class Value(override val fieldName: String, override val transform: JsValue => JsValue = identity)
-    extends CustomField {
-  override def customField: String = "value"
+case class Reference(
+  fieldName: String,
+  transform: ReferenceObject => ReferenceObject = s => s
+) extends TemplateWriter {
+  override type T = ReferenceObject
+  override def op(content: Map[String, JsValue]): Option[ReferenceObject] = {
+    if (content.contains(fieldName)) {
+      for {
+        v <- content.get(fieldName)
+      } yield transform(ReferenceObject(v.asOpt[String]))
+    } else {
+      None
+    }
+  }
+  override def zero: ReferenceObject = ReferenceObject.zero
+
 }
 
-case class Reference[T <: TemplateWriter](
-  override val fieldName: String,
-  override val valueField: T,
-  override val transform: JsValue => JsValue = identity
-) extends IReference[T] {
-  override def customField: String = "reference"
+case class Url(
+  fieldName: String,
+  transform: UrlObject => UrlObject = s => s
+) extends TemplateWriter {
+  override type T = UrlObject
+  override def op(content: Map[String, JsValue]): Option[UrlObject] = {
+    if (content.contains(fieldName)) {
+      for {
+        v <- content.get(fieldName)
+      } yield transform(UrlObject(v.asOpt[String]))
+    } else {
+      None
+    }
+  }
+  override def zero: UrlObject = UrlObject.zero
 
 }
 
-case class Url[T <: TemplateWriter](
-  override val fieldName: String,
-  override val valueField: T,
-  override val transform: JsValue => JsValue = identity
-) extends IReference[T] {
-  override def customField: String = "url"
-}
-
-case class OrElse[T <: TemplateWriter](left: T, right: T) extends TemplateWriter {
-  override def op(content: Map[String, JsValue]): JsValue = {
+case class OrElse[Template <: TemplateWriter](left: Template, right: Template) extends TemplateWriter {
+  override type T = TemplateEntity
+  override def op(content: Map[String, JsValue]): Option[TemplateEntity] = {
     left.op(content) match {
-      case JsNull => right.op(content)
-      case js     => js
+      case v @ Some(_) => v
+      case None        => right.op(content)
     }
   }
+
+  override def zero: TemplateEntity = left.zero
 }
 
 case class Merge[T <: TemplateComponent, T2 <: TemplateComponent](
   templateLeft: T,
   templateRight: T2,
-  merge: JsValue => JsValue => JsValue
+  merge: Option[TemplateEntity] => Option[TemplateEntity] => Option[TemplateEntity]
 ) extends TemplateWriter {
-  override def op(content: Map[String, JsValue]): JsValue = {
+  override type T = TemplateEntity
+  override def op(content: Map[String, JsValue]): Option[TemplateEntity] = {
     merge(templateLeft.op(content))(templateRight.op(content))
   }
+
+  override def zero: TemplateEntity = templateLeft.zero
 }
 
-case class ValueList(fieldName: String, transform: JsValue => JsValue = identity) extends IList {
-  override def op(content: Map[String, JsValue]): JsValue = {
+case class ValueList(fieldName: String, transform: ValueObject => ValueObject = identity) extends IList {
+  override type T = ValueObjectList
+  override def op(content: Map[String, JsValue]): Option[ValueObjectList] = {
     content
       .get(fieldName)
-      .map { fieldValue =>
+      .flatMap { fieldValue =>
         val l = fieldValue
           .as[List[JsValue]]
           .map { el =>
-            val v = transform(el)
-            Map("value" -> v)
+            transform(ValueObject(el.asOpt[String]))
           }
         if (l.isEmpty) {
-          JsNull
+          None
         } else {
-          Json.toJson(l)
+          Some(ValueObjectList(l))
         }
       }
-      .getOrElse(JsNull)
   }
+
+  override def zero = ValueObjectList.zero
 }
 
-case class DirectValue(fieldName: String, transform: JsValue => JsValue = identity) extends TemplateWriter {
-  override def op(content: Map[String, JsValue]): JsValue = content.get(fieldName).map(transform).getOrElse(JsNull)
-}
-
-case class ObjectValue[T <: TemplateComponent](templates: T*) extends TemplateReader {
-  override def op(content: Map[String, JsValue]): JsValue = {
-    templates.foldLeft(Json.obj()) {
-      case (jsObject, opt @ Optional(_)) =>
-        opt.getAsOpt(content) match {
-          case Some(js) =>
-            jsObject ++ js.as[JsObject]
-          case None => jsObject
+case class ObjectValue[Template <: TemplateComponent](
+  templates: List[Template],
+  transform: ObjectValueMap => ObjectValueMap = identity
+) extends TemplateWriter {
+  override type T = ObjectValueMap
+  override def op(content: Map[String, JsValue]): Option[ObjectValueMap] = {
+    val resultList = templates.foldLeft(ObjectValueMap.zero) {
+      case (l, opt @ Optional(_)) =>
+        opt.op(content) match {
+          case Some(content) => l :+ content
+          case None          => l
         }
-      case (jsObject, template) =>
-        val templateContent = template.op(content)
-        templateContent match {
-          case JsNull => jsObject
-          case js     => jsObject ++ js.as[JsObject]
+      case (l, template) =>
+        template.op(content) match {
+          case Some(content) => l :+ content
+          case None          => l :+ template.zero
         }
     }
+    Some(transform(resultList))
   }
+
+  override def zero: ObjectValueMap = ObjectValueMap.zero
 }
 
-case class NestedObject[T <: TemplateWriter](fieldName: String, template: T) extends TemplateWriter {
-  override def op(content: Map[String, JsValue]): JsValue = {
+case class Nested[T <: TemplateWriter](fieldName: String, template: T) extends TemplateWriter {
+  override type T = NestedObject
+  override def op(content: Map[String, JsValue]): Option[NestedObject] = {
     template match {
       case opt @ Optional(_) =>
-        opt.getAsOpt(content) match {
-          case Some(v) => Json.toJson(Map(fieldName -> v))
-          case None    => JsNull
-        }
-      case t => Json.toJson(Map(fieldName -> t.op(content)))
+        opt.op(content).map(v => NestedObject(fieldName, v))
+      case t => Some(NestedObject(fieldName, t.op(content).getOrElse(EmptyEntity())))
     }
   }
+
+  override def zero: NestedObject = NestedObject.zero
 }
 
 case class FirstElement(list: IList) extends TemplateWriter {
-  override def op(content: Map[String, JsValue]): JsValue = {
-    val arr = list.op(content)
-    val firstElement = for {
-      jsArray <- arr.asOpt[JsArray]
-      head    <- jsArray.value.headOption
-    } yield head
-    firstElement.getOrElse(JsNull)
+  override type T = TemplateEntity
+  override def op(content: Map[String, JsValue]): Option[T] = {
+    list.op(content) match {
+      case Some(ObjectValueList(l)) => l.headOption
+      case Some(ValueObjectList(l)) => l.headOption
+      case None                     => None
+    }
   }
+
+  override def zero: list.T = list.zero
 }
 
-case class ObjectList[A <: TemplateComponent](fieldName: String, el: A, transform: JsValue => JsValue = identity)
-    extends TemplateReader
-    with IList {
-  override def op(content: Map[String, JsValue]): JsValue = {
+case class ObjectListReader[A <: TemplateComponent](fieldName: String, el: A) extends TemplateReader with IList {
+  override type T = ObjectValueList
+  override def zero: ObjectValueList = ObjectValueList.zero
+  override def op(content: Map[String, JsValue]): Option[ObjectValueList] = {
     val c = content
       .get(fieldName)
       .map { l =>
@@ -196,18 +232,28 @@ case class ObjectList[A <: TemplateComponent](fieldName: String, el: A, transfor
           case Some(ll) => ll
           case None     => List(l.as[JsObject])
         }
-        val updated = arr.map(js => {
-          val withTemplate = el.op(js.value)
-          val transformed = transform(withTemplate)
-          transformed
-        })
-        if (updated.isEmpty || updated.forall(js => js == JsNull)) {
-          JsNull
+        val updated = arr.foldLeft(ObjectValueList.zero) {
+          case (l, js) =>
+            el match {
+              case opt @ Optional(_) =>
+                opt.op(js.value) match {
+                  case Some(entity) => l :+ entity
+                  case None         => l
+                }
+              case template =>
+                template.op(js.value) match {
+                  case Some(entity) => l :+ entity
+                  case None         => l :+ template.zero
+                }
+            }
+        }
+        if (updated.list.isEmpty) {
+          None
         } else {
-          Json.toJson(updated)
+          Some(updated)
         }
       }
-      .getOrElse(JsNull)
+      .getOrElse(None)
     c
   }
 }

@@ -13,18 +13,22 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package utils
+package models.templates.entities
 
-import play.api.libs.json.{JsNull, JsString, JsValue}
+import play.api.libs.json.{JsValue, Json}
 
-object TemplateHelper {
+case class NestedObject(fieldName: String, content: TemplateEntity) extends TemplateEntity {
+  override type T = NestedObject
 
-  def schemaIdToSearchId(`type`: String): String => String = (schemaId: String) => {
-    val uuidPattern = "(\\w+\\/\\w+\\/\\w+\\/v\\d\\.\\d\\.\\d)".r
-    uuidPattern replaceFirstIn (schemaId, `type`)
-  }
+  override def zero: NestedObject = NestedObject.zero
 
-  def refUUIDToSearchId(`type`: String): String => String = (reference: String) => {
-    s"${`type`}/$reference"
-  }
+  override def toJson: JsValue = Json.toJson(this)(NestedObject.implicitWrites)
+
+}
+
+object NestedObject {
+  implicit lazy val implicitWrites = Json.writes[NestedObject]
+
+  def zero: NestedObject = NestedObject("", EmptyEntity())
+
 }

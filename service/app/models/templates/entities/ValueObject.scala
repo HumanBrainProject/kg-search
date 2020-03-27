@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2020, EPFL/Human Brain Project PCO
+ *   Copyright (c) 2018, EPFL/Human Brain Project PCO
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -13,18 +13,22 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package utils
+package models.templates.entities
 
-import play.api.libs.json.{JsNull, JsString, JsValue}
+import play.api.libs.json.{JsValue, Json}
 
-object TemplateHelper {
+case class ValueObject(value: Option[String]) extends TemplateEntity {
+  override type T = ValueObject
 
-  def schemaIdToSearchId(`type`: String): String => String = (schemaId: String) => {
-    val uuidPattern = "(\\w+\\/\\w+\\/\\w+\\/v\\d\\.\\d\\.\\d)".r
-    uuidPattern replaceFirstIn (schemaId, `type`)
+  def map[B](t: String => String): ValueObject = {
+    ValueObject(value.map(t))
   }
+  override def toJson: JsValue = Json.toJson(this)(ValueObject.implicitWrites)
 
-  def refUUIDToSearchId(`type`: String): String => String = (reference: String) => {
-    s"${`type`}/$reference"
-  }
+  override def zero: ValueObject = ValueObject.zero
+}
+
+object ValueObject {
+  implicit val implicitWrites = Json.writes[ValueObject]
+  def zero: ValueObject = ValueObject(None)
 }

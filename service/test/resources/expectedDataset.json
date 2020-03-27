@@ -50,9 +50,6 @@
   "embargoForFilter": {
     "value": "Embargoed"
   },
-  "embargo": {
-    "value": "This dataset is temporarily under embargo. The data will become available for download after the embargo period."
-  },
   "external_datalink": {
     "url": "ftp://bigbrain.loris.ca/../BigBrainRelease.2015/2D_Final_Sections/Sagittal/",
     "value": "ftp://bigbrain.loris.ca/../BigBrainRelease.2015/2D_Final_Sections/Sagittal/"

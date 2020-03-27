@@ -24,7 +24,7 @@
   "container_url": null,
   "files": [],
   "contributors": [],
-  "embargo": [],
+  "embargo": ["Embargoed"],
   "doi": [],
   "publications": []
 }

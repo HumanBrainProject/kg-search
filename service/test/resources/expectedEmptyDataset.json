@@ -8,6 +8,9 @@
   "contributors": null,
   "citation": null,
   "doi": null,
+  "embargo": {
+    "value": "This dataset is temporarily under embargo. The data will become available for download after the embargo period."
+  },
   "license_info": null,
   "component": null,
   "owners": null,

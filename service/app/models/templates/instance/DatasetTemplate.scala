@@ -4,6 +4,7 @@ import java.net.URLEncoder
 
 import models.DatabaseScope
 import models.templates.Template
+import models.templates.entities.{CustomObject, NestedObject, ObjectValueMap, UrlObject, ValueObject, ValueObjectList}
 import play.api.libs.json._
 import utils._
 
@@ -14,55 +15,57 @@ trait DatasetTemplate extends Template {
   val template = Map(
     "identifier" -> Value("identifier"),
     "title"      -> Value("title"),
-    "contributors" -> ObjectList(
+    "contributors" -> ObjectListReader(
       "contributors",
       ObjectValue(
-        Reference(
-          "relativeUrl",
-          Value("name"),
-          TemplateHelper.schemaIdToSearchId("Contributor")
+        List(
+          Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))),
+          Value("name")
         )
       )
     ),
     "citation" -> Merge(
       FirstElement(ValueList("citation")),
       FirstElement(ValueList("doi", doi => {
-        val doiStr = doi.as[String]
-        val url = URLEncoder.encode(doiStr, "UTF-8")
-        JsString(s" [DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url")
+        doi.map(doiStr => {
+          val url = URLEncoder.encode(doiStr, "UTF-8")
+          s" [DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url"
+        })
       })),
       l =>
         r => {
-          val strOpt = for {
-            citationObj <- l.asOpt[JsObject]
-            doiObj      <- r.asOpt[JsObject]
-            citationJs  <- citationObj.value.get("value")
-            doiJs       <- doiObj.value.get("value")
-            citation    <- citationJs.asOpt[String]
-            doi         <- doiJs.asOpt[String]
-          } yield citation + doi
-          strOpt match {
-            case Some(v) =>
-              Json.toJson(Map("value" -> JsString(v)))
-            case None => JsNull
+          (l, r) match {
+            case (Some(ValueObject(maybeCitation)), Some(ValueObject(maybeDoi))) =>
+              val strOpt = for {
+                citationStr <- maybeCitation
+                doiStr      <- maybeDoi
+              } yield citationStr + doiStr
+              strOpt.map(s => ValueObject(Some(s)))
+            case _ => None
           }
-
       }
     ),
     "zip"            -> Value("zip"),
     "dataDescriptor" -> Value("zip"),
     "doi"            -> FirstElement(ValueList("doi")),
-    "license_info"   -> FirstElement(ObjectList("license", Url("url", Value("name")))),
+    "license_info"   -> FirstElement(ObjectListReader("license", ObjectValue(List(Url("url"), Value("name"))))),
     "component" -> FirstElement(
-      ObjectList(
+      ObjectListReader(
         "component",
-        Reference("relativeUrl", Value("name"), TemplateHelper.schemaIdToSearchId("Project"))
+        ObjectValue(
+          List(Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Project"))), Value("name"))
+        )
       )
     ),
     "owners" -> FirstElement(
-      ObjectList(
+      ObjectListReader(
         "owners",
-        Reference("relativeUrl", Value("name"), TemplateHelper.schemaIdToSearchId("Contributor"))
+        ObjectValue(
+          List(
+            Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))),
+            Value("name")
+          )
+        )
       )
     ),
     "description"      -> Value("description"),
@@ -72,17 +75,20 @@ trait DatasetTemplate extends Template {
       FirstElement(
         ValueList(
           "embargo",
-          embargo => {
-            embargo.asOpt[String].fold[JsValue](JsNull) {
-              case "Embargoed" =>
-                JsString(
-                  "This dataset is temporarily under embargo. The data will become available for download after the embargo period."
+          s =>
+            s match {
+              case ValueObject(Some("Embargoed")) =>
+                ValueObject(
+                  Some(
+                    "This dataset is temporarily under embargo. The data will become available for download after the embargo period."
+                  )
                 )
-              case "Under review" =>
-                JsString(
-                  "This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review."
+              case ValueObject(Some("Under review")) =>
+                ValueObject(
+                  Some(
+                    "This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review."
+                  )
                 )
-            }
           }
         )
       )
@@ -90,142 +96,156 @@ trait DatasetTemplate extends Template {
     "files" -> Optional(
       Merge(
         FirstElement(ValueList("embargo")),
-        ObjectList(
+        ObjectListReader(
           "files",
           ObjectValue(
             List(
               Merge(
-                Url("absolute_path", Value("name")),
+                ObjectValue(List(Url("absolute_path"), Value("name"))),
                 Value("private_access"),
-                urlJs =>
-                  privateAccessJs => {
-                    val opt = for {
-                      privateAccessObj  <- privateAccessJs.asOpt[JsObject]
-                      privateAccessVal  <- privateAccessObj.value.get("value")
-                      privateAccessBool <- privateAccessVal.asOpt[Boolean]
-                      if privateAccessBool
-                      urlObj  <- urlJs.asOpt[JsObject]
-                      urlVal  <- urlObj.value.get("url")
-                      urlStr  <- urlVal.asOpt[String]
-                      nameVal <- urlObj.value.get("value")
-                      nameStr <- nameVal.asOpt[String]
-                    } yield
-                      Json.toJson(
-                        Map("url" -> s"$fileProxy/files/cscs?url=$urlStr", "value" -> (s"ACCESS PROTECTED: $nameStr"))
-                      )
-                    opt.getOrElse(urlJs)
+                urlOpt =>
+                  privateAccesOpt => {
+                    (urlOpt, privateAccesOpt) match {
+                      case (
+                          Some(ObjectValueMap(List(UrlObject(url), ValueObject(name)))),
+                          Some(ValueObject(privateAccess))
+                          ) =>
+                        val opt = for {
+                          privateAccessVal <- privateAccess
+                          if privateAccessVal.toBoolean
+                          urlStr  <- url
+                          nameStr <- name
+                        } yield
+                          ObjectValueMap(
+                            List(
+                              UrlObject(Some(s"$fileProxy/files/cscs?url=$urlStr")),
+                              ValueObject(Some(s"ACCESS PROTECTED: $nameStr"))
+                            )
+                          )
+                        opt.orElse(urlOpt)
+                      case _ => urlOpt
+                    }
+
                 }
               ),
-              new CustomField {
-                override def fieldName: String = "human_readable_size"
-                override def customField: String = "fileSize"
-                override def transform: JsValue => JsValue = identity
-              },
+              CustomField("human_readable_size", "fileSize"),
               Optional(
                 Merge(
                   FirstElement(ValueList("preview_url")),
                   FirstElement(ValueList("is_preview_animated")),
-                  preview =>
-                    isAnimatedJs => {
-                      val res = for {
-                        isAnimatedObj  <- isAnimatedJs.asOpt[JsObject]
-                        isAnimatedVal  <- isAnimatedObj.value.get("value")
-                        isAnimatedBool <- isAnimatedVal.asOpt[Boolean]
-                        previewObj     <- preview.asOpt[JsObject]
-                        previewVal     <- previewObj.value.get("value")
-                      } yield Map("previewUrl" -> Json.obj("url" -> previewVal, "isAnimated" -> isAnimatedBool))
-                      res.map(Json.toJson(_)).getOrElse(JsNull)
+                  previewOpt =>
+                    isAnimatedOpt => {
+                      (previewOpt, isAnimatedOpt) match {
+                        case (Some(ValueObject(preview)), Some(ValueObject(isAnimated))) =>
+                          for {
+                            previewVal    <- preview
+                            isAnimatedStr <- isAnimated
+                          } yield
+                            NestedObject(
+                              "previewUrl",
+                              ObjectValueMap(
+                                List(
+                                  UrlObject(Some(previewVal)),
+                                  CustomObject("isAnimated", Some(isAnimatedStr.toBoolean.toString))
+                                )
+                              )
+                            )
+
+                        case _ => None
+                      }
+
                   }
                 )
               )
-            ): _*
+            )
           )
         ),
-        embargo =>
-          files => {
-            embargo.asOpt[String].fold[JsValue](files)(_ => JsNull)
+        embargoOpt =>
+          filesOpt => {
+            embargoOpt.fold(filesOpt)(_ => None)
         }
       )
     ),
-    "external_datalink" ->
-    Url("external_datalink", Value("external_datalink")),
-    "publications" -> ObjectList(
+    "external_datalink" -> ObjectValue(List(Url("external_datalink"), Value("external_datalink"))),
+    "publications" -> ObjectListReader(
       "publications",
       Merge(
         Value("citation"),
         Value("doi", doi => {
-          val doiStr = doi.as[String]
-          val url = URLEncoder.encode(doiStr, "UTF-8")
-          JsString(s"[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url")
+          doi.map { doiStr =>
+            val url = URLEncoder.encode(doiStr, "UTF-8")
+            s"[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url"
+          }
         }),
         citation =>
           doi => {
-            citation match {
-              case JsNull => doi
-              case citationJs =>
+            (citation, doi) match {
+              case (Some(citationObj: ValueObject), Some(doiObj: ValueObject)) =>
                 val strOpt = for {
-                  citationObj <- citationJs.asOpt[JsObject]
-                  doiObj      <- doi.asOpt[JsObject]
-                  citationJs  <- citationObj.value.get("value")
-                  doiJs       <- doiObj.value.get("value")
-                  citationStr <- citationJs.asOpt[String]
-                  doiStr      <- doiJs.asOpt[String]
+                  citationStr <- citationObj.value
+                  doiStr      <- doiObj.value
                 } yield citationStr + "\n" + doiStr
-                Json.toJson(Map("value" -> strOpt.map(s => JsString(s)).getOrElse(JsNull)))
+                strOpt.map(str => ValueObject(Some(str)))
+              case _ => doi
             }
 
         }
       )
     ),
-    "atlas"       -> FirstElement(ValueList("parcellationAtlas")),
-    "region"      -> ObjectList("parcellationRegion", Url("url", OrElse(Value("alias"), Value("name")))),
+    "atlas" -> FirstElement(ValueList("parcellationAtlas")),
+    "region" -> ObjectListReader(
+      "parcellationRegion",
+      ObjectValue(List(Url("url"), OrElse(Value("alias"), Value("name"))))
+    ),
     "preparation" -> FirstElement(ValueList("preparation")),
     "methods"     -> ValueList("methods"),
     "protocol"    -> ValueList("protocol"),
     "viewer" ->
     OrElse(
-      ObjectList(
+      ObjectListReader(
         "brainviewer",
-        Url("url", Value("name", js => JsString("Show " + js.as[String] + " in brain atlas viewer")))
+        ObjectValue(List(Url("url"), Value("name", js => js.map(str => "Show " + str + " in brain atlas viewer"))))
       ),
-      ObjectList(
+      ObjectListReader(
         "neuroglancer",
-        Url("url", Value("title", js => JsString("Show " + js.as[String] + " in brain atlas viewer")))
+        ObjectValue(List(Url("url"), Value("title", js => js.map(str => "Show " + str + " in brain atlas viewer"))))
       )
     ),
-    "subjects" -> ObjectList(
+    "subjects" -> ObjectListReader(
       "subjects",
       ObjectValue(
         List(
-          NestedObject(
+          Nested(
             "subject_name",
-            Reference(
-              "identifier",
-              Value("name"),
-              TemplateHelper.refUUIDToSearchId("Subject")
+            ObjectValue(
+              List(
+                Reference("identifier", ref => ref.map(TemplateHelper.refUUIDToSearchId("Subject"))),
+                Value("name"),
+              )
             )
           ),
-          NestedObject("species", FirstElement(ValueList("species"))),
-          NestedObject("sex", FirstElement(ValueList("sex"))),
-          NestedObject("age", Value("age")),
-          NestedObject("agecategory", FirstElement(ValueList("agecategory"))),
-          NestedObject("weight", Value("weight")),
-          NestedObject("strain", Optional(Value("strain"))),
-          NestedObject("genotype", Value("genotype")),
-          NestedObject(
+          Nested("species", FirstElement(ValueList("species"))),
+          Nested("sex", FirstElement(ValueList("sex"))),
+          Nested("age", Value("age")),
+          Nested("agecategory", FirstElement(ValueList("agecategory"))),
+          Nested("weight", Value("weight")),
+          Nested("strain", Optional(Value("strain"))),
+          Nested("genotype", Value("genotype")),
+          Nested(
             "samples",
-            ObjectList("samples", Reference("identifier", Value("name"), TemplateHelper.refUUIDToSearchId("Sample")))
-          ),
-        ): _*
-      ),
-      js => {
-        val res = for {
-          obj <- js.asOpt[JsObject]
-        } yield {
-          Map("children" -> obj)
+            ObjectListReader(
+              "samples",
+              ObjectValue(
+                List(Reference("identifier", ref => ref.map(TemplateHelper.refUUIDToSearchId("Sample"))), Value("name"))
+              )
+            )
+          )
+        ),
+        objectValue =>
+          objectValue match {
+            case a: ObjectValueMap => a.map(t => NestedObject("children", t))
         }
-        Json.toJson(res)
-      }
+      )
     ),
     "first_release" -> Value("first_release"),
     "last_release"  -> Value("last_release"),
