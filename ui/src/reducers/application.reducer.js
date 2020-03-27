@@ -38,7 +38,8 @@ const agreeTermsShortNotice = state => {
   setTimeout(() => window.dispatchEvent(new Event("resize")), 250);
   return {
     ...state,
-    showTermsShortNotice: false
+    showTermsShortNotice: false,
+    showTermsShortUpdateNotice: false
   };
 };
 
