@@ -17,13 +17,14 @@
 import { connect } from "react-redux";
 import * as actions from "../actions/actions";
 import { Notice } from "../components/Notice";
-import { termsShortNotice } from "../data/termsShortNotice.js";
+import {termsShortNotice} from "../data/termsShortNotice";
+import {termsShortNoticeUpdate} from "../data/termsShortNotice";
 
 export const TermsShortNotice = connect(
   (state, props) => ({
     className: props.className,
-    show: !!state.application.showTermsShortNotice,
-    text: termsShortNotice
+    show: !!state.application.showTermsShortNotice || !!state.application.showTermsShortUpdateNotice,
+    text: !!state.application.showTermsShortUpdateNotice ? termsShortNoticeUpdate : termsShortNotice
   }),
   dispatch => ({
     onAgree: () => dispatch(actions.agreeTermsShortNotice())
