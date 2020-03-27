@@ -1,5 +1,7 @@
+import {termsCurrentVersion} from "./termsShortNotice";
+
 export const termsOfUse = `###EBRAINS Knowledge Graph Data Platform Citation Requirements
-This text is provided to describe the requirements for citing datasets, models and software found via EBRAINS Knowledge Graph Data Platform (KG): [https://kg.ebrains.eu/search](https://kg.ebrains.eu/search). It is meant to provide a more human-readable form of key parts of the KG Terms of Service, but in the event of disagreement between the [KG Terms of Service](https://kg.ebrains.eu/search-terms-of-use.html) and these Citation Requirements, the former is to be taken as authoritative.
+This text is provided to describe the requirements for citing datasets, models and software found via EBRAINS Knowledge Graph Data Platform (KG): [https://kg.ebrains.eu/search](https://kg.ebrains.eu/search). It is meant to provide a more human-readable form of key parts of the KG Terms of Service, but in the event of disagreement between the [KG Terms of Service](https://kg.ebrains.eu/search-terms-of-use.html?v=`+termsCurrentVersion+`) and these Citation Requirements, the former is to be taken as authoritative.
 
 ####Dataset, model and software licensing
 Datasets, models and software in the KG have explicit licensing conditions attached. The license is typically one of the Creative Commons licenses. You must follow the licensing conditions attached to the dataset, model or software, including all restrictions on commercial use, requirements for attribution or requirements to share-alike.
