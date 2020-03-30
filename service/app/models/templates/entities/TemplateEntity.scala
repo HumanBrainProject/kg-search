@@ -30,12 +30,12 @@ object TemplateEntity {
   implicit lazy val implicitWrites = new Writes[TemplateEntity] {
 
     def writes(u: TemplateEntity): JsValue = u match {
-      case j: ValueObjectList => Json.toJson(j)(ValueObjectList.implicitWrites)
-      case j: ValueObject     => Json.toJson(j)(ValueObject.implicitWrites)
-      case j: UrlObject       => Json.toJson(j)(UrlObject.implicitWrites)
-      case j: ObjectValueList => Json.toJson(j)(ObjectValueList.implicitWrites)
-      case j: ObjectValueMap  => Json.toJson(j)(ObjectValueMap.implicitWrites)
-      case j: NestedObject    => Json.toJson(j)(NestedObject.implicitWrites)
+      case j: ValueObjectList   => Json.toJson(j)(ValueObjectList.implicitWrites)
+      case j: ValueObjectString => Json.toJson(j)(ValueObjectString.implicitWrites)
+      case j: UrlObject         => Json.toJson(j)(UrlObject.implicitWrites)
+      case j: ObjectValueList   => Json.toJson(j)(ObjectValueList.implicitWrites)
+      case j: ObjectValueMap    => Json.toJson(j)(ObjectValueMap.implicitWrites)
+      case j: NestedObject      => Json.toJson(j)(NestedObject.implicitWrites)
     }
   }
 }

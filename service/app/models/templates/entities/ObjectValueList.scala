@@ -34,11 +34,11 @@ object ObjectValueList {
     def writes(c: ObjectValueList): JsValue = {
       Json.toJson(c.list.map { el =>
         el match {
-          case j: ValueObject     => Json.toJson(j)(ValueObject.implicitWrites)
-          case j: UrlObject       => Json.toJson(j)(UrlObject.implicitWrites)
-          case j: ValueObjectList => Json.toJson(j)(ValueObjectList.implicitWrites)
-          case j: NestedObject    => Json.toJson(j)(NestedObject.implicitWrites)
-          case j: ObjectValueMap  => Json.toJson(j)(ObjectValueMap.implicitWrites)
+          case j: ValueObjectString => Json.toJson(j)(ValueObjectString.implicitWrites)
+          case j: UrlObject         => Json.toJson(j)(UrlObject.implicitWrites)
+          case j: ValueObjectList   => Json.toJson(j)(ValueObjectList.implicitWrites)
+          case j: NestedObject      => Json.toJson(j)(NestedObject.implicitWrites)
+          case j: ObjectValueMap    => Json.toJson(j)(ObjectValueMap.implicitWrites)
         }
       })
     }

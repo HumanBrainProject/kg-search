@@ -4,7 +4,15 @@ import java.net.URLEncoder
 
 import models.DatabaseScope
 import models.templates.Template
-import models.templates.entities.{CustomObject, NestedObject, ObjectValueMap, UrlObject, ValueObject, ValueObjectList}
+import models.templates.entities.{
+  CustomObject,
+  NestedObject,
+  ObjectValueMap,
+  UrlObject,
+  ValueObjectBoolean,
+  ValueObjectList,
+  ValueObjectString
+}
 import play.api.libs.json._
 import utils._
 
@@ -13,14 +21,14 @@ trait DatasetTemplate extends Template {
   def dataBaseScope: DatabaseScope
 
   val template = Map(
-    "identifier" -> Value("identifier"),
-    "title"      -> Value("title"),
+    "identifier" -> ValueString("identifier"),
+    "title"      -> ValueString("title"),
     "contributors" -> ObjectListReader(
       "contributors",
       ObjectValue(
         List(
           Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))),
-          Value("name")
+          ValueString("name")
         )
       )
     ),
@@ -35,25 +43,28 @@ trait DatasetTemplate extends Template {
       l =>
         r => {
           (l, r) match {
-            case (Some(ValueObject(maybeCitation)), Some(ValueObject(maybeDoi))) =>
+            case (Some(ValueObjectString(maybeCitation)), Some(ValueObjectString(maybeDoi))) =>
               val strOpt = for {
                 citationStr <- maybeCitation
                 doiStr      <- maybeDoi
               } yield citationStr + doiStr
-              strOpt.map(s => ValueObject(Some(s)))
+              strOpt.map(s => ValueObjectString(Some(s)))
             case _ => None
           }
       }
     ),
-    "zip"            -> Value("zip"),
-    "dataDescriptor" -> Value("zip"),
+    "zip"            -> ValueString("zip"),
+    "dataDescriptor" -> ValueString("zip"),
     "doi"            -> FirstElement(ValueList("doi")),
-    "license_info"   -> FirstElement(ObjectListReader("license", ObjectValue(List(Url("url"), Value("name"))))),
+    "license_info"   -> FirstElement(ObjectListReader("license", ObjectValue(List(Url("url"), ValueString("name"))))),
     "component" -> FirstElement(
       ObjectListReader(
         "component",
         ObjectValue(
-          List(Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Project"))), Value("name"))
+          List(
+            Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Project"))),
+            ValueString("name")
+          )
         )
       )
     ),
@@ -63,12 +74,12 @@ trait DatasetTemplate extends Template {
         ObjectValue(
           List(
             Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))),
-            Value("name")
+            ValueString("name")
           )
         )
       )
     ),
-    "description"      -> Value("description"),
+    "description"      -> ValueString("description"),
     "speciesFilter"    -> FirstElement(ValueList("speciesFilter")),
     "embargoForFilter" -> FirstElement(ValueList("embargoForFilter")),
     "embargo" -> Optional(
@@ -77,14 +88,14 @@ trait DatasetTemplate extends Template {
           "embargo",
           s =>
             s match {
-              case ValueObject(Some("Embargoed")) =>
-                ValueObject(
+              case ValueObjectString(Some("Embargoed")) =>
+                ValueObjectString(
                   Some(
                     "This dataset is temporarily under embargo. The data will become available for download after the embargo period."
                   )
                 )
-              case ValueObject(Some("Under review")) =>
-                ValueObject(
+              case ValueObjectString(Some("Under review")) =>
+                ValueObjectString(
                   Some(
                     "This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review."
                   )
@@ -101,25 +112,25 @@ trait DatasetTemplate extends Template {
           ObjectValue(
             List(
               Merge(
-                ObjectValue(List(Url("absolute_path"), Value("name"))),
-                Value("private_access"),
+                ObjectValue(List(Url("absolute_path"), ValueString("name"))),
+                ValueBoolean("private_access"),
                 urlOpt =>
                   privateAccesOpt => {
                     (urlOpt, privateAccesOpt) match {
                       case (
-                          Some(ObjectValueMap(List(UrlObject(url), ValueObject(name)))),
-                          Some(ValueObject(privateAccess))
+                          Some(ObjectValueMap(List(UrlObject(url), ValueObjectString(name)))),
+                          Some(ValueObjectBoolean(privateAccess))
                           ) =>
                         val opt = for {
                           privateAccessVal <- privateAccess
-                          if privateAccessVal.toBoolean
+                          if privateAccessVal
                           urlStr  <- url
                           nameStr <- name
                         } yield
                           ObjectValueMap(
                             List(
                               UrlObject(Some(s"$fileProxy/files/cscs?url=$urlStr")),
-                              ValueObject(Some(s"ACCESS PROTECTED: $nameStr"))
+                              ValueObjectString(Some(s"ACCESS PROTECTED: $nameStr"))
                             )
                           )
                         opt.orElse(urlOpt)
@@ -136,7 +147,7 @@ trait DatasetTemplate extends Template {
                   previewOpt =>
                     isAnimatedOpt => {
                       (previewOpt, isAnimatedOpt) match {
-                        case (Some(ValueObject(preview)), Some(ValueObject(isAnimated))) =>
+                        case (Some(ValueObjectString(preview)), Some(ValueObjectString(isAnimated))) =>
                           for {
                             previewVal    <- preview
                             isAnimatedStr <- isAnimated
@@ -166,12 +177,12 @@ trait DatasetTemplate extends Template {
         }
       )
     ),
-    "external_datalink" -> ObjectValue(List(Url("external_datalink"), Value("external_datalink"))),
+    "external_datalink" -> ObjectValue(List(Url("external_datalink"), ValueString("external_datalink"))),
     "publications" -> ObjectListReader(
       "publications",
       Merge(
-        Value("citation"),
-        Value("doi", doi => {
+        ValueString("citation"),
+        ValueString("doi", doi => {
           doi.map { doiStr =>
             val url = URLEncoder.encode(doiStr, "UTF-8")
             s"[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url"
@@ -180,12 +191,12 @@ trait DatasetTemplate extends Template {
         citation =>
           doi => {
             (citation, doi) match {
-              case (Some(citationObj: ValueObject), Some(doiObj: ValueObject)) =>
+              case (Some(citationObj: ValueObjectString), Some(doiObj: ValueObjectString)) =>
                 val strOpt = for {
                   citationStr <- citationObj.value
                   doiStr      <- doiObj.value
                 } yield citationStr + "\n" + doiStr
-                strOpt.map(str => ValueObject(Some(str)))
+                strOpt.map(str => ValueObjectString(Some(str)))
               case _ => doi
             }
 
@@ -195,7 +206,7 @@ trait DatasetTemplate extends Template {
     "atlas" -> FirstElement(ValueList("parcellationAtlas")),
     "region" -> ObjectListReader(
       "parcellationRegion",
-      ObjectValue(List(Url("url"), OrElse(Value("alias"), Value("name"))))
+      ObjectValue(List(Url("url"), OrElse(ValueString("alias"), ValueString("name"))))
     ),
     "preparation" -> FirstElement(ValueList("preparation")),
     "methods"     -> ValueList("methods"),
@@ -204,11 +215,15 @@ trait DatasetTemplate extends Template {
     OrElse(
       ObjectListReader(
         "brainviewer",
-        ObjectValue(List(Url("url"), Value("name", js => js.map(str => "Show " + str + " in brain atlas viewer"))))
+        ObjectValue(
+          List(Url("url"), ValueString("name", js => js.map(str => "Show " + str + " in brain atlas viewer")))
+        )
       ),
       ObjectListReader(
         "neuroglancer",
-        ObjectValue(List(Url("url"), Value("title", js => js.map(str => "Show " + str + " in brain atlas viewer"))))
+        ObjectValue(
+          List(Url("url"), ValueString("title", js => js.map(str => "Show " + str + " in brain atlas viewer")))
+        )
       )
     ),
     "subjects" -> ObjectListReader(
@@ -220,23 +235,26 @@ trait DatasetTemplate extends Template {
             ObjectValue(
               List(
                 Reference("identifier", ref => ref.map(TemplateHelper.refUUIDToSearchId("Subject"))),
-                Value("name"),
+                ValueString("name"),
               )
             )
           ),
           Nested("species", FirstElement(ValueList("species"))),
           Nested("sex", FirstElement(ValueList("sex"))),
-          Nested("age", Value("age")),
+          Nested("age", ValueString("age")),
           Nested("agecategory", FirstElement(ValueList("agecategory"))),
-          Nested("weight", Value("weight")),
-          Nested("strain", Optional(Value("strain"))),
-          Nested("genotype", Value("genotype")),
+          Nested("weight", ValueString("weight")),
+          Nested("strain", Optional(ValueString("strain"))),
+          Nested("genotype", ValueString("genotype")),
           Nested(
             "samples",
             ObjectListReader(
               "samples",
               ObjectValue(
-                List(Reference("identifier", ref => ref.map(TemplateHelper.refUUIDToSearchId("Sample"))), Value("name"))
+                List(
+                  Reference("identifier", ref => ref.map(TemplateHelper.refUUIDToSearchId("Sample"))),
+                  ValueString("name")
+                )
               )
             )
           )
@@ -247,8 +265,8 @@ trait DatasetTemplate extends Template {
         }
       )
     ),
-    "first_release" -> Value("first_release"),
-    "last_release"  -> Value("last_release"),
+    "first_release" -> ValueString("first_release"),
+    "last_release"  -> ValueString("last_release"),
   )
 
 }

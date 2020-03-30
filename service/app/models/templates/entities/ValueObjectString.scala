@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2020, EPFL/Human Brain Project PCO
+ *   Copyright (c) 2018, EPFL/Human Brain Project PCO
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,22 +14,21 @@
  *   limitations under the License.
  */
 package models.templates.entities
-import play.api.libs.json.{JsValue, Json, Writes}
 
-case class ValueObjectList(list: List[ValueObjectString]) extends TemplateEntity {
-  override def toJson: JsValue = Json.toJson(this)(ValueObjectList.implicitWrites)
+import play.api.libs.json.{JsValue, Json}
 
-  override type T = ValueObjectList
+case class ValueObjectString(value: Option[String]) extends TemplateEntity {
+  override type T = ValueObjectString
 
-  override def zero: ValueObjectList = ValueObjectList.zero
+  def map[B](t: String => String): ValueObjectString = {
+    ValueObjectString(value.map(t))
+  }
+  override def toJson: JsValue = Json.toJson(this)(ValueObjectString.implicitWrites)
+
+  override def zero: ValueObjectString = ValueObjectString.zero
 }
 
-object ValueObjectList {
-  def zero: ValueObjectList = ValueObjectList(List())
-  implicit val implicitWrites = new Writes[ValueObjectList] {
-
-    def writes(u: ValueObjectList): JsValue = {
-      Json.toJson(u.list)
-    }
-  }
+object ValueObjectString {
+  implicit val implicitWrites = Json.writes[ValueObjectString]
+  def zero: ValueObjectString = ValueObjectString(None)
 }

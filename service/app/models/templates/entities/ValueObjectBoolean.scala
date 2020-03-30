@@ -17,18 +17,18 @@ package models.templates.entities
 
 import play.api.libs.json.{JsValue, Json}
 
-case class ValueObject(value: Option[String]) extends TemplateEntity {
-  override type T = ValueObject
+case class ValueObjectBoolean(value: Option[Boolean]) extends TemplateEntity {
+  override type T = ValueObjectBoolean
 
-  def map[B](t: String => String): ValueObject = {
-    ValueObject(value.map(t))
+  def map(t: Boolean => Boolean): ValueObjectBoolean = {
+    ValueObjectBoolean(value.map(t))
   }
-  override def toJson: JsValue = Json.toJson(this)(ValueObject.implicitWrites)
+  override def toJson: JsValue = Json.toJson(this)(ValueObjectBoolean.implicitWrites)
 
-  override def zero: ValueObject = ValueObject.zero
+  override def zero: ValueObjectBoolean = ValueObjectBoolean.zero
 }
 
-object ValueObject {
-  implicit val implicitWrites = Json.writes[ValueObject]
-  def zero: ValueObject = ValueObject(None)
+object ValueObjectBoolean {
+  implicit val implicitWrites = Json.writes[ValueObjectBoolean]
+  def zero: ValueObjectBoolean = ValueObjectBoolean(None)
 }

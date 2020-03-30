@@ -25,8 +25,9 @@ import models.templates.entities.{
   ReferenceObject,
   TemplateEntity,
   UrlObject,
-  ValueObject,
-  ValueObjectList
+  ValueObjectBoolean,
+  ValueObjectList,
+  ValueObjectString
 }
 import play.api.libs.json._
 
@@ -72,20 +73,38 @@ case class Optional[A <: TemplateWriter](template: A) extends TemplateWriter {
   override def zero: template.T = template.zero
 }
 
-case class Value(fieldName: String, transform: ValueObject => ValueObject = identity) extends TemplateWriter {
-  override type T = ValueObject
+case class ValueBoolean(fieldName: String, transform: ValueObjectBoolean => ValueObjectBoolean = identity)
+    extends TemplateWriter {
+  override type T = ValueObjectBoolean
 
-  override def op(content: Map[String, JsValue]): Option[ValueObject] = {
+  override def op(content: Map[String, JsValue]): Option[ValueObjectBoolean] = {
     if (content.contains(fieldName)) {
       for {
         v <- content.get(fieldName)
-      } yield transform(ValueObject(v.asOpt[String]))
+      } yield transform(ValueObjectBoolean(v.asOpt[Boolean]))
     } else {
       None
     }
   }
 
-  override def zero: ValueObject = ValueObject.zero
+  override def zero: ValueObjectBoolean = ValueObjectBoolean.zero
+}
+
+case class ValueString(fieldName: String, transform: ValueObjectString => ValueObjectString = identity)
+    extends TemplateWriter {
+  override type T = ValueObjectString
+
+  override def op(content: Map[String, JsValue]): Option[ValueObjectString] = {
+    if (content.contains(fieldName)) {
+      for {
+        v <- content.get(fieldName)
+      } yield transform(ValueObjectString(v.asOpt[String]))
+    } else {
+      None
+    }
+  }
+
+  override def zero: ValueObjectString = ValueObjectString.zero
 }
 
 case class Reference(
@@ -149,7 +168,7 @@ case class Merge[T <: TemplateComponent, T2 <: TemplateComponent](
   override def zero: TemplateEntity = templateLeft.zero
 }
 
-case class ValueList(fieldName: String, transform: ValueObject => ValueObject = identity) extends IList {
+case class ValueList(fieldName: String, transform: ValueObjectString => ValueObjectString = identity) extends IList {
   override type T = ValueObjectList
   override def op(content: Map[String, JsValue]): Option[ValueObjectList] = {
     content
@@ -158,7 +177,7 @@ case class ValueList(fieldName: String, transform: ValueObject => ValueObject = 
         val l = fieldValue
           .as[List[JsValue]]
           .map { el =>
-            transform(ValueObject(el.asOpt[String]))
+            transform(ValueObjectString(el.asOpt[String]))
           }
         if (l.isEmpty) {
           None
