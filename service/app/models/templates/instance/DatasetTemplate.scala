@@ -4,16 +4,7 @@ import java.net.URLEncoder
 
 import models.DatabaseScope
 import models.templates.Template
-import models.templates.entities.{
-  CustomObject,
-  NestedObject,
-  ObjectValueMap,
-  UrlObject,
-  ValueObjectBoolean,
-  ValueObjectList,
-  ValueObjectString
-}
-import play.api.libs.json._
+import models.templates.entities._
 import utils._
 
 trait DatasetTemplate extends Template {
@@ -261,7 +252,7 @@ trait DatasetTemplate extends Template {
         ),
         objectValue =>
           objectValue match {
-            case a: ObjectValueMap => a.map(t => NestedObject("children", t))
+            case a: ObjectValueMap => ObjectValueMap(List(NestedObject("children", a)))
         }
       )
     ),

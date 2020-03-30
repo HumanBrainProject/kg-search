@@ -1,6 +1,6 @@
 package models.templates.entities
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 
 case class ReferenceObject(reference: Option[String]) extends TemplateEntity {
   override def toJson: JsValue = Json.toJson(this)(ReferenceObject.implicitWrites)
@@ -15,6 +15,11 @@ case class ReferenceObject(reference: Option[String]) extends TemplateEntity {
 }
 
 object ReferenceObject {
-  implicit val implicitWrites = Json.writes[ReferenceObject]
+  implicit val implicitWrites = new Writes[ReferenceObject] {
+
+    def writes(u: ReferenceObject): JsValue = {
+      u.reference.fold[JsValue](JsNull)(v => Json.obj("reference" -> Json.toJson(v)))
+    }
+  }
   def zero: ReferenceObject = ReferenceObject(None)
 }

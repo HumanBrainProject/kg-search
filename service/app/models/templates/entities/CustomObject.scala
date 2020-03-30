@@ -15,7 +15,7 @@
  */
 package models.templates.entities
 
-import play.api.libs.json.{JsValue, Json, Writes}
+import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 
 case class CustomObject(fieldName: String, fieldValue: Option[String]) extends TemplateEntity {
   override def toJson: JsValue = Json.toJson(this)(CustomObject.implicitWrites)
@@ -29,9 +29,13 @@ object CustomObject {
   implicit val implicitWrites = new Writes[CustomObject] {
 
     def writes(c: CustomObject): JsValue = {
-      Json.obj(
-        c.fieldName -> Json.toJson(c.fieldValue)
+      c.fieldValue.fold[JsValue](JsNull)(
+        v =>
+          Json.obj(
+            c.fieldName -> Json.toJson(v)
+        )
       )
+
     }
   }
 

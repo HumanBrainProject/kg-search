@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 package models.templates.entities
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 
 case class UrlObject(url: Option[String]) extends TemplateEntity {
   override def toJson: JsValue = Json.toJson(this)(UrlObject.implicitWrites)
@@ -25,6 +25,11 @@ case class UrlObject(url: Option[String]) extends TemplateEntity {
 }
 
 object UrlObject {
-  implicit val implicitWrites = Json.writes[UrlObject]
+  implicit val implicitWrites = new Writes[UrlObject] {
+
+    def writes(u: UrlObject): JsValue = {
+      u.url.fold[JsValue](JsNull)(v => Json.obj("url" -> Json.toJson(v)))
+    }
+  }
   def zero: UrlObject = UrlObject(None)
 }

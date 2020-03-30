@@ -15,7 +15,7 @@
  */
 package models.templates.entities
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 
 case class ValueObjectBoolean(value: Option[Boolean]) extends TemplateEntity {
   override type T = ValueObjectBoolean
@@ -29,6 +29,11 @@ case class ValueObjectBoolean(value: Option[Boolean]) extends TemplateEntity {
 }
 
 object ValueObjectBoolean {
-  implicit val implicitWrites = Json.writes[ValueObjectBoolean]
+  implicit val implicitWrites = new Writes[ValueObjectBoolean] {
+
+    def writes(u: ValueObjectBoolean): JsValue = {
+      u.value.fold[JsValue](JsNull)(bool => Json.obj("value" -> bool))
+    }
+  }
   def zero: ValueObjectBoolean = ValueObjectBoolean(None)
 }

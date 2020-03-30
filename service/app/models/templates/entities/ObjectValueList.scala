@@ -14,14 +14,14 @@
  *   limitations under the License.
  */
 package models.templates.entities
-import play.api.libs.json.{JsValue, Json, Writes}
+import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 
 case class ObjectValueList(list: List[TemplateEntity]) extends TemplateEntity {
   override type T = ObjectValueList
 
   override def zero: ObjectValueList = ObjectValueList.zero
 
-  override def toJson: JsValue = Json.toJson(list)
+  override def toJson: JsValue = Json.toJson(this)(ObjectValueList.implicitWrites)
 
   def :+(el: TemplateEntity): ObjectValueList = {
     this.copy(list :+ el)
@@ -32,15 +32,12 @@ object ObjectValueList {
   implicit lazy val implicitWrites = new Writes[ObjectValueList] {
 
     def writes(c: ObjectValueList): JsValue = {
-      Json.toJson(c.list.map { el =>
-        el match {
-          case j: ValueObjectString => Json.toJson(j)(ValueObjectString.implicitWrites)
-          case j: UrlObject         => Json.toJson(j)(UrlObject.implicitWrites)
-          case j: ValueObjectList   => Json.toJson(j)(ValueObjectList.implicitWrites)
-          case j: NestedObject      => Json.toJson(j)(NestedObject.implicitWrites)
-          case j: ObjectValueMap    => Json.toJson(j)(ObjectValueMap.implicitWrites)
-        }
-      })
+      val js = c.list.map(el => Json.toJson(el))
+      if (js.forall(jsEntity => jsEntity == JsNull)) {
+        JsNull
+      } else {
+        Json.toJson(js)
+      }
     }
   }
 

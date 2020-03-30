@@ -15,7 +15,7 @@
  */
 package models.templates.entities
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 
 case class ValueObjectString(value: Option[String]) extends TemplateEntity {
   override type T = ValueObjectString
@@ -29,6 +29,11 @@ case class ValueObjectString(value: Option[String]) extends TemplateEntity {
 }
 
 object ValueObjectString {
-  implicit val implicitWrites = Json.writes[ValueObjectString]
+  implicit val implicitWrites = new Writes[ValueObjectString] {
+
+    def writes(u: ValueObjectString): JsValue = {
+      u.value.fold[JsValue](JsNull)(str => Json.obj("value" -> str))
+    }
+  }
   def zero: ValueObjectString = ValueObjectString(None)
 }

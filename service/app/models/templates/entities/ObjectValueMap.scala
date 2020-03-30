@@ -15,7 +15,7 @@
  */
 package models.templates.entities
 
-import play.api.libs.json.{JsObject, JsValue, Json, Writes}
+import play.api.libs.json.{JsNull, JsObject, JsValue, Json, Writes}
 
 case class ObjectValueMap(list: List[TemplateEntity]) extends TemplateEntity {
   override type T = ObjectValueMap
@@ -37,11 +37,21 @@ object ObjectValueMap {
   implicit lazy val implicitWrites = new Writes[ObjectValueMap] {
 
     def writes(c: ObjectValueMap): JsValue = {
-      c.list.foldLeft(Json.obj()) {
+      val resultObj = c.list.foldLeft(JsObject.empty) {
         case (json, el) =>
           val jsResult = el.toJson
-          json ++ jsResult.as[JsObject]
+          if (jsResult == JsNull || jsResult == JsObject.empty) {
+            json
+          } else {
+            json ++ jsResult.as[JsObject]
+          }
       }
+      if (resultObj.value.isEmpty) {
+        JsNull
+      } else {
+        resultObj
+      }
+
     }
   }
 
