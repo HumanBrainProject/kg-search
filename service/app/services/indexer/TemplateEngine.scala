@@ -27,6 +27,7 @@ import utils._
 @ImplementedBy(classOf[TemplateEngineImpl])
 trait TemplateEngine[Content, TransformedContent] {
   def transform(c: Content, template: Template): TransformedContent
+  def transformMeta(c: Content, template: Template): TransformedContent
 
   def getTemplateFromType(templateType: TemplateType, databaseScope: DatabaseScope): Template
 }
@@ -48,6 +49,42 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     }
     val j = Json.toJson(transformedContent)
     j
+  }
+
+  override def transformMeta(c: JsValue, template: Template): JsValue = {
+    val maybeContent = for {
+      fields    <- c.as[JsObject].value.get("fields")
+      fieldList <- fields.asOpt[List[JsObject]]
+    } yield
+      fieldList.foldLeft(Map[String, JsValue]()) {
+        case (acc, el) =>
+          val maybeName = for {
+            js  <- el.value.get("fieldname")
+            str <- js.asOpt[String]
+          } yield str
+          maybeName match {
+            case Some(name) => acc.updated(name, el)
+            case None       => acc
+          }
+      }
+    maybeContent match {
+      case Some(currentContent) =>
+        val transformedContent = template.template.foldLeft(Map[String, JsValue]()) {
+          case (acc, (k, v)) =>
+            v match {
+              case opt @ Optional(_) =>
+                opt.op(currentContent) match {
+                  case Some(content) => acc.updated(k, content.toJson)
+                  case None          => acc
+                }
+              case _ =>
+                acc.updated(k, v.op(currentContent).getOrElse(v.zero).toJson)
+            }
+        }
+        val j = Json.toJson(transformedContent)
+        j
+      case None => JsNull
+    }
   }
 
   override def getTemplateFromType(templateType: TemplateType, dbScope: DatabaseScope): Template = templateType match {

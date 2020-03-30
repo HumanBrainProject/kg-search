@@ -18,16 +18,14 @@ package utils
 import models.templates.entities.{
   CustomObject,
   EmptyEntity,
-  EntitySerialization,
   NestedObject,
   ObjectValueList,
   ObjectValueMap,
   ReferenceObject,
   TemplateEntity,
   UrlObject,
-  ValueObjectBoolean,
+  ValueObject,
   ValueObjectList,
-  ValueObjectString
 }
 import play.api.libs.json._
 
@@ -49,18 +47,18 @@ trait TemplateReader extends TemplateComponent {
 }
 trait IList extends TemplateWriter
 
-case class CustomField(fieldName: String, customField: String) extends TemplateWriter {
-  override type T = CustomObject
-  override def op(content: Map[String, JsValue]): Option[CustomObject] = {
+case class CustomField[ReturnType: Format](fieldName: String, customField: String) extends TemplateWriter {
+  override type T = CustomObject[ReturnType]
+  override def op(content: Map[String, JsValue]): Option[CustomObject[ReturnType]] = {
     if (content.contains(fieldName)) {
       for {
         v <- content.get(fieldName)
-      } yield CustomObject(customField, v.asOpt[String])
+      } yield CustomObject[ReturnType](customField, v.asOpt[ReturnType])
     } else {
       None
     }
   }
-  override def zero: CustomObject = CustomObject.zero
+  override def zero: CustomObject[ReturnType] = CustomObject.zero[ReturnType]
 
 }
 
@@ -73,38 +71,23 @@ case class Optional[A <: TemplateWriter](template: A) extends TemplateWriter {
   override def zero: template.T = template.zero
 }
 
-case class ValueBoolean(fieldName: String, transform: ValueObjectBoolean => ValueObjectBoolean = identity)
-    extends TemplateWriter {
-  override type T = ValueObjectBoolean
+case class Value[ReturnType: Format](
+  fieldName: String,
+  transform: ValueObject[ReturnType] => ValueObject[ReturnType]
+) extends TemplateWriter {
+  override type T = ValueObject[ReturnType]
 
-  override def op(content: Map[String, JsValue]): Option[ValueObjectBoolean] = {
+  override def op(content: Map[String, JsValue]): Option[ValueObject[ReturnType]] = {
     if (content.contains(fieldName)) {
       for {
         v <- content.get(fieldName)
-      } yield transform(ValueObjectBoolean(v.asOpt[Boolean]))
+      } yield transform(ValueObject[ReturnType](v.asOpt[ReturnType]))
     } else {
       None
     }
   }
 
-  override def zero: ValueObjectBoolean = ValueObjectBoolean.zero
-}
-
-case class ValueString(fieldName: String, transform: ValueObjectString => ValueObjectString = identity)
-    extends TemplateWriter {
-  override type T = ValueObjectString
-
-  override def op(content: Map[String, JsValue]): Option[ValueObjectString] = {
-    if (content.contains(fieldName)) {
-      for {
-        v <- content.get(fieldName)
-      } yield transform(ValueObjectString(v.asOpt[String]))
-    } else {
-      None
-    }
-  }
-
-  override def zero: ValueObjectString = ValueObjectString.zero
+  override def zero: ValueObject[ReturnType] = ValueObject.zero
 }
 
 case class Reference(
@@ -168,16 +151,19 @@ case class Merge[T <: TemplateComponent, T2 <: TemplateComponent](
   override def zero: TemplateEntity = templateLeft.zero
 }
 
-case class ValueList(fieldName: String, transform: ValueObjectString => ValueObjectString = identity) extends IList {
-  override type T = ValueObjectList
-  override def op(content: Map[String, JsValue]): Option[ValueObjectList] = {
+case class ValueList[ReturnType: Format](
+  fieldName: String,
+  transform: ValueObject[ReturnType] => ValueObject[ReturnType]
+) extends IList {
+  override type T = ValueObjectList[ReturnType]
+  override def op(content: Map[String, JsValue]): Option[ValueObjectList[ReturnType]] = {
     content
       .get(fieldName)
       .flatMap { fieldValue =>
         val l = fieldValue
           .as[List[JsValue]]
           .map { el =>
-            transform(ValueObjectString(el.asOpt[String]))
+            transform(ValueObject[ReturnType](el.asOpt[ReturnType]))
           }
         if (l.isEmpty) {
           None

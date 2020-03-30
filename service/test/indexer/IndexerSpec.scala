@@ -20,6 +20,7 @@ import java.io.FileInputStream
 import controllers.IndexerController
 import models.templates.Dataset
 import models.templates.instance.DatasetTemplate
+import models.templates.meta.DatasetMetaTemplate
 import models.{DatabaseScope, INFERRED}
 import org.scalatest.Assertion
 import org.scalatestplus.play.PlaySpec
@@ -64,6 +65,7 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("embargoForFilter", result, expected)
       assertIsSameJsObject("embargo", result, expected)
       assertIsSameJsObject("files", result, expected)
+      assertIsSameJsObject("dataDescriptor", result, expected)
       assertIsSameJsObject("external_datalink", result, expected)
       assertIsSameJsObject("publications", result, expected)
       assertIsSameJsObject("atlas", result, expected)
@@ -110,6 +112,37 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("first_release", result, expected)
       assertIsSameJsObject("last_release", result, expected)
 
+    }
+    "create an object for the meta information" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/datasetMeta.json")
+      val template = new DatasetMetaTemplate {}
+      val result = indexer.transformMeta(payload, template)
+      val expected = loadResource("/expectedDatasetMeta.json")
+      assertIsSameJsObject("identifier", result, expected)
+//      assertIsSameJsObject("contributors", result, expected)
+//      assertIsSameJsObject("title", result, expected)
+//      assertIsSameJsObject("citation", result, expected)
+//      assertIsSameJsObject("license_info", result, expected)
+//      assertIsSameJsObject("doi", result, expected)
+//      assertIsSameJsObject("component", result, expected)
+//      assertIsSameJsObject("owners", result, expected)
+//      assertIsSameJsObject("description", result, expected)
+//      assertIsSameJsObject("speciesFilter", result, expected)
+//      assertIsSameJsObject("embargoForFilter", result, expected)
+//      assertIsSameJsObject("embargo", result, expected)
+//      assertIsSameJsObject("files", result, expected)
+//      assertIsSameJsObject("external_datalink", result, expected)
+//      assertIsSameJsObject("publications", result, expected)
+//      assertIsSameJsObject("atlas", result, expected)
+//      assertIsSameJsObject("region", result, expected)
+//      assertIsSameJsObject("preparation", result, expected)
+//      assertIsSameJsObject("methods", result, expected)
+//      assertIsSameJsObject("protocols", result, expected)
+//      assertIsSameJsObject("viewer", result, expected)
+//      assertIsSameJsObject("subjects", result, expected)
+//      assertIsSameJsObject("first_release", result, expected)
+//      assertIsSameJsObject("last_release", result, expected)
     }
   }
 

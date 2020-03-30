@@ -15,7 +15,7 @@
  */
 package models.templates.entities
 
-import play.api.libs.json.{JsValue, Json, Writes}
+import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 
 case class NestedObject(fieldName: String, content: TemplateEntity) extends TemplateEntity {
   override type T = NestedObject
@@ -27,14 +27,14 @@ case class NestedObject(fieldName: String, content: TemplateEntity) extends Temp
 }
 
 object NestedObject {
-  implicit val implicitWrites = new Writes[NestedObject] {
+  implicit def implicitWrites: Writes[NestedObject] =
+    new Writes[NestedObject] {
 
-    def writes(u: NestedObject): JsValue = {
-      Json.obj(
-        u.fieldName -> Json.toJson(u.content)
-      )
+      def writes(u: NestedObject): JsValue = {
+        Json.obj(u.fieldName -> u.content.toJson)
+
+      }
     }
-  }
 
   def zero: NestedObject = NestedObject("", EmptyEntity())
 

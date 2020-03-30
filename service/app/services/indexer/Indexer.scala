@@ -32,6 +32,7 @@ import play.api.http.Status._
 trait Indexer[Content, TransformedContent, Effect[_], UploadResult, QueryResult] {
 
   def transform(jsonContent: Content, template: Template): TransformedContent
+  def transformMeta(jsonContent: Content, template: Template): TransformedContent
   def load(jsValue: TransformedContent): Effect[UploadResult]
 
   def queryByType(
@@ -59,9 +60,11 @@ class IndexerImpl @Inject()(
   val queryEndpoint = configuration.get[String]("kgquery.endpoint")
 
   override def load(jsValue: JsValue): Task[WSResponse] = ???
-
   override def transform(jsonContent: JsValue, template: Template): JsValue = {
     templateEngine.transform(jsonContent, template)
+  }
+  override def transformMeta(jsonContent: JsValue, template: Template): JsValue = {
+    templateEngine.transformMeta(jsonContent, template)
   }
 
   override def queryByType(

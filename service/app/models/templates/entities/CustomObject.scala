@@ -17,27 +17,29 @@ package models.templates.entities
 
 import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 
-case class CustomObject(fieldName: String, fieldValue: Option[String]) extends TemplateEntity {
+case class CustomObject[ReturnValue](fieldName: String, fieldValue: Option[ReturnValue])(
+  implicit writes: Writes[ReturnValue]
+) extends TemplateEntity {
   override def toJson: JsValue = Json.toJson(this)(CustomObject.implicitWrites)
 
-  override type T = CustomObject
+  override type T = CustomObject[ReturnValue]
 
-  override def zero: CustomObject = CustomObject.zero
+  override def zero: CustomObject[ReturnValue] = CustomObject.zero[ReturnValue]
 }
 
 object CustomObject {
-  implicit val implicitWrites = new Writes[CustomObject] {
+  implicit def implicitWrites[T: Writes](implicit returnTypeWrite: Writes[T]): Writes[CustomObject[T]] =
+    new Writes[CustomObject[T]] {
 
-    def writes(c: CustomObject): JsValue = {
-      c.fieldValue.fold[JsValue](JsNull)(
-        v =>
-          Json.obj(
-            c.fieldName -> Json.toJson(v)
+      def writes(c: CustomObject[T]): JsValue = {
+        c.fieldValue.fold[JsValue](JsNull)(
+          v =>
+            Json.obj(
+              c.fieldName -> Json.toJson(v)(returnTypeWrite)
+          )
         )
-      )
-
+      }
     }
-  }
 
-  def zero: CustomObject = CustomObject("", None)
+  def zero[T: Writes]: CustomObject[T] = CustomObject[T]("", None)
 }

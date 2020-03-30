@@ -29,10 +29,10 @@ case class ObjectValueList(list: List[TemplateEntity]) extends TemplateEntity {
 }
 
 object ObjectValueList {
-  implicit lazy val implicitWrites = new Writes[ObjectValueList] {
+  implicit def implicitWrites = new Writes[ObjectValueList] {
 
     def writes(c: ObjectValueList): JsValue = {
-      val js = c.list.map(el => Json.toJson(el))
+      val js = c.list.map(el => el.toJson)
       if (js.forall(jsEntity => jsEntity == JsNull)) {
         JsNull
       } else {
@@ -41,6 +41,6 @@ object ObjectValueList {
     }
   }
 
-  def zero = ObjectValueList(List())
+  def zero: ObjectValueList = ObjectValueList(List())
 
 }
