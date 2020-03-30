@@ -93,6 +93,12 @@ trait DatasetTemplate extends Template {
                   "This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review."
                 )
               )
+            case ValueObject(Some("Free")) =>
+              ValueObject[String](
+                Some(
+                  "Free"
+                )
+              )
           }
         )
       )
