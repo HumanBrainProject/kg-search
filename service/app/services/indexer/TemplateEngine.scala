@@ -44,7 +44,6 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
             }
           case _ =>
             acc.updated(k, v.op(currentContent).getOrElse(v.zero).toJson)
-
         }
     }
     val j = Json.toJson(transformedContent)

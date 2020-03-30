@@ -76,21 +76,19 @@ trait DatasetTemplate extends Template {
     "embargo" -> Optional(
       FirstElement(
         ValueList(
-          "embargo",
-          s =>
-            s match {
-              case ValueObjectString(Some("Embargoed")) =>
-                ValueObjectString(
-                  Some(
-                    "This dataset is temporarily under embargo. The data will become available for download after the embargo period."
-                  )
+          "embargo", {
+            case ValueObjectString(Some("Embargoed")) =>
+              ValueObjectString(
+                Some(
+                  "This dataset is temporarily under embargo. The data will become available for download after the embargo period."
                 )
-              case ValueObjectString(Some("Under review")) =>
-                ValueObjectString(
-                  Some(
-                    "This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review."
-                  )
+              )
+            case ValueObjectString(Some("Under review")) =>
+              ValueObjectString(
+                Some(
+                  "This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review."
                 )
+              )
           }
         )
       )

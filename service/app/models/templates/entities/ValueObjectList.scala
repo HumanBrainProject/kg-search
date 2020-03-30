@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 package models.templates.entities
-import play.api.libs.json.{JsValue, Json, Writes}
+import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 
 case class ValueObjectList(list: List[ValueObjectString]) extends TemplateEntity {
   override def toJson: JsValue = Json.toJson(this)(ValueObjectList.implicitWrites)
@@ -29,7 +29,11 @@ object ValueObjectList {
   implicit val implicitWrites = new Writes[ValueObjectList] {
 
     def writes(u: ValueObjectList): JsValue = {
-      Json.toJson(u.list)
+      if (u.list.isEmpty) {
+        JsNull
+      } else {
+        Json.toJson(u.list)
+      }
     }
   }
 }
