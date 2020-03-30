@@ -25,7 +25,7 @@ case class UrlObject(url: Option[String]) extends TemplateEntity {
 }
 
 object UrlObject {
-  implicit val implicitWrites = new Writes[UrlObject] {
+  implicit val implicitWrites: Writes[UrlObject] = new Writes[UrlObject] {
 
     def writes(u: UrlObject): JsValue = {
       u.url.fold[JsValue](JsNull)(v => Json.obj("url" -> Json.toJson(v)))

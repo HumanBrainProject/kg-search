@@ -11,7 +11,7 @@ object Common {
   val settings: Seq[Setting[_]] = Seq(
     organization := "eu.humanbrainproject",
     version := "1.0.0-SNAPSHOT",
-    scalaVersion := "2.13.1",
+    scalaVersion := "2.12.11",
     libraryDependencies ++= baseDependencies
   )
 
@@ -38,4 +38,5 @@ object Common {
     routesGenerator := InjectedRoutesGenerator,
     libraryDependencies ++= playDependencies
   )
+
 }

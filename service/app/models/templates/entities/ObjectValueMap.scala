@@ -34,7 +34,7 @@ case class ObjectValueMap(list: List[TemplateEntity]) extends TemplateEntity {
 }
 
 object ObjectValueMap {
-  implicit lazy val implicitWrites = new Writes[ObjectValueMap] {
+  implicit lazy val implicitWrites: Writes[ObjectValueMap] = new Writes[ObjectValueMap] {
 
     def writes(c: ObjectValueMap): JsValue = {
       val resultObj = c.list.foldLeft(JsObject.empty) {

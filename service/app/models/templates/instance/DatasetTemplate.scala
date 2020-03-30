@@ -7,11 +7,13 @@ import models.templates.Template
 import models.templates.entities.{ValueObject, _}
 import utils._
 
+import scala.collection.immutable.HashMap
+
 trait DatasetTemplate extends Template {
   def fileProxy: String
   def dataBaseScope: DatabaseScope
 
-  val template = Map(
+  val template: Map[String, TemplateComponent] = HashMap(
     "identifier" -> Value[String]("identifier", identity),
     "title"      -> Value[String]("title", identity),
     "contributors" -> ObjectListReader(
@@ -252,10 +254,8 @@ trait DatasetTemplate extends Template {
               )
             )
           )
-        ),
-        objectValue =>
-          objectValue match {
-            case a: ObjectValueMap => ObjectValueMap(List(NestedObject("children", a)))
+        ), { a =>
+          ObjectValueMap(List(NestedObject("children", a)))
         }
       )
     ),

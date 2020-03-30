@@ -15,7 +15,7 @@ case class ReferenceObject(reference: Option[String]) extends TemplateEntity {
 }
 
 object ReferenceObject {
-  implicit val implicitWrites = new Writes[ReferenceObject] {
+  implicit val implicitWrites: Writes[ReferenceObject] = new Writes[ReferenceObject] {
 
     def writes(u: ReferenceObject): JsValue = {
       u.reference.fold[JsValue](JsNull)(v => Json.obj("reference" -> Json.toJson(v)))

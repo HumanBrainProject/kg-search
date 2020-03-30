@@ -23,6 +23,7 @@ import models.templates.{Dataset, Template, TemplateType}
 import play.api.Configuration
 import play.api.libs.json._
 import utils._
+import scala.collection.immutable.HashMap
 
 @ImplementedBy(classOf[TemplateEngineImpl])
 trait TemplateEngine[Content, TransformedContent] {
@@ -35,7 +36,7 @@ trait TemplateEngine[Content, TransformedContent] {
 class TemplateEngineImpl @Inject()(configuration: Configuration) extends TemplateEngine[JsValue, JsValue] {
   override def transform(c: JsValue, template: Template): JsValue = {
     val currentContent = c.as[JsObject].value
-    val transformedContent = template.template.foldLeft(Map[String, JsValue]()) {
+    val transformedContent = template.template.foldLeft(HashMap[String, JsValue]()) {
       case (acc, (k, v)) =>
         v match {
           case opt @ Optional(_) =>
@@ -56,7 +57,7 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
       fields    <- c.as[JsObject].value.get("fields")
       fieldList <- fields.asOpt[List[JsObject]]
     } yield
-      fieldList.foldLeft(Map[String, JsValue]()) {
+      fieldList.foldLeft(HashMap[String, JsValue]()) {
         case (acc, el) =>
           val maybeName = for {
             js  <- el.value.get("fieldname")
@@ -69,7 +70,7 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
       }
     maybeContent match {
       case Some(currentContent) =>
-        val transformedContent = template.template.foldLeft(Map[String, JsValue]()) {
+        val transformedContent = template.template.foldLeft(HashMap[String, JsValue]()) {
           case (acc, (k, v)) =>
             v match {
               case opt @ Optional(_) =>

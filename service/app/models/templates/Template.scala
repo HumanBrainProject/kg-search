@@ -15,10 +15,10 @@
  */
 package models.templates
 
-import models.DatabaseScope
+import models.{DatabaseScope, INFERRED}
 import utils.TemplateComponent
 
 trait Template {
-  def dataBaseScope: DatabaseScope = dataBaseScope
+  def dataBaseScope: DatabaseScope = INFERRED
   def template: Map[String, TemplateComponent]
 }

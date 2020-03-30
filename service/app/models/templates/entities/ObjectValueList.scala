@@ -29,7 +29,7 @@ case class ObjectValueList(list: List[TemplateEntity]) extends TemplateEntity {
 }
 
 object ObjectValueList {
-  implicit def implicitWrites = new Writes[ObjectValueList] {
+  implicit def implicitWrites: Writes[ObjectValueList] = new Writes[ObjectValueList] {
 
     def writes(c: ObjectValueList): JsValue = {
       val js = c.list.map(el => el.toJson)
