@@ -57,7 +57,7 @@ class IndexerImpl @Inject()(
   configuration: Configuration
 ) extends Indexer[JsValue, JsValue, Task, WSResponse, Either[ApiError, JsValue]] {
 
-  val queryEndpoint = configuration.get[String]("kgquery.endpoint")
+  val queryEndpoint: String = configuration.get[String]("kgquery.endpoint")
 
   override def load(jsValue: JsValue): Task[WSResponse] = ???
   override def transform(jsonContent: JsValue, template: Template): JsValue = {

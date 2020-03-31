@@ -21,24 +21,25 @@ sealed trait TemplateType
 
 object TemplateType {
 
-  def apply(s: String) = s.toUpperCase match {
+  def apply(s: String): TemplateType = s.toUpperCase match {
     case "DATASET" => Dataset
-    case "PERSON"  => Person
+    case "PERSON" => Person
     case "PROJECT" => Project
   }
 
   def toSchema(templateType: TemplateType): String = templateType match {
     case Dataset => "minds/core/dataset/v1.0.0"
-    case Person  => "minds/core/person/v1.0.0"
+    case Person => "minds/core/person/v1.0.0"
     case Project => "minds/core/placomponent/v1.0.0"
   }
 
-  implicit def pathBinder(implicit stringBinder: PathBindable[String]) = new PathBindable[TemplateType] {
+  implicit def pathBinder(implicit stringBinder: PathBindable[String]): PathBindable[TemplateType] = new PathBindable[TemplateType] {
     override def bind(key: String, value: String): Either[String, TemplateType] = {
       for {
         str <- stringBinder.bind(key, value).right
       } yield TemplateType(str)
     }
+
     override def unbind(key: String, templateType: TemplateType): String = {
       templateType.toString
     }
@@ -46,5 +47,7 @@ object TemplateType {
 }
 
 case object Dataset extends TemplateType
+
 case object Person extends TemplateType
+
 case object Project extends TemplateType

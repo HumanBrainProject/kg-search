@@ -18,11 +18,12 @@ package services.indexer
 import com.google.inject.ImplementedBy
 import javax.inject.Inject
 import models.DatabaseScope
-import models.templates.instance.DatasetTemplate
-import models.templates.{Dataset, Template, TemplateType}
+import models.templates.instance.{DatasetTemplate, PersonTemplate}
+import models.templates.{Dataset, Person, Template, TemplateType}
 import play.api.Configuration
 import play.api.libs.json._
 import utils._
+
 import scala.collection.immutable.HashMap
 
 @ImplementedBy(classOf[TemplateEngineImpl])
@@ -91,6 +92,11 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
   override def getTemplateFromType(templateType: TemplateType, dbScope: DatabaseScope): Template = templateType match {
     case Dataset =>
       new DatasetTemplate {
+        override def dataBaseScope: DatabaseScope = dbScope
+        override def fileProxy: String = configuration.get[String]("file.proxy")
+      }
+    case Person =>
+      new PersonTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
         override def fileProxy: String = configuration.get[String]("file.proxy")
       }

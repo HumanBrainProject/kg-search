@@ -25,12 +25,14 @@ object DatabaseScope {
     case "INFERRED" => INFERRED
     case "RELEASED" => RELEASED
   }
-  implicit def pathBinder(implicit stringBinder: PathBindable[String]) = new PathBindable[DatabaseScope] {
+
+  implicit def pathBinder(implicit stringBinder: PathBindable[String]): PathBindable[DatabaseScope] = new PathBindable[DatabaseScope] {
     override def bind(key: String, value: String): Either[String, DatabaseScope] = {
       for {
         str <- stringBinder.bind(key, value).right
       } yield DatabaseScope(str)
     }
+
     override def unbind(key: String, databaseScope: DatabaseScope): String = {
       databaseScope.toString
     }
@@ -38,4 +40,5 @@ object DatabaseScope {
 }
 
 case object INFERRED extends DatabaseScope
+
 case object RELEASED extends DatabaseScope
