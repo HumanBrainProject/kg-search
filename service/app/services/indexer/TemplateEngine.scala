@@ -19,6 +19,7 @@ import com.google.inject.ImplementedBy
 import javax.inject.Inject
 import models.DatabaseScope
 import models.templates.instance.{DatasetTemplate, PersonTemplate, ProjectTemplate}
+import models.templates.meta.DatasetMetaTemplate
 import models.templates.{Dataset, Person, Project, Template, TemplateType}
 import play.api.Configuration
 import play.api.libs.json._
@@ -32,6 +33,7 @@ trait TemplateEngine[Content, TransformedContent] {
   def transformMeta(c: Content, template: Template): TransformedContent
 
   def getTemplateFromType(templateType: TemplateType, databaseScope: DatabaseScope): Template
+  def getMetaTemplateFromType(templateType: TemplateType): Template
 }
 
 class TemplateEngineImpl @Inject()(configuration: Configuration) extends TemplateEngine[JsValue, JsValue] {
@@ -111,5 +113,10 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
         override def dataBaseScope: DatabaseScope = dbScope
         override def fileProxy: String = configuration.get[String]("file.proxy")
       }
+  }
+
+  override def getMetaTemplateFromType(templateType: TemplateType): Template = templateType match {
+    case Dataset => new DatasetMetaTemplate {}
+    case _       => ???
   }
 }
