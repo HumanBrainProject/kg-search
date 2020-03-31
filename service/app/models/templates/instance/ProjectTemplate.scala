@@ -24,7 +24,7 @@ import utils.{Merge, ObjectListReader, ObjectValue, Reference, TemplateComponent
 
 import scala.collection.immutable.HashMap
 
-trait PersonTemplate extends Template {
+trait ProjectTemplate extends Template {
   def fileProxy: String
 
   def dataBaseScope: DatabaseScope
@@ -33,28 +33,8 @@ trait PersonTemplate extends Template {
     "identifier" -> Value[String]("identifier", identity),
     "title" -> Value[String]("title", identity),
     "description" -> Value[String]("description", identity),
-    "phone" -> Value[String]("phone", identity),
-    "custodianOf" -> ObjectListReader(
-      "custodianOf",
-      ObjectValue(
-        List(
-          Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Dataset"))),
-          Value[String]("name", identity)
-        )
-      )
-    ),
-    "custodianOfModel" -> ObjectListReader(
-      "custodianOfModel",
-      ObjectValue(
-        List(
-          Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Model"))),
-          Value[String]("name", identity)
-        )
-      )
-    ),
-    "address" -> Value[String]("address", identity),
-    "contributions" -> ObjectListReader(
-      "contributions",
+    "dataset" -> ObjectListReader(
+      "datasets",
       ObjectValue(
         List(
           Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Dataset"))),
@@ -87,16 +67,6 @@ trait PersonTemplate extends Template {
           }
       )
     ),
-    "modelContributions" -> ObjectListReader(
-      "modelContributions",
-      ObjectValue(
-        List(
-          Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Model"))),
-          Value[String]("name", identity)
-        )
-      )
-    ),
-    "email" -> Value[String]("email", identity),
     "first_release" -> Value[String]("first_release", identity),
     "last_release" -> Value[String]("last_release", identity)
   )

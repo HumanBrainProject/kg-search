@@ -19,7 +19,7 @@ import java.io.FileInputStream
 
 import controllers.IndexerController
 import models.templates.Dataset
-import models.templates.instance.DatasetTemplate
+import models.templates.instance.{DatasetTemplate, PersonTemplate}
 import models.templates.meta.DatasetMetaTemplate
 import models.{DatabaseScope, INFERRED}
 import org.scalatest.Assertion
@@ -43,7 +43,7 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     )
   }
   "The indexed trait" must {
-    "transform the payload accordingly" in {
+    "transform the dataset payload accordingly" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/dataset.json")
       val template = new DatasetTemplate {
@@ -78,7 +78,31 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("first_release", result, expected)
       assertIsSameJsObject("last_release", result, expected)
     }
-    "properly handle empty values" in {
+    "transform the person payload accordingly" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/person.json")
+      val template = new PersonTemplate {
+        override def fileProxy: String = ""
+        override def dataBaseScope: DatabaseScope = INFERRED
+      }
+      val result = indexer.transform(payload, template)
+      val expected = loadResource("/expectedPerson.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("address", result, expected)
+      assertIsSameJsObject("custodianOfModel", result, expected)
+      assertIsSameJsObject("lastReleaseAt", result, expected)
+      assertIsSameJsObject("description", result, expected)
+      assertIsSameJsObject("modelContributions", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("firstReleaseAt", result, expected)
+      assertIsSameJsObject("custodianOf", result, expected)
+      assertIsSameJsObject("contributions", result, expected)
+      assertIsSameJsObject("phone", result, expected)
+      assertIsSameJsObject("organizations", result, expected)
+      assertIsSameJsObject("email", result, expected)
+      assertIsSameJsObject("publications", result, expected)
+    }
+    "properly handle empty values in dataset" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/emptyDataset.json")
       val template = new DatasetTemplate {
@@ -111,7 +135,29 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("subjects", result, expected)
       assertIsSameJsObject("first_release", result, expected)
       assertIsSameJsObject("last_release", result, expected)
-
+    }
+    "properly handle empty values in person" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/emptyPerson.json")
+      val template = new PersonTemplate {
+        override def fileProxy: String = ""
+        override def dataBaseScope: DatabaseScope = INFERRED
+      }
+      val result = indexer.transform(payload, template)
+      val expected = loadResource("/expectedEmptyPerson.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("address", result, expected)
+      assertIsSameJsObject("custodianOfModel", result, expected)
+      assertIsSameJsObject("lastReleaseAt", result, expected)
+      assertIsSameJsObject("description", result, expected)
+      assertIsSameJsObject("modelContributions", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("firstReleaseAt", result, expected)
+      assertIsSameJsObject("custodianOf", result, expected)
+      assertIsSameJsObject("contributions", result, expected)
+      assertIsSameJsObject("phone", result, expected)
+      assertIsSameJsObject("email", result, expected)
+      assertIsSameJsObject("publications", result, expected)
     }
     "create an object for the meta information" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
