@@ -19,7 +19,7 @@ import java.io.FileInputStream
 
 import controllers.IndexerController
 import models.templates.Dataset
-import models.templates.instance.{DatasetTemplate, PersonTemplate}
+import models.templates.instance.{DatasetTemplate, PersonTemplate, ProjectTemplate}
 import models.templates.meta.DatasetMetaTemplate
 import models.{DatabaseScope, INFERRED}
 import org.scalatest.Assertion
@@ -102,6 +102,24 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("email", result, expected)
       assertIsSameJsObject("publications", result, expected)
     }
+    "transform the project payload accordingly" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/project.json")
+      val template = new ProjectTemplate {
+        override def fileProxy: String = ""
+        override def dataBaseScope: DatabaseScope = INFERRED
+      }
+      val result = indexer.transform(payload, template)
+      val expected = loadResource("/expectedProject.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("description", result, expected)
+      assertIsSameJsObject("publications", result, expected)
+      assertIsSameJsObject("dataset", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("first_release", result, expected)
+      assertIsSameJsObject("editorId", result, expected)
+      assertIsSameJsObject("last_release", result, expected)
+    }
     "properly handle empty values in dataset" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/emptyDataset.json")
@@ -158,6 +176,24 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("phone", result, expected)
       assertIsSameJsObject("email", result, expected)
       assertIsSameJsObject("publications", result, expected)
+    }
+    "properly handle empty values in project" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/emptyProject.json")
+      val template = new ProjectTemplate {
+        override def fileProxy: String = ""
+        override def dataBaseScope: DatabaseScope = INFERRED
+      }
+      val result = indexer.transform(payload, template)
+      val expected = loadResource("/expectedEmptyProject.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("description", result, expected)
+      assertIsSameJsObject("publications", result, expected)
+      assertIsSameJsObject("dataset", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("first_release", result, expected)
+      assertIsSameJsObject("editorId", result, expected)
+      assertIsSameJsObject("last_release", result, expected)
     }
     "create an object for the meta information" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
