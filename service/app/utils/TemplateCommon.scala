@@ -126,7 +126,7 @@ case class Url(
 
 }
 
-case class OrElse[Template <: TemplateWriter](left: Template, right: Template) extends TemplateWriter {
+case class OrElse[Template <: TemplateComponent](left: Template, right: Template) extends TemplateWriter {
   override type T = TemplateEntity
   override def op(content: Map[String, JsValue]): Option[TemplateEntity] = {
     left.op(content) match {
@@ -200,7 +200,7 @@ case class ObjectValue[Template <: TemplateComponent](
   override def zero: ObjectValueMap = ObjectValueMap.zero
 }
 
-case class Nested[T <: TemplateWriter](fieldName: String, template: T) extends TemplateWriter {
+case class Nested[T <: TemplateComponent](fieldName: String, template: T) extends TemplateWriter {
   override type T = NestedObject
   override def op(content: Map[String, JsValue]): Option[NestedObject] = {
     template match {
@@ -224,6 +224,24 @@ case class FirstElement(list: IList) extends TemplateWriter {
   }
 
   override def zero: list.T = list.zero
+}
+
+case class ObjectReader[A <: TemplateComponent](fieldName: String, el: A) extends TemplateReader {
+  override type T = ObjectValueMap
+  override def zero: ObjectValueMap = ObjectValueMap.zero
+
+  override def op(content: Map[String, JsValue]): Option[ObjectValueMap] = {
+    val c = content
+      .get(fieldName)
+      .flatMap { l =>
+        l.asOpt[JsObject]
+      }
+
+    c match {
+      case Some(v) => el.op(v.value).map(l => ObjectValueMap.zero :+ l)
+      case None    => None
+    }
+  }
 }
 
 case class ObjectListReader[A <: TemplateComponent](fieldName: String, el: A) extends TemplateReader with IList {

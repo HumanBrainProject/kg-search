@@ -53,22 +53,28 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     j
   }
 
+  private def fieldsListToMap(fieldList: List[JsObject]): Map[String, JsValue] = {
+    fieldList.foldLeft(HashMap[String, JsValue]()) {
+      case (acc, el) =>
+        val maybeName = for {
+          js  <- el.value.get("fieldname")
+          str <- js.asOpt[String]
+        } yield str
+        maybeName match {
+          case Some(name) =>
+            val fieldsMap = el.value.get("fields").map(fields => fieldsListToMap(fields.as[List[JsObject]]))
+            val updatedFields = el.value.updated("fields", Json.toJson(fieldsMap))
+            acc.updated(name, Json.toJson(updatedFields))
+          case None => acc
+        }
+    }
+  }
   override def transformMeta(c: JsValue, template: Template): JsValue = {
     val maybeContent = for {
       fields    <- c.as[JsObject].value.get("fields")
       fieldList <- fields.asOpt[List[JsObject]]
-    } yield
-      fieldList.foldLeft(HashMap[String, JsValue]()) {
-        case (acc, el) =>
-          val maybeName = for {
-            js  <- el.value.get("fieldname")
-            str <- js.asOpt[String]
-          } yield str
-          maybeName match {
-            case Some(name) => acc.updated(name, el)
-            case None       => acc
-          }
-      }
+    } yield fieldsListToMap(fieldList)
+
     maybeContent match {
       case Some(currentContent) =>
         val transformedContent = template.template.foldLeft(HashMap[String, JsValue]()) {
