@@ -19,7 +19,7 @@ import java.io.FileInputStream
 
 import controllers.IndexerController
 import models.templates.Dataset
-import models.templates.instance.{DatasetTemplate, PersonTemplate, ProjectTemplate}
+import models.templates.instance.{DatasetTemplate, PersonTemplate, ProjectTemplate, UnimindsPersonTemplate}
 import models.templates.meta.DatasetMetaTemplate
 import models.{DatabaseScope, INFERRED}
 import org.scalatest.Assertion
@@ -102,6 +102,30 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("email", result, expected)
       assertIsSameJsObject("publications", result, expected)
     }
+    "transform the uniminds person payload accordingly" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/unimindsPerson.json")
+      val template = new UnimindsPersonTemplate {
+        override def fileProxy: String = ""
+        override def dataBaseScope: DatabaseScope = INFERRED
+      }
+      val result = indexer.transform(payload, template)
+      val expected = loadResource("/expectedUnimindsPerson.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("address", result, expected)
+      assertIsSameJsObject("custodianOfModel", result, expected)
+      assertIsSameJsObject("lastReleaseAt", result, expected)
+      assertIsSameJsObject("description", result, expected)
+      assertIsSameJsObject("modelContributions", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("firstReleaseAt", result, expected)
+      assertIsSameJsObject("custodianOf", result, expected)
+      assertIsSameJsObject("contributions", result, expected)
+      assertIsSameJsObject("phone", result, expected)
+      assertIsSameJsObject("organizations", result, expected)
+      assertIsSameJsObject("email", result, expected)
+      assertIsSameJsObject("publications", result, expected)
+    }
     "transform the project payload accordingly" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/project.json")
@@ -163,6 +187,29 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       }
       val result = indexer.transform(payload, template)
       val expected = loadResource("/expectedEmptyPerson.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("address", result, expected)
+      assertIsSameJsObject("custodianOfModel", result, expected)
+      assertIsSameJsObject("lastReleaseAt", result, expected)
+      assertIsSameJsObject("description", result, expected)
+      assertIsSameJsObject("modelContributions", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("firstReleaseAt", result, expected)
+      assertIsSameJsObject("custodianOf", result, expected)
+      assertIsSameJsObject("contributions", result, expected)
+      assertIsSameJsObject("phone", result, expected)
+      assertIsSameJsObject("email", result, expected)
+      assertIsSameJsObject("publications", result, expected)
+    }
+    "properly handle empty values in uniminds person" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/emptyUnimindsPerson.json")
+      val template = new UnimindsPersonTemplate {
+        override def fileProxy: String = ""
+        override def dataBaseScope: DatabaseScope = INFERRED
+      }
+      val result = indexer.transform(payload, template)
+      val expected = loadResource("/expectedEmptyUnimindsPerson.json")
       assertIsSameJsObject("identifier", result, expected)
       assertIsSameJsObject("address", result, expected)
       assertIsSameJsObject("custodianOfModel", result, expected)

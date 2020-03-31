@@ -1,0 +1,18 @@
+{
+  "custodianOf": [],
+  "identifier": "93c031f3-40aa-4d51-b095-73dfa72df389",
+  "editorId": "uniminds/core/person/v1.0.0/93c031f3-40aa-4d51-b095-73dfa72df389",
+  "contributions": [],
+  "custodianOfModel": [],
+  "lastReleaseAt": null,
+  "modelContributions": [
+    {
+      "identifier": "7072cb28-02aa-4500-a7f8-153ae47b4fe8",
+      "name": "Connectivity of the perirhinal cortex to cortical areas within the ventral visual stream",
+      "relativeUrl": "uniminds/core/dataset/v1.0.0/7072cb28-02aa-4500-a7f8-153ae47b4fe8"
+    }
+  ],
+  "title": "Hvoslef-Eide, Martha",
+  "firstReleaseAt": null,
+  "publications": []
+}

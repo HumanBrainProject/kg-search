@@ -18,9 +18,9 @@ package services.indexer
 import com.google.inject.ImplementedBy
 import javax.inject.Inject
 import models.DatabaseScope
-import models.templates.instance.{DatasetTemplate, PersonTemplate, ProjectTemplate}
 import models.templates.meta.DatasetMetaTemplate
-import models.templates.{Dataset, Person, Project, Template, TemplateType}
+import models.templates.instance.{DatasetTemplate, PersonTemplate, ProjectTemplate, UnimindsPersonTemplate}
+import models.templates.{Dataset, Person, Project, Template, TemplateType, UnimindsPerson}
 import play.api.Configuration
 import play.api.libs.json._
 import utils._
@@ -30,6 +30,7 @@ import scala.collection.immutable.HashMap
 @ImplementedBy(classOf[TemplateEngineImpl])
 trait TemplateEngine[Content, TransformedContent] {
   def transform(c: Content, template: Template): TransformedContent
+
   def transformMeta(c: Content, template: Template): TransformedContent
 
   def getTemplateFromType(templateType: TemplateType, databaseScope: DatabaseScope): Template
@@ -42,10 +43,10 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     val transformedContent = template.template.foldLeft(HashMap[String, JsValue]()) {
       case (acc, (k, v)) =>
         v match {
-          case opt @ Optional(_) =>
+          case opt@Optional(_) =>
             opt.op(currentContent) match {
               case Some(content) => acc.updated(k, content.toJson)
-              case None          => acc
+              case None => acc
             }
           case _ =>
             acc.updated(k, v.op(currentContent).getOrElse(v.zero).toJson)
@@ -59,7 +60,7 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     fieldList.foldLeft(HashMap[String, JsValue]()) {
       case (acc, el) =>
         val maybeName = for {
-          js  <- el.value.get("fieldname")
+          js <- el.value.get("fieldname")
           str <- js.asOpt[String]
         } yield str
         maybeName match {
@@ -71,9 +72,10 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
         }
     }
   }
+
   override def transformMeta(c: JsValue, template: Template): JsValue = {
     val maybeContent = for {
-      fields    <- c.as[JsObject].value.get("fields")
+      fields <- c.as[JsObject].value.get("fields")
       fieldList <- fields.asOpt[List[JsObject]]
     } yield fieldsListToMap(fieldList)
 
@@ -82,10 +84,10 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
         val transformedContent = template.template.foldLeft(HashMap[String, JsValue]()) {
           case (acc, (k, v)) =>
             v match {
-              case opt @ Optional(_) =>
+              case opt@Optional(_) =>
                 opt.op(currentContent) match {
                   case Some(content) => acc.updated(k, content.toJson)
-                  case None          => acc
+                  case None => acc
                 }
               case _ =>
                 acc.updated(k, v.op(currentContent).getOrElse(v.zero).toJson)
@@ -101,16 +103,25 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     case Dataset =>
       new DatasetTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
+
         override def fileProxy: String = configuration.get[String]("file.proxy")
       }
     case Person =>
       new PersonTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
+
         override def fileProxy: String = configuration.get[String]("file.proxy")
       }
     case Project =>
       new ProjectTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
+
+        override def fileProxy: String = configuration.get[String]("file.proxy")
+      }
+    case UnimindsPerson =>
+      new UnimindsPersonTemplate {
+        override def dataBaseScope: DatabaseScope = dbScope
+
         override def fileProxy: String = configuration.get[String]("file.proxy")
       }
   }

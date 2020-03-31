@@ -25,12 +25,14 @@ object TemplateType {
     case "DATASET" => Dataset
     case "PERSON" => Person
     case "PROJECT" => Project
+    case "UNIMINDSPERSON" => UnimindsPerson
   }
 
   def toSchema(templateType: TemplateType): String = templateType match {
     case Dataset => "minds/core/dataset/v1.0.0"
     case Person => "minds/core/person/v1.0.0"
     case Project => "minds/core/placomponent/v1.0.0"
+    case UnimindsPerson => "uniminds/core/person/v1.0.0"
   }
 
   implicit def pathBinder(implicit stringBinder: PathBindable[String]): PathBindable[TemplateType] = new PathBindable[TemplateType] {
@@ -51,3 +53,5 @@ case object Dataset extends TemplateType
 case object Person extends TemplateType
 
 case object Project extends TemplateType
+
+case object UnimindsPerson extends TemplateType
