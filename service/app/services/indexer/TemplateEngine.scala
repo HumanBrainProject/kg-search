@@ -18,8 +18,8 @@ package services.indexer
 import com.google.inject.ImplementedBy
 import javax.inject.Inject
 import models.DatabaseScope
-import models.templates.instance.{DatasetTemplate, PersonTemplate}
-import models.templates.{Dataset, Person, Template, TemplateType}
+import models.templates.instance.{DatasetTemplate, PersonTemplate, ProjectTemplate}
+import models.templates.{Dataset, Person, Project, Template, TemplateType}
 import play.api.Configuration
 import play.api.libs.json._
 import utils._
@@ -97,6 +97,11 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
       }
     case Person =>
       new PersonTemplate {
+        override def dataBaseScope: DatabaseScope = dbScope
+        override def fileProxy: String = configuration.get[String]("file.proxy")
+      }
+    case Project =>
+      new ProjectTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
         override def fileProxy: String = configuration.get[String]("file.proxy")
       }

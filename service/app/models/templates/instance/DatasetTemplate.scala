@@ -2,7 +2,7 @@ package models.templates.instance
 
 import java.net.URLEncoder
 
-import models.DatabaseScope
+import models.{DatabaseScope, INFERRED}
 import models.templates.Template
 import models.templates.entities.{ValueObject, _}
 import utils._
@@ -13,7 +13,7 @@ trait DatasetTemplate extends Template {
   def fileProxy: String
   def dataBaseScope: DatabaseScope
 
-  val template: Map[String, TemplateComponent] = HashMap(
+  val result: Map[String, TemplateComponent] = HashMap(
     "identifier" -> Value[String]("identifier", identity),
     "title"      -> Value[String]("title", identity),
     "contributors" -> ObjectListReader(
@@ -44,7 +44,7 @@ trait DatasetTemplate extends Template {
               strOpt.map(s => ValueObject[String](Some(s)))
             case _ => None
           }
-      }
+        }
     ),
     "zip"            -> Value[String]("zip", identity),
     "dataDescriptor" -> Optional(Value[String]("dataDescriptor", identity)),
@@ -117,9 +117,9 @@ trait DatasetTemplate extends Template {
                   privateAccesOpt => {
                     (urlOpt, privateAccesOpt) match {
                       case (
-                          Some(ObjectValueMap(List(UrlObject(url), ValueObject(name: Option[String])))),
-                          Some(ValueObject(privateAccess: Option[Boolean]))
-                          ) =>
+                        Some(ObjectValueMap(List(UrlObject(url), ValueObject(name: Option[String])))),
+                        Some(ValueObject(privateAccess: Option[Boolean]))
+                        ) =>
                         val opt = for {
                           privateAccessVal <- privateAccess
                           if privateAccessVal
@@ -136,7 +136,7 @@ trait DatasetTemplate extends Template {
                       case _ => urlOpt
                     }
 
-                }
+                  }
               ),
               CustomField[String]("human_readable_size", "fileSize"),
               Optional(
@@ -147,9 +147,9 @@ trait DatasetTemplate extends Template {
                     isAnimatedOpt => {
                       (previewOpt, isAnimatedOpt) match {
                         case (
-                            Some(ValueObject(preview: Option[String])),
-                            Some(ValueObject(isAnimated: Option[String]))
-                            ) =>
+                          Some(ValueObject(preview: Option[String])),
+                          Some(ValueObject(isAnimated: Option[String]))
+                          ) =>
                           for {
                             previewVal    <- preview
                             isAnimatedStr <- isAnimated
@@ -167,7 +167,7 @@ trait DatasetTemplate extends Template {
                         case _ => None
                       }
 
-                  }
+                    }
                 )
               )
             )
@@ -176,7 +176,7 @@ trait DatasetTemplate extends Template {
         embargoOpt =>
           filesOpt => {
             embargoOpt.fold(filesOpt)(_ => None)
-        }
+          }
       )
     ),
     "external_datalink" -> ObjectValue(List(Url("external_datalink"), Value[String]("external_datalink", identity))),
@@ -202,7 +202,7 @@ trait DatasetTemplate extends Template {
               case _ => doi
             }
 
-        }
+          }
       )
     ),
     "atlas" -> FirstElement(ValueList[String]("parcellationAtlas", identity)),
@@ -214,20 +214,20 @@ trait DatasetTemplate extends Template {
     "methods"     -> ValueList[String]("methods", identity),
     "protocol"    -> ValueList[String]("protocol", identity),
     "viewer" ->
-    OrElse(
-      ObjectListReader(
-        "brainviewer",
-        ObjectValue(
-          List(Url("url"), Value[String]("name", js => js.map(str => "Show " + str + " in brain atlas viewer")))
+      OrElse(
+        ObjectListReader(
+          "brainviewer",
+          ObjectValue(
+            List(Url("url"), Value[String]("name", js => js.map(str => "Show " + str + " in brain atlas viewer")))
+          )
+        ),
+        ObjectListReader(
+          "neuroglancer",
+          ObjectValue(
+            List(Url("url"), Value[String]("title", js => js.map(str => "Show " + str + " in brain atlas viewer")))
+          )
         )
       ),
-      ObjectListReader(
-        "neuroglancer",
-        ObjectValue(
-          List(Url("url"), Value[String]("title", js => js.map(str => "Show " + str + " in brain atlas viewer")))
-        )
-      )
-    ),
     "subjects" -> ObjectListReader(
       "subjects",
       ObjectValue(
@@ -269,4 +269,8 @@ trait DatasetTemplate extends Template {
     "last_release"  -> Value[String]("last_release", identity),
   )
 
+  val template: Map[String, TemplateComponent] = dataBaseScope match {
+    case INFERRED => HashMap("editorId" -> Value[String]("editorId", identity)) ++ result
+    case _ => result
+  }
 }
