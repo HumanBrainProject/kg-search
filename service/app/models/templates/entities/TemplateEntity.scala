@@ -39,3 +39,25 @@ object EmptyEntity {
     def writes(u: EmptyEntity): JsValue = JsNull
   }
 }
+
+case class DirectValue(fieldName: String, fieldValue: JsValue) extends TemplateEntity {
+  override type T = DirectValue
+
+  override def zero: T = DirectValue.zero
+
+  override def toJson: JsValue = Json.toJson(this)(DirectValue.implicitWrites)
+}
+
+object DirectValue {
+  implicit def implicitWrites: Writes[DirectValue] =
+    new Writes[DirectValue] {
+
+      def writes(c: DirectValue): JsValue = {
+        Json.obj(
+          c.fieldName -> c.fieldValue
+        )
+      }
+    }
+
+  def zero: DirectValue = DirectValue("", JsNull)
+}

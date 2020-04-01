@@ -17,6 +17,12 @@ package utils
 
 import models.templates.entities.{
   CustomObject,
+  DirectValue,
+  ESFields,
+  ESKeyword,
+  ESPropertiesObject,
+  ESPropertyObject,
+  ESValue,
   EmptyEntity,
   NestedObject,
   ObjectValueList,
@@ -25,11 +31,12 @@ import models.templates.entities.{
   TemplateEntity,
   UrlObject,
   ValueObject,
-  ValueObjectList,
+  ValueObjectList
 }
 import play.api.libs.json._
 
 import scala.collection.Map
+import scala.reflect.ClassTag
 
 trait TemplateComponent {
   type T <: TemplateEntity
@@ -47,13 +54,17 @@ trait TemplateReader extends TemplateComponent {
 }
 trait IList extends TemplateWriter
 
-case class CustomField[ReturnType: Format](fieldName: String, customField: String) extends TemplateWriter {
+case class CustomField[ReturnType: Format](
+  fieldName: String,
+  customField: String,
+  transform: Option[ReturnType] => Option[ReturnType]
+) extends TemplateWriter {
   override type T = CustomObject[ReturnType]
   override def op(content: Map[String, JsValue]): Option[CustomObject[ReturnType]] = {
     if (content.contains(fieldName)) {
       for {
         v <- content.get(fieldName)
-      } yield CustomObject[ReturnType](customField, v.asOpt[ReturnType])
+      } yield CustomObject[ReturnType](customField, transform(v.asOpt[ReturnType]))
     } else {
       None
     }
@@ -279,4 +290,29 @@ case class ObjectListReader[A <: TemplateComponent](fieldName: String, el: A) ex
       .getOrElse(None)
     c
   }
+}
+
+case class ESProperty(fieldName: String, fields: Option[ESFields] = Some(ESFields(ESKeyword())))
+    extends TemplateWriter {
+  override type T = ESPropertyObject
+  override def zero: ESPropertyObject = ESPropertyObject.zero
+
+  override def op(content: Map[String, JsValue]): Option[ESPropertyObject] = {
+    val newType = for {
+      t    <- content.get("searchUi:type")
+      tStr <- t.asOpt[String]
+    } yield tStr
+    newType match {
+      case Some(t) => Some(ESPropertyObject(fieldName, ESValue(`type` = t, fields = fields)))
+      case _       => Some(ESPropertyObject(fieldName, ESValue(fields = fields)))
+    }
+  }
+}
+
+case class Direct(fieldName: String, value: JsValue) extends TemplateWriter {
+  override type T = DirectValue
+
+  override def zero: DirectValue = DirectValue.zero
+
+  override def op(content: Map[String, JsValue]): Option[DirectValue] = Some(DirectValue(fieldName, value))
 }
