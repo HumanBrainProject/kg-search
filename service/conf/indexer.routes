@@ -39,6 +39,7 @@ GET /:templateType/meta  controllers.IndexerController.applyMetaTemplateByType(t
   #      - Person
   #      - Project
   #      - UnimindsPerson
+  #      - ModelInstance
   #    default: Dataset
   #  - in: query
   #    name: from
@@ -71,6 +72,7 @@ GET /:databaseScope/:templateType  controllers.IndexerController.applyTemplateBy
   #      - Person
   #      - Project
   #      - UnimindsPerson
+  #      - ModelInstance
   #    default: Dataset
   #  - in: path
   #    name: id

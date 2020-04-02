@@ -20,13 +20,14 @@ import javax.inject.Inject
 import models.DatabaseScope
 import models.templates.elasticSearch.DatasetMetaESTemplate
 import models.templates.meta.DatasetMetaTemplate
-import models.templates.instance.{DatasetTemplate, PersonTemplate, ProjectTemplate, UnimindsPersonTemplate}
+import models.templates.instance.{DatasetTemplate, ModelInstanceTemplate, PersonTemplate, ProjectTemplate, UnimindsPersonTemplate}
 import models.templates.{Dataset, Person, Project, Template, TemplateType, UnimindsPerson}
 import play.api.Configuration
 import play.api.libs.json._
 import utils._
 
 import scala.collection.immutable.HashMap
+import models.templates.ModelInstance
 
 @ImplementedBy(classOf[TemplateEngineImpl])
 trait TemplateEngine[Content, TransformedContent] {
@@ -122,6 +123,12 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
       }
     case UnimindsPerson =>
       new UnimindsPersonTemplate {
+        override def dataBaseScope: DatabaseScope = dbScope
+
+        override def fileProxy: String = configuration.get[String]("file.proxy")
+      }
+    case ModelInstance =>
+      new ModelInstanceTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
 
         override def fileProxy: String = configuration.get[String]("file.proxy")

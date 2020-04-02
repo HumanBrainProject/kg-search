@@ -1,3 +1,18 @@
+/*
+ *   Copyright (c) 2020, EPFL/Human Brain Project PCO
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 package models.templates.instance
 
 import java.net.URLEncoder
@@ -11,11 +26,12 @@ import scala.collection.immutable.HashMap
 
 trait DatasetTemplate extends Template {
   def fileProxy: String
+
   def dataBaseScope: DatabaseScope
 
   val result: Map[String, TemplateComponent] = HashMap(
     "identifier" -> Value[String]("identifier", identity),
-    "title"      -> Value[String]("title", identity),
+    "title" -> Value[String]("title", identity),
     "contributors" -> ObjectListReader(
       "contributors",
       ObjectValue(
@@ -39,16 +55,16 @@ trait DatasetTemplate extends Template {
             case (Some(ValueObject(maybeCitation: Option[String])), Some(ValueObject(maybeDoi: Option[String]))) =>
               val strOpt = for {
                 citationStr <- maybeCitation
-                doiStr      <- maybeDoi
+                doiStr <- maybeDoi
               } yield citationStr + doiStr
               strOpt.map(s => ValueObject[String](Some(s)))
             case _ => None
           }
       }
     ),
-    "zip"            -> Value[String]("zip", identity),
+    "zip" -> Value[String]("zip", identity),
     "dataDescriptor" -> Optional(Value[String]("dataDescriptor", identity)),
-    "doi"            -> FirstElement(ValueList[String]("doi", identity)),
+    "doi" -> FirstElement(ValueList[String]("doi", identity)),
     "license_info" -> FirstElement(
       ObjectListReader("license", ObjectValue(List(Url("url"), Value[String]("name", identity))))
     ),
@@ -74,8 +90,8 @@ trait DatasetTemplate extends Template {
         )
       )
     ),
-    "description"      -> Value[String]("description", identity),
-    "speciesFilter"    -> FirstElement(ValueList[String]("speciesFilter", identity)),
+    "description" -> Value[String]("description", identity),
+    "speciesFilter" -> FirstElement(ValueList[String]("speciesFilter", identity)),
     "embargoForFilter" -> FirstElement(ValueList[String]("embargoForFilter", identity)),
     "embargo" -> Optional(
       FirstElement(
@@ -93,12 +109,7 @@ trait DatasetTemplate extends Template {
                   "This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review."
                 )
               )
-            case ValueObject(Some("Free")) =>
-              ValueObject[String](
-                Some(
-                  "Free"
-                )
-              )
+            case _ => ValueObject[String](None)
           }
         )
       )
@@ -123,7 +134,7 @@ trait DatasetTemplate extends Template {
                         val opt = for {
                           privateAccessVal <- privateAccess
                           if privateAccessVal
-                          urlStr  <- url
+                          urlStr <- url
                           nameStr <- name
                         } yield
                           ObjectValueMap(
@@ -151,7 +162,7 @@ trait DatasetTemplate extends Template {
                             Some(ValueObject(isAnimated: Option[String]))
                             ) =>
                           for {
-                            previewVal    <- preview
+                            previewVal <- preview
                             isAnimatedStr <- isAnimated
                           } yield
                             NestedObject(
@@ -196,12 +207,11 @@ trait DatasetTemplate extends Template {
               case (Some(citationObj: ValueObject[String]), Some(doiObj: ValueObject[String])) =>
                 val strOpt = for {
                   citationStr <- citationObj.value
-                  doiStr      <- doiObj.value
+                  doiStr <- doiObj.value
                 } yield citationStr + "\n" + doiStr
                 strOpt.map(str => ValueObject[String](Some(str)))
               case _ => doi
             }
-
         }
       )
     ),
@@ -211,8 +221,8 @@ trait DatasetTemplate extends Template {
       ObjectValue(List(Url("url"), OrElse(Value[String]("alias", identity), Value[String]("name", identity))))
     ),
     "preparation" -> FirstElement(ValueList[String]("preparation", identity)),
-    "methods"     -> ValueList[String]("methods", identity),
-    "protocol"    -> ValueList[String]("protocol", identity),
+    "methods" -> ValueList[String]("methods", identity),
+    "protocol" -> ValueList[String]("protocol", identity),
     "viewer" ->
     OrElse(
       ObjectListReader(
@@ -266,7 +276,7 @@ trait DatasetTemplate extends Template {
       )
     ),
     "first_release" -> Value[String]("first_release", identity),
-    "last_release"  -> Value[String]("last_release", identity),
+    "last_release" -> Value[String]("last_release", identity),
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {

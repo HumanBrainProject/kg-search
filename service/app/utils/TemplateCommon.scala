@@ -184,7 +184,7 @@ case class ValueList[ReturnType: Format](
       }
   }
 
-  override def zero = ValueObjectList.zero
+  override def zero: ValueObjectList[ReturnType] = ValueObjectList.zero
 }
 
 case class ObjectValue[Template <: TemplateComponent](
