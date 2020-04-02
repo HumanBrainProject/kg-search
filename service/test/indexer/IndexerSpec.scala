@@ -20,7 +20,7 @@ import java.io.FileInputStream
 import controllers.IndexerController
 import models.templates.Dataset
 import models.templates.elasticSearch.DatasetMetaESTemplate
-import models.templates.instance.{DatasetTemplate, PersonTemplate, ProjectTemplate, UnimindsPersonTemplate}
+import models.templates.instance.{DatasetTemplate, ModelInstanceTemplate, PersonTemplate, ProjectTemplate, UnimindsPersonTemplate}
 import models.templates.meta.DatasetMetaTemplate
 import models.{DatabaseScope, INFERRED}
 import org.scalatest.Assertion
@@ -144,6 +144,36 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("first_release", result, expected)
       assertIsSameJsObject("editorId", result, expected)
       assertIsSameJsObject("last_release", result, expected)
+    }
+    "transform the model instance payload accordingly" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/modelinstance.json")
+      val template = new ModelInstanceTemplate {
+        override def fileProxy: String = ""
+        override def dataBaseScope: DatabaseScope = INFERRED
+      }
+      val result = indexer.transform(payload, template)
+      val expected = loadResource("/expectedModelInstance.json")
+      assertIsSameJsObject("producedDataset", result, expected)
+      assertIsSameJsObject("modelFormat", result, expected)
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("description", result, expected)
+      assertIsSameJsObject("owners", result, expected)
+      assertIsSameJsObject("abstractionLevel", result, expected)
+      assertIsSameJsObject("mainContact", result, expected)
+      assertIsSameJsObject("brainStructures", result, expected)
+      assertIsSameJsObject("usedDataset", result, expected)
+      assertIsSameJsObject("version", result, expected)
+      assertIsSameJsObject("publications", result, expected)
+      assertIsSameJsObject("studyTarget", result, expected)
+      assertIsSameJsObject("allFiles", result, expected)
+      assertIsSameJsObject("modelScope", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("first_release", result, expected)
+      assertIsSameJsObject("contributors", result, expected)
+      assertIsSameJsObject("editorId", result, expected)
+      assertIsSameJsObject("last_release", result, expected)
+      assertIsSameJsObject("cellularTarget", result, expected)
     }
     "properly handle empty values in dataset" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
