@@ -54,6 +54,11 @@ trait Indexer[Content, TransformedContent, Effect[_], UploadResult, QueryResult]
     token: String
   ): Effect[QueryResult]
 
+  def getLabels(
+    templateType: TemplateType,
+    token: String
+  ): Effect[QueryResult]
+
 }
 
 class IndexerImpl @Inject()(
@@ -149,6 +154,24 @@ class IndexerImpl @Inject()(
           case OK =>
             val metaTemplate = templateEngine.getMetaTemplateFromType(templateType)
             Right(transformMeta(wsresult.json, metaTemplate))
+          case status => Left(ApiError(status, wsresult.body))
+        }
+      }
+  }
+  override def getLabels(templateType: TemplateType, token: String): Task[Either[ApiError, JsValue]] = {
+    val schema = TemplateType.toSchema(templateType)
+    Task
+      .deferFuture(
+        WSClient
+          .url(s"$queryEndpoint/query/$schema/search")
+          .addHttpHeaders("Authorization" -> s"Bearer $token")
+          .get()
+      )
+      .map { wsresult =>
+        wsresult.status match {
+          case OK =>
+            val template = templateEngine.getESTemplateFromType(templateType)
+            Right(transformMeta(wsresult.json, template))
           case status => Left(ApiError(status, wsresult.body))
         }
       }

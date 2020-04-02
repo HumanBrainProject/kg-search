@@ -100,4 +100,20 @@ class IndexerController @Inject()(
       result.runToFuture(s)
     }
 
+  def getLabels(templateType: TemplateType): Action[AnyContent] =
+    Action.async { implicit request =>
+      val result = request.headers.toSimpleMap.get("Authorization") match {
+        case Some(token) =>
+          indexer
+            .getLabels(templateType, token)
+            .map {
+              case Right(v) => Ok(v)
+              case Left(error) =>
+                Result(ResponseHeader(error.status), HttpEntity.Strict(ByteString(error.message), None))
+            }
+
+        case None => Task.pure(Unauthorized("Please provide credentials"))
+      }
+      result.runToFuture(s)
+    }
 }
