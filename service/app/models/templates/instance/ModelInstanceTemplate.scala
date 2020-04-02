@@ -19,7 +19,8 @@ import java.net.URLEncoder
 
 import models.{DatabaseScope, INFERRED}
 import models.templates.Template
-import models.templates.entities.{ObjectValueList, ObjectValueMap, UrlObject, ValueObject}
+import models.templates.entities.{DirectValue, ObjectValueList, ObjectValueMap, UrlObject, ValueObject}
+import play.api.libs.json.{JsNull, JsString, JsValue}
 import utils.{Value, _}
 
 import scala.collection.immutable.HashMap
@@ -108,7 +109,7 @@ trait ModelInstanceTemplate extends Template {
           ObjectValue(
             List(
               Url("url"),
-              CustomField[String]("human_readable_size", "detail"),
+              Direct("detail", JsNull),
               Value[String]("value", identity)
             )
           )
@@ -118,8 +119,23 @@ trait ModelInstanceTemplate extends Template {
             (embargoOpt, urlOpt) match {
               case (Some(ValueObject(Some("embargoed"))), _) => None
               case (_, Some(ObjectValueList(listRes))) => Some(ObjectValueList(listRes.map {
-                case ObjectValueMap(List(UrlObject(Some(resUrl)), ValueObject(d: Option[String]), ValueObject(v: Option[String]))) if resUrl.startsWith("https://object.cscs.ch") =>
-                  UrlObject(Some(s"https://kg.ebrains.eu/proxy/export?container=$resUrl"))
+                case ObjectValueMap(List(UrlObject(Some(resUrl)), DirectValue(d: String, k: JsValue), ValueObject(name: Option[String]))) =>
+                  if (resUrl.startsWith("https://object.cscs.ch")) {
+                    ObjectValueMap(
+                      List(
+                        UrlObject(Some(s"https://kg.ebrains.eu/proxy/export?container=$resUrl")),
+                        DirectValue("detail", JsString("###HBP Knowledge Graph Data Platform Citation Requirements")),
+                        ValueObject[String](Some("download all related data as ZIP"))
+                      )
+                    )
+                  } else {
+                    ObjectValueMap(
+                      List(
+                        UrlObject(Some(resUrl)),
+                        ValueObject[String](Some("Go to the data"))
+                      )
+                    )
+                  }
                 case s => s
               }))
             }
