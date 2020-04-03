@@ -43,6 +43,9 @@
     position: relative;
     padding: 25px;
 }
+.kgs-instance-container .kgs-footer .kgs-select select {
+    background-color: var(--background-color-1);
+}
 
 @media (min-width: 900px) {
 

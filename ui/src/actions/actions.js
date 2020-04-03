@@ -89,8 +89,7 @@ export const initialize = (location, defaultGroup) => {
       history.replace(`${location.pathname}${queryString}`);
       dispatch(setApplicationReady());
     } else {
-      const group = getSearchKey("group");
-
+      const group = getSearchKey("group") || localStorage.getItem("group");
       // backward compatibility test
       const instance = location.hash.substr(1);
       if (location.pathname === "/" && instance) {

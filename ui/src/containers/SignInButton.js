@@ -26,7 +26,10 @@ export const SignInButton = connect(
     offLabel: props.signInLabel
   }),
   dispatch => ({
-    onClick: () => dispatch(actions.logout()),
+    onClick: () => {
+      dispatch(actions.logout());
+      localStorage.removeItem("group");
+    },
     offClick: () => dispatch(actions.authenticate())
   })
 )(ConditionalButton);
