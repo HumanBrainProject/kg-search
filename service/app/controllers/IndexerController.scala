@@ -42,14 +42,21 @@ class IndexerController @Inject()(
   def applyTemplateByType(
     databaseScope: DatabaseScope,
     templateType: TemplateType,
-    from: Int,
-    size: Int
+    restrictToOrg: Option[String],
+    from: Option[Int],
+    size: Option[Int]
   ): Action[AnyContent] =
     Action.async { implicit request =>
       val result = request.headers.toSimpleMap.get("Authorization") match {
         case Some(token) =>
           indexer
-            .queryByType(templateType, databaseScope, PaginationParams(from, size), token)
+            .queryByType(
+              templateType,
+              databaseScope,
+              PaginationParams(from, size),
+              restrictToOrg.map(s => s.split(",").toList).getOrElse(List()),
+              token
+            )
             .map {
               case Right(v) => Ok(v)
               case Left(error) =>

@@ -17,9 +17,9 @@ package models.templates.instance
 
 import java.net.URLEncoder
 
-import models.{DatabaseScope, INFERRED}
 import models.templates.Template
-import models.templates.entities.{DirectValue, ObjectValueList, ObjectValueMap, UrlObject, ValueObject}
+import models.templates.entities.{ObjectValueList, ObjectValueMap, SetValue, UrlObject, ValueObject}
+import models.{DatabaseScope, INFERRED}
 import play.api.libs.json.{JsNull, JsString, JsValue}
 import utils.{Value, _}
 
@@ -31,10 +31,10 @@ trait ModelInstanceTemplate extends Template {
   def dataBaseScope: DatabaseScope
 
   val result: Map[String, TemplateComponent] = HashMap(
-    "identifier" -> Value[String]("identifier", identity),
-    "title" -> Value[String]("title", identity),
+    "identifier"  -> Value[String]("identifier", identity),
+    "title"       -> Value[String]("title", identity),
     "description" -> Value[String]("description", identity),
-    "version" -> Value[String]("version", identity),
+    "version"     -> Value[String]("version", identity),
     "contributors" -> ObjectListReader(
       "contributors",
       ObjectValue(
@@ -72,18 +72,13 @@ trait ModelInstanceTemplate extends Template {
             s"[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url"
           }
         }),
-        citation =>
-          doi => {
-            (citation, doi) match {
-              case (Some(citationObj: ValueObject[String]), Some(doiObj: ValueObject[String])) =>
-                val strOpt = for {
-                  citationStr <- citationObj.value
-                  doiStr <- doiObj.value
-                } yield citationStr + "\n" + doiStr
-                strOpt.map(str => ValueObject[String](Some(str)))
-              case _ => doi
-            }
+        (citation, doi) => {
+          (citation, doi) match {
+            case (Some(ValueObject(Some(citationStr))), Some(ValueObject(Some(doiStr)))) =>
+              Some(ValueObject[String](Some(citationStr + "\n" + doiStr)))
+            case _ => doi
           }
+        }
       )
     ),
     "embargo" -> Optional(
@@ -109,46 +104,51 @@ trait ModelInstanceTemplate extends Template {
           ObjectValue(
             List(
               Url("url"),
-              Direct("detail", JsNull),
+              Set("detail", JsNull),
               Value[String]("value", identity)
             )
           )
         ),
-        embargoOpt =>
-          urlOpt =>
-            (embargoOpt, urlOpt) match {
-              case (Some(ValueObject(Some("embargoed"))), _) => None
-              case (_, Some(ObjectValueList(listRes))) => Some(ObjectValueList(listRes.map {
-                case ObjectValueMap(List(UrlObject(Some(resUrl)), DirectValue(d: String, k: JsValue), ValueObject(name: Option[String]))) =>
-                  if (resUrl.startsWith("https://object.cscs.ch")) {
-                    ObjectValueMap(
-                      List(
-                        UrlObject(Some(s"https://kg.ebrains.eu/proxy/export?container=$resUrl")),
-                        DirectValue("detail", JsString("###HBP Knowledge Graph Data Platform Citation Requirements")),
-                        ValueObject[String](Some("download all related data as ZIP"))
-                      )
+        (embargoOpt, urlOpt) =>
+          (embargoOpt, urlOpt) match {
+            case (Some(ValueObject(Some("embargoed"))), _) => None
+            case (_, Some(ObjectValueList(listRes))) =>
+              Some(ObjectValueList(listRes.map {
+                case ObjectValueMap(
+                    List(
+                      UrlObject(Some(resUrl)),
+                      SetValue(_, _),
+                      ValueObject(_)
                     )
-                  } else {
-                    ObjectValueMap(
-                      List(
-                        UrlObject(Some(resUrl)),
-                        ValueObject[String](Some("Go to the data"))
-                      )
+                    ) if resUrl.startsWith("https://object.cscs.ch") =>
+                  ObjectValueMap(
+                    List(
+                      UrlObject(Some(s"https://kg.ebrains.eu/proxy/export?container=$resUrl")),
+                      SetValue("detail", JsString("###HBP Knowledge Graph Data Platform Citation Requirements")),
+                      ValueObject[String](Some("download all related data as ZIP"))
                     )
-                  }
+                  )
+                case ObjectValueMap(List(UrlObject(Some(resUrl)), x)) =>
+                  ObjectValueMap(
+                    List(
+                      UrlObject(Some(resUrl)),
+                      ValueObject[String](Some("Go to the data"))
+                    )
+                  )
                 case s => s
               }))
-            }
+            case _ => None
+        }
       )
     ),
-    "brainStructures" -> ValueList[String]("brainStructure", identity),
-    "cellularTarget" -> ValueList[String]("cellularTarget", identity),
-    "studyTarget" -> ValueList[String]("studyTarget", identity),
-    "modelScope" -> ValueList[String]("modelScope", identity),
+    "brainStructures"  -> ValueList[String]("brainStructure", identity),
+    "cellularTarget"   -> ValueList[String]("cellularTarget", identity),
+    "studyTarget"      -> ValueList[String]("studyTarget", identity),
+    "modelScope"       -> ValueList[String]("modelScope", identity),
     "abstractionLevel" -> ValueList[String]("abstractionLevel", identity),
-    "modelFormat" -> ValueList[String]("modelFormat", identity),
-    "first_release" -> Value[String]("first_release", identity),
-    "last_release" -> Value[String]("last_release", identity),
+    "modelFormat"      -> ValueList[String]("modelFormat", identity),
+    "first_release"    -> Value[String]("first_release", identity),
+    "last_release"     -> Value[String]("last_release", identity),
     "usedDataset" -> ObjectListReader(
       "usedDataset",
       ObjectValue(
@@ -171,7 +171,7 @@ trait ModelInstanceTemplate extends Template {
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {
     case INFERRED => HashMap("editorId" -> Value[String]("editorId", identity)) ++ result
-    case _ => result
+    case _        => result
   }
 
 }

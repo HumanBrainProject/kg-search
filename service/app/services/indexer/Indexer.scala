@@ -20,7 +20,7 @@ import java.util.{Date, UUID}
 
 import com.google.inject.ImplementedBy
 import javax.inject.Inject
-import models.{DatabaseScope, PaginationParams}
+import models.{DatabaseScope, INFERRED, PaginationParams, RELEASED}
 import models.errors.ApiError
 import models.templates.{Template, TemplateType}
 import monix.eval.Task
@@ -28,6 +28,8 @@ import play.api.Configuration
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
+
+import scala.concurrent.Await
 
 @ImplementedBy(classOf[IndexerImpl])
 trait Indexer[Content, TransformedContent, Effect[_], UploadResult, QueryResult] {
@@ -40,6 +42,7 @@ trait Indexer[Content, TransformedContent, Effect[_], UploadResult, QueryResult]
     templateType: TemplateType,
     databaseScope: DatabaseScope,
     paginationParams: PaginationParams,
+    restrictToOrgs: List[String],
     token: String
   ): Effect[QueryResult]
 
@@ -114,34 +117,190 @@ class IndexerImpl @Inject()(
     }
 
   }
-  private def createESmapping(relevantTypes: List[String]) = ???
+  private def createESmapping(relevantTypes: List[String], token: String): Task[Map[String, Map[String, JsValue]]] = {
+    val labels = relevantTypes.map { t =>
+      val templateName = TemplateType.apply(t)
+      getLabels(templateName, token).map {
+        case Right(js) => Right((templateName.apiName, js))
+        case Left(e)   => Left(e)
+      }
+    }
+    Task.sequence(labels).map { listOfLabelsPerType =>
+      listOfLabelsPerType
+        .collect { case Right(v) => v }
+        .foldLeft(Map[String, Map[String, JsValue]]("mappings" -> Map())) {
+          case (acc, (apiName, js)) =>
+            val innerMapUpdated = acc("mappings").updated(
+              apiName,
+              Json.toJson(
+                Map("_all" -> Json.toJson(Map("enabled" -> true))(Writes.genericMapWrites), "properties" -> js)
+              )(Writes.genericMapWrites)
+            )
+            acc.updated("mappings", innerMapUpdated)
+        }
+    }
+  }
 
-  private def reindexInstances(relevantType: List[String], organizations: List[String]) = ???
+  private def extractIdentifier(el: JsObject): Option[String] = {
+    for {
+      idAsList <- el.value.get("identifier")
+      mayBeId = if (idAsList.asOpt[List[JsObject]].isDefined) {
+        idAsList.as[List[JsObject]].headOption
+      } else {
+        idAsList.asOpt[JsObject]
+      }
+      id         <- mayBeId
+      idValue    <- id.value.get("value")
+      idValueStr <- idValue.asOpt[String]
+    } yield idValueStr
+  }
 
-  private def removeNonexistingItems(now: java.util.Date) = ???
+  def indexJson(
+    apiName: String,
+    el: JsObject,
+    identifier: Option[String],
+    simulate: Boolean,
+    dbScope: DatabaseScope,
+    releaseOnly: Boolean,
+    completeRebuild: Boolean
+  ): Task[Either[ApiError, Unit]] = {
+    identifier match {
+      case Some(id) =>
+        import java.text.DateFormat
+        import java.text.SimpleDateFormat
+        import java.util.TimeZone
+        val tz = TimeZone.getTimeZone("UTC")
+        val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+        df.setTimeZone(tz)
+        val nowAsISO = df.format(new Date())
+        val jsonWithTimeStamp = el ++ Json.obj("@timestamp" -> nowAsISO)
+        val indexed = if (!simulate) {
+          elasticSearch.index(jsonWithTimeStamp, apiName, id, dbScope)
+        } else {
+          Task.pure(Right(()))
+        }
+        indexed.map {
+          case Right(_) =>
+            siteMapGenerator.addUrl(apiName, identifier, releaseOnly, completeRebuild)
+            Right(())
+          case Left(e) => Left(e)
+        }
+      case None =>
+        Task.pure(
+          Left(
+            ApiError(
+              INTERNAL_SERVER_ERROR,
+              s"Was not able to upload json because it hasn't provided an id: ${el.toString()}"
+            )
+          )
+        )
+    }
+  }
 
-  def index(completeRebuild: Boolean, simulate: Boolean, organizations: List[String], token: String): Task[Any] = {
+  private def reindexInstances(
+    relevantType: List[String],
+    organizations: List[String],
+    databaseScope: DatabaseScope,
+    simulate: Boolean,
+    releasedOnly: Boolean,
+    completeRebuild: Boolean,
+    token: String
+  ): List[Task[Either[ApiError, Unit]]] = {
+    relevantType.map { t =>
+      val template = TemplateType(t)
+      queryByType(template, databaseScope, PaginationParams(None, None), organizations, token).flatMap {
+        case Right(value) =>
+          val valueArr = value.as[List[JsObject]]
+          val indexedList = for {
+            el <- valueArr
+          } yield {
+            indexJson(
+              template.apiName,
+              el,
+              extractIdentifier(el),
+              simulate,
+              databaseScope,
+              releasedOnly,
+              completeRebuild
+            )
+          }
+          Task.sequence(indexedList).map { _ =>
+            Right(())
+          }
+        case Left(e) => Task.pure(Left(e))
+      }
+    }
+  }
+
+  private def removeNonexistingItems(indexName: String, indexTime: String, completeRebuild: Boolean) = {
+    import monix.execution.Scheduler.Implicits.global
+    import scala.concurrent.duration._
+    elasticSearch.getNotUpdatedInstances(indexName, indexTime).map {
+      case Right(Nil) =>
+        ()
+      case Right(l) =>
+        var listOfIdsToRemove = l
+        while (listOfIdsToRemove.nonEmpty) {
+          removeIndex(listOfIdsToRemove, indexName, indexTime)
+          val res = Await.result(elasticSearch.getNotUpdatedInstances(indexName, indexTime).runToFuture, 10.seconds)
+          listOfIdsToRemove = res.toOption.getOrElse(List())
+        }
+
+      case Left(e) => Left(e)
+    }
+  }
+
+  private def removeIndex(ids: List[String], indexName: String, indexTime: String) = {
+    val idsToRemove = for {
+      id <- ids
+    } yield elasticSearch.removeIndex(id, indexName)
+    Task.sequence(idsToRemove)
+  }
+
+  def index(
+    completeRebuild: Boolean,
+    releasedOnly: Boolean,
+    simulate: Boolean,
+    organizations: List[String],
+    databaseScope: DatabaseScope,
+    token: String
+  ): Task[Any] = {
     getRelevantTypes(token).map {
       case Right(relevantTypes) =>
-        createLabels(relevantTypes, token).map { labels =>
-          //    print(json.dumps(labels, indent=4))
-          elasticSearch.updateLabels(labels)
-        }
-        val mapping = createESmapping(relevantTypes)
-        val now = new Date()
-        if (completeRebuild) {
-          elasticSearch.recreateIndex(mapping, simulate)
-        }
-        reindexInstances(relevantTypes, organizations)
-        if (!completeRebuild) {
-          removeNonexistingItems(now)
-        }
-        if (simulate) {
-          siteMapGenerator.write(Path.of("/opt/scripts/kg_indexer/kg_indexer/sitemap.xml"))
+        createESmapping(relevantTypes, token).map { mapping =>
+          import java.text.SimpleDateFormat
+          import java.util.TimeZone
+          val tz = TimeZone.getTimeZone("UTC")
+          val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+          df.setTimeZone(tz)
+          val nowAsISO = df.format(new Date())
+          val recreateIndexTask = if (completeRebuild && !simulate) {
+            elasticSearch.recreateIndex(mapping, databaseScope)
+          } else {
+            Task.pure(Right(()))
+          }
+          recreateIndexTask.map { indexRecreated =>
+            val e = for {
+              _ <- Task.sequence(
+                reindexInstances(
+                  relevantTypes,
+                  organizations,
+                  databaseScope,
+                  simulate = simulate,
+                  releasedOnly,
+                  completeRebuild,
+                  token
+                )
+              )
+              _ <- removeNonexistingItems(databaseScope.toIndexName, nowAsISO, completeRebuild) //              writeSiteMap <- siteMapGenerator.write(
+//                Path.of("/opt/scripts/kg_indexer/kg_indexer/sitemap.xml")
+//              )
+            } yield ()
+            e
+          }
         }
       case e => e
     }
-
   }
 
   override def transform(jsonContent: JsValue, template: Template): JsValue = {
@@ -155,14 +314,18 @@ class IndexerImpl @Inject()(
     templateType: TemplateType,
     databaseScope: DatabaseScope,
     paginationParams: PaginationParams,
+    restrictToOrgs: List[String],
     token: String
   ): Task[Either[ApiError, JsValue]] = {
     val schema = TemplateType.toSchema(templateType)
+    val paramsSize = paginationParams.limit.map(p => s"&size=${p}").getOrElse("")
+    val paramsFrom = paginationParams.offset.map(p => s"&from=${p}").getOrElse("")
+    val restrictOrgsToString = if (restrictToOrgs.isEmpty) "" else restrictToOrgs.mkString(",")
     Task
       .deferFuture(
         WSClient
           .url(
-            s"$queryEndpoint/query/$schema/search/instances/?vocab=https://schema.hbp.eu/search/&size=${paginationParams.limit}&from=${paginationParams.offset}"
+            s"$queryEndpoint/query/$schema/search/instances/?vocab=https://schema.hbp.eu/search/&databaseScope=${databaseScope.toString}$paramsSize$paramsFrom&restrictToOrganizations=$restrictOrgsToString"
           )
           .addHttpHeaders("Authorization" -> s"Bearer $token")
           .get()

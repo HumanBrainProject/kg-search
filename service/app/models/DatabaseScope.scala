@@ -17,7 +17,9 @@ package models
 
 import play.api.mvc.PathBindable
 
-sealed trait DatabaseScope
+sealed trait DatabaseScope {
+  def toIndexName: String
+}
 
 object DatabaseScope {
 
@@ -26,19 +28,28 @@ object DatabaseScope {
     case "RELEASED" => RELEASED
   }
 
-  implicit def pathBinder(implicit stringBinder: PathBindable[String]): PathBindable[DatabaseScope] = new PathBindable[DatabaseScope] {
-    override def bind(key: String, value: String): Either[String, DatabaseScope] = {
-      for {
-        str <- stringBinder.bind(key, value).right
-      } yield DatabaseScope(str)
-    }
+  implicit def pathBinder(implicit stringBinder: PathBindable[String]): PathBindable[DatabaseScope] =
+    new PathBindable[DatabaseScope] {
+      override def bind(key: String, value: String): Either[String, DatabaseScope] = {
+        for {
+          str <- stringBinder.bind(key, value).right
+        } yield DatabaseScope(str)
+      }
 
-    override def unbind(key: String, databaseScope: DatabaseScope): String = {
-      databaseScope.toString
+      override def unbind(key: String, databaseScope: DatabaseScope): String = {
+        databaseScope.toString
+      }
     }
-  }
 }
 
-case object INFERRED extends DatabaseScope
+case object INFERRED extends DatabaseScope {
+  override def toString: String = "INFERRED"
 
-case object RELEASED extends DatabaseScope
+  override def toIndexName: String = "in_progress"
+}
+
+case object RELEASED extends DatabaseScope {
+  override def toString: String = "RELEASED"
+
+  override def toIndexName: String = "publicly_released"
+}

@@ -19,15 +19,32 @@ import java.nio.file.Path
 
 import com.google.inject.ImplementedBy
 import javax.inject.Inject
+import models.DatabaseScope
+import models.errors.ApiError
+import monix.eval.Task
 import play.api.libs.json.JsValue
 
 @ImplementedBy(classOf[SitemapGeneratorImpl])
 trait SitemapGenerator {
 
   def write(path: Path): Unit
+
+  def addUrl(
+    dataType: String,
+    identifier: Option[String],
+    releasedOnly: Boolean,
+    completeRebuild: Boolean
+  ): Unit
 }
 
 class SitemapGeneratorImpl @Inject()(
   ) extends SitemapGenerator {
   override def write(path: Path): Unit = ???
+
+  override def addUrl(
+    dataType: String,
+    identifier: Option[String],
+    releasedOnly: Boolean,
+    completeRebuild: Boolean
+  ): Unit = {}
 }

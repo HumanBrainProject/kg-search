@@ -72,7 +72,7 @@ GET /:templateType/labels  controllers.IndexerController.getLabels(templateType:
   #    '200':
   #      description: Ok
   ###
-GET /:databaseScope/:templateType  controllers.IndexerController.applyTemplateByType(databaseScope: models.DatabaseScope, templateType:models.templates.TemplateType,from:Int?=0, size:Int?=20)
+GET /:databaseScope/:templateType  controllers.IndexerController.applyTemplateByType(databaseScope: models.DatabaseScope, templateType:models.templates.TemplateType, restrictToOrg:Option[String], from:Option[Int], size:Option[Int])
   ###
   #  summary: Apply a template to a single instance this process is the first step of the indexing to the search UI
   #  parameters:

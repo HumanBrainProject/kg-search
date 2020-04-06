@@ -15,4 +15,4 @@
  */
 package models
 
-case class PaginationParams(offset: Int, limit: Int)
+case class PaginationParams(offset: Option[Int], limit: Option[Int])
