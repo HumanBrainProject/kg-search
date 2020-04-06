@@ -60,6 +60,7 @@ GET /:templateType/labels  controllers.IndexerController.getLabels(templateType:
   #      - Person
   #      - Project
   #      - UnimindsPerson
+  #      - ModelInstance
   #    default: Dataset
   #  - in: query
   #    name: from
@@ -92,6 +93,7 @@ GET /:databaseScope/:templateType  controllers.IndexerController.applyTemplateBy
   #      - Person
   #      - Project
   #      - UnimindsPerson
+  #      - ModelInstance
   #    default: Dataset
   #  - in: path
   #    name: id
