@@ -18,10 +18,6 @@ import play.api.libs.json.{JsNull, JsObject, JsValue, Json, OWrites, Writes}
 trait ESEntity extends TemplateEntity
 
 case class EmptyESEntity() extends ESEntity {
-  override type T = EmptyESEntity
-
-  override def zero: EmptyESEntity = EmptyESEntity()
-
   override def toJson: JsValue = Json.toJson(this)(EmptyESEntity.implicitWrites)
 }
 
@@ -32,10 +28,6 @@ object EmptyESEntity {
 }
 
 case class ESPropertiesObject(value: ESPropertyObject, properties: List[ESPropertyObject]) extends ESEntity {
-  override type T = ESPropertiesObject
-
-  override def zero: ESPropertiesObject = ESPropertiesObject.zero
-
   override def toJson: JsValue = Json.toJson(this)(ESPropertiesObject.implicitWrites)
 
 }
@@ -49,22 +41,17 @@ object ESPropertiesObject {
 
   implicit lazy val implicitWrites: Writes[ESPropertiesObject] = (u: ESPropertiesObject) =>
     u.properties match {
+      case Nil => Json.obj("properties" -> u.value.toJson)
       case props =>
         Json.obj(
           "properties" -> props
             .foldLeft(Json.obj()) { case (obj, el) => obj ++ el.toJson.as[JsObject] }
             .++(u.value.toJson.as[JsObject])
         )
-      case Nil => Json.obj("properties" -> u.value.toJson)
   }
 }
 
 case class ESPropertyObject(fieldName: String = "value", valueContent: ESValue = ESValue()) extends ESEntity {
-
-  override type T = ESPropertyObject
-
-  override def zero: ESPropertyObject = ESPropertyObject.zero
-
   override def toJson: JsValue = Json.toJson(this)(ESPropertyObject.implicitWrites)
 }
 

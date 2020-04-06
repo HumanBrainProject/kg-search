@@ -17,10 +17,6 @@ package models.templates.entities
 import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 
 case class ObjectValueList(list: List[TemplateEntity]) extends TemplateEntity {
-  override type T = ObjectValueList
-
-  override def zero: ObjectValueList = ObjectValueList.zero
-
   override def toJson: JsValue = Json.toJson(this)(ObjectValueList.implicitWrites)
 
   def :+(el: TemplateEntity): ObjectValueList = {

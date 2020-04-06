@@ -13,20 +13,23 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package models.templates.entities
-import play.api.libs.json.{JsNull, JsValue, Json, Writes}
+package services.indexer
 
-case class UrlObject(url: Option[String]) extends TemplateEntity {
-  override def toJson: JsValue = Json.toJson(this)(UrlObject.implicitWrites)
+import com.google.inject.ImplementedBy
+import javax.inject.Inject
+import play.api.libs.json.JsValue
 
+@ImplementedBy(classOf[ElasticSearchImpl])
+trait ElasticSearch {
+
+  def updateLabels(labels: Map[String, JsValue]): Unit
+
+  def recreateIndex(mapping: Nothing, simulate: Boolean): Unit
 }
 
-object UrlObject {
-  implicit val implicitWrites: Writes[UrlObject] = new Writes[UrlObject] {
+class ElasticSearchImpl @Inject()(
+  ) extends ElasticSearch {
+  override def updateLabels(labels: Map[String, JsValue]): Unit = ???
 
-    def writes(u: UrlObject): JsValue = {
-      u.url.fold[JsValue](JsNull)(v => Json.obj("url" -> Json.toJson(v)))
-    }
-  }
-  def zero: UrlObject = UrlObject(None)
+  override def recreateIndex(mapping: Nothing, simulate: Boolean): Unit = ???
 }

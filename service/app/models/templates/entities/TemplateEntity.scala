@@ -17,47 +17,53 @@ package models.templates.entities
 
 import play.api.libs.json.{Format, JsNull, JsValue, Json, Writes}
 
+import scala.reflect.ClassTag
+
 trait EntitySerialization {
   def toJson: JsValue
 }
 
-trait TemplateEntity extends EntitySerialization {
-  type T <: TemplateEntity
-  def zero: T
-}
+trait TemplateEntity extends EntitySerialization
 
 case class EmptyEntity() extends TemplateEntity {
-  override type T = EmptyEntity
-
-  override def zero: EmptyEntity = EmptyEntity()
-
   override def toJson: JsValue = Json.toJson(this)(EmptyEntity.implicitWrites)
 }
 
 object EmptyEntity {
-  implicit lazy val implicitWrites = new Writes[EmptyEntity] {
+  implicit lazy val implicitWrites: Writes[EmptyEntity] = new Writes[EmptyEntity] {
     def writes(u: EmptyEntity): JsValue = JsNull
   }
 }
 
-case class DirectValue(fieldName: String, fieldValue: JsValue) extends TemplateEntity {
-  override type T = DirectValue
-
-  override def zero: T = DirectValue.zero
-
-  override def toJson: JsValue = Json.toJson(this)(DirectValue.implicitWrites)
+case class SetValue(fieldName: String, fieldValue: JsValue) extends TemplateEntity {
+  override def toJson: JsValue = Json.toJson(this)(SetValue.implicitWrites)
 }
 
-object DirectValue {
-  implicit def implicitWrites: Writes[DirectValue] =
-    new Writes[DirectValue] {
+object SetValue {
+  implicit def implicitWrites: Writes[SetValue] =
+    new Writes[SetValue] {
 
-      def writes(c: DirectValue): JsValue = {
+      def writes(c: SetValue): JsValue = {
         Json.obj(
           c.fieldName -> c.fieldValue
         )
       }
     }
 
-  def zero: DirectValue = DirectValue("", JsNull)
+  def zero: SetValue = SetValue("", JsNull)
+}
+
+case class GetValue[ReturnType: Format](value: Option[ReturnType]) extends TemplateEntity {
+  override def toJson: JsValue = Json.toJson(this)(GetValue.implicitWrites[ReturnType])
+}
+
+object GetValue {
+  implicit def implicitWrites[ReturnType: Writes]: Writes[GetValue[ReturnType]] =
+    new Writes[GetValue[ReturnType]] {
+
+      def writes(u: GetValue[ReturnType]): JsValue = {
+        u.value.fold[JsValue](JsNull)(str => Json.toJson(str))
+      }
+    }
+  def zero[ReturnType: Format]: GetValue[ReturnType] = GetValue[ReturnType](None)
 }

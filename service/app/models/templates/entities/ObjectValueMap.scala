@@ -18,9 +18,6 @@ package models.templates.entities
 import play.api.libs.json.{JsNull, JsObject, JsValue, Json, Writes}
 
 case class ObjectValueMap(list: List[TemplateEntity]) extends TemplateEntity {
-  override type T = ObjectValueMap
-
-  override def zero: ObjectValueMap = ObjectValueMap.zero
 
   override def toJson: JsValue = Json.toJson(this)(ObjectValueMap.implicitWrites)
 

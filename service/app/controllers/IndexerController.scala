@@ -23,6 +23,7 @@ import models.errors.ApiError
 import models.templates.TemplateType
 import models.{DatabaseScope, PaginationParams}
 import monix.eval.Task
+import monix.execution.Scheduler
 import play.api.http.HttpEntity
 import play.api.libs.json.JsValue
 import play.api.libs.ws.WSResponse
@@ -33,10 +34,10 @@ class IndexerController @Inject()(
   indexer: Indexer[JsValue, JsValue, Task, WSResponse, Either[ApiError, JsValue]],
   cc: ControllerComponents
 ) extends AbstractController(cc) {
-  implicit val s = monix.execution.Scheduler.Implicits.global
-  def indexByType(databaseScope: DatabaseScope, templateType: TemplateType) = ???
+  implicit val s: Scheduler = monix.execution.Scheduler.Implicits.global
+  def indexByType(databaseScope: DatabaseScope, templateType: TemplateType): Unit = ()
 
-  def indexByTypeAndId(databaseScope: DatabaseScope, templateType: TemplateType, id: UUID): Action[AnyContent] = ???
+  def indexByTypeAndId(databaseScope: DatabaseScope, templateType: TemplateType, id: UUID): Unit = ()
 
   def applyTemplateByType(
     databaseScope: DatabaseScope,
@@ -111,7 +112,6 @@ class IndexerController @Inject()(
               case Left(error) =>
                 Result(ResponseHeader(error.status), HttpEntity.Strict(ByteString(error.message), None))
             }
-
         case None => Task.pure(Unauthorized("Please provide credentials"))
       }
       result.runToFuture(s)

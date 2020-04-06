@@ -22,9 +22,6 @@ case class CustomObject[ReturnValue](fieldName: String, fieldValue: Option[Retur
 ) extends TemplateEntity {
   override def toJson: JsValue = Json.toJson(this)(CustomObject.implicitWrites)
 
-  override type T = CustomObject[ReturnValue]
-
-  override def zero: CustomObject[ReturnValue] = CustomObject.zero[ReturnValue]
 }
 
 object CustomObject {

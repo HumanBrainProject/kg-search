@@ -14,43 +14,35 @@ trait DatasetTemplate extends Template {
   def dataBaseScope: DatabaseScope
 
   val result: Map[String, TemplateComponent] = HashMap(
-    "identifier" -> Value[String]("identifier", identity),
-    "title"      -> Value[String]("title", identity),
+    "identifier" -> Value[String]("identifier"),
+    "title"      -> Value[String]("title"),
     "contributors" -> ObjectListReader(
       "contributors",
       ObjectValue(
         List(
           Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))),
-          Value[String]("name", identity)
+          Value[String]("name")
         )
       )
     ),
     "citation" -> Merge(
-      FirstElement(ValueList[String]("citation", identity)),
+      FirstElement(ValueList[String]("citation")),
       FirstElement(ValueList[String]("doi", doi => {
         doi.map(doiStr => {
           val url = URLEncoder.encode(doiStr, "UTF-8")
           s" [DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url"
         })
-      })),
-      l =>
-        r => {
-          (l, r) match {
-            case (Some(ValueObject(maybeCitation: Option[String])), Some(ValueObject(maybeDoi: Option[String]))) =>
-              val strOpt = for {
-                citationStr <- maybeCitation
-                doiStr      <- maybeDoi
-              } yield citationStr + doiStr
-              strOpt.map(s => ValueObject[String](Some(s)))
-            case _ => None
-          }
+      })), {
+        case (Some(ValueObject(Some(citationStr: String))), Some(ValueObject(Some(doiStr: String)))) =>
+          Some(ValueObject[String](Some(citationStr + doiStr)))
+        case _ => None
       }
     ),
-    "zip"            -> Value[String]("zip", identity),
-    "dataDescriptor" -> Optional(Value[String]("dataDescriptor", identity)),
-    "doi"            -> FirstElement(ValueList[String]("doi", identity)),
+    "zip"            -> Value[String]("zip"),
+    "dataDescriptor" -> Optional(Value[String]("dataDescriptor")),
+    "doi"            -> FirstElement(ValueList[String]("doi")),
     "license_info" -> FirstElement(
-      ObjectListReader("license", ObjectValue(List(Url("url"), Value[String]("name", identity))))
+      ObjectListReader("license", ObjectValue(List(Url("url"), Value[String]("name"))))
     ),
     "component" -> FirstElement(
       ObjectListReader(
@@ -58,7 +50,7 @@ trait DatasetTemplate extends Template {
         ObjectValue(
           List(
             Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Project"))),
-            Value[String]("name", identity)
+            Value[String]("name")
           )
         )
       )
@@ -69,14 +61,14 @@ trait DatasetTemplate extends Template {
         ObjectValue(
           List(
             Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))),
-            Value[String]("name", identity)
+            Value[String]("name")
           )
         )
       )
     ),
-    "description"      -> Value[String]("description", identity),
-    "speciesFilter"    -> FirstElement(ValueList[String]("speciesFilter", identity)),
-    "embargoForFilter" -> FirstElement(ValueList[String]("embargoForFilter", identity)),
+    "description"      -> Value[String]("description"),
+    "speciesFilter"    -> FirstElement(ValueList[String]("speciesFilter")),
+    "embargoForFilter" -> FirstElement(ValueList[String]("embargoForFilter")),
     "embargo" -> Optional(
       FirstElement(
         ValueList[String](
@@ -99,120 +91,102 @@ trait DatasetTemplate extends Template {
                   "Free"
                 )
               )
+            case _ => ValueObject(None)
           }
         )
       )
     ),
     "files" -> Optional(
       Merge(
-        FirstElement(ValueList[String]("embargo", identity)),
+        FirstElement(ValueList[String]("embargo")),
         ObjectListReader(
           "files",
           ObjectValue(
             List(
               Merge(
-                ObjectValue(List(Url("absolute_path"), Value[String]("name", identity))),
-                Value[Boolean]("private_access", identity),
-                urlOpt =>
-                  privateAccesOpt => {
-                    (urlOpt, privateAccesOpt) match {
-                      case (
-                          Some(ObjectValueMap(List(UrlObject(url), ValueObject(name: Option[String])))),
-                          Some(ValueObject(privateAccess: Option[Boolean]))
-                          ) =>
-                        val opt = for {
-                          privateAccessVal <- privateAccess
-                          if privateAccessVal
-                          urlStr  <- url
-                          nameStr <- name
-                        } yield
-                          ObjectValueMap(
-                            List(
-                              UrlObject(Some(s"$fileProxy/files/cscs?url=$urlStr")),
-                              ValueObject[String](Some(s"ACCESS PROTECTED: $nameStr"))
-                            )
+                ObjectValue(List(Url("absolute_path"), Value[String]("name"))),
+                Value[Boolean]("private_access"),
+                (urlOpt, privateAccesOpt) => {
+                  (urlOpt, privateAccesOpt) match {
+                    case (
+                        Some(ObjectValueMap(List(UrlObject(Some(urlStr)), ValueObject(Some(nameStr))))),
+                        Some(ValueObject(Some(true)))
+                        ) =>
+                      Some(
+                        ObjectValueMap(
+                          List(
+                            UrlObject(Some(s"$fileProxy/files/cscs?url=$urlStr")),
+                            ValueObject[String](Some(s"ACCESS PROTECTED: $nameStr"))
                           )
-                        opt.orElse(urlOpt)
-                      case _ => urlOpt
-                    }
+                        )
+                      )
+                    case _ => urlOpt
+                  }
 
                 }
               ),
-              CustomField[String]("human_readable_size", "fileSize", identity),
+              CustomField[String]("human_readable_size", "fileSize"),
               Optional(
                 Merge(
-                  FirstElement(ValueList[String]("preview_url", identity)),
-                  FirstElement(ValueList[String]("is_preview_animated", identity)),
-                  previewOpt =>
-                    isAnimatedOpt => {
-                      (previewOpt, isAnimatedOpt) match {
-                        case (
-                            Some(ValueObject(preview: Option[String])),
-                            Some(ValueObject(isAnimated: Option[String]))
-                            ) =>
-                          for {
-                            previewVal    <- preview
-                            isAnimatedStr <- isAnimated
-                          } yield
-                            NestedObject(
-                              "previewUrl",
-                              ObjectValueMap(
-                                List(
-                                  UrlObject(Some(previewVal)),
-                                  CustomObject("isAnimated", Some(isAnimatedStr.toBoolean.toString))
-                                )
-                              )
+                  FirstElement(ValueList[String]("preview_url")),
+                  FirstElement(ValueList[String]("is_preview_animated")), {
+                    case (
+                        Some(ValueObject(Some(preview: String))),
+                        Some(ValueObject(Some(isAnimated: String)))
+                        ) =>
+                      Some(
+                        NestedObject(
+                          "previewUrl",
+                          ObjectValueMap(
+                            List(
+                              UrlObject(Some(preview)),
+                              CustomObject("isAnimated", Some(isAnimated.toBoolean.toString))
                             )
+                          )
+                        )
+                      )
 
-                        case _ => None
-                      }
-
+                    case _ => None
                   }
                 )
               )
             )
           )
         ),
-        embargoOpt =>
-          filesOpt => {
-            embargoOpt.fold(filesOpt)(_ => None)
+        (embargoOpt, filesOpt) => {
+          embargoOpt.fold(filesOpt)(_ => None)
         }
       )
     ),
-    "external_datalink" -> ObjectValue(List(Url("external_datalink"), Value[String]("external_datalink", identity))),
+    "external_datalink" -> ObjectValue(List(Url("external_datalink"), Value[String]("external_datalink"))),
     "publications" -> ObjectListReader(
       "publications",
       Merge(
-        Value[String]("citation", identity),
+        Value[String]("citation"),
         Value[String]("doi", doi => {
           doi.map { doiStr =>
             val url = URLEncoder.encode(doiStr, "UTF-8")
             s"[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url"
           }
         }),
-        citation =>
-          doi => {
-            (citation, doi) match {
-              case (Some(citationObj: ValueObject[String]), Some(doiObj: ValueObject[String])) =>
-                val strOpt = for {
-                  citationStr <- citationObj.value
-                  doiStr      <- doiObj.value
-                } yield citationStr + "\n" + doiStr
-                strOpt.map(str => ValueObject[String](Some(str)))
-              case _ => doi
-            }
+        (citation, doi) => {
+          (citation, doi) match {
+            case (Some(ValueObject(Some(citationStr: String))), Some(ValueObject(Some(doiStr: String)))) =>
+              Some(ValueObject[String](Some(citationStr + "\n" + doiStr)))
+            case _ => doi
+          }
 
         }
       )
     ),
-    "atlas" -> FirstElement(ValueList[String]("parcellationAtlas", identity)),
+    "atlas" -> FirstElement(ValueList[String]("parcellationAtlas")),
     "region" -> ObjectListReader(
       "parcellationRegion",
-      ObjectValue(List(Url("url"), OrElse(Value[String]("alias", identity), Value[String]("name", identity))))
+      ObjectValue(List(Url("url"), OrElse(Value[String]("alias"), Value[String]("name"))))
     ),
-    "preparation" -> FirstElement(ValueList[String]("preparation", identity)),
-    "methods"     -> ValueList[String]("methods", identity),
-    "protocol"    -> ValueList[String]("protocol", identity),
+    "preparation" -> FirstElement(ValueList[String]("preparation")),
+    "methods"     -> ValueList[String]("methods"),
+    "protocol"    -> ValueList[String]("protocol"),
     "viewer" ->
     OrElse(
       ObjectListReader(
@@ -237,17 +211,17 @@ trait DatasetTemplate extends Template {
             ObjectValue(
               List(
                 Reference("identifier", ref => ref.map(TemplateHelper.refUUIDToSearchId("Subject"))),
-                Value[String]("name", identity),
+                Value[String]("name"),
               )
             )
           ),
-          Nested("species", FirstElement(ValueList[String]("species", identity))),
-          Nested("sex", FirstElement(ValueList[String]("sex", identity))),
-          Nested("age", Value[String]("age", identity)),
-          Nested("agecategory", FirstElement(ValueList[String]("agecategory", identity))),
-          Nested("weight", Value[String]("weight", identity)),
-          Nested("strain", Optional(Value[String]("strain", identity))),
-          Nested("genotype", Value[String]("genotype", identity)),
+          Nested("species", FirstElement(ValueList[String]("species"))),
+          Nested("sex", FirstElement(ValueList[String]("sex"))),
+          Nested("age", Value[String]("age")),
+          Nested("agecategory", FirstElement(ValueList[String]("agecategory"))),
+          Nested("weight", Value[String]("weight")),
+          Nested("strain", Optional(Value[String]("strain"))),
+          Nested("genotype", Value[String]("genotype")),
           Nested(
             "samples",
             ObjectListReader(
@@ -255,7 +229,7 @@ trait DatasetTemplate extends Template {
               ObjectValue(
                 List(
                   Reference("identifier", ref => ref.map(TemplateHelper.refUUIDToSearchId("Sample"))),
-                  Value[String]("name", identity)
+                  Value[String]("name")
                 )
               )
             )
@@ -265,12 +239,12 @@ trait DatasetTemplate extends Template {
         }
       )
     ),
-    "first_release" -> Value[String]("first_release", identity),
-    "last_release"  -> Value[String]("last_release", identity),
+    "first_release" -> Value[String]("first_release"),
+    "last_release"  -> Value[String]("last_release"),
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {
-    case INFERRED => HashMap("editorId" -> Value[String]("editorId", identity)) ++ result
+    case INFERRED => HashMap("editorId" -> Value[String]("editorId")) ++ result
     case _        => result
   }
 }

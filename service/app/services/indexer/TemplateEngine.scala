@@ -24,6 +24,7 @@ import models.templates.instance.{DatasetTemplate, PersonTemplate, ProjectTempla
 import models.templates.{Dataset, Person, Project, Template, TemplateType, UnimindsPerson}
 import play.api.Configuration
 import play.api.libs.json._
+import play.api.libs.json.DefaultWrites
 import utils._
 
 import scala.collection.immutable.HashMap
@@ -69,7 +70,7 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
           case Some(name) =>
             val fieldsMap = el.value.get("fields").map(fields => fieldsListToMap(fields.as[List[JsObject]]))
             val updatedFields = el.value.updated("fields", Json.toJson(fieldsMap))
-            acc.updated(name, Json.toJson(updatedFields))
+            acc.updated(name, Json.toJson(updatedFields)(Writes.genericMapWrites))
           case None => acc
         }
     }
@@ -79,8 +80,7 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     val maybeContent = for {
       fields    <- c.as[JsObject].value.get("fields")
       fieldList <- fields.asOpt[List[JsObject]]
-    } yield fieldsListToMap(fieldList)
-
+    } yield c.as[JsObject].value.updated("fields", Json.toJson(fieldsListToMap(fieldList)))
     maybeContent match {
       case Some(currentContent) =>
         val transformedContent = template.template.foldLeft(HashMap[String, JsValue]()) {

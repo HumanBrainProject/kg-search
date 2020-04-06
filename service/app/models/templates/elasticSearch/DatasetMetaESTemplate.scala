@@ -22,7 +22,7 @@ import utils._
 
 trait DatasetMetaESTemplate extends Template {
 
-  val template = Map(
+  val template: Map[String, TemplateComponent] = Map(
     "identifier" -> ObjectReader(
       "search:identifier",
       Nested(
@@ -265,7 +265,7 @@ trait DatasetMetaESTemplate extends Template {
               "children",
               ObjectValue(
                 List(
-                  Direct("type", JsString("nested")),
+                  Set("type", JsString("nested")),
                   ObjectReader(
                     "fields",
                     Nested(

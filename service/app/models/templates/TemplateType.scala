@@ -17,41 +17,52 @@ package models.templates
 
 import play.api.mvc.PathBindable
 
-sealed trait TemplateType
+sealed trait TemplateType {
+  def apiName: String
+}
 
 object TemplateType {
 
   def apply(s: String): TemplateType = s.toUpperCase match {
-    case "DATASET" => Dataset
-    case "PERSON" => Person
-    case "PROJECT" => Project
+    case "DATASET"        => Dataset
+    case "PERSON"         => Person
+    case "PROJECT"        => Project
     case "UNIMINDSPERSON" => UnimindsPerson
   }
 
   def toSchema(templateType: TemplateType): String = templateType match {
-    case Dataset => "minds/core/dataset/v1.0.0"
-    case Person => "minds/core/person/v1.0.0"
-    case Project => "minds/core/placomponent/v1.0.0"
+    case Dataset        => "minds/core/dataset/v1.0.0"
+    case Person         => "minds/core/person/v1.0.0"
+    case Project        => "minds/core/placomponent/v1.0.0"
     case UnimindsPerson => "uniminds/core/person/v1.0.0"
   }
 
-  implicit def pathBinder(implicit stringBinder: PathBindable[String]): PathBindable[TemplateType] = new PathBindable[TemplateType] {
-    override def bind(key: String, value: String): Either[String, TemplateType] = {
-      for {
-        str <- stringBinder.bind(key, value).right
-      } yield TemplateType(str)
-    }
+  implicit def pathBinder(implicit stringBinder: PathBindable[String]): PathBindable[TemplateType] =
+    new PathBindable[TemplateType] {
+      override def bind(key: String, value: String): Either[String, TemplateType] = {
+        for {
+          str <- stringBinder.bind(key, value).right
+        } yield TemplateType(str)
+      }
 
-    override def unbind(key: String, templateType: TemplateType): String = {
-      templateType.toString
+      override def unbind(key: String, templateType: TemplateType): String = {
+        templateType.toString
+      }
     }
-  }
 }
 
-case object Dataset extends TemplateType
+case object Dataset extends TemplateType {
+  override def apiName: String = "Dataset"
+}
 
-case object Person extends TemplateType
+case object Person extends TemplateType {
+  override def apiName: String = "Contributor"
+}
 
-case object Project extends TemplateType
+case object Project extends TemplateType {
+  override def apiName: String = "Project"
+}
 
-case object UnimindsPerson extends TemplateType
+case object UnimindsPerson extends TemplateType {
+  override def apiName: String = "Contributor"
+}

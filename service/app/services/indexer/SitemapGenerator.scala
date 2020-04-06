@@ -13,20 +13,21 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package models.templates.entities
-import play.api.libs.json.{JsNull, JsValue, Json, Writes}
+package services.indexer
 
-case class UrlObject(url: Option[String]) extends TemplateEntity {
-  override def toJson: JsValue = Json.toJson(this)(UrlObject.implicitWrites)
+import java.nio.file.Path
 
+import com.google.inject.ImplementedBy
+import javax.inject.Inject
+import play.api.libs.json.JsValue
+
+@ImplementedBy(classOf[SitemapGeneratorImpl])
+trait SitemapGenerator {
+
+  def write(path: Path): Unit
 }
 
-object UrlObject {
-  implicit val implicitWrites: Writes[UrlObject] = new Writes[UrlObject] {
-
-    def writes(u: UrlObject): JsValue = {
-      u.url.fold[JsValue](JsNull)(v => Json.obj("url" -> Json.toJson(v)))
-    }
-  }
-  def zero: UrlObject = UrlObject(None)
+class SitemapGeneratorImpl @Inject()(
+  ) extends SitemapGenerator {
+  override def write(path: Path): Unit = ???
 }

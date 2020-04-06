@@ -18,14 +18,12 @@ package models.templates.entities
 import play.api.libs.json.{Format, JsNull, JsValue, Json, Writes}
 
 case class ValueObject[ReturnType: Format](value: Option[ReturnType]) extends TemplateEntity {
-  override type T = ValueObject[ReturnType]
 
   def map[B: Format](t: ReturnType => B): ValueObject[B] = {
     ValueObject[B](this.value.map(t))
   }
   override def toJson: JsValue = Json.toJson(this)(ValueObject.implicitWrites[ReturnType])
 
-  override def zero: ValueObject[ReturnType] = ValueObject.zero[ReturnType]
 }
 
 object ValueObject {

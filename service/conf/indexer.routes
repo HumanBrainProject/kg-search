@@ -19,6 +19,27 @@
   #      description: Ok
   ###
 GET /:templateType/meta  controllers.IndexerController.applyMetaTemplateByType(templateType:models.templates.TemplateType)
+
+
+  ###
+  #  summary: Apply a template for meta information of a specific type
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  #  - in: path
+  #    name: templateType
+  #    type: string
+  #    enum:
+  #      - Dataset
+  #    default: Dataset
+  #  responses:
+  #    '200':
+  #      description: Ok
+  ###
+GET /:templateType/labels  controllers.IndexerController.getLabels(templateType:models.templates.TemplateType)
   ###
   #  summary: Apply a template to a single instance this process is the first step of the indexing to the search UI
   #  parameters:

@@ -30,16 +30,16 @@ trait PersonTemplate extends Template {
   def dataBaseScope: DatabaseScope
 
   val result: Map[String, TemplateComponent] = HashMap(
-    "identifier" -> Value[String]("identifier", identity),
-    "title" -> Value[String]("title", identity),
-    "description" -> Value[String]("description", identity),
-    "phone" -> Value[String]("phone", identity),
+    "identifier"  -> Value[String]("identifier"),
+    "title"       -> Value[String]("title"),
+    "description" -> Value[String]("description"),
+    "phone"       -> Value[String]("phone"),
     "custodianOf" -> ObjectListReader(
       "custodianOf",
       ObjectValue(
         List(
           Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Dataset"))),
-          Value[String]("name", identity)
+          Value[String]("name")
         )
       )
     ),
@@ -48,43 +48,38 @@ trait PersonTemplate extends Template {
       ObjectValue(
         List(
           Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Model"))),
-          Value[String]("name", identity)
+          Value[String]("name")
         )
       )
     ),
-    "address" -> Value[String]("address", identity),
+    "address" -> Value[String]("address"),
     "contributions" -> ObjectListReader(
       "contributions",
       ObjectValue(
         List(
           Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Dataset"))),
-          Value[String]("name", identity)
+          Value[String]("name")
         )
       )
     ),
     "publications" -> ObjectListReader(
       "publications",
       Merge(
-        Value[String]("citation", identity),
+        Value[String]("citation"),
         Value[String]("doi", doi => {
           doi.map { doiStr =>
             val url = URLEncoder.encode(doiStr, "UTF-8")
             s"[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url"
           }
         }),
-        citation =>
-          doi => {
-            (citation, doi) match {
-              case (Some(citationObj: ValueObject[String]), Some(doiObj: ValueObject[String])) =>
-                val strOpt = for {
-                  citationStr <- citationObj.value
-                  doiStr <- doiObj.value
-                } yield citationStr + "\n" + doiStr
-                strOpt.map(str => ValueObject[String](Some(str)))
-              case _ => doi
-            }
-
+        (citation, doi) => {
+          (citation, doi) match {
+            case (Some(ValueObject(Some(citationStr: String))), Some(ValueObject(Some(doiStr: String)))) =>
+              Some(ValueObject[String](Some(citationStr + "\n" + doiStr)))
+            case _ => doi
           }
+
+        }
       )
     ),
     "modelContributions" -> ObjectListReader(
@@ -92,17 +87,17 @@ trait PersonTemplate extends Template {
       ObjectValue(
         List(
           Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Model"))),
-          Value[String]("name", identity)
+          Value[String]("name")
         )
       )
     ),
-    "email" -> Value[String]("email", identity),
-    "first_release" -> Value[String]("first_release", identity),
-    "last_release" -> Value[String]("last_release", identity)
+    "email"         -> Value[String]("email"),
+    "first_release" -> Value[String]("first_release"),
+    "last_release"  -> Value[String]("last_release")
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {
-    case INFERRED => HashMap("editorId" -> Value[String]("editorId", identity)) ++ result
-    case _ => result
+    case INFERRED => HashMap("editorId" -> Value[String]("editorId")) ++ result
+    case _        => result
   }
 }

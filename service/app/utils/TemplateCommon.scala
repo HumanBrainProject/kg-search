@@ -17,17 +17,18 @@ package utils
 
 import models.templates.entities.{
   CustomObject,
-  DirectValue,
   ESFields,
   ESKeyword,
   ESPropertiesObject,
   ESPropertyObject,
   ESValue,
   EmptyEntity,
+  GetValue,
   NestedObject,
   ObjectValueList,
   ObjectValueMap,
   ReferenceObject,
+  SetValue,
   TemplateEntity,
   UrlObject,
   ValueObject,
@@ -52,22 +53,18 @@ trait TemplateWriter extends TemplateComponent {
 trait TemplateReader extends TemplateComponent {
   override type T <: TemplateEntity
 }
-trait IList extends TemplateWriter
+sealed trait IList extends TemplateWriter
 
 case class CustomField[ReturnType: Format](
   fieldName: String,
   customField: String,
-  transform: Option[ReturnType] => Option[ReturnType]
+  transform: Option[ReturnType] => Option[ReturnType] = identity[Option[ReturnType]](_)
 ) extends TemplateWriter {
   override type T = CustomObject[ReturnType]
   override def op(content: Map[String, JsValue]): Option[CustomObject[ReturnType]] = {
-    if (content.contains(fieldName)) {
-      for {
-        v <- content.get(fieldName)
-      } yield CustomObject[ReturnType](customField, transform(v.asOpt[ReturnType]))
-    } else {
-      None
-    }
+    for {
+      v <- content.get(fieldName)
+    } yield CustomObject[ReturnType](customField, transform(v.asOpt[ReturnType]))
   }
   override def zero: CustomObject[ReturnType] = CustomObject.zero[ReturnType]
 
@@ -84,18 +81,14 @@ case class Optional[A <: TemplateWriter](template: A) extends TemplateWriter {
 
 case class Value[ReturnType: Format](
   fieldName: String,
-  transform: ValueObject[ReturnType] => ValueObject[ReturnType]
+  transform: ValueObject[ReturnType] => ValueObject[ReturnType] = identity[ValueObject[ReturnType]](_)
 ) extends TemplateWriter {
   override type T = ValueObject[ReturnType]
 
   override def op(content: Map[String, JsValue]): Option[ValueObject[ReturnType]] = {
-    if (content.contains(fieldName)) {
-      for {
-        v <- content.get(fieldName)
-      } yield transform(ValueObject[ReturnType](v.asOpt[ReturnType]))
-    } else {
-      None
-    }
+    for {
+      v <- content.get(fieldName)
+    } yield transform(ValueObject[ReturnType](v.asOpt[ReturnType]))
   }
 
   override def zero: ValueObject[ReturnType] = ValueObject.zero
@@ -103,17 +96,13 @@ case class Value[ReturnType: Format](
 
 case class Reference(
   fieldName: String,
-  transform: ReferenceObject => ReferenceObject = s => s
+  transform: ReferenceObject => ReferenceObject = identity
 ) extends TemplateWriter {
   override type T = ReferenceObject
   override def op(content: Map[String, JsValue]): Option[ReferenceObject] = {
-    if (content.contains(fieldName)) {
-      for {
-        v <- content.get(fieldName)
-      } yield transform(ReferenceObject(v.asOpt[String]))
-    } else {
-      None
-    }
+    for {
+      v <- content.get(fieldName)
+    } yield transform(ReferenceObject(v.asOpt[String]))
   }
   override def zero: ReferenceObject = ReferenceObject.zero
 
@@ -121,17 +110,13 @@ case class Reference(
 
 case class Url(
   fieldName: String,
-  transform: UrlObject => UrlObject = s => s
+  transform: UrlObject => UrlObject = identity
 ) extends TemplateWriter {
   override type T = UrlObject
   override def op(content: Map[String, JsValue]): Option[UrlObject] = {
-    if (content.contains(fieldName)) {
-      for {
-        v <- content.get(fieldName)
-      } yield transform(UrlObject(v.asOpt[String]))
-    } else {
-      None
-    }
+    for {
+      v <- content.get(fieldName)
+    } yield transform(UrlObject(v.asOpt[String]))
   }
   override def zero: UrlObject = UrlObject.zero
 
@@ -152,11 +137,11 @@ case class OrElse[Template <: TemplateComponent](left: Template, right: Template
 case class Merge[T <: TemplateComponent, T2 <: TemplateComponent](
   templateLeft: T,
   templateRight: T2,
-  merge: Option[TemplateEntity] => Option[TemplateEntity] => Option[TemplateEntity]
+  merge: (Option[TemplateEntity], Option[TemplateEntity]) => Option[TemplateEntity]
 ) extends TemplateWriter {
   override type T = TemplateEntity
   override def op(content: Map[String, JsValue]): Option[TemplateEntity] = {
-    merge(templateLeft.op(content))(templateRight.op(content))
+    merge(templateLeft.op(content), templateRight.op(content))
   }
 
   override def zero: TemplateEntity = templateLeft.zero
@@ -164,7 +149,7 @@ case class Merge[T <: TemplateComponent, T2 <: TemplateComponent](
 
 case class ValueList[ReturnType: Format](
   fieldName: String,
-  transform: ValueObject[ReturnType] => ValueObject[ReturnType]
+  transform: ValueObject[ReturnType] => ValueObject[ReturnType] = identity[ValueObject[ReturnType]](_)
 ) extends IList {
   override type T = ValueObjectList[ReturnType]
   override def op(content: Map[String, JsValue]): Option[ValueObjectList[ReturnType]] = {
@@ -184,7 +169,7 @@ case class ValueList[ReturnType: Format](
       }
   }
 
-  override def zero = ValueObjectList.zero
+  override def zero: ValueObjectList[ReturnType] = ValueObjectList.zero
 }
 
 case class ObjectValue[Template <: TemplateComponent](
@@ -230,7 +215,7 @@ case class FirstElement(list: IList) extends TemplateWriter {
     list.op(content) match {
       case Some(ObjectValueList(l)) => l.headOption
       case Some(ValueObjectList(l)) => l.headOption
-      case None                     => None
+      case _                        => None
     }
   }
 
@@ -261,25 +246,14 @@ case class ObjectListReader[A <: TemplateComponent](fieldName: String, el: A) ex
   override def op(content: Map[String, JsValue]): Option[ObjectValueList] = {
     val c = content
       .get(fieldName)
-      .map { l =>
+      .flatMap { l =>
         val arr: List[JsObject] = l.asOpt[List[JsObject]] match {
           case Some(ll) => ll
           case None     => List(l.as[JsObject])
         }
         val updated = arr.foldLeft(ObjectValueList.zero) {
           case (l, js) =>
-            el match {
-              case opt @ Optional(_) =>
-                opt.op(js.value) match {
-                  case Some(entity) => l :+ entity
-                  case None         => l
-                }
-              case template =>
-                template.op(js.value) match {
-                  case Some(entity) => l :+ entity
-                  case None         => l :+ template.zero
-                }
-            }
+            checkOptional(l, js)
         }
         if (updated.list.isEmpty) {
           None
@@ -287,8 +261,22 @@ case class ObjectListReader[A <: TemplateComponent](fieldName: String, el: A) ex
           Some(updated)
         }
       }
-      .getOrElse(None)
     c
+  }
+
+  private def checkOptional(l: ObjectValueList, js: JsObject) = {
+    el match {
+      case opt @ Optional(_) =>
+        opt.op(js.value) match {
+          case Some(entity) => l :+ entity
+          case None         => l
+        }
+      case template =>
+        template.op(js.value) match {
+          case Some(entity) => l :+ entity
+          case None         => l :+ template.zero
+        }
+    }
   }
 }
 
@@ -309,10 +297,26 @@ case class ESProperty(fieldName: String, fields: Option[ESFields] = Some(ESField
   }
 }
 
-case class Direct(fieldName: String, value: JsValue) extends TemplateWriter {
-  override type T = DirectValue
+case class Set(fieldName: String, value: JsValue) extends TemplateWriter {
+  override type T = SetValue
 
-  override def zero: DirectValue = DirectValue.zero
+  override def zero: SetValue = SetValue.zero
 
-  override def op(content: Map[String, JsValue]): Option[DirectValue] = Some(DirectValue(fieldName, value))
+  override def op(content: Map[String, JsValue]): Option[SetValue] = Some(SetValue(fieldName, value))
+}
+
+case class Get[ReturnType: Format](
+  fieldName: String,
+  transform: GetValue[ReturnType] => GetValue[ReturnType] = identity[GetValue[ReturnType]](_)
+) extends TemplateWriter {
+  override type T = GetValue[ReturnType]
+
+  override def op(content: Map[String, JsValue]): Option[GetValue[ReturnType]] = {
+    for {
+      v  <- content.get(fieldName)
+      vT <- v.asOpt[ReturnType]
+    } yield transform(GetValue[ReturnType](Some(vT)))
+  }
+
+  override def zero: GetValue[ReturnType] = GetValue.zero
 }

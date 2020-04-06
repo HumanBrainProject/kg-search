@@ -18,10 +18,6 @@ package models.templates.entities
 import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 
 case class NestedObject(fieldName: String, content: TemplateEntity) extends TemplateEntity {
-  override type T = NestedObject
-
-  override def zero: NestedObject = NestedObject.zero
-
   override def toJson: JsValue = Json.toJson(this)(NestedObject.implicitWrites)
 
 }

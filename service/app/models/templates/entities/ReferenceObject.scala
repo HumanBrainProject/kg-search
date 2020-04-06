@@ -20,10 +20,6 @@ import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 case class ReferenceObject(reference: Option[String]) extends TemplateEntity {
   override def toJson: JsValue = Json.toJson(this)(ReferenceObject.implicitWrites)
 
-  override type T = ReferenceObject
-
-  override def zero: ReferenceObject = ReferenceObject.zero
-
   def map(f: String => String): ReferenceObject = {
     ReferenceObject(reference.map(f))
   }

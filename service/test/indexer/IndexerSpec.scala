@@ -17,18 +17,15 @@ package indexer
 
 import java.io.FileInputStream
 
-import controllers.IndexerController
-import models.templates.Dataset
-import models.templates.elasticSearch.DatasetMetaESTemplate
-import models.templates.instance.{DatasetTemplate, PersonTemplate, ProjectTemplate, UnimindsPersonTemplate}
-import models.templates.meta.DatasetMetaTemplate
-import models.{DatabaseScope, INFERRED}
 import org.scalatest.Assertion
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.test.Injecting
 import services.indexer.IndexerImpl
+
+import scala.concurrent.Await
+import scala.concurrent.duration._
 
 class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
 
@@ -38,280 +35,33 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     Json.parse(stream)
   }
 
-  def assertIsSameJsObject(fieldName: String, result: JsValue, expected: JsValue): Assertion = {
+  def assertIsSameJsObject(
+    fieldName: String,
+    result: Map[String, JsValue],
+    expected: Map[String, JsValue]
+  ): Assertion = {
     assert(
-      result.as[JsObject].value.get(fieldName).toString == expected.as[JsObject].value.get(fieldName).toString
+      result(fieldName) == expected(fieldName)
     )
   }
   "The indexed trait" must {
-    "transform the dataset payload accordingly" in {
+    "create the labels properly" in {
+      import monix.execution.Scheduler.Implicits.global
       val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/dataset.json")
-      val template = new DatasetTemplate {
-        override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
-      }
-      val result = indexer.transform(payload, template)
-      val expected = loadResource("/expectedDataset.json")
-      assertIsSameJsObject("identifier", result, expected)
-      assertIsSameJsObject("contributors", result, expected)
-      assertIsSameJsObject("title", result, expected)
-      assertIsSameJsObject("citation", result, expected)
-      assertIsSameJsObject("license_info", result, expected)
-      assertIsSameJsObject("doi", result, expected)
-      assertIsSameJsObject("component", result, expected)
-      assertIsSameJsObject("owners", result, expected)
-      assertIsSameJsObject("description", result, expected)
-      assertIsSameJsObject("speciesFilter", result, expected)
-      assertIsSameJsObject("embargoForFilter", result, expected)
-      assertIsSameJsObject("embargo", result, expected)
-      assertIsSameJsObject("files", result, expected)
-      assertIsSameJsObject("dataDescriptor", result, expected)
-      assertIsSameJsObject("external_datalink", result, expected)
-      assertIsSameJsObject("publications", result, expected)
-      assertIsSameJsObject("atlas", result, expected)
-      assertIsSameJsObject("region", result, expected)
-      assertIsSameJsObject("preparation", result, expected)
-      assertIsSameJsObject("methods", result, expected)
-      assertIsSameJsObject("protocols", result, expected)
-      assertIsSameJsObject("viewer", result, expected)
-      assertIsSameJsObject("subjects", result, expected)
-      assertIsSameJsObject("first_release", result, expected)
-      assertIsSameJsObject("last_release", result, expected)
-    }
-    "transform the person payload accordingly" in {
-      val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/person.json")
-      val template = new PersonTemplate {
-        override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
-      }
-      val result = indexer.transform(payload, template)
-      val expected = loadResource("/expectedPerson.json")
-      assertIsSameJsObject("identifier", result, expected)
-      assertIsSameJsObject("address", result, expected)
-      assertIsSameJsObject("custodianOfModel", result, expected)
-      assertIsSameJsObject("lastReleaseAt", result, expected)
-      assertIsSameJsObject("description", result, expected)
-      assertIsSameJsObject("modelContributions", result, expected)
-      assertIsSameJsObject("title", result, expected)
-      assertIsSameJsObject("firstReleaseAt", result, expected)
-      assertIsSameJsObject("custodianOf", result, expected)
-      assertIsSameJsObject("contributions", result, expected)
-      assertIsSameJsObject("phone", result, expected)
-      assertIsSameJsObject("organizations", result, expected)
-      assertIsSameJsObject("email", result, expected)
-      assertIsSameJsObject("publications", result, expected)
-    }
-    "transform the uniminds person payload accordingly" in {
-      val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/unimindsPerson.json")
-      val template = new UnimindsPersonTemplate {
-        override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
-      }
-      val result = indexer.transform(payload, template)
-      val expected = loadResource("/expectedUnimindsPerson.json")
-      assertIsSameJsObject("identifier", result, expected)
-      assertIsSameJsObject("address", result, expected)
-      assertIsSameJsObject("custodianOfModel", result, expected)
-      assertIsSameJsObject("lastReleaseAt", result, expected)
-      assertIsSameJsObject("description", result, expected)
-      assertIsSameJsObject("modelContributions", result, expected)
-      assertIsSameJsObject("title", result, expected)
-      assertIsSameJsObject("firstReleaseAt", result, expected)
-      assertIsSameJsObject("custodianOf", result, expected)
-      assertIsSameJsObject("contributions", result, expected)
-      assertIsSameJsObject("phone", result, expected)
-      assertIsSameJsObject("organizations", result, expected)
-      assertIsSameJsObject("email", result, expected)
-      assertIsSameJsObject("publications", result, expected)
-    }
-    "transform the project payload accordingly" in {
-      val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/project.json")
-      val template = new ProjectTemplate {
-        override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
-      }
-      val result = indexer.transform(payload, template)
-      val expected = loadResource("/expectedProject.json")
-      assertIsSameJsObject("identifier", result, expected)
-      assertIsSameJsObject("description", result, expected)
-      assertIsSameJsObject("publications", result, expected)
-      assertIsSameJsObject("dataset", result, expected)
-      assertIsSameJsObject("title", result, expected)
-      assertIsSameJsObject("first_release", result, expected)
-      assertIsSameJsObject("editorId", result, expected)
-      assertIsSameJsObject("last_release", result, expected)
-    }
-    "properly handle empty values in dataset" in {
-      val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/emptyDataset.json")
-      val template = new DatasetTemplate {
-        override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
-      }
-      val result = indexer.transform(payload, template)
-      val expected = loadResource("/expectedEmptyDataset.json")
-      assertIsSameJsObject("identifier", result, expected)
-      assertIsSameJsObject("contributors", result, expected)
-      assertIsSameJsObject("title", result, expected)
-      assertIsSameJsObject("citation", result, expected)
-      assertIsSameJsObject("license_info", result, expected)
-      assertIsSameJsObject("doi", result, expected)
-      assertIsSameJsObject("component", result, expected)
-      assertIsSameJsObject("owners", result, expected)
-      assertIsSameJsObject("description", result, expected)
-      assertIsSameJsObject("speciesFilter", result, expected)
-      assertIsSameJsObject("embargoForFilter", result, expected)
-      assertIsSameJsObject("embargo", result, expected)
-      assertIsSameJsObject("files", result, expected)
-      assertIsSameJsObject("external_datalink", result, expected)
-      assertIsSameJsObject("publications", result, expected)
-      assertIsSameJsObject("atlas", result, expected)
-      assertIsSameJsObject("region", result, expected)
-      assertIsSameJsObject("preparation", result, expected)
-      assertIsSameJsObject("methods", result, expected)
-      assertIsSameJsObject("protocols", result, expected)
-      assertIsSameJsObject("viewer", result, expected)
-      assertIsSameJsObject("subjects", result, expected)
-      assertIsSameJsObject("first_release", result, expected)
-      assertIsSameJsObject("last_release", result, expected)
-    }
-    "properly handle empty values in person" in {
-      val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/emptyPerson.json")
-      val template = new PersonTemplate {
-        override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
-      }
-      val result = indexer.transform(payload, template)
-      val expected = loadResource("/expectedEmptyPerson.json")
-      assertIsSameJsObject("identifier", result, expected)
-      assertIsSameJsObject("address", result, expected)
-      assertIsSameJsObject("custodianOfModel", result, expected)
-      assertIsSameJsObject("lastReleaseAt", result, expected)
-      assertIsSameJsObject("description", result, expected)
-      assertIsSameJsObject("modelContributions", result, expected)
-      assertIsSameJsObject("title", result, expected)
-      assertIsSameJsObject("firstReleaseAt", result, expected)
-      assertIsSameJsObject("custodianOf", result, expected)
-      assertIsSameJsObject("contributions", result, expected)
-      assertIsSameJsObject("phone", result, expected)
-      assertIsSameJsObject("email", result, expected)
-      assertIsSameJsObject("publications", result, expected)
-    }
-    "properly handle empty values in uniminds person" in {
-      val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/emptyUnimindsPerson.json")
-      val template = new UnimindsPersonTemplate {
-        override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
-      }
-      val result = indexer.transform(payload, template)
-      val expected = loadResource("/expectedEmptyUnimindsPerson.json")
-      assertIsSameJsObject("identifier", result, expected)
-      assertIsSameJsObject("address", result, expected)
-      assertIsSameJsObject("custodianOfModel", result, expected)
-      assertIsSameJsObject("lastReleaseAt", result, expected)
-      assertIsSameJsObject("description", result, expected)
-      assertIsSameJsObject("modelContributions", result, expected)
-      assertIsSameJsObject("title", result, expected)
-      assertIsSameJsObject("firstReleaseAt", result, expected)
-      assertIsSameJsObject("custodianOf", result, expected)
-      assertIsSameJsObject("contributions", result, expected)
-      assertIsSameJsObject("phone", result, expected)
-      assertIsSameJsObject("email", result, expected)
-      assertIsSameJsObject("publications", result, expected)
-    }
-    "properly handle empty values in project" in {
-      val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/emptyProject.json")
-      val template = new ProjectTemplate {
-        override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
-      }
-      val result = indexer.transform(payload, template)
-      val expected = loadResource("/expectedEmptyProject.json")
-      assertIsSameJsObject("identifier", result, expected)
-      assertIsSameJsObject("description", result, expected)
-      assertIsSameJsObject("publications", result, expected)
-      assertIsSameJsObject("dataset", result, expected)
-      assertIsSameJsObject("title", result, expected)
-      assertIsSameJsObject("first_release", result, expected)
-      assertIsSameJsObject("editorId", result, expected)
-      assertIsSameJsObject("last_release", result, expected)
-    }
-    "create an object for the meta information" in {
-      val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/datasetMeta.json")
-      val template = new DatasetMetaTemplate {}
-      val result = indexer.transformMeta(payload, template)
-      val expected = loadResource("/expectedDatasetMeta.json")
-      assertIsSameJsObject("identifier", result, expected)
-      assertIsSameJsObject("title", result, expected)
-      assertIsSameJsObject("contributors", result, expected)
-      assertIsSameJsObject("zip", result, expected)
-      assertIsSameJsObject("citation", result, expected)
-      assertIsSameJsObject("dataDescriptor", result, expected)
-      assertIsSameJsObject("doi", result, expected)
-      assertIsSameJsObject("license_info", result, expected)
-      assertIsSameJsObject("component", result, expected)
-      assertIsSameJsObject("owners", result, expected)
-      assertIsSameJsObject("description", result, expected)
-      assertIsSameJsObject("speciesFilter", result, expected)
-      assertIsSameJsObject("embargoForFilter", result, expected)
-      assertIsSameJsObject("embargo", result, expected)
-      assertIsSameJsObject("files", result, expected)
-      assertIsSameJsObject("external_datalink", result, expected)
-      assertIsSameJsObject("atlas", result, expected)
-      assertIsSameJsObject("region", result, expected)
-      assertIsSameJsObject("preparation", result, expected)
-      assertIsSameJsObject("methods", result, expected)
-      assertIsSameJsObject("protocol", result, expected)
-      assertIsSameJsObject("viewer", result, expected)
-      assertIsSameJsObject("subjects", result, expected)
-      assertIsSameJsObject("first_release", result, expected)
-      assertIsSameJsObject("last_release", result, expected)
-    }
-    "create an object for ES mapping information" in {
-      val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/datasetMeta.json")
-      val template = new DatasetMetaESTemplate {}
-      val result = indexer.transformMeta(payload, template)
-      val expected = loadResource("/expectedDatasetMetaES.json")
-      assertIsSameJsObject("identifier", result, expected)
-      assertIsSameJsObject("title", result, expected)
-      assertIsSameJsObject("contributors", result, expected)
-      assertIsSameJsObject("zip", result, expected)
-      assertIsSameJsObject("citation", result, expected)
-      assertIsSameJsObject("dataDescriptor", result, expected)
-      assertIsSameJsObject("doi", result, expected)
-      assertIsSameJsObject("license_info", result, expected)
-      assertIsSameJsObject("component", result, expected)
-      assertIsSameJsObject("owners", result, expected)
-      assertIsSameJsObject("description", result, expected)
-      assertIsSameJsObject("speciesFilter", result, expected)
-      assertIsSameJsObject("embargoForFilter", result, expected)
-      assertIsSameJsObject("embargo", result, expected)
-      assertIsSameJsObject("files", result, expected)
-      assertIsSameJsObject("external_datalink", result, expected)
-      assertIsSameJsObject("atlas", result, expected)
-      assertIsSameJsObject("region", result, expected)
-      assertIsSameJsObject("preparation", result, expected)
-      assertIsSameJsObject("methods", result, expected)
-      assertIsSameJsObject("protocol", result, expected)
-      assertIsSameJsObject("viewer", result, expected)
-      assertIsSameJsObject("subjects", result, expected)
-      assertIsSameJsObject("first_release", result, expected)
-      assertIsSameJsObject("last_release", result, expected)
+      val expected = loadResource("/indexer/labelsExpected.json").as[JsObject].value("Dataset").as[Map[String, JsValue]]
+      val token =
+        "eyJhbGciOiJSUzI1NiIsImtpZCI6ImJicC1vaWRjIn0.eyJleHAiOjE1ODU5MTQ4NTcsInN1YiI6IjMwNTg2MSIsImF1ZCI6WyJuZXh1cy1rZy1zZWFyY2giXSwiaXNzIjoiaHR0cHM6XC9cL3NlcnZpY2VzLmh1bWFuYnJhaW5wcm9qZWN0LmV1XC9vaWRjXC8iLCJqdGkiOiJkMDhmODhlNC00NGRhLTQ4ZTgtOWJhOC1hN2FmMzY2MGVkOTgiLCJpYXQiOjE1ODU5MDA0NTcsImhicF9rZXkiOiI2ZWUzMDEzZTlkZWJmOWNkODE4OTJlYjY1ZDEwZGUyY2JiMGMzODVhIn0.T6SDqkO-e8Bl8nt5F4V6NYvAfo86_tWnWRf1fVvGaLHgoTTadZUHDnx-pxCpK4aRPLMbfQU44t10QDKwrvLQWzETIpr4PmMxu8vSb0tskfIjJUhQLTEygaf_fjP2u91YuXWcaBqDkIT01aM47hhDGrDdvJQH7EWjVPNeTYcw_BU"
+      val task = indexer.createLabels(List("Dataset"), token)
+      val labels = Await.result(task.runToFuture, Duration.Inf)
+      val datasetLabels = labels("Dataset").as[Map[String, JsValue]]
+//      assertIsSameJsObject("http://schema.org/identifier", datasetLabels, expected)
+//      assertIsSameJsObject("http://schema.org/name", datasetLabels, expected)
+//      assertIsSameJsObject("https://schema.hbp.eu/searchUi/boost", datasetLabels, expected)
+//      assertIsSameJsObject("https://schema.hbp.eu/searchUi/defaultSelection", datasetLabels, expected)
+//      assertIsSameJsObject("https://schema.hbp.eu/searchUi/icon", datasetLabels, expected)
+//      assertIsSameJsObject("https://schema.hbp.eu/searchUi/order", datasetLabels, expected)
+      assertIsSameJsObject("https://schema.hbp.eu/searchUi/ribbon", datasetLabels, expected)
     }
   }
 
-  "The index endpoint" must {
-    "fetch datasets and apply the template" in {
-      val indexerController = app.injector.instanceOf[IndexerController]
-    }
-  }
 }
