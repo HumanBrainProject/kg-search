@@ -89,7 +89,8 @@ export const initialize = (location, defaultGroup) => {
       history.replace(`${location.pathname}${queryString}`);
       dispatch(setApplicationReady());
     } else {
-      const group = getSearchKey("group") || localStorage.getItem("group");
+      const group = getSearchKey("group");
+      const savedGroup = localStorage.getItem("group");
       // backward compatibility test
       const instance = location.hash.substr(1);
       if (location.pathname === "/" && instance) {
@@ -98,7 +99,7 @@ export const initialize = (location, defaultGroup) => {
       }
 
       const regShareEditorReference = /^\/instances\/(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
-      if((group && group !== defaultGroup) || location.pathname.startsWith("/live/") || regShareEditorReference.test(location.pathname))  {
+      if((group && group !== defaultGroup) || savedGroup || location.pathname.startsWith("/live/") || regShareEditorReference.test(location.pathname))  {
         dispatch(authenticate());
       } else {
         dispatch(setApplicationReady());
