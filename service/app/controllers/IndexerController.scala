@@ -35,7 +35,62 @@ class IndexerController @Inject()(
   cc: ControllerComponents
 ) extends AbstractController(cc) {
   implicit val s: Scheduler = monix.execution.Scheduler.Implicits.global
-  def indexByType(databaseScope: DatabaseScope, templateType: TemplateType): Unit = ()
+
+  def index(
+    databaseScope: DatabaseScope,
+    completeRebuild: Boolean,
+    releasedOnly: Boolean,
+    simulate: Boolean,
+    restrictToOrganizations: Option[String]
+  ): Action[AnyContent] = Action.async { implicit request =>
+    val result = request.headers.toSimpleMap.get("Authorization") match {
+      case Some(token) =>
+        indexer
+          .index(
+            completeRebuild,
+            releasedOnly,
+            simulate,
+            restrictToOrganizations.map(_.split(",").toList).getOrElse(List()),
+            databaseScope,
+            token
+          )
+          .map {
+            case Right(_) => Ok("Indexing done")
+            case Left(e)  => e.toResults()
+          }
+      case None => Task.pure(Unauthorized("Please provide credentials"))
+    }
+    result.runToFuture
+  }
+
+  def indexByType(
+    databaseScope: DatabaseScope,
+    dataType: String,
+    completeRebuild: Boolean,
+    releasedOnly: Boolean,
+    simulate: Boolean,
+    restrictToOrganizations: Option[String]
+  ): Action[AnyContent] = Action.async { implicit request =>
+    val result = request.headers.toSimpleMap.get("Authorization") match {
+      case Some(token) =>
+        indexer
+          .indexByType(
+            completeRebuild,
+            releasedOnly,
+            simulate,
+            restrictToOrganizations.map(_.split(",").toList).getOrElse(List()),
+            databaseScope,
+            dataType,
+            token
+          )
+          .map {
+            case Right(_) => Ok(s"Indexing done for type $dataType")
+            case Left(e)  => e.toResults()
+          }
+      case None => Task.pure(Unauthorized("Please provide credentials"))
+    }
+    result.runToFuture
+  }
 
   def indexByTypeAndId(databaseScope: DatabaseScope, templateType: TemplateType, id: UUID): Unit = ()
 
@@ -60,7 +115,7 @@ class IndexerController @Inject()(
             .map {
               case Right(v) => Ok(v)
               case Left(error) =>
-                Result(ResponseHeader(error.status), HttpEntity.Strict(ByteString(error.message), None))
+                error.toResults()
             }
 
         case None => Task.pure(Unauthorized("Please provide credentials"))
@@ -81,7 +136,7 @@ class IndexerController @Inject()(
             .map {
               case Right(v) => Ok(v)
               case Left(error) =>
-                Result(ResponseHeader(error.status), HttpEntity.Strict(ByteString(error.message), None))
+                error.toResults()
             }
 
         case None => Task.pure(Unauthorized("Please provide credentials"))
@@ -100,7 +155,7 @@ class IndexerController @Inject()(
             .map {
               case Right(v) => Ok(v)
               case Left(error) =>
-                Result(ResponseHeader(error.status), HttpEntity.Strict(ByteString(error.message), None))
+                error.toResults()
             }
 
         case None => Task.pure(Unauthorized("Please provide credentials"))
@@ -117,7 +172,7 @@ class IndexerController @Inject()(
             .map {
               case Right(v) => Ok(v)
               case Left(error) =>
-                Result(ResponseHeader(error.status), HttpEntity.Strict(ByteString(error.message), None))
+                error.toResults()
             }
         case None => Task.pure(Unauthorized("Please provide credentials"))
       }

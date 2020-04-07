@@ -24,7 +24,8 @@ import models.{DatabaseScope, INFERRED, PaginationParams, RELEASED}
 import models.errors.ApiError
 import models.templates.{Template, TemplateType}
 import monix.eval.Task
-import play.api.Configuration
+import org.slf4j.LoggerFactory
+import play.api.{Configuration, Logging}
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
@@ -36,7 +37,6 @@ trait Indexer[Content, TransformedContent, Effect[_], UploadResult, QueryResult]
 
   def transform(jsonContent: Content, template: Template): TransformedContent
   def transformMeta(jsonContent: Content, template: Template): TransformedContent
-  def load(jsValue: TransformedContent): Effect[UploadResult]
 
   def queryByType(
     templateType: TemplateType,
@@ -64,6 +64,24 @@ trait Indexer[Content, TransformedContent, Effect[_], UploadResult, QueryResult]
     token: String
   ): Effect[QueryResult]
 
+  def index(
+    completeRebuild: Boolean,
+    releasedOnly: Boolean,
+    simulate: Boolean,
+    organizations: List[String],
+    databaseScope: DatabaseScope,
+    token: String
+  ): Effect[Either[ApiError, Unit]]
+
+  def indexByType(
+    completeRebuild: Boolean,
+    releasedOnly: Boolean,
+    simulate: Boolean,
+    organizations: List[String],
+    databaseScope: DatabaseScope,
+    relevantType: String,
+    token: String
+  ): Effect[Either[ApiError, Unit]]
 }
 
 class IndexerImpl @Inject()(
@@ -72,12 +90,11 @@ class IndexerImpl @Inject()(
   elasticSearch: ElasticSearch,
   siteMapGenerator: SitemapGenerator,
   configuration: Configuration
-) extends Indexer[JsValue, JsValue, Task, WSResponse, Either[ApiError, JsValue]] {
+) extends Indexer[JsValue, JsValue, Task, WSResponse, Either[ApiError, JsValue]]
+    with Logging {
 
   val queryEndpoint: String = configuration.get[String]("kgquery.endpoint")
   val serviceUrlBase: String = configuration.get[String]("serviceUrlBase")
-
-  override def load(jsValue: JsValue): Task[WSResponse] = ???
 
   private def getRelevantTypes(token: String): Task[Either[ApiError, List[String]]] = {
     Task
@@ -211,6 +228,7 @@ class IndexerImpl @Inject()(
       queryByType(template, databaseScope, PaginationParams(None, None), organizations, token).flatMap {
         case Right(value) =>
           val valueArr = value.as[List[JsObject]]
+          logger.debug(s"$template - Indexing of started")
           val indexedList = for {
             el <- valueArr
           } yield {
@@ -225,6 +243,7 @@ class IndexerImpl @Inject()(
             )
           }
           Task.sequence(indexedList).map { _ =>
+            logger.debug(s"$template - Indexing of done")
             Right(())
           }
         case Left(e) => Task.pure(Left(e))
@@ -257,50 +276,72 @@ class IndexerImpl @Inject()(
     Task.sequence(idsToRemove)
   }
 
-  def index(
+  private def indexWithTypes(
+    completeRebuild: Boolean,
+    releasedOnly: Boolean,
+    simulate: Boolean,
+    organizations: List[String],
+    databaseScope: DatabaseScope,
+    relevantTypes: List[String],
+    token: String
+  ) = {
+    createESmapping(relevantTypes, token).flatMap { mapping =>
+      import java.text.SimpleDateFormat
+      import java.util.TimeZone
+      val tz = TimeZone.getTimeZone("UTC")
+      val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+      df.setTimeZone(tz)
+      val nowAsISO = df.format(new Date())
+      val recreateIndexTask = if (completeRebuild && !simulate) {
+        elasticSearch.recreateIndex(mapping, databaseScope)
+      } else {
+        Task.pure(Right(()))
+      }
+      for {
+        _ <- recreateIndexTask
+        _ <- Task.sequence(
+          reindexInstances(
+            relevantTypes,
+            organizations,
+            databaseScope,
+            simulate = simulate,
+            releasedOnly,
+            completeRebuild,
+            token
+          )
+        )
+        _ <- removeNonexistingItems(databaseScope.toIndexName, nowAsISO, completeRebuild) //              writeSiteMap <- siteMapGenerator.write(
+        //                Path.of("/opt/scripts/kg_indexer/kg_indexer/sitemap.xml")
+        //              )
+      } yield Right(())
+    }
+  }
+
+  override def index(
     completeRebuild: Boolean,
     releasedOnly: Boolean,
     simulate: Boolean,
     organizations: List[String],
     databaseScope: DatabaseScope,
     token: String
-  ): Task[Any] = {
-    getRelevantTypes(token).map {
+  ): Task[Either[ApiError, Unit]] = {
+    getRelevantTypes(token).flatMap {
       case Right(relevantTypes) =>
-        createESmapping(relevantTypes, token).map { mapping =>
-          import java.text.SimpleDateFormat
-          import java.util.TimeZone
-          val tz = TimeZone.getTimeZone("UTC")
-          val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
-          df.setTimeZone(tz)
-          val nowAsISO = df.format(new Date())
-          val recreateIndexTask = if (completeRebuild && !simulate) {
-            elasticSearch.recreateIndex(mapping, databaseScope)
-          } else {
-            Task.pure(Right(()))
-          }
-          recreateIndexTask.map { indexRecreated =>
-            val e = for {
-              _ <- Task.sequence(
-                reindexInstances(
-                  relevantTypes,
-                  organizations,
-                  databaseScope,
-                  simulate = simulate,
-                  releasedOnly,
-                  completeRebuild,
-                  token
-                )
-              )
-              _ <- removeNonexistingItems(databaseScope.toIndexName, nowAsISO, completeRebuild) //              writeSiteMap <- siteMapGenerator.write(
-//                Path.of("/opt/scripts/kg_indexer/kg_indexer/sitemap.xml")
-//              )
-            } yield ()
-            e
-          }
-        }
-      case e => e
+        indexWithTypes(completeRebuild, releasedOnly, simulate, organizations, databaseScope, relevantTypes, token)
+      case Left(e) => Task.pure(Left(e))
     }
+  }
+
+  override def indexByType(
+    completeRebuild: Boolean,
+    releasedOnly: Boolean,
+    simulate: Boolean,
+    organizations: List[String],
+    databaseScope: DatabaseScope,
+    relevantType: String,
+    token: String
+  ): Task[Either[ApiError, Unit]] = {
+    indexWithTypes(completeRebuild, releasedOnly, simulate, organizations, databaseScope, List(relevantType), token)
   }
 
   override def transform(jsonContent: JsValue, template: Template): JsValue = {
@@ -319,13 +360,15 @@ class IndexerImpl @Inject()(
   ): Task[Either[ApiError, JsValue]] = {
     val schema = TemplateType.toSchema(templateType)
     val paramsSize = paginationParams.limit.map(p => s"&size=${p}").getOrElse("")
-    val paramsFrom = paginationParams.offset.map(p => s"&from=${p}").getOrElse("")
-    val restrictOrgsToString = if (restrictToOrgs.isEmpty) "" else restrictToOrgs.mkString(",")
+    val paramsFrom = paginationParams.offset.map(p => s"&start=${p}").getOrElse("")
+    val restrictOrgsToString =
+      if (restrictToOrgs.isEmpty) "" else s"""&restrictToOrganizations=${restrictToOrgs.mkString(",")}"""
+    logger.debug(s"$templateType - Fetching of data started")
     Task
-      .deferFuture(
+      .fromFuture(
         WSClient
           .url(
-            s"$queryEndpoint/query/$schema/search/instances/?vocab=https://schema.hbp.eu/search/&databaseScope=${databaseScope.toString}$paramsSize$paramsFrom&restrictToOrganizations=$restrictOrgsToString"
+            s"$queryEndpoint/query/$schema/search/instances/?vocab=https://schema.hbp.eu/search/&databaseScope=${databaseScope.toString}$paramsSize$paramsFrom$restrictOrgsToString"
           )
           .addHttpHeaders("Authorization" -> s"Bearer $token")
           .get()
@@ -341,6 +384,7 @@ class IndexerImpl @Inject()(
 
             maybeListOfResults match {
               case Some(listOfResults) =>
+                logger.debug(s"$templateType - Fetching of data done with ${listOfResults.size} elements fetched")
                 val template = templateEngine.getTemplateFromType(templateType, databaseScope)
                 val result = listOfResults.map(r => {
                   transform(r, template)

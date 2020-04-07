@@ -1,7 +1,5 @@
-
-
   ###
-  #  summary: Apply a template for meta information of a specific type
+  #  summary: Index the specified database scope
   #  parameters:
   #  - in: header
   #    name: Authorization
@@ -9,37 +7,32 @@
   #    required: false
   #    type: string
   #  - in: path
-  #    name: templateType
+  #    name: dataType
   #    type: string
-  #    enum:
-  #      - Dataset
-  #    default: Dataset
+  #    enum: [Dataset]
+  #  - in: query
+  #    name: databaseScope
+  #    type: string
+  #    enum: [INFERRED, RELEASED]
+  #  - in: query
+  #    name: completeRebuild
+  #    type: bool
+  #  - in: query
+  #    name: releasedOnly
+  #    type: bool
+  #  - in: query
+  #    name: simulate
+  #    type: bool
+  #  - in: query
+  #    name: restrictToOrganizations
+  #    type: string
   #  responses:
   #    '200':
   #      description: Ok
   ###
-GET /:templateType/meta  controllers.IndexerController.applyMetaTemplateByType(templateType:models.templates.TemplateType)
+POST /:dataType  controllers.IndexerController.indexByType(databaseScope: models.DatabaseScope,dataType: String, completeRebuild: Boolean?=false,releasedOnly: Boolean?=false, simulate: Boolean?=true, restrictToOrganizations:Option[String])
 
 
-  ###
-  #  summary: Apply a template for meta information of a specific type
-  #  parameters:
-  #  - in: header
-  #    name: Authorization
-  #    description: Authorization token
-  #    required: false
-  #    type: string
-  #  - in: path
-  #    name: templateType
-  #    type: string
-  #    enum:
-  #      - Dataset
-  #    default: Dataset
-  #  responses:
-  #    '200':
-  #      description: Ok
-  ###
-GET /:templateType/labels  controllers.IndexerController.getLabels(templateType:models.templates.TemplateType)
   ###
   #  summary: Apply a template to a single instance this process is the first step of the indexing to the search UI
   #  parameters:
@@ -48,10 +41,6 @@ GET /:templateType/labels  controllers.IndexerController.getLabels(templateType:
   #    description: Authorization token
   #    required: false
   #    type: string
-  #  - in: path
-  #    name: databaseScope
-  #    type: string
-  #    enum: [INFERRED, RELEASED]
   #  - in: path
   #    name: templateType
   #    type: string
@@ -62,6 +51,10 @@ GET /:templateType/labels  controllers.IndexerController.getLabels(templateType:
   #      - UnimindsPerson
   #      - ModelInstance
   #    default: Dataset
+  #  - in: path
+  #    name: query
+  #    type: string
+  #    enum: [INFERRED, RELEASED]
   #  - in: query
   #    name: from
   #    type: int
@@ -72,7 +65,49 @@ GET /:templateType/labels  controllers.IndexerController.getLabels(templateType:
   #    '200':
   #      description: Ok
   ###
-GET /:databaseScope/:templateType  controllers.IndexerController.applyTemplateByType(databaseScope: models.DatabaseScope, templateType:models.templates.TemplateType, restrictToOrg:Option[String], from:Option[Int], size:Option[Int])
+GET /templates/:templateType  controllers.IndexerController.applyTemplateByType(databaseScope: models.DatabaseScope, templateType:models.templates.TemplateType, restrictToOrg:Option[String], from:Option[Int], size:Option[Int])
+
+
+  ###
+  #  summary: Apply a template for meta information of a specific type
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  #  - in: path
+  #    name: templateType
+  #    type: string
+  #    enum:
+  #      - Dataset
+  #    default: Dataset
+  #  responses:
+  #    '200':
+  #      description: Ok
+  ###
+GET /templates/:templateType/meta  controllers.IndexerController.applyMetaTemplateByType(templateType:models.templates.TemplateType)
+
+
+  ###
+  #  summary: Apply a template for meta information of a specific type
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  #  - in: path
+  #    name: templateType
+  #    type: string
+  #    enum:
+  #      - Dataset
+  #    default: Dataset
+  #  responses:
+  #    '200':
+  #      description: Ok
+  ###
+GET /templates/:templateType/labels  controllers.IndexerController.getLabels(templateType:models.templates.TemplateType)
   ###
   #  summary: Apply a template to a single instance this process is the first step of the indexing to the search UI
   #  parameters:
@@ -81,7 +116,7 @@ GET /:databaseScope/:templateType  controllers.IndexerController.applyTemplateBy
   #    description: Authorization token
   #    required: false
   #    type: string
-  #  - in: path
+  #  - in: query
   #    name: databaseScope
   #    type: string
   #    enum: [INFERRED, RELEASED]
@@ -103,5 +138,5 @@ GET /:databaseScope/:templateType  controllers.IndexerController.applyTemplateBy
   #    '200':
   #      description: Ok
   ###
-GET /:databaseScope/:templateType/:id  controllers.IndexerController.applyTemplateByTypeAndId(databaseScope: models.DatabaseScope, templateType:models.templates.TemplateType, id: java.util.UUID)
+GET /templates/:templateType/:id  controllers.IndexerController.applyTemplateByTypeAndId(databaseScope: models.DatabaseScope, templateType:models.templates.TemplateType, id: java.util.UUID)
 

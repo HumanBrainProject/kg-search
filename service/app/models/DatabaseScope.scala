@@ -15,7 +15,7 @@
  */
 package models
 
-import play.api.mvc.PathBindable
+import play.api.mvc.{PathBindable, QueryStringBindable}
 
 sealed trait DatabaseScope {
   def toIndexName: String
@@ -28,12 +28,16 @@ object DatabaseScope {
     case "RELEASED" => RELEASED
   }
 
-  implicit def pathBinder(implicit stringBinder: PathBindable[String]): PathBindable[DatabaseScope] =
-    new PathBindable[DatabaseScope] {
-      override def bind(key: String, value: String): Either[String, DatabaseScope] = {
+  implicit def queryBinder(implicit stringBinder: QueryStringBindable[String]): QueryStringBindable[DatabaseScope] =
+    new QueryStringBindable[DatabaseScope] {
+      override def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, DatabaseScope]] = {
         for {
-          str <- stringBinder.bind(key, value).right
-        } yield DatabaseScope(str)
+          str <- stringBinder.bind("databaseScope", params)
+        } yield
+          (str match {
+            case Right(dbScope) => Right(DatabaseScope(dbScope))
+            case _              => Left("Unable to process database scope")
+          })
       }
 
       override def unbind(key: String, databaseScope: DatabaseScope): String = {

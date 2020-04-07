@@ -87,24 +87,8 @@ class ElasticSearchImpl @Inject()(
             case s => Task.pure(Left(ApiError(s, res.body)))
         }
       )
-//        setFilter <- setESFilter(indexName)
-
   }
 
-//  override def setESFilter(indexName: String) = {
-//
-//    for {
-//    // disable index
-//      closedIndex <- WSClient.url(s"$elasticSearchEndpoint/$indexName/_close")
-//
-//
-//
-//    self.http_client.put(f"{self.index_name}/_settings", recommended_filter)
-//
-//    # enable index
-//        self.http_client.post(f"{self.index_name}/_open")
-//    }
-//  }
   override def index(
     jsonPayload: JsObject,
     dataType: String,
