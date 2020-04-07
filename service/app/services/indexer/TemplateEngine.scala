@@ -20,15 +20,14 @@ import javax.inject.Inject
 import models.DatabaseScope
 import models.templates.elasticSearch.DatasetMetaESTemplate
 import models.templates.meta.DatasetMetaTemplate
-import models.templates.instance.{DatasetTemplate, ModelInstanceTemplate, PersonTemplate, ProjectTemplate, UnimindsPersonTemplate}
-import models.templates.{Dataset, Person, Project, Template, TemplateType, UnimindsPerson}
+import models.templates.instance.{DatasetTemplate, ModelInstanceTemplate, PersonTemplate, ProjectTemplate, SoftwareProjectTemplate, UnimindsPersonTemplate}
+import models.templates.{Dataset, ModelInstance, Person, Project, SoftwareProject, Template, TemplateType, UnimindsPerson}
 import play.api.Configuration
 import play.api.libs.json._
 import play.api.libs.json.DefaultWrites
 import utils._
 
 import scala.collection.immutable.HashMap
-import models.templates.ModelInstance
 
 @ImplementedBy(classOf[TemplateEngineImpl])
 trait TemplateEngine[Content, TransformedContent] {
@@ -37,7 +36,9 @@ trait TemplateEngine[Content, TransformedContent] {
   def transformMeta(c: Content, template: Template): TransformedContent
 
   def getTemplateFromType(templateType: TemplateType, databaseScope: DatabaseScope): Template
+
   def getMetaTemplateFromType(templateType: TemplateType): Template
+
   def getESTemplateFromType(templateType: TemplateType): Template
 }
 
@@ -47,10 +48,10 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     val transformedContent = template.template.foldLeft(HashMap[String, JsValue]()) {
       case (acc, (k, v)) =>
         v match {
-          case opt @ Optional(_) =>
+          case opt@Optional(_) =>
             opt.op(currentContent) match {
               case Some(content) => acc.updated(k, content.toJson)
-              case None          => acc
+              case None => acc
             }
           case _ =>
             acc.updated(k, v.op(currentContent).getOrElse(v.zero).toJson)
@@ -64,7 +65,7 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     fieldList.foldLeft(HashMap[String, JsValue]()) {
       case (acc, el) =>
         val maybeName = for {
-          js  <- el.value.get("fieldname")
+          js <- el.value.get("fieldname")
           str <- js.asOpt[String]
         } yield str
         maybeName match {
@@ -79,7 +80,7 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
 
   override def transformMeta(c: JsValue, template: Template): JsValue = {
     val maybeContent = for {
-      fields    <- c.as[JsObject].value.get("fields")
+      fields <- c.as[JsObject].value.get("fields")
       fieldList <- fields.asOpt[List[JsObject]]
     } yield c.as[JsObject].value.updated("fields", Json.toJson(fieldsListToMap(fieldList)))
     maybeContent match {
@@ -87,10 +88,10 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
         val transformedContent = template.template.foldLeft(HashMap[String, JsValue]()) {
           case (acc, (k, v)) =>
             v match {
-              case opt @ Optional(_) =>
+              case opt@Optional(_) =>
                 opt.op(currentContent) match {
                   case Some(content) => acc.updated(k, content.toJson)
-                  case None          => acc
+                  case None => acc
                 }
               case _ =>
                 acc.updated(k, v.op(currentContent).getOrElse(v.zero).toJson)
@@ -133,15 +134,22 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
 
         override def fileProxy: String = configuration.get[String]("file.proxy")
       }
+    case SoftwareProject =>
+      new SoftwareProjectTemplate  {
+        override def dataBaseScope: DatabaseScope = dbScope
+
+        override def fileProxy: String = configuration.get[String]("file.proxy")
+
+      }
   }
 
   override def getMetaTemplateFromType(templateType: TemplateType): Template = templateType match {
     case Dataset => new DatasetMetaTemplate {}
-    case _       => ???
+    case _ => ???
   }
 
   override def getESTemplateFromType(templateType: TemplateType): Template = templateType match {
     case Dataset => new DatasetMetaESTemplate {}
-    case _       => ???
+    case _ => ???
   }
 }

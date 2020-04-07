@@ -50,6 +50,7 @@ POST /:dataType  controllers.IndexerController.indexByType(databaseScope: models
   #      - Project
   #      - UnimindsPerson
   #      - ModelInstance
+  #      - SoftwareProject
   #    default: Dataset
   #  - in: path
   #    name: query
@@ -129,6 +130,7 @@ GET /templates/:templateType/labels  controllers.IndexerController.getLabels(tem
   #      - Project
   #      - UnimindsPerson
   #      - ModelInstance
+  #      - SoftwareProject
   #    default: Dataset
   #  - in: path
   #    name: id

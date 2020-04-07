@@ -29,6 +29,7 @@ object TemplateType {
     case "PROJECT"        => Project
     case "UNIMINDSPERSON" => UnimindsPerson
     case "MODELINSTANCE"  => ModelInstance
+    case "SOFTWAREPROJECT" => SoftwareProject
   }
 
   def toSchema(templateType: TemplateType): String = templateType match {
@@ -37,6 +38,7 @@ object TemplateType {
     case Project        => "minds/core/placomponent/v1.0.0"
     case UnimindsPerson => "uniminds/core/person/v1.0.0"
     case ModelInstance  => "uniminds/core/modelinstance/v1.0.0"
+    case SoftwareProject => "softwarecatalog/software/softwareproject/v1.0.0"
   }
 
   implicit def pathBinder(implicit stringBinder: PathBindable[String]): PathBindable[TemplateType] =
@@ -71,4 +73,8 @@ case object UnimindsPerson extends TemplateType {
 
 case object ModelInstance extends TemplateType {
   override def apiName: String = "Model"
+}
+
+case object SoftwareProject extends TemplateType {
+  override def apiName: String = "Software"
 }
