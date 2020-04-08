@@ -57,7 +57,7 @@ class ElasticSearchImpl @Inject()(
   WSClient: WSClient,
   configuration: Configuration
 ) extends ElasticSearch {
-  val elasticSearchEndpoint = configuration.get[String]("es.host")
+  val elasticSearchEndpoint: String = configuration.get[String]("es.host")
   override def updateLabels(labels: Map[String, JsValue]): Unit = {}
 
   override def recreateIndex(
@@ -69,19 +69,20 @@ class ElasticSearchImpl @Inject()(
       .flatMap(
         res =>
           res.status match {
-            case OK =>
+            case OK | NOT_FOUND =>
               //recreate
+              val payload = Json.toJson(mapping)(Writes.genericMapWrites)
               Task
                 .fromFuture(
                   WSClient
-                    .url(s"$elasticSearchEndpoint/${dbScope.toIndexName}")
-                    .put(Json.toJson(mapping)(Writes.genericMapWrites))
+                    .url(s"$elasticSearchEndpoint/${dbScope.toIndexName}?include_type_name=true")
+                    .put(payload)
                 )
                 .map(
                   res =>
                     res.status match {
-                      case CREATED => Right(())
-                      case s       => Left(ApiError(s, res.body))
+                      case OK | CREATED => Right(())
+                      case s            => Left(ApiError(s, res.body))
                   }
                 )
             case s => Task.pure(Left(ApiError(s, res.body)))

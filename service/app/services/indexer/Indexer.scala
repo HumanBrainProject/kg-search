@@ -150,7 +150,7 @@ class IndexerImpl @Inject()(
             val innerMapUpdated = acc("mappings").updated(
               apiName,
               Json.toJson(
-                Map("_all" -> Json.toJson(Map("enabled" -> true))(Writes.genericMapWrites), "properties" -> js)
+                Map("properties" -> js)
               )(Writes.genericMapWrites)
             )
             acc.updated("mappings", innerMapUpdated)
@@ -228,7 +228,7 @@ class IndexerImpl @Inject()(
       queryByType(template, databaseScope, PaginationParams(None, None), organizations, token).flatMap {
         case Right(value) =>
           val valueArr = value.as[List[JsObject]]
-          logger.debug(s"$template - Indexing of started")
+          logger.debug(s"$template - Indexing started")
           val indexedList = for {
             el <- valueArr
           } yield {
@@ -243,7 +243,7 @@ class IndexerImpl @Inject()(
             )
           }
           Task.sequence(indexedList).map { _ =>
-            logger.debug(s"$template - Indexing of done")
+            logger.debug(s"$template - Indexing done")
             Right(())
           }
         case Left(e) => Task.pure(Left(e))
@@ -251,12 +251,16 @@ class IndexerImpl @Inject()(
     }
   }
 
-  private def removeNonexistingItems(indexName: String, indexTime: String, completeRebuild: Boolean) = {
+  private def removeNonexistingItems(
+    indexName: String,
+    indexTime: String,
+    completeRebuild: Boolean
+  ): Task[Either[ApiError, Unit]] = {
     import monix.execution.Scheduler.Implicits.global
     import scala.concurrent.duration._
     elasticSearch.getNotUpdatedInstances(indexName, indexTime).map {
       case Right(Nil) =>
-        ()
+        Right(())
       case Right(l) =>
         var listOfIdsToRemove = l
         while (listOfIdsToRemove.nonEmpty) {
@@ -264,6 +268,7 @@ class IndexerImpl @Inject()(
           val res = Await.result(elasticSearch.getNotUpdatedInstances(indexName, indexTime).runToFuture, 10.seconds)
           listOfIdsToRemove = res.toOption.getOrElse(List())
         }
+        Right(())
 
       case Left(e) => Left(e)
     }
@@ -284,7 +289,7 @@ class IndexerImpl @Inject()(
     databaseScope: DatabaseScope,
     relevantTypes: List[String],
     token: String
-  ) = {
+  ): Task[Either[ApiError, Unit]] = {
     createESmapping(relevantTypes, token).flatMap { mapping =>
       import java.text.SimpleDateFormat
       import java.util.TimeZone
@@ -297,23 +302,30 @@ class IndexerImpl @Inject()(
       } else {
         Task.pure(Right(()))
       }
-      for {
-        _ <- recreateIndexTask
-        _ <- Task.sequence(
-          reindexInstances(
-            relevantTypes,
-            organizations,
-            databaseScope,
-            simulate = simulate,
-            releasedOnly,
-            completeRebuild,
-            token
-          )
-        )
-        _ <- removeNonexistingItems(databaseScope.toIndexName, nowAsISO, completeRebuild) //              writeSiteMap <- siteMapGenerator.write(
-        //                Path.of("/opt/scripts/kg_indexer/kg_indexer/sitemap.xml")
-        //              )
-      } yield Right(())
+      recreateIndexTask.flatMap {
+        case Right(()) =>
+          val result = Task
+            .gather(
+              reindexInstances(
+                relevantTypes,
+                organizations,
+                databaseScope,
+                simulate = simulate,
+                releasedOnly,
+                completeRebuild,
+                token
+              )
+              //              writeSiteMap <- siteMapGenerator.write(
+              //                Path.of("/opt/scripts/kg_indexer/kg_indexer/sitemap.xml")
+              //              )
+            )
+            .flatMap(t => {
+              removeNonexistingItems(databaseScope.toIndexName, nowAsISO, completeRebuild)
+            })
+          result
+
+        case Left(e) => Task.pure(Left(e))
+      }
     }
   }
 

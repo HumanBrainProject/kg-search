@@ -19,7 +19,7 @@ import java.io.FileInputStream
 
 import controllers.IndexerController
 import models.templates.Dataset
-import models.templates.elasticSearch.DatasetMetaESTemplate
+import models.templates.elasticSearch.{DatasetMetaESTemplate, PersonMetaESTemplate}
 import models.templates.instance.{DatasetTemplate, PersonTemplate, ProjectTemplate, UnimindsPersonTemplate}
 import models.templates.meta.DatasetMetaTemplate
 import models.{DatabaseScope, INFERRED}
@@ -46,13 +46,13 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
   "The indexed trait" must {
     "transform the dataset payload accordingly" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/dataset.json")
+      val payload = loadResource("/dataset/dataset.json")
       val template = new DatasetTemplate {
         override def fileProxy: String = ""
         override def dataBaseScope: DatabaseScope = INFERRED
       }
       val result = indexer.transform(payload, template)
-      val expected = loadResource("/expectedDataset.json")
+      val expected = loadResource("/dataset/expectedDataset.json")
       assertIsSameJsObject("identifier", result, expected)
       assertIsSameJsObject("contributors", result, expected)
       assertIsSameJsObject("title", result, expected)
@@ -81,13 +81,13 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     }
     "transform the person payload accordingly" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/person.json")
+      val payload = loadResource("/person/person.json")
       val template = new PersonTemplate {
         override def fileProxy: String = ""
         override def dataBaseScope: DatabaseScope = INFERRED
       }
       val result = indexer.transform(payload, template)
-      val expected = loadResource("/expectedPerson.json")
+      val expected = loadResource("/person/expectedPerson.json")
       assertIsSameJsObject("identifier", result, expected)
       assertIsSameJsObject("address", result, expected)
       assertIsSameJsObject("custodianOfModel", result, expected)
@@ -147,7 +147,7 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     }
     "properly handle empty values in dataset" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/emptyDataset.json")
+      val payload = loadResource("/dataset/emptyDataset.json")
       val template = new DatasetTemplate {
         override def fileProxy: String = ""
         override def dataBaseScope: DatabaseScope = INFERRED
@@ -181,13 +181,13 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     }
     "properly handle empty values in person" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/emptyPerson.json")
+      val payload = loadResource("/person/emptyPerson.json")
       val template = new PersonTemplate {
         override def fileProxy: String = ""
         override def dataBaseScope: DatabaseScope = INFERRED
       }
       val result = indexer.transform(payload, template)
-      val expected = loadResource("/expectedEmptyPerson.json")
+      val expected = loadResource("/person/expectedEmptyPerson.json")
       assertIsSameJsObject("identifier", result, expected)
       assertIsSameJsObject("address", result, expected)
       assertIsSameJsObject("custodianOfModel", result, expected)
@@ -245,10 +245,10 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     }
     "create an object for the meta information" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/datasetMeta.json")
+      val payload = loadResource("/dataset/datasetMeta.json")
       val template = new DatasetMetaTemplate {}
       val result = indexer.transformMeta(payload, template).as[JsObject].value("fields")
-      val expected = loadResource("/expectedDatasetMeta.json")
+      val expected = loadResource("/dataset/expectedDatasetMeta.json")
       assertIsSameJsObject("identifier", result, expected)
       assertIsSameJsObject("title", result, expected)
       assertIsSameJsObject("contributors", result, expected)
@@ -275,12 +275,12 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("first_release", result, expected)
       assertIsSameJsObject("last_release", result, expected)
     }
-    "create an object for ES mapping information" in {
+    "create an object for ES mapping information for Dataset" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/datasetMeta.json")
+      val payload = loadResource("/dataset/datasetMeta.json")
       val template = new DatasetMetaESTemplate {}
       val result = indexer.transformMeta(payload, template)
-      val expected = loadResource("/expectedDatasetMetaES.json")
+      val expected = loadResource("/dataset/expectedDatasetMetaES.json")
       assertIsSameJsObject("identifier", result, expected)
       assertIsSameJsObject("title", result, expected)
       assertIsSameJsObject("contributors", result, expected)
@@ -304,6 +304,26 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("protocol", result, expected)
       assertIsSameJsObject("viewer", result, expected)
       assertIsSameJsObject("subjects", result, expected)
+      assertIsSameJsObject("first_release", result, expected)
+      assertIsSameJsObject("last_release", result, expected)
+    }
+    "create an object for ES mapping information for Person" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/person/personMeta.json")
+      val template = new PersonMetaESTemplate {}
+      val result = indexer.transformMeta(payload, template)
+      val expected = loadResource("/person/expectedPersonMetaES.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("description", result, expected)
+      assertIsSameJsObject("phone", result, expected)
+      assertIsSameJsObject("custodianOf", result, expected)
+      assertIsSameJsObject("custodianOfModel", result, expected)
+      assertIsSameJsObject("publications", result, expected)
+      assertIsSameJsObject("address", result, expected)
+      assertIsSameJsObject("contributions", result, expected)
+      assertIsSameJsObject("modelContributions", result, expected)
+      assertIsSameJsObject("email", result, expected)
       assertIsSameJsObject("first_release", result, expected)
       assertIsSameJsObject("last_release", result, expected)
     }
