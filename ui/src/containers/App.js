@@ -32,7 +32,7 @@ import { SessionExpiredErrorPanel } from "./ErrorPanel";
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.props.initialize(this.props.location, this.props.defaultGroup);
+    this.props.initialize(this.props.location);
   }
 
   render() {
@@ -62,6 +62,6 @@ export default connect(
     isReady: state.application.isReady && !state.auth.error
   }),
   dispatch => ({
-    initialize: (location, defaultGroup) => dispatch(actions.initialize(location, defaultGroup))
+    initialize: location => dispatch(actions.initialize(location))
   })
 )(App);

@@ -37,6 +37,7 @@ export const GroupSelection = connect(
       dispatch(actionsGroups.setGroup(value));
       dispatch(actionsGroups.resetTypeForGroup(value));
       dispatch(actionsSearch.setPage(1));
+      localStorage.setItem("group", value);
     }
   })
 )(GroupSelectionBase);

@@ -53,7 +53,7 @@ export const InstanceEditor = connect(
       isGroupLoading: state.groups.isLoading,
       shouldLoadGroups: !!state.auth.accessToken,
       instanceIsLoading: state.instances.isLoading,
-      shouldLoadInstance: !state.instances.currentInstance || state.instances.currentInstance._type !==  type || state.instances.currentInstance._id !==  props.match.params.id,
+      // shouldLoadInstance: !state.instances.currentInstance || state.instances.currentInstance._type !==  type || state.instances.currentInstance._id !==  props.match.params.id,
       instanceHasError: !!state.instances.error,
       currentInstance: state.instances.currentInstance,
       previousInstance: state.instances.previousInstances.length?state.instances.previousInstances[state.instances.previousInstances.length-1]:null,

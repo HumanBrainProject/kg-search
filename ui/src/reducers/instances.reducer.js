@@ -40,7 +40,8 @@ const loadInstanceSuccess = (state, action) => {
     isLoading: false,
     currentInstance: action.data,
     previousInstances: previousInstances,
-    image: null
+    image: null,
+    error: null
   };
 };
 

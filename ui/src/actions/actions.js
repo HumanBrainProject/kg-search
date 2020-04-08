@@ -78,7 +78,7 @@ export const authenticate = () => {
   };
 };
 
-export const initialize = (location, defaultGroup) => {
+export const initialize = location => {
   return dispatch => {
     const accessToken = getHashKey("access_token");
     if (accessToken) {
@@ -90,7 +90,10 @@ export const initialize = (location, defaultGroup) => {
       dispatch(setApplicationReady());
     } else {
       const group = getSearchKey("group");
-
+      const savedGroup = localStorage.getItem("group");
+      if(group && group !== savedGroup) {
+        localStorage.setItem("group", group);
+      }
       // backward compatibility test
       const instance = location.hash.substr(1);
       if (location.pathname === "/" && instance) {
@@ -99,7 +102,7 @@ export const initialize = (location, defaultGroup) => {
       }
 
       const regShareEditorReference = /^\/instances\/(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
-      if((group && group !== defaultGroup) || location.pathname.startsWith("/live/") || regShareEditorReference.test(location.pathname))  {
+      if(group || savedGroup || location.pathname.startsWith("/live/") || regShareEditorReference.test(location.pathname))  {
         dispatch(authenticate());
       } else {
         dispatch(setApplicationReady());

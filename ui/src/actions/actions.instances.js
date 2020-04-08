@@ -19,6 +19,7 @@ import API from "../services/API";
 import { setGroup, clearGroupError } from "./actions.groups";
 import { sessionFailure, logout } from "./actions";
 import { history, store } from "../store";
+import { getSearchKey } from "../helpers/BrowserHelpers";
 
 export const loadInstanceRequest = () => {
   return {
@@ -143,6 +144,19 @@ export const loadInstance = (type, id, shouldUpdateLocation=false) => {
           break;
         }
         case 404:
+        {
+          const index = response.headers["x-selected-index"];
+          if (index) {
+            dispatch(setGroup(index.slice(3)));
+          }
+          const url = `${window.location.protocol}//${window.location.host}${window.location.pathname}?group=curated`;
+          const link = `<a href=${url}>${url}</a>`;
+          const group = getSearchKey("group");
+          const error = (group && group === "curated") || (localStorage.getItem("group") && localStorage.getItem("group") === "curated")? "The page you requested was not found." :
+            `The page you requested was not found. It might not yet be public and authorized users might have access to it in the ${link} or in in-progress view`;
+          dispatch(loadInstanceFailure(error));
+          break;
+        }
         default:
         {
           const index = response.headers["x-selected-index"];

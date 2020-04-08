@@ -71,8 +71,9 @@ class SearchBase extends React.Component {
     const searchParam = {...params};
     delete searchParam.group;
     setInitialSearchParams(searchParam);
-    if (params.group) {
-      setInitialGroup(params.group);
+    const group = params.group || localStorage.getItem("group");
+    if (group) {
+      setInitialGroup(group);
     }
     this.unlisten = history.listen( location => {
       const reg = /^#(.+)\/(.+)$/;
