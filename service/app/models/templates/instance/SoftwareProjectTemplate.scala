@@ -17,7 +17,7 @@ package models.templates.instance
 
 import models.{DatabaseScope, INFERRED}
 import models.templates.Template
-import models.templates.entities.{ObjectValueList, ObjectValueMap, UrlObject, ValueObject, ValueObjectList}
+import models.templates.entities.{ObjectValueList, ObjectValueMap, TemplateEntity, UrlObject, ValueObject, ValueObjectList}
 import utils.{FirstElement, Merge, ObjectListReader, ObjectValue, Optional, TemplateComponent, Url, Value, ValueList}
 
 import scala.collection.immutable.HashMap
@@ -38,14 +38,7 @@ trait SoftwareProjectTemplate extends Template {
           ObjectValue(
             List(
               Value[String]("version", identity),
-              Value[String]("description", identity),
-              //            Value[String]("license"),
-              //            Value[String]("applicationCategory"),
-              //            Value[String]("operatingSystem"),
-              //            ObjectListReader("homepage", ObjectValue(List(Url("url"), Value[String]("value")))),
-              //            ObjectListReader("sourceCode", ObjectValue(List(Url("url"), Value[String]("value")))),
-              //            ObjectListReader("documentation", ObjectValue(List(Url("url"), Value[String]("value")))),
-              //            Value[String]("features")
+              Value[String]("description", identity)
             )
           )
         ),
@@ -56,7 +49,7 @@ trait SoftwareProjectTemplate extends Template {
                 case ObjectValueMap(
                 List(
                 ValueObject(Some(versionRes: String)),
-                ValueObject(Some(descriptionRes: String))
+                ValueObject(_)
                 )
                 ) => versionRes
               }.reverse.headOption match {
@@ -69,7 +62,7 @@ trait SoftwareProjectTemplate extends Template {
                 case ObjectValueMap(
                 List(
                 ValueObject(Some(versionRes: String)),
-                ValueObject(Some(descriptionRes: String))
+                ValueObject(_)
                 )
                 ) => versionRes
               }.reverse.headOption match {
@@ -81,36 +74,221 @@ trait SoftwareProjectTemplate extends Template {
       )
     ),
     "license" -> Optional(
-      Merge(
-        Value[String]("description", identity),
+      FirstElement(
         ObjectListReader(
           "versions",
           ObjectValue(
             List(
               Value[String]("version", identity),
               ValueList[String]("license", identity),
-            )
-          )
+            ),
+          ),
+          listLicenseOpt => transformList(listLicenseOpt)
         ),
-        (descriptionOpt, licenseOpt) =>
-          (descriptionOpt,licenseOpt) match  {
-            case (_, Some(ObjectValueList(versionLicenseList))) =>
-              versionLicenseList.sortBy {
+        licenseOpt => transformResult(licenseOpt)
+      )
+    ),
+    "version" -> Optional(
+      FirstElement(
+        ObjectListReader(
+          "versions",
+          ObjectValue(
+            List(
+              Value[String]("version", identity)
+            ),
+          ),
+          {
+            case res@Some(ObjectValueList(List(ObjectValueMap(List(ValueObject(None)))))) => res
+            case Some(ObjectValueList(versionLicenseList)) =>
+              Some(ObjectValueList(versionLicenseList.sortBy {
                 case ObjectValueMap(
                 List(
-                ValueObject(Some(versionRes: String)),
-                ValueObjectList(List(ValueObject(Some(licenseRes: String))))
+                ValueObject(Some(versionRes: String))
                 )
                 ) => versionRes
-              }.reverse.headOption match {
-                case Some(ObjectValueMap(List(_, ValueObjectList(List(ValueObject(Some(versionLicenseRes: String))))))) => Some(ValueObjectList(List(ValueObject(Some(versionLicenseRes)))))
-                case _ => None
-              }
+              }.reverse))
             case _ => None
           }
+        ),
+        {
+          case Some(
+            ObjectValueMap(
+              List(
+                ValueObject(None)
+              )
+            )
+          ) => None
+          case Some(
+            ObjectValueMap(
+              List(
+                ValueObject(Some(versionRes: String)),
+              )
+            )
+          ) => Some(ValueObject[String](Some(versionRes)))
+          case _ => None
+        }
+      )
+    ),
+    "appCategory" -> Optional(
+      FirstElement(
+        ObjectListReader(
+          "versions",
+          ObjectValue(
+            List(
+              Value[String]("version", identity),
+              ValueList[String]("applicationCategory", identity),
+            ),
+          ),
+          listApplicationCategoryOpt => transformList(listApplicationCategoryOpt)
+        ),
+        appCategoryOpt => transformResult(appCategoryOpt)
+      )
+    ),
+    "operatingSystem" -> Optional(
+      FirstElement(
+        ObjectListReader(
+          "versions",
+          ObjectValue(
+            List(
+              Value[String]("version", identity),
+              ValueList[String]("operatingSystem", identity),
+            ),
+          ),
+          listOperatingSystemOpt => transformList(listOperatingSystemOpt)
+        ),
+        operatingSystemOpt => transformResult(operatingSystemOpt)
+      )
+    ),
+    "homepage" -> Optional(
+      FirstElement(
+        ObjectListReader(
+          "versions",
+          ObjectValue(
+            List(
+              Value[String]("version", identity),
+              ValueList[String]("homepage", identity),
+            ),
+          ),
+          listHomepageOpt => transformList(listHomepageOpt)
+        ),
+        homepageOpt => transformResultWithUrl(homepageOpt)
+      )
+    ),
+    "sourceCode" -> Optional(
+      FirstElement(
+        ObjectListReader(
+          "versions",
+          ObjectValue(
+            List(
+              Value[String]("version", identity),
+              ValueList[String]("sourceCode", identity),
+            ),
+          ),
+          listSourceCodeOpt => transformList(listSourceCodeOpt)
+        ),
+        sourceCodeOpt => transformResultWithUrl(sourceCodeOpt)
+      )
+    ),
+    "documentation" -> Optional(
+      FirstElement(
+        ObjectListReader(
+          "versions",
+          ObjectValue(
+            List(
+              Value[String]("version", identity),
+              ValueList[String]("documentation", identity),
+            ),
+          ),
+          listDocumentationOpt => transformList(listDocumentationOpt)
+        ),
+        documentationOpt => transformResultWithUrl(documentationOpt)
+      )
+    ),
+    "features" -> Optional(
+      FirstElement(
+        ObjectListReader(
+          "versions",
+          ObjectValue(
+            List(
+              Value[String]("version", identity),
+              ValueList[String]("features", identity),
+            ),
+          ),
+          listFeaturesOpt => transformList(listFeaturesOpt)
+        ),
+        featuresOpt => transformResult(featuresOpt)
       )
     )
   )
+
+  private def transformList(l: Option[ObjectValueList]):Option[ObjectValueList] = {
+    l match {
+      case res@Some(ObjectValueList(List(ObjectValueMap(List(ValueObject(None), _))))) => res
+      case Some(ObjectValueList(versionLicenseList)) =>
+        Some(ObjectValueList(versionLicenseList.sortBy {
+          case ObjectValueMap(
+          List(
+          ValueObject(Some(versionRes: String)),
+          ValueObjectList(List(_))
+          )
+          ) => versionRes
+        }.reverse))
+      case _ => None
+    }
+  }
+
+  private def transformResult(t: Option[TemplateEntity]): Option[TemplateEntity] = {
+    t match {
+      case Some(
+        ObjectValueMap(
+          List(
+            ValueObject(_),
+            ValueObjectList(Nil)
+          )
+        )
+      ) => None
+      case Some(
+        ObjectValueMap(
+          List(
+            ValueObject(_),
+            l
+          )
+        )
+      ) => Some(l)
+      case _ => None
+    }
+  }
+
+  private def transformResultWithUrl(t: Option[TemplateEntity]): Option[TemplateEntity] = {
+    t match {
+      case Some(
+        ObjectValueMap(
+          List(
+            ValueObject(_),
+            ValueObjectList(Nil)
+          )
+        )
+      ) => None
+      case Some(
+        ObjectValueMap(
+          List(
+            ValueObject(_),
+            ValueObjectList(l)
+          )
+        )
+      ) =>  Some(
+        ObjectValueList(
+          l.map {
+            case ValueObject(Some(el:String)) => Some(ObjectValueMap(List(UrlObject(Some(el)), ValueObject[String](Some(el)))))
+            case _ => None
+          }.collect{
+            case Some(v) => v
+          }
+        )
+      )
+      case _ => None
+    }
+  }
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {
     case INFERRED => HashMap("editorId" -> Value[String]("editorId")) ++ result
