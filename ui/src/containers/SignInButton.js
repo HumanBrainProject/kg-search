@@ -27,9 +27,6 @@ export const SignInButton = connect(
   }),
   dispatch => ({
     onClick: () => dispatch(actions.logout()),
-    offClick: () => {
-      dispatch(actions.authenticate());
-      localStorage.setItem("group", "public");
-    }
+    offClick: () => dispatch(actions.authenticate())
   })
 )(ConditionalButton);

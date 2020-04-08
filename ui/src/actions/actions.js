@@ -83,6 +83,13 @@ export const initialize = location => {
     const accessToken = getHashKey("access_token");
     if (accessToken) {
       dispatch(setToken(accessToken));
+      const group = getSearchKey("group");
+      const savedGroup = localStorage.getItem("group");
+      if(group && group !== savedGroup && (group === "public" || group === "curated")) {
+        localStorage.setItem("group", group);
+      } else if (!group && !savedGroup) {
+        localStorage.setItem("group", "public");
+      }
       const stateValue = getHashKey("state");
       const state = stateValue?JSON.parse(atob(stateValue)):{};
       const queryString = (state && state.queryString)?state.queryString:"";
@@ -91,7 +98,7 @@ export const initialize = location => {
     } else {
       const group = getSearchKey("group");
       const savedGroup = localStorage.getItem("group");
-      if(group && group !== savedGroup) {
+      if(group && group !== savedGroup && (group === "public" || group === "curated")) {
         localStorage.setItem("group", group);
       }
       // backward compatibility test
@@ -102,7 +109,9 @@ export const initialize = location => {
       }
 
       const regShareEditorReference = /^\/instances\/(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
-      if(group || savedGroup || location.pathname.startsWith("/live/") || regShareEditorReference.test(location.pathname))  {
+      if((group && (group === "public" || group === "curated")) ||
+         (savedGroup && (savedGroup === "public" || savedGroup === "curated")) ||
+         location.pathname.startsWith("/live/") || regShareEditorReference.test(location.pathname))  {
         dispatch(authenticate());
       } else {
         dispatch(setApplicationReady());
