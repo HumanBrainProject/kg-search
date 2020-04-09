@@ -19,9 +19,9 @@ import java.io.FileInputStream
 
 import controllers.IndexerController
 import models.templates.Dataset
-import models.templates.elasticSearch.{DatasetMetaESTemplate, PersonMetaESTemplate}
+import models.templates.elasticSearch.{DatasetMetaESTemplate, PersonMetaESTemplate, ProjectMetaESTemplate}
 import models.templates.instance.{DatasetTemplate, PersonTemplate, ProjectTemplate, UnimindsPersonTemplate}
-import models.templates.meta.DatasetMetaTemplate
+import models.templates.meta.{DatasetMetaTemplate, ProjectMetaTemplate}
 import models.{DatabaseScope, INFERRED}
 import org.scalatest.Assertion
 import org.scalatestplus.play.PlaySpec
@@ -129,13 +129,13 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     }
     "transform the project payload accordingly" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/project.json")
+      val payload = loadResource("/project/project.json")
       val template = new ProjectTemplate {
         override def fileProxy: String = ""
         override def dataBaseScope: DatabaseScope = INFERRED
       }
       val result = indexer.transform(payload, template)
-      val expected = loadResource("/expectedProject.json")
+      val expected = loadResource("/project/expectedProject.json")
       assertIsSameJsObject("identifier", result, expected)
       assertIsSameJsObject("description", result, expected)
       assertIsSameJsObject("publications", result, expected)
@@ -227,13 +227,13 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     }
     "properly handle empty values in project" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/emptyProject.json")
+      val payload = loadResource("/project/emptyProject.json")
       val template = new ProjectTemplate {
         override def fileProxy: String = ""
         override def dataBaseScope: DatabaseScope = INFERRED
       }
       val result = indexer.transform(payload, template)
-      val expected = loadResource("/expectedEmptyProject.json")
+      val expected = loadResource("/project/expectedEmptyProject.json")
       assertIsSameJsObject("identifier", result, expected)
       assertIsSameJsObject("description", result, expected)
       assertIsSameJsObject("publications", result, expected)
@@ -243,7 +243,7 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("editorId", result, expected)
       assertIsSameJsObject("last_release", result, expected)
     }
-    "create an object for the meta information" in {
+    "create an object for the meta information for dataset" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/dataset/datasetMeta.json")
       val template = new DatasetMetaTemplate {}
@@ -324,6 +324,34 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("contributions", result, expected)
       assertIsSameJsObject("modelContributions", result, expected)
       assertIsSameJsObject("email", result, expected)
+      assertIsSameJsObject("first_release", result, expected)
+      assertIsSameJsObject("last_release", result, expected)
+    }
+    "create an object for meta information for Project" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/project/projectMeta.json")
+      val template = new ProjectMetaTemplate {}
+      val result = indexer.transformMeta(payload, template).as[JsObject].value("fields")
+      val expected = loadResource("/project/expectedProjectMeta.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("description", result, expected)
+      assertIsSameJsObject("datasets", result, expected)
+      assertIsSameJsObject("publications", result, expected)
+      assertIsSameJsObject("first_release", result, expected)
+      assertIsSameJsObject("last_release", result, expected)
+    }
+    "create an object for elastic search mapping information for Project" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/project/projectMeta.json")
+      val template = new ProjectMetaESTemplate {}
+      val result = indexer.transformMeta(payload, template)
+      val expected = loadResource("/project/expectedProjectMetaES.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("description", result, expected)
+      assertIsSameJsObject("datasets", result, expected)
+      assertIsSameJsObject("publications", result, expected)
       assertIsSameJsObject("first_release", result, expected)
       assertIsSameJsObject("last_release", result, expected)
     }

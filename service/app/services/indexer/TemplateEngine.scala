@@ -18,8 +18,8 @@ package services.indexer
 import com.google.inject.ImplementedBy
 import javax.inject.Inject
 import models.DatabaseScope
-import models.templates.elasticSearch.{DatasetMetaESTemplate, PersonMetaESTemplate}
-import models.templates.meta.{DatasetMetaTemplate, PersonMetaTemplate}
+import models.templates.elasticSearch.{DatasetMetaESTemplate, PersonMetaESTemplate, ProjectMetaESTemplate}
+import models.templates.meta.{DatasetMetaTemplate, PersonMetaTemplate, ProjectMetaTemplate}
 import models.templates.instance.{
   DatasetTemplate,
   ModelInstanceTemplate,
@@ -144,12 +144,14 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
   override def getMetaTemplateFromType(templateType: TemplateType): Template = templateType match {
     case Dataset => new DatasetMetaTemplate {}
     case Person  => new PersonMetaTemplate {}
+    case Project => new ProjectMetaTemplate {}
     case _       => ???
   }
 
   override def getESTemplateFromType(templateType: TemplateType): Template = templateType match {
     case Dataset => new DatasetMetaESTemplate {}
     case Person  => new PersonMetaESTemplate {}
+    case Project => new ProjectMetaESTemplate {}
     case _       => ???
   }
 }
