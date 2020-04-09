@@ -57,7 +57,7 @@ export const InstanceLink = connect(
   dispatch => ({
     onClick: (type, id, group, path, context) => {
       if (path) {
-        history.push(`${path}${type}/${id}${group?("?group=" + group ):""}`, context);
+        history.push(`${path}${type}/${id}${group && group !== "public"?("?group=" + group ):""}`, context);
       } else {
         dispatch(actionsGroups.setGroup(group));
         dispatch(actionsInstances.loadInstance(type, id, true));
