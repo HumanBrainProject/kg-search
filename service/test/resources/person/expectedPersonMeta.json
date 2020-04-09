@@ -1,0 +1,68 @@
+{
+  "identifier": {
+    "https://schema.hbp.eu/searchUi/visible": false
+  },
+  "title": {
+    "https://schema.hbp.eu/searchUi/optional": false,
+    "https://schema.hbp.eu/searchUi/sort": true,
+    "https://schema.hbp.eu/graphQuery/label": "Name",
+    "https://schema.hbp.eu/searchUi/boost": 20
+  },
+  "description": {
+    "https://schema.hbp.eu/searchUi/markdown": true,
+    "https://schema.hbp.eu/graphQuery/label": "Description",
+    "https://schema.hbp.eu/searchUi/boost": 7.5,
+    "https://schema.hbp.eu/searchUi/label_hidden": true
+  },
+  "phone": {
+    "https://schema.hbp.eu/graphQuery/label": "Phone"
+  },
+  "custodianOf": {
+    "https://schema.hbp.eu/graphQuery/label": "Custodian of",
+    "https://schema.hbp.eu/searchUi/layout": "group",
+    "https://schema.hbp.eu/searchUi/overview": true
+  },
+  "custodianOfModel": {
+    "https://schema.hbp.eu/graphQuery/label": "Custodian of models",
+    "https://schema.hbp.eu/searchUi/layout": "group"
+  },
+  "publications": {
+    "https://schema.hbp.eu/searchUi/facet": "exists",
+    "https://schema.hbp.eu/searchUi/markdown": true,
+    "https://schema.hbp.eu/graphQuery/label": "Publications",
+    "https://schema.hbp.eu/searchUi/layout": "group"
+  },
+  "address": {
+    "https://schema.hbp.eu/graphQuery/label": "Address"
+  },
+  "contributions": {
+    "https://schema.hbp.eu/searchUi/facet": "exists",
+    "https://schema.hbp.eu/graphQuery/label": "Contributions",
+    "https://schema.hbp.eu/searchUi/layout": "group",
+    "https://schema.hbp.eu/searchUi/type": "text",
+    "https://schema.hbp.eu/searchUi/overview": true
+  },
+  "modelContributions": {
+    "https://schema.hbp.eu/searchUi/facet": "exists",
+    "https://schema.hbp.eu/graphQuery/label": "Model contributions",
+    "https://schema.hbp.eu/searchUi/layout": "group",
+    "https://schema.hbp.eu/searchUi/type": "text"
+  },
+  "email": {
+    "https://schema.hbp.eu/graphQuery/label": "Email",
+    "https://schema.hbp.eu/searchUi/type": "text",
+    "https://schema.hbp.eu/searchUi/overview": true
+  },
+  "first_release": {
+    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
+    "https://schema.hbp.eu/searchUi/visible": false,
+    "https://schema.hbp.eu/graphQuery/label": "First release",
+    "https://schema.hbp.eu/searchUi/type": "date"
+  },
+  "last_release": {
+    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
+    "https://schema.hbp.eu/searchUi/visible": false,
+    "https://schema.hbp.eu/graphQuery/label": "Last release",
+    "https://schema.hbp.eu/searchUi/type": "date"
+  }
+}

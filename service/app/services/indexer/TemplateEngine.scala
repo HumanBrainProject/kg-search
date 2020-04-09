@@ -18,10 +18,17 @@ package services.indexer
 import com.google.inject.ImplementedBy
 import javax.inject.Inject
 import models.DatabaseScope
-import models.templates.elasticSearch.DatasetMetaESTemplate
-import models.templates.meta.DatasetMetaTemplate
-import models.templates.instance.{DatasetTemplate, ModelInstanceTemplate, PersonTemplate, ProjectTemplate, SoftwareProjectTemplate, UnimindsPersonTemplate}
-import models.templates.{Dataset, ModelInstance, Person, Project, SoftwareProject, Template, TemplateType, UnimindsPerson}
+import models.templates.elasticSearch.{DatasetMetaESTemplate, PersonMetaESTemplate, ProjectMetaESTemplate}
+import models.templates.meta.{DatasetMetaTemplate, PersonMetaTemplate, ProjectMetaTemplate}
+import models.templates.instance.{
+  DatasetTemplate,
+  ModelInstanceTemplate,
+  PersonTemplate,
+  ProjectTemplate,
+  UnimindsPersonTemplate,
+  SoftwareProjectTemplate
+}
+import models.templates.{Dataset, Person, Project, Template, TemplateType, UnimindsPerson, SoftwareProject, ModelInstance}
 import play.api.Configuration
 import play.api.libs.json._
 import play.api.libs.json.DefaultWrites
@@ -145,11 +152,15 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
 
   override def getMetaTemplateFromType(templateType: TemplateType): Template = templateType match {
     case Dataset => new DatasetMetaTemplate {}
-    case _ => ???
+    case Person  => new PersonMetaTemplate {}
+    case Project => new ProjectMetaTemplate {}
+    case _       => ???
   }
 
   override def getESTemplateFromType(templateType: TemplateType): Template = templateType match {
     case Dataset => new DatasetMetaESTemplate {}
-    case _ => ???
+    case Person  => new PersonMetaESTemplate {}
+    case Project => new ProjectMetaESTemplate {}
+    case _       => ???
   }
 }
