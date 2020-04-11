@@ -70,7 +70,7 @@ export class InstanceContainer extends React.Component {
     if (group) {
       setInitialGroup(group);
     }
-    this.initialize();
+    this.initialize(group);
   }
 
   componentDidUpdate(previousProps) {
@@ -81,7 +81,7 @@ export class InstanceContainer extends React.Component {
        groupsHasError !== previousProps.groupsHasError || isGroupsReady !== previousProps.isGroupsReady || previousProps.group !== group ||
        previousProps.instanceHasError !== instanceHasError ||
        previousProps.type !== type || previousProps.id !== id) {
-      this.initialize();
+      this.initialize(previousProps.group);
     }
   }
 
@@ -101,12 +101,12 @@ export class InstanceContainer extends React.Component {
     }
   }
 
-  initialize() {
+  initialize(previousGroup) {
     const {
       definitionIsReady, definitionHasError, definitionIsLoading,
       isGroupsReady, isGroupLoading, shouldLoadGroups, groupsHasError,
       instanceIsLoading, type, id, group, previousInstance, setPreviousInstance,
-      loadDefinition, loadGroups, fetch
+      loadDefinition, loadGroups, fetch, index
     } = this.props;
 
     if (!definitionIsReady) {
@@ -119,7 +119,11 @@ export class InstanceContainer extends React.Component {
       }
     } else {
       if(!instanceIsLoading) {
-        if (previousInstance && previousInstance._type === type && previousInstance._id === id) {
+        if (previousInstance &&
+              previousInstance._type === type &&
+              previousInstance._id === id &&
+              previousInstance._index === index &&
+              previousGroup === group) {
           setPreviousInstance();
         } else {
           fetch(type, id, group);

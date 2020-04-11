@@ -81,10 +81,10 @@ export const authenticate = () => {
 export const initialize = location => {
   return dispatch => {
     const accessToken = getHashKey("access_token");
+    const group = getSearchKey("group");
+    const savedGroup = localStorage.getItem("group");
     if (accessToken) {
       dispatch(setToken(accessToken));
-      const group = getSearchKey("group");
-      const savedGroup = localStorage.getItem("group");
       if(group && group !== savedGroup && (group === "public" || group === "curated")) {
         localStorage.setItem("group", group);
       } else if (!group && !savedGroup) {
@@ -96,8 +96,6 @@ export const initialize = location => {
       history.replace(`${location.pathname}${queryString}`);
       dispatch(setApplicationReady());
     } else {
-      const group = getSearchKey("group");
-      const savedGroup = localStorage.getItem("group");
       if(group && group !== savedGroup && (group === "public" || group === "curated")) {
         localStorage.setItem("group", group);
       }
