@@ -67,13 +67,13 @@ export const sessionFailure = error => {
 };
 
 
-export const authenticate = () => {
+export const authenticate = (group=null) => {
   return () => {
     const stateKey= btoa(JSON.stringify({
       queryString: window.location.search
     }));
     const nonceKey=  generateKey();
-    const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+    const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}${group?("?group=" + group):""}`;
     window.location.href = API.endpoints.auth(redirectUri, stateKey, nonceKey);
   };
 };
@@ -96,9 +96,6 @@ export const initialize = location => {
       history.replace(`${location.pathname}${queryString}`);
       dispatch(setApplicationReady());
     } else {
-      if(group && group !== savedGroup && (group === "public" || group === "curated")) {
-        localStorage.setItem("group", group);
-      }
       // backward compatibility test
       const instance = location.hash.substr(1);
       if (location.pathname === "/" && instance) {
@@ -110,7 +107,7 @@ export const initialize = location => {
       if((group && (group === "public" || group === "curated")) ||
          (savedGroup && (savedGroup === "public" || savedGroup === "curated")) ||
          location.pathname.startsWith("/live/") || regShareEditorReference.test(location.pathname))  {
-        dispatch(authenticate());
+        dispatch(authenticate(group || savedGroup));
       } else {
         dispatch(setApplicationReady());
       }
