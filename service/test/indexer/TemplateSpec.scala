@@ -23,7 +23,8 @@ import models.templates.elasticSearch.{
   DatasetMetaESTemplate,
   PersonMetaESTemplate,
   ProjectMetaESTemplate,
-  SampleMetaESTemplate
+  SampleMetaESTemplate,
+  SubjectMetaESTemplate
 }
 import models.templates.instance.{
   DatasetTemplate,
@@ -533,6 +534,27 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("allfiles", result, expected)
       assertIsSameJsObject("files", result, expected)
       assertIsSameJsObject("subject", result, expected)
+      assertIsSameJsObject("datasetExists", result, expected)
+      assertIsSameJsObject("datasets", result, expected)
+      assertIsSameJsObject("first_release", result, expected)
+      assertIsSameJsObject("last_release", result, expected)
+    }
+    "create an object for ES mapping information for Subject" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/subject/subjectMeta.json")
+      val template = new SubjectMetaESTemplate {}
+      val result = indexer.transformMeta(payload, template)
+      val expected = loadResource("/subject/expectedSubjectMetaES.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("species", result, expected)
+      assertIsSameJsObject("sex", result, expected)
+      assertIsSameJsObject("age", result, expected)
+      assertIsSameJsObject("agecategory", result, expected)
+      assertIsSameJsObject("strain", result, expected)
+      assertIsSameJsObject("genotype", result, expected)
+      assertIsSameJsObject("weight", result, expected)
+      assertIsSameJsObject("samples", result, expected)
       assertIsSameJsObject("datasetExists", result, expected)
       assertIsSameJsObject("datasets", result, expected)
       assertIsSameJsObject("first_release", result, expected)
