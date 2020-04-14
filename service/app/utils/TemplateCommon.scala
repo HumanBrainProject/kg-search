@@ -273,7 +273,7 @@ case class ObjectArrayToListOfObject[A <: TemplateComponent](
     c
   }
 
-  private def checkOptional(l: ListOfObject, js: JsObject) = {
+  private def checkOptional(l: ListOfObject, js: JsObject): ListOfObject = {
     el match {
       case opt @ Optional(_) =>
         opt.op(js.value) match {

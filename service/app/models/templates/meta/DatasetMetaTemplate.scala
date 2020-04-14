@@ -51,7 +51,7 @@ trait DatasetMetaTemplate extends Template {
                   PrimitiveToObjectWithCustomField[Boolean]("searchUi:sort", "https://schema.hbp.eu/searchUi/sort"),
                   PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
                   PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
-                  PrimitiveToObjectWithCustomField[Int]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost")
+                  PrimitiveToObjectWithCustomField[Double]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost")
                 )
               )
             )

@@ -19,7 +19,12 @@ import java.io.FileInputStream
 
 import controllers.IndexerController
 import models.templates.Dataset
-import models.templates.elasticSearch.{DatasetMetaESTemplate, PersonMetaESTemplate, ProjectMetaESTemplate}
+import models.templates.elasticSearch.{
+  DatasetMetaESTemplate,
+  PersonMetaESTemplate,
+  ProjectMetaESTemplate,
+  SampleMetaESTemplate
+}
 import models.templates.instance.{
   DatasetTemplate,
   ModelInstanceTemplate,
@@ -29,7 +34,7 @@ import models.templates.instance.{
   SoftwareProjectTemplate,
   UnimindsPersonTemplate
 }
-import models.templates.meta.{DatasetMetaTemplate, ProjectMetaTemplate}
+import models.templates.meta.{DatasetMetaTemplate, ProjectMetaTemplate, SampleMetaTemplate}
 import models.{DatabaseScope, INFERRED}
 import org.scalatest.Assertion
 import org.scalatestplus.play.PlaySpec
@@ -326,6 +331,8 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("editorId", result, expected)
       assertIsSameJsObject("last_release", result, expected)
     }
+  }
+  "The meta template engine" must {
     "create an object for the meta information for dataset" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/dataset/datasetMeta.json")
@@ -358,6 +365,45 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("first_release", result, expected)
       assertIsSameJsObject("last_release", result, expected)
     }
+    "create an object for meta information for Project" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/project/projectMeta.json")
+      val template = new ProjectMetaTemplate {}
+      val result = indexer.transformMeta(payload, template).as[JsObject].value("fields")
+      val expected = loadResource("/project/expectedProjectMeta.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("description", result, expected)
+      assertIsSameJsObject("datasets", result, expected)
+      assertIsSameJsObject("publications", result, expected)
+      assertIsSameJsObject("first_release", result, expected)
+      assertIsSameJsObject("last_release", result, expected)
+    }
+    "create an object for meta information for Sample" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/sample/sampleMeta.json")
+      val template = new SampleMetaTemplate {}
+      val result = indexer.transformMeta(payload, template).as[JsObject].value("fields")
+      val expected = loadResource("/sample/expectedSampleMeta.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("weightPreFixation", result, expected)
+      assertIsSameJsObject("parcellationAtlas", result, expected)
+      assertIsSameJsObject("region", result, expected)
+      assertIsSameJsObject("viewer", result, expected)
+      assertIsSameJsObject("methods", result, expected)
+      assertIsSameJsObject("allfiles", result, expected)
+      assertIsSameJsObject("files", result, expected)
+      assertIsSameJsObject("subject", result, expected)
+      assertIsSameJsObject("datasetExists", result, expected)
+      assertIsSameJsObject("datasets", result, expected)
+      assertIsSameJsObject("first_release", result, expected)
+      assertIsSameJsObject("last_release", result, expected)
+    }
+
+  }
+
+  "The ES template engine" must {
     "create an object for ES mapping information for Dataset" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/dataset/datasetMeta.json")
@@ -410,21 +456,7 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("first_release", result, expected)
       assertIsSameJsObject("last_release", result, expected)
     }
-    "create an object for meta information for Project" in {
-      val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/project/projectMeta.json")
-      val template = new ProjectMetaTemplate {}
-      val result = indexer.transformMeta(payload, template).as[JsObject].value("fields")
-      val expected = loadResource("/project/expectedProjectMeta.json")
-      assertIsSameJsObject("identifier", result, expected)
-      assertIsSameJsObject("title", result, expected)
-      assertIsSameJsObject("description", result, expected)
-      assertIsSameJsObject("datasets", result, expected)
-      assertIsSameJsObject("publications", result, expected)
-      assertIsSameJsObject("first_release", result, expected)
-      assertIsSameJsObject("last_release", result, expected)
-    }
-    "create an object for elastic search mapping information for Project" in {
+    "create an object for ES mapping information for Project" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/project/projectMeta.json")
       val template = new ProjectMetaESTemplate {}
@@ -438,6 +470,28 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("first_release", result, expected)
       assertIsSameJsObject("last_release", result, expected)
     }
+    "create an object for ES mapping information for Sample" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/sample/sampleMeta.json")
+      val template = new SampleMetaESTemplate {}
+      val result = indexer.transformMeta(payload, template)
+      val expected = loadResource("/sample/expectedSampleMetaES.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("weightPreFixation", result, expected)
+      assertIsSameJsObject("parcellationAtlas", result, expected)
+      assertIsSameJsObject("region", result, expected)
+      assertIsSameJsObject("viewer", result, expected)
+      assertIsSameJsObject("methods", result, expected)
+      assertIsSameJsObject("allfiles", result, expected)
+      assertIsSameJsObject("files", result, expected)
+      assertIsSameJsObject("subject", result, expected)
+      assertIsSameJsObject("datasetExists", result, expected)
+      assertIsSameJsObject("datasets", result, expected)
+      assertIsSameJsObject("first_release", result, expected)
+      assertIsSameJsObject("last_release", result, expected)
+    }
+
   }
 
   "The index endpoint" must {
