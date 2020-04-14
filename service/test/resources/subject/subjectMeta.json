@@ -1,0 +1,209 @@
+{
+  "https://schema.hbp.eu/graphQuery/root_schema": {
+    "@id": "https://nexus.humanbrainproject.org/v0/schemas/minds/experiment/subject/v1.0.0"
+  },
+  "http://schema.org/identifier": "minds/experiment/subject/v1.0.0/search",
+  "searchUi:icon": "<svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\t width=\"40px\" height=\"40px\" viewBox=\"0 0 40 40\" enable-background=\"new 0 0 40 40\" xml:space=\"preserve\"><g>\t<g>\t\t<g>\t\t\t<path fill=\"#4D4D4D\" d=\"M10.708,29.291c-5.122-5.123-5.122-13.459,0-18.582c5.125-5.123,13.46-5.123,18.583,0\t\t\t\tc5.124,5.123,5.124,13.459,0,18.582C24.168,34.414,15.833,34.414,10.708,29.291z M27.762,12.239\t\t\t\tc-4.279-4.279-11.242-4.279-15.523,0c-4.277,4.279-4.277,11.242,0,15.521c4.281,4.279,11.244,4.279,15.523,0\t\t\t\tC32.039,23.481,32.039,16.519,27.762,12.239z\"/>\t\t</g>\t\t<g>\t\t\t<circle opacity=\"0.6\" fill=\"#4D4D4D\" cx=\"24.265\" cy=\"16.843\" r=\"2.782\"/>\t\t\t<circle fill=\"#4D4D4D\" cx=\"20.401\" cy=\"25.345\" r=\"2.782\"/>\t\t\t<g>\t\t\t\t<circle fill=\"#4D4D4D\" cx=\"15.299\" cy=\"18.852\" r=\"2.783\"/>\t\t\t</g>\t\t</g>\t</g></g></svg>",
+  "searchUi:order": 3,
+  "fields": [
+    {
+      "fieldname": "search:identifier",
+      "searchUi:visible": false,
+      "relative_path": "schema:identifier",
+      "required": true
+    },
+    {
+      "fieldname": "search:title",
+      "searchUi:boost": 20,
+      "searchUi:sort": true,
+      "label": "Name",
+      "relative_path": "schema:name",
+      "required": true
+    },
+    {
+      "fieldname": "search:species",
+      "searchUi:overview": true,
+      "label": "Species",
+      "relative_path": [
+        "minds:species",
+        "schema:name"
+      ],
+      "searchUi:facet": "list",
+      "searchUi:type": "text"
+    },
+    {
+      "fieldname": "search:sex",
+      "searchUi:overview": true,
+      "label": "Sex",
+      "relative_path": [
+        "minds:sex",
+        "schema:name"
+      ],
+      "searchUi:facet": "list"
+    },
+    {
+      "fieldname": "search:age",
+      "searchUi:overview": true,
+      "label": "Age",
+      "relative_path": "minds:age"
+    },
+    {
+      "fieldname": "search:agecategory",
+      "searchUi:overview": true,
+      "label": "Age category",
+      "relative_path": [
+        "minds:age_category",
+        "schema:name"
+      ]
+    },
+    {
+      "fieldname": "search:weight",
+      "label": "Weight",
+      "relative_path": "minds:weight"
+    },
+    {
+      "fieldname": "search:strains",
+      "searchUi:overview": true,
+      "label": "Strain",
+      "relative_path": "minds:strains",
+      "searchUi:facet": "list"
+    },
+    {
+      "fieldname": "search:strain",
+      "searchUi:overview": true,
+      "label": "Strain",
+      "relative_path": "minds:strain",
+      "searchUi:facet": "list"
+    },
+    {
+      "fieldname": "search:genotype",
+      "searchUi:overview": true,
+      "label": "Genotype",
+      "relative_path": "minds:genotype",
+      "searchUi:facet": "list"
+    },
+    {
+      "fieldname": "search:samples",
+      "searchUi:aggregate": "count",
+      "searchUi:hint": "List of samples that have been obtained from a given subject.",
+      "searchUi:layout": "group",
+      "label": "Samples",
+      "fields": [
+        {
+          "fieldname": "search:name",
+          "relative_path": "schema:name"
+        },
+        {
+          "fieldname": "search:identifier",
+          "relative_path": "schema:identifier",
+          "required": true
+        },
+        {
+          "fieldname": "search:relativeUrl",
+          "searchUi:visible": false,
+          "relative_path": "https://schema.hbp.eu/relativeUrl"
+        }
+      ],
+      "relative_path": "minds:samples"
+    },
+    {
+      "fieldname": "search:datasetExists",
+      "label": "Datasets",
+      "searchUi:visible": false,
+      "relative_path": [
+        {
+          "@id": "minds:subjects",
+          "reverse": true
+        },
+        {
+          "@id": "minds:specimen_group",
+          "reverse": true
+        },
+        "schema:identifier"
+      ],
+      "searchUi:facet": "exists"
+    },
+    {
+      "fieldname": "search:datasets",
+      "grouped_instances": "search:instances",
+      "searchUi:hint": "List of datasets in which the subject was used to produce data.",
+      "searchUi:layout": "group",
+      "label": "Datasets",
+      "fields": [
+        {
+          "fieldname": "search:name",
+          "searchUi:count": true,
+          "sort": true,
+          "relative_path": "schema:name",
+          "searchUi:type": "text"
+        },
+        {
+          "fieldname": "search:identifier",
+          "relative_path": "schema:identifier",
+          "required": true
+        },
+        {
+          "fieldname": "search:relativeUrl",
+          "searchUi:visible": false,
+          "relative_path": "https://schema.hbp.eu/relativeUrl"
+        },
+        {
+          "fieldname": "search:componentName",
+          "group_by": true,
+          "relative_path": [
+            "minds:component",
+            "schema:name"
+          ]
+        }
+      ],
+      "relative_path": [
+        {
+          "@id": "minds:subjects",
+          "reverse": true
+        },
+        {
+          "@id": "minds:specimen_group",
+          "reverse": true
+        }
+      ],
+      "searchUi:type": "text"
+    },
+    {
+      "fieldname": "search:firstReleaseAt",
+      "searchUi:ignoreForSearch": true,
+      "label": "First release",
+      "searchUi:visible": false,
+      "relative_path": "release:firstReleaseAt",
+      "searchUi:type": "date"
+    },
+    {
+      "fieldname": "search:lastReleaseAt",
+      "searchUi:ignoreForSearch": true,
+      "label": "Last release",
+      "searchUi:visible": false,
+      "relative_path": "release:lastReleaseAt",
+      "searchUi:type": "date"
+    }
+  ],
+  "schema:name": "Subject",
+  "@context": {
+    "fieldname": {
+      "@type": "@id",
+      "@id": "fieldname"
+    },
+    "minds": "https://schema.hbp.eu/minds/",
+    "schema": "http://schema.org/",
+    "search": "https://schema.hbp.eu/search/",
+    "@vocab": "https://schema.hbp.eu/graphQuery/",
+    "grouped_instances": {
+      "@type": "@id",
+      "@id": "grouped_instances"
+    },
+    "release": "https://schema.hbp.eu/release/",
+    "searchUi": "https://schema.hbp.eu/searchUi/",
+    "relative_path": {
+      "@type": "@id",
+      "@id": "relative_path"
+    }
+  }
+}
