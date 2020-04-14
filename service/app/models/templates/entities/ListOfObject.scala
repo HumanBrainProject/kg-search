@@ -16,18 +16,18 @@
 package models.templates.entities
 import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 
-case class ObjectValueList(list: List[TemplateEntity]) extends TemplateEntity {
-  override def toJson: JsValue = Json.toJson(this)(ObjectValueList.implicitWrites)
+case class ListOfObject(list: List[TemplateEntity]) extends TemplateEntity {
+  override def toJson: JsValue = Json.toJson(this)(ListOfObject.implicitWrites)
 
-  def :+(el: TemplateEntity): ObjectValueList = {
+  def :+(el: TemplateEntity): ListOfObject = {
     this.copy(list :+ el)
   }
 }
 
-object ObjectValueList {
-  implicit def implicitWrites: Writes[ObjectValueList] = new Writes[ObjectValueList] {
+object ListOfObject {
+  implicit def implicitWrites: Writes[ListOfObject] = new Writes[ListOfObject] {
 
-    def writes(c: ObjectValueList): JsValue = {
+    def writes(c: ListOfObject): JsValue = {
       val js = c.list.map(el => el.toJson)
       if (js.forall(jsEntity => jsEntity == JsNull)) {
         JsNull
@@ -37,6 +37,6 @@ object ObjectValueList {
     }
   }
 
-  def zero: ObjectValueList = ObjectValueList(List())
+  def zero: ListOfObject = ListOfObject(List())
 
 }

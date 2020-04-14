@@ -18,7 +18,7 @@ package models.templates.instance
 import java.net.URLEncoder
 
 import models.templates.Template
-import models.templates.entities.{ValueObject, _}
+import models.templates.entities.{ObjectWithValueField, _}
 import models.{DatabaseScope, INFERRED}
 import play.api.libs.json.{JsNull, JsString}
 import utils._
@@ -30,43 +30,52 @@ trait SampleTemplate extends Template {
   def dataBaseScope: DatabaseScope
 
   val result: Map[String, TemplateComponent] = HashMap(
-    "identifier"        -> Value[String]("identifier"),
-    "title"             -> Value[String]("title"),
-    "weightPreFixation" -> Value[String]("weightPreFixation"),
-    "parcellationAtlas" -> ValueList[String]("parcellationAtlas"),
+    "identifier"        -> PrimitiveToObjectWithValueField[String]("identifier"),
+    "title"             -> PrimitiveToObjectWithValueField[String]("title"),
+    "weightPreFixation" -> PrimitiveToObjectWithValueField[String]("weightPreFixation"),
+    "parcellationAtlas" -> PrimitiveArrayToListOfValueObject[String]("parcellationAtlas"),
     "region" ->
-    ObjectListReader(
+    ObjectArrayToListOfObject(
       "parcellationRegion",
-      ObjectValue(List(Optional(Url("url")), OrElse(Value[String]("alias"), Value[String]("name"))))
-    ),
-    "viewer" -> ObjectListReader(
-      "brainviewer",
-      ObjectValue(
-        List(Url("url"), Value[String]("name", js => js.map(str => "Show " + str + " in brain atlas viewer")))
+      WriteObject(
+        List(
+          Optional(PrimitiveToObjectWithUrlField("url")),
+          OrElse(PrimitiveToObjectWithValueField[String]("alias"), PrimitiveToObjectWithValueField[String]("name"))
+        )
       )
     ),
-    "methods" -> ValueList[String]("methods"),
+    "viewer" -> ObjectArrayToListOfObject(
+      "brainviewer",
+      WriteObject(
+        List(
+          PrimitiveToObjectWithUrlField("url"),
+          PrimitiveToObjectWithValueField[String]("name", js => js.map(str => "Show " + str + " in brain atlas viewer"))
+        )
+      )
+    ),
+    "methods" -> PrimitiveArrayToListOfValueObject[String]("methods"),
     "allfiles" ->
     Merge(
-      FirstElement(ValueList[String]("embargo", identity)),
-      Value[String]("container_url"), {
-        case (Some(ValueObject(Some("Embargoed"))), _) => None
-        case (_, Some(ValueObject(Some(containerUrl: String)))) if containerUrl.startsWith("https://object.cscs.ch") =>
+      FirstElement(PrimitiveArrayToListOfValueObject[String]("embargo", identity)),
+      PrimitiveToObjectWithValueField[String]("container_url"), {
+        case (Some(ObjectWithValueField(Some("Embargoed"))), _) => None
+        case (_, Some(ObjectWithValueField(Some(containerUrl: String))))
+            if containerUrl.startsWith("https://object.cscs.ch") =>
           Some(
-            ObjectValueMap(
+            ObjectMap(
               List(
-                UrlObject(Some(s"https://kg.ebrains.eu/proxy/export?container=$containerUrl")),
+                ObjectWithUrlField(Some(s"https://kg.ebrains.eu/proxy/export?container=$containerUrl")),
                 SetValue("detail", JsString("###HBP Knowledge Graph Data Platform Citation Requirements")),
-                ValueObject[String](Some("download all related data as ZIP"))
+                ObjectWithValueField[String](Some("download all related data as ZIP"))
               )
             )
           )
-        case (_, Some(ValueObject(Some(containerUrl: String)))) =>
+        case (_, Some(ObjectWithValueField(Some(containerUrl: String)))) =>
           Some(
-            ObjectValueMap(
+            ObjectMap(
               List(
-                UrlObject(Some(containerUrl)),
-                ValueObject[String](Some("Go to the data"))
+                ObjectWithUrlField(Some(containerUrl)),
+                ObjectWithValueField[String](Some("Go to the data"))
               )
             )
           )
@@ -75,25 +84,27 @@ trait SampleTemplate extends Template {
     ),
     "files" ->
     Merge(
-      FirstElement(ValueList[String]("embargo")),
-      ObjectListReader(
+      FirstElement(PrimitiveArrayToListOfValueObject[String]("embargo")),
+      ObjectArrayToListOfObject(
         "files",
-        ObjectValue(
+        WriteObject(
           List(
             Merge(
-              ObjectValue(List(Url("absolute_path"), Value[String]("name"))),
-              Value[Boolean]("private_access"),
+              WriteObject(
+                List(PrimitiveToObjectWithUrlField("absolute_path"), PrimitiveToObjectWithValueField[String]("name"))
+              ),
+              PrimitiveToObjectWithValueField[Boolean]("private_access"),
               (urlOpt, privateAccesOpt) => {
                 (urlOpt, privateAccesOpt) match {
                   case (
-                      Some(ObjectValueMap(List(UrlObject(Some(urlStr)), ValueObject(Some(nameStr))))),
-                      Some(ValueObject(Some(true)))
+                      Some(ObjectMap(List(ObjectWithUrlField(Some(urlStr)), ObjectWithValueField(Some(nameStr))))),
+                      Some(ObjectWithValueField(Some(true)))
                       ) =>
                     Some(
-                      ObjectValueMap(
+                      ObjectMap(
                         List(
-                          UrlObject(Some(s"$fileProxy/files/cscs?url=$urlStr")),
-                          ValueObject[String](Some(s"ACCESS PROTECTED: $nameStr"))
+                          ObjectWithUrlField(Some(s"$fileProxy/files/cscs?url=$urlStr")),
+                          ObjectWithValueField[String](Some(s"ACCESS PROTECTED: $nameStr"))
                         )
                       )
                     )
@@ -102,22 +113,22 @@ trait SampleTemplate extends Template {
 
               }
             ),
-            CustomField[String]("human_readable_size", "fileSize"),
+            PrimitiveToObjectWithCustomField[String]("human_readable_size", "fileSize"),
             Optional(
               Merge(
-                FirstElement(ValueList[String]("preview_url")),
-                FirstElement(ValueList[String]("is_preview_animated")), {
+                FirstElement(PrimitiveArrayToListOfValueObject[String]("preview_url")),
+                FirstElement(PrimitiveArrayToListOfValueObject[String]("is_preview_animated")), {
                   case (
-                      Some(ValueObject(Some(preview: String))),
-                      Some(ValueObject(Some(isAnimated: String)))
+                      Some(ObjectWithValueField(Some(preview: String))),
+                      Some(ObjectWithValueField(Some(isAnimated: String)))
                       ) =>
                     Some(
                       NestedObject(
                         "previewUrl",
-                        ObjectValueMap(
+                        ObjectMap(
                           List(
-                            UrlObject(Some(preview)),
-                            CustomObject("isAnimated", Some(isAnimated.toBoolean.toString))
+                            ObjectWithUrlField(Some(preview)),
+                            ObjectWithCustomField("isAnimated", Some(isAnimated.toBoolean.toString))
                           )
                         )
                       )
@@ -135,16 +146,16 @@ trait SampleTemplate extends Template {
       }
     ),
     "datasets" ->
-    ObjectListReader(
+    ObjectArrayToListOfObject(
       "datasets",
       Nested(
         "children",
-        ObjectValue(
+        WriteObject(
           List(
             Nested(
               "component",
               FirstElement(
-                ValueList[String](
+                PrimitiveArrayToListOfValueObject[String](
                   "componentName",
                 )
               )
@@ -152,15 +163,15 @@ trait SampleTemplate extends Template {
             Nested(
               "name",
               FirstElement(
-                ObjectListReader(
+                ObjectArrayToListOfObject(
                   "instances",
-                  ObjectValue(
+                  WriteObject(
                     List(
-                      Reference(
+                      PrimitiveToObjectWithReferenceField(
                         "identifier",
                         ref => ref.map(TemplateHelper.refUUIDToSearchId("Dataset"))
                       ),
-                      Value[String]("name")
+                      PrimitiveToObjectWithValueField[String]("name")
                     )
                   )
                 )
@@ -170,40 +181,49 @@ trait SampleTemplate extends Template {
         )
       )
     ),
-    "datasetExists" -> ValueList[String]("datasetExists"),
+    "datasetExists" -> PrimitiveArrayToListOfValueObject[String]("datasetExists"),
     "subject" ->
-    ObjectListReader(
+    ObjectArrayToListOfObject(
       "subjects",
       Nested(
         "children",
-        ObjectValue(
+        WriteObject(
           List(
             Nested(
               "subject_name",
-              ObjectValue(
+              WriteObject(
                 List(
-                  Reference("identifier", ref => ref.map(TemplateHelper.refUUIDToSearchId("Subject"))),
-                  Value[String]("name"),
+                  PrimitiveToObjectWithReferenceField(
+                    "identifier",
+                    ref => ref.map(TemplateHelper.refUUIDToSearchId("Subject"))
+                  ),
+                  PrimitiveToObjectWithValueField[String]("name"),
                 )
               )
             ),
-            Nested("species", FirstElement(ValueList[String]("species"))),
-            Nested("sex", FirstElement(ValueList[String]("sex"))),
-            Nested("age", Value[String]("age")),
-            Nested("agecategory", FirstElement(ValueList[String]("agecategory"))),
-            Nested("weight", Value[String]("weight")),
-            Nested("strain", OrElse(Value[String]("strain"), Value[String]("strains"))),
-            Nested("genotype", Value[String]("genotype"))
+            Nested("species", FirstElement(PrimitiveArrayToListOfValueObject[String]("species"))),
+            Nested("sex", FirstElement(PrimitiveArrayToListOfValueObject[String]("sex"))),
+            Nested("age", PrimitiveToObjectWithValueField[String]("age")),
+            Nested("agecategory", FirstElement(PrimitiveArrayToListOfValueObject[String]("agecategory"))),
+            Nested("weight", PrimitiveToObjectWithValueField[String]("weight")),
+            Nested(
+              "strain",
+              OrElse(
+                PrimitiveToObjectWithValueField[String]("strain"),
+                PrimitiveToObjectWithValueField[String]("strains")
+              )
+            ),
+            Nested("genotype", PrimitiveToObjectWithValueField[String]("genotype"))
           )
         )
       )
     ),
-    "first_release" -> Value[String]("first_release"),
-    "last_release"  -> Value[String]("last_release"),
+    "first_release" -> PrimitiveToObjectWithValueField[String]("first_release"),
+    "last_release"  -> PrimitiveToObjectWithValueField[String]("last_release"),
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {
-    case INFERRED => HashMap("editorId" -> Value[String]("editorId")) ++ result
+    case INFERRED => HashMap("editorId" -> PrimitiveToObjectWithValueField[String]("editorId")) ++ result
     case _        => result
   }
 }

@@ -1,7 +1,7 @@
 package models.templates.meta
 
 import models.templates.Template
-import models.templates.entities.ObjectValueMap
+import models.templates.entities.ObjectMap
 import utils._
 
 trait ProjectMetaTemplate extends Template {
@@ -9,24 +9,24 @@ trait ProjectMetaTemplate extends Template {
   val template: Map[String, TemplateComponent] = Map(
     "fields" -> ObjectReader(
       "fields",
-      ObjectValue(
+      WriteObject(
         List(
           Nested(
             "identifier",
             ObjectReader(
               "search:identifier",
-              CustomField[Boolean]("searchUi:visible", "https://schema.hbp.eu/searchUi/visible")
+              PrimitiveToObjectWithCustomField[Boolean]("searchUi:visible", "https://schema.hbp.eu/searchUi/visible")
             )
           ),
           Nested(
             "title",
             ObjectReader(
               "search:title",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[Boolean]("searchUi:sort", "https://schema.hbp.eu/searchUi/sort"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[Double]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost")
+                  PrimitiveToObjectWithCustomField[Boolean]("searchUi:sort", "https://schema.hbp.eu/searchUi/sort"),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[Double]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost")
                 )
               )
             )
@@ -35,12 +35,18 @@ trait ProjectMetaTemplate extends Template {
             "description",
             ObjectReader(
               "search:description",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[Boolean]("searchUi:markdown", "https://schema.hbp.eu/searchUi/markdown"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[Double]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost"),
-                  CustomField[Boolean]("searchUi:label_hidden", "https://schema.hbp.eu/searchUi/label_hidden")
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:markdown",
+                    "https://schema.hbp.eu/searchUi/markdown"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[Double]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost"),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:label_hidden",
+                    "https://schema.hbp.eu/searchUi/label_hidden"
+                  )
                 )
               )
             )
@@ -49,10 +55,10 @@ trait ProjectMetaTemplate extends Template {
             "dataset",
             ObjectReader(
               "search:dataset",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
                 )
               )
             )
@@ -61,12 +67,15 @@ trait ProjectMetaTemplate extends Template {
             "publications",
             ObjectReader(
               "search:publications",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[Boolean]("searchUi:markdown", "https://schema.hbp.eu/searchUi/markdown"),
-                  CustomField[String]("searchUi:hint", "https://schema.hbp.eu/searchUi/hint"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:markdown",
+                    "https://schema.hbp.eu/searchUi/markdown"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:hint", "https://schema.hbp.eu/searchUi/hint"),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
                 )
               )
             )
@@ -75,16 +84,19 @@ trait ProjectMetaTemplate extends Template {
             "first_release",
             ObjectReader(
               "search:firstReleaseAt",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[Boolean](
+                  PrimitiveToObjectWithCustomField[Boolean](
                     "searchUi:ignoreForSearch",
                     "https://schema.hbp.eu/searchUi/ignoreForSearch",
                     identity
                   ),
-                  CustomField[Boolean]("searchUi:visible", "https://schema.hbp.eu/searchUi/visible"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type")
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:visible",
+                    "https://schema.hbp.eu/searchUi/visible"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type")
                 )
               )
             )
@@ -93,16 +105,19 @@ trait ProjectMetaTemplate extends Template {
             "last_release",
             ObjectReader(
               "search:lastReleaseAt",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[Boolean](
+                  PrimitiveToObjectWithCustomField[Boolean](
                     "searchUi:ignoreForSearch",
                     "https://schema.hbp.eu/searchUi/ignoreForSearch",
                     identity
                   ),
-                  CustomField[Boolean]("searchUi:visible", "https://schema.hbp.eu/searchUi/visible"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type")
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:visible",
+                    "https://schema.hbp.eu/searchUi/visible"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type")
                 )
               )
             )
@@ -112,25 +127,37 @@ trait ProjectMetaTemplate extends Template {
     ),
     "https://schema.hbp.eu/searchUi/ribbon" -> ObjectReader(
       "searchUi:ribbon",
-      ObjectValue(
+      WriteObject(
         List(
-          CustomField[String]("searchUi:content", "https://schema.hbp.eu/searchUi/content"),
+          PrimitiveToObjectWithCustomField[String]("searchUi:content", "https://schema.hbp.eu/searchUi/content"),
           Nested(
             "https://schema.hbp.eu/searchUi/framed",
             ObjectReader(
               "searchUi:framed",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("searchUi:aggregation", "https://schema.hbp.eu/searchUi/aggregation"),
-                  CustomField[String]("searchUi:dataField", "https://schema.hbp.eu/searchUi/dataField"),
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:aggregation",
+                    "https://schema.hbp.eu/searchUi/aggregation"
+                  ),
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:dataField",
+                    "https://schema.hbp.eu/searchUi/dataField"
+                  ),
                   Nested(
                     "https://schema.hbp.eu/searchUi/suffix",
                     ObjectReader(
                       "searchUi:suffix",
-                      ObjectValue(
+                      WriteObject(
                         List(
-                          CustomField[String]("searchUi:plural", "https://schema.hbp.eu/searchUi/plural"),
-                          CustomField[String]("searchUi:singular", "https://schema.hbp.eu/searchUi/singular"),
+                          PrimitiveToObjectWithCustomField[String](
+                            "searchUi:plural",
+                            "https://schema.hbp.eu/searchUi/plural"
+                          ),
+                          PrimitiveToObjectWithCustomField[String](
+                            "searchUi:singular",
+                            "https://schema.hbp.eu/searchUi/singular"
+                          ),
                         )
                       )
                     )
@@ -139,31 +166,43 @@ trait ProjectMetaTemplate extends Template {
               )
             )
           ),
-          CustomField[String]("searchUi:icon", "https://schema.hbp.eu/searchUi/icon"),
+          PrimitiveToObjectWithCustomField[String]("searchUi:icon", "https://schema.hbp.eu/searchUi/icon"),
         )
       )
     ),
     "https://schema.hbp.eu/searchUi/ribbon" -> ObjectReader(
       "searchUi:ribbon",
-      ObjectValue(
+      WriteObject(
         List(
-          CustomField[String]("searchUi:content", "https://schema.hbp.eu/searchUi/content"),
+          PrimitiveToObjectWithCustomField[String]("searchUi:content", "https://schema.hbp.eu/searchUi/content"),
           Nested(
             "https://schema.hbp.eu/searchUi/framed",
             ObjectReader(
               "searchUi:framed",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("searchUi:aggregation", "https://schema.hbp.eu/searchUi/aggregation"),
-                  CustomField[String]("searchUi:dataField", "https://schema.hbp.eu/searchUi/dataField"),
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:aggregation",
+                    "https://schema.hbp.eu/searchUi/aggregation"
+                  ),
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:dataField",
+                    "https://schema.hbp.eu/searchUi/dataField"
+                  ),
                   Nested(
                     "https://schema.hbp.eu/searchUi/suffix",
                     ObjectReader(
                       "searchUi:suffix",
-                      ObjectValue(
+                      WriteObject(
                         List(
-                          CustomField[String]("searchUi:plural", "https://schema.hbp.eu/searchUi/plural"),
-                          CustomField[String]("searchUi:singular", "https://schema.hbp.eu/searchUi/singular"),
+                          PrimitiveToObjectWithCustomField[String](
+                            "searchUi:plural",
+                            "https://schema.hbp.eu/searchUi/plural"
+                          ),
+                          PrimitiveToObjectWithCustomField[String](
+                            "searchUi:singular",
+                            "https://schema.hbp.eu/searchUi/singular"
+                          ),
                         )
                       )
                     )
@@ -172,7 +211,7 @@ trait ProjectMetaTemplate extends Template {
               )
             )
           ),
-          CustomField[String]("searchUi:icon", "https://schema.hbp.eu/searchUi/icon"),
+          PrimitiveToObjectWithCustomField[String]("searchUi:icon", "https://schema.hbp.eu/searchUi/icon"),
         )
       )
     ),

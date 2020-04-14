@@ -17,18 +17,18 @@ package models.templates.entities
 
 import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 
-case class CustomObject[ReturnValue](fieldName: String, fieldValue: Option[ReturnValue])(
+case class ObjectWithCustomField[ReturnValue](fieldName: String, fieldValue: Option[ReturnValue])(
   implicit writes: Writes[ReturnValue]
 ) extends TemplateEntity {
-  override def toJson: JsValue = Json.toJson(this)(CustomObject.implicitWrites)
+  override def toJson: JsValue = Json.toJson(this)(ObjectWithCustomField.implicitWrites)
 
 }
 
-object CustomObject {
-  implicit def implicitWrites[T: Writes](implicit returnTypeWrite: Writes[T]): Writes[CustomObject[T]] =
-    new Writes[CustomObject[T]] {
+object ObjectWithCustomField {
+  implicit def implicitWrites[T: Writes](implicit returnTypeWrite: Writes[T]): Writes[ObjectWithCustomField[T]] =
+    new Writes[ObjectWithCustomField[T]] {
 
-      def writes(c: CustomObject[T]): JsValue = {
+      def writes(c: ObjectWithCustomField[T]): JsValue = {
         c.fieldValue.fold[JsValue](JsNull)(
           v =>
             Json.obj(
@@ -38,5 +38,5 @@ object CustomObject {
       }
     }
 
-  def zero[T: Writes]: CustomObject[T] = CustomObject[T]("", None)
+  def zero[T: Writes]: ObjectWithCustomField[T] = ObjectWithCustomField[T]("", None)
 }

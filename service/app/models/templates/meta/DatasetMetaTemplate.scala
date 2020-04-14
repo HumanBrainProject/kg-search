@@ -1,27 +1,39 @@
 package models.templates.meta
 
 import models.templates.Template
-import models.templates.entities.ObjectValueMap
-import utils.{CustomField, Get, Merge, Nested, ObjectReader, ObjectValue, OrElse, TemplateComponent}
+import models.templates.entities.ObjectMap
+import utils.{
+  Get,
+  Merge,
+  Nested,
+  ObjectReader,
+  OrElse,
+  PrimitiveToObjectWithCustomField,
+  TemplateComponent,
+  WriteObject
+}
 
 trait DatasetMetaTemplate extends Template {
 
   val template: Map[String, TemplateComponent] = Map(
     "fields" -> ObjectReader(
       "fields",
-      ObjectValue(
+      WriteObject(
         List(
           Nested(
             "identifier",
             ObjectReader(
               "search:identifier",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[Boolean](
+                  PrimitiveToObjectWithCustomField[Boolean](
                     "searchUi:ignoreForSearch",
                     "https://schema.hbp.eu/searchUi/ignoreForSearch"
                   ),
-                  CustomField[Boolean]("searchUi:visible", "https://schema.hbp.eu/searchUi/visible")
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:visible",
+                    "https://schema.hbp.eu/searchUi/visible"
+                  )
                 )
               )
             )
@@ -30,13 +42,16 @@ trait DatasetMetaTemplate extends Template {
             "title",
             ObjectReader(
               "search:title",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[Boolean]("searchUi:optional", "https://schema.hbp.eu/searchUi/optional"),
-                  CustomField[Boolean]("searchUi:sort", "https://schema.hbp.eu/searchUi/sort"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
-                  CustomField[Int]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost")
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:optional",
+                    "https://schema.hbp.eu/searchUi/optional"
+                  ),
+                  PrimitiveToObjectWithCustomField[Boolean]("searchUi:sort", "https://schema.hbp.eu/searchUi/sort"),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
+                  PrimitiveToObjectWithCustomField[Int]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost")
                 )
               )
             )
@@ -45,14 +60,20 @@ trait DatasetMetaTemplate extends Template {
             "contributors",
             ObjectReader(
               "search:contributors",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("searchUi:separator", "https://schema.hbp.eu/searchUi/separator"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
-                  CustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type"),
-                  CustomField[Int]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost"),
-                  CustomField[Boolean]("searchUi:label_hidden", "https://schema.hbp.eu/searchUi/label_hidden")
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:separator",
+                    "https://schema.hbp.eu/searchUi/separator"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type"),
+                  PrimitiveToObjectWithCustomField[Int]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost"),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:label_hidden",
+                    "https://schema.hbp.eu/searchUi/label_hidden"
+                  )
                 )
               )
             )
@@ -62,23 +83,29 @@ trait DatasetMetaTemplate extends Template {
             Merge(
               ObjectReader(
                 "search:containerUrlAsZIP",
-                ObjectValue(
+                WriteObject(
                   List(
-                    CustomField[Boolean]("searchUi:isButton", "https://schema.hbp.eu/searchUi/isButton"),
-                    CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label")
+                    PrimitiveToObjectWithCustomField[Boolean](
+                      "searchUi:isButton",
+                      "https://schema.hbp.eu/searchUi/isButton"
+                    ),
+                    PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label")
                   )
                 )
               ),
               ObjectReader(
                 "search:files",
-                ObjectValue(
+                WriteObject(
                   List(
-                    CustomField[Boolean]("searchUi:termsOfUse", "https://schema.hbp.eu/searchUi/termsOfUse"),
+                    PrimitiveToObjectWithCustomField[Boolean](
+                      "searchUi:termsOfUse",
+                      "https://schema.hbp.eu/searchUi/termsOfUse"
+                    ),
                   )
                 )
               ), {
-                case (Some(ObjectValueMap(zip)), Some(ObjectValueMap(List(termOfUse)))) =>
-                  Some(ObjectValueMap(zip :+ termOfUse))
+                case (Some(ObjectMap(zip)), Some(ObjectMap(List(termOfUse)))) =>
+                  Some(ObjectMap(zip :+ termOfUse))
                 case _ => None
               }
             )
@@ -87,11 +114,17 @@ trait DatasetMetaTemplate extends Template {
             "citation",
             ObjectReader(
               "search:citation",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[Boolean]("searchUi:isButton", "https://schema.hbp.eu/searchUi/isButton"),
-                  CustomField[Boolean]("searchUi:markdown", "https://schema.hbp.eu/searchUi/markdown"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label")
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:isButton",
+                    "https://schema.hbp.eu/searchUi/isButton"
+                  ),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:markdown",
+                    "https://schema.hbp.eu/searchUi/markdown"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label")
                 )
               )
             )
@@ -100,11 +133,17 @@ trait DatasetMetaTemplate extends Template {
             "dataDescriptor",
             ObjectReader(
               "search:dataDescriptorURL",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[Boolean]("searchUi:isButton", "https://schema.hbp.eu/searchUi/isButton"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[Boolean]("searchUi:termsOfUse", "https://schema.hbp.eu/searchUi/termsOfUse"),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:isButton",
+                    "https://schema.hbp.eu/searchUi/isButton"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:termsOfUse",
+                    "https://schema.hbp.eu/searchUi/termsOfUse"
+                  ),
                 )
               )
             )
@@ -113,10 +152,10 @@ trait DatasetMetaTemplate extends Template {
             "doi",
             ObjectReader(
               "search:doi",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("searchUi:hint", "https://schema.hbp.eu/searchUi/hint"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label")
+                  PrimitiveToObjectWithCustomField[String]("searchUi:hint", "https://schema.hbp.eu/searchUi/hint"),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label")
                 )
               )
             )
@@ -125,11 +164,14 @@ trait DatasetMetaTemplate extends Template {
             "license_info",
             ObjectReader(
               "search:license",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type"),
-                  CustomField[String]("searchUi:facet_order", "https://schema.hbp.eu/searchUi/facet_order")
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type"),
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:facet_order",
+                    "https://schema.hbp.eu/searchUi/facet_order"
+                  )
                 )
               )
             )
@@ -138,11 +180,11 @@ trait DatasetMetaTemplate extends Template {
             "component",
             ObjectReader(
               "search:component",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[Int]("searchUi:order", "https://schema.hbp.eu/searchUi/order"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[Int]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost")
+                  PrimitiveToObjectWithCustomField[Int]("searchUi:order", "https://schema.hbp.eu/searchUi/order"),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[Int]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost")
                 )
               )
             )
@@ -151,12 +193,15 @@ trait DatasetMetaTemplate extends Template {
             "owners",
             ObjectReader(
               "search:owners",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("searchUi:separator", "https://schema.hbp.eu/searchUi/separator"),
-                  CustomField[String]("searchUi:hint", "https://schema.hbp.eu/searchUi/hint"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[Int]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost")
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:separator",
+                    "https://schema.hbp.eu/searchUi/separator"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:hint", "https://schema.hbp.eu/searchUi/hint"),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[Int]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost")
                 )
               )
             )
@@ -165,12 +210,18 @@ trait DatasetMetaTemplate extends Template {
             "description",
             ObjectReader(
               "search:description",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[Boolean]("searchUi:markdown", "https://schema.hbp.eu/searchUi/markdown"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[Int]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost"),
-                  CustomField[Boolean]("searchUi:label_hidden", "https://schema.hbp.eu/searchUi/label_hidden")
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:markdown",
+                    "https://schema.hbp.eu/searchUi/markdown"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[Int]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost"),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:label_hidden",
+                    "https://schema.hbp.eu/searchUi/label_hidden"
+                  )
                 )
               )
             )
@@ -179,12 +230,15 @@ trait DatasetMetaTemplate extends Template {
             "speciesFilter",
             ObjectReader(
               "search:speciesFilter",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("searchUi:facet", "https://schema.hbp.eu/searchUi/facet"),
-                  CustomField[Boolean]("searchUi:visible", "https://schema.hbp.eu/searchUi/visible"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type")
+                  PrimitiveToObjectWithCustomField[String]("searchUi:facet", "https://schema.hbp.eu/searchUi/facet"),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:visible",
+                    "https://schema.hbp.eu/searchUi/visible"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type")
                 )
               )
             )
@@ -193,11 +247,14 @@ trait DatasetMetaTemplate extends Template {
             "embargoForFilter",
             ObjectReader(
               "search:embargoForFilter",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("searchUi:facet", "https://schema.hbp.eu/searchUi/facet"),
-                  CustomField[Boolean]("searchUi:visible", "https://schema.hbp.eu/searchUi/visible"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label")
+                  PrimitiveToObjectWithCustomField[String]("searchUi:facet", "https://schema.hbp.eu/searchUi/facet"),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:visible",
+                    "https://schema.hbp.eu/searchUi/visible"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label")
                 )
               )
             )
@@ -206,10 +263,10 @@ trait DatasetMetaTemplate extends Template {
             "embargo",
             ObjectReader(
               "search:embargo",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
                 )
               )
             )
@@ -218,12 +275,18 @@ trait DatasetMetaTemplate extends Template {
             "files",
             ObjectReader(
               "search:files",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
-                  CustomField[Boolean]("searchUi:isTable", "https://schema.hbp.eu/searchUi/isTable"),
-                  CustomField[Boolean]("searchUi:termsOfUse", "https://schema.hbp.eu/searchUi/termsOfUse")
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:isTable",
+                    "https://schema.hbp.eu/searchUi/isTable"
+                  ),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:termsOfUse",
+                    "https://schema.hbp.eu/searchUi/termsOfUse"
+                  )
                 )
               )
             )
@@ -232,10 +295,10 @@ trait DatasetMetaTemplate extends Template {
             "external_datalink",
             ObjectReader(
               "search:external_datalink",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
                 )
               )
             )
@@ -244,12 +307,15 @@ trait DatasetMetaTemplate extends Template {
             "publications",
             ObjectReader(
               "search:publications",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[Boolean]("searchUi:markdown", "https://schema.hbp.eu/searchUi/markdown"),
-                  CustomField[String]("searchUi:hint", "https://schema.hbp.eu/searchUi/hint"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:markdown",
+                    "https://schema.hbp.eu/searchUi/markdown"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:hint", "https://schema.hbp.eu/searchUi/hint"),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
                 )
               )
             )
@@ -258,10 +324,10 @@ trait DatasetMetaTemplate extends Template {
             "atlas",
             ObjectReader(
               "search:parcellationAtlas",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
                 )
               )
             )
@@ -270,11 +336,14 @@ trait DatasetMetaTemplate extends Template {
             "region",
             ObjectReader(
               "search:parcellationRegion",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
-                  CustomField[String]("searchUi:link_icon", "https://schema.hbp.eu/searchUi/link_icon")
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:link_icon",
+                    "https://schema.hbp.eu/searchUi/link_icon"
+                  )
                 )
               )
             )
@@ -283,10 +352,10 @@ trait DatasetMetaTemplate extends Template {
             "preparation",
             ObjectReader(
               "search:preparation",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
                 )
               )
             )
@@ -295,19 +364,25 @@ trait DatasetMetaTemplate extends Template {
             "methods",
             ObjectReader(
               "search:methods",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("searchUi:tag_icon", "https://schema.hbp.eu/searchUi/tag_icon"),
-                  CustomField[String]("searchUi:facet", "https://schema.hbp.eu/searchUi/facet"),
-                  CustomField[Int]("searchUi:order", "https://schema.hbp.eu/searchUi/order"),
-                  CustomField[Int](
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:tag_icon",
+                    "https://schema.hbp.eu/searchUi/tag_icon"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:facet", "https://schema.hbp.eu/searchUi/facet"),
+                  PrimitiveToObjectWithCustomField[Int]("searchUi:order", "https://schema.hbp.eu/searchUi/order"),
+                  PrimitiveToObjectWithCustomField[Int](
                     "searchUi:overviewMaxDisplay",
                     "https://schema.hbp.eu/searchUi/overviewMaxDisplay",
                     identity
                   ),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
-                  CustomField[Boolean]("searchUi:overview", "https://schema.hbp.eu/searchUi/overview")
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:overview",
+                    "https://schema.hbp.eu/searchUi/overview"
+                  )
                 )
               )
             )
@@ -316,19 +391,25 @@ trait DatasetMetaTemplate extends Template {
             "protocol",
             ObjectReader(
               "search:protocols",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("searchUi:tag_icon", "https://schema.hbp.eu/searchUi/tag_icon"),
-                  CustomField[String]("searchUi:facet", "https://schema.hbp.eu/searchUi/facet"),
-                  CustomField[Int]("searchUi:order", "https://schema.hbp.eu/searchUi/order"),
-                  CustomField[Int](
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:tag_icon",
+                    "https://schema.hbp.eu/searchUi/tag_icon"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:facet", "https://schema.hbp.eu/searchUi/facet"),
+                  PrimitiveToObjectWithCustomField[Int]("searchUi:order", "https://schema.hbp.eu/searchUi/order"),
+                  PrimitiveToObjectWithCustomField[Int](
                     "searchUi:overviewMaxDisplay",
                     "https://schema.hbp.eu/searchUi/overviewMaxDisplay",
                     identity
                   ),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
-                  CustomField[Boolean]("searchUi:overview", "https://schema.hbp.eu/searchUi/overview")
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:overview",
+                    "https://schema.hbp.eu/searchUi/overview"
+                  )
                 )
               )
             )
@@ -338,19 +419,25 @@ trait DatasetMetaTemplate extends Template {
             OrElse(
               ObjectReader(
                 "search:brainviewer",
-                ObjectValue(
+                WriteObject(
                   List(
-                    CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                    CustomField[String]("searchUi:link_icon", "https://schema.hbp.eu/searchUi/link_icon")
+                    PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                    PrimitiveToObjectWithCustomField[String](
+                      "searchUi:link_icon",
+                      "https://schema.hbp.eu/searchUi/link_icon"
+                    )
                   )
                 )
               ),
               ObjectReader(
                 "search:neuroglancer",
-                ObjectValue(
+                WriteObject(
                   List(
-                    CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                    CustomField[String]("searchUi:link_icon", "https://schema.hbp.eu/searchUi/link_icon")
+                    PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                    PrimitiveToObjectWithCustomField[String](
+                      "searchUi:link_icon",
+                      "https://schema.hbp.eu/searchUi/link_icon"
+                    )
                   )
                 )
               )
@@ -360,26 +447,32 @@ trait DatasetMetaTemplate extends Template {
             "subjects",
             ObjectReader(
               "search:subjects",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("searchUi:hint", "https://schema.hbp.eu/searchUi/hint"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
-                  CustomField[Boolean]("searchUi:isTable", "https://schema.hbp.eu/searchUi/isTable"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:hint", "https://schema.hbp.eu/searchUi/hint"),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:isTable",
+                    "https://schema.hbp.eu/searchUi/isTable"
+                  ),
                   ObjectReader(
                     "fields",
                     Nested(
                       "children",
-                      ObjectValue(
+                      WriteObject(
                         List(
                           Nested(
                             "subject_name",
                             ObjectReader(
                               "search:name",
-                              ObjectValue(
+                              WriteObject(
                                 List(
-                                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                                  CustomField[Boolean](
+                                  PrimitiveToObjectWithCustomField[String](
+                                    "label",
+                                    "https://schema.hbp.eu/graphQuery/label"
+                                  ),
+                                  PrimitiveToObjectWithCustomField[Boolean](
                                     "searchUi:groupby",
                                     "https://schema.hbp.eu/searchUi/groupby",
                                     identity
@@ -392,9 +485,12 @@ trait DatasetMetaTemplate extends Template {
                             "species",
                             ObjectReader(
                               "search:species",
-                              ObjectValue(
+                              WriteObject(
                                 List(
-                                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                                  PrimitiveToObjectWithCustomField[String](
+                                    "label",
+                                    "https://schema.hbp.eu/graphQuery/label"
+                                  ),
                                 )
                               )
                             )
@@ -403,9 +499,12 @@ trait DatasetMetaTemplate extends Template {
                             "sex",
                             ObjectReader(
                               "search:sex",
-                              ObjectValue(
+                              WriteObject(
                                 List(
-                                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                                  PrimitiveToObjectWithCustomField[String](
+                                    "label",
+                                    "https://schema.hbp.eu/graphQuery/label"
+                                  ),
                                 )
                               )
                             )
@@ -414,9 +513,12 @@ trait DatasetMetaTemplate extends Template {
                             "age",
                             ObjectReader(
                               "search:age",
-                              ObjectValue(
+                              WriteObject(
                                 List(
-                                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                                  PrimitiveToObjectWithCustomField[String](
+                                    "label",
+                                    "https://schema.hbp.eu/graphQuery/label"
+                                  ),
                                 )
                               )
                             )
@@ -425,9 +527,12 @@ trait DatasetMetaTemplate extends Template {
                             "agecategory",
                             ObjectReader(
                               "search:agecategory",
-                              ObjectValue(
+                              WriteObject(
                                 List(
-                                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                                  PrimitiveToObjectWithCustomField[String](
+                                    "label",
+                                    "https://schema.hbp.eu/graphQuery/label"
+                                  ),
                                 )
                               )
                             )
@@ -436,9 +541,12 @@ trait DatasetMetaTemplate extends Template {
                             "weight",
                             ObjectReader(
                               "search:weight",
-                              ObjectValue(
+                              WriteObject(
                                 List(
-                                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                                  PrimitiveToObjectWithCustomField[String](
+                                    "label",
+                                    "https://schema.hbp.eu/graphQuery/label"
+                                  ),
                                 )
                               )
                             )
@@ -447,9 +555,12 @@ trait DatasetMetaTemplate extends Template {
                             "strain",
                             ObjectReader(
                               "search:strain",
-                              ObjectValue(
+                              WriteObject(
                                 List(
-                                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                                  PrimitiveToObjectWithCustomField[String](
+                                    "label",
+                                    "https://schema.hbp.eu/graphQuery/label"
+                                  ),
                                 )
                               )
                             )
@@ -458,9 +569,12 @@ trait DatasetMetaTemplate extends Template {
                             "genotype",
                             ObjectReader(
                               "search:genotype",
-                              ObjectValue(
+                              WriteObject(
                                 List(
-                                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                                  PrimitiveToObjectWithCustomField[String](
+                                    "label",
+                                    "https://schema.hbp.eu/graphQuery/label"
+                                  ),
                                 )
                               )
                             )
@@ -469,9 +583,12 @@ trait DatasetMetaTemplate extends Template {
                             "samples",
                             ObjectReader(
                               "search:samples",
-                              ObjectValue(
+                              WriteObject(
                                 List(
-                                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                                  PrimitiveToObjectWithCustomField[String](
+                                    "label",
+                                    "https://schema.hbp.eu/graphQuery/label"
+                                  ),
                                 )
                               )
                             )
@@ -488,16 +605,19 @@ trait DatasetMetaTemplate extends Template {
             "first_release",
             ObjectReader(
               "search:firstReleaseAt",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[Boolean](
+                  PrimitiveToObjectWithCustomField[Boolean](
                     "searchUi:ignoreForSearch",
                     "https://schema.hbp.eu/searchUi/ignoreForSearch",
                     identity
                   ),
-                  CustomField[Boolean]("searchUi:visible", "https://schema.hbp.eu/searchUi/visible"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type")
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:visible",
+                    "https://schema.hbp.eu/searchUi/visible"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type")
                 )
               )
             )
@@ -506,16 +626,19 @@ trait DatasetMetaTemplate extends Template {
             "last_release",
             ObjectReader(
               "search:lastReleaseAt",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[Boolean](
+                  PrimitiveToObjectWithCustomField[Boolean](
                     "searchUi:ignoreForSearch",
                     "https://schema.hbp.eu/searchUi/ignoreForSearch",
                     identity
                   ),
-                  CustomField[Boolean]("searchUi:visible", "https://schema.hbp.eu/searchUi/visible"),
-                  CustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  CustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type")
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:visible",
+                    "https://schema.hbp.eu/searchUi/visible"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type")
                 )
               )
             )
@@ -525,25 +648,37 @@ trait DatasetMetaTemplate extends Template {
     ),
     "https://schema.hbp.eu/searchUi/ribbon" -> ObjectReader(
       "searchUi:ribbon",
-      ObjectValue(
+      WriteObject(
         List(
-          CustomField[String]("searchUi:content", "https://schema.hbp.eu/searchUi/content"),
+          PrimitiveToObjectWithCustomField[String]("searchUi:content", "https://schema.hbp.eu/searchUi/content"),
           Nested(
             "https://schema.hbp.eu/searchUi/framed",
             ObjectReader(
               "searchUi:framed",
-              ObjectValue(
+              WriteObject(
                 List(
-                  CustomField[String]("searchUi:aggregation", "https://schema.hbp.eu/searchUi/aggregation"),
-                  CustomField[String]("searchUi:dataField", "https://schema.hbp.eu/searchUi/dataField"),
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:aggregation",
+                    "https://schema.hbp.eu/searchUi/aggregation"
+                  ),
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:dataField",
+                    "https://schema.hbp.eu/searchUi/dataField"
+                  ),
                   Nested(
                     "https://schema.hbp.eu/searchUi/suffix",
                     ObjectReader(
                       "searchUi:suffix",
-                      ObjectValue(
+                      WriteObject(
                         List(
-                          CustomField[String]("searchUi:plural", "https://schema.hbp.eu/searchUi/plural"),
-                          CustomField[String]("searchUi:singular", "https://schema.hbp.eu/searchUi/singular"),
+                          PrimitiveToObjectWithCustomField[String](
+                            "searchUi:plural",
+                            "https://schema.hbp.eu/searchUi/plural"
+                          ),
+                          PrimitiveToObjectWithCustomField[String](
+                            "searchUi:singular",
+                            "https://schema.hbp.eu/searchUi/singular"
+                          ),
                         )
                       )
                     )
@@ -552,7 +687,7 @@ trait DatasetMetaTemplate extends Template {
               )
             )
           ),
-          CustomField[String]("searchUi:icon", "https://schema.hbp.eu/searchUi/icon"),
+          PrimitiveToObjectWithCustomField[String]("searchUi:icon", "https://schema.hbp.eu/searchUi/icon"),
         )
       )
     ),

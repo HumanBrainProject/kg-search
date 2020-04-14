@@ -29,7 +29,7 @@ trait ProjectMetaESTemplate extends Template {
         "search:identifier",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -41,7 +41,7 @@ trait ProjectMetaESTemplate extends Template {
         "search:title",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -53,7 +53,7 @@ trait ProjectMetaESTemplate extends Template {
         "search:description",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -65,7 +65,7 @@ trait ProjectMetaESTemplate extends Template {
         "search:datasets",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(
               ESProperty("reference", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
               ESProperty("uuid", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
@@ -82,7 +82,7 @@ trait ProjectMetaESTemplate extends Template {
         "search:publications",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -94,7 +94,7 @@ trait ProjectMetaESTemplate extends Template {
         "search:firstReleaseAt",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value", None))
           )
         )
@@ -106,7 +106,7 @@ trait ProjectMetaESTemplate extends Template {
         "search:lastReleaseAt",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value", None))
           )
         )

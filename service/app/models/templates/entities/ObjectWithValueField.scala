@@ -17,22 +17,22 @@ package models.templates.entities
 
 import play.api.libs.json.{Format, JsNull, JsValue, Json, Writes}
 
-case class ValueObject[ReturnType: Format](value: Option[ReturnType]) extends TemplateEntity {
+case class ObjectWithValueField[ReturnType: Format](value: Option[ReturnType]) extends TemplateEntity {
 
-  def map[B: Format](t: ReturnType => B): ValueObject[B] = {
-    ValueObject[B](this.value.map(t))
+  def map[B: Format](t: ReturnType => B): ObjectWithValueField[B] = {
+    ObjectWithValueField[B](this.value.map(t))
   }
-  override def toJson: JsValue = Json.toJson(this)(ValueObject.implicitWrites[ReturnType])
+  override def toJson: JsValue = Json.toJson(this)(ObjectWithValueField.implicitWrites[ReturnType])
 
 }
 
-object ValueObject {
-  implicit def implicitWrites[ReturnType: Writes]: Writes[ValueObject[ReturnType]] =
-    new Writes[ValueObject[ReturnType]] {
+object ObjectWithValueField {
+  implicit def implicitWrites[ReturnType: Writes]: Writes[ObjectWithValueField[ReturnType]] =
+    new Writes[ObjectWithValueField[ReturnType]] {
 
-      def writes(u: ValueObject[ReturnType]): JsValue = {
+      def writes(u: ObjectWithValueField[ReturnType]): JsValue = {
         u.value.fold[JsValue](JsNull)(str => Json.obj("value" -> str))
       }
     }
-  def zero[ReturnType: Format]: ValueObject[ReturnType] = ValueObject[ReturnType](None)
+  def zero[ReturnType: Format]: ObjectWithValueField[ReturnType] = ObjectWithValueField[ReturnType](None)
 }

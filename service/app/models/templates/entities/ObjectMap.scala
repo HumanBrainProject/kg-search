@@ -17,23 +17,23 @@ package models.templates.entities
 
 import play.api.libs.json.{JsNull, JsObject, JsValue, Json, Writes}
 
-case class ObjectValueMap(list: List[TemplateEntity]) extends TemplateEntity {
+case class ObjectMap(list: List[TemplateEntity]) extends TemplateEntity {
 
-  override def toJson: JsValue = Json.toJson(this)(ObjectValueMap.implicitWrites)
+  override def toJson: JsValue = Json.toJson(this)(ObjectMap.implicitWrites)
 
-  def :+(el: TemplateEntity): ObjectValueMap = {
+  def :+(el: TemplateEntity): ObjectMap = {
     this.copy(list :+ el)
   }
 
-  def map(f: TemplateEntity => TemplateEntity): ObjectValueMap = {
+  def map(f: TemplateEntity => TemplateEntity): ObjectMap = {
     this.copy(this.list.map(f))
   }
 }
 
-object ObjectValueMap {
-  implicit lazy val implicitWrites: Writes[ObjectValueMap] = new Writes[ObjectValueMap] {
+object ObjectMap {
+  implicit lazy val implicitWrites: Writes[ObjectMap] = new Writes[ObjectMap] {
 
-    def writes(c: ObjectValueMap): JsValue = {
+    def writes(c: ObjectMap): JsValue = {
       val resultObj = c.list.foldLeft(JsObject.empty) {
         case (json, el) =>
           val jsResult = el.toJson
@@ -52,6 +52,6 @@ object ObjectValueMap {
     }
   }
 
-  def zero = ObjectValueMap(List())
+  def zero = ObjectMap(List())
 
 }

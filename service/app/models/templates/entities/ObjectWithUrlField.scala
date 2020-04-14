@@ -14,23 +14,19 @@
  *   limitations under the License.
  */
 package models.templates.entities
-
 import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 
-case class ReferenceObject(reference: Option[String]) extends TemplateEntity {
-  override def toJson: JsValue = Json.toJson(this)(ReferenceObject.implicitWrites)
+case class ObjectWithUrlField(url: Option[String]) extends TemplateEntity {
+  override def toJson: JsValue = Json.toJson(this)(ObjectWithUrlField.implicitWrites)
 
-  def map(f: String => String): ReferenceObject = {
-    ReferenceObject(reference.map(f))
-  }
 }
 
-object ReferenceObject {
-  implicit val implicitWrites: Writes[ReferenceObject] = new Writes[ReferenceObject] {
+object ObjectWithUrlField {
+  implicit val implicitWrites: Writes[ObjectWithUrlField] = new Writes[ObjectWithUrlField] {
 
-    def writes(u: ReferenceObject): JsValue = {
-      u.reference.fold[JsValue](JsNull)(v => Json.obj("reference" -> Json.toJson(v)))
+    def writes(u: ObjectWithUrlField): JsValue = {
+      u.url.fold[JsValue](JsNull)(v => Json.obj("url" -> Json.toJson(v)))
     }
   }
-  def zero: ReferenceObject = ReferenceObject(None)
+  def zero: ObjectWithUrlField = ObjectWithUrlField(None)
 }

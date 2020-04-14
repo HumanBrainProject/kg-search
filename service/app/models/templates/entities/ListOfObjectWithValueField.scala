@@ -16,17 +16,18 @@
 package models.templates.entities
 import play.api.libs.json.{Format, JsNull, JsValue, Json, Writes}
 
-case class ValueObjectList[ReturnType: Format](list: List[ValueObject[ReturnType]]) extends TemplateEntity {
-  override def toJson: JsValue = Json.toJson(this)(ValueObjectList.implicitWrites)
+case class ListOfObjectWithValueField[ReturnType: Format](list: List[ObjectWithValueField[ReturnType]])
+    extends TemplateEntity {
+  override def toJson: JsValue = Json.toJson(this)(ListOfObjectWithValueField.implicitWrites)
 
 }
 
-object ValueObjectList {
-  def zero[ReturnType: Format]: ValueObjectList[ReturnType] = ValueObjectList[ReturnType](List())
-  implicit def implicitWrites[ReturnType: Format]: Writes[ValueObjectList[ReturnType]] =
-    new Writes[ValueObjectList[ReturnType]] {
+object ListOfObjectWithValueField {
+  def zero[ReturnType: Format]: ListOfObjectWithValueField[ReturnType] = ListOfObjectWithValueField[ReturnType](List())
+  implicit def implicitWrites[ReturnType: Format]: Writes[ListOfObjectWithValueField[ReturnType]] =
+    new Writes[ListOfObjectWithValueField[ReturnType]] {
 
-      def writes(u: ValueObjectList[ReturnType]): JsValue = {
+      def writes(u: ListOfObjectWithValueField[ReturnType]): JsValue = {
         if (u.list.isEmpty) {
           JsNull
         } else {

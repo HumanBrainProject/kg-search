@@ -19,8 +19,16 @@ import java.net.URLEncoder
 
 import models.{DatabaseScope, INFERRED}
 import models.templates.Template
-import models.templates.entities.ValueObject
-import utils.{Merge, ObjectListReader, ObjectValue, Reference, TemplateComponent, TemplateHelper, Value}
+import models.templates.entities.ObjectWithValueField
+import utils.{
+  Merge,
+  ObjectArrayToListOfObject,
+  PrimitiveToObjectWithReferenceField,
+  PrimitiveToObjectWithValueField,
+  TemplateComponent,
+  TemplateHelper,
+  WriteObject
+}
 
 import scala.collection.immutable.HashMap
 
@@ -30,23 +38,26 @@ trait ProjectTemplate extends Template {
   def dataBaseScope: DatabaseScope
 
   val result: Map[String, TemplateComponent] = HashMap(
-    "identifier"  -> Value[String]("identifier"),
-    "title"       -> Value[String]("title"),
-    "description" -> Value[String]("description"),
-    "dataset" -> ObjectListReader(
+    "identifier"  -> PrimitiveToObjectWithValueField[String]("identifier"),
+    "title"       -> PrimitiveToObjectWithValueField[String]("title"),
+    "description" -> PrimitiveToObjectWithValueField[String]("description"),
+    "dataset" -> ObjectArrayToListOfObject(
       "datasets",
-      ObjectValue(
+      WriteObject(
         List(
-          Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Dataset"))),
-          Value[String]("name")
+          PrimitiveToObjectWithReferenceField(
+            "relativeUrl",
+            ref => ref.map(TemplateHelper.schemaIdToSearchId("Dataset"))
+          ),
+          PrimitiveToObjectWithValueField[String]("name")
         )
       )
     ),
-    "publications" -> ObjectListReader(
+    "publications" -> ObjectArrayToListOfObject(
       "publications",
       Merge(
-        Value[String]("citation"),
-        Value[String]("doi", doi => {
+        PrimitiveToObjectWithValueField[String]("citation"),
+        PrimitiveToObjectWithValueField[String]("doi", doi => {
           doi.map { doiStr =>
             val url = URLEncoder.encode(doiStr, "UTF-8")
             s"[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url"
@@ -54,20 +65,23 @@ trait ProjectTemplate extends Template {
         }),
         (citation, doi) => {
           (citation, doi) match {
-            case (Some(ValueObject(Some(citationStr: String))), Some(ValueObject(Some(doiStr: String)))) =>
-              Some(ValueObject[String](Some(citationStr + "\n" + doiStr)))
+            case (
+                Some(ObjectWithValueField(Some(citationStr: String))),
+                Some(ObjectWithValueField(Some(doiStr: String)))
+                ) =>
+              Some(ObjectWithValueField[String](Some(citationStr + "\n" + doiStr)))
             case _ => doi
           }
 
         }
       )
     ),
-    "first_release" -> Value[String]("first_release"),
-    "last_release"  -> Value[String]("last_release")
+    "first_release" -> PrimitiveToObjectWithValueField[String]("first_release"),
+    "last_release"  -> PrimitiveToObjectWithValueField[String]("last_release")
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {
-    case INFERRED => HashMap("editorId" -> Value[String]("editorId")) ++ result
+    case INFERRED => HashMap("editorId" -> PrimitiveToObjectWithValueField[String]("editorId")) ++ result
     case _        => result
   }
 }

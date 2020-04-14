@@ -29,7 +29,7 @@ trait PersonMetaESTemplate extends Template {
         "search:identifier",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -41,7 +41,7 @@ trait PersonMetaESTemplate extends Template {
         "search:title",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -53,7 +53,7 @@ trait PersonMetaESTemplate extends Template {
         "search:description",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -65,7 +65,7 @@ trait PersonMetaESTemplate extends Template {
         "search:phone",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -77,7 +77,7 @@ trait PersonMetaESTemplate extends Template {
         "search:custodianOf",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(
               ESProperty("reference", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
               ESProperty("uuid", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
@@ -93,7 +93,7 @@ trait PersonMetaESTemplate extends Template {
         "search:custodianOfModel",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(
               ESProperty("reference", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
               ESProperty("uuid", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
@@ -110,7 +110,7 @@ trait PersonMetaESTemplate extends Template {
         "search:publications",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -122,7 +122,7 @@ trait PersonMetaESTemplate extends Template {
         "search:address",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -134,7 +134,7 @@ trait PersonMetaESTemplate extends Template {
         "search:contributions",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(
               ESProperty("reference", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
               ESProperty("uuid", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
@@ -150,7 +150,7 @@ trait PersonMetaESTemplate extends Template {
         "search:modelContributions",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(
               ESProperty("reference", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
               ESProperty("uuid", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
@@ -166,7 +166,7 @@ trait PersonMetaESTemplate extends Template {
         "search:email",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -178,7 +178,7 @@ trait PersonMetaESTemplate extends Template {
         "search:firstReleaseAt",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value", None))
           )
         )
@@ -190,7 +190,7 @@ trait PersonMetaESTemplate extends Template {
         "search:lastReleaseAt",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value", None))
           )
         )

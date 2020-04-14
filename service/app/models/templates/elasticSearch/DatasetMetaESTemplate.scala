@@ -29,7 +29,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:identifier",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -41,7 +41,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:title",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -53,7 +53,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:contributors",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(
               ESProperty("reference", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
               ESProperty("uuid", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
@@ -70,7 +70,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:containerUrlAsZIP",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -82,7 +82,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:citation",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -94,7 +94,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:dataDescriptorURL",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -106,7 +106,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:doi",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -118,7 +118,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:license",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -130,7 +130,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:component",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(
               ESProperty("reference", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
               ESProperty("uuid", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
@@ -146,7 +146,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:owners",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(
               ESProperty("reference", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
               ESProperty("uuid", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
@@ -162,7 +162,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:description",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -174,7 +174,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:speciesFilter",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -186,7 +186,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:embargoForFilter",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -198,7 +198,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:embargo",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -210,7 +210,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:files",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -222,7 +222,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:external_datalink",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -234,7 +234,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:publications",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -246,7 +246,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:parcellationAtlas",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -258,7 +258,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:parcellationRegion",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -270,7 +270,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:preparation",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -282,7 +282,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:methods",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -294,7 +294,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:protocols",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value"))
           )
         )
@@ -307,7 +307,7 @@ trait DatasetMetaESTemplate extends Template {
           "search:brainviewer",
           Nested(
             "properties",
-            ObjectValue(
+            WriteObject(
               List(ESProperty("value"))
             )
           )
@@ -316,7 +316,7 @@ trait DatasetMetaESTemplate extends Template {
           "search:neuroglancer",
           Nested(
             "properties",
-            ObjectValue(
+            WriteObject(
               List(ESProperty("value"))
             )
           )
@@ -329,19 +329,19 @@ trait DatasetMetaESTemplate extends Template {
         "search:subjects",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(
               ESProperty("value"),
               Nested(
                 "children",
-                ObjectValue(
+                WriteObject(
                   List(
                     Set("type", JsString("nested")),
                     ObjectReader(
                       "fields",
                       Nested(
                         "properties",
-                        ObjectValue(
+                        WriteObject(
                           List(
                             Nested(
                               "subject_name",
@@ -382,7 +382,7 @@ trait DatasetMetaESTemplate extends Template {
                               "samples",
                               Nested(
                                 "properties",
-                                ObjectValue(
+                                WriteObject(
                                   List(
                                     ESProperty("reference", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
                                     ESProperty("uuid", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
@@ -409,7 +409,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:firstReleaseAt",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value", None))
           )
         )
@@ -421,7 +421,7 @@ trait DatasetMetaESTemplate extends Template {
         "search:lastReleaseAt",
         Nested(
           "properties",
-          ObjectValue(
+          WriteObject(
             List(ESProperty("value", None))
           )
         )

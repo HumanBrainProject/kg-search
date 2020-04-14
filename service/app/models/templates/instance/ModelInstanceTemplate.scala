@@ -18,10 +18,10 @@ package models.templates.instance
 import java.net.URLEncoder
 
 import models.templates.Template
-import models.templates.entities.{ObjectValueList, ObjectValueMap, SetValue, UrlObject, ValueObject}
+import models.templates.entities.{ListOfObject, ObjectMap, ObjectWithUrlField, ObjectWithValueField, SetValue}
 import models.{DatabaseScope, INFERRED}
 import play.api.libs.json.{JsNull, JsString, JsValue}
-import utils.{Value, _}
+import utils.{PrimitiveToObjectWithValueField, _}
 
 import scala.collection.immutable.HashMap
 
@@ -31,42 +31,51 @@ trait ModelInstanceTemplate extends Template {
   def dataBaseScope: DatabaseScope
 
   val result: Map[String, TemplateComponent] = HashMap(
-    "identifier"  -> Value[String]("identifier", identity),
-    "title"       -> Value[String]("title", identity),
-    "description" -> Value[String]("description", identity),
-    "version"     -> Value[String]("version", identity),
-    "contributors" -> ObjectListReader(
+    "identifier"  -> PrimitiveToObjectWithValueField[String]("identifier", identity),
+    "title"       -> PrimitiveToObjectWithValueField[String]("title", identity),
+    "description" -> PrimitiveToObjectWithValueField[String]("description", identity),
+    "version"     -> PrimitiveToObjectWithValueField[String]("version", identity),
+    "contributors" -> ObjectArrayToListOfObject(
       "contributors",
-      ObjectValue(
+      WriteObject(
         List(
-          Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))),
-          Value[String]("name", identity)
+          PrimitiveToObjectWithReferenceField(
+            "relativeUrl",
+            ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))
+          ),
+          PrimitiveToObjectWithValueField[String]("name", identity)
         )
       )
     ),
-    "owners" -> ObjectListReader(
+    "owners" -> ObjectArrayToListOfObject(
       "custodian",
-      ObjectValue(
+      WriteObject(
         List(
-          Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))),
-          Value[String]("name", identity)
+          PrimitiveToObjectWithReferenceField(
+            "relativeUrl",
+            ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))
+          ),
+          PrimitiveToObjectWithValueField[String]("name", identity)
         )
       )
     ),
-    "mainContact" -> ObjectListReader(
+    "mainContact" -> ObjectArrayToListOfObject(
       "mainContact",
-      ObjectValue(
+      WriteObject(
         List(
-          Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))),
-          Value[String]("name", identity)
+          PrimitiveToObjectWithReferenceField(
+            "relativeUrl",
+            ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))
+          ),
+          PrimitiveToObjectWithValueField[String]("name", identity)
         )
       )
     ),
-    "publications" -> ObjectListReader(
+    "publications" -> ObjectArrayToListOfObject(
       "publications",
       Merge(
-        Value[String]("citation", identity),
-        Value[String]("doi", doi => {
+        PrimitiveToObjectWithValueField[String]("citation", identity),
+        PrimitiveToObjectWithValueField[String]("doi", doi => {
           doi.map { doiStr =>
             val url = URLEncoder.encode(doiStr, "UTF-8")
             s"[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url"
@@ -74,8 +83,8 @@ trait ModelInstanceTemplate extends Template {
         }),
         (citation, doi) => {
           (citation, doi) match {
-            case (Some(ValueObject(Some(citationStr))), Some(ValueObject(Some(doiStr)))) =>
-              Some(ValueObject[String](Some(citationStr + "\n" + doiStr)))
+            case (Some(ObjectWithValueField(Some(citationStr))), Some(ObjectWithValueField(Some(doiStr)))) =>
+              Some(ObjectWithValueField[String](Some(citationStr + "\n" + doiStr)))
             case _ => doi
           }
         }
@@ -83,56 +92,56 @@ trait ModelInstanceTemplate extends Template {
     ),
     "embargo" -> Optional(
       FirstElement(
-        ValueList[String](
+        PrimitiveArrayToListOfValueObject[String](
           "embargo", {
-            case ValueObject(Some("embargoed")) =>
-              ValueObject[String](
+            case ObjectWithValueField(Some("embargoed")) =>
+              ObjectWithValueField[String](
                 Some(
                   "This model is temporarily under embargo. The data will become available for download after the embargo period."
                 )
               )
-            case _ => ValueObject[String](None)
+            case _ => ObjectWithValueField[String](None)
           }
         )
       )
     ),
     "allFiles" -> Optional(
       Merge(
-        FirstElement(ValueList[String]("embargo", identity)),
-        ObjectListReader(
+        FirstElement(PrimitiveArrayToListOfValueObject[String]("embargo", identity)),
+        ObjectArrayToListOfObject(
           "fileBundle",
-          ObjectValue(
+          WriteObject(
             List(
-              Url("url"),
+              PrimitiveToObjectWithUrlField("url"),
               Set("detail", JsNull),
-              Value[String]("value", identity)
+              PrimitiveToObjectWithValueField[String]("value", identity)
             )
           )
         ),
         (embargoOpt, urlOpt) =>
           (embargoOpt, urlOpt) match {
-            case (Some(ValueObject(Some("embargoed"))), _) => None
-            case (_, Some(ObjectValueList(listRes))) =>
-              Some(ObjectValueList(listRes.map {
-                case ObjectValueMap(
+            case (Some(ObjectWithValueField(Some("embargoed"))), _) => None
+            case (_, Some(ListOfObject(listRes))) =>
+              Some(ListOfObject(listRes.map {
+                case ObjectMap(
                     List(
-                      UrlObject(Some(resUrl)),
+                      ObjectWithUrlField(Some(resUrl)),
                       SetValue(_, _),
-                      ValueObject(_)
+                      ObjectWithValueField(_)
                     )
                     ) if resUrl.startsWith("https://object.cscs.ch") =>
-                  ObjectValueMap(
+                  ObjectMap(
                     List(
-                      UrlObject(Some(s"https://kg.ebrains.eu/proxy/export?container=$resUrl")),
+                      ObjectWithUrlField(Some(s"https://kg.ebrains.eu/proxy/export?container=$resUrl")),
                       SetValue("detail", JsString("###HBP Knowledge Graph Data Platform Citation Requirements")),
-                      ValueObject[String](Some("download all related data as ZIP"))
+                      ObjectWithValueField[String](Some("download all related data as ZIP"))
                     )
                   )
-                case ObjectValueMap(List(UrlObject(Some(resUrl)), x)) =>
-                  ObjectValueMap(
+                case ObjectMap(List(ObjectWithUrlField(Some(resUrl)), x)) =>
+                  ObjectMap(
                     List(
-                      UrlObject(Some(resUrl)),
-                      ValueObject[String](Some("Go to the data"))
+                      ObjectWithUrlField(Some(resUrl)),
+                      ObjectWithValueField[String](Some("Go to the data"))
                     )
                   )
                 case s => s
@@ -141,36 +150,42 @@ trait ModelInstanceTemplate extends Template {
         }
       )
     ),
-    "brainStructures"  -> ValueList[String]("brainStructure", identity),
-    "cellularTarget"   -> ValueList[String]("cellularTarget", identity),
-    "studyTarget"      -> ValueList[String]("studyTarget", identity),
-    "modelScope"       -> ValueList[String]("modelScope", identity),
-    "abstractionLevel" -> ValueList[String]("abstractionLevel", identity),
-    "modelFormat"      -> ValueList[String]("modelFormat", identity),
-    "first_release"    -> Value[String]("first_release", identity),
-    "last_release"     -> Value[String]("last_release", identity),
-    "usedDataset" -> ObjectListReader(
+    "brainStructures"  -> PrimitiveArrayToListOfValueObject[String]("brainStructure", identity),
+    "cellularTarget"   -> PrimitiveArrayToListOfValueObject[String]("cellularTarget", identity),
+    "studyTarget"      -> PrimitiveArrayToListOfValueObject[String]("studyTarget", identity),
+    "modelScope"       -> PrimitiveArrayToListOfValueObject[String]("modelScope", identity),
+    "abstractionLevel" -> PrimitiveArrayToListOfValueObject[String]("abstractionLevel", identity),
+    "modelFormat"      -> PrimitiveArrayToListOfValueObject[String]("modelFormat", identity),
+    "first_release"    -> PrimitiveToObjectWithValueField[String]("first_release", identity),
+    "last_release"     -> PrimitiveToObjectWithValueField[String]("last_release", identity),
+    "usedDataset" -> ObjectArrayToListOfObject(
       "usedDataset",
-      ObjectValue(
+      WriteObject(
         List(
-          Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Dataset"))),
-          Value[String]("name", identity)
+          PrimitiveToObjectWithReferenceField(
+            "relativeUrl",
+            ref => ref.map(TemplateHelper.schemaIdToSearchId("Dataset"))
+          ),
+          PrimitiveToObjectWithValueField[String]("name", identity)
         )
       )
     ),
-    "producedDataset" -> ObjectListReader(
+    "producedDataset" -> ObjectArrayToListOfObject(
       "producedDataset",
-      ObjectValue(
+      WriteObject(
         List(
-          Reference("relativeUrl", ref => ref.map(TemplateHelper.schemaIdToSearchId("Dataset"))),
-          Value[String]("name", identity)
+          PrimitiveToObjectWithReferenceField(
+            "relativeUrl",
+            ref => ref.map(TemplateHelper.schemaIdToSearchId("Dataset"))
+          ),
+          PrimitiveToObjectWithValueField[String]("name", identity)
         )
       )
     )
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {
-    case INFERRED => HashMap("editorId" -> Value[String]("editorId", identity)) ++ result
+    case INFERRED => HashMap("editorId" -> PrimitiveToObjectWithValueField[String]("editorId", identity)) ++ result
     case _        => result
   }
 
