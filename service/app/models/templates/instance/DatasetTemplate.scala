@@ -53,7 +53,29 @@ trait DatasetTemplate extends Template {
         case _ => None
       }
     ),
-    "zip"            -> Value[String]("zip"),
+    "zip" -> Optional(
+      Merge(
+        Merge(
+          FirstElement(ValueList[String]("embargo")),
+          Value[Boolean]("containerUrlAsZip"), {
+            case (embargoObject @ Some(ValueObject(Some(embargoString: String))), Some(ValueObject(Some(true))))
+                if embargoString != "Under review" && embargoString != "Embargoed" =>
+              embargoObject
+            case _ => None
+          }
+        ),
+        ObjectValue(
+          List(
+            Value[String]("container_url"),
+            CustomField[String]("human_readable_size", "fileSize"),
+          ),
+        ), {
+          case (Some(ValueObject(embargo)), containerUrlObject) =>
+            containerUrlObject
+          case _ => None
+        }
+      )
+    ),
     "dataDescriptor" -> Optional(Value[String]("dataDescriptor")),
     "doi"            -> FirstElement(ValueList[String]("doi")),
     "license_info" -> FirstElement(
@@ -217,41 +239,43 @@ trait DatasetTemplate extends Template {
         )
       )
     ),
-    "subjects" -> ObjectListReader(
+    "subjects" ->
+    ObjectListReader(
       "subjects",
-      ObjectValue(
-        List(
-          Nested(
-            "subject_name",
-            ObjectValue(
-              List(
-                Reference("identifier", ref => ref.map(TemplateHelper.refUUIDToSearchId("Subject"))),
-                Value[String]("name"),
-              )
-            )
-          ),
-          Nested("species", FirstElement(ValueList[String]("species"))),
-          Nested("sex", FirstElement(ValueList[String]("sex"))),
-          Nested("age", Value[String]("age")),
-          Nested("agecategory", FirstElement(ValueList[String]("agecategory"))),
-          Nested("weight", Value[String]("weight")),
-          Nested("strain", Optional(Value[String]("strain"))),
-          Nested("genotype", Value[String]("genotype")),
-          Nested(
-            "samples",
-            ObjectListReader(
-              "samples",
+      Nested(
+        "children",
+        ObjectValue(
+          List(
+            Nested(
+              "subject_name",
               ObjectValue(
                 List(
-                  Reference("identifier", ref => ref.map(TemplateHelper.refUUIDToSearchId("Sample"))),
-                  Value[String]("name")
+                  Reference("identifier", ref => ref.map(TemplateHelper.refUUIDToSearchId("Subject"))),
+                  Value[String]("name"),
+                )
+              )
+            ),
+            Nested("species", FirstElement(ValueList[String]("species"))),
+            Nested("sex", FirstElement(ValueList[String]("sex"))),
+            Nested("age", Value[String]("age")),
+            Nested("agecategory", FirstElement(ValueList[String]("agecategory"))),
+            Nested("weight", Value[String]("weight")),
+            Nested("strain", Optional(Value[String]("strain"))),
+            Nested("genotype", Value[String]("genotype")),
+            Nested(
+              "samples",
+              ObjectListReader(
+                "samples",
+                ObjectValue(
+                  List(
+                    Reference("identifier", ref => ref.map(TemplateHelper.refUUIDToSearchId("Sample"))),
+                    Value[String]("name")
+                  )
                 )
               )
             )
-          )
-        ), { a =>
-          ObjectValueMap(List(NestedObject("children", a)))
-        }
+          ),
+        )
       )
     ),
     "first_release" -> Value[String]("first_release"),

@@ -9,7 +9,7 @@
   #  - in: path
   #    name: dataType
   #    type: string
-  #    enum: [Dataset]
+  #    enum: [Dataset, Person, Project]
   #  - in: query
   #    name: databaseScope
   #    type: string
@@ -80,8 +80,7 @@ GET /templates/:templateType  controllers.IndexerController.applyTemplateByType(
   #  - in: path
   #    name: templateType
   #    type: string
-  #    enum:
-  #      - Dataset
+  #    enum: [Dataset, Person, Project]
   #    default: Dataset
   #  responses:
   #    '200':
@@ -101,8 +100,7 @@ GET /templates/:templateType/meta  controllers.IndexerController.applyMetaTempla
   #  - in: path
   #    name: templateType
   #    type: string
-  #    enum:
-  #      - Dataset
+  #    enum: [Dataset, Person, Project]
   #    default: Dataset
   #  responses:
   #    '200':

@@ -20,7 +20,15 @@ import java.io.FileInputStream
 import controllers.IndexerController
 import models.templates.Dataset
 import models.templates.elasticSearch.{DatasetMetaESTemplate, PersonMetaESTemplate, ProjectMetaESTemplate}
-import models.templates.instance.{DatasetTemplate, ModelInstanceTemplate, PersonTemplate, ProjectTemplate, SoftwareProjectTemplate, UnimindsPersonTemplate}
+import models.templates.instance.{
+  DatasetTemplate,
+  ModelInstanceTemplate,
+  PersonTemplate,
+  ProjectTemplate,
+  SampleTemplate,
+  SoftwareProjectTemplate,
+  UnimindsPersonTemplate
+}
 import models.templates.meta.{DatasetMetaTemplate, ProjectMetaTemplate}
 import models.{DatabaseScope, INFERRED}
 import org.scalatest.Assertion
@@ -43,8 +51,8 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       result.as[JsObject].value.get(fieldName) == expected.as[JsObject].value.get(fieldName)
     )
   }
-  "The indexed trait" must {
-    "transform the dataset payload accordingly" in {
+  "The template engine" must {
+    "transform correctly a query for datasets" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/dataset/dataset.json")
       val template = new DatasetTemplate {
@@ -165,6 +173,30 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("title", result, expected)
       assertIsSameJsObject("editorId", result, expected)
       assertIsSameJsObject("version", result, expected)
+    }
+    "transform the sample payload accordingly" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/sample/sample.json")
+      val template = new SampleTemplate {
+        override def fileProxy: String = ""
+        override def dataBaseScope: DatabaseScope = INFERRED
+      }
+      val result = indexer.transform(payload, template)
+      val expected = loadResource("/sample/expectedSample.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("weightPreFixation", result, expected)
+      assertIsSameJsObject("parcellationAtlas", result, expected)
+      assertIsSameJsObject("region", result, expected)
+      assertIsSameJsObject("viewer", result, expected)
+      assertIsSameJsObject("methods", result, expected)
+      assertIsSameJsObject("allfiles", result, expected)
+      assertIsSameJsObject("files", result, expected)
+      assertIsSameJsObject("subject", result, expected)
+      assertIsSameJsObject("datasetExists", result, expected)
+      assertIsSameJsObject("datasets", result, expected)
+      assertIsSameJsObject("first_release", result, expected)
+      assertIsSameJsObject("last_release", result, expected)
     }
     "transform the model instance payload accordingly" in {
       val indexer = app.injector.instanceOf[IndexerImpl]

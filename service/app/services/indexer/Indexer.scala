@@ -242,7 +242,7 @@ class IndexerImpl @Inject()(
               completeRebuild
             )
           }
-          Task.sequence(indexedList).map { _ =>
+          Task.gather(indexedList).map { _ =>
             logger.debug(s"$template - Indexing done")
             Right(())
           }
