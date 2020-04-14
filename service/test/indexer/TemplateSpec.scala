@@ -20,7 +20,7 @@ import java.io.FileInputStream
 import controllers.IndexerController
 import models.templates.Dataset
 import models.templates.elasticSearch.{DatasetMetaESTemplate, PersonMetaESTemplate, ProjectMetaESTemplate}
-import models.templates.instance.{DatasetTemplate, PersonTemplate, ProjectTemplate, UnimindsPersonTemplate}
+import models.templates.instance.{DatasetTemplate, PersonTemplate, ProjectTemplate, SoftwareProjectTemplate, UnimindsPersonTemplate}
 import models.templates.meta.{DatasetMetaTemplate, ProjectMetaTemplate}
 import models.{DatabaseScope, INFERRED}
 import org.scalatest.Assertion
@@ -144,6 +144,27 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("first_release", result, expected)
       assertIsSameJsObject("editorId", result, expected)
       assertIsSameJsObject("last_release", result, expected)
+    }
+    "transform the software project payload accordingly" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/softwareProject.json")
+      val template = new SoftwareProjectTemplate {
+        override def fileProxy: String = ""
+        override def dataBaseScope: DatabaseScope = INFERRED
+      }
+      val result = indexer.transform(payload, template)
+      val expected = loadResource("/expectedSoftwareProject.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("description", result, expected)
+      assertIsSameJsObject("appCategory", result, expected)
+      assertIsSameJsObject("sourceCode", result, expected)
+      assertIsSameJsObject("documentation", result, expected)
+      assertIsSameJsObject("license", result, expected)
+      assertIsSameJsObject("operatingSystem", result, expected)
+      assertIsSameJsObject("homepage", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("editorId", result, expected)
+      assertIsSameJsObject("version", result, expected)
     }
     "properly handle empty values in dataset" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
