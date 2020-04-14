@@ -25,8 +25,6 @@ import utils._
 import scala.collection.immutable.HashMap
 
 trait SubjectTemplate extends Template {
-  def fileProxy: String
-  def dataBaseScope: DatabaseScope
 
   val result: Map[String, TemplateComponent] = HashMap(
     "identifier"  -> PrimitiveToObjectWithValueField[String]("identifier"),

@@ -18,7 +18,15 @@ package models.templates
 import models.{DatabaseScope, INFERRED}
 import utils.TemplateComponent
 
-trait Template {
+trait DatabaseScopeDep {
+  def dataBaseScope: DatabaseScope
+}
+
+trait Template extends DatabaseScopeDep {
   def dataBaseScope: DatabaseScope = INFERRED
   def template: Map[String, TemplateComponent]
+}
+
+trait FileProxy {
+  def fileProxy: String
 }

@@ -18,17 +18,42 @@ package services.indexer
 import com.google.inject.ImplementedBy
 import javax.inject.Inject
 import models.DatabaseScope
-import models.templates.elasticSearch.{DatasetMetaESTemplate, PersonMetaESTemplate, ProjectMetaESTemplate}
-import models.templates.meta.{DatasetMetaTemplate, PersonMetaTemplate, ProjectMetaTemplate}
+import models.templates.elasticSearch.{
+  DatasetMetaESTemplate,
+  PersonMetaESTemplate,
+  ProjectMetaESTemplate,
+  SampleMetaESTemplate,
+  SubjectMetaESTemplate
+}
+import models.templates.meta.{
+  DatasetMetaTemplate,
+  PersonMetaTemplate,
+  ProjectMetaTemplate,
+  SampleMetaTemplate,
+  SubjectMetaTemplate
+}
 import models.templates.instance.{
   DatasetTemplate,
   ModelInstanceTemplate,
   PersonTemplate,
   ProjectTemplate,
-  UnimindsPersonTemplate,
-  SoftwareProjectTemplate
+  SampleTemplate,
+  SoftwareProjectTemplate,
+  SubjectTemplate,
+  UnimindsPersonTemplate
 }
-import models.templates.{Dataset, Person, Project, Template, TemplateType, UnimindsPerson, SoftwareProject, ModelInstance}
+import models.templates.{
+  Dataset,
+  ModelInstance,
+  Person,
+  Project,
+  Sample,
+  SoftwareProject,
+  Subject,
+  Template,
+  TemplateType,
+  UnimindsPerson
+}
 import play.api.Configuration
 import play.api.libs.json._
 import play.api.libs.json.DefaultWrites
@@ -55,10 +80,10 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     val transformedContent = template.template.foldLeft(HashMap[String, JsValue]()) {
       case (acc, (k, v)) =>
         v match {
-          case opt@Optional(_) =>
+          case opt @ Optional(_) =>
             opt.op(currentContent) match {
               case Some(content) => acc.updated(k, content.toJson)
-              case None => acc
+              case None          => acc
             }
           case _ =>
             acc.updated(k, v.op(currentContent).getOrElse(v.zero).toJson)
@@ -72,7 +97,7 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     fieldList.foldLeft(HashMap[String, JsValue]()) {
       case (acc, el) =>
         val maybeName = for {
-          js <- el.value.get("fieldname")
+          js  <- el.value.get("fieldname")
           str <- js.asOpt[String]
         } yield str
         maybeName match {
@@ -87,7 +112,7 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
 
   override def transformMeta(c: JsValue, template: Template): JsValue = {
     val maybeContent = for {
-      fields <- c.as[JsObject].value.get("fields")
+      fields    <- c.as[JsObject].value.get("fields")
       fieldList <- fields.asOpt[List[JsObject]]
     } yield c.as[JsObject].value.updated("fields", Json.toJson(fieldsListToMap(fieldList)))
     maybeContent match {
@@ -95,10 +120,10 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
         val transformedContent = template.template.foldLeft(HashMap[String, JsValue]()) {
           case (acc, (k, v)) =>
             v match {
-              case opt@Optional(_) =>
+              case opt @ Optional(_) =>
                 opt.op(currentContent) match {
                   case Some(content) => acc.updated(k, content.toJson)
-                  case None => acc
+                  case None          => acc
                 }
               case _ =>
                 acc.updated(k, v.op(currentContent).getOrElse(v.zero).toJson)
@@ -109,44 +134,42 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
       case None => JsNull
     }
   }
-
+  val fileProxyStr = configuration.get[String]("file.proxy")
   override def getTemplateFromType(templateType: TemplateType, dbScope: DatabaseScope): Template = templateType match {
     case Dataset =>
       new DatasetTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
-
-        override def fileProxy: String = configuration.get[String]("file.proxy")
+        override def fileProxy: String = fileProxyStr
       }
     case Person =>
       new PersonTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
-
-        override def fileProxy: String = configuration.get[String]("file.proxy")
       }
     case Project =>
       new ProjectTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
-
-        override def fileProxy: String = configuration.get[String]("file.proxy")
       }
     case UnimindsPerson =>
       new UnimindsPersonTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
-
-        override def fileProxy: String = configuration.get[String]("file.proxy")
       }
     case ModelInstance =>
       new ModelInstanceTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
-
-        override def fileProxy: String = configuration.get[String]("file.proxy")
       }
     case SoftwareProject =>
-      new SoftwareProjectTemplate  {
+      new SoftwareProjectTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
+      }
+    case Sample =>
+      new SampleTemplate {
+        override def dataBaseScope: DatabaseScope = dbScope
+        override def fileProxy: String = fileProxyStr
 
-        override def fileProxy: String = configuration.get[String]("file.proxy")
-
+      }
+    case Subject =>
+      new SubjectTemplate {
+        override def dataBaseScope: DatabaseScope = dbScope
       }
   }
 
@@ -154,6 +177,8 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     case Dataset => new DatasetMetaTemplate {}
     case Person  => new PersonMetaTemplate {}
     case Project => new ProjectMetaTemplate {}
+    case Sample  => new SampleMetaTemplate {}
+    case Subject => new SubjectMetaTemplate {}
     case _       => ???
   }
 
@@ -161,6 +186,8 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     case Dataset => new DatasetMetaESTemplate {}
     case Person  => new PersonMetaESTemplate {}
     case Project => new ProjectMetaESTemplate {}
+    case Sample  => new SampleMetaESTemplate {}
+    case Subject => new SubjectMetaESTemplate {}
     case _       => ???
   }
 }

@@ -18,15 +18,13 @@ package models.templates.instance
 import java.net.URLEncoder
 
 import models.{DatabaseScope, INFERRED}
-import models.templates.Template
+import models.templates.{FileProxy, Template}
 import models.templates.entities.{ObjectWithValueField, _}
 import utils._
 
 import scala.collection.immutable.HashMap
 
-trait DatasetTemplate extends Template {
-  def fileProxy: String
-  def dataBaseScope: DatabaseScope
+trait DatasetTemplate extends Template with FileProxy {
 
   val result: Map[String, TemplateComponent] = HashMap(
     "identifier" -> PrimitiveToObjectWithValueField[String]("identifier"),

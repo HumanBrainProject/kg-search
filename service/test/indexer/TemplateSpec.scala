@@ -64,7 +64,6 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       val payload = loadResource("/dataset/dataset.json")
       val template = new DatasetTemplate {
         override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
       }
       val result = indexer.transform(payload, template)
       val expected = loadResource("/dataset/expectedDataset.json")
@@ -97,10 +96,7 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     "transform the person payload accordingly" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/person/person.json")
-      val template = new PersonTemplate {
-        override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
-      }
+      val template = new PersonTemplate {}
       val result = indexer.transform(payload, template)
       val expected = loadResource("/person/expectedPerson.json")
       assertIsSameJsObject("identifier", result, expected)
@@ -121,10 +117,7 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     "transform the uniminds person payload accordingly" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/UnimindsPerson/unimindsPerson.json")
-      val template = new UnimindsPersonTemplate {
-        override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
-      }
+      val template = new UnimindsPersonTemplate {}
       val result = indexer.transform(payload, template)
       val expected = loadResource("/UnimindsPerson/expectedUnimindsPerson.json")
       assertIsSameJsObject("identifier", result, expected)
@@ -145,10 +138,7 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     "transform the project payload accordingly" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/project/project.json")
-      val template = new ProjectTemplate {
-        override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
-      }
+      val template = new ProjectTemplate {}
       val result = indexer.transform(payload, template)
       val expected = loadResource("/project/expectedProject.json")
       assertIsSameJsObject("identifier", result, expected)
@@ -163,10 +153,7 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     "transform the software project payload accordingly" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/softwareProject.json")
-      val template = new SoftwareProjectTemplate {
-        override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
-      }
+      val template = new SoftwareProjectTemplate {}
       val result = indexer.transform(payload, template)
       val expected = loadResource("/expectedSoftwareProject.json")
       assertIsSameJsObject("identifier", result, expected)
@@ -208,10 +195,7 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     "transform the model instance payload accordingly" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/modelInstance.json")
-      val template = new ModelInstanceTemplate {
-        override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
-      }
+      val template = new ModelInstanceTemplate {}
       val result = indexer.transform(payload, template)
       val expected = loadResource("/expectedModelInstance.json")
       assertIsSameJsObject("producedDataset", result, expected)
@@ -272,10 +256,7 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     "properly handle empty values in person" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/person/emptyPerson.json")
-      val template = new PersonTemplate {
-        override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
-      }
+      val template = new PersonTemplate {}
       val result = indexer.transform(payload, template)
       val expected = loadResource("/person/expectedEmptyPerson.json")
       assertIsSameJsObject("identifier", result, expected)
@@ -295,10 +276,7 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     "properly handle empty values in uniminds person" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/UnimindsPerson/emptyUnimindsPerson.json")
-      val template = new UnimindsPersonTemplate {
-        override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
-      }
+      val template = new UnimindsPersonTemplate {}
       val result = indexer.transform(payload, template)
       val expected = loadResource("/UnimindsPerson/expectedEmptyUnimindsPerson.json")
       assertIsSameJsObject("identifier", result, expected)
@@ -318,10 +296,7 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     "properly handle empty values in project" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/project/emptyProject.json")
-      val template = new ProjectTemplate {
-        override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
-      }
+      val template = new ProjectTemplate {}
       val result = indexer.transform(payload, template)
       val expected = loadResource("/project/expectedEmptyProject.json")
       assertIsSameJsObject("identifier", result, expected)
@@ -336,10 +311,7 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     "transform the subject payload" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/subject/subject.json")
-      val template = new SubjectTemplate {
-        override def fileProxy: String = ""
-        override def dataBaseScope: DatabaseScope = INFERRED
-      }
+      val template = new SubjectTemplate {}
       val result = indexer.transform(payload, template)
       val expected = loadResource("/subject/expectedSubject.json")
       assertIsSameJsObject("identifier", result, expected)

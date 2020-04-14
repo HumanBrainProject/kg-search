@@ -17,7 +17,7 @@ package models.templates.instance
 
 import java.net.URLEncoder
 
-import models.templates.Template
+import models.templates.{FileProxy, Template}
 import models.templates.entities.{ObjectWithValueField, _}
 import models.{DatabaseScope, INFERRED}
 import play.api.libs.json.{JsNull, JsString}
@@ -25,9 +25,7 @@ import utils._
 
 import scala.collection.immutable.HashMap
 
-trait SampleTemplate extends Template {
-  def fileProxy: String
-  def dataBaseScope: DatabaseScope
+trait SampleTemplate extends Template with FileProxy {
 
   val result: Map[String, TemplateComponent] = HashMap(
     "identifier"        -> PrimitiveToObjectWithValueField[String]("identifier"),

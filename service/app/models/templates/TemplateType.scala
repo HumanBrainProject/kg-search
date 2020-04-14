@@ -24,21 +24,25 @@ sealed trait TemplateType {
 object TemplateType {
 
   def apply(s: String): TemplateType = s.toUpperCase match {
-    case "DATASET"        => Dataset
-    case "PERSON"         => Person
-    case "PROJECT"        => Project
-    case "UNIMINDSPERSON" => UnimindsPerson
-    case "MODELINSTANCE"  => ModelInstance
+    case "DATASET"         => Dataset
+    case "PERSON"          => Person
+    case "PROJECT"         => Project
+    case "UNIMINDSPERSON"  => UnimindsPerson
+    case "MODELINSTANCE"   => ModelInstance
     case "SOFTWAREPROJECT" => SoftwareProject
+    case "SAMPLE"          => Sample
+    case "SUBJECT"         => Subject
   }
 
   def toSchema(templateType: TemplateType): String = templateType match {
-    case Dataset        => "minds/core/dataset/v1.0.0"
-    case Person         => "minds/core/person/v1.0.0"
-    case Project        => "minds/core/placomponent/v1.0.0"
-    case UnimindsPerson => "uniminds/core/person/v1.0.0"
-    case ModelInstance  => "uniminds/core/modelinstance/v1.0.0"
+    case Dataset         => "minds/core/dataset/v1.0.0"
+    case Person          => "minds/core/person/v1.0.0"
+    case Project         => "minds/core/placomponent/v1.0.0"
+    case UnimindsPerson  => "uniminds/core/person/v1.0.0"
+    case ModelInstance   => "uniminds/core/modelinstance/v1.0.0"
     case SoftwareProject => "softwarecatalog/software/softwareproject/v1.0.0"
+    case Sample          => "minds/experiment/sample/v1.0.0"
+    case Subject         => "minds/experiment/subject/v1.0.0"
   }
 
   implicit def pathBinder(implicit stringBinder: PathBindable[String]): PathBindable[TemplateType] =
@@ -77,4 +81,10 @@ case object ModelInstance extends TemplateType {
 
 case object SoftwareProject extends TemplateType {
   override def apiName: String = "Software"
+}
+case object Sample extends TemplateType {
+  override def apiName: String = "Sample"
+}
+case object Subject extends TemplateType {
+  override def apiName: String = "Subject"
 }

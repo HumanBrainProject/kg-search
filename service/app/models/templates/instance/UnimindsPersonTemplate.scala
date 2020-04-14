@@ -33,9 +33,6 @@ import utils.{
 import scala.collection.immutable.HashMap
 
 trait UnimindsPersonTemplate extends Template {
-  def fileProxy: String
-
-  def dataBaseScope: DatabaseScope
 
   val result: Map[String, TemplateComponent] = HashMap(
     "identifier"  -> PrimitiveToObjectWithValueField[String]("identifier"),
