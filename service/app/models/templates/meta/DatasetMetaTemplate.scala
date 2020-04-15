@@ -69,7 +69,7 @@ trait DatasetMetaTemplate extends Template {
                   PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
                   PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
                   PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type"),
-                  PrimitiveToObjectWithCustomField[Int]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost"),
+                  PrimitiveToObjectWithCustomField[Double]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost"),
                   PrimitiveToObjectWithCustomField[Boolean](
                     "searchUi:label_hidden",
                     "https://schema.hbp.eu/searchUi/label_hidden"

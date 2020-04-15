@@ -23,6 +23,7 @@ import models.templates.elasticSearch.{
   PersonMetaESTemplate,
   ProjectMetaESTemplate,
   SampleMetaESTemplate,
+  SoftwareProjectMetaESTemplate,
   SubjectMetaESTemplate
 }
 import models.templates.meta.{
@@ -30,6 +31,7 @@ import models.templates.meta.{
   PersonMetaTemplate,
   ProjectMetaTemplate,
   SampleMetaTemplate,
+  SoftwareProjectMetaTemplate,
   SubjectMetaTemplate
 }
 import models.templates.instance.{
@@ -174,20 +176,22 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
   }
 
   override def getMetaTemplateFromType(templateType: TemplateType): Template = templateType match {
-    case Dataset => new DatasetMetaTemplate {}
-    case Person  => new PersonMetaTemplate {}
-    case Project => new ProjectMetaTemplate {}
-    case Sample  => new SampleMetaTemplate {}
-    case Subject => new SubjectMetaTemplate {}
-    case _       => ???
+    case Dataset         => new DatasetMetaTemplate {}
+    case Person          => new PersonMetaTemplate {}
+    case Project         => new ProjectMetaTemplate {}
+    case Sample          => new SampleMetaTemplate {}
+    case Subject         => new SubjectMetaTemplate {}
+    case SoftwareProject => new SoftwareProjectMetaTemplate {}
+    case _               => ???
   }
 
   override def getESTemplateFromType(templateType: TemplateType): Template = templateType match {
-    case Dataset => new DatasetMetaESTemplate {}
-    case Person  => new PersonMetaESTemplate {}
-    case Project => new ProjectMetaESTemplate {}
-    case Sample  => new SampleMetaESTemplate {}
-    case Subject => new SubjectMetaESTemplate {}
-    case _       => ???
+    case Dataset         => new DatasetMetaESTemplate {}
+    case Person          => new PersonMetaESTemplate {}
+    case Project         => new ProjectMetaESTemplate {}
+    case Sample          => new SampleMetaESTemplate {}
+    case Subject         => new SubjectMetaESTemplate {}
+    case SoftwareProject => new SoftwareProjectMetaESTemplate {}
+    case _               => ???
   }
 }

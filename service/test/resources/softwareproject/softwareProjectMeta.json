@@ -1,0 +1,160 @@
+{
+  "https://schema.hbp.eu/graphQuery/root_schema": {
+    "@id": "https://nexus.humanbrainproject.org/v0/schemas/softwarecatalog/software/softwareproject/v1.0.0"
+  },
+  "http://schema.org/identifier": "softwarecatalog/software/softwareproject/v1.0.0/search",
+  "searchUi:boost": 2.5,
+  "searchUi:icon": "<svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlnsxlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"40px\" height=\"40px\" viewBox=\"0 0 40 40\" enablebackground=\"new 0 0 40 40\" xmlspace=\"preserve\"><g><line fill=\"none\" stroke=\"#4D4D4D\" strokewidth=\"4\" strokelinecap=\"round\" strokelinejoin=\"round\" strokemiterlimit=\"10\" x1=\"9.25\" y1=\"9.168\" x2=\"31.25\" y2=\"9.168\"></line><line fill=\"none\" stroke=\"#4D4D4D\" strokewidth=\"4\" strokelinecap=\"round\" strokelinejoin=\"round\" strokemiterlimit=\"10\" x1=\"9.25\" y1=\"31.168\" x2=\"31.25\" y2=\"31.168\"></line><line fill=\"none\" stroke=\"#4D4D4D\" strokewidth=\"4\" strokelinecap=\"round\" strokelinejoin=\"round\" strokemiterlimit=\"10\" x1=\"9.25\" y1=\"16.168\" x2=\"31.25\" y2=\"16.168\"></line><line fill=\"none\" stroke=\"#4D4D4D\" strokewidth=\"4\" strokelinecap=\"round\" strokelinejoin=\"round\" strokemiterlimit=\"10\" x1=\"9.25\" y1=\"24.168\" x2=\"31.25\" y2=\"24.168\"></line></g></svg>",
+  "searchUi:order": 6,
+  "fields": [
+    {
+      "fieldname": "search:identifier",
+      "searchUi:ignoreForSearch": true,
+      "searchUi:visible": false,
+      "relative_path": "schema:identifier",
+      "required": true
+    },
+    {
+      "fieldname": "search:title",
+      "searchUi:boost": 20,
+      "searchUi:sort": true,
+      "label": "Name",
+      "relative_path": "http://schema.org/name",
+      "searchUi:optional": false,
+      "required": true
+    },
+    {
+      "fieldname": "search:description",
+      "searchUi:boost": 2,
+      "relative_path": "http://schema.org/description",
+      "searchUi:label_hidden": true,
+      "searchUi:markdown": true
+    },
+    {
+      "fieldname": "search:versions",
+      "fields": [
+        {
+          "fieldname": "search:description",
+          "searchUi:boost": 2,
+          "relative_path": "http://schema.org/description",
+          "searchUi:markdown": true
+        },
+        {
+          "fieldname": "search:version",
+          "searchUi:layout": "summary",
+          "label": "Latest Version",
+          "relative_path": "http://schema.org/version"
+        },
+        {
+          "fieldname": "search:applicationCategory",
+          "searchUi:layout": "summary",
+          "label": "Application Category",
+          "searchUi:separator": ", ",
+          "relative_path": [
+            "http://schema.org/applicationCategory",
+            "http://schema.org/name"
+          ]
+        },
+        {
+          "fieldname": "search:operatingSystem",
+          "searchUi:tag_icon": "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>",
+          "ensure_order": true,
+          "searchUi:layout": "summary",
+          "label": "Operating System",
+          "relative_path": [
+            "http://schema.org/operatingSystem",
+            "http://schema.org/name"
+          ],
+          "searchUi:facet": "list"
+        },
+        {
+          "fieldname": "search:homepage",
+          "searchUi:layout": "summary",
+          "label": "Homepage",
+          "relative_path": [
+            "http://schema.org/url",
+            "@id"
+          ]
+        },
+        {
+          "fieldname": "search:contributors",
+          "ensure_order": true,
+          "label": "Contributors",
+          "searchUi:separator": ", ",
+          "fields": [
+            {
+              "fieldname": "search:familyName",
+              "relative_path": "http://schema.org/familyName"
+            },
+            {
+              "fieldname": "search:givenName",
+              "relative_path": "http://schema.org/givenName"
+            }
+          ],
+          "relative_path": "http://schema.org/author"
+        },
+        {
+          "fieldname": "search:sourceCode",
+          "searchUi:layout": "summary",
+          "label": "Source code",
+          "relative_path": [
+            "http://schema.org/code",
+            "@id"
+          ]
+        },
+        {
+          "fieldname": "search:documentation",
+          "searchUi:layout": "summary",
+          "label": "Documentation",
+          "relative_path": [
+            "http://schema.org/documentation",
+            "@id"
+          ]
+        },
+        {
+          "fieldname": "search:features",
+          "searchUi:tag_icon": "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>",
+          "searchUi:layout": "summary",
+          "label": "Features",
+          "relative_path": [
+            "http://schema.org/feature",
+            "http://schema.org/name"
+          ]
+        },
+        {
+          "fieldname": "search:license",
+          "label": "License",
+          "relative_path": [
+            "http://schema.org/license",
+            "http://schema.org/name"
+          ]
+        }
+      ],
+      "relative_path": {
+        "@id": "http://schema.org/project",
+        "reverse": true
+      },
+      "required": true
+    }
+  ],
+  "schema:name": "Software",
+  "@context": {
+    "fieldname": {
+      "@type": "@id",
+      "@id": "fieldname"
+    },
+    "schema": "http://schema.org/",
+    "search": "https://schema.hbp.eu/search/",
+    "@vocab": "https://schema.hbp.eu/graphQuery/",
+    "release": "https://schema.hbp.eu/release/",
+    "merge": {
+      "@type": "@id",
+      "@id": "merge"
+    },
+    "searchUi": "https://schema.hbp.eu/searchUi/",
+    "relative_path": {
+      "@type": "@id",
+      "@id": "relative_path"
+    }
+  }
+}
