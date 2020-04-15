@@ -20,6 +20,7 @@ import javax.inject.Inject
 import models.DatabaseScope
 import models.templates.elasticSearch.{
   DatasetMetaESTemplate,
+  ModelInstanceMetaESTemplate,
   PersonMetaESTemplate,
   ProjectMetaESTemplate,
   SampleMetaESTemplate,
@@ -28,6 +29,7 @@ import models.templates.elasticSearch.{
 }
 import models.templates.meta.{
   DatasetMetaTemplate,
+  ModelInstanceMetaTemplate,
   PersonMetaTemplate,
   ProjectMetaTemplate,
   SampleMetaTemplate,
@@ -182,6 +184,7 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     case Sample          => new SampleMetaTemplate {}
     case Subject         => new SubjectMetaTemplate {}
     case SoftwareProject => new SoftwareProjectMetaTemplate {}
+    case ModelInstance   => new ModelInstanceMetaTemplate {}
     case _               => ???
   }
 
@@ -192,6 +195,7 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     case Sample          => new SampleMetaESTemplate {}
     case Subject         => new SubjectMetaESTemplate {}
     case SoftwareProject => new SoftwareProjectMetaESTemplate {}
+    case ModelInstance   => new ModelInstanceMetaESTemplate {}
     case _               => ???
   }
 }

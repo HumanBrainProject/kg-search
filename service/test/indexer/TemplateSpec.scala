@@ -21,6 +21,7 @@ import controllers.IndexerController
 import models.templates.Dataset
 import models.templates.elasticSearch.{
   DatasetMetaESTemplate,
+  ModelInstanceMetaESTemplate,
   PersonMetaESTemplate,
   ProjectMetaESTemplate,
   SampleMetaESTemplate,
@@ -39,6 +40,7 @@ import models.templates.instance.{
 }
 import models.templates.meta.{
   DatasetMetaTemplate,
+  ModelInstanceMetaTemplate,
   ProjectMetaTemplate,
   SampleMetaTemplate,
   SoftwareProjectMetaTemplate,
@@ -428,7 +430,7 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("last_release", result, expected)
     }
 
-    "create an object for meta information for SoftwareProject" in {
+    "create an object for meta information for Software Project" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/softwareproject/softwareProjectMeta.json")
       val template = new SoftwareProjectMetaTemplate {}
@@ -444,6 +446,33 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("homepage", result, expected)
       assertIsSameJsObject("title", result, expected)
       assertIsSameJsObject("version", result, expected)
+    }
+
+    "create an object for meta information for Model Instance" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/unimindsModelInstance/modelinstanceMeta.json")
+      val template = new ModelInstanceMetaTemplate {}
+      val result = indexer.transformMeta(payload, template).as[JsObject].value("fields")
+      val expected = loadResource("/unimindsModelInstance/expectedModelInstanceMeta.json")
+      assertIsSameJsObject("producedDataset", result, expected)
+      assertIsSameJsObject("modelFormat", result, expected)
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("description", result, expected)
+      assertIsSameJsObject("owners", result, expected)
+      assertIsSameJsObject("abstractionLevel", result, expected)
+      assertIsSameJsObject("mainContact", result, expected)
+      assertIsSameJsObject("brainStructures", result, expected)
+      assertIsSameJsObject("usedDataset", result, expected)
+      assertIsSameJsObject("version", result, expected)
+      assertIsSameJsObject("publications", result, expected)
+      assertIsSameJsObject("studyTarget", result, expected)
+      assertIsSameJsObject("allFiles", result, expected)
+      assertIsSameJsObject("modelScope", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("first_release", result, expected)
+      assertIsSameJsObject("contributors", result, expected)
+      assertIsSameJsObject("last_release", result, expected)
+      assertIsSameJsObject("cellularTarget", result, expected)
     }
 
   }
@@ -574,6 +603,32 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("homepage", result, expected)
       assertIsSameJsObject("title", result, expected)
       assertIsSameJsObject("version", result, expected)
+    }
+    "create an object for ES mapping information for Model Instance" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/unimindsModelInstance/modelinstanceMeta.json")
+      val template = new ModelInstanceMetaESTemplate {}
+      val result = indexer.transformMeta(payload, template)
+      val expected = loadResource("/unimindsModelInstance/expectedModelInstanceMetaES.json")
+      assertIsSameJsObject("producedDataset", result, expected)
+      assertIsSameJsObject("modelFormat", result, expected)
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("description", result, expected)
+      assertIsSameJsObject("owners", result, expected)
+      assertIsSameJsObject("abstractionLevel", result, expected)
+      assertIsSameJsObject("mainContact", result, expected)
+      assertIsSameJsObject("brainStructures", result, expected)
+      assertIsSameJsObject("usedDataset", result, expected)
+      assertIsSameJsObject("version", result, expected)
+      assertIsSameJsObject("publications", result, expected)
+      assertIsSameJsObject("studyTarget", result, expected)
+      assertIsSameJsObject("allFiles", result, expected)
+      assertIsSameJsObject("modelScope", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("first_release", result, expected)
+      assertIsSameJsObject("contributors", result, expected)
+      assertIsSameJsObject("last_release", result, expected)
+      assertIsSameJsObject("cellularTarget", result, expected)
     }
 
   }

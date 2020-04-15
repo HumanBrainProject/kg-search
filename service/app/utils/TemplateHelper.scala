@@ -27,4 +27,18 @@ object TemplateHelper {
   def refUUIDToSearchId(`type`: String): String => String = (reference: String) => {
     s"${`type`}/$reference"
   }
+
+  def defaultESMapping(
+    fieldName: String
+  ): ObjectReader[Nested[WriteObject[ESProperty]]] = {
+    ObjectReader(
+      fieldName,
+      Nested(
+        "properties",
+        WriteObject(
+          List(ESProperty("value"))
+        )
+      )
+    )
+  }
 }
