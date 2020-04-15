@@ -26,7 +26,8 @@ import models.templates.elasticSearch.{
   ProjectMetaESTemplate,
   SampleMetaESTemplate,
   SoftwareProjectMetaESTemplate,
-  SubjectMetaESTemplate
+  SubjectMetaESTemplate,
+  UnimindsPersonMetaESTemplate
 }
 import models.templates.instance.{
   DatasetTemplate,
@@ -41,10 +42,12 @@ import models.templates.instance.{
 import models.templates.meta.{
   DatasetMetaTemplate,
   ModelInstanceMetaTemplate,
+  PersonMetaTemplate,
   ProjectMetaTemplate,
   SampleMetaTemplate,
   SoftwareProjectMetaTemplate,
-  SubjectMetaTemplate
+  SubjectMetaTemplate,
+  UnimindsPersonMetaTemplate
 }
 import models.{DatabaseScope, INFERRED}
 import org.scalatest.Assertion
@@ -341,7 +344,7 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     }
   }
   "The meta template engine" must {
-    "create an object for the meta information for dataset" in {
+    "create an object for the meta information for Dataset" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/dataset/datasetMeta.json")
       val template = new DatasetMetaTemplate {}
@@ -370,6 +373,26 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("protocol", result, expected)
       assertIsSameJsObject("viewer", result, expected)
       assertIsSameJsObject("subjects", result, expected)
+      assertIsSameJsObject("first_release", result, expected)
+      assertIsSameJsObject("last_release", result, expected)
+    }
+    "create an object for the meta information for Person" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/person/personMeta.json")
+      val template = new PersonMetaTemplate {}
+      val result = indexer.transformMeta(payload, template).as[JsObject].value("fields")
+      val expected = loadResource("/person/expectedPersonMeta.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("description", result, expected)
+      assertIsSameJsObject("phone", result, expected)
+      assertIsSameJsObject("custodianOf", result, expected)
+      assertIsSameJsObject("custodianOfModel", result, expected)
+      assertIsSameJsObject("publications", result, expected)
+      assertIsSameJsObject("address", result, expected)
+      assertIsSameJsObject("contributions", result, expected)
+      assertIsSameJsObject("modelContributions", result, expected)
+      assertIsSameJsObject("email", result, expected)
       assertIsSameJsObject("first_release", result, expected)
       assertIsSameJsObject("last_release", result, expected)
     }
@@ -473,6 +496,27 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("contributors", result, expected)
       assertIsSameJsObject("last_release", result, expected)
       assertIsSameJsObject("cellularTarget", result, expected)
+    }
+
+    "create an object for the meta information for Uniminds Person" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/unimindsPerson/unimindsPersonMeta.json")
+      val template = new UnimindsPersonMetaTemplate {}
+      val result = indexer.transformMeta(payload, template).as[JsObject].value("fields")
+      val expected = loadResource("/unimindsPerson/expectedUnimindsPersonMeta.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("description", result, expected)
+      assertIsSameJsObject("phone", result, expected)
+      assertIsSameJsObject("custodianOf", result, expected)
+      assertIsSameJsObject("custodianOfModel", result, expected)
+      assertIsSameJsObject("publications", result, expected)
+      assertIsSameJsObject("address", result, expected)
+      assertIsSameJsObject("contributions", result, expected)
+      assertIsSameJsObject("modelContributions", result, expected)
+      assertIsSameJsObject("email", result, expected)
+      assertIsSameJsObject("first_release", result, expected)
+      assertIsSameJsObject("last_release", result, expected)
     }
 
   }
@@ -629,6 +673,27 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("contributors", result, expected)
       assertIsSameJsObject("last_release", result, expected)
       assertIsSameJsObject("cellularTarget", result, expected)
+    }
+
+    "create an object for ES mapping information for Uniminds Person" in {
+      val indexer = app.injector.instanceOf[IndexerImpl]
+      val payload = loadResource("/unimindsPerson/unimindsPersonMeta.json")
+      val template = new UnimindsPersonMetaESTemplate {}
+      val result = indexer.transformMeta(payload, template)
+      val expected = loadResource("/unimindsPerson/expectedUnimindsPersonMetaES.json")
+      assertIsSameJsObject("identifier", result, expected)
+      assertIsSameJsObject("title", result, expected)
+      assertIsSameJsObject("description", result, expected)
+      assertIsSameJsObject("phone", result, expected)
+      assertIsSameJsObject("custodianOf", result, expected)
+      assertIsSameJsObject("custodianOfModel", result, expected)
+      assertIsSameJsObject("publications", result, expected)
+      assertIsSameJsObject("address", result, expected)
+      assertIsSameJsObject("contributions", result, expected)
+      assertIsSameJsObject("modelContributions", result, expected)
+      assertIsSameJsObject("email", result, expected)
+      assertIsSameJsObject("first_release", result, expected)
+      assertIsSameJsObject("last_release", result, expected)
     }
 
   }
