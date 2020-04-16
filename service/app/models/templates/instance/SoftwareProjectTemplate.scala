@@ -252,13 +252,13 @@ trait SoftwareProjectTemplate extends Template {
 
   private def transformList(l: Option[ListOfObject]): Option[ListOfObject] = {
     l match {
-      case res @ Some(ListOfObject(List(ObjectMap(List(ObjectWithValueField(None), _))))) => res
+      case res @ Some(ListOfObject(List(ObjectMap(List(ObjectWithValueField(None), _*))))) => res
       case Some(ListOfObject(versionLicenseList)) =>
         Some(ListOfObject(versionLicenseList.sortBy {
           case ObjectMap(
               List(
                 ObjectWithValueField(Some(versionRes: String)),
-                ListOfObjectWithValueField(List(_))
+                _
               )
               ) =>
             versionRes

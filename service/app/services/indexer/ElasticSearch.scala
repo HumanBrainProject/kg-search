@@ -21,7 +21,7 @@ import models.DatabaseScope
 import models.errors.ApiError
 import monix.eval.Task
 import org.slf4j.LoggerFactory
-import play.api.Configuration
+import play.api.{Configuration, Logging}
 import play.api.libs.json.{JsNumber, JsObject, JsValue, Json, Writes}
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
@@ -34,13 +34,19 @@ trait ElasticSearch {
 
   def updateLabels(labels: Map[String, JsValue]): Unit
 
-  def recreateIndex(mapping: Map[String, Map[String, JsValue]], indexName: DatabaseScope): Task[Either[ApiError, Unit]]
+  def recreateIndex(
+    mapping: Map[String, Map[String, JsValue]],
+    indexName: DatabaseScope,
+    completeRebuild: Boolean,
+    simulate: Boolean
+  ): Task[Either[ApiError, Unit]]
 
   def index(
     jsonPayload: JsObject,
     dataType: String,
     identifier: String,
-    indexName: DatabaseScope
+    indexName: DatabaseScope,
+    simulate: Boolean
   ): Task[Either[ApiError, Unit]]
 
   def getNotUpdatedInstances(
@@ -56,57 +62,75 @@ trait ElasticSearch {
 class ElasticSearchImpl @Inject()(
   WSClient: WSClient,
   configuration: Configuration
-) extends ElasticSearch {
+) extends ElasticSearch
+    with Logging {
   val elasticSearchEndpoint: String = configuration.get[String]("es.host")
   override def updateLabels(labels: Map[String, JsValue]): Unit = {}
 
   override def recreateIndex(
     mapping: Map[String, Map[String, JsValue]],
-    dbScope: DatabaseScope
+    dbScope: DatabaseScope,
+    completeRebuild: Boolean,
+    simulate: Boolean
   ): Task[Either[ApiError, Unit]] = {
-    Task
-      .fromFuture(WSClient.url(s"$elasticSearchEndpoint/${dbScope.toIndexName}").delete())
-      .flatMap(
-        res =>
-          res.status match {
-            case OK | NOT_FOUND =>
-              //recreate
-              val payload = Json.toJson(mapping)(Writes.genericMapWrites)
-              Task
-                .fromFuture(
-                  WSClient
-                    .url(s"$elasticSearchEndpoint/${dbScope.toIndexName}?include_type_name=true")
-                    .put(payload)
-                )
-                .map(
-                  res =>
-                    res.status match {
-                      case OK | CREATED => Right(())
-                      case s            => Left(ApiError(s, res.body))
-                  }
-                )
-            case s => Task.pure(Left(ApiError(s, res.body)))
-        }
-      )
+    if (completeRebuild && !simulate) {
+      Task
+        .deferFuture(WSClient.url(s"$elasticSearchEndpoint/${dbScope.toIndexName}").delete())
+        .flatMap(
+          res =>
+            res.status match {
+              case OK | NOT_FOUND =>
+                //recreate
+                val payload = Json.toJson(mapping)(Writes.genericMapWrites)
+                Task
+                  .deferFuture(
+                    WSClient
+                      .url(s"$elasticSearchEndpoint/${dbScope.toIndexName}")
+                      .put(payload)
+                  )
+                  .map(
+                    res =>
+                      res.status match {
+                        case OK | CREATED =>
+                          logger.debug("Success - Creating ES Mapping")
+                          Right(())
+                        case s =>
+                          logger.error(s"Error - Creating ES Mapping - ${s} : ${res.body}")
+                          Left(ApiError(s, res.body))
+                    }
+                  )
+              case s =>
+                logger.error(s"Error - Creating ES Mapping - ${s} : ${res.body}")
+                Task.pure(Left(ApiError(s, res.body)))
+          }
+        )
+    } else {
+      Task.pure(Right(()))
+    }
   }
 
   override def index(
     jsonPayload: JsObject,
     dataType: String,
     identifier: String,
-    databaseScope: DatabaseScope
+    databaseScope: DatabaseScope,
+    simulate: Boolean
   ): Task[Either[ApiError, Unit]] = {
     // TODO Check if element is a list ????
-    Task
-      .fromFuture(
-        WSClient.url(s"$elasticSearchEndpoint/${databaseScope.toIndexName}/$dataType/$identifier").put(jsonPayload)
-      )
-      .map { res =>
-        res.status match {
-          case CREATED | OK => Right(())
-          case e            => Left(ApiError(e, res.body))
+    if (!simulate) {
+      Task
+        .deferFuture(
+          WSClient.url(s"$elasticSearchEndpoint/${databaseScope.toIndexName}/$dataType/$identifier").put(jsonPayload)
+        )
+        .map { res =>
+          res.status match {
+            case CREATED | OK => Right(())
+            case e            => Left(ApiError(e, res.body))
+          }
         }
-      }
+    } else {
+      Task.pure(Right(()))
+    }
 
   }
 
@@ -125,7 +149,7 @@ class ElasticSearchImpl @Inject()(
       "from" -> JsNumber(page),
       "size" -> JsNumber(size)
     )
-    Task.fromFuture(WSClient.url(s"$elasticSearchEndpoint/$indexName/_search").post(body)).map { res =>
+    Task.deferFuture(WSClient.url(s"$elasticSearchEndpoint/$indexName/_search").post(body)).map { res =>
       res.status match {
         case OK | CREATED =>
           val listOfIds: List[String] = (res.json \ "hits" \ "hits").asOpt[List[JsObject]].getOrElse(List()).map { el =>

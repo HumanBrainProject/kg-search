@@ -119,10 +119,10 @@ trait SampleMetaESTemplate extends Template {
         )
       )
     ),
-    "file" -> ObjectReader(
+    "files" -> ObjectReader(
       "fields",
       ObjectReader(
-        "search:file",
+        "search:files",
         Nested(
           "properties",
           WriteObject(
@@ -131,7 +131,7 @@ trait SampleMetaESTemplate extends Template {
         )
       )
     ),
-    "subjects" -> ObjectReader(
+    "subject" -> ObjectReader(
       "fields",
       ObjectReader(
         "search:subjects",
@@ -200,15 +200,7 @@ trait SampleMetaESTemplate extends Template {
     ),
     "datasetExists" -> ObjectReader(
       "fields",
-      ObjectReader(
-        "search:datasetExists",
-        Nested(
-          "properties",
-          WriteObject(
-            List(ESProperty("value", None))
-          )
-        )
-      )
+      TemplateHelper.defaultESMapping("search:datasetExists")
     ),
     "datasets" -> ObjectReader(
       "fields",

@@ -25,7 +25,8 @@ import models.templates.elasticSearch.{
   ProjectMetaESTemplate,
   SampleMetaESTemplate,
   SoftwareProjectMetaESTemplate,
-  SubjectMetaESTemplate
+  SubjectMetaESTemplate,
+  UnimindsPersonMetaESTemplate
 }
 import models.templates.meta.{
   DatasetMetaTemplate,
@@ -34,7 +35,8 @@ import models.templates.meta.{
   ProjectMetaTemplate,
   SampleMetaTemplate,
   SoftwareProjectMetaTemplate,
-  SubjectMetaTemplate
+  SubjectMetaTemplate,
+  UnimindsPersonMetaTemplate
 }
 import models.templates.instance.{
   DatasetTemplate,
@@ -185,6 +187,7 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     case Subject         => new SubjectMetaTemplate {}
     case SoftwareProject => new SoftwareProjectMetaTemplate {}
     case ModelInstance   => new ModelInstanceMetaTemplate {}
+    case UnimindsPerson  => new UnimindsPersonMetaTemplate {}
     case _               => ???
   }
 
@@ -196,6 +199,7 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     case Subject         => new SubjectMetaESTemplate {}
     case SoftwareProject => new SoftwareProjectMetaESTemplate {}
     case ModelInstance   => new ModelInstanceMetaESTemplate {}
+    case UnimindsPerson  => new UnimindsPersonMetaESTemplate {}
     case _               => ???
   }
 }

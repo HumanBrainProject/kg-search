@@ -54,10 +54,18 @@ class IndexerController @Inject()(
             databaseScope,
             token
           )
-          .map {
-            case Right(_) => Ok("Indexing done")
-            case Left(e)  => e.toResults()
+          .map { l =>
+            val errors = l.collect { case Left(e) => e }
+            if (errors.isEmpty) {
+              Ok("Indexing successful")
+            } else {
+              val message = errors.foldLeft("") {
+                case (acc, e) => s"$acc + \n Status - ${e.status} - ${e.message}"
+              }
+              InternalServerError(s"Multiple errors detected - $message")
+            }
           }
+
       case None => Task.pure(Unauthorized("Please provide credentials"))
     }
     result.runToFuture

@@ -37,10 +37,10 @@
     "reference": "Project/c37cc15d-94c8-42f8-b548-3a4f06ff022b",
     "value": "Connectivity of the perirhinal cortex in C57BL/J6 mice"
   },
-  "owners": {
+  "owners": [{
     "reference": "Contributor/3e41be67-c4c8-4527-89d4-1951b9f647a0",
     "value": "Schlegel, Ulrike"
-  },
+  }],
   "description": {
     "value": "This dataset contains confocal image data of coronal sections following retrograde tract tracer injections (Cholera toxin (subunit b) conjugated with Alexa 594) in the perirhinal cortex in five adult male C57BL/J6 mice. \nThe images show connections from other areas in the brain to the perirhinal cortex. \n"
   },

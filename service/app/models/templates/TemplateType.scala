@@ -45,6 +45,18 @@ object TemplateType {
     case Subject         => "minds/experiment/subject/v1.0.0"
   }
 
+  def fromSchema(schema: String): TemplateType = schema match {
+    case "minds/core/dataset/v1.0.0"                       => Dataset
+    case "minds/core/person/v1.0.0"                        => Person
+    case "minds/core/placomponent/v1.0.0"                  => Project
+    case "uniminds/core/person/v1.0.0"                     => UnimindsPerson
+    case "uniminds/core/modelinstance/v1.0.0"              => ModelInstance
+    case "softwarecatalog/software/softwareproject/v1.0.0" => SoftwareProject
+    case "minds/experiment/sample/v1.0.0"                  => Sample
+    case "minds/experiment/subject/v1.0.0"                 => Subject
+
+  }
+
   implicit def pathBinder(implicit stringBinder: PathBindable[String]): PathBindable[TemplateType] =
     new PathBindable[TemplateType] {
       override def bind(key: String, value: String): Either[String, TemplateType] = {

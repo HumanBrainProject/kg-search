@@ -53,11 +53,21 @@ import models.{DatabaseScope, INFERRED}
 import org.scalatest.Assertion
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.test.Injecting
 import services.indexer.IndexerImpl
 
 class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
+  override def fakeApplication() =
+    GuiceApplicationBuilder()
+      .configure(
+        "play.http.filters"     -> "play.api.http.NoHttpFilters",
+        "hbp.url"               -> "",
+        "play.http.secret.key"  -> "123",
+        "auth.refreshTokenFile" -> "test"
+      )
+      .build()
 
   def loadResource(filename: String): JsValue = {
     val jsonFile = getClass.getResource(filename).getFile
@@ -128,10 +138,10 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     }
     "transform correctly a query for uniminds person " in {
       val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/UnimindsPerson/unimindsPerson.json")
+      val payload = loadResource("/unimindsPerson/unimindsPerson.json")
       val template = new UnimindsPersonTemplate {}
       val result = indexer.transform(payload, template)
-      val expected = loadResource("/UnimindsPerson/expectedUnimindsPerson.json")
+      val expected = loadResource("/unimindsPerson/expectedUnimindsPerson.json")
       assertIsSameJsObject("identifier", result, expected)
       assertIsSameJsObject("address", result, expected)
       assertIsSameJsObject("custodianOfModel", result, expected)
@@ -206,7 +216,7 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     }
     "transform correctly a query for model instance" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/modelInstance.json")
+      val payload = loadResource("/unimindsModelInstance/modelinstance.json")
       val template = new ModelInstanceTemplate {}
       val result = indexer.transform(payload, template)
       val expected = loadResource("/unimindsModelInstance/expectedModelInstance.json")
@@ -287,10 +297,10 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     }
     "properly handle empty values in uniminds person" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
-      val payload = loadResource("/UnimindsPerson/emptyUnimindsPerson.json")
+      val payload = loadResource("/unimindsPerson/emptyUnimindsPerson.json")
       val template = new UnimindsPersonTemplate {}
       val result = indexer.transform(payload, template)
-      val expected = loadResource("/UnimindsPerson/expectedEmptyUnimindsPerson.json")
+      val expected = loadResource("/unimindsPerson/expectedEmptyUnimindsPerson.json")
       assertIsSameJsObject("identifier", result, expected)
       assertIsSameJsObject("address", result, expected)
       assertIsSameJsObject("custodianOfModel", result, expected)

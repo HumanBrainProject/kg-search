@@ -104,17 +104,16 @@ trait DatasetTemplate extends Template with FileProxy {
         )
       )
     ),
-    "owners" -> FirstElement(
-      ObjectArrayToListOfObject(
-        "owners",
-        WriteObject(
-          List(
-            PrimitiveToObjectWithReferenceField(
-              "relativeUrl",
-              ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))
-            ),
-            PrimitiveToObjectWithValueField[String]("name")
-          )
+    "owners" ->
+    ObjectArrayToListOfObject(
+      "owners",
+      WriteObject(
+        List(
+          PrimitiveToObjectWithReferenceField(
+            "relativeUrl",
+            ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))
+          ),
+          PrimitiveToObjectWithValueField[String]("name")
         )
       )
     ),

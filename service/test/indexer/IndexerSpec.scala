@@ -20,6 +20,7 @@ import java.io.FileInputStream
 import org.scalatest.Assertion
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.test.Injecting
 import services.indexer.IndexerImpl
@@ -28,6 +29,15 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 
 class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
+  override def fakeApplication() =
+    GuiceApplicationBuilder()
+      .configure(
+        "play.http.filters"     -> "play.api.http.NoHttpFilters",
+        "hbp.url"               -> "",
+        "play.http.secret.key"  -> "123",
+        "auth.refreshTokenFile" -> "test"
+      )
+      .build()
 
   def loadResource(filename: String): JsValue = {
     val jsonFile = getClass.getResource(filename).getFile
