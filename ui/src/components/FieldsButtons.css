@@ -88,12 +88,20 @@
   text-align: center;
 }
 
+.kgs-fields-buttons .kgs-download .kgs-download-multiple {
+  text-align: left;
+}
+
 .kgs-fields-buttons .kgs-download > div span {
   font-size: var(--font-size);
 }
 
 .kgs-fields-buttons .kgs-download > div span i {
   margin-right: 6px;
+}
+
+.kgs-fields-buttons .kgs-download .kgs-download-multiple span a {
+  font-size: var(--font-size-extra-small);
 }
 
 .kgs-fields-buttons .kgs-cite {

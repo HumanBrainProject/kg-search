@@ -32,15 +32,29 @@ class Download extends React.PureComponent {
   };
 
   render() {
-    const {url, label, showTermsOfUse} = this.props;
-
-    if (!url) {
-      return null;
-    }
-
+    const {data, showTermsOfUse, isListOfUrl} = this.props;
     return (
       <div className="kgs-download">
-        <div><span><i className="fa fa-2x fa-file-o"></i><a href={url}>{label}</a></span></div>
+        {isListOfUrl ?
+          data.map(el => {
+            const label = el.url.split("container=")[1];
+            return (
+              <div className="kgs-download-multiple" key={el.url}>
+                <span>
+                  <i className="fa fa-file-o"></i>
+                  <a href={el.url}>{label || el.url}</a>
+                </span>
+              </div>
+            );
+          })
+          :
+          <div>
+            <span>
+              <i className="fa fa-2x fa-file-o"></i>
+              <a href={data.url}>{data.value}</a>
+            </span>
+          </div>
+        }
         {showTermsOfUse && (
           <Text content={termsOfUse} isMarkdown={true} />
         )}
@@ -114,14 +128,15 @@ class Content extends React.PureComponent {
       return null;
     }
 
+    const isListOfUrl = Array.isArray(field.data) && field.data.some(u => u.url);
     const {url, value} = field.data;
     const {termsOfUse} = field.mapping;
 
     return (
       <div className="kgs-fields-buttons__details">
         <div className="kgs-field-fields-buttons__details__panel">
-          {url?
-            <Download url={url} label={value} showTermsOfUse={!!termsOfUse} />
+          {url || isListOfUrl?
+            <Download data={field.data} showTermsOfUse={!!termsOfUse} isListOfUrl={isListOfUrl} />
             :
             <Cite content={value} />
           }
