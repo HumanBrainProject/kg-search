@@ -37,8 +37,8 @@ trait ModelInstanceTemplate extends Template {
       WriteObject(
         List(
           PrimitiveToObjectWithReferenceField(
-            "relativeUrl",
-            ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))
+            "identifier",
+            ref => ref.map(s => s"Contributor/$s")
           ),
           PrimitiveToObjectWithValueField[String]("name", identity)
         )
@@ -49,8 +49,8 @@ trait ModelInstanceTemplate extends Template {
       WriteObject(
         List(
           PrimitiveToObjectWithReferenceField(
-            "relativeUrl",
-            ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))
+            "identifier",
+            ref => ref.map(s => s"Contributor/$s")
           ),
           PrimitiveToObjectWithValueField[String]("name", identity)
         )
@@ -61,8 +61,8 @@ trait ModelInstanceTemplate extends Template {
       WriteObject(
         List(
           PrimitiveToObjectWithReferenceField(
-            "relativeUrl",
-            ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))
+            "identifier",
+            ref => ref.map(s => s"Contributor/$s")
           ),
           PrimitiveToObjectWithValueField[String]("name", identity)
         )
@@ -160,8 +160,8 @@ trait ModelInstanceTemplate extends Template {
       WriteObject(
         List(
           PrimitiveToObjectWithReferenceField(
-            "relativeUrl",
-            ref => ref.map(TemplateHelper.schemaIdToSearchId("Dataset"))
+            "identifier",
+            ref => ref.map(s => s"Dataset/$s")
           ),
           PrimitiveToObjectWithValueField[String]("name", identity)
         )
@@ -172,8 +172,8 @@ trait ModelInstanceTemplate extends Template {
       WriteObject(
         List(
           PrimitiveToObjectWithReferenceField(
-            "relativeUrl",
-            ref => ref.map(TemplateHelper.schemaIdToSearchId("Dataset"))
+            "identifier",
+            ref => ref.map(s => s"Dataset/$s")
           ),
           PrimitiveToObjectWithValueField[String]("name", identity)
         )

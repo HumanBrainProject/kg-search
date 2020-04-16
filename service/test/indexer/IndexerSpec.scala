@@ -22,6 +22,7 @@ import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.ws.WSClient
 import play.api.test.Injecting
 import services.indexer.IndexerImpl
 
@@ -72,6 +73,65 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
 //      assertIsSameJsObject("https://schema.hbp.eu/searchUi/order", datasetLabels, expected)
 //      assertIsSameJsObject("https://schema.hbp.eu/searchUi/ribbon", datasetLabels, expected)
     }
+
+    def compareIndices(`type`: String, WSClient: WSClient): Unit = {
+      val oldIndex =
+        Await.result(WSClient.url(s"http://localhost:9400/kg_curated/${`type`}/_search?size=3000").get(), Duration.Inf)
+      val newIndex =
+        Await.result(WSClient.url(s"http://localhost:9200/in_progress/${`type`}/_search?size=3000").get(), Duration.Inf)
+
+      val oldJs = oldIndex.json
+        .as[JsObject]
+        .value("hits")
+        .as[JsObject]
+        .value("hits")
+        .as[List[JsObject]]
+        .map(js => js.value("_id").as[String] -> js.value("_source"))
+        .toMap
+
+      val newJs = newIndex.json
+        .as[JsObject]
+        .value("hits")
+        .as[JsObject]
+        .value("hits")
+        .as[List[JsObject]]
+        .map(js => js.value("_id").as[String] -> js.value("_source"))
+        .toMap
+
+      assert(newJs.size == oldJs.size)
+
+      newJs.foreach {
+        case (k, v) =>
+          v.as[JsObject]
+            .value
+            .filter { case (innerK, _) => innerK != "@timestamp" && innerK != "editorId" }
+            .foreach {
+              case (innerK, innerV) =>
+                val oldValue = oldJs(k)
+                  .as[JsObject]
+                  .value
+                  .filter { case (innerK, _) => innerK != "@timestamp" && innerK != "editorId" }(innerK)
+                val test = compareAndIgnoreListWithSingleElement(innerV, oldValue)
+                assert(test)
+            }
+      }
+
+    }
+
+    def compareAndIgnoreListWithSingleElement(left: JsValue, right: JsValue): Boolean = {
+      if (left.asOpt[List[JsObject]].isDefined && right.asOpt[JsObject].isDefined) {
+        left.as[List[JsObject]].head == right.as[JsObject]
+      } else {
+        left == right
+      }
+    }
+
+    "create the same object as the old indexer" in {
+      val relevantTypes = List("Project") //,"Contributor" "Dataset", "Software", "Sample", "Model", "Subject")
+      val wsClient = app.injector.instanceOf[WSClient]
+      relevantTypes.foreach(t => compareIndices(t, wsClient))
+    }
+
   }
 
 }

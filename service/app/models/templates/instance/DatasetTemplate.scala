@@ -34,8 +34,8 @@ trait DatasetTemplate extends Template with FileProxy {
       WriteObject(
         List(
           PrimitiveToObjectWithReferenceField(
-            "relativeUrl",
-            ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))
+            "identifier",
+            ref => ref.map(s => s"Contributor/$s")
           ),
           PrimitiveToObjectWithValueField[String]("name")
         )
@@ -96,8 +96,8 @@ trait DatasetTemplate extends Template with FileProxy {
         WriteObject(
           List(
             PrimitiveToObjectWithReferenceField(
-              "relativeUrl",
-              ref => ref.map(TemplateHelper.schemaIdToSearchId("Project"))
+              "identifier",
+              ref => ref.map(s => s"Project/$s")
             ),
             PrimitiveToObjectWithValueField[String]("name")
           )
@@ -110,8 +110,8 @@ trait DatasetTemplate extends Template with FileProxy {
       WriteObject(
         List(
           PrimitiveToObjectWithReferenceField(
-            "relativeUrl",
-            ref => ref.map(TemplateHelper.schemaIdToSearchId("Contributor"))
+            "identifier",
+            ref => ref.map(s => s"Contributor/$s")
           ),
           PrimitiveToObjectWithValueField[String]("name")
         )

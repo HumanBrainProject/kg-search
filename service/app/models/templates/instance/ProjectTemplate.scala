@@ -43,8 +43,8 @@ trait ProjectTemplate extends Template {
       WriteObject(
         List(
           PrimitiveToObjectWithReferenceField(
-            "relativeUrl",
-            ref => ref.map(TemplateHelper.schemaIdToSearchId("Dataset"))
+            "identifier",
+            ref => ref.map(s => s"Dataset/$s")
           ),
           PrimitiveToObjectWithValueField[String]("name")
         )
@@ -67,6 +67,15 @@ trait ProjectTemplate extends Template {
                 Some(ObjectWithValueField(Some(doiStr: String)))
                 ) =>
               Some(ObjectWithValueField[String](Some(citationStr + "\n" + doiStr)))
+            case (
+                Some(ObjectWithValueField(Some(citationStr: String))),
+                _
+                ) =>
+              Some(
+                ObjectWithValueField[String](
+                  Some(citationStr + "\n" + s"[DOI: null]\n[DOI: null]: https://doi.org/null")
+                )
+              )
             case _ => doi
           }
 

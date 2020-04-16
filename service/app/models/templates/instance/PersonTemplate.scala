@@ -44,8 +44,8 @@ trait PersonTemplate extends Template {
       WriteObject(
         List(
           PrimitiveToObjectWithReferenceField(
-            "relativeUrl",
-            ref => ref.map(TemplateHelper.schemaIdToSearchId("Dataset"))
+            "identifier",
+            ref => ref.map(s => s"Dataset/$s")
           ),
           PrimitiveToObjectWithValueField[String]("name")
         )
@@ -56,8 +56,8 @@ trait PersonTemplate extends Template {
       WriteObject(
         List(
           PrimitiveToObjectWithReferenceField(
-            "relativeUrl",
-            ref => ref.map(TemplateHelper.schemaIdToSearchId("Model"))
+            "identifier",
+            ref => ref.map(s => s"Model/$s")
           ),
           PrimitiveToObjectWithValueField[String]("name")
         )
@@ -69,8 +69,8 @@ trait PersonTemplate extends Template {
       WriteObject(
         List(
           PrimitiveToObjectWithReferenceField(
-            "relativeUrl",
-            ref => ref.map(TemplateHelper.schemaIdToSearchId("Dataset"))
+            "identifier",
+            ref => ref.map(s => s"Dataset/$s")
           ),
           PrimitiveToObjectWithValueField[String]("name")
         )
@@ -104,8 +104,8 @@ trait PersonTemplate extends Template {
       WriteObject(
         List(
           PrimitiveToObjectWithReferenceField(
-            "relativeUrl",
-            ref => ref.map(TemplateHelper.schemaIdToSearchId("Model"))
+            "identifier",
+            ref => ref.map(s => s"Model/$s")
           ),
           PrimitiveToObjectWithValueField[String]("name")
         )

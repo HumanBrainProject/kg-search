@@ -21,12 +21,14 @@ import akka.util.ByteString
 import services.{IDMAPIService, ProxyService, TokenAuthService}
 import helpers.{ESHelper, OIDCHelper, ResponseHelper}
 import javax.inject.{Inject, Singleton}
+import models.errors.ApiError
 import monix.eval.Task
 import play.api.http.HttpEntity
 import play.api.libs.json._
-import play.api.libs.ws.{WSClient, WSRequest}
+import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, Request, ResponseHeader, Result}
 import play.api.{Configuration, Logger}
+import services.indexer.Indexer
 import utils.JsonHandler
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,7 +38,8 @@ class SearchProxy @Inject()(
   cc: ControllerComponents,
   mat: Materializer,
   authService: IDMAPIService,
-  proxyService: ProxyService
+  proxyService: ProxyService,
+  indexerService: Indexer[JsValue, JsValue, Task, WSResponse, Either[ApiError, JsValue]],
 )(implicit ec: ExecutionContext, ws: WSClient, config: Configuration)
     extends AbstractController(cc) {
   val es_host = config.get[String]("es.host")
