@@ -38,66 +38,56 @@ import utils.{
 }
 
 import scala.collection.immutable.HashMap
+import scala.math.Ordered._
 
 trait SoftwareProjectTemplate extends Template {
 
-  val result: Map[String, TemplateComponent] = HashMap(
+  val result: Map[String, TemplateComponent] = Map(
     "identifier" -> PrimitiveToObjectWithValueField[String]("identifier"),
     "title"      -> PrimitiveToObjectWithValueField[String]("title"),
     "description" -> Optional(
       Merge(
         PrimitiveToObjectWithValueField[String]("description", identity),
-        ObjectArrayToListOfObject(
-          "versions",
-          WriteObject(
-            List(
-              PrimitiveToObjectWithValueField[String]("version", identity),
-              PrimitiveToObjectWithValueField[String]("description", identity)
-            )
+        FirstElement(
+          ObjectArrayToListOfObject(
+            "versions",
+            WriteObject(
+              List(
+                PrimitiveToObjectWithValueField[String]("version", identity),
+                PrimitiveToObjectWithValueField[String]("description", identity)
+              )
+            ), {
+              case Some(ListOfObject(versionAndDescriptionList)) =>
+                val listOfTemplates = versionAndDescriptionList.sortWith {
+                  case (
+                      ObjectMap(
+                        List(
+                          ObjectWithValueField(l),
+                          _
+                        )
+                      ),
+                      ObjectMap(
+                        List(
+                          ObjectWithValueField(r),
+                          _
+                        )
+                      )
+                      ) =>
+                    Ordering[Option[String]].lt(l.asInstanceOf[Option[String]], r.asInstanceOf[Option[String]])
+                }.reverse
+                Some(ListOfObject(listOfTemplates))
+              case s => s
+            }
           )
-        ),
-        (descriptionOpt, versionDescriptionOpt) =>
-          (descriptionOpt, versionDescriptionOpt) match {
-            case (
-                Some(ObjectWithValueField(Some(descriptionResult: String))),
-                Some(ListOfObject(versionDescriptionList))
-                ) =>
-              versionDescriptionList
-                .sortBy {
-                  case ObjectMap(
-                      List(
-                        ObjectWithValueField(Some(versionRes: String)),
-                        ObjectWithValueField(_)
-                      )
-                      ) =>
-                    versionRes
-                }
-                .reverse
-                .headOption match {
-                case Some(ObjectMap(List(_, ObjectWithValueField(Some(versionDescriptionRes: String))))) =>
-                  Some(ObjectWithValueField[String](Some(descriptionResult + "\n\n" + versionDescriptionRes)))
-                case _ => Some(ObjectWithValueField[String](Some(descriptionResult)))
-              }
-            case (Some(ObjectWithValueField(Some(descriptionRes: String))), _) =>
-              Some(ObjectWithValueField[String](Some(descriptionRes)))
-            case (_, Some(ListOfObject(versionDescriptionList))) =>
-              versionDescriptionList
-                .sortBy {
-                  case ObjectMap(
-                      List(
-                        ObjectWithValueField(Some(versionRes: String)),
-                        ObjectWithValueField(_)
-                      )
-                      ) =>
-                    versionRes
-                }
-                .reverse
-                .headOption match {
-                case Some(ObjectMap(List(_, ObjectWithValueField(Some(versionDescriptionRes: String))))) =>
-                  Some(ObjectWithValueField[String](Some(versionDescriptionRes)))
-                case _ => None
-              }
-            case _ => None
+        ), {
+          case (
+              Some(ObjectWithValueField(Some(descriptionResult: String))),
+              Some(ObjectMap(List(ObjectWithValueField(_), ObjectWithValueField(Some(versionDescriptionRes: String)))))
+              ) if versionDescriptionRes.nonEmpty =>
+            Some(ObjectWithValueField[String](Some(descriptionResult + "\n\n" + versionDescriptionRes)))
+          case (Some(ObjectWithValueField(Some(descriptionResult: String))), _) =>
+            Some(ObjectWithValueField[String](Some(descriptionResult)))
+          case _ => None
         }
       )
     ),
@@ -120,22 +110,14 @@ trait SoftwareProjectTemplate extends Template {
       FirstElement(
         ObjectArrayToListOfObject(
           "versions",
-          WriteObject(
-            List(
-              PrimitiveToObjectWithValueField[String]("version", identity)
-            ),
-          ), {
-            case res @ Some(ListOfObject(List(ObjectMap(List(ObjectWithValueField(None)))))) => res
+          PrimitiveToObjectWithValueField[String]("version", identity), {
             case Some(ListOfObject(versionLicenseList)) =>
-              Some(ListOfObject(versionLicenseList.sortBy {
-                case ObjectMap(
-                    List(
-                      ObjectWithValueField(Some(versionRes: String))
-                    )
-                    ) =>
-                  versionRes
+              Some(ListOfObject(versionLicenseList.sortWith {
+                case (ObjectWithValueField(l), ObjectWithValueField(r)) =>
+                  Ordering[Option[String]].lt(l.asInstanceOf[Option[String]], r.asInstanceOf[Option[String]])
+                case _ => true
               }.reverse))
-            case _ => None
+            case s => s
           }
         ), {
           case Some(
@@ -254,14 +236,22 @@ trait SoftwareProjectTemplate extends Template {
     l match {
       case res @ Some(ListOfObject(List(ObjectMap(List(ObjectWithValueField(None), _*))))) => res
       case Some(ListOfObject(versionLicenseList)) =>
-        Some(ListOfObject(versionLicenseList.sortBy {
-          case ObjectMap(
-              List(
-                ObjectWithValueField(Some(versionRes: String)),
-                _
+        Some(ListOfObject(versionLicenseList.sortWith {
+          case (
+              ObjectMap(
+                List(
+                  ObjectWithValueField(l),
+                  _
+                )
+              ),
+              ObjectMap(
+                List(
+                  ObjectWithValueField(r),
+                  _
+                )
               )
               ) =>
-            versionRes
+            Ordering[Option[String]].lt(l.asInstanceOf[Option[String]], r.asInstanceOf[Option[String]])
         }.reverse))
       case _ => None
     }

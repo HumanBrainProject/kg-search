@@ -81,15 +81,16 @@ case class Optional[A <: TemplateWriter](template: A) extends TemplateWriter {
 
 case class PrimitiveToObjectWithValueField[ReturnType: Format](
   fieldName: String,
-  transform: ObjectWithValueField[ReturnType] => ObjectWithValueField[ReturnType] =
-    identity[ObjectWithValueField[ReturnType]](_)
+  transform: Option[ObjectWithValueField[ReturnType]] => Option[ObjectWithValueField[ReturnType]] =
+    identity[Option[ObjectWithValueField[ReturnType]]](_)
 ) extends TemplateWriter {
   override type T = ObjectWithValueField[ReturnType]
 
   override def op(content: Map[String, JsValue]): Option[ObjectWithValueField[ReturnType]] = {
-    for {
+    val s = for {
       v <- content.get(fieldName)
-    } yield transform(ObjectWithValueField[ReturnType](v.asOpt[ReturnType]))
+    } yield ObjectWithValueField[ReturnType](v.asOpt[ReturnType])
+    transform(s)
   }
 
   override def zero: ObjectWithValueField[ReturnType] = ObjectWithValueField.zero

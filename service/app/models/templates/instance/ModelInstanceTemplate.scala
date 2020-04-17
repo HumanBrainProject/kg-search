@@ -72,12 +72,14 @@ trait ModelInstanceTemplate extends Template {
       "publications",
       Merge(
         PrimitiveToObjectWithValueField[String]("citation", identity),
-        PrimitiveToObjectWithValueField[String]("doi", doi => {
-          doi.map { doiStr =>
-            val url = URLEncoder.encode(doiStr, "UTF-8")
-            s"[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url"
+        PrimitiveToObjectWithValueField[String](
+          "doi", {
+            case Some(ObjectWithValueField(Some(doiStr))) =>
+              val url = URLEncoder.encode(doiStr, "UTF-8")
+              Some(ObjectWithValueField(Some(s"[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url")))
+            case s => s
           }
-        }),
+        ),
         (citation, doi) => {
           (citation, doi) match {
             case (Some(ObjectWithValueField(Some(citationStr))), Some(ObjectWithValueField(Some(doiStr)))) =>

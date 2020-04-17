@@ -21,7 +21,9 @@ case class ObjectWithValueField[ReturnType: Format](value: Option[ReturnType]) e
 
   def map[B: Format](t: ReturnType => B): ObjectWithValueField[B] = {
     ObjectWithValueField[B](this.value.map(t))
+
   }
+
   override def toJson: JsValue = Json.toJson(this)(ObjectWithValueField.implicitWrites[ReturnType])
 
 }

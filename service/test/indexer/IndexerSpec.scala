@@ -21,7 +21,7 @@ import org.scalatest.Assertion
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.libs.ws.WSClient
 import play.api.test.Injecting
 import services.indexer.IndexerImpl
@@ -100,22 +100,34 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
 
       assert(newJs.size == oldJs.size)
 
-      newJs.foreach {
-        case (k, v) =>
-          v.as[JsObject]
-            .value
-            .filter { case (innerK, _) => innerK != "@timestamp" && innerK != "editorId" }
-            .foreach {
-              case (innerK, innerV) =>
-                val oldValue = oldJs(k)
-                  .as[JsObject]
-                  .value
-                  .filter { case (innerK, _) => innerK != "@timestamp" && innerK != "editorId" }(innerK)
-                val test = compareAndIgnoreListWithSingleElement(innerV, oldValue)
-                assert(test)
-            }
-      }
+      val listOfDiff = newJs
+        .map {
+          case (k, v) =>
+            v.as[JsObject]
+              .value
+              .filter { case (innerK, _) => innerK != "@timestamp" && innerK != "editorId" }
+              .foldLeft(Map[String, JsValue]()) {
+                case (acc, (innerK, innerV)) =>
+                  val oldValue = oldJs(k)
+                    .as[JsObject]
+                    .value
+                    .filter { case (innerK, _) => innerK != "@timestamp" && innerK != "editorId" }
+                    .get(innerK)
+                  oldValue match {
+                    case Some(v) =>
+                      val test = compareAndIgnoreListWithSingleElement(innerV, v)
+                      if (!test) {
+                        acc.updated(innerK, Json.obj("oldValue" -> oldValue, "newValue" -> innerV))
+                      } else {
+                        acc
+                      }
+                    case None => acc.updated(innerK, JsString("Key not found"))
+                  }
 
+              }
+        }
+        .filter(m => m.nonEmpty)
+      assert(listOfDiff.isEmpty)
     }
 
     def compareAndIgnoreListWithSingleElement(left: JsValue, right: JsValue): Boolean = {
@@ -127,7 +139,7 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     }
 
     "create the same object as the old indexer" in {
-      val relevantTypes = List("Project") //,"Contributor" "Dataset", "Software", "Sample", "Model", "Subject")
+      val relevantTypes = List("Software") //,"Contributor" "Project", "Dataset", "Sample", "Model", "Subject")
       val wsClient = app.injector.instanceOf[WSClient]
       relevantTypes.foreach(t => compareIndices(t, wsClient))
     }

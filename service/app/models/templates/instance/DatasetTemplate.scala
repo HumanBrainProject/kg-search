@@ -20,6 +20,7 @@ import java.net.URLEncoder
 import models.{DatabaseScope, INFERRED}
 import models.templates.{FileProxy, Template}
 import models.templates.entities.{ObjectWithValueField, _}
+import net.sf.ehcache.constructs.scheduledrefresh.OverseerJob
 import utils._
 
 import scala.collection.immutable.HashMap
@@ -123,28 +124,27 @@ trait DatasetTemplate extends Template with FileProxy {
     "embargo" -> Optional(
       FirstElement(
         PrimitiveArrayToListOfValueObject[String](
-          "embargo", {
-            case ObjectWithValueField(Some("Embargoed")) =>
+          "embargo"
+        ), {
+          case Some(ObjectWithValueField(Some("Embargoed"))) =>
+            Some(
               ObjectWithValueField[String](
                 Some(
                   "This dataset is temporarily under embargo. The data will become available for download after the embargo period."
                 )
               )
-            case ObjectWithValueField(Some("Under review")) =>
+            )
+          case Some(ObjectWithValueField(Some("Under review"))) =>
+            Some(
               ObjectWithValueField[String](
                 Some(
                   "This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review."
                 )
               )
-            case ObjectWithValueField(Some("Free")) =>
-              ObjectWithValueField[String](
-                Some(
-                  "Free"
-                )
-              )
-            case _ => ObjectWithValueField(None)
-          }
-        )
+            )
+          case _ =>
+            None
+        }
       )
     ),
     "files" -> Optional(
@@ -205,9 +205,10 @@ trait DatasetTemplate extends Template with FileProxy {
               )
             )
           )
-        ),
-        (embargoOpt, filesOpt) => {
-          embargoOpt.fold(filesOpt)(_ => None)
+        ), {
+          case (Some(ObjectWithValueField(None)), filesOpt) => filesOpt
+          case (None, filesOpt)                             => filesOpt
+          case _                                            => None
         }
       )
     ),
@@ -221,12 +222,14 @@ trait DatasetTemplate extends Template with FileProxy {
       "publications",
       Merge(
         PrimitiveToObjectWithValueField[String]("citation"),
-        PrimitiveToObjectWithValueField[String]("doi", doi => {
-          doi.map { doiStr =>
-            val url = URLEncoder.encode(doiStr, "UTF-8")
-            s"[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url"
+        PrimitiveToObjectWithValueField[String](
+          "doi", {
+            case Some(ObjectWithValueField(Some(doiStr))) =>
+              val url = URLEncoder.encode(doiStr, "UTF-8")
+              Some(ObjectWithValueField(Some(s"[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url")))
+            case doi => doi
           }
-        }),
+        ),
         (citation, doi) => {
           (citation, doi) match {
             case (
@@ -252,7 +255,7 @@ trait DatasetTemplate extends Template with FileProxy {
     ),
     "preparation" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("preparation")),
     "methods"     -> PrimitiveArrayToListOfValueObject[String]("methods"),
-    "protocol"    -> PrimitiveArrayToListOfValueObject[String]("protocol"),
+    "protocol"    -> PrimitiveArrayToListOfValueObject[String]("protocols"),
     "viewer" ->
     OrElse(
       ObjectArrayToListOfObject(
@@ -261,8 +264,11 @@ trait DatasetTemplate extends Template with FileProxy {
           List(
             PrimitiveToObjectWithUrlField("url"),
             PrimitiveToObjectWithValueField[String](
-              "name",
-              js => js.map(str => "Show " + str + " in brain atlas viewer")
+              "name", {
+                case Some(ObjectWithValueField(Some(str))) =>
+                  Some(ObjectWithValueField(Some("Show " + str + " in brain atlas viewer")))
+                case _ => Some(ObjectWithValueField(Some("Show in brain atlas viewer")))
+              }
             )
           )
         )
@@ -272,9 +278,21 @@ trait DatasetTemplate extends Template with FileProxy {
         WriteObject(
           List(
             PrimitiveToObjectWithUrlField("url"),
-            PrimitiveToObjectWithValueField[String](
-              "title",
-              js => js.map(str => "Show " + str + " in brain atlas viewer")
+            OrElse(
+              PrimitiveToObjectWithValueField[String](
+                "name", {
+                  case Some(ObjectWithValueField(Some(str))) =>
+                    Some(ObjectWithValueField(Some("Show " + str + " in brain atlas viewer")))
+                  case _ => None
+                }
+              ),
+              PrimitiveToObjectWithValueField[String](
+                "title", {
+                  case Some(ObjectWithValueField(Some(str))) =>
+                    Some(ObjectWithValueField(Some("Show " + str + " in brain atlas viewer")))
+                  case _ => Some(ObjectWithValueField(Some("Show in brain atlas viewer")))
+                }
+              )
             )
           )
         )
@@ -293,7 +311,7 @@ trait DatasetTemplate extends Template with FileProxy {
                 List(
                   PrimitiveToObjectWithReferenceField(
                     "identifier",
-                    ref => ref.map(TemplateHelper.refUUIDToSearchId("Subject"))
+                    ref => ref.map(s => s"Subject/$s")
                   ),
                   PrimitiveToObjectWithValueField[String]("name"),
                 )
@@ -304,7 +322,15 @@ trait DatasetTemplate extends Template with FileProxy {
             Nested("age", PrimitiveToObjectWithValueField[String]("age")),
             Nested("agecategory", FirstElement(PrimitiveArrayToListOfValueObject[String]("agecategory"))),
             Nested("weight", PrimitiveToObjectWithValueField[String]("weight")),
-            Nested("strain", Optional(PrimitiveToObjectWithValueField[String]("strain"))),
+            Nested(
+              "strain",
+              Optional(
+                OrElse(
+                  PrimitiveToObjectWithValueField[String]("strain"),
+                  PrimitiveToObjectWithValueField[String]("strains")
+                )
+              )
+            ),
             Nested("genotype", PrimitiveToObjectWithValueField[String]("genotype")),
             Nested(
               "samples",
@@ -314,7 +340,7 @@ trait DatasetTemplate extends Template with FileProxy {
                   List(
                     PrimitiveToObjectWithReferenceField(
                       "identifier",
-                      ref => ref.map(TemplateHelper.refUUIDToSearchId("Sample"))
+                      ref => ref.map(s => s"Sample/$s")
                     ),
                     PrimitiveToObjectWithValueField[String]("name")
                   )

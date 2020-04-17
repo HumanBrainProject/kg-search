@@ -115,7 +115,9 @@ class IndexerImpl @Inject()(
             Right(
               wsresult.json
                 .as[List[JsObject]]
-                .map(js => TemplateType.fromSchema(js.value.get("https://schema.hbp.eu/relativeUrl").get.as[String]))
+                .map(js => js.value.get("https://schema.hbp.eu/relativeUrl").get.as[String])
+                .sorted
+                .map(TemplateType.fromSchema)
             )
           case s => Left(ApiError(s, wsresult.body))
         }

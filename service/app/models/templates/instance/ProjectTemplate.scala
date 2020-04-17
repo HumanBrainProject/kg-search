@@ -16,10 +16,12 @@
 package models.templates.instance
 
 import java.net.URLEncoder
+import java.nio.charset.{Charset, StandardCharsets}
 
 import models.{DatabaseScope, INFERRED}
 import models.templates.Template
 import models.templates.entities.ObjectWithValueField
+import sun.nio.cs.UTF_8
 import utils.{
   Merge,
   ObjectArrayToListOfObject,
@@ -54,12 +56,14 @@ trait ProjectTemplate extends Template {
       "publications",
       Merge(
         PrimitiveToObjectWithValueField[String]("citation"),
-        PrimitiveToObjectWithValueField[String]("doi", doi => {
-          doi.map { doiStr =>
-            val url = URLEncoder.encode(doiStr, "UTF-8")
-            s"[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url"
+        PrimitiveToObjectWithValueField[String](
+          "doi", {
+            case Some(ObjectWithValueField(Some(doiStr))) =>
+              val url = URLEncoder.encode(doiStr, "UTF-8")
+              Some(ObjectWithValueField(Some(s"[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url")))
+            case s => s
           }
-        }),
+        ),
         (citation, doi) => {
           (citation, doi) match {
             case (

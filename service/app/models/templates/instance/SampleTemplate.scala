@@ -47,7 +47,13 @@ trait SampleTemplate extends Template with FileProxy {
       WriteObject(
         List(
           PrimitiveToObjectWithUrlField("url"),
-          PrimitiveToObjectWithValueField[String]("name", js => js.map(str => "Show " + str + " in brain atlas viewer"))
+          PrimitiveToObjectWithValueField[String](
+            "name", {
+              case Some(ObjectWithValueField(Some(str))) =>
+                Some(ObjectWithValueField(Some("Show " + str + " in brain atlas viewer")))
+              case _ => Some(ObjectWithValueField(Some("Show in brain atlas viewer")))
+            }
+          )
         )
       )
     ),
