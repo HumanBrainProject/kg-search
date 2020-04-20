@@ -34,10 +34,10 @@
   "datasets": [{
     "children": {
       "component": null,
-      "name": {
+      "name": [{
         "reference": "Dataset/17196b79-04db-4ea4-bb69-d20aab6f1d62",
         "value": "Whole cell patch-clamp recordings of cerebellar Golgi cells"
-      }
+      }]
     }
   }],
   "first_release": null,

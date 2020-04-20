@@ -26,7 +26,7 @@ import scala.collection.immutable.HashMap
 
 trait SubjectTemplate extends Template {
 
-  val result: Map[String, TemplateComponent] = HashMap(
+  val result: Map[String, TemplateComponent] = Map(
     "identifier"  -> PrimitiveToObjectWithValueField[String]("identifier"),
     "title"       -> PrimitiveToObjectWithValueField[String]("title"),
     "species"     -> FirstElement(PrimitiveArrayToListOfValueObject[String]("species")),
@@ -34,13 +34,16 @@ trait SubjectTemplate extends Template {
     "age"         -> PrimitiveToObjectWithValueField[String]("age"),
     "agecategory" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("agecategory")),
     "weight"      -> PrimitiveToObjectWithValueField[String]("weight"),
-    "strain"      -> PrimitiveToObjectWithValueField[String]("strain"),
-    "genotype"    -> PrimitiveToObjectWithValueField[String]("genotype"),
+    "strain" -> OrElse(
+      PrimitiveToObjectWithValueField[String]("strain"),
+      PrimitiveToObjectWithValueField[String]("strains")
+    ),
+    "genotype" -> PrimitiveToObjectWithValueField[String]("genotype"),
     "samples" -> ObjectArrayToListOfObject(
       "samples",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField("identifier", ref => ref.map(TemplateHelper.refUUIDToSearchId("Sample"))),
+          PrimitiveToObjectWithReferenceField("identifier", ref => ref.map(s => s"Sample/$s")),
           PrimitiveToObjectWithValueField[String]("name"),
         )
       )
@@ -62,17 +65,15 @@ trait SubjectTemplate extends Template {
             ),
             Nested(
               "name",
-              FirstElement(
-                ObjectArrayToListOfObject(
-                  "instances",
-                  WriteObject(
-                    List(
-                      PrimitiveToObjectWithReferenceField(
-                        "identifier",
-                        ref => ref.map(TemplateHelper.refUUIDToSearchId("Dataset"))
-                      ),
-                      PrimitiveToObjectWithValueField[String]("name")
-                    )
+              ObjectArrayToListOfObject(
+                "instances",
+                WriteObject(
+                  List(
+                    PrimitiveToObjectWithReferenceField(
+                      "identifier",
+                      ref => ref.map(s => s"Dataset/$s")
+                    ),
+                    PrimitiveToObjectWithValueField[String]("name")
                   )
                 )
               )
@@ -86,7 +87,7 @@ trait SubjectTemplate extends Template {
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {
-    case INFERRED => HashMap("editorId" -> PrimitiveToObjectWithValueField[String]("editorId")) ++ result
+    case INFERRED => Map("editorId" -> PrimitiveToObjectWithValueField[String]("editorId")) ++ result
     case _        => result
   }
 }

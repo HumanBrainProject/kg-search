@@ -31,7 +31,11 @@ object ListOfObjectWithValueField {
         if (u.list.isEmpty) {
           JsNull
         } else {
-          Json.toJson(u.list.map(el => el.toJson))
+          //Removing null element
+          Json.toJson(u.list.map(el => el.toJson).filter {
+            case JsNull => false
+            case _      => true
+          })
         }
       }
     }

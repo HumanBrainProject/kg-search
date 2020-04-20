@@ -28,10 +28,10 @@ import scala.collection.immutable.HashMap
 trait ModelInstanceTemplate extends Template {
 
   val result: Map[String, TemplateComponent] = HashMap(
-    "identifier"  -> PrimitiveToObjectWithValueField[String]("identifier", identity),
-    "title"       -> PrimitiveToObjectWithValueField[String]("title", identity),
-    "description" -> PrimitiveToObjectWithValueField[String]("description", identity),
-    "version"     -> PrimitiveToObjectWithValueField[String]("version", identity),
+    "identifier"  -> PrimitiveToObjectWithValueField[String]("identifier"),
+    "title"       -> PrimitiveToObjectWithValueField[String]("title"),
+    "description" -> PrimitiveToObjectWithValueField[String]("description"),
+    "version"     -> PrimitiveToObjectWithValueField[String]("version"),
     "contributors" -> ObjectArrayToListOfObject(
       "contributors",
       WriteObject(
@@ -40,7 +40,7 @@ trait ModelInstanceTemplate extends Template {
             "identifier",
             ref => ref.map(s => s"Contributor/$s")
           ),
-          PrimitiveToObjectWithValueField[String]("name", identity)
+          PrimitiveToObjectWithValueField[String]("name")
         )
       )
     ),
@@ -52,7 +52,7 @@ trait ModelInstanceTemplate extends Template {
             "identifier",
             ref => ref.map(s => s"Contributor/$s")
           ),
-          PrimitiveToObjectWithValueField[String]("name", identity)
+          PrimitiveToObjectWithValueField[String]("name")
         )
       )
     ),
@@ -64,14 +64,14 @@ trait ModelInstanceTemplate extends Template {
             "identifier",
             ref => ref.map(s => s"Contributor/$s")
           ),
-          PrimitiveToObjectWithValueField[String]("name", identity)
+          PrimitiveToObjectWithValueField[String]("name")
         )
       )
     ),
     "publications" -> ObjectArrayToListOfObject(
       "publications",
       Merge(
-        PrimitiveToObjectWithValueField[String]("citation", identity),
+        PrimitiveToObjectWithValueField[String]("citation"),
         PrimitiveToObjectWithValueField[String](
           "doi", {
             case Some(ObjectWithValueField(Some(doiStr))) =>
@@ -104,16 +104,15 @@ trait ModelInstanceTemplate extends Template {
         )
       )
     ),
-    "allFiles" -> Optional(
+    "allfiles" -> Optional(
       Merge(
-        FirstElement(PrimitiveArrayToListOfValueObject[String]("embargo", identity)),
+        FirstElement(PrimitiveArrayToListOfValueObject[String]("embargo")),
         ObjectArrayToListOfObject(
           "fileBundle",
           WriteObject(
             List(
               PrimitiveToObjectWithUrlField("url"),
-              Set("detail", JsNull),
-              PrimitiveToObjectWithValueField[String]("value", identity)
+              PrimitiveToObjectWithValueField[String]("value")
             )
           )
         ),
@@ -125,8 +124,7 @@ trait ModelInstanceTemplate extends Template {
                 case ObjectMap(
                     List(
                       ObjectWithUrlField(Some(resUrl)),
-                      SetValue(_, _),
-                      ObjectWithValueField(_)
+                      _
                     )
                     ) if resUrl.startsWith("https://object.cscs.ch") =>
                   ObjectMap(
@@ -136,7 +134,7 @@ trait ModelInstanceTemplate extends Template {
                       ObjectWithValueField[String](Some("download all related data as ZIP"))
                     )
                   )
-                case ObjectMap(List(ObjectWithUrlField(Some(resUrl)), x)) =>
+                case ObjectMap(List(ObjectWithUrlField(Some(resUrl)), _)) =>
                   ObjectMap(
                     List(
                       ObjectWithUrlField(Some(resUrl)),
@@ -149,14 +147,14 @@ trait ModelInstanceTemplate extends Template {
         }
       )
     ),
-    "brainStructures"  -> PrimitiveArrayToListOfValueObject[String]("brainStructure", identity),
-    "cellularTarget"   -> PrimitiveArrayToListOfValueObject[String]("cellularTarget", identity),
-    "studyTarget"      -> PrimitiveArrayToListOfValueObject[String]("studyTarget", identity),
-    "modelScope"       -> PrimitiveArrayToListOfValueObject[String]("modelScope", identity),
-    "abstractionLevel" -> PrimitiveArrayToListOfValueObject[String]("abstractionLevel", identity),
-    "modelFormat"      -> PrimitiveArrayToListOfValueObject[String]("modelFormat", identity),
-    "first_release"    -> PrimitiveToObjectWithValueField[String]("first_release", identity),
-    "last_release"     -> PrimitiveToObjectWithValueField[String]("last_release", identity),
+    "brainStructures"  -> PrimitiveArrayToListOfValueObject[String]("brainStructure"),
+    "cellularTarget"   -> PrimitiveArrayToListOfValueObject[String]("cellularTarget"),
+    "studyTarget"      -> PrimitiveArrayToListOfValueObject[String]("studyTarget"),
+    "modelScope"       -> PrimitiveArrayToListOfValueObject[String]("modelScope"),
+    "abstractionLevel" -> PrimitiveArrayToListOfValueObject[String]("abstractionLevel"),
+    "modelFormat"      -> PrimitiveArrayToListOfValueObject[String]("modelFormat"),
+    "first_release"    -> PrimitiveToObjectWithValueField[String]("first_release"),
+    "last_release"     -> PrimitiveToObjectWithValueField[String]("last_release"),
     "usedDataset" -> ObjectArrayToListOfObject(
       "usedDataset",
       WriteObject(
@@ -165,7 +163,7 @@ trait ModelInstanceTemplate extends Template {
             "identifier",
             ref => ref.map(s => s"Dataset/$s")
           ),
-          PrimitiveToObjectWithValueField[String]("name", identity)
+          PrimitiveToObjectWithValueField[String]("name")
         )
       )
     ),
@@ -177,14 +175,14 @@ trait ModelInstanceTemplate extends Template {
             "identifier",
             ref => ref.map(s => s"Dataset/$s")
           ),
-          PrimitiveToObjectWithValueField[String]("name", identity)
+          PrimitiveToObjectWithValueField[String]("name")
         )
       )
     )
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {
-    case INFERRED => HashMap("editorId" -> PrimitiveToObjectWithValueField[String]("editorId", identity)) ++ result
+    case INFERRED => HashMap("editorId" -> PrimitiveToObjectWithValueField[String]("editorId")) ++ result
     case _        => result
   }
 

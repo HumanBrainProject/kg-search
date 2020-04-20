@@ -27,7 +27,7 @@ import scala.collection.immutable.HashMap
 
 trait DatasetTemplate extends Template with FileProxy {
 
-  val result: Map[String, TemplateComponent] = HashMap(
+  val result: Map[String, TemplateComponent] = Map(
     "identifier" -> PrimitiveToObjectWithValueField[String]("identifier"),
     "title"      -> PrimitiveToObjectWithValueField[String]("title"),
     "contributors" -> ObjectArrayToListOfObject(

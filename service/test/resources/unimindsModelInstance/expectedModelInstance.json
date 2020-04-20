@@ -13,7 +13,7 @@
   },
   "owners": [
     {
-      "reference": "Contributor/14f0acc0-9fc0-4b67-881f-522b89316b83",
+      "reference": "Contributor/68f7bd0bbd60708e0baf671b5306c6a9",
       "value": "Aardse, Romy"
     }
   ],
@@ -24,7 +24,7 @@
   ],
   "mainContact": [
     {
-      "reference": "Contributor/14f0acc0-9fc0-4b67-881f-522b89316b83",
+      "reference": "Contributor/68f7bd0bbd60708e0baf671b5306c6a9",
       "value": "Aardse, Romy"
     }
   ],
@@ -46,7 +46,7 @@
       "value": "Parvalbumin"
     }
   ],
-  "allFiles": [
+  "allfiles": [
     {
       "url": "https://kg.ebrains.eu/proxy/export?container=https://object.cscs.ch/v1/AUTH_c0a333ecf7c045809321ce9d9ecdfdea/Migliore_2018_CA1/",
       "detail": "###HBP Knowledge Graph Data Platform Citation Requirements",
@@ -64,11 +64,11 @@
   "first_release": null,
   "contributors": [
     {
-      "reference": "Contributor/14f0acc0-9fc0-4b67-881f-522b89316b83",
+      "reference": "Contributor/68f7bd0bbd60708e0baf671b5306c6a9",
       "value": "Aardse, Romy"
     },
     {
-      "reference": "Contributor/ce01db5c-e9f9-4f93-8cc6-5df9ee3a6b63",
+      "reference": "Contributor/d53c19307c5e9bc77c9b0cc80ff0a95c",
       "value": "Alexander, Daniel C."
     }
   ],

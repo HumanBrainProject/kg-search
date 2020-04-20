@@ -232,7 +232,7 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       assertIsSameJsObject("version", result, expected)
       assertIsSameJsObject("publications", result, expected)
       assertIsSameJsObject("studyTarget", result, expected)
-      assertIsSameJsObject("allFiles", result, expected)
+      assertIsSameJsObject("allfiles", result, expected)
       assertIsSameJsObject("modelScope", result, expected)
       assertIsSameJsObject("title", result, expected)
       assertIsSameJsObject("first_release", result, expected)

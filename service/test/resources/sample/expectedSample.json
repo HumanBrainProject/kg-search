@@ -62,10 +62,10 @@
       "component": {
         "value": "Immunocytochemical detection of excitatory and inhibitory terminals in the mouse hippocampus (CA1) by confocal microscopy"
       },
-      "name": {
+      "name": [{
         "reference": "Dataset/2eb4336742bd92b71f01d2d14a5a9400",
         "value": "Immunocytochemical detection of excitatory and inhibitory terminals in the mouse hippocampus (CA1) by confocal microscopy"
-      }
+      }]
     }
   }],
   "first_release": null,

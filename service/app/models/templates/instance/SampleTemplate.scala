@@ -27,7 +27,7 @@ import scala.collection.immutable.HashMap
 
 trait SampleTemplate extends Template with FileProxy {
 
-  val result: Map[String, TemplateComponent] = HashMap(
+  val result: Map[String, TemplateComponent] = Map(
     "identifier"        -> PrimitiveToObjectWithValueField[String]("identifier"),
     "title"             -> PrimitiveToObjectWithValueField[String]("title"),
     "weightPreFixation" -> PrimitiveToObjectWithValueField[String]("weightPreFixation"),
@@ -95,7 +95,7 @@ trait SampleTemplate extends Template with FileProxy {
           List(
             Merge(
               WriteObject(
-                List(PrimitiveToObjectWithUrlField("absolute_path"), PrimitiveToObjectWithValueField[String]("name"))
+                List(PrimitiveToObjectWithUrlField("absolutePath"), PrimitiveToObjectWithValueField[String]("name"))
               ),
               PrimitiveToObjectWithValueField[Boolean]("private_access"),
               (urlOpt, privateAccesOpt) => {
@@ -166,17 +166,12 @@ trait SampleTemplate extends Template with FileProxy {
             ),
             Nested(
               "name",
-              FirstElement(
-                ObjectArrayToListOfObject(
-                  "instances",
-                  WriteObject(
-                    List(
-                      PrimitiveToObjectWithReferenceField(
-                        "identifier",
-                        ref => ref.map(TemplateHelper.refUUIDToSearchId("Dataset"))
-                      ),
-                      PrimitiveToObjectWithValueField[String]("name")
-                    )
+              ObjectArrayToListOfObject(
+                "instances",
+                WriteObject(
+                  List(
+                    PrimitiveToObjectWithReferenceField("identifier", ref => ref.map(s => s"Dataset/$s")),
+                    PrimitiveToObjectWithValueField[String]("name")
                   )
                 )
               )
@@ -199,7 +194,7 @@ trait SampleTemplate extends Template with FileProxy {
                 List(
                   PrimitiveToObjectWithReferenceField(
                     "identifier",
-                    ref => ref.map(TemplateHelper.refUUIDToSearchId("Subject"))
+                    ref => ref.map(s => s"Subject/$s")
                   ),
                   PrimitiveToObjectWithValueField[String]("name"),
                 )
@@ -227,7 +222,7 @@ trait SampleTemplate extends Template with FileProxy {
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {
-    case INFERRED => HashMap("editorId" -> PrimitiveToObjectWithValueField[String]("editorId")) ++ result
+    case INFERRED => Map("editorId" -> PrimitiveToObjectWithValueField[String]("editorId")) ++ result
     case _        => result
   }
 }

@@ -33,7 +33,10 @@ object ObjectWithValueField {
     new Writes[ObjectWithValueField[ReturnType]] {
 
       def writes(u: ObjectWithValueField[ReturnType]): JsValue = {
-        u.value.fold[JsValue](JsNull)(str => Json.obj("value" -> str))
+        u.value.fold[JsValue](JsNull) {
+          case ""  => JsNull
+          case str => Json.obj("value" -> str)
+        }
       }
     }
   def zero[ReturnType: Format]: ObjectWithValueField[ReturnType] = ObjectWithValueField[ReturnType](None)

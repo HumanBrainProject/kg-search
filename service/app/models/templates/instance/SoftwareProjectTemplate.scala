@@ -121,19 +121,11 @@ trait SoftwareProjectTemplate extends Template {
           }
         ), {
           case Some(
-              ObjectMap(
-                List(
-                  ObjectWithValueField(None)
-                )
-              )
+              ObjectWithValueField(None)
               ) =>
             None
           case Some(
-              ObjectMap(
-                List(
-                  ObjectWithValueField(Some(versionRes: String)),
-                )
-              )
+              ObjectWithValueField(Some(versionRes: String)),
               ) =>
             Some(ObjectWithValueField[String](Some(versionRes)))
           case _ => None
