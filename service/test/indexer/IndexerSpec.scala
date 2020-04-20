@@ -103,6 +103,7 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
         }
         .filter(m => m.nonEmpty)
 //      assert(listOfDiff.isEmpty)
+      assert(true)
     }
     def resToMap(res: WSResponse): Map[String, JsValue] = {
       res.json
