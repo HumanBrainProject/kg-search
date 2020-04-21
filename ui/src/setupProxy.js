@@ -1,16 +1,19 @@
 const proxy = require("http-proxy-middleware");
 
-module.exports = function(app) {
+module.exports = function (app) {
   app.use(proxy("/proxy", {
-    target: "https://kg-int.humanbrainproject.eu",
+    target: "http://localhost:9000",
     changeOrigin: true,
-    ws: true }));
+    ws: true
+  }));
   app.use(proxy("/auth", {
-    target: "https://kg-int.humanbrainproject.eu",
+    target: "http://localhost:9000",
     changeOrigin: true,
-    ws: true }));
+    ws: true
+  }));
   app.use(proxy("/query", {
-    target: "https://kg-int.humanbrainproject.eu",
+    target: "http://localhost:8600",
     changeOrigin: true,
-    ws: true }));
+    ws: true
+  }));
 };

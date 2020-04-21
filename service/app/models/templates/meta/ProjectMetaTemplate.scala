@@ -54,7 +54,7 @@ trait ProjectMetaTemplate extends Template {
           Nested(
             "dataset",
             ObjectReader(
-              "search:dataset",
+              "search:datasets",
               WriteObject(
                 List(
                   PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
@@ -122,51 +122,6 @@ trait ProjectMetaTemplate extends Template {
               )
             )
           )
-        )
-      )
-    ),
-    "https://schema.hbp.eu/searchUi/ribbon" -> ObjectReader(
-      "searchUi:ribbon",
-      WriteObject(
-        List(
-          PrimitiveToObjectWithCustomField[String]("searchUi:content", "https://schema.hbp.eu/searchUi/content"),
-          Nested(
-            "https://schema.hbp.eu/searchUi/framed",
-            ObjectReader(
-              "searchUi:framed",
-              WriteObject(
-                List(
-                  PrimitiveToObjectWithCustomField[String](
-                    "searchUi:aggregation",
-                    "https://schema.hbp.eu/searchUi/aggregation"
-                  ),
-                  PrimitiveToObjectWithCustomField[String](
-                    "searchUi:dataField",
-                    "https://schema.hbp.eu/searchUi/dataField"
-                  ),
-                  Nested(
-                    "https://schema.hbp.eu/searchUi/suffix",
-                    ObjectReader(
-                      "searchUi:suffix",
-                      WriteObject(
-                        List(
-                          PrimitiveToObjectWithCustomField[String](
-                            "searchUi:plural",
-                            "https://schema.hbp.eu/searchUi/plural"
-                          ),
-                          PrimitiveToObjectWithCustomField[String](
-                            "searchUi:singular",
-                            "https://schema.hbp.eu/searchUi/singular"
-                          ),
-                        )
-                      )
-                    )
-                  )
-                )
-              )
-            )
-          ),
-          PrimitiveToObjectWithCustomField[String]("searchUi:icon", "https://schema.hbp.eu/searchUi/icon"),
         )
       )
     ),

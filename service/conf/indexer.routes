@@ -14,9 +14,6 @@
     #    name: completeRebuild
     #    type: bool
     #  - in: query
-    #    name: releasedOnly
-    #    type: bool
-    #  - in: query
     #    name: simulate
     #    type: bool
     #  - in: query
@@ -26,7 +23,7 @@
     #    '200':
     #      description: Ok
     ###
-  POST /  controllers.IndexerController.index(databaseScope: models.DatabaseScope, completeRebuild: Boolean?=false,releasedOnly: Boolean?=false, simulate: Boolean?=true, restrictToOrganizations:Option[String])
+  POST /  controllers.IndexerController.index(databaseScope: models.DatabaseScope, completeRebuild: Boolean?=false, simulate: Boolean?=true, restrictToOrganizations:Option[String])
 
   ###
   #  summary: Index the specified type
@@ -48,9 +45,6 @@
   #    name: completeRebuild
   #    type: bool
   #  - in: query
-  #    name: releasedOnly
-  #    type: bool
-  #  - in: query
   #    name: simulate
   #    type: bool
   #  - in: query
@@ -60,7 +54,7 @@
   #    '200':
   #      description: Ok
   ###
-POST /:dataType  controllers.IndexerController.indexByType(databaseScope: models.DatabaseScope,dataType: String, completeRebuild: Boolean?=false,releasedOnly: Boolean?=false, simulate: Boolean?=true, restrictToOrganizations:Option[String])
+POST /:dataType  controllers.IndexerController.indexByType(databaseScope: models.DatabaseScope,dataType: String, completeRebuild: Boolean?=false, simulate: Boolean?=true, restrictToOrganizations:Option[String])
 
 
   ###

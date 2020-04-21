@@ -69,10 +69,10 @@ export const sessionFailure = error => {
 
 export const authenticate = () => {
   return () => {
-    const stateKey= btoa(JSON.stringify({
+    const stateKey = btoa(JSON.stringify({
       queryString: window.location.search
     }));
-    const nonceKey=  generateKey();
+    const nonceKey = generateKey();
     const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
     window.location.href = API.endpoints.auth(redirectUri, stateKey, nonceKey);
   };
@@ -84,22 +84,21 @@ export const initialize = (location, defaultGroup) => {
     if (accessToken) {
       dispatch(setToken(accessToken));
       const stateValue = getHashKey("state");
-      const state = stateValue?JSON.parse(atob(stateValue)):{};
-      const queryString = (state && state.queryString)?state.queryString:"";
+      const state = stateValue ? JSON.parse(atob(stateValue)) : {};
+      const queryString = (state && state.queryString) ? state.queryString : "";
       history.replace(`${location.pathname}${queryString}`);
       dispatch(setApplicationReady());
     } else {
       const group = getSearchKey("group");
-
       // backward compatibility test
       const instance = location.hash.substr(1);
       if (location.pathname === "/" && instance) {
-        const url = `/instances/${instance}${group?("?group=" + group):""}`;
+        const url = `/instances/${instance}${group ? ("?group=" + group) : ""}`;
         history.replace(url);
       }
 
       const regShareEditorReference = /^\/instances\/(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
-      if((group && group !== defaultGroup) || location.pathname.startsWith("/live/") || regShareEditorReference.test(location.pathname))  {
+      if ((group && group !== defaultGroup) || location.pathname.startsWith("/live/") || regShareEditorReference.test(location.pathname)) {
         dispatch(authenticate());
       } else {
         dispatch(setApplicationReady());

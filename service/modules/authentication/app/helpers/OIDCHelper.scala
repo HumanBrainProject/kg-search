@@ -43,10 +43,11 @@ object OIDCHelper {
   def getESIndex(userInfo: IDMUser, hints: String): String = {
     val groups = ESHelper.filterNexusGroups(userInfo.groups)
     val h = hints.trim
-    if (groups.contains(h)) {
-      ESHelper.transformToIndex(h)
-    } else {
-      ESHelper.publicIndex
+    h match {
+      case "public"                => ESHelper.publicIndex
+      case "curated"               => "in_progress"
+      case l if groups.contains(l) => l
+      case _                       => ESHelper.publicIndex
     }
   }
 }

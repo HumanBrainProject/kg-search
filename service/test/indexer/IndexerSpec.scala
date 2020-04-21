@@ -17,13 +17,19 @@ package indexer
 
 import java.io.FileInputStream
 
+import controllers.IndexerController
 import org.scalatest.Assertion
 import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play._
+
+import play.api.mvc._
+import play.api.test._
+import play.api.test.Helpers._
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.libs.ws.{WSClient, WSResponse}
-import play.api.test.Injecting
+import play.api.test.{FakeRequest, Injecting}
 import services.indexer.IndexerImpl
 
 import scala.concurrent.Await
@@ -60,9 +66,7 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       import monix.execution.Scheduler.Implicits.global
       val indexer = app.injector.instanceOf[IndexerImpl]
       val expected = loadResource("/indexer/labelsExpected.json").as[JsObject].value("Dataset").as[Map[String, JsValue]]
-      val token =
-        ""
-      val task = indexer.createLabels(List("Dataset"), token)
+      val task = indexer.createLabels(List("Dataset"))
       val labels = Await.result(task.runToFuture, Duration.Inf)
       val datasetLabels = labels("Dataset").as[Map[String, JsValue]]
 //      assertIsSameJsObject("http://schema.org/identifier", datasetLabels, expected)
@@ -143,6 +147,18 @@ class IndexerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       relevantTypes.foreach(t => compareIndices(t, wsClient))
     }
 
+  }
+
+  "The Get labels method" must {
+    "return the same content as in the old index" in {
+      import play.api.test.Helpers._
+      val indexer = app.injector.instanceOf[IndexerController]
+      val expected =
+        loadResource("/indexer/oldIndexLabels.json").as[JsObject].value("_source").as[Map[String, JsValue]]
+      val jsLabel = Json.parse(contentAsString(indexer.getLabels().apply(FakeRequest())))
+      val src = jsLabel.as[JsObject].value
+      assert(src == expected)
+    }
   }
 
 }

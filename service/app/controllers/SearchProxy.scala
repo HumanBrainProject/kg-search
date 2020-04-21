@@ -46,6 +46,7 @@ class SearchProxy @Inject()(
   implicit val s = monix.execution.Scheduler.Implicits.global
 
   val logger: Logger = Logger(this.getClass)
+  val serviceUrlBase: String = config.get[String]("serviceUrlBase")
 
   def proxy(indexWithProxyUrl: String): Action[AnyContent] = Action.async { implicit request =>
     val segments = indexWithProxyUrl.split("/")
@@ -132,8 +133,25 @@ class SearchProxy @Inject()(
     }
 
   def labels(proxyUrl: String): Action[AnyContent] = Action.async { implicit request =>
-    val wsRequestBase: WSRequest = ws.url(es_host + "/kg_labels/" + proxyUrl)
-    propagateRequest(wsRequestBase).runToFuture
+    indexerService
+      .getRelevantTypes()
+      .flatMap {
+        case Right(relevantTypes) =>
+          indexerService.getLabels(relevantTypes).map { labels =>
+            val errors = labels.collect { case Left(e) => e }
+            if (errors.isEmpty) {
+              val successful = labels.collect { case Right(l) => l }
+              Ok(Json.obj("_source" -> Json.toJson(successful.toMap.updated("serviceUrl", JsString(serviceUrlBase)))))
+            } else {
+              val message = errors.foldLeft("") {
+                case (acc, e) => s"$acc + \n Status - ${e.status} - ${e.message}"
+              }
+              InternalServerError(s"Multiple errors detected - $message")
+            }
+          }
+        case Left(e) => Task.pure(e.toResults())
+      }
+      .runToFuture
   }
 
   def labelsOptions(proxyUrl: String): Action[AnyContent] = Action {

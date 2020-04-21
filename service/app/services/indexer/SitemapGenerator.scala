@@ -32,7 +32,7 @@ trait SitemapGenerator {
   def addUrl(
     dataType: String,
     identifier: Option[String],
-    releasedOnly: Boolean,
+    databaseScope: DatabaseScope,
     completeRebuild: Boolean
   ): Unit
 }
@@ -44,7 +44,7 @@ class SitemapGeneratorImpl @Inject()(
   override def addUrl(
     dataType: String,
     identifier: Option[String],
-    releasedOnly: Boolean,
+    databaseScope: DatabaseScope,
     completeRebuild: Boolean
   ): Unit = {}
 }

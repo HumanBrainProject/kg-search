@@ -246,10 +246,10 @@ trait SoftwareProjectMetaTemplate extends Template {
         )
       )
     ),
-    "http://schema.org/identifier" -> Get[String]("http://schema.org/identifier"),
-    "http://schema.org/name"       -> Get[String]("schema:name"),
-    "https://schema.hbp.eu/boost"  -> Get[Double]("schema:boost"),
-    "https://schema.hbp.eu/icon"   -> Get[String]("schema:icon"),
-    "https://schema.hbp.eu/order"  -> Get[Int]("schema:order"),
+    "http://schema.org/identifier"         -> Get[String]("http://schema.org/identifier"),
+    "http://schema.org/name"               -> Get[String]("schema:name"),
+    "https://schema.hbp.eu/searchUi/boost" -> Get[Double]("searchUi:boost"),
+    "https://schema.hbp.eu/searchUi/icon"  -> Get[String]("searchUi:icon"),
+    "https://schema.hbp.eu/searchUi/order" -> Get[Int]("searchUi:order"),
   )
 }

@@ -82,7 +82,7 @@
       "searchUi:markdown": true
     },
     {
-      "fieldname": "search:dataset",
+      "fieldname": "search:datasets",
       "searchUi:layout": "group",
       "label": "Datasets",
       "fields": [

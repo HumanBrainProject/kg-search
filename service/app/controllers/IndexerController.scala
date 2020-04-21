@@ -25,7 +25,7 @@ import models.{DatabaseScope, PaginationParams}
 import monix.eval.Task
 import monix.execution.Scheduler
 import play.api.http.HttpEntity
-import play.api.libs.json.{JsObject, JsValue}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.WSResponse
 import play.api.mvc._
 import services.indexer.Indexer
@@ -39,7 +39,6 @@ class IndexerController @Inject()(
   def index(
     databaseScope: DatabaseScope,
     completeRebuild: Boolean,
-    releasedOnly: Boolean,
     simulate: Boolean,
     restrictToOrganizations: Option[String]
   ): Action[AnyContent] = Action.async { implicit request =>
@@ -48,7 +47,6 @@ class IndexerController @Inject()(
         indexer
           .index(
             completeRebuild,
-            releasedOnly,
             simulate,
             restrictToOrganizations.map(_.split(",").toList).getOrElse(List()),
             databaseScope,
@@ -75,7 +73,6 @@ class IndexerController @Inject()(
     databaseScope: DatabaseScope,
     dataType: String,
     completeRebuild: Boolean,
-    releasedOnly: Boolean,
     simulate: Boolean,
     restrictToOrganizations: Option[String]
   ): Action[AnyContent] = Action.async { implicit request =>
@@ -84,7 +81,6 @@ class IndexerController @Inject()(
         indexer
           .indexByType(
             completeRebuild,
-            releasedOnly,
             simulate,
             restrictToOrganizations.map(_.split(",").toList).getOrElse(List()),
             databaseScope,
@@ -156,66 +152,55 @@ class IndexerController @Inject()(
     templateType: TemplateType,
   ): Action[AnyContent] =
     Action.async { implicit request =>
-      val result = request.headers.toSimpleMap.get("Authorization") match {
-        case Some(token) =>
-          indexer
-            .metaByType(templateType, token)
-            .map {
-              case Right(v) => Ok(v)
-              case Left(error) =>
-                error.toResults()
-            }
-
-        case None => Task.pure(Unauthorized("Please provide credentials"))
-      }
-      result.runToFuture(s)
+      indexer
+        .metaByType(templateType)
+        .map {
+          case Right(v) => Ok(v)
+          case Left(error) =>
+            error.toResults()
+        }
+        .runToFuture(s)
     }
 
   def getLabelsByType(templateType: TemplateType): Action[AnyContent] =
     Action.async { implicit request =>
-      val result = request.headers.toSimpleMap.get("Authorization") match {
-        case Some(token) =>
-          indexer
-            .getLabelsByType(templateType, token)
-            .map {
-              case Right(v) => Ok(v)
-              case Left(error) =>
-                error.toResults()
-            }
-        case None => Task.pure(Unauthorized("Please provide credentials"))
-      }
-      result.runToFuture(s)
+      indexer
+        .getLabelsByType(templateType)
+        .map {
+          case Right((_, v)) => Ok(v)
+          case Left(error) =>
+            error.toResults()
+        }
+        .runToFuture(s)
     }
 
   def getLabels(): Action[AnyContent] =
     Action.async { implicit request =>
-      val result = request.headers.toSimpleMap.get("Authorization") match {
-        case Some(token) =>
-          indexer.getRelevantTypes(token).flatMap {
-            case Right(types) =>
-              Task
-                .sequence(types.map { t =>
-                  indexer
-                    .getLabelsByType(t, token)
-                })
-                .map { l =>
-                  val errors = l.collect { case Left(e) => e }
-                  if (errors.isEmpty) {
-                    val labels = l.collect { case Right(v) => v }.foldLeft(JsObject.empty) {
-                      case (acc, js) => acc ++ js.as[JsObject]
-                    }
-                    Ok(labels)
-                  } else {
-                    val message = errors.foldLeft("") {
-                      case (acc, e) => s"$acc + \n Status - ${e.status} - ${e.message}"
-                    }
-                    InternalServerError(s"Multiple errors detected - $message")
+      indexer
+        .getRelevantTypes()
+        .flatMap {
+          case Right(types) =>
+            Task
+              .sequence(types.map { t =>
+                indexer
+                  .getLabelsByType(t)
+              })
+              .map { l =>
+                val errors = l.collect { case Left(e) => e }
+                if (errors.isEmpty) {
+                  val labels = l.collect { case Right(v) => v }.foldLeft(JsObject.empty) {
+                    case (acc, (apiName, js)) => acc ++ Json.obj(apiName -> js.as[JsObject])
                   }
+                  Ok(labels)
+                } else {
+                  val message = errors.foldLeft("") {
+                    case (acc, e) => s"$acc + \n Status - ${e.status} - ${e.message}"
+                  }
+                  InternalServerError(s"Multiple errors detected - $message")
                 }
-            case Left(e) => Task.pure(e.toResults())
-          }
-        case None => Task.pure(Unauthorized("Please provide credentials"))
-      }
-      result.runToFuture(s)
+              }
+          case Left(e) => Task.pure(e.toResults())
+        }
+        .runToFuture(s)
     }
 }
