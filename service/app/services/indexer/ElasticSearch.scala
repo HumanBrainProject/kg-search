@@ -40,7 +40,6 @@ trait ElasticSearch {
     mapping: Map[String, Map[String, JsValue]],
     indexName: DatabaseScope,
     completeRebuild: Boolean,
-    simulate: Boolean
   ): Task[Either[ApiError, Unit]]
 
   def index(
@@ -48,7 +47,6 @@ trait ElasticSearch {
     dataType: String,
     identifier: String,
     indexName: DatabaseScope,
-    simulate: Boolean
   ): Task[Either[ApiError, Unit]]
 
   def getNotUpdatedInstances(
@@ -78,9 +76,8 @@ class ElasticSearchImpl @Inject()(
     mapping: Map[String, Map[String, JsValue]],
     dbScope: DatabaseScope,
     completeRebuild: Boolean,
-    simulate: Boolean
   ): Task[Either[ApiError, Unit]] = {
-    if (completeRebuild && !simulate) {
+    if (completeRebuild) {
       Task
         .deferFuture(WSClient.url(s"$elasticSearchEndpoint/${dbScope.toIndexName}").delete())
         .flatMap(
@@ -121,23 +118,18 @@ class ElasticSearchImpl @Inject()(
     dataType: String,
     identifier: String,
     databaseScope: DatabaseScope,
-    simulate: Boolean
   ): Task[Either[ApiError, Unit]] = {
     // TODO Check if element is a list ????
-    if (!simulate) {
-      Task
-        .deferFuture(
-          WSClient.url(s"$elasticSearchEndpoint/${databaseScope.toIndexName}/$dataType/$identifier").put(jsonPayload)
-        )
-        .map { res =>
-          res.status match {
-            case CREATED | OK => Right(())
-            case e            => Left(ApiError(e, res.body))
-          }
+    Task
+      .deferFuture(
+        WSClient.url(s"$elasticSearchEndpoint/${databaseScope.toIndexName}/$dataType/$identifier").put(jsonPayload)
+      )
+      .map { res =>
+        res.status match {
+          case CREATED | OK => Right(())
+          case e            => Left(ApiError(e, res.body))
         }
-    } else {
-      Task.pure(Right(()))
-    }
+      }
 
   }
 

@@ -23,7 +23,7 @@
     #    '200':
     #      description: Ok
     ###
-  POST /  controllers.IndexerController.index(databaseScope: models.DatabaseScope, completeRebuild: Boolean?=false, simulate: Boolean?=true, restrictToOrganizations:Option[String])
+  POST /  controllers.IndexerController.index(databaseScope: models.DatabaseScope, completeRebuild: Boolean?=false, restrictToOrganizations:Option[String])
 
   ###
   #  summary: Index the specified type
@@ -54,7 +54,7 @@
   #    '200':
   #      description: Ok
   ###
-POST /:dataType  controllers.IndexerController.indexByType(databaseScope: models.DatabaseScope,dataType: String, completeRebuild: Boolean?=false, simulate: Boolean?=true, restrictToOrganizations:Option[String])
+POST /:dataType  controllers.IndexerController.indexByType(databaseScope: models.DatabaseScope,dataType: String, completeRebuild: Boolean?=false, restrictToOrganizations:Option[String])
 
 
   ###

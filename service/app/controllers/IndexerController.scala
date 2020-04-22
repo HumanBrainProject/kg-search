@@ -39,7 +39,6 @@ class IndexerController @Inject()(
   def index(
     databaseScope: DatabaseScope,
     completeRebuild: Boolean,
-    simulate: Boolean,
     restrictToOrganizations: Option[String]
   ): Action[AnyContent] = Action.async { implicit request =>
     val result = request.headers.toSimpleMap.get("Authorization") match {
@@ -47,7 +46,6 @@ class IndexerController @Inject()(
         indexer
           .index(
             completeRebuild,
-            simulate,
             restrictToOrganizations.map(_.split(",").toList).getOrElse(List()),
             databaseScope,
             token
@@ -73,7 +71,6 @@ class IndexerController @Inject()(
     databaseScope: DatabaseScope,
     dataType: String,
     completeRebuild: Boolean,
-    simulate: Boolean,
     restrictToOrganizations: Option[String]
   ): Action[AnyContent] = Action.async { implicit request =>
     val result = request.headers.toSimpleMap.get("Authorization") match {
@@ -81,7 +78,6 @@ class IndexerController @Inject()(
         indexer
           .indexByType(
             completeRebuild,
-            simulate,
             restrictToOrganizations.map(_.split(",").toList).getOrElse(List()),
             databaseScope,
             dataType,

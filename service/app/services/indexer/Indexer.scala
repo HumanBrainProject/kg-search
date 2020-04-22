@@ -71,7 +71,6 @@ trait Indexer[Content, TransformedContent, Effect[_], UploadResult, QueryResult]
 
   def index(
     completeRebuild: Boolean,
-    simulate: Boolean,
     organizations: List[String],
     databaseScope: DatabaseScope,
     token: String
@@ -79,7 +78,6 @@ trait Indexer[Content, TransformedContent, Effect[_], UploadResult, QueryResult]
 
   def indexByType(
     completeRebuild: Boolean,
-    simulate: Boolean,
     organizations: List[String],
     databaseScope: DatabaseScope,
     relevantType: String,
@@ -210,7 +208,6 @@ class IndexerImpl @Inject()(
     apiName: String,
     el: JsObject,
     identifier: Option[String],
-    simulate: Boolean,
     dbScope: DatabaseScope,
     completeRebuild: Boolean
   ): Task[Either[ApiError, Unit]] = {
@@ -222,7 +219,7 @@ class IndexerImpl @Inject()(
 
         val nowAsISO = Instant.now().atOffset(ZoneOffset.UTC).toLocalDateTime.toString
         val jsonWithTimeStamp = el ++ Json.obj("@timestamp" -> nowAsISO)
-        val indexed = elasticSearch.index(jsonWithTimeStamp, apiName, id, dbScope, simulate)
+        val indexed = elasticSearch.index(jsonWithTimeStamp, apiName, id, dbScope)
         indexed.map {
           case Right(_) =>
             siteMapGenerator.addUrl(apiName, identifier, dbScope, completeRebuild)
@@ -248,7 +245,6 @@ class IndexerImpl @Inject()(
     relevantType: List[TemplateType],
     organizations: List[String],
     databaseScope: DatabaseScope,
-    simulate: Boolean,
     completeRebuild: Boolean,
     token: String
   ): Task[List[Either[ApiError, Unit]]] = {
@@ -265,7 +261,6 @@ class IndexerImpl @Inject()(
               template.apiName,
               el,
               extractIdentifier(el),
-              simulate,
               databaseScope,
               completeRebuild
             )
@@ -317,7 +312,6 @@ class IndexerImpl @Inject()(
 
   private def indexWithTypes(
     completeRebuild: Boolean,
-    simulate: Boolean,
     organizations: List[String],
     databaseScope: DatabaseScope,
     relevantTypes: List[TemplateType],
@@ -331,7 +325,7 @@ class IndexerImpl @Inject()(
       df.setTimeZone(tz)
       val nowAsISO = df.format(new Date())
       val recreateIndexTask =
-        elasticSearch.recreateIndex(mapping, databaseScope, completeRebuild, simulate)
+        elasticSearch.recreateIndex(mapping, databaseScope, completeRebuild)
       recreateIndexTask.flatMap {
         case Right(()) =>
           val result =
@@ -339,7 +333,6 @@ class IndexerImpl @Inject()(
               relevantTypes,
               organizations,
               databaseScope,
-              simulate = simulate,
               completeRebuild,
               token
             )
@@ -358,7 +351,6 @@ class IndexerImpl @Inject()(
 
   override def index(
     completeRebuild: Boolean,
-    simulate: Boolean,
     organizations: List[String],
     databaseScope: DatabaseScope,
     token: String
@@ -367,7 +359,6 @@ class IndexerImpl @Inject()(
       case Right(relevantTypes) =>
         indexWithTypes(
           completeRebuild,
-          simulate,
           organizations,
           databaseScope,
           relevantTypes,
@@ -379,7 +370,6 @@ class IndexerImpl @Inject()(
 
   override def indexByType(
     completeRebuild: Boolean,
-    simulate: Boolean,
     organizations: List[String],
     databaseScope: DatabaseScope,
     relevantType: String,
@@ -387,7 +377,6 @@ class IndexerImpl @Inject()(
   ): Task[Either[ApiError, Unit]] = {
     indexWithTypes(
       completeRebuild,
-      simulate,
       organizations,
       databaseScope,
       List(TemplateType(relevantType)),
