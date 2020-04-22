@@ -19,6 +19,7 @@ import API from "../services/API";
 import { setGroup, clearGroupError } from "./actions.groups";
 import { sessionFailure, logout } from "./actions";
 import { history, store } from "../store";
+import { getSearchKey } from "../helpers/BrowserHelpers";
 
 export const loadInstanceRequest = () => {
   return {
@@ -91,7 +92,7 @@ export const updateLocation = () => {
   const state = store.getState();
   const type = state.instances.currentInstance && state.instances.currentInstance._type;
   const id = state.instances.currentInstance && state.instances.currentInstance._id;
-  if (type && id) {
+  if(type && id) {
     history.push(`/${window.location.search}#${type}/${id}`);
   } else {
     history.push(`/${window.location.search}`);
@@ -109,18 +110,18 @@ export const goToSearch = (group, defaultGroup) => {
     }
     dispatch(clearInstanceError());
     dispatch(clearAllInstances());
-    history.replace(`/${(group && group !== defaultGroup) ? ("?group=" + group) : ""}`);
+    history.replace(`/${(group && group !== defaultGroup)?("?group=" + group):""}`);
   };
 };
 
-export const loadInstance = (type, id, shouldUpdateLocation = false) => {
+export const loadInstance = (type, id, shouldUpdateLocation=false) => {
   return dispatch => {
     dispatch(loadInstanceRequest());
     API.axios
       .get(API.endpoints.instance(type, id))
       .then(response => {
         dispatch(loadInstanceSuccess(response.data));
-        if (shouldUpdateLocation) {
+        if(shouldUpdateLocation) {
           dispatch(updateLocation());
         }
       })
@@ -128,30 +129,43 @@ export const loadInstance = (type, id, shouldUpdateLocation = false) => {
         const { response } = e;
         const { status } = response;
         switch (status) {
-          case 400: // Bad Request
-            {
-              const error = `The service is temporary unavailable. Please retry in a moment. (${e.message ? e.message : e})`;
-              dispatch(loadInstanceFailure(error));
-              break;
-            }
-          case 401: // Unauthorized
-          case 403: // Forbidden
-          case 511: // Network Authentication Required
-            {
-              const error = "Your session has expired. Please login again.";
-              dispatch(sessionFailure(error));
-              break;
-            }
-          case 404:
-          default:
-            {
-              const index = response.headers["x-selected-index"];
-              if (index) {
-                dispatch(setGroup(index));
-              }
-              const error = `The service is temporary unavailable. Please retry in a moment. (${e.message ? e.message : e})`;
-              dispatch(loadInstanceFailure(error));
-            }
+        case 400: // Bad Request
+        {
+          const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
+          dispatch(loadInstanceFailure(error));
+          break;
+        }
+        case 401: // Unauthorized
+        case 403: // Forbidden
+        case 511: // Network Authentication Required
+        {
+          const error = "Your session has expired. Please login again.";
+          dispatch(sessionFailure(error));
+          break;
+        }
+        case 404:
+        {
+          const index = response.headers["x-selected-index"];
+          if (index) {
+            dispatch(setGroup(index));
+          }
+          const url = `${window.location.protocol}//${window.location.host}${window.location.pathname}?group=curated`;
+          const link = `<a href=${url}>${url}</a>`;
+          const group = getSearchKey("group");
+          const error = (group && group === "curated") || (localStorage.getItem("group") && localStorage.getItem("group") === "curated")? "The page you requested was not found." :
+            `The page you requested was not found. It might not yet be public and authorized users might have access to it in the ${link} or in in-progress view`;
+          dispatch(loadInstanceFailure(error));
+          break;
+        }
+        default:
+        {
+          const index = response.headers["x-selected-index"];
+          if (index) {
+            dispatch(setGroup(index));
+          }
+          const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
+          dispatch(loadInstanceFailure(error));
+        }
         }
       });
   };
@@ -180,20 +194,20 @@ export const loadPreview = (type, id) => {
           const { response } = e;
           const { status } = response;
           switch (status) {
-            case 401: // Unauthorized
-            case 403: // Forbidden
-            case 511: // Network Authentication Required
-              {
-                const error = "Your session has expired. Please login again.";
-                dispatch(sessionFailure(error));
-                break;
-              }
-            case 404:
-            default:
-              {
-                const error = `The service is temporary unavailable. Please retry in a moment. (${e.message ? e.message : e})`;
-                dispatch(loadInstanceFailure(error));
-              }
+          case 401: // Unauthorized
+          case 403: // Forbidden
+          case 511: // Network Authentication Required
+          {
+            const error = "Your session has expired. Please login again.";
+            dispatch(sessionFailure(error));
+            break;
+          }
+          case 404:
+          default:
+          {
+            const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
+            dispatch(loadInstanceFailure(error));
+          }
           }
         }
       });

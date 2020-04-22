@@ -42,6 +42,7 @@ const setToken = (state, action) => {
 };
 
 const logout = state => {
+  localStorage.removeItem("group");
   return {
     ...state,
     accessToken: null,
@@ -51,6 +52,7 @@ const logout = state => {
 };
 
 const authenticationExpired = (state, action) => {
+  localStorage.removeItem("group");
   return {
     ...state,
     error: action.error,

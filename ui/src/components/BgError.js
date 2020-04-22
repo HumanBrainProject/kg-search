@@ -17,6 +17,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "./BgError.css";
+import showdown from "showdown";
+import xssFilter from "showdown-xss-filter";
 
 export class BgError extends React.PureComponent {
   onRetry = () => {
@@ -34,10 +36,12 @@ export class BgError extends React.PureComponent {
     if (!show) {
       return null;
     }
+    const converter = new showdown.Converter({extensions: [xssFilter]});
+    const html = converter.makeHtml(message);
     return (
       <div className="kgs-bg-error">
         <i className="fa fa-ban fa-5x kgs-bg-error-icon"></i><br/>
-        <span className="kgs-bg-error-message">{message}</span>
+        <span className="kgs-bg-error-message" dangerouslySetInnerHTML={{__html:html}} />
         <div className="kgs-bg-error-navigation">
           {cancelLabel && (
             <button className={`${cancelStyle?cancelStyle:""}`} onClick={this.onCancel}>{cancelLabel}</button>

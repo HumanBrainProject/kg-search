@@ -15,13 +15,15 @@
 */
 
 import * as types from "../actions/actions.types";
+import {termsCurrentVersion} from "../data/termsShortNotice";
 
 const TermsShortNoticeLocalStorageKey = "ebrains-search-terms-conditions-consent";
 
 const initialState = {
   isReady: false,
   info: null,
-  showTermsShortNotice: typeof Storage === "undefined" || localStorage.getItem(TermsShortNoticeLocalStorageKey) !== "true"
+  showTermsShortNotice: typeof Storage === "undefined" || !localStorage.getItem(TermsShortNoticeLocalStorageKey),
+  showTermsShortUpdateNotice: typeof Storage !== "undefined" && localStorage.getItem(TermsShortNoticeLocalStorageKey) && localStorage.getItem(TermsShortNoticeLocalStorageKey) !== termsCurrentVersion
 };
 
 const setApplicationReady = state => ({
@@ -31,12 +33,13 @@ const setApplicationReady = state => ({
 
 const agreeTermsShortNotice = state => {
   if (typeof(Storage) !== "undefined") {
-    localStorage.setItem(TermsShortNoticeLocalStorageKey, true);
+    localStorage.setItem(TermsShortNoticeLocalStorageKey, termsCurrentVersion);
   }
   setTimeout(() => window.dispatchEvent(new Event("resize")), 250);
   return {
     ...state,
-    showTermsShortNotice: false
+    showTermsShortNotice: false,
+    showTermsShortUpdateNotice: false
   };
 };
 

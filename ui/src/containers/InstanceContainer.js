@@ -24,6 +24,9 @@ import { Tags } from "../components/Tags";
 import { DefinitionErrorPanel, GroupErrorPanel, InstanceErrorPanel } from "./ErrorPanel";
 
 import "./InstanceContainer.css";
+import { SignInButton } from "./SignInButton";
+import { GroupSelection } from "./GroupSelection";
+import { getUpdatedQuery, getLocationFromQuery } from "../helpers/BrowserHelpers";
 
 class BackLinkButton extends React.Component {
 
@@ -63,21 +66,22 @@ export class InstanceContainer extends React.Component {
   componentDidMount() {
     const { setInitialGroup, location } = this.props;
     this.setTitle();
-    const group = location.query.group;
+    const group = location.query.group || localStorage.getItem("group");
     if (group) {
       setInitialGroup(group);
     }
-    this.initialize();
+    this.initialize(group);
   }
 
   componentDidUpdate(previousProps) {
     const { definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, group, instanceHasError, type, id } = this.props;
     this.setTitle();
+    this.updateLocation(previousProps);
     if (definitionIsReady !== previousProps.definitionIsReady || definitionHasError !== previousProps.definitionHasError ||
        groupsHasError !== previousProps.groupsHasError || isGroupsReady !== previousProps.isGroupsReady || previousProps.group !== group ||
        previousProps.instanceHasError !== instanceHasError ||
        previousProps.type !== type || previousProps.id !== id) {
-      this.initialize();
+      this.initialize(previousProps.group);
     }
   }
 
@@ -86,13 +90,23 @@ export class InstanceContainer extends React.Component {
     document.title = getTitle(currentInstance, type, id);
   }
 
-  initialize() {
+  updateLocation = (previousProps) => {
+    const { group, defaultGroup, location } = this.props;
+    const shouldUpdateGroup = group !== previousProps.group;
+
+    if (shouldUpdateGroup) {
+      const query = getUpdatedQuery(location.query, "group", group && group !== defaultGroup, group, false);
+      const url = getLocationFromQuery(query, location);
+      history.push(url);
+    }
+  }
+
+  initialize(previousGroup) {
     const {
       definitionIsReady, definitionHasError, definitionIsLoading,
       isGroupsReady, isGroupLoading, shouldLoadGroups, groupsHasError,
-      instanceIsLoading, shouldLoadInstance, instanceHasError,
-      type, id, group, previousInstance, setPreviousInstance,
-      loadDefinition, loadGroups, fetch
+      instanceIsLoading, type, id, group, previousInstance, setPreviousInstance,
+      loadDefinition, loadGroups, fetch, index
     } = this.props;
 
     if (!definitionIsReady) {
@@ -104,8 +118,12 @@ export class InstanceContainer extends React.Component {
         loadGroups();
       }
     } else {
-      if (shouldLoadInstance && !instanceIsLoading && !instanceHasError) {
-        if (previousInstance && previousInstance._type === type && previousInstance._id === id) {
+      if(!instanceIsLoading) {
+        if (previousInstance &&
+              previousInstance._type === type &&
+              previousInstance._id === id &&
+              previousInstance._index === index &&
+              previousGroup === group) {
           setPreviousInstance();
         } else {
           fetch(type, id, group);
@@ -126,6 +144,12 @@ export class InstanceContainer extends React.Component {
               <Instance {...this.props.instanceProps} NavigationComponent={NavigationComponent} />
             </React.Fragment>
           )}
+          <div className="kgs-footer">
+            <div className="kgs-footer-nav">
+              <SignInButton className="kgs-sign-in" signInLabel="Log in" signOffLabel="Log out"/>
+              <GroupSelection className="kgs-group-selection"/>
+            </div>
+          </div>
         </div>
         <DefinitionErrorPanel />
         <GroupErrorPanel />

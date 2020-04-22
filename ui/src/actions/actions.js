@@ -67,39 +67,47 @@ export const sessionFailure = error => {
 };
 
 
-export const authenticate = () => {
+export const authenticate = (group=null) => {
   return () => {
-    const stateKey = btoa(JSON.stringify({
+    const stateKey= btoa(JSON.stringify({
       queryString: window.location.search
     }));
-    const nonceKey = generateKey();
-    const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+    const nonceKey=  generateKey();
+    const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}${group?("?group=" + group):""}`;
     window.location.href = API.endpoints.auth(redirectUri, stateKey, nonceKey);
   };
 };
 
-export const initialize = (location, defaultGroup) => {
+export const initialize = location => {
   return dispatch => {
     const accessToken = getHashKey("access_token");
+    const group = getSearchKey("group");
+    const savedGroup = localStorage.getItem("group");
     if (accessToken) {
       dispatch(setToken(accessToken));
+      if(group && group !== savedGroup && (group === "public" || group === "curated")) {
+        localStorage.setItem("group", group);
+      } else if (!group && !savedGroup) {
+        localStorage.setItem("group", "public");
+      }
       const stateValue = getHashKey("state");
-      const state = stateValue ? JSON.parse(atob(stateValue)) : {};
-      const queryString = (state && state.queryString) ? state.queryString : "";
+      const state = stateValue?JSON.parse(atob(stateValue)):{};
+      const queryString = (state && state.queryString)?state.queryString:"";
       history.replace(`${location.pathname}${queryString}`);
       dispatch(setApplicationReady());
     } else {
-      const group = getSearchKey("group");
       // backward compatibility test
       const instance = location.hash.substr(1);
       if (location.pathname === "/" && instance) {
-        const url = `/instances/${instance}${group ? ("?group=" + group) : ""}`;
+        const url = `/instances/${instance}${group?("?group=" + group):""}`;
         history.replace(url);
       }
 
       const regShareEditorReference = /^\/instances\/(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
-      if ((group && group !== defaultGroup) || location.pathname.startsWith("/live/") || regShareEditorReference.test(location.pathname)) {
-        dispatch(authenticate());
+      if((group && (group === "public" || group === "curated")) ||
+         (savedGroup && (savedGroup === "public" || savedGroup === "curated")) ||
+         location.pathname.startsWith("/live/") || regShareEditorReference.test(location.pathname))  {
+        dispatch(authenticate(group || savedGroup));
       } else {
         dispatch(setApplicationReady());
       }
