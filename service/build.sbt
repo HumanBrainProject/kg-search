@@ -4,10 +4,10 @@ organization := "eu.humanbrainproject"
 version := "1.0-SNAPSHOT"
 Common.settings
 lazy val common = (project in file("modules/common"))
-  .enablePlugins(PlayScala, SwaggerPlugin)
+  .enablePlugins(PlayScala)
 
 lazy val auth = (project in file("modules/authentication"))
-  .enablePlugins(PlayScala, SwaggerPlugin)
+  .enablePlugins(PlayScala)
   .dependsOn(common)
 
 lazy val kg_service = (project in file("."))
