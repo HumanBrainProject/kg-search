@@ -16,9 +16,11 @@
 package services.indexer
 
 import com.google.inject.ImplementedBy
+import helpers.ESHelper
 import javax.inject.Inject
 import models.DatabaseScope
 import models.errors.ApiError
+import models.templates.TemplateType
 import monix.eval.Task
 import org.slf4j.LoggerFactory
 import play.api.{Configuration, Logging}
@@ -57,6 +59,11 @@ trait ElasticSearch {
   ): Task[Either[ApiError, List[String]]]
 
   def removeIndex(id: String, indexName: String): Task[Either[ApiError, Unit]]
+
+  def queryIndexByType(
+    templateType: TemplateType,
+    indexname: String = ESHelper.publicIndex
+  ): Task[Either[ApiError, List[JsObject]]]
 }
 
 class ElasticSearchImpl @Inject()(
@@ -164,12 +171,82 @@ class ElasticSearchImpl @Inject()(
   }
 
   override def removeIndex(id: String, indexName: String): Task[Either[ApiError, Unit]] = {
-    Task.from(WSClient.url(s"$elasticSearchEndpoint/$indexName/$id").delete()).map { res =>
+    Task.deferFuture(WSClient.url(s"$elasticSearchEndpoint/$indexName/$id").delete()).map { res =>
       res.status match {
         case OK => Right(())
         case e  => Left(ApiError(e, res.body))
       }
     }
+  }
+
+  private def doQueryIndexByType(
+    templateType: TemplateType,
+    indexname: String = ESHelper.publicIndex,
+    size: Long,
+    startingPage: Long,
+    totalPages: Long
+  ): Task[Either[ApiError, List[JsObject]]] = {
+    val listOfTask = for {
+      currentPage <- startingPage to totalPages
+    } yield {
+      Task
+        .deferFuture(
+          WSClient
+            .url(
+              s"$elasticSearchEndpoint/$indexname/${templateType.apiName}/_search?size=$size&from=${currentPage * size}"
+            )
+            .get()
+        )
+    }
+    Task
+      .sequence(listOfTask)
+      .map { l =>
+        val errors = l.filter(r => r.status != OK)
+        if (errors.nonEmpty) {
+          Left(ApiError(errors.head.status, errors.map(_.body).mkString("\n")))
+        } else {
+          val hits = l.map { r =>
+            (r.json \ "hits" \ "hits").asOpt[List[JsObject]]
+          }
+          if (hits.exists(s => s.isEmpty)) {
+            Left(ApiError(INTERNAL_SERVER_ERROR, "Could not parse data from ES response"))
+          } else {
+            Right(hits.collect { case Some(v) => v }.flatten.toList)
+          }
+        }
+      }
+  }
+
+  override def queryIndexByType(
+    templateType: TemplateType,
+    indexname: String = ESHelper.publicIndex
+  ): Task[Either[ApiError, List[JsObject]]] = {
+    val querySize = 1000
+    Task
+      .deferFuture(
+        WSClient.url(s"$elasticSearchEndpoint/$indexname/${templateType.apiName}/_search?size=$querySize&from=0").get()
+      )
+      .flatMap { res =>
+        res.status match {
+          case OK =>
+            val hits = (res.json \ "hits" \ "hits").asOpt[List[JsObject]]
+            val total = (res.json \ "hits" \ "total").asOpt[Long]
+            (total, hits) match {
+              case (_, Some(Nil)) | (_, None) => Task.pure(Right(List()))
+              case (Some(t), Some(l)) if l.length == t =>
+                val startingPage = 1
+                val overFlow = if (t % querySize > 0) 1 else 0
+                val totalPages = (t / querySize) + overFlow
+                doQueryIndexByType(templateType, indexname, querySize, startingPage, totalPages).map {
+                  case Right(value) => Right(l ++ value)
+                  case Left(e)      => Left(e)
+                }
+              case (Some(t), Some(l)) if l.length < t => Task.pure(Right(l))
+              case _ =>
+                Task.pure(Left(ApiError(INTERNAL_SERVER_ERROR, s"Could not fetch data from es index - ${res.status}")))
+            }
+        }
+      }
   }
 }
 

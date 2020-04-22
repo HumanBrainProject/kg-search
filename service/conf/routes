@@ -11,6 +11,15 @@
 
 # Indexer services
 -> /indexer indexer.Routes
+
+  ###
+    #  summary: Fetch the site map
+    #  responses:
+    #    '200':
+    #      description: Ok
+    ###
+GET    /sitemap controllers.SitemapController.generateSitemap()
+
 #Swagger
 ### NoDocs ###
 # docs/swagger-ui/index.html?url=/assets/swagger.json#/
