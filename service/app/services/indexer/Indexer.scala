@@ -113,6 +113,7 @@ class IndexerImpl @Inject()(
                 .map(js => js.value.get("https://schema.hbp.eu/relativeUrl").get.as[String])
                 .sorted
                 .map(TemplateType.fromSchema)
+                .collect { case Some(t) => t }
             )
           case s => Left(ApiError(s, wsresult.body))
         }
