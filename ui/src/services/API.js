@@ -5,15 +5,15 @@ const oidcUri = "https://services.humanbrainproject.eu/oidc/authorize";
 const oidcClientId = "nexus-kg-search";
 
 const endpoints = {
-  "definition":() => "/proxy/kg_labels/labels/labels",
-  "groups": () => "/auth/groups",
-  "search": () => "/proxy/search/kg/_search",
-  "instance": (type, id) => `/proxy/default/kg/${type}/${id}`,
+  "definition": () => "/search/proxy/kg_labels/labels/labels",
+  "groups": () => "/search/auth/groups",
+  "search": () => "/search/proxy/search/kg/_search",
+  "instance": (type, id) => `/search/proxy/default/kg/${type}/${id}`,
   "preview": (type, id) => `/query/${type}/search/templates/searchUi/libraries/instancesDynamic/instances/${id}`,
   "auth": (redirectUri, stateKey, nonceKey) => `${oidcUri}?response_type=id_token%20token&client_id=${oidcClientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`
 };
 
-class API{
+class API {
   constructor() {
     this._axios = axios.create({});
     this._axios.interceptors.request.use(config => {
@@ -33,7 +33,7 @@ class API{
     return this._axios;
   }
 
-  get endpoints(){
+  get endpoints() {
     return endpoints;
   }
 }
