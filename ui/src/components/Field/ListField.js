@@ -55,12 +55,14 @@ const ListFieldBase = (renderUserInteractions = true) => {
     </span>
   );
 
-  const ListFieldComponent = ({list, separator, showAsTag, showToggle, toggleHandler, toggleLabel}) => {
+  const ListFieldComponent = ({list, sort, separator, showAsTag, showToggle, toggleHandler, toggleLabel}) => {
     const isCustom = separator || showAsTag;
     const List = isCustom?CustomList:DefaultList;
     const ListItem = isCustom?CustomListItem:DefaultListItem;
     const className =  `kgs-field__list ${showAsTag?"items-as-tags":""}`;
-
+    if(sort) {
+      list.sort((a, b) => a.data.value.localeCompare(b.data.value));
+    }
     return (
       <span className={className}>
         <List>
@@ -137,7 +139,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
       }
 
       return (
-        <ListFieldComponent list={this.state.items} separator={mapping && !mapping.tagIcon && mapping.separator} showAsTag={mapping && !!mapping.tagIcon} showToggle={this.state.hasShowMoreToggle} toggleHandler={this.handleShowMoreClick} toggleLabel={this.state.showMoreLabel} />
+        <ListFieldComponent list={this.state.items} sort={mapping && mapping.sort} separator={mapping && !mapping.tagIcon && mapping.separator} showAsTag={mapping && !!mapping.tagIcon} showToggle={this.state.hasShowMoreToggle} toggleHandler={this.handleShowMoreClick} toggleLabel={this.state.showMoreLabel} />
       );
     }
   }
