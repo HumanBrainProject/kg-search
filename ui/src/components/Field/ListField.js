@@ -61,7 +61,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
     const ListItem = isCustom?CustomListItem:DefaultListItem;
     const className =  `kgs-field__list ${showAsTag?"items-as-tags":""}`;
     if(sort) {
-      list.sort((a, b) => a.data.value.localeCompare(b.data.value));
+      list.sort((a, b) => a.data.value.toLowerCase().localeCompare(b.data.value.toLowerCase()));
     }
     return (
       <span className={className}>
