@@ -396,6 +396,14 @@ const clearSearchError = state => {
   };
 };
 
+const logout = state => {
+  return {
+    ...state,
+    page: 1,
+    from: 0
+  };
+};
+
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case types.SET_INITIAL_SEARCH_PARAMS:
@@ -428,6 +436,8 @@ export function reducer(state = initialState, action = {}) {
     return loadSearchBadRequest(state, action);
   case types.LOAD_SEARCH_SERVICE_FAILURE:
     return loadSearchFail(state, action);
+  case types.LOGOUT:
+    return logout(state, action);
   default:
     return state;
   }
