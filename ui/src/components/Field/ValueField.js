@@ -16,11 +16,11 @@
 
 import React from "react";
 import { termsOfUse } from "../../data/termsOfUse.js";
-import { Details } from "../Details";
-import { Text } from "../Text";
-import { CollapsibleText } from "../CollapsibleText";
-import { Link } from "../Link";
-import { Tag } from "../Tag";
+import { Details } from "../Details/Details";
+import { Text } from "../Text/Text";
+import { CollapsibleText } from "../CollapsibleText/CollapsibleText";
+import { Link } from "../Link/Link";
+import { Tag } from "../Tag/Tag";
 import { Thumbnail } from "./Thumbnail";
 import { InstanceLink } from "./InstanceLink";
 import "./ValueField.css";

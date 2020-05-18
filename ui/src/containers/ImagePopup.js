@@ -16,7 +16,7 @@
 
 import { connect } from "react-redux";
 import * as actions from "../actions/actions";
-import { ImagePopup as Component} from "../components/ImagePopup";
+import { ImagePopup as Component} from "../components/ImagePopup/ImagePopup";
 
 export const ImagePopup = connect(
   (state, props) => ({

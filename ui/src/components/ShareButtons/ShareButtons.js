@@ -16,8 +16,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { CopyToClipboardButton } from "./CopyToClipboardButton";
-import { EmailToLink} from "./EmailToLink";
+import { CopyToClipboardButton } from "../CopyToClipboard/CopyToClipboardButton";
+import { EmailToLink} from "../EmailToLink/EmailToLink";
 import "./ShareButtons.css";
 
 export function ShareButtons({className, clipboardContent, emailToLink}) {

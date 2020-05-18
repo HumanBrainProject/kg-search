@@ -17,7 +17,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { getPreviews } from "../../helpers/InstanceHelper";
-import { PrintViewField } from "../../components/Field";
+import { PrintViewField } from "../../components/Field/Field";
 import { HitRibbon } from "./HitRibbon";
 import { HighlightsField } from "./HighlightsField";
 import { formatHitForHighlight } from "../../helpers/HitFormattingHelpers";

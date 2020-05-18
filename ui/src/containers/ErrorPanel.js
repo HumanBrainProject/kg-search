@@ -15,8 +15,8 @@
 */
 
 import { connect } from "react-redux";
-import { ErrorPanel as  Component } from "../components/ErrorPanel";
-import { BgError } from "../components/BgError";
+import { ErrorPanel as  Component } from "../components/ErrorPanel/ErrorPanel";
+import { BgError } from "../components/BgError/BgError";
 import * as actions from "../actions/actions";
 import * as actionsSearch from "../actions/actions.search";
 import * as actionsGroups from "../actions/actions.groups";

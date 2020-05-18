@@ -19,7 +19,7 @@ import { connect } from "react-redux";
 
 import * as actionsGroups from "../actions/actions.groups";
 import * as actionsSearch from "../actions/actions.search";
-import { Select } from "../components/Select";
+import { Select } from "../components/Select/Select";
 
 const GroupSelectionBase = props => (
   <Select {...props} />

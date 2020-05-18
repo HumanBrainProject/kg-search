@@ -16,9 +16,9 @@
 
 import React from "react";
 
-import { Text } from "./Text";
-import { CopyToClipboardButton } from "./CopyToClipboardButton";
-import { termsOfUse } from "../data/termsOfUse.js";
+import { Text } from "../Text/Text";
+import { CopyToClipboardButton } from "../CopyToClipboard/CopyToClipboardButton";
+import { termsOfUse } from "../../data/termsOfUse.js";
 
 
 import "./FieldsButtons.css";

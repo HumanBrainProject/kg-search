@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { isMobile } from "../helpers/BrowserHelpers";
+import { isMobile } from "../../helpers/BrowserHelpers";
 import "./Carousel.css";
 
 const getNavigation = (item, showPrevious, onClose, onPrevious, navigationComponent) => {

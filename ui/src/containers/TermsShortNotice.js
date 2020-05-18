@@ -16,7 +16,7 @@
 
 import { connect } from "react-redux";
 import * as actions from "../actions/actions";
-import { Notice } from "../components/Notice";
+import { Notice } from "../components/Notice/Notice";
 import {termsShortNotice} from "../data/termsShortNotice";
 import {termsShortNoticeUpdate} from "../data/termsShortNotice";
 

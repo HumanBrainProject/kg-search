@@ -19,8 +19,8 @@ import React from "react";
 import { history } from "../store";
 import { getTags, getTitle } from "../helpers/InstanceHelper";
 import { ShareButtons } from "./ShareButtons";
-import { Instance } from "../components/Instance";
-import { Tags } from "../components/Tags";
+import { Instance } from "../components/Instance/Instance";
+import { Tags } from "../components/Tags/Tags";
 import { DefinitionErrorPanel, GroupErrorPanel, InstanceErrorPanel } from "./ErrorPanel";
 
 import "./InstanceContainer.css";

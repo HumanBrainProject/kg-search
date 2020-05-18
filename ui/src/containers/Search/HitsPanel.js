@@ -18,7 +18,7 @@ import React from "react";
 import uniqueId from "lodash/uniqueId";
 import { connect } from "react-redux";
 import * as actionsInstances from "../../actions/actions.instances";
-import { List } from "../../components/List";
+import { List } from "../../components/List/List";
 import { Hit } from "./Hit";
 import { StatsHelpers } from "../../helpers/StatsHelpers";
 

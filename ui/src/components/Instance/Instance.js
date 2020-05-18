@@ -17,12 +17,12 @@
 import React from "react";
 import ReactPiwik from "react-piwik";
 
-import { getTags } from "../helpers/InstanceHelper";
-import { Tags } from "./Tags";
-import { Field } from "./Field";
-import { FieldsPanel } from "./FieldsPanel";
-import { FieldsTabs } from "./FieldsTabs";
-import { FieldsButtons } from "./FieldsButtons";
+import { getTags } from "../../helpers/InstanceHelper";
+import { Tags } from "../Tags/Tags";
+import { Field } from "../Field/Field";
+import { FieldsPanel } from "../Field/FieldsPanel";
+import { FieldsTabs } from "../Field/FieldsTabs";
+import { FieldsButtons } from "../Field/FieldsButtons";
 
 import "./Instance.css";
 

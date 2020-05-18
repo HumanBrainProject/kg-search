@@ -15,12 +15,12 @@
 */
 
 import React from "react";
-import { FieldLabel} from "./Field/FieldLabel";
-import { Hint} from "./Hint";
-import { ListField, PrintViewListField } from "./Field/ListField";
-import { ObjectField, PrintViewObjectField } from "./Field/ObjectField";
-import { ValueField, PrintViewValueField } from "./Field/ValueField";
-import { TableField, PrintViewTableField } from "./Field/TableField";
+import { FieldLabel} from "./FieldLabel";
+import { Hint} from "../Hint/Hint";
+import { ListField, PrintViewListField } from "./ListField";
+import { ObjectField, PrintViewObjectField } from "./ObjectField";
+import { ValueField, PrintViewValueField } from "./ValueField";
+import { TableField, PrintViewTableField } from "./TableField";
 import "./Field.css";
 
 const FieldBase = (renderUserInteractions = true) => {

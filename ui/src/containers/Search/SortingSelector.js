@@ -17,7 +17,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import * as actionsSearch from "../../actions/actions.search";
-import { Select } from "../../components/Select";
+import { Select } from "../../components/Select/Select";
 
 const SortingSelectorComponent = ({show, className, label, value, list, onChange}) => {
   if (!show) {

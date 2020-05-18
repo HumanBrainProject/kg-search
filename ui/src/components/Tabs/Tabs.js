@@ -15,7 +15,7 @@
 */
 import React from "react";
 import PropTypes from "prop-types";
-import { Hint } from "./Hint";
+import { Hint } from "../Hint/Hint";
 import "./Tabs.css";
 
 const Tab = ({tab, active, onClick}) => {

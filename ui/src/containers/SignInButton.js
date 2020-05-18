@@ -16,7 +16,7 @@
 
 import { connect } from "react-redux";
 import * as actions from "../actions/actions";
-import { ConditionalButton } from "../components/ConditionalButton";
+import { ConditionalButton } from "../components/ConditionalButton/ConditionalButton";
 
 export const SignInButton = connect(
   (state, props) => ({

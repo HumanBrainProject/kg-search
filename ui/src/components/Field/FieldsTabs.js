@@ -15,7 +15,7 @@
 */
 import React from "react";
 import { Field } from "./Field";
-import { Tabs } from "./Tabs";
+import { Tabs } from "../Tabs/Tabs";
 
 const getCount = field => {
   if (field.data && field.mapping && field.mapping.children) {

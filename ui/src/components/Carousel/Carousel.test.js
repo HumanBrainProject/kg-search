@@ -19,7 +19,7 @@ import renderer from "react-test-renderer";
 import Enzyme, { mount, shallow, render } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import Carousel from "./Carousel";
-import ShareButtons from "./ShareButtons";
+import ShareButtons from "../ShareButtons";
 
 Enzyme.configure({ adapter: new Adapter() });
 

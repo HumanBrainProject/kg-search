@@ -16,7 +16,7 @@
 
 import { connect } from "react-redux";
 import * as actionsInstances from "../../actions/actions.instances";
-import { Carousel } from "../../components/Carousel";
+import { Carousel } from "../../components/Carousel/Carousel";
 import { ShareButtons } from "../ShareButtons";
 import { Instance } from "./Instance";
 import "./DetailView.css";

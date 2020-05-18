@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { Ribbon } from "../../components/Ribbon";
+import { Ribbon } from "../../components/Ribbon/Ribbon";
 
 const getCounter = (data, mapping) => {
   let counter = 0;

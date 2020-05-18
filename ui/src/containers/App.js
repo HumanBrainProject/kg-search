@@ -22,7 +22,7 @@ import * as actions from "../actions/actions";
 import { Search } from "./Search";
 import { Instance } from "./Instance";
 import { InstanceEditor } from "./InstanceEditor";
-import { NotFound } from "../components/NotFound";
+import { NotFound } from "../components/NotFound/NotFound";
 import { Preview } from "./Preview";
 import { FetchingPanel } from "./FetchingPanel";
 import { InfoPanel } from "./InfoPanel";

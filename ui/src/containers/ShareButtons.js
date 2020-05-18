@@ -15,7 +15,7 @@
 */
 
 import { connect } from "react-redux";
-import { ShareButtons as Component } from "../components/ShareButtons";
+import { ShareButtons as Component } from "../components/ShareButtons/ShareButtons";
 
 const getShareEmailToLink = url => {
   const to = "";

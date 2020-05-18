@@ -15,7 +15,7 @@
 */
 
 import { connect } from "react-redux";
-import { FetchingPanel as  Component } from "../components/FetchingPanel";
+import { FetchingPanel as  Component } from "../components/FetchingPanel/FetchingPanel";
 
 export const FetchingPanel = connect(
   state => ({

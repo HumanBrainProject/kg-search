@@ -15,7 +15,7 @@
 */
 
 import React from "react";
-import { Text } from "./Text";
+import { Text } from "../Text/Text";
 import "./CollapsibleText.css";
 
 export class CollapsibleText extends React.Component {
