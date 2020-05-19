@@ -15,20 +15,14 @@
 */
 
 import { connect } from "react-redux";
+import * as actions from "../../actions/actions";
+import { InfoPanel as  Component } from "../../components/InfoPanel/InfoPanel";
 
-import { mapStateToProps } from "../../helpers/InstanceHelper";
-import { ImagePreviews } from "../Image/ImagePreviews";
-import { ImagePopup } from "../Image/ImagePopup";
-import { TermsShortNotice } from "../Notice/TermsShortNotice";
-import { Instance as Component } from "../../components/Instance/Instance";
-
-export const Instance = connect(
-  (state, props) => ({
-    ...mapStateToProps(state, props),
-    path: "/instances/",
-    defaultGroup: state.groups.defaultGroup,
-    ImagePreviewsComponent: ImagePreviews,
-    ImagePopupComponent: ImagePopup,
-    TermsShortNoticeComponent: TermsShortNotice
+export const InfoPanel = connect(
+  state => ({
+    text: state.application.info
+  }),
+  dispatch => ({
+    onClose: () => dispatch(actions.setInfo())
   })
 )(Component);

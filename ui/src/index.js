@@ -19,7 +19,7 @@ import { ConnectedRouter } from "connected-react-router";
 import { store, history } from "./store";
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./containers/App";
+import App from "./containers/App/App";
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
 import "normalize.css/normalize.css";
 import "font-awesome/css/font-awesome.min.css";

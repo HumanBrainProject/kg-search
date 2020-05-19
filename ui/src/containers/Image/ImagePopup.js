@@ -15,20 +15,18 @@
 */
 
 import { connect } from "react-redux";
+import * as actions from "../../actions/actions";
+import { ImagePopup as Component} from "../../components/ImagePopup/ImagePopup";
 
-import { mapStateToProps } from "../../helpers/InstanceHelper";
-import { ImagePreviews } from "../Image/ImagePreviews";
-import { ImagePopup } from "../Image/ImagePopup";
-import { TermsShortNotice } from "../Notice/TermsShortNotice";
-import { Instance as Component } from "../../components/Instance/Instance";
-
-export const Instance = connect(
+export const ImagePopup = connect(
   (state, props) => ({
-    ...mapStateToProps(state, props),
-    path: "/instances/",
-    defaultGroup: state.groups.defaultGroup,
-    ImagePreviewsComponent: ImagePreviews,
-    ImagePopupComponent: ImagePopup,
-    TermsShortNoticeComponent: TermsShortNotice
+    className: props.className,
+    src: state.instances.image && typeof state.instances.image.url === "string" && state.instances.image.url,
+    label: (state.instances.image && state.instances.image.label)?state.instances.image.label:""
+  }),
+  dispatch => ({
+    onClick: () => dispatch(actions.showImage(null, null))
   })
 )(Component);
+
+export default ImagePopup;

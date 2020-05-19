@@ -15,20 +15,11 @@
 */
 
 import { connect } from "react-redux";
+import { FetchingPanel as  Component } from "../../components/Fetching/FetchingPanel";
 
-import { mapStateToProps } from "../../helpers/InstanceHelper";
-import { ImagePreviews } from "../Image/ImagePreviews";
-import { ImagePopup } from "../Image/ImagePopup";
-import { TermsShortNotice } from "../Notice/TermsShortNotice";
-import { Instance as Component } from "../../components/Instance/Instance";
-
-export const Instance = connect(
-  (state, props) => ({
-    ...mapStateToProps(state, props),
-    path: "/instances/",
-    defaultGroup: state.groups.defaultGroup,
-    ImagePreviewsComponent: ImagePreviews,
-    ImagePopupComponent: ImagePopup,
-    TermsShortNoticeComponent: TermsShortNotice
+export const FetchingPanel = connect(
+  state => ({
+    show: state.fetching.active,
+    message: state.fetching.message
   })
 )(Component);
