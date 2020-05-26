@@ -15,20 +15,18 @@
 */
 
 import { connect } from "react-redux";
+import * as actions from "../../actions/actions";
+import { ConditionalButton } from "../../components/ConditionalButton/ConditionalButton";
 
-import { mapStateToProps } from "../../helpers/InstanceHelper";
-import { ImagePreviews } from "../Image/ImagePreviews";
-import { ImagePopup } from "../Image/ImagePopup";
-import { TermsShortNotice } from "../Notice/TermsShortNotice";
-import { Instance as Component } from "../../components/Instance/Instance";
-
-export const Instance = connect(
+export const SignInButton = connect(
   (state, props) => ({
-    ...mapStateToProps(state, props),
-    path: "/instances/",
-    defaultGroup: state.groups.defaultGroup,
-    ImagePreviewsComponent: ImagePreviews,
-    ImagePopupComponent: ImagePopup,
-    TermsShortNoticeComponent: TermsShortNotice
+    className: props.className,
+    test: state.auth.isAuthenticated,
+    onLabel: props.signOffLabel,
+    offLabel: props.signInLabel
+  }),
+  dispatch => ({
+    onClick: () => dispatch(actions.logout()),
+    offClick: () => dispatch(actions.authenticate())
   })
-)(Component);
+)(ConditionalButton);

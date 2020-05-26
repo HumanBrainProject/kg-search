@@ -13,20 +13,21 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from "react-redux";
+import { ConnectedRouter } from "connected-react-router";
+import { store, history } from "../../store";
+import App from './App';
 
-import { connect } from "react-redux";
-import * as actions from "../../actions/actions";
-import { Thumbnail as Component} from "../Thumbnail/Thumbnail";
-
-export const Thumbnail = connect(
-  (state, props) => ({
-    url: props.thumbnailUrl,
-    alt: props.alt,
-    isAnimated: !!props.isAnimated
-  }),
-  (dispatch, props) => ({
-    onClick: (props.showPreview && typeof props.previewUrl === "string")?() => dispatch(actions.showImage(props.previewUrl, props.alt)):null
-  })
-)(Component);
-
-export default Thumbnail;
+it('renders without crashing', () => {
+  const div = document.createElement('div');
+  ReactDOM.render(
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <App />
+      </ConnectedRouter>
+    </Provider>,
+    div
+  );
+});

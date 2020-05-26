@@ -14,19 +14,18 @@
 *   limitations under the License.
 */
 
-import { connect } from "react-redux";
-import * as actions from "../../actions/actions";
-import { Thumbnail as Component} from "../Thumbnail/Thumbnail";
+import React from "react";
+import { HitStats } from "../Hit/HitStats";
+import { SortingSelector } from "../Sort/SortingSelector";
+import "./ResultsHeader.css";
 
-export const Thumbnail = connect(
-  (state, props) => ({
-    url: props.thumbnailUrl,
-    alt: props.alt,
-    isAnimated: !!props.isAnimated
-  }),
-  (dispatch, props) => ({
-    onClick: (props.showPreview && typeof props.previewUrl === "string")?() => dispatch(actions.showImage(props.previewUrl, props.alt)):null
-  })
-)(Component);
-
-export default Thumbnail;
+export function ResultsHeader() {
+  return (
+    <div className="kgs-result-header">
+      <div>
+        <HitStats/>
+        <SortingSelector className="kgs-sorting-selector"/>
+      </div>
+    </div>
+  );
+}

@@ -15,20 +15,17 @@
 */
 
 import { connect } from "react-redux";
+import * as actions from "../../actions/actions";
+import { Notice } from "../../components/Notice/Notice";
+import { termsShortNotice, termsShortNoticeUpdate } from "../../data/termsShortNotice";
 
-import { mapStateToProps } from "../../helpers/InstanceHelper";
-import { ImagePreviews } from "../Image/ImagePreviews";
-import { ImagePopup } from "../Image/ImagePopup";
-import { TermsShortNotice } from "../Notice/TermsShortNotice";
-import { Instance as Component } from "../../components/Instance/Instance";
-
-export const Instance = connect(
+export const TermsShortNotice = connect(
   (state, props) => ({
-    ...mapStateToProps(state, props),
-    path: "/instances/",
-    defaultGroup: state.groups.defaultGroup,
-    ImagePreviewsComponent: ImagePreviews,
-    ImagePopupComponent: ImagePopup,
-    TermsShortNoticeComponent: TermsShortNotice
+    className: props.className,
+    show: !!state.application.showTermsShortNotice || !!state.application.showTermsShortUpdateNotice,
+    text: state.application.showTermsShortUpdateNotice ? termsShortNoticeUpdate : termsShortNotice
+  }),
+  dispatch => ({
+    onAgree: () => dispatch(actions.agreeTermsShortNotice())
   })
-)(Component);
+)(Notice);
