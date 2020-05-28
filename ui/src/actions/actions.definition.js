@@ -17,6 +17,7 @@
 import * as types from "./actions.types";
 import API from "../services/API";
 import { sessionFailure } from "./actions";
+import * as Sentry from "@sentry/browser";
 
 export const loadDefinitionRequest = () => {
   return {
@@ -171,6 +172,11 @@ export const loadDefinition = () => {
         {
           const error = "Your session has expired. Please login again.";
           dispatch(sessionFailure(error));
+          break;
+        }
+        case 500:
+        {
+          Sentry.captureException(e);
           break;
         }
         case 404:

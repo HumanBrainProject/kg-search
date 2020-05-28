@@ -20,6 +20,7 @@ import API from "../services/API";
 import ReactPiwik from "react-piwik";
 import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
 import { sessionFailure } from "./actions";
+import * as Sentry from "@sentry/browser";
 
 export const loadSearchBadRequest = error => {
   return {
@@ -153,6 +154,11 @@ export const search = () => {
         {
           const error = "Your session has expired. Please login again.";
           dispatch(sessionFailure(error));
+          break;
+        }
+        case 500:
+        {
+          Sentry.captureException(e);
           break;
         }
         case 404:
