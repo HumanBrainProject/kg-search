@@ -107,6 +107,7 @@ const SearchPanelContainer = connect(
 export const SearchPanel = withFloatingScrollEventsSubscription(
   "top",
   [
-    { querySelector: "header.site-navigation" }
+    { querySelector: "nav.kgs-navbar" },
+    { querySelector: ".kgs-notification" }
   ]
 )(SearchPanelContainer);
