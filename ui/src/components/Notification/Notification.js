@@ -32,8 +32,8 @@ export const Notification = ({className, show, text}) => {
   const classNames = `kgs-notification ${className?className:""}`;
   return (
     <div className={classNames}>
-        <i class="fa fa-warning fa-2x kgs-notification_warning-icon"></i>
-        <span class="kgs-notification_text" dangerouslySetInnerHTML={{__html:html}} />
+        <i className="fa fa-warning fa-2x kgs-notification_warning-icon"></i>
+        <span className="kgs-notification_text" dangerouslySetInnerHTML={{__html:html}} />
     </div>
   );
 };
