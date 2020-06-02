@@ -17,6 +17,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Route, Switch } from "react-router-dom";
+import * as Sentry from "@sentry/browser";
+import Cookies from "universal-cookie";
 
 import * as actions from "../../actions/actions";
 import { Notification } from "../Notification/Notification";
@@ -34,6 +36,16 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.props.initialize(this.props.location);
+  }
+
+  componentDidMount() {
+    const cookies = new Cookies();
+    const sentryUrl = cookies.get("sentry_url");
+    if (sentryUrl) {
+      Sentry.init({
+        dsn: sentryUrl
+      });
+    }
   }
 
   render() {
