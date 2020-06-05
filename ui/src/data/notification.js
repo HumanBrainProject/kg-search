@@ -1,4 +1,4 @@
 
 export const notification = `
-### NOTIFICATION: due to a current issue of the system files are not correctly displayed | the problem will be solved as soon as possible ###
+### An issue with the Knowledge Graph's automated ingestion of references to data files has been identified. We are in the process of resolving this. In the meantime, the list of files for a dataset might not be complete. ###
 `;
