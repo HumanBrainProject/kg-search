@@ -23,6 +23,7 @@ import { LIST_SMALL_SIZE_STOP,
   getShowMoreLabel } from "./helpers";
 import "./TableField.css";
 
+import { Notification } from "../../containers/Notification/Notification";
 
 const CustomTableRow = ({item, viewComponent}) => {
   let Component = viewComponent;
@@ -83,22 +84,25 @@ const TableFieldBase = (renderUserInteractions = true) => {
               )}
             </tbody>
           </table>:null) :
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Filename</th>
-              <th>Size</th>
-            </tr>
-          </thead>
-          <tbody>
-            {fields.map((item, index) => <CustomTableRow key={`${index}`}  item={item} isFirst={!index} viewComponent={FieldComponent} />)}
-            {showToggle && (
+        <>
+          <Notification />
+          <table className="table">
+            <thead>
               <tr>
-                <th><button className="kgs-field__viewMore-button" onClick={toggleHandler} role="link">{toggleLabel}</button></th>
+                <th>Filename</th>
+                <th>Size</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {fields.map((item, index) => <CustomTableRow key={`${index}`}  item={item} isFirst={!index} viewComponent={FieldComponent} />)}
+              {showToggle && (
+                <tr>
+                  <th><button className="kgs-field__viewMore-button" onClick={toggleHandler} role="link">{toggleLabel}</button></th>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </>
     );
   };
 

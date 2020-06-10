@@ -18,7 +18,7 @@
     display: flex;
     align-items: flex-start;
     margin: 10px var(--site-margin) 15px var(--site-margin);
-    padding: 20px;
+    padding: 10px;
     border-radius: 5px;
     background-color: var(--color-selected);
     background-color: #fee78a;

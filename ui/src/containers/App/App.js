@@ -21,7 +21,7 @@ import * as Sentry from "@sentry/browser";
 import Cookies from "universal-cookie";
 
 import * as actions from "../../actions/actions";
-import { Notification } from "../Notification/Notification";
+// import { Notification } from "../Notification/Notification";
 import { Search } from "../Search/Search";
 import { Instance } from "../Instance/Instance";
 import { InstanceEditor } from "../Instance/InstanceEditor";
@@ -51,7 +51,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="kgs-app">
-        <Notification />
+        {/* <Notification /> */}
         {this.props.isReady && (
           <Switch>
             <Route path="/instances/:type/:id" exact component={Instance} />
