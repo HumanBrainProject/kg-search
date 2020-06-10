@@ -40,7 +40,7 @@ export const Notification = ({className, show, text}) => {
 
 Notification.propTypes = {
   className: PropTypes.string,
-  show: PropTypes.bool,
+  show: PropTypes.number,
   text: PropTypes.string
 };
 
