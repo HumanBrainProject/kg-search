@@ -43,7 +43,16 @@ class FacetListItem extends React.PureComponent {
 
   render() {
     const { item } = this.props;
+
+    const list = (item.children && item.children.keywords)?item.children.keywords.map(child => ({
+      name: "facet.id",
+      value: child.value,
+      count: child.count,
+      checked: false
+    })):null;
+
     return (
+      <>
       <FacetCheckbox
         name = { item.name }
         label = { item.value }
@@ -53,6 +62,12 @@ class FacetListItem extends React.PureComponent {
         many = { true }
         onClick = { this.onClick }
       />
+      {list && (
+        <div style={{marginLeft: "26px"}}>
+          <FacetList list={list} onChange={this.onClick}/>
+        </div>
+      )}
+      </>
     );
   }
 }
@@ -99,7 +114,8 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
         name: facet.id,
         value: keyword.value,
         count: keyword.count,
-        checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false
+        checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false,
+        children: keyword.children
       })),
       onChange: (keyword, active) => onChange(facet.id, active, keyword),
       onViewChange: onView,

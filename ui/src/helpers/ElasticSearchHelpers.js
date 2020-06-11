@@ -304,24 +304,47 @@ export class ElasticSearchHelpers {
         if (field.children) {
           Object.entries(field.children).forEach(([childName, child]) => {
             if (child.facet) {
-              facets.push({
-                id: "facet_" + type + "_" + name + ".children." + childName,
-                name: name,
-                type: type,
-                filterType: child.facet,
-                filterOrder: child.facetOrder,
-                exclusiveSelection: field.facetExclusiveSelection,
-                fieldType: child.type,
-                fieldLabel: child.value,
-                isChild: true,
-                path: name + ".children",
-                childName: childName,
-                count: 0,
-                value: null,
-                keywords: [],
-                size: ElasticSearchHelpers.listFacetDefaultSize,
-                defaultSize: ElasticSearchHelpers.listFacetDefaultSize
-              });
+              if (child.isHierarchicalFacet) {
+                facets.push({
+                  id: "facet_" + type + "_" + name + ".children." + childName,
+                  name: name,
+                  type: type,
+                  filterType: child.facet,
+                  filterOrder: child.facetOrder,
+                  exclusiveSelection: field.facetExclusiveSelection,
+                  fieldType: child.type,
+                  fieldLabel: field.value,
+                  isChild: true,
+                  isHierarchical: true,
+                  path: name + ".children",
+                  childName: childName,
+                  count: 0,
+                  value: null,
+                  keywords: [],
+                  size: ElasticSearchHelpers.listFacetDefaultSize,
+                  defaultSize: ElasticSearchHelpers.listFacetDefaultSize
+                });
+              } else {
+                facets.push({
+                  id: "facet_" + type + "_" + name + ".children." + childName,
+                  name: name,
+                  type: type,
+                  filterType: child.facet,
+                  filterOrder: child.facetOrder,
+                  exclusiveSelection: field.facetExclusiveSelection,
+                  fieldType: child.type,
+                  fieldLabel: child.value,
+                  isChild: true,
+                  isHierarchical: false,
+                  path: name + ".children",
+                  childName: childName,
+                  count: 0,
+                  value: null,
+                  keywords: [],
+                  size: ElasticSearchHelpers.listFacetDefaultSize,
+                  defaultSize: ElasticSearchHelpers.listFacetDefaultSize
+                });
+              }
             }
           });
         }
@@ -603,18 +626,30 @@ export class ElasticSearchHelpers {
         const orderDirection = orderKey === "_term" ? "asc" : "desc";
 
         if (facet.isChild) {
-          const key = `${facet.name}.children.${facet.childName}.value.keyword`;
-          const count = `${facet.name}.children.${facet.childName}.value.keyword_count`;
-          aggs[facet.id] = {
-            aggs: {
-              inner: {
-                aggs: setAggs(key, count, orderDirection, facet.size),
-                nested: {
-                  path: `${facet.name}.children`
+          if (facet.isHierarchical) {
+            const key = `${facet.name}.value.keyword`;
+            const count = `${facet.name}.value.keyword_count`;
+            aggs[facet.id] = {
+              aggs: setAggs(key, count, orderDirection, 1000000)
+            };
+            aggs[facet.id].aggs[key].terms.missing = "Others";
+            const subKey = `${facet.childName}.value.keyword`;
+            const subCount = `${facet.childName}.value.keyword_count`;
+            aggs[facet.id].aggs[key].aggs  = setAggs(subKey, subCount, orderDirection, 1000000);
+          } else {
+            const key = `${facet.name}.children.${facet.childName}.value.keyword`;
+            const count = `${facet.name}.children.${facet.childName}.value.keyword_count`;
+            aggs[facet.id] = {
+              aggs: {
+                inner: {
+                  aggs: setAggs(key, count, orderDirection, facet.size),
+                  nested: {
+                    path: `${facet.name}.children`
+                  }
                 }
               }
-            }
-          };
+            };
+          }
         } else {
           const key = `${facet.name}.value.keyword`;
           const count = `${facet.name}.value.keyword_count`;
