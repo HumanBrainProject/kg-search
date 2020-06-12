@@ -284,7 +284,7 @@ const loadSearchResult = (state, action) => {
         return [];
       }
       return keywords.buckets.map(bucket => {
-        const child = childName && bucket[childName];
+        const child = childName && bucket[`${childName}.value.keyword`];
         if (child) {
           return {
             value: bucket.key,
@@ -316,6 +316,7 @@ const loadSearchResult = (state, action) => {
       const facet = {
         ...f
       };
+
       const res = aggs[facet.id];
       if (facet.filterType === "list") {
         if (facet.isChild) {
