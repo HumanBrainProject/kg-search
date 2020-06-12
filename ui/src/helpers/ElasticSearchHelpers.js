@@ -321,8 +321,9 @@ export class ElasticSearchHelpers {
                   count: 0,
                   value: null,
                   keywords: [],
-                  size: ElasticSearchHelpers.listFacetDefaultSize,
-                  defaultSize: ElasticSearchHelpers.listFacetDefaultSize
+                  size: null,
+                  defaultSize: null,
+                  nullValuesLabel: child.nullValuesLabel
                 });
               } else {
                 facets.push({
@@ -603,10 +604,12 @@ export class ElasticSearchHelpers {
         const aggs = {};
         aggs[key] = {
           terms: {
-            field: key,
-            size: size
+            field: key
           }
         };
+        if (size) {
+          aggs[key].terms.size = size;
+        }
         if (orderDirection) {
           aggs[key].terms.order = {
             _count: orderDirection
@@ -632,10 +635,10 @@ export class ElasticSearchHelpers {
             aggs[facet.id] = {
               aggs: setAggs(key, count, orderDirection, 1000000)
             };
-            aggs[facet.id].aggs[key].terms.missing = "Others";
+            aggs[facet.id].aggs[key].terms.missing = facet.nullValuesLabel?facet.nullValuesLabel:"Others";
             const subKey = `${facet.childName}.value.keyword`;
             const subCount = `${facet.childName}.value.keyword_count`;
-            aggs[facet.id].aggs[key].aggs  = setAggs(subKey, subCount, orderDirection, 1000000);
+            aggs[facet.id].aggs[key].aggs  = setAggs(subKey, subCount, orderDirection, facet.size);
           } else {
             const key = `${facet.name}.children.${facet.childName}.value.keyword`;
             const count = `${facet.name}.children.${facet.childName}.value.keyword_count`;

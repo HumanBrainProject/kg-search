@@ -97,16 +97,20 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
   {
     let onView = null;
     let viewText = null;
-    if (facet.others > 0) {
-      onView = () => onViewChange(facet.id, facet.size === facet.defaultSize?viewMoreIncrement:facet.size + viewMoreIncrement);
-      if (viewMoreIncrement >= facet.others) {
-        viewText = "View all";
-      } else {
-        viewText = "View more";
+    if (facet.isHierarchical) {
+
+    } else {
+      if (facet.others > 0) {
+        onView = () => onViewChange(facet.id, facet.size === facet.defaultSize?viewMoreIncrement:facet.size + viewMoreIncrement);
+        if (viewMoreIncrement >= facet.others) {
+          viewText = "View all";
+        } else {
+          viewText = "View more";
+        }
+      } else if (facet.keywords.length > facet.defaultSize) {
+        onView = () => onViewChange(facet.id, facet.defaultSize);
+        viewText = "View less";
       }
-    } else if (facet.keywords.length > facet.defaultSize) {
-      onView = () => onViewChange(facet.id, facet.defaultSize);
-      viewText = "View less";
     }
     Component = FacetList;
     parameters = {
