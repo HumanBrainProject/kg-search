@@ -113,14 +113,22 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
       }
     }
     Component = FacetList;
+    const list = facet.keywords.map(keyword => ({
+      name: facet.id,
+      value: keyword.value,
+      count: keyword.count,
+      checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false,
+      children: keyword.children
+    }));
+    if (facet.isHierarchical) {
+      const nullValueIdx = list.findIndex(e => e.value === facet.nullValuesLabel);
+      if (nullValueIdx !== -1) {
+        const removedItems = list.splice(nullValueIdx, 1);
+        list.push(removedItems[0]);
+      }
+    }
     parameters = {
-      list: facet.keywords.map(keyword => ({
-        name: facet.id,
-        value: keyword.value,
-        count: keyword.count,
-        checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false,
-        children: keyword.children
-      })),
+      list: list,
       onChange: (keyword, active) => onChange(facet.id, active, keyword),
       onViewChange: onView,
       viewText: viewText
