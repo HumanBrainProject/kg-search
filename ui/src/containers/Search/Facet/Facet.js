@@ -77,7 +77,7 @@ class HierarchicalFacetListItem extends React.Component {
   constructor(props) {
     super(props);
     this.childrenRef = React.createRef();
-    this.state = {isCollapsed: true};
+    this.state = {isCollapsed: this.props.item.checked};
   }
 
   onClick = active => {
@@ -91,7 +91,7 @@ class HierarchicalFacetListItem extends React.Component {
     const maxHeight = (!this.state.isCollapsed && this.childrenRef && this.childrenRef.current)?this.childrenRef.current.scrollHeight + "px":null;
 
     return (
-      <div className={`kgs-collapsible-facet ${this.state.isCollapsed?"is-collapsed":""}`}>
+      <div className={`kgs-collapsible-facet ${this.state.isCollapsed?"is-collapsed":""} ${this.props.item.hasAnyChildChecked?"has-any-child-active":""}`}>
         <div className="kgs-collapsible-facet__header">
           <button className="kgs-collapsible-facet__button" onClick={this.onCollapseToggle} title={`${this.state.isCollapsed?"expand":"collapse"}`}><i className="fa fa-chevron-down"></i></button>
           <FacetCheckbox
@@ -136,11 +136,14 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
       const list = facet.keywords.map(keyword => {
         let value = [];
         let checked = true;
+        let hasAnyChildChecked = false;
         let children = (keyword.children && keyword.children.keywords)?keyword.children.keywords.map(child => {
           value.push(child.value);
           const childChecked = Array.isArray(facet.value) ? facet.value.includes(child.value) : false;
           if (!childChecked) {
             checked = false;
+          } else {
+            hasAnyChildChecked = true;
           }
           return {
             name: facet.id,
@@ -156,6 +159,7 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
           value: value,
           count: keyword.count,
           checked: checked,
+          hasAnyChildChecked: hasAnyChildChecked,
           children: children
         };
       });

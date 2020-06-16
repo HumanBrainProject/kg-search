@@ -85,6 +85,7 @@
     color: var(--color-selected);
     font-weight: 900;
 }
+
 .kgs-facet .kgs-facet-checkbox .kgs-facet-checkbox__count {
     display: inline-block;
     min-width: 36px;
@@ -157,3 +158,15 @@
     transition: max-height 0.25s cubic-bezier(.34,1.06,.63,.93);
 }
 
+
+.kgs-collapsible-facet.has-any-child-active > .kgs-collapsible-facet__header > .kgs-facet-checkbox:not(.is-active) input[type="checkbox"]:after {
+    content: "\f068";
+    border-color: transparent;
+    background-color: var(--color-selected);
+    font-family: "FontAwesome";
+}
+
+.kgs-collapsible-facet.has-any-child-active > .kgs-collapsible-facet__header > .kgs-facet-checkbox:not(.is-active) .kgs-facet-checkbox__text {
+    color: var(--color-selected);
+    font-weight: 900;
+}
