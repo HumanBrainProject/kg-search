@@ -487,6 +487,12 @@ export class ElasticSearchHelpers {
         const term = {};
         term[key] = value;
         if (facet.isChild) {
+          if (facet.isHierarchical) {
+            return {
+              term: term
+            };
+          }
+
           return {
             nested: {
               path: `${facet.name}.children`,
@@ -504,7 +510,7 @@ export class ElasticSearchHelpers {
 
       facets.forEach(facet => {
         let filter = null;
-        const facetKey = facet.isChild ? `${facet.name}.children.${facet.childName}.value.keyword` : `${facet.name}.value.keyword`;
+        const facetKey = facet.isChild ?(facet.isHierarchical?`${facet.childName}.value.keyword`:`${facet.name}.children.${facet.childName}.value.keyword`):`${facet.name}.value.keyword`;
         switch (facet.filterType) {
         case "_type":
         {
@@ -633,7 +639,7 @@ export class ElasticSearchHelpers {
             const key = `${facet.name}.value.keyword`;
             const count = `${facet.name}.value.keyword_count`;
             aggs[facet.id] = {
-              aggs: setAggs(key, count, orderDirection, 1000000)
+              aggs: setAggs(key, count, orderDirection, facet.size)
             };
             aggs[facet.id].aggs[key].terms.missing = facet.nullValuesLabel;
             const subKey = `${facet.childName}.value.keyword`;

@@ -43,31 +43,16 @@ class FacetListItem extends React.PureComponent {
 
   render() {
     const { item } = this.props;
-
-    const list = (item.children && item.children.keywords)?item.children.keywords.map(child => ({
-      name: "facet.id",
-      value: child.value,
-      count: child.count,
-      checked: false
-    })):null;
-
     return (
-      <>
       <FacetCheckbox
         name = { item.name }
-        label = { item.value }
+        label = { item.label }
         checked = { item.checked }
         count = { item.count }
         value = { item.value }
         many = { true }
         onClick = { this.onClick }
       />
-      {list && (
-        <div style={{marginLeft: "26px"}}>
-          <FacetList list={list} onChange={this.onClick}/>
-        </div>
-      )}
-      </>
     );
   }
 }
@@ -87,6 +72,58 @@ const FacetList = ({ list, onChange, onViewChange, viewText }) => (
   </div>
 );
 
+class HierarchicalFacetListItem extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.childrenRef = React.createRef();
+    this.state = {isCollapsed: true};
+  }
+
+  onClick = active => {
+    this.props.onChange(this.props.item.value, active)};
+
+  onCollapseToggle = () => this.setState(state => ({ isCollapsed: !state.isCollapsed }));
+
+  render() {
+    const { item } = this.props;
+
+    const maxHeight = (!this.state.isCollapsed && this.childrenRef && this.childrenRef.current)?this.childrenRef.current.scrollHeight + "px":null;
+
+    return (
+      <div className={`kgs-collapsible-facet ${this.state.isCollapsed?"is-collapsed":""}`}>
+        <div className="kgs-collapsible-facet__header">
+          <button className="kgs-collapsible-facet__button" onClick={this.onCollapseToggle} title={`${this.state.isCollapsed?"expand":"collapse"}`}><i className="fa fa-chevron-down"></i></button>
+          <FacetCheckbox
+            name = { item.name }
+            label = { item.label }
+            checked = { item.checked }
+            count = { item.count }
+            value = { item.value }
+            many = { true }
+            onClick = { this.onClick }
+          />
+          </div>
+        <div className="kgs-collapsible-facet__children" ref={this.childrenRef} style={{maxHeight: maxHeight}}>
+            <FacetList list={item.children} onChange={this.props.onChange}/>
+        </div>
+      </div>
+    );
+  }
+}
+
+const HierarchicalFacetList = ({ list, onChange }) => (
+  <div className="kgs-facet-list">
+    {list.map(item => (
+      <HierarchicalFacetListItem
+        key = { item.value }
+        item = { item }
+        onChange = { onChange }
+      />
+    ))}
+  </div>
+);
+
 const viewMoreIncrement = 50;
 
 export const Facet = ({ facet, onChange, onViewChange }) => {
@@ -95,11 +132,53 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
   switch (facet.filterType) {
   case "list":
   {
-    let onView = null;
-    let viewText = null;
     if (facet.isHierarchical) {
-
+      const list = facet.keywords.map(keyword => {
+        let value = [];
+        let checked = true;
+        let children = (keyword.children && keyword.children.keywords)?keyword.children.keywords.map(child => {
+          value.push(child.value);
+          const childChecked = Array.isArray(facet.value) ? facet.value.includes(child.value) : false;
+          if (!childChecked) {
+            checked = false;
+          }
+          return {
+            name: facet.id,
+            label: child.value,
+            value: child.value,
+            count: child.count,
+            checked: childChecked
+          };
+        }):[];
+        return {
+          name: facet.id,
+          label: keyword.value,
+          value: value,
+          count: keyword.count,
+          checked: checked,
+          children: children
+        };
+      });
+      const nullValueIdx = list.findIndex(e => e.label === facet.nullValuesLabel);
+      if (nullValueIdx !== -1) {
+        const removedItems = list.splice(nullValueIdx, 1);
+        list.push(removedItems[0]);
+      }
+      Component = HierarchicalFacetList;
+      parameters = {
+        list: list,
+        onChange: (keyword, active) => onChange(facet.id, active, keyword)
+      };
     } else {
+      const list = facet.keywords.map(keyword => ({
+        name: facet.id,
+        label: keyword.value,
+        value: keyword.value,
+        count: keyword.count,
+        checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false,
+      }));
+      let onView = null;
+      let viewText = null;
       if (facet.others > 0) {
         onView = () => onViewChange(facet.id, facet.size === facet.defaultSize?viewMoreIncrement:facet.size + viewMoreIncrement);
         if (viewMoreIncrement >= facet.others) {
@@ -111,28 +190,14 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
         onView = () => onViewChange(facet.id, facet.defaultSize);
         viewText = "View less";
       }
+      Component = FacetList;
+      parameters = {
+        list: list,
+        onChange: (keyword, active) => onChange(facet.id, active, keyword),
+        onViewChange: onView,
+        viewText: viewText
+      };
     }
-    Component = FacetList;
-    const list = facet.keywords.map(keyword => ({
-      name: facet.id,
-      value: keyword.value,
-      count: keyword.count,
-      checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false,
-      children: keyword.children
-    }));
-    if (facet.isHierarchical) {
-      const nullValueIdx = list.findIndex(e => e.value === facet.nullValuesLabel);
-      if (nullValueIdx !== -1) {
-        const removedItems = list.splice(nullValueIdx, 1);
-        list.push(removedItems[0]);
-      }
-    }
-    parameters = {
-      list: list,
-      onChange: (keyword, active) => onChange(facet.id, active, keyword),
-      onViewChange: onView,
-      viewText: viewText
-    };
     break;
   }
   case "exists":

@@ -120,3 +120,40 @@
 .kgs-facet button.kgs-facet-viewMore-button:hover {
     color: var(--link-color-active);
 }
+
+.kgs-collapsible-facet .kgs-collapsible-facet__header {
+    display: flex;
+    align-items: flex-start;
+}
+
+.kgs-collapsible-facet .kgs-collapsible-facet__button {
+    margin:0;
+    border:0;
+    padding: 2px 4px 0 4px;
+    background: none;
+}
+
+.kgs-collapsible-facet .kgs-collapsible-facet__button +  .kgs-facet-checkbox {
+    padding-left: 0;
+}
+
+.kgs-collapsible-facet > .kgs-collapsible-facet__header > .kgs-facet-checkbox {
+    flex: 1;
+}
+
+.kgs-collapsible-facet .kgs-collapsible-facet__button i {
+    color: #999;
+    transition: transform 0.25s cubic-bezier(.34,1.06,.63,.93);
+}
+
+.kgs-collapsible-facet.is-collapsed > .kgs-collapsible-facet__header > .kgs-collapsible-facet__button i {
+    transform: rotateZ(-90deg);
+}
+
+.kgs-collapsible-facet .kgs-collapsible-facet__children {
+    margin-left: 45px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s cubic-bezier(.34,1.06,.63,.93);
+}
+

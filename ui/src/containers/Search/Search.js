@@ -103,14 +103,27 @@ class SearchBase extends React.Component {
     return facets.reduce((acc, facet) => {
       switch (facet.filterType) {
       case "list":
-        facet.keywords.forEach(keyword => {
-          acc.push({
-            name: facet.id,
-            value: keyword.value,
-            checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false,
-            many: true
+        if (facet.isHierarchical) {
+          facet.keywords.forEach(keyword => {
+            keyword.children && Array.isArray(keyword.children.keywords) && keyword.children.keywords.forEach(child => {
+              acc.push({
+                name: facet.id,
+                value: child.value,
+                checked: Array.isArray(facet.value) ? facet.value.includes(child.value) : false,
+                many: true
+              });
+            });
           });
-        });
+        } else {
+          facet.keywords.forEach(keyword => {
+            acc.push({
+              name: facet.id,
+              value: keyword.value,
+              checked: Array.isArray(facet.value) ? facet.value.includes(keyword.value) : false,
+              many: true
+            });
+          });
+        }
         break;
       case "exists":
         acc.push({

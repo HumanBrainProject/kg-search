@@ -150,13 +150,23 @@ const setFacet = (state, action) => {
         };
         if (action.active) {
           const values = Array.isArray(facet.value) ? facet.value : [];
-          if (!values.includes(action.keyword)) {
+          if (Array.isArray(action.keyword)) {
+            action.keyword.forEach(keyword => {
+              if (!values.includes(keyword)) {
+                values.push(keyword);
+              }
+            });
+          } else if (!values.includes(action.keyword)) {
             values.push(action.keyword);
           }
           facet.value = values;
         } else {
           if (Array.isArray(facet.value)) {
-            facet.value = facet.value.filter(value => value !== action.keyword);
+            if (Array.isArray(action.keyword)) {
+              facet.value = facet.value.filter(value => !action.keyword.includes(value));
+            } else {
+              facet.value = facet.value.filter(value => value !== action.keyword);
+            }
           }
         }
         return facet;
@@ -184,7 +194,7 @@ const getResetFacets = facets => {
       return {
         ...f,
         value: null,
-        size: ElasticSearchHelpers.listFacetDefaultSize
+        size: f.isHierarchical?null:ElasticSearchHelpers.listFacetDefaultSize
       };
     case "exists":
     default:
