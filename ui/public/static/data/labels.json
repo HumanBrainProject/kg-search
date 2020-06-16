@@ -472,7 +472,7 @@
                     "https://schema.hbp.eu/searchUi/overview": true
                 },
                 "speciesFilter": {
-                    "https://schema.hbp.eu/graphQuery/label": "Species",
+                    "https://schema.hbp.eu/graphQuery/label": "Owners",
                     "https://schema.hbp.eu/searchUi/visible": false,
                     "children": {
                         "owners": {

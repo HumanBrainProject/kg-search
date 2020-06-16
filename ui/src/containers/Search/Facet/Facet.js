@@ -77,7 +77,7 @@ class HierarchicalFacetListItem extends React.Component {
   constructor(props) {
     super(props);
     this.childrenRef = React.createRef();
-    this.state = {isCollapsed: this.props.item.checked};
+    this.state = {isCollapsed: true};
   }
 
   onClick = active => {
