@@ -26,10 +26,11 @@ class FacetCheckbox extends React.Component {
   }
 
   render() {
-    const { label, checked, count } = this.props;
+    const { label, checked, count, hidden } = this.props;
+    const props = hidden ? {tabIndex: -1} : {};
     return (
       <div className={`kgs-facet-checkbox ${checked?"is-active":""}`} onClick = { this.handleClick } >
-        <input type="checkbox" defaultChecked={checked} />
+        <input type="checkbox" defaultChecked={checked} {...props} />
         <div className="kgs-facet-checkbox__text">{label}</div>
         <div className="kgs-facet-checkbox__count">{count}</div>
       </div>
@@ -52,18 +53,20 @@ class FacetListItem extends React.PureComponent {
         value = { item.value }
         many = { true }
         onClick = { this.onClick }
+        hidden  = { this.props.hidden }
       />
     );
   }
 }
 
-const FacetList = ({ list, onChange, onViewChange, viewText }) => (
+const FacetList = ({ list, onChange, onViewChange, viewText, hidden }) => (
   <div className="kgs-facet-list">
     {list.map(item => (
       <FacetListItem
         key = { item.value }
         item = { item }
         onChange = { onChange }
+        hidden  = { hidden }
       />
     ))}
     {onViewChange && (
@@ -105,7 +108,7 @@ class HierarchicalFacetListItem extends React.Component {
           />
           </div>
         <div className="kgs-collapsible-facet__children" ref={this.childrenRef} style={{maxHeight: maxHeight}}>
-            <FacetList list={item.children} onChange={this.props.onChange}/>
+            <FacetList list={item.children} onChange={this.props.onChange} hidden={this.state.isCollapsed} />
         </div>
       </div>
     );
