@@ -15,6 +15,7 @@
 */
 
 import React from "react";
+import ReactPiwik from "react-piwik";
 
 import { Text } from "../Text/Text";
 import { CopyToClipboardButton } from "../CopyToClipboard/CopyToClipboardButton";
@@ -31,6 +32,11 @@ class Download extends React.PureComponent {
     typeof onClick === "function" && onClick(field);
   };
 
+  handleDownload = url => e => {
+    e.stopPropagation();
+    ReactPiwik.push(["trackLink", url, "download"]);
+  }
+
   render() {
     const {data, showTermsOfUse, isListOfUrl} = this.props;
     return (
@@ -42,7 +48,7 @@ class Download extends React.PureComponent {
               <div className="kgs-download-multiple" key={el.url}>
                 <span>
                   <i className="fa fa-file-o"></i>
-                  <a href={el.url}>{label || el.url}</a>
+                  <a href={el.url} onClick={this.handleDownload(el.url)}>{label || el.url}</a>
                 </span>
               </div>
             );
@@ -51,7 +57,7 @@ class Download extends React.PureComponent {
           <div>
             <span>
               <i className="fa fa-2x fa-file-o"></i>
-              <a href={data.url}>{data.value}</a>
+              <a href={data.url} onClick={this.handleDownload(data.url)}>{data.value}</a>
             </span>
           </div>
         }
