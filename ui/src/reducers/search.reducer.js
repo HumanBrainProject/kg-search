@@ -194,7 +194,7 @@ const getResetFacets = facets => {
       return {
         ...f,
         value: null,
-        size: f.isHierarchical?null:ElasticSearchHelpers.listFacetDefaultSize
+        size: (f.isHierarchical || f.isFilterable)?ElasticSearchHelpers.listFacetAllSize:ElasticSearchHelpers.listFacetDefaultSize
       };
     case "exists":
     default:

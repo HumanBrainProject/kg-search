@@ -81,6 +81,7 @@ export const loadDefinition = () => {
     field.order = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "order", null);
     field.facet = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "facet", null);
     field.isHierarchicalFacet = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isHierarchicalFacet", false);
+    field.isFilterableFacet = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isFilterableFacet", false);
     field.nullValuesLabel = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "nullValuesLabel", false);
     field.facetOrder = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "facet_order", "bycount");
     field.aggregate = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "aggregate", null);

@@ -48,6 +48,10 @@ export class ElasticSearchHelpers {
     return 10;
   }
 
+  static get listFacetAllSize() {
+    return 1000000000;
+  }
+
   /*# sanitize a search query for Lucene. Useful if the original
           # query raises an exception, due to bad adherence to DSL.
           # Taken from here:
@@ -294,11 +298,12 @@ export class ElasticSearchHelpers {
             fieldType: field.type,
             fieldLabel: field.value,
             isChild: false,
+            isFilterable: field.isFilterableFacet,
             count: 0,
             value: null,
             keywords: [],
-            size: ElasticSearchHelpers.listFacetDefaultSize,
-            defaultSize: ElasticSearchHelpers.listFacetDefaultSize
+            size: field.isFilterableFacet?ElasticSearchHelpers.listFacetAllSize:ElasticSearchHelpers.listFacetDefaultSize,
+            defaultSize: field.isFilterableFacet?ElasticSearchHelpers.listFacetAllSize:ElasticSearchHelpers.listFacetDefaultSize
           });
         }
         if (field.children) {
@@ -316,13 +321,14 @@ export class ElasticSearchHelpers {
                   fieldLabel: field.value,
                   isChild: true,
                   isHierarchical: true,
+                  isFilterable: false,
                   path: name + ".children",
                   childName: childName,
                   count: 0,
                   value: null,
                   keywords: [],
-                  size: null,
-                  defaultSize: null,
+                  size: ElasticSearchHelpers.listFacetAllSize,
+                  defaultSize: ElasticSearchHelpers.listFacetAllSize,
                   nullValuesLabel: child.nullValuesLabel?child.nullValuesLabel:"Others"
                 });
               } else {
@@ -337,6 +343,7 @@ export class ElasticSearchHelpers {
                   fieldLabel: child.value,
                   isChild: true,
                   isHierarchical: false,
+                  isFilterable: false,
                   path: name + ".children",
                   childName: childName,
                   count: 0,
@@ -610,12 +617,10 @@ export class ElasticSearchHelpers {
         const aggs = {};
         aggs[key] = {
           terms: {
-            field: key
+            field: key,
+            size: size
           }
         };
-        if (size) {
-          aggs[key].terms.size = size;
-        }
         if (orderDirection) {
           aggs[key].terms.order = {
             _count: orderDirection

@@ -469,7 +469,8 @@
                     "https://schema.hbp.eu/searchUi/overviewMaxDisplay": 1.0,
                     "https://schema.hbp.eu/graphQuery/label": "Methods",
                     "https://schema.hbp.eu/searchUi/layout": "summary",
-                    "https://schema.hbp.eu/searchUi/overview": true
+                    "https://schema.hbp.eu/searchUi/overview": true,
+                    "https://schema.hbp.eu/searchUi/isFilterableFacet": true
                 },
                 "speciesFilter": {
                     "https://schema.hbp.eu/graphQuery/label": "Owners",
