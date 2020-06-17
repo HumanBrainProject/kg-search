@@ -308,7 +308,7 @@ const loadSearchResult = (state, action) => {
           return {
             value: bucket.key,
             count: bucket.doc_count
-          }
+          };
         }
       });
     };
@@ -333,7 +333,7 @@ const loadSearchResult = (state, action) => {
           if (facet.isHierarchical) {
             const keywords = res && res[`${facet.name}.value.keyword`];
             facet.keywords = getKeywords(keywords, facet.childName);
-            facet.others = getOthers(keywords); 
+            facet.others = getOthers(keywords);
           } else { // nested
             const name =  `${facet.name}.children.${facet.childName}`;
             const keywords = res && res.inner && res.inner[`${name}.value.keyword`];

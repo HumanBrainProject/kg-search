@@ -96,13 +96,13 @@ class FilteredFacetList extends React.PureComponent {
   handleInputKeyStrokes = e => {
     if(e.keyCode === 40){
       e.preventDefault();
-      let allOptions = this.optionsRef.querySelectorAll('input[type="checkbox"]');
+      let allOptions = this.optionsRef.querySelectorAll("input[type=\"checkbox\"]");
       if(allOptions.length > 0){
         allOptions[0].focus();
       }
     } else if(e.keyCode === 38){
       e.preventDefault();
-      let allOptions = this.optionsRef.querySelectorAll('input[type="checkbox"]');
+      let allOptions = this.optionsRef.querySelectorAll("input[type=\"checkbox\"]");
       if(allOptions.length > 0){
         allOptions[allOptions.length-1].focus();
       }
@@ -117,7 +117,7 @@ class FilteredFacetList extends React.PureComponent {
     this.setState({ filter: e.target.value.toLowerCase().trim() });
   }
 
-  handleFocus = e => {
+  handleFocus = () => {
     this.listenClickOutHandler();
     this.setState({ hasFocus: true});
   };
@@ -152,7 +152,7 @@ class FilteredFacetList extends React.PureComponent {
 
   render() {
     const { list, onChange } = this.props;
-    
+
     const dropdownOpen = this.wrapperRef && this.wrapperRef.contains(document.activeElement);
 
     let activeList = [];
@@ -223,7 +223,8 @@ class HierarchicalFacetListItem extends React.Component {
   }
 
   onClick = active => {
-    this.props.onChange(this.props.item.value, active)};
+    this.props.onChange(this.props.item.value, active);
+  };
 
   onCollapseToggle = () => this.setState(state => ({ isCollapsed: !state.isCollapsed }));
 
@@ -245,9 +246,9 @@ class HierarchicalFacetListItem extends React.Component {
             many = { true }
             onClick = { this.onClick }
           />
-          </div>
+        </div>
         <div className="kgs-collapsible-facet__children" ref={this.childrenRef} style={{maxHeight: maxHeight}}>
-            <FacetList list={item.children} onChange={this.props.onChange} hidden={this.state.isCollapsed} />
+          <FacetList list={item.children} onChange={this.props.onChange} hidden={this.state.isCollapsed} />
         </div>
       </div>
     );
