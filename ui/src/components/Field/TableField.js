@@ -23,7 +23,7 @@ import { LIST_SMALL_SIZE_STOP,
   getShowMoreLabel } from "./helpers";
 import "./TableField.css";
 
-import { Notification } from "../../containers/Notification/Notification";
+// import { Notification } from "../../containers/Notification/Notification";
 import HierarchicalFiles from "../Files/HierarchicalFiles";
 
 const CustomTableRow = ({item, viewComponent}) => {

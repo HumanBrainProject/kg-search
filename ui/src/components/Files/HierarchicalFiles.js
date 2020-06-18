@@ -1,77 +1,77 @@
 import React, {PureComponent} from "react";
 import {Treebeard} from "react-treebeard";
 
-const data = {
-  "name": "react-treebeard",
-  "toggled": false,
-  "children": [
-    {
-      "name": "example",
-      "children": [
-        {
-          "name": "app.js"
-        },
-        {
-          "name": "data.js"
-        },
-        {
-          "name": "index.html"
-        },
-        {
-          "name": "styles.js"
-        },
-        {
-          "name": "webpack.config.js"
-        }
-      ]
-    },
-    {
-      "name": "node_modules",
-      "loading": true,
-      "children": []
-    },
-    {
-      "name": "src",
-      "children": [
-        {
-          "name": "components",
-          "children": [
-            {
-              "name": "decorators.js"
-            },
-            {
-              "name": "treebeard.js"
-            }
-          ]
-        },
-        {
-          "name": "index.js"
-        }
-      ]
-    },
-    {
-      "name": "themes",
-      "children": [
-        {
-          "name": "animations.js"
-        },
-        {
-          "name": "default.js"
-        }
-      ]
-    },
-    {
-      "name": "Gulpfile.js"
-    },
-    {
-      "name": "index.js"
-    },
-    {
-      "name": "package.json"
-    }
-  ],
-  "active": true
-};
+// const data = {
+//   "name": "react-treebeard",
+//   "toggled": false,
+//   "children": [
+//     {
+//       "name": "example",
+//       "children": [
+//         {
+//           "name": "app.js"
+//         },
+//         {
+//           "name": "data.js"
+//         },
+//         {
+//           "name": "index.html"
+//         },
+//         {
+//           "name": "styles.js"
+//         },
+//         {
+//           "name": "webpack.config.js"
+//         }
+//       ]
+//     },
+//     {
+//       "name": "node_modules",
+//       "loading": true,
+//       "children": []
+//     },
+//     {
+//       "name": "src",
+//       "children": [
+//         {
+//           "name": "components",
+//           "children": [
+//             {
+//               "name": "decorators.js"
+//             },
+//             {
+//               "name": "treebeard.js"
+//             }
+//           ]
+//         },
+//         {
+//           "name": "index.js"
+//         }
+//       ]
+//     },
+//     {
+//       "name": "themes",
+//       "children": [
+//         {
+//           "name": "animations.js"
+//         },
+//         {
+//           "name": "default.js"
+//         }
+//       ]
+//     },
+//     {
+//       "name": "Gulpfile.js"
+//     },
+//     {
+//       "name": "index.js"
+//     },
+//     {
+//       "name": "package.json"
+//     }
+//   ],
+//   "active": true
+// };
 
 export default class HierarchicalFiles extends PureComponent {
   constructor(props){
@@ -111,7 +111,7 @@ export default class HierarchicalFiles extends PureComponent {
   }
 
   constructData = () => {
-    const rootPath = this.props.data[0].url.split("/").slice(6)[0];
+    const rootPath = this.props.data[0].url.split("/").slice(6)[0]; //To be checked
     const result = {
       name: rootPath
     };
@@ -141,6 +141,7 @@ export default class HierarchicalFiles extends PureComponent {
 
   render(){
     const {data} = this.state;
+    // console.log(this.state.cursor);
     return (
       <Treebeard
         data={data}
