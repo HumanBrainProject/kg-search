@@ -76,15 +76,17 @@ const data = {
 export default class HierarchicalFiles extends PureComponent {
   constructor(props){
     super(props);
-    this.constructData();
     this.state = {
-      data
+      curson: false,
+      data: {}
     };
   }
 
-  build = (obj,path) => path.map(d => {
-    return obj = obj[d] || (obj[d]={});
-  });
+  componentDidMount() {
+    this.constructData();
+  }
+
+  buildObjectStructure = (obj,path) => path.forEach(d => obj = obj[d] || (obj[d]={}));
 
   constructResult = (resultObj, val) => {
     if(val) {
@@ -99,9 +101,9 @@ export default class HierarchicalFiles extends PureComponent {
             children: []
           });
         }
-        resultObj.children.forEach(c => {
-          if(c.name === key){
-            this.constructResult(c, value);
+        resultObj.children.forEach(child => {
+          if(child.name === key){
+            this.constructResult(child, value);
           }
         });
       });
@@ -109,43 +111,32 @@ export default class HierarchicalFiles extends PureComponent {
   }
 
   constructData = () => {
-    const root = this.props.data[0].url.split("/").slice(6)[0];
+    const rootPath = this.props.data[0].url.split("/").slice(6)[0];
     const result = {
-      name: root,
-      children: []
+      name: rootPath
     };
-    const obj = {};
+    const pathObj = {};
     this.props.data.forEach(item => {
       const path = item.url.split("/").slice(7);
-      this.build(obj, path);
+      this.buildObjectStructure(pathObj, path);
     });
-    console.log(obj);
-    Object.entries(obj).forEach(([key, value]) => {
-      if(!key.includes(".")) {
-        result.children.push({
-          name: key,
-          children: []
-        });
-      }
-      result.children.forEach(child => {
-        if(child.name === key){
-          this.constructResult(child, value);
-        }
-      });
-    });
-    console.log(result);
+    if (pathObj) {
+      result.children = [];
+      this.constructResult(result, pathObj);
+    }
+    this.setState({data: Object.assign({}, result)});
   }
 
   onToggle = (node, toggled) => {
     const {cursor, data} = this.state;
     if (cursor) {
-      this.setState(() => ({cursor, active: false}));
+      this.setState({cursor: {active: false}});
     }
     node.active = true;
     if (node.children) {
       node.toggled = toggled;
     }
-    this.setState(() => ({cursor: node, data: Object.assign({}, data)}));
+    this.setState({cursor: node, data: Object.assign({}, data)});
   }
 
   render(){
