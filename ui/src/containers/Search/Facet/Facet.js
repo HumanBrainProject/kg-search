@@ -231,7 +231,7 @@ class FilteredFacetList extends React.PureComponent {
             onKeyDown={this.handleInputKeyStrokes}
             onChange={this.handleChangeUserInput}
             onFocus={this.handleFocus}
-            value={this.state.filter } 
+            value={this.state.filter }
             placeholder={(!activeList.length && !dropdownOpen)?"add " + label.toLowerCase() + " filters":""} />
           <input style={{display:"none"}} type="text" ref={ref=>this.hiddenInputRef = ref}/>
         </div>
