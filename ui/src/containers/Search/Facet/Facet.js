@@ -197,7 +197,7 @@ class FilteredFacetList extends React.PureComponent {
   }
 
   render() {
-    const { list, onChange } = this.props;
+    const { list, label, onChange } = this.props;
 
     const dropdownOpen = this.wrapperRef && this.wrapperRef.contains(document.activeElement);
 
@@ -231,7 +231,8 @@ class FilteredFacetList extends React.PureComponent {
             onKeyDown={this.handleInputKeyStrokes}
             onChange={this.handleChangeUserInput}
             onFocus={this.handleFocus}
-            value={this.state.filter } />
+            value={this.state.filter } 
+            placeholder={(!activeList.length && !dropdownOpen)?"add " + label.toLowerCase() + " filters":""} />
           <input style={{display:"none"}} type="text" ref={ref=>this.hiddenInputRef = ref}/>
         </div>
         {dropdownOpen && (filteredOptionsList.length || this.state.filter) && (
@@ -377,6 +378,7 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
         Component = FilteredFacetList;
         parameters = {
           list: list,
+          label: facet.fieldLabel,
           onChange: (keyword, active) => onChange(facet.id, active, keyword)
         };
       } else {
