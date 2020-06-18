@@ -25,12 +25,25 @@ class FacetCheckbox extends React.Component {
     this.props.onClick(!this.props.checked);
   }
 
+  handleKeyDown = e => {
+    if(e.keyCode === 13) {
+      this.handleClick(e);
+    } else {
+      this.props.onKeyDown && this.props.onKeyDown(e);
+    }
+  }
+
   render() {
     const { label, checked, count, hidden } = this.props;
-    const props = hidden ? {tabIndex: -1} : {};
+    const inputProps = {};
+
+    if (hidden) {
+      inputProps.tabIndex = -1;
+    }
+
     return (
-      <div className={`kgs-facet-checkbox ${checked?"is-active":""}`} onClick = { this.handleClick } >
-        <input type="checkbox" defaultChecked={checked} {...props} />
+      <div className={`kgs-facet-checkbox ${checked?"is-active":""}`} tabIndex="-1" onClick={this.handleClick}  onKeyDown={this.handleKeyDown} >
+        <input type="checkbox" defaultChecked={checked} {...inputProps} />
         <div className="kgs-facet-checkbox__text">{label}</div>
         <div className="kgs-facet-checkbox__count">{count}</div>
       </div>
@@ -53,19 +66,21 @@ class FacetListItem extends React.PureComponent {
         value = { item.value }
         many = { true }
         onClick = { this.onClick }
+        onKeyDown = { this.props.onKeyDown }
         hidden  = { this.props.hidden }
       />
     );
   }
 }
 
-const FacetList = ({ list, onChange, onViewChange, viewText, hidden }) => (
+const FacetList = ({ list, onChange, onKeyDown, onViewChange, viewText, hidden }) => (
   <div className="kgs-facet-list">
     {list.map(item => (
       <FacetListItem
         key = { item.value }
         item = { item }
         onChange = { onChange }
+        onKeyDown = { onKeyDown }
         hidden  = { hidden }
       />
     ))}
@@ -96,43 +111,74 @@ class FilteredFacetList extends React.PureComponent {
   handleInputKeyStrokes = e => {
     if(e.keyCode === 40){
       e.preventDefault();
-      let allOptions = this.optionsRef.querySelectorAll("input[type=\"checkbox\"]");
+      const allOptions = this.optionsRef.querySelectorAll(".kgs-facet-checkbox");
       if(allOptions.length > 0){
         allOptions[0].focus();
       }
     } else if(e.keyCode === 38){
       e.preventDefault();
-      let allOptions = this.optionsRef.querySelectorAll("input[type=\"checkbox\"]");
+      const allOptions = this.optionsRef.querySelectorAll(".kgs-facet-checkbox");
       if(allOptions.length > 0){
         allOptions[allOptions.length-1].focus();
       }
-    } else if(e.keyCode === 27) {
-      //escape key -> we want to close the dropdown menu
-      this.unlistenClickOutHandler();
+    } else if(e.keyCode === 27 || e.keyCode === 9) {
+      //escape or tab key -> we want to close the dropdown menu
       this.closeDropdown();
     }
-  };
+  }
+
+  handleOptionKeyStrokes = e => {
+    if (e.keyCode === 40){
+      e.preventDefault();
+      if (e.target.nextSibling) {
+        e.target.nextSibling.focus();
+      } else {
+        const allOptions = this.optionsRef.querySelectorAll(".kgs-facet-checkbox");
+        if (allOptions.length > 0) {
+          allOptions[0].focus();
+        }
+      }
+    } else if(e.keyCode === 38) {
+      e.preventDefault();
+      if (e.target.previousSibling) {
+        e.target.previousSibling.focus();
+      } else {
+        const allOptions = this.optionsRef.querySelectorAll(".kgs-facet-checkbox");
+        if (allOptions.length > 0) {
+          allOptions[allOptions.length-1].focus();
+        }
+      }
+    } else if (e.keyCode === 27 || e.keyCode === 9) {
+      //escape or tab key -> we want to close the dropdown menu
+      this.closeDropdown();
+    }
+  }
 
   handleChangeUserInput = e => {
-    this.setState({ filter: e.target.value.toLowerCase().trim() });
+    this.setState({ filter: e.target.value });
   }
 
   handleFocus = () => {
     this.listenClickOutHandler();
     this.setState({ hasFocus: true});
-  };
+  }
+
+  onSelect = (keyword, active) => {
+    this.props.onChange && this.props.onChange(keyword, active);
+    this.closeDropdown();
+  }
 
   closeDropdown(){
+    this.unlistenClickOutHandler();
     this.wrapperRef = null;
     this.setState({ filter: "", hasFocus: false});
   }
 
   clickOutHandler = e => {
     if(!this.wrapperRef || !this.wrapperRef.contains(e.target)){
-      this.unlistenClickOutHandler();
       this.closeDropdown();
     }
-  };
+  }
 
   listenClickOutHandler(){
     window.addEventListener("mouseup", this.clickOutHandler, false);
@@ -168,7 +214,8 @@ class FilteredFacetList extends React.PureComponent {
     let filteredOptionsList = [];
     if (dropdownOpen) {
       if (this.state.filter) {
-        filteredOptionsList = optionsList.filter(e => e.value && e.value.toLowerCase().includes(this.state.filter));
+        const filter = this.state.filter.toLowerCase().trim();
+        filteredOptionsList = optionsList.filter(e => e.value && e.value.toLowerCase().includes(filter));
       } else {
         filteredOptionsList = optionsList;
       }
@@ -193,8 +240,10 @@ class FilteredFacetList extends React.PureComponent {
               {filteredOptionsList.map(item => (
                 <FacetListItem
                   key = { item.value }
-                  item = { item }
-                  onChange = { onChange }
+                  item= { item }
+                  onChange = { this.onSelect }
+                  onKeyDown = { this.handleOptionKeyStrokes }
+                  hidden = { true }
                 />
               ))}
             </div>
