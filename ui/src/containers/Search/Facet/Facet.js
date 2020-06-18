@@ -356,7 +356,7 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
           children: children
         };
       });
-      const nullValueIdx = list.findIndex(e => e.label === facet.nullValuesLabel);
+      const nullValueIdx = list.findIndex(e => e.label === facet.missingTerm);
       if (nullValueIdx !== -1) {
         const removedItems = list.splice(nullValueIdx, 1);
         list.push(removedItems[0]);

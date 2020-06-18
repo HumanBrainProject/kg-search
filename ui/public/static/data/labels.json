@@ -475,12 +475,12 @@
                 "speciesFilter": {
                     "https://schema.hbp.eu/graphQuery/label": "Owners",
                     "https://schema.hbp.eu/searchUi/visible": false,
+                    "https://schema.hbp.eu/searchUi/facetMissingTerm": "Others",
                     "children": {
                         "owners": {
                             "https://schema.hbp.eu/searchUi/visible": false,
                             "https://schema.hbp.eu/searchUi/facet": "list",
-                            "https://schema.hbp.eu/searchUi/isHierarchicalFacet": true,
-                            "https://schema.hbp.eu/searchUi/nullValuesLabel": "Others"
+                            "https://schema.hbp.eu/searchUi/isHierarchicalFacet": true
                         }
                     }
                 },
@@ -491,7 +491,8 @@
                     "https://schema.hbp.eu/searchUi/overviewMaxDisplay": 3.0,
                     "https://schema.hbp.eu/graphQuery/label": "Keywords",
                     "https://schema.hbp.eu/searchUi/layout": "summary",
-                    "https://schema.hbp.eu/searchUi/overview": true
+                    "https://schema.hbp.eu/searchUi/overview": true,
+                    "https://schema.hbp.eu/searchUi/isFilterableFacet": true
                 },
                 "viewer": {
                     "https://schema.hbp.eu/graphQuery/label": "Viewer",

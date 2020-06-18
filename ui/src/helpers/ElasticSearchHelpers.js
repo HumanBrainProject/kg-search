@@ -329,7 +329,7 @@ export class ElasticSearchHelpers {
                   keywords: [],
                   size: ElasticSearchHelpers.listFacetAllSize,
                   defaultSize: ElasticSearchHelpers.listFacetAllSize,
-                  nullValuesLabel: child.nullValuesLabel?child.nullValuesLabel:"Others"
+                  missingTerm: field.facetMissingTerm?field.facetMissingTerm:"Others"
                 });
               } else {
                 facets.push({
@@ -646,7 +646,7 @@ export class ElasticSearchHelpers {
             aggs[facet.id] = {
               aggs: setAggs(key, count, orderDirection, facet.size)
             };
-            aggs[facet.id].aggs[key].terms.missing = facet.nullValuesLabel;
+            aggs[facet.id].aggs[key].terms.missing = facet.missingTerm;
             const subKey = `${facet.childName}.value.keyword`;
             const subCount = `${facet.childName}.value.keyword_count`;
             aggs[facet.id].aggs[key].aggs  = setAggs(subKey, subCount, orderDirection, facet.size);
