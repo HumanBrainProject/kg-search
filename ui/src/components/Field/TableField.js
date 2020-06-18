@@ -24,6 +24,7 @@ import { LIST_SMALL_SIZE_STOP,
 import "./TableField.css";
 
 import { Notification } from "../../containers/Notification/Notification";
+import HierarchicalFiles from "../Files/HierarchicalFiles";
 
 const CustomTableRow = ({item, viewComponent}) => {
   let Component = viewComponent;
@@ -64,6 +65,8 @@ const TableFieldBase = (renderUserInteractions = true) => {
     }
     );
 
+    const fileData = fields.map(item => item.data);
+
     return (
       fields && Array.isArray(fields[0]) ?
         (fields && fields[0] ?
@@ -85,7 +88,8 @@ const TableFieldBase = (renderUserInteractions = true) => {
             </tbody>
           </table>:null) :
         <>
-          <Notification />
+          <HierarchicalFiles data={fileData} />
+          {/* <Notification />
           <table className="table">
             <thead>
               <tr>
@@ -101,7 +105,7 @@ const TableFieldBase = (renderUserInteractions = true) => {
                 </tr>
               )}
             </tbody>
-          </table>
+          </table> */}
         </>
     );
   };

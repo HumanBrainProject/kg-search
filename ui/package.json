@@ -14,6 +14,7 @@
     "react-test-renderer": "^16.8.6"
   },
   "dependencies": {
+    "@sentry/browser": "^5.4.3",
     "axios": "^0.19.0",
     "bootstrap": "^3.3.7",
     "connected-react-router": "^6.6.1",
@@ -32,13 +33,13 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
     "react-tooltip": "^3.10.0",
+    "react-treebeard": "^3.2.4",
     "redux": "^4.0.1",
     "redux-logger": "3.0.6",
     "redux-thunk": "2.3.0",
     "sanitize-html": "^1.20.1",
     "showdown": "^1.9.0",
     "showdown-xss-filter": "^0.2.0",
-    "@sentry/browser": "^5.4.3",
     "universal-cookie": "^4.0.2"
   },
   "scripts": {
