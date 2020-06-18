@@ -111,19 +111,21 @@ export default class HierarchicalFiles extends PureComponent {
   }
 
   constructData = () => {
-    const rootPath = this.props.data[0].url.split("/").slice(6)[0]; //To be checked
+    // const rootPath = this.props.data[0].url.split("/").slice(6)[0]; //To be checked
     const result = {
-      name: rootPath
+      name: "./"
     };
     const pathObj = {};
     this.props.data.forEach(item => {
-      const path = item.url.split("/").slice(7);
+      const path = item.url.split("/").slice(6);
       this.buildObjectStructure(pathObj, path);
     });
+    console.log(pathObj);
     if (pathObj) {
       result.children = [];
       this.constructResult(result, pathObj);
     }
+    console.log(result);
     this.setState({data: Object.assign({}, result)});
   }
 
