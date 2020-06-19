@@ -110,22 +110,33 @@ export default class HierarchicalFiles extends PureComponent {
     }
   }
 
+  findCommonPath = array => {
+    const sortedArray = array.sort();
+    const firstElement = sortedArray[0];
+    const lastElement= sortedArray[sortedArray.length-1];
+    const firstElementLength = firstElement.length;
+    let index= 0;
+    while(index<firstElementLength && firstElement.charAt(index) === lastElement.charAt(index)) {
+      index++;
+    }
+    return firstElement.substring(0, index);
+  }
+
   constructData = () => {
-    // const rootPath = this.props.data[0].url.split("/").slice(6)[0]; //To be checked
+    const urlsToFindCommon = this.props.data.map(u => u.url);
+    const commonPath = this.findCommonPath(urlsToFindCommon).split("/");
     const result = {
-      name: "./"
+      name: commonPath[commonPath.length-2]
     };
     const pathObj = {};
     this.props.data.forEach(item => {
-      const path = item.url.split("/").slice(6);
+      const path = item.url.split("/").slice(commonPath.length-1);
       this.buildObjectStructure(pathObj, path);
     });
-    console.log(pathObj);
     if (pathObj) {
       result.children = [];
       this.constructResult(result, pathObj);
     }
-    console.log(result);
     this.setState({data: Object.assign({}, result)});
   }
 
@@ -143,7 +154,6 @@ export default class HierarchicalFiles extends PureComponent {
 
   render(){
     const {data} = this.state;
-    // console.log(this.state.cursor);
     return (
       <Treebeard
         data={data}
