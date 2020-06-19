@@ -135,6 +135,7 @@ export default class HierarchicalFiles extends PureComponent {
     });
     if (pathObj) {
       result.children = [];
+      result.toggled = true;
       this.constructResult(result, pathObj);
     }
     this.setState({data: Object.assign({}, result)});
