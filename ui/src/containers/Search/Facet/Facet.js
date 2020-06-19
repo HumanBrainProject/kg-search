@@ -39,6 +39,8 @@ class FacetCheckbox extends React.Component {
 
     if (hidden) {
       inputProps.tabIndex = -1;
+      inputProps.style = {};
+      inputProps.style.pointerEvents = "none";
     }
 
     return (
@@ -232,7 +234,7 @@ class FilteredFacetList extends React.PureComponent {
             onChange={this.handleChangeUserInput}
             onFocus={this.handleFocus}
             value={this.state.filter }
-            placeholder={(!activeList.length && !dropdownOpen)?"add " + label.toLowerCase() + " filters":""} />
+            placeholder={(!dropdownOpen)?"add " + label.toLowerCase() + " filters":""} />
           <input style={{display:"none"}} type="text" ref={ref=>this.hiddenInputRef = ref}/>
         </div>
         {dropdownOpen && (filteredOptionsList.length || this.state.filter) && (

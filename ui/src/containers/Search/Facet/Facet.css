@@ -190,6 +190,7 @@
     font-family: FontAwesome;
     font-size: 1em;
     color: #999;
+    pointer-events: none;
 }
 
 .kgs-filtered-facet .kgs-filtered-facet_filter:after {
@@ -201,6 +202,7 @@
     font-family: FontAwesome;
     font-size: 1em;
     color: #999;
+    pointer-events: none;
 }
 
 
