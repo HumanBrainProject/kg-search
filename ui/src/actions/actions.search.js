@@ -131,6 +131,7 @@ export const search = () => {
     ReactPiwik.push(["trackPageView"]);
     API.axios
       .post(API.endpoints.search(), payload)
+      //.get(API.endpoints.search(), payload)
       .then(response => {
         const index = response.headers["x-selected-index"];
         if (index) {

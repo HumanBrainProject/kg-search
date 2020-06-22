@@ -150,13 +150,23 @@ const setFacet = (state, action) => {
         };
         if (action.active) {
           const values = Array.isArray(facet.value) ? facet.value : [];
-          if (!values.includes(action.keyword)) {
+          if (Array.isArray(action.keyword)) {
+            action.keyword.forEach(keyword => {
+              if (!values.includes(keyword)) {
+                values.push(keyword);
+              }
+            });
+          } else if (!values.includes(action.keyword)) {
             values.push(action.keyword);
           }
           facet.value = values;
         } else {
           if (Array.isArray(facet.value)) {
-            facet.value = facet.value.filter(value => value !== action.keyword);
+            if (Array.isArray(action.keyword)) {
+              facet.value = facet.value.filter(value => !action.keyword.includes(value));
+            } else {
+              facet.value = facet.value.filter(value => value !== action.keyword);
+            }
           }
         }
         return facet;
@@ -184,7 +194,7 @@ const getResetFacets = facets => {
       return {
         ...f,
         value: null,
-        size: ElasticSearchHelpers.listFacetDefaultSize
+        size: (f.isHierarchical || f.isFilterable)?ElasticSearchHelpers.listFacetAllSize:ElasticSearchHelpers.listFacetDefaultSize
       };
     case "exists":
     default:
@@ -279,20 +289,35 @@ const loadSearchResult = (state, action) => {
 
   const getUpdatedFacets = (facets, results) => {
 
-    const getKeywords = (aggs, name) => {
-      const values = aggs && aggs[`${name}.value.keyword`];
-      return (values && Array.isArray(values.buckets)) ? values.buckets.map(bucket => ({
-        value: bucket.key,
-        count: bucket.doc_count
-      })) : [];
+    const getKeywords = (keywords, childName) => {
+      if (!keywords || !Array.isArray(keywords.buckets)) {
+        return [];
+      }
+      return keywords.buckets.map(bucket => {
+        const child = childName && bucket[`${childName}.value.keyword`];
+        if (child) {
+          return {
+            value: bucket.key,
+            count: bucket.doc_count,
+            children: {
+              keywords: getKeywords(child),
+              others: getOthers(child)
+            }
+          };
+        } else {
+          return {
+            value: bucket.key,
+            count: bucket.doc_count
+          };
+        }
+      });
     };
 
-    const getOthers = (aggs, name) => {
-      const values = aggs && aggs[`${name}.value.keyword`];
-      if (!values || !values.sum_other_doc_count) {
+    const getOthers = keywords => {
+      if (!keywords || !keywords.sum_other_doc_count) {
         return 0;
       }
-      const count = Number(values.sum_other_doc_count);
+      const count = Number(keywords.sum_other_doc_count);
       return isNaN(count) ? 0 : count;
     };
 
@@ -301,12 +326,25 @@ const loadSearchResult = (state, action) => {
       const facet = {
         ...f
       };
+
       const res = aggs[facet.id];
       if (facet.filterType === "list") {
-        const faggs = facet.isChild ? (res ? res.inner : null) : res;
-        const name =  facet.isChild ? `${facet.name}.children.${facet.childName}`:facet.name;
-        facet.keywords = getKeywords(faggs, name);
-        facet.others = getOthers(faggs, name);
+        if (facet.isChild) {
+          if (facet.isHierarchical) {
+            const keywords = res && res[`${facet.name}.value.keyword`];
+            facet.keywords = getKeywords(keywords, facet.childName);
+            facet.others = getOthers(keywords);
+          } else { // nested
+            const name =  `${facet.name}.children.${facet.childName}`;
+            const keywords = res && res.inner && res.inner[`${name}.value.keyword`];
+            facet.keywords = getKeywords(keywords);
+            facet.others = getOthers(keywords);
+          }
+        } else {
+          const keywords = res && res[`${facet.name}.value.keyword`];
+          facet.keywords = getKeywords(keywords);
+          facet.others = getOthers(keywords);
+        }
       }
       const count = (res && res.doc_count) ? res.doc_count : 0;
       facet.count = count;

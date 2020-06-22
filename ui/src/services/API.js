@@ -5,8 +5,10 @@ const oidcUri = "https://services.humanbrainproject.eu/oidc/authorize";
 const oidcClientId = "nexus-kg-search";
 
 const endpoints = {
+  //"definition": () => "/static/data/labels.json",
   "definition": () => "/search/proxy/kg_labels/labels/labels",
   "groups": () => "/search/auth/groups",
+  //"search": () => "/static/data/search.json",
   "search": () => "/search/proxy/search/kg/_search",
   "instance": (type, id) => `/search/proxy/default/kg/${type}/${id}`,
   "preview": (type, id) => `/query/${type}/search/templates/searchUi/libraries/instancesDynamic/instances/${id}`,
