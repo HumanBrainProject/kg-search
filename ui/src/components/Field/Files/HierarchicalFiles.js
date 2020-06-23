@@ -139,13 +139,14 @@ export default class HierarchicalFiles extends React.Component {
     const size = node && node.size;
     const type = node && node.type;
     return (
-      <div className="kgs-hierarchical-files">
-        <Treebeard
-          data={data}
-          onToggle={this.onToggle}
-          style={{...theme}}
-        />
-        {node.active &&
+      <>
+        <div className="kgs-hierarchical-files">
+          <Treebeard
+            data={data}
+            onToggle={this.onToggle}
+            style={{...theme}}
+          />
+          {node.active &&
         <div className="kgs-hierarchical-files__details">
           <div>{node.thumbnail ? <img height="80" src={node.thumbnail} alt={node.url} />:<i className={`fa fa-5x fa-${type}-o`}></i>}</div>
           <div className="kgs-hierarchical-files__info">
@@ -153,16 +154,16 @@ export default class HierarchicalFiles extends React.Component {
               <div><strong>Name:</strong> {name}</div>
               {size  && <div><strong>Size:</strong> {size}</div>}
               <a type="button" className="btn kgs-hierarchical-files__info_link" href={node.url} onClick={this.handleClick(node.url)}><i className="fa fa-download"></i> Download {type}</a>
-              <div className="kgs-hierarchical-files__info_agreement"><span>By downloading the {type} you agree to the <a href="" onClick={this.toggleTermsOfUse}>Terms of use</a></span></div>
+              <div className="kgs-hierarchical-files__info_agreement"><span>By downloading the {type} you agree to the <a href="javascript:void(0);" onClick={this.toggleTermsOfUse}>Terms of use</a></span></div>
             </div>
           </div>
-          {showTermsOfUse &&
-            <div className="kgs-hierarchical-files__info_terms_of_use">
-              <Text content={termsOfUse} isMarkdown={true} />
-            </div>
-          }
         </div>}
-      </div>
+        </div>
+        {showTermsOfUse &&
+          <div className="kgs-hierarchical-files__info_terms_of_use">
+            <Text content={termsOfUse} isMarkdown={true} />
+          </div>}
+      </>
     );
   }
 }

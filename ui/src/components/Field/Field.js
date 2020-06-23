@@ -54,7 +54,7 @@ const FieldBase = (renderUserInteractions = true) => {
       value: mapping.hint
     };
     const listProps = {
-      show: isList,
+      show: isList && !isHierarchicalFiles,
       items: data,
       mapping: mapping,
       group: group

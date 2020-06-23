@@ -16,11 +16,13 @@
 
 .kgs-hierarchical-files {
     display: none;
+    display: flex;
+    align-items: self-start;
 }
 
 .kgs-hierarchical-files>ul {
     width: 50%;
-    height: 320px;
+    height: 350px;
     overflow-y: auto;
     border: 1px solid var(--default-border-color);
     border-radius: 5px;
@@ -33,7 +35,9 @@
     margin: 9px 0 2px;
     padding: 10px;
 }
-.kgs-hierarchical-files .kgs-hierarchical-files__terms_of_use {
+
+
+.kgs-hierarchical-files__info_terms_of_use {
     padding: 10px;
     margin: 9px 0 2px;
     border: 1px solid var(--default-border-color);
@@ -110,7 +114,7 @@
     border-color: var(--button-default-border-color);
     color: var(--color-33);   
 }
-
+/* 
 @media (min-width: 992px) {
     .kgs-field__hierarchical-files .kgs-hierarchical-files {
         display: flex;
@@ -121,4 +125,4 @@
         display: none;
     }
 
- }
+ } */
