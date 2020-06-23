@@ -1,18 +1,19 @@
 import React, {PureComponent} from "react";
+import ReactPiwik from "react-piwik";
 import { Treebeard } from "react-treebeard";
 import { Text } from "../../Text/Text";
 import { termsOfUse } from "../../../data/termsOfUse.js";
 import "./HierarchicalFiles.css";
 import theme from "./Theme";
-import Link from "../../Link/Link";
 
 export default class HierarchicalFiles extends PureComponent {
   constructor(props){
     super(props);
     this.state = {
-      curson: false,
+      cursor: null,
       data: {},
-      valueUrlMap: {}
+      valueUrlMap: {},
+      showTermsOfUse: false
     };
   }
 
@@ -46,8 +47,8 @@ export default class HierarchicalFiles extends PureComponent {
     this.setState({valueUrlMap: {...valUrlMap}});
   }
 
-  constructResult = (resultObj, val, isRootLevel) => {
-    if(val.type !== "file" || isRootLevel) {
+  constructResult = (resultObj, val) => {
+    if(val.type !== "file") {
       Object.entries(val).forEach(([key, value]) => {
         if(value.type === "file") {
           resultObj.children.push({
@@ -62,7 +63,7 @@ export default class HierarchicalFiles extends PureComponent {
         }
         resultObj.children.forEach(child => {
           if(child.name === key){
-            this.constructResult(child, value, false);
+            this.constructResult(child, value);
           }
         });
       });
@@ -95,7 +96,7 @@ export default class HierarchicalFiles extends PureComponent {
     if (pathObj) {
       result.children = [];
       result.toggled = true;
-      this.constructResult(result, pathObj, true);
+      this.constructResult(result, pathObj);
     }
     this.setState({data: {...result} });
   }
@@ -105,21 +106,30 @@ export default class HierarchicalFiles extends PureComponent {
     if (cursor) {
       this.setState({cursor: {active: false}});
     }
-    node.active = true;
+    if(node.url) {
+      node.active = true;
+    }
     if (node.children) {
       node.toggled = toggled;
     }
     this.setState({cursor: node, data: {...data} });
   }
 
-  render(){
+  toggleTermsOfUse = () => this.setState(state => ({showTermsOfUse: !state.showTermsOfUse}));
+
+  handleClick = url => e => {
+    e.stopPropagation();
+    ReactPiwik.push(["trackLink", url, "download"]);
+  }
+
+  render() {
     const {show} = this.props;
     if(!show) {
       return null;
     }
-    const {cursor, data, valueUrlMap} = this.state;
-    const name = cursor && cursor.url && valueUrlMap[cursor.url]["value"];
-    const fileSize = cursor && cursor.url && valueUrlMap[cursor.url]["fileSize"];
+    const {cursor, data, valueUrlMap, showTermsOfUse} = this.state;
+    const name = cursor && cursor.url && valueUrlMap[cursor.url].value;
+    const fileSize = cursor && cursor.url && valueUrlMap[cursor.url].fileSize;
     return (
       <div className="kgs-hierarchical-files">
         <Treebeard
@@ -129,12 +139,20 @@ export default class HierarchicalFiles extends PureComponent {
         />
         {name &&
         <div className="kgs-hierarchical-files__details">
-          <div>
-            <i className="fa fa-2x fa-file-o"></i>
-            <Link url={cursor.url} label={name}  isAFileLink={true} />
-            <strong> ({fileSize})</strong>
+          <div><i className="fa fa-5x fa-file-o"></i></div>
+          <div className="kgs-hierarchical-files__info">
+            <div>
+              <div><strong>Name:</strong> {name}</div>
+              <div><strong>Size:</strong> {fileSize}</div>
+              <a type="button" className="btn kgs-hierarchical-files__info_link" href={cursor.url} onClick={this.handleClick(cursor.url)}><i className="fa fa-download"></i> Download file</a>
+              <div className="kgs-hierarchical-files__info_agreement"><span>By downloading the file you agree to the <a href onClick={this.toggleTermsOfUse}>Terms of use</a></span></div>
+            </div>
           </div>
-          <Text content={termsOfUse} isMarkdown={true} />
+          {showTermsOfUse &&
+            <div className="kgs-hierarchical-files__info_terms_of_use">
+              <Text content={termsOfUse} isMarkdown={true} />
+            </div>
+          }
         </div>}
       </div>
     );

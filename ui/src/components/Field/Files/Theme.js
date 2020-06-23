@@ -37,7 +37,7 @@ export default {
         display: "block"
       },
       activeLink: {
-        background: "transparent"
+        background: "#bdbdbd"
       },
       toggle: {
         base: {
