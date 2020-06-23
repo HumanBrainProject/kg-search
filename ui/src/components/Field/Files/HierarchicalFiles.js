@@ -1,4 +1,4 @@
-import React, {PureComponent} from "react";
+import React from "react";
 import ReactPiwik from "react-piwik";
 import { Treebeard } from "react-treebeard";
 import { Text } from "../../Text/Text";
@@ -6,13 +6,12 @@ import { termsOfUse } from "../../../data/termsOfUse.js";
 import "./HierarchicalFiles.css";
 import theme from "./Theme";
 
-export default class HierarchicalFiles extends PureComponent {
+export default class HierarchicalFiles extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      cursor: null,
+      node: {},
       data: {},
-      valueUrlMap: {},
       showTermsOfUse: false
     };
   }
@@ -20,52 +19,53 @@ export default class HierarchicalFiles extends PureComponent {
   componentDidMount() {
     const {show} = this.props;
     if(show) {
-      this.constructValueUrlMap();
       this.constructData();
     }
   }
 
-  buildObjectStructure = (obj, path, url) => path.forEach((d, index) => {
-    if(index === (path.length - 1)) {
-      obj[d] = {
-        url: url,
-        type: "file"
-      };
-    }
-    obj = obj[d] || (obj[d] = {});
-    return obj;
-  });
-
-  constructValueUrlMap = () => {
-    const valUrlMap = this.props.data.reduce((acc, currentVal) => {
-      acc[currentVal.url] = {
-        value: currentVal.value,
-        fileSize: currentVal.fileSize
-      };
-      return acc;
-    }, {});
-    this.setState({valueUrlMap: {...valUrlMap}});
-  }
+  buildObjectStructure = (obj, path, item) => {
+    path.forEach((d, index) => {
+      if(index === (path.length - 1)) {
+        obj.children[d] = {
+          url: item.url,
+          type: "file",
+          name: d,
+          size: item.fileSize
+        };
+      } else {
+        if(!obj.children[d]) {
+          obj.children[d] = {
+            children: {},
+            type: "folder",
+            url: `${obj.url}${d}`,
+            name: d
+          };
+        }
+        obj = obj.children[d];
+      }
+    });
+  };
 
   constructResult = (resultObj, val) => {
-    if(val.type !== "file") {
-      Object.entries(val).forEach(([key, value]) => {
+    if(val.type === "folder") {
+      Object.entries(val.children).forEach(([key, value]) => {
         if(value.type === "file") {
           resultObj.children.push({
             name: key,
-            url: value.url
+            type: "file",
+            url: value.url,
+            size: value.size
           });
         } else {
-          resultObj.children.push({
+          const child ={
             name: key,
-            children: []
-          });
+            children: [],
+            type: "folder",
+            url: value.url
+          };
+          resultObj.children.push(child);
+          this.constructResult(child, value);
         }
-        resultObj.children.forEach(child => {
-          if(child.name === key){
-            this.constructResult(child, value);
-          }
-        });
       });
     }
   }
@@ -84,14 +84,19 @@ export default class HierarchicalFiles extends PureComponent {
 
   constructData = () => {
     const urlsToFindCommon = this.props.data.map(u => u.url);
-    const commonPath = this.findCommonPath(urlsToFindCommon).split("/");
+    const commonPath = this.findCommonPath(urlsToFindCommon);
+    const pathArray = commonPath.split("/");
     const result = {
-      name: commonPath[commonPath.length-2]
+      name: pathArray[pathArray.length-2]
     };
-    const pathObj = {};
+    const pathObj = {
+      children:{},
+      type: "folder",
+      url: `/proxy/export?container=${commonPath}`
+    };
     this.props.data.forEach(item => {
-      const path = item.url.split("/").slice(commonPath.length-1);
-      this.buildObjectStructure(pathObj, path, item.url);
+      const path = item.url.split("/").slice(pathArray.length-1);
+      this.buildObjectStructure(pathObj, path, item);
     });
     if (pathObj) {
       result.children = [];
@@ -102,17 +107,13 @@ export default class HierarchicalFiles extends PureComponent {
   }
 
   onToggle = (node, toggled) => {
-    const {cursor, data} = this.state;
-    if (cursor) {
-      this.setState({cursor: {active: false}});
-    }
-    if(node.url) {
-      node.active = true;
-    }
+    node.active = true;
     if (node.children) {
       node.toggled = toggled;
     }
-    this.setState({cursor: node, data: {...data} });
+    const previousNode = this.state.node;
+    previousNode.active = false;
+    this.setState({node: node});
   }
 
   toggleTermsOfUse = () => this.setState(state => ({showTermsOfUse: !state.showTermsOfUse}));
@@ -127,9 +128,10 @@ export default class HierarchicalFiles extends PureComponent {
     if(!show) {
       return null;
     }
-    const {cursor, data, valueUrlMap, showTermsOfUse} = this.state;
-    const name = cursor && cursor.url && valueUrlMap[cursor.url].value;
-    const fileSize = cursor && cursor.url && valueUrlMap[cursor.url].fileSize;
+    const {node, data, showTermsOfUse} = this.state;
+    const name = node && node.name;
+    const size = node && node.size;
+    const type = node && node.type;
     return (
       <div className="kgs-hierarchical-files">
         <Treebeard
@@ -143,9 +145,9 @@ export default class HierarchicalFiles extends PureComponent {
           <div className="kgs-hierarchical-files__info">
             <div>
               <div><strong>Name:</strong> {name}</div>
-              <div><strong>Size:</strong> {fileSize}</div>
-              <a type="button" className="btn kgs-hierarchical-files__info_link" href={cursor.url} onClick={this.handleClick(cursor.url)}><i className="fa fa-download"></i> Download file</a>
-              <div className="kgs-hierarchical-files__info_agreement"><span>By downloading the file you agree to the <a href onClick={this.toggleTermsOfUse}>Terms of use</a></span></div>
+              {size  && <div><strong>Size:</strong> {size}</div>}
+              <a type="button" className="btn kgs-hierarchical-files__info_link" href={node.url} onClick={this.handleClick(node.url)}><i className="fa fa-download"></i> Download {type}</a>
+              <div className="kgs-hierarchical-files__info_agreement"><span>By downloading the {type} you agree to the <a href="" onClick={this.toggleTermsOfUse}>Terms of use</a></span></div>
             </div>
           </div>
           {showTermsOfUse &&

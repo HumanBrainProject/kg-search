@@ -20,4 +20,9 @@ module.exports = function(app) {
     target: "https://kg-dev.humanbrainproject.eu",
     changeOrigin: true,
     ws: true }));
+  app.use(proxy("/proxy", {
+    // target: "https://kg.ebrain.eu",
+    target: "https://kg-dev.humanbrainproject.eu",
+    changeOrigin: true,
+    ws: true }));
 };
