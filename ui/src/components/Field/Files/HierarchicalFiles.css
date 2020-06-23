@@ -20,6 +20,11 @@
 
 .kgs-hierarchical-files>ul {
     width: 50%;
+    height: 320px;
+    overflow-y: auto;
+    border: 1px solid var(--default-border-color);
+    border-radius: 5px;
+    padding: 10px;
 }
 
 .kgs-hierarchical-files .kgs-hierarchical-files__details {

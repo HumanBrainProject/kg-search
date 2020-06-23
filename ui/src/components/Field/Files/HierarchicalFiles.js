@@ -30,7 +30,8 @@ export default class HierarchicalFiles extends React.Component {
           url: item.url,
           type: "file",
           name: d,
-          size: item.fileSize
+          size: item.fileSize,
+          thumbnail: item.thumbnailUrl && item.thumbnailUrl.url
         };
       } else {
         if(!obj.children[d]) {
@@ -54,7 +55,8 @@ export default class HierarchicalFiles extends React.Component {
             name: key,
             type: "file",
             url: value.url,
-            size: value.size
+            size: value.size,
+            thumbnail: value.thumbnail
           });
         } else {
           const child ={
@@ -101,6 +103,8 @@ export default class HierarchicalFiles extends React.Component {
     if (pathObj) {
       result.children = [];
       result.toggled = true;
+      result.type = "folder";
+      result.url = pathObj.url;
       this.constructResult(result, pathObj);
     }
     this.setState({data: {...result} });
@@ -111,8 +115,10 @@ export default class HierarchicalFiles extends React.Component {
     if (node.children) {
       node.toggled = toggled;
     }
-    const previousNode = this.state.node;
-    previousNode.active = false;
+    if(node.url !== this.state.node.url) {
+      const previousNode = this.state.node;
+      previousNode.active = false;
+    }
     this.setState({node: node});
   }
 
@@ -139,9 +145,9 @@ export default class HierarchicalFiles extends React.Component {
           onToggle={this.onToggle}
           style={{...theme}}
         />
-        {name &&
+        {node.active &&
         <div className="kgs-hierarchical-files__details">
-          <div><i className="fa fa-5x fa-file-o"></i></div>
+          <div>{node.thumbnail ? <img height="80" src={node.thumbnail} alt={node.url} />:<i className={`fa fa-5x fa-${type}-o`}></i>}</div>
           <div className="kgs-hierarchical-files__info">
             <div>
               <div><strong>Name:</strong> {name}</div>

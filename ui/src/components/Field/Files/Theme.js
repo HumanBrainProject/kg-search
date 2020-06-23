@@ -37,7 +37,7 @@ export default {
         display: "block"
       },
       activeLink: {
-        background: "#bdbdbd"
+        background: "var(--button-default-background-color)"
       },
       toggle: {
         base: {
