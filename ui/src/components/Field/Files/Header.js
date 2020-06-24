@@ -6,12 +6,12 @@ const Header = ({node, style}) => {
   const iconStyle = {marginRight: "5px"};
   return(
     <div style={style.base}>
-      <div style={style.title}>
+      <div style={style.title} className="kgs-hierarchical-files__node">
         {node.thumbnail ?
           <img height="14" width="12" src={node.thumbnail} alt={node.url} style={iconStyle} />:
           node.type === "file" ? <i className={"fa fa-file-o"} style={iconStyle}/>:null
         }
-        {node.name}
+        <span className="kgs-hierarchical-files__node_name">{node.name}</span>
       </div>
     </div>);
 };

@@ -69,6 +69,15 @@
     font-size: small;
 }
 
+.kgs-hierarchical-files__details .kgs-hierarchical-files__info > div > div {
+    word-break: break-all;
+    line-height: 1.3em;
+} 
+
+.kgs-hierarchical-files__details .kgs-hierarchical-files__info > div > div + div {
+    margin-top: 4px;
+} 
+
 .kgs-hierarchical-files__details .kgs-hierarchical-files__info_terms_of_use {
     position: relative;
     margin: 9px 0 2px;
@@ -112,4 +121,22 @@
     background-color: var(--button-default-background-color-hover);
     border-color: var(--button-default-border-color);
     color: var(--color-33);   
+}
+
+.kgs-hierarchical-files .kgs-hierarchical-files__node {
+    display: flex;
+}
+
+.kgs-hierarchical-files .kgs-hierarchical-files__node_name {
+    word-break: break-all;
+}
+
+
+@media (min-width:768px) {
+    .kgs-hierarchical-files>ul {
+        width: 60%;
+    }
+    .kgs-hierarchical-files .kgs-hierarchical-files__details {
+        width: 40%;
+    }
 }
