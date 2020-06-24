@@ -1,10 +1,11 @@
 import React from "react";
 import ReactPiwik from "react-piwik";
-import { Treebeard } from "react-treebeard";
+import { Treebeard, decorators } from "react-treebeard";
 import { Text } from "../../Text/Text";
 import { termsOfUse } from "../../../data/termsOfUse.js";
 import "./HierarchicalFiles.css";
 import theme from "./Theme";
+import Header from "./Header";
 
 export default class HierarchicalFiles extends React.Component {
   constructor(props){
@@ -31,7 +32,7 @@ export default class HierarchicalFiles extends React.Component {
           type: "file",
           name: d,
           size: item.fileSize,
-          thumbnail: item.thumbnailUrl && item.thumbnailUrl.url
+          thumbnail: item.thumbnailUrl && item.thumbnailUrl.url //"https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000041_VervetMonkey_3D-PLI_CoroSagiSec_dev/VervetThumbnail.jpg"
         };
       } else {
         if(!obj.children[d]) {
@@ -147,6 +148,7 @@ export default class HierarchicalFiles extends React.Component {
           <Treebeard
             data={data}
             onToggle={this.onToggle}
+            decorators={{...decorators, Header}}
             style={{...theme}}
           />
           {node.active &&
