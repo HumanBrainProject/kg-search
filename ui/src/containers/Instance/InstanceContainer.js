@@ -133,7 +133,8 @@ export class InstanceContainer extends React.Component {
   }
 
   render() {
-    const { showInstance, instanceProps } = this.props;
+    const { showInstance, instanceProps, hasWatermark } = this.props;
+    console.log(hasWatermark)
     const NavigationComponent = getNavigation(instanceProps && instanceProps.header);
     return (
       <React.Fragment>
@@ -143,6 +144,11 @@ export class InstanceContainer extends React.Component {
               <BackLinkButton />
               <Instance {...this.props.instanceProps} NavigationComponent={NavigationComponent} />
             </React.Fragment>
+          )}
+          {hasWatermark && (
+            <div className="kgs-instance-editor__watermark">
+              <p>Preview</p>
+            </div>
           )}
           <div className="kgs-footer">
             <div className="kgs-footer-nav">

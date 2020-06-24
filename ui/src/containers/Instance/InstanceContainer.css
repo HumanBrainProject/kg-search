@@ -74,6 +74,22 @@
   color: var(--link-color-active);
 }
 
+.kgs-instance-container .kgs-instance-editor__watermark {
+  height: 38px;
+  position: absolute;
+  top: 50%;
+}
+
+.kgs-instance-container .kgs-instance-editor__watermark p { 
+  position: absolute;
+  color: gray;
+  font-size: 400px;
+  pointer-events: none;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  opacity: 0.2;
+}
+
 @media (min-width:1200px) { 
   .kgs-instance-container {
     max-width: 1200px;

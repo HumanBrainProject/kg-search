@@ -61,7 +61,8 @@ export const Preview = connect(
       defaultGroup: state.groups.defaultGroup,
       id: props.match.params.id,
       type: type,
-      location: state.router.location
+      location: state.router.location,
+      hasWatermark: true
     };
   },
   dispatch => ({
