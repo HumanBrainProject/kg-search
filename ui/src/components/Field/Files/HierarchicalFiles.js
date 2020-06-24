@@ -7,108 +7,98 @@ import "./HierarchicalFiles.css";
 import theme from "./Theme";
 import Header from "./Header";
 
+const buildTreeStructureForFile = (tree, file, nbOfPathToSkip, rootUrlSeparator) => { 
+  const path = file.url.split("/").slice(nbOfPathToSkip);
+  let node = tree;
+  path.forEach((name, index) => {
+    if(index === (path.length - 1)) { // file
+      node.paths[name] = {
+        name: name,
+        url: file.url,
+        type: "file",
+        size: file.fileSize,
+        thumbnail: file.thumbnailUrl && file.thumbnailUrl.url //"https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000041_VervetMonkey_3D-PLI_CoroSagiSec_dev/VervetThumbnail.jpg"
+      };
+    } else { // folder
+      if(!node.paths[name]) { // is not already created
+        node.paths[name] = {
+          name: name,
+          url: `${node.url}${node === tree?rootUrlSeparator:"/"}${name}`,
+          type: "folder",
+          paths: {}
+        };
+      }
+      node = node.paths[name];
+    }
+  });
+};
+
+const setChildren = node => {
+  if(node.type === "folder") {
+    node.children = [];
+    Object.values(node.paths).forEach(child => {
+      node.children.push(child);
+      if(child.type === "folder") {
+        setChildren(child);
+      }
+    });
+  }
+};
+
+const getPath = url => {
+  if (!url) {
+    return [];
+  }
+  const segments = url.split("/");
+  return segments.slice(0, segments.length-1);
+};
+
+const getCommonPath = files => {
+  const urls = files.map(file => file.url).sort();
+  const firstFilePath = getPath(urls[0]);
+  const lastFilePath = getPath(urls.pop());
+  const max = firstFilePath.length > lastFilePath.length?lastFilePath.length:firstFilePath.length;
+  let index = 0;
+  while(index<max && firstFilePath[index] === lastFilePath[index]) {
+    index++;
+  }
+  return firstFilePath.splice(0, index);
+};
+
+const getTree = files => {
+  const commonPath = getCommonPath(files);
+  const rootPathIndex = 6;
+  const url = commonPath.length<=rootPathIndex?commonPath.join("/"):`${commonPath.slice(0,rootPathIndex).join("/")}?prefix=${commonPath.slice(rootPathIndex).join("/")}`;
+  const tree = {
+    name: commonPath[commonPath.length-1],
+    url: `/proxy/export?container=${url}`,
+    type: "folder",
+    paths: {},
+    toggled: true
+  };
+  const nbOfPathToSkip = commonPath.length;
+  const rootUrlSeparator = nbOfPathToSkip>rootPathIndex?"/":"?prefix=";
+  files.forEach(file => buildTreeStructureForFile(tree, file, nbOfPathToSkip, rootUrlSeparator));
+  setChildren(tree);
+  return tree;
+};
+
 export default class HierarchicalFiles extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       node: {},
-      data: {},
+      tree: {},
       showTermsOfUse: false
     };
   }
 
   componentDidMount() {
-    const {show} = this.props;
-    if(show) {
-      this.constructData();
+    const {show, data} = this.props;
+    if (show) {
+      const tree = getTree(data);
+      this.setState({tree: {...tree} });
     }
-  }
-
-  buildObjectStructure = (obj, path, item) => {
-    path.forEach((d, index) => {
-      if(index === (path.length - 1)) {
-        obj.children[d] = {
-          url: item.url,
-          type: "file",
-          name: d,
-          size: item.fileSize,
-          thumbnail: item.thumbnailUrl && item.thumbnailUrl.url //"https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000041_VervetMonkey_3D-PLI_CoroSagiSec_dev/VervetThumbnail.jpg"
-        };
-      } else {
-        if(!obj.children[d]) {
-          obj.children[d] = {
-            children: {},
-            type: "folder",
-            url: `${obj.url}${d}`,
-            name: d
-          };
-        }
-        obj = obj.children[d];
-      }
-    });
-  };
-
-  constructResult = (resultObj, val) => {
-    if(val.type === "folder") {
-      Object.entries(val.children).forEach(([key, value]) => {
-        if(value.type === "file") {
-          resultObj.children.push({
-            name: key,
-            type: "file",
-            url: value.url,
-            size: value.size,
-            thumbnail: value.thumbnail
-          });
-        } else {
-          const child ={
-            name: key,
-            children: [],
-            type: "folder",
-            url: value.url
-          };
-          resultObj.children.push(child);
-          this.constructResult(child, value);
-        }
-      });
-    }
-  }
-
-  findCommonPath = array => {
-    const sortedArray = array.sort();
-    const firstElement = sortedArray[0];
-    const lastElement= sortedArray.pop();
-    const firstElementLength = firstElement.length;
-    let index= 0;
-    while(index<firstElementLength && firstElement.charAt(index) === lastElement.charAt(index)) {
-      index++;
-    }
-    return firstElement.substring(0, index);
-  }
-
-  constructData = () => {
-    const urlsToFindCommon = this.props.data.map(u => u.url);
-    const commonPath = this.findCommonPath(urlsToFindCommon);
-    const pathArray = commonPath.split("/");
-    const result = {
-      name: pathArray[pathArray.length-2]
-    };
-    const pathObj = {
-      children:{},
-      type: "folder",
-      url: `/proxy/export?container=${commonPath}`
-    };
-    this.props.data.forEach(item => {
-      const path = item.url.split("/").slice(pathArray.length-1);
-      this.buildObjectStructure(pathObj, path, item);
-    });
-    if (pathObj) {
-      result.children = [];
-      result.toggled = true;
-      result.type = "folder";
-      result.url = pathObj.url;
-      this.constructResult(result, pathObj);
-    }
-    this.setState({data: {...result} });
   }
 
   onToggle = (node, toggled) => {
@@ -138,7 +128,7 @@ export default class HierarchicalFiles extends React.Component {
     if(!show) {
       return null;
     }
-    const {node, data, showTermsOfUse} = this.state;
+    const {node, tree, showTermsOfUse} = this.state;
     const name = node && node.name;
     const size = node && node.size;
     const type = node && node.type;
@@ -146,23 +136,24 @@ export default class HierarchicalFiles extends React.Component {
       <>
         <div className="kgs-hierarchical-files">
           <Treebeard
-            data={data}
+            data={tree}
             onToggle={this.onToggle}
             decorators={{...decorators, Header}}
             style={{...theme}}
           />
-          {node.active &&
-        <div className="kgs-hierarchical-files__details">
-          <div>{node.thumbnail ? <img height="80" src={node.thumbnail} alt={node.url} />:<i className={`fa fa-5x fa-${type}-o`}></i>}</div>
-          <div className="kgs-hierarchical-files__info">
-            <div>
-              <div><strong>Name:</strong> {name}</div>
-              {size  && <div><strong>Size:</strong> {size}</div>}
-              <a type="button" className="btn kgs-hierarchical-files__info_link" href={node.url} onClick={this.handleClick(node.url)}><i className="fa fa-download"></i> Download {type}</a>
-              <div className="kgs-hierarchical-files__info_agreement"><span>By downloading the {type} you agree to the <a href="#" onClick={this.toggleTermsOfUse}><strong>Terms of use</strong></a></span></div>
+          {node.active && (
+            <div className="kgs-hierarchical-files__details">
+              <div>{node.thumbnail ? <img height="80" src={node.thumbnail} alt={node.url} />:<i className={`fa fa-5x fa-${type}-o`}></i>}</div>
+              <div className="kgs-hierarchical-files__info">
+                <div>
+                  <div><strong>Name:</strong> {name}</div>
+                  {size  && <div><strong>Size:</strong> {size}</div>}
+                  <a type="button" className="btn kgs-hierarchical-files__info_link" href={node.url} onClick={this.handleClick(node.url)}><i className="fa fa-download"></i> Download {type}</a>
+                  <div className="kgs-hierarchical-files__info_agreement"><span>By downloading the {type} you agree to the <a href="#" onClick={this.toggleTermsOfUse}><strong>Terms of use</strong></a></span></div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>}
+          )}
         </div>
         {showTermsOfUse &&
           <div className="kgs-hierarchical-files__info_terms_of_use">
