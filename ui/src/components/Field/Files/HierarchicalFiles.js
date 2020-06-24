@@ -97,7 +97,7 @@ export default class HierarchicalFiles extends React.Component {
     const {show, data} = this.props;
     if (show) {
       const tree = getTree(data);
-      this.setState({tree: {...tree} });
+      this.setState({tree: tree });
     }
   }
 
