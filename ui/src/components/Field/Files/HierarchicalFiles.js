@@ -7,7 +7,7 @@ import "./HierarchicalFiles.css";
 import theme from "./Theme";
 import Header from "./Header";
 
-const buildTreeStructureForFile = (tree, file, nbOfPathToSkip, rootUrlSeparator) => { 
+const buildTreeStructureForFile = (tree, file, nbOfPathToSkip, rootUrlSeparator) => {
   const path = file.url.split("/").slice(nbOfPathToSkip);
   let node = tree;
   path.forEach((name, index) => {
