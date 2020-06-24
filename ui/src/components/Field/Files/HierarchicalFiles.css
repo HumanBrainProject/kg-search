@@ -125,6 +125,9 @@
 
 .kgs-hierarchical-files .kgs-hierarchical-files__node {
     display: flex;
+    cursor: pointer; 
+    position: relative; 
+    padding: 0px 5px;  
 }
 
 .kgs-hierarchical-files .kgs-hierarchical-files__node_name {
@@ -138,5 +141,9 @@
     }
     .kgs-hierarchical-files .kgs-hierarchical-files__details {
         width: 40%;
+    }
+    
+    .kgs-hierarchical-files .kgs-hierarchical-files__node {
+        align-items: center;
     }
 }
