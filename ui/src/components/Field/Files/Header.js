@@ -3,14 +3,13 @@ import PropTypes from "prop-types";
 
 
 const Header = ({node, style}) => {
-  const iconClass = `fa fa-${node.type}-o`;
   const iconStyle = {marginRight: "5px"};
   return(
     <div style={style.base}>
       <div style={style.title}>
-        {node.thumbnail?
+        {node.thumbnail ?
           <img height="14" width="12" src={node.thumbnail} alt={node.url} style={iconStyle} />:
-          <i className={iconClass} style={iconStyle}/>
+          node.type === "file" ? <i className={"fa fa-file-o"} style={iconStyle}/>:null
         }
         {node.name}
       </div>
