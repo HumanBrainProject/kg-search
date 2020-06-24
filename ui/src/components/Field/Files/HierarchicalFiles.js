@@ -66,6 +66,9 @@ const getCommonPath = files => {
 };
 
 const getTree = files => {
+  if(!Array.isArray(files)) {
+    files = [files]; // To be checked with the new indexer
+  }
   const commonPath = getCommonPath(files);
   const rootPathIndex = 6;
   const url = commonPath.length<=rootPathIndex?commonPath.join("/"):`${commonPath.slice(0,rootPathIndex).join("/")}?prefix=${commonPath.slice(rootPathIndex).join("/")}`;

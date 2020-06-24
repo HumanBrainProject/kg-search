@@ -60,7 +60,7 @@ const FieldBase = (renderUserInteractions = true) => {
       group: group
     };
     const valueProps = {
-      show: !isList && !isButton,
+      show: !isList && !isButton && !isHierarchicalFiles,
       data: data,
       mapping: mapping,
       group: group
