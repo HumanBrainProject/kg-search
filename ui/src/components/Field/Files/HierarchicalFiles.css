@@ -15,7 +15,6 @@
 */
 
 .kgs-hierarchical-files {
-    display: none;
     display: flex;
     align-items: self-start;
 }
@@ -94,7 +93,7 @@
 
 .kgs-hierarchical-files__details .kgs-hierarchical-files__info .kgs-hierarchical-files__info_agreement {
     margin-top: 10px;
-    font-size: x-small;
+    /* font-size: x-small; */
     cursor: pointer;
 }
 
@@ -114,15 +113,3 @@
     border-color: var(--button-default-border-color);
     color: var(--color-33);   
 }
-/* 
-@media (min-width: 992px) {
-    .kgs-field__hierarchical-files .kgs-hierarchical-files {
-        display: flex;
-        align-items: self-start;
-    }
-
-    .kgs-field__hierarchical-files > .kgs-field__list {
-        display: none;
-    }
-
- } */
