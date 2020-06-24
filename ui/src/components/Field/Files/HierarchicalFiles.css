@@ -130,6 +130,12 @@
     padding: 0px 5px;  
 }
 
+.kgs-hierarchical-files .kgs-hierarchical-files__node_wrapper {
+    display: inline-block;
+    color: rgb(157, 165, 171);
+    vertical-align: middle;
+}
+
 .kgs-hierarchical-files .kgs-hierarchical-files__node_name {
     word-break: break-all;
 }
