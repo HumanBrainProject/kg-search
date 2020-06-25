@@ -102,8 +102,16 @@
 
 .kgs-hierarchical-files__details .kgs-hierarchical-files__info .kgs-hierarchical-files__info_agreement {
     margin-top: 10px;
-    /* font-size: x-small; */
     cursor: pointer;
+}
+
+.kgs-hierarchical-files__details .kgs-hierarchical-files__info .kgs-hierarchical-files__info_agreement > span > button {
+    border: 0;
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    color: var(--link-color-1);
 }
 
 .kgs-hierarchical-files__details .kgs-hierarchical-files__info  .kgs-hierarchical-files__info_link {

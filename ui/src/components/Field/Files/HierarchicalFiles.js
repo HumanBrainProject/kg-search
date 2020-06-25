@@ -168,7 +168,7 @@ export default class HierarchicalFiles extends React.Component {
                   <div><strong>Name:</strong> {name}</div>
                   {size  && <div><strong>Size:</strong> {size}</div>}
                   <a type="button" className="btn kgs-hierarchical-files__info_link" href={node.url} onClick={this.handleClick(node.url)}><i className="fa fa-download"></i> Download {type}</a>
-                  <div className="kgs-hierarchical-files__info_agreement"><span>By downloading the {type} you agree to the <a href="#" onClick={this.toggleTermsOfUse}><strong>Terms of use</strong></a></span></div>
+                  <div className="kgs-hierarchical-files__info_agreement"><span>By downloading the {type} you agree to the <button onClick={this.toggleTermsOfUse}><strong>Terms of use</strong></button></span></div>
                 </div>
               </div>
             </div>
