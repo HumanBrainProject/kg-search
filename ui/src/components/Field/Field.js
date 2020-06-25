@@ -21,6 +21,7 @@ import { ListField, PrintViewListField } from "./ListField";
 import { ObjectField, PrintViewObjectField } from "./ObjectField";
 import { ValueField, PrintViewValueField } from "./ValueField";
 import { TableField, PrintViewTableField } from "./TableField";
+import HierarchicalFiles from "./Files/HierarchicalFiles";
 import "./Field.css";
 
 const FieldBase = (renderUserInteractions = true) => {
@@ -37,9 +38,10 @@ const FieldBase = (renderUserInteractions = true) => {
 
     const isList = Array.isArray(data);
     const isTable = mapping.isTable;
+    const isHierarchicalFiles = mapping.isHierarchicalFiles;
     const isButton = mapping.isButton;
     const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
-    const className = "kgs-field" + (name?" kgs-field__" + name:"") + (mapping.layout?" kgs-field__layout-" + mapping.layout:"") + (isTable?" kgs-field__table":"");
+    const className = "kgs-field" + (name?" kgs-field__" + name:"") + (mapping.layout?" kgs-field__layout-" + mapping.layout:"") + (isTable?" kgs-field__table":"") + (isHierarchicalFiles?" kgs-field__hierarchical-files":"");
 
     const labelProps = {
       show: !!mapping.value && (!mapping.labelHidden || !renderUserInteractions) && !isButton,
@@ -52,13 +54,13 @@ const FieldBase = (renderUserInteractions = true) => {
       value: mapping.hint
     };
     const listProps = {
-      show: isList,
+      show: isList && !isHierarchicalFiles,
       items: data,
       mapping: mapping,
       group: group
     };
     const valueProps = {
-      show: !isList && !isButton,
+      show: !isList && !isButton && !isHierarchicalFiles,
       data: data,
       mapping: mapping,
       group: group
@@ -75,6 +77,12 @@ const FieldBase = (renderUserInteractions = true) => {
       mapping: mapping,
       group: group
     };
+    const hierarchicalFileProps = {
+      show: isHierarchicalFiles,
+      data: data,
+      mapping: mapping,
+      group: group
+    };
 
     return (
       <span style={style} className={className}>
@@ -84,6 +92,7 @@ const FieldBase = (renderUserInteractions = true) => {
         <ListFieldComponent {...listProps} />
         <ObjectFieldComponent {...objectProps} />
         <TableFieldComponent {...tableProps} />
+        <HierarchicalFiles  {...hierarchicalFileProps} />
       </span>
     );
   };

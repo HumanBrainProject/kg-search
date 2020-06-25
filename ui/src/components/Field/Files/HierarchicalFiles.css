@@ -1,0 +1,155 @@
+/*
+*   Copyright (c) 2020, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+.kgs-hierarchical-files {
+    display: flex;
+    align-items: self-start;
+}
+
+.kgs-hierarchical-files>ul {
+    width: 50%;
+    height: 350px;
+    overflow-y: auto;
+    border: 1px solid var(--default-border-color);
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.kgs-hierarchical-files .kgs-hierarchical-files__details {
+    width: 50%;
+    position: relative;
+    margin: 9px 0 2px;
+    padding: 10px;
+}
+
+
+.kgs-hierarchical-files__info_terms_of_use {
+    padding: 10px;
+    margin: 9px 0 2px;
+    border: 1px solid var(--default-border-color);
+    border-radius: 10px;
+    box-sizing: border-box;
+    background-color: var(--background-color-5);
+    text-align: left;
+    font-size: var(--font-size-extra-small);
+    font-weight: 500;
+    line-height: 1.3em;
+    color: var(--color-7);
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+.kgs-hierarchical-files__details > div {
+    margin: 20px 0 30px 0;
+    text-align: center;   
+}
+
+.kgs-hierarchical-files__details > div > a {
+    margin-left: 6px;
+}
+
+.kgs-hierarchical-files__details .kgs-hierarchical-files__info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: small;
+}
+
+.kgs-hierarchical-files__details .kgs-hierarchical-files__info > div > div {
+    word-break: break-all;
+    line-height: 1.3em;
+} 
+
+.kgs-hierarchical-files__details .kgs-hierarchical-files__info > div > div + div {
+    margin-top: 4px;
+} 
+
+.kgs-hierarchical-files__details .kgs-hierarchical-files__info_terms_of_use {
+    position: relative;
+    margin: 9px 0 2px;
+    padding: 10px;
+    border: 1px solid var(--default-border-color);
+    border-radius: 10px;
+    box-sizing: border-box;
+    background-color: var(--background-color-5);
+    text-align: left;
+    font-size: var(--font-size-extra-small);
+    font-weight: 500;
+    line-height: 1.3em;
+    color: var(--color-7);
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;   
+}
+
+.kgs-hierarchical-files__details .kgs-hierarchical-files__info > div {
+    text-align: left;
+}
+
+.kgs-hierarchical-files__details .kgs-hierarchical-files__info .kgs-hierarchical-files__info_agreement {
+    margin-top: 10px;
+    /* font-size: x-small; */
+    cursor: pointer;
+}
+
+.kgs-hierarchical-files__details .kgs-hierarchical-files__info  .kgs-hierarchical-files__info_link {
+    position: relative;
+    background-color: var(--button-default-background-color);
+    border-color: var(--button-default-border-color);
+    font-size: var(--font-size);
+    color: var(--color-36);
+    margin-top: 20px;
+}
+
+.kgs-hierarchical-files__details .kgs-hierarchical-files__info  .kgs-hierarchical-files__info_link:hover,
+.kgs-hierarchical-files__details .kgs-hierarchical-files__info  .kgs-hierarchical-files__info_link:focus,
+.kgs-hierarchical-files__details .kgs-hierarchical-files__info  .kgs-hierarchical-files__info_link:active  {
+    background-color: var(--button-default-background-color-hover);
+    border-color: var(--button-default-border-color);
+    color: var(--color-33);   
+}
+
+.kgs-hierarchical-files .kgs-hierarchical-files__node {
+    display: flex;
+    cursor: pointer; 
+    position: relative; 
+    padding: 0px 5px;  
+}
+
+.kgs-hierarchical-files .kgs-hierarchical-files__node_wrapper {
+    display: inline-block;
+    color: rgb(157, 165, 171);
+    vertical-align: middle;
+}
+
+.kgs-hierarchical-files .kgs-hierarchical-files__node_name {
+    word-break: break-all;
+}
+
+
+@media (min-width:768px) {
+    .kgs-hierarchical-files>ul {
+        width: 60%;
+    }
+    .kgs-hierarchical-files .kgs-hierarchical-files__details {
+        width: 40%;
+    }
+    
+    .kgs-hierarchical-files .kgs-hierarchical-files__node {
+        align-items: center;
+    }
+}
