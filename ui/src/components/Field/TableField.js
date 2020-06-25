@@ -55,7 +55,7 @@ const TableFieldBase = (renderUserInteractions = true) => {
     );
 
     return (
-      fields && fields[0] ?
+      fields && fields[0] && Array.isArray(fields[0]) ?
         <table className="table">
           <thead>
             <tr>

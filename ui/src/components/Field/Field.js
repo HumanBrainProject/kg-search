@@ -37,7 +37,7 @@ const FieldBase = (renderUserInteractions = true) => {
     }
 
     const isList = Array.isArray(data);
-    const isTable = mapping.isTable;
+    const isTable = mapping.isTable && isList && data[0] && !!data[0].children;
     const isHierarchicalFiles = mapping.isHierarchicalFiles;
     const isButton = mapping.isButton;
     const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
@@ -72,7 +72,7 @@ const FieldBase = (renderUserInteractions = true) => {
       group: group
     };
     const tableProps = {
-      show: isTable,
+      show: isTable && !isHierarchicalFiles,
       items: data,
       mapping: mapping,
       group: group
