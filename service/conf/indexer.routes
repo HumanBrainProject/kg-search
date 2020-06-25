@@ -23,7 +23,7 @@
     #    '200':
     #      description: Ok
     ###
-  POST /  controllers.IndexerController.index(databaseScope: models.DatabaseScope, completeRebuild: Boolean?=false, restrictToOrganizations:Option[String])
+  POST /all  controllers.IndexerController.index(databaseScope: models.DatabaseScope, completeRebuild: Boolean?=false, restrictToOrganizations:Option[String])
 
   ###
   #  summary: Index the specified type
