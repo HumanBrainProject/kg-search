@@ -152,6 +152,7 @@ const getGroupLabel = (groups, name) => {
       label = group.label;
       return true;
     }
+    return false;
   });
   return label;
 };

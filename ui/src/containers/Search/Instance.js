@@ -17,10 +17,10 @@
 import { connect } from "react-redux";
 
 import { mapStateToProps } from "../../helpers/InstanceHelper";
-import { ImagePreviews } from "../ImagePreviews";
-import { ImagePopup } from "../ImagePopup";
-import { TermsShortNotice } from "../TermsShortNotice";
-import { Instance as Component } from "../../components/Instance";
+import { ImagePreviews } from "../Image/ImagePreviews";
+import { ImagePopup } from "../Image/ImagePopup";
+import { TermsShortNotice } from "../Notice/TermsShortNotice";
+import { Instance as Component } from "../../components/Instance/Instance";
 
 export const Instance = connect(
   (state, props) => ({

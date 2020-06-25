@@ -20,6 +20,7 @@ import API from "../services/API";
 import ReactPiwik from "react-piwik";
 import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
 import { sessionFailure } from "./actions";
+import * as Sentry from "@sentry/browser";
 
 export const loadSearchBadRequest = error => {
   return {
@@ -130,6 +131,7 @@ export const search = () => {
     ReactPiwik.push(["trackPageView"]);
     API.axios
       .post(API.endpoints.search(), payload)
+      //.get(API.endpoints.search(), payload)
       .then(response => {
         const index = response.headers["x-selected-index"];
         if (index) {
@@ -141,30 +143,35 @@ export const search = () => {
         const { response } = e;
         const { status } = response;
         switch (status) {
-          case 400: // Bad Request
-            {
-              const error = `Your search query is not well formed. Please refine your request (${status})`;
-              dispatch(loadSearchBadRequest(error));
-              break;
-            }
-          case 401: // Unauthorized
-          case 403: // Forbidden
-          case 511: // Network Authentication Required
-            {
-              const error = "Your session has expired. Please login again.";
-              dispatch(sessionFailure(error));
-              break;
-            }
-          case 404:
-          default:
-            {
-              const index = response.headers["x-selected-index"];
-              if (index) {
-                dispatch(setGroup(index));
-              }
-              const error = `Your search query is not well formed. Please refine your request (${status})`;
-              dispatch(loadSearchServiceFailure(error));
-            }
+        case 400: // Bad Request
+        {
+          const error = `Your search query is not well formed. Please refine your request (${status})`;
+          dispatch(loadSearchBadRequest(error));
+          break;
+        }
+        case 401: // Unauthorized
+        case 403: // Forbidden
+        case 511: // Network Authentication Required
+        {
+          const error = "Your session has expired. Please login again.";
+          dispatch(sessionFailure(error));
+          break;
+        }
+        case 500:
+        {
+          Sentry.captureException(e);
+          break;
+        }
+        case 404:
+        default:
+        {
+          const index = response.headers["x-selected-index"];
+          if (index) {
+            dispatch(setGroup(index));
+          }
+          const error = `Your search query is not well formed. Please refine your request (${status})`;
+          dispatch(loadSearchServiceFailure(error));
+        }
         }
       });
   };

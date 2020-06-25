@@ -20,6 +20,7 @@ import { setGroup, clearGroupError } from "./actions.groups";
 import { sessionFailure, logout } from "./actions";
 import { history, store } from "../store";
 import { getSearchKey } from "../helpers/BrowserHelpers";
+import * as Sentry from "@sentry/browser";
 
 export const loadInstanceRequest = () => {
   return {
@@ -143,6 +144,11 @@ export const loadInstance = (type, id, shouldUpdateLocation=false) => {
           dispatch(sessionFailure(error));
           break;
         }
+        case 500:
+        {
+          Sentry.captureException(e);
+          break;
+        }
         case 404:
         {
           const index = response.headers["x-selected-index"];
@@ -200,6 +206,11 @@ export const loadPreview = (type, id) => {
           {
             const error = "Your session has expired. Please login again.";
             dispatch(sessionFailure(error));
+            break;
+          }
+          case 500:
+          {
+            Sentry.captureException(e.message);
             break;
           }
           case 404:

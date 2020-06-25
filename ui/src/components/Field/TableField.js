@@ -15,31 +15,22 @@
 */
 
 import React from "react";
-import { Field, PrintViewField } from ".";
-import { ValueField } from "./ValueField";
+import { Field, PrintViewField } from "./Field";
 import { LIST_SMALL_SIZE_STOP,
   getNextSizeStop,
   getFilteredItems,
   getShowMoreLabel } from "./helpers";
 import "./TableField.css";
 
-
 const CustomTableRow = ({item, viewComponent}) => {
   let Component = viewComponent;
   return (
     <tr>
-      { Array.isArray(item)?
-        item.map((i, id) =>
-          <th key={`${i.name}-${id}`}>{i.data ?
-            <Component name={i.name} data={i.data} mapping={i.mapping} group={i.group} />:"-"}</th>
-        ):item.data ?
-          <React.Fragment>
-            <th className="kg-table__filecol">
-              <ValueField show={true} data={item.data} mapping={item.mapping} group={item.group} />
-            </th>
-            <th>{item.data.fileSize ? item.data.fileSize:"-"}</th>
-          </React.Fragment>:<th>-</th>
-      }
+      {item.map((i, id) =>
+        <th key={`${i.name}-${id}`}>{i.data ?
+          <Component name={i.name} data={i.data} mapping={i.mapping} group={i.group} />:"-"}
+        </th>
+      )}
     </tr>
   );
 };
@@ -64,30 +55,13 @@ const TableFieldBase = (renderUserInteractions = true) => {
     );
 
     return (
-      fields && Array.isArray(fields[0]) ?
-        (fields && fields[0] ?
-          <table className="table">
-            <thead>
-              <tr>
-                {fields[0].map((el,id) =>
-                  <th key={`${el.name}-${id}`}>{el.mapping.value}</th>
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {fields.map((item, index) => <CustomTableRow key={`${index}`}  item={item} isFirst={!index} viewComponent={FieldComponent} />)}
-              {showToggle && (
-                <tr>
-                  <th><button className="kgs-field__viewMore-button" onClick={toggleHandler} role="link">{toggleLabel}</button></th>
-                </tr>
-              )}
-            </tbody>
-          </table>:null) :
+      fields && fields[0] && Array.isArray(fields[0]) ?
         <table className="table">
           <thead>
             <tr>
-              <th>Filename</th>
-              <th>Size</th>
+              {fields[0].map((el,id) =>
+                <th key={`${el.name}-${id}`}>{el.mapping.value}</th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -98,7 +72,7 @@ const TableFieldBase = (renderUserInteractions = true) => {
               </tr>
             )}
           </tbody>
-        </table>
+        </table>:null
     );
   };
 
@@ -165,9 +139,12 @@ const TableFieldBase = (renderUserInteractions = true) => {
 
     render() {
       const {show} = this.props;
+      if(!show) {
+        return null;
+      }
 
       return (
-        show ? <TableFieldComponent list={this.state.items} showToggle={this.state.hasShowMoreToggle} toggleHandler={this.handleShowMoreClick} toggleLabel={this.state.showMoreLabel} />:null
+        <TableFieldComponent list={this.state.items} showToggle={this.state.hasShowMoreToggle} toggleHandler={this.handleShowMoreClick} toggleLabel={this.state.showMoreLabel} />
       );
     }
   }

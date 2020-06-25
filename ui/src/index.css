@@ -193,15 +193,6 @@
   --box-shadow-4: #111;
 }
 
-body[theme="dark"] ::-webkit-scrollbar {
-  background: #1a1a1a;
-}
-
-body[theme="dark"] ::-webkit-scrollbar-thumb {
-  background: #444;
-}
-
-
 @media (min-width: 576px) {
   :root {
     --site-margin: var(--site-margin-desktop)

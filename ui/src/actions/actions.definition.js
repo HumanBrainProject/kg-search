@@ -17,6 +17,7 @@
 import * as types from "./actions.types";
 import API from "../services/API";
 import { sessionFailure } from "./actions";
+import * as Sentry from "@sentry/browser";
 
 export const loadDefinitionRequest = () => {
   return {
@@ -68,6 +69,7 @@ export const loadDefinition = () => {
     field.linkIcon = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "link_icon", null);
     field.visible = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "visible", true);
     field.isTable = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isTable", false);
+    field.isHierarchicalFiles = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isHierarchicalFiles", false);
     field.isButton = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isButton", false);
     field.showIfEmpty = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "showIfEmpty", false);
     field.layout = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "layout", null);
@@ -79,6 +81,9 @@ export const loadDefinition = () => {
     field.boost = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "boost", 1);
     field.order = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "order", null);
     field.facet = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "facet", null);
+    field.isHierarchicalFacet = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isHierarchicalFacet", false);
+    field.isFilterableFacet = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isFilterableFacet", false);
+    field.facetMissingTerm = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "facetMissingTerm", false);
     field.facetOrder = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "facet_order", "bycount");
     field.aggregate = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "aggregate", null);
     field.type = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "type", null);
@@ -171,6 +176,11 @@ export const loadDefinition = () => {
         {
           const error = "Your session has expired. Please login again.";
           dispatch(sessionFailure(error));
+          break;
+        }
+        case 500:
+        {
+          Sentry.captureException(e);
           break;
         }
         case 404:
