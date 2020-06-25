@@ -62,7 +62,7 @@ export const Preview = connect(
       id: props.match.params.id,
       type: type,
       location: state.router.location,
-      hasWatermark: true
+      watermark: "Preview"
     };
   },
   dispatch => ({
