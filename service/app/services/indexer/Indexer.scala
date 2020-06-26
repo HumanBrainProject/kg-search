@@ -106,7 +106,6 @@ class IndexerImpl @Inject()(
       .map { wsresult =>
         wsresult.status match {
           case OK =>
-            logger.debug("Successfully received relevant types from KG Query")
             Right(
               wsresult.json
                 .as[List[JsObject]]
@@ -155,9 +154,9 @@ class IndexerImpl @Inject()(
         .map { wsresult =>
           wsresult.status match {
             case OK =>
-              logger.info(s"Received instances for schema $schema from KG Query")
               val metaTemplate = templateEngine.getESTemplateFromType(templateType)
               val value = (templateType.apiName, transformMeta(wsresult.json, metaTemplate))
+              logger.info(s"Received instances for schema $schema from KG Query")
               Right(value)
             case status => Left(ApiError(status, wsresult.body))
           }
@@ -415,6 +414,7 @@ class IndexerImpl @Inject()(
             s"$queryEndpoint/query/$schema/search/instances/?vocab=https://schema.hbp.eu/search/&databaseScope=${databaseScope.toString}$paramsSize$paramsFrom$restrictOrgsToString"
           )
           .addHttpHeaders("Authorization" -> s"Bearer $token")
+          .withRequestTimeout(60.minutes)
           .get()
       )
       .map { wsresult =>
