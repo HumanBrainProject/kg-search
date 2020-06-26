@@ -78,6 +78,7 @@ class ElasticSearchImpl @Inject()(
     completeRebuild: Boolean,
   ): Task[Either[ApiError, Unit]] = {
     if (completeRebuild) {
+      logger.info(s"Completely rebuilding the index ${dbScope.toIndexName} in ES...")
       Task
         .deferFuture(WSClient.url(s"$elasticSearchEndpoint/${dbScope.toIndexName}").delete())
         .flatMap(
@@ -89,7 +90,7 @@ class ElasticSearchImpl @Inject()(
                 Task
                   .deferFuture(
                     WSClient
-                      .url(s"$elasticSearchEndpoint/${dbScope.toIndexName}")
+                      .url(s"$elasticSearchEndpoint/${dbScope.toIndexName}").withRequestTimeout(60.minutes)
                       .put(payload)
                   )
                   .map(
@@ -122,7 +123,7 @@ class ElasticSearchImpl @Inject()(
     // TODO Check if element is a list ????
     Task
       .deferFuture(
-        WSClient.url(s"$elasticSearchEndpoint/${databaseScope.toIndexName}/$dataType/$identifier").put(jsonPayload)
+        WSClient.url(s"$elasticSearchEndpoint/${databaseScope.toIndexName}/$dataType/$identifier").withRequestTimeout(60.minutes).put(jsonPayload)
       )
       .map { res =>
         res.status match {

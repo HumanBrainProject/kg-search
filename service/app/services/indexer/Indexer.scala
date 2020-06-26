@@ -98,13 +98,15 @@ class IndexerImpl @Inject()(
   val serviceUrlBase: String = configuration.get[String]("serviceUrlBase")
 
   def getRelevantTypes(): Task[Either[ApiError, List[TemplateType]]] = {
+    logger.info(s"Loading relevant types for indexing in KG Query")
     Task
       .deferFuture(
-        WSClient.url(s"${queryEndpoint}/query/search/schemas").get()
+        WSClient.url(s"${queryEndpoint}/query/search/schemas").withRequestTimeout(60.minutes).get()
       )
       .map { wsresult =>
         wsresult.status match {
           case OK =>
+            logger.debug("Successfully received relevant types from KG Query")
             Right(
               wsresult.json
                 .as[List[JsObject]]
@@ -120,6 +122,7 @@ class IndexerImpl @Inject()(
   }
 
   def createLabels(relevantTypes: List[String]): Task[Map[String, JsValue]] = {
+    logger.info(s"Creating labels")
     val labelsPerRelevantTypes = relevantTypes.map { t =>
       val template = TemplateType(t.splitAt(t.lastIndexOf("/"))._2)
       metaByType(template, fieldsOnly = false)
@@ -143,15 +146,16 @@ class IndexerImpl @Inject()(
   private def getListOfESmapping(relevantTypes: List[TemplateType]) = {
     Task.sequence(relevantTypes.map { templateType =>
       val schema = TemplateType.toSchema(templateType)
+      logger.info(s"Loading instances for schema $schema from KG Query")
       Task
         .deferFuture(
           WSClient
-            .url(s"$queryEndpoint/query/$schema/search")
-            .get()
+            .url(s"$queryEndpoint/query/$schema/search").withRequestTimeout(60.minutes).get()
         )
         .map { wsresult =>
           wsresult.status match {
             case OK =>
+              logger.info(s"Received instances for schema $schema from KG Query")
               val metaTemplate = templateEngine.getESTemplateFromType(templateType)
               val value = (templateType.apiName, transformMeta(wsresult.json, metaTemplate))
               Right(value)
