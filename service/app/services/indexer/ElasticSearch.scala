@@ -28,6 +28,7 @@ import play.api.libs.json.{JsNumber, JsObject, JsValue, Json, Writes}
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
 
+import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
 import scala.util.Success
 
@@ -90,7 +91,7 @@ class ElasticSearchImpl @Inject()(
                 Task
                   .deferFuture(
                     WSClient
-                      .url(s"$elasticSearchEndpoint/${dbScope.toIndexName}").withRequestTimeout(60.minutes)
+                      .url(s"$elasticSearchEndpoint/${dbScope.toIndexName}").withRequestTimeout(3600.seconds)
                       .put(payload)
                   )
                   .map(

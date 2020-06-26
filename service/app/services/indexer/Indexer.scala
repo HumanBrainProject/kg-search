@@ -31,7 +31,7 @@ import play.api.{Configuration, Logging}
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
-
+import scala.concurrent.duration._
 import scala.concurrent.Await
 
 @ImplementedBy(classOf[IndexerImpl])
