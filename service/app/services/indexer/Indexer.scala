@@ -101,7 +101,7 @@ class IndexerImpl @Inject()(
     logger.info(s"Loading relevant types for indexing in KG Query")
     Task
       .deferFuture(
-        WSClient.url(s"${queryEndpoint}/query/search/schemas").withRequestTimeout(60.minutes).get()
+        WSClient.url(s"${queryEndpoint}/query/search/schemas").get()
       )
       .map { wsresult =>
         wsresult.status match {
@@ -149,7 +149,7 @@ class IndexerImpl @Inject()(
       Task
         .deferFuture(
           WSClient
-            .url(s"$queryEndpoint/query/$schema/search").withRequestTimeout(60.minutes).get()
+            .url(s"$queryEndpoint/query/$schema/search").get()
         )
         .map { wsresult =>
           wsresult.status match {
@@ -406,7 +406,7 @@ class IndexerImpl @Inject()(
     val paramsFrom = paginationParams.offset.map(p => s"&start=${p}").getOrElse("")
     val restrictOrgsToString =
       if (restrictToOrgs.isEmpty) "" else s"""&restrictToOrganizations=${restrictToOrgs.mkString(",")}"""
-    logger.debug(s"$templateType - Fetching of data started")
+    logger.info(s"$templateType - Fetching of data started")
     Task
       .deferFuture(
         WSClient
@@ -414,7 +414,6 @@ class IndexerImpl @Inject()(
             s"$queryEndpoint/query/$schema/search/instances/?vocab=https://schema.hbp.eu/search/&databaseScope=${databaseScope.toString}$paramsSize$paramsFrom$restrictOrgsToString"
           )
           .addHttpHeaders("Authorization" -> s"Bearer $token")
-          .withRequestTimeout(60.minutes)
           .get()
       )
       .map { wsresult =>
@@ -428,7 +427,7 @@ class IndexerImpl @Inject()(
 
             maybeListOfResults match {
               case Some(listOfResults) =>
-                logger.debug(s"$templateType - Fetching of data done with ${listOfResults.size} elements fetched")
+                logger.info(s"$templateType - Fetching of data done with ${listOfResults.size} elements fetched")
                 val template = templateEngine.getTemplateFromType(templateType, databaseScope)
                 val result = listOfResults.map(r => {
                   transform(r, template)
@@ -452,7 +451,7 @@ class IndexerImpl @Inject()(
       .deferFuture(
         WSClient
           .url(s"$queryEndpoint/query/$schema/search/instances/${id.toString}?vocab=https://schema.hbp.eu/search/")
-          .addHttpHeaders("Authorization" -> s"Bearer $token").withRequestTimeout(60.minutes)
+          .addHttpHeaders("Authorization" -> s"Bearer $token")
           .get()
       )
       .map { wsresult =>
@@ -473,7 +472,7 @@ class IndexerImpl @Inject()(
     Task
       .deferFuture(
         WSClient
-          .url(s"$queryEndpoint/query/$schema/search").withRequestTimeout(60.minutes)
+          .url(s"$queryEndpoint/query/$schema/search")
           .get()
       )
       .map { wsresult =>
