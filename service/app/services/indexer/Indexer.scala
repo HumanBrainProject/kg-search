@@ -156,7 +156,7 @@ class IndexerImpl @Inject()(
             case OK =>
               val metaTemplate = templateEngine.getESTemplateFromType(templateType)
               val value = (templateType.apiName, transformMeta(wsresult.json, metaTemplate))
-              logger.info(s"Received instances for schema $schema from KG Query")
+              logger.info(s"Received instances for schema $schema from KG Query: $value")
               Right(value)
             case status => Left(ApiError(status, wsresult.body))
           }
@@ -452,7 +452,7 @@ class IndexerImpl @Inject()(
       .deferFuture(
         WSClient
           .url(s"$queryEndpoint/query/$schema/search/instances/${id.toString}?vocab=https://schema.hbp.eu/search/")
-          .addHttpHeaders("Authorization" -> s"Bearer $token")
+          .addHttpHeaders("Authorization" -> s"Bearer $token").withRequestTimeout(60.minutes)
           .get()
       )
       .map { wsresult =>
@@ -473,7 +473,7 @@ class IndexerImpl @Inject()(
     Task
       .deferFuture(
         WSClient
-          .url(s"$queryEndpoint/query/$schema/search")
+          .url(s"$queryEndpoint/query/$schema/search").withRequestTimeout(60.minutes)
           .get()
       )
       .map { wsresult =>

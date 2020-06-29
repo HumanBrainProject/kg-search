@@ -81,7 +81,7 @@ class ElasticSearchImpl @Inject()(
     if (completeRebuild) {
       logger.info(s"Completely rebuilding the index ${dbScope.toIndexName} in ES...")
       Task
-        .deferFuture(WSClient.url(s"$elasticSearchEndpoint/${dbScope.toIndexName}").delete())
+        .deferFuture(WSClient.url(s"$elasticSearchEndpoint/${dbScope.toIndexName}").withRequestTimeout(60.minutes).delete())
         .flatMap(
           res =>
             res.status match {
@@ -91,7 +91,7 @@ class ElasticSearchImpl @Inject()(
                 Task
                   .deferFuture(
                     WSClient
-                      .url(s"$elasticSearchEndpoint/${dbScope.toIndexName}").withRequestTimeout(3600.seconds)
+                      .url(s"$elasticSearchEndpoint/${dbScope.toIndexName}").withRequestTimeout(60.minutes)
                       .put(payload)
                   )
                   .map(
@@ -150,7 +150,7 @@ class ElasticSearchImpl @Inject()(
       "from" -> JsNumber(page),
       "size" -> JsNumber(size)
     )
-    Task.deferFuture(WSClient.url(s"$elasticSearchEndpoint/$indexName/_search").post(body)).map { res =>
+    Task.deferFuture(WSClient.url(s"$elasticSearchEndpoint/$indexName/_search").withRequestTimeout(60.minutes).post(body)).map { res =>
       res.status match {
         case OK | CREATED =>
           val listOfIds: List[String] = (res.json \ "hits" \ "hits").asOpt[List[JsObject]].getOrElse(List()).map { el =>
@@ -165,7 +165,7 @@ class ElasticSearchImpl @Inject()(
   }
 
   override def removeIndex(id: String, indexName: String): Task[Either[ApiError, Unit]] = {
-    Task.deferFuture(WSClient.url(s"$elasticSearchEndpoint/$indexName/$id").delete()).map { res =>
+    Task.deferFuture(WSClient.url(s"$elasticSearchEndpoint/$indexName/$id").withRequestTimeout(60.minutes).delete()).map { res =>
       res.status match {
         case OK => Right(())
         case e  => Left(ApiError(e, res.body))
@@ -188,7 +188,7 @@ class ElasticSearchImpl @Inject()(
           WSClient
             .url(
               s"$elasticSearchEndpoint/$indexname/${templateType.apiName}/_search?size=$size&from=${currentPage * size}"
-            )
+            ).withRequestTimeout(60.minutes)
             .get()
         )
     }
@@ -218,7 +218,7 @@ class ElasticSearchImpl @Inject()(
     val querySize = 1000
     Task
       .deferFuture(
-        WSClient.url(s"$elasticSearchEndpoint/$indexname/${templateType.apiName}/_search?size=$querySize&from=0").get()
+        WSClient.url(s"$elasticSearchEndpoint/$indexname/${templateType.apiName}/_search?size=$querySize&from=0").withRequestTimeout(60.minutes).get()
       )
       .flatMap { res =>
         res.status match {
