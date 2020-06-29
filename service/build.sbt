@@ -15,7 +15,7 @@ lazy val kg_service = (project in file("."))
   .aggregate(common, auth)
   .dependsOn(common, auth)
 
-
+PlayKeys.devSettings += "play.server.http.idleTimeout" -> "infinite"
 
 javaOptions in Universal ++= Seq("-Dpidfile.path=/dev/null")
 
