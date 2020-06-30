@@ -161,7 +161,7 @@ trait DatasetTemplate extends Template with FileProxy {
       )
     ),
     "preparation" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("preparation")),
-    "modalityForFilter" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("modalityForFilter")),
+//    "modalityForFilter" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("modalityForFilter")),
     "methods" -> PrimitiveArrayToListOfValueObject[String]("methods"),
     "protocol" -> PrimitiveArrayToListOfValueObject[String]("protocols"),
     "viewer" ->
