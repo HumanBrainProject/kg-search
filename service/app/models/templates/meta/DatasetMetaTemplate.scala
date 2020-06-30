@@ -2,16 +2,7 @@ package models.templates.meta
 
 import models.templates.Template
 import models.templates.entities.ObjectMap
-import utils.{
-  Get,
-  Merge,
-  Nested,
-  ObjectReader,
-  OrElse,
-  PrimitiveToObjectWithCustomField,
-  TemplateComponent,
-  WriteObject
-}
+import utils.{Get, Merge, Nested, ObjectReader, OrElse, PrimitiveToObjectWithCustomField, TemplateComponent, WriteObject}
 
 trait DatasetMetaTemplate extends Template {
 
@@ -356,6 +347,19 @@ trait DatasetMetaTemplate extends Template {
                 List(
                   PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
                   PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
+                )
+              )
+            )
+          ),
+          Nested(
+            "modality",
+            ObjectReader(
+              "search:modality",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:facet", "https://schema.hbp.eu/searchUi/facet")
                 )
               )
             )
