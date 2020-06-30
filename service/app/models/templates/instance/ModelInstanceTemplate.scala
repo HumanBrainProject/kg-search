@@ -17,21 +17,21 @@ package models.templates.instance
 
 import java.net.URLEncoder
 
-import models.templates.Template
-import models.templates.entities.{ListOfObject, ObjectMap, ObjectWithUrlField, ObjectWithValueField, SetValue}
-import models.{DatabaseScope, INFERRED}
-import play.api.libs.json.{JsNull, JsString, JsValue}
+import models.templates.{FileProxy, Template}
+import models.templates.entities.{ListOfObject, NestedObject, ObjectMap, ObjectWithUrlField, ObjectWithValueField, SetValue, ObjectWithCustomField}
+import models.{INFERRED, RELEASED}
+import play.api.libs.json.JsString
 import utils.{PrimitiveToObjectWithValueField, _}
 
 import scala.collection.immutable.HashMap
 
-trait ModelInstanceTemplate extends Template {
+trait ModelInstanceTemplate extends Template with FileProxy {
 
   val result: Map[String, TemplateComponent] = HashMap(
-    "identifier"  -> PrimitiveToObjectWithValueField[String]("identifier"),
-    "title"       -> PrimitiveToObjectWithValueField[String]("title"),
+    "identifier" -> PrimitiveToObjectWithValueField[String]("identifier"),
+    "title" -> PrimitiveToObjectWithValueField[String]("title"),
     "description" -> PrimitiveToObjectWithValueField[String]("description"),
-    "version"     -> PrimitiveToObjectWithValueField[String]("version"),
+    "version" -> PrimitiveToObjectWithValueField[String]("version"),
     "contributors" -> ObjectArrayToListOfObject(
       "contributors",
       WriteObject(
@@ -89,21 +89,6 @@ trait ModelInstanceTemplate extends Template {
         }
       )
     ),
-    "embargo" -> Optional(
-      FirstElement(
-        PrimitiveArrayToListOfValueObject[String](
-          "embargo", {
-            case ObjectWithValueField(Some("embargoed")) =>
-              ObjectWithValueField[String](
-                Some(
-                  "This model is temporarily under embargo. The data will become available for download after the embargo period."
-                )
-              )
-            case _ => ObjectWithValueField[String](None)
-          }
-        )
-      )
-    ),
     "allfiles" -> Optional(
       Merge(
         FirstElement(PrimitiveArrayToListOfValueObject[String]("embargo")),
@@ -122,11 +107,11 @@ trait ModelInstanceTemplate extends Template {
             case (_, Some(ListOfObject(listRes))) =>
               Some(ListOfObject(listRes.map {
                 case ObjectMap(
-                    List(
-                      ObjectWithUrlField(Some(resUrl)),
-                      _
-                    )
-                    ) if resUrl.startsWith("https://object.cscs.ch") =>
+                List(
+                ObjectWithUrlField(Some(resUrl)),
+                _
+                )
+                ) if resUrl.startsWith("https://object.cscs.ch") =>
                   ObjectMap(
                     List(
                       ObjectWithUrlField(Some(s"https://kg.ebrains.eu/proxy/export?container=$resUrl")),
@@ -144,17 +129,17 @@ trait ModelInstanceTemplate extends Template {
                 case s => s
               }))
             case _ => None
-        }
+          }
       )
     ),
-    "brainStructures"  -> PrimitiveArrayToListOfValueObject[String]("brainStructure"),
-    "cellularTarget"   -> PrimitiveArrayToListOfValueObject[String]("cellularTarget"),
-    "studyTarget"      -> PrimitiveArrayToListOfValueObject[String]("studyTarget"),
-    "modelScope"       -> PrimitiveArrayToListOfValueObject[String]("modelScope"),
+    "brainStructures" -> PrimitiveArrayToListOfValueObject[String]("brainStructure"),
+    "cellularTarget" -> PrimitiveArrayToListOfValueObject[String]("cellularTarget"),
+    "studyTarget" -> PrimitiveArrayToListOfValueObject[String]("studyTarget"),
+    "modelScope" -> PrimitiveArrayToListOfValueObject[String]("modelScope"),
     "abstractionLevel" -> PrimitiveArrayToListOfValueObject[String]("abstractionLevel"),
-    "modelFormat"      -> PrimitiveArrayToListOfValueObject[String]("modelFormat"),
-    "first_release"    -> PrimitiveToObjectWithValueField[String]("first_release"),
-    "last_release"     -> PrimitiveToObjectWithValueField[String]("last_release"),
+    "modelFormat" -> PrimitiveArrayToListOfValueObject[String]("modelFormat"),
+    "first_release" -> PrimitiveToObjectWithValueField[String]("first_release"),
+    "last_release" -> PrimitiveToObjectWithValueField[String]("last_release"),
     "usedDataset" -> ObjectArrayToListOfObject(
       "usedDataset",
       WriteObject(
@@ -182,8 +167,188 @@ trait ModelInstanceTemplate extends Template {
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {
-    case INFERRED => HashMap("editorId" -> PrimitiveToObjectWithValueField[String]("editorId")) ++ result
-    case _        => result
+    case INFERRED => HashMap(
+      "editorId" -> PrimitiveToObjectWithValueField[String]("editorId"),
+      "embargo" -> Merge(
+        PrimitiveToObjectWithValueField[String]("container_url"),
+        Optional(
+          FirstElement(
+            PrimitiveArrayToListOfValueObject[String](
+              "embargo"
+            )
+          )
+        ),
+        (container_url, embargo) => {
+          (container_url, embargo) match {
+            case (
+              Some(ObjectWithValueField(Some(url: String))),
+              Some(ObjectWithValueField(Some("embargoed")))
+              ) =>  if (url.startsWith("https://object.cscs.ch")) {
+              Some(
+                ObjectWithValueField[String](
+                  Some(
+                    "This model is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url="+url+"\" target=\"_blank\"> you should be able to access the data here</a>"
+                  )
+                )
+              )
+            } else {
+              Some(
+                ObjectWithValueField[String](
+                  Some(
+                    "This model is temporarily under embargo. The data will become available for download after the embargo period."
+                  )
+                )
+              )
+            }
+            case _ =>
+              None
+          }
+        }
+      ),
+      "files" -> Optional(
+        ObjectArrayToListOfObject(
+          "files",
+          WriteObject(
+            List(
+              Merge(
+                WriteObject(
+                  List(PrimitiveToObjectWithUrlField("absolute_path"), PrimitiveToObjectWithValueField[String]("name"))
+                ),
+                PrimitiveToObjectWithValueField[Boolean]("private_access"),
+                (urlOpt, privateAccesOpt) => {
+                  (urlOpt, privateAccesOpt) match {
+                    case (
+                      Some(ObjectMap(List(ObjectWithUrlField(Some(urlStr)), ObjectWithValueField(Some(nameStr))))),
+                      Some(ObjectWithValueField(Some(true)))
+                      ) =>
+                      Some(
+                        ObjectMap(
+                          List(
+                            ObjectWithUrlField(Some(s"$fileProxy/files/cscs?url=$urlStr")),
+                            ObjectWithValueField[String](Some(s"ACCESS PROTECTED: $nameStr"))
+                          )
+                        )
+                      )
+                    case _ => urlOpt
+                  }
+
+                }
+              ),
+              PrimitiveToObjectWithCustomField[String]("human_readable_size", "fileSize"),
+              Optional(
+                Merge(
+                  FirstElement(PrimitiveArrayToListOfValueObject[String]("preview_url")),
+                  FirstElement(PrimitiveArrayToListOfValueObject[String]("is_preview_animated")), {
+                    case (
+                      Some(ObjectWithValueField(Some(preview: String))),
+                      Some(ObjectWithValueField(Some(isAnimated: String)))
+                      ) =>
+                      Some(
+                        NestedObject(
+                          "previewUrl",
+                          ObjectMap(
+                            List(
+                              ObjectWithUrlField(Some(preview)),
+                              ObjectWithCustomField("isAnimated", Some(isAnimated.toBoolean.toString))
+                            )
+                          )
+                        )
+                      )
+
+                    case _ => None
+                  }
+                )
+              )
+            )
+          )
+        )
+      )
+    ) ++ result
+    case RELEASED => HashMap(
+      "embargo" -> Optional(
+        FirstElement(
+          PrimitiveArrayToListOfValueObject[String](
+            "embargo", {
+              case ObjectWithValueField(Some("embargoed")) =>
+                ObjectWithValueField[String](
+                  Some(
+                    "This model is temporarily under embargo. The data will become available for download after the embargo period."
+                  )
+                )
+              case _ => ObjectWithValueField[String](None)
+            }
+          )
+        )
+      ),
+      "files" -> Optional(
+        Merge(
+          FirstElement(PrimitiveArrayToListOfValueObject[String]("embargo")),
+          ObjectArrayToListOfObject(
+            "files",
+            WriteObject(
+              List(
+                Merge(
+                  WriteObject(
+                    List(PrimitiveToObjectWithUrlField("absolute_path"), PrimitiveToObjectWithValueField[String]("name"))
+                  ),
+                  PrimitiveToObjectWithValueField[Boolean]("private_access"),
+                  (urlOpt, privateAccesOpt) => {
+                    (urlOpt, privateAccesOpt) match {
+                      case (
+                        Some(ObjectMap(List(ObjectWithUrlField(Some(urlStr)), ObjectWithValueField(Some(nameStr))))),
+                        Some(ObjectWithValueField(Some(true)))
+                        ) =>
+                        Some(
+                          ObjectMap(
+                            List(
+                              ObjectWithUrlField(Some(s"$fileProxy/files/cscs?url=$urlStr")),
+                              ObjectWithValueField[String](Some(s"ACCESS PROTECTED: $nameStr"))
+                            )
+                          )
+                        )
+                      case _ => urlOpt
+                    }
+
+                  }
+                ),
+                PrimitiveToObjectWithCustomField[String]("human_readable_size", "fileSize"),
+                Optional(
+                  Merge(
+                    FirstElement(PrimitiveArrayToListOfValueObject[String]("preview_url")),
+                    FirstElement(PrimitiveArrayToListOfValueObject[String]("is_preview_animated")), {
+                      case (
+                        Some(ObjectWithValueField(Some(preview: String))),
+                        Some(ObjectWithValueField(Some(isAnimated: String)))
+                        ) =>
+                        Some(
+                          NestedObject(
+                            "previewUrl",
+                            ObjectMap(
+                              List(
+                                ObjectWithUrlField(Some(preview)),
+                                ObjectWithCustomField("isAnimated", Some(isAnimated.toBoolean.toString))
+                              )
+                            )
+                          )
+                        )
+                      case _ => None
+                    }
+                  )
+                )
+              )
+            )
+          ), {
+            case (
+              Some(ObjectWithValueField(Some(embargoString: String))),
+              filesOpt
+              ) if (embargoString != "embargoed") =>
+              filesOpt
+            case (None, filesOpt) => filesOpt
+            case _ => None
+          }
+        )
+      )
+    ) ++ result
   }
 
 }

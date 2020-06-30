@@ -17,10 +17,9 @@ package models.templates.instance
 
 import java.net.URLEncoder
 
-import models.{DatabaseScope, INFERRED}
+import models.{INFERRED, RELEASED}
 import models.templates.{FileProxy, Template}
 import models.templates.entities.{ObjectWithValueField, _}
-import net.sf.ehcache.constructs.scheduledrefresh.OverseerJob
 import utils._
 
 import scala.collection.immutable.HashMap
@@ -29,7 +28,7 @@ trait DatasetTemplate extends Template with FileProxy {
 
   val result: Map[String, TemplateComponent] = Map(
     "identifier" -> PrimitiveToObjectWithValueField[String]("identifier"),
-    "title"      -> PrimitiveToObjectWithValueField[String]("title"),
+    "title" -> PrimitiveToObjectWithValueField[String]("title"),
     "contributors" -> ObjectArrayToListOfObject(
       "contributors",
       WriteObject(
@@ -51,9 +50,9 @@ trait DatasetTemplate extends Template with FileProxy {
         })
       })), {
         case (
-            Some(ObjectWithValueField(Some(citationStr: String))),
-            Some(ObjectWithValueField(Some(doiStr: String)))
-            ) =>
+          Some(ObjectWithValueField(Some(citationStr: String))),
+          Some(ObjectWithValueField(Some(doiStr: String)))
+          ) =>
           Some(ObjectWithValueField[String](Some(citationStr + doiStr)))
         case _ => None
       }
@@ -64,9 +63,9 @@ trait DatasetTemplate extends Template with FileProxy {
           FirstElement(PrimitiveArrayToListOfValueObject[String]("embargo")),
           PrimitiveToObjectWithValueField[Boolean]("containerUrlAsZip"), {
             case (
-                embargoObject @ Some(ObjectWithValueField(Some(embargoString: String))),
-                Some(ObjectWithValueField(Some(true)))
-                ) if embargoString != "Under review" && embargoString != "Embargoed" =>
+              embargoObject@Some(ObjectWithValueField(Some(embargoString: String))),
+              Some(ObjectWithValueField(Some(true)))
+              ) if embargoString != "Under review" && embargoString != "Embargoed" =>
               embargoObject
             case _ => None
           }
@@ -84,7 +83,7 @@ trait DatasetTemplate extends Template with FileProxy {
       )
     ),
     "dataDescriptor" -> Optional(PrimitiveToObjectWithValueField[String]("dataDescriptor")),
-    "doi"            -> FirstElement(PrimitiveArrayToListOfValueObject[String]("doi")),
+    "doi" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("doi")),
     "license_info" -> FirstElement(
       ObjectArrayToListOfObject(
         "license",
@@ -106,112 +105,21 @@ trait DatasetTemplate extends Template with FileProxy {
       )
     ),
     "owners" ->
-    ObjectArrayToListOfObject(
-      "owners",
-      WriteObject(
-        List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Contributor/$s")
-          ),
-          PrimitiveToObjectWithValueField[String]("name")
-        )
-      )
-    ),
-    "description"      -> PrimitiveToObjectWithValueField[String]("description"),
-    "speciesFilter"    -> FirstElement(PrimitiveArrayToListOfValueObject[String]("speciesFilter")),
-    "embargoForFilter" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("embargoForFilter")),
-    "embargo" -> Optional(
-      FirstElement(
-        PrimitiveArrayToListOfValueObject[String](
-          "embargo"
-        ), {
-          case Some(ObjectWithValueField(Some("Embargoed"))) =>
-            Some(
-              ObjectWithValueField[String](
-                Some(
-                  "This dataset is temporarily under embargo. The data will become available for download after the embargo period."
-                )
-              )
-            )
-          case Some(ObjectWithValueField(Some("Under review"))) =>
-            Some(
-              ObjectWithValueField[String](
-                Some(
-                  "This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review."
-                )
-              )
-            )
-          case _ =>
-            None
-        }
-      )
-    ),
-    "files" -> Optional(
-      Merge(
-        FirstElement(PrimitiveArrayToListOfValueObject[String]("embargo")),
-        ObjectArrayToListOfObject(
-          "files",
-          WriteObject(
-            List(
-              Merge(
-                WriteObject(
-                  List(PrimitiveToObjectWithUrlField("absolute_path"), PrimitiveToObjectWithValueField[String]("name"))
-                ),
-                PrimitiveToObjectWithValueField[Boolean]("private_access"),
-                (urlOpt, privateAccesOpt) => {
-                  (urlOpt, privateAccesOpt) match {
-                    case (
-                        Some(ObjectMap(List(ObjectWithUrlField(Some(urlStr)), ObjectWithValueField(Some(nameStr))))),
-                        Some(ObjectWithValueField(Some(true)))
-                        ) =>
-                      Some(
-                        ObjectMap(
-                          List(
-                            ObjectWithUrlField(Some(s"$fileProxy/files/cscs?url=$urlStr")),
-                            ObjectWithValueField[String](Some(s"ACCESS PROTECTED: $nameStr"))
-                          )
-                        )
-                      )
-                    case _ => urlOpt
-                  }
-
-                }
-              ),
-              PrimitiveToObjectWithCustomField[String]("human_readable_size", "fileSize"),
-              Optional(
-                Merge(
-                  FirstElement(PrimitiveArrayToListOfValueObject[String]("preview_url")),
-                  FirstElement(PrimitiveArrayToListOfValueObject[String]("is_preview_animated")), {
-                    case (
-                        Some(ObjectWithValueField(Some(preview: String))),
-                        Some(ObjectWithValueField(Some(isAnimated: String)))
-                        ) =>
-                      Some(
-                        NestedObject(
-                          "previewUrl",
-                          ObjectMap(
-                            List(
-                              ObjectWithUrlField(Some(preview)),
-                              ObjectWithCustomField("isAnimated", Some(isAnimated.toBoolean.toString))
-                            )
-                          )
-                        )
-                      )
-
-                    case _ => None
-                  }
-                )
-              )
-            )
+      ObjectArrayToListOfObject(
+        "owners",
+        WriteObject(
+          List(
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Contributor/$s")
+            ),
+            PrimitiveToObjectWithValueField[String]("name")
           )
-        ), {
-          case (Some(ObjectWithValueField(None)), filesOpt) => filesOpt
-          case (None, filesOpt)                             => filesOpt
-          case _                                            => None
-        }
-      )
-    ),
+        )
+      ),
+    "description" -> PrimitiveToObjectWithValueField[String]("description"),
+    "speciesFilter" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("speciesFilter")),
+    "embargoForFilter" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("embargoForFilter")),
     "external_datalink" -> WriteObject(
       List(
         PrimitiveToObjectWithUrlField("external_datalink"),
@@ -233,13 +141,12 @@ trait DatasetTemplate extends Template with FileProxy {
         (citation, doi) => {
           (citation, doi) match {
             case (
-                Some(ObjectWithValueField(Some(citationStr: String))),
-                Some(ObjectWithValueField(Some(doiStr: String)))
-                ) =>
+              Some(ObjectWithValueField(Some(citationStr: String))),
+              Some(ObjectWithValueField(Some(doiStr: String)))
+              ) =>
               Some(ObjectWithValueField[String](Some(citationStr + "\n" + doiStr)))
             case _ => doi
           }
-
         }
       )
     ),
@@ -254,40 +161,17 @@ trait DatasetTemplate extends Template with FileProxy {
       )
     ),
     "preparation" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("preparation")),
-    "methods"     -> PrimitiveArrayToListOfValueObject[String]("methods"),
-    "protocol"    -> PrimitiveArrayToListOfValueObject[String]("protocols"),
+    "methods" -> PrimitiveArrayToListOfValueObject[String]("methods"),
+    "protocol" -> PrimitiveArrayToListOfValueObject[String]("protocols"),
     "viewer" ->
-    OrElse(
-      ObjectArrayToListOfObject(
-        "brainviewer",
-        WriteObject(
-          List(
-            PrimitiveToObjectWithUrlField("url"),
-            PrimitiveToObjectWithValueField[String](
-              "name", {
-                case Some(ObjectWithValueField(Some(str))) =>
-                  Some(ObjectWithValueField(Some("Show " + str + " in brain atlas viewer")))
-                case _ => Some(ObjectWithValueField(Some("Show in brain atlas viewer")))
-              }
-            )
-          )
-        )
-      ),
-      ObjectArrayToListOfObject(
-        "neuroglancer",
-        WriteObject(
-          List(
-            PrimitiveToObjectWithUrlField("url"),
-            OrElse(
+      OrElse(
+        ObjectArrayToListOfObject(
+          "brainviewer",
+          WriteObject(
+            List(
+              PrimitiveToObjectWithUrlField("url"),
               PrimitiveToObjectWithValueField[String](
                 "name", {
-                  case Some(ObjectWithValueField(Some(str))) =>
-                    Some(ObjectWithValueField(Some("Show " + str + " in brain atlas viewer")))
-                  case _ => None
-                }
-              ),
-              PrimitiveToObjectWithValueField[String](
-                "title", {
                   case Some(ObjectWithValueField(Some(str))) =>
                     Some(ObjectWithValueField(Some("Show " + str + " in brain atlas viewer")))
                   case _ => Some(ObjectWithValueField(Some("Show in brain atlas viewer")))
@@ -295,68 +179,284 @@ trait DatasetTemplate extends Template with FileProxy {
               )
             )
           )
+        ),
+        ObjectArrayToListOfObject(
+          "neuroglancer",
+          WriteObject(
+            List(
+              PrimitiveToObjectWithUrlField("url"),
+              OrElse(
+                PrimitiveToObjectWithValueField[String](
+                  "name", {
+                    case Some(ObjectWithValueField(Some(str))) =>
+                      Some(ObjectWithValueField(Some("Show " + str + " in brain atlas viewer")))
+                    case _ => None
+                  }
+                ),
+                PrimitiveToObjectWithValueField[String](
+                  "title", {
+                    case Some(ObjectWithValueField(Some(str))) =>
+                      Some(ObjectWithValueField(Some("Show " + str + " in brain atlas viewer")))
+                    case _ => Some(ObjectWithValueField(Some("Show in brain atlas viewer")))
+                  }
+                )
+              )
+            )
+          )
         )
-      )
-    ),
+      ),
     "subjects" ->
-    ObjectArrayToListOfObject(
-      "subjects",
-      Nested(
-        "children",
-        WriteObject(
-          List(
-            Nested(
-              "subject_name",
-              WriteObject(
-                List(
-                  PrimitiveToObjectWithReferenceField(
-                    "identifier",
-                    ref => ref.map(s => s"Subject/$s")
-                  ),
-                  PrimitiveToObjectWithValueField[String]("name"),
-                )
-              )
-            ),
-            Nested("species", FirstElement(PrimitiveArrayToListOfValueObject[String]("species"))),
-            Nested("sex", FirstElement(PrimitiveArrayToListOfValueObject[String]("sex"))),
-            Nested("age", PrimitiveToObjectWithValueField[String]("age")),
-            Nested("agecategory", FirstElement(PrimitiveArrayToListOfValueObject[String]("agecategory"))),
-            Nested("weight", PrimitiveToObjectWithValueField[String]("weight")),
-            Nested(
-              "strain",
-              Optional(
-                OrElse(
-                  PrimitiveToObjectWithValueField[String]("strain"),
-                  PrimitiveToObjectWithValueField[String]("strains")
-                )
-              )
-            ),
-            Nested("genotype", PrimitiveToObjectWithValueField[String]("genotype")),
-            Nested(
-              "samples",
-              ObjectArrayToListOfObject(
-                "samples",
+      ObjectArrayToListOfObject(
+        "subjects",
+        Nested(
+          "children",
+          WriteObject(
+            List(
+              Nested(
+                "subject_name",
                 WriteObject(
                   List(
                     PrimitiveToObjectWithReferenceField(
                       "identifier",
-                      ref => ref.map(s => s"Sample/$s")
+                      ref => ref.map(s => s"Subject/$s")
                     ),
-                    PrimitiveToObjectWithValueField[String]("name")
+                    PrimitiveToObjectWithValueField[String]("name"),
+                  )
+                )
+              ),
+              Nested("species", FirstElement(PrimitiveArrayToListOfValueObject[String]("species"))),
+              Nested("sex", FirstElement(PrimitiveArrayToListOfValueObject[String]("sex"))),
+              Nested("age", PrimitiveToObjectWithValueField[String]("age")),
+              Nested("agecategory", FirstElement(PrimitiveArrayToListOfValueObject[String]("agecategory"))),
+              Nested("weight", PrimitiveToObjectWithValueField[String]("weight")),
+              Nested(
+                "strain",
+                Optional(
+                  OrElse(
+                    PrimitiveToObjectWithValueField[String]("strain"),
+                    PrimitiveToObjectWithValueField[String]("strains")
+                  )
+                )
+              ),
+              Nested("genotype", PrimitiveToObjectWithValueField[String]("genotype")),
+              Nested(
+                "samples",
+                ObjectArrayToListOfObject(
+                  "samples",
+                  WriteObject(
+                    List(
+                      PrimitiveToObjectWithReferenceField(
+                        "identifier",
+                        ref => ref.map(s => s"Sample/$s")
+                      ),
+                      PrimitiveToObjectWithValueField[String]("name")
+                    )
+                  )
+                )
+              )
+            ),
+          )
+        )
+      ),
+    "first_release" -> PrimitiveToObjectWithValueField[String]("first_release"),
+    "last_release" -> PrimitiveToObjectWithValueField[String]("last_release"),
+  )
+
+  val template: Map[String, TemplateComponent] = dataBaseScope match {
+    case INFERRED => HashMap(
+      "editorId" -> PrimitiveToObjectWithValueField[String]("editorId"),
+      "embargoRestrictedAccess" -> Merge(
+        PrimitiveToObjectWithValueField[String]("container_url"),
+        Optional(
+          FirstElement(
+            PrimitiveArrayToListOfValueObject[String](
+              "embargo"
+            )
+          )
+        ),
+        (container_url, embargo) => {
+          (container_url, embargo) match {
+            case (
+              Some(ObjectWithValueField(Some(url: String))),
+              Some(ObjectWithValueField(Some("Embargoed")))
+              ) if (url.startsWith("https://object.cscs.ch")) =>
+              Some(
+                ObjectWithValueField[String](
+                  Some(
+                    "This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=" + url + "\" target=\"_blank\"> you should be able to access the data here</a>"
+                  )
+                )
+              )
+            case (
+              Some(ObjectWithValueField(Some(url: String))),
+              Some(ObjectWithValueField(Some("Under review")))
+              ) if (url.startsWith("https://object.cscs.ch")) =>
+              Some(
+                ObjectWithValueField[String](
+                  Some(
+                    "This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=" + url + "\" target=\"_blank\"> you should be able to access the data here</a>"
+                  )
+                )
+              )
+            case _ =>
+              None
+          }
+        }
+      ),
+      "files" -> Optional(
+        ObjectArrayToListOfObject(
+          "files",
+          WriteObject(
+            List(
+              Merge(
+                WriteObject(
+                  List(PrimitiveToObjectWithUrlField("absolute_path"), PrimitiveToObjectWithValueField[String]("name"))
+                ),
+                PrimitiveToObjectWithValueField[Boolean]("private_access"),
+                (urlOpt, privateAccesOpt) => {
+                  (urlOpt, privateAccesOpt) match {
+                    case (
+                      Some(ObjectMap(List(ObjectWithUrlField(Some(urlStr)), ObjectWithValueField(Some(nameStr))))),
+                      Some(ObjectWithValueField(Some(true)))
+                      ) =>
+                      Some(
+                        ObjectMap(
+                          List(
+                            ObjectWithUrlField(Some(s"$fileProxy/files/cscs?url=$urlStr")),
+                            ObjectWithValueField[String](Some(s"ACCESS PROTECTED: $nameStr"))
+                          )
+                        )
+                      )
+                    case _ => urlOpt
+                  }
+
+                }
+              ),
+              PrimitiveToObjectWithCustomField[String]("human_readable_size", "fileSize"),
+              Optional(
+                Merge(
+                  FirstElement(PrimitiveArrayToListOfValueObject[String]("preview_url")),
+                  FirstElement(PrimitiveArrayToListOfValueObject[String]("is_preview_animated")), {
+                    case (
+                      Some(ObjectWithValueField(Some(preview: String))),
+                      Some(ObjectWithValueField(Some(isAnimated: String)))
+                      ) =>
+                      Some(
+                        NestedObject(
+                          "previewUrl",
+                          ObjectMap(
+                            List(
+                              ObjectWithUrlField(Some(preview)),
+                              ObjectWithCustomField("isAnimated", Some(isAnimated.toBoolean.toString))
+                            )
+                          )
+                        )
+                      )
+
+                    case _ => None
+                  }
+                )
+              )
+            )
+          )
+        )
+      )
+    ) ++ result
+    case RELEASED => HashMap(
+      "embargo" -> Optional(
+        FirstElement(
+          PrimitiveArrayToListOfValueObject[String](
+            "embargo"
+          ), {
+            case Some(ObjectWithValueField(Some("Embargoed"))) =>
+              Some(
+                ObjectWithValueField[String](
+                  Some(
+                    "This dataset is temporarily under embargo. The data will become available for download after the embargo period."
+                  )
+                )
+              )
+            case Some(ObjectWithValueField(Some("Under review"))) =>
+              Some(
+                ObjectWithValueField[String](
+                  Some(
+                    "This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review."
+                  )
+                )
+              )
+            case _ =>
+              None
+          }
+        )
+      ),
+      "files" -> Optional(
+        Merge(
+          FirstElement(PrimitiveArrayToListOfValueObject[String]("embargo")),
+          ObjectArrayToListOfObject(
+            "files",
+            WriteObject(
+              List(
+                Merge(
+                  WriteObject(
+                    List(PrimitiveToObjectWithUrlField("absolute_path"), PrimitiveToObjectWithValueField[String]("name"))
+                  ),
+                  PrimitiveToObjectWithValueField[Boolean]("private_access"),
+                  (urlOpt, privateAccesOpt) => {
+                    (urlOpt, privateAccesOpt) match {
+                      case (
+                        Some(ObjectMap(List(ObjectWithUrlField(Some(urlStr)), ObjectWithValueField(Some(nameStr))))),
+                        Some(ObjectWithValueField(Some(true)))
+                        ) =>
+                        Some(
+                          ObjectMap(
+                            List(
+                              ObjectWithUrlField(Some(s"$fileProxy/files/cscs?url=$urlStr")),
+                              ObjectWithValueField[String](Some(s"ACCESS PROTECTED: $nameStr"))
+                            )
+                          )
+                        )
+                      case _ => urlOpt
+                    }
+
+                  }
+                ),
+                PrimitiveToObjectWithCustomField[String]("human_readable_size", "fileSize"),
+                Optional(
+                  Merge(
+                    FirstElement(PrimitiveArrayToListOfValueObject[String]("preview_url")),
+                    FirstElement(PrimitiveArrayToListOfValueObject[String]("is_preview_animated")), {
+                      case (
+                        Some(ObjectWithValueField(Some(preview: String))),
+                        Some(ObjectWithValueField(Some(isAnimated: String)))
+                        ) =>
+                        Some(
+                          NestedObject(
+                            "previewUrl",
+                            ObjectMap(
+                              List(
+                                ObjectWithUrlField(Some(preview)),
+                                ObjectWithCustomField("isAnimated", Some(isAnimated.toBoolean.toString))
+                              )
+                            )
+                          )
+                        )
+                      case _ => None
+                    }
                   )
                 )
               )
             )
-          ),
+          ), {
+            case (
+              Some(ObjectWithValueField(Some(embargoString: String))),
+              filesOpt
+              ) if (embargoString != "Under review" && embargoString != "Embargoed") =>
+              filesOpt
+            case (None, filesOpt) => filesOpt
+            case _ => None
+          }
         )
       )
-    ),
-    "first_release" -> PrimitiveToObjectWithValueField[String]("first_release"),
-    "last_release"  -> PrimitiveToObjectWithValueField[String]("last_release"),
-  )
-
-  val template: Map[String, TemplateComponent] = dataBaseScope match {
-    case INFERRED => HashMap("editorId" -> PrimitiveToObjectWithValueField[String]("editorId")) ++ result
-    case _        => result
+    ) ++ result
   }
 }

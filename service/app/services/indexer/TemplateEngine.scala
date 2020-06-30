@@ -162,6 +162,7 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     case ModelInstance =>
       new ModelInstanceTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
+        override def fileProxy: String = fileProxyStr
       }
     case SoftwareProject =>
       new SoftwareProjectTemplate {

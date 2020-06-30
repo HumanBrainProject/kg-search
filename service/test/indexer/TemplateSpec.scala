@@ -217,7 +217,7 @@ class TemplateSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     "transform correctly a query for model instance" in {
       val indexer = app.injector.instanceOf[IndexerImpl]
       val payload = loadResource("/unimindsModelInstance/modelinstance.json")
-      val template = new ModelInstanceTemplate {}
+      val template = new ModelInstanceTemplate {override def fileProxy: String = ""}
       val result = indexer.transform(payload, template)
       val expected = loadResource("/unimindsModelInstance/expectedModelInstance.json")
       assertIsSameJsObject("producedDataset", result, expected)
