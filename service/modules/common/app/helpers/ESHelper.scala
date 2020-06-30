@@ -21,6 +21,7 @@ import models.user.Group
 object ESHelper {
 
   val publicIndex: String = "publicly_released"
+  val curatedIndex: String = "in_progress"
   val indicesPath: String = "_cat/indices"
 
   def filterNexusGroups(groups: Seq[Group], formatName: String => String = ESHelper.formatGroupName): Seq[String] = {

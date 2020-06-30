@@ -15,6 +15,7 @@
  */
 package models
 
+import helpers.ESHelper
 import play.api.mvc.{PathBindable, QueryStringBindable}
 
 sealed trait DatabaseScope {
@@ -49,11 +50,11 @@ object DatabaseScope {
 case object INFERRED extends DatabaseScope {
   override def toString: String = "INFERRED"
 
-  override def toIndexName: String = "in_progress"
+  override def toIndexName: String = ESHelper.curatedIndex
 }
 
 case object RELEASED extends DatabaseScope {
   override def toString: String = "RELEASED"
 
-  override def toIndexName: String = "publicly_released"
+  override def toIndexName: String = ESHelper.publicIndex
 }

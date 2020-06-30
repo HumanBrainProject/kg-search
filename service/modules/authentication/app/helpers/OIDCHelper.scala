@@ -45,7 +45,7 @@ object OIDCHelper {
     val h = hints.trim
     h match {
       case "public"                => ESHelper.publicIndex
-      case "curated"               => "in_progress"
+      case "curated"               => ESHelper.curatedIndex
       case l if groups.contains(l) => l
       case _                       => ESHelper.publicIndex
     }
