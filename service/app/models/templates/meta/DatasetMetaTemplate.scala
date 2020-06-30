@@ -280,8 +280,8 @@ trait DatasetMetaTemplate extends Template {
                   PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
                   PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
                   PrimitiveToObjectWithCustomField[Boolean](
-                    "searchUi:isTable",
-                    "https://schema.hbp.eu/searchUi/isTable"
+                    "searchUi:isHierarchicalFiles",
+                    "https://schema.hbp.eu/searchUi/isHierarchicalFiles"
                   ),
                   PrimitiveToObjectWithCustomField[Boolean](
                     "searchUi:termsOfUse",
@@ -382,6 +382,10 @@ trait DatasetMetaTemplate extends Template {
                   PrimitiveToObjectWithCustomField[Boolean](
                     "searchUi:overview",
                     "https://schema.hbp.eu/searchUi/overview"
+                  ),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:isFilterableFacet",
+                    "https://schema.hbp.eu/searchUi/isFilterableFacet"
                   )
                 )
               )
@@ -409,6 +413,10 @@ trait DatasetMetaTemplate extends Template {
                   PrimitiveToObjectWithCustomField[Boolean](
                     "searchUi:overview",
                     "https://schema.hbp.eu/searchUi/overview"
+                  ),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:isFilterableFacet",
+                    "https://schema.hbp.eu/searchUi/isFilterableFacet"
                   )
                 )
               )
