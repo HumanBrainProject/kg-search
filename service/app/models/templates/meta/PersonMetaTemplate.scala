@@ -47,33 +47,6 @@ trait PersonMetaTemplate extends Template {
             )
           ),
           Nested(
-            "description",
-            ObjectReader(
-              "search:description",
-              WriteObject(
-                List(
-                  PrimitiveToObjectWithCustomField[Boolean](
-                    "searchUi:markdown",
-                    "https://schema.hbp.eu/searchUi/markdown"
-                  ),
-                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  PrimitiveToObjectWithCustomField[Double]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost"),
-                  PrimitiveToObjectWithCustomField[Boolean](
-                    "searchUi:label_hidden",
-                    "https://schema.hbp.eu/searchUi/label_hidden"
-                  )
-                )
-              )
-            )
-          ),
-          Nested(
-            "phone",
-            ObjectReader(
-              "search:phone",
-              PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-            )
-          ),
-          Nested(
             "custodianOf",
             ObjectReader(
               "search:custodianOf",
@@ -120,13 +93,6 @@ trait PersonMetaTemplate extends Template {
             )
           ),
           Nested(
-            "address",
-            ObjectReader(
-              "search:address",
-              PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-            )
-          ),
-          Nested(
             "contributions",
             ObjectReader(
               "search:contributions",
@@ -154,22 +120,6 @@ trait PersonMetaTemplate extends Template {
                   PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
                   PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
                   PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type"),
-                )
-              )
-            )
-          ),
-          Nested(
-            "email",
-            ObjectReader(
-              "search:email",
-              WriteObject(
-                List(
-                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type"),
-                  PrimitiveToObjectWithCustomField[Boolean](
-                    "searchUi:overview",
-                    "https://schema.hbp.eu/searchUi/overview"
-                  )
                 )
               )
             )

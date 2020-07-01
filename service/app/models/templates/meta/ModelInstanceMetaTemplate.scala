@@ -199,6 +199,10 @@ trait ModelInstanceMetaTemplate extends Template {
                     "searchUi:layout",
                     "https://schema.hbp.eu/searchUi/layout"
                   ),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:markdown",
+                    "https://schema.hbp.eu/searchUi/markdown"
+                  )
                 )
               )
             )

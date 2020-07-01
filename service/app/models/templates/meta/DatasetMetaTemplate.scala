@@ -246,6 +246,18 @@ trait DatasetMetaTemplate extends Template {
             )
           ),
           Nested(
+            "embargoRestrictedAccess",
+            ObjectReader(
+              "search:embargoRestrictedAccess",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
+                )
+              )
+            )
+          ),
+          Nested(
             "embargoForFilter",
             ObjectReader(
               "search:embargoForFilter",
@@ -612,6 +624,7 @@ trait DatasetMetaTemplate extends Template {
                                     "label",
                                     "https://schema.hbp.eu/graphQuery/label"
                                   ),
+                                  PrimitiveToObjectWithCustomField[Boolean]("searchUi:sort", "https://schema.hbp.eu/searchUi/sort")
                                 )
                               )
                             )
