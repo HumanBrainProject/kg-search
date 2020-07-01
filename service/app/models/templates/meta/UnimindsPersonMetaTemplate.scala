@@ -46,8 +46,6 @@ trait UnimindsPersonMetaTemplate extends Template {
               )
             )
           ),
-          Set("description", JsArray.empty),
-          Set("phone", JsArray.empty),
           Nested(
             "custodianOf",
             ObjectReader(
@@ -97,7 +95,6 @@ trait UnimindsPersonMetaTemplate extends Template {
               )
             )
           ),
-          Set("address", JsArray.empty),
           Nested(
             "contributions",
             ObjectReader(
@@ -134,7 +131,6 @@ trait UnimindsPersonMetaTemplate extends Template {
               )
             )
           ),
-          Set("email", JsArray.empty),
           Nested(
             "first_release",
             ObjectReader(
