@@ -35,6 +35,17 @@ trait UnimindsPersonMetaTemplate extends Template {
               )
             )
           ),
+          Nested(
+            "editorId",
+            ObjectReader(
+              "search:editorId",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
+                )
+              )
+            )
+          ),
           Set("description", JsArray.empty),
           Set("phone", JsArray.empty),
           Nested(

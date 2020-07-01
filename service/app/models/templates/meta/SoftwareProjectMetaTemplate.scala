@@ -48,6 +48,17 @@ trait SoftwareProjectMetaTemplate extends Template {
             )
           ),
           Nested(
+            "editorId",
+            ObjectReader(
+              "search:editorId",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
+                )
+              )
+            )
+          ),
+          Nested(
             "description",
             ObjectReader(
               "search:description",

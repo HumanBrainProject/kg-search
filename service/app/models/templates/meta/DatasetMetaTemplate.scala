@@ -48,6 +48,17 @@ trait DatasetMetaTemplate extends Template {
             )
           ),
           Nested(
+            "editorId",
+            ObjectReader(
+              "search:editorId",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
+                )
+              )
+            )
+          ),
+          Nested(
             "contributors",
             ObjectReader(
               "search:contributors",
@@ -352,7 +363,7 @@ trait DatasetMetaTemplate extends Template {
             )
           ),
           Nested(
-            "modality",
+            "modalityForFilter",
             ObjectReader(
               "search:modalityForFilter",
               WriteObject(

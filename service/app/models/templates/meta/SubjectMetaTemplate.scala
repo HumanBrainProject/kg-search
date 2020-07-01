@@ -35,6 +35,17 @@ trait SubjectMetaTemplate extends Template {
             )
           ),
           Nested(
+            "editorId",
+            ObjectReader(
+              "search:editorId",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
+                )
+              )
+            )
+          ),
+          Nested(
             "species",
             ObjectReader(
               "search:species",
