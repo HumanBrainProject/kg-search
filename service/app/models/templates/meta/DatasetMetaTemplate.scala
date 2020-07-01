@@ -351,19 +351,19 @@ trait DatasetMetaTemplate extends Template {
               )
             )
           ),
-//          Nested(
-//            "modality",
-//            ObjectReader(
-//              "search:modality",
-//              WriteObject(
-//                List(
-//                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-//                  PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type"),
-//                  PrimitiveToObjectWithCustomField[String]("searchUi:facet", "https://schema.hbp.eu/searchUi/facet")
-//                )
-//              )
-//            )
-//          ),
+          Nested(
+            "modality",
+            ObjectReader(
+              "search:modalityForFilter",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:facet", "https://schema.hbp.eu/searchUi/facet")
+                )
+              )
+            )
+          ),
           Nested(
             "methods",
             ObjectReader(
