@@ -38,28 +38,21 @@ class Download extends React.PureComponent {
   }
 
   render() {
-    const {data, showTermsOfUse, isListOfUrl} = this.props;
+    const {data, showTermsOfUse} = this.props;
     return (
       <div className="kgs-download">
-        {isListOfUrl ?
+        {
           data.map(el => {
-            const label = el.url.split("container=")[1];
+            const label = el.value || el.url.split("container=")[1] || el.url;
             return (
               <div className="kgs-download-multiple" key={el.url}>
                 <span>
                   <i className="fa fa-file-o"></i>
-                  <a href={el.url} onClick={this.handleDownload(el.url)}>{label || el.url}</a>
+                  <a href={el.url} onClick={this.handleDownload(el.url)}>{label}</a>
                 </span>
               </div>
             );
           })
-          :
-          <div>
-            <span>
-              <i className="fa fa-2x fa-file-o"></i>
-              <a href={data.url} onClick={this.handleDownload(data.url)}>{data.value}</a>
-            </span>
-          </div>
         }
         {showTermsOfUse && (
           <Text content={termsOfUse} isMarkdown={true} />
@@ -109,9 +102,8 @@ class Button extends React.PureComponent {
     const {value} = field.mapping;
 
     const [name, type] = value.split(" ");
-
-    const {url} = field.data;
-    const icon = <i className={`fa ${url?"fa-download":"fa-quote-left"}`}></i>;
+    const isListOfUrl = Array.isArray(field.data) && field.data.some(u => u.url);
+    const icon = <i className={`fa ${isListOfUrl?"fa-download":"fa-quote-left"}`}></i>;
 
     return (
       <button type="button" className={`btn kgs-fields-buttons__button ${active?"is-active":""}`} onClick={this.handleClick}>{icon}{name}{type?(<span>{type}</span>):null}</button>
@@ -135,14 +127,14 @@ class Content extends React.PureComponent {
     }
 
     const isListOfUrl = Array.isArray(field.data) && field.data.some(u => u.url);
-    const {url, value} = field.data;
+    const {value} = field.data;
     const {termsOfUse} = field.mapping;
 
     return (
       <div className="kgs-fields-buttons__details">
         <div className="kgs-field-fields-buttons__details__panel">
-          {url || isListOfUrl?
-            <Download data={field.data} showTermsOfUse={!!termsOfUse} isListOfUrl={isListOfUrl} />
+          {isListOfUrl?
+            <Download data={field.data} showTermsOfUse={!!termsOfUse} />
             :
             <Cite content={value} />
           }

@@ -58,18 +58,6 @@ trait ModelInstanceMetaTemplate extends Template {
             )
           ),
           Nested(
-            "version",
-            ObjectReader(
-              "search:version",
-              WriteObject(
-                List(
-                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
-                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                )
-              )
-            )
-          ),
-          Nested(
             "description",
             ObjectReader(
               "search:description",
@@ -86,6 +74,45 @@ trait ModelInstanceMetaTemplate extends Template {
                     "searchUi:label_hidden",
                     "https://schema.hbp.eu/searchUi/label_hidden"
                   )
+                )
+              )
+            )
+          ),
+          Nested(
+            "version",
+            ObjectReader(
+              "search:version",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                )
+              )
+            )
+          ),
+          Nested(
+            "owners",
+            ObjectReader(
+              "search:custodian",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:layout",
+                    "https://schema.hbp.eu/searchUi/layout"
+                  ),
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:separator",
+                    "https://schema.hbp.eu/searchUi/separator"
+                  ),
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:type",
+                    "https://schema.hbp.eu/searchUi/type"
+                  ),
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:hint",
+                    "https://schema.hbp.eu/searchUi/hint"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
                 )
               )
             )
@@ -137,33 +164,6 @@ trait ModelInstanceMetaTemplate extends Template {
                   ),
                   PrimitiveToObjectWithCustomField[Double]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost"),
                   PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label")
-                )
-              )
-            )
-          ),
-          Nested(
-            "owners",
-            ObjectReader(
-              "search:custodian",
-              WriteObject(
-                List(
-                  PrimitiveToObjectWithCustomField[String](
-                    "searchUi:layout",
-                    "https://schema.hbp.eu/searchUi/layout"
-                  ),
-                  PrimitiveToObjectWithCustomField[String](
-                    "searchUi:separator",
-                    "https://schema.hbp.eu/searchUi/separator"
-                  ),
-                  PrimitiveToObjectWithCustomField[String](
-                    "searchUi:type",
-                    "https://schema.hbp.eu/searchUi/type"
-                  ),
-                  PrimitiveToObjectWithCustomField[String](
-                    "searchUi:hint",
-                    "https://schema.hbp.eu/searchUi/hint"
-                  ),
-                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
                 )
               )
             )
