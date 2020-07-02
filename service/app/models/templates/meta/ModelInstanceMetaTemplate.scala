@@ -30,6 +30,17 @@ trait ModelInstanceMetaTemplate extends Template {
             )
           ),
           Nested(
+            "editorId",
+            ObjectReader(
+              "search:editorId",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
+                )
+              )
+            )
+          ),
+          Nested(
             "title",
             ObjectReader(
               "search:title",
@@ -42,17 +53,6 @@ trait ModelInstanceMetaTemplate extends Template {
                   PrimitiveToObjectWithCustomField[Boolean]("searchUi:sort", "https://schema.hbp.eu/searchUi/sort"),
                   PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
                   PrimitiveToObjectWithCustomField[Double]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost")
-                )
-              )
-            )
-          ),
-          Nested(
-            "editorId",
-            ObjectReader(
-              "search:editorId",
-              WriteObject(
-                List(
-                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
                 )
               )
             )
@@ -86,6 +86,34 @@ trait ModelInstanceMetaTemplate extends Template {
                 List(
                   PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
                   PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                )
+              )
+            )
+          ),
+          Nested(
+            "contributors",
+            ObjectReader(
+              "search:contributors",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:layout",
+                    "https://schema.hbp.eu/searchUi/layout"
+                  ),
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:separator",
+                    "https://schema.hbp.eu/searchUi/separator"
+                  ),
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:type",
+                    "https://schema.hbp.eu/searchUi/type"
+                  ),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:label_hidden",
+                    "https://schema.hbp.eu/searchUi/label_hidden"
+                  ),
+                  PrimitiveToObjectWithCustomField[Double]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost"),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label")
                 )
               )
             )
@@ -141,54 +169,6 @@ trait ModelInstanceMetaTemplate extends Template {
             )
           ),
           Nested(
-            "contributors",
-            ObjectReader(
-              "search:contributors",
-              WriteObject(
-                List(
-                  PrimitiveToObjectWithCustomField[String](
-                    "searchUi:layout",
-                    "https://schema.hbp.eu/searchUi/layout"
-                  ),
-                  PrimitiveToObjectWithCustomField[String](
-                    "searchUi:separator",
-                    "https://schema.hbp.eu/searchUi/separator"
-                  ),
-                  PrimitiveToObjectWithCustomField[String](
-                    "searchUi:type",
-                    "https://schema.hbp.eu/searchUi/type"
-                  ),
-                  PrimitiveToObjectWithCustomField[Boolean](
-                    "searchUi:label_hidden",
-                    "https://schema.hbp.eu/searchUi/label_hidden"
-                  ),
-                  PrimitiveToObjectWithCustomField[Double]("searchUi:boost", "https://schema.hbp.eu/searchUi/boost"),
-                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label")
-                )
-              )
-            )
-          ),
-          Nested(
-            "publications",
-            ObjectReader(
-              "search:publications",
-              WriteObject(
-                List(
-                  PrimitiveToObjectWithCustomField[String](
-                    "searchUi:layout",
-                    "https://schema.hbp.eu/searchUi/layout"
-                  ),
-                  PrimitiveToObjectWithCustomField[String]("searchUi:hint", "https://schema.hbp.eu/searchUi/hint"),
-                  PrimitiveToObjectWithCustomField[Boolean](
-                    "searchUi:markdown",
-                    "https://schema.hbp.eu/searchUi/markdown"
-                  ),
-                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label")
-                )
-              )
-            )
-          ),
-          Nested(
             "embargo",
             ObjectReader(
               "search:embargo",
@@ -222,6 +202,26 @@ trait ModelInstanceMetaTemplate extends Template {
                     "searchUi:isButton",
                     "https://schema.hbp.eu/searchUi/isButton"
                   )
+                )
+              )
+            )
+          ),
+          Nested(
+            "publications",
+            ObjectReader(
+              "search:publications",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:layout",
+                    "https://schema.hbp.eu/searchUi/layout"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:hint", "https://schema.hbp.eu/searchUi/hint"),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:markdown",
+                    "https://schema.hbp.eu/searchUi/markdown"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label")
                 )
               )
             )
@@ -322,30 +322,6 @@ trait ModelInstanceMetaTemplate extends Template {
             )
           ),
           Nested(
-            "usedDataset",
-            ObjectReader(
-              "search:usedDataset",
-              WriteObject(
-                List(
-                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
-                )
-              )
-            )
-          ),
-          Nested(
-            "producedDataset",
-            ObjectReader(
-              "search:producedDataset",
-              WriteObject(
-                List(
-                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
-                )
-              )
-            )
-          ),
-          Nested(
             "first_release",
             ObjectReader(
               "search:firstReleaseAt",
@@ -383,6 +359,43 @@ trait ModelInstanceMetaTemplate extends Template {
                   ),
                   PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
                   PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type")
+                )
+              )
+            )
+          ),
+          Nested(
+            "usedDataset",
+            ObjectReader(
+              "search:usedDataset",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
+                )
+              )
+            )
+          ),
+          Nested(
+            "producedDataset",
+            ObjectReader(
+              "search:producedDataset",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout")
+                )
+              )
+            )
+          ),
+          Nested(
+            "license_info",
+            ObjectReader(
+              "search:license",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:facet_order", "https://schema.hbp.eu/searchUi/facet_order")
                 )
               )
             )
