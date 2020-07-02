@@ -160,9 +160,6 @@ export const loadDefinition = () => {
       .get(API.endpoints.definition())
       .then(({ data }) => {
         const definition = data && data._source;
-        if (definition && definition.serviceUrl) {
-          delete definition.serviceUrl;
-        }
         simplifySemantics(definition);
         dispatch(loadDefinitionSuccess(definition));
       })

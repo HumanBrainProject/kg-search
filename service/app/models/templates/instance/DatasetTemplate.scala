@@ -82,7 +82,7 @@ trait DatasetTemplate extends Template with FileProxy {
         }
       )
     ),
-    "dataDescriptor" -> Optional(PrimitiveToObjectWithValueField[String]("dataDescriptor")),
+    "dataDescriptor" -> Optional(PrimitiveToObjectWithValueField[String]("dataDescriptorURL")),
     "doi" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("doi")),
     "license_info" -> FirstElement(
       ObjectArrayToListOfObject(
@@ -90,8 +90,7 @@ trait DatasetTemplate extends Template with FileProxy {
         WriteObject(List(PrimitiveToObjectWithUrlField("url"), PrimitiveToObjectWithValueField[String]("name")))
       )
     ),
-    "component" -> FirstElement(
-      ObjectArrayToListOfObject(
+    "component" -> ObjectArrayToListOfObject(
         "component",
         WriteObject(
           List(
@@ -102,8 +101,7 @@ trait DatasetTemplate extends Template with FileProxy {
             PrimitiveToObjectWithValueField[String]("name")
           )
         )
-      )
-    ),
+      ),
     "owners" ->
       ObjectArrayToListOfObject(
         "owners",
@@ -161,7 +159,7 @@ trait DatasetTemplate extends Template with FileProxy {
       )
     ),
     "preparation" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("preparation")),
-    "modalityForFilter" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("modalityForFilter")),
+    "modalityForFilter" -> PrimitiveArrayToListOfValueObject[String]("modalityForFilter"),
     "methods" -> PrimitiveArrayToListOfValueObject[String]("methods"),
     "protocol" -> PrimitiveArrayToListOfValueObject[String]("protocols"),
     "viewer" ->

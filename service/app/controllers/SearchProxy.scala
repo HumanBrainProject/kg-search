@@ -141,7 +141,7 @@ class SearchProxy @Inject()(
             val errors = labels.collect { case Left(e) => e }
             if (errors.isEmpty) {
               val successful = labels.collect { case Right(l) => l }
-              Ok(Json.obj("_source" -> Json.toJson(successful.toMap.updated("serviceUrl", JsString(serviceUrlBase)))))
+              Ok(Json.obj("_source" -> Json.toJson(successful.toMap)))
             } else {
               val message = errors.foldLeft("") {
                 case (acc, e) => s"$acc + \n Status - ${e.status} - ${e.message}"

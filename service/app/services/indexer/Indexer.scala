@@ -134,7 +134,7 @@ class IndexerImpl @Inject()(
     }
     Task.sequence(labelsPerRelevantTypes).map { l =>
       l.collect { case Right(v) => v }
-        .foldLeft(Map[String, JsValue]("serviceUrl" -> JsString(serviceUrlBase))) {
+        .foldLeft(Map[String, JsValue]()) {
           case (acc, (apiName, content)) =>
             acc.updated(apiName, content)
         }
