@@ -79,6 +79,19 @@ trait SoftwareProjectMetaTemplate extends Template {
             )
           ),
           Nested(
+            "license",
+            ObjectReader(
+              "search:versions",
+              ObjectReader(
+                "fields",
+                ObjectReader(
+                  "search:license",
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label")
+                )
+              )
+            )
+          ),
+          Nested(
             "version",
             ObjectReader(
               "search:versions",
@@ -95,19 +108,6 @@ trait SoftwareProjectMetaTemplate extends Template {
                       PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label")
                     )
                   )
-                )
-              )
-            )
-          ),
-          Nested(
-            "license",
-            ObjectReader(
-              "search:versions",
-              ObjectReader(
-                "fields",
-                ObjectReader(
-                  "search:license",
-                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label")
                 )
               )
             )
