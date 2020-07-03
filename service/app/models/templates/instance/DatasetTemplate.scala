@@ -82,7 +82,14 @@ trait DatasetTemplate extends Template with FileProxy {
         }
       )
     ),
-    "dataDescriptor" -> Optional(PrimitiveToObjectWithValueField[String]("dataDescriptorURL")),
+    "dataDescriptor" -> Optional(
+      WriteObject(
+        List(
+          PrimitiveToObjectWithUrlField("dataDescriptorURL"),
+          PrimitiveToObjectWithValueField[String]("dataDescriptorURL")
+        )
+      )
+    ),
     "doi" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("doi")),
     "license_info" -> FirstElement(
       ObjectArrayToListOfObject(
@@ -91,17 +98,17 @@ trait DatasetTemplate extends Template with FileProxy {
       )
     ),
     "component" -> ObjectArrayToListOfObject(
-        "component",
-        WriteObject(
-          List(
-            PrimitiveToObjectWithReferenceField(
-              "identifier",
-              ref => ref.map(s => s"Project/$s")
-            ),
-            PrimitiveToObjectWithValueField[String]("name")
-          )
+      "component",
+      WriteObject(
+        List(
+          PrimitiveToObjectWithReferenceField(
+            "identifier",
+            ref => ref.map(s => s"Project/$s")
+          ),
+          PrimitiveToObjectWithValueField[String]("name")
         )
-      ),
+      )
+    ),
     "owners" ->
       ObjectArrayToListOfObject(
         "owners",
