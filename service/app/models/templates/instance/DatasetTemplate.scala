@@ -342,10 +342,10 @@ trait DatasetTemplate extends Template with FileProxy {
               Optional(
                 Merge(
                   FirstElement(PrimitiveArrayToListOfValueObject[String]("preview_url")),
-                  FirstElement(PrimitiveArrayToListOfValueObject[String]("is_preview_animated")), {
+                  FirstElement(PrimitiveArrayToListOfValueObject[Boolean]("is_preview_animated")), {
                     case (
                       Some(ObjectWithValueField(Some(preview: String))),
-                      Some(ObjectWithValueField(Some(isAnimated: String)))
+                      Some(ObjectWithValueField(Some(isAnimated: Boolean)))
                       ) =>
                       Some(
                         NestedObject(
@@ -353,12 +353,57 @@ trait DatasetTemplate extends Template with FileProxy {
                           ObjectMap(
                             List(
                               ObjectWithUrlField(Some(preview)),
-                              ObjectWithCustomField("isAnimated", Some(isAnimated.toBoolean.toString))
+                              ObjectWithCustomField("isAnimated", Some(isAnimated))
                             )
                           )
                         )
                       )
-
+                    case _ => None
+                  }
+                )
+              ),
+              Optional(
+                Merge(
+                  FirstElement(PrimitiveArrayToListOfValueObject[String]("static_image_url")),
+                  FirstElement(PrimitiveArrayToListOfValueObject[Boolean]("is_preview_animated")), {
+                    case (
+                      Some(ObjectWithValueField(Some(static: String))),
+                      _
+                      ) =>
+                      Some(
+                        NestedObject(
+                          "staticImageUrl",
+                          ObjectMap(
+                            List(
+                              ObjectWithUrlField(Some(static)),
+                              ObjectWithCustomField("isAnimated", Some(false))
+                            )
+                          )
+                        )
+                      )
+                    case _ => None
+                  }
+                )
+              ),
+              Optional(
+                Merge(
+                  FirstElement(PrimitiveArrayToListOfValueObject[String]("thumbnail_url")),
+                  FirstElement(PrimitiveArrayToListOfValueObject[Boolean]("is_preview_animated")), {
+                    case (
+                      Some(ObjectWithValueField(Some(thumbnail: String))),
+                      _
+                      ) =>
+                      Some(
+                        NestedObject(
+                          "thumbnailUrl",
+                          ObjectMap(
+                            List(
+                              ObjectWithUrlField(Some(thumbnail)),
+                              ObjectWithCustomField("isAnimated", Some(false))
+                            )
+                          )
+                        )
+                      )
                     case _ => None
                   }
                 )
@@ -430,10 +475,10 @@ trait DatasetTemplate extends Template with FileProxy {
                 Optional(
                   Merge(
                     FirstElement(PrimitiveArrayToListOfValueObject[String]("preview_url")),
-                    FirstElement(PrimitiveArrayToListOfValueObject[String]("is_preview_animated")), {
+                    FirstElement(PrimitiveArrayToListOfValueObject[Boolean]("is_preview_animated")), {
                       case (
                         Some(ObjectWithValueField(Some(preview: String))),
-                        Some(ObjectWithValueField(Some(isAnimated: String)))
+                        Some(ObjectWithValueField(Some(isAnimated: Boolean)))
                         ) =>
                         Some(
                           NestedObject(
@@ -441,7 +486,53 @@ trait DatasetTemplate extends Template with FileProxy {
                             ObjectMap(
                               List(
                                 ObjectWithUrlField(Some(preview)),
-                                ObjectWithCustomField("isAnimated", Some(isAnimated.toBoolean.toString))
+                                ObjectWithCustomField("isAnimated", Some(isAnimated))
+                              )
+                            )
+                          )
+                        )
+                      case _ => None
+                    }
+                  )
+                ),
+                Optional(
+                  Merge(
+                    FirstElement(PrimitiveArrayToListOfValueObject[String]("static_image_url")),
+                    FirstElement(PrimitiveArrayToListOfValueObject[Boolean]("is_preview_animated")), {
+                      case (
+                        Some(ObjectWithValueField(Some(static: String))),
+                        _
+                        ) =>
+                        Some(
+                          NestedObject(
+                            "staticImageUrl",
+                            ObjectMap(
+                              List(
+                                ObjectWithUrlField(Some(static)),
+                                ObjectWithCustomField("isAnimated", Some(false))
+                              )
+                            )
+                          )
+                        )
+                      case _ => None
+                    }
+                  )
+                ),
+                Optional(
+                  Merge(
+                    FirstElement(PrimitiveArrayToListOfValueObject[String]("thumbnail_url")),
+                    FirstElement(PrimitiveArrayToListOfValueObject[Boolean]("is_preview_animated")), {
+                      case (
+                        Some(ObjectWithValueField(Some(thumbnail: String))),
+                        _
+                        ) =>
+                        Some(
+                          NestedObject(
+                            "thumbnailUrl",
+                            ObjectMap(
+                              List(
+                                ObjectWithUrlField(Some(thumbnail)),
+                                ObjectWithCustomField("isAnimated", Some(false))
                               )
                             )
                           )
