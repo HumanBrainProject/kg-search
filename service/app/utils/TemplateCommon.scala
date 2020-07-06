@@ -47,14 +47,22 @@ trait TemplateComponent {
 
 trait TemplateWriter extends TemplateComponent {
   override type T <: TemplateEntity
-
 }
 
 trait TemplateReader extends TemplateComponent {
   override type T <: TemplateEntity
 }
+
 sealed trait IList extends TemplateWriter
 
+object ValueNormalizer {
+  def normalize[T](value:Option[T]):Option[T] = {
+    value match {
+      case Some(str: JsString) if str.as[String].isBlank => None
+      case _ => value
+    }
+  }
+}
 case class PrimitiveToObjectWithCustomField[ReturnType: Format](
   fieldName: String,
   customField: String,
@@ -63,7 +71,7 @@ case class PrimitiveToObjectWithCustomField[ReturnType: Format](
   override type T = ObjectWithCustomField[ReturnType]
   override def op(content: Map[String, JsValue]): Option[ObjectWithCustomField[ReturnType]] = {
     for {
-      v <- content.get(fieldName)
+      v <- ValueNormalizer.normalize(content.get(fieldName))
     } yield ObjectWithCustomField[ReturnType](customField, transform(v.asOpt[ReturnType]))
   }
   override def zero: ObjectWithCustomField[ReturnType] = ObjectWithCustomField.zero[ReturnType]
@@ -88,7 +96,7 @@ case class PrimitiveToObjectWithValueField[ReturnType: Format](
 
   override def op(content: Map[String, JsValue]): Option[ObjectWithValueField[ReturnType]] = {
     val s = for {
-      v <- content.get(fieldName)
+      v <- ValueNormalizer.normalize(content.get(fieldName))
     } yield ObjectWithValueField[ReturnType](v.asOpt[ReturnType])
     transform(s)
   }
@@ -103,7 +111,7 @@ case class PrimitiveToObjectWithReferenceField(
   override type T = ObjectWithReferenceField
   override def op(content: Map[String, JsValue]): Option[ObjectWithReferenceField] = {
     for {
-      v <- content.get(fieldName)
+      v <- ValueNormalizer.normalize(content.get(fieldName))
     } yield transform(ObjectWithReferenceField(v.asOpt[String]))
   }
   override def zero: ObjectWithReferenceField = ObjectWithReferenceField.zero
@@ -117,7 +125,7 @@ case class PrimitiveToObjectWithUrlField(
   override type T = ObjectWithUrlField
   override def op(content: Map[String, JsValue]): Option[ObjectWithUrlField] = {
     for {
-      v <- content.get(fieldName)
+      v <- ValueNormalizer.normalize(content.get(fieldName))
     } yield transform(ObjectWithUrlField(v.asOpt[String]))
   }
   override def zero: ObjectWithUrlField = ObjectWithUrlField.zero
@@ -157,8 +165,8 @@ case class PrimitiveArrayToListOfValueObject[ReturnType: Format](
 ) extends IList {
   override type T = ListOfObjectWithValueField[ReturnType]
   override def op(content: Map[String, JsValue]): Option[ListOfObjectWithValueField[ReturnType]] = {
-    content
-      .get(fieldName)
+    ValueNormalizer
+      .normalize(content.get(fieldName))
       .flatMap { fieldValue =>
         val l = fieldValue
           .as[List[JsValue]]

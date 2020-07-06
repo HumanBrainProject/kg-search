@@ -20,6 +20,7 @@ import java.net.URLEncoder
 import models.{INFERRED, RELEASED}
 import models.templates.{FileProxy, Template}
 import models.templates.entities.{ObjectWithValueField, _}
+import play.api.libs.json.JsObject
 import utils._
 
 import scala.collection.immutable.HashMap
@@ -59,29 +60,53 @@ trait DatasetTemplate extends Template with FileProxy {
     ),
     "zip" -> Optional(
       Merge(
-        Merge(
-          FirstElement(PrimitiveArrayToListOfValueObject[String]("embargo")),
-          PrimitiveToObjectWithValueField[Boolean]("containerUrlAsZip"), {
-            case (
-              embargoObject@Some(ObjectWithValueField(Some(embargoString: String))),
-              Some(ObjectWithValueField(Some(true)))
-              ) if embargoString != "Under review" && embargoString != "Embargoed" =>
-              embargoObject
-            case _ => None
-          }
-        ),
         WriteObject(
           List(
-            PrimitiveToObjectWithValueField[String]("container_url"),
-            PrimitiveToObjectWithCustomField[String]("human_readable_size", "fileSize"),
-          ),
-        ), {
-          case (Some(ObjectWithValueField(embargo)), containerUrlObject) =>
-            containerUrlObject
+            Nested("embargo", FirstElement(PrimitiveArrayToListOfValueObject[String]("embargo"))),
+            Nested("containerUrlAsZIP", PrimitiveToObjectWithValueField[Boolean]("containerUrlAsZIP")),
+            Nested("files", ObjectArrayToListOfObject(
+              "files",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithUrlField("absolute_path")
+                )
+              )
+            )
+            )
+          )
+        ),
+        PrimitiveToObjectWithUrlField("container_url", {
+          case ObjectWithUrlField(Some(url)) =>
+            ObjectWithUrlField(Some(s"https://kg.ebrains.eu/proxy/export?container=$url"))
+          case _ => ObjectWithUrlField(None)
+        }),
+        {
+          case (
+            Some(visibilityCriteria),
+            Some(res)
+            ) => {
+            val embargo = (visibilityCriteria.toJson \ "embargo" \ "value").as[String]
+            val isEmbargoed = embargo == "Under review" || embargo == "Embargoed"
+            val asZip = (visibilityCriteria.toJson \ "containerUrlAsZIP" \ "value").asOpt[Boolean].getOrElse(false)
+            val hasFiles = (visibilityCriteria.toJson \ "files").asOpt[List[JsObject]].getOrElse(List()).nonEmpty
+            if (!isEmbargoed && (asZip || hasFiles)) {
+              Some(
+                ObjectMap(
+                  List(
+                    res,
+                    ObjectWithValueField[String](Some("Download all related data as ZIP"))
+                  )
+                )
+              )
+            } else {
+              None
+            }
+          }
           case _ => None
         }
       )
-    ),
+    )
+    ,
     "dataDescriptor" -> Optional(
       WriteObject(
         List(
@@ -89,14 +114,17 @@ trait DatasetTemplate extends Template with FileProxy {
           PrimitiveToObjectWithValueField[String]("dataDescriptorURL")
         )
       )
-    ),
-    "doi" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("doi")),
+    )
+    ,
+    "doi" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("doi"))
+    ,
     "license_info" -> FirstElement(
       ObjectArrayToListOfObject(
         "license",
         WriteObject(List(PrimitiveToObjectWithUrlField("url"), PrimitiveToObjectWithValueField[String]("name")))
       )
-    ),
+    )
+    ,
     "component" -> ObjectArrayToListOfObject(
       "component",
       WriteObject(
@@ -108,7 +136,8 @@ trait DatasetTemplate extends Template with FileProxy {
           PrimitiveToObjectWithValueField[String]("name")
         )
       )
-    ),
+    )
+    ,
     "owners" ->
       ObjectArrayToListOfObject(
         "owners",
@@ -121,16 +150,21 @@ trait DatasetTemplate extends Template with FileProxy {
             PrimitiveToObjectWithValueField[String]("name")
           )
         )
-      ),
-    "description" -> PrimitiveToObjectWithValueField[String]("description"),
-    "speciesFilter" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("speciesFilter")),
-    "embargoForFilter" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("embargoForFilter")),
+      )
+    ,
+    "description" -> PrimitiveToObjectWithValueField[String]("description")
+    ,
+    "speciesFilter" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("speciesFilter"))
+    ,
+    "embargoForFilter" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("embargoForFilter"))
+    ,
     "external_datalink" -> WriteObject(
       List(
         PrimitiveToObjectWithUrlField("external_datalink"),
         PrimitiveToObjectWithValueField[String]("external_datalink")
       )
-    ),
+    )
+    ,
     "publications" -> ObjectArrayToListOfObject(
       "publications",
       Merge(
@@ -154,8 +188,10 @@ trait DatasetTemplate extends Template with FileProxy {
           }
         }
       )
-    ),
-    "atlas" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("parcellationAtlas")),
+    )
+    ,
+    "atlas" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("parcellationAtlas"))
+    ,
     "region" -> ObjectArrayToListOfObject(
       "parcellationRegion",
       WriteObject(
@@ -164,11 +200,16 @@ trait DatasetTemplate extends Template with FileProxy {
           OrElse(PrimitiveToObjectWithValueField[String]("alias"), PrimitiveToObjectWithValueField[String]("name"))
         )
       )
-    ),
-    "preparation" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("preparation")),
-    "modalityForFilter" -> PrimitiveArrayToListOfValueObject[String]("modalityForFilter"),
-    "methods" -> PrimitiveArrayToListOfValueObject[String]("methods"),
-    "protocol" -> PrimitiveArrayToListOfValueObject[String]("protocols"),
+    )
+    ,
+    "preparation" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("preparation"))
+    ,
+    "modalityForFilter" -> PrimitiveArrayToListOfValueObject[String]("modalityForFilter")
+    ,
+    "methods" -> PrimitiveArrayToListOfValueObject[String]("methods")
+    ,
+    "protocol" -> PrimitiveArrayToListOfValueObject[String]("protocols")
+    ,
     "viewer" ->
       OrElse(
         ObjectArrayToListOfObject(
@@ -186,31 +227,62 @@ trait DatasetTemplate extends Template with FileProxy {
             )
           )
         ),
-        ObjectArrayToListOfObject(
-          "neuroglancer",
-          WriteObject(
-            List(
-              PrimitiveToObjectWithUrlField("url"),
-              OrElse(
+        Merge(
+          PrimitiveToObjectWithValueField[String](
+            "title", {
+              case Some(ObjectWithValueField(Some(str))) => Some(ObjectWithValueField(Some(str)))
+              case _ => None
+            }
+          ),
+          ObjectArrayToListOfObject(
+            "neuroglancer",
+            WriteObject(
+              List(
+                PrimitiveToObjectWithUrlField("url"),
                 PrimitiveToObjectWithValueField[String](
                   "name", {
                     case Some(ObjectWithValueField(Some(str))) =>
                       Some(ObjectWithValueField(Some("Show " + str + " in brain atlas viewer")))
                     case _ => None
                   }
-                ),
-                PrimitiveToObjectWithValueField[String](
-                  "title", {
-                    case Some(ObjectWithValueField(Some(str))) =>
-                      Some(ObjectWithValueField(Some("Show " + str + " in brain atlas viewer")))
-                    case _ => Some(ObjectWithValueField(Some("Show in brain atlas viewer")))
-                  }
                 )
               )
             )
-          )
+          ),
+          {
+            case (
+              Some(ObjectWithValueField(titleStr)),
+              Some(ListOfObject(obj: List[Object]))
+              ) =>
+              Some(
+                ListOfObject(
+                  obj.map(i => {
+                    if ((i.toJson \ "name").isDefined) {
+                      i
+                    } else {
+                      titleStr match {
+                        case Some(t) => ObjectMap(
+                          List(
+                            ObjectWithUrlField((i.toJson \ "url").asOpt[String]),
+                            ObjectWithValueField[String](Some("Show " + t + " in brain atlas viewer"))
+                          )
+                        )
+                        case _ => ObjectMap(
+                          List(
+                            ObjectWithUrlField((i.toJson \ "url").asOpt[String]),
+                            ObjectWithValueField[String](Some("Show in brain atlas viewer"))
+                          )
+                        )
+                      }
+                    }
+                  }
+                  )
+                ))
+            case _ => None
+          }
         )
-      ),
+      )
+    ,
     "subjects" ->
       ObjectArrayToListOfObject(
         "subjects",
@@ -263,9 +335,12 @@ trait DatasetTemplate extends Template with FileProxy {
             ),
           )
         )
-      ),
-    "first_release" -> PrimitiveToObjectWithValueField[String]("first_release"),
-    "last_release" -> PrimitiveToObjectWithValueField[String]("last_release"),
+      )
+    ,
+    "first_release" -> PrimitiveToObjectWithValueField[String]("first_release")
+    ,
+    "last_release" -> PrimitiveToObjectWithValueField[String]("last_release")
+    ,
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {
