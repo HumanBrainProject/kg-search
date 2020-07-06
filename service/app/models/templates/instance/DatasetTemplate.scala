@@ -302,10 +302,10 @@ trait DatasetTemplate extends Template with FileProxy {
                   )
                 )
               ),
-              Nested("species", FirstElement(PrimitiveArrayToListOfValueObject[String]("species"))),
-              Nested("sex", FirstElement(PrimitiveArrayToListOfValueObject[String]("sex"))),
+              Nested("species", PrimitiveArrayToListOfValueObject[String]("species")),
+              Nested("sex", PrimitiveArrayToListOfValueObject[String]("sex")),
               Nested("age", PrimitiveToObjectWithValueField[String]("age")),
-              Nested("agecategory", FirstElement(PrimitiveArrayToListOfValueObject[String]("agecategory"))),
+              Nested("agecategory", PrimitiveArrayToListOfValueObject[String]("agecategory")),
               Nested("weight", PrimitiveToObjectWithValueField[String]("weight")),
               Nested(
                 "strain",
