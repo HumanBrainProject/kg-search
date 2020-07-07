@@ -85,8 +85,11 @@ trait DatasetTemplate extends Template with FileProxy {
             Some(visibilityCriteria),
             Some(res)
             ) => {
-            val embargo = (visibilityCriteria.toJson \ "embargo" \ "value").as[String]
-            val isEmbargoed = embargo == "Under review" || embargo == "Embargoed"
+            val embargo = (visibilityCriteria.toJson \ "embargo" \ "value").asOpt[String]
+            val isEmbargoed = embargo match {
+              case Some(em) => em == "Under review" || em == "Embargoed"
+              case _ => false
+            }
             val asZip = (visibilityCriteria.toJson \ "containerUrlAsZIP" \ "value").asOpt[Boolean].getOrElse(false)
             val hasFiles = (visibilityCriteria.toJson \ "files").asOpt[List[JsObject]].getOrElse(List()).nonEmpty
             if (!isEmbargoed && (asZip || hasFiles)) {
