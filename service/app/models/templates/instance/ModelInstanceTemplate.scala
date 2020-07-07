@@ -32,6 +32,17 @@ trait ModelInstanceTemplate extends Template with FileProxy {
     "title" -> PrimitiveToObjectWithValueField[String]("title"),
     "description" -> PrimitiveToObjectWithValueField[String]("description"),
     "version" -> PrimitiveToObjectWithValueField[String]("version"),
+    "license_info" -> FirstElement(
+      ObjectArrayToListOfObject(
+        "license",
+        WriteObject(
+          List(
+            PrimitiveToObjectWithUrlField("url"),
+            PrimitiveToObjectWithValueField[String]("name")
+          )
+        )
+      )
+    ),
     "contributors" -> ObjectArrayToListOfObject(
       "contributors",
       WriteObject(
@@ -115,7 +126,6 @@ trait ModelInstanceTemplate extends Template with FileProxy {
                   ObjectMap(
                     List(
                       ObjectWithUrlField(Some(s"https://kg.ebrains.eu/proxy/export?container=$resUrl")),
-                      SetValue("detail", JsString("###HBP Knowledge Graph Data Platform Citation Requirements")),
                       ObjectWithValueField[String](Some("download all related data as ZIP"))
                     )
                   )
@@ -170,7 +180,14 @@ trait ModelInstanceTemplate extends Template with FileProxy {
     case INFERRED => HashMap(
       "editorId" -> PrimitiveToObjectWithValueField[String]("editorId"),
       "embargo" -> Merge(
-        PrimitiveToObjectWithValueField[String]("container_url"),
+        ObjectArrayToListOfObject(
+          "fileBundle",
+          WriteObject(
+            List(
+              PrimitiveToObjectWithUrlField("url")
+            )
+          )
+        ),
         Optional(
           FirstElement(
             PrimitiveArrayToListOfValueObject[String](
@@ -181,27 +198,46 @@ trait ModelInstanceTemplate extends Template with FileProxy {
         (container_url, embargo) => {
           (container_url, embargo) match {
             case (
-              Some(ObjectWithValueField(Some(url: String))),
+              Some(ListOfObject(objList: List[Object])),
               Some(ObjectWithValueField(Some("embargoed")))
-              ) =>  if (url.startsWith("https://object.cscs.ch")) {
-              Some(
-                ObjectWithValueField[String](
+              ) => {
+              val url = if (objList.isEmpty) {
+                None
+              } else {
+                (objList.head.toJson \ "url").asOpt[String] match {
+                  case Some(u) => Some(u)
+                  case _ => None
+                }
+              }
+              url match {
+                case Some(urlRes) => if (urlRes.startsWith("https://object.cscs.ch")) {
                   Some(
-                    "This model is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url="+url+"\" target=\"_blank\"> you should be able to access the data here</a>"
+                    ObjectWithValueField[String](
+                      Some {
+                        "This model is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=" + urlRes + "\" target=\"_blank\"> you should be able to access the data here</a>"
+                      }
+                    )
                   )
-                )
-              )
-            } else {
-              Some(
-                ObjectWithValueField[String](
+                }
+                else {
                   Some(
-                    "This model is temporarily under embargo. The data will become available for download after the embargo period."
+                    ObjectWithValueField[String](
+                      Some(
+                        "This model is temporarily under embargo. The data will become available for download after the embargo period."
+                      )
+                    )
                   )
-                )
-              )
+                }
+                case _ => Some(
+                    ObjectWithValueField[String](
+                      Some(
+                        "This model is temporarily under embargo. The data will become available for download after the embargo period."
+                      )
+                    )
+                  )
+              }
             }
-            case _ =>
-              None
+            case _ => None
           }
         }
       ),

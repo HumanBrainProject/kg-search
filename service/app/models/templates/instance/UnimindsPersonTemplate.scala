@@ -85,17 +85,19 @@ trait UnimindsPersonTemplate extends Template {
             case Some(ObjectWithValueField(Some(doiStr))) =>
               val url = URLEncoder.encode(doiStr, "UTF-8")
               Some(ObjectWithValueField(Some(s"[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url")))
-            case s => s
+            case _ => None
           }
         ),
         (citation, doi) => {
           (citation, doi) match {
             case (
-                Some(ObjectWithValueField(Some(citationStr: String))),
-                Some(ObjectWithValueField(Some(doiStr: String)))
-                ) =>
+              Some(ObjectWithValueField(Some(citationStr: String))),
+              Some(ObjectWithValueField(Some(doiStr: String)))
+              ) =>
               Some(ObjectWithValueField[String](Some(citationStr + "\n" + doiStr)))
-            case _ => doi
+            case (Some(ObjectWithValueField(Some(citationStr: String))), _) =>Some(ObjectWithValueField[String](Some(citationStr)))
+            case (_, Some(ObjectWithValueField(Some(doiStr: String)))) =>Some(ObjectWithValueField[String](Some(doiStr)))
+            case _ => None
           }
 
         }
