@@ -121,7 +121,12 @@ trait DatasetTemplate extends Template with FileProxy {
     "license_info" -> FirstElement(
       ObjectArrayToListOfObject(
         "license",
-        WriteObject(List(PrimitiveToObjectWithUrlField("url"), PrimitiveToObjectWithValueField[String]("name")))
+        WriteObject(
+          List(
+            PrimitiveToObjectWithUrlField("url"),
+            PrimitiveToObjectWithValueField[String]("name")
+          )
+        )
       )
     )
     ,

@@ -29,10 +29,10 @@ trait SubjectTemplate extends Template {
   val result: Map[String, TemplateComponent] = Map(
     "identifier"  -> PrimitiveToObjectWithValueField[String]("identifier"),
     "title"       -> PrimitiveToObjectWithValueField[String]("title"),
-    "species"     -> FirstElement(PrimitiveArrayToListOfValueObject[String]("species")),
-    "sex"         -> FirstElement(PrimitiveArrayToListOfValueObject[String]("sex")),
+    "species"     -> PrimitiveArrayToListOfValueObject[String]("species"),
+    "sex"         -> PrimitiveArrayToListOfValueObject[String]("sex"),
     "age"         -> PrimitiveToObjectWithValueField[String]("age"),
-    "agecategory" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("agecategory")),
+    "agecategory" -> PrimitiveArrayToListOfValueObject[String]("agecategory"),
     "weight"      -> PrimitiveToObjectWithValueField[String]("weight"),
     "strain" -> OrElse(
       PrimitiveToObjectWithValueField[String]("strain"),
@@ -57,11 +57,7 @@ trait SubjectTemplate extends Template {
           List(
             Nested(
               "component",
-              FirstElement(
-                PrimitiveArrayToListOfValueObject[String](
-                  "componentName",
-                )
-              )
+              PrimitiveArrayToListOfValueObject[String]("componentName")
             ),
             Nested(
               "name",

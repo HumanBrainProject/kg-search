@@ -135,6 +135,7 @@ GET /templates/:templateType/meta  controllers.IndexerController.applyMetaTempla
   #      - UnimindsPerson
   #      - ModelInstance
   #      - SoftwareProject
+  #      - Sample
   #    default: Dataset
   #  - in: path
   #    name: id
