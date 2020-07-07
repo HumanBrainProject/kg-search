@@ -158,21 +158,16 @@ trait DatasetTemplate extends Template with FileProxy {
             PrimitiveToObjectWithValueField[String]("name")
           )
         )
-      )
-    ,
-    "description" -> PrimitiveToObjectWithValueField[String]("description")
-    ,
-    "speciesFilter" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("speciesFilter"))
-    ,
-    "embargoForFilter" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("embargoForFilter"))
-    ,
+      ),
+    "description" -> PrimitiveToObjectWithValueField[String]("description"),
+    "speciesFilter" -> PrimitiveArrayToListOfValueObject[String]("speciesFilter"),
+    "embargoForFilter" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("embargoForFilter")),
     "external_datalink" -> WriteObject(
       List(
         PrimitiveToObjectWithUrlField("external_datalink"),
         PrimitiveToObjectWithValueField[String]("external_datalink")
       )
-    )
-    ,
+    ),
     "publications" -> ObjectArrayToListOfObject(
       "publications",
       Merge(
@@ -196,10 +191,8 @@ trait DatasetTemplate extends Template with FileProxy {
           }
         }
       )
-    )
-    ,
-    "atlas" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("parcellationAtlas"))
-    ,
+    ),
+    "atlas" -> PrimitiveArrayToListOfValueObject[String]("parcellationAtlas"),
     "region" -> ObjectArrayToListOfObject(
       "parcellationRegion",
       WriteObject(
@@ -208,16 +201,11 @@ trait DatasetTemplate extends Template with FileProxy {
           OrElse(PrimitiveToObjectWithValueField[String]("alias"), PrimitiveToObjectWithValueField[String]("name"))
         )
       )
-    )
-    ,
-    "preparation" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("preparation"))
-    ,
-    "modalityForFilter" -> PrimitiveArrayToListOfValueObject[String]("modalityForFilter")
-    ,
-    "methods" -> PrimitiveArrayToListOfValueObject[String]("methods")
-    ,
-    "protocol" -> PrimitiveArrayToListOfValueObject[String]("protocols")
-    ,
+    ),
+    "preparation" -> PrimitiveArrayToListOfValueObject[String]("preparation"),
+    "modalityForFilter" -> PrimitiveArrayToListOfValueObject[String]("modalityForFilter"),
+    "methods" -> PrimitiveArrayToListOfValueObject[String]("methods"),
+    "protocol" -> PrimitiveArrayToListOfValueObject[String]("protocols"),
     "viewer" ->
       OrElse(
         ObjectArrayToListOfObject(
@@ -289,8 +277,7 @@ trait DatasetTemplate extends Template with FileProxy {
             case _ => None
           }
         )
-      )
-    ,
+      ),
     "subjects" ->
       ObjectArrayToListOfObject(
         "subjects",
@@ -343,12 +330,9 @@ trait DatasetTemplate extends Template with FileProxy {
             ),
           )
         )
-      )
-    ,
-    "first_release" -> PrimitiveToObjectWithValueField[String]("first_release")
-    ,
+      ),
+    "first_release" -> PrimitiveToObjectWithValueField[String]("first_release"),
     "last_release" -> PrimitiveToObjectWithValueField[String]("last_release")
-    ,
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {
