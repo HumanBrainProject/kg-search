@@ -11,7 +11,7 @@ const endpoints = {
   //"search": () => "/static/data/search.json",
   "search": () => "/search/proxy/search/kg/_search",
   "instance": (type, id) => `/search/proxy/default/kg/${type}/${id}`,
-  "preview": (type, id) => `/query/${type}/search/templates/searchUi/libraries/instancesDynamic/instances/${id}`,
+  "preview": (type, id) => `/search/indexer/templates/${type}/${id}?databaseScope=INFERRED`,
   "auth": (redirectUri, stateKey, nonceKey) => `${oidcUri}?response_type=id_token%20token&client_id=${oidcClientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`
 };
 

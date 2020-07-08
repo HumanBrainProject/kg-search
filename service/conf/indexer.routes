@@ -147,6 +147,40 @@ GET /templates/:templateType/meta  controllers.IndexerController.applyMetaTempla
   ###
 GET /templates/:templateType/:id  controllers.IndexerController.applyTemplateByTypeAndId(databaseScope: models.DatabaseScope, templateType:models.templates.TemplateType, id: java.util.UUID)
 
+ ###
+  #  summary: Apply a template to a single instance this process is the first step of the indexing to the search UI
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  #  - in: query
+  #    name: databaseScope
+  #    type: string
+  #    enum: [INFERRED, RELEASED]
+  #  - in: path
+  #    name: org
+  #    type: string
+  #  - in: path
+  #    name: domain
+  #    type: string
+  #  - in: path
+  #    name: schema
+  #    type: string
+  #  - in: path
+  #    name: version
+  #    type: string
+  #  - in: path
+  #    name: id
+  #    type: string
+  #    format: uuid
+  #  responses:
+  #    '200':
+  #      description: Ok
+  ###
+GET /templates/:org/:domain/:schema/:version/:id  controllers.IndexerController.applyTemplateBySchemaAndId(databaseScope: models.DatabaseScope, org:String, domain:String, schema:String, version:String, id: java.util.UUID)
+
   ###
   #  summary: Get labels
   #  parameters:

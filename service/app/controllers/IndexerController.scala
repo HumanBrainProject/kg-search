@@ -31,16 +31,16 @@ import play.api.mvc._
 import services.indexer.Indexer
 
 class IndexerController @Inject()(
-  indexer: Indexer[JsValue, JsValue, Task, WSResponse, Either[ApiError, JsValue]],
-  cc: ControllerComponents
-) extends AbstractController(cc) {
+                                   indexer: Indexer[JsValue, JsValue, Task, WSResponse, Either[ApiError, JsValue]],
+                                   cc: ControllerComponents
+                                 ) extends AbstractController(cc) {
   implicit val s: Scheduler = monix.execution.Scheduler.Implicits.global
 
   def index(
-    databaseScope: DatabaseScope,
-    completeRebuild: Boolean,
-    restrictToOrganizations: Option[String]
-  ): Action[AnyContent] = Action.async { implicit request =>
+             databaseScope: DatabaseScope,
+             completeRebuild: Boolean,
+             restrictToOrganizations: Option[String]
+           ): Action[AnyContent] = Action.async { implicit request =>
     val result = request.headers.toSimpleMap.get("Authorization") match {
       case Some(token) =>
         indexer
@@ -68,11 +68,11 @@ class IndexerController @Inject()(
   }
 
   def indexByType(
-    databaseScope: DatabaseScope,
-    dataType: String,
-    completeRebuild: Boolean,
-    restrictToOrganizations: Option[String]
-  ): Action[AnyContent] = Action.async { implicit request =>
+                   databaseScope: DatabaseScope,
+                   dataType: String,
+                   completeRebuild: Boolean,
+                   restrictToOrganizations: Option[String]
+                 ): Action[AnyContent] = Action.async { implicit request =>
     val result = request.headers.toSimpleMap.get("Authorization") match {
       case Some(token) =>
         indexer
@@ -85,7 +85,7 @@ class IndexerController @Inject()(
           )
           .map {
             case Right(_) => Ok(s"Indexing done for type $dataType")
-            case Left(e)  => e.toResults()
+            case Left(e) => e.toResults()
           }
       case None => Task.pure(Unauthorized("Please provide credentials"))
     }
@@ -95,12 +95,12 @@ class IndexerController @Inject()(
   def indexByTypeAndId(databaseScope: DatabaseScope, templateType: TemplateType, id: UUID): Unit = ()
 
   def applyTemplateByType(
-    databaseScope: DatabaseScope,
-    templateType: TemplateType,
-    restrictToOrg: Option[String],
-    from: Option[Int],
-    size: Option[Int]
-  ): Action[AnyContent] =
+                           databaseScope: DatabaseScope,
+                           templateType: TemplateType,
+                           restrictToOrg: Option[String],
+                           from: Option[Int],
+                           size: Option[Int]
+                         ): Action[AnyContent] =
     Action.async { implicit request =>
       val result = request.headers.toSimpleMap.get("Authorization") match {
         case Some(token) =>
@@ -124,10 +124,10 @@ class IndexerController @Inject()(
     }
 
   def applyTemplateByTypeAndId(
-    databaseScope: DatabaseScope,
-    templateType: TemplateType,
-    id: UUID
-  ): Action[AnyContent] =
+                                databaseScope: DatabaseScope,
+                                templateType: TemplateType,
+                                id: UUID
+                              ): Action[AnyContent] =
     Action.async { implicit request =>
       val result = request.headers.toSimpleMap.get("Authorization") match {
         case Some(token) =>
@@ -144,9 +144,21 @@ class IndexerController @Inject()(
       result.runToFuture(s)
     }
 
+  def applyTemplateBySchemaAndId(
+                                  databaseScope: DatabaseScope,
+                                  org: String,
+                                  domain: String,
+                                  schema: String,
+                                  version: String,
+                                  id: UUID
+                                ): Action[AnyContent] = {
+    val template = TemplateType.fromSchema(s"$org/$domain/$schema/$version").get
+    applyTemplateByTypeAndId(databaseScope, template, id)
+  }
+
   def applyMetaTemplateByType(
-    templateType: TemplateType,
-  ): Action[AnyContent] =
+                               templateType: TemplateType,
+                             ): Action[AnyContent] =
     Action.async { implicit request =>
       indexer
         .metaByType(templateType)
