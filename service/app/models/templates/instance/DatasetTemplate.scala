@@ -92,7 +92,7 @@ trait DatasetTemplate extends Template with FileProxy {
             }
             val asZip = (visibilityCriteria.toJson \ "containerUrlAsZIP" \ "value").asOpt[Boolean].getOrElse(false)
             val hasFiles = (visibilityCriteria.toJson \ "files").asOpt[List[JsObject]].getOrElse(List()).nonEmpty
-            if (!isEmbargoed && (asZip || hasFiles)) {
+            if (!isEmbargoed && (asZip || !hasFiles)) {
               Some(
                 ObjectMap(
                   List(
