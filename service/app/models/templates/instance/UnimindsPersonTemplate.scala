@@ -95,7 +95,7 @@ trait UnimindsPersonTemplate extends Template {
               Some(ObjectWithValueField(Some(doiStr: String)))
               ) =>
               Some(ObjectWithValueField[String](Some(citationStr + "\n" + doiStr)))
-            case (Some(ObjectWithValueField(Some(citationStr: String))), _) =>Some(ObjectWithValueField[String](Some(citationStr)))
+            case (Some(ObjectWithValueField(Some(citationStr: String))), _) =>Some(ObjectWithValueField[String](Some(citationStr.trim().stripSuffix(","))))
             case (_, Some(ObjectWithValueField(Some(doiStr: String)))) =>Some(ObjectWithValueField[String](Some(doiStr)))
             case _ => None
           }

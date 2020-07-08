@@ -165,13 +165,13 @@ case class PrimitiveArrayToListOfValueObject[ReturnType: Format](
 ) extends IList {
   override type T = ListOfObjectWithValueField[ReturnType]
   override def op(content: Map[String, JsValue]): Option[ListOfObjectWithValueField[ReturnType]] = {
-    ValueNormalizer
-      .normalize(content.get(fieldName))
+    content
+      .get(fieldName)
       .flatMap { fieldValue =>
         val l = fieldValue
           .as[List[JsValue]]
           .map { el =>
-            transform(ObjectWithValueField[ReturnType](el.asOpt[ReturnType]))
+            transform(ObjectWithValueField[ReturnType](ValueNormalizer.normalize(el.asOpt[ReturnType])))
           }
         if (l.isEmpty) {
           None
