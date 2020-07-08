@@ -251,14 +251,13 @@ trait DatasetTemplate extends Template with FileProxy {
                       case Some(u) => Some(s"https://neuroglancer.humanbrainproject.org/?$u")
                       case _ => None
                     }
-                    if ((i.toJson \ "name").isDefined) {
+                    if ((i.toJson \ "value").isDefined) {
                       ObjectMap(
                         List(
                           ObjectWithUrlField(url),
-                          ObjectWithValueField[String](Some("Show " + (i.toJson \ "name").as[String] + " in brain atlas viewer"))
+                          ObjectWithValueField[String](Some("Show " + (i.toJson \ "value").as[String] + " in brain atlas viewer"))
                         )
                       )
-                      i
                     } else {
                       titleStr match {
                         case Some(t) => ObjectMap(
