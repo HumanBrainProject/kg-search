@@ -232,8 +232,7 @@ trait DatasetTemplate extends Template with FileProxy {
                 PrimitiveToObjectWithUrlField("url"),
                 PrimitiveToObjectWithValueField[String](
                   "name", {
-                    case Some(ObjectWithValueField(Some(str))) =>
-                      Some(ObjectWithValueField(Some("Show " + str + " in brain atlas viewer")))
+                    case Some(ObjectWithValueField(Some(str))) => Some(ObjectWithValueField(Some(str)))
                     case _ => None
                   }
                 )
@@ -248,19 +247,29 @@ trait DatasetTemplate extends Template with FileProxy {
               Some(
                 ListOfObject(
                   obj.map(i => {
+                    val url: Option[String] = (i.toJson \ "url").asOpt[String] match {
+                      case Some(u) => Some(s"https://neuroglancer.humanbrainproject.org/?$u")
+                      case _ => None
+                    }
                     if ((i.toJson \ "name").isDefined) {
+                      ObjectMap(
+                        List(
+                          ObjectWithUrlField(url),
+                          ObjectWithValueField[String](Some("Show " + (i.toJson \ "name").as[String] + " in brain atlas viewer"))
+                        )
+                      )
                       i
                     } else {
                       titleStr match {
                         case Some(t) => ObjectMap(
                           List(
-                            ObjectWithUrlField((i.toJson \ "url").asOpt[String]),
+                            ObjectWithUrlField(url),
                             ObjectWithValueField[String](Some("Show " + t + " in brain atlas viewer"))
                           )
                         )
                         case _ => ObjectMap(
                           List(
-                            ObjectWithUrlField((i.toJson \ "url").asOpt[String]),
+                            ObjectWithUrlField(url),
                             ObjectWithValueField[String](Some("Show in brain atlas viewer"))
                           )
                         )
