@@ -168,16 +168,16 @@ trait DatasetTemplate extends Template with FileProxy {
             ListOfObject(
               links.foldLeft(List[ObjectMap]()) {
                 case (acc, currentValue) =>
-                (currentValue.toJson \ "value").asOpt[String] match {
-                  case Some(v) =>
-                    acc :+ ObjectMap(
-                      List(
-                        ObjectWithUrlField(Some(v)),
-                        ObjectWithValueField[String](Some(v))
+                  (currentValue.toJson \ "value").asOpt[String] match {
+                    case Some(v) =>
+                      acc :+ ObjectMap(
+                        List(
+                          ObjectWithUrlField(Some(v)),
+                          ObjectWithValueField[String](Some(v))
+                        )
                       )
-                    )
-                  case _ => acc
-                }
+                    case _ => acc
+                  }
               }
             )
           )
@@ -395,6 +395,28 @@ trait DatasetTemplate extends Template with FileProxy {
                   )
                 )
               )
+            case (
+              _,
+              Some(ObjectWithValueField(Some("Embargoed")))
+              ) =>
+              Some(
+                ObjectWithValueField[String](
+                  Some(
+                    "This dataset is temporarily under embargo. The data will become available for download after the embargo period."
+                  )
+                )
+              )
+            case (
+              _,
+              Some(ObjectWithValueField(Some("Under review")))
+              ) =>
+              Some(
+                ObjectWithValueField[String](
+                  Some(
+                    "This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review."
+                  )
+                )
+              )
             case _ =>
               None
           }
@@ -438,7 +460,7 @@ trait DatasetTemplate extends Template with FileProxy {
                       Some(ObjectWithValueField(Some(preview: String))),
                       Some(ObjectWithValueField(Some(isAnimated: Boolean)))
                       ) =>
-                      if(!preview.isBlank) {
+                      if (!preview.isBlank) {
                         Some(
                           NestedObject(
                             "previewUrl",
@@ -465,7 +487,7 @@ trait DatasetTemplate extends Template with FileProxy {
                       Some(ObjectWithValueField(Some(static: String))),
                       _
                       ) =>
-                      if(!static.isBlank) {
+                      if (!static.isBlank) {
                         Some(
                           NestedObject(
                             "staticImageUrl",
@@ -492,7 +514,7 @@ trait DatasetTemplate extends Template with FileProxy {
                       Some(ObjectWithValueField(Some(thumbnail: String))),
                       _
                       ) =>
-                      if(!thumbnail.isBlank) {
+                      if (!thumbnail.isBlank) {
                         Some(
                           NestedObject(
                             "thumbnailUrl",
@@ -583,7 +605,7 @@ trait DatasetTemplate extends Template with FileProxy {
                         Some(ObjectWithValueField(Some(preview: String))),
                         Some(ObjectWithValueField(Some(isAnimated: Boolean)))
                         ) =>
-                        if(!preview.isBlank) {
+                        if (!preview.isBlank) {
                           Some(
                             NestedObject(
                               "previewUrl",
@@ -610,7 +632,7 @@ trait DatasetTemplate extends Template with FileProxy {
                         Some(ObjectWithValueField(Some(static: String))),
                         _
                         ) =>
-                        if(!static.isBlank) {
+                        if (!static.isBlank) {
                           Some(
                             NestedObject(
                               "staticImageUrl",
@@ -637,7 +659,7 @@ trait DatasetTemplate extends Template with FileProxy {
                         Some(ObjectWithValueField(Some(thumbnail: String))),
                         _
                         ) =>
-                        if(!thumbnail.isBlank) {
+                        if (!thumbnail.isBlank) {
                           Some(
                             NestedObject(
                               "thumbnailUrl",
