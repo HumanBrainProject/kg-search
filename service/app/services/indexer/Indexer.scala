@@ -413,7 +413,7 @@ class IndexerImpl @Inject()(
           .url(
             s"$queryEndpoint/query/$schema/search/instances/?vocab=https://schema.hbp.eu/search/&databaseScope=${databaseScope.toString}$paramsSize$paramsFrom$restrictOrgsToString"
           )
-          .addHttpHeaders("Authorization" -> s"Bearer $token")
+          .addHttpHeaders("Authorization" -> token)
           .get()
       )
       .map { wsresult =>
@@ -451,7 +451,7 @@ class IndexerImpl @Inject()(
       .deferFuture(
         WSClient
           .url(s"$queryEndpoint/query/$schema/search/instances/${id.toString}?vocab=https://schema.hbp.eu/search/")
-          .addHttpHeaders("Authorization" -> s"Bearer $token")
+          .addHttpHeaders("Authorization" -> token)
           .get()
       )
       .map { wsresult =>
