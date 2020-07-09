@@ -18,6 +18,7 @@ package controllers
 import java.util.UUID
 
 import akka.util.ByteString
+import helpers.ESHelper
 import javax.inject.Inject
 import models.errors.ApiError
 import models.templates.TemplateType
@@ -152,8 +153,22 @@ class IndexerController @Inject()(
                                   version: String,
                                   id: UUID
                                 ): Action[AnyContent] = {
-    val template = TemplateType.fromSchema(s"$org/$domain/$schema/$version").get
-    applyTemplateByTypeAndId(databaseScope, template, id)
+    Action.async { implicit request =>
+      val result = request.headers.toSimpleMap.get("Authorization") match {
+        case Some(token) =>
+          val templateType = TemplateType.fromSchema(s"$org/$domain/$schema/$version").get
+          indexer
+            .queryByTypeAndId(templateType, id, databaseScope, token)
+            .map {
+              case Right(v) => Ok(Json.obj("_source" -> v, "_id" -> id, "found" -> true, "_type" -> templateType.toString, "_index" -> ESHelper.curatedIndex))
+              case Left(error) =>
+                error.toResults()
+            }
+
+        case None => Task.pure(Unauthorized("Please provide credentials"))
+      }
+      result.runToFuture(s)
+    }
   }
 
   def applyMetaTemplateByType(
