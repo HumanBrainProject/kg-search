@@ -160,7 +160,15 @@ class IndexerController @Inject()(
           indexer
             .queryByTypeAndId(templateType, id, databaseScope, token)
             .map {
-              case Right(v) => Ok(Json.obj("_source" -> v, "_id" -> id, "found" -> true, "_type" -> templateType.toString, "_index" -> ESHelper.curatedIndex))
+              case Right(v) => Ok(
+                Json.obj(
+                  "found" -> true,
+                  "_id" -> "dynamic",
+                  "_index" -> "dynamic",
+                  "_type" -> templateType.toString,
+                  "version" -> 0,
+                  "_source" -> v)
+              )
               case Left(error) =>
                 error.toResults()
             }
