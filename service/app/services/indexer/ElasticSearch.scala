@@ -28,6 +28,7 @@ import play.api.libs.json.{JsNumber, JsObject, JsValue, Json, Writes}
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
 
+import scala.collection.immutable.HashMap
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
 import scala.util.Success
@@ -38,7 +39,8 @@ trait ElasticSearch {
   def updateLabels(labels: Map[String, JsValue]): Unit
 
   def recreateIndex(
-    mapping: Map[String, Map[String, JsValue]],
+    mapping: JsValue,
+    relevantType: TemplateType,
     indexName: DatabaseScope,
     completeRebuild: Boolean,
   ): Task[Either[ApiError, Unit]]
@@ -71,27 +73,28 @@ class ElasticSearchImpl @Inject()(
 ) extends ElasticSearch
     with Logging {
   val elasticSearchEndpoint: String = configuration.get[String]("es.host")
+
   override def updateLabels(labels: Map[String, JsValue]): Unit = {}
 
   override def recreateIndex(
-    mapping: Map[String, Map[String, JsValue]],
+    mapping: JsValue,
+    relevantType: TemplateType,
     dbScope: DatabaseScope,
     completeRebuild: Boolean,
   ): Task[Either[ApiError, Unit]] = {
     if (completeRebuild) {
-      logger.info(s"Completely rebuilding the index ${dbScope.toIndexName} in ES...")
+      logger.info(s"Completely rebuilding the index ${dbScope.toIndexName}_${relevantType.apiName.toLowerCase} in ES...")
       Task
-        .deferFuture(WSClient.url(s"$elasticSearchEndpoint/${dbScope.toIndexName}").delete())
+        .deferFuture(WSClient.url(s"$elasticSearchEndpoint/${dbScope.toIndexName}_${relevantType.apiName.toLowerCase}").delete())
         .flatMap(
           res =>
             res.status match {
               case OK | NOT_FOUND =>
                 //recreate
-                val payload = Json.toJson(mapping)(Writes.genericMapWrites)
                 Task
                   .deferFuture(
                     WSClient
-                      .url(s"$elasticSearchEndpoint/${dbScope.toIndexName}").put(payload)
+                      .url(s"$elasticSearchEndpoint/${dbScope.toIndexName}_${relevantType.apiName.toLowerCase}").put(mapping)
                   )
                   .map(
                     res =>
@@ -121,13 +124,16 @@ class ElasticSearchImpl @Inject()(
     databaseScope: DatabaseScope,
   ): Task[Either[ApiError, Unit]] = {
     // TODO Check if element is a list ????
+    logger.info(s"Started the ingestion of the data for ${databaseScope.toIndexName}_${dataType.toLowerCase}/$identifier")
     Task
       .deferFuture(
-        WSClient.url(s"$elasticSearchEndpoint/${databaseScope.toIndexName}/$dataType/$identifier").put(jsonPayload)
+        WSClient.url(s"$elasticSearchEndpoint/${databaseScope.toIndexName}_${dataType.toLowerCase}/_doc/$identifier").put(jsonPayload)
       )
       .map { res =>
         res.status match {
-          case CREATED | OK => Right(())
+          case CREATED | OK =>
+            logger.info(s"Done with the ingestion of the data for ${databaseScope.toIndexName}_${dataType.toLowerCase}/_doc/$identifier")
+            Right(())
           case e            => Left(ApiError(e, res.body))
         }
       }
