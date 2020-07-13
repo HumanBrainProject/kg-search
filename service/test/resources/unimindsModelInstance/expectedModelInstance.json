@@ -1,0 +1,84 @@
+{
+  "producedDataset": null,
+  "modelFormat": [
+    {
+      "value": "NEST-Python"
+    }
+  ],
+  "identifier": {
+    "value": "2d5ecf4a-2962-4a04-a42d-4a680664bea0"
+  },
+  "description": {
+    "value": "Neuron models associated with:\n\nMigliore R, Lupascu CA, Bologna LL, Romani A, Courcol J-D, Antonel S, et al. (2018) The physiological variability of channel density in hippocampal CA1 pyramidal cells and interneurons explored using a unified data-driven modeling workflow. PLoS Comput Biol 14(9): e1006423.\n\nalso see: \n \n- https://humanbrainproject.github.io/hbp-bsp-live-papers/2018/migliore_et_al_2018/migliore_et_al_2018.html\n- https://senselab.med.yale.edu/modeldb/enterCode.cshtml?model=244688#tabs-1"
+  },
+  "owners": [
+    {
+      "reference": "Contributor/68f7bd0bbd60708e0baf671b5306c6a9",
+      "value": "Aardse, Romy"
+    }
+  ],
+  "abstractionLevel": [
+    {
+      "value": "spiking neurons:biophysical"
+    }
+  ],
+  "mainContact": [
+    {
+      "reference": "Contributor/68f7bd0bbd60708e0baf671b5306c6a9",
+      "value": "Aardse, Romy"
+    }
+  ],
+  "brainStructures": [
+    {
+      "value": "Primary Visual Cortex"
+    }
+  ],
+  "usedDataset": null,
+  "version": {
+    "value": "1.0"
+  },
+  "publications": null,
+  "studyTarget": [
+    {
+      "value": "Neuropsin"
+    },
+    {
+      "value": "Parvalbumin"
+    }
+  ],
+  "allfiles": [
+    {
+      "url": "https://kg.ebrains.eu/proxy/export?container=https://object.cscs.ch/v1/AUTH_c0a333ecf7c045809321ce9d9ecdfdea/Migliore_2018_CA1/",
+      "detail": "###HBP Knowledge Graph Data Platform Citation Requirements",
+      "value": "download all related data as ZIP"
+    }
+  ],
+  "modelScope": [
+    {
+      "value": "single cell"
+    }
+  ],
+  "title": {
+    "value": "Collection of hippocampal CA1 pyramidal cell and interneuron models from Migliore et al. 2018"
+  },
+  "first_release": null,
+  "contributors": [
+    {
+      "reference": "Contributor/68f7bd0bbd60708e0baf671b5306c6a9",
+      "value": "Aardse, Romy"
+    },
+    {
+      "reference": "Contributor/d53c19307c5e9bc77c9b0cc80ff0a95c",
+      "value": "Alexander, Daniel C."
+    }
+  ],
+  "editorId": {
+    "value": "uniminds/core/modelinstance/v1.0.0/2d5ecf4a-2962-4a04-a42d-4a680664bea0"
+  },
+  "last_release": null,
+  "cellularTarget": [
+    {
+      "value": "Neuron"
+    }
+  ]
+}

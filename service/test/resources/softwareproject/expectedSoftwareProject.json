@@ -1,0 +1,57 @@
+{
+  "appCategory": [
+    {
+      "value": "Application"
+    }
+  ],
+  "identifier": {
+    "value": "465f6bc7-c405-4fc3-a21d-cb7c66edf144"
+  },
+  "description": {
+    "value": "foobar\n\nfoobar"
+  },
+  "version": {
+    "value": "1"
+  },
+  "sourceCode": [
+    {
+      "url": "http://foobar/source",
+      "value": "http://foobar/source"
+    }
+  ],
+  "documentation": [
+    {
+      "url": "http://fobar/doc",
+      "value": "http://fobar/doc"
+    }
+  ],
+  "license": [
+    {
+      "value": "BSD-3-Clause"
+    },
+    {
+      "value": "GNU General Public License"
+    }
+  ],
+  "operatingSystem": [
+    {
+      "value": "MacOS"
+    },
+    {
+      "value": "Linux"
+    },
+    {
+      "value": "Windows"
+    }
+  ],
+  "homepage": [
+    {
+      "url": "http://foobr",
+      "value": "http://foobr"
+    }
+  ],
+  "title": {
+    "value": "test"
+  },
+  "editorId": null
+}

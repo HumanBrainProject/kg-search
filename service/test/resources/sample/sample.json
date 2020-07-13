@@ -1,0 +1,62 @@
+{
+  "identifier": "746bbff3c752470b8e6bc899313881f6",
+  "methods": [
+    "Anesthesia Isoflurane 0.0%",
+    "Right hemisphere"
+  ],
+  "lastReleaseAt": null,
+  "brainViewer": [],
+  "subjects": [
+    {
+      "strain": "C57BL/6J",
+      "identifier": "ff8d632fe215c27b4eecc5a19dfa1fd4",
+      "species": [
+        "Mus musculus"
+      ],
+      "sex": [
+        "Male"
+      ],
+      "name": "C57-3",
+      "weight": null,
+      "agecategory": [
+        "Adult"
+      ],
+      "relativeUrl": "minds/experiment/subject/v1.0.0/903525b5-8b1f-4263-a8d3-14159a3ad267",
+      "strains": "C57BL/6",
+      "age": "8 weeks",
+      "genotype": null
+    }
+  ],
+  "parcellationAtlas": [
+    "Paxinos and Franklin's The Mouse Brain in Stereotaxic Coordinates 2007 v3"
+  ],
+  "datasets": [
+    {
+      "instances": [
+        {
+          "identifier": "2eb4336742bd92b71f01d2d14a5a9400",
+          "name": "Immunocytochemical detection of excitatory and inhibitory terminals in the mouse hippocampus (CA1) by confocal microscopy",
+          "relativeUrl": "minds/core/dataset/v1.0.0/49d24b6f-65f9-4e7a-a3db-83321b6a49d4"
+        }
+      ],
+      "componentName": [
+        "Immunocytochemical detection of excitatory and inhibitory terminals in the mouse hippocampus (CA1) by confocal microscopy"
+      ]
+    }
+  ],
+  "title": "C57-3.rad-VGLUT",
+  "firstReleaseAt": null,
+  "datasetExists": [
+    "2eb4336742bd92b71f01d2d14a5a9400"
+  ],
+  "container_url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-00961/mhippo-vGlut1-vGAT/c57-3/rad/VGLUT",
+  "parcellationRegion": [
+    {
+      "name": "radiatum layer of the hippocampus",
+      "alias": null,
+      "url": null
+    }
+  ],
+  "files": [],
+  "weightPreFixation": "1216 g"
+}

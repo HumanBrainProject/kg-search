@@ -27,9 +27,10 @@ class SearchProxySpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
   override def fakeApplication() =
     GuiceApplicationBuilder()
       .configure(
-        "play.http.filters" -> "play.api.http.NoHttpFilters",
-        "oidc.userinfo"     -> userinfoEndpoint,
-        "es.host"           -> "/eshost"
+        "play.http.filters"     -> "play.api.http.NoHttpFilters",
+        "oidc.userinfo"         -> userinfoEndpoint,
+        "es.host"               -> "/eshost",
+        "auth.refreshTokenFile" -> "test"
       )
       .build()
   implicit lazy val materializer: Materializer = app.materializer

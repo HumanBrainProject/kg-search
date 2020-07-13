@@ -35,9 +35,11 @@ const FieldBase = (renderUserInteractions = true) => {
     if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
       return null;
     }
-
+    if(Array.isArray(data) && data.length === 1) {
+      data = data[0];
+    }
     const isList = Array.isArray(data);
-    const isTable = mapping.isTable && isList && data[0] && !!data[0].children;
+    const isTable = mapping.isTable;
     const isHierarchicalFiles = mapping.isHierarchicalFiles;
     const isButton = mapping.isButton;
     const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
