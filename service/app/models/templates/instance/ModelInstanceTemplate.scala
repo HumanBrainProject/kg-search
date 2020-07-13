@@ -148,8 +148,6 @@ trait ModelInstanceTemplate extends Template with FileProxy {
     "modelScope" -> PrimitiveArrayToListOfValueObject[String]("modelScope"),
     "abstractionLevel" -> PrimitiveArrayToListOfValueObject[String]("abstractionLevel"),
     "modelFormat" -> PrimitiveArrayToListOfValueObject[String]("modelFormat"),
-    "first_release" -> PrimitiveToObjectWithValueField[String]("first_release"),
-    "last_release" -> PrimitiveToObjectWithValueField[String]("last_release"),
     "usedDataset" -> ObjectArrayToListOfObject(
       "usedDataset",
       WriteObject(

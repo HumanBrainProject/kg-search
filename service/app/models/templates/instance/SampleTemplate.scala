@@ -237,8 +237,8 @@ trait SampleTemplate extends Template with FileProxy {
           )
         )
       ),
-    "first_release" -> PrimitiveToObjectWithValueField[String]("first_release"),
-    "last_release" -> PrimitiveToObjectWithValueField[String]("last_release"),
+    "first_release" -> PrimitiveToObjectWithValueField[String]("firstReleaseAt"),
+    "last_release"  -> PrimitiveToObjectWithValueField[String]("lastReleaseAt")
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {
