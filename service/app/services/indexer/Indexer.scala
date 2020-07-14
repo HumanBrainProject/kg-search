@@ -293,7 +293,7 @@ class IndexerImpl @Inject()(
         var listOfIdsToRemove = l
         while (listOfIdsToRemove.nonEmpty) {
           removeIndex(listOfIdsToRemove, indexName, indexTime)
-          val res = Await.result(elasticSearch.getNotUpdatedInstances(indexName, indexTime).runToFuture, 10.seconds)
+          val res = Await.result(elasticSearch.getNotUpdatedInstances(indexName, indexTime).runToFuture, 5.minutes)
           listOfIdsToRemove = res.toOption.getOrElse(List())
         }
         Right(())
