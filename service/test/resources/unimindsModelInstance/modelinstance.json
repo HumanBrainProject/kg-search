@@ -1,0 +1,70 @@
+{
+  "editorId": "uniminds/core/modelinstance/v1.0.0/2d5ecf4a-2962-4a04-a42d-4a680664bea0",
+  "identifier": "2d5ecf4a-2962-4a04-a42d-4a680664bea0",
+  "producedDataset": [],
+  "custodian": [
+    {
+      "identifier": "68f7bd0bbd60708e0baf671b5306c6a9",
+      "name": "Aardse, Romy",
+      "relativeUrl": "uniminds/core/person/v1.0.0/14f0acc0-9fc0-4b67-881f-522b89316b83"
+    }
+  ],
+  "lastReleaseAt": null,
+  "brainStructure": [
+    "Primary Visual Cortex"
+  ],
+  "description": "Neuron models associated with:\n\nMigliore R, Lupascu CA, Bologna LL, Romani A, Courcol J-D, Antonel S, et al. (2018) The physiological variability of channel density in hippocampal CA1 pyramidal cells and interneurons explored using a unified data-driven modeling workflow. PLoS Comput Biol 14(9): e1006423.\n\nalso see: \n \n- https://humanbrainproject.github.io/hbp-bsp-live-papers/2018/migliore_et_al_2018/migliore_et_al_2018.html\n- https://senselab.med.yale.edu/modeldb/enterCode.cshtml?model=244688#tabs-1",
+  "title": "Collection of hippocampal CA1 pyramidal cell and interneuron models from Migliore et al. 2018",
+  "usedDataset": [],
+  "modelScope": [
+    "single cell"
+  ],
+  "version": "1.0",
+  "abstractionLevel": [
+    "spiking neurons:biophysical"
+  ],
+  "firstReleaseAt": null,
+  "studyTarget": [
+    "Neuropsin",
+    "Parvalbumin"
+  ],
+  "modelFormat": [
+    "NEST-Python"
+  ],
+  "mainContact": [
+    {
+      "identifier": "68f7bd0bbd60708e0baf671b5306c6a9",
+      "name": "Aardse, Romy",
+      "relativeUrl": "uniminds/core/person/v1.0.0/14f0acc0-9fc0-4b67-881f-522b89316b83"
+    }
+  ],
+  "fileBundle": [
+    {
+      "url": "https://object.cscs.ch/v1/AUTH_c0a333ecf7c045809321ce9d9ecdfdea/Migliore_2018_CA1/"
+    }
+  ],
+  "cellularTarget": [
+    "Neuron"
+  ],
+  "contributors": [
+    {
+      "identifier": "68f7bd0bbd60708e0baf671b5306c6a9",
+      "name": "Aardse, Romy",
+      "relativeUrl": "uniminds/core/person/v1.0.0/14f0acc0-9fc0-4b67-881f-522b89316b83"
+    },
+    {
+      "identifier": "d53c19307c5e9bc77c9b0cc80ff0a95c",
+      "name": "Alexander, Daniel C.",
+      "relativeUrl": "uniminds/core/person/v1.0.0/ce01db5c-e9f9-4f93-8cc6-5df9ee3a6b63"
+    }
+  ],
+  "embargo": [],
+  "publications": [
+    {
+      "url": null,
+      "doi": [
+        "10.1006/nimg.2000.0548"
+      ]
+    }
+  ]
+}

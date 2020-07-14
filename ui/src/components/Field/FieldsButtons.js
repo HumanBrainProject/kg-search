@@ -43,12 +43,12 @@ class Download extends React.PureComponent {
       <div className="kgs-download">
         {isListOfUrl ?
           data.map(el => {
-            const label = el.url.split("container=")[1];
+            const label = el.value || el.url.split("container=")[1] || el.url;
             return (
               <div className="kgs-download-multiple" key={el.url}>
                 <span>
                   <i className="fa fa-file-o"></i>
-                  <a href={el.url} onClick={this.handleDownload(el.url)}>{label || el.url}</a>
+                  <a href={el.url} onClick={this.handleDownload(el.url)}>{label}</a>
                 </span>
               </div>
             );
@@ -109,9 +109,9 @@ class Button extends React.PureComponent {
     const {value} = field.mapping;
 
     const [name, type] = value.split(" ");
-
-    const {url} = field.data;
-    const icon = <i className={`fa ${url?"fa-download":"fa-quote-left"}`}></i>;
+    const isListOfUrl = Array.isArray(field.data) && field.data.some(u => u.url);
+    const isUrl = field.data.url;
+    const icon = <i className={`fa ${isUrl || isListOfUrl?"fa-download":"fa-quote-left"}`}></i>;
 
     return (
       <button type="button" className={`btn kgs-fields-buttons__button ${active?"is-active":""}`} onClick={this.handleClick}>{icon}{name}{type?(<span>{type}</span>):null}</button>

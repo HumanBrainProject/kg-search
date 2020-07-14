@@ -20,7 +20,8 @@ import models.user.Group
 
 object ESHelper {
 
-  val publicIndex: String = "kg_public"
+  val publicIndex: String = "publicly_released"
+  val curatedIndex: String = "in_progress"
   val indicesPath: String = "_cat/indices"
 
   def filterNexusGroups(groups: Seq[Group], formatName: String => String = ESHelper.formatGroupName): Seq[String] = {
@@ -29,10 +30,6 @@ object ESHelper {
 
   def formatGroupName(name: String): String = {
     name.replace("nexus-", "")
-  }
-
-  def transformToIndex(s: String): String = {
-    s"kg_$s"
   }
 
   def replaceESIndex(esIndex: String, proxyUrl: String): String = {

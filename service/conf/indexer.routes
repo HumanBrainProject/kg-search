@@ -1,0 +1,215 @@
+    ###
+    #  summary: Index the specified database scope
+    #  parameters:
+    #  - in: header
+    #    name: Authorization
+    #    description: Authorization token
+    #    required: false
+    #    type: string
+    #  - in: query
+    #    name: databaseScope
+    #    type: string
+    #    enum: [INFERRED, RELEASED]
+    #  - in: query
+    #    name: completeRebuild
+    #    type: bool
+    #  - in: query
+    #    name: simulate
+    #    type: bool
+    #  - in: query
+    #    name: restrictToOrganizations
+    #    type: string
+    #  responses:
+    #    '200':
+    #      description: Ok
+    ###
+POST /  controllers.IndexerController.index(databaseScope: models.DatabaseScope, completeRebuild: Boolean?=false, restrictToOrganizations:Option[String])
+
+  ###
+  #  summary: Index the specified type
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  #  - in: path
+  #    name: dataType
+  #    type: string
+  #    enum: [Dataset, Person, Project, Sample, Subject, SoftwareProject, ModelInstance]
+  #  - in: query
+  #    name: databaseScope
+  #    type: string
+  #    enum: [INFERRED, RELEASED]
+  #  - in: query
+  #    name: completeRebuild
+  #    type: bool
+  #  - in: query
+  #    name: simulate
+  #    type: bool
+  #  - in: query
+  #    name: restrictToOrganizations
+  #    type: string
+  #  responses:
+  #    '200':
+  #      description: Ok
+  ###
+POST /:dataType  controllers.IndexerController.indexByType(databaseScope: models.DatabaseScope,dataType: String, completeRebuild: Boolean?=false, restrictToOrganizations:Option[String])
+
+
+  ###
+  #  summary: Apply a template to a single instance this process is the first step of the indexing to the search UI
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  #  - in: path
+  #    name: templateType
+  #    type: string
+  #    enum:
+  #      - Dataset
+  #      - Person
+  #      - Project
+  #      - UnimindsPerson
+  #      - ModelInstance
+  #      - SoftwareProject
+  #    default: Dataset
+  #  - in: path
+  #    name: query
+  #    type: string
+  #    enum: [INFERRED, RELEASED]
+  #  - in: query
+  #    name: from
+  #    type: int
+  #  - in: query
+  #    name: size
+  #    type: int
+  #  responses:
+  #    '200':
+  #      description: Ok
+  ###
+GET /templates/:templateType  controllers.IndexerController.applyTemplateByType(databaseScope: models.DatabaseScope, templateType:models.templates.TemplateType, restrictToOrg:Option[String], from:Option[Int], size:Option[Int])
+
+
+  ###
+  #  summary: Apply a template for meta information of a specific type
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  #  - in: path
+  #    name: templateType
+  #    type: string
+  #    enum: [Dataset, Person, Project, Sample, Subject, SoftwareProject, ModelInstance]
+  #    default: Dataset
+  #  responses:
+  #    '200':
+  #      description: Ok
+  ###
+GET /templates/:templateType/meta  controllers.IndexerController.applyMetaTemplateByType(templateType:models.templates.TemplateType)
+
+
+  ###
+  #  summary: Apply a template to a single instance this process is the first step of the indexing to the search UI
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  #  - in: query
+  #    name: databaseScope
+  #    type: string
+  #    enum: [INFERRED, RELEASED]
+  #  - in: path
+  #    name: templateType
+  #    type: string
+  #    enum:
+  #      - Dataset
+  #      - Person
+  #      - Project
+  #      - UnimindsPerson
+  #      - ModelInstance
+  #      - SoftwareProject
+  #      - Sample
+  #    default: Dataset
+  #  - in: path
+  #    name: id
+  #    type: string
+  #    format: uuid
+  #  responses:
+  #    '200':
+  #      description: Ok
+  ###
+GET /templates/:templateType/:id  controllers.IndexerController.applyTemplateByTypeAndId(databaseScope: models.DatabaseScope, templateType:models.templates.TemplateType, id: java.util.UUID)
+
+ ###
+  #  summary: Apply a template to a single instance this process is the first step of the indexing to the search UI
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  #  - in: query
+  #    name: databaseScope
+  #    type: string
+  #    enum: [INFERRED, RELEASED]
+  #  - in: path
+  #    name: org
+  #    type: string
+  #  - in: path
+  #    name: domain
+  #    type: string
+  #  - in: path
+  #    name: schema
+  #    type: string
+  #  - in: path
+  #    name: version
+  #    type: string
+  #  - in: path
+  #    name: id
+  #    type: string
+  #    format: uuid
+  #  responses:
+  #    '200':
+  #      description: Ok
+  ###
+GET /templates/:org/:domain/:schema/:version/:id  controllers.IndexerController.applyTemplateBySchemaAndId(databaseScope: models.DatabaseScope, org:String, domain:String, schema:String, version:String, id: java.util.UUID)
+
+  ###
+  #  summary: Get labels
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  #  responses:
+  #    '200':
+  #      description: Ok
+  ###
+GET /labels/  controllers.IndexerController.getLabels()
+
+  ###
+  #  summary: Get labels of a specific type
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  #  - in: path
+  #    name: templateType
+  #    type: string
+  #    enum: [Dataset, Person, Project, Sample, Subject, SoftwareProject, ModelInstance]
+  #    default: Dataset
+  #  responses:
+  #    '200':
+  #      description: Ok
+  ###
+GET /labels/:templateType  controllers.IndexerController.getLabelsByType(templateType:models.templates.TemplateType)

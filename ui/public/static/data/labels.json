@@ -5,7 +5,6 @@
     "_version": 102221,
     "found": true,
     "_source": {
-        "serviceUrl": "https://kg.ebrains.eu/search",
         "Subject": {
             "fields": {
                 "identifier": {

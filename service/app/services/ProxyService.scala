@@ -27,6 +27,11 @@ import scala.concurrent.ExecutionContext
 
 class ProxyService @Inject()(wSClient: WSClient)(implicit executionContext: ExecutionContext) {
   val logger: Logger = Logger(this.getClass)
+  private def getSelectedIndex(str: String): String = str match {
+    case "publicly_released" => "public"
+    case "in_progress"       => "curated"
+    case s                   => s
+  }
 
   def queryIndex(
     esIndex: String,
@@ -46,7 +51,7 @@ class ProxyService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
       case Some(bytes) => wsRequestBase.withBody(transformInputFunc(bytes))
       case None        => wsRequestBase
     }
-    (wsRequest, Map("X-Selected-Index" -> esIndex))
+    (wsRequest, Map("X-Selected-Index" -> getSelectedIndex(esIndex)))
   }
 
   def modifyQuery(newUrl: String, indexHint: String)(implicit request: Request[AnyContent]): WSRequest = {

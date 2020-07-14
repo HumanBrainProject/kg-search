@@ -1,0 +1,54 @@
+{
+  "container": [
+    {
+      "foo": null,
+      "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d002272_BigBrainCytoMapping-v1-v2_pub"
+    }
+  ],
+  "identifier": "af8d3519-9561-4060-8da9-2de1bb966a81",
+  "editorId": "minds/core/placomponent/v1.0.0/af8d3519-9561-4060-8da9-2de1bb966a81",
+  "lastReleaseAt": null,
+  "description": "The gold standard for cytoarchitectonic brain mapping in histological tissue sections stained for neuronal cell bodies relies on a semi-automatic multivariate statistical image analysis method [Schleicher et al. 1999, Schleicher et al. 2005]. This method is well accepted, and provides an observer-independent workflow for areal border detection. The method can be applied in regions with rather orthogonal cutting angle, where all cortical layers are in the field of view. The delineation of one brain area in a single human brain section can take several hours of work for a human expert. Therefore, the established approach cannot be used in practice to label full stacks of histological brain sections, where large brain areas can extend across more than 1000 histological sections. For the present high-resolution, full 3D maps of cytoarchitectonic areas, a more automatic procedure has been used, where a recently proposed Machine Learning model based on Deep Convolutional Networks [Spitzer et al. 2017, Spitzer et al. 2018] is employed to support an expert in the mapping process. The model learns to fill in a large fraction of areal delineations from a sparse set of annotations provided by an expert.\nThe resulting stack of 2D delineations per brain area are carefully verified by a human expert. The final 3D volumetric masks at a resolution of 20 micron are obtained by direct projection of the 2D maps into the histological space of the 3D reconstructed BigBrain [Amunts et al. 2013] model. Masks which were classified as imprecise during the verification process were replaced by interpolations between the nearest high quality masks. To distinguish predicted and interpolated results, the file includes an additional dataset called “interpolation_info”, which encodes if a respective section was predicted (intensity 1) or interpolated (intensity 2).\nFurthermore, all 2D masks are provided to be used in conjunction with the coronal sections of the Big Brain. The original expert annotations are provided separately from the Deep Learning predictions.\n",
+  "datasets": [
+    {
+      "identifier": "87c6dea7-bdf7-4049-9975-6a9925df393f",
+      "name": "Reference delineations of Area hOc1 (V1, 17, CalcS) in individual sections of the BigBrain",
+      "relativeUrl": "minds/core/dataset/v1.0.0/87c6dea7-bdf7-4049-9975-6a9925df393f"
+    },
+    {
+      "identifier": "02b56db7-a083-44f3-91dc-72bb67f3fd0a",
+      "name": "Reference delineations of Area hOc2 (V2, 18) in individual sections of the BigBrain",
+      "relativeUrl": "minds/core/dataset/v1.0.0/02b56db7-a083-44f3-91dc-72bb67f3fd0a"
+    },
+    {
+      "identifier": "696d6062-3b86-498f-9ca6-e4d67b433396",
+      "name": "Ultrahigh resolution 3D cytoarchitectonic map of Area hOc1 (V1, 17, CalcS) created by a Deep-Learning assisted workflow",
+      "relativeUrl": "minds/core/dataset/v1.0.0/696d6062-3b86-498f-9ca6-e4d67b433396"
+    },
+    {
+      "identifier": "63093617-9b72-45f5-88e6-f648ad05ae79",
+      "name": "Ultrahigh resolution 3D cytoarchitectonic map of Area hOc2 (V2, 18) created by a Deep-Learning assisted workflow",
+      "relativeUrl": "minds/core/dataset/v1.0.0/63093617-9b72-45f5-88e6-f648ad05ae79"
+    }
+  ],
+  "title": "Ultrahigh resolution 3D maps of cytoarchitectonic areas obtained by a Deep-Learning assisted mapping workflow",
+  "firstReleaseAt": null,
+  "publications": [
+    {
+      "citation": "Amunts, K., Lepage, C., Borgeat, L., Mohlberg, H., Dickscheid, T., Rousseau, M. -E., Bludau, S., Bazin, P. -L., Lewis, L. B., Oros-Peusquens, A.-M., Shah, N. J., Lippert, T., Zilles, K., Evans, A. C. (2013).  BigBrain: An Ultrahigh-Resolution 3D Human Brain Model. Science, 340(6139),1472-5.",
+      "doi": "10.1126/science.1235381"
+    },
+    {
+      "citation": "Schleicher, A., Amunts, K., Geyer, S., Morosan, P., & Zilles, K. (1999). Observer-Independent Method for Microstructural Parcellation of Cerebral Cortex: A Quantitative Approach to Cytoarchitectonics. NeuroImage, 9(1), 165–177. ",
+      "doi": "10.1006/nimg.1998.0385"
+    },
+    {
+      "citation": "Spitzer, H., Amunts, K., Harmeling, S., and Dickscheid, T. (2017). Parcellation of visual cortex on high-resolution histological brain sections using convolutional neural networks, in 2017 IEEE 14th International Symposium on Biomedical Imaging (ISBI 2017), pp. 920–923.",
+      "doi": "10.1109/ISBI.2017.7950666"
+    },
+    {
+      "citation": "Spitzer, H., Kiwitz, K., Amunts, K., Harmeling, S., Dickscheid, T. (2018). Improving Cytoarchitectonic Segmentation of Human Brain Areas with Self-supervised Siamese Networks. In: Frangi A., Schnabel J., Davatzikos C., Alberola-López C., Fichtinger G. (eds) Medical Image Computing and Computer Assisted Intervention – MICCAI 2018. MICCAI 2018. Lecture Notes in Computer Science, vol 11072. Springer, Cham.",
+      "doi": "10.1007/978-3-030-00931-1_76"
+    }
+  ]
+}

@@ -153,7 +153,7 @@ export const loadInstance = (type, id, shouldUpdateLocation=false) => {
         {
           const index = response.headers["x-selected-index"];
           if (index) {
-            dispatch(setGroup(index.slice(3)));
+            dispatch(setGroup(index));
           }
           const url = `${window.location.protocol}//${window.location.host}${window.location.pathname}?group=curated`;
           const link = `<a href=${url}>${url}</a>`;
@@ -167,7 +167,7 @@ export const loadInstance = (type, id, shouldUpdateLocation=false) => {
         {
           const index = response.headers["x-selected-index"];
           if (index) {
-            dispatch(setGroup(index.slice(3)));
+            dispatch(setGroup(index));
           }
           const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
           dispatch(loadInstanceFailure(error));

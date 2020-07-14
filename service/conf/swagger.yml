@@ -1,7 +1,7 @@
 ---
   swagger: "2.0"
   info:
-    title: "KG services"
+    title: "KG search services"
     description: "Power your data"
   consumes:
     - application/json

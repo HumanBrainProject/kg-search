@@ -21,12 +21,14 @@ import akka.util.ByteString
 import services.{IDMAPIService, ProxyService, TokenAuthService}
 import helpers.{ESHelper, OIDCHelper, ResponseHelper}
 import javax.inject.{Inject, Singleton}
+import models.errors.ApiError
 import monix.eval.Task
 import play.api.http.HttpEntity
 import play.api.libs.json._
-import play.api.libs.ws.{WSClient, WSRequest}
+import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, Request, ResponseHeader, Result}
 import play.api.{Configuration, Logger}
+import services.indexer.Indexer
 import utils.JsonHandler
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,13 +38,15 @@ class SearchProxy @Inject()(
   cc: ControllerComponents,
   mat: Materializer,
   authService: IDMAPIService,
-  proxyService: ProxyService
+  proxyService: ProxyService,
+  indexerService: Indexer[JsValue, JsValue, Task, WSResponse, Either[ApiError, JsValue]],
 )(implicit ec: ExecutionContext, ws: WSClient, config: Configuration)
     extends AbstractController(cc) {
   val es_host = config.get[String]("es.host")
   implicit val s = monix.execution.Scheduler.Implicits.global
 
   val logger: Logger = Logger(this.getClass)
+  val serviceUrlBase: String = config.get[String]("serviceUrlBase")
 
   def proxy(indexWithProxyUrl: String): Action[AnyContent] = Action.async { implicit request =>
     val segments = indexWithProxyUrl.split("/")
@@ -63,7 +67,7 @@ class SearchProxy @Inject()(
     val opts: (Option[String], Option[String]) =
       (request.headers.get("index-hint"), request.headers.get("Authorization"))
     opts match {
-      case (Some(hints), Some(auth)) =>
+      case (Some(hints), Some(_)) =>
         val token = OIDCHelper.getTokenFromRequest(request)
         authService.getUserInfo(token).flatMap {
           case Some(userInfo) =>
@@ -93,13 +97,17 @@ class SearchProxy @Inject()(
       )
       .map { response => // we want to read the raw bytes for the body
         val count = (response.json \ "hits" \ "total").asOpt[Long].getOrElse(0L)
+        val responseHeaders: Map[String, scala.collection.Seq[String]] = response.headers
         logger.info(s"Search query - term: $searchTerm, #results: $count")
         val h = ResponseHelper
-            .flattenHeaders(ResponseHelper.filterContentTypeAndLengthFromHeaders[Seq[String]](response.headers)) ++ headers
+          .flattenHeaders(
+            ResponseHelper
+              .filterContentTypeAndLengthFromHeaders[scala.collection.Seq[String]](responseHeaders)
+          ) ++ headers
         Result(
           // keep original response header except content type and length that need specific handling
           ResponseHeader(response.status),
-          HttpEntity.Strict(response.bodyAsBytes, ResponseHelper.getContentType(response.headers))
+          HttpEntity.Strict(response.bodyAsBytes, ResponseHelper.getContentType(responseHeaders))
         ).withHeaders(h.toList: _*)
       }
 
@@ -125,8 +133,25 @@ class SearchProxy @Inject()(
     }
 
   def labels(proxyUrl: String): Action[AnyContent] = Action.async { implicit request =>
-    val wsRequestBase: WSRequest = ws.url(es_host + "/kg_labels/" + proxyUrl)
-    propagateRequest(wsRequestBase).runToFuture
+    indexerService
+      .getRelevantTypes()
+      .flatMap {
+        case Right(relevantTypes) =>
+          indexerService.getLabels(relevantTypes).map { labels =>
+            val errors = labels.collect { case Left(e) => e }
+            if (errors.isEmpty) {
+              val successful = labels.collect { case Right(l) => l }
+              Ok(Json.obj("_source" -> Json.toJson(successful.toMap)))
+            } else {
+              val message = errors.foldLeft("") {
+                case (acc, e) => s"$acc + \n Status - ${e.status} - ${e.message}"
+              }
+              InternalServerError(s"Multiple errors detected - $message")
+            }
+          }
+        case Left(e) => Task.pure(e.toResults())
+      }
+      .runToFuture
   }
 
   def labelsOptions(proxyUrl: String): Action[AnyContent] = Action {

@@ -1,0 +1,324 @@
+{
+  "https://schema.hbp.eu/graphQuery/root_schema": {
+    "@id": "https://nexus.humanbrainproject.org/v0/schemas/uniminds/core/modelinstance/v1.0.0"
+  },
+  "http://schema.org/identifier": "uniminds/core/modelinstance/v1.0.0/search",
+  "searchUi:boost": 1.5,
+  "searchUi:icon": "<svg xmlns=\"http://www.w3.org/2000/svg\"  width=\"40px\"  height=\"40px\"  viewBox=\"0 0 101.94369 106.07654\"  version=\"1.1\">  <g  id=\"layer1\"  transform=\"translate(-18.662182,-76.441552)\">  <path  id=\"path1048\"  style=\"fill:none;stroke:#000000;stroke-width:3px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1\"  d=\"m 69.748968,166.9362 25.002418,15.00034 25.000004,-14.70092 M 44.751384,181.63747 69.748968,166.9362 m -49.997584,-0.29872 25,14.99999 m 74.882626,-44.40064 0.11738,29.99879 m -25.11738,-15.29787 0.117377,29.99879 M 69.631593,136.9374 69.74897,166.9362 m -25.114963,-15.29752 0.117377,29.99879 m -25.117377,-44.99879 0.117377,29.9988 m 74.76249,-74.698535 0.117379,29.998795 M 69.513534,106.9386 69.631593,136.9374 M 44.513874,91.639875 44.631251,121.63867 m 50.002759,0.29908 -25,15 25,15 25,-14.70092 z m -50.000003,-0.29907 -25,15 25,15 25.000003,-14.70093 z m 24.877113,-44.612498 -25,15.000006 25,14.999962 25,-14.700885 z\"  />  <path  style=\"opacity:0.6;fill:#4D4D4D;\"  d=\"m 310.73837,658.31418 -46.21448,-27.72879 -0.33274,-55.68521 c -0.18301,-30.62686 -0.28493,-55.73481 -0.22649,-55.79544 0.0584,-0.0606 20.92846,12.38304 46.37783,27.65258 l 46.27157,27.76282 0.32051,3.66214 c 0.17628,2.01418 0.25251,27.10682 0.1694,55.76142 l -0.15112,52.09926 z\"  id=\"path1069\"  transform=\"scale(0.26458333)\" />  <path  style=\"opacity:0.6;fill:#4D4D4D\"  d=\"m 215.7764,487.6544 -46.20685,-28.27758 -0.30526,-54.93374 c -0.16789,-30.21356 -0.25531,-54.99784 -0.19427,-55.07618 0.061,-0.0784 21.05175,12.42219 46.64601,27.77896 l 46.53502,27.92141 v 55.43236 c 0,30.48779 -0.0603,55.43234 -0.13391,55.43234 -0.0736,0 -20.92698,-12.72491 -46.34074,-28.27757 z\"  id=\"path1079\"  transform=\"scale(0.26458333)\" />  <path  style=\"opacity:0.6;fill:#4D4D4D\"  d=\"M 121.79303,657.17445 75.531743,629.41774 75.169807,573.88331 c -0.199065,-30.54394 -0.265226,-55.63114 -0.147025,-55.74934 0.118202,-0.1182 20.985012,12.24785 46.370688,27.48012 l 46.15578,27.69502 0.37242,16.64203 c 0.20484,9.15311 0.31848,34.26807 0.25254,55.81102 l -0.11988,39.16899 z\"  id=\"path1081\"  transform=\"scale(0.26458333)\" />  </g>  </svg>",
+  "searchUi:order": 5,
+  "fields": [
+    {
+      "fieldname": "search:title",
+      "searchUi:boost": 20,
+      "searchUi:sort": true,
+      "label": "Name",
+      "relative_path": "http://schema.org/name",
+      "searchUi:optional": false,
+      "required": true
+    },
+    {
+      "fieldname": "search:identifier",
+      "searchUi:ignoreForSearch": true,
+      "searchUi:visible": false,
+      "relative_path": "http://schema.org/identifier",
+      "required": true
+    },
+    {
+      "fieldname": "search:version",
+      "searchUi:layout": "summary",
+      "label": "Version",
+      "relative_path": "http://schema.org/version"
+    },
+    {
+      "fieldname": "search:description",
+      "searchUi:boost": 2,
+      "label": "Description",
+      "relative_path": "http://schema.org/description",
+      "searchUi:label_hidden": true,
+      "searchUi:markdown": true
+    },
+    {
+      "fieldname": "search:mainContact",
+      "searchUi:layout": "summary",
+      "label": "Main contact",
+      "searchUi:separator": "; ",
+      "fields": [
+        {
+          "fieldname": "search:name",
+          "searchUi:visible": false,
+          "relative_path": "http://schema.org/name"
+        },
+        {
+          "fieldname": "search:identifier",
+          "searchUi:visible": false,
+          "relative_path": "http://schema.org/identifier",
+          "required": true
+        },
+        {
+          "fieldname": "search:relativeUrl",
+          "searchUi:visible": false,
+          "relative_path": "https://schema.hbp.eu/relativeUrl"
+        }
+      ],
+      "relative_path": "https://schema.hbp.eu/uniminds/mainContact",
+      "searchUi:type": "text"
+    },
+    {
+      "fieldname": "search:custodian",
+      "ensure_order": true,
+      "searchUi:hint": "A custodian is the person responsible for the data bundle.",
+      "searchUi:layout": "summary",
+      "label": "Custodian",
+      "searchUi:separator": "; ",
+      "fields": [
+        {
+          "fieldname": "search:name",
+          "searchUi:visible": false,
+          "relative_path": "http://schema.org/name"
+        },
+        {
+          "fieldname": "search:identifier",
+          "searchUi:visible": false,
+          "relative_path": "http://schema.org/identifier",
+          "required": true
+        },
+        {
+          "fieldname": "search:relativeUrl",
+          "searchUi:visible": false,
+          "relative_path": "https://schema.hbp.eu/relativeUrl"
+        }
+      ],
+      "relative_path": "https://schema.hbp.eu/uniminds/custodian",
+      "searchUi:type": "text"
+    },
+    {
+      "fieldname": "search:contributors",
+      "ensure_order": true,
+      "searchUi:boost": 10,
+      "searchUi:layout": "header",
+      "label": "Contributors",
+      "searchUi:separator": "; ",
+      "fields": [
+        {
+          "fieldname": "search:name",
+          "searchUi:visible": false,
+          "relative_path": "http://schema.org/name"
+        },
+        {
+          "fieldname": "search:identifier",
+          "searchUi:visible": false,
+          "relative_path": "http://schema.org/identifier",
+          "required": true
+        },
+        {
+          "fieldname": "search:relativeUrl",
+          "searchUi:visible": false,
+          "relative_path": "https://schema.hbp.eu/relativeUrl"
+        }
+      ],
+      "relative_path": "https://schema.hbp.eu/uniminds/contributor",
+      "searchUi:label_hidden": true,
+      "searchUi:type": "text"
+    },
+    {
+      "fieldname": "search:publications",
+      "searchUi:hint": "List of publications that have been published as a part of this model.",
+      "searchUi:layout": "group",
+      "label": "Publications",
+      "fields": [
+        {
+          "fieldname": "search:url",
+          "searchUi:visible": false,
+          "relative_path": "https://schema.hbp.eu/uniminds/url"
+        },
+        {
+          "fieldname": "search:doi",
+          "searchUi:visible": false,
+          "relative_path": [
+            "https://schema.hbp.eu/uniminds/publicationId",
+            "schema:name"
+          ],
+          "required": true
+        }
+      ],
+      "relative_path": "https://schema.hbp.eu/uniminds/publication",
+      "searchUi:markdown": true
+    },
+    {
+      "fieldname": "search:brainStructure",
+      "searchUi:layout": "summary",
+      "label": "Brain structure",
+      "sort": true,
+      "relative_path": [
+        "https://schema.hbp.eu/uniminds/brainStructure",
+        "schema:name"
+      ],
+      "searchUi:facet": "list"
+    },
+    {
+      "fieldname": "search:cellularTarget",
+      "searchUi:layout": "summary",
+      "label": "(Sub)cellular target",
+      "sort": true,
+      "relative_path": [
+        "https://schema.hbp.eu/uniminds/cellularTarget",
+        "schema:name"
+      ]
+    },
+    {
+      "fieldname": "search:studyTarget",
+      "searchUi:layout": "summary",
+      "label": "Study target",
+      "sort": true,
+      "relative_path": [
+        "https://schema.hbp.eu/uniminds/studyTarget",
+        "https://schema.hbp.eu/uniminds/fullName"
+      ]
+    },
+    {
+      "fieldname": "search:modelScope",
+      "searchUi:layout": "summary",
+      "label": "Model scope",
+      "sort": true,
+      "relative_path": [
+        "https://schema.hbp.eu/uniminds/modelScope",
+        "schema:name"
+      ],
+      "searchUi:facet": "list"
+    },
+    {
+      "fieldname": "search:abstractionLevel",
+      "searchUi:layout": "summary",
+      "label": "Abstraction level",
+      "searchUi:separator": "; ",
+      "sort": true,
+      "relative_path": [
+        "https://schema.hbp.eu/uniminds/abstractionLevel",
+        "schema:name"
+      ],
+      "searchUi:facet": "list"
+    },
+    {
+      "fieldname": "search:modelFormat",
+      "searchUi:layout": "summary",
+      "label": "Model format",
+      "searchUi:separator": "; ",
+      "sort": true,
+      "relative_path": [
+        "https://schema.hbp.eu/uniminds/modelFormat",
+        "schema:name"
+      ]
+    },
+    {
+      "fieldname": "search:fileBundle",
+      "searchUi:termsOfUse": true,
+      "searchUi:isButton": true,
+      "label": "Download model",
+      "fields": [
+        {
+          "fieldname": "search:url",
+          "relative_path": "http://schema.org/url"
+        }
+      ],
+      "relative_path": [
+        {
+          "@id": "https://schema.hbp.eu/uniminds/modelInstance",
+          "reverse": true
+        }
+      ]
+    },
+    {
+      "fieldname": "search:embargo",
+      "searchUi:layout": "group",
+      "label": "Files",
+      "relative_path": [
+        "https://schema.hbp.eu/uniminds/embargoStatus",
+        "schema:name"
+      ]
+    },
+    {
+      "fieldname": "search:firstReleaseAt",
+      "searchUi:ignoreForSearch": true,
+      "label": "First release",
+      "searchUi:visible": false,
+      "relative_path": "release:firstReleaseAt",
+      "searchUi:type": "date"
+    },
+    {
+      "fieldname": "search:lastReleaseAt",
+      "searchUi:ignoreForSearch": true,
+      "label": "Last release",
+      "searchUi:visible": false,
+      "relative_path": "release:lastReleaseAt",
+      "searchUi:type": "date"
+    },
+    {
+      "fieldname": "search:usedDataset",
+      "searchUi:layout": "group",
+      "label": "Used datasets",
+      "fields": [
+        {
+          "fieldname": "search:name",
+          "searchUi:visible": false,
+          "relative_path": "http://schema.org/name"
+        },
+        {
+          "fieldname": "search:identifier",
+          "searchUi:visible": false,
+          "relative_path": "http://schema.org/identifier",
+          "required": true
+        },
+        {
+          "fieldname": "search:relativeUrl",
+          "searchUi:visible": false,
+          "relative_path": "https://schema.hbp.eu/relativeUrl"
+        }
+      ],
+      "relative_path": "https://schema.hbp.eu/uniminds/usedDataset"
+    },
+    {
+      "fieldname": "search:producedDataset",
+      "searchUi:layout": "group",
+      "label": "Produced datasets",
+      "fields": [
+        {
+          "fieldname": "search:name",
+          "searchUi:visible": false,
+          "relative_path": "http://schema.org/name"
+        },
+        {
+          "fieldname": "search:identifier",
+          "searchUi:visible": false,
+          "relative_path": "http://schema.org/identifier",
+          "required": true
+        },
+        {
+          "fieldname": "search:relativeUrl",
+          "searchUi:visible": false,
+          "relative_path": "https://schema.hbp.eu/relativeUrl"
+        }
+      ],
+      "relative_path": "https://schema.hbp.eu/uniminds/producedDataset"
+    }
+  ],
+  "schema:name": "Model",
+  "@context": {
+    "fieldname": {
+      "@type": "@id",
+      "@id": "fieldname"
+    },
+    "schema": "http://schema.org/",
+    "search": "https://schema.hbp.eu/search/",
+    "@vocab": "https://schema.hbp.eu/graphQuery/",
+    "merge": {
+      "@type": "@id",
+      "@id": "merge"
+    },
+    "query": "https://schema.hbp.eu/myQuery/",
+    "searchUi": "https://schema.hbp.eu/searchUi/",
+    "relative_path": {
+      "@type": "@id",
+      "@id": "relative_path"
+    }
+  }
+}

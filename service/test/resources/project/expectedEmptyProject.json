@@ -1,0 +1,16 @@
+{
+  "identifier": {
+    "value": "af8d3519-9561-4060-8da9-2de1bb966a81"
+  },
+  "description": null,
+  "publications": null,
+  "dataset": null,
+  "title": {
+    "value": "Test"
+  },
+  "first_release": null,
+  "editorId": {
+    "value": "minds/core/placomponent/v1.0.0/af8d3519-9561-4060-8da9-2de1bb966a81"
+  },
+  "last_release": null
+}

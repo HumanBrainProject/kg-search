@@ -1,0 +1,38 @@
+{
+  "identifier": {
+    "https://schema.hbp.eu/searchUi/visible": false
+  },
+  "title": {
+    "https://schema.hbp.eu/searchUi/sort": true,
+    "https://schema.hbp.eu/graphQuery/label": "Name",
+    "https://schema.hbp.eu/searchUi/boost": 20
+  },
+  "description": {
+    "https://schema.hbp.eu/searchUi/markdown": true,
+    "https://schema.hbp.eu/graphQuery/label": "Description",
+    "https://schema.hbp.eu/searchUi/boost": 7.5,
+    "https://schema.hbp.eu/searchUi/label_hidden": true
+  },
+  "dataset": {
+    "https://schema.hbp.eu/graphQuery/label": "Datasets",
+    "https://schema.hbp.eu/searchUi/layout": "group"
+  },
+  "publications": {
+    "https://schema.hbp.eu/searchUi/markdown": true,
+    "https://schema.hbp.eu/searchUi/hint": "List of publications that have been published as a part of this project.",
+    "https://schema.hbp.eu/graphQuery/label": "Related publications",
+    "https://schema.hbp.eu/searchUi/layout": "group"
+  },
+  "first_release": {
+    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
+    "https://schema.hbp.eu/searchUi/visible": false,
+    "https://schema.hbp.eu/graphQuery/label": "First release",
+    "https://schema.hbp.eu/searchUi/type": "date"
+  },
+  "last_release": {
+    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
+    "https://schema.hbp.eu/searchUi/visible": false,
+    "https://schema.hbp.eu/graphQuery/label": "Last release",
+    "https://schema.hbp.eu/searchUi/type": "date"
+  }
+}

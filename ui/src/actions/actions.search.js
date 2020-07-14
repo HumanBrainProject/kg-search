@@ -135,7 +135,7 @@ export const search = () => {
       .then(response => {
         const index = response.headers["x-selected-index"];
         if (index) {
-          dispatch(setGroup(index.slice(3)));
+          dispatch(setGroup(index));
         }
         dispatch(loadSearchResult(response.data));
       })
@@ -167,7 +167,7 @@ export const search = () => {
         {
           const index = response.headers["x-selected-index"];
           if (index) {
-            dispatch(setGroup(index.slice(3)));
+            dispatch(setGroup(index));
           }
           const error = `Your search query is not well formed. Please refine your request (${status})`;
           dispatch(loadSearchServiceFailure(error));

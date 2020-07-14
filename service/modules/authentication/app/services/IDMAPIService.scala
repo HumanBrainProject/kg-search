@@ -209,10 +209,17 @@ class IDMAPIService @Inject()(
         for {
           esIndices <- esService.getEsIndices()
         } yield {
-          val kgIndices = esIndices.filter(_.startsWith("kg_")).map(_.substring(3))
           val nexusGroups = info.groups
-          val resultingGroups = ESHelper.filterNexusGroups(nexusGroups).filter(group => kgIndices.contains(group))
-          log.debug(esIndices + "\n" + kgIndices + "\n " + nexusGroups)
+          val resultingGroups = ESHelper
+            .filterNexusGroups(nexusGroups)
+            .filter(
+              group =>
+                esIndices.exists {
+                  case (_, Some(grpName)) => group == grpName
+                  case (index, _)         => group == index
+              }
+            )
+          log.debug(esIndices + "\n " + nexusGroups)
           resultingGroups.toList.map { groupName =>
             if (MindsGroupSpec.group.contains(groupName)) {
               UserGroup(groupName, Some(MindsGroupSpec.v))
