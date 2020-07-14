@@ -19,16 +19,23 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Knowledge Graph Search</title>
+    <title>EBRAINS - Knowledge Graph Search</title>
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1, minimum-scale=1">
     <meta name="description" content="">
-    <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/static/img/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/static/img/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/static/img/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="%PUBLIC_URL%/static/img/favicon-192x192.png">
-    <link rel="icon" type="image/png" sizes="256x256" href="%PUBLIC_URL%/static/img/favicon-256x256.png">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="msapplication-TileImage" content="%PUBLIC_URL%/static/img/mstile-150x150.png">
+    <meta name="description" content="EBRAINS is building the platform needed to enable a new era in brain research.">
+    <meta name="theme-color" content="#c1c1c1">
+    <meta name="robots" content="index, follow">
+    <meta name="twitter:title" content="EBRAINS">
+    <meta name="twitter:description" content="EBRAINS is building the platform needed to enable a new era in brain research.">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@ebrains_eu">
+    <meta name="og:image" content="%PUBLIC_URL%/static/img/ebrains_icon_square.png">
+    <meta property="og:type" content="profile">
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/static/img/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="%PUBLIC_URL%/static/img/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="%PUBLIC_URL%/static/img/favicon-16x16.png" sizes="16x16">
+    <link rel="mask-icon" href="%PUBLIC_URL%/static/img/safari-pinned-tab.svg" color="#111111">
+    <link name="msapplication-TileColor" content="#2b5797">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser-polyfill.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -44,7 +51,7 @@
             <span class="icon-bar"></span>
           </button>
           <a href="https://ebrains.eu" aria-label="EBRAINS homepage" class="logo nuxt-link-active navbar-brand">
-            <img src="%PUBLIC_URL%/static/img/ebrains_logo.svg" alt="ebrains" height="60">
+            <img src="%PUBLIC_URL%/static/img/ebrains_logo.svg" alt="ebrains" height="100">
           </a>
         </div>
     
@@ -61,22 +68,77 @@
       <div id="root"></div>
     </main>
     <footer class="site-footer">
-      <div class="footer__content">
-        <div id="rootFooter"></div>
-        <a href="https://ebrains.eu" aria-label="Ebrains homepage" class="logo nuxt-link-active">
-          <img src="%PUBLIC_URL%/static/img/ebrains_logo.svg" alt="ebrains" height="60">
-        </a>
-        <div class="credits">
-          <div class="powered-by"><a href="https://www.humanbrainproject.eu/" title="Human Brain Project">
-              <span class="powered-by-intro">Powered by</span>
-              <img src="%PUBLIC_URL%/static/img/hbp.png" alt="Human Brain Project" width="60" height="60">
-            </a>
+      <div id="rootFooter"></div>
+      <div class="footer__header">
+          <div class="footer__primary">
+              <a href="https://ebrains.eu" aria-label="Ebrains homepage" class="logo nuxt-link-exact-active nuxt-link-active">
+                  <img src="%PUBLIC_URL%/static/img/ebrains_logo.svg" alt="ebrains" height="100">
+              </a>
           </div>
-          <a class="eu-logo" href="http://ec.europa.eu/programmes/horizon2020/en/h2020-section/fet-flagships" target="_blank">
-            <img src="%PUBLIC_URL%/static/img/eu_cofunded_logo.png" alt="Cofunded by EU">
-          </a>
-        </div>
-        <p class="small-text"></p>
+          <div class="footer__secondary">
+              <div class="powered-by">
+                <a href="https://www.humanbrainproject.eu/" title="Human Brain Project" target="_blank">
+                  <img src="%PUBLIC_URL%/static/img/hbp.png" alt="Human Brain Project" width="65" height="65">
+                </a>
+              </div>
+              <a class="eu-logo" href="http://ec.europa.eu/programmes/horizon2020/en/h2020-section/fet-flagships" target="_blank">
+                <img src="%PUBLIC_URL%/static/img/eu_cofunded_logo.png" alt="Cofunded by EU">
+              </a>
+          </div>
+      </div>
+      <div class="footer__content">
+          <div class="footer__menu">
+              <ul>
+                  <li class="title">
+                      <a href="https://ebrains.eu/services">Services</a>
+                  </li>
+                  <li>
+                      <a href="https://kg.ebrains.eu/search/">Find Data</a>
+                  </li>
+                  <li>
+                      <a href="https://ebrains.eu/services/data-knowledge/share-data">Share Data</a>
+                  </li>
+                  <li>
+                     <a href="https://ebrains.eu/services/atlases/brain-atlases">Brain Atlases</a>
+                  </li>
+                  <li>
+                      <a href="https://mip.ebrains.eu/">Medical Informatics Platform</a>
+                  </li>
+                  <li>
+                      <a href="https://ebrains.eu/services/simulation/brain-simulation">Brain Simulation Platform</a>
+                  </li>
+                  <li>
+                      <a href="https://ebrains.eu/services/simulation/virtual-brain">The Virtual Brain</a>
+                  </li>
+                  <li>
+                      <a href="https://ebrains.eu/services/simulation/nest">NEST Simulator</a>
+                  </li>
+                  <li>
+                      <a href="https://ebrains.eu/services/ai-and-robotics/neurorobotics">Neurorobotics Platform</a>
+                  </li>
+              </ul>
+          </div>
+          <div class="footer__menu">
+              <ul>
+                  <li class="title">Contact us</li>
+                  <li>
+                      <a href="https://ebrains.eu/support">Support</a>
+                  </li> 
+                  <li>
+                      <a href="https://ebrains.eu/register">Register</a>
+                  </li>
+              </ul>
+          </div>
+          <div class="footer__menu">
+              <ul>
+                  <li class="title">
+                      <a href="https://ebrains.eu/about">About EBRAINS</a>
+                  </li>
+                  <li>
+                      <a href="https://ebrains.eu/terms">Terms and Policies</a>
+                  </li>
+              </ul>
+          </div>
       </div>
       <div class="footer__end">
         <div class="footer__copyright">
