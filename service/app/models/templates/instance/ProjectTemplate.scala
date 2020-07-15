@@ -44,10 +44,17 @@ trait ProjectTemplate extends Template {
       "datasets",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Dataset/$s")
-          ),
+          if(liveMode){
+            PrimitiveToObjectWithReferenceField(
+              "relativeUrl",
+              ref => ref.map(s => s"$s")
+            )
+          } else {
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Dataset/$s")
+            )
+          },
           PrimitiveToObjectWithValueField[String]("name")
         )
       )

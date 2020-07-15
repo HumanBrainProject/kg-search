@@ -24,6 +24,7 @@ trait DatabaseScopeDep {
 
 trait Template extends DatabaseScopeDep {
   def dataBaseScope: DatabaseScope = INFERRED
+  def liveMode: Boolean = false
   def template: Map[String, TemplateComponent]
 }
 

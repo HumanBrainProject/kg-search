@@ -54,7 +54,8 @@ trait Indexer[Content, TransformedContent, Effect[_], UploadResult, QueryResult]
     templateType: TemplateType,
     id: UUID,
     databaseScope: DatabaseScope,
-    token: String
+    token: String,
+    liveMode: Boolean
   ): Effect[QueryResult]
 
   def metaByType(
@@ -439,7 +440,7 @@ class IndexerImpl @Inject()(
             maybeListOfResults match {
               case Some(listOfResults) =>
                 logger.info(s"$templateType - Fetching of data done with ${listOfResults.size} elements fetched")
-                val template = templateEngine.getTemplateFromType(templateType, databaseScope)
+                val template = templateEngine.getTemplateFromType(templateType, databaseScope, false)
                 val result = listOfResults.map(r => {
                   transform(r, template)
                 })
@@ -455,7 +456,8 @@ class IndexerImpl @Inject()(
     templateType: TemplateType,
     id: UUID,
     databaseScope: DatabaseScope,
-    token: String
+    token: String,
+    liveMode: Boolean
   ): Task[Either[ApiError, JsValue]] = {
     val schema = TemplateType.toSchema(templateType)
     Task
@@ -468,7 +470,7 @@ class IndexerImpl @Inject()(
       .map { wsresult =>
         wsresult.status match {
           case OK =>
-            val template = templateEngine.getTemplateFromType(templateType, databaseScope)
+            val template = templateEngine.getTemplateFromType(templateType, databaseScope, liveMode)
             Right(transform(wsresult.json, template))
           case status => Left(ApiError(status, wsresult.body))
         }

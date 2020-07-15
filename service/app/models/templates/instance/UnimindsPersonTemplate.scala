@@ -43,10 +43,17 @@ trait UnimindsPersonTemplate extends Template {
       "custodianOf",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Dataset/$s")
-          ),
+          if(liveMode){
+            PrimitiveToObjectWithReferenceField(
+              "relativeUrl",
+              ref => ref.map(s => s"$s")
+            )
+          } else {
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Dataset/$s")
+            )
+          },
           PrimitiveToObjectWithValueField[String]("name")
         )
       )
@@ -55,10 +62,17 @@ trait UnimindsPersonTemplate extends Template {
       "custodianOfModel",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Model/$s")
-          ),
+          if(liveMode){
+            PrimitiveToObjectWithReferenceField(
+              "relativeUrl",
+              ref => ref.map(s => s"$s")
+            )
+          } else {
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Model/$s")
+            )
+          },
           PrimitiveToObjectWithValueField[String]("name")
         )
       )
@@ -68,10 +82,17 @@ trait UnimindsPersonTemplate extends Template {
       "contributions",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Dataset/$s")
-          ),
+          if(liveMode){
+            PrimitiveToObjectWithReferenceField(
+              "relativeUrl",
+              ref => ref.map(s => s"$s")
+            )
+          } else {
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Dataset/$s")
+            )
+          },
           PrimitiveToObjectWithValueField[String]("name")
         )
       )
@@ -107,10 +128,17 @@ trait UnimindsPersonTemplate extends Template {
       "modelContributions",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Model/$s")
-          ),
+          if(liveMode){
+            PrimitiveToObjectWithReferenceField(
+              "relativeUrl",
+              ref => ref.map(s => s"$s")
+            )
+          } else {
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Model/$s")
+            )
+          },
           PrimitiveToObjectWithValueField[String]("name")
         )
       )
