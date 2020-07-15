@@ -287,6 +287,7 @@ class IndexerImpl @Inject()(
   ): Task[Either[ApiError, Unit]] = {
     import monix.execution.Scheduler.Implicits.global
     import scala.concurrent.duration._
+    Thread.sleep(10000) // wait for 10 seconds
     elasticSearch.getNotUpdatedInstances(indexName, indexTime).map {
       case Right(Nil) =>
         Right(())
