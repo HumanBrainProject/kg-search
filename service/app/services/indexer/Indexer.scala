@@ -37,6 +37,7 @@ import scala.concurrent.Await
 @ImplementedBy(classOf[IndexerImpl])
 trait Indexer[Content, TransformedContent, Effect[_], UploadResult, QueryResult] {
   val batchSize = 10
+  val maxCleanupLoops = 1000
   def transform(jsonContent: Content, template: Template): TransformedContent
   def transformMeta(jsonContent: Content, template: Template): TransformedContent
   def getRelevantTypes(): Effect[Either[ApiError, List[TemplateType]]]
@@ -279,7 +280,7 @@ class IndexerImpl @Inject()(
     Task.sequence(instanceIndexed).map(_.flatten.toList)
   }
 
-  private def removeNonexistingItems(
+  private def   removeNonexistingItems(
     indexName: String,
     indexTime: String,
     completeRebuild: Boolean
@@ -291,11 +292,13 @@ class IndexerImpl @Inject()(
         Right(())
       case Right(l) =>
         var listOfIdsToRemove = l
-        while (listOfIdsToRemove.nonEmpty) {
+        var loops = 0
+        while (loops<maxCleanupLoops && listOfIdsToRemove.nonEmpty) {
+          loops += 1
           logger.debug(s"Found ${listOfIdsToRemove.size} instances which have to be removed from the ES index")
-          removeIndex(listOfIdsToRemove, indexName, indexTime)
+          Await.result(removeIndex(listOfIdsToRemove, indexName, indexTime).runToFuture, 20.seconds)
           logger.debug("Removed elements which have not been updated during last run")
-          val res = Await.result(elasticSearch.getNotUpdatedInstances(indexName, indexTime).runToFuture, 5.minutes)
+          val res = Await.result(elasticSearch.getNotUpdatedInstances(indexName, indexTime).runToFuture, 10.seconds)
           listOfIdsToRemove = res.toOption.getOrElse(List())
         }
         Right(())
