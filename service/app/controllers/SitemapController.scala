@@ -70,7 +70,7 @@ class SitemapController @Inject()(
           (el \ "_source" \ "identifier" \ "value")
             .asOpt[String]
             .map { id =>
-              val location = s"$baseUrl/search/?search=false&identifier=${templateType.apiName}/$id"
+              val location = s"$baseUrl/search/instances/${templateType.apiName}/$id"
               Right(<url>
                 <loc>
                   {location}
