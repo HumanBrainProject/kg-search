@@ -165,7 +165,7 @@ class IndexerController @Inject()(
                   "found" -> true,
                   "_id" -> "dynamic",
                   "_index" -> "dynamic",
-                  "_type" -> templateType.toString,
+                  "_type" -> templateType.apiName,
                   "version" -> 0,
                   "_source" -> v)
               )
