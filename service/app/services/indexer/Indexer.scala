@@ -292,7 +292,9 @@ class IndexerImpl @Inject()(
       case Right(l) =>
         var listOfIdsToRemove = l
         while (listOfIdsToRemove.nonEmpty) {
+          logger.debug(s"Found ${listOfIdsToRemove.size} instances which have to be removed from the ES index")
           removeIndex(listOfIdsToRemove, indexName, indexTime)
+          logger.debug("Removed elements which have not been updated during last run")
           val res = Await.result(elasticSearch.getNotUpdatedInstances(indexName, indexTime).runToFuture, 5.minutes)
           listOfIdsToRemove = res.toOption.getOrElse(List())
         }

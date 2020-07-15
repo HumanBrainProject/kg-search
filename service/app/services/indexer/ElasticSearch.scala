@@ -152,11 +152,13 @@ class ElasticSearchImpl @Inject()(
     Task.deferFuture(WSClient.url(s"$elasticSearchEndpoint/$indexName/_search").post(body)).map { res =>
       res.status match {
         case OK | CREATED =>
+
           val listOfIds: List[String] = (res.json \ "hits" \ "hits").asOpt[List[JsObject]].getOrElse(List()).map { el =>
             val t = (el \ "_type").as[String]
             val id = (el \ "_id").as[String]
             s"$t/$id"
           }
+          logger.debug(s"Elasticsearch returned ${listOfIds.size} instances which haven't been updated recently")
           Right(listOfIds)
         case s => Left(ApiError(s, res.body))
       }
@@ -166,7 +168,10 @@ class ElasticSearchImpl @Inject()(
   override def removeIndex(id: String, indexName: String): Task[Either[ApiError, Unit]] = {
     Task.deferFuture(WSClient.url(s"$elasticSearchEndpoint/$indexName/$id").delete()).map { res =>
       res.status match {
-        case OK => Right(())
+        case OK => {
+          logger.debug(s"Successfully removed instance $id")
+          Right(())
+        }
         case e  => Left(ApiError(e, res.body))
       }
     }
