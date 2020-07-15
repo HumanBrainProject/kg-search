@@ -39,7 +39,7 @@ class SitemapController @Inject()(
   cc: ControllerComponents
 ) extends AbstractController(cc) {
   implicit val s: Scheduler = monix.execution.Scheduler.Implicits.global
-  val baseUrl: String = configuration.get[String]("serviceUrlBase")
+  val searchUrl: String = configuration.get[String]("searchUrlBase")
 
   def generateSitemap(): Action[AnyContent] = Action.async {
     val siteMapGeneration = indexer.getRelevantTypes().flatMap {
@@ -70,7 +70,7 @@ class SitemapController @Inject()(
           (el \ "_source" \ "identifier" \ "value")
             .asOpt[String]
             .map { id =>
-              val location = s"$baseUrl/search/instances/${templateType.apiName}/$id"
+              val location = s"$searchUrl/instances/${templateType.apiName}/$id"
               Right(<url>
                 <loc>
                   {location}

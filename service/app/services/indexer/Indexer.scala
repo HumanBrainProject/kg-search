@@ -96,7 +96,6 @@ class IndexerImpl @Inject()(
     with Logging {
 
   val queryEndpoint: String = configuration.get[String]("kgquery.endpoint")
-  val serviceUrlBase: String = configuration.get[String]("serviceUrlBase")
 
   def getRelevantTypes(): Task[Either[ApiError, List[TemplateType]]] = {
     logger.info(s"Loading relevant types for indexing in KG Query")

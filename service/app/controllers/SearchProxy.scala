@@ -46,7 +46,6 @@ class SearchProxy @Inject()(
   implicit val s = monix.execution.Scheduler.Implicits.global
 
   val logger: Logger = Logger(this.getClass)
-  val serviceUrlBase: String = config.get[String]("serviceUrlBase")
 
   def proxy(indexWithProxyUrl: String): Action[AnyContent] = Action.async { implicit request =>
     val segments = indexWithProxyUrl.split("/")
