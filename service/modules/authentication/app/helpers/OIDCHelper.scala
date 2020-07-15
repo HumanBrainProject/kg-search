@@ -44,10 +44,10 @@ object OIDCHelper {
     val groups = ESHelper.filterNexusGroups(userInfo.groups)
     val h = hints.trim
     h match {
-      case "public"                => ESHelper.publicIndex
-      case "curated"               => ESHelper.curatedIndex
-      case l if groups.contains(l) => l
-      case _                       => ESHelper.publicIndex
+      case "public"                                => ESHelper.publicIndex
+      case "curated" if groups.contains("curated") => ESHelper.curatedIndex
+      case l if groups.contains(l)                 => l
+      case _                                       => ESHelper.publicIndex
     }
   }
 }
