@@ -287,24 +287,30 @@ class IndexerImpl @Inject()(
   ): Task[Either[ApiError, Unit]] = {
     import monix.execution.Scheduler.Implicits.global
     import scala.concurrent.duration._
-    Thread.sleep(10000) // wait for 10 seconds
-    elasticSearch.getNotUpdatedInstances(indexName, indexTime).map {
-      case Right(Nil) =>
-        Right(())
-      case Right(l) =>
-        var listOfIdsToRemove = l
-        var loops = 0
-        while (loops<maxCleanupLoops && listOfIdsToRemove.nonEmpty) {
-          loops += 1
-          logger.debug(s"Found ${listOfIdsToRemove.size} instances which have to be removed from the ES index")
-          Await.result(removeIndex(listOfIdsToRemove, indexName, indexTime).runToFuture, 20.seconds)
-          logger.debug("Removed elements which have not been updated during last run")
-          val res = Await.result(elasticSearch.getNotUpdatedInstances(indexName, indexTime).runToFuture, 10.seconds)
-          listOfIdsToRemove = res.toOption.getOrElse(List())
-        }
-        Right(())
+    if(!completeRebuild) {
+      Thread.sleep(10000) // wait for 10 seconds
+      elasticSearch.getNotUpdatedInstances(indexName, indexTime).map {
+        case Right(Nil) =>
+          Right(())
+        case Right(l) =>
+          var listOfIdsToRemove = l
+          var loops = 0
+          while (loops < maxCleanupLoops && listOfIdsToRemove.nonEmpty) {
+            loops += 1
+            Thread.sleep(2000) // wait for 2 seconds
+            logger.debug(s"Found ${listOfIdsToRemove.size} instances which have to be removed from the ES index")
+            Await.result(removeIndex(listOfIdsToRemove, indexName, indexTime).runToFuture, 20.seconds)
+            logger.debug("Removed elements which have not been updated during last run")
+            val res = Await.result(elasticSearch.getNotUpdatedInstances(indexName, indexTime).runToFuture, 10.seconds)
+            listOfIdsToRemove = res.toOption.getOrElse(List())
+          }
+          Right(())
 
-      case Left(e) => Left(e)
+        case Left(e) => Left(e)
+      }
+    }
+    else{
+      Task.pure(Right(()))
     }
   }
 
