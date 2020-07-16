@@ -39,6 +39,7 @@ class SearchController @Inject()(
   cc: ControllerComponents,
   mat: Materializer,
   authService: IDMAPIService,
+  indexerController: IndexerController,
   proxyService: ProxyService,
   indexerService: Indexer[JsValue, JsValue, Task, WSResponse, Either[ApiError, JsValue]],
 )(implicit ec: ExecutionContext, ws: WSClient, config: Configuration)
@@ -66,6 +67,12 @@ class SearchController @Inject()(
   }
 
   def documentOptions(group: String, dataType: String, id: String): Action[AnyContent] = Action {
+    Ok("").withHeaders("Allow" -> "GET, OPTIONS")
+  }
+
+  def preview(org: String, domain: String, schema: String, version: String, id: java.util.UUID) = indexerController.applyTemplateBySchemaAndId(models.INFERRED, org, domain, schema, version, id)
+
+  def previewOptions(org:String, domain:String, schema:String, version:String, id: java.util.UUID) = Action {
     Ok("").withHeaders("Allow" -> "GET, OPTIONS")
   }
 
