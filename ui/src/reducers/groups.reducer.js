@@ -53,17 +53,9 @@ const loadGroupsRequest = state => {
 
 const loadGroupsSuccess = (state, action) => {
 
-  const getGroupLabel = name => {
-    if (name === "public") {
-      return "publicly released";
-    }
-    if (name === "curated") {
-      return "in progress";
-    }
-    return name;
-  };
-  const groups = Array.isArray(action.groups) ? [...action.groups.map(e => ({ label: getGroupLabel(e.name), value: e.name }))] : [];
+  const groups = Array.isArray(action.groups) ? [...action.groups.map(e => ({ label: e.label, value: e.name }))] : [];
   const group = (state.initialGroup && groups.some(g => g.value === state.initialGroup)) ? state.initialGroup : state.defaultGroup;
+
   return {
     ...state,
     isReady: true,

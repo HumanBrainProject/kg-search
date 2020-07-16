@@ -26,6 +26,7 @@ import monix.eval.Task
 import play.api.http.HttpEntity
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
+import play.api.mvc.Results.Unauthorized
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, Request, ResponseHeader, Result}
 import play.api.{Configuration, Logger}
 import services.indexer.Indexer
@@ -34,7 +35,7 @@ import utils.JsonHandler
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SearchProxy @Inject()(
+class SearchController @Inject()(
   cc: ControllerComponents,
   mat: Materializer,
   authService: IDMAPIService,
@@ -48,14 +49,50 @@ class SearchProxy @Inject()(
   val logger: Logger = Logger(this.getClass)
   val serviceUrlBase: String = config.get[String]("serviceUrlBase")
 
-  def proxy(indexWithProxyUrl: String): Action[AnyContent] = Action.async { implicit request =>
-    val segments = indexWithProxyUrl.split("/")
-    val (index, proxyUrl) = (segments.head, segments.tail.mkString("/"))
-    processRequest(index, proxyUrl).runToFuture
+  def document(group: String, dataType: String, id: String): Action[AnyContent] = Action.async { implicit request =>
+    OIDCHelper.groupNeedsPermissions(group) match {
+      case false => processRequest(OIDCHelper.getESIndex(group, dataType), id).runToFuture
+      case true  =>
+        val token = OIDCHelper.getTokenFromRequest(request)
+        authService.getUserInfo(token).flatMap {
+          case Some(userInfo) =>
+            OIDCHelper.isUserGrantedAccessToGroup(userInfo, group) match {
+              case true => processRequest(OIDCHelper.getESIndex(group, dataType), id)
+              case false => Task.pure(Unauthorized(s"You are not granted access to group ${group}."))
+            }
+          case _ => Task.pure(Unauthorized(s"You must be logged in to execute this request."))
+        }.runToFuture
+    }
   }
 
-  def proxyOptions(index: String, proxyUrl: String): Action[AnyContent] = Action {
-    Ok("").withHeaders("Allow" -> "GET, POST, OPTIONS")
+  def documentOptions(group: String, dataType: String, id: String): Action[AnyContent] = Action {
+    Ok("").withHeaders("Allow" -> "GET, OPTIONS")
+  }
+
+  def search(group: String, dataType: String): Action[AnyContent] = Action.async { implicit request =>
+    OIDCHelper.groupNeedsPermissions(group) match {
+      case false =>
+        updateEsResponseWithNestedDocument(
+          processRequest(OIDCHelper.getESIndex(group, dataType), "_search", transformInputFunc = SearchController.adaptEsQueryForNestedDocument)
+        ).runToFuture
+      case true  =>
+        val token = OIDCHelper.getTokenFromRequest(request)
+        authService.getUserInfo(token).flatMap {
+          case Some(userInfo) =>
+            OIDCHelper.isUserGrantedAccessToGroup(userInfo, group) match {
+              case true =>
+                updateEsResponseWithNestedDocument(
+                  processRequest(OIDCHelper.getESIndex(group, dataType), "_search", transformInputFunc = SearchController.adaptEsQueryForNestedDocument)
+                )
+              case false => Task.pure(Unauthorized(s"You are not granted access to group ${group}."))
+            }
+          case _ => Task.pure(Unauthorized(s"You must be logged in to execute this request."))
+        }.runToFuture
+    }
+  }
+
+  def searchOptions(group: String, dataType: String): Action[AnyContent] = Action {
+    Ok("").withHeaders("Allow" -> "POST, OPTIONS")
   }
 
   def processRequest(index: String, proxyUrl: String, transformInputFunc: ByteString => ByteString = identity)(
@@ -64,30 +101,12 @@ class SearchProxy @Inject()(
     logger.debug(s"Search proxy - Index: $index, proxy: $proxyUrl")
     val searchTerm = request.body.asJson.getOrElse(Json.obj()).as[JsValue]
     val t = (searchTerm \ "query" \\ "query").headOption.map(_.asOpt[String].getOrElse("")).getOrElse("")
-    val opts: (Option[String], Option[String]) =
-      (request.headers.get("index-hint"), request.headers.get("Authorization"))
-    opts match {
-      case (Some(hints), Some(_)) =>
-        val token = OIDCHelper.getTokenFromRequest(request)
-        authService.getUserInfo(token).flatMap {
-          case Some(userInfo) =>
-            val esIndex = OIDCHelper.getESIndex(userInfo, hints)
-            val (wsRequest, index) = proxyService.queryIndex(esIndex, proxyUrl, es_host, transformInputFunc)
-            propagateRequest(wsRequest, index, t)
-          case _ =>
-            val (wsRequest, index) =
-              proxyService.queryIndex(ESHelper.publicIndex, proxyUrl, es_host, transformInputFunc)
-            propagateRequest(wsRequest, index, t)
-        }
-      case _ =>
-        val (wsRequest, index) = proxyService.queryIndex(ESHelper.publicIndex, proxyUrl, es_host, transformInputFunc)
-        propagateRequest(wsRequest, index, t)
-    }
+    val wsRequest = proxyService.queryIndex(index, proxyUrl, es_host, transformInputFunc)
+    propagateRequest(wsRequest, t)
   }
 
   def propagateRequest(
     request: WSRequest,
-    headers: Map[String, String] = Map(),
     searchTerm: String = ""
   ): Task[Result] =
     Task
@@ -96,6 +115,7 @@ class SearchProxy @Inject()(
           .execute()
       )
       .map { response => // we want to read the raw bytes for the body
+        val headers: Map[String, String] = Map()
         val count = (response.json \ "hits" \ "total").asOpt[Long].getOrElse(0L)
         val responseHeaders: Map[String, scala.collection.Seq[String]] = response.headers
         logger.info(s"Search query - term: $searchTerm, #results: $count")
@@ -111,14 +131,6 @@ class SearchProxy @Inject()(
         ).withHeaders(h.toList: _*)
       }
 
-  def proxySearch(indexWithProxyUrl: String): Action[AnyContent] = Action.async { implicit request =>
-    val segments = indexWithProxyUrl.split("/")
-    val (index, proxyUrl) = (segments.head, segments.tail.mkString("/"))
-    updateEsResponseWithNestedDocument(
-      processRequest(index, proxyUrl, transformInputFunc = SearchProxy.adaptEsQueryForNestedDocument)
-    ).runToFuture
-  }
-
   def updateEsResponseWithNestedDocument(response: Task[Result]): Task[Result] =
     response.flatMap[Result] { rawResponse =>
       if (rawResponse.header.status != 200) {
@@ -126,13 +138,13 @@ class SearchProxy @Inject()(
       } else {
         // need to get full response back to process it
         Task.deferFuture(rawResponse.body.consumeData(mat)).map { bytes =>
-          val json = SearchProxy.updateEsResponseWithNestedDocument(Json.parse(bytes.utf8String).as[JsObject])
+          val json = SearchController.updateEsResponseWithNestedDocument(Json.parse(bytes.utf8String).as[JsObject])
           Ok(json).withHeaders(rawResponse.header.headers.toList: _*)
         }
       }
     }
 
-  def labels(proxyUrl: String): Action[AnyContent] = Action.async { implicit request =>
+  def labels(): Action[AnyContent] = Action.async { implicit request =>
     indexerService
       .getRelevantTypes()
       .flatMap {
@@ -154,12 +166,12 @@ class SearchProxy @Inject()(
       .runToFuture
   }
 
-  def labelsOptions(proxyUrl: String): Action[AnyContent] = Action {
+  def labelsOptions(): Action[AnyContent] = Action {
     Ok("").withHeaders("Allow" -> "GET, OPTIONS")
   }
 }
 
-object SearchProxy {
+object SearchController {
   val logger: Logger = Logger(this.getClass)
   val parentCountLabel = "temporary_parent_doc_count"
   val docCountLabel = "doc_count"

@@ -3,11 +3,8 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-# Auth services
--> /auth auth.Routes
-
-# Proxy services
--> /proxy proxy.Routes
+# API services
+-> /api api.Routes
 
 # Indexer services
 -> /indexer indexer.Routes

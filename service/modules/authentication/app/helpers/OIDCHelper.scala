@@ -33,21 +33,50 @@ object OIDCHelper {
   }
 
   /**
+   * Check if group
+   *
+   * @param userInfo The user's info
+   * @param group The wished group
+   * @return The requested ES index or the public index
+   */
+  def groupNeedsPermissions(group: String): Boolean = {
+    group match {
+      case ESHelper.publicGroupName   => false
+      case _                          => true
+    }
+  }
+
+  /**
+   * Check if the user is granted access to the group
+   *
+   * @param userInfo The user's info
+   * @param group The wished group
+   * @return The requested ES index or the public index
+   */
+  def isUserGrantedAccessToGroup(userInfo: IDMUser, group: String): Boolean = {
+    val groups = ESHelper.filterNexusGroups(userInfo.groups)
+    group match {
+      case ESHelper.publicGroupName                                 => true
+      case ESHelper.curatedGroupName if groups.contains("curated")  => true
+      case group if groups.contains(group)                          => true
+      case _                                                        => false
+    }
+  }
+
+  /**
     * If the user is allowed, return the ES index requested by the user,
     * or else return the public index
     *
-    * @param userInfo The user's info
-    * @param hints The requested ES index
-    * @return The requested ES index or the public index
+    * @param group The group
+    * @param dataType The type
+    * @return The requested ES index
     */
-  def getESIndex(userInfo: IDMUser, hints: String): String = {
-    val groups = ESHelper.filterNexusGroups(userInfo.groups)
-    val h = hints.trim
-    h match {
-      case "public"                => ESHelper.publicIndex
-      case "curated"               => ESHelper.curatedIndex
-      case l if groups.contains(l) => l
-      case _                       => ESHelper.publicIndex
+  def getESIndex(group: String, dataType: String): String = {
+    group match {
+      case ESHelper.publicGroupName    => s"${ESHelper.publicIndexPrefix}_${dataType}"
+      case ESHelper.curatedGroupName   => s"${ESHelper.curatedIndexPrefix}_${dataType}"
+      case group                       => s"${group.toLowerCase}_${dataType}"
     }
   }
 }
+

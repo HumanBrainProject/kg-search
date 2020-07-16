@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 import akka.util.ByteString
-import controllers.SearchProxy
+import controllers.SearchController
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsObject, Json}
 
@@ -227,7 +227,7 @@ class SmartProxySpec extends PlaySpec {
         }
         """).as[JsObject]
 
-      val jsUp = Json.parse(SearchProxy.adaptEsQueryForNestedDocument(ByteString(query.getBytes)).utf8String)
+      val jsUp = Json.parse(SearchController.adaptEsQueryForNestedDocument(ByteString(query.getBytes)).utf8String)
       assert(jsUp.equals(jsExpected))
 
     }
@@ -403,7 +403,7 @@ class SmartProxySpec extends PlaySpec {
           }
         """).as[JsObject]
 
-      val jsUp = SearchProxy.updateEsResponseWithNestedDocument(js)
+      val jsUp = SearchController.updateEsResponseWithNestedDocument(js)
       assert(jsUp.equals(jsExpected))
     }
   }

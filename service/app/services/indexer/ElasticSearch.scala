@@ -63,7 +63,7 @@ trait ElasticSearch {
 
   def queryIndexByType(
     templateType: TemplateType,
-    indexname: String = ESHelper.publicIndex
+    indexname: String = ESHelper.publicIndexPrefix
   ): Task[Either[ApiError, List[JsObject]]]
 }
 
@@ -179,11 +179,11 @@ class ElasticSearchImpl @Inject()(
   }
 
   private def doQueryIndexByType(
-    templateType: TemplateType,
-    indexname: String = ESHelper.publicIndex,
-    size: Long,
-    startingPage: Long,
-    totalPages: Long
+                                  templateType: TemplateType,
+                                  indexname: String = ESHelper.publicIndexPrefix,
+                                  size: Long,
+                                  startingPage: Long,
+                                  totalPages: Long
   ): Task[Either[ApiError, List[JsObject]]] = {
     val listOfTask = for {
       currentPage <- startingPage to totalPages
@@ -217,7 +217,7 @@ class ElasticSearchImpl @Inject()(
 
   override def queryIndexByType(
     templateType: TemplateType,
-    indexname: String = ESHelper.publicIndex
+    indexname: String = ESHelper.publicIndexPrefix
   ): Task[Either[ApiError, List[JsObject]]] = {
     val querySize = 1000
     Task

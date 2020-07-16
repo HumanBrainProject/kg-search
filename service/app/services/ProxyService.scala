@@ -27,19 +27,14 @@ import scala.concurrent.ExecutionContext
 
 class ProxyService @Inject()(wSClient: WSClient)(implicit executionContext: ExecutionContext) {
   val logger: Logger = Logger(this.getClass)
-  private def getSelectedIndex(str: String): String = str match {
-    case "publicly_released" => "public"
-    case "in_progress"       => "curated"
-    case s                   => s
-  }
 
   def queryIndex(
     esIndex: String,
     proxyUrl: String,
     es_host: String,
     transformInputFunc: ByteString => ByteString = identity
-  )(implicit request: Request[AnyContent], executionContext: ExecutionContext): (WSRequest, Map[String, String]) = {
-    val newUrl = es_host + "/" + ESHelper.replaceESIndex(esIndex, proxyUrl)
+  )(implicit request: Request[AnyContent], executionContext: ExecutionContext): WSRequest = {
+    val newUrl =  s"$es_host/$esIndex/$proxyUrl"
     logger.debug(s"Modified URL: $newUrl")
     val wsRequestBase: WSRequest = modifyQuery(newUrl, esIndex)
     // depending on whether we have a body, append it in our request
@@ -47,11 +42,10 @@ class ProxyService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
       raw <- request.body.asJson
     } yield ByteString(raw.toString())
 
-    val wsRequest: WSRequest = byteString match {
+    byteString match {
       case Some(bytes) => wsRequestBase.withBody(transformInputFunc(bytes))
       case None        => wsRequestBase
     }
-    (wsRequest, Map("X-Selected-Index" -> getSelectedIndex(esIndex)))
   }
 
   def modifyQuery(newUrl: String, indexHint: String)(implicit request: Request[AnyContent]): WSRequest = {

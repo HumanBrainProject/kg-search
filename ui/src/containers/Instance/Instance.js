@@ -66,7 +66,7 @@ export const Instance = connect(
     setInitialGroup: group => dispatch(actionsGroups.setInitialGroup(group)),
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
-    fetch: (type, id) => dispatch(actionsInstances.loadInstance(type, id)),
+    fetch: (group, type, id) => dispatch(actionsInstances.loadInstance(group, type, id)),
     setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance()),
     onGoHome: path => {
       dispatch(actionsInstances.clearAllInstances());

@@ -126,7 +126,7 @@ export class InstanceContainer extends React.Component {
               previousGroup === group) {
           setPreviousInstance();
         } else {
-          fetch(type, id, group);
+          fetch(group, type, id);
         }
       }
     }

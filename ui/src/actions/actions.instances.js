@@ -115,11 +115,11 @@ export const goToSearch = (group, defaultGroup) => {
   };
 };
 
-export const loadInstance = (type, id, shouldUpdateLocation=false) => {
+export const loadInstance = (group, type, id, shouldUpdateLocation=false) => {
   return dispatch => {
     dispatch(loadInstanceRequest());
     API.axios
-      .get(API.endpoints.instance(type, id))
+      .get(API.endpoints.instance(group, type, id))
       .then(response => {
         dispatch(loadInstanceSuccess(response.data));
         if(shouldUpdateLocation) {

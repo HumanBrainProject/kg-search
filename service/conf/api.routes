@@ -1,0 +1,78 @@
+# proxy service
+
+  ###
+  #  summary: Get labels
+  #  parameters:
+  #  responses:
+  #    '200':
+  #      description: Ok
+  ###
+  GET     /labels                                         controllers.SearchController.labels
+  OPTIONS /labels                                         controllers.SearchController.labelsOptions
+
+  ###
+  #  summary: Get groups available for the user
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: true
+  #    type: string
+  #  responses:
+  #    '200':
+  #      description: Ok
+  #    '401':
+  #      description: Unauthorized
+  ###
+  GET     /groups                                         controllers.OIDCController.groups
+  OPTIONS /groups                                         controllers.OIDCController.groupsOptions
+
+  ###
+  #  summary: Search for ElasticSearch documents matching criteria
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  #  - in: path
+  #    name: group
+  #    type: string
+  #  - in: path
+  #    name: dataType
+  #    type: string
+  #  responses:
+  #    '200':
+  #      description: Ok
+  #    '401':
+  #      description: Unauthorized
+  ###
+  POST    /groups/:group/types/:dataType/search           controllers.SearchController.search(group:String, dataType:String)
+  OPTIONS /groups/:group/types/:dataType/search           controllers.SearchController.searchOptions(group:String, dataType:String)
+
+  ###
+  #  summary: Get an ElasticSearch document
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  #  - in: path
+  #    name: group
+  #    type: string
+  #  - in: path
+  #    name: dataType
+  #    type: string
+  #  - in: path
+  #    name: id
+  #    type: string
+  #  responses:
+  #    '200':
+  #      description: Ok
+  #    '401':
+  #      description: Unauthorized
+  ###
+  GET     /groups/:group/types/:dataType/documents/:id    controllers.SearchController.document(group:String, dataType:String, id:String)
+  OPTIONS /groups/:group/types/:dataType/documents/:id    controllers.SearchController.documentOptions(group:String, dataType:String, id:String)
+
