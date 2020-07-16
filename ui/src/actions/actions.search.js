@@ -130,8 +130,8 @@ export const search = () => {
     ReactPiwik.push(["setCustomUrl", window.location.href]);
     ReactPiwik.push(["trackPageView"]);
     API.axios
-      .post(API.endpoints.search(state.groups.group, state.search.selectedType), payload)
-      //.get(API.endpoints.search(state.groups.group, state.search.selectedType), payload)
+      .post(API.endpoints.search(state.groups.group), payload)
+      //.get(API.endpoints.search(state.groups.group), payload)
       .then(response => {
         const index = response.headers["x-selected-index"];
         if (index) {

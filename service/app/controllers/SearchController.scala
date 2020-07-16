@@ -69,11 +69,11 @@ class SearchController @Inject()(
     Ok("").withHeaders("Allow" -> "GET, OPTIONS")
   }
 
-  def search(group: String, dataType: String): Action[AnyContent] = Action.async { implicit request =>
+  def search(group: String): Action[AnyContent] = Action.async { implicit request =>
     OIDCHelper.groupNeedsPermissions(group) match {
       case false =>
         updateEsResponseWithNestedDocument(
-          processRequest(OIDCHelper.getESIndex(group, dataType), "_search", transformInputFunc = SearchController.adaptEsQueryForNestedDocument)
+          processRequest(OIDCHelper.getESIndex(group, "*"), "_search", transformInputFunc = SearchController.adaptEsQueryForNestedDocument)
         ).runToFuture
       case true  =>
         val token = OIDCHelper.getTokenFromRequest(request)
@@ -82,7 +82,7 @@ class SearchController @Inject()(
             OIDCHelper.isUserGrantedAccessToGroup(userInfo, group) match {
               case true =>
                 updateEsResponseWithNestedDocument(
-                  processRequest(OIDCHelper.getESIndex(group, dataType), "_search", transformInputFunc = SearchController.adaptEsQueryForNestedDocument)
+                  processRequest(OIDCHelper.getESIndex(group, "*"), "_search", transformInputFunc = SearchController.adaptEsQueryForNestedDocument)
                 )
               case false => Task.pure(Unauthorized(s"You are not granted access to group ${group}."))
             }
@@ -91,7 +91,7 @@ class SearchController @Inject()(
     }
   }
 
-  def searchOptions(group: String, dataType: String): Action[AnyContent] = Action {
+  def searchOptions(group: String): Action[AnyContent] = Action {
     Ok("").withHeaders("Allow" -> "POST, OPTIONS")
   }
 

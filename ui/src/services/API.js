@@ -9,7 +9,7 @@ const endpoints = {
   "definition": () => "/search/api/labels",
   "groups": () => "/search/api/groups",
   //"search": () => "/static/data/search.json",
-  "search": (group, type) => `/search/api/groups/${group}/types/${type}/search`,
+  "search": group => `/search/api/groups/${group}/search`,
   "instance": (group, type, id) => `/search/api/groups/${group}/types/${type}/documents/${id}`,
   "preview": (type, id) => `/search/indexer/templates/${type}/${id}?databaseScope=INFERRED`,
   "auth": (redirectUri, stateKey, nonceKey) => `${oidcUri}?response_type=id_token%20token&client_id=${oidcClientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`

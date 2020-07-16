@@ -38,17 +38,14 @@
   #  - in: path
   #    name: group
   #    type: string
-  #  - in: path
-  #    name: dataType
-  #    type: string
   #  responses:
   #    '200':
   #      description: Ok
   #    '401':
   #      description: Unauthorized
   ###
-  POST    /groups/:group/types/:dataType/search           controllers.SearchController.search(group:String, dataType:String)
-  OPTIONS /groups/:group/types/:dataType/search           controllers.SearchController.searchOptions(group:String, dataType:String)
+  POST    /groups/:group/search           controllers.SearchController.search(group:String)
+  OPTIONS /groups/:group/search           controllers.SearchController.searchOptions(group:String)
 
   ###
   #  summary: Get an ElasticSearch document
