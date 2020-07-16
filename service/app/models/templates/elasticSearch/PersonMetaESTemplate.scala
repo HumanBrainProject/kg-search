@@ -23,7 +23,7 @@ import utils._
 trait PersonMetaESTemplate extends Template {
 
   val template: Map[String, TemplateComponent] = Map(
-    "type" -> Set("type", JsString("keyword")),
+    "type" -> Set("properties", Json.obj("value" -> Json.obj("type" -> "keyword"))),
     "identifier" -> ObjectReader(
       "fields",
       ObjectReader(
@@ -105,18 +105,18 @@ trait PersonMetaESTemplate extends Template {
       )
     ),
     "publications" ->
-    ObjectReader(
-      "fields",
       ObjectReader(
-        "search:publications",
-        Nested(
-          "properties",
-          WriteObject(
-            List(ESProperty("value"))
+        "fields",
+        ObjectReader(
+          "search:publications",
+          Nested(
+            "properties",
+            WriteObject(
+              List(ESProperty("value"))
+            )
           )
         )
-      )
-    ),
+      ),
     "address" -> ObjectReader(
       "fields",
       ObjectReader(

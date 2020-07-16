@@ -213,7 +213,7 @@ class IndexerImpl @Inject()(
         import java.util.TimeZone
 
         val nowAsISO = Instant.now().atOffset(ZoneOffset.UTC).toLocalDateTime.toString
-        val jsonWithTimeStampAndDocType = el ++ Json.obj("@timestamp" -> nowAsISO, "type"-> apiName)
+        val jsonWithTimeStampAndDocType = el ++ Json.obj("@timestamp" -> nowAsISO, "type"-> Json.obj("value" -> apiName))
         val indexed = elasticSearch.index(jsonWithTimeStampAndDocType, apiName, id, dbScope)
         indexed.map {
           case Right(_) =>
