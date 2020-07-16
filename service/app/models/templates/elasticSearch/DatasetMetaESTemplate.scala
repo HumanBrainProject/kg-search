@@ -183,7 +183,7 @@ trait DatasetMetaESTemplate extends Template {
     "embargoForFilter" -> ObjectReader(
       "fields",
       ObjectReader(
-        "search:embargoForFilter",
+        "search: embargoForFilter",
         Nested(
           "properties",
           WriteObject(

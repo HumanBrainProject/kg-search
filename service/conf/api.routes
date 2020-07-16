@@ -44,8 +44,8 @@
   #    '401':
   #      description: Unauthorized
   ###
-  POST    /groups/:group/search           controllers.SearchController.search(group:String)
-  OPTIONS /groups/:group/search           controllers.SearchController.searchOptions(group:String)
+  POST    /groups/:group/search                            controllers.SearchController.search(group:String)
+  OPTIONS /groups/:group/search                            controllers.SearchController.searchOptions(group:String)
 
   ###
   #  summary: Get an ElasticSearch document
@@ -59,7 +59,7 @@
   #    name: group
   #    type: string
   #  - in: path
-  #    name: dataType
+  #    name: type
   #    type: string
   #  - in: path
   #    name: id
@@ -70,6 +70,38 @@
   #    '401':
   #      description: Unauthorized
   ###
-  GET     /groups/:group/types/:dataType/documents/:id    controllers.SearchController.document(group:String, dataType:String, id:String)
-  OPTIONS /groups/:group/types/:dataType/documents/:id    controllers.SearchController.documentOptions(group:String, dataType:String, id:String)
+  GET     /groups/:group/types/:type/documents/:id     controllers.SearchController.document(group:String, type:String, id:String)
+  OPTIONS /groups/:group/types/:type/documents/:id     controllers.SearchController.documentOptions(group:String, type:String, id:String)
 
+  ###
+  #  summary: Get a preview of a future ElasticSearch document
+  #  parameters:
+  #  - in: header
+  #    name: Authorization
+  #    description: Authorization token
+  #    required: false
+  #    type: string
+  #  - in: path
+  #    name: org
+  #    type: string
+  #  - in: path
+  #    name: domain
+  #    type: string
+  #  - in: path
+  #    name: schema
+  #    type: string
+  #  - in: path
+  #    name: version
+  #    type: string
+  #  - in: path
+  #    name: id
+  #    type: string
+  #    format: uuid
+  #  responses:
+  #    '200':
+  #      description: Ok
+  #    '401':
+  #      description: Unauthorized
+  ###
+ GET /types/:org/:domain/:schema/:version/documents/:id/preview        controllers.SearchController.preview(org:String, domain:String, schema:String, version:String, id: java.util.UUID)
+ OPTIONS /types/:org/:domain/:schema/:version/documents/:id/preview    controllers.SearchController.previewOptions(org:String, domain:String, schema:String, version:String, id: java.util.UUID)
