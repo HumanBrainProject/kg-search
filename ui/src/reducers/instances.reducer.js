@@ -134,7 +134,7 @@ const goBackToInstance = (state, action) => {
   }
 
   // instance reference url is already matching current instance, do notthing
-  if (instance && instance._type === instanceType && instance._id === instanceId) {
+  if (instance && instance._source?.type?.value === instanceType && instance._id === instanceId) {
     return state;
   }
 
@@ -150,10 +150,10 @@ const goBackToInstance = (state, action) => {
 
   const previousInstances = (state && state.previousInstances instanceof Array)?[...state.previousInstances]:[];
   instance = previousInstances.pop() || null;
-  while(previousInstances.length && instance && !(instance._type === instanceType && instance._id === instanceId))  {
+  while(previousInstances.length && instance && !(instance._source?.type?.value === instanceType && instance._id === instanceId))  {
     instance = previousInstances.pop();
   }
-  if (instance && instance._type === instanceType && instance._id === instanceId) {
+  if (instance && instance._source?.type?.value === instanceType && instance._id === instanceId) {
     return {
       ...state,
       currentInstance: instance,

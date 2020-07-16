@@ -354,8 +354,8 @@ const loadSearchResult = (state, action) => {
 
   const getUpdatedTypes = (types, selectedType, group, groupsSettings, defaultOrder, results) => {
 
-    const buckets = (results && results.aggregations && results.aggregations.facet_type && results.aggregations.facet_type._type && Array.isArray(results.aggregations.facet_type._type.buckets)) ?
-      results.aggregations.facet_type._type.buckets : [];
+    const buckets = Array.isArray(results?.aggregations?.facet_type?.type?.value?.buckets)?
+      results.aggregations.facet_type.type.value.buckets.buckets : [];
 
     const counts = buckets.reduce((acc, current) => {
       const count = Number(current.doc_count);

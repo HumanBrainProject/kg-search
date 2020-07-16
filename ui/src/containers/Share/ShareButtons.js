@@ -24,11 +24,9 @@ const getShareEmailToLink = url => {
   return `mailto:${to}?subject=${subject}&body=${body} ${escape(url)}.`;
 };
 
-const getClipboardContent = (state, location, currentInstance, currentGroup, defaultGroup) => {
+const getClipboardContent = (state, location, currentInstance, group, defaultGroup) => {
   if (location.pathname === "/" && currentInstance) {
-    const indexReg = /^kg_(.*)$/;
-    const group = indexReg.test(currentInstance._index) ? currentInstance._index.match(indexReg)[1] : (currentGroup ? currentGroup : null);
-    const type = currentInstance._type;
+    const type = currentInstance?._source?.type?.value;
     const id = currentInstance._id;
     if (type && id) {
       const rootPath = window.location.pathname.substr(0, window.location.pathname.length - location.pathname.length);

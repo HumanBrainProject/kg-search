@@ -73,9 +73,9 @@ object OIDCHelper {
     */
   def getESIndex(group: String, dataType: String): String = {
     group match {
-      case ESHelper.publicGroupName    => s"${ESHelper.publicIndexPrefix}_${dataType}"
-      case ESHelper.curatedGroupName   => s"${ESHelper.curatedIndexPrefix}_${dataType}"
-      case group                       => s"${group.toLowerCase}_${dataType}"
+      case ESHelper.publicGroupName    => s"${ESHelper.publicIndexPrefix}_${dataType.toLowerCase}"
+      case ESHelper.curatedGroupName   => s"${ESHelper.curatedIndexPrefix}_${dataType.toLowerCase}"
+      case group                       => s"${group}_${dataType.toLowerCase}"
     }
   }
 }

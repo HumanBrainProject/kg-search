@@ -133,10 +133,6 @@ export const search = () => {
       .post(API.endpoints.search(state.groups.group), payload)
       //.get(API.endpoints.search(state.groups.group), payload)
       .then(response => {
-        const index = response.headers["x-selected-index"];
-        if (index) {
-          dispatch(setGroup(index));
-        }
         dispatch(loadSearchResult(response.data));
       })
       .catch(e => {
@@ -165,10 +161,6 @@ export const search = () => {
         case 404:
         default:
         {
-          const index = response.headers["x-selected-index"];
-          if (index) {
-            dispatch(setGroup(index));
-          }
           const error = `Your search query is not well formed. Please refine your request (${status})`;
           dispatch(loadSearchServiceFailure(error));
         }
