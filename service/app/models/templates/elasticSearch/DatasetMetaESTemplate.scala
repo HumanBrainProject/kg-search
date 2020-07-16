@@ -65,18 +65,18 @@ trait DatasetMetaESTemplate extends Template {
       )
     ),
     "zip" ->
-    ObjectReader(
-      "fields",
       ObjectReader(
-        "search:containerUrlAsZIP",
-        Nested(
-          "properties",
-          WriteObject(
-            List(ESProperty("value"))
+        "fields",
+        ObjectReader(
+          "search:containerUrlAsZIP",
+          Nested(
+            "properties",
+            WriteObject(
+              List(ESProperty("value"))
+            )
           )
         )
-      )
-    ),
+      ),
     "citation" -> ObjectReader(
       "fields",
       ObjectReader(
@@ -184,7 +184,7 @@ trait DatasetMetaESTemplate extends Template {
     "embargoForFilter" -> ObjectReader(
       "fields",
       ObjectReader(
-        "search: embargoForFilter",
+        "search:embargoForFilter",
         Nested(
           "properties",
           WriteObject(
