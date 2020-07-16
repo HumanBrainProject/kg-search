@@ -23,6 +23,7 @@ import utils._
 trait DatasetMetaESTemplate extends Template {
 
   val template: Map[String, TemplateComponent] = Map(
+    "type" -> Set("type", JsString("keyword")),
     "identifier" -> ObjectReader(
       "fields",
       ObjectReader(

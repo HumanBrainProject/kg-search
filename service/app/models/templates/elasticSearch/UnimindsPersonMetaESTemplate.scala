@@ -17,11 +17,13 @@ package models.templates.elasticSearch
 
 import models.templates.Template
 import models.templates.entities.{ESFields, ESKeyword, ESPropertyObject}
+import play.api.libs.json.JsString
 import utils._
 
 trait UnimindsPersonMetaESTemplate extends Template {
 
   val template: Map[String, TemplateComponent] = Map(
+    "type" -> Set("type", JsString("keyword")),
     "identifier" -> ObjectReader(
       "fields",
       TemplateHelper.defaultESMapping("search:identifier")

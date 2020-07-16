@@ -213,8 +213,8 @@ class IndexerImpl @Inject()(
         import java.util.TimeZone
 
         val nowAsISO = Instant.now().atOffset(ZoneOffset.UTC).toLocalDateTime.toString
-        val jsonWithTimeStamp = el ++ Json.obj("@timestamp" -> nowAsISO)
-        val indexed = elasticSearch.index(jsonWithTimeStamp, apiName, id, dbScope)
+        val jsonWithTimeStampAndDocType = el ++ Json.obj("@timestamp" -> nowAsISO, "type"-> apiName)
+        val indexed = elasticSearch.index(jsonWithTimeStampAndDocType, apiName, id, dbScope)
         indexed.map {
           case Right(_) =>
             siteMapGenerator.addUrl(apiName, identifier, dbScope, completeRebuild)
