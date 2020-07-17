@@ -98,7 +98,7 @@ const mapStateToProps = state => {
       }
     ],
     itemComponent: Hit,
-    getKey: data => `${data._type ? data._type : "unknown"}/${data._id ? data._id : uniqueId()}`
+    getKey: data => `${data?._source?.type?.value}/${data._id ? data._id : uniqueId()}`
   };
 };
 

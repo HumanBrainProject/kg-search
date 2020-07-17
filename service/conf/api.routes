@@ -43,6 +43,8 @@
   #      description: Ok
   #    '401':
   #      description: Unauthorized
+  #    '406':
+  #      description: Not Acceptable
   ###
   POST    /groups/:group/search                            controllers.SearchController.search(group:String)
   OPTIONS /groups/:group/search                            controllers.SearchController.searchOptions(group:String)

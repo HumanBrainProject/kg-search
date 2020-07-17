@@ -52,13 +52,13 @@ class SearchController @Inject()(
 
   def document(group: String, dataType: String, id: String): Action[AnyContent] = Action.async { implicit request =>
     OIDCHelper.groupNeedsPermissions(group) match {
-      case false => processRequest(OIDCHelper.getESIndex(group, dataType), id).runToFuture
+      case false => processRequest(s"${OIDCHelper.getESIndex(group, dataType)}/_doc", id).runToFuture
       case true  =>
         val token = OIDCHelper.getTokenFromRequest(request)
         authService.getUserInfo(token).flatMap {
           case Some(userInfo) =>
             OIDCHelper.isUserGrantedAccessToGroup(userInfo, group) match {
-              case true => processRequest(OIDCHelper.getESIndex(group, dataType), id)
+              case true => processRequest(s"${OIDCHelper.getESIndex(group, dataType)}/_doc", id)
               case false => Task.pure(Unauthorized(s"You are not granted access to group ${group}."))
             }
           case _ => Task.pure(Unauthorized(s"You must be logged in to execute this request."))
@@ -122,7 +122,6 @@ class SearchController @Inject()(
           .execute()
       )
       .map { response => // we want to read the raw bytes for the body
-        val headers: Map[String, String] = Map()
         val count = (response.json \ "hits" \ "total").asOpt[Long].getOrElse(0L)
         val responseHeaders: Map[String, scala.collection.Seq[String]] = response.headers
         logger.info(s"Search query - term: $searchTerm, #results: $count")
@@ -130,7 +129,7 @@ class SearchController @Inject()(
           .flattenHeaders(
             ResponseHelper
               .filterContentTypeAndLengthFromHeaders[scala.collection.Seq[String]](responseHeaders)
-          ) ++ headers
+          )
         Result(
           // keep original response header except content type and length that need specific handling
           ResponseHeader(response.status),

@@ -480,8 +480,8 @@ export class ElasticSearchHelpers {
 
     const typeFacet = {
       id: "facet_type",
-      name: "_type",
-      filterType: "_type",
+      name: "type.value",
+      filterType: "type",
       value: selectedType
     };
 
@@ -519,7 +519,7 @@ export class ElasticSearchHelpers {
         let filter = null;
         const facetKey = facet.isChild ?(facet.isHierarchical?`${facet.childName}.value.keyword`:`${facet.name}.children.${facet.childName}.value.keyword`):`${facet.name}.value.keyword`;
         switch (facet.filterType) {
-        case "_type":
+        case "type":
         {
           filter = {
             term: {}
@@ -583,7 +583,7 @@ export class ElasticSearchHelpers {
             return true;
           }
           return active && id !== key;
-        case "_type":
+        case "type":
         case "list":
         default:
           return active && id !== key;
@@ -675,7 +675,7 @@ export class ElasticSearchHelpers {
 
       facets.forEach(facet => {
         switch (facet.filterType) {
-        case "_type":
+        case "type":
         {
           aggs[facet.id] = {
             aggs: setAggs(facet.name, `${facet.name}_count`, null, 50)
@@ -767,7 +767,7 @@ export class ElasticSearchHelpers {
       if (boostedTypes.length) {
         const boostedTypesTerms = boostedTypes.map(type => ({
           term: {
-            _type: {
+            "type.value": {
               value: type.name,
               boost: type.boost
             }

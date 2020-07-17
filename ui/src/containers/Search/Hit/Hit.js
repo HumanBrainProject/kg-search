@@ -211,10 +211,10 @@ const filterHighlightFields = (data, excludeFieldNames) => {
 export const Hit = connect(
   (state, { data }) => {
 
-    const indexReg = /^kg_(.*)$/;
-    const source = data && !(data.found === false) && data._type && data._source;
-    const mapping = source && state.definition && state.definition.typeMappings && state.definition.typeMappings[data._type];
-    const group = (data && !(data.found === false) && indexReg.test(data._index))?data._index.match(indexReg)[1]:state.groups.defaultGroup;
+    const type = data?._source?.type?.value; // state.search.selectedType
+    const source = data && data._source;
+    const mapping = source && state.definition && state.definition.typeMappings && state.definition.typeMappings[type];
+    const group = state.groups.group;
 
     const getPreview = () => {
       const previews = getPreviews(source, { children: mapping.fields });
@@ -283,11 +283,11 @@ export const Hit = connect(
 
     const ribbonData = mapping && mapping.ribbon && mapping.ribbon.framed && mapping.ribbon.framed.dataField && source[mapping.ribbon.framed.dataField];
     return {
-      type: data && data._type,
+      type: type,
       hasNoData: !source,
       hasUnknownData: !mapping,
-      ribbon: getField(group, data && data._type, "ribbon", ribbonData, null, mapping && mapping.ribbon),
-      fields: getFields(group, data && data._type, source, data && data.highlight, mapping, false),
+      ribbon: getField(group, type, "ribbon", ribbonData, null, mapping && mapping.ribbon),
+      fields: getFields(group, type, source, data && data.highlight, mapping, false),
       preview: getPreview(),
       highlightsField: {
         fields: filterHighlightFields(data && data.highlight, ["title.value", "description.value"]),
