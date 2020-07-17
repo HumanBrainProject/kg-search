@@ -153,8 +153,8 @@ export class InstanceContainer extends React.Component {
               <div className="kgs-footer-nav">
                 {showGroupSelection && (
                   <>
-                  <SignInButton className="kgs-sign-in" signInLabel="Log in" signOffLabel="Log out"/>
-                  <GroupSelection className="kgs-group-selection"/>
+                    <SignInButton className="kgs-sign-in" signInLabel="Log in" signOffLabel="Log out"/>
+                    <GroupSelection className="kgs-group-selection"/>
                   </>
                 )}
               </div>

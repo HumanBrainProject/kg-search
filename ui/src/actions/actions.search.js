@@ -14,7 +14,6 @@
  *   limitations under the License.
  */
 
-import { setGroup } from "./actions.groups";
 import * as types from "./actions.types";
 import API from "../services/API";
 import ReactPiwik from "react-piwik";
