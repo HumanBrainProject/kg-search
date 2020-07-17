@@ -354,8 +354,8 @@ const loadSearchResult = (state, action) => {
 
   const getUpdatedTypes = (types, selectedType, group, groupsSettings, defaultOrder, results) => {
 
-    const buckets = Array.isArray(results?.aggregations?.facet_type?.type?.value?.buckets)?
-      results.aggregations.facet_type.type.value.buckets.buckets : [];
+    const buckets = Array.isArray(results?.aggregations?.facet_type?.["type.value"]?.buckets)?
+      results.aggregations.facet_type["type.value"].buckets : [];
 
     const counts = buckets.reduce((acc, current) => {
       const count = Number(current.doc_count);
@@ -387,7 +387,7 @@ const loadSearchResult = (state, action) => {
       });
   };
 
-  const total = (action.results && action.results.hits && action.results.hits.total) ?(isNaN(Number(action.results.hits.total))?0:Number(action.results.hits.total)): 0;
+  const total = isNaN(Number(action.results?.hits?.total?.value))?0:Number(action.results.hits.total.value);
 
   return {
     ...state,
@@ -396,7 +396,7 @@ const loadSearchResult = (state, action) => {
     isLoading: false,
     facets: getUpdatedFacets(state.facets, action.results),
     types: getUpdatedTypes(state.types, state.selectedType, state.group, state.groupsSettings, state.facetTypesOrder, action.results),
-    hits: (action.results && action.results.hits && Array.isArray(action.results.hits.hits)) ? action.results.hits.hits : [],
+    hits: Array.isArray(action.results?.hits?.hits) ? action.results.hits.hits : [],
     total: total,
     totalPages: Math.ceil(total / state.hitsPerPage)
   };

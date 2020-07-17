@@ -212,7 +212,7 @@ export const Hit = connect(
   (state, { data }) => {
 
     const type = data?._source?.type?.value; // state.search.selectedType
-    const source = data && !(data.found === false) && data._source;
+    const source = data && data._source;
     const mapping = source && state.definition && state.definition.typeMappings && state.definition.typeMappings[type];
     const group = state.groups.group;
 

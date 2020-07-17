@@ -132,7 +132,7 @@ export class InstanceContainer extends React.Component {
   }
 
   render() {
-    const { showInstance, instanceProps, watermark } = this.props;
+    const { showInstance, showGroupSelection, instanceProps, watermark } = this.props;
     const NavigationComponent = getNavigation(instanceProps && instanceProps.header);
     return (
       <React.Fragment>
@@ -148,12 +148,18 @@ export class InstanceContainer extends React.Component {
               <p>{watermark}</p>
             </div>
           )}
-          <div className="kgs-footer">
-            <div className="kgs-footer-nav">
-              <SignInButton className="kgs-sign-in" signInLabel="Log in" signOffLabel="Log out"/>
-              <GroupSelection className="kgs-group-selection"/>
+          {showInstance && (
+            <div className="kgs-footer">
+              <div className="kgs-footer-nav">
+                {showGroupSelection && (
+                  <>
+                  <SignInButton className="kgs-sign-in" signInLabel="Log in" signOffLabel="Log out"/>
+                  <GroupSelection className="kgs-group-selection"/>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <DefinitionErrorPanel />
         <GroupErrorPanel />

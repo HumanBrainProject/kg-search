@@ -161,8 +161,7 @@ export const mapStateToProps = (state, props) => {
 
   const { data } = props;
 
-  const indexReg = /^kg_(.*)$/;
-  const source = data && data.found && data._source;
+  const source = data && data._source;
   const type = source?.type?.value
   const mapping = (source && state.definition?.typeMappings && state.definition.typeMappings[type])??{};
   const group = state.groups.group;

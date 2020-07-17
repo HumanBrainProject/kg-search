@@ -45,6 +45,7 @@ export const Preview = connect(
     return {
       instanceProps: instanceProps,
       showInstance: state.instances.currentInstance && !state.instances.error,
+      showGroupSelection: false,
       definitionIsReady: state.definition.isReady,
       definitionIsLoading: state.definition.isLoading,
       definitionHasError: !!state.definition.error,
@@ -68,7 +69,7 @@ export const Preview = connect(
     setInitialGroup: group => dispatch(actionsGroups.setInitialGroup(group)),
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
-    fetch: (type, id) => dispatch(actionsInstances.loadPreview(type, id)),
+    fetch: (group, type, id) => dispatch(actionsInstances.loadPreview(type, id)),
     setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance()),
     onGoHome: path => {
       dispatch(actionsInstances.clearAllInstances());

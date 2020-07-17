@@ -43,6 +43,7 @@ export const Instance = connect(
     return {
       instanceProps: instanceProps,
       showInstance: state.instances.currentInstance && !state.instances.isLoading && !state.instances.error,
+      showGroupSelection: state.instances.currentInstance && !state.instances.error,
       definitionIsReady: state.definition.isReady,
       definitionIsLoading: state.definition.isLoading,
       definitionHasError: !!state.definition.error,
