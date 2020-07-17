@@ -83,35 +83,39 @@ class ElasticSearchImpl @Inject()(
     completeRebuild: Boolean,
   ): Task[Either[ApiError, Unit]] = {
     if (completeRebuild) {
-      logger.info(s"Completely rebuilding the index ${dbScope.toIndexName}_${relevantType.apiName.toLowerCase} in ES...")
-      Task
-        .deferFuture(WSClient.url(s"$elasticSearchEndpoint/${dbScope.toIndexName}_${relevantType.apiName.toLowerCase}").delete())
-        .flatMap(
-          res =>
-            res.status match {
-              case OK | NOT_FOUND =>
-                //recreate
-                Task
-                  .deferFuture(
-                    WSClient
-                      .url(s"$elasticSearchEndpoint/${dbScope.toIndexName}_${relevantType.apiName.toLowerCase}").put(mapping)
-                  )
-                  .map(
-                    res =>
-                      res.status match {
-                        case OK | CREATED =>
-                          logger.debug("Success - Creating ES Mapping")
-                          Right(())
-                        case s =>
-                          logger.error(s"Error - Creating ES Mapping - ${s} : ${res.body}")
-                          Left(ApiError(s, res.body))
-                    }
-                  )
-              case s =>
-                logger.error(s"Error - Creating ES Mapping - ${s} : ${res.body}")
-                Task.pure(Left(ApiError(s, res.body)))
-          }
-        )
+      if(relevantType.toString.equals("UnimindsPerson")) {
+        logger.info(s"Mapping for ${relevantType.toString} already exists")
+        Task.pure(Right(()))
+      } else {
+        logger.info(s"Completely rebuilding the index ${dbScope.toIndexName}_${relevantType.apiName.toLowerCase} in ES...")
+        Task
+          .deferFuture(WSClient.url(s"$elasticSearchEndpoint/${dbScope.toIndexName}_${relevantType.apiName.toLowerCase}").delete())
+          .flatMap(
+            res =>
+              res.status match {
+                case OK | NOT_FOUND =>
+                  Task
+                    .deferFuture(
+                      WSClient
+                        .url(s"$elasticSearchEndpoint/${dbScope.toIndexName}_${relevantType.apiName.toLowerCase}").put(mapping)
+                    )
+                    .map(
+                      res =>
+                        res.status match {
+                          case OK | CREATED =>
+                            logger.debug("Success - Creating ES Mapping")
+                            Right(())
+                          case s =>
+                            logger.error(s"Error - Creating ES Mapping - ${s} : ${res.body}")
+                            Left(ApiError(s, res.body))
+                        }
+                    )
+                case s =>
+                  logger.error(s"Error - Creating ES Mapping - ${s} : ${res.body}")
+                  Task.pure(Left(ApiError(s, res.body)))
+              }
+          )
+      }
     } else {
       Task.pure(Right(()))
     }
