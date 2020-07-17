@@ -160,14 +160,15 @@ class IndexerController @Inject()(
           indexer
             .queryByTypeAndId(templateType, id, databaseScope, token)
             .map {
-              case Right(v) => Ok(
+              case Right(v) =>
+                val jsonWithType = v.as[JsObject] ++ Json.obj("type"-> Json.obj("value" -> templateType.apiName))
+                Ok(
                 Json.obj(
                   "found" -> true,
                   "_id" -> "dynamic",
                   "_index" -> "dynamic",
-                  "_type" -> templateType.toString,
                   "version" -> 0,
-                  "_source" -> v)
+                  "_source" -> jsonWithType.as[JsValue])
               )
               case Left(error) =>
                 error.toResults()
