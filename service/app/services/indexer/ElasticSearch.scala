@@ -24,7 +24,7 @@ import models.templates.TemplateType
 import monix.eval.Task
 import org.slf4j.LoggerFactory
 import play.api.{Configuration, Logging}
-import play.api.libs.json.{JsNumber, JsObject, JsValue, Json, Writes}
+import play.api.libs.json.{JsNumber, JsObject, JsString, JsValue, Json, Writes}
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
 
@@ -192,7 +192,7 @@ class ElasticSearchImpl @Inject()(
           WSClient
             .url(
               s"$elasticSearchEndpoint/$indexname/${templateType.apiName}/_search?size=$size&from=${currentPage * size}"
-            ).get()
+            ).post(Json.obj("_source" -> JsString("identifier.value")))
         )
     }
     Task
@@ -221,7 +221,7 @@ class ElasticSearchImpl @Inject()(
     val querySize = 1000
     Task
       .deferFuture(
-        WSClient.url(s"$elasticSearchEndpoint/$indexname/${templateType.apiName}/_search?size=$querySize&from=0").get()
+        WSClient.url(s"$elasticSearchEndpoint/$indexname/${templateType.apiName}/_search?size=$querySize&from=0").post(Json.obj("_source" -> JsString("identifier.value")))
       )
       .flatMap { res =>
         res.status match {
@@ -230,7 +230,7 @@ class ElasticSearchImpl @Inject()(
             val total = (res.json \ "hits" \ "total").asOpt[Long]
             (total, hits) match {
               case (_, Some(Nil)) | (_, None) => Task.pure(Right(List()))
-              case (Some(t), Some(l)) if l.length == t =>
+              case (Some(t), Some(l)) if l.length < t =>
                 val startingPage = 1
                 val overFlow = if (t % querySize > 0) 1 else 0
                 val totalPages = (t / querySize) + overFlow
@@ -238,7 +238,7 @@ class ElasticSearchImpl @Inject()(
                   case Right(value) => Right(l ++ value)
                   case Left(e)      => Left(e)
                 }
-              case (Some(t), Some(l)) if l.length < t => Task.pure(Right(l))
+              case (Some(t), Some(l)) if l.length >= t => Task.pure(Right(l))
               case _ =>
                 Task.pure(Left(ApiError(INTERNAL_SERVER_ERROR, s"Could not fetch data from es index - ${res.status}")))
             }
