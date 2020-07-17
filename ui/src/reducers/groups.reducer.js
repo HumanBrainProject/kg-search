@@ -89,21 +89,21 @@ const clearGroupsError = state => {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-    case types.SET_INITIAL_GROUP:
-      return setInitialGroup(state, action);
-    case types.SET_GROUP:
-      return setGroup(state, action);
-    case types.LOAD_GROUPS_REQUEST:
-      return loadGroupsRequest(state, action);
-    case types.LOAD_GROUPS_SUCCESS:
-      return loadGroupsSuccess(state, action);
-    case types.LOAD_GROUPS_FAILURE:
-      return loadGroupsFailure(state, action);
-    case types.LOGOUT:
-      return resetGroups(state, action);
-    case types.CLEAR_GROUPS_ERROR:
-      return clearGroupsError(state, action);
-    default:
-      return state;
+  case types.SET_INITIAL_GROUP:
+    return setInitialGroup(state, action);
+  case types.SET_GROUP:
+    return setGroup(state, action);
+  case types.LOAD_GROUPS_REQUEST:
+    return loadGroupsRequest(state, action);
+  case types.LOAD_GROUPS_SUCCESS:
+    return loadGroupsSuccess(state, action);
+  case types.LOAD_GROUPS_FAILURE:
+    return loadGroupsFailure(state, action);
+  case types.LOGOUT:
+    return resetGroups(state, action);
+  case types.CLEAR_GROUPS_ERROR:
+    return clearGroupsError(state, action);
+  default:
+    return state;
   }
 }

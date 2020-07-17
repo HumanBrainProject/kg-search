@@ -16,7 +16,7 @@
 
 import * as types from "./actions.types";
 import API from "../services/API";
-import { setGroup, clearGroupError } from "./actions.groups";
+import { clearGroupError } from "./actions.groups";
 import { sessionFailure, logout } from "./actions";
 import { history, store } from "../store";
 import { getSearchKey } from "../helpers/BrowserHelpers";

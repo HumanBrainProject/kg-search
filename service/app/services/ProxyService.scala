@@ -32,11 +32,12 @@ class ProxyService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
     esIndex: String,
     proxyUrl: String,
     es_host: String,
+    method: String,
     transformInputFunc: ByteString => ByteString = identity
   )(implicit request: Request[AnyContent], executionContext: ExecutionContext): WSRequest = {
     val newUrl =  s"$es_host/$esIndex/$proxyUrl"
     logger.debug(s"Modified URL: $newUrl")
-    val wsRequestBase: WSRequest = modifyQuery(newUrl)
+    val wsRequestBase: WSRequest = modifyQuery(method, newUrl)
     // depending on whether we have a body, append it in our request
     request.body.asJson match {
         case Some(json) =>
@@ -45,10 +46,10 @@ class ProxyService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
       }
   }
 
-  def modifyQuery(newUrl: String)(implicit request: Request[AnyContent]): WSRequest = {
+  def modifyQuery(method: String, newUrl: String)(implicit request: Request[AnyContent]): WSRequest = {
     wSClient
       .url(newUrl) // set the proxy path
-      .withMethod(request.method) // set our HTTP  method
+      .withMethod(method) // set our HTTP  method
       .addQueryStringParameters(request.queryString.mapValues(_.head).toSeq: _*) // similarly for query strings
   }
 
