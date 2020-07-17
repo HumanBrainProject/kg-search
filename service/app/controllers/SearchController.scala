@@ -52,13 +52,13 @@ class SearchController @Inject()(
 
   def document(group: String, dataType: String, id: String): Action[AnyContent] = Action.async { implicit request =>
     OIDCHelper.groupNeedsPermissions(group) match {
-      case false => processRequest(s"${OIDCHelper.getESIndex(group, dataType)}/_doc", id).runToFuture
+      case false => processRequest(s"${OIDCHelper.getESIndex(group, dataType)}/_doc", id, "GET").runToFuture
       case true  =>
         val token = OIDCHelper.getTokenFromRequest(request)
         authService.getUserInfo(token).flatMap {
           case Some(userInfo) =>
             OIDCHelper.isUserGrantedAccessToGroup(userInfo, group) match {
-              case true => processRequest(s"${OIDCHelper.getESIndex(group, dataType)}/_doc", id)
+              case true => processRequest(s"${OIDCHelper.getESIndex(group, dataType)}/_doc", id, "GET")
               case false => Task.pure(Unauthorized(s"You are not granted access to group ${group}."))
             }
           case _ => Task.pure(Unauthorized(s"You must be logged in to execute this request."))
@@ -80,7 +80,7 @@ class SearchController @Inject()(
     OIDCHelper.groupNeedsPermissions(group) match {
       case false =>
         updateEsResponseWithNestedDocument(
-          processRequest(OIDCHelper.getESIndex(group, "*"), "_search", transformInputFunc = SearchController.adaptEsQueryForNestedDocument)
+          processRequest(OIDCHelper.getESIndex(group, "*"), "_search", "POST", transformInputFunc = SearchController.adaptEsQueryForNestedDocument)
         ).runToFuture
       case true  =>
         val token = OIDCHelper.getTokenFromRequest(request)
@@ -89,7 +89,7 @@ class SearchController @Inject()(
             OIDCHelper.isUserGrantedAccessToGroup(userInfo, group) match {
               case true =>
                 updateEsResponseWithNestedDocument(
-                  processRequest(OIDCHelper.getESIndex(group, "*"), "_search", transformInputFunc = SearchController.adaptEsQueryForNestedDocument)
+                  processRequest(OIDCHelper.getESIndex(group, "*"), "_search", "POST", transformInputFunc = SearchController.adaptEsQueryForNestedDocument)
                 )
               case false => Task.pure(Unauthorized(s"You are not granted access to group ${group}."))
             }
@@ -102,13 +102,13 @@ class SearchController @Inject()(
     Ok("").withHeaders("Allow" -> "POST, OPTIONS")
   }
 
-  def processRequest(index: String, proxyUrl: String, transformInputFunc: ByteString => ByteString = identity)(
+  def processRequest(index: String, proxyUrl: String, method: String, transformInputFunc: ByteString => ByteString = identity)(
     implicit request: Request[AnyContent]
   ): Task[Result] = {
     logger.debug(s"Search proxy - Index: $index, proxy: $proxyUrl")
     val searchTerm = request.body.asJson.getOrElse(Json.obj()).as[JsValue]
     val t = (searchTerm \ "query" \\ "query").headOption.map(_.asOpt[String].getOrElse("")).getOrElse("")
-    val wsRequest = proxyService.queryIndex(index, proxyUrl, es_host, transformInputFunc)
+    val wsRequest = proxyService.queryIndex(index, proxyUrl, es_host, method, transformInputFunc)
     propagateRequest(wsRequest, t)
   }
 
