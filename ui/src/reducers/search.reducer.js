@@ -43,7 +43,6 @@ const initialState = {
 
 const setupSearch = (state, action) => {
   const definition = action.definition;
-
   if (!definition) {
     return state;
   } else {
