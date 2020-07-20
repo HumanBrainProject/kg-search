@@ -47,10 +47,17 @@ trait ModelInstanceTemplate extends Template with FileProxy {
       "contributors",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Contributor/$s")
-          ),
+          if(liveMode){
+            PrimitiveToObjectWithReferenceField(
+              "relativeUrl",
+              ref => ref.map(s => s"$s")
+            )
+          } else{
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Contributor/$s")
+            )
+          },
           PrimitiveToObjectWithValueField[String]("name")
         )
       )
@@ -59,10 +66,17 @@ trait ModelInstanceTemplate extends Template with FileProxy {
       "custodian",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Contributor/$s")
-          ),
+          if(liveMode){
+            PrimitiveToObjectWithReferenceField(
+              "relativeUrl",
+              ref => ref.map(s => s"$s")
+            )
+          } else {
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Contributor/$s")
+            )
+          },
           PrimitiveToObjectWithValueField[String]("name")
         )
       )
@@ -71,10 +85,17 @@ trait ModelInstanceTemplate extends Template with FileProxy {
       "mainContact",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Contributor/$s")
-          ),
+          if(liveMode){
+            PrimitiveToObjectWithReferenceField(
+              "relativeUrl",
+              ref => ref.map(s => s"$s")
+            )
+          } else {
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Contributor/$s")
+            )
+          },
           PrimitiveToObjectWithValueField[String]("name")
         )
       )
@@ -148,16 +169,21 @@ trait ModelInstanceTemplate extends Template with FileProxy {
     "modelScope" -> PrimitiveArrayToListOfValueObject[String]("modelScope"),
     "abstractionLevel" -> PrimitiveArrayToListOfValueObject[String]("abstractionLevel"),
     "modelFormat" -> PrimitiveArrayToListOfValueObject[String]("modelFormat"),
-    "first_release" -> PrimitiveToObjectWithValueField[String]("first_release"),
-    "last_release" -> PrimitiveToObjectWithValueField[String]("last_release"),
     "usedDataset" -> ObjectArrayToListOfObject(
       "usedDataset",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Dataset/$s")
-          ),
+          if(liveMode){
+            PrimitiveToObjectWithReferenceField(
+              "relativeUrl",
+              ref => ref.map(s => s"$s")
+            )
+          } else {
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Dataset/$s")
+            )
+          },
           PrimitiveToObjectWithValueField[String]("name")
         )
       )
@@ -166,10 +192,17 @@ trait ModelInstanceTemplate extends Template with FileProxy {
       "producedDataset",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Dataset/$s")
-          ),
+          if(liveMode){
+            PrimitiveToObjectWithReferenceField(
+              "relativeUrl",
+              ref => ref.map(s => s"$s")
+            )
+          } else {
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Dataset/$s")
+            )
+          },
           PrimitiveToObjectWithValueField[String]("name")
         )
       )

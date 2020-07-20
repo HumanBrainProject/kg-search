@@ -152,64 +152,6 @@ trait SampleMetaTemplate extends Template {
             )
           ),
           Nested(
-            "datasetExists",
-            ObjectReader(
-              "search:datasetExists",
-              WriteObject(
-                List(
-                  PrimitiveToObjectWithCustomField[String](
-                    "searchUi:facet",
-                    "https://schema.hbp.eu/searchUi/facet"
-                  ),
-                  PrimitiveToObjectWithCustomField[Boolean](
-                    "searchUi:visible",
-                    "https://schema.hbp.eu/searchUi/visible"
-                  ),
-                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                )
-              )
-            )
-          ),
-          Nested(
-            "datasets",
-            ObjectReader(
-              "search:datasets",
-              WriteObject(
-                List(
-                  PrimitiveToObjectWithCustomField[String]("searchUi:hint", "https://schema.hbp.eu/searchUi/hint"),
-                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
-                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
-                  PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type"),
-                  ObjectReader(
-                    "fields",
-                    Nested(
-                      "children",
-                      WriteObject(
-                        List(
-                          Nested(
-                            "component",
-                            ObjectReader(
-                              "search:componentName",
-                              WriteObject(
-                                List(
-                                  PrimitiveToObjectWithCustomField[String](
-                                    "searchUi:type",
-                                    "https://schema.hbp.eu/searchUi/type"
-                                  ),
-                                )
-                              )
-                            )
-                          ),
-                          Set("name", JsObject.empty)
-                        )
-                      )
-                    )
-                  )
-                )
-              )
-            )
-          ),
-          Nested(
             "subject",
             ObjectReader(
               "search:subjects",
@@ -360,6 +302,64 @@ trait SampleMetaTemplate extends Template {
                             )
                           ),
                         ),
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          ),
+          Nested(
+            "datasetExists",
+            ObjectReader(
+              "search:datasetExists",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[String](
+                    "searchUi:facet",
+                    "https://schema.hbp.eu/searchUi/facet"
+                  ),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:visible",
+                    "https://schema.hbp.eu/searchUi/visible"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                )
+              )
+            )
+          ),
+          Nested(
+            "datasets",
+            ObjectReader(
+              "search:datasets",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[String]("searchUi:hint", "https://schema.hbp.eu/searchUi/hint"),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:layout", "https://schema.hbp.eu/searchUi/layout"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type"),
+                  ObjectReader(
+                    "fields",
+                    Nested(
+                      "children",
+                      WriteObject(
+                        List(
+                          Nested(
+                            "component",
+                            ObjectReader(
+                              "search:componentName",
+                              WriteObject(
+                                List(
+                                  PrimitiveToObjectWithCustomField[String](
+                                    "searchUi:type",
+                                    "https://schema.hbp.eu/searchUi/type"
+                                  ),
+                                )
+                              )
+                            )
+                          ),
+                          Set("name", JsObject.empty)
+                        )
                       )
                     )
                   )

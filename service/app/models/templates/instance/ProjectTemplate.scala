@@ -44,10 +44,17 @@ trait ProjectTemplate extends Template {
       "datasets",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Dataset/$s")
-          ),
+          if(liveMode){
+            PrimitiveToObjectWithReferenceField(
+              "relativeUrl",
+              ref => ref.map(s => s"$s")
+            )
+          } else {
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Dataset/$s")
+            )
+          },
           PrimitiveToObjectWithValueField[String]("name")
         )
       )
@@ -86,8 +93,8 @@ trait ProjectTemplate extends Template {
         }
       )
     ),
-    "first_release" -> PrimitiveToObjectWithValueField[String]("first_release"),
-    "last_release"  -> PrimitiveToObjectWithValueField[String]("last_release")
+    "first_release" -> PrimitiveToObjectWithValueField[String]("firstReleaseAt"),
+    "last_release"  -> PrimitiveToObjectWithValueField[String]("lastReleaseAt")
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {

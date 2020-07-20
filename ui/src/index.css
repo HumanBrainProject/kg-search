@@ -333,9 +333,47 @@ main a:hover, main a:hover:visited {
   z-index: 5;
 }
 
+.site-footer .footer__header {
+  margin-bottom: auto;
+}
+
+.site-footer .footer__header .footer__primary {
+  margin-right: auto;
+}
+
+.site-footer .footer__header .footer__secondary {
+  display: flex;
+  padding-bottom: 10px;
+}
+
+.site-footer .footer__header .footer__secondary .powered-by {
+  margin-right: auto;
+}
+
 .site-footer .footer__content {
   position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
   margin-bottom: auto;
+}
+
+.site-footer .footer__content .footer__menu {
+  flex-basis: 33%;
+}
+
+.site-footer .footer__content ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.site-footer .footer__content + .footer__content ul {
+  padding-left: 40px;
+}
+
+.site-footer .footer__content ul .title {
+  padding-bottom: 10px;
+  text-transform: uppercase;
 }
 
 .site-footer .footer__content .logo {
@@ -352,7 +390,7 @@ main a:hover, main a:hover:visited {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  min-height: 80px;
+  min-height: 72px;
   padding-bottom: 70px;
 }
 
@@ -373,7 +411,7 @@ main a:hover, main a:hover:visited {
 
 .eu-logo{
     display:inline-block;
-    height: 40px;
+    height: 60px;
     margin-top: 5px;
 }
 
@@ -389,13 +427,8 @@ main a:hover, main a:hover:visited {
     text-wrap: none;
 }
 
-.powered-by-intro{
-    font-size: 10px;
-    margin-top:20px;
-}
-
 .powered-by img{
-    height: 50px;
+    height: 65px;
     width: auto;
 }
 
@@ -404,22 +437,12 @@ main a:hover, main a:hover:visited {
     text-decoration: none;
 }
 
-.credits{
-    float:right;
-    text-align: right;
-}
-
 @media (max-width:768px) {
   .site-footer .footer__end {
     flex-wrap: wrap;
     justify-content: center;
     flex-flow: column-reverse;
     line-height: 50px;
-  }
-
-  .credits{
-      max-width: 200px;
-      margin-bottom: 2em;
   }
 
 }
@@ -469,7 +492,7 @@ main a:hover, main a:hover:visited {
 
 @media (min-width: 768px) {
   main {
-    margin-bottom: 320px;
+    margin-bottom: 500px;
   }
 
   .kgs-navbar {
@@ -490,22 +513,46 @@ main a:hover, main a:hover:visited {
     position: fixed;
     min-height: 270px;
   }
+
+  .site-footer .footer__header {
+    display: flex;
+  }
+
+  .site-footer .footer__header .footer__secondary {
+    display: inline-block;
+    padding-bottom: 0;
+  }
+
+  .site-footer .footer__header .footer__secondary .powered-by {
+    margin-right: 0;
+  }
+
+  .site-footer .footer__content .footer__menu {
+    flex-basis: 20%;
+  }
+
 }
 
 @media (min-width: 768px) and (max-width: 768px) {
   main {
-    margin-bottom: 420px;
+    margin-bottom: 700px;
   }
 }
 
 .logo {
-  margin: 0 auto 0 0;
+  display: inline-block; 
+  margin: -15px auto 0 0;
   color: var(--color-1);
   min-width: 200px;
 }
 
 .logo img {
   display: inline-block;
+}
+
+.logo svg {
+  height: 100%;
+  min-width: 160px;
 }
 
 body[theme="dark"] .logo:after {
@@ -527,23 +574,24 @@ body[theme="dark"] .logo:after {
 body[theme="dark"] .eu-logo:after {
   content: "Co-funded by\A the European Union";
   display: inline-block;
-  font-size: 10px;
+  font-size: 15px;
   background: var(--background-color-2);
   color: var(--color-10);
   -webkit-font-smoothing: auto;
   white-space: pre;
   position: absolute;
-  top: 12px;
-  left: 2px;
+  top: 20px;
+  left: 3px;
   line-height: 1.4em;
-  letter-spacing: 0.042em;
+  letter-spacing: 0.04em;
   text-align: right;
 }
 
 #rootFooter {
-  position: relative;
+  position: absolute;
+  right: var(--site-margin);
+  margin-top: 20px;
   width: 100%;
-  margin-bottom: 10px;
 }
 
 #rootFooter > div {
@@ -553,8 +601,9 @@ body[theme="dark"] .eu-logo:after {
 
 @media (min-width: 768px) {
   #rootFooter {
-    position: absolute;
-    top: -50px;
-    margin-bottom: 0;
+    position: relative;
+    margin-top: 0;
+    margin-bottom: 15px;
+    right: unset;
   }
 }

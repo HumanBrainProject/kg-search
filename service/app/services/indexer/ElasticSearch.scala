@@ -24,7 +24,7 @@ import models.templates.TemplateType
 import monix.eval.Task
 import org.slf4j.LoggerFactory
 import play.api.{Configuration, Logging}
-import play.api.libs.json.{JsNumber, JsObject, JsValue, Json, Writes}
+import play.api.libs.json.{JsNumber, JsObject, JsString, JsValue, Json, Writes}
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
 
@@ -162,12 +162,13 @@ class ElasticSearchImpl @Inject()(
     Task.deferFuture(WSClient.url(s"$elasticSearchEndpoint/$indexName/_search").post(body)).map { res =>
       res.status match {
         case OK | CREATED =>
+
           val listOfIds: List[String] = (res.json \ "hits" \ "hits").asOpt[List[JsObject]].getOrElse(List()).map { el =>
-            val t = (el \ "_type").as[String]
+            val t = (el \ "_source" \ "type" \ "value").as[String]
             val id = (el \ "_id").as[String]
             s"$t/$id"
           }
-          logger.info(s"Not updated instances are: ${listOfIds}")
+          logger.debug(s"Elasticsearch returned ${listOfIds.size} instances which haven't been updated recently")
           Right(listOfIds)
         case s => Left(ApiError(s, res.body))
       }
@@ -177,7 +178,10 @@ class ElasticSearchImpl @Inject()(
   override def removeIndex(id: String, indexName: String): Task[Either[ApiError, Unit]] = {
     Task.deferFuture(WSClient.url(s"$elasticSearchEndpoint/$indexName/$id").delete()).map { res =>
       res.status match {
-        case OK => Right(())
+        case OK => {
+          logger.debug(s"Successfully removed instance $id")
+          Right(())
+        }
         case e  => Left(ApiError(e, res.body))
       }
     }
@@ -198,7 +202,7 @@ class ElasticSearchImpl @Inject()(
           WSClient
             .url(
               s"$elasticSearchEndpoint/$indexname/${templateType.apiName}/_search?size=$size&from=${currentPage * size}"
-            ).get()
+            ).post(Json.obj("_source" -> JsString("identifier.value")))
         )
     }
     Task
@@ -227,7 +231,7 @@ class ElasticSearchImpl @Inject()(
     val querySize = 1000
     Task
       .deferFuture(
-        WSClient.url(s"$elasticSearchEndpoint/$indexname/${templateType.apiName}/_search?size=$querySize&from=0").get()
+        WSClient.url(s"$elasticSearchEndpoint/$indexname/${templateType.apiName}/_search?size=$querySize&from=0").post(Json.obj("_source" -> JsString("identifier.value")))
       )
       .flatMap { res =>
         res.status match {
@@ -236,7 +240,7 @@ class ElasticSearchImpl @Inject()(
             val total = (res.json \ "hits" \ "total").asOpt[Long]
             (total, hits) match {
               case (_, Some(Nil)) | (_, None) => Task.pure(Right(List()))
-              case (Some(t), Some(l)) if l.length == t =>
+              case (Some(t), Some(l)) if l.length < t =>
                 val startingPage = 1
                 val overFlow = if (t % querySize > 0) 1 else 0
                 val totalPages = (t / querySize) + overFlow
@@ -244,7 +248,7 @@ class ElasticSearchImpl @Inject()(
                   case Right(value) => Right(l ++ value)
                   case Left(e)      => Left(e)
                 }
-              case (Some(t), Some(l)) if l.length < t => Task.pure(Right(l))
+              case (Some(t), Some(l)) if l.length >= t => Task.pure(Right(l))
               case _ =>
                 Task.pure(Left(ApiError(INTERNAL_SERVER_ERROR, s"Could not fetch data from es index - ${res.status}")))
             }

@@ -39,7 +39,7 @@ class SitemapController @Inject()(
   cc: ControllerComponents
 ) extends AbstractController(cc) {
   implicit val s: Scheduler = monix.execution.Scheduler.Implicits.global
-  val baseUrl: String = configuration.get[String]("serviceUrlBase")
+  val searchUrl: String = configuration.get[String]("searchUrlBase")
 
   def generateSitemap(): Action[AnyContent] = Action.async {
     val siteMapGeneration = indexer.getRelevantTypes().flatMap {
@@ -54,7 +54,7 @@ class SitemapController @Inject()(
             ApiError(INTERNAL_SERVER_ERROR, errors.map(e => e.message).mkString("\n")).toResults()
           } else {
             val listOfXmlElements = l.collect { case Right(xml) => xml }
-            val root = <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{listOfXmlElements}</urlset>
+            val root = <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{listOfXmlElements.distinct}</urlset>
             Ok(root).as("text/xml")
           }
         }
@@ -66,16 +66,13 @@ class SitemapController @Inject()(
   private def generateXmlPerType(templateType: TemplateType): Task[List[Either[ApiError, Elem]]] = {
     elasticSearch.queryIndexByType(templateType).map {
       case Right(listOfElements) =>
-        listOfElements.map { el =>
+        listOfElements
+          .map { el =>
           (el \ "_source" \ "identifier" \ "value")
             .asOpt[String]
             .map { id =>
-              val location = s"$baseUrl/search/?search=false&identifier=${templateType.apiName}/$id"
-              Right(<url>
-                <loc>
-                  {location}
-                </loc>
-              </url>)
+              val location = s"$searchUrl/instances/${templateType.apiName}/$id"
+              Right(<url><loc>{location}</loc></url>)
             }
             .getOrElse(Left(ApiError(INTERNAL_SERVER_ERROR, s"Could not parse identifier of element $el")))
         }

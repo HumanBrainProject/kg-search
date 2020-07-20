@@ -133,7 +133,7 @@ class IndexerController @Inject()(
       val result = request.headers.toSimpleMap.get("Authorization") match {
         case Some(token) =>
           indexer
-            .queryByTypeAndId(templateType, id, databaseScope, token)
+            .queryByTypeAndId(templateType, id, databaseScope, token, false)
             .map {
               case Right(v) => Ok(v)
               case Left(error) =>
@@ -158,7 +158,7 @@ class IndexerController @Inject()(
         case Some(token) =>
           val templateType = TemplateType.fromSchema(s"$org/$domain/$schema/$version").get
           indexer
-            .queryByTypeAndId(templateType, id, databaseScope, token)
+            .queryByTypeAndId(templateType, id, databaseScope, token, true)
             .map {
               case Right(v) =>
                 val jsonWithType = v.as[JsObject] ++ Json.obj("type"-> Json.obj("value" -> templateType.apiName))

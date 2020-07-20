@@ -34,10 +34,18 @@ trait DatasetTemplate extends Template with FileProxy {
       "contributors",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Contributor/$s")
-          ),
+          if (liveMode) {
+            PrimitiveToObjectWithReferenceField(
+              "relativeUrl",
+              ref => ref.map(s => s"$s")
+            )
+          }
+          else {
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Contributor/$s")
+            )
+          },
           PrimitiveToObjectWithValueField[String]("name")
         )
       )
@@ -132,10 +140,17 @@ trait DatasetTemplate extends Template with FileProxy {
       "component",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Project/$s")
-          ),
+          if(liveMode){
+            PrimitiveToObjectWithReferenceField(
+              "relativeUrl",
+              ref => ref.map(s => s"$s")
+            )
+          } else{
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Project/$s")
+            )
+          },
           PrimitiveToObjectWithValueField[String]("name")
         )
       )
@@ -145,10 +160,17 @@ trait DatasetTemplate extends Template with FileProxy {
         "owners",
         WriteObject(
           List(
-            PrimitiveToObjectWithReferenceField(
-              "identifier",
-              ref => ref.map(s => s"Contributor/$s")
-            ),
+            if(liveMode){
+              PrimitiveToObjectWithReferenceField(
+                "relativeUrl",
+                ref => ref.map(s => s"$s")
+              )
+            } else{
+              PrimitiveToObjectWithReferenceField(
+                "identifier",
+                ref => ref.map(s => s"Contributor/$s")
+              )
+            },
             PrimitiveToObjectWithValueField[String]("name")
           )
         )
@@ -313,10 +335,17 @@ trait DatasetTemplate extends Template with FileProxy {
                 "subject_name",
                 WriteObject(
                   List(
-                    PrimitiveToObjectWithReferenceField(
-                      "identifier",
-                      ref => ref.map(s => s"Subject/$s")
-                    ),
+                    if(liveMode){
+                      PrimitiveToObjectWithReferenceField(
+                        "relativeUrl",
+                        ref => ref.map(s => s"$s")
+                      )
+                    } else{
+                      PrimitiveToObjectWithReferenceField(
+                        "identifier",
+                        ref => ref.map(s => s"Subject/$s")
+                      )
+                    },
                     PrimitiveToObjectWithValueField[String]("name"),
                   )
                 )
@@ -342,10 +371,17 @@ trait DatasetTemplate extends Template with FileProxy {
                   "samples",
                   WriteObject(
                     List(
-                      PrimitiveToObjectWithReferenceField(
-                        "identifier",
-                        ref => ref.map(s => s"Sample/$s")
-                      ),
+                      if(liveMode){
+                        PrimitiveToObjectWithReferenceField(
+                          "relativeUrl",
+                          ref => ref.map(s => s"$s")
+                        )
+                      } else{
+                        PrimitiveToObjectWithReferenceField(
+                          "identifier",
+                          ref => ref.map(s => s"Sample/$s")
+                        )
+                      },
                       PrimitiveToObjectWithValueField[String]("name")
                     )
                   )
@@ -355,8 +391,8 @@ trait DatasetTemplate extends Template with FileProxy {
           )
         )
       ),
-    "first_release" -> PrimitiveToObjectWithValueField[String]("first_release"),
-    "last_release" -> PrimitiveToObjectWithValueField[String]("last_release")
+    "first_release" -> PrimitiveToObjectWithValueField[String]("firstReleaseAt"),
+    "last_release" -> PrimitiveToObjectWithValueField[String]("lastReleaseAt"),
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {

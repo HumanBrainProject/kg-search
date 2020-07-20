@@ -73,7 +73,7 @@ trait TemplateEngine[Content, TransformedContent] {
 
   def transformMeta(c: Content, template: Template): TransformedContent
 
-  def getTemplateFromType(templateType: TemplateType, databaseScope: DatabaseScope): Template
+  def getTemplateFromType(templateType: TemplateType, databaseScope: DatabaseScope, liveMode: Boolean): Template
 
   def getMetaTemplateFromType(templateType: TemplateType): Template
 
@@ -141,42 +141,50 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     }
   }
   val fileProxyStr = configuration.get[String]("file.proxy")
-  override def getTemplateFromType(templateType: TemplateType, dbScope: DatabaseScope): Template = templateType match {
+  override def getTemplateFromType(templateType: TemplateType, dbScope: DatabaseScope, live: Boolean): Template = templateType match {
     case Dataset =>
       new DatasetTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
+        override def liveMode: Boolean = live
         override def fileProxy: String = fileProxyStr
       }
     case Person =>
       new PersonTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
+        override def liveMode: Boolean = live
       }
     case Project =>
       new ProjectTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
+        override def liveMode: Boolean = live
       }
     case UnimindsPerson =>
       new UnimindsPersonTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
+        override def liveMode: Boolean = live
       }
     case ModelInstance =>
       new ModelInstanceTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
+        override def liveMode: Boolean = live
         override def fileProxy: String = fileProxyStr
       }
     case SoftwareProject =>
       new SoftwareProjectTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
+        override def liveMode: Boolean = live
       }
     case Sample =>
       new SampleTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
+        override def liveMode: Boolean = live
         override def fileProxy: String = fileProxyStr
 
       }
     case Subject =>
       new SubjectTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
+        override def liveMode: Boolean = live
       }
   }
 

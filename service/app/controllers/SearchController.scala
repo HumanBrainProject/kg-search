@@ -48,7 +48,6 @@ class SearchController @Inject()(
   implicit val s = monix.execution.Scheduler.Implicits.global
 
   val logger: Logger = Logger(this.getClass)
-  val serviceUrlBase: String = config.get[String]("serviceUrlBase")
 
   def document(group: String, dataType: String, id: String): Action[AnyContent] = Action.async { implicit request =>
     OIDCHelper.groupNeedsPermissions(group) match {
