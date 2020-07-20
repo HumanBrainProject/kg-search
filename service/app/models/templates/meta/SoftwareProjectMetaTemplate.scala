@@ -253,6 +253,48 @@ trait SoftwareProjectMetaTemplate extends Template {
                 )
               )
             )
+          ),
+          Nested(
+            "first_release",
+            ObjectReader(
+              "search:firstReleaseAt",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:ignoreForSearch",
+                    "https://schema.hbp.eu/searchUi/ignoreForSearch",
+                    identity
+                  ),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:visible",
+                    "https://schema.hbp.eu/searchUi/visible"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type")
+                )
+              )
+            )
+          ),
+          Nested(
+            "last_release",
+            ObjectReader(
+              "search:lastReleaseAt",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:ignoreForSearch",
+                    "https://schema.hbp.eu/searchUi/ignoreForSearch",
+                    identity
+                  ),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:visible",
+                    "https://schema.hbp.eu/searchUi/visible"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label"),
+                  PrimitiveToObjectWithCustomField[String]("searchUi:type", "https://schema.hbp.eu/searchUi/type")
+                )
+              )
+            )
           )
         )
       )

@@ -52,7 +52,11 @@ const buildTreeStructureForFile = (tree, file, nbOfPathToSkip, rootUrlSeparator)
 const setChildren = node => {
   if(node.type === "folder") {
     node.children = [];
-    Object.values(node.paths).forEach(child => {
+    const paths = Object.values(node.paths);
+    if(!paths.every(el => el.type === "folder") && !paths.every(el => el.type === "file")) {
+      paths.sort((a, b) => b.type.toLowerCase().localeCompare(a.type.toLowerCase()));
+    }
+    paths.forEach(child => {
       node.children.push(child);
       if(child.type === "folder") {
         setChildren(child);

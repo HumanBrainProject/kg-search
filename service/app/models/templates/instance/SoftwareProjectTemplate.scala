@@ -221,7 +221,9 @@ trait SoftwareProjectTemplate extends Template {
         ),
         featuresOpt => transformResult(featuresOpt)
       )
-    )
+    ),
+    "first_release" -> PrimitiveToObjectWithValueField[String]("firstReleaseAt"),
+    "last_release" -> PrimitiveToObjectWithValueField[String]("lastReleaseAt")
   )
 
   private def transformList(l: Option[ListOfObject]): Option[ListOfObject] = {

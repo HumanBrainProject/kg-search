@@ -38,6 +38,4 @@ class ConfigurationService @Inject()(configuration: Configuration) {
   val iamEndpoint = configuration.get[String]("nexus.iam")
   val authEndpoint = configuration.get[String]("auth.endpoint")
   val idmApiEndpoint = s"$authEndpoint/idm/v1/api"
-  val hbpUrl = configuration.getOptional[String]("hbp.url").getOrElse("https://kg.humanbrainproject.eu/webapp")
-
 }

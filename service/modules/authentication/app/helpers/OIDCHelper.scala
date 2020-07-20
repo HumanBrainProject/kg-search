@@ -35,7 +35,6 @@ object OIDCHelper {
   /**
    * Check if group
    *
-   * @param userInfo The user's info
    * @param group The wished group
    * @return The requested ES index or the public index
    */

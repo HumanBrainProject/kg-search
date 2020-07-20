@@ -43,10 +43,17 @@ trait PersonTemplate extends Template {
       "custodianOf",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Dataset/$s")
-          ),
+          if(liveMode){
+            PrimitiveToObjectWithReferenceField(
+              "relativeUrl",
+              ref => ref.map(s => s"$s")
+            )
+          } else {
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Dataset/$s")
+            )
+          },
           PrimitiveToObjectWithValueField[String]("name")
         )
       )
@@ -55,10 +62,17 @@ trait PersonTemplate extends Template {
       "custodianOfModel",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Model/$s")
-          ),
+          if(liveMode){
+            PrimitiveToObjectWithReferenceField(
+              "relativeUrl",
+              ref => ref.map(s => s"$s")
+            )
+          } else {
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Model/$s")
+            )
+          },
           PrimitiveToObjectWithValueField[String]("name")
         )
       )
@@ -68,10 +82,17 @@ trait PersonTemplate extends Template {
       "contributions",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Dataset/$s")
-          ),
+          if(liveMode){
+            PrimitiveToObjectWithReferenceField(
+              "relativeUrl",
+              ref => ref.map(s => s"$s")
+            )
+          } else {
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Dataset/$s")
+            )
+          },
           PrimitiveToObjectWithValueField[String]("name")
         )
       )
@@ -107,17 +128,24 @@ trait PersonTemplate extends Template {
       "modelContributions",
       WriteObject(
         List(
-          PrimitiveToObjectWithReferenceField(
-            "identifier",
-            ref => ref.map(s => s"Model/$s")
-          ),
+          if(liveMode){
+            PrimitiveToObjectWithReferenceField(
+              "relativeUrl",
+              ref => ref.map(s => s"$s")
+            )
+          } else {
+            PrimitiveToObjectWithReferenceField(
+              "identifier",
+              ref => ref.map(s => s"Model/$s")
+            )
+          },
           PrimitiveToObjectWithValueField[String]("name")
         )
       )
     ),
     "email"         -> PrimitiveToObjectWithValueField[String]("email"),
-    "first_release" -> PrimitiveToObjectWithValueField[String]("first_release"),
-    "last_release"  -> PrimitiveToObjectWithValueField[String]("last_release")
+    "first_release" -> PrimitiveToObjectWithValueField[String]("firstReleaseAt"),
+    "last_release"  -> PrimitiveToObjectWithValueField[String]("lastReleaseAt")
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {

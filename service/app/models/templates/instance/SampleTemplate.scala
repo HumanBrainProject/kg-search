@@ -190,7 +190,17 @@ trait SampleTemplate extends Template with FileProxy {
                   "instances",
                   WriteObject(
                     List(
-                      PrimitiveToObjectWithReferenceField("identifier", ref => ref.map(s => s"Dataset/$s")),
+                      if(liveMode){
+                        PrimitiveToObjectWithReferenceField(
+                          "relativeUrl",
+                          ref => ref.map(s => s"$s")
+                        )
+                      } else {
+                        PrimitiveToObjectWithReferenceField(
+                          "identifier",
+                          ref => ref.map(s => s"Dataset/$s")
+                        )
+                      },
                       PrimitiveToObjectWithValueField[String]("name")
                     )
                   )
@@ -212,10 +222,17 @@ trait SampleTemplate extends Template with FileProxy {
                 "subject_name",
                 WriteObject(
                   List(
-                    PrimitiveToObjectWithReferenceField(
-                      "identifier",
-                      ref => ref.map(s => s"Subject/$s")
-                    ),
+                    if(liveMode){
+                      PrimitiveToObjectWithReferenceField(
+                        "relativeUrl",
+                        ref => ref.map(s => s"$s")
+                      )
+                    } else {
+                      PrimitiveToObjectWithReferenceField(
+                        "identifier",
+                        ref => ref.map(s => s"Subject/$s")
+                      )
+                    },
                     PrimitiveToObjectWithValueField[String]("name"),
                   )
                 )
@@ -237,8 +254,8 @@ trait SampleTemplate extends Template with FileProxy {
           )
         )
       ),
-    "first_release" -> PrimitiveToObjectWithValueField[String]("first_release"),
-    "last_release" -> PrimitiveToObjectWithValueField[String]("last_release"),
+    "first_release" -> PrimitiveToObjectWithValueField[String]("firstReleaseAt"),
+    "last_release"  -> PrimitiveToObjectWithValueField[String]("lastReleaseAt")
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {
