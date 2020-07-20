@@ -10,6 +10,7 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "1.15.2",
     "eslint-plugin-react": "^7.20.3",
+    "http-proxy-middleware": "^1.0.5",
     "react-test-renderer": "^16.13.1"
   },
   "dependencies": {
@@ -19,7 +20,6 @@
     "connected-react-router": "^6.8.0",
     "env-cmd": "^10.1.0",
     "font-awesome": "^4.4.0",
-    "http-proxy-middleware": "^1.0.5",
     "lodash": "^4.17.19",
     "lucene-query-parser": "^1.2.0",
     "normalize.css": "^8.0.1",
