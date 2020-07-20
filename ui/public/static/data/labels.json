@@ -1,22 +1,82 @@
 {
-    "_index": "kg_labels",
-    "_type": "labels",
-    "_id": "labels",
-    "_version": 102221,
-    "found": true,
     "_source": {
-        "Subject": {
+        "Software": {
+            "https://schema.hbp.eu/searchUi/order": 6,
+            "https://schema.hbp.eu/searchUi/boost": 2.5,
+            "https://schema.hbp.eu/searchUi/icon": "<svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlnsxlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"40px\" height=\"40px\" viewBox=\"0 0 40 40\" enablebackground=\"new 0 0 40 40\" xmlspace=\"preserve\"><g><line fill=\"none\" stroke=\"#4D4D4D\" strokewidth=\"4\" strokelinecap=\"round\" strokelinejoin=\"round\" strokemiterlimit=\"10\" x1=\"9.25\" y1=\"9.168\" x2=\"31.25\" y2=\"9.168\"></line><line fill=\"none\" stroke=\"#4D4D4D\" strokewidth=\"4\" strokelinecap=\"round\" strokelinejoin=\"round\" strokemiterlimit=\"10\" x1=\"9.25\" y1=\"31.168\" x2=\"31.25\" y2=\"31.168\"></line><line fill=\"none\" stroke=\"#4D4D4D\" strokewidth=\"4\" strokelinecap=\"round\" strokelinejoin=\"round\" strokemiterlimit=\"10\" x1=\"9.25\" y1=\"16.168\" x2=\"31.25\" y2=\"16.168\"></line><line fill=\"none\" stroke=\"#4D4D4D\" strokewidth=\"4\" strokelinecap=\"round\" strokelinejoin=\"round\" strokemiterlimit=\"10\" x1=\"9.25\" y1=\"24.168\" x2=\"31.25\" y2=\"24.168\"></line></g></svg>",
+            "http://schema.org/identifier": "softwarecatalog/software/softwareproject/v1.0.0/search",
             "fields": {
                 "identifier": {
+                    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
                     "https://schema.hbp.eu/searchUi/visible": false
+                },
+                "title": {
+                    "https://schema.hbp.eu/searchUi/optional": false,
+                    "https://schema.hbp.eu/searchUi/sort": true,
+                    "https://schema.hbp.eu/graphQuery/label": "Name",
+                    "https://schema.hbp.eu/searchUi/boost": 20
                 },
                 "editorId": {
                     "https://schema.hbp.eu/searchUi/layout": "header"
                 },
+                "description": {
+                    "https://schema.hbp.eu/searchUi/label_hidden": true,
+                    "https://schema.hbp.eu/searchUi/markdown": true,
+                    "https://schema.hbp.eu/searchUi/boost": 2
+                },
+                "license": {
+                    "https://schema.hbp.eu/graphQuery/label": "License"
+                },
+                "version": {
+                    "https://schema.hbp.eu/searchUi/layout": "summary",
+                    "https://schema.hbp.eu/graphQuery/label": "Latest Version"
+                },
+                "appCategory": {
+                    "https://schema.hbp.eu/searchUi/layout": "summary",
+                    "https://schema.hbp.eu/searchUi/separator": ", ",
+                    "https://schema.hbp.eu/graphQuery/label": "Application Category"
+                },
+                "operatingSystem": {
+                    "https://schema.hbp.eu/searchUi/layout": "summary",
+                    "https://schema.hbp.eu/searchUi/tag_icon": "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>",
+                    "https://schema.hbp.eu/searchUi/facet": "list",
+                    "https://schema.hbp.eu/graphQuery/label": "Operating System"
+                },
+                "homepage": {
+                    "https://schema.hbp.eu/searchUi/layout": "summary",
+                    "https://schema.hbp.eu/graphQuery/label": "Homepage"
+                },
+                "sourceCode": {
+                    "https://schema.hbp.eu/searchUi/layout": "summary",
+                    "https://schema.hbp.eu/graphQuery/label": "Source code"
+                },
+                "documentation": {
+                    "https://schema.hbp.eu/searchUi/layout": "summary",
+                    "https://schema.hbp.eu/graphQuery/label": "Documentation"
+                },
+                "features": {
+                    "https://schema.hbp.eu/searchUi/tag_icon": "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>",
+                    "https://schema.hbp.eu/searchUi/layout": "summary",
+                    "https://schema.hbp.eu/graphQuery/label": "Features"
+                }
+            },
+            "http://schema.org/name": "Software"
+        },
+        "Subject": {
+            "https://schema.hbp.eu/searchUi/order": 3,
+            "https://schema.hbp.eu/searchUi/icon": "<svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\t width=\"40px\" height=\"40px\" viewBox=\"0 0 40 40\" enable-background=\"new 0 0 40 40\" xml:space=\"preserve\"><g>\t<g>\t\t<g>\t\t\t<path fill=\"#4D4D4D\" d=\"M10.708,29.291c-5.122-5.123-5.122-13.459,0-18.582c5.125-5.123,13.46-5.123,18.583,0\t\t\t\tc5.124,5.123,5.124,13.459,0,18.582C24.168,34.414,15.833,34.414,10.708,29.291z M27.762,12.239\t\t\t\tc-4.279-4.279-11.242-4.279-15.523,0c-4.277,4.279-4.277,11.242,0,15.521c4.281,4.279,11.244,4.279,15.523,0\t\t\t\tC32.039,23.481,32.039,16.519,27.762,12.239z\"/>\t\t</g>\t\t<g>\t\t\t<circle opacity=\"0.6\" fill=\"#4D4D4D\" cx=\"24.265\" cy=\"16.843\" r=\"2.782\"/>\t\t\t<circle fill=\"#4D4D4D\" cx=\"20.401\" cy=\"25.345\" r=\"2.782\"/>\t\t\t<g>\t\t\t\t<circle fill=\"#4D4D4D\" cx=\"15.299\" cy=\"18.852\" r=\"2.783\"/>\t\t\t</g>\t\t</g>\t</g></g></svg>",
+            "http://schema.org/identifier": "minds/experiment/subject/v1.0.0/search",
+            "fields": {
+                "identifier": {
+                    "https://schema.hbp.eu/searchUi/visible": false
+                },
                 "title": {
                     "https://schema.hbp.eu/searchUi/sort": true,
                     "https://schema.hbp.eu/graphQuery/label": "Name",
-                    "https://schema.hbp.eu/searchUi/boost": 20.0
+                    "https://schema.hbp.eu/searchUi/boost": 20
+                },
+                "editorId": {
+                    "https://schema.hbp.eu/searchUi/layout": "header"
                 },
                 "species": {
                     "https://schema.hbp.eu/searchUi/facet": "list",
@@ -58,8 +118,8 @@
                 },
                 "datasetExists": {
                     "https://schema.hbp.eu/searchUi/facet": "exists",
-                    "https://schema.hbp.eu/searchUi/visible": false,
-                    "https://schema.hbp.eu/graphQuery/label": "Datasets"
+                    "https://schema.hbp.eu/graphQuery/label": "Datasets",
+                    "https://schema.hbp.eu/searchUi/visible": false
                 },
                 "datasets": {
                     "https://schema.hbp.eu/searchUi/hint": "List of datasets in which the subject was used to produce data.",
@@ -84,298 +144,47 @@
                     "https://schema.hbp.eu/searchUi/type": "date"
                 }
             },
-            "http://schema.org/identifier": "minds/experiment/subject/v1.0.0/search",
-            "http://schema.org/name": "Subject",
-            "https://schema.hbp.eu/graphQuery/_createdByUser": "306228",
-            "https://schema.hbp.eu/searchUi/icon": "<svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\t width=\"40px\" height=\"40px\" viewBox=\"0 0 40 40\" enable-background=\"new 0 0 40 40\" xml:space=\"preserve\"><g>\t<g>\t\t<g>\t\t\t<path fill=\"#4D4D4D\" d=\"M10.708,29.291c-5.122-5.123-5.122-13.459,0-18.582c5.125-5.123,13.46-5.123,18.583,0\t\t\t\tc5.124,5.123,5.124,13.459,0,18.582C24.168,34.414,15.833,34.414,10.708,29.291z M27.762,12.239\t\t\t\tc-4.279-4.279-11.242-4.279-15.523,0c-4.277,4.279-4.277,11.242,0,15.521c4.281,4.279,11.244,4.279,15.523,0\t\t\t\tC32.039,23.481,32.039,16.519,27.762,12.239z\"/>\t\t</g>\t\t<g>\t\t\t<circle opacity=\"0.6\" fill=\"#4D4D4D\" cx=\"24.265\" cy=\"16.843\" r=\"2.782\"/>\t\t\t<circle fill=\"#4D4D4D\" cx=\"20.401\" cy=\"25.345\" r=\"2.782\"/>\t\t\t<g>\t\t\t\t<circle fill=\"#4D4D4D\" cx=\"15.299\" cy=\"18.852\" r=\"2.783\"/>\t\t\t</g>\t\t</g>\t</g></g></svg>",
-            "https://schema.hbp.eu/searchUi/order": 3.0
+            "http://schema.org/name": "Subject"
         },
-        "Project": {
-            "fields": {
-                "identifier": {
-                    "https://schema.hbp.eu/searchUi/visible": false
-                },
-                "editorId": {
-                    "https://schema.hbp.eu/searchUi/layout": "header"
-                },
-                "title": {
-                    "https://schema.hbp.eu/searchUi/sort": true,
-                    "https://schema.hbp.eu/graphQuery/label": "Name",
-                    "https://schema.hbp.eu/searchUi/boost": 20.0
-                },
-                "description": {
-                    "https://schema.hbp.eu/searchUi/markdown": true,
-                    "https://schema.hbp.eu/graphQuery/label": "Description",
-                    "https://schema.hbp.eu/searchUi/boost": 7.5,
-                    "https://schema.hbp.eu/searchUi/label_hidden": true
-                },
-                "dataset": {
-                    "https://schema.hbp.eu/graphQuery/label": "Datasets",
-                    "https://schema.hbp.eu/searchUi/layout": "group"
-                },
-                "publications": {
-                    "https://schema.hbp.eu/searchUi/markdown": true,
-                    "https://schema.hbp.eu/searchUi/hint": "List of publications that have been published as a part of this project.",
-                    "https://schema.hbp.eu/graphQuery/label": "Related publications",
-                    "https://schema.hbp.eu/searchUi/layout": "group"
-                },
-                "first_release": {
-                    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
-                    "https://schema.hbp.eu/searchUi/visible": false,
-                    "https://schema.hbp.eu/graphQuery/label": "First release",
-                    "https://schema.hbp.eu/searchUi/type": "date"
-                },
-                "last_release": {
-                    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
-                    "https://schema.hbp.eu/searchUi/visible": false,
-                    "https://schema.hbp.eu/graphQuery/label": "Last release",
-                    "https://schema.hbp.eu/searchUi/type": "date"
-                }
-            },
-            "http://schema.org/identifier": "minds/core/placomponent/v1.0.0/search",
-            "http://schema.org/name": "Project",
-            "https://schema.hbp.eu/graphQuery/_createdByUser": "306228",
-            "https://schema.hbp.eu/searchUi/boost": 3.0,
-            "https://schema.hbp.eu/searchUi/icon": "<svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\t width=\"40px\" height=\"40px\" viewBox=\"0 0 40 40\" enable-background=\"new 0 0 40 40\" xml:space=\"preserve\"><g>\t<polygon fill=\"#4D4D4D\" points=\"13.752,20.63 10.702,18.869 10.702,22.391 \t\"/>\t<g>\t\t<rect x=\"5.25\" y=\"9.018\" opacity=\"0.6\" fill=\"#4D4D4D\" width=\"12.162\" height=\"4.865\"/>\t\t<rect x=\"13.547\" y=\"18.139\" opacity=\"0.6\" fill=\"#4D4D4D\" width=\"13.379\" height=\"4.865\"/>\t\t<rect x=\"22.75\" y=\"26.117\" opacity=\"0.6\" fill=\"#4D4D4D\" width=\"12\" height=\"4.865\"/>\t\t<polyline fill=\"none\" stroke=\"#4D4D4D\" stroke-width=\"1.2589\" stroke-miterlimit=\"10\" points=\"17.412,11.45 19.845,11.45 \t\t\t19.845,16.662 8.898,16.662 8.898,20.571 11.331,20.571 \t\t\"/>\t\t<polyline fill=\"none\" stroke=\"#4D4D4D\" stroke-width=\"1.259\" stroke-miterlimit=\"10\" points=\"16.75,23.004 16.75,28.518 \t\t\t20.25,28.518 \t\t\"/>\t</g>\t<polygon fill=\"#4D4D4D\" points=\"22.752,28.63 19.702,26.869 19.702,30.391 \t\"/></g></svg>",
-            "https://schema.hbp.eu/searchUi/order": 1.0,
+        "Dataset": {
+            "https://schema.hbp.eu/searchUi/order": 2,
+            "https://schema.hbp.eu/searchUi/defaultSelection": true,
+            "https://schema.hbp.eu/searchUi/boost": 2.5,
+            "https://schema.hbp.eu/searchUi/icon": "<svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\t width=\"40px\" height=\"40px\" viewBox=\"0 0 40 40\" enable-background=\"new 0 0 40 40\" xml:space=\"preserve\"><g transform=\"translate(288 48)\">\t<g id=\"icon-server_42_\">\t\t<path fill=\"#4D4D4D\" d=\"M-268.001-43.069c1.871,0,3.681,0.112,5.427,0.338c1.748,0.226,3.352,0.551,4.811,0.982\t\t\ts2.63,1.007,3.513,1.723c0.881,0.719,1.319,1.53,1.319,2.437v19.18c0,0.904-0.438,1.718-1.319,2.435\t\t\tc-0.881,0.718-2.05,1.291-3.513,1.725c-1.459,0.432-3.062,0.758-4.811,0.982c-1.746,0.226-3.556,0.338-5.427,0.338\t\t\tc-1.869,0-3.679-0.112-5.425-0.338s-3.352-0.551-4.809-0.982c-1.461-0.434-2.632-1.007-3.512-1.725\t\t\tc-0.882-0.717-1.322-1.529-1.322-2.435v-19.181c0-0.905,0.44-1.719,1.322-2.436c0.88-0.717,2.051-1.293,3.512-1.724\t\t\tc1.457-0.433,3.062-0.758,4.809-0.983C-271.68-42.957-269.87-43.069-268.001-43.069z M-255.671-18.433v-6.24\t\t\tc-1.397,0.707-3.2,1.242-5.402,1.607c-2.204,0.363-4.515,0.547-6.928,0.545c-2.411,0-4.718-0.184-6.924-0.545\t\t\tc-2.204-0.362-4.005-0.898-5.403-1.607v6.262c0.043,0.158,0.232,0.348,0.571,0.569c0.34,0.22,0.858,0.458,1.558,0.715\t\t\tc0.7,0.257,1.514,0.493,2.439,0.708c0.928,0.214,2.074,0.393,3.438,0.535c1.363,0.141,2.805,0.213,4.321,0.213\t\t\tc1.521,0,2.962-0.072,4.326-0.213c1.36-0.145,2.508-0.321,3.435-0.541c0.928-0.217,1.74-0.455,2.439-0.712\t\t\tc0.701-0.257,1.219-0.497,1.559-0.718C-255.902-18.074-255.713-18.267-255.671-18.433z M-255.671-28.022v-6.24\t\t\tc-1.397,0.707-3.2,1.242-5.402,1.606c-2.204,0.363-4.515,0.546-6.928,0.544c-2.411,0-4.718-0.183-6.924-0.544\t\t\tc-2.204-0.362-4.005-0.899-5.403-1.606v6.262c0.043,0.156,0.232,0.348,0.571,0.566c0.34,0.221,0.858,0.461,1.558,0.718\t\t\tc0.7,0.257,1.514,0.493,2.439,0.708c0.928,0.212,2.074,0.391,3.438,0.533c1.363,0.144,2.805,0.216,4.321,0.216\t\t\tc1.521,0,2.962-0.072,4.326-0.216c1.36-0.144,2.507-0.321,3.429-0.533c0.926-0.215,1.735-0.451,2.438-0.708\t\t\tc0.697-0.257,1.221-0.498,1.562-0.722c0.343-0.226,0.535-0.42,0.58-0.584H-255.671z M-268.001-40.331\t\t\tc-1.504,0-2.935,0.072-4.291,0.217c-1.354,0.143-2.492,0.317-3.413,0.528c-0.921,0.21-1.732,0.442-2.434,0.696\t\t\tc-0.705,0.254-1.23,0.49-1.58,0.716c-0.35,0.228-0.553,0.42-0.609,0.584c0.057,0.164,0.26,0.358,0.609,0.585\t\t\tc0.351,0.225,0.878,0.463,1.58,0.717c0.701,0.253,1.513,0.485,2.434,0.695c0.921,0.211,2.059,0.388,3.413,0.529\t\t\tc1.356,0.144,2.787,0.215,4.291,0.213c1.509,0,2.938-0.069,4.294-0.213c1.355-0.143,2.492-0.318,3.412-0.529\t\t\tc0.922-0.211,1.734-0.442,2.438-0.695c0.7-0.254,1.228-0.492,1.576-0.717c0.35-0.229,0.555-0.422,0.61-0.585\t\t\tc-0.056-0.164-0.261-0.356-0.61-0.584c-0.35-0.226-0.876-0.462-1.576-0.716c-0.703-0.256-1.516-0.486-2.438-0.696\t\t\tc-0.92-0.211-2.057-0.388-3.412-0.528C-265.062-40.259-266.492-40.331-268.001-40.331z\"/>\t</g></g></svg>",
             "https://schema.hbp.eu/searchUi/ribbon": {
-                "https://schema.hbp.eu/searchUi/content": "Datasets",
+                "https://schema.hbp.eu/searchUi/content": "Downloadable Data",
                 "https://schema.hbp.eu/searchUi/framed": {
                     "https://schema.hbp.eu/searchUi/aggregation": "count",
-                    "https://schema.hbp.eu/searchUi/dataField": "search:datasets",
+                    "https://schema.hbp.eu/searchUi/dataField": "search:files",
                     "https://schema.hbp.eu/searchUi/suffix": {
-                        "https://schema.hbp.eu/searchUi/plural": "datasets",
-                        "https://schema.hbp.eu/searchUi/singular": "dataset"
+                        "https://schema.hbp.eu/searchUi/plural": "files",
+                        "https://schema.hbp.eu/searchUi/singular": "file"
                     }
                 },
                 "https://schema.hbp.eu/searchUi/icon": "<i class=\"fa fa-download\" aria-hidden=\"true\"></i>"
-            }
-        },
-        "Model": {
+            },
+            "http://schema.org/identifier": "minds/core/dataset/v1.0.0/search",
             "fields": {
                 "identifier": {
                     "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
                     "https://schema.hbp.eu/searchUi/visible": false
                 },
-                "editorId": {
-                    "https://schema.hbp.eu/searchUi/layout": "header"
-                },
                 "title": {
                     "https://schema.hbp.eu/searchUi/optional": false,
                     "https://schema.hbp.eu/searchUi/sort": true,
                     "https://schema.hbp.eu/graphQuery/label": "Name",
-                    "https://schema.hbp.eu/searchUi/boost": 20.0
+                    "https://schema.hbp.eu/searchUi/layout": "header",
+                    "https://schema.hbp.eu/searchUi/boost": 20
                 },
-                "description": {
-                    "https://schema.hbp.eu/searchUi/markdown": true,
-                    "https://schema.hbp.eu/graphQuery/label": "Description",
-                    "https://schema.hbp.eu/searchUi/boost": 2.0,
-                    "https://schema.hbp.eu/searchUi/label_hidden": true
-                },
-                "version": {
-                    "https://schema.hbp.eu/graphQuery/label": "Version",
-                    "https://schema.hbp.eu/searchUi/layout": "summary"
+                "editorId": {
+                    "https://schema.hbp.eu/searchUi/layout": "header"
                 },
                 "contributors": {
                     "https://schema.hbp.eu/searchUi/separator": "; ",
                     "https://schema.hbp.eu/graphQuery/label": "Contributors",
                     "https://schema.hbp.eu/searchUi/layout": "header",
                     "https://schema.hbp.eu/searchUi/type": "text",
-                    "https://schema.hbp.eu/searchUi/boost": 10.0,
-                    "https://schema.hbp.eu/searchUi/label_hidden": true
-                },
-                "owners": {
-                    "https://schema.hbp.eu/searchUi/separator": "; ",
-                    "https://schema.hbp.eu/searchUi/hint": "A custodian is the person responsible for the data bundle.",
-                    "https://schema.hbp.eu/graphQuery/label": "Custodian",
-                    "https://schema.hbp.eu/searchUi/layout": "summary",
-                    "https://schema.hbp.eu/searchUi/type": "text"
-                },
-                "mainContact": {
-                    "https://schema.hbp.eu/searchUi/separator": "; ",
-                    "https://schema.hbp.eu/graphQuery/label": "Main contact",
-                    "https://schema.hbp.eu/searchUi/layout": "summary",
-                    "https://schema.hbp.eu/searchUi/type": "text"
-                },
-                "embargo": {
-                    "https://schema.hbp.eu/searchUi/markdown": true,
-                    "https://schema.hbp.eu/graphQuery/label": "Files",
-                    "https://schema.hbp.eu/searchUi/layout": "group"
-                },
-                "allfiles": {
-                    "https://schema.hbp.eu/searchUi/isButton": true,
-                    "https://schema.hbp.eu/graphQuery/label": "Download model",
-                    "https://schema.hbp.eu/searchUi/termsOfUse": true
-                },
-                "publications": {
-                    "https://schema.hbp.eu/searchUi/markdown": true,
-                    "https://schema.hbp.eu/searchUi/hint": "List of publications that have been published as a part of this model.",
-                    "https://schema.hbp.eu/graphQuery/label": "Publications",
-                    "https://schema.hbp.eu/searchUi/layout": "group"
-                },
-                "brainStructures": {
-                    "https://schema.hbp.eu/searchUi/facet": "list",
-                    "https://schema.hbp.eu/graphQuery/label": "Brain structure",
-                    "https://schema.hbp.eu/searchUi/layout": "summary"
-                },
-                "cellularTarget": {
-                    "https://schema.hbp.eu/graphQuery/label": "(Sub)cellular target",
-                    "https://schema.hbp.eu/searchUi/layout": "summary"
-                },
-                "studyTarget": {
-                    "https://schema.hbp.eu/graphQuery/label": "Study target",
-                    "https://schema.hbp.eu/searchUi/layout": "summary"
-                },
-                "modelScope": {
-                    "https://schema.hbp.eu/searchUi/facet": "list",
-                    "https://schema.hbp.eu/graphQuery/label": "Model scope",
-                    "https://schema.hbp.eu/searchUi/layout": "summary"
-                },
-                "abstractionLevel": {
-                    "https://schema.hbp.eu/searchUi/separator": "; ",
-                    "https://schema.hbp.eu/searchUi/facet": "list",
-                    "https://schema.hbp.eu/graphQuery/label": "Abstraction level",
-                    "https://schema.hbp.eu/searchUi/layout": "summary"
-                },
-                "modelFormat": {
-                    "https://schema.hbp.eu/searchUi/separator": "; ",
-                    "https://schema.hbp.eu/graphQuery/label": "Model format",
-                    "https://schema.hbp.eu/searchUi/layout": "summary"
-                },
-                "first_release": {
-                    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
-                    "https://schema.hbp.eu/searchUi/visible": false,
-                    "https://schema.hbp.eu/graphQuery/label": "First release",
-                    "https://schema.hbp.eu/searchUi/type": "date"
-                },
-                "last_release": {
-                    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
-                    "https://schema.hbp.eu/searchUi/visible": false,
-                    "https://schema.hbp.eu/graphQuery/label": "Last release",
-                    "https://schema.hbp.eu/searchUi/type": "date"
-                },
-                "usedDataset": {
-                    "https://schema.hbp.eu/graphQuery/label": "Used datasets",
-                    "https://schema.hbp.eu/searchUi/layout": "group"
-                },
-                "producedDataset": {
-                    "https://schema.hbp.eu/graphQuery/label": "Produced datasets",
-                    "https://schema.hbp.eu/searchUi/layout": "group"
-                },
-                "license_info": {
-                    "https://schema.hbp.eu/graphQuery/label": "License",
-                    "https://schema.hbp.eu/searchUi/type": "text",
-                    "https://schema.hbp.eu/searchUi/facet_order": "byvalue"
-                }
-            },
-            "http://schema.org/identifier": "uniminds/core/modelinstance/v1.0.0/search",
-            "http://schema.org/name": "Model",
-            "https://schema.hbp.eu/graphQuery/_createdByUser": "306228",
-            "https://schema.hbp.eu/searchUi/boost": 1.5,
-            "https://schema.hbp.eu/searchUi/icon": "<svg xmlns=\"http://www.w3.org/2000/svg\"  width=\"40px\"  height=\"40px\"  viewBox=\"0 0 101.94369 106.07654\"  version=\"1.1\">  <g  id=\"layer1\"  transform=\"translate(-18.662182,-76.441552)\">  <path  id=\"path1048\"  style=\"fill:none;stroke:#000000;stroke-width:3px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1\"  d=\"m 69.748968,166.9362 25.002418,15.00034 25.000004,-14.70092 M 44.751384,181.63747 69.748968,166.9362 m -49.997584,-0.29872 25,14.99999 m 74.882626,-44.40064 0.11738,29.99879 m -25.11738,-15.29787 0.117377,29.99879 M 69.631593,136.9374 69.74897,166.9362 m -25.114963,-15.29752 0.117377,29.99879 m -25.117377,-44.99879 0.117377,29.9988 m 74.76249,-74.698535 0.117379,29.998795 M 69.513534,106.9386 69.631593,136.9374 M 44.513874,91.639875 44.631251,121.63867 m 50.002759,0.29908 -25,15 25,15 25,-14.70092 z m -50.000003,-0.29907 -25,15 25,15 25.000003,-14.70093 z m 24.877113,-44.612498 -25,15.000006 25,14.999962 25,-14.700885 z\"  />  <path  style=\"opacity:0.6;fill:#4D4D4D;\"  d=\"m 310.73837,658.31418 -46.21448,-27.72879 -0.33274,-55.68521 c -0.18301,-30.62686 -0.28493,-55.73481 -0.22649,-55.79544 0.0584,-0.0606 20.92846,12.38304 46.37783,27.65258 l 46.27157,27.76282 0.32051,3.66214 c 0.17628,2.01418 0.25251,27.10682 0.1694,55.76142 l -0.15112,52.09926 z\"  id=\"path1069\"  transform=\"scale(0.26458333)\" />  <path  style=\"opacity:0.6;fill:#4D4D4D\"  d=\"m 215.7764,487.6544 -46.20685,-28.27758 -0.30526,-54.93374 c -0.16789,-30.21356 -0.25531,-54.99784 -0.19427,-55.07618 0.061,-0.0784 21.05175,12.42219 46.64601,27.77896 l 46.53502,27.92141 v 55.43236 c 0,30.48779 -0.0603,55.43234 -0.13391,55.43234 -0.0736,0 -20.92698,-12.72491 -46.34074,-28.27757 z\"  id=\"path1079\"  transform=\"scale(0.26458333)\" />  <path  style=\"opacity:0.6;fill:#4D4D4D\"  d=\"M 121.79303,657.17445 75.531743,629.41774 75.169807,573.88331 c -0.199065,-30.54394 -0.265226,-55.63114 -0.147025,-55.74934 0.118202,-0.1182 20.985012,12.24785 46.370688,27.48012 l 46.15578,27.69502 0.37242,16.64203 c 0.20484,9.15311 0.31848,34.26807 0.25254,55.81102 l -0.11988,39.16899 z\"  id=\"path1081\"  transform=\"scale(0.26458333)\" />  </g>  </svg>",
-            "https://schema.hbp.eu/searchUi/order": 5.0
-        },
-        "Contributor": {
-            "fields": {
-                "identifier": {
-                    "https://schema.hbp.eu/searchUi/visible": false
-                },
-                "editorId": {
-                    "https://schema.hbp.eu/searchUi/layout": "header"
-                },
-                "title": {
-                    "https://schema.hbp.eu/searchUi/optional": false,
-                    "https://schema.hbp.eu/searchUi/sort": true,
-                    "https://schema.hbp.eu/graphQuery/label": "Name",
-                    "https://schema.hbp.eu/searchUi/boost": 20.0
-                },
-                "description": {
-                    "https://schema.hbp.eu/searchUi/markdown": true,
-                    "https://schema.hbp.eu/graphQuery/label": "Description",
-                    "https://schema.hbp.eu/searchUi/boost": 7.5,
-                    "https://schema.hbp.eu/searchUi/label_hidden": true
-                },
-                "phone": {
-                    "https://schema.hbp.eu/graphQuery/label": "Phone"
-                },
-                "custodianOf": {
-                    "https://schema.hbp.eu/graphQuery/label": "Custodian of",
-                    "https://schema.hbp.eu/searchUi/layout": "group",
-                    "https://schema.hbp.eu/searchUi/overview": true
-                },
-                "custodianOfModel": {
-                    "https://schema.hbp.eu/graphQuery/label": "Custodian of models",
-                    "https://schema.hbp.eu/searchUi/layout": "group"
-                },
-                "publications": {
-                    "https://schema.hbp.eu/searchUi/facet": "exists",
-                    "https://schema.hbp.eu/searchUi/markdown": true,
-                    "https://schema.hbp.eu/graphQuery/label": "Publications",
-                    "https://schema.hbp.eu/searchUi/layout": "group"
-                },
-                "address": {
-                    "https://schema.hbp.eu/graphQuery/label": "Address"
-                },
-                "contributions": {
-                    "https://schema.hbp.eu/searchUi/facet": "exists",
-                    "https://schema.hbp.eu/graphQuery/label": "Contributions",
-                    "https://schema.hbp.eu/searchUi/layout": "group",
-                    "https://schema.hbp.eu/searchUi/type": "text",
-                    "https://schema.hbp.eu/searchUi/overview": true
-                },
-                "modelContributions": {
-                    "https://schema.hbp.eu/searchUi/facet": "exists",
-                    "https://schema.hbp.eu/graphQuery/label": "Model contributions",
-                    "https://schema.hbp.eu/searchUi/layout": "group",
-                    "https://schema.hbp.eu/searchUi/type": "text"
-                },
-                "email": {
-                    "https://schema.hbp.eu/graphQuery/label": "Email",
-                    "https://schema.hbp.eu/searchUi/type": "text",
-                    "https://schema.hbp.eu/searchUi/overview": true
-                },
-                "first_release": {
-                    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
-                    "https://schema.hbp.eu/searchUi/visible": false,
-                    "https://schema.hbp.eu/graphQuery/label": "First release",
-                    "https://schema.hbp.eu/searchUi/type": "date"
-                },
-                "last_release": {
-                    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
-                    "https://schema.hbp.eu/searchUi/visible": false,
-                    "https://schema.hbp.eu/graphQuery/label": "Last release",
-                    "https://schema.hbp.eu/searchUi/type": "date"
-                }
-            },
-            "http://schema.org/identifier": "minds/core/person/v1.0.0/search",
-            "http://schema.org/name": "Contributor",
-            "https://schema.hbp.eu/graphQuery/_createdByUser": "306228",
-            "https://schema.hbp.eu/searchUi/boost": 2.5,
-            "https://schema.hbp.eu/searchUi/icon": "<svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"40px\" height=\"40px\" viewBox=\"0 0 40 40\" enable-background=\"new 0 0 40 40\" xml:space=\"preserve\"><g>\t<g>\t\t<g>\t\t\t<path opacity=\"0.6\" fill=\"#4D4D4D\" d=\"M22.584,19.024c0,1.63-1.012,2.952-2.642,2.952l0,0c-1.631,0-2.64-1.322-2.64-2.952\t\t\t\tl-0.312-2.214c0-1.63,1.321-2.951,2.952-2.951l0,0c1.63,0,2.953,1.321,2.953,2.951L22.584,19.024z\"/>\t\t\t<path opacity=\"0.6\" fill=\"#4D4D4D\" d=\"M23.227,21.409c-0.656,1.087-1.845,1.815-3.206,1.815c-1.362,0-2.551-0.729-3.206-1.815\t\t\t\tc-1.848,0.745-3.111,2.111-3.189,3.689h12.79C26.336,23.521,25.074,22.154,23.227,21.409z\"/>\t\t</g>\t</g>\t\t\t<path fill=\"none\" stroke=\"#4D4D4D\" stroke-width=\"1.538\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" d=\"\t\tM29.612,36.514H10.387c-0.33,0-0.601-0.271-0.601-0.601V9.478c0-0.33,0.271-0.601,0.601-0.601h19.226\t\tc0.331,0,0.602,0.271,0.602,0.601v26.436C30.214,36.243,29.943,36.514,29.612,36.514z\"/>\t<line fill=\"none\" stroke=\"#4D4D4D\" stroke-width=\"1.8024\" x1=\"13.391\" y1=\"29.304\" x2=\"26.608\" y2=\"29.304\"/>\t<g>\t\t<path fill=\"#4D4D4D\" d=\"M22.584,10.148c0,0.944-0.766,1.709-1.707,1.709h-1.712c-0.941,0-1.707-0.765-1.707-1.709V5.195\t\t\tc0-0.944,0.766-1.709,1.707-1.709h1.712c0.941,0,1.707,0.765,1.707,1.709V10.148z\"/>\t</g></g></svg>",
-            "https://schema.hbp.eu/searchUi/order": 7.0
-        },
-        "Dataset": {
-            "fields": {
-                "identifier": {
-                    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
-                    "https://schema.hbp.eu/searchUi/visible": false
-                },
-                "editorId": {
-                    "https://schema.hbp.eu/searchUi/layout": "header"
-                },
-                "title": {
-                    "https://schema.hbp.eu/searchUi/optional": false,
-                    "https://schema.hbp.eu/searchUi/sort": true,
-                    "https://schema.hbp.eu/graphQuery/label": "Name",
-                    "https://schema.hbp.eu/searchUi/layout": "header",
-                    "https://schema.hbp.eu/searchUi/boost": 20.0
-                },
-                "contributors": {
-                    "https://schema.hbp.eu/searchUi/separator": "; ",
-                    "https://schema.hbp.eu/graphQuery/label": "Contributors",
-                    "https://schema.hbp.eu/searchUi/layout": "header",
-                    "https://schema.hbp.eu/searchUi/type": "text",
-                    "https://schema.hbp.eu/searchUi/boost": 10.0,
+                    "https://schema.hbp.eu/searchUi/boost": 10,
                     "https://schema.hbp.eu/searchUi/label_hidden": true
                 },
                 "zip": {
@@ -403,21 +212,37 @@
                     "https://schema.hbp.eu/searchUi/facet_order": "byvalue"
                 },
                 "component": {
-                    "https://schema.hbp.eu/searchUi/order": 3.0,
+                    "https://schema.hbp.eu/searchUi/order": 3,
                     "https://schema.hbp.eu/graphQuery/label": "Project",
-                    "https://schema.hbp.eu/searchUi/boost": 10.0
+                    "https://schema.hbp.eu/searchUi/boost": 10
                 },
                 "owners": {
                     "https://schema.hbp.eu/searchUi/separator": "; ",
                     "https://schema.hbp.eu/searchUi/hint": "A custodian is the person responsible for the data bundle.",
                     "https://schema.hbp.eu/graphQuery/label": "Custodians",
-                    "https://schema.hbp.eu/searchUi/boost": 10.0
+                    "https://schema.hbp.eu/searchUi/boost": 10
                 },
                 "description": {
                     "https://schema.hbp.eu/searchUi/markdown": true,
                     "https://schema.hbp.eu/graphQuery/label": "Description",
-                    "https://schema.hbp.eu/searchUi/boost": 2.0,
+                    "https://schema.hbp.eu/searchUi/boost": 2,
                     "https://schema.hbp.eu/searchUi/label_hidden": true
+                },
+                "speciesFilter": {
+                    "https://schema.hbp.eu/graphQuery/label": "Owners",
+                    "https://schema.hbp.eu/searchUi/visible": false,
+                    "https://schema.hbp.eu/searchUi/facetMissingTerm": "Others",
+                    "children": {
+                        "owners": {
+                            "https://schema.hbp.eu/searchUi/visible": false,
+                            "https://schema.hbp.eu/searchUi/facet": "list",
+                            "https://schema.hbp.eu/searchUi/isHierarchicalFacet": true
+                        }
+                    }
+                },
+                "embargoRestrictedAccess": {
+                    "https://schema.hbp.eu/graphQuery/label": "Restricted access",
+                    "https://schema.hbp.eu/searchUi/layout": "group"
                 },
                 "embargoForFilter": {
                     "https://schema.hbp.eu/searchUi/facet": "list",
@@ -428,14 +253,10 @@
                     "https://schema.hbp.eu/graphQuery/label": "Files",
                     "https://schema.hbp.eu/searchUi/layout": "group"
                 },
-                "embargoRestrictedAccess": {
-                    "https://schema.hbp.eu/graphQuery/label": "Restricted access",
-                    "https://schema.hbp.eu/searchUi/layout": "group"
-                },
                 "files": {
                     "https://schema.hbp.eu/graphQuery/label": "Files",
                     "https://schema.hbp.eu/searchUi/layout": "group",
-                    "https://schema.hbp.eu/searchUi/isTable": true,
+                    "https://schema.hbp.eu/searchUi/isHierarchicalFiles": true,
                     "https://schema.hbp.eu/searchUi/termsOfUse": true
                 },
                 "external_datalink": {
@@ -461,33 +282,26 @@
                     "https://schema.hbp.eu/graphQuery/label": "Preparation",
                     "https://schema.hbp.eu/searchUi/layout": "summary"
                 },
+                "modalityForFilter": {
+                    "https://schema.hbp.eu/graphQuery/label": "Modality",
+                    "https://schema.hbp.eu/searchUi/type": "text",
+                    "https://schema.hbp.eu/searchUi/facet": "list"
+                },
                 "methods": {
                     "https://schema.hbp.eu/searchUi/tag_icon": "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>",
                     "https://schema.hbp.eu/searchUi/facet": "list",
-                    "https://schema.hbp.eu/searchUi/order": 2.0,
-                    "https://schema.hbp.eu/searchUi/overviewMaxDisplay": 1.0,
+                    "https://schema.hbp.eu/searchUi/order": 2,
+                    "https://schema.hbp.eu/searchUi/overviewMaxDisplay": 1,
                     "https://schema.hbp.eu/graphQuery/label": "Methods",
                     "https://schema.hbp.eu/searchUi/layout": "summary",
                     "https://schema.hbp.eu/searchUi/overview": true,
                     "https://schema.hbp.eu/searchUi/isFilterableFacet": true
                 },
-                "speciesFilter": {
-                    "https://schema.hbp.eu/graphQuery/label": "Owners",
-                    "https://schema.hbp.eu/searchUi/visible": false,
-                    "https://schema.hbp.eu/searchUi/facetMissingTerm": "Others",
-                    "children": {
-                        "owners": {
-                            "https://schema.hbp.eu/searchUi/visible": false,
-                            "https://schema.hbp.eu/searchUi/facet": "list",
-                            "https://schema.hbp.eu/searchUi/isHierarchicalFacet": true
-                        }
-                    }
-                },
                 "protocol": {
                     "https://schema.hbp.eu/searchUi/tag_icon": "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>",
                     "https://schema.hbp.eu/searchUi/facet": "list",
-                    "https://schema.hbp.eu/searchUi/order": 1.0,
-                    "https://schema.hbp.eu/searchUi/overviewMaxDisplay": 3.0,
+                    "https://schema.hbp.eu/searchUi/order": 1,
+                    "https://schema.hbp.eu/searchUi/overviewMaxDisplay": 3,
                     "https://schema.hbp.eu/graphQuery/label": "Keywords",
                     "https://schema.hbp.eu/searchUi/layout": "summary",
                     "https://schema.hbp.eu/searchUi/overview": true,
@@ -529,8 +343,8 @@
                             "https://schema.hbp.eu/graphQuery/label": "Genotype"
                         },
                         "samples": {
-                            "https://schema.hbp.eu/searchUi/sort": true,
-                            "https://schema.hbp.eu/graphQuery/label": "Samples"
+                            "https://schema.hbp.eu/graphQuery/label": "Samples",
+                            "https://schema.hbp.eu/searchUi/sort": true
                         }
                     }
                 },
@@ -547,38 +361,209 @@
                     "https://schema.hbp.eu/searchUi/type": "date"
                 }
             },
-            "http://schema.org/identifier": "minds/core/dataset/v1.0.0/search",
-            "http://schema.org/name": "Dataset",
-            "https://schema.hbp.eu/graphQuery/_createdByUser": "306228",
-            "https://schema.hbp.eu/searchUi/boost": 2.5,
-            "https://schema.hbp.eu/searchUi/defaultSelection": true,
-            "https://schema.hbp.eu/searchUi/icon": "<svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\t width=\"40px\" height=\"40px\" viewBox=\"0 0 40 40\" enable-background=\"new 0 0 40 40\" xml:space=\"preserve\"><g transform=\"translate(288 48)\">\t<g id=\"icon-server_42_\">\t\t<path fill=\"#4D4D4D\" d=\"M-268.001-43.069c1.871,0,3.681,0.112,5.427,0.338c1.748,0.226,3.352,0.551,4.811,0.982\t\t\ts2.63,1.007,3.513,1.723c0.881,0.719,1.319,1.53,1.319,2.437v19.18c0,0.904-0.438,1.718-1.319,2.435\t\t\tc-0.881,0.718-2.05,1.291-3.513,1.725c-1.459,0.432-3.062,0.758-4.811,0.982c-1.746,0.226-3.556,0.338-5.427,0.338\t\t\tc-1.869,0-3.679-0.112-5.425-0.338s-3.352-0.551-4.809-0.982c-1.461-0.434-2.632-1.007-3.512-1.725\t\t\tc-0.882-0.717-1.322-1.529-1.322-2.435v-19.181c0-0.905,0.44-1.719,1.322-2.436c0.88-0.717,2.051-1.293,3.512-1.724\t\t\tc1.457-0.433,3.062-0.758,4.809-0.983C-271.68-42.957-269.87-43.069-268.001-43.069z M-255.671-18.433v-6.24\t\t\tc-1.397,0.707-3.2,1.242-5.402,1.607c-2.204,0.363-4.515,0.547-6.928,0.545c-2.411,0-4.718-0.184-6.924-0.545\t\t\tc-2.204-0.362-4.005-0.898-5.403-1.607v6.262c0.043,0.158,0.232,0.348,0.571,0.569c0.34,0.22,0.858,0.458,1.558,0.715\t\t\tc0.7,0.257,1.514,0.493,2.439,0.708c0.928,0.214,2.074,0.393,3.438,0.535c1.363,0.141,2.805,0.213,4.321,0.213\t\t\tc1.521,0,2.962-0.072,4.326-0.213c1.36-0.145,2.508-0.321,3.435-0.541c0.928-0.217,1.74-0.455,2.439-0.712\t\t\tc0.701-0.257,1.219-0.497,1.559-0.718C-255.902-18.074-255.713-18.267-255.671-18.433z M-255.671-28.022v-6.24\t\t\tc-1.397,0.707-3.2,1.242-5.402,1.606c-2.204,0.363-4.515,0.546-6.928,0.544c-2.411,0-4.718-0.183-6.924-0.544\t\t\tc-2.204-0.362-4.005-0.899-5.403-1.606v6.262c0.043,0.156,0.232,0.348,0.571,0.566c0.34,0.221,0.858,0.461,1.558,0.718\t\t\tc0.7,0.257,1.514,0.493,2.439,0.708c0.928,0.212,2.074,0.391,3.438,0.533c1.363,0.144,2.805,0.216,4.321,0.216\t\t\tc1.521,0,2.962-0.072,4.326-0.216c1.36-0.144,2.507-0.321,3.429-0.533c0.926-0.215,1.735-0.451,2.438-0.708\t\t\tc0.697-0.257,1.221-0.498,1.562-0.722c0.343-0.226,0.535-0.42,0.58-0.584H-255.671z M-268.001-40.331\t\t\tc-1.504,0-2.935,0.072-4.291,0.217c-1.354,0.143-2.492,0.317-3.413,0.528c-0.921,0.21-1.732,0.442-2.434,0.696\t\t\tc-0.705,0.254-1.23,0.49-1.58,0.716c-0.35,0.228-0.553,0.42-0.609,0.584c0.057,0.164,0.26,0.358,0.609,0.585\t\t\tc0.351,0.225,0.878,0.463,1.58,0.717c0.701,0.253,1.513,0.485,2.434,0.695c0.921,0.211,2.059,0.388,3.413,0.529\t\t\tc1.356,0.144,2.787,0.215,4.291,0.213c1.509,0,2.938-0.069,4.294-0.213c1.355-0.143,2.492-0.318,3.412-0.529\t\t\tc0.922-0.211,1.734-0.442,2.438-0.695c0.7-0.254,1.228-0.492,1.576-0.717c0.35-0.229,0.555-0.422,0.61-0.585\t\t\tc-0.056-0.164-0.261-0.356-0.61-0.584c-0.35-0.226-0.876-0.462-1.576-0.716c-0.703-0.256-1.516-0.486-2.438-0.696\t\t\tc-0.92-0.211-2.057-0.388-3.412-0.528C-265.062-40.259-266.492-40.331-268.001-40.331z\"/>\t</g></g></svg>",
-            "https://schema.hbp.eu/searchUi/order": 2.0,
-            "https://schema.hbp.eu/searchUi/ribbon": {
-                "https://schema.hbp.eu/searchUi/content": "Downloadable Data",
-                "https://schema.hbp.eu/searchUi/framed": {
-                    "https://schema.hbp.eu/searchUi/aggregation": "count",
-                    "https://schema.hbp.eu/searchUi/dataField": "search:files",
-                    "https://schema.hbp.eu/searchUi/suffix": {
-                        "https://schema.hbp.eu/searchUi/plural": "files",
-                        "https://schema.hbp.eu/searchUi/singular": "file"
-                    }
-                },
-                "https://schema.hbp.eu/searchUi/icon": "<i class=\"fa fa-download\" aria-hidden=\"true\"></i>"
-            }
+            "http://schema.org/name": "Dataset"
         },
-        "Sample": {
+        "Model": {
+            "https://schema.hbp.eu/searchUi/order": 5,
+            "https://schema.hbp.eu/searchUi/boost": 1.5,
+            "https://schema.hbp.eu/searchUi/icon": "<svg xmlns=\"http://www.w3.org/2000/svg\"  width=\"40px\"  height=\"40px\"  viewBox=\"0 0 101.94369 106.07654\"  version=\"1.1\">  <g  id=\"layer1\"  transform=\"translate(-18.662182,-76.441552)\">  <path  id=\"path1048\"  style=\"fill:none;stroke:#000000;stroke-width:3px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1\"  d=\"m 69.748968,166.9362 25.002418,15.00034 25.000004,-14.70092 M 44.751384,181.63747 69.748968,166.9362 m -49.997584,-0.29872 25,14.99999 m 74.882626,-44.40064 0.11738,29.99879 m -25.11738,-15.29787 0.117377,29.99879 M 69.631593,136.9374 69.74897,166.9362 m -25.114963,-15.29752 0.117377,29.99879 m -25.117377,-44.99879 0.117377,29.9988 m 74.76249,-74.698535 0.117379,29.998795 M 69.513534,106.9386 69.631593,136.9374 M 44.513874,91.639875 44.631251,121.63867 m 50.002759,0.29908 -25,15 25,15 25,-14.70092 z m -50.000003,-0.29907 -25,15 25,15 25.000003,-14.70093 z m 24.877113,-44.612498 -25,15.000006 25,14.999962 25,-14.700885 z\"  />  <path  style=\"opacity:0.6;fill:#4D4D4D;\"  d=\"m 310.73837,658.31418 -46.21448,-27.72879 -0.33274,-55.68521 c -0.18301,-30.62686 -0.28493,-55.73481 -0.22649,-55.79544 0.0584,-0.0606 20.92846,12.38304 46.37783,27.65258 l 46.27157,27.76282 0.32051,3.66214 c 0.17628,2.01418 0.25251,27.10682 0.1694,55.76142 l -0.15112,52.09926 z\"  id=\"path1069\"  transform=\"scale(0.26458333)\" />  <path  style=\"opacity:0.6;fill:#4D4D4D\"  d=\"m 215.7764,487.6544 -46.20685,-28.27758 -0.30526,-54.93374 c -0.16789,-30.21356 -0.25531,-54.99784 -0.19427,-55.07618 0.061,-0.0784 21.05175,12.42219 46.64601,27.77896 l 46.53502,27.92141 v 55.43236 c 0,30.48779 -0.0603,55.43234 -0.13391,55.43234 -0.0736,0 -20.92698,-12.72491 -46.34074,-28.27757 z\"  id=\"path1079\"  transform=\"scale(0.26458333)\" />  <path  style=\"opacity:0.6;fill:#4D4D4D\"  d=\"M 121.79303,657.17445 75.531743,629.41774 75.169807,573.88331 c -0.199065,-30.54394 -0.265226,-55.63114 -0.147025,-55.74934 0.118202,-0.1182 20.985012,12.24785 46.370688,27.48012 l 46.15578,27.69502 0.37242,16.64203 c 0.20484,9.15311 0.31848,34.26807 0.25254,55.81102 l -0.11988,39.16899 z\"  id=\"path1081\"  transform=\"scale(0.26458333)\" />  </g>  </svg>",
+            "http://schema.org/identifier": "uniminds/core/modelinstance/v1.0.0/search",
             "fields": {
                 "identifier": {
+                    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
                     "https://schema.hbp.eu/searchUi/visible": false
                 },
                 "editorId": {
                     "https://schema.hbp.eu/searchUi/layout": "header"
                 },
                 "title": {
+                    "https://schema.hbp.eu/searchUi/optional": false,
                     "https://schema.hbp.eu/searchUi/sort": true,
                     "https://schema.hbp.eu/graphQuery/label": "Name",
-                    "https://schema.hbp.eu/searchUi/boost": 20.0
+                    "https://schema.hbp.eu/searchUi/boost": 20
+                },
+                "description": {
+                    "https://schema.hbp.eu/graphQuery/label": "Description",
+                    "https://schema.hbp.eu/searchUi/markdown": true,
+                    "https://schema.hbp.eu/searchUi/boost": 2,
+                    "https://schema.hbp.eu/searchUi/label_hidden": true
+                },
+                "version": {
+                    "https://schema.hbp.eu/searchUi/layout": "summary",
+                    "https://schema.hbp.eu/graphQuery/label": "Version"
+                },
+                "contributors": {
+                    "https://schema.hbp.eu/searchUi/layout": "header",
+                    "https://schema.hbp.eu/searchUi/separator": "; ",
+                    "https://schema.hbp.eu/searchUi/type": "text",
+                    "https://schema.hbp.eu/searchUi/label_hidden": true,
+                    "https://schema.hbp.eu/searchUi/boost": 10,
+                    "https://schema.hbp.eu/graphQuery/label": "Contributors"
+                },
+                "owners": {
+                    "https://schema.hbp.eu/searchUi/layout": "summary",
+                    "https://schema.hbp.eu/searchUi/separator": "; ",
+                    "https://schema.hbp.eu/searchUi/type": "text",
+                    "https://schema.hbp.eu/searchUi/hint": "A custodian is the person responsible for the data bundle.",
+                    "https://schema.hbp.eu/graphQuery/label": "Custodian"
+                },
+                "mainContact": {
+                    "https://schema.hbp.eu/searchUi/layout": "summary",
+                    "https://schema.hbp.eu/searchUi/separator": "; ",
+                    "https://schema.hbp.eu/searchUi/type": "text",
+                    "https://schema.hbp.eu/graphQuery/label": "Main contact"
+                },
+                "embargo": {
+                    "https://schema.hbp.eu/graphQuery/label": "Files",
+                    "https://schema.hbp.eu/searchUi/layout": "group",
+                    "https://schema.hbp.eu/searchUi/markdown": true
+                },
+                "allfiles": {
+                    "https://schema.hbp.eu/searchUi/termsOfUse": true,
+                    "https://schema.hbp.eu/graphQuery/label": "Download model",
+                    "https://schema.hbp.eu/searchUi/isButton": true
+                },
+                "publications": {
+                    "https://schema.hbp.eu/searchUi/layout": "group",
+                    "https://schema.hbp.eu/searchUi/hint": "List of publications that have been published as a part of this model.",
+                    "https://schema.hbp.eu/searchUi/markdown": true,
+                    "https://schema.hbp.eu/graphQuery/label": "Publications"
+                },
+                "brainStructures": {
+                    "https://schema.hbp.eu/searchUi/layout": "summary",
+                    "https://schema.hbp.eu/searchUi/facet": "list",
+                    "https://schema.hbp.eu/graphQuery/label": "Brain structure"
+                },
+                "cellularTarget": {
+                    "https://schema.hbp.eu/searchUi/layout": "summary",
+                    "https://schema.hbp.eu/graphQuery/label": "(Sub)cellular target"
+                },
+                "studyTarget": {
+                    "https://schema.hbp.eu/searchUi/layout": "summary",
+                    "https://schema.hbp.eu/graphQuery/label": "Study target"
+                },
+                "modelScope": {
+                    "https://schema.hbp.eu/searchUi/facet": "list",
+                    "https://schema.hbp.eu/searchUi/layout": "summary",
+                    "https://schema.hbp.eu/graphQuery/label": "Model scope"
+                },
+                "abstractionLevel": {
+                    "https://schema.hbp.eu/searchUi/separator": "; ",
+                    "https://schema.hbp.eu/searchUi/facet": "list",
+                    "https://schema.hbp.eu/graphQuery/label": "Abstraction level",
+                    "https://schema.hbp.eu/searchUi/layout": "summary"
+                },
+                "modelFormat": {
+                    "https://schema.hbp.eu/searchUi/separator": "; ",
+                    "https://schema.hbp.eu/graphQuery/label": "Model format",
+                    "https://schema.hbp.eu/searchUi/layout": "summary"
+                },
+                "first_release": {
+                    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
+                    "https://schema.hbp.eu/searchUi/visible": false,
+                    "https://schema.hbp.eu/graphQuery/label": "First release",
+                    "https://schema.hbp.eu/searchUi/type": "date"
+                },
+                "last_release": {
+                    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
+                    "https://schema.hbp.eu/searchUi/visible": false,
+                    "https://schema.hbp.eu/graphQuery/label": "Last release",
+                    "https://schema.hbp.eu/searchUi/type": "date"
+                },
+                "usedDataset": {
+                    "https://schema.hbp.eu/graphQuery/label": "Used datasets",
+                    "https://schema.hbp.eu/searchUi/layout": "group"
+                },
+                "producedDataset": {
+                    "https://schema.hbp.eu/graphQuery/label": "Produced datasets",
+                    "https://schema.hbp.eu/searchUi/layout": "group"
+                },
+                "license_info": {
+                    "https://schema.hbp.eu/graphQuery/label": "License",
+                    "https://schema.hbp.eu/searchUi/type": "text",
+                    "https://schema.hbp.eu/searchUi/facet_order": "byvalue"
+                }
+            },
+            "http://schema.org/name": "Model"
+        },
+        "Contributor": {
+            "https://schema.hbp.eu/searchUi/order": 6,
+            "https://schema.hbp.eu/searchUi/boost": 2.5,
+            "https://schema.hbp.eu/searchUi/icon": "<svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\t width=\"40px\" height=\"40px\" viewBox=\"0 0 40 40\" enable-background=\"new 0 0 40 40\" xml:space=\"preserve\"><g>\t<g>\t\t<g>\t\t\t<path opacity=\"0.6\" fill=\"#4D4D4D\" d=\"M22.584,19.024c0,1.63-1.012,2.952-2.642,2.952l0,0c-1.631,0-2.64-1.322-2.64-2.952\t\t\t\tl-0.312-2.214c0-1.63,1.321-2.951,2.952-2.951l0,0c1.63,0,2.953,1.321,2.953,2.951L22.584,19.024z\"/>\t\t\t<path opacity=\"0.6\" fill=\"#4D4D4D\" d=\"M23.227,21.409c-0.656,1.087-1.845,1.815-3.206,1.815c-1.362,0-2.551-0.729-3.206-1.815\t\t\t\tc-1.848,0.745-3.111,2.111-3.189,3.689h12.79C26.336,23.521,25.074,22.154,23.227,21.409z\"/>\t\t</g>\t</g>\t\t\t<path fill=\"none\" stroke=\"#4D4D4D\" stroke-width=\"1.538\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" d=\"\t\tM29.612,36.514H10.387c-0.33,0-0.601-0.271-0.601-0.601V9.478c0-0.33,0.271-0.601,0.601-0.601h19.226\t\tc0.331,0,0.602,0.271,0.602,0.601v26.436C30.214,36.243,29.943,36.514,29.612,36.514z\"/>\t<line fill=\"none\" stroke=\"#4D4D4D\" stroke-width=\"1.8024\" x1=\"13.391\" y1=\"29.304\" x2=\"26.608\" y2=\"29.304\"/>\t<g>\t\t<path fill=\"#4D4D4D\" d=\"M22.584,10.148c0,0.944-0.766,1.709-1.707,1.709h-1.712c-0.941,0-1.707-0.765-1.707-1.709V5.195\t\t\tc0-0.944,0.766-1.709,1.707-1.709h1.712c0.941,0,1.707,0.765,1.707,1.709V10.148z\"/>\t</g></g></svg>",
+            "http://schema.org/identifier": "uniminds/core/person/v1.0.0/search",
+            "fields": {
+                "identifier": {
+                    "https://schema.hbp.eu/searchUi/visible": false
+                },
+                "title": {
+                    "https://schema.hbp.eu/searchUi/optional": false,
+                    "https://schema.hbp.eu/searchUi/sort": true,
+                    "https://schema.hbp.eu/graphQuery/label": "Name",
+                    "https://schema.hbp.eu/searchUi/boost": 20
+                },
+                "editorId": {
+                    "https://schema.hbp.eu/searchUi/layout": "header"
+                },
+                "custodianOf": {
+                    "https://schema.hbp.eu/graphQuery/label": "Custodian of",
+                    "https://schema.hbp.eu/searchUi/layout": "group",
+                    "https://schema.hbp.eu/searchUi/overview": true
+                },
+                "custodianOfModel": {
+                    "https://schema.hbp.eu/graphQuery/label": "Custodian of models",
+                    "https://schema.hbp.eu/searchUi/layout": "group",
+                    "https://schema.hbp.eu/searchUi/overview": true
+                },
+                "publications": {
+                    "https://schema.hbp.eu/searchUi/facet": "exists",
+                    "https://schema.hbp.eu/searchUi/markdown": true,
+                    "https://schema.hbp.eu/graphQuery/label": "Publications",
+                    "https://schema.hbp.eu/searchUi/layout": "group"
+                },
+                "contributions": {
+                    "https://schema.hbp.eu/searchUi/facet": "exists",
+                    "https://schema.hbp.eu/graphQuery/label": "Contributions",
+                    "https://schema.hbp.eu/searchUi/layout": "group",
+                    "https://schema.hbp.eu/searchUi/type": "text",
+                    "https://schema.hbp.eu/searchUi/overview": true
+                },
+                "modelContributions": {
+                    "https://schema.hbp.eu/searchUi/facet": "exists",
+                    "https://schema.hbp.eu/graphQuery/label": "Model contributions",
+                    "https://schema.hbp.eu/searchUi/layout": "group",
+                    "https://schema.hbp.eu/searchUi/type": "text",
+                    "https://schema.hbp.eu/searchUi/overview": true
+                },
+                "first_release": {
+                    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
+                    "https://schema.hbp.eu/searchUi/visible": false,
+                    "https://schema.hbp.eu/graphQuery/label": "First release",
+                    "https://schema.hbp.eu/searchUi/type": "date"
+                },
+                "last_release": {
+                    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
+                    "https://schema.hbp.eu/searchUi/visible": false,
+                    "https://schema.hbp.eu/graphQuery/label": "Last release",
+                    "https://schema.hbp.eu/searchUi/type": "date"
+                }
+            },
+            "http://schema.org/name": "Contributor"
+        },
+        "Sample": {
+            "https://schema.hbp.eu/searchUi/order": 4,
+            "https://schema.hbp.eu/searchUi/icon": "<svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\t width=\"40px\" height=\"40px\" viewBox=\"0 0 40 40\" enable-background=\"new 0 0 40 40\" xml:space=\"preserve\"><g>\t\t\t<path fill=\"none\" stroke=\"#4D4D4D\" stroke-width=\"2.5599\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" d=\"\t\tM16.373,5.668v11.094c0,0-8.58,12.102-7.252,15.787c0.855,2.377,20.902,2.377,21.758,0c1.328-3.686-7.252-15.787-7.252-15.787\t\tV5.668\"/>\t<path fill=\"#4D4D4D\" opacity=\"0.6\" d=\"M26.076,27.002c-1.377-0.721-10.775-0.721-12.152,0c-0.77,0.402-1.928,2.576-1.518,3.412\t\tc0.92,1.879,14.268,1.879,15.188,0C28.004,29.578,26.846,27.404,26.076,27.002z\"/></g></svg>",
+            "http://schema.org/identifier": "minds/experiment/sample/v1.0.0/search",
+            "fields": {
+                "identifier": {
+                    "https://schema.hbp.eu/searchUi/visible": false
+                },
+                "title": {
+                    "https://schema.hbp.eu/searchUi/sort": true,
+                    "https://schema.hbp.eu/graphQuery/label": "Name",
+                    "https://schema.hbp.eu/searchUi/boost": 20
+                },
+                "editorId": {
+                    "https://schema.hbp.eu/searchUi/layout": "header"
                 },
                 "weightPreFixation": {
                     "https://schema.hbp.eu/graphQuery/label": "Weight pre fixation"
@@ -597,7 +582,7 @@
                 },
                 "methods": {
                     "https://schema.hbp.eu/searchUi/tag_icon": "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>",
-                    "https://schema.hbp.eu/searchUi/overviewMaxDisplay": 1.0,
+                    "https://schema.hbp.eu/searchUi/overviewMaxDisplay": 1,
                     "https://schema.hbp.eu/graphQuery/label": "Methods",
                     "https://schema.hbp.eu/searchUi/layout": "summary",
                     "https://schema.hbp.eu/searchUi/overview": true
@@ -611,6 +596,23 @@
                     "https://schema.hbp.eu/graphQuery/label": "Files",
                     "https://schema.hbp.eu/searchUi/layout": "group",
                     "https://schema.hbp.eu/searchUi/termsOfUse": true
+                },
+                "datasetExists": {
+                    "https://schema.hbp.eu/searchUi/facet": "exists",
+                    "https://schema.hbp.eu/searchUi/visible": false,
+                    "https://schema.hbp.eu/graphQuery/label": "Datasets"
+                },
+                "datasets": {
+                    "https://schema.hbp.eu/searchUi/hint": "List of datasets in which the sample was used to produce data.",
+                    "https://schema.hbp.eu/graphQuery/label": "Datasets",
+                    "https://schema.hbp.eu/searchUi/layout": "group",
+                    "https://schema.hbp.eu/searchUi/type": "text",
+                    "children": {
+                        "component": {
+                            "https://schema.hbp.eu/searchUi/type": "text"
+                        },
+                        "name": {}
+                    }
                 },
                 "subject": {
                     "https://schema.hbp.eu/searchUi/hint": "Experimental subject that this sample was obtained from.",
@@ -648,22 +650,65 @@
                         }
                     }
                 },
-                "datasetExists": {
-                    "https://schema.hbp.eu/searchUi/facet": "exists",
+                "first_release": {
+                    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
                     "https://schema.hbp.eu/searchUi/visible": false,
-                    "https://schema.hbp.eu/graphQuery/label": "Datasets"
+                    "https://schema.hbp.eu/graphQuery/label": "First release",
+                    "https://schema.hbp.eu/searchUi/type": "date"
                 },
-                "datasets": {
-                    "https://schema.hbp.eu/searchUi/hint": "List of datasets in which the sample was used to produce data.",
-                    "https://schema.hbp.eu/graphQuery/label": "Datasets",
-                    "https://schema.hbp.eu/searchUi/layout": "group",
-                    "https://schema.hbp.eu/searchUi/type": "text",
-                    "children": {
-                        "component": {
-                            "https://schema.hbp.eu/searchUi/type": "text"
-                        },
-                        "name": {}
+                "last_release": {
+                    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
+                    "https://schema.hbp.eu/searchUi/visible": false,
+                    "https://schema.hbp.eu/graphQuery/label": "Last release",
+                    "https://schema.hbp.eu/searchUi/type": "date"
+                }
+            },
+            "http://schema.org/name": "Sample"
+        },
+        "Project": {
+            "https://schema.hbp.eu/searchUi/order": 1,
+            "https://schema.hbp.eu/searchUi/boost": 3,
+            "https://schema.hbp.eu/searchUi/icon": "<svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\t width=\"40px\" height=\"40px\" viewBox=\"0 0 40 40\" enable-background=\"new 0 0 40 40\" xml:space=\"preserve\"><g>\t<polygon fill=\"#4D4D4D\" points=\"13.752,20.63 10.702,18.869 10.702,22.391 \t\"/>\t<g>\t\t<rect x=\"5.25\" y=\"9.018\" opacity=\"0.6\" fill=\"#4D4D4D\" width=\"12.162\" height=\"4.865\"/>\t\t<rect x=\"13.547\" y=\"18.139\" opacity=\"0.6\" fill=\"#4D4D4D\" width=\"13.379\" height=\"4.865\"/>\t\t<rect x=\"22.75\" y=\"26.117\" opacity=\"0.6\" fill=\"#4D4D4D\" width=\"12\" height=\"4.865\"/>\t\t<polyline fill=\"none\" stroke=\"#4D4D4D\" stroke-width=\"1.2589\" stroke-miterlimit=\"10\" points=\"17.412,11.45 19.845,11.45 \t\t\t19.845,16.662 8.898,16.662 8.898,20.571 11.331,20.571 \t\t\"/>\t\t<polyline fill=\"none\" stroke=\"#4D4D4D\" stroke-width=\"1.259\" stroke-miterlimit=\"10\" points=\"16.75,23.004 16.75,28.518 \t\t\t20.25,28.518 \t\t\"/>\t</g>\t<polygon fill=\"#4D4D4D\" points=\"22.752,28.63 19.702,26.869 19.702,30.391 \t\"/></g></svg>",
+            "https://schema.hbp.eu/searchUi/ribbon": {
+                "https://schema.hbp.eu/searchUi/content": "Datasets",
+                "https://schema.hbp.eu/searchUi/framed": {
+                    "https://schema.hbp.eu/searchUi/aggregation": "count",
+                    "https://schema.hbp.eu/searchUi/dataField": "search:datasets",
+                    "https://schema.hbp.eu/searchUi/suffix": {
+                        "https://schema.hbp.eu/searchUi/plural": "datasets",
+                        "https://schema.hbp.eu/searchUi/singular": "dataset"
                     }
+                },
+                "https://schema.hbp.eu/searchUi/icon": "<i class=\"fa fa-download\" aria-hidden=\"true\"></i>"
+            },
+            "http://schema.org/identifier": "minds/core/placomponent/v1.0.0/search",
+            "fields": {
+                "identifier": {
+                    "https://schema.hbp.eu/searchUi/visible": false
+                },
+                "title": {
+                    "https://schema.hbp.eu/searchUi/sort": true,
+                    "https://schema.hbp.eu/graphQuery/label": "Name",
+                    "https://schema.hbp.eu/searchUi/boost": 20
+                },
+                "editorId": {
+                    "https://schema.hbp.eu/searchUi/layout": "header"
+                },
+                "description": {
+                    "https://schema.hbp.eu/searchUi/markdown": true,
+                    "https://schema.hbp.eu/graphQuery/label": "Description",
+                    "https://schema.hbp.eu/searchUi/boost": 7.5,
+                    "https://schema.hbp.eu/searchUi/label_hidden": true
+                },
+                "dataset": {
+                    "https://schema.hbp.eu/graphQuery/label": "Datasets",
+                    "https://schema.hbp.eu/searchUi/layout": "group"
+                },
+                "publications": {
+                    "https://schema.hbp.eu/searchUi/markdown": true,
+                    "https://schema.hbp.eu/searchUi/hint": "List of publications that have been published as a part of this project.",
+                    "https://schema.hbp.eu/graphQuery/label": "Related publications",
+                    "https://schema.hbp.eu/searchUi/layout": "group"
                 },
                 "first_release": {
                     "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
@@ -678,74 +723,7 @@
                     "https://schema.hbp.eu/searchUi/type": "date"
                 }
             },
-            "http://schema.org/identifier": "minds/experiment/sample/v1.0.0/search",
-            "http://schema.org/name": "Sample",
-            "https://schema.hbp.eu/graphQuery/_createdByUser": "306228",
-            "https://schema.hbp.eu/searchUi/icon": "<svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\t width=\"40px\" height=\"40px\" viewBox=\"0 0 40 40\" enable-background=\"new 0 0 40 40\" xml:space=\"preserve\"><g>\t\t\t<path fill=\"none\" stroke=\"#4D4D4D\" stroke-width=\"2.5599\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" d=\"\t\tM16.373,5.668v11.094c0,0-8.58,12.102-7.252,15.787c0.855,2.377,20.902,2.377,21.758,0c1.328-3.686-7.252-15.787-7.252-15.787\t\tV5.668\"/>\t<path fill=\"#4D4D4D\" opacity=\"0.6\" d=\"M26.076,27.002c-1.377-0.721-10.775-0.721-12.152,0c-0.77,0.402-1.928,2.576-1.518,3.412\t\tc0.92,1.879,14.268,1.879,15.188,0C28.004,29.578,26.846,27.404,26.076,27.002z\"/></g></svg>",
-            "https://schema.hbp.eu/searchUi/order": 4.0
-        },
-        "Software": {
-            "fields": {
-                "identifier": {
-                    "https://schema.hbp.eu/searchUi/ignoreForSearch": true,
-                    "https://schema.hbp.eu/searchUi/visible": false
-                },
-                "editorId": {
-                    "https://schema.hbp.eu/searchUi/layout": "header"
-                },
-                "title": {
-                    "https://schema.hbp.eu/searchUi/optional": false,
-                    "https://schema.hbp.eu/searchUi/sort": true,
-                    "https://schema.hbp.eu/graphQuery/label": "Name",
-                    "https://schema.hbp.eu/searchUi/boost": 20.0
-                },
-                "description": {
-                    "https://schema.hbp.eu/searchUi/markdown": true,
-                    "https://schema.hbp.eu/searchUi/boost": 2.0,
-                    "https://schema.hbp.eu/searchUi/label_hidden": true
-                },
-                "license": {
-                    "https://schema.hbp.eu/graphQuery/label": "License"
-                },
-                "version": {
-                    "https://schema.hbp.eu/graphQuery/label": "Latest Version",
-                    "https://schema.hbp.eu/searchUi/layout": "summary"
-                },
-                "appCategory": {
-                    "https://schema.hbp.eu/searchUi/separator": ", ",
-                    "https://schema.hbp.eu/graphQuery/label": "Application Category",
-                    "https://schema.hbp.eu/searchUi/layout": "summary"
-                },
-                "operatingSystem": {
-                    "https://schema.hbp.eu/searchUi/tag_icon": "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>",
-                    "https://schema.hbp.eu/searchUi/facet": "list",
-                    "https://schema.hbp.eu/graphQuery/label": "Operating System",
-                    "https://schema.hbp.eu/searchUi/layout": "summary"
-                },
-                "homepage": {
-                    "https://schema.hbp.eu/graphQuery/label": "Homepage",
-                    "https://schema.hbp.eu/searchUi/layout": "summary"
-                },
-                "sourceCode": {
-                    "https://schema.hbp.eu/graphQuery/label": "Source code",
-                    "https://schema.hbp.eu/searchUi/layout": "summary"
-                },
-                "documentation": {
-                    "https://schema.hbp.eu/graphQuery/label": "Documentation",
-                    "https://schema.hbp.eu/searchUi/layout": "summary"
-                },
-                "features": {
-                    "https://schema.hbp.eu/searchUi/tag_icon": "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>",
-                    "https://schema.hbp.eu/graphQuery/label": "Features",
-                    "https://schema.hbp.eu/searchUi/layout": "summary"
-                }
-            },
-            "http://schema.org/identifier": "softwarecatalog/software/softwareproject/v1.0.0/search",
-            "http://schema.org/name": "Software",
-            "https://schema.hbp.eu/graphQuery/_createdByUser": "306228",
-            "https://schema.hbp.eu/searchUi/boost": 2.5,
-            "https://schema.hbp.eu/searchUi/icon": "<svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlnsxlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"40px\" height=\"40px\" viewBox=\"0 0 40 40\" enablebackground=\"new 0 0 40 40\" xmlspace=\"preserve\"><g><line fill=\"none\" stroke=\"#4D4D4D\" strokewidth=\"4\" strokelinecap=\"round\" strokelinejoin=\"round\" strokemiterlimit=\"10\" x1=\"9.25\" y1=\"9.168\" x2=\"31.25\" y2=\"9.168\"></line><line fill=\"none\" stroke=\"#4D4D4D\" strokewidth=\"4\" strokelinecap=\"round\" strokelinejoin=\"round\" strokemiterlimit=\"10\" x1=\"9.25\" y1=\"31.168\" x2=\"31.25\" y2=\"31.168\"></line><line fill=\"none\" stroke=\"#4D4D4D\" strokewidth=\"4\" strokelinecap=\"round\" strokelinejoin=\"round\" strokemiterlimit=\"10\" x1=\"9.25\" y1=\"16.168\" x2=\"31.25\" y2=\"16.168\"></line><line fill=\"none\" stroke=\"#4D4D4D\" strokewidth=\"4\" strokelinecap=\"round\" strokelinejoin=\"round\" strokemiterlimit=\"10\" x1=\"9.25\" y1=\"24.168\" x2=\"31.25\" y2=\"24.168\"></line></g></svg>",
-            "https://schema.hbp.eu/searchUi/order": 6.0
+            "http://schema.org/name": "Project"
         }
     }
 }
