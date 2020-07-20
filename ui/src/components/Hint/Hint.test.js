@@ -22,14 +22,6 @@ import Hint from "./Hint";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-test('Hint component renders initially', () => {
-    const component = renderer.create(
-        <Hint className="test" show={true} value="some text" />
-    );
-  
-    expect(component.toJSON()).toMatchSnapshot();
-});
-
 test('Hint test show false"', () => {
     const component = renderer.create(
         <Hint className="test" show={false} value="some text" />
