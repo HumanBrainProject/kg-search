@@ -203,6 +203,30 @@ trait SoftwareProjectMetaESTemplate extends Template {
           )
         )
       )
+    ),
+    "first_release" -> ObjectReader(
+      "fields",
+      ObjectReader(
+        "search:firstReleaseAt",
+        Nested(
+          "properties",
+          WriteObject(
+            List(ESProperty("value", None))
+          )
+        )
+      )
+    ),
+    "last_release" -> ObjectReader(
+      "fields",
+      ObjectReader(
+        "search:lastReleaseAt",
+        Nested(
+          "properties",
+          WriteObject(
+            List(ESProperty("value", None))
+          )
+        )
+      )
     )
   )
 }
