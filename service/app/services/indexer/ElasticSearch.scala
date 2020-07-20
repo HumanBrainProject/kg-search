@@ -176,13 +176,15 @@ class ElasticSearchImpl @Inject()(
   }
 
   override def removeIndex(id: String, indexName: String): Task[Either[ApiError, Unit]] = {
-    Task.deferFuture(WSClient.url(s"$elasticSearchEndpoint/$indexName/$id").delete()).map { res =>
+    Task.deferFuture(WSClient.url(s"$elasticSearchEndpoint/$indexName/_doc/$id").delete()).map { res =>
       res.status match {
         case OK => {
-          logger.debug(s"Successfully removed instance $id")
+          logger.debug(s"Successfully removed instance $indexName/_doc/$id")
           Right(())
         }
-        case e  => Left(ApiError(e, res.body))
+        case e  =>
+          logger.error(s"Was not able to remove instance $indexName/_doc/$id - Error(${res.status} - ${res.body})")
+          Left(ApiError(e, res.body))
       }
     }
   }
