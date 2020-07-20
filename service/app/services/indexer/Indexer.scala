@@ -16,8 +16,9 @@
 package services.indexer
 
 import java.nio.file.Path
+import java.text.SimpleDateFormat
 import java.time.{Instant, ZoneOffset}
-import java.util.{Date, UUID}
+import java.util.{Date, TimeZone, UUID}
 
 import com.google.inject.ImplementedBy
 import javax.inject.Inject
@@ -31,6 +32,7 @@ import play.api.{Configuration, Logging}
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
+
 import scala.concurrent.duration._
 import scala.concurrent.Await
 
@@ -286,9 +288,9 @@ class IndexerImpl @Inject()(
           var loops = 0
           while (loops < maxCleanupLoops && listOfIdsToRemove.nonEmpty) {
             loops += 1
-            Thread.sleep(2000) // wait for 2 seconds
             logger.debug(s"Found ${listOfIdsToRemove.size} instances which have to be removed from the ES index")
             Await.result(removeIndex(listOfIdsToRemove, indexName, indexTime).runToFuture, 20.seconds)
+            Thread.sleep(2000) // wait for 2 seconds
             logger.debug("Removed elements which have not been updated during last run")
             val res = Await.result(elasticSearch.getNotUpdatedInstances(indexName, indexTime).runToFuture, 10.seconds)
             listOfIdsToRemove = res.toOption.getOrElse(List())
@@ -319,15 +321,12 @@ class IndexerImpl @Inject()(
                              organizations: List[String],
                              databaseScope: DatabaseScope,
                              relevantType: TemplateType,
-                             token: String
+                             token: String,
+                             nowAsISO: String
                            ): Task[Either[ApiError, Unit]] = {
     createESmapping(relevantType).flatMap {
       case Right(mappingValue) => import java.text.SimpleDateFormat
         import java.util.TimeZone
-        val tz = TimeZone.getTimeZone("UTC")
-        val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
-        df.setTimeZone(tz)
-        val nowAsISO = df.format(new Date())
         val recreateIndexTask =
           elasticSearch.recreateIndex(mappingValue, relevantType, databaseScope, completeRebuild)
         recreateIndexTask.flatMap {
@@ -358,6 +357,10 @@ class IndexerImpl @Inject()(
                     ): Task[List[Either[ApiError, Unit]]] = {
     getRelevantTypes().flatMap {
       case Right(relevantTypes) =>
+        val tz = TimeZone.getTimeZone("UTC")
+        val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+        df.setTimeZone(tz)
+        val nowAsISO = df.format(new Date())
         Task.sequence(
           relevantTypes
             .map(relType =>
@@ -366,7 +369,8 @@ class IndexerImpl @Inject()(
                 organizations,
                 databaseScope,
                 relType,
-                token
+                token,
+                nowAsISO
               )
             )
         )
@@ -381,12 +385,17 @@ class IndexerImpl @Inject()(
                             relevantType: String,
                             token: String
                           ): Task[Either[ApiError, Unit]] = {
+    val tz = TimeZone.getTimeZone("UTC")
+    val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+    df.setTimeZone(tz)
+    val nowAsISO = df.format(new Date())
     indexWithType(
       completeRebuild,
       organizations,
       databaseScope,
       TemplateType(relevantType),
-      token
+      token,
+      nowAsISO
     )
   }
 
