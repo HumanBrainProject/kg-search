@@ -136,7 +136,7 @@ class ElasticSearchImpl @Inject()(
       .map { res =>
         res.status match {
           case CREATED | OK =>
-            logger.info(s"Done with the ingestion of the data for ${databaseScope.toIndexName}_${dataType.toLowerCase}/_doc/$identifier")
+//            logger.info(s"Done with the ingestion of the data for ${databaseScope.toIndexName}_${dataType.toLowerCase}/_doc/$identifier")
             Right(())
           case e            => Left(ApiError(e, res.body))
         }
@@ -167,6 +167,7 @@ class ElasticSearchImpl @Inject()(
             val id = (el \ "_id").as[String]
             s"$t/$id"
           }
+          logger.info(s"Not updated instances are: ${listOfIds}")
           Right(listOfIds)
         case s => Left(ApiError(s, res.body))
       }
