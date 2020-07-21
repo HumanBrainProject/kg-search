@@ -20,6 +20,7 @@ import akka.util.ByteString
 import com.google.inject.Inject
 import helpers.ESHelper
 import play.api.Logger
+import play.api.libs.json.JsValue
 import play.api.libs.ws.{WSClient, WSRequest}
 import play.api.mvc.{AnyContent, BodyParser, RawBuffer, Request}
 
@@ -33,7 +34,7 @@ class ProxyService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
     proxyUrl: String,
     es_host: String,
     method: String,
-    transformInputFunc: ByteString => ByteString = identity
+    transformInputFunc: JsValue => JsValue = identity
   )(implicit request: Request[AnyContent], executionContext: ExecutionContext): WSRequest = {
     val newUrl =  s"$es_host/$esIndex/$proxyUrl"
     logger.debug(s"Modified URL: $newUrl")
@@ -41,7 +42,7 @@ class ProxyService @Inject()(wSClient: WSClient)(implicit executionContext: Exec
     // depending on whether we have a body, append it in our request
     request.body.asJson match {
         case Some(json) =>
-          wsRequestBase.withBody(json)
+          wsRequestBase.withBody(transformInputFunc(json))
         case None        => wsRequestBase
       }
   }
