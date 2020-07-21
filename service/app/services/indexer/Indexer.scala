@@ -307,9 +307,9 @@ class IndexerImpl @Inject()(
           var loops = 0
           while (loops < maxCleanupLoops && listOfIdsToRemove.nonEmpty) {
             loops += 1
-            Thread.sleep(2000) // wait for 2 seconds
             logger.debug(s"Found ${listOfIdsToRemove.size} instances which have to be removed from the ES index")
             Await.result(removeIndex(listOfIdsToRemove, indexName, indexTime).runToFuture, 20.seconds)
+            Thread.sleep(2000) // wait for 2 seconds
             logger.debug("Removed elements which have not been updated during last run")
             val res = Await.result(elasticSearch.getNotUpdatedInstances(indexName, indexTime).runToFuture, 10.seconds)
             listOfIdsToRemove = res.toOption.getOrElse(List())
@@ -340,15 +340,12 @@ class IndexerImpl @Inject()(
                              organizations: List[String],
                              databaseScope: DatabaseScope,
                              relevantType: TemplateType,
-                             token: String
+                             token: String,
+                             nowAsISO: String
                            ): Task[Either[ApiError, Unit]] = {
     createESmapping(relevantType).flatMap {
       case Right(mappingValue) => import java.text.SimpleDateFormat
         import java.util.TimeZone
-        val tz = TimeZone.getTimeZone("UTC")
-        val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
-        df.setTimeZone(tz)
-        val nowAsISO = df.format(new Date())
         val recreateIndexTask =
           elasticSearch.recreateIndex(mappingValue, relevantType, databaseScope, completeRebuild)
         recreateIndexTask.flatMap {
