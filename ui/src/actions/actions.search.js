@@ -14,7 +14,6 @@
  *   limitations under the License.
  */
 
-import { setGroup } from "./actions.groups";
 import * as types from "./actions.types";
 import API from "../services/API";
 import ReactPiwik from "react-piwik";
@@ -130,13 +129,9 @@ export const search = () => {
     ReactPiwik.push(["setCustomUrl", window.location.href]);
     ReactPiwik.push(["trackPageView"]);
     API.axios
-      .post(API.endpoints.search(), payload)
-      //.get(API.endpoints.search(), payload)
+      .post(API.endpoints.search(state.groups.group), payload)
+      //.get(API.endpoints.search(state.groups.group), payload)
       .then(response => {
-        const index = response.headers["x-selected-index"];
-        if (index) {
-          dispatch(setGroup(index));
-        }
         dispatch(loadSearchResult(response.data));
       })
       .catch(e => {
@@ -165,10 +160,6 @@ export const search = () => {
         case 404:
         default:
         {
-          const index = response.headers["x-selected-index"];
-          if (index) {
-            dispatch(setGroup(index));
-          }
           const error = `Your search query is not well formed. Please refine your request (${status})`;
           dispatch(loadSearchServiceFailure(error));
         }

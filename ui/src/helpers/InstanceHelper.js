@@ -28,12 +28,12 @@ export const getTags = header => {
 };
 
 export const getTitle = (data, type, id) => {
-  if (data && data._type && data._id) {
-    if (data._source && data._source.title && data._source.title.value) {
-      return data._source.title.value;
+  if (data && data._id) {
+    if (data._source?.title?.value) {
+      return `${data._source.title.value}`;
     }
-    if (data._type && data._id) {
-      return `${data._type} ${data._id}`;
+    if (data._source?.type?.value ) {
+      return `${data._soure.type.value} ${data._id}`;
     }
   }
   if (!type || !id) {
@@ -161,28 +161,28 @@ export const mapStateToProps = (state, props) => {
 
   const { data } = props;
 
-  const indexReg = /^kg_(.*)$/;
-  const source = data && !(data.found === false) && data._type && data._source;
-  const mapping = (source && state.definition && state.definition.typeMappings && state.definition.typeMappings[data._type])?state.definition.typeMappings[data._type]:{};
-  const group = (data && indexReg.test(data._index)) ? data._index.match(indexReg)[1] : state.groups.group;
+  const source = data && data._source;
+  const type = source?.type?.value;
+  const mapping = (source && state.definition?.typeMappings && state.definition.typeMappings[type])??{};
+  const group = state.groups.group;
 
   return {
     id: data && data._id,
-    type: data && data._type,
+    type: type,
     group: group,
     hasNoData: !source,
     hasUnknownData: !mapping,
     header: {
       group: (group !== state.groups.defaultGroup)?group:null,
       groupLabel: (group !== state.groups.defaultGroup)?getGroupLabel(state.groups.groups, group):null,
-      type: getField(group, data && data._type, "type"),
-      title: getField(group, data && data._type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"]),
-      fields: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "header" && name !== "title"),
+      type: getField(group, type, "type"),
+      title: getField(group, type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"]),
+      fields: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout === "header" && name !== "title"),
     },
     previews: getPreviews(source, { children: mapping.fields }),
-    buttons: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.isButton),
-    main: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout !== "header" && name !== "title" && !mapping.isButton),
-    summary: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "summary" && name !== "title" && !mapping.isButton),
-    groups: getFields(group, data && data._type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title" && !mapping.isButton)
+    buttons: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.isButton),
+    main: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout !== "header" && name !== "title" && !mapping.isButton),
+    summary: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout === "summary" && name !== "title" && !mapping.isButton),
+    groups: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title" && !mapping.isButton)
   };
 };

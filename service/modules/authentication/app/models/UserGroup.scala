@@ -17,13 +17,14 @@ package models
 
 import play.api.libs.json.{JsValue, Json}
 
-final case class UserGroup(name: String, displaySpec: Option[Map[String, JsValue]])
+final case class UserGroup(name: String, label: String, displaySpec: Option[Map[String, JsValue]])
 
 object UserGroup {
   import play.api.libs.json._
   import play.api.libs.functional.syntax._
   implicit val userGroupWrites: Writes[UserGroup] = (
     (JsPath \ "name").write[String] and
+      (JsPath \ "label").write[String] and
     (JsPath \ "spec").writeNullable[Map[String, JsValue]]
   )(unlift(UserGroup.unapply))
 

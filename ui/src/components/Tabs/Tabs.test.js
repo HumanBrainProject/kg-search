@@ -22,14 +22,6 @@ import Tabs from "./Tabs";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-test('Tabs component renders initially', () => {
-    const component = renderer.create(
-        <Tabs className="className" tabs={[{id: "an id", title: "a label", counter: 11, hint: {show: true, value: "a hint"}},{id: "another id", title: "another label", counter: 32, hint: {show: true, value: "another hint"}}]}  viewComponent={() => null} />
-    );
-  
-    expect(component.toJSON()).toMatchSnapshot();
-});
-
 test('Tabs test className"', () => {
     const component = shallow(
         <Tabs className="className" tabs={[{id: "an id", title: "a label", counter: 11, hint: {show: true, value: "a hint"}},{id: "another id", title: "another label", counter: 32, hint: {show: true, value: "another hint"}}]}  viewComponent={() => null} />

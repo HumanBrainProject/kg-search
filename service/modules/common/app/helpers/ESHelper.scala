@@ -20,8 +20,14 @@ import models.user.Group
 
 object ESHelper {
 
-  val publicIndex: String = "publicly_released"
-  val curatedIndex: String = "in_progress"
+  val publicIndexPrefix: String = "publicly_released"
+  val publicGroupName: String = "public"
+  val publicGroupLabel: String = "publicly released"
+
+  val curatedIndexPrefix: String = "in_progress"
+  val curatedGroupName: String = "curated"
+  val curatedGroupLabel: String = "in progress"
+
   val indicesPath: String = "_cat/indices"
 
   def filterNexusGroups(groups: Seq[Group], formatName: String => String = ESHelper.formatGroupName): Seq[String] = {
@@ -34,6 +40,14 @@ object ESHelper {
 
   def replaceESIndex(esIndex: String, proxyUrl: String): String = {
     s"$esIndex/$proxyUrl"
+  }
+
+  def getGroupLabel(name: String): String = {
+    name match {
+      case n if n.equals(publicGroupName) => publicGroupLabel
+      case n if n.equals(curatedGroupName) => curatedGroupLabel
+      case _ => name
+    }
   }
 
 }

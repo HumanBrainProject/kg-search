@@ -215,16 +215,16 @@ class IDMAPIService @Inject()(
             .filter(
               group =>
                 esIndices.exists {
-                  case (_, Some(grpName)) => group == grpName
-                  case (index, _)         => group == index
+                  case (_, Some(grpName), Some(_)) => group == grpName
+                  case (index, _, _)               => index.startsWith(s"${group}_")
               }
             )
           log.debug(esIndices + "\n " + nexusGroups)
           resultingGroups.toList.map { groupName =>
             if (MindsGroupSpec.group.contains(groupName)) {
-              UserGroup(groupName, Some(MindsGroupSpec.v))
+              UserGroup(groupName, ESHelper.getGroupLabel(groupName), Some(MindsGroupSpec.v))
             } else {
-              UserGroup(groupName, None)
+              UserGroup(groupName, ESHelper.getGroupLabel(groupName), None)
             }
           }
         }

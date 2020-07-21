@@ -14,18 +14,18 @@
 *   limitations under the License.
 */
 
-.kgs-list {
+.kgs-chevron-list {
     position: relative;
     margin: 0 -20px;
 }
 
 @media (min-width: 576px) {
-    .kgs-list {
+    .kgs-chevron-list {
         margin: 0;
     }
 }
 
-.kgs-list > ul {
+.kgs-chevron-list > ul {
     list-style-type: none;
     display: block;
     -ms-flex-flow: unset;
@@ -34,7 +34,7 @@
     padding: 0;
 }
 
-.kgs-list > div {
+.kgs-chevron-list > div {
     border-top: 1px solid var(--color-27);
     width: 100%;
     margin-top: 40px;
@@ -45,12 +45,12 @@
 }
 
 @media (min-width: 576px) {
-    .kgs-list > div {
+    .kgs-chevron-list > div {
         padding: 10px 0;
     }
 }
 
-.kgs-list > ul > li {
+.kgs-chevron-list > ul > li {
     position: relative;
     display: inline-block;
     width: 100%;
@@ -59,7 +59,7 @@
     border-bottom: 1px solid var(--border-color-8);
 }
 
-.kgs-list > ul > li>button {
+.kgs-chevron-list > ul > li>button {
     display: inline-block;
     width: 100%;
     height: 100%;
@@ -70,37 +70,37 @@
     overflow: hidden;
 }
 
-.kgs-list > ul > li>button .kgs-list__chevron {
+.kgs-chevron-list > ul > li>button .kgs-chevron-list__chevron {
     position: absolute;
     top: calc(50% - 9px);
     right: 15px;
     color: var(--color-19);
 }
 
-.kgs-list > ul > li>button:hover .kgs-list__chevron {
+.kgs-chevron-list > ul > li>button:hover .kgs-chevron-list__chevron {
     color: var(--color-20);
 }
 
 @media (min-width: 576px) {
-    .kgs-list > ul > li {
+    .kgs-chevron-list > ul > li {
         margin: 10px 0 10px 0;
         border-bottom-width: 0;
         box-shadow: 2px 2px 4px var(--box-shadow-3);
         transition: box-shadow 0.2s ease-in;
     }
 
-    .kgs-list > ul > li:hover {
+    .kgs-chevron-list > ul > li:hover {
         box-shadow: 3px 3px 6px var(--box-shadow-2);
     }
 }
 
 @media (min-width: 1450px) {
-    .kgs-list > ul {
+    .kgs-chevron-list > ul {
         margin: 0 0 25px 0;
         padding: 0;
     }
 
-    .kgs-list > ul > li {
+    .kgs-chevron-list > ul > li {
         width: 100%;
         margin: 0 0 30px 0;
     }

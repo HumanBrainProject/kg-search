@@ -53,17 +53,9 @@ const loadGroupsRequest = state => {
 
 const loadGroupsSuccess = (state, action) => {
 
-  const getGroupLabel = name => {
-    if (name === "public") {
-      return "publicly released";
-    }
-    if (name === "curated") {
-      return "in progress";
-    }
-    return name;
-  };
-  const groups = Array.isArray(action.groups) ? [...action.groups.map(e => ({ label: getGroupLabel(e.name), value: e.name }))] : [];
+  const groups = Array.isArray(action.groups) ? [...action.groups.map(e => ({ label: e.label, value: e.name }))] : [];
   const group = (state.initialGroup && groups.some(g => g.value === state.initialGroup)) ? state.initialGroup : state.defaultGroup;
+
   return {
     ...state,
     isReady: true,
@@ -97,21 +89,21 @@ const clearGroupsError = state => {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
-    case types.SET_INITIAL_GROUP:
-      return setInitialGroup(state, action);
-    case types.SET_GROUP:
-      return setGroup(state, action);
-    case types.LOAD_GROUPS_REQUEST:
-      return loadGroupsRequest(state, action);
-    case types.LOAD_GROUPS_SUCCESS:
-      return loadGroupsSuccess(state, action);
-    case types.LOAD_GROUPS_FAILURE:
-      return loadGroupsFailure(state, action);
-    case types.LOGOUT:
-      return resetGroups(state, action);
-    case types.CLEAR_GROUPS_ERROR:
-      return clearGroupsError(state, action);
-    default:
-      return state;
+  case types.SET_INITIAL_GROUP:
+    return setInitialGroup(state, action);
+  case types.SET_GROUP:
+    return setGroup(state, action);
+  case types.LOAD_GROUPS_REQUEST:
+    return loadGroupsRequest(state, action);
+  case types.LOAD_GROUPS_SUCCESS:
+    return loadGroupsSuccess(state, action);
+  case types.LOAD_GROUPS_FAILURE:
+    return loadGroupsFailure(state, action);
+  case types.LOGOUT:
+    return resetGroups(state, action);
+  case types.CLEAR_GROUPS_ERROR:
+    return clearGroupsError(state, action);
+  default:
+    return state;
   }
 }

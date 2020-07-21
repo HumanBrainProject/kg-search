@@ -18,7 +18,7 @@ import * as types from "../actions/actions.types";
 import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
 
 const initialState = {
-  queryFields: ["title", "description"],
+  queryFieldsByType: null,
   error: null,
   message: "",
   initialParams: {},
@@ -43,12 +43,11 @@ const initialState = {
 
 const setupSearch = (state, action) => {
   const definition = action.definition;
-
   if (!definition) {
     return state;
   } else {
 
-    const queryValuesBoost = ElasticSearchHelpers.getQueryValuesBoost(definition);
+    const queryFieldsByType = ElasticSearchHelpers.getQueryFieldsByType(definition);
     const sortFields = ElasticSearchHelpers.getSortFields(definition);
     const facetTypesOrder = ElasticSearchHelpers.getFacetTypesOrder(definition);
     const defaultType = ElasticSearchHelpers.getDefaultSelectedType(definition, facetTypesOrder);
@@ -102,7 +101,7 @@ const setupSearch = (state, action) => {
     return {
       ...state,
       queryString:  queryString,
-      queryFields: queryValuesBoost,
+      queryFieldsByType: queryFieldsByType,
       facets: facets,
       types: types,
       sort: sort,
@@ -354,8 +353,8 @@ const loadSearchResult = (state, action) => {
 
   const getUpdatedTypes = (types, selectedType, group, groupsSettings, defaultOrder, results) => {
 
-    const buckets = (results && results.aggregations && results.aggregations.facet_type && results.aggregations.facet_type._type && Array.isArray(results.aggregations.facet_type._type.buckets)) ?
-      results.aggregations.facet_type._type.buckets : [];
+    const buckets = Array.isArray(results?.aggregations?.facet_type?.["type.value"]?.buckets)?
+      results.aggregations.facet_type["type.value"].buckets : [];
 
     const counts = buckets.reduce((acc, current) => {
       const count = Number(current.doc_count);
@@ -387,7 +386,7 @@ const loadSearchResult = (state, action) => {
       });
   };
 
-  const total = (action.results && action.results.hits && action.results.hits.total) ?(isNaN(Number(action.results.hits.total))?0:Number(action.results.hits.total)): 0;
+  const total = isNaN(Number(action.results?.hits?.total?.value))?0:Number(action.results.hits.total.value);
 
   return {
     ...state,
@@ -396,7 +395,7 @@ const loadSearchResult = (state, action) => {
     isLoading: false,
     facets: getUpdatedFacets(state.facets, action.results),
     types: getUpdatedTypes(state.types, state.selectedType, state.group, state.groupsSettings, state.facetTypesOrder, action.results),
-    hits: (action.results && action.results.hits && Array.isArray(action.results.hits.hits)) ? action.results.hits.hits : [],
+    hits: Array.isArray(action.results?.hits?.hits) ? action.results.hits.hits : [],
     total: total,
     totalPages: Math.ceil(total / state.hitsPerPage)
   };

@@ -17,12 +17,13 @@ package models.templates.elasticSearch
 
 import models.templates.Template
 import models.templates.entities.{ESFields, ESKeyword}
-import play.api.libs.json.JsString
+import play.api.libs.json.{JsString, Json}
 import utils._
 
 trait SoftwareProjectMetaESTemplate extends Template {
 
   val template: Map[String, TemplateComponent] = Map(
+    "type" -> Set("properties", Json.obj("value" -> Json.obj("type" -> "keyword"))),
     "identifier" -> ObjectReader(
       "fields",
       ObjectReader(
@@ -199,6 +200,30 @@ trait SoftwareProjectMetaESTemplate extends Template {
                 List(ESProperty("value"))
               )
             )
+          )
+        )
+      )
+    ),
+    "first_release" -> ObjectReader(
+      "fields",
+      ObjectReader(
+        "search:firstReleaseAt",
+        Nested(
+          "properties",
+          WriteObject(
+            List(ESProperty("value", None))
+          )
+        )
+      )
+    ),
+    "last_release" -> ObjectReader(
+      "fields",
+      ObjectReader(
+        "search:lastReleaseAt",
+        Nested(
+          "properties",
+          WriteObject(
+            List(ESProperty("value", None))
           )
         )
       )

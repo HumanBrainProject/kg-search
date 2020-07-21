@@ -27,13 +27,16 @@ import scala.concurrent.ExecutionContext
 
 class ESService @Inject()(wSClient: WSClient, configuration: ConfigurationService)(implicit ec: ExecutionContext) {
 
-  def getEsIndices(): Task[List[(String, Option[String])]] = {
+  def getEsIndices(): Task[List[(String, Option[String], Option[String])]] = {
     Task.deferFuture(wSClient.url(s"${configuration.esHost}/${ESHelper.indicesPath}?format=json").get()).map { res =>
       val j = res.json
       j.as[List[JsValue]].map(json => (json \ "index").as[String]).map {
-        case index @ "publicly_released" => (index, Some("public"))
-        case index @ "in_progress"       => (index, Some("curated"))
-        case s                           => (s, None)
+        case index if index.startsWith(s"${ESHelper.publicIndexPrefix}_") =>
+          (index, Some(ESHelper.publicGroupName), Some(index.substring(ESHelper.publicIndexPrefix.length + 1)))
+        case index if index.startsWith(s"${ESHelper.curatedIndexPrefix}_") =>
+          (index, Some(ESHelper.curatedGroupName), Some(index.substring(ESHelper.curatedIndexPrefix.length + 1)))
+        case s =>
+          (s, None, None)
       }
     }
   }
@@ -45,7 +48,7 @@ class ESService @Inject()(wSClient: WSClient, configuration: ConfigurationServic
     * @return a json representation of the instance
     */
   def getDataById(dataType: String, id: String): Task[Either[WSResponse, JsValue]] = {
-    Task.deferFuture(wSClient.url(s"${configuration.esHost}/publicly_released/$dataType/$id?format=json").get()).map {
+    Task.deferFuture(wSClient.url(s"${configuration.esHost}/${ESHelper.publicIndexPrefix}_${dataType.toLowerCase}/$id?format=json").get()).map {
       res =>
         res.status match {
           case OK => Right(res.json)

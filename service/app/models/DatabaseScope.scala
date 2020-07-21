@@ -50,11 +50,11 @@ object DatabaseScope {
 case object INFERRED extends DatabaseScope {
   override def toString: String = "INFERRED"
 
-  override def toIndexName: String = ESHelper.curatedIndex
+  override def toIndexName: String = ESHelper.curatedIndexPrefix
 }
 
 case object RELEASED extends DatabaseScope {
   override def toString: String = "RELEASED"
 
-  override def toIndexName: String = ESHelper.publicIndex
+  override def toIndexName: String = ESHelper.publicIndexPrefix
 }

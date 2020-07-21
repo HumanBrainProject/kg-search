@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`List component renders initially 1`] = `
+exports[`ChevronList component renders initially 1`] = `
 <div
-  className="kgs-list className"
+  className="kgs-chevron-list className"
 >
   <div>
     a title
@@ -15,7 +15,7 @@ exports[`List component renders initially 1`] = `
         role="link"
       >
         <span
-          className="kgs-list__chevron"
+          className="kgs-chevron-list__chevron"
         >
           <i
             className="fa fa-chevron-right"
@@ -30,7 +30,7 @@ exports[`List component renders initially 1`] = `
         role="link"
       >
         <span
-          className="kgs-list__chevron"
+          className="kgs-chevron-list__chevron"
         >
           <i
             className="fa fa-chevron-right"

@@ -28,20 +28,6 @@ const queryTweaking = {
   maxNbOfTermsTrigger: 4 // maximum number of terms before tweaking is turned off
 };
 
-const defaultCustomHighlight = {
-  "fields": {
-    "title.value": {},
-    "description.value": {},
-    "contributors.value": {},
-    "owners.value": {},
-    "component.value": {},
-    "created_at.value": {},
-    "releasedate.value": {},
-    "activities.value": {}
-  },
-  "encoder": "html"
-};
-
 export class ElasticSearchHelpers {
 
   static get listFacetDefaultSize() {
@@ -361,127 +347,89 @@ export class ElasticSearchHelpers {
     return facets;
   };
 
-  static getQueryValuesBoost = definition => {
+  static getQueryFieldsByType = definition => {
 
-    const initQueryFieldsRec = (typeFields, parent) => {
-      let key = Object.keys(typeFields)[0];
-      let queryFields = {};
-      let newQueryfields = {};
-      Object.values(typeFields).forEach(el => {
-        Object.keys(el).forEach(fieldName => {
-          const field = typeFields[key][fieldName];
-          const fullFieldName = parent + fieldName;
-          let queryField = queryFields[fullFieldName];
-          if (!queryField) {
-            queryField = { boost: 1 };
-            queryFields[fullFieldName] = queryField;
+    const addQueryFields = (queryFields, fields, parentPath) => {
+      Object.entries(fields).forEach(([field, mapping]) => {
+        if (!mapping.ignoreForSearch) {
+          const path = `${parentPath}${field}`;
+          const name = `${path}.value`;
+          queryFields[name] = {
+            boost: mapping.boost??1,
+            highlight: [
+              "title.value",
+              "description.value",
+              "contributors.value",
+              "owners.value",
+              "component.value",
+              "created_at.value",
+              "releasedate.value",
+              "activities.value"
+            ].includes(name) // temporary mapping.highlight
+          };
+          if (mapping.children !== undefined) {
+            addQueryFields(queryFields, mapping.children, path + ".children.");
           }
-
-          if (field && field.boost && field.boost > queryField.boost) {
-            queryField.boost = field.boost;
-          }
-
-          newQueryfields[key] = queryFields;
-
-          if (field["children"] !== undefined) {
-            let children = initQueryFieldsChildren(field["children"], fullFieldName + ".children.");
-            newQueryfields[key] = Object.assign(queryFields, children);
-          }
-        });
-      });
-      return newQueryfields;
-    };
-
-    const initQueryFieldsChildren = (typeFields, parent) => {
-      let childrenQueryFields = {};
-      Object.keys(typeFields).forEach(fieldName => {
-        const field = typeFields[fieldName];
-        const fullFieldName = parent + fieldName;
-        let queryField = childrenQueryFields[fullFieldName];
-        if (!queryField) {
-          queryField = { boost: 1 };
-          childrenQueryFields[fullFieldName] = queryField;
-        }
-
-        if (field && field.boost && field.boost > queryField.boost) {
-          queryField.boost = field.boost;
         }
       });
-      return childrenQueryFields;
     };
 
-    const filterTypeFields = (type, typeFields) => {
-      const filteredTypeFields = {};
-      const result = {};
-      for (let [key, value] of Object.entries(typeFields)) {
-        if (value.ignoreForSearch !== true) {
-          filteredTypeFields[key] = value;
-        }
-      }
-      result[type] = filteredTypeFields;
-      return result;
-    };
-
-    const queryValuesBoost = [];
+    const queryFieldsByType = {};
     if (definition) {
-      Object.keys(definition).forEach(type => {
-        const typeFields = definition[type] && definition[type].fields;
-        const filteredTypeFields = filterTypeFields(type, typeFields);
-        const initFields = initQueryFieldsRec(filteredTypeFields, "");
-        queryValuesBoost.push(initFields);
+      Object.entries(definition).forEach(([type, typeMapping]) => {
+        const queryFields = {};
+        addQueryFields(queryFields, typeMapping.fields, "");
+        queryFieldsByType[type] = queryFields;
       });
     }
+    return queryFieldsByType;
+  }
 
-    queryValuesBoost.forEach(field => {
-      let key = Object.keys(field)[0];
-      Object.values(field).forEach(fieldObj => {
-        const lastRes = [];
-        Object.keys(fieldObj).forEach(f => {
-          const boost = fieldObj[f].boost;
-          if (boost) {
-            lastRes.push(f + ".value^" + boost);
-          } else {
-            lastRes.push(f + ".value");
-          }
-        });
-        field[key] = lastRes;
-      });
-      return field;
+  static getQueryFields = (queryFieldsByType, selectedType) => {
+    if (!queryFieldsByType) {
+      return [];
+    }
+    let queryFields = {};
+    Object.entries(queryFieldsByType).forEach(([type, fields]) => {
+      if (type !== selectedType) {
+        Object.assign(queryFields, fields);
+      }
     });
-    return queryValuesBoost;
+    // selected type fields override others
+    if (selectedType && queryFieldsByType[selectedType]) {
+      Object.assign(queryFields, queryFieldsByType[selectedType]);
+    }
+    return Object.entries(queryFields).map(([name, field]) => `${name}^${field.boost}`).sort();
   };
 
-  static getBoostedTypes = definition => {
-    return Object.entries(definition).map(([type, typeDefinition]) => ({
-      name: type,
-      boost: typeDefinition.boost
-    }));
-  };
+  static getcustomHighlightFields = (queryFieldsByType, selectedType) => {
+    if (selectedType && queryFieldsByType[selectedType]) {
+      const highlightFields = Object.entries(queryFieldsByType[selectedType]).reduce((acc, [name, field]) => {
+        if (field.highlight) {
+          acc[name] = {}; // field
+        }
+        return acc;
+      }, {});
+      return Object.keys(highlightFields).length?highlightFields:null;
+    }
+    return null;
+  }
 
   static buildRequest(searchState) {
 
     const queryString = searchState.queryString;
-    const queryFields = searchState.queryFields;
     const selectedType = searchState.selectedType;
+    const queryFields = ElasticSearchHelpers.getQueryFields(searchState.queryFieldsByType, selectedType);
     const facets = searchState.facets;
     const sort = searchState.sort;
     const from = searchState.from;
     const size = searchState.hitsPerPage;
-    const boostedTypes = []; // ElasticSearchHelpers.getBoostedTypes(state.definition);
-    const customHighlight = defaultCustomHighlight;
-    /*
-    const customHighlight = searchState.queryFields.reduce((result, field) => {
-      result[field.replace(/^(.*?)\^.*$/g,"$1")] = {};
-      return result;
-    },[]);
-    */
-
-
+    const customHighlightFields = ElasticSearchHelpers.getcustomHighlightFields(searchState.queryFieldsByType, selectedType);
 
     const typeFacet = {
       id: "facet_type",
-      name: "_type",
-      filterType: "_type",
+      name: "type.value",
+      filterType: "type",
       value: selectedType
     };
 
@@ -519,7 +467,7 @@ export class ElasticSearchHelpers {
         let filter = null;
         const facetKey = facet.isChild ?(facet.isHierarchical?`${facet.childName}.value.keyword`:`${facet.name}.children.${facet.childName}.value.keyword`):`${facet.name}.value.keyword`;
         switch (facet.filterType) {
-        case "_type":
+        case "type":
         {
           filter = {
             term: {}
@@ -583,7 +531,7 @@ export class ElasticSearchHelpers {
             return true;
           }
           return active && id !== key;
-        case "_type":
+        case "type":
         case "list":
         default:
           return active && id !== key;
@@ -675,7 +623,7 @@ export class ElasticSearchHelpers {
 
       facets.forEach(facet => {
         switch (facet.filterType) {
-        case "_type":
+        case "type":
         {
           aggs[facet.id] = {
             aggs: setAggs(facet.name, `${facet.name}_count`, null, 50)
@@ -725,62 +673,39 @@ export class ElasticSearchHelpers {
       return aggs;
     };
 
-    const getFields = (fields, type) => {
-      if (!type || !Array.isArray(fields)) {
-        return [];
-      }
-      const filtered = fields.filter(field => field && field[selectedType]);
-      if (!filtered.length) {
-        return [];
-      }
-      const first = filtered[0];
-      if (first && Array.isArray(first[type])) {
-        return first[type];
-      }
-      return [];
-    };
-
-    const fields = getFields(queryFields, selectedType);
     const query = queryString ? {
       query_string: {
-        fields: fields,
         query: ElasticSearchHelpers.sanitizeString(queryString),
-        lenient: true
+        lenient: true,
+        analyze_wildcard: true
       }
     } : null;
+    if (query && query.query_string && queryFields.length) {
+      query.query_string.fields = queryFields;
+    }
 
-    const allFilters = getAllFilters(queryFacets, selectedType);
+    const allFilters = getAllFilters(queryFacets);
 
     const payload = {
-      aggs: getAggs(queryFacets, allFilters),
+      aggs: getAggs(queryFacets.filter(facet => facet.type === selectedType || facet.filterType === "type"), allFilters),
       from: from,
-      highlight: customHighlight,
       post_filter: setFilters(allFilters),
       size: size
     };
+
+    if (customHighlightFields) {
+      payload.highlight = {
+        fields: customHighlightFields,
+        encoder: "html"
+      };
+    }
 
     if (sort && Array.isArray(sort.fields)) {
       payload.sort = sort.fields;
     }
 
     if (query) {
-      if (boostedTypes.length) {
-        const boostedTypesTerms = boostedTypes.map(type => ({
-          term: {
-            _type: {
-              value: type.name,
-              boost: type.boost
-            }
-          }
-        }));
-        payload.query = {
-          bool: {
-            should: [query, ...boostedTypesTerms]
-          }
-        };
-      } else {
-        payload.query = query;
-      }
+      payload.query = query;
     }
     return payload;
   }

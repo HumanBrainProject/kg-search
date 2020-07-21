@@ -20,6 +20,7 @@ import akka.util.ByteString
 import com.google.inject.Inject
 import helpers.ESHelper
 import play.api.Logger
+import play.api.libs.json.JsValue
 import play.api.libs.ws.{WSClient, WSRequest}
 import play.api.mvc.{AnyContent, BodyParser, RawBuffer, Request}
 
@@ -27,38 +28,29 @@ import scala.concurrent.ExecutionContext
 
 class ProxyService @Inject()(wSClient: WSClient)(implicit executionContext: ExecutionContext) {
   val logger: Logger = Logger(this.getClass)
-  private def getSelectedIndex(str: String): String = str match {
-    case "publicly_released" => "public"
-    case "in_progress"       => "curated"
-    case s                   => s
-  }
 
   def queryIndex(
     esIndex: String,
     proxyUrl: String,
     es_host: String,
-    transformInputFunc: ByteString => ByteString = identity
-  )(implicit request: Request[AnyContent], executionContext: ExecutionContext): (WSRequest, Map[String, String]) = {
-    val newUrl = es_host + "/" + ESHelper.replaceESIndex(esIndex, proxyUrl)
+    method: String,
+    transformInputFunc: JsValue => JsValue = identity
+  )(implicit request: Request[AnyContent], executionContext: ExecutionContext): WSRequest = {
+    val newUrl =  s"$es_host/$esIndex/$proxyUrl"
     logger.debug(s"Modified URL: $newUrl")
-    val wsRequestBase: WSRequest = modifyQuery(newUrl, esIndex)
+    val wsRequestBase: WSRequest = modifyQuery(method, newUrl)
     // depending on whether we have a body, append it in our request
-    val byteString = for {
-      raw <- request.body.asJson
-    } yield ByteString(raw.toString())
-
-    val wsRequest: WSRequest = byteString match {
-      case Some(bytes) => wsRequestBase.withBody(transformInputFunc(bytes))
-      case None        => wsRequestBase
-    }
-    (wsRequest, Map("X-Selected-Index" -> getSelectedIndex(esIndex)))
+    request.body.asJson match {
+        case Some(json) =>
+          wsRequestBase.withBody(transformInputFunc(json))
+        case None        => wsRequestBase
+      }
   }
 
-  def modifyQuery(newUrl: String, indexHint: String)(implicit request: Request[AnyContent]): WSRequest = {
+  def modifyQuery(method: String, newUrl: String)(implicit request: Request[AnyContent]): WSRequest = {
     wSClient
       .url(newUrl) // set the proxy path
-      .withMethod(request.method) // set our HTTP  method
-      .addHttpHeaders("index-hint" -> indexHint) // Set our headers, function takes var args so we need to "explode" the Seq to var args
+      .withMethod(method) // set our HTTP  method
       .addQueryStringParameters(request.queryString.mapValues(_.head).toSeq: _*) // similarly for query strings
   }
 

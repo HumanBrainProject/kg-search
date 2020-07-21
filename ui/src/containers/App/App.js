@@ -24,7 +24,6 @@ import * as actions from "../../actions/actions";
 // import { Notification } from "../Notification/Notification";
 import { Search } from "../Search/Search";
 import { Instance } from "../Instance/Instance";
-import { InstanceEditor } from "../Instance/InstanceEditor";
 import { NotFound } from "../../components/NotFound/NotFound";
 import { Preview } from "../Instance/Preview";
 import { FetchingPanel } from "../Fetching/FetchingPanel";
@@ -56,7 +55,6 @@ class App extends React.Component {
           <Switch>
             <Route path="/instances/:type/:id" exact component={Instance} />
             <Route path="/live/:org/:domain/:schema/:version/:id" exact component={Preview} />
-            <Route path="/instances/:org/:domain/:schema/:version/:id" exact component={InstanceEditor} />
             <Route path="/" exact component={Search} />
             <Route component={NotFound} />
           </Switch>

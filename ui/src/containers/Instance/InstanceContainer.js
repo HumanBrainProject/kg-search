@@ -87,7 +87,7 @@ export class InstanceContainer extends React.Component {
 
   setTitle() {
     const { type, id, currentInstance } = this.props;
-    document.title = getTitle(currentInstance, type, id);
+    document.title = `EBRAINS - ${getTitle(currentInstance, type, id)}`;
   }
 
   updateLocation = (previousProps) => {
@@ -106,7 +106,7 @@ export class InstanceContainer extends React.Component {
       definitionIsReady, definitionHasError, definitionIsLoading,
       isGroupsReady, isGroupLoading, shouldLoadGroups, groupsHasError,
       instanceIsLoading, type, id, group, previousInstance, setPreviousInstance,
-      loadDefinition, loadGroups, fetch, index
+      loadDefinition, loadGroups, fetch
     } = this.props;
 
     if (!definitionIsReady) {
@@ -120,20 +120,19 @@ export class InstanceContainer extends React.Component {
     } else {
       if(!instanceIsLoading) {
         if (previousInstance &&
-              previousInstance._type === type &&
-              previousInstance._id === id &&
-              previousInstance._index === index &&
-              previousGroup === group) {
+            previousInstance._source?.type?.value === type &&
+            previousInstance._id === id &&
+            previousGroup === group) {
           setPreviousInstance();
         } else {
-          fetch(type, id, group);
+          fetch(group, type, id);
         }
       }
     }
   }
 
   render() {
-    const { showInstance, instanceProps, watermark } = this.props;
+    const { showInstance, showGroupSelection, instanceProps, watermark } = this.props;
     const NavigationComponent = getNavigation(instanceProps && instanceProps.header);
     return (
       <React.Fragment>
@@ -149,12 +148,18 @@ export class InstanceContainer extends React.Component {
               <p>{watermark}</p>
             </div>
           )}
-          <div className="kgs-footer">
-            <div className="kgs-footer-nav">
-              <SignInButton className="kgs-sign-in" signInLabel="Log in" signOffLabel="Log out"/>
-              <GroupSelection className="kgs-group-selection"/>
+          {showInstance && (
+            <div className="kgs-footer">
+              <div className="kgs-footer-nav">
+                {showGroupSelection && (
+                  <>
+                    <SignInButton className="kgs-sign-in" signInLabel="Log in" signOffLabel="Log out"/>
+                    <GroupSelection className="kgs-group-selection"/>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <DefinitionErrorPanel />
         <GroupErrorPanel />

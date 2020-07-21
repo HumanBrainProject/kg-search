@@ -160,14 +160,15 @@ class IndexerController @Inject()(
           indexer
             .queryByTypeAndId(templateType, id, databaseScope, token, true)
             .map {
-              case Right(v) => Ok(
+              case Right(v) =>
+                val jsonWithType = v.as[JsObject] ++ Json.obj("type"-> Json.obj("value" -> templateType.apiName))
+                Ok(
                 Json.obj(
                   "found" -> true,
                   "_id" -> "dynamic",
                   "_index" -> "dynamic",
-                  "_type" -> templateType.apiName,
                   "version" -> 0,
-                  "_source" -> v)
+                  "_source" -> jsonWithType.as[JsValue])
               )
               case Left(error) =>
                 error.toResults()
@@ -191,6 +192,11 @@ class IndexerController @Inject()(
             error.toResults()
         }
         .runToFuture(s)
+    }
+
+  def clearCache(): Action[AnyContent] =
+    Action.async { implicit request =>
+      indexer.clearCache().map(_=>Ok("Cache cleared")).runToFuture
     }
 
   def getLabelsByType(templateType: TemplateType): Action[AnyContent] =

@@ -206,7 +206,9 @@ trait ModelInstanceTemplate extends Template with FileProxy {
           PrimitiveToObjectWithValueField[String]("name")
         )
       )
-    )
+    ),
+    "first_release" -> PrimitiveToObjectWithValueField[String]("firstReleaseAt"),
+    "last_release" -> PrimitiveToObjectWithValueField[String]("lastReleaseAt")
   )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {

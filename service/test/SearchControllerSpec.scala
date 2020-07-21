@@ -21,7 +21,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test._
 
-class SearchProxySpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
+class SearchControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
   val userinfoEndpoint: String = "http://www.userinfo.com"
 
   override def fakeApplication() =

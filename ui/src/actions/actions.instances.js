@@ -16,7 +16,7 @@
 
 import * as types from "./actions.types";
 import API from "../services/API";
-import { setGroup, clearGroupError } from "./actions.groups";
+import { clearGroupError } from "./actions.groups";
 import { sessionFailure, logout } from "./actions";
 import { history, store } from "../store";
 import { getSearchKey } from "../helpers/BrowserHelpers";
@@ -91,8 +91,8 @@ export const goBackToInstance = (type, id) => {
 
 export const updateLocation = () => {
   const state = store.getState();
-  const type = state.instances.currentInstance && state.instances.currentInstance._type;
-  const id = state.instances.currentInstance && state.instances.currentInstance._id;
+  const type = state.instances.currentInstance?._source?.type?.value;
+  const id = state.instances.currentInstance?._id;
   if(type && id) {
     history.push(`/${window.location.search}#${type}/${id}`);
   } else {
@@ -115,11 +115,11 @@ export const goToSearch = (group, defaultGroup) => {
   };
 };
 
-export const loadInstance = (type, id, shouldUpdateLocation=false) => {
+export const loadInstance = (group, type, id, shouldUpdateLocation=false) => {
   return dispatch => {
     dispatch(loadInstanceRequest());
     API.axios
-      .get(API.endpoints.instance(type, id))
+      .get(API.endpoints.instance(group, type, id))
       .then(response => {
         dispatch(loadInstanceSuccess(response.data));
         if(shouldUpdateLocation) {
@@ -151,10 +151,6 @@ export const loadInstance = (type, id, shouldUpdateLocation=false) => {
         }
         case 404:
         {
-          const index = response.headers["x-selected-index"];
-          if (index) {
-            dispatch(setGroup(index));
-          }
           const url = `${window.location.protocol}//${window.location.host}${window.location.pathname}?group=curated`;
           const link = `<a href=${url}>${url}</a>`;
           const group = getSearchKey("group");
@@ -165,10 +161,6 @@ export const loadInstance = (type, id, shouldUpdateLocation=false) => {
         }
         default:
         {
-          const index = response.headers["x-selected-index"];
-          if (index) {
-            dispatch(setGroup(index));
-          }
           const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
           dispatch(loadInstanceFailure(error));
         }

@@ -66,7 +66,6 @@ class FacetListItem extends React.PureComponent {
         checked = { item.checked }
         count = { item.count }
         value = { item.value }
-        many = { true }
         onClick = { this.onClick }
         onKeyDown = { this.props.onKeyDown }
         hidden  = { this.props.hidden }
@@ -295,7 +294,6 @@ class HierarchicalFacetListItem extends React.Component {
             checked = { item.checked }
             count = { item.count }
             value = { item.value }
-            many = { true }
             onClick = { this.onClick }
           />
         </div>
@@ -416,7 +414,6 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
       count: facet.count,
       value: !!facet.value,
       checked: !!facet.value,
-      many: false,
       onClick: active => onChange(facet.id, active)
     };
     break;
