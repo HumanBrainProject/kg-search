@@ -269,22 +269,26 @@ class IndexerImpl @Inject()(
     queryByType(relevantType, databaseScope, PaginationParams(None, None), organizations, token).flatMap {
       case Right(value) =>
         val valueArr = value.as[List[JsObject]]
-        logger.info(s"$relevantType - Indexing started")
-        val indexedList: List[Task[Either[ApiError, Unit]]] = for {
-          el <- valueArr
-        } yield {
-          indexJson(
-            relevantType.apiName,
-            el,
-            extractIdentifier(el),
-            databaseScope,
-            completeRebuild
-          )
+        if(valueArr.isEmpty){
+          Task.pure(List(Left(ApiError(NOT_FOUND, s"There were no elements for the type ${relevantType.apiName} - not doing anything..."))))
         }
-
-        Task.sequence(indexedList).map { s =>
-          logger.info(s"Done - Reindexing instances for ${relevantType.apiName}")
-          s
+        else {
+          logger.info(s"$relevantType - Indexing started")
+          val indexedList: List[Task[Either[ApiError, Unit]]] = for {
+            el <- valueArr
+          } yield {
+            indexJson(
+              relevantType.apiName,
+              el,
+              extractIdentifier(el),
+              databaseScope,
+              completeRebuild
+            )
+          }
+          Task.sequence(indexedList).map { s =>
+            logger.info(s"Done - Reindexing instances for ${relevantType.apiName}")
+            s
+          }
         }
       case Left(e) => Task.pure(List(Left(e)))
     }
@@ -346,21 +350,28 @@ class IndexerImpl @Inject()(
     createESmapping(relevantType).flatMap {
       case Right(mappingValue) => import java.text.SimpleDateFormat
         import java.util.TimeZone
-        val recreateIndexTask =
-          elasticSearch.recreateIndex(mappingValue, relevantType, databaseScope, completeRebuild)
+        val recreateIndexTask =  elasticSearch.recreateIndex(mappingValue, relevantType, databaseScope, completeRebuild)
         recreateIndexTask.flatMap {
           case Right(()) =>
-            val result =
-              reindexInstances(
+            val result = reindexInstances(
                 relevantType,
                 organizations,
                 databaseScope,
                 completeRebuild,
                 token
-              )
-            result.flatMap { l =>
-              logger.debug("Done - Reindexing instances")
-              removeNonexistingItems(s"${databaseScope.toIndexName}_${relevantType.apiName.toLowerCase}", nowAsISO, completeRebuild)
+            )
+            result.flatMap{
+                l => {
+                  logger.debug("Done - Reindexing instances")
+                  val errors = l.collect {case Left(e) => e}
+                  if(errors.isEmpty){
+                    removeNonexistingItems(s"${databaseScope.toIndexName}_${relevantType.apiName.toLowerCase}", nowAsISO, completeRebuild)
+                  }
+                  else{
+                    logger.error("There were errors during the indexing process - we're not removing the elements which have not been reported")
+                    Task.pure(Left(ApiError(INTERNAL_SERVER_ERROR, "There were errors during the indexing process")))
+                  }
+                }
             }
           case Left(e) => Task.pure(Left(e))
         }
@@ -464,7 +475,12 @@ class IndexerImpl @Inject()(
                 val result = listOfResults.map(r => {
                   transform(r, template)
                 })
-                Right(Json.toJson(result))
+                if(result.isEmpty){
+                  Left(ApiError(NOT_FOUND, "Did not find any objects - don't do anything..."))
+                }
+                else {
+                  Right(Json.toJson(result))
+                }
               case None => Left(ApiError(INTERNAL_SERVER_ERROR, "Could not unpack json result"))
             }
           case status => Left(ApiError(status, wsresult.body))
