@@ -414,7 +414,7 @@ export class ElasticSearchHelpers {
     }
     return null;
   }
-  
+
   static buildRequest(searchState) {
 
     const queryString = searchState.queryString;
