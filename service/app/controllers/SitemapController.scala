@@ -27,7 +27,7 @@ import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponent
 import play.api.{Configuration, Logging}
 import play.cache.NamedCache
 import services.indexer.{ElasticSearch, Indexer}
-
+import scala.concurrent.duration._
 import scala.xml.Elem
 
 class SitemapController @Inject()(
@@ -63,14 +63,14 @@ class SitemapController @Inject()(
   }
 
   private def generateXmlPerType(templateType: TemplateType): Task[List[Either[ApiError, Elem]]] = {
-    Task.deferFuture(cache.get[List[Either[ApiError,Elem]]](s"xml-${templateType.apiName}")).flatMap {
+    Task.deferFuture(cache.get[List[Either[ApiError,Elem]]](s"xml-${TemplateType.toSchema(templateType)}")).flatMap {
       case Some(elem) =>
-        logger.info(s"Found sitemap xml for ${templateType.apiName} in cache")
+        logger.info(s"Found sitemap xml for ${TemplateType.toSchema(templateType)} in cache")
         Task.pure(elem)
       case _ =>
         elasticSearch.queryIndexByType(templateType).map {
           case Right(listOfElements) =>
-            listOfElements
+            val result = listOfElements
               .map { el =>
                 (el \ "_source" \ "identifier" \ "value")
                   .asOpt[String]
@@ -80,6 +80,8 @@ class SitemapController @Inject()(
                   }
                   .getOrElse(Left(ApiError(INTERNAL_SERVER_ERROR, s"Could not parse identifier of element $el")))
               }
+            cache.set(s"xml-${TemplateType.toSchema(templateType)}", result, 24.hours)
+            result
           case Left(e) => List(Left(e))
       }
     }
