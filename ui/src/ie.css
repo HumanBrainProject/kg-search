@@ -222,22 +222,22 @@
     fill: #4D4D4D;
   }
   
-  .kgs-list > div {
+  .kgs-chevron-list > div {
     border-top: 1px solid #777;
     font-size: 12px;
     color: #777;
   }
   
-  .kgs-list > ul > li {
+  .kgs-chevron-list > ul > li {
     background-color: #fff;
     border-bottom: 1px solid #000;
   }
   
-  .kgs-list > ul > li>button .kgs-list__chevron {
+  .kgs-chevron-list > ul > li>button .kgs-chevron-list__chevron {
     color: #6c7379;
   }
   
-  .kgs-list > ul > li>button:hover .kgs-list__chevron {
+  .kgs-chevron-list > ul > li>button:hover .kgs-chevron-list__chevron {
     color: #333333;
   }
     
@@ -732,11 +732,11 @@
     right: 42px;
   }
 
-  .kgs-list > ul > li {
+  .kgs-chevron-list > ul > li {
       box-shadow: 2px 2px 4px #cbc9c9;
   }
 
-  .kgs-list > ul > li:hover {
+  .kgs-chevron-list > ul > li:hover {
       box-shadow: 3px 3px 6px #8f8a8a;
   }
 
