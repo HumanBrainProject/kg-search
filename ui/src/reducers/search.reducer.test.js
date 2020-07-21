@@ -26,15 +26,6 @@ describe('search reducer', () => {
             expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
         });
     });
-    describe('setup search', () => {
-        it('should set current definition', () => {
-            const state = undefined;
-            const definition = {};
-            const action = actionsDefinition.loadDefinitionSuccess(definition);
-            const newState = searchReducer(state, action);
-            expect(newState.queryFields.length).toBe(0);
-        });
-    });
     describe('load search result', () => {
         it('should set results', () => {
             const state = undefined;

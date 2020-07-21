@@ -92,66 +92,71 @@ export const loadDefinition = () => {
     field.count = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "count", false);
     field.collapsible = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "collapsible", false);
     field.ignoreForSearch = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "ignoreForSearch", false);
+    field.optional = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "optional", false);
+    field.highlight = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "highlight", false);
+    if (field.children) {
+      Object.values(field.children).forEach(childField => {
+        simplifySemanticKeysForField(childField);
+      });
+    }
   };
 
-  const simplifySemantics = source => {
-    if (source instanceof Object) {
-      Object.keys(source).forEach(key => {
-        simplifySemantics(source[key]);
-      });
-      if (source[SCHEMA_ORG + "identifier"]) {
-        source.identifier = source[SCHEMA_ORG + "identifier"];
-        delete source[SCHEMA_ORG + "identifier"];
-      }
-      if (source[SCHEMA_ORG + "name"]) {
-        source.name = source[SCHEMA_ORG + "name"];
-        delete source[SCHEMA_ORG + "name"];
-      }
-      if (source[SEARCHUI_NAMESPACE + "order"]) {
-        source.order = source[SEARCHUI_NAMESPACE + "order"];
-        delete source[SEARCHUI_NAMESPACE + "order"];
-      }
-      if (source[SEARCHUI_NAMESPACE + "ribbon"]) {
-        const ribbon = source[SEARCHUI_NAMESPACE + "ribbon"];
-        const framed = ribbon[SEARCHUI_NAMESPACE + "framed"];
-        const suffix = framed[SEARCHUI_NAMESPACE + "suffix"];
-        delete source[SEARCHUI_NAMESPACE + "ribbon"];
-        const datafield = framed[SEARCHUI_NAMESPACE + "dataField"].split(":");
-        source.ribbon = {
-          framed: {
-            dataField: datafield.length ? datafield[1]: null,
-            aggregation: framed[SEARCHUI_NAMESPACE + "aggregation"],
-            suffix: {
-              singular: suffix[SEARCHUI_NAMESPACE + "singular"],
-              plural: suffix[SEARCHUI_NAMESPACE + "plural"]
-            }
-          }
-        };
-      }
-      if (source[SEARCHUI_NAMESPACE + "boost"]) {
-        source.boost = source[SEARCHUI_NAMESPACE + "boost"];
-        delete source[SEARCHUI_NAMESPACE + "boost"];
-      }
-      if (source[SEARCHUI_NAMESPACE + "defaultSelection"]) {
-        source.defaultSelection = source[SEARCHUI_NAMESPACE + "defaultSelection"];
-        delete source[SEARCHUI_NAMESPACE + "defaultSelection"];
-      }
-      if (source[SEARCHUI_NAMESPACE + "icon"]) {
-        source.icon = source[SEARCHUI_NAMESPACE + "icon"];
-        delete source[SEARCHUI_NAMESPACE + "icon"];
-      }
-      if (source.fields) {
-        Object.keys(source.fields).forEach(field => {
-          simplifySemanticKeysForField(source.fields[field]);
-        });
-      }
-      if (source.children) {
-        Object.keys(source.children).forEach(field => {
-          simplifySemanticKeysForField(source.children[field]);
-        });
-      }
-
+  const simplifySemanticKeyForType = mapping => {
+    if (mapping[SCHEMA_ORG + "identifier"]) {
+      mapping.identifier = mapping[SCHEMA_ORG + "identifier"];
+      delete mapping[SCHEMA_ORG + "identifier"];
     }
+    if (mapping[SCHEMA_ORG + "name"]) {
+      mapping.name = mapping[SCHEMA_ORG + "name"];
+      delete mapping[SCHEMA_ORG + "name"];
+    }
+    if (mapping[SEARCHUI_NAMESPACE + "order"]) {
+      mapping.order = mapping[SEARCHUI_NAMESPACE + "order"];
+      delete mapping[SEARCHUI_NAMESPACE + "order"];
+    }
+    if (mapping[SEARCHUI_NAMESPACE + "ribbon"]) {
+      const ribbon = mapping[SEARCHUI_NAMESPACE + "ribbon"];
+      const framed = ribbon[SEARCHUI_NAMESPACE + "framed"];
+      const suffix = framed[SEARCHUI_NAMESPACE + "suffix"];
+      delete mapping[SEARCHUI_NAMESPACE + "ribbon"];
+      const datafield = framed[SEARCHUI_NAMESPACE + "dataField"].split(":");
+      mapping.ribbon = {
+        framed: {
+          dataField: datafield.length ? datafield[1]: null,
+          aggregation: framed[SEARCHUI_NAMESPACE + "aggregation"],
+          suffix: {
+            singular: suffix[SEARCHUI_NAMESPACE + "singular"],
+            plural: suffix[SEARCHUI_NAMESPACE + "plural"]
+          }
+        }
+      };
+    }
+    if (mapping[SEARCHUI_NAMESPACE + "boost"]) {
+      mapping.boost = mapping[SEARCHUI_NAMESPACE + "boost"];
+      delete mapping[SEARCHUI_NAMESPACE + "boost"];
+    }
+    if (mapping[SEARCHUI_NAMESPACE + "defaultSelection"]) {
+      mapping.defaultSelection = mapping[SEARCHUI_NAMESPACE + "defaultSelection"];
+      delete mapping[SEARCHUI_NAMESPACE + "defaultSelection"];
+    }
+    if (mapping[SEARCHUI_NAMESPACE + "icon"]) {
+      mapping.icon = mapping[SEARCHUI_NAMESPACE + "icon"];
+      delete mapping[SEARCHUI_NAMESPACE + "icon"];
+    }
+    if (mapping.fields) {
+      Object.values(mapping.fields).forEach(field => {
+        simplifySemanticKeysForField(field);
+      });
+    }
+    if (mapping.children) {
+      Object.values(mapping.children).forEach(field => {
+        simplifySemanticKeysForField(field);
+      });
+    }
+  };
+
+  const simplifySemantics = types => {
+    types instanceof Object && Object.values(types).forEach(mapping => simplifySemanticKeyForType(mapping));
   };
 
   return dispatch => {

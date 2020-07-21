@@ -18,7 +18,7 @@ import * as types from "../actions/actions.types";
 import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
 
 const initialState = {
-  queryFields: ["title", "description"],
+  queryFieldsByType: null,
   error: null,
   message: "",
   initialParams: {},
@@ -47,7 +47,7 @@ const setupSearch = (state, action) => {
     return state;
   } else {
 
-    const queryValuesBoost = ElasticSearchHelpers.getQueryValuesBoost(definition);
+    const queryFieldsByType = ElasticSearchHelpers.getQueryFieldsByType(definition);
     const sortFields = ElasticSearchHelpers.getSortFields(definition);
     const facetTypesOrder = ElasticSearchHelpers.getFacetTypesOrder(definition);
     const defaultType = ElasticSearchHelpers.getDefaultSelectedType(definition, facetTypesOrder);
@@ -101,7 +101,7 @@ const setupSearch = (state, action) => {
     return {
       ...state,
       queryString:  queryString,
-      queryFields: queryValuesBoost,
+      queryFieldsByType: queryFieldsByType,
       facets: facets,
       types: types,
       sort: sort,

@@ -124,8 +124,7 @@ export const setInitialSearchParams = params => {
 export const search = () => {
   return (dispatch, getState) => {
     const state = getState();
-    const boostedTypes = []; //ElasticSearchHelpers.getBoostedTypes(state.definition.typeMappings);
-    const payload = ElasticSearchHelpers.buildRequest(state.search, boostedTypes);
+    const payload = ElasticSearchHelpers.buildRequest(state.search);
     dispatch(loadSearchRequest());
     ReactPiwik.push(["setCustomUrl", window.location.href]);
     ReactPiwik.push(["trackPageView"]);
