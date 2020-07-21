@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat
 import java.time.{Instant, ZoneOffset}
 import java.util.{Date, TimeZone, UUID}
 
+import akka.Done
 import com.google.inject.ImplementedBy
 import javax.inject.Inject
 import models.{DatabaseScope, INFERRED, PaginationParams, RELEASED}
@@ -28,10 +29,12 @@ import models.templates.{Template, TemplateType}
 import monix.eval.Task
 import monix.reactive.Observable
 import org.slf4j.LoggerFactory
+import play.api.cache.AsyncCacheApi
 import play.api.{Configuration, Logging}
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.http.Status._
+import play.cache.NamedCache
 
 import scala.concurrent.duration._
 import scala.concurrent.Await
@@ -62,6 +65,8 @@ trait Indexer[Content, TransformedContent, Effect[_], UploadResult, QueryResult]
     token: String,
     liveMode: Boolean
   ): Effect[QueryResult]
+
+  def clearCache(): Task[Done]
 
   def metaByType(
                   templateType: TemplateType,
@@ -97,33 +102,47 @@ class IndexerImpl @Inject()(
                              templateEngine: TemplateEngine[JsValue, JsValue],
                              elasticSearch: ElasticSearch,
                              siteMapGenerator: SitemapGenerator,
-                             configuration: Configuration
+                             configuration: Configuration,
+                             @NamedCache("search-metadata-cache") cache: AsyncCacheApi
                            ) extends Indexer[JsValue, JsValue, Task, WSResponse, Either[ApiError, JsValue]]
   with Logging {
 
   val queryEndpoint: String = configuration.get[String]("kgquery.endpoint")
 
+  def clearCache(): Task[Done] = {
+    logger.info("Now clearing the cache")
+    Task.deferFuture(cache.removeAll())
+  }
+
   def getRelevantTypes(): Task[Either[ApiError, List[TemplateType]]] = {
     logger.info(s"Loading relevant types for indexing in KG Query")
-    Task
-      .deferFuture(
-        WSClient.url(s"${queryEndpoint}/query/search/schemas").get()
-      )
-      .map { wsresult =>
-        wsresult.status match {
-          case OK =>
-            Right(
-              wsresult.json
-                .as[List[JsObject]]
-                .map(js => js.value.get("https://schema.hbp.eu/relativeUrl").get.as[String])
-                .sorted
-                .map(TemplateType.fromSchema)
-                .collect { case Some(t) => t }
-            )
-          case s => Left(ApiError(s, wsresult.body))
-        }
-      }
-
+    Task.deferFuture(
+      cache.get[List[TemplateType]]("relevantTypes")
+    ).flatMap {
+      case Some(elem) =>
+        logger.info("Found relevant types in cache")
+        Task.pure(Right(elem))
+      case None =>
+        logger.info("Didn't find relevant types in cache -> fetching from DB")
+        Task
+          .deferFuture(
+            WSClient.url(s"${queryEndpoint}/query/search/schemas").get()
+          )
+          .map { wsresult =>
+            wsresult.status match {
+              case OK =>
+                val result = wsresult.json
+                    .as[List[JsObject]]
+                    .map(js => js.value.get("https://schema.hbp.eu/relativeUrl").get.as[String])
+                    .sorted
+                    .map(TemplateType.fromSchema)
+                    .collect { case Some(t) => t }
+                cache.set("relevantTypes", result, 24.hours)
+                Right(result)
+              case s => Left(ApiError(s, wsresult.body))
+            }
+          }
+    }
   }
 
   def createLabels(relevantTypes: List[String]): Task[Map[String, JsValue]] = {
@@ -482,27 +501,36 @@ class IndexerImpl @Inject()(
                            templateType: TemplateType,
                            fieldsOnly: Boolean = true
                          ): Task[Either[ApiError, JsValue]] = {
+
     val schema = TemplateType.toSchema(templateType)
-    Task
-      .deferFuture(
-        WSClient
-          .url(s"$queryEndpoint/query/$schema/search")
-          .get()
-      )
-      .map { wsresult =>
-        wsresult.status match {
-          case OK =>
-            val metaTemplate = templateEngine.getMetaTemplateFromType(templateType)
-            val value = transformMeta(wsresult.json, metaTemplate)
-            val res = if (fieldsOnly) {
-              value.asOpt[JsObject].get("fields")
-            } else {
-              value
+    Task.deferFuture(cache.get[JsValue](s"meta-${schema}")).flatMap {
+      case Some(elem) =>
+        logger.info(s"Found meta data for ${schema} in cache")
+        Task.pure(Right(elem))
+      case None =>
+        logger.info(s"Didn't find meta data for ${schema}  -> fetching")
+        Task
+          .deferFuture(
+            WSClient
+              .url(s"$queryEndpoint/query/$schema/search")
+              .get()
+          )
+          .map { wsresult =>
+            wsresult.status match {
+              case OK =>
+                val metaTemplate = templateEngine.getMetaTemplateFromType(templateType)
+                val value = transformMeta(wsresult.json, metaTemplate)
+                val res = if (fieldsOnly) {
+                  value.asOpt[JsObject].get("fields")
+                } else {
+                  value
+                }
+                cache.set(s"meta-${schema}", res, 24.hours)
+                Right(res)
+              case status => Left(ApiError(status, wsresult.body))
             }
-            Right(res)
-          case status => Left(ApiError(status, wsresult.body))
-        }
-      }
+          }
+    }
   }
 
   override def getLabelsByType(templateType: TemplateType): Task[Either[ApiError, (String, JsValue)]] = {

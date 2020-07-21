@@ -194,6 +194,11 @@ class IndexerController @Inject()(
         .runToFuture(s)
     }
 
+  def clearCache(): Action[AnyContent] =
+    Action.async { implicit request =>
+      indexer.clearCache().map(_=>Ok("Cache cleared")).runToFuture
+    }
+
   def getLabelsByType(templateType: TemplateType): Action[AnyContent] =
     Action.async { implicit request =>
       indexer

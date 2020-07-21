@@ -213,3 +213,6 @@ GET /labels/  controllers.IndexerController.getLabels()
   #      description: Ok
   ###
 GET /labels/:templateType  controllers.IndexerController.getLabelsByType(templateType:models.templates.TemplateType)
+
+
+DELETE /cache    controllers.IndexerController.clearCache()

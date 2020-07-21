@@ -86,7 +86,7 @@ class SearchController @Inject()(
         authService.getUserInfo(token).flatMap {
           case Some(userInfo) =>
             OIDCHelper.isUserGrantedAccessToGroup(userInfo, group) match {
-              case true =>
+              case true => processRequest(OIDCHelper.getESIndex(group, "*"), "_search", "POST", transformInputFunc = SearchController.adaptEsQueryForNestedDocument)
                 updateEsResponseWithNestedDocument(
                   processRequest(OIDCHelper.getESIndex(group, "*"), "_search", "POST", transformInputFunc = SearchController.adaptEsQueryForNestedDocument)
                 )
@@ -101,7 +101,7 @@ class SearchController @Inject()(
     Ok("").withHeaders("Allow" -> "POST, OPTIONS")
   }
 
-  def processRequest(index: String, proxyUrl: String, method: String, transformInputFunc: ByteString => ByteString = identity)(
+  def processRequest(index: String, proxyUrl: String, method: String, transformInputFunc: JsValue => JsValue = identity)(
     implicit request: Request[AnyContent]
   ): Task[Result] = {
     logger.debug(s"Search proxy - Index: $index, proxy: $proxyUrl")
@@ -121,7 +121,7 @@ class SearchController @Inject()(
           .execute()
       )
       .map { response => // we want to read the raw bytes for the body
-        val count = (response.json \ "hits" \ "total").asOpt[Long].getOrElse(0L)
+        val count = (response.json \ "hits" \ "total" \ "value").asOpt[Long].getOrElse(0L)
         val responseHeaders: Map[String, scala.collection.Seq[String]] = response.headers
         logger.info(s"Search query - term: $searchTerm, #results: $count")
         val h = ResponseHelper
@@ -182,9 +182,9 @@ object SearchController {
   val docCountLabel = "doc_count"
   val parentDocCountObj = Json.parse(s"""{\"aggs\": {\"$parentCountLabel\": {\"reverse_nested\": {}}}}""").as[JsObject]
 
-  def adaptEsQueryForNestedDocument(payload: ByteString): ByteString =
+  def adaptEsQueryForNestedDocument(payload: JsValue): JsValue =
     try {
-      var json = Json.parse(payload.utf8String).as[JsObject]
+      var json = payload.as[JsObject]
       // get list of nested objects
       val innerList = JsonHandler.findPathForKey("nested", __, json)
       // for each one, add a parent_count_section in aggs/terms if any
@@ -208,11 +208,11 @@ object SearchController {
           case _ => // There is no nested aggregation. Nothing to do on this input
         }
       }
-      ByteString(json.toString().getBytes)
+      json
     } catch {
       case e: Exception =>
         logger.info(
-          s"Exception in json query adaptation. Error:\n${e.getMessage}\nInput is used:\n${Json.parse(payload.utf8String).toString}"
+          s"Exception in json query adaptation. Error:\n${e.getMessage}\nInput is used:\n${payload.toString}}"
         )
         payload
     }
