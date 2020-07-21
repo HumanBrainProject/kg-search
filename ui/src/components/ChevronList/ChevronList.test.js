@@ -19,35 +19,35 @@ import uniqueId from "lodash/uniqueId";
 import renderer from "react-test-renderer";
 import Enzyme, { mount, shallow, render } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import List from "./List";
+import ChevronList from "./ChevronList";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-test('List component renders initially', () => {
+test('ChevronList component renders initially', () => {
     const component = renderer.create(
-        <List className="className" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={() => {}} itemComponent={() => null} />
+        <ChevronList className="className" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={() => {}} itemComponent={() => null} />
     );
   
     expect(component.toJSON()).toMatchSnapshot();
 });
   
-test('List test className"', () => {
+test('ChevronList test className"', () => {
     const component = shallow(
-        <List className="className" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={() => {}} itemComponent={() => null} />
+        <ChevronList className="className" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={() => {}} itemComponent={() => null} />
     );
     expect(component.hasClass("className"));
 });
 
-test('List test title"', () => {
+test('ChevronList test title"', () => {
     const component = shallow(
-        <List className="className" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={() => {}} itemComponent={() => null} />
+        <ChevronList className="className" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={() => {}} itemComponent={() => null} />
     );
     expect(component.find("div div").text()).toBe("a title");
 });
 
-test('List test number of items', () => {
+test('ChevronList test number of items', () => {
     const component = render(
-        <List className="className" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={() => {}} itemComponent={() => null} />
+        <ChevronList className="className" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={() => {}} itemComponent={() => null} />
     );
     expect(component.find("li").length).toBe(2);
 });
@@ -55,7 +55,7 @@ test('List test number of items', () => {
 test('Toggle test  button click', () => {
     const fn = jest.fn();
     const component = mount(
-        <List className="className" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={fn} itemComponent={() => null} />
+        <ChevronList className="className" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={fn} itemComponent={() => null} />
     );
     component.find('button').at(1).simulate('click');
     expect(fn.mock.calls.length).toBe(1);

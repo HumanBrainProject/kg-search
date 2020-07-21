@@ -39,51 +39,51 @@ trait ElasticSearch {
   def updateLabels(labels: Map[String, JsValue]): Unit
 
   def recreateIndex(
-                     mapping: JsValue,
-                     relevantType: TemplateType,
-                     indexName: DatabaseScope,
-                     completeRebuild: Boolean,
-                   ): Task[Either[ApiError, Unit]]
+    mapping: JsValue,
+    relevantType: TemplateType,
+    indexName: DatabaseScope,
+    completeRebuild: Boolean,
+  ): Task[Either[ApiError, Unit]]
 
   def index(
-             jsonPayload: JsObject,
-             dataType: String,
-             identifier: String,
-             indexName: DatabaseScope,
-           ): Task[Either[ApiError, Unit]]
+    jsonPayload: JsObject,
+    dataType: String,
+    identifier: String,
+    indexName: DatabaseScope,
+  ): Task[Either[ApiError, Unit]]
 
   def getNotUpdatedInstances(
-                              indexName: String,
-                              indexTime: String,
-                              page: Int = 0,
-                              size: Int = 50
-                            ): Task[Either[ApiError, List[String]]]
+    indexName: String,
+    indexTime: String,
+    page: Int = 0,
+    size: Int = 50
+  ): Task[Either[ApiError, List[String]]]
 
   def removeIndex(id: String, indexName: String): Task[Either[ApiError, Unit]]
 
   def queryIndexByType(
-                        templateType: TemplateType,
-                        indexname: String = ESHelper.publicIndexPrefix
-                      ): Task[Either[ApiError, List[JsObject]]]
+    templateType: TemplateType,
+    indexname: String = ESHelper.publicIndexPrefix
+  ): Task[Either[ApiError, List[JsObject]]]
 }
 
 class ElasticSearchImpl @Inject()(
-                                   WSClient: WSClient,
-                                   configuration: Configuration
-                                 ) extends ElasticSearch
-  with Logging {
+  WSClient: WSClient,
+  configuration: Configuration
+) extends ElasticSearch
+    with Logging {
   val elasticSearchEndpoint: String = configuration.get[String]("es.host")
 
   override def updateLabels(labels: Map[String, JsValue]): Unit = {}
 
   override def recreateIndex(
-                              mapping: JsValue,
-                              relevantType: TemplateType,
-                              dbScope: DatabaseScope,
-                              completeRebuild: Boolean,
-                            ): Task[Either[ApiError, Unit]] = {
+    mapping: JsValue,
+    relevantType: TemplateType,
+    dbScope: DatabaseScope,
+    completeRebuild: Boolean,
+  ): Task[Either[ApiError, Unit]] = {
     if (completeRebuild) {
-      if (relevantType.toString.equals("UnimindsPerson")) {
+      if(relevantType.toString.equals("UnimindsPerson")) {
         logger.info(s"Mapping for ${relevantType.toString} already exists")
         Task.pure(Right(()))
       } else {
@@ -122,11 +122,11 @@ class ElasticSearchImpl @Inject()(
   }
 
   override def index(
-                      jsonPayload: JsObject,
-                      dataType: String,
-                      identifier: String,
-                      databaseScope: DatabaseScope,
-                    ): Task[Either[ApiError, Unit]] = {
+    jsonPayload: JsObject,
+    dataType: String,
+    identifier: String,
+    databaseScope: DatabaseScope,
+  ): Task[Either[ApiError, Unit]] = {
     // TODO Check if element is a list ????
     logger.info(s"Started the ingestion of the data for ${databaseScope.toIndexName}_${dataType.toLowerCase}/_doc/$identifier")
     Task
@@ -143,11 +143,11 @@ class ElasticSearchImpl @Inject()(
   }
 
   override def getNotUpdatedInstances(
-                                       indexName: String,
-                                       indexTime: String,
-                                       page: Int = 0,
-                                       size: Int = 50
-                                     ): Task[Either[ApiError, List[String]]] = {
+    indexName: String,
+    indexTime: String,
+    page: Int = 0,
+    size: Int = 50
+  ): Task[Either[ApiError, List[String]]] = {
     val body = Json.obj(
       "query" -> Json.obj(
         "range" -> Json.obj(
@@ -188,7 +188,7 @@ class ElasticSearchImpl @Inject()(
                                   size: Long,
                                   startingPage: Long,
                                   totalPages: Long
-                                ): Task[Either[ApiError, List[JsObject]]] = {
+  ): Task[Either[ApiError, List[JsObject]]] = {
     val listOfTask = for {
       currentPage <- startingPage to totalPages
     } yield {
@@ -196,7 +196,7 @@ class ElasticSearchImpl @Inject()(
         .deferFuture(
           WSClient
             .url(
-              s"$elasticSearchEndpoint/$indexname/${templateType.apiName}/_search?size=$size&from=${currentPage * size}"
+              s"$elasticSearchEndpoint/${indexname}_${templateType.apiName.toLowerCase}/_search?size=$size&from=${currentPage * size}"
             ).post(Json.obj("_source" -> JsString("identifier.value")))
         )
     }
@@ -220,19 +220,19 @@ class ElasticSearchImpl @Inject()(
   }
 
   override def queryIndexByType(
-                                 templateType: TemplateType,
-                                 indexname: String = ESHelper.publicIndexPrefix
-                               ): Task[Either[ApiError, List[JsObject]]] = {
+    templateType: TemplateType,
+    indexname: String = ESHelper.publicIndexPrefix
+  ): Task[Either[ApiError, List[JsObject]]] = {
     val querySize = 1000
     Task
       .deferFuture(
-        WSClient.url(s"$elasticSearchEndpoint/$indexname/${templateType.apiName}/_search?size=$querySize&from=0").post(Json.obj("_source" -> JsString("identifier.value")))
+        WSClient.url(s"$elasticSearchEndpoint/${indexname}_${templateType.apiName.toLowerCase}/_search?size=$querySize&from=0").post(Json.obj("_source" -> JsString("identifier.value")))
       )
       .flatMap { res =>
         res.status match {
           case OK =>
             val hits = (res.json \ "hits" \ "hits").asOpt[List[JsObject]]
-            val total = (res.json \ "hits" \ "total").asOpt[Long]
+            val total = (res.json \ "hits" \ "total" \ "value").asOpt[Long]
             (total, hits) match {
               case (_, Some(Nil)) | (_, None) => Task.pure(Right(List()))
               case (Some(t), Some(l)) if l.length < t =>
@@ -241,12 +241,12 @@ class ElasticSearchImpl @Inject()(
                 val totalPages = (t / querySize) + overFlow
                 doQueryIndexByType(templateType, indexname, querySize, startingPage, totalPages).map {
                   case Right(value) => Right(l ++ value)
-                  case Left(e) => Left(e)
+                  case Left(e)      => Left(ApiError(INTERNAL_SERVER_ERROR, s"Could not paginate data from es index - ${e.status}"))
                 }
               case (Some(t), Some(l)) if l.length >= t => Task.pure(Right(l))
-              case _ =>
-                Task.pure(Left(ApiError(INTERNAL_SERVER_ERROR, s"Could not fetch data from es index - ${res.status}")))
             }
+          case _ =>
+            Task.pure(Left(ApiError(INTERNAL_SERVER_ERROR, s"Could not fetch data from es index - ${res.status}")))
         }
       }
   }

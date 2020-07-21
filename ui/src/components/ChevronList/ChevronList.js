@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import "./List.css";
+import "./ChevronList.css";
 
 const ListItem = ({ reference, data, itemComponent, onClick }) => {
   const handleClick = (event) => {
@@ -28,17 +28,17 @@ const ListItem = ({ reference, data, itemComponent, onClick }) => {
     <li>
       <button role="link" onClick={handleClick} data-reference={reference}>
         <Component data={data} />
-        <span className="kgs-list__chevron"><i className="fa fa-chevron-right"></i></span>
+        <span className="kgs-chevron-list__chevron"><i className="fa fa-chevron-right"></i></span>
       </button>
     </li>
   );
 };
 
-export const List = ({ className, title, items, itemComponent, getKey, onClick }) => {
+export const ChevronList = ({ className, title, items, itemComponent, getKey, onClick }) => {
   if (!Array.isArray(items) || items.length === 0 || typeof getKey !== "function") {
     return null;
   }
-  const classNames = ["kgs-list", className].join(" ");
+  const classNames = ["kgs-chevron-list", className].join(" ");
   return (
     <div className={classNames}>
       {title && (
@@ -56,7 +56,7 @@ export const List = ({ className, title, items, itemComponent, getKey, onClick }
   );
 };
 
-List.propTypes = {
+ChevronList.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string,
   items: PropTypes.arrayOf(PropTypes.any),
@@ -69,4 +69,4 @@ List.propTypes = {
   onClick: PropTypes.func
 };
 
-export default List;
+export default ChevronList;

@@ -451,14 +451,14 @@ export class ElasticSearchHelpers {
     return queryValuesBoost;
   };
 
-  static getBoostedTypes = definition => {
-    return Object.entries(definition).map(([type, typeDefinition]) => ({
+  static getBoostedTypes = typeMappings => {
+    return Object.entries(typeMappings).map(([type, mapping]) => ({
       name: type,
-      boost: typeDefinition.boost
+      boost: mapping.boost
     }));
   };
 
-  static buildRequest(searchState) {
+  static buildRequest(searchState, boostedTypes) {
 
     const queryString = searchState.queryString;
     const queryFields = searchState.queryFields;
@@ -467,7 +467,6 @@ export class ElasticSearchHelpers {
     const sort = searchState.sort;
     const from = searchState.from;
     const size = searchState.hitsPerPage;
-    const boostedTypes = []; // ElasticSearchHelpers.getBoostedTypes(state.definition);
     const customHighlight = defaultCustomHighlight;
     /*
     const customHighlight = searchState.queryFields.reduce((result, field) => {
@@ -745,7 +744,8 @@ export class ElasticSearchHelpers {
       query_string: {
         fields: fields,
         query: ElasticSearchHelpers.sanitizeString(queryString),
-        lenient: true
+        lenient: true,
+        analyze_wildcard: true
       }
     } : null;
 

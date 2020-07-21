@@ -15,29 +15,28 @@
  */
 package controllers
 
-import java.nio.file.{Files, Paths}
-
-import com.google.protobuf.compiler.PluginProtos.CodeGeneratorResponse.File
 import javax.inject.Inject
 import models.errors.ApiError
 import models.templates.TemplateType
 import monix.eval.Task
 import monix.execution.Scheduler
-import play.api.Configuration
+import play.api.cache.AsyncCacheApi
 import play.api.libs.json.JsValue
 import play.api.libs.ws.WSResponse
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
+import play.api.{Configuration, Logging}
+import play.cache.NamedCache
 import services.indexer.{ElasticSearch, Indexer}
-
-import scala.util.{Failure, Success, Try}
+import scala.concurrent.duration._
 import scala.xml.Elem
 
 class SitemapController @Inject()(
   elasticSearch: ElasticSearch,
   indexer: Indexer[JsValue, JsValue, Task, WSResponse, Either[ApiError, JsValue]],
   configuration: Configuration,
-  cc: ControllerComponents
-) extends AbstractController(cc) {
+  cc: ControllerComponents,
+  @NamedCache("search-metadata-cache") cache: AsyncCacheApi
+) extends AbstractController(cc) with Logging {
   implicit val s: Scheduler = monix.execution.Scheduler.Implicits.global
   val searchUrl: String = configuration.get[String]("searchUrlBase")
 
@@ -64,19 +63,27 @@ class SitemapController @Inject()(
   }
 
   private def generateXmlPerType(templateType: TemplateType): Task[List[Either[ApiError, Elem]]] = {
-    elasticSearch.queryIndexByType(templateType).map {
-      case Right(listOfElements) =>
-        listOfElements
-          .map { el =>
-          (el \ "_source" \ "identifier" \ "value")
-            .asOpt[String]
-            .map { id =>
-              val location = s"$searchUrl/instances/${templateType.apiName}/$id"
-              Right(<url><loc>{location}</loc></url>)
-            }
-            .getOrElse(Left(ApiError(INTERNAL_SERVER_ERROR, s"Could not parse identifier of element $el")))
-        }
-      case Left(e) => List(Left(e))
+    Task.deferFuture(cache.get[List[Either[ApiError,Elem]]](s"xml-${TemplateType.toSchema(templateType)}")).flatMap {
+      case Some(elem) =>
+        logger.info(s"Found sitemap xml for ${TemplateType.toSchema(templateType)} in cache")
+        Task.pure(elem)
+      case _ =>
+        elasticSearch.queryIndexByType(templateType).map {
+          case Right(listOfElements) =>
+            val result = listOfElements
+              .map { el =>
+                (el \ "_source" \ "identifier" \ "value")
+                  .asOpt[String]
+                  .map { id =>
+                    val location = s"$searchUrl/instances/${templateType.apiName}/$id"
+                    Right(<url><loc>{location}</loc></url>)
+                  }
+                  .getOrElse(Left(ApiError(INTERNAL_SERVER_ERROR, s"Could not parse identifier of element $el")))
+              }
+            cache.set(s"xml-${TemplateType.toSchema(templateType)}", result, 24.hours)
+            result
+          case Left(e) => List(Left(e))
+      }
     }
   }
 }

@@ -7069,35 +7069,253 @@
         }]
     },
     "aggregations": {
-        "facet_Dataset_speciesFilter": {
-            "doc_count": 873,
+        "facet_Dataset_speciesFilter.children.owners": {
+            "doc_count": 782,
             "speciesFilter.value.keyword_count": {
-                "value": 7
+                "value": 6
             },
             "speciesFilter.value.keyword": {
                 "doc_count_error_upper_bound": 0,
                 "sum_other_doc_count": 0,
                 "buckets": [{
                     "key": "Homo sapiens",
-                    "doc_count": 562
+                    "doc_count": 507,
+                    "owners.value.keyword": {
+                        "doc_count_error_upper_bound": 0,
+                        "sum_other_doc_count": 43,
+                        "buckets": [{
+                            "key": "Amunts, Katrin",
+                            "doc_count": 254
+                        }, {
+                            "key": "Mangin, Jean-François",
+                            "doc_count": 130
+                        }, {
+                            "key": "Palomero-Gallagher, Nicola",
+                            "doc_count": 41
+                        }, {
+                            "key": "Zilles, Karl",
+                            "doc_count": 41
+                        }, {
+                            "key": "Thirion, Bertrand",
+                            "doc_count": 18
+                        }, {
+                            "key": "Pavone, Francesco S.",
+                            "doc_count": 7
+                        }, {
+                            "key": "DeFelipe, Javier",
+                            "doc_count": 6
+                        }, {
+                            "key": "Alonso-Nanclares, Lidia",
+                            "doc_count": 4
+                        }, {
+                            "key": "Massimini, Marcello",
+                            "doc_count": 4
+                        }, {
+                            "key": "Muckli, Lars",
+                            "doc_count": 4
+                        }]
+                    },
+                    "owners.value.keyword_count": {
+                        "value": 37
+                    }
                 }, {
                     "key": "Mus musculus",
-                    "doc_count": 155
+                    "doc_count": 140,
+                    "owners.value.keyword": {
+                        "doc_count_error_upper_bound": 0,
+                        "sum_other_doc_count": 48,
+                        "buckets": [{
+                            "key": "Cherubini, Enrico",
+                            "doc_count": 17
+                        }, {
+                            "key": "Leergaard, Trygve B.",
+                            "doc_count": 15
+                        }, {
+                            "key": "D'Angelo, Egidio",
+                            "doc_count": 14
+                        }, {
+                            "key": "Pavone, Francesco S.",
+                            "doc_count": 13
+                        }, {
+                            "key": "Grillner, Sten",
+                            "doc_count": 12
+                        }, {
+                            "key": "Jankowsky, Joanna L.",
+                            "doc_count": 10
+                        }, {
+                            "key": "Sanders, Stephan",
+                            "doc_count": 8
+                        }, {
+                            "key": "Sanchez-Vives, Maria",
+                            "doc_count": 5
+                        }, {
+                            "key": "Benavides-Piccione, Ruth",
+                            "doc_count": 3
+                        }, {
+                            "key": "Clascá, Francisco",
+                            "doc_count": 3
+                        }]
+                    },
+                    "owners.value.keyword_count": {
+                        "value": 45
+                    }
                 }, {
                     "key": "Rattus norvegicus",
-                    "doc_count": 121
+                    "doc_count": 112,
+                    "owners.value.keyword": {
+                        "doc_count_error_upper_bound": 0,
+                        "sum_other_doc_count": 15,
+                        "buckets": [{
+                            "key": "Witter, Menno P.",
+                            "doc_count": 31
+                        }, {
+                            "key": "Leergaard, Trygve B.",
+                            "doc_count": 28
+                        }, {
+                            "key": "Palomero-Gallagher, Nicola",
+                            "doc_count": 18
+                        }, {
+                            "key": "Zilles, Karl",
+                            "doc_count": 17
+                        }, {
+                            "key": "D'Angelo, Egidio",
+                            "doc_count": 7
+                        }, {
+                            "key": "Storm, Johan",
+                            "doc_count": 5
+                        }, {
+                            "key": "Feldmeyer, Dirk",
+                            "doc_count": 3
+                        }, {
+                            "key": "Bjaalie, Jan G.",
+                            "doc_count": 2
+                        }, {
+                            "key": "Cherubini, Enrico",
+                            "doc_count": 2
+                        }, {
+                            "key": "Grillner, Sten",
+                            "doc_count": 2
+                        }]
+                    },
+                    "owners.value.keyword_count": {
+                        "value": 23
+                    }
+                }, {
+                    "key": "Others",
+                    "doc_count": 15,
+                    "owners.value.keyword": {
+                        "doc_count_error_upper_bound": 0,
+                        "sum_other_doc_count": 0,
+                        "buckets": [{
+                            "key": "Vassalos, Vasilis",
+                            "doc_count": 4
+                        }, {
+                            "key": "Hilgetag, Claus C.",
+                            "doc_count": 3
+                        }, {
+                            "key": "Genon, Sarah",
+                            "doc_count": 2
+                        }, {
+                            "key": "Caspers, Svenja",
+                            "doc_count": 1
+                        }, {
+                            "key": "Cattaneo, Antonino",
+                            "doc_count": 1
+                        }, {
+                            "key": "Gorostiza, Pau",
+                            "doc_count": 1
+                        }, {
+                            "key": "Mangin, Jean-François",
+                            "doc_count": 1
+                        }, {
+                            "key": "Pearson, Martin",
+                            "doc_count": 1
+                        }, {
+                            "key": "Ritter, Petra",
+                            "doc_count": 1
+                        }, {
+                            "key": "Sorokina, Oksana",
+                            "doc_count": 1
+                        }]
+                    },
+                    "owners.value.keyword_count": {
+                        "value": 10
+                    }
                 }, {
                     "key": "Macaca mulatta",
-                    "doc_count": 13
+                    "doc_count": 13,
+                    "owners.value.keyword": {
+                        "doc_count_error_upper_bound": 0,
+                        "sum_other_doc_count": 0,
+                        "buckets": [{
+                            "key": "Roelfsema, Pieter R.",
+                            "doc_count": 4
+                        }, {
+                            "key": "Vanduffel, Wim",
+                            "doc_count": 4
+                        }, {
+                            "key": "Self, Matthew W.",
+                            "doc_count": 2
+                        }, {
+                            "key": "Balan, Puiu F.",
+                            "doc_count": 1
+                        }, {
+                            "key": "Brochier, Thomas",
+                            "doc_count": 1
+                        }, {
+                            "key": "Denker, Michael",
+                            "doc_count": 1
+                        }, {
+                            "key": "Judith Peters",
+                            "doc_count": 1
+                        }, {
+                            "key": "Riehle, Alexa",
+                            "doc_count": 1
+                        }, {
+                            "key": "Valk, Sofie L.",
+                            "doc_count": 1
+                        }, {
+                            "key": "Zehl, Lyuba",
+                            "doc_count": 1
+                        }]
+                    },
+                    "owners.value.keyword_count": {
+                        "value": 10
+                    }
                 }, {
                     "key": "Macaca fascicularis",
-                    "doc_count": 5
+                    "doc_count": 5,
+                    "owners.value.keyword": {
+                        "doc_count_error_upper_bound": 0,
+                        "sum_other_doc_count": 0,
+                        "buckets": [{
+                            "key": "Palomero-Gallagher, Nicola",
+                            "doc_count": 5
+                        }, {
+                            "key": "Zilles, Karl",
+                            "doc_count": 5
+                        }]
+                    },
+                    "owners.value.keyword_count": {
+                        "value": 2
+                    }
                 }, {
                     "key": "Mustela putorius furo",
-                    "doc_count": 3
-                }, {
-                    "key": "Chlorocebus pygerythrus",
-                    "doc_count": 1
+                    "doc_count": 3,
+                    "owners.value.keyword": {
+                        "doc_count_error_upper_bound": 0,
+                        "sum_other_doc_count": 0,
+                        "buckets": [{
+                            "key": "Sanchez-Vives, Maria",
+                            "doc_count": 3
+                        }, {
+                            "key": "Gorostiza, Pau",
+                            "doc_count": 1
+                        }]
+                    },
+                    "owners.value.keyword_count": {
+                        "value": 2
+                    }
                 }]
             }
         },
