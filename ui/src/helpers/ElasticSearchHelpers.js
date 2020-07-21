@@ -684,10 +684,10 @@ export class ElasticSearchHelpers {
       query.query_string.fields = queryFields;
     }
 
-    const allFilters = getAllFilters(queryFacets, selectedType);
+    const allFilters = getAllFilters(queryFacets);
 
     const payload = {
-      aggs: getAggs(queryFacets, allFilters),
+      aggs: getAggs(queryFacets.filter(facet => facet.type === selectedType || facet.filterType === "type"), allFilters),
       from: from,
       post_filter: setFilters(allFilters),
       size: size
