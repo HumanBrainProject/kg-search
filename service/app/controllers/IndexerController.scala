@@ -17,15 +17,12 @@ package controllers
 
 import java.util.UUID
 
-import akka.util.ByteString
-import helpers.ESHelper
 import javax.inject.Inject
 import models.errors.ApiError
 import models.templates.TemplateType
 import models.{DatabaseScope, PaginationParams}
 import monix.eval.Task
 import monix.execution.Scheduler
-import play.api.http.HttpEntity
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.WSResponse
 import play.api.mvc._
@@ -124,27 +121,6 @@ class IndexerController @Inject()(
       result.runToFuture(s)
     }
 
-  def applyTemplateByTypeAndId(
-                                databaseScope: DatabaseScope,
-                                templateType: TemplateType,
-                                id: UUID
-                              ): Action[AnyContent] =
-    Action.async { implicit request =>
-      val result = request.headers.toSimpleMap.get("Authorization") match {
-        case Some(token) =>
-          indexer
-            .queryByTypeAndId(templateType, id, databaseScope, token, false)
-            .map {
-              case Right(v) => Ok(v)
-              case Left(error) =>
-                error.toResults()
-            }
-
-        case None => Task.pure(Unauthorized("Please provide credentials"))
-      }
-      result.runToFuture(s)
-    }
-
   def applyTemplateBySchemaAndId(
                                   databaseScope: DatabaseScope,
                                   org: String,
@@ -156,24 +132,26 @@ class IndexerController @Inject()(
     Action.async { implicit request =>
       val result = request.headers.toSimpleMap.get("Authorization") match {
         case Some(token) =>
-          val templateType = TemplateType.fromSchema(s"$org/$domain/$schema/$version").get
           indexer
-            .queryByTypeAndId(templateType, id, databaseScope, token, true)
+            .queryBySchemaAndId(org, domain, schema, version, id, databaseScope, token, true)
             .map {
               case Right(v) =>
-                val jsonWithType = v.as[JsObject] ++ Json.obj("type"-> Json.obj("value" -> templateType.apiName))
-                Ok(
-                Json.obj(
-                  "found" -> true,
-                  "_id" -> "dynamic",
-                  "_index" -> "dynamic",
-                  "version" -> 0,
-                  "_source" -> jsonWithType.as[JsValue])
-              )
+                TemplateType.fromSchema(s"$org/$domain/$schema/$version") match {
+                  case Some(t) =>
+                    val jsonWithType = v.as[JsObject] ++ Json.obj("type" -> Json.obj("value" -> t.apiName))
+                    Ok(
+                      Json.obj(
+                        "found" -> true,
+                        "_id" -> "dynamic",
+                        "_index" -> "dynamic",
+                        "version" -> 0,
+                        "_source" -> jsonWithType.as[JsValue])
+                    )
+                  case _ => ApiError(NOT_FOUND, s"Was not able to find a template type for schema $org/$domain/$schema/$version").toResults()
+                }
               case Left(error) =>
                 error.toResults()
             }
-
         case None => Task.pure(Unauthorized("Please provide credentials"))
       }
       result.runToFuture(s)
@@ -196,7 +174,7 @@ class IndexerController @Inject()(
 
   def clearCache(): Action[AnyContent] =
     Action.async { implicit request =>
-      indexer.clearCache().map(_=>Ok("Cache cleared")).runToFuture
+      indexer.clearCache().map(_ => Ok("Cache cleared")).runToFuture
     }
 
   def getLabelsByType(templateType: TemplateType): Action[AnyContent] =
@@ -213,31 +191,25 @@ class IndexerController @Inject()(
 
   def getLabels(): Action[AnyContent] =
     Action.async { implicit request =>
-      indexer
-        .getRelevantTypes()
-        .flatMap {
-          case Right(types) =>
-            Task
-              .sequence(types.map { t =>
-                indexer
-                  .getLabelsByType(t)
-              })
-              .map { l =>
-                val errors = l.collect { case Left(e) => e }
-                if (errors.isEmpty) {
-                  val labels = l.collect { case Right(v) => v }.foldLeft(JsObject.empty) {
-                    case (acc, (apiName, js)) => acc ++ Json.obj(apiName -> js.as[JsObject])
-                  }
-                  Ok(labels)
-                } else {
-                  val message = errors.foldLeft("") {
-                    case (acc, e) => s"$acc + \n Status - ${e.status} - ${e.message}"
-                  }
-                  InternalServerError(s"Multiple errors detected - $message")
-                }
-              }
-          case Left(e) => Task.pure(e.toResults())
-        }
-        .runToFuture(s)
+      Task
+        .sequence(TemplateType.orderedList().map { t =>
+          indexer
+            .getLabelsByType(t)
+        })
+        .map { l =>
+          val errors = l.collect { case Left(e) => e }
+          if (errors.isEmpty) {
+            val labels = l.collect { case Right(v) => v }.foldLeft(JsObject.empty) {
+              case (acc, (apiName, js)) => acc ++ Json.obj(apiName -> js.as[JsObject])
+            }
+            Ok(labels)
+          } else {
+            val message = errors.foldLeft("") {
+              case (acc, e) => s"$acc + \n Status - ${e.status} - ${e.message}"
+            }
+            InternalServerError(s"Multiple errors detected - $message")
+          }
+        }.runToFuture(s)
     }
+
 }

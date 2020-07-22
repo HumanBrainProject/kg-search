@@ -16,8 +16,8 @@
 package models.templates.elasticSearch
 
 import models.templates.Template
-import models.templates.entities.{ESFields, ESKeyword, ESValue}
-import play.api.libs.json.{JsString, Json}
+import models.templates.entities.{ESFields, ESKeyword}
+import play.api.libs.json.{Json}
 import utils._
 
 trait PersonMetaESTemplate extends Template {
@@ -40,30 +40,6 @@ trait PersonMetaESTemplate extends Template {
       "fields",
       ObjectReader(
         "search:title",
-        Nested(
-          "properties",
-          WriteObject(
-            List(ESProperty("value"))
-          )
-        )
-      )
-    ),
-    "description" -> ObjectReader(
-      "fields",
-      ObjectReader(
-        "search:description",
-        Nested(
-          "properties",
-          WriteObject(
-            List(ESProperty("value"))
-          )
-        )
-      )
-    ),
-    "phone" -> ObjectReader(
-      "fields",
-      ObjectReader(
-        "search:phone",
         Nested(
           "properties",
           WriteObject(
@@ -117,18 +93,6 @@ trait PersonMetaESTemplate extends Template {
           )
         )
       ),
-    "address" -> ObjectReader(
-      "fields",
-      ObjectReader(
-        "search:address",
-        Nested(
-          "properties",
-          WriteObject(
-            List(ESProperty("value"))
-          )
-        )
-      )
-    ),
     "contributions" -> ObjectReader(
       "fields",
       ObjectReader(
@@ -157,18 +121,6 @@ trait PersonMetaESTemplate extends Template {
               ESProperty("uuid", Some(ESFields(ESKeyword(ignore_above = Some(256))))),
               ESProperty("value")
             )
-          )
-        )
-      )
-    ),
-    "email" -> ObjectReader(
-      "fields",
-      ObjectReader(
-        "search:email",
-        Nested(
-          "properties",
-          WriteObject(
-            List(ESProperty("value"))
           )
         )
       )

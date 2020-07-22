@@ -23,33 +23,35 @@ sealed trait TemplateType {
 
 object TemplateType {
 
+  def orderedList(): List[TemplateType] = {
+    List(Dataset, Person, ModelInstance, SoftwareProject, Project, Sample, Subject)
+  }
+
   def apply(s: String): TemplateType = s.toUpperCase match {
     case "DATASET"         => Dataset
     case "PERSON"          => Person
     case "PROJECT"         => Project
-    case "UNIMINDSPERSON"  => UnimindsPerson
     case "MODELINSTANCE"   => ModelInstance
     case "SOFTWAREPROJECT" => SoftwareProject
     case "SAMPLE"          => Sample
     case "SUBJECT"         => Subject
   }
 
-  def toSchema(templateType: TemplateType): String = templateType match {
-    case Dataset         => "minds/core/dataset/v1.0.0"
-    case Person          => "minds/core/person/v1.0.0"
-    case Project         => "minds/core/placomponent/v1.0.0"
-    case UnimindsPerson  => "uniminds/core/person/v1.0.0"
-    case ModelInstance   => "uniminds/core/modelinstance/v1.0.0"
-    case SoftwareProject => "softwarecatalog/software/softwareproject/v1.0.0"
-    case Sample          => "minds/experiment/sample/v1.0.0"
-    case Subject         => "minds/experiment/subject/v1.0.0"
+  def toSchema(templateType: TemplateType): List[String] = templateType match {
+    case Dataset         => List("minds/core/dataset/v1.0.0")
+    case Person          => List("minds/core/person/v1.0.0", "uniminds/core/person/v1.0.0")
+    case Project         => List("minds/core/placomponent/v1.0.0")
+    case ModelInstance   => List("uniminds/core/modelinstance/v1.0.0")
+    case SoftwareProject => List("softwarecatalog/software/softwareproject/v1.0.0")
+    case Sample          => List("minds/experiment/sample/v1.0.0")
+    case Subject         => List("minds/experiment/subject/v1.0.0")
   }
 
   def fromSchema(schema: String): Option[TemplateType] = schema match {
     case "minds/core/dataset/v1.0.0"                       => Some(Dataset)
     case "minds/core/person/v1.0.0"                        => Some(Person)
+    case "uniminds/core/person/v1.0.0"                     => Some(Person)
     case "minds/core/placomponent/v1.0.0"                  => Some(Project)
-    case "uniminds/core/person/v1.0.0"                     => Some(UnimindsPerson)
     case "uniminds/core/modelinstance/v1.0.0"              => Some(ModelInstance)
     case "softwarecatalog/software/softwareproject/v1.0.0" => Some(SoftwareProject)
     case "minds/experiment/sample/v1.0.0"                  => Some(Sample)
@@ -81,10 +83,6 @@ case object Person extends TemplateType {
 
 case object Project extends TemplateType {
   override def apiName: String = "Project"
-}
-
-case object UnimindsPerson extends TemplateType {
-  override def apiName: String = "Contributor"
 }
 
 case object ModelInstance extends TemplateType {

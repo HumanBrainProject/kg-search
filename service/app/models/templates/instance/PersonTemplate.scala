@@ -34,7 +34,7 @@ import scala.collection.immutable.HashMap
 
 trait PersonTemplate extends Template {
 
-  val result: Map[String, TemplateComponent] = HashMap(
+  val result: Map[String, TemplateComponent] = Map(
     "identifier"  -> PrimitiveToObjectWithValueField[String]("identifier"),
     "title"       -> PrimitiveToObjectWithValueField[String]("title"),
     "description" -> PrimitiveToObjectWithValueField[String]("description"),

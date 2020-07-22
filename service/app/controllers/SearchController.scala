@@ -22,6 +22,7 @@ import services.{IDMAPIService, ProxyService, TokenAuthService}
 import helpers.{ESHelper, OIDCHelper, ResponseHelper}
 import javax.inject.{Inject, Singleton}
 import models.errors.ApiError
+import models.templates.TemplateType
 import monix.eval.Task
 import play.api.http.HttpEntity
 import play.api.libs.json._
@@ -36,14 +37,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SearchController @Inject()(
-  cc: ControllerComponents,
-  mat: Materializer,
-  authService: IDMAPIService,
-  indexerController: IndexerController,
-  proxyService: ProxyService,
-  indexerService: Indexer[JsValue, JsValue, Task, WSResponse, Either[ApiError, JsValue]],
-)(implicit ec: ExecutionContext, ws: WSClient, config: Configuration)
-    extends AbstractController(cc) {
+                                  cc: ControllerComponents,
+                                  mat: Materializer,
+                                  authService: IDMAPIService,
+                                  indexerController: IndexerController,
+                                  proxyService: ProxyService,
+                                  indexerService: Indexer[JsValue, JsValue, Task, WSResponse, Either[ApiError, JsValue]],
+                                )(implicit ec: ExecutionContext, ws: WSClient, config: Configuration)
+  extends AbstractController(cc) {
   val es_host = config.get[String]("es.host")
   implicit val s = monix.execution.Scheduler.Implicits.global
 
@@ -52,7 +53,7 @@ class SearchController @Inject()(
   def document(group: String, dataType: String, id: String): Action[AnyContent] = Action.async { implicit request =>
     OIDCHelper.groupNeedsPermissions(group) match {
       case false => processRequest(s"${OIDCHelper.getESIndex(group, dataType)}/_doc", id, "GET").runToFuture
-      case true  =>
+      case true =>
         val token = OIDCHelper.getTokenFromRequest(request)
         authService.getUserInfo(token).flatMap {
           case Some(userInfo) =>
@@ -71,7 +72,7 @@ class SearchController @Inject()(
 
   def preview(org: String, domain: String, schema: String, version: String, id: java.util.UUID) = indexerController.applyTemplateBySchemaAndId(models.INFERRED, org, domain, schema, version, id)
 
-  def previewOptions(org:String, domain:String, schema:String, version:String, id: java.util.UUID) = Action {
+  def previewOptions(org: String, domain: String, schema: String, version: String, id: java.util.UUID) = Action {
     Ok("").withHeaders("Allow" -> "GET, OPTIONS")
   }
 
@@ -81,7 +82,7 @@ class SearchController @Inject()(
         updateEsResponseWithNestedDocument(
           processRequest(OIDCHelper.getESIndex(group, "*"), "_search", "POST", transformInputFunc = SearchController.adaptEsQueryForNestedDocument)
         ).runToFuture
-      case true  =>
+      case true =>
         val token = OIDCHelper.getTokenFromRequest(request)
         authService.getUserInfo(token).flatMap {
           case Some(userInfo) =>
@@ -112,9 +113,9 @@ class SearchController @Inject()(
   }
 
   def propagateRequest(
-    request: WSRequest,
-    searchTerm: String = ""
-  ): Task[Result] =
+                        request: WSRequest,
+                        searchTerm: String = ""
+                      ): Task[Result] =
     Task
       .deferFuture(
         request
@@ -150,25 +151,18 @@ class SearchController @Inject()(
     }
 
   def labels(): Action[AnyContent] = Action.async { implicit request =>
-    indexerService
-      .getRelevantTypes()
-      .flatMap {
-        case Right(relevantTypes) =>
-          indexerService.getLabels(relevantTypes).map { labels =>
-            val errors = labels.collect { case Left(e) => e }
-            if (errors.isEmpty) {
-              val successful = labels.collect { case Right(l) => l }
-              Ok(Json.obj("_source" -> Json.toJson(successful.toMap)))
-            } else {
-              val message = errors.foldLeft("") {
-                case (acc, e) => s"$acc + \n Status - ${e.status} - ${e.message}"
-              }
-              InternalServerError(s"Multiple errors detected - $message")
-            }
-          }
-        case Left(e) => Task.pure(e.toResults())
+    indexerService.getLabels(TemplateType.orderedList()).map { labels =>
+      val errors = labels.collect { case Left(e) => e }
+      if (errors.isEmpty) {
+        val successful = labels.collect { case Right(l) => l }
+        Ok(Json.obj("_source" -> Json.toJson(successful.toMap)))
+      } else {
+        val message = errors.foldLeft("") {
+          case (acc, e) => s"$acc + \n Status - ${e.status} - ${e.message}"
+        }
+        InternalServerError(s"Multiple errors detected - $message")
       }
-      .runToFuture
+    }.runToFuture
   }
 
   def labelsOptions(): Action[AnyContent] = Action {

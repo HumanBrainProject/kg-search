@@ -15,7 +15,6 @@
  */
 package services.indexer
 
-import java.nio.file.Path
 import java.text.SimpleDateFormat
 import java.time.{Instant, ZoneOffset}
 import java.util.{Date, TimeZone, UUID}
@@ -23,21 +22,19 @@ import java.util.{Date, TimeZone, UUID}
 import akka.Done
 import com.google.inject.ImplementedBy
 import javax.inject.Inject
-import models.{DatabaseScope, INFERRED, PaginationParams, RELEASED}
 import models.errors.ApiError
 import models.templates.{Template, TemplateType}
+import models.{DatabaseScope, PaginationParams}
 import monix.eval.Task
-import monix.reactive.Observable
-import org.slf4j.LoggerFactory
 import play.api.cache.AsyncCacheApi
-import play.api.{Configuration, Logging}
+import play.api.http.Status._
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSResponse}
-import play.api.http.Status._
+import play.api.{Configuration, Logging}
 import play.cache.NamedCache
 
-import scala.concurrent.duration._
 import scala.concurrent.Await
+import scala.concurrent.duration._
 
 @ImplementedBy(classOf[IndexerImpl])
 trait Indexer[Content, TransformedContent, Effect[_], UploadResult, QueryResult] {
@@ -48,8 +45,6 @@ trait Indexer[Content, TransformedContent, Effect[_], UploadResult, QueryResult]
 
   def transformMeta(jsonContent: Content, template: Template): TransformedContent
 
-  def getRelevantTypes(): Effect[Either[ApiError, List[TemplateType]]]
-
   def queryByType(
                    templateType: TemplateType,
                    databaseScope: DatabaseScope,
@@ -58,13 +53,16 @@ trait Indexer[Content, TransformedContent, Effect[_], UploadResult, QueryResult]
                    token: String
                  ): Effect[QueryResult]
 
-  def queryByTypeAndId(
-    templateType: TemplateType,
-    id: UUID,
-    databaseScope: DatabaseScope,
-    token: String,
-    liveMode: Boolean
-  ): Effect[QueryResult]
+  def queryBySchemaAndId(
+                          org: String,
+                          domain: String,
+                          schema: String,
+                          version: String,
+                          id: UUID,
+                          databaseScope: DatabaseScope,
+                          token: String,
+                          liveMode: Boolean
+                        ): Effect[QueryResult]
 
   def clearCache(): Task[Done]
 
@@ -114,36 +112,6 @@ class IndexerImpl @Inject()(
     Task.deferFuture(cache.removeAll())
   }
 
-  def getRelevantTypes(): Task[Either[ApiError, List[TemplateType]]] = {
-    logger.info(s"Loading relevant types for indexing in KG Query")
-    Task.deferFuture(
-      cache.get[List[TemplateType]]("relevantTypes")
-    ).flatMap {
-      case Some(elem) =>
-        logger.info("Found relevant types in cache")
-        Task.pure(Right(elem))
-      case None =>
-        logger.info("Didn't find relevant types in cache -> fetching from DB")
-        Task
-          .deferFuture(
-            WSClient.url(s"${queryEndpoint}/query/search/schemas").get()
-          )
-          .map { wsresult =>
-            wsresult.status match {
-              case OK =>
-                val result = wsresult.json
-                    .as[List[JsObject]]
-                    .map(js => js.value.get("https://schema.hbp.eu/relativeUrl").get.as[String])
-                    .sorted
-                    .map(TemplateType.fromSchema)
-                    .collect { case Some(t) => t }
-                cache.set("relevantTypes", result, 24.hours)
-                Right(result)
-              case s => Left(ApiError(s, wsresult.body))
-            }
-          }
-    }
-  }
 
   def createLabels(relevantTypes: List[String]): Task[Map[String, JsValue]] = {
     logger.info(s"Creating labels")
@@ -168,7 +136,8 @@ class IndexerImpl @Inject()(
   }
 
   private def fetchESmapping(templateType: TemplateType): Task[Either[ApiError, (String, JsValue)]] = {
-    val schema = TemplateType.toSchema(templateType)
+    //The last defined schema defines the ES mapping
+    val schema = TemplateType.toSchema(templateType).last
     logger.info(s"Loading instances for schema $schema from KG Query")
     Task
       .deferFuture(
@@ -230,12 +199,8 @@ class IndexerImpl @Inject()(
                ): Task[Either[ApiError, Unit]] = {
     identifier match {
       case Some(id) =>
-        import java.text.DateFormat
-        import java.text.SimpleDateFormat
-        import java.util.TimeZone
-
         val nowAsISO = Instant.now().atOffset(ZoneOffset.UTC).toLocalDateTime.toString
-        val jsonWithTimeStampAndDocType = el ++ Json.obj("@timestamp" -> nowAsISO, "type"-> Json.obj("value" -> apiName))
+        val jsonWithTimeStampAndDocType = el ++ Json.obj("@timestamp" -> nowAsISO, "type" -> Json.obj("value" -> apiName))
         val indexed = elasticSearch.index(jsonWithTimeStampAndDocType, apiName, id, dbScope)
         indexed.map {
           case Right(_) =>
@@ -244,7 +209,6 @@ class IndexerImpl @Inject()(
           case Left(e) =>
             logger.info(s"$apiName - Error while indexing - $id - ${e.status}: ${e.message}")
             Left(e)
-
         }
       case None =>
         Task.pure(
@@ -269,7 +233,7 @@ class IndexerImpl @Inject()(
     queryByType(relevantType, databaseScope, PaginationParams(None, None), organizations, token).flatMap {
       case Right(value) =>
         val valueArr = value.as[List[JsObject]]
-        if(valueArr.isEmpty){
+        if (valueArr.isEmpty) {
           Task.pure(List(Left(ApiError(NOT_FOUND, s"There were no elements for the type ${relevantType.apiName} - not doing anything..."))))
         }
         else {
@@ -294,14 +258,15 @@ class IndexerImpl @Inject()(
     }
   }
 
-  private def   removeNonexistingItems(
-    indexName: String,
-    indexTime: String,
-    completeRebuild: Boolean
-  ): Task[Either[ApiError, Unit]] = {
+  private def removeNonexistingItems(
+                                      indexName: String,
+                                      indexTime: String,
+                                      completeRebuild: Boolean
+                                    ): Task[Either[ApiError, Unit]] = {
     import monix.execution.Scheduler.Implicits.global
+
     import scala.concurrent.duration._
-    if(!completeRebuild) {
+    if (!completeRebuild) {
       Thread.sleep(10000) // wait for 10 seconds
       elasticSearch.getNotUpdatedInstances(indexName, indexTime).map {
         case Right(Nil) =>
@@ -323,7 +288,7 @@ class IndexerImpl @Inject()(
         case Left(e) => Left(e)
       }
     }
-    else{
+    else {
       Task.pure(Right(()))
     }
   }
@@ -348,30 +313,29 @@ class IndexerImpl @Inject()(
                              nowAsISO: String
                            ): Task[Either[ApiError, Unit]] = {
     createESmapping(relevantType).flatMap {
-      case Right(mappingValue) => import java.text.SimpleDateFormat
-        import java.util.TimeZone
-        val recreateIndexTask =  elasticSearch.recreateIndex(mappingValue, relevantType, databaseScope, completeRebuild)
+      case Right(mappingValue) =>
+        val recreateIndexTask = elasticSearch.recreateIndex(mappingValue, relevantType, databaseScope, completeRebuild)
         recreateIndexTask.flatMap {
           case Right(()) =>
             val result = reindexInstances(
-                relevantType,
-                organizations,
-                databaseScope,
-                completeRebuild,
-                token
+              relevantType,
+              organizations,
+              databaseScope,
+              completeRebuild,
+              token
             )
-            result.flatMap{
-                l => {
-                  logger.debug("Done - Reindexing instances")
-                  val errors = l.collect {case Left(e) => e}
-                  if(errors.isEmpty){
-                    removeNonexistingItems(s"${databaseScope.toIndexName}_${relevantType.apiName.toLowerCase}", nowAsISO, completeRebuild)
-                  }
-                  else{
-                    logger.error("There were errors during the indexing process - we're not removing the elements which have not been reported")
-                    Task.pure(Left(ApiError(INTERNAL_SERVER_ERROR, "There were errors during the indexing process")))
-                  }
+            result.flatMap {
+              l => {
+                logger.debug("Done - Reindexing instances")
+                val errors = l.collect { case Left(e) => e }
+                if (errors.isEmpty) {
+                  removeNonexistingItems(s"${databaseScope.toIndexName}_${relevantType.apiName.toLowerCase}", nowAsISO, completeRebuild)
                 }
+                else {
+                  logger.error("There were errors during the indexing process - we're not removing the elements which have not been reported")
+                  Task.pure(Left(ApiError(INTERNAL_SERVER_ERROR, "There were errors during the indexing process")))
+                }
+              }
             }
           case Left(e) => Task.pure(Left(e))
         }
@@ -385,27 +349,23 @@ class IndexerImpl @Inject()(
                       databaseScope: DatabaseScope,
                       token: String
                     ): Task[List[Either[ApiError, Unit]]] = {
-    getRelevantTypes().flatMap {
-      case Right(relevantTypes) =>
-        val tz = TimeZone.getTimeZone("UTC")
-        val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
-        df.setTimeZone(tz)
-        val nowAsISO = df.format(new Date())
-        Task.sequence(
-          relevantTypes
-            .map(relType =>
-              indexWithType(
-                completeRebuild,
-                organizations,
-                databaseScope,
-                relType,
-                token,
-                nowAsISO
-              )
-            )
+    val tz = TimeZone.getTimeZone("UTC")
+    val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+    df.setTimeZone(tz)
+    val nowAsISO = df.format(new Date())
+    Task.sequence(
+      TemplateType.orderedList()
+        .map(relType =>
+          indexWithType(
+            completeRebuild,
+            organizations,
+            databaseScope,
+            relType,
+            token,
+            nowAsISO
+          )
         )
-      case Left(e) => Task.pure(List(Left(e)))
-    }
+    )
   }
 
   override def indexByType(
@@ -444,70 +404,93 @@ class IndexerImpl @Inject()(
                             restrictToOrgs: List[String],
                             token: String
                           ): Task[Either[ApiError, JsValue]] = {
-    val schema = TemplateType.toSchema(templateType)
+    val schemas = TemplateType.toSchema(templateType)
     val paramsSize = paginationParams.limit.map(p => s"&size=${p}").getOrElse("")
     val paramsFrom = paginationParams.offset.map(p => s"&start=${p}").getOrElse("")
     val restrictOrgsToString =
       if (restrictToOrgs.isEmpty) "" else s"""&restrictToOrganizations=${restrictToOrgs.mkString(",")}"""
     logger.info(s"$templateType - Fetching of data started")
-    Task
-      .deferFuture(
-        WSClient
-          .url(
-            s"$queryEndpoint/query/$schema/search/instances/?vocab=https://schema.hbp.eu/search/&databaseScope=${databaseScope.toString}$paramsSize$paramsFrom$restrictOrgsToString"
-          )
-          .addHttpHeaders("Authorization" -> token)
-          .get()
-      )
-      .map { wsresult =>
-        wsresult.status match {
-          case OK =>
-            val maybeListOfResults = for {
-              jsonResponse <- wsresult.json.asOpt[Map[String, JsValue]]
-              results <- jsonResponse.get("results")
-              resultArray <- results.asOpt[List[JsObject]]
-            } yield resultArray
 
-            maybeListOfResults match {
-              case Some(listOfResults) =>
-                logger.info(s"$templateType - Fetching of data done with ${listOfResults.size} elements fetched")
-                val template = templateEngine.getTemplateFromType(templateType, databaseScope, false)
-                val result = listOfResults.map(r => {
-                  transform(r, template)
-                })
-                if(result.isEmpty){
-                  Left(ApiError(NOT_FOUND, "Did not find any objects - don't do anything..."))
-                }
-                else {
-                  Right(Json.toJson(result))
-                }
-              case None => Left(ApiError(INTERNAL_SERVER_ERROR, "Could not unpack json result"))
+    val fetchTasks = schemas.map {
+      schema =>
+        Task.deferFuture(
+          WSClient
+            .url(
+              s"$queryEndpoint/query/$schema/search/instances/?vocab=https://schema.hbp.eu/search/&databaseScope=${databaseScope.toString}$paramsSize$paramsFrom$restrictOrgsToString"
+            )
+            .addHttpHeaders("Authorization" -> token)
+            .get()
+        )
+    }
+    Task.sequence(fetchTasks).map(
+      wsResults => {
+        val payloads = wsResults.map {
+          wsResult =>
+            wsResult.status match {
+              case OK =>
+                Right((wsResult.json \ "results").asOpt[List[JsObject]].getOrElse(List()))
+              case status =>
+                Left(ApiError(status, wsResult.body))
             }
-          case status => Left(ApiError(status, wsresult.body))
+        }
+        val errors = payloads.collect { case Left(e) => e }
+        if (errors.isEmpty) {
+          val objects = payloads.collect { case Right(payload) => payload }.foldLeft(Map[String, JsObject]()) {
+            (acc, resultList) =>
+              for (el <- resultList) {
+                (el \ "identifier").asOpt[String] match {
+                  case Some(identifier) => acc + (identifier -> el)
+                  case _ => None
+                }
+              }
+              acc
+          }.valuesIterator.toList
+          logger.info(s"$templateType - Fetching of data done with ${objects.size} elements fetched")
+          val template = templateEngine.getTemplateFromType(templateType, databaseScope, false)
+          val result = objects.map(r => {
+            transform(r, template)
+          })
+          if (result.isEmpty) {
+            Left(ApiError(NOT_FOUND, "Did not find any objects - don't do anything..."))
+          }
+          else {
+            Right(Json.toJson(result))
+          }
+        }
+        else {
+          Left(ApiError(INTERNAL_SERVER_ERROR, "Errors while fetching payloads"))
         }
       }
+    )
   }
 
-  override def queryByTypeAndId(
-    templateType: TemplateType,
-    id: UUID,
-    databaseScope: DatabaseScope,
-    token: String,
-    liveMode: Boolean
-  ): Task[Either[ApiError, JsValue]] = {
-    val schema = TemplateType.toSchema(templateType)
+  override def queryBySchemaAndId(
+                                   org: String,
+                                   domain: String,
+                                   schema: String,
+                                   version: String,
+                                   id: UUID,
+                                   databaseScope: DatabaseScope,
+                                   token: String,
+                                   liveMode: Boolean
+                                 ): Task[Either[ApiError, JsValue]] = {
     Task
       .deferFuture(
         WSClient
-          .url(s"$queryEndpoint/query/$schema/search/instances/${id.toString}?vocab=https://schema.hbp.eu/search/")
+          .url(s"$queryEndpoint/query/$org/$domain/$schema/$version/search/instances/${id.toString}?vocab=https://schema.hbp.eu/search/")
           .addHttpHeaders("Authorization" -> token)
           .get()
       )
       .map { wsresult =>
         wsresult.status match {
           case OK =>
-            val template = templateEngine.getTemplateFromType(templateType, databaseScope, liveMode)
-            Right(transform(wsresult.json, template))
+            TemplateType.fromSchema(s"$org/$domain/$schema/$version") match {
+              case Some(t) =>
+                val template = templateEngine.getTemplateFromType(t, databaseScope, liveMode)
+                Right(transform(wsresult.json, template))
+              case _ =>
+                Left(ApiError(NOT_FOUND, s"Did not find template type for schema $org/$domain/$schema/$version"))
+            }
           case status => Left(ApiError(status, wsresult.body))
         }
       }
@@ -518,7 +501,8 @@ class IndexerImpl @Inject()(
                            fieldsOnly: Boolean = true
                          ): Task[Either[ApiError, JsValue]] = {
 
-    val schema = TemplateType.toSchema(templateType)
+    //The last declaration of the template types defines the meta information
+    val schema = TemplateType.toSchema(templateType).last
     Task.deferFuture(cache.get[JsValue](s"meta-${schema}")).flatMap {
       case Some(elem) =>
         logger.info(s"Found meta data for ${schema} in cache")

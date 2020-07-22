@@ -403,8 +403,6 @@ trait ModelInstanceMetaTemplate extends Template {
         )
       )
     ),
-    "https://schema.hbp.eu/searchUi/boost" -> Get[Double]("searchUi:boost"),
-    "https://schema.hbp.eu/searchUi/icon"  -> Get[String]("searchUi:icon"),
     "http://schema.org/identifier"         -> Get[String]("http://schema.org/identifier"),
     "https://schema.hbp.eu/searchUi/order" -> Get[Int]("searchUi:order"),
     "http://schema.org/name"               -> Get[String]("schema:name")

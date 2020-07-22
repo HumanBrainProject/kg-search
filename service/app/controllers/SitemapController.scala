@@ -21,18 +21,15 @@ import models.templates.TemplateType
 import monix.eval.Task
 import monix.execution.Scheduler
 import play.api.cache.AsyncCacheApi
-import play.api.libs.json.JsValue
-import play.api.libs.ws.WSResponse
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import play.api.{Configuration, Logging}
 import play.cache.NamedCache
-import services.indexer.{ElasticSearch, Indexer}
+import services.indexer.{ElasticSearch}
 import scala.concurrent.duration._
 import scala.xml.Elem
 
 class SitemapController @Inject()(
   elasticSearch: ElasticSearch,
-  indexer: Indexer[JsValue, JsValue, Task, WSResponse, Either[ApiError, JsValue]],
   configuration: Configuration,
   cc: ControllerComponents,
   @NamedCache("search-metadata-cache") cache: AsyncCacheApi
@@ -41,31 +38,26 @@ class SitemapController @Inject()(
   val searchUrl: String = configuration.get[String]("searchUrlBase")
 
   def generateSitemap(): Action[AnyContent] = Action.async {
-    val siteMapGeneration = indexer.getRelevantTypes().flatMap {
-      case Right(relevantTypes) =>
-        val taskOfMAyXml = Task.sequence(relevantTypes.map { t =>
-          generateXmlPerType(t)
-        })
-        taskOfMAyXml.map { e =>
-          val l = e.flatten
-          val errors = l.collect { case Left(e) => e }
-          if (errors.nonEmpty) {
-            ApiError(INTERNAL_SERVER_ERROR, errors.map(e => e.message).mkString("\n")).toResults()
-          } else {
-            val listOfXmlElements = l.collect { case Right(xml) => xml }
-            val root = <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{listOfXmlElements.distinct}</urlset>
-            Ok(root).as("text/xml")
-          }
+      val taskOfMAyXml = Task.sequence(TemplateType.orderedList().map { t =>
+        generateXmlPerType(t)
+      })
+      taskOfMAyXml.map { e =>
+        val l = e.flatten
+        val errors = l.collect { case Left(e) => e }
+        if (errors.nonEmpty) {
+          ApiError(INTERNAL_SERVER_ERROR, errors.map(e => e.message).mkString("\n")).toResults()
+        } else {
+          val listOfXmlElements = l.collect { case Right(xml) => xml }
+          val root = <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{listOfXmlElements.distinct}</urlset>
+          Ok(root).as("text/xml")
         }
-      case Left(e) => Task.pure(e.toResults())
-    }
-    siteMapGeneration.runToFuture
+      }.runToFuture
   }
 
   private def generateXmlPerType(templateType: TemplateType): Task[List[Either[ApiError, Elem]]] = {
-    Task.deferFuture(cache.get[List[Either[ApiError,Elem]]](s"xml-${TemplateType.toSchema(templateType)}")).flatMap {
+    Task.deferFuture(cache.get[List[Either[ApiError,Elem]]](s"xml-${templateType.apiName}")).flatMap {
       case Some(elem) =>
-        logger.info(s"Found sitemap xml for ${TemplateType.toSchema(templateType)} in cache")
+        logger.info(s"Found sitemap xml for ${templateType.apiName} in cache")
         Task.pure(elem)
       case _ =>
         elasticSearch.queryIndexByType(templateType).map {
@@ -80,7 +72,7 @@ class SitemapController @Inject()(
                   }
                   .getOrElse(Left(ApiError(INTERNAL_SERVER_ERROR, s"Could not parse identifier of element $el")))
               }
-            cache.set(s"xml-${TemplateType.toSchema(templateType)}", result, 24.hours)
+            cache.set(s"xml-${templateType.apiName}", result, 24.hours)
             result
           case Left(e) => List(Left(e))
       }

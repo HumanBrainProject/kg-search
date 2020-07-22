@@ -25,8 +25,7 @@ import models.templates.elasticSearch.{
   ProjectMetaESTemplate,
   SampleMetaESTemplate,
   SoftwareProjectMetaESTemplate,
-  SubjectMetaESTemplate,
-  UnimindsPersonMetaESTemplate
+  SubjectMetaESTemplate
 }
 import models.templates.meta.{
   DatasetMetaTemplate,
@@ -35,8 +34,7 @@ import models.templates.meta.{
   ProjectMetaTemplate,
   SampleMetaTemplate,
   SoftwareProjectMetaTemplate,
-  SubjectMetaTemplate,
-  UnimindsPersonMetaTemplate
+  SubjectMetaTemplate
 }
 import models.templates.instance.{
   DatasetTemplate,
@@ -45,8 +43,7 @@ import models.templates.instance.{
   ProjectTemplate,
   SampleTemplate,
   SoftwareProjectTemplate,
-  SubjectTemplate,
-  UnimindsPersonTemplate
+  SubjectTemplate
 }
 import models.templates.{
   Dataset,
@@ -57,12 +54,10 @@ import models.templates.{
   SoftwareProject,
   Subject,
   Template,
-  TemplateType,
-  UnimindsPerson
+  TemplateType
 }
 import play.api.Configuration
 import play.api.libs.json._
-import play.api.libs.json.DefaultWrites
 import utils._
 
 import scala.collection.immutable.HashMap
@@ -158,11 +153,6 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
         override def dataBaseScope: DatabaseScope = dbScope
         override def liveMode: Boolean = live
       }
-    case UnimindsPerson =>
-      new UnimindsPersonTemplate {
-        override def dataBaseScope: DatabaseScope = dbScope
-        override def liveMode: Boolean = live
-      }
     case ModelInstance =>
       new ModelInstanceTemplate {
         override def dataBaseScope: DatabaseScope = dbScope
@@ -196,7 +186,6 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     case Subject         => new SubjectMetaTemplate {}
     case SoftwareProject => new SoftwareProjectMetaTemplate {}
     case ModelInstance   => new ModelInstanceMetaTemplate {}
-    case UnimindsPerson  => new UnimindsPersonMetaTemplate {}
     case _               => ???
   }
 
@@ -208,7 +197,6 @@ class TemplateEngineImpl @Inject()(configuration: Configuration) extends Templat
     case Subject         => new SubjectMetaESTemplate {}
     case SoftwareProject => new SoftwareProjectMetaESTemplate {}
     case ModelInstance   => new ModelInstanceMetaESTemplate {}
-    case UnimindsPerson  => new UnimindsPersonMetaESTemplate {}
     case _               => ???
   }
 }

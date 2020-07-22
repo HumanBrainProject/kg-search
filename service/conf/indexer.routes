@@ -113,40 +113,6 @@ GET /templates/:templateType  controllers.IndexerController.applyTemplateByType(
 GET /templates/:templateType/meta  controllers.IndexerController.applyMetaTemplateByType(templateType:models.templates.TemplateType)
 
 
-  ###
-  #  summary: Apply a template to a single instance this process is the first step of the indexing to the search UI
-  #  parameters:
-  #  - in: header
-  #    name: Authorization
-  #    description: Authorization token
-  #    required: false
-  #    type: string
-  #  - in: query
-  #    name: databaseScope
-  #    type: string
-  #    enum: [INFERRED, RELEASED]
-  #  - in: path
-  #    name: templateType
-  #    type: string
-  #    enum:
-  #      - Dataset
-  #      - Person
-  #      - Project
-  #      - UnimindsPerson
-  #      - ModelInstance
-  #      - SoftwareProject
-  #      - Sample
-  #    default: Dataset
-  #  - in: path
-  #    name: id
-  #    type: string
-  #    format: uuid
-  #  responses:
-  #    '200':
-  #      description: Ok
-  ###
-GET /templates/:templateType/:id  controllers.IndexerController.applyTemplateByTypeAndId(databaseScope: models.DatabaseScope, templateType:models.templates.TemplateType, id: java.util.UUID)
-
  ###
   #  summary: Apply a template to a single instance this process is the first step of the indexing to the search UI
   #  parameters:

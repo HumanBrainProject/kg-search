@@ -227,7 +227,7 @@ class SmartProxySpec extends PlaySpec {
         }
         """).as[JsObject]
 
-      val jsUp = Json.parse(SearchController.adaptEsQueryForNestedDocument(ByteString(query.getBytes)).utf8String)
+      val jsUp = SearchController.adaptEsQueryForNestedDocument(Json.parse(query))
       assert(jsUp.equals(jsExpected))
 
     }
