@@ -92,7 +92,6 @@ export const loadDefinition = () => {
     field.count = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "count", false);
     field.collapsible = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "collapsible", false);
     field.ignoreForSearch = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "ignoreForSearch", false);
-    field.optional = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "optional", false);
     field.highlight = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "highlight", false);
     if (field.children) {
       Object.values(field.children).forEach(childField => {
@@ -131,17 +130,9 @@ export const loadDefinition = () => {
         }
       };
     }
-    if (mapping[SEARCHUI_NAMESPACE + "boost"]) {
-      mapping.boost = mapping[SEARCHUI_NAMESPACE + "boost"];
-      delete mapping[SEARCHUI_NAMESPACE + "boost"];
-    }
     if (mapping[SEARCHUI_NAMESPACE + "defaultSelection"]) {
       mapping.defaultSelection = mapping[SEARCHUI_NAMESPACE + "defaultSelection"];
       delete mapping[SEARCHUI_NAMESPACE + "defaultSelection"];
-    }
-    if (mapping[SEARCHUI_NAMESPACE + "icon"]) {
-      mapping.icon = mapping[SEARCHUI_NAMESPACE + "icon"];
-      delete mapping[SEARCHUI_NAMESPACE + "icon"];
     }
     if (mapping.fields) {
       Object.values(mapping.fields).forEach(field => {
