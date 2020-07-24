@@ -36,7 +36,7 @@ POST /  controllers.IndexerController.index(databaseScope: models.DatabaseScope,
   #  - in: path
   #    name: dataType
   #    type: string
-  #    enum: [Dataset, Person, UnimindsPerson, Project, Sample, Subject, SoftwareProject, ModelInstance]
+  #    enum: [Dataset, Person, Project, Sample, Subject, SoftwareProject, ModelInstance]
   #  - in: query
   #    name: databaseScope
   #    type: string
@@ -72,12 +72,11 @@ POST /:dataType  controllers.IndexerController.indexByType(databaseScope: models
   #      - Dataset
   #      - Person
   #      - Project
-  #      - UnimindsPerson
   #      - ModelInstance
   #      - SoftwareProject
   #    default: Dataset
   #  - in: path
-  #    name: query
+  #    name: databaseScope
   #    type: string
   #    enum: [INFERRED, RELEASED]
   #  - in: query

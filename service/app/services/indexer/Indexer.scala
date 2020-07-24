@@ -435,16 +435,22 @@ class IndexerImpl @Inject()(
         }
         val errors = payloads.collect { case Left(e) => e }
         if (errors.isEmpty) {
-          val objects = payloads.collect { case Right(payload) => payload }.foldLeft(Map[String, JsObject]()) {
-            (acc, resultList) =>
-              for (el <- resultList) {
-                (el \ "identifier").asOpt[String] match {
-                  case Some(identifier) => acc + (identifier -> el)
-                  case _ => None
+          val objectMap = payloads.collect { case Right(payload) => payload }.flatten.foldLeft(Map.empty[String, JsObject]) {
+            (map, jsObject) =>
+                (jsObject \ "identifier") match {
+                  case i: JsDefined => i.asInstanceOf[JsDefined].value match {
+                    case JsString(s) =>
+                      map + (s -> jsObject)
+                    case JsArray(list)  =>
+                      if(list.nonEmpty) {
+                        map + (list.head.asInstanceOf[JsString].value -> jsObject)
+                      } else map
+                    case _ => map
+                  }
+                  case _ => map
                 }
-              }
-              acc
-          }.valuesIterator.toList
+          }
+          val objects = objectMap.valuesIterator.toList
           logger.info(s"$templateType - Fetching of data done with ${objects.size} elements fetched")
           val template = templateEngine.getTemplateFromType(templateType, databaseScope, false)
           val result = objects.map(r => {
