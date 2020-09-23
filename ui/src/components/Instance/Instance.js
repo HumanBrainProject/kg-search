@@ -80,16 +80,20 @@ export class Instance extends React.PureComponent {
           </div>
         </div>
         <div className="kgs-instance-scroll">
-          <div className={`kgs-instance-content kgs-instance__grid ${(buttons && buttons.length) ? "kgs-instance__with-buttons" : ""} ${(previews && previews.length) ? "kgs-instance__with-previews" : ""}`}>
-            <FieldsButtons className="kgs-instance__buttons" fields={buttons} />
-            <div className="kgs-instance__highlights">
-              <ImagePreviewsComponent className={`kgs-instance__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
-              <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
+          <div className="kgs-instance-scoll-content">
+            <div className={`kgs-instance-content kgs-instance__grid ${(buttons && buttons.length) ? "kgs-instance__with-buttons" : ""} ${(previews && previews.length) ? "kgs-instance__with-previews" : ""}`}>
+              <FieldsButtons className="kgs-instance__buttons" fields={buttons} />
+              <div className="kgs-instance__highlights">
+                <ImagePreviewsComponent className={`kgs-instance__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
+                <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
+              </div>
+              <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
+              <FieldsTabs className="kgs-instance__groups" id={id} fields={groups} />
             </div>
-            <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
-            <FieldsTabs className="kgs-instance__groups" id={id} fields={groups} />
+            <strong className="kgs-instance-content-disclaimer">Disclaimer:
+Please alert us at <a href="mailto:curation-support@ebrains.eu">curation-support@ebrains.eu</a> for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible.</strong>
+            <TermsShortNoticeComponent />
           </div>
-          <TermsShortNoticeComponent />
         </div>
         <ImagePopupComponent className="kgs-instance__image_popup" />
       </div>
