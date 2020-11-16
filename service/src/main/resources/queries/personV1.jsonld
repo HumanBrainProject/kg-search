@@ -1,0 +1,239 @@
+{
+  "@context": {
+    "fieldname": {
+      "@type": "@id",
+      "@id": "fieldname"
+    },
+    "minds": "https://schema.hbp.eu/minds/",
+    "schema": "http://schema.org/",
+    "search": "https://schema.hbp.eu/search/",
+    "@vocab": "https://schema.hbp.eu/graphQuery/",
+    "release": "https://schema.hbp.eu/release/",
+    "searchUi": "https://schema.hbp.eu/searchUi/",
+    "relative_path": {
+      "@type": "@id",
+      "@id": "relative_path"
+    }
+  },
+  "schema:name": "Contributor",
+  "searchUi:boost": 2.5,
+  "searchUi:icon": "<svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"40px\" height=\"40px\" viewBox=\"0 0 40 40\" enable-background=\"new 0 0 40 40\" xml:space=\"preserve\"><g>\t<g>\t\t<g>\t\t\t<path opacity=\"0.6\" fill=\"#4D4D4D\" d=\"M22.584,19.024c0,1.63-1.012,2.952-2.642,2.952l0,0c-1.631,0-2.64-1.322-2.64-2.952\t\t\t\tl-0.312-2.214c0-1.63,1.321-2.951,2.952-2.951l0,0c1.63,0,2.953,1.321,2.953,2.951L22.584,19.024z\"/>\t\t\t<path opacity=\"0.6\" fill=\"#4D4D4D\" d=\"M23.227,21.409c-0.656,1.087-1.845,1.815-3.206,1.815c-1.362,0-2.551-0.729-3.206-1.815\t\t\t\tc-1.848,0.745-3.111,2.111-3.189,3.689h12.79C26.336,23.521,25.074,22.154,23.227,21.409z\"/>\t\t</g>\t</g>\t\t\t<path fill=\"none\" stroke=\"#4D4D4D\" stroke-width=\"1.538\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" d=\"\t\tM29.612,36.514H10.387c-0.33,0-0.601-0.271-0.601-0.601V9.478c0-0.33,0.271-0.601,0.601-0.601h19.226\t\tc0.331,0,0.602,0.271,0.602,0.601v26.436C30.214,36.243,29.943,36.514,29.612,36.514z\"/>\t<line fill=\"none\" stroke=\"#4D4D4D\" stroke-width=\"1.8024\" x1=\"13.391\" y1=\"29.304\" x2=\"26.608\" y2=\"29.304\"/>\t<g>\t\t<path fill=\"#4D4D4D\" d=\"M22.584,10.148c0,0.944-0.766,1.709-1.707,1.709h-1.712c-0.941,0-1.707-0.765-1.707-1.709V5.195\t\t\tc0-0.944,0.766-1.709,1.707-1.709h1.712c0.941,0,1.707,0.765,1.707,1.709V10.148z\"/>\t</g></g></svg>",
+  "searchUi:order": 7,
+  "fields": [
+    {
+      "fieldname": "search:identifier",
+      "relative_path": "schema:identifier",
+      "required": true,
+      "searchUi:visible": false
+    },
+    {
+      "fieldname": "search:editorId",
+      "relative_path": "https://schema.hbp.eu/relativeUrl",
+      "required": true,
+      "searchUi:layout": "header"
+    },
+    {
+      "fieldname": "search:title",
+      "relative_path": "schema:name",
+      "required": true,
+      "label": "Name",
+      "searchUi:boost": 20,
+      "searchUi:optional": false,
+      "searchUi:sort": true
+    },
+    {
+      "fieldname": "search:description",
+      "relative_path": "schema:description",
+      "label": "Description",
+      "searchUi:boost": 7.5,
+      "searchUi:label_hidden": true,
+      "searchUi:markdown": true
+    },
+    {
+      "fieldname": "search:email",
+      "relative_path": "schema:email",
+      "label": "Email",
+      "searchUi:overview": true,
+      "searchUi:type": "text"
+    },
+    {
+      "fieldname": "search:phone",
+      "relative_path": "schema:telephone",
+      "label": "Phone"
+    },
+    {
+      "fieldname": "search:address",
+      "relative_path": "schema:address",
+      "label": "Address"
+    },
+    {
+      "fieldname": "search:organizations",
+      "relative_path": [
+        "minds:affiliations",
+        "schema:name"
+      ],
+      "label": "Organizations",
+      "searchUi:overview": true
+    },
+    {
+      "fieldname": "search:custodianOf",
+      "relative_path": {
+        "@id": "minds:owners",
+        "reverse": true
+      },
+      "label": "Custodian of",
+      "searchUi:layout": "group",
+      "searchUi:overview": true,
+      "fields": [
+        {
+          "fieldname": "search:name",
+          "relative_path": "schema:name"
+        },
+        {
+          "fieldname": "search:identifier",
+          "relative_path": "schema:identifier",
+          "required": true
+        },
+        {
+          "fieldname": "search:relativeUrl",
+          "relative_path": "https://schema.hbp.eu/relativeUrl",
+          "searchUi:visible": false
+        },
+        {
+          "fieldname": "search:datasetComponent",
+          "relative_path": [
+            "minds:component",
+            "schema:name"
+          ]
+        }
+      ]
+    },
+    {
+      "fieldname": "search:custodianOfModel",
+      "relative_path": {
+        "@id": "https://schema.hbp.eu/invalid",
+        "reverse": true
+      },
+      "label": "Custodian of models",
+      "searchUi:layout": "group",
+      "fields": [
+        {
+          "fieldname": "search:name",
+          "relative_path": "schema:name"
+        },
+        {
+          "fieldname": "search:identifier",
+          "relative_path": "schema:identifier",
+          "required": true
+        },
+        {
+          "fieldname": "search:relativeUrl",
+          "relative_path": "https://schema.hbp.eu/relativeUrl",
+          "searchUi:visible": false
+        }
+      ]
+    },
+    {
+      "fieldname": "search:modelContributions",
+      "relative_path": {
+        "@id": "https://schema.hbp.eu/invalid",
+        "reverse": true
+      },
+      "label": "Model contributions",
+      "searchUi:facet": "exists",
+      "searchUi:layout": "group",
+      "searchUi:type": "text",
+      "fields": [
+        {
+          "fieldname": "search:name",
+          "relative_path": "schema:name",
+          "sort": true
+        },
+        {
+          "fieldname": "search:identifier",
+          "relative_path": "schema:identifier"
+        },
+        {
+          "fieldname": "search:relativeUrl",
+          "relative_path": "https://schema.hbp.eu/relativeUrl",
+          "searchUi:visible": false
+        }
+      ]
+    },
+    {
+      "fieldname": "search:publications",
+      "relative_path": {
+        "@id": "minds:authors",
+        "reverse": true
+      },
+      "label": "Publications",
+      "searchUi:facet": "exists",
+      "searchUi:layout": "group",
+      "searchUi:markdown": true,
+      "fields": [
+        {
+          "fieldname": "search:citation",
+          "relative_path": "minds:cite",
+          "sort": true,
+          "searchUi:visible": false
+        },
+        {
+          "fieldname": "search:doi",
+          "relative_path": "minds:doi",
+          "searchUi:visible": false
+        }
+      ]
+    },
+    {
+      "fieldname": "search:contributions",
+      "relative_path": {
+        "@id": "minds:contributors",
+        "reverse": true
+      },
+      "label": "Contributions",
+      "searchUi:facet": "exists",
+      "searchUi:layout": "group",
+      "searchUi:overview": true,
+      "searchUi:type": "text",
+      "fields": [
+        {
+          "fieldname": "search:name",
+          "relative_path": "schema:name",
+          "sort": true
+        },
+        {
+          "fieldname": "search:identifier",
+          "relative_path": "schema:identifier"
+        },
+        {
+          "fieldname": "search:relativeUrl",
+          "relative_path": "https://schema.hbp.eu/relativeUrl",
+          "searchUi:visible": false
+        },
+        {
+          "fieldname": "search:datasetComponent",
+          "relative_path": [
+            "minds:component",
+            "schema:name"
+          ]
+        }
+      ]
+    },
+    {
+      "fieldname": "search:firstReleaseAt",
+      "relative_path": "release:firstReleaseAt",
+      "label": "First release",
+      "searchUi:ignoreForSearch": true,
+      "searchUi:type": "date",
+      "searchUi:visible": false
+    },
+    {
+      "fieldname": "search:lastReleaseAt",
+      "relative_path": "release:lastReleaseAt",
+      "label": "Last release",
+      "searchUi:ignoreForSearch": true,
+      "searchUi:type": "date",
+      "searchUi:visible": false
+    }
+  ]
+}

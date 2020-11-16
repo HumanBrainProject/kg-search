@@ -1,8 +1,0 @@
-{
-  "@type": "https://schema.hbp.eu/meta/Specificationfield",
-  "https://schema.hbp.eu/meta/editor/key": "https://schema.hbp.eu/meta/editor/targetType",
-  "https://schema.hbp.eu/meta/editor/label": "Target type",
-  "http://schema.org/name": "Target type",
-  "https://schema.hbp.eu/meta/editor/type": "InputText",
-  "https://schema.hbp.eu/meta/editor/identifier": "meta/minds/specificationfield/v0.0.1/targetType"
-}
