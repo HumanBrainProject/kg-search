@@ -1,0 +1,80 @@
+{
+  "_index": "publicly_released_software",
+  "_type": "_doc",
+  "_id": "d82bc443-557a-4555-8e48-0a9131bee71d",
+  "_version": 5299,
+  "_seq_no": 1130812,
+  "_primary_term": 16,
+  "found": true,
+  "_source": {
+    "appCategory": [
+      {
+        "value": "Application"
+      }
+    ],
+    "identifier": {
+      "value": "d82bc443-557a-4555-8e48-0a9131bee71d"
+    },
+    "description": {
+      "value": "PostgreSQL relational database schema for tracking the provenance of data for all software components and files involved in the data transformation process. This project provides a Docker container including Alembic and a Python model of the Data Catalog schema to setup and migrate this schema in a target database.\n"
+    },
+    "sourceCode": [
+      {
+        "url": "https://github.com/LREN-CHUV/data-catalog-setup/",
+        "value": "https://github.com/LREN-CHUV/data-catalog-setup/"
+      }
+    ],
+    "features": [
+      {
+        "value": "Commandline Interface"
+      },
+      {
+        "value": "Desktop Environment"
+      },
+      {
+        "value": "Metadata Data Types"
+      }
+    ],
+    "documentation": [
+      {
+        "url": "https://github.com/LREN-CHUV/data-catalog-setup/blob/master/README.md",
+        "value": "https://github.com/LREN-CHUV/data-catalog-setup/blob/master/README.md"
+      }
+    ],
+    "license": [
+      {
+        "value": "Apache License, Version 2.0 "
+      }
+    ],
+    "operatingSystem": [
+      {
+        "value": "Linux"
+      },
+      {
+        "value": "MacOS"
+      }
+    ],
+    "version": {
+      "value": "1.6.0"
+    },
+    "homepage": [
+      {
+        "url": "https://github.com/LREN-CHUV/data-catalog-setup/",
+        "value": "https://github.com/LREN-CHUV/data-catalog-setup/"
+      }
+    ],
+    "title": {
+      "value": "Data Catalogue"
+    },
+    "first_release": {
+      "value": "2020-09-17T10:11:29.378Z"
+    },
+    "last_release": {
+      "value": "2020-09-17T10:11:29.369Z"
+    },
+    "@timestamp": "2020-11-16T15:41:02.173721",
+    "type": {
+      "value": "Software"
+    }
+  }
+}

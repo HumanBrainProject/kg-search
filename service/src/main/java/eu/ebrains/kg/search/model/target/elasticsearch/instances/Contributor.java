@@ -10,24 +10,53 @@ import java.util.List;
 @MetaInfo(orderId = 6, identifier = "uniminds/core/person/v1.0.0/search")
 public class Contributor {
 
-    @JsonProperty("first_release")
-    @FieldInfo(label = "First release", type="date", layout = FieldInfo.Layout.GROUP)
-    private Value<Date> firstRelease;
-    @JsonProperty("last_release")
-    private Value<Date> lastRelease;
-    private List<InternalReference> custodianOf;
-    private List<InternalReference> contributions;
-    private List<InternalReference> modelContributions;
+//    @FieldInfo(visible = false)
+    private Value<String> identifier;
+
+//    @FieldInfo(label = "Name", sort = true, boost = 20)
     private Value<String> title;
+
+//    @FieldInfo(layout = FieldInfo.Layout.HEADER)
+    private Value<String> editorId;
+
+//    @FieldInfo(label = "Custodian of", overview = true, layout = FieldInfo.Layout.GROUP)
+    private List<InternalReference> custodianOf;
+
+//    @FieldInfo(label = "Custodian of models", overview = true, layout = FieldInfo.Layout.GROUP)
+    private List<InternalReference> custodianOfModel;
+
+//    @FieldInfo(label = "Publications", facet = "exists", layout = FieldInfo.Layout.GROUP, markdown = true)
+    private List<InternalReference> publications;
+
+//    @FieldInfo(label = "Contributions", facet = "exists", layout = FieldInfo.Layout.GROUP, type = "text", overview = true)
+    private List<InternalReference> contributions;
+
+//    @FieldInfo(label = "Model contributions", facet = "exists", layout = FieldInfo.Layout.GROUP, type = "text", overview = true)
+    private List<InternalReference> modelContributions;
+
+    @JsonProperty("first_release")
+//    @FieldInfo(label = "First release", type="date", visible = false, ignoreForSearch = true)
+    private Value<Date> firstRelease;
+
+    @JsonProperty("last_release")
+//    @FieldInfo(label = "Last release", type="date", visible = false, ignoreForSearch = true)
+    private Value<Date> lastRelease;
+
     private Value<String> type;
 
     public void setFirstRelease(Date firstRelease){
         setFirstRelease(firstRelease!=null ? new Value<>(firstRelease) : null);
     }
 
+    public void setEditorId(Value<String> editorId) { this.editorId = editorId; }
+
     public void setLastRelease(Date lastRelease){
         setLastRelease(lastRelease!=null ? new Value<>(lastRelease) : null);
     }
+
+    public Value<String> getIdentifier() { return identifier; }
+
+    public void setIdentifier(Value<String> identifier) { this.identifier = identifier; }
 
     public void setTitle(String title){
         setTitle(title!=null ? new Value<>(title) : null);
@@ -37,6 +66,7 @@ public class Contributor {
         setType(type!=null ? new Value<>(type): null);
     }
 
+    public Value<String> getEditorId() { return editorId; }
 
     public Value<Date> getFirstRelease() {
         return firstRelease;
@@ -62,6 +92,12 @@ public class Contributor {
         this.custodianOf = custodianOf;
     }
 
+    public List<InternalReference> getCustodianOfModel() { return custodianOfModel; }
+
+    public void setCustodianOfModel(List<InternalReference> custodianOfModel) {
+        this.custodianOfModel = custodianOfModel;
+    }
+
     public List<InternalReference> getContributions() {
         return contributions;
     }
@@ -76,6 +112,12 @@ public class Contributor {
 
     public void setModelContributions(List<InternalReference> modelContributions) {
         this.modelContributions = modelContributions;
+    }
+
+    public List<InternalReference> getPublications() { return publications; }
+
+    public void setPublications(List<InternalReference> publications) {
+        this.publications = publications;
     }
 
     public Value<String> getTitle() {

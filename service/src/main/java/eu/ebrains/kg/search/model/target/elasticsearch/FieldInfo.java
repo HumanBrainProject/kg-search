@@ -8,15 +8,17 @@ public @interface FieldInfo {
     boolean labelHidden() default false;
     boolean markdown() default false;
     boolean overview() default false;
-    String type();
+    String type() default  "";
     Layout layout() default Layout.STANDARD;
     String linkIcon() default "";
     String tagIcon() default "";
+    String facet() default "";
+    boolean ignoreForSearch() default false;
     float boost() default 1.0f;
 
 
     public enum Layout{
-        STANDARD, GROUP
+        STANDARD, GROUP, HEADER
     }
 
 }
