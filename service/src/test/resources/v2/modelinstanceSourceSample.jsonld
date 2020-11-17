@@ -1,0 +1,1097 @@
+{
+  "databaseScope": "RELEASED",
+  "importantMessage": "This query is executed with a mode thought for query testing only (with throttled performance). Please register your query if you're happy with it. It's easy and you gain speed ;)!",
+  "apiName": "Model",
+  "results": [
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://github.com/SpikeFrame/TemporalEncoding"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/ef9f5b43-51c2-4e24-beeb-3afe5b7efa01",
+          "https://schema.hbp.eu/search/name": "Gruening, Andre",
+          "https://schema.hbp.eu/search/identifier": "1246d77d1d771325575776db8a3405ac"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "INST/FILT Learning Rule",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/e12a3afa-256a-4fbb-8c29-2c8c05f2e229",
+      "https://schema.hbp.eu/search/version": "P1",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "Precise spike timing as a means to encode information in neural networks is biologically supported, and is advantageous over frequency-based codes by processing input features on a much shorter time-scale. For these reasons, much recent attention has been focused on the development of supervised learning rules for spiking neural networks that utilise a temporal coding scheme. However, despite significant progress in this area, there still lack rules that have a theoretical basis, and yet can be considered biologically relevant. Here we examine the general conditions under which synaptic plasticity most effectively takes place to support the supervised learning of a precise temporal code. As part of our analysis we examine two spike-based learning methods: one of which relies on an instantaneous error signal to modify synaptic weights in a network (INST rule), and the other one relying on a filtered error signal for smoother synaptic weight modifications (FILT rule). We test the accuracy of the solutions provided by each rule with respect to their temporal encoding precision, and then measure the maximum number of input patterns they can learn to memorise using the precise timings of individual spikes as an indication of their storage capacity. Our results demonstrate the high performance of the FILT rule in most cases, underpinned by the rule’s error-filtering mechanism, which is predicted to provide smooth convergence towards a desired solution during learning. We also find the FILT rule to be most efficient at performing input pattern memorisations, and most noticeably when patterns are identified using spikes with sub-millisecond temporal precision. In comparison with existing work, we determine the performance of the FILT rule to be consistent with that of the highly efficient E-learning Chronotron rule, but with the distinct advantage that our FILT rule is also implementable as an online method for increased biological realism.",
+      "https://schema.hbp.eu/search/license": [],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/32b5b002-a563-4250-8365-fd7f55557034",
+          "https://schema.hbp.eu/search/name": "Gardner, Brian",
+          "https://schema.hbp.eu/search/identifier": "3bb6ae1ec51622439f158ed89973471e"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/ef9f5b43-51c2-4e24-beeb-3afe5b7efa01",
+          "https://schema.hbp.eu/search/name": "Gruening, Andre",
+          "https://schema.hbp.eu/search/identifier": "1246d77d1d771325575776db8a3405ac"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [],
+      "https://schema.hbp.eu/search/identifier": "6fa8effd02dce86157a04b91f262ce7f"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://senselab.med.yale.edu/modeldb/ShowModel.cshtml?model=234992"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/79e451c0-59f6-425b-a336-9c8e7955aefa",
+          "https://schema.hbp.eu/search/name": "Destexhe, Alain",
+          "https://schema.hbp.eu/search/identifier": "8cb9d524dff73b321ede05deea3322f2"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "Mean-field Model of AdEx networks",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/bc3b915f-1ef4-43bc-890b-8b5098d080da",
+      "https://schema.hbp.eu/search/version": "1.0",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "The UNIC partner has designed a mean-field model of neuronal population activity, for networks of Adaptive Exponential (AdEx) integrate and fire neurons.  The model of spiking neurons (used as a reference) was a similar model as described previously (Destexhe, JCNS, 2009; see this paper for all details about the methods).  The network was based on two different cell types, excitatory (“regular spiking” or RS) and inhibitory (“fast spiking” or FS) neurons.  The mean-field model of RS-FS networks was based on a Master Equation Formalism proposed previously (El Boustani and Destexhe, 2009).  \n\nWe report here the first results of a mean-field model of RS-FS networks.  Such a model requires to compute the transfer functions of the different cell types, which we have done for RS and FS cells, numerically.  The mean-field model obtained was then tested against numerical simulations of the network.  The mean-field model was able to capture the distribution of firing rates during spontaneous activity (Fig. 1), as well as the response of the network to external excitatory inputs (Fig. 2).   One can see that the mean-field predicts well the activity of these networks, as well as the temporal dynamics of their responses to simple stimuli.  However, the peak and the tail of the responses were not perfectly fit, mostly because of the presence of adaptation in RS cells.  The inclusion of an adaptation term is currently being investigated.\n\nAn extension of the model is towards including measurements of transfer functions from real cortical neurons.  The transfer function is a central piece of the mean-field formalism, it maps the output of the neuron (expressed as a rate) as a function of its excitatory and inhibitory inputs.  One great advantage of the Master Equation formalism (El Boustani and Destexhe, 2009) is that it can be applied to any network of neurons, provided their transfer functions are known.  It was initially applied networks of integrate-and-fire neurons, connected with conductance-based synapses, and the formalism successfully predicted the state space of such networks (El Boustani and Destexhe, 2009).  It was more recently applied to more complex neuron types, such as the AdEx model (Zerlaut and Destexhe, 2017).  Here, the transfer function was obtained using a semi-analytical procedure, where a mathematical template was fit to numerical simulations (Zerlaut and Destexhe, 2017).   The resulting mean-field model could predict not only the level of spontaneous activity, but also the response of the network to external stimuli, as shown above.\n\nThe same approach could be followed for more complex neurons, and it was applied to real neurons from mouse V1 (Zerlaut et al., 2016).  In this approach, the same mathematical template was used and was constrained to recordings of neurons using conductance-based inputs injected using the dynamic-clamp technique.  This technique allowed us to measure the transfer function from 30 neurons, electrophysiologically identified as RS neurons.  However, the experiments revealed a very strong cell-to-cell diversity of transfer functions, which could only be accounted by diversity in the level of excitability of the neurons.  Mean-field models based on real neurons are potentially powerful because they can be used to match population recordings from real data - this new type of mean-field model will be investigated in SGA2.\n\n#### Publications\n\nZerlaut Y. and Destexhe A. (2017) A mean-field model for conductance-based networks of adaptive exponential integrate-and-fire models.  [ArXiv preprint](https://arxiv.org/abs/1703.00698)\n\nZerlaut Y., Chemla, S., Chavane F. and Destexhe A. (2018) Modeling mesoscopic cortical dynamics using a mean-field model of conductance-based networks of adaptive exponential integrate-and-fire models.  Journal of Computational Neuroscience (in press) [bioRxiv preprint](https://www.biorxiv.org/content/early/2017/11/12/abs/168385)\n\nZerlaut Y., Telenczuk, B., Deleuze, C., Bal, T., Ouanounou, G. and Destexhe, A. (2016)  Heterogeneous firing rate response of mice layer V pyramidal neurons in the fluctuation-driven regime. Journal of Physiology 594: 3791-3808.\n\n#### References\n\nEl Boustani, S. and Destexhe, A.  A master equation formalism for macroscopic modeling of asynchronous irregular activity states.  Neural Computation 21: 46-100, 2009.\n\n#### Code\n\n[https://senselab.med.yale.edu/modeldb/ShowModel.cshtml?model=234992](https://senselab.med.yale.edu/modeldb/ShowModel.cshtml?model=234992)",
+      "https://schema.hbp.eu/search/license": [
+        {
+          "https://schema.hbp.eu/search/url": "https://creativecommons.org/licenses/by/4.0/",
+          "https://schema.hbp.eu/search/name": "Creative Commons Attribution 4.0 International"
+        }
+      ],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/d7db810e-57e4-49f3-9cde-a3e03458ffa5",
+          "https://schema.hbp.eu/search/name": "Zerlaut, Yann",
+          "https://schema.hbp.eu/search/identifier": "ab2a2c03c2ea415fa8f2e092751c73b8"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/663c7ec5-4506-4054-9c64-15514222774f",
+          "https://schema.hbp.eu/search/name": "Chemla, Sandrine",
+          "https://schema.hbp.eu/search/identifier": "663c7ec5-4506-4054-9c64-15514222774f"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/1bfcbf36-6137-4f38-a49c-e880c2137f21",
+          "https://schema.hbp.eu/search/name": "Chavane, Frédéric",
+          "https://schema.hbp.eu/search/identifier": "1bfcbf36-6137-4f38-a49c-e880c2137f21"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/79e451c0-59f6-425b-a336-9c8e7955aefa",
+          "https://schema.hbp.eu/search/name": "Destexhe, Alain",
+          "https://schema.hbp.eu/search/identifier": "8cb9d524dff73b321ede05deea3322f2"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [],
+      "https://schema.hbp.eu/search/identifier": "6a11f5921af42fcf69e3e3f0e468797c"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/fb89992e-f603-449a-8dae-60147a1c2322",
+          "https://schema.hbp.eu/search/name": "Górski, Tomasz",
+          "https://schema.hbp.eu/search/identifier": "db99b8dc0e51c0c3758e6517427407a2"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "Conductance-based Adaptive Exponential Integrate and Fire Model",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/42496253-4b81-4493-8e9a-e13196c106ca",
+      "https://schema.hbp.eu/search/version": "Demonstration of CAdEx",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "The intrinsic electrophysiological properties of single neurons can be described by a broad spectrum of models, from the most realistic Hodgkin-Huxley type models with numerous detailed mechanisms to the phenomenological models. The Adaptive Exponential integrate-and-fire (AdEx) model has emerged as a convenient “middle-ground” model. With a low computational cost, but keeping biophysical interpretation of the parameters it has been extensively used for simulation of large neural networks. However, because of its current-based adaptation, it can generate unrealistic behaviors. We show the limitations of the AdEx model, and to avoid them, we introduce the Conductance-based Adaptive Exponential integrate-and-fire model (CAdEx). We give an analysis of the dynamic of the CAdEx model and we show the variety of firing patterns that it can produce. We propose the CAdEx model as a richer alternative to perform network simulations with simplified models reproducing neuronal intrinsic properties.",
+      "https://schema.hbp.eu/search/license": [
+        {
+          "https://schema.hbp.eu/search/url": "https://creativecommons.org/licenses/by/4.0/",
+          "https://schema.hbp.eu/search/name": "Creative Commons Attribution 4.0 International"
+        }
+      ],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/fb89992e-f603-449a-8dae-60147a1c2322",
+          "https://schema.hbp.eu/search/name": "Górski, Tomasz",
+          "https://schema.hbp.eu/search/identifier": "db99b8dc0e51c0c3758e6517427407a2"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/0ce2a1d4-1471-4199-a544-9f85004a87c5",
+          "https://schema.hbp.eu/search/name": "Depannemaecker, Damien",
+          "https://schema.hbp.eu/search/identifier": "0ce2a1d4-1471-4199-a544-9f85004a87c5"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/79e451c0-59f6-425b-a336-9c8e7955aefa",
+          "https://schema.hbp.eu/search/name": "Destexhe, Alain",
+          "https://schema.hbp.eu/search/identifier": "8cb9d524dff73b321ede05deea3322f2"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [
+        "embargoed"
+      ],
+      "https://schema.hbp.eu/search/identifier": "6e9dffde5bc73f1432fce77dd21cd17b"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://senselab.med.yale.edu/modeldb/ShowModel.cshtml?model=224923"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/4093e758-4db9-4672-ba3e-6142a741b2c9",
+          "https://schema.hbp.eu/search/name": "Einevoll, Gaute T.",
+          "https://schema.hbp.eu/search/identifier": "9ebd3a30a3114d811b0a2afe2660348b"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "Effect of tissue impedance on LFPs",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/cec48280-3142-4744-a1f2-bb2b435bba0d",
+      "https://schema.hbp.eu/search/version": "1.0",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "Simulation code used in Miceli S, Ness T V, Einevoll GT, Schubert D (2017) Impedance Spectrum in Cortical Tissue: Implications for Propagation of LFP Signals on the Microscopic Level. [eNeuro 4:1–15](http://www.eneuro.org/content/4/1/ENEURO.0291-16.2016)\n\nWe performed a detailed investigation of the frequency dependence of the conductivity within cortical tissue at microscopic distances using small current amplitudes within the typical (neuro)physiological micrometer and sub-nanoampere range. We investigated the propagation of LFPs, induced by extracellular electrical current injections via patch-pipettes, in acute rat brain slice preparations containing the somatosensory cortex in vitro using multielectrode arrays. Based on our data, we determined the cortical tissue conductivity over a 100-fold increase in signal frequency (5-500 Hz). Our results imply at most very weak frequency-dependent effects within the frequency range of physiological LFPs. Using biophysical modeling, we estimated the impact of different putative impedance spectra. Our results indicate that frequency dependencies of the order measured here and in most other studies have negligible impact on the typical analysis and modeling of LFP signals from extracellular brain recordings.",
+      "https://schema.hbp.eu/search/license": [],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/ed6b7869-b6ec-4c6b-91ac-481f168d3986",
+          "https://schema.hbp.eu/search/name": "Ness, Torbjørn V.",
+          "https://schema.hbp.eu/search/identifier": "dc9290080e07c6386e6869b1f947acdf"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/4093e758-4db9-4672-ba3e-6142a741b2c9",
+          "https://schema.hbp.eu/search/name": "Einevoll, Gaute T.",
+          "https://schema.hbp.eu/search/identifier": "9ebd3a30a3114d811b0a2afe2660348b"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [],
+      "https://schema.hbp.eu/search/identifier": "e20dc9bea3edea44235a0a0d1f0e439b"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://senselab.med.yale.edu/modeldb/ShowModel?model=263259"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/57a67503-1cb5-4bad-ad19-c62919ca4805",
+          "https://schema.hbp.eu/search/name": "Carlu, Mallory",
+          "https://schema.hbp.eu/search/identifier": "57a67503-1cb5-4bad-ad19-c62919ca4805"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "Mean field model for Hodgkin Huxley networks of neurons",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/fa393b61-92ab-4925-ad53-d36cde34c5d6",
+      "https://schema.hbp.eu/search/version": "1.0",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "In SGA2, we have developed a semi-analytic approach to mean-field models [1].  This approach is very powerful because one can use it to design mean-field models from complex neural models.  It was applied first to networks of AdEx neurons with conductance-based synaptic interactions [1].  The formalism was later extended to include spike-frequency adaptation [2], which enabled us to obtain mean-field models that very finely capture the time course and amplitude of response to external stimulation.  At the end of SGA2, we took it one step further by designing mean-field models of even more complex models, the Morris-Lecar model and the well-known Hodgkin-Huxley (HH) model [3].  The mean-field model captures the level of spontaneous activity and the dynamics of response of networks of HH neurons.  In SGA3, we plan to apply this formalism to detailed models based on morphological reconstructions.\n\nIt is important to note that part of this work was obtained during the EITN Spring School of Computational Neuroscience, and we decided to put the students as co-first authors of the resulting article [3].\n\nA copy of the code of this model was put in open-access on [ModelDB]( https://senselab.med.yale.edu/modeldb/ShowModel?model=263259)\n\n\n#### References\n\n[1] Zerlaut, Y., Chemla, S., Chavane, F. and Destexhe, A.  Modeling mesoscopic cortical dynamics using a mean-field model of conductance-based networks of adaptive exponential integrate-and-fire neurons. J. Computational Neurosci. 44: 45-61, 2018.\n\n[2] di Volo, M., Romagnoni, A., Capone, C. and Destexhe, A. Biologically realistic mean-field models of conductance-based networks of spiking neurons with adaptation. Neural Computation 31: 653-680, 2019. \n\n[3] Carlu, M., Chehab, O., Dalla Porta, L., Depannemaecker, D., Herice, C., Jedynak, M., Koksal, Ersoz, E., Muratore, P., Souihel, S., Capone, C., Zerlaut, Y., Destexhe, A. and di Volo, M.  A mean-field approach to the dynamics of networks of complex neurons, from nonlinear Integrate-and-Fire to Hodgkin-Huxley models. J. Neurophysiol., in press, 2020.\n[bioRxiv preprint](https://www.biorxiv.org/content/10.1101/870345v1)",
+      "https://schema.hbp.eu/search/license": [
+        {
+          "https://schema.hbp.eu/search/url": "https://creativecommons.org/licenses/by/4.0/",
+          "https://schema.hbp.eu/search/name": "Creative Commons Attribution 4.0 International"
+        }
+      ],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/57a67503-1cb5-4bad-ad19-c62919ca4805",
+          "https://schema.hbp.eu/search/name": "Carlu, Mallory",
+          "https://schema.hbp.eu/search/identifier": "57a67503-1cb5-4bad-ad19-c62919ca4805"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/183e06ec-d1f5-4959-9fab-45bcc8ee57d4",
+          "https://schema.hbp.eu/search/name": "Chehab, Omar",
+          "https://schema.hbp.eu/search/identifier": "183e06ec-d1f5-4959-9fab-45bcc8ee57d4"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/a61a6c10-db25-4b3e-ac7e-fea121430f7e",
+          "https://schema.hbp.eu/search/name": "Dalla Porta, Leonardo",
+          "https://schema.hbp.eu/search/identifier": "a61a6c10-db25-4b3e-ac7e-fea121430f7e"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/ce5e7d96-3184-4f72-b654-fa66c02ca7a1",
+          "https://schema.hbp.eu/search/name": "Depannemaeker, Damien",
+          "https://schema.hbp.eu/search/identifier": "ce5e7d96-3184-4f72-b654-fa66c02ca7a1"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/d9372958-1f34-4667-b231-c8410c6633c4",
+          "https://schema.hbp.eu/search/name": "Héricé, Charlotte",
+          "https://schema.hbp.eu/search/identifier": "d9372958-1f34-4667-b231-c8410c6633c4"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/7d2852a1-0595-443a-9c67-ef01ff155ea5",
+          "https://schema.hbp.eu/search/name": "Jedynak, Maciej",
+          "https://schema.hbp.eu/search/identifier": "7d2852a1-0595-443a-9c67-ef01ff155ea5"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/bb40c2c3-f5d1-451a-9ebb-9c9e78b351c9",
+          "https://schema.hbp.eu/search/name": "Muratore, Paolo",
+          "https://schema.hbp.eu/search/identifier": "bb40c2c3-f5d1-451a-9ebb-9c9e78b351c9"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/806b4306-5ff8-4bcf-b583-6acdc71da9bb",
+          "https://schema.hbp.eu/search/name": "Souihel, Selma",
+          "https://schema.hbp.eu/search/identifier": "806b4306-5ff8-4bcf-b583-6acdc71da9bb"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/50aa9d25-68b5-4d05-8c24-efd658e3c0b6",
+          "https://schema.hbp.eu/search/name": "Capone, Cristiano",
+          "https://schema.hbp.eu/search/identifier": "ddb0904147e01f2c2dcb111007cf7fed"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/d7db810e-57e4-49f3-9cde-a3e03458ffa5",
+          "https://schema.hbp.eu/search/name": "Zerlaut, Yann",
+          "https://schema.hbp.eu/search/identifier": "ab2a2c03c2ea415fa8f2e092751c73b8"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/79e451c0-59f6-425b-a336-9c8e7955aefa",
+          "https://schema.hbp.eu/search/name": "Destexhe, Alain",
+          "https://schema.hbp.eu/search/identifier": "8cb9d524dff73b321ede05deea3322f2"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/bea1da12-1209-4860-adc7-34275fb69917",
+          "https://schema.hbp.eu/search/name": "di Volo, Matteo",
+          "https://schema.hbp.eu/search/identifier": "4cc6d9f1a3aef03d763856d84f785576"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [],
+      "https://schema.hbp.eu/search/identifier": "4e3a86e2b1a58087b07052776b257f16"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "http://nbviewer.jupyter.org/url/docs.thevirtualbrain.org/tutorials/tutorial_s6_ModelingEpilepsy.ipynb"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/5fd5a274-8b6e-4501-a688-b87e444e49e3",
+          "https://schema.hbp.eu/search/name": "Jirsa, Viktor",
+          "https://schema.hbp.eu/search/identifier": "29afd436bfdca862b216a8c4a5d7526b"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "The Virtual Epileptic Patient",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/45e8bfee-739b-421e-b7c8-4be9edc5404a",
+      "https://schema.hbp.eu/search/version": "v1",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "The virtual patient brain network model allows a novel approach to brain interventions based on large-scale brain network based models that are derived from non- invasive structural data of individual patients. The Virtual Epileptic Patient (VEP) model provides the perfect test bed for clinical hypothesis testing of questions linked to network-based mechanisms. \nLarge-scale brain network models in general, and the VEP brain model in particular, have three critical components, network connectivity, neural mass model and MRI lesions. First, procedures to reconstruct connectivity from dMRI data nowadays reliably extract structural network connectivity with high anatomical precision (Johansen-Berg and Berhens, 2009) and efforts are on the way to develop more advanced methods proving robust and reproducible on subject and group levels (Besson et al., 2014). Thus there is hope that patient specific connectomes may soon enter in clinical routine use. Second, neural mass models are placed at the network nodes and determine the dynamic nature of the interactions. Neural mass models need not necessarily to be derived from biophysical mechanisms, but rather need to capture the dynamic repertoire of the neural population. It is in this dynamical sense that they have to be biophysically realistic, not in the traditional bottom-up causal sense. In epilepsy, the Epileptor is a neural mass model that has been derived purely based on mathematical reasoning. It provides a complete taxonomy of epileptic seizures including onset, offset and seizure evolution characteristics. Once a seizure type has been determined for a particular patient, then the taxonomy by (Jirsa et al., 2014) offers a mathematical formulation of a generative model that can be used as a network node in the VEP model. Third, integration of MRI lesions into the VEP model is possible, but not evident due to the challenge in translating the lesion into model parameters. Reasonable candidates are excitability and local connectivity, because localized tis- sue abnormalities are likely to alter these two parameters in the context of our network perspective. MRI lesions provide a spatial map of altered parameters that thus enter into the VEP model and affect the network dynamics. The emergent dynamic effects, that are the seizures in the current context, will crucially depend on the interplay between net- work node model (Epileptor), patient specific structural connectivity (from dMRI), and spatial maps of excitability (EZ, PZ) and MRI lesions.\n\nThe model allows reconstructing epileptic patients’ brain networks, using their specific anatomical properties and the Epileptor, a neural mass model that captures the temporal evolution of a seizure including on- and offset. Based on clinical hypothesis of the epileptogenic zone (EZ), the model can reproduce seizure propagation in silico as observed empirically with SEEG electrodes implanted in the patient. These propagation patterns cannot be captured by functional connectivity due to their inherent non-stationarity. \nThe model allows modeling that includes the following steps: \n1) Proix et al (2016) built the processing chain of all structural images (dMRI, MRI) required to build a virtual brain. \n2) Jirsa et al (2017) demonstrated the methodology and proof of concept of how to create personalized models and fit them against empirical neuroimaging data. 3) Proix et al (2017) performed a pilot study (N=15), where we computed a score estimating the difference between the EZ identified by the brain model, and that identified by the clinicians during pre-surgical evaluation. This study demonstrated the favourable correlation between model prediction and surgery outcome. In other words: negative surgery outcome correlates with surgery not performed in line with model predictions.\n\nReferences: \nJirsa, V. K. et al. The Virtual Epileptic Patient: Individualized whole-brain models of epilepsy spread. Neuroimage (2016). doi:10.1016/j.neuroimage.2016.04.049\nProix, T. et al. How do parcellation size and short-range connectivity affect dynamics in large-scale brain network models? Neuroimage (2016). doi:10.1016/j.neuroimage.2016.06.016\nProix T, Bartolomei F, Guye M, Jirsa V. Individual brain structure and modelling predict seizure propagation. Brain 140, 641–654 (2017).\nJirsa, VK, Stacey WC, Quilichini PP, Ivanov A, Bernard C, 2014. On the nature of seizure dynamics. Brain 137, 2210–2230. http://dx.doi.org/10.1093/brain/awu133.",
+      "https://schema.hbp.eu/search/license": [],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/c1eda0e9-eecc-47f1-a1e1-8805c647b732",
+          "https://schema.hbp.eu/search/name": "Petkoski, Spase",
+          "https://schema.hbp.eu/search/identifier": "8d8e0517090b4eddf46b294663839302"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/5fd5a274-8b6e-4501-a688-b87e444e49e3",
+          "https://schema.hbp.eu/search/name": "Jirsa, Viktor",
+          "https://schema.hbp.eu/search/identifier": "29afd436bfdca862b216a8c4a5d7526b"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [],
+      "https://schema.hbp.eu/search/identifier": "9f3fe79323ffc5eba54f3c549083f508"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://github.com/bicanski/HBPcollab/tree/master/SpatialEpisodicMemoryModel-v1.0"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/7d2b7340-d444-4aa1-b495-6a165873d754",
+          "https://schema.hbp.eu/search/name": "Burgess, Neil",
+          "https://schema.hbp.eu/search/identifier": "928ae53713d824ce88b354f32d7d5fbc"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "Spatial and Episodic Memory",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/cacd0578-1582-4a34-9b14-95b93284a210",
+      "https://schema.hbp.eu/search/version": "1.0",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "Based on previous work on human episodic memory (the so-called Byrne, Becker and Burgess-model; Byrne et al. 2008) we have built a model of how neural representations of egocentric spatial experiences in the parietal lobe interface with viewpoint-independent representations in medial temporal lobe, to enable many key aspects of spatial cognition. The model shows how specific, experimentally characterised, neural responses (place cells, head-direction cells, boundary- and object-vector cells, grid cells, and parietal gain-field neurons) map onto higher cognitive function in a modular way. The interactions between these populations of neurons across multiple brain regions provide a mechanistic account of spatial memory, scene construction, novelty-detection, and mental navigation. In particular the model shows how so-called object vector cells (OVCs) may allow memory for items to be incorporated into a contextual representation based on extended environmental boundaries (as expressed in the firing of boundary vector cells; or BVCs). The same cells provide the neural correlate of objects in context during recall/visuospatial imagery (cf. Figure). Simulations have been implemented in MatLab (using rate coded neurons).\n\nBicanski A, Burgess N. A neural-level model of spatial memory and imagery. ELife. 2018 Sep 4;7:e33752.\n\nByrne P, Becker S, Burgess N. Remembering the past and imagining the future: a neural model of spatial memory and imagery. Psychological review. 2007 Apr;114(2):340.\n\nCode location: https://github.com/bicanski/HBPcollab",
+      "https://schema.hbp.eu/search/license": [],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/2224908b-c918-42aa-a48c-1de9f7c8c9ac",
+          "https://schema.hbp.eu/search/name": "Bicanski, Andrej",
+          "https://schema.hbp.eu/search/identifier": "fe4a151aa50b36947c340060639b06d1"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/7d2b7340-d444-4aa1-b495-6a165873d754",
+          "https://schema.hbp.eu/search/name": "Burgess, Neil",
+          "https://schema.hbp.eu/search/identifier": "928ae53713d824ce88b354f32d7d5fbc"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [],
+      "https://schema.hbp.eu/search/identifier": "a2fe8a9e1a7d8b0d26eabbac9fbb253d"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_64bf8536ad8b4872a4121f909be7e82f/DecoLab/Hopfsimulation_ARCHI.ipynb"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/1feef926-228d-4a73-978d-0226f078412b",
+          "https://schema.hbp.eu/search/name": "Deco, Gustavo",
+          "https://schema.hbp.eu/search/identifier": "aeeaa478013a1a0b355597b63906f03d"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "Whole-brain Hopf",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/6dc92977-9f7e-4328-9f78-a61b45909cd3",
+      "https://schema.hbp.eu/search/version": "20200427",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "In the human brain, spontaneous activity during rest consists of rapid transitions between\nfunctional network states over time but the underlying mechanisms are not understood. Several models have been proposed in the past to reproduce the whole-brain spontaneous activity. While those models could reasonably reproduce the time-averaged functional connectivity of the brain at rest, they have failed to capture its temporal fluctuations. The reason, we find, is the type of local dynamics those models used to characterise the local dynamics of brain regions. To explore identify the type of local dynamics giving rise to realistic fluctuations we define a whole brain network model where the local dynamics of the brain regions are characterised by the canonical form of the Hopf bifurcation.\n\nThe model considers the structural connectome for the human brain extracted via diffusion tensor imaging and tractography. The corresponding connectivity is encoded into the weighted adjacency matrix **_A_** where *A(i,j) > 0* if there is a link pointing from region *i* to region *j* and *A(i,j) = 0* if no such link exist. The local dynamics *z(i,t)* of a brain region is characterised by the Hopf normal form,\n\n$\\dot{z} = (a + jw)z - z|z^2| + \\beta \\eta(t)$,  (Eq. 1)\n\nwhere *z(i,t)* is a complex variable and *η(i,t)* is an additive external Gaussian noise each region receives. The noise each region receives is independent. The local dynamics of each region *i* depends on two parameters:\n\n- *a(i)*, the bifurcation parameter, and\n- *ω(i)*, the natural frequency of the region.\n\nThe bifurcation parameter sets the dynamical mode of the brain region. If *a < 0* the local dynamics are characterised by the external noise *η(i,t)* fluctuating around the fix point *z(t) = 0*. If *a > 0* then *z(t)* oscillate. In the vecinity of *a = 0* the local dynamics are characterised by small noisy oscillations due to stochastic resonance. See Fig. 1.\n\n![Figure 1](https://object.cscs.ch/v1/AUTH_64bf8536ad8b4872a4121f909be7e82f/DecoLab/Model_Hopf_Fig1.png \"Figure 1\") **Figure 1**\n\nGiven the BOLD signals from resting-state fMRI, the natural frequencies *ω(i)* for each brain region are determined from the experimental data. While Eq. (1) represents the equation for each region, Eq. (2) represents the dynamics of the coupled system, where *g* is a global coupling parameter and the brain regions are diffusively coupled.\n\n$\\dot{z}\\_i = (a\\_i + jw\\_i)z\\_i - z\\_i|z\\_i^2| + g \\sum\\_{k=1}^N A (z\\_k - z\\_i) + \\beta\\_i \\eta\\_i(t)$,   (Eq. 2)\n\nUsing this model we could reveal the dynamical \ncortical core of the human brain, which is driving the activity of the rest of the whole brain, see Fig. 2.\n\n![Figure 2](https://object.cscs.ch/v1/AUTH_64bf8536ad8b4872a4121f909be7e82f/DecoLab/Model_Hopf_Fig2.png\" Figure 2\") **Figure 2**\n\n### Publications\n\n**G. Deco**, M.L. Kringelbach, V.K. Jirsa, and P. Ritter \"*[The dynamics of resting\nfluctuations in the brain: metastability and its dynamical cortical core](https://www.nature.com/articles/s41598-017-03073-5)*\" Sci. Reps. **7**:3095 (2017).\n\n\n### Code Availability\nA runnable test version of the model is available in the HBP Collaboratory in the form of a Jupyter Notebook. Please visit the Collab \"[Whole-brain connectivity and simulation workflows](https://collab.humanbrainproject.eu/#/collab/34586/nav/239746)\" or access directly the Notebook:\n[https://collab.humanbrainproject.eu/#/collab/34586/nav/239751](https://collab.humanbrainproject.eu/#/collab/34586/nav/239751)\n\n\n### Achieved impact\nThe model has served as the basis for recent reseach:\n\nV.M. Saenger, Joshua Kahan, et al. \"*[Uncovering the underlying mechanisms and whole-brain dynamics of deep brain stimulation for Parkinson’s disease](http://www.nature.com/articles/s41598-017-10003-y)*\" Sci. Reps. **7**:9882 (2017).\n\nM. Senden, N. Reuter, M.P. van den Heuvel, R. Goebel, **G. Deco** \"*[Cortical rich club regions can organize state-dependent functional network formation by engaging in oscillatory behavior](https://www.sciencedirect.com/science/article/pii/S1053811916306000?via%3Dihub)*\" NeuroImage **146**, 561-574 (2017).",
+      "https://schema.hbp.eu/search/license": [],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/3fc8ea93-1b59-4692-bb6f-e91ff277869f",
+          "https://schema.hbp.eu/search/name": "Zamora-López, Gorka",
+          "https://schema.hbp.eu/search/identifier": "40dedce89f58ff31d66e8478675cd4df"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/1feef926-228d-4a73-978d-0226f078412b",
+          "https://schema.hbp.eu/search/name": "Deco, Gustavo",
+          "https://schema.hbp.eu/search/identifier": "aeeaa478013a1a0b355597b63906f03d"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/5fd5a274-8b6e-4501-a688-b87e444e49e3",
+          "https://schema.hbp.eu/search/name": "Jirsa, Viktor",
+          "https://schema.hbp.eu/search/identifier": "29afd436bfdca862b216a8c4a5d7526b"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [],
+      "https://schema.hbp.eu/search/identifier": "889eee8c0a86adc20b427a7f273dc157"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://github.com/bicanski/HBPcollab/tree/master/Striatal_v_hippocampal_nav_v3"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/7d2b7340-d444-4aa1-b495-6a165873d754",
+          "https://schema.hbp.eu/search/name": "Burgess, Neil",
+          "https://schema.hbp.eu/search/identifier": "928ae53713d824ce88b354f32d7d5fbc"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "Hippocampal & Striatal navigation",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/06049b06-bbbd-4b30-ace6-73c922a969c5",
+      "https://schema.hbp.eu/search/version": "3.0",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "Behavioural and neural data suggest that multiple strategies and brain systems support learning about reward. Reinforcement learning (RL) considers these strategies in terms of model-based (MB) learning, which involves learning an explicit transition model of the available state-space, or model-free (MF) learning, which involves directly estimating the cumulative future reward associated with each state. The MB-MF distinction parallels that between place learning and response learning within spatial navigation. Lesion and inactivation studies suggests that dorsal hippocampus (dHC) underlies both MB and place learning, whereas dorsolateral striatum (DLS) underlies MF and response learning. Here, we present a computational model of the dHC and DLS contributions to reward learning that applies to spatial and nonspatial domains. In the model, hippocampal place cell firing reflects the geodesic distance of other states from its preferred state along the graph of task structure. Accordingly, this population can support a value function or goal cell firing rate, via one-shot learning, on which gradient ascent corresponds to taking the shortest path on the graph, behaviour associated with MB planning. In contrast, the DLS learns through MF stimulus-response associations with egocentric environmental cues. We show that this model reproduces animal behaviour on spatial navigation tasks using the Morris Water Maze and the Plus Maze, and human behaviour on non-spatial two-step decision tasks. We discuss how the geodesic place cell fields could be learnt, and how this type of representation helps to span the gap between MB and MF learning. The generality of our model, originally shaped by detailed constraints in the spatial literature, suggests that the hippocampal-striatal system is a general-purpose learning device that adaptively combines MB and MF mechanisms.  \n\n[Code location](https://github.com/bicanski/HBPcollab/tree/master/Striatal_v_hippocampal_nav)\n\n[Detailed description of simulations and results](https://github.com/bicanski/HBPcollab/blob/master/Striatal_v_hippocampal_nav_v2/Modelling_hippocampal_and_dorsolateral_striatal_contributions_to_learning_across_domains.pdf)",
+      "https://schema.hbp.eu/search/license": [],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/bfdcee77-cf9f-421f-8565-cd619584a772",
+          "https://schema.hbp.eu/search/name": "Geerts, Jesse",
+          "https://schema.hbp.eu/search/identifier": "98875cc8775207e604e1db7f6bcf9fe8"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/7d2b7340-d444-4aa1-b495-6a165873d754",
+          "https://schema.hbp.eu/search/name": "Burgess, Neil",
+          "https://schema.hbp.eu/search/identifier": "928ae53713d824ce88b354f32d7d5fbc"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [
+        "embargoed"
+      ],
+      "https://schema.hbp.eu/search/identifier": "9ccad40b5d450dcc584af1022e1fb4f4"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://github.com/gorkazl/pyGAlib"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/1feef926-228d-4a73-978d-0226f078412b",
+          "https://schema.hbp.eu/search/name": "Deco, Gustavo",
+          "https://schema.hbp.eu/search/identifier": "aeeaa478013a1a0b355597b63906f03d"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "Topological Similarity",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/9a87f271-c0e3-4642-b5a6-1edb5ad7daac",
+      "https://schema.hbp.eu/search/version": "a029578344d63ed4c27853f948a738da6b7e94ec",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "The quest to understand how the structural network of interconnections shapes brain function lies at the heart of the field of brain connectivity. So far, we still lack a unitary model of the relationship between the shape of the brain’s connectome and the emergent activity patterns. One of the main reasons is that interactions between different brain areas do not only depend on the structure of the connectome but also on the local and global dynamics characterizing a given brain state, such as rest, sleep, and anesthesia. The existence of different state dependent activity patterns sustained by the same underlying anatomy exposes how elusive is the relationship between the network structure and function.\n\nThis model, named as *topological similarity*, is an analytical estimate of the contribution of the structural brain connectivity alone on the cross-correlations between brain areas, discarding the influence of higher order dynamical influences. The model is based on three axiomatic assumptions on the diffusion of influence or information over the network:\n\n1. In a network, information travels along all possible paths (with equal probability). Very often, network approaches of information transmission consider only the shortest paths.\n2. Information content (or signal power) decays with path distance. This assumption implies that despite information travels along all possible paths, shorter paths are still more influencial than longer paths.\n3. Two brain regions are correlated if they receive inputs from the same sources.\n\nThe first two assumptions define how information travels along a network and determine how much the dynamics of one brain region affected the dynamics of any other brain region. Given that the structural connectivity is encoded by the weighted adjacency matrix **A**, where A(i,j) > 0 if there is a link pointing from region *i* to region *j* and A(i,j) = 0 if no such link exist, then the influence between any pair of nodes can be quantified by the communicability measure *C*. By definition, communicability is the matrix exponential of the adjacency matrix, *C* = exp(g**A**), which is a weighted sum of the powers of the adjacency matrix, and *g* is a parameter for global coupling strength.\n\n$$\\mathcal{C} = e^{gA} = \\mathbf{1} + gA + \\frac{(gA)^2}{2!}  + \\frac{(gA)^3}{3!} + \\ldots$$\n\n$$\\mathcal{T} = \\frac{\\left< \\mathbf{c}\\_i, \\mathbf{c}\\_j \\right>}{|\\mathbf{c}\\_i| \\, |\\mathbf{c}\\_j|}$$\n\nApplying this model to structural human brain connectivity we were able to estimate the cross-correlations between brain regions which are expected in resting-state only due to the connectivity alone, Fig. 1(M) for one hemisphere and Fig. 1(N) for the whole brain. Comparing to empirically observed functional connectivities via fMRI during resting-state, Fig. 1(E) and (F), we could quantify that the shape of the brain's connectome only accounts for up to 45% of the empirical functional connectivity.\n\n\n#### Publications\n\nR.G. Bettinardi, **G. Deco**, V.M. Karlaftis, T.J. Van Hartevelt, H. M. Fernandes, Z. Kourtzi, M.L. Kringelbach, and **G. Zamora-López** \"*[How structure sculpts function: Unveiling the contribution of anatomical connectivity to the brain’s spontaneous correlation structure](http://aip.scitation.org/doi/10.1063/1.4980099)*\" CHAOS **27**, 047409 (2017).\n\n#### Code Availability\nSource code to calculate the Topological Similarity from a given network is found as a function in [pyGAlib](https://github.com/gorkazl/pyGAlib), a Graph Analysis library in Python / Numpy. See module \"*galib.extra*\" at [https://github.com/gorkazl/pyGAlib/blob/master/galib/extra.py](https://github.com/gorkazl/pyGAlib/blob/master/galib/extra.py). \n\n#### Achieved impact\nAccording to the records from the publisher's own records (The American Institute of Physics), the publication above is among the 10 most read articles of the journal CHAOS along 2017.\n\nThe model has served as the basis to define a generalised framework to describe the network-dynamic properties of weighted networks:\nM. Gilson, **G. Zamora-L\u0013ópez**, **N.E. Kouvaris**, and **G. Deco**, \"*[Dynamic communicability and flow to describe complex network dynamics with linear feedback](https://arxiv.org/abs/1712.05693v1)*\" arXiv:1712.05693v1 (2017).",
+      "https://schema.hbp.eu/search/license": [],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/3fc8ea93-1b59-4692-bb6f-e91ff277869f",
+          "https://schema.hbp.eu/search/name": "Zamora-López, Gorka",
+          "https://schema.hbp.eu/search/identifier": "40dedce89f58ff31d66e8478675cd4df"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/1feef926-228d-4a73-978d-0226f078412b",
+          "https://schema.hbp.eu/search/name": "Deco, Gustavo",
+          "https://schema.hbp.eu/search/identifier": "aeeaa478013a1a0b355597b63906f03d"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [],
+      "https://schema.hbp.eu/search/identifier": "24c05a1ed06c72f0172dd80cfd9ab44f"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://gitlab.inria.fr/rveltz/networkbas/-/tree/master"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/9cf0277b-c727-4279-a5be-d40eb34bbce1",
+          "https://schema.hbp.eu/search/name": "Veltz, Romain",
+          "https://schema.hbp.eu/search/identifier": "4c155e737456366d67952d50cdd51443"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "Ball-and-stick network",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/838f9a5d-c0cc-4570-8fb3-194806123cf7",
+      "https://schema.hbp.eu/search/version": "0.0.1",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "This model implements the rationale described in:\n\nN. Fournier, E. Tanré, and R. Veltz. On a toy network of neurons interacting through their dendrites. **Annales de l'Institut Henri Poincaré (B) Probabilités et Statistiques**, 2019 \n\nand \n\nT. Górski, R. Veltz, M. Galtier, H. Fragnaud, J. S. Goldman, B. Teleńczuk, and A. Destexhe. Dendritic sodium spikes endow neurons with inverse firing rate response to correlated synaptic activity **Journal of Computational Neuroscience**, 45(3), 2018.\n\nIn short, we provide a description of the annihilation of dendritic spikes and build a network of \"Ball and Stick\" spiking neurons.",
+      "https://schema.hbp.eu/search/license": [],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/9cf0277b-c727-4279-a5be-d40eb34bbce1",
+          "https://schema.hbp.eu/search/name": "Veltz, Romain",
+          "https://schema.hbp.eu/search/identifier": "4c155e737456366d67952d50cdd51443"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [],
+      "https://schema.hbp.eu/search/identifier": "521593ef92a133b5efc6de1ada26239d"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://github.com/talfanevans/probabilistic_localization_grid_cells"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/7d2b7340-d444-4aa1-b495-6a165873d754",
+          "https://schema.hbp.eu/search/name": "Burgess, Neil",
+          "https://schema.hbp.eu/search/identifier": "928ae53713d824ce88b354f32d7d5fbc"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "Sensory- and self-motion integration for location",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/3e24263f-83fe-4781-8559-48b97c26c42d",
+      "https://schema.hbp.eu/search/version": "1.0",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "We have developed a novel model in which grid cells combine path integration and environmentally anchored sensory information to generate an optimal estimation of the animal’s current location within an environment. In this framework, the firing of the grid cell population represents a distribution of position probability across space. Path integration is performed by translating this distribution in proportion to the movement of the animal, with associated noise. Sensory information is provided by place cell inputs, whose weights are learned upon exposure to a novel environment. The localisation and learning features together constitute a neurally plausible system capable of performing simultaneous localisation and mapping (SLAM) [Durrant-Whyte and Bailey 2006]. Weight stabilisation allows the model to account for place cell stabilisation in pre-weanling pups ([Chen et al., in prep], laboratory of Francesca Cacucci, SP3 collaborator). Nonuniform place cell densities can re-create grid cell firing pattern distortions ([3]; figure not shown), and grid patterns rescale in response to environmental manipulations (Figure 1H; [Chen et al., in prep]). Finally reciprocal connections between place and grid cells can produce a change of grid scale in response to changes in path integration gain, with subsequent but diminished effects on the location of associated place cells (Chen et al. (2018), submitted; SP3 collaborator). Simulations have been implemented in Matlab.\n\n\n\nChen G, Lu Y, King JA, Cacucci F, Burgess N. Differential influences of environment and self-motion on place and grid cell firing. Nature communications. 2019 Feb 7;10(1):630.\n\nChen G, King JA, Lu Y, Cacucci F, Burgess N. Spatial cell firing during virtual navigation of open arenas by head-restrained mice. Elife. 2018 Jun 18;7:e34789.\n\nDurrant-Whyte, Hugh, and Tim Bailey. \"Simultaneous localization and mapping: part I.\" IEEE robotics & automation magazine 13.2 (2006): 99-110.\n",
+      "https://schema.hbp.eu/search/license": [],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/d08574c4-ce94-427f-9565-733561c84a46",
+          "https://schema.hbp.eu/search/name": "Evans, Talfan",
+          "https://schema.hbp.eu/search/identifier": "1f41214159a0f7c4c6c16e2992004003"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/7d2b7340-d444-4aa1-b495-6a165873d754",
+          "https://schema.hbp.eu/search/name": "Burgess, Neil",
+          "https://schema.hbp.eu/search/identifier": "928ae53713d824ce88b354f32d7d5fbc"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [
+        "embargoed"
+      ],
+      "https://schema.hbp.eu/search/identifier": "9288e5ed44d3928069b28acdde905b85"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://github.com/ccnmaastricht/CDP4_NRP"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/b2f92c77-2f46-4c84-9cec-d98e798ef801",
+          "https://schema.hbp.eu/search/name": "Senden, Mario",
+          "https://schema.hbp.eu/search/identifier": "db64e0f6fe4185798ff7df93abba1526"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "Saccades for Scene Understanding Closed Loop",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/9ed76c54-c864-42ca-ad9f-a2978ed865f1",
+      "https://schema.hbp.eu/search/version": "v0.3.0",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "Human vision operates in light of physical constraints imposed by the eye as well as functional requirements such as having high visual acuity while maintaining a large field of view. Physically, the organization of the retina meets these constraints by densely packing photoreceptors within a small central region, the fovea, and letting photoreceptor density decrease rapidly towards the periphery. Functionally, this arrangement introduces a challenge for the visual system since only the region of external space fixated by the eyes is resolved with high acuity. To overcome this, vision involves information integration across samples of external space obtained by continuously repositioning the eyes. Co-design project 4 has developed a closed-loop architecture consisting of five functional modules:\n\n- retinal image resampling\n- object recognition\n- saliency computation\n- visual target selection\n- saccade generation\n\nand embodied this in a virtual iCub robot simulated on the neurorobotics platform.",
+      "https://schema.hbp.eu/search/license": [],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/b2f92c77-2f46-4c84-9cec-d98e798ef801",
+          "https://schema.hbp.eu/search/name": "Senden, Mario",
+          "https://schema.hbp.eu/search/identifier": "db64e0f6fe4185798ff7df93abba1526"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/ef39f3d1-6b8c-40c6-b55b-39fcb051b760",
+          "https://schema.hbp.eu/search/name": "da Costa, Danny",
+          "https://schema.hbp.eu/search/identifier": "ef39f3d1-6b8c-40c6-b55b-39fcb051b760"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/aa6fc129-1e0b-4bdd-8fe8-f52aeb3cef4b",
+          "https://schema.hbp.eu/search/name": "Kroner, Alexander",
+          "https://schema.hbp.eu/search/identifier": "aa6fc129-1e0b-4bdd-8fe8-f52aeb3cef4b"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/9b3303b1-262b-4d25-b5c8-8940f9c68634",
+          "https://schema.hbp.eu/search/name": "Kurth, Anno",
+          "https://schema.hbp.eu/search/identifier": "9b3303b1-262b-4d25-b5c8-8940f9c68634"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/2067361b-ec6d-459b-83d2-5d985d0084ae",
+          "https://schema.hbp.eu/search/name": "Bhat, Salil",
+          "https://schema.hbp.eu/search/identifier": "2067361b-ec6d-459b-83d2-5d985d0084ae"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/edc7810c-185a-4b24-90e2-5e3d967d1ed8",
+          "https://schema.hbp.eu/search/name": "Akl, Mahmoud",
+          "https://schema.hbp.eu/search/identifier": "edc7810c-185a-4b24-90e2-5e3d967d1ed8"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/8e08096f-2165-4aff-9966-e3d2f2719fd2",
+          "https://schema.hbp.eu/search/name": "Narayanan, Vaishnavi",
+          "https://schema.hbp.eu/search/identifier": "8e08096f-2165-4aff-9966-e3d2f2719fd2"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [],
+      "https://schema.hbp.eu/search/identifier": "1d2d54ee28f7ac5db98782663bd319e6"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://kg.humanbrainproject.org/proxy/export?container=https://object.cscs.ch/v1/AUTH_64bf8536ad8b4872a4121f909be7e82f/Falotico?prefix=hippocampus-ventral-striatum/code"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/93f8d31b-c29c-4569-8515-08ffd85ff560",
+          "https://schema.hbp.eu/search/name": "Falotico, Egidio",
+          "https://schema.hbp.eu/search/identifier": "93f8d31b-c29c-4569-8515-08ffd85ff560"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "The hippocampus-ventral striatum circuit model in the Neurorobotics Platform",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/ed808592-c81d-4185-be5a-c62bbadb3cfc",
+      "https://schema.hbp.eu/search/version": "1.0",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "### Introduction\n\nThe hippocampus is a complex structure of the brain which is part of the limbic system, and it is mainly involved in the development of long-term memory and spatial memory. In fact, the hippocampus makes use of the grid cells present in the entorhinal cortex to generate place cells, specific types of neurons that fire when the animal enters a particular place in the environment. What allows an animal to learn how to navigate in this environment is the basal ganglia (BG) circuit, composed of many subnuclei located in different areas of the brain: this circuit, thanks to a neurotransmitter called dopamine, changes the synaptic strengths of the striatum, a subnucleus of the BG, and makes the animal be able to select actions in its environment in order to maximize some reward, a mechanism very similar to reinforcement learning.\n\nStoianov et al. proposed a probabilistic model which simulates the functioning of these neural circuits, and tested it on three different tasks on a Y-maze environment: in the first task (cue conditioning), every final position had a 100% probability to give a reward, while on the second task (context conditioning) the reward probabilities varied depending on the room; finally, a third task was performed (contextual conditioning) with reward probabilities of 0% in order to check the spatial preferences learned by the robot during the previous phases of training. The rodent was able to find out the reward locations that yielded a higher probability to get the reward. However, the model was tested on a simple environment without a realistic agent and sensors, though a noise term was added for the retrieval of the position and direction of the rodent, and for the execution of the actions.\n\nIn order to find out how this model would perform in a realistic scenario, we integrated it on the NRP and performed simulations on more complex environments. The NRP is a simulation infrastructure that aims to bridge the gap between neuroscience and robotics by providing biologically realistic brain models to virtually embodied agents, and vice versa. For these simulations, we employed the Husky robot, an unmanned ground vehicle (UGV) with four wheels and realistic sensors.\n\n### NRP Integration\n\nIn order to integrate the Matlab model in the Neurorobotics Platform (NRP), we utilized the Matlab engine, a Python package that allows executing Matlab function from Python scripts. The simulation environment, including initialization of the world, execution of actions and visiting reward locations, is handled by the NRP, while the Matlab functions for control and learning are called from Python through the Matlab engine.\n\nAs illustrated in Fig. 1, we tested the model on three different mazes: a simple grid with 8 reward locations, a T-maze with 6 reward locations, and a 4 rooms environment with 12 reward locations. The Husky robot uses a physically realistic laser scan to check if there are obstacles nearby, in order to stop when it is approaching a wall.\n\n![Figure 1](https://object.cscs.ch/v1/AUTH_64bf8536ad8b4872a4121f909be7e82f/Falotico/hippocampus-ventral-striatum/figures/fig1_900px.png)\n\n### Results\n\nFig. 2 shows the metric scores for the simple environment, Fig. 3 represents the scores for the T-maze, while Fig. 4 shows the scores for the 4 rooms environment. Both simulations consisted of 1000 trials.\n\nIn order to assess the model performances in a robotic scenario, we relied on the four metrics used on the original work: (i) accuracy (number of trials where the rodent finds a reward location over the number of trials); (ii) path length of each trial (a lower path length means that the rodent found the reward location in few steps); (iii) sweep depth for each trial; (iv) decision certainty of the rodent.\n\nAs can be seen from the scores, the Husky robot is able to learn the first two tasks, while the decision certainty decreases; on the other hand, it has more difficulties learning the third task, due to the increased complexity of the environment.\n\n![Figure 2](https://object.cscs.ch/v1/AUTH_64bf8536ad8b4872a4121f909be7e82f/Falotico/hippocampus-ventral-striatum/figures/fig2_600px.png)\n![Figure 3](https://object.cscs.ch/v1/AUTH_64bf8536ad8b4872a4121f909be7e82f/Falotico/hippocampus-ventral-striatum/figures/fig3_600px.png)\n![Figure 4](https://object.cscs.ch/v1/AUTH_64bf8536ad8b4872a4121f909be7e82f/Falotico/hippocampus-ventral-striatum/figures/fig4_600px.png)\n",
+      "https://schema.hbp.eu/search/license": [],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/868e3591-6ce5-47b5-b394-347adb60e150",
+          "https://schema.hbp.eu/search/name": "Priorelli,  Matteo",
+          "https://schema.hbp.eu/search/identifier": "868e3591-6ce5-47b5-b394-347adb60e150"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/ec5d158d-d301-4aea-9e74-16e1dc387967",
+          "https://schema.hbp.eu/search/name": "Kirtay, Murat",
+          "https://schema.hbp.eu/search/identifier": "ec5d158d-d301-4aea-9e74-16e1dc387967"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/ae471ead-7c2a-45fb-8e45-48367ba4e77f",
+          "https://schema.hbp.eu/search/name": "Stoianov, Ivilin Peev",
+          "https://schema.hbp.eu/search/identifier": "8264e3f07b7bbd52a9cb7d057989070a"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/d5b63cdb-3234-49e0-862d-b8a3e430320d",
+          "https://schema.hbp.eu/search/name": "Pezzulo, Giovanni",
+          "https://schema.hbp.eu/search/identifier": "8ddc0437cd46a85d000c64452490b2a72d2c3570"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/93f8d31b-c29c-4569-8515-08ffd85ff560",
+          "https://schema.hbp.eu/search/name": "Falotico, Egidio",
+          "https://schema.hbp.eu/search/identifier": "93f8d31b-c29c-4569-8515-08ffd85ff560"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [],
+      "https://schema.hbp.eu/search/identifier": "6537f46b10a199f56ed8aedfc0f076a3"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://github.com/solveignaess/fourspheremodel.git"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/a7dfbf02-4c3d-49d2-946a-5c7d7093ff55",
+          "https://schema.hbp.eu/search/name": "Wójcik, Daniel K.",
+          "https://schema.hbp.eu/search/identifier": "db40532ad3db1e2e9cbc76f3f73fa08a"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "Corrected Four-Sphere Head Model for EEG Signals",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/05aa7c0d-b6b5-4b58-b938-f4086ff67ada",
+      "https://schema.hbp.eu/search/version": "1.0",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "Corrected Four-Sphere Head Model for EEG Signals\n\nThe EEG signal is generated by electrical brain cell activity, often described in terms of current dipoles. By applying EEG forward models we can compute the contribution from such dipoles to the electrical potential recorded by EEG electrodes. Forward models are key both for generating understanding and intuition about the neural origin of EEG signals as well as inverse modeling, i.e., the estimation of the underlying dipole sources from recorded EEG signals. Different models of varying complexity and biological detail are used in the field. One such analytical model is the four-sphere model which assumes a four-layered spherical head where the layers represent brain tissue, cerebrospinal fluid (CSF), skull, and scalp, respectively. While conceptually clear, the mathematical expression for the electric potentials in the four-sphere model is cumbersome, and we observed that the formulas presented in the literature contain errors. Here, we derive and present the correct analytical formulas with a detailed derivation. A useful application of the analytical four-sphere model is that it can serve as ground truth to test the accuracy of numerical schemes such as the Finite Element Method (FEM). We performed FEM simulations of the four-sphere head model and showed that they were consistent with the corrected analytical formulas. For future reference we provide scripts for computing EEG potentials with the four-sphere model, both by means of the correct analytical formulas and numerical FEM simulations.",
+      "https://schema.hbp.eu/search/license": [],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/9ba358cc-c832-4190-aa60-5e4fcf53dd4d",
+          "https://schema.hbp.eu/search/name": "Næss, Solveig",
+          "https://schema.hbp.eu/search/identifier": "e37e661f25b354bc48ecb19316a3922b"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/083c588a-9ea8-4329-bc64-ef952cb5c1f6",
+          "https://schema.hbp.eu/search/name": "Chintaluri, Chaitanya",
+          "https://schema.hbp.eu/search/identifier": "c11a1c3bbaba950d3a7edd47752eb1e1"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/ed6b7869-b6ec-4c6b-91ac-481f168d3986",
+          "https://schema.hbp.eu/search/name": "Ness, Torbjørn V.",
+          "https://schema.hbp.eu/search/identifier": "dc9290080e07c6386e6869b1f947acdf"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/be9ae439-e727-4d52-935e-5f67b3d6e4d9",
+          "https://schema.hbp.eu/search/name": "Dale, Anders M.",
+          "https://schema.hbp.eu/search/identifier": "11f03cabc47e37dc3e2fda0828bb3c55"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/4093e758-4db9-4672-ba3e-6142a741b2c9",
+          "https://schema.hbp.eu/search/name": "Einevoll, Gaute T.",
+          "https://schema.hbp.eu/search/identifier": "9ebd3a30a3114d811b0a2afe2660348b"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/a7dfbf02-4c3d-49d2-946a-5c7d7093ff55",
+          "https://schema.hbp.eu/search/name": "Wójcik, Daniel K.",
+          "https://schema.hbp.eu/search/identifier": "db40532ad3db1e2e9cbc76f3f73fa08a"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [],
+      "https://schema.hbp.eu/search/identifier": "0e25289e88b378a42831ebcda3e25440"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://senselab.med.yale.edu/modeldb/ShowModel?model=234992"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/79e451c0-59f6-425b-a336-9c8e7955aefa",
+          "https://schema.hbp.eu/search/name": "Destexhe, Alain",
+          "https://schema.hbp.eu/search/identifier": "8cb9d524dff73b321ede05deea3322f2"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "Network model of spontaneous activity in cortex (Brian implementation)",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/7a3a2776-c398-4845-95e8-55a1d8310791",
+      "https://schema.hbp.eu/search/version": "1.0 (Brian)",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "The UNIC partner has studied the activity and responsiveness of cortical networks of Adaptive Exponential (AdEx) integrate and fire neurons, using a similar model as described previously (Destexhe, JCNS, 2009; see this paper for all details about the methods).  Such networks can be used to simulate the different firing patterns of excitatory (“regular spiking” or RS) and inhibitory (“fast spiking” or FS) neurons (Fig. 1A).  RS-FS networks display different states ranging from synchronous-regular (SR) to asynchronous-irregular (AI) states (Fig. 1B).  Interestingly, the response of the network was higher in the AI state, compared to any other state of the network (Fig. 1C-D).  The responsiveness of the network can be understood from reconstructing the transfer function of its neurons (Fig. 1E-F).\n\nRemarkably, one can see that the AI state is highly responsive (Fig. 1D), but not all AI states produce the same response.  This was due to the fact that one of the network (VA-2005) had a too strong conductance, while the RS-FS network was tuned to the conductances measured experimentally in vivo (Fig. 1E).  Reconstructing the theoretical transfer function from these two networks shows that the strong conductance shifted the response of the neurons to high input weights, which explains the lack of responsiveness (Fig. 1F, green).  On the other hand, the RS-FS network displayed a response curve which was overlapping with the stimulus (Fig. 1F, blue) and thus the network was responsive to this input.\n\nTo investigate larger-scale consequences of this responsiveness, we simulated a paradigm consisting of successive layers of RS-FS networks (Fig. 2).  A pulse packet given as input in the first layer could reliably propagate across layers, but only in the AI state (Fig. 2B).  Such a propagation was not possible in AI states that had implausible conductance levels (not shown). \n\nWe conclude that AI state provide very interesting responsiveness properties, but only if they have a physiologically realistic conductance level.  This was confirmed by analyzing a very wide range of AI states (Girones and Destexhe, 2017).  This property makes them able to detect inputs and propagate them across layers.  This may explain why the awake brain is always associated to “desynchronized” activity, and why the brain switches to this type of activity when performing a task, or attending to stimuli.  We thus propose that AI states can implement a low-level form of sensory awareness (Zerlaut and Destexhe, 2017).\n\n**[Program code of the model is available in ModelDB](https://senselab.med.yale.edu/modeldb/ShowModel?model=234992#tabs-1)**\n\n**[PyNN program code of the model in ZIP](https://object.cscs.ch/v1/AUTH_64bf8536ad8b4872a4121f909be7e82f/DestexheTeam/simulations_JCNS_2018.zip)**\n\n\n\n#### Publications\n\nZerlaut Y. and Destexhe A. Enhanced responsiveness and low-level awareness in stochastic network states.  Neuron 92: 1002-1009, 2017.\n\nGirones Z. and Destexhe A. Enhanced responsiveness in asynchronous irregular neuronal networks. [arXiv preprint](https://arxiv.org/abs/1611.09089)",
+      "https://schema.hbp.eu/search/license": [
+        {
+          "https://schema.hbp.eu/search/url": "https://creativecommons.org/licenses/by/4.0/",
+          "https://schema.hbp.eu/search/name": "Creative Commons Attribution 4.0 International"
+        }
+      ],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/d7db810e-57e4-49f3-9cde-a3e03458ffa5",
+          "https://schema.hbp.eu/search/name": "Zerlaut, Yann",
+          "https://schema.hbp.eu/search/identifier": "ab2a2c03c2ea415fa8f2e092751c73b8"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/663c7ec5-4506-4054-9c64-15514222774f",
+          "https://schema.hbp.eu/search/name": "Chemla, Sandrine",
+          "https://schema.hbp.eu/search/identifier": "663c7ec5-4506-4054-9c64-15514222774f"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/1bfcbf36-6137-4f38-a49c-e880c2137f21",
+          "https://schema.hbp.eu/search/name": "Chavane, Frédéric",
+          "https://schema.hbp.eu/search/identifier": "1bfcbf36-6137-4f38-a49c-e880c2137f21"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/f47bbdd3-7529-45c9-b336-719ef447aeda",
+          "https://schema.hbp.eu/search/name": "Gironés, Zahara",
+          "https://schema.hbp.eu/search/identifier": "f47bbdd3-7529-45c9-b336-719ef447aeda"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/79e451c0-59f6-425b-a336-9c8e7955aefa",
+          "https://schema.hbp.eu/search/name": "Destexhe, Alain",
+          "https://schema.hbp.eu/search/identifier": "8cb9d524dff73b321ede05deea3322f2"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [],
+      "https://schema.hbp.eu/search/identifier": "02e3bfefef14ac60a04411b298e2360d"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_64bf8536ad8b4872a4121f909be7e82f/DestexheTeam/simulations_JCNS_2018.zip"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/79e451c0-59f6-425b-a336-9c8e7955aefa",
+          "https://schema.hbp.eu/search/name": "Destexhe, Alain",
+          "https://schema.hbp.eu/search/identifier": "8cb9d524dff73b321ede05deea3322f2"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "Network model of spontaneous activity in cortex (PyNN implementation)",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/cd7f3ec5-3241-45e5-a658-a61b56dc5bc9",
+      "https://schema.hbp.eu/search/version": "1.0 (PyNN)",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "The UNIC partner has studied the activity and responsiveness of cortical networks of Adaptive Exponential (AdEx) integrate and fire neurons, using a similar model as described previously (Destexhe, JCNS, 2009; see this paper for all details about the methods).  Such networks can be used to simulate the different firing patterns of excitatory (“regular spiking” or RS) and inhibitory (“fast spiking” or FS) neurons (Fig. 1A).  RS-FS networks display different states ranging from synchronous-regular (SR) to asynchronous-irregular (AI) states (Fig. 1B).  Interestingly, the response of the network was higher in the AI state, compared to any other state of the network (Fig. 1C-D).  The responsiveness of the network can be understood from reconstructing the transfer function of its neurons (Fig. 1E-F).\n\nRemarkably, one can see that the AI state is highly responsive (Fig. 1D), but not all AI states produce the same response.  This was due to the fact that one of the network (VA-2005) had a too strong conductance, while the RS-FS network was tuned to the conductances measured experimentally in vivo (Fig. 1E).  Reconstructing the theoretical transfer function from these two networks shows that the strong conductance shifted the response of the neurons to high input weights, which explains the lack of responsiveness (Fig. 1F, green).  On the other hand, the RS-FS network displayed a response curve which was overlapping with the stimulus (Fig. 1F, blue) and thus the network was responsive to this input.\n\nTo investigate larger-scale consequences of this responsiveness, we simulated a paradigm consisting of successive layers of RS-FS networks (Fig. 2).  A pulse packet given as input in the first layer could reliably propagate across layers, but only in the AI state (Fig. 2B).  Such a propagation was not possible in AI states that had implausible conductance levels (not shown). \n\nWe conclude that AI state provide very interesting responsiveness properties, but only if they have a physiologically realistic conductance level.  This was confirmed by analyzing a very wide range of AI states (Girones and Destexhe, 2017).  This property makes them able to detect inputs and propagate them across layers.  This may explain why the awake brain is always associated to “desynchronized” activity, and why the brain switches to this type of activity when performing a task, or attending to stimuli.  We thus propose that AI states can implement a low-level form of sensory awareness (Zerlaut and Destexhe, 2017).\n\n**[Program code of the model is available in ModelDB](https://senselab.med.yale.edu/modeldb/ShowModel?model=234992#tabs-1)**\n\n**[PyNN program code of the model in ZIP](https://object.cscs.ch/v1/AUTH_64bf8536ad8b4872a4121f909be7e82f/DestexheTeam/simulations_JCNS_2018.zip)**\n\n\n\n#### Publications\n\nZerlaut Y. and Destexhe A. Enhanced responsiveness and low-level awareness in stochastic network states.  Neuron 92: 1002-1009, 2017.\n\nGirones Z. and Destexhe A. Enhanced responsiveness in asynchronous irregular neuronal networks. [arXiv preprint](https://arxiv.org/abs/1611.09089)\n",
+      "https://schema.hbp.eu/search/license": [
+        {
+          "https://schema.hbp.eu/search/url": "https://creativecommons.org/licenses/by/4.0/",
+          "https://schema.hbp.eu/search/name": "Creative Commons Attribution 4.0 International"
+        }
+      ],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/d7db810e-57e4-49f3-9cde-a3e03458ffa5",
+          "https://schema.hbp.eu/search/name": "Zerlaut, Yann",
+          "https://schema.hbp.eu/search/identifier": "ab2a2c03c2ea415fa8f2e092751c73b8"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/663c7ec5-4506-4054-9c64-15514222774f",
+          "https://schema.hbp.eu/search/name": "Chemla, Sandrine",
+          "https://schema.hbp.eu/search/identifier": "663c7ec5-4506-4054-9c64-15514222774f"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/1bfcbf36-6137-4f38-a49c-e880c2137f21",
+          "https://schema.hbp.eu/search/name": "Chavane, Frédéric",
+          "https://schema.hbp.eu/search/identifier": "1bfcbf36-6137-4f38-a49c-e880c2137f21"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/f47bbdd3-7529-45c9-b336-719ef447aeda",
+          "https://schema.hbp.eu/search/name": "Gironés, Zahara",
+          "https://schema.hbp.eu/search/identifier": "f47bbdd3-7529-45c9-b336-719ef447aeda"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/79e451c0-59f6-425b-a336-9c8e7955aefa",
+          "https://schema.hbp.eu/search/name": "Destexhe, Alain",
+          "https://schema.hbp.eu/search/identifier": "8cb9d524dff73b321ede05deea3322f2"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [],
+      "https://schema.hbp.eu/search/identifier": "e7490bf4574742e2a156da537090f48d"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://senselab.med.yale.edu/modeldb/ShowModel?model=263236"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/bea1da12-1209-4860-adc7-34275fb69917",
+          "https://schema.hbp.eu/search/name": "di Volo, Matteo",
+          "https://schema.hbp.eu/search/identifier": "4cc6d9f1a3aef03d763856d84f785576"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/79e451c0-59f6-425b-a336-9c8e7955aefa",
+          "https://schema.hbp.eu/search/name": "Destexhe, Alain",
+          "https://schema.hbp.eu/search/identifier": "8cb9d524dff73b321ede05deea3322f2"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [],
+      "https://schema.hbp.eu/search/title": "Biologically realistic mean-field models",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/528b3f4f-9bb5-4fef-8810-4773e446f5f2",
+      "https://schema.hbp.eu/search/version": "1.0",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "During SGA2, the CNRS partner has worked on a framework for building mean-field models using a semi-analytic procedure which allows one to design mean-field models even for complex neurons. This formalism was applied to gradually more complex models such as the leaky integrate and fire (IF) model (work in SGA1), the AdEx model (di Volo et al., 2019, Fig.5) [4] and more recently the Hodgkin-Huxley model (Carlu et al., 2020) [2]. This formalism will be used in SGA3 to design mean-field models to even more complex neuronal types, with dendrites. The mean-field approach was also extended to model Up-Down state dynamics, using either a mean-field model with adaptation (di Volo et al., 2019) [4] or a state-dependent formalism (Capone et al., 2020) [1]. The mean-field model approach was combined with voltage-sensitive dye recordings in awake monkey, to account for propagating waves of activity in V1, and how such propagating waves participate to visual information processing (Chemla et al., 2019) [3]. This study was very important for modeling because it allowed us to calibrate mean-field models and create \"networks of mean-fields\", applied here to V1 recordings. The same approach will be continued in SGA3, towards larger scales, as reviewed in a recent paper (Goldman et al., 2019) [5].\nThis model is now implemented in The Virtual Brain (TVB). This implementation (joint work with Viktor Jirsa in Marseille) is in progress and is described in the EITN deliverable.\n\nA copy of the code of this model was put in open-access on [ModelDB]( https://senselab.med.yale.edu/modeldb/ShowModel?model=263236#tabs-1)\n\n\n\n### References\n\n[1] Capone, C., di Volo, M., Romagnoni, A., Mattia, M. and Destexhe, A.  A state-dependent mean-field formalism to model different activity states in conductance-based networks of spiking neurons. Physical Review E, in press, 2020. biorXiv preprint: [https://www.biorxiv.org/content/10.1101/565127v1](https://www.biorxiv.org/content/10.1101/565127v1)\n\n[2] Carlu, M., Chehab, O., Dalla Porta, L., Depannemaecker, D., Herice, C., Jedynak, M., Koksal Ersoz, E., Muratore, P., Souihel, S., Capone, C., Zerlaut, Y., Destexhe, A., di Volo, M.  A mean-field approach to the dynamics of networks of complex neurons, from nonlinear Integrate-and-Fire to Hodgkin-Huxley models. J. Neurophysiol., in press, 2020. (P2369) \n[https://www.biorxiv.org/content/10.1101/870345v1](https://www.biorxiv.org/content/10.1101/870345v1)\n\n[3] Chemla, S., Reynaud, A., diVolo, M., Zerlaut, Y., Perrinet, K., Destexhe, A. and Chavane, F.  Suppressive traveling waves shape representations of illusory motion in primary visual cortex of awake primate. J. Neurosci. 39: 4282-4298, 2019. (P1510)\n\n[4] di Volo, M., Romagnoni, A., Capone, C.  and Destexhe, A. Biologically realistic mean-field models of conductance-based networks of spiking neurons with adaptation. Neural Computation 31: 653-680, 2019. (P1864)\n\n[5] Goldman, J.S., Tort-Colet, N., di Volo, M., Susin, E., Boute, J., Carlu, M., Nghiem, T-A., Gorski, T. and Destexhe, A.  Bridging single neuron dynamics to global brain states. Frontiers in Systems Neuroscience 13: 75, 2019.",
+      "https://schema.hbp.eu/search/license": [
+        {
+          "https://schema.hbp.eu/search/url": "https://creativecommons.org/licenses/by/4.0/",
+          "https://schema.hbp.eu/search/name": "Creative Commons Attribution 4.0 International"
+        }
+      ],
+      "https://schema.hbp.eu/search/modelScope": [],
+      "https://schema.hbp.eu/search/abstractionLevel": [],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/bea1da12-1209-4860-adc7-34275fb69917",
+          "https://schema.hbp.eu/search/name": "di Volo, Matteo",
+          "https://schema.hbp.eu/search/identifier": "4cc6d9f1a3aef03d763856d84f785576"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/faf35101-5d48-41c9-9bc5-11a6f8e65138",
+          "https://schema.hbp.eu/search/name": "Romagnoni, Alberto",
+          "https://schema.hbp.eu/search/identifier": "faf35101-5d48-41c9-9bc5-11a6f8e65138"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/50aa9d25-68b5-4d05-8c24-efd658e3c0b6",
+          "https://schema.hbp.eu/search/name": "Capone, Cristiano",
+          "https://schema.hbp.eu/search/identifier": "ddb0904147e01f2c2dcb111007cf7fed"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/79e451c0-59f6-425b-a336-9c8e7955aefa",
+          "https://schema.hbp.eu/search/name": "Destexhe, Alain",
+          "https://schema.hbp.eu/search/identifier": "8cb9d524dff73b321ede05deea3322f2"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [],
+      "https://schema.hbp.eu/search/identifier": "9659cbb1ba1fdff950728f727de1145e"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://github.com/alexanderkroner/saliency/tree/42b8bb61e163072768dd735afd35cb22b37036e4"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/aa6fc129-1e0b-4bdd-8fe8-f52aeb3cef4b",
+          "https://schema.hbp.eu/search/name": "Kroner, Alexander",
+          "https://schema.hbp.eu/search/identifier": "aa6fc129-1e0b-4bdd-8fe8-f52aeb3cef4b"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/aa6fc129-1e0b-4bdd-8fe8-f52aeb3cef4b",
+          "https://schema.hbp.eu/search/name": "Kroner, Alexander",
+          "https://schema.hbp.eu/search/identifier": "aa6fc129-1e0b-4bdd-8fe8-f52aeb3cef4b"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Visual saliency prediction",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/91efceb2-53bd-4905-ad38-4252a3a1d0fa",
+      "https://schema.hbp.eu/search/version": "42b8bb61e163072768dd735afd35cb22b37036e4",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "Predicting salient regions in natural images requires the detection of objects that are present in a scene. To develop robust representations for this challenging task, high-level visual features at multiple spatial scales must be extracted and augmented with contextual information. Here we propose an approach based on a convolutional neural network pre-trained on a large-scale image classification task. The architecture forms an encoder-decoder structure and includes a module with multiple convolutional layers at different dilation rates to capture multi-scale features in parallel. Moreover, we combine the resulting representations with global scene information for accurately predicting visual saliency. The network is based on a lightweight image classification backbone and hence presents a suitable choice for applications with limited computational resources to estimate human fixations across complex natural scenes.",
+      "https://schema.hbp.eu/search/license": [],
+      "https://schema.hbp.eu/search/modelScope": [
+        "network"
+      ],
+      "https://schema.hbp.eu/search/abstractionLevel": [
+        "cognitive modelling"
+      ],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/aa6fc129-1e0b-4bdd-8fe8-f52aeb3cef4b",
+          "https://schema.hbp.eu/search/name": "Kroner, Alexander",
+          "https://schema.hbp.eu/search/identifier": "aa6fc129-1e0b-4bdd-8fe8-f52aeb3cef4b"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/b2f92c77-2f46-4c84-9cec-d98e798ef801",
+          "https://schema.hbp.eu/search/name": "Senden, Mario",
+          "https://schema.hbp.eu/search/identifier": "db64e0f6fe4185798ff7df93abba1526"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/248a8006-9578-4eed-8f87-81a22d971413",
+          "https://schema.hbp.eu/search/name": "Driessens, Kurt",
+          "https://schema.hbp.eu/search/identifier": "248a8006-9578-4eed-8f87-81a22d971413"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/92a155a0-c229-4526-8817-f524b0391278",
+          "https://schema.hbp.eu/search/name": "Goebel, Rainer",
+          "https://schema.hbp.eu/search/identifier": "92a155a0-c229-4526-8817-f524b0391278"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [],
+      "https://schema.hbp.eu/search/identifier": "f2e8e0e97629022e6d8e68bd893c1836"
+    },
+    {
+      "https://schema.hbp.eu/search/fileBundle": [
+        {
+          "https://schema.hbp.eu/search/url": "https://github.com/ccnmaastricht/Object_recognition"
+        }
+      ],
+      "https://schema.hbp.eu/search/custodian": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/2067361b-ec6d-459b-83d2-5d985d0084ae",
+          "https://schema.hbp.eu/search/name": "Bhat, Salil",
+          "https://schema.hbp.eu/search/identifier": "2067361b-ec6d-459b-83d2-5d985d0084ae"
+        }
+      ],
+      "https://schema.hbp.eu/search/mainContact": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/2067361b-ec6d-459b-83d2-5d985d0084ae",
+          "https://schema.hbp.eu/search/name": "Bhat, Salil",
+          "https://schema.hbp.eu/search/identifier": "2067361b-ec6d-459b-83d2-5d985d0084ae"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Object Recognition for Scene Understanding",
+      "https://schema.hbp.eu/search/modelFormat": [],
+      "https://schema.hbp.eu/search/cellularTarget": [],
+      "https://schema.hbp.eu/search/editorId": "uniminds/core/modelinstance/v1.0.0/12f9a370-7761-4356-ad52-b7634016b682",
+      "https://schema.hbp.eu/search/version": "1.0",
+      "https://schema.hbp.eu/search/studyTarget": [],
+      "https://schema.hbp.eu/search/usedDataset": [],
+      "https://schema.hbp.eu/search/description": "A convolutional neural network model which recognizes objects based on snapshots obtained from Neurorobotic Platform (NRP). A simulated icub robot was used to capture the images. The images were captured using icub left (eye) camera. The icub gazes upon objects belonging to 10 object categories. The resulting images were then resampled (distorted) using ganglion cell distributions in the retina.",
+      "https://schema.hbp.eu/search/license": [],
+      "https://schema.hbp.eu/search/modelScope": [
+        "network"
+      ],
+      "https://schema.hbp.eu/search/abstractionLevel": [
+        "cognitive modelling"
+      ],
+      "https://schema.hbp.eu/search/producedDataset": [],
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/brainStructure": [],
+      "https://schema.hbp.eu/search/contributors": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "uniminds/core/person/v1.0.0/2067361b-ec6d-459b-83d2-5d985d0084ae",
+          "https://schema.hbp.eu/search/name": "Bhat, Salil",
+          "https://schema.hbp.eu/search/identifier": "2067361b-ec6d-459b-83d2-5d985d0084ae"
+        }
+      ],
+      "https://schema.hbp.eu/search/embargo": [],
+      "https://schema.hbp.eu/search/identifier": "3bb59155bd681b466092731a3a1b9e0f"
+    }
+  ],
+  "total": 92,
+  "size": 20,
+  "start": 0
+}
