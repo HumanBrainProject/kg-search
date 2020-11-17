@@ -17,6 +17,8 @@ public @interface FieldInfo {
     boolean markdown() default false;
     boolean overview() default false;
     boolean ignoreForSearch() default false;
+    boolean isButton() default false;
+    boolean termsOfUse() default false;
     Type type() default Type.UNDEFINED;
     Layout layout() default Layout.UNDEFINED;
     String linkIcon() default "";
@@ -24,11 +26,16 @@ public @interface FieldInfo {
     String separator() default "";
     float boost() default 1.0f;
     Facet facet() default Facet.UNDEFINED;
+    FacetOrder facetOrder() default  FacetOrder.UNDEFINED;
     Aggregate aggregate() default Aggregate.UNDEFINED;
 
 
     enum Facet{
         UNDEFINED, EXISTS, LIST
+    }
+
+    enum FacetOrder{
+        UNDEFINED, BYCOUNT, BYVALUE
     }
 
     enum Aggregate{

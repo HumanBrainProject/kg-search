@@ -22,7 +22,7 @@ public class Contributor {
     private Value<String> title;
 
     @FieldInfo(layout = FieldInfo.Layout.HEADER)
-    private String editorId;
+    private Value<String> editorId;
 
     @FieldInfo(label = "Custodian of", layout = FieldInfo.Layout.GROUP, overview = true)
     private List<InternalReference> custodianOf;
@@ -72,11 +72,11 @@ public class Contributor {
         this.identifier = identifier;
     }
 
-    public String getEditorId() {
+    public Value<String> getEditorId() {
         return editorId;
     }
 
-    public void setEditorId(String editorId) {
+    public void setEditorId(Value<String> editorId) {
         this.editorId = editorId;
     }
 

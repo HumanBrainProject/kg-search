@@ -1,56 +1,99 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
+import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference;
 
 import java.util.Date;
 import java.util.List;
 
+@MetaInfo(name="Model", identifier = "uniminds/core/modelinstance/v1.0.0/search", order=5)
 public class Model {
+    private Value<String> type = new Value<>("Model");
 
+    @FieldInfo(visible = false, ignoreForSearch = true)
+    private Value<String> identifier;
+
+    @FieldInfo(layout = FieldInfo.Layout.HEADER)
+    private Value<String> editorId;
+
+    @FieldInfo(label = "Files", layout = FieldInfo.Layout.GROUP, markdown = true)
+    private Value<String> embargo;
+
+    @FieldInfo(label = "Produced datasets", layout = FieldInfo.Layout.GROUP)
     private List<ExternalReference> producedDataset;
 
+    @FieldInfo(label = "Download model", isButton=true, termsOfUse=true)
     private List<ExternalReference> allFiles;
 
+    @FieldInfo(label = "Model format", layout = FieldInfo.Layout.SUMMARY, separator = "; ")
     private List<Value<String>> modelFormat;
 
+    @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true)
     private Value<String> description;
 
     @JsonProperty("license_info")
+    @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder= FieldInfo.FacetOrder.BYVALUE)
     private ExternalReference licenseInfo;
 
-    private List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> owners;
+    @FieldInfo(label = "Custodian", layout = FieldInfo.Layout.SUMMARY, separator = "; ", type = FieldInfo.Type.TEXT, hint = "A custodian is the person responsible for the data bundle.")
+    private List<InternalReference> owners;
 
+    @FieldInfo(label = "Abstraction level", layout = FieldInfo.Layout.SUMMARY, separator = "; ", facet = FieldInfo.Facet.LIST)
     private List<Value<String>> abstractionLevel;
 
-    private List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> mainContact;
+    @FieldInfo(label = "Main contact", layout = FieldInfo.Layout.SUMMARY, separator = "; ", type = FieldInfo.Type.TEXT)
+    private List<InternalReference> mainContact;
 
+    @FieldInfo(label = "Brain structure", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
     private List<Value<String>> brainStructures;
 
-    private List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> usedDataset;
+    @FieldInfo(label = "Used datasets", layout = FieldInfo.Layout.GROUP)
+    private List<InternalReference> usedDataset;
 
+    @FieldInfo(label = "Version", layout = FieldInfo.Layout.SUMMARY)
     private Value<String> version;
 
-    private List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> publications;
+    @FieldInfo(label = "Publications", layout = FieldInfo.Layout.GROUP, markdown = true, hint = "List of publications that have been published as a part of this model.")
+    private List<InternalReference> publications;
 
-    private List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> studyTarget;
+    @FieldInfo(label = "Study target", layout = FieldInfo.Layout.SUMMARY)
+    private List<InternalReference> studyTarget;
 
+    @FieldInfo(label = "Model scope", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
     private List<Value<String>> modelScope;
 
+    @FieldInfo(label = "Name", optional = false, sort = true, boost = 20)
     private Value<String> title;
 
-    private List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> contributors;
+    @FieldInfo(label = "Contributors", layout = FieldInfo.Layout.HEADER, separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10)
+    private List<InternalReference> contributors;
 
+    @FieldInfo(label = "(Sub)cellular target", layout = FieldInfo.Layout.SUMMARY)
     private List<Value<String>> cellularTarget;
 
     @JsonProperty("first_release")
+    @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
     private Value<Date> firstRelease;
 
     @JsonProperty("last_release")
+    @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
     private Value<Date> lastRelease;
 
-    private Value<String> type;
+    public Value<String> getIdentifier() { return identifier; }
+
+    public void setIdentifier(Value<String> identifier) { this.identifier = identifier; }
+
+    public Value<String> getEditorId() { return editorId; }
+
+    public void setEditorId(Value<String> editorId) { this.editorId = editorId; }
+
+    public Value<String> getEmbargo() { return embargo; }
+
+    public void setEmbargo(Value<String> embargo) { this.embargo = embargo; }
 
     public List<ExternalReference> getProducedDataset() {
         return producedDataset;
