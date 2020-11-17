@@ -18,11 +18,11 @@ public class Contributor {
     @FieldInfo(visible = false)
     private Value<String> identifier;
 
-    @FieldInfo(optional = false, sort = true, label = "Name", boost = 20f)
-    private Value<String> title;
-
     @FieldInfo(layout = FieldInfo.Layout.HEADER)
     private Value<String> editorId;
+
+    @FieldInfo(optional = false, sort = true, label = "Name", boost = 20f)
+    private Value<String> title;
 
     @FieldInfo(label = "Custodian of", layout = FieldInfo.Layout.GROUP, overview = true)
     private List<InternalReference> custodianOf;
@@ -47,9 +47,16 @@ public class Contributor {
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
     private Value<Date> lastRelease;
 
-
     public void setIdentifier(String identifier) {
-        this.identifier = identifier!=null ? new Value<>(identifier) : null;
+        setIdentifier(identifier!=null ? new Value<>(identifier) : null);
+    }
+
+    public void setEditorId(String editorId){
+        setEditorId(editorId!=null ? new Value<>(editorId) : null);
+    }
+
+    public void setTitle(String title){
+        setTitle(title!=null ? new Value<>(title) : null);
     }
 
     public void setFirstRelease(Date firstRelease){
@@ -58,10 +65,6 @@ public class Contributor {
 
     public void setLastRelease(Date lastRelease){
         setLastRelease(lastRelease!=null ? new Value<>(lastRelease) : null);
-    }
-
-    public void setTitle(String title){
-        setTitle(title!=null ? new Value<>(title) : null);
     }
 
     public Value<String> getIdentifier() {
