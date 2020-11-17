@@ -1,24 +1,44 @@
 package eu.ebrains.kg.search.model.target.elasticsearch;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
 public @interface FieldInfo {
     String label() default "";
-    boolean optional() default false;
+    String hint() default "";
+    boolean optional() default true;
     boolean sort() default false;
     boolean visible() default true;
     boolean labelHidden() default false;
     boolean markdown() default false;
     boolean overview() default false;
-    String type() default  "";
-    Layout layout() default Layout.STANDARD;
+    boolean ignoreForSearch() default false;
+    Type type() default Type.UNDEFINED;
+    Layout layout() default Layout.UNDEFINED;
     String linkIcon() default "";
     String tagIcon() default "";
-    String facet() default "";
-    boolean ignoreForSearch() default false;
     float boost() default 1.0f;
+    Facet facet() default Facet.UNDEFINED;
+    Aggregate aggregate() default Aggregate.UNDEFINED;
 
 
-    public enum Layout{
-        STANDARD, GROUP, HEADER
+    enum Facet{
+        UNDEFINED, EXISTS, LIST
     }
 
+    enum Aggregate{
+        UNDEFINED, COUNT
+    }
+
+    enum Type{
+        UNDEFINED, TEXT, DATE
+    }
+
+    enum Layout{
+        UNDEFINED, GROUP, HEADER
+    }
 }

@@ -2,6 +2,8 @@ package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ExternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
 import java.util.Date;
 import java.util.List;
@@ -148,46 +150,5 @@ public class Software {
 
     public void setType(Value<String> type) {
         this.type = type;
-    }
-
-    public static class ExternalReference {
-
-        public ExternalReference() {}
-
-        public ExternalReference(String url, String value) {
-            this.url = url;
-            this.value = value;
-        }
-
-        private String url;
-        private String value;
-
-        public String getUrl() { return url; }
-
-        public void setUrl(String url) { this.url = url; }
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-    }
-
-
-    public static class Value<T>{
-
-        public Value() {}
-
-        public Value(T value) {
-            this.value = value;
-        }
-
-        private T value;
-
-        public T getValue() {
-            return value;
-        }
     }
 }

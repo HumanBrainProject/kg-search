@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 public class ContributorTranslator implements Translator<PersonSources, Contributor> {
 
-    private final static String TYPE = "Contributor";
 
 
     public Contributor translate(PersonSources personSources) {
@@ -24,21 +23,19 @@ public class ContributorTranslator implements Translator<PersonSources, Contribu
                 .map(contribution ->
                         new Contributor.InternalReference(
                                 String.format("Dataset/%s", contribution.getIdentifier()),
-                                contribution.getName())).collect(Collectors.toList()));
+                                contribution.getName(), null)).collect(Collectors.toList()));
 
         c.setCustodianOf(person.getCustodianOf().stream()
                 .map(custodianOf ->
                         new Contributor.InternalReference(
                                 String.format("Dataset/%s", custodianOf.getIdentifier()),
-                                custodianOf.getName())).collect(Collectors.toList()));
+                                custodianOf.getName(), null)).collect(Collectors.toList()));
 
         c.setModelContributions(person.getModelContributions().stream()
                 .map(contribution -> new Contributor.InternalReference(
                         String.format("Model/%s", contribution.getIdentifier()),
-                        contribution.getName()
+                        contribution.getName(), null
                 )).collect(Collectors.toList()));
-
-        c.setType(TYPE);
         return c;
     }
 }

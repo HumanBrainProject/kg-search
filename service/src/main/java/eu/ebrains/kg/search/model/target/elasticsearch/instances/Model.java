@@ -1,6 +1,9 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ExternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
 import java.util.Date;
 import java.util.List;
@@ -18,37 +21,37 @@ public class Model {
     @JsonProperty("license_info")
     private ExternalReference licenseInfo;
 
-    private List<InternalReference> owners;
+    private List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> owners;
 
     private List<Value<String>> abstractionLevel;
 
-    private List<InternalReference> mainContact;
+    private List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> mainContact;
 
     private List<Value<String>> brainStructures;
 
-    private List<InternalReference> usedDataset;
+    private List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> usedDataset;
 
     private Value<String> version;
 
-    private List<InternalReference> publications;
+    private List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> publications;
 
-    private List<InternalReference> studyTarget;
+    private List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> studyTarget;
 
     private List<Value<String>> modelScope;
 
     private Value<String> title;
 
-    private List<InternalReference> contributors;
+    private List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> contributors;
 
     private List<Value<String>> cellularTarget;
 
     @JsonProperty("first_release")
-    private Software.Value<Date> firstRelease;
+    private Value<Date> firstRelease;
 
     @JsonProperty("last_release")
-    private Software.Value<Date> lastRelease;
+    private Value<Date> lastRelease;
 
-    private Software.Value<String> type;
+    private Value<String> type;
 
     public List<ExternalReference> getProducedDataset() {
         return producedDataset;
@@ -90,11 +93,11 @@ public class Model {
         this.licenseInfo = licenseInfo;
     }
 
-    public List<InternalReference> getOwners() {
+    public List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> getOwners() {
         return owners;
     }
 
-    public void setOwners(List<InternalReference> owners) {
+    public void setOwners(List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> owners) {
         this.owners = owners;
     }
 
@@ -106,11 +109,11 @@ public class Model {
         this.abstractionLevel = abstractionLevel;
     }
 
-    public List<InternalReference> getMainContact() {
+    public List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> getMainContact() {
         return mainContact;
     }
 
-    public void setMainContact(List<InternalReference> mainContact) {
+    public void setMainContact(List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> mainContact) {
         this.mainContact = mainContact;
     }
 
@@ -122,11 +125,11 @@ public class Model {
         this.brainStructures = brainStructures;
     }
 
-    public List<InternalReference> getUsedDataset() {
+    public List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> getUsedDataset() {
         return usedDataset;
     }
 
-    public void setUsedDataset(List<InternalReference> usedDataset) {
+    public void setUsedDataset(List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> usedDataset) {
         this.usedDataset = usedDataset;
     }
 
@@ -138,19 +141,19 @@ public class Model {
         this.version = version;
     }
 
-    public List<InternalReference> getPublications() {
+    public List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> getPublications() {
         return publications;
     }
 
-    public void setPublications(List<InternalReference> publications) {
+    public void setPublications(List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> publications) {
         this.publications = publications;
     }
 
-    public List<InternalReference> getStudyTarget() {
+    public List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> getStudyTarget() {
         return studyTarget;
     }
 
-    public void setStudyTarget(List<InternalReference> studyTarget) {
+    public void setStudyTarget(List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> studyTarget) {
         this.studyTarget = studyTarget;
     }
 
@@ -170,11 +173,11 @@ public class Model {
         this.title = title;
     }
 
-    public List<InternalReference> getContributors() {
+    public List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> getContributors() {
         return contributors;
     }
 
-    public void setContributors(List<InternalReference> contributors) {
+    public void setContributors(List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> contributors) {
         this.contributors = contributors;
     }
 
@@ -186,98 +189,28 @@ public class Model {
         this.cellularTarget = cellularTarget;
     }
 
-    public Software.Value<Date> getFirstRelease() {
+    public Value<Date> getFirstRelease() {
         return firstRelease;
     }
 
-    public void setFirstRelease(Software.Value<Date> firstRelease) {
+    public void setFirstRelease(Value<Date> firstRelease) {
         this.firstRelease = firstRelease;
     }
 
-    public Software.Value<Date> getLastRelease() {
+    public Value<Date> getLastRelease() {
         return lastRelease;
     }
 
-    public void setLastRelease(Software.Value<Date> lastRelease) {
+    public void setLastRelease(Value<Date> lastRelease) {
         this.lastRelease = lastRelease;
     }
 
-    public Software.Value<String> getType() {
+    public Value<String> getType() {
         return type;
     }
 
-    public void setType(Software.Value<String> type) {
+    public void setType(Value<String> type) {
         this.type = type;
     }
 
-    public static class ExternalReference {
-
-        public ExternalReference() {}
-
-        public ExternalReference(String url, String value) {
-            this.url = url;
-            this.value = value;
-        }
-
-        private String url;
-        private String value;
-
-        public String getUrl() { return url; }
-
-        public void setUrl(String url) { this.url = url; }
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-    }
-
-    public static class InternalReference {
-
-        public InternalReference() {
-        }
-
-        public InternalReference(String reference, String value) {
-            this.reference = reference;
-            this.value = value;
-        }
-
-        private String reference;
-        private String value;
-
-        public String getReference() {
-            return reference;
-        }
-
-        public void setReference(String reference) {
-            this.reference = reference;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-    }
-
-
-    public static class Value<T>{
-
-        public Value() {}
-
-        public Value(T value) {
-            this.value = value;
-        }
-
-        private T value;
-
-        public T getValue() {
-            return value;
-        }
-    }
 }
