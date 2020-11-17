@@ -11,4 +11,5 @@ public @interface MetaInfo {
     String name();
     String identifier();
     int order();
+    boolean defaultSelection() default false;
 }

@@ -19,6 +19,10 @@ public @interface FieldInfo {
     boolean ignoreForSearch() default false;
     boolean isButton() default false;
     boolean termsOfUse() default false;
+    boolean isFilterableFacet() default false;
+    boolean isHierarchicalFiles() default false;
+    boolean groupBy() default false;
+    boolean isTable() default false;
     Type type() default Type.UNDEFINED;
     Layout layout() default Layout.UNDEFINED;
     String linkIcon() default "";
@@ -28,6 +32,8 @@ public @interface FieldInfo {
     Facet facet() default Facet.UNDEFINED;
     FacetOrder facetOrder() default  FacetOrder.UNDEFINED;
     Aggregate aggregate() default Aggregate.UNDEFINED;
+    int order() default 0;
+    int overviewMaxDisplay() default 0;
 
 
     enum Facet{
