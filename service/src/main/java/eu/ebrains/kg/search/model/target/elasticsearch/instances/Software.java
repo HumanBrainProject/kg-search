@@ -15,7 +15,7 @@ public class Software {
     private Value<String> type = new Value<>("Software");
 
     @FieldInfo(layout = FieldInfo.Layout.HEADER)
-    private String editorId;
+    private Value<String> editorId;
 
     @FieldInfo(label = "Application Category", layout = FieldInfo.Layout.SUMMARY, separator = ", ")
     private List<Value<String>> appCategory;
@@ -58,11 +58,11 @@ public class Software {
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
     private Value<Date> lastRelease;
 
-    public String getEditorId() {
+    public Value<String> getEditorId() {
         return editorId;
     }
 
-    public void setEditorId(String editorId) {
+    public void setEditorId(Value<String> editorId) {
         this.editorId = editorId;
     }
 
@@ -146,9 +146,7 @@ public class Software {
         this.homepage = homepage;
     }
 
-    public Value<String> getTitle() {
-        return title;
-    }
+    public Value<String> getTitle() { return title; }
 
     public void setTitle(Value<String> title) {
         this.title = title;
