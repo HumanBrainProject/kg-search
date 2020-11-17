@@ -1,11 +1,9 @@
 package eu.ebrains.kg.search.controller.translators;
 
-import eu.ebrains.kg.search.controller.translators.Translator;
 import eu.ebrains.kg.search.model.source.PersonSources;
 import eu.ebrains.kg.search.model.source.PersonV1andV2;
-import eu.ebrains.kg.search.model.source.openMINDSv1.PersonV1;
-import eu.ebrains.kg.search.model.source.openMINDSv2.PersonV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Contributor;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference;
 
 import java.util.stream.Collectors;
 
@@ -21,18 +19,18 @@ public class ContributorTranslator implements Translator<PersonSources, Contribu
         c.setTitle(person.getTitle());
         c.setContributions(person.getContributions().stream()
                 .map(contribution ->
-                        new Contributor.InternalReference(
+                        new InternalReference(
                                 String.format("Dataset/%s", contribution.getIdentifier()),
                                 contribution.getName(), null)).collect(Collectors.toList()));
 
         c.setCustodianOf(person.getCustodianOf().stream()
                 .map(custodianOf ->
-                        new Contributor.InternalReference(
+                        new InternalReference(
                                 String.format("Dataset/%s", custodianOf.getIdentifier()),
                                 custodianOf.getName(), null)).collect(Collectors.toList()));
 
         c.setModelContributions(person.getModelContributions().stream()
-                .map(contribution -> new Contributor.InternalReference(
+                .map(contribution -> new InternalReference(
                         String.format("Model/%s", contribution.getIdentifier()),
                         contribution.getName(), null
                 )).collect(Collectors.toList()));
