@@ -2,17 +2,26 @@ package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
+import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
+import eu.ebrains.kg.search.model.target.elasticsearch.RibbonInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
 import java.util.Date;
 import java.util.List;
 
+@MetaInfo(name="Project", identifier = "uniminds/core/placomponent/v1.0.0/search", order=1)
+@RibbonInfo(content="Datasets", aggregation="count", dataField="search:datasets", singular="dataset", plural="datasets")
 public class Project {
+
     private Value<String> type = new Value<>("Project");
 
+    @FieldInfo(visible = false)
     private Value<String> identifier;
+
+    @FieldInfo(label = "Description", markdown =  true, boost =  7.5f, labelHidden = true, type=FieldInfo.Type.TEXT)
     private Value<String> description;
+
     private List<Value<String>> publications;
     private List<InternalReference> dataset;
     private Value<String> title;
