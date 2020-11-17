@@ -13,4 +13,5 @@ public @interface RibbonInfo {
     String dataField();
     String singular();
     String plural();
+    String icon();
 }
