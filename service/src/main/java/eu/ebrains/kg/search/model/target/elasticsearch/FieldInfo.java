@@ -21,6 +21,7 @@ public @interface FieldInfo {
     Layout layout() default Layout.UNDEFINED;
     String linkIcon() default "";
     String tagIcon() default "";
+    String separator() default "";
     float boost() default 1.0f;
     Facet facet() default Facet.UNDEFINED;
     Aggregate aggregate() default Aggregate.UNDEFINED;
@@ -39,6 +40,6 @@ public @interface FieldInfo {
     }
 
     enum Layout{
-        UNDEFINED, GROUP, HEADER
+        UNDEFINED, GROUP, HEADER, SUMMARY
     }
 }

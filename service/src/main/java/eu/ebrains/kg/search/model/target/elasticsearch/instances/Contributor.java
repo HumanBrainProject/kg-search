@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 
-@MetaInfo(name="Contributor", identifier = "uniminds/core/person/v1.0.0/search")
+@MetaInfo(name="Contributor", identifier = "uniminds/core/person/v1.0.0/search", order=6)
 public class Contributor {
 
     private Value<String> type = new Value<>("Contributor");

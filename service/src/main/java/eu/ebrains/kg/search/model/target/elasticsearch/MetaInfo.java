@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface MetaInfo {
     String name();
     String identifier();
+    int order();
 }
