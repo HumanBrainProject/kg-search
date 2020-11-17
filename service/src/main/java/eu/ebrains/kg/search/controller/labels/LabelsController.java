@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
+import eu.ebrains.kg.search.model.target.elasticsearch.RibbonInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Contributor;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Software;
 import eu.ebrains.kg.search.utils.MetaModelUtils;
@@ -39,6 +40,21 @@ public class LabelsController {
         MetaInfo metaInfo = clazz.getAnnotation(MetaInfo.class);
         if (metaInfo != null) {
             result.put("http://schema.org/identifier", metaInfo.identifier());
+        }
+        RibbonInfo ribbonInfo = clazz.getAnnotation(RibbonInfo.class);
+        if (ribbonInfo != null) {
+            Map<String, Object> ribbonInfo_result = new HashMap<>();
+            ribbonInfo_result.put(SEARCH_UI_NAMESPACE + "content", ribbonInfo.content());
+            Map<String, Object> framed_result = new HashMap<>();
+            framed_result.put(SEARCH_UI_NAMESPACE + "aggregation", ribbonInfo.aggregation());
+            framed_result.put(SEARCH_UI_NAMESPACE + "dataField", ribbonInfo.dataField());
+            Map<String, Object> suffix_result = new HashMap<>();
+            suffix_result.put(SEARCH_UI_NAMESPACE + "singular", ribbonInfo.singular());
+            suffix_result.put(SEARCH_UI_NAMESPACE + "plural", ribbonInfo.plural());
+            framed_result.put(SEARCH_UI_NAMESPACE + "suffix", suffix_result);
+            ribbonInfo_result.put(SEARCH_UI_NAMESPACE + "framed", framed_result);
+            ribbonInfo_result.put(SEARCH_UI_NAMESPACE + "icon", ribbonInfo.icon());
+            result.put(SEARCH_UI_NAMESPACE + "ribbon", ribbonInfo_result);
         }
         List<Field> allFields = utils.getAllFields(clazz);
         Map<String, Object> fields = new LinkedHashMap<>();
