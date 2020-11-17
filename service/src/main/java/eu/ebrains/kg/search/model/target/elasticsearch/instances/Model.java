@@ -83,6 +83,42 @@ public class Model {
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
     private Value<Date> lastRelease;
 
+    public void setType(String type) {
+        setType(type!=null ? new Value<>(type) : null);
+    }
+
+    public void setIdentifier(String identifier) {
+        setIdentifier(identifier!=null ? new Value<>(identifier) : null);
+    }
+
+    public void setEditorId(String editorId) {
+        setEditorId(editorId!=null ? new Value<>(editorId) : null);
+    }
+
+    public void setEmbargo(String embargo) {
+        setEmbargo(embargo!=null ? new Value<>(embargo) : null);
+    }
+
+    public void setDescription(String description) {
+        setDescription(description!=null ? new Value<>(description) : null);
+    }
+
+    public void setVersion(String version) {
+        setVersion(version!=null ? new Value<>(version) : null);
+    }
+
+    public void setTitle(String title) {
+        setTitle(title!=null ? new Value<>(title) : null);
+    }
+
+    public void setFirstRelease(Date firstRelease) {
+        setFirstRelease(firstRelease!=null ? new Value<>(firstRelease) : null);
+    }
+
+    public void setLastRelease(Date lastRelease) {
+        setLastRelease(lastRelease!=null ? new Value<>(lastRelease) : null);
+    }
+
     public Value<String> getIdentifier() { return identifier; }
 
     public void setIdentifier(Value<String> identifier) { this.identifier = identifier; }
