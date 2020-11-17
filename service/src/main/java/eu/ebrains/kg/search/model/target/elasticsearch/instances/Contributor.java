@@ -47,6 +47,10 @@ public class Contributor {
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
     private Value<Date> lastRelease;
 
+    public void setType(String type) {
+        setType(type!=null ? new Value<>(type) : null);
+    }
+
     public void setIdentifier(String identifier) {
         setIdentifier(identifier!=null ? new Value<>(identifier) : null);
     }
