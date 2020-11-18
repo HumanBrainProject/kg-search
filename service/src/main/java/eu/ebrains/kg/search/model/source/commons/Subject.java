@@ -34,4 +34,48 @@ public class Subject {
     private List<String> sex;
     private String name;
     private String identifier;
+
+    public String getAge() { return age; }
+
+    public void setAge(String age) { this.age = age; }
+
+    public List<String> getAgeCategory() { return ageCategory; }
+
+    public void setAgeCategory(List<String> ageCategory) { this.ageCategory = ageCategory; }
+
+    public String getWeight() { return weight; }
+
+    public void setWeight(String weight) { this.weight = weight; }
+
+    public String getGenotype() { return genotype; }
+
+    public void setGenotype(String genotype) { this.genotype = genotype; }
+
+    public String getRelativeUrl() { return relativeUrl; }
+
+    public void setRelativeUrl(String relativeUrl) { this.relativeUrl = relativeUrl; }
+
+    public String getStrains() { return strains; }
+
+    public void setStrains(String strains) { this.strains = strains; }
+
+    public String getSpecies() { return species; }
+
+    public void setSpecies(String species) { this.species = species; }
+
+    public String getStrain() { return strain; }
+
+    public void setStrain(String strain) { this.strain = strain; }
+
+    public List<String> getSex() { return sex; }
+
+    public void setSex(List<String> sex) { this.sex = sex; }
+
+    public String getName() { return name; }
+
+    public void setName(String name) { this.name = name; }
+
+    public String getIdentifier() { return identifier; }
+
+    public void setIdentifier(String identifier) { this.identifier = identifier; }
 }
