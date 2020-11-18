@@ -1,0 +1,932 @@
+{
+  "databaseScope": "RELEASED",
+  "importantMessage": "This query is executed with a mode thought for query testing only (with throttled performance). Please register your query if you're happy with it. It's easy and you gain speed ;)!",
+  "apiName": "Software",
+  "results": [
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-08-25T08:58:36.542Z",
+      "https://schema.hbp.eu/search/description": "UNICORE is a set of server components that are installed at the resource provider site (e.g. JSC or CSCS) to provide a set of REST APIs for submiting and managing HPC jobs and related tasks like data access and data movement. UNICORE handles security aspects like federated authentication, user mapping and authorization.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-08-25T08:58:36.535Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://www.unicore.eu/documentation/"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "BSD"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Commandline Interface",
+            "Desktop Environment"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Linux",
+            "MacOS"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://www.unicore.eu"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://sourceforge.net/projects/unicore"
+          ],
+          "https://schema.hbp.eu/search/version": "8.0.0"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "Unicore",
+      "https://schema.hbp.eu/search/identifier": "671a21a4-4a65-4e33-9622-e85457bef265",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/671a21a4-4a65-4e33-9622-e85457bef265"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-09-29T09:56:43.900Z",
+      "https://schema.hbp.eu/search/description": "Multi-Brain: Unified segmentation of population neuroimaging data\n\nThe Multi-Brain (MB) model has the general aim of integrating a number of disparate image analysis components within a single unified generative modelling framework (segmentation, nonlinear registration, image translation, etc.). The model is described in Brudfors et al [2020], and it builds on a number of previous works. Its objective is to achieve diffeomorphic alignment of a wide variaty of medical image modalities into a common anatomical space. This involves the ability to construct a \"tissue probability template\" from a population of scans through group-wise alignment [Ashburner & Friston, 2009; Blaiotta et al, 2018]. Diffeomorphic deformations are computed within a geodesic shooting framework [Ashburner & Friston, 2011], which is optimised with a Gauss-Newton strategy that uses a multi-grid approach to solve the system of linear equations [Ashburner, 2007]. Variability among image contrasts is modelled using a much more sophisticated version of the Gaussian mixture model with bias correction framework originally proposed by Ashburner & Friston [2005], and which has been extended to account for known variability of the intensity distributions of different tissues [Blaiotta et al, 2018]. This model has been shown to provide a good model of the intensity distributions of different imaging modalities [Brudfors et al, 2019].",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-09-29T09:56:43.893Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Plugin"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://github.com/WTCN-computational-anatomy-group/diffeo-segment/blob/v0.1.0/manual-mb.pdf"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "GNU General Public License, version 3.0"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Commandline Interface",
+            "Desktop Environment",
+            "Modelling",
+            "Data Processing",
+            "3D-Vector Data Types",
+            "3D-Scalar Data Types",
+            "Matrix Data Types"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Linux",
+            "MacOS",
+            "Windows"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://github.com/WTCN-computational-anatomy-group/diffeo-segment"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://github.com/WTCN-computational-anatomy-group/diffeo-segment/tree/v0.1.0"
+          ],
+          "https://schema.hbp.eu/search/version": "0.1.0"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "Multi-Brain",
+      "https://schema.hbp.eu/search/identifier": "6b3a113b-8640-4e27-baab-bf4eef1c6501",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/6b3a113b-8640-4e27-baab-bf4eef1c6501"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-05-26T06:02:21.763Z",
+      "https://schema.hbp.eu/search/description": "UG4 (Unstructured Grids 4) is an extensive, flexible, cross-platform open source simulation framework for the numerical solution of systems of partial differential equations. Using Finite Element and Finite Volume methods on hybrid, adaptive, unstructured multigrid hierarchies, UG4 allows for the simulation of complex real world models (physical, biological etc.) on massively parallel computer architectures.\n\nUG4 is implemented in the C++ programming language and provides grid management, discretization and (linear as well as non-linear) solver utilities. It is extensible and customizable via its plugin mechanism. The highly scalable MPI based parallelization of UG4 has been shown to scale to hundred thousands of cores.\n\nSimulation workflows are defined either using the Lua scripting language or the graphical VRL interface https://vrl-studio.mihosoft.eu/. Besides that, UG4 can be used as a library for third-party code.\n\nSeveral examples are provided in the Examples application that can be used for simulations of the corresponding phenomena but also serve as demonstration modules for implementing user-defined plugins and scripts. By developing custom plugins, users can extend the functionality of the framework for their particular purposes. The framework provides coupling facilities for the models implemented in different plugins.\n\nKey elements of UG4 are:\n\n* Efficient solvers on distributed, adaptive multigrid hierarchies.\n* A flexible component based discretization system.\n* Efficient support for massively parallel computer architectures.\n* Full scripting support.\n* A modular plugin based architecture.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-05-26T06:02:21.746Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Library"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "http://ug4.github.io/docs/"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "GNU Lesser General Public License, version 3.0"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Commandline Interface",
+            "Scripting Interface",
+            "Desktop Environment",
+            "Simulation",
+            "Data Processing",
+            "3D Geometry Data",
+            "3D-Vector Data Types",
+            "3D-Scalar Data Types",
+            "Graph Data Types"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Windows",
+            "Linux",
+            "MacOS"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://gcsc.uni-frankfurt.de/simulation-and-modelling/ug4"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://github.com/UG4/ugcore/tree/2018.4.3.1"
+          ],
+          "https://schema.hbp.eu/search/version": "4.3.1"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "UG4",
+      "https://schema.hbp.eu/search/identifier": "4b03f671-d305-4f0a-be74-39a5d8b8d7d9",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/4b03f671-d305-4f0a-be74-39a5d8b8d7d9"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-10-06T14:21:29.891Z",
+      "https://schema.hbp.eu/search/description": "This package contains validation tests for models of hippocampus, based on the SciUnit framework and the NeuronUnit package. As in SciUnit, in HippoUnit tests four main classes are implemented: the Test class, the  Model class, the Capabilities class and the Score class.\nThe tests of HippoUnit automatically run simulations on single-cell models that mimic the electrophysiological protocol from which the target experimental data were derived. Then the behavior of the model is evaluated and quantitatively compared to the experimental data using various feature-based error functions.\nCurrent tests cover somatic behavior and signal propagation and integration in apical dendrites of hippocampal CA1 pyramidal cell models.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-10-06T14:21:29.883Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Library"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://hippounit.readthedocs.io/"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "BSD 3-Clause"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Commandline Interface",
+            "Desktop Environment",
+            "Simulation",
+            "Time Series Data Types"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Linux",
+            "Windows",
+            "MacOS"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://github.com/KaliLab/hippounit"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://pypi.org/project/hippounit/#files"
+          ],
+          "https://schema.hbp.eu/search/version": "1.3.5"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "HippoUnit",
+      "https://schema.hbp.eu/search/identifier": "fd369ab8-c788-4c7b-89ec-594aa3e46c24",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/3ab6bb29-5a48-43ac-bf53-b307c66505cb"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-04-14T12:09:56.265Z",
+      "https://schema.hbp.eu/search/description": "3D Slicer is:\n\n* A software platform for the analysis (including registration and interactive segmentation) and visualization (including volume rendering) of medical images and for research in image guided therapy.\n* A free, open source software available on multiple operating systems: Linux, MacOSX and Windows\n* Extensible, with powerful plug-in capabilities for adding algorithms and applications.\n\nFeatures include:\n\n* Multi organ: from head to toe.\n* Support for multi-modality imaging including, MRI, CT, US, nuclear medicine, and microscopy.\n* Bidirectional interface for devices.\n\nThere is no restriction on use, but Slicer is not approved for clinical use and intended for research. Permissions and compliance with applicable rules are the responsibility of the user.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-04-14T12:09:56.260Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Application"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://www.slicer.org/wiki/Documentation/4.10"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "BSD-style License"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Graphical User Interface",
+            "Desktop Environment",
+            "Presentation/Visualization",
+            "Interactive Analysis",
+            "3D-Scalar Data Types",
+            "Vector Image Data Types",
+            "Raster Image Data Types"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Linux",
+            "Windows",
+            "MacOS"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://www.slicer.org/"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://github.com/Slicer/Slicer/tree/v4.10.2"
+          ],
+          "https://schema.hbp.eu/search/version": "4.10.2"
+        },
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Application"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://github.com/Slicer/Slicer"
+          ],
+          "https://schema.hbp.eu/search/description": "3D Slicer is an open source software platform for medical image informatics,\nimage processing, and three-dimensional visualization.\nBuilt over two decades through support from the National Institutes of Health and a worldwide developer community,\nSlicer brings free, powerful cross-platform processing tools to physicians, researchers, and the general public.",
+          "https://schema.hbp.eu/search/license": [
+            "BSD 3-Clause",
+            "GNU General Public License"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Model",
+            "Raster Image Data Types",
+            "Data Processing",
+            "Presentation/Visualization",
+            "Interactive Analysis",
+            "Desktop Environment"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Windows",
+            "Linux",
+            "MacOS"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://www.slicer.org"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://github.com/Slicer/Slicer"
+          ],
+          "https://schema.hbp.eu/search/version": "4.10.1"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "3D Slicer",
+      "https://schema.hbp.eu/search/identifier": "e9e73399-e9b1-4f8e-b24c-ffb447ed50d2",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/e9e73399-e9b1-4f8e-b24c-ffb447ed50d2"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-04-29T20:47:13.356Z",
+      "https://schema.hbp.eu/search/description": "Clint Explorer is an application that uses supervised and  unsupervised  learning techniques to cluster neurobiological dataset.  The main contributions of this software is that incorporates the expert’s know-how in the clustering process. Besides, it allows to interpret the results  providing different metrics.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-04-29T20:47:13.347Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Application"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://github.com/gmrvvis/ClintExplorer",
+            "https://gmrv.es/gmrvvis/clintexplorer/"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "GNU General Public License, version 3.0"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Graphical User Interface",
+            "Interactive Analysis",
+            "Presentation/Visualization",
+            "Statistical Data Types",
+            "Graph Data Types"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Windows",
+            "Linux"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://gmrv.es/gmrvvis/clintexplorer/"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://github.com/gmrvvis/ClintExplorer"
+          ],
+          "https://schema.hbp.eu/search/version": "0.1"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "Clint Explorer",
+      "https://schema.hbp.eu/search/identifier": "1338913e-1a3c-4290-93d2-f16be43cd0a7",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/29a13c10-99de-461f-8989-bd4712e63c94"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-05-26T06:03:52.507Z",
+      "https://schema.hbp.eu/search/description": "MRIcroGL allows you to view 2D slices and renderings of your brain imaging data. It can display many image formats and includes a graphical interface for dcm2nii to convert DICOM images to NIfTI format. It allows you to draw regions of interest which can aid lesion mapping and fMRI analysis. It provides sophisticated volume rendering. It uses Python as a scripting language allowing repetitve tasks to be automated.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-05-26T06:03:52.492Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Application"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://www.nitrc.org/plugins/mwiki/index.php/mricrogl:MainPage"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "BSD 2-clause"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Data Processing",
+            "Interactive Analysis",
+            "Presentation/Visualization",
+            "3D-Scalar Data Types",
+            "Vector Image Data Types",
+            "Raster Image Data Types"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Windows",
+            "Linux",
+            "MacOS"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://www.mccauslandcenter.sc.edu/mricrogl/home"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://github.com/rordenlab/MRIcroGL12/tree/v1.2.20200331"
+          ],
+          "https://schema.hbp.eu/search/version": "v.1.2.20200331"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "MRIcroGL",
+      "https://schema.hbp.eu/search/identifier": "dc4766c0-9f27-4e3d-8745-f082def053a7",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/dc4766c0-9f27-4e3d-8745-f082def053a7"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-11-11T12:00:07.853Z",
+      "https://schema.hbp.eu/search/description": "Insite is a library that integrates into existing neuronal network simulators and provides a REST API to access the data generated by the simulation while it is running. This includes the generated spikes of the neurons as well as other measured attributes (e.g., membrane potentials). In addition it provides access to the network structure such as the number of neurons and their models and parameters. ",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-11-11T12:00:07.842Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Library"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://vrgrouprwth.github.io/insite/"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "Apache License, Version 2.0 "
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Desktop Environment",
+            "Data Acquisition",
+            "Scripting Interface",
+            "Graph Data Types",
+            "Time Series Data Types",
+            "3D-Scalar Data Types"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "platform independent"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://vrgrouprwth.github.io/insite/"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://devhub.vr.rwth-aachen.de/VR-Group/in-situ-pipeline/"
+          ],
+          "https://schema.hbp.eu/search/version": "11.11.2020"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "Insite",
+      "https://schema.hbp.eu/search/identifier": "eb0b86a5-eb49-4a87-9128-6ca592293218",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/eb0b86a5-eb49-4a87-9128-6ca592293218"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-08-24T08:39:06.315Z",
+      "https://schema.hbp.eu/search/description": "NeuroSuites is an online platform to run multiple neuroscience tools in a very easy way.\n\nTo start using NeuroSuites just click on your preferred category on the tab at the top of the page. It provides you multiple tools to analyze neuroscience data. You will not need to install anything to run the tools provided, everything is online. Furthermore, when you are done, you can export your results to your own computer.\nThere are many available tools, some are focused in analyzing neurons morphology reconstructions and the others are general purpose tools like the statistics engine, supervised classification models, Bayesian networks, etc.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-08-24T08:39:06.309Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Application"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://gitlab.com/mmichiels/neurosuite/-/tree/master/documentation"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "none"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "3D Geometry Data",
+            "3D-Scalar Data Types",
+            "Vector Image Data Types",
+            "Raster Image Data Types",
+            "Statistical Data Types",
+            "Graph Data Types",
+            "Simulation",
+            "Data Processing",
+            "Presentation/Visualization",
+            "Interactive Analysis",
+            "Desktop Environment",
+            "Graphical User Interface"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Windows",
+            "Linux",
+            "MacOS",
+            "Android",
+            "iOS"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://neurosuites.com/"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://gitlab.com/mmichiels/neurosuite"
+          ],
+          "https://schema.hbp.eu/search/version": "1.0"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "NeuroSuites-BNs",
+      "https://schema.hbp.eu/search/identifier": "de3692a9-8151-4e2d-adce-8dd29c9476f4",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/8daa7614-7f23-4496-ad11-c258d4e17a92"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-02-03T16:43:00.011Z",
+      "https://schema.hbp.eu/search/description": "This server-side tool is meant to be used for the creation of provenance tracks in context of interactive analysis tools and visualization applications. It is capable of tracking multi-view and multiple applications for one user using this ensemble. It further is able to extract these tracks from the internal data base into a XML-based standard format, such as the W3C Prov-Model or the OPM format. This enables the integration to other tools used for provenance tracking and will finally end up in the UP.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-02-03T16:43:00.003Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Application"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://github.com/HBPVIS/InDiProv/blob/master/README.md"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [],
+          "https://schema.hbp.eu/search/features": [
+            "Provenance",
+            "Data Processing"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Linux"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://github.com/HBPVIS/InDiProv/tree/master"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://github.com/HBPVIS/InDiProv/tree/InDiProv-2.0"
+          ],
+          "https://schema.hbp.eu/search/version": "2.0"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "InDiProv",
+      "https://schema.hbp.eu/search/identifier": "6231ae9b-b6e6-49b2-b806-b7c0033ee61c",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/6231ae9b-b6e6-49b2-b806-b7c0033ee61c"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-09-29T13:14:41.203Z",
+      "https://schema.hbp.eu/search/description": "Ginkgo/MEDUSA (Microstructure Environment Designer Using Sphere Atoms) is a HPC compatible simulation tool that allows an all-in one simulation of brain tissue microstructure and their diffusion MRI signal relying on 3 simulation features:\n<ol>\n<li>Simulation of realistic geometries representing cell membranes populating brain gray and white matters to create virtual tissues using a generative approach called MEDUSA,\n</li><li>Simulation of the diffusion process of water molecules present within tissues using a Monte-Carlo approach,</li><li>Simulation of the attenuation of the diffusion MRI signal for any tuning of a diffusion-weighted MRI pulse sequence (Pulsed Gradient Spin Echo, Oscillating Gradient Spin Echo, Abritrary Gradient Spin Echo, ….).</li>\n</ol>\n\nThe Ginkgo/MEDUSA tool is dedicated to the development of computational models of brain tissue microstructure in order to go beyond existing analytical models known to be limited to accurately represent the complexity of brain cellular environments",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-09-29T13:14:41.197Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Application"
+          ],
+          "https://schema.hbp.eu/search/documentation": [],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "Ginkgo Research License"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "3D Geometry Data",
+            "3D-Scalar Data Types"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Linux"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://framagit.org/cpoupon/gkg"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [],
+          "https://schema.hbp.eu/search/version": "1.0"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "Ginkgo/MEDUSA",
+      "https://schema.hbp.eu/search/identifier": "91e8f01e-af99-4804-b42d-a08407b86940",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/91e8f01e-af99-4804-b42d-a08407b86940"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-06-06T21:33:25.788Z",
+      "https://schema.hbp.eu/search/description": "Access the TVB GUI from the Internet and simulate brain network models on HCP. TheVirtualBrain is a framework for the simulation of the dynamics of large-scale brain networks with biologically realistic connectivity. TheVirtualBrain uses tractographic data (DTI/DSI) to generate connectivity matrices and build cortical and subcortical brain networks. The connectivity matrix defines the connection strengths and time delays via signal transmission between all network nodes. Various neural mass models are available in the repertoire of TheVirtualBrain and define the dynamics of a network node. Together, the neural mass models at the network nodes and the connectivity matrix define the Virtual Brain. TheVirtualBrain simulates and generates the time courses of various forms of neural activity including Local Field Potentials (LFP) and firing rate, as well as brain imaging data such as EEG, MEG and BOLD activations as observed in fMRI.\n\nTheVirtualBrain is foremost a scientific simulation platform and provides all means necessary to generate, manipulate and visualize connectivity and network dynamics. In addition, TheVirtualBrain comprises a set of classical time series analysis tools, structural and functional connectivity analysis tools, as well as parameter exploration facilities.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-06-06T21:33:25.781Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Application"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "http://docs.thevirtualbrain.org/"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "GPL3"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Heterogeneous Architecture",
+            "Desktop Environment",
+            "Graphical User Interface",
+            "Interactive Analysis",
+            "Presentation/Visualization",
+            "Simulation",
+            "Data Processing",
+            "Vector Image Data Types",
+            "Time Series Data Types"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Windows",
+            "MacOS",
+            "Linux"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://thevirtualbrain.apps.hbp.eu"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://github.com/the-virtual-brain/tvb-root"
+          ],
+          "https://schema.hbp.eu/search/version": "2.0.6"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "The Virtual Brain Web-App",
+      "https://schema.hbp.eu/search/identifier": "4c1886a8-5744-445b-8f3c-c6867079cfd7",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/4c1886a8-5744-445b-8f3c-c6867079cfd7"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-03-03T14:13:41.504Z",
+      "https://schema.hbp.eu/search/description": "The neurom module has various helper functions and command line applications to simplify loading neuron morphologies from files into neurom data structures and\nobtaining morphometrics, either from single or multiple neurons.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-03-03T14:13:41.496Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Library"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://neurom.readthedocs.io/en/v1.4.17/"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "BSD 3-Clause"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Commandline Interface",
+            "Data Processing",
+            "Presentation/Visualization",
+            "3D-Scalar Data Types",
+            "Raster Image Data Types",
+            "Statistical Data Types",
+            "Graph Data Types"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Windows",
+            "Linux",
+            "MacOS"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://github.com/BlueBrain/NeuroM"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://github.com/BlueBrain/NeuroM/releases/tag/v1.4.17"
+          ],
+          "https://schema.hbp.eu/search/version": "1.4.17"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "NeuroM",
+      "https://schema.hbp.eu/search/identifier": "fa4751e5-dcca-4c7b-afbc-9e4c948d35ed",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/fa4751e5-dcca-4c7b-afbc-9e4c948d35ed"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-06-06T21:36:44.161Z",
+      "https://schema.hbp.eu/search/description": "ImageJ is an open source image processing program designed for scientific multidimensional images. ImageJ is highly extensible, with thousands of plugins and scripts for performing a wide variety of tasks, and a large user community.\n\n* **Open source:** ImageJ is a tool for the scientific community. To maintain transparency, the ImageJ application and its source code will always be freely available.\n* **Reproducible:** Powerful tools such as the Script Editor and personal update sites help you develop and share reproducible analysis workflows.\n* **Interoperable:** ImageJ is not an island. Use the best tool for the job, including KNIME, ITK, MATLAB, and a multitude of scripting languages.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-06-06T21:36:44.153Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Application"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://github.com/imagej/imagej"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [],
+          "https://schema.hbp.eu/search/features": [
+            "Data Processing",
+            "Presentation/Visualization",
+            "Interactive Analysis",
+            "Vector Image Data Types",
+            "Raster Image Data Types",
+            "Desktop Environment"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Linux",
+            "MacOS",
+            "Windows"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://imagej.net/Welcome"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://github.com/imagej/imagej"
+          ],
+          "https://schema.hbp.eu/search/version": "2.0.0-rc-71"
+        },
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Application"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://github.com/imagej/imagej/blob/master/README.md"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "BSD 2-clause"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Graphical User Interface",
+            "Scripting Interface",
+            "Desktop Environment",
+            "Data Processing",
+            "Presentation/Visualization",
+            "3D-Vector Data Types",
+            "Tensor Data Types",
+            "3D-Scalar Data Types",
+            "Vector Image Data Types",
+            "Raster Image Data Types"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Windows",
+            "MacOS",
+            "Linux"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://imagej.net/Welcome"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://github.com/imagej/imagej/tree/imagej-2.0.0-rc-72"
+          ],
+          "https://schema.hbp.eu/search/version": "2.0.0-rc-72"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "ImageJ",
+      "https://schema.hbp.eu/search/identifier": "1368839e-85b0-4856-8e6d-31bb9a2d9c84",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/1368839e-85b0-4856-8e6d-31bb9a2d9c84"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-08-24T09:52:32.849Z",
+      "https://schema.hbp.eu/search/description": "This tool presents a new technique for the generation of three-dimensional models for neuronal cells from the morphological information extracted through computed-aided tracing applications. The 3D polygonal meshes that approximate the cell membrane can be generated at different resolution levels, allowing balance to be reached between the complexity and the quality of the final model.\nNeuronize implements a novel approach to generate a realistic 3D shape of the soma from the incomplete information stored in the digitally traced neuron using a physical deformation technique.\nThe addition of a set of spines along the dendrites completes the model, generating a final 3D neuronal cell suitable for its visualization in a wide range of 3D environments.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-08-24T09:52:32.836Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Application"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://docs.google.com/document/d/1wgXFyhbiehLDr7nEg-jvb9HlIiybbW7U0OCjRGzgWj0/edit?usp=sharing"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "GNU General Public License, version 2.0"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Heterogeneous Architecture",
+            "Graphical User Interface",
+            "Desktop Environment",
+            "Modelling",
+            "Presentation/Visualization",
+            "Interactive Analysis",
+            "3D Geometry Data"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Linux",
+            "MacOS",
+            "Windows"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://vg-lab.es/neuronizev2/"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://github.com/vg-lab/Neuronize"
+          ],
+          "https://schema.hbp.eu/search/version": "2.0.0"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "Neuronizev2",
+      "https://schema.hbp.eu/search/identifier": "e99d0018-28bc-42ff-b380-abd49590eb70",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/70727549-ff01-4ddb-ad8e-d24e1134b5b6"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-09-29T13:56:35.289Z",
+      "https://schema.hbp.eu/search/description": "Spectralsegmentation is a pipeline that can be used to detect active neurons and dendrites in ca-imageing data. A series of steps are defined to achieve this. After image stabilization and transposing an image sequence to the (time x pixel) space, Cross-spectral analysis is applied to low frequency(<1Hz) decimated pixel traces. This results in images representing the cross spectral power of each pixel with it's surrounding pixels at increasing frequency components (0.017Hz steps - 0.4Hz). These images are used to define preliminary ROIs using morphological criteria. The ROIs are then constrained to contain only pixels with possitive correlations. \n \n The pipeline includes a graphical user interface to edit the automatically extracted ROIs, to add new ones or delete ROIs by further constraining their properties.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-09-29T13:56:56.421Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Application"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://github.com/Leveltlab/SpectralSegmentation/blob/master/README.md"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "CC-BY-NC 4.0"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Presentation/Visualization",
+            "Data Processing",
+            "Raster Image Data Types",
+            "Desktop Environment",
+            "Graphical User Interface"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Linux",
+            "MacOS",
+            "Windows"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://github.com/Leveltlab/SpectralSegmentation"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://github.com/Leveltlab/SpectralSegmentation"
+          ],
+          "https://schema.hbp.eu/search/version": "1.0"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "SpectralSegmentation ",
+      "https://schema.hbp.eu/search/identifier": "90368a62-42ea-481d-a95c-818419b95c14",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/90368a62-42ea-481d-a95c-818419b95c14"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-02-04T12:13:08.120Z",
+      "https://schema.hbp.eu/search/description": "Originally created to simulate the propagation of synfire chains using single-processor workstations, NEST’s capabilities have been pushed continuously to address new scientific questions and computer architectures. Prominent examples include studies on spike-timing dependent plasticity in large simulations of cortical networks, the verification of mean-field models, models of Alzheimer’s and Parkinson’s disease and tinnitus. Recent developments include a significant reduction in memory requirements, as demonstrated by a record-breaking simulation of 1.86 billion neurons connected by 11.1 trillion synapses on the Japanese K supercomputer, paving the way for brain-scale simulations.\nRunning on everything from laptops to the world’s largest supercomputers, NEST is configured and controlled by high-level Python scripts, while harnessing the power of C++ under the hood. An extensive testsuite and systematic quality assurance ensure the reliability of NEST.\nThe development of NEST is driven by the demands of neuroscience and carried out in a collaborative fashion at many institutions around the world, coordinated by the non-profit member-based NEST Initiative.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-02-04T13:12:55.073Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Application"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://nest-simulator.readthedocs.io/en/v2.20.0/"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "GNU General Public License, version 2.0 or later"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Commandline Interface",
+            "Scripting Interface",
+            "Desktop Environment"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Linux",
+            "MacOS"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://www.nest-simulator.org"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://github.com/nest/nest-simulator/releases/tag/v2.20.0"
+          ],
+          "https://schema.hbp.eu/search/version": "v2.20.0"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "NEST",
+      "https://schema.hbp.eu/search/identifier": "c3d23fd5-4370-487b-9231-e0f8e8a1e9e6",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/c3d23fd5-4370-487b-9231-e0f8e8a1e9e6"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-10-06T14:34:37.185Z",
+      "https://schema.hbp.eu/search/description": "SCAIView-NEURO is an semantic search engine especially built for translational neurodegeneration research. It supports literature mining in PubMed abstracts and PubMedCentral full text publications.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-10-06T14:34:37.177Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Application"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://www.scaiview.com/en/first-steps.html"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "SCAIView-NEURO-2020"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Commandline Interface",
+            "Graphical User Interface",
+            "Desktop Environment",
+            "Metadata Data Types"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Linux",
+            "Windows"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://neuro.scaiview.com/"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [],
+          "https://schema.hbp.eu/search/version": "SCAIView-NEURO-2020"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "SCAIView-NEURO",
+      "https://schema.hbp.eu/search/identifier": "62c8130f-1462-4a6b-8f57-cf093d7c7968",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/cfb4c2f1-1cb6-4207-ac7b-36fc30ca1de9"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-08-07T10:36:30.585Z",
+      "https://schema.hbp.eu/search/description": "NSuite is a framework for maintaining and running benchmarks and validation tests for multi-compartment neural network simulations on HPC systems. NSuite automates the process of building simulation engines, and running benchmarks and validation tests. NSuite is specifically designed to allow easy deployment on HPC systems in testing workflows, such as benchmark-driven development or continuous integration.\n\nThere are three motivations for the development of NSuite:\n\n1. The need for a definitive resource for comparing performance and correctness of simulation engines on HPC systems.\n2. The need to verify the performance and correctness of individual simulation engines as they change over time.\n3. The need to test that changes to an HPC system do not cause performance or correctness regressions in simulation engines.\n\nThe framework currently supports the simulation engines Arbor, NEURON, and CoreNeuron, while allowing other simulation engines to be added.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-08-07T10:36:30.568Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Application"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://nsuite.readthedocs.io/en/latest/index.html"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "BSD 3-Clause"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Scripting Interface",
+            "Commandline Interface",
+            "Desktop Environment",
+            "Performance Measurement",
+            "Simulation"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Linux",
+            "MacOS"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://github.com/arbor-sim/nsuite"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://github.com/arbor-sim/nsuite/tree/v1.0"
+          ],
+          "https://schema.hbp.eu/search/version": "1.0"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "NSuite",
+      "https://schema.hbp.eu/search/identifier": "3fc89f49-1f74-4387-a725-3e2f96338aee",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/9cedd799-ff81-42bd-9ec5-7c479915dc54"
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-04-14T12:17:43.426Z",
+      "https://schema.hbp.eu/search/description": "Tide (Tiled Interactive Display Environment) is a distributed application that can run on multiple machines to power display walls or projection systems of any size.\n\nIts user interface is designed to offer an intuitive experience on touch walls. It works just as well on non touch-capable installations by using its web interface from any web browser.\n\nTide helps users with:\n\n* Presenting and collaborating on a variety of media such as high-resolution images, movies and pdfs.\n* Sharing multiple desktop or laptop screens using the DesktopStreamer application.\n* Sketching new ideas by drawing on a whiteboard and browsing websites.\n* Interacting with content streamed from remote sources such as high-performance visualisation machines through the Deflect protocol. In particular all Equalizer-based applications as well as Brayns ray-tracing engine have built-in support.\n* Viewing high-resolution, immersive stereo 3D streams on compatible hardware.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-04-14T12:17:43.418Z",
+      "https://schema.hbp.eu/search/versions": [
+        {
+          "https://schema.hbp.eu/search/applicationCategory": [
+            "Application"
+          ],
+          "https://schema.hbp.eu/search/documentation": [
+            "https://bluebrain.github.io/Tide-1.5/index.html"
+          ],
+          "https://schema.hbp.eu/search/description": "",
+          "https://schema.hbp.eu/search/license": [
+            "BSD 2-clause"
+          ],
+          "https://schema.hbp.eu/search/features": [
+            "Graphical User Interface",
+            "Tiled Display Wall",
+            "Data Processing",
+            "Presentation/Visualization"
+          ],
+          "https://schema.hbp.eu/search/operatingSystem": [
+            "Linux",
+            "MacOS"
+          ],
+          "https://schema.hbp.eu/search/contributors": [],
+          "https://schema.hbp.eu/search/homepage": [
+            "https://github.com/BlueBrain/Tide"
+          ],
+          "https://schema.hbp.eu/search/sourceCode": [
+            "https://github.com/BlueBrain/Tide/tree/1.5.0"
+          ],
+          "https://schema.hbp.eu/search/version": "1.5.0"
+        }
+      ],
+      "query:projectDoi": [],
+      "https://schema.hbp.eu/search/title": "Tide",
+      "https://schema.hbp.eu/search/identifier": "75db79f6-6329-4a38-b58d-82585256679f",
+      "https://schema.hbp.eu/search/editorId": "softwarecatalog/software/softwareproject/v1.0.0/75db79f6-6329-4a38-b58d-82585256679f"
+    }
+  ],
+  "total": 129,
+  "size": 20,
+  "start": 0
+}
