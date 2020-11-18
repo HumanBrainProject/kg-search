@@ -9,7 +9,7 @@ import java.util.List;
 public class DatasetV1 {
     private List<String> methods;
     private Date lastReleaseAt;
-    private List<Reference> component;
+    private List<InternalReference> component;
     private List<String> embargoRestrictedAccess;
     @JsonProperty("external_datalink") //TODO: Capitalize the property
     private String externalDatalink;
@@ -20,7 +20,7 @@ public class DatasetV1 {
     private List<ExternalReference> neuroglancer;
     private List<Publication> publications;
     private List<Subject> subjects;
-    private List<Reference> contributors;
+    private List<InternalReference> contributors;
     private String identifier;
     private List<String> speciesFilter;
     private Date firstReleaseAt;
@@ -29,7 +29,7 @@ public class DatasetV1 {
     private List<String> preparation;
     private String title;
     private String editorId;
-    private List<Reference> owners;
+    private List<InternalReference> owners;
     private Boolean containerUrlAsZIP;
     private List<String> protocols;
     @JsonProperty("container_url")
@@ -49,9 +49,9 @@ public class DatasetV1 {
 
     public void setLastReleaseAt(Date lastReleaseAt) { this.lastReleaseAt = lastReleaseAt; }
 
-    public List<Reference> getComponent() { return component; }
+    public List<InternalReference> getComponent() { return component; }
 
-    public void setComponent(List<Reference> component) { this.component = component; }
+    public void setComponent(List<InternalReference> component) { this.component = component; }
 
     public List<String> getEmbargoRestrictedAccess() { return embargoRestrictedAccess; }
 
@@ -89,9 +89,9 @@ public class DatasetV1 {
 
     public void setSubjects(List<Subject> subjects) { this.subjects = subjects; }
 
-    public List<Reference> getContributors() { return contributors; }
+    public List<InternalReference> getContributors() { return contributors; }
 
-    public void setContributors(List<Reference> contributors) { this.contributors = contributors; }
+    public void setContributors(List<InternalReference> contributors) { this.contributors = contributors; }
 
     public String getIdentifier() { return identifier; }
 
@@ -125,9 +125,9 @@ public class DatasetV1 {
 
     public void setEditorId(String editorId) { this.editorId = editorId; }
 
-    public List<Reference> getOwners() { return owners; }
+    public List<InternalReference> getOwners() { return owners; }
 
-    public void setOwners(List<Reference> owners) { this.owners = owners; }
+    public void setOwners(List<InternalReference> owners) { this.owners = owners; }
 
     public Boolean getContainerUrlAsZIP() { return containerUrlAsZIP; }
 

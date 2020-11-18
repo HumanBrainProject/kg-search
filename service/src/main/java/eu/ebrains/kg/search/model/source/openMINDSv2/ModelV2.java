@@ -1,14 +1,14 @@
 package eu.ebrains.kg.search.model.source.openMINDSv2;
 
 import eu.ebrains.kg.search.model.source.commons.ExternalReference;
-import eu.ebrains.kg.search.model.source.commons.Reference;
+import eu.ebrains.kg.search.model.source.commons.InternalReference;
 
 import java.util.List;
 
 public class ModelV2 {
     private List<ExternalReference> fileBundle;
-    private List<Reference> custodian;
-    private List<Reference> mainContact;
+    private List<InternalReference> custodian;
+    private List<InternalReference> mainContact;
     private String title;
     private List<String> modelFormat;
     private List<String> cellularTarget;
@@ -20,10 +20,10 @@ public class ModelV2 {
     private List<ExternalReference> license;
     private List<String> modelScope;
     private List<String> abstractionLevel;
-    private List<Reference> producedDataset;
+    private List<InternalReference> producedDataset;
     private List<Publication> publications; //TODO: Check why doi is a List ?
     private List<String> brainStructure;
-    private List<Reference> contributors;
+    private List<InternalReference> contributors;
     private List<String> embargo;
     private String identifier;
 
@@ -31,13 +31,13 @@ public class ModelV2 {
 
     public void setFileBundle(List<ExternalReference> fileBundle) { this.fileBundle = fileBundle; }
 
-    public List<Reference> getCustodian() { return custodian; }
+    public List<InternalReference> getCustodian() { return custodian; }
 
-    public void setCustodian(List<Reference> custodian) { this.custodian = custodian; }
+    public void setCustodian(List<InternalReference> custodian) { this.custodian = custodian; }
 
-    public List<Reference> getMainContact() { return mainContact; }
+    public List<InternalReference> getMainContact() { return mainContact; }
 
-    public void setMainContact(List<Reference> mainContact) { this.mainContact = mainContact; }
+    public void setMainContact(List<InternalReference> mainContact) { this.mainContact = mainContact; }
 
     public String getTitle() { return title; }
 
@@ -83,9 +83,9 @@ public class ModelV2 {
 
     public void setAbstractionLevel(List<String> abstractionLevel) { this.abstractionLevel = abstractionLevel; }
 
-    public List<Reference> getProducedDataset() { return producedDataset; }
+    public List<InternalReference> getProducedDataset() { return producedDataset; }
 
-    public void setProducedDataset(List<Reference> producedDataset) { this.producedDataset = producedDataset; }
+    public void setProducedDataset(List<InternalReference> producedDataset) { this.producedDataset = producedDataset; }
 
     public List<Publication> getPublications() { return publications; }
 
@@ -95,9 +95,9 @@ public class ModelV2 {
 
     public void setBrainStructure(List<String> brainStructure) { this.brainStructure = brainStructure; }
 
-    public List<Reference> getContributors() { return contributors; }
+    public List<InternalReference> getContributors() { return contributors; }
 
-    public void setContributors(List<Reference> contributors) { this.contributors = contributors; }
+    public void setContributors(List<InternalReference> contributors) { this.contributors = contributors; }
 
     public List<String> getEmbargo() { return embargo; }
 

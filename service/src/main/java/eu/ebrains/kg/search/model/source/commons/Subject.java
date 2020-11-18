@@ -22,7 +22,7 @@ public class Subject {
         this.identifier = identifier;
     }
 
-    public Subject(String age, List<String> ageCategory, String weight, String genotype, String relativeUrl, String strains, String species, String strain, List<String> sex, String name, String identifier, List<Reference> samples) {
+    public Subject(String age, List<String> ageCategory, String weight, String genotype, String relativeUrl, String strains, String species, String strain, List<String> sex, String name, String identifier, List<InternalReference> samples) {
         this.age = age;
         this.ageCategory = ageCategory;
         this.weight = weight;
@@ -51,11 +51,11 @@ public class Subject {
     private String identifier;
     // private List<String> experimentMethod; TODO: is this used?? 
 
-    public List<Reference> getSamples() { return samples; }
+    public List<InternalReference> getSamples() { return samples; }
 
-    public void setSamples(List<Reference> samples) { this.samples = samples; }
+    public void setSamples(List<InternalReference> samples) { this.samples = samples; }
 
-    private List<Reference> samples;
+    private List<InternalReference> samples;
 
     public String getAge() { return age; }
 

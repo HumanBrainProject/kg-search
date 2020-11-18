@@ -2,17 +2,17 @@ package eu.ebrains.kg.search.model.source.commons;
 
 import java.util.List;
 
-public class Reference {
+public class InternalReference {
 
-    public Reference() {}
+    public InternalReference() {}
 
-    public Reference(String identifier, String name, String relativeUrl) {
+    public InternalReference(String identifier, String name, String relativeUrl) {
         this.identifier = identifier;
         this.name = name;
         this.relativeUrl = relativeUrl;
     }
 
-    public Reference(String identifier, String name, String relativeUrl, List<String> datasetComponent) {
+    public InternalReference(String identifier, String name, String relativeUrl, List<String> datasetComponent) {
         this.identifier = identifier;
         this.name = name;
         this.relativeUrl = relativeUrl;

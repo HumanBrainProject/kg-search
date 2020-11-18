@@ -22,7 +22,7 @@ public class SpecimenGroup {
         this.componentName = componentName;
     }
 
-    public static class Instance extends Reference {
+    public static class Instance extends InternalReference {
     }
 
 }
