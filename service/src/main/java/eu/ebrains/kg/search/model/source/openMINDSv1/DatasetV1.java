@@ -1,11 +1,7 @@
 package eu.ebrains.kg.search.model.source.openMINDSv1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.search.model.source.commons.Publication;
-import eu.ebrains.kg.search.model.source.commons.Reference;
-import eu.ebrains.kg.search.model.source.commons.Subject;
-import eu.ebrains.kg.search.model.source.commons.File;
-import eu.ebrains.kg.search.model.source.commons.ParcellationRegion;
+import eu.ebrains.kg.search.model.source.commons.*;
 
 import java.util.Date;
 import java.util.List;
@@ -169,17 +165,4 @@ public class DatasetV1 {
 
     public void setEmbargo(List<String> embargo) { this.embargo = embargo; }
 
-    public static class ExternalReference {
-        private String url;
-        private String name;
-
-        public String getUrl() { return url; }
-
-        public void setUrl(String url) { this.url = url; }
-
-        public String getName() { return name; }
-
-        public void setName(String name) { this.name = name; }
-
-    }
 }
