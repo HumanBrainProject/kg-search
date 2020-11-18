@@ -1,9 +1,9 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances.commons;
 
-public class Files {
-        public Files() {}
+public class File {
+        public File() {}
 
-        public Files(String url, String value, String fileSize) {
+        public File(String url, String value, String fileSize) {
             this.url = url;
             this.value = value;
             this.fileSize = fileSize;

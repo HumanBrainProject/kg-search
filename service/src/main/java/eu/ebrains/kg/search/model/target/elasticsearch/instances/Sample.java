@@ -40,7 +40,7 @@ public class Sample {
     private ExternalReference allfiles;
 
     @FieldInfo(label = "Files", layout = FieldInfo.Layout.GROUP, termsOfUse = true)
-    private List<Files> files;
+    private List<File> files;
 
     @FieldInfo(label = "Subject", overview = true, hint = "Experimental subject that this sample was obtained from.")
     private List<Children<Subject>> subject;
@@ -123,9 +123,9 @@ public class Sample {
 
     public void setAllfiles(ExternalReference allfiles) { this.allfiles = allfiles; }
 
-    public List<Files> getFiles() { return files; }
+    public List<File> getFiles() { return files; }
 
-    public void setFiles(List<Files> files) { this.files = files; }
+    public void setFiles(List<File> files) { this.files = files; }
 
     public List<Children<Subject>> getSubject() { return subject; }
 

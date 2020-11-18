@@ -43,7 +43,7 @@ public class Dataset {
     private List<Value<String>> speciesFilter;
 
     @FieldInfo(label = "Files", layout = FieldInfo.Layout.GROUP, isHierarchicalFiles=true, termsOfUse = true)
-    private List<Files> files;
+    private List<File> files;
 
     @FieldInfo(label = "Cite dataset", isButton = true, markdown = true)
     private Value<String> citation;
@@ -132,9 +132,9 @@ public class Dataset {
         setLastRelease(lastRelease!=null ? new Value<>(lastRelease) : null);
     }
 
-    public List<Files> getFiles() { return files; }
+    public List<File> getFiles() { return files; }
 
-    public void setFiles(List<Files> files) { this.files = files; }
+    public void setFiles(List<File> files) { this.files = files; }
 
     public Value<String> getType() {
         return type;
