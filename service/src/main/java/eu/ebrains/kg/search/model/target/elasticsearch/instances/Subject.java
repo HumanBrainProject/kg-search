@@ -51,11 +51,6 @@ public class Subject {
     @FieldInfo(label = "Datasets", visible = false, facet = FieldInfo.Facet.EXISTS)
     private List<Value<String>> datasetExists;
 
-    //TODO: Check if we need to add
-    //  "children": {
-    //            "component": [],
-    //            "name": {}
-    //          }
     @FieldInfo(label = "Datasets", layout = FieldInfo.Layout.GROUP, type = FieldInfo.Type.TEXT, hint = "List of datasets in which the subject was used to produce data.")
     private List<Children<Dataset>> datasets;
 
@@ -195,13 +190,9 @@ public class Subject {
         this.datasetExists = datasetExists;
     }
 
-    public List<Children<Dataset>> getDatasets() {
-        return datasets;
-    }
+    public List<Children<Dataset>> getDatasets() { return datasets; }
 
-    public void setDatasets(List<Children<Dataset>> datasets) {
-        this.datasets = datasets;
-    }
+    public void setDatasets(List<Children<Dataset>> datasets) { this.datasets = datasets; }
 
     public Value<Date> getFirstRelease() {
         return firstRelease;
@@ -237,7 +228,6 @@ public class Subject {
         public List<InternalReference> getName() { return name; }
 
         public void setName(List<InternalReference> name) { this.name = name; }
-
     }
 
 }

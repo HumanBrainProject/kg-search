@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.RibbonInfo;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ExternalReference;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 
 import java.util.Date;
 import java.util.List;
@@ -135,6 +132,10 @@ public class Dataset {
         setLastRelease(lastRelease!=null ? new Value<>(lastRelease) : null);
     }
 
+    public List<Files> getFiles() { return files; }
+
+    public void setFiles(List<Files> files) { this.files = files; }
+
     public Value<String> getType() {
         return type;
     }
@@ -213,14 +214,6 @@ public class Dataset {
 
     public void setSpeciesFilter(List<Value<String>> speciesFilter) {
         this.speciesFilter = speciesFilter;
-    }
-
-    public List<Files> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<Files> files) {
-        this.files = files;
     }
 
     public Value<String> getCitation() {
@@ -373,37 +366,6 @@ public class Dataset {
 
     public void setLastRelease(Value<Date> lastRelease) {
         this.lastRelease = lastRelease;
-    }
-
-    public static class Files {
-
-        public Files() {}
-
-        public Files(String url, String value, String fileSize) {
-            this.url = url;
-            this.value = value;
-            this.fileSize = fileSize;
-        }
-
-        private String url;
-        private String value;
-        private String fileSize;
-
-        public String getFileSize() { return fileSize; }
-
-        public void setFileSize(String fileSize) { this.fileSize = fileSize; }
-
-        public String getUrl() { return url; }
-
-        public void setUrl(String url) { this.url = url; }
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
     }
 
     public static class Subject {

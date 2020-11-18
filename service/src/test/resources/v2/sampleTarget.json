@@ -1,0 +1,87 @@
+{
+  "_index": "publicly_released_sample",
+  "_type": "_doc",
+  "_id": "62423653-5725-4758-a509-6306353cb87f",
+  "_version": 2858,
+  "_seq_no": 24799818,
+  "_primary_term": 16,
+  "found": true,
+  "_source": {
+    "allfiles": null,
+    "subject": [
+      {
+        "children": {
+          "subject_name": {
+            "reference": "Subject/c56908ef-a1e5-4e84-8f12-c0c0119fda00",
+            "value": "C1844_SG_male-tlx"
+          },
+          "species": [
+            {
+              "value": "Mus musculus"
+            }
+          ],
+          "sex": [
+            {
+              "value": "Male"
+            }
+          ],
+          "age": {
+            "value": "7 months"
+          },
+          "agecategory": [
+            {
+              "value": "Adult"
+            }
+          ],
+          "weight": null,
+          "strain": {
+            "value": "C57BL/6"
+          },
+          "genotype": {
+            "value": "Wild type "
+          }
+        }
+      }
+    ],
+    "identifier": {
+      "value": "62423653-5725-4758-a509-6306353cb87f"
+    },
+    "methods": null,
+    "parcellationAtlas": null,
+    "files": null,
+    "weightPreFixation": null,
+    "datasets": [
+      {
+        "children": {
+          "component": null,
+          "name": [
+            {
+              "reference": "Dataset/00bb07d7-eeae-4408-b9b5-6dbd2d3582e2",
+              "value": "Behavior of mice on the AirTrack floating plus-maze"
+            }
+          ]
+        }
+      }
+    ],
+    "region": null,
+    "title": {
+      "value": "tlx-session1"
+    },
+    "first_release": {
+      "value": "2020-10-14T16:27:20.910Z"
+    },
+    "datasetExists": [
+      {
+        "value": "00bb07d7-eeae-4408-b9b5-6dbd2d3582e2"
+      }
+    ],
+    "last_release": {
+      "value": "2020-10-14T16:27:20.903Z"
+    },
+    "viewer": null,
+    "@timestamp": "2020-11-18T08:27:20.036112",
+    "type": {
+      "value": "Sample"
+    }
+  }
+}
