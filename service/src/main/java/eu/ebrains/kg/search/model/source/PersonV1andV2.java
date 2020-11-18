@@ -2,6 +2,7 @@ package eu.ebrains.kg.search.model.source;
 
 import java.util.Date;
 import java.util.List;
+import eu.ebrains.kg.search.model.source.commons.Reference;
 
 public class PersonV1andV2 {
 
@@ -132,45 +133,5 @@ public class PersonV1andV2 {
 
     public static class CustodianOf extends Reference {
     }
-
-    public static abstract class Reference {
-        private String relativeUrl;
-        private List<String> datasetComponent;
-        private String name;
-        private String identifier;
-
-        public String getRelativeUrl() {
-            return relativeUrl;
-        }
-
-        public void setRelativeUrl(String relativeUrl) {
-            this.relativeUrl = relativeUrl;
-        }
-
-        public List<String> getDatasetComponent() {
-            return datasetComponent;
-        }
-
-        public void setDatasetComponent(List<String> datasetComponent) {
-            this.datasetComponent = datasetComponent;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getIdentifier() {
-            return identifier;
-        }
-
-        public void setIdentifier(String identifier) {
-            this.identifier = identifier;
-        }
-    }
-
 
 }
