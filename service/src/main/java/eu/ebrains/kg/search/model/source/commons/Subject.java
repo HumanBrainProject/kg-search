@@ -22,6 +22,21 @@ public class Subject {
         this.identifier = identifier;
     }
 
+    public Subject(String age, List<String> ageCategory, String weight, String genotype, String relativeUrl, String strains, String species, String strain, List<String> sex, String name, String identifier, List<Reference> samples) {
+        this.age = age;
+        this.ageCategory = ageCategory;
+        this.weight = weight;
+        this.genotype = genotype;
+        this.relativeUrl = relativeUrl;
+        this.strains = strains;
+        this.species = species;
+        this.strain = strain;
+        this.sex = sex;
+        this.name = name;
+        this.identifier = identifier;
+        this.samples = samples;
+    }
+
     private String age;
     @JsonProperty("agecategory") // TODO: change capitalization
     private List<String> ageCategory;
@@ -34,6 +49,13 @@ public class Subject {
     private List<String> sex;
     private String name;
     private String identifier;
+    // private List<String> experimentMethod; TODO: is this used?? 
+
+    public List<Reference> getSamples() { return samples; }
+
+    public void setSamples(List<Reference> samples) { this.samples = samples; }
+
+    private List<Reference> samples;
 
     public String getAge() { return age; }
 
