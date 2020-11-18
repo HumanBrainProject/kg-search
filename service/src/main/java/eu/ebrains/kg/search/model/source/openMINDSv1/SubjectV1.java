@@ -22,7 +22,7 @@ public class SubjectV1 {
     private List<String> ageCategory;
     private List<String> species;
     private List<String> sex;
-    private List<Sample> samples;
+    private List<Reference> samples;
     private List<String> datasetExists;
     private List<SpecimenGroup> datasets;
 
@@ -130,11 +130,11 @@ public class SubjectV1 {
         this.sex = sex;
     }
 
-    public List<Sample> getSamples() {
+    public List<Reference> getSamples() {
         return samples;
     }
 
-    public void setSamples(List<Sample> samples) {
+    public void setSamples(List<Reference> samples) {
         this.samples = samples;
     }
 
@@ -153,8 +153,4 @@ public class SubjectV1 {
     public void setDatasets(List<SpecimenGroup> specimenGroups) {
         this.datasets = specimenGroups;
     }
-
-    public static class Sample extends Reference {
-    }
-
 }
