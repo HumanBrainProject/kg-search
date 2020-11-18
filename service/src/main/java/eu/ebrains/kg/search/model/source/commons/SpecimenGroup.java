@@ -2,7 +2,7 @@ package eu.ebrains.kg.search.model.source.commons;
 
 import java.util.List;
 
-public class Dataset {
+public class SpecimenGroup {
     private List<Instance> instances;
     private List<String> componentName;
 
