@@ -6,6 +6,12 @@ public class Reference {
 
     public Reference() {}
 
+    public Reference(String identifier, String name, String relativeUrl) {
+        this.identifier = identifier;
+        this.name = name;
+        this.relativeUrl = relativeUrl;
+    }
+
     public Reference(String identifier, String name, String relativeUrl, List<String> datasetComponent) {
         this.identifier = identifier;
         this.name = name;

@@ -2,6 +2,8 @@ package eu.ebrains.kg.search.model.source;
 
 import java.util.Date;
 import java.util.List;
+
+import eu.ebrains.kg.search.model.source.commons.Publication;
 import eu.ebrains.kg.search.model.source.commons.Reference;
 
 public class PersonV1andV2 {
@@ -105,27 +107,6 @@ public class PersonV1andV2 {
 
     public void setLastReleaseAt(Date lastReleaseAt) {
         this.lastReleaseAt = lastReleaseAt;
-    }
-
-    public static class Publication {
-        private String citation;
-        private String doi;
-
-        public String getCitation() {
-            return citation;
-        }
-
-        public void setCitation(String citation) {
-            this.citation = citation;
-        }
-
-        public String getDoi() {
-            return doi;
-        }
-
-        public void setDoi(String doi) {
-            this.doi = doi;
-        }
     }
 
     public static class Contribution extends Reference {
