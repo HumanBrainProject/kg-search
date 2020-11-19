@@ -9,6 +9,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Interna
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @MetaInfo(name="Model", identifier = "uniminds/core/modelinstance/v1.0.0/search", order=5)
 public class Model {
@@ -24,7 +25,7 @@ public class Model {
     private Value<String> embargo;
 
     @FieldInfo(label = "Produced datasets", layout = FieldInfo.Layout.GROUP)
-    private List<ExternalReference> producedDataset;
+    private List<InternalReference> producedDataset;
 
     @FieldInfo(label = "Download model", isButton=true, termsOfUse=true)
     private List<ExternalReference> allFiles;
@@ -58,10 +59,10 @@ public class Model {
     private Value<String> version;
 
     @FieldInfo(label = "Publications", layout = FieldInfo.Layout.GROUP, markdown = true, hint = "List of publications that have been published as a part of this model.")
-    private List<InternalReference> publications;
+    private List<String> publications;
 
     @FieldInfo(label = "Study target", layout = FieldInfo.Layout.SUMMARY)
-    private List<InternalReference> studyTarget;
+    private List<Value<String>> studyTarget;
 
     @FieldInfo(label = "Model scope", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
     private List<Value<String>> modelScope;
@@ -131,11 +132,11 @@ public class Model {
 
     public void setEmbargo(Value<String> embargo) { this.embargo = embargo; }
 
-    public List<ExternalReference> getProducedDataset() {
+    public List<InternalReference> getProducedDataset() {
         return producedDataset;
     }
 
-    public void setProducedDataset(List<ExternalReference> producedDataset) {
+    public void setProducedDataset(List<InternalReference> producedDataset) {
         this.producedDataset = producedDataset;
     }
 
@@ -151,8 +152,8 @@ public class Model {
         return modelFormat;
     }
 
-    public void setModelFormat(List<Value<String>> modelFormat) {
-        this.modelFormat = modelFormat;
+    public void setModelFormat(List<String> modelFormat) {
+        this.modelFormat = modelFormat != null? modelFormat.stream().map(Value::new).collect(Collectors.toList()) : null;
     }
 
     public Value<String> getDescription() {
@@ -171,11 +172,11 @@ public class Model {
         this.licenseInfo = licenseInfo;
     }
 
-    public List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> getOwners() {
+    public List<InternalReference> getOwners() {
         return owners;
     }
 
-    public void setOwners(List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> owners) {
+    public void setOwners(List<InternalReference> owners) {
         this.owners = owners;
     }
 
@@ -183,15 +184,15 @@ public class Model {
         return abstractionLevel;
     }
 
-    public void setAbstractionLevel(List<Value<String>> abstractionLevel) {
-        this.abstractionLevel = abstractionLevel;
+    public void setAbstractionLevel(List<String> abstractionLevel) {
+        this.abstractionLevel = abstractionLevel != null ? abstractionLevel.stream().map(Value::new).collect(Collectors.toList()):null;
     }
 
-    public List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> getMainContact() {
+    public List<InternalReference> getMainContact() {
         return mainContact;
     }
 
-    public void setMainContact(List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> mainContact) {
+    public void setMainContact(List<InternalReference> mainContact) {
         this.mainContact = mainContact;
     }
 
@@ -199,15 +200,15 @@ public class Model {
         return brainStructures;
     }
 
-    public void setBrainStructures(List<Value<String>> brainStructures) {
-        this.brainStructures = brainStructures;
+    public void setBrainStructures(List<String> brainStructures) {
+        this.brainStructures = brainStructures != null?brainStructures.stream().map(Value::new).collect(Collectors.toList()):null;
     }
 
-    public List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> getUsedDataset() {
+    public List<InternalReference> getUsedDataset() {
         return usedDataset;
     }
 
-    public void setUsedDataset(List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> usedDataset) {
+    public void setUsedDataset(List<InternalReference> usedDataset) {
         this.usedDataset = usedDataset;
     }
 
@@ -219,28 +220,28 @@ public class Model {
         this.version = version;
     }
 
-    public List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> getPublications() {
+    public List<String> getPublications() {
         return publications;
     }
 
-    public void setPublications(List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> publications) {
+    public void setPublications(List<String> publications) {
         this.publications = publications;
     }
 
-    public List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> getStudyTarget() {
+    public List<Value<String>> getStudyTarget() {
         return studyTarget;
     }
 
-    public void setStudyTarget(List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> studyTarget) {
-        this.studyTarget = studyTarget;
+    public void setStudyTarget(List<String> studyTarget) {
+        this.studyTarget = studyTarget != null ? studyTarget.stream().map(Value::new).collect(Collectors.toList()):null;
     }
 
     public List<Value<String>> getModelScope() {
         return modelScope;
     }
 
-    public void setModelScope(List<Value<String>> modelScope) {
-        this.modelScope = modelScope;
+    public void setModelScope(List<String> modelScope) {
+        this.modelScope = modelScope != null ? modelScope.stream().map(Value::new).collect(Collectors.toList()):null;
     }
 
     public Value<String> getTitle() {
@@ -251,11 +252,11 @@ public class Model {
         this.title = title;
     }
 
-    public List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> getContributors() {
+    public List<InternalReference> getContributors() {
         return contributors;
     }
 
-    public void setContributors(List<eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference> contributors) {
+    public void setContributors(List<InternalReference> contributors) {
         this.contributors = contributors;
     }
 
@@ -263,8 +264,8 @@ public class Model {
         return cellularTarget;
     }
 
-    public void setCellularTarget(List<Value<String>> cellularTarget) {
-        this.cellularTarget = cellularTarget;
+    public void setCellularTarget(List<String> cellularTarget) {
+        this.cellularTarget = cellularTarget != null ? cellularTarget.stream().map(Value::new).collect(Collectors.toList()):null;;
     }
 
     public Value<Date> getFirstRelease() {
