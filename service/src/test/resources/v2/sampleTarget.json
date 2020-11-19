@@ -63,7 +63,28 @@
         }
       }
     ],
-    "region": null,
+    "region": [
+      {
+        "url": "https://interactive-viewer.apps.hbp.eu/?templateSelected=Allen+Mouse+Common+Coordinate+Framework+v3&parcellationSelected=Allen+Mouse+Common+Coordinate+Framework+v3+2017&cNavigation=0.0.0.-W000.._XxAw.-GC6L.2-2QPq.2_Ylx_..cwd..Uzz.O43%7E.HD0%7E..7xi&cRegionsSelected=%7B%22v3_2017%22%3A%2261.9H.Cr.BH.CA.X.4n%22%7D",
+        "value": "Primary visual area "
+      },
+      {
+        "url": "https://interactive-viewer-next.apps-dev.hbp.eu/?templateSelected=Allen+Mouse+Common+Coordinate+Framework+v3&parcellationSelected=Allen+Mouse+Common+Coordinate+Framework+v3+2017&cRegionsSelected=%7B%22v3_2017%22%3A%223_.D_.AV.F5.C6.EA.4N.SddyA.SddyE.SddyI.SddyM.SddyQ.SddyU.SddyY.Sddyc.Sddyg.Sddyk.Sddyo.Sddys.Sddyw.Sddy_.Sddz2.Sddz6.SddzA.SddzE.SddzI.SddzM.SddzQ.Dl.6w.6o.8X.9Y.4I.5A.Ds.8U.9U.6k.Al.9E.9k%22%7D&cNavigation=0.0.0.-W000.._XxAw.-GC6L.2-2QPq.2_Ylx_..cwd..Uzz.O43%7E.HD0%7E..6ZL",
+        "value": "Retrosplenial area"
+      },
+      {
+        "url": "https://interactive-viewer.apps.hbp.eu/?templateSelected=Allen+Mouse+Common+Coordinate+Framework+v3&parcellationSelected=Allen+Mouse+Common+Coordinate+Framework+v3+2017&cNavigation=0.0.0.-W000.._XxAw.-GC6L.2-2QPq.2_Ylx_..cwd..Uzz.8Zdc%7E.HD0%7E..7xi&cRegionsSelected=%7B%22v3_2017%22%3A%2259.FL.39.GN.Gk.GE.Gc.SddxI.SddxM.SddxQ.SddxU.SddxY.Sddxc.Sddxg%22%7D",
+        "value": "Primary somatosensory  area, barrel field"
+      },
+      {
+        "url": "https://interactive-viewer.apps.hbp.eu/?templateSelected=Allen+Mouse+Common+Coordinate+Framework+v3&parcellationSelected=Allen+Mouse+Common+Coordinate+Framework+v3+2017&cNavigation=0.0.0.-W000.._XxAw.-GC6L.2-2QPq.2_Ylx_..cwd..Uzz.O43%7E.HD0%7E..E5c&cRegionsSelected=%7B%22v3_2017%22%3A%2252.CP.5Q.DX.EP.Ak.BF.5X.8k.D6.AE.A_.Dv.EX.59.FL.39.GN.Gk.GE.Gc.SddxI.SddxM.SddxQ.SddxU.SddxY.Sddxc.Sddxg.5H.G6.1n.H6.He.7U.7_.5P.Dk.AH.Es.FE.HE.2.5n.72.DM.91.9n.En.G2.5f.Fk.AU.G_.HN.9.7D.AtSEP.AtSET.AtSEX.AtSEb.AtSEf.AtSEj.AtSEn%22%7D",
+        "value": "Primary somatosensory area"
+      },
+      {
+        "url": "https://interactive-viewer.apps.hbp.eu/?templateSelected=Allen+Mouse+Common+Coordinate+Framework+v3&parcellationSelected=Allen+Mouse+Common+Coordinate+Framework+v3+2017&cNavigation=0.0.0.-W000.._XxAw.-GC6L.2-2QPq.2_Ylx_..cwd..Uzz.O43%7E.HD0%7E..7xi&cRegionsSelected=%7B%22v3_2017%22%3A%22FP.50.El.A8.DC.Do%22%7D",
+        "value": "Primary motor area"
+      }
+    ],
     "title": {
       "value": "tlx-session1"
     },
@@ -78,7 +99,12 @@
     "last_release": {
       "value": "2020-10-14T16:27:20.903Z"
     },
-    "viewer": null,
+    "viewer": [
+      {
+        "url": "http://cmbn-navigator.uio.no/navigator/filmstripzoom/filmstripzoom.html?atlas=100000&series=1001&preview=ABAMousev2Preview.png",
+        "value": "Show 1261.1001 in brain atlas viewer"
+      }
+    ],
     "@timestamp": "2020-11-18T08:27:20.036112",
     "type": {
       "value": "Sample"
