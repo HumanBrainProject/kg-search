@@ -26,6 +26,7 @@ public class SampleV1 {
     private List<ParcellationRegion> parcellationRegion;
     private List<String> parcellationAtlas;
     private List<File> files;
+    private List<String> embargo;
 
     public String getIdentifier() {
         return identifier;
@@ -154,4 +155,9 @@ public class SampleV1 {
     public void setFiles(List<File> files) {
         this.files = files;
     }
+
+    public List<String> getEmbargo() { return embargo; }
+
+    public void setEmbargo(List<String> embargo) { this.embargo = embargo; }
+
 }

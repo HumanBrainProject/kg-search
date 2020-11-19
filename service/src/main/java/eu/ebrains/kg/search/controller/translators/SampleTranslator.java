@@ -11,6 +11,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
     public Sample translate(SampleV1 sample) {
         Sample s = new Sample();
         String title = sample.getTitle();
+        String embargo = sample.getEmbargo().get(0);
         s.setTitle(title);
         s.setFirstRelease(sample.getFirstReleaseAt());
         s.setLastRelease(sample.getLastReleaseAt());
@@ -57,8 +58,21 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                                 d.getGenotype()
                         )
                 ).collect(Collectors.toList()));
+        String containerUrl = sample.getContainerUrl();
+        if (!embargo.equals("embargoed")) {
+            if(containerUrl.startsWith("https://object.cscs.ch")) {
+                s.setAllFiles(new ExternalReference(
+                        String.format("https://kg.ebrains.eu/proxy/export?container=%s", containerUrl),
+                        "Download all related data as ZIP"
+                ));
+            } else {
+                s.setAllFiles(new ExternalReference(
+                        containerUrl,
+                        "Go to the data."
+                ));
+            }
+        }
         //s.setFiles(sample.getFiles());
-        //s.setAllfiles(sample.getFiles());
         return s;
     }
 }

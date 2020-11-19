@@ -27,6 +27,7 @@ public class Model {
     @FieldInfo(label = "Produced datasets", layout = FieldInfo.Layout.GROUP)
     private List<InternalReference> producedDataset;
 
+    @JsonProperty("allfiles") //TODO: capitalize
     @FieldInfo(label = "Download model", isButton=true, termsOfUse=true)
     private List<ExternalReference> allFiles;
 
