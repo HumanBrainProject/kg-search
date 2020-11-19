@@ -2,7 +2,9 @@ package eu.ebrains.kg.search.model.source.openMINDSv2;
 
 import eu.ebrains.kg.search.model.source.commons.ExternalReference;
 import eu.ebrains.kg.search.model.source.commons.InternalReference;
+import eu.ebrains.kg.search.model.source.commons.Publication;
 
+import java.util.Date;
 import java.util.List;
 
 public class ModelV2 {
@@ -15,7 +17,7 @@ public class ModelV2 {
     private String editorId;
     private String version;
     private List<String> studyTarget;
-    private List<String> usedDataset; //TODO: validate the type.
+    private List<InternalReference> usedDataset; //TODO: validate the type.
     private String description;
     private List<ExternalReference> license;
     private List<String> modelScope;
@@ -26,6 +28,16 @@ public class ModelV2 {
     private List<InternalReference> contributors;
     private List<String> embargo;
     private String identifier;
+    private Date lastReleaseAt;
+    private Date firstReleaseAt;
+
+    public Date getLastReleaseAt() { return lastReleaseAt; }
+
+    public void setLastReleaseAt(Date lastReleaseAt) { this.lastReleaseAt = lastReleaseAt; }
+
+    public Date getFirstReleaseAt() { return firstReleaseAt; }
+
+    public void setFirstReleaseAt(Date firstReleaseAt) { this.firstReleaseAt = firstReleaseAt; }
 
     public List<ExternalReference> getFileBundle() { return fileBundle; }
 
@@ -62,10 +74,6 @@ public class ModelV2 {
     public List<String> getStudyTarget() { return studyTarget; }
 
     public void setStudyTarget(List<String> studyTarget) { this.studyTarget = studyTarget; }
-
-    public List<String> getUsedDataset() { return usedDataset; }
-
-    public void setUsedDataset(List<String> usedDataset) { this.usedDataset = usedDataset; }
 
     public String getDescription() { return description; }
 
@@ -107,17 +115,8 @@ public class ModelV2 {
 
     public void setIdentifier(String identifier) { this.identifier = identifier; }
 
-    public static class Publication {
-        private String url;
-        private List<String> doi;
+    public List<InternalReference> getUsedDataset() { return usedDataset; }
 
-        public String getUrl() { return url; }
-
-        public void setUrl(String url) { this.url = url; }
-
-        public List<String> getDoi() { return doi; }
-
-        public void setDoi(List<String> doi) { this.doi = doi; }
-    }
+    public void setUsedDataset(List<InternalReference> usedDataset) { this.usedDataset = usedDataset; }
 
 }
