@@ -9,6 +9,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @MetaInfo(name="Project", identifier = "uniminds/core/placomponent/v1.0.0/search", order=1)
 @RibbonInfo(content="Datasets", aggregation="count", dataField="search:datasets", singular="dataset", plural="datasets", icon="<i class=\"fa fa-download\" aria-hidden=\"true\"></i>")
@@ -70,6 +71,10 @@ public class Project {
         setLastRelease(lastRelease!=null ? new Value<>(lastRelease) : null);
     }
 
+    public void setPublications(List<String> publications) {
+        this.publications = publications != null ? publications.stream().map(Value::new).collect(Collectors.toList()):null;
+    }
+
     public Value<String> getType() {
         return type;
     }
@@ -96,10 +101,6 @@ public class Project {
 
     public List<Value<String>> getPublications() {
         return publications;
-    }
-
-    public void setPublications(List<Value<String>> publications) {
-        this.publications = publications;
     }
 
     public List<InternalReference> getDataset() {

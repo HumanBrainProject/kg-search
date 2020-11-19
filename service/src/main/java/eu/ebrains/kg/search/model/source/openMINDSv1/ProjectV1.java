@@ -15,7 +15,7 @@ public class ProjectV1 {
     private List<Publication> publications;
     private String identifier;
     private String editorId;
-    private List<Container> container;
+    //    private List<Container> container; //TODO: This is not used
 
     public Date getFirstReleaseAt() { return firstReleaseAt; }
 
@@ -49,16 +49,16 @@ public class ProjectV1 {
 
     public void setEditorId(String editorId) { this.editorId = editorId; }
 
-    public List<Container> getContainer() { return container; }
-
-    public void setContainer(List<Container> container) { this.container = container; }
-
-    public static class Container {
-        private String relativeUrl;
-
-        public String getRelativeUrl() { return relativeUrl; }
-
-        public void setRelativeUrl(String relativeUrl) { this.relativeUrl = relativeUrl; }
-    }
+//    public List<Container> getContainer() { return container; }
+//
+//    public void setContainer(List<Container> container) { this.container = container; }
+//
+//    public static class Container {
+//        private String relativeUrl;
+//
+//        public String getRelativeUrl() { return relativeUrl; }
+//
+//        public void setRelativeUrl(String relativeUrl) { this.relativeUrl = relativeUrl; }
+//    }
 
 }
