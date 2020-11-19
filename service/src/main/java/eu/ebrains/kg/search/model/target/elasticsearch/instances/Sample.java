@@ -37,8 +37,9 @@ public class Sample {
     @FieldInfo(label = "Methods", overview = true, overviewMaxDisplay = 1, layout = FieldInfo.Layout.SUMMARY, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>")
     private List<Value<String>> methods;
 
+    @JsonProperty("allfiles") //TODO: capitalize
     @FieldInfo(label = "Data download", isButton = true, termsOfUse = true)
-    private ExternalReference allfiles;
+    private ExternalReference allFiles;
 
     @FieldInfo(label = "Files", layout = FieldInfo.Layout.GROUP, termsOfUse = true)
     private List<File> files;
@@ -130,9 +131,9 @@ public class Sample {
         this.methods = methods!=null ? methods.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
     }
 
-    public ExternalReference getAllfiles() { return allfiles; }
+    public ExternalReference getAllFiles() { return allFiles; }
 
-    public void setAllfiles(ExternalReference allfiles) { this.allfiles = allfiles; }
+    public void setAllFiles(ExternalReference allFiles) { this.allFiles = allFiles; }
 
     public List<File> getFiles() { return files; }
 
