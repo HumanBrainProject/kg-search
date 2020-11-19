@@ -8,6 +8,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @MetaInfo(name="Software", identifier = "softwarecatalog/software/softwareproject/v1.0.0/search", order=6)
 public class Software {
@@ -45,7 +46,7 @@ public class Software {
     private List<Value<String>> operatingSystem;
 
     @FieldInfo(label = "Latest Version", layout = FieldInfo.Layout.SUMMARY)
-    private List<Value<String>> version;
+    private Value<String> version;
 
     @FieldInfo(label = "Homepage", layout = FieldInfo.Layout.SUMMARY)
     private List<ExternalReference> homepage;
@@ -97,8 +98,8 @@ public class Software {
         return appCategory;
     }
 
-    public void setAppCategory(List<Value<String>> appCategory) {
-        this.appCategory = appCategory;
+    public void setAppCategory(List<String> appCategory) {
+        this.appCategory = appCategory != null ? appCategory.stream().map(Value::new).collect(Collectors.toList()):null;
     }
 
     public Value<String> getIdentifier() {
@@ -129,8 +130,8 @@ public class Software {
         return features;
     }
 
-    public void setFeatures(List<Value<String>> features) {
-        this.features = features;
+    public void setFeatures(List<String> features) {
+        this.features = features != null ? features.stream().map(Value::new).collect(Collectors.toList()):null;
     }
 
     public List<ExternalReference> getDocumentation() {
@@ -145,23 +146,28 @@ public class Software {
         return license;
     }
 
-    public void setLicense(List<Value<String>> license) {
-        this.license = license;
+    public void setLicense(List<String> license) {
+        this.license = license != null ? license.stream().map(Value::new).collect(Collectors.toList()):null;;
     }
 
     public List<Value<String>> getOperatingSystem() {
         return operatingSystem;
     }
 
-    public void setOperatingSystem(List<Value<String>> operatingSystem) {
-        this.operatingSystem = operatingSystem;
+    public void setOperatingSystem(List<String> operatingSystem) {
+
+        this.operatingSystem = operatingSystem != null ? operatingSystem.stream().map(Value::new).collect(Collectors.toList()):null;;;
     }
 
-    public List<Value<String>> getVersion() {
+    public Value<String> getVersion() {
         return version;
     }
 
-    public void setVersion(List<Value<String>> version) {
+    public void setVersion(String version) {
+        setVersion(version !=null? new Value<>(version):null);
+    }
+
+    public void setVersion(Value<String> version) {
         this.version = version;
     }
 
