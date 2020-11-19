@@ -237,6 +237,7 @@ public class Subject {
             this.component = component!=null ? component.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
             this.name = name;
         }
+
         private List<Value<String>> component;
         private List<InternalReference> name;
 
