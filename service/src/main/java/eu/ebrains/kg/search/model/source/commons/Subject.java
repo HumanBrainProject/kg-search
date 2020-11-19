@@ -8,7 +8,7 @@ public class Subject {
 
     public Subject() {}
 
-    public Subject(String age, List<String> ageCategory, String weight, String genotype, String relativeUrl, String strains, String species, String strain, List<String> sex, String name, String identifier) {
+    public Subject(String age, List<String> ageCategory, String weight, String genotype, String relativeUrl, String strains, List<String> species, String strain, List<String> sex, String name, String identifier) {
         this.age = age;
         this.ageCategory = ageCategory;
         this.weight = weight;
@@ -22,7 +22,7 @@ public class Subject {
         this.identifier = identifier;
     }
 
-    public Subject(String age, List<String> ageCategory, String weight, String genotype, String relativeUrl, String strains, String species, String strain, List<String> sex, String name, String identifier, List<InternalReference> samples) {
+    public Subject(String age, List<String> ageCategory, String weight, String genotype, String relativeUrl, String strains, List<String> species, String strain, List<String> sex, String name, String identifier, List<InternalReference> samples) {
         this.age = age;
         this.ageCategory = ageCategory;
         this.weight = weight;
@@ -44,7 +44,7 @@ public class Subject {
     private String genotype;
     private String relativeUrl;
     private String strains;
-    private String species;
+    private List<String> species;
     private String strain;
     private List<String> sex;
     private String name;
@@ -81,9 +81,9 @@ public class Subject {
 
     public void setStrains(String strains) { this.strains = strains; }
 
-    public String getSpecies() { return species; }
+    public List<String> getSpecies() { return species; }
 
-    public void setSpecies(String species) { this.species = species; }
+    public void setSpecies(List<String> species) { this.species = species; }
 
     public String getStrain() { return strain; }
 

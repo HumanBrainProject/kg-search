@@ -22,7 +22,8 @@ public class SampleV1 {
     private List<String> methods;
     private List<String> brainViewer;
     private List<String> datasetExists;
-    private List<ParcellationRegion> datasets;
+    private List<SpecimenGroup> datasets;
+    private List<ParcellationRegion> parcellationRegion;
     private List<String> parcellationAtlas;
     private List<File> files;
 
@@ -122,12 +123,20 @@ public class SampleV1 {
         this.datasetExists = datasetExists;
     }
 
-    public List<ParcellationRegion> getDatasets() {
+    public List<SpecimenGroup> getDatasets() {
         return datasets;
     }
 
-    public void setDatasets(List<ParcellationRegion> datasets) {
+    public void setDatasets(List<SpecimenGroup> datasets) {
         this.datasets = datasets;
+    }
+
+    public List<ParcellationRegion> getParcellationRegion() {
+        return parcellationRegion;
+    }
+
+    public void setParcellationRegion(List<ParcellationRegion> parcellationRegion) {
+        this.parcellationRegion = parcellationRegion;
     }
 
     public List<String> getParcellationAtlas() {
