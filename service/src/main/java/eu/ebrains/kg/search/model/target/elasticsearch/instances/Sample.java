@@ -7,6 +7,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @MetaInfo(name="Sample", identifier = "minds/experiment/sample/v1.0.0/search", order = 4)
 public class Sample {
@@ -133,7 +134,9 @@ public class Sample {
 
     public List<Value<String>> getDatasetExists() { return datasetExists; }
 
-    public void setDatasetExists(List<Value<String>> datasetExists) { this.datasetExists = datasetExists; }
+    public void setDatasetExists(List<String> datasetExists) {
+        this.datasetExists = datasetExists!=null ? datasetExists.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+    }
 
     public List<Children<Dataset>> getDatasets() { return datasets; }
 
@@ -150,8 +153,8 @@ public class Sample {
     public static class Dataset {
         public Dataset() {}
 
-        public Dataset(List<Value<String>> component, List<InternalReference> name) {
-            this.component = component;
+        public Dataset(List<String> component, List<InternalReference> name) {
+            this.component = component!=null ? component.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
             this.name = name;
         }
 
@@ -173,21 +176,21 @@ public class Sample {
         public Subject() {}
 
         public Subject(InternalReference subjectName,
-                       List<Value<String>> species,
-                       List<Value<String>> sex,
-                       Value<String> age,
-                       List<Value<String>> ageCategory,
-                       Value<String> weight,
-                       Value<String> strain,
-                       Value<String> genotype) {
+                       List<String> species,
+                       List<String> sex,
+                       String age,
+                       List<String> ageCategory,
+                       String weight,
+                       String strain,
+                       String genotype) {
             this.subjectName = subjectName;
-            this.species = species;
-            this.sex = sex;
-            this.age = age;
-            this.ageCategory = ageCategory;
-            this.weight = weight;
-            this.strain = strain;
-            this.genotype = genotype;
+            this.species =  species!=null ? species.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+            this.sex =  sex!=null ? sex.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+            this.age = age!=null ? new Value<>(age) : null;
+            this.ageCategory =  ageCategory!=null ? ageCategory.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+            this.weight = weight!=null ? new Value<>(weight) : null;
+            this.strain = strain!=null ? new Value<>(strain) : null;
+            this.genotype = genotype!=null ? new Value<>(genotype) : null;
         }
 
         @JsonProperty("subject_name")

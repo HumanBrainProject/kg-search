@@ -20,7 +20,11 @@ public class SubjectTranslator implements Translator<SubjectV1, Subject> {
         s.setIdentifier(subject.getIdentifier());
         s.setSex(subject.getSex());
         s.setSpecies(subject.getSpecies());
-        s.setStrain(subject.getStrain());
+        String strain = subject.getStrain();
+        if (strain==null) {
+            strain = subject.getStrains();
+        }
+        s.setStrain(strain);
         s.setTitle(subject.getTitle());
         s.setWeight(subject.getWeight());
         s.setSamples(subject.getSamples().stream()
