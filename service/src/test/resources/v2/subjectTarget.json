@@ -22,7 +22,12 @@
     "identifier": {
       "value": "48fa30ab-5939-4106-93da-db478e89f941"
     },
-    "samples": null,
+    "samples": [
+      {
+        "reference": "Sample/14a90d4d-4455-4743-9c80-a53808cdb16a",
+        "value": "080419_IV"
+      }
+    ],
     "age": {
       "value": "15 weeks"
     },

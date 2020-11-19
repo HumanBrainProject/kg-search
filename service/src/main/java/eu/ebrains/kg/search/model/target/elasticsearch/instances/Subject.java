@@ -9,6 +9,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @MetaInfo(name = "Subject", order = 3, identifier = "minds/experiment/subject/v1.0.0/search")
 public class Subject {
@@ -122,20 +123,24 @@ public class Subject {
         return species;
     }
 
-    public void setSpecies(List<Value<String>> species) {
-        this.species = species;
+    public void setSpecies(List<String> species) {
+        this.species = species!=null ? species.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
     }
 
     public List<Value<String>> getSex() {
         return sex;
     }
 
-    public void setSex(List<Value<String>> sex) {
-        this.sex = sex;
+    public void setSex(List<String> sex) {
+        this.sex = sex!=null ? sex.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
     }
 
     public Value<String> getAge() {
         return age;
+    }
+
+    public void setAge(String age) {
+        setAge(age!=null ? new Value<>(age) : null);
     }
 
     public void setAge(Value<String> age) {
@@ -146,12 +151,16 @@ public class Subject {
         return ageCategory;
     }
 
-    public void setAgeCategory(List<Value<String>> ageCategory) {
-        this.ageCategory = ageCategory;
+    public void setAgeCategory(List<String> ageCategory) {
+        this.ageCategory = ageCategory!=null ? ageCategory.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
     }
 
     public Value<String> getWeight() {
         return weight;
+    }
+
+    public void setWeight(String weight) {
+        setWeight(weight!=null ? new Value<>(weight) : null);
     }
 
     public void setWeight(Value<String> weight) {
@@ -162,12 +171,20 @@ public class Subject {
         return strain;
     }
 
+    public void setStrain(String strain) {
+        setStrain(strain!=null ? new Value<>(strain) : null);
+    }
+
     public void setStrain(Value<String> strain) {
         this.strain = strain;
     }
 
     public Value<String> getGenotype() {
         return genotype;
+    }
+
+    public void setGenotype(String genotype) {
+        setGenotype(genotype!=null ? new Value<>(genotype) : null);
     }
 
     public void setGenotype(Value<String> genotype) {
@@ -186,13 +203,15 @@ public class Subject {
         return datasetExists;
     }
 
-    public void setDatasetExists(List<Value<String>> datasetExists) {
-        this.datasetExists = datasetExists;
+    public void setDatasetExists(List<String> datasetExists) {
+        this.datasetExists = datasetExists!=null ? datasetExists.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
     }
 
     public List<Children<Dataset>> getDatasets() { return datasets; }
 
-    public void setDatasets(List<Children<Dataset>> datasets) { this.datasets = datasets; }
+    public void setDatasets(List<Dataset> datasets) {
+        this.datasets = datasets!=null ? datasets.stream().map(value -> new Children<>(value)).collect(Collectors.toList()) : null;
+    }
 
     public Value<Date> getFirstRelease() {
         return firstRelease;
@@ -211,13 +230,13 @@ public class Subject {
     }
 
     public static class Dataset {
+
         public Dataset() {}
 
-        public Dataset(List<Value<String>> component, List<InternalReference> name) {
-            this.component = component;
+        public Dataset(List<String> component, List<InternalReference> name) {
+            this.component = component!=null ? component.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
             this.name = name;
         }
-
         private List<Value<String>> component;
         private List<InternalReference> name;
 
