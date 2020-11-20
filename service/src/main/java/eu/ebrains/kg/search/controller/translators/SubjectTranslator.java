@@ -1,5 +1,6 @@
 package eu.ebrains.kg.search.controller.translators;
 
+import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Subject;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference;
@@ -8,7 +9,8 @@ import java.util.stream.Collectors;
 
 
 public class SubjectTranslator implements Translator<SubjectV1, Subject> {
-    public Subject translate(SubjectV1 subject) {
+
+    public Subject translate(SubjectV1 subject, DatabaseScope databaseScope, boolean liveMode) {
         Subject s = new Subject();
         s.setAge(subject.getAge());
         s.setAgeCategory(subject.getAgeCategory());

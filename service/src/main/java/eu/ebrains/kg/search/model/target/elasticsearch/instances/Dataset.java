@@ -357,9 +357,10 @@ public class Dataset {
         return subjects;
     }
 
-    public void setSubjects(List<Children<Subject>> subjects) {
-        this.subjects = subjects;
+    public void setSubjects(List<Subject> subject) {
+        this.subjects = subject!=null ? subject.stream().map(value -> new Children<>(value)).collect(Collectors.toList()) : null;
     }
+
 
     public Value<Date> getFirstRelease() {
         return firstRelease;
@@ -381,24 +382,25 @@ public class Dataset {
         public Subject() {}
 
         public Subject(InternalReference subjectName,
-                       List<Value<String>> species,
-                       List<Value<String>> sex,
-                       Value<String> age,
-                       List<Value<String>> ageCategory,
-                       Value<String> weight,
-                       Value<String> strain,
-                       Value<String> genotype,
+                       List<String> species,
+                       List<String> sex,
+                       String age,
+                       List<String> ageCategory,
+                       String weight,
+                       String strain,
+                       String genotype,
                        List<InternalReference> samples) {
             this.subjectName = subjectName;
-            this.species = species;
-            this.sex = sex;
-            this.age = age;
-            this.ageCategory = ageCategory;
-            this.weight = weight;
-            this.strain = strain;
-            this.genotype = genotype;
+            this.species =  species!=null ? species.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+            this.sex =  sex!=null ? sex.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+            this.age = age!=null ? new Value<>(age) : null;
+            this.ageCategory =  ageCategory!=null ? ageCategory.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+            this.weight = weight!=null ? new Value<>(weight) : null;
+            this.strain = strain!=null ? new Value<>(strain) : null;
+            this.genotype = genotype!=null ? new Value<>(genotype) : null;
             this.samples = samples;
         }
+
 
         @JsonProperty("subject_name")
         @FieldInfo(label = "Name", groupBy=true) //TODO: convert groupby to groupBy

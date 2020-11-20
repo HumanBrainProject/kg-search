@@ -1,5 +1,6 @@
 package eu.ebrains.kg.search.controller.translators;
 
+import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.source.openMINDSv1.ProjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Project;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference;
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class ProjectTranslator implements Translator<ProjectV1, Project> {
 
-    public Project translate(ProjectV1 projectSource) {
+    public Project translate(ProjectV1 projectSource, DatabaseScope databaseScope, boolean liveMode) {
         Project p = new Project();
         p.setFirstRelease(projectSource.getFirstReleaseAt());
         p.setDescription(projectSource.getDescription());

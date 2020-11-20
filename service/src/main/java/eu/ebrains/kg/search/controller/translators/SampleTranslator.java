@@ -1,5 +1,6 @@
 package eu.ebrains.kg.search.controller.translators;
 
+import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SampleV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Sample;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference;
@@ -8,7 +9,8 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Externa
 import java.util.stream.Collectors;
 
 public class SampleTranslator implements Translator<SampleV1, Sample> {
-    public Sample translate(SampleV1 sample) {
+
+    public Sample translate(SampleV1 sample, DatabaseScope databaseScope, boolean liveMode) {
         Sample s = new Sample();
         String title = sample.getTitle();
         String embargo = sample.getEmbargo().get(0);

@@ -1,5 +1,6 @@
 package eu.ebrains.kg.search.controller.translators;
 
+import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.source.commons.File;
 import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
 
-    public Dataset translate(DatasetV1 datasetV1) {
+    public Dataset translate(DatasetV1 datasetV1, DatabaseScope databaseScope, boolean liveMode) {
         Dataset d = new Dataset();
         String embargo = datasetV1.getEmbargo().get(0);
         String containerUrl = datasetV1.getContainerUrl();
@@ -84,23 +85,28 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                      v.getUrl(),
                      v.getName().isEmpty() ? "Show in brain atlas viewer":String.format("Show %s in brain atlas viewer", v.getName())
                 )).collect(Collectors.toList()));
-//        d.setSubjects(datasetV1.getSubjects().stream()
-//                .map(s ->
-//                        new Dataset.Subject(
-//                                new InternalReference(
-//                                        false?s.getRelativeUrl():String.format("Subject/%s", d.getIdentifier()), // TODO: replace false by isLive
-//                                        s.getName(),
-//                                        null
-//                                ),
-//                                s.getSpecies(),
-//                                s.getSex(),
-//                                s.getAge(),
-//                                s.getAgeCategory(),
-//                                s.getWeight(),
-//                                s.getStrain()!=null?s.getStrain():s.getStrains(),
-//                                s.getGenotype()
-//                        )
-//                ).collect(Collectors.toList()));
+        d.setSubjects(datasetV1.getSubjects().stream()
+                .map(s ->
+                        new Dataset.Subject(
+                                new InternalReference(
+                                        false?s.getRelativeUrl():String.format("Subject/%s", d.getIdentifier()), // TODO: replace false by isLive
+                                        s.getName(),
+                                        null
+                                ),
+                                s.getSpecies(),
+                                s.getSex(),
+                                s.getAge(),
+                                s.getAgeCategory(),
+                                s.getWeight(),
+                                s.getStrain()!=null?s.getStrain():s.getStrains(),
+                                s.getGenotype(),
+                                s.getSamples().stream().map(sample -> new InternalReference(
+                                        String.format("Sample/%s", sample.getIdentifier()),
+                                        sample.getName(),
+                                        null
+                                )).collect(Collectors.toList())
+                        )
+                ).collect(Collectors.toList()));
         d.setFirstRelease(datasetV1.getFirstReleaseAt());
         d.setLastRelease(datasetV1.getLastReleaseAt());
         return d;

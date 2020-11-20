@@ -1,5 +1,6 @@
 package eu.ebrains.kg.search.controller.translators;
 
+import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Model;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ExternalReference;
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class ModelTranslator implements Translator<ModelV2, Model>{
 
-    public Model translate(ModelV2 modelV2) {
+    public Model translate(ModelV2 modelV2, DatabaseScope databaseScope, boolean liveMode) {
         Model m = new Model();
         String embargo = modelV2.getEmbargo().get(0);
         m.setIdentifier(modelV2.getIdentifier());
