@@ -1,10 +1,10 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances.commons;
 
-public class ExternalReference {
+public class TargetExternalReference {
 
-    public ExternalReference() {}
+    public TargetExternalReference() {}
 
-    public ExternalReference(String url, String value) {
+    public TargetExternalReference(String url, String value) {
         this.url = url;
         this.value = value;
     }

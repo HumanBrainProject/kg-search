@@ -1,7 +1,7 @@
 package eu.ebrains.kg.search.model.source.openMINDSv1;
 
 import eu.ebrains.kg.search.model.source.commons.Publication;
-import eu.ebrains.kg.search.model.source.commons.InternalReference;
+import eu.ebrains.kg.search.model.source.commons.SourceInternalReference;
 
 import java.util.Date;
 import java.util.List;
@@ -10,7 +10,7 @@ public class ProjectV1 {
     private Date firstReleaseAt;
     private String description;
     private Date lastReleaseAt;
-    private List<InternalReference> datasets;
+    private List<SourceInternalReference> datasets;
     private String title;
     private List<Publication> publications;
     private String identifier;
@@ -29,9 +29,9 @@ public class ProjectV1 {
 
     public void setLastReleaseAt(Date lastReleaseAt) { this.lastReleaseAt = lastReleaseAt; }
 
-    public List<InternalReference> getDatasets() { return datasets; }
+    public List<SourceInternalReference> getDatasets() { return datasets; }
 
-    public void setDatasets(List<InternalReference> datasets) { this.datasets = datasets; }
+    public void setDatasets(List<SourceInternalReference> datasets) { this.datasets = datasets; }
 
     public String getTitle() { return title; }
 

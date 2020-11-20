@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
 import java.util.Date;
@@ -47,7 +47,7 @@ public class Subject {
     private Value<String> genotype;
 
     @FieldInfo(label = "Samples", layout = FieldInfo.Layout.GROUP, hint = "List of samples that have been obtained from a given subject.", aggregate = FieldInfo.Aggregate.COUNT)
-    private List<InternalReference> samples;
+    private List<TargetInternalReference> samples;
 
     @FieldInfo(label = "Datasets", visible = false, facet = FieldInfo.Facet.EXISTS)
     private List<Value<String>> datasetExists;
@@ -191,11 +191,11 @@ public class Subject {
         this.genotype = genotype;
     }
 
-    public List<InternalReference> getSamples() {
+    public List<TargetInternalReference> getSamples() {
         return samples;
     }
 
-    public void setSamples(List<InternalReference> samples) {
+    public void setSamples(List<TargetInternalReference> samples) {
         this.samples = samples;
     }
 
@@ -233,21 +233,21 @@ public class Subject {
 
         public Dataset() {}
 
-        public Dataset(List<String> component, List<InternalReference> name) {
+        public Dataset(List<String> component, List<TargetInternalReference> name) {
             this.component = component!=null ? component.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
             this.name = name;
         }
 
         private List<Value<String>> component;
-        private List<InternalReference> name;
+        private List<TargetInternalReference> name;
 
         public List<Value<String>> getComponent() { return component; }
 
         public void setComponent(List<Value<String>> component) { this.component = component; }
 
-        public List<InternalReference> getName() { return name; }
+        public List<TargetInternalReference> getName() { return name; }
 
-        public void setName(List<InternalReference> name) { this.name = name; }
+        public void setName(List<TargetInternalReference> name) { this.name = name; }
     }
 
 }

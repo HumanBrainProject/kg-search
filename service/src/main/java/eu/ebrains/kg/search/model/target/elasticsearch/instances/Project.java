@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.RibbonInfo;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
 import java.util.Date;
@@ -33,7 +33,7 @@ public class Project {
     private List<Value<String>> publications;
 
     @FieldInfo(label = "Datasets", layout = FieldInfo.Layout.GROUP)
-    private List<InternalReference> dataset;
+    private List<TargetInternalReference> dataset;
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
@@ -103,11 +103,11 @@ public class Project {
         return publications;
     }
 
-    public List<InternalReference> getDataset() {
+    public List<TargetInternalReference> getDataset() {
         return dataset;
     }
 
-    public void setDataset(List<InternalReference> dataset) {
+    public void setDataset(List<TargetInternalReference> dataset) {
         this.dataset = dataset;
     }
 

@@ -6,7 +6,7 @@ import java.util.List;
 import eu.ebrains.kg.search.model.source.commons.SpecimenGroup;
 import eu.ebrains.kg.search.model.source.commons.ParcellationRegion;
 import eu.ebrains.kg.search.model.source.commons.Subject;
-import eu.ebrains.kg.search.model.source.commons.File;
+import eu.ebrains.kg.search.model.source.commons.SourceFile;
 
 public class SampleV1 {
     private String identifier;
@@ -25,7 +25,7 @@ public class SampleV1 {
     private List<SpecimenGroup> datasets;
     private List<ParcellationRegion> parcellationRegion;
     private List<String> parcellationAtlas;
-    private List<File> files;
+    private List<SourceFile> files;
     private List<String> embargo;
 
     public String getIdentifier() {
@@ -148,11 +148,11 @@ public class SampleV1 {
         this.parcellationAtlas = parcellationAtlas;
     }
 
-    public List<File> getFiles() {
+    public List<SourceFile> getFiles() {
         return files;
     }
 
-    public void setFiles(List<File> files) {
+    public void setFiles(List<SourceFile> files) {
         this.files = files;
     }
 

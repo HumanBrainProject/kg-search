@@ -4,16 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class File {
+public class SourceFile {
 
-    public File() {}
+    public SourceFile() {}
 
-    public File(String name, String absolutePath, String humanReadableSize ) {
+    public SourceFile(String name, String absolutePath, String humanReadableSize ) {
         this.name = name;
         this.absolutePath = absolutePath;
         this.humanReadableSize = humanReadableSize;
     }
-    public File(String name, String absolutePath, String humanReadableSize, List<String> staticImageUrl, Boolean isPreviewAnimated, List<String> previewUrl, Boolean privateAccess, List<String> thumbnailUrl) {
+    public SourceFile(String name, String absolutePath, String humanReadableSize, List<String> staticImageUrl, Boolean isPreviewAnimated, List<String> previewUrl, Boolean privateAccess, List<String> thumbnailUrl) {
         this.name = name;
         this.absolutePath = absolutePath;
         this.humanReadableSize = humanReadableSize;

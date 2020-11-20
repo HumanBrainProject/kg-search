@@ -3,9 +3,9 @@ package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ExternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 
 import java.util.Date;
 import java.util.List;
@@ -25,11 +25,11 @@ public class Model {
     private Value<String> embargo;
 
     @FieldInfo(label = "Produced datasets", layout = FieldInfo.Layout.GROUP)
-    private List<InternalReference> producedDataset;
+    private List<TargetInternalReference> producedDataset;
 
     @JsonProperty("allfiles") //TODO: capitalize
     @FieldInfo(label = "Download model", isButton=true, termsOfUse=true)
-    private List<ExternalReference> allFiles;
+    private List<TargetExternalReference> allFiles;
 
     @FieldInfo(label = "Model format", layout = FieldInfo.Layout.SUMMARY, separator = "; ")
     private List<Value<String>> modelFormat;
@@ -39,22 +39,22 @@ public class Model {
 
     @JsonProperty("license_info")
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder= FieldInfo.FacetOrder.BYVALUE)
-    private ExternalReference licenseInfo;
+    private TargetExternalReference licenseInfo;
 
     @FieldInfo(label = "Custodian", layout = FieldInfo.Layout.SUMMARY, separator = "; ", type = FieldInfo.Type.TEXT, hint = "A custodian is the person responsible for the data bundle.")
-    private List<InternalReference> owners;
+    private List<TargetInternalReference> owners;
 
     @FieldInfo(label = "Abstraction level", layout = FieldInfo.Layout.SUMMARY, separator = "; ", facet = FieldInfo.Facet.LIST)
     private List<Value<String>> abstractionLevel;
 
     @FieldInfo(label = "Main contact", layout = FieldInfo.Layout.SUMMARY, separator = "; ", type = FieldInfo.Type.TEXT)
-    private List<InternalReference> mainContact;
+    private List<TargetInternalReference> mainContact;
 
     @FieldInfo(label = "Brain structure", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
     private List<Value<String>> brainStructures;
 
     @FieldInfo(label = "Used datasets", layout = FieldInfo.Layout.GROUP)
-    private List<InternalReference> usedDataset;
+    private List<TargetInternalReference> usedDataset;
 
     @FieldInfo(label = "Version", layout = FieldInfo.Layout.SUMMARY)
     private Value<String> version;
@@ -72,7 +72,7 @@ public class Model {
     private Value<String> title;
 
     @FieldInfo(label = "Contributors", layout = FieldInfo.Layout.HEADER, separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10)
-    private List<InternalReference> contributors;
+    private List<TargetInternalReference> contributors;
 
     @FieldInfo(label = "(Sub)cellular target", layout = FieldInfo.Layout.SUMMARY)
     private List<Value<String>> cellularTarget;
@@ -133,19 +133,19 @@ public class Model {
 
     public void setEmbargo(Value<String> embargo) { this.embargo = embargo; }
 
-    public List<InternalReference> getProducedDataset() {
+    public List<TargetInternalReference> getProducedDataset() {
         return producedDataset;
     }
 
-    public void setProducedDataset(List<InternalReference> producedDataset) {
+    public void setProducedDataset(List<TargetInternalReference> producedDataset) {
         this.producedDataset = producedDataset;
     }
 
-    public List<ExternalReference> getAllFiles() {
+    public List<TargetExternalReference> getAllFiles() {
         return allFiles;
     }
 
-    public void setAllFiles(List<ExternalReference> allFiles) {
+    public void setAllFiles(List<TargetExternalReference> allFiles) {
         this.allFiles = allFiles;
     }
 
@@ -165,19 +165,19 @@ public class Model {
         this.description = description;
     }
 
-    public ExternalReference getLicenseInfo() {
+    public TargetExternalReference getLicenseInfo() {
         return licenseInfo;
     }
 
-    public void setLicenseInfo(ExternalReference licenseInfo) {
+    public void setLicenseInfo(TargetExternalReference licenseInfo) {
         this.licenseInfo = licenseInfo;
     }
 
-    public List<InternalReference> getOwners() {
+    public List<TargetInternalReference> getOwners() {
         return owners;
     }
 
-    public void setOwners(List<InternalReference> owners) {
+    public void setOwners(List<TargetInternalReference> owners) {
         this.owners = owners;
     }
 
@@ -189,11 +189,11 @@ public class Model {
         this.abstractionLevel = abstractionLevel != null ? abstractionLevel.stream().map(Value::new).collect(Collectors.toList()):null;
     }
 
-    public List<InternalReference> getMainContact() {
+    public List<TargetInternalReference> getMainContact() {
         return mainContact;
     }
 
-    public void setMainContact(List<InternalReference> mainContact) {
+    public void setMainContact(List<TargetInternalReference> mainContact) {
         this.mainContact = mainContact;
     }
 
@@ -205,11 +205,11 @@ public class Model {
         this.brainStructures = brainStructures != null?brainStructures.stream().map(Value::new).collect(Collectors.toList()):null;
     }
 
-    public List<InternalReference> getUsedDataset() {
+    public List<TargetInternalReference> getUsedDataset() {
         return usedDataset;
     }
 
-    public void setUsedDataset(List<InternalReference> usedDataset) {
+    public void setUsedDataset(List<TargetInternalReference> usedDataset) {
         this.usedDataset = usedDataset;
     }
 
@@ -253,11 +253,11 @@ public class Model {
         this.title = title;
     }
 
-    public List<InternalReference> getContributors() {
+    public List<TargetInternalReference> getContributors() {
         return contributors;
     }
 
-    public void setContributors(List<InternalReference> contributors) {
+    public void setContributors(List<TargetInternalReference> contributors) {
         this.contributors = contributors;
     }
 

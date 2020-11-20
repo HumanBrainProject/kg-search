@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import eu.ebrains.kg.search.model.source.commons.Publication;
-import eu.ebrains.kg.search.model.source.commons.InternalReference;
+import eu.ebrains.kg.search.model.source.commons.SourceInternalReference;
 
 public class PersonV1andV2 {
 
@@ -109,10 +109,10 @@ public class PersonV1andV2 {
         this.lastReleaseAt = lastReleaseAt;
     }
 
-    public static class Contribution extends InternalReference {
+    public static class Contribution extends SourceInternalReference {
     }
 
-    public static class CustodianOf extends InternalReference {
+    public static class CustodianOf extends SourceInternalReference {
     }
 
 }

@@ -1,11 +1,11 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances.commons;
 
-public class InternalReference {
+public class TargetInternalReference {
 
-    public InternalReference() {
+    public TargetInternalReference() {
     }
 
-    public InternalReference(String reference, String value, String uuid) {
+    public TargetInternalReference(String reference, String value, String uuid) {
         this.reference = reference;
         this.value = value;
         this.uuid = uuid;

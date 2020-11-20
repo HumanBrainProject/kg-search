@@ -107,6 +107,23 @@
         "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d002272_BigBrainCytoMapping-hoc3v_pub/Deep-Learning/Licence (CCBY-NC-SA).pdf",
         "value": "Licence (CCBY-NC-SA).pdf",
         "fileSize": "140 KB"
+      },
+      {
+        "fileSize": "121 KB",
+        "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000001_jubrain-cytoatlas-Area-PFt_pub/9.2/Area-PFt_r_N10_nlin2Stdcolin27_9.2_publicP_4fdc5af5671bc935358ef59006bc666d.nii.gz"
+        "value": "Area-PFt_r_N10_nlin2Stdcolin27_9.2_publicP_4fdc5af5671bc935358ef59006bc666d.nii.gz",
+        "previewUrl": {
+          "url": "https://kg.ebrains.eu/search/preview/86946459-84fc-5b80-9da9-9b5b924c8118.mp4",
+          "isAnimated": true
+        },
+        "staticImageUrl": {
+          "url": "https://kg.ebrains.eu/search/preview/staticImage/86946459-84fc-5b80-9da9-9b5b924c8118.png",
+          "isAnimated": false
+        },
+        "thumbnailUrl": {
+          "url": "https://kg.ebrains.eu/search/preview/thumbnails/86946459-84fc-5b80-9da9-9b5b924c8118.png",
+          "isAnimated": false
+        }
       }
     ],
     "citation": {

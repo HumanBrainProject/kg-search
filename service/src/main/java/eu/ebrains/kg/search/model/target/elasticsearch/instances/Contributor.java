@@ -3,7 +3,7 @@ package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
 import java.util.Date;
@@ -25,19 +25,19 @@ public class Contributor {
     private Value<String> title;
 
     @FieldInfo(label = "Custodian of", layout = FieldInfo.Layout.GROUP, overview = true)
-    private List<InternalReference> custodianOf;
+    private List<TargetInternalReference> custodianOf;
 
     @FieldInfo(label = "Custodian of model", layout = FieldInfo.Layout.GROUP, overview = true)
-    private List<InternalReference> custodianOfModel;
+    private List<TargetInternalReference> custodianOfModel;
 
     @FieldInfo(label = "Publications", markdown = true, facet = FieldInfo.Facet.EXISTS, layout = FieldInfo.Layout.GROUP)
-    private List<InternalReference> publications;
+    private List<TargetInternalReference> publications;
 
     @FieldInfo(label = "Contributions", facet = FieldInfo.Facet.EXISTS, layout = FieldInfo.Layout.GROUP, type = FieldInfo.Type.TEXT, overview = true)
-    private List<InternalReference> contributions;
+    private List<TargetInternalReference> contributions;
 
     @FieldInfo(label = "Model contributions", facet = FieldInfo.Facet.EXISTS, layout = FieldInfo.Layout.GROUP, type = FieldInfo.Type.TEXT, overview = true)
-    private List<InternalReference> modelContributions;
+    private List<TargetInternalReference> modelContributions;
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
@@ -87,19 +87,19 @@ public class Contributor {
         this.editorId = editorId;
     }
 
-    public List<InternalReference> getCustodianOfModel() {
+    public List<TargetInternalReference> getCustodianOfModel() {
         return custodianOfModel;
     }
 
-    public void setCustodianOfModel(List<InternalReference> custodianOfModel) {
+    public void setCustodianOfModel(List<TargetInternalReference> custodianOfModel) {
         this.custodianOfModel = custodianOfModel;
     }
 
-    public List<InternalReference> getPublications() {
+    public List<TargetInternalReference> getPublications() {
         return publications;
     }
 
-    public void setPublications(List<InternalReference> publications) {
+    public void setPublications(List<TargetInternalReference> publications) {
         this.publications = publications;
     }
 
@@ -119,27 +119,27 @@ public class Contributor {
         this.lastRelease = lastRelease;
     }
 
-    public List<InternalReference> getCustodianOf() {
+    public List<TargetInternalReference> getCustodianOf() {
         return custodianOf;
     }
 
-    public void setCustodianOf(List<InternalReference> custodianOf) {
+    public void setCustodianOf(List<TargetInternalReference> custodianOf) {
         this.custodianOf = custodianOf;
     }
 
-    public List<InternalReference> getContributions() {
+    public List<TargetInternalReference> getContributions() {
         return contributions;
     }
 
-    public void setContributions(List<InternalReference> contributions) {
+    public void setContributions(List<TargetInternalReference> contributions) {
         this.contributions = contributions;
     }
 
-    public List<InternalReference> getModelContributions() {
+    public List<TargetInternalReference> getModelContributions() {
         return modelContributions;
     }
 
-    public void setModelContributions(List<InternalReference> modelContributions) {
+    public void setModelContributions(List<TargetInternalReference> modelContributions) {
         this.modelContributions = modelContributions;
     }
 

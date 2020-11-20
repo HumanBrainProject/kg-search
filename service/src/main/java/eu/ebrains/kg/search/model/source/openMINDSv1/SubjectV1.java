@@ -1,7 +1,7 @@
 package eu.ebrains.kg.search.model.source.openMINDSv1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.search.model.source.commons.InternalReference;
+import eu.ebrains.kg.search.model.source.commons.SourceInternalReference;
 import eu.ebrains.kg.search.model.source.commons.SpecimenGroup;
 
 import java.util.Date;
@@ -22,7 +22,7 @@ public class SubjectV1 {
     private List<String> ageCategory;
     private List<String> species;
     private List<String> sex;
-    private List<InternalReference> samples;
+    private List<SourceInternalReference> samples;
     private List<String> datasetExists;
     private List<SpecimenGroup> datasets;
 
@@ -130,11 +130,11 @@ public class SubjectV1 {
         this.sex = sex;
     }
 
-    public List<InternalReference> getSamples() {
+    public List<SourceInternalReference> getSamples() {
         return samples;
     }
 
-    public void setSamples(List<InternalReference> samples) {
+    public void setSamples(List<SourceInternalReference> samples) {
         this.samples = samples;
     }
 

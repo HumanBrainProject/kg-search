@@ -3,7 +3,7 @@ package eu.ebrains.kg.search.controller.translators;
 import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.source.openMINDSv1.ProjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Project;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.InternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -18,7 +18,7 @@ public class ProjectTranslator implements Translator<ProjectV1, Project> {
         p.setLastRelease(projectSource.getLastReleaseAt());
         p.setDataset(projectSource.getDatasets().stream()
                 .map(dataset ->
-                        new InternalReference(
+                        new TargetInternalReference(
                                 String.format("Dataset/%s", dataset.getIdentifier()),
                                 dataset.getName(), null))
                 .collect(Collectors.toList()));

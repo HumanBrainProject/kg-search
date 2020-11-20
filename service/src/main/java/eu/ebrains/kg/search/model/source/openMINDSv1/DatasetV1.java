@@ -9,27 +9,27 @@ import java.util.List;
 public class DatasetV1 {
     private List<String> methods;
     private Date lastReleaseAt;
-    private List<InternalReference> component;
+    private List<SourceInternalReference> component;
     private List<String> embargoRestrictedAccess;
     @JsonProperty("external_datalink") //TODO: Capitalize the property
     private String externalDatalink;
     private List<String> embargoForFilter;
     private List<String> doi;
-    private List<File> files;
+    private List<SourceFile> files;
     private List<String> parcellationAtlas;
-    private List<ExternalReference> neuroglancer;
+    private List<SourceExternalReference> neuroglancer;
     private List<Publication> publications;
     private List<Subject> subjects;
-    private List<InternalReference> contributors;
+    private List<SourceInternalReference> contributors;
     private String identifier;
     private List<String> speciesFilter;
     private Date firstReleaseAt;
     private List<String> citation;
-    private List<ExternalReference> brainViewer;
+    private List<SourceExternalReference> brainViewer;
     private List<String> preparation;
     private String title;
     private String editorId;
-    private List<InternalReference> owners;
+    private List<SourceInternalReference> owners;
     private Boolean containerUrlAsZIP;
     private List<String> protocols;
     @JsonProperty("container_url")
@@ -37,7 +37,7 @@ public class DatasetV1 {
     private String dataDescriptorURL;
     private List<ParcellationRegion> parcellationRegion;
     private String description;
-    private List<ExternalReference> license;
+    private List<SourceExternalReference> license;
     private List<String> modalityForFilter;
     private List<String> embargo;
 
@@ -49,9 +49,9 @@ public class DatasetV1 {
 
     public void setLastReleaseAt(Date lastReleaseAt) { this.lastReleaseAt = lastReleaseAt; }
 
-    public List<InternalReference> getComponent() { return component; }
+    public List<SourceInternalReference> getComponent() { return component; }
 
-    public void setComponent(List<InternalReference> component) { this.component = component; }
+    public void setComponent(List<SourceInternalReference> component) { this.component = component; }
 
     public List<String> getEmbargoRestrictedAccess() { return embargoRestrictedAccess; }
 
@@ -69,17 +69,17 @@ public class DatasetV1 {
 
     public void setDoi(List<String> doi) { this.doi = doi; }
 
-    public List<File> getFiles() { return files; }
+    public List<SourceFile> getFiles() { return files; }
 
-    public void setFiles(List<File> files) { this.files = files; }
+    public void setFiles(List<SourceFile> files) { this.files = files; }
 
     public List<String> getParcellationAtlas() { return parcellationAtlas; }
 
     public void setParcellationAtlas(List<String> parcellationAtlas) { this.parcellationAtlas = parcellationAtlas; }
 
-    public List<ExternalReference> getNeuroglancer() { return neuroglancer; }
+    public List<SourceExternalReference> getNeuroglancer() { return neuroglancer; }
 
-    public void setNeuroglancer(List<ExternalReference> neuroglancer) { this.neuroglancer = neuroglancer; }
+    public void setNeuroglancer(List<SourceExternalReference> neuroglancer) { this.neuroglancer = neuroglancer; }
 
     public List<Publication> getPublications() { return publications; }
 
@@ -89,9 +89,9 @@ public class DatasetV1 {
 
     public void setSubjects(List<Subject> subjects) { this.subjects = subjects; }
 
-    public List<InternalReference> getContributors() { return contributors; }
+    public List<SourceInternalReference> getContributors() { return contributors; }
 
-    public void setContributors(List<InternalReference> contributors) { this.contributors = contributors; }
+    public void setContributors(List<SourceInternalReference> contributors) { this.contributors = contributors; }
 
     public String getIdentifier() { return identifier; }
 
@@ -109,9 +109,9 @@ public class DatasetV1 {
 
     public void setCitation(List<String> citation) { this.citation = citation; }
 
-    public List<ExternalReference> getBrainViewer() { return brainViewer; }
+    public List<SourceExternalReference> getBrainViewer() { return brainViewer; }
 
-    public void setBrainViewer(List<ExternalReference> brainViewer) { this.brainViewer = brainViewer; }
+    public void setBrainViewer(List<SourceExternalReference> brainViewer) { this.brainViewer = brainViewer; }
 
     public List<String> getPreparation() { return preparation; }
 
@@ -125,9 +125,9 @@ public class DatasetV1 {
 
     public void setEditorId(String editorId) { this.editorId = editorId; }
 
-    public List<InternalReference> getOwners() { return owners; }
+    public List<SourceInternalReference> getOwners() { return owners; }
 
-    public void setOwners(List<InternalReference> owners) { this.owners = owners; }
+    public void setOwners(List<SourceInternalReference> owners) { this.owners = owners; }
 
     public Boolean getContainerUrlAsZIP() { return containerUrlAsZIP; }
 
@@ -153,9 +153,9 @@ public class DatasetV1 {
 
     public void setDescription(String description) { this.description = description; }
 
-    public List<ExternalReference> getLicense() { return license; }
+    public List<SourceExternalReference> getLicense() { return license; }
 
-    public void setLicense(List<ExternalReference> license) { this.license = license; }
+    public void setLicense(List<SourceExternalReference> license) { this.license = license; }
 
     public List<String> getModalityForFilter() { return modalityForFilter; }
 

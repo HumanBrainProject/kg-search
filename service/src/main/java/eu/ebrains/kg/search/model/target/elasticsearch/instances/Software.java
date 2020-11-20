@@ -3,7 +3,7 @@ package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ExternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
 import java.util.Date;
@@ -31,13 +31,13 @@ public class Software {
     private Value<String> description;
 
     @FieldInfo(label = "Source code", layout = FieldInfo.Layout.SUMMARY)
-    private List<ExternalReference> sourceCode;
+    private List<TargetExternalReference> sourceCode;
 
     @FieldInfo(label = "Features", layout = FieldInfo.Layout.SUMMARY, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
     private List<Value<String>> features;
 
     @FieldInfo(label = "Documentation", layout = FieldInfo.Layout.SUMMARY)
-    private List<ExternalReference> documentation;
+    private List<TargetExternalReference> documentation;
 
     @FieldInfo(label = "License")
     private List<Value<String>> license;
@@ -49,7 +49,7 @@ public class Software {
     private Value<String> version;
 
     @FieldInfo(label = "Homepage", layout = FieldInfo.Layout.SUMMARY)
-    private List<ExternalReference> homepage;
+    private List<TargetExternalReference> homepage;
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
@@ -118,11 +118,11 @@ public class Software {
         this.description = description;
     }
 
-    public List<ExternalReference> getSourceCode() {
+    public List<TargetExternalReference> getSourceCode() {
         return sourceCode;
     }
 
-    public void setSourceCode(List<ExternalReference> sourceCode) {
+    public void setSourceCode(List<TargetExternalReference> sourceCode) {
         this.sourceCode = sourceCode;
     }
 
@@ -134,11 +134,11 @@ public class Software {
         this.features = features != null ? features.stream().map(Value::new).collect(Collectors.toList()):null;
     }
 
-    public List<ExternalReference> getDocumentation() {
+    public List<TargetExternalReference> getDocumentation() {
         return documentation;
     }
 
-    public void setDocumentation(List<ExternalReference> documentation) {
+    public void setDocumentation(List<TargetExternalReference> documentation) {
         this.documentation = documentation;
     }
 
@@ -171,11 +171,11 @@ public class Software {
         this.version = version;
     }
 
-    public List<ExternalReference> getHomepage() {
+    public List<TargetExternalReference> getHomepage() {
         return homepage;
     }
 
-    public void setHomepage(List<ExternalReference> homepage) {
+    public void setHomepage(List<TargetExternalReference> homepage) {
         this.homepage = homepage;
     }
 

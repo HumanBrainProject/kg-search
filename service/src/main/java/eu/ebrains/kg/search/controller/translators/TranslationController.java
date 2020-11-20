@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class TranslationController {
-
     private final KGv2 kgV2;
     private final KGv3 kgV3;
 

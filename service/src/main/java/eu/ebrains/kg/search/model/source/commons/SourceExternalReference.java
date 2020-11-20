@@ -1,13 +1,13 @@
 package eu.ebrains.kg.search.model.source.commons;
 
-public class ExternalReference {
-        public ExternalReference() {}
+public class SourceExternalReference {
+        public SourceExternalReference() {}
 
-        public ExternalReference(String url) {
+        public SourceExternalReference(String url) {
             this.url = url;
         }
 
-        public ExternalReference(String url, String name) {
+        public SourceExternalReference(String url, String name) {
             this.url = url;
             this.name = name;
         }
