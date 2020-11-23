@@ -15,7 +15,9 @@ public class SubjectTranslator implements Translator<SubjectV1, Subject> {
         s.setAge(subject.getAge());
         s.setAgeCategory(subject.getAgeCategory());
         s.setDatasetExists(subject.getDatasetExists());
-        s.setEditorId(subject.getEditorId());
+        if (databaseScope == DatabaseScope.INFERRED) {
+            s.setEditorId(subject.getEditorId());
+        }
         s.setFirstRelease(subject.getFirstReleaseAt());
         s.setLastRelease(subject.getLastReleaseAt());
         s.setGenotype(subject.getGenotype());
@@ -28,7 +30,7 @@ public class SubjectTranslator implements Translator<SubjectV1, Subject> {
         s.setSamples(subject.getSamples().stream()
                 .map(sample ->
                         new TargetInternalReference(
-                                String.format("Sample/%s", sample.getIdentifier()),
+                                liveMode ? sample.getRelativeUrl() : String.format("Sample/%s", sample.getIdentifier()),
                                 sample.getName(), null)
                 ).collect(Collectors.toList()));
         s.setDatasets(subject.getDatasets().stream()
@@ -38,7 +40,7 @@ public class SubjectTranslator implements Translator<SubjectV1, Subject> {
                                 d.getInstances().stream()
                                         .map(i ->
                                                 new TargetInternalReference(
-                                                        String.format("Dataset/%s", i.getIdentifier()),
+                                                        liveMode ? i.getRelativeUrl() : String.format("Dataset/%s", i.getIdentifier()),
                                                         i.getName(), null)
                                         ).collect(Collectors.toList())
                         )
