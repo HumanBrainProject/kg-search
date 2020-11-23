@@ -12,7 +12,7 @@ public class DatasetV1 {
     private List<SourceInternalReference> component;
     private List<String> embargoRestrictedAccess;
     @JsonProperty("external_datalink") //TODO: Capitalize the property
-    private String externalDatalink;
+    private List<String> externalDatalink; // TODO: Sometimes a String sometimes a List, ensure always List
     private List<String> embargoForFilter;
     private List<String> doi;
     private List<SourceFile> files;
@@ -57,9 +57,9 @@ public class DatasetV1 {
 
     public void setEmbargoRestrictedAccess(List<String> embargoRestrictedAccess) { this.embargoRestrictedAccess = embargoRestrictedAccess; }
 
-    public String getExternalDatalink() { return externalDatalink; }
+    public List<String> getExternalDatalink() { return externalDatalink; }
 
-    public void setExternalDatalink(String externalDatalink) { this.externalDatalink = externalDatalink; }
+    public void setExternalDatalink(List<String> externalDatalink) { this.externalDatalink = externalDatalink; }
 
     public List<String> getEmbargoForFilter() { return embargoForFilter; }
 

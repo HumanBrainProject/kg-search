@@ -47,6 +47,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                 )).collect(Collectors.toList()));
         d.setDataDescriptor(new TargetExternalReference(datasetV1.getDataDescriptorURL(), datasetV1.getDataDescriptorURL()));
         d.setSpeciesFilter(datasetV1.getSpeciesFilter());
+        d.setEmbargoForFilter(datasetV1.getEmbargoForFilter().get(0));
 
         if (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && !embargo.equals("Embargoed") && !embargo.equals("Under review"))) {
             d.setFiles(datasetV1.getFiles().stream()
@@ -63,6 +64,12 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                     ).collect(Collectors.toList()));
         }
 
+        if (!datasetV1.getCitation().get(0).isEmpty() && !datasetV1.getDoi().get(0).isEmpty()) {
+            String citation = datasetV1.getCitation().get(0);
+            String doi = datasetV1.getDoi().get(0);
+            String url = URLEncoder.encode(doi, StandardCharsets.UTF_8);
+            d.setCitation(citation + "\n" + String.format("[DOI: %s]\\n[DOI: %s]: https://doi.org/%s\"", doi, doi, url));
+        }
 
         d.setPublications(datasetV1.getPublications().stream()
                 .map(publication -> {
@@ -72,14 +79,14 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                         publicationResult = publication.getCitation() + "\n" + String.format("[DOI: %s]\\n[DOI: %s]: https://doi.org/%s\"", publication.getDoi(), publication.getDoi(), url);
                     } else if (publication.getCitation() != null && publication.getDoi() == null) {
                         publicationResult = publication.getCitation().trim().replaceAll(", $", "");
-                        ;
                     } else {
                         publicationResult = publication.getDoi();
                     }
                     return publicationResult;
                 }).collect(Collectors.toList()));
         d.setAtlas(datasetV1.getParcellationAtlas());
-        d.setExternalDatalink(datasetV1.getExternalDatalink());
+        d.setExternalDatalink(datasetV1.getExternalDatalink().stream()
+                .map(ed -> new TargetExternalReference(ed, ed)).collect(Collectors.toList()));
         d.setRegion(datasetV1.getParcellationRegion().stream()
                 .map(r -> new TargetExternalReference(r.getUrl(), r.getAlias().isEmpty() ? r.getName() : r.getAlias()))
                 .collect(Collectors.toList()));
@@ -100,33 +107,45 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                         null
                 )).collect(Collectors.toList()));
         d.setProtocol(datasetV1.getProtocols());
-        d.setViewer(datasetV1.getBrainViewer().stream()
-                .map(v -> new TargetExternalReference(
-                        v.getUrl(),
-                        v.getName().isEmpty() ? "Show in brain atlas viewer" : String.format("Show %s in brain atlas viewer", v.getName())
-                )).collect(Collectors.toList()));
+
+        if (!datasetV1.getBrainViewer().isEmpty()) {
+            d.setViewer(datasetV1.getBrainViewer().stream()
+                    .map(v -> new TargetExternalReference(
+                            v.getUrl(),
+                            v.getName().isEmpty() ? "Show in brain atlas viewer" : String.format("Show %s in brain atlas viewer", v.getName())
+                    )).collect(Collectors.toList()));
+        } else {
+            d.setViewer(datasetV1.getNeuroglancer().stream()
+                    .map(n -> new TargetExternalReference(
+                            !n.getUrl().isEmpty() ? String.format("https://neuroglancer.humanbrainproject.org/?%s", n.getUrl()) : null,
+                            String.format("Show %s in brain atlas viewer", !n.getName().isEmpty() ? n.getName() : datasetV1.getTitle())
+                    )).collect(Collectors.toList()));
+        }
+
         d.setSubjects(datasetV1.getSubjects().stream()
-                .map(s ->
-                        new Dataset.Subject(
-                                new TargetInternalReference(
-                                        liveMode ? s.getRelativeUrl() : String.format("Subject/%s", s.getIdentifier()),
-                                        s.getName(),
-                                        null
-                                ),
-                                s.getSpecies(),
-                                s.getSex(),
-                                s.getAge(),
-                                s.getAgeCategory(),
-                                s.getWeight(),
-                                s.getStrain() != null ? s.getStrain() : s.getStrains(),
-                                s.getGenotype(),
-                                s.getSamples().stream().map(sample -> new TargetInternalReference(
-                                        liveMode ? sample.getRelativeUrl() : String.format("Sample/%s", sample.getIdentifier()),
-                                        sample.getName(),
-                                        null
-                                )).collect(Collectors.toList())
-                        )
-                ).collect(Collectors.toList()));
+            .map(s ->
+                new Dataset.Subject(
+                    new TargetInternalReference(
+                        liveMode ? s.getRelativeUrl() : String.format("Subject/%s", s.getIdentifier()),
+                        s.getName(),
+                        null
+                    ),
+                    s.getSpecies(),
+                    s.getSex(),
+                    s.getAge(),
+                    s.getAgeCategory(),
+                    s.getWeight(),
+                    s.getStrain() != null ? s.getStrain() : s.getStrains(),
+                    s.getGenotype(),
+                    s.getSamples().
+                        stream().
+                        map(sample -> new TargetInternalReference(
+                            liveMode ? sample.getRelativeUrl() : String.format("Sample/%s", sample.getIdentifier()),
+                            sample.getName(),
+                            null
+                        )).collect(Collectors.toList())
+                )
+            ).collect(Collectors.toList()));
         d.setFirstRelease(datasetV1.getFirstReleaseAt());
         d.setLastRelease(datasetV1.getLastReleaseAt());
         return d;

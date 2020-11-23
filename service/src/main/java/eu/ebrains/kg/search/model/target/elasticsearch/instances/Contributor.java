@@ -31,7 +31,7 @@ public class Contributor {
     private List<TargetInternalReference> custodianOfModel;
 
     @FieldInfo(label = "Publications", markdown = true, facet = FieldInfo.Facet.EXISTS, layout = FieldInfo.Layout.GROUP)
-    private List<TargetInternalReference> publications;
+    private List<String> publications;
 
     @FieldInfo(label = "Contributions", facet = FieldInfo.Facet.EXISTS, layout = FieldInfo.Layout.GROUP, type = FieldInfo.Type.TEXT, overview = true)
     private List<TargetInternalReference> contributions;
@@ -95,11 +95,11 @@ public class Contributor {
         this.custodianOfModel = custodianOfModel;
     }
 
-    public List<TargetInternalReference> getPublications() {
+    public List<String> getPublications() {
         return publications;
     }
 
-    public void setPublications(List<TargetInternalReference> publications) {
+    public void setPublications(List<String> publications) {
         this.publications = publications;
     }
 
