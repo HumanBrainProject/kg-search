@@ -1,8 +1,5 @@
 package eu.ebrains.kg.search.controller.data;
 
-import com.apicatalog.jsonld.JsonLd;
-import com.apicatalog.jsonld.api.JsonLdError;
-import com.apicatalog.jsonld.document.JsonDocument;
 import eu.ebrains.kg.search.controller.translators.SoftwareTranslator;
 import eu.ebrains.kg.search.controller.utils.JsonAdapter;
 import eu.ebrains.kg.search.model.DatabaseScope;
@@ -12,28 +9,20 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.jupiter.api.Test;
-import com.github.jsonldjava.utils.JsonUtils;
 import org.junit.rules.ErrorCollector;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import java.io.*;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 
 public class SoftwareTranslatorTest {
 
     SoftwareTranslator translator = new SoftwareTranslator();
     JsonAdapter jsonAdapter = new JsonAdapter();
-    private final static JsonDocument EMPTY_DOCUMENT = JsonDocument.of(Json.createObjectBuilder().build());
 
     @Rule
     public ErrorCollector collector = new ErrorCollector();
@@ -49,30 +38,29 @@ public class SoftwareTranslatorTest {
         //Object qualified = standardization.fullyQualify(json);
         //System.out.println(qualified);
 
-        String json = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareReleasedSource.json"), StandardCharsets.UTF_8);
-        //System.out.println(json);
-
-        SoftwareV2 source = jsonAdapter.fromJson(json, SoftwareV2.class);
-
-        Software target = translator.translate(source, DatabaseScope.RELEASED, false);
-        String targetJson = jsonAdapter.toJson(target);
-        //System.out.println(targetJson);
-        Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
+        // Given
+        String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareReleasedSource.json"), StandardCharsets.UTF_8);
+        SoftwareV2 source = jsonAdapter.fromJson(sourceJson, SoftwareV2.class);
 
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareReleasedTarget.json"), StandardCharsets.UTF_8);
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
 
-        List<String> messages = new ArrayList<String>();
-        targetExpected.entrySet().stream().forEach(i -> {
-            String key = i.getKey();
+        //When
+        Software target = translator.translate(source, DatabaseScope.RELEASED, false);
+        String targetJson = jsonAdapter.toJson(target);
+        Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
+
+        //Then
+        List<String> messages = new ArrayList<>();
+        targetExpected.forEach((key, value) -> {
             try {
                 assertEquals(targetExpected.get(key), targetResult.get(key));
-            } catch (AssertionError assertFaild) {
-                messages.add(key + ": " + assertFaild.getMessage());
+            } catch (AssertionError assertFailed) {
+                messages.add(key + ": " + assertFailed.getMessage());
             }
         });
         if (!messages.isEmpty()) {
-            Assert.fail("\n\t" + messages.stream().collect(Collectors.joining("\n\t")));
+            Assert.fail("\n\t" + String.join("\n\t", messages));
         }
     }
 
