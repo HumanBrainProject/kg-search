@@ -19,20 +19,23 @@ public class ContributorTranslator implements Translator<PersonSources, Contribu
         c.setContributions(person.getContributions().stream()
                 .map(contribution ->
                         new TargetInternalReference(
-                                String.format("Dataset/%s", contribution.getIdentifier()),
+                                liveMode ? contribution.getRelativeUrl() : String.format("Dataset/%s", contribution.getIdentifier()),
                                 contribution.getName(), null)).collect(Collectors.toList()));
 
         c.setCustodianOf(person.getCustodianOf().stream()
                 .map(custodianOf ->
                         new TargetInternalReference(
-                                String.format("Dataset/%s", custodianOf.getIdentifier()),
+                                liveMode ? custodianOf.getRelativeUrl() : String.format("Dataset/%s", custodianOf.getIdentifier()),
                                 custodianOf.getName(), null)).collect(Collectors.toList()));
 
         c.setModelContributions(person.getModelContributions().stream()
                 .map(contribution -> new TargetInternalReference(
-                        String.format("Model/%s", contribution.getIdentifier()),
+                        liveMode ? contribution.getRelativeUrl() : String.format("Model/%s", contribution.getIdentifier()),
                         contribution.getName(), null
                 )).collect(Collectors.toList()));
+        if (databaseScope == DatabaseScope.INFERRED) {
+            c.setEditorId(person.getEditorId());
+        }
         return c;
     }
 }
