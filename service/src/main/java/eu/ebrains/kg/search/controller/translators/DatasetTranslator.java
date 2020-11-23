@@ -31,7 +31,9 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
             ));
         }
         d.setIdentifier(datasetV1.getIdentifier());
-        d.setEditorId(datasetV1.getEditorId());
+        if (databaseScope == DatabaseScope.INFERRED) {
+            d.setEditorId(datasetV1.getEditorId());
+        }
         d.setMethods(datasetV1.getMethods());
         d.setDescription(datasetV1.getDescription());
 
@@ -39,7 +41,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         d.setLicenseInfo(new TargetExternalReference(license.getUrl(), license.getName()));
         d.setOwners(datasetV1.getOwners().stream()
                 .map(o -> new TargetInternalReference(
-                        String.format("Contributor/%s", o.getIdentifier()),
+                        liveMode ? o.getRelativeUrl() : String.format("Contributor/%s", o.getIdentifier()),
                         o.getName(),
                         null
                 )).collect(Collectors.toList()));
@@ -86,14 +88,14 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         d.setDoi(datasetV1.getDoi().get(0));
         d.setContributors(datasetV1.getContributors().stream()
                 .map(c -> new TargetInternalReference(
-                        String.format("Contributor/%s", c.getIdentifier()),
+                        liveMode ? c.getRelativeUrl() : String.format("Contributor/%s", c.getIdentifier()),
                         c.getName(),
                         null
                 )).collect(Collectors.toList()));
         d.setPreparation(datasetV1.getPreparation());
         d.setComponent(datasetV1.getComponent().stream()
                 .map(c -> new TargetInternalReference(
-                        String.format("Project/%s", c.getIdentifier()),
+                        liveMode ? c.getRelativeUrl() : String.format("Project/%s", c.getIdentifier()),
                         c.getName(),
                         null
                 )).collect(Collectors.toList()));
@@ -107,7 +109,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                 .map(s ->
                         new Dataset.Subject(
                                 new TargetInternalReference(
-                                        false ? s.getRelativeUrl() : String.format("Subject/%s", d.getIdentifier()), // TODO: replace false by isLive
+                                        liveMode ? s.getRelativeUrl() : String.format("Subject/%s", s.getIdentifier()),
                                         s.getName(),
                                         null
                                 ),
@@ -119,7 +121,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                                 s.getStrain() != null ? s.getStrain() : s.getStrains(),
                                 s.getGenotype(),
                                 s.getSamples().stream().map(sample -> new TargetInternalReference(
-                                        String.format("Sample/%s", sample.getIdentifier()),
+                                        liveMode ? sample.getRelativeUrl() : String.format("Sample/%s", sample.getIdentifier()),
                                         sample.getName(),
                                         null
                                 )).collect(Collectors.toList())
