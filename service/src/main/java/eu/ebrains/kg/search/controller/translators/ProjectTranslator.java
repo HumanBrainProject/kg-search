@@ -19,7 +19,7 @@ public class ProjectTranslator implements Translator<ProjectV1, Project> {
         p.setDataset(projectSource.getDatasets().stream()
                 .map(dataset ->
                         new TargetInternalReference(
-                                String.format("Dataset/%s", dataset.getIdentifier()),
+                                liveMode ? dataset.getRelativeUrl() : String.format("Dataset/%s", dataset.getIdentifier()),
                                 dataset.getName(), null))
                 .collect(Collectors.toList()));
         p.setTitle(projectSource.getTitle());
@@ -37,7 +37,9 @@ public class ProjectTranslator implements Translator<ProjectV1, Project> {
                     return publicationResult;
                 }).collect(Collectors.toList()));
         p.setIdentifier(projectSource.getIdentifier());
-        p.setEditorId(projectSource.getEditorId());
+        if (databaseScope == DatabaseScope.INFERRED) {
+            p.setEditorId(projectSource.getEditorId());
+        }
         return p;
     }
 }
