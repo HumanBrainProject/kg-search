@@ -1,6 +1,7 @@
 package eu.ebrains.kg.search.model.source.openMINDSv2;
 
 import eu.ebrains.kg.search.model.source.commons.SourceExternalReference;
+import eu.ebrains.kg.search.model.source.commons.SourceFile;
 import eu.ebrains.kg.search.model.source.commons.SourceInternalReference;
 import eu.ebrains.kg.search.model.source.commons.Publication;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 public class ModelV2 {
     private List<SourceExternalReference> fileBundle;
+    private List<SourceFile> files;
     private List<SourceInternalReference> custodian;
     private List<SourceInternalReference> mainContact;
     private String title;
@@ -118,5 +120,13 @@ public class ModelV2 {
     public List<SourceInternalReference> getUsedDataset() { return usedDataset; }
 
     public void setUsedDataset(List<SourceInternalReference> usedDataset) { this.usedDataset = usedDataset; }
+
+    public List<SourceFile> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<SourceFile> files) {
+        this.files = files;
+    }
 
 }

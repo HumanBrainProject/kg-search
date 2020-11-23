@@ -265,6 +265,10 @@ public class Dataset {
         this.embargo = embargo;
     }
 
+    public void setEmbargo(String embargo) {
+        setEmbargo(citation != null ? new Value<>(embargo):null);
+    }
+
     public List<Value<String>> getPublications() {
         return publications;
     }

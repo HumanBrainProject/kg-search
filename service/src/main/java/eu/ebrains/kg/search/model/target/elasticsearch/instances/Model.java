@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 
@@ -30,6 +31,9 @@ public class Model {
     @JsonProperty("allfiles") //TODO: capitalize
     @FieldInfo(label = "Download model", isButton=true, termsOfUse=true)
     private List<TargetExternalReference> allFiles;
+
+    @FieldInfo(label = "Files", layout = FieldInfo.Layout.GROUP, termsOfUse = true)
+    private List<TargetFile> files;
 
     @FieldInfo(label = "Model format", layout = FieldInfo.Layout.SUMMARY, separator = "; ")
     private List<Value<String>> modelFormat;
@@ -292,5 +296,9 @@ public class Model {
     public void setType(Value<String> type) {
         this.type = type;
     }
+
+    public List<TargetFile> getFiles() { return files; }
+
+    public void setFiles(List<TargetFile> files) { this.files = files; }
 
 }

@@ -48,9 +48,17 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                 )).collect(Collectors.toList()));
         d.setDataDescriptor(new TargetExternalReference(datasetV1.getDataDescriptorURL(), datasetV1.getDataDescriptorURL()));
         d.setSpeciesFilter(datasetV1.getSpeciesFilter());
+
+        if (databaseScope == DatabaseScope.RELEASED) {
+            if (embargo != null && embargo.equals("Embargoed")) {
+                d.setEmbargo("This dataset is temporarily under embargo. The data will become available for download after the embargo period.");
+            } else if (embargo != null && embargo.equals("Under review")){
+                d.setEmbargo("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.");
+            }
+        }
         d.setEmbargoForFilter(datasetV1.getEmbargoForFilter().get(0));
 
-        if (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && (embargo != null && !embargo.equals("Embargoed") && !embargo.equals("Under review")))) {
+        if (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && (embargo == null || (!embargo.equals("Embargoed") && !embargo.equals("Under review"))))) {
             d.setFiles(datasetV1.getFiles().stream()
                     .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
                     .map(f ->

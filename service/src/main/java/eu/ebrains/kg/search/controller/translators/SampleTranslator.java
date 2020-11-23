@@ -64,7 +64,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                         )
                 ).collect(Collectors.toList()));
         String containerUrl = sample.getContainerUrl();
-        if (!embargo.equals("embargoed")) {
+        if (!embargo.equals("Embargoed")) {
             if (containerUrl.startsWith("https://object.cscs.ch")) {
                 s.setAllFiles(new TargetExternalReference(
                         String.format("https://kg.ebrains.eu/proxy/export?container=%s", containerUrl),
@@ -77,7 +77,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                 ));
             }
         }
-        if (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && !embargo.equals("Embargoed") && !embargo.equals("Under review"))) {
+        if (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && (embargo == null || (!embargo.equals("Embargoed") && !embargo.equals("Under review"))))) {
             s.setFiles(sample.getFiles().stream()
                     .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
                     .map(f ->
