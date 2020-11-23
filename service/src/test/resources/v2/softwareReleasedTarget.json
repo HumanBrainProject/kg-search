@@ -1,0 +1,62 @@
+{
+    "identifier": {
+        "value": "671a21a4-4a65-4e33-9622-e85457bef265"
+    },
+    "description": {
+        "value": "UNICORE is a set of server components that are installed at the resource provider site (e.g. JSC or CSCS) to provide a set of REST APIs for submiting and managing HPC jobs and related tasks like data access and data movement. UNICORE handles security aspects like federated authentication, user mapping and authorization."
+    },
+    "sourceCode": [
+        {
+            "url": "https://sourceforge.net/projects/unicore",
+            "value": "https://sourceforge.net/projects/unicore"
+        }
+    ],
+    "features": [
+        {
+            "value": "Commandline Interface"
+        },
+        {
+            "value": "Desktop Environment"
+        }
+    ],
+    "documentation": [
+        {
+            "url": "https://www.unicore.eu/documentation/",
+            "value": "https://www.unicore.eu/documentation/"
+        }
+    ],
+    "license": [
+        {
+            "value": "BSD"
+        }
+    ],
+    "operatingSystem": [
+        {
+            "value": "Linux"
+        },
+        {
+            "value": "MacOS"
+        }
+    ],
+    "version": {
+        "value": "8.0.0"
+    },
+    "homepage": [
+        {
+            "url": "https://www.unicore.eu",
+            "value": "https://www.unicore.eu"
+        }
+    ],
+    "title": {
+        "value": "Unicore"
+    },
+    "first_release": {
+        "value": "2020-08-25T08:58:36.542Z"
+    },
+    "last_release": {
+        "value": "2020-08-25T08:58:36.535Z"
+    },
+    "type": {
+        "value": "Software"
+    }
+}
