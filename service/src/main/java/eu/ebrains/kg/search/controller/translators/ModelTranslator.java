@@ -17,7 +17,9 @@ public class ModelTranslator implements Translator<ModelV2, Model>{
         Model m = new Model();
         String embargo = modelV2.getEmbargo().get(0);
         m.setIdentifier(modelV2.getIdentifier());
-        m.setEditorId(modelV2.getEditorId());
+        if (databaseScope == DatabaseScope.INFERRED) {
+            m.setEditorId(modelV2.getEditorId());
+        }
         m.setEmbargo(embargo.equals("embargoed") ? "This model is temporarily under embargo. The data will become available for download after the embargo period.":null);
         m.setProducedDataset(modelV2.getProducedDataset().stream()
                 .map(pd -> new TargetInternalReference(
@@ -49,21 +51,21 @@ public class ModelTranslator implements Translator<ModelV2, Model>{
         m.setLicenseInfo(new TargetExternalReference(license.getUrl(), license.getName()));
         m.setOwners(modelV2.getContributors().stream()
                 .map(o -> new TargetInternalReference(
-                        String.format("Contributor/%s", o.getIdentifier()),
+                        liveMode ? o.getRelativeUrl() : String.format("Contributor/%s", o.getIdentifier()),
                         o.getName(),
                         null
                 )).collect(Collectors.toList()));
         m.setAbstractionLevel(modelV2.getAbstractionLevel());
         m.setMainContact(modelV2.getMainContact().stream()
                 .map(mc -> new TargetInternalReference(
-                    String.format("Contributor/%s", mc.getIdentifier()),
+                        liveMode ? mc.getRelativeUrl() : String.format("Contributor/%s", mc.getIdentifier()),
                     mc.getName(),
                     null
                 )).collect(Collectors.toList()));
         m.setBrainStructures(modelV2.getBrainStructure());
         m.setUsedDataset(modelV2.getUsedDataset().stream()
                 .map(ud -> new TargetInternalReference(
-                        String.format("Dataset/%s", ud.getIdentifier()),
+                        liveMode ? ud.getRelativeUrl() : String.format("Dataset/%s", ud.getIdentifier()),
                         ud.getName(),
                         null
                 )).collect(Collectors.toList()));
@@ -84,7 +86,7 @@ public class ModelTranslator implements Translator<ModelV2, Model>{
         m.setTitle(modelV2.getTitle());
         m.setContributors(modelV2.getContributors().stream()
                 .map(c -> new TargetInternalReference(
-                        String.format("Contributor/%s", c.getIdentifier()),
+                        liveMode ? c.getRelativeUrl() : String.format("Contributor/%s", c.getIdentifier()),
                         c.getName(),
                         null
                 )).collect(Collectors.toList()));
