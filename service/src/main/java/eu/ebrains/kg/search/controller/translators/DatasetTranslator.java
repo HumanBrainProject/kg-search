@@ -18,13 +18,14 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
 
     public Dataset translate(DatasetV1 datasetV1, DatabaseScope databaseScope, boolean liveMode) {
         Dataset d = new Dataset();
-        String embargo = datasetV1.getEmbargo().get(0);
+        String embargo = datasetV1.getEmbargo().isEmpty() ? null:datasetV1.getEmbargo().get(0);
         String containerUrl = datasetV1.getContainerUrl();
         Boolean containerUrlAsZIP = datasetV1.getContainerUrlAsZIP();
         List<SourceFile> files = datasetV1.getFiles();
-        if (!embargo.equals("Embargoed") &&
-                !embargo.equals("Under review") &&
-                (!containerUrl.isEmpty() && (containerUrlAsZIP || !files.isEmpty()))) {
+        if (embargo != null &&
+                !embargo.equals("Embargoed") &&
+                    !embargo.equals("Under review") &&
+                        (!containerUrl.isEmpty() && (containerUrlAsZIP || !files.isEmpty()))) {
             d.setZip(new TargetExternalReference(
                     String.format("https://kg.ebrains.eu/proxy/export?container=%s", containerUrl),
                     "Download all related data as ZIP"
@@ -49,7 +50,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         d.setSpeciesFilter(datasetV1.getSpeciesFilter());
         d.setEmbargoForFilter(datasetV1.getEmbargoForFilter().get(0));
 
-        if (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && !embargo.equals("Embargoed") && !embargo.equals("Under review"))) {
+        if (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && (embargo != null && !embargo.equals("Embargoed") && !embargo.equals("Under review")))) {
             d.setFiles(datasetV1.getFiles().stream()
                     .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
                     .map(f ->
