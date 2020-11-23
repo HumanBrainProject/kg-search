@@ -14,8 +14,9 @@ public class SoftwareTranslator implements Translator<SoftwareV2, Software> {
         Software s = new Software();
         softwareV2.getVersions().sort(Comparator.comparing(SoftwareV2.Version::getVersion).reversed());
         SoftwareV2.Version version = softwareV2.getVersions().get(0);
-
-        s.setEditorId(softwareV2.getEditorId());
+        if (databaseScope == DatabaseScope.INFERRED) {
+            s.setEditorId(softwareV2.getEditorId());
+        }
         s.setAppCategory(version.getApplicationCategory());
         s.setIdentifier(softwareV2.getIdentifier());
         s.setTitle(softwareV2.getTitle());
