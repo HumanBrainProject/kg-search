@@ -20,7 +20,9 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
         s.setLastRelease(sample.getLastReleaseAt());
         s.setIdentifier(sample.getIdentifier());
         s.setDatasetExists(sample.getDatasetExists());
-        s.setEditorId(sample.getEditorId());
+        if (databaseScope == DatabaseScope.INFERRED) {
+            s.setEditorId(sample.getEditorId());
+        }
         s.setParcellationAtlas(sample.getParcellationAtlas());
         s.setWeightPreFixation(sample.getWeightPreFixation());
         s.setMethods(sample.getMethods());
@@ -39,7 +41,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                                 d.getInstances().stream()
                                         .map(i ->
                                                 new TargetInternalReference(
-                                                        String.format("Dataset/%s", i.getIdentifier()),
+                                                        liveMode ? i.getRelativeUrl() : String.format("Dataset/%s", i.getIdentifier()),
                                                         i.getName(), null)
                                         ).collect(Collectors.toList())
                         )
@@ -48,7 +50,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                 .map(d ->
                         new Sample.Subject(
                                 new TargetInternalReference(
-                                        false ? d.getRelativeUrl() : String.format("Subject/%s", d.getIdentifier()), // TODO: replace false by isLive
+                                        liveMode ? d.getRelativeUrl() : String.format("Subject/%s", d.getIdentifier()),
                                         d.getName(),
                                         null
                                 ),
