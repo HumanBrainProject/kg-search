@@ -49,7 +49,6 @@
   "allfiles": [
     {
       "url": "https://kg.ebrains.eu/proxy/export?container=https://object.cscs.ch/v1/AUTH_c0a333ecf7c045809321ce9d9ecdfdea/Migliore_2018_CA1/",
-      "detail": "###HBP Knowledge Graph Data Platform Citation Requirements",
       "value": "download all related data as ZIP"
     }
   ],
@@ -72,9 +71,6 @@
       "value": "Alexander, Daniel C."
     }
   ],
-  "editorId": {
-    "value": "uniminds/core/modelinstance/v1.0.0/2d5ecf4a-2962-4a04-a42d-4a680664bea0"
-  },
   "last_release": null,
   "cellularTarget": [
     {

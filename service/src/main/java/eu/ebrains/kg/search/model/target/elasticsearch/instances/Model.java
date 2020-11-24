@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@MetaInfo(name="Model", identifier = "uniminds/core/modelinstance/v1.0.0/search", order=5)
+@MetaInfo(name = "Model", identifier = "uniminds/core/modelinstance/v1.0.0/search", order = 5)
 public class Model {
     private Value<String> type = new Value<>("Model");
 
@@ -29,7 +29,7 @@ public class Model {
     private List<TargetInternalReference> producedDataset;
 
     @JsonProperty("allfiles") //TODO: capitalize
-    @FieldInfo(label = "Download model", isButton=true, termsOfUse=true)
+    @FieldInfo(label = "Download model", isButton = true, termsOfUse = true)
     private List<TargetExternalReference> allFiles;
 
     @FieldInfo(label = "Files", layout = FieldInfo.Layout.GROUP, termsOfUse = true)
@@ -42,7 +42,7 @@ public class Model {
     private Value<String> description;
 
     @JsonProperty("license_info")
-    @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder= FieldInfo.FacetOrder.BYVALUE)
+    @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)
     private TargetExternalReference licenseInfo;
 
     @FieldInfo(label = "Custodian", layout = FieldInfo.Layout.SUMMARY, separator = "; ", type = FieldInfo.Type.TEXT, hint = "A custodian is the person responsible for the data bundle.")
@@ -82,67 +82,79 @@ public class Model {
     private List<Value<String>> cellularTarget;
 
     @JsonProperty("first_release")
-    @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
+    @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private Value<Date> firstRelease;
 
     @JsonProperty("last_release")
-    @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
+    @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private Value<Date> lastRelease;
 
     public void setType(String type) {
-        setType(type!=null ? new Value<>(type) : null);
+        setType(type != null ? new Value<>(type) : null);
     }
 
     public void setIdentifier(String identifier) {
-        setIdentifier(identifier!=null ? new Value<>(identifier) : null);
+        setIdentifier(identifier != null ? new Value<>(identifier) : null);
     }
 
     public void setEditorId(String editorId) {
-        setEditorId(editorId!=null ? new Value<>(editorId) : null);
+        setEditorId(editorId != null ? new Value<>(editorId) : null);
     }
 
     public void setEmbargo(String embargo) {
-        setEmbargo(embargo!=null ? new Value<>(embargo) : null);
+        setEmbargo(embargo != null ? new Value<>(embargo) : null);
     }
 
     public void setDescription(String description) {
-        setDescription(description!=null ? new Value<>(description) : null);
+        setDescription(description != null ? new Value<>(description) : null);
     }
 
     public void setVersion(String version) {
-        setVersion(version!=null ? new Value<>(version) : null);
+        setVersion(version != null ? new Value<>(version) : null);
     }
 
     public void setTitle(String title) {
-        setTitle(title!=null ? new Value<>(title) : null);
+        setTitle(title != null ? new Value<>(title) : null);
     }
 
     public void setFirstRelease(Date firstRelease) {
-        setFirstRelease(firstRelease!=null ? new Value<>(firstRelease) : null);
+        setFirstRelease(firstRelease != null ? new Value<>(firstRelease) : null);
     }
 
     public void setLastRelease(Date lastRelease) {
-        setLastRelease(lastRelease!=null ? new Value<>(lastRelease) : null);
+        setLastRelease(lastRelease != null ? new Value<>(lastRelease) : null);
     }
 
-    public Value<String> getIdentifier() { return identifier; }
+    public Value<String> getIdentifier() {
+        return identifier;
+    }
 
-    public void setIdentifier(Value<String> identifier) { this.identifier = identifier; }
+    public void setIdentifier(Value<String> identifier) {
+        this.identifier = identifier;
+    }
 
-    public Value<String> getEditorId() { return editorId; }
+    public Value<String> getEditorId() {
+        return editorId;
+    }
 
-    public void setEditorId(Value<String> editorId) { this.editorId = editorId; }
+    public void setEditorId(Value<String> editorId) {
+        this.editorId = editorId;
+    }
 
-    public Value<String> getEmbargo() { return embargo; }
+    public Value<String> getEmbargo() {
+        return embargo;
+    }
 
-    public void setEmbargo(Value<String> embargo) { this.embargo = embargo; }
+    public void setEmbargo(Value<String> embargo) {
+        this.embargo = embargo;
+    }
 
     public List<TargetInternalReference> getProducedDataset() {
         return producedDataset;
     }
 
     public void setProducedDataset(List<TargetInternalReference> producedDataset) {
-        this.producedDataset = producedDataset;
+        this.producedDataset = producedDataset.isEmpty() ? null : producedDataset; // TODO: Should we completely skip the value if it is null ?
     }
 
     public List<TargetExternalReference> getAllFiles() {
@@ -158,7 +170,7 @@ public class Model {
     }
 
     public void setModelFormat(List<String> modelFormat) {
-        this.modelFormat = modelFormat != null? modelFormat.stream().map(Value::new).collect(Collectors.toList()) : null;
+        this.modelFormat = modelFormat != null ? modelFormat.stream().map(Value::new).collect(Collectors.toList()) : null;
     }
 
     public Value<String> getDescription() {
@@ -190,7 +202,7 @@ public class Model {
     }
 
     public void setAbstractionLevel(List<String> abstractionLevel) {
-        this.abstractionLevel = abstractionLevel != null ? abstractionLevel.stream().map(Value::new).collect(Collectors.toList()):null;
+        this.abstractionLevel = abstractionLevel != null ? abstractionLevel.stream().map(Value::new).collect(Collectors.toList()) : null;
     }
 
     public List<TargetInternalReference> getMainContact() {
@@ -206,7 +218,7 @@ public class Model {
     }
 
     public void setBrainStructures(List<String> brainStructures) {
-        this.brainStructures = brainStructures != null?brainStructures.stream().map(Value::new).collect(Collectors.toList()):null;
+        this.brainStructures = brainStructures != null ? brainStructures.stream().map(Value::new).collect(Collectors.toList()) : null;
     }
 
     public List<TargetInternalReference> getUsedDataset() {
@@ -214,7 +226,7 @@ public class Model {
     }
 
     public void setUsedDataset(List<TargetInternalReference> usedDataset) {
-        this.usedDataset = usedDataset;
+        this.usedDataset = usedDataset.isEmpty() ? null : usedDataset;
     }
 
     public Value<String> getVersion() {
@@ -230,7 +242,7 @@ public class Model {
     }
 
     public void setPublications(List<String> publications) {
-        this.publications = publications;
+        this.publications = publications.isEmpty() ? null : publications;
     }
 
     public List<Value<String>> getStudyTarget() {
@@ -238,7 +250,7 @@ public class Model {
     }
 
     public void setStudyTarget(List<String> studyTarget) {
-        this.studyTarget = studyTarget != null ? studyTarget.stream().map(Value::new).collect(Collectors.toList()):null;
+        this.studyTarget = studyTarget != null ? studyTarget.stream().map(Value::new).collect(Collectors.toList()) : null;
     }
 
     public List<Value<String>> getModelScope() {
@@ -246,7 +258,7 @@ public class Model {
     }
 
     public void setModelScope(List<String> modelScope) {
-        this.modelScope = modelScope != null ? modelScope.stream().map(Value::new).collect(Collectors.toList()):null;
+        this.modelScope = modelScope != null ? modelScope.stream().map(Value::new).collect(Collectors.toList()) : null;
     }
 
     public Value<String> getTitle() {
@@ -270,7 +282,8 @@ public class Model {
     }
 
     public void setCellularTarget(List<String> cellularTarget) {
-        this.cellularTarget = cellularTarget != null ? cellularTarget.stream().map(Value::new).collect(Collectors.toList()):null;;
+        this.cellularTarget = cellularTarget != null ? cellularTarget.stream().map(Value::new).collect(Collectors.toList()) : null;
+        ;
     }
 
     public Value<Date> getFirstRelease() {
@@ -297,8 +310,12 @@ public class Model {
         this.type = type;
     }
 
-    public List<TargetFile> getFiles() { return files; }
+    public List<TargetFile> getFiles() {
+        return files;
+    }
 
-    public void setFiles(List<TargetFile> files) { this.files = files; }
+    public void setFiles(List<TargetFile> files) {
+        this.files = files;
+    }
 
 }
