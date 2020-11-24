@@ -1,0 +1,26 @@
+{
+  "address": null,
+  "firstReleaseAt": "2020-02-15T14:07:09.749Z",
+  "lastReleaseAt": "2020-02-15T14:07:09.741Z",
+  "title": "Wolff, Audrey",
+  "custodianOf": [],
+  "modelContributions": [],
+  "phone": null,
+  "editorId": "minds/core/person/v1.0.0/faf8d0c8-793e-464c-b49d-f78786d3b417",
+  "description": null,
+  "contributions": [
+    {
+      "relativeUrl": "minds/core/dataset/v1.0.0/ab2d4db0-4c97-442c-82f9-a3dade301e9f",
+      "datasetComponent": [
+        "Develop and compare methods for assessing consciousness (anaesthesia, sleep, DOC)"
+      ],
+      "name": "TMS-EEG perturbation in patients with disorders of consciousness",
+      "identifier": "ab2d4db0-4c97-442c-82f9-a3dade301e9f"
+    }
+  ],
+  "organizations": [],
+  "publications": [],
+  "custodianOfModel": [],
+  "identifier": "faf8d0c8-793e-464c-b49d-f78786d3b417",
+  "email": null
+}
