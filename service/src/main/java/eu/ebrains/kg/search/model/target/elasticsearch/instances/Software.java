@@ -81,13 +81,6 @@ public class Software {
         setDescription(description!=null ? new Value<>(description) : null);
     }
 
-    public void setFirstRelease(Date firstRelease) {
-        setFirstRelease(firstRelease!=null ? new ISODateValue(firstRelease) : null);
-    }
-
-    public void setLastRelease(Date lastRelease) {
-        setLastRelease(lastRelease!=null ? new ISODateValue(lastRelease) : null);
-    }
     public Value<String> getEditorId() {
         return editorId;
     }
@@ -186,7 +179,6 @@ public class Software {
     public void setTitle(Value<String> title) {
         this.title = title;
     }
-
     public ISODateValue getFirstRelease() {
         return firstRelease;
     }
@@ -195,12 +187,20 @@ public class Software {
         this.firstRelease = firstRelease;
     }
 
+    public void setFirstRelease(Date firstRelease) {
+        this.setFirstRelease(firstRelease != null ? new ISODateValue(firstRelease) : null);
+    }
+
     public ISODateValue getLastRelease() {
         return lastRelease;
     }
 
     public void setLastRelease(ISODateValue lastRelease) {
         this.lastRelease = lastRelease;
+    }
+
+    public void setLastRelease(Date lastRelease) {
+        this.setLastRelease(lastRelease != null ? new ISODateValue(lastRelease) : null);
     }
 
     public Value<String> getType() {

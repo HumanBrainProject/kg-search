@@ -55,11 +55,11 @@ public class Sample {
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
-    private Value<Date> firstRelease;
+    private ISODateValue firstRelease;
 
     @JsonProperty("last_release")
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
-    private Value<Date> lastRelease;
+    private ISODateValue lastRelease;
 
     public void setType(String type) {
         setType(type!=null ? new Value<>(type) : null);
@@ -75,14 +75,6 @@ public class Sample {
 
     public void setTitle(String title){
         setTitle(title!=null ? new Value<>(title) : null);
-    }
-
-    public void setFirstRelease(Date firstRelease){
-        setFirstRelease(firstRelease!=null ? new Value<>(firstRelease) : null);
-    }
-
-    public void setLastRelease(Date lastRelease){
-        setLastRelease(lastRelease!=null ? new Value<>(lastRelease) : null);
     }
 
     public Value<String> getType() { return type; }
@@ -157,13 +149,29 @@ public class Sample {
         this.datasets = datasets!=null ? datasets.stream().map(value -> new Children<>(value)).collect(Collectors.toList()) : null;
     }
 
-    public Value<Date> getFirstRelease() { return firstRelease; }
+    public ISODateValue getFirstRelease() {
+        return firstRelease;
+    }
 
-    public void setFirstRelease(Value<Date> firstRelease) { this.firstRelease = firstRelease; }
+    public void setFirstRelease(ISODateValue firstRelease) {
+        this.firstRelease = firstRelease;
+    }
 
-    public Value<Date> getLastRelease() { return lastRelease; }
+    public void setFirstRelease(Date firstRelease) {
+        this.setFirstRelease(firstRelease != null ? new ISODateValue(firstRelease) : null);
+    }
 
-    public void setLastRelease(Value<Date> lastRelease) { this.lastRelease = lastRelease; }
+    public ISODateValue getLastRelease() {
+        return lastRelease;
+    }
+
+    public void setLastRelease(ISODateValue lastRelease) {
+        this.lastRelease = lastRelease;
+    }
+
+    public void setLastRelease(Date lastRelease) {
+        this.setLastRelease(lastRelease != null ? new ISODateValue(lastRelease) : null);
+    }
 
     public static class Dataset {
         public Dataset() {}

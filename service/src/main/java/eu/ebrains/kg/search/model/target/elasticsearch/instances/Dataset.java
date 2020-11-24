@@ -125,14 +125,6 @@ public class Dataset {
         setDescription(description != null ? new Value<>(description) : null);
     }
 
-    public void setFirstRelease(Date firstRelease) {
-        setFirstRelease(firstRelease != null ? new ISODateValue(firstRelease) : null);
-    }
-
-    public void setLastRelease(Date lastRelease) {
-        setLastRelease(lastRelease != null ? new ISODateValue(lastRelease) : null);
-    }
-
     public List<TargetExternalReference> getExternalDatalink() {
         return externalDatalink;
     }
@@ -386,12 +378,20 @@ public class Dataset {
         this.firstRelease = firstRelease;
     }
 
+    public void setFirstRelease(Date firstRelease) {
+        this.setFirstRelease(firstRelease != null ? new ISODateValue(firstRelease) : null);
+    }
+
     public ISODateValue getLastRelease() {
         return lastRelease;
     }
 
     public void setLastRelease(ISODateValue lastRelease) {
         this.lastRelease = lastRelease;
+    }
+
+    public void setLastRelease(Date lastRelease) {
+        this.setLastRelease(lastRelease != null ? new ISODateValue(lastRelease) : null);
     }
 
 

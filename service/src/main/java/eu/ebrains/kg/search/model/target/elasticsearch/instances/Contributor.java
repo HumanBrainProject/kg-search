@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ISODateValue;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
@@ -43,11 +44,11 @@ public class Contributor {
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
-    private Value<Date> firstRelease;
+    private ISODateValue firstRelease;
 
     @JsonProperty("last_release")
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
-    private Value<Date> lastRelease;
+    private ISODateValue lastRelease;
 
     public void setType(String type) {
         setType(type!=null ? new Value<>(type) : null);
@@ -63,14 +64,6 @@ public class Contributor {
 
     public void setTitle(String title){
         setTitle(title!=null ? new Value<>(title) : null);
-    }
-
-    public void setFirstRelease(Date firstRelease){
-        setFirstRelease(firstRelease!=null ? new Value<>(firstRelease) : null);
-    }
-
-    public void setLastRelease(Date lastRelease){
-        setLastRelease(lastRelease!=null ? new Value<>(lastRelease) : null);
     }
 
     public Value<String> getIdentifier() {
@@ -105,20 +98,28 @@ public class Contributor {
         this.publications = (publications == null || publications.isEmpty())? null : publications.stream().map(Value::new).collect(Collectors.toList());
     }
 
-    public Value<Date> getFirstRelease() {
+    public ISODateValue getFirstRelease() {
         return firstRelease;
     }
 
-    public void setFirstRelease(Value<Date> firstRelease) {
+    public void setFirstRelease(ISODateValue firstRelease) {
         this.firstRelease = firstRelease;
     }
 
-    public Value<Date> getLastRelease() {
+    public void setFirstRelease(Date firstRelease) {
+        this.setFirstRelease(firstRelease != null ? new ISODateValue(firstRelease) : null);
+    }
+
+    public ISODateValue getLastRelease() {
         return lastRelease;
     }
 
-    public void setLastRelease(Value<Date> lastRelease) {
+    public void setLastRelease(ISODateValue lastRelease) {
         this.lastRelease = lastRelease;
+    }
+
+    public void setLastRelease(Date lastRelease) {
+        this.setLastRelease(lastRelease != null ? new ISODateValue(lastRelease) : null);
     }
 
     public List<TargetInternalReference> getCustodianOf() {
