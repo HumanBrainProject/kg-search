@@ -120,12 +120,20 @@ public class Project {
         this.firstRelease = firstRelease;
     }
 
+    public void setFirstRelease(Date firstRelease) {
+        this.setFirstRelease(firstRelease != null ? new ISODateValue(firstRelease) : null);
+    }
+
     public ISODateValue getLastRelease() {
         return lastRelease;
     }
 
     public void setLastRelease(ISODateValue lastRelease) {
         this.lastRelease = lastRelease;
+    }
+
+    public void setLastRelease(Date lastRelease) {
+        this.setLastRelease(lastRelease != null ? new ISODateValue(lastRelease) : null);
     }
 
     public Value<String> getEditorId() {
