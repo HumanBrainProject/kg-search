@@ -1,20 +1,15 @@
 package eu.ebrains.kg.search.controller.utils;
 
-import eu.ebrains.kg.search.controller.translators.ContributorTranslator;
-import eu.ebrains.kg.search.controller.translators.DatasetTranslator;
-import eu.ebrains.kg.search.controller.translators.ModelTranslator;
-import eu.ebrains.kg.search.controller.translators.SoftwareTranslator;
+import eu.ebrains.kg.search.controller.translators.*;
 import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.source.PersonSources;
 import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
 import eu.ebrains.kg.search.model.source.openMINDSv1.PersonV1;
+import eu.ebrains.kg.search.model.source.openMINDSv1.ProjectV1;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.PersonV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.Contributor;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.Model;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.Software;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,19 +66,29 @@ public class TranslatorTestHelper {
         return compareResults(targetExpected, targetResult);
     }
 
-    public static List<String> compareSoftware(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
-        SoftwareTranslator translator = new SoftwareTranslator();
-        // Given
-        SoftwareV2 source = jsonAdapter.fromJson(sourceJson, SoftwareV2.class);
+    public static List<String> compareProject(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
+        ProjectTranslator translator = new ProjectTranslator();
 
+        ProjectV1 source = jsonAdapter.fromJson(sourceJson, ProjectV1.class);
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
 
-        //When
+        Project target = translator.translate(source, databaseScope, liveMode);
+        String targetJson = jsonAdapter.toJson(target);
+        Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
+
+        return compareResults(targetExpected, targetResult);
+    }
+
+    public static List<String> compareSoftware(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
+        SoftwareTranslator translator = new SoftwareTranslator();
+
+        SoftwareV2 source = jsonAdapter.fromJson(sourceJson, SoftwareV2.class);
+        Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
+
         Software target = translator.translate(source, databaseScope, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
 
-        //Then
         return compareResults(targetExpected, targetResult);
     }
 
