@@ -73,8 +73,12 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
         m.setDescription(modelV2.getDescription());
 
         if(modelV2.getLicense() != null) {
-            SourceExternalReference license = modelV2.getLicense().get(0);
-            m.setLicenseInfo(new TargetExternalReference(license.getUrl(), license.getName()));
+            SourceExternalReference license = modelV2.getLicense().isEmpty()?null:modelV2.getLicense().get(0);
+            if(license == null) {
+                m.setLicenseInfo(null); // TODO: Remove null values from target
+            } else {
+                m.setLicenseInfo(new TargetExternalReference(license.getUrl(), license.getName()));
+            }
         }
         m.setOwners(modelV2.getCustodian().stream()
                 .map(o -> new TargetInternalReference(
