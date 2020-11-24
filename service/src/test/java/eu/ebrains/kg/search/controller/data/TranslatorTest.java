@@ -76,4 +76,13 @@ public class TranslatorTest {
         }
     }
 
+    @Test
+    public void compareInferredSoftware() throws IOException {
+
+    }
+
+    @Test
+    public void compareInferredLiveSoftware() throws IOException {
+
+    }
 }
