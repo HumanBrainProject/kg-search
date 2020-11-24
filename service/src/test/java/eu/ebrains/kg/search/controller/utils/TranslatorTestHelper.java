@@ -3,9 +3,7 @@ package eu.ebrains.kg.search.controller.utils;
 import eu.ebrains.kg.search.controller.translators.*;
 import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.source.PersonSources;
-import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
-import eu.ebrains.kg.search.model.source.openMINDSv1.PersonV1;
-import eu.ebrains.kg.search.model.source.openMINDSv1.ProjectV1;
+import eu.ebrains.kg.search.model.source.openMINDSv1.*;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.PersonV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
@@ -60,6 +58,32 @@ public class TranslatorTestHelper {
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
 
         Model target = translator.translate(source, databaseScope, liveMode);
+        String targetJson = jsonAdapter.toJson(target);
+        Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
+
+        return compareResults(targetExpected, targetResult);
+    }
+
+    public static List<String> compareSubject(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
+        SubjectTranslator translator = new SubjectTranslator();
+
+        SubjectV1 source = jsonAdapter.fromJson(sourceJson, SubjectV1.class);
+        Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
+
+        Subject target = translator.translate(source, databaseScope, liveMode);
+        String targetJson = jsonAdapter.toJson(target);
+        Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
+
+        return compareResults(targetExpected, targetResult);
+    }
+
+    public static List<String> compareSample(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
+        SampleTranslator translator = new SampleTranslator();
+
+        SampleV1 source = jsonAdapter.fromJson(sourceJson, SampleV1.class);
+        Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
+
+        Sample target = translator.translate(source, databaseScope, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
 
