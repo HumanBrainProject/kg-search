@@ -1,0 +1,35 @@
+{
+  "weight": "32 gram",
+  "firstReleaseAt": null,
+  "genotype": "C57BL/6J-Tg(Thy1-GCaMP6f)GP5.17Dkim/J",
+  "lastReleaseAt": null,
+  "strain": "C57BL/6",
+  "datasets": [],
+  "title": "GCaMP26",
+  "samples": [
+    {
+      "relativeUrl": "minds/experiment/sample/v1.0.0/c28ee949-9aab-4aef-8a8b-83b0a7dff24a",
+      "name": "GCaMP26.post-stroke",
+      "identifier": "0f1c43bee43f2e06ab4e5d779b258ce5"
+    },
+    {
+      "relativeUrl": "minds/experiment/sample/v1.0.0/871b11ba-dc4e-4deb-b257-35e4a9130c2e",
+      "name": "GCaMP26.pre-stroke",
+      "identifier": "18d1404ea707b89339d5314b19979449"
+    }
+  ],
+  "editorId": "minds/experiment/subject/v1.0.0/b649ed57-6160-4e0e-990a-96d98249c2b8",
+  "age": "7 month",
+  "agecategory": [
+    "Adult"
+  ],
+  "datasetExists": [],
+  "strains": "C57BL/6J",
+  "species": [
+    "Mus musculus"
+  ],
+  "sex": [
+    "Male"
+  ],
+  "identifier": "33ad6ebf462b9d53009b0e7e4cf82d8b"
+}
