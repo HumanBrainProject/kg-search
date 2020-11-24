@@ -41,6 +41,5 @@ public class ModelTranslatorTest {
         if (!result.isEmpty()) {
             Assert.fail("\n\t" + String.join("\n\t", result));
         }
-
     }
 }

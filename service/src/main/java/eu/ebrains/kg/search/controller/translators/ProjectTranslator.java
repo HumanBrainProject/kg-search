@@ -28,9 +28,9 @@ public class ProjectTranslator implements Translator<ProjectV1, Project> {
                     String publicationResult = "";
                     if (publication.getCitation() != null && publication.getDoi() != null) {
                         String url = URLEncoder.encode(publication.getDoi(), StandardCharsets.UTF_8);
-                        publicationResult = publication.getCitation() + "\n" + String.format("[DOI: %s]\\n[DOI: %s]: https://doi.org/%s\"", publication.getDoi(), publication.getDoi(), url);
+                        publicationResult = publication.getCitation() + "\n" + String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
                     } else if (publication.getCitation() != null && publication.getDoi() == null) {
-                        publicationResult = publication.getCitation() + "\n" + "[DOI: null]\\n[DOI: null]: https://doi.org/null\"";
+                        publicationResult = publication.getCitation() + "\n" + "[DOI: null]\n[DOI: null]: https://doi.org/null";
                     } else {
                         publicationResult = publication.getDoi();
                     }
