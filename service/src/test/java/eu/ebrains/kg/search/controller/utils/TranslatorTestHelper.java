@@ -28,16 +28,20 @@ public class TranslatorTestHelper {
 
         PersonSources sources = new PersonSources();
 
-        String sourceJsonV1 = sourcesJson.get(0);
-        if (sourceJsonV1 != null) {
-            PersonV1 source = jsonAdapter.fromJson(sourceJsonV1, PersonV1.class);
-            sources.setPersonV1(source);
+        if (sourcesJson.size() >= 1) {
+            String sourceJsonV1 = sourcesJson.get(0);
+            if (sourceJsonV1 != null) {
+                PersonV1 source = jsonAdapter.fromJson(sourceJsonV1, PersonV1.class);
+                sources.setPersonV1(source);
+            }
         }
 
-        String sourceJsonV2 = sourcesJson.get(1);
-        if (sourceJsonV2 != null) {
-            PersonV2 source = jsonAdapter.fromJson(sourceJsonV2, PersonV2.class);
-            sources.setPersonV2(source);
+        if (sourcesJson.size() >= 2) {
+            String sourceJsonV2 = sourcesJson.get(1);
+            if (sourceJsonV2 != null) {
+                PersonV2 source = jsonAdapter.fromJson(sourceJsonV2, PersonV2.class);
+                sources.setPersonV2(source);
+            }
         }
 
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
