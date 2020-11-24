@@ -2,6 +2,7 @@ package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ISODateValue;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @MetaInfo(name="Contributor", identifier = "uniminds/core/person/v1.0.0/search", order=6)
 public class Contributor {
 
+    @ElasticSearchInfo(mapping = false)
     private Value<String> type = new Value<>("Contributor");
 
     @FieldInfo(visible = false)
@@ -87,7 +89,7 @@ public class Contributor {
     }
 
     public void setCustodianOfModel(List<TargetInternalReference> custodianOfModel) {
-        this.custodianOfModel = (custodianOfModel == null || custodianOfModel.isEmpty())? null : custodianOfModel;
+        this.custodianOfModel = custodianOfModel;
     }
 
     public List<Value<String>> getPublications() {
@@ -95,7 +97,7 @@ public class Contributor {
     }
 
     public void setPublications(List<String> publications) {
-        this.publications = (publications == null || publications.isEmpty())? null : publications.stream().map(Value::new).collect(Collectors.toList());
+        this.publications = publications != null ? publications.stream().map(Value::new).collect(Collectors.toList()):null;
     }
 
     public ISODateValue getFirstRelease() {
@@ -127,7 +129,7 @@ public class Contributor {
     }
 
     public void setCustodianOf(List<TargetInternalReference> custodianOf) {
-        this.custodianOf = (custodianOf == null || custodianOf.isEmpty())? null : custodianOf;
+        this.custodianOf = custodianOf;
     }
 
     public List<TargetInternalReference> getContributions() {
@@ -135,7 +137,7 @@ public class Contributor {
     }
 
     public void setContributions(List<TargetInternalReference> contributions) {
-        this.contributions = (contributions == null || contributions.isEmpty())? null : contributions;
+        this.contributions = contributions;
     }
 
     public List<TargetInternalReference> getModelContributions() {
@@ -143,7 +145,7 @@ public class Contributor {
     }
 
     public void setModelContributions(List<TargetInternalReference> modelContributions) {
-        this.modelContributions = (modelContributions == null || modelContributions.isEmpty())? null : modelContributions;
+        this.modelContributions = modelContributions;
     }
 
     public Value<String> getTitle() {

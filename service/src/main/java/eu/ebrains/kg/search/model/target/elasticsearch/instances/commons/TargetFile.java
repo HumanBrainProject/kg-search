@@ -1,5 +1,6 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances.commons;
 
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 public class TargetFile {
@@ -21,8 +22,11 @@ public class TargetFile {
         this.thumbnailUrl = thumbnailUrl;
     }
 
+
+    @ElasticSearchInfo(ignoreAbove = 256)
     private String url;
     private String value;
+    @ElasticSearchInfo(ignoreAbove = 256)
     private String fileSize;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private FileImage staticImageUrl;
@@ -67,6 +71,7 @@ public class TargetFile {
             this.isAnimated = isAnimated;
         }
         private Boolean isAnimated;
+        @ElasticSearchInfo(ignoreAbove = 256)
         private String url;
 
         public Boolean getAnimated() { return isAnimated; }

@@ -1,5 +1,6 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances.commons;
 
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 public class TargetInternalReference {
@@ -22,6 +23,7 @@ public class TargetInternalReference {
 
     private String value;
 
+    @ElasticSearchInfo(ignoreAbove = 256)
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String uuid;
 

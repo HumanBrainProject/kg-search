@@ -1,5 +1,7 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances.commons;
 
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
+
 public class TargetExternalReference {
 
     public TargetExternalReference() {}
@@ -9,6 +11,7 @@ public class TargetExternalReference {
         this.value = value;
     }
 
+    @ElasticSearchInfo(ignoreAbove = 256)
     private String url;
     private String value;
 

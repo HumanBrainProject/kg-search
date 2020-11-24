@@ -2,6 +2,7 @@ package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ISODateValue;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 
 @MetaInfo(name="Software", identifier = "softwarecatalog/software/softwareproject/v1.0.0/search", order=6)
 public class Software {
-
+    @ElasticSearchInfo(mapping = false)
     private Value<String> type = new Value<>("Software");
 
     @FieldInfo(layout = FieldInfo.Layout.HEADER)

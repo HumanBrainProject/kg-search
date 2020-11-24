@@ -56,13 +56,13 @@ public class LabelsController {
             ribbonInfo_result.put(SEARCH_UI_NAMESPACE + "icon", ribbonInfo.icon());
             result.put(SEARCH_UI_NAMESPACE + "ribbon", ribbonInfo_result);
         }
-        List<Field> allFields = utils.getAllFields(clazz);
+        List<MetaModelUtils.FieldWithGenericTypeInfo> allFields = utils.getAllFields(clazz);
         Map<String, Object> fields = new LinkedHashMap<>();
         result.put("fields", fields);
         allFields.stream().forEach(f -> {
-            FieldInfo info = f.getAnnotation(FieldInfo.class);
+            FieldInfo info = f.getField().getAnnotation(FieldInfo.class);
             if (info != null) {
-                String propertyName = utils.getPropertyName(f);
+                String propertyName = utils.getPropertyName(f.getField());
                 Map<String, Object> propertyDefinition = new HashMap<>();
                 fields.put(propertyName, propertyDefinition);
                 FieldInfo defaultFieldInfo = utils.defaultFieldInfo();
