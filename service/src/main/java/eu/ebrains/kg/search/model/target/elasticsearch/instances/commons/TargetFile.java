@@ -1,5 +1,7 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances.commons;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 public class TargetFile {
     public TargetFile() {
     }
@@ -22,8 +24,11 @@ public class TargetFile {
     private String url;
     private String value;
     private String fileSize;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private FileImage staticImageUrl;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private FileImage previewUrl;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private FileImage thumbnailUrl;
 
     public String getFileSize() { return fileSize; }

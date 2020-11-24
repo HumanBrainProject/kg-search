@@ -25,6 +25,7 @@ public class DatasetV1 {
     private List<String> speciesFilter;
     private Date firstReleaseAt;
     private List<String> citation;
+    @JsonProperty("brainviewer")
     private List<SourceExternalReference> brainViewer;
     private List<String> preparation;
     private String title;

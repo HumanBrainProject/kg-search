@@ -49,7 +49,8 @@ public class Subject {
     private List<String> sex;
     private String name;
     private String identifier;
-    // private List<String> experimentMethod; TODO: is this used?? 
+    @JsonProperty("experimentmethod")
+    private List<String> experimentMethod; // TODO: is this used??
 
     public List<SourceInternalReference> getSamples() { return samples; }
 
@@ -100,4 +101,9 @@ public class Subject {
     public String getIdentifier() { return identifier; }
 
     public void setIdentifier(String identifier) { this.identifier = identifier; }
+
+    public List<String> getExperimentMethod() { return experimentMethod; }
+
+    public void setExperimentMethod(List<String> experimentMethod) { this.experimentMethod = experimentMethod; }
+
 }

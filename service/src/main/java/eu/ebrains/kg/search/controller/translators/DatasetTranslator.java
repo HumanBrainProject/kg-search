@@ -18,14 +18,14 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
 
     public Dataset translate(DatasetV1 datasetV1, DatabaseScope databaseScope, boolean liveMode) {
         Dataset d = new Dataset();
-        String embargo = datasetV1.getEmbargo().isEmpty() ? null:datasetV1.getEmbargo().get(0);
+        String embargo = datasetV1.getEmbargo().isEmpty() ? null : datasetV1.getEmbargo().get(0);
         String containerUrl = datasetV1.getContainerUrl();
         Boolean containerUrlAsZIP = datasetV1.getContainerUrlAsZIP();
         List<SourceFile> files = datasetV1.getFiles();
         if (embargo != null &&
                 !embargo.equals("Embargoed") &&
-                    !embargo.equals("Under review") &&
-                        (!containerUrl.isEmpty() && (containerUrlAsZIP || !files.isEmpty()))) {
+                !embargo.equals("Under review") &&
+                (!containerUrl.isEmpty() && (containerUrlAsZIP || !files.isEmpty()))) {
             d.setZip(new TargetExternalReference(
                     String.format("https://kg.ebrains.eu/proxy/export?container=%s", containerUrl),
                     "Download all related data as ZIP"
@@ -52,7 +52,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         if (databaseScope == DatabaseScope.RELEASED) {
             if (embargo != null && embargo.equals("Embargoed")) {
                 d.setEmbargo("This dataset is temporarily under embargo. The data will become available for download after the embargo period.");
-            } else if (embargo != null && embargo.equals("Under review")){
+            } else if (embargo != null && embargo.equals("Under review")) {
                 d.setEmbargo("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.");
             }
         }
@@ -67,7 +67,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                                     f.getPrivateAccess() ? String.format("ACCESS PROTECTED: %s", f.getName()) : f.getName(),
                                     f.getHumanReadableSize(),
                                     getFileImage(f.getStaticImageUrl(), false),
-                                    getFileImage(f.getPreviewUrl(), f.getPreviewAnimated()),
+                                    getFileImage(f.getPreviewUrl(), !f.getPreviewAnimated().isEmpty() && f.getPreviewAnimated().get(0)),
                                     getFileImage(f.getThumbnailUrl(), false)
                             )
                     ).collect(Collectors.toList()));
@@ -77,7 +77,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
             String citation = datasetV1.getCitation().get(0);
             String doi = datasetV1.getDoi().get(0);
             String url = URLEncoder.encode(doi, StandardCharsets.UTF_8);
-            d.setCitation(citation + "\n" + String.format("[DOI: %s]\\n[DOI: %s]: https://doi.org/%s\"", doi, doi, url));
+            d.setCitation(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url));
         }
 
         d.setPublications(datasetV1.getPublications().stream()
@@ -132,29 +132,46 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         }
 
         d.setSubjects(datasetV1.getSubjects().stream()
-            .map(s ->
-                new Dataset.Subject(
-                    new TargetInternalReference(
-                        liveMode ? s.getRelativeUrl() : String.format("Subject/%s", s.getIdentifier()),
-                        s.getName(),
-                        null
-                    ),
-                    s.getSpecies(),
-                    s.getSex(),
-                    s.getAge(),
-                    s.getAgeCategory(),
-                    s.getWeight(),
-                    s.getStrain() != null ? s.getStrain() : s.getStrains(),
-                    s.getGenotype(),
-                    s.getSamples().
-                        stream().
-                        map(sample -> new TargetInternalReference(
-                            liveMode ? sample.getRelativeUrl() : String.format("Sample/%s", sample.getIdentifier()),
-                            sample.getName(),
-                            null
-                        )).collect(Collectors.toList())
-                )
-            ).collect(Collectors.toList()));
+                .map(s ->
+                        new Dataset.Subject(
+                                new TargetInternalReference(
+                                        liveMode ? s.getRelativeUrl() : String.format("Subject/%s", s.getIdentifier()),
+                                        s.getName(),
+                                        null
+                                ),
+                                s.getSpecies(),
+                                s.getSex(),
+                                s.getAge(),
+                                s.getAgeCategory(),
+                                s.getWeight(),
+                                s.getStrain() != null ? s.getStrain() : s.getStrains(),
+                                s.getGenotype(),
+                                s.getSamples().
+                                        stream().
+                                        map(sample -> new TargetInternalReference(
+                                                liveMode ? sample.getRelativeUrl() : String.format("Sample/%s", sample.getIdentifier()),
+                                                sample.getName(),
+                                                null
+                                        )).collect(Collectors.toList())
+                        )
+                ).collect(Collectors.toList()));
+        if (databaseScope == DatabaseScope.INFERRED) {
+            String embargoRestrictedAccess = "";
+            if (containerUrl != null && containerUrl.startsWith("https://object.cscs.ch")) {
+                if (embargo.equals("Embargoed")) {
+                    embargoRestrictedAccess = String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", containerUrl);
+                } else if (embargo.equals("Under review")) {
+                    embargoRestrictedAccess = String.format("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\"  target=\"_blank\"> you should be able to access the data here</a>", containerUrl);
+                }
+            } else {
+                if (embargo.equals("Embargoed")) {
+                    embargoRestrictedAccess = "This dataset is temporarily under embargo. The data will become available for download after the embargo period.";
+                } else if (embargo.equals("Under review")) {
+                    embargoRestrictedAccess = "This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.";
+                }
+            }
+            d.setEmbargoRestrictedAccess(embargoRestrictedAccess);
+        }
         d.setFirstRelease(datasetV1.getFirstReleaseAt());
         d.setLastRelease(datasetV1.getLastReleaseAt());
         return d;

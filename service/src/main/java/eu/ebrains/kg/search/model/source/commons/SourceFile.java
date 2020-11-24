@@ -13,7 +13,7 @@ public class SourceFile {
         this.absolutePath = absolutePath;
         this.humanReadableSize = humanReadableSize;
     }
-    public SourceFile(String name, String absolutePath, String humanReadableSize, List<String> staticImageUrl, Boolean isPreviewAnimated, List<String> previewUrl, Boolean privateAccess, List<String> thumbnailUrl) {
+    public SourceFile(String name, String absolutePath, String humanReadableSize, List<String> staticImageUrl, List<Boolean> isPreviewAnimated, List<String> previewUrl, Boolean privateAccess, List<String> thumbnailUrl) {
         this.name = name;
         this.absolutePath = absolutePath;
         this.humanReadableSize = humanReadableSize;
@@ -36,7 +36,7 @@ public class SourceFile {
     private List<String> staticImageUrl;
 
     @JsonProperty("is_preview_animated")
-    private Boolean isPreviewAnimated;
+    private List<Boolean> isPreviewAnimated;
 
     @JsonProperty("preview_url")
     private List<String> previewUrl;
@@ -59,9 +59,9 @@ public class SourceFile {
 
     public void setStaticImageUrl(List<String> staticImageUrl) { this.staticImageUrl = staticImageUrl; }
 
-    public Boolean getPreviewAnimated() { return isPreviewAnimated; }
+    public List<Boolean> getPreviewAnimated() { return isPreviewAnimated; }
 
-    public void setPreviewAnimated(Boolean previewAnimated) { isPreviewAnimated = previewAnimated; }
+    public void setPreviewAnimated(List<Boolean> previewAnimated) { isPreviewAnimated = previewAnimated; }
 
     public String getName() { return name; }
 

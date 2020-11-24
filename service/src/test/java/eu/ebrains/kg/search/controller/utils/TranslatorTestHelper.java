@@ -1,10 +1,13 @@
 package eu.ebrains.kg.search.controller.utils;
 
+import eu.ebrains.kg.search.controller.translators.DatasetTranslator;
 import eu.ebrains.kg.search.controller.translators.ModelTranslator;
 import eu.ebrains.kg.search.controller.translators.SoftwareTranslator;
 import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Model;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Software;
 
@@ -39,6 +42,22 @@ public class TranslatorTestHelper {
 
         //When
         Software target = translator.translate(source, databaseScope, liveMode);
+        String targetJson = jsonAdapter.toJson(target);
+        Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
+
+        //Then
+        return compareResults(targetExpected, targetResult);
+    }
+
+    public static List<String> compareDataset(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
+        DatasetTranslator translator = new DatasetTranslator();
+        // Given
+        DatasetV1 source = jsonAdapter.fromJson(sourceJson, DatasetV1.class);
+
+        Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
+
+        //When
+        Dataset target = translator.translate(source, databaseScope, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
 
