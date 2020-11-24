@@ -59,7 +59,7 @@ public class ContributorTranslatorTest {
     public void compareInferredLiveContributorV1() throws IOException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v1/personInferredSource.json"), StandardCharsets.UTF_8);
         List<String> sourcesJson = new ArrayList<>(Arrays.asList(sourceJson));
-        String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/contributorV1InferredTarget.json"), StandardCharsets.UTF_8);
+        String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/contributorV1InferredLiveTarget.json"), StandardCharsets.UTF_8);
         List<String> result = TranslatorTestHelper.compareContributor(sourcesJson, expectedJson, DatabaseScope.INFERRED, true);
         if (!result.isEmpty()) {
             Assert.fail("\n\t" + String.join("\n\t", result));

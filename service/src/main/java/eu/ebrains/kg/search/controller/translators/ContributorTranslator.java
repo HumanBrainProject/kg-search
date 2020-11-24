@@ -15,6 +15,7 @@ public class ContributorTranslator implements Translator<PersonSources, Contribu
     public Contributor translate(PersonSources personSources, DatabaseScope databaseScope, boolean liveMode) {
         Contributor c = new Contributor();
         PersonV1andV2 person = personSources.getPersonV2() != null ? personSources.getPersonV2() : personSources.getPersonV1();
+        c.setIdentifier(person.getIdentifier());
         c.setFirstRelease(person.getFirstReleaseAt());
         c.setLastRelease(person.getLastReleaseAt());
         c.setTitle(person.getTitle());
@@ -40,7 +41,7 @@ public class ContributorTranslator implements Translator<PersonSources, Contribu
                     String publicationResult = "";
                     if (publication.getCitation() != null && publication.getDoi() != null) {
                         String url = URLEncoder.encode(publication.getDoi(), StandardCharsets.UTF_8);
-                        publicationResult = publication.getCitation() + "\n" + String.format("[DOI: %s]\\n[DOI: %s]: https://doi.org/%s\"", publication.getDoi(), publication.getDoi(), url);
+                        publicationResult = publication.getCitation() + "\n" + String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
                     } else if (publication.getCitation() != null && publication.getDoi() == null) {
                         publicationResult = publication.getCitation().trim().replaceAll(", $", "");
                         ;
