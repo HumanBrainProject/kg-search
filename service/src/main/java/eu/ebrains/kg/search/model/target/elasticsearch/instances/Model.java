@@ -64,7 +64,7 @@ public class Model {
     private Value<String> version;
 
     @FieldInfo(label = "Publications", layout = FieldInfo.Layout.GROUP, markdown = true, hint = "List of publications that have been published as a part of this model.")
-    private List<String> publications;
+    private List<Value<String>> publications;
 
     @FieldInfo(label = "Study target", layout = FieldInfo.Layout.SUMMARY)
     private List<Value<String>> studyTarget;
@@ -170,7 +170,7 @@ public class Model {
     }
 
     public void setModelFormat(List<String> modelFormat) {
-        this.modelFormat = modelFormat.isEmpty() ? null : modelFormat.stream().map(Value::new).collect(Collectors.toList());
+        this.modelFormat = (modelFormat == null || modelFormat.isEmpty())? null : modelFormat.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public Value<String> getDescription() {
@@ -202,7 +202,7 @@ public class Model {
     }
 
     public void setAbstractionLevel(List<String> abstractionLevel) {
-        this.abstractionLevel = abstractionLevel.isEmpty() ? null : abstractionLevel.stream().map(Value::new).collect(Collectors.toList()); // TODO: Remove null values
+        this.abstractionLevel = (abstractionLevel == null || abstractionLevel.isEmpty())? null : abstractionLevel.stream().map(Value::new).collect(Collectors.toList()); // TODO: Remove null values
     }
 
     public List<TargetInternalReference> getMainContact() {
@@ -218,7 +218,7 @@ public class Model {
     }
 
     public void setBrainStructures(List<String> brainStructures) {
-        this.brainStructures = brainStructures.isEmpty() ? null : brainStructures.stream().map(Value::new).collect(Collectors.toList());
+        this.brainStructures = (brainStructures == null || brainStructures.isEmpty())? null : brainStructures.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public List<TargetInternalReference> getUsedDataset() {
@@ -237,20 +237,19 @@ public class Model {
         this.version = version;
     }
 
-    public List<String> getPublications() {
+    public List<Value<String>> getPublications() {
         return publications;
     }
 
     public void setPublications(List<String> publications) {
-        this.publications = publications.isEmpty() ? null : publications;
+        this.publications = (publications == null || publications.isEmpty())? null : publications.stream().map(Value::new).collect(Collectors.toList());
     }
-
     public List<Value<String>> getStudyTarget() {
         return studyTarget;
     }
 
     public void setStudyTarget(List<String> studyTarget) {
-        this.studyTarget = studyTarget.isEmpty() ? null : studyTarget.stream().map(Value::new).collect(Collectors.toList());
+        this.studyTarget = (studyTarget == null || studyTarget.isEmpty())? null : studyTarget.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public List<Value<String>> getModelScope() {
@@ -258,7 +257,7 @@ public class Model {
     }
 
     public void setModelScope(List<String> modelScope) {
-        this.modelScope = modelScope.isEmpty() ? null : modelScope.stream().map(Value::new).collect(Collectors.toList());
+        this.modelScope = (modelScope == null || modelScope.isEmpty())? null : modelScope.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public Value<String> getTitle() {
@@ -282,8 +281,7 @@ public class Model {
     }
 
     public void setCellularTarget(List<String> cellularTarget) {
-        this.cellularTarget = cellularTarget.isEmpty() ? null : cellularTarget.stream().map(Value::new).collect(Collectors.toList());
-        ;
+        this.cellularTarget = (cellularTarget == null || cellularTarget.isEmpty())? null : cellularTarget.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public Value<Date> getFirstRelease() {

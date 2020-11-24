@@ -71,8 +71,12 @@ public class Project {
         setLastRelease(lastRelease!=null ? new Value<>(lastRelease) : null);
     }
 
+    public List<Value<String>> getPublications() {
+        return publications;
+    }
+
     public void setPublications(List<String> publications) {
-        this.publications = publications != null ? publications.stream().map(Value::new).collect(Collectors.toList()):null;
+        this.publications = (publications == null || publications.isEmpty())? null : publications.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public Value<String> getType() {
@@ -99,16 +103,12 @@ public class Project {
         this.description = description;
     }
 
-    public List<Value<String>> getPublications() {
-        return publications;
-    }
-
     public List<TargetInternalReference> getDataset() {
         return dataset;
     }
 
     public void setDataset(List<TargetInternalReference> dataset) {
-        this.dataset = dataset;
+        this.dataset = (dataset == null || dataset.isEmpty())? null : dataset;
     }
 
     public Value<String> getTitle() {
