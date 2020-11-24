@@ -1,40 +1,23 @@
-package eu.ebrains.kg.search.controller.data;
+package eu.ebrains.kg.search.controller.utils;
 
 import eu.ebrains.kg.search.controller.translators.ModelTranslator;
 import eu.ebrains.kg.search.controller.translators.SoftwareTranslator;
-import eu.ebrains.kg.search.controller.utils.JsonAdapter;
 import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Model;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Software;
-import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
-import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class TranslatorTest {
+public class TranslatorTestHelper {
+    private static final JsonAdapter jsonAdapter = new JsonAdapter();
 
-    JsonAdapter jsonAdapter = new JsonAdapter();
-
-    @Test
-    public void compareReleasedModel() throws IOException {
-        String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/modelReleasedSource.json"), StandardCharsets.UTF_8);
-        String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/modelReleasedTarget.json"), StandardCharsets.UTF_8);
-        List<String> result = compareReleasedModel(sourceJson, expectedJson, DatabaseScope.RELEASED, false);
-        if (!result.isEmpty()) {
-            Assert.fail("\n\t" + String.join("\n\t", result));
-        }
-    }
-
-    private List<String> compareReleasedModel(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
+    public static List<String> compareModel(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
         ModelTranslator translator = new ModelTranslator();
 
         ModelV2 source = jsonAdapter.fromJson(sourceJson, ModelV2.class);
@@ -47,17 +30,7 @@ public class TranslatorTest {
         return compareResults(targetExpected, targetResult);
     }
 
-    @Test
-    public void compareReleasedSoftware() throws IOException {
-        String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareReleasedSource.json"), StandardCharsets.UTF_8);
-        String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareReleasedTarget.json"), StandardCharsets.UTF_8);
-        List<String> result = compareReleasedModel(sourceJson, expectedJson, DatabaseScope.RELEASED, false);
-        if (!result.isEmpty()) {
-            Assert.fail("\n\t" + String.join("\n\t", result));
-        }
-    }
-
-    public List<String> compareReleasedSoftware(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
+    public static List<String> compareSoftware(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
         SoftwareTranslator translator = new SoftwareTranslator();
         // Given
         SoftwareV2 source = jsonAdapter.fromJson(sourceJson, SoftwareV2.class);
@@ -73,7 +46,7 @@ public class TranslatorTest {
         return compareResults(targetExpected, targetResult);
     }
 
-    private List<String> compareResults(Map<String, Object> targetExpected, Map<String, Object> targetResult) {
+    private static List<String> compareResults(Map<String, Object> targetExpected, Map<String, Object> targetResult) {
         List<String> messages = new ArrayList<>();
         targetExpected.forEach((key, value) -> {
             try {
@@ -83,15 +56,5 @@ public class TranslatorTest {
             }
         });
         return messages;
-    }
-
-    @Test
-    public void compareInferredSoftware() throws IOException {
-
-    }
-
-    @Test
-    public void compareInferredLiveSoftware() throws IOException {
-
     }
 }
