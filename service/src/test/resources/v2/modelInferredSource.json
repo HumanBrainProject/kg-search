@@ -1,0 +1,45 @@
+{
+  "fileBundle": [
+    {
+      "url": "https://github.com/bicanski/HBPcollab/tree/master/Striatal_v_hippocampal_nav_v3"
+    }
+  ],
+  "custodian": [
+    {
+      "relativeUrl": "uniminds/core/person/v1.0.0/7d2b7340-d444-4aa1-b495-6a165873d754",
+      "name": "Burgess, Neil",
+      "identifier": "928ae53713d824ce88b354f32d7d5fbc"
+    }
+  ],
+  "mainContact": [],
+  "title": "Hippocampal & Striatal navigation",
+  "modelFormat": [],
+  "cellularTarget": [],
+  "editorId": "uniminds/core/modelinstance/v1.0.0/06049b06-bbbd-4b30-ace6-73c922a969c5",
+  "version": "3.0",
+  "studyTarget": [],
+  "usedDataset": [],
+  "description": "Behavioural and neural data suggest that multiple strategies and brain systems support learning about reward. Reinforcement learning (RL) considers these strategies in terms of model-based (MB) learning, which involves learning an explicit transition model of the available state-space, or model-free (MF) learning, which involves directly estimating the cumulative future reward associated with each state. The MB-MF distinction parallels that between place learning and response learning within spatial navigation. Lesion and inactivation studies suggests that dorsal hippocampus (dHC) underlies both MB and place learning, whereas dorsolateral striatum (DLS) underlies MF and response learning. Here, we present a computational model of the dHC and DLS contributions to reward learning that applies to spatial and nonspatial domains. In the model, hippocampal place cell firing reflects the geodesic distance of other states from its preferred state along the graph of task structure. Accordingly, this population can support a value function or goal cell firing rate, via one-shot learning, on which gradient ascent corresponds to taking the shortest path on the graph, behaviour associated with MB planning. In contrast, the DLS learns through MF stimulus-response associations with egocentric environmental cues. We show that this model reproduces animal behaviour on spatial navigation tasks using the Morris Water Maze and the Plus Maze, and human behaviour on non-spatial two-step decision tasks. We discuss how the geodesic place cell fields could be learnt, and how this type of representation helps to span the gap between MB and MF learning. The generality of our model, originally shaped by detailed constraints in the spatial literature, suggests that the hippocampal-striatal system is a general-purpose learning device that adaptively combines MB and MF mechanisms.  \n\n[Code location](https://github.com/bicanski/HBPcollab/tree/master/Striatal_v_hippocampal_nav)\n\n[Detailed description of simulations and results](https://github.com/bicanski/HBPcollab/blob/master/Striatal_v_hippocampal_nav_v2/Modelling_hippocampal_and_dorsolateral_striatal_contributions_to_learning_across_domains.pdf)",
+  "license": [],
+  "modelScope": [],
+  "abstractionLevel": [],
+  "producedDataset": [],
+  "publications": [],
+  "brainStructure": [],
+  "contributors": [
+    {
+      "relativeUrl": "uniminds/core/person/v1.0.0/bfdcee77-cf9f-421f-8565-cd619584a772",
+      "name": "Geerts, Jesse",
+      "identifier": "98875cc8775207e604e1db7f6bcf9fe8"
+    },
+    {
+      "relativeUrl": "uniminds/core/person/v1.0.0/7d2b7340-d444-4aa1-b495-6a165873d754",
+      "name": "Burgess, Neil",
+      "identifier": "928ae53713d824ce88b354f32d7d5fbc"
+    }
+  ],
+  "embargo": [
+    "embargoed"
+  ],
+  "identifier": "9ccad40b5d450dcc584af1022e1fb4f4"
+}
