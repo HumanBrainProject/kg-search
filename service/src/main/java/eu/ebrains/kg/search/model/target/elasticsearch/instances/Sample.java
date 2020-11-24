@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@MetaInfo(name="Sample", identifier = "minds/experiment/sample/v1.0.0/search", order = 4)
+@MetaInfo(name = "Sample", identifier = "minds/experiment/sample/v1.0.0/search", order = 4)
 public class Sample {
     private Value<String> type = new Value<>("Sample");
 
@@ -54,99 +54,143 @@ public class Sample {
     private List<Children<Dataset>> datasets;
 
     @JsonProperty("first_release")
-    @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
+    @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue firstRelease;
 
     @JsonProperty("last_release")
-    @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
+    @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 
     public void setType(String type) {
-        setType(type!=null ? new Value<>(type) : null);
+        setType(type != null ? new Value<>(type) : null);
     }
 
     public void setIdentifier(String identifier) {
-        setIdentifier(identifier!=null ? new Value<>(identifier) : null);
+        setIdentifier(identifier != null ? new Value<>(identifier) : null);
     }
 
-    public void setEditorId(String editorId){
-        setEditorId(editorId!=null ? new Value<>(editorId) : null);
+    public void setEditorId(String editorId) {
+        setEditorId(editorId != null ? new Value<>(editorId) : null);
     }
 
-    public void setTitle(String title){
-        setTitle(title!=null ? new Value<>(title) : null);
+    public void setTitle(String title) {
+        setTitle(title != null ? new Value<>(title) : null);
     }
 
-    public Value<String> getType() { return type; }
-
-    public void setType(Value<String> type) { this.type = type; }
-
-    public Value<String> getIdentifier() { return identifier; }
-
-    public void setIdentifier(Value<String> identifier) { this.identifier = identifier; }
-
-    public Value<String> getTitle() { return title; }
-
-    public void setTitle(Value<String> title) { this.title = title; }
-
-    public Value<String> getEditorId() { return editorId; }
-
-    public void setEditorId(Value<String> editorId) { this.editorId = editorId; }
-
-    public Value<String> getWeightPreFixation() { return weightPreFixation; }
-
-    public void setWeightPreFixation(String weightPreFixation){
-        setWeightPreFixation(weightPreFixation!=null ? new Value<>(weightPreFixation) : null);
+    public Value<String> getType() {
+        return type;
     }
 
-    public void setWeightPreFixation(Value<String> weightPreFixation) { this.weightPreFixation = weightPreFixation; }
+    public void setType(Value<String> type) {
+        this.type = type;
+    }
 
-    public List<Value<String>> getParcellationAtlas() { return parcellationAtlas; }
+    public Value<String> getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(Value<String> identifier) {
+        this.identifier = identifier;
+    }
+
+    public Value<String> getTitle() {
+        return title;
+    }
+
+    public void setTitle(Value<String> title) {
+        this.title = title;
+    }
+
+    public Value<String> getEditorId() {
+        return editorId;
+    }
+
+    public void setEditorId(Value<String> editorId) {
+        this.editorId = editorId;
+    }
+
+    public Value<String> getWeightPreFixation() {
+        return weightPreFixation;
+    }
+
+    public void setWeightPreFixation(String weightPreFixation) {
+        setWeightPreFixation(weightPreFixation != null ? new Value<>(weightPreFixation) : null);
+    }
+
+    public void setWeightPreFixation(Value<String> weightPreFixation) {
+        this.weightPreFixation = weightPreFixation;
+    }
+
+    public List<Value<String>> getParcellationAtlas() {
+        return parcellationAtlas;
+    }
 
     public void setParcellationAtlas(List<String> parcellationAtlas) {
-        this.parcellationAtlas = parcellationAtlas!=null ? parcellationAtlas.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+        this.parcellationAtlas = (parcellationAtlas == null || parcellationAtlas.isEmpty()) ? null : parcellationAtlas.stream().map(value -> new Value<>(value)).collect(Collectors.toList());
     }
 
-    public List<TargetExternalReference> getRegion() { return region; }
+    public List<TargetExternalReference> getRegion() {
+        return region;
+    }
 
     public void setRegion(List<TargetExternalReference> region) {
         this.region = region;
     }
 
-    public List<TargetExternalReference> getViewer() { return viewer; }
+    public List<TargetExternalReference> getViewer() {
+        return viewer;
+    }
 
-    public void setViewer(List<TargetExternalReference> viewer) { this.viewer = viewer; }
+    public void setViewer(List<TargetExternalReference> viewer) {
+        this.viewer = (viewer == null || viewer.isEmpty()) ? null : viewer;
+    }
 
-    public List<Value<String>> getMethods() { return methods; }
+    public List<Value<String>> getMethods() {
+        return methods;
+    }
 
     public void setMethods(List<String> methods) {
-        this.methods = methods!=null ? methods.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+        this.methods = (methods == null || methods.isEmpty()) ? null : methods.stream().map(value -> new Value<>(value)).collect(Collectors.toList());
     }
 
-    public TargetExternalReference getAllFiles() { return allFiles; }
+    public TargetExternalReference getAllFiles() {
+        return allFiles;
+    }
 
-    public void setAllFiles(TargetExternalReference allFiles) { this.allFiles = allFiles; }
+    public void setAllFiles(TargetExternalReference allFiles) {
+        this.allFiles = allFiles;
+    }
 
-    public List<TargetFile> getFiles() { return files; }
+    public List<TargetFile> getFiles() {
+        return files;
+    }
 
-    public void setFiles(List<TargetFile> files) { this.files = files; }
+    public void setFiles(List<TargetFile> files) {
+        this.files = (files == null || files.isEmpty()) ? null : files;
+    }
 
-    public List<Children<Subject>> getSubject() { return subject; }
+    public List<Children<Subject>> getSubject() {
+        return subject;
+    }
 
     public void setSubject(List<Subject> subject) {
-        this.subject = subject!=null ? subject.stream().map(value -> new Children<>(value)).collect(Collectors.toList()) : null;
+        this.subject = subject != null ? subject.stream().map(value -> new Children<>(value)).collect(Collectors.toList()) : null;
     }
 
-    public List<Value<String>> getDatasetExists() { return datasetExists; }
+    public List<Value<String>> getDatasetExists() {
+        return datasetExists;
+    }
 
     public void setDatasetExists(List<String> datasetExists) {
-        this.datasetExists = datasetExists!=null ? datasetExists.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+        this.datasetExists = datasetExists != null ? datasetExists.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
     }
 
-    public List<Children<Dataset>> getDatasets() { return datasets; }
+    public List<Children<Dataset>> getDatasets() {
+        return datasets;
+    }
 
     public void setDatasets(List<Dataset> datasets) {
-        this.datasets = datasets!=null ? datasets.stream().map(value -> new Children<>(value)).collect(Collectors.toList()) : null;
+        this.datasets = datasets != null ? datasets.stream().map(value -> new Children<>(value)).collect(Collectors.toList()) : null;
     }
 
     public ISODateValue getFirstRelease() {
@@ -174,10 +218,11 @@ public class Sample {
     }
 
     public static class Dataset {
-        public Dataset() {}
+        public Dataset() {
+        }
 
         public Dataset(List<String> component, List<TargetInternalReference> name) {
-            this.component = component!=null ? component.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+            this.component = (component == null || component.isEmpty()) ? null : component.stream().map(value -> new Value<>(value)).collect(Collectors.toList());
             this.name = name;
         }
 
@@ -186,17 +231,26 @@ public class Sample {
 
         private List<TargetInternalReference> name;
 
-        public List<Value<String>> getComponent() { return component; }
+        public List<Value<String>> getComponent() {
+            return component;
+        }
 
-        public void setComponent(List<Value<String>> component) { this.component = component; }
+        public void setComponent(List<Value<String>> component) {
+            this.component = component;
+        }
 
-        public List<TargetInternalReference> getName() { return name; }
+        public List<TargetInternalReference> getName() {
+            return name;
+        }
 
-        public void setName(List<TargetInternalReference> name) { this.name = name; }
+        public void setName(List<TargetInternalReference> name) {
+            this.name = name;
+        }
     }
 
     public static class Subject {
-        public Subject() {}
+        public Subject() {
+        }
 
         public Subject(TargetInternalReference subjectName,
                        List<String> species,
@@ -207,13 +261,13 @@ public class Sample {
                        String strain,
                        String genotype) {
             this.subjectName = subjectName;
-            this.species =  species!=null ? species.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
-            this.sex =  sex!=null ? sex.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
-            this.age = age!=null ? new Value<>(age) : null;
-            this.ageCategory =  ageCategory!=null ? ageCategory.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
-            this.weight = weight!=null ? new Value<>(weight) : null;
-            this.strain = strain!=null ? new Value<>(strain) : null;
-            this.genotype = genotype!=null ? new Value<>(genotype) : null;
+            this.species = species != null ? species.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+            this.sex = sex != null ? sex.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+            this.age = age != null ? new Value<>(age) : null;
+            this.ageCategory = ageCategory != null ? ageCategory.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+            this.weight = weight != null ? new Value<>(weight) : null;
+            this.strain = strain != null ? new Value<>(strain) : null;
+            this.genotype = genotype != null ? new Value<>(genotype) : null;
         }
 
         @JsonProperty("subject_name")
@@ -242,36 +296,68 @@ public class Sample {
         @FieldInfo(label = "Genotype")
         private Value<String> genotype;
 
-        public TargetInternalReference getSubjectName() { return subjectName; }
+        public TargetInternalReference getSubjectName() {
+            return subjectName;
+        }
 
-        public void setSubjectName(TargetInternalReference subjectName) { this.subjectName = subjectName; }
+        public void setSubjectName(TargetInternalReference subjectName) {
+            this.subjectName = subjectName;
+        }
 
-        public List<Value<String>> getSpecies() { return species; }
+        public List<Value<String>> getSpecies() {
+            return species;
+        }
 
-        public void setSpecies(List<Value<String>> species) { this.species = species; }
+        public void setSpecies(List<Value<String>> species) {
+            this.species = species;
+        }
 
-        public List<Value<String>> getSex() { return sex; }
+        public List<Value<String>> getSex() {
+            return sex;
+        }
 
-        public void setSex(List<Value<String>> sex) { this.sex = sex; }
+        public void setSex(List<Value<String>> sex) {
+            this.sex = sex;
+        }
 
-        public Value<String> getAge() { return age; }
+        public Value<String> getAge() {
+            return age;
+        }
 
-        public void setAge(Value<String> age) { this.age = age; }
+        public void setAge(Value<String> age) {
+            this.age = age;
+        }
 
-        public List<Value<String>> getAgeCategory() { return ageCategory; }
+        public List<Value<String>> getAgeCategory() {
+            return ageCategory;
+        }
 
-        public void setAgeCategory(List<Value<String>> ageCategory) { this.ageCategory = ageCategory; }
+        public void setAgeCategory(List<Value<String>> ageCategory) {
+            this.ageCategory = ageCategory;
+        }
 
-        public Value<String> getWeight() { return weight; }
+        public Value<String> getWeight() {
+            return weight;
+        }
 
-        public void setWeight(Value<String> weight) { this.weight = weight; }
+        public void setWeight(Value<String> weight) {
+            this.weight = weight;
+        }
 
-        public Value<String> getStrain() { return strain; }
+        public Value<String> getStrain() {
+            return strain;
+        }
 
-        public void setStrain(Value<String> strain) { this.strain = strain; }
+        public void setStrain(Value<String> strain) {
+            this.strain = strain;
+        }
 
-        public Value<String> getGenotype() { return genotype; }
+        public Value<String> getGenotype() {
+            return genotype;
+        }
 
-        public void setGenotype(Value<String> genotype) { this.genotype = genotype; }
+        public void setGenotype(Value<String> genotype) {
+            this.genotype = genotype;
+        }
     }
 }

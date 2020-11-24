@@ -14,7 +14,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
     public Sample translate(SampleV1 sample, DatabaseScope databaseScope, boolean liveMode) {
         Sample s = new Sample();
         String title = sample.getTitle();
-        String embargo = sample.getEmbargo().get(0);
+        String embargo = (sample.getEmbargo() != null && !sample.getEmbargo().isEmpty())?sample.getEmbargo().get(0):null;
         s.setTitle(title);
         s.setFirstRelease(sample.getFirstReleaseAt());
         s.setLastRelease(sample.getLastReleaseAt());
@@ -64,7 +64,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                         )
                 ).collect(Collectors.toList()));
         String containerUrl = sample.getContainerUrl();
-        if (!embargo.equals("Embargoed")) {
+        if (embargo != null && !embargo.equals("Embargoed")) {
             if (containerUrl.startsWith("https://object.cscs.ch")) {
                 s.setAllFiles(new TargetExternalReference(
                         String.format("https://kg.ebrains.eu/proxy/export?container=%s", containerUrl),

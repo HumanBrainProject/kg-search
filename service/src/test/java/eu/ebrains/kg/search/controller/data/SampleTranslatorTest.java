@@ -29,7 +29,6 @@ public class SampleTranslatorTest {
         if (!result.isEmpty()) {
             Assert.fail("\n\t" + String.join("\n\t", result));
         }
-
     }
 
     @Test
