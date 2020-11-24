@@ -186,7 +186,6 @@ public class Software {
     public void setTitle(Value<String> title) {
         this.title = title;
     }
-
     public ISODateValue getFirstRelease() {
         return firstRelease;
     }

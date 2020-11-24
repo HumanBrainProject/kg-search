@@ -3,10 +3,7 @@ package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 
 import java.util.Date;
 import java.util.List;
@@ -83,11 +80,11 @@ public class Model {
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
-    private Value<Date> firstRelease;
+    private ISODateValue firstRelease;
 
     @JsonProperty("last_release")
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
-    private Value<Date> lastRelease;
+    private ISODateValue lastRelease;
 
     public void setType(String type) {
         setType(type != null ? new Value<>(type) : null);
@@ -117,12 +114,20 @@ public class Model {
         setTitle(title != null ? new Value<>(title) : null);
     }
 
-    public void setFirstRelease(Date firstRelease) {
-        setFirstRelease(firstRelease != null ? new Value<>(firstRelease) : null);
+    public ISODateValue getFirstRelease() {
+        return firstRelease;
     }
 
-    public void setLastRelease(Date lastRelease) {
-        setLastRelease(lastRelease != null ? new Value<>(lastRelease) : null);
+    public void setFirstRelease(ISODateValue firstRelease) {
+        this.firstRelease = firstRelease;
+    }
+
+    public ISODateValue getLastRelease() {
+        return lastRelease;
+    }
+
+    public void setLastRelease(ISODateValue lastRelease) {
+        this.lastRelease = lastRelease;
     }
 
     public Value<String> getIdentifier() {
@@ -282,22 +287,6 @@ public class Model {
 
     public void setCellularTarget(List<String> cellularTarget) {
         this.cellularTarget = (cellularTarget == null || cellularTarget.isEmpty())? null : cellularTarget.stream().map(Value::new).collect(Collectors.toList());
-    }
-
-    public Value<Date> getFirstRelease() {
-        return firstRelease;
-    }
-
-    public void setFirstRelease(Value<Date> firstRelease) {
-        this.firstRelease = firstRelease;
-    }
-
-    public Value<Date> getLastRelease() {
-        return lastRelease;
-    }
-
-    public void setLastRelease(Value<Date> lastRelease) {
-        this.lastRelease = lastRelease;
     }
 
     public Value<String> getType() {
