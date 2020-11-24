@@ -1,0 +1,32 @@
+{
+  "custodianOf": null,
+  "email": null,
+  "identifier": {
+    "value": "faf8d0c8-793e-464c-b49d-f78786d3b417"
+  },
+  "description": null,
+  "contributions": [
+    {
+      "reference": "Dataset/ab2d4db0-4c97-442c-82f9-a3dade301e9f",
+      "value": "TMS-EEG perturbation in patients with disorders of consciousness"
+    }
+  ],
+  "modelContributions": null,
+  "publications": null,
+  "address": null,
+  "custodianOfModel": null,
+  "title": {
+    "value": "Wolff, Audrey"
+  },
+  "first_release": {
+    "value": "2020-02-15T14:07:09.749Z"
+  },
+  "last_release": {
+    "value": "2020-02-15T14:07:09.741Z"
+  },
+  "phone": null,
+  "@timestamp": "2020-11-24T13:11:20.795034",
+  "type": {
+    "value": "Contributor"
+  }
+}
