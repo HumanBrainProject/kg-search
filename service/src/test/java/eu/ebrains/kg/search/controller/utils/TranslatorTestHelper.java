@@ -15,6 +15,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.Model;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Software;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,8 @@ import static org.junit.Assert.assertEquals;
 
 public class TranslatorTestHelper {
     private static final JsonAdapter jsonAdapter = new JsonAdapter();
+
+    private static final List<String> keysToIgnore = new ArrayList<>(Arrays.asList("@timestamp"));
 
     public static List<String> compareContributor(List<String> sourcesJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
         ContributorTranslator translator = new ContributorTranslator();
@@ -85,10 +88,12 @@ public class TranslatorTestHelper {
     private static List<String> compareResults(Map<String, Object> targetExpected, Map<String, Object> targetResult) {
         List<String> messages = new ArrayList<>();
         targetExpected.forEach((key, value) -> {
-            try {
-                assertEquals(targetExpected.get(key), targetResult.get(key));
-            } catch (AssertionError assertFailed) {
-                messages.add(key + ": " + assertFailed.getMessage());
+            if (!keysToIgnore.contains(key)) {
+                try {
+                    assertEquals(targetExpected.get(key), targetResult.get(key));
+                } catch (AssertionError assertFailed) {
+                    messages.add(key + ": " + assertFailed.getMessage());
+                }
             }
         });
         return messages;
