@@ -26,43 +26,54 @@ public class TranslatorTest {
 
     @Test
     public void compareReleasedModel() throws IOException {
-        ModelTranslator translator = new ModelTranslator();
-        // Given
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/modelReleasedSource.json"), StandardCharsets.UTF_8);
-        ModelV2 source = jsonAdapter.fromJson(sourceJson, ModelV2.class);
-
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/modelReleasedTarget.json"), StandardCharsets.UTF_8);
+        List<String> result = compareReleasedModel(sourceJson, expectedJson, DatabaseScope.RELEASED, false);
+        if (!result.isEmpty()) {
+            Assert.fail("\n\t" + String.join("\n\t", result));
+        }
+    }
+
+    private List<String> compareReleasedModel(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
+        ModelTranslator translator = new ModelTranslator();
+
+        ModelV2 source = jsonAdapter.fromJson(sourceJson, ModelV2.class);
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
 
-        //When
-        Model target = translator.translate(source, DatabaseScope.RELEASED, false);
+        Model target = translator.translate(source, databaseScope, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
 
-        //Then
-        compareResults(targetExpected, targetResult);
+        return compareResults(targetExpected, targetResult);
     }
 
     @Test
     public void compareReleasedSoftware() throws IOException {
+        String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareReleasedSource.json"), StandardCharsets.UTF_8);
+        String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareReleasedTarget.json"), StandardCharsets.UTF_8);
+        List<String> result = compareReleasedModel(sourceJson, expectedJson, DatabaseScope.RELEASED, false);
+        if (!result.isEmpty()) {
+            Assert.fail("\n\t" + String.join("\n\t", result));
+        }
+    }
+
+    public List<String> compareReleasedSoftware(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
         SoftwareTranslator translator = new SoftwareTranslator();
         // Given
-        String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareReleasedSource.json"), StandardCharsets.UTF_8);
         SoftwareV2 source = jsonAdapter.fromJson(sourceJson, SoftwareV2.class);
 
-        String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareReleasedTarget.json"), StandardCharsets.UTF_8);
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
 
         //When
-        Software target = translator.translate(source, DatabaseScope.RELEASED, false);
+        Software target = translator.translate(source, databaseScope, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
 
         //Then
-        compareResults(targetExpected, targetResult);
+        return compareResults(targetExpected, targetResult);
     }
 
-    private void compareResults(Map<String, Object> targetExpected, Map<String, Object> targetResult) {
+    private List<String> compareResults(Map<String, Object> targetExpected, Map<String, Object> targetResult) {
         List<String> messages = new ArrayList<>();
         targetExpected.forEach((key, value) -> {
             try {
@@ -71,9 +82,7 @@ public class TranslatorTest {
                 messages.add(key + ": " + assertFailed.getMessage());
             }
         });
-        if (!messages.isEmpty()) {
-            Assert.fail("\n\t" + String.join("\n\t", messages));
-        }
+        return messages;
     }
 
     @Test
