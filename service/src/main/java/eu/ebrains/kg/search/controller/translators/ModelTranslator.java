@@ -38,8 +38,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
         m.setProducedDataset(modelV2.getProducedDataset().stream()
                 .map(pd -> new TargetInternalReference(
                         liveMode ? pd.getRelativeUrl() : String.format("Dataset/%s", pd.getIdentifier()),
-                        pd.getName(),
-                        null
+                        pd.getName()
                 )).collect(Collectors.toList()));
         if (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && (embargo == null || !embargo.equals("embargoed")))) { //TODO: capitalize to "Embargoed" and check if we should also add "Under review" check
             if (modelV2.getFiles() != null) {
@@ -60,7 +59,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
                         if (fb.getUrl().startsWith("https://object.cscs.ch")) {
                             return new TargetExternalReference(
                                     String.format("https://kg.ebrains.eu/proxy/export?container=%s", fb.getUrl()),
-                                    "Download all related data as ZIP"
+                                    "download all related data as ZIP" // TODO: Capitalize the value
                             );
                         } else {
                             return new TargetExternalReference(
@@ -73,27 +72,30 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
         m.setModelFormat(modelV2.getModelFormat());
         m.setDescription(modelV2.getDescription());
 
-        SourceExternalReference license = modelV2.getLicense().get(0);
-        m.setLicenseInfo(new TargetExternalReference(license.getUrl(), license.getName()));
-        m.setOwners(modelV2.getContributors().stream()
+        if(modelV2.getLicense() != null) {
+            SourceExternalReference license = modelV2.getLicense().isEmpty()?null:modelV2.getLicense().get(0);
+            if(license == null) {
+                m.setLicenseInfo(null); // TODO: Remove null values from target
+            } else {
+                m.setLicenseInfo(new TargetExternalReference(license.getUrl(), license.getName()));
+            }
+        }
+        m.setOwners(modelV2.getCustodian().stream()
                 .map(o -> new TargetInternalReference(
                         liveMode ? o.getRelativeUrl() : String.format("Contributor/%s", o.getIdentifier()),
-                        o.getName(),
-                        null
+                        o.getName()
                 )).collect(Collectors.toList()));
         m.setAbstractionLevel(modelV2.getAbstractionLevel());
         m.setMainContact(modelV2.getMainContact().stream()
                 .map(mc -> new TargetInternalReference(
                         liveMode ? mc.getRelativeUrl() : String.format("Contributor/%s", mc.getIdentifier()),
-                        mc.getName(),
-                        null
+                        mc.getName()
                 )).collect(Collectors.toList()));
         m.setBrainStructures(modelV2.getBrainStructure());
         m.setUsedDataset(modelV2.getUsedDataset().stream()
                 .map(ud -> new TargetInternalReference(
                         liveMode ? ud.getRelativeUrl() : String.format("Dataset/%s", ud.getIdentifier()),
-                        ud.getName(),
-                        null
+                        ud.getName()
                 )).collect(Collectors.toList()));
         m.setVersion(modelV2.getVersion());
         m.setPublications(modelV2.getPublications().stream()
@@ -113,8 +115,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
         m.setContributors(modelV2.getContributors().stream()
                 .map(c -> new TargetInternalReference(
                         liveMode ? c.getRelativeUrl() : String.format("Contributor/%s", c.getIdentifier()),
-                        c.getName(),
-                        null
+                        c.getName()
                 )).collect(Collectors.toList()));
         m.setCellularTarget(modelV2.getCellularTarget());
         m.setFirstRelease(modelV2.getFirstReleaseAt());

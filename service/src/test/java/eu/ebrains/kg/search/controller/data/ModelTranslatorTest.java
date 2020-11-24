@@ -24,11 +24,23 @@ public class ModelTranslatorTest {
 
     @Test
     public void compareInferredSoftware() throws IOException {
+        String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/modelInferredSource.json"), StandardCharsets.UTF_8);
+        String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/modelInferredTarget.json"), StandardCharsets.UTF_8);
+        List<String> result = TranslatorTestHelper.compareModel(sourceJson, expectedJson, DatabaseScope.INFERRED, false);
+        if (!result.isEmpty()) {
+            Assert.fail("\n\t" + String.join("\n\t", result));
+        }
 
     }
 
     @Test
     public void compareInferredLiveSoftware() throws IOException {
+        String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/modelInferredSource.json"), StandardCharsets.UTF_8);
+        String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/modelInferredLiveTarget.json"), StandardCharsets.UTF_8);
+        List<String> result = TranslatorTestHelper.compareModel(sourceJson, expectedJson, DatabaseScope.INFERRED, true);
+        if (!result.isEmpty()) {
+            Assert.fail("\n\t" + String.join("\n\t", result));
+        }
 
     }
 }

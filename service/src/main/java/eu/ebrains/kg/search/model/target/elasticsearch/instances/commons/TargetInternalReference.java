@@ -1,8 +1,15 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances.commons;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 public class TargetInternalReference {
 
     public TargetInternalReference() {
+    }
+
+    public TargetInternalReference(String reference, String value) {
+        this.reference = reference;
+        this.value = value;
     }
 
     public TargetInternalReference(String reference, String value, String uuid) {
@@ -12,7 +19,10 @@ public class TargetInternalReference {
     }
 
     private String reference;
+
     private String value;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String uuid;
 
     public String getReference() {
