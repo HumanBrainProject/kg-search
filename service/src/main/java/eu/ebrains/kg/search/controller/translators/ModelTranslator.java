@@ -13,11 +13,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ModelTranslator implements Translator<ModelV2, Model>{
+public class ModelTranslator implements Translator<ModelV2, Model> {
 
     public Model translate(ModelV2 modelV2, DatabaseScope databaseScope, boolean liveMode) {
         Model m = new Model();
-        String embargo = modelV2.getEmbargo().isEmpty()?null:modelV2.getEmbargo().get(0);
+        String embargo = modelV2.getEmbargo().isEmpty() ? null : modelV2.getEmbargo().get(0);
         m.setIdentifier(modelV2.getIdentifier());
         if (databaseScope == DatabaseScope.INFERRED) {
             m.setEditorId(modelV2.getEditorId());
@@ -27,7 +27,7 @@ public class ModelTranslator implements Translator<ModelV2, Model>{
                 m.setEmbargo("This model is temporarily under embargo. The data will become available for download after the embargo period.");
             } else {
                 List<SourceExternalReference> fileBundle = modelV2.getFileBundle();
-                String fileUrl = fileBundle.isEmpty()?null:fileBundle.get(0).getUrl();
+                String fileUrl = fileBundle.isEmpty() ? null : fileBundle.get(0).getUrl();
                 if (fileUrl != null && fileUrl.startsWith("https://object.cscs.ch")) {
                     m.setEmbargo(String.format("This model is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", fileUrl));
                 } else {
@@ -42,17 +42,19 @@ public class ModelTranslator implements Translator<ModelV2, Model>{
                         null
                 )).collect(Collectors.toList()));
         if (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && (embargo == null || !embargo.equals("embargoed")))) { //TODO: capitalize to "Embargoed" and check if we should also add "Under review" check
-            m.setFiles(modelV2.getFiles().stream()
-                    .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
-                    .map(f ->
-                            new TargetFile(
-                                    f.getPrivateAccess() ? String.format("%s/files/cscs?url=%s", Translator.fileProxy, f.getAbsolutePath()) : f.getAbsolutePath(),
-                                    f.getPrivateAccess() ? String.format("ACCESS PROTECTED: %s", f.getName()) : f.getName(),
-                                    f.getHumanReadableSize()
-                            )
-                    ).collect(Collectors.toList()));
+            if (modelV2.getFiles() != null) {
+                m.setFiles(modelV2.getFiles().stream()
+                        .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
+                        .map(f ->
+                                new TargetFile(
+                                        f.getPrivateAccess() ? String.format("%s/files/cscs?url=%s", Translator.fileProxy, f.getAbsolutePath()) : f.getAbsolutePath(),
+                                        f.getPrivateAccess() ? String.format("ACCESS PROTECTED: %s", f.getName()) : f.getName(),
+                                        f.getHumanReadableSize()
+                                )
+                        ).collect(Collectors.toList()));
+            }
         }
-        if (embargo == null  || !embargo.equals("embargoed")) { //TODO: capitalize to "Embargoed"
+        if (embargo == null || !embargo.equals("embargoed")) { //TODO: capitalize to "Embargoed"
             m.setAllFiles(modelV2.getFileBundle().stream()
                     .map(fb -> {
                         if (fb.getUrl().startsWith("https://object.cscs.ch")) {
@@ -83,8 +85,8 @@ public class ModelTranslator implements Translator<ModelV2, Model>{
         m.setMainContact(modelV2.getMainContact().stream()
                 .map(mc -> new TargetInternalReference(
                         liveMode ? mc.getRelativeUrl() : String.format("Contributor/%s", mc.getIdentifier()),
-                    mc.getName(),
-                    null
+                        mc.getName(),
+                        null
                 )).collect(Collectors.toList()));
         m.setBrainStructures(modelV2.getBrainStructure());
         m.setUsedDataset(modelV2.getUsedDataset().stream()
