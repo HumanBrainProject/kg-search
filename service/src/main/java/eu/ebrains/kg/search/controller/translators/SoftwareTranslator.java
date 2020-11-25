@@ -9,8 +9,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.firstItemOrNull;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
 public class SoftwareTranslator implements Translator<SoftwareV2, Software> {
 

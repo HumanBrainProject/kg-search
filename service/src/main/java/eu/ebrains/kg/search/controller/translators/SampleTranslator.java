@@ -21,11 +21,10 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
         s.setFirstRelease(sample.getFirstReleaseAt());
         s.setLastRelease(sample.getLastReleaseAt());
         s.setIdentifier(sample.getIdentifier());
-        s.setDatasetExists(sample.getDatasetExists());
+        s.setDatasetExists(emptyToNull(sample.getDatasetExists()));
         if (databaseScope == DatabaseScope.INFERRED) {
             s.setEditorId(sample.getEditorId());
         }
-
         s.setParcellationAtlas(emptyToNull(sample.getParcellationAtlas()));
         s.setWeightPreFixation(sample.getWeightPreFixation());
         s.setMethods(emptyToNull(sample.getMethods()));
@@ -45,7 +44,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
             s.setDatasets(sample.getDatasets().stream()
                     .map(d ->
                             new Sample.Dataset(
-                                    CollectionUtils.isEmpty(d.getComponentName())?null:d.getComponentName(),
+                                    CollectionUtils.isEmpty(d.getComponentName()) ? null : d.getComponentName(),
                                     d.getInstances().stream()
                                             .map(i ->
                                                     new TargetInternalReference(
