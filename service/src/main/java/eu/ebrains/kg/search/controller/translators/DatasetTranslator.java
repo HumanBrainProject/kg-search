@@ -86,7 +86,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         String doi = firstItemOrNull(datasetV1.getDoi());
         if (StringUtils.isNotBlank(citation) && StringUtils.isNotBlank(doi)) {
             String url = URLEncoder.encode(doi, StandardCharsets.UTF_8);
-            d.setCitation(citation + "\n" + String.format("[DOI: %s]\\n[DOI: %s]: https://doi.org/%s\"", doi, doi, url));
+            d.setCitation(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url));
         }
 
 
@@ -96,7 +96,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                         String publicationResult = null;
                         if (StringUtils.isNotBlank(publication.getCitation()) && StringUtils.isNotBlank(publication.getDoi())) {
                             String url = URLEncoder.encode(publication.getDoi(), StandardCharsets.UTF_8);
-                            publicationResult = publication.getCitation() + "\n" + String.format("[DOI: %s]\\n[DOI: %s]: https://doi.org/%s\"", publication.getDoi(), publication.getDoi(), url);
+                            publicationResult = publication.getCitation() + "\n" + String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
                         } else if (StringUtils.isNotBlank(publication.getCitation()) && StringUtils.isBlank(publication.getDoi())) {
                             publicationResult = publication.getCitation().trim().replaceAll(", $", "");
                         } else if (StringUtils.isNotBlank(publication.getDoi())) {
@@ -129,7 +129,9 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                     )).collect(Collectors.toList()));
         }
 
-        d.setPreparation(datasetV1.getPreparation());
+        if (!CollectionUtils.isEmpty(datasetV1.getPreparation())) {
+            d.setPreparation(datasetV1.getPreparation());
+        }
 
         if (!CollectionUtils.isEmpty(datasetV1.getComponent())) {
             d.setComponent(datasetV1.getComponent().stream()
@@ -184,17 +186,16 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         }
         if (databaseScope == DatabaseScope.INFERRED) {
             if (containerUrl != null && containerUrl.startsWith("https://object.cscs.ch")) {
-                if(hasEmbargoStatus(datasetV1, EMBARGOED)){
+                if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
                     d.setEmbargoRestrictedAccess(String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", containerUrl));
-                }
-                else if (hasEmbargoStatus(datasetV1, UNDER_REVIEW)) {
+                } else if (hasEmbargoStatus(datasetV1, UNDER_REVIEW)) {
                     d.setEmbargoRestrictedAccess(String.format("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\"  target=\"_blank\"> you should be able to access the data here</a>", containerUrl));
                 }
             } else {
                 if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
                     d.setEmbargoRestrictedAccess("This dataset is temporarily under embargo. The data will become available for download after the embargo period.");
                 } else if (hasEmbargoStatus(datasetV1, UNDER_REVIEW)) {
-                    d.setEmbargoRestrictedAccess( "This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.");
+                    d.setEmbargoRestrictedAccess("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.");
                 }
             }
         }
