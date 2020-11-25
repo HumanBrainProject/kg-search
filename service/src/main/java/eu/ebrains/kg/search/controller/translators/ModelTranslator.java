@@ -8,10 +8,10 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetE
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
@@ -39,7 +39,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
                 }
             }
         }
-        if (modelV2.getProducedDataset() != null) {
+        if (!CollectionUtils.isEmpty(modelV2.getProducedDataset())) {
             m.setProducedDataset(modelV2.getProducedDataset().stream()
                     .map(pd -> new TargetInternalReference(
                             liveMode ? pd.getRelativeUrl() : String.format("Dataset/%s", pd.getIdentifier()),
@@ -47,7 +47,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
                     )).collect(Collectors.toList()));
         }
         if (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && !hasEmbargoStatus(modelV2, EMBARGOED))) {
-            if (modelV2.getFiles() != null) {
+            if (!CollectionUtils.isEmpty(modelV2.getFiles())) {
                 m.setFiles(modelV2.getFiles().stream()
                         .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
                         .map(f ->
@@ -59,7 +59,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
                         ).collect(Collectors.toList()));
             }
         }
-        if (!hasEmbargoStatus(modelV2, EMBARGOED) && modelV2.getFileBundle() != null) {
+        if (!hasEmbargoStatus(modelV2, EMBARGOED) && !CollectionUtils.isEmpty(modelV2.getFileBundle())) {
             m.setAllFiles(modelV2.getFileBundle().stream()
                     .map(fb -> {
                         if (fb.getUrl().startsWith("https://object.cscs.ch")) {
@@ -83,7 +83,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
             m.setLicenseInfo(new TargetExternalReference(license.getUrl(), license.getName()));
         }
 
-        if (modelV2.getCustodian() != null) {
+        if (!CollectionUtils.isEmpty(modelV2.getCustodian())) {
             m.setOwners(modelV2.getCustodian().stream()
                     .map(o -> new TargetInternalReference(
                             liveMode ? o.getRelativeUrl() : String.format("Contributor/%s", o.getIdentifier()),
@@ -93,7 +93,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
 
         m.setAbstractionLevel(modelV2.getAbstractionLevel());
 
-        if (modelV2.getMainContact() != null) {
+        if (!CollectionUtils.isEmpty(modelV2.getMainContact())) {
             m.setMainContact(modelV2.getMainContact().stream()
                     .map(mc -> new TargetInternalReference(
                             liveMode ? mc.getRelativeUrl() : String.format("Contributor/%s", mc.getIdentifier()),
@@ -102,7 +102,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
         }
         m.setBrainStructures(modelV2.getBrainStructure());
 
-        if (modelV2.getUsedDataset() != null) {
+        if (!CollectionUtils.isEmpty(modelV2.getUsedDataset())) {
             m.setUsedDataset(modelV2.getUsedDataset().stream()
                     .map(ud -> new TargetInternalReference(
                             liveMode ? ud.getRelativeUrl() : String.format("Dataset/%s", ud.getIdentifier()),
@@ -110,7 +110,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
                     )).collect(Collectors.toList()));
         }
         m.setVersion(modelV2.getVersion());
-        if (modelV2.getPublications() != null) {
+        if (!CollectionUtils.isEmpty(modelV2.getPublications())) {
             m.setPublications(modelV2.getPublications().stream()
                     .filter(p -> StringUtils.isNotBlank(p.getDoi()))
                     .map(p -> {
@@ -125,7 +125,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
         m.setStudyTarget(modelV2.getStudyTarget());
         m.setModelScope(modelV2.getModelScope());
         m.setTitle(modelV2.getTitle());
-        if (modelV2.getContributors() != null) {
+        if (!CollectionUtils.isEmpty(modelV2.getContributors())) {
             m.setContributors(modelV2.getContributors().stream()
                     .map(c -> new TargetInternalReference(
                             liveMode ? c.getRelativeUrl() : String.format("Contributor/%s", c.getIdentifier()),

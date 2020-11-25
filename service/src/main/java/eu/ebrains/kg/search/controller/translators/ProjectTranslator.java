@@ -5,6 +5,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv1.ProjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Project;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -17,7 +18,7 @@ public class ProjectTranslator implements Translator<ProjectV1, Project> {
         p.setFirstRelease(projectSource.getFirstReleaseAt());
         p.setDescription(projectSource.getDescription());
         p.setLastRelease(projectSource.getLastReleaseAt());
-        if(projectSource.getDatasets()!=null) {
+        if(!CollectionUtils.isEmpty(projectSource.getDatasets())) {
             p.setDataset(projectSource.getDatasets().stream()
                     .map(dataset ->
                             new TargetInternalReference(
@@ -26,7 +27,7 @@ public class ProjectTranslator implements Translator<ProjectV1, Project> {
                     .collect(Collectors.toList()));
         }
         p.setTitle(projectSource.getTitle());
-        if(projectSource.getPublications()!=null) {
+        if(!CollectionUtils.isEmpty(projectSource.getPublications())) {
             p.setPublications(projectSource.getPublications().stream()
                     .map(publication -> {
                         if (StringUtils.isNotBlank(publication.getDoi()) && StringUtils.isNotBlank(publication.getCitation())) {

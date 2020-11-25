@@ -6,15 +6,17 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.Sample;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import org.springframework.util.CollectionUtils;
 
 import java.util.stream.Collectors;
 
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
+
 public class SampleTranslator implements Translator<SampleV1, Sample> {
-//TODO Ioannis
+
     public Sample translate(SampleV1 sample, DatabaseScope databaseScope, boolean liveMode) {
         Sample s = new Sample();
         String title = sample.getTitle();
-        String embargo = (sample.getEmbargo() != null && !sample.getEmbargo().isEmpty())?sample.getEmbargo().get(0):null;
         s.setTitle(title);
         s.setFirstRelease(sample.getFirstReleaseAt());
         s.setLastRelease(sample.getLastReleaseAt());
@@ -26,45 +28,53 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
         s.setParcellationAtlas(sample.getParcellationAtlas());
         s.setWeightPreFixation(sample.getWeightPreFixation());
         s.setMethods(sample.getMethods());
-        s.setRegion(sample.getParcellationRegion().stream()
-                .map(r ->
-                        new TargetExternalReference(r.getUrl(), r.getAlias() != null ? r.getAlias() : r.getName())
-                ).collect(Collectors.toList()));
-        s.setViewer(sample.getBrainViewer().stream()
-                .map(url ->
-                        new TargetExternalReference(url, title != null ? String.format("Show %s in brain atlas viewer", title) : "Show in brain atlas viewer")
-                ).collect(Collectors.toList()));
-        s.setDatasets(sample.getDatasets().stream()
-                .map(d ->
-                        new Sample.Dataset(
-                                d.getComponentName(),
-                                d.getInstances().stream()
-                                        .map(i ->
-                                                new TargetInternalReference(
-                                                        liveMode ? i.getRelativeUrl() : String.format("Dataset/%s", i.getIdentifier()),
-                                                        i.getName(), null)
-                                        ).collect(Collectors.toList())
-                        )
-                ).collect(Collectors.toList()));
-        s.setSubject(sample.getSubjects().stream()
-                .map(d ->
-                        new Sample.Subject(
-                                new TargetInternalReference(
-                                        liveMode ? d.getRelativeUrl() : String.format("Subject/%s", d.getIdentifier()),
-                                        d.getName(),
-                                        null
-                                ),
-                                d.getSpecies(),
-                                d.getSex(),
-                                d.getAge(),
-                                d.getAgeCategory(),
-                                d.getWeight(),
-                                d.getStrain() != null ? d.getStrain() : d.getStrains() ,
-                                d.getGenotype()
-                        )
-                ).collect(Collectors.toList()));
+        if (sample.getParcellationRegion() != null) {
+            s.setRegion(sample.getParcellationRegion().stream()
+                    .map(r ->
+                            new TargetExternalReference(r.getUrl(), r.getAlias() != null ? r.getAlias() : r.getName())
+                    ).collect(Collectors.toList()));
+        }
+        if (sample.getBrainViewer() != null) {
+            s.setViewer(sample.getBrainViewer().stream()
+                    .map(url ->
+                            new TargetExternalReference(url, title != null ? String.format("Show %s in brain atlas viewer", title) : "Show in brain atlas viewer")
+                    ).collect(Collectors.toList()));
+        }
+        if (sample.getDatasets() != null) {
+            s.setDatasets(sample.getDatasets().stream()
+                    .map(d ->
+                            new Sample.Dataset(
+                                    d.getComponentName(),
+                                    d.getInstances().stream()
+                                            .map(i ->
+                                                    new TargetInternalReference(
+                                                            liveMode ? i.getRelativeUrl() : String.format("Dataset/%s", i.getIdentifier()),
+                                                            i.getName(), null)
+                                            ).collect(Collectors.toList())
+                            )
+                    ).collect(Collectors.toList()));
+        }
+        if (sample.getSubjects() != null) {
+            s.setSubject(sample.getSubjects().stream()
+                    .map(d ->
+                            new Sample.Subject(
+                                    new TargetInternalReference(
+                                            liveMode ? d.getRelativeUrl() : String.format("Subject/%s", d.getIdentifier()),
+                                            d.getName(),
+                                            null
+                                    ),
+                                    d.getSpecies(),
+                                    d.getSex(),
+                                    d.getAge(),
+                                    d.getAgeCategory(),
+                                    d.getWeight(),
+                                    d.getStrain() != null ? d.getStrain() : d.getStrains(),
+                                    d.getGenotype()
+                            )
+                    ).collect(Collectors.toList()));
+        }
         String containerUrl = sample.getContainerUrl();
-        if (embargo != null && !embargo.equals("Embargoed")) {
+        if (hasEmbargoStatus(sample, EMBARGOED)) {
             if (containerUrl.startsWith("https://object.cscs.ch")) {
                 s.setAllFiles(new TargetExternalReference(
                         String.format("https://kg.ebrains.eu/proxy/export?container=%s", containerUrl),
@@ -77,7 +87,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                 ));
             }
         }
-        if (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && (embargo == null || (!embargo.equals("Embargoed") && !embargo.equals("Under review"))))) {
+        if (!CollectionUtils.isEmpty(sample.getFiles()) && (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && !hasEmbargoStatus(sample, EMBARGOED, UNDER_REVIEW)))) {
             s.setFiles(sample.getFiles().stream()
                     .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
                     .map(f ->

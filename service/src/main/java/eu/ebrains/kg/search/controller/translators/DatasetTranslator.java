@@ -6,19 +6,17 @@ import eu.ebrains.kg.search.model.source.commons.SourceFile;
 import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import javax.print.DocFlavor;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
 public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
@@ -92,7 +90,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         }
 
 
-        if (datasetV1.getPublications() != null) {
+        if (!CollectionUtils.isEmpty(datasetV1.getPublications())) {
             d.setPublications(datasetV1.getPublications().stream()
                     .map(publication -> {
                         String publicationResult = null;
@@ -109,11 +107,11 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         }
         d.setAtlas(datasetV1.getParcellationAtlas());
 
-        if (datasetV1.getExternalDatalink() != null) {
+        if (!CollectionUtils.isEmpty(datasetV1.getExternalDatalink())) {
             d.setExternalDatalink(datasetV1.getExternalDatalink().stream()
                     .map(ed -> new TargetExternalReference(ed, ed)).collect(Collectors.toList()));
         }
-        if (datasetV1.getParcellationRegion() != null) {
+        if (!CollectionUtils.isEmpty(datasetV1.getParcellationRegion())) {
             d.setRegion(datasetV1.getParcellationRegion().stream()
                     .map(r -> new TargetExternalReference(r.getUrl(), StringUtils.isBlank(r.getAlias()) ? r.getName() : r.getAlias()))
                     .collect(Collectors.toList()));
@@ -122,7 +120,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         d.setModalityForFilter(datasetV1.getModalityForFilter());
         d.setDoi(firstItemOrNull(datasetV1.getDoi()));
 
-        if (datasetV1.getContributors() != null) {
+        if (!CollectionUtils.isEmpty(datasetV1.getContributors())) {
             d.setContributors(datasetV1.getContributors().stream()
                     .map(c -> new TargetInternalReference(
                             liveMode ? c.getRelativeUrl() : String.format("Contributor/%s", c.getIdentifier()),
@@ -133,7 +131,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
 
         d.setPreparation(datasetV1.getPreparation());
 
-        if (datasetV1.getComponent() != null) {
+        if (!CollectionUtils.isEmpty(datasetV1.getComponent())) {
             d.setComponent(datasetV1.getComponent().stream()
                     .map(c -> new TargetInternalReference(
                             liveMode ? c.getRelativeUrl() : String.format("Project/%s", c.getIdentifier()),
@@ -158,7 +156,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                             )).collect(Collectors.toList()));
         }
 
-        if (datasetV1.getSubjects() != null) {
+        if (!CollectionUtils.isEmpty(datasetV1.getSubjects())) {
             d.setSubjects(datasetV1.getSubjects().stream()
                     .map(s ->
                             new Dataset.Subject(
@@ -174,13 +172,13 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                                     s.getWeight(),
                                     s.getStrain() != null ? s.getStrain() : s.getStrains(),
                                     s.getGenotype(),
-                                    s.getSamples().
+                                    !CollectionUtils.isEmpty(s.getSamples()) ? s.getSamples().
                                             stream().
                                             map(sample -> new TargetInternalReference(
                                                     liveMode ? sample.getRelativeUrl() : String.format("Sample/%s", sample.getIdentifier()),
                                                     sample.getName(),
                                                     null
-                                            )).collect(Collectors.toList())
+                                            )).collect(Collectors.toList()) : null
                             )
                     ).collect(Collectors.toList()));
         }
