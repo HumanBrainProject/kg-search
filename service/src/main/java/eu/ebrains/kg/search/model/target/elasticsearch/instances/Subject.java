@@ -119,7 +119,7 @@ public class Subject {
     }
 
     public void setSpecies(List<String> species) {
-        this.species = (species == null || species.isEmpty())? null : species.stream().map(value -> new Value<>(value)).collect(Collectors.toList());
+        this.species = species == null ? null : species.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public List<Value<String>> getSex() {
@@ -127,7 +127,7 @@ public class Subject {
     }
 
     public void setSex(List<String> sex) {
-        this.sex = (sex == null || sex.isEmpty())? null : sex.stream().map(value -> new Value<>(value)).collect(Collectors.toList());
+        this.sex = sex == null ? null : sex.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public Value<String> getAge() {
@@ -147,7 +147,7 @@ public class Subject {
     }
 
     public void setAgeCategory(List<String> ageCategory) {
-        this.ageCategory = (ageCategory == null || ageCategory.isEmpty())? null : ageCategory.stream().map(value -> new Value<>(value)).collect(Collectors.toList());
+        this.ageCategory = ageCategory == null ? null : ageCategory.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public Value<String> getWeight() {
@@ -191,7 +191,7 @@ public class Subject {
     }
 
     public void setSamples(List<TargetInternalReference> samples) {
-        this.samples = (samples == null || samples.isEmpty())? null : samples;
+        this.samples = samples;
     }
 
     public List<Value<String>> getDatasetExists() {
@@ -199,13 +199,13 @@ public class Subject {
     }
 
     public void setDatasetExists(List<String> datasetExists) {
-        this.datasetExists = (datasetExists == null || datasetExists.isEmpty())? null : datasetExists.stream().map(value -> new Value<>(value)).collect(Collectors.toList());
+        this.datasetExists = datasetExists == null ? null : datasetExists.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public List<Children<Dataset>> getDatasets() { return datasets; }
 
     public void setDatasets(List<Dataset> datasets) {
-        this.datasets = (datasets == null || datasets.isEmpty())? null : datasets.stream().map(value -> new Children<>(value)).collect(Collectors.toList());
+        this.datasets = datasets == null ? null : datasets.stream().map(Children::new).collect(Collectors.toList());
     }
 
     public ISODateValue getFirstRelease() {
@@ -237,7 +237,7 @@ public class Subject {
         public Dataset() {}
 
         public Dataset(List<String> component, List<TargetInternalReference> name) {
-            this.component = (component == null || component.isEmpty())? null : component.stream().map(value -> new Value<>(value)).collect(Collectors.toList());
+            this.component = component == null ? null : component.stream().map(Value::new).collect(Collectors.toList());
             this.name = name;
         }
 
@@ -247,13 +247,13 @@ public class Subject {
         public List<Value<String>> getComponent() { return component; }
 
         public void setComponent(List<Value<String>> component) {
-            this.component = (component == null || component.isEmpty())? null : component;
+            this.component = component;
         }
 
         public List<TargetInternalReference> getName() { return name; }
 
         public void setName(List<TargetInternalReference> name) {
-            this.name = (name == null || name.isEmpty())? null : name;
+            this.name = name;
         }
     }
 

@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 
 public class ContributorTranslator implements Translator<PersonSources, Contributor> {
 
+    //TODO Oli
+
     public Contributor translate(PersonSources personSources, DatabaseScope databaseScope, boolean liveMode) {
         Contributor c = new Contributor();
         PersonV1andV2 person = personSources.getPersonV2() != null ? personSources.getPersonV2() : personSources.getPersonV1();

@@ -6,7 +6,7 @@ import eu.ebrains.kg.search.model.source.commons.*;
 import java.util.Date;
 import java.util.List;
 
-public class DatasetV1 {
+public class DatasetV1 implements HasEmbargo{
     private List<String> methods;
     private Date lastReleaseAt;
     private List<SourceInternalReference> component;
@@ -162,6 +162,7 @@ public class DatasetV1 {
 
     public void setModalityForFilter(List<String> modalityForFilter) { this.modalityForFilter = modalityForFilter; }
 
+    @Override
     public List<String> getEmbargo() { return embargo; }
 
     public void setEmbargo(List<String> embargo) { this.embargo = embargo; }

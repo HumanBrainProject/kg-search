@@ -97,7 +97,7 @@ public class Contributor {
     }
 
     public void setPublications(List<String> publications) {
-        this.publications = publications != null ? publications.stream().map(Value::new).collect(Collectors.toList()):null;
+        this.publications = publications != null ? publications.stream().map(Value::new).collect(Collectors.toList()) : null;
     }
 
     public ISODateValue getFirstRelease() {

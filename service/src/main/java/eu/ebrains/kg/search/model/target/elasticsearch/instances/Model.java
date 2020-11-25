@@ -167,7 +167,7 @@ public class Model {
     }
 
     public void setProducedDataset(List<TargetInternalReference> producedDataset) {
-        this.producedDataset = producedDataset.isEmpty() ? null : producedDataset; // TODO: Should we completely skip the value if it is null ?
+        this.producedDataset = producedDataset;
     }
 
     public List<TargetExternalReference> getAllFiles() {
@@ -183,7 +183,7 @@ public class Model {
     }
 
     public void setModelFormat(List<String> modelFormat) {
-        this.modelFormat = (modelFormat == null || modelFormat.isEmpty())? null : modelFormat.stream().map(Value::new).collect(Collectors.toList());
+        this.modelFormat = modelFormat == null ? null : modelFormat.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public Value<String> getDescription() {
@@ -215,7 +215,7 @@ public class Model {
     }
 
     public void setAbstractionLevel(List<String> abstractionLevel) {
-        this.abstractionLevel = (abstractionLevel == null || abstractionLevel.isEmpty())? null : abstractionLevel.stream().map(Value::new).collect(Collectors.toList()); // TODO: Remove null values
+        this.abstractionLevel = abstractionLevel == null ? null : abstractionLevel.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public List<TargetInternalReference> getMainContact() {
@@ -223,7 +223,7 @@ public class Model {
     }
 
     public void setMainContact(List<TargetInternalReference> mainContact) {
-        this.mainContact = mainContact.isEmpty() ? null : mainContact;
+        this.mainContact = mainContact;
     }
 
     public List<Value<String>> getBrainStructures() {
@@ -231,7 +231,7 @@ public class Model {
     }
 
     public void setBrainStructures(List<String> brainStructures) {
-        this.brainStructures = (brainStructures == null || brainStructures.isEmpty())? null : brainStructures.stream().map(Value::new).collect(Collectors.toList());
+        this.brainStructures = brainStructures == null ? null : brainStructures.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public List<TargetInternalReference> getUsedDataset() {
@@ -239,7 +239,7 @@ public class Model {
     }
 
     public void setUsedDataset(List<TargetInternalReference> usedDataset) {
-        this.usedDataset = usedDataset.isEmpty() ? null : usedDataset;
+        this.usedDataset = usedDataset;
     }
 
     public Value<String> getVersion() {
@@ -255,14 +255,15 @@ public class Model {
     }
 
     public void setPublications(List<String> publications) {
-        this.publications = (publications == null || publications.isEmpty())? null : publications.stream().map(Value::new).collect(Collectors.toList());
+        this.publications = publications == null ? null : publications.stream().map(Value::new).collect(Collectors.toList());
     }
+
     public List<Value<String>> getStudyTarget() {
         return studyTarget;
     }
 
     public void setStudyTarget(List<String> studyTarget) {
-        this.studyTarget = (studyTarget == null || studyTarget.isEmpty())? null : studyTarget.stream().map(Value::new).collect(Collectors.toList());
+        this.studyTarget = studyTarget == null ? null : studyTarget.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public List<Value<String>> getModelScope() {
@@ -270,7 +271,7 @@ public class Model {
     }
 
     public void setModelScope(List<String> modelScope) {
-        this.modelScope = (modelScope == null || modelScope.isEmpty())? null : modelScope.stream().map(Value::new).collect(Collectors.toList());
+        this.modelScope = modelScope == null ? null : modelScope.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public Value<String> getTitle() {
@@ -294,7 +295,7 @@ public class Model {
     }
 
     public void setCellularTarget(List<String> cellularTarget) {
-        this.cellularTarget = (cellularTarget == null || cellularTarget.isEmpty())? null : cellularTarget.stream().map(Value::new).collect(Collectors.toList());
+        this.cellularTarget = cellularTarget == null ? null : cellularTarget.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public Value<String> getType() {

@@ -70,7 +70,7 @@ public class Project {
     }
 
     public void setPublications(List<String> publications) {
-        this.publications = (publications == null || publications.isEmpty())? null : publications.stream().map(Value::new).collect(Collectors.toList());
+        this.publications = publications == null ? null : publications.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public Value<String> getType() {
@@ -102,7 +102,7 @@ public class Project {
     }
 
     public void setDataset(List<TargetInternalReference> dataset) {
-        this.dataset = (dataset == null || dataset.isEmpty())? null : dataset;
+        this.dataset = dataset;
     }
 
     public Value<String> getTitle() {

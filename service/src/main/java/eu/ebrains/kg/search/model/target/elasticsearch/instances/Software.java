@@ -95,7 +95,7 @@ public class Software {
     }
 
     public void setAppCategory(List<String> appCategory) {
-        this.appCategory = (appCategory == null || appCategory.isEmpty())? null : appCategory.stream().map(Value::new).collect(Collectors.toList());
+        this.appCategory = appCategory == null ? null : appCategory.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public Value<String> getIdentifier() {
@@ -119,7 +119,7 @@ public class Software {
     }
 
     public void setSourceCode(List<TargetExternalReference> sourceCode) {
-        this.sourceCode = (sourceCode == null || sourceCode.isEmpty())? null : sourceCode;
+        this.sourceCode = sourceCode;
     }
 
     public List<Value<String>> getFeatures() {
@@ -127,7 +127,7 @@ public class Software {
     }
 
     public void setFeatures(List<String> features) {
-        this.features = (features == null || features.isEmpty())? null : features.stream().map(Value::new).collect(Collectors.toList());
+        this.features = features == null ? null : features.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public List<TargetExternalReference> getDocumentation() {
@@ -135,7 +135,7 @@ public class Software {
     }
 
     public void setDocumentation(List<TargetExternalReference> documentation) {
-        this.documentation = (documentation == null || documentation.isEmpty())? null : documentation;
+        this.documentation =  documentation;
     }
 
     public List<Value<String>> getLicense() {
@@ -143,7 +143,7 @@ public class Software {
     }
 
     public void setLicense(List<String> license) {
-        this.license = (license == null || license.isEmpty())? null : license.stream().map(Value::new).collect(Collectors.toList());;
+        this.license = license == null ? null : license.stream().map(Value::new).collect(Collectors.toList());;
     }
 
     public List<Value<String>> getOperatingSystem() {
@@ -152,7 +152,7 @@ public class Software {
 
     public void setOperatingSystem(List<String> operatingSystem) {
 
-        this.operatingSystem = (operatingSystem == null || operatingSystem.isEmpty())? null : operatingSystem.stream().map(Value::new).collect(Collectors.toList());
+        this.operatingSystem = operatingSystem == null ? null : operatingSystem.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public Value<String> getVersion() {
@@ -172,7 +172,7 @@ public class Software {
     }
 
     public void setHomepage(List<TargetExternalReference> homepage) {
-        this.homepage = (homepage == null || homepage.isEmpty())? null : homepage;
+        this.homepage = homepage;
     }
 
     public Value<String> getTitle() { return title; }

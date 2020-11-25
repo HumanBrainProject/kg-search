@@ -1,14 +1,11 @@
 package eu.ebrains.kg.search.model.source.openMINDSv2;
 
-import eu.ebrains.kg.search.model.source.commons.SourceExternalReference;
-import eu.ebrains.kg.search.model.source.commons.SourceFile;
-import eu.ebrains.kg.search.model.source.commons.SourceInternalReference;
-import eu.ebrains.kg.search.model.source.commons.Publication;
+import eu.ebrains.kg.search.model.source.commons.*;
 
 import java.util.Date;
 import java.util.List;
 
-public class ModelV2 {
+public class ModelV2 implements HasEmbargo {
     private List<SourceExternalReference> fileBundle;
     private List<SourceFile> files;
     private List<SourceInternalReference> custodian;
@@ -109,6 +106,7 @@ public class ModelV2 {
 
     public void setContributors(List<SourceInternalReference> contributors) { this.contributors = contributors; }
 
+    @Override
     public List<String> getEmbargo() { return embargo; }
 
     public void setEmbargo(List<String> embargo) { this.embargo = embargo; }

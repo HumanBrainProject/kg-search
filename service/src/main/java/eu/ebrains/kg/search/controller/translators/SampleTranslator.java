@@ -10,7 +10,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetE
 import java.util.stream.Collectors;
 
 public class SampleTranslator implements Translator<SampleV1, Sample> {
-
+//TODO Ioannis
     public Sample translate(SampleV1 sample, DatabaseScope databaseScope, boolean liveMode) {
         Sample s = new Sample();
         String title = sample.getTitle();

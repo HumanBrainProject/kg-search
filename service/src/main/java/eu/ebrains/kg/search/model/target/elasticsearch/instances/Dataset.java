@@ -132,7 +132,7 @@ public class Dataset {
     }
 
     public void setExternalDatalink(List<TargetExternalReference> externalDatalink) {
-        this.externalDatalink = (externalDatalink == null || externalDatalink.isEmpty())? null : externalDatalink;
+        this.externalDatalink = externalDatalink;
     }
 
     public List<TargetFile> getFiles() {
@@ -180,7 +180,7 @@ public class Dataset {
     }
 
     public void setMethods(List<String> methods) {
-        this.methods = (methods == null || methods.isEmpty())? null : methods.stream().map(Value::new).collect(Collectors.toList());
+        this.methods = methods == null ? null : methods.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public Value<String> getDescription() {
@@ -204,7 +204,7 @@ public class Dataset {
     }
 
     public void setOwners(List<TargetInternalReference> owners) {
-        this.owners = (owners == null || owners.isEmpty())? null : owners;
+        this.owners =  owners;
     }
 
     public TargetExternalReference getDataDescriptor() {
@@ -220,7 +220,7 @@ public class Dataset {
     }
 
     public void setSpeciesFilter(List<String> speciesFilter) {
-        this.speciesFilter = (speciesFilter == null || speciesFilter.isEmpty())? null : speciesFilter.stream().map(Value::new).collect(Collectors.toList());
+        this.speciesFilter = speciesFilter == null ? null : speciesFilter.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public Value<String> getCitation() {
@@ -276,7 +276,7 @@ public class Dataset {
     }
 
     public void setPublications(List<String> publications) {
-        this.publications = (publications == null || publications.isEmpty())? null : publications.stream().map(Value::new).collect(Collectors.toList());
+        this.publications = publications == null ? null : publications.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public List<Value<String>> getAtlas() {
@@ -284,7 +284,7 @@ public class Dataset {
     }
 
     public void setAtlas(List<String> atlas) {
-        this.atlas = (atlas == null || atlas.isEmpty())? null : atlas.stream().map(Value::new).collect(Collectors.toList());
+        this.atlas = atlas == null ? null : atlas.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public List<TargetExternalReference> getRegion() {
@@ -292,7 +292,7 @@ public class Dataset {
     }
 
     public void setRegion(List<TargetExternalReference> region) {
-        this.region = (region == null || region.isEmpty())? null : region;
+        this.region = region;
     }
 
     public Value<String> getTitle() {
@@ -308,7 +308,7 @@ public class Dataset {
     }
 
     public void setModalityForFilter(List<String> modalityForFilter) {
-        this.modalityForFilter = (modalityForFilter == null || modalityForFilter.isEmpty())? null : modalityForFilter.stream().map(Value::new).collect(Collectors.toList());
+        this.modalityForFilter = modalityForFilter == null ? null : modalityForFilter.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public Value<String> getDoi() {
@@ -328,7 +328,7 @@ public class Dataset {
     }
 
     public void setContributors(List<TargetInternalReference> contributors) {
-        this.contributors = (contributors == null || contributors.isEmpty())? null : contributors;
+        this.contributors =  contributors;
     }
 
     public List<Value<String>> getPreparation() {
@@ -336,7 +336,7 @@ public class Dataset {
     }
 
     public void setPreparation(List<String> preparation) {
-        this.preparation = (preparation == null || preparation.isEmpty())? null : preparation.stream().map(Value::new).collect(Collectors.toList());
+        this.preparation = preparation == null ? null : preparation.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public List<TargetInternalReference> getComponent() {
@@ -344,7 +344,7 @@ public class Dataset {
     }
 
     public void setComponent(List<TargetInternalReference> component) {
-        this.component = (component == null || component.isEmpty())? null : component;
+        this.component = component;
     }
 
     public List<Value<String>> getProtocol() {
@@ -352,7 +352,7 @@ public class Dataset {
     }
 
     public void setProtocol(List<String> protocol) {
-        this.protocol = (protocol == null || protocol.isEmpty())? null : protocol.stream().map(Value::new).collect(Collectors.toList());
+        this.protocol = protocol == null ? null : protocol.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public List<TargetExternalReference> getViewer() {
@@ -360,7 +360,7 @@ public class Dataset {
     }
 
     public void setViewer(List<TargetExternalReference> viewer) {
-        this.viewer = (viewer == null || viewer.isEmpty())? null : viewer;
+        this.viewer = viewer;
     }
 
     public List<Children<Subject>> getSubjects() {
@@ -368,7 +368,7 @@ public class Dataset {
     }
 
     public void setSubjects(List<Subject> subject) {
-        this.subjects = (subject == null || subject.isEmpty())? null : subject.stream().map(value -> new Children<>(value)).collect(Collectors.toList());
+        this.subjects = subject == null ? null : subject.stream().map(Children::new).collect(Collectors.toList());
     }
 
 
@@ -464,7 +464,7 @@ public class Dataset {
         }
 
         public void setSpecies(List<Value<String>> species) {
-            this.species = (species == null || species.isEmpty())? null : species;
+            this.species = species;
         }
 
         public List<Value<String>> getSex() {
@@ -472,7 +472,7 @@ public class Dataset {
         }
 
         public void setSex(List<Value<String>> sex) {
-            this.sex = (sex == null || sex.isEmpty())? null : sex;
+            this.sex = sex;
         }
 
         public Value<String> getAge() {
@@ -488,7 +488,7 @@ public class Dataset {
         }
 
         public void setAgeCategory(List<Value<String>> ageCategory) {
-            this.ageCategory = (ageCategory == null || ageCategory.isEmpty())? null : ageCategory;
+            this.ageCategory = ageCategory;
         }
 
         public Value<String> getWeight() {
@@ -520,7 +520,7 @@ public class Dataset {
         }
 
         public void setSamples(List<TargetInternalReference> samples) {
-            this.samples = (samples == null || samples.isEmpty())? null : samples;
+            this.samples = samples;
         }
     }
 }

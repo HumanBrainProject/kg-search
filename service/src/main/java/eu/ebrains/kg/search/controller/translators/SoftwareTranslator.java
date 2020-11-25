@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 
 public class SoftwareTranslator implements Translator<SoftwareV2, Software> {
-
+//TODO Gilles
     public Software translate(SoftwareV2 softwareV2, DatabaseScope databaseScope, boolean liveMode) {
         Software s = new Software();
         softwareV2.getVersions().sort(Comparator.comparing(SoftwareV2.Version::getVersion).reversed());

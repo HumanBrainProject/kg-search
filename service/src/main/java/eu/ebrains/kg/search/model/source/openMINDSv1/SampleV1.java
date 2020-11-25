@@ -3,12 +3,10 @@ package eu.ebrains.kg.search.model.source.openMINDSv1;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.List;
-import eu.ebrains.kg.search.model.source.commons.SpecimenGroup;
-import eu.ebrains.kg.search.model.source.commons.ParcellationRegion;
-import eu.ebrains.kg.search.model.source.commons.Subject;
-import eu.ebrains.kg.search.model.source.commons.SourceFile;
 
-public class SampleV1 {
+import eu.ebrains.kg.search.model.source.commons.*;
+
+public class SampleV1 implements HasEmbargo {
     private String identifier;
     private String editorId;
     private String title;
@@ -156,6 +154,7 @@ public class SampleV1 {
         this.files = files;
     }
 
+    @Override
     public List<String> getEmbargo() { return embargo; }
 
     public void setEmbargo(List<String> embargo) { this.embargo = embargo; }

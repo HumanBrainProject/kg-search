@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 public class SubjectTranslator implements Translator<SubjectV1, Subject> {
 
+    //TODO the first one finished
     public Subject translate(SubjectV1 subject, DatabaseScope databaseScope, boolean liveMode) {
         Subject s = new Subject();
         s.setAge(subject.getAge());

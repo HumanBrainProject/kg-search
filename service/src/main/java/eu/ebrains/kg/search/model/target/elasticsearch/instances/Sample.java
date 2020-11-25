@@ -128,7 +128,7 @@ public class Sample {
     }
 
     public void setParcellationAtlas(List<String> parcellationAtlas) {
-        this.parcellationAtlas = (parcellationAtlas == null || parcellationAtlas.isEmpty()) ? null : parcellationAtlas.stream().map(value -> new Value<>(value)).collect(Collectors.toList());
+        this.parcellationAtlas = parcellationAtlas == null ? null : parcellationAtlas.stream().map(value -> new Value<>(value)).collect(Collectors.toList());
     }
 
     public List<TargetExternalReference> getRegion() {
@@ -144,7 +144,7 @@ public class Sample {
     }
 
     public void setViewer(List<TargetExternalReference> viewer) {
-        this.viewer = (viewer == null || viewer.isEmpty()) ? null : viewer;
+        this.viewer = viewer;
     }
 
     public List<Value<String>> getMethods() {
@@ -152,7 +152,7 @@ public class Sample {
     }
 
     public void setMethods(List<String> methods) {
-        this.methods = (methods == null || methods.isEmpty()) ? null : methods.stream().map(value -> new Value<>(value)).collect(Collectors.toList());
+        this.methods = methods == null ? null : methods.stream().map(value -> new Value<>(value)).collect(Collectors.toList());
     }
 
     public TargetExternalReference getAllFiles() {
@@ -168,7 +168,7 @@ public class Sample {
     }
 
     public void setFiles(List<TargetFile> files) {
-        this.files = (files == null || files.isEmpty()) ? null : files;
+        this.files =  files;
     }
 
     public List<Children<Subject>> getSubject() {
@@ -224,7 +224,7 @@ public class Sample {
         }
 
         public Dataset(List<String> component, List<TargetInternalReference> name) {
-            this.component = (component == null || component.isEmpty()) ? null : component.stream().map(value -> new Value<>(value)).collect(Collectors.toList());
+            this.component = component == null  ? null : component.stream().map(value -> new Value<>(value)).collect(Collectors.toList());
             this.name = name;
         }
 
