@@ -4,7 +4,6 @@ import eu.ebrains.kg.search.controller.utils.TranslatorTestHelper;
 import eu.ebrains.kg.search.controller.utils.WebClientHelper;
 import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.source.ResultOfKGv2;
-import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import org.apache.commons.io.IOUtils;
@@ -29,7 +28,7 @@ public class SoftwareTranslatorTest {
             Map<String, Object> expected = WebClientHelper.getDocument("public", "Software", id, ElasticSearchDocument.class).getSource();
             List<String> messages = TranslatorTestHelper.compareSoftware(software, expected, DatabaseScope.RELEASED, false);
             if (!messages.isEmpty()) {
-                result.add("\n\n\tSubject: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+                result.add("\n\n\tSoftware: " + id + "\n\t\t" + String.join("\n\t\t", messages));
             }
         });
         if (!result.isEmpty()) {

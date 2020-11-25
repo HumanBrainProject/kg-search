@@ -22,12 +22,12 @@ public class SampleTranslatorTest {
     }
 
     @Test
-    public void compareReleasedSubjects() {
+    public void compareReleasedSamples() {
         compareSamples(DatabaseScope.RELEASED);
     }
 
     @Test
-    public void compareInferredSubjects() {
+    public void compareInferredSamples() {
         compareSamples(DatabaseScope.INFERRED);
     }
 
@@ -39,7 +39,7 @@ public class SampleTranslatorTest {
             Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated", "Sample", id, ElasticSearchDocument.class).getSource();
             List<String> messages = TranslatorTestHelper.compareSample(sample, expected, databaseScope, false);
             if (!messages.isEmpty()) {
-                result.add("\n\n\tSubject: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+                result.add("\n\n\tSample: " + id + "\n\t\t" + String.join("\n\t\t", messages));
             }
         });
         if (!result.isEmpty()) {

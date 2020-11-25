@@ -1,5 +1,6 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances.commons;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 
 public class TargetExternalReference {
@@ -12,6 +13,7 @@ public class TargetExternalReference {
     }
 
     @ElasticSearchInfo(ignoreAbove = 256)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String url;
     private String value;
 
