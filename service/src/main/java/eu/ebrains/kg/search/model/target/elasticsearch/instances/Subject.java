@@ -68,7 +68,7 @@ public class Subject {
     private ISODateValue lastRelease;
 
     public void setType(String type) {
-        setType(type != null ? new Value<>(type) : null);
+        setType(StringUtils.isBlank(type) ? null : new Value<>(type));
     }
 
     public void setIdentifier(String identifier) {
@@ -76,11 +76,11 @@ public class Subject {
     }
 
     public void setEditorId(String editorId) {
-        setEditorId(editorId != null ? new Value<>(editorId) : null);
+        setEditorId(StringUtils.isBlank(editorId) ? null : new Value<>(editorId));
     }
 
     public void setTitle(String title) {
-        setTitle(title != null ? new Value<>(title) : null);
+        setTitle(StringUtils.isBlank(title) ? null : new Value<>(title));
     }
 
     public Value<String> getType() {
@@ -136,7 +136,7 @@ public class Subject {
     }
 
     public void setAge(String age) {
-        setAge(age != null ? new Value<>(age) : null);
+        setAge(StringUtils.isBlank(age) ? null : new Value<>(age));
     }
 
     public void setAge(Value<String> age) {
@@ -168,7 +168,7 @@ public class Subject {
     }
 
     public void setStrain(String strain) {
-        setStrain(strain != null ? new Value<>(strain) : null);
+        setStrain(StringUtils.isBlank(strain) ? null : new Value<>(strain));
     }
 
     public void setStrain(Value<String> strain) {
@@ -180,7 +180,7 @@ public class Subject {
     }
 
     public void setGenotype(String genotype) {
-        setGenotype(genotype != null ? new Value<>(genotype) : null);
+        setGenotype(StringUtils.isBlank(genotype) ? null : new Value<>(genotype));
     }
 
     public void setGenotype(Value<String> genotype) {

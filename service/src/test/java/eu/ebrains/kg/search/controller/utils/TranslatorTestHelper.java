@@ -72,15 +72,29 @@ public class TranslatorTestHelper {
 
     public static List<String> compareSubject(SubjectV1 source, Map<String, Object> targetExpected, DatabaseScope databaseScope, boolean liveMode) {
         SubjectTranslator translator = new SubjectTranslator();
-
         Subject target = translator.translate(source, databaseScope, liveMode);
-
         String targetJson = jsonAdapter.toJson(target);
-
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
 
         return compareResults(targetExpected, targetResult);
     }
+
+    public static List<String> compareSoftware(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
+        SoftwareV2 source = jsonAdapter.fromJson(sourceJson, SoftwareV2.class);
+        Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
+        return compareSoftware(source, targetExpected, databaseScope, liveMode);
+    }
+
+
+    public static List<String> compareSoftware(SoftwareV2 source, Map<String, Object> targetExpected, DatabaseScope databaseScope, boolean liveMode) {
+        SoftwareTranslator translator = new SoftwareTranslator();
+        Software target = translator.translate(source, databaseScope, liveMode);
+        String targetJson = jsonAdapter.toJson(target);
+        Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
+
+        return compareResults(targetExpected, targetResult);
+    }
+
 
     public static List<String> compareSample(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
         SampleTranslator translator = new SampleTranslator();
@@ -102,19 +116,6 @@ public class TranslatorTestHelper {
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
 
         Project target = translator.translate(source, databaseScope, liveMode);
-        String targetJson = jsonAdapter.toJson(target);
-        Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
-
-        return compareResults(targetExpected, targetResult);
-    }
-
-    public static List<String> compareSoftware(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
-        SoftwareTranslator translator = new SoftwareTranslator();
-
-        SoftwareV2 source = jsonAdapter.fromJson(sourceJson, SoftwareV2.class);
-        Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
-
-        Software target = translator.translate(source, databaseScope, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
 
