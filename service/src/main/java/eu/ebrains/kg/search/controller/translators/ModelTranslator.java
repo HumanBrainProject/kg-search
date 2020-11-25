@@ -75,7 +75,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
                         }
                     }).collect(Collectors.toList()));
         }
-        m.setModelFormat(modelV2.getModelFormat());
+        m.setModelFormat(emptyToNull(modelV2.getModelFormat()));
         m.setDescription(modelV2.getDescription());
 
         SourceExternalReference license = firstItemOrNull(modelV2.getLicense());
@@ -91,7 +91,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
                     )).collect(Collectors.toList()));
         }
 
-        m.setAbstractionLevel(modelV2.getAbstractionLevel());
+        m.setAbstractionLevel(emptyToNull(modelV2.getAbstractionLevel()));
 
         if (!CollectionUtils.isEmpty(modelV2.getMainContact())) {
             m.setMainContact(modelV2.getMainContact().stream()
@@ -100,7 +100,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
                             mc.getName()
                     )).collect(Collectors.toList()));
         }
-        m.setBrainStructures(modelV2.getBrainStructure());
+        m.setBrainStructures(emptyToNull(modelV2.getBrainStructure()));
 
         if (!CollectionUtils.isEmpty(modelV2.getUsedDataset())) {
             m.setUsedDataset(modelV2.getUsedDataset().stream()
@@ -122,8 +122,8 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
                         }
                     }).collect(Collectors.toList()));
         }
-        m.setStudyTarget(modelV2.getStudyTarget());
-        m.setModelScope(modelV2.getModelScope());
+        m.setStudyTarget(emptyToNull(modelV2.getStudyTarget()));
+        m.setModelScope(emptyToNull(modelV2.getModelScope()));
         m.setTitle(modelV2.getTitle());
         if (!CollectionUtils.isEmpty(modelV2.getContributors())) {
             m.setContributors(modelV2.getContributors().stream()
@@ -132,7 +132,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
                             c.getName()
                     )).collect(Collectors.toList()));
         }
-        m.setCellularTarget(modelV2.getCellularTarget());
+        m.setCellularTarget(emptyToNull(modelV2.getCellularTarget()));
         m.setFirstRelease(modelV2.getFirstReleaseAt());
         m.setLastRelease(modelV2.getLastReleaseAt());
         return m;

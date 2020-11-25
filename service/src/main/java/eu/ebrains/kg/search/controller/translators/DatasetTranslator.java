@@ -86,7 +86,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         String doi = firstItemOrNull(datasetV1.getDoi());
         if (StringUtils.isNotBlank(citation) && StringUtils.isNotBlank(doi)) {
             String url = URLEncoder.encode(doi, StandardCharsets.UTF_8);
-            d.setCitation(citation + "\n" + String.format("[DOI: %s]\\n[DOI: %s]: https://doi.org/%s\"", doi, doi, url));
+            d.setCitation(citation + " "+ String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url));
         }
 
 
@@ -96,7 +96,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                         String publicationResult = null;
                         if (StringUtils.isNotBlank(publication.getCitation()) && StringUtils.isNotBlank(publication.getDoi())) {
                             String url = URLEncoder.encode(publication.getDoi(), StandardCharsets.UTF_8);
-                            publicationResult = publication.getCitation() + "\n" + String.format("[DOI: %s]\\n[DOI: %s]: https://doi.org/%s\"", publication.getDoi(), publication.getDoi(), url);
+                            publicationResult = publication.getCitation() + " "+ String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
                         } else if (StringUtils.isNotBlank(publication.getCitation()) && StringUtils.isBlank(publication.getDoi())) {
                             publicationResult = publication.getCitation().trim().replaceAll(", $", "");
                         } else if (StringUtils.isNotBlank(publication.getDoi())) {
