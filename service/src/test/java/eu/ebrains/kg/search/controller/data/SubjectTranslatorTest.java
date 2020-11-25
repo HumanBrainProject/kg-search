@@ -1,16 +1,41 @@
 package eu.ebrains.kg.search.controller.data;
 
+import eu.ebrains.kg.search.controller.utils.JsonAdapter;
 import eu.ebrains.kg.search.controller.utils.TranslatorTestHelper;
+import eu.ebrains.kg.search.controller.utils.WebClientHelper;
 import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.source.ResultOfKGv2;
+import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.Subject;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SubjectTranslatorTest {
+    private static class SubjectV1Result extends ResultOfKGv2<SubjectV1> {}
+
+    @Test
+    public void compareReleasedSubjects() {
+        List<String> result = new ArrayList<>();
+        SubjectV1Result queryResult = WebClientHelper.executeQuery("query/minds/experiment/subject/v1.0.0/search", DatabaseScope.RELEASED, SubjectV1Result.class);
+        queryResult.getResults().forEach(subject -> {
+            String id = subject.getIdentifier();
+            Map<String, Object> expected = WebClientHelper.getDocument("public", "Subject", id, ElasticSearchDocument.class).getSource();
+            List<String> messages = TranslatorTestHelper.compareSubject(subject, expected, DatabaseScope.RELEASED, false);
+            result.add("\n\t\n" + id +"\n\t\t" +  String.join("\n\t\t", messages));
+        });
+        if (!result.isEmpty()) {
+            Assert.fail("\n\t" + String.join("\n\t", result));
+        }
+    }
+
     @Test
     public void compareReleasedSubject() throws IOException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v1/subjectReleasedSource.json"), StandardCharsets.UTF_8);

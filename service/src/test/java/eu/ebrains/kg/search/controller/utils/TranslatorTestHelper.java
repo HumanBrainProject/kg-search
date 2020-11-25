@@ -65,13 +65,18 @@ public class TranslatorTestHelper {
     }
 
     public static List<String> compareSubject(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
-        SubjectTranslator translator = new SubjectTranslator();
-
         SubjectV1 source = jsonAdapter.fromJson(sourceJson, SubjectV1.class);
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
+        return compareSubject(source, targetExpected, databaseScope, liveMode);
+    }
+
+    public static List<String> compareSubject(SubjectV1 source, Map<String, Object> targetExpected, DatabaseScope databaseScope, boolean liveMode) {
+        SubjectTranslator translator = new SubjectTranslator();
 
         Subject target = translator.translate(source, databaseScope, liveMode);
+
         String targetJson = jsonAdapter.toJson(target);
+
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
 
         return compareResults(targetExpected, targetResult);
