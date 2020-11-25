@@ -25,13 +25,10 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
         if (databaseScope == DatabaseScope.INFERRED) {
             s.setEditorId(sample.getEditorId());
         }
-        if (!CollectionUtils.isEmpty(sample.getParcellationAtlas())) {
-            s.setParcellationAtlas(sample.getParcellationAtlas());
-        }
+
+        s.setParcellationAtlas(emptyToNull(sample.getParcellationAtlas()));
         s.setWeightPreFixation(sample.getWeightPreFixation());
-        if (!CollectionUtils.isEmpty(sample.getMethods())) {
-            s.setMethods(sample.getMethods());
-        }
+        s.setMethods(emptyToNull(sample.getMethods()));
         if (!CollectionUtils.isEmpty(sample.getParcellationRegion())) {
             s.setRegion(sample.getParcellationRegion().stream()
                     .map(r ->

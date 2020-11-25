@@ -9,6 +9,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.firstItemOrNull;
 
 public class SoftwareTranslator implements Translator<SoftwareV2, Software> {
@@ -22,7 +23,7 @@ public class SoftwareTranslator implements Translator<SoftwareV2, Software> {
         if (databaseScope == DatabaseScope.INFERRED) {
             s.setEditorId(softwareV2.getEditorId());
         }
-        s.setAppCategory(version.getApplicationCategory());
+        s.setAppCategory(emptyToNull(version.getApplicationCategory()));
         s.setIdentifier(softwareV2.getIdentifier());
         s.setTitle(softwareV2.getTitle());
         s.setDescription(softwareV2.getDescription());
@@ -31,14 +32,14 @@ public class SoftwareTranslator implements Translator<SoftwareV2, Software> {
                     .map(sc -> new TargetExternalReference(sc, sc))
                     .collect(Collectors.toList()));
         }
-        s.setFeatures(version.getFeatures());
+        s.setFeatures(emptyToNull(version.getFeatures()));
         if (!CollectionUtils.isEmpty(version.getDocumentation())) {
             s.setDocumentation(version.getDocumentation().stream()
                     .map(d -> new TargetExternalReference(d, d))
                     .collect(Collectors.toList()));
         }
-        s.setLicense(version.getLicense());
-        s.setOperatingSystem(version.getOperatingSystem());
+        s.setLicense(emptyToNull(version.getLicense()));
+        s.setOperatingSystem(emptyToNull(version.getOperatingSystem()));
         s.setVersion(version.getVersion());
         if (!CollectionUtils.isEmpty(version.getHomepage())) {
             s.setHomepage(version.getHomepage().stream()
