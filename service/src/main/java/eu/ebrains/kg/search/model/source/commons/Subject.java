@@ -1,41 +1,12 @@
 package eu.ebrains.kg.search.model.source.commons;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Subject {
-
-    public Subject() {}
-
-    public Subject(String age, List<String> ageCategory, String weight, String genotype, String relativeUrl, String strains, List<String> species, String strain, List<String> sex, String name, String identifier) {
-        this.age = age;
-        this.ageCategory = ageCategory;
-        this.weight = weight;
-        this.genotype = genotype;
-        this.relativeUrl = relativeUrl;
-        this.strains = strains;
-        this.species = species;
-        this.strain = strain;
-        this.sex = sex;
-        this.name = name;
-        this.identifier = identifier;
-    }
-
-    public Subject(String age, List<String> ageCategory, String weight, String genotype, String relativeUrl, String strains, List<String> species, String strain, List<String> sex, String name, String identifier, List<SourceInternalReference> samples) {
-        this.age = age;
-        this.ageCategory = ageCategory;
-        this.weight = weight;
-        this.genotype = genotype;
-        this.relativeUrl = relativeUrl;
-        this.strains = strains;
-        this.species = species;
-        this.strain = strain;
-        this.sex = sex;
-        this.name = name;
-        this.identifier = identifier;
-        this.samples = samples;
-    }
 
     private String age;
     @JsonProperty("agecategory") // TODO: change capitalization
@@ -43,6 +14,7 @@ public class Subject {
     private String weight;
     private String genotype;
     private String relativeUrl;
+    @JsonDeserialize(using = ListOrSingleStringDeserializer.class)
     private String strains;
     private List<String> species;
     private String strain;

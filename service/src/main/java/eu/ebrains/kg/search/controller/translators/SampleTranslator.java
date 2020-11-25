@@ -59,7 +59,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                                 d.getAge(),
                                 d.getAgeCategory(),
                                 d.getWeight(),
-                                d.getStrain() != null ? d.getStrain() : d.getStrains(),
+                                d.getStrain() != null ? d.getStrain() : d.getStrains() ,
                                 d.getGenotype()
                         )
                 ).collect(Collectors.toList()));
