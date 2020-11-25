@@ -128,7 +128,7 @@ public class Sample {
     }
 
     public void setParcellationAtlas(List<String> parcellationAtlas) {
-        this.parcellationAtlas = parcellationAtlas == null ? null : parcellationAtlas.stream().map(value -> new Value<>(value)).collect(Collectors.toList());
+        this.parcellationAtlas = parcellationAtlas == null ? null : parcellationAtlas.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public List<TargetExternalReference> getRegion() {
@@ -152,7 +152,7 @@ public class Sample {
     }
 
     public void setMethods(List<String> methods) {
-        this.methods = methods == null ? null : methods.stream().map(value -> new Value<>(value)).collect(Collectors.toList());
+        this.methods = methods == null ? null : methods.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public TargetExternalReference getAllFiles() {
@@ -176,7 +176,7 @@ public class Sample {
     }
 
     public void setSubject(List<Subject> subject) {
-        this.subject = subject != null ? subject.stream().map(value -> new Children<>(value)).collect(Collectors.toList()) : null;
+        this.subject = subject != null ? subject.stream().map(Children::new).collect(Collectors.toList()) : null;
     }
 
     public List<Value<String>> getDatasetExists() {
@@ -184,7 +184,7 @@ public class Sample {
     }
 
     public void setDatasetExists(List<String> datasetExists) {
-        this.datasetExists = datasetExists != null ? datasetExists.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+        this.datasetExists = datasetExists != null ? datasetExists.stream().map(Value::new).collect(Collectors.toList()) : null;
     }
 
     public List<Children<Dataset>> getDatasets() {
@@ -192,7 +192,7 @@ public class Sample {
     }
 
     public void setDatasets(List<Dataset> datasets) {
-        this.datasets = datasets != null ? datasets.stream().map(value -> new Children<>(value)).collect(Collectors.toList()) : null;
+        this.datasets = datasets != null ? datasets.stream().map(Children::new).collect(Collectors.toList()) : null;
     }
 
     public ISODateValue getFirstRelease() {
@@ -224,7 +224,7 @@ public class Sample {
         }
 
         public Dataset(List<String> component, List<TargetInternalReference> name) {
-            this.component = component == null  ? null : component.stream().map(value -> new Value<>(value)).collect(Collectors.toList());
+            this.component = component == null  ? null : component.stream().map(Value::new).collect(Collectors.toList());
             this.name = name;
         }
 
@@ -263,10 +263,10 @@ public class Sample {
                        String strain,
                        String genotype) {
             this.subjectName = subjectName;
-            this.species = species != null ? species.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
-            this.sex = sex != null ? sex.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+            this.species = species != null ? species.stream().map(Value::new).collect(Collectors.toList()) : null;
+            this.sex = sex != null ? sex.stream().map(Value::new).collect(Collectors.toList()) : null;
             this.age = age != null ? new Value<>(age) : null;
-            this.ageCategory = ageCategory != null ? ageCategory.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+            this.ageCategory = ageCategory != null ? ageCategory.stream().map(Value::new).collect(Collectors.toList()) : null;
             this.weight = weight != null ? new Value<>(weight) : null;
             this.strain = strain != null ? new Value<>(strain) : null;
             this.genotype = genotype != null ? new Value<>(genotype) : null;

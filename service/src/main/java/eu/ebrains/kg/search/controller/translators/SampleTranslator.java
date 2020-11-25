@@ -25,26 +25,30 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
         if (databaseScope == DatabaseScope.INFERRED) {
             s.setEditorId(sample.getEditorId());
         }
-        s.setParcellationAtlas(sample.getParcellationAtlas());
+        if (!CollectionUtils.isEmpty(sample.getParcellationAtlas())) {
+            s.setParcellationAtlas(sample.getParcellationAtlas());
+        }
         s.setWeightPreFixation(sample.getWeightPreFixation());
-        s.setMethods(sample.getMethods());
-        if (sample.getParcellationRegion() != null) {
+        if (!CollectionUtils.isEmpty(sample.getMethods())) {
+            s.setMethods(sample.getMethods());
+        }
+        if (!CollectionUtils.isEmpty(sample.getParcellationRegion())) {
             s.setRegion(sample.getParcellationRegion().stream()
                     .map(r ->
                             new TargetExternalReference(r.getUrl(), r.getAlias() != null ? r.getAlias() : r.getName())
                     ).collect(Collectors.toList()));
         }
-        if (sample.getBrainViewer() != null) {
+        if (!CollectionUtils.isEmpty(sample.getBrainViewer())) {
             s.setViewer(sample.getBrainViewer().stream()
                     .map(url ->
                             new TargetExternalReference(url, title != null ? String.format("Show %s in brain atlas viewer", title) : "Show in brain atlas viewer")
                     ).collect(Collectors.toList()));
         }
-        if (sample.getDatasets() != null) {
+        if (!CollectionUtils.isEmpty(sample.getDatasets())) {
             s.setDatasets(sample.getDatasets().stream()
                     .map(d ->
                             new Sample.Dataset(
-                                    d.getComponentName(),
+                                    CollectionUtils.isEmpty(d.getComponentName())?null:d.getComponentName(),
                                     d.getInstances().stream()
                                             .map(i ->
                                                     new TargetInternalReference(
@@ -54,7 +58,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                             )
                     ).collect(Collectors.toList()));
         }
-        if (sample.getSubjects() != null) {
+        if (!CollectionUtils.isEmpty(sample.getSubjects())) {
             s.setSubject(sample.getSubjects().stream()
                     .map(d ->
                             new Sample.Subject(
