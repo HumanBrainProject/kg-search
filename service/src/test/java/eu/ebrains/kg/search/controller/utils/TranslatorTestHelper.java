@@ -99,13 +99,14 @@ public class TranslatorTestHelper {
         return compareResults(targetExpected, targetResult);
     }
 
-
     public static List<String> compareSample(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
-        SampleTranslator translator = new SampleTranslator();
-
         SampleV1 source = jsonAdapter.fromJson(sourceJson, SampleV1.class);
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
+        return compareSample(source, targetExpected, databaseScope, liveMode);
+    }
 
+    public static List<String> compareSample(SampleV1 source, Map<String, Object> targetExpected, DatabaseScope databaseScope, boolean liveMode) {
+        SampleTranslator translator = new SampleTranslator();
         Sample target = translator.translate(source, databaseScope, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);

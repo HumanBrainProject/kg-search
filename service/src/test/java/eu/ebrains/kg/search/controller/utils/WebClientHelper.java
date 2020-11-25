@@ -13,7 +13,7 @@ public class WebClientHelper {
             .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 10000)).build();
     public static final WebClient webClient = WebClient.builder().exchangeStrategies(exchangeStrategies).build();
 
-    private static final String token = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImJicC1vaWRjIn0.eyJleHAiOjE2MDYzMjExODAsInN1YiI6IjMwNzQ4NyIsImF1ZCI6WyJuZXh1cy1rZy1zZWFyY2giXSwiaXNzIjoiaHR0cHM6XC9cL3NlcnZpY2VzLmh1bWFuYnJhaW5wcm9qZWN0LmV1XC9vaWRjXC8iLCJqdGkiOiJmOWI0YTMxMS01ZGQ5LTRiNWUtOTAzOC1hYjQ5M2ZjZjBkOTAiLCJpYXQiOjE2MDYzMDY3ODAsImhicF9rZXkiOiI2OWY2MjQ5NzViMTk1ZjJlM2FjZDVkYjIwMzlmZmE5NDYzMDQ1NjZlIn0.RqrP-iJU-cqvSzchBZoGaa1obWxHcByM4XJKywOxNYU0Ff5n0297fizoLmWBF5fy8YJkdkRFQOHeMJ4UR5cUgI-MMp8N9cli9jVB3TpsZrZJesuctRhYJyM7BUt-bL9xTedLX1L088kLxThcpjHwg60nWcjEowgIwK0Azz9f6Pk";
+    private static final String token = "";
     private static final String vocab = "https://schema.hbp.eu/search/";
     private static final String hbpUrl = "https://kg.humanbrainproject.eu";
     private static final String ebrainsUrl = "https://kg.ebrains.eu";
