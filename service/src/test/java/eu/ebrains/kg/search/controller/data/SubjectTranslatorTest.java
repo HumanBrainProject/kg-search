@@ -24,12 +24,21 @@ public class SubjectTranslatorTest {
 
     @Test
     public void compareReleasedSubjects() {
+        compareSubjects(DatabaseScope.RELEASED);
+    }
+
+    @Test
+    public void compareInferredSubjects() {
+        compareSubjects(DatabaseScope.INFERRED);
+    }
+
+    private void compareSubjects(DatabaseScope databaseScope) {
         List<String> result = new ArrayList<>();
-        SubjectV1Result queryResult = WebClientHelper.executeQuery("query/minds/experiment/subject/v1.0.0/search", DatabaseScope.RELEASED, SubjectV1Result.class);
+        SubjectV1Result queryResult = WebClientHelper.executeQuery("query/minds/experiment/subject/v1.0.0/search", databaseScope, SubjectV1Result.class);
         queryResult.getResults().forEach(subject -> {
             String id = subject.getIdentifier();
-            Map<String, Object> expected = WebClientHelper.getDocument("public", "Subject", id, ElasticSearchDocument.class).getSource();
-            List<String> messages = TranslatorTestHelper.compareSubject(subject, expected, DatabaseScope.RELEASED, false);
+            Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated", "Subject", id, ElasticSearchDocument.class).getSource();
+            List<String> messages = TranslatorTestHelper.compareSubject(subject, expected, databaseScope, false);
             if (!messages.isEmpty()) {
                 result.add("\n\n\tSubject: " + id + "\n\t\t" + String.join("\n\t\t", messages));
             }
