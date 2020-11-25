@@ -6,6 +6,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.Sample;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.stream.Collectors;
@@ -74,11 +75,11 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                     ).collect(Collectors.toList()));
         }
         String containerUrl = sample.getContainerUrl();
-        if (hasEmbargoStatus(sample, EMBARGOED)) {
+        if (!hasEmbargoStatus(sample, EMBARGOED) && !StringUtils.isBlank(containerUrl)) {
             if (containerUrl.startsWith("https://object.cscs.ch")) {
                 s.setAllFiles(new TargetExternalReference(
                         String.format("https://kg.ebrains.eu/proxy/export?container=%s", containerUrl),
-                        "Download all related data as ZIP"
+                        "download all related data as ZIP"
                 ));
             } else {
                 s.setAllFiles(new TargetExternalReference(
