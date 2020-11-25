@@ -5,6 +5,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -64,19 +65,19 @@ public class Sample {
     private ISODateValue lastRelease;
 
     public void setType(String type) {
-        setType(type != null ? new Value<>(type) : null);
+        setType(StringUtils.isBlank(type) ? null : new Value<>(type));
     }
 
     public void setIdentifier(String identifier) {
-        setIdentifier(identifier != null ? new Value<>(identifier) : null);
+        setIdentifier(StringUtils.isBlank(identifier) ? null : new Value<>(identifier));
     }
 
     public void setEditorId(String editorId) {
-        setEditorId(editorId != null ? new Value<>(editorId) : null);
+        setEditorId(StringUtils.isBlank(editorId) ? null : new Value<>(editorId));
     }
 
     public void setTitle(String title) {
-        setTitle(title != null ? new Value<>(title) : null);
+        setTitle(StringUtils.isBlank(title) ? null : new Value<>(title));
     }
 
     public Value<String> getType() {
@@ -116,7 +117,7 @@ public class Sample {
     }
 
     public void setWeightPreFixation(String weightPreFixation) {
-        setWeightPreFixation(weightPreFixation != null ? new Value<>(weightPreFixation) : null);
+        setWeightPreFixation(StringUtils.isBlank(weightPreFixation) ? null : new Value<>(weightPreFixation));
     }
 
     public void setWeightPreFixation(Value<String> weightPreFixation) {
@@ -265,11 +266,11 @@ public class Sample {
             this.subjectName = subjectName;
             this.species = species != null ? species.stream().map(Value::new).collect(Collectors.toList()) : null;
             this.sex = sex != null ? sex.stream().map(Value::new).collect(Collectors.toList()) : null;
-            this.age = age != null ? new Value<>(age) : null;
+            this.age = StringUtils.isBlank(age) ? null : new Value<>(age);
             this.ageCategory = ageCategory != null ? ageCategory.stream().map(Value::new).collect(Collectors.toList()) : null;
-            this.weight = weight != null ? new Value<>(weight) : null;
-            this.strain = strain != null ? new Value<>(strain) : null;
-            this.genotype = genotype != null ? new Value<>(genotype) : null;
+            this.weight = StringUtils.isBlank(weight) ? null : new Value<>(weight);
+            this.strain = StringUtils.isBlank(strain) ? null : new Value<>(strain);
+            this.genotype = StringUtils.isBlank(genotype) ? null : new Value<>(genotype);
         }
 
         @JsonProperty("subject_name")
