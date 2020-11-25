@@ -20,7 +20,7 @@ public class WebClientHelper {
 
     public static <T> T executeQuery(String query, DatabaseScope databaseScope, Class<T> clazz) {
         return WebClientHelper.webClient.get()
-                .uri(String.format("%s/%s/instances?databaseScope=%s&vocab=%s&size=1", hbpUrl, query, databaseScope, vocab))
+                .uri(String.format("%s/%s/instances?databaseScope=%s&vocab=%s", hbpUrl, query, databaseScope, vocab))
                 .headers(h ->
                 {
                     h.add("Authorization", token);

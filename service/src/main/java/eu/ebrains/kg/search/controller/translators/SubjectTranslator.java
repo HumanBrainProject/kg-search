@@ -39,9 +39,10 @@ public class SubjectTranslator implements Translator<SubjectV1, Subject> {
         }
         if(!CollectionUtils.isEmpty(subject.getDatasets())) {
             s.setDatasets(subject.getDatasets().stream()
+                    .filter(d -> !(CollectionUtils.isEmpty(d.getComponentName()) && CollectionUtils.isEmpty(d.getInstances())))
                     .map(d ->
                             new Subject.Dataset(
-                                    d.getComponentName(),
+                                    !CollectionUtils.isEmpty(d.getComponentName())?d.getComponentName():null,
                                     !CollectionUtils.isEmpty(d.getInstances()) ?
                                     d.getInstances().stream()
                                             .map(i ->

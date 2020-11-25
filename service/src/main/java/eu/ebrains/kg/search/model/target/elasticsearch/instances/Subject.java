@@ -8,6 +8,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Childre
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ISODateValue;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -21,7 +22,7 @@ public class Subject {
     @FieldInfo(visible = false)
     private Value<String> identifier;
 
-    @FieldInfo(label="Name", sort = true, boost = 20)
+    @FieldInfo(label = "Name", sort = true, boost = 20)
     private Value<String> title;
 
     @FieldInfo(layout = FieldInfo.Layout.HEADER)
@@ -59,27 +60,27 @@ public class Subject {
     private List<Children<Dataset>> datasets;
 
     @JsonProperty("first_release")
-    @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
+    @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue firstRelease;
 
     @JsonProperty("last_release")
-    @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
+    @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 
     public void setType(String type) {
-        setType(type!=null ? new Value<>(type) : null);
+        setType(type != null ? new Value<>(type) : null);
     }
 
     public void setIdentifier(String identifier) {
-        setIdentifier(identifier!=null ? new Value<>(identifier) : null);
+        setIdentifier(identifier != null ? new Value<>(identifier) : null);
     }
 
-    public void setEditorId(String editorId){
-        setEditorId(editorId!=null ? new Value<>(editorId) : null);
+    public void setEditorId(String editorId) {
+        setEditorId(editorId != null ? new Value<>(editorId) : null);
     }
 
-    public void setTitle(String title){
-        setTitle(title!=null ? new Value<>(title) : null);
+    public void setTitle(String title) {
+        setTitle(title != null ? new Value<>(title) : null);
     }
 
     public Value<String> getType() {
@@ -135,7 +136,7 @@ public class Subject {
     }
 
     public void setAge(String age) {
-        setAge(age!=null ? new Value<>(age) : null);
+        setAge(age != null ? new Value<>(age) : null);
     }
 
     public void setAge(Value<String> age) {
@@ -155,7 +156,7 @@ public class Subject {
     }
 
     public void setWeight(String weight) {
-        setWeight(weight!=null ? new Value<>(weight) : null);
+        setWeight(StringUtils.isBlank(weight) ? null : new Value<>(weight));
     }
 
     public void setWeight(Value<String> weight) {
@@ -167,7 +168,7 @@ public class Subject {
     }
 
     public void setStrain(String strain) {
-        setStrain(strain!=null ? new Value<>(strain) : null);
+        setStrain(strain != null ? new Value<>(strain) : null);
     }
 
     public void setStrain(Value<String> strain) {
@@ -179,7 +180,7 @@ public class Subject {
     }
 
     public void setGenotype(String genotype) {
-        setGenotype(genotype!=null ? new Value<>(genotype) : null);
+        setGenotype(genotype != null ? new Value<>(genotype) : null);
     }
 
     public void setGenotype(Value<String> genotype) {
@@ -202,7 +203,9 @@ public class Subject {
         this.datasetExists = datasetExists == null ? null : datasetExists.stream().map(Value::new).collect(Collectors.toList());
     }
 
-    public List<Children<Dataset>> getDatasets() { return datasets; }
+    public List<Children<Dataset>> getDatasets() {
+        return datasets;
+    }
 
     public void setDatasets(List<Dataset> datasets) {
         this.datasets = datasets == null ? null : datasets.stream().map(Children::new).collect(Collectors.toList());
@@ -234,7 +237,8 @@ public class Subject {
 
     public static class Dataset {
 
-        public Dataset() {}
+        public Dataset() {
+        }
 
         public Dataset(List<String> component, List<TargetInternalReference> name) {
             this.component = component == null ? null : component.stream().map(Value::new).collect(Collectors.toList());
@@ -244,13 +248,17 @@ public class Subject {
         private List<Value<String>> component;
         private List<TargetInternalReference> name;
 
-        public List<Value<String>> getComponent() { return component; }
+        public List<Value<String>> getComponent() {
+            return component;
+        }
 
         public void setComponent(List<Value<String>> component) {
             this.component = component;
         }
 
-        public List<TargetInternalReference> getName() { return name; }
+        public List<TargetInternalReference> getName() {
+            return name;
+        }
 
         public void setName(List<TargetInternalReference> name) {
             this.name = name;

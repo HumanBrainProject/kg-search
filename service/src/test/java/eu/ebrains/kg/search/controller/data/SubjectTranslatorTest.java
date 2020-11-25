@@ -19,7 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 public class SubjectTranslatorTest {
-    private static class SubjectV1Result extends ResultOfKGv2<SubjectV1> {}
+    private static class SubjectV1Result extends ResultOfKGv2<SubjectV1> {
+    }
 
     @Test
     public void compareReleasedSubjects() {
@@ -29,10 +30,12 @@ public class SubjectTranslatorTest {
             String id = subject.getIdentifier();
             Map<String, Object> expected = WebClientHelper.getDocument("public", "Subject", id, ElasticSearchDocument.class).getSource();
             List<String> messages = TranslatorTestHelper.compareSubject(subject, expected, DatabaseScope.RELEASED, false);
-            result.add("\n\t\n" + id +"\n\t\t" +  String.join("\n\t\t", messages));
+            if (!messages.isEmpty()) {
+                result.add("\n\n\tSubject: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+            }
         });
         if (!result.isEmpty()) {
-            Assert.fail("\n\t" + String.join("\n\t", result));
+            Assert.fail(String.join("", result));
         }
     }
 
