@@ -22,7 +22,6 @@ public class TranslatorTestHelper {
     private static final List<String> keysToIgnore = new ArrayList<>(Arrays.asList("@timestamp"));
 
     public static List<String> compareContributor(List<String> sourcesJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
-        ContributorTranslator translator = new ContributorTranslator();
 
         PersonSources sources = new PersonSources();
 
@@ -43,6 +42,11 @@ public class TranslatorTestHelper {
         }
 
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
+
+        return compareContributor(sources, targetExpected, databaseScope, liveMode);
+    }
+    public static List<String> compareContributor(PersonSources sources, Map<String, Object> targetExpected, DatabaseScope databaseScope, boolean liveMode) {
+        ContributorTranslator translator = new ContributorTranslator();
 
         Contributor target = translator.translate(sources, databaseScope, liveMode);
         String targetJson = jsonAdapter.toJson(target);
