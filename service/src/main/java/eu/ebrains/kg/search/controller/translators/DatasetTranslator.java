@@ -37,7 +37,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         if (databaseScope == DatabaseScope.INFERRED) {
             d.setEditorId(datasetV1.getEditorId());
         }
-        d.setMethods(datasetV1.getMethods());
+        d.setMethods(emptyToNull(datasetV1.getMethods()));
         d.setDescription(datasetV1.getDescription());
 
         SourceExternalReference license = firstItemOrNull(datasetV1.getLicense());
@@ -55,7 +55,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         if (datasetV1.getDataDescriptorURL() != null) {
             d.setDataDescriptor(new TargetExternalReference(datasetV1.getDataDescriptorURL(), datasetV1.getDataDescriptorURL()));
         }
-        d.setSpeciesFilter(datasetV1.getSpeciesFilter());
+        d.setSpeciesFilter(emptyToNull(datasetV1.getSpeciesFilter()));
 
         if (databaseScope == DatabaseScope.RELEASED) {
             if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
@@ -105,7 +105,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                         return publicationResult;
                     }).filter(Objects::nonNull).collect(Collectors.toList()));
         }
-        d.setAtlas(datasetV1.getParcellationAtlas());
+        d.setAtlas(emptyToNull(datasetV1.getParcellationAtlas()));
 
         if (!CollectionUtils.isEmpty(datasetV1.getExternalDatalink())) {
             d.setExternalDatalink(datasetV1.getExternalDatalink().stream()
@@ -117,7 +117,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                     .collect(Collectors.toList()));
         }
         d.setTitle(datasetV1.getTitle());
-        d.setModalityForFilter(datasetV1.getModalityForFilter());
+        d.setModalityForFilter(emptyToNull(datasetV1.getModalityForFilter()));
         d.setDoi(firstItemOrNull(datasetV1.getDoi()));
 
         if (!CollectionUtils.isEmpty(datasetV1.getContributors())) {
@@ -129,7 +129,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                     )).collect(Collectors.toList()));
         }
 
-        d.setPreparation(datasetV1.getPreparation());
+        d.setPreparation(emptyToNull(datasetV1.getPreparation()));
 
         if (!CollectionUtils.isEmpty(datasetV1.getComponent())) {
             d.setComponent(datasetV1.getComponent().stream()
@@ -139,7 +139,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                             null
                     )).collect(Collectors.toList()));
         }
-        d.setProtocol(datasetV1.getProtocols());
+        d.setProtocol(emptyToNull(datasetV1.getProtocols()));
 
         if (!CollectionUtils.isEmpty(datasetV1.getBrainViewer())) {
             d.setViewer(datasetV1.getBrainViewer().stream()
