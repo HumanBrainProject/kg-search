@@ -6,6 +6,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.RibbonInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -108,23 +109,23 @@ public class Dataset {
     private ISODateValue lastRelease;
 
     public void setType(String type) {
-        setType(type != null ? new Value<>(type) : null);
+        setType(StringUtils.isBlank(type) ? null : new Value<>(type));
     }
 
     public void setIdentifier(String identifier) {
-        setIdentifier(identifier != null ? new Value<>(identifier) : null);
+        setIdentifier(StringUtils.isBlank(identifier) ? null : new Value<>(identifier));
     }
 
     public void setEditorId(String editorId) {
-        setEditorId(editorId != null ? new Value<>(editorId) : null);
+        setEditorId(StringUtils.isBlank(editorId) ? null : new Value<>(editorId));
     }
 
     public void setTitle(String title) {
-        setTitle(title != null ? new Value<>(title) : null);
+        setTitle(StringUtils.isBlank(title) ? null : new Value<>(title));
     }
 
     public void setDescription(String description) {
-        setDescription(description != null ? new Value<>(description) : null);
+        setDescription(StringUtils.isBlank(description) ? null : new Value<>(description));
     }
 
     public List<TargetExternalReference> getExternalDatalink() {
@@ -228,7 +229,7 @@ public class Dataset {
     }
 
     public void setCitation(String citation) {
-        setCitation(citation != null ? new Value<>(citation) : null);
+        setCitation(StringUtils.isBlank(citation) ? null : new Value<>(citation));
     }
 
     public void setCitation(Value<String> citation) {
@@ -240,7 +241,7 @@ public class Dataset {
     }
 
     public void setEmbargoForFilter(String embargoForFilter) {
-        setEmbargoForFilter(embargoForFilter != null ? new Value<>(embargoForFilter) : null);
+        setEmbargoForFilter(StringUtils.isBlank(embargoForFilter) ? null : new Value<>(embargoForFilter));
     }
 
     public void setEmbargoForFilter(Value<String> embargoForFilter) {
@@ -252,7 +253,7 @@ public class Dataset {
     }
 
     public void setEmbargoRestrictedAccess(String embargoRestrictedAccess) {
-        setEmbargoRestrictedAccess(embargoRestrictedAccess != null? new Value<>(embargoRestrictedAccess):null);
+        setEmbargoRestrictedAccess(StringUtils.isBlank(embargoRestrictedAccess) ? null : new Value<>(embargoRestrictedAccess));
     }
 
     public void setEmbargoRestrictedAccess(Value<String> embargoRestrictedAccess) {
@@ -268,7 +269,7 @@ public class Dataset {
     }
 
     public void setEmbargo(String embargo) {
-        setEmbargo(embargo != null ? new Value<>(embargo) : null);
+        setEmbargo(StringUtils.isBlank(embargo) ? null : new Value<>(embargo));
     }
 
     public List<Value<String>> getPublications() {
@@ -316,7 +317,7 @@ public class Dataset {
     }
 
     public void setDoi(String doi) {
-        setDoi(doi != null ? new Value<>(doi) : null);
+        setDoi(StringUtils.isBlank(doi) ? null : new Value<>(doi));
     }
 
     public void setDoi(Value<String> doi) {
@@ -413,11 +414,11 @@ public class Dataset {
             this.subjectName = subjectName;
             this.species = species != null ? species.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
             this.sex = sex != null ? sex.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
-            this.age = age != null ? new Value<>(age) : null;
+            this.age = StringUtils.isBlank(age) ? null : new Value<>(age);
             this.ageCategory = ageCategory != null ? ageCategory.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
-            this.weight = weight != null ? new Value<>(weight) : null;
-            this.strain = strain != null ? new Value<>(strain) : null;
-            this.genotype = genotype != null ? new Value<>(genotype) : null;
+            this.weight = StringUtils.isBlank(weight) ? null : new Value<>(weight);
+            this.strain = StringUtils.isBlank(strain) ? null : new Value<>(strain);
+            this.genotype = StringUtils.isBlank(genotype) ? null : new Value<>(genotype);
             this.samples = samples;
         }
 

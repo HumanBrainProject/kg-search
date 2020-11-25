@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -87,31 +88,31 @@ public class Model {
     private ISODateValue lastRelease;
 
     public void setType(String type) {
-        setType(type != null ? new Value<>(type) : null);
+        setType(StringUtils.isBlank(type) ? null : new Value<>(type));
     }
 
     public void setIdentifier(String identifier) {
-        setIdentifier(identifier != null ? new Value<>(identifier) : null);
+        setIdentifier(StringUtils.isBlank(identifier) ? null : new Value<>(identifier));
     }
 
     public void setEditorId(String editorId) {
-        setEditorId(editorId != null ? new Value<>(editorId) : null);
+        setEditorId(StringUtils.isBlank(editorId) ? null : new Value<>(editorId));
     }
 
     public void setEmbargo(String embargo) {
-        setEmbargo(embargo != null ? new Value<>(embargo) : null);
+        setEmbargo(StringUtils.isBlank(embargo) ? null : new Value<>(embargo));
     }
 
     public void setDescription(String description) {
-        setDescription(description != null ? new Value<>(description) : null);
+        setDescription(StringUtils.isBlank(description) ? null : new Value<>(description));
     }
 
     public void setVersion(String version) {
-        setVersion(version != null ? new Value<>(version) : null);
+        setVersion(StringUtils.isBlank(version) ? null : new Value<>(version));
     }
 
     public void setTitle(String title) {
-        setTitle(title != null ? new Value<>(title) : null);
+        setTitle(StringUtils.isBlank(title) ? null : new Value<>(title));
     }
 
     public ISODateValue getFirstRelease() {

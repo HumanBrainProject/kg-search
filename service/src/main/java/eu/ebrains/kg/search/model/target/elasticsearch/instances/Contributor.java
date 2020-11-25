@@ -8,6 +8,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ISODateValue;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -53,19 +54,19 @@ public class Contributor {
     private ISODateValue lastRelease;
 
     public void setType(String type) {
-        setType(type!=null ? new Value<>(type) : null);
+        setType(StringUtils.isBlank(type) ? null : new Value<>(type));
     }
 
     public void setIdentifier(String identifier) {
-        setIdentifier(identifier!=null ? new Value<>(identifier) : null);
+        setIdentifier(StringUtils.isBlank(identifier) ? null : new Value<>(identifier));
     }
 
     public void setEditorId(String editorId){
-        setEditorId(editorId!=null ? new Value<>(editorId) : null);
+        setEditorId(StringUtils.isBlank(editorId) ? null : new Value<>(editorId));
     }
 
     public void setTitle(String title){
-        setTitle(title!=null ? new Value<>(title) : null);
+        setTitle(StringUtils.isBlank(title) ? null : new Value<>(title));
     }
 
     public Value<String> getIdentifier() {
