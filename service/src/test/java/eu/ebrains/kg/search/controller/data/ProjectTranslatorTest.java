@@ -38,7 +38,7 @@ public class ProjectTranslatorTest {
             Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated", "Project", id, ElasticSearchDocument.class).getSource();
             List<String> messages = TranslatorTestHelper.compareProject(project, expected, databaseScope, false);
             if (!messages.isEmpty()) {
-                result.add("\n\n\tSubject: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+                result.add("\n\n\tProject: " + id + "\n\t\t" + String.join("\n\t\t", messages));
             }
         });
         if (!result.isEmpty()) {

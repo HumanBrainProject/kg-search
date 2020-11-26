@@ -293,7 +293,7 @@ public class Model {
     }
 
     public void setCellularTarget(List<String> cellularTarget) {
-        this.cellularTarget = cellularTarget == null ? null : cellularTarget.stream().map(Value::new).collect(Collectors.toList());
+        this.cellularTarget = cellularTarget == null ? null : cellularTarget.stream().filter(StringUtils::isNotBlank).map(Value::new).collect(Collectors.toList());
     }
 
     public Value<String> getType() {

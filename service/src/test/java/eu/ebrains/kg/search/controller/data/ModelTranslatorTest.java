@@ -34,10 +34,10 @@ public class ModelTranslatorTest {
         ModelV2Result queryResult = WebClientHelper.executeQuery("query/uniminds/core/modelinstance/v1.0.0/search", databaseScope, ModelV2Result.class);
         queryResult.getResults().forEach(project -> {
             String id = project.getIdentifier();
-            Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated", "Subject", id, ElasticSearchDocument.class).getSource();
+            Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated", "Model", id, ElasticSearchDocument.class).getSource();
             List<String> messages = TranslatorTestHelper.compareModel(project, expected, databaseScope, false);
             if (!messages.isEmpty()) {
-                result.add("\n\n\tSubject: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+                result.add("\n\n\tModel: " + id + "\n\t\t" + String.join("\n\t\t", messages));
             }
         });
         if (!result.isEmpty()) {

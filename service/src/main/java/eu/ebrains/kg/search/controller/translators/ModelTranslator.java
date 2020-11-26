@@ -5,7 +5,6 @@ import eu.ebrains.kg.search.model.source.commons.SourceExternalReference;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Model;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -57,7 +56,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
                         } else {
                             return new TargetExternalReference(
                                     fb.getUrl(),
-                                    "Go to the data."
+                                    "Go to the data"
                             );
                         }
                     }).collect(Collectors.toList()));

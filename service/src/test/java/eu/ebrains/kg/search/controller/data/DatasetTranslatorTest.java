@@ -37,7 +37,7 @@ public class DatasetTranslatorTest {
             Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated", "Software", id, ElasticSearchDocument.class).getSource();
             List<String> messages = TranslatorTestHelper.compareDataset(dataset, expected, databaseScope, false);
             if (!messages.isEmpty()) {
-                result.add("\n\n\tSoftware: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+                result.add("\n\n\tDataset: " + id + "\n\t\t" + String.join("\n\t\t", messages));
             }
         });
         if (!result.isEmpty()) {
