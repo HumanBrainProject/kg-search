@@ -159,4 +159,49 @@ public class SampleV1 implements HasEmbargo {
 
     public void setEmbargo(List<String> embargo) { this.embargo = embargo; }
 
+    public static class SourceFile {
+        private String name;
+
+        private String absolutePath;
+
+        @JsonProperty("human_readable_size")
+        private String humanReadableSize;
+
+        @JsonProperty("preview_url")
+        private List<String> previewUrl;
+
+        @JsonProperty("private_access")
+        private boolean privateAccess;
+
+        @JsonProperty("is_preview_animated")
+        private List<Boolean> isPreviewAnimated;
+
+        public String getAbsolutePath() { return absolutePath; }
+
+        public void setAbsolutePath(String absolutePath) { this.absolutePath = absolutePath; }
+
+        public String getHumanReadableSize() { return humanReadableSize; }
+
+        public List<Boolean> getPreviewAnimated() { return isPreviewAnimated; }
+
+        public void setPreviewAnimated(List<Boolean> previewAnimated) { isPreviewAnimated = previewAnimated; }
+
+
+        public void setHumanReadableSize(String humanReadableSize) { this.humanReadableSize = humanReadableSize; }
+
+        public String getName() { return name; }
+
+        public void setName(String name) { this.name = name; }
+
+        public List<String> getPreviewUrl() { return previewUrl; }
+
+        public void setPreviewUrl(List<String> previewUrl) { this.previewUrl = previewUrl; }
+
+        public boolean getPrivateAccess() { return privateAccess; }
+
+        public void setPrivateAccess(Boolean privateAccess) { this.privateAccess = privateAccess; }
+
+    }
+
+
 }

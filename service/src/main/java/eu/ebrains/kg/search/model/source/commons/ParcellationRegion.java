@@ -1,15 +1,6 @@
 package eu.ebrains.kg.search.model.source.commons;
 
 public class ParcellationRegion {
-
-    public ParcellationRegion() {}
-
-    public ParcellationRegion(String name, String alias, String url) {
-        this.name = name;
-        this.alias = alias;
-        this.url = url;
-    }
-
     private String name;
     private String alias;
     private String url;

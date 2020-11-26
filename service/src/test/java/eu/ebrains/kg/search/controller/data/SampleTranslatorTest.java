@@ -5,7 +5,6 @@ import eu.ebrains.kg.search.controller.utils.WebClientHelper;
 import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.source.ResultOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SampleV1;
-import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
@@ -21,9 +20,7 @@ public class SampleTranslatorTest {
     private static class SampleV1Result extends ResultOfKGv2<SampleV1> {}
 
     @Test
-    public void compareReleasedSamples() {
-        compareSamples(DatabaseScope.RELEASED);
-    }
+    public void compareReleasedSamples() { compareSamples(DatabaseScope.RELEASED); }
 
     @Test
     public void compareInferredSamples() {

@@ -4,6 +4,7 @@ import eu.ebrains.kg.search.model.source.commons.HasEmbargo;
 import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SampleV1;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
@@ -28,6 +29,14 @@ public class TranslatorCommons {
             return false;
         }
         return Arrays.stream(status).anyMatch(s -> embargo.toLowerCase().equals(s));
+    }
+
+    static TargetFile.FileImage getFileImage(List<String> url, boolean b) {
+        return (!CollectionUtils.isEmpty(url) && url.get(0) != null) ?
+                new TargetFile.FileImage(
+                        url.get(0),
+                        b
+                ) : null;
     }
 
 }

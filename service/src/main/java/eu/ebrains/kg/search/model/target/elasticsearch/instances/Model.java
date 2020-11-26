@@ -30,9 +30,6 @@ public class Model {
     @FieldInfo(label = "Download model", isButton = true, termsOfUse = true)
     private List<TargetExternalReference> allFiles;
 
-    @FieldInfo(label = "Files", layout = FieldInfo.Layout.GROUP, termsOfUse = true)
-    private List<TargetFile> files;
-
     @FieldInfo(label = "Model format", layout = FieldInfo.Layout.SUMMARY, separator = "; ")
     private List<Value<String>> modelFormat;
 
@@ -305,14 +302,6 @@ public class Model {
 
     public void setType(Value<String> type) {
         this.type = type;
-    }
-
-    public List<TargetFile> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<TargetFile> files) {
-        this.files = files;
     }
 
 }

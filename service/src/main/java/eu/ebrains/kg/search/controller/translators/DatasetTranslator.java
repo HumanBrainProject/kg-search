@@ -2,7 +2,6 @@ package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.source.commons.SourceExternalReference;
-import eu.ebrains.kg.search.model.source.commons.SourceFile;
 import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
@@ -26,7 +25,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         Dataset d = new Dataset();
         String containerUrl = datasetV1.getContainerUrl();
         Boolean containerUrlAsZIP = datasetV1.getContainerUrlAsZIP();
-        List<SourceFile> files = datasetV1.getFiles();
+        List<DatasetV1.SourceFile> files = datasetV1.getFiles();
         if (hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW) && StringUtils.isNotBlank(containerUrl) && ((containerUrlAsZIP != null && containerUrlAsZIP) || firstItemOrNull(files) != null)) {
             d.setZip(new TargetExternalReference(
                     String.format("https://kg.ebrains.eu/proxy/export?container=%s", containerUrl),
@@ -68,7 +67,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         d.setEmbargoForFilter(firstItemOrNull(datasetV1.getEmbargoForFilter()));
 
         if (!CollectionUtils.isEmpty(datasetV1.getFiles()) && (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && !hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW)))) {
-            d.setFiles(datasetV1.getFiles().stream()
+            d.setFiles(emptyToNull(datasetV1.getFiles().stream()
                     .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
                     .map(f ->
                             new TargetFile(
@@ -79,7 +78,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                                     getFileImage(f.getPreviewUrl(), !f.getPreviewAnimated().isEmpty() && f.getPreviewAnimated().get(0)), //TODO review
                                     getFileImage(f.getThumbnailUrl(), false)
                             )
-                    ).collect(Collectors.toList()));
+                    ).collect(Collectors.toList())));
         }
 
         String citation = firstItemOrNull(datasetV1.getCitation());
@@ -164,10 +163,10 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                                             s.getName(),
                                             null
                                     ),
-                                    s.getSpecies(),
-                                    s.getSex(),
+                                    CollectionUtils.isEmpty(s.getSpecies()) ? null : s.getSpecies(),
+                                    CollectionUtils.isEmpty(s.getSex()) ? null : s.getSex(),
                                     s.getAge(),
-                                    s.getAgeCategory(),
+                                    CollectionUtils.isEmpty(s.getAgeCategory()) ? null : s.getAgeCategory(),
                                     s.getWeight(),
                                     s.getStrain() != null ? s.getStrain() : s.getStrains(),
                                     s.getGenotype(),
@@ -199,13 +198,5 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         d.setFirstRelease(datasetV1.getFirstReleaseAt());
         d.setLastRelease(datasetV1.getLastReleaseAt());
         return d;
-    }
-
-    private TargetFile.FileImage getFileImage(List<String> url, boolean b) {
-        return (!url.isEmpty() && url.get(0) != null) ?
-                new TargetFile.FileImage(
-                        url.get(0),
-                        b
-                ) : null;
     }
 }

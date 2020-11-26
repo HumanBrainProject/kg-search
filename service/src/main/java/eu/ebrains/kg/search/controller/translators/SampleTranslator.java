@@ -32,7 +32,10 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
         if (!CollectionUtils.isEmpty(sample.getParcellationRegion())) {
             s.setRegion(sample.getParcellationRegion().stream()
                     .map(r ->
-                            new TargetExternalReference(r.getUrl(), r.getAlias() != null ? r.getAlias() : r.getName())
+                            new TargetExternalReference(
+                                    StringUtils.isBlank(r.getUrl())?null:r.getUrl(),
+                                    StringUtils.isBlank(r.getAlias()) ? r.getName() : r.getAlias()
+                            )
                     ).collect(Collectors.toList()));
         }
         if (!CollectionUtils.isEmpty(sample.getBrainViewer())) {
@@ -64,10 +67,10 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                                             d.getName(),
                                             null
                                     ),
-                                    d.getSpecies(),
-                                    d.getSex(),
+                                    CollectionUtils.isEmpty(d.getSpecies()) ? null : d.getSpecies(),
+                                    CollectionUtils.isEmpty(d.getSex()) ? null : d.getSex(),
                                     d.getAge(),
-                                    d.getAgeCategory(),
+                                    CollectionUtils.isEmpty(d.getAgeCategory()) ? null : d.getAgeCategory(),
                                     d.getWeight(),
                                     d.getStrain() != null ? d.getStrain() : d.getStrains(),
                                     d.getGenotype()
@@ -89,15 +92,18 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
             }
         }
         if (!CollectionUtils.isEmpty(sample.getFiles()) && (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && !hasEmbargoStatus(sample, EMBARGOED, UNDER_REVIEW)))) {
-            s.setFiles(sample.getFiles().stream()
+            s.setFiles(emptyToNull(sample.getFiles().stream()
                     .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
                     .map(f ->
                             new TargetFile(
                                     f.getPrivateAccess() ? String.format("%s/files/cscs?url=%s", Translator.fileProxy, f.getAbsolutePath()) : f.getAbsolutePath(),
                                     f.getPrivateAccess() ? String.format("ACCESS PROTECTED: %s", f.getName()) : f.getName(),
-                                    f.getHumanReadableSize()
+                                    f.getHumanReadableSize(),
+                                    null,
+                                    getFileImage(f.getPreviewUrl(), !CollectionUtils.isEmpty(f.getPreviewAnimated()) && f.getPreviewAnimated().get(0)), //TODO review,
+                                    null
                             )
-                    ).collect(Collectors.toList()));
+                    ).collect(Collectors.toList())));
         }
         return s;
     }

@@ -46,19 +46,6 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
                             pd.getName()
                     )).collect(Collectors.toList()));
         }
-        if (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && !hasEmbargoStatus(modelV2, EMBARGOED))) {
-            if (!CollectionUtils.isEmpty(modelV2.getFiles())) {
-                m.setFiles(modelV2.getFiles().stream()
-                        .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
-                        .map(f ->
-                                new TargetFile(
-                                        f.getPrivateAccess() ? String.format("%s/files/cscs?url=%s", Translator.fileProxy, f.getAbsolutePath()) : f.getAbsolutePath(),
-                                        f.getPrivateAccess() ? String.format("ACCESS PROTECTED: %s", f.getName()) : f.getName(),
-                                        f.getHumanReadableSize()
-                                )
-                        ).collect(Collectors.toList()));
-            }
-        }
         if (!hasEmbargoStatus(modelV2, EMBARGOED) && !CollectionUtils.isEmpty(modelV2.getFileBundle())) {
             m.setAllFiles(modelV2.getFileBundle().stream()
                     .map(fb -> {
@@ -111,7 +98,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
         }
         m.setVersion(modelV2.getVersion());
         if (!CollectionUtils.isEmpty(modelV2.getPublications())) {
-            m.setPublications(modelV2.getPublications().stream()
+            m.setPublications(emptyToNull(modelV2.getPublications().stream()
                     .filter(p -> StringUtils.isNotBlank(p.getDoi()))
                     .map(p -> {
                         if (StringUtils.isNotBlank(p.getCitation())) {
@@ -120,7 +107,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
                         } else {
                             return p.getDoi();
                         }
-                    }).collect(Collectors.toList()));
+                    }).collect(Collectors.toList())));
         }
         m.setStudyTarget(emptyToNull(modelV2.getStudyTarget()));
         m.setModelScope(emptyToNull(modelV2.getModelScope()));
