@@ -35,7 +35,7 @@ public class ProjectTranslatorTest {
         ProjectV1Result queryResult = WebClientHelper.executeQuery("query/minds/core/placomponent/v1.0.0/search", databaseScope, ProjectV1Result.class);
         queryResult.getResults().forEach(project -> {
             String id = project.getIdentifier();
-            Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated", "Subject", id, ElasticSearchDocument.class).getSource();
+            Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated", "Project", id, ElasticSearchDocument.class).getSource();
             List<String> messages = TranslatorTestHelper.compareProject(project, expected, databaseScope, false);
             if (!messages.isEmpty()) {
                 result.add("\n\n\tSubject: " + id + "\n\t\t" + String.join("\n\t\t", messages));

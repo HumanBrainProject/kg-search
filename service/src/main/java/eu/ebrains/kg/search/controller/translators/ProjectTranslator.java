@@ -30,13 +30,17 @@ public class ProjectTranslator implements Translator<ProjectV1, Project> {
         if(!CollectionUtils.isEmpty(projectSource.getPublications())) {
             p.setPublications(projectSource.getPublications().stream()
                     .map(publication -> {
-                        if (StringUtils.isNotBlank(publication.getDoi()) && StringUtils.isNotBlank(publication.getCitation())) {
+                        String doi;
+                        if(StringUtils.isNotBlank(publication.getDoi())) {
                             String url = URLEncoder.encode(publication.getDoi(), StandardCharsets.UTF_8);
-                            return publication.getCitation() + "\n" + String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
-                        } else if (StringUtils.isBlank(publication.getDoi()) && StringUtils.isNotBlank(publication.getCitation())) {
-                            return publication.getCitation() + "\n" + "[DOI: null]\n[DOI: null]: https://doi.org/null";
+                            doi = String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
                         } else {
-                            return publication.getDoi();
+                            doi = "[DOI: null]\n[DOI: null]: https://doi.org/null";
+                        }
+                        if (StringUtils.isNotBlank(publication.getCitation())) {
+                            return publication.getCitation() + "\n" + doi;
+                        } else {
+                            return doi;
                         }
                     }).collect(Collectors.toList()));
         }
