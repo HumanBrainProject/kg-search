@@ -20,9 +20,7 @@ public class SoftwareTranslatorTest {
     private static class SoftwareV2Result extends ResultOfKGv2<SoftwareV2> {}
 
     @Test
-    public void compareReleasedSoftwareAll() {
-        compareSoftware(DatabaseScope.RELEASED);
-    }
+    public void compareReleasedSoftwareAll() { compareSoftware(DatabaseScope.RELEASED); }
 
     @Test
     public void compareInferredSoftwareAll() {

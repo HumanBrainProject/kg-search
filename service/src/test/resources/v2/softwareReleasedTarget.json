@@ -1,62 +1,96 @@
 {
-  "identifier": {
-      "value": "671a21a4-4a65-4e33-9622-e85457bef265"
-  },
-  "description": {
-      "value": "UNICORE is a set of server components that are installed at the resource provider site (e.g. JSC or CSCS) to provide a set of REST APIs for submiting and managing HPC jobs and related tasks like data access and data movement. UNICORE handles security aspects like federated authentication, user mapping and authorization."
-  },
-  "sourceCode": [
+    "appCategory": [
       {
-          "url": "https://sourceforge.net/projects/unicore",
-          "value": "https://sourceforge.net/projects/unicore"
+        "value": "Application"
       }
-  ],
-  "features": [
+    ],
+    "identifier": {
+      "value": "1ccaa580-15ba-49da-9efe-9d4108375027"
+    },
+    "description": {
+      "value": "This Python package offers a convenient interface to set-up co-simulation models that simulate TVB large-scale brain network models that interact with NEST spiking neuron models.\nNEST simulates neural activity at the microscopic spatial scale of single neurons or neuron networks. On the other hand, The Virtual brain simulates at the mesoscopic or macroscopic scales of large neural populations or brain regions. Here, both are brought together to enable neuroscientists to study how these different scales interact and how different scales inform activity \"from the bottom up\" and \"down from the top\".\n\nA generic Python interface allows users to quickly and conveniently set up a parallel simulation in TVB and in NEST and automatically handles the exchange of currents, spikes, voltages, etc. between the different scales. Although the technical aspect of this tool is realized, the scientific part is a work in progress and we are continuously enriching the coupling between scales such that biophysical plausibility is maintained. The TVB+NEST bundle software package -- available as an easy-to-use Docker image container -- combines the sophistication and flexibility of NEST's spiking neuron simulation infrastructure with TVB's whole-brain simulation, processing, analyses and visualisation capabilities.\n\nThis Python package offers a convenient interface to set-up co-simulation models that simulate TVB large-scale brain network models that interact with NEST spiking neuron models.\nNEST simulates neural activity at the microscopic spatial scale of single neurons or neuron networks. On the other hand, The Virtual brain simulates at the mesoscopic or macroscopic scales of large neural populations or brain regions. Here, both are brought together to enable neuroscientists to study how these different scales interact and how different scales inform activity \"from the bottom up\" and \"down from the top\".\n\nA generic Python interface allows users to quickly and conveniently set up a parallel simulation in TVB and in NEST and automatically handles the exchange of currents, spikes, voltages, etc. between the different scales. Although the technical aspect of this tool is realized, the scientific part is a work in progress and we are continuously enriching the coupling between scales such that biophysical plausibility is maintained. The TVB+NEST bundle software package -- available as an easy-to-use Docker image container -- combines the sophistication and flexibility of NEST's spiking neuron simulation infrastructure with TVB's whole-brain simulation, processing, analyses and visualisation capabilities."
+    },
+    "sourceCode": [
       {
-          "value": "Commandline Interface"
+        "url": "https://hub.docker.com/r/thevirtualbrain/tvb-nest",
+        "value": "https://hub.docker.com/r/thevirtualbrain/tvb-nest"
       },
       {
-          "value": "Desktop Environment"
+        "url": "https://github.com/the-virtual-brain/tvb-multiscale/tree/1.0.1",
+        "value": "https://github.com/the-virtual-brain/tvb-multiscale/tree/1.0.1"
       }
-  ],
-  "documentation": [
+    ],
+    "features": [
       {
-          "url": "https://www.unicore.eu/documentation/",
-          "value": "https://www.unicore.eu/documentation/"
-      }
-  ],
-  "license": [
-      {
-          "value": "BSD"
-      }
-  ],
-  "operatingSystem": [
-      {
-          "value": "Linux"
+        "value": "Graphical User Interface"
       },
       {
-          "value": "MacOS"
-      }
-  ],
-  "version": {
-      "value": "8.0.0"
-  },
-  "homepage": [
+        "value": "Commandline Interface"
+      },
       {
-          "url": "https://www.unicore.eu",
-          "value": "https://www.unicore.eu"
+        "value": "Desktop Environment"
+      },
+      {
+        "value": "Presentation/Visualization"
+      },
+      {
+        "value": "Interactive Analysis"
+      },
+      {
+        "value": "Simulation"
+      },
+      {
+        "value": "Time Series Data Types"
+      },
+      {
+        "value": "Graph Data Types"
       }
-  ],
-  "title": {
-      "value": "Unicore"
-  },
-  "first_release": {
-      "value": "2020-08-25T08:58:36.542Z"
-  },
-  "last_release": {
-      "value": "2020-08-25T08:58:36.535Z"
-  },
-  "type": {
+    ],
+    "documentation": [
+      {
+        "url": "https://github.com/the-virtual-brain/tvb-multiscale/tree/master/docs",
+        "value": "https://github.com/the-virtual-brain/tvb-multiscale/tree/master/docs"
+      }
+    ],
+    "license": [
+      {
+        "value": "GNU General Public License, version 3.0"
+      }
+    ],
+    "operatingSystem": [
+      {
+        "value": "Linux"
+      },
+      {
+        "value": "Windows"
+      },
+      {
+        "value": "MacOS"
+      }
+    ],
+    "version": {
+      "value": "1.0.1"
+    },
+    "homepage": [
+      {
+        "url": "https://tvb-nest.apps.hbp.eu/",
+        "value": "https://tvb-nest.apps.hbp.eu/"
+      },
+      {
+        "url": "https://collab.humanbrainproject.eu/#/collab/19/nav/2108?state=software,TVB%20and%20NEST%202",
+        "value": "https://collab.humanbrainproject.eu/#/collab/19/nav/2108?state=software,TVB%20and%20NEST%202"
+      }
+    ],
+    "title": {
+      "value": "Multi-scale brain simulation with TVB-NEST"
+    },
+    "first_release": {
+      "value": "2020-06-06T21:45:04.035Z"
+    },
+    "last_release": {
+      "value": "2020-06-06T21:45:04.026Z"
+    },
+    "type": {
       "value": "Software"
-  }
+    }
 }

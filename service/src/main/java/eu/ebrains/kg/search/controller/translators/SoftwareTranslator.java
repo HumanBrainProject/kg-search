@@ -4,6 +4,7 @@ import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Software;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Comparator;
@@ -19,13 +20,16 @@ public class SoftwareTranslator implements Translator<SoftwareV2, Software> {
             softwareV2.getVersions().sort(Comparator.comparing(SoftwareV2.Version::getVersion).reversed());
         }
         SoftwareV2.Version version = firstItemOrNull(softwareV2.getVersions());
+
         if (databaseScope == DatabaseScope.INFERRED) {
             s.setEditorId(softwareV2.getEditorId());
         }
         s.setAppCategory(emptyToNull(version.getApplicationCategory()));
         s.setIdentifier(softwareV2.getIdentifier());
         s.setTitle(softwareV2.getTitle());
-        s.setDescription(softwareV2.getDescription());
+
+        s.setDescription(softwareV2.getDescription() + (StringUtils.isBlank(version.getDescription())? "": ("\n\n" + version.getDescription())));
+
         if (!CollectionUtils.isEmpty(version.getSourceCode())) {
             s.setSourceCode(version.getSourceCode().stream()
                     .map(sc -> new TargetExternalReference(sc, sc))
