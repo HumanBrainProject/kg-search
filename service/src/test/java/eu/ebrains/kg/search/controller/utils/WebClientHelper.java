@@ -1,12 +1,8 @@
 package eu.ebrains.kg.search.controller.utils;
 
 import eu.ebrains.kg.search.model.DatabaseScope;
-import eu.ebrains.kg.search.model.source.ResultOfKGv2;
-import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.util.Map;
 
 public class WebClientHelper {
     private static final ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()

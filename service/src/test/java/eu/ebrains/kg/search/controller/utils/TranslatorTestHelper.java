@@ -45,6 +45,7 @@ public class TranslatorTestHelper {
 
         return compareContributor(sources, targetExpected, databaseScope, liveMode);
     }
+
     public static List<String> compareContributor(PersonSources sources, Map<String, Object> targetExpected, DatabaseScope databaseScope, boolean liveMode) {
         ContributorTranslator translator = new ContributorTranslator();
 
@@ -56,11 +57,13 @@ public class TranslatorTestHelper {
     }
 
     public static List<String> compareModel(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
-        ModelTranslator translator = new ModelTranslator();
-
         ModelV2 source = jsonAdapter.fromJson(sourceJson, ModelV2.class);
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
+        return compareModel(source, targetExpected, databaseScope, liveMode);
+    }
 
+    public static List<String> compareModel(ModelV2 source, Map<String, Object> targetExpected, DatabaseScope databaseScope, boolean liveMode) {
+        ModelTranslator translator = new ModelTranslator();
         Model target = translator.translate(source, databaseScope, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
@@ -115,31 +118,31 @@ public class TranslatorTestHelper {
     }
 
     public static List<String> compareProject(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
-        ProjectTranslator translator = new ProjectTranslator();
-
         ProjectV1 source = jsonAdapter.fromJson(sourceJson, ProjectV1.class);
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
+        return compareProject(source, targetExpected, databaseScope, liveMode);
+    }
 
+
+    public static List<String> compareProject(ProjectV1 source, Map<String, Object> targetExpected, DatabaseScope databaseScope, boolean liveMode) {
+        ProjectTranslator translator = new ProjectTranslator();
         Project target = translator.translate(source, databaseScope, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
-
         return compareResults(targetExpected, targetResult);
     }
 
     public static List<String> compareDataset(String sourceJson, String expectedJson, DatabaseScope databaseScope, boolean liveMode) {
-        DatasetTranslator translator = new DatasetTranslator();
-        // Given
         DatasetV1 source = jsonAdapter.fromJson(sourceJson, DatasetV1.class);
-
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
+        return compareDataset(source, targetExpected, databaseScope, liveMode);
+    }
 
-        //When
+    public static List<String> compareDataset(DatasetV1 source, Map<String, Object> targetExpected, DatabaseScope databaseScope, boolean liveMode) {
+        DatasetTranslator translator = new DatasetTranslator();
         Dataset target = translator.translate(source, databaseScope, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
-
-        //Then
         return compareResults(targetExpected, targetResult);
     }
 

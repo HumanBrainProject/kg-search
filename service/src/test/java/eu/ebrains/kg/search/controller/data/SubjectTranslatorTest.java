@@ -17,8 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SubjectTranslatorTest {
-    private static class SubjectV1Result extends ResultOfKGv2<SubjectV1> {
-    }
+    private static class SubjectV1Result extends ResultOfKGv2<SubjectV1> { }
 
     @Test
     public void compareReleasedSubjects() {

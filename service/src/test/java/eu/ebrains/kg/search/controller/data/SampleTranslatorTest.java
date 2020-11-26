@@ -18,8 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SampleTranslatorTest {
-    private static class SampleV1Result extends ResultOfKGv2<SampleV1> {
-    }
+    private static class SampleV1Result extends ResultOfKGv2<SampleV1> {}
 
     @Test
     public void compareReleasedSamples() {
