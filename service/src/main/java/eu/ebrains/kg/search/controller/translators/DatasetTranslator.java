@@ -24,9 +24,9 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
     public Dataset translate(DatasetV1 datasetV1, DatabaseScope databaseScope, boolean liveMode) {
         Dataset d = new Dataset();
         String containerUrl = datasetV1.getContainerUrl();
-        Boolean containerUrlAsZIP = datasetV1.getContainerUrlAsZIP();
+        boolean containerUrlAsZIP = datasetV1.getContainerUrlAsZIP();
         List<DatasetV1.SourceFile> files = datasetV1.getFiles();
-        if (hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW) && StringUtils.isNotBlank(containerUrl) && ((containerUrlAsZIP != null && containerUrlAsZIP) || firstItemOrNull(files) != null)) {
+        if (!hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW) && (StringUtils.isNotBlank(containerUrl) && (containerUrlAsZIP || firstItemOrNull(files) != null))) {
             d.setZip(new TargetExternalReference(
                     String.format("https://kg.ebrains.eu/proxy/export?container=%s", containerUrl),
                     "Download all related data as ZIP"
@@ -51,8 +51,10 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                             null
                     )).collect(Collectors.toList()));
         }
-        if (datasetV1.getDataDescriptorURL() != null) {
-            d.setDataDescriptor(new TargetExternalReference(datasetV1.getDataDescriptorURL(), datasetV1.getDataDescriptorURL()));
+        if (StringUtils.isNotBlank(datasetV1.getDataDescriptorURL())) {
+            d.setDataDescriptor(new TargetExternalReference(
+                    datasetV1.getDataDescriptorURL(), datasetV1.getDataDescriptorURL()
+            ));
         }
         d.setSpeciesFilter(emptyToNull(datasetV1.getSpeciesFilter()));
 
@@ -90,19 +92,20 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
 
 
         if (!CollectionUtils.isEmpty(datasetV1.getPublications())) {
-            d.setPublications(datasetV1.getPublications().stream()
+            d.setPublications(emptyToNull(datasetV1.getPublications().stream()
                     .map(publication -> {
                         String publicationResult = null;
                         if (StringUtils.isNotBlank(publication.getCitation()) && StringUtils.isNotBlank(publication.getDoi())) {
                             String url = URLEncoder.encode(publication.getDoi(), StandardCharsets.UTF_8);
-                            publicationResult = publication.getCitation() + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
+                            publicationResult = publication.getCitation() + "\n" + String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
                         } else if (StringUtils.isNotBlank(publication.getCitation()) && StringUtils.isBlank(publication.getDoi())) {
-                            publicationResult = publication.getCitation().trim().replaceAll(", $", "");
+                            publicationResult = publication.getCitation().trim().replaceAll(",$", "");
                         } else if (StringUtils.isNotBlank(publication.getDoi())) {
-                            publicationResult = publication.getDoi();
+                            String url = URLEncoder.encode(publication.getDoi(), StandardCharsets.UTF_8);
+                            publicationResult = String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
                         }
                         return publicationResult;
-                    }).filter(Objects::nonNull).collect(Collectors.toList()));
+                    }).filter(Objects::nonNull).collect(Collectors.toList())));
         }
         d.setAtlas(emptyToNull(datasetV1.getParcellationAtlas()));
 
@@ -112,7 +115,9 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         }
         if (!CollectionUtils.isEmpty(datasetV1.getParcellationRegion())) {
             d.setRegion(datasetV1.getParcellationRegion().stream()
-                    .map(r -> new TargetExternalReference(r.getUrl(), StringUtils.isBlank(r.getAlias()) ? r.getName() : r.getAlias()))
+                    .map(r -> new TargetExternalReference(
+                            StringUtils.isNotBlank(r.getUrl()) ? r.getUrl() : null,
+                            StringUtils.isBlank(r.getAlias()) ? r.getName() : r.getAlias()))
                     .collect(Collectors.toList()));
         }
         d.setTitle(datasetV1.getTitle());

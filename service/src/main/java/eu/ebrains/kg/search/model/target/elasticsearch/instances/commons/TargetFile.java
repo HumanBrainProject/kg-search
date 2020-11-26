@@ -1,5 +1,6 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances.commons;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -35,13 +36,21 @@ public class TargetFile {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private FileImage thumbnailUrl;
 
-    public String getFileSize() { return fileSize; }
+    public String getFileSize() {
+        return fileSize;
+    }
 
-    public void setFileSize(String fileSize) { this.fileSize = fileSize; }
+    public void setFileSize(String fileSize) {
+        this.fileSize = fileSize;
+    }
 
-    public String getUrl() { return url; }
+    public String getUrl() {
+        return url;
+    }
 
-    public void setUrl(String url) { this.url = url; }
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public String getValue() {
         return value;
@@ -51,35 +60,59 @@ public class TargetFile {
         this.value = value;
     }
 
-    public FileImage getStaticImageUrl() { return staticImageUrl; }
+    public FileImage getStaticImageUrl() {
+        return staticImageUrl;
+    }
 
-    public void setStaticImageUrl(FileImage staticImageUrl) { this.staticImageUrl = staticImageUrl; }
+    public void setStaticImageUrl(FileImage staticImageUrl) {
+        this.staticImageUrl = staticImageUrl;
+    }
 
-    public FileImage getPreviewUrl() { return previewUrl; }
+    public FileImage getPreviewUrl() {
+        return previewUrl;
+    }
 
-    public void setPreviewUrl(FileImage previewUrl) { this.previewUrl = previewUrl; }
+    public void setPreviewUrl(FileImage previewUrl) {
+        this.previewUrl = previewUrl;
+    }
 
-    public FileImage getThumbnailUrl() { return thumbnailUrl; }
+    public FileImage getThumbnailUrl() {
+        return thumbnailUrl;
+    }
 
-    public void setThumbnailUrl(FileImage thumbnailUrl) { this.thumbnailUrl = thumbnailUrl; }
+    public void setThumbnailUrl(FileImage thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
 
     public static class FileImage {
-        public FileImage(){}
-
-        public FileImage(String url, Boolean isAnimated) {
-            this.url = url;
-            this.isAnimated = isAnimated;
+        public FileImage() {
         }
-        private Boolean isAnimated;
+
+        public FileImage(boolean isAnimated, String url) {
+            this.isAnimated = isAnimated;
+            this.url = url;
+        }
+
+        private boolean isAnimated;
+
         @ElasticSearchInfo(ignoreAbove = 256)
         private String url;
 
-        public Boolean getAnimated() { return isAnimated; }
+        public boolean getIsAnimated() {
+            return isAnimated;
+        }
 
-        public void setAnimated(Boolean animated) { isAnimated = animated; }
+        public void setIsAnimated(boolean isAnimated) {
+            this.isAnimated = isAnimated;
+        }
 
-        public String getUrl() { return url; }
+        public String getUrl() {
+            return url;
+        }
 
-        public void setUrl(String url) { this.url = url; }
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
     }
 }

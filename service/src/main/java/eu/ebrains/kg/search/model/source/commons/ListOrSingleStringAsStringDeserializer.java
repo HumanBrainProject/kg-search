@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ListOrSingleStringDeserializer extends JsonDeserializer<String> {
+public class ListOrSingleStringAsStringDeserializer extends JsonDeserializer<String> {
 
     @Override
     public String deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {

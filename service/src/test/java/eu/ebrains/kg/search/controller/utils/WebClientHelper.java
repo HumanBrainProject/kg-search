@@ -6,7 +6,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 public class WebClientHelper {
     private static final ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
-            .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 10000)).build();
+            .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1000000)).build();
     public static final WebClient webClient = WebClient.builder().exchangeStrategies(exchangeStrategies).build();
 
     private static final String token = "";

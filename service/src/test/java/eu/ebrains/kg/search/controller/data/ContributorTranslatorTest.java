@@ -20,11 +20,9 @@ import java.util.*;
 
 public class ContributorTranslatorTest {
 
-    private static class PersonV1Result extends ResultOfKGv2<PersonV1> {
-    }
+    private static class PersonV1Result extends ResultOfKGv2<PersonV1> {}
 
-    private static class PersonV2Result extends ResultOfKGv2<PersonV2> {
-    }
+    private static class PersonV2Result extends ResultOfKGv2<PersonV2> { }
 
     @Test
     public void compareReleasedContributors() {

@@ -34,7 +34,7 @@ public class DatasetTranslatorTest {
         DatasetV1Result queryResult = WebClientHelper.executeQuery("query/minds/core/dataset/v1.0.0/search", DatabaseScope.RELEASED, DatasetV1Result.class);
         queryResult.getResults().forEach(dataset -> {
             String id = dataset.getIdentifier();
-            Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated", "Software", id, ElasticSearchDocument.class).getSource();
+            Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated", "Dataset", id, ElasticSearchDocument.class).getSource();
             List<String> messages = TranslatorTestHelper.compareDataset(dataset, expected, databaseScope, false);
             if (!messages.isEmpty()) {
                 result.add("\n\n\tDataset: " + id + "\n\t\t" + String.join("\n\t\t", messages));

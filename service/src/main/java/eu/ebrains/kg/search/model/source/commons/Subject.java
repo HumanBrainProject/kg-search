@@ -3,7 +3,6 @@ package eu.ebrains.kg.search.model.source.commons;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import java.util.Collections;
 import java.util.List;
 
 public class Subject {
@@ -14,7 +13,7 @@ public class Subject {
     private String weight;
     private String genotype;
     private String relativeUrl;
-    @JsonDeserialize(using = ListOrSingleStringDeserializer.class)
+    @JsonDeserialize(using = ListOrSingleStringAsStringDeserializer.class)
     private String strains;
     private List<String> species;
     private String strain;

@@ -2,11 +2,10 @@ package eu.ebrains.kg.search.model.source.openMINDSv1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import eu.ebrains.kg.search.model.source.commons.ListOrSingleStringDeserializer;
+import eu.ebrains.kg.search.model.source.commons.ListOrSingleStringAsStringDeserializer;
 import eu.ebrains.kg.search.model.source.commons.SourceInternalReference;
 import eu.ebrains.kg.search.model.source.commons.SpecimenGroup;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class SubjectV1 {
     private String genotype;
     private String strain;
     private String age;
-    @JsonDeserialize(using = ListOrSingleStringDeserializer.class)
+    @JsonDeserialize(using = ListOrSingleStringAsStringDeserializer.class)
     private String strains;
     private Date lastReleaseAt;
     private Date firstReleaseAt;

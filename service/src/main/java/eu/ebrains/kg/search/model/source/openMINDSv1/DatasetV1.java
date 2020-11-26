@@ -1,6 +1,7 @@
 package eu.ebrains.kg.search.model.source.openMINDSv1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import eu.ebrains.kg.search.model.source.commons.*;
 
 import java.util.Date;
@@ -12,7 +13,8 @@ public class DatasetV1 implements HasEmbargo{
     private List<SourceInternalReference> component;
     private List<String> embargoRestrictedAccess;
     @JsonProperty("external_datalink") //TODO: Capitalize the property
-    private List<String> externalDatalink; // TODO: Sometimes a String sometimes a List, ensure always List
+    @JsonDeserialize(using = ListOrSingleStringAsListDeserializer.class)
+    private List<String> externalDatalink;
     private List<String> embargoForFilter;
     private List<String> doi;
     private List<SourceFile> files;
@@ -31,7 +33,7 @@ public class DatasetV1 implements HasEmbargo{
     private String title;
     private String editorId;
     private List<SourceInternalReference> owners;
-    private Boolean containerUrlAsZIP;
+    private boolean containerUrlAsZIP;
     private List<String> protocols;
     @JsonProperty("container_url")
     private String containerUrl;
@@ -130,9 +132,9 @@ public class DatasetV1 implements HasEmbargo{
 
     public void setOwners(List<SourceInternalReference> owners) { this.owners = owners; }
 
-    public Boolean getContainerUrlAsZIP() { return containerUrlAsZIP; }
+    public boolean getContainerUrlAsZIP() { return containerUrlAsZIP; }
 
-    public void setContainerUrlAsZIP(Boolean containerUrlAsZIP) { this.containerUrlAsZIP = containerUrlAsZIP; }
+    public void setContainerUrlAsZIP(boolean containerUrlAsZIP) { this.containerUrlAsZIP = containerUrlAsZIP; }
 
     public List<String> getProtocols() { return protocols; }
 
@@ -186,7 +188,7 @@ public class DatasetV1 implements HasEmbargo{
         private List<String> previewUrl;
 
         @JsonProperty("private_access")
-        private Boolean privateAccess;
+        private boolean privateAccess;
 
         @JsonProperty("thumbnail_url")
         private List<String> thumbnailUrl;
@@ -215,9 +217,9 @@ public class DatasetV1 implements HasEmbargo{
 
         public void setPreviewUrl(List<String> previewUrl) { this.previewUrl = previewUrl; }
 
-        public Boolean getPrivateAccess() { return privateAccess; }
+        public boolean getPrivateAccess() { return privateAccess; }
 
-        public void setPrivateAccess(Boolean privateAccess) { this.privateAccess = privateAccess; }
+        public void setPrivateAccess(boolean privateAccess) { this.privateAccess = privateAccess; }
 
         public List<String> getThumbnailUrl() { return thumbnailUrl; }
 

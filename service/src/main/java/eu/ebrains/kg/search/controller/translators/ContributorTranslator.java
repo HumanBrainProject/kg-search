@@ -5,11 +5,15 @@ import eu.ebrains.kg.search.model.source.PersonSources;
 import eu.ebrains.kg.search.model.source.PersonV1andV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Contributor;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
 public class ContributorTranslator implements Translator<PersonSources, Contributor> {
 
@@ -37,6 +41,14 @@ public class ContributorTranslator implements Translator<PersonSources, Contribu
                                     custodianOf.getName(), null)).collect(Collectors.toList()));
         }
 
+        if(!CollectionUtils.isEmpty(person.getCustodianOfModel())) {
+            c.setCustodianOfModel(person.getCustodianOfModel().stream()
+                    .map(custodianOfModel ->
+                            new TargetInternalReference(
+                                    liveMode ? custodianOfModel.getRelativeUrl() : String.format("Model/%s", custodianOfModel.getIdentifier()),
+                                    custodianOfModel.getName(), null)).collect(Collectors.toList()));
+        }
+
         if(!CollectionUtils.isEmpty(person.getModelContributions())) {
             c.setModelContributions(person.getModelContributions().stream()
                     .map(contribution -> new TargetInternalReference(
@@ -45,20 +57,19 @@ public class ContributorTranslator implements Translator<PersonSources, Contribu
                     )).collect(Collectors.toList()));
         }
         if(!CollectionUtils.isEmpty(person.getPublications())) {
-            c.setPublications(person.getPublications().stream()
+            c.setPublications(emptyToNull(person.getPublications().stream()
                     .map(publication -> {
-                        String publicationResult = "";
-                        if (publication.getCitation() != null && publication.getDoi() != null) {
+                        String publicationResult;
+                        if (StringUtils.isNotBlank(publication.getCitation()) && StringUtils.isNotBlank(publication.getDoi())) {
                             String url = URLEncoder.encode(publication.getDoi(), StandardCharsets.UTF_8);
                             publicationResult = publication.getCitation() + "\n" + String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
-                        } else if (publication.getCitation() != null && publication.getDoi() == null) {
-                            publicationResult = publication.getCitation().trim().replaceAll(", $", "");
-                            ;
+                        } else if (StringUtils.isNotBlank(publication.getCitation()) && StringUtils.isBlank(publication.getDoi())) {
+                            publicationResult = publication.getCitation().trim().replaceAll(",$", "");
                         } else {
                             publicationResult = publication.getDoi();
                         }
                         return publicationResult;
-                    }).collect(Collectors.toList()));
+                    }).filter(Objects::nonNull).collect(Collectors.toList())));
         }
         if (databaseScope == DatabaseScope.INFERRED) {
             c.setEditorId(person.getEditorId());

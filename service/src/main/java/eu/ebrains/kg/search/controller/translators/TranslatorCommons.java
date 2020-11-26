@@ -5,6 +5,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SampleV1;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
@@ -19,7 +20,7 @@ public class TranslatorCommons {
         return list != null && !list.isEmpty() ? list.get(0) : null;
     }
 
-    static <T> List<T> emptyToNull(List<T> list){
+    static <T> List<T> emptyToNull(List<T> list) {
         return CollectionUtils.isEmpty(list) ? null : list;
     }
 
@@ -32,10 +33,11 @@ public class TranslatorCommons {
     }
 
     static TargetFile.FileImage getFileImage(List<String> url, boolean b) {
-        return (!CollectionUtils.isEmpty(url) && url.get(0) != null) ?
+        String s = firstItemOrNull(url);
+        return (StringUtils.isNotBlank(s)) ?
                 new TargetFile.FileImage(
-                        url.get(0),
-                        b
+                        b,
+                        s
                 ) : null;
     }
 
