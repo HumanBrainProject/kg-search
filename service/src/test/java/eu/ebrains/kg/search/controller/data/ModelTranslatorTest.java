@@ -32,7 +32,7 @@ public class ModelTranslatorTest {
 
     private void compareModels(DatabaseScope databaseScope) {
         List<String> result = new ArrayList<>();
-        ModelV2Result queryResult = WebClientHelper.executeQuery("query/minds/core/placomponent/v1.0.0/search", databaseScope, ModelV2Result.class);
+        ModelV2Result queryResult = WebClientHelper.executeQuery("query/uniminds/core/modelinstance/v1.0.0/search", databaseScope, ModelV2Result.class);
         queryResult.getResults().forEach(project -> {
             String id = project.getIdentifier();
             Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated", "Subject", id, ElasticSearchDocument.class).getSource();
