@@ -7,20 +7,16 @@ import eu.ebrains.kg.search.model.source.PersonSources;
 import eu.ebrains.kg.search.model.source.PersonV1andV2;
 import eu.ebrains.kg.search.model.source.ResultOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.PersonV1;
-import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
 import eu.ebrains.kg.search.model.source.openMINDSv2.PersonV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.Contributor;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ContributorTranslatorTest {
 
@@ -41,16 +37,43 @@ public class ContributorTranslatorTest {
     }
 
     private void compareContributors(DatabaseScope databaseScope) {
+        Map<String, PersonSources> sourcesMap = new HashMap<>();
+
         List<String> result = new ArrayList<>();
         ContributorTranslatorTest.PersonV1Result personV1Result = WebClientHelper.executeQuery("query/minds/core/person/v1.0.0/search", databaseScope, ContributorTranslatorTest.PersonV1Result.class);
-        ContributorTranslatorTest.PersonV1Result personV2Result = WebClientHelper.executeQuery("query/minds/core/person/v1.0.0/search", databaseScope, ContributorTranslatorTest.PersonV1Result.class);
+        ContributorTranslatorTest.PersonV2Result personV2Result = WebClientHelper.executeQuery("query/uniminds/core/person/v1.0.0/search", databaseScope, ContributorTranslatorTest.PersonV2Result.class);
 
-        //PersonSources sources = new PersonSources();
-        List<PersonSources> sources =  new ArrayList<>();
-        sources.forEach(personSources -> {
+        if (!CollectionUtils.isEmpty(personV1Result.getResults())) {
+            personV1Result.getResults().forEach(person -> {
+                String id = person.getIdentifier();
+                if (sourcesMap.containsKey(id)) {
+                    PersonSources sources = sourcesMap.get(id);
+                    sources.setPersonV1(person);
+                } else {
+                    PersonSources sources = new PersonSources();
+                    sourcesMap.put(id, sources);
+                    sources.setPersonV1(person);
+                }
+            });
+        }
+
+        if (!CollectionUtils.isEmpty(personV2Result.getResults())) {
+            personV2Result.getResults().forEach(person -> {
+                String id = person.getIdentifier();
+                if (sourcesMap.containsKey(id)) {
+                    PersonSources sources = sourcesMap.get(id);
+                    sources.setPersonV2(person);
+                } else {
+                    PersonSources sources = new PersonSources();
+                    sourcesMap.put(id, sources);
+                    sources.setPersonV2(person);
+                }
+            });
+        }
+        sourcesMap.forEach((key, personSources) -> {
             PersonV1andV2 person = personSources.getPersonV2() != null ? personSources.getPersonV2() : personSources.getPersonV1();
             String id = person.getIdentifier();
-            Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated", "Contributor", id, ElasticSearchDocument.class).getSource();
+            Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED) ? "public" : "curated", "Contributor", id, ElasticSearchDocument.class).getSource();
             List<String> messages = TranslatorTestHelper.compareContributor(personSources, expected, databaseScope, false);
             if (!messages.isEmpty()) {
                 result.add("\n\n\tContributor: " + id + "\n\t\t" + String.join("\n\t\t", messages));
