@@ -42,11 +42,11 @@ public class WebClientHelper {
         if (!m.find( )) {
             return null;
         }
-        String org = m.group(0);
-        String domain = m.group(1);
-        String schema = m.group(2);
-        String version = m.group(3);
-        String id= m.group(4);
+        String org = m.group(1);
+        String domain = m.group(2);
+        String schema = m.group(3);
+        String version = m.group(4);
+        String id= m.group(5);
         return getDocument(String.format("/search/api/types/%s/%s/%s/%s/documents/%s/preview", org, domain, schema, version, id), clazz);
     }
 
