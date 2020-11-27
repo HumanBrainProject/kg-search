@@ -47,7 +47,7 @@ public class SoftwareTranslatorTest {
                 result.add("\n\n\tSoftware: " + software.getIdentifier() + " (Fail to get expected document!)");
             } else {
                 Map<String, Object> expected = doc.getSource();
-                List<String> messages = TranslatorTestHelper.compareSoftware(software, expected, databaseScope, false);
+                List<String> messages = TranslatorTestHelper.compareSoftware(software, expected, databaseScope, liveMode);
                 if (!messages.isEmpty()) {
                     result.add("\n\n\tSoftware: " + software.getIdentifier() + "\n\t\t" + String.join("\n\t\t", messages));
                 }

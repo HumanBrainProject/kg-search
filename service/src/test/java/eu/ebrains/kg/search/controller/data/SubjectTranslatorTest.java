@@ -49,7 +49,7 @@ public class SubjectTranslatorTest {
                 result.add("\n\n\tSubject: " + subject.getIdentifier() + " (Fail to get expected document!)");
             } else {
                 Map<String, Object> expected = doc.getSource();
-                List<String> messages = TranslatorTestHelper.compareSubject(subject, expected, databaseScope, false);
+                List<String> messages = TranslatorTestHelper.compareSubject(subject, expected, databaseScope, liveMode);
                 if (!messages.isEmpty()) {
                     result.add("\n\n\tSubject: " + subject.getIdentifier() + "\n\t\t" + String.join("\n\t\t", messages));
                 }

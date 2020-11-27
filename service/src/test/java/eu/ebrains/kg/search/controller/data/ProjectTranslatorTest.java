@@ -50,7 +50,7 @@ public class ProjectTranslatorTest {
                 result.add("\n\n\tProject: " + project.getIdentifier() + " (Fail to get expected document!)");
             } else {
                 Map<String, Object> expected = doc.getSource();
-                List<String> messages = TranslatorTestHelper.compareProject(project, expected, databaseScope, false);
+                List<String> messages = TranslatorTestHelper.compareProject(project, expected, databaseScope, liveMode);
                 if (!messages.isEmpty()) {
                     result.add("\n\n\tProject: " + project.getIdentifier() + "\n\t\t" + String.join("\n\t\t", messages));
                 }
