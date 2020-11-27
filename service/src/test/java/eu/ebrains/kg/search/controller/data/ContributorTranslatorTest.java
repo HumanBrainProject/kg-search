@@ -26,15 +26,20 @@ public class ContributorTranslatorTest {
 
     @Test
     public void compareReleasedContributors() {
-        compareContributors(DatabaseScope.RELEASED);
+        compareContributors(DatabaseScope.RELEASED, false);
     }
 
     @Test
     public void compareInferredContributors() {
-        compareContributors(DatabaseScope.INFERRED);
+        compareContributors(DatabaseScope.INFERRED, false);
     }
 
-    private void compareContributors(DatabaseScope databaseScope) {
+    @Test
+    public void compareInferredLiveContributors() {
+        compareContributors(DatabaseScope.INFERRED, true);
+    }
+
+    private void compareContributors(DatabaseScope databaseScope, boolean liveMode) {
         Map<String, PersonSources> sourcesMap = new HashMap<>();
 
         List<String> result = new ArrayList<>();
@@ -70,11 +75,21 @@ public class ContributorTranslatorTest {
         }
         sourcesMap.forEach((key, personSources) -> {
             PersonV1andV2 person = personSources.getPersonV2() != null ? personSources.getPersonV2() : personSources.getPersonV1();
-            String id = person.getIdentifier();
-            Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED) ? "public" : "curated", "Contributor", id, ElasticSearchDocument.class).getSource();
-            List<String> messages = TranslatorTestHelper.compareContributor(personSources, expected, databaseScope, false);
-            if (!messages.isEmpty()) {
-                result.add("\n\n\tContributor: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+            String id = liveMode?person.getEditorId():person.getIdentifier();
+            ElasticSearchDocument doc = null;
+            if (liveMode) {
+                doc = WebClientHelper.getLiveDocument(id, ElasticSearchDocument.class);
+            } else {
+                doc = WebClientHelper.getDocument(databaseScope, "Contributor", id, ElasticSearchDocument.class);
+            }
+            if (doc == null) {
+                result.add("\n\n\tContributor: " + id + " (Fail to get expected document!)");
+            } else {
+                Map<String, Object> expected = doc.getSource();
+                List<String> messages = TranslatorTestHelper.compareContributor(personSources, expected, databaseScope, false);
+                if (!messages.isEmpty()) {
+                    result.add("\n\n\tContributor: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+                }
             }
         });
         if (!result.isEmpty()) {

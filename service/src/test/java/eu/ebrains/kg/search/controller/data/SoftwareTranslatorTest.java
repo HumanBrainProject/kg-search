@@ -20,22 +20,37 @@ public class SoftwareTranslatorTest {
     private static class SoftwareV2Result extends ResultOfKGv2<SoftwareV2> {}
 
     @Test
-    public void compareReleasedSoftwareAll() { compareSoftware(DatabaseScope.RELEASED); }
+    public void compareReleasedSoftwares() { compareSoftware(DatabaseScope.RELEASED, false); }
 
     @Test
-    public void compareInferredSoftwareAll() {
-        compareSoftware(DatabaseScope.INFERRED);
+    public void compareInferredSoftwares() {
+        compareSoftware(DatabaseScope.INFERRED, false);
     }
 
-    public void compareSoftware(DatabaseScope databaseScope) {
+    @Test
+    public void compareInferredLiveSoftwares() {
+        compareSoftware(DatabaseScope.INFERRED, true);
+    }
+
+    public void compareSoftware(DatabaseScope databaseScope, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        SoftwareV2Result queryResult = WebClientHelper.executeQuery("query/softwarecatalog/software/softwareproject/v1.0.0/search", DatabaseScope.RELEASED, SoftwareV2Result.class);
+        SoftwareV2Result queryResult = WebClientHelper.executeQuery("query/softwarecatalog/software/softwareproject/v1.0.0/search", databaseScope, SoftwareV2Result.class);
         queryResult.getResults().forEach(software -> {
-            String id = software.getIdentifier();
-            Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated", "Software", id, ElasticSearchDocument.class).getSource();
-            List<String> messages = TranslatorTestHelper.compareSoftware(software, expected, databaseScope, false);
-            if (!messages.isEmpty()) {
-                result.add("\n\n\tSoftware: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+            String id = liveMode?software.getEditorId():software.getIdentifier();
+            ElasticSearchDocument doc = null;
+            if (liveMode) {
+                doc = WebClientHelper.getLiveDocument(id, ElasticSearchDocument.class);
+            } else {
+                doc = WebClientHelper.getDocument(databaseScope, "Software", id, ElasticSearchDocument.class);
+            }
+            if (doc == null) {
+                result.add("\n\n\tContributor: " + id + " (Fail to get expected document!)");
+            } else {
+                Map<String, Object> expected = doc.getSource();
+                List<String> messages = TranslatorTestHelper.compareSoftware(software, expected, databaseScope, false);
+                if (!messages.isEmpty()) {
+                    result.add("\n\n\tSoftware: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+                }
             }
         });
         if (!result.isEmpty()) {

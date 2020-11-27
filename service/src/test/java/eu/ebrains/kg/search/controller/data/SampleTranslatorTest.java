@@ -20,22 +20,37 @@ public class SampleTranslatorTest {
     private static class SampleV1Result extends ResultOfKGv2<SampleV1> {}
 
     @Test
-    public void compareReleasedSamples() { compareSamples(DatabaseScope.RELEASED); }
+    public void compareReleasedSamples() { compareSamples(DatabaseScope.RELEASED, false); }
 
     @Test
     public void compareInferredSamples() {
-        compareSamples(DatabaseScope.INFERRED);
+        compareSamples(DatabaseScope.INFERRED, false);
     }
 
-    private void compareSamples(DatabaseScope databaseScope) {
+    @Test
+    public void compareInferredLiveSamples() {
+        compareSamples(DatabaseScope.INFERRED, true);
+    }
+
+    private void compareSamples(DatabaseScope databaseScope, boolean liveMode) {
         List<String> result = new ArrayList<>();
         SampleV1Result queryResult = WebClientHelper.executeQuery("query/minds/experiment/sample/v1.0.0/search", databaseScope, SampleV1Result.class);
         queryResult.getResults().forEach(sample -> {
-            String id = sample.getIdentifier();
-            Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated", "Sample", id, ElasticSearchDocument.class).getSource();
-            List<String> messages = TranslatorTestHelper.compareSample(sample, expected, databaseScope, false);
-            if (!messages.isEmpty()) {
-                result.add("\n\n\tSample: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+            String id = liveMode?sample.getEditorId():sample.getIdentifier();
+            ElasticSearchDocument doc = null;
+            if (liveMode) {
+                doc = WebClientHelper.getLiveDocument(id, ElasticSearchDocument.class);
+            } else {
+                doc = WebClientHelper.getDocument(databaseScope, "Sample", id, ElasticSearchDocument.class);
+            }
+            if (doc == null) {
+                result.add("\n\n\tContributor: " + id + " (Fail to get expected document!)");
+            } else {
+                Map<String, Object> expected = doc.getSource();
+                List<String> messages = TranslatorTestHelper.compareSample(sample, expected, databaseScope, false);
+                if (!messages.isEmpty()) {
+                    result.add("\n\n\tSample: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+                }
             }
         });
         if (!result.isEmpty()) {

@@ -21,23 +21,38 @@ public class ModelTranslatorTest {
 
     @Test
     public void compareReleasedModels() {
-        compareModels(DatabaseScope.RELEASED);
+        compareModels(DatabaseScope.RELEASED, false);
     }
 
     @Test
     public void compareInferredModels() {
-        compareModels(DatabaseScope.INFERRED);
+        compareModels(DatabaseScope.INFERRED, false);
     }
 
-    private void compareModels(DatabaseScope databaseScope) {
+    @Test
+    public void compareInferredLiveModels() {
+        compareModels(DatabaseScope.INFERRED, true);
+    }
+
+    private void compareModels(DatabaseScope databaseScope, boolean liveMode) {
         List<String> result = new ArrayList<>();
         ModelV2Result queryResult = WebClientHelper.executeQuery("query/uniminds/core/modelinstance/v1.0.0/search", databaseScope, ModelV2Result.class);
         queryResult.getResults().forEach(project -> {
-            String id = project.getIdentifier();
-            Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated", "Model", id, ElasticSearchDocument.class).getSource();
-            List<String> messages = TranslatorTestHelper.compareModel(project, expected, databaseScope, false);
-            if (!messages.isEmpty()) {
-                result.add("\n\n\tModel: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+            String id = liveMode?project.getEditorId():project.getIdentifier();
+            ElasticSearchDocument doc = null;
+            if (liveMode) {
+                doc = WebClientHelper.getLiveDocument(id, ElasticSearchDocument.class);
+            } else {
+                doc = WebClientHelper.getDocument(databaseScope, "Model", id, ElasticSearchDocument.class);
+            }
+            if (doc == null) {
+                result.add("\n\n\tContributor: " + id + " (Fail to get expected document!)");
+            } else {
+                Map<String, Object> expected = doc.getSource();
+                List<String> messages = TranslatorTestHelper.compareModel(project, expected, databaseScope, false);
+                if (!messages.isEmpty()) {
+                    result.add("\n\n\tModel: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+                }
             }
         });
         if (!result.isEmpty()) {

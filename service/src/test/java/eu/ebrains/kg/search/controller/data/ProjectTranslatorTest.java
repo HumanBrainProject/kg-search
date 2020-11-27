@@ -22,23 +22,38 @@ public class ProjectTranslatorTest {
 
     @Test
     public void compareReleasedProjects() {
-        compareProjects(DatabaseScope.RELEASED);
+        compareProjects(DatabaseScope.RELEASED, false);
     }
 
     @Test
     public void compareInferredSubjects() {
-        compareProjects(DatabaseScope.INFERRED);
+        compareProjects(DatabaseScope.INFERRED, false);
     }
 
-    private void compareProjects(DatabaseScope databaseScope) {
+    @Test
+    public void compareInferredLiveSubjects() {
+        compareProjects(DatabaseScope.INFERRED, true);
+    }
+
+    private void compareProjects(DatabaseScope databaseScope, boolean liveMode) {
         List<String> result = new ArrayList<>();
         ProjectV1Result queryResult = WebClientHelper.executeQuery("query/minds/core/placomponent/v1.0.0/search", databaseScope, ProjectV1Result.class);
         queryResult.getResults().forEach(project -> {
-            String id = project.getIdentifier();
-            Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated", "Project", id, ElasticSearchDocument.class).getSource();
-            List<String> messages = TranslatorTestHelper.compareProject(project, expected, databaseScope, false);
-            if (!messages.isEmpty()) {
-                result.add("\n\n\tProject: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+            String id = liveMode?project.getEditorId():project.getIdentifier();
+            ElasticSearchDocument doc = null;
+            if (liveMode) {
+                doc = WebClientHelper.getLiveDocument(id, ElasticSearchDocument.class);
+            } else {
+                doc = WebClientHelper.getDocument(databaseScope, "Project", id, ElasticSearchDocument.class);
+            }
+            if (doc == null) {
+                result.add("\n\n\tContributor: " + id + " (Fail to get expected document!)");
+            } else {
+                Map<String, Object> expected = doc.getSource();
+                List<String> messages = TranslatorTestHelper.compareProject(project, expected, databaseScope, false);
+                if (!messages.isEmpty()) {
+                    result.add("\n\n\tProject: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+                }
             }
         });
         if (!result.isEmpty()) {

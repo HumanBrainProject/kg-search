@@ -21,23 +21,38 @@ public class SubjectTranslatorTest {
 
     @Test
     public void compareReleasedSubjects() {
-        compareSubjects(DatabaseScope.RELEASED);
+        compareSubjects(DatabaseScope.RELEASED, false);
     }
 
     @Test
     public void compareInferredSubjects() {
-        compareSubjects(DatabaseScope.INFERRED);
+        compareSubjects(DatabaseScope.INFERRED, false);
     }
 
-    private void compareSubjects(DatabaseScope databaseScope) {
+    @Test
+    public void compareInferredLiveSubjects() {
+        compareSubjects(DatabaseScope.INFERRED, true);
+    }
+
+    private void compareSubjects(DatabaseScope databaseScope, boolean liveMode) {
         List<String> result = new ArrayList<>();
         SubjectV1Result queryResult = WebClientHelper.executeQuery("query/minds/experiment/subject/v1.0.0/search", databaseScope, SubjectV1Result.class);
         queryResult.getResults().forEach(subject -> {
-            String id = subject.getIdentifier();
-            Map<String, Object> expected = WebClientHelper.getDocument(databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated", "Subject", id, ElasticSearchDocument.class).getSource();
-            List<String> messages = TranslatorTestHelper.compareSubject(subject, expected, databaseScope, false);
-            if (!messages.isEmpty()) {
-                result.add("\n\n\tSubject: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+            String id = liveMode?subject.getEditorId():subject.getIdentifier();
+            ElasticSearchDocument doc = null;
+            if (liveMode) {
+                doc = WebClientHelper.getLiveDocument(id, ElasticSearchDocument.class);
+            } else {
+                doc = WebClientHelper.getDocument(databaseScope, "Subject", id, ElasticSearchDocument.class);
+            }
+            if (doc == null) {
+                result.add("\n\n\tContributor: " + id + " (Fail to get expected document!)");
+            } else {
+                Map<String, Object> expected = doc.getSource();
+                List<String> messages = TranslatorTestHelper.compareSubject(subject, expected, databaseScope, false);
+                if (!messages.isEmpty()) {
+                    result.add("\n\n\tSubject: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+                }
             }
         });
         if (!result.isEmpty()) {
