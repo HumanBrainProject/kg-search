@@ -37,19 +37,19 @@ public class SampleTranslatorTest {
         SampleV1Result queryResult = WebClientHelper.executeQuery("query/minds/experiment/sample/v1.0.0/search", databaseScope, SampleV1Result.class);
         queryResult.getResults().forEach(sample -> {
             String id = liveMode?sample.getEditorId():sample.getIdentifier();
-            ElasticSearchDocument doc = null;
+            ElasticSearchDocument doc;
             if (liveMode) {
                 doc = WebClientHelper.getLiveDocument(id, ElasticSearchDocument.class);
             } else {
                 doc = WebClientHelper.getDocument(databaseScope, "Sample", id, ElasticSearchDocument.class);
             }
             if (doc == null) {
-                result.add("\n\n\tContributor: " + id + " (Fail to get expected document!)");
+                result.add("\n\n\tSample: " + sample.getIdentifier() + " (Fail to get expected document!)");
             } else {
                 Map<String, Object> expected = doc.getSource();
                 List<String> messages = TranslatorTestHelper.compareSample(sample, expected, databaseScope, false);
                 if (!messages.isEmpty()) {
-                    result.add("\n\n\tSample: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+                    result.add("\n\n\tSample: " + sample.getIdentifier() + "\n\t\t" + String.join("\n\t\t", messages));
                 }
             }
         });

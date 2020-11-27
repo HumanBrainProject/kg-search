@@ -39,19 +39,19 @@ public class DatasetTranslatorTest {
         DatasetV1Result queryResult = WebClientHelper.executeQuery("query/minds/core/dataset/v1.0.0/search", databaseScope, DatasetV1Result.class);
         queryResult.getResults().forEach(dataset -> {
             String id = liveMode?dataset.getEditorId():dataset.getIdentifier();
-            ElasticSearchDocument doc = null;
+            ElasticSearchDocument doc;
             if (liveMode) {
                 doc = WebClientHelper.getLiveDocument(id, ElasticSearchDocument.class);
             } else {
                 doc = WebClientHelper.getDocument(databaseScope, "Dataset", id, ElasticSearchDocument.class);
             }
             if (doc == null) {
-                result.add("\n\n\tContributor: " + id + " (Fail to get expected document!)");
+                result.add("\n\n\tDataset: " + dataset.getIdentifier() + " (Fail to get expected document!)");
             } else {
                 Map<String, Object> expected = doc.getSource();
                 List<String> messages = TranslatorTestHelper.compareDataset(dataset, expected, databaseScope, liveMode);
                 if (!messages.isEmpty()) {
-                    result.add("\n\n\tDataset: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+                    result.add("\n\n\tDataset: " + dataset.getIdentifier() + "\n\t\t" + String.join("\n\t\t", messages));
                 }
             }
         });

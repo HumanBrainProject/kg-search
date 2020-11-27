@@ -39,19 +39,19 @@ public class ModelTranslatorTest {
         ModelV2Result queryResult = WebClientHelper.executeQuery("query/uniminds/core/modelinstance/v1.0.0/search", databaseScope, ModelV2Result.class);
         queryResult.getResults().forEach(project -> {
             String id = liveMode?project.getEditorId():project.getIdentifier();
-            ElasticSearchDocument doc = null;
+            ElasticSearchDocument doc;
             if (liveMode) {
                 doc = WebClientHelper.getLiveDocument(id, ElasticSearchDocument.class);
             } else {
                 doc = WebClientHelper.getDocument(databaseScope, "Model", id, ElasticSearchDocument.class);
             }
             if (doc == null) {
-                result.add("\n\n\tContributor: " + id + " (Fail to get expected document!)");
+                result.add("\n\n\tModel: " + project.getIdentifier() + " (Fail to get expected document!)");
             } else {
                 Map<String, Object> expected = doc.getSource();
                 List<String> messages = TranslatorTestHelper.compareModel(project, expected, databaseScope, false);
                 if (!messages.isEmpty()) {
-                    result.add("\n\n\tModel: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+                    result.add("\n\n\tModel: " + project.getIdentifier() + "\n\t\t" + String.join("\n\t\t", messages));
                 }
             }
         });

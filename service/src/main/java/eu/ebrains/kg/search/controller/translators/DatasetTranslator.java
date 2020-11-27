@@ -26,9 +26,9 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         String containerUrl = datasetV1.getContainerUrl();
         boolean containerUrlAsZIP = datasetV1.getContainerUrlAsZIP();
         List<DatasetV1.SourceFile> files = datasetV1.getFiles();
-        if (!hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW) && (StringUtils.isNotBlank(containerUrl) && (containerUrlAsZIP || firstItemOrNull(files) != null))) {
+        if (!hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW) && (StringUtils.isNotBlank(containerUrl) && (containerUrlAsZIP || CollectionUtils.isEmpty(files)))) {
             d.setZip(new TargetExternalReference(
-                    String.format("https://kg.ebrains.eu/proxy/export?container=%s", containerUrl),
+                    String.format("https://kg.ebrains.eu/proxy/export?container=%s", containerUrl), // TODO: Get rid of empty and containerUrlAsZip condition
                     "Download all related data as ZIP"
             ));
         }
@@ -190,7 +190,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                 if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
                     d.setEmbargoRestrictedAccess(String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", containerUrl));
                 } else if (hasEmbargoStatus(datasetV1, UNDER_REVIEW)) {
-                    d.setEmbargoRestrictedAccess(String.format("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\"  target=\"_blank\"> you should be able to access the data here</a>", containerUrl));
+                    d.setEmbargoRestrictedAccess(String.format("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", containerUrl));
                 }
             } else {
                 if (hasEmbargoStatus(datasetV1, EMBARGOED)) {

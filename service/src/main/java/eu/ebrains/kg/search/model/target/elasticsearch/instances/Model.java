@@ -181,7 +181,7 @@ public class Model {
     }
 
     public void setModelFormat(List<String> modelFormat) {
-        this.modelFormat = modelFormat == null ? null : modelFormat.stream().map(Value::new).collect(Collectors.toList());
+        this.modelFormat = modelFormat == null ? null : modelFormat.stream().filter(StringUtils::isNotBlank).map(Value::new).collect(Collectors.toList());
     }
 
     public Value<String> getDescription() {
