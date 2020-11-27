@@ -21,6 +21,7 @@ public class TargetInternalReference {
 
     private String reference;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String value;
 
     @ElasticSearchInfo(ignoreAbove = 256)

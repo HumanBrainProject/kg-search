@@ -37,19 +37,19 @@ public class SoftwareTranslatorTest {
         SoftwareV2Result queryResult = WebClientHelper.executeQuery("query/softwarecatalog/software/softwareproject/v1.0.0/search", databaseScope, SoftwareV2Result.class);
         queryResult.getResults().forEach(software -> {
             String id = liveMode?software.getEditorId():software.getIdentifier();
-            ElasticSearchDocument doc = null;
+            ElasticSearchDocument doc;
             if (liveMode) {
                 doc = WebClientHelper.getLiveDocument(id, ElasticSearchDocument.class);
             } else {
                 doc = WebClientHelper.getDocument(databaseScope, "Software", id, ElasticSearchDocument.class);
             }
             if (doc == null) {
-                result.add("\n\n\tContributor: " + id + " (Fail to get expected document!)");
+                result.add("\n\n\tSoftware: " + software.getIdentifier() + " (Fail to get expected document!)");
             } else {
                 Map<String, Object> expected = doc.getSource();
                 List<String> messages = TranslatorTestHelper.compareSoftware(software, expected, databaseScope, false);
                 if (!messages.isEmpty()) {
-                    result.add("\n\n\tSoftware: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+                    result.add("\n\n\tSoftware: " + software.getIdentifier() + "\n\t\t" + String.join("\n\t\t", messages));
                 }
             }
         });

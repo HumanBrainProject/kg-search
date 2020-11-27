@@ -59,14 +59,15 @@ public class ContributorTranslator implements Translator<PersonSources, Contribu
         if(!CollectionUtils.isEmpty(person.getPublications())) {
             c.setPublications(emptyToNull(person.getPublications().stream()
                     .map(publication -> {
-                        String publicationResult;
+                        String publicationResult = null;
                         if (StringUtils.isNotBlank(publication.getCitation()) && StringUtils.isNotBlank(publication.getDoi())) {
                             String url = URLEncoder.encode(publication.getDoi(), StandardCharsets.UTF_8);
                             publicationResult = publication.getCitation() + "\n" + String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
                         } else if (StringUtils.isNotBlank(publication.getCitation()) && StringUtils.isBlank(publication.getDoi())) {
                             publicationResult = publication.getCitation().trim().replaceAll(",$", "");
-                        } else {
-                            publicationResult = publication.getDoi();
+                        } else if (StringUtils.isBlank(publication.getCitation()) && StringUtils.isNotBlank(publication.getDoi())) {
+                            String url = URLEncoder.encode(publication.getDoi(), StandardCharsets.UTF_8);
+                            publicationResult = String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
                         }
                         return publicationResult;
                     }).filter(Objects::nonNull).collect(Collectors.toList())));

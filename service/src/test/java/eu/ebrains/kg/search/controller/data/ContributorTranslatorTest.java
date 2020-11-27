@@ -76,19 +76,19 @@ public class ContributorTranslatorTest {
         sourcesMap.forEach((key, personSources) -> {
             PersonV1andV2 person = personSources.getPersonV2() != null ? personSources.getPersonV2() : personSources.getPersonV1();
             String id = liveMode?person.getEditorId():person.getIdentifier();
-            ElasticSearchDocument doc = null;
+            ElasticSearchDocument doc;
             if (liveMode) {
                 doc = WebClientHelper.getLiveDocument(id, ElasticSearchDocument.class);
             } else {
                 doc = WebClientHelper.getDocument(databaseScope, "Contributor", id, ElasticSearchDocument.class);
             }
             if (doc == null) {
-                result.add("\n\n\tContributor: " + id + " (Fail to get expected document!)");
+                result.add("\n\n\tContributor: " + person.getIdentifier() + " (Fail to get expected document!)");
             } else {
                 Map<String, Object> expected = doc.getSource();
                 List<String> messages = TranslatorTestHelper.compareContributor(personSources, expected, databaseScope, false);
                 if (!messages.isEmpty()) {
-                    result.add("\n\n\tContributor: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+                    result.add("\n\n\tContributor: " + person.getIdentifier() + "\n\t\t" + String.join("\n\t\t", messages));
                 }
             }
         });

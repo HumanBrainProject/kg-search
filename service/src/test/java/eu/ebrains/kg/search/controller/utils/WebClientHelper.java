@@ -24,7 +24,7 @@ public class WebClientHelper {
                 .uri(String.format("%s/%s/instances?databaseScope=%s&vocab=%s", hbpUrl, query, databaseScope, vocab))
                 .headers(h ->
                 {
-                    h.add("Authorization", token);
+                    h.add("Authorization", "Bearer " + token);
                     h.add("Accept", "application/json");
                 })
                 .retrieve()
@@ -55,7 +55,7 @@ public class WebClientHelper {
                 .uri(String.format("%s%s", ebrainsUrl, uri))
                 .headers(h ->
                 {
-                    h.add("Authorization", token);
+                    h.add("Authorization", "Bearer " + token);
                     h.add("Accept", "application/json");
                 })
                 .retrieve()

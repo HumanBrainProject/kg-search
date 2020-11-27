@@ -26,7 +26,7 @@ public class ProjectTranslatorTest {
     }
 
     @Test
-    public void compareInferredSubjects() {
+    public void compareInferredProjects() {
         compareProjects(DatabaseScope.INFERRED, false);
     }
 
@@ -40,19 +40,19 @@ public class ProjectTranslatorTest {
         ProjectV1Result queryResult = WebClientHelper.executeQuery("query/minds/core/placomponent/v1.0.0/search", databaseScope, ProjectV1Result.class);
         queryResult.getResults().forEach(project -> {
             String id = liveMode?project.getEditorId():project.getIdentifier();
-            ElasticSearchDocument doc = null;
+            ElasticSearchDocument doc;
             if (liveMode) {
                 doc = WebClientHelper.getLiveDocument(id, ElasticSearchDocument.class);
             } else {
                 doc = WebClientHelper.getDocument(databaseScope, "Project", id, ElasticSearchDocument.class);
             }
             if (doc == null) {
-                result.add("\n\n\tContributor: " + id + " (Fail to get expected document!)");
+                result.add("\n\n\tProject: " + project.getIdentifier() + " (Fail to get expected document!)");
             } else {
                 Map<String, Object> expected = doc.getSource();
                 List<String> messages = TranslatorTestHelper.compareProject(project, expected, databaseScope, false);
                 if (!messages.isEmpty()) {
-                    result.add("\n\n\tProject: " + id + "\n\t\t" + String.join("\n\t\t", messages));
+                    result.add("\n\n\tProject: " + project.getIdentifier() + "\n\t\t" + String.join("\n\t\t", messages));
                 }
             }
         });
