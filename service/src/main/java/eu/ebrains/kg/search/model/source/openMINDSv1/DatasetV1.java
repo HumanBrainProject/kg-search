@@ -2,12 +2,13 @@ package eu.ebrains.kg.search.model.source.openMINDSv1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import eu.ebrains.kg.search.model.source.SourceInstance;
 import eu.ebrains.kg.search.model.source.commons.*;
 
 import java.util.Date;
 import java.util.List;
 
-public class DatasetV1 implements HasEmbargo{
+public class DatasetV1 implements HasEmbargo, SourceInstance {
     private List<String> methods;
     private Date lastReleaseAt;
     private List<SourceInternalReference> component;

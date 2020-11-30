@@ -1,11 +1,11 @@
 package eu.ebrains.kg.search.api;
 
 import eu.ebrains.kg.search.boundary.IndexingOrchestration;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import eu.ebrains.kg.search.model.DatabaseScope;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("/indexing")
+@RequestMapping("/indexing")
+@RestController
 public class Indexing {
 
     private final IndexingOrchestration indexingOrchestration;
@@ -15,26 +15,23 @@ public class Indexing {
     }
 
     @PostMapping("/full")
-    public void fullReplacement(){
+    public void fullReplacement(@RequestParam("databaseScope") DatabaseScope databaseScope) {
+    }
+
+    @PostMapping("/full/{type}")
+    public void fullReplacementByType(@RequestParam("databaseScope") DatabaseScope databaseScope, @PathVariable("type") String type) {
 
     }
 
     @PostMapping("/incremental")
-    public void incrementalUpdate(){
-
-    }
-
-    @PostMapping("/full/{id}")
-    public void fullReplacementOfInstance(@PathVariable("id") String id){
+    public void incrementalUpdate(@RequestParam("databaseScope") DatabaseScope databaseScope) {
 
     }
 
     @PostMapping("/incremental/{id}")
-    public void incrementalUpdateOfInstance(@PathVariable("id") String id){
+    public void incrementalUpdateOfInstance(@RequestParam("databaseScope") DatabaseScope databaseScope, @PathVariable("id") String id) {
 
     }
-
-
 
 
 }

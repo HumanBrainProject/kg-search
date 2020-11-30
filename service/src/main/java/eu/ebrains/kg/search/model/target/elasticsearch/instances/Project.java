@@ -1,10 +1,7 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
-import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
-import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
-import eu.ebrains.kg.search.model.target.elasticsearch.RibbonInfo;
+import eu.ebrains.kg.search.model.target.elasticsearch.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ISODateValue;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
@@ -16,7 +13,7 @@ import java.util.stream.Collectors;
 
 @MetaInfo(name="Project", identifier = "uniminds/core/placomponent/v1.0.0/search", order=1)
 @RibbonInfo(content="Datasets", aggregation="count", dataField="search:datasets", singular="dataset", plural="datasets", icon="<i class=\"fa fa-download\" aria-hidden=\"true\"></i>")
-public class Project {
+public class Project implements TargetInstance {
     @ElasticSearchInfo(mapping = false)
     private Value<String> type = new Value<>("Project");
 

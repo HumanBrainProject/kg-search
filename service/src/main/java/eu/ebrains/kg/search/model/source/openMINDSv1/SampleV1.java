@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.List;
 
+import eu.ebrains.kg.search.model.source.SourceInstance;
 import eu.ebrains.kg.search.model.source.commons.*;
 
-public class SampleV1 implements HasEmbargo {
+public class SampleV1 implements HasEmbargo, SourceInstance {
     private String identifier;
     private String editorId;
     private String title;

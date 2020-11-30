@@ -6,7 +6,7 @@ import java.util.List;
 import eu.ebrains.kg.search.model.source.commons.Publication;
 import eu.ebrains.kg.search.model.source.commons.SourceInternalReference;
 
-public class PersonV1andV2 {
+public class PersonV1andV2 implements SourceInstance {
 
     private String identifier;
     private String editorId;

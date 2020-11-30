@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
+import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @MetaInfo(name = "Sample", identifier = "minds/experiment/sample/v1.0.0/search", order = 4)
-public class Sample {
+public class Sample implements TargetInstance {
     @ElasticSearchInfo(mapping = false)
     private Value<String> type = new Value<>("Sample");
 

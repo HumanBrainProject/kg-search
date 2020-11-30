@@ -1,12 +1,13 @@
 package eu.ebrains.kg.search.model.source.openMINDSv1;
 
+import eu.ebrains.kg.search.model.source.SourceInstance;
 import eu.ebrains.kg.search.model.source.commons.Publication;
 import eu.ebrains.kg.search.model.source.commons.SourceInternalReference;
 
 import java.util.Date;
 import java.util.List;
 
-public class ProjectV1 {
+public class ProjectV1 implements SourceInstance {
     private Date firstReleaseAt;
     private String description;
     private Date lastReleaseAt;

@@ -2,6 +2,7 @@ package eu.ebrains.kg.search.model.source.openMINDSv1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import eu.ebrains.kg.search.model.source.SourceInstance;
 import eu.ebrains.kg.search.model.source.commons.ListOrSingleStringAsStringDeserializer;
 import eu.ebrains.kg.search.model.source.commons.SourceInternalReference;
 import eu.ebrains.kg.search.model.source.commons.SpecimenGroup;
@@ -9,7 +10,7 @@ import eu.ebrains.kg.search.model.source.commons.SpecimenGroup;
 import java.util.Date;
 import java.util.List;
 
-public class SubjectV1 {
+public class SubjectV1 implements SourceInstance {
     private String identifier;
     private String editorId;
     private String title;

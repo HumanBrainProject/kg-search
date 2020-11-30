@@ -1,11 +1,12 @@
 package eu.ebrains.kg.search.model.source.openMINDSv2;
 
+import eu.ebrains.kg.search.model.source.SourceInstance;
 import eu.ebrains.kg.search.model.source.commons.*;
 
 import java.util.Date;
 import java.util.List;
 
-public class ModelV2 implements HasEmbargo {
+public class ModelV2 implements HasEmbargo, SourceInstance {
     private List<SourceExternalReference> fileBundle;
     private List<SourceInternalReference> custodian;
     private List<SourceInternalReference> mainContact;
