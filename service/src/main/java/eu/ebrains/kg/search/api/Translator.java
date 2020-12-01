@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.Arrays;
+import java.util.List;
+
 @RequestMapping("/translate")
 @RestController
 public class Translator {
@@ -57,7 +60,8 @@ public class Translator {
             case "minds/core/dataset/v1.0.0":
                 return translationController.createDataset(databaseScope, liveMode, query, id, authorization);
             case "minds/core/person/v1.0.0":
-                return translationController.createContributor(databaseScope, liveMode, query, id, authorization);
+                List<String> queries = Arrays.asList(query, "query/uniminds/core/person/v1.0.0/search");
+                return translationController.createCompatibleContributor(databaseScope, liveMode, queries, id, authorization);
             case "uniminds/core/person/v1.0.0":
                 return translationController.createContributor(databaseScope, liveMode, query, id, authorization);
             case "minds/core/placomponent/v1.0.0":

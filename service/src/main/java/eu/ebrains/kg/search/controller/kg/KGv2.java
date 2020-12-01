@@ -26,6 +26,8 @@ public class KGv2 {
         return  serviceClient.executeQuery(query, id, databaseScope, clazz, authorization);
     }
 
-
+    public <T> T fetchInstanceByIdentifier(Class<T> clazz, String query, String identifier, String authorization, DatabaseScope databaseScope) {
+        return  serviceClient.executeQueryByIdentifier(query, identifier, databaseScope, clazz, authorization);
+    }
 
 }

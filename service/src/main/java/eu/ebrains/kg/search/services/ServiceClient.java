@@ -2,6 +2,8 @@ package eu.ebrains.kg.search.services;
 
 import eu.ebrains.kg.search.model.DatabaseScope;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -23,25 +25,27 @@ public class ServiceClient {
     private static final Pattern editorIdPattern = Pattern.compile("(.+)/(.+)/(.+)/(.+)/(.+)");
 
     public <T> T executeQuery(String query, DatabaseScope databaseScope, Class<T> clazz, String token) {
-        return webClient.get()
-                .uri(String.format("%s/%s/instances/?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, databaseScope, vocab))
-                .headers(h ->
-                {
-                    h.add("Authorization", "Bearer " + token);
-                    h.add("Accept", "application/json");
-                })
-                .retrieve()
-                .bodyToMono(clazz)
-                .block();
+        String url = String.format("%s/%s/instances/?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, databaseScope, vocab);
+        return executeCall(clazz, token, url);
     }
 
     public <T> T executeQuery(String query, String id, DatabaseScope databaseScope, Class<T> clazz, String token) {
+        String url = String.format("%s/%s/instances/%s?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, id, databaseScope, vocab);
+        return executeCall(clazz, token, url);
+    }
+
+    public <T> T executeQueryByIdentifier(String query, String identifier, DatabaseScope databaseScope, Class<T> clazz, String token) {
+        String url = String.format("%s/%s/instances?databaseScope=%s&vocab=%s&identifier=%s", kgQueryEndpoint, query, databaseScope, vocab, identifier);
+        return executeCall(clazz, token, url);
+    }
+
+    private <T> T executeCall(Class<T> clazz, String token, String url) {
         return webClient.get()
-                .uri(String.format("%s/%s/instances/%s?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, id, databaseScope, vocab))
+                .uri(url)
                 .headers(h ->
                 {
-                    h.add("Authorization", "Bearer " + token);
-                    h.add("Accept", "application/json");
+                    h.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+                    h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
                 })
                 .retrieve()
                 .bodyToMono(clazz)

@@ -16,6 +16,7 @@ public class Indexing {
 
     @PostMapping("/full")
     public void fullReplacement(@RequestParam("databaseScope") DatabaseScope databaseScope) {
+
     }
 
     @PostMapping("/full/{type}")

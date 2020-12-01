@@ -15,8 +15,10 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.PersonV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -71,7 +73,28 @@ public class TranslationController {
     }
 
     public Contributor createContributor(DatabaseScope databaseScope, boolean liveMode, String query, String id, String authorization) {
-        return null;
+        PersonV2 personV2 =  kgV2.fetchInstance(PersonV2.class, query, id, authorization, databaseScope);
+        ContributorTranslator translator = new ContributorTranslator();
+        PersonSources personSource = new PersonSources();
+        personSource.setPersonV2(personV2);
+        return translator.translate(personSource, databaseScope, liveMode);
+    }
+
+    private static class PersonV2Result extends ResultOfKGv2<PersonV2> {}
+
+    public Contributor createCompatibleContributor(DatabaseScope databaseScope, boolean liveMode, List<String> queries, String id, String authorization) {
+        String personV1Query = queries.get(0);
+        String personV2Query = queries.get(1);
+        PersonSources personSource = new PersonSources();
+        PersonV1 personV1 =  kgV2.fetchInstance(PersonV1.class, personV1Query, id, authorization, databaseScope);
+        personSource.setPersonV1(personV1);
+        PersonV2Result personV2Result =  kgV2.fetchInstanceByIdentifier(PersonV2Result.class,  personV2Query, personV1.getIdentifier(), authorization, databaseScope);
+        if(personV2Result != null && !CollectionUtils.isEmpty(personV2Result.getResults())) {
+            PersonV2 personV2 = personV2Result.getResults().get(0);
+            personSource.setPersonV2(personV2);
+        }
+        ContributorTranslator translator = new ContributorTranslator();
+        return translator.translate(personSource, databaseScope, liveMode);
     }
 
     public List<Software> createSoftwares(DatabaseScope databaseScope, boolean liveMode){
