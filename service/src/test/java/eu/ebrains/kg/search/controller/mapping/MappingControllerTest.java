@@ -1,10 +1,10 @@
 package eu.ebrains.kg.search.controller.mapping;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.utils.MetaModelUtils;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -23,18 +23,23 @@ class MappingControllerTest {
     @Ignore("Not working because of different data states - more complex assertions needed")
     void generateMapping() throws IOException, URISyntaxException {
         //Given
-        Path path = Paths.get(MappingControllerTest.class.getClassLoader().getResource("mappings_result.json").toURI());
-        String json = Files.lines(path).collect(Collectors.joining("\n"));
         ObjectMapper mapper = new ObjectMapper().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
-        Map expected = mapper.readValue(json, Map.class);
-
         MappingController mappingController = new MappingController(new MetaModelUtils());
 
         //When
-        Map<String, Object> mapping = mappingController.generateMapping();
-
-        //Then
-        Assertions.assertEquals(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(expected), mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mapping));
-
+        Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> {
+            Path path;
+            String json;
+            try {
+                path = Paths.get(MappingControllerTest.class.getClassLoader().getResource(String.format("mappings/%sMapping.json", type.toLowerCase())).toURI());
+                json = Files.lines(path).collect(Collectors.joining("\n"));
+                Map expected = mapper.readValue(json, Map.class);
+                Map<String, Object> mapping = mappingController.generateMapping(clazz);
+                //Then
+                Assertions.assertEquals(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(expected), mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mapping));
+            } catch (URISyntaxException | IOException e) {
+                Assert.fail(e.getMessage());
+            }
+        });
     }
 }

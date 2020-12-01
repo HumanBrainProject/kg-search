@@ -18,8 +18,11 @@ public class KGv2 {
         this.serviceClient = serviceClient;
     }
 
-    public <T> ResultOfKGv2<T> fetchInstances(Class<T> clazz){
-        return null;
+
+
+    public <T> ResultOfKGv2<T> fetchInstances(Class<T> clazz, String query, String authorization, DatabaseScope databaseScope){
+//        return  serviceClient.executeQuery(query, databaseScope, clazz, authorization);
+        return  null;
     }
 
     public <T> T fetchInstance(Class<T> clazz, String query, String id, String authorization, DatabaseScope databaseScope) {

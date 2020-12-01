@@ -1,13 +1,16 @@
 package eu.ebrains.kg.search.services;
 
 import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +22,9 @@ public class ServiceClient {
 
     @Value("${kgquery.endpoint}")
     String kgQueryEndpoint;
+
+    @Value("${es.endpoint}")
+    String elasticSearchEndpoint;
 
     private static final String vocab = "https://schema.hbp.eu/search/";
 
@@ -72,7 +78,7 @@ public class ServiceClient {
 
     private <T> T getDocument(String uri, Class<T> clazz, String token) {
         return webClient.get()
-                .uri(String.format("%s%s", "", uri)) // TODO: Use ES endpoint
+                .uri(String.format("%s%s", elasticSearchEndpoint, uri))
                 .headers(h ->
                 {
                     h.add("Authorization", "Bearer " + token);
@@ -83,4 +89,22 @@ public class ServiceClient {
                 .block();
     }
 
+    public void deleteIndex(String index) {
+        webClient.delete()
+                .uri(String.format("%s/%s", elasticSearchEndpoint, index))
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public void createIndex(String index, Map<String, Object> mapping) {
+        webClient.put()
+                .uri(String.format("%s/%s", elasticSearchEndpoint, index))
+                .body(BodyInserters.fromValue(mapping))
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public void addDocument(String index, TargetInstance targetInstance) {}
 }

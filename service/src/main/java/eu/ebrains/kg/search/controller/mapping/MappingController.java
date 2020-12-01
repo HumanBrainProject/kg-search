@@ -4,6 +4,7 @@ import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.utils.MetaModelUtils;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -24,21 +25,8 @@ public class MappingController {
         this.utils = utils;
     }
 
-    public Map<String, Object> generateMapping() {
-        Map<String, Object> result = new HashMap<>();
-        Map<String, Object> mappings = new HashMap<>();
-        result.put("mappings", mappings);
-        Constants.TARGET_MODELS_ORDER.forEach(targetModel -> {
-            mappings.put(utils.getNameForClass(targetModel), generateMapping(targetModel));
-        });
-        return result;
-    }
-
     public Map<String, Object> generateMapping(Class<?> clazz) {
         Map<String, Object> mapping = new LinkedHashMap<>();
-        Map<String, Object> all = new HashMap<>();
-        all.put("enabled", true);
-        mapping.put("_all", all);
         Map<String, Object> properties = new LinkedHashMap<>();
         Map<String, Object> timestamp = new LinkedHashMap<>();
         mapping.put("properties", properties);

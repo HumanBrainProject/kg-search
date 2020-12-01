@@ -1,9 +1,6 @@
 package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.source.commons.HasEmbargo;
-import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
-import eu.ebrains.kg.search.model.source.openMINDSv1.SampleV1;
-import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;

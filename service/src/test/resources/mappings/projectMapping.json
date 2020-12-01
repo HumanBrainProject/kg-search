@@ -1,0 +1,111 @@
+{
+  "properties": {
+    "@timestamp": {
+      "type": "date"
+    },
+    "dataset": {
+      "properties": {
+        "reference": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "uuid": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "value": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    },
+    "description": {
+      "properties": {
+        "value": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    },
+    "editorId": {
+      "properties": {
+        "value": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    },
+    "first_release": {
+      "properties": {
+        "value": {
+          "type": "date"
+        }
+      }
+    },
+    "identifier": {
+      "properties": {
+        "value": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    },
+    "last_release": {
+      "properties": {
+        "value": {
+          "type": "date"
+        }
+      }
+    },
+    "publications": {
+      "properties": {
+        "value": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    },
+    "title": {
+      "properties": {
+        "value": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    }
+  }
+}
