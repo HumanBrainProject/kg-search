@@ -79,6 +79,7 @@ public class Project implements TargetInstance {
         this.type = type;
     }
 
+    @Override
     public Value<String> getIdentifier() {
         return identifier;
     }

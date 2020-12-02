@@ -137,6 +137,7 @@ public class Model implements TargetInstance {
         this.setLastRelease(lastRelease != null ? new ISODateValue(lastRelease) : null);
     }
 
+    @Override
     public Value<String> getIdentifier() {
         return identifier;
     }

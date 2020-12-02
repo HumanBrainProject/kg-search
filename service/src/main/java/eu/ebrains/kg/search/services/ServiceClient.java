@@ -1,6 +1,8 @@
 package eu.ebrains.kg.search.services;
 
 import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.source.ResultOfKGv2;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +29,6 @@ public class ServiceClient {
     String elasticSearchEndpoint;
 
     private static final String vocab = "https://schema.hbp.eu/search/";
-
     private static final Pattern editorIdPattern = Pattern.compile("(.+)/(.+)/(.+)/(.+)/(.+)");
 
     public <T> T executeQuery(String query, DatabaseScope databaseScope, Class<T> clazz, String token) {
@@ -89,6 +90,14 @@ public class ServiceClient {
                 .block();
     }
 
+    public ElasticSearchResult getDocuments(String index) {
+        return webClient.get()
+                .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
+                .retrieve()
+                .bodyToMono(ElasticSearchResult.class)
+                .block();
+    }
+
     public void deleteIndex(String index) {
         webClient.delete()
                 .uri(String.format("%s/%s", elasticSearchEndpoint, index))
@@ -106,5 +115,13 @@ public class ServiceClient {
                 .block();
     }
 
-    public void addDocument(String index, TargetInstance targetInstance) {}
+    public void updateIndex(String index, String operations) {
+        webClient.post()
+                .uri(String.format("%s/%s/_bulk", elasticSearchEndpoint, index))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_NDJSON_VALUE)
+                .body(BodyInserters.fromValue(operations))
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
 }

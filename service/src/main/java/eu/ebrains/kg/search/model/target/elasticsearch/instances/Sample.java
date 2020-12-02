@@ -89,6 +89,7 @@ public class Sample implements TargetInstance {
         this.type = type;
     }
 
+    @Override
     public Value<String> getIdentifier() {
         return identifier;
     }

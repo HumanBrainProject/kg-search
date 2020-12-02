@@ -6,12 +6,10 @@ import eu.ebrains.kg.search.controller.kg.KGv3;
 import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.source.PersonSources;
 import eu.ebrains.kg.search.model.source.ResultOfKGv2;
-import eu.ebrains.kg.search.model.source.ResultOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv1.*;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.PersonV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
-import eu.ebrains.kg.search.model.source.openMINDSv3.PersonV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.*;
 import org.springframework.http.HttpStatus;
@@ -20,7 +18,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Component
@@ -33,11 +30,14 @@ public class TranslationController {
         this.kgV3 = kgV3;
     }
 
+    private static class ResultOfKGV2PersonV1 extends ResultOfKGv2<PersonV1> {}
+    private static class ResultOfKGV2PersonV2 extends ResultOfKGv2<PersonV2> {}
+
     private List<TargetInstance> createContributors(DatabaseScope databaseScope, boolean liveMode, String authorization) {
         String queryForV1 = "query/minds/core/person/v1.0.0/search";
         String queryForV2 = "query/uniminds/core/person/v1.0.0/search";
-        ResultOfKGv2<PersonV1> personsFromV1 = kgV2.fetchInstances(PersonV1.class, queryForV1, authorization, databaseScope);
-        ResultOfKGv2<PersonV2> personsFromV2 = kgV2.fetchInstances(PersonV2.class, queryForV2, authorization, databaseScope);
+        ResultOfKGV2PersonV1 personsFromV1 = kgV2.fetchInstances(ResultOfKGV2PersonV1.class, queryForV1, authorization, databaseScope);
+        ResultOfKGv2<PersonV2> personsFromV2 = kgV2.fetchInstances(ResultOfKGV2PersonV2.class, queryForV2, authorization, databaseScope);
 //        ResultOfKGv3<PersonV3> personsFromV3 = kgV3.fetchInstances(PersonV3.class); //TODO v3
 
         List<PersonSources> personSources = new ArrayList<>();
@@ -90,9 +90,11 @@ public class TranslationController {
         return translator.translate(personSource, databaseScope, liveMode);
     }
 
+    private static class ResultOfKGV2SoftwareV2 extends ResultOfKGv2<SoftwareV2> {}
+
     public List<TargetInstance> createSoftwares(DatabaseScope databaseScope, boolean liveMode, String authorization) {
         String query = "query/softwarecatalog/software/softwareproject/v1.0.0/search";
-        ResultOfKGv2<SoftwareV2> software = kgV2.fetchInstances(SoftwareV2.class, query, authorization, databaseScope);
+        ResultOfKGV2SoftwareV2 software = kgV2.fetchInstances(ResultOfKGV2SoftwareV2.class, query, authorization, databaseScope);
         SoftwareTranslator translator = new SoftwareTranslator();
         return software.getResults().stream().map(s -> (TargetInstance) translator.translate(s, databaseScope, liveMode)).collect(Collectors.toList());
     }
@@ -103,9 +105,11 @@ public class TranslationController {
         return translator.translate(software, databaseScope, liveMode);
     }
 
+    private static class ResultOfKGV2DatasetV1 extends ResultOfKGv2<DatasetV1> {}
+
     public List<TargetInstance> createDatasets(DatabaseScope databaseScope, boolean liveMode, String authorization) {
         String query = "query/minds/core/dataset/v1.0.0/search";
-        ResultOfKGv2<DatasetV1> dataset = kgV2.fetchInstances(DatasetV1.class, query, authorization, databaseScope);
+        ResultOfKGV2DatasetV1 dataset = kgV2.fetchInstances(ResultOfKGV2DatasetV1.class, query, authorization, databaseScope);
         DatasetTranslator translator = new DatasetTranslator();
         return dataset.getResults().stream().map(d -> (TargetInstance) translator.translate(d, databaseScope, liveMode)).collect(Collectors.toList());
     }
@@ -116,9 +120,10 @@ public class TranslationController {
         return translator.translate(dataset, databaseScope, liveMode);
     }
 
+    private static class ResultOfKGV2ModelV2 extends ResultOfKGv2<ModelV2> {}
     public List<TargetInstance> createModels(DatabaseScope databaseScope, boolean liveMode, String authorization) {
         String query = "query/uniminds/core/modelinstance/v1.0.0/search";
-        ResultOfKGv2<ModelV2> model = kgV2.fetchInstances(ModelV2.class, query, authorization, databaseScope);
+        ResultOfKGV2ModelV2 model = kgV2.fetchInstances(ResultOfKGV2ModelV2.class, query, authorization, databaseScope);
         ModelTranslator translator = new ModelTranslator();
         return model.getResults().stream().map(m -> (TargetInstance) translator.translate(m, databaseScope, liveMode)).collect(Collectors.toList());
     }
@@ -129,9 +134,10 @@ public class TranslationController {
         return translator.translate(model, databaseScope, liveMode);
     }
 
+    private static class ResultOfKGV2ProjectV1 extends ResultOfKGv2<ProjectV1> {}
     public List<TargetInstance> createProjects(DatabaseScope databaseScope, boolean liveMode, String authorization) {
         String query = "query/minds/core/placomponent/v1.0.0/search";
-        ResultOfKGv2<ProjectV1> project = kgV2.fetchInstances(ProjectV1.class, query, authorization, databaseScope);
+        ResultOfKGV2ProjectV1 project = kgV2.fetchInstances(ResultOfKGV2ProjectV1.class, query, authorization, databaseScope);
         ProjectTranslator translator = new ProjectTranslator();
         return project.getResults().stream().map(p -> (TargetInstance) translator.translate(p, databaseScope, liveMode)).collect(Collectors.toList());
     }
@@ -142,9 +148,10 @@ public class TranslationController {
         return translator.translate(project, databaseScope, liveMode);
     }
 
+    private static class ResultOfKGV2SampleV1 extends ResultOfKGv2<SampleV1> {}
     public List<TargetInstance> createSamples(DatabaseScope databaseScope, boolean liveMode, String authorization) {
         String query = "query/minds/experiment/sample/v1.0.0/search";
-        ResultOfKGv2<SampleV1> sample = kgV2.fetchInstances(SampleV1.class, query, authorization, databaseScope);
+        ResultOfKGV2SampleV1 sample = kgV2.fetchInstances(ResultOfKGV2SampleV1.class, query, authorization, databaseScope);
         SampleTranslator translator = new SampleTranslator();
         return sample.getResults().stream().map(s -> (TargetInstance) translator.translate(s, databaseScope, liveMode)).collect(Collectors.toList());
     }
@@ -155,9 +162,10 @@ public class TranslationController {
         return translator.translate(sample, databaseScope, liveMode);
     }
 
+    private static class ResultOfKGV2SubjectV1 extends ResultOfKGv2<SubjectV1> {}
     public List<TargetInstance> createSubjects(DatabaseScope databaseScope, boolean liveMode, String authorization) {
         String query = "query/minds/experiment/subject/v1.0.0/search";
-        ResultOfKGv2<SubjectV1> subject = kgV2.fetchInstances(SubjectV1.class, query, authorization, databaseScope);
+        ResultOfKGV2SubjectV1 subject = kgV2.fetchInstances(ResultOfKGV2SubjectV1.class, query, authorization, databaseScope);
         SubjectTranslator translator = new SubjectTranslator();
         return subject.getResults().stream().map(s -> (TargetInstance) translator.translate(s, databaseScope, liveMode)).collect(Collectors.toList());
     }

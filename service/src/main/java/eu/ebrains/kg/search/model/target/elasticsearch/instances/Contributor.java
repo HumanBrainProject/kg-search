@@ -70,6 +70,7 @@ public class Contributor implements TargetInstance {
         setTitle(StringUtils.isBlank(title) ? null : new Value<>(title));
     }
 
+    @Override
     public Value<String> getIdentifier() {
         return identifier;
     }

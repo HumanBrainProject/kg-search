@@ -31,7 +31,7 @@ public class Indexing {
     @PostMapping
     public ResponseEntity<?> fullReplacement(@RequestParam("databaseScope") DatabaseScope databaseScope, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
         try {
-            Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> recreateIndex(databaseScope, type, clazz));
+            Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> fullReplacementByType(databaseScope, type, authorization, clazz));
             return ResponseEntity.ok().build();
         } catch (WebClientResponseException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
@@ -45,9 +45,7 @@ public class Indexing {
         Class<?> clazz = Constants.TARGET_MODELS_MAP.get(type);
         if (clazz != null) {
             try {
-                recreateIndex(databaseScope, type, clazz);
-                List<TargetInstance> instances = translationController.createInstances(databaseScope, false, type, authorization);
-//                elasticSearchController.
+                fullReplacementByType(databaseScope, type, authorization, clazz);
                 return ResponseEntity.ok().build();
             } catch (WebClientResponseException e) {
                 return ResponseEntity.status(e.getStatusCode()).build();
@@ -57,8 +55,41 @@ public class Indexing {
     }
 
     @PutMapping
-    public void incrementalUpdate(@RequestParam("databaseScope") DatabaseScope databaseScope) {
+    public ResponseEntity<?> incrementalUpdate(@RequestParam("databaseScope") DatabaseScope databaseScope,
+                                               @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
+        try {
+            Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> incrementalUpdateByType(databaseScope, type, authorization, clazz));
+            return ResponseEntity.ok().build();
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
+    }
 
+    @PutMapping("/{type}")
+    public ResponseEntity<?> incrementalUpdate(@RequestParam("databaseScope") DatabaseScope databaseScope,
+                                               @PathVariable("type") String type,
+                                               @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
+        Class<?> clazz = Constants.TARGET_MODELS_MAP.get(type);
+        if (clazz != null) {
+            try {
+                incrementalUpdateByType(databaseScope, type, authorization, clazz);
+                return ResponseEntity.ok().build();
+            } catch (WebClientResponseException e) {
+                return ResponseEntity.status(e.getStatusCode()).build();
+            }
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    private void incrementalUpdateByType(DatabaseScope databaseScope, String type, String authorization, Class<?> clazz) {
+        List<TargetInstance> instances = translationController.createInstances(databaseScope, false, type, authorization);
+        elasticSearchController.updateIndex(instances, type, databaseScope);
+    }
+
+    private void fullReplacementByType(DatabaseScope databaseScope, String type, String authorization, Class<?> clazz) {
+        recreateIndex(databaseScope, type, clazz);
+        List<TargetInstance> instances = translationController.createInstances(databaseScope, false, type, authorization);
+        elasticSearchController.indexDocuments(instances, type, databaseScope);
     }
 
     private void recreateIndex(DatabaseScope databaseScope, String type, Class<?> clazz) {

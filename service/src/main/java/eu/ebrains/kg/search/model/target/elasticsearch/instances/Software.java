@@ -99,6 +99,7 @@ public class Software implements TargetInstance {
         this.appCategory = appCategory == null ? null : appCategory.stream().map(Value::new).collect(Collectors.toList());
     }
 
+    @Override
     public Value<String> getIdentifier() {
         return identifier;
     }
