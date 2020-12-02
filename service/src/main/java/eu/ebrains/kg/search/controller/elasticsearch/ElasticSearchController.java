@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.search.services.ServiceClient;
+import eu.ebrains.kg.search.services.ESServiceClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -17,32 +17,26 @@ import java.util.Map;
 @Component
 public class ElasticSearchController {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final ServiceClient serviceClient;
+    private final ESServiceClient esServiceClient;
 
-    public ElasticSearchController(ServiceClient serviceClient) {
-        this.serviceClient = serviceClient;
-    }
-
-    private String getIndexPrefix(DatabaseScope databaseScope) {
-        return databaseScope == DatabaseScope.INFERRED ? "in_progress" : "publicly_released";
+    public ElasticSearchController(ESServiceClient esServiceClient) {
+        this.esServiceClient = esServiceClient;
     }
 
     public void recreateIndex(Map<String, Object> mapping, String type, DatabaseScope databaseScope) {
-        String indexPrefix = this.getIndexPrefix(databaseScope);
-        String index = String.format("%s_%s", indexPrefix, type.toLowerCase());
+        String index = esServiceClient.getIndex(type, databaseScope);
         try {
-            serviceClient.deleteIndex(index);
+            esServiceClient.deleteIndex(index);
         } catch (WebClientResponseException e) {
             if(e.getStatusCode() != HttpStatus.NOT_FOUND) {
                 throw  e;
             }
         }
-        serviceClient.createIndex(index, mapping);
+        esServiceClient.createIndex(index, mapping);
     }
 
     public void indexDocuments(List<TargetInstance> instances, String type, DatabaseScope databaseScope) {
-        String indexPrefix = this.getIndexPrefix(databaseScope);
-        String index = String.format("%s_%s", indexPrefix, type.toLowerCase());
+        String index = esServiceClient.getIndex(type, databaseScope);
         String operations = instances.stream().reduce("", (acc, instance) -> {
             acc += String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", instance.getIdentifier().getValue());
             try {
@@ -52,12 +46,11 @@ public class ElasticSearchController {
                 throw new RuntimeException(e);
             }
         }, String::concat);
-        serviceClient.updateIndex(index, operations);
+        esServiceClient.updateIndex(index, operations);
     }
 
     public void updateIndex(List<TargetInstance> instances, String type, DatabaseScope databaseScope) {
-        String indexPrefix = this.getIndexPrefix(databaseScope);
-        String index = String.format("%s_%s", indexPrefix, type.toLowerCase());
+        String index = esServiceClient.getIndex(type, databaseScope);
         HashSet<String> ids = new HashSet<>();
 
         String updateOperations = instances.stream().reduce("", (acc, instance) -> {
@@ -72,7 +65,7 @@ public class ElasticSearchController {
             }
         }, String::concat);
 
-        ElasticSearchResult documents = serviceClient.getDocuments(index);
+        ElasticSearchResult documents = esServiceClient.getDocuments(index);
         String deleteOperations = documents.getHits().getHits().stream().reduce("", (acc, document) -> {
             if(!ids.contains(document.getId())) {
                 acc += String.format("{ \"delete\" : { \"_id\" : \"%s\" } } \n", document.getId());
@@ -80,7 +73,7 @@ public class ElasticSearchController {
             return acc;
         }, String::concat);
 
-        serviceClient.updateIndex(index, updateOperations + deleteOperations);
+        esServiceClient.updateIndex(index, updateOperations + deleteOperations);
     }
 
 }

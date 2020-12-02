@@ -1,9 +1,7 @@
 package eu.ebrains.kg.search.services;
 
 import eu.ebrains.kg.search.model.DatabaseScope;
-import eu.ebrains.kg.search.model.source.ResultOfKGv2;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
-import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,47 +15,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class ServiceClient {
+public class ESServiceClient {
+
     private final ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
             .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1000000)).build();
     private final WebClient webClient = WebClient.builder().exchangeStrategies(exchangeStrategies).build();
 
-    @Value("${kgquery.endpoint}")
-    String kgQueryEndpoint;
 
     @Value("${es.endpoint}")
     String elasticSearchEndpoint;
 
-    private static final String vocab = "https://schema.hbp.eu/search/";
     private static final Pattern editorIdPattern = Pattern.compile("(.+)/(.+)/(.+)/(.+)/(.+)");
-
-    public <T> T executeQuery(String query, DatabaseScope databaseScope, Class<T> clazz, String token) {
-        String url = String.format("%s/%s/instances/?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, databaseScope, vocab);
-        return executeCall(clazz, token, url);
-    }
-
-    public <T> T executeQuery(String query, String id, DatabaseScope databaseScope, Class<T> clazz, String token) {
-        String url = String.format("%s/%s/instances/%s?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, id, databaseScope, vocab);
-        return executeCall(clazz, token, url);
-    }
-
-    public <T> T executeQueryByIdentifier(String query, String identifier, DatabaseScope databaseScope, Class<T> clazz, String token) {
-        String url = String.format("%s/%s/instances?databaseScope=%s&vocab=%s&identifier=%s", kgQueryEndpoint, query, databaseScope, vocab, identifier);
-        return executeCall(clazz, token, url);
-    }
-
-    private <T> T executeCall(Class<T> clazz, String token, String url) {
-        return webClient.get()
-                .uri(url)
-                .headers(h ->
-                {
-                    h.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-                    h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-                })
-                .retrieve()
-                .bodyToMono(clazz)
-                .block();
-    }
 
     public <T> T getDocument(DatabaseScope databaseScope, String type, String id, Class<T> clazz, String token) {
         String group = databaseScope.equals(DatabaseScope.RELEASED) ? "public" : "curated";
@@ -124,4 +92,10 @@ public class ServiceClient {
                 .bodyToMono(Void.class)
                 .block();
     }
+
+    public String getIndex(String type, DatabaseScope databaseScope) {
+        String indexPrefix = databaseScope == DatabaseScope.INFERRED ? "in_progress" : "publicly_released";
+        return String.format("%s_%s", indexPrefix, type.toLowerCase());
+    }
+
 }

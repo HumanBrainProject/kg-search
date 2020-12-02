@@ -2,6 +2,7 @@ package eu.ebrains.kg.search.api;
 
 import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.controller.elasticsearch.ElasticSearchController;
+import eu.ebrains.kg.search.controller.indexing.IndexingController;
 import eu.ebrains.kg.search.controller.mapping.MappingController;
 import eu.ebrains.kg.search.controller.translators.TranslationController;
 import eu.ebrains.kg.search.model.DatabaseScope;
@@ -18,20 +19,16 @@ import java.util.Map;
 @RestController
 public class Indexing {
 
-    private final MappingController mappingController;
-    private final ElasticSearchController elasticSearchController;
-    private final TranslationController translationController;
+    private final IndexingController indexingController;
 
-    public Indexing(MappingController mappingController, ElasticSearchController elasticSearchController, TranslationController translationController) {
-        this.mappingController = mappingController;
-        this.elasticSearchController = elasticSearchController;
-        this.translationController = translationController;
+    public Indexing(IndexingController indexingController) {
+        this.indexingController = indexingController;
     }
 
     @PostMapping
     public ResponseEntity<?> fullReplacement(@RequestParam("databaseScope") DatabaseScope databaseScope, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
         try {
-            Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> fullReplacementByType(databaseScope, type, authorization, clazz));
+            Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> indexingController.fullReplacementByType(databaseScope, type, authorization, clazz));
             return ResponseEntity.ok().build();
         } catch (WebClientResponseException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
@@ -45,7 +42,7 @@ public class Indexing {
         Class<?> clazz = Constants.TARGET_MODELS_MAP.get(type);
         if (clazz != null) {
             try {
-                fullReplacementByType(databaseScope, type, authorization, clazz);
+                indexingController.fullReplacementByType(databaseScope, type, authorization, clazz);
                 return ResponseEntity.ok().build();
             } catch (WebClientResponseException e) {
                 return ResponseEntity.status(e.getStatusCode()).build();
@@ -58,7 +55,7 @@ public class Indexing {
     public ResponseEntity<?> incrementalUpdate(@RequestParam("databaseScope") DatabaseScope databaseScope,
                                                @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
         try {
-            Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> incrementalUpdateByType(databaseScope, type, authorization, clazz));
+            indexingController.incrementalUpdateAll(databaseScope, authorization);
             return ResponseEntity.ok().build();
         } catch (WebClientResponseException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
@@ -69,33 +66,12 @@ public class Indexing {
     public ResponseEntity<?> incrementalUpdate(@RequestParam("databaseScope") DatabaseScope databaseScope,
                                                @PathVariable("type") String type,
                                                @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
-        Class<?> clazz = Constants.TARGET_MODELS_MAP.get(type);
-        if (clazz != null) {
-            try {
-                incrementalUpdateByType(databaseScope, type, authorization, clazz);
-                return ResponseEntity.ok().build();
-            } catch (WebClientResponseException e) {
-                return ResponseEntity.status(e.getStatusCode()).build();
-            }
+        try {
+            indexingController.incrementalUpdateByType(databaseScope, type, authorization);
+            return ResponseEntity.ok().build();
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
         }
-        return ResponseEntity.badRequest().build();
-    }
-
-    private void incrementalUpdateByType(DatabaseScope databaseScope, String type, String authorization, Class<?> clazz) {
-        List<TargetInstance> instances = translationController.createInstances(databaseScope, false, type, authorization);
-        elasticSearchController.updateIndex(instances, type, databaseScope);
-    }
-
-    private void fullReplacementByType(DatabaseScope databaseScope, String type, String authorization, Class<?> clazz) {
-        recreateIndex(databaseScope, type, clazz);
-        List<TargetInstance> instances = translationController.createInstances(databaseScope, false, type, authorization);
-        elasticSearchController.indexDocuments(instances, type, databaseScope);
-    }
-
-    private void recreateIndex(DatabaseScope databaseScope, String type, Class<?> clazz) {
-        Map<String, Object> mapping = mappingController.generateMapping(clazz);
-        Map<String, Object> mappingResult = Map.of("mappings", mapping);
-        elasticSearchController.recreateIndex(mappingResult, type, databaseScope);
     }
 
 }
