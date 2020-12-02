@@ -10,11 +10,11 @@ public class UrlSetTest {
 
     @Test
     public void serializeXml() throws JsonProcessingException {
-        Sitemap set = new Sitemap();
+        SitemapXML set = new SitemapXML();
 
-        Sitemap.Url a = new Sitemap.Url();
+        SitemapXML.Url a = new SitemapXML.Url();
         a.setLoc("a");
-        Sitemap.Url b = new Sitemap.Url();
+        SitemapXML.Url b = new SitemapXML.Url();
         b.setLoc("b");
         set.setUrl(Arrays.asList(a, b));
 

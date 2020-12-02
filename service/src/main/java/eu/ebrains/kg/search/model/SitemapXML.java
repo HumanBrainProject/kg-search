@@ -8,7 +8,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import java.util.List;
 
 @JacksonXmlRootElement(localName = "urlset")
-public class Sitemap {
+public class SitemapXML {
+    @JacksonXmlProperty(isAttribute = true)
+    private String xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9";
+
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<Url> url;
 
