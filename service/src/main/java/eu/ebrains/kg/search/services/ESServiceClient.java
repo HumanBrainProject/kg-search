@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 @Component
 public class ESServiceClient {
+    private final Integer querySize = 10000; //TODO Pagination?
 
     private final ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
             .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1000000)).build();
@@ -60,7 +61,7 @@ public class ESServiceClient {
 
     public ElasticSearchResult getDocuments(String index) {
         return webClient.get()
-                .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
+                .uri(String.format("%s/%s/_search?size=%d", elasticSearchEndpoint, index, querySize))
                 .retrieve()
                 .bodyToMono(ElasticSearchResult.class)
                 .block();
