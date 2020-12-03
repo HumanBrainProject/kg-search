@@ -1,6 +1,7 @@
 package eu.ebrains.kg.search.services;
 
 import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -26,36 +27,11 @@ public class ESServiceClient {
     @Value("${es.endpoint}")
     String elasticSearchEndpoint;
 
-    private static final Pattern editorIdPattern = Pattern.compile("(.+)/(.+)/(.+)/(.+)/(.+)");
-
-    public <T> T getDocument(DatabaseScope databaseScope, String type, String id, Class<T> clazz, String token) {
-        String group = databaseScope.equals(DatabaseScope.RELEASED) ? "public" : "curated";
-        return getDocument(String.format("/search/api/groups/%s/types/%s/documents/%s", group, type, id), clazz, token);
-    }
-
-    public <T> T getLiveDocument(String editorId, Class<T> clazz, String token) {
-        Matcher m = editorIdPattern.matcher(editorId);
-        if (!m.find()) {
-            return null;
-        }
-        String org = m.group(1);
-        String domain = m.group(2);
-        String schema = m.group(3);
-        String version = m.group(4);
-        String id = m.group(5);
-        return getDocument(String.format("/search/api/types/%s/%s/%s/%s/documents/%s/preview", org, domain, schema, version, id), clazz, token);
-    }
-
-    private <T> T getDocument(String uri, Class<T> clazz, String token) {
+    public ElasticSearchDocument getDocument(String index, String id) {
         return webClient.get()
-                .uri(String.format("%s%s", elasticSearchEndpoint, uri))
-                .headers(h ->
-                {
-                    h.add("Authorization", "Bearer " + token);
-                    h.add("Accept", "application/json");
-                })
+                .uri(String.format("%s/%s/_doc/%s", elasticSearchEndpoint, index, id))
                 .retrieve()
-                .bodyToMono(clazz)
+                .bodyToMono(ElasticSearchDocument.class)
                 .block();
     }
 
@@ -93,10 +69,4 @@ public class ESServiceClient {
                 .bodyToMono(Void.class)
                 .block();
     }
-
-    public String getIndex(String type, DatabaseScope databaseScope) {
-        String indexPrefix = databaseScope == DatabaseScope.INFERRED ? "in_progress" : "publicly_released";
-        return String.format("%s_%s", indexPrefix, type.toLowerCase());
-    }
-
 }

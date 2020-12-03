@@ -5,6 +5,7 @@ import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.SitemapXML;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import eu.ebrains.kg.search.services.ESServiceClient;
+import eu.ebrains.kg.search.utils.ESHelper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -34,7 +35,7 @@ public class SitemapController {
     private SitemapXML fetchSitemap(){
         //TODO check if we want to cache each type individually
         List<SitemapXML.Url> urls = Constants.TARGET_MODELS_MAP.keySet().stream().map(type -> {
-            String index = esServiceClient.getIndex(type, DatabaseScope.RELEASED);
+            String index = ESHelper.getIndex(type, DatabaseScope.RELEASED);
             ElasticSearchResult documents = esServiceClient.getDocuments(index);
             return documents.getHits().getHits().stream().map(doc -> {
                 SitemapXML.Url url = new SitemapXML.Url();

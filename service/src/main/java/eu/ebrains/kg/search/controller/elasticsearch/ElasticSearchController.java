@@ -6,6 +6,7 @@ import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.services.ESServiceClient;
+import eu.ebrains.kg.search.utils.ESHelper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -24,7 +25,7 @@ public class ElasticSearchController {
     }
 
     public void recreateIndex(Map<String, Object> mapping, String type, DatabaseScope databaseScope) {
-        String index = esServiceClient.getIndex(type, databaseScope);
+        String index = ESHelper.getIndex(type, databaseScope);
         try {
             esServiceClient.deleteIndex(index);
         } catch (WebClientResponseException e) {
@@ -36,7 +37,7 @@ public class ElasticSearchController {
     }
 
     public void indexDocuments(List<TargetInstance> instances, String type, DatabaseScope databaseScope) {
-        String index = esServiceClient.getIndex(type, databaseScope);
+        String index = ESHelper.getIndex(type, databaseScope);
         String operations = instances.stream().reduce("", (acc, instance) -> {
             acc += String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", instance.getIdentifier().getValue());
             try {
@@ -50,7 +51,7 @@ public class ElasticSearchController {
     }
 
     public void updateIndex(List<TargetInstance> instances, String type, DatabaseScope databaseScope) {
-        String index = esServiceClient.getIndex(type, databaseScope);
+        String index = ESHelper.getIndex(type, databaseScope);
         HashSet<String> ids = new HashSet<>();
 
         String updateOperations = instances.stream().reduce("", (acc, instance) -> {
