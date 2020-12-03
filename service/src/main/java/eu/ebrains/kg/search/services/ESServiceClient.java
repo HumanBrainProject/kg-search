@@ -1,5 +1,6 @@
 package eu.ebrains.kg.search.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
@@ -38,6 +39,15 @@ public class ESServiceClient {
     public ElasticSearchResult getDocuments(String index) {
         return webClient.get()
                 .uri(String.format("%s/%s/_search?size=%d", elasticSearchEndpoint, index, querySize))
+                .retrieve()
+                .bodyToMono(ElasticSearchResult.class)
+                .block();
+    }
+
+    public ElasticSearchResult searchDocuments(String index, JsonNode payload) {
+        return webClient.post()
+                .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
+                .body(BodyInserters.fromValue(payload))
                 .retrieve()
                 .bodyToMono(ElasticSearchResult.class)
                 .block();
