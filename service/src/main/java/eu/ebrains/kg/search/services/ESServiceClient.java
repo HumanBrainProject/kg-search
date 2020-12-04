@@ -44,12 +44,12 @@ public class ESServiceClient {
                 .block();
     }
 
-    public ElasticSearchResult searchDocuments(String index, JsonNode payload) {
+    public String searchDocuments(String index, JsonNode payload) {
         return webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
                 .body(BodyInserters.fromValue(payload))
                 .retrieve()
-                .bodyToMono(ElasticSearchResult.class)
+                .bodyToMono(String.class)
                 .block();
     }
 

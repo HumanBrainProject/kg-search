@@ -5,11 +5,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.ebrains.kg.search.controller.labels.LabelsController;
-import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +20,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 public class Search {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String parentCountLabel = "temporary_parent_doc_count";
     private final String docCountLabel = "doc_count";
@@ -63,8 +67,10 @@ public class Search {
                                     @RequestBody String payload) throws JsonProcessingException {
         JsonNode jsonNode = adaptEsQueryForNestedDocument(payload);
         String index = ESHelper.getIndexFromGroup("*", group);
-        ElasticSearchResult elasticSearchResult = esServiceClient.searchDocuments(index, jsonNode);
-        return ResponseEntity.ok(elasticSearchResult);
+        String result = esServiceClient.searchDocuments(index, jsonNode);
+        JsonNode resultJson = objectMapper.readTree(result);
+        JsonNode updatedJson = updateEsResponseWithNestedDocument(resultJson);
+        return ResponseEntity.ok(updatedJson);
     }
 
     private JsonNode adaptEsQueryForNestedDocument(String payload) throws JsonProcessingException {
@@ -77,13 +83,48 @@ public class Search {
                 if (!aggs.isEmpty()) {
                     aggs.fields().forEachRemaining(i -> {
                         if (i.getValue().has("terms")) {
-                            ((ObjectNode)i.getValue()).set("aggs", parentDocCountObj);
+                            ((ObjectNode) i.getValue()).set("aggs", parentDocCountObj);
                         }
                     });
                 }
             });
         }
         return jsonNode;
+    }
+
+    private JsonNode updateEsResponseWithNestedDocument(JsonNode jsonSrc) {
+        try {
+            JsonNode json = jsonSrc.deepCopy();
+            List<String> innerList = findPathForKey(json, "", parentCountLabel);
+            List<String> buckets = innerList.stream().map(this::trimLastSegment)
+                    .distinct()
+                    .collect(Collectors.toList());
+
+            buckets.forEach(path -> {
+                ArrayNode arrayNode = (ArrayNode) json.at(path);
+                int sum = 0;
+                for (int i = 0; i < arrayNode.size(); i++) {
+                    ObjectNode objectNode = (ObjectNode) arrayNode.get(i);
+                    int count = objectNode.at(String.format("/%s/%s", parentCountLabel, docCountLabel)).asInt();
+                    sum += count;
+                    objectNode.remove(parentCountLabel);
+                    objectNode.set(docCountLabel, new IntNode(count));
+                }
+
+                String inner = trimLastSegment(trimLastSegment(path)); // Remove everything after slash(/) before last
+                ObjectNode innerObject = (ObjectNode) json.at(inner);
+                innerObject.set(docCountLabel, new IntNode(sum));
+            });
+            return json;
+        } catch (Exception e) {
+            logger.info(String.format("Exception in json response update. Error:\n%s\nInput is used:\n%s", e.getMessage(), jsonSrc.asText()));
+            return jsonSrc;
+        }
+    }
+
+    private String trimLastSegment(String path) {
+        int index = path.lastIndexOf('/');
+        return path.substring(0, index);
     }
 
     private static List<String> findPathForKey(JsonNode jsonNode, String path, String key) {
