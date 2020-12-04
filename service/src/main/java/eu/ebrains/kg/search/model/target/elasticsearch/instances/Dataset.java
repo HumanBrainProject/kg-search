@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @MetaInfo(name = "Dataset", identifier = "minds/core/dataset/v1.0.0/search", defaultSelection = true, order = 2)
 @RibbonInfo(content = "Downloadable Data", aggregation = "count", dataField = "search:files", singular = "file", plural = "files", icon = "<i class=\"fa fa-download\" aria-hidden=\"true\"></i>")
 public class Dataset implements TargetInstance {
-    @ElasticSearchInfo(mapping = false)
+    @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Dataset");
 
     @FieldInfo(label = "Download Dataset", isButton = true, termsOfUse = true)

@@ -1,386 +1,441 @@
 {
-  "properties": {
-    "@timestamp": {
-      "type": "date"
+  "properties" : {
+    "@timestamp" : {
+      "type" : "date"
     },
-    "allfiles": {
-      "properties": {
-        "detail": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
+    "allfiles" : {
+      "properties" : {
+        "url" : {
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         },
-        "url": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
-        },
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
-            }
-          }
+          },
+          "type" : "text"
         }
       }
     },
-    "datasetExists": {
-      "properties": {
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+    "datasetExists" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         }
       }
     },
-    "datasets": {
-      "properties": {
-        "children": {
-          "type": "nested",
-          "properties": {
-            "component": {
-              "properties": {
-                "value": {
-                  "type": "text",
-                  "fields": {
-                    "keyword": {
-                      "type": "keyword"
+    "datasets" : {
+      "properties" : {
+        "children" : {
+          "properties" : {
+            "component" : {
+              "properties" : {
+                "value" : {
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword"
                     }
-                  }
+                  },
+                  "type" : "text"
                 }
               }
             },
-            "name": {
-              "properties": {
-                "reference": {
-                  "type": "text",
-                  "fields": {
-                    "keyword": {
-                      "type": "keyword",
-                      "ignore_above": 256
+            "name" : {
+              "properties" : {
+                "reference" : {
+                  "fields" : {
+                    "keyword" : {
+                      "ignore_above" : 256,
+                      "type" : "keyword"
                     }
-                  }
+                  },
+                  "type" : "text"
                 },
-                "uuid": {
-                  "type": "text",
-                  "fields": {
-                    "keyword": {
-                      "type": "keyword",
-                      "ignore_above": 256
+                "uuid" : {
+                  "fields" : {
+                    "keyword" : {
+                      "ignore_above" : 256,
+                      "type" : "keyword"
                     }
-                  }
+                  },
+                  "type" : "text"
                 },
-                "value": {
-                  "type": "text",
-                  "fields": {
-                    "keyword": {
-                      "type": "keyword"
+                "value" : {
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword"
                     }
-                  }
+                  },
+                  "type" : "text"
                 }
               }
+            }
+          },
+          "type" : "nested"
+        },
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "editorId" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "files" : {
+      "properties" : {
+        "fileSize" : {
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        },
+        "previewUrl" : {
+          "properties" : {
+            "isAnimated" : {
+              "type" : "boolean"
+            },
+            "url" : {
+              "fields" : {
+                "keyword" : {
+                  "ignore_above" : 256,
+                  "type" : "keyword"
+                }
+              },
+              "type" : "text"
             }
           }
         },
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
-            }
-          }
-        }
-      }
-    },
-    "editorId": {
-      "properties": {
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
-            }
-          }
-        }
-      }
-    },
-    "files": {
-      "properties": {
-        "fileSize": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
+        "staticImageUrl" : {
+          "properties" : {
+            "isAnimated" : {
+              "type" : "boolean"
+            },
+            "url" : {
+              "fields" : {
+                "keyword" : {
+                  "ignore_above" : 256,
+                  "type" : "keyword"
+                }
+              },
+              "type" : "text"
             }
           }
         },
-        "url": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
+        "thumbnailUrl" : {
+          "properties" : {
+            "isAnimated" : {
+              "type" : "boolean"
+            },
+            "url" : {
+              "fields" : {
+                "keyword" : {
+                  "ignore_above" : 256,
+                  "type" : "keyword"
+                }
+              },
+              "type" : "text"
             }
           }
         },
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+        "url" : {
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
             }
-          }
-        }
-      }
-    },
-    "first_release": {
-      "properties": {
-        "value": {
-          "type": "date"
-        }
-      }
-    },
-    "identifier": {
-      "properties": {
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
-            }
-          }
-        }
-      }
-    },
-    "last_release": {
-      "properties": {
-        "value": {
-          "type": "date"
-        }
-      }
-    },
-    "methods": {
-      "properties": {
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
-            }
-          }
-        }
-      }
-    },
-    "parcellationAtlas": {
-      "properties": {
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
-            }
-          }
-        }
-      }
-    },
-    "region": {
-      "properties": {
-        "url": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
-            }
-          }
+          },
+          "type" : "text"
         },
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         }
       }
     },
-    "subject": {
-      "properties": {
-        "children": {
-          "type": "nested",
-          "properties": {
-            "age": {
-              "properties": {
-                "value": {
-                  "type": "text",
-                  "fields": {
-                    "keyword": {
-                      "type": "keyword"
+    "first_release" : {
+      "properties" : {
+        "value" : {
+          "type" : "date"
+        }
+      }
+    },
+    "identifier" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "last_release" : {
+      "properties" : {
+        "value" : {
+          "type" : "date"
+        }
+      }
+    },
+    "methods" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "parcellationAtlas" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "region" : {
+      "properties" : {
+        "url" : {
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        },
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "subject" : {
+      "properties" : {
+        "children" : {
+          "properties" : {
+            "age" : {
+              "properties" : {
+                "value" : {
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword"
                     }
-                  }
+                  },
+                  "type" : "text"
                 }
               }
             },
-            "agecategory": {
-              "properties": {
-                "value": {
-                  "type": "text",
-                  "fields": {
-                    "keyword": {
-                      "type": "keyword"
+            "agecategory" : {
+              "properties" : {
+                "value" : {
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword"
                     }
-                  }
+                  },
+                  "type" : "text"
                 }
               }
             },
-            "genotype": {
-              "properties": {
-                "value": {
-                  "type": "text",
-                  "fields": {
-                    "keyword": {
-                      "type": "keyword"
+            "genotype" : {
+              "properties" : {
+                "value" : {
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword"
                     }
-                  }
+                  },
+                  "type" : "text"
                 }
               }
             },
-            "sex": {
-              "properties": {
-                "value": {
-                  "type": "text",
-                  "fields": {
-                    "keyword": {
-                      "type": "keyword"
+            "sex" : {
+              "properties" : {
+                "value" : {
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword"
                     }
-                  }
+                  },
+                  "type" : "text"
                 }
               }
             },
-            "species": {
-              "properties": {
-                "value": {
-                  "type": "text",
-                  "fields": {
-                    "keyword": {
-                      "type": "keyword"
+            "species" : {
+              "properties" : {
+                "value" : {
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword"
                     }
-                  }
+                  },
+                  "type" : "text"
                 }
               }
             },
-            "strain": {
-              "properties": {
-                "value": {
-                  "type": "text",
-                  "fields": {
-                    "keyword": {
-                      "type": "keyword"
+            "strain" : {
+              "properties" : {
+                "value" : {
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword"
                     }
-                  }
+                  },
+                  "type" : "text"
                 }
               }
             },
-            "subject_name": {
-              "properties": {
-                "reference": {
-                  "type": "text",
-                  "fields": {
-                    "keyword": {
-                      "type": "keyword",
-                      "ignore_above": 256
+            "subject_name" : {
+              "properties" : {
+                "reference" : {
+                  "fields" : {
+                    "keyword" : {
+                      "ignore_above" : 256,
+                      "type" : "keyword"
                     }
-                  }
+                  },
+                  "type" : "text"
                 },
-                "value": {
-                  "type": "text",
-                  "fields": {
-                    "keyword": {
-                      "type": "keyword"
+                "uuid" : {
+                  "fields" : {
+                    "keyword" : {
+                      "ignore_above" : 256,
+                      "type" : "keyword"
                     }
-                  }
+                  },
+                  "type" : "text"
+                },
+                "value" : {
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword"
+                    }
+                  },
+                  "type" : "text"
                 }
               }
             },
-            "weight": {
-              "properties": {
-                "value": {
-                  "type": "text",
-                  "fields": {
-                    "keyword": {
-                      "type": "keyword"
+            "weight" : {
+              "properties" : {
+                "value" : {
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword"
                     }
-                  }
+                  },
+                  "type" : "text"
                 }
               }
             }
-          }
+          },
+          "type" : "nested"
         },
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         }
       }
     },
-    "title": {
-      "properties": {
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+    "title" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         }
       }
     },
-    "viewer": {
-      "properties": {
-        "url": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
+    "type" : {
+      "properties" : {
+        "value" : {
+          "type" : "keyword"
+        }
+      }
+    },
+    "viewer" : {
+      "properties" : {
+        "url" : {
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         },
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         }
       }
     },
-    "weightPreFixation": {
-      "properties": {
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+    "weightPreFixation" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         }
       }
     }

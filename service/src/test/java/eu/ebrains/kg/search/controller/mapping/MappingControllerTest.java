@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 class MappingControllerTest {
 
     @Test
-    @Ignore("Not working because of different data states - more complex assertions needed")
     void generateMapping() throws IOException, URISyntaxException {
         //Given
         ObjectMapper mapper = new ObjectMapper().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
@@ -28,6 +27,7 @@ class MappingControllerTest {
 
         //When
         Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> {
+            System.out.printf("Now handling type: %s%n", type);
             Path path;
             String json;
             try {

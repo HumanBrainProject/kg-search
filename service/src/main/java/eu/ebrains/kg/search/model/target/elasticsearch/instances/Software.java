@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @MetaInfo(name="Software", identifier = "softwarecatalog/software/softwareproject/v1.0.0/search", order=6)
 public class Software implements TargetInstance {
-    @ElasticSearchInfo(mapping = false)
+    @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Software");
 
     @FieldInfo(layout = FieldInfo.Layout.HEADER)

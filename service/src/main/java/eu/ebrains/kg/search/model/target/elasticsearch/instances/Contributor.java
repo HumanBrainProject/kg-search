@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @MetaInfo(name="Contributor", identifier = "uniminds/core/person/v1.0.0/search", order=6)
 public class Contributor implements TargetInstance {
 
-    @ElasticSearchInfo(mapping = false)
+    @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Contributor");
 
     @FieldInfo(visible = false)

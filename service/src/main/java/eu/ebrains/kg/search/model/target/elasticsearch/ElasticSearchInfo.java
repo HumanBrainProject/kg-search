@@ -10,5 +10,6 @@ import java.lang.annotation.Target;
 public @interface ElasticSearchInfo {
     boolean mapping() default true;
     int ignoreAbove() default -1;
+    String type() default "";
 
 }
