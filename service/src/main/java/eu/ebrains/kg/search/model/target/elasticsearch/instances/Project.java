@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@MetaInfo(name="Project", identifier = "uniminds/core/placomponent/v1.0.0/search", order=1)
+@MetaInfo(name="Project", identifier = "minds/core/placomponent/v1.0.0/search", order=1)
 @RibbonInfo(content="Datasets", aggregation="count", dataField="search:datasets", singular="dataset", plural="datasets", icon="<i class=\"fa fa-download\" aria-hidden=\"true\"></i>")
 public class Project implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
@@ -23,10 +23,10 @@ public class Project implements TargetInstance {
     @FieldInfo(layout=FieldInfo.Layout.HEADER)
     private Value<String> editorId;
 
-    @FieldInfo(optional = false, sort = true, label = "Name", boost = 20f)
+    @FieldInfo(sort = true, label = "Name", boost = 20f)
     private Value<String> title;
 
-    @FieldInfo(label = "Description", markdown =  true, boost =  7.5f, labelHidden = true, type=FieldInfo.Type.TEXT)
+    @FieldInfo(label = "Description", markdown =  true, boost =  7.5f, labelHidden = true)
     private Value<String> description;
 
     @FieldInfo(label = "Related publications", markdown = true, hint = "List of publications that have been published as a part of this project.", layout=FieldInfo.Layout.GROUP)

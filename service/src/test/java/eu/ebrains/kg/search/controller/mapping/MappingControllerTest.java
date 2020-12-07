@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.utils.MetaModelUtils;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 class MappingControllerTest {
 
     @Test
-    void generateMapping() throws IOException, URISyntaxException {
+    void generateMapping() {
         //Given
         ObjectMapper mapper = new ObjectMapper().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
         MappingController mappingController = new MappingController(new MetaModelUtils());

@@ -34,7 +34,7 @@ public class Contributor implements TargetInstance {
     @FieldInfo(label = "Custodian of", layout = FieldInfo.Layout.GROUP, overview = true)
     private List<TargetInternalReference> custodianOf;
 
-    @FieldInfo(label = "Custodian of model", layout = FieldInfo.Layout.GROUP, overview = true)
+    @FieldInfo(label = "Custodian of models", layout = FieldInfo.Layout.GROUP, overview = true)
     private List<TargetInternalReference> custodianOfModel;
 
     @FieldInfo(label = "Publications", markdown = true, facet = FieldInfo.Facet.EXISTS, layout = FieldInfo.Layout.GROUP)
