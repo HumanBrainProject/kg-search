@@ -18,18 +18,17 @@ import java.util.stream.Collectors;
 
 @MetaInfo(name="Contributor", identifier = "uniminds/core/person/v1.0.0/search", order=6)
 public class Contributor implements TargetInstance {
-
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Contributor");
 
     @FieldInfo(visible = false)
     private Value<String> identifier;
 
-    @FieldInfo(layout = FieldInfo.Layout.HEADER)
-    private Value<String> editorId;
-
     @FieldInfo(sort = true, label = "Name", boost = 20)
     private Value<String> title;
+
+    @FieldInfo(layout = FieldInfo.Layout.HEADER)
+    private Value<String> editorId;
 
     @FieldInfo(label = "Custodian of", layout = FieldInfo.Layout.GROUP, overview = true)
     private List<TargetInternalReference> custodianOf;

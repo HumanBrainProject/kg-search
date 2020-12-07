@@ -20,20 +20,20 @@ public class Project implements TargetInstance {
     @FieldInfo(visible = false)
     private Value<String> identifier;
 
-    @FieldInfo(layout=FieldInfo.Layout.HEADER)
-    private Value<String> editorId;
-
     @FieldInfo(sort = true, label = "Name", boost = 20)
     private Value<String> title;
+
+    @FieldInfo(layout=FieldInfo.Layout.HEADER)
+    private Value<String> editorId;
 
     @FieldInfo(label = "Description", markdown =  true, boost =  7.5f, labelHidden = true)
     private Value<String> description;
 
-    @FieldInfo(label = "Related publications", markdown = true, hint = "List of publications that have been published as a part of this project.", layout=FieldInfo.Layout.GROUP)
-    private List<Value<String>> publications;
-
     @FieldInfo(label = "Datasets", layout = FieldInfo.Layout.GROUP)
     private List<TargetInternalReference> dataset;
+
+    @FieldInfo(label = "Related publications", markdown = true, hint = "List of publications that have been published as a part of this project.", layout=FieldInfo.Layout.GROUP)
+    private List<Value<String>> publications;
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)

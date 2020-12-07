@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 @MetaInfo(name = "Model", identifier = "uniminds/core/modelinstance/v1.0.0/search", order = 5)
 public class Model implements TargetInstance {
-
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Model");
 
@@ -24,46 +23,39 @@ public class Model implements TargetInstance {
     @FieldInfo(layout = FieldInfo.Layout.HEADER)
     private Value<String> editorId;
 
+    @FieldInfo(label = "Name", sort = true, boost = 20)
+    private Value<String> title;
+
+    @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true)
+    private Value<String> description;
+
+    @FieldInfo(label = "Version", layout = FieldInfo.Layout.SUMMARY)
+    private Value<String> version;
+
+    @FieldInfo(label = "Contributors", layout = FieldInfo.Layout.HEADER, separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10)
+    private List<TargetInternalReference> contributors;
+
+    @FieldInfo(label = "Custodian", layout = FieldInfo.Layout.SUMMARY, separator = "; ", type = FieldInfo.Type.TEXT, hint = "A custodian is the person responsible for the data bundle.")
+    private List<TargetInternalReference> owners;
+
+    @FieldInfo(label = "Main contact", layout = FieldInfo.Layout.SUMMARY, separator = "; ", type = FieldInfo.Type.TEXT)
+    private List<TargetInternalReference> mainContact;
+
     @FieldInfo(label = "Files", layout = FieldInfo.Layout.GROUP, markdown = true)
     private Value<String> embargo;
-
-    @FieldInfo(label = "Produced datasets", layout = FieldInfo.Layout.GROUP)
-    private List<TargetInternalReference> producedDataset;
 
     @JsonProperty("allfiles") //TODO: capitalize
     @FieldInfo(label = "Download model", isButton = true, termsOfUse = true)
     private List<TargetExternalReference> allFiles;
 
-    @FieldInfo(label = "Model format", layout = FieldInfo.Layout.SUMMARY, separator = "; ")
-    private List<Value<String>> modelFormat;
-
-    @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true)
-    private Value<String> description;
-
-    @JsonProperty("license_info")
-    @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)
-    private TargetExternalReference licenseInfo;
-
-    @FieldInfo(label = "Custodian", layout = FieldInfo.Layout.SUMMARY, separator = "; ", type = FieldInfo.Type.TEXT, hint = "A custodian is the person responsible for the data bundle.")
-    private List<TargetInternalReference> owners;
-
-    @FieldInfo(label = "Abstraction level", layout = FieldInfo.Layout.SUMMARY, separator = "; ", facet = FieldInfo.Facet.LIST)
-    private List<Value<String>> abstractionLevel;
-
-    @FieldInfo(label = "Main contact", layout = FieldInfo.Layout.SUMMARY, separator = "; ", type = FieldInfo.Type.TEXT)
-    private List<TargetInternalReference> mainContact;
+    @FieldInfo(label = "Publications", layout = FieldInfo.Layout.GROUP, markdown = true, hint = "List of publications that have been published as a part of this model.")
+    private List<Value<String>> publications;
 
     @FieldInfo(label = "Brain structure", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
     private List<Value<String>> brainStructures;
 
-    @FieldInfo(label = "Used datasets", layout = FieldInfo.Layout.GROUP)
-    private List<TargetInternalReference> usedDataset;
-
-    @FieldInfo(label = "Version", layout = FieldInfo.Layout.SUMMARY)
-    private Value<String> version;
-
-    @FieldInfo(label = "Publications", layout = FieldInfo.Layout.GROUP, markdown = true, hint = "List of publications that have been published as a part of this model.")
-    private List<Value<String>> publications;
+    @FieldInfo(label = "(Sub)cellular target", layout = FieldInfo.Layout.SUMMARY)
+    private List<Value<String>> cellularTarget;
 
     @FieldInfo(label = "Study target", layout = FieldInfo.Layout.SUMMARY)
     private List<Value<String>> studyTarget;
@@ -71,14 +63,11 @@ public class Model implements TargetInstance {
     @FieldInfo(label = "Model scope", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
     private List<Value<String>> modelScope;
 
-    @FieldInfo(label = "Name", sort = true, boost = 20)
-    private Value<String> title;
+    @FieldInfo(label = "Abstraction level", layout = FieldInfo.Layout.SUMMARY, separator = "; ", facet = FieldInfo.Facet.LIST)
+    private List<Value<String>> abstractionLevel;
 
-    @FieldInfo(label = "Contributors", layout = FieldInfo.Layout.HEADER, separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10)
-    private List<TargetInternalReference> contributors;
-
-    @FieldInfo(label = "(Sub)cellular target", layout = FieldInfo.Layout.SUMMARY)
-    private List<Value<String>> cellularTarget;
+    @FieldInfo(label = "Model format", layout = FieldInfo.Layout.SUMMARY, separator = "; ")
+    private List<Value<String>> modelFormat;
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
@@ -87,6 +76,16 @@ public class Model implements TargetInstance {
     @JsonProperty("last_release")
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
+
+    @FieldInfo(label = "Used datasets", layout = FieldInfo.Layout.GROUP)
+    private List<TargetInternalReference> usedDataset;
+
+    @FieldInfo(label = "Produced datasets", layout = FieldInfo.Layout.GROUP)
+    private List<TargetInternalReference> producedDataset;
+
+    @JsonProperty("license_info")
+    @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)
+    private TargetExternalReference licenseInfo;
 
     public void setType(String type) {
         setType(StringUtils.isBlank(type) ? null : new Value<>(type));
