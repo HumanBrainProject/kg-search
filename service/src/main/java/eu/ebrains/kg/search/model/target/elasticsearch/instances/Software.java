@@ -19,41 +19,41 @@ public class Software implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Software");
 
-    @FieldInfo(layout = FieldInfo.Layout.HEADER)
-    private Value<String> editorId;
-
-    @FieldInfo(label = "Application Category", layout = FieldInfo.Layout.SUMMARY, separator = ", ")
-    private List<Value<String>> appCategory;
-
     @FieldInfo(visible = false, ignoreForSearch = true)
     private Value<String> identifier;
 
     @FieldInfo(label = "Name", boost = 20, sort = true)
     private Value<String> title;
 
+    @FieldInfo(layout = FieldInfo.Layout.HEADER)
+    private Value<String> editorId;
+
     @FieldInfo(labelHidden = true, markdown = true, boost = 2)
     private Value<String> description;
-
-    @FieldInfo(label = "Source code", layout = FieldInfo.Layout.SUMMARY)
-    private List<TargetExternalReference> sourceCode;
-
-    @FieldInfo(label = "Features", layout = FieldInfo.Layout.SUMMARY, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
-    private List<Value<String>> features;
-
-    @FieldInfo(label = "Documentation", layout = FieldInfo.Layout.SUMMARY)
-    private List<TargetExternalReference> documentation;
 
     @FieldInfo(label = "License")
     private List<Value<String>> license;
 
-    @FieldInfo(label = "Operating System", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>")
-    private List<Value<String>> operatingSystem;
-
     @FieldInfo(label = "Latest Version", layout = FieldInfo.Layout.SUMMARY)
     private Value<String> version;
 
+    @FieldInfo(label = "Application Category", layout = FieldInfo.Layout.SUMMARY, separator = ", ")
+    private List<Value<String>> appCategory;
+
+    @FieldInfo(label = "Operating System", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>")
+    private List<Value<String>> operatingSystem;
+
     @FieldInfo(label = "Homepage", layout = FieldInfo.Layout.SUMMARY)
     private List<TargetExternalReference> homepage;
+
+    @FieldInfo(label = "Source code", layout = FieldInfo.Layout.SUMMARY)
+    private List<TargetExternalReference> sourceCode;
+
+    @FieldInfo(label = "Documentation", layout = FieldInfo.Layout.SUMMARY)
+    private List<TargetExternalReference> documentation;
+
+    @FieldInfo(label = "Features", layout = FieldInfo.Layout.SUMMARY, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
+    private List<Value<String>> features;
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
