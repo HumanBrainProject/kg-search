@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@MetaInfo(name = "Subject", order = 3, identifier = "minds/experiment/subject/v1.0.0/search")
+@MetaInfo(name = "Subject", identifier = "minds/experiment/subject/v1.0.0/search", order = 3)
 public class Subject implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Subject");

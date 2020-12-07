@@ -105,4 +105,21 @@ public class MetaModelUtils {
     }
 
 
+    public static Type getTopTypeToHandle(Type type) throws ClassNotFoundException {
+        if (type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = ((ParameterizedType) type);
+            Type[] actualTypeArguments = ((ParameterizedType) type).getActualTypeArguments();
+            if (actualTypeArguments.length > 0) {
+                Type typeArgument = actualTypeArguments[0];
+                if (Collection.class.isAssignableFrom(Class.forName(parameterizedType.getRawType().getTypeName()))) {
+                    return getTopTypeToHandle(typeArgument);
+                } else {
+                    return parameterizedType;
+                }
+            }
+        }
+        return type;
+
+    }
+
 }
