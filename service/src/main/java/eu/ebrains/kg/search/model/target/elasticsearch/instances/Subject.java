@@ -17,8 +17,7 @@ import java.util.stream.Collectors;
 
 @MetaInfo(name = "Subject", order = 3, identifier = "minds/experiment/subject/v1.0.0/search")
 public class Subject implements TargetInstance {
-
-    @ElasticSearchInfo(mapping = false)
+    @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Subject");
 
     @FieldInfo(visible = false)

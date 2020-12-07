@@ -1,14 +1,16 @@
 package eu.ebrains.kg.search.controller.data;
 
 import eu.ebrains.kg.search.controller.utils.TranslatorTestHelper;
-import eu.ebrains.kg.search.controller.utils.WebClientHelper;
 import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.source.ResultOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
+import eu.ebrains.kg.search.services.KGServiceClient;
+import eu.ebrains.kg.search.services.LegacySearchServiceClient;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -17,6 +19,15 @@ import java.util.List;
 import java.util.Map;
 
 public class DatasetTranslatorTest {
+    private final KGServiceClient kgServiceClient;
+
+    public DatasetTranslatorTest(KGServiceClient kgServiceClient) {
+        this.kgServiceClient = kgServiceClient;
+    }
+
+    @Value("${test.token}")
+    String token;
+
     private static class DatasetV1Result extends ResultOfKGv2<DatasetV1> {}
 
     @Test
@@ -36,14 +47,14 @@ public class DatasetTranslatorTest {
 
     public void compareDatasets(DatabaseScope databaseScope, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        DatasetV1Result queryResult = WebClientHelper.executeQuery("query/minds/core/dataset/v1.0.0/search", databaseScope, DatasetV1Result.class);
+        DatasetV1Result queryResult = kgServiceClient.executeQuery("query/minds/core/dataset/v1.0.0/search", databaseScope, DatasetV1Result.class, token);
         queryResult.getResults().forEach(dataset -> {
             String id = liveMode?dataset.getEditorId():dataset.getIdentifier();
             ElasticSearchDocument doc;
             if (liveMode) {
-                doc = WebClientHelper.getLiveDocument(id, ElasticSearchDocument.class);
+                doc = LegacySearchServiceClient.getLiveDocument(id, ElasticSearchDocument.class);
             } else {
-                doc = WebClientHelper.getDocument(databaseScope, "Dataset", id, ElasticSearchDocument.class);
+                doc = LegacySearchServiceClient.getDocument(databaseScope, "Dataset", id, ElasticSearchDocument.class);
             }
             if (doc == null) {
                 result.add("\n\n\tDataset: " + dataset.getIdentifier() + " (Fail to get expected document!)");

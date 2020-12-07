@@ -4,6 +4,7 @@ import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.utils.MetaModelUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +15,6 @@ import java.util.*;
 
 @Component
 public class MappingController {
-
-    private static final String SEARCH_UI_NAMESPACE = "https://schema.hbp.eu/searchUi/";
-    private static final String GRAPHQUERY_NAMESPACE = "https://schema.hbp.eu/graphQuery/";
-
-
     private final MetaModelUtils utils;
 
     public MappingController(MetaModelUtils utils) {
@@ -32,16 +28,16 @@ public class MappingController {
         mapping.put("properties", properties);
         timestamp.put("type", "date");
         properties.put("@timestamp", timestamp);
-        properties.putAll(handleType(clazz));
+        properties.putAll(handleType(clazz, null));
         return mapping;
     }
 
-    private Map<String, Object> handleType(Type type) {
+    private Map<String, Object> handleType(Type type, ElasticSearchInfo parentInfo) {
         Map<String, Object> properties = new LinkedHashMap<>();
         List<MetaModelUtils.FieldWithGenericTypeInfo> allFields = utils.getAllFields(type);
         allFields.sort(Comparator.comparing(f -> utils.getPropertyName(f.getField())));
         allFields.forEach(field -> {
-            Map<String, Object> fieldDefinition = handleField(field);
+            Map<String, Object> fieldDefinition = handleField(field, parentInfo);
             if (fieldDefinition != null) {
                 properties.put(utils.getPropertyName(field.getField()), fieldDefinition);
             }
@@ -49,15 +45,19 @@ public class MappingController {
         return properties;
     }
 
-    private Map<String, Object> handleField(MetaModelUtils.FieldWithGenericTypeInfo field) {
+    private Map<String, Object> handleField(MetaModelUtils.FieldWithGenericTypeInfo field, ElasticSearchInfo parentInfo) {
         try {
             ElasticSearchInfo esInfo = field.getField().getAnnotation(ElasticSearchInfo.class);
+            if(esInfo == null && parentInfo != null) {
+                esInfo = parentInfo;
+            }
             if (esInfo == null || esInfo.mapping()) {
                 Type topTypeToHandle = field.getGenericType() != null ? field.getGenericType() : getTopTypeToHandle(field.getField().getGenericType());
                 Map<String, Object> fieldDefinition = new HashMap<>();
 
+
                 if(topTypeToHandle instanceof ParameterizedType && ((ParameterizedType)topTypeToHandle).getRawType() == Children.class){
-                    Map<String, Object> otherType = handleType(topTypeToHandle);
+                    Map<String, Object> otherType = handleType(topTypeToHandle, esInfo);
                     //TODO check if nested shouldn't be defined one level further up
                     ((Map<String, Object>)otherType.get("children")).put("type", "nested");
                     fieldDefinition.put("properties", otherType);
@@ -74,21 +74,25 @@ public class MappingController {
 
                 }
                 else if (topTypeToHandle == String.class) {
-                    fieldDefinition.put("type", "text");
-                    Map<String, Object> fields = new HashMap<>();
-                    fieldDefinition.put("fields", fields);
-                    Map<String, Object> keyword = new LinkedHashMap<>();
-                    fields.put("keyword", keyword);
-                    keyword.put("type", "keyword");
-                    if (esInfo != null && esInfo.ignoreAbove() > 0) {
-                        keyword.put("ignore_above", esInfo.ignoreAbove());
+                    if(esInfo != null && StringUtils.isNotBlank(esInfo.type())) {
+                        fieldDefinition.put("type", esInfo.type());
+                    } else {
+                        fieldDefinition.put("type", "text");
+                        Map<String, Object> fields = new HashMap<>();
+                        fieldDefinition.put("fields", fields);
+                        Map<String, Object> keyword = new LinkedHashMap<>();
+                        fields.put("keyword", keyword);
+                        keyword.put("type", "keyword");
+                        if (esInfo != null && esInfo.ignoreAbove() > 0) {
+                            keyword.put("ignore_above", esInfo.ignoreAbove());
+                        }
                     }
                 } else if (topTypeToHandle == Date.class) {
                     fieldDefinition.put("type", "date");
-                } else if (topTypeToHandle == Boolean.class) {
+                } else if (topTypeToHandle == Boolean.class || topTypeToHandle == boolean.class) {
                     fieldDefinition.put("type", "boolean");
                 } else {
-                    Map<String, Object> otherType = handleType(topTypeToHandle);
+                    Map<String, Object> otherType = handleType(topTypeToHandle, esInfo);
                     fieldDefinition.put("properties", otherType);
                 }
                 return fieldDefinition;

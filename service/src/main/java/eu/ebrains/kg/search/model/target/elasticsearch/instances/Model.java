@@ -1,6 +1,7 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
@@ -13,6 +14,8 @@ import java.util.stream.Collectors;
 
 @MetaInfo(name = "Model", identifier = "uniminds/core/modelinstance/v1.0.0/search", order = 5)
 public class Model implements TargetInstance {
+
+    @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Model");
 
     @FieldInfo(visible = false, ignoreForSearch = true)
@@ -68,7 +71,7 @@ public class Model implements TargetInstance {
     @FieldInfo(label = "Model scope", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
     private List<Value<String>> modelScope;
 
-    @FieldInfo(label = "Name", optional = false, sort = true, boost = 20)
+    @FieldInfo(label = "Name", sort = true, boost = 20)
     private Value<String> title;
 
     @FieldInfo(label = "Contributors", layout = FieldInfo.Layout.HEADER, separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10)

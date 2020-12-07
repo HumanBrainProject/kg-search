@@ -19,6 +19,7 @@ public class TargetInternalReference {
         this.uuid = uuid;
     }
 
+    @ElasticSearchInfo(ignoreAbove = 256)
     private String reference;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

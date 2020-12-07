@@ -1,4 +1,4 @@
-package eu.ebrains.kg.search.controller.utils;
+package eu.ebrains.kg.search.services;
 
 import eu.ebrains.kg.search.model.DatabaseScope;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
@@ -7,30 +7,15 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class WebClientHelper {
+public class LegacySearchServiceClient {
     private static final ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
             .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1000000)).build();
     public static final WebClient webClient = WebClient.builder().exchangeStrategies(exchangeStrategies).build();
 
     private static final String token = "";
-    private static final String vocab = "https://schema.hbp.eu/search/";
-    private static final String hbpUrl = "https://kg.humanbrainproject.eu";
     private static final String ebrainsUrl = "https://kg.ebrains.eu";
 
     private static final Pattern editorIdPattern = Pattern.compile("(.+)/(.+)/(.+)/(.+)/(.+)");
-
-    public static <T> T executeQuery(String query, DatabaseScope databaseScope, Class<T> clazz) {
-        return WebClientHelper.webClient.get()
-                .uri(String.format("%s/%s/instances?databaseScope=%s&vocab=%s", hbpUrl, query, databaseScope, vocab))
-                .headers(h ->
-                {
-                    h.add("Authorization", "Bearer " + token);
-                    h.add("Accept", "application/json");
-                })
-                .retrieve()
-                .bodyToMono(clazz)
-                .block();
-    }
 
     public static <T> T getDocument(DatabaseScope databaseScope, String type, String id, Class<T> clazz) {
         String group = databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated";
@@ -51,7 +36,7 @@ public class WebClientHelper {
     }
 
     private static <T> T getDocument(String uri, Class<T> clazz) {
-        return WebClientHelper.webClient.get()
+        return webClient.get()
                 .uri(String.format("%s%s", ebrainsUrl, uri))
                 .headers(h ->
                 {
@@ -62,5 +47,4 @@ public class WebClientHelper {
                 .bodyToMono(clazz)
                 .block();
     }
-
 }

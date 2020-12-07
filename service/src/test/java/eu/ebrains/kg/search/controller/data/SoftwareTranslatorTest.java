@@ -1,14 +1,16 @@
 package eu.ebrains.kg.search.controller.data;
 
 import eu.ebrains.kg.search.controller.utils.TranslatorTestHelper;
-import eu.ebrains.kg.search.controller.utils.WebClientHelper;
 import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.source.ResultOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
+import eu.ebrains.kg.search.services.KGServiceClient;
+import eu.ebrains.kg.search.services.LegacySearchServiceClient;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -17,6 +19,15 @@ import java.util.List;
 import java.util.Map;
 
 public class SoftwareTranslatorTest {
+    private final KGServiceClient kgServiceClient;
+
+    public SoftwareTranslatorTest(KGServiceClient kgServiceClient) {
+        this.kgServiceClient = kgServiceClient;
+    }
+
+    @Value("${test.token}")
+    String token;
+
     private static class SoftwareV2Result extends ResultOfKGv2<SoftwareV2> {}
 
     @Test
@@ -34,14 +45,14 @@ public class SoftwareTranslatorTest {
 
     public void compareSoftware(DatabaseScope databaseScope, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        SoftwareV2Result queryResult = WebClientHelper.executeQuery("query/softwarecatalog/software/softwareproject/v1.0.0/search", databaseScope, SoftwareV2Result.class);
+        SoftwareV2Result queryResult = kgServiceClient.executeQuery("query/softwarecatalog/software/softwareproject/v1.0.0/search", databaseScope, SoftwareV2Result.class, token);
         queryResult.getResults().forEach(software -> {
             String id = liveMode?software.getEditorId():software.getIdentifier();
             ElasticSearchDocument doc;
             if (liveMode) {
-                doc = WebClientHelper.getLiveDocument(id, ElasticSearchDocument.class);
+                doc = LegacySearchServiceClient.getLiveDocument(id, ElasticSearchDocument.class);
             } else {
-                doc = WebClientHelper.getDocument(databaseScope, "Software", id, ElasticSearchDocument.class);
+                doc = LegacySearchServiceClient.getDocument(databaseScope, "Software", id, ElasticSearchDocument.class);
             }
             if (doc == null) {
                 result.add("\n\n\tSoftware: " + software.getIdentifier() + " (Fail to get expected document!)");

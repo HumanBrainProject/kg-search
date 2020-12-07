@@ -1,176 +1,197 @@
 {
-  "properties": {
-    "@timestamp": {
-      "type": "date"
+  "properties" : {
+    "@timestamp" : {
+      "type" : "date"
     },
-    "appCategory": {
-      "properties": {
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+    "appCategory" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         }
       }
     },
-    "description": {
-      "properties": {
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+    "description" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         }
       }
     },
-    "documentation": {
-      "properties": {
-        "url": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
+    "documentation" : {
+      "properties" : {
+        "url" : {
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         },
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         }
       }
     },
-    "editorId": {
-      "properties": {
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+    "editorId" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         }
       }
     },
-    "features": {
-      "properties": {
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+    "features" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         }
       }
     },
-    "homepage": {
-      "properties": {
-        "url": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
+    "first_release" : {
+      "properties" : {
+        "value" : {
+          "type" : "date"
+        }
+      }
+    },
+    "homepage" : {
+      "properties" : {
+        "url" : {
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         },
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         }
       }
     },
-    "identifier": {
-      "properties": {
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+    "identifier" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         }
       }
     },
-    "license": {
-      "properties": {
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
-            }
-          }
+    "last_release" : {
+      "properties" : {
+        "value" : {
+          "type" : "date"
         }
       }
     },
-    "operatingSystem": {
-      "properties": {
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+    "license" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         }
       }
     },
-    "sourceCode": {
-      "properties": {
-        "url": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
+    "operatingSystem" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "sourceCode" : {
+      "properties" : {
+        "url" : {
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
         },
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         }
       }
     },
-    "title": {
-      "properties": {
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+    "title" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         }
       }
     },
-    "version": {
-      "properties": {
-        "value": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
+    "type" : {
+      "properties" : {
+        "value" : {
+          "type" : "keyword"
+        }
+      }
+    },
+    "version" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
             }
-          }
+          },
+          "type" : "text"
         }
       }
     }

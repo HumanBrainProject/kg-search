@@ -1,19 +1,12 @@
 package eu.ebrains.kg.search.api;
 
 import eu.ebrains.kg.search.controller.Constants;
-import eu.ebrains.kg.search.controller.elasticsearch.ElasticSearchController;
 import eu.ebrains.kg.search.controller.indexing.IndexingController;
-import eu.ebrains.kg.search.controller.mapping.MappingController;
-import eu.ebrains.kg.search.controller.translators.TranslationController;
 import eu.ebrains.kg.search.model.DatabaseScope;
-import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-
-import java.util.List;
-import java.util.Map;
 
 @RequestMapping("/indexing")
 @RestController

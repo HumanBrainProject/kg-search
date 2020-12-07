@@ -1,17 +1,16 @@
 package eu.ebrains.kg.search.controller.labels;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.RibbonInfo;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.Contributor;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.Software;
 import eu.ebrains.kg.search.utils.MetaModelUtils;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class LabelsController {
@@ -40,6 +39,9 @@ public class LabelsController {
         MetaInfo metaInfo = clazz.getAnnotation(MetaInfo.class);
         if (metaInfo != null) {
             result.put("http://schema.org/identifier", metaInfo.identifier());
+            if(metaInfo.defaultSelection()) {
+                result.put(SEARCH_UI_NAMESPACE + "defaultSelection", true);
+            }
         }
         RibbonInfo ribbonInfo = clazz.getAnnotation(RibbonInfo.class);
         if (ribbonInfo != null) {
@@ -72,47 +74,71 @@ public class LabelsController {
                 if (!info.hint().equals(defaultFieldInfo.hint())) {
                     propertyDefinition.put(SEARCH_UI_NAMESPACE + "hint", info.hint());
                 }
-                if (!info.optional() == defaultFieldInfo.optional()) {
-                    propertyDefinition.put(SEARCH_UI_NAMESPACE + "optional", info.optional());
-                }
-                if (!info.sort() == defaultFieldInfo.sort()) {
+                if (info.sort() != defaultFieldInfo.sort()) {
                     propertyDefinition.put(SEARCH_UI_NAMESPACE + "sort", info.sort());
                 }
-                if (!info.visible() == defaultFieldInfo.visible()) {
+                if (info.visible() != defaultFieldInfo.visible()) {
                     propertyDefinition.put(SEARCH_UI_NAMESPACE + "visible", info.visible());
                 }
-                if (!info.labelHidden() == defaultFieldInfo.labelHidden()) {
-                    propertyDefinition.put(SEARCH_UI_NAMESPACE + "labelHidden", info.labelHidden());
+                if (info.labelHidden() != defaultFieldInfo.labelHidden()) {
+                    propertyDefinition.put(SEARCH_UI_NAMESPACE + "label_hidden", info.labelHidden()); // TODO: change to camelCase (labelHidden)
                 }
-                if (!info.markdown() == defaultFieldInfo.markdown()) {
+                if (info.markdown() != defaultFieldInfo.markdown()) {
                     propertyDefinition.put(SEARCH_UI_NAMESPACE + "markdown", info.markdown());
                 }
-                if (!info.overview() == defaultFieldInfo.overview()) {
+                if (info.overview() != defaultFieldInfo.overview()) {
                     propertyDefinition.put(SEARCH_UI_NAMESPACE + "overview", info.overview());
                 }
-                if (!info.ignoreForSearch() == defaultFieldInfo.ignoreForSearch()) {
+                if (info.overviewMaxDisplay() != defaultFieldInfo.overviewMaxDisplay()) {
+                    propertyDefinition.put(SEARCH_UI_NAMESPACE + "overviewMaxDisplay", info.overviewMaxDisplay());
+                }
+                if (info.ignoreForSearch() != defaultFieldInfo.ignoreForSearch()) {
                     propertyDefinition.put(SEARCH_UI_NAMESPACE + "ignoreForSearch", info.ignoreForSearch());
                 }
                 if (info.type() != defaultFieldInfo.type()) {
                     propertyDefinition.put(SEARCH_UI_NAMESPACE + "type", info.type().name().toLowerCase());
                 }
+                if (!info.separator().equals(defaultFieldInfo.separator())) {
+                    propertyDefinition.put(SEARCH_UI_NAMESPACE + "separator", info.separator());
+                }
                 if (info.layout() != defaultFieldInfo.layout()) {
                     propertyDefinition.put(SEARCH_UI_NAMESPACE + "layout", info.layout().name().toLowerCase());
                 }
+                if (info.facetOrder() != defaultFieldInfo.facetOrder()) {
+                    propertyDefinition.put(SEARCH_UI_NAMESPACE + "facet_order", info.facetOrder().name().toLowerCase()); // TODO: change to camelCase (facetOrder)
+                }
                 if (!info.linkIcon().equals(defaultFieldInfo.linkIcon())) {
-                    propertyDefinition.put(SEARCH_UI_NAMESPACE + "linkIcon", info.linkIcon());
+                    propertyDefinition.put(SEARCH_UI_NAMESPACE + "link_icon", info.linkIcon()); // TODO: change to camelCase (linkIcon)
                 }
                 if (!info.tagIcon().equals(defaultFieldInfo.tagIcon())) {
-                    propertyDefinition.put(SEARCH_UI_NAMESPACE + "tagIcon", info.tagIcon());
+                    propertyDefinition.put(SEARCH_UI_NAMESPACE + "tag_icon", info.tagIcon()); // TODO: change to camelCase (tagIcon)
                 }
                 if (info.boost() != defaultFieldInfo.boost()) {
                     propertyDefinition.put(SEARCH_UI_NAMESPACE + "boost", info.boost());
+                }
+                if (info.order() != defaultFieldInfo.order()) {
+                    propertyDefinition.put(SEARCH_UI_NAMESPACE + "order", info.order());
                 }
                 if (info.facet() != defaultFieldInfo.facet()) {
                     propertyDefinition.put(SEARCH_UI_NAMESPACE + "facet", info.facet().name().toLowerCase());
                 }
                 if (info.aggregate() != defaultFieldInfo.aggregate()) {
                     propertyDefinition.put(SEARCH_UI_NAMESPACE + "aggregate", info.aggregate().name().toLowerCase());
+                }
+                if (info.isButton() != defaultFieldInfo.isButton()) {
+                    propertyDefinition.put(SEARCH_UI_NAMESPACE + "isButton", info.isButton());
+                }
+                if (info.isHierarchicalFiles() != defaultFieldInfo.isHierarchicalFiles()) {
+                    propertyDefinition.put(SEARCH_UI_NAMESPACE + "isHierarchicalFiles", info.isHierarchicalFiles());
+                }
+                if (info.termsOfUse() != defaultFieldInfo.termsOfUse()) {
+                    propertyDefinition.put(SEARCH_UI_NAMESPACE + "termsOfUse", info.termsOfUse());
+                }
+                if (info.isFilterableFacet() != defaultFieldInfo.isFilterableFacet()) {
+                    propertyDefinition.put(SEARCH_UI_NAMESPACE + "isFilterableFacet", info.isFilterableFacet());
+                }
+                if (info.isTable() != defaultFieldInfo.isTable()) {
+                    propertyDefinition.put(SEARCH_UI_NAMESPACE + "isTable", info.isTable());
                 }
             }
         });
