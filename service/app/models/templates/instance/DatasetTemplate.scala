@@ -84,7 +84,8 @@ trait DatasetTemplate extends Template with FileProxy {
             }
           case _ => None
         }
-      ),
+      )
+    ),
       "zip" -> Optional(
         Merge(
           WriteObject(
