@@ -28,7 +28,7 @@ public @interface FieldInfo {
     String linkIcon() default "";
     String tagIcon() default "";
     String separator() default "";
-    float boost() default 1.0f;
+    double boost() default 1.0;
     Facet facet() default Facet.UNDEFINED;
     FacetOrder facetOrder() default  FacetOrder.UNDEFINED;
     Aggregate aggregate() default Aggregate.UNDEFINED;

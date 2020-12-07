@@ -8,7 +8,6 @@
         "https://schema.hbp.eu/searchUi/visible": false
       },
       "title": {
-        "https://schema.hbp.eu/searchUi/optional": false,
         "https://schema.hbp.eu/searchUi/sort": true,
         "https://schema.hbp.eu/graphQuery/label": "Name",
         "https://schema.hbp.eu/searchUi/boost": 20
@@ -176,7 +175,6 @@
         "https://schema.hbp.eu/searchUi/visible": false
       },
       "title": {
-        "https://schema.hbp.eu/searchUi/optional": false,
         "https://schema.hbp.eu/searchUi/sort": true,
         "https://schema.hbp.eu/graphQuery/label": "Name",
         "https://schema.hbp.eu/searchUi/layout": "header",
@@ -375,7 +373,6 @@
         "https://schema.hbp.eu/searchUi/layout": "header"
       },
       "title": {
-        "https://schema.hbp.eu/searchUi/optional": false,
         "https://schema.hbp.eu/searchUi/sort": true,
         "https://schema.hbp.eu/graphQuery/label": "Name",
         "https://schema.hbp.eu/searchUi/boost": 20
@@ -485,14 +482,13 @@
     "http://schema.org/name": "Model"
   },
   "Contributor": {
-    "https://schema.hbp.eu/searchUi/order": 6,
+    "https://schema.hbp.eu/searchUi/order": 7,
     "http://schema.org/identifier": "uniminds/core/person/v1.0.0/search",
     "fields": {
       "identifier": {
         "https://schema.hbp.eu/searchUi/visible": false
       },
       "title": {
-        "https://schema.hbp.eu/searchUi/optional": false,
         "https://schema.hbp.eu/searchUi/sort": true,
         "https://schema.hbp.eu/graphQuery/label": "Name",
         "https://schema.hbp.eu/searchUi/boost": 20

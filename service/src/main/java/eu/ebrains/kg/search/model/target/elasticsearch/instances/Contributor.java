@@ -28,7 +28,7 @@ public class Contributor implements TargetInstance {
     @FieldInfo(layout = FieldInfo.Layout.HEADER)
     private Value<String> editorId;
 
-    @FieldInfo(optional = false, sort = true, label = "Name", boost = 20f)
+    @FieldInfo(sort = true, label = "Name", boost = 20)
     private Value<String> title;
 
     @FieldInfo(label = "Custodian of", layout = FieldInfo.Layout.GROUP, overview = true)

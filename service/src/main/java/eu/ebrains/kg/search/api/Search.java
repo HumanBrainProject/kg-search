@@ -4,6 +4,7 @@ package eu.ebrains.kg.search.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -19,6 +20,11 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,11 +48,10 @@ public class Search {
     }
 
     @GetMapping("/labels")
-    public Map<String, Object> getLabels() {
+    public Map<String, Object> getLabels() throws URISyntaxException, IOException {
         Map<String, Object> labels = new HashMap<>();
         labels.put("_source", labelsController.generateLabels());
         return labels;
-
     }
 
     @GetMapping("/groups/{group}/types/{type}/documents/{id}")

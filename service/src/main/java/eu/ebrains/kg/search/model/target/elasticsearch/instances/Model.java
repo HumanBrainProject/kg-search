@@ -71,7 +71,7 @@ public class Model implements TargetInstance {
     @FieldInfo(label = "Model scope", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
     private List<Value<String>> modelScope;
 
-    @FieldInfo(label = "Name", optional = false, sort = true, boost = 20)
+    @FieldInfo(label = "Name", sort = true, boost = 20)
     private Value<String> title;
 
     @FieldInfo(label = "Contributors", layout = FieldInfo.Layout.HEADER, separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10)

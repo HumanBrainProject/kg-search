@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 class LabelsTest {
@@ -22,7 +23,7 @@ class LabelsTest {
         try {
             LabelsController labels = new LabelsController(new MetaModelUtils());
             Map<String, Object> labelsResult = labels.generateLabels();
-            Path path = Paths.get(LabelsController.class.getClassLoader().getResource("labels_result.json").toURI());
+            Path path = Paths.get(Objects.requireNonNull(LabelsController.class.getClassLoader().getResource("labels_result.json")).toURI());
             String json = Files.lines(path).collect(Collectors.joining("\n"));
             Map expected = mapper.readValue(json, Map.class);
             Assertions.assertEquals(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(expected), mapper.writerWithDefaultPrettyPrinter().writeValueAsString(labelsResult));

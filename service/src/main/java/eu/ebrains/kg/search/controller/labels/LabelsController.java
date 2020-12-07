@@ -74,9 +74,6 @@ public class LabelsController {
                 if (!info.hint().equals(defaultFieldInfo.hint())) {
                     propertyDefinition.put(SEARCH_UI_NAMESPACE + "hint", info.hint());
                 }
-                if (!info.optional() == defaultFieldInfo.optional()) {
-                    propertyDefinition.put(SEARCH_UI_NAMESPACE + "optional", info.optional());
-                }
                 if (info.sort() != defaultFieldInfo.sort()) {
                     propertyDefinition.put(SEARCH_UI_NAMESPACE + "sort", info.sort());
                 }

@@ -23,7 +23,7 @@ public class Project implements TargetInstance {
     @FieldInfo(layout=FieldInfo.Layout.HEADER)
     private Value<String> editorId;
 
-    @FieldInfo(sort = true, label = "Name", boost = 20f)
+    @FieldInfo(sort = true, label = "Name", boost = 20)
     private Value<String> title;
 
     @FieldInfo(label = "Description", markdown =  true, boost =  7.5f, labelHidden = true)

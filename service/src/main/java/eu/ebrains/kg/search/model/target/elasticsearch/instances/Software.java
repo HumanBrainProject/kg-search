@@ -28,7 +28,7 @@ public class Software implements TargetInstance {
     @FieldInfo(visible = false, ignoreForSearch = true)
     private Value<String> identifier;
 
-    @FieldInfo(label = "Name", boost = 20, sort = true, optional = false)
+    @FieldInfo(label = "Name", boost = 20, sort = true)
     private Value<String> title;
 
     @FieldInfo(labelHidden = true, markdown = true, boost = 2)
