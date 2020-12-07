@@ -64,6 +64,19 @@ trait DatasetMetaESTemplate extends Template {
         )
       )
     ),
+    "useHDG" ->
+      ObjectReader(
+        "fields",
+        ObjectReader(
+          "search:useHDG",
+          Nested(
+            "properties",
+            WriteObject(
+              List(ESProperty("value"))
+            )
+          )
+        )
+      ),
     "zip" ->
       ObjectReader(
         "fields",

@@ -81,6 +81,29 @@ trait DatasetMetaTemplate extends Template {
             )
           ),
           Nested(
+            "useHDG",
+            ObjectReader(
+              "search:useHDG",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:markdown",
+                    "https://schema.hbp.eu/searchUi/markdown"
+                  ),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:isButton",
+                    "https://schema.hbp.eu/searchUi/isButton"
+                  ),
+                  PrimitiveToObjectWithCustomField[Boolean](
+                    "searchUi:termsOfUse",
+                    "https://schema.hbp.eu/searchUi/termsOfUse"
+                  ),
+                  PrimitiveToObjectWithCustomField[String]("label", "https://schema.hbp.eu/graphQuery/label")
+                )
+              )
+            )
+          ),
+          Nested(
             "zip",
             Merge(
               ObjectReader(

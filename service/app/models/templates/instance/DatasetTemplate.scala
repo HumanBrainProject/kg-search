@@ -66,334 +66,353 @@ trait DatasetTemplate extends Template with FileProxy {
         case _ => None
       }
     ),
-    "zip" -> Optional(
+    "useHDG" -> Optional(
       Merge(
-        WriteObject(
-          List(
-            Nested("embargo", FirstElement(PrimitiveArrayToListOfValueObject[String]("embargo"))),
-            Nested("containerUrlAsZIP", PrimitiveToObjectWithValueField[Boolean]("containerUrlAsZIP")),
-            Nested("files", ObjectArrayToListOfObject(
-              "files",
-              WriteObject(
-                List(
-                  PrimitiveToObjectWithUrlField("absolute_path")
-                )
-              )
-            )
-            )
-          )
-        ),
-        PrimitiveToObjectWithUrlField("container_url", {
-          case ObjectWithUrlField(Some(url)) =>
-            ObjectWithUrlField(Some(s"https://kg.ebrains.eu/proxy/export?container=$url"))
-          case _ => ObjectWithUrlField(None)
-        }),
+        PrimitiveToObjectWithValueField[String]("editorId"),
+        PrimitiveToObjectWithValueField[Boolean]("useHDG"),
         {
           case (
-            Some(visibilityCriteria),
-            Some(ObjectWithUrlField(Some(res: String)))
+            Some(ObjectWithValueField(Some(editorId: String))),
+            Some(ObjectWithValueField(Some(useHDG: Boolean)))
             ) =>
-            val embargo = (visibilityCriteria.toJson \ "embargo" \ "value").asOpt[String]
-            val isEmbargoed = embargo match {
-              case Some(em) => em == "Under review" || em == "Embargoed"
-              case _ => false
+            val id = editorId.split("/").last
+            if (useHDG) {
+              Some(ObjectWithValueField(Some(s"This data requires you to explicitly [request access](https://hdg.kg.ebrains.eu/request_access?kg_id=$id) with your EBRAINS account. If you don't have such an account yet, please [register](https://ebrains.eu/register/).")))
             }
-            val asZip = (visibilityCriteria.toJson \ "containerUrlAsZIP" \ "value").asOpt[Boolean].getOrElse(false)
-            val hasFiles = (visibilityCriteria.toJson \ "files").asOpt[List[JsObject]].getOrElse(List()).nonEmpty
-            if (!isEmbargoed && (!res.isBlank && (asZip || !hasFiles))) {
-              Some(
-                ObjectMap(
-                  List(
-                    ObjectWithUrlField(Some(res)),
-                    ObjectWithValueField[String](Some("Download all related data as ZIP"))
-                  )
-                )
-              )
-            } else {
+            else {
               None
             }
           case _ => None
         }
-      )
-    ),
-    "dataDescriptor" -> Optional(
-      WriteObject(
-        List(
-          PrimitiveToObjectWithUrlField("dataDescriptorURL"),
-          PrimitiveToObjectWithValueField[String]("dataDescriptorURL")
+      ),
+      "zip" -> Optional(
+        Merge(
+          WriteObject(
+            List(
+              Nested("embargo", FirstElement(PrimitiveArrayToListOfValueObject[String]("embargo"))),
+              Nested("containerUrlAsZIP", PrimitiveToObjectWithValueField[Boolean]("containerUrlAsZIP")),
+              Nested("files", ObjectArrayToListOfObject(
+                "files",
+                WriteObject(
+                  List(
+                    PrimitiveToObjectWithUrlField("absolute_path")
+                  )
+                )
+              )
+              )
+            )
+          ),
+          PrimitiveToObjectWithUrlField("container_url", {
+            case ObjectWithUrlField(Some(url)) =>
+              ObjectWithUrlField(Some(s"https://kg.ebrains.eu/proxy/export?container=$url"))
+            case _ => ObjectWithUrlField(None)
+          }),
+          {
+            case (
+              Some(visibilityCriteria),
+              Some(ObjectWithUrlField(Some(res: String)))
+              ) =>
+              val embargo = (visibilityCriteria.toJson \ "embargo" \ "value").asOpt[String]
+              val isEmbargoed = embargo match {
+                case Some(em) => em == "Under review" || em == "Embargoed"
+                case _ => false
+              }
+              val asZip = (visibilityCriteria.toJson \ "containerUrlAsZIP" \ "value").asOpt[Boolean].getOrElse(false)
+              val hasFiles = (visibilityCriteria.toJson \ "files").asOpt[List[JsObject]].getOrElse(List()).nonEmpty
+              if (!isEmbargoed && (!res.isBlank && (asZip || !hasFiles))) {
+                Some(
+                  ObjectMap(
+                    List(
+                      ObjectWithUrlField(Some(res)),
+                      ObjectWithValueField[String](Some("Download all related data as ZIP"))
+                    )
+                  )
+                )
+              } else {
+                None
+              }
+            case _ => None
+          }
         )
-      )
-    ),
-    "doi" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("doi")),
-    "license_info" -> FirstElement(
-      ObjectArrayToListOfObject(
-        "license",
+      ),
+      "dataDescriptor" -> Optional(
         WriteObject(
           List(
-            PrimitiveToObjectWithUrlField("url"),
-            PrimitiveToObjectWithValueField[String]("name")
+            PrimitiveToObjectWithUrlField("dataDescriptorURL"),
+            PrimitiveToObjectWithValueField[String]("dataDescriptorURL")
           )
         )
-      )
-    ),
-    "component" -> ObjectArrayToListOfObject(
-      "component",
-      WriteObject(
-        List(
-          if(liveMode){
-            PrimitiveToObjectWithReferenceField(
-              "relativeUrl",
-              ref => ref.map(s => s"$s")
+      ),
+      "doi" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("doi")),
+      "license_info" -> FirstElement(
+        ObjectArrayToListOfObject(
+          "license",
+          WriteObject(
+            List(
+              PrimitiveToObjectWithUrlField("url"),
+              PrimitiveToObjectWithValueField[String]("name")
             )
-          } else{
-            PrimitiveToObjectWithReferenceField(
-              "identifier",
-              ref => ref.map(s => s"Project/$s")
-            )
-          },
-          PrimitiveToObjectWithValueField[String]("name")
+          )
         )
-      )
-    ),
-    "owners" ->
-      ObjectArrayToListOfObject(
-        "owners",
+      ),
+      "component" -> ObjectArrayToListOfObject(
+        "component",
         WriteObject(
           List(
-            if(liveMode){
+            if (liveMode) {
               PrimitiveToObjectWithReferenceField(
                 "relativeUrl",
                 ref => ref.map(s => s"$s")
               )
-            } else{
+            } else {
               PrimitiveToObjectWithReferenceField(
                 "identifier",
-                ref => ref.map(s => s"Contributor/$s")
+                ref => ref.map(s => s"Project/$s")
               )
             },
             PrimitiveToObjectWithValueField[String]("name")
           )
         )
       ),
-    "description" -> PrimitiveToObjectWithValueField[String]("description"),
-    "speciesFilter" -> PrimitiveArrayToListOfValueObject[String]("speciesFilter"),
-    "embargoForFilter" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("embargoForFilter")),
-    "external_datalink" -> Merge(
-      PrimitiveArrayToListOfValueObject[String]("external_datalink"),
-      PrimitiveArrayToListOfValueObject[String]("external_datalink"), // WORKAROUND
-      {
-        case (
-          Some(ListOfObjectWithValueField(links)),
-          _
-          ) =>
-          Some(
-            ListOfObject(
-              links.foldLeft(List[ObjectMap]()) {
-                case (acc, currentValue) =>
-                  (currentValue.toJson \ "value").asOpt[String] match {
-                    case Some(v) =>
-                      acc :+ ObjectMap(
-                        List(
-                          ObjectWithUrlField(Some(v)),
-                          ObjectWithValueField[String](Some(v))
-                        )
-                      )
-                    case _ => acc
-                  }
-              }
-            )
-          )
-        case _ => None
-      }
-    ),
-    "publications" -> ObjectArrayToListOfObject(
-      "publications",
-      Merge(
-        PrimitiveToObjectWithValueField[String]("citation"),
-        PrimitiveToObjectWithValueField[String](
-          "doi", {
-            case Some(ObjectWithValueField(Some(doiStr))) =>
-              val url = URLEncoder.encode(doiStr, "UTF-8")
-              Some(ObjectWithValueField(Some(s"[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url")))
-            case _ => None
-          }
-        ),
-        {
-          case (
-            Some(ObjectWithValueField(Some(citationStr: String))),
-            Some(ObjectWithValueField(Some(doiStr: String)))
-            ) =>
-            Some(ObjectWithValueField[String](Some(citationStr + "\n" + doiStr)))
-          case (Some(ObjectWithValueField(Some(citationStr: String))), _) => Some(ObjectWithValueField[String](Some(citationStr.trim().stripSuffix(","))))
-          case (_, Some(ObjectWithValueField(Some(doiStr: String)))) => Some(ObjectWithValueField[String](Some(doiStr)))
-          case _ => None
-        }
-      )
-    ),
-    "atlas" -> PrimitiveArrayToListOfValueObject[String]("parcellationAtlas"),
-    "region" -> ObjectArrayToListOfObject(
-      "parcellationRegion",
-      WriteObject(
-        List(
-          PrimitiveToObjectWithUrlField("url"),
-          OrElse(PrimitiveToObjectWithValueField[String]("alias"), PrimitiveToObjectWithValueField[String]("name"))
-        )
-      )
-    ),
-    "preparation" -> PrimitiveArrayToListOfValueObject[String]("preparation"),
-    "modalityForFilter" -> PrimitiveArrayToListOfValueObject[String]("modalityForFilter"),
-    "methods" -> PrimitiveArrayToListOfValueObject[String]("methods"),
-    "protocol" -> PrimitiveArrayToListOfValueObject[String]("protocols"),
-    "viewer" ->
-      OrElse(
+      "owners" ->
         ObjectArrayToListOfObject(
-          "brainviewer",
+          "owners",
           WriteObject(
             List(
-              PrimitiveToObjectWithUrlField("url"),
-              PrimitiveToObjectWithValueField[String](
-                "name", {
-                  case Some(ObjectWithValueField(Some(str))) =>
-                    Some(ObjectWithValueField(Some("Show " + str + " in brain atlas viewer")))
-                  case _ => Some(ObjectWithValueField(Some("Show in brain atlas viewer")))
+              if (liveMode) {
+                PrimitiveToObjectWithReferenceField(
+                  "relativeUrl",
+                  ref => ref.map(s => s"$s")
+                )
+              } else {
+                PrimitiveToObjectWithReferenceField(
+                  "identifier",
+                  ref => ref.map(s => s"Contributor/$s")
+                )
+              },
+              PrimitiveToObjectWithValueField[String]("name")
+            )
+          )
+        ),
+      "description" -> PrimitiveToObjectWithValueField[String]("description"),
+      "speciesFilter" -> PrimitiveArrayToListOfValueObject[String]("speciesFilter"),
+      "embargoForFilter" -> FirstElement(PrimitiveArrayToListOfValueObject[String]("embargoForFilter")),
+      "external_datalink" -> Merge(
+        PrimitiveArrayToListOfValueObject[String]("external_datalink"),
+        PrimitiveArrayToListOfValueObject[String]("external_datalink"), // WORKAROUND
+        {
+          case (
+            Some(ListOfObjectWithValueField(links)),
+            _
+            ) =>
+            Some(
+              ListOfObject(
+                links.foldLeft(List[ObjectMap]()) {
+                  case (acc, currentValue) =>
+                    (currentValue.toJson \ "value").asOpt[String] match {
+                      case Some(v) =>
+                        acc :+ ObjectMap(
+                          List(
+                            ObjectWithUrlField(Some(v)),
+                            ObjectWithValueField[String](Some(v))
+                          )
+                        )
+                      case _ => acc
+                    }
                 }
               )
             )
-          )
-        ),
+          case _ => None
+        }
+      ),
+      "publications" -> ObjectArrayToListOfObject(
+        "publications",
         Merge(
+          PrimitiveToObjectWithValueField[String]("citation"),
           PrimitiveToObjectWithValueField[String](
-            "title", {
-              case Some(ObjectWithValueField(Some(str))) => Some(ObjectWithValueField(Some(str)))
+            "doi", {
+              case Some(ObjectWithValueField(Some(doiStr))) =>
+                val url = URLEncoder.encode(doiStr, "UTF-8")
+                Some(ObjectWithValueField(Some(s"[DOI: $doiStr]\n[DOI: $doiStr]: https://doi.org/$url")))
               case _ => None
             }
           ),
+          {
+            case (
+              Some(ObjectWithValueField(Some(citationStr: String))),
+              Some(ObjectWithValueField(Some(doiStr: String)))
+              ) =>
+              Some(ObjectWithValueField[String](Some(citationStr + "\n" + doiStr)))
+            case (Some(ObjectWithValueField(Some(citationStr: String))), _) => Some(ObjectWithValueField[String](Some(citationStr.trim().stripSuffix(","))))
+            case (_, Some(ObjectWithValueField(Some(doiStr: String)))) => Some(ObjectWithValueField[String](Some(doiStr)))
+            case _ => None
+          }
+        )
+      ),
+      "atlas" -> PrimitiveArrayToListOfValueObject[String]("parcellationAtlas"),
+      "region" -> ObjectArrayToListOfObject(
+        "parcellationRegion",
+        WriteObject(
+          List(
+            PrimitiveToObjectWithUrlField("url"),
+            OrElse(PrimitiveToObjectWithValueField[String]("alias"), PrimitiveToObjectWithValueField[String]("name"))
+          )
+        )
+      ),
+      "preparation" -> PrimitiveArrayToListOfValueObject[String]("preparation"),
+      "modalityForFilter" -> PrimitiveArrayToListOfValueObject[String]("modalityForFilter"),
+      "methods" -> PrimitiveArrayToListOfValueObject[String]("methods"),
+      "protocol" -> PrimitiveArrayToListOfValueObject[String]("protocols"),
+      "viewer" ->
+        OrElse(
           ObjectArrayToListOfObject(
-            "neuroglancer",
+            "brainviewer",
             WriteObject(
               List(
                 PrimitiveToObjectWithUrlField("url"),
                 PrimitiveToObjectWithValueField[String](
                   "name", {
-                    case Some(ObjectWithValueField(Some(str))) => Some(ObjectWithValueField(Some(str)))
-                    case _ => None
+                    case Some(ObjectWithValueField(Some(str))) =>
+                      Some(ObjectWithValueField(Some("Show " + str + " in brain atlas viewer")))
+                    case _ => Some(ObjectWithValueField(Some("Show in brain atlas viewer")))
                   }
                 )
               )
             )
           ),
-          {
-            case (
-              Some(ObjectWithValueField(titleStr)),
-              Some(ListOfObject(obj: List[Object]))
-              ) =>
-              Some(
-                ListOfObject(
-                  obj.map(i => {
-                    val url: Option[String] = (i.toJson \ "url").asOpt[String] match {
-                      case Some(u) => Some(s"https://neuroglancer.humanbrainproject.org/?$u")
+          Merge(
+            PrimitiveToObjectWithValueField[String](
+              "title", {
+                case Some(ObjectWithValueField(Some(str))) => Some(ObjectWithValueField(Some(str)))
+                case _ => None
+              }
+            ),
+            ObjectArrayToListOfObject(
+              "neuroglancer",
+              WriteObject(
+                List(
+                  PrimitiveToObjectWithUrlField("url"),
+                  PrimitiveToObjectWithValueField[String](
+                    "name", {
+                      case Some(ObjectWithValueField(Some(str))) => Some(ObjectWithValueField(Some(str)))
                       case _ => None
                     }
-                    if ((i.toJson \ "value").isDefined) {
-                      ObjectMap(
-                        List(
-                          ObjectWithUrlField(url),
-                          ObjectWithValueField[String](Some("Show " + (i.toJson \ "value").as[String] + " in brain atlas viewer"))
-                        )
-                      )
-                    } else {
-                      titleStr match {
-                        case Some(t) => ObjectMap(
-                          List(
-                            ObjectWithUrlField(url),
-                            ObjectWithValueField[String](Some("Show " + t + " in brain atlas viewer"))
-                          )
-                        )
-                        case _ => ObjectMap(
-                          List(
-                            ObjectWithUrlField(url),
-                            ObjectWithValueField[String](Some("Show in brain atlas viewer"))
-                          )
-                        )
-                      }
-                    }
-                  }
-                  )
-                ))
-            case _ => None
-          }
-        )
-      ),
-    "subjects" ->
-      ObjectArrayToListOfObject(
-        "subjects",
-        Nested(
-          "children",
-          WriteObject(
-            List(
-              Nested(
-                "subject_name",
-                WriteObject(
-                  List(
-                    if(liveMode){
-                      PrimitiveToObjectWithReferenceField(
-                        "relativeUrl",
-                        ref => ref.map(s => s"$s")
-                      )
-                    } else{
-                      PrimitiveToObjectWithReferenceField(
-                        "identifier",
-                        ref => ref.map(s => s"Subject/$s")
-                      )
-                    },
-                    PrimitiveToObjectWithValueField[String]("name"),
-                  )
-                )
-              ),
-              Nested("species", PrimitiveArrayToListOfValueObject[String]("species")),
-              Nested("sex", PrimitiveArrayToListOfValueObject[String]("sex")),
-              Nested("age", PrimitiveToObjectWithValueField[String]("age")),
-              Nested("agecategory", PrimitiveArrayToListOfValueObject[String]("agecategory")),
-              Nested("weight", PrimitiveToObjectWithValueField[String]("weight")),
-              Nested(
-                "strain",
-                Optional(
-                  OrElse(
-                    PrimitiveToObjectWithValueField[String]("strain"),
-                    PrimitiveToObjectWithValueField[String]("strains")
-                  )
-                )
-              ),
-              Nested("genotype", PrimitiveToObjectWithValueField[String]("genotype")),
-              Nested(
-                "samples",
-                ObjectArrayToListOfObject(
-                  "samples",
-                  WriteObject(
-                    List(
-                      if(liveMode){
-                        PrimitiveToObjectWithReferenceField(
-                          "relativeUrl",
-                          ref => ref.map(s => s"$s")
-                        )
-                      } else{
-                        PrimitiveToObjectWithReferenceField(
-                          "identifier",
-                          ref => ref.map(s => s"Sample/$s")
-                        )
-                      },
-                      PrimitiveToObjectWithValueField[String]("name")
-                    )
                   )
                 )
               )
             ),
+            {
+              case (
+                Some(ObjectWithValueField(titleStr)),
+                Some(ListOfObject(obj: List[Object]))
+                ) =>
+                Some(
+                  ListOfObject(
+                    obj.map(i => {
+                      val url: Option[String] = (i.toJson \ "url").asOpt[String] match {
+                        case Some(u) => Some(s"https://neuroglancer.humanbrainproject.org/?$u")
+                        case _ => None
+                      }
+                      if ((i.toJson \ "value").isDefined) {
+                        ObjectMap(
+                          List(
+                            ObjectWithUrlField(url),
+                            ObjectWithValueField[String](Some("Show " + (i.toJson \ "value").as[String] + " in brain atlas viewer"))
+                          )
+                        )
+                      } else {
+                        titleStr match {
+                          case Some(t) => ObjectMap(
+                            List(
+                              ObjectWithUrlField(url),
+                              ObjectWithValueField[String](Some("Show " + t + " in brain atlas viewer"))
+                            )
+                          )
+                          case _ => ObjectMap(
+                            List(
+                              ObjectWithUrlField(url),
+                              ObjectWithValueField[String](Some("Show in brain atlas viewer"))
+                            )
+                          )
+                        }
+                      }
+                    }
+                    )
+                  ))
+              case _ => None
+            }
           )
-        )
-      ),
-    "first_release" -> PrimitiveToObjectWithValueField[String]("firstReleaseAt"),
-    "last_release" -> PrimitiveToObjectWithValueField[String]("lastReleaseAt"),
-  )
+        ),
+      "subjects" ->
+        ObjectArrayToListOfObject(
+          "subjects",
+          Nested(
+            "children",
+            WriteObject(
+              List(
+                Nested(
+                  "subject_name",
+                  WriteObject(
+                    List(
+                      if (liveMode) {
+                        PrimitiveToObjectWithReferenceField(
+                          "relativeUrl",
+                          ref => ref.map(s => s"$s")
+                        )
+                      } else {
+                        PrimitiveToObjectWithReferenceField(
+                          "identifier",
+                          ref => ref.map(s => s"Subject/$s")
+                        )
+                      },
+                      PrimitiveToObjectWithValueField[String]("name"),
+                    )
+                  )
+                ),
+                Nested("species", PrimitiveArrayToListOfValueObject[String]("species")),
+                Nested("sex", PrimitiveArrayToListOfValueObject[String]("sex")),
+                Nested("age", PrimitiveToObjectWithValueField[String]("age")),
+                Nested("agecategory", PrimitiveArrayToListOfValueObject[String]("agecategory")),
+                Nested("weight", PrimitiveToObjectWithValueField[String]("weight")),
+                Nested(
+                  "strain",
+                  Optional(
+                    OrElse(
+                      PrimitiveToObjectWithValueField[String]("strain"),
+                      PrimitiveToObjectWithValueField[String]("strains")
+                    )
+                  )
+                ),
+                Nested("genotype", PrimitiveToObjectWithValueField[String]("genotype")),
+                Nested(
+                  "samples",
+                  ObjectArrayToListOfObject(
+                    "samples",
+                    WriteObject(
+                      List(
+                        if (liveMode) {
+                          PrimitiveToObjectWithReferenceField(
+                            "relativeUrl",
+                            ref => ref.map(s => s"$s")
+                          )
+                        } else {
+                          PrimitiveToObjectWithReferenceField(
+                            "identifier",
+                            ref => ref.map(s => s"Sample/$s")
+                          )
+                        },
+                        PrimitiveToObjectWithValueField[String]("name")
+                      )
+                    )
+                  )
+                )
+              ),
+            )
+          )
+        ),
+      "first_release" -> PrimitiveToObjectWithValueField[String]("firstReleaseAt"),
+      "last_release" -> PrimitiveToObjectWithValueField[String]("lastReleaseAt"),
+    )
 
   val template: Map[String, TemplateComponent] = dataBaseScope match {
     case INFERRED => HashMap(
