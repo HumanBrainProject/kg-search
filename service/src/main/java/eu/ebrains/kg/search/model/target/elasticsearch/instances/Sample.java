@@ -234,6 +234,7 @@ public class Sample implements TargetInstance {
         @FieldInfo(type = FieldInfo.Type.TEXT)
         private List<Value<String>> component;
 
+        @FieldInfo
         private List<TargetInternalReference> name;
 
         public List<Value<String>> getComponent() {

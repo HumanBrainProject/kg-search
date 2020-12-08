@@ -247,7 +247,9 @@ public class Subject implements TargetInstance {
             this.name = name;
         }
 
+        @FieldInfo
         private List<Value<String>> component;
+        @FieldInfo
         private List<TargetInternalReference> name;
 
         public List<Value<String>> getComponent() {

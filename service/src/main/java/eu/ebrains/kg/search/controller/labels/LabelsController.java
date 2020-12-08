@@ -76,7 +76,6 @@ public class LabelsController {
     private Map<String, Object> handleChildren(Type type) {
         Map<String, Object> properties = new LinkedHashMap<>();
         List<MetaModelUtils.FieldWithGenericTypeInfo> allFields = utils.getAllFields(type);
-        allFields.sort(Comparator.comparing(f -> utils.getPropertyName(f.getField())));
         allFields.forEach(field -> {
             try {
                 handleField(field, properties);
@@ -94,7 +93,7 @@ public class LabelsController {
 
         if (info != null) {
             String propertyName = utils.getPropertyName(f.getField());
-            Map<String, Object> propertyDefinition = new HashMap<>();
+            Map<String, Object> propertyDefinition = new LinkedHashMap<>();
             fields.put(propertyName, propertyDefinition);
             FieldInfo defaultFieldInfo = utils.defaultFieldInfo();
             if (!info.label().equals(defaultFieldInfo.label())) {
