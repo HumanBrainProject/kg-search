@@ -66,7 +66,7 @@ export class InstanceContainer extends React.Component {
   componentDidMount() {
     const { setInitialGroup, location } = this.props;
     this.setTitle();
-    const group = location.query.group || localStorage.getItem("group");
+    const group = location.query.group;
     if (group) {
       setInitialGroup(group);
     }

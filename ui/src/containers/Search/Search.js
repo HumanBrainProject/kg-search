@@ -71,7 +71,7 @@ class SearchBase extends React.Component {
     const searchParam = {...params};
     delete searchParam.group;
     setInitialSearchParams(searchParam);
-    const group = params.group || localStorage.getItem("group");
+    const group = params.group;
     if (group) {
       setInitialGroup(group);
     }

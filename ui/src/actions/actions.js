@@ -67,31 +67,26 @@ export const sessionFailure = error => {
 };
 
 
-export const authenticate = (group=null) => {
+export const authenticate = (group=null, isKeycloak=true) => {
   return () => {
     const stateKey= btoa(JSON.stringify({
       queryString: window.location.search
     }));
     const nonceKey=  generateKey();
     const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}${group?("?group=" + group):""}`;
-    window.location.href = API.endpoints.auth(redirectUri, stateKey, nonceKey);
+    const auth = isKeycloak?API.endpoints.keycloakAuth:API.endpoints.oidcAuth;
+    window.location.href = auth(redirectUri, stateKey, nonceKey);
   };
 };
 
 export const initialize = location => {
   return dispatch => {
-    const accessToken = getHashKey("access_token");
+    const accessToken = getHashKey("id_token");
     const group = getSearchKey("group");
-    const savedGroup = localStorage.getItem("group");
     if (accessToken) {
       dispatch(setToken(accessToken));
-      if(group && group !== savedGroup && (group === "public" || group === "curated")) {
-        localStorage.setItem("group", group);
-      } else if (!group && !savedGroup) {
-        localStorage.setItem("group", "public");
-      }
       const stateValue = getHashKey("state");
-      const state = stateValue?JSON.parse(atob(stateValue)):{};
+      const state = stateValue?JSON.parse(atob(decodeURIComponent(stateValue))):{};
       const queryString = (state && state.queryString)?state.queryString:"";
       history.replace(`${location.pathname}${queryString}`);
       dispatch(setApplicationReady());
@@ -103,11 +98,13 @@ export const initialize = location => {
         history.replace(url);
       }
 
-      const regShareEditorReference = /^\/instances\/(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
-      if((group && (group === "public" || group === "curated")) ||
-         (savedGroup && (savedGroup === "public" || savedGroup === "curated")) ||
-         location.pathname.startsWith("/live/") || regShareEditorReference.test(location.pathname))  {
-        dispatch(authenticate(group || savedGroup));
+      if((group && (group === "public" || group === "curated")) || location.pathname.startsWith("/live/")) {
+        const regLegacyIdReference = /^\/live\/(((.+)\/(.+)\/(.+)\/(.+))\/(.+))\??.*$/;
+        if (regLegacyIdReference.test(location.pathname)) {
+          dispatch(authenticate(group, false));
+        } else {
+          dispatch(authenticate(group, true));
+        }
       } else {
         dispatch(setApplicationReady());
       }

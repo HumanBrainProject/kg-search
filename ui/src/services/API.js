@@ -1,6 +1,9 @@
 import { store } from "../store";
 import axios from "axios";
 
+const keycloakUri = "https://iam-dev.humanbrainproject.eu/auth/realms/hbp/protocol/openid-connect/auth";
+const keycloakClientId = "kg";
+
 const oidcUri = "https://services.humanbrainproject.eu/oidc/authorize";
 const oidcClientId = "nexus-kg-search";
 
@@ -12,8 +15,12 @@ const endpoints = {
   "search": group => `/search/api/groups/${group}/search`,
   "instance": (group, type, id) => `/search/api/groups/${group}/types/${type}/documents/${id}`,
   "preview": (type, id) => `/search/api/types/${type}/documents/${id}/preview`,
-  "auth": (redirectUri, stateKey, nonceKey) => `${oidcUri}?response_type=id_token%20token&client_id=${oidcClientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`
+  "keycloakAuth": (redirectUri, stateKey, nonceKey) => `${keycloakUri}?client_id=${keycloakClientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${stateKey}&nonce=${nonceKey}&response_type=id_token%20token`,
+  "oidcAuth": (redirectUri, stateKey, nonceKey) => `${oidcUri}?response_type=id_token%20token&client_id=${oidcClientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`
 };
+
+//&response_mode=fragment
+//&scope=openid
 
 class API {
   constructor() {

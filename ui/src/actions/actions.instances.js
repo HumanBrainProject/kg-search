@@ -154,7 +154,7 @@ export const loadInstance = (group, type, id, shouldUpdateLocation=false) => {
           const url = `${window.location.protocol}//${window.location.host}${window.location.pathname}?group=curated`;
           const link = `<a href=${url}>${url}</a>`;
           const group = getSearchKey("group");
-          const error = (group && group === "curated") || (localStorage.getItem("group") && localStorage.getItem("group") === "curated")? "The page you requested was not found." :
+          const error = (group && group === "curated")? "The page you requested was not found." :
             `The page you requested was not found. It might not yet be public and authorized users might have access to it in the ${link} or in in-progress view`;
           dispatch(loadInstanceFailure(error));
           break;
