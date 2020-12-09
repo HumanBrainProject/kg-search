@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import eu.ebrains.kg.search.controller.Constants;
+import eu.ebrains.kg.search.controller.authentication.UserInfoRepository;
 import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
 import eu.ebrains.kg.search.controller.labels.LabelsController;
 import eu.ebrains.kg.search.services.ESServiceClient;
@@ -14,7 +16,6 @@ import eu.ebrains.kg.search.utils.ESHelper;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -49,19 +48,32 @@ public class Search {
         this.userInfoRoles = userInfoRoles;
     }
 
-    @GetMapping("/labels")
-    public ResponseEntity<Map<String, Object>> getLabels() throws URISyntaxException, IOException {
-        Map<String, Object> labels = new HashMap<>();
-        labels.put("_source", labelsController.generateLabels());
-        return ResponseEntity.ok(labels);
+    private boolean isInInProgressRole(Principal principal){
+        return userInfoRoles.isInAnyOfRoles((KeycloakAuthenticationToken)principal, "team", "collab-kg-search-in-progress-administrator", "collab-kg-search-in-progress-editor", "collab-kg-search-in-progress-viewer");
     }
 
-    @GetMapping("/groups/{group}/types/{type}/documents/{id}")
-    public ResponseEntity<?> getDocument(@PathVariable("group") String group,
-                                         @PathVariable("type") String type,
-                                         @PathVariable("id") String id,
-                                         @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
-        String index = ESHelper.getIndexFromGroup(type, group);
+
+    @GetMapping("/labels")
+    public Map<String, Object> getLabels() {
+        Map<String, Object> labels = new HashMap<>();
+        labels.put("_source", labelsController.generateLabels());
+        return labels;
+    }
+
+    @GetMapping("/groups")
+    public ResponseEntity<?> getGroups(Principal principal) {
+        if(isInInProgressRole(principal)){
+            return ResponseEntity.ok(Constants.GROUPS);
+        }
+        else{
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+    }
+
+    @GetMapping("/groups/public/types/{type}/documents/{id}")
+    public ResponseEntity<?> getDocumentForPublic(@PathVariable("type") String type,
+                                         @PathVariable("id") String id) {
+        String index = ESHelper.getIndexFromGroup(type, "public");
         try {
             return ResponseEntity.ok(esServiceClient.getDocument(index, id));
         } catch (WebClientResponseException e) {
@@ -69,15 +81,51 @@ public class Search {
         }
     }
 
-    @PostMapping("/groups/{group}/search")
-    public ResponseEntity<?> search(@PathVariable("group") String group,
-                                    @RequestBody String payload) throws JsonProcessingException {
-        JsonNode jsonNode = adaptEsQueryForNestedDocument(payload);
+    @GetMapping("/groups/curated/types/{type}/documents/{id}")
+    public ResponseEntity<?> getDocumentForCurated(@PathVariable("type") String type,
+                                         @PathVariable("id") String id, Principal principal) {
+        if(isInInProgressRole(principal)) {
+            try {
+                String index = ESHelper.getIndexFromGroup(type, "curated");
+                return ResponseEntity.ok(esServiceClient.getDocument(index, id));
+            } catch (WebClientResponseException e) {
+                return ResponseEntity.status(e.getStatusCode()).build();
+            }
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    @PostMapping("/groups/public/search")
+    public ResponseEntity<?> searchPublic(@RequestBody String payload, Principal principal) throws JsonProcessingException {
+        try {
+            return ResponseEntity.ok(getResult(payload, "public"));
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
+    }
+
+    @PostMapping("/groups/curated/search")
+    public ResponseEntity<?> searchCurated(@RequestBody String payload, Principal principal) throws JsonProcessingException {
+        if(isInInProgressRole(principal)) {
+            try {
+                return ResponseEntity.ok(getResult(payload, "curated"));
+            } catch (WebClientResponseException e) {
+                return ResponseEntity.status(e.getStatusCode()).build();
+            }
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    private JsonNode getResult(String payload, String group) throws JsonProcessingException {
         String index = ESHelper.getIndexFromGroup("*", group);
+        JsonNode jsonNode = adaptEsQueryForNestedDocument(payload);
         String result = esServiceClient.searchDocuments(index, jsonNode);
         JsonNode resultJson = objectMapper.readTree(result);
-        JsonNode updatedJson = updateEsResponseWithNestedDocument(resultJson);
-        return ResponseEntity.ok(updatedJson);
+        return updateEsResponseWithNestedDocument(resultJson);
     }
 
     private JsonNode adaptEsQueryForNestedDocument(String payload) throws JsonProcessingException {

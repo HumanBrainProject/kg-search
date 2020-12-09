@@ -20,4 +20,11 @@ public class Constants {
             "Contributor", Contributor.class
     );
 
+    public final static List<Map<String, String>> GROUPS = Arrays.asList(
+            Map.of("name", "curated",
+                    "label", "in progress"),
+            Map.of("name", "public",
+                    "label", "publicly released")
+    );
+
 }
