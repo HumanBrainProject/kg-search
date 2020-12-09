@@ -7,31 +7,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.controller.labels.LabelsController;
 import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
-import org.keycloak.KeycloakPrincipal;
-import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
-import org.keycloak.representations.AccessToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.annotation.CurrentSecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,17 +42,17 @@ public class Search {
     }
 
     @GetMapping("/labels")
-    //@PreAuthorize("hasRole(':owner')")
-    public Map<String, Object> getLabels() throws URISyntaxException, IOException {
+    public Map<String, Object> getLabels() {
         Map<String, Object> labels = new HashMap<>();
         labels.put("_source", labelsController.generateLabels());
         return labels;
     }
 
+    // TODO: Needs authorization checking
     @GetMapping("/groups")
-    public ResponseEntity<?> getGroups(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
+    public ResponseEntity<?> getGroups() {
         try {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(Constants.GROUPS);
         } catch (WebClientResponseException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
         }
@@ -82,10 +69,10 @@ public class Search {
         }
     }
 
+    // TODO: Needs authorization checking
     @GetMapping("/groups/curated/types/{type}/documents/{id}")
     public ResponseEntity<?> getDocumentForCurated(@PathVariable("type") String type,
-                                         @PathVariable("id") String id,
-                                         @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
+                                         @PathVariable("id") String id) {
         String index = ESHelper.getIndexFromGroup(type, "curated");
         try {
             return ResponseEntity.ok(esServiceClient.getDocument(index, id));
@@ -103,6 +90,7 @@ public class Search {
         }
     }
 
+    // TODO: Needs authorization checking
     @PostMapping("/groups/curated/search")
     public ResponseEntity<?> searchCurated(@RequestBody String payload) throws JsonProcessingException {
         try {
