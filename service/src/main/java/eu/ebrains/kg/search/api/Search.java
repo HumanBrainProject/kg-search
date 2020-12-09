@@ -98,7 +98,7 @@ public class Search {
     }
 
     @PostMapping("/groups/public/search")
-    public ResponseEntity<?> searchPublic(@RequestBody String payload, Principal principal) throws JsonProcessingException {
+    public ResponseEntity<?> searchPublic(@RequestBody String payload) throws JsonProcessingException {
         try {
             return ResponseEntity.ok(getResult(payload, "public"));
         } catch (WebClientResponseException e) {
