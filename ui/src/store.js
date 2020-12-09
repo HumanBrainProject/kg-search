@@ -24,7 +24,8 @@ import { createLogger } from "redux-logger";
 import createRootReducer from "./reducers";
 
 
-export const history = createBrowserHistory({ basename: "/search" });
+export const history = createBrowserHistory();
+//export const history = createBrowserHistory({ basename: "/search" });
 
 function configureStoreProd(initialState) {
   const reactRouterMiddleware = routerMiddleware(history);
