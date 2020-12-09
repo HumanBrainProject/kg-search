@@ -13,6 +13,7 @@ import eu.ebrains.kg.search.utils.ESHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -50,12 +51,19 @@ public class Search {
         return labels;
     }
 
-    @GetMapping("/groups/{group}/types/{type}/documents/{id}")
-    public ResponseEntity<?> getDocument(@PathVariable("group") String group,
-                                         @PathVariable("type") String type,
-                                         @PathVariable("id") String id,
-                                         @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
-        String index = ESHelper.getIndexFromGroup(type, group);
+    @GetMapping("/groups")
+    public ResponseEntity<?> getGroups(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
+        try {
+            return ResponseEntity.ok().build();
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
+    }
+
+    @GetMapping("/groups/public/types/{type}/documents/{id}")
+    public ResponseEntity<?> getDocumentForPublic(@PathVariable("type") String type,
+                                         @PathVariable("id") String id) {
+        String index = ESHelper.getIndexFromGroup(type, "public");
         try {
             return ResponseEntity.ok(esServiceClient.getDocument(index, id));
         } catch (WebClientResponseException e) {
@@ -63,15 +71,42 @@ public class Search {
         }
     }
 
-    @PostMapping("/groups/{group}/search")
-    public ResponseEntity<?> search(@PathVariable("group") String group,
-                                    @RequestBody String payload) throws JsonProcessingException {
-        JsonNode jsonNode = adaptEsQueryForNestedDocument(payload);
+    @GetMapping("/groups/curated/types/{type}/documents/{id}")
+    public ResponseEntity<?> getDocumentForCurated(@PathVariable("type") String type,
+                                         @PathVariable("id") String id,
+                                         @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
+        String index = ESHelper.getIndexFromGroup(type, "curated");
+        try {
+            return ResponseEntity.ok(esServiceClient.getDocument(index, id));
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
+    }
+
+    @PostMapping("/groups/public/search")
+    public ResponseEntity<?> searchPublic(@RequestBody String payload) throws JsonProcessingException {
+        try {
+            return ResponseEntity.ok(getResult(payload, "public"));
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
+    }
+
+    @PostMapping("/groups/curated/search")
+    public ResponseEntity<?> searchCurated(@RequestBody String payload) throws JsonProcessingException {
+        try {
+            return ResponseEntity.ok(getResult(payload, "curated"));
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
+    }
+
+    private JsonNode getResult(String payload, String group) throws JsonProcessingException {
         String index = ESHelper.getIndexFromGroup("*", group);
+        JsonNode jsonNode = adaptEsQueryForNestedDocument(payload);
         String result = esServiceClient.searchDocuments(index, jsonNode);
         JsonNode resultJson = objectMapper.readTree(result);
-        JsonNode updatedJson = updateEsResponseWithNestedDocument(resultJson);
-        return ResponseEntity.ok(updatedJson);
+        return updateEsResponseWithNestedDocument(resultJson);
     }
 
     private JsonNode adaptEsQueryForNestedDocument(String payload) throws JsonProcessingException {
