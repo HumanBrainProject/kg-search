@@ -81,7 +81,7 @@ export const authenticate = (group=null, isKeycloak=true) => {
 
 export const initialize = location => {
   return dispatch => {
-    const accessToken = getHashKey("id_token");
+    const accessToken = getHashKey("token");
     const group = getSearchKey("group");
     if (accessToken) {
       dispatch(setToken(accessToken));
