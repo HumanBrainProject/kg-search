@@ -94,7 +94,7 @@ export const loadGroups = () => {
         case 404:
         default:
         {
-          const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
+          const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
           dispatch(loadGroupsFailure(error));
         }
         }

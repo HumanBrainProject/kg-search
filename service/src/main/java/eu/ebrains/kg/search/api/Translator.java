@@ -19,20 +19,6 @@ public class Translator {
         this.translationController = translationController;
     }
 
-    @GetMapping("/{org}/{domain}/{schema}/{version}/{id}/live")
-    public ResponseEntity<TargetInstance> translate(@PathVariable("org") String org,
-                                                    @PathVariable("domain") String domain,
-                                                    @PathVariable("schema") String schema,
-                                                    @PathVariable("version") String version,
-                                                    @PathVariable("id") String id,
-                                                    @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
-        try {
-            return ResponseEntity.ok(translationController.createInstance(DatabaseScope.INFERRED, true, org, domain, schema, version, id, authorization));
-        } catch (HttpClientErrorException e) {
-            return ResponseEntity.status(e.getStatusCode()).build();
-        }
-    }
-
     @GetMapping("/{org}/{domain}/{schema}/{version}/{id}")
     public ResponseEntity<TargetInstance> translate(@RequestParam(value = "databaseScope", required = false) DatabaseScope databaseScope,
                                                     @PathVariable("org") String org,

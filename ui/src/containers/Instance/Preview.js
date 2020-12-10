@@ -52,7 +52,7 @@ export const Preview = connect(
       groupsHasError: !!state.groups.error,
       isGroupsReady: state.groups.isReady,
       isGroupLoading: state.groups.isLoading,
-      shouldLoadGroups: !!state.auth.accessToken,
+      shouldLoadGroups: false,
       instanceIsLoading: state.instances.isLoading,
       instanceHasError: !!state.instances.error,
       currentInstance: state.instances.currentInstance,

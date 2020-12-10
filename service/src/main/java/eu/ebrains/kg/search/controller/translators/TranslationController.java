@@ -192,7 +192,7 @@ public class TranslationController {
             case "uniminds/core/modelinstance/v1.0.0":
                 return this.createModel(databaseScope, liveMode, query, id, authorization);
             case "softwarecatalog/software/softwareproject/v1.0.0":
-                return this.createSoftware(databaseScope, liveMode, type, id, authorization);
+                return this.createSoftware(databaseScope, liveMode, query, id, authorization);
             case "minds/experiment/subject/v1.0.0":
                 return this.createSubject(databaseScope, liveMode, query, id, authorization);
             case "minds/experiment/sample/v1.0.0":

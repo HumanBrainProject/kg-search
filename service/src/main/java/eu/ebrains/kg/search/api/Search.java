@@ -11,16 +11,21 @@ import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.controller.authentication.UserInfoRepository;
 import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
 import eu.ebrains.kg.search.controller.labels.LabelsController;
+import eu.ebrains.kg.search.controller.translators.TranslationController;
+import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.security.Principal;
@@ -41,11 +46,13 @@ public class Search {
     private final ESServiceClient esServiceClient;
     private final LabelsController labelsController;
     private final UserInfoRoles userInfoRoles;
+    private final TranslationController translationController;
 
-    public Search(ESServiceClient esServiceClient, LabelsController labelsController, UserInfoRoles userInfoRoles) throws JsonProcessingException {
+    public Search(ESServiceClient esServiceClient, LabelsController labelsController, UserInfoRoles userInfoRoles, TranslationController translationController) throws JsonProcessingException {
         this.esServiceClient = esServiceClient;
         this.labelsController = labelsController;
         this.userInfoRoles = userInfoRoles;
+        this.translationController = translationController;
     }
 
     private boolean isInInProgressRole(Principal principal){
@@ -67,6 +74,21 @@ public class Search {
         }
         else{
             return ResponseEntity.ok(Collections.emptyList());
+        }
+    }
+
+    @GetMapping("/{org}/{domain}/{schema}/{version}/{id}/live")
+    public ResponseEntity<Map> translate(@PathVariable("org") String org,
+                                                    @PathVariable("domain") String domain,
+                                                    @PathVariable("schema") String schema,
+                                                    @PathVariable("version") String version,
+                                                    @PathVariable("id") String id,
+                                                    @RequestHeader("X-Legacy-Authorization") String authorization) {
+        try {
+            TargetInstance instance = translationController.createInstance(DatabaseScope.INFERRED, true, org, domain, schema, version, id, authorization);
+            return ResponseEntity.ok(Map.of("_source", instance));
+        } catch (HttpClientErrorException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
         }
     }
 

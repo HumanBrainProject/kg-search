@@ -132,7 +132,7 @@ export const loadInstance = (group, type, id, shouldUpdateLocation=false) => {
         switch (status) {
         case 400: // Bad Request
         {
-          const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
+          const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
           dispatch(loadInstanceFailure(error));
           break;
         }
@@ -161,7 +161,7 @@ export const loadInstance = (group, type, id, shouldUpdateLocation=false) => {
         }
         default:
         {
-          const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
+          const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
           dispatch(loadInstanceFailure(error));
         }
         }
@@ -208,7 +208,7 @@ export const loadPreview = (type, id) => {
           case 404:
           default:
           {
-            const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
+            const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
             dispatch(loadInstanceFailure(error));
           }
           }

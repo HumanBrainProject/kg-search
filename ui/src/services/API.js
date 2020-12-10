@@ -14,7 +14,7 @@ const endpoints = {
   //"search": () => "/static/data/search.json",
   "search": group => `/api/groups/${group}/search`,
   "instance": (group, type, id) => `/api/groups/${group}/types/${type}/documents/${id}`,
-  "preview": (type, id) => `/api/types/${type}/documents/${id}/preview`,
+  "preview": (type, id) => `/api/${type}/${id}/live`,
   "keycloakAuth": (redirectUri, stateKey, nonceKey) => `${keycloakUri}?client_id=${keycloakClientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${stateKey}&nonce=${nonceKey}&response_type=token`,
   "oidcAuth": (redirectUri, stateKey, nonceKey) => `${oidcUri}?response_type=id_token%20token&client_id=${oidcClientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`
 };
@@ -28,8 +28,12 @@ class API {
     this._axios.interceptors.request.use(config => {
       const state = store.getState();
       const header = config.headers[config.method];
-      if (state.auth.accessToken) {
-        header.Authorization = "Bearer " + state.auth.accessToken;
+      if (state.auth.accessToken && !config.url.endsWith("/labels")) {
+        if(config.url.endsWith("/live")) {
+          header["X-Legacy-Authorization"] = state.auth.accessToken;
+        } else {
+          header.Authorization = "Bearer " + state.auth.accessToken;
+        }
       }
       return Promise.resolve(config);
     });

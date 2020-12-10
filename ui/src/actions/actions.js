@@ -97,7 +97,6 @@ export const initialize = location => {
         const url = `/instances/${instance}${group?("?group=" + group):""}`;
         history.replace(url);
       }
-
       if((group && (group === "public" || group === "curated")) || location.pathname.startsWith("/live/")) {
         const regLegacyIdReference = /^\/live\/(((.+)\/(.+)\/(.+)\/(.+))\/(.+))\??.*$/;
         if (regLegacyIdReference.test(location.pathname)) {
