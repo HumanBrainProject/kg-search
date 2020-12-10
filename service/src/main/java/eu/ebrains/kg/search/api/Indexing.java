@@ -19,7 +19,8 @@ public class Indexing {
     }
 
     @PostMapping
-    public ResponseEntity<?> fullReplacement(@RequestParam("databaseScope") DatabaseScope databaseScope, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
+    public ResponseEntity<?> fullReplacement(@RequestParam("databaseScope") DatabaseScope databaseScope,
+                                             @RequestHeader("X-Legacy-Authorization") String authorization) {
         try {
             Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> indexingController.fullReplacementByType(databaseScope, type, authorization, clazz));
             return ResponseEntity.ok().build();
@@ -31,7 +32,7 @@ public class Indexing {
     @PostMapping("/{type}")
     public ResponseEntity<?> fullReplacementByType(@RequestParam("databaseScope") DatabaseScope databaseScope,
                                                    @PathVariable("type") String type,
-                                                   @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
+                                                   @RequestHeader("X-Legacy-Authorization") String authorization) {
         Class<?> clazz = Constants.TARGET_MODELS_MAP.get(type);
         if (clazz != null) {
             try {
@@ -46,7 +47,7 @@ public class Indexing {
 
     @PutMapping
     public ResponseEntity<?> incrementalUpdate(@RequestParam("databaseScope") DatabaseScope databaseScope,
-                                               @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
+                                               @RequestHeader("X-Legacy-Authorization") String authorization) {
         try {
             indexingController.incrementalUpdateAll(databaseScope, authorization);
             return ResponseEntity.ok().build();
@@ -58,7 +59,7 @@ public class Indexing {
     @PutMapping("/{type}")
     public ResponseEntity<?> incrementalUpdate(@RequestParam("databaseScope") DatabaseScope databaseScope,
                                                @PathVariable("type") String type,
-                                               @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
+                                               @RequestHeader("X-Legacy-Authorization") String authorization) {
         try {
             indexingController.incrementalUpdateByType(databaseScope, type, authorization);
             return ResponseEntity.ok().build();
