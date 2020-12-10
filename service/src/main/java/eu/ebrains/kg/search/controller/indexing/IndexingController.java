@@ -39,8 +39,8 @@ public class IndexingController {
     }
 
     public void fullReplacementByType(DatabaseScope databaseScope, String type, String authorization, Class<?> clazz) {
-        recreateIndex(databaseScope, type, clazz);
         List<TargetInstance> instances = translationController.createInstances(databaseScope, false, type, authorization);
+        recreateIndex(databaseScope, type, clazz);
         elasticSearchController.indexDocuments(instances, type, databaseScope);
         sitemapController.updateSitemapCache();
     }
