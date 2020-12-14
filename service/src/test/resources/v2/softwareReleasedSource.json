@@ -1,0 +1,48 @@
+{
+  "identifier": "1ccaa580-15ba-49da-9efe-9d4108375027",
+  "editorId": "softwarecatalog/software/softwareproject/v1.0.0/22d1695e-d4a2-4504-9201-78f1866b2b0d",
+  "versions": [
+    {
+      "applicationCategory": [
+        "Application"
+      ],
+      "license": [
+        "GNU General Public License, version 3.0"
+      ],
+      "features": [
+        "Graphical User Interface",
+        "Commandline Interface",
+        "Desktop Environment",
+        "Presentation/Visualization",
+        "Interactive Analysis",
+        "Simulation",
+        "Time Series Data Types",
+        "Graph Data Types"
+      ],
+      "sourceCode": [
+        "https://hub.docker.com/r/thevirtualbrain/tvb-nest",
+        "https://github.com/the-virtual-brain/tvb-multiscale/tree/1.0.1"
+      ],
+      "documentation": [
+        "https://github.com/the-virtual-brain/tvb-multiscale/tree/master/docs"
+      ],
+      "description": "This Python package offers a convenient interface to set-up co-simulation models that simulate TVB large-scale brain network models that interact with NEST spiking neuron models.\nNEST simulates neural activity at the microscopic spatial scale of single neurons or neuron networks. On the other hand, The Virtual brain simulates at the mesoscopic or macroscopic scales of large neural populations or brain regions. Here, both are brought together to enable neuroscientists to study how these different scales interact and how different scales inform activity \"from the bottom up\" and \"down from the top\".\n\nA generic Python interface allows users to quickly and conveniently set up a parallel simulation in TVB and in NEST and automatically handles the exchange of currents, spikes, voltages, etc. between the different scales. Although the technical aspect of this tool is realized, the scientific part is a work in progress and we are continuously enriching the coupling between scales such that biophysical plausibility is maintained. The TVB+NEST bundle software package -- available as an easy-to-use Docker image container -- combines the sophistication and flexibility of NEST's spiking neuron simulation infrastructure with TVB's whole-brain simulation, processing, analyses and visualisation capabilities.",
+      "contributors": [],
+      "operatingSystem": [
+        "Linux",
+        "Windows",
+        "MacOS"
+      ],
+      "version": "1.0.1",
+      "homepage": [
+        "https://tvb-nest.apps.hbp.eu/",
+        "https://collab.humanbrainproject.eu/#/collab/19/nav/2108?state=software,TVB%20and%20NEST%202"
+      ]
+    }
+  ],
+  "lastReleaseAt": "2020-06-06T21:45:04.026Z",
+  "query:projectDoi": [],
+  "description": "This Python package offers a convenient interface to set-up co-simulation models that simulate TVB large-scale brain network models that interact with NEST spiking neuron models.\nNEST simulates neural activity at the microscopic spatial scale of single neurons or neuron networks. On the other hand, The Virtual brain simulates at the mesoscopic or macroscopic scales of large neural populations or brain regions. Here, both are brought together to enable neuroscientists to study how these different scales interact and how different scales inform activity \"from the bottom up\" and \"down from the top\".\n\nA generic Python interface allows users to quickly and conveniently set up a parallel simulation in TVB and in NEST and automatically handles the exchange of currents, spikes, voltages, etc. between the different scales. Although the technical aspect of this tool is realized, the scientific part is a work in progress and we are continuously enriching the coupling between scales such that biophysical plausibility is maintained. The TVB+NEST bundle software package -- available as an easy-to-use Docker image container -- combines the sophistication and flexibility of NEST's spiking neuron simulation infrastructure with TVB's whole-brain simulation, processing, analyses and visualisation capabilities.",
+  "title": "Multi-scale brain simulation with TVB-NEST",
+  "firstReleaseAt": "2020-06-06T21:45:04.035Z"
+}

@@ -1,0 +1,43 @@
+{
+  "identifier": {
+    "value": "07c5807d0d927dcd0980f86024e5208b"
+  },
+  "description": {
+    "value": "This project provides electrophysiological data to study the role played by neuroligin (NLGN)-neurexin (NRXN) connections and gephyrin in regulating signaling between post- and presynaptic processing. \n"
+  },
+  "publications": null,
+  "dataset": [
+    {
+      "reference": "Dataset/185144fef27b8ee7ed48c801f0cbb2b0",
+      "value": "Modulation of cortical GABAergic currents by anti-gephyrin intrabodies (scFv-geph NLSC)"
+    },
+    {
+      "reference": "Dataset/31d100b53522ba630499cc06ddecf6a6",
+      "value": "Modulation of cortical GABAergic currents by anti-gephyrin intrabodies (scFv-gephcyto)"
+    },
+    {
+      "reference": "Dataset/ef885b1330592c3a06886ed8de567b45",
+      "value": "Modulation of cortical GABAergic currents by anti-neuroligin 2 (scFvNLG2-645)"
+    },
+    {
+      "reference": "Dataset/a59e367315cd7cbcfee42593201adc42",
+      "value": "Modulation of hippocampal GABAergic currents by anti-gephyrin intrabodies (delta2-188)"
+    },
+    {
+      "reference": "Dataset/bf19d2dceeb5aba0045d5d56a8e62fc4",
+      "value": "Modulation of hippocampal GABAergic currents by anti-gephyrin intrabodies (scFv-geph NLS)"
+    }
+  ],
+  "title": {
+    "value": "Electrophysiological data under neuroligin or gephyrin block"
+  },
+  "first_release": {
+    "value": "2019-09-18T09:15:18.419Z"
+  },
+  "last_release": {
+    "value": "2019-09-18T09:21:14.605Z"
+  },
+  "type": {
+    "value": "Project"
+  }
+}

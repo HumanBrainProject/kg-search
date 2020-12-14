@@ -1,0 +1,246 @@
+{
+  "_index": "publicly_released_dataset",
+  "_type": "_doc",
+  "_id": "f746514d-b79a-48e2-9c07-39f7c62459cf",
+  "_version": 1338,
+  "_seq_no": 8929021,
+  "_primary_term": 16,
+  "found": true,
+  "_source": {
+    "zip": {
+      "url": "https://kg.ebrains.eu/proxy/export?container=https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d002272_BigBrainCytoMapping-hoc3v_pub?prefix=Deep-Learning",
+      "value": "Download all related data as ZIP"
+    },
+    "subjects": [
+      {
+        "children": {
+          "subject_name": {
+            "reference": "Subject/ec04c6c3-3dcc-4c58-a64e-e3441c5334ff",
+            "value": "bigbrain-sub-20"
+          },
+          "species": [
+            {
+              "value": "Homo sapiens"
+            }
+          ],
+          "sex": [
+            {
+              "value": "Male"
+            }
+          ],
+          "age": {
+            "value": "65 years"
+          },
+          "agecategory": [
+            {
+              "value": "Adult"
+            }
+          ],
+          "weight": null,
+          "strain": null,
+          "genotype": null,
+          "samples": [
+            {
+              "reference": "Sample/3e7c0301-589e-4e1e-88ec-78cb23e1db30",
+              "value": "bigbrain-sub-20-sam-01"
+            }
+          ]
+        }
+      }
+    ],
+    "identifier": {
+      "value": "f746514d-b79a-48e2-9c07-39f7c62459cf"
+    },
+    "methods": [
+      {
+        "value": "Deep-Learning based cytoarchitectonic mapping"
+      },
+      {
+        "value": "cytoarchitectonic mapping"
+      },
+      {
+        "value": "silver staining"
+      },
+      {
+        "value": "Magnetic Resonance Imaging (MRI)"
+      }
+    ],
+    "description": {
+      "value": "This dataset contains automatically created cytoarchitectonic maps of Area hOc3v (LingG) in the BigBrain. Mappings were created using Deep Convolutional Neural networks trained on delineations on every 60th section using multivariate statistical image analysis, applied to GLI-images of coronal histological sections of 1 micron resolution. Resulting mappings are available on every section. Maps were transformed to the 3D reconstructed BigBrain space. Individual sections were used to assemble a 3D volume of the area, low quality results were replaced by interpolations between nearest neighboring sections. The volume was then smoothed using an 11³ median filter and largest connected components were identified to remove false positive results. The dataset consists of a HDF5 file containing the volume in RAS dimension ordering (20 micron isotropic resolution, dataset “volume”) and an affine transformation matrix (dataset “affine”). An additional dataset “interpolation_info” contains an integer vector for each section which indicates if a section was interpolated due to low quality results (value 2) or not (value 1). "
+    },
+    "license_info": {
+      "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "value": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International"
+    },
+    "owners": [
+      {
+        "reference": "Contributor/e86dc72d5594a43f7a1db1e3945db2bf",
+        "value": "Amunts, Katrin"
+      }
+    ],
+    "dataDescriptor": {
+      "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d002272_BigBrainCytoMapping-hoc3v_pub/Deep-Learning/EBRAINS-DataDescriptor_hOc3v_DeepLearning.pdf",
+      "value": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d002272_BigBrainCytoMapping-hoc3v_pub/Deep-Learning/EBRAINS-DataDescriptor_hOc3v_DeepLearning.pdf"
+    },
+    "speciesFilter": [
+      {
+        "value": "Homo sapiens"
+      }
+    ],
+    "files": [
+      {
+        "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d002272_BigBrainCytoMapping-hoc3v_pub/Deep-Learning/2020_09_29_hOc3v_masks.zip",
+        "value": "2020_09_29_hOc3v_masks.zip",
+        "fileSize": "11 MB"
+      },
+      {
+        "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d002272_BigBrainCytoMapping-hoc3v_pub/Deep-Learning/2020_09_29_hOc3v.hdf5",
+        "value": "2020_09_29_hOc3v.hdf5",
+        "fileSize": "80 MB"
+      },
+      {
+        "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d002272_BigBrainCytoMapping-hoc3v_pub/Deep-Learning/EBRAINS-DataDescriptor_hOc3v_DeepLearning.pdf",
+        "value": "EBRAINS-DataDescriptor_hOc3v_DeepLearning.pdf",
+        "fileSize": "154 KB"
+      },
+      {
+        "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d002272_BigBrainCytoMapping-hoc3v_pub/Deep-Learning/Licence (CCBY-NC-SA).pdf",
+        "value": "Licence (CCBY-NC-SA).pdf",
+        "fileSize": "140 KB"
+      },
+      {
+        "fileSize": "121 KB",
+        "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000001_jubrain-cytoatlas-Area-PFt_pub/9.2/Area-PFt_r_N10_nlin2Stdcolin27_9.2_publicP_4fdc5af5671bc935358ef59006bc666d.nii.gz"
+        "value": "Area-PFt_r_N10_nlin2Stdcolin27_9.2_publicP_4fdc5af5671bc935358ef59006bc666d.nii.gz",
+        "previewUrl": {
+          "url": "https://kg.ebrains.eu/search/preview/86946459-84fc-5b80-9da9-9b5b924c8118.mp4",
+          "isAnimated": true
+        },
+        "staticImageUrl": {
+          "url": "https://kg.ebrains.eu/search/preview/staticImage/86946459-84fc-5b80-9da9-9b5b924c8118.png",
+          "isAnimated": false
+        },
+        "thumbnailUrl": {
+          "url": "https://kg.ebrains.eu/search/preview/thumbnails/86946459-84fc-5b80-9da9-9b5b924c8118.png",
+          "isAnimated": false
+        }
+      }
+    ],
+    "citation": {
+      "value": "Schiffer, C., Kiwitz, K., Amunts, K., &amp; Dickscheid, T. (2020). <i>Ultrahigh resolution 3D cytoarchitectonic map of Area hOc3v (LingG) created by a Deep-Learning assisted workflow</i> [Data set]. EBRAINS.  [DOI: 10.25493/PH0C-EKX]\n[DOI: 10.25493/PH0C-EKX]: https://doi.org/10.25493%2FPH0C-EKX"
+    },
+    "embargoForFilter": {
+      "value": "Free"
+    },
+    "publications": [
+      {
+        "value": "Amunts, K., Lepage, C., Borgeat, L., Mohlberg, H., Dickscheid, T., Rousseau, M. E., Bludau, S., Bazin, P. L., Lewis, L. B., Oros-Peusquens, A. M., Shah, N. J., Lippert, T., Zilles, K., Evans, A. C. (2013).  BigBrain: An Ultrahigh-Resolution 3D Human Brain Model. Science, 340(6139),1472-5.\n[DOI: 10.1126/science.1235381]\n[DOI: 10.1126/science.1235381]: https://doi.org/10.1126%2Fscience.1235381"
+      },
+      {
+        "value": "Spitzer, H., Amunts, K., Harmeling, S., and Dickscheid, T. (2017). Parcellation of visual cortex on high-resolution histological brain sections using convolutional neural networks, in 2017 IEEE 14th International Symposium on Biomedical Imaging (ISBI 2017), pp. 920–923.\n[DOI: 10.1109/ISBI.2017.7950666]\n[DOI: 10.1109/ISBI.2017.7950666]: https://doi.org/10.1109%2FISBI.2017.7950666"
+      },
+      {
+        "value": "Spitzer, H., Kiwitz, K., Amunts, K., Harmeling, S., Dickscheid, T. (2018). Improving Cytoarchitectonic Segmentation of Human Brain Areas with Self-supervised Siamese Networks. In: Frangi A., Schnabel J., Davatzikos C., Alberola-López C., Fichtinger G. (eds) Medical Image Computing and Computer Assisted Intervention – MICCAI 2018. MICCAI 2018. Lecture Notes in Computer Science, vol 11072. Springer, Cham.\n[DOI: 10.1007/978-3-030-00931-1_76]\n[DOI: 10.1007/978-3-030-00931-1_76]: https://doi.org/10.1007%2F978-3-030-00931-1_76"
+      },
+      {
+        "value": "Schleicher, A., Amunts, K., Geyer, S., Morosan, P., & Zilles, K. (1999). Observer-Independent Method for Microstructural Parcellation of Cerebral Cortex: A Quantitative Approach to Cytoarchitectonics. NeuroImage, 9(1), 165–177. \n[DOI: 10.1006/nimg.1998.0385]\n[DOI: 10.1006/nimg.1998.0385]: https://doi.org/10.1006%2Fnimg.1998.0385"
+      },
+      {
+        "value": "Schleicher, A. , Zilles, K. (2005). The verticality index: A quantitative approach to the analysis of the columnar arrangement of neurons in the primate neocortex. Neocortical modularity and the cell minicolumn 181–185"
+      }
+    ],
+    "atlas": [
+      {
+        "value": "Julich-Brain Atlas"
+      }
+    ],
+    "external_datalink": null,
+    "region": [
+      {
+        "value": "Area hOc3v (LingG)"
+      }
+    ],
+    "title": {
+      "value": "Ultrahigh resolution 3D cytoarchitectonic map of Area hOc3v (LingG) created by a Deep-Learning assisted workflow"
+    },
+    "modalityForFilter": [
+      {
+        "value": "cell population imaging"
+      },
+      {
+        "value": "microscopy"
+      },
+      {
+        "value": "anatomical approach"
+      },
+      {
+        "value": "histological approach"
+      },
+      {
+        "value": "neuroimaging"
+      }
+    ],
+    "first_release": {
+      "value": "2020-11-02T11:00:18.068Z"
+    },
+    "doi": {
+      "value": "10.25493/PH0C-EKX"
+    },
+    "contributors": [
+      {
+        "reference": "Contributor/d5f892af-a003-4e54-9c88-0c10ec3da455",
+        "value": "Schiffer, C."
+      },
+      {
+        "reference": "Contributor/c4a9ca26-8b84-4fac-b40b-158cf891be3b",
+        "value": "Kiwitz, K."
+      },
+      {
+        "reference": "Contributor/e86dc72d5594a43f7a1db1e3945db2bf",
+        "value": "Amunts, K."
+      },
+      {
+        "reference": "Contributor/6815ac666477e233eb244713ed5cf8dd",
+        "value": "Dickscheid, T."
+      }
+    ],
+    "preparation": [
+      {
+        "value": "Ex vivo"
+      }
+    ],
+    "component": [
+      {
+        "reference": "Project/af8d3519-9561-4060-8da9-2de1bb966a81",
+        "value": "Ultrahigh resolution 3D maps of cytoarchitectonic areas in the Big Brain model"
+      }
+    ],
+    "protocol": [
+      {
+        "value": "analysis technique"
+      },
+      {
+        "value": "brain mapping"
+      },
+      {
+        "value": "histology"
+      },
+      {
+        "value": "imaging"
+      }
+    ],
+    "last_release": {
+      "value": "2020-11-03T15:01:30.655Z"
+    },
+    "viewer": [
+      {
+        "url": "https://neuroglancer.humanbrainproject.org/?templateSelected=Big+Brain+%28Histology%29&parcellationSelected=Cytoarchitectonic+Maps&cRegionsSelected=%7B%22v3v%22%3A%221%22%7D&cNavigation=0.0.0.-W000..-DAqw.2_PGSc._ShZn.2-8GXE..7LIx..Echz.3Dv8q%7E.7gwp%7E..jZZ",
+        "value": "Show BigBrain Area hOc3v (LingG) in brain atlas viewer"
+      }
+    ],
+    "@timestamp": "2020-11-17T12:54:30.529636",
+    "type": {
+      "value": "Dataset"
+    }
+  }
+}

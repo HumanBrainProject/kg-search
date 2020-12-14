@@ -1,8 +1,0 @@
-{
-  "https://schema.hbp.eu/meta/editor/key": "https://schema.hbp.eu/meta/editor/label",
-  "https://schema.hbp.eu/meta/editor/label": "Label",
-  "http://schema.org/name": "Label",
-  "https://schema.hbp.eu/meta/editor/type": "InputText",
-  "https://schema.hbp.eu/meta/editor/identifier": "meta/minds/specificationfield/v0.0.1/label",
-  "@type": "https://schema.hbp.eu/meta/Specificationfield"
-}

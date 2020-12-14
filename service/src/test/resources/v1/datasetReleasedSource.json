@@ -1,0 +1,427 @@
+{
+  "brainviewer": [],
+  "methods": [
+    "Anterograde tracing technique",
+    "Image segmentation",
+    "Spatial atlas registration",
+    "Transgenic mouse line"
+  ],
+  "lastReleaseAt": "2020-11-06T09:27:16.033Z",
+  "embargoForFilter": [
+    "Embargoed"
+  ],
+  "description": "The 3-D point coordinate data represent the spatial distribution of mouse brain subcortical projections from different parts of the frontal cortex to the caudoputamen, thalamus, superior colliculus and pontine nuclei. The point data are derived from segmented images series programmatically downloaded from the Allen Brain Atlas Data Portal. The data are suited for 3-D visualization and comparison the spatial arrangement of frontal corticostriatal, corticothalamic, corticocollicular, and corticopontine projections. \n",
+  "owners": [
+    {
+      "identifier": "af81c3857f9ddaeff432d30349c4565a",
+      "name": "Leergaard, Trygve B.",
+      "relativeUrl": "minds/core/person/v1.0.0/a1cb1a1f-2634-4e81-b97f-303fd55efc13"
+    }
+  ],
+  "title": "3-D point data representing the spatial distribution of corticopontine projections originating in the frontal cortex of transgenic mice",
+  "firstReleaseAt": "2020-04-08T08:57:31.894Z",
+  "preparation": [],
+  "containerUrlAsZIP": false,
+  "parcellationRegion": [
+    {
+      "name": "Mouse Whole brain (v3 2017)",
+      "alias": "Whole brain",
+      "url": "https://interactive-viewer.apps.hbp.eu/?templateSelected=Allen+Mouse+Common+Coordinate+Framework+v3&parcellationSelected=Allen+Mouse+Common+Coordinate+Framework+v3+2017&cNavigation=0.0.0.-W000.._XxAw.-GC6L.2-2QPq.2_Ylx_..cwd..Uzz.O43%7E.HD0%7E..8SW"
+    }
+  ],
+  "dataDescriptorURL": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/DataDescriptor_Cre_FrontalCortex.pdf",
+  "modalityForFilter": [
+    "anatomical approach",
+    "neural connectivity"
+  ],
+  "embargoRestrictedAccess": [
+    "Embargoed"
+  ],
+  "protocols": [
+    "Anterograde Tracer",
+    "Conditional model",
+    "Connectivity",
+    "Feature extraction",
+    "Nutil"
+  ],
+  "identifier": "933048fa-f314-4a70-8839-0ce346ac0c36",
+  "editorId": "minds/core/dataset/v1.0.0/933048fa-f314-4a70-8839-0ce346ac0c36",
+  "citation": [
+    "Ovsthus, M., Yates, S. C., Groeneboom, N., Puchades, M., Bjaalie, J. G., &amp; Leergaard, T. B. (2020). <i>3-D point data representing the spatial distribution of corticopontine projections originating in the frontal cortex of transgenic mice</i> [Data set]. EBRAINS. "
+  ],
+  "subjects": [
+    {
+      "strain": "Trib2-F2A-CreERT2",
+      "identifier": "b953b5da-0dfa-4d22-b50f-c8e85d328bbc",
+      "sex": [
+        "Male"
+      ],
+      "weight": null,
+      "agecategory": [
+        "Adult"
+      ],
+      "relativeUrl": "minds/experiment/subject/v1.0.0/b953b5da-0dfa-4d22-b50f-c8e85d328bbc",
+      "strains": null,
+      "samples": [
+        {
+          "identifier": "15e11621-9e97-40f1-b97a-a9e7dcc69e9d",
+          "name": "287599685_ACAd",
+          "relativeUrl": "minds/experiment/sample/v1.0.0/15e11621-9e97-40f1-b97a-a9e7dcc69e9d"
+        }
+      ],
+      "genotype": "Cre-mouse line",
+      "species": [
+        "Mus musculus"
+      ],
+      "name": "TopoCreFrontal_287599685",
+      "experimentmethod": [],
+      "age": "P56"
+    },
+    {
+      "strain": "Sim1-Cre_KJ18",
+      "identifier": "fbd8a652-066d-446a-9a50-7eaec5556f4a",
+      "sex": [
+        "Male"
+      ],
+      "weight": null,
+      "agecategory": [
+        "Adult"
+      ],
+      "relativeUrl": "minds/experiment/subject/v1.0.0/fbd8a652-066d-446a-9a50-7eaec5556f4a",
+      "strains": null,
+      "samples": [
+        {
+          "identifier": "acc11b36-3602-4a09-8107-8c1504ad10bc",
+          "name": "297946935_MOs",
+          "relativeUrl": "minds/experiment/sample/v1.0.0/acc11b36-3602-4a09-8107-8c1504ad10bc"
+        }
+      ],
+      "genotype": "Cre-mouse line",
+      "species": [
+        "Mus musculus"
+      ],
+      "name": "TopoCreFrontal_297946935",
+      "experimentmethod": [],
+      "age": "P56"
+    },
+    {
+      "strain": "Tlx3-Cre_PL56",
+      "identifier": "175efb85-8342-4747-b2fe-5d65ea6c24ea",
+      "sex": [
+        "Male"
+      ],
+      "weight": null,
+      "agecategory": [
+        "Adult"
+      ],
+      "relativeUrl": "minds/experiment/subject/v1.0.0/175efb85-8342-4747-b2fe-5d65ea6c24ea",
+      "strains": null,
+      "samples": [
+        {
+          "identifier": "a2eaa0c5-e70a-4c45-a394-ac22e68fde40",
+          "name": "303615412_MOp",
+          "relativeUrl": "minds/experiment/sample/v1.0.0/a2eaa0c5-e70a-4c45-a394-ac22e68fde40"
+        }
+      ],
+      "genotype": "Cre-mouse line",
+      "species": [
+        "Mus musculus"
+      ],
+      "name": "TopoCreFrontal_303615412",
+      "experimentmethod": [],
+      "age": "P56"
+    },
+    {
+      "strain": "Tlx3-Cre_PL56",
+      "identifier": "861ae46e-906f-4b69-ae42-908a13a16d1a",
+      "sex": [
+        "Male"
+      ],
+      "weight": null,
+      "agecategory": [
+        "Adult"
+      ],
+      "relativeUrl": "minds/experiment/subject/v1.0.0/861ae46e-906f-4b69-ae42-908a13a16d1a",
+      "strains": null,
+      "samples": [
+        {
+          "identifier": "39f0307a-eaf5-41f0-bb5c-1c3b0450ad97",
+          "name": "591612976_MOp",
+          "relativeUrl": "minds/experiment/sample/v1.0.0/39f0307a-eaf5-41f0-bb5c-1c3b0450ad97"
+        }
+      ],
+      "genotype": "Cre-mouse line",
+      "species": [
+        "Mus musculus"
+      ],
+      "name": "TopoCreFrontal_591612976",
+      "experimentmethod": [],
+      "age": "P56"
+    },
+    {
+      "strain": "Rbp4-Cre_KL100",
+      "identifier": "da462dea-d3d1-4c82-bc9e-672c81aa7afb",
+      "sex": [
+        "Male"
+      ],
+      "weight": null,
+      "agecategory": [
+        "Adult"
+      ],
+      "relativeUrl": "minds/experiment/subject/v1.0.0/da462dea-d3d1-4c82-bc9e-672c81aa7afb",
+      "strains": null,
+      "samples": [
+        {
+          "identifier": "010bd111-5943-440f-a151-b0fa2bc728c0",
+          "name": "606785720_MOs",
+          "relativeUrl": "minds/experiment/sample/v1.0.0/010bd111-5943-440f-a151-b0fa2bc728c0"
+        }
+      ],
+      "genotype": "Cre-mouse line",
+      "species": [
+        "Mus musculus"
+      ],
+      "name": "TopoCreFrontal_606785720",
+      "experimentmethod": [],
+      "age": "P56"
+    }
+  ],
+  "parcellationAtlas": [
+    "Allen Mouse Common Coordinate Framework v3 2017"
+  ],
+  "speciesFilter": [
+    "Mus musculus"
+  ],
+  "external_datalink": [],
+  "neuroglancer": [],
+  "license": [
+    {
+      "name": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+      "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    }
+  ],
+  "component": [
+    {
+      "identifier": "2aa0fb33-470a-4994-8f3a-2625f3f37466",
+      "name": "QUINT analytical workflow",
+      "relativeUrl": "minds/core/placomponent/v1.0.0/2aa0fb33-470a-4994-8f3a-2625f3f37466"
+    },
+    {
+      "identifier": "6c4e8789-65ad-41d4-a2d7-741afb6c0852",
+      "name": "Topographical termination patterns in subcortical brain structures in the mouse",
+      "relativeUrl": "minds/core/placomponent/v1.0.0/6c4e8789-65ad-41d4-a2d7-741afb6c0852"
+    }
+  ],
+  "container_url": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub",
+  "files": [
+    {
+      "absolute_path": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/287599685_ACAd_Cre_CustomRegions_All.csv",
+      "is_preview_animated": [],
+      "preview_url": [],
+      "name": "287599685_ACAd_Cre_CustomRegions_All.csv",
+      "human_readable_size": "552 bytes",
+      "private_access": true,
+      "thumbnail_url": [],
+      "static_image_url": []
+    },
+    {
+      "absolute_path": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/287599685_ACAd_Cre_RefAtlasRegions.csv",
+      "is_preview_animated": [],
+      "preview_url": [],
+      "name": "287599685_ACAd_Cre_RefAtlasRegions.csv",
+      "human_readable_size": "123 KB",
+      "private_access": true,
+      "thumbnail_url": [],
+      "static_image_url": []
+    },
+    {
+      "absolute_path": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/287599685_ACAd_Cre.json",
+      "is_preview_animated": [],
+      "preview_url": [],
+      "name": "287599685_ACAd_Cre.json",
+      "human_readable_size": "32 MB",
+      "private_access": true,
+      "thumbnail_url": [],
+      "static_image_url": []
+    },
+    {
+      "absolute_path": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/297946935_MOs_Cre_CustomRegions_All.csv",
+      "is_preview_animated": [],
+      "preview_url": [],
+      "name": "297946935_MOs_Cre_CustomRegions_All.csv",
+      "human_readable_size": "568 bytes",
+      "private_access": true,
+      "thumbnail_url": [],
+      "static_image_url": []
+    },
+    {
+      "absolute_path": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/297946935_MOs_Cre_RefAtlasRegions.csv",
+      "is_preview_animated": [],
+      "preview_url": [],
+      "name": "297946935_MOs_Cre_RefAtlasRegions.csv",
+      "human_readable_size": "121 KB",
+      "private_access": true,
+      "thumbnail_url": [],
+      "static_image_url": []
+    },
+    {
+      "absolute_path": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/297946935_MOs_Cre.json",
+      "is_preview_animated": [],
+      "preview_url": [],
+      "name": "297946935_MOs_Cre.json",
+      "human_readable_size": "7 MB",
+      "private_access": true,
+      "thumbnail_url": [],
+      "static_image_url": []
+    },
+    {
+      "absolute_path": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/303615412_MOp_Cre_CustomRegions_All.csv",
+      "is_preview_animated": [],
+      "preview_url": [],
+      "name": "303615412_MOp_Cre_CustomRegions_All.csv",
+      "human_readable_size": "549 bytes",
+      "private_access": true,
+      "thumbnail_url": [],
+      "static_image_url": []
+    },
+    {
+      "absolute_path": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/303615412_MOp_Cre_RefAtlasRegions.csv",
+      "is_preview_animated": [],
+      "preview_url": [],
+      "name": "303615412_MOp_Cre_RefAtlasRegions.csv",
+      "human_readable_size": "120 KB",
+      "private_access": true,
+      "thumbnail_url": [],
+      "static_image_url": []
+    },
+    {
+      "absolute_path": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/303615412_MOp_Cre.json",
+      "is_preview_animated": [],
+      "preview_url": [],
+      "name": "303615412_MOp_Cre.json",
+      "human_readable_size": "6 MB",
+      "private_access": true,
+      "thumbnail_url": [],
+      "static_image_url": []
+    },
+    {
+      "absolute_path": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/591612976_MOp_Cre_CustomRegions_All.csv",
+      "is_preview_animated": [],
+      "preview_url": [],
+      "name": "591612976_MOp_Cre_CustomRegions_All.csv",
+      "human_readable_size": "538 bytes",
+      "private_access": true,
+      "thumbnail_url": [],
+      "static_image_url": []
+    },
+    {
+      "absolute_path": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/591612976_MOp_Cre_RefAtlasRegions.csv",
+      "is_preview_animated": [],
+      "preview_url": [],
+      "name": "591612976_MOp_Cre_RefAtlasRegions.csv",
+      "human_readable_size": "121 KB",
+      "private_access": true,
+      "thumbnail_url": [],
+      "static_image_url": []
+    },
+    {
+      "absolute_path": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/591612976_MOp_Cre.json",
+      "is_preview_animated": [],
+      "preview_url": [],
+      "name": "591612976_MOp_Cre.json",
+      "human_readable_size": "32 MB",
+      "private_access": true,
+      "thumbnail_url": [],
+      "static_image_url": []
+    },
+    {
+      "absolute_path": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/606785720_MOs_Cre_CustomRegions_All.csv",
+      "is_preview_animated": [],
+      "preview_url": [],
+      "name": "606785720_MOs_Cre_CustomRegions_All.csv",
+      "human_readable_size": "568 bytes",
+      "private_access": true,
+      "thumbnail_url": [],
+      "static_image_url": []
+    },
+    {
+      "absolute_path": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/606785720_MOs_Cre_RefAtlasRegions.csv",
+      "is_preview_animated": [],
+      "preview_url": [],
+      "name": "606785720_MOs_Cre_RefAtlasRegions.csv",
+      "human_readable_size": "123 KB",
+      "private_access": true,
+      "thumbnail_url": [],
+      "static_image_url": []
+    },
+    {
+      "absolute_path": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/606785720_MOs_Cre.json",
+      "is_preview_animated": [],
+      "preview_url": [],
+      "name": "606785720_MOs_Cre.json",
+      "human_readable_size": "104 MB",
+      "private_access": true,
+      "thumbnail_url": [],
+      "static_image_url": []
+    },
+    {
+      "absolute_path": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/DataDescriptor_Cre_FrontalCortex.pdf",
+      "is_preview_animated": [],
+      "preview_url": [],
+      "name": "DataDescriptor_Cre_FrontalCortex.pdf",
+      "human_readable_size": "182 KB",
+      "private_access": true,
+      "thumbnail_url": [],
+      "static_image_url": []
+    },
+    {
+      "absolute_path": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub/Licence (CCBY-NC-SA).pdf",
+      "is_preview_animated": [],
+      "preview_url": [],
+      "name": "Licence (CCBY-NC-SA).pdf",
+      "human_readable_size": "140 KB",
+      "private_access": true,
+      "thumbnail_url": [],
+      "static_image_url": []
+    }
+  ],
+  "contributors": [
+    {
+      "identifier": "4d1dac94-77e8-45bd-a54c-b88712569ba5",
+      "name": "Ovsthus, M.",
+      "relativeUrl": "minds/core/person/v1.0.0/4d1dac94-77e8-45bd-a54c-b88712569ba5"
+    },
+    {
+      "identifier": "12bdd736-084e-4055-ad57-4800925adb5c",
+      "name": "Yates, SC",
+      "relativeUrl": "minds/core/person/v1.0.0/12bdd736-084e-4055-ad57-4800925adb5c"
+    },
+    {
+      "identifier": "a2ad9f78-ee68-4b25-9585-7ca116c7ec7c",
+      "name": "Groeneboom, N",
+      "relativeUrl": "minds/core/person/v1.0.0/a2ad9f78-ee68-4b25-9585-7ca116c7ec7c"
+    },
+    {
+      "identifier": "83f98ca132efd19ca9054ba329fe5fbd",
+      "name": "Puchades, M.",
+      "relativeUrl": "minds/core/person/v1.0.0/33aec65a-8f3c-45a7-8d74-607ee8ae5709"
+    },
+    {
+      "identifier": "cdda3cdc7b3f7ab98830205602f87db3",
+      "name": "Bjaalie, J.G.",
+      "relativeUrl": "minds/core/person/v1.0.0/5271206e-7dcd-4081-a49a-bc5f147028ce"
+    },
+    {
+      "identifier": "af81c3857f9ddaeff432d30349c4565a",
+      "name": "Leergaard, T.B.",
+      "relativeUrl": "minds/core/person/v1.0.0/a1cb1a1f-2634-4e81-b97f-303fd55efc13"
+    }
+  ],
+  "embargo": [
+    "Embargoed"
+  ],
+  "doi": [
+    "10.25493/3FC2-R3R"
+  ],
+  "publications": []
+}

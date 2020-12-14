@@ -1,0 +1,31 @@
+{
+  "address": null,
+  "firstReleaseAt": null,
+  "lastReleaseAt": null,
+  "title": "Erb, Julia",
+  "custodianOf": [],
+  "modelContributions": [],
+  "phone": null,
+  "editorId": "minds/core/person/v1.0.0/561dd032-2df7-4b78-b636-a046dc54b9ae",
+  "description": null,
+  "contributions": [
+    {
+      "relativeUrl": "minds/core/dataset/v1.0.0/889aefd8-70ca-4f12-a6c1-fe844bbab084",
+      "datasetComponent": [
+        "Homology and Specificity of Natural Sound-Encoding in Human and Monkey Auditory Cortex"
+      ],
+      "name": "Homology and Specificity of Natural Sound-Encoding in Monkey Auditory Cortex",
+      "identifier": "889aefd8-70ca-4f12-a6c1-fe844bbab084"
+    }
+  ],
+  "organizations": [],
+  "publications": [
+    {
+      "doi": "10.1093/cercor/bhy243",
+      "citation": "Erb, J., Armendariz, M., De Martino, F., Goebel, R., Vanduffel, W., Formisano, E. (2018). Homology and Specificity of Natural Sound-Encoding in Human and Monkey Auditory Cortex. Cereb Cortex."
+    }
+  ],
+  "custodianOfModel": [],
+  "identifier": "561dd032-2df7-4b78-b636-a046dc54b9ae",
+  "email": null
+}

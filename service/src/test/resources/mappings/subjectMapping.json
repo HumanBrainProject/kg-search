@@ -1,0 +1,249 @@
+{
+  "properties" : {
+    "@timestamp" : {
+      "type" : "date"
+    },
+    "age" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "agecategory" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "datasetExists" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "datasets" : {
+      "properties" : {
+        "children" : {
+          "properties" : {
+            "component" : {
+              "properties" : {
+                "value" : {
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword"
+                    }
+                  },
+                  "type" : "text"
+                }
+              }
+            },
+            "name" : {
+              "properties" : {
+                "reference" : {
+                  "fields" : {
+                    "keyword" : {
+                      "ignore_above" : 256,
+                      "type" : "keyword"
+                    }
+                  },
+                  "type" : "text"
+                },
+                "uuid" : {
+                  "fields" : {
+                    "keyword" : {
+                      "ignore_above" : 256,
+                      "type" : "keyword"
+                    }
+                  },
+                  "type" : "text"
+                },
+                "value" : {
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword"
+                    }
+                  },
+                  "type" : "text"
+                }
+              }
+            }
+          },
+          "type" : "nested"
+        },
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "editorId" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "first_release" : {
+      "properties" : {
+        "value" : {
+          "type" : "date"
+        }
+      }
+    },
+    "genotype" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "identifier" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "last_release" : {
+      "properties" : {
+        "value" : {
+          "type" : "date"
+        }
+      }
+    },
+    "samples" : {
+      "properties" : {
+        "reference" : {
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        },
+        "uuid" : {
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        },
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "sex" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "species" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "strain" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "title" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    },
+    "type" : {
+      "properties" : {
+        "value" : {
+          "type" : "keyword"
+        }
+      }
+    },
+    "weight" : {
+      "properties" : {
+        "value" : {
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword"
+            }
+          },
+          "type" : "text"
+        }
+      }
+    }
+  }
+}
