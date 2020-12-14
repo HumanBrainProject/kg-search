@@ -44,6 +44,11 @@ public class DatasetV1 implements HasEmbargo, SourceInstance {
     private List<SourceExternalReference> license;
     private List<String> modalityForFilter;
     private List<String> embargo;
+    private boolean useHDG;
+
+    public boolean isUseHDG() { return useHDG; }
+
+    public void setUseHDG(boolean useHDG) { this.useHDG = useHDG; }
 
     public List<String> getMethods() { return methods; }
 

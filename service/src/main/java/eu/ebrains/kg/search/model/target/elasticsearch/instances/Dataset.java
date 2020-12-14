@@ -39,6 +39,9 @@ public class Dataset implements TargetInstance {
     @FieldInfo(label = "DOI", hint = "This is the dataset DOI you must cite if you reuse this data in a way that leads to a publication")
     private Value<String> doi;
 
+    @FieldInfo(label= "Access Dataset", markdown = true, isButton = true, termsOfUse = true)
+    private Value<String> useHDG;
+
     @JsonProperty("license_info")
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)
     private TargetExternalReference licenseInfo;
@@ -105,6 +108,14 @@ public class Dataset implements TargetInstance {
     @JsonProperty("last_release")
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
+
+    public Value<String> getUseHDG() { return useHDG; }
+
+    public void setUseHDG(String useHDG) {
+        setUseHDG(StringUtils.isBlank(useHDG) ? null : new Value<>(useHDG));
+    }
+
+    public void setUseHDG(Value<String> useHDG) { this.useHDG = useHDG; }
 
     public void setType(String type) {
         setType(StringUtils.isBlank(type) ? null : new Value<>(type));
