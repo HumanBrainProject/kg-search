@@ -39,10 +39,25 @@
     right: var(--site-margin);
 }
 
+.kgs-instance-scoll-content {
+    display: flex;
+    flex-direction: column; 
+    height: 100%;
+}
+
 .kgs-instance-content {
     position: relative;
     padding: 25px;
+    flex:1;
 }
+
+.kgs-instance-content-disclaimer {
+    padding: 0 35px 20px 35px; 
+    display: inline-block; 
+    font-size: small;
+    color: var(--color-8);
+}
+
 .kgs-instance-container .kgs-footer .kgs-select select {
     background-color: var(--background-color-1);
 }
