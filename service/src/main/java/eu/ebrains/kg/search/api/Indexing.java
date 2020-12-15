@@ -3,6 +3,8 @@ package eu.ebrains.kg.search.api;
 import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.controller.indexing.IndexingController;
 import eu.ebrains.kg.search.model.DatabaseScope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -10,7 +12,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 @RequestMapping("/indexing")
 @RestController
 public class Indexing {
-
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final IndexingController indexingController;
 
     public Indexing(IndexingController indexingController) {
@@ -24,6 +26,7 @@ public class Indexing {
             Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> indexingController.fullReplacementByType(databaseScope, type, authorization, clazz));
             return ResponseEntity.ok().build();
         } catch (WebClientResponseException e) {
+            logger.info("Unsuccessful indexing", e);
             return ResponseEntity.status(e.getStatusCode()).build();
         }
     }
@@ -38,6 +41,7 @@ public class Indexing {
                 indexingController.fullReplacementByType(databaseScope, type, authorization, clazz);
                 return ResponseEntity.ok().build();
             } catch (WebClientResponseException e) {
+                logger.info("Unsuccessful indexing", e);
                 return ResponseEntity.status(e.getStatusCode()).build();
             }
         }
@@ -51,6 +55,8 @@ public class Indexing {
             indexingController.incrementalUpdateAll(databaseScope, authorization);
             return ResponseEntity.ok().build();
         } catch (WebClientResponseException e) {
+
+            logger.info("Unsuccessful incremental indexing", e);
             return ResponseEntity.status(e.getStatusCode()).build();
         }
     }
@@ -63,6 +69,8 @@ public class Indexing {
             indexingController.incrementalUpdateByType(databaseScope, type, authorization);
             return ResponseEntity.ok().build();
         } catch (WebClientResponseException e) {
+
+            logger.info("Unsuccessful incremental indexing", e);
             return ResponseEntity.status(e.getStatusCode()).build();
         }
     }

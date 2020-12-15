@@ -37,9 +37,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
             d.setEditorId(datasetV1.getEditorId());
         }
         if(StringUtils.isNotBlank(datasetV1.getEditorId()) && datasetV1.isUseHDG()) {
-            String[] splitted = datasetV1.getEditorId().split("/");
-            String id = splitted[splitted.length - 1];
-            d.setUseHDG(String.format("This data requires you to explicitly [request access](https://hdg.kg.ebrains.eu/request_access?kg_id=%s) with your EBRAINS account. If you don't have such an account yet, please [register](https://ebrains.eu/register/).", id));
+            d.setUseHDG(String.format("This data requires you to explicitly [request access](https://hdg.kg.ebrains.eu/request_access?kg_id=%s) with your EBRAINS account. If you don't have such an account yet, please [register](https://ebrains.eu/register/).", datasetV1.getEditorId()));
         }
         d.setMethods(emptyToNull(datasetV1.getMethods()));
         d.setDescription(datasetV1.getDescription());
