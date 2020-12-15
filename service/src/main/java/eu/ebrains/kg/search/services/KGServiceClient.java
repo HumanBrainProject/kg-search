@@ -2,6 +2,8 @@ package eu.ebrains.kg.search.services;
 
 import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,6 +18,7 @@ import java.util.regex.Pattern;
 
 @Component
 public class KGServiceClient {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
             .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1000000)).build();
     private final WebClient webClient = WebClient.builder().exchangeStrategies(exchangeStrategies).build();
@@ -40,7 +43,8 @@ public class KGServiceClient {
             Map data = (Map) result.get("data");
             return data.get("endpoint").toString();
         } catch (Exception e) {
-            return null; //TODO: Add a logger here.
+            logger.info(e.getMessage());
+            return null;
         }
     }
 
