@@ -29,20 +29,20 @@ public class IndexingController {
 
     public void incrementalUpdateAll(DatabaseScope databaseScope, String authorization){
         Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> incrementalUpdateByType(databaseScope, type, authorization));
-        sitemapController.updateSitemapCache();
+        sitemapController.updateSitemapCache(databaseScope);
     }
 
     public void incrementalUpdateByType(DatabaseScope databaseScope, String type, String authorization) {
         List<TargetInstance> instances = translationController.createInstances(databaseScope, false, type, authorization);
         elasticSearchController.updateIndex(instances, type, databaseScope);
-        sitemapController.updateSitemapCache();
+        sitemapController.updateSitemapCache(databaseScope);
     }
 
     public void fullReplacementByType(DatabaseScope databaseScope, String type, String authorization, Class<?> clazz) {
         List<TargetInstance> instances = translationController.createInstances(databaseScope, false, type, authorization);
         recreateIndex(databaseScope, type, clazz);
         elasticSearchController.indexDocuments(instances, type, databaseScope);
-        sitemapController.updateSitemapCache();
+        sitemapController.updateSitemapCache(databaseScope);
     }
 
     private void recreateIndex(DatabaseScope databaseScope, String type, Class<?> clazz) {
