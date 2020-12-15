@@ -31,7 +31,7 @@ public class SitemapController {
         this.esServiceClient = esServiceClient;
     }
 
-    @Cacheable("sitemap")
+    @Cacheable(value = "sitemap", unless = "#result == null")
     public SitemapXML getSitemap() {
         return fetchSitemap();
     }
@@ -55,6 +55,9 @@ public class SitemapController {
                 }
             }
         }).filter(Objects::nonNull).flatMap(Collection::stream).collect(Collectors.toList());
+        if (urls.isEmpty()) {
+            return null;
+        }
         SitemapXML sitemapXML = new SitemapXML();
         sitemapXML.setUrl(urls);
         return sitemapXML;

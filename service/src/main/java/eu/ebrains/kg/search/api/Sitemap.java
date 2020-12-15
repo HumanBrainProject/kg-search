@@ -3,6 +3,7 @@ package eu.ebrains.kg.search.api;
 
 import eu.ebrains.kg.search.model.SitemapXML;
 import eu.ebrains.kg.search.controller.sitemap.SitemapController;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,9 @@ public class Sitemap {
     public ResponseEntity<?> generateSitemap() {
         try {
             SitemapXML sitemapXML = sitemapController.getSitemap();
+            if(sitemapXML == null) {
+                return  ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
+            }
             return ResponseEntity.ok(sitemapXML);
         } catch (WebClientResponseException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
