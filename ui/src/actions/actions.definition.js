@@ -19,6 +19,14 @@ import API from "../services/API";
 import { sessionFailure } from "./actions";
 import * as Sentry from "@sentry/browser";
 
+
+export const setAuthEndpoint = authEndpoint => {
+  return {
+    type: types.SET_AUTH_ENDPOINT,
+    authEndpoint: authEndpoint
+  };
+};
+
 export const loadDefinitionRequest = () => {
   return {
     type: types.LOAD_DEFINITION_REQUEST
@@ -157,6 +165,7 @@ export const loadDefinition = () => {
       .then(({ data }) => {
         const definition = data && data._source;
         simplifySemantics(definition);
+        data.authEndpoint && dispatch(setAuthEndpoint(data.authEndpoint));
         dispatch(loadDefinitionSuccess(definition));
       })
       .catch(e => {

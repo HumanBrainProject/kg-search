@@ -71,7 +71,8 @@ export default connect(
   state => ({
     location: state.router.location,
     defaultGroup: state.groups.defaultGroup,
-    isReady: state.application.isReady && !state.auth.error
+    isReady: state.application.isReady && !state.auth.error,
+    authEndpoint: state.auth.authEndpoint
   }),
   dispatch => ({
     initialize: location => dispatch(actions.initialize(location))

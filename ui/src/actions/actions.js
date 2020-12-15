@@ -17,7 +17,7 @@
 import * as types from "./actions.types";
 import API from "../services/API";
 import { getHashKey, generateKey, getSearchKey } from "../helpers/BrowserHelpers";
-import { history } from "../store";
+import { history, store } from "../store";
 
 export const setApplicationReady = () => {
   return {
@@ -68,14 +68,25 @@ export const sessionFailure = error => {
 
 
 export const authenticate = (group=null, isKeycloak=true) => {
-  return () => {
-    const stateKey= btoa(JSON.stringify({
-      queryString: window.location.search
-    }));
-    const nonceKey=  generateKey();
-    const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}${group?("?group=" + group):""}`;
-    const auth = isKeycloak?API.endpoints.keycloakAuth:API.endpoints.oidcAuth;
-    window.location.href = auth(redirectUri, stateKey, nonceKey);
+  return dispatch => {
+    let authEndpoint = null;
+    if(isKeycloak) {
+      const state = store.getState();
+      authEndpoint = state.auth.authEndpoint;
+    } else {
+      authEndpoint = "https://services.humanbrainproject.eu/oidc/authorize";
+    }
+    if(authEndpoint) {
+      const stateKey= btoa(JSON.stringify({
+        queryString: window.location.search
+      }));
+      const nonceKey=  generateKey();
+      const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}${group?("?group=" + group):""}`;
+      const auth = isKeycloak?API.endpoints.keycloakAuth:API.endpoints.oidcAuth;
+      window.location.href = auth(authEndpoint, redirectUri, stateKey, nonceKey);
+    } else {
+      dispatch(sessionFailure("Restricted area is currently not available, please retry in a few minutes!"));
+    }
   };
 };
 

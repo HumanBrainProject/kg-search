@@ -23,7 +23,26 @@ public class KGServiceClient {
     @Value("${kgquery.endpoint}")
     String kgQueryEndpoint;
 
+    @Value("${kgcore.endpoint}")
+    String kgCoreEndpoint;
+
     private static final String vocab = "https://schema.hbp.eu/search/";
+
+    public String getAuthEndpoint() {
+        String url = String.format("%s/users/authorization", kgCoreEndpoint);
+        try {
+            Map result = webClient.get()
+                    .uri(url)
+                    .retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
+
+            Map data = (Map) result.get("data");
+            return data.get("endpoint").toString();
+        } catch (Exception e) {
+            return null; //TODO: Add a logger here.
+        }
+    }
 
     public <T> T executeQuery(String query, DatabaseScope databaseScope, Class<T> clazz, String token) {
         String url = String.format("%s/%s/instances/?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, databaseScope, vocab);

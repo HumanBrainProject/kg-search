@@ -22,13 +22,15 @@ import { GroupSelection } from "../../Group/GroupSelection";
 import { SignInButton } from "../../SignIn/SignInButton";
 import { TermsShortNotice } from "../../Notice/TermsShortNotice";
 import "./Footer.css";
+import { connect } from "react-redux";
 
-const FooterBase = ({isFloating}) => {
+const FooterBase = ({isFloating, showLogin}) => {
   return (
     <div className={`kgs-footer${isFloating?" is-fixed-position":""}`}>
       <TermsShortNotice className="kgs-footer__terms-short-notice" />
       <div className="kgs-footer-nav">
-        <SignInButton className="kgs-sign-in" signInLabel="Log in" signOffLabel="Log out"/>
+        {showLogin &&
+          <SignInButton className="kgs-sign-in" signInLabel="Log in" signOffLabel="Log out"/>}
         <GroupSelection className="kgs-group-selection"/>
         <Pagination />
         <ShareButtons/>
@@ -39,9 +41,16 @@ const FooterBase = ({isFloating}) => {
   );
 };
 
-export const Footer = withFloatingScrollEventsSubscription(
+const FooterWithFloatingEvents = withFloatingScrollEventsSubscription(
   "bottom",
   [
     {querySelector: "footer.site-footer"}
   ]
 )(FooterBase);
+
+
+export const Footer = connect(
+  state => ({
+    showLogin: !!state.auth.authEndpoint
+  })
+)(FooterWithFloatingEvents);

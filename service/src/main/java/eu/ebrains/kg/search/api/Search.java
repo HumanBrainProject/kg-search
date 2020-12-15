@@ -8,18 +8,17 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.ebrains.kg.search.controller.Constants;
-import eu.ebrains.kg.search.controller.authentication.UserInfoRepository;
 import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
 import eu.ebrains.kg.search.controller.labels.LabelsController;
 import eu.ebrains.kg.search.controller.translators.TranslationController;
 import eu.ebrains.kg.search.model.DatabaseScope;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.services.ESServiceClient;
+import eu.ebrains.kg.search.services.KGServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,12 +42,14 @@ public class Search {
             String.format("{\"%s\": {\"reverse_nested\": {}}}", parentCountLabel)
     );
 
+    private final KGServiceClient kgServiceClient;
     private final ESServiceClient esServiceClient;
     private final LabelsController labelsController;
     private final UserInfoRoles userInfoRoles;
     private final TranslationController translationController;
 
-    public Search(ESServiceClient esServiceClient, LabelsController labelsController, UserInfoRoles userInfoRoles, TranslationController translationController) throws JsonProcessingException {
+    public Search(KGServiceClient kgServiceClient, ESServiceClient esServiceClient, LabelsController labelsController, UserInfoRoles userInfoRoles, TranslationController translationController) throws JsonProcessingException {
+        this.kgServiceClient = kgServiceClient;
         this.esServiceClient = esServiceClient;
         this.labelsController = labelsController;
         this.userInfoRoles = userInfoRoles;
@@ -59,11 +60,12 @@ public class Search {
         return userInfoRoles.isInAnyOfRoles((KeycloakAuthenticationToken)principal, "team", "collab-kg-search-in-progress-administrator", "collab-kg-search-in-progress-editor", "collab-kg-search-in-progress-viewer");
     }
 
-
     @GetMapping("/labels")
     public Map<String, Object> getLabels() {
+        String authEndpoint = kgServiceClient.getAuthEndpoint();
         Map<String, Object> labels = new HashMap<>();
         labels.put("_source", labelsController.generateLabels());
+        labels.put("authEndpoint", authEndpoint);
         return labels;
     }
 
