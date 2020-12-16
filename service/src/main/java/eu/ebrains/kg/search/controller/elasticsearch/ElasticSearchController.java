@@ -38,43 +38,40 @@ public class ElasticSearchController {
 
     public void indexDocuments(List<TargetInstance> instances, String type, DatabaseScope databaseScope) {
         String index = ESHelper.getIndex(type, databaseScope);
-        String operations = instances.stream().reduce("", (acc, instance) -> {
-            acc += String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", instance.getIdentifier().getValue());
+        StringBuilder operations = new StringBuilder();
+        instances.forEach(instance -> {
+            operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", instance.getIdentifier().getValue()));
             try {
-                acc += objectMapper.writeValueAsString(instance) + "\n";
-                return acc;
+                operations.append(objectMapper.writeValueAsString(instance)).append("\n");
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
-        }, String::concat);
-        esServiceClient.updateIndex(index, operations);
+        });
+        esServiceClient.updateIndex(index, operations.toString());
     }
 
     public void updateIndex(List<TargetInstance> instances, String type, DatabaseScope databaseScope) {
         String index = ESHelper.getIndex(type, databaseScope);
         HashSet<String> ids = new HashSet<>();
-
-        String updateOperations = instances.stream().reduce("", (acc, instance) -> {
+        StringBuilder operations = new StringBuilder();
+        instances.forEach( instance -> {
             String identifier = instance.getIdentifier().getValue();
             ids.add(identifier);
-            acc += String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", identifier);
+            operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", identifier));
             try {
-                acc += objectMapper.writeValueAsString(instance) + "\n";
-                return acc;
+                operations.append(objectMapper.writeValueAsString(instance)).append("\n");
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
-        }, String::concat);
+        });
 
         ElasticSearchResult documents = esServiceClient.getDocuments(index);
-        String deleteOperations = documents.getHits().getHits().stream().reduce("", (acc, document) -> {
+        documents.getHits().getHits().forEach(document -> {
             if(!ids.contains(document.getId())) {
-                acc += String.format("{ \"delete\" : { \"_id\" : \"%s\" } } \n", document.getId());
+                operations.append(String.format("{ \"delete\" : { \"_id\" : \"%s\" } } \n", document.getId()));
             }
-            return acc;
-        }, String::concat);
-
-        esServiceClient.updateIndex(index, updateOperations + deleteOperations);
+        });
+        esServiceClient.updateIndex(index, operations.toString());
     }
 
 }
