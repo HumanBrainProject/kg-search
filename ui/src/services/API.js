@@ -6,6 +6,7 @@ const oidcClientId = "nexus-kg-search";
 
 const endpoints = {
   //"definition": () => "/static/data/labels.json",
+  "authEndpoint": () => "/api/auth/endpoint",
   "definition": () => "/api/labels",
   "groups": () => "/api/groups",
   //"search": () => "/static/data/search.json",

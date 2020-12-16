@@ -60,13 +60,21 @@ public class Search {
         return userInfoRoles.isInAnyOfRoles((KeycloakAuthenticationToken)principal, "team", "collab-kg-search-in-progress-administrator", "collab-kg-search-in-progress-editor", "collab-kg-search-in-progress-viewer");
     }
 
+    @GetMapping("/auth/endpoint")
+    public Map<String, String> getAuthEndpoint() {
+        Map<String, String> result = new HashMap<>();
+        String authEndpoint = kgServiceClient.getAuthEndpoint();
+        result.put("authEndpoint", authEndpoint);
+        return result;
+    }
+
     @GetMapping("/labels")
     public Map<String, Object> getLabels() {
         String authEndpoint = kgServiceClient.getAuthEndpoint();
-        Map<String, Object> labels = new HashMap<>();
-        labels.put("_source", labelsController.generateLabels());
-        labels.put("authEndpoint", authEndpoint);
-        return labels;
+        Map<String, Object> result = new HashMap<>();
+        result.put("_source", labelsController.generateLabels());
+        result.put("authEndpoint", authEndpoint);
+        return result;
     }
 
     @GetMapping("/groups")

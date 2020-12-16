@@ -5,6 +5,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -31,6 +32,7 @@ public class KGServiceClient {
 
     private static final String vocab = "https://schema.hbp.eu/search/";
 
+    @Cacheable(value = "authEndpoint", unless = "#result == null")
     public String getAuthEndpoint() {
         String url = String.format("%s/users/authorization", kgCoreEndpoint);
         try {
