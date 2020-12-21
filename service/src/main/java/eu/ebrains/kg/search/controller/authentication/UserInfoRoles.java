@@ -45,7 +45,7 @@ public class UserInfoRoles {
                 repository.clearUserInfoCache(keycloakSecurityContext.getTokenString());
             }
             else{
-                logger.info(String.format("Token is still valid for %d seconds... ", (int)(keycloakSecurityContext.getToken().getExp()-Math.floor(new Date().getTime()/1000.0))));
+                logger.debug(String.format("Token is still valid for %d seconds... ", (int)(keycloakSecurityContext.getToken().getExp()-Math.floor(new Date().getTime()/1000.0))));
             }
             UserInfoRepository.UserInfo userInfo = repository.fetchUserInfo(keycloakSecurityContext.getTokenString());
             if(userInfo!=null){

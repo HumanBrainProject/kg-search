@@ -152,6 +152,7 @@ public class Search {
         }
     }
 
+    //TODO move to controller
     private JsonNode getResult(String payload, String group) throws JsonProcessingException {
         String index = ESHelper.getIndexFromGroup("*", group);
         JsonNode jsonNode = adaptEsQueryForNestedDocument(payload);
@@ -160,6 +161,7 @@ public class Search {
         return updateEsResponseWithNestedDocument(resultJson);
     }
 
+    //TODO move to controller and document
     private JsonNode adaptEsQueryForNestedDocument(String payload) throws JsonProcessingException {
         JsonNode jsonNode = objectMapper.readTree(payload);
         List<String> paths = findPathForKey(jsonNode, "", "nested");
@@ -179,6 +181,7 @@ public class Search {
         return jsonNode;
     }
 
+    //TODO move to controller and document
     private JsonNode updateEsResponseWithNestedDocument(JsonNode jsonSrc) {
         try {
             JsonNode json = jsonSrc.deepCopy();

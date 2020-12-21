@@ -14,7 +14,7 @@ import java.util.List;
 public class ListOrSingleStringAsListDeserializer extends JsonDeserializer<List> {
 
     @Override
-    public List deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+    public List<?> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         try {
             String s = jsonParser.readValueAs(String.class);
             if(StringUtils.isNotBlank(s)) {
@@ -22,7 +22,7 @@ public class ListOrSingleStringAsListDeserializer extends JsonDeserializer<List>
             }
             return null;
         } catch (MismatchedInputException e) {
-            List list = jsonParser.readValueAs(List.class);
+            List<?> list = jsonParser.readValueAs(List.class);
             if(CollectionUtils.isEmpty(list)){
                 return null;
             }
