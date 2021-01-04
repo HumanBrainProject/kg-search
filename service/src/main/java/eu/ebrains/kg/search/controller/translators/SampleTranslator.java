@@ -78,7 +78,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                     ).collect(Collectors.toList()));
         }
         String containerUrl = sample.getContainerUrl();
-        if (!hasEmbargoStatus(sample, EMBARGOED) && !StringUtils.isBlank(containerUrl)) {
+        if (!hasEmbargoStatus(sample, EMBARGOED) && !StringUtils.isBlank(containerUrl) && !CollectionUtils.isEmpty(sample.getFiles())) {
             if (containerUrl.startsWith("https://object.cscs.ch")) {
                 s.setAllFiles(new TargetExternalReference(
                         String.format("https://kg.ebrains.eu/proxy/export?container=%s", containerUrl),

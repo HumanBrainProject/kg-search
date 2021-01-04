@@ -26,7 +26,7 @@ public class Translator {
                                                     @PathVariable("schema") String schema,
                                                     @PathVariable("version") String version,
                                                     @PathVariable("id") String id,
-                                                    @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
+                                                    @RequestHeader("X-Legacy-Authorization") String authorization) {
         try {
             return ResponseEntity.ok(translationController.createInstance(databaseScope, false, org, domain, schema, version, id, authorization));
         } catch (HttpClientErrorException e) {
