@@ -73,6 +73,7 @@ const authenticationExpired = (state, action) => {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
+  case types.LOAD_AUTH_ENDPOINT_SUCCESS:
   case types.SET_AUTH_ENDPOINT:
     return setAuthEndpoint(state, action);
   case types.SET_TOKEN:

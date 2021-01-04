@@ -23,6 +23,7 @@ const initialState = {
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
+  case types.LOAD_AUTH_ENDPOINT_REQUEST:
   case types.LOAD_DEFINITION_REQUEST:
     return {
       message: "Initializing...",
@@ -47,7 +48,8 @@ export function reducer(state = initialState, action = {}) {
   case types.AGREE_TERMS_SHORT_NOTICE:
   case types.SET_INFO:
   case types.SHOW_IMAGE:
-  case types.LOAD_DEFINITION_SUCCESS:
+  case types.LOAD_AUTH_ENDPOINT_SUCCESS:
+  case types.LOAD_AUTH_ENDPOINT_FAILURE:
   case types.LOAD_DEFINITION_FAILURE:
   case types.CLEAR_DEFINITION_ERROR:
   case types.LOAD_GROUPS_SUCCESS:

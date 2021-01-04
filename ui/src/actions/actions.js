@@ -18,6 +18,7 @@ import * as types from "./actions.types";
 import API from "../services/API";
 import { getHashKey, generateKey, getSearchKey } from "../helpers/BrowserHelpers";
 import { history, store } from "../store";
+import * as Sentry from "@sentry/browser";
 
 export const setApplicationReady = () => {
   return {
@@ -66,6 +67,26 @@ export const sessionFailure = error => {
   };
 };
 
+export const loadAuthEndpointRequest = () => {
+  return {
+    type: types.LOAD_AUTH_ENDPOINT_REQUEST
+  };
+};
+
+export const loadAuthEndpointSuccess = authEndpoint => {
+  return {
+    type: types.LOAD_AUTH_ENDPOINT_SUCCESS,
+    authEndpoint: authEndpoint
+  };
+};
+
+
+export const loadAuthEndpointFailure = () => {
+  return {
+    type: types.LOAD_AUTH_ENDPOINT_FAILURE
+  };
+};
+
 
 export const authenticate = (group=null, isKeycloak=true) => {
   return dispatch => {
@@ -87,6 +108,35 @@ export const authenticate = (group=null, isKeycloak=true) => {
     } else {
       dispatch(sessionFailure("Restricted area is currently not available, please retry in a few minutes!"));
     }
+  };
+};
+
+export const getAuthEndpoint = (group=null) => {
+  return dispatch => {
+    dispatch(loadAuthEndpointRequest());
+    API.axios
+      .get(API.endpoints.authEndpoint())
+      .then(response => {
+        dispatch(loadAuthEndpointSuccess(response.data && response.data.authEndpoint));
+        dispatch(authenticate(group, true));
+      })
+      .catch(e => {
+        const { response } = e;
+        const { status } = response;
+        switch (status) {
+        case 500:
+        {
+          Sentry.captureException(e);
+          break;
+        }
+        case 404:
+        default:
+        {
+          const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
+          dispatch(loadAuthEndpointFailure(error));
+        }
+        }
+      });
   };
 };
 
@@ -113,7 +163,7 @@ export const initialize = location => {
         if (regLegacyIdReference.test(location.pathname)) {
           dispatch(authenticate(group, false));
         } else {
-          dispatch(authenticate(group, true));
+          dispatch(getAuthEndpoint(group));
         }
       } else {
         dispatch(setApplicationReady());

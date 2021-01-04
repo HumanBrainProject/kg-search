@@ -60,13 +60,21 @@ public class Search {
         return userInfoRoles.isInAnyOfRoles((KeycloakAuthenticationToken)principal, "team", "collab-kg-search-in-progress-administrator", "collab-kg-search-in-progress-editor", "collab-kg-search-in-progress-viewer");
     }
 
+    @GetMapping("/auth/endpoint")
+    public Map<String, String> getAuthEndpoint() {
+        Map<String, String> result = new HashMap<>();
+        String authEndpoint = kgServiceClient.getAuthEndpoint();
+        result.put("authEndpoint", authEndpoint);
+        return result;
+    }
+
     @GetMapping("/labels")
     public Map<String, Object> getLabels() {
         String authEndpoint = kgServiceClient.getAuthEndpoint();
-        Map<String, Object> labels = new HashMap<>();
-        labels.put("_source", labelsController.generateLabels());
-        labels.put("authEndpoint", authEndpoint);
-        return labels;
+        Map<String, Object> result = new HashMap<>();
+        result.put("_source", labelsController.generateLabels());
+        result.put("authEndpoint", authEndpoint);
+        return result;
     }
 
     @GetMapping("/groups")
@@ -144,6 +152,7 @@ public class Search {
         }
     }
 
+    //TODO move to controller
     private JsonNode getResult(String payload, String group) throws JsonProcessingException {
         String index = ESHelper.getIndexFromGroup("*", group);
         JsonNode jsonNode = adaptEsQueryForNestedDocument(payload);
@@ -152,6 +161,7 @@ public class Search {
         return updateEsResponseWithNestedDocument(resultJson);
     }
 
+    //TODO move to controller and document
     private JsonNode adaptEsQueryForNestedDocument(String payload) throws JsonProcessingException {
         JsonNode jsonNode = objectMapper.readTree(payload);
         List<String> paths = findPathForKey(jsonNode, "", "nested");
@@ -171,6 +181,7 @@ public class Search {
         return jsonNode;
     }
 
+    //TODO move to controller and document
     private JsonNode updateEsResponseWithNestedDocument(JsonNode jsonSrc) {
         try {
             JsonNode json = jsonSrc.deepCopy();
