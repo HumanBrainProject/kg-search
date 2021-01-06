@@ -27,11 +27,17 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import "./ie.css";
 import ReactPiwik from "react-piwik";
+import * as Sentry from "@sentry/browser";
 
 new ReactPiwik({
   url: process.env.REACT_APP_MATOMO_URL,
   siteId: process.env.REACT_APP_MATOMO_SITE_ID,
   trackErrors: true
+});
+
+Sentry.init({
+  dsn: process.env.REACT_APP_SENTRY_URL,
+  environment: window.location.host
 });
 
 ReactPiwik.push(["trackPageView"]);

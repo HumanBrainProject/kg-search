@@ -38,8 +38,7 @@
     "redux-thunk": "2.3.0",
     "sanitize-html": "^1.27.1",
     "showdown": "^1.9.0",
-    "showdown-xss-filter": "^0.2.0",
-    "universal-cookie": "^4.0.2"
+    "showdown-xss-filter": "^0.2.0"
   },
   "scripts": {
     "start": "env-cmd -f .env.development react-scripts start",
