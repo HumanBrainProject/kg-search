@@ -683,12 +683,11 @@ body[theme="dark"] .hbp-logo:after {
 
 #rootFooter {
   position: absolute;
-  right: var(--site-margin);
   margin-top: 20px;
   width: 100%;
 }
 
 #rootFooter > div {
   position: relative;
-  text-align: right;
+  text-align: left;
 }
