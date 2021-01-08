@@ -85,12 +85,11 @@
     .kgs-chevron-list > ul > li {
         margin: 10px 0 10px 0;
         border-bottom-width: 0;
-        box-shadow: 2px 2px 4px var(--box-shadow-3);
         transition: box-shadow 0.2s ease-in;
     }
 
     .kgs-chevron-list > ul > li:hover {
-        box-shadow: 3px 3px 6px var(--box-shadow-2);
+        box-shadow: 1px 1px 2px var(--box-shadow-2);
     }
 }
 

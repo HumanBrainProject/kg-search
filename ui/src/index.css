@@ -277,7 +277,7 @@ body {
   overflow-x: hidden;
   font-family: var(--font-stack);
   font-weight: var(--regular);
-  font-size: var(--font-size);
+  font-size: var(--font-size-small);
   line-height: var(--line-height);
   background: var(--background-color-2);
   color: var(--color-1);
@@ -309,7 +309,6 @@ main {
   min-height: 100vh;
   background-color: transparent;
   border-bottom: 1px solid var(--border-color-1);
-  box-shadow: 0 10px 20px 0 var(--box-shadow-1);
   z-index: 100;
   background: var(--background-color-2);
 }
@@ -341,17 +340,6 @@ main a:hover, main a:hover:visited {
   font-size: 14px;
   font-size: var(--font-size-small);
   color: var(--light-text);
-
-  /* display: block;
-  bottom: 0;
-  width: 100%;
-  padding: 20px var(--site-margin) 0;
-  display: flex;
-  flex-direction: column;
-  font-size: var(--font-size-small);
-  line-height: var(--line-height);
-  color: var(--light-text);
-  z-index: 5; */
 }
 
 .site-footer .footer__header {
@@ -482,6 +470,10 @@ main a:hover, main a:hover:visited {
   text-decoration: none; 
 }
 
+.navbar-nav>li {
+  font-weight: 600;
+}
+
 .navbar-default .navbar-nav>li>a {
   color: var(--color-8);
 }
@@ -496,10 +488,9 @@ main a:hover, main a:hover:visited {
 }
 
 .kgs-navbar .container-fluid {
+  max-width: 2100px;
   padding-right: 0px;
   padding-left: 0px;
-  margin-right: 0px;
-  margin-left: 0px;
 }
 
 .kgs-navbar .navbar-toggle {
@@ -559,15 +550,6 @@ main a:hover, main a:hover:visited {
 }
 
 @media (min-width: 768px) {
-  /* main {
-    margin-bottom: 500px;
-  }
-
-  .site-footer {
-       position: fixed;
-      min-height: 270px;
-  } */
-
   .kgs-navbar {
     height: 100px;
   }
