@@ -630,10 +630,10 @@ main a:hover, main a:hover:visited {
 body[theme="dark"] .logo:after {
   content: "EBRAINS";
   display: inline-block;
-  font-size: 19px;
+  font-size: 33px;
   font-weight: 600;
   padding-right: 10px;
-  transform: translate(-87px, 2px);
+  transform: translate(-145px, 4px);
   background: var(--background-color-2);
   color: var(--color-10);
   -webkit-font-smoothing: auto;
@@ -643,20 +643,42 @@ body[theme="dark"] .logo:after {
   position: relative;
 }
 
+.hbp-logo {
+  position: relative;
+  display: inline-block;
+}
+
 body[theme="dark"] .eu-logo:after {
   content: "Co-funded by\A the European Union";
   display: inline-block;
-  font-size: 15px;
+  font-size: 9px;
   background: var(--background-color-2);
   color: var(--color-10);
   -webkit-font-smoothing: auto;
   white-space: pre;
   position: absolute;
-  top: 20px;
-  left: 3px;
+  top: 11px;
+  left: 2px;
   line-height: 1.4em;
   letter-spacing: 0.04em;
   text-align: right;
+}
+
+body[theme="dark"] .hbp-logo:after {
+  content: "Human Brain Project";
+  display: inline-block;
+  font-size: 14px;
+  background: var(--background-color-2);
+  color: var(--color-10);
+  -webkit-font-smoothing: auto;
+  white-space: pre;
+  position: absolute;
+  top: 10px;
+  left: 37px;
+  line-height: 1.4em;
+  letter-spacing: 0.04em;
+  text-align: right;
+  font: initial;
 }
 
 #rootFooter {
