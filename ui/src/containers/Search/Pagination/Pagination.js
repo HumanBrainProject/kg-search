@@ -160,7 +160,10 @@ export const Pagination = connect(
     page: state.search.page
   }),
   dispatch => ({
-    onClick: value => dispatch(actionsSearch.setPage(value))
+    onClick: value => {
+      dispatch(actionsSearch.setPage(value));
+      window.scrollTo(0, 0); // Scroll page to top after paginating
+    }
   })
 )(PaginationComponent);
 

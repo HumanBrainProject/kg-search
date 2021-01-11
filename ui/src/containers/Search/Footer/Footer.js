@@ -15,7 +15,6 @@
 */
 
 import React from "react";
-import { withFloatingScrollEventsSubscription} from "../../../helpers/withFloatingScrollEventsSubscription";
 import { ShareButtons } from "../../Share/ShareButtons";
 import { Pagination } from "../Pagination/Pagination";
 import { GroupSelection } from "../../Group/GroupSelection";
@@ -24,9 +23,9 @@ import { TermsShortNotice } from "../../Notice/TermsShortNotice";
 import "./Footer.css";
 import { connect } from "react-redux";
 
-const FooterBase = ({isFloating, showLogin}) => {
+const FooterBase = ({showLogin}) => {
   return (
-    <div className={`kgs-footer${isFloating?" is-fixed-position":""}`}>
+    <div className="kgs-footer">
       <TermsShortNotice className="kgs-footer__terms-short-notice" />
       <div className="kgs-footer-nav">
         {showLogin &&
@@ -41,16 +40,8 @@ const FooterBase = ({isFloating, showLogin}) => {
   );
 };
 
-const FooterWithFloatingEvents = withFloatingScrollEventsSubscription(
-  "bottom",
-  [
-    {querySelector: "footer.site-footer"}
-  ]
-)(FooterBase);
-
-
 export const Footer = connect(
   state => ({
     showLogin: !!state.auth.authEndpoint
   })
-)(FooterWithFloatingEvents);
+)(FooterBase);
