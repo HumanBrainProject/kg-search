@@ -109,6 +109,12 @@
     color: var(--color-11);
 }
 
+.kgs-search-panel input.kg-search-bar:focus {
+    border-color: var(--color-30);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
 .kgs-search-panel input.kg-search-bar::-moz-placeholder {
     color: #999 !important;
 }

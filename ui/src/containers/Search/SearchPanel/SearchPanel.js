@@ -39,6 +39,7 @@ class SeachPanelBaseComponent extends React.Component {
       const queryString = decodeURIComponent(q);
       this.setState({value: queryString});
     }
+    this.textInput.current.focus();
   }
 
   handleMouseDownEvent = () => this.ref && this.ref.focus();
