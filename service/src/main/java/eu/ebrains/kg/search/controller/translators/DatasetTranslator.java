@@ -60,8 +60,9 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
 
         if (datasetV1.isUseHDG()) {
             String hdgMessage = String.format("This data requires you to explicitly [request access](https://hdg.kg.ebrains.eu/request_access?kg_id=%s) with your EBRAINS account. If you don't have such an account yet, please [register](https://ebrains.eu/register/).", datasetV1.getEditorId());
+            String hdgMessageHTML = String.format("This data requires you to explicitly <a href=\"https://hdg.kg.ebrains.eu/request_access?kg_id=%s\" target=\"_blank\">request access</a> with your EBRAINS account. If you don't have such an account yet, please <a href=\"https://ebrains.eu/register/\" target=\"_blank\">register</a>.", datasetV1.getEditorId());
             d.setUseHDG(hdgMessage);
-            d.setEmbargo(hdgMessage);
+            d.setEmbargo(hdgMessageHTML);
             d.setEmbargoForFilter("Controlled access");
         } else {
             if (databaseScope == DatabaseScope.RELEASED) {
