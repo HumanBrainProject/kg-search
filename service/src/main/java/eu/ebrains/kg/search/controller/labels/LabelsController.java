@@ -144,6 +144,9 @@ public class LabelsController {
             if (!info.tagIcon().equals(defaultFieldInfo.tagIcon())) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "tag_icon", info.tagIcon()); // TODO: change to camelCase (tagIcon)
             }
+            if (!info.icon().equals(defaultFieldInfo.icon())) {
+                propertyDefinition.put(SEARCH_UI_NAMESPACE + "icon", info.icon());
+            }
             if (info.boost() != defaultFieldInfo.boost()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "boost", info.boost());
             }

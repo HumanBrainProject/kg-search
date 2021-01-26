@@ -106,15 +106,13 @@ class Button extends React.PureComponent {
       return null;
     }
 
-    const {value} = field.mapping;
+    const {value, icon} = field.mapping;
 
     const [name, type] = value.split(" ");
-    const isListOfUrl = Array.isArray(field.data) && field.data.some(u => u.url);
-    const isUrl = field.data.url;
-    const icon = <i className={`fa ${isUrl || isListOfUrl?"fa-download":"fa-quote-left"}`}></i>;
-
     return (
-      <button type="button" className={`btn kgs-fields-buttons__button ${active?"is-active":""}`} onClick={this.handleClick}>{icon}{name}{type?(<span>{type}</span>):null}</button>
+      <button type="button" className={`btn kgs-fields-buttons__button ${active?"is-active":""}`} onClick={this.handleClick}>
+        <i className={icon}></i>{name}{type?(<span>{type}</span>):null}
+      </button>
     );
   }
 }

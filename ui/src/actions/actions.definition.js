@@ -74,6 +74,7 @@ export const loadDefinition = () => {
     field.markdown = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "markdown", false);
     field.labelHidden = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "label_hidden", false);
     field.tagIcon = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "tag_icon", null);
+    field.icon = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "icon", null);
     field.linkIcon = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "link_icon", null);
     field.visible = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "visible", true);
     field.isTable = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isTable", false);

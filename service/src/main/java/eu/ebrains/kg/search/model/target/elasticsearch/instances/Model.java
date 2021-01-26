@@ -45,7 +45,7 @@ public class Model implements TargetInstance {
     private Value<String> embargo;
 
     @JsonProperty("allfiles") //TODO: capitalize
-    @FieldInfo(label = "Download model", isButton = true, termsOfUse = true)
+    @FieldInfo(label = "Download model", isButton = true, termsOfUse = true, icon="fa fa-download")
     private List<TargetExternalReference> allFiles;
 
     @FieldInfo(label = "Publications", layout = FieldInfo.Layout.GROUP, markdown = true, hint = "List of publications that have been published as a part of this model.")

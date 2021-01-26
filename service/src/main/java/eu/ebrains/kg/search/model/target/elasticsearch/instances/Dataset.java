@@ -27,19 +27,19 @@ public class Dataset implements TargetInstance {
     @FieldInfo(label = "Contributors", separator = "; ", layout = FieldInfo.Layout.HEADER, type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true)
     private List<TargetInternalReference> contributors;
 
-    @FieldInfo(label = "Download Dataset", isButton = true, termsOfUse = true)
+    @FieldInfo(label = "Download Dataset", isButton = true, termsOfUse = true, icon="fa fa-download")
     private TargetExternalReference zip;
 
-    @FieldInfo(label = "Cite dataset", isButton = true, markdown = true)
+    @FieldInfo(label = "Cite dataset", isButton = true, markdown = true, icon="fa fa-quote-left")
     private Value<String> citation;
 
-    @FieldInfo(label = "Data-descriptor", isButton = true)
+    @FieldInfo(label = "Data-descriptor", isButton = true, icon="fa fa-sticky-note")
     private TargetExternalReference dataDescriptor;
 
     @FieldInfo(label = "DOI", hint = "This is the dataset DOI you must cite if you reuse this data in a way that leads to a publication")
     private Value<String> doi;
 
-    @FieldInfo(label= "Access Dataset", markdown = true, isButton = true, termsOfUse = true)
+    @FieldInfo(label= "Access Dataset", markdown = true, isButton = true, termsOfUse = true, icon="fa fa-unlock-alt")
     private Value<String> useHDG;
 
     @JsonProperty("license_info")
