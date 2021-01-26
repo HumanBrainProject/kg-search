@@ -26,7 +26,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         String containerUrl = datasetV1.getContainerUrl();
         boolean containerUrlAsZIP = datasetV1.getContainerUrlAsZIP();
         List<DatasetV1.SourceFile> files = datasetV1.getFiles();
-        if (!hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW) && (StringUtils.isNotBlank(containerUrl) && (containerUrlAsZIP || CollectionUtils.isEmpty(files)))) {
+        if (!datasetV1.isUseHDG() && !hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW) && (StringUtils.isNotBlank(containerUrl) && (containerUrlAsZIP || CollectionUtils.isEmpty(files)))) {
             d.setZip(new TargetExternalReference(
                     String.format("https://kg.ebrains.eu/proxy/export?container=%s", containerUrl), // TODO: Get rid of empty and containerUrlAsZip condition
                     "Download all related data as ZIP"
@@ -36,9 +36,6 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         if (databaseScope == DatabaseScope.INFERRED) {
             d.setEditorId(datasetV1.getEditorId());
         }
-    //    if(StringUtils.isNotBlank(datasetV1.getEditorId()) && datasetV1.isUseHDG()) {
-    //        d.setUseHDG(String.format("This data requires you to explicitly [request access](https://hdg.kg.ebrains.eu/request_access?kg_id=%s) with your EBRAINS account. If you don't have such an account yet, please [register](https://ebrains.eu/register/).", datasetV1.getEditorId()));
-    //    }
         d.setMethods(emptyToNull(datasetV1.getMethods()));
         d.setDescription(datasetV1.getDescription());
 
@@ -61,29 +58,34 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         }
         d.setSpeciesFilter(emptyToNull(datasetV1.getSpeciesFilter()));
 
-        if (databaseScope == DatabaseScope.RELEASED) {
-            if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
-                d.setEmbargo("This dataset is temporarily under embargo. The data will become available for download after the embargo period.");
-            } else if (hasEmbargoStatus(datasetV1, UNDER_REVIEW)) {
-                d.setEmbargo("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.");
+        if (datasetV1.isUseHDG()) {
+            String hdgMessage = String.format("This data requires you to explicitly [request access](https://hdg.kg.ebrains.eu/request_access?kg_id=%s) with your EBRAINS account. If you don't have such an account yet, please [register](https://ebrains.eu/register/).", datasetV1.getEditorId());
+            d.setUseHDG(hdgMessage);
+            d.setEmbargo(hdgMessage);
+            d.setEmbargoForFilter("Controlled access");
+        } else {
+            if (databaseScope == DatabaseScope.RELEASED) {
+                if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
+                    d.setEmbargo("This dataset is temporarily under embargo. The data will become available for download after the embargo period.");
+                } else if (hasEmbargoStatus(datasetV1, UNDER_REVIEW)) {
+                    d.setEmbargo("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.");
+                }
             }
-        }
-
-        d.setEmbargoForFilter(firstItemOrNull(datasetV1.getEmbargoForFilter()));
-
-        if (!CollectionUtils.isEmpty(datasetV1.getFiles()) && (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && !hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW)))) {
-            d.setFiles(emptyToNull(datasetV1.getFiles().stream()
-                    .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
-                    .map(f ->
-                            new TargetFile(
-                                    f.getPrivateAccess() ? String.format("%s/files/cscs?url=%s", Translator.fileProxy, f.getAbsolutePath()) : f.getAbsolutePath(),
-                                    f.getPrivateAccess() ? String.format("ACCESS PROTECTED: %s", f.getName()) : f.getName(),
-                                    f.getHumanReadableSize(),
-                                    getFileImage(f.getStaticImageUrl(), false),
-                                    getFileImage(f.getPreviewUrl(), !f.getPreviewAnimated().isEmpty() && f.getPreviewAnimated().get(0)), //TODO review
-                                    getFileImage(f.getThumbnailUrl(), false)
-                            )
-                    ).collect(Collectors.toList())));
+            d.setEmbargoForFilter(firstItemOrNull(datasetV1.getEmbargoForFilter()));
+            if (!CollectionUtils.isEmpty(datasetV1.getFiles()) && (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && !hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW)))) {
+                d.setFiles(emptyToNull(datasetV1.getFiles().stream()
+                        .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
+                        .map(f ->
+                                new TargetFile(
+                                        f.getPrivateAccess() ? String.format("%s/files/cscs?url=%s", Translator.fileProxy, f.getAbsolutePath()) : f.getAbsolutePath(),
+                                        f.getPrivateAccess() ? String.format("ACCESS PROTECTED: %s", f.getName()) : f.getName(),
+                                        f.getHumanReadableSize(),
+                                        getFileImage(f.getStaticImageUrl(), false),
+                                        getFileImage(f.getPreviewUrl(), !f.getPreviewAnimated().isEmpty() && f.getPreviewAnimated().get(0)), //TODO review
+                                        getFileImage(f.getThumbnailUrl(), false)
+                                )
+                        ).collect(Collectors.toList())));
+            }
         }
 
         String citation = firstItemOrNull(datasetV1.getCitation());
@@ -188,7 +190,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                             )
                     ).collect(Collectors.toList()));
         }
-        if (databaseScope == DatabaseScope.INFERRED) {
+        if (databaseScope == DatabaseScope.INFERRED && !datasetV1.isUseHDG()) {
             if (containerUrl != null && containerUrl.startsWith("https://object.cscs.ch")) {
                 if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
                     d.setEmbargoRestrictedAccess(String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", containerUrl));
