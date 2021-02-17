@@ -1,0 +1,75 @@
+package eu.ebrains.kg.search.model.source.openMINDSv3;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.ebrains.kg.search.constants.EBRAINSVocab;
+import eu.ebrains.kg.search.model.source.SourceInstance;
+
+import java.util.List;
+
+public class DatasetV3 implements SourceInstance {
+    @JsonProperty(EBRAINSVocab.OPENMINDS_DESCRIPTION)
+    private String description;
+
+    @JsonProperty(EBRAINSVocab.OPENMINDS_DIGITAL_IDENTIFIER)
+    private List<DigitalIdentifierV3> digitalIdentifier;
+
+    @JsonProperty(EBRAINSVocab.OPENMINDS_FULL_NAME)
+    private String fullName;
+
+    @JsonProperty(EBRAINSVocab.OPENMINDS_HAS_VERSION)
+    private List<DatasetVersionV3> hasVersion;
+
+    @JsonProperty(EBRAINSVocab.OPENMINDS_HOMEPAGE)
+    private String homepage;
+
+    @JsonProperty(EBRAINSVocab.OPENMINDS_SHORT_NAME)
+    private String shortName;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<DigitalIdentifierV3> getDigitalIdentifier() {
+        return digitalIdentifier;
+    }
+
+    public void setDigitalIdentifier(List<DigitalIdentifierV3> digitalIdentifier) {
+        this.digitalIdentifier = digitalIdentifier;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public List<DatasetVersionV3> getHasVersion() {
+        return hasVersion;
+    }
+
+    public void setHasVersion(List<DatasetVersionV3> hasVersion) {
+        this.hasVersion = hasVersion;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getHomepage() {
+        return homepage;
+    }
+
+    public void setHomepage(String homepage) {
+        this.homepage = homepage;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+}

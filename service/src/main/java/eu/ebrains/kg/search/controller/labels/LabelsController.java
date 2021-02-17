@@ -1,17 +1,17 @@
 package eu.ebrains.kg.search.controller.labels;
 
 import eu.ebrains.kg.search.controller.Constants;
-import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.RibbonInfo;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.utils.MetaModelUtils;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class LabelsController {
