@@ -2,7 +2,7 @@ package eu.ebrains.kg.search.controller.elasticsearch;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.services.ESServiceClient;
@@ -24,8 +24,8 @@ public class ElasticSearchController {
         this.esServiceClient = esServiceClient;
     }
 
-    public void recreateIndex(Map<String, Object> mapping, String type, DatabaseScope databaseScope) {
-        String index = ESHelper.getIndex(type, databaseScope);
+    public void recreateIndex(Map<String, Object> mapping, String type, DataStage dataStage) {
+        String index = ESHelper.getIndex(type, dataStage);
         try {
             esServiceClient.deleteIndex(index);
         } catch (WebClientResponseException e) {
@@ -36,8 +36,8 @@ public class ElasticSearchController {
         esServiceClient.createIndex(index, mapping);
     }
 
-    public void indexDocuments(List<TargetInstance> instances, String type, DatabaseScope databaseScope) {
-        String index = ESHelper.getIndex(type, databaseScope);
+    public void indexDocuments(List<TargetInstance> instances, String type, DataStage dataStage) {
+        String index = ESHelper.getIndex(type, dataStage);
         StringBuilder operations = new StringBuilder();
         instances.forEach(instance -> {
             operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", instance.getIdentifier().getValue()));
@@ -50,8 +50,8 @@ public class ElasticSearchController {
         esServiceClient.updateIndex(index, operations.toString());
     }
 
-    public void updateIndex(List<TargetInstance> instances, String type, DatabaseScope databaseScope) {
-        String index = ESHelper.getIndex(type, databaseScope);
+    public void updateIndex(List<TargetInstance> instances, String type, DataStage dataStage) {
+        String index = ESHelper.getIndex(type, dataStage);
         HashSet<String> ids = new HashSet<>();
         StringBuilder operations = new StringBuilder();
         instances.forEach( instance -> {

@@ -1,15 +1,26 @@
 package eu.ebrains.kg.search.controller.kg;
 
-import eu.ebrains.kg.search.model.source.ResultOfKGv3;
+import eu.ebrains.kg.search.model.DataStage;
+import eu.ebrains.kg.search.services.KGV3ServiceClient;
 import org.springframework.stereotype.Component;
 
 
 @Component
 public class KGv3 {
+    private final KGV3ServiceClient kgServiceClient;
 
-    //TODO To be implemented
-    public <T> ResultOfKGv3<T> fetchInstances(Class<T> clazz){
-        return null;
+    public KGv3(KGV3ServiceClient kgServiceClient) {
+        this.kgServiceClient = kgServiceClient;
+    }
+
+
+    public <T> T fetchInstances(Class<T> clazz, String queryId, String authorization, DataStage dataStage){
+        return kgServiceClient.executeQuery(queryId, dataStage, clazz, authorization);
+    }
+
+
+    public <T> T fetchInstance(Class<T> clazz, String queryId, String id, String authorization, DataStage dataStage) {
+        return  kgServiceClient.executeQuery(queryId, id, dataStage, clazz, authorization);
     }
 
 }

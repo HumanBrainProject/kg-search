@@ -1,5 +1,5 @@
 {
-  "databaseScope": "RELEASED",
+  "dataStage": "RELEASED",
   "importantMessage": "This query is executed with a mode thought for query testing only (with throttled performance). Please register your query if you're happy with it. It's easy and you gain speed ;)!",
   "apiName": "Sample",
   "results": [

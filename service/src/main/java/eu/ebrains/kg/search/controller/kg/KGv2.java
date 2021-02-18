@@ -1,6 +1,6 @@
 package eu.ebrains.kg.search.controller.kg;
 
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.services.KGServiceClient;
 import org.springframework.stereotype.Component;
 
@@ -12,16 +12,16 @@ public class KGv2 {
         this.kgServiceClient = kgServiceClient;
     }
 
-    public <T> T fetchInstances(Class<T> clazz, String query, String authorization, DatabaseScope databaseScope){
-        return kgServiceClient.executeQuery(query, databaseScope, clazz, authorization);
+    public <T> T fetchInstances(Class<T> clazz, String query, String authorization, DataStage dataStage){
+        return kgServiceClient.executeQuery(query, dataStage, clazz, authorization);
     }
 
-    public <T> T fetchInstance(Class<T> clazz, String query, String id, String authorization, DatabaseScope databaseScope) {
-        return  kgServiceClient.executeQuery(query, id, databaseScope, clazz, authorization);
+    public <T> T fetchInstance(Class<T> clazz, String query, String id, String authorization, DataStage dataStage) {
+        return  kgServiceClient.executeQuery(query, id, dataStage, clazz, authorization);
     }
 
-    public <T> T fetchInstanceByIdentifier(Class<T> clazz, String query, String identifier, String authorization, DatabaseScope databaseScope) {
-        return  kgServiceClient.executeQueryByIdentifier(query, identifier, databaseScope, clazz, authorization);
+    public <T> T fetchInstanceByIdentifier(Class<T> clazz, String query, String identifier, String authorization, DataStage dataStage) {
+        return  kgServiceClient.executeQueryByIdentifier(query, identifier, dataStage, clazz, authorization);
     }
 
 }

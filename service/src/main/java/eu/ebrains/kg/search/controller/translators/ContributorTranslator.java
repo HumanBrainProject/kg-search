@@ -1,6 +1,6 @@
 package eu.ebrains.kg.search.controller.translators;
 
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.PersonSources;
 import eu.ebrains.kg.search.model.source.PersonV1andV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Contributor;
@@ -18,7 +18,7 @@ import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 public class ContributorTranslator implements Translator<PersonSources, Contributor> {
 
 
-    public Contributor translate(PersonSources personSources, DatabaseScope databaseScope, boolean liveMode) {
+    public Contributor translate(PersonSources personSources, DataStage dataStage, boolean liveMode) {
         Contributor c = new Contributor();
         PersonV1andV2 person = personSources.getPersonV2() != null ? personSources.getPersonV2() : personSources.getPersonV1();
         c.setIdentifier(person.getIdentifier());
@@ -72,7 +72,7 @@ public class ContributorTranslator implements Translator<PersonSources, Contribu
                         return publicationResult;
                     }).filter(Objects::nonNull).collect(Collectors.toList())));
         }
-        if (databaseScope == DatabaseScope.INFERRED) {
+        if (dataStage == DataStage.IN_PROGRESS) {
             c.setEditorId(person.getEditorId());
         }
         return c;

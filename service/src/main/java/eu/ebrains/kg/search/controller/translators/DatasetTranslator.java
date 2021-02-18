@@ -1,8 +1,11 @@
 package eu.ebrains.kg.search.controller.translators;
 
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
+import eu.ebrains.kg.search.model.source.DatasetSources;
 import eu.ebrains.kg.search.model.source.commons.SourceExternalReference;
 import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
+import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
@@ -18,10 +21,37 @@ import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
-public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
+public class DatasetTranslator implements Translator<DatasetSources, Dataset> {
 
+    public Dataset translate(DatasetSources datasetSources, DataStage dataStage, boolean liveMode) {
+        if (datasetSources.getDatasetV3() != null) {
+            return this.translate(datasetSources.getDatasetV3(), dataStage, liveMode, null);
+        }
+        return translate(datasetSources.getDatasetV1(), dataStage, liveMode);
+    }
 
-    public Dataset translate(DatasetV1 datasetV1, DatabaseScope databaseScope, boolean liveMode) {
+    public Dataset translate(DatasetV3 datasetV3, DataStage dataStage, boolean liveMode, String versionIdentifier) {
+        Dataset d = new Dataset();
+        DatasetVersionV3 datasetVersion = getDatasetVersion(datasetV3.getHasVersion(), versionIdentifier);
+        if(datasetVersion != null) {
+            d.setDescription(datasetVersion.getDescription());
+            d.setTitle(datasetVersion.getFullName());
+            d.setVersionIdentifier(datasetVersion.getVersionIdentifier());
+        } else {
+            d.setDescription(datasetV3.getDescription());
+            d.setTitle(datasetV3.getFullName());
+        }
+        return d;
+    }
+
+    private DatasetVersionV3 getDatasetVersion(List<DatasetVersionV3> datasetVersions, String versionIdentifier) {
+        if (datasetVersions != null && versionIdentifier != null) {
+            return datasetVersions.stream().filter(d -> d.getVersionIdentifier().equals(versionIdentifier)).collect(Collectors.toList()).stream().findFirst().orElse(null);
+        }
+        return null;
+    }
+
+    public Dataset translate(DatasetV1 datasetV1, DataStage dataStage, boolean liveMode) {
         Dataset d = new Dataset();
         String containerUrl = datasetV1.getContainerUrl();
         boolean containerUrlAsZIP = datasetV1.getContainerUrlAsZIP();
@@ -33,7 +63,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
             ));
         }
         d.setIdentifier(datasetV1.getIdentifier());
-        if (databaseScope == DatabaseScope.INFERRED) {
+        if (dataStage == DataStage.IN_PROGRESS) {
             d.setEditorId(datasetV1.getEditorId());
         }
         d.setMethods(emptyToNull(datasetV1.getMethods()));
@@ -65,7 +95,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
             d.setEmbargo(hdgMessageHTML);
             d.setEmbargoForFilter("Controlled access");
         } else {
-            if (databaseScope == DatabaseScope.RELEASED) {
+            if (dataStage == DataStage.RELEASED) {
                 if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
                     d.setEmbargo("This dataset is temporarily under embargo. The data will become available for download after the embargo period.");
                 } else if (hasEmbargoStatus(datasetV1, UNDER_REVIEW)) {
@@ -73,7 +103,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                 }
             }
             d.setEmbargoForFilter(firstItemOrNull(datasetV1.getEmbargoForFilter()));
-            if (!CollectionUtils.isEmpty(datasetV1.getFiles()) && (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && !hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW)))) {
+            if (!CollectionUtils.isEmpty(datasetV1.getFiles()) && (dataStage == DataStage.IN_PROGRESS || (dataStage == DataStage.RELEASED && !hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW)))) {
                 d.setFiles(emptyToNull(datasetV1.getFiles().stream()
                         .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
                         .map(f ->
@@ -191,7 +221,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                             )
                     ).collect(Collectors.toList()));
         }
-        if (databaseScope == DatabaseScope.INFERRED && !datasetV1.isUseHDG()) {
+        if (dataStage == DataStage.IN_PROGRESS && !datasetV1.isUseHDG()) {
             if (containerUrl != null && containerUrl.startsWith("https://object.cscs.ch")) {
                 if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
                     d.setEmbargoRestrictedAccess(String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", containerUrl));

@@ -1,6 +1,6 @@
 package eu.ebrains.kg.search.model;
 
-public enum DatabaseScope {
+public enum DataStage {
     RELEASED,
-    INFERRED
+    IN_PROGRESS
 }

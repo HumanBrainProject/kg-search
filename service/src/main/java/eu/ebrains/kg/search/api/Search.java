@@ -11,7 +11,7 @@ import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
 import eu.ebrains.kg.search.controller.labels.LabelsController;
 import eu.ebrains.kg.search.controller.translators.TranslationController;
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.services.KGServiceClient;
@@ -95,7 +95,7 @@ public class Search {
                                                     @PathVariable("id") String id,
                                                     @RequestHeader("X-Legacy-Authorization") String authorization) {
         try {
-            TargetInstance instance = translationController.createInstance(DatabaseScope.INFERRED, true, org, domain, schema, version, id, authorization);
+            TargetInstance instance = translationController.createInstance(DataStage.IN_PROGRESS, true, org, domain, schema, version, id, authorization);
             return ResponseEntity.ok(Map.of("_source", instance));
         } catch (HttpClientErrorException e) {
             return ResponseEntity.status(e.getStatusCode()).build();

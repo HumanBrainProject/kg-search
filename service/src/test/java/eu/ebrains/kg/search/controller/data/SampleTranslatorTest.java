@@ -1,7 +1,7 @@
 package eu.ebrains.kg.search.controller.data;
 
 import eu.ebrains.kg.search.controller.utils.TranslatorTestHelper;
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SampleV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
@@ -31,34 +31,34 @@ public class SampleTranslatorTest {
     String token;
 
     @Test
-    public void compareReleasedSamples() { compareSamples(DatabaseScope.RELEASED, false); }
+    public void compareReleasedSamples() { compareSamples(DataStage.RELEASED, false); }
 
     @Test
     public void compareInferredSamples() {
-        compareSamples(DatabaseScope.INFERRED, false);
+        compareSamples(DataStage.IN_PROGRESS, false);
     }
 
     @Test
     public void compareInferredLiveSamples() {
-        compareSamples(DatabaseScope.INFERRED, true);
+        compareSamples(DataStage.IN_PROGRESS, true);
     }
 
-    private void compareSamples(DatabaseScope databaseScope, boolean liveMode) {
+    private void compareSamples(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        SampleV1Result queryResult = kgServiceClient.executeQuery("query/minds/experiment/sample/v1.0.0/search", databaseScope, SampleV1Result.class, token);
+        SampleV1Result queryResult = kgServiceClient.executeQuery("query/minds/experiment/sample/v1.0.0/search", dataStage, SampleV1Result.class, token);
         queryResult.getResults().forEach(sample -> {
             String id = liveMode?sample.getEditorId():sample.getIdentifier();
             ElasticSearchDocument doc;
             if (liveMode) {
                 doc = LegacySearchServiceClient.getLiveDocument(id, ElasticSearchDocument.class);
             } else {
-                doc = LegacySearchServiceClient.getDocument(databaseScope, "Sample", id, ElasticSearchDocument.class);
+                doc = LegacySearchServiceClient.getDocument(dataStage, "Sample", id, ElasticSearchDocument.class);
             }
             if (doc == null) {
                 result.add("\n\n\tSample: " + sample.getIdentifier() + " (Fail to get expected document!)");
             } else {
                 Map<String, Object> expected = doc.getSource();
-                List<String> messages = TranslatorTestHelper.compareSample(sample, expected, databaseScope, liveMode);
+                List<String> messages = TranslatorTestHelper.compareSample(sample, expected, dataStage, liveMode);
                 if (!messages.isEmpty()) {
                     result.add("\n\n\tSample: " + sample.getIdentifier() + "\n\t\t" + String.join("\n\t\t", messages));
                 }
@@ -73,7 +73,7 @@ public class SampleTranslatorTest {
     public void compareReleasedSample() throws IOException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v1/sampleReleasedSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/sampleReleasedTarget.json"), StandardCharsets.UTF_8);
-        List<String> result = TranslatorTestHelper.compareSample(sourceJson, expectedJson, DatabaseScope.RELEASED, false);
+        List<String> result = TranslatorTestHelper.compareSample(sourceJson, expectedJson, DataStage.RELEASED, false);
         if (!result.isEmpty()) {
             Assert.fail("\n\t" + String.join("\n\t", result));
         }
@@ -83,7 +83,7 @@ public class SampleTranslatorTest {
     public void compareInferredSample() throws IOException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v1/sampleInferredSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/sampleInferredTarget.json"), StandardCharsets.UTF_8);
-        List<String> result = TranslatorTestHelper.compareSample(sourceJson, expectedJson, DatabaseScope.INFERRED, false);
+        List<String> result = TranslatorTestHelper.compareSample(sourceJson, expectedJson, DataStage.IN_PROGRESS, false);
         if (!result.isEmpty()) {
             Assert.fail("\n\t" + String.join("\n\t", result));
         }
@@ -93,7 +93,7 @@ public class SampleTranslatorTest {
     public void compareInferredLiveSample() throws IOException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v1/sampleInferredSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/sampleInferredLiveTarget.json"), StandardCharsets.UTF_8);
-        List<String> result = TranslatorTestHelper.compareSample(sourceJson, expectedJson, DatabaseScope.INFERRED, true);
+        List<String> result = TranslatorTestHelper.compareSample(sourceJson, expectedJson, DataStage.IN_PROGRESS, true);
         if (!result.isEmpty()) {
             Assert.fail("\n\t" + String.join("\n\t", result));
         }

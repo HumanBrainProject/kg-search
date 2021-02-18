@@ -1,6 +1,6 @@
 package eu.ebrains.kg.search.controller.translators;
 
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SampleV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Sample;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
@@ -15,7 +15,7 @@ import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
 public class SampleTranslator implements Translator<SampleV1, Sample> {
 
-    public Sample translate(SampleV1 sample, DatabaseScope databaseScope, boolean liveMode) {
+    public Sample translate(SampleV1 sample, DataStage dataStage, boolean liveMode) {
         Sample s = new Sample();
         String title = sample.getTitle();
         s.setTitle(title);
@@ -23,7 +23,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
         s.setLastRelease(sample.getLastReleaseAt());
         s.setIdentifier(sample.getIdentifier());
         s.setDatasetExists(emptyToNull(sample.getDatasetExists()));
-        if (databaseScope == DatabaseScope.INFERRED) {
+        if (dataStage == DataStage.IN_PROGRESS) {
             s.setEditorId(sample.getEditorId());
         }
         s.setParcellationAtlas(emptyToNull(sample.getParcellationAtlas()));
@@ -91,7 +91,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                 ));
             }
         }
-        if (!CollectionUtils.isEmpty(sample.getFiles()) && (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && !hasEmbargoStatus(sample, EMBARGOED, UNDER_REVIEW)))) {
+        if (!CollectionUtils.isEmpty(sample.getFiles()) && (dataStage == DataStage.IN_PROGRESS || (dataStage == DataStage.RELEASED && !hasEmbargoStatus(sample, EMBARGOED, UNDER_REVIEW)))) {
             s.setFiles(emptyToNull(sample.getFiles().stream()
                     .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
                     .map(f ->

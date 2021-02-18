@@ -7,6 +7,9 @@ import eu.ebrains.kg.search.model.source.SourceInstance;
 import java.util.List;
 
 public class DatasetV3 implements SourceInstance {
+    @JsonProperty(EBRAINSVocab.OPENMINDS_IDENTIFIER)
+    private List<String> identifier;
+
     @JsonProperty(EBRAINSVocab.OPENMINDS_DESCRIPTION)
     private String description;
 
@@ -24,6 +27,14 @@ public class DatasetV3 implements SourceInstance {
 
     @JsonProperty(EBRAINSVocab.OPENMINDS_SHORT_NAME)
     private String shortName;
+
+    public List<String> getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(List<String> identifier) {
+        this.identifier = identifier;
+    }
 
     public String getDescription() {
         return description;

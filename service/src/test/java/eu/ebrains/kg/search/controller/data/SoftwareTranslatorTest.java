@@ -1,7 +1,7 @@
 package eu.ebrains.kg.search.controller.data;
 
 import eu.ebrains.kg.search.controller.utils.TranslatorTestHelper;
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
@@ -31,34 +31,34 @@ public class SoftwareTranslatorTest {
     private static class SoftwareV2Result extends ResultOfKGv2<SoftwareV2> {}
 
     @Test
-    public void compareReleasedSoftwares() { compareSoftware(DatabaseScope.RELEASED, false); }
+    public void compareReleasedSoftwares() { compareSoftware(DataStage.RELEASED, false); }
 
     @Test
     public void compareInferredSoftwares() {
-        compareSoftware(DatabaseScope.INFERRED, false);
+        compareSoftware(DataStage.IN_PROGRESS, false);
     }
 
     @Test
     public void compareInferredLiveSoftwares() {
-        compareSoftware(DatabaseScope.INFERRED, true);
+        compareSoftware(DataStage.IN_PROGRESS, true);
     }
 
-    public void compareSoftware(DatabaseScope databaseScope, boolean liveMode) {
+    public void compareSoftware(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        SoftwareV2Result queryResult = kgServiceClient.executeQuery("query/softwarecatalog/software/softwareproject/v1.0.0/search", databaseScope, SoftwareV2Result.class, token);
+        SoftwareV2Result queryResult = kgServiceClient.executeQuery("query/softwarecatalog/software/softwareproject/v1.0.0/search", dataStage, SoftwareV2Result.class, token);
         queryResult.getResults().forEach(software -> {
             String id = liveMode?software.getEditorId():software.getIdentifier();
             ElasticSearchDocument doc;
             if (liveMode) {
                 doc = LegacySearchServiceClient.getLiveDocument(id, ElasticSearchDocument.class);
             } else {
-                doc = LegacySearchServiceClient.getDocument(databaseScope, "Software", id, ElasticSearchDocument.class);
+                doc = LegacySearchServiceClient.getDocument(dataStage, "Software", id, ElasticSearchDocument.class);
             }
             if (doc == null) {
                 result.add("\n\n\tSoftware: " + software.getIdentifier() + " (Fail to get expected document!)");
             } else {
                 Map<String, Object> expected = doc.getSource();
-                List<String> messages = TranslatorTestHelper.compareSoftware(software, expected, databaseScope, liveMode);
+                List<String> messages = TranslatorTestHelper.compareSoftware(software, expected, dataStage, liveMode);
                 if (!messages.isEmpty()) {
                     result.add("\n\n\tSoftware: " + software.getIdentifier() + "\n\t\t" + String.join("\n\t\t", messages));
                 }
@@ -73,7 +73,7 @@ public class SoftwareTranslatorTest {
     public void compareReleasedSoftware() throws IOException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareReleasedSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareReleasedTarget.json"), StandardCharsets.UTF_8);
-        List<String> result = TranslatorTestHelper.compareSoftware(sourceJson, expectedJson, DatabaseScope.RELEASED, false);
+        List<String> result = TranslatorTestHelper.compareSoftware(sourceJson, expectedJson, DataStage.RELEASED, false);
         if (!result.isEmpty()) {
             Assert.fail("\n\t" + String.join("\n\t", result));
         }
@@ -83,7 +83,7 @@ public class SoftwareTranslatorTest {
     public void compareInferredSoftware() throws IOException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareInferredSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareInferredTarget.json"), StandardCharsets.UTF_8);
-        List<String> result = TranslatorTestHelper.compareSoftware(sourceJson, expectedJson, DatabaseScope.INFERRED, false);
+        List<String> result = TranslatorTestHelper.compareSoftware(sourceJson, expectedJson, DataStage.IN_PROGRESS, false);
         if (!result.isEmpty()) {
             Assert.fail("\n\t" + String.join("\n\t", result));
         }
@@ -93,7 +93,7 @@ public class SoftwareTranslatorTest {
     public void compareInferredLiveSoftware() throws IOException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareInferredSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareInferredLiveTarget.json"), StandardCharsets.UTF_8);
-        List<String> result = TranslatorTestHelper.compareSoftware(sourceJson, expectedJson, DatabaseScope.INFERRED, true);
+        List<String> result = TranslatorTestHelper.compareSoftware(sourceJson, expectedJson, DataStage.IN_PROGRESS, true);
         if (!result.isEmpty()) {
             Assert.fail("\n\t" + String.join("\n\t", result));
         }

@@ -1,6 +1,7 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.ebrains.kg.search.constants.EBRAINSVocab;
 import eu.ebrains.kg.search.model.target.elasticsearch.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import org.apache.commons.lang3.StringUtils;
@@ -108,6 +109,16 @@ public class Dataset implements TargetInstance {
     @JsonProperty("last_release")
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
+
+    private String versionIdentifier;
+
+    public String getVersionIdentifier() {
+        return versionIdentifier;
+    }
+
+    public void setVersionIdentifier(String versionIdentifier) {
+        this.versionIdentifier = versionIdentifier;
+    }
 
     public Value<String> getUseHDG() { return useHDG; }
 

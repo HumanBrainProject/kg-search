@@ -1,6 +1,6 @@
 package eu.ebrains.kg.search.controller.translators;
 
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Software;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
@@ -14,14 +14,14 @@ import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
 public class SoftwareTranslator implements Translator<SoftwareV2, Software> {
 
-    public Software translate(SoftwareV2 softwareV2, DatabaseScope databaseScope, boolean liveMode) {
+    public Software translate(SoftwareV2 softwareV2, DataStage dataStage, boolean liveMode) {
         Software s = new Software();
         if (!CollectionUtils.isEmpty(softwareV2.getVersions())) {
             softwareV2.getVersions().sort(Comparator.comparing(SoftwareV2.Version::getVersion).reversed());
         }
         SoftwareV2.Version version = firstItemOrNull(softwareV2.getVersions());
 
-        if (databaseScope == DatabaseScope.INFERRED) {
+        if (dataStage == DataStage.IN_PROGRESS) {
             s.setEditorId(softwareV2.getEditorId());
         }
         s.setAppCategory(emptyToNull(version.getApplicationCategory()));

@@ -1,6 +1,6 @@
 package eu.ebrains.kg.search.controller.translators;
 
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.commons.SourceExternalReference;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Model;
@@ -17,14 +17,14 @@ import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
 public class ModelTranslator implements Translator<ModelV2, Model> {
 
-    public Model translate(ModelV2 modelV2, DatabaseScope databaseScope, boolean liveMode) {
+    public Model translate(ModelV2 modelV2, DataStage dataStage, boolean liveMode) {
         Model m = new Model();
         m.setIdentifier(modelV2.getIdentifier());
-        if (databaseScope == DatabaseScope.INFERRED) {
+        if (dataStage == DataStage.IN_PROGRESS) {
             m.setEditorId(modelV2.getEditorId());
         }
         if (hasEmbargoStatus(modelV2, EMBARGOED)) {
-            if (databaseScope == DatabaseScope.RELEASED) {
+            if (dataStage == DataStage.RELEASED) {
                 m.setEmbargo("This model is temporarily under embargo. The data will become available for download after the embargo period.");
             } else {
                 SourceExternalReference fileBundle = firstItemOrNull(modelV2.getFileBundle());

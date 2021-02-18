@@ -1,6 +1,6 @@
 package eu.ebrains.kg.search.controller.translators;
 
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Subject;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
@@ -12,12 +12,12 @@ import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
 public class SubjectTranslator implements Translator<SubjectV1, Subject> {
 
-    public Subject translate(SubjectV1 subject, DatabaseScope databaseScope, boolean liveMode) {
+    public Subject translate(SubjectV1 subject, DataStage dataStage, boolean liveMode) {
         Subject s = new Subject();
         s.setAge(subject.getAge());
         s.setAgeCategory(emptyToNull(subject.getAgeCategory()));
         s.setDatasetExists(emptyToNull(subject.getDatasetExists()));
-        if (databaseScope == DatabaseScope.INFERRED) {
+        if (dataStage == DataStage.IN_PROGRESS) {
             s.setEditorId(subject.getEditorId());
         }
         s.setFirstRelease(subject.getFirstReleaseAt());
