@@ -149,12 +149,16 @@ public class TranslationController {
         });
 
         DatasetTranslator translator = new DatasetTranslator();
+        VersionedDatasetTranslator versionedDatasetTranslator = new VersionedDatasetTranslator();
         TargetInstances targetInstances = new TargetInstances();
         datasetSources.forEach(d -> {
             if(d.getDatasetV3() != null) {
-                List<String> versionIdentifiers = sortDatasetVersions(d.getDatasetV3().getHasVersion());
+                List<String> versionIdentifiers = sortDatasetVersions(d.getDatasetV3().getDatasetVersions());
                 for(int i = 0; i < versionIdentifiers.size(); i++) {
-                    targetInstances.addInstance(translator.translate(d.getDatasetV3(), dataStage, liveMode, versionIdentifiers.get(i)), i==0);
+                    if(i == 0) {
+                        targetInstances.addInstance(versionedDatasetTranslator.translate(d.getDatasetV3(), dataStage, liveMode, versionIdentifiers.get(i), true), true);
+                    }
+                    targetInstances.addInstance(versionedDatasetTranslator.translate(d.getDatasetV3(), dataStage, liveMode, versionIdentifiers.get(i), false), false);
                 }
             } else {
                 targetInstances.addInstance(translator.translate(d.getDatasetV1(), dataStage, liveMode), true);
@@ -195,14 +199,14 @@ public class TranslationController {
         //TODO: Remove the comments. It is just for test and will be removed.
 //        ResultOfKGV3DatasetV3 datasetV31 = kgV3.fetchInstance(ResultOfKGV3DatasetV3.class, Queries.DATASET_ID, id, authorization, dataStage);
 //        DatasetV3 datasetV32 = datasetV31.getData().get(0);
-//        String latestDatasetVersionIdentifier = getLatestDatasetVersionIdentifier(datasetV32.getHasVersion());
+//        String latestDatasetVersionIdentifier = getLatestDatasetVersionIdentifier(datasetV32.getDatasetVersions());
 //        DatasetTranslator translator = new DatasetTranslator();
 //        return translator.translate(datasetV32, dataStage, liveMode, latestDatasetVersionIdentifier);
 
         DatasetV3 datasetV3 = kgV3.fetchInstance(DatasetV3.class, Queries.DATASET_ID, id, authorization, dataStage);
-        String latestDatasetVersionIdentifier = getLatestDatasetVersionIdentifier(datasetV3.getHasVersion());
-        DatasetTranslator translator = new DatasetTranslator();
-        return translator.translate(datasetV3, dataStage, liveMode, latestDatasetVersionIdentifier);
+        String latestDatasetVersionIdentifier = getLatestDatasetVersionIdentifier(datasetV3.getDatasetVersions());
+        VersionedDatasetTranslator translator = new VersionedDatasetTranslator();
+        return translator.translate(datasetV3, dataStage, liveMode, latestDatasetVersionIdentifier, true);
     }
 
     private String getLatestDatasetVersionIdentifier(List<DatasetVersionV3> datasetVersions){

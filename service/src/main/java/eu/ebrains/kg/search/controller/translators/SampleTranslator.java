@@ -9,6 +9,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetE
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
@@ -21,7 +22,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
         s.setTitle(title);
         s.setFirstRelease(sample.getFirstReleaseAt());
         s.setLastRelease(sample.getLastReleaseAt());
-        s.setIdentifier(sample.getIdentifier());
+        s.setIdentifier(Collections.singletonList(sample.getIdentifier()));
         s.setDatasetExists(emptyToNull(sample.getDatasetExists()));
         if (dataStage == DataStage.IN_PROGRESS) {
             s.setEditorId(sample.getEditorId());

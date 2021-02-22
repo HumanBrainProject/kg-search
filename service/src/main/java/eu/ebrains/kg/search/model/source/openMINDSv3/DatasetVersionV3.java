@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.List;
 
 public class DatasetVersionV3 implements SourceInstance {
+    @JsonProperty(EBRAINSVocab.OPENMINDS_ID)
+    private String id;
+
     @JsonProperty(EBRAINSVocab.OPENMINDS_DESCRIPTION)
     private String description;
 
@@ -38,6 +41,17 @@ public class DatasetVersionV3 implements SourceInstance {
     @JsonProperty(EBRAINSVocab.OPENMINDS_PREVIOUS_VERSION_IDENTIFIER)
     private String previousVersionIdentifier;
 
+    @JsonProperty(EBRAINSVocab.OPENMINDS_IDENTIFIER)
+    private List<String> identifiers;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -53,6 +67,10 @@ public class DatasetVersionV3 implements SourceInstance {
 //    public void setDigitalIdentifier(List<DigitalIdentifierV3> digitalIdentifier) {
 //        this.digitalIdentifier = digitalIdentifier;
 //    }
+
+    public List<String> getIdentifiers() { return identifiers; }
+
+    public void setIdentifiers(List<String> identifiers) { this.identifiers = identifiers; }
 
     public String getFullName() {
         return fullName;

@@ -6,6 +6,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.Subject;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
@@ -23,7 +24,7 @@ public class SubjectTranslator implements Translator<SubjectV1, Subject> {
         s.setFirstRelease(subject.getFirstReleaseAt());
         s.setLastRelease(subject.getLastReleaseAt());
         s.setGenotype(subject.getGenotype());
-        s.setIdentifier(subject.getIdentifier());
+        s.setIdentifier(Collections.singletonList(subject.getIdentifier()));
         s.setSex(emptyToNull(subject.getSex()));
         s.setSpecies(emptyToNull(subject.getSpecies()));
         s.setStrain(subject.getStrain() != null ? subject.getStrain() : subject.getStrains());

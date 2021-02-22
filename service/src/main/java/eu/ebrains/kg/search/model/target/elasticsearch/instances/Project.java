@@ -18,7 +18,7 @@ public class Project implements TargetInstance {
     private Value<String> type = new Value<>("Project");
 
     @FieldInfo(visible = false)
-    private Value<String> identifier;
+    private List<String> identifier;
 
     @FieldInfo(sort = true, label = "Name", boost = 20)
     private Value<String> title;
@@ -47,8 +47,8 @@ public class Project implements TargetInstance {
         setType(StringUtils.isBlank(type) ? null : new Value<>(type));
     }
 
-    public void setIdentifier(String identifier) {
-        setIdentifier(StringUtils.isBlank(identifier) ? null : new Value<>(identifier));
+    public void setIdentifier(List<String> identifier) {
+        this.identifier = identifier;
     }
 
     public void setEditorId(String editorId){
@@ -80,12 +80,8 @@ public class Project implements TargetInstance {
     }
 
     @Override
-    public Value<String> getIdentifier() {
+    public List<String> getIdentifier() {
         return identifier;
-    }
-
-    public void setIdentifier(Value<String> identifier) {
-        this.identifier = identifier;
     }
 
     public Value<String> getDescription() {

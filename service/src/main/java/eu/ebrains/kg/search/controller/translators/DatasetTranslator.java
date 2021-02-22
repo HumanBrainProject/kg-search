@@ -1,11 +1,8 @@
 package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.DatasetSources;
 import eu.ebrains.kg.search.model.source.commons.SourceExternalReference;
 import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
-import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
@@ -15,41 +12,14 @@ import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
-public class DatasetTranslator implements Translator<DatasetSources, Dataset> {
-
-    public Dataset translate(DatasetSources datasetSources, DataStage dataStage, boolean liveMode) {
-        if (datasetSources.getDatasetV3() != null) {
-            return this.translate(datasetSources.getDatasetV3(), dataStage, liveMode, null);
-        }
-        return translate(datasetSources.getDatasetV1(), dataStage, liveMode);
-    }
-
-    public Dataset translate(DatasetV3 datasetV3, DataStage dataStage, boolean liveMode, String versionIdentifier) {
-        Dataset d = new Dataset();
-        DatasetVersionV3 datasetVersion = getDatasetVersion(datasetV3.getHasVersion(), versionIdentifier);
-        if(datasetVersion != null) {
-            d.setDescription(datasetVersion.getDescription());
-            d.setTitle(datasetVersion.getFullName());
-            d.setVersionIdentifier(datasetVersion.getVersionIdentifier());
-        } else {
-            d.setDescription(datasetV3.getDescription());
-            d.setTitle(datasetV3.getFullName());
-        }
-        return d;
-    }
-
-    private DatasetVersionV3 getDatasetVersion(List<DatasetVersionV3> datasetVersions, String versionIdentifier) {
-        if (datasetVersions != null && versionIdentifier != null) {
-            return datasetVersions.stream().filter(d -> d.getVersionIdentifier().equals(versionIdentifier)).collect(Collectors.toList()).stream().findFirst().orElse(null);
-        }
-        return null;
-    }
+public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
 
     public Dataset translate(DatasetV1 datasetV1, DataStage dataStage, boolean liveMode) {
         Dataset d = new Dataset();
@@ -62,7 +32,7 @@ public class DatasetTranslator implements Translator<DatasetSources, Dataset> {
                     "Download all related data as ZIP"
             ));
         }
-        d.setIdentifier(datasetV1.getIdentifier());
+        d.setIdentifier(Collections.singletonList(datasetV1.getIdentifier()));
         if (dataStage == DataStage.IN_PROGRESS) {
             d.setEditorId(datasetV1.getEditorId());
         }

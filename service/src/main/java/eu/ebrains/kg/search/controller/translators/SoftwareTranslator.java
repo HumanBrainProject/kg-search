@@ -7,6 +7,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetE
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,7 @@ public class SoftwareTranslator implements Translator<SoftwareV2, Software> {
             s.setEditorId(softwareV2.getEditorId());
         }
         s.setAppCategory(emptyToNull(version.getApplicationCategory()));
-        s.setIdentifier(softwareV2.getIdentifier());
+        s.setIdentifier(Collections.singletonList(softwareV2.getIdentifier()));
         s.setTitle(softwareV2.getTitle());
 
         s.setDescription(softwareV2.getDescription() + (StringUtils.isBlank(version.getDescription())? "": ("\n\n" + version.getDescription())));

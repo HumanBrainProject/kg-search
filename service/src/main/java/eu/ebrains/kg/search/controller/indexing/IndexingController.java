@@ -5,11 +5,9 @@ import eu.ebrains.kg.search.controller.elasticsearch.ElasticSearchController;
 import eu.ebrains.kg.search.controller.mapping.MappingController;
 import eu.ebrains.kg.search.controller.translators.TranslationController;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstances;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 
 @Component
@@ -37,12 +35,12 @@ public class IndexingController {
     public void fullReplacementByType(DataStage dataStage, String type, String authorization, String legacyAuthorization, Class<?> clazz) {
         TargetInstances instances = translationController.createInstances(dataStage, false, type, authorization, legacyAuthorization);
         recreateIndex(dataStage, type, clazz);
-        elasticSearchController.indexDocuments(instances.getSearchableInstances(), type, dataStage);
+        elasticSearchController.indexSearchDocuments(instances.getSearchableInstances(), type, dataStage);
     }
 
     private void recreateIndex(DataStage dataStage, String type, Class<?> clazz) {
         Map<String, Object> mapping = mappingController.generateMapping(clazz);
         Map<String, Object> mappingResult = Map.of("mappings", mapping);
-        elasticSearchController.recreateIndex(mappingResult, type, dataStage);
+        elasticSearchController.recreateSearchIndex(mappingResult, type, dataStage);
     }
 }

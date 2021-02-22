@@ -1,8 +1,9 @@
 package eu.ebrains.kg.search.model.target.elasticsearch;
 
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import java.util.List;
 
 public interface TargetInstance {
+//    String getId();
 
-    Value<String> getIdentifier();
+    List<String> getIdentifier();
 }

@@ -9,6 +9,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 public class ProjectTranslator implements Translator<ProjectV1, Project> {
@@ -44,7 +45,7 @@ public class ProjectTranslator implements Translator<ProjectV1, Project> {
                         }
                     }).collect(Collectors.toList()));
         }
-        p.setIdentifier(projectSource.getIdentifier());
+        p.setIdentifier(Collections.singletonList(projectSource.getIdentifier()));
         if (dataStage == DataStage.IN_PROGRESS) {
             p.setEditorId(projectSource.getEditorId());
         }

@@ -10,6 +10,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,7 @@ public class ContributorTranslator implements Translator<PersonSources, Contribu
     public Contributor translate(PersonSources personSources, DataStage dataStage, boolean liveMode) {
         Contributor c = new Contributor();
         PersonV1andV2 person = personSources.getPersonV2() != null ? personSources.getPersonV2() : personSources.getPersonV1();
-        c.setIdentifier(person.getIdentifier());
+        c.setIdentifier(Collections.singletonList(person.getIdentifier()));
         c.setFirstRelease(person.getFirstReleaseAt());
         c.setLastRelease(person.getLastReleaseAt());
         c.setTitle(person.getTitle());

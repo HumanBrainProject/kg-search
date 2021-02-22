@@ -38,7 +38,7 @@ public class SitemapController {
     private SitemapXML fetchSitemap() {
         //TODO check if we want to cache each type individually
         List<SitemapXML.Url> urls = Constants.TARGET_MODELS_MAP.keySet().stream().map(type -> {
-            String index = ESHelper.getIndex(type, DataStage.RELEASED);
+            String index = ESHelper.getSearchIndex(type, DataStage.RELEASED);
             try {
                 ElasticSearchResult documents = esServiceClient.getDocuments(index);
                 return documents.getHits().getHits().stream().map(doc -> {

@@ -7,6 +7,9 @@ import eu.ebrains.kg.search.model.source.SourceInstance;
 import java.util.List;
 
 public class DatasetV3 implements SourceInstance {
+    @JsonProperty(EBRAINSVocab.OPENMINDS_ID)
+    private String id;
+
     @JsonProperty(EBRAINSVocab.OPENMINDS_IDENTIFIER)
     private List<String> identifier;
 
@@ -19,14 +22,18 @@ public class DatasetV3 implements SourceInstance {
     @JsonProperty(EBRAINSVocab.OPENMINDS_FULL_NAME)
     private String fullName;
 
-    @JsonProperty(EBRAINSVocab.OPENMINDS_HAS_VERSION)
-    private List<DatasetVersionV3> hasVersion;
+    @JsonProperty(EBRAINSVocab.OPENMINDS_DATASET_VERSIONS)
+    private List<DatasetVersionV3> datasetVersions;
 
     @JsonProperty(EBRAINSVocab.OPENMINDS_HOMEPAGE)
     private String homepage;
 
     @JsonProperty(EBRAINSVocab.OPENMINDS_SHORT_NAME)
     private String shortName;
+
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
 
     public List<String> getIdentifier() {
         return identifier;
@@ -56,12 +63,12 @@ public class DatasetV3 implements SourceInstance {
         return fullName;
     }
 
-    public List<DatasetVersionV3> getHasVersion() {
-        return hasVersion;
+    public List<DatasetVersionV3> getDatasetVersions() {
+        return datasetVersions;
     }
 
-    public void setHasVersion(List<DatasetVersionV3> hasVersion) {
-        this.hasVersion = hasVersion;
+    public void setDatasetVersions(List<DatasetVersionV3> datasetVersions) {
+        this.datasetVersions = datasetVersions;
     }
 
     public void setFullName(String fullName) {

@@ -7,5 +7,4 @@ public interface Translator<Source, Target> {
 //    public static final String fileProxy = "https://kg.ebrains.eu";
 
     public Target translate(Source source, DataStage dataStage, boolean liveMode);
-
 }

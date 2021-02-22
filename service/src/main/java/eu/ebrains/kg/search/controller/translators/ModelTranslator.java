@@ -11,6 +11,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
@@ -19,7 +20,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
 
     public Model translate(ModelV2 modelV2, DataStage dataStage, boolean liveMode) {
         Model m = new Model();
-        m.setIdentifier(modelV2.getIdentifier());
+        m.setIdentifier(Collections.singletonList(modelV2.getIdentifier()));
         if (dataStage == DataStage.IN_PROGRESS) {
             m.setEditorId(modelV2.getEditorId());
         }
