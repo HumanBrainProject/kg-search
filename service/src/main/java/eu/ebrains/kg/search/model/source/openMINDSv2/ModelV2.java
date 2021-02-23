@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 public class ModelV2 implements HasEmbargo, SourceInstance {
+    private String id;
     private List<SourceExternalReference> fileBundle;
     private List<SourceInternalReference> custodian;
     private List<SourceInternalReference> mainContact;
@@ -29,6 +30,10 @@ public class ModelV2 implements HasEmbargo, SourceInstance {
     private String identifier;
     private Date lastReleaseAt;
     private Date firstReleaseAt;
+
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
 
     public Date getLastReleaseAt() { return lastReleaseAt; }
 

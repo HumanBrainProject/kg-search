@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -36,24 +37,20 @@ public class SitemapController {
     }
 
     private SitemapXML fetchSitemap() {
-        //TODO check if we want to cache each type individually
-        List<SitemapXML.Url> urls = Constants.TARGET_MODELS_MAP.keySet().stream().map(type -> {
-            String index = ESHelper.getSearchIndex(type, DataStage.RELEASED);
-            try {
-                ElasticSearchResult documents = esServiceClient.getDocuments(index);
-                return documents.getHits().getHits().stream().map(doc -> {
-                    SitemapXML.Url url = new SitemapXML.Url();
-                    url.setLoc(String.format("%s/instances/%s/%s", ebrainsUrl, type, doc.getId()));
-                    return url;
-                }).collect(Collectors.toList());
-            } catch (WebClientResponseException e) {
-                if (e.getStatusCode() != HttpStatus.NOT_FOUND) {
-                    throw e;
-                } else {
-                    return null;
-                }
+        List<SitemapXML.Url> urls = new ArrayList<>();
+        String index = ESHelper.getIdentifierIndex(DataStage.RELEASED);
+        try {
+            ElasticSearchResult documents = esServiceClient.getDocuments(index);
+            documents.getHits().getHits().forEach(doc -> {
+                SitemapXML.Url url = new SitemapXML.Url();
+                url.setLoc(String.format("%s/instances/%s", ebrainsUrl, doc.getId()));
+                urls.add(url);
+            });
+        } catch (WebClientResponseException e) {
+            if (e.getStatusCode() != HttpStatus.NOT_FOUND) {
+                throw e;
             }
-        }).filter(Objects::nonNull).flatMap(Collection::stream).collect(Collectors.toList());
+        }
         if (urls.isEmpty()) {
             return null;
         }

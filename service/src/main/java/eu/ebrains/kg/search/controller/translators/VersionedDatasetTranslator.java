@@ -4,7 +4,11 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
+import eu.ebrains.kg.search.utils.ESHelper;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,19 +16,32 @@ public class VersionedDatasetTranslator implements  VersionedTranslator<DatasetV
 
     public Dataset translate(DatasetV3 datasetV3, DataStage dataStage, boolean liveMode, String versionIdentifier, boolean useDatasetIdentifier) {
         Dataset d = new Dataset();
+
         DatasetVersionV3 datasetVersion = getDatasetVersion(datasetV3.getDatasetVersions(), versionIdentifier);
         if(datasetVersion != null) {
             if(useDatasetIdentifier) {
-                d.setIdentifier(datasetV3.getIdentifier());
+                d.setId(ESHelper.getUUID(datasetV3.getId()));
+                List<String> ids = new ArrayList<>();
+                ids.addAll(ESHelper.getUUID(datasetV3.getIdentifier()));
+                ids.addAll(Arrays.asList("Barth", "Homer", "Lisa"));
+                d.setIdentifier(ids);
             } else {
-                d.setIdentifier(datasetVersion.getIdentifiers());
+                d.setId(ESHelper.getUUID(datasetVersion.getId()));
+                d.setIdentifier(ESHelper.getUUID(datasetVersion.getIdentifiers()));
             }
-            d.setId(datasetVersion.getId());
             d.setVersions(datasetV3.getDatasetVersions());
-            d.setDescription(datasetVersion.getDescription());
-            d.setTitle(datasetVersion.getFullName());
+            if (StringUtils.isBlank(datasetVersion.getDescription())) {
+                d.setDescription(datasetV3.getDescription());
+            } else {
+                d.setDescription(datasetVersion.getDescription());
+            }
+            if (StringUtils.isBlank(datasetVersion.getFullName())) {
+                d.setDescription(datasetV3.getFullName());
+            } else {
+                d.setTitle(datasetVersion.getFullName());
+            }
         } else {
-            d.setId(datasetV3.getId());
+            d.setId(ESHelper.getUUID(datasetV3.getId()));
             d.setIdentifier(datasetV3.getIdentifier());
             d.setDescription(datasetV3.getDescription());
             d.setTitle(datasetV3.getFullName());

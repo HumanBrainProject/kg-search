@@ -6,6 +6,7 @@ import eu.ebrains.kg.search.controller.mapping.MappingController;
 import eu.ebrains.kg.search.controller.translators.TranslationController;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstances;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -30,15 +31,29 @@ public class IndexingController {
     public void incrementalUpdateByType(DataStage dataStage, String type, String authorization, String legacyAuthorization) {
         TargetInstances instances = translationController.createInstances(dataStage, false, type, authorization, legacyAuthorization);
         elasticSearchController.updateSearchIndex(instances.getSearchableInstances(), type, dataStage);
+        elasticSearchController.updateIdentifiersIndex(instances.getAllInstances(), dataStage);
     }
 
     public void fullReplacementByType(DataStage dataStage, String type, String authorization, String legacyAuthorization, Class<?> clazz) {
         TargetInstances instances = translationController.createInstances(dataStage, false, type, authorization, legacyAuthorization);
-        recreateIndex(dataStage, type, clazz);
+        recreateSearchIndex(dataStage, type, clazz);
         elasticSearchController.indexSearchDocuments(instances.getSearchableInstances(), type, dataStage);
+        elasticSearchController.indexIdentifierDocuments(instances.getAllInstances(), dataStage);
     }
 
-    private void recreateIndex(DataStage dataStage, String type, Class<?> clazz) {
+    public void testFullDatasetReplacement(DataStage dataStage, String authorization, String legacyAuthorization) {
+        TargetInstances instances = translationController.createV3Datasets(dataStage, false, authorization, legacyAuthorization);
+        recreateIdentifiersIndex(dataStage);
+        elasticSearchController.indexIdentifierDocuments(instances.getAllInstances(), dataStage);
+    }
+
+    public void recreateIdentifiersIndex(DataStage dataStage) {
+        Map<String, Object> mapping = mappingController.generateIdentifierMapping();
+        Map<String, Object> mappingResult = Map.of("mappings", mapping);
+        elasticSearchController.recreateIdentifiersIndex(mappingResult, dataStage);
+    }
+
+    private void recreateSearchIndex(DataStage dataStage, String type, Class<?> clazz) {
         Map<String, Object> mapping = mappingController.generateMapping(clazz);
         Map<String, Object> mappingResult = Map.of("mappings", mapping);
         elasticSearchController.recreateSearchIndex(mappingResult, type, dataStage);

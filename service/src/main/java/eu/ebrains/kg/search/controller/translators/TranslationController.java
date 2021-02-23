@@ -18,6 +18,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstances;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.*;
+import eu.ebrains.kg.search.utils.ESHelper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -131,12 +132,11 @@ public class TranslationController {
         datasetV3.getData().forEach(d -> {
             String id = d.getIdentifier().stream().reduce(null, (found, i) -> {
                 if (found != null) {
-                    String[] splitId = i.split("/");
-                    String lookupId = splitId[splitId.length - 1];
-                    DatasetSources source = datasetSourcesByV1Identifier.get(lookupId);
+                    String uuid = ESHelper.getUUID(i);
+                    DatasetSources source = datasetSourcesByV1Identifier.get(uuid);
                     if (source != null) {
                         source.setDatasetV3(d);
-                        return lookupId;
+                        return uuid;
                     }
                 }
                 return null;
@@ -153,12 +153,14 @@ public class TranslationController {
         TargetInstances targetInstances = new TargetInstances();
         datasetSources.forEach(d -> {
             if(d.getDatasetV3() != null) {
-                List<String> versionIdentifiers = sortDatasetVersions(d.getDatasetV3().getDatasetVersions());
-                for(int i = 0; i < versionIdentifiers.size(); i++) {
+                List<DatasetVersionV3> datasetVersions = d.getDatasetV3().getDatasetVersions();
+                for(int i = 0; i < datasetVersions.size(); i++) {
+                    DatasetVersionV3 datasetVersion = datasetVersions.get(i);
+                    String versionIdentifiers = datasetVersion.getVersionIdentifier();
                     if(i == 0) {
-                        targetInstances.addInstance(versionedDatasetTranslator.translate(d.getDatasetV3(), dataStage, liveMode, versionIdentifiers.get(i), true), true);
+                        targetInstances.addInstance(versionedDatasetTranslator.translate(d.getDatasetV3(), dataStage, liveMode, versionIdentifiers, true), true);
                     }
-                    targetInstances.addInstance(versionedDatasetTranslator.translate(d.getDatasetV3(), dataStage, liveMode, versionIdentifiers.get(i), false), false);
+                    targetInstances.addInstance(versionedDatasetTranslator.translate(d.getDatasetV3(), dataStage, liveMode, versionIdentifiers, false), false);
                 }
             } else {
                 targetInstances.addInstance(translator.translate(d.getDatasetV1(), dataStage, liveMode), true);
@@ -167,26 +169,50 @@ public class TranslationController {
         return targetInstances;
     }
 
-    private List<String> sortDatasetVersions(List<DatasetVersionV3> datasetVersions) {
-        LinkedList<String> result = new LinkedList<>();
-        datasetVersions.forEach(dv -> {
-            if(result.isEmpty()) {
-                result.add(dv.getVersionIdentifier());
-            } else {
-                String previousVersionIdentifier = dv.getPreviousVersionIdentifier();
-                if(previousVersionIdentifier != null) {
-                    int i = result.indexOf(previousVersionIdentifier);
-                    if(i == -1) {
-                        result.addLast(dv.getVersionIdentifier());
-                    } else {
-                        result.add(i-1, dv.getVersionIdentifier());
+    public TargetInstances createV3Datasets(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
+
+        ResultOfKGv3<DatasetV3> datasetV3 = kgV3.fetchInstances(ResultOfKGV3DatasetV3.class, Queries.DATASET_ID, authorization, dataStage);
+
+        List<DatasetSources> datasetSources = new ArrayList<>();
+
+        Map<String, DatasetSources> datasetSourcesByV1Identifier = datasetSources.stream().collect(Collectors.toMap(k -> k.getDatasetV1().getIdentifier(), v -> v));
+
+        datasetV3.getData().forEach(d -> {
+            String id = d.getIdentifier().stream().reduce(null, (found, i) -> {
+                if (found != null) {
+                    String uuid = ESHelper.getUUID(i);
+                    DatasetSources source = datasetSourcesByV1Identifier.get(uuid);
+                    if (source != null) {
+                        source.setDatasetV3(d);
+                        return uuid;
                     }
-                } else {
-                    result.addFirst(dv.getVersionIdentifier());
+                }
+                return null;
+            });
+            if(id == null) {
+                DatasetSources source = new DatasetSources();
+                source.setDatasetV3(d);
+                datasetSources.add(source);
+            }
+        });
+
+        DatasetTranslator translator = new DatasetTranslator();
+        VersionedDatasetTranslator versionedDatasetTranslator = new VersionedDatasetTranslator();
+        TargetInstances targetInstances = new TargetInstances();
+        datasetSources.forEach(d -> {
+            if(d.getDatasetV3() != null) {
+                List<DatasetVersionV3> datasetVersions = d.getDatasetV3().getDatasetVersions();
+                for(int i = 0; i < datasetVersions.size(); i++) {
+                    DatasetVersionV3 datasetVersion = datasetVersions.get(i);
+                    String versionIdentifiers = datasetVersion.getVersionIdentifier();
+                    if(i == 0) {
+                        targetInstances.addInstance(versionedDatasetTranslator.translate(d.getDatasetV3(), dataStage, liveMode, versionIdentifiers, true), true);
+                    }
+                    targetInstances.addInstance(versionedDatasetTranslator.translate(d.getDatasetV3(), dataStage, liveMode, versionIdentifiers, false), false);
                 }
             }
         });
-        return result;
+        return targetInstances;
     }
 
     public Dataset createDataset(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
@@ -210,8 +236,10 @@ public class TranslationController {
     }
 
     private String getLatestDatasetVersionIdentifier(List<DatasetVersionV3> datasetVersions){
-        List<String> versionIdentifiers = sortDatasetVersions(datasetVersions);
-        return versionIdentifiers.stream().findFirst().orElse(null);
+        if (datasetVersions.isEmpty()) {
+            return null;
+        }
+        return datasetVersions.get(0).getVersionIdentifier();
     }
 
     private static class ResultOfKGV2ModelV2 extends ResultOfKGv2<ModelV2> {}

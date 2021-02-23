@@ -1,10 +1,10 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.search.constants.EBRAINSVocab;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
+import eu.ebrains.kg.search.utils.ESHelper;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -122,7 +122,7 @@ public class Dataset implements TargetInstance {
 
     public void setVersions(List<DatasetVersionV3> versionsV3) {
         List<Version> result = new ArrayList<>();
-        versionsV3.forEach(v -> result.add(new Version(v.getId(), v.getFullName())));
+        versionsV3.forEach(v -> result.add(new Version(ESHelper.getUUID(v.getId()), v.getFullName())));
         this.versions = result;
     }
 
@@ -426,20 +426,20 @@ public class Dataset implements TargetInstance {
     }
 
     public static class Version {
-        private String identifier;
+        private String id;
         private String name;
 
-        public Version(String identifier, String name) {
-            this.identifier = identifier;
+        public Version(String id, String name) {
+            this.id = id;
             this.name = name;
         }
 
-        public String getIdentifier() {
-            return identifier;
+        public String getId() {
+            return id;
         }
 
-        public void setIdentifier(String identifier) {
-            this.identifier = identifier;
+        public void setId(String id) {
+            this.id = id;
         }
 
         public String getName() {

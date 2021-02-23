@@ -4,18 +4,25 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv1.ProjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Project;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.utils.ESHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProjectTranslator implements Translator<ProjectV1, Project> {
 
     public Project translate(ProjectV1 projectSource, DataStage dataStage, boolean liveMode) {
         Project p = new Project();
+        String uuid = ESHelper.getUUID(projectSource.getId());
+        p.setId(uuid);
+        List<String> identifiers = Arrays.asList(String.format("Project/%s", projectSource.getIdentifier()), uuid);
+        p.setIdentifier(identifiers);
         p.setFirstRelease(projectSource.getFirstReleaseAt());
         p.setDescription(projectSource.getDescription());
         p.setLastRelease(projectSource.getLastReleaseAt());
@@ -45,7 +52,6 @@ public class ProjectTranslator implements Translator<ProjectV1, Project> {
                         }
                     }).collect(Collectors.toList()));
         }
-        p.setIdentifier(Collections.singletonList(projectSource.getIdentifier()));
         if (dataStage == DataStage.IN_PROGRESS) {
             p.setEditorId(projectSource.getEditorId());
         }

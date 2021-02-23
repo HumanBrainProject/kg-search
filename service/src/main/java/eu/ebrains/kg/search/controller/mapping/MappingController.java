@@ -21,6 +21,17 @@ public class MappingController {
         this.utils = utils;
     }
 
+    public Map<String, Object> generateIdentifierMapping() {
+        Map<String, Object> mapping = new LinkedHashMap<>();
+        Map<String, Object> properties = new LinkedHashMap<>();
+        Map<String, Object> timestamp = new LinkedHashMap<>();
+        properties.put("identifier", Map.of("type", "text"));
+        timestamp.put("type", "date");
+        properties.put("@timestamp", timestamp);
+        mapping.put("properties", properties);
+        return mapping;
+    }
+
     public Map<String, Object> generateMapping(Class<?> clazz) {
         Map<String, Object> mapping = new LinkedHashMap<>();
         Map<String, Object> properties = new LinkedHashMap<>();

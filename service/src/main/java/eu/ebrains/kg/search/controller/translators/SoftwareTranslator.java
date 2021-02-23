@@ -4,11 +4,14 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Software;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import eu.ebrains.kg.search.utils.ESHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
@@ -17,6 +20,10 @@ public class SoftwareTranslator implements Translator<SoftwareV2, Software> {
 
     public Software translate(SoftwareV2 softwareV2, DataStage dataStage, boolean liveMode) {
         Software s = new Software();
+        String uuid = ESHelper.getUUID(softwareV2.getId());
+        s.setId(uuid);
+        List<String> identifiers = Arrays.asList(String.format("Software/%s", softwareV2.getIdentifier()), uuid);
+        s.setIdentifier(identifiers);
         if (!CollectionUtils.isEmpty(softwareV2.getVersions())) {
             softwareV2.getVersions().sort(Comparator.comparing(SoftwareV2.Version::getVersion).reversed());
         }
@@ -26,7 +33,6 @@ public class SoftwareTranslator implements Translator<SoftwareV2, Software> {
             s.setEditorId(softwareV2.getEditorId());
         }
         s.setAppCategory(emptyToNull(version.getApplicationCategory()));
-        s.setIdentifier(Collections.singletonList(softwareV2.getIdentifier()));
         s.setTitle(softwareV2.getTitle());
 
         s.setDescription(softwareV2.getDescription() + (StringUtils.isBlank(version.getDescription())? "": ("\n\n" + version.getDescription())));

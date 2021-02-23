@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 public class ProjectV1 implements SourceInstance {
+    private String id;
     private Date firstReleaseAt;
     private String description;
     private Date lastReleaseAt;
@@ -17,6 +18,10 @@ public class ProjectV1 implements SourceInstance {
     private String identifier;
     private String editorId;
     //    private List<Container> container; //TODO: This is not used
+
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
 
     public Date getFirstReleaseAt() { return firstReleaseAt; }
 

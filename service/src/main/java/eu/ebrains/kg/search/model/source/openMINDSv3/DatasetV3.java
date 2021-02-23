@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.constants.EBRAINSVocab;
 import eu.ebrains.kg.search.model.source.SourceInstance;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DatasetV3 implements SourceInstance {
     @JsonProperty(EBRAINSVocab.OPENMINDS_ID)
@@ -68,7 +72,27 @@ public class DatasetV3 implements SourceInstance {
     }
 
     public void setDatasetVersions(List<DatasetVersionV3> datasetVersions) {
-        this.datasetVersions = datasetVersions;
+        LinkedList<String> result = new LinkedList<>();
+        Map<String, DatasetVersionV3> lookup = new HashMap<>();
+        datasetVersions.forEach(dv -> {
+            lookup.put(dv.getVersionIdentifier(), dv);
+            if(result.isEmpty()) {
+                result.add(dv.getVersionIdentifier());
+            } else {
+                String previousVersionIdentifier = dv.getPreviousVersionIdentifier();
+                if(previousVersionIdentifier != null) {
+                    int i = result.indexOf(previousVersionIdentifier);
+                    if(i == -1) {
+                        result.addLast(dv.getVersionIdentifier());
+                    } else {
+                        result.add(i, dv.getVersionIdentifier());
+                    }
+                } else {
+                    result.addFirst(dv.getVersionIdentifier());
+                }
+            }
+        });
+        this.datasetVersions = result.stream().map(lookup::get).collect(Collectors.toList());
     }
 
     public void setFullName(String fullName) {

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 public class DatasetV1 implements HasEmbargo, SourceInstance {
+    private String id;
     private List<String> methods;
     private Date lastReleaseAt;
     private List<SourceInternalReference> component;
@@ -45,6 +46,10 @@ public class DatasetV1 implements HasEmbargo, SourceInstance {
     private List<String> modalityForFilter;
     private List<String> embargo;
     private boolean useHDG;
+
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
 
     public boolean isUseHDG() { return useHDG; }
 

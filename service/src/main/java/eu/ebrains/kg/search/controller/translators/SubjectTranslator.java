@@ -4,9 +4,12 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Subject;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.utils.ESHelper;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
@@ -15,6 +18,10 @@ public class SubjectTranslator implements Translator<SubjectV1, Subject> {
 
     public Subject translate(SubjectV1 subject, DataStage dataStage, boolean liveMode) {
         Subject s = new Subject();
+        String uuid = ESHelper.getUUID(subject.getId());
+        s.setId(uuid);
+        List<String> identifiers = Arrays.asList(String.format("Subject/%s", subject.getIdentifier()), uuid);
+        s.setIdentifier(identifiers);
         s.setAge(subject.getAge());
         s.setAgeCategory(emptyToNull(subject.getAgeCategory()));
         s.setDatasetExists(emptyToNull(subject.getDatasetExists()));
@@ -24,7 +31,6 @@ public class SubjectTranslator implements Translator<SubjectV1, Subject> {
         s.setFirstRelease(subject.getFirstReleaseAt());
         s.setLastRelease(subject.getLastReleaseAt());
         s.setGenotype(subject.getGenotype());
-        s.setIdentifier(Collections.singletonList(subject.getIdentifier()));
         s.setSex(emptyToNull(subject.getSex()));
         s.setSpecies(emptyToNull(subject.getSpecies()));
         s.setStrain(subject.getStrain() != null ? subject.getStrain() : subject.getStrains());

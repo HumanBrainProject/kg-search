@@ -36,7 +36,7 @@ public class ElasticSearchController {
         esServiceClient.createIndex(index, mapping);
     }
 
-    public void recreateIdentifierIndex(Map<String, Object> mapping, DataStage dataStage) {
+    public void recreateIdentifiersIndex(Map<String, Object> mapping, DataStage dataStage) {
         String index = ESHelper.getIdentifierIndex(dataStage);
         try {
             esServiceClient.deleteIndex(index);
@@ -52,7 +52,7 @@ public class ElasticSearchController {
         String index = ESHelper.getSearchIndex(type, dataStage);
         StringBuilder operations = new StringBuilder();
         instances.forEach(instance -> {
-            operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", instance.getIdentifier().get(0)));
+            operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", instance.getId()));
             try {
                 operations.append(objectMapper.writeValueAsString(instance)).append("\n");
             } catch (JsonProcessingException e) {
