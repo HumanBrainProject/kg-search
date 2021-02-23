@@ -29,7 +29,7 @@ public class IndexingController {
 
     public void incrementalUpdateByType(DataStage dataStage, String type, String authorization, String legacyAuthorization) {
         TargetInstances instances = translationController.createInstances(dataStage, false, type, authorization, legacyAuthorization);
-        elasticSearchController.updateIndex(instances.getSearchableInstances(), type, dataStage);
+        elasticSearchController.updateSearchIndex(instances.getSearchableInstances(), type, dataStage);
     }
 
     public void fullReplacementByType(DataStage dataStage, String type, String authorization, String legacyAuthorization, Class<?> clazz) {

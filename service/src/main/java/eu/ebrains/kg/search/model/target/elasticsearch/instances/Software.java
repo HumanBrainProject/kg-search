@@ -19,6 +19,9 @@ public class Software implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Software");
 
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private String id;
+
     @FieldInfo(visible = false, ignoreForSearch = true)
     private List<String> identifier;
 
@@ -62,6 +65,11 @@ public class Software implements TargetInstance {
     @JsonProperty("last_release")
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
+
+    @Override
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
 
     public void setType(String type) {
         setType(StringUtils.isBlank(type) ? null : new Value<>(type));

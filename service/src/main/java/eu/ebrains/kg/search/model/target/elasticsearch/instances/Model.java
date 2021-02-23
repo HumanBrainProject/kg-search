@@ -17,6 +17,9 @@ public class Model implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Model");
 
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private String id;
+
     @FieldInfo(visible = false, ignoreForSearch = true)
     private List<String> identifier;
 
@@ -86,6 +89,11 @@ public class Model implements TargetInstance {
     @JsonProperty("license_info")
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)
     private TargetExternalReference licenseInfo;
+
+    @Override
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
 
     public void setType(String type) {
         setType(StringUtils.isBlank(type) ? null : new Value<>(type));

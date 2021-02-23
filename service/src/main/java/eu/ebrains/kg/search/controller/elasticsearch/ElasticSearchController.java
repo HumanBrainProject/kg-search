@@ -66,7 +66,7 @@ public class ElasticSearchController {
         String index = ESHelper.getIdentifierIndex(dataStage);
         StringBuilder operations = new StringBuilder();
         instances.forEach(instance -> {
-            operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", instance.getIdentifier().get(0)));
+            operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", instance.getId()));
             try {
                 operations.append(objectMapper.writeValueAsString(instance)).append("\n");
             } catch (JsonProcessingException e) {
@@ -76,12 +76,36 @@ public class ElasticSearchController {
         esServiceClient.updateIndex(index, operations.toString());
     }
 
-    public void updateIndex(List<TargetInstance> instances, String type, DataStage dataStage) {
+    public void updateSearchIndex(List<TargetInstance> instances, String type, DataStage dataStage) {
         String index = ESHelper.getSearchIndex(type, dataStage);
         HashSet<String> ids = new HashSet<>();
         StringBuilder operations = new StringBuilder();
         instances.forEach( instance -> {
             String identifier = instance.getIdentifier().get(0);
+            ids.add(identifier);
+            operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", identifier));
+            try {
+                operations.append(objectMapper.writeValueAsString(instance)).append("\n");
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        ElasticSearchResult documents = esServiceClient.getDocuments(index);
+        documents.getHits().getHits().forEach(document -> {
+            if(!ids.contains(document.getId())) {
+                operations.append(String.format("{ \"delete\" : { \"_id\" : \"%s\" } } \n", document.getId()));
+            }
+        });
+        esServiceClient.updateIndex(index, operations.toString());
+    }
+
+    public void updateIdentifiersIndex(List<TargetInstance> instances, DataStage dataStage) {
+        String index = ESHelper.getIdentifierIndex(dataStage);
+        HashSet<String> ids = new HashSet<>();
+        StringBuilder operations = new StringBuilder();
+        instances.forEach( instance -> {
+            String identifier = instance.getId();
             ids.add(identifier);
             operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", identifier));
             try {
