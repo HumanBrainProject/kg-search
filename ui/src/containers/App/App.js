@@ -41,6 +41,7 @@ class App extends React.Component {
         {/* <Notification /> */}
         {this.props.isReady && (
           <Switch>
+            <Route path="/instances/:id" exact component={Instance} />
             <Route path="/instances/:type/:id" exact component={Instance} />
             <Route path="/live/:org/:domain/:schema/:version/:id" exact component={Preview} />
             <Route path="/" exact component={Search} />

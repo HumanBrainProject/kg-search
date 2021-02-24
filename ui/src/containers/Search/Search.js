@@ -76,9 +76,9 @@ class SearchBase extends React.Component {
       setInitialGroup(group);
     }
     this.unlisten = history.listen( location => {
-      const reg = /^#(.+)\/(.+)$/;
-      const [,type, id] = reg.test(location.hash) ? location.hash.match(reg) : [null, null, null];
-      this.props.goBackToInstance(type, id);
+      const reg = /^#(.+)$/;
+      const [, id] = reg.test(location.hash) ? location.hash.match(reg) : [null, null];
+      this.props.goBackToInstance(id);
     });
     //this.updateLocation({});
     this.search();
@@ -271,6 +271,6 @@ export const Search = connect(
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
     search: () => dispatch(actionsSearch.search()),
-    goBackToInstance: (type, id) => dispatch(actionsInstances.goBackToInstance(type, id))
+    goBackToInstance: id => dispatch(actionsInstances.goBackToInstance(id))
   })
 )(SearchWithTabKeyNavigation);

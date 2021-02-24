@@ -11,7 +11,7 @@ const endpoints = {
   "groups": () => "/api/groups",
   //"search": () => "/static/data/search.json",
   "search": group => `/api/groups/${group}/search`,
-  "instance": (group, type, id) => `/api/groups/${group}/types/${type}/documents/${id}`,
+  "instance": (group, id) => `/api/groups/${group}/documents/${id}`,
   "preview": (type, id) => `/api/${type}/${id}/live`,
   "keycloakAuth": (authEndpoint, redirectUri, stateKey, nonceKey) => `${authEndpoint}/realms/hbp/protocol/openid-connect/auth?client_id=${keycloakClientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${stateKey}&nonce=${nonceKey}&response_type=token`,
   "oidcAuth": (authEndpoint, redirectUri, stateKey, nonceKey) => `${authEndpoint}?response_type=id_token%20token&client_id=${oidcClientId}&redirect_uri=${escape(redirectUri)}&scope=openid%20profile&state=${stateKey}&nonce=${nonceKey}`

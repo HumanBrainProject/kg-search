@@ -27,7 +27,7 @@ export const getTags = header => {
   return tags;
 };
 
-export const getTitle = (data, type, id) => {
+export const getTitle = (data, id) => {
   if (data && data._id) {
     if (data._source?.title?.value) {
       return `${data._source.title.value}`;
@@ -36,10 +36,10 @@ export const getTitle = (data, type, id) => {
       return `${data._soure.type.value} ${data._id}`;
     }
   }
-  if (!type || !id) {
+  if (!id) {
     return "Knowledge Graph Search";
   }
-  return `${type} ${id}`;
+  return id;
 };
 
 const getField = (group, type, name, data, mapping) => {

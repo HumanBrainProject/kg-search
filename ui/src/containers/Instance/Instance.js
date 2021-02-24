@@ -40,6 +40,7 @@ export const Instance = connect(
       }
       :
       null;
+    console.log(props.match.params);
     return {
       instanceProps: instanceProps,
       showInstance: state.instances.currentInstance && !state.instances.isLoading && !state.instances.error,
@@ -57,8 +58,7 @@ export const Instance = connect(
       previousInstance: state.instances.previousInstances.length?state.instances.previousInstances[state.instances.previousInstances.length-1]:null,
       group: state.groups.group,
       defaultGroup: state.groups.defaultGroup,
-      id: props.match.params.id,
-      type: props.match.params.type,
+      id: props.match.params.type?`${props.match.params.type}/${props.match.params.id}`:props.match.params.id,
       location: state.router.location
     };
   },
@@ -66,7 +66,7 @@ export const Instance = connect(
     setInitialGroup: group => dispatch(actionsGroups.setInitialGroup(group)),
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
-    fetch: (group, type, id) => dispatch(actionsInstances.loadInstance(group, type, id)),
+    fetch: (group, id) => dispatch(actionsInstances.loadInstance(group, id)),
     setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance()),
     onGoHome: path => {
       dispatch(actionsInstances.clearAllInstances());

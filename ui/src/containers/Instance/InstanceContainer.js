@@ -74,20 +74,20 @@ export class InstanceContainer extends React.Component {
   }
 
   componentDidUpdate(previousProps) {
-    const { definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, group, instanceHasError, type, id } = this.props;
+    const { definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, group, instanceHasError, id } = this.props;
     this.setTitle();
     this.updateLocation(previousProps);
     if (definitionIsReady !== previousProps.definitionIsReady || definitionHasError !== previousProps.definitionHasError ||
        groupsHasError !== previousProps.groupsHasError || isGroupsReady !== previousProps.isGroupsReady || previousProps.group !== group ||
        previousProps.instanceHasError !== instanceHasError ||
-       previousProps.type !== type || previousProps.id !== id) {
+       previousProps.id !== id) {
       this.initialize(previousProps.group);
     }
   }
 
   setTitle() {
-    const { type, id, currentInstance } = this.props;
-    document.title = `EBRAINS - ${getTitle(currentInstance, type, id)}`;
+    const { id, currentInstance } = this.props;
+    document.title = `EBRAINS - ${getTitle(currentInstance, id)}`;
   }
 
   updateLocation = (previousProps) => {
@@ -105,7 +105,7 @@ export class InstanceContainer extends React.Component {
     const {
       definitionIsReady, definitionHasError, definitionIsLoading,
       isGroupsReady, isGroupLoading, shouldLoadGroups, groupsHasError,
-      instanceIsLoading, type, id, group, previousInstance, setPreviousInstance,
+      instanceIsLoading, id, group, previousInstance, setPreviousInstance,
       loadDefinition, loadGroups, fetch
     } = this.props;
 
@@ -120,12 +120,11 @@ export class InstanceContainer extends React.Component {
     } else {
       if(!instanceIsLoading) {
         if (previousInstance &&
-            previousInstance._source?.type?.value === type &&
             previousInstance._id === id &&
             previousGroup === group) {
           setPreviousInstance();
         } else {
-          fetch(group, type, id);
+          fetch(group, id);
         }
       }
     }
