@@ -24,7 +24,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         Dataset d = new Dataset();
         String uuid = ESHelper.getUUID(datasetV1.getId());
         d.setId(uuid);
-        List<String> identifiers = Arrays.asList(String.format("Dataset/%s", datasetV1.getIdentifier()), uuid);
+        List<String> identifiers = Arrays.asList(uuid, String.format("Dataset/%s", datasetV1.getIdentifier()));
         d.setIdentifier(identifiers);
         String containerUrl = datasetV1.getContainerUrl();
         boolean containerUrlAsZIP = datasetV1.getContainerUrlAsZIP();
@@ -48,7 +48,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         if (!CollectionUtils.isEmpty(datasetV1.getOwners())) {
             d.setOwners(datasetV1.getOwners().stream()
                     .map(o -> new TargetInternalReference(
-                            liveMode ? o.getRelativeUrl() : String.format("Contributor/%s", o.getIdentifier()),
+                            liveMode ? o.getRelativeUrl() : o.getIdentifier(),
                             o.getName(),
                             null
                     )).collect(Collectors.toList()));
@@ -135,7 +135,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         if (!CollectionUtils.isEmpty(datasetV1.getContributors())) {
             d.setContributors(datasetV1.getContributors().stream()
                     .map(c -> new TargetInternalReference(
-                            liveMode ? c.getRelativeUrl() : String.format("Contributor/%s", c.getIdentifier()),
+                            liveMode ? c.getRelativeUrl() : c.getIdentifier(),
                             c.getName(),
                             null
                     )).collect(Collectors.toList()));
@@ -145,7 +145,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         if (!CollectionUtils.isEmpty(datasetV1.getComponent())) {
             d.setComponent(datasetV1.getComponent().stream()
                     .map(c -> new TargetInternalReference(
-                            liveMode ? c.getRelativeUrl() : String.format("Project/%s", c.getIdentifier()),
+                            liveMode ? c.getRelativeUrl() : c.getIdentifier(),
                             c.getName(),
                             null
                     )).collect(Collectors.toList()));
@@ -172,7 +172,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                     .map(s ->
                             new Dataset.Subject(
                                     new TargetInternalReference(
-                                            liveMode ? s.getRelativeUrl() : String.format("Subject/%s", s.getIdentifier()),
+                                            liveMode ? s.getRelativeUrl() : s.getIdentifier(),
                                             s.getName(),
                                             null
                                     ),
@@ -186,7 +186,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                                     !CollectionUtils.isEmpty(s.getSamples()) ? s.getSamples().
                                             stream().
                                             map(sample -> new TargetInternalReference(
-                                                    liveMode ? sample.getRelativeUrl() : String.format("Sample/%s", sample.getIdentifier()),
+                                                    liveMode ? sample.getRelativeUrl() : sample.getIdentifier(),
                                                     sample.getName(),
                                                     null
                                             )).collect(Collectors.toList()) : null

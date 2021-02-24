@@ -20,7 +20,7 @@ public class SubjectTranslator implements Translator<SubjectV1, Subject> {
         Subject s = new Subject();
         String uuid = ESHelper.getUUID(subject.getId());
         s.setId(uuid);
-        List<String> identifiers = Arrays.asList(String.format("Subject/%s", subject.getIdentifier()), uuid);
+        List<String> identifiers = Arrays.asList(uuid, String.format("Subject/%s", subject.getIdentifier()));
         s.setIdentifier(identifiers);
         s.setAge(subject.getAge());
         s.setAgeCategory(emptyToNull(subject.getAgeCategory()));
@@ -40,7 +40,7 @@ public class SubjectTranslator implements Translator<SubjectV1, Subject> {
             s.setSamples(subject.getSamples().stream()
                     .map(sample ->
                             new TargetInternalReference(
-                                    liveMode ? sample.getRelativeUrl() : String.format("Sample/%s", sample.getIdentifier()),
+                                    liveMode ? sample.getRelativeUrl() : sample.getIdentifier(),
                                     sample.getName(), null)
                     ).collect(Collectors.toList()));
         }
@@ -54,7 +54,7 @@ public class SubjectTranslator implements Translator<SubjectV1, Subject> {
                                     d.getInstances().stream()
                                             .map(i ->
                                                     new TargetInternalReference(
-                                                            liveMode ? i.getRelativeUrl() : String.format("Dataset/%s", i.getIdentifier()),
+                                                            liveMode ? i.getRelativeUrl() : i.getIdentifier(),
                                                             i.getName(), null)
                                             ).collect(Collectors.toList()) : null
                             )

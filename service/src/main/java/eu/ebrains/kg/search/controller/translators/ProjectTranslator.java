@@ -21,7 +21,7 @@ public class ProjectTranslator implements Translator<ProjectV1, Project> {
         Project p = new Project();
         String uuid = ESHelper.getUUID(projectSource.getId());
         p.setId(uuid);
-        List<String> identifiers = Arrays.asList(String.format("Project/%s", projectSource.getIdentifier()), uuid);
+        List<String> identifiers = Arrays.asList(uuid, String.format("Project/%s", projectSource.getIdentifier()));
         p.setIdentifier(identifiers);
         p.setFirstRelease(projectSource.getFirstReleaseAt());
         p.setDescription(projectSource.getDescription());

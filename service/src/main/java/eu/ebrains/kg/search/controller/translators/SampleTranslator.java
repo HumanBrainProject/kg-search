@@ -23,7 +23,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
         Sample s = new Sample();
         String uuid = ESHelper.getUUID(sample.getId());
         s.setId(uuid);
-        List<String> identifiers = Arrays.asList(String.format("Sample/%s", sample.getIdentifier()), uuid);
+        List<String> identifiers = Arrays.asList(uuid, String.format("Sample/%s", sample.getIdentifier()));
         s.setIdentifier(identifiers);
         String title = sample.getTitle();
         s.setTitle(title);
@@ -59,7 +59,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                                     d.getInstances().stream()
                                             .map(i ->
                                                     new TargetInternalReference(
-                                                            liveMode ? i.getRelativeUrl() : String.format("Dataset/%s", i.getIdentifier()),
+                                                            liveMode ? i.getRelativeUrl() : i.getIdentifier(),
                                                             i.getName(), null)
                                             ).collect(Collectors.toList())
                             )
@@ -70,7 +70,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                     .map(d ->
                             new Sample.Subject(
                                     new TargetInternalReference(
-                                            liveMode ? d.getRelativeUrl() : String.format("Subject/%s", d.getIdentifier()),
+                                            liveMode ? d.getRelativeUrl() : d.getIdentifier(),
                                             d.getName(),
                                             null
                                     ),

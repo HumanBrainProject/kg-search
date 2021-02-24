@@ -116,13 +116,13 @@ public class Dataset implements TargetInstance {
     private ISODateValue lastRelease;
 
     // TODO: Add fieldInfo
-    private List<Version> versions;
+    private List<TargetInternalReference> versions;
 
-    public List<Version> getVersions() { return versions; }
+    public List<TargetInternalReference> getVersions() { return versions; }
 
     public void setVersions(List<DatasetVersionV3> versionsV3) {
-        List<Version> result = new ArrayList<>();
-        versionsV3.forEach(v -> result.add(new Version(ESHelper.getUUID(v.getId()), v.getFullName())));
+        List<TargetInternalReference> result = new ArrayList<>();
+        versionsV3.forEach(v -> result.add(new TargetInternalReference(ESHelper.getUUID(v.getId()), v.getFullName())));
         this.versions = result;
     }
 
@@ -423,32 +423,6 @@ public class Dataset implements TargetInstance {
 
     public void setLastRelease(Date lastRelease) {
         this.setLastRelease(lastRelease != null ? new ISODateValue(lastRelease) : null);
-    }
-
-    public static class Version {
-        private String id;
-        private String name;
-
-        public Version(String id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
     }
 
 

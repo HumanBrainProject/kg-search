@@ -22,7 +22,7 @@ public class SoftwareTranslator implements Translator<SoftwareV2, Software> {
         Software s = new Software();
         String uuid = ESHelper.getUUID(softwareV2.getId());
         s.setId(uuid);
-        List<String> identifiers = Arrays.asList(String.format("Software/%s", softwareV2.getIdentifier()), uuid);
+        List<String> identifiers = Arrays.asList(uuid, String.format("Software/%s", softwareV2.getIdentifier()));
         s.setIdentifier(identifiers);
         if (!CollectionUtils.isEmpty(softwareV2.getVersions())) {
             softwareV2.getVersions().sort(Comparator.comparing(SoftwareV2.Version::getVersion).reversed());

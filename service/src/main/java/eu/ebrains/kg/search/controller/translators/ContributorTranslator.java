@@ -27,7 +27,7 @@ public class ContributorTranslator implements Translator<PersonSources, Contribu
         PersonV1andV2 person = personSources.getPersonV2() != null ? personSources.getPersonV2() : personSources.getPersonV1();
         String uuid = ESHelper.getUUID(person.getId());
         c.setId(uuid);
-        List<String> identifiers = Arrays.asList(String.format("Contributor/%s", person.getIdentifier()), uuid);
+        List<String> identifiers = Arrays.asList(uuid, String.format("Contributor/%s", person.getIdentifier()));
         c.setIdentifier(identifiers);
         c.setFirstRelease(person.getFirstReleaseAt());
         c.setLastRelease(person.getLastReleaseAt());
@@ -36,7 +36,7 @@ public class ContributorTranslator implements Translator<PersonSources, Contribu
             c.setContributions(person.getContributions().stream()
                     .map(contribution ->
                             new TargetInternalReference(
-                                    liveMode ? contribution.getRelativeUrl() : String.format("Dataset/%s", contribution.getIdentifier()),
+                                    liveMode ? contribution.getRelativeUrl() : contribution.getIdentifier(),
                                     contribution.getName(), null)).collect(Collectors.toList()));
         }
 
@@ -44,7 +44,7 @@ public class ContributorTranslator implements Translator<PersonSources, Contribu
             c.setCustodianOf(person.getCustodianOf().stream()
                     .map(custodianOf ->
                             new TargetInternalReference(
-                                    liveMode ? custodianOf.getRelativeUrl() : String.format("Dataset/%s", custodianOf.getIdentifier()),
+                                    liveMode ? custodianOf.getRelativeUrl() : custodianOf.getIdentifier(),
                                     custodianOf.getName(), null)).collect(Collectors.toList()));
         }
 
@@ -52,14 +52,14 @@ public class ContributorTranslator implements Translator<PersonSources, Contribu
             c.setCustodianOfModel(person.getCustodianOfModel().stream()
                     .map(custodianOfModel ->
                             new TargetInternalReference(
-                                    liveMode ? custodianOfModel.getRelativeUrl() : String.format("Model/%s", custodianOfModel.getIdentifier()),
+                                    liveMode ? custodianOfModel.getRelativeUrl() : custodianOfModel.getIdentifier(),
                                     custodianOfModel.getName(), null)).collect(Collectors.toList()));
         }
 
         if(!CollectionUtils.isEmpty(person.getModelContributions())) {
             c.setModelContributions(person.getModelContributions().stream()
                     .map(contribution -> new TargetInternalReference(
-                            liveMode ? contribution.getRelativeUrl() : String.format("Model/%s", contribution.getIdentifier()),
+                            liveMode ? contribution.getRelativeUrl() : contribution.getIdentifier(),
                             contribution.getName(), null
                     )).collect(Collectors.toList()));
         }
