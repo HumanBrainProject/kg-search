@@ -169,52 +169,6 @@ public class TranslationController {
         return targetInstances;
     }
 
-    public TargetInstances createV3Datasets(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
-
-        ResultOfKGv3<DatasetV3> datasetV3 = kgV3.fetchInstances(ResultOfKGV3DatasetV3.class, Queries.DATASET_ID, authorization, dataStage);
-
-        List<DatasetSources> datasetSources = new ArrayList<>();
-
-        Map<String, DatasetSources> datasetSourcesByV1Identifier = datasetSources.stream().collect(Collectors.toMap(k -> k.getDatasetV1().getIdentifier(), v -> v));
-
-        datasetV3.getData().forEach(d -> {
-            String id = d.getIdentifier().stream().reduce(null, (found, i) -> {
-                if (found != null) {
-                    String uuid = ESHelper.getUUID(i);
-                    DatasetSources source = datasetSourcesByV1Identifier.get(uuid);
-                    if (source != null) {
-                        source.setDatasetV3(d);
-                        return uuid;
-                    }
-                }
-                return null;
-            });
-            if(id == null) {
-                DatasetSources source = new DatasetSources();
-                source.setDatasetV3(d);
-                datasetSources.add(source);
-            }
-        });
-
-        DatasetTranslator translator = new DatasetTranslator();
-        VersionedDatasetTranslator versionedDatasetTranslator = new VersionedDatasetTranslator();
-        TargetInstances targetInstances = new TargetInstances();
-        datasetSources.forEach(d -> {
-            if(d.getDatasetV3() != null) {
-                List<DatasetVersionV3> datasetVersions = d.getDatasetV3().getDatasetVersions();
-                for(int i = 0; i < datasetVersions.size(); i++) {
-                    DatasetVersionV3 datasetVersion = datasetVersions.get(i);
-                    String versionIdentifiers = datasetVersion.getVersionIdentifier();
-                    if(i == 0) {
-                        targetInstances.addInstance(versionedDatasetTranslator.translate(d.getDatasetV3(), dataStage, liveMode, versionIdentifiers, true), true);
-                    }
-                    targetInstances.addInstance(versionedDatasetTranslator.translate(d.getDatasetV3(), dataStage, liveMode, versionIdentifiers, false), false);
-                }
-            }
-        });
-        return targetInstances;
-    }
-
     public Dataset createDataset(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
         DatasetV1 datasetV1 = kgV2.fetchInstance(DatasetV1.class, query, id, authorization, dataStage);
         DatasetTranslator translator = new DatasetTranslator();
@@ -222,13 +176,6 @@ public class TranslationController {
     }
 
     public Dataset createDataset(DataStage dataStage, boolean liveMode, String id, String authorization) {
-        //TODO: Remove the comments. It is just for test and will be removed.
-//        ResultOfKGV3DatasetV3 datasetV31 = kgV3.fetchInstance(ResultOfKGV3DatasetV3.class, Queries.DATASET_ID, id, authorization, dataStage);
-//        DatasetV3 datasetV32 = datasetV31.getData().get(0);
-//        String latestDatasetVersionIdentifier = getLatestDatasetVersionIdentifier(datasetV32.getDatasetVersions());
-//        DatasetTranslator translator = new DatasetTranslator();
-//        return translator.translate(datasetV32, dataStage, liveMode, latestDatasetVersionIdentifier);
-
         DatasetV3 datasetV3 = kgV3.fetchInstance(DatasetV3.class, Queries.DATASET_ID, id, authorization, dataStage);
         String latestDatasetVersionIdentifier = getLatestDatasetVersionIdentifier(datasetV3.getDatasetVersions());
         VersionedDatasetTranslator translator = new VersionedDatasetTranslator();

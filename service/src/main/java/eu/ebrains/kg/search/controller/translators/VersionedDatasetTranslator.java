@@ -19,12 +19,10 @@ public class VersionedDatasetTranslator implements  VersionedTranslator<DatasetV
 
         DatasetVersionV3 datasetVersion = getDatasetVersion(datasetV3.getDatasetVersions(), versionIdentifier);
         if(datasetVersion != null) {
+            d.setVersion(versionIdentifier);
             if(useDatasetIdentifier) {
                 d.setId(ESHelper.getUUID(datasetV3.getId()));
-                List<String> ids = new ArrayList<>();
-                ids.addAll(ESHelper.getUUID(datasetV3.getIdentifier()));
-                ids.addAll(Arrays.asList("Barth", "Homer", "Lisa"));
-                d.setIdentifier(ids);
+                d.setIdentifier(ESHelper.getUUID(datasetV3.getIdentifier()));
             } else {
                 d.setId(ESHelper.getUUID(datasetVersion.getId()));
                 d.setIdentifier(ESHelper.getUUID(datasetVersion.getIdentifiers()));
@@ -35,11 +33,13 @@ public class VersionedDatasetTranslator implements  VersionedTranslator<DatasetV
             } else {
                 d.setDescription(datasetVersion.getDescription());
             }
-            if (StringUtils.isBlank(datasetVersion.getFullName())) {
-                d.setDescription(datasetV3.getFullName());
-            } else {
-                d.setTitle(datasetVersion.getFullName());
-            }
+//            if (StringUtils.isBlank(datasetVersion.getFullName())) {
+//                d.setTitle(datasetV3.getFullName());
+//            } else {
+//                d.setTitle(datasetVersion.getFullName());
+//            }
+            // For the UI we don't need the version number in the title as it is set in de dropdown
+            d.setTitle(datasetV3.getFullName());
         } else {
             d.setId(ESHelper.getUUID(datasetV3.getId()));
             d.setIdentifier(datasetV3.getIdentifier());

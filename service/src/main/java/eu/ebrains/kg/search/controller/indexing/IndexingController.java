@@ -41,12 +41,6 @@ public class IndexingController {
         elasticSearchController.indexIdentifierDocuments(instances.getAllInstances(), dataStage);
     }
 
-    public void testFullDatasetReplacement(DataStage dataStage, String authorization, String legacyAuthorization) {
-        TargetInstances instances = translationController.createV3Datasets(dataStage, false, authorization, legacyAuthorization);
-        recreateIdentifiersIndex(dataStage);
-        elasticSearchController.indexIdentifierDocuments(instances.getAllInstances(), dataStage);
-    }
-
     public void recreateIdentifiersIndex(DataStage dataStage) {
         Map<String, Object> mapping = mappingController.generateIdentifierMapping();
         Map<String, Object> mappingResult = Map.of("mappings", mapping);

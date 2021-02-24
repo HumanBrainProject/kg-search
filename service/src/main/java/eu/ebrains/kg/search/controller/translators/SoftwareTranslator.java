@@ -20,7 +20,7 @@ public class SoftwareTranslator implements Translator<SoftwareV2, Software> {
 
     public Software translate(SoftwareV2 softwareV2, DataStage dataStage, boolean liveMode) {
         Software s = new Software();
-        String uuid = ESHelper.getUUID(softwareV2.getId());
+            String uuid = ESHelper.getUUID(softwareV2.getId());
         s.setId(uuid);
         List<String> identifiers = Arrays.asList(uuid, String.format("Software/%s", softwareV2.getIdentifier()));
         s.setIdentifier(identifiers);

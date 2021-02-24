@@ -40,32 +40,6 @@ public class Indexing {
         }
     }
 
-    @PostMapping("/test")
-    public ResponseEntity<?> testFullReplacement(@RequestHeader("Authorization") String authorization
-    ) {
-        try {
-            indexingController.testFullDatasetReplacement(DataStage.IN_PROGRESS, authorization, null);
-            return ResponseEntity.ok().build();
-        } catch (WebClientResponseException e) {
-            logger.info("Unsuccessful indexing dataset", e);
-            return ResponseEntity.status(e.getStatusCode()).build();
-        }
-    }
-
-    @PostMapping("/test2")
-    public ResponseEntity<?> testFullReplacement(@RequestHeader("Authorization") String authorization,
-                                                 @RequestHeader("X-Legacy-Authorization") String legacyAuthorization
-    ) {
-        try {
-            indexingController.recreateIdentifiersIndex(DataStage.IN_PROGRESS);
-            indexingController.fullReplacementByType(DataStage.IN_PROGRESS, "Dataset", authorization, legacyAuthorization, Dataset.class);
-            return ResponseEntity.ok().build();
-        } catch (WebClientResponseException e) {
-            logger.info("Unsuccessful indexing dataset", e);
-            return ResponseEntity.status(e.getStatusCode()).build();
-        }
-    }
-
     @PutMapping
     public ResponseEntity<?> incrementalUpdate(@RequestParam("databaseScope") DataStage dataStage,
                                                @RequestHeader("Authorization") String authorization,
