@@ -1,8 +1,10 @@
 package eu.ebrains.kg.search.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
+import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -11,6 +13,9 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -21,16 +26,46 @@ public class ESServiceClient {
             .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1000000)).build();
     private final WebClient webClient = WebClient.builder().exchangeStrategies(exchangeStrategies).build();
 
-
     @Value("${es.endpoint}")
     String elasticSearchEndpoint;
 
+    private String getQuery(String id) {
+        String normalizeId = id.replace("/", "\\/");
+        return String.format("{\n" +
+                "  \"query\": {\n" +
+                "    \"bool\": {\n" +
+                "      \"must\": [\n" +
+                "        {\n" +
+                "          \"term\": {\n" +
+                "            \"identifier\": \"%s\"\n" +
+                "          }\n" +
+                "        }\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  }\n" +
+                "}", normalizeId);
+    }
+
     public ElasticSearchDocument getDocument(String index, String id) {
-        return webClient.get()
-                .uri(String.format("%s/%s/_doc/%s", elasticSearchEndpoint, index, id))
+        ElasticSearchResult result =  webClient.post()
+                .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(BodyInserters.fromValue(getQuery(id)))
                 .retrieve()
-                .bodyToMono(ElasticSearchDocument.class)
+                .bodyToMono(ElasticSearchResult.class)
                 .block();
+        ElasticSearchResult.Hits hits = result.getHits();
+        List<ElasticSearchDocument> documents = hits == null? Collections.emptyList():hits.getHits();
+        if (documents.isEmpty()) {
+            ElasticSearchDocument doc = new ElasticSearchDocument();
+            doc.setId(id);
+            doc.setType("_doc");
+            doc.setIndex(index);
+            return doc;
+        }
+        ElasticSearchDocument doc = documents.get(0);
+        doc.setId(id);
+        return doc;
     }
 
     public ElasticSearchResult getDocuments(String index) {

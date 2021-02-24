@@ -34,7 +34,7 @@ public class ESHelper {
     }
 
     public static String getIndexFromGroup(String type, String group) {
-        String indexPrefix = group.equals("public") ? "publicly_released" : "in_progress";
+        String indexPrefix = group.equals("curated") ? "in_progress": "publicly_released";
         return String.format("%s_%s", indexPrefix, type.toLowerCase());
     }
 

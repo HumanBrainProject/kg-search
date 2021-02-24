@@ -102,10 +102,9 @@ public class Search {
         }
     }
 
-    @GetMapping("/groups/public/types/{type}/documents/{id}")
-    public ResponseEntity<?> getDocumentForPublic(@PathVariable("type") String type,
-                                         @PathVariable("id") String id) {
-        String index = ESHelper.getIndexFromGroup(type, "public");
+    @GetMapping("/groups/public/documents/{id}")
+    public ResponseEntity<?> getDocumentForPublic(@PathVariable("id") String id) {
+        String index = ESHelper.getIdentifierIndex(DataStage.RELEASED);
         try {
             return ResponseEntity.ok(esServiceClient.getDocument(index, id));
         } catch (WebClientResponseException e) {
@@ -113,13 +112,37 @@ public class Search {
         }
     }
 
-    @GetMapping("/groups/curated/types/{type}/documents/{id}")
-    public ResponseEntity<?> getDocumentForCurated(@PathVariable("type") String type,
-                                         @PathVariable("id") String id, Principal principal) {
+    @GetMapping("/groups/public/documents/{type}/{id}")
+    public ResponseEntity<?> getDocumentForPublic(@PathVariable("type") String type, @PathVariable("id") String id) {
+        String index = ESHelper.getIdentifierIndex(DataStage.RELEASED);
+        try {
+            return ResponseEntity.ok(esServiceClient.getDocument(index, String.format("%s/%s", type, id)));
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
+    }
+
+    @GetMapping("/groups/curated/documents/{id}")
+    public ResponseEntity<?> getDocumentForCurated(@PathVariable("id") String id, Principal principal) {
         if(isInInProgressRole(principal)) {
             try {
-                String index = ESHelper.getIndexFromGroup(type, "curated");
+                String index = ESHelper.getIdentifierIndex(DataStage.IN_PROGRESS);
                 return ResponseEntity.ok(esServiceClient.getDocument(index, id));
+            } catch (WebClientResponseException e) {
+                return ResponseEntity.status(e.getStatusCode()).build();
+            }
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    @GetMapping("/groups/curated/documents/{type}/{id}")
+    public ResponseEntity<?> getDocumentForCurated(@PathVariable("type") String type, @PathVariable("id") String id, Principal principal) {
+        if(isInInProgressRole(principal)) {
+            try {
+                String index = ESHelper.getIdentifierIndex(DataStage.IN_PROGRESS);
+                return ResponseEntity.ok(esServiceClient.getDocument(index, String.format("%s/%s", type, id)));
             } catch (WebClientResponseException e) {
                 return ResponseEntity.status(e.getStatusCode()).build();
             }
