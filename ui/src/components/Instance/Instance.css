@@ -79,6 +79,10 @@
     color: var(--color-36);
 }
 
+.kgs-instance__header_title .kgs-field__title, .kgs-instance__header_title .kgs-field__title .field-value {
+    display: inline;
+}
+
 .kgs-instance__header_fields {
     padding: 0 25px 20px 25px;
 }

@@ -165,7 +165,11 @@ export const mapStateToProps = (state, props) => {
   const type = source?.type?.value;
   const mapping = (source && state.definition?.typeMappings && state.definition.typeMappings[type])??{};
   const group = state.groups.group;
-
+  const version = source?.version;
+  const versions = (source && Array.isArray(source.versions)?source.versions:[]).map(v => ({
+    label: v.value,
+    value: v.reference
+  }));
   return {
     id: data && data._id,
     type: type,
@@ -178,6 +182,8 @@ export const mapStateToProps = (state, props) => {
       type: getField(group, type, "type"),
       title: getField(group, type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"]),
       fields: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout === "header" && name !== "title"),
+      version: version,
+      versions: versions
     },
     previews: getPreviews(source, { children: mapping.fields }),
     buttons: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.isButton),

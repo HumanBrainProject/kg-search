@@ -23,6 +23,7 @@ import { Field } from "../Field/Field";
 import { FieldsPanel } from "../Field/FieldsPanel";
 import { FieldsTabs } from "../Field/FieldsTabs";
 import { FieldsButtons } from "../Field/FieldsButtons";
+import { VersionSelector } from "../VersionSelector/VersionSelector";
 
 import "./Instance.css";
 
@@ -44,6 +45,11 @@ export class Instance extends React.PureComponent {
     const relativeUrl = `${path}${type}/${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
     // window.console.log("trackEvent", "Card", "Opened", relativeUrl);
     ReactPiwik.push(["trackEvent", "Card", "Opened", relativeUrl]);
+  }
+
+  onVersionChange = version => {
+    const { group, fetch } = this.props;
+    fetch(group, version);
   }
 
   render() {
@@ -73,8 +79,9 @@ export class Instance extends React.PureComponent {
           <NavigationComponent />
           <div className="kgs-instance__header_fields">
             <Tags tags={tags} />
-            <div>
+            <div className="kgs-instance__header_title">
               <Field {...header.title} />
+              <VersionSelector version={header.version} versions={header.versions} onChange={this.onVersionChange} />
             </div>
             <FieldsPanel fields={header.fields} fieldComponent={Field} />
           </div>

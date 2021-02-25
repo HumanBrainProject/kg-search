@@ -40,7 +40,6 @@ export const Instance = connect(
       }
       :
       null;
-    console.log(props.match.params);
     return {
       instanceProps: instanceProps,
       showInstance: state.instances.currentInstance && !state.instances.isLoading && !state.instances.error,

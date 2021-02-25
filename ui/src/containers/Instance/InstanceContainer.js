@@ -131,7 +131,7 @@ export class InstanceContainer extends React.Component {
   }
 
   render() {
-    const { showInstance, showGroupSelection, instanceProps, watermark } = this.props;
+    const { showInstance, showGroupSelection, instanceProps, watermark, fetch } = this.props;
     const NavigationComponent = getNavigation(instanceProps && instanceProps.header);
     return (
       <React.Fragment>
@@ -139,7 +139,7 @@ export class InstanceContainer extends React.Component {
           {showInstance && (
             <React.Fragment>
               <BackLinkButton />
-              <Instance {...this.props.instanceProps} NavigationComponent={NavigationComponent} />
+              <Instance {...this.props.instanceProps} NavigationComponent={NavigationComponent} fetch={fetch} />
             </React.Fragment>
           )}
           {watermark && (
