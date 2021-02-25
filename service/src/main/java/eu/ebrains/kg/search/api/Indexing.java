@@ -4,8 +4,6 @@ import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.controller.indexing.IndexingController;
 import eu.ebrains.kg.search.controller.sitemap.SitemapController;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
