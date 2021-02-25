@@ -93,9 +93,21 @@ public class Search {
                                                     @PathVariable("schema") String schema,
                                                     @PathVariable("version") String version,
                                                     @PathVariable("id") String id,
-                                                    @RequestHeader("X-Legacy-Authorization") String authorization) {
+                                                    @RequestHeader("X-Legacy-Authorization") String legacyAuthorization) {
         try {
-            TargetInstance instance = translationController.createInstance(DataStage.IN_PROGRESS, true, org, domain, schema, version, id, authorization);
+            TargetInstance instance = translationController.createInstance(DataStage.IN_PROGRESS, true, org, domain, schema, version, id, legacyAuthorization);
+            return ResponseEntity.ok(Map.of("_source", instance));
+        } catch (HttpClientErrorException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
+    }
+
+    @GetMapping("/{id}/live")
+    public ResponseEntity<Map> translate(@PathVariable("id") String id,
+                                         @RequestParam("type") String type,
+                                         @RequestHeader("Authorization") String authorization) {
+        try {
+            TargetInstance instance = translationController.createInstance(DataStage.IN_PROGRESS, true, id, type, authorization);
             return ResponseEntity.ok(Map.of("_source", instance));
         } catch (HttpClientErrorException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
