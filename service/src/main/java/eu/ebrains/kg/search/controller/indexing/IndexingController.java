@@ -44,15 +44,22 @@ public class IndexingController {
 
     public void fullReplacementByType(DataStage dataStage, String type, String authorization, String legacyAuthorization, Class<?> clazz) {
         TargetInstances instances = translationController.createInstances(dataStage, false, type, authorization, legacyAuthorization);
-        logger.info(String.format("Now indexing: %s", type));
+        logger.info(String.format("Creating index for %s", type));
         recreateSearchIndex(dataStage, type, clazz);
+        logger.info(String.format("Created index for %s", type));
         if (!CollectionUtils.isEmpty(instances.getSearchableInstances())) {
+            logger.info(String.format("Start search indexing %s instances for %s", instances.getSearchableInstances().size(), type));
             elasticSearchController.indexSearchDocuments(instances.getSearchableInstances(), type, dataStage);
-            logger.info("Done indexing in search index");
+            logger.info(String.format("Indexed search for %s", type));
+        } else {
+            logger.info(String.format("Bypass search indexing for %s, because no instance", type));
         }
         if (!CollectionUtils.isEmpty(instances.getAllInstances())) {
+            logger.info(String.format("Start instance indexing %s instances with %s", instances.getAllInstances().size(), type));
             elasticSearchController.indexIdentifierDocuments(instances.getAllInstances(), dataStage);
-            logger.info("Done indexing in identifiers index");
+            logger.info(String.format("Indexed instance with %s", type));
+        } else {
+            logger.info(String.format("Bypass instance indexing with %s, because no instance", type));
         }
     }
 
