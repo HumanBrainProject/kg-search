@@ -40,7 +40,7 @@ public class TranslationController {
     private static class ResultOfKGV2PersonV1 extends ResultOfKGv2<PersonV1> {}
     private static class ResultOfKGV2PersonV2 extends ResultOfKGv2<PersonV2> {}
 
-    private List<TargetInstance> createContributors(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
+    private TargetInstances createContributors(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
         String queryForV1 = "query/minds/core/person/v1.0.0/search";
         String queryForV2 = "query/uniminds/core/person/v1.0.0/search";
         ResultOfKGV2PersonV1 personsFromV1 = kgV2.fetchInstances(ResultOfKGV2PersonV1.class, queryForV1, legacyAuthorization, dataStage);
@@ -68,7 +68,11 @@ public class TranslationController {
         //TODO add v3
 
         ContributorTranslator translator = new ContributorTranslator();
-        return personSources.stream().map(p -> (TargetInstance) translator.translate(p, dataStage, liveMode)).collect(Collectors.toList());
+        List<TargetInstance> list =  personSources.stream().map(p -> (TargetInstance) translator.translate(p, dataStage, liveMode)).collect(Collectors.toList());
+        TargetInstances result = new TargetInstances();
+        result.setSearchableInstances(list);
+        result.setAllInstances(list);
+        return result;
     }
 
     public Contributor createContributor(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
@@ -99,11 +103,15 @@ public class TranslationController {
 
     private static class ResultOfKGV2SoftwareV2 extends ResultOfKGv2<SoftwareV2> {}
 
-    public List<TargetInstance> createSoftwares(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
+    public TargetInstances createSoftwares(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
         String query = "query/softwarecatalog/software/softwareproject/v1.0.0/search";
         ResultOfKGV2SoftwareV2 software = kgV2.fetchInstances(ResultOfKGV2SoftwareV2.class, query, legacyAuthorization, dataStage);
         SoftwareTranslator translator = new SoftwareTranslator();
-        return software.getResults().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
+        List<TargetInstance> list = software.getResults().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
+        TargetInstances result = new TargetInstances();
+        result.setSearchableInstances(list);
+        result.setAllInstances(list);
+        return result;
     }
 
     public Software createSoftware(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
@@ -190,11 +198,15 @@ public class TranslationController {
     }
 
     private static class ResultOfKGV2ModelV2 extends ResultOfKGv2<ModelV2> {}
-    public List<TargetInstance> createModels(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
+    public TargetInstances createModels(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
         String query = "query/uniminds/core/modelinstance/v1.0.0/search";
         ResultOfKGV2ModelV2 model = kgV2.fetchInstances(ResultOfKGV2ModelV2.class, query, legacyAuthorization, dataStage);
         ModelTranslator translator = new ModelTranslator();
-        return model.getResults().stream().map(m -> (TargetInstance) translator.translate(m, dataStage, liveMode)).collect(Collectors.toList());
+        List<TargetInstance> list = model.getResults().stream().map(m -> (TargetInstance) translator.translate(m, dataStage, liveMode)).collect(Collectors.toList());
+        TargetInstances result = new TargetInstances();
+        result.setSearchableInstances(list);
+        result.setAllInstances(list);
+        return result;
     }
 
     public Model createModel(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
@@ -204,11 +216,15 @@ public class TranslationController {
     }
 
     private static class ResultOfKGV2ProjectV1 extends ResultOfKGv2<ProjectV1> {}
-    public List<TargetInstance> createProjects(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
+    public TargetInstances createProjects(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
         String query = "query/minds/core/placomponent/v1.0.0/search";
         ResultOfKGV2ProjectV1 project = kgV2.fetchInstances(ResultOfKGV2ProjectV1.class, query, legacyAuthorization, dataStage);
         ProjectTranslator translator = new ProjectTranslator();
-        return project.getResults().stream().map(p -> (TargetInstance) translator.translate(p, dataStage, liveMode)).collect(Collectors.toList());
+        List<TargetInstance> list = project.getResults().stream().map(p -> (TargetInstance) translator.translate(p, dataStage, liveMode)).collect(Collectors.toList());
+        TargetInstances result = new TargetInstances();
+        result.setSearchableInstances(list);
+        result.setAllInstances(list);
+        return result;
     }
 
     public Project createProject(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
@@ -218,11 +234,15 @@ public class TranslationController {
     }
 
     private static class ResultOfKGV2SampleV1 extends ResultOfKGv2<SampleV1> {}
-    public List<TargetInstance> createSamples(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
+    public TargetInstances createSamples(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
         String query = "query/minds/experiment/sample/v1.0.0/search";
         ResultOfKGV2SampleV1 sample = kgV2.fetchInstances(ResultOfKGV2SampleV1.class, query, legacyAuthorization, dataStage);
         SampleTranslator translator = new SampleTranslator();
-        return sample.getResults().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
+        List<TargetInstance> list = sample.getResults().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
+        TargetInstances result = new TargetInstances();
+        result.setSearchableInstances(list);
+        result.setAllInstances(list);
+        return result;
     }
 
     public Sample createSample(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
@@ -232,11 +252,15 @@ public class TranslationController {
     }
 
     private static class ResultOfKGV2SubjectV1 extends ResultOfKGv2<SubjectV1> {}
-    public List<TargetInstance> createSubjects(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
+    public TargetInstances createSubjects(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
         String query = "query/minds/experiment/subject/v1.0.0/search";
         ResultOfKGV2SubjectV1 subject = kgV2.fetchInstances(ResultOfKGV2SubjectV1.class, query, legacyAuthorization, dataStage);
         SubjectTranslator translator = new SubjectTranslator();
-        return subject.getResults().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
+        List<TargetInstance> list = subject.getResults().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
+        TargetInstances result = new TargetInstances();
+        result.setSearchableInstances(list);
+        result.setAllInstances(list);
+        return result;
     }
 
     public Subject createSubject(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
@@ -294,18 +318,18 @@ public class TranslationController {
         switch (type) {
             case "Dataset":
                 return this.createDatasets(dataStage, liveMode, authorization, legacyAuthorization);
-//            case "Contributor":
-//                return this.createContributors(dataStage, liveMode, authorization, legacyAuthorization);
-//            case "Project":
-//                return this.createProjects(dataStage, liveMode, authorization, legacyAuthorization);
-//            case "Model":
-//                return this.createModels(dataStage, liveMode, authorization, legacyAuthorization);
-//            case "Subject":
-//                return this.createSubjects(dataStage, liveMode, authorization, legacyAuthorization);
-//            case "Sample":
-//                return this.createSamples(dataStage, liveMode, authorization, legacyAuthorization);
-//            case "Software":
-//                return this.createSoftwares(dataStage, liveMode, authorization, legacyAuthorization);
+            case "Contributor":
+                return this.createContributors(dataStage, liveMode, authorization, legacyAuthorization);
+            case "Project":
+                return this.createProjects(dataStage, liveMode, authorization, legacyAuthorization);
+            case "Model":
+                return this.createModels(dataStage, liveMode, authorization, legacyAuthorization);
+            case "Subject":
+                return this.createSubjects(dataStage, liveMode, authorization, legacyAuthorization);
+            case "Sample":
+                return this.createSamples(dataStage, liveMode, authorization, legacyAuthorization);
+            case "Software":
+                return this.createSoftwares(dataStage, liveMode, authorization, legacyAuthorization);
         }
         return new TargetInstances();
     }
