@@ -1,6 +1,7 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
@@ -434,6 +435,12 @@ public class Dataset implements TargetInstance {
         List<TargetInternalReference> result = new ArrayList<>();
         versionsV3.forEach(v -> result.add(new TargetInternalReference(ESHelper.getUUID(v.getId()), v.getVersionIdentifier())));
         this.versions = result;
+    }
+
+    public void addDatasetToVersions(DatasetV3 dataset) {
+        if (this.versions != null) {
+            this.versions.add(0, new TargetInternalReference(ESHelper.getUUID(dataset.getId()), ""));
+        }
     }
 
     public static class Subject {
