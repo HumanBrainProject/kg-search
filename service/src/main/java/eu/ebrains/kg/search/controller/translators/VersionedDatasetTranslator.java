@@ -14,19 +14,14 @@ import java.util.stream.Collectors;
 
 public class VersionedDatasetTranslator implements  VersionedTranslator<DatasetV3, Dataset>{
 
-    public Dataset translate(DatasetV3 datasetV3, DataStage dataStage, boolean liveMode, String versionIdentifier, boolean useDatasetIdentifier) {
+    public Dataset translate(DatasetV3 datasetV3, DataStage dataStage, boolean liveMode, String versionIdentifier) {
         Dataset d = new Dataset();
 
         DatasetVersionV3 datasetVersion = getDatasetVersion(datasetV3.getDatasetVersions(), versionIdentifier);
         if(datasetVersion != null) {
             d.setVersion(versionIdentifier);
-            if(useDatasetIdentifier) {
-                d.setId(ESHelper.getUUID(datasetV3.getId()));
-                d.setIdentifier(ESHelper.getUUID(datasetV3.getIdentifier()));
-            } else {
-                d.setId(ESHelper.getUUID(datasetVersion.getId()));
-                d.setIdentifier(ESHelper.getUUID(datasetVersion.getIdentifiers()));
-            }
+            d.setId(ESHelper.getUUID(datasetVersion.getId()));
+            d.setIdentifier(ESHelper.getUUID(datasetVersion.getIdentifiers()));
             d.setVersions(datasetV3.getDatasetVersions());
             if (StringUtils.isBlank(datasetVersion.getDescription())) {
                 d.setDescription(datasetV3.getDescription());
@@ -45,6 +40,7 @@ public class VersionedDatasetTranslator implements  VersionedTranslator<DatasetV
             d.setIdentifier(datasetV3.getIdentifier());
             d.setDescription(datasetV3.getDescription());
             d.setTitle(datasetV3.getFullName());
+            d.setVersions(datasetV3.getDatasetVersions());
         }
         return d;
     }

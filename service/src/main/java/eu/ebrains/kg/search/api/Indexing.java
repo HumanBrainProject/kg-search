@@ -28,7 +28,9 @@ public class Indexing {
                                              @RequestHeader("X-Legacy-Authorization") String legacyAuthorization
                                              ) {
         try {
+            logger.info(String.format("Creating index identifiers_%s", dataStage));
             indexingController.recreateIdentifiersIndex(dataStage);
+            logger.info(String.format("Created index identifiers_%s", dataStage));
             Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> indexingController.fullReplacementByType(dataStage, type, authorization, legacyAuthorization, clazz));
             sitemapController.updateSitemapCache(dataStage);
             return ResponseEntity.ok().build();

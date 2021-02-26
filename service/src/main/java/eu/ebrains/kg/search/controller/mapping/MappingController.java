@@ -29,6 +29,7 @@ public class MappingController {
         timestamp.put("type", "date");
         properties.put("@timestamp", timestamp);
         mapping.put("properties", properties);
+        mapping.put("dynamic", false);
         return mapping;
     }
 
@@ -37,6 +38,7 @@ public class MappingController {
         Map<String, Object> properties = new LinkedHashMap<>();
         Map<String, Object> timestamp = new LinkedHashMap<>();
         mapping.put("properties", properties);
+        mapping.put("dynamic", false);
         timestamp.put("type", "date");
         properties.put("@timestamp", timestamp);
         properties.putAll(handleType(clazz, null));

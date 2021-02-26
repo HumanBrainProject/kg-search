@@ -175,14 +175,11 @@ public class TranslationController {
         TargetInstances targetInstances = new TargetInstances();
         datasetSources.forEach(d -> {
             if(d.getDatasetV3() != null) {
+                targetInstances.addInstance(versionedDatasetTranslator.translate(d.getDatasetV3(), dataStage, liveMode, null), true);
                 List<DatasetVersionV3> datasetVersions = d.getDatasetV3().getDatasetVersions();
-                for(int i = 0; i < datasetVersions.size(); i++) {
-                    DatasetVersionV3 datasetVersion = datasetVersions.get(i);
+                for (DatasetVersionV3 datasetVersion : datasetVersions) {
                     String versionIdentifiers = datasetVersion.getVersionIdentifier();
-                    if(i == 0) {
-                        targetInstances.addInstance(versionedDatasetTranslator.translate(d.getDatasetV3(), dataStage, liveMode, versionIdentifiers, true), true);
-                    }
-                    Dataset translate = versionedDatasetTranslator.translate(d.getDatasetV3(), dataStage, liveMode, versionIdentifiers, false);
+                    Dataset translate = versionedDatasetTranslator.translate(d.getDatasetV3(), dataStage, liveMode, versionIdentifiers);
                     targetInstances.addInstance(translate, false);
                 }
             } else {
@@ -200,16 +197,8 @@ public class TranslationController {
 
     public Dataset createDataset(DataStage dataStage, boolean liveMode, String id, String authorization) {
         DatasetV3 datasetV3 = kgV3.fetchInstance(DatasetV3.class, Queries.DATASET_ID, id, authorization, dataStage);
-        String latestDatasetVersionIdentifier = getLatestDatasetVersionIdentifier(datasetV3.getDatasetVersions());
         VersionedDatasetTranslator translator = new VersionedDatasetTranslator();
-        return translator.translate(datasetV3, dataStage, liveMode, latestDatasetVersionIdentifier, true);
-    }
-
-    private String getLatestDatasetVersionIdentifier(List<DatasetVersionV3> datasetVersions){
-        if (datasetVersions.isEmpty()) {
-            return null;
-        }
-        return datasetVersions.get(0).getVersionIdentifier();
+        return translator.translate(datasetV3, dataStage, liveMode, null);
     }
 
     private static class ResultOfKGV2ModelV2 extends ResultOfKGv2<ModelV2> {}

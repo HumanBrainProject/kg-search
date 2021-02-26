@@ -16,8 +16,8 @@ public class Constants {
             "Subject", Subject.class,
             "Sample", Sample.class,
             "Model", Model.class,
-            "Software", Software.class,
-            "Contributor", Contributor.class
+            "Contributor", Contributor.class,
+            "Software", Software.class
     );
 
     public final static List<Map<String, String>> GROUPS = Arrays.asList(

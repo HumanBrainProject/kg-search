@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import org.apache.http.protocol.HTTP;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,6 +23,8 @@ import java.util.Map;
 @Component
 public class ESServiceClient {
     private final Integer querySize = 10000; //TODO Pagination?
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
             .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1000000)).build();
@@ -104,12 +108,20 @@ public class ESServiceClient {
     }
 
     public void updateIndex(String index, String operations) {
-        webClient.post()
+        Map<String, Object> result = webClient.post()
                 .uri(String.format("%s/%s/_bulk", elasticSearchEndpoint, index))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_NDJSON_VALUE)
                 .body(BodyInserters.fromValue(operations))
                 .retrieve()
-                .bodyToMono(Void.class)
+                .bodyToMono(Map.class)
                 .block();
+        if ((boolean) result.get("errors")) {
+            ((List<Map<String,Object>>) result.get("items")).forEach(item -> {
+                Map<String,Object> instance = (Map) item.get("index");
+                if ((int) instance.get("status") >= 400) {
+                    logger.error(instance.toString());
+                }
+            });
+        }
     }
 }

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Locale;
 import java.util.Map;
 
 @Component
@@ -44,9 +45,9 @@ public class IndexingController {
 
     public void fullReplacementByType(DataStage dataStage, String type, String authorization, String legacyAuthorization, Class<?> clazz) {
         TargetInstances instances = translationController.createInstances(dataStage, false, type, authorization, legacyAuthorization);
-        logger.info(String.format("Creating index for %s", type));
+        logger.info(String.format("Creating index %s_%s for %s", dataStage, type.toLowerCase(), type));
         recreateSearchIndex(dataStage, type, clazz);
-        logger.info(String.format("Created index for %s", type));
+        logger.info(String.format("Created index %s_%s for %s", dataStage, type.toLowerCase(), type));
         if (!CollectionUtils.isEmpty(instances.getSearchableInstances())) {
             logger.info(String.format("Start search indexing %s instances for %s", instances.getSearchableInstances().size(), type));
             elasticSearchController.indexSearchDocuments(instances.getSearchableInstances(), type, dataStage);
