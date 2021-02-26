@@ -36,7 +36,6 @@ public class ESServiceClient {
     private String getQuery(String id) {
         String normalizeId = id.replace("/", "\\/");
         return String.format("{\n" +
-                "\"track_total_hits\": true,\n" +
                 "  \"query\": {\n" +
                 "    \"bool\": {\n" +
                 "      \"must\": [\n" +
