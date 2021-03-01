@@ -31,8 +31,9 @@ export const Instance = connect(
     ImagePreviewsComponent: ImagePreviews,
     ImagePopupComponent: ImagePopup,
     TermsShortNoticeComponent: TermsShortNotice,
+    searchPage: true
   }),
   dispatch => ({
-    fetch: (group, id) => dispatch(actionsInstances.loadInstance(group, id)),
+    fetch: (group, id, updateLocation) => dispatch(actionsInstances.loadInstance(group, id, updateLocation)),
   })
 )(Component);

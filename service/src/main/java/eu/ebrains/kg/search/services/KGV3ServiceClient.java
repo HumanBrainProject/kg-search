@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Map;
+
 @Component
 public class KGV3ServiceClient {
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -32,6 +34,11 @@ public class KGV3ServiceClient {
 //        String url = String.format("%s/queries/%s/instances/%s?stage=%s&vocab=%s", kgCoreEndpoint, queryId, id, dataStage, vocab);
         String url = String.format("%s/queries/%s/instances?stage=%s&vocab=%s", kgCoreEndpoint, queryId, dataStage, vocab);
         return executeCall(clazz, token, url);
+    }
+
+    public Map getInstance(String id, DataStage dataStage, String token) {
+        String url = String.format("%s/instances/%s?stage=%s", kgCoreEndpoint, id, dataStage);
+        return executeCall(Map.class, token, url);
     }
 
     private <T> T executeCall(Class<T> clazz, String token, String url) {

@@ -58,7 +58,8 @@ export const Instance = connect(
       group: state.groups.group,
       defaultGroup: state.groups.defaultGroup,
       id: props.match.params.type?`${props.match.params.type}/${props.match.params.id}`:props.match.params.id,
-      location: state.router.location
+      location: state.router.location,
+      searchPage: false
     };
   },
   dispatch => ({

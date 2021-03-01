@@ -1,5 +1,6 @@
 package eu.ebrains.kg.search.controller;
 
+import eu.ebrains.kg.search.constants.Queries;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.*;
 
 import java.util.Arrays;
@@ -25,6 +26,16 @@ public class Constants {
                     "label", "in progress"),
             Map.of("name", "public",
                     "label", "publicly released")
+    );
+
+    public final static List<String> TYPES_FOR_LIVE = Arrays.asList(
+            "https://openminds.ebrains.eu/core/Dataset",
+            "https://openminds.ebrains.eu/core/Person",
+            "https://openminds.ebrains.eu/core/Project",
+            "https://openminds.ebrains.eu/core/Model",
+            "https://openminds.ebrains.eu/core/Software",
+            "https://openminds.ebrains.eu/core/Subject",
+            "https://openminds.ebrains.eu/core/Sample"
     );
 
 }

@@ -439,7 +439,7 @@ public class Dataset implements TargetInstance {
 
     public void addDatasetToVersions(DatasetV3 dataset) {
         if (this.versions != null) {
-            this.versions.add(0, new TargetInternalReference(ESHelper.getUUID(dataset.getId()), ""));
+            this.versions.add(0, new TargetInternalReference(ESHelper.getUUID(dataset.getId()), null));
         }
     }
 

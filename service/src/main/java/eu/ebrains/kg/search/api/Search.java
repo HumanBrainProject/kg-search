@@ -104,10 +104,9 @@ public class Search {
 
     @GetMapping("/{id}/live")
     public ResponseEntity<Map> translate(@PathVariable("id") String id,
-                                         @RequestParam("type") String type,
                                          @RequestHeader("Authorization") String authorization) {
         try {
-            TargetInstance instance = translationController.createInstance(DataStage.IN_PROGRESS, true, id, type, authorization);
+            TargetInstance instance = translationController.createInstance(DataStage.IN_PROGRESS, true, id, authorization);
             return ResponseEntity.ok(Map.of("_source", instance));
         } catch (HttpClientErrorException e) {
             return ResponseEntity.status(e.getStatusCode()).build();

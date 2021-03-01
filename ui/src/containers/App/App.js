@@ -44,6 +44,7 @@ class App extends React.Component {
             <Route path="/instances/:id" exact component={Instance} />
             <Route path="/instances/:type/:id" exact component={Instance} />
             <Route path="/live/:org/:domain/:schema/:version/:id" exact component={Preview} />
+            <Route path="/live/:id" exact component={Preview} />
             <Route path="/" exact component={Search} />
             <Route component={NotFound} />
           </Switch>

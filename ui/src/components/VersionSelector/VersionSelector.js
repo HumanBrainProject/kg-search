@@ -32,16 +32,13 @@ const getVersionValue = (versions, version) => {
 };
 
 export const VersionSelector = ({ version, versions, onChange }) => {
-  if (!version) {
-    return null;
-  }
   if (!Array.isArray(versions) || !versions.length) {
+    if(!version) {
+      return null;
+    }
     return version;
   }
   const value = getVersionValue(versions, version);
-  if (!value) {
-    return null;
-  }
   return (
     <div className="kgs-version_selector">
       <Select value={value} list={versions} onChange={onChange} />

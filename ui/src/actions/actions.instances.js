@@ -167,11 +167,11 @@ export const loadInstance = (group, id, shouldUpdateLocation=false) => {
   };
 };
 
-export const loadPreview = (type, id) => {
+export const loadPreview = id => {
   return dispatch => {
     dispatch(loadInstanceRequest());
     API.axios
-      .get(API.endpoints.preview(type, id))
+      .get(API.endpoints.preview(id))
       .then(response => {
         if (response.data && !response.data.error) {
           response.data._id = id;

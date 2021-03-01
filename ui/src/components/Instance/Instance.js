@@ -24,6 +24,7 @@ import { FieldsPanel } from "../Field/FieldsPanel";
 import { FieldsTabs } from "../Field/FieldsTabs";
 import { FieldsButtons } from "../Field/FieldsButtons";
 import { VersionSelector } from "../VersionSelector/VersionSelector";
+import { history } from "../../store";
 
 import "./Instance.css";
 
@@ -43,13 +44,16 @@ export class Instance extends React.PureComponent {
   trackEvent = () => {
     const { id, type, group, path, defaultGroup } = this.props;
     const relativeUrl = `${path}${type}/${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
-    // window.console.log("trackEvent", "Card", "Opened", relativeUrl);
     ReactPiwik.push(["trackEvent", "Card", "Opened", relativeUrl]);
   }
 
   onVersionChange = version => {
-    const { group, fetch } = this.props;
-    fetch(group, version);
+    const { searchPage, group, fetch, path } = this.props;
+    if(searchPage) {
+      fetch(group, version, true);
+    } else {
+      history.push(`${path}${version}${group && group !== "public"?("?group=" + group ):""}`);
+    }
   }
 
   render() {
