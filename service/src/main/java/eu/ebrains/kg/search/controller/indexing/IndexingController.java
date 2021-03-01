@@ -29,12 +29,12 @@ public class IndexingController {
         this.translationController = translationController;
     }
 
-    public void incrementalUpdateAll(DataStage dataStage, String authorization, String legacyAuthorization){
-        Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> incrementalUpdateByType(dataStage, type, authorization, legacyAuthorization));
+    public void incrementalUpdateAll(DataStage dataStage, String legacyAuthorization){
+        Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> incrementalUpdateByType(dataStage, type, legacyAuthorization));
     }
 
-    public void incrementalUpdateByType(DataStage dataStage, String type, String authorization, String legacyAuthorization) {
-        TargetInstances instances = translationController.createInstances(dataStage, false, type, authorization, legacyAuthorization);
+    public void incrementalUpdateByType(DataStage dataStage, String type, String legacyAuthorization) {
+        TargetInstances instances = translationController.createInstances(dataStage, false, type, legacyAuthorization);
         if (!CollectionUtils.isEmpty(instances.getSearchableInstances())) {
             elasticSearchController.indexSearchDocuments(instances.getSearchableInstances(), type, dataStage);
         }
@@ -43,8 +43,8 @@ public class IndexingController {
         }
     }
 
-    public void fullReplacementByType(DataStage dataStage, String type, String authorization, String legacyAuthorization, Class<?> clazz) {
-        TargetInstances instances = translationController.createInstances(dataStage, false, type, authorization, legacyAuthorization);
+    public void fullReplacementByType(DataStage dataStage, String type, String legacyAuthorization, Class<?> clazz) {
+        TargetInstances instances = translationController.createInstances(dataStage, false, type, legacyAuthorization);
         logger.info(String.format("Creating index %s_%s for %s", dataStage, type.toLowerCase(), type));
         recreateSearchIndex(dataStage, type, clazz);
         logger.info(String.format("Created index %s_%s for %s", dataStage, type.toLowerCase(), type));

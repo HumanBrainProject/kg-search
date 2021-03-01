@@ -16,8 +16,8 @@ public class KGv3 {
     }
 
 
-    public <T> T fetchInstances(Class<T> clazz, String queryId, String authorization, DataStage dataStage){
-        return kgServiceClient.executeQuery(queryId, dataStage, clazz, authorization);
+    public <T> T fetchInstances(Class<T> clazz, String queryId, DataStage dataStage){
+        return kgServiceClient.executeQuery(queryId, dataStage, clazz);
     }
 
 

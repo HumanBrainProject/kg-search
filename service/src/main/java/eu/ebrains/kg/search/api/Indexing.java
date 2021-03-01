@@ -24,14 +24,13 @@ public class Indexing {
 
     @PostMapping
     public ResponseEntity<?> fullReplacement(@RequestParam("databaseScope") DataStage dataStage,
-                                             @RequestHeader("Authorization") String authorization,
                                              @RequestHeader("X-Legacy-Authorization") String legacyAuthorization
                                              ) {
         try {
             logger.info(String.format("Creating index identifiers_%s", dataStage));
             indexingController.recreateIdentifiersIndex(dataStage);
             logger.info(String.format("Created index identifiers_%s", dataStage));
-            Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> indexingController.fullReplacementByType(dataStage, type, authorization, legacyAuthorization, clazz));
+            Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> indexingController.fullReplacementByType(dataStage, type, legacyAuthorization, clazz));
             sitemapController.updateSitemapCache(dataStage);
             return ResponseEntity.ok().build();
         } catch (WebClientResponseException e) {
@@ -42,10 +41,9 @@ public class Indexing {
 
     @PutMapping
     public ResponseEntity<?> incrementalUpdate(@RequestParam("databaseScope") DataStage dataStage,
-                                               @RequestHeader("Authorization") String authorization,
                                                @RequestHeader("X-Legacy-Authorization") String legacyAuthorization) {
         try {
-            indexingController.incrementalUpdateAll(dataStage, authorization, legacyAuthorization);
+            indexingController.incrementalUpdateAll(dataStage, legacyAuthorization);
             sitemapController.updateSitemapCache(dataStage);
             return ResponseEntity.ok().build();
         } catch (WebClientResponseException e) {

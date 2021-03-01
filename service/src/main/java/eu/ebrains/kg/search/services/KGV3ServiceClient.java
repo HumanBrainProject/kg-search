@@ -22,11 +22,17 @@ public class KGV3ServiceClient {
     @Value("${kgcore.endpoint}")
     String kgCoreEndpoint;
 
+    @Value("${kgsearch.clientId}")
+    String kgSearchClientId;
+
+    @Value("${kgsearch.clientSecret}")
+    String kgSearchClientSecret;
+
     private static final String vocab = "https://schema.hbp.eu/search/";
 
-    public <T> T executeQuery(String queryId, DataStage dataStage, Class<T> clazz, String token) {
+    public <T> T executeQuery(String queryId, DataStage dataStage, Class<T> clazz) {
         String url = String.format("%s/queries/%s/instances?stage=%s&vocab=%s", kgCoreEndpoint, queryId, dataStage, vocab);
-        return executeCall(clazz, token, url);
+        return executeCall(clazz, url);
     }
 
     public <T> T executeQuery(String queryId, String id, DataStage dataStage, Class<T> clazz, String token) {
@@ -47,6 +53,20 @@ public class KGV3ServiceClient {
                 .headers(h ->
                 {
                     h.add(HttpHeaders.AUTHORIZATION, token);
+                    h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+                })
+                .retrieve()
+                .bodyToMono(clazz)
+                .block();
+    }
+
+    private <T> T executeCall(Class<T> clazz, String url) {
+        return webClient.get()
+                .uri(url)
+                .headers(h ->
+                {
+                    h.add("Client-Id", kgSearchClientId);
+                    h.add("Client-SA-Secret", kgSearchClientSecret);
                     h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
                 })
                 .retrieve()

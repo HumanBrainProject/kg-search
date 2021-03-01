@@ -48,7 +48,7 @@ public class TranslationController {
     private static class ResultOfKGV2PersonV2 extends ResultOfKGv2<PersonV2> {
     }
 
-    private TargetInstances createContributors(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
+    private TargetInstances createContributors(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
         String queryForV1 = "query/minds/core/person/v1.0.0/search";
         String queryForV2 = "query/uniminds/core/person/v1.0.0/search";
         logger.info("Starting to query contributors for v1");
@@ -117,7 +117,7 @@ public class TranslationController {
     private static class ResultOfKGV2SoftwareV2 extends ResultOfKGv2<SoftwareV2> {
     }
 
-    public TargetInstances createSoftwares(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
+    public TargetInstances createSoftwares(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
         String query = "query/softwarecatalog/software/softwareproject/v1.0.0/search";
         logger.info("Starting to query software for v1");
         ResultOfKGV2SoftwareV2 software = kgV2.fetchInstances(ResultOfKGV2SoftwareV2.class, query, legacyAuthorization, dataStage);
@@ -142,13 +142,13 @@ public class TranslationController {
     private static class ResultOfKGV3DatasetV3 extends ResultOfKGv3<DatasetV3> {
     }
 
-    public TargetInstances createDatasets(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
+    public TargetInstances createDatasets(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
         String query = "query/minds/core/dataset/v1.0.0/search";
         logger.info("Starting to query datasets for v1");
         ResultOfKGV2DatasetV1 datasetV1 = kgV2.fetchInstances(ResultOfKGV2DatasetV1.class, query, legacyAuthorization, dataStage);
         logger.info(String.format("Queried %s datasets for v1", CollectionUtils.isEmpty(datasetV1.getResults()) ? 0 : datasetV1.getResults().size()));
         logger.info("Starting to query datasets for v3");
-        ResultOfKGv3<DatasetV3> datasetV3 = kgV3.fetchInstances(ResultOfKGV3DatasetV3.class, Queries.DATASET_ID, authorization, dataStage);
+        ResultOfKGv3<DatasetV3> datasetV3 = kgV3.fetchInstances(ResultOfKGV3DatasetV3.class, Queries.DATASET_ID, dataStage);
         logger.info(String.format("Queried %s datasets for v3", CollectionUtils.isEmpty(datasetV3.getData()) ? 0 : datasetV3.getData().size()));
         List<DatasetSources> datasetSources = new ArrayList<>();
         datasetV1.getResults().forEach(p -> {
@@ -212,7 +212,7 @@ public class TranslationController {
     private static class ResultOfKGV2ModelV2 extends ResultOfKGv2<ModelV2> {
     }
 
-    public TargetInstances createModels(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
+    public TargetInstances createModels(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
         String query = "query/uniminds/core/modelinstance/v1.0.0/search";
         logger.info("Starting to query models for v1");
         ResultOfKGV2ModelV2 model = kgV2.fetchInstances(ResultOfKGV2ModelV2.class, query, legacyAuthorization, dataStage);
@@ -234,7 +234,7 @@ public class TranslationController {
     private static class ResultOfKGV2ProjectV1 extends ResultOfKGv2<ProjectV1> {
     }
 
-    public TargetInstances createProjects(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
+    public TargetInstances createProjects(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
         String query = "query/minds/core/placomponent/v1.0.0/search";
         logger.info("Starting to query projects for v1");
         ResultOfKGV2ProjectV1 project = kgV2.fetchInstances(ResultOfKGV2ProjectV1.class, query, legacyAuthorization, dataStage);
@@ -256,7 +256,7 @@ public class TranslationController {
     private static class ResultOfKGV2SampleV1 extends ResultOfKGv2<SampleV1> {
     }
 
-    public TargetInstances createSamples(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
+    public TargetInstances createSamples(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
         String query = "query/minds/experiment/sample/v1.0.0/search";
         logger.info("Starting to query samples for v1");
         ResultOfKGV2SampleV1 sample = kgV2.fetchInstances(ResultOfKGV2SampleV1.class, query, legacyAuthorization, dataStage);
@@ -278,7 +278,7 @@ public class TranslationController {
     private static class ResultOfKGV2SubjectV1 extends ResultOfKGv2<SubjectV1> {
     }
 
-    public TargetInstances createSubjects(DataStage dataStage, boolean liveMode, String authorization, String legacyAuthorization) {
+    public TargetInstances createSubjects(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
         String query = "query/minds/experiment/subject/v1.0.0/search";
         logger.info("Starting to query subjects for v1");
         ResultOfKGV2SubjectV1 subject = kgV2.fetchInstances(ResultOfKGV2SubjectV1.class, query, legacyAuthorization, dataStage);
@@ -348,22 +348,22 @@ public class TranslationController {
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Type %s is not recognized as a valid search resource!", type));
     }
 
-    public TargetInstances createInstances(DataStage dataStage, boolean liveMode, String type, String authorization, String legacyAuthorization) {
+    public TargetInstances createInstances(DataStage dataStage, boolean liveMode, String type, String legacyAuthorization) {
         switch (type) {
             case "Dataset":
-                return this.createDatasets(dataStage, liveMode, authorization, legacyAuthorization);
+                return this.createDatasets(dataStage, liveMode, legacyAuthorization);
             case "Contributor":
-                return this.createContributors(dataStage, liveMode, authorization, legacyAuthorization);
+                return this.createContributors(dataStage, liveMode, legacyAuthorization);
             case "Project":
-                return this.createProjects(dataStage, liveMode, authorization, legacyAuthorization);
+                return this.createProjects(dataStage, liveMode, legacyAuthorization);
             case "Model":
-                return this.createModels(dataStage, liveMode, authorization, legacyAuthorization);
+                return this.createModels(dataStage, liveMode, legacyAuthorization);
             case "Subject":
-                return this.createSubjects(dataStage, liveMode, authorization, legacyAuthorization);
+                return this.createSubjects(dataStage, liveMode, legacyAuthorization);
             case "Sample":
-                return this.createSamples(dataStage, liveMode, authorization, legacyAuthorization);
+                return this.createSamples(dataStage, liveMode, legacyAuthorization);
             case "Software":
-                return this.createSoftwares(dataStage, liveMode, authorization, legacyAuthorization);
+                return this.createSoftwares(dataStage, liveMode, legacyAuthorization);
         }
         return new TargetInstances();
     }
