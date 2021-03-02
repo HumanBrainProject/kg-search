@@ -2,7 +2,9 @@ package eu.ebrains.kg.search.controller.elasticsearch;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.model.DataStage;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.services.ESServiceClient;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -91,8 +94,8 @@ public class ElasticSearchController {
             }
         });
 
-        ElasticSearchResult documents = esServiceClient.getDocuments(index);
-        documents.getHits().getHits().forEach(document -> {
+        List<ElasticSearchDocument> documents = esServiceClient.getDocuments(index);
+        documents.forEach(document -> {
             if(!ids.contains(document.getId())) {
                 operations.append(String.format("{ \"delete\" : { \"_id\" : \"%s\" } } \n", document.getId()));
             }
@@ -100,7 +103,7 @@ public class ElasticSearchController {
         esServiceClient.updateIndex(index, operations.toString());
     }
 
-    public void updateIdentifiersIndex(List<TargetInstance> instances, DataStage dataStage) {
+    public void updateIdentifiersIndex(List<TargetInstance> instances, String type, DataStage dataStage) {
         String index = ESHelper.getIdentifierIndex(dataStage);
         HashSet<String> ids = new HashSet<>();
         StringBuilder operations = new StringBuilder();
@@ -115,8 +118,8 @@ public class ElasticSearchController {
             }
         });
 
-        ElasticSearchResult documents = esServiceClient.getDocuments(index);
-        documents.getHits().getHits().forEach(document -> {
+        List<ElasticSearchDocument> documents = esServiceClient.getDocuments(index);
+        documents.stream().filter(hit -> hit.getType().equals(type)).forEach(document -> {
             if(!ids.contains(document.getId())) {
                 operations.append(String.format("{ \"delete\" : { \"_id\" : \"%s\" } } \n", document.getId()));
             }

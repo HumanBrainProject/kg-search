@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class Constants {
 
+    public final static Integer esQuerySize = 10000;
+
     public final static List<Class<?>> TARGET_MODELS_ORDER = Arrays.asList(Project.class, Dataset.class, Subject.class, Sample.class, Model.class, Software.class, Contributor.class);
 
     public final static Map<String, Class<?>> TARGET_MODELS_MAP = Map.of(

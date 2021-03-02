@@ -1,6 +1,7 @@
 package eu.ebrains.kg.search.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import org.slf4j.Logger;
@@ -13,21 +14,20 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 @Component
 public class ESServiceClient {
-    private final Integer querySize = 10000; //TODO Pagination?
-
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final WebClient webClient;
 
     private final String elasticSearchEndpoint;
 
-    public ESServiceClient(WebClient webClient,  @Value("${es.endpoint}") String elasticSearchEndpoint) {
+    public ESServiceClient(WebClient webClient, @Value("${es.endpoint}") String elasticSearchEndpoint) {
         this.webClient = webClient;
         this.elasticSearchEndpoint = elasticSearchEndpoint;
     }
@@ -49,8 +49,29 @@ public class ESServiceClient {
                 "}", normalizeId);
     }
 
+
+    private String getPaginatedQuery(String id) {
+        if (id == null) {
+            return String.format("{\n" +
+                    " \"size\": %d,\n" +
+                    " \"sort\": [\n" +
+                    "    {\"_id\": \"asc\"}\n" +
+                    " ]\n" +
+                    "}", Constants.esQuerySize);
+        }
+        return String.format("{\n" +
+                " \"size\": %d,\n" +
+                " \"sort\": [\n" +
+                "    {\"_id\": \"asc\"}\n" +
+                "  ],\n" +
+                "  \"search_after\": [\n" +
+                "      \"%s\"\n" +
+                "   ]\n" +
+                "}", Constants.esQuerySize, id);
+    }
+
     public ElasticSearchDocument getDocument(String index, String id) {
-        ElasticSearchResult result =  webClient.post()
+        ElasticSearchResult result = webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .body(BodyInserters.fromValue(getQuery(id)))
@@ -58,7 +79,7 @@ public class ESServiceClient {
                 .bodyToMono(ElasticSearchResult.class)
                 .block();
         ElasticSearchResult.Hits hits = result.getHits();
-        List<ElasticSearchDocument> documents = hits == null? Collections.emptyList():hits.getHits();
+        List<ElasticSearchDocument> documents = hits == null ? Collections.emptyList() : hits.getHits();
         if (documents.isEmpty()) {
             ElasticSearchDocument doc = new ElasticSearchDocument();
             doc.setId(id);
@@ -71,9 +92,24 @@ public class ESServiceClient {
         return doc;
     }
 
-    public ElasticSearchResult getDocuments(String index) {
-        return webClient.get()
-                .uri(String.format("%s/%s/_search?size=%d", elasticSearchEndpoint, index, querySize))
+    public List<ElasticSearchDocument> getDocuments(String index) {
+        List<ElasticSearchDocument> result = new ArrayList<>();
+        String searchAfter = null;
+        while (result.isEmpty() || searchAfter != null) {
+            ElasticSearchResult documents = getPaginatedDocuments(index, searchAfter);
+            List<ElasticSearchDocument> hits = documents.getHits().getHits();
+            result.addAll(hits);
+            searchAfter = hits.size() < Constants.esQuerySize ? null:hits.get(hits.size()-1).getId();
+        }
+        return result;
+    }
+
+    private ElasticSearchResult getPaginatedDocuments(String index, String searchAfter) {
+        String paginatedQuery = getPaginatedQuery(searchAfter);
+        return webClient.post()
+                .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
+                .body(BodyInserters.fromValue(paginatedQuery))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_NDJSON_VALUE)
                 .retrieve()
                 .bodyToMono(ElasticSearchResult.class)
                 .block();
@@ -114,8 +150,8 @@ public class ESServiceClient {
                 .bodyToMono(Map.class)
                 .block();
         if ((boolean) result.get("errors")) {
-            ((List<Map<String,Object>>) result.get("items")).forEach(item -> {
-                Map<String,Object> instance = (Map) item.get("index");
+            ((List<Map<String, Object>>) result.get("items")).forEach(item -> {
+                Map<String, Object> instance = (Map) item.get("index");
                 if ((int) instance.get("status") >= 400) {
                     logger.error(instance.toString());
                 }

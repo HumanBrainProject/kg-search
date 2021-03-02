@@ -3,6 +3,7 @@ package eu.ebrains.kg.search.controller.sitemap;
 import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.SitemapXML;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
@@ -40,8 +41,8 @@ public class SitemapController {
         List<SitemapXML.Url> urls = new ArrayList<>();
         String index = ESHelper.getIdentifierIndex(DataStage.RELEASED);
         try {
-            ElasticSearchResult documents = esServiceClient.getDocuments(index);
-            documents.getHits().getHits().forEach(doc -> {
+            List<ElasticSearchDocument> documents = esServiceClient.getDocuments(index);
+            documents.forEach(doc -> {
                 SitemapXML.Url url = new SitemapXML.Url();
                 url.setLoc(String.format("%s/instances/%s", ebrainsUrl, doc.getId()));
                 urls.add(url);

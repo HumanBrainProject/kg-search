@@ -34,10 +34,10 @@ public class IndexingController {
     public void incrementalUpdateByType(DataStage dataStage, String type, String legacyAuthorization) {
         TargetInstances instances = translationController.createInstancesCombined(dataStage, false, type, legacyAuthorization);
         if (!CollectionUtils.isEmpty(instances.getSearchableInstances())) {
-            elasticSearchController.indexSearchDocuments(instances.getSearchableInstances(), type, dataStage);
+            elasticSearchController.updateSearchIndex(instances.getSearchableInstances(), type, dataStage);
         }
         if (!CollectionUtils.isEmpty(instances.getAllInstances())) {
-            elasticSearchController.indexIdentifierDocuments(instances.getAllInstances(), dataStage);
+            elasticSearchController.updateIdentifiersIndex(instances.getAllInstances(), type, dataStage);
         }
     }
 
