@@ -165,7 +165,7 @@ export const mapStateToProps = (state, props) => {
   const type = source?.type?.value;
   const mapping = (source && state.definition?.typeMappings && state.definition.typeMappings[type])??{};
   const group = state.groups.group;
-  const version = source.version?source.version:"Current";
+  const version = source && source.version?source.version:"Current";
   const versions = (source && Array.isArray(source.versions)?source.versions:[]).map(v => ({
     label: v.value?v.value:"Current",
     value: v.reference

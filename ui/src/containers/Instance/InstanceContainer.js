@@ -130,6 +130,11 @@ export class InstanceContainer extends React.Component {
     }
   }
 
+  handleBackToSearch = () => {
+    const { group } = this.props;
+    history.push(`/${group?("?group=" + group):""}`);
+  }
+
   render() {
     const { showInstance, showGroupSelection, instanceProps, watermark, fetch } = this.props;
     const NavigationComponent = getNavigation(instanceProps && instanceProps.header);
@@ -139,6 +144,7 @@ export class InstanceContainer extends React.Component {
           {showInstance && (
             <React.Fragment>
               <BackLinkButton />
+              <button className="kgs-container__backButton kgs-back__search" onClick={this.handleBackToSearch}><i className="fa fa-search"></i>&nbsp;Back to search</button>
               <Instance {...this.props.instanceProps} NavigationComponent={NavigationComponent} fetch={fetch} />
             </React.Fragment>
           )}

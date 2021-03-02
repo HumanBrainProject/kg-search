@@ -33,7 +33,7 @@ const getVersionValue = (versions, version) => {
 
 export const VersionSelector = ({ version, versions, onChange }) => {
   if (!Array.isArray(versions) || !versions.length) {
-    if(!version) {
+    if(!version || version === "Current") {
       return null;
     }
     return version;
