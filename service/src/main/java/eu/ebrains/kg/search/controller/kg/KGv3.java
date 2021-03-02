@@ -15,18 +15,16 @@ public class KGv3 {
         this.kgServiceClient = kgServiceClient;
     }
 
-
-    public <T> T fetchInstances(Class<T> clazz, String queryId, DataStage dataStage){
-        return kgServiceClient.executeQuery(queryId, dataStage, clazz);
+    public <T> T executeQueryForIndexing(Class<T> clazz, String queryId, DataStage dataStage){
+        return kgServiceClient.executeQueryForIndexing(queryId, dataStage, clazz);
     }
 
-
-    public <T> T fetchInstance(Class<T> clazz, String queryId, String id, String authorization, DataStage dataStage) {
-        return  kgServiceClient.executeQuery(queryId, id, dataStage, clazz, authorization);
+    public <T> T executeQueryForLive(Class<T> clazz, String queryId, String id, DataStage dataStage) {
+        return  kgServiceClient.executeQueryForLiveMode(queryId, id, dataStage, clazz);
     }
 
-    public Map fetchInstance(String id, DataStage dataStage, String authorization) {
-        return  kgServiceClient.getInstance(id, dataStage, authorization);
+    public Map fetchInstanceForLive(String id, DataStage dataStage) {
+        return  kgServiceClient.getInstanceForLiveMode(id, dataStage);
     }
 
 }

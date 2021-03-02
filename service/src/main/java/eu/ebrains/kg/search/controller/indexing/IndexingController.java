@@ -6,13 +6,11 @@ import eu.ebrains.kg.search.controller.mapping.MappingController;
 import eu.ebrains.kg.search.controller.translators.TranslationController;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstances;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Locale;
 import java.util.Map;
 
 @Component
@@ -34,7 +32,7 @@ public class IndexingController {
     }
 
     public void incrementalUpdateByType(DataStage dataStage, String type, String legacyAuthorization) {
-        TargetInstances instances = translationController.createInstances(dataStage, false, type, legacyAuthorization);
+        TargetInstances instances = translationController.createInstancesCombined(dataStage, false, type, legacyAuthorization);
         if (!CollectionUtils.isEmpty(instances.getSearchableInstances())) {
             elasticSearchController.indexSearchDocuments(instances.getSearchableInstances(), type, dataStage);
         }
@@ -44,7 +42,7 @@ public class IndexingController {
     }
 
     public void fullReplacementByType(DataStage dataStage, String type, String legacyAuthorization, Class<?> clazz) {
-        TargetInstances instances = translationController.createInstances(dataStage, false, type, legacyAuthorization);
+        TargetInstances instances = translationController.createInstancesCombined(dataStage, false, type, legacyAuthorization);
         logger.info(String.format("Creating index %s_%s for %s", dataStage, type.toLowerCase(), type));
         recreateSearchIndex(dataStage, type, clazz);
         logger.info(String.format("Created index %s_%s for %s", dataStage, type.toLowerCase(), type));

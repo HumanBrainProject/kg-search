@@ -12,7 +12,7 @@ public class KGv2 {
         this.kgServiceClient = kgServiceClient;
     }
 
-    public <T> T fetchInstances(Class<T> clazz, String query, String authorization, DataStage dataStage){
+    public <T> T executeQueryForIndexing(Class<T> clazz, String query, String authorization, DataStage dataStage){
         return kgServiceClient.executeQuery(query, dataStage, clazz, authorization);
     }
 

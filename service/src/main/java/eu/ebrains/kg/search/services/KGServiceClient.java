@@ -17,15 +17,15 @@ import java.util.Map;
 @Component
 public class KGServiceClient {
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private final ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
-            .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1000000)).build();
-    private final WebClient webClient = WebClient.builder().exchangeStrategies(exchangeStrategies).build();
+    private final WebClient webClient;
+    private final String kgQueryEndpoint;
+    private final String kgCoreEndpoint;
 
-    @Value("${kgquery.endpoint}")
-    String kgQueryEndpoint;
-
-    @Value("${kgcore.endpoint}")
-    String kgCoreEndpoint;
+    public KGServiceClient(WebClient webClient, @Value("${kgquery.endpoint}") String kgQueryEndpoint,  @Value("${kgcore.endpoint}") String kgCoreEndpoint) {
+        this.webClient = webClient;
+        this.kgQueryEndpoint = kgQueryEndpoint;
+        this.kgCoreEndpoint = kgCoreEndpoint;
+    }
 
     private static final String vocab = "https://schema.hbp.eu/search/";
 

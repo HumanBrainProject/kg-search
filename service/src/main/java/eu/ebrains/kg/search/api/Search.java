@@ -95,7 +95,7 @@ public class Search {
                                                     @PathVariable("id") String id,
                                                     @RequestHeader("X-Legacy-Authorization") String legacyAuthorization) {
         try {
-            TargetInstance instance = translationController.createInstance(DataStage.IN_PROGRESS, true, org, domain, schema, version, id, legacyAuthorization);
+            TargetInstance instance = translationController.createInstanceFromKGv2(DataStage.IN_PROGRESS, true, org, domain, schema, version, id, legacyAuthorization);
             return ResponseEntity.ok(Map.of("_source", instance));
         } catch (HttpClientErrorException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
@@ -103,10 +103,9 @@ public class Search {
     }
 
     @GetMapping("/{id}/live")
-    public ResponseEntity<Map> translate(@PathVariable("id") String id,
-                                         @RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<Map> translate(@PathVariable("id") String id) {
         try {
-            TargetInstance instance = translationController.createInstance(DataStage.IN_PROGRESS, true, id, authorization);
+            TargetInstance instance = translationController.createLiveInstanceFromKGv3(DataStage.IN_PROGRESS, true, id);
             return ResponseEntity.ok(Map.of("_source", instance));
         } catch (HttpClientErrorException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
