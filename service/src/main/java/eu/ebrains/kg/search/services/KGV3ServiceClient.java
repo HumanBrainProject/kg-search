@@ -1,17 +1,23 @@
 package eu.ebrains.kg.search.services;
 
 import eu.ebrains.kg.search.model.DataStage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.Map;
 
 @Component
 public class KGV3ServiceClient {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final WebClient serviceAccountWebClient;
     private final WebClient userWebClient;
     private final String kgCoreEndpoint;
@@ -35,6 +41,32 @@ public class KGV3ServiceClient {
     public Map getInstanceForLiveMode(String id, DataStage dataStage) {
         String url = String.format("%s/instances/%s?stage=%s", kgCoreEndpoint, id, dataStage);
         return executeCallForLive(Map.class, url);
+    }
+
+    public void uploadQuery(String queryId, String payload) {
+        try {
+            String url = String.format("%s/queries/%s", kgCoreEndpoint, queryId);
+            serviceAccountWebClient.put()
+                    .uri(url)
+                    .body(BodyInserters.fromValue(payload))
+                    .headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                    .retrieve()
+                    .bodyToMono(Void.class)
+                    .block();
+        } catch (WebClientResponseException e) {
+            if(e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                String url = String.format("%s/queries/%s?space=myspace", kgCoreEndpoint, queryId);
+                serviceAccountWebClient.put()
+                        .uri(url)
+                        .body(BodyInserters.fromValue(payload))
+                        .headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                        .retrieve()
+                        .bodyToMono(Void.class)
+                        .block();
+            } else {
+                throw e;
+            }
+        }
     }
 
     private <T> T executeCallForLive(Class<T> clazz, String url) {

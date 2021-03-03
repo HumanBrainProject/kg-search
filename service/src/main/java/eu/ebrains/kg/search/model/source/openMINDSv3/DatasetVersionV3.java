@@ -1,47 +1,21 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.search.constants.EBRAINSVocab;
 import eu.ebrains.kg.search.model.source.SourceInstance;
 
 import java.util.Date;
 import java.util.List;
 
 public class DatasetVersionV3 implements SourceInstance {
-    @JsonProperty(EBRAINSVocab.OPENMINDS_ID)
     private String id;
-
-    @JsonProperty(EBRAINSVocab.OPENMINDS_DESCRIPTION)
     private String description;
-
-//    @JsonProperty(EBRAINSVocab.OPENMINDS_DIGITAL_IDENTIFIER)
-//    private List<DigitalIdentifierV3> digitalIdentifier;
-
-    @JsonProperty(EBRAINSVocab.OPENMINDS_FULL_NAME)
     private String fullName;
-
-    @JsonProperty(EBRAINSVocab.OPENMINDS_HOMEPAGE)
     private String homepage;
-
-    @JsonProperty(EBRAINSVocab.OPENMINDS_KEYWORD)
     private List<String> keyword;
-
-    @JsonProperty(EBRAINSVocab.OPENMINDS_RELEASE_DATE)
     private Date releaseDate;
-
-    @JsonProperty(EBRAINSVocab.OPENMINDS_SHORT_NAME)
     private String shortName;
-
-    @JsonProperty(EBRAINSVocab.OPENMINDS_VERSION_IDENTIFIER)
     private String versionIdentifier;
-
-    @JsonProperty(EBRAINSVocab.OPENMINDS_VERSION_INNOVATION)
     private String versionInnovation;
-
-    @JsonProperty(EBRAINSVocab.OPENMINDS_PREVIOUS_VERSION_IDENTIFIER)
     private String previousVersionIdentifier;
-
-    @JsonProperty(EBRAINSVocab.OPENMINDS_IDENTIFIER)
     private List<String> identifiers;
 
     public String getId() {
@@ -59,14 +33,6 @@ public class DatasetVersionV3 implements SourceInstance {
     public void setDescription(String description) {
         this.description = description;
     }
-
-//    public List<DigitalIdentifierV3> getDigitalIdentifier() {
-//        return digitalIdentifier;
-//    }
-//
-//    public void setDigitalIdentifier(List<DigitalIdentifierV3> digitalIdentifier) {
-//        this.digitalIdentifier = digitalIdentifier;
-//    }
 
     public List<String> getIdentifiers() { return identifiers; }
 

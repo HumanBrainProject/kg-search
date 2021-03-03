@@ -1,7 +1,5 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.search.constants.EBRAINSVocab;
 import eu.ebrains.kg.search.model.source.SourceInstance;
 
 import java.util.HashMap;
@@ -11,28 +9,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DatasetV3 implements SourceInstance {
-    @JsonProperty(EBRAINSVocab.OPENMINDS_ID)
     private String id;
-
-    @JsonProperty(EBRAINSVocab.OPENMINDS_IDENTIFIER)
     private List<String> identifier;
-
-    @JsonProperty(EBRAINSVocab.OPENMINDS_DESCRIPTION)
     private String description;
-
-    @JsonProperty(EBRAINSVocab.OPENMINDS_DIGITAL_IDENTIFIER)
     private List<DigitalIdentifierV3> digitalIdentifier;
-
-    @JsonProperty(EBRAINSVocab.OPENMINDS_FULL_NAME)
     private String fullName;
-
-    @JsonProperty(EBRAINSVocab.OPENMINDS_DATASET_VERSIONS)
     private List<DatasetVersionV3> datasetVersions;
-
-    @JsonProperty(EBRAINSVocab.OPENMINDS_HOMEPAGE)
     private String homepage;
-
-    @JsonProperty(EBRAINSVocab.OPENMINDS_SHORT_NAME)
     private String shortName;
 
     public String getId() { return id; }

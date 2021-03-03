@@ -1,0 +1,118 @@
+{
+  "@context": {
+    "@vocab": "https://core.kg.ebrains.eu/vocab/query/",
+    "query": "https://schema.hbp.eu/myQuery/",
+    "propertyName": {
+      "@id": "propertyName",
+      "@type": "@id"
+    },
+    "merge": {
+      "@type": "@id",
+      "@id": "merge"
+    },
+    "path": {
+      "@id": "path",
+      "@type": "@id"
+    }
+  },
+  "meta": {
+    "name": "Dataset",
+    "type": "https://openminds.ebrains.eu/core/Dataset",
+    "responseVocab": "https://schema.hbp.eu/myQuery/"
+  },
+  "label": "dataset search query",
+  "structure": [
+    {
+      "propertyName": "query:description",
+      "path": "https://openminds.ebrains.eu/vocab/description"
+    },
+    {
+      "propertyName": "query:fullName",
+      "path": "https://openminds.ebrains.eu/vocab/fullName"
+    },
+    {
+      "propertyName": "query:homepage",
+      "path": "https://openminds.ebrains.eu/vocab/homepage"
+    },
+    {
+      "propertyName": "query:shortName",
+      "path": "https://openminds.ebrains.eu/vocab/shortName"
+    },
+    {
+      "propertyName": "query:digitalIdentifier",
+      "path": "https://openminds.ebrains.eu/vocab/digitalIdentifier",
+      "structure": [
+        {
+          "propertyName": "query:howToCite",
+          "path": "https://openminds.ebrains.eu/vocab/howToCite"
+        },
+        {
+          "propertyName": "query:identifier",
+          "path": "https://openminds.ebrains.eu/vocab/identifier"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:datasetVersions",
+      "path": "https://openminds.ebrains.eu/vocab/hasVersion",
+      "structure": [
+        {
+          "propertyName": "query:description",
+          "path": "https://openminds.ebrains.eu/vocab/description"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:homepage",
+          "path": "https://openminds.ebrains.eu/vocab/homepage"
+        },
+        {
+          "propertyName": "query:keyword",
+          "path": "https://openminds.ebrains.eu/vocab/keyword"
+        },
+        {
+          "propertyName": "query:shortName",
+          "path": "https://openminds.ebrains.eu/vocab/shortName"
+        },
+        {
+          "propertyName": "query:versionIdentifier",
+          "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
+        },
+        {
+          "propertyName": "query:versionInnovation",
+          "path": "https://openminds.ebrains.eu/vocab/versionInnovation"
+        },
+        {
+          "propertyName": "query:releaseDate",
+          "path": "https://openminds.ebrains.eu/vocab/releaseDate"
+        },
+        {
+          "propertyName": "query:previousVersionIdentifier",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/isNewVersionOf",
+            "https://openminds.ebrains.eu/vocab/versionIdentifier"
+          ],
+          "singleValue": "FIRST"
+        },
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:identifier",
+          "path": "http://schema.org/identifier"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:id",
+      "path": "@id"
+    },
+    {
+      "propertyName": "query:identifier",
+      "path": "http://schema.org/identifier"
+    }
+  ]
+}

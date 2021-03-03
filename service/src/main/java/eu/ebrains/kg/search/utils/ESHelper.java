@@ -1,12 +1,8 @@
 package eu.ebrains.kg.search.utils;
 
-import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
-import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;

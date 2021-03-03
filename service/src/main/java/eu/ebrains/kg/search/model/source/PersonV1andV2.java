@@ -1,12 +1,10 @@
 package eu.ebrains.kg.search.model.source;
 
-import java.util.Date;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.search.constants.EBRAINSVocab;
 import eu.ebrains.kg.search.model.source.commons.Publication;
 import eu.ebrains.kg.search.model.source.commons.SourceInternalReference;
+
+import java.util.Date;
+import java.util.List;
 
 public class PersonV1andV2 implements SourceInstance {
     private String id;

@@ -148,7 +148,7 @@ public class TranslationController {
         ResultOfKGV2DatasetV1 datasetV1 = kgV2.executeQueryForIndexing(ResultOfKGV2DatasetV1.class, query, legacyAuthorization, dataStage);
         logger.info(String.format("Queried %s datasets for v1", CollectionUtils.isEmpty(datasetV1.getResults()) ? 0 : datasetV1.getResults().size()));
         logger.info("Starting to query datasets for v3");
-        ResultOfKGv3<DatasetV3> datasetV3 = kgV3.executeQueryForIndexing(ResultOfKGV3DatasetV3.class, Queries.DATASET_ID, dataStage);
+        ResultOfKGv3<DatasetV3> datasetV3 = kgV3.executeQueryForIndexing(ResultOfKGV3DatasetV3.class, Queries.DATASET_QUERY_ID, dataStage);
         logger.info(String.format("Queried %s datasets for v3", CollectionUtils.isEmpty(datasetV3.getData()) ? 0 : datasetV3.getData().size()));
         List<DatasetSources> datasetSources = new ArrayList<>();
         datasetV1.getResults().forEach(p -> {
@@ -204,7 +204,7 @@ public class TranslationController {
     }
 
     public Dataset createDatasetV3(DataStage dataStage, boolean liveMode, String id) {
-        DatasetV3 datasetV3 = kgV3.executeQueryForLive(DatasetV3.class, Queries.DATASET_ID, id, dataStage);
+        DatasetV3 datasetV3 = kgV3.executeQueryForLive(DatasetV3.class, Queries.DATASET_QUERY_ID, id, dataStage);
         VersionedDatasetTranslator translator = new VersionedDatasetTranslator();
         return translator.translate(datasetV3, dataStage, liveMode, null);
     }

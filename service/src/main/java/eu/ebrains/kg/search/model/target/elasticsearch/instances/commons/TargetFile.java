@@ -1,8 +1,7 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances.commons;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 
 public class TargetFile {
     public TargetFile() {

@@ -1,6 +1,5 @@
 package eu.ebrains.kg.search.controller;
 
-import eu.ebrains.kg.search.constants.Queries;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.*;
 
 import java.util.Arrays;
