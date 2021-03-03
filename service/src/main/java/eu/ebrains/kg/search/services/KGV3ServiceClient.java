@@ -55,7 +55,7 @@ public class KGV3ServiceClient {
                     .block();
         } catch (WebClientResponseException e) {
             if(e.getStatusCode() == HttpStatus.BAD_REQUEST) {
-                String url = String.format("%s/queries/%s?space=myspace", kgCoreEndpoint, queryId);
+                String url = String.format("%s/queries/%s?space=kg-search", kgCoreEndpoint, queryId);
                 serviceAccountWebClient.put()
                         .uri(url)
                         .body(BodyInserters.fromValue(payload))
