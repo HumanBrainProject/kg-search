@@ -16,11 +16,10 @@
     }
   },
   "meta": {
-    "name": "Dataset",
+    "name": "dataset search query",
     "type": "https://openminds.ebrains.eu/core/Dataset",
     "responseVocab": "https://schema.hbp.eu/myQuery/"
   },
-  "label": "dataset search query",
   "structure": [
     {
       "propertyName": "query:description",
