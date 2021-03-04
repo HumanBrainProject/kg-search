@@ -28,6 +28,8 @@ import { FetchingPanel } from "../Fetching/FetchingPanel";
 import { InfoPanel } from "../Info/InfoPanel";
 import "./App.css";
 import { SessionExpiredErrorPanel } from "../Error/ErrorPanel";
+import Footer from "../../components/Footer/Footer";
+import Header from "../Header/Header";
 
 class App extends React.Component {
   constructor(props) {
@@ -39,6 +41,7 @@ class App extends React.Component {
     return (
       <div className="kgs-app">
         {/* <Notification /> */}
+        <Header />
         {this.props.isReady && (
           <Switch>
             <Route path="/instances/:id" exact component={Instance} />
@@ -52,6 +55,7 @@ class App extends React.Component {
         <FetchingPanel />
         <SessionExpiredErrorPanel />
         <InfoPanel />
+        <Footer />
       </div>
     );
   }

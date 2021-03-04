@@ -84,10 +84,10 @@
     cursor: default;
 }
 
-.kgs-app a,
+/* .kgs-app a,
 .kgs-app a:visited {
     color: var(--link-color-1);
-}
+} */
 
 .kgs-app a:hover,
 .kgs-app a:focus,
