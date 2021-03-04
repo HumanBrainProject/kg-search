@@ -25,6 +25,7 @@ import { FieldsTabs } from "../Field/FieldsTabs";
 import { FieldsButtons } from "../Field/FieldsButtons";
 import { VersionSelector } from "../VersionSelector/VersionSelector";
 import { history } from "../../store";
+import { BgError } from "../BgError/BgError";
 
 import "./Instance.css";
 
@@ -60,18 +61,14 @@ export class Instance extends React.PureComponent {
     const { id, type, hasNoData, hasUnknownData, header, previews, buttons, main, summary, groups, NavigationComponent, ImagePreviewsComponent, ImagePopupComponent, TermsShortNoticeComponent } = this.props;
 
     if (hasNoData) {
-      return (
-        <div className="kgs-instance" data-type={type}>
-          <div className="kgs-instance__no-data">This data is currently not available.</div>
-        </div>
+      return(
+        <BgError show={true} message="This data is currently not available." />
       );
     }
 
     if (hasUnknownData) {
-      return (
-        <div className="kgs-instance" data-type={type}>
-          <div className="kgs-instance__no-data">This type of data is currently not supported.</div>
-        </div>
+      return(
+        <BgError show={true} message="This type of data is currently not supported." />
       );
     }
 

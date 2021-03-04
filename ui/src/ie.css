@@ -350,18 +350,18 @@
     color: #555;
   }
 
-  .kgs-app {
+  main {
     font-family: "Inter","Helvetica Neue",Arial,sans-serif;
   }
 
-  .kgs-app a,
-  .kgs-app a:visited {
+  main a,
+  main a:visited {
       color: #337ab7;
   }
 
-  .kgs-app a:hover,
-  .kgs-app a:focus,
-  .kgs-app a:active {
+  main a:hover,
+  main a:focus,
+  main a:active {
       color:#23527c;
   }
 
