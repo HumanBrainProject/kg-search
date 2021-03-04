@@ -2,6 +2,7 @@ package eu.ebrains.kg.search.utils;
 
 import eu.ebrains.kg.search.model.DataStage;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,7 +19,7 @@ public class ESHelper {
     }
 
     public static List<String> getUUID(List<String> ids) {
-        if (ids.isEmpty()) {
+        if (CollectionUtils.isEmpty(ids)) {
             return ids;
         }
         return ids.stream().map(ESHelper::getUUID).filter(Objects::nonNull).collect(Collectors.toList());

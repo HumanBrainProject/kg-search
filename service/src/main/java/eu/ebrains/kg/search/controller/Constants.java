@@ -14,12 +14,12 @@ public class Constants {
 
     public final static Map<String, Class<?>> TARGET_MODELS_MAP = Map.of(
             "Project", Project.class,
-            "Dataset", Dataset.class,
             "Subject", Subject.class,
             "Sample", Sample.class,
             "Model", Model.class,
             "Contributor", Contributor.class,
-            "Software", Software.class
+            "Software", Software.class,
+            "Dataset", Dataset.class
     );
 
     public final static List<Map<String, String>> GROUPS = Arrays.asList(

@@ -16,7 +16,7 @@ public class DatasetVersionV3 implements SourceInstance {
     private String versionIdentifier;
     private String versionInnovation;
     private String previousVersionIdentifier;
-    private List<String> identifiers;
+    private List<String> identifier;
 
     public String getId() {
         return id;
@@ -34,9 +34,9 @@ public class DatasetVersionV3 implements SourceInstance {
         this.description = description;
     }
 
-    public List<String> getIdentifiers() { return identifiers; }
+    public List<String> getIdentifier() { return identifier; }
 
-    public void setIdentifiers(List<String> identifiers) { this.identifiers = identifiers; }
+    public void setIdentifier(List<String> identifier) { this.identifier = identifier; }
 
     public String getFullName() {
         return fullName;
