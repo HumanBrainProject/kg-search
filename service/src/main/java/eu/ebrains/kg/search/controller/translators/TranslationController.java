@@ -204,9 +204,13 @@ public class TranslationController {
     }
 
     public Dataset createDatasetV3(DataStage dataStage, boolean liveMode, String id) {
-        DatasetV3 datasetV3 = kgV3.executeQueryForLive(DatasetV3.class, Queries.DATASET_QUERY_ID, id, dataStage);
-        VersionedDatasetTranslator translator = new VersionedDatasetTranslator();
-        return translator.translate(datasetV3, dataStage, liveMode, null);
+        ResultOfKGV3DatasetV3 resultOfKGV3DatasetV3 = kgV3.executeQueryForLive(ResultOfKGV3DatasetV3.class, Queries.DATASET_QUERY_ID, id, dataStage);
+        DatasetV3 datasetV3 = resultOfKGV3DatasetV3.getData().stream().findFirst().orElse(null);
+        if (datasetV3 != null) {
+            VersionedDatasetTranslator translator = new VersionedDatasetTranslator();
+            return translator.translate(datasetV3, dataStage, liveMode, null);
+        }
+        return null;
     }
 
     private static class ResultOfKGV2ModelV2 extends ResultOfKGv2<ModelV2> {
