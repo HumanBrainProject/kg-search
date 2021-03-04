@@ -7,13 +7,15 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.search.utils.ESHelper;
+import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
@@ -22,7 +24,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
 
     public Dataset translate(DatasetV1 datasetV1, DataStage dataStage, boolean liveMode) {
         Dataset d = new Dataset();
-        String uuid = ESHelper.getUUID(datasetV1.getId());
+        String uuid = IdUtils.getUUID(datasetV1.getId());
         d.setId(uuid);
         List<String> identifiers = Arrays.asList(uuid, String.format("Dataset/%s", datasetV1.getIdentifier()));
         d.setIdentifier(identifiers);

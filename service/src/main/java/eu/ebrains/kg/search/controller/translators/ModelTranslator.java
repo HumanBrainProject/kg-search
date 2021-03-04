@@ -6,14 +6,13 @@ import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Model;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.search.utils.ESHelper;
+import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +22,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
 
     public Model translate(ModelV2 modelV2, DataStage dataStage, boolean liveMode) {
         Model m = new Model();
-        String uuid = ESHelper.getUUID(modelV2.getId());
+        String uuid = IdUtils.getUUID(modelV2.getId());
         m.setId(uuid);
         List<String> identifiers = Arrays.asList(uuid, String.format("Model/%s", modelV2.getIdentifier()));
         m.setIdentifier(identifiers);

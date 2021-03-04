@@ -6,6 +6,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import eu.ebrains.kg.search.utils.ESHelper;
+import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -433,13 +434,13 @@ public class Dataset implements TargetInstance {
 
     public void setVersions(List<DatasetVersionV3> versionsV3) {
         List<TargetInternalReference> result = new ArrayList<>();
-        versionsV3.forEach(v -> result.add(new TargetInternalReference(ESHelper.getUUID(v.getId()), v.getVersionIdentifier())));
+        versionsV3.forEach(v -> result.add(new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())));
         this.versions = result;
     }
 
     public void addDatasetToVersions(DatasetV3 dataset) {
         if (this.versions != null) {
-            this.versions.add(0, new TargetInternalReference(ESHelper.getUUID(dataset.getId()), null));
+            this.versions.add(0, new TargetInternalReference(IdUtils.getUUID(dataset.getId()), null));
         }
     }
 

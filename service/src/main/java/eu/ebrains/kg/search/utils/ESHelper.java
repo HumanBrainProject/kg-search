@@ -1,29 +1,8 @@
 package eu.ebrains.kg.search.utils;
 
 import eu.ebrains.kg.search.model.DataStage;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.CollectionUtils;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class ESHelper {
-
-    public static String getUUID(String id) {
-        if (StringUtils.isBlank(id)) {
-            return null;
-        }
-        String[] splitId = id.split("/");
-        return splitId[splitId.length - 1];
-    }
-
-    public static List<String> getUUID(List<String> ids) {
-        if (CollectionUtils.isEmpty(ids)) {
-            return ids;
-        }
-        return ids.stream().map(ESHelper::getUUID).filter(Objects::nonNull).collect(Collectors.toList());
-    }
 
     public static String getSearchIndex(String type, DataStage dataStage) {
         String indexPrefix = dataStage == DataStage.IN_PROGRESS ? "in_progress" : "publicly_released";

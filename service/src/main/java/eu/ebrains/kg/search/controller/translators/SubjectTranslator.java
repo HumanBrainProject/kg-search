@@ -4,21 +4,20 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Subject;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.search.utils.ESHelper;
+import eu.ebrains.kg.search.utils.IdUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
 
 public class SubjectTranslator implements Translator<SubjectV1, Subject> {
 
     public Subject translate(SubjectV1 subject, DataStage dataStage, boolean liveMode) {
         Subject s = new Subject();
-        String uuid = ESHelper.getUUID(subject.getId());
+        String uuid = IdUtils.getUUID(subject.getId());
         s.setId(uuid);
         List<String> identifiers = Arrays.asList(uuid, String.format("Subject/%s", subject.getIdentifier()));
         s.setIdentifier(identifiers);

@@ -19,7 +19,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstances;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.*;
-import eu.ebrains.kg.search.utils.ESHelper;
+import eu.ebrains.kg.search.utils.IdUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -162,7 +165,7 @@ public class TranslationController {
         datasetV3.getData().forEach(d -> {
             String id = d.getIdentifier().stream().reduce(null, (found, i) -> {
                 if (found != null) {
-                    String uuid = ESHelper.getUUID(i);
+                    String uuid = IdUtils.getUUID(i);
                     DatasetSources source = datasetSourcesByV1Identifier.get(uuid);
                     if (source != null) {
                         source.setDatasetV3(d);
@@ -203,12 +206,12 @@ public class TranslationController {
         return translator.translate(datasetV1, dataStage, liveMode);
     }
 
-    public Dataset createDatasetV3(DataStage dataStage, boolean liveMode, String id) {
+    public Dataset createDatasetV3(DataStage dataStage, boolean liveMode, String id, String versionIdentifier) {
         ResultOfKGV3DatasetV3 resultOfKGV3DatasetV3 = kgV3.executeQueryForLive(ResultOfKGV3DatasetV3.class, Queries.DATASET_QUERY_ID, id, dataStage);
         DatasetV3 datasetV3 = resultOfKGV3DatasetV3.getData().stream().findFirst().orElse(null);
         if (datasetV3 != null) {
             VersionedDatasetTranslator translator = new VersionedDatasetTranslator();
-            return translator.translate(datasetV3, dataStage, liveMode, null);
+            return translator.translate(datasetV3, dataStage, liveMode, versionIdentifier);
         }
         return null;
     }
@@ -333,7 +336,14 @@ public class TranslationController {
         if (type != null) {
             switch (type) {
                 case "https://openminds.ebrains.eu/core/Dataset":
-                    return this.createDatasetV3(dataStage, liveMode, id);
+                    return this.createDatasetV3(dataStage, liveMode, id, null);
+                case "https://openminds.ebrains.eu/core/DatasetVersion":
+                    String datasetId = retrieveDatasetV3IdFromDatasetVersion(data);
+                    String versionIdentifier = (String) data.get("https://openminds.ebrains.eu/vocab/versionIdentifier");
+                    if(datasetId == null || versionIdentifier == null) {
+                        return null;
+                    }
+                    return this.createDatasetV3(dataStage, liveMode, datasetId, versionIdentifier);
                 case "https://openminds.ebrains.eu/core/Person":
                 case "https://openminds.ebrains.eu/core/Project":
                 case "https://openminds.ebrains.eu/core/Model":
@@ -345,6 +355,16 @@ public class TranslationController {
             }
         }
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Type %s is not recognized as a valid search resource!", type));
+    }
+
+    private String retrieveDatasetV3IdFromDatasetVersion(Map<String, Object> data) {
+        Map<String, Object> incomingLinks = (Map<String, Object>) data.get("https://core.kg.ebrains.eu/vocab/meta/incomingLinks");
+        List versions = (List)incomingLinks.get("https://openminds.ebrains.eu/vocab/hasVersion");
+        Map<String, Object> dataset = (Map<String, Object>) versions.stream().findFirst().orElse(null);
+        if(dataset == null) {
+            return  null;
+        }
+        return IdUtils.getUUID((String) dataset.get("@id"));
     }
 
     public TargetInstances createInstancesCombined(DataStage dataStage, boolean liveMode, String type, String legacyAuthorization) {

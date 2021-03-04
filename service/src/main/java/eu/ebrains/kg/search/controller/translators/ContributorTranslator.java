@@ -5,7 +5,7 @@ import eu.ebrains.kg.search.model.source.PersonSources;
 import eu.ebrains.kg.search.model.source.PersonV1andV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Contributor;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.search.utils.ESHelper;
+import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -24,7 +24,7 @@ public class ContributorTranslator implements Translator<PersonSources, Contribu
     public Contributor translate(PersonSources personSources, DataStage dataStage, boolean liveMode) {
         Contributor c = new Contributor();
         PersonV1andV2 person = personSources.getPersonV2() != null ? personSources.getPersonV2() : personSources.getPersonV1();
-        String uuid = ESHelper.getUUID(person.getId());
+        String uuid = IdUtils.getUUID(person.getId());
         c.setId(uuid);
         List<String> identifiers = Arrays.asList(uuid, String.format("Contributor/%s", person.getIdentifier()));
         c.setIdentifier(identifiers);

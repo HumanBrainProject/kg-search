@@ -37,7 +37,7 @@ public class KGV3ServiceClient {
     }
 
     public Map getInstanceForLiveMode(String id, DataStage dataStage) {
-        String url = String.format("%s/instances/%s?stage=%s", kgCoreEndpoint, id, dataStage);
+        String url = String.format("%s/instances/%s?stage=%s&returnIncomingLinks=true", kgCoreEndpoint, id, dataStage);
         return executeCallForLive(Map.class, url);
     }
 

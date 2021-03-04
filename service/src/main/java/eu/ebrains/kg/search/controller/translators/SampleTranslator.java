@@ -3,15 +3,14 @@ package eu.ebrains.kg.search.controller.translators;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SampleV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Sample;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
-import eu.ebrains.kg.search.utils.ESHelper;
+import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +20,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
 
     public Sample translate(SampleV1 sample, DataStage dataStage, boolean liveMode) {
         Sample s = new Sample();
-        String uuid = ESHelper.getUUID(sample.getId());
+        String uuid = IdUtils.getUUID(sample.getId());
         s.setId(uuid);
         List<String> identifiers = Arrays.asList(uuid, String.format("Sample/%s", sample.getIdentifier()));
         s.setIdentifier(identifiers);

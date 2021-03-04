@@ -4,23 +4,23 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Software;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
-import eu.ebrains.kg.search.utils.ESHelper;
+import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.firstItemOrNull;
 
 public class SoftwareTranslator implements Translator<SoftwareV2, Software> {
 
     public Software translate(SoftwareV2 softwareV2, DataStage dataStage, boolean liveMode) {
         Software s = new Software();
-            String uuid = ESHelper.getUUID(softwareV2.getId());
+            String uuid = IdUtils.getUUID(softwareV2.getId());
         s.setId(uuid);
         List<String> identifiers = Arrays.asList(uuid, String.format("Software/%s", softwareV2.getIdentifier()));
         s.setIdentifier(identifiers);

@@ -31,6 +31,7 @@ public class Constants {
 
     public final static List<String> TYPES_FOR_LIVE = Arrays.asList(
             "https://openminds.ebrains.eu/core/Dataset",
+            "https://openminds.ebrains.eu/core/DatasetVersion",
             "https://openminds.ebrains.eu/core/Person",
             "https://openminds.ebrains.eu/core/Project",
             "https://openminds.ebrains.eu/core/Model",
