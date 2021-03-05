@@ -20,11 +20,11 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class ContributorTranslatorTest {
+public class ContributorOfKGV2TranslatorTest {
 
     private final KGServiceClient kgServiceClient;
 
-    public ContributorTranslatorTest(KGServiceClient kgServiceClient) {
+    public ContributorOfKGV2TranslatorTest(KGServiceClient kgServiceClient) {
         this.kgServiceClient = kgServiceClient;
     }
 
@@ -54,8 +54,8 @@ public class ContributorTranslatorTest {
         Map<String, PersonSources> sourcesMap = new HashMap<>();
 
         List<String> result = new ArrayList<>();
-        ContributorTranslatorTest.PersonV1Result personV1Result = kgServiceClient.executeQuery("query/minds/core/person/v1.0.0/search", dataStage, ContributorTranslatorTest.PersonV1Result.class, token);
-        ContributorTranslatorTest.PersonV2Result personV2Result = kgServiceClient.executeQuery("query/uniminds/core/person/v1.0.0/search", dataStage, ContributorTranslatorTest.PersonV2Result.class, token);
+        ContributorOfKGV2TranslatorTest.PersonV1Result personV1Result = kgServiceClient.executeQuery("query/minds/core/person/v1.0.0/search", dataStage, ContributorOfKGV2TranslatorTest.PersonV1Result.class, token);
+        ContributorOfKGV2TranslatorTest.PersonV2Result personV2Result = kgServiceClient.executeQuery("query/uniminds/core/person/v1.0.0/search", dataStage, ContributorOfKGV2TranslatorTest.PersonV2Result.class, token);
 
         if (!CollectionUtils.isEmpty(personV1Result.getResults())) {
             personV1Result.getResults().forEach(person -> {

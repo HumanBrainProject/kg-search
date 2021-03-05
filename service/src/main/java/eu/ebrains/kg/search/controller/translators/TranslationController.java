@@ -16,6 +16,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv2.PersonV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.PersonV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstances;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.*;
@@ -45,11 +46,9 @@ public class TranslationController {
         this.kgV3 = kgV3;
     }
 
-    private static class ResultOfKGV2PersonV1 extends ResultOfKGv2<PersonV1> {
-    }
-
-    private static class ResultOfKGV2PersonV2 extends ResultOfKGv2<PersonV2> {
-    }
+    private static class ResultOfKGV2PersonV1 extends ResultOfKGv2<PersonV1> {}
+    private static class ResultOfKGV2PersonV2 extends ResultOfKGv2<PersonV2> {}
+    private static class ResultOfKGV3PersonV3 extends ResultOfKGv3<PersonV3> {}
 
     private TargetInstances createContributors(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
         String queryForV1 = "query/minds/core/person/v1.0.0/search";
@@ -61,7 +60,10 @@ public class TranslationController {
         logger.info("Starting to query contributors for v2");
         ResultOfKGv2<PersonV2> personsFromV2 = kgV2.executeQueryForIndexing(ResultOfKGV2PersonV2.class, queryForV2, legacyAuthorization, dataStage);
         logger.info(String.format("Queried %s contributors for v2", CollectionUtils.isEmpty(personsFromV2.getResults()) ? 0 : personsFromV2.getResults().size()));
-//        ResultOfKGv3<PersonV3> personsFromV3 = kgV3.fetchInstances(PersonV3.class); //TODO v3
+
+        logger.info("Starting to query contributors for v3");
+        ResultOfKGv3<PersonV3> personsFromV3 = kgV3.executeQueryForIndexing(ResultOfKGV3PersonV3.class, Queries.CONTRIBUTOR_QUERY_ID, dataStage);
+        logger.info("Done querying contributors for v3");
 
         List<PersonSources> personSources = new ArrayList<>();
         personsFromV1.getResults().forEach(p -> {
@@ -81,10 +83,33 @@ public class TranslationController {
             source.setPersonV2(p);
         });
 
-        //TODO add v3
+        personsFromV3.getData().forEach(p -> {
+            String id = p.getIdentifier().stream().reduce(null, (found, i) -> {
+                if (found != null) {
+                    String uuid = IdUtils.getUUID(i);
+                    PersonSources source = personSourcesByV1Identifier.get(uuid);
+                    if (source != null) {
+                        source.setPersonV3(p);
+                        return uuid;
+                    }
+                }
+                return null;
+            });
+            if (id == null) {
+                PersonSources source = new PersonSources();
+                source.setPersonV3(p);
+                personSources.add(source);
+            }
+        });
 
-        ContributorTranslator translator = new ContributorTranslator();
-        List<TargetInstance> list = personSources.stream().map(p -> (TargetInstance) translator.translate(p, dataStage, liveMode)).collect(Collectors.toList());
+        ContributorOfKGV2Translator kgv2Translator = new ContributorOfKGV2Translator();
+        ContributorOfKgV3Translator kgV3Translator = new ContributorOfKgV3Translator();
+        List<TargetInstance> list = personSources.stream().map(p -> {
+            if (p.getPersonV3() != null) {
+                return kgV3Translator.translate(p.getPersonV3(), dataStage, liveMode);
+            }
+            return kgv2Translator.translate(p, dataStage, liveMode);
+        }).collect(Collectors.toList());
         TargetInstances result = new TargetInstances();
         result.setSearchableInstances(list);
         result.setAllInstances(list);
@@ -93,10 +118,20 @@ public class TranslationController {
 
     public Contributor createContributorFromKGv2(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
         PersonV2 personV2 = kgV2.fetchInstance(PersonV2.class, query, id, authorization, dataStage);
-        ContributorTranslator translator = new ContributorTranslator();
+        ContributorOfKGV2Translator translator = new ContributorOfKGV2Translator();
         PersonSources personSource = new PersonSources();
         personSource.setPersonV2(personV2);
         return translator.translate(personSource, dataStage, liveMode);
+    }
+
+    public Contributor createContributorFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultOfKGV3PersonV3 resultOfKGV3PersonV3 = kgV3.executeQueryForLive(ResultOfKGV3PersonV3.class, Queries.CONTRIBUTOR_QUERY_ID, id, dataStage);
+        PersonV3 personV3 = resultOfKGV3PersonV3.getData().stream().findFirst().orElse(null);
+        if (personV3 != null) {
+            ContributorOfKgV3Translator translator = new ContributorOfKgV3Translator();
+            return translator.translate(personV3, dataStage, liveMode);
+        }
+        return null;
     }
 
     private static class PersonV2Result extends ResultOfKGv2<PersonV2> {
@@ -113,7 +148,7 @@ public class TranslationController {
             PersonV2 personV2 = personV2Result.getResults().get(0);
             personSource.setPersonV2(personV2);
         }
-        ContributorTranslator translator = new ContributorTranslator();
+        ContributorOfKGV2Translator translator = new ContributorOfKGV2Translator();
         return translator.translate(personSource, dataStage, liveMode);
     }
 
@@ -181,20 +216,20 @@ public class TranslationController {
             }
         });
 
-        DatasetTranslator translator = new DatasetTranslator();
-        VersionedDatasetTranslator versionedDatasetTranslator = new VersionedDatasetTranslator();
+        DatasetOfKGV2Translator kgv2Translator = new DatasetOfKGV2Translator();
+        DatasetOfKGV3Translator kgv3Translator = new DatasetOfKGV3Translator();
         TargetInstances targetInstances = new TargetInstances();
         datasetSources.forEach(d -> {
             if (d.getDatasetV3() != null) {
-                targetInstances.addInstance(versionedDatasetTranslator.translate(d.getDatasetV3(), dataStage, liveMode, null), true);
+                targetInstances.addInstance(kgv3Translator.translate(d.getDatasetV3(), dataStage, liveMode, null), true);
                 List<DatasetVersionV3> datasetVersions = d.getDatasetV3().getDatasetVersions();
                 for (DatasetVersionV3 datasetVersion : datasetVersions) {
                     String versionIdentifiers = datasetVersion.getVersionIdentifier();
-                    Dataset translate = versionedDatasetTranslator.translate(d.getDatasetV3(), dataStage, liveMode, versionIdentifiers);
-                    targetInstances.addInstance(translate, false);
+                    Dataset dataset = kgv3Translator.translate(d.getDatasetV3(), dataStage, liveMode, versionIdentifiers);
+                    targetInstances.addInstance(dataset, false);
                 }
             } else {
-                targetInstances.addInstance(translator.translate(d.getDatasetV1(), dataStage, liveMode), true);
+                targetInstances.addInstance(kgv2Translator.translate(d.getDatasetV1(), dataStage, liveMode), true);
             }
         });
         return targetInstances;
@@ -202,15 +237,15 @@ public class TranslationController {
 
     public Dataset createDatasetFromKGv2(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
         DatasetV1 datasetV1 = kgV2.fetchInstance(DatasetV1.class, query, id, authorization, dataStage);
-        DatasetTranslator translator = new DatasetTranslator();
+        DatasetOfKGV2Translator translator = new DatasetOfKGV2Translator();
         return translator.translate(datasetV1, dataStage, liveMode);
     }
 
-    public Dataset createDatasetV3(DataStage dataStage, boolean liveMode, String id, String versionIdentifier) {
+    public Dataset createDatasetFromKGv3(DataStage dataStage, boolean liveMode, String id, String versionIdentifier) {
         ResultOfKGV3DatasetV3 resultOfKGV3DatasetV3 = kgV3.executeQueryForLive(ResultOfKGV3DatasetV3.class, Queries.DATASET_QUERY_ID, id, dataStage);
         DatasetV3 datasetV3 = resultOfKGV3DatasetV3.getData().stream().findFirst().orElse(null);
         if (datasetV3 != null) {
-            VersionedDatasetTranslator translator = new VersionedDatasetTranslator();
+            DatasetOfKGV3Translator translator = new DatasetOfKGV3Translator();
             return translator.translate(datasetV3, dataStage, liveMode, versionIdentifier);
         }
         return null;
@@ -336,15 +371,16 @@ public class TranslationController {
         if (type != null) {
             switch (type) {
                 case "https://openminds.ebrains.eu/core/Dataset":
-                    return this.createDatasetV3(dataStage, liveMode, id, null);
+                    return this.createDatasetFromKGv3(dataStage, liveMode, id, null);
                 case "https://openminds.ebrains.eu/core/DatasetVersion":
                     String datasetId = retrieveDatasetV3IdFromDatasetVersion(data);
                     String versionIdentifier = (String) data.get("https://openminds.ebrains.eu/vocab/versionIdentifier");
                     if(datasetId == null || versionIdentifier == null) {
                         return null;
                     }
-                    return this.createDatasetV3(dataStage, liveMode, datasetId, versionIdentifier);
+                    return this.createDatasetFromKGv3(dataStage, liveMode, datasetId, versionIdentifier);
                 case "https://openminds.ebrains.eu/core/Person":
+                    return this.createContributorFromKGv3(dataStage, liveMode, id);
                 case "https://openminds.ebrains.eu/core/Project":
                 case "https://openminds.ebrains.eu/core/Model":
                 case "https://openminds.ebrains.eu/core/Software":

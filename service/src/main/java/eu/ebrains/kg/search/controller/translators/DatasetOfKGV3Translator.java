@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class VersionedDatasetTranslator implements  VersionedTranslator<DatasetV3, Dataset>{
+public class DatasetOfKGV3Translator implements  VersionedTranslator<DatasetV3, Dataset>{
 
     public Dataset translate(DatasetV3 datasetV3, DataStage dataStage, boolean liveMode, String versionIdentifier) {
         Dataset d = new Dataset();

@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DatasetTranslatorTest {
+public class DatasetOfKGV2TranslatorTest {
     private final KGServiceClient kgServiceClient;
 
-    public DatasetTranslatorTest(KGServiceClient kgServiceClient) {
+    public DatasetOfKGV2TranslatorTest(KGServiceClient kgServiceClient) {
         this.kgServiceClient = kgServiceClient;
     }
 

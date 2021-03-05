@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
-public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
+public class DatasetOfKGV2Translator implements Translator<DatasetV1, Dataset> {
 
     public Dataset translate(DatasetV1 datasetV1, DataStage dataStage, boolean liveMode) {
         Dataset d = new Dataset();

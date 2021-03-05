@@ -24,12 +24,13 @@ public class Setup {
     @PostConstruct
     public void uploadQueries() throws IOException {
         uploadQuery(Queries.DATASET_QUERY_ID, Queries.DATASET_QUERY_RESOURCE);
+        uploadQuery(Queries.CONTRIBUTOR_QUERY_ID, Queries.CONTRIBUTOR_QUERY_RESOURCE);
+        logger.info("Queries successfully uploaded!");
     }
 
     private void uploadQuery(String queryId, String path) throws IOException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream(path), StandardCharsets.UTF_8);
         kgv3ServiceClient.uploadQuery(queryId, sourceJson);
-        logger.info("Queries successfully uploaded!");
     }
 
 }

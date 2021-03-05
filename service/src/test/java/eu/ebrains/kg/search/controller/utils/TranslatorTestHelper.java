@@ -47,7 +47,7 @@ public class TranslatorTestHelper {
     }
 
     public static List<String> compareContributor(PersonSources sources, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        ContributorTranslator translator = new ContributorTranslator();
+        ContributorOfKGV2Translator translator = new ContributorOfKGV2Translator();
 
         Contributor target = translator.translate(sources, dataStage, liveMode);
         String targetJson = jsonAdapter.toJson(target);
@@ -139,7 +139,7 @@ public class TranslatorTestHelper {
     }
 
     public static List<String> compareDataset(DatasetV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        DatasetTranslator translator = new DatasetTranslator();
+        DatasetOfKGV2Translator translator = new DatasetOfKGV2Translator();
         Dataset target = translator.translate(source, dataStage, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
