@@ -15,9 +15,11 @@
 */
 
 import React from "react";
+import { Link } from "react-router-dom";
 
 export class Header extends React.Component {
   render() {
+    const { location } = this.props;
     return (
       <nav className="navbar navbar-default kgs-navbar">
         <div className="container-fluid">
@@ -35,6 +37,7 @@ export class Header extends React.Component {
 
           <div className="collapse navbar-collapse" id="nav-collapse-mobile">
             <ul className="nav navbar-nav navbar-right">
+              {location.pathname.startsWith("/instances") && <li><Link to="/">Search</Link></li>}
               <li><a href="https://ebrains.eu/services/data-knowledge/share-data"  className="mobile-link" rel="noopener noreferrer">Share data</a></li>
               <li><a href="https://ebrains.eu/service/find-data" className="mobile-link" target="_blank" rel="noopener noreferrer">About</a></li>
             </ul>
