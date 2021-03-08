@@ -85,7 +85,7 @@ public class TranslationController {
 
         personsFromV3.getData().forEach(p -> {
             String id = p.getIdentifier().stream().reduce(null, (found, i) -> {
-                if (found != null) {
+                if (found == null) {
                     String uuid = IdUtils.getUUID(i);
                     PersonSources source = personSourcesByV1Identifier.get(uuid);
                     if (source != null) {
@@ -199,7 +199,7 @@ public class TranslationController {
 
         datasetV3.getData().forEach(d -> {
             String id = d.getIdentifier().stream().reduce(null, (found, i) -> {
-                if (found != null) {
+                if (found == null) {
                     String uuid = IdUtils.getUUID(i);
                     DatasetSources source = datasetSourcesByV1Identifier.get(uuid);
                     if (source != null) {
