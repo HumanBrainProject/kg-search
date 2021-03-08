@@ -10,7 +10,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -23,8 +22,9 @@ public class ContributorOfKgV3Translator implements  Translator<PersonV3, Contri
         Contributor c = new Contributor();
         String uuid = IdUtils.getUUID(person.getId());
         c.setId(uuid);
-        List<String> identifiers = Arrays.asList(uuid, String.format("Contributor/%s", person.getIdentifier()));
-        c.setIdentifier(identifiers);
+        List<String> identifiers = IdUtils.getUUID(person.getIdentifier());
+        identifiers.add(uuid);
+        c.setIdentifier(identifiers.stream().distinct().collect(Collectors.toList()));
         c.setTitle(getFullName(person.getFamilyName(), person.getGivenName()));
         if(!CollectionUtils.isEmpty(person.getContributions())) {
             c.setContributions(person.getContributions().stream()
