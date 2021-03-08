@@ -93,7 +93,7 @@ public class TranslationController {
                         return uuid;
                     }
                 }
-                return null;
+                return found;
             });
             if (id == null) {
                 PersonSources source = new PersonSources();
@@ -207,7 +207,7 @@ public class TranslationController {
                         return uuid;
                     }
                 }
-                return null;
+                return found;
             });
             if (id == null) {
                 DatasetSources source = new DatasetSources();
