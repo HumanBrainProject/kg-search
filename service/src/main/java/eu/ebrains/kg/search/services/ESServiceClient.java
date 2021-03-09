@@ -1,9 +1,11 @@
 package eu.ebrains.kg.search.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -12,33 +14,102 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Component
 public class ESServiceClient {
-    private final Integer querySize = 10000; //TODO Pagination?
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
-            .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1000000)).build();
-    private final WebClient webClient = WebClient.builder().exchangeStrategies(exchangeStrategies).build();
+    private final WebClient webClient;
 
+    private final String elasticSearchEndpoint;
 
-    @Value("${es.endpoint}")
-    String elasticSearchEndpoint;
-
-    public ElasticSearchDocument getDocument(String index, String id) {
-        return webClient.get()
-                .uri(String.format("%s/%s/_doc/%s", elasticSearchEndpoint, index, id))
-                .retrieve()
-                .bodyToMono(ElasticSearchDocument.class)
-                .block();
+    public ESServiceClient(WebClient webClient, @Value("${es.endpoint}") String elasticSearchEndpoint) {
+        this.webClient = webClient;
+        this.elasticSearchEndpoint = elasticSearchEndpoint;
     }
 
-    public ElasticSearchResult getDocuments(String index) {
-        return webClient.get()
-                .uri(String.format("%s/%s/_search?size=%d", elasticSearchEndpoint, index, querySize))
+    private String getQuery(String id) {
+        String normalizeId = id.replace("/", "\\/");
+        return String.format("{\n" +
+                "  \"query\": {\n" +
+                "    \"bool\": {\n" +
+                "      \"must\": [\n" +
+                "        {\n" +
+                "          \"term\": {\n" +
+                "            \"identifier\": \"%s\"\n" +
+                "          }\n" +
+                "        }\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  }\n" +
+                "}", normalizeId);
+    }
+
+
+    private String getPaginatedQuery(String id) {
+        if (id == null) {
+            return String.format("{\n" +
+                    " \"size\": %d,\n" +
+                    " \"sort\": [\n" +
+                    "    {\"_id\": \"asc\"}\n" +
+                    " ]\n" +
+                    "}", Constants.esQuerySize);
+        }
+        return String.format("{\n" +
+                " \"size\": %d,\n" +
+                " \"sort\": [\n" +
+                "    {\"_id\": \"asc\"}\n" +
+                "  ],\n" +
+                "  \"search_after\": [\n" +
+                "      \"%s\"\n" +
+                "   ]\n" +
+                "}", Constants.esQuerySize, id);
+    }
+
+    public ElasticSearchDocument getDocument(String index, String id) {
+        ElasticSearchResult result = webClient.post()
+                .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(BodyInserters.fromValue(getQuery(id)))
+                .retrieve()
+                .bodyToMono(ElasticSearchResult.class)
+                .block();
+        ElasticSearchResult.Hits hits = result.getHits();
+        List<ElasticSearchDocument> documents = hits == null ? Collections.emptyList() : hits.getHits();
+        if (documents.isEmpty()) {
+            ElasticSearchDocument doc = new ElasticSearchDocument();
+            doc.setId(id);
+            doc.setType("_doc");
+            doc.setIndex(index);
+            return doc;
+        }
+        ElasticSearchDocument doc = documents.get(0);
+        doc.setId(id);
+        return doc;
+    }
+
+    public List<ElasticSearchDocument> getDocuments(String index) {
+        List<ElasticSearchDocument> result = new ArrayList<>();
+        String searchAfter = null;
+        while (result.isEmpty() || searchAfter != null) {
+            ElasticSearchResult documents = getPaginatedDocuments(index, searchAfter);
+            List<ElasticSearchDocument> hits = documents.getHits().getHits();
+            result.addAll(hits);
+            searchAfter = hits.size() < Constants.esQuerySize ? null:hits.get(hits.size()-1).getId();
+        }
+        return result;
+    }
+
+    private ElasticSearchResult getPaginatedDocuments(String index, String searchAfter) {
+        String paginatedQuery = getPaginatedQuery(searchAfter);
+        return webClient.post()
+                .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
+                .body(BodyInserters.fromValue(paginatedQuery))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_NDJSON_VALUE)
                 .retrieve()
                 .bodyToMono(ElasticSearchResult.class)
                 .block();
@@ -71,12 +142,20 @@ public class ESServiceClient {
     }
 
     public void updateIndex(String index, String operations) {
-        webClient.post()
+        Map<String, Object> result = webClient.post()
                 .uri(String.format("%s/%s/_bulk", elasticSearchEndpoint, index))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_NDJSON_VALUE)
                 .body(BodyInserters.fromValue(operations))
                 .retrieve()
-                .bodyToMono(Void.class)
+                .bodyToMono(Map.class)
                 .block();
+        if ((boolean) result.get("errors")) {
+            ((List<Map<String, Object>>) result.get("items")).forEach(item -> {
+                Map<String, Object> instance = (Map) item.get("index");
+                if ((int) instance.get("status") >= 400) {
+                    logger.error(instance.toString());
+                }
+            });
+        }
     }
 }

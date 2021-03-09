@@ -1,14 +1,11 @@
 package eu.ebrains.kg.search.controller.mapping;
 
-import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.utils.MetaModelUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -21,11 +18,24 @@ public class MappingController {
         this.utils = utils;
     }
 
+    public Map<String, Object> generateIdentifierMapping() {
+        Map<String, Object> mapping = new LinkedHashMap<>();
+        Map<String, Object> properties = new LinkedHashMap<>();
+        Map<String, Object> timestamp = new LinkedHashMap<>();
+        properties.put("identifier", Map.of("type", "keyword"));
+        timestamp.put("type", "date");
+        properties.put("@timestamp", timestamp);
+        mapping.put("properties", properties);
+        mapping.put("dynamic", false);
+        return mapping;
+    }
+
     public Map<String, Object> generateMapping(Class<?> clazz) {
         Map<String, Object> mapping = new LinkedHashMap<>();
         Map<String, Object> properties = new LinkedHashMap<>();
         Map<String, Object> timestamp = new LinkedHashMap<>();
         mapping.put("properties", properties);
+        mapping.put("dynamic", false);
         timestamp.put("type", "date");
         properties.put("@timestamp", timestamp);
         properties.putAll(handleType(clazz, null));

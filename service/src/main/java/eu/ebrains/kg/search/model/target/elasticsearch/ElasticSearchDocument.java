@@ -15,17 +15,6 @@ public class ElasticSearchDocument {
     @JsonProperty("_id")
     private String id;
 
-    @JsonProperty("_version")
-    private Integer version;
-
-    @JsonProperty("_seq_no")
-    private Integer seqNo;
-
-    @JsonProperty("_primary_term")
-    private Integer _primary_term;
-
-    private boolean found;
-
     @JsonProperty("_source")
     private Map<String, Object> source;
 
@@ -59,38 +48,6 @@ public class ElasticSearchDocument {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public Integer getSeqNo() {
-        return seqNo;
-    }
-
-    public void setSeqNo(Integer seqNo) {
-        this.seqNo = seqNo;
-    }
-
-    public Integer get_primary_term() {
-        return _primary_term;
-    }
-
-    public void set_primary_term(Integer _primary_term) {
-        this._primary_term = _primary_term;
-    }
-
-    public boolean isFound() {
-        return found;
-    }
-
-    public void setFound(boolean found) {
-        this.found = found;
     }
 }
 

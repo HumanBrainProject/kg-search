@@ -1,10 +1,15 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
+import eu.ebrains.kg.search.utils.ESHelper;
+import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +21,10 @@ public class Dataset implements TargetInstance {
     private Value<String> type = new Value<>("Dataset");
 
     @FieldInfo(ignoreForSearch = true, visible = false)
-    private Value<String> identifier;
+    private String id;
+
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private List<String> identifier;
 
     @FieldInfo(label = "Name", sort = true, layout = FieldInfo.Layout.HEADER, boost = 20)
     private Value<String> title;
@@ -109,6 +117,17 @@ public class Dataset implements TargetInstance {
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 
+    // TODO: Add fieldInfo
+
+    private String version;
+
+    private List<TargetInternalReference> versions;
+
+    @Override
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
+
     public Value<String> getUseHDG() { return useHDG; }
 
     public void setUseHDG(String useHDG) {
@@ -121,8 +140,8 @@ public class Dataset implements TargetInstance {
         setType(StringUtils.isBlank(type) ? null : new Value<>(type));
     }
 
-    public void setIdentifier(String identifier) {
-        setIdentifier(StringUtils.isBlank(identifier) ? null : new Value<>(identifier));
+    public void setIdentifier(List<String> identifier) {
+        this.identifier = identifier;
     }
 
     public void setEditorId(String editorId) {
@@ -170,12 +189,8 @@ public class Dataset implements TargetInstance {
     }
 
     @Override
-    public Value<String> getIdentifier() {
+    public List<String> getIdentifier() {
         return identifier;
-    }
-
-    public void setIdentifier(Value<String> identifier) {
-        this.identifier = identifier;
     }
 
     public Value<String> getEditorId() {
@@ -407,6 +422,27 @@ public class Dataset implements TargetInstance {
         this.setLastRelease(lastRelease != null ? new ISODateValue(lastRelease) : null);
     }
 
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public List<TargetInternalReference> getVersions() { return versions; }
+
+    public void setVersions(List<DatasetVersionV3> versionsV3) {
+        List<TargetInternalReference> result = new ArrayList<>();
+        versionsV3.forEach(v -> result.add(new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())));
+        this.versions = result;
+    }
+
+    public void addDatasetToVersions(DatasetV3 dataset) {
+        if (this.versions != null) {
+            this.versions.add(0, new TargetInternalReference(IdUtils.getUUID(dataset.getId()), null));
+        }
+    }
 
     public static class Subject {
         public Subject() {
@@ -422,10 +458,10 @@ public class Dataset implements TargetInstance {
                        String genotype,
                        List<TargetInternalReference> samples) {
             this.subjectName = subjectName;
-            this.species = species != null ? species.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
-            this.sex = sex != null ? sex.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+            this.species = species != null ? species.stream().map(Value::new).collect(Collectors.toList()) : null;
+            this.sex = sex != null ? sex.stream().map(Value::new).collect(Collectors.toList()) : null;
             this.age = StringUtils.isBlank(age) ? null : new Value<>(age);
-            this.ageCategory = ageCategory != null ? ageCategory.stream().map(value -> new Value<>(value)).collect(Collectors.toList()) : null;
+            this.ageCategory = ageCategory != null ? ageCategory.stream().map(Value::new).collect(Collectors.toList()) : null;
             this.weight = StringUtils.isBlank(weight) ? null : new Value<>(weight);
             this.strain = StringUtils.isBlank(strain) ? null : new Value<>(strain);
             this.genotype = StringUtils.isBlank(genotype) ? null : new Value<>(genotype);

@@ -27,7 +27,7 @@ export const getTags = header => {
   return tags;
 };
 
-export const getTitle = (data, type, id) => {
+export const getTitle = (data, id) => {
   if (data && data._id) {
     if (data._source?.title?.value) {
       return `${data._source.title.value}`;
@@ -36,10 +36,10 @@ export const getTitle = (data, type, id) => {
       return `${data._soure.type.value} ${data._id}`;
     }
   }
-  if (!type || !id) {
+  if (!id) {
     return "Knowledge Graph Search";
   }
-  return `${type} ${id}`;
+  return id;
 };
 
 const getField = (group, type, name, data, mapping) => {
@@ -165,7 +165,11 @@ export const mapStateToProps = (state, props) => {
   const type = source?.type?.value;
   const mapping = (source && state.definition?.typeMappings && state.definition.typeMappings[type])??{};
   const group = state.groups.group;
-
+  const version = source && source.version?source.version:"Current";
+  const versions = (source && Array.isArray(source.versions)?source.versions:[]).map(v => ({
+    label: v.value?v.value:"Current",
+    value: v.reference
+  }));
   return {
     id: data && data._id,
     type: type,
@@ -178,6 +182,8 @@ export const mapStateToProps = (state, props) => {
       type: getField(group, type, "type"),
       title: getField(group, type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"]),
       fields: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout === "header" && name !== "title"),
+      version: version,
+      versions: versions
     },
     previews: getPreviews(source, { children: mapping.fields }),
     buttons: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.isButton),

@@ -1,29 +1,35 @@
 package eu.ebrains.kg.search.controller.translators;
 
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Subject;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.utils.IdUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
 
 public class SubjectTranslator implements Translator<SubjectV1, Subject> {
 
-    public Subject translate(SubjectV1 subject, DatabaseScope databaseScope, boolean liveMode) {
+    public Subject translate(SubjectV1 subject, DataStage dataStage, boolean liveMode) {
         Subject s = new Subject();
+        String uuid = IdUtils.getUUID(subject.getId());
+        s.setId(uuid);
+        List<String> identifiers = Arrays.asList(uuid, String.format("Subject/%s", subject.getIdentifier()));
+        s.setIdentifier(identifiers);
         s.setAge(subject.getAge());
         s.setAgeCategory(emptyToNull(subject.getAgeCategory()));
         s.setDatasetExists(emptyToNull(subject.getDatasetExists()));
-        if (databaseScope == DatabaseScope.INFERRED) {
+        if (dataStage == DataStage.IN_PROGRESS) {
             s.setEditorId(subject.getEditorId());
         }
         s.setFirstRelease(subject.getFirstReleaseAt());
         s.setLastRelease(subject.getLastReleaseAt());
         s.setGenotype(subject.getGenotype());
-        s.setIdentifier(subject.getIdentifier());
         s.setSex(emptyToNull(subject.getSex()));
         s.setSpecies(emptyToNull(subject.getSpecies()));
         s.setStrain(subject.getStrain() != null ? subject.getStrain() : subject.getStrains());
@@ -33,7 +39,7 @@ public class SubjectTranslator implements Translator<SubjectV1, Subject> {
             s.setSamples(subject.getSamples().stream()
                     .map(sample ->
                             new TargetInternalReference(
-                                    liveMode ? sample.getRelativeUrl() : String.format("Sample/%s", sample.getIdentifier()),
+                                    liveMode ? sample.getRelativeUrl() : sample.getIdentifier(),
                                     sample.getName(), null)
                     ).collect(Collectors.toList()));
         }
@@ -47,7 +53,7 @@ public class SubjectTranslator implements Translator<SubjectV1, Subject> {
                                     d.getInstances().stream()
                                             .map(i ->
                                                     new TargetInternalReference(
-                                                            liveMode ? i.getRelativeUrl() : String.format("Dataset/%s", i.getIdentifier()),
+                                                            liveMode ? i.getRelativeUrl() : i.getIdentifier(),
                                                             i.getName(), null)
                                             ).collect(Collectors.toList()) : null
                             )

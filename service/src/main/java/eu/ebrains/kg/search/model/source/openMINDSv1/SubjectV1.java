@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 public class SubjectV1 implements SourceInstance {
+    private String id;
     private String identifier;
     private String editorId;
     private String title;
@@ -29,6 +30,10 @@ public class SubjectV1 implements SourceInstance {
     private List<SourceInternalReference> samples;
     private List<String> datasetExists;
     private List<SpecimenGroup> datasets;
+
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
 
     public String getIdentifier() {
         return identifier;

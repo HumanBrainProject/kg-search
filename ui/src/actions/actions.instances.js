@@ -81,20 +81,18 @@ export const clearAllInstances = () => {
   };
 };
 
-export const goBackToInstance = (type, id) => {
+export const goBackToInstance = id => {
   return {
     type: types.GO_BACK_TO_INSTANCE,
-    instanceType: type,
     id: id
   };
 };
 
 export const updateLocation = () => {
   const state = store.getState();
-  const type = state.instances.currentInstance?._source?.type?.value;
   const id = state.instances.currentInstance?._id;
-  if(type && id) {
-    history.push(`/${window.location.search}#${type}/${id}`);
+  if(id) {
+    history.push(`/${window.location.search}#${id}`);
   } else {
     history.push(`/${window.location.search}`);
   }
@@ -115,11 +113,11 @@ export const goToSearch = (group, defaultGroup) => {
   };
 };
 
-export const loadInstance = (group, type, id, shouldUpdateLocation=false) => {
+export const loadInstance = (group, id, shouldUpdateLocation=false) => {
   return dispatch => {
     dispatch(loadInstanceRequest());
     API.axios
-      .get(API.endpoints.instance(group, type, id))
+      .get(API.endpoints.instance(group, id))
       .then(response => {
         dispatch(loadInstanceSuccess(response.data));
         if(shouldUpdateLocation) {
@@ -169,11 +167,11 @@ export const loadInstance = (group, type, id, shouldUpdateLocation=false) => {
   };
 };
 
-export const loadPreview = (type, id) => {
+export const loadPreview = id => {
   return dispatch => {
     dispatch(loadInstanceRequest());
     API.axios
-      .get(API.endpoints.preview(type, id))
+      .get(API.endpoints.preview(id))
       .then(response => {
         if (response.data && !response.data.error) {
           response.data._id = id;

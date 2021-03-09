@@ -28,6 +28,8 @@ import { FetchingPanel } from "../Fetching/FetchingPanel";
 import { InfoPanel } from "../Info/InfoPanel";
 import "./App.css";
 import { SessionExpiredErrorPanel } from "../Error/ErrorPanel";
+import Footer from "../../components/Footer/Footer";
+import Header from "../Header/Header";
 
 class App extends React.Component {
   constructor(props) {
@@ -37,20 +39,26 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="kgs-app">
-        {/* <Notification /> */}
-        {this.props.isReady && (
-          <Switch>
-            <Route path="/instances/:type/:id" exact component={Instance} />
-            <Route path="/live/:org/:domain/:schema/:version/:id" exact component={Preview} />
-            <Route path="/" exact component={Search} />
-            <Route component={NotFound} />
-          </Switch>
-        )}
-        <FetchingPanel />
-        <SessionExpiredErrorPanel />
-        <InfoPanel />
-      </div>
+      <React.Fragment>
+        <Header />
+        <main>
+          {/* <Notification /> */}
+          {this.props.isReady && (
+            <Switch>
+              <Route path="/instances/:id" exact component={Instance} />
+              <Route path="/instances/:type/:id" exact component={Instance} />
+              <Route path="/live/:org/:domain/:schema/:version/:id" exact component={Preview} />
+              <Route path="/live/:id" exact component={Preview} />
+              <Route path="/" exact component={Search} />
+              <Route component={NotFound} />
+            </Switch>
+          )}
+          <FetchingPanel />
+          <SessionExpiredErrorPanel />
+          <InfoPanel />
+        </main>
+        <Footer />
+      </React.Fragment>
     );
   }
 }

@@ -60,7 +60,7 @@ public class MetaModelUtils {
             rawType = ((Class<?>) type);
         }
         if (rawType != null) {
-            System.out.println(String.format("Getting fields for %s", type.getTypeName()));
+            //System.out.println(String.format("Getting fields for %s", type.getTypeName()));
             List<FieldWithGenericTypeInfo> result = new ArrayList<>(getAllFields(rawType.getGenericSuperclass()));
             Map<String, Type> genericTypes = genericTypes(type);
             result.addAll(Arrays.stream(rawType.getDeclaredFields()).map(field ->
@@ -121,5 +121,4 @@ public class MetaModelUtils {
         return type;
 
     }
-
 }

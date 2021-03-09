@@ -1,20 +1,27 @@
 package eu.ebrains.kg.search.controller.translators;
 
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv1.ProjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Project;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProjectTranslator implements Translator<ProjectV1, Project> {
 
-    public Project translate(ProjectV1 projectSource, DatabaseScope databaseScope, boolean liveMode) {
+    public Project translate(ProjectV1 projectSource, DataStage dataStage, boolean liveMode) {
         Project p = new Project();
+        String uuid = IdUtils.getUUID(projectSource.getId());
+        p.setId(uuid);
+        List<String> identifiers = Arrays.asList(uuid, String.format("Project/%s", projectSource.getIdentifier()));
+        p.setIdentifier(identifiers);
         p.setFirstRelease(projectSource.getFirstReleaseAt());
         p.setDescription(projectSource.getDescription());
         p.setLastRelease(projectSource.getLastReleaseAt());
@@ -44,8 +51,7 @@ public class ProjectTranslator implements Translator<ProjectV1, Project> {
                         }
                     }).collect(Collectors.toList()));
         }
-        p.setIdentifier(projectSource.getIdentifier());
-        if (databaseScope == DatabaseScope.INFERRED) {
+        if (dataStage == DataStage.IN_PROGRESS) {
             p.setEditorId(projectSource.getEditorId());
         }
         return p;

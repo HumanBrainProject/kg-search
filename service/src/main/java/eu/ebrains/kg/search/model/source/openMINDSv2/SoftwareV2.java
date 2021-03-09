@@ -1,11 +1,13 @@
 package eu.ebrains.kg.search.model.source.openMINDSv2;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.source.SourceInstance;
 
 import java.util.Date;
 import java.util.List;
 
 public class SoftwareV2 implements SourceInstance {
+    private String id;
     private Date firstReleaseAt;
     private String description;
     private Date lastReleaseAt;
@@ -13,6 +15,10 @@ public class SoftwareV2 implements SourceInstance {
     private String title;
     private String identifier;
     private String editorId;
+
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
 
     public Date getFirstReleaseAt() { return firstReleaseAt; }
 

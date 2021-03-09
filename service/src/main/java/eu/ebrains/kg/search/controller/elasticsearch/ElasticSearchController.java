@@ -2,8 +2,8 @@ package eu.ebrains.kg.search.controller.elasticsearch;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.ebrains.kg.search.model.DatabaseScope;
-import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
+import eu.ebrains.kg.search.model.DataStage;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
@@ -24,8 +24,8 @@ public class ElasticSearchController {
         this.esServiceClient = esServiceClient;
     }
 
-    public void recreateIndex(Map<String, Object> mapping, String type, DatabaseScope databaseScope) {
-        String index = ESHelper.getIndex(type, databaseScope);
+    public void recreateSearchIndex(Map<String, Object> mapping, String type, DataStage dataStage) {
+        String index = ESHelper.getSearchIndex(type, dataStage);
         try {
             esServiceClient.deleteIndex(index);
         } catch (WebClientResponseException e) {
@@ -36,11 +36,23 @@ public class ElasticSearchController {
         esServiceClient.createIndex(index, mapping);
     }
 
-    public void indexDocuments(List<TargetInstance> instances, String type, DatabaseScope databaseScope) {
-        String index = ESHelper.getIndex(type, databaseScope);
+    public void recreateIdentifiersIndex(Map<String, Object> mapping, DataStage dataStage) {
+        String index = ESHelper.getIdentifierIndex(dataStage);
+        try {
+            esServiceClient.deleteIndex(index);
+        } catch (WebClientResponseException e) {
+            if(e.getStatusCode() != HttpStatus.NOT_FOUND) {
+                throw  e;
+            }
+        }
+        esServiceClient.createIndex(index, mapping);
+    }
+
+    public void indexSearchDocuments(List<TargetInstance> instances, String type, DataStage dataStage) {
+        String index = ESHelper.getSearchIndex(type, dataStage);
         StringBuilder operations = new StringBuilder();
         instances.forEach(instance -> {
-            operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", instance.getIdentifier().getValue()));
+            operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", instance.getId()));
             try {
                 operations.append(objectMapper.writeValueAsString(instance)).append("\n");
             } catch (JsonProcessingException e) {
@@ -50,12 +62,26 @@ public class ElasticSearchController {
         esServiceClient.updateIndex(index, operations.toString());
     }
 
-    public void updateIndex(List<TargetInstance> instances, String type, DatabaseScope databaseScope) {
-        String index = ESHelper.getIndex(type, databaseScope);
+    public void indexIdentifierDocuments(List<TargetInstance> instances, DataStage dataStage) {
+        String index = ESHelper.getIdentifierIndex(dataStage);
+        StringBuilder operations = new StringBuilder();
+        instances.forEach(instance -> {
+            operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", instance.getId()));
+            try {
+                operations.append(objectMapper.writeValueAsString(instance)).append("\n");
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        esServiceClient.updateIndex(index, operations.toString());
+    }
+
+    public void updateSearchIndex(List<TargetInstance> instances, String type, DataStage dataStage) {
+        String index = ESHelper.getSearchIndex(type, dataStage);
         HashSet<String> ids = new HashSet<>();
         StringBuilder operations = new StringBuilder();
         instances.forEach( instance -> {
-            String identifier = instance.getIdentifier().getValue();
+            String identifier = instance.getIdentifier().get(0);
             ids.add(identifier);
             operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", identifier));
             try {
@@ -65,8 +91,32 @@ public class ElasticSearchController {
             }
         });
 
-        ElasticSearchResult documents = esServiceClient.getDocuments(index);
-        documents.getHits().getHits().forEach(document -> {
+        List<ElasticSearchDocument> documents = esServiceClient.getDocuments(index);
+        documents.forEach(document -> {
+            if(!ids.contains(document.getId())) {
+                operations.append(String.format("{ \"delete\" : { \"_id\" : \"%s\" } } \n", document.getId()));
+            }
+        });
+        esServiceClient.updateIndex(index, operations.toString());
+    }
+
+    public void updateIdentifiersIndex(List<TargetInstance> instances, String type, DataStage dataStage) {
+        String index = ESHelper.getIdentifierIndex(dataStage);
+        HashSet<String> ids = new HashSet<>();
+        StringBuilder operations = new StringBuilder();
+        instances.forEach( instance -> {
+            String identifier = instance.getId();
+            ids.add(identifier);
+            operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", identifier));
+            try {
+                operations.append(objectMapper.writeValueAsString(instance)).append("\n");
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        List<ElasticSearchDocument> documents = esServiceClient.getDocuments(index);
+        documents.stream().filter(hit -> hit.getType().equals(type)).forEach(document -> {
             if(!ids.contains(document.getId())) {
                 operations.append(String.format("{ \"delete\" : { \"_id\" : \"%s\" } } \n", document.getId()));
             }

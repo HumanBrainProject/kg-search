@@ -17,8 +17,11 @@ public class Model implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Model");
 
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private String id;
+
     @FieldInfo(visible = false, ignoreForSearch = true)
-    private Value<String> identifier;
+    private List<String> identifier;
 
     @FieldInfo(layout = FieldInfo.Layout.HEADER)
     private Value<String> editorId;
@@ -87,12 +90,17 @@ public class Model implements TargetInstance {
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)
     private TargetExternalReference licenseInfo;
 
+    @Override
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
+
     public void setType(String type) {
         setType(StringUtils.isBlank(type) ? null : new Value<>(type));
     }
 
-    public void setIdentifier(String identifier) {
-        setIdentifier(StringUtils.isBlank(identifier) ? null : new Value<>(identifier));
+    public void setIdentifier(List<String> identifier) {
+        this.identifier = identifier;
     }
 
     public void setEditorId(String editorId) {
@@ -140,12 +148,8 @@ public class Model implements TargetInstance {
     }
 
     @Override
-    public Value<String> getIdentifier() {
+    public List<String> getIdentifier() {
         return identifier;
-    }
-
-    public void setIdentifier(Value<String> identifier) {
-        this.identifier = identifier;
     }
 
     public Value<String> getEditorId() {

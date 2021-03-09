@@ -8,6 +8,7 @@ import eu.ebrains.kg.search.model.source.SourceInstance;
 import eu.ebrains.kg.search.model.source.commons.*;
 
 public class SampleV1 implements HasEmbargo, SourceInstance {
+    private String id;
     private String identifier;
     private String editorId;
     private String title;
@@ -26,6 +27,10 @@ public class SampleV1 implements HasEmbargo, SourceInstance {
     private List<String> parcellationAtlas;
     private List<SourceFile> files;
     private List<String> embargo;
+
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
 
     public String getIdentifier() {
         return identifier;

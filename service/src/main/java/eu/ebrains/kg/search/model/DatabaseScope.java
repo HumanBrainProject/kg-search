@@ -1,6 +1,6 @@
 package eu.ebrains.kg.search.model;
 
-public enum DatabaseScope{
+public enum DatabaseScope {
     RELEASED,
     INFERRED
 }

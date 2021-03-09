@@ -1,6 +1,6 @@
 package eu.ebrains.kg.search.services;
 
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -17,8 +17,8 @@ public class LegacySearchServiceClient {
 
     private static final Pattern editorIdPattern = Pattern.compile("(.+)/(.+)/(.+)/(.+)/(.+)");
 
-    public static <T> T getDocument(DatabaseScope databaseScope, String type, String id, Class<T> clazz) {
-        String group = databaseScope.equals(DatabaseScope.RELEASED)?"public":"curated";
+    public static <T> T getDocument(DataStage dataStage, String type, String id, Class<T> clazz) {
+        String group = dataStage.equals(DataStage.RELEASED)?"public":"curated";
         return getDocument(String.format("/search/api/groups/%s/types/%s/documents/%s", group, type, id), clazz);
     }
 

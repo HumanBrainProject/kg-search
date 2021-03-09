@@ -3,7 +3,7 @@ package eu.ebrains.kg.search.api;
 import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.controller.indexing.IndexingController;
 import eu.ebrains.kg.search.controller.sitemap.SitemapController;
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +23,15 @@ public class Indexing {
     }
 
     @PostMapping
-    public ResponseEntity<?> fullReplacement(@RequestParam("databaseScope") DatabaseScope databaseScope,
-                                             @RequestHeader("X-Legacy-Authorization") String authorization) {
+    public ResponseEntity<?> fullReplacement(@RequestParam("databaseScope") DataStage dataStage,
+                                             @RequestHeader("X-Legacy-Authorization") String legacyAuthorization
+                                             ) {
         try {
-            Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> indexingController.fullReplacementByType(databaseScope, type, authorization, clazz));
-            sitemapController.updateSitemapCache(databaseScope);
+            logger.info(String.format("Creating index identifiers_%s", dataStage));
+            indexingController.recreateIdentifiersIndex(dataStage);
+            logger.info(String.format("Created index identifiers_%s", dataStage));
+            Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> indexingController.fullReplacementByType(dataStage, type, legacyAuthorization, clazz));
+            sitemapController.updateSitemapCache(dataStage);
             return ResponseEntity.ok().build();
         } catch (WebClientResponseException e) {
             logger.info("Unsuccessful indexing", e);
@@ -35,30 +39,12 @@ public class Indexing {
         }
     }
 
-    @PostMapping("/{type}")
-    public ResponseEntity<?> fullReplacementByType(@RequestParam("databaseScope") DatabaseScope databaseScope,
-                                                   @PathVariable("type") String type,
-                                                   @RequestHeader("X-Legacy-Authorization") String authorization) {
-        Class<?> clazz = Constants.TARGET_MODELS_MAP.get(type);
-        if (clazz != null) {
-            try {
-                indexingController.fullReplacementByType(databaseScope, type, authorization, clazz);
-                sitemapController.updateSitemapCache(databaseScope);
-                return ResponseEntity.ok().build();
-            } catch (WebClientResponseException e) {
-                logger.info("Unsuccessful indexing", e);
-                return ResponseEntity.status(e.getStatusCode()).build();
-            }
-        }
-        return ResponseEntity.badRequest().build();
-    }
-
     @PutMapping
-    public ResponseEntity<?> incrementalUpdate(@RequestParam("databaseScope") DatabaseScope databaseScope,
-                                               @RequestHeader("X-Legacy-Authorization") String authorization) {
+    public ResponseEntity<?> incrementalUpdate(@RequestParam("databaseScope") DataStage dataStage,
+                                               @RequestHeader("X-Legacy-Authorization") String legacyAuthorization) {
         try {
-            indexingController.incrementalUpdateAll(databaseScope, authorization);
-            sitemapController.updateSitemapCache(databaseScope);
+            indexingController.incrementalUpdateAll(dataStage, legacyAuthorization);
+            sitemapController.updateSitemapCache(dataStage);
             return ResponseEntity.ok().build();
         } catch (WebClientResponseException e) {
 
@@ -67,19 +53,5 @@ public class Indexing {
         }
     }
 
-    @PutMapping("/{type}")
-    public ResponseEntity<?> incrementalUpdate(@RequestParam("databaseScope") DatabaseScope databaseScope,
-                                               @PathVariable("type") String type,
-                                               @RequestHeader("X-Legacy-Authorization") String authorization) {
-        try {
-            indexingController.incrementalUpdateByType(databaseScope, type, authorization);
-            sitemapController.updateSitemapCache(databaseScope);
-            return ResponseEntity.ok().build();
-        } catch (WebClientResponseException e) {
-
-            logger.info("Unsuccessful incremental indexing", e);
-            return ResponseEntity.status(e.getStatusCode()).build();
-        }
-    }
 
 }

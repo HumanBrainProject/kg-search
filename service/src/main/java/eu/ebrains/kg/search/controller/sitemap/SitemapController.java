@@ -1,9 +1,8 @@
 package eu.ebrains.kg.search.controller.sitemap;
 
-import eu.ebrains.kg.search.controller.Constants;
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.SitemapXML;
-import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,11 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Component
 public class SitemapController {
@@ -37,24 +33,20 @@ public class SitemapController {
     }
 
     private SitemapXML fetchSitemap() {
-        //TODO check if we want to cache each type individually
-        List<SitemapXML.Url> urls = Constants.TARGET_MODELS_MAP.keySet().stream().map(type -> {
-            String index = ESHelper.getIndex(type, DatabaseScope.RELEASED);
-            try {
-                ElasticSearchResult documents = esServiceClient.getDocuments(index);
-                return documents.getHits().getHits().stream().map(doc -> {
-                    SitemapXML.Url url = new SitemapXML.Url();
-                    url.setLoc(String.format("%s/instances/%s/%s", ebrainsUrl, type, doc.getId()));
-                    return url;
-                }).collect(Collectors.toList());
-            } catch (WebClientResponseException e) {
-                if (e.getStatusCode() != HttpStatus.NOT_FOUND) {
-                    throw e;
-                } else {
-                    return null;
-                }
+        List<SitemapXML.Url> urls = new ArrayList<>();
+        String index = ESHelper.getIdentifierIndex(DataStage.RELEASED);
+        try {
+            List<ElasticSearchDocument> documents = esServiceClient.getDocuments(index);
+            documents.forEach(doc -> {
+                SitemapXML.Url url = new SitemapXML.Url();
+                url.setLoc(String.format("%s/instances/%s", ebrainsUrl, doc.getId()));
+                urls.add(url);
+            });
+        } catch (WebClientResponseException e) {
+            if (e.getStatusCode() != HttpStatus.NOT_FOUND) {
+                throw e;
             }
-        }).filter(Objects::nonNull).flatMap(Collection::stream).collect(Collectors.toList());
+        }
         if (urls.isEmpty()) {
             return null;
         }
@@ -64,8 +56,8 @@ public class SitemapController {
     }
 
     @CachePut(value = "sitemap")
-    public SitemapXML updateSitemapCache(DatabaseScope databaseScope) {
-        if (databaseScope == DatabaseScope.RELEASED) {
+    public SitemapXML updateSitemapCache(DataStage dataStage) {
+        if (dataStage == DataStage.RELEASED) {
             return fetchSitemap();
         }
         return null;

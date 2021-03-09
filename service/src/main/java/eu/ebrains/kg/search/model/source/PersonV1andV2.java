@@ -1,13 +1,13 @@
 package eu.ebrains.kg.search.model.source;
 
-import java.util.Date;
-import java.util.List;
-
 import eu.ebrains.kg.search.model.source.commons.Publication;
 import eu.ebrains.kg.search.model.source.commons.SourceInternalReference;
 
-public class PersonV1andV2 implements SourceInstance {
+import java.util.Date;
+import java.util.List;
 
+public class PersonV1andV2 implements SourceInstance {
+    private String id;
     private String identifier;
     private String editorId;
     private String title;
@@ -19,6 +19,9 @@ public class PersonV1andV2 implements SourceInstance {
     private Date firstReleaseAt;
     private Date lastReleaseAt;
 
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
 
     public String getIdentifier() {
         return identifier;

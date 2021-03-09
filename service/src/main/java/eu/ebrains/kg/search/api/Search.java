@@ -11,7 +11,7 @@ import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
 import eu.ebrains.kg.search.controller.labels.LabelsController;
 import eu.ebrains.kg.search.controller.translators.TranslationController;
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.services.KGServiceClient;
@@ -93,19 +93,28 @@ public class Search {
                                                     @PathVariable("schema") String schema,
                                                     @PathVariable("version") String version,
                                                     @PathVariable("id") String id,
-                                                    @RequestHeader("X-Legacy-Authorization") String authorization) {
+                                                    @RequestHeader("X-Legacy-Authorization") String legacyAuthorization) {
         try {
-            TargetInstance instance = translationController.createInstance(DatabaseScope.INFERRED, true, org, domain, schema, version, id, authorization);
+            TargetInstance instance = translationController.createInstanceFromKGv2(DataStage.IN_PROGRESS, true, org, domain, schema, version, id, legacyAuthorization);
             return ResponseEntity.ok(Map.of("_source", instance));
         } catch (HttpClientErrorException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
         }
     }
 
-    @GetMapping("/groups/public/types/{type}/documents/{id}")
-    public ResponseEntity<?> getDocumentForPublic(@PathVariable("type") String type,
-                                         @PathVariable("id") String id) {
-        String index = ESHelper.getIndexFromGroup(type, "public");
+    @GetMapping("/{id}/live")
+    public ResponseEntity<Map> translate(@PathVariable("id") String id) {
+        try {
+            TargetInstance instance = translationController.createLiveInstanceFromKGv3(DataStage.IN_PROGRESS, true, id);
+            return ResponseEntity.ok(Map.of("_source", instance));
+        } catch (HttpClientErrorException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
+    }
+
+    @GetMapping("/groups/public/documents/{id}")
+    public ResponseEntity<?> getDocumentForPublic(@PathVariable("id") String id) {
+        String index = ESHelper.getIdentifierIndex(DataStage.RELEASED);
         try {
             return ResponseEntity.ok(esServiceClient.getDocument(index, id));
         } catch (WebClientResponseException e) {
@@ -113,13 +122,37 @@ public class Search {
         }
     }
 
-    @GetMapping("/groups/curated/types/{type}/documents/{id}")
-    public ResponseEntity<?> getDocumentForCurated(@PathVariable("type") String type,
-                                         @PathVariable("id") String id, Principal principal) {
+    @GetMapping("/groups/public/documents/{type}/{id}")
+    public ResponseEntity<?> getDocumentForPublic(@PathVariable("type") String type, @PathVariable("id") String id) {
+        String index = ESHelper.getIdentifierIndex(DataStage.RELEASED);
+        try {
+            return ResponseEntity.ok(esServiceClient.getDocument(index, String.format("%s/%s", type, id)));
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
+    }
+
+    @GetMapping("/groups/curated/documents/{id}")
+    public ResponseEntity<?> getDocumentForCurated(@PathVariable("id") String id, Principal principal) {
         if(isInInProgressRole(principal)) {
             try {
-                String index = ESHelper.getIndexFromGroup(type, "curated");
+                String index = ESHelper.getIdentifierIndex(DataStage.IN_PROGRESS);
                 return ResponseEntity.ok(esServiceClient.getDocument(index, id));
+            } catch (WebClientResponseException e) {
+                return ResponseEntity.status(e.getStatusCode()).build();
+            }
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    @GetMapping("/groups/curated/documents/{type}/{id}")
+    public ResponseEntity<?> getDocumentForCurated(@PathVariable("type") String type, @PathVariable("id") String id, Principal principal) {
+        if(isInInProgressRole(principal)) {
+            try {
+                String index = ESHelper.getIdentifierIndex(DataStage.IN_PROGRESS);
+                return ResponseEntity.ok(esServiceClient.getDocument(index, String.format("%s/%s", type, id)));
             } catch (WebClientResponseException e) {
                 return ResponseEntity.status(e.getStatusCode()).build();
             }

@@ -305,25 +305,6 @@ a, a:hover, a:visited {
   background-color: #fff;
 }
 
-main {
-  position: relative;
-  min-height: 100vh;
-  background-color: transparent;
-  border-bottom: 1px solid var(--border-color-1);
-  z-index: 100;
-  background: var(--background-color-2);
-}
-
-main a, main a:visited {
-  color: currentColor;
-  text-decoration: none;
-}
-
-main a:hover, main a:hover:visited {
-  color: currentColor;
-  text-decoration: none;
-}
-
 .full-width {
   margin:0;
   width: 100vw;

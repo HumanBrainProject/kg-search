@@ -1,7 +1,7 @@
 package eu.ebrains.kg.search.controller.data;
 
 import eu.ebrains.kg.search.controller.utils.TranslatorTestHelper;
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.ProjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
@@ -32,35 +32,35 @@ public class ProjectTranslatorTest {
 
     @Test
     public void compareReleasedProjects() {
-        compareProjects(DatabaseScope.RELEASED, false);
+        compareProjects(DataStage.RELEASED, false);
     }
 
     @Test
     public void compareInferredProjects() {
-        compareProjects(DatabaseScope.INFERRED, false);
+        compareProjects(DataStage.IN_PROGRESS, false);
     }
 
     @Test
     public void compareInferredLiveSubjects() {
-        compareProjects(DatabaseScope.INFERRED, true);
+        compareProjects(DataStage.IN_PROGRESS, true);
     }
 
-    private void compareProjects(DatabaseScope databaseScope, boolean liveMode) {
+    private void compareProjects(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        ProjectV1Result queryResult = kgServiceClient.executeQuery("query/minds/core/placomponent/v1.0.0/search", databaseScope, ProjectV1Result.class, token);
+        ProjectV1Result queryResult = kgServiceClient.executeQuery("query/minds/core/placomponent/v1.0.0/search", dataStage, ProjectV1Result.class, token);
         queryResult.getResults().forEach(project -> {
             String id = liveMode?project.getEditorId():project.getIdentifier();
             ElasticSearchDocument doc;
             if (liveMode) {
                 doc = LegacySearchServiceClient.getLiveDocument(id, ElasticSearchDocument.class);
             } else {
-                doc = LegacySearchServiceClient.getDocument(databaseScope, "Project", id, ElasticSearchDocument.class);
+                doc = LegacySearchServiceClient.getDocument(dataStage, "Project", id, ElasticSearchDocument.class);
             }
             if (doc == null) {
                 result.add("\n\n\tProject: " + project.getIdentifier() + " (Fail to get expected document!)");
             } else {
                 Map<String, Object> expected = doc.getSource();
-                List<String> messages = TranslatorTestHelper.compareProject(project, expected, databaseScope, liveMode);
+                List<String> messages = TranslatorTestHelper.compareProject(project, expected, dataStage, liveMode);
                 if (!messages.isEmpty()) {
                     result.add("\n\n\tProject: " + project.getIdentifier() + "\n\t\t" + String.join("\n\t\t", messages));
                 }
@@ -75,7 +75,7 @@ public class ProjectTranslatorTest {
     public void compareReleasedProject() throws IOException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v1/projectReleasedSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/projectReleasedTarget.json"), StandardCharsets.UTF_8);
-        List<String> result = TranslatorTestHelper.compareProject(sourceJson, expectedJson, DatabaseScope.RELEASED, false);
+        List<String> result = TranslatorTestHelper.compareProject(sourceJson, expectedJson, DataStage.RELEASED, false);
         if (!result.isEmpty()) {
             Assert.fail("\n\t" + String.join("\n\t", result));
         }
@@ -85,7 +85,7 @@ public class ProjectTranslatorTest {
     public void compareInferredProject() throws IOException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v1/projectInferredSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/projectInferredTarget.json"), StandardCharsets.UTF_8);
-        List<String> result = TranslatorTestHelper.compareProject(sourceJson, expectedJson, DatabaseScope.INFERRED, false);
+        List<String> result = TranslatorTestHelper.compareProject(sourceJson, expectedJson, DataStage.IN_PROGRESS, false);
         if (!result.isEmpty()) {
             Assert.fail("\n\t" + String.join("\n\t", result));
         }
@@ -96,7 +96,7 @@ public class ProjectTranslatorTest {
     public void compareInferredLiveProject() throws IOException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v1/projectInferredSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/projectInferredLiveTarget.json"), StandardCharsets.UTF_8);
-        List<String> result = TranslatorTestHelper.compareProject(sourceJson, expectedJson, DatabaseScope.INFERRED, true);
+        List<String> result = TranslatorTestHelper.compareProject(sourceJson, expectedJson, DataStage.IN_PROGRESS, true);
         if (!result.isEmpty()) {
             Assert.fail("\n\t" + String.join("\n\t", result));
         }

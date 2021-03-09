@@ -1,29 +1,35 @@
 package eu.ebrains.kg.search.controller.translators;
 
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SampleV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Sample;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
 public class SampleTranslator implements Translator<SampleV1, Sample> {
 
-    public Sample translate(SampleV1 sample, DatabaseScope databaseScope, boolean liveMode) {
+    public Sample translate(SampleV1 sample, DataStage dataStage, boolean liveMode) {
         Sample s = new Sample();
+        String uuid = IdUtils.getUUID(sample.getId());
+        s.setId(uuid);
+        List<String> identifiers = Arrays.asList(uuid, String.format("Sample/%s", sample.getIdentifier()));
+        s.setIdentifier(identifiers);
         String title = sample.getTitle();
         s.setTitle(title);
         s.setFirstRelease(sample.getFirstReleaseAt());
         s.setLastRelease(sample.getLastReleaseAt());
-        s.setIdentifier(sample.getIdentifier());
         s.setDatasetExists(emptyToNull(sample.getDatasetExists()));
-        if (databaseScope == DatabaseScope.INFERRED) {
+        if (dataStage == DataStage.IN_PROGRESS) {
             s.setEditorId(sample.getEditorId());
         }
         s.setParcellationAtlas(emptyToNull(sample.getParcellationAtlas()));
@@ -52,7 +58,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                                     d.getInstances().stream()
                                             .map(i ->
                                                     new TargetInternalReference(
-                                                            liveMode ? i.getRelativeUrl() : String.format("Dataset/%s", i.getIdentifier()),
+                                                            liveMode ? i.getRelativeUrl() : i.getIdentifier(),
                                                             i.getName(), null)
                                             ).collect(Collectors.toList())
                             )
@@ -63,7 +69,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                     .map(d ->
                             new Sample.Subject(
                                     new TargetInternalReference(
-                                            liveMode ? d.getRelativeUrl() : String.format("Subject/%s", d.getIdentifier()),
+                                            liveMode ? d.getRelativeUrl() : d.getIdentifier(),
                                             d.getName(),
                                             null
                                     ),
@@ -91,7 +97,7 @@ public class SampleTranslator implements Translator<SampleV1, Sample> {
                 ));
             }
         }
-        if (!CollectionUtils.isEmpty(sample.getFiles()) && (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && !hasEmbargoStatus(sample, EMBARGOED, UNDER_REVIEW)))) {
+        if (!CollectionUtils.isEmpty(sample.getFiles()) && (dataStage == DataStage.IN_PROGRESS || (dataStage == DataStage.RELEASED && !hasEmbargoStatus(sample, EMBARGOED, UNDER_REVIEW)))) {
             s.setFiles(emptyToNull(sample.getFiles().stream()
                     .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
                     .map(f ->

@@ -17,8 +17,11 @@ public class Project implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Project");
 
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private String id;
+
     @FieldInfo(visible = false)
-    private Value<String> identifier;
+    private List<String> identifier;
 
     @FieldInfo(sort = true, label = "Name", boost = 20)
     private Value<String> title;
@@ -43,12 +46,17 @@ public class Project implements TargetInstance {
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 
+    @Override
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
+
     public void setType(String type) {
         setType(StringUtils.isBlank(type) ? null : new Value<>(type));
     }
 
-    public void setIdentifier(String identifier) {
-        setIdentifier(StringUtils.isBlank(identifier) ? null : new Value<>(identifier));
+    public void setIdentifier(List<String> identifier) {
+        this.identifier = identifier;
     }
 
     public void setEditorId(String editorId){
@@ -80,12 +88,8 @@ public class Project implements TargetInstance {
     }
 
     @Override
-    public Value<String> getIdentifier() {
+    public List<String> getIdentifier() {
         return identifier;
-    }
-
-    public void setIdentifier(Value<String> identifier) {
-        this.identifier = identifier;
     }
 
     public Value<String> getDescription() {

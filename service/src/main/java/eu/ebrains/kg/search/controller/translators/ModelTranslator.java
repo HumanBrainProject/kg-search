@@ -1,30 +1,36 @@
 package eu.ebrains.kg.search.controller.translators;
 
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.commons.SourceExternalReference;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Model;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
 public class ModelTranslator implements Translator<ModelV2, Model> {
 
-    public Model translate(ModelV2 modelV2, DatabaseScope databaseScope, boolean liveMode) {
+    public Model translate(ModelV2 modelV2, DataStage dataStage, boolean liveMode) {
         Model m = new Model();
-        m.setIdentifier(modelV2.getIdentifier());
-        if (databaseScope == DatabaseScope.INFERRED) {
+        String uuid = IdUtils.getUUID(modelV2.getId());
+        m.setId(uuid);
+        List<String> identifiers = Arrays.asList(uuid, String.format("Model/%s", modelV2.getIdentifier()));
+        m.setIdentifier(identifiers);
+        if (dataStage == DataStage.IN_PROGRESS) {
             m.setEditorId(modelV2.getEditorId());
         }
         if (hasEmbargoStatus(modelV2, EMBARGOED)) {
-            if (databaseScope == DatabaseScope.RELEASED) {
+            if (dataStage == DataStage.RELEASED) {
                 m.setEmbargo("This model is temporarily under embargo. The data will become available for download after the embargo period.");
             } else {
                 SourceExternalReference fileBundle = firstItemOrNull(modelV2.getFileBundle());
@@ -41,7 +47,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
         if (!CollectionUtils.isEmpty(modelV2.getProducedDataset())) {
             m.setProducedDataset(modelV2.getProducedDataset().stream()
                     .map(pd -> new TargetInternalReference(
-                            liveMode ? pd.getRelativeUrl() : String.format("Dataset/%s", pd.getIdentifier()),
+                            liveMode ? pd.getRelativeUrl() : pd.getIdentifier(),
                             pd.getName()
                     )).collect(Collectors.toList()));
         }
@@ -72,7 +78,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
         if (!CollectionUtils.isEmpty(modelV2.getCustodian())) {
             m.setOwners(modelV2.getCustodian().stream()
                     .map(o -> new TargetInternalReference(
-                            liveMode ? o.getRelativeUrl() : String.format("Contributor/%s", o.getIdentifier()),
+                            liveMode ? o.getRelativeUrl() : o.getIdentifier(),
                             o.getName()
                     )).collect(Collectors.toList()));
         }
@@ -82,7 +88,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
         if (!CollectionUtils.isEmpty(modelV2.getMainContact())) {
             m.setMainContact(modelV2.getMainContact().stream()
                     .map(mc -> new TargetInternalReference(
-                            liveMode ? mc.getRelativeUrl() : String.format("Contributor/%s", mc.getIdentifier()),
+                            liveMode ? mc.getRelativeUrl() : mc.getIdentifier(),
                             mc.getName()
                     )).collect(Collectors.toList()));
         }
@@ -91,7 +97,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
         if (!CollectionUtils.isEmpty(modelV2.getUsedDataset())) {
             m.setUsedDataset(modelV2.getUsedDataset().stream()
                     .map(ud -> new TargetInternalReference(
-                            liveMode ? ud.getRelativeUrl() : String.format("Dataset/%s", ud.getIdentifier()),
+                            liveMode ? ud.getRelativeUrl() : ud.getIdentifier(),
                             ud.getName()
                     )).collect(Collectors.toList()));
         }
@@ -114,7 +120,7 @@ public class ModelTranslator implements Translator<ModelV2, Model> {
         if (!CollectionUtils.isEmpty(modelV2.getContributors())) {
             m.setContributors(modelV2.getContributors().stream()
                     .map(c -> new TargetInternalReference(
-                            liveMode ? c.getRelativeUrl() : String.format("Contributor/%s", c.getIdentifier()),
+                            liveMode ? c.getRelativeUrl() : c.getIdentifier(),
                             c.getName()
                     )).collect(Collectors.toList()));
         }

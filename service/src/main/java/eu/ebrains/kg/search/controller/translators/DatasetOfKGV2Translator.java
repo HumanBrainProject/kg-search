@@ -1,28 +1,33 @@
 package eu.ebrains.kg.search.controller.translators;
 
-import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.commons.SourceExternalReference;
 import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
-public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
+public class DatasetOfKGV2Translator implements Translator<DatasetV1, Dataset> {
 
-
-    public Dataset translate(DatasetV1 datasetV1, DatabaseScope databaseScope, boolean liveMode) {
+    public Dataset translate(DatasetV1 datasetV1, DataStage dataStage, boolean liveMode) {
         Dataset d = new Dataset();
+        String uuid = IdUtils.getUUID(datasetV1.getId());
+        d.setId(uuid);
+        List<String> identifiers = Arrays.asList(uuid, String.format("Dataset/%s", datasetV1.getIdentifier()));
+        d.setIdentifier(identifiers);
         String containerUrl = datasetV1.getContainerUrl();
         boolean containerUrlAsZIP = datasetV1.getContainerUrlAsZIP();
         List<DatasetV1.SourceFile> files = datasetV1.getFiles();
@@ -32,8 +37,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                     "Download all related data as ZIP"
             ));
         }
-        d.setIdentifier(datasetV1.getIdentifier());
-        if (databaseScope == DatabaseScope.INFERRED) {
+        if (dataStage == DataStage.IN_PROGRESS) {
             d.setEditorId(datasetV1.getEditorId());
         }
         d.setMethods(emptyToNull(datasetV1.getMethods()));
@@ -46,7 +50,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         if (!CollectionUtils.isEmpty(datasetV1.getOwners())) {
             d.setOwners(datasetV1.getOwners().stream()
                     .map(o -> new TargetInternalReference(
-                            liveMode ? o.getRelativeUrl() : String.format("Contributor/%s", o.getIdentifier()),
+                            liveMode ? o.getRelativeUrl() : o.getIdentifier(),
                             o.getName(),
                             null
                     )).collect(Collectors.toList()));
@@ -65,7 +69,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
             d.setEmbargo(hdgMessageHTML);
             d.setEmbargoForFilter("Controlled access");
         } else {
-            if (databaseScope == DatabaseScope.RELEASED) {
+            if (dataStage == DataStage.RELEASED) {
                 if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
                     d.setEmbargo("This dataset is temporarily under embargo. The data will become available for download after the embargo period.");
                 } else if (hasEmbargoStatus(datasetV1, UNDER_REVIEW)) {
@@ -73,7 +77,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                 }
             }
             d.setEmbargoForFilter(firstItemOrNull(datasetV1.getEmbargoForFilter()));
-            if (!CollectionUtils.isEmpty(datasetV1.getFiles()) && (databaseScope == DatabaseScope.INFERRED || (databaseScope == DatabaseScope.RELEASED && !hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW)))) {
+            if (!CollectionUtils.isEmpty(datasetV1.getFiles()) && (dataStage == DataStage.IN_PROGRESS || (dataStage == DataStage.RELEASED && !hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW)))) {
                 d.setFiles(emptyToNull(datasetV1.getFiles().stream()
                         .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
                         .map(f ->
@@ -133,7 +137,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         if (!CollectionUtils.isEmpty(datasetV1.getContributors())) {
             d.setContributors(datasetV1.getContributors().stream()
                     .map(c -> new TargetInternalReference(
-                            liveMode ? c.getRelativeUrl() : String.format("Contributor/%s", c.getIdentifier()),
+                            liveMode ? c.getRelativeUrl() : c.getIdentifier(),
                             c.getName(),
                             null
                     )).collect(Collectors.toList()));
@@ -143,7 +147,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
         if (!CollectionUtils.isEmpty(datasetV1.getComponent())) {
             d.setComponent(datasetV1.getComponent().stream()
                     .map(c -> new TargetInternalReference(
-                            liveMode ? c.getRelativeUrl() : String.format("Project/%s", c.getIdentifier()),
+                            liveMode ? c.getRelativeUrl() : c.getIdentifier(),
                             c.getName(),
                             null
                     )).collect(Collectors.toList()));
@@ -170,7 +174,7 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                     .map(s ->
                             new Dataset.Subject(
                                     new TargetInternalReference(
-                                            liveMode ? s.getRelativeUrl() : String.format("Subject/%s", s.getIdentifier()),
+                                            liveMode ? s.getRelativeUrl() : s.getIdentifier(),
                                             s.getName(),
                                             null
                                     ),
@@ -184,14 +188,14 @@ public class DatasetTranslator implements Translator<DatasetV1, Dataset> {
                                     !CollectionUtils.isEmpty(s.getSamples()) ? s.getSamples().
                                             stream().
                                             map(sample -> new TargetInternalReference(
-                                                    liveMode ? sample.getRelativeUrl() : String.format("Sample/%s", sample.getIdentifier()),
+                                                    liveMode ? sample.getRelativeUrl() : sample.getIdentifier(),
                                                     sample.getName(),
                                                     null
                                             )).collect(Collectors.toList()) : null
                             )
                     ).collect(Collectors.toList()));
         }
-        if (databaseScope == DatabaseScope.INFERRED && !datasetV1.isUseHDG()) {
+        if (dataStage == DataStage.IN_PROGRESS && !datasetV1.isUseHDG()) {
             if (containerUrl != null && containerUrl.startsWith("https://object.cscs.ch")) {
                 if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
                     d.setEmbargoRestrictedAccess(String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", containerUrl));

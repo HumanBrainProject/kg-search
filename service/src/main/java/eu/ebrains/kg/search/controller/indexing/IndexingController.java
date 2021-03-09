@@ -3,17 +3,19 @@ package eu.ebrains.kg.search.controller.indexing;
 import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.controller.elasticsearch.ElasticSearchController;
 import eu.ebrains.kg.search.controller.mapping.MappingController;
-import eu.ebrains.kg.search.controller.sitemap.SitemapController;
 import eu.ebrains.kg.search.controller.translators.TranslationController;
-import eu.ebrains.kg.search.model.DatabaseScope;
-import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.search.model.DataStage;
+import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstances;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
-import java.util.List;
 import java.util.Map;
 
 @Component
 public class IndexingController {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final MappingController mappingController;
     private final ElasticSearchController elasticSearchController;
@@ -25,24 +27,50 @@ public class IndexingController {
         this.translationController = translationController;
     }
 
-    public void incrementalUpdateAll(DatabaseScope databaseScope, String authorization){
-        Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> incrementalUpdateByType(databaseScope, type, authorization));
+    public void incrementalUpdateAll(DataStage dataStage, String legacyAuthorization){
+        Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> incrementalUpdateByType(dataStage, type, legacyAuthorization));
     }
 
-    public void incrementalUpdateByType(DatabaseScope databaseScope, String type, String authorization) {
-        List<TargetInstance> instances = translationController.createInstances(databaseScope, false, type, authorization);
-        elasticSearchController.updateIndex(instances, type, databaseScope);
+    public void incrementalUpdateByType(DataStage dataStage, String type, String legacyAuthorization) {
+        TargetInstances instances = translationController.createInstancesCombined(dataStage, false, type, legacyAuthorization);
+        if (!CollectionUtils.isEmpty(instances.getSearchableInstances())) {
+            elasticSearchController.updateSearchIndex(instances.getSearchableInstances(), type, dataStage);
+        }
+        if (!CollectionUtils.isEmpty(instances.getAllInstances())) {
+            elasticSearchController.updateIdentifiersIndex(instances.getAllInstances(), type, dataStage);
+        }
     }
 
-    public void fullReplacementByType(DatabaseScope databaseScope, String type, String authorization, Class<?> clazz) {
-        List<TargetInstance> instances = translationController.createInstances(databaseScope, false, type, authorization);
-        recreateIndex(databaseScope, type, clazz);
-        elasticSearchController.indexDocuments(instances, type, databaseScope);
+    public void fullReplacementByType(DataStage dataStage, String type, String legacyAuthorization, Class<?> clazz) {
+        TargetInstances instances = translationController.createInstancesCombined(dataStage, false, type, legacyAuthorization);
+        logger.info(String.format("Creating index %s_%s for %s", dataStage, type.toLowerCase(), type));
+        recreateSearchIndex(dataStage, type, clazz);
+        logger.info(String.format("Created index %s_%s for %s", dataStage, type.toLowerCase(), type));
+        if (!CollectionUtils.isEmpty(instances.getSearchableInstances())) {
+            logger.info(String.format("Start search indexing %s instances for %s", instances.getSearchableInstances().size(), type));
+            elasticSearchController.indexSearchDocuments(instances.getSearchableInstances(), type, dataStage);
+            logger.info(String.format("Indexed search for %s", type));
+        } else {
+            logger.info(String.format("Bypass search indexing for %s, because no instance", type));
+        }
+        if (!CollectionUtils.isEmpty(instances.getAllInstances())) {
+            logger.info(String.format("Start instance indexing %s instances with %s", instances.getAllInstances().size(), type));
+            elasticSearchController.indexIdentifierDocuments(instances.getAllInstances(), dataStage);
+            logger.info(String.format("Indexed instance with %s", type));
+        } else {
+            logger.info(String.format("Bypass instance indexing with %s, because no instance", type));
+        }
     }
 
-    private void recreateIndex(DatabaseScope databaseScope, String type, Class<?> clazz) {
+    public void recreateIdentifiersIndex(DataStage dataStage) {
+        Map<String, Object> mapping = mappingController.generateIdentifierMapping();
+        Map<String, Object> mappingResult = Map.of("mappings", mapping);
+        elasticSearchController.recreateIdentifiersIndex(mappingResult, dataStage);
+    }
+
+    private void recreateSearchIndex(DataStage dataStage, String type, Class<?> clazz) {
         Map<String, Object> mapping = mappingController.generateMapping(clazz);
         Map<String, Object> mappingResult = Map.of("mappings", mapping);
-        elasticSearchController.recreateIndex(mappingResult, type, databaseScope);
+        elasticSearchController.recreateSearchIndex(mappingResult, type, dataStage);
     }
 }
