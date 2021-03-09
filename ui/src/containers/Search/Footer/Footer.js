@@ -17,20 +17,14 @@
 import React from "react";
 import { ShareButtons } from "../../Share/ShareButtons";
 import { Pagination } from "../Pagination/Pagination";
-import { GroupSelection } from "../../Group/GroupSelection";
-import { SignInButton } from "../../SignIn/SignInButton";
 import { TermsShortNotice } from "../../Notice/TermsShortNotice";
 import "./Footer.css";
-import { connect } from "react-redux";
 
-const FooterBase = ({showLogin}) => {
+export const Footer = () => {
   return (
     <div className="kgs-footer">
       <TermsShortNotice className="kgs-footer__terms-short-notice" />
       <div className="kgs-footer-nav">
-        {showLogin &&
-          <SignInButton className="kgs-sign-in" signInLabel="Log in" signOffLabel="Log out"/>}
-        <GroupSelection className="kgs-group-selection"/>
         <Pagination />
         <ShareButtons/>
         <div className="kgs-space" />
@@ -39,9 +33,3 @@ const FooterBase = ({showLogin}) => {
     </div>
   );
 };
-
-export const Footer = connect(
-  state => ({
-    showLogin: !!state.auth.authEndpoint
-  })
-)(FooterBase);

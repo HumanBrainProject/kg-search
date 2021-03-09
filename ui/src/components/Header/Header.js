@@ -16,6 +16,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
+import { SignIn } from "../../containers/SignIn/SignIn";
 
 export class Header extends React.Component {
   render() {
@@ -40,6 +41,7 @@ export class Header extends React.Component {
               {location.pathname.startsWith("/instances") && <li><Link to="/">Search</Link></li>}
               <li><a href="https://ebrains.eu/services/data-knowledge/share-data"  className="mobile-link" rel="noopener noreferrer">Share data</a></li>
               <li><a href="https://ebrains.eu/service/find-data" className="mobile-link" target="_blank" rel="noopener noreferrer">About</a></li>
+              <li><SignIn /></li>
             </ul>
           </div>
         </div>

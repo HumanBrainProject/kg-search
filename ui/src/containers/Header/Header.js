@@ -20,7 +20,6 @@ import Header from "../../components/Header/Header";
 
 export default connect(
   state => ({
-    isAuthenticated: state.auth.isAuthenticated,
     location: state.router.location
   })
 )(Header);

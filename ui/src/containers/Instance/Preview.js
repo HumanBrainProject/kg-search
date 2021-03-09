@@ -51,7 +51,6 @@ export const Preview = connect(
     return {
       instanceProps: instanceProps,
       showInstance: state.instances.currentInstance && !state.instances.error,
-      showGroupSelection: false,
       definitionIsReady: state.definition.isReady,
       definitionIsLoading: state.definition.isLoading,
       definitionHasError: !!state.definition.error,

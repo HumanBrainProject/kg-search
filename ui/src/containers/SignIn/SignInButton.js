@@ -21,12 +21,12 @@ import { ConditionalButton } from "../../components/ConditionalButton/Conditiona
 export const SignInButton = connect(
   (state, props) => ({
     className: props.className,
-    test: state.auth.isAuthenticated,
+    isAuthenticated: state.auth.isAuthenticated,
     onLabel: props.signOffLabel,
     offLabel: props.signInLabel
   }),
   dispatch => ({
-    onClick: () => dispatch(actions.logout()),
-    offClick: () => dispatch(actions.authenticate())
+    logout: () => dispatch(actions.logout()),
+    login: () => dispatch(actions.authenticate())
   })
 )(ConditionalButton);

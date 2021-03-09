@@ -24,8 +24,6 @@ import { Tags } from "../../components/Tags/Tags";
 import { DefinitionErrorPanel, GroupErrorPanel, InstanceErrorPanel } from "../Error/ErrorPanel";
 
 import "./InstanceContainer.css";
-import { SignInButton } from "../SignIn/SignInButton";
-import { GroupSelection } from "../Group/GroupSelection";
 import { getUpdatedQuery, getLocationFromQuery } from "../../helpers/BrowserHelpers";
 
 class BackLinkButton extends React.Component {
@@ -131,7 +129,7 @@ export class InstanceContainer extends React.Component {
   }
 
   render() {
-    const { showInstance, showGroupSelection, instanceProps, watermark, fetch } = this.props;
+    const { showInstance, instanceProps, watermark, fetch } = this.props;
     const NavigationComponent = getNavigation(instanceProps && instanceProps.header);
     return (
       <React.Fragment>
@@ -145,18 +143,6 @@ export class InstanceContainer extends React.Component {
           {watermark && (
             <div className="kgs-instance-editor__watermark">
               <p>{watermark}</p>
-            </div>
-          )}
-          {showInstance && (
-            <div className="kgs-footer">
-              <div className="kgs-footer-nav">
-                {showGroupSelection && (
-                  <>
-                    <SignInButton className="kgs-sign-in" signInLabel="Log in" signOffLabel="Log out"/>
-                    <GroupSelection className="kgs-group-selection"/>
-                  </>
-                )}
-              </div>
             </div>
           )}
         </div>

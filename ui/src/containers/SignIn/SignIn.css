@@ -1,5 +1,5 @@
 /*
-*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*   Copyright (c) 2021, EPFL/Human Brain Project PCO
 *
 *   Licensed under the Apache License, Version 2.0 (the "License");
 *   you may not use this file except in compliance with the License.
@@ -14,23 +14,29 @@
 *   limitations under the License.
 */
 
-button.kgs-conditional-button {    
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-    border: 0;
+body[theme="dark"] a.kgs-sign__in {
+    color: #fff;
     background-color: transparent;
-    color: var(--link-color-1);
-    font-size: 20px;
-    white-space: nowrap;
-    outline: none;
 }
 
-button.kgs-conditional-button:hover,
-button.kgs-conditional-button:focus {
-    color:var(--link-color-active);
+body[theme="dark"] .navbar-default .navbar-nav>li>a.kgs-login{
+    color: #fff;
 }
 
-button.kgs-conditional-button:focus {
-    text-decoration: underline;
+a.kgs-sign__in, .kgs-sign__in + ul > li > a {
+    border: none;
+    cursor: pointer;
+}
+
+a.kgs-sign__in:hover {
+    background-color: transparent;
+}
+
+.kgs-login {
+    cursor: pointer;
+}
+
+.kgs-sign__in__space{
+    display: inline-block;
+    margin-right: 22px;
 }
