@@ -1,4 +1,8 @@
 
+.kgs-fields-buttons a {
+  color: var(--link-color-1);
+}
+
 .kgs-fields-buttons .kgs-fields-buttons__button {
   position: relative;
   background-color: var(--button-default-background-color); 
