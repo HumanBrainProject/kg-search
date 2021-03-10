@@ -14,7 +14,6 @@
     "react-test-renderer": "^17.0.1"
   },
   "dependencies": {
-    "@popperjs/core": "^2.9.1",
     "@sentry/browser": "^6.2.1",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
@@ -25,6 +24,7 @@
     "lodash": "^4.17.21",
     "lucene-query-parser": "^1.2.0",
     "normalize.css": "^8.0.1",
+    "popper": "^1.16.1",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
