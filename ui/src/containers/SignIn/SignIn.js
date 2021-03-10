@@ -25,30 +25,30 @@ const SignInComponent = ({ isAuthenticated, group, groups, login, logout, onGrou
   if(isAuthenticated) {
     return (
       <div className="dropdown">
-        <a className="btn btn-default dropdown-toggle kgs-sign__in" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <button className="btn btn-default dropdown-toggle kgs-sign__in kgs_signed__in" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <i className="fa fa-2x fa-user" aria-hidden="true"></i>
-        </a>
+        </button>
         <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
           {groups.map(g => (
             <li key={g.value}>
-              <a onClick={() => onGroupChange(g.value)}>
+              <button  onClick={() => onGroupChange(g.value)}>
                 {group === g.value?
                   <i className="fa fa-check" aria-hidden="true" style={{marginRight: "4px"}}></i>
                   :
                   <span className="kgs-sign__in__space"/>
                 }
                 {g.label}
-              </a>
+              </button>
             </li>
           ))}
           <li role="separator" className="divider"></li>
-          <li><a className="mobile-link" onClick={logout}><i className="fa fa-sign-out" aria-hidden="true" style={{marginRight: "4px"}}></i>Logout</a></li>
+          <li><button className="mobile-link" onClick={logout}><i className="fa fa-sign-out" aria-hidden="true" style={{marginRight: "4px"}}></i>Logout</button></li>
         </ul>
       </div>
     );
   }
   return (
-    <a className="mobile-link kgs-login" onClick={login}>Login</a>
+    <button className="mobile-link kgs-login" onClick={login}>Login</button>
   );
 };
 

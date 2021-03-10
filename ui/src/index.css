@@ -460,13 +460,9 @@ a, a:hover, a:visited {
   color: var(--color-8);
 }
 
-.navbar-default .navbar-nav>li>a:visited {
-  color: currentColor;
-  text-decoration: none;
-}
-
 .navbar-default .navbar-nav>li>a:hover {
   text-decoration: underline;
+  color: var(--color-8);
 }
 
 .kgs-navbar .container-fluid {

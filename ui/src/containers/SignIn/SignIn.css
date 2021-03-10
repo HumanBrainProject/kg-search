@@ -14,29 +14,67 @@
 *   limitations under the License.
 */
 
-body[theme="dark"] a.kgs-sign__in {
-    color: #fff;
+button.kgs-login {
+    margin: 0;
+    padding: 14px;
+    border: 0;
     background-color: transparent;
+    color: var(--color-8);
+    font-family: var(--font-stack);
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
 }
 
-body[theme="dark"] .navbar-default .navbar-nav>li>a.kgs-login{
+button.kgs-login:hover {
+    text-decoration: underline;
+}
+
+body[theme="dark"] button.kgs-sign__in {
+    color: var(--color-8);
+}
+
+body[theme="dark"] button.kgs-sign__in:hover {
     color: #fff;
 }
 
-a.kgs-sign__in, .kgs-sign__in + ul > li > a {
+body[theme="dark"] .navbar-default .navbar-nav>li>button.kgs-login {
+    color: var(--color-8);
+}
+
+button.kgs-sign__in, button.kgs-sign__in + ul > li > button {
+    width: 100%;
     border: none;
     cursor: pointer;
+    padding: 10px 20px;
+    border: 0;
+    background: transparent;
+    font-family: var(--font-stack);
+    font-size: 18px;
+    font-weight: 400;
+    white-space: nowrap;
+    text-align: left;
 }
 
-a.kgs-sign__in:hover {
+button.kgs-sign__in.kgs_signed__in {
+    padding: 7px 20px;
+}
+
+button.kgs-sign__in:hover {
     background-color: transparent;
 }
 
-.kgs-login {
-    cursor: pointer;
+button.kgs-sign__in + ul > li > button {
+    color: #262626;
 }
 
-.kgs-sign__in__space{
+button.kgs-sign__in + ul > li > button:hover {
+    color: #262626;
+    text-decoration: none;
+    background-color: #f5f5f5;
+}
+
+.kgs-sign__in__space {
     display: inline-block;
     margin-right: 22px;
 }
