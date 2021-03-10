@@ -14,6 +14,7 @@ exports[`ChevronList component renders initially 1`] = `
         onClick={[Function]}
         role="link"
       >
+        <div />
         <span
           className="kgs-chevron-list__chevron"
         >
@@ -29,6 +30,7 @@ exports[`ChevronList component renders initially 1`] = `
         onClick={[Function]}
         role="link"
       >
+        <div />
         <span
           className="kgs-chevron-list__chevron"
         >

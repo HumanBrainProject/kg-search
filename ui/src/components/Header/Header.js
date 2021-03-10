@@ -16,32 +16,30 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { SignIn } from "../../containers/SignIn/SignIn";
-
+import "./Header.css";
 export class Header extends React.Component {
   render() {
-    const { location } = this.props;
+    const { location, SignInComponent } = this.props;
     return (
-      <nav className="navbar navbar-default kgs-navbar">
+      <nav className="navbar navbar-expand-lg navbar-light kgs-navbar">
         <div className="container-fluid">
-          <div className="navbar-header">
-            <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse-mobile" aria-expanded="false">
-              <span className="sr-only">Toggle navigation</span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-            </button>
-            <a href="https://ebrains.eu" aria-label="EBRAINS homepage" className="logo nuxt-link-active navbar-brand">
-              <img src="/static/img/ebrains_logo.svg" alt="ebrains" height="100" />
-            </a>
-          </div>
+          <a href="https://ebrains.eu" aria-label="EBRAINS homepage" className="logo nuxt-link-active navbar-brand">
+            <img src="/static/img/ebrains_logo.svg" alt="ebrains" height="100" />
+          </a>
+          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i className="fa fa-bars" aria-hidden="true"></i>
+          </button>
 
-          <div className="collapse navbar-collapse" id="nav-collapse-mobile">
-            <ul className="nav navbar-nav navbar-right">
-              {location.pathname.startsWith("/instances") && <li><Link to="/">Search</Link></li>}
-              <li><a href="https://ebrains.eu/services/data-knowledge/share-data"  className="mobile-link" rel="noopener noreferrer">Share data</a></li>
-              <li><a href="https://ebrains.eu/service/find-data" className="mobile-link" target="_blank" rel="noopener noreferrer">About</a></li>
-              <li><SignIn /></li>
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav mr-auto">
+              {location.pathname.startsWith("/instances") && <li className="nav-item"><Link to="/">Search</Link></li>}
+              <li className="nav-item">
+                <a href="https://ebrains.eu/services/data-knowledge/share-data"  className="mobile-link" rel="noopener noreferrer">Share data</a>
+              </li>
+              <li className="nav-item">
+                <a href="https://ebrains.eu/service/find-data" className="mobile-link" target="_blank" rel="noopener noreferrer">About</a>
+              </li>
+              <SignInComponent Tag="li" className="nav-item" />
             </ul>
           </div>
         </div>

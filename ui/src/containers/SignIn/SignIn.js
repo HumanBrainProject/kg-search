@@ -21,16 +21,16 @@ import * as actionsGroups from "../../actions/actions.groups";
 import * as actionsSearch from "../../actions/actions.search";
 import "./SignIn.css";
 
-const SignInComponent = ({ isAuthenticated, group, groups, login, logout, onGroupChange }) => {
+const SignInComponent = ({ className, Tag, isAuthenticated, group, groups, login, logout, onGroupChange }) => {
   if(isAuthenticated) {
     return (
-      <div className="dropdown">
-        <button className="btn btn-default dropdown-toggle kgs-sign__in kgs_signed__in" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <Tag className={`${className} dropdown dropleft`}>
+        <a className="dropdown-toggle kgs-sign__in kgs_signed__in" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i className="fa fa-2x fa-user" aria-hidden="true"></i>
-        </button>
-        <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
+        </a>
+        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
           {groups.map(g => (
-            <li key={g.value}>
+            <div className="dropdown-item" key={g.value}>
               <button  onClick={() => onGroupChange(g.value)}>
                 {group === g.value?
                   <i className="fa fa-check" aria-hidden="true" style={{marginRight: "4px"}}></i>
@@ -39,24 +39,30 @@ const SignInComponent = ({ isAuthenticated, group, groups, login, logout, onGrou
                 }
                 {g.label}
               </button>
-            </li>
+            </div>
           ))}
-          <li role="separator" className="divider"></li>
-          <li><button className="mobile-link" onClick={logout}><i className="fa fa-sign-out" aria-hidden="true" style={{marginRight: "4px"}}></i>Logout</button></li>
-        </ul>
-      </div>
+          <div className="dropdown-divider"></div>
+          <div className="dropdown-item">
+            <button onClick={logout}><i className="fa fa-sign-out" aria-hidden="true" style={{marginRight: "4px"}}></i>Logout</button>
+          </div>
+        </div>
+      </Tag>
     );
   }
   return (
-    <button className="mobile-link kgs-login" onClick={login}>Login</button>
+    <Tag className={className}>
+      <button className="mobile-link kgs-login" onClick={login}>Login</button>
+    </Tag>
   );
 };
 
 export const SignIn = connect(
-  state => ({
+  (state, props) => ({
     isAuthenticated: state.auth.isAuthenticated,
     group: state.groups.group,
-    groups: state.groups.groups?state.groups.groups:[]
+    groups: state.groups.groups?state.groups.groups:[],
+    className: props.className,
+    Tag: props.Tag
   }),
   dispatch => ({
     logout: () => dispatch(actions.logout()),
