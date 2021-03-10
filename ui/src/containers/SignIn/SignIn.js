@@ -42,7 +42,7 @@ const SignInComponent = ({ isAuthenticated, group, groups, login, logout, onGrou
             </li>
           ))}
           <li role="separator" className="divider"></li>
-          <li><a className="mobile-link" onClick={logout}>Logout</a></li>
+          <li><a className="mobile-link" onClick={logout}><i className="fa fa-sign-out" aria-hidden="true" style={{marginRight: "4px"}}></i>Logout</a></li>
         </ul>
       </div>
     );
