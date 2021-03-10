@@ -20,6 +20,7 @@
     "connected-react-router": "^6.9.1",
     "env-cmd": "^10.1.0",
     "font-awesome": "^4.4.0",
+    "jquery": "^3.6.0",
     "lodash": "^4.17.21",
     "lucene-query-parser": "^1.2.0",
     "normalize.css": "^8.0.1",
