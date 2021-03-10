@@ -35,39 +35,41 @@
 
 .kgs-paging button {
     flex: none;
-    background-color: var(--background-color-2);
-    border-color: var(--background-color-2);
+    background: transparent;
+    color: var(--color-2);
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+    -webkit-box-shadow: none;
     padding: 5px 15px;
-    color: var(--link-highlight-color);
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none;    
-    -webkit-transition: -webkit-box-shadow 0.2s ease-in;
-    transition: -webkit-box-shadow 0.2s ease-in;
-    -o-transition: box-shadow 0.2s ease-in;
-    transition: box-shadow 0.2s ease-in;
-    transition: box-shadow 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
+    user-select: none;  
     font-size: 22px;
     font-weight: normal;
 }
 
-.kgs-paging button.is-active {
-    color: white;
-    background-color: var(--link-highlight-color);
-    border-color: var(--link-highlight-color);
-}
-
-.kgs-paging button[disabled] {
-    background-color: transparent;
-    border-color: transparent;
-}
-
-
 .kgs-paging button:not([disabled]):hover,
-.kgs-paging button:not([disabled]):focus  {
-    border-color:var(--link-highlight-color)
+.kgs-paging button:not([disabled]):focus {
+    color: var(--color-20);
+    font-weight: bold;
+}
+
+
+.kgs-paging button.is-active,
+.kgs-paging button.is-active:hover,
+.kgs-paging button.is-active:focus {
+    color: var(--link-highlight-color);
+    /*color: color: var(--color-20); */
+    font-weight: bold;
+}
+
+.kgs-paging button[disabled],
+.kgs-paging button[disabled]:hover,
+.kgs-paging button[disabled]:focus {
+    color: var(--color-21);
 }
 
 .kgs-paging button + button {
