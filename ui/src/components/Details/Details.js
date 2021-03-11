@@ -17,24 +17,19 @@
 import React from "react";
 import { Text } from "../Text/Text";
 import "./Details.css";
-
-
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export class Details extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       collapsed: true
     };
-    this.handleToggle = this.handleToggle.bind(this);
-    this.handleClose = this.handleClose.bind(this);
   }
-  handleToggle() {
-    this.setState(state => ({ collapsed: !state.collapsed }));
-  }
-  handleClose() {
-    this.setState(() => ({ collapsed: true }));
-  }
+
+  handleToggle = () => this.setState(state => ({ collapsed: !state.collapsed }));
+
+  handleClose = () => this.setState({ collapsed: true });
+
   render() {
     const { toggleLabel, content, asPopup } = this.props;
 
@@ -46,7 +41,7 @@ export class Details extends React.Component {
     return (
       <span className="field-details">
         <button className={className} onClick={this.handleToggle}>
-          <i className="fa fa-exclamation-circle"></i>
+          <FontAwesomeIcon icon="exclamation-circle" />
           {toggleLabel && (
             <span>{toggleLabel}</span>
           )}
@@ -56,7 +51,9 @@ export class Details extends React.Component {
             {!this.state.collapsed && (
               <div className="field-details__panel">
                 <Text content={content} isMarkdown={true} />
-                <button className="field-details__close-button" onClick={this.handleClose} title="close"><i className="fa fa-2x fa-close"></i></button>
+                <button className="field-details__close-button" onClick={this.handleClose} title="close">
+                  <FontAwesomeIcon icon="times" size="2x" />
+                </button>
               </div>
             )}
           </div>
@@ -64,7 +61,9 @@ export class Details extends React.Component {
           <div className={`popup ${this.state.collapsed ? "" : "show"}`}>
             <div className="field-details__panel">
               <Text content={content} isMarkdown={true} />
-              <button className="field-details__close-button" onClick={this.handleClose} title="close"><i className="fa fa-2x fa-close"></i></button>
+              <button className="field-details__close-button" onClick={this.handleClose} title="close">
+                <FontAwesomeIcon icon="times" size="2x" />
+              </button>
             </div>
           </div>
         }

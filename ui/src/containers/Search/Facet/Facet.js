@@ -15,6 +15,7 @@
  */
 
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import "./Facet.css";
 
@@ -45,7 +46,7 @@ class FacetCheckbox extends React.Component {
 
     return (
       <div className={`kgs-facet-checkbox ${checked?"is-active":""}`} tabIndex="-1" onClick={this.handleClick}  onKeyDown={this.handleKeyDown} >
-        <input type="checkbox" defaultChecked={checked} {...inputProps} />
+        <input type="checkbox" defaultChecked={checked} {...inputProps} />{checked?<FontAwesomeIcon icon="check"/>:null}
         <div className="kgs-facet-checkbox__text">{label}</div>
         <div className="kgs-facet-checkbox__count">{count}</div>
       </div>
@@ -234,6 +235,8 @@ class FilteredFacetList extends React.PureComponent {
             onFocus={this.handleFocus}
             value={this.state.filter }
             placeholder={(!dropdownOpen)?"add " + label.toLowerCase() + " filters":""} />
+          <FontAwesomeIcon icon="filter" className="kgs-filtered-facet_filter_icon" />
+          <FontAwesomeIcon icon="chevron-down" className="kgs-filtered-facet_filter_dropdown_icon"/>
           <input style={{display:"none"}} type="text" ref={ref=>this.hiddenInputRef = ref}/>
         </div>
         {dropdownOpen && (filteredOptionsList.length || this.state.filter) && (
@@ -287,7 +290,9 @@ class HierarchicalFacetListItem extends React.Component {
     return (
       <div className={`kgs-collapsible-facet ${this.state.isCollapsed?"is-collapsed":""} ${this.props.item.hasAnyChildChecked?"has-any-child-active":""}`}>
         <div className="kgs-collapsible-facet__header">
-          <button className="kgs-collapsible-facet__button" onClick={this.onCollapseToggle} title={`${this.state.isCollapsed?"expand":"collapse"}`}><i className="fa fa-chevron-down"></i></button>
+          <button className="kgs-collapsible-facet__button" onClick={this.onCollapseToggle} title={`${this.state.isCollapsed?"expand":"collapse"}`}>
+            <FontAwesomeIcon icon="chevron-down" />
+          </button>
           <FacetCheckbox
             name = { item.name }
             label = { item.label }

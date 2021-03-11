@@ -14,14 +14,14 @@
 *   limitations under the License.
 */
 
+import React from "react";
+import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { ConnectedRouter } from "connected-react-router";
 import { store, history } from "./store";
-import React from "react";
-import ReactDOM from "react-dom";
 import App from "./containers/App/App";
+import "./services/IconsImport";
 import "normalize.css/normalize.css";
-import "font-awesome/css/font-awesome.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "./index.css";

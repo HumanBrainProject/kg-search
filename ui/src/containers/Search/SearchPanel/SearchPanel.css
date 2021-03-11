@@ -86,13 +86,6 @@
     position: absolute;
     opacity: 1;
     margin: 15px 0 0 15px;
-}
-
-.kgs-search-panel  .kg-search-bar__icon:before {
-    content: "\f002";
-    background: none;
-    font-family: FontAwesome;
-    font-size: 2em;
     color: var(--link-highlight-color);
 }
 

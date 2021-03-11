@@ -17,6 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "./CopyToClipboardButton.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const CopyToClipboardButton = props => {
 
@@ -72,7 +73,7 @@ export const CopyToClipboardButton = props => {
     confirmationText = props.confirmationText;
   }
 
-  let iconClassName = "fa fa-clipboard";
+  let iconClassName = "clipboard";
   if (props.icon) {
     iconClassName = props.icon;
   }
@@ -81,11 +82,11 @@ export const CopyToClipboardButton = props => {
   let text = null;
   if (props.text) {
     if (props.icon) {
-      icon = <i className={iconClassName}></i>;
+      icon = <FontAwesomeIcon icon={iconClassName} />;
     }
     text = <span>{props.text}</span>;
   } else {
-    icon = <i className={iconClassName}></i>;
+    icon = <FontAwesomeIcon icon={iconClassName} />;
   }
 
   const classNames = ["kgs-copy-to-clipboard", props.className].join(" ");

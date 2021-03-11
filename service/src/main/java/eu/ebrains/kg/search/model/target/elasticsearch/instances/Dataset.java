@@ -5,7 +5,6 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
-import eu.ebrains.kg.search.utils.ESHelper;
 import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @MetaInfo(name = "Dataset", identifier = "minds/core/dataset/v1.0.0/search", defaultSelection = true, order = 2)
-@RibbonInfo(content = "Downloadable Data", aggregation = "count", dataField = "search:files", singular = "file", plural = "files", icon = "<i class=\"fa fa-download\" aria-hidden=\"true\"></i>")
+@RibbonInfo(content = "Downloadable Data", aggregation = "count", dataField = "search:files", singular = "file", plural = "files", icon = "download")
 public class Dataset implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Dataset");
@@ -35,19 +34,19 @@ public class Dataset implements TargetInstance {
     @FieldInfo(label = "Contributors", separator = "; ", layout = FieldInfo.Layout.HEADER, type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true)
     private List<TargetInternalReference> contributors;
 
-    @FieldInfo(label = "Download Dataset", isButton = true, termsOfUse = true, icon="fa fa-download")
+    @FieldInfo(label = "Download Dataset", isButton = true, termsOfUse = true, icon="download")
     private TargetExternalReference zip;
 
-    @FieldInfo(label = "Cite dataset", isButton = true, markdown = true, icon="fa fa-quote-left")
+    @FieldInfo(label = "Cite dataset", isButton = true, markdown = true, icon="quote-left")
     private Value<String> citation;
 
-    @FieldInfo(label = "Data-descriptor", isButton = true, icon="fa fa-sticky-note")
+    @FieldInfo(label = "Data-descriptor", isButton = true, icon="sticky-note")
     private TargetExternalReference dataDescriptor;
 
     @FieldInfo(label = "DOI", hint = "This is the dataset DOI you must cite if you reuse this data in a way that leads to a publication")
     private Value<String> doi;
 
-    @FieldInfo(label= "Access Dataset", markdown = true, isButton = true, termsOfUse = true, icon="fa fa-unlock-alt")
+    @FieldInfo(label= "Access Dataset", markdown = true, isButton = true, termsOfUse = true, icon="unlock")
     private Value<String> useHDG;
 
     @JsonProperty("license_info")

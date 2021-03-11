@@ -14,12 +14,14 @@
     "react-test-renderer": "^17.0.1"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.19",
+    "@fortawesome/free-solid-svg-icons": "^5.9.0",
+    "@fortawesome/react-fontawesome": "^0.1.4",
     "@sentry/browser": "^6.2.1",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "connected-react-router": "^6.9.1",
     "env-cmd": "^10.1.0",
-    "font-awesome": "^4.4.0",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
     "lucene-query-parser": "^1.2.0",

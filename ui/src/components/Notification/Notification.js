@@ -20,6 +20,7 @@ import showdown from "showdown";
 /*import FilterXSS from 'xss';*/
 import xssFilter from "showdown-xss-filter";
 import "./Notification.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const converter = new showdown.Converter({extensions: [xssFilter]});
 
@@ -32,7 +33,7 @@ export const Notification = ({className, show, text}) => {
   const classNames = `kgs-notification ${className?className:""}`;
   return (
     <div className={classNames}>
-      <i className="fa fa-warning fa-2x kgs-notification_warning-icon"></i>
+      <FontAwesomeIcon icon="exlamation-triangle" size="2x" className="kgs-notification_warning-icon" />
       <span className="kgs-notification_text" dangerouslySetInnerHTML={{__html:html}} />
     </div>
   );

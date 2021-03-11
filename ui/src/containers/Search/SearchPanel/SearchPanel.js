@@ -21,6 +21,7 @@ import * as actionsSearch from "../../../actions/actions.search";
 import { help } from "../../../data/help.js";
 import { withFloatingScrollEventsSubscription } from "../../../helpers/withFloatingScrollEventsSubscription";
 import "./SearchPanel.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class SeachPanelBaseComponent extends React.Component {
   constructor(props){
@@ -66,7 +67,7 @@ class SeachPanelBaseComponent extends React.Component {
       <div className={`kgs-search-panel ${isFloating ? " is-fixed-position" : ""}`}>
         <div>
           <div>
-            <i className="fa fa-search kg-search-bar__icon"></i>
+            <FontAwesomeIcon icon="search" size="2x" className="kg-search-bar__icon" />
             <input className="kg-search-bar"
               type="text"
               placeholder="Search (e.g. brain or neuroscience)"
@@ -76,7 +77,7 @@ class SeachPanelBaseComponent extends React.Component {
               onKeyDown={this.handleKeyDown}
               ref={this.textInput} />
             <button type="button" className="kgs-search-panel-help__button" title="Help" onClick={onHelp}>
-              <i className="fa fa-info-circle fa-2x"></i>
+              <FontAwesomeIcon icon="info-circle" size="2x" />
             </button>
           </div>
           <button className="kgs-search-panel-button" onClick={this.handleSearch}>Search</button>

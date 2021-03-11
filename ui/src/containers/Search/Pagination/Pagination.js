@@ -20,6 +20,7 @@ import { connect } from "react-redux";
 import { windowWidth } from "../../../helpers/BrowserHelpers";
 import * as actionsSearch from "../../../actions/actions.search";
 import "./Pagination.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class PageLinkButton extends React.PureComponent {
 
@@ -34,7 +35,11 @@ class PageLinkButton extends React.PureComponent {
     const next = name === "next";
     const ellipsis = name === "ellipsis";
     return (
-      <button className={`kgs-page-link ${previous?" is-previous":""}${next?" is-next":""}${ellipsis?" is-ellipsis":""}${active?" is-active":""}`} onClick={this.onClick} disabled={readOnly}>{title}</button>
+      <button className={`kgs-page-link ${ellipsis?" is-ellipsis":""}${active?" is-active":""}`} onClick={this.onClick} disabled={readOnly}>
+        {previous && <FontAwesomeIcon icon="chevron-left" className="is-previous" />}
+        {!previous && !next && title}
+        {next && <FontAwesomeIcon icon="chevron-right" className="is-next" />}
+      </button>
     );
   }
 }

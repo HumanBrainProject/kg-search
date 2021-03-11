@@ -166,7 +166,7 @@
           "https://schema.hbp.eu/searchUi/singular": "file"
         }
       },
-      "https://schema.hbp.eu/searchUi/icon": "<i class=\"fa fa-download\" aria-hidden=\"true\"></i>"
+      "https://schema.hbp.eu/searchUi/icon": "download"
     },
     "http://schema.org/identifier": "minds/core/dataset/v1.0.0/search",
     "fields": {
@@ -668,7 +668,7 @@
           "https://schema.hbp.eu/searchUi/singular": "dataset"
         }
       },
-      "https://schema.hbp.eu/searchUi/icon": "<i class=\"fa fa-download\" aria-hidden=\"true\"></i>"
+      "https://schema.hbp.eu/searchUi/icon": "download"
     },
     "http://schema.org/identifier": "minds/core/placomponent/v1.0.0/search",
     "fields": {

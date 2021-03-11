@@ -88,18 +88,6 @@
     transform: translateY(-5px);
 }
 
-.kgs-paging button.is-previous, 
-.kgs-paging button.is-next {
-    font-family: FontAwesome;
-}
-.kgs-paging button.is-previous:before {
-    content: "\f053";
-} 
-
-.kgs-paging button.is-next:before {
-    content: "\f054";
-}
-
 @media (min-width: 576px) {
     .kgs-paging button.is-previous, 
     .kgs-paging button.is-next {

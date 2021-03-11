@@ -20,7 +20,7 @@ import showdown from "showdown";
 /*import FilterXSS from 'xss';*/
 import xssFilter from "showdown-xss-filter";
 import "./InfoPanel.css";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export class InfoPanel extends React.Component {
   onClose = e => {
     if (this.wrapperRef && !this.wrapperRef.contains(e.target)) {
@@ -42,7 +42,7 @@ export class InfoPanel extends React.Component {
           <div className="kgs-info__container">
             <span className="kgs-info__content" dangerouslySetInnerHTML={{__html:html}} />
             <button className="kgs-info__closeButton" onClick={onClose}>
-              <i className="fa fa-close" />
+              <FontAwesomeIcon icon="times" />
             </button>
           </div>
         </div>

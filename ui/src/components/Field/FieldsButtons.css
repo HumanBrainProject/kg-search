@@ -119,16 +119,6 @@
   margin: 10px 20px;
 }
 
-.kgs-fields-buttons .kgs-cite .kgs-cite-content i.fa-quote-left {
-
-}
-
-.kgs-fields-buttons .kgs-cite .kgs-cite-content i.fa-quote-right {
-  position: absolute;
-  bottom: 0;
-  right: 10px;
-}
-
 .kgs-fields-buttons .kgs-cite-clipboard-button {
   position: absolute;
   right: 25px;

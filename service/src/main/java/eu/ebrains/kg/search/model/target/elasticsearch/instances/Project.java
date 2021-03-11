@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @MetaInfo(name="Project", identifier = "minds/core/placomponent/v1.0.0/search", order=1)
-@RibbonInfo(content="Datasets", aggregation="count", dataField="search:datasets", singular="dataset", plural="datasets", icon="<i class=\"fa fa-download\" aria-hidden=\"true\"></i>")
+@RibbonInfo(content="Datasets", aggregation="count", dataField="search:datasets", singular="dataset", plural="datasets", icon="download")
 public class Project implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Project");

@@ -58,6 +58,11 @@
     color: var(--color-8);
 }
 
+.kgs-instance-content-disclaimer  a{
+    color: var(--link-color-1)
+}
+
+
 .kgs-instance-container .kgs-footer .kgs-select select {
     background-color: var(--background-color-1);
 }

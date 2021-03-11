@@ -15,6 +15,7 @@
 */
 
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { history } from "../../store";
 import { getTags, getTitle } from "../../helpers/InstanceHelper";
@@ -36,7 +37,7 @@ class BackLinkButton extends React.Component {
       return null;
     }
     return (
-      <button className="kgs-container__backButton" onClick={this.onClick}><i className="fa fa-chevron-left"></i>&nbsp;{history.location.state.title}</button>
+      <button className="kgs-container__backButton" onClick={this.onClick}><FontAwesomeIcon icon="chevron-left" />&nbsp;{history.location.state.title}</button>
     );
   }
 }

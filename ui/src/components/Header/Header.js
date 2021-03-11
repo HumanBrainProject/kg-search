@@ -17,9 +17,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export class Header extends React.Component {
   render() {
-    const { location, SignInComponent } = this.props;
+    const { location, SignInComponent, onClearInstances } = this.props;
+
+    const backToSearch = location => {
+      onClearInstances();
+      return { ...location, pathname: "/" };
+    };
+
     return (
       <nav className="navbar navbar-expand-lg navbar-light kgs-navbar">
         <div className="container-fluid">
@@ -27,12 +34,12 @@ export class Header extends React.Component {
             <img src="/static/img/ebrains_logo.svg" alt="ebrains" height="100" />
           </a>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <i className="fa fa-bars" aria-hidden="true"></i>
+            <FontAwesomeIcon icon="bars" />
           </button>
 
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto">
-              {location.pathname.startsWith("/instances") && <li className="nav-item"><Link to="/">Search</Link></li>}
+              {location.pathname.startsWith("/instances") && <li className="nav-item"><Link to={location => backToSearch(location)}>Search</Link></li>}
               <li className="nav-item">
                 <a href="https://ebrains.eu/services/data-knowledge/share-data"  className="mobile-link" rel="noopener noreferrer">Share data</a>
               </li>

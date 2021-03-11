@@ -17,10 +17,14 @@
 import { connect } from "react-redux";
 import Header from "../../components/Header/Header";
 import { SignIn } from "../SignIn/SignIn";
+import * as actionsInstances from "../../actions/actions.instances";
 
 export default connect(
   state => ({
     location: state.router.location,
     SignInComponent: SignIn
+  }),
+  dispatch => ({
+    onClearInstances: () => dispatch(actionsInstances.clearAllInstances())
   })
 )(Header);

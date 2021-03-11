@@ -16,8 +16,9 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export const Icon = ({className, title, url, inline}) => {
+const Icon = ({className, title, url, inline}) => {
   if (url) {
     return (
       <img className={className?className:null} src={url} alt={title} width="100%" height="100%" />
@@ -29,7 +30,7 @@ export const Icon = ({className, title, url, inline}) => {
     );
   }
   return (
-    <i className={`fa fa-tag ${className?className:null}`} />
+    <FontAwesomeIcon icon="tag" className={className?className:null} />
   );
 };
 

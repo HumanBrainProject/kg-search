@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 import "./BgError.css";
 import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export class BgError extends React.PureComponent {
   onRetry = () => {
     const { retryAction, onAction } = this.props;
@@ -40,7 +40,7 @@ export class BgError extends React.PureComponent {
     const html = converter.makeHtml(message);
     return (
       <div className="kgs-bg-error">
-        <i className="fa fa-ban fa-5x kgs-bg-error-icon"></i><br/>
+        <FontAwesomeIcon icon="ban" className="kgs-bg-error-icon" size="5x"/><br/>
         <span className="kgs-bg-error-message" dangerouslySetInnerHTML={{__html:html}} />
         <div className="kgs-bg-error-navigation">
           {cancelLabel && (

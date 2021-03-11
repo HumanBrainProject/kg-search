@@ -19,7 +19,6 @@ import { connect } from "react-redux";
 import * as actionsGroups from "../../actions/actions.groups";
 import * as actionsInstances from "../../actions/actions.instances";
 import * as actionsDefinition from "../../actions/actions.definition";
-import { history } from "../../store";
 import { ImagePreviews } from "../Image/ImagePreviews";
 import { ImagePopup } from "../Image/ImagePopup";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
@@ -75,10 +74,6 @@ export const Preview = connect(
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
     fetch: (group, id) => dispatch(actionsInstances.loadPreview(id)),
-    setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance()),
-    onGoHome: path => {
-      dispatch(actionsInstances.clearAllInstances());
-      history.push(path);
-    }
+    setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance())
   })
 )(InstanceContainer);

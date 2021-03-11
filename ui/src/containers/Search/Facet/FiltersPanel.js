@@ -16,6 +16,7 @@
 
 import React from "react";
 import { connect } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as actionsSearch from "../../../actions/actions.search";
 import { Facet } from "./Facet";
 
@@ -46,7 +47,10 @@ class FiltersPanelBase extends React.Component {
     return (
       <div className="kgs-filters collapsible">
         <div className="kgs-filters__header" >
-          <div className="kgs-filters__title" ><button type="button" className={`kgs-filters__toggle ${this.state.collapsed?"":"in"} ${hasFilters?"hasFilters":""}`}><i className="fa fa-chevron-right" onClick={this.toggleFilters}></i></button> Filters </div>
+          <div className="kgs-filters__title" >
+            <button type="button" className={`kgs-filters__toggle ${this.state.collapsed?"":"in"} ${hasFilters?"hasFilters":""}`} onClick={this.toggleFilters}>
+              <FontAwesomeIcon icon="chevron-right" />
+            </button> Filters </div>
           <div className= "kgs-filters__reset" >
             <button type="button" className="kgs-filters__reset-button" onClick={onReset}>Reset</button>
           </div>

@@ -94,7 +94,8 @@ const clearAllInstances = state => {
     ...state,
     currentInstance: null,
     previousInstances: [],
-    image: null
+    image: null,
+    error: null
   };
 };
 

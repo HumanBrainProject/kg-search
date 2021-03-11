@@ -100,11 +100,6 @@ main button[disabled] * {
     cursor: default;
 }
 
-/* main a,
-main a:visited {
-    color: var(--link-color-1);
-} */
-
 main a:hover,
 main a:focus,
 main a:active {

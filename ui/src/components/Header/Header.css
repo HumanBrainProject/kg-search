@@ -19,7 +19,7 @@
   background-color: transparent;
   border: none;
   margin-bottom: 0;
-  padding: 0 var(--site-margin);
+  padding: 0 var(--site-margin) 0 0;
 }
   
 .kgs-navbar a {

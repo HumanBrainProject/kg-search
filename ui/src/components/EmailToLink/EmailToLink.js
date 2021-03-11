@@ -17,11 +17,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "./EmailToLink.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export const EmailToLink = ({className, title = "Send search link by email", text, icon = "fa fa-envelope-o", link}) => {
+const EmailToLink = ({className, title = "Send search link by email", text, icon = "envelope", link}) => {
   const classNames = ["kgs-email-link", className].join(" ");
   return (
-    <a className={classNames} href={link} title={title}><i className={icon}></i><span>{text}</span></a>
+    <a className={classNames} href={link} title={title}>
+      <FontAwesomeIcon icon={icon} /><span>{text}</span>
+    </a>
   );
 };
 

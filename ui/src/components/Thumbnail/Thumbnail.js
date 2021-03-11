@@ -16,6 +16,7 @@
 
 import React from "react";
 import "./Thumbnail.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const getImage = url => {
   return new Promise((resolve, reject) => {
@@ -103,7 +104,7 @@ export class Thumbnail extends React.Component {
       }
       return (
         <span className="fa-stack fa-1x kgs-thumbnail--panel">
-          <i className="fa fa-file-o fa-stack-1x"></i>
+          <FontAwesomeIcon icon="file" />
         </span>
       );
     }
@@ -116,19 +117,19 @@ export class Thumbnail extends React.Component {
               <div className="kgs-thumbnail--image">
                 <img src={url} alt={alt} />
                 {isAnimated?
-                  <i className="fa fa-play kgs-thumbnail--zoom-dynamic"></i>
+                  <FontAwesomeIcon icon="play" className="kgs-thumbnail--zoom-dynamic" />
                   :
-                  <i className="fa fa-search kgs-thumbnail--zoom-static"></i>
+                  <FontAwesomeIcon icon="search" className="kgs-thumbnail--zoom-static" />
                 }
               </div>
             </span>
             :
             <span className="fa-stack fa-1x kgs-thumbnail--panel">
-              <i className="fa fa-file-image-o fa-stack-1x"></i>
+              <FontAwesomeIcon icon="fileImage"/>
               {isAnimated?
-                <i className="fa fa-play fa-stack-1x kgs-thumbnail--zoom-dynamic"></i>
+                <FontAwesomeIcon icon="play" className="kgs-thumbnail--zoom-dynamic"/>
                 :
-                <i className="fa fa-search fa-stack-1x kgs-thumbnail--zoom-static"></i>
+                <FontAwesomeIcon icon="search" className="kgs-thumbnail--zoom-static"/>
               }
             </span>
           }

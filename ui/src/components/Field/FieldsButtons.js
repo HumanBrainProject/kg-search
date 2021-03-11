@@ -20,9 +20,9 @@ import ReactPiwik from "react-piwik";
 import { Text } from "../Text/Text";
 import { CopyToClipboardButton } from "../CopyToClipboard/CopyToClipboardButton";
 import { termsOfUse } from "../../data/termsOfUse.js";
-
-
 import "./FieldsButtons.css";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class Download extends React.PureComponent {
 
@@ -47,7 +47,7 @@ class Download extends React.PureComponent {
             return (
               <div className="kgs-download-multiple" key={el.url}>
                 <span>
-                  <i className="fa fa-file-o"></i>
+                  <FontAwesomeIcon icon="file" />
                   <a href={el.url} onClick={this.handleDownload(el.url)}>{label}</a>
                 </span>
               </div>
@@ -56,7 +56,7 @@ class Download extends React.PureComponent {
           :
           <div>
             <span>
-              <i className="fa fa-2x fa-file-o"></i>
+              <FontAwesomeIcon icon="file" />&nbsp;
               <a href={data.url} onClick={this.handleDownload(data.url)}>{data.value}</a>
             </span>
           </div>
@@ -80,7 +80,7 @@ class Cite extends React.PureComponent {
 
     return (
       <React.Fragment>
-        <CopyToClipboardButton className="kgs-cite-clipboard-button" icon="fa fa-clipboard" title="Copy text to clipboard" confirmationText="text copied to clipoard" content={content} />
+        <CopyToClipboardButton className="kgs-cite-clipboard-button" icon="clipboard" title="Copy text to clipboard" confirmationText="text copied to clipoard" content={content} />
         <div className="kgs-cite">
           <div className="kgs-cite-content">
             <Text content={content} isMarkdown={true} />
@@ -111,7 +111,7 @@ class Button extends React.PureComponent {
     const [name, type] = value.split(" ");
     return (
       <button type="button" className={`btn kgs-fields-buttons__button ${active?"is-active":""}`} onClick={this.handleClick}>
-        <i className={icon}></i>{name}{type?(<span>{type}</span>):null}
+        <FontAwesomeIcon icon={icon} />&nbsp;{name}{type?(<span>{type}</span>):null}
       </button>
     );
   }
@@ -144,7 +144,9 @@ class Content extends React.PureComponent {
             :
             <Cite content={value} />
           }
-          <button className="kgs-field-fields-buttons__close-button" onClick={this.handleClose} title="close"><i className="fa fa-2x fa-close"></i></button>
+          <button className="kgs-field-fields-buttons__close-button" onClick={this.handleClose} title="close">
+            <FontAwesomeIcon icon="times" size="2x" />
+          </button>
         </div>
       </div>
     );
