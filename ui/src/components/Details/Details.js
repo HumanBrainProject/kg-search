@@ -14,62 +14,55 @@
 *   limitations under the License.
 */
 
-import React from "react";
+import React, { useState } from "react";
 import { Text } from "../Text/Text";
 import "./Details.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-export class Details extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      collapsed: true
-    };
+
+export const Details = ({ toggleLabel, content, asPopup }) => {
+  const [collapsed, setCollapsed] = useState(true);
+
+  const handleToggle = () => setCollapsed(isCollapsed => !isCollapsed);
+
+  const handleClose = () => setCollapsed(true);
+
+  if (!content) {
+    return null;
   }
 
-  handleToggle = () => this.setState(state => ({ collapsed: !state.collapsed }));
-
-  handleClose = () => this.setState({ collapsed: true });
-
-  render() {
-    const { toggleLabel, content, asPopup } = this.props;
-
-    if (!content) {
-      return null;
-    }
-
-    const className = `toggle ${this.state.collapsed ? "" : "in"}`;
-    return (
-      <span className="field-details">
-        <button className={className} onClick={this.handleToggle}>
-          <FontAwesomeIcon icon="exclamation-circle" />
-          {toggleLabel && (
-            <span>{toggleLabel}</span>
-          )}
-        </button>
-        {!asPopup ?
-          <div className="collapsible">
-            {!this.state.collapsed && (
-              <div className="field-details__panel">
-                <Text content={content} isMarkdown={true} />
-                <button className="field-details__close-button" onClick={this.handleClose} title="close">
-                  <FontAwesomeIcon icon="times" size="2x" />
-                </button>
-              </div>
-            )}
-          </div>
-          :
-          <div className={`popup ${this.state.collapsed ? "" : "show"}`}>
+  const className = `toggle ${collapsed ? "" : "in"}`;
+  return (
+    <span className="field-details">
+      <button className={className} onClick={handleToggle}>
+        <FontAwesomeIcon icon="exclamation-circle" />
+        {toggleLabel && (
+          <span>{toggleLabel}</span>
+        )}
+      </button>
+      {!asPopup ?
+        <div className="collapsible">
+          {!collapsed && (
             <div className="field-details__panel">
               <Text content={content} isMarkdown={true} />
-              <button className="field-details__close-button" onClick={this.handleClose} title="close">
+              <button className="field-details__close-button" onClick={handleClose} title="close">
                 <FontAwesomeIcon icon="times" size="2x" />
               </button>
             </div>
+          )}
+        </div>
+        :
+        <div className={`popup ${collapsed ? "" : "show"}`}>
+          <div className="field-details__panel">
+            <Text content={content} isMarkdown={true} />
+            <button className="field-details__close-button" onClick={handleClose} title="close">
+              <FontAwesomeIcon icon="times" size="2x" />
+            </button>
           </div>
-        }
-      </span>
-    );
-  }
-}
+        </div>
+      }
+    </span>
+  );
+
+};
 
 export default Details;

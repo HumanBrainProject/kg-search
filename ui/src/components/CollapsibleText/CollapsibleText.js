@@ -14,41 +14,31 @@
 *   limitations under the License.
 */
 
-import React from "react";
+import React, { useState } from "react";
 import { Text } from "../Text/Text";
 import "./CollapsibleText.css";
 
-export class CollapsibleText extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      collapsed: true,
-    };
-    this.handleClick = this.handleClick.bind(this);
-  }
-  handleClick() {
-    this.setState(state => ({ collapsed: !state.collapsed }));
+export const CollapsibleText = ({content, isMarkdown} ) => {
+  const [collapsed, setCollapsed] = useState(true);
+
+  const handleClick = () => setCollapsed(isCollapsed => !isCollapsed);
+
+  if (!content) {
+    return null;
   }
 
-  render() {
-    const {content, isMarkdown} = this.props;
-
-    if (!content) {
-      return null;
-    }
-
-    const className = `collapse ${this.state.collapsed?"":"in"}`;
-    return (
-      <span className="field-text collapsible">
-        <span className={className}>
-          <Text content={content} isMarkdown={isMarkdown} />
-        </span>
-        {this.state.collapsed && (
-          <button onClick={this.handleClick}>more...</button>
-        )}
+  const className = `collapse ${collapsed?"":"in"}`;
+  return (
+    <span className="field-text collapsible">
+      <span className={className}>
+        <Text content={content} isMarkdown={isMarkdown} />
       </span>
-    );
-  }
-}
+      {collapsed && (
+        <button onClick={handleClick}>more...</button>
+      )}
+    </span>
+  );
+
+};
 
 export default CollapsibleText;

@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import React from "react";
+import React, { useState } from "react";
 import ReactPiwik from "react-piwik";
 
 import { Text } from "../Text/Text";
@@ -24,163 +24,125 @@ import "./FieldsButtons.css";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-class Download extends React.PureComponent {
+const Download = ({data, showTermsOfUse, isListOfUrl}) => {
 
-  handleClick = () => {
-    const {field, onClick} = this.props;
-
-    typeof onClick === "function" && onClick(field);
-  };
-
-  handleDownload = url => e => {
+  const handleDownload = url => e => {
     e.stopPropagation();
     ReactPiwik.push(["trackLink", url, "download"]);
+  };
+
+  return (
+    <div className="kgs-download">
+      {isListOfUrl ?
+        data.map(el => {
+          const label = el.value || el.url.split("container=")[1] || el.url;
+          return (
+            <div className="kgs-download-multiple" key={el.url}>
+              <span>
+                <FontAwesomeIcon icon="file" />
+                <a href={el.url} onClick={handleDownload(el.url)}>{label}</a>
+              </span>
+            </div>
+          );
+        })
+        :
+        <div>
+          <span>
+            <FontAwesomeIcon icon="file" />&nbsp;
+            <a href={data.url} onClick={handleDownload(data.url)}>{data.value}</a>
+          </span>
+        </div>
+      }
+      {showTermsOfUse && (
+        <Text content={termsOfUse} isMarkdown={true} />
+      )}
+    </div>
+  );
+};
+
+const Cite = ({content}) => {
+  if (!content) {
+    return null;
   }
 
-  render() {
-    const {data, showTermsOfUse, isListOfUrl} = this.props;
-    return (
-      <div className="kgs-download">
-        {isListOfUrl ?
-          data.map(el => {
-            const label = el.value || el.url.split("container=")[1] || el.url;
-            return (
-              <div className="kgs-download-multiple" key={el.url}>
-                <span>
-                  <FontAwesomeIcon icon="file" />
-                  <a href={el.url} onClick={this.handleDownload(el.url)}>{label}</a>
-                </span>
-              </div>
-            );
-          })
+  return (
+    <React.Fragment>
+      <CopyToClipboardButton className="kgs-cite-clipboard-button" icon="clipboard" title="Copy text to clipboard" confirmationText="text copied to clipoard" content={content} />
+      <div className="kgs-cite">
+        <div className="kgs-cite-content">
+          <Text content={content} isMarkdown={true} />
+        </div>
+      </div>
+    </React.Fragment>
+  );
+};
+
+const Button = ({field, onClick, active}) => {
+
+  const handleClick = () => typeof onClick === "function" && onClick(field);
+
+  if (!field) {
+    return null;
+  }
+
+  const {value, icon} = field.mapping;
+
+  const [name, type] = value.split(" ");
+  return (
+    <button type="button" className={`btn kgs-fields-buttons__button ${active?"is-active":""}`} onClick={handleClick}>
+      <FontAwesomeIcon icon={icon} />&nbsp;{name}{type?(<span>{type}</span>):null}
+    </button>
+  );
+
+};
+
+const Content = ({onClose, field}) => {
+
+  const handleClose = () => typeof onClose === "function" && onClose();
+
+  if (!field) {
+    return null;
+  }
+
+  const isListOfUrl = Array.isArray(field.data) && field.data.some(u => u.url);
+  const {url, value} = field.data;
+  const {termsOfUse} = field.mapping;
+
+  return (
+    <div className="kgs-fields-buttons__details">
+      <div className="kgs-field-fields-buttons__details__panel">
+        {url || isListOfUrl?
+          <Download data={field.data} showTermsOfUse={!!termsOfUse} isListOfUrl={isListOfUrl} />
           :
-          <div>
-            <span>
-              <FontAwesomeIcon icon="file" />&nbsp;
-              <a href={data.url} onClick={this.handleDownload(data.url)}>{data.value}</a>
-            </span>
-          </div>
+          <Cite content={value} />
         }
-        {showTermsOfUse && (
-          <Text content={termsOfUse} isMarkdown={true} />
-        )}
+        <button className="kgs-field-fields-buttons__close-button" onClick={handleClose} title="close">
+          <FontAwesomeIcon icon="times" size="2x" />
+        </button>
       </div>
-    );
+    </div>
+  );
+
+};
+
+export const FieldsButtons = ({className, fields}) => {
+  const [value, setValue] = useState();
+
+  const handleClick = value => setValue(value);
+
+  if (!fields || !fields.length) {
+    return null;
   }
-}
-
-class Cite extends React.PureComponent {
-
-  render() {
-    const {content} = this.props;
-
-    if (!content) {
-      return null;
-    }
-
-    return (
-      <React.Fragment>
-        <CopyToClipboardButton className="kgs-cite-clipboard-button" icon="clipboard" title="Copy text to clipboard" confirmationText="text copied to clipoard" content={content} />
-        <div className="kgs-cite">
-          <div className="kgs-cite-content">
-            <Text content={content} isMarkdown={true} />
-          </div>
-        </div>
-      </React.Fragment>
-    );
-  }
-}
-
-class Button extends React.PureComponent {
-
-  handleClick = () => {
-    const {field, onClick} = this.props;
-
-    typeof onClick === "function" && onClick(field);
-  };
-
-  render() {
-    const {field, active} = this.props;
-
-    if (!field) {
-      return null;
-    }
-
-    const {value, icon} = field.mapping;
-
-    const [name, type] = value.split(" ");
-    return (
-      <button type="button" className={`btn kgs-fields-buttons__button ${active?"is-active":""}`} onClick={this.handleClick}>
-        <FontAwesomeIcon icon={icon} />&nbsp;{name}{type?(<span>{type}</span>):null}
-      </button>
-    );
-  }
-}
-
-class Content extends React.PureComponent {
-
-  handleClose = () => {
-    const {onClose} = this.props;
-
-    typeof onClose === "function" && onClose();
-  };
-
-  render() {
-    const {field } = this.props;
-
-    if (!field) {
-      return null;
-    }
-
-    const isListOfUrl = Array.isArray(field.data) && field.data.some(u => u.url);
-    const {url, value} = field.data;
-    const {termsOfUse} = field.mapping;
-
-    return (
-      <div className="kgs-fields-buttons__details">
-        <div className="kgs-field-fields-buttons__details__panel">
-          {url || isListOfUrl?
-            <Download data={field.data} showTermsOfUse={!!termsOfUse} isListOfUrl={isListOfUrl} />
-            :
-            <Cite content={value} />
-          }
-          <button className="kgs-field-fields-buttons__close-button" onClick={this.handleClose} title="close">
-            <FontAwesomeIcon icon="times" size="2x" />
-          </button>
-        </div>
+  return (
+    <div className={`kgs-fields-buttons ${className?className:""}`}>
+      <div className="kgs-fields-buttons__selectors">
+        {fields.map(field => (
+          <Button key={field.name} field={field} type="button" active={field === value} onClick={handleClick} />
+        ))}
       </div>
-    );
-  }
-}
-
-export class FieldsButtons extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: null
-    };
-  }
-
-  handleClick = value => {
-    this.setState({value: value});
-  }
-
-  render() {
-    const {className, fields} = this.props;
-    if (!fields || !fields.length) {
-      return null;
-    }
-    return (
-      <div className={`kgs-fields-buttons ${className?className:""}`}>
-        <div className="kgs-fields-buttons__selectors">
-          {fields.map(field => (
-            <Button key={field.name} field={field} type="button" active={field === this.state.value} onClick={this.handleClick} />
-          ))}
-        </div>
-        <div className="kgs-fields-buttons__content">
-          <Content field={this.state.value} onClose={this.handleClick} />
-        </div>
+      <div className="kgs-fields-buttons__content">
+        <Content field={value} onClose={handleClick} />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};

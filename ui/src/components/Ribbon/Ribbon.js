@@ -20,26 +20,24 @@ import PropTypes from "prop-types";
 import "./Ribbon.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export const Ribbon = ({className, icon, text, counter, suffix}) => {
-  return (
-    <div className={`ribbon-container ${icon?"ribbon-with-icon":""} ${text?"ribbon-with-text":""}  ${className?className:""}`}>
-      <div className="ribbon-inner-container">
-        <div className="ribbon-inner">
-          <div className="ribbon-inner-content">
-            {!!icon && (
-              <FontAwesomeIcon icon={icon} />
-            )}
-            {!!text && (
-              <div>{text}</div>
-            )}
-            <div className="ribbon-inner-content-framed">{counter} {suffix}</div>
-          </div>
+export const Ribbon = ({className, icon, text, counter, suffix}) => (
+  <div className={`ribbon-container ${icon?"ribbon-with-icon":""} ${text?"ribbon-with-text":""}  ${className?className:""}`}>
+    <div className="ribbon-inner-container">
+      <div className="ribbon-inner">
+        <div className="ribbon-inner-content">
+          {!!icon && (
+            <FontAwesomeIcon icon={icon} />
+          )}
+          {!!text && (
+            <div>{text}</div>
+          )}
+          <div className="ribbon-inner-content-framed">{counter} {suffix}</div>
         </div>
-        <div className="skew r"></div>
       </div>
+      <div className="skew r"></div>
     </div>
-  );
-};
+  </div>
+);
 
 Ribbon.propTypes = {
   className: PropTypes.string,

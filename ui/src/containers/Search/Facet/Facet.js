@@ -14,66 +14,60 @@
  *   limitations under the License.
  */
 
-import React from "react";
+import React, { useRef, useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import "./Facet.css";
 
-class FacetCheckbox extends React.Component {
+const FacetCheckbox = ({onClick, checked, onKeyDown, label, count, hidden}) => {
 
-  handleClick = e => {
+  const handleClick = e => {
     e.stopPropagation();
-    this.props.onClick(!this.props.checked);
-  }
+    onClick(!checked);
+  };
 
-  handleKeyDown = e => {
+  const handleKeyDown = e => {
     if(e.keyCode === 13) {
-      this.handleClick(e);
+      handleClick(e);
     } else {
-      this.props.onKeyDown && this.props.onKeyDown(e);
+      onKeyDown && onKeyDown(e);
     }
+  };
+
+  const inputProps = {};
+
+  if (hidden) {
+    inputProps.tabIndex = -1;
+    inputProps.style = {};
+    inputProps.style.pointerEvents = "none";
   }
 
-  render() {
-    const { label, checked, count, hidden } = this.props;
-    const inputProps = {};
+  return (
+    <div className={`kgs-facet-checkbox ${checked?"is-active":""}`} tabIndex="-1" onClick={handleClick}  onKeyDown={handleKeyDown} >
+      <input type="checkbox" defaultChecked={checked} {...inputProps} />{checked?<FontAwesomeIcon icon="check"/>:null}
+      <div className="kgs-facet-checkbox__text">{label}</div>
+      <div className="kgs-facet-checkbox__count">{count}</div>
+    </div>
+  );
+};
 
-    if (hidden) {
-      inputProps.tabIndex = -1;
-      inputProps.style = {};
-      inputProps.style.pointerEvents = "none";
-    }
+const FacetListItem = ({onChange, item, hidden, onKeyDown}) => {
 
-    return (
-      <div className={`kgs-facet-checkbox ${checked?"is-active":""}`} tabIndex="-1" onClick={this.handleClick}  onKeyDown={this.handleKeyDown} >
-        <input type="checkbox" defaultChecked={checked} {...inputProps} />{checked?<FontAwesomeIcon icon="check"/>:null}
-        <div className="kgs-facet-checkbox__text">{label}</div>
-        <div className="kgs-facet-checkbox__count">{count}</div>
-      </div>
-    );
-  }
-}
+  const onClick = active => onChange(item.value, active);
 
-class FacetListItem extends React.PureComponent {
-
-  onClick = active => this.props.onChange(this.props.item.value, active);
-
-  render() {
-    const { item } = this.props;
-    return (
-      <FacetCheckbox
-        name = { item.name }
-        label = { item.label }
-        checked = { item.checked }
-        count = { item.count }
-        value = { item.value }
-        onClick = { this.onClick }
-        onKeyDown = { this.props.onKeyDown }
-        hidden  = { this.props.hidden }
-      />
-    );
-  }
-}
+  return (
+    <FacetCheckbox
+      name = {item.name}
+      label = {item.label}
+      checked = {item.checked}
+      count = {item.count}
+      value = {item.value}
+      onClick = {onClick}
+      onKeyDown = {onKeyDown }
+      hidden  = {hidden }
+    />
+  );
+};
 
 const FacetList = ({ list, onChange, onKeyDown, onViewChange, viewText, hidden }) => (
   <div className="kgs-facet-list">
@@ -268,47 +262,37 @@ class FilteredFacetList extends React.PureComponent {
   }
 }
 
-class HierarchicalFacetListItem extends React.Component {
+const HierarchicalFacetListItem = ({onChange, item}) => {
+  const childrenRef = useRef();
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
-  constructor(props) {
-    super(props);
-    this.childrenRef = React.createRef();
-    this.state = {isCollapsed: true};
-  }
+  const onClick = active => onChange(item.value, active);
 
-  onClick = active => {
-    this.props.onChange(this.props.item.value, active);
-  };
+  const onCollapseToggle = () => setIsCollapsed(isCollapsed => !isCollapsed);
 
-  onCollapseToggle = () => this.setState(state => ({ isCollapsed: !state.isCollapsed }));
+  const maxHeight = (!isCollapsed && childrenRef && childrenRef.current)?childrenRef.current.scrollHeight + "px":null;
 
-  render() {
-    const { item } = this.props;
-
-    const maxHeight = (!this.state.isCollapsed && this.childrenRef && this.childrenRef.current)?this.childrenRef.current.scrollHeight + "px":null;
-
-    return (
-      <div className={`kgs-collapsible-facet ${this.state.isCollapsed?"is-collapsed":""} ${this.props.item.hasAnyChildChecked?"has-any-child-active":""}`}>
-        <div className="kgs-collapsible-facet__header">
-          <button className="kgs-collapsible-facet__button" onClick={this.onCollapseToggle} title={`${this.state.isCollapsed?"expand":"collapse"}`}>
-            <FontAwesomeIcon icon="chevron-down" />
-          </button>
-          <FacetCheckbox
-            name = { item.name }
-            label = { item.label }
-            checked = { item.checked }
-            count = { item.count }
-            value = { item.value }
-            onClick = { this.onClick }
-          />
-        </div>
-        <div className="kgs-collapsible-facet__children" ref={this.childrenRef} style={{maxHeight: maxHeight}}>
-          <FacetList list={item.children} onChange={this.props.onChange} hidden={this.state.isCollapsed} />
-        </div>
+  return (
+    <div className={`kgs-collapsible-facet ${isCollapsed?"is-collapsed":""} ${item.hasAnyChildChecked?"has-any-child-active":""}`}>
+      <div className="kgs-collapsible-facet__header">
+        <button className="kgs-collapsible-facet__button" onClick={onCollapseToggle} title={`${isCollapsed?"expand":"collapse"}`}>
+          <FontAwesomeIcon icon="chevron-down" />
+        </button>
+        <FacetCheckbox
+          name = {item.name}
+          label = {item.label}
+          checked = {item.checked}
+          count = {item.count}
+          value = {item.value}
+          onClick = {onClick}
+        />
       </div>
-    );
-  }
-}
+      <div className="kgs-collapsible-facet__children" ref={childrenRef} style={{maxHeight: maxHeight}}>
+        <FacetList list={item.children} onChange={onChange} hidden={isCollapsed} />
+      </div>
+    </div>
+  );
+};
 
 const HierarchicalFacetList = ({ list, onChange }) => (
   <div className="kgs-facet-list">
