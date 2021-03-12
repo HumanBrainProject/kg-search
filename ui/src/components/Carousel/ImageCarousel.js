@@ -14,13 +14,16 @@
 *   limitations under the License.
 */
 
-import React from "react";
+import React, { useRef } from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./ImageCarousel.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const ImageCarousel = ({className, width, images, onClick}) => {
+
+  const labelRef = useRef();
+
   const onClickItem = index => {
     typeof onClick === "function" && !Number.isNaN(Number(index)) && images && images.length && index < images.length && onClick(images[index]);
   };
@@ -36,7 +39,7 @@ export const ImageCarousel = ({className, width, images, onClick}) => {
           <div key={src}>
             <img src={src} alt={label?label:""}/>
             {label && (
-              <p className="legend" ref={ref=>this.labelRef = ref}>{label}</p>
+              <p className="legend" ref={labelRef}>{label}</p>
             )}
             {typeof onClick === "function" && hasTarget && (
               <div className={`kgs-image_carousel-icon ${isTargetAnimated?"is-animated":""}`}>
