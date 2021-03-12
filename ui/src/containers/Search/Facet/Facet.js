@@ -20,6 +20,7 @@ import { PaginatedList } from "../../../components/PaginatedList/PaginatedList";
 import { FilteredList } from "../../../components/FilteredList/FilteredList";
 import { Tree } from "../../../components/Tree/Tree";
 import { FacetCheckbox } from "./FacetCheckbox";
+import { Item } from "../../../components/List/List";
 
 import "./Facet.css";
 
@@ -70,10 +71,7 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
         tree: list,
         ItemComponent: FacetCheckbox,
         itemUniqKeyAttribute: "value",
-        onItemClick: item => {
-          console.log(facet.id, !item.checked, item.value);
-          onChange(facet.id, !item.checked, item.value);
-        },
+        onItemClick: item => onChange(facet.id, !item.checked, item.value)
       };
     } else {
       const list = facet.keywords.map(keyword => ({
@@ -109,14 +107,15 @@ export const Facet = ({ facet, onChange, onViewChange }) => {
     break;
   }
   case "exists":
-    Component = FacetCheckbox;
+    Component = Item;
     parameters = {
-      name: facet.id,
-      label: `Has ${facet.fieldLabel}`,
-      count: facet.count,
-      value: !!facet.value,
-      checked: !!facet.value,
-      onClick: active => onChange(facet.id, active)
+      item: {
+        label: `Has ${facet.fieldLabel}`,
+        count: facet.count,
+        checked: !!facet.value
+      },
+      ItemComponent: FacetCheckbox,
+      onClick: item => onChange(facet.id, !item.checked)
     };
     break;
   default:

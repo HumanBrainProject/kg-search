@@ -17,7 +17,7 @@
 import React from "react";
 
 import "./List.css";
-class Item extends React.PureComponent {
+export class Item extends React.PureComponent {
 
   handleClick = e => {
     const { item, onClick } = this.props;
