@@ -94,7 +94,8 @@ const clearAllInstances = state => {
     ...state,
     currentInstance: null,
     previousInstances: [],
-    image: null
+    image: null,
+    error: null
   };
 };
 
@@ -120,11 +121,10 @@ const goBackToInstance = (state, action) => {
     return state;
   }
 
-  const instanceType = action.instanceType;
   const instanceId = action.id;
 
   // no instance reference available in url, unset current instance
-  if (!instanceType || !instanceId) {
+  if (!instanceId) {
     return {
       ...state,
       currentInstance: null,
@@ -134,7 +134,7 @@ const goBackToInstance = (state, action) => {
   }
 
   // instance reference url is already matching current instance, do notthing
-  if (instance && instance._source?.type?.value === instanceType && instance._id === instanceId) {
+  if (instance && instance._id === instanceId) {
     return state;
   }
 
@@ -150,10 +150,10 @@ const goBackToInstance = (state, action) => {
 
   const previousInstances = (state && state.previousInstances instanceof Array)?[...state.previousInstances]:[];
   instance = previousInstances.pop() || null;
-  while(previousInstances.length && instance && !(instance._source?.type?.value === instanceType && instance._id === instanceId))  {
+  while(previousInstances.length && instance && instance._id !== instanceId)  {
     instance = previousInstances.pop();
   }
-  if (instance && instance._source?.type?.value === instanceType && instance._id === instanceId) {
+  if (instance && instance._id === instanceId) {
     return {
       ...state,
       currentInstance: instance,

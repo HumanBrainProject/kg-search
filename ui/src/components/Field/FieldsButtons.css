@@ -1,4 +1,8 @@
 
+.kgs-fields-buttons a {
+  color: var(--link-color-1);
+}
+
 .kgs-fields-buttons .kgs-fields-buttons__button {
   position: relative;
   background-color: var(--button-default-background-color); 
@@ -113,16 +117,6 @@
 .kgs-fields-buttons .kgs-cite .kgs-cite-content .field-markdown {
   display: inline-block;
   margin: 10px 20px;
-}
-
-.kgs-fields-buttons .kgs-cite .kgs-cite-content i.fa-quote-left {
-
-}
-
-.kgs-fields-buttons .kgs-cite .kgs-cite-content i.fa-quote-right {
-  position: absolute;
-  bottom: 0;
-  right: 10px;
 }
 
 .kgs-fields-buttons .kgs-cite-clipboard-button {

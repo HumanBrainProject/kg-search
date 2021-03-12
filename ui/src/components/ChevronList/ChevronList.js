@@ -17,6 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "./ChevronList.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const ListItem = ({ reference, data, itemComponent, onClick }) => {
   const handleClick = (event) => {
@@ -28,7 +29,7 @@ const ListItem = ({ reference, data, itemComponent, onClick }) => {
     <li>
       <button role="link" onClick={handleClick} data-reference={reference}>
         <Component data={data} />
-        <span className="kgs-chevron-list__chevron"><i className="fa fa-chevron-right"></i></span>
+        <span className="kgs-chevron-list__chevron"><FontAwesomeIcon icon="chevron-right" /></span>
       </button>
     </li>
   );

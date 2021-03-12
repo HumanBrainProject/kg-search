@@ -1,0 +1,880 @@
+{
+  "dataStage": "RELEASED",
+  "importantMessage": "This query is executed with a mode thought for query testing only (with throttled performance). Please register your query if you're happy with it. It's easy and you gain speed ;)!",
+  "apiName": "Project",
+  "results": [
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2019-09-18T09:15:18.419Z",
+      "https://schema.hbp.eu/search/description": "This project provides electrophysiological data to study the role played by neuroligin (NLGN)-neurexin (NRXN) connections and gephyrin in regulating signaling between post- and presynaptic processing. \n",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2019-09-18T09:21:14.605Z",
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/bcc37438-f9f9-40f3-aadc-d0fad1489767",
+          "https://schema.hbp.eu/search/name": "Modulation of cortical GABAergic currents by anti-gephyrin intrabodies (scFv-geph NLSC)",
+          "https://schema.hbp.eu/search/identifier": "185144fef27b8ee7ed48c801f0cbb2b0"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/438a1a40-5edd-4922-a1e6-82a9e25542dc",
+          "https://schema.hbp.eu/search/name": "Modulation of cortical GABAergic currents by anti-gephyrin intrabodies (scFv-gephcyto)",
+          "https://schema.hbp.eu/search/identifier": "31d100b53522ba630499cc06ddecf6a6"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/019ec94d-324b-44aa-8a6f-b78f8689b644",
+          "https://schema.hbp.eu/search/name": "Modulation of cortical GABAergic currents by anti-neuroligin 2 (scFvNLG2-645)",
+          "https://schema.hbp.eu/search/identifier": "ef885b1330592c3a06886ed8de567b45"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/cf7a42c6-2faf-4ed7-b2ad-b4f9ffbf207f",
+          "https://schema.hbp.eu/search/name": "Modulation of hippocampal GABAergic currents by anti-gephyrin intrabodies (delta2-188)",
+          "https://schema.hbp.eu/search/identifier": "a59e367315cd7cbcfee42593201adc42"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/9d8a2594-3d2b-496b-a5ba-82365d29172f",
+          "https://schema.hbp.eu/search/name": "Modulation of hippocampal GABAergic currents by anti-gephyrin intrabodies (scFv-geph NLS)",
+          "https://schema.hbp.eu/search/identifier": "bf19d2dceeb5aba0045d5d56a8e62fc4"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Electrophysiological data under neuroligin or gephyrin block",
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/identifier": "07c5807d0d927dcd0980f86024e5208b",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/2260b3bd-3252-46a8-b68a-af95ec4263dd",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-00713_sIPSCs-delta2-188",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-00713_mIPSCs-scFv-geph-NLSC",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-00713_mIPSCs-scFvNLG2-645",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-00713_mIPSCs-scFv-gephcyto",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-00713_sIPSCs-scFv-geph-NLS",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": null,
+      "https://schema.hbp.eu/search/description": "Patch-clamp recordings from cerebellar neurons will be made to assist with constructing advanced Purkinje cell models and stellate cell models. The experiments will be designed to achieve optimal alignment with HBP cerebellar modelling, thus allowing efficient model construction. About 50 neurons will be recorded and analyzed.",
+      "https://schema.hbp.eu/search/lastReleaseAt": null,
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/65a1a3ca-a8e7-4bc0-a60b-3cffc9122b0e",
+          "https://schema.hbp.eu/search/name": "Loose-cell attached patch-clamp recordings from cerebellar granule cells",
+          "https://schema.hbp.eu/search/identifier": "430c8508746cbd9f8f5c91b66ae97316"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/870f5bb4-1afa-490c-8bf8-869d4a18f839",
+          "https://schema.hbp.eu/search/name": "Recordings of cerebellar granule cells current-voltage relations",
+          "https://schema.hbp.eu/search/identifier": "40a8ed8caae4989506d69fd290b67a90"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/6783cede-b5b3-4009-84c7-285b19141eb5",
+          "https://schema.hbp.eu/search/name": "Recordings of cerebellar neuronal firing induced by currents steps",
+          "https://schema.hbp.eu/search/identifier": "5e245cf67a42a14a56bc43913f7bf28a"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/6d413c98-a6ae-4cd4-96ef-b9abfe1a106c",
+          "https://schema.hbp.eu/search/name": "Recordings of excitatory postsynaptic currents from cerebellar neurons",
+          "https://schema.hbp.eu/search/identifier": "a1ba394b5f353a67f9cec3549891d77b"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/54cba01d-c58f-4542-ae68-93a79c29431f",
+          "https://schema.hbp.eu/search/name": "Recordings of excitatory postsynaptic potentials from cerebellar neurons",
+          "https://schema.hbp.eu/search/identifier": "2ea6f32e8dfd644d426b93aac0ae6eec"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/bbb2f462-98f7-4fd9-b4af-ee22d182990d",
+          "https://schema.hbp.eu/search/name": "Recordings of passive cellular parameters of cerebellar neurons",
+          "https://schema.hbp.eu/search/identifier": "077778de710a9192795869a8885525ac"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/bb024285-ab31-48fa-86ff-5450b5e64cd7",
+          "https://schema.hbp.eu/search/name": "Recordings of spontaneous firing of cerebellar interneurons (Golgi cells)",
+          "https://schema.hbp.eu/search/identifier": "4197a2f5d71432349fb37ff3ad429580"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Patch-clamp recordings from cerebellar neurons",
+      "https://schema.hbp.eu/search/publications": [
+        {
+          "https://schema.hbp.eu/search/doi": "10.1523/JNEUROSCI.4897-11.2013",
+          "https://schema.hbp.eu/search/citation": "Cesana, E., Pietrajtis, K., Bidoret, C., Isope, P., D’Angelo, E., Dieudonne, S., & Forti, L. (2013). Granule Cell Ascending Axon Excitatory Synapses onto Golgi Cells Implement a Potent Feedback Circuit in the Cerebellar Granular Layer. Journal of Neuroscience, 33(30), 12430–12446. "
+        }
+      ],
+      "https://schema.hbp.eu/search/identifier": "b6edc1cd1f36e45daf6d7824d7bb2283",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/ad350ba3-274e-4251-ba20-6c9b81488c74",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Angelo_SGA1_1.2.4?prefix=hbp-00810/GapFree",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Angelo_SGA1_1.2.4?prefix=hbp-00810/cell-att",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Angelo_SGA1_1.2.4?prefix=hbp-00810/IV",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Angelo_SGA1_1.2.4?prefix=hbp-00810/CC-step",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Angelo_SGA1_1.2.4?prefix=hbp-00810/EPSP",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Angelo_SGA1_1.2.4?prefix=hbp-00810/VC-ramp",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Angelo_SGA1_1.2.4?prefix=hbp-00810/EPSC",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-09-30T06:58:51.442Z",
+      "https://schema.hbp.eu/search/description": null,
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-09-30T06:58:56.512Z",
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/e174a987-744f-43d2-8b43-3c8cb0a5c13c",
+          "https://schema.hbp.eu/search/name": "Characterization of striatal neurons in Parkinson’s disease patients and healthy individuals using scRNA-seq",
+          "https://schema.hbp.eu/search/identifier": "e174a987-744f-43d2-8b43-3c8cb0a5c13c"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/a4d76158-ba11-4f13-aa4b-49d7c7652ce3",
+          "https://schema.hbp.eu/search/name": "In-depth characterization of striatal neurons in non-human primates using single-cell RNA-seq",
+          "https://schema.hbp.eu/search/identifier": "a4d76158-ba11-4f13-aa4b-49d7c7652ce3"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Cross-species map of striatal neurons",
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/identifier": "0699326f-67b5-47ec-9d6b-83d78f903287",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/0699326f-67b5-47ec-9d6b-83d78f903287",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-d00045_scRNAseq-NHP-Striatum-3031_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-d00046_scRNAseq-HS-Striatum-3032_pub",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-02-18T14:34:04.839Z",
+      "https://schema.hbp.eu/search/description": "Electroencephalography (EEG)-based measures of functional connectivity, complexity, integration, and differentiation, will be developed, tested and compared to assess their accuracy and predictive value for quantifying human conscious states. The metrics will be applied to data gathered across natural and pharmacologically altered states of consciousness.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-02-18T14:34:04.830Z",
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/048c3956-8a2f-4259-a117-47bb2ffbca97",
+          "https://schema.hbp.eu/search/name": "Functional brain complexity changes in humans under the influence of psychedelic low doses of ketamine",
+          "https://schema.hbp.eu/search/identifier": "048c3956-8a2f-4259-a117-47bb2ffbca97"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/bcc4bebb-dbf8-479e-b77f-e2c46f6fabf3",
+          "https://schema.hbp.eu/search/name": "Measures of states of consciousness during attentional and cognitive load",
+          "https://schema.hbp.eu/search/identifier": "bcc4bebb-dbf8-479e-b77f-e2c46f6fabf3"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/087aebb3-60b7-4b9f-a11c-d50655544b15",
+          "https://schema.hbp.eu/search/name": "Sleep deprivation in human electroencephalography (EEG)",
+          "https://schema.hbp.eu/search/identifier": "087aebb3-60b7-4b9f-a11c-d50655544b15"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/1dbda526-175a-43a6-970d-dbe6ddf43fe7",
+          "https://schema.hbp.eu/search/name": "Spontaneous EEG during sleep with intermittent awakenings",
+          "https://schema.hbp.eu/search/identifier": "1dbda526-175a-43a6-970d-dbe6ddf43fe7"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Testing and developing electrophysiological measures of consciousness in humans",
+      "https://schema.hbp.eu/search/publications": [
+        {
+          "https://schema.hbp.eu/search/doi": "https://doi.org/10.1093/sleep/zsz016",
+          "https://schema.hbp.eu/search/citation": "Anikó Kusztor, Liisa Raud, Bjørn E Juel, André S Nilsen, Johan F Storm, Rene J Huster, Sleep deprivation differentially affects subcomponents of cognitive control, Sleep, Volume 42, Issue 4, April 2019, zsz016, https://doi.org/10.1093/sleep/zsz016"
+        },
+        {
+          "https://schema.hbp.eu/search/doi": "https://doi.org/10.1101/586149",
+          "https://schema.hbp.eu/search/citation": " Measures of states of consciousness during attentional and cognitive load\nAndré S. Nilsen, Bjørn E. Juel, Johan F. Storm\nbioRxiv 586149; doi: https://doi.org/10.1101/586149 "
+        },
+        {
+          "https://schema.hbp.eu/search/doi": "https://doi.org/10.1101/508697",
+          "https://schema.hbp.eu/search/citation": "Increased signal diversity/complexity of spontaneous EEG in humans given sub-anaesthetic doses of ketamine\nNadine Farnes, Bjørn E. Juel, André S. Nilsen, Luis G. Romundstad, Johan F. Storm"
+        }
+      ],
+      "https://schema.hbp.eu/search/identifier": "62e1a139-c331-45a1-a1d6-e9c222d3c52d",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/62e1a139-c331-45a1-a1d6-e9c222d3c52d",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_25b4e28a742d4987a7b6f84c0c36512e/hbp-d000024_SleepDeprivation_dev",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_25b4e28a742d4987a7b6f84c0c36512e/hbp-d000025_AttentionalLoad_dev",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_25b4e28a742d4987a7b6f84c0c36512e/hbp-d000026_Ketamine_dev",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_25b4e28a742d4987a7b6f84c0c36512e/hbp-d000027_SleepMornings_dev",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": null,
+      "https://schema.hbp.eu/search/description": "Voltage-clamp recordings of GABAA spontaneous inhibitory post-synaptic currents (sIPSCs) were obtained from juvenile (P21-30) C57Bl6/J male mice and recorded from hippocampal CA1 pyramidal neurons receiving input from parvalbumin positive and cholecystokinin positive (CCK+) interneurons. The dataset contains 2130 individual events recorded from 3 different neurons (expD1-D3).",
+      "https://schema.hbp.eu/search/lastReleaseAt": null,
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/e1c32990-e2ba-4331-981b-0b83ae925c29",
+          "https://schema.hbp.eu/search/name": "sIPSCs from juvenile (P21-30) C57B16/J male mice from hippocampal CA1 pyramidal neurons receiving input from PV+ and CCK+ interneurons",
+          "https://schema.hbp.eu/search/identifier": "fb1dab2cc153f8de099996172ea4d8b8"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Action potential dependent sIPSCs - from juvenile (P21-30) C57Bl6/J male mice - from CA1 pyramidal neurons receiving input from PV+ and CCK+ interneurons",
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/identifier": "c20ad4d76fe97759aa27a0c99bff6710",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/65a37d43-92f9-4d16-b7d7-339466372e82",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Cherubini_RUP_T.1.1.6_nar033?prefix=hbp-00012",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-03-30T11:56:38.748Z",
+      "https://schema.hbp.eu/search/description": "Population imaging markedly increased the size of functional-imaging datasets, shedding new light on the neural basis of inter-individual differences. Analyzing these large data entails new scalability challenges, computational and statistical. For this reason, brain images are typically summarized in a few signals, for instance reducing voxel-level measures with brain atlases or functional modes. A good choice of the corresponding brain networks is important, as most data analyses start from these reduced signals. We contribute finely-resolved atlases of functional modes, comprising from 64 to 1024 networks. These dictionaries of functional modes (DiFuMo) are sampled on millions of functional brain (fMRI) volumes of total size 2.4TB, spanned over 27 studies and many research groups. We demonstrate the benefits of extracting reduced  signals on such fine-grain atlases for classic analysis problems on a wide variety of functional images: stimuli decoding from 12,334 brain responses, standard GLM analysis of fMRI across sessions and individuals, resting-state functional- connectomes biomarkers on different cohorts covering 2,500 individuals, data fidelity –quality of image reconstruction and meta-analysis on > 15,000 statistical maps. In each of these analysis scenarios, we compare the performance of our functional atlases with that of other popular references, and also to traditional voxel-level analysis. Results highlight the importance of high-dimensional “soft” functional atlases, to represent and analyse brain activity while capturing its functional gradients. Analyses on high-dimensional modes achieve similar statistical performance as at the voxel level, but with much reduced computational cost and higher interpretability. Additionally, we provide meaningful names for these modes, based on their anatomical location, to facilitate reporting of results.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-03-30T11:56:38.739Z",
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/164ef5c9-bec5-43c7-b258-80798cb0d57b",
+          "https://schema.hbp.eu/search/name": "DiFuMo atlas (1024 dimensions)",
+          "https://schema.hbp.eu/search/identifier": "164ef5c9-bec5-43c7-b258-80798cb0d57b"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/b8d0ba16-5543-4594-a6f0-ecbacfc9fb04",
+          "https://schema.hbp.eu/search/name": "DiFuMo atlas (128 dimensions) ",
+          "https://schema.hbp.eu/search/identifier": "b8d0ba16-5543-4594-a6f0-ecbacfc9fb04"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/5438792c-ff2a-4554-9f85-af795f870741",
+          "https://schema.hbp.eu/search/name": "DiFuMo atlas (256 dimensions)",
+          "https://schema.hbp.eu/search/identifier": "5438792c-ff2a-4554-9f85-af795f870741"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/2ab064dd-7ac5-44ca-8711-a72435f0672e",
+          "https://schema.hbp.eu/search/name": "DiFuMo atlas (512 dimensions)",
+          "https://schema.hbp.eu/search/identifier": "2ab064dd-7ac5-44ca-8711-a72435f0672e"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/e472a8c7-d9f9-4e75-9d0b-b137cecbc6a2",
+          "https://schema.hbp.eu/search/name": "DiFuMo atlas (64 dimensions)",
+          "https://schema.hbp.eu/search/identifier": "e472a8c7-d9f9-4e75-9d0b-b137cecbc6a2"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Dictionary of Functional Modes (DiFuMo Atlases)",
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/identifier": "d4782861-de31-4b48-bf04-c65c6ac77e5f",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/d4782861-de31-4b48-bf04-c65c6ac77e5f",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000017_DiFuMoAtlases_pub?prefix=128/",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000017_DiFuMoAtlases_pub?prefix=256/",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000017_DiFuMoAtlases_pub?prefix=512/",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000017_DiFuMoAtlases_pub?prefix=1024/",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000017_DiFuMoAtlases_pub?prefix=64/",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": null,
+      "https://schema.hbp.eu/search/description": "Voltage-clamp recordings of GABAA spontaneous inhibitory post-synaptic currents (sIPSCs) were obtained from 3-4 months old wt (B6/SJL) female mice . The dataset contains 701 individual events recorded from 7 different neurons (expB1-B7).",
+      "https://schema.hbp.eu/search/lastReleaseAt": null,
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/48934c56-32d1-4e4f-ae9b-c38c3225d6c4",
+          "https://schema.hbp.eu/search/name": "Spontaneous inhibitory post-synaptic currents recorded from CA1 pyramidal neurons of adult wild type B6/SJL mice",
+          "https://schema.hbp.eu/search/identifier": "b8007a80fc0dccd56797473b45429787"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Action potential dependent sIPSCs - from 3-4 months old wt (B6/SJL) female mice ",
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/identifier": "aab3238922bcc25a6f606eb525ffdc56",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/448e03b4-a26d-4a05-afe7-ac224421798b",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Cherubini_RUP_T1.1.6_nar028?prefix=hbp-00014",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": null,
+      "https://schema.hbp.eu/search/description": "Extracellular electrophysiology recordings from monkey motor and premotor cortex during performance of a reach-to-grasp task. The dataset contains full metadata annotations (in the odML format) and basic python loading routines.\r\n\r\nReferences: \r\nBrochier T, Zehl L, Hao Y, Duret M, Sprenger J ,Denker M, Grün S, Riehle A and (accepted) Massively parallel recordings in macaque motor cortex during an instructed delayed reach-to-grasp task. Scientific Data.\r\nRiehle A, Wirtssohn S, Grün S and Brochier T (2013) Mapping the spatio-temporal structure of motor cortical LFP and spiking activities during reach-to-grasp movements Front. Neural Circuits 7:48. DOI: 10.3389/fncir.2013.00048 \r\n",
+      "https://schema.hbp.eu/search/lastReleaseAt": null,
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/b23a87a2-3079-46ff-9649-d6a521952e4a",
+          "https://schema.hbp.eu/search/name": "Massively parallel multi-electrode recordings of macaque motor cortex during an instructed delayed reach-to-grasp task",
+          "https://schema.hbp.eu/search/identifier": "7f57abb7db2d9afa5b364530311075de"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Massively Parallel Electrophysiology data",
+      "https://schema.hbp.eu/search/publications": [
+        {
+          "https://schema.hbp.eu/search/doi": "10.1038/sdata.2018.55",
+          "https://schema.hbp.eu/search/citation": "Brochier, T., Zehl, L., Hao, Y., Duret, M., Sprenger, J., Denker, M., … Riehle, A. (2018). Massively parallel recordings in macaque motor cortex during an instructed delayed reach-to-grasp task. Scientific Data, 5, 180055. "
+        }
+      ],
+      "https://schema.hbp.eu/search/identifier": "d1f255a373a3cef72e03aa9d980c7eca",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/ff46ca8d-393f-4e5e-8144-447c59d531c8",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000015_multielectrode_grasp_pub",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": null,
+      "https://schema.hbp.eu/search/description": "Voltage-clamp recordings of GABAA spontaneous inhibitory post-synaptic currents (sIPSCs) were obtained from juvenile (P21-30) C57Bl6/J male mice. The dataset contains 267 individual events recorded from 3 different neurons (expA1-A3).",
+      "https://schema.hbp.eu/search/lastReleaseAt": null,
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/8f3a518b-8224-447c-bf41-0da18797d969",
+          "https://schema.hbp.eu/search/name": "Action potential dependent sIPSCs - from juvenile (P21-30) C57Bl6/J male mice",
+          "https://schema.hbp.eu/search/identifier": "679c1e4beb7b5f8d7097f1835480a76f"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Action potential dependent sIPSCs -  from juvenile (P21-30) C57Bl6/J male mice",
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/identifier": "9bf31c7ff062936a96d3c8bd1f8f2ff3",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/100b0350-06aa-404e-98ab-500987270216",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Cherubini_RUP_T.1.1.6_nar032?prefix=hbp-00015",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2019-05-06T15:17:02.481Z",
+      "https://schema.hbp.eu/search/description": "The Infant Brain Atlas is a corrected three-dimensional reconstruction of a single MRI brain scan of a single human infant with a high resolution (1.1 mm isotropic). It includes atlas parcellation, 3D representation of the grey-white matter interface, the overall brain shape, and raw T1w/T2w images.\nThe first version of this atlas (v1.0: female infant, 7.1 weeks old) was published by Kabdebon et al. 2014, in Neuroimage. Since then, a second version of the atlas was released that is based on data from a slightly older infant (v4.0: female infant, 10 weeks old).\n \nIn both versions, the grey-white matter interface was segmented using a semi-automatic segmentation pipeline dedicated to T2-weighted MRI images of the infant brain, followed by manual correction, when local inaccuracies were detected. On the basis of the segmented sulci, 47 anatomical regions were delineated in each hemisphere, using the same principles as the AAL atlas (Automated Anatomical Labelling).\n\nPlease have a look at xxxx to see how to use the atlas.  (--> 'How to' atlas usage )\n \nBesides the raw atlas data, two supplementary datasets that were integrated into the Infant Brain Atlas [v4.0] are provided: \n\n(i) averaged locations of the main cortical sulci and averaged brain depth from the external head surface based on data from 16 infants (age range: 3 - 17 weeks post-term)\n(ii) fibre bundles",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-07-08T16:11:16.441Z",
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/8b40f63b-4be3-4b8d-af6e-01b413d1654b",
+          "https://schema.hbp.eu/search/name": "Corrected 3-D reconstruction and surface parcellation of an infant brain [v1.0]",
+          "https://schema.hbp.eu/search/identifier": "f74bfebb75642794e197521839b127e1"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "The Infant Brain Atlas and supplementary data",
+      "https://schema.hbp.eu/search/publications": [
+        {
+          "https://schema.hbp.eu/search/doi": "10.1016/j.neuroimage.2014.05.046",
+          "https://schema.hbp.eu/search/citation": "Kabdebon, C., Leroy, F., Simmonet, H., Perrot, M., Dubois, J., & Dehaene-Lambertz, G. (2014). Anatomical correlations of the international 10–20 sensor placement system in infants. NeuroImage, 99, 342–356. "
+        }
+      ],
+      "https://schema.hbp.eu/search/identifier": "d9d4f495e875a2e075a1a4a6e1b9770f",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/5af40dbc-afdf-42a2-83d2-f4b09e2f0661",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000046_InfantTemplate_pub",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2019-10-21T13:13:15.617Z",
+      "https://schema.hbp.eu/search/description": "We applied Connectivity-Based Parcellation (CBP) on multimodal MRI data such as fMRI, MACM, and SC in order to reveal the underlying pattern of hippocampal organization based on macro-level features. ",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2019-10-21T13:13:15.607Z",
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/ea328dde-556e-4abf-af21-52c78d30aa63",
+          "https://schema.hbp.eu/search/name": "Functional map of left human hippocampus",
+          "https://schema.hbp.eu/search/identifier": "ea328dde-556e-4abf-af21-52c78d30aa63"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/e1a5c70f-6fb9-43bf-8529-4e969f80422e",
+          "https://schema.hbp.eu/search/name": "Functional map of right human hippocampus ",
+          "https://schema.hbp.eu/search/identifier": "e1a5c70f-6fb9-43bf-8529-4e969f80422e"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Multimodal Parcellations and Extensive Behavioral Profiling Tackling the Hippocampus Gradient",
+      "https://schema.hbp.eu/search/publications": [
+        {
+          "https://schema.hbp.eu/search/doi": "10.1093/cercor/bhy336",
+          "https://schema.hbp.eu/search/citation": "Plachti, A., Eickhoff, S.B., Hoffstaedter, F., Patil, K.R., Laird, A.R., Fox, P.T., Amunts, K., Genon, S. (2019). Multimodal Parcellations and Extensive Behavioral Profiling Tackling the Hippocampus Gradient. Cereb Cortex."
+        }
+      ],
+      "https://schema.hbp.eu/search/identifier": "1f13894e-5fae-4833-9306-332a4739a8ae",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/1f13894e-5fae-4833-9306-332a4739a8ae",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000003_HippocampusFunctionalmap_dev?prefix=functionalmap_left_hippocampus",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000003_HippocampusFunctionalmap_dev?prefix=functionalmap_right_hippocampus",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2019-10-18T07:57:16.582Z",
+      "https://schema.hbp.eu/search/description": "The aim of this project is to compare neuronal activity between mice, monkeys and humans in a task that can be performed by all three species. A figure-ground segregation task was selected, where the visual cortex identifies the foreground features in a visual and suppresses features that belong to the background.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-03-30T10:04:42.376Z",
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/c76ee58e-2187-4b33-ad45-cf1ea7ab0d65",
+          "https://schema.hbp.eu/search/name": "Recordings of spiking activity and local field potentials from Human Visual Cortex V3",
+          "https://schema.hbp.eu/search/identifier": "c76ee58e-2187-4b33-ad45-cf1ea7ab0d65"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/088a7717-76d2-4520-b9e8-3f2fecce1ee4",
+          "https://schema.hbp.eu/search/name": "The essential role of feedback processing for figure-ground perception in mice",
+          "https://schema.hbp.eu/search/identifier": "088a7717-76d2-4520-b9e8-3f2fecce1ee4"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Comparative mapping of visuo-motor cortex in mouse, monkey and human",
+      "https://schema.hbp.eu/search/publications": [
+        {
+          "https://schema.hbp.eu/search/doi": "10.1371/journal.pbio.1002420",
+          "https://schema.hbp.eu/search/citation": "Self, M. W., Peters, J. C., Possel, J. K., Reithler, J., Goebel, R., Ris, P., Jeurissen, D., Reddy, L., Claus, S., Baayen, J., Roelfsema, P. R. (2016). The Effects of Context and Attention on Spiking Activity in Human Early Visual Cortex. PLoS Biol., 14(3):e1002420\n \n"
+        }
+      ],
+      "https://schema.hbp.eu/search/identifier": "758e3600-13dd-4e43-8812-66e79cbcf987",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/758e3600-13dd-4e43-8812-66e79cbcf987",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000012_ComparativeMappingOfVisuo-MotorCortex_pub?prefix=Self",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_25b4e28a742d4987a7b6f84c0c36512e/hbp-d000018_FigureGroundModulation-Mice_dev",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-03-31T20:24:54.211Z",
+      "https://schema.hbp.eu/search/description": "Axonal projections from the cerebral cortex target several subcortical brain regions involved in sensorimotor and cognitive functions. The topographical arrangement of projections originating from different parts of the cerebral cortex vary across target regions, possibly reflecting different functional or computational properties in these regions. To combine and compare the subcortical projections from different parts of the mouse cortex, we downloaded segmented axonal labelling data shared by the Allen Mouse Brain Connectivity Atlas (Oh et al., Nature 508, 2014), and converted these to 3-D point coordinate data. The data can be pseudocolored, combined and compared in a 3-D viewer. The project includes data derived from experiments with anterograde viral tracers placed in the somatosensory, motor, visual, or auditory cortical areas. The point data are shared as x, y, z coordinates, together with links to a custom atlas viewer tool that allows interactive visualization and analysis of the data points. The data set provides overview of the spatial organization of mouse brain corticostriatal, corticocollicular, corticothalamic, and corticopontine projections.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-04-01T10:20:08.263Z",
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/933048fa-f314-4a70-8839-0ce346ac0c36",
+          "https://schema.hbp.eu/search/name": "3-D point data representing the spatial distribution of corticopontine projections originating in the frontal cortex of transgenic mice",
+          "https://schema.hbp.eu/search/identifier": "933048fa-f314-4a70-8839-0ce346ac0c36"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/c9080ff8-5f90-4588-a2ab-517a1a3b30ad",
+          "https://schema.hbp.eu/search/name": "3-D point data representing the spatial distribution of corticopontine projections originating in the mouse frontal cortex",
+          "https://schema.hbp.eu/search/identifier": "c9080ff8-5f90-4588-a2ab-517a1a3b30ad"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/dd4e3a5b-91f8-4bbc-84d3-7fe66014c39e",
+          "https://schema.hbp.eu/search/name": "3-D point data representing the spatial distribution of corticopontine projections originating in the mouse primary somatosensory cortex",
+          "https://schema.hbp.eu/search/identifier": "dd4e3a5b-91f8-4bbc-84d3-7fe66014c39e"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/92404ca5-3fc9-4ed8-b2c9-92718e7444bc",
+          "https://schema.hbp.eu/search/name": "3-D point data representing the spatial distribution of corticopontine projections originating in the mouse temporal cortex",
+          "https://schema.hbp.eu/search/identifier": "92404ca5-3fc9-4ed8-b2c9-92718e7444bc"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/d40b6d70-c44d-426d-b52c-c15c01d2aad9",
+          "https://schema.hbp.eu/search/name": "3-D point data representing the spatial distribution of corticopontine projections originating in the mouse visual cortex",
+          "https://schema.hbp.eu/search/identifier": "d40b6d70-c44d-426d-b52c-c15c01d2aad9"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/7599fa5c-8181-44d3-9dbf-56c68ef754ee",
+          "https://schema.hbp.eu/search/name": "3-D point data representing the spatial distribution of corticopontine projections originating in the somatosensory cortex of transgenic mice",
+          "https://schema.hbp.eu/search/identifier": "7599fa5c-8181-44d3-9dbf-56c68ef754ee"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/e0940682-5464-4a2c-8c5c-370e945b55b2",
+          "https://schema.hbp.eu/search/name": "3-D point data representing the spatial distribution of corticopontine projections originating in the visual cortex of transgenic mice",
+          "https://schema.hbp.eu/search/identifier": "e0940682-5464-4a2c-8c5c-370e945b55b2"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Topographical termination patterns in subcortical brain structures in the mouse",
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/identifier": "6c4e8789-65ad-41d4-a2d7-741afb6c0852",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/6c4e8789-65ad-41d4-a2d7-741afb6c0852",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000009_TopoCreVisual_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000008_TopoCreSomatosensory_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000005_TopoWTVisual_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000006_TopoWTTemporal_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000003_TopoWTFrontal_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000004_TopoWTSomatosensory_pub",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": null,
+      "https://schema.hbp.eu/search/description": "Cellular-resolution volumetric maps of the spatial distribution of selected cell types in the whole encephalon. Different neurons are identified using transgenic strategies.",
+      "https://schema.hbp.eu/search/lastReleaseAt": null,
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/c53fb6e0-2e28-4354-8417-2476698b924f",
+          "https://schema.hbp.eu/search/name": "Parvalbumin interneuron distribution in the mouse brain",
+          "https://schema.hbp.eu/search/identifier": "f740e7bb4e7a93647e3a9da50d6d965b"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Whole-brain distribution of different cell types",
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/identifier": "3c59dc048e8850243be8079a5c74d079",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/8bde222d-705a-4425-bf97-0883f41aae9b",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Pavone_RUP_T1.2.2?prefix=hbp-00021",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2019-05-24T09:43:38.184Z",
+      "https://schema.hbp.eu/search/description": "3D reconstructions of 50 cells in mouse hippocampal CA1 region\r\nRelated milestones: MS1.2.3 Reconstruction of pyramidal neurons  M12\r\nMS1.2.8 Reconstruction of dendritic arbors and dendritic spines of pyramidal neurons M24\r\nVerification: Data released and data quality validated\r\nRelated task: Task 1.2.1 The pyramidal neuron in the cerebral cortex of humans and rodents ",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2019-05-24T09:43:38.173Z",
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/6b5e5373-d496-496c-a300-324ddab4c5f7",
+          "https://schema.hbp.eu/search/name": "3D reconstructions of pyramidal cells in mouse hippocampal CA1 region",
+          "https://schema.hbp.eu/search/identifier": "d40c0f1c7365b5b14be937c3a7860c06"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "3D reconstructions of 50 cells in mouse hippocampal CA1 region",
+      "https://schema.hbp.eu/search/publications": [
+        {
+          "https://schema.hbp.eu/search/doi": "10.1093/cercor/bhj041",
+          "https://schema.hbp.eu/search/citation": "Benavides-Piccione R, Hamzei-Sichani F, Ballesteros-Yáñez I, DeFelipe J and Yuste R. (2006). Dendritic size of pyramidal neurons differs among mouse cortical regions. Cereb cortex 16: 990-1001"
+        },
+        {
+          "https://schema.hbp.eu/search/doi": "10.1093/cercor/bhz122",
+          "https://schema.hbp.eu/search/citation": "Benavides-Piccione, R., Regalado, M., Fernaud, I., Kastanauskaite, A., Tapia-González, S., Leon, G., Rojo, C., Insausti, R., Segev, I. & DeFelipe, J. (2020) Differential structure of hippocampal CA1 pyramidal neurons in the human and mouse, Cerebral Cortex, 30 (2), p730-752."
+        }
+      ],
+      "https://schema.hbp.eu/search/identifier": "168908dd3227b8358eababa07fcaf091",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/a26f614c-854e-4159-a7a9-3cdeb9b11330",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-00956",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-04-30T14:00:12.012Z",
+      "https://schema.hbp.eu/search/description": "",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-04-30T14:00:12.006Z",
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/5b55cc01-8eb2-48fa-967d-d0c6c2c0e67d",
+          "https://schema.hbp.eu/search/name": "Electrophysiological data of cortical layer 6 neurons and synaptically coupled neuronal pairs",
+          "https://schema.hbp.eu/search/identifier": "5b55cc01-8eb2-48fa-967d-d0c6c2c0e67d"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/32c50a24-a673-4ac7-ab64-583f2ee95f19",
+          "https://schema.hbp.eu/search/name": "Immunofluorescence data of cortical layer 6 neurons",
+          "https://schema.hbp.eu/search/identifier": "32c50a24-a673-4ac7-ab64-583f2ee95f19"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/d464079f-bdf8-4b5c-8763-305625cb7bc4",
+          "https://schema.hbp.eu/search/name": "Morphological data of cortical layer 6 neurons and synaptically coupled neuronal pairs",
+          "https://schema.hbp.eu/search/identifier": "d464079f-bdf8-4b5c-8763-305625cb7bc4"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Electrophysiological, morphological and molecular study of layer 6 neuronal microcircuits in rat primary somatosensory (barrel) cortex",
+      "https://schema.hbp.eu/search/publications": [
+        {
+          "https://schema.hbp.eu/search/doi": "10.1073/pnas.0810062106",
+          "https://schema.hbp.eu/search/citation": "Eggermann, E. & Feldmeyer, D. (2009). Cholinergic filtering in the recurrent excitatory microcircuit of cortical layer 4. Proceedings of the National Academy of Sciences, 106 (28), 11753-11758."
+        },
+        {
+          "https://schema.hbp.eu/search/doi": "10.1093/cercor/bhw243",
+          "https://schema.hbp.eu/search/citation": "Qi, G., an Aerde, K., Abel, T. & Feldmeyer, D. (2016). Adenosine Differentially Modulates Synaptic Transmission of Excitatory and Inhibitory Microcircuits in Layer 4 of Rat Barrel Cortex. Cerebral Cortex, 27 (9), 4411–4422."
+        },
+        {
+          "https://schema.hbp.eu/search/doi": "10.1093/cercor/bht274",
+          "https://schema.hbp.eu/search/citation": "van Aerde, K., Qi, G. & Feldmeyer, D. (2013). Cell Type-Specific Effects of Adenosine on Cortical Neurons. Cerebral Cortex, 25 (3), 772–787."
+        },
+        {
+          "https://schema.hbp.eu/search/doi": "10.1093/cercor/bhz324",
+          "https://schema.hbp.eu/search/citation": "Yang, D., Günter, R., Qi, G., Radnikow, G., Feldmeyer, D. (2019). Muscarinic and Nicotinic Modulation of Neocortical Layer 6A Synaptic Microcircuits Is Cooperative and Cell-Specific. Cerebral Cortex, bhz324."
+        }
+      ],
+      "https://schema.hbp.eu/search/identifier": "dc29d7ef-6f7e-424b-a677-646301ae8a04",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/dc29d7ef-6f7e-424b-a677-646301ae8a04",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d002323_NeuromodNeocortex-Morph_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d002323_NeuromodNeocortex-EPhys_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d002323_NeuromodNeocortex-Immuno_pub",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2019-05-15T10:34:50.338Z",
+      "https://schema.hbp.eu/search/description": "The QUINT analytical workflow allows to quantify labelled features in rodent histological series. It combines several tools. Registration of 2D images to 3D atlases with the QuickNII tool, non-linear corrections can be added with VisuAlign. Advanced automated image segmentation using the machine learning tool ilastik, which is based on Random Forest Algorithm for supervised classification.  Finally, the segmented images are analysed on a whole brain and at the regional level, using the registered brain atlas maps in the updated Nutil software, with a new user friendly GUI. Thereby, whole brain features and region level features such as number of and area occupied by objects are derived, enabling quantitative regional analysis as a semi-automatic pipeline. An object coordinate file is also generated allowing 3D visualisations of the features.\nSome dataset in this project are using only parts of the workflow as it allows to use any segmentation tool.\nAccess the tools and descriptions [here]( https://wiki.ebrains.eu/bin/view/Collabs/quint/)\n",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-07-02T11:55:16.102Z",
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/933048fa-f314-4a70-8839-0ce346ac0c36",
+          "https://schema.hbp.eu/search/name": "3-D point data representing the spatial distribution of corticopontine projections originating in the frontal cortex of transgenic mice",
+          "https://schema.hbp.eu/search/identifier": "933048fa-f314-4a70-8839-0ce346ac0c36"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/c9080ff8-5f90-4588-a2ab-517a1a3b30ad",
+          "https://schema.hbp.eu/search/name": "3-D point data representing the spatial distribution of corticopontine projections originating in the mouse frontal cortex",
+          "https://schema.hbp.eu/search/identifier": "c9080ff8-5f90-4588-a2ab-517a1a3b30ad"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/dd4e3a5b-91f8-4bbc-84d3-7fe66014c39e",
+          "https://schema.hbp.eu/search/name": "3-D point data representing the spatial distribution of corticopontine projections originating in the mouse primary somatosensory cortex",
+          "https://schema.hbp.eu/search/identifier": "dd4e3a5b-91f8-4bbc-84d3-7fe66014c39e"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/92404ca5-3fc9-4ed8-b2c9-92718e7444bc",
+          "https://schema.hbp.eu/search/name": "3-D point data representing the spatial distribution of corticopontine projections originating in the mouse temporal cortex",
+          "https://schema.hbp.eu/search/identifier": "92404ca5-3fc9-4ed8-b2c9-92718e7444bc"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/d40b6d70-c44d-426d-b52c-c15c01d2aad9",
+          "https://schema.hbp.eu/search/name": "3-D point data representing the spatial distribution of corticopontine projections originating in the mouse visual cortex",
+          "https://schema.hbp.eu/search/identifier": "d40b6d70-c44d-426d-b52c-c15c01d2aad9"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/7599fa5c-8181-44d3-9dbf-56c68ef754ee",
+          "https://schema.hbp.eu/search/name": "3-D point data representing the spatial distribution of corticopontine projections originating in the somatosensory cortex of transgenic mice",
+          "https://schema.hbp.eu/search/identifier": "7599fa5c-8181-44d3-9dbf-56c68ef754ee"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/e0940682-5464-4a2c-8c5c-370e945b55b2",
+          "https://schema.hbp.eu/search/name": "3-D point data representing the spatial distribution of corticopontine projections originating in the visual cortex of transgenic mice",
+          "https://schema.hbp.eu/search/identifier": "e0940682-5464-4a2c-8c5c-370e945b55b2"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/ff9e337d-3849-4405-8443-fcca287ea441",
+          "https://schema.hbp.eu/search/name": "Brain-wide quantitative data on calbindin positive neurons in the mouse",
+          "https://schema.hbp.eu/search/identifier": "ff9e337d-3849-4405-8443-fcca287ea441"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/c25f0a96-cdf0-4277-ba3c-495de13f3ccd",
+          "https://schema.hbp.eu/search/name": "Brain-wide quantitative data on parvalbumin positive neurons in the mouse",
+          "https://schema.hbp.eu/search/identifier": "c25f0a96-cdf0-4277-ba3c-495de13f3ccd"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/d56d6bd3-1b24-4f1e-97c3-637bf8e9231b",
+          "https://schema.hbp.eu/search/name": "Brain-wide quantitative data on parvalbumin positive neurons in the rat",
+          "https://schema.hbp.eu/search/identifier": "d56d6bd3-1b24-4f1e-97c3-637bf8e9231b"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/8e8ac473-08fc-4510-bf81-e6d94c9c15d6",
+          "https://schema.hbp.eu/search/name": "Extraction of Parvalbumin positive cells from an Allen mouse brain in situ hybridisation experiment",
+          "https://schema.hbp.eu/search/identifier": "8e8ac473-08fc-4510-bf81-e6d94c9c15d6"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "QUINT analytical workflow",
+      "https://schema.hbp.eu/search/publications": [
+        {
+          "https://schema.hbp.eu/search/doi": "10.3389/fninf.2019.00075",
+          "https://schema.hbp.eu/search/citation": "Yates et al. (2019). QUINT: Workflow for Quantification and Spatial Analysis of Features in Histological Images From Rodent Brain. Frontiers in Neuroinformatics. "
+        }
+      ],
+      "https://schema.hbp.eu/search/identifier": "2aa0fb33-470a-4994-8f3a-2625f3f37466",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/2aa0fb33-470a-4994-8f3a-2625f3f37466",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000008_TopoCreSomatosensory_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000005_TopoWTVisual_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000033_PVMouseExtraction_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/ext-00008a",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000032_CalbDistrExtraction_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_4791e0a3b3de43e2840fe46d9dc2b334/ext-d000034_PVRatExtraction_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000006_TopoWTTemporal_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000007_TopoCreFrontal_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000009_TopoCreVisual_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000004_TopoWTSomatosensory_pub",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000003_TopoWTFrontal_pub",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2019-08-20T14:49:41.333Z",
+      "https://schema.hbp.eu/search/description": "Multilevel maps of quantitative cell distributions and morphologies in selected regions of human brain using serial two photon and confocal light sheet microscopy. Immunocytochemical staining methods for marker of different interneuron types in the human neocortex were optimized in order to obtain physiology, morphology and molecular type data.",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2019-08-20T14:49:41.326Z",
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/2050edaa-7b9e-4034-a18e-1dc72c382b08",
+          "https://schema.hbp.eu/search/name": "Maps of neurons stained with anti-NeuN antibody",
+          "https://schema.hbp.eu/search/identifier": "f8c924351e0b7792782e7c9af216acb8"
+        },
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/ef961535-449a-44f4-9057-f8cc22feb290",
+          "https://schema.hbp.eu/search/name": "Maps of neurons stained with anti-Parvalbumin antibody",
+          "https://schema.hbp.eu/search/identifier": "d83a6bcaffcabc30ac45ecc8b67a91fb"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Multilevel maps of quantitative cell distributions and morphologies",
+      "https://schema.hbp.eu/search/publications": [],
+      "https://schema.hbp.eu/search/identifier": "4ea06fbc83cdd0a06020c35d50e1e89a",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/ef921968-e2f6-4361-b14d-83bd5fc56e3d",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-data-000770?prefix=Parvalbumin staining",
+          "https://schema.hbp.eu/search/foo": null
+        },
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-data-000770?prefix=NeuN staining",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-03-31T11:10:27.603Z",
+      "https://schema.hbp.eu/search/description": "The aim of this project is to study how cortical maps and motor-evoked neuronal activity is modified by rehabilitative treatments after stroke.\nAs it is well known, motor practice with the paretic limb improves functional recovery and behaviorally relevant neural restructuring both in humans (Jaillard et al. 2005; Butefisch et al. 2006; Dong et al. 2007; Liepert et al. 2000; Sawaki et al. 2008) and in animal models (Nudo et al. 1996; Biernaskie et al. 2001; Jones et al. 1999). Indeed, training of the affected forelimb in skilled reaching tasks restores movement representation in the remaining forelimb region of the primary motor cortex (M1) (Jones et al. 2015). As it has been observed in previous animal studies, beginning motor rehabilitation during the first weeks after stroke leads to a better functional improvement and neural rearrangement than does later training (Barbay et al. 2006; Biernaskie et al 2004; Park et al. 2010). The underneath idea is that sudden interventions can act during a more dynamic phase of neuronal remodeling, thus promoting a better reorganization. Clinical studies confirmed that earlier interventions are more effective (Lotze et al. 2012; Rei et al. 2009). In the last years neurorehabilitation protocols based on the use of robotic devices have shown to provide promising clinical results. In particular, mechatronic devices have key advantages over conventional physiotherapy as they provide an intensive and highly repeatable practice and offer a quantitative and objective evaluation of the outcome for each patient, exploiting the built-in sensors that measure different parameters such as forces exerted by the subject and the smoothness of movement (Spalletti et al. 2014). Furthermore, the use of robotic devices in murine models and human patients gives an unbiased evaluation of recovery of motor performances providing an accurate description of kinetic and kinematic aspects on motor performance during rehabilitation after stroke.\n\nIn order to evaluate brain remapping and neuronal rewiring, fluorescence imaging provided valuable insights into spontaneous cortical plasticity after stroke. Murphy and colleagues performed several acute optical imaging studies showing the persistence of cortical functional remapping over months after stroke (Brown et al., 2009; Harrison et al., 2013). The availability of a new generation of experimental tools, like genetically encoded functional indicators (Chen et al., 2013) provided new means of exploring cortical remapping. Up to now, no investigation has yet described how repetitive motor training longitudinally molds cortical functional maps after stroke.\n\nIn this study we imaged the calcium-associated activity of the lesioned hemisphere and part of the healthy one in awake mice performing a retraction task on a robotic device for motor training (M-Platform). We simultaneously recorded the forces applied and the associated cortical activity by combining the robotic platform with a wide-field fluorescence microscope. We compare the remodeling of the motor-evoked cortical maps after stroke and in healthy control performing 20 days of training on the robotic platform.\nHere we share wide-field fluorescence imaging datasets acquired during the pulling task. Healthy mice performing 20 days of training allowed to characterize the learning phase of the motor task and to investigate how cortical maps changed during the training. Then we studied motor-evoked cortical remapping pre- and post-stroke.   \n",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-03-31T11:10:27.598Z",
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/e4355d7d-d357-48cc-ab34-27f29ec7c8f3",
+          "https://schema.hbp.eu/search/name": "Widefield imaging of combined rehabilitation after stroke",
+          "https://schema.hbp.eu/search/identifier": "e4355d7d-d357-48cc-ab34-27f29ec7c8f3"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Longitudinal imaging of motor-evoked cortical activity before and after stroke",
+      "https://schema.hbp.eu/search/publications": [
+        {
+          "https://schema.hbp.eu/search/doi": "10.1016/j.celrep.2019.08.062",
+          "https://schema.hbp.eu/search/citation": "Allegra Mascaro, A. L., Conti, E., Lai, S., Di Giovanna, A.P., Spalletti, C., Alia, C., Panarese, A., Scaglione, A., Sacconi, L., Micera, S., Caleo, M. & Pavone, F. (2019). Combined Rehabilitation Promotes the Recovery of Structural and Functional Features of Healthy Neuronal Networks after Stroke. Cell Reports, Volume 28, Issue 13, 3474 - 3485.e6."
+        }
+      ],
+      "https://schema.hbp.eu/search/identifier": "7ea707b9-146e-496a-80e7-1094d3b4f910",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/7ea707b9-146e-496a-80e7-1094d3b4f910",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Pavone_SGA1_1.3.2",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    },
+    {
+      "https://schema.hbp.eu/search/firstReleaseAt": "2020-02-05T12:17:37.426Z",
+      "https://schema.hbp.eu/search/description": "We develop a theoretical framework combining experimental characterizations and analytical calculus to capture the firing rate input-output properties of single neurons in the fluctuation-driven regime. Our framework consists of a two-step procedure to treat independently how the dendritic input translates into somatic fluctuation variables, and how the latter determine action potential firing. We use this framework to investigate the functional\nimpact of the heterogeneity in firing responses found experimentally in young mice layer V pyramidal cells. \n\nWe design and calibrate in vitro a simplified morphological model of layer V pyramidal neurons with a dendritic tree following Rall’s branching rule. Then, we propose an analytical derivation for the membrane potential fluctuations at the soma as a func-\ntion of the properties of the synaptic input in dendrites. This mathematical description allows us to easily emulate various forms of synaptic input: either balanced, unbalanced, synchronized, purely proximal or purely distal synaptic activity. ",
+      "https://schema.hbp.eu/search/lastReleaseAt": "2020-02-05T12:17:37.420Z",
+      "https://schema.hbp.eu/search/datasets": [
+        {
+          "https://schema.hbp.eu/search/relativeUrl": "minds/core/dataset/v1.0.0/5a95ceb4-e303-42e3-9558-83b9ccb45976",
+          "https://schema.hbp.eu/search/name": "Input Impedance Recordings in Neocortical Pyramidal cells",
+          "https://schema.hbp.eu/search/identifier": "5a95ceb4-e303-42e3-9558-83b9ccb45976"
+        }
+      ],
+      "https://schema.hbp.eu/search/title": "Modeling synaptic integration in pyramidal cells",
+      "https://schema.hbp.eu/search/publications": [
+        {
+          "https://schema.hbp.eu/search/doi": "10.1371/journal.pcbi.1005452",
+          "https://schema.hbp.eu/search/citation": "Heterogeneous firing responses predict diverse couplings to presynaptic activity in mice layer V pyramidal neurons\nY Zerlaut, A Destexhe\nPLoS computational biology 13 (4), e1005452"
+        }
+      ],
+      "https://schema.hbp.eu/search/identifier": "44cfbba7-33d7-49bf-856d-e67b9335d51a",
+      "https://schema.hbp.eu/search/editorId": "minds/core/placomponent/v1.0.0/44cfbba7-33d7-49bf-856d-e67b9335d51a",
+      "https://schema.hbp.eu/search/container": [
+        {
+          "https://schema.hbp.eu/search/url": "https://object.cscs.ch/v1/AUTH_6ebec77683fb472f94d352be92b5a577/hbp-d000000_Input-Impedance_L5PyrMiceV1_pub",
+          "https://schema.hbp.eu/search/foo": null
+        }
+      ]
+    }
+  ],
+  "total": 117,
+  "size": 20,
+  "start": 0
+}

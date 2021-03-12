@@ -24,21 +24,21 @@ Enzyme.configure({ adapter: new Adapter() });
 
 test('Tabs test className"', () => {
     const component = shallow(
-        <Tabs className="className" tabs={[{id: "an id", title: "a label", counter: 11, hint: {show: true, value: "a hint"}},{id: "another id", title: "another label", counter: 32, hint: {show: true, value: "another hint"}}]}  viewComponent={() => null} />
+        <Tabs className="className" tabs={[{id: "an id", title: "a label", counter: 11, hint: {show: true, value: "a hint"}},{id: "another id", title: "another label", counter: 32, hint: {show: true, value: "another hint"}}]}  viewComponent={() => (<div></div>)} />
     );
     expect(component.hasClass("className"));
 });
 
 test('Tabs test number of tabs', () => {
     const component = render(
-        <Tabs className="className" tabs={[{id: "an id", title: "a label", counter: 11, hint: {show: true, value: "a hint"}},{id: "another id", title: "another label", counter: 32, hint: {show: true, value: "another hint"}}]}  viewComponent={() => null} />
+        <Tabs className="className" tabs={[{id: "an id", title: "a label", counter: 11, hint: {show: true, value: "a hint"}},{id: "another id", title: "another label", counter: 32, hint: {show: true, value: "another hint"}}]}  viewComponent={() => (<div></div>)} />
     );
     expect(component.find(".kgs-tabs-button").length).toBe(2);
 });
 
 test('Tabs test active tab', () => {
     const component = mount(
-        <Tabs className="className" tabs={[{id: "an id", title: "a label", counter: 11, hint: {show: true, value: "a hint"}},{id: "another id", title: "another label", counter: 32, hint: {show: true, value: "another hint"}}]}  viewComponent={() => null} />
+        <Tabs className="className" tabs={[{id: "an id", title: "a label", counter: 11, hint: {show: true, value: "a hint"}},{id: "another id", title: "another label", counter: 32, hint: {show: true, value: "another hint"}}]}  viewComponent={() => (<div></div>)} />
     );
     
     expect(component.find("button.kgs-tabs-button").at(0).hasClass("is-active"));

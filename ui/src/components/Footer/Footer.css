@@ -1,0 +1,309 @@
+/*
+*   Copyright (c) 2021, EPFL/Human Brain Project PCO
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
+
+.site-footer {
+    border-top: 1px solid var(--border-color);
+    margin-left: auto;
+    margin-right: auto;
+    padding: 40px var(--site-margin) 0;
+    display: grid;
+    grid-template-columns: 1fr min(1400px,100%) 1fr;
+    font-size: 14px;
+    font-size: var(--font-size-small);
+    color: var(--light-text);
+  }
+  
+  .site-footer .footer__header {
+    margin-bottom: auto;
+  }
+  
+  .site-footer .footer__header .footer__primary {
+    margin-right: auto;
+  }
+  
+  .site-footer .footer__header .footer__primary img{
+    min-width: 220px;
+    height: 100%;
+  }
+  
+  .site-footer .footer__header .footer__secondary {
+    display: flex;
+    padding-bottom: 10px;
+  }
+  
+  .site-footer .footer__header .footer__secondary .powered-by {
+    margin-right: auto;
+  }
+  
+  .site-footer .footer__content {
+    position: relative;
+    display: grid;
+    grid-gap: 10px;
+    gap: 10px;
+    grid-template-columns: 46% 1fr 1fr 1fr;
+    margin-top: 20px;
+    margin-bottom: 32px;
+  }
+  
+  .site-footer>* {
+    grid-column: 2;
+  }
+  
+  .site-footer .footer__content .footer__menu {
+    flex-basis: 33%;
+  }
+  
+  .site-footer .footer__content ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .site-footer .footer__content + .footer__content ul {
+    padding-left: 40px;
+  }
+  
+  .site-footer .footer__content ul .title {
+    padding-bottom: 10px;
+    text-transform: uppercase;
+  }
+  
+  .site-footer .footer__content .logo {
+    color: var(--color-1);
+  }
+  
+  .site-footer .footer__end {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    min-height: 65px;
+  }
+  
+  .site-footer .footer__end .footer__social {
+    display: flex;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .site-footer .footer__end .footer__social li {
+    margin: 0 8px;
+  }
+  
+  .site-footer .footer__end .footer__social li a:hover {
+    color: var(--color-10);
+  }
+  
+  
+  .eu-logo{
+      display:inline-block;
+      height: 60px;
+      margin-top: 5px;
+  }
+  
+  .eu-logo img{
+      height: 100%;
+  }
+  
+  .powered-by {
+      display:inline-block;
+      font-size: 0.4em;
+      font-weight: bold;
+      margin-right: 1.5em;
+      word-wrap: none;
+  }
+  
+  .powered-by img{
+      height: 35px;
+      width: auto;
+  }
+  
+  .powered-by a, .powered-by a:hover{
+      margin-right: 60px;
+      color: var(--color-1);
+      text-decoration: none;
+  }
+  
+  .sprite-icons {
+    width: 40px;
+    height: 40px;
+  }
+  
+  @media (max-width: 670px) {
+    .site-footer {
+      width: 100%;
+      max-width: 670px;
+      margin-left: 0;
+    }
+  
+    .site-footer .footer__content {
+      margin-bottom: 50px;
+      max-width: 670px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .site-footer {
+      height: auto;
+    }
+  
+    .site-footer .footer__content {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "menu2"
+        "menu3"  
+        "menu1"
+        "hbpEu";
+    }
+  
+    .site-footer .footer__header .footer__secondary {
+      grid-area: hbpEu;
+    }
+  
+    .site-footer .footer__content .footer__menu-1 {
+      grid-area: menu1;
+    }
+    
+    .site-footer .footer__content .footer__menu-2 {
+      grid-area: menu2;
+    }
+    
+    .site-footer .footer__content .footer__menu-3 {
+      grid-area: menu3;
+    }
+  
+    .site-footer .footer__end {
+      flex-wrap: wrap;
+      justify-content: center;
+      flex-flow: column-reverse;
+      line-height: 50px;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .kgs-navbar {
+      height: 100px;
+    }
+  
+    .navbar-right { 
+      margin-top: 25px;
+      margin-bottom: -15px;
+    }
+  
+    .container-fluid>.navbar-collapse {
+      margin-right: -15px;
+      margin-left: -15px; 
+    }
+  
+    .site-footer .footer__header {
+      display: flex;
+    }
+  
+    .site-footer .footer__header .footer__secondary {
+      display: inline-block;
+      padding-bottom: 0;
+    }
+  
+    .site-footer .footer__header .footer__secondary .powered-by {
+      margin-right: 0;
+    }
+  
+    .site-footer .footer__content .footer__menu {
+      flex-basis: 20%;
+    }
+  
+    .navbar-header .logo {
+      margin: -15px auto 0 0;
+    }
+  
+    #rootFooter {
+      position: relative;
+      margin-top: 0;
+      margin-bottom: 15px;
+    }
+  
+  }
+  
+  .logo {
+    display: inline-block; 
+    margin: -25px auto 0 0;
+    color: var(--color-1);
+    min-width: 200px;
+  }
+  
+  .logo img {
+    display: inline-block;
+  }
+  
+  .logo svg {
+    height: 100%;
+    min-width: 160px;
+  }
+  
+  body[theme="dark"] .logo:after {
+    content: "EBRAINS";
+    display: inline-block;
+    position: absolute;
+    font-size: 33px;
+    font-weight: 600;
+    padding-right: 10px;
+    transform: translate(-140px, 39px);
+    background: var(--background-color-2);
+    color: var(--color-10);
+    -webkit-font-smoothing: auto;
+  }
+  
+  .eu-logo {
+    position: relative;
+  }
+  
+  .hbp-logo {
+    position: relative;
+    display: inline-block;
+  }
+  
+  body[theme="dark"] .eu-logo:after {
+    content: "Co-funded by\A the European Union";
+    display: inline-block;
+    font-size: 9px;
+    background: var(--background-color-2);
+    color: var(--color-10);
+    -webkit-font-smoothing: auto;
+    white-space: pre;
+    position: absolute;
+    top: 11px;
+    left: 2px;
+    line-height: 1.4em;
+    letter-spacing: 0.04em;
+    text-align: right;
+  }
+  
+  body[theme="dark"] .hbp-logo:after {
+    content: "Human Brain Project";
+    display: inline-block;
+    font-size: 14px;
+    background: var(--background-color-2);
+    color: var(--color-10);
+    -webkit-font-smoothing: auto;
+    white-space: pre;
+    position: absolute;
+    top: 10px;
+    left: 37px;
+    line-height: 1.4em;
+    letter-spacing: 0.04em;
+    text-align: right;
+    font: initial;
+  }

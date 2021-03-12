@@ -17,8 +17,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Route, Switch } from "react-router-dom";
-import * as Sentry from "@sentry/browser";
-import Cookies from "universal-cookie";
 
 import * as actions from "../../actions/actions";
 // import { Notification } from "../Notification/Notification";
@@ -30,6 +28,8 @@ import { FetchingPanel } from "../Fetching/FetchingPanel";
 import { InfoPanel } from "../Info/InfoPanel";
 import "./App.css";
 import { SessionExpiredErrorPanel } from "../Error/ErrorPanel";
+import Footer from "../../components/Footer/Footer";
+import Header from "../Header/Header";
 
 class App extends React.Component {
   constructor(props) {
@@ -37,32 +37,28 @@ class App extends React.Component {
     this.props.initialize(this.props.location);
   }
 
-  componentDidMount() {
-    const cookies = new Cookies();
-    const sentryUrl = cookies.get("sentry_url");
-    if (sentryUrl) {
-      Sentry.init({
-        dsn: sentryUrl
-      });
-    }
-  }
-
   render() {
     return (
-      <div className="kgs-app">
-        {/* <Notification /> */}
-        {this.props.isReady && (
-          <Switch>
-            <Route path="/instances/:type/:id" exact component={Instance} />
-            <Route path="/live/:org/:domain/:schema/:version/:id" exact component={Preview} />
-            <Route path="/" exact component={Search} />
-            <Route component={NotFound} />
-          </Switch>
-        )}
-        <FetchingPanel />
-        <SessionExpiredErrorPanel />
-        <InfoPanel />
-      </div>
+      <React.Fragment>
+        <Header />
+        <main>
+          {/* <Notification /> */}
+          {this.props.isReady && (
+            <Switch>
+              <Route path="/instances/:id" exact component={Instance} />
+              <Route path="/instances/:type/:id" exact component={Instance} />
+              <Route path="/live/:org/:domain/:schema/:version/:id" exact component={Preview} />
+              <Route path="/live/:id" exact component={Preview} />
+              <Route path="/" exact component={Search} />
+              <Route component={NotFound} />
+            </Switch>
+          )}
+          <FetchingPanel />
+          <SessionExpiredErrorPanel />
+          <InfoPanel />
+        </main>
+        <Footer />
+      </React.Fragment>
     );
   }
 }
@@ -71,7 +67,8 @@ export default connect(
   state => ({
     location: state.router.location,
     defaultGroup: state.groups.defaultGroup,
-    isReady: state.application.isReady && !state.auth.error
+    isReady: state.application.isReady && !state.auth.error,
+    authEndpoint: state.auth.authEndpoint
   }),
   dispatch => ({
     initialize: location => dispatch(actions.initialize(location))

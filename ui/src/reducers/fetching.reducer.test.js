@@ -36,14 +36,6 @@ describe('confirguration reducer', () => {
             expect(newState.active).toBe(true);
         });
     });
-    describe('load definition success', () => {
-        it('should set is active to false', () => {
-            const state = {active: true};
-            const action = actionsDefinition.loadDefinitionSuccess(null);
-            const newState = fetchingReducer(state, action);
-            expect(newState.active).toBe(false);
-        });
-    });
     describe('load definition failure', () => {
         it('should set is active to false', () => {
             const state = {active: true};

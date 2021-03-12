@@ -15,21 +15,16 @@
 */
 
 import React from "react";
-import { withFloatingScrollEventsSubscription} from "../../../helpers/withFloatingScrollEventsSubscription";
 import { ShareButtons } from "../../Share/ShareButtons";
 import { Pagination } from "../Pagination/Pagination";
-import { GroupSelection } from "../../Group/GroupSelection";
-import { SignInButton } from "../../SignIn/SignInButton";
 import { TermsShortNotice } from "../../Notice/TermsShortNotice";
 import "./Footer.css";
 
-const FooterBase = ({isFloating}) => {
+export const Footer = () => {
   return (
-    <div className={`kgs-footer${isFloating?" is-fixed-position":""}`}>
+    <div className="kgs-footer">
       <TermsShortNotice className="kgs-footer__terms-short-notice" />
       <div className="kgs-footer-nav">
-        <SignInButton className="kgs-sign-in" signInLabel="Log in" signOffLabel="Log out"/>
-        <GroupSelection className="kgs-group-selection"/>
         <Pagination />
         <ShareButtons/>
         <div className="kgs-space" />
@@ -38,10 +33,3 @@ const FooterBase = ({isFloating}) => {
     </div>
   );
 };
-
-export const Footer = withFloatingScrollEventsSubscription(
-  "bottom",
-  [
-    {querySelector: "footer.site-footer"}
-  ]
-)(FooterBase);

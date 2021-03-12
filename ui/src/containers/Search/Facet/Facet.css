@@ -62,16 +62,19 @@
     box-shadow: 0 0 2px #8f8a8a inset;
 }
 
+.kgs-facet .kgs-facet-checkbox input[type="checkbox"] + svg {
+    position: absolute;
+    transform: translate(4px, 4px);
+}
+
 .kgs-facet .kgs-facet-checkbox input[type="checkbox"]:focus:after {
     outline: 5px auto -webkit-focus-ring-color;
     outline-offset: -2px;
 }
 
 .kgs-facet .kgs-facet-checkbox.is-active input[type="checkbox"]:after {
-    content: "\f00c";
     border-color: transparent;
     background-color: var(--color-selected);
-    font-family: "FontAwesome";
 }
 
 .kgs-facet .kgs-facet-checkbox .kgs-facet-checkbox__text {
@@ -181,25 +184,21 @@
     background: var(--background-color-2);
 }
 
-.kgs-filtered-facet .kgs-filtered-facet_filter:before {
-    content: "\f0b0";
+.kgs-filtered-facet .kgs-filtered-facet_filter_icon {
     position: absolute;
-    margin-top: 4px;
-    margin-left: 8px;
-    background: transparent;
-    font-family: FontAwesome;
+    left: 9px;
+    top: 9px;
+    background: transparent; 
     font-size: 1em;
     color: #999;
     pointer-events: none;
 }
 
-.kgs-filtered-facet .kgs-filtered-facet_filter:after {
-    content: "\f078";
+.kgs-filtered-facet .kgs-filtered-facet_filter_dropdown_icon {
     position: absolute;
-    margin-top: 4px;
+    margin-top: 8px;
     margin-left: -30px;
     background: transparent;
-    font-family: FontAwesome;
     font-size: 1em;
     color: #999;
     pointer-events: none;

@@ -17,7 +17,8 @@
 import * as types from "./actions.types";
 import API from "../services/API";
 import { getHashKey, generateKey, getSearchKey } from "../helpers/BrowserHelpers";
-import { history } from "../store";
+import { history, store } from "../store";
+import * as Sentry from "@sentry/browser";
 
 export const setApplicationReady = () => {
   return {
@@ -66,15 +67,76 @@ export const sessionFailure = error => {
   };
 };
 
+export const loadAuthEndpointRequest = () => {
+  return {
+    type: types.LOAD_AUTH_ENDPOINT_REQUEST
+  };
+};
 
-export const authenticate = (group=null) => {
-  return () => {
-    const stateKey= btoa(JSON.stringify({
-      queryString: window.location.search
-    }));
-    const nonceKey=  generateKey();
-    const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}${group?("?group=" + group):""}`;
-    window.location.href = API.endpoints.auth(redirectUri, stateKey, nonceKey);
+export const loadAuthEndpointSuccess = authEndpoint => {
+  return {
+    type: types.LOAD_AUTH_ENDPOINT_SUCCESS,
+    authEndpoint: authEndpoint
+  };
+};
+
+
+export const loadAuthEndpointFailure = () => {
+  return {
+    type: types.LOAD_AUTH_ENDPOINT_FAILURE
+  };
+};
+
+
+export const authenticate = (group=null, isKeycloak=true) => {
+  return dispatch => {
+    let authEndpoint = null;
+    if(isKeycloak) {
+      const state = store.getState();
+      authEndpoint = state.auth.authEndpoint;
+    } else {
+      authEndpoint = "https://services.humanbrainproject.eu/oidc/authorize";
+    }
+    if(authEndpoint) {
+      const stateKey= btoa(JSON.stringify({
+        queryString: window.location.search
+      }));
+      const nonceKey=  generateKey();
+      const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}${group?("?group=" + group):""}`;
+      const auth = isKeycloak?API.endpoints.keycloakAuth:API.endpoints.oidcAuth;
+      window.location.href = auth(authEndpoint, redirectUri, stateKey, nonceKey);
+    } else {
+      dispatch(sessionFailure("Restricted area is currently not available, please retry in a few minutes!"));
+    }
+  };
+};
+
+export const getAuthEndpoint = (group=null) => {
+  return dispatch => {
+    dispatch(loadAuthEndpointRequest());
+    API.axios
+      .get(API.endpoints.authEndpoint())
+      .then(response => {
+        dispatch(loadAuthEndpointSuccess(response.data && response.data.authEndpoint));
+        dispatch(authenticate(group, true));
+      })
+      .catch(e => {
+        const { response } = e;
+        const { status } = response;
+        switch (status) {
+        case 500:
+        {
+          Sentry.captureException(e);
+          break;
+        }
+        case 404:
+        default:
+        {
+          const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
+          dispatch(loadAuthEndpointFailure(error));
+        }
+        }
+      });
   };
 };
 
@@ -82,16 +144,10 @@ export const initialize = location => {
   return dispatch => {
     const accessToken = getHashKey("access_token");
     const group = getSearchKey("group");
-    const savedGroup = localStorage.getItem("group");
     if (accessToken) {
       dispatch(setToken(accessToken));
-      if(group && group !== savedGroup && (group === "public" || group === "curated")) {
-        localStorage.setItem("group", group);
-      } else if (!group && !savedGroup) {
-        localStorage.setItem("group", "public");
-      }
       const stateValue = getHashKey("state");
-      const state = stateValue?JSON.parse(atob(stateValue)):{};
+      const state = stateValue?JSON.parse(atob(decodeURIComponent(stateValue))):{};
       const queryString = (state && state.queryString)?state.queryString:"";
       history.replace(`${location.pathname}${queryString}`);
       dispatch(setApplicationReady());
@@ -102,12 +158,13 @@ export const initialize = location => {
         const url = `/instances/${instance}${group?("?group=" + group):""}`;
         history.replace(url);
       }
-
-      const regShareEditorReference = /^\/instances\/(((.+)\/(.+)\/(.+)\/(.+))\/(.+))$/;
-      if((group && (group === "public" || group === "curated")) ||
-         (savedGroup && (savedGroup === "public" || savedGroup === "curated")) ||
-         location.pathname.startsWith("/live/") || regShareEditorReference.test(location.pathname))  {
-        dispatch(authenticate(group || savedGroup));
+      if((group && (group === "public" || group === "curated")) || location.pathname.startsWith("/live/")) {
+        const regLegacyIdReference = /^\/live\/(((.+)\/(.+)\/(.+)\/(.+))\/(.+))\??.*$/;
+        if (regLegacyIdReference.test(location.pathname)) {
+          dispatch(authenticate(group, false));
+        } else {
+          dispatch(getAuthEndpoint(group));
+        }
       } else {
         dispatch(setApplicationReady());
       }

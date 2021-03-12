@@ -18,7 +18,6 @@ import { connect } from "react-redux";
 import * as actionsGroups from "../../actions/actions.groups";
 import * as actionsInstances from "../../actions/actions.instances";
 import * as actionsDefinition from "../../actions/actions.definition";
-import { history } from "../../store";
 import { ImagePreviews } from "../Image/ImagePreviews";
 import { ImagePopup } from "../Image/ImagePopup";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
@@ -43,7 +42,6 @@ export const Instance = connect(
     return {
       instanceProps: instanceProps,
       showInstance: state.instances.currentInstance && !state.instances.isLoading && !state.instances.error,
-      showGroupSelection: state.instances.currentInstance && !state.instances.error,
       definitionIsReady: state.definition.isReady,
       definitionIsLoading: state.definition.isLoading,
       definitionHasError: !!state.definition.error,
@@ -57,20 +55,16 @@ export const Instance = connect(
       previousInstance: state.instances.previousInstances.length?state.instances.previousInstances[state.instances.previousInstances.length-1]:null,
       group: state.groups.group,
       defaultGroup: state.groups.defaultGroup,
-      id: props.match.params.id,
-      type: props.match.params.type,
-      location: state.router.location
+      id: props.match.params.type?`${props.match.params.type}/${props.match.params.id}`:props.match.params.id,
+      location: state.router.location,
+      searchPage: false
     };
   },
   dispatch => ({
     setInitialGroup: group => dispatch(actionsGroups.setInitialGroup(group)),
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
-    fetch: (group, type, id) => dispatch(actionsInstances.loadInstance(group, type, id)),
-    setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance()),
-    onGoHome: path => {
-      dispatch(actionsInstances.clearAllInstances());
-      history.push(path);
-    }
+    fetch: (group, id) => dispatch(actionsInstances.loadInstance(group, id)),
+    setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance())
   })
 )(InstanceContainer);

@@ -1,0 +1,61 @@
+{
+  "editorId": "minds/experiment/sample/v1.0.0/103c5a96-7575-4348-86ce-a3b6e46b1197",
+  "identifier": "103c5a96-7575-4348-86ce-a3b6e46b1197",
+  "methods": [],
+  "lastReleaseAt": "2020-03-26T11:24:31.255Z",
+  "brainViewer": [],
+  "subjects": [
+    {
+      "strain": "129/Sv",
+      "identifier": "d810f907-41fa-48a7-a7ab-d22a3ceb64ed",
+      "species": [
+        "Mus musculus"
+      ],
+      "sex": [
+        "Unknown"
+      ],
+      "name": "VSD_Subject01",
+      "weight": null,
+      "agecategory": [
+        "Juvenile"
+      ],
+      "relativeUrl": "minds/experiment/subject/v1.0.0/d810f907-41fa-48a7-a7ab-d22a3ceb64ed",
+      "strains": null,
+      "age": "18-24 days",
+      "genotype": "Wild type"
+    }
+  ],
+  "parcellationAtlas": [],
+  "datasets": [
+    {
+      "instances": [
+        {
+          "identifier": "071117f4-3d05-400b-8e2a-696adb93346f",
+          "name": "Investigation of spatial distribution of excitation in cerebellar cortical slices",
+          "relativeUrl": "minds/core/dataset/v1.0.0/071117f4-3d05-400b-8e2a-696adb93346f"
+        }
+      ],
+      "componentName": []
+    }
+  ],
+  "title": "VSD_Subject01_sample",
+  "firstReleaseAt": "2020-03-26T11:24:31.261Z",
+  "datasetExists": [
+    "071117f4-3d05-400b-8e2a-696adb93346f"
+  ],
+  "container_url": null,
+  "parcellationRegion": [],
+  "files": [
+    {
+      "name": "VSD_Subject01_140414004A.dml",
+      "absolutePath": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-00811_VSD/VSD_Subject01_14-04-14/VSD_Subject01_140414004A.dml",
+      "human_readable_size": "7 MB"
+    },
+    {
+      "name": "VSD_Subject01_140414006A.dml",
+      "absolutePath": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-00811_VSD/VSD_Subject01_14-04-14/VSD_Subject01_140414006A.dml",
+      "human_readable_size": "7 MB"
+    }
+  ],
+  "weightPreFixation": null
+}

@@ -16,12 +16,23 @@
 
 import React, { Component } from "react";
 import "./ImagePopup.css";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export class ImagePopup extends Component {
   constructor(props) {
     super(props);
     this.state = { src: null, error: false };
   }
+
+  componentDidMount() {
+    this.loadImage();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.src !== prevProps.src) {
+      this.loadImage();
+    }
+  }
+
   onClick = e => {
     if ((!this.closeBtnRef || (this.closeBtnRef && this.closeBtnRef !== e.target)) && this.wrapperRef && this.wrapperRef.contains(e.target)) {
       e && e.preventDefault();
@@ -30,6 +41,7 @@ export class ImagePopup extends Component {
       typeof onClick === "function" && onClick();
     }
   };
+
   loadImage() {
     if (typeof this.props.src === "string") {
       if (this.props.src !== this.state.src || this.state.error) {
@@ -39,14 +51,7 @@ export class ImagePopup extends Component {
       this.setState({ src: null, error: true });
     }
   }
-  componentDidMount() {
-    this.loadImage();
-  }
-  componentDidUpdate(prevProps) {
-    if (this.props.src !== prevProps.src) {
-      this.loadImage();
-    }
-  }
+
   render() {
     const { className, src, label } = this.props;
     const show = typeof src === "string";
@@ -57,7 +62,7 @@ export class ImagePopup extends Component {
             {
               this.state.error ?
                 <div className="kgs-image_popup-error">
-                  <i className="fa fa-ban"></i>
+                  <FontAwesomeIcon icon="ban"/>
                   <span>{`failed to fetch image "${label}" ...`}</span>
                 </div>
                 :
@@ -74,7 +79,9 @@ export class ImagePopup extends Component {
                   )}
                 </React.Fragment>
             }
-            <i className="fa fa-close" ref={ref => this.closeBtnRef = ref} ></i>
+            <div className="kgs-image_popup-close" ref={ref => this.closeBtnRef = ref}>
+              <FontAwesomeIcon icon="times"/>
+            </div>
           </div>
         )}
       </div>

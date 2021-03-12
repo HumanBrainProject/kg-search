@@ -124,7 +124,7 @@ export class ElasticSearchHelpers {
     }
 
     let str = q.trim().replace(/\s+/g, " ");
-    str = trimOperators(str);
+    str = trimOperators(str).toLowerCase();
 
     // Capitalize operator
     ["AND", "OR", "NOT"].forEach(op => {

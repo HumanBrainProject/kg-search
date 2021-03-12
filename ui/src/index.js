@@ -14,24 +14,30 @@
 *   limitations under the License.
 */
 
+import React from "react";
+import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { ConnectedRouter } from "connected-react-router";
 import { store, history } from "./store";
-import React from "react";
-import ReactDOM from "react-dom";
 import App from "./containers/App/App";
-import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
+import "./services/IconsImport";
 import "normalize.css/normalize.css";
-import "font-awesome/css/font-awesome.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.min.js";
 import "./index.css";
 import "./ie.css";
 import ReactPiwik from "react-piwik";
+import * as Sentry from "@sentry/browser";
 
 new ReactPiwik({
   url: process.env.REACT_APP_MATOMO_URL,
   siteId: process.env.REACT_APP_MATOMO_SITE_ID,
   trackErrors: true
+});
+
+Sentry.init({
+  dsn: process.env.REACT_APP_SENTRY_URL,
+  environment: window.location.host
 });
 
 ReactPiwik.push(["trackPageView"]);
@@ -43,11 +49,4 @@ ReactDOM.render(
     </ConnectedRouter>
   </Provider>,
   document.getElementById("root")
-);
-
-ReactDOM.render(
-  <div>
-    <ThemeToggle />
-  </div>,
-  document.getElementById("rootFooter")
 );

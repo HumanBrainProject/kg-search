@@ -19,6 +19,14 @@ import API from "../services/API";
 import { sessionFailure } from "./actions";
 import * as Sentry from "@sentry/browser";
 
+
+export const setAuthEndpoint = authEndpoint => {
+  return {
+    type: types.SET_AUTH_ENDPOINT,
+    authEndpoint: authEndpoint
+  };
+};
+
 export const loadDefinitionRequest = () => {
   return {
     type: types.LOAD_DEFINITION_REQUEST
@@ -66,6 +74,7 @@ export const loadDefinition = () => {
     field.markdown = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "markdown", false);
     field.labelHidden = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "label_hidden", false);
     field.tagIcon = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "tag_icon", null);
+    field.icon = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "icon", null);
     field.linkIcon = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "link_icon", null);
     field.visible = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "visible", true);
     field.isTable = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isTable", false);
@@ -92,7 +101,6 @@ export const loadDefinition = () => {
     field.count = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "count", false);
     field.collapsible = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "collapsible", false);
     field.ignoreForSearch = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "ignoreForSearch", false);
-    field.optional = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "optional", false);
     field.highlight = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "highlight", false);
     if (field.children) {
       Object.values(field.children).forEach(childField => {
@@ -131,17 +139,9 @@ export const loadDefinition = () => {
         }
       };
     }
-    if (mapping[SEARCHUI_NAMESPACE + "boost"]) {
-      mapping.boost = mapping[SEARCHUI_NAMESPACE + "boost"];
-      delete mapping[SEARCHUI_NAMESPACE + "boost"];
-    }
     if (mapping[SEARCHUI_NAMESPACE + "defaultSelection"]) {
       mapping.defaultSelection = mapping[SEARCHUI_NAMESPACE + "defaultSelection"];
       delete mapping[SEARCHUI_NAMESPACE + "defaultSelection"];
-    }
-    if (mapping[SEARCHUI_NAMESPACE + "icon"]) {
-      mapping.icon = mapping[SEARCHUI_NAMESPACE + "icon"];
-      delete mapping[SEARCHUI_NAMESPACE + "icon"];
     }
     if (mapping.fields) {
       Object.values(mapping.fields).forEach(field => {
@@ -166,6 +166,7 @@ export const loadDefinition = () => {
       .then(({ data }) => {
         const definition = data && data._source;
         simplifySemantics(definition);
+        data.authEndpoint && dispatch(setAuthEndpoint(data.authEndpoint));
         dispatch(loadDefinitionSuccess(definition));
       })
       .catch(e => {

@@ -22,6 +22,7 @@ import { termsOfUse } from "../../../data/termsOfUse.js";
 import "./HierarchicalFiles.css";
 import theme from "./Theme";
 import Header from "./Header";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const buildTreeStructureForFile = (tree, file, nbOfPathToSkip, rootUrlSeparator) => {
   const path = file.url.split("/").slice(nbOfPathToSkip);
@@ -166,12 +167,12 @@ export default class HierarchicalFiles extends React.Component {
           />
           {node.active && (
             <div className="kgs-hierarchical-files__details">
-              <div>{node.thumbnail ? <img height="80" src={node.thumbnail} alt={node.url} />:<i className={`fa fa-5x fa-${type}-o`}></i>}</div>
+              <div>{node.thumbnail ? <img height="80" src={node.thumbnail} alt={node.url} />:<FontAwesomeIcon icon={type} size="5x"/>}</div>
               <div className="kgs-hierarchical-files__info">
                 <div>
                   <div><strong>Name:</strong> {name}</div>
                   {size  && <div><strong>Size:</strong> {size}</div>}
-                  <a type="button" className="btn kgs-hierarchical-files__info_link" href={node.url} onClick={this.handleClick(node.url)}><i className="fa fa-download"></i> Download {type}</a>
+                  <a type="button" className="btn kgs-hierarchical-files__info_link" rel="noopener noreferrer" target="_blank" href={node.url} onClick={this.handleClick(node.url)} ><FontAwesomeIcon icon="download" /> Download {type}</a>
                   <div className="kgs-hierarchical-files__info_agreement"><span>By downloading the {type} you agree to the <button onClick={this.toggleTermsOfUse}><strong>Terms of use</strong></button></span></div>
                 </div>
               </div>

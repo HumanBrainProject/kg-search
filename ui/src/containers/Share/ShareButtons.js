@@ -24,13 +24,12 @@ const getShareEmailToLink = url => {
   return `mailto:${to}?subject=${subject}&body=${body} ${escape(url)}.`;
 };
 
-const getClipboardContent = (state, location, currentInstance, group, defaultGroup) => {
+const getClipboardContent = (location, currentInstance, group, defaultGroup) => {
   if (location.pathname === "/" && currentInstance) {
-    const type = currentInstance?._source?.type?.value;
     const id = currentInstance._id;
-    if (type && id) {
+    if (id) {
       const rootPath = window.location.pathname.substr(0, window.location.pathname.length - location.pathname.length);
-      return `${window.location.protocol}//${window.location.host}${rootPath}/instances/${type}/${id}${group !== defaultGroup?("?group=" + group ):""}`;
+      return `${window.location.protocol}//${window.location.host}${rootPath}/instances/${id}${group !== defaultGroup?("?group=" + group ):""}`;
     }
   }
   return window.location.href;
@@ -38,7 +37,7 @@ const getClipboardContent = (state, location, currentInstance, group, defaultGro
 
 export const ShareButtons = connect(
   state => {
-    const href = getClipboardContent(state, state.router.location, state.instances.currentInstance, state.groups.group, state.groups.defaultGroup);
+    const href = getClipboardContent(state.router.location, state.instances.currentInstance, state.groups.group, state.groups.defaultGroup);
     return {
       clipboardContent: href,
       emailToLink: getShareEmailToLink(href)

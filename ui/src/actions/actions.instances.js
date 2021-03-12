@@ -81,20 +81,18 @@ export const clearAllInstances = () => {
   };
 };
 
-export const goBackToInstance = (type, id) => {
+export const goBackToInstance = id => {
   return {
     type: types.GO_BACK_TO_INSTANCE,
-    instanceType: type,
     id: id
   };
 };
 
 export const updateLocation = () => {
   const state = store.getState();
-  const type = state.instances.currentInstance?._source?.type?.value;
   const id = state.instances.currentInstance?._id;
-  if(type && id) {
-    history.push(`/${window.location.search}#${type}/${id}`);
+  if(id) {
+    history.push(`/${window.location.search}#${id}`);
   } else {
     history.push(`/${window.location.search}`);
   }
@@ -115,11 +113,11 @@ export const goToSearch = (group, defaultGroup) => {
   };
 };
 
-export const loadInstance = (group, type, id, shouldUpdateLocation=false) => {
+export const loadInstance = (group, id, shouldUpdateLocation=false) => {
   return dispatch => {
     dispatch(loadInstanceRequest());
     API.axios
-      .get(API.endpoints.instance(group, type, id))
+      .get(API.endpoints.instance(group, id))
       .then(response => {
         dispatch(loadInstanceSuccess(response.data));
         if(shouldUpdateLocation) {
@@ -132,7 +130,7 @@ export const loadInstance = (group, type, id, shouldUpdateLocation=false) => {
         switch (status) {
         case 400: // Bad Request
         {
-          const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
+          const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
           dispatch(loadInstanceFailure(error));
           break;
         }
@@ -154,14 +152,14 @@ export const loadInstance = (group, type, id, shouldUpdateLocation=false) => {
           const url = `${window.location.protocol}//${window.location.host}${window.location.pathname}?group=curated`;
           const link = `<a href=${url}>${url}</a>`;
           const group = getSearchKey("group");
-          const error = (group && group === "curated") || (localStorage.getItem("group") && localStorage.getItem("group") === "curated")? "The page you requested was not found." :
+          const error = (group && group === "curated")? "The page you requested was not found." :
             `The page you requested was not found. It might not yet be public and authorized users might have access to it in the ${link} or in in-progress view`;
           dispatch(loadInstanceFailure(error));
           break;
         }
         default:
         {
-          const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
+          const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
           dispatch(loadInstanceFailure(error));
         }
         }
@@ -169,11 +167,11 @@ export const loadInstance = (group, type, id, shouldUpdateLocation=false) => {
   };
 };
 
-export const loadPreview = (type, id) => {
+export const loadPreview = id => {
   return dispatch => {
     dispatch(loadInstanceRequest());
     API.axios
-      .get(API.endpoints.preview(type, id))
+      .get(API.endpoints.preview(id))
       .then(response => {
         if (response.data && !response.data.error) {
           response.data._id = id;
@@ -208,7 +206,7 @@ export const loadPreview = (type, id) => {
           case 404:
           default:
           {
-            const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
+            const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
             dispatch(loadInstanceFailure(error));
           }
           }

@@ -1,0 +1,58 @@
+{
+  "firstReleaseAt": "2019-09-18T09:15:18.419Z",
+  "description": "This project provides electrophysiological data to study the role played by neuroligin (NLGN)-neurexin (NRXN) connections and gephyrin in regulating signaling between post- and presynaptic processing. \n",
+  "lastReleaseAt": "2019-09-18T09:21:14.605Z",
+  "datasets": [
+    {
+      "relativeUrl": "minds/core/dataset/v1.0.0/bcc37438-f9f9-40f3-aadc-d0fad1489767",
+      "name": "Modulation of cortical GABAergic currents by anti-gephyrin intrabodies (scFv-geph NLSC)",
+      "identifier": "185144fef27b8ee7ed48c801f0cbb2b0"
+    },
+    {
+      "relativeUrl": "minds/core/dataset/v1.0.0/438a1a40-5edd-4922-a1e6-82a9e25542dc",
+      "name": "Modulation of cortical GABAergic currents by anti-gephyrin intrabodies (scFv-gephcyto)",
+      "identifier": "31d100b53522ba630499cc06ddecf6a6"
+    },
+    {
+      "relativeUrl": "minds/core/dataset/v1.0.0/019ec94d-324b-44aa-8a6f-b78f8689b644",
+      "name": "Modulation of cortical GABAergic currents by anti-neuroligin 2 (scFvNLG2-645)",
+      "identifier": "ef885b1330592c3a06886ed8de567b45"
+    },
+    {
+      "relativeUrl": "minds/core/dataset/v1.0.0/cf7a42c6-2faf-4ed7-b2ad-b4f9ffbf207f",
+      "name": "Modulation of hippocampal GABAergic currents by anti-gephyrin intrabodies (delta2-188)",
+      "identifier": "a59e367315cd7cbcfee42593201adc42"
+    },
+    {
+      "relativeUrl": "minds/core/dataset/v1.0.0/9d8a2594-3d2b-496b-a5ba-82365d29172f",
+      "name": "Modulation of hippocampal GABAergic currents by anti-gephyrin intrabodies (scFv-geph NLS)",
+      "identifier": "bf19d2dceeb5aba0045d5d56a8e62fc4"
+    }
+  ],
+  "title": "Electrophysiological data under neuroligin or gephyrin block",
+  "publications": [],
+  "identifier": "07c5807d0d927dcd0980f86024e5208b",
+  "editorId": "minds/core/placomponent/v1.0.0/2260b3bd-3252-46a8-b68a-af95ec4263dd",
+  "container": [
+    {
+      "url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-00713_sIPSCs-delta2-188",
+      "foo": null
+    },
+    {
+      "url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-00713_mIPSCs-scFv-geph-NLSC",
+      "foo": null
+    },
+    {
+      "url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-00713_mIPSCs-scFvNLG2-645",
+      "foo": null
+    },
+    {
+      "url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-00713_mIPSCs-scFv-gephcyto",
+      "foo": null
+    },
+    {
+      "url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/hbp-00713_sIPSCs-scFv-geph-NLS",
+      "foo": null
+    }
+  ]
+}

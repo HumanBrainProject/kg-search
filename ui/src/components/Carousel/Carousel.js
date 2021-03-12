@@ -18,6 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { isMobile } from "../../helpers/BrowserHelpers";
 import "./Carousel.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const getNavigation = (item, showPrevious, onClose, onPrevious, navigationComponent) => {
   const NavigationComponent = navigationComponent;
@@ -25,7 +26,7 @@ const getNavigation = (item, showPrevious, onClose, onPrevious, navigationCompon
     <div className="kgs-carousel__header">
       {item.isActive && showPrevious && (
         <button className="kgs-carousel__previous-button" onClick={onPrevious}>
-          <i className="fa fa-chevron-left" /> Previous
+          <FontAwesomeIcon icon="chevron-left" /> Previous
         </button>
       )}
       <div className="kgs-carousel__navigation">
@@ -35,7 +36,7 @@ const getNavigation = (item, showPrevious, onClose, onPrevious, navigationCompon
       </div>
       {item.isActive && (
         <button className="kgs-carousel__close-button" onClick={onClose}>
-          <i className="fa fa-close" />
+          <FontAwesomeIcon icon="times" />
         </button>
       )}
     </div>

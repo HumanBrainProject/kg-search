@@ -1,0 +1,80 @@
+{
+  "_index": "publicly_released_subject",
+  "_type": "_doc",
+  "_id": "48fa30ab-5939-4106-93da-db478e89f941",
+  "_version": 1587,
+  "_seq_no": 29922589,
+  "_primary_term": 16,
+  "found": true,
+  "_source": {
+    "species": [
+      {
+        "value": "Mus musculus"
+      }
+    ],
+    "weight": null,
+    "genotype": {
+      "value": "Wild type"
+    },
+    "strain": {
+      "value": "C57BL/6J"
+    },
+    "identifier": {
+      "value": "48fa30ab-5939-4106-93da-db478e89f941"
+    },
+    "samples": [
+      {
+        "reference": "Sample/14a90d4d-4455-4743-9c80-a53808cdb16a",
+        "value": "080419_IV"
+      }
+    ],
+    "age": {
+      "value": "15 weeks"
+    },
+    "sex": [
+      {
+        "value": "Male"
+      }
+    ],
+    "datasets": [
+      {
+        "children": {
+          "component": [
+            {
+              "value": "Synapse maps on inhibitory neurons in mice primary visual cortex"
+            }
+          ],
+          "name": [
+            {
+              "reference": "Dataset/95f44822-6247-4d7a-a232-23a5247dd91d",
+              "value": "Input architecture of cortical parvalbumin interneurons: dendritic synaptome"
+            }
+          ]
+        }
+      }
+    ],
+    "title": {
+      "value": "PV_sub-02"
+    },
+    "agecategory": [
+      {
+        "value": "Adult"
+      }
+    ],
+    "first_release": {
+      "value": "2020-10-28T12:35:41.845Z"
+    },
+    "datasetExists": [
+      {
+        "value": "95f44822-6247-4d7a-a232-23a5247dd91d"
+      }
+    ],
+    "last_release": {
+      "value": "2020-10-28T12:35:41.837Z"
+    },
+    "@timestamp": "2020-11-17T15:27:37.608061",
+    "type": {
+      "value": "Subject"
+    }
+  }
+}

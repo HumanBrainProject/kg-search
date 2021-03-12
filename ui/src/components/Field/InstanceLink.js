@@ -21,13 +21,13 @@ import * as actionsGroups from "../../actions/actions.groups";
 import * as actionsInstances from "../../actions/actions.instances";
 import { getTitle } from "../../helpers/InstanceHelper";
 
-const InstanceLinkComponent = ({text, type, id, group, path, context, onClick}) => {
-  if (!type || !id) {
+const InstanceLinkComponent = ({text, id, group, path, context, onClick}) => {
+  if (!id) {
     return text;
   }
 
   const handleClick = () => {
-    typeof onClick === "function" && onClick(type, id, group, path, context);
+    typeof onClick === "function" && onClick(id, group, path, context);
   };
 
   return (
@@ -44,8 +44,7 @@ export const InstanceLink = connect(
       path = "/live/";
     }
     return {
-      text: props.text?props.text:`${props.type}/${props.id}`,
-      type: props.type,
+      text: props.text?props.text:props.id,
       id: props.id,
       group: (props.group && props.group !== props.defaultGroup)?props.group:null,
       path: path,
@@ -55,12 +54,12 @@ export const InstanceLink = connect(
     };
   },
   dispatch => ({
-    onClick: (type, id, group, path, context) => {
+    onClick: (id, group, path, context) => {
       if (path) {
-        history.push(`${path}${type}/${id}${group && group !== "public"?("?group=" + group ):""}`, context);
+        history.push(`${path}${id}${group && group !== "public"?("?group=" + group ):""}`, context);
       } else {
         dispatch(actionsGroups.setGroup(group));
-        dispatch(actionsInstances.loadInstance(group, type, id, true));
+        dispatch(actionsInstances.loadInstance(group, id, true));
       }
     }
   })

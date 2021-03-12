@@ -23,6 +23,9 @@ import { Field } from "../Field/Field";
 import { FieldsPanel } from "../Field/FieldsPanel";
 import { FieldsTabs } from "../Field/FieldsTabs";
 import { FieldsButtons } from "../Field/FieldsButtons";
+import { VersionSelector } from "../VersionSelector/VersionSelector";
+import { history } from "../../store";
+import { BgError } from "../BgError/BgError";
 
 import "./Instance.css";
 
@@ -42,26 +45,30 @@ export class Instance extends React.PureComponent {
   trackEvent = () => {
     const { id, type, group, path, defaultGroup } = this.props;
     const relativeUrl = `${path}${type}/${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
-    // window.console.log("trackEvent", "Card", "Opened", relativeUrl);
     ReactPiwik.push(["trackEvent", "Card", "Opened", relativeUrl]);
+  }
+
+  onVersionChange = version => {
+    const { searchPage, group, fetch, path } = this.props;
+    if(searchPage) {
+      fetch(group, version, true);
+    } else {
+      history.push(`${path}${version}${group && group !== "public"?("?group=" + group ):""}`);
+    }
   }
 
   render() {
     const { id, type, hasNoData, hasUnknownData, header, previews, buttons, main, summary, groups, NavigationComponent, ImagePreviewsComponent, ImagePopupComponent, TermsShortNoticeComponent } = this.props;
 
     if (hasNoData) {
-      return (
-        <div className="kgs-instance" data-type={type}>
-          <div className="kgs-instance__no-data">This data is currently not available.</div>
-        </div>
+      return(
+        <BgError show={true} message="This data is currently not available." />
       );
     }
 
     if (hasUnknownData) {
-      return (
-        <div className="kgs-instance" data-type={type}>
-          <div className="kgs-instance__no-data">This type of data is currently not supported.</div>
-        </div>
+      return(
+        <BgError show={true} message="This type of data is currently not supported." />
       );
     }
 
@@ -73,23 +80,28 @@ export class Instance extends React.PureComponent {
           <NavigationComponent />
           <div className="kgs-instance__header_fields">
             <Tags tags={tags} />
-            <div>
+            <div className="kgs-instance__header_title">
               <Field {...header.title} />
+              <VersionSelector version={header.version} versions={header.versions} onChange={this.onVersionChange} />
             </div>
             <FieldsPanel fields={header.fields} fieldComponent={Field} />
           </div>
         </div>
         <div className="kgs-instance-scroll">
-          <div className={`kgs-instance-content kgs-instance__grid ${(buttons && buttons.length) ? "kgs-instance__with-buttons" : ""} ${(previews && previews.length) ? "kgs-instance__with-previews" : ""}`}>
-            <FieldsButtons className="kgs-instance__buttons" fields={buttons} />
-            <div className="kgs-instance__highlights">
-              <ImagePreviewsComponent className={`kgs-instance__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
-              <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
+          <div className="kgs-instance-scoll-content">
+            <div className={`kgs-instance-content kgs-instance__grid ${(buttons && buttons.length) ? "kgs-instance__with-buttons" : ""} ${(previews && previews.length) ? "kgs-instance__with-previews" : ""}`}>
+              <FieldsButtons className="kgs-instance__buttons" fields={buttons} />
+              <div className="kgs-instance__highlights">
+                <ImagePreviewsComponent className={`kgs-instance__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
+                <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
+              </div>
+              <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
+              <FieldsTabs className="kgs-instance__groups" id={id} fields={groups} />
             </div>
-            <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
-            <FieldsTabs className="kgs-instance__groups" id={id} fields={groups} />
+            <strong className="kgs-instance-content-disclaimer">Disclaimer:
+Please alert us at <a href="mailto:curation-support@ebrains.eu">curation-support@ebrains.eu</a> for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible.</strong>
+            <TermsShortNoticeComponent />
           </div>
-          <TermsShortNoticeComponent />
         </div>
         <ImagePopupComponent className="kgs-instance__image_popup" />
       </div>

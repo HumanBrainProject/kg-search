@@ -18,6 +18,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "./Ribbon.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const Ribbon = ({className, icon, text, counter, suffix}) => {
   return (
@@ -26,9 +27,9 @@ export const Ribbon = ({className, icon, text, counter, suffix}) => {
         <div className="ribbon-inner">
           <div className="ribbon-inner-content">
             {!!icon && (
-              <div dangerouslySetInnerHTML={{__html:icon}} />
+              <FontAwesomeIcon icon={icon} />
             )}
-            {!!icon && (
+            {!!text && (
               <div>{text}</div>
             )}
             <div className="ribbon-inner-content-framed">{counter} {suffix}</div>

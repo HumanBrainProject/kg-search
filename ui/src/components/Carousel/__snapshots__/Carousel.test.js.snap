@@ -20,7 +20,9 @@ exports[`Carousel component renders initially 1`] = `
     >
       <div
         className="kgs-carousel__content"
-      />
+      >
+        <div />
+      </div>
     </div>
     <div
       className="kgs-carousel__item position1"

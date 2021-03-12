@@ -98,8 +98,8 @@ export const SessionExpiredErrorPanel = connect(
   state => ({
     show: !!state.auth.error,
     message: state.auth.error,
-    retryLabel: "Login",
-    retryAction: actions.authenticate(),
+    retryLabel: state.auth.authEndpoint ? "Login": "Retry",
+    retryAction: state.auth.authEndpoint ? actions.authenticate(): actionsDefinition.loadDefinition(),
     retryStyle: "primary"
   }),
   dispatch => ({

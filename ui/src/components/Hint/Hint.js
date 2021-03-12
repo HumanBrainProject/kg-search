@@ -18,6 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import uniqueId from "lodash/uniqueId";
 import ReactTooltip from "react-tooltip";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const Hint = ({className, show, value}) => {
   if (!show) {
@@ -27,7 +28,7 @@ export const Hint = ({className, show, value}) => {
   const hint_id = encodeURI(uniqueId("kgs-hint_content-"));
   return (
     <span className={classNames}>
-      <i className="fa fa-info-circle" data-tip data-for={hint_id} aria-hidden="true"></i>
+      <FontAwesomeIcon icon="info-circle" data-tip data-for={hint_id} aria-hidden="true" />
       <ReactTooltip id={hint_id} place="right" type="dark" effect="solid">
         <span>{value}</span>
       </ReactTooltip>

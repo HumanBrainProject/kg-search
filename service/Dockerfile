@@ -1,8 +1,5 @@
-FROM adoptopenjdk:11-jre-hotspot
-MAINTAINER David Kunzmann "david.kunzmann@epfl.ch"
-RUN mkdir /app
-COPY target/universal/stage/ /app/
-WORKDIR /app
-USER root
-ENTRYPOINT ["bin/kg-service"]
-CMD []
+FROM openjdk:11-jre-slim
+VOLUME /tmp
+COPY target/*.jar kg-search.jar
+ENV JAVA_OPTS=""
+ENTRYPOINT exec java $JAVA_OPTS -jar /kg-search.jar

@@ -86,13 +86,6 @@
     position: absolute;
     opacity: 1;
     margin: 15px 0 0 15px;
-}
-
-.kgs-search-panel  .kg-search-bar__icon:before {
-    content: "\f002";
-    background: none;
-    font-family: FontAwesome;
-    font-size: 2em;
     color: var(--link-highlight-color);
 }
 
@@ -107,6 +100,12 @@
 
 .kgs-search-panel input.kg-search-bar:hover {
     color: var(--color-11);
+}
+
+.kgs-search-panel input.kg-search-bar:focus {
+    border-color: var(--color-30);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
 }
 
 .kgs-search-panel input.kg-search-bar::-moz-placeholder {

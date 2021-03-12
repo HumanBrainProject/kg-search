@@ -16,6 +16,7 @@
 
 import { connect } from "react-redux";
 
+import * as actionsInstances from "../../actions/actions.instances";
 import { mapStateToProps } from "../../helpers/InstanceHelper";
 import { ImagePreviews } from "../Image/ImagePreviews";
 import { ImagePopup } from "../Image/ImagePopup";
@@ -29,6 +30,10 @@ export const Instance = connect(
     defaultGroup: state.groups.defaultGroup,
     ImagePreviewsComponent: ImagePreviews,
     ImagePopupComponent: ImagePopup,
-    TermsShortNoticeComponent: TermsShortNotice
+    TermsShortNoticeComponent: TermsShortNotice,
+    searchPage: true
+  }),
+  dispatch => ({
+    fetch: (group, id, updateLocation) => dispatch(actionsInstances.loadInstance(group, id, updateLocation)),
   })
 )(Component);

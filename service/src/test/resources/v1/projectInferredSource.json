@@ -1,0 +1,81 @@
+{
+  "firstReleaseAt": null,
+  "description": "Patch-clamp recordings from cerebellar neurons will be made to assist with constructing advanced Purkinje cell models and stellate cell models. The experiments will be designed to achieve optimal alignment with HBP cerebellar modelling, thus allowing efficient model construction. About 50 neurons will be recorded and analyzed.",
+  "lastReleaseAt": null,
+  "datasets": [
+    {
+      "relativeUrl": "minds/core/dataset/v1.0.0/65a1a3ca-a8e7-4bc0-a60b-3cffc9122b0e",
+      "name": "Loose-cell attached patch-clamp recordings from cerebellar granule cells",
+      "identifier": "430c8508746cbd9f8f5c91b66ae97316"
+    },
+    {
+      "relativeUrl": "minds/core/dataset/v1.0.0/870f5bb4-1afa-490c-8bf8-869d4a18f839",
+      "name": "Recordings of cerebellar granule cells current-voltage relations",
+      "identifier": "40a8ed8caae4989506d69fd290b67a90"
+    },
+    {
+      "relativeUrl": "minds/core/dataset/v1.0.0/6783cede-b5b3-4009-84c7-285b19141eb5",
+      "name": "Recordings of cerebellar neuronal firing induced by currents steps",
+      "identifier": "5e245cf67a42a14a56bc43913f7bf28a"
+    },
+    {
+      "relativeUrl": "minds/core/dataset/v1.0.0/6d413c98-a6ae-4cd4-96ef-b9abfe1a106c",
+      "name": "Recordings of excitatory postsynaptic currents from cerebellar neurons",
+      "identifier": "a1ba394b5f353a67f9cec3549891d77b"
+    },
+    {
+      "relativeUrl": "minds/core/dataset/v1.0.0/54cba01d-c58f-4542-ae68-93a79c29431f",
+      "name": "Recordings of excitatory postsynaptic potentials from cerebellar neurons",
+      "identifier": "2ea6f32e8dfd644d426b93aac0ae6eec"
+    },
+    {
+      "relativeUrl": "minds/core/dataset/v1.0.0/bbb2f462-98f7-4fd9-b4af-ee22d182990d",
+      "name": "Recordings of passive cellular parameters of cerebellar neurons",
+      "identifier": "077778de710a9192795869a8885525ac"
+    },
+    {
+      "relativeUrl": "minds/core/dataset/v1.0.0/bb024285-ab31-48fa-86ff-5450b5e64cd7",
+      "name": "Recordings of spontaneous firing of cerebellar interneurons (Golgi cells)",
+      "identifier": "4197a2f5d71432349fb37ff3ad429580"
+    }
+  ],
+  "title": "Patch-clamp recordings from cerebellar neurons",
+  "publications": [
+    {
+      "doi": "10.1523/JNEUROSCI.4897-11.2013",
+      "citation": "Cesana, E., Pietrajtis, K., Bidoret, C., Isope, P., D’Angelo, E., Dieudonne, S., & Forti, L. (2013). Granule Cell Ascending Axon Excitatory Synapses onto Golgi Cells Implement a Potent Feedback Circuit in the Cerebellar Granular Layer. Journal of Neuroscience, 33(30), 12430–12446. "
+    }
+  ],
+  "identifier": "b6edc1cd1f36e45daf6d7824d7bb2283",
+  "editorId": "minds/core/placomponent/v1.0.0/ad350ba3-274e-4251-ba20-6c9b81488c74",
+  "container": [
+    {
+      "url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Angelo_SGA1_1.2.4?prefix=hbp-00810/EPSP",
+      "foo": null
+    },
+    {
+      "url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Angelo_SGA1_1.2.4?prefix=hbp-00810/VC-ramp",
+      "foo": null
+    },
+    {
+      "url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Angelo_SGA1_1.2.4?prefix=hbp-00810/GapFree",
+      "foo": null
+    },
+    {
+      "url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Angelo_SGA1_1.2.4?prefix=hbp-00810/cell-att",
+      "foo": null
+    },
+    {
+      "url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Angelo_SGA1_1.2.4?prefix=hbp-00810/IV",
+      "foo": null
+    },
+    {
+      "url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Angelo_SGA1_1.2.4?prefix=hbp-00810/CC-step",
+      "foo": null
+    },
+    {
+      "url": "https://object.cscs.ch/v1/AUTH_63ea6845b1d34ad7a43c8158d9572867/Angelo_SGA1_1.2.4?prefix=hbp-00810/EPSC",
+      "foo": null
+    }
+  ]
+}

@@ -70,6 +70,10 @@
   text-align: left;
 }
 
+.kgs-instance-container button.kgs-container__backButton.kgs-back__search {
+  float: right;
+}
+
 .kgs-instance-container button.kgs-container__backButton:hover {
   color: var(--link-color-active);
 }

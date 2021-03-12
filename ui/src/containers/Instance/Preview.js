@@ -19,16 +19,21 @@ import { connect } from "react-redux";
 import * as actionsGroups from "../../actions/actions.groups";
 import * as actionsInstances from "../../actions/actions.instances";
 import * as actionsDefinition from "../../actions/actions.definition";
-import { history } from "../../store";
 import { ImagePreviews } from "../Image/ImagePreviews";
 import { ImagePopup } from "../Image/ImagePopup";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { mapStateToProps } from "../../helpers/InstanceHelper";
 import { InstanceContainer } from "./InstanceContainer";
 
+const getId = ({org, domain, schema, version, id}) => {
+  if(org && domain && schema && version && id) {
+    return `${org}/${domain}/${schema}/${version}/${id}`;
+  }
+  return id;
+};
+
 export const Preview = connect(
   (state, props) => {
-    const type = `${props.match.params.org}/${props.match.params.domain}/${props.match.params.schema}/${props.match.params.version}`;
     const instanceProps = state.instances.currentInstance?
       {
         ...mapStateToProps(state, {
@@ -45,35 +50,30 @@ export const Preview = connect(
     return {
       instanceProps: instanceProps,
       showInstance: state.instances.currentInstance && !state.instances.error,
-      showGroupSelection: false,
       definitionIsReady: state.definition.isReady,
       definitionIsLoading: state.definition.isLoading,
       definitionHasError: !!state.definition.error,
       groupsHasError: !!state.groups.error,
       isGroupsReady: state.groups.isReady,
       isGroupLoading: state.groups.isLoading,
-      shouldLoadGroups: !!state.auth.accessToken,
+      shouldLoadGroups: false,
       instanceIsLoading: state.instances.isLoading,
       instanceHasError: !!state.instances.error,
       currentInstance: state.instances.currentInstance,
       previousInstance: state.instances.previousInstances.length?state.instances.previousInstances[state.instances.previousInstances.length-1]:null,
       group: state.groups.group,
       defaultGroup: state.groups.defaultGroup,
-      id: props.match.params.id,
-      type: type,
+      id: getId(props.match.params),
       location: state.router.location,
-      watermark: "Preview"
+      watermark: "Preview",
+      searchPage: false
     };
   },
   dispatch => ({
     setInitialGroup: group => dispatch(actionsGroups.setInitialGroup(group)),
     loadDefinition: () => dispatch(actionsDefinition.loadDefinition()),
     loadGroups: () => dispatch(actionsGroups.loadGroups()),
-    fetch: (group, type, id) => dispatch(actionsInstances.loadPreview(type, id)),
-    setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance()),
-    onGoHome: path => {
-      dispatch(actionsInstances.clearAllInstances());
-      history.push(path);
-    }
+    fetch: (group, id) => dispatch(actionsInstances.loadPreview(id)),
+    setPreviousInstance: () => dispatch(actionsInstances.setPreviousInstance())
   })
 )(InstanceContainer);

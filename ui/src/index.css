@@ -72,7 +72,7 @@
   --default-border-color: var(--color-35);
   --link-color-active: var(--link-color-2);
   --light-text: #828282;
-  --background-color-1: #f4f4f4;
+  --background-color-1: #f5f7fa;
   --background-color-2: #fff;
   --background-color-3: #dddee0;
   --background-color-4: #bbb;
@@ -204,7 +204,7 @@
   font-family: 'Inter';
   font-display: swap;
   src: url('./assets/fonts/Inter-Regular.woff2') format('woff2'),
-      url('/static/fonts/Inter-Regular.woff') format('woff');
+      url('./assets/fonts/Inter-Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
 }
@@ -240,6 +240,7 @@
 }
 
 html, body {
+    scroll-behavior: smooth;
     overflow-x: hidden;
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
@@ -262,6 +263,10 @@ body:before {
   body:before {
     content: "large";
   }
+  
+  .site-footer .footer__secondary {
+    margin: 3rem 0;
+  }
 }
 
 html {
@@ -273,7 +278,7 @@ body {
   overflow-x: hidden;
   font-family: var(--font-stack);
   font-weight: var(--regular);
-  font-size: var(--font-size);
+  font-size: var(--font-size-small);
   line-height: var(--line-height);
   background: var(--background-color-2);
   color: var(--color-1);
@@ -300,310 +305,9 @@ a, a:hover, a:visited {
   background-color: #fff;
 }
 
-main {
-  position: relative;
-  min-height: 100vh;
-  background-color: transparent;
-  border-bottom: 1px solid var(--border-color-1);
-  box-shadow: 0 10px 20px 0 var(--box-shadow-1);
-  z-index: 100;
-  background: var(--background-color-2);
-}
-
-main a, main a:visited {
-  color: currentColor;
-  text-decoration: none;
-}
-
-main a:hover, main a:hover:visited {
-  color: currentColor;
-  text-decoration: none;
-}
-
-.site-footer {
-  display: block;
-  bottom: 0;
-  width: 100%;
-  padding: 20px var(--site-margin) 0;
-  display: flex;
-  flex-direction: column;
-  font-size: var(--font-size-small);
-  line-height: var(--line-height);
-  color: var(--light-text);
-  z-index: 5;
-}
-
-.site-footer .footer__header {
-  margin-bottom: auto;
-}
-
-.site-footer .footer__header .footer__primary {
-  margin-right: auto;
-}
-
-.site-footer .footer__header .footer__secondary {
-  display: flex;
-  padding-bottom: 10px;
-}
-
-.site-footer .footer__header .footer__secondary .powered-by {
-  margin-right: auto;
-}
-
-.site-footer .footer__content {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  margin-bottom: auto;
-}
-
-.site-footer .footer__content .footer__menu {
-  flex-basis: 33%;
-}
-
-.site-footer .footer__content ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-.site-footer .footer__content + .footer__content ul {
-  padding-left: 40px;
-}
-
-.site-footer .footer__content ul .title {
-  padding-bottom: 10px;
-  text-transform: uppercase;
-}
-
-.site-footer .footer__content .logo {
-  color: var(--color-1);
-}
-
-.site-footer .footer__content p {
-  margin-top: 40px;
-  max-width: 320px;
-}
-
-.site-footer .footer__end {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  min-height: 72px;
-  padding-bottom: 70px;
-}
-
-.site-footer .footer__end .footer__social {
-  display: flex;
-  list-style: none;
-  padding: 0;
-}
-
-.site-footer .footer__end .footer__social li {
-  margin: 0 8px;
-}
-
-.site-footer .footer__end .footer__social li a:hover {
-  color: var(--color-10);
-}
-
-
-.eu-logo{
-    display:inline-block;
-    height: 60px;
-    margin-top: 5px;
-}
-
-.eu-logo img{
-    height: 100%;
-}
-
-.powered-by{
-    display:inline-block;
-    font-size: 0.4em;
-    font-weight: bold;
-    margin-right: 1.5em;
-    text-wrap: none;
-}
-
-.powered-by img{
-    height: 65px;
-    width: auto;
-}
-
-.powered-by a, .powered-by a:hover{
-    color: var(--color-1);
-    text-decoration: none;
-}
-
-@media (max-width:768px) {
-  .site-footer .footer__end {
-    flex-wrap: wrap;
-    justify-content: center;
-    flex-flow: column-reverse;
-    line-height: 50px;
-  }
-
-}
-
-.sprite-icons {
-  width: 40px;
-  height: 40px;
-}
-
-.kgs-navbar {
-  height: auto;
-  background-color: transparent;
-  border: none;
-  margin-bottom: 0;
-  padding: 0 var(--site-margin);
-}
-
-.kgs-navbar a {
-  font-size: 18px;
-  text-decoration: none; 
-}
-
-.navbar-default .navbar-nav>li>a {
-  color: var(--color-8);
-}
-
-.navbar-default .navbar-nav>li>a:visited {
-  color: currentColor;
-  text-decoration: none;
-}
-
-.navbar-default .navbar-nav>li>a:hover {
-  text-decoration: underline;
-}
-
-.kgs-navbar .container-fluid {
-  padding-right: 0px;
-  padding-left: 0px;
-  margin-right: 0px;
-  margin-left: 0px;
-}
-
-.kgs-navbar .navbar-toggle {
-  margin-top: 25px;
-  margin-bottom: 20px;
-}
-
-@media (min-width: 768px) {
-  main {
-    margin-bottom: 500px;
-  }
-
-  .kgs-navbar {
-    height: 100px;
-  }
-
-  .navbar-right { 
-    margin-top: 25px;
-    margin-bottom: -15px;
-  }
-
-  .container-fluid>.navbar-collapse {
-    margin-right: -15px;
-    margin-left: -15px; 
-  }
-
-  .site-footer {
-    position: fixed;
-    min-height: 270px;
-  }
-
-  .site-footer .footer__header {
-    display: flex;
-  }
-
-  .site-footer .footer__header .footer__secondary {
-    display: inline-block;
-    padding-bottom: 0;
-  }
-
-  .site-footer .footer__header .footer__secondary .powered-by {
-    margin-right: 0;
-  }
-
-  .site-footer .footer__content .footer__menu {
-    flex-basis: 20%;
-  }
-
-}
-
-@media (min-width: 768px) and (max-width: 768px) {
-  main {
-    margin-bottom: 700px;
-  }
-}
-
-.logo {
-  display: inline-block; 
-  margin: -15px auto 0 0;
-  color: var(--color-1);
-  min-width: 200px;
-}
-
-.logo img {
-  display: inline-block;
-}
-
-.logo svg {
-  height: 100%;
-  min-width: 160px;
-}
-
-body[theme="dark"] .logo:after {
-  content: "EBRAINS";
-  display: inline-block;
-  font-size: 19px;
-  font-weight: 600;
-  padding-right: 10px;
-  transform: translate(-87px, 2px);
-  background: var(--background-color-2);
-  color: var(--color-10);
-  -webkit-font-smoothing: auto;
-}
-
-.eu-logo {
-  position: relative;
-}
-
-body[theme="dark"] .eu-logo:after {
-  content: "Co-funded by\A the European Union";
-  display: inline-block;
-  font-size: 15px;
-  background: var(--background-color-2);
-  color: var(--color-10);
-  -webkit-font-smoothing: auto;
-  white-space: pre;
-  position: absolute;
-  top: 20px;
-  left: 3px;
-  line-height: 1.4em;
-  letter-spacing: 0.04em;
-  text-align: right;
-}
-
-#rootFooter {
-  position: absolute;
-  right: var(--site-margin);
-  margin-top: 20px;
-  width: 100%;
-}
-
-#rootFooter > div {
-  position: relative;
-  text-align: right;
-}
-
-@media (min-width: 768px) {
-  #rootFooter {
-    position: relative;
-    margin-top: 0;
-    margin-bottom: 15px;
-    right: unset;
-  }
+.full-width {
+  margin:0;
+  width: 100vw;
+  margin-left: 50%;
+  transform: translateX(-50%);
 }

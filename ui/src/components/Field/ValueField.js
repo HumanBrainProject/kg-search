@@ -60,9 +60,9 @@ const ValueFieldBase = (renderUserInteractions = true) => {
       };
     }
     */
-    const regInstanceLink = /^(.+)\/(.+)$/;
-    const [, instanceTypeLink, instanceIdLink] = (!!renderUserInteractions && !!data.reference && regInstanceLink.test(data.reference))?data.reference.match(regInstanceLink):[null, null, null];
-    const hasInstanceLink = !!instanceTypeLink && !!instanceIdLink;
+    const regInstanceLink = /^(.+)$/;
+    const [, instanceIdLink] = (!!renderUserInteractions && !!data.reference && regInstanceLink.test(data.reference))?data.reference.match(regInstanceLink):[null, null];
+    const hasInstanceLink = !!instanceIdLink;
     const hasLink = !!renderUserInteractions && !!data.url;
     const hasMailToLink = !!renderUserInteractions && typeof data.url === "string" && data.url.substr(0, 7).toLowerCase() === "mailto:";
     const isAFileLink = typeof data.url === "string" && data.url.startsWith("https://object.cscs.ch");
@@ -88,10 +88,9 @@ const ValueFieldBase = (renderUserInteractions = true) => {
     if (hasInstanceLink) {
       ValueComponent = InstanceLink;
       valueProps = {
-        type: instanceTypeLink,
         id: instanceIdLink,
         group: group,
-        text: value ? value : `${instanceTypeLink}/${instanceIdLink}`
+        text: value ? value : instanceIdLink
       };
     } else if (hasLink || isLinkWithIcon) {
       ValueComponent = Link;

@@ -16,15 +16,16 @@
 
 import React from "react";
 import "./ThemeToggle.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const themes = [
   {
     name: "dark",
-    icon: "fa-moon-o"
+    icon: "moon"
   },
   {
     name: "default",
-    icon: "fa-sun-o",
+    icon: "sun",
     default: true
   }
 ];
@@ -60,7 +61,7 @@ export class ThemeToggle extends React.Component {
       <div className="kgs-theme_toggle">
         {themes.map(theme => (
           <button key={theme.name} className={`kgs-theme_toggle__button ${((!this.state.theme && theme.default) || (theme.name === this.state.theme))?"selected":""}`} onClick={() => this.handleClick(theme)}>
-            <i className={`fa ${theme.icon}`}></i>
+            <FontAwesomeIcon icon={theme.icon} />
           </button>
         ))}
       </div>

@@ -18,7 +18,7 @@ import React from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./ImageCarousel.css";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export class ImageCarousel extends React.Component {
   onClick = index => {
     const { images, onClick } = this.props;
@@ -39,7 +39,9 @@ export class ImageCarousel extends React.Component {
                 <p className="legend" ref={ref=>this.labelRef = ref}>{label}</p>
               )}
               {typeof onClick === "function" && hasTarget && (
-                <div className={`kgs-image_carousel-icon ${isTargetAnimated?"is-animated":""}`}><i className={`fa fa-4x ${isTargetAnimated?"fa-play":"fa-search"}`}></i></div>
+                <div className={`kgs-image_carousel-icon ${isTargetAnimated?"is-animated":""}`}>
+                  <FontAwesomeIcon icon={isTargetAnimated?"play":"search"} size="4x" />
+                </div>
               )}
             </div>
           ))}

@@ -15,6 +15,7 @@
 */
 
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { history } from "../../store";
 import { getTags, getTitle } from "../../helpers/InstanceHelper";
@@ -24,8 +25,6 @@ import { Tags } from "../../components/Tags/Tags";
 import { DefinitionErrorPanel, GroupErrorPanel, InstanceErrorPanel } from "../Error/ErrorPanel";
 
 import "./InstanceContainer.css";
-import { SignInButton } from "../SignIn/SignInButton";
-import { GroupSelection } from "../Group/GroupSelection";
 import { getUpdatedQuery, getLocationFromQuery } from "../../helpers/BrowserHelpers";
 
 class BackLinkButton extends React.Component {
@@ -38,7 +37,7 @@ class BackLinkButton extends React.Component {
       return null;
     }
     return (
-      <button className="kgs-container__backButton" onClick={this.onClick}><i className="fa fa-chevron-left"></i>&nbsp;{history.location.state.title}</button>
+      <button className="kgs-container__backButton" onClick={this.onClick}><FontAwesomeIcon icon="chevron-left" />&nbsp;{history.location.state.title}</button>
     );
   }
 }
@@ -66,7 +65,7 @@ export class InstanceContainer extends React.Component {
   componentDidMount() {
     const { setInitialGroup, location } = this.props;
     this.setTitle();
-    const group = location.query.group || localStorage.getItem("group");
+    const group = location.query.group;
     if (group) {
       setInitialGroup(group);
     }
@@ -74,20 +73,20 @@ export class InstanceContainer extends React.Component {
   }
 
   componentDidUpdate(previousProps) {
-    const { definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, group, instanceHasError, type, id } = this.props;
+    const { definitionIsReady, definitionHasError, isGroupsReady, groupsHasError, group, instanceHasError, id } = this.props;
     this.setTitle();
     this.updateLocation(previousProps);
     if (definitionIsReady !== previousProps.definitionIsReady || definitionHasError !== previousProps.definitionHasError ||
        groupsHasError !== previousProps.groupsHasError || isGroupsReady !== previousProps.isGroupsReady || previousProps.group !== group ||
        previousProps.instanceHasError !== instanceHasError ||
-       previousProps.type !== type || previousProps.id !== id) {
+       previousProps.id !== id) {
       this.initialize(previousProps.group);
     }
   }
 
   setTitle() {
-    const { type, id, currentInstance } = this.props;
-    document.title = `EBRAINS - ${getTitle(currentInstance, type, id)}`;
+    const { id, currentInstance } = this.props;
+    document.title = `EBRAINS - ${getTitle(currentInstance, id)}`;
   }
 
   updateLocation = (previousProps) => {
@@ -105,7 +104,7 @@ export class InstanceContainer extends React.Component {
     const {
       definitionIsReady, definitionHasError, definitionIsLoading,
       isGroupsReady, isGroupLoading, shouldLoadGroups, groupsHasError,
-      instanceIsLoading, type, id, group, previousInstance, setPreviousInstance,
+      instanceIsLoading, id, group, previousInstance, setPreviousInstance,
       loadDefinition, loadGroups, fetch
     } = this.props;
 
@@ -120,19 +119,18 @@ export class InstanceContainer extends React.Component {
     } else {
       if(!instanceIsLoading) {
         if (previousInstance &&
-            previousInstance._source?.type?.value === type &&
             previousInstance._id === id &&
             previousGroup === group) {
           setPreviousInstance();
         } else {
-          fetch(group, type, id);
+          fetch(group, id);
         }
       }
     }
   }
 
   render() {
-    const { showInstance, showGroupSelection, instanceProps, watermark } = this.props;
+    const { showInstance, instanceProps, watermark, fetch } = this.props;
     const NavigationComponent = getNavigation(instanceProps && instanceProps.header);
     return (
       <React.Fragment>
@@ -140,24 +138,12 @@ export class InstanceContainer extends React.Component {
           {showInstance && (
             <React.Fragment>
               <BackLinkButton />
-              <Instance {...this.props.instanceProps} NavigationComponent={NavigationComponent} />
+              <Instance {...this.props.instanceProps} NavigationComponent={NavigationComponent} fetch={fetch} />
             </React.Fragment>
           )}
           {watermark && (
             <div className="kgs-instance-editor__watermark">
               <p>{watermark}</p>
-            </div>
-          )}
-          {showInstance && (
-            <div className="kgs-footer">
-              <div className="kgs-footer-nav">
-                {showGroupSelection && (
-                  <>
-                    <SignInButton className="kgs-sign-in" signInLabel="Log in" signOffLabel="Log out"/>
-                    <GroupSelection className="kgs-group-selection"/>
-                  </>
-                )}
-              </div>
             </div>
           )}
         </div>
