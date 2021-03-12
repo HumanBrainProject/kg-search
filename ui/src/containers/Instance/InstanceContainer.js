@@ -27,20 +27,19 @@ import { DefinitionErrorPanel, GroupErrorPanel, InstanceErrorPanel } from "../Er
 import "./InstanceContainer.css";
 import { getUpdatedQuery, getLocationFromQuery } from "../../helpers/BrowserHelpers";
 
-class BackLinkButton extends React.Component {
+const BackLinkButton = () => {
 
-  onClick = () => history.goBack();
+  const onClick = () => history.goBack();
 
-  render() {
-    const title = history.location.state && history.location.state.title;
-    if (!title) {
-      return null;
-    }
-    return (
-      <button className="kgs-container__backButton" onClick={this.onClick}><FontAwesomeIcon icon="chevron-left" />&nbsp;{history.location.state.title}</button>
-    );
+  const title = history.location.state && history.location.state.title;
+  if (!title) {
+    return null;
   }
-}
+  return (
+    <button className="kgs-container__backButton" onClick={onClick}><FontAwesomeIcon icon="chevron-left" />&nbsp;{history.location.state.title}</button>
+  );
+
+};
 
 const NavigationComponent = ({tags}) => (
   <div className="kgs-instance-container__header">

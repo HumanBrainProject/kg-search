@@ -13,7 +13,7 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Hint } from "../Hint/Hint";
 import "./Tabs.css";
@@ -32,49 +32,37 @@ const Tab = ({tab, active, onClick}) => {
   );
 };
 
-export class Tabs extends React.Component {
-  constructor(props) {
-    super(props);
-    const {tabs} = this.props;
-    this.state = {
-      value: Array.isArray(tabs) && tabs.length && tabs[0]
-    };
+export const Tabs = ({id, className, tabs, viewComponent }) => {
+  const [value, setValue] = useState();
+
+  useEffect(() => {
+    setValue(Array.isArray(tabs) && tabs.length && tabs[0]);
+  }, [id]);
+
+  const handleClick = value => setValue(value);
+
+  const classNames = ["kgs-tabs", className].join(" ");
+  const Component = viewComponent;
+
+  if (!Array.isArray(tabs) || !tabs.length) {
+    return null;
   }
 
-  componentDidUpdate(previousProps) {
-    const { id, tabs } = this.props;
-    if (previousProps.id !== id) {
-      this.setState({value: Array.isArray(tabs) && tabs.length && tabs[0]});
-    }
-  }
-
-  handleClick = value => {
-    this.setState({value: value});
-  }
-  render() {
-    const { className, tabs, viewComponent } = this.props;
-
-    if (!Array.isArray(tabs) || !tabs.length) {
-      return null;
-    }
-    const classNames = ["kgs-tabs", className].join(" ");
-    const Component = viewComponent;
-    return (
-      <div className={classNames}>
-        <div className="kgs-tabs-buttons">
-          {tabs.map(tab => (
-            <Tab key={tab.id} tab={tab} active={this.state.value && tab.id === this.state.value.id} onClick={this.handleClick} />
-          ))}
-        </div>
-        <div className="kgs-tabs-content">
-          {this.state.value && this.state.value.data && Component && (
-            <Component key={this.state.value.id} {...this.state.value.data} />
-          )}
-        </div>
+  return (
+    <div className={classNames}>
+      <div className="kgs-tabs-buttons">
+        {tabs.map(tab => (
+          <Tab key={tab.id} tab={tab} active={value && tab.id === value.id} onClick={handleClick} />
+        ))}
       </div>
-    );
-  }
-}
+      <div className="kgs-tabs-content">
+        {value && value.data && Component && (
+          <Component key={value.id} {...value.data} />
+        )}
+      </div>
+    </div>
+  );
+};
 
 Tabs.propTypes = {
   className: PropTypes.string,

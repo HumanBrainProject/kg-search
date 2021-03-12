@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./ThemeToggle.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -30,43 +30,40 @@ const themes = [
   }
 ];
 
-export class ThemeToggle extends React.Component {
-  constructor(props) {
-    super(props);
-    const theme = localStorage.getItem("currentTheme");
-    this.setTheme(theme);
-    this.state = {
-      theme: theme
-    };
-  }
+export const ThemeToggle = () => {
+  const [theme, setTheme] = useState();
 
-  setTheme = theme => {
-    if (theme) {
-      document.body.setAttribute("theme", theme);
-      localStorage.setItem("currentTheme", theme);
+  const applyTheme = value => {
+    if (value) {
+      document.body.setAttribute("theme", value);
+      localStorage.setItem("currentTheme", value);
     } else {
       document.body.removeAttribute("theme");
-      localStorage.removeItem("currentTheme", theme);
+      localStorage.removeItem("currentTheme", value);
     }
-  }
+  };
 
-  handleClick = theme => {
-    const value = theme.default?null:theme.name;
-    this.setTheme(value);
-    this.setState({theme: value});
-  }
+  useEffect(() => {
+    const value = localStorage.getItem("currentTheme");
+    applyTheme(value);
+    setTheme(value);
+  }, []);
 
-  render() {
-    return (
-      <div className="kgs-theme_toggle">
-        {themes.map(theme => (
-          <button key={theme.name} className={`kgs-theme_toggle__button ${((!this.state.theme && theme.default) || (theme.name === this.state.theme))?"selected":""}`} onClick={() => this.handleClick(theme)}>
-            <FontAwesomeIcon icon={theme.icon} />
-          </button>
-        ))}
-      </div>
-    );
-  }
-}
+  const handleClick = v => {
+    const value = v.default?null:v.name;
+    applyTheme(value);
+    setTheme(value);
+  };
+
+  return (
+    <div className="kgs-theme_toggle">
+      {themes.map(t => (
+        <button key={t.name} className={`kgs-theme_toggle__button ${((!theme && t.default) || (t.name === theme))?"selected":""}`} onClick={() => handleClick(t)}>
+          <FontAwesomeIcon icon={t.icon} />
+        </button>
+      ))}
+    </div>
+  );
+};
 
 export default ThemeToggle;

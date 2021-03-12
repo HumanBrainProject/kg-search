@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-import React from "react";
+import React, { useEffect } from "react";
 import ReactPiwik from "react-piwik";
 
 import { getTags } from "../../helpers/InstanceHelper";
@@ -29,82 +29,69 @@ import { BgError } from "../BgError/BgError";
 
 import "./Instance.css";
 
-export class Instance extends React.PureComponent {
+export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, previews, buttons, main, summary, groups, NavigationComponent, ImagePreviewsComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch }) => {
 
-  componentDidMount() {
-    this.trackEvent();
-  }
+  useEffect(() => {
+    trackEvent();
+  }, [id, type, group]);
 
-  componentDidUpdate(previousProps) {
-    const { id, type, group } = this.props;
-    if (id !== previousProps.id || type !== previousProps.type || group !== previousProps.group) {
-      this.trackEvent();
-    }
-  }
-
-  trackEvent = () => {
-    const { id, type, group, path, defaultGroup } = this.props;
+  const trackEvent = () => {
     const relativeUrl = `${path}${type}/${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
     ReactPiwik.push(["trackEvent", "Card", "Opened", relativeUrl]);
-  }
+  };
 
-  onVersionChange = version => {
-    const { searchPage, group, fetch, path } = this.props;
+  const onVersionChange = version => {
     if(searchPage) {
       fetch(group, version, true);
     } else {
       history.push(`${path}${version}${group && group !== "public"?("?group=" + group ):""}`);
     }
-  }
+  };
 
-  render() {
-    const { id, type, hasNoData, hasUnknownData, header, previews, buttons, main, summary, groups, NavigationComponent, ImagePreviewsComponent, ImagePopupComponent, TermsShortNoticeComponent } = this.props;
-
-    if (hasNoData) {
-      return(
-        <BgError show={true} message="This data is currently not available." />
-      );
-    }
-
-    if (hasUnknownData) {
-      return(
-        <BgError show={true} message="This type of data is currently not supported." />
-      );
-    }
-
-    const tags = getTags(header);
-
-    return (
-      <div className="kgs-instance" data-type={type}>
-        <div className="kgs-instance__header">
-          <NavigationComponent />
-          <div className="kgs-instance__header_fields">
-            <Tags tags={tags} />
-            <div className="kgs-instance__header_title">
-              <Field {...header.title} />
-              <VersionSelector version={header.version} versions={header.versions} onChange={this.onVersionChange} />
-            </div>
-            <FieldsPanel fields={header.fields} fieldComponent={Field} />
-          </div>
-        </div>
-        <div className="kgs-instance-scroll">
-          <div className="kgs-instance-scoll-content">
-            <div className={`kgs-instance-content kgs-instance__grid ${(buttons && buttons.length) ? "kgs-instance__with-buttons" : ""} ${(previews && previews.length) ? "kgs-instance__with-previews" : ""}`}>
-              <FieldsButtons className="kgs-instance__buttons" fields={buttons} />
-              <div className="kgs-instance__highlights">
-                <ImagePreviewsComponent className={`kgs-instance__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
-                <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
-              </div>
-              <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
-              <FieldsTabs className="kgs-instance__groups" id={id} fields={groups} />
-            </div>
-            <strong className="kgs-instance-content-disclaimer">Disclaimer:
-Please alert us at <a href="mailto:curation-support@ebrains.eu">curation-support@ebrains.eu</a> for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible.</strong>
-            <TermsShortNoticeComponent />
-          </div>
-        </div>
-        <ImagePopupComponent className="kgs-instance__image_popup" />
-      </div>
+  if (hasNoData) {
+    return(
+      <BgError show={true} message="This data is currently not available." />
     );
   }
-}
+
+  if (hasUnknownData) {
+    return(
+      <BgError show={true} message="This type of data is currently not supported." />
+    );
+  }
+
+  const tags = getTags(header);
+
+  return (
+    <div className="kgs-instance" data-type={type}>
+      <div className="kgs-instance__header">
+        <NavigationComponent />
+        <div className="kgs-instance__header_fields">
+          <Tags tags={tags} />
+          <div className="kgs-instance__header_title">
+            <Field {...header.title} />
+            <VersionSelector version={header.version} versions={header.versions} onChange={onVersionChange} />
+          </div>
+          <FieldsPanel fields={header.fields} fieldComponent={Field} />
+        </div>
+      </div>
+      <div className="kgs-instance-scroll">
+        <div className="kgs-instance-scoll-content">
+          <div className={`kgs-instance-content kgs-instance__grid ${(buttons && buttons.length) ? "kgs-instance__with-buttons" : ""} ${(previews && previews.length) ? "kgs-instance__with-previews" : ""}`}>
+            <FieldsButtons className="kgs-instance__buttons" fields={buttons} />
+            <div className="kgs-instance__highlights">
+              <ImagePreviewsComponent className={`kgs-instance__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
+              <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
+            </div>
+            <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
+            <FieldsTabs className="kgs-instance__groups" id={id} fields={groups} />
+          </div>
+          <strong className="kgs-instance-content-disclaimer">Disclaimer:
+Please alert us at <a href="mailto:curation-support@ebrains.eu">curation-support@ebrains.eu</a> for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible.</strong>
+          <TermsShortNoticeComponent />
+        </div>
+      </div>
+      <ImagePopupComponent className="kgs-instance__image_popup" />
+    </div>
+  );
+};

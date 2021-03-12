@@ -16,7 +16,7 @@
 
 import React from "react";
 
-export function FieldsPanel({className, fields, fieldComponent}) {
+export const FieldsPanel = ({className, fields, fieldComponent}) =>{
   if (!fields || !fields.length) {
     return null;
   }
@@ -28,4 +28,4 @@ export function FieldsPanel({className, fields, fieldComponent}) {
       ))}
     </div>
   );
-}
+};

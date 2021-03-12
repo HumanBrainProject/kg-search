@@ -18,39 +18,31 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./ErrorPanel.css";
 
-export class ErrorPanel extends React.PureComponent {
-  onRetry = () => {
-    const { retryAction, onAction } = this.props;
-    typeof onAction === "function" && onAction(retryAction);
-  };
+export const ErrorPanel = ({ cancelAction, retryAction, onAction, show, message, retryLabel, cancelLabel  }) => {
+  const onRetry = () => typeof onAction === "function" && onAction(retryAction);
 
-  onCancel = () => {
-    const { cancelAction, onAction } = this.props;
-    typeof onAction === "function" && onAction(cancelAction);
-  };
+  const onCancel = () => typeof onAction === "function" && onAction(cancelAction);
 
-  render() {
-    const { show, message, retryLabel, cancelLabel } = this.props;
-    if (!show) {
-      return null;
-    }
-    return (
-      <div className="kgs-error-container">
-        <div className="kgs-error-panel">
-          <span className="kgs-error-message">{message}</span>
-          <div className="kgs-error-navigation">
-            {cancelLabel && (
-              <button onClick={this.onCancel}>{cancelLabel}</button>
-            )}
-            {retryLabel && (
-              <button onClick={this.onRetry}>{retryLabel}</button>
-            )}
-          </div>
+  if (!show) {
+    return null;
+  }
+
+  return (
+    <div className="kgs-error-container">
+      <div className="kgs-error-panel">
+        <span className="kgs-error-message">{message}</span>
+        <div className="kgs-error-navigation">
+          {cancelLabel && (
+            <button onClick={onCancel}>{cancelLabel}</button>
+          )}
+          {retryLabel && (
+            <button onClick={onRetry}>{retryLabel}</button>
+          )}
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 ErrorPanel.propTypes = {
   show: PropTypes.bool,

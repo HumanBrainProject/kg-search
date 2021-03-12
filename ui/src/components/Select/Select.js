@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./Select.css";
 
-export function Select({className, label, value, list, onChange}) {
+export const Select = ({className, label, value, list, onChange}) => {
   if (!Array.isArray(list) || list.length <= 1) {
     return null;
   }
@@ -32,7 +32,7 @@ export function Select({className, label, value, list, onChange}) {
       </select>
     </div>
   );
-}
+};
 
 Select.propTypes = {
   className: PropTypes.string,

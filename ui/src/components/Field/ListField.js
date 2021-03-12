@@ -95,7 +95,6 @@ const ListFieldBase = (renderUserInteractions = true) => {
         hasShowMoreToggle: this.hasShowMoreToggle,
         showMoreLabel: getShowMoreLabel(sizeStop, this.props)
       };
-      this.handleShowMoreClick = this.handleShowMoreClick.bind(this);
     }
 
     get maxSizeStop() {
@@ -120,7 +119,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
       return this.maxSizeStop > LIST_SMALL_SIZE_STOP;
     }
 
-    handleShowMoreClick() {
+    handleShowMoreClick = () => {
       this.setState((state, props) => {
         const nextSizeStop = getNextSizeStop(state.sizeStop, props);
         return {

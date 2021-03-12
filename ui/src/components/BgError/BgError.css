@@ -33,6 +33,10 @@
     position: relative;
 }
 
+.kgs-bg-error-message a{
+    color: var(--link-color-1)
+}
+
 .kgs-bg-error-navigation {
     position: relative;
     width: 100%;

@@ -86,7 +86,6 @@ const TableFieldBase = (renderUserInteractions = true) => {
         hasShowMoreToggle: this.hasShowMoreToggle,
         showMoreLabel: getShowMoreLabel(sizeStop, this.props)
       };
-      this.handleShowMoreClick = this.handleShowMoreClick.bind(this);
     }
 
     get maxSizeStop() {
@@ -125,7 +124,7 @@ const TableFieldBase = (renderUserInteractions = true) => {
       }));
     }
 
-    handleShowMoreClick() {
+    handleShowMoreClick = () => {
       this.setState((state,props) => {
         const nextSizeStop = getNextSizeStop(state.sizeStop, props);
         return {

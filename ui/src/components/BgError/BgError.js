@@ -20,40 +20,34 @@ import "./BgError.css";
 import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-export class BgError extends React.PureComponent {
-  onRetry = () => {
-    const { retryAction, onAction } = this.props;
-    typeof onAction === "function" && onAction(retryAction);
-  };
 
-  onCancel = () => {
-    const { cancelAction, onAction } = this.props;
-    typeof onAction === "function" && onAction(cancelAction);
-  };
+const converter = new showdown.Converter({extensions: [xssFilter]});
 
-  render() {
-    const { show, message, retryLabel, retryStyle, cancelLabel, cancelStyle } = this.props;
-    if (!show) {
-      return null;
-    }
-    const converter = new showdown.Converter({extensions: [xssFilter]});
-    const html = converter.makeHtml(message);
-    return (
-      <div className="kgs-bg-error">
-        <FontAwesomeIcon icon="ban" className="kgs-bg-error-icon" size="5x"/><br/>
-        <span className="kgs-bg-error-message" dangerouslySetInnerHTML={{__html:html}} />
-        <div className="kgs-bg-error-navigation">
-          {cancelLabel && (
-            <button className={`${cancelStyle?cancelStyle:""}`} onClick={this.onCancel}>{cancelLabel}</button>
-          )}
-          {retryLabel && (
-            <button className={`${retryStyle?retryStyle:""}`} onClick={this.onRetry}>{retryLabel}</button>
-          )}
-        </div>
-      </div>
-    );
+export const BgError = ({ cancelAction, retryAction, onAction, show, message, retryLabel, retryStyle, cancelLabel, cancelStyle }) => {
+  const onRetry = () => typeof onAction === "function" && onAction(retryAction);
+
+  const onCancel = () => typeof onAction === "function" && onAction(cancelAction);
+
+  if (!show) {
+    return null;
   }
-}
+
+  const html = converter.makeHtml(message);
+  return (
+    <div className="kgs-bg-error">
+      <FontAwesomeIcon icon="ban" className="kgs-bg-error-icon" size="5x"/><br/>
+      <span className="kgs-bg-error-message" dangerouslySetInnerHTML={{__html:html}} />
+      <div className="kgs-bg-error-navigation">
+        {cancelLabel && (
+          <button className={`${cancelStyle?cancelStyle:""}`} onClick={onCancel}>{cancelLabel}</button>
+        )}
+        {retryLabel && (
+          <button className={`${retryStyle?retryStyle:""}`} onClick={onRetry}>{retryLabel}</button>
+        )}
+      </div>
+    </div>
+  );
+};
 
 BgError.propTypes = {
   show: PropTypes.bool,

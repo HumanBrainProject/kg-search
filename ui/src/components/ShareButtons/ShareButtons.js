@@ -20,17 +20,14 @@ import { CopyToClipboardButton } from "../CopyToClipboard/CopyToClipboardButton"
 import EmailToLink from "../EmailToLink/EmailToLink";
 import "./ShareButtons.css";
 
-export function ShareButtons({className, clipboardContent, emailToLink}) {
-  const classNames = ["kgs-share-links", className].join(" ");
-  return (
-    <span className={classNames}>
-      <span className="kgs-share-links-panel">
-        <CopyToClipboardButton icon="clipboard" title="Copy search link to clipboard" confirmationText="search link copied to clipoard" content={clipboardContent} />
-        <EmailToLink icon="envelope" title="Send search link by email" link={emailToLink} />
-      </span>
+export const ShareButtons = ({className, clipboardContent, emailToLink}) => (
+  <span className={`kgs-share-links ${className?className:""}`}>
+    <span className="kgs-share-links-panel">
+      <CopyToClipboardButton icon="clipboard" title="Copy search link to clipboard" confirmationText="search link copied to clipoard" content={clipboardContent} />
+      <EmailToLink icon="envelope" title="Send search link by email" link={emailToLink} />
     </span>
-  );
-}
+  </span>
+);
 
 ShareButtons.propTypes = {
   className: PropTypes.string,
