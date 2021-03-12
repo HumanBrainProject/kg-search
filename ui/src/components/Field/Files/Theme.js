@@ -52,7 +52,7 @@ export default {
           position: "absolute",
           top: "50%",
           left: "50%",
-          margin: "-7px 0 0 -7px",
+          margin: "-12px 0 0 -7px",
           height: "14px"
         },
         height: 14,

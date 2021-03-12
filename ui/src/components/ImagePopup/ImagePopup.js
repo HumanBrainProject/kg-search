@@ -28,7 +28,7 @@ export const ImagePopup = ({ className, src, label, onClick }) => {
   useEffect(() => loadImage(), [src]);
 
   const handleOnClick = e => {
-    if ((!this.closeBtnRef || (this.closeBtnRef && this.closeBtnRef !== e.target)) && this.wrapperRef && this.wrapperRef.contains(e.target)) {
+    if ((!closeBtnRef.current || (closeBtnRef.current && closeBtnRef.current !== e.target)) && wrapperRef.current && wrapperRef.current.contains(e.target)) {
       e && e.preventDefault();
     } else {
       typeof onClick === "function" && onClick();

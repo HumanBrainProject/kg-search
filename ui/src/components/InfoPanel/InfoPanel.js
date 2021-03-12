@@ -28,7 +28,7 @@ export const InfoPanel = ({text, onClose}) => {
   const ref = useRef();
 
   const handleOnClose = e => {
-    if (this.wrapperRef && !this.wrapperRef.contains(e.target)) {
+    if (ref.current && !ref.current.contains(e.target)) {
       typeof onClose === "function" && onClose();
     }
   };

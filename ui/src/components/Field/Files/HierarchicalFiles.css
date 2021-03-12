@@ -148,6 +148,9 @@
     word-break: break-all;
 }
 
+.kgs-hierarchical-files__icon {
+    transform: translateY(-4px);
+}
 
 @media (min-width:768px) {
     .kgs-hierarchical-files>ul {
