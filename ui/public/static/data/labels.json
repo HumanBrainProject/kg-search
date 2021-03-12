@@ -148,10 +148,16 @@
                     "https://schema.hbp.eu/searchUi/boost": 2.0
                 },
                 "speciesFilter": {
-                    "https://schema.hbp.eu/graphQuery/label": "Species",
+                    "https://schema.hbp.eu/graphQuery/label": "Owners",
                     "https://schema.hbp.eu/searchUi/visible": false,
-                    "https://schema.hbp.eu/searchUi/type": "text",
-                    "https://schema.hbp.eu/searchUi/facet": "list"
+                    "https://schema.hbp.eu/searchUi/facetMissingTerm": "Others",
+                    "children": {
+                        "owners": {
+                            "https://schema.hbp.eu/searchUi/visible": false,
+                            "https://schema.hbp.eu/searchUi/facet": "list",
+                            "https://schema.hbp.eu/searchUi/isHierarchicalFacet": true
+                        }
+                    }
                 },
                 "embargoRestrictedAccess": {
                     "https://schema.hbp.eu/graphQuery/label": "Restricted access",

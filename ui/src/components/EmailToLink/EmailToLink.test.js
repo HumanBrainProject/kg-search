@@ -24,7 +24,7 @@ Enzyme.configure({ adapter: new Adapter() });
 
 test('EmailToLink component renders initially', () => {
     const component = renderer.create(
-        <EmailToLink className="test" title="title" text="text" link="link" icon="icon" />
+        <EmailToLink className="test" title="title" text="text" link="link" icon="times" />
     );
   
     expect(component.toJSON()).toMatchSnapshot();
@@ -32,28 +32,28 @@ test('EmailToLink component renders initially', () => {
 
 test('EmailToLink test className"', () => {
     const component = shallow(
-        <EmailToLink className="test" title="title" text="text" link="link" icon="icon" />
+        <EmailToLink className="test" title="title" text="text" link="link" icon="times" />
     );
     expect(component.hasClass("test"));
 });
   
 test('EmailToLink test text', () => {
     const component = shallow(
-        <EmailToLink className="test" title="title" text="text" link="link" icon="icon" />
+        <EmailToLink className="test" title="title" text="text" link="link" icon="times" />
     );
-    expect(component.text()).toEqual('text');
+    expect(component.text()).toContain('text');
 });
 
 test('EmailToLink test title', () => {
     const component = shallow(
-        <EmailToLink className="test" title="title" text="text" link="link" icon="icon" />
+        <EmailToLink className="test" title="title" text="text" link="link" icon="times" />
     );
     expect(component.prop("title")).toEqual('title');
 });
 
 test('EmailToLink test icon', () => {
     const component = shallow(
-        <EmailToLink className="test" title="title" text="text" link="link" icon="icon" />
+        <EmailToLink className="test" title="title" text="text" link="link" icon="times" />
     );
-    expect(component.find("i").hasClass("icon"));
+    expect(component.find("svg"));
 });

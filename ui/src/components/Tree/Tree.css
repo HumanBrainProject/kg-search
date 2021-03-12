@@ -38,12 +38,12 @@
     flex: 1;
 }
 
-.kgs-tree-collapsible-node .kgs-tree-collapsible-node__button i {
+.kgs-tree-collapsible-node .kgs-tree-collapsible-node__button svg {
     color: #999;
     transition: transform 0.25s cubic-bezier(.34,1.06,.63,.93);
 }
 
-.kgs-tree-collapsible-node.is-collapsed > .kgs-tree-collapsible-node__header > .kgs-tree-collapsible-node__button i {
+.kgs-tree-collapsible-node.is-collapsed > .kgs-tree-collapsible-node__header > .kgs-tree-collapsible-node__button svg {
     transform: rotateZ(-90deg);
 }
 

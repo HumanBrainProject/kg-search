@@ -15,6 +15,7 @@
  */
 
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import "./Tree.css";
 
@@ -33,7 +34,7 @@ const Node = props => {
 const NodeList = ({ items, ItemComponent, itemUniqKeyAttribute, onItemClick, readOnly }) => (
   <div className="kgs-tree__nodesList">
     {items.map(item => (
-      <Node key={item[itemUniqKeyAttribute]} item={item} ItemComponent={ItemComponent} itemUniqKeyAttribute={itemUniqKeyAttribute} onItemClick={onItemClick} readOnly={readOnly} />
+      <Node key={item[itemUniqKeyAttribute]} item={item} ItemComponent={ItemComponent} itemUniqKeyAttribute={itemUniqKeyAttribute} onClick={onItemClick} readOnly={readOnly} />
     ))}
   </div>
 );
@@ -92,7 +93,7 @@ class CollapisbleNode extends React.Component {
     return (
       <div className={`kgs-tree-collapsible-node ${this.state.isCollapsed ? "is-collapsed" : ""}`}>
         <div className="kgs-tree-collapsible-node__header">
-          <button className="kgs-tree-collapsible-node__button" title={`${this.state.isCollapsed ? "expand" : "collapse"}`} tabIndex={readOnly ? -1 : 0} onClick={readOnly ? undefined : this.handleCollapseToggle} style={readOnly ? { pointerEvents: "none" } : {}}><i className="fa fa-chevron-down"></i></button>
+          <button className="kgs-tree-collapsible-node__button" title={`${this.state.isCollapsed ? "expand" : "collapse"}`} tabIndex={readOnly ? -1 : 0} onClick={readOnly ? undefined : this.handleCollapseToggle} style={readOnly ? { pointerEvents: "none" } : {}}><FontAwesomeIcon icon="chevron-down" /></button>
           <NodeItem ItemComponent={ItemComponent} item={item} onClick={onClick} readOnly={readOnly} />
         </div>
         <div className="kgs-tree-collapsible-node__children" ref={this.childrenRef} style={{ maxHeight: maxHeight }}>

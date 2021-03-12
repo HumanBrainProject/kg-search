@@ -15,6 +15,7 @@
  */
 
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { List } from "../List/List";
 
@@ -141,6 +142,8 @@ export class FilteredList extends React.Component {
             onFocus={this.handleFocus}
             value={filter}
             placeholder={(!dropdownOpen) ? "add " + label.toLowerCase() + " filters" : ""} />
+          <FontAwesomeIcon icon="filter" className="kgs-filtered-facet_filter_icon" />
+          <FontAwesomeIcon icon="chevron-down" className="kgs-filtered-facet_filter_dropdown_icon"/>
           <input style={{ display: "none" }} type="text" ref={ref => this.hiddenInputRef = ref} />
         </div>
         {dropdownOpen && (options.length || filter) && (

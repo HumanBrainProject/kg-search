@@ -24,7 +24,7 @@ Enzyme.configure({ adapter: new Adapter() });
 
 test('Ribbon component renders initially', () => {
     const component = renderer.create(
-        <Ribbon className="className" icon="an icon" text="some text" counter={12} suffix="a suffix" />
+        <Ribbon className="className" icon="times" text="some text" counter={12} suffix="a suffix" />
     );
   
     expect(component.toJSON()).toMatchSnapshot();
@@ -32,28 +32,28 @@ test('Ribbon component renders initially', () => {
 
 test('Ribbon test className"', () => {
     const component = shallow(
-        <Ribbon className="className" icon="an icon" text="some text" counter={12} suffix="a suffix" />
+        <Ribbon className="className" icon="times" text="some text" counter={12} suffix="a suffix" />
     );
     expect(component.hasClass("className"));
 });
 
 test('Ribbon test icon', () => {
     const component = shallow(
-        <Ribbon className="className" icon="an icon" text="some text" counter={12} suffix="a suffix" />
+        <Ribbon className="className" icon="times" text="some text" counter={12} suffix="a suffix" />
     );
-    expect(component.find("div.ribbon-inner-content div").at(0).html()).toContain("an icon");
+    expect(component.find("svg"));
 });
 
 test('Ribbon test text', () => {
     const component = shallow(
-        <Ribbon className="className" icon="an icon" text="some text" counter={12} suffix="a suffix" />
+        <Ribbon className="className" icon="times" text="some text" counter={12} suffix="a suffix" />
     );
-    expect(component.find("div.ribbon-inner-content div").at(1).html()).toContain("some text");
+    expect(component.find("div.ribbon-inner-content div").at(0).html()).toContain("some text");
 });
 
 test('Ribbon test counter & suffix', () => {
     const component = shallow(
-        <Ribbon className="className" icon="an icon" text="some text" counter={12} suffix="a suffix" />
+        <Ribbon className="className" icon="times" text="some text" counter={12} suffix="a suffix" />
     );
     expect(component.find(".ribbon-inner-content-framed").html()).toContain("12 a suffix");
 });

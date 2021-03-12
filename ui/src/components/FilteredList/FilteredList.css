@@ -24,25 +24,21 @@
     background: var(--background-color-2);
 }
 
-.kgs-filtered-list .kgs-filtered-list_filter:before {
-    content: "\f0b0";
+.kgs-filtered-list .kgs-filtered-facet_filter_icon {
     position: absolute;
-    margin-top: 4px;
-    margin-left: 8px;
+    left: 9px;
+    top: 9px;
     background: transparent;
-    font-family: FontAwesome;
     font-size: 1em;
     color: #999;
     pointer-events: none;
 }
 
-.kgs-filtered-list .kgs-filtered-list_filter:after {
-    content: "\f078";
+.kgs-filtered-list .kgs-filtered-facet_filter_dropdown_icon {
     position: absolute;
-    margin-top: 4px;
+    margin-top: 8px;
     margin-left: -30px;
     background: transparent;
-    font-family: FontAwesome;
     font-size: 1em;
     color: #999;
     pointer-events: none;

@@ -15,12 +15,13 @@
  */
 
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import "./FacetCheckbox.css";
 
 export const FacetCheckbox = ({ item: { label, count, checked, hasAnyChildChecked } }) => (
   <div className={`kgs-facet-checkbox ${checked ? "is-active" : ""}  ${hasAnyChildChecked ? "has-any-child-active" : ""}`}>
-    <input type="checkbox" tabIndex="-1" />
+    <input type="checkbox" tabIndex="-1" />{checked?<FontAwesomeIcon icon="check"/>:hasAnyChildChecked?<FontAwesomeIcon icon="minus"/>:null}
     <div className="kgs-facet-checkbox__text">{label}</div>
     <div className="kgs-facet-checkbox__count">{count}</div>
   </div>

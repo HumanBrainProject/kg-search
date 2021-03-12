@@ -43,6 +43,11 @@
     outline: none;
 }
 
+.kgs-facet-checkbox input[type="checkbox"] + svg {
+    position: absolute;
+    transform: translate(4px, 4px);
+}
+
 .kgs-facet-checkbox input[type="checkbox"]:after {
     position: absolute;
     content: "";
@@ -64,10 +69,8 @@
 }
 
 .kgs-facet-checkbox.is-active input[type="checkbox"]:after {
-    content: "\f00c";
     border-color: transparent;
     background-color: var(--color-selected);
-    font-family: "FontAwesome";
 }
 
 .kgs-facet-checkbox .kgs-facet-checkbox__text {
@@ -98,10 +101,8 @@
 }
 
 .kgs-facet-checkbox.has-any-child-active:not(.is-active) input[type="checkbox"]:after {
-    content: "\f068";
     border-color: transparent;
     background-color: var(--color-selected);
-    font-family: "FontAwesome";
 }
 
 .kgs-facet-checkbox.has-any-child-active:not(.is-active) .kgs-facet-checkbox__text {
