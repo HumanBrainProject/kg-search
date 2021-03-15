@@ -14,42 +14,44 @@
 *   limitations under the License.
 */
 
-import React from "react";
+import React, { useRef } from "react";
 import PropTypes from "prop-types";
 import showdown from "showdown";
 /*import FilterXSS from 'xss';*/
 import xssFilter from "showdown-xss-filter";
 import "./InfoPanel.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-export class InfoPanel extends React.Component {
-  onClose = e => {
-    if (this.wrapperRef && !this.wrapperRef.contains(e.target)) {
-      const { onClose } = this.props;
+
+const converter = new showdown.Converter({extensions: [xssFilter]});
+
+export const InfoPanel = ({text, onClose}) => {
+  const ref = useRef();
+
+  const handleOnClose = e => {
+    if (ref.current && !ref.current.contains(e.target)) {
       typeof onClose === "function" && onClose();
     }
   };
 
-  render() {
-    const {text, onClose} = this.props;
-    if (!text) {
-      return null;
-    }
-    const converter = new showdown.Converter({extensions: [xssFilter]});
-    const html = converter.makeHtml(text);
-    return (
-      <div className="kgs-info" onClick={this.onClose} >
-        <div className="kgs-info__panel" ref={ref => this.wrapperRef = ref}>
-          <div className="kgs-info__container">
-            <span className="kgs-info__content" dangerouslySetInnerHTML={{__html:html}} />
-            <button className="kgs-info__closeButton" onClick={onClose}>
-              <FontAwesomeIcon icon="times" />
-            </button>
-          </div>
+  if (!text) {
+    return null;
+  }
+
+  const html = converter.makeHtml(text);
+  return (
+    <div className="kgs-info" onClick={handleOnClose} >
+      <div className="kgs-info__panel" ref={ref}>
+        <div className="kgs-info__container">
+          <span className="kgs-info__content" dangerouslySetInnerHTML={{__html:html}} />
+          <button className="kgs-info__closeButton" onClick={handleOnClose}>
+            <FontAwesomeIcon icon="times" />
+          </button>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+
+};
 
 
 InfoPanel.propTypes = {

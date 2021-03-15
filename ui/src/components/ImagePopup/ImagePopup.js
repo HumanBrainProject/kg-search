@@ -14,79 +14,72 @@
 *   limitations under the License.
 */
 
-import React, { Component } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./ImagePopup.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-export class ImagePopup extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { src: null, error: false };
-  }
 
-  componentDidMount() {
-    this.loadImage();
-  }
+export const ImagePopup = ({ className, src, label, onClick }) => {
+  const [srcState, setSrc] = useState();
+  const [error, setError] = useState(false);
 
-  componentDidUpdate(prevProps) {
-    if (this.props.src !== prevProps.src) {
-      this.loadImage();
-    }
-  }
+  const wrapperRef = useRef();
+  const closeBtnRef = useRef();
 
-  onClick = e => {
-    if ((!this.closeBtnRef || (this.closeBtnRef && this.closeBtnRef !== e.target)) && this.wrapperRef && this.wrapperRef.contains(e.target)) {
+  useEffect(() => loadImage(), [src]);
+
+  const handleOnClick = e => {
+    if ((!closeBtnRef.current || (closeBtnRef.current && closeBtnRef.current !== e.target)) && wrapperRef.current && wrapperRef.current.contains(e.target)) {
       e && e.preventDefault();
     } else {
-      const { onClick } = this.props;
       typeof onClick === "function" && onClick();
     }
   };
 
-  loadImage() {
-    if (typeof this.props.src === "string") {
-      if (this.props.src !== this.state.src || this.state.error) {
-        this.setState({ src: this.props.src, error: false });
+  const loadImage = () => {
+    if (typeof src === "string") {
+      if (srcState !== src || error) {
+        setSrc(src);
+        setError(false);
       }
     } else {
-      this.setState({ src: null, error: true });
+      setSrc(null);
+      setError(true);
     }
-  }
+  };
 
-  render() {
-    const { className, src, label } = this.props;
-    const show = typeof src === "string";
-    return (
-      <div className={`kgs-image_popup ${show ? "show" : ""} ${className ? className : ""}`} onClick={this.onClick}>
-        {show && (
-          <div className="fa-stack fa-1x kgs-image_popup-content" ref={ref => this.wrapperRef = ref} >
-            {
-              this.state.error ?
-                <div className="kgs-image_popup-error">
-                  <FontAwesomeIcon icon="ban"/>
-                  <span>{`failed to fetch image "${label}" ...`}</span>
-                </div>
-                :
-                <React.Fragment>
-                  {(typeof this.state.src === "string" && this.state.src.endsWith(".mp4"))?
-                    <video alt={label ? label : ""} width="750" height="250" autoPlay loop>
-                      <source src={this.state.src} type="video/mp4" />
-                    </video>
-                    :
-                    <img src={this.state.src} alt={label ? label: ""}/>
-                  }
-                  {label && (
-                    <p className="kgs-image_popup-label">{label}</p>
-                  )}
-                </React.Fragment>
-            }
-            <div className="kgs-image_popup-close" ref={ref => this.closeBtnRef = ref}>
-              <FontAwesomeIcon icon="times"/>
-            </div>
+  const show = typeof src === "string";
+  return (
+    <div className={`kgs-image_popup ${show ? "show" : ""} ${className ? className : ""}`} onClick={handleOnClick}>
+      {show && (
+        <div className="fa-stack fa-1x kgs-image_popup-content" ref={wrapperRef} >
+          {
+            error ?
+              <div className="kgs-image_popup-error">
+                <FontAwesomeIcon icon="ban"/>
+                <span>{`failed to fetch image "${label}" ...`}</span>
+              </div>
+              :
+              <React.Fragment>
+                {(typeof srcState === "string" && srcState.endsWith(".mp4"))?
+                  <video alt={label ? label : ""} width="750" height="250" autoPlay loop>
+                    <source src={srcState} type="video/mp4" />
+                  </video>
+                  :
+                  <img src={srcState} alt={label ? label: ""}/>
+                }
+                {label && (
+                  <p className="kgs-image_popup-label">{label}</p>
+                )}
+              </React.Fragment>
+          }
+          <div className="kgs-image_popup-close" ref={closeBtnRef}>
+            <FontAwesomeIcon icon="times"/>
           </div>
-        )}
-      </div>
-    );
-  }
-}
+        </div>
+      )}
+    </div>
+  );
+
+};
 
 export default ImagePopup;

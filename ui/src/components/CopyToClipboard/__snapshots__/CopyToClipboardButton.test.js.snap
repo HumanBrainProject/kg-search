@@ -9,9 +9,6 @@ exports[`CopyToClipboardButton component renders initially 1`] = `
     role="link"
     title="title"
   >
-    <i
-      className="iconClassName"
-    />
     <span>
       text
     </span>

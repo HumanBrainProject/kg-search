@@ -13,13 +13,6 @@ exports[`Ribbon component renders initially 1`] = `
       <div
         className="ribbon-inner-content"
       >
-        <div
-          dangerouslySetInnerHTML={
-            Object {
-              "__html": "an icon",
-            }
-          }
-        />
         <div>
           some text
         </div>

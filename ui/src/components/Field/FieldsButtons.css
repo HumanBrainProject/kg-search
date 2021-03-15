@@ -1,6 +1,6 @@
 
 .kgs-fields-buttons a {
-  color: var(--link-color-1);
+  color: var(--link-color-1) !important;
 }
 
 .kgs-fields-buttons .kgs-fields-buttons__button {

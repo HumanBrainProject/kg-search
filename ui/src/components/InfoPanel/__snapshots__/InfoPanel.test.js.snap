@@ -22,11 +22,7 @@ exports[`InfoPanel component renders initially 1`] = `
       <button
         className="kgs-info__closeButton"
         onClick={[Function]}
-      >
-        <i
-          className="fa fa-close"
-        />
-      </button>
+      />
     </div>
   </div>
 </div>

@@ -6,9 +6,6 @@ exports[`EmailToLink component renders initially 1`] = `
   href="link"
   title="title"
 >
-  <i
-    className="icon"
-  />
   <span>
     text
   </span>

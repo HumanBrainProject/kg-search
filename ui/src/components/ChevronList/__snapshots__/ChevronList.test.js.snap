@@ -17,11 +17,7 @@ exports[`ChevronList component renders initially 1`] = `
         <div />
         <span
           className="kgs-chevron-list__chevron"
-        >
-          <i
-            className="fa fa-chevron-right"
-          />
-        </span>
+        />
       </button>
     </li>
     <li>
@@ -33,11 +29,7 @@ exports[`ChevronList component renders initially 1`] = `
         <div />
         <span
           className="kgs-chevron-list__chevron"
-        >
-          <i
-            className="fa fa-chevron-right"
-          />
-        </span>
+        />
       </button>
     </li>
   </ul>

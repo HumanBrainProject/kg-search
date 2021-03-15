@@ -21,7 +21,7 @@ import { Text } from "../Text/Text";
 import { CollapsibleText } from "../CollapsibleText/CollapsibleText";
 import { Link } from "../Link/Link";
 import { Tag } from "../Tag/Tag";
-import { Thumbnail } from "./Thumbnail";
+import { Thumbnail } from "../../containers/Thumbnail/Thumbnail";
 import { InstanceLink } from "./InstanceLink";
 import "./ValueField.css";
 

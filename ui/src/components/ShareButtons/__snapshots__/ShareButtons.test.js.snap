@@ -14,11 +14,7 @@ exports[`ShareButtons component renders initially 1`] = `
         onClick={[Function]}
         role="link"
         title="Copy search link to clipboard"
-      >
-        <i
-          className="fa fa-clipboard"
-        />
-      </button>
+      />
       <div
         className="kgs-copy-confirmation"
       >
@@ -30,9 +26,6 @@ exports[`ShareButtons component renders initially 1`] = `
       href="email to link"
       title="Send search link by email"
     >
-      <i
-        className="fa fa-envelope-o"
-      />
       <span />
     </a>
   </span>

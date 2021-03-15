@@ -41,7 +41,7 @@ test('Icon test without props', () => {
     const component = shallow(
         <Icon />
     );
-    expect(component.find("i").exists()).toEqual(true);
+    expect(component.find("svg").exists()).toEqual(true);
 });
 
 test('Icon test url', () => {
