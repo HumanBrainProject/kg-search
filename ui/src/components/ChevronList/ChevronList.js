@@ -17,21 +17,20 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "./ChevronList.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ChevronButton } from "./ChevronButton";
+import { ChevronStack } from "./ChevronStack";
 
-const ListItem = ({ reference, data, itemComponent, onClick }) => {
-  const handleClick = (event) => {
-    onClick(data, event.currentTarget);
-  };
 
-  const Component = itemComponent;
+const ChevronListItem = ({item, itemComponent, getKey, onClick }) => {
+  if (Array.isArray(item)) {
+    const key = getKey(item[0]);
+    return (
+      <ChevronStack reference={key} items={item} itemComponent={itemComponent} getKey={getKey} onClick={onClick} />
+    );
+  }
+  const key = getKey(item);
   return (
-    <li>
-      <button role="link" onClick={handleClick} data-reference={reference}>
-        <Component data={data} />
-        <span className="kgs-chevron-list__chevron"><FontAwesomeIcon icon="chevron-right" /></span>
-      </button>
-    </li>
+    <ChevronButton reference={key} data={item} component={itemComponent} onClick={onClick} />
   );
 };
 
@@ -47,9 +46,11 @@ export const ChevronList = ({ className, title, items, itemComponent, getKey, on
       )}
       <ul>
         {items.map(item => {
-          const key = getKey(item);
+          const key = getKey(Array.isArray(item)?items[0]:item);
           return (
-            <ListItem key={key} reference={key} data={item} itemComponent={itemComponent} onClick={onClick} />
+            <li key={key}>
+              <ChevronListItem item={item} itemComponent={itemComponent} getKey={getKey} onClick={onClick} />
+            </li>
           );
         })}
       </ul>

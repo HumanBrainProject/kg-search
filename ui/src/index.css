@@ -80,6 +80,7 @@
   --background-color-6: rgba(36, 38, 40, 0.75);
   --background-color-7: #242628;
   --background-color-8: #e4e4e4;
+  --background-color-9: #eee;
   --border-color-1: #e0e0e0;
   --border-color-2: #fff;
   --border-color-3: #ccc;
@@ -93,6 +94,7 @@
   --box-shadow-2: #8f8a8a;
   --box-shadow-3: #cbc9c9;
   --box-shadow-4: #111;
+  --box-shadow-5: rgba(0, 0, 0, .15);
   --font-stack: "Inter","Helvetica Neue",Arial,sans-serif;
   --font-stack-bold: "Inter-Bold","Helvetica Neue",Arial,sans-serif;
   --font-size-bigger: 21px;
@@ -178,6 +180,7 @@
   --background-color-6: rgba(73, 77, 80, 0.75);
   --background-color-7: #616365;
   --background-color-8: var(--background-color-1);
+  --background-color-9: #2a2a2a;
   --border-color-1: #555;
   --border-color-2: #111;
   --border-color-3: #222;
@@ -191,6 +194,7 @@
   --box-shadow-2: #111;
   --box-shadow-3: var(--box-shadow-2);
   --box-shadow-4: #111;
+  --box-shadow-5: rgba(255, 255, 255, .15);
 }
 
 @media (min-width: 576px) {

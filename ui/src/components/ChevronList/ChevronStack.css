@@ -1,0 +1,81 @@
+
+.kgs-chevron-stack .kgs-chevron-stack__total {
+  font-size: 14px;
+  color: var(--color-2);
+}
+
+.kgs-chevron-stack .kgs-chevron-stack__panel {
+  background-color: var(--background-color-2);
+  box-shadow:
+    /* The top layer shadow */
+    0 1px 1px rgba(0,0,0,0.15);
+}
+
+.kgs-chevron-stack[size="2"] .kgs-chevron-stack__panel {
+  
+  box-shadow:
+    /* The top layer shadow */
+    0 1px 1px rgba(0,0,0,0.15),
+    /* The second layer */
+    0 10px 0 -5px var(--background-color-9),
+    /* The second layer shadow */
+    0 10px 1px -4px var(--box-shadow-5);
+}
+
+.kgs-chevron-stack[size="3"] .kgs-chevron-stack__panel {
+  box-shadow:
+    /* The top layer shadow */
+    0 1px 1px rgba(0,0,0,0.15),
+    /* The second layer */
+    0 10px 0 -5px var(--background-color-9),
+    /* The second layer shadow */
+    0 10px 1px -4px var(--box-shadow-5),
+     /* The third layer */
+    0 20px 0 -10px var(--background-color-9),
+    /* The third layer shadow */
+    0 20px 1px -9px var(--box-shadow-5);
+}
+
+.kgs-chevron-stack[size="4"] .kgs-chevron-stack__panel {
+  box-shadow:
+    /* The top layer shadow */
+    0 1px 1px rgba(0,0,0,0.15),
+    /* The second layer */
+    0 10px 0 -5px var(--background-color-9),
+    /* The second layer shadow */
+    0 10px 1px -4px var(--box-shadow-5),
+     /* The third layer */
+    0 20px 0 -10px var(--background-color-9),
+    /* The third layer shadow */
+    0 20px 1px -9px var(--box-shadow-5),
+    /* The forth layer */
+    0 30px 0 -15px var(--background-color-9),
+    /* The forth layer shadow */
+    0 30px 1px -14px var(--box-shadow-5);
+}
+
+.kgs-chevron-stack[size="5"] .kgs-chevron-stack__panel {
+  box-shadow:
+  /* The top layer shadow */
+  0 1px 1px rgba(0,0,0,0.15),
+  /* The second layer */
+  0 10px 0 -5px var(--background-color-9),
+  /* The second layer shadow */
+  0 10px 1px -4px var(--box-shadow-5),
+   /* The third layer */
+  0 20px 0 -10px var(--background-color-9),
+  /* The third layer shadow */
+  0 20px 1px -9px var(--box-shadow-5),
+  /* The forth layer */
+  0 30px 0 -15px var(--background-color-9),
+  /* The forth layer shadow */
+  0 30px 1px -14px var(--box-shadow-5),
+  /* The fifth layer */
+  0 40px 0 -20px var(--background-color-9),
+  /* The fifth layer shadow */
+  0 40px 1px -19px var(--box-shadow-5);
+}
+
+.kgs-chevron-stack .kgs-chevron-stack__panel button.kgs-chevron-button {
+  min-height: 440px;
+}
