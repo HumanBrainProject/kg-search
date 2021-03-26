@@ -14,18 +14,18 @@
 *   limitations under the License.
 */
 
-.kgs-chevron-list {
+.kgs-hits-list {
     position: relative;
     margin: 0 -20px;
 }
 
 @media (min-width: 576px) {
-    .kgs-chevron-list {
+    .kgs-hits-list {
         margin: 0;
     }
 }
 
-.kgs-chevron-list > ul {
+.kgs-hits-list > ul {
     list-style-type: none;
     display: block;
     -ms-flex-flow: unset;
@@ -34,7 +34,7 @@
     padding: 0;
 }
 
-.kgs-chevron-list > div {
+.kgs-hits-list > div {
     border-top: 1px solid var(--color-27);
     width: 100%;
     margin-top: 40px;
@@ -45,12 +45,12 @@
 }
 
 @media (min-width: 576px) {
-    .kgs-chevron-list > div {
+    .kgs-hits-list > div {
         padding: 10px 0;
     }
 }
 
-.kgs-chevron-list > ul > li {
+.kgs-hits-list > ul > li {
     position: relative;
     display: inline-block;
     width: 100%;
@@ -58,18 +58,18 @@
 }
 
 @media (min-width: 576px) {
-    .kgs-chevron-list > ul > li {
+    .kgs-hits-list > ul > li {
         margin: 10px 0 10px 0;
     }
 }
 
 @media (min-width: 1450px) {
-    .kgs-chevron-list > ul {
+    .kgs-hits-list > ul {
         margin: 0 0 25px 0;
         padding: 0;
     }
 
-    .kgs-chevron-list > ul > li {
+    .kgs-hits-list > ul > li {
         width: 100%;
         margin: 0 0 30px 0;
     }

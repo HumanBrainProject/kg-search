@@ -16,29 +16,29 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import "./ChevronList.css";
-import { ChevronButton } from "./ChevronButton";
-import { ChevronStack } from "./ChevronStack";
+import "./HitsList.css";
+import { HitButton } from "./HitButton";
+import { HitsStack } from "./HitsStack";
 
 
-const ChevronListItem = ({item, itemComponent, getKey, onClick }) => {
+const HitsListItem = ({item, itemComponent, getKey, onClick }) => {
   if (Array.isArray(item)) {
     const key = getKey(item[0]);
     return (
-      <ChevronStack reference={key} items={item} itemComponent={itemComponent} getKey={getKey} onClick={onClick} />
+      <HitsStack reference={key} items={item} itemComponent={itemComponent} getKey={getKey} onClick={onClick} />
     );
   }
   const key = getKey(item);
   return (
-    <ChevronButton reference={key} data={item} component={itemComponent} onClick={onClick} />
+    <HitButton reference={key} data={item} component={itemComponent} onClick={onClick} />
   );
 };
 
-export const ChevronList = ({ className, title, items, itemComponent, getKey, onClick }) => {
+export const HitsList = ({ className, title, items, itemComponent, getKey, onClick }) => {
   if (!Array.isArray(items) || items.length === 0 || typeof getKey !== "function") {
     return null;
   }
-  const classNames = ["kgs-chevron-list", className].join(" ");
+  const classNames = ["kgs-hits-list", className].join(" ");
   return (
     <div className={classNames}>
       {title && (
@@ -49,7 +49,7 @@ export const ChevronList = ({ className, title, items, itemComponent, getKey, on
           const key = getKey(Array.isArray(item)?items[0]:item);
           return (
             <li key={key}>
-              <ChevronListItem item={item} itemComponent={itemComponent} getKey={getKey} onClick={onClick} />
+              <HitsListItem item={item} itemComponent={itemComponent} getKey={getKey} onClick={onClick} />
             </li>
           );
         })}
@@ -58,7 +58,7 @@ export const ChevronList = ({ className, title, items, itemComponent, getKey, on
   );
 };
 
-ChevronList.propTypes = {
+HitsList.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string,
   items: PropTypes.arrayOf(PropTypes.any),
@@ -71,4 +71,4 @@ ChevronList.propTypes = {
   onClick: PropTypes.func
 };
 
-export default ChevronList;
+export default HitsList;

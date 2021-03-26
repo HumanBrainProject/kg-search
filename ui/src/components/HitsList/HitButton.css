@@ -13,23 +13,29 @@
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
+button.kgs-hit-button {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 20px 40px 20px 20px;
+    border: 0;
+    border-bottom: 1px solid var(--border-color-8);
+    background-color: var(--background-color-2);
+    overflow: hidden;
+}
 
-import React from "react";
-import "./ChevronButton.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+.kgs-hits-stack button.kgs-hit-button {
+    display: flex;
+}
 
-export const ChevronButton = ({ reference, data, component, onClick }) => {
-  const handleClick = (event) => {
-    onClick(data, event.currentTarget);
-  };
+@media (min-width: 576px) {
+    button.kgs-hit-button {
+        border-bottom-width: 0;
+        transition: box-shadow 0.2s ease-in;
+    }
 
-  const Component = component;
-  return (
-    <button role="link" className="kgs-chevron-button" onClick={handleClick} data-reference={reference}>
-      <Component data={data} />
-      <span className="kgs-chevron-button__chevron"><FontAwesomeIcon icon="chevron-right" /></span>
-    </button>
-  );
-};
-
-export default ChevronButton;
+    button.kgs-hit-button:hover {
+        box-shadow: 1px 1px 2px var(--box-shadow-2);
+    }
+}
