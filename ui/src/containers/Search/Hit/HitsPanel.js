@@ -37,8 +37,6 @@ const groupHitsByField = (hits, field) => {
     const f = hit._source && hit._source[field];
     const value = f && !Array.isArray(f) && (typeof f === "object"?f.value:value);
     //console.log(value, value.startsWith("Probabilistic cytoarchitectonic"));
-    const [, test] = value.match(/(Probabilistic cytoarchitectonic map of\s[^\s]+)\s.*/);
-    const key = value?test: uniqueId(); // TODO: remove test and use value
     if (!value) {
       acc[uniqueId()] = {
         hits: [hit],
@@ -46,6 +44,9 @@ const groupHitsByField = (hits, field) => {
       };
       return acc;
     }
+    const reg = /(Probabilistic cytoarchitectonic map of\s[^\s]+)\s.*/;
+    const [, test] = (typeof value === "string" && reg.test(value))?value.match(reg):[null, null];
+    const key = test?test: uniqueId(); // TODO: remove test and use value
     if (!acc[key]) {
       acc[key] = {
         hits: [hit],
