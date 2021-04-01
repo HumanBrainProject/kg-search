@@ -1,7 +1,6 @@
-package eu.ebrains.kg.search.model.source.commons;
+package eu.ebrains.kg.search.model.source.commonsV1andV2;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;

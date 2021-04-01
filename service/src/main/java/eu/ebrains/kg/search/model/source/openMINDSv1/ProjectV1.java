@@ -1,8 +1,8 @@
 package eu.ebrains.kg.search.model.source.openMINDSv1;
 
 import eu.ebrains.kg.search.model.source.SourceInstance;
-import eu.ebrains.kg.search.model.source.commons.Publication;
-import eu.ebrains.kg.search.model.source.commons.SourceInternalReference;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.Publication;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.SourceInternalReference;
 
 import java.util.Date;
 import java.util.List;

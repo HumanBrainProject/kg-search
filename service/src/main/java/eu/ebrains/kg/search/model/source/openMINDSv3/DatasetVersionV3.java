@@ -1,12 +1,15 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import eu.ebrains.kg.search.model.source.SourceInstance;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Component;
 
 import java.util.Date;
 import java.util.List;
 
 public class DatasetVersionV3 implements SourceInstance {
     private String id;
+    private List<String> identifier;
     private String description;
     private String fullName;
     private String homepage;
@@ -16,7 +19,8 @@ public class DatasetVersionV3 implements SourceInstance {
     private String versionIdentifier;
     private String versionInnovation;
     private String previousVersionIdentifier;
-    private List<String> identifier;
+    private List<Author> authors;
+    private List<Component> components;
 
     public String getId() {
         return id;
@@ -100,6 +104,22 @@ public class DatasetVersionV3 implements SourceInstance {
 
     public void setPreviousVersionIdentifier(String previousVersionIdentifier) {
         this.previousVersionIdentifier = previousVersionIdentifier;
+    }
+
+    public List<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
+    }
+
+    public List<Component> getComponents() {
+        return components;
+    }
+
+    public void setComponents(List<Component> components) {
+        this.components = components;
     }
 }
 

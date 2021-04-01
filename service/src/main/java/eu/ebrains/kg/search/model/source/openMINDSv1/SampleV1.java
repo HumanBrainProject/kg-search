@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import eu.ebrains.kg.search.model.source.SourceInstance;
-import eu.ebrains.kg.search.model.source.commons.*;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.*;
 
 public class SampleV1 implements HasEmbargo, SourceInstance {
     private String id;

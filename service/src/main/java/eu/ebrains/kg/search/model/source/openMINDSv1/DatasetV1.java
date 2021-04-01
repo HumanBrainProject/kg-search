@@ -3,7 +3,7 @@ package eu.ebrains.kg.search.model.source.openMINDSv1;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import eu.ebrains.kg.search.model.source.SourceInstance;
-import eu.ebrains.kg.search.model.source.commons.*;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.*;
 
 import java.util.Date;
 import java.util.List;

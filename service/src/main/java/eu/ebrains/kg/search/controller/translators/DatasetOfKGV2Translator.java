@@ -1,7 +1,7 @@
 package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.commons.SourceExternalReference;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.SourceExternalReference;
 import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;

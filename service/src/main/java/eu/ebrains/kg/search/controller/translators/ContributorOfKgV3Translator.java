@@ -25,7 +25,7 @@ public class ContributorOfKgV3Translator implements  Translator<PersonV3, Contri
         List<String> identifiers = IdUtils.getUUID(person.getIdentifier());
         identifiers.add(uuid);
         c.setIdentifier(identifiers.stream().distinct().collect(Collectors.toList()));
-        c.setTitle(getFullName(person.getFamilyName(), person.getGivenName()));
+        c.setTitle(Helpers.getFullName(person.getFamilyName(), person.getGivenName()));
         if(!CollectionUtils.isEmpty(person.getContributions())) {
             c.setContributions(person.getContributions().stream()
                     .map(contribution ->
@@ -87,16 +87,5 @@ public class ContributorOfKgV3Translator implements  Translator<PersonV3, Contri
         return c;
     }
 
-    private String getFullName(String familyName, String givenName) {
-        if(familyName == null && givenName == null) {
-            return  null;
-        }
-        if(familyName != null && givenName == null) {
-            return familyName;
-        }
-        if(familyName == null) {
-            return givenName;
-        }
-        return String.format("%s, %s", familyName, givenName);
-    }
+
 }

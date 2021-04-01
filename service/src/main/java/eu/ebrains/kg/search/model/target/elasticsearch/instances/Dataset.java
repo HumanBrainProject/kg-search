@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//@MetaInfo(name = "DatasetVersions", identifier = "https://openminds.ebrains.eu/core/DatasetVersion", defaultSelection = true, order = 2)
 @MetaInfo(name = "Dataset", identifier = "minds/core/dataset/v1.0.0/search", defaultSelection = true, order = 2)
 @RibbonInfo(content = "Downloadable Data", aggregation = "count", dataField = "search:files", singular = "file", plural = "files", icon = "download")
 public class Dataset implements TargetInstance {
@@ -33,6 +34,9 @@ public class Dataset implements TargetInstance {
 
     @FieldInfo(label = "Contributors", separator = "; ", layout = FieldInfo.Layout.HEADER, type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true)
     private List<TargetInternalReference> contributors;
+
+    @FieldInfo(label = "Dataset Versions")
+    private TargetInternalReference datasetVersions;
 
     @FieldInfo(label = "Download Dataset", isButton = true, termsOfUse = true, icon="download")
     private TargetExternalReference zip;
@@ -441,6 +445,14 @@ public class Dataset implements TargetInstance {
         if (this.versions != null) {
             this.versions.add(0, new TargetInternalReference(IdUtils.getUUID(dataset.getId()), null));
         }
+    }
+
+    public TargetInternalReference getDatasetVersions() {
+        return datasetVersions;
+    }
+
+    public void setDatasetVersions(TargetInternalReference datasetVersions) {
+        this.datasetVersions = datasetVersions;
     }
 
     public static class Subject {

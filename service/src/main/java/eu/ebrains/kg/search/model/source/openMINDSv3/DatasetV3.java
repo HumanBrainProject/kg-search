@@ -1,11 +1,10 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import eu.ebrains.kg.search.model.source.SourceInstance;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Component;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DatasetV3 implements SourceInstance {
@@ -14,9 +13,11 @@ public class DatasetV3 implements SourceInstance {
     private String description;
     private List<DigitalIdentifierV3> digitalIdentifier;
     private String fullName;
-    private List<DatasetVersionV3> datasetVersions;
     private String homepage;
     private String shortName;
+    private List<DatasetVersionV3> datasetVersions;
+    private List<Author> authors;
+    private List<Component> components;
 
     public String getId() { return id; }
 
@@ -56,26 +57,33 @@ public class DatasetV3 implements SourceInstance {
 
     public void setDatasetVersions(List<DatasetVersionV3> datasetVersions) {
         LinkedList<String> result = new LinkedList<>();
+        List<DatasetVersionV3> datasetVersionsWithoutVersion = new ArrayList<>();
         Map<String, DatasetVersionV3> lookup = new HashMap<>();
         datasetVersions.forEach(dv -> {
-            lookup.put(dv.getVersionIdentifier(), dv);
-            if(result.isEmpty()) {
-                result.add(dv.getVersionIdentifier());
-            } else {
-                String previousVersionIdentifier = dv.getPreviousVersionIdentifier();
-                if(previousVersionIdentifier != null) {
-                    int i = result.indexOf(previousVersionIdentifier);
-                    if(i == -1) {
-                        result.addLast(dv.getVersionIdentifier());
-                    } else {
-                        result.add(i, dv.getVersionIdentifier());
-                    }
+            String id = dv.getVersionIdentifier();
+            if (id != null) {
+                lookup.put(id, dv);
+                if (result.isEmpty()) {
+                    result.add(id);
                 } else {
-                    result.addFirst(dv.getVersionIdentifier());
+                    String previousVersionIdentifier = dv.getPreviousVersionIdentifier();
+                    if (previousVersionIdentifier != null) {
+                        int i = result.indexOf(previousVersionIdentifier);
+                        if (i == -1) {
+                            result.addLast(id);
+                        } else {
+                            result.add(i, id);
+                        }
+                    } else {
+                        result.addFirst(id);
+                    }
                 }
+            } else {
+                datasetVersionsWithoutVersion.add(dv);
             }
         });
         this.datasetVersions = result.stream().map(lookup::get).collect(Collectors.toList());
+        this.datasetVersions.addAll(datasetVersionsWithoutVersion);
     }
 
     public void setFullName(String fullName) {
@@ -97,4 +105,21 @@ public class DatasetV3 implements SourceInstance {
     public void setShortName(String shortName) {
         this.shortName = shortName;
     }
+
+    public List<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
+    }
+
+    public List<Component> getComponents() {
+        return components;
+    }
+
+    public void setComponents(List<Component> components) {
+        this.components = components;
+    }
+
 }

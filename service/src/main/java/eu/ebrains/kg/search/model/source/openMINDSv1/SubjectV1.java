@@ -3,9 +3,9 @@ package eu.ebrains.kg.search.model.source.openMINDSv1;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import eu.ebrains.kg.search.model.source.SourceInstance;
-import eu.ebrains.kg.search.model.source.commons.ListOrSingleStringAsStringDeserializer;
-import eu.ebrains.kg.search.model.source.commons.SourceInternalReference;
-import eu.ebrains.kg.search.model.source.commons.SpecimenGroup;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.ListOrSingleStringAsStringDeserializer;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.SourceInternalReference;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.SpecimenGroup;
 
 import java.util.Date;
 import java.util.List;

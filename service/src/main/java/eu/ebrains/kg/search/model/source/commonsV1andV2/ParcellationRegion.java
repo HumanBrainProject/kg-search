@@ -1,4 +1,4 @@
-package eu.ebrains.kg.search.model.source.commons;
+package eu.ebrains.kg.search.model.source.commonsV1andV2;
 
 public class ParcellationRegion {
     private String name;
