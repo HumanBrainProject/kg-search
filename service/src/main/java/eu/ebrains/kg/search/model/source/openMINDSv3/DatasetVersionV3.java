@@ -3,6 +3,7 @@ package eu.ebrains.kg.search.model.source.openMINDSv3;
 import eu.ebrains.kg.search.model.source.SourceInstance;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Component;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.InternalDatasetVersion;
 
 import java.util.Date;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 public class DatasetVersionV3 implements SourceInstance {
     private String id;
     private List<String> identifier;
+    private List<DigitalIdentifierV3> digitalIdentifier;
     private String description;
     private String fullName;
     private String homepage;
@@ -18,9 +20,9 @@ public class DatasetVersionV3 implements SourceInstance {
     private String shortName;
     private String versionIdentifier;
     private String versionInnovation;
-    private String previousVersionIdentifier;
     private List<Author> authors;
     private List<Component> components;
+    private Dataset dataset;
 
     public String getId() {
         return id;
@@ -41,6 +43,14 @@ public class DatasetVersionV3 implements SourceInstance {
     public List<String> getIdentifier() { return identifier; }
 
     public void setIdentifier(List<String> identifier) { this.identifier = identifier; }
+
+    public List<DigitalIdentifierV3> getDigitalIdentifier() {
+        return digitalIdentifier;
+    }
+
+    public void setDigitalIdentifier(List<DigitalIdentifierV3> digitalIdentifier) {
+        this.digitalIdentifier = digitalIdentifier;
+    }
 
     public String getFullName() {
         return fullName;
@@ -98,14 +108,6 @@ public class DatasetVersionV3 implements SourceInstance {
         this.versionInnovation = versionInnovation;
     }
 
-    public String getPreviousVersionIdentifier() {
-        return previousVersionIdentifier;
-    }
-
-    public void setPreviousVersionIdentifier(String previousVersionIdentifier) {
-        this.previousVersionIdentifier = previousVersionIdentifier;
-    }
-
     public List<Author> getAuthors() {
         return authors;
     }
@@ -120,6 +122,53 @@ public class DatasetVersionV3 implements SourceInstance {
 
     public void setComponents(List<Component> components) {
         this.components = components;
+    }
+
+    public Dataset getDataset() {
+        return dataset;
+    }
+
+    public void setDataset(Dataset dataset) {
+        this.dataset = dataset;
+    }
+
+    public static class Dataset {
+        private String id;
+        private String fullName;
+        private String description;
+        private List<InternalDatasetVersion> datasetVersions;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getFullName() {
+            return fullName;
+        }
+
+        public void setFullName(String fullName) {
+            this.fullName = fullName;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public List<InternalDatasetVersion> getDatasetVersions() {
+            return datasetVersions;
+        }
+
+        public void setDatasetVersions(List<InternalDatasetVersion> datasetVersions) {
+            this.datasetVersions = datasetVersions;
+        }
     }
 }
 

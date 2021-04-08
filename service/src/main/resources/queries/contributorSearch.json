@@ -16,7 +16,7 @@
     }
   },
   "meta": {
-    "name": "persons search query",
+    "name": "Persons search query",
     "type": "https://openminds.ebrains.eu/core/Person",
     "responseVocab": "https://schema.hbp.eu/myQuery/"
   },

@@ -4,6 +4,7 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DigitalIdentifierV3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.InternalDatasetVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.DatasetVersions;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.utils.IdUtils;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.firstItemOrNull;
 
-public class DatasetVersionsOfKGV3Translator implements  Translator<DatasetV3, DatasetVersions>{
+public class DatasetVersionsOfKGV3Translator implements Translator<DatasetV3, DatasetVersions>{
 
     public DatasetVersions translate(DatasetV3 dataset, DataStage dataStage, boolean liveMode) {
         DatasetVersions d = new DatasetVersions();
@@ -53,11 +54,9 @@ public class DatasetVersionsOfKGV3Translator implements  Translator<DatasetV3, D
                         )).collect(Collectors.toList()));
             }
             if (!CollectionUtils.isEmpty(dataset.getDatasetVersions())) {
-                d.setDatasets(dataset.getDatasetVersions().stream()
-                        .map(dv -> new TargetInternalReference(
-                                IdUtils.getUUID(dv.getId()),
-                                dv.getFullName()
-                        )).collect(Collectors.toList()));
+                List<InternalDatasetVersion> sortedVersions = Helpers.sort(dataset.getDatasetVersions());                                         //v.getFullName()
+                List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
+                d.setDatasets(references);
             }
         return d;
     }

@@ -6,6 +6,7 @@ import eu.ebrains.kg.search.controller.mapping.MappingController;
 import eu.ebrains.kg.search.controller.translators.TranslationController;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstances;
+import eu.ebrains.kg.search.utils.MetaModelUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -20,19 +21,22 @@ public class IndexingController {
     private final MappingController mappingController;
     private final ElasticSearchController elasticSearchController;
     private final TranslationController translationController;
+    private final MetaModelUtils utils;
 
-    public IndexingController(MappingController mappingController, ElasticSearchController elasticSearchController, TranslationController translationController) {
+    public IndexingController(MappingController mappingController, ElasticSearchController elasticSearchController, TranslationController translationController, MetaModelUtils utils) {
         this.mappingController = mappingController;
         this.elasticSearchController = elasticSearchController;
         this.translationController = translationController;
+        this.utils = utils;
     }
 
     public void incrementalUpdateAll(DataStage dataStage, String legacyAuthorization){
-        Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> incrementalUpdateByType(dataStage, type, legacyAuthorization));
+        Constants.TARGET_MODELS_ORDER.forEach(clazz -> incrementalUpdateByType(clazz, dataStage, legacyAuthorization));
     }
 
-    public void incrementalUpdateByType(DataStage dataStage, String type, String legacyAuthorization) {
-        TargetInstances instances = translationController.createInstancesCombined(dataStage, false, type, legacyAuthorization);
+    public void incrementalUpdateByType(Class<?> clazz, DataStage dataStage, String legacyAuthorization) {
+        String type = utils.getNameForClass(clazz);
+        TargetInstances instances = translationController.createInstancesCombined(clazz, dataStage, false, legacyAuthorization);
         if (!CollectionUtils.isEmpty(instances.getSearchableInstances())) {
             elasticSearchController.updateSearchIndex(instances.getSearchableInstances(), type, dataStage);
         }
@@ -41,8 +45,9 @@ public class IndexingController {
         }
     }
 
-    public void fullReplacementByType(DataStage dataStage, String type, String legacyAuthorization, Class<?> clazz) {
-        TargetInstances instances = translationController.createInstancesCombined(dataStage, false, type, legacyAuthorization);
+    public void fullReplacementByType(Class<?> clazz, DataStage dataStage, String legacyAuthorization) {
+        String type = utils.getNameForClass(clazz);
+        TargetInstances instances = translationController.createInstancesCombined(clazz, dataStage, false, legacyAuthorization);
         logger.info(String.format("Creating index %s_%s for %s", dataStage, type.toLowerCase(), type));
         recreateSearchIndex(dataStage, type, clazz);
         logger.info(String.format("Created index %s_%s for %s", dataStage, type.toLowerCase(), type));

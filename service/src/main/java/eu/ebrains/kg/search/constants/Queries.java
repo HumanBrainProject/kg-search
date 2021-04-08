@@ -4,6 +4,9 @@ public class Queries {
     public static final String DATASET_QUERY_ID = "1967ced9-e3f9-4d8f-a2e6-296f3fb6329f";
     public static final String DATASET_QUERY_RESOURCE = "/queries/datasetSearch.json";
 
+    public static final String DATASET_VERSION_QUERY_ID = "e09b4984-5272-431e-8d3b-7d498328d8ee";
+    public static final String DATASET_VERSION_QUERY_RESOURCE = "/queries/datasetVersionSearch.json";
+
     public static final String CONTRIBUTOR_QUERY_ID = "b31f015f-9592-408a-b3e2-d6ed74abc5ce";
     public static final String CONTRIBUTOR_QUERY_RESOURCE = "/queries/contributorSearch.json";
 

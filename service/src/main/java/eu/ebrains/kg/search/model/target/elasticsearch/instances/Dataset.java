@@ -435,16 +435,8 @@ public class Dataset implements TargetInstance {
 
     public List<TargetInternalReference> getVersions() { return versions; }
 
-    public void setVersions(List<DatasetVersionV3> versionsV3) {
-        List<TargetInternalReference> result = new ArrayList<>();
-        versionsV3.forEach(v -> result.add(new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())));
-        this.versions = result;
-    }
-
-    public void addDatasetToVersions(DatasetV3 dataset) {
-        if (this.versions != null) {
-            this.versions.add(0, new TargetInternalReference(IdUtils.getUUID(dataset.getId()), null));
-        }
+    public void setVersions(List<TargetInternalReference> versions) {
+        this.versions = versions;
     }
 
     public TargetInternalReference getDatasetVersions() {

@@ -24,6 +24,7 @@ public class Setup {
     @PostConstruct
     public void uploadQueries() throws IOException {
         uploadQuery(Queries.DATASET_QUERY_ID, Queries.DATASET_QUERY_RESOURCE);
+        uploadQuery(Queries.DATASET_VERSION_QUERY_ID, Queries.DATASET_VERSION_QUERY_RESOURCE);
         uploadQuery(Queries.CONTRIBUTOR_QUERY_ID, Queries.CONTRIBUTOR_QUERY_RESOURCE);
         logger.info("Queries successfully uploaded!");
     }

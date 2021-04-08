@@ -20,6 +20,7 @@ public class Indexing {
     public Indexing(IndexingController indexingController, SitemapController sitemapController) {
         this.indexingController = indexingController;
         this.sitemapController = sitemapController;
+
     }
 
     @PostMapping
@@ -30,7 +31,7 @@ public class Indexing {
             logger.info(String.format("Creating index identifiers_%s", dataStage));
             indexingController.recreateIdentifiersIndex(dataStage);
             logger.info(String.format("Created index identifiers_%s", dataStage));
-            Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> indexingController.fullReplacementByType(dataStage, type, legacyAuthorization, clazz));
+            Constants.TARGET_MODELS_ORDER.forEach(clazz -> indexingController.fullReplacementByType(clazz, dataStage, legacyAuthorization));
             sitemapController.updateSitemapCache(dataStage);
             return ResponseEntity.ok().build();
         } catch (WebClientResponseException e) {
@@ -47,7 +48,6 @@ public class Indexing {
             sitemapController.updateSitemapCache(dataStage);
             return ResponseEntity.ok().build();
         } catch (WebClientResponseException e) {
-
             logger.info("Unsuccessful incremental indexing", e);
             return ResponseEntity.status(e.getStatusCode()).build();
         }

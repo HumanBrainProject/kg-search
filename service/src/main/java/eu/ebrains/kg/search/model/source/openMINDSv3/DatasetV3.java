@@ -3,6 +3,7 @@ package eu.ebrains.kg.search.model.source.openMINDSv3;
 import eu.ebrains.kg.search.model.source.SourceInstance;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Component;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.InternalDatasetVersion;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ public class DatasetV3 implements SourceInstance {
     private String fullName;
     private String homepage;
     private String shortName;
-    private List<DatasetVersionV3> datasetVersions;
+    private List<InternalDatasetVersion> datasetVersions;
     private List<Author> authors;
     private List<Component> components;
 
@@ -51,39 +52,12 @@ public class DatasetV3 implements SourceInstance {
         return fullName;
     }
 
-    public List<DatasetVersionV3> getDatasetVersions() {
+    public List<InternalDatasetVersion> getDatasetVersions() {
         return datasetVersions;
     }
 
-    public void setDatasetVersions(List<DatasetVersionV3> datasetVersions) {
-        LinkedList<String> result = new LinkedList<>();
-        List<DatasetVersionV3> datasetVersionsWithoutVersion = new ArrayList<>();
-        Map<String, DatasetVersionV3> lookup = new HashMap<>();
-        datasetVersions.forEach(dv -> {
-            String id = dv.getVersionIdentifier();
-            if (id != null) {
-                lookup.put(id, dv);
-                if (result.isEmpty()) {
-                    result.add(id);
-                } else {
-                    String previousVersionIdentifier = dv.getPreviousVersionIdentifier();
-                    if (previousVersionIdentifier != null) {
-                        int i = result.indexOf(previousVersionIdentifier);
-                        if (i == -1) {
-                            result.addLast(id);
-                        } else {
-                            result.add(i, id);
-                        }
-                    } else {
-                        result.addFirst(id);
-                    }
-                }
-            } else {
-                datasetVersionsWithoutVersion.add(dv);
-            }
-        });
-        this.datasetVersions = result.stream().map(lookup::get).collect(Collectors.toList());
-        this.datasetVersions.addAll(datasetVersionsWithoutVersion);
+    public void setDatasetVersions(List<InternalDatasetVersion> datasetVersions) {
+        this.datasetVersions = datasetVersions;
     }
 
     public void setFullName(String fullName) {
