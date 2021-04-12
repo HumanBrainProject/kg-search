@@ -25,24 +25,26 @@ public class DatasetOfKGV3Translator implements Translator<DatasetVersionV3, Dat
         d.setVersion(datasetVersion.getVersionIdentifier());
         d.setId(IdUtils.getUUID(datasetVersion.getId()));
         d.setIdentifier(IdUtils.getUUID(datasetVersion.getIdentifier()));
-        if (!CollectionUtils.isEmpty(dataset.getDatasetVersions())) {
+        if (dataset != null && !CollectionUtils.isEmpty(dataset.getDatasetVersions())) {
             List<InternalDatasetVersion> sortedVersions = Helpers.sort(dataset.getDatasetVersions());
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             d.setVersions(references);
         }
-        if (StringUtils.isBlank(datasetVersion.getDescription())) {
-            d.setDescription(dataset.getDescription());
-        } else {
+        if (!StringUtils.isBlank(datasetVersion.getDescription())) {
             d.setDescription(datasetVersion.getDescription());
+        } else if (dataset != null) {
+            d.setDescription(dataset.getDescription());
         }
-//        if (StringUtils.isBlank(datasetVersion.getFullName())) {
-//            d.setTitle(datasetV3.getFullName());
-//        } else {
+//        if (!StringUtils.isBlank(datasetVersion.getFullName())) {
 //            d.setTitle(datasetVersion.getFullName());
+//        } else if (dataset != null {
+//            d.setTitle(datasetV3.getFullName());
 //        }
         // For the UI we don't need the version number in the title as it is set in de dropdown
-        d.setTitle(dataset.getFullName());
-        d.setDatasetVersions(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), dataset.getFullName()));
+        if (dataset != null) {
+            d.setTitle(dataset.getFullName());
+            d.setDatasetVersions(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), dataset.getFullName()));
+        }
         if (!CollectionUtils.isEmpty(datasetVersion.getAuthors())) {
             d.setContributors(datasetVersion.getAuthors().stream() // TODO: setAuthors
                     .map(a -> new TargetInternalReference(
