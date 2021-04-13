@@ -124,7 +124,6 @@ public class TranslationController {
         }).collect(Collectors.toList());
         TargetInstances result = new TargetInstances();
         result.setSearchableInstances(list);
-        result.setAllInstances(list);
         return result;
     }
 
@@ -176,7 +175,6 @@ public class TranslationController {
         List<TargetInstance> list = software.getResults().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
         TargetInstances result = new TargetInstances();
         result.setSearchableInstances(list);
-        result.setAllInstances(list);
         return result;
     }
 
@@ -258,7 +256,7 @@ public class TranslationController {
         DatasetVersionsOfKGV3Translator translator = new DatasetVersionsOfKGV3Translator();
         List<TargetInstance> list = datasets.getData().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
         TargetInstances result = new TargetInstances();
-        result.setAllInstances(list);
+        result.setNonSearchableInstances(list);
         return result;
     }
 
@@ -284,7 +282,6 @@ public class TranslationController {
         List<TargetInstance> list = model.getResults().stream().map(m -> (TargetInstance) translator.translate(m, dataStage, liveMode)).collect(Collectors.toList());
         TargetInstances result = new TargetInstances();
         result.setSearchableInstances(list);
-        result.setAllInstances(list);
         return result;
     }
 
@@ -306,7 +303,6 @@ public class TranslationController {
         List<TargetInstance> list = project.getResults().stream().map(p -> (TargetInstance) translator.translate(p, dataStage, liveMode)).collect(Collectors.toList());
         TargetInstances result = new TargetInstances();
         result.setSearchableInstances(list);
-        result.setAllInstances(list);
         return result;
     }
 
@@ -328,7 +324,6 @@ public class TranslationController {
         List<TargetInstance> list = sample.getResults().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
         TargetInstances result = new TargetInstances();
         result.setSearchableInstances(list);
-        result.setAllInstances(list);
         return result;
     }
 
@@ -350,7 +345,6 @@ public class TranslationController {
         List<TargetInstance> list = subject.getResults().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
         TargetInstances result = new TargetInstances();
         result.setSearchableInstances(list);
-        result.setAllInstances(list);
         return result;
     }
 

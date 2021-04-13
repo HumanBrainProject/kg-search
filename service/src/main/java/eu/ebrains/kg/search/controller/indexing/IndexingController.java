@@ -40,8 +40,8 @@ public class IndexingController {
         if (!CollectionUtils.isEmpty(instances.getSearchableInstances())) {
             elasticSearchController.updateSearchIndex(instances.getSearchableInstances(), type, dataStage);
         }
-        if (!CollectionUtils.isEmpty(instances.getAllInstances())) {
-            elasticSearchController.updateIdentifiersIndex(instances.getAllInstances(), type, dataStage);
+        if (!CollectionUtils.isEmpty(instances.getNonSearchableInstances())) {
+            elasticSearchController.updateIdentifiersIndex(instances.getNonSearchableInstances(), type, dataStage);
         }
     }
 
@@ -50,20 +50,20 @@ public class IndexingController {
         TargetInstances instances = translationController.createInstancesCombined(clazz, dataStage, false, legacyAuthorization);
         logger.info(String.format("Creating index %s_%s for %s", dataStage, type.toLowerCase(), type));
         recreateSearchIndex(dataStage, type, clazz);
-        logger.info(String.format("Created index %s_%s for %s", dataStage, type.toLowerCase(), type));
+        logger.info(String.format("Successfully created index %s_%s for %s", dataStage, type.toLowerCase(), type));
         if (!CollectionUtils.isEmpty(instances.getSearchableInstances())) {
             logger.info(String.format("Start search indexing %s instances for %s", instances.getSearchableInstances().size(), type));
             elasticSearchController.indexSearchDocuments(instances.getSearchableInstances(), type, dataStage);
-            logger.info(String.format("Indexed search for %s", type));
+            logger.info(String.format("Successfully indexed search for %s", type));
         } else {
-            logger.info(String.format("Bypass search indexing for %s, because no instance", type));
+            logger.info(String.format("Bypass search indexing for %s, because no searchable instance", type));
         }
-        if (!CollectionUtils.isEmpty(instances.getAllInstances())) {
-            logger.info(String.format("Start instance indexing %s instances with %s", instances.getAllInstances().size(), type));
-            elasticSearchController.indexIdentifierDocuments(instances.getAllInstances(), dataStage);
-            logger.info(String.format("Indexed instance with %s", type));
+        if (!CollectionUtils.isEmpty(instances.getNonSearchableInstances())) {
+            logger.info(String.format("Start instance indexing %s instances with %s", instances.getNonSearchableInstances().size(), type));
+            elasticSearchController.indexIdentifierDocuments(instances.getNonSearchableInstances(), dataStage);
+            logger.info(String.format("Successfully indexed instance with %s", type));
         } else {
-            logger.info(String.format("Bypass instance indexing with %s, because no instance", type));
+            logger.info(String.format("Bypass instance indexing with %s, because no non searchable instance", type));
         }
     }
 

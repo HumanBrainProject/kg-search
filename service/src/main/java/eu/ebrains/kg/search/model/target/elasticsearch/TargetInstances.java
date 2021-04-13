@@ -5,11 +5,11 @@ import java.util.List;
 
 public class TargetInstances {
     private List<TargetInstance> searchableInstances;
-    private List<TargetInstance> allInstances;
+    private List<TargetInstance> nonSearchableInstances;
 
     public TargetInstances() {
         this.searchableInstances = new ArrayList<>();
-        this.allInstances = new ArrayList<>();
+        this.nonSearchableInstances = new ArrayList<>();
     }
 
     public List<TargetInstance> getSearchableInstances() { return searchableInstances; }
@@ -18,15 +18,16 @@ public class TargetInstances {
         this.searchableInstances = searchableInstances;
     }
 
-    public List<TargetInstance> getAllInstances() { return allInstances; }
+    public List<TargetInstance> getNonSearchableInstances() { return nonSearchableInstances; }
 
-    public void setAllInstances(List<TargetInstance> allInstances) { this.allInstances = allInstances; }
+    public void setNonSearchableInstances(List<TargetInstance> nonSearchableInstances) { this.nonSearchableInstances = nonSearchableInstances; }
 
     public void addInstance(TargetInstance instance, boolean searchable) {
         if(searchable) {
             this.searchableInstances.add(instance);
+        } else {
+            this.nonSearchableInstances.add(instance);
         }
-        this.allInstances.add(instance);
     }
 
 }

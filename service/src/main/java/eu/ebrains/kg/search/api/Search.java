@@ -114,7 +114,7 @@ public class Search {
 
     @GetMapping("/groups/public/documents/{id}")
     public ResponseEntity<?> getDocumentForPublic(@PathVariable("id") String id) {
-        String index = ESHelper.getIdentifierIndex(DataStage.RELEASED);
+        String index = ESHelper.getAllIndex(DataStage.RELEASED);
         try {
             return ResponseEntity.ok(esServiceClient.getDocument(index, id));
         } catch (WebClientResponseException e) {
@@ -124,7 +124,7 @@ public class Search {
 
     @GetMapping("/groups/public/documents/{type}/{id}")
     public ResponseEntity<?> getDocumentForPublic(@PathVariable("type") String type, @PathVariable("id") String id) {
-        String index = ESHelper.getIdentifierIndex(DataStage.RELEASED);
+        String index = ESHelper.getAllIndex(DataStage.RELEASED);
         try {
             return ResponseEntity.ok(esServiceClient.getDocument(index, String.format("%s/%s", type, id)));
         } catch (WebClientResponseException e) {
@@ -136,7 +136,7 @@ public class Search {
     public ResponseEntity<?> getDocumentForCurated(@PathVariable("id") String id, Principal principal) {
         if(isInInProgressRole(principal)) {
             try {
-                String index = ESHelper.getIdentifierIndex(DataStage.IN_PROGRESS);
+                String index = ESHelper.getAllIndex(DataStage.IN_PROGRESS);
                 return ResponseEntity.ok(esServiceClient.getDocument(index, id));
             } catch (WebClientResponseException e) {
                 return ResponseEntity.status(e.getStatusCode()).build();
@@ -151,7 +151,7 @@ public class Search {
     public ResponseEntity<?> getDocumentForCurated(@PathVariable("type") String type, @PathVariable("id") String id, Principal principal) {
         if(isInInProgressRole(principal)) {
             try {
-                String index = ESHelper.getIdentifierIndex(DataStage.IN_PROGRESS);
+                String index = ESHelper.getAllIndex(DataStage.IN_PROGRESS);
                 return ResponseEntity.ok(esServiceClient.getDocument(index, String.format("%s/%s", type, id)));
             } catch (WebClientResponseException e) {
                 return ResponseEntity.status(e.getStatusCode()).build();

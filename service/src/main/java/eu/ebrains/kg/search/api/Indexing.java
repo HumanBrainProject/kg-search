@@ -4,6 +4,7 @@ import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.controller.indexing.IndexingController;
 import eu.ebrains.kg.search.controller.sitemap.SitemapController;
 import eu.ebrains.kg.search.model.DataStage;
+import eu.ebrains.kg.search.utils.ESHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +29,9 @@ public class Indexing {
                                              @RequestHeader("X-Legacy-Authorization") String legacyAuthorization
                                              ) {
         try {
-            logger.info(String.format("Creating index identifiers_%s", dataStage));
+            logger.info(String.format("Creating index %s", ESHelper.getIdentifierIndex(dataStage)));
             indexingController.recreateIdentifiersIndex(dataStage);
-            logger.info(String.format("Created index identifiers_%s", dataStage));
+            logger.info(String.format("Successfully created index %s", ESHelper.getIdentifierIndex(dataStage)));
             Constants.TARGET_MODELS_ORDER.forEach(clazz -> indexingController.fullReplacementByType(clazz, dataStage, legacyAuthorization));
             sitemapController.updateSitemapCache(dataStage);
             return ResponseEntity.ok().build();

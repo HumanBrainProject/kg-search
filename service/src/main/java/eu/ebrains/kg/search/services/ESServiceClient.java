@@ -160,7 +160,7 @@ public class ESServiceClient {
     }
 
     public void updateIndex(String index, List<StringBuilder> operationsList) {
-        logger.info(String.format("updating index %s with %s bulk operations", index, operationsList.size()));
+        logger.info(String.format("Updating index %s with %s bulk operations", index, operationsList.size()));
         operationsList.forEach(operations -> {
             this.updateIndex(index, operations.toString());
         });

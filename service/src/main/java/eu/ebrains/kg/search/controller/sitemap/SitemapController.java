@@ -34,7 +34,7 @@ public class SitemapController {
 
     private SitemapXML fetchSitemap() {
         List<SitemapXML.Url> urls = new ArrayList<>();
-        String index = ESHelper.getIdentifierIndex(DataStage.RELEASED);
+        String index = ESHelper.getAllIndex(DataStage.RELEASED);
         try {
             List<ElasticSearchDocument> documents = esServiceClient.getDocuments(index);
             documents.forEach(doc -> {
