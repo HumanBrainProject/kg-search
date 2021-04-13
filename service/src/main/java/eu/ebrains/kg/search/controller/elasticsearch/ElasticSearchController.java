@@ -9,16 +9,23 @@ import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class ElasticSearchController {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ESServiceClient esServiceClient;
+    private final int ESOperationsMaxCharPayload = 1000000;
 
     public ElasticSearchController(ESServiceClient esServiceClient) {
         this.esServiceClient = esServiceClient;
@@ -48,10 +55,18 @@ public class ElasticSearchController {
         esServiceClient.createIndex(index, mapping);
     }
 
-    public void indexSearchDocuments(List<TargetInstance> instances, String type, DataStage dataStage) {
-        String index = ESHelper.getSearchIndex(type, dataStage);
-        StringBuilder operations = new StringBuilder();
+    private List<StringBuilder> getInsertOperations(List<TargetInstance> instances) {
+        List<StringBuilder> result = new ArrayList<>();
+        if (CollectionUtils.isEmpty(instances)) {
+            return result;
+        }
+        result.add(new StringBuilder());
         instances.forEach(instance -> {
+            StringBuilder operations = result.get(result.size() - 1);
+            if (operations.length() > ESOperationsMaxCharPayload) {
+                operations = new StringBuilder();
+                result.add(operations);
+            }
             operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", instance.getId()));
             try {
                 operations.append(objectMapper.writeValueAsString(instance)).append("\n");
@@ -59,69 +74,64 @@ public class ElasticSearchController {
                 throw new RuntimeException(e);
             }
         });
-        esServiceClient.updateIndex(index, operations.toString());
+        return result;
+    }
+    private List<StringBuilder> getDeleteOperations(String index, List<TargetInstance> instances) {
+        HashSet<String> ids = new HashSet<>();
+        instances.forEach(instance -> ids.add(instance.getIdentifier().get(0)));
+        List<StringBuilder> result = new ArrayList<>();
+        result.add(new StringBuilder());
+        List<ElasticSearchDocument> documents = esServiceClient.getDocuments(index);
+        documents.forEach(document -> {
+            StringBuilder operations = result.get(result.size() - 1);
+            if (operations.length() > ESOperationsMaxCharPayload) {
+                operations = new StringBuilder();
+                result.add(operations);
+            }
+            if(!ids.contains(document.getId())) {
+                operations.append(String.format("{ \"delete\" : { \"_id\" : \"%s\" } } \n", document.getId()));
+            }
+        });
+        if (result.get(result.size() - 1).length() == 0) {
+            result.remove(result.size() - 1);
+        };
+        return result;
+    }
+
+    private void indexDocuments(String index, List<TargetInstance> instances) {
+        List<StringBuilder> operationsList = getInsertOperations(instances);
+        if (!CollectionUtils.isEmpty(operationsList)) {
+            esServiceClient.updateIndex(index, operationsList);
+        }
+    }
+    public void indexSearchDocuments(List<TargetInstance> instances, String type, DataStage dataStage) {
+        String index = ESHelper.getSearchIndex(type, dataStage);
+        indexDocuments(index, instances);
     }
 
     public void indexIdentifierDocuments(List<TargetInstance> instances, DataStage dataStage) {
         String index = ESHelper.getIdentifierIndex(dataStage);
-        StringBuilder operations = new StringBuilder();
-        instances.forEach(instance -> {
-            operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", instance.getId()));
-            try {
-                operations.append(objectMapper.writeValueAsString(instance)).append("\n");
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        esServiceClient.updateIndex(index, operations.toString());
+        indexDocuments(index, instances);
     }
 
+    private void updateIndex(String index, List<TargetInstance> instances) {
+        List<StringBuilder> operationsList = getInsertOperations(instances);
+        List<StringBuilder> deleteOperationsList  = getDeleteOperations(index, instances);
+        if (deleteOperationsList.size() > 0) {
+            operationsList.addAll(deleteOperationsList);
+        }
+        if (!CollectionUtils.isEmpty(operationsList)) {
+            esServiceClient.updateIndex(index, operationsList);
+        }
+    }
     public void updateSearchIndex(List<TargetInstance> instances, String type, DataStage dataStage) {
         String index = ESHelper.getSearchIndex(type, dataStage);
-        HashSet<String> ids = new HashSet<>();
-        StringBuilder operations = new StringBuilder();
-        instances.forEach( instance -> {
-            String identifier = instance.getIdentifier().get(0);
-            ids.add(identifier);
-            operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", identifier));
-            try {
-                operations.append(objectMapper.writeValueAsString(instance)).append("\n");
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        List<ElasticSearchDocument> documents = esServiceClient.getDocuments(index);
-        documents.forEach(document -> {
-            if(!ids.contains(document.getId())) {
-                operations.append(String.format("{ \"delete\" : { \"_id\" : \"%s\" } } \n", document.getId()));
-            }
-        });
-        esServiceClient.updateIndex(index, operations.toString());
+        updateIndex(index, instances);
     }
 
     public void updateIdentifiersIndex(List<TargetInstance> instances, String type, DataStage dataStage) {
         String index = ESHelper.getIdentifierIndex(dataStage);
-        HashSet<String> ids = new HashSet<>();
-        StringBuilder operations = new StringBuilder();
-        instances.forEach( instance -> {
-            String identifier = instance.getId();
-            ids.add(identifier);
-            operations.append(String.format("{ \"index\" : { \"_id\" : \"%s\" } } \n", identifier));
-            try {
-                operations.append(objectMapper.writeValueAsString(instance)).append("\n");
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        List<ElasticSearchDocument> documents = esServiceClient.getDocuments(index);
-        documents.stream().filter(hit -> hit.getType().equals(type)).forEach(document -> {
-            if(!ids.contains(document.getId())) {
-                operations.append(String.format("{ \"delete\" : { \"_id\" : \"%s\" } } \n", document.getId()));
-            }
-        });
-        esServiceClient.updateIndex(index, operations.toString());
+        updateIndex(index, instances);
     }
 
 }

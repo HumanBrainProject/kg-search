@@ -80,11 +80,18 @@ public class TranslationController {
             source.setPersonV2(p);
         });
 
+        Map<String, PersonSources> personSourcesByV1AndV2Identifier = personSources.stream().collect(Collectors.toMap(k -> {
+            if (k.getPersonV1() != null) {
+                return k.getPersonV1().getIdentifier();
+            }
+            return k.getPersonV2().getIdentifier();
+        }, v -> v));
+
         personsFromV3.getData().forEach(p -> {
             String id = p.getIdentifier().stream().reduce(null, (found, i) -> {
                 if (found == null) {
                     String uuid = IdUtils.getUUID(i);
-                    PersonSources source = personSourcesByV1Identifier.get(uuid);
+                    PersonSources source = personSourcesByV1AndV2Identifier.get(uuid);
                     if (source != null) {
                         source.setPersonV3(p);
                         return uuid;
@@ -102,7 +109,7 @@ public class TranslationController {
         List<TargetInstance> list = personSources.stream().map(p -> {
             Contributor ContributorOfKGV2 = null;
             Contributor ContributorOfKGV3 = null;
-            if (p.getPersonV2() != null) {
+            if (p.getPersonV1() != null || p.getPersonV2() != null) {
                 ContributorOfKGV2Translator translator = new ContributorOfKGV2Translator();
                 ContributorOfKGV2 = translator.translate(p, dataStage, liveMode);
             }
@@ -110,6 +117,9 @@ public class TranslationController {
                 ContributorOfKgV3Translator translator = new ContributorOfKgV3Translator();
                 ContributorOfKGV3 = translator.translate(p.getPersonV3(), dataStage, liveMode);
             }
+//            if ((p.getPersonV1() != null || p.getPersonV2() != null) && p.getPersonV3() != null) {
+//                System.out.println(p.getPersonV3().getId());
+//            }
             return ContributorHelpers.merge(ContributorOfKGV2, ContributorOfKGV3);
         }).collect(Collectors.toList());
         TargetInstances result = new TargetInstances();
