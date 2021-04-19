@@ -1,0 +1,146 @@
+{
+  "@context": {
+    "@vocab": "https://core.kg.ebrains.eu/vocab/query/",
+    "query": "https://schema.hbp.eu/myQuery/",
+    "propertyName": {
+      "@id": "propertyName",
+      "@type": "@id"
+    },
+    "merge": {
+      "@type": "@id",
+      "@id": "merge"
+    },
+    "path": {
+      "@id": "path",
+      "@type": "@id"
+    }
+  },
+  "meta": {
+    "type": "https://openminds.ebrains.eu/core/Software",
+    "name": "Software Search Query - Gilles"
+  },
+  "structure": [
+    {
+      "propertyName": "query:id",
+      "path": "@id"
+    },
+    {
+      "propertyName": "query:identifier",
+      "path": "http://schema.org/identifier",
+      "required": true
+    },
+    {
+      "propertyName": "query:title",
+      "path": "https://openminds.ebrains.eu/vocab/fullName",
+      "required": true
+    },
+    {
+      "propertyName": "query:description",
+      "path": "https://openminds.ebrains.eu/vocab/description"
+    },
+    {
+      "propertyName": "query:projectDoi",
+      "path": "https://openminds.ebrains.eu/vocab/digitalIdentifier",
+      "structure": {
+        "propertyName": "query:id",
+        "path": "https://openminds.ebrains.eu/vocab/identifier"
+      }
+    },
+    {
+      "propertyName": "query:howToCite",
+      "path": "https://openminds.ebrains.eu/vocab/howToCite"
+    },
+    {
+      "propertyName": "query:versions",
+      "path": "https://openminds.ebrains.eu/vocab/hasVersion",
+      "structure": [
+        {
+          "propertyName": "query:description",
+          "path": "https://openminds.ebrains.eu/vocab/description"
+        },
+        {
+          "propertyName": "query:version",
+          "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
+        },
+        {
+          "propertyName": "query:applicationCategory",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/applicationCategory",
+            "https://openminds.ebrains.eu/vocab/name"
+          ]
+        },
+        {
+          "propertyName": "query:operatingSystem",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/operatingSystem",
+            "https://openminds.ebrains.eu/vocab/name"
+          ]
+        },
+        {
+          "propertyName": "query:homepage",
+          "path": "https://openminds.ebrains.eu/vocab/homepage"
+        },
+        {
+          "propertyName": "query:contributors",
+          "path": "https://openminds.ebrains.eu/vocab/custodian",
+          "structure": [
+            {
+              "propertyName": "query:fullName",
+              "path": "https://openminds.ebrains.eu/vocab/fullName"
+            },
+            {
+              "propertyName": "query:familyName",
+              "path": "https://openminds.ebrains.eu/vocab/familyName"
+            },
+            {
+              "propertyName": "query:givenName",
+              "path": "https://openminds.ebrains.eu/vocab/givenName"
+            }
+          ]
+        },
+        {
+          "propertyName": "query:sourceCode",
+          "path": "https://openminds.ebrains.eu/vocab/repository",
+          "structure": [
+            {
+              "propertyName": "query:IRI",
+              "path": "https://openminds.ebrains.eu/vocab/IRI"
+            },
+            {
+              "propertyName": "query:name",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            }
+          ]
+        },
+        {
+          "propertyName": "query:documentation",
+          "path": "https://openminds.ebrains.eu/vocab/fullDocumentation",
+          "structure": [
+            {
+              "propertyName": "query:IRI",
+              "path": "https://openminds.ebrains.eu/vocab/IRI"
+            },
+            {
+              "propertyName": "query:name",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            }
+          ]
+        },
+        {
+          "propertyName": "query:features",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/feature",
+            "https://openminds.ebrains.eu/vocab/name"
+          ]
+        },
+        {
+          "propertyName": "query:license",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/license",
+            "https://openminds.ebrains.eu/vocab/fullName"
+          ]
+        }
+      ]
+    }
+  ]
+}
