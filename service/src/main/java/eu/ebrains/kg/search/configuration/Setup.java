@@ -27,6 +27,7 @@ public class Setup {
         uploadQuery(Queries.DATASET_VERSION_QUERY_ID, Queries.DATASET_VERSION_QUERY_RESOURCE);
         uploadQuery(Queries.CONTRIBUTOR_QUERY_ID, Queries.CONTRIBUTOR_QUERY_RESOURCE);
         uploadQuery(Queries.SOFTWARE_QUERY_ID, Queries.SOFTWARE_QUERY_RESOURCE);
+        uploadQuery(Queries.MODEL_QUERY_ID, Queries.MODEL_QUERY_RESOURCE);
         logger.info("Queries successfully uploaded!");
     }
 
