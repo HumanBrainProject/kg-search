@@ -1,6 +1,6 @@
 package eu.ebrains.kg.search.controller.translators;
 
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.InternalDatasetVersion;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -27,10 +27,10 @@ public class Helpers {
         return getFullName(familyName, givenName);
     }
 
-    public static List<InternalDatasetVersion> sort(List<InternalDatasetVersion> datasetVersions) {
+    public static List<Version> sort(List<Version> datasetVersions) {
         LinkedList<String> versions = new LinkedList<>();
-        List<InternalDatasetVersion> datasetVersionsWithoutVersion = new ArrayList<>();
-        Map<String, InternalDatasetVersion> lookup = new HashMap<>();
+        List<Version> datasetVersionsWithoutVersion = new ArrayList<>();
+        Map<String, Version> lookup = new HashMap<>();
         datasetVersions.forEach(dv -> {
             String id = dv.getVersionIdentifier();
             if (id != null) {
@@ -38,7 +38,7 @@ public class Helpers {
                 if (versions.isEmpty()) {
                     versions.add(id);
                 } else {
-                    String previousVersionIdentifier = dv.getPreviousVersionIdentifier();
+                    String previousVersionIdentifier = dv.getIsNewVersionOf();
                     if (previousVersionIdentifier != null) {
                         int i = versions.indexOf(previousVersionIdentifier);
                         if (i == -1) {
@@ -54,7 +54,7 @@ public class Helpers {
                 datasetVersionsWithoutVersion.add(dv);
             }
         });
-        List<InternalDatasetVersion> result = versions.stream().map(lookup::get).collect(Collectors.toList());
+        List<Version> result = versions.stream().map(lookup::get).collect(Collectors.toList());
         result.addAll(datasetVersionsWithoutVersion);
         return result;
     }

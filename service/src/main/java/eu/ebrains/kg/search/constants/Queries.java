@@ -22,6 +22,12 @@ public class Queries {
     public static final String MODEL_QUERY_ID = "493c0895-9f9a-4eb1-9f24-8d4227daa87c";
     public static final String MODEL_QUERY_RESOURCE = "/queries/modelSearch.json";
 
+    public static final String MODEL_VERSION_QUERY_ID = "87858583-1462-4952-9e71-90b159a7a1ed";
+    public static final String MODEL_VERSION_QUERY_RESOURCE = "/queries/modelVersionSearch.json";
+
     public static final String SOFTWARE_QUERY_ID = "d149f504-9086-4f0e-bd1d-55fd4355bca0";
     public static final String SOFTWARE_QUERY_RESOURCE = "/queries/softwareSearch.json";
+
+    public static final String SOFTWARE_VERSION_QUERY_ID = "e1cd5cd9-f4e1-467b-82de-b5f093c2a0cf";
+    public static final String SOFTWARE_VERSION_QUERY_RESOURCE = "/queries/softwareVersionSearch.json";
 }

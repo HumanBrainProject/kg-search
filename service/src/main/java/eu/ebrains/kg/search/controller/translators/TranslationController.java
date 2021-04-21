@@ -380,7 +380,7 @@ public class TranslationController {
 
     public TargetInstance createLiveInstanceFromKGv3(DataStage dataStage, boolean liveMode, String id) {
         Map instance = kgV3.fetchInstanceForLive(id, dataStage);
-        String type = null;
+        String type;
         try {
             Map data = (Map) instance.get("data");
             List<String> types = (List<String>) data.get("@type");
@@ -400,7 +400,9 @@ public class TranslationController {
                 case Constants.SOURCE_MODEL_SUBJECT:
                 case Constants.SOURCE_MODEL_SAMPLE:
                 case Constants.SOURCE_MODEL_MODEL:
+                case Constants.SOURCE_MODEL_MODEL_VERSION:
                 case Constants.SOURCE_MODEL_SOFTWARE:
+                case Constants.SOURCE_MODEL_SOFTWARE_VERSION:
                     //TODO to be implemented
                     return null;
             }

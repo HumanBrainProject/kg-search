@@ -19,7 +19,9 @@ public class Constants {
     public final static String SOURCE_MODEL_SUBJECT = OPENMINDS_CORE_NAMESPACE + "Subject";
     public final static String SOURCE_MODEL_SAMPLE = OPENMINDS_CORE_NAMESPACE + "Sample";
     public final static String SOURCE_MODEL_MODEL = OPENMINDS_CORE_NAMESPACE + "Model";
+    public final static String SOURCE_MODEL_MODEL_VERSION = OPENMINDS_CORE_NAMESPACE + "ModelVersion";
     public final static String SOURCE_MODEL_SOFTWARE = OPENMINDS_CORE_NAMESPACE + "Software";
+    public final static String SOURCE_MODEL_SOFTWARE_VERSION = OPENMINDS_CORE_NAMESPACE + "SoftwareVersion";
 
     public final static List<String> SOURCE_MODELS = Arrays.asList(
             SOURCE_MODEL_DATASET,
@@ -29,7 +31,9 @@ public class Constants {
             SOURCE_MODEL_SUBJECT,
             SOURCE_MODEL_SAMPLE,
             SOURCE_MODEL_MODEL,
-            SOURCE_MODEL_SOFTWARE
+            SOURCE_MODEL_MODEL_VERSION,
+            SOURCE_MODEL_SOFTWARE,
+            SOURCE_MODEL_SOFTWARE_VERSION
     );
 
     public final static List<Class<?>> TARGET_MODELS_ORDER = Arrays.asList(
@@ -40,7 +44,9 @@ public class Constants {
             Model.class,
             Software.class,
             Contributor.class,
-            DatasetVersions.class
+            DatasetVersions.class,
+            ModelVersions.class,
+            SoftwareVersions.class
     );
 
     public final static List<Map<String, String>> GROUPS = Arrays.asList(

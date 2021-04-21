@@ -2,9 +2,8 @@ package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DigitalIdentifierV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.InternalDatasetVersion;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.DatasetVersions;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.utils.IdUtils;
@@ -54,7 +53,7 @@ public class DatasetVersionsOfKGV3Translator implements Translator<DatasetV3, Da
                         )).collect(Collectors.toList()));
             }
             if (!CollectionUtils.isEmpty(dataset.getDatasetVersions())) {
-                List<InternalDatasetVersion> sortedVersions = Helpers.sort(dataset.getDatasetVersions());                                         //v.getFullName()
+                List<Version> sortedVersions = Helpers.sort(dataset.getDatasetVersions());                                         //v.getFullName()
                 List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
                 d.setDatasets(references);
             }

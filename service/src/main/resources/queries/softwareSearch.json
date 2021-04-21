@@ -16,8 +16,8 @@
     }
   },
   "meta": {
-    "type": "https://openminds.ebrains.eu/core/Software",
-    "name": "Software Search Query - Gilles"
+    "name": "Software Search Query",
+    "type": "https://openminds.ebrains.eu/core/Software"
   },
   "structure": [
     {
@@ -55,90 +55,20 @@
       "path": "https://openminds.ebrains.eu/vocab/hasVersion",
       "structure": [
         {
-          "propertyName": "query:description",
-          "path": "https://openminds.ebrains.eu/vocab/description"
-        },
-        {
           "propertyName": "query:version",
           "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
         },
         {
-          "propertyName": "query:applicationCategory",
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:isNewVersionOf",
           "path": [
-            "https://openminds.ebrains.eu/vocab/applicationCategory",
-            "https://openminds.ebrains.eu/vocab/name"
-          ]
-        },
-        {
-          "propertyName": "query:operatingSystem",
-          "path": [
-            "https://openminds.ebrains.eu/vocab/operatingSystem",
-            "https://openminds.ebrains.eu/vocab/name"
-          ]
-        },
-        {
-          "propertyName": "query:homepage",
-          "path": "https://openminds.ebrains.eu/vocab/homepage"
-        },
-        {
-          "propertyName": "query:contributors",
-          "path": "https://openminds.ebrains.eu/vocab/custodian",
-          "structure": [
-            {
-              "propertyName": "query:fullName",
-              "path": "https://openminds.ebrains.eu/vocab/fullName"
-            },
-            {
-              "propertyName": "query:familyName",
-              "path": "https://openminds.ebrains.eu/vocab/familyName"
-            },
-            {
-              "propertyName": "query:givenName",
-              "path": "https://openminds.ebrains.eu/vocab/givenName"
-            }
-          ]
-        },
-        {
-          "propertyName": "query:sourceCode",
-          "path": "https://openminds.ebrains.eu/vocab/repository",
-          "structure": [
-            {
-              "propertyName": "query:IRI",
-              "path": "https://openminds.ebrains.eu/vocab/IRI"
-            },
-            {
-              "propertyName": "query:name",
-              "path": "https://openminds.ebrains.eu/vocab/name"
-            }
-          ]
-        },
-        {
-          "propertyName": "query:documentation",
-          "path": "https://openminds.ebrains.eu/vocab/fullDocumentation",
-          "structure": [
-            {
-              "propertyName": "query:IRI",
-              "path": "https://openminds.ebrains.eu/vocab/IRI"
-            },
-            {
-              "propertyName": "query:name",
-              "path": "https://openminds.ebrains.eu/vocab/name"
-            }
-          ]
-        },
-        {
-          "propertyName": "query:features",
-          "path": [
-            "https://openminds.ebrains.eu/vocab/feature",
-            "https://openminds.ebrains.eu/vocab/name"
-          ]
-        },
-        {
-          "propertyName": "query:license",
-          "path": [
-            "https://openminds.ebrains.eu/vocab/license",
-            "https://openminds.ebrains.eu/vocab/fullName"
-          ]
+            "https://openminds.ebrains.eu/vocab/isNewVersionOf",
+            "https://openminds.ebrains.eu/vocab/versionIdentifier"
+          ],
+          "singleValue": "FIRST"
         }
       ]
     }

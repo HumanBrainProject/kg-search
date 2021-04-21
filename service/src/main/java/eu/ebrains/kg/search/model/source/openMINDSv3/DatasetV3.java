@@ -3,10 +3,9 @@ package eu.ebrains.kg.search.model.source.openMINDSv3;
 import eu.ebrains.kg.search.model.source.SourceInstance;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Component;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.InternalDatasetVersion;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class DatasetV3 implements SourceInstance {
     private String id;
@@ -16,7 +15,7 @@ public class DatasetV3 implements SourceInstance {
     private String fullName;
     private String homepage;
     private String shortName;
-    private List<InternalDatasetVersion> datasetVersions;
+    private List<Version> datasetVersions;
     private List<Author> authors;
     private List<Component> components;
 
@@ -52,11 +51,11 @@ public class DatasetV3 implements SourceInstance {
         return fullName;
     }
 
-    public List<InternalDatasetVersion> getDatasetVersions() {
+    public List<Version> getDatasetVersions() {
         return datasetVersions;
     }
 
-    public void setDatasetVersions(List<InternalDatasetVersion> datasetVersions) {
+    public void setDatasetVersions(List<Version> datasetVersions) {
         this.datasetVersions = datasetVersions;
     }
 

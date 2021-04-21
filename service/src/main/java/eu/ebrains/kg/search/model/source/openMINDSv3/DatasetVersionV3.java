@@ -3,7 +3,7 @@ package eu.ebrains.kg.search.model.source.openMINDSv3;
 import eu.ebrains.kg.search.model.source.SourceInstance;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Component;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.InternalDatasetVersion;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
 
 import java.util.Date;
 import java.util.List;
@@ -22,7 +22,7 @@ public class DatasetVersionV3 implements SourceInstance {
     private String versionInnovation;
     private List<Author> authors;
     private List<Component> components;
-    private Dataset dataset;
+    private Versions dataset;
 
     public String getId() {
         return id;
@@ -124,52 +124,14 @@ public class DatasetVersionV3 implements SourceInstance {
         this.components = components;
     }
 
-    public Dataset getDataset() {
+    public Versions getDataset() {
         return dataset;
     }
 
-    public void setDataset(Dataset dataset) {
+    public void setDataset(Versions dataset) {
         this.dataset = dataset;
     }
 
-    public static class Dataset {
-        private String id;
-        private String fullName;
-        private String description;
-        private List<InternalDatasetVersion> datasetVersions;
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getFullName() {
-            return fullName;
-        }
-
-        public void setFullName(String fullName) {
-            this.fullName = fullName;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public List<InternalDatasetVersion> getDatasetVersions() {
-            return datasetVersions;
-        }
-
-        public void setDatasetVersions(List<InternalDatasetVersion> datasetVersions) {
-            this.datasetVersions = datasetVersions;
-        }
-    }
 }
 
 

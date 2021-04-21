@@ -3,7 +3,8 @@ package eu.ebrains.kg.search.controller.translators;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DigitalIdentifierV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.InternalDatasetVersion;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.utils.IdUtils;
@@ -21,12 +22,12 @@ public class DatasetOfKGV3Translator implements Translator<DatasetVersionV3, Dat
 
     public Dataset translate(DatasetVersionV3 datasetVersion, DataStage dataStage, boolean liveMode) {
         Dataset d = new Dataset();
-        DatasetVersionV3.Dataset dataset = datasetVersion.getDataset();
+        Versions dataset = datasetVersion.getDataset();
         d.setVersion(datasetVersion.getVersionIdentifier());
         d.setId(IdUtils.getUUID(datasetVersion.getId()));
         d.setIdentifier(IdUtils.getUUID(datasetVersion.getIdentifier()));
-        if (dataset != null && !CollectionUtils.isEmpty(dataset.getDatasetVersions())) {
-            List<InternalDatasetVersion> sortedVersions = Helpers.sort(dataset.getDatasetVersions());
+        if (dataset != null && !CollectionUtils.isEmpty(dataset.getVersions())) {
+            List<Version> sortedVersions = Helpers.sort(dataset.getVersions());
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             d.setVersions(references);
         }

@@ -1,13 +1,10 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3.commons;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-public class InternalDatasetVersion {
+public class Version {
     private String id;
     private String fullName;
     private String versionIdentifier;
-    private String previousVersionIdentifier;
+    private String isNewVersionOf;
 
     public String getId() {
         return id;
@@ -33,11 +30,7 @@ public class InternalDatasetVersion {
         this.versionIdentifier = versionIdentifier;
     }
 
-    public String getPreviousVersionIdentifier() {
-        return previousVersionIdentifier;
-    }
+    public String getIsNewVersionOf() { return isNewVersionOf; }
 
-    public void setPreviousVersionIdentifier(String previousVersionIdentifier) {
-        this.previousVersionIdentifier = previousVersionIdentifier;
-    }
+    public void setIsNewVersionOf(String isNewVersionOf) { this.isNewVersionOf = isNewVersionOf; }
 }
