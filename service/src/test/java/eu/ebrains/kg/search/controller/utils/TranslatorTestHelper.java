@@ -63,7 +63,7 @@ public class TranslatorTestHelper {
     }
 
     public static List<String> compareModel(ModelV2 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        ModelTranslator translator = new ModelTranslator();
+        ModelOfKGV2Translator translator = new ModelOfKGV2Translator();
         Model target = translator.translate(source, dataStage, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
@@ -94,7 +94,7 @@ public class TranslatorTestHelper {
 
 
     public static List<String> compareSoftware(SoftwareV2 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        SoftwareTranslator translator = new SoftwareTranslator();
+        SoftwareOfKGV2Translator translator = new SoftwareOfKGV2Translator();
         Software target = translator.translate(source, dataStage, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.firstItemOrNull;
 
-public class SoftwareTranslator implements Translator<SoftwareV2, Software> {
+public class SoftwareOfKGV2Translator implements Translator<SoftwareV2, Software> {
 
     public Software translate(SoftwareV2 softwareV2, DataStage dataStage, boolean liveMode) {
         Software s = new Software();

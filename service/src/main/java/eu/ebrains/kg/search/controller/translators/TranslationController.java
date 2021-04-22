@@ -6,10 +6,7 @@ import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.controller.kg.KGv2;
 import eu.ebrains.kg.search.controller.kg.KGv3;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.DatasetSources;
-import eu.ebrains.kg.search.model.source.PersonSources;
-import eu.ebrains.kg.search.model.source.ResultOfKGv2;
-import eu.ebrains.kg.search.model.source.ResultOfKGv3;
+import eu.ebrains.kg.search.model.source.*;
 import eu.ebrains.kg.search.model.source.openMINDSv1.*;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.PersonV2;
@@ -166,19 +163,49 @@ public class TranslationController {
 
     public TargetInstances createSoftwares(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
         String query = "query/softwarecatalog/software/softwareproject/v1.0.0/search";
-        logger.info("Starting to query software for v1");
-        ResultOfKGV2SoftwareV2 software = kgV2.executeQueryForIndexing(ResultOfKGV2SoftwareV2.class, query, legacyAuthorization, dataStage);
-        logger.info(String.format("Queried %s software for v1", CollectionUtils.isEmpty(software.getResults()) ? 0 : software.getResults().size()));
-        SoftwareTranslator translator = new SoftwareTranslator();
-        List<TargetInstance> list = software.getResults().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
-        TargetInstances result = new TargetInstances();
-        result.setSearchableInstances(list);
-        return result;
+        logger.info("Starting to query software for v2");
+        ResultOfKGV2SoftwareV2 softwareV2 = kgV2.executeQueryForIndexing(ResultOfKGV2SoftwareV2.class, query, legacyAuthorization, dataStage);
+        logger.info(String.format("Queried %s softwares for v2", CollectionUtils.isEmpty(softwareV2.getResults()) ? 0 : softwareV2.getResults().size()));
+        logger.info("Starting to query softwareVersions for v3");
+        ResultOfKGv3<SoftwareVersionV3> softwareVersionsV3 = kgV3.executeQueryForIndexing(ResultOfKGV3SoftwareVersionV3.class, Queries.SOFTWARE_VERSION_QUERY_ID, dataStage);
+        logger.info(String.format("Queried %s softwareVersions for v3", CollectionUtils.isEmpty(softwareVersionsV3.getData()) ? 0 : softwareVersionsV3.getData().size()));
+        List<SoftwareSources> softwareSources = new ArrayList<>();
+
+        Map<String, SoftwareSources> sourcesIdentifiers = new HashMap<>();
+
+        softwareVersionsV3.getData().forEach(sv -> {
+            SoftwareSources source = new SoftwareSources();
+            softwareSources.add(source);
+            source.setSoftwareVersionV3(sv);
+            sv.getIdentifier().forEach(id -> sourcesIdentifiers.put(id, source));
+        });
+
+        softwareV2.getResults().forEach(d -> {
+            String id = d.getIdentifier();
+            if (!sourcesIdentifiers.containsKey(id)) {
+                SoftwareSources source = new SoftwareSources();
+                source.setSoftwareV2(d);
+                softwareSources.add(source);
+            }
+        });
+
+        TargetInstances targetInstances = new TargetInstances();
+        softwareSources.forEach(s -> {
+            SoftwareVersionV3 sV3 = s.getSoftwareVersionV3();
+            if (sV3 != null) {
+                SoftwareOfKGV3Translator translator = new SoftwareOfKGV3Translator();
+                targetInstances.addInstance(translator.translate(sV3, dataStage, liveMode), true);
+            } else {
+                SoftwareOfKGV2Translator translator = new SoftwareOfKGV2Translator();
+                targetInstances.addInstance(translator.translate(s.getSoftwareV2(), dataStage, liveMode), true);
+            }
+        });
+        return targetInstances;
     }
 
     public Software createSoftwareFromKGv2(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
         SoftwareV2 software = kgV2.fetchInstance(SoftwareV2.class, query, id, authorization, dataStage);
-        SoftwareTranslator translator = new SoftwareTranslator();
+        SoftwareOfKGV2Translator translator = new SoftwareOfKGV2Translator();
         return translator.translate(software, dataStage, liveMode);
     }
 
@@ -273,9 +300,32 @@ public class TranslationController {
     public TargetInstances createDatasetVersions(DataStage dataStage, boolean liveMode) {
         logger.info("Starting to query datasets for v3");
         ResultOfKGv3<DatasetV3> datasets = kgV3.executeQueryForIndexing(ResultOfKGV3DatasetV3.class, Queries.DATASET_QUERY_ID, dataStage);
-        logger.info(String.format("Queried %s datasets for v3", CollectionUtils.isEmpty(datasets.getData()) ? 0 : datasets.getData().size()));
+        logger.info(String.format("Queried %d datasets for v3", CollectionUtils.isEmpty(datasets.getData()) ? 0 : datasets.getData().size()));
         DatasetVersionsOfKGV3Translator translator = new DatasetVersionsOfKGV3Translator();
         List<TargetInstance> list = datasets.getData().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
+        TargetInstances result = new TargetInstances();
+        result.setNonSearchableInstances(list);
+        return result;
+    }
+
+    public TargetInstances createModelVersions(DataStage dataStage, boolean liveMode) {
+        logger.info("Starting to query models for v3");
+        ResultOfKGv3<ModelV3> models = kgV3.executeQueryForIndexing(ResultOfKGV3ModelV3.class, Queries.MODEL_QUERY_ID, dataStage);
+        logger.info(String.format("Queried %d models for v3", CollectionUtils.isEmpty(models.getData()) ? 0 : models.getData().size()));
+        ModelVersionsOfKGV3Translator translator = new ModelVersionsOfKGV3Translator();
+        List<TargetInstance> list = models.getData().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
+        TargetInstances result = new TargetInstances();
+        result.setNonSearchableInstances(list);
+        return result;
+    }
+
+
+    public TargetInstances createSoftwareVersions(DataStage dataStage, boolean liveMode) {
+        logger.info("Starting to query softwares for v3");
+        ResultOfKGv3<SoftwareV3> softwares = kgV3.executeQueryForIndexing(ResultOfKGV3SoftwareV3.class, Queries.SOFTWARE_QUERY_ID, dataStage);
+        logger.info(String.format("Queried %d softwares for v3", CollectionUtils.isEmpty(softwares.getData()) ? 0 : softwares.getData().size()));
+        SoftwareVersionsOfKGV3Translator translator = new SoftwareVersionsOfKGV3Translator();
+        List<TargetInstance> list = softwares.getData().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
         TargetInstances result = new TargetInstances();
         result.setNonSearchableInstances(list);
         return result;
@@ -317,21 +367,53 @@ public class TranslationController {
 
     private static class ResultOfKGV2ModelV2 extends ResultOfKGv2<ModelV2> { }
 
+
     public TargetInstances createModels(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
         String query = "query/uniminds/core/modelinstance/v1.0.0/search";
-        logger.info("Starting to query models for v1");
-        ResultOfKGV2ModelV2 model = kgV2.executeQueryForIndexing(ResultOfKGV2ModelV2.class, query, legacyAuthorization, dataStage);
-        logger.info(String.format("Queried %s models for v1", CollectionUtils.isEmpty(model.getResults()) ? 0 : model.getResults().size()));
-        ModelTranslator translator = new ModelTranslator();
-        List<TargetInstance> list = model.getResults().stream().map(m -> (TargetInstance) translator.translate(m, dataStage, liveMode)).collect(Collectors.toList());
-        TargetInstances result = new TargetInstances();
-        result.setSearchableInstances(list);
-        return result;
+        logger.info("Starting to query model for v2");
+        ResultOfKGV2ModelV2 modelV2 = kgV2.executeQueryForIndexing(ResultOfKGV2ModelV2.class, query, legacyAuthorization, dataStage);
+        logger.info(String.format("Queried %s models for v2", CollectionUtils.isEmpty(modelV2.getResults()) ? 0 : modelV2.getResults().size()));
+        logger.info("Starting to query modelVersions for v3");
+        ResultOfKGv3<ModelVersionV3> modelVersionsV3 = kgV3.executeQueryForIndexing(ResultOfKGV3ModelVersionV3.class, Queries.MODEL_VERSION_QUERY_ID, dataStage);
+        logger.info(String.format("Queried %s modelVersions for v3", CollectionUtils.isEmpty(modelVersionsV3.getData()) ? 0 : modelVersionsV3.getData().size()));
+        List<ModelSources> modelSources = new ArrayList<>();
+
+        Map<String, ModelSources> sourcesIdentifiers = new HashMap<>();
+
+        modelVersionsV3.getData().forEach(mv -> {
+            ModelSources source = new ModelSources();
+            modelSources.add(source);
+            source.setModelVersionV3(mv);
+            mv.getIdentifier().forEach(id -> sourcesIdentifiers.put(id, source));
+        });
+
+        modelV2.getResults().forEach(m -> {
+            String id = m.getIdentifier();
+            if (!sourcesIdentifiers.containsKey(id)) {
+                ModelSources source = new ModelSources();
+                source.setModelV2(m);
+                modelSources.add(source);
+            }
+        });
+
+        TargetInstances targetInstances = new TargetInstances();
+        modelSources.forEach(m -> {
+            ModelVersionV3 mV3 = m.getModelVersionV3();
+            if (mV3 != null) {
+                ModelOfKGV3Translator translator = new ModelOfKGV3Translator();
+                targetInstances.addInstance(translator.translate(mV3, dataStage, liveMode), true);
+            } else {
+                ModelOfKGV2Translator translator = new ModelOfKGV2Translator();
+                targetInstances.addInstance(translator.translate(m.getModelV2(), dataStage, liveMode), true);
+            }
+        });
+        return targetInstances;
     }
+
 
     public Model createModelFromKGv2(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
         ModelV2 model = kgV2.fetchInstance(ModelV2.class, query, id, authorization, dataStage);
-        ModelTranslator translator = new ModelTranslator();
+        ModelOfKGV2Translator translator = new ModelOfKGV2Translator();
         return translator.translate(model, dataStage, liveMode);
     }
 
@@ -480,8 +562,14 @@ public class TranslationController {
         if (clazz == Model.class) {
             return this.createModels(dataStage, liveMode, legacyAuthorization);
         }
+        if (clazz == ModelVersions.class) {
+            return this.createModelVersions(dataStage, liveMode);
+        }
         if (clazz == Software.class) {
             return this.createSoftwares(dataStage, liveMode, legacyAuthorization);
+        }
+        if (clazz == SoftwareVersions.class) {
+            return this.createSoftwareVersions(dataStage, liveMode);
         }
         return new TargetInstances();
     }

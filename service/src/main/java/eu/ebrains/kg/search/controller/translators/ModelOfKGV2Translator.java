@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
-public class ModelTranslator implements Translator<ModelV2, Model> {
+public class ModelOfKGV2Translator implements Translator<ModelV2, Model> {
 
     public Model translate(ModelV2 modelV2, DataStage dataStage, boolean liveMode) {
         Model m = new Model();
