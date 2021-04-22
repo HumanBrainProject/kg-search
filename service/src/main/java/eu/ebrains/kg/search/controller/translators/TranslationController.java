@@ -14,9 +14,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv1.*;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.PersonV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
-import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.PersonV3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstances;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.*;
@@ -248,6 +246,29 @@ public class TranslationController {
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("DatasetVersion %s does not exist!", id));
     }
 
+    private static class ResultOfKGV3ModelVersionV3 extends ResultOfKGv3<ModelVersionV3> {}
+
+    public Model createModelFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultOfKGV3ModelVersionV3 result = kgV3.executeQueryForLive(ResultOfKGV3ModelVersionV3.class, Queries.MODEL_VERSION_QUERY_ID, id, dataStage);
+        ModelVersionV3 modelVersion = result.getData().stream().findFirst().orElse(null);
+        if (modelVersion != null) {
+            ModelOfKGV3Translator translator = new ModelOfKGV3Translator();
+            return translator.translate(modelVersion, dataStage, liveMode);
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("ModelVersion %s does not exist!", id));
+    }
+
+    private static class ResultOfKGV3SoftwareVersionV3 extends ResultOfKGv3<SoftwareVersionV3> {}
+
+    public Software createSoftwareFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultOfKGV3SoftwareVersionV3 result = kgV3.executeQueryForLive(ResultOfKGV3SoftwareVersionV3.class, Queries.SOFTWARE_VERSION_QUERY_ID, id, dataStage);
+        SoftwareVersionV3 softwareVersion = result.getData().stream().findFirst().orElse(null);
+        if (softwareVersion != null) {
+            SoftwareOfKGV3Translator translator = new SoftwareOfKGV3Translator();
+            return translator.translate(softwareVersion, dataStage, liveMode);
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("SoftwareVersion %s does not exist!", id));
+    }
 
     public TargetInstances createDatasetVersions(DataStage dataStage, boolean liveMode) {
         logger.info("Starting to query datasets for v3");
@@ -270,8 +291,31 @@ public class TranslationController {
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Dataset %s does not exist!", id));
     }
 
-    private static class ResultOfKGV2ModelV2 extends ResultOfKGv2<ModelV2> {
+    private static class ResultOfKGV3ModelV3 extends ResultOfKGv3<ModelV3> {}
+
+    public ModelVersions createModelVersionsFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultOfKGV3ModelV3 result = kgV3.executeQueryForLive(ResultOfKGV3ModelV3.class, Queries.MODEL_QUERY_ID, id, dataStage);
+        ModelV3 model = result.getData().stream().findFirst().orElse(null);
+        if (model != null) {
+            ModelVersionsOfKGV3Translator translator = new ModelVersionsOfKGV3Translator();
+            return translator.translate(model, dataStage, liveMode);
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Model %s does not exist!", id));
     }
+
+    private static class ResultOfKGV3SoftwareV3 extends ResultOfKGv3<SoftwareV3> {}
+
+    public SoftwareVersions createSoftwareVersionsFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultOfKGV3SoftwareV3 result = kgV3.executeQueryForLive(ResultOfKGV3SoftwareV3.class, Queries.SOFTWARE_QUERY_ID, id, dataStage);
+        SoftwareV3 software = result.getData().stream().findFirst().orElse(null);
+        if (software != null) {
+            SoftwareVersionsOfKGV3Translator translator = new SoftwareVersionsOfKGV3Translator();
+            return translator.translate(software, dataStage, liveMode);
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Software %s does not exist!", id));
+    }
+
+    private static class ResultOfKGV2ModelV2 extends ResultOfKGv2<ModelV2> { }
 
     public TargetInstances createModels(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
         String query = "query/uniminds/core/modelinstance/v1.0.0/search";
@@ -396,13 +440,17 @@ public class TranslationController {
                     return this.createDatasetFromKGv3(dataStage, liveMode, id);
                 case Constants.SOURCE_MODEL_PERSON:
                     return this.createContributorFromKGv3(dataStage, liveMode, id);
+                case Constants.SOURCE_MODEL_MODEL:
+                    return this.createModelVersionsFromKGv3(dataStage, liveMode, id);
+                case Constants.SOURCE_MODEL_MODEL_VERSION:
+                    return this.createModelFromKGv3(dataStage, liveMode, id);
+                case Constants.SOURCE_MODEL_SOFTWARE:
+                    return this.createSoftwareVersionsFromKGv3(dataStage, liveMode, id);
+                case Constants.SOURCE_MODEL_SOFTWARE_VERSION:
+                    return this.createSoftwareFromKGv3(dataStage, liveMode, id);
                 case Constants.SOURCE_MODEL_PROJECT:
                 case Constants.SOURCE_MODEL_SUBJECT:
                 case Constants.SOURCE_MODEL_SAMPLE:
-                case Constants.SOURCE_MODEL_MODEL:
-                case Constants.SOURCE_MODEL_MODEL_VERSION:
-                case Constants.SOURCE_MODEL_SOFTWARE:
-                case Constants.SOURCE_MODEL_SOFTWARE_VERSION:
                     //TODO to be implemented
                     return null;
             }
