@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @MetaInfo(name = "DatasetVersions", identifier = "https://openminds.ebrains.eu/core/Dataset", order = 2)
 public class DatasetVersions implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
-    private Value<String> type = new Value<>("DatasetVersions");
+    private final Value<String> type = new Value<>("DatasetVersions");
 
     @FieldInfo(ignoreForSearch = true, visible = false)
     private String id;
@@ -57,10 +57,6 @@ public class DatasetVersions implements TargetInstance {
 
     public void setId(String id) { this.id = id; }
 
-    public void setType(String type) {
-        setType(StringUtils.isBlank(type) ? null : new Value<>(type));
-    }
-
     public void setIdentifier(List<String> identifier) {
         this.identifier = identifier;
     }
@@ -79,10 +75,6 @@ public class DatasetVersions implements TargetInstance {
 
     public Value<String> getType() {
         return type;
-    }
-
-    public void setType(Value<String> type) {
-        this.type = type;
     }
 
     @Override

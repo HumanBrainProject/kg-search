@@ -2,7 +2,6 @@ package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import eu.ebrains.kg.search.model.source.SourceInstance;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Component;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
 
 import java.util.Date;
@@ -11,7 +10,8 @@ import java.util.List;
 public class DatasetVersionV3 implements SourceInstance {
     private String id;
     private List<String> identifier;
-    private List<DigitalIdentifierV3> digitalIdentifier;
+    private List<String> digitalIdentifier;
+    private String howToCite;
     private String description;
     private String fullName;
     private String homepage;
@@ -20,9 +20,8 @@ public class DatasetVersionV3 implements SourceInstance {
     private String shortName;
     private String version;
     private String versionInnovation;
-    private List<Author> authors;
-    private List<Component> components;
-    private Versions dataset;
+    private List<Author> author;
+    private DatasetVersions dataset;
 
     public String getId() {
         return id;
@@ -44,12 +43,20 @@ public class DatasetVersionV3 implements SourceInstance {
 
     public void setIdentifier(List<String> identifier) { this.identifier = identifier; }
 
-    public List<DigitalIdentifierV3> getDigitalIdentifier() {
+    public List<String> getDigitalIdentifier() {
         return digitalIdentifier;
     }
 
-    public void setDigitalIdentifier(List<DigitalIdentifierV3> digitalIdentifier) {
+    public void setDigitalIdentifier(List<String> digitalIdentifier) {
         this.digitalIdentifier = digitalIdentifier;
+    }
+
+    public String getHowToCite() {
+        return howToCite;
+    }
+
+    public void setHowToCite(String howToCite) {
+        this.howToCite = howToCite;
     }
 
     public String getFullName() {
@@ -108,28 +115,33 @@ public class DatasetVersionV3 implements SourceInstance {
         this.versionInnovation = versionInnovation;
     }
 
-    public List<Author> getAuthors() {
-        return authors;
+    public List<Author> getAuthor() {
+        return author;
     }
 
-    public void setAuthors(List<Author> authors) {
-        this.authors = authors;
+    public void setAuthor(List<Author> author) {
+        this.author = author;
     }
 
-    public List<Component> getComponents() {
-        return components;
-    }
-
-    public void setComponents(List<Component> components) {
-        this.components = components;
-    }
-
-    public Versions getDataset() {
+    public DatasetVersions getDataset() {
         return dataset;
     }
 
-    public void setDataset(Versions dataset) {
+    public void setDataset(DatasetVersions dataset) {
         this.dataset = dataset;
+    }
+
+    public static class DatasetVersions extends Versions {
+
+        private List<Author> author;
+
+        public List<Author> getAuthor() {
+            return author;
+        }
+
+        public void setAuthor(List<Author> author) {
+            this.author = author;
+        }
     }
 
 }

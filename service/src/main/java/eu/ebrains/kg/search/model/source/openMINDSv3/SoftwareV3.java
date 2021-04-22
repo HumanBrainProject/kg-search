@@ -1,6 +1,7 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import eu.ebrains.kg.search.model.source.SourceInstance;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 
 import java.util.List;
@@ -9,8 +10,11 @@ public class SoftwareV3 implements SourceInstance {
     private String id;
     private List<String> identifier;
     private String description;
-    private List<DigitalIdentifierV3> projectDoi;
+    private List<String> digitalIdentifier;
+    private String howToCite;
     private String title;
+    private List<Author> developer;
+    private List<Author> custodian;
     private List<Version> versions;
 
     public String getId() {
@@ -37,12 +41,20 @@ public class SoftwareV3 implements SourceInstance {
         this.description = description;
     }
 
-    public List<DigitalIdentifierV3> getProjectDoi() {
-        return projectDoi;
+    public List<String> getDigitalIdentifier() {
+        return digitalIdentifier;
     }
 
-    public void setProjectDoi(List<DigitalIdentifierV3> projectDoi) {
-        this.projectDoi = projectDoi;
+    public void setDigitalIdentifier(List<String> digitalIdentifier) {
+        this.digitalIdentifier = digitalIdentifier;
+    }
+
+    public String getHowToCite() {
+        return howToCite;
+    }
+
+    public void setHowToCite(String howToCite) {
+        this.howToCite = howToCite;
     }
 
     public String getTitle() {
@@ -51,6 +63,22 @@ public class SoftwareV3 implements SourceInstance {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<Author> getDeveloper() {
+        return developer;
+    }
+
+    public void setDeveloper(List<Author> developer) {
+        this.developer = developer;
+    }
+
+    public List<Author> getCustodian() {
+        return custodian;
+    }
+
+    public void setCustodian(List<Author> custodian) {
+        this.custodian = custodian;
     }
 
     public List<Version> getVersions() {

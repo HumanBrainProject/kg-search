@@ -40,15 +40,11 @@
       "path": "https://openminds.ebrains.eu/vocab/description"
     },
     {
-      "propertyName": "query:projectDoi",
-      "path": [
-        "https://openminds.ebrains.eu/vocab/digitalIdentifier",
-        "http://schema.org/identifier"
-      ],
-      "singleValue": "FIRST"
+      "propertyName": "query:digitalIdentifier",
+      "path": "https://openminds.ebrains.eu/vocab/digitalIdentifier"
     },
     {
-      "propertyName": "query:citation",
+      "propertyName": "query:howToCite",
       "path": "https://openminds.ebrains.eu/vocab/howToCite"
     },
     {
@@ -115,7 +111,25 @@
       "path": "https://openminds.ebrains.eu/vocab/homepage"
     },
     {
-      "propertyName": "query:contributors",
+      "propertyName": "query:developer",
+      "path": "https://openminds.ebrains.eu/vocab/developer",
+      "structure": [
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:familyName",
+          "path": "https://openminds.ebrains.eu/vocab/familyName"
+        },
+        {
+          "propertyName": "query:givenName",
+          "path": "https://openminds.ebrains.eu/vocab/givenName"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:custodian",
       "path": "https://openminds.ebrains.eu/vocab/custodian",
       "structure": [
         {

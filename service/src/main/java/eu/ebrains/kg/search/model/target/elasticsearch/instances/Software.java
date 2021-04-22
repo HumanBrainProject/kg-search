@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @MetaInfo(name="Software", identifier = "softwarecatalog/software/softwareproject/v1.0.0/search", order=6)
 public class Software implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
-    private Value<String> type = new Value<>("Software");
+    private final Value<String> type = new Value<>("Software");
 
     @FieldInfo(ignoreForSearch = true, visible = false)
     private String id;
@@ -46,6 +46,12 @@ public class Software implements TargetInstance {
 
     @FieldInfo(label = "Application Category", layout = FieldInfo.Layout.SUMMARY, separator = ", ")
     private List<Value<String>> appCategory;
+
+    @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10)
+    private List<TargetInternalReference> custodians;
+
+    @FieldInfo(label = "Developers", separator = "; ", boost = 10)
+    private List<TargetInternalReference> developers;
 
     @FieldInfo(label = "Operating System", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>")
     private List<Value<String>> operatingSystem;
@@ -76,10 +82,6 @@ public class Software implements TargetInstance {
     public String getId() { return id; }
 
     public void setId(String id) { this.id = id; }
-
-    public void setType(String type) {
-        setType(StringUtils.isBlank(type) ? null : new Value<>(type));
-    }
 
     public void setIdentifier(List<String> identifier) {
         this.identifier = identifier;
@@ -115,6 +117,22 @@ public class Software implements TargetInstance {
 
     public void setAppCategory(List<String> appCategory) {
         this.appCategory = appCategory == null ? null : appCategory.stream().map(Value::new).collect(Collectors.toList());
+    }
+
+    public List<TargetInternalReference> getCustodians() {
+        return custodians;
+    }
+
+    public void setCustodians(List<TargetInternalReference> custodians) {
+        this.custodians = custodians;
+    }
+
+    public List<TargetInternalReference> getDevelopers() {
+        return developers;
+    }
+
+    public void setDevelopers(List<TargetInternalReference> developers) {
+        this.developers = developers;
     }
 
     @Override
@@ -222,10 +240,6 @@ public class Software implements TargetInstance {
 
     public Value<String> getType() {
         return type;
-    }
-
-    public void setType(Value<String> type) {
-        this.type = type;
     }
 
     public List<TargetInternalReference> getVersions() { return versions; }

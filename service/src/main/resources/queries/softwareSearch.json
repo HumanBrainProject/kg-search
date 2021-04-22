@@ -39,16 +39,48 @@
       "path": "https://openminds.ebrains.eu/vocab/description"
     },
     {
-      "propertyName": "query:projectDoi",
-      "path": "https://openminds.ebrains.eu/vocab/digitalIdentifier",
-      "structure": {
-        "propertyName": "query:id",
-        "path": "https://openminds.ebrains.eu/vocab/identifier"
-      }
+      "propertyName": "query:digitalIdentifier",
+      "path": "https://openminds.ebrains.eu/vocab/digitalIdentifier"
     },
     {
       "propertyName": "query:howToCite",
       "path": "https://openminds.ebrains.eu/vocab/howToCite"
+    },
+    {
+      "propertyName": "query:developer",
+      "path": "https://openminds.ebrains.eu/vocab/developer",
+      "structure": [
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:familyName",
+          "path": "https://openminds.ebrains.eu/vocab/familyName"
+        },
+        {
+          "propertyName": "query:givenName",
+          "path": "https://openminds.ebrains.eu/vocab/givenName"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:custodian",
+      "path": "https://openminds.ebrains.eu/vocab/custodian",
+      "structure": [
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:familyName",
+          "path": "https://openminds.ebrains.eu/vocab/familyName"
+        },
+        {
+          "propertyName": "query:givenName",
+          "path": "https://openminds.ebrains.eu/vocab/givenName"
+        }
+      ]
     },
     {
       "propertyName": "query:versions",

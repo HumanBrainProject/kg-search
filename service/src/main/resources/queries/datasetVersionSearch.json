@@ -31,17 +31,11 @@
     },
     {
       "propertyName": "query:digitalIdentifier",
-      "path": "https://openminds.ebrains.eu/vocab/digitalIdentifier",
-      "structure": [
-        {
-          "propertyName": "query:id",
-          "path": "@id"
-        },
-        {
-          "propertyName": "query:howToCite",
-          "path": "https://openminds.ebrains.eu/vocab/howToCite"
-        }
-      ]
+      "path": "https://openminds.ebrains.eu/vocab/digitalIdentifier"
+    },
+    {
+      "propertyName": "query:howToCite",
+      "path": "https://openminds.ebrains.eu/vocab/howToCite"
     },
     {
       "propertyName": "query:description",
@@ -106,6 +100,40 @@
       "singleValue": "FIRST",
       "structure": [
         {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:description",
+          "path": "https://openminds.ebrains.eu/vocab/description"
+        },
+        {
+          "propertyName": "query:author",
+          "path": "https://openminds.ebrains.eu/vocab/author",
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:fullName",
+              "path": "https://openminds.ebrains.eu/vocab/fullName"
+            },
+            {
+              "propertyName": "query:familyName",
+              "path": "https://openminds.ebrains.eu/vocab/familyName"
+            },
+            {
+              "propertyName": "query:givenName",
+              "path": "https://openminds.ebrains.eu/vocab/givenName"
+            }
+          ]
+        },
+        {
           "propertyName": "query:versions",
           "path": "https://openminds.ebrains.eu/vocab/hasVersion",
           "structure": [
@@ -126,14 +154,6 @@
               "singleValue": "FIRST"
             }
           ]
-        },
-        {
-          "propertyName": "query:id",
-          "path": "@id"
-        },
-        {
-          "propertyName": "query:fullName",
-          "path": "https://openminds.ebrains.eu/vocab/fullName"
         }
       ]
     }

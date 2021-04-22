@@ -47,17 +47,11 @@
     },
     {
       "propertyName": "query:digitalIdentifier",
-      "path": "https://openminds.ebrains.eu/vocab/digitalIdentifier",
-      "structure": [
-        {
-          "propertyName": "query:howToCite",
-          "path": "https://openminds.ebrains.eu/vocab/howToCite"
-        },
-        {
-          "propertyName": "query:identifier",
-          "path": "https://openminds.ebrains.eu/vocab/identifier"
-        }
-      ]
+      "path": "https://openminds.ebrains.eu/vocab/digitalIdentifier"
+    },
+    {
+      "propertyName": "query:howToCite",
+      "path": "https://openminds.ebrains.eu/vocab/howToCite"
     },
     {
       "propertyName": "query:datasetVersions",

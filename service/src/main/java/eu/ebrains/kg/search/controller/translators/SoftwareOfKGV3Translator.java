@@ -2,6 +2,7 @@ package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
+import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.SoftwareVersionV3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
@@ -22,7 +23,7 @@ public class SoftwareOfKGV3Translator implements Translator<SoftwareVersionV3, S
 
     public Software translate(SoftwareVersionV3 softwareVersion, DataStage dataStage, boolean liveMode) {
         Software s = new Software();
-        Versions software = softwareVersion.getSoftware();
+        SoftwareVersionV3.SoftwareVersions software = softwareVersion.getSoftware();
         s.setVersion(softwareVersion.getVersion());
         s.setId(IdUtils.getUUID(softwareVersion.getId()));
         s.setIdentifier(IdUtils.getUUID(softwareVersion.getIdentifier()));
@@ -47,7 +48,32 @@ public class SoftwareOfKGV3Translator implements Translator<SoftwareVersionV3, S
             s.setTitle(software.getFullName());
             s.setSoftwareVersions(new TargetInternalReference(IdUtils.getUUID(software.getId()), software.getFullName()));
         }
-
+        if (!CollectionUtils.isEmpty(softwareVersion.getDeveloper())) {
+            s.setDevelopers(softwareVersion.getDeveloper().stream()
+                    .map(a -> new TargetInternalReference(
+                            IdUtils.getUUID(a.getId()),
+                            Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
+                    )).collect(Collectors.toList()));
+        } else if (software != null && !CollectionUtils.isEmpty(software.getDeveloper())) {
+            s.setDevelopers(software.getDeveloper().stream()
+                    .map(a -> new TargetInternalReference(
+                            IdUtils.getUUID(a.getId()),
+                            Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
+                    )).collect(Collectors.toList()));
+        }
+        if (!CollectionUtils.isEmpty(softwareVersion.getCustodian())) {
+            s.setCustodians(softwareVersion.getCustodian().stream()
+                    .map(a -> new TargetInternalReference(
+                            IdUtils.getUUID(a.getId()),
+                            Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
+                    )).collect(Collectors.toList()));
+        } else if (software != null && !CollectionUtils.isEmpty(software.getCustodian())) {
+            s.setCustodians(software.getCustodian().stream()
+                    .map(a -> new TargetInternalReference(
+                            IdUtils.getUUID(a.getId()),
+                            Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
+                    )).collect(Collectors.toList()));
+        }
         s.setAppCategory(emptyToNull(softwareVersion.getApplicationCategory()));
 
         if (!CollectionUtils.isEmpty(softwareVersion.getSourceCode())) {

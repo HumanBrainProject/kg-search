@@ -2,7 +2,6 @@ package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import eu.ebrains.kg.search.model.source.SourceInstance;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Component;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 
 import java.util.*;
@@ -11,13 +10,13 @@ public class DatasetV3 implements SourceInstance {
     private String id;
     private List<String> identifier;
     private String description;
-    private List<DigitalIdentifierV3> digitalIdentifier;
+    private List<String> digitalIdentifier;
+    private String howToCite;
     private String fullName;
     private String homepage;
     private String shortName;
-    private List<Version> datasetVersions;
-    private List<Author> authors;
-    private List<Component> components;
+    private List<Version> versions;
+    private List<Author> author; //TODO: use plural naming when having a list as soon as query bug is fixed (same alias in different structure)
 
     public String getId() { return id; }
 
@@ -39,24 +38,32 @@ public class DatasetV3 implements SourceInstance {
         this.description = description;
     }
 
-    public List<DigitalIdentifierV3> getDigitalIdentifier() {
+    public List<String> getDigitalIdentifier() {
         return digitalIdentifier;
     }
 
-    public void setDigitalIdentifier(List<DigitalIdentifierV3> digitalIdentifier) {
+    public void setDigitalIdentifier(List<String> digitalIdentifier) {
         this.digitalIdentifier = digitalIdentifier;
+    }
+
+    public String getHowToCite() {
+        return howToCite;
+    }
+
+    public void setHowToCite(String howToCite) {
+        this.howToCite = howToCite;
     }
 
     public String getFullName() {
         return fullName;
     }
 
-    public List<Version> getDatasetVersions() {
-        return datasetVersions;
+    public List<Version> getVersions() {
+        return versions;
     }
 
-    public void setDatasetVersions(List<Version> datasetVersions) {
-        this.datasetVersions = datasetVersions;
+    public void setVersions(List<Version> versions) {
+        this.versions = versions;
     }
 
     public void setFullName(String fullName) {
@@ -79,20 +86,12 @@ public class DatasetV3 implements SourceInstance {
         this.shortName = shortName;
     }
 
-    public List<Author> getAuthors() {
-        return authors;
+    public List<Author> getAuthor() {
+        return author;
     }
 
-    public void setAuthors(List<Author> authors) {
-        this.authors = authors;
-    }
-
-    public List<Component> getComponents() {
-        return components;
-    }
-
-    public void setComponents(List<Component> components) {
-        this.components = components;
+    public void setAuthor(List<Author> author) {
+        this.author = author;
     }
 
 }

@@ -10,15 +10,16 @@ public class SoftwareVersionV3 implements SourceInstance {
     private String id;
     private List<String> identifier;
     private String version;
-    private String projectDoi;
-    private String citation;
+    private String digitalIdentifier;
+    private String howToCite;
     private String description;
     private String title;
-    private Versions software;
+    private SoftwareVersions software;
     private List<String> applicationCategory;
     private List<String> operatingSystem;
     private String homepage;
-    private List<Author> contributors;
+    private List<Author> developer;
+    private List<Author> custodian;
     private List<String> sourceCode;
     private List<String> documentation;
     private List<String> features;
@@ -44,20 +45,20 @@ public class SoftwareVersionV3 implements SourceInstance {
 
     public void setVersion(String version) { this.version = version; }
 
-    public String getProjectDoi() {
-        return projectDoi;
+    public String getDigitalIdentifier() {
+        return digitalIdentifier;
     }
 
-    public void setProjectDoi(String projectDoi) {
-        this.projectDoi = projectDoi;
+    public void setDigitalIdentifier(String digitalIdentifier) {
+        this.digitalIdentifier = digitalIdentifier;
     }
 
-    public String getCitation() {
-        return citation;
+    public String getHowToCite() {
+        return howToCite;
     }
 
-    public void setCitation(String citation) {
-        this.citation = citation;
+    public void setHowToCite(String howToCite) {
+        this.howToCite = howToCite;
     }
 
     public String getDescription() {
@@ -76,11 +77,11 @@ public class SoftwareVersionV3 implements SourceInstance {
         this.title = title;
     }
 
-    public Versions getSoftware() {
+    public SoftwareVersions getSoftware() {
         return software;
     }
 
-    public void setSoftware(Versions software) {
+    public void setSoftware(SoftwareVersions software) {
         this.software = software;
     }
 
@@ -108,12 +109,20 @@ public class SoftwareVersionV3 implements SourceInstance {
         this.homepage = homepage;
     }
 
-    public List<Author> getContributors() {
-        return contributors;
+    public List<Author> getDeveloper() {
+        return developer;
     }
 
-    public void setContributors(List<Author> contributors) {
-        this.contributors = contributors;
+    public void setDeveloper(List<Author> developer) {
+        this.developer = developer;
+    }
+
+    public List<Author> getCustodian() {
+        return custodian;
+    }
+
+    public void setCustodian(List<Author> custodian) {
+        this.custodian = custodian;
     }
 
     public List<String> getSourceCode() {
@@ -146,5 +155,27 @@ public class SoftwareVersionV3 implements SourceInstance {
 
     public void setLicense(List<String> license) {
         this.license = license;
+    }
+
+    public static class SoftwareVersions extends Versions {
+
+        private List<Author> custodian;
+        private List<Author> developer;
+
+        public List<Author> getCustodian() {
+            return custodian;
+        }
+
+        public void setCustodian(List<Author> custodian) {
+            this.custodian = custodian;
+        }
+
+        public List<Author> getDeveloper() {
+            return developer;
+        }
+
+        public void setDeveloper(List<Author> developer) {
+            this.developer = developer;
+        }
     }
 }
