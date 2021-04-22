@@ -52,7 +52,7 @@
       "path": "https://openminds.ebrains.eu/vocab/howToCite"
     },
     {
-      "propertyName": "query:version",
+      "propertyName": "query:software",
       "path": {
         "@id": "https://openminds.ebrains.eu/vocab/hasVersion",
         "reverse": true
@@ -161,7 +161,7 @@
       ]
     },
     {
-      "propertyName": "query:versionIdentifier",
+      "propertyName": "query:version",
       "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
     }
   ]

@@ -35,6 +35,9 @@ public class Model implements TargetInstance {
     @FieldInfo(label = "Version", layout = FieldInfo.Layout.SUMMARY)
     private Value<String> version;
 
+    @FieldInfo(label = "Model Versions")
+    private TargetInternalReference modelVersions;
+
     @FieldInfo(label = "Contributors", layout = FieldInfo.Layout.HEADER, separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10)
     private List<TargetInternalReference> contributors;
 
@@ -90,6 +93,8 @@ public class Model implements TargetInstance {
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)
     private TargetExternalReference licenseInfo;
 
+    private List<TargetInternalReference> versions;
+
     @Override
     public String getId() { return id; }
 
@@ -106,6 +111,10 @@ public class Model implements TargetInstance {
     public void setEditorId(String editorId) {
         setEditorId(StringUtils.isBlank(editorId) ? null : new Value<>(editorId));
     }
+
+    public TargetInternalReference getModelVersions() { return modelVersions; }
+
+    public void setModelVersions(TargetInternalReference modelVersions) { this.modelVersions = modelVersions; }
 
     public void setEmbargo(String embargo) {
         setEmbargo(StringUtils.isBlank(embargo) ? null : new Value<>(embargo));
@@ -312,4 +321,7 @@ public class Model implements TargetInstance {
         this.type = type;
     }
 
+    public List<TargetInternalReference> getVersions() { return versions; }
+
+    public void setVersions(List<TargetInternalReference> versions) { this.versions = versions; }
 }

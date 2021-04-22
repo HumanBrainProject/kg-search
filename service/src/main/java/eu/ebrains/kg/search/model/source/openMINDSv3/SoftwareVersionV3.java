@@ -9,11 +9,12 @@ import java.util.List;
 public class SoftwareVersionV3 implements SourceInstance {
     private String id;
     private List<String> identifier;
+    private String version;
     private String projectDoi;
     private String citation;
     private String description;
     private String title;
-    private Versions versions;
+    private Versions software;
     private List<String> applicationCategory;
     private List<String> operatingSystem;
     private String homepage;
@@ -38,6 +39,10 @@ public class SoftwareVersionV3 implements SourceInstance {
     public void setIdentifier(List<String> identifier) {
         this.identifier = identifier;
     }
+
+    public String getVersion() { return version; }
+
+    public void setVersion(String version) { this.version = version; }
 
     public String getProjectDoi() {
         return projectDoi;
@@ -71,12 +76,12 @@ public class SoftwareVersionV3 implements SourceInstance {
         this.title = title;
     }
 
-    public Versions getVersions() {
-        return versions;
+    public Versions getSoftware() {
+        return software;
     }
 
-    public void setVersions(Versions versions) {
-        this.versions = versions;
+    public void setSoftware(Versions software) {
+        this.software = software;
     }
 
     public List<String> getApplicationCategory() {

@@ -18,7 +18,7 @@ public class DatasetVersionV3 implements SourceInstance {
     private List<String> keyword;
     private Date releaseDate;
     private String shortName;
-    private String versionIdentifier;
+    private String version;
     private String versionInnovation;
     private List<Author> authors;
     private List<Component> components;
@@ -92,12 +92,12 @@ public class DatasetVersionV3 implements SourceInstance {
         this.shortName = shortName;
     }
 
-    public String getVersionIdentifier() {
-        return versionIdentifier;
+    public String getVersion() {
+        return version;
     }
 
-    public void setVersionIdentifier(String versionIdentifier) {
-        this.versionIdentifier = versionIdentifier;
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public String getVersionInnovation() {

@@ -23,7 +23,7 @@ public class DatasetOfKGV3Translator implements Translator<DatasetVersionV3, Dat
     public Dataset translate(DatasetVersionV3 datasetVersion, DataStage dataStage, boolean liveMode) {
         Dataset d = new Dataset();
         Versions dataset = datasetVersion.getDataset();
-        d.setVersion(datasetVersion.getVersionIdentifier());
+        d.setVersion(datasetVersion.getVersion());
         d.setId(IdUtils.getUUID(datasetVersion.getId()));
         d.setIdentifier(IdUtils.getUUID(datasetVersion.getIdentifier()));
         if (dataset != null && !CollectionUtils.isEmpty(dataset.getVersions())) {

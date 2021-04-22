@@ -7,6 +7,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ISODateValue;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,6 +31,9 @@ public class Software implements TargetInstance {
 
     @FieldInfo(layout = FieldInfo.Layout.HEADER)
     private Value<String> editorId;
+
+    @FieldInfo(label = "Software Versions")
+    private TargetInternalReference softwareVersions;
 
     @FieldInfo(labelHidden = true, markdown = true, boost = 2)
     private Value<String> description;
@@ -66,6 +70,8 @@ public class Software implements TargetInstance {
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 
+    private List<TargetInternalReference> versions;
+
     @Override
     public String getId() { return id; }
 
@@ -82,6 +88,10 @@ public class Software implements TargetInstance {
     public void setEditorId(String editorId){
         setEditorId(StringUtils.isBlank(editorId) ? null : new Value<>(editorId));
     }
+
+    public TargetInternalReference getSoftwareVersions() { return softwareVersions; }
+
+    public void setSoftwareVersions(TargetInternalReference softwareVersions) { this.softwareVersions = softwareVersions;  }
 
     public void setTitle(String title){
         setTitle(StringUtils.isBlank(title) ? null : new Value<>(title));
@@ -217,4 +227,8 @@ public class Software implements TargetInstance {
     public void setType(Value<String> type) {
         this.type = type;
     }
+
+    public List<TargetInternalReference> getVersions() { return versions; }
+
+    public void setVersions(List<TargetInternalReference> versions) { this.versions = versions; }
 }

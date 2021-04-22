@@ -12,11 +12,10 @@ public class ModelVersionV3 implements SourceInstance {
     private String id;
     private String version;
     private String description;
-    private String versionIdentifier;
     private Author mainContact;
     private List<Author> custodian;
     private List<Author> contributors;
-    private ModelVersions versions;
+    private ModelVersions model;
     private List<String> applicationCategory;
     private List<String> operatingSystem;
     private List<String> format;
@@ -30,14 +29,6 @@ public class ModelVersionV3 implements SourceInstance {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getVersionIdentifier() {
-        return versionIdentifier;
-    }
-
-    public void setVersionIdentifier(String versionIdentifier) {
-        this.versionIdentifier = versionIdentifier;
     }
 
     public List<String> getIdentifier() {
@@ -96,12 +87,12 @@ public class ModelVersionV3 implements SourceInstance {
         this.contributors = contributors;
     }
 
-    public ModelVersions getVersions() {
-        return versions;
+    public ModelVersions getModel() {
+        return model;
     }
 
-    public void setVersions(ModelVersions versions) {
-        this.versions = versions;
+    public void setModel(ModelVersions model) {
+        this.model = model;
     }
 
     public List<String> getApplicationCategory() {
