@@ -1,27 +1,29 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import eu.ebrains.kg.search.model.source.SourceInstance;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.HasEmbargo;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
 
 import java.util.List;
 
-public class ModelVersionV3 implements SourceInstance {
+public class ModelVersionV3 implements HasEmbargo, SourceInstance {
     private String title;
     private List<String> identifier;
     private String id;
     private String version;
     private String description;
-    private Author mainContact;
+    private List<Author> developer;
     private List<Author> custodian;
-    private List<Author> contributors;
-    private Versions model;
+    private ModelVersions model;
     private List<String> applicationCategory;
     private List<String> operatingSystem;
     private List<String> format;
     private List<String> embargo;
     private List<String> fileBundle;
     private List<License> license;
+    private List<String> publications;
+    private String howToCite;
 
     public String getTitle() {
         return title;
@@ -63,14 +65,6 @@ public class ModelVersionV3 implements SourceInstance {
         this.description = description;
     }
 
-    public Author getMainContact() {
-        return mainContact;
-    }
-
-    public void setMainContact(Author mainContact) {
-        this.mainContact = mainContact;
-    }
-
     public List<Author> getCustodian() {
         return custodian;
     }
@@ -79,19 +73,19 @@ public class ModelVersionV3 implements SourceInstance {
         this.custodian = custodian;
     }
 
-    public List<Author> getContributors() {
-        return contributors;
+    public List<Author> getDeveloper() {
+        return developer;
     }
 
-    public void setContributors(List<Author> contributors) {
-        this.contributors = contributors;
+    public void setDeveloper(List<Author> developer) {
+        this.developer = developer;
     }
 
-    public Versions getModel() {
+    public ModelVersions getModel() {
         return model;
     }
 
-    public void setModel(Versions model) {
+    public void setModel(ModelVersions model) {
         this.model = model;
     }
 
@@ -143,7 +137,53 @@ public class ModelVersionV3 implements SourceInstance {
         this.license = license;
     }
 
-    private static class License {
+    public List<String> getPublications() {
+        return publications;
+    }
+
+    public void setPublications(List<String> publications) {
+        this.publications = publications;
+    }
+
+    public String getHowToCite() {
+        return howToCite;
+    }
+
+    public void setHowToCite(String howToCite) {
+        this.howToCite = howToCite;
+    }
+
+    public static class ModelVersions extends Versions {
+        private List<String> studyTarget;
+        private List<String> modelScope;
+        private List<String> abstractionLevel;
+
+        public List<String> getStudyTarget() {
+            return studyTarget;
+        }
+
+        public void setStudyTarget(List<String> studyTarget) {
+            this.studyTarget = studyTarget;
+        }
+
+        public List<String> getModelScope() {
+            return modelScope;
+        }
+
+        public void setModelScope(List<String> modelScope) {
+            this.modelScope = modelScope;
+        }
+
+        public List<String> getAbstractionLevel() {
+            return abstractionLevel;
+        }
+
+        public void setAbstractionLevel(List<String> abstractionLevel) {
+            this.abstractionLevel = abstractionLevel;
+        }
+    }
+
+    public static class License {
         private String fullName;
         private String webpage;
 
