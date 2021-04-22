@@ -21,8 +21,8 @@
   },
   "structure": [
     {
-      "propertyName": "query:title",
-      "path": "https://openminds.ebrains.eu/vocab/fullName",
+      "propertyName": "query:id",
+      "path": "@id",
       "required": true
     },
     {
@@ -31,13 +31,50 @@
       "required": true
     },
     {
-      "propertyName": "query:id",
-      "path": "@id",
+      "propertyName": "query:title",
+      "path": "https://openminds.ebrains.eu/vocab/fullName",
       "required": true
     },
     {
       "propertyName": "query:description",
       "path": "https://openminds.ebrains.eu/vocab/description"
+    },
+    {
+      "propertyName": "query:homepage",
+      "path": "https://openminds.ebrains.eu/vocab/homepage"
+    },
+    {
+      "propertyName": "query:digitalIdentifier",
+      "path": "https://openminds.ebrains.eu/vocab/digitalIdentifier"
+    },
+    {
+      "propertyName": "query:howToCite",
+      "path": "https://openminds.ebrains.eu/vocab/howToCite"
+    },
+    {
+      "propertyName": "query:studyTarget",
+      "path": [
+        "https://openminds.ebrains.eu/vocab/studyTarget",
+        "https://openminds.ebrains.eu/vocab/name"
+      ]
+    },
+    {
+      "propertyName": "query:modelScope",
+      "path": [
+        "https://openminds.ebrains.eu/vocab/modelScope",
+        "https://openminds.ebrains.eu/vocab/name"
+      ]
+    },
+    {
+      "propertyName": "query:abstractionLevel",
+      "path": [
+        "https://openminds.ebrains.eu/vocab/abstractionLevel",
+        "https://openminds.ebrains.eu/vocab/name"
+      ]
+    },
+    {
+      "propertyName": "query:homepage",
+      "path": "https://openminds.ebrains.eu/vocab/homepage"
     },
     {
       "propertyName": "query:hasVersion",
@@ -83,7 +120,7 @@
       ]
     },
     {
-      "propertyName": "query:contributors",
+      "propertyName": "query:developer",
       "path": "https://openminds.ebrains.eu/vocab/developer",
       "structure": [
         {

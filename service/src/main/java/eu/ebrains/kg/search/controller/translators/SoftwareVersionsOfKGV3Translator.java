@@ -24,9 +24,6 @@ public class SoftwareVersionsOfKGV3Translator implements Translator<SoftwareV3, 
         s.setIdentifier(IdUtils.getUUID(software.getIdentifier()));
         s.setDescription(software.getDescription());
         s.setTitle(software.getTitle());
-
-
-
         if (!CollectionUtils.isEmpty(software.getDeveloper())) {
             s.setDevelopers(software.getDeveloper().stream()
                     .map(a -> new TargetInternalReference(

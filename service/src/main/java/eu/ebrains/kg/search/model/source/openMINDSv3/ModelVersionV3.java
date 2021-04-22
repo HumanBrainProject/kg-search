@@ -15,7 +15,7 @@ public class ModelVersionV3 implements SourceInstance {
     private Author mainContact;
     private List<Author> custodian;
     private List<Author> contributors;
-    private ModelVersions model;
+    private Versions model;
     private List<String> applicationCategory;
     private List<String> operatingSystem;
     private List<String> format;
@@ -87,11 +87,11 @@ public class ModelVersionV3 implements SourceInstance {
         this.contributors = contributors;
     }
 
-    public ModelVersions getModel() {
+    public Versions getModel() {
         return model;
     }
 
-    public void setModel(ModelVersions model) {
+    public void setModel(Versions model) {
         this.model = model;
     }
 
@@ -141,54 +141,6 @@ public class ModelVersionV3 implements SourceInstance {
 
     public void setLicense(List<License> license) {
         this.license = license;
-    }
-
-    private static class ModelVersions extends Versions {
-        private List<String> brainStructure;
-        private List<String> cellularTarget;
-        private List<String> studyTarget;
-        private List<String> modelScope;
-        private List<String> abstractionLevel;
-
-        public List<String> getBrainStructure() {
-            return brainStructure;
-        }
-
-        public void setBrainStructure(List<String> brainStructure) {
-            this.brainStructure = brainStructure;
-        }
-
-        public List<String> getCellularTarget() {
-            return cellularTarget;
-        }
-
-        public void setCellularTarget(List<String> cellularTarget) {
-            this.cellularTarget = cellularTarget;
-        }
-
-        public List<String> getStudyTarget() {
-            return studyTarget;
-        }
-
-        public void setStudyTarget(List<String> studyTarget) {
-            this.studyTarget = studyTarget;
-        }
-
-        public List<String> getModelScope() {
-            return modelScope;
-        }
-
-        public void setModelScope(List<String> modelScope) {
-            this.modelScope = modelScope;
-        }
-
-        public List<String> getAbstractionLevel() {
-            return abstractionLevel;
-        }
-
-        public void setAbstractionLevel(List<String> abstractionLevel) {
-            this.abstractionLevel = abstractionLevel;
-        }
     }
 
     private static class License {

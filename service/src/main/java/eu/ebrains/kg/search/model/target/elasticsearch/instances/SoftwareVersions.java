@@ -33,10 +33,10 @@ public class SoftwareVersions implements TargetInstance {
     @FieldInfo(label = "Developers", separator = "; ", boost = 10)
     private List<TargetInternalReference> developers;
 
-    @FieldInfo(label = "Cite dataset", isButton = true, markdown = true, icon="quote-left")
+    @FieldInfo(label = "Cite software", isButton = true, markdown = true, icon="quote-left")
     private Value<String> citation;
 
-    @FieldInfo(label = "DOI", hint = "This is the dataset DOI representing all the underlying datasets you must cite if you reuse this data in a way that leads to a publication")
+    @FieldInfo(label = "DOI", hint = "This is the software DOI representing all the underlying software's versions you must cite if you reuse this data in a way that leads to a publication")
     private Value<String> doi;
 
     @FieldInfo(label = "Versions")

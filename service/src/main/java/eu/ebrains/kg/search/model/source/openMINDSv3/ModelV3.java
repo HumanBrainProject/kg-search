@@ -9,10 +9,16 @@ import java.util.List;
 public class ModelV3 implements SourceInstance {
     private String id;
     private List<String> identifier;
-    private String description;
-    private List<Author> contributors;
-    private List<Author> custodian;
     private String title;
+    private String description;
+    private List<String> digitalIdentifier;
+    private String howToCite;
+    private List<Author> developer;
+    private List<Author> custodian;
+    private List<String> studyTarget;
+    private List<String> modelScope;
+    private List<String> abstractionLevel;
+    private String homepage;
     private List<Version> versions;
 
     public String getId() {
@@ -31,6 +37,14 @@ public class ModelV3 implements SourceInstance {
         this.identifier = identifier;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -39,12 +53,60 @@ public class ModelV3 implements SourceInstance {
         this.description = description;
     }
 
-    public String getTitle() {
-        return title;
+    public List<String> getDigitalIdentifier() {
+        return digitalIdentifier;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setDigitalIdentifier(List<String> digitalIdentifier) {
+        this.digitalIdentifier = digitalIdentifier;
+    }
+
+    public String getHowToCite() {
+        return howToCite;
+    }
+
+    public void setHowToCite(String howToCite) {
+        this.howToCite = howToCite;
+    }
+
+    public List<Author> getDeveloper() { return developer; }
+
+    public void setDeveloper(List<Author> developer) { this.developer = developer; }
+
+    public List<Author> getCustodian() { return custodian; }
+
+    public void setCustodian(List<Author> custodian) { this.custodian = custodian; }
+
+    public List<String> getStudyTarget() {
+        return studyTarget;
+    }
+
+    public void setStudyTarget(List<String> studyTarget) {
+        this.studyTarget = studyTarget;
+    }
+
+    public List<String> getModelScope() {
+        return modelScope;
+    }
+
+    public void setModelScope(List<String> modelScope) {
+        this.modelScope = modelScope;
+    }
+
+    public List<String> getAbstractionLevel() {
+        return abstractionLevel;
+    }
+
+    public void setAbstractionLevel(List<String> abstractionLevel) {
+        this.abstractionLevel = abstractionLevel;
+    }
+
+    public String getHomepage() {
+        return homepage;
+    }
+
+    public void setHomepage(String homepage) {
+        this.homepage = homepage;
     }
 
     public List<Version> getVersions() {
@@ -55,11 +117,4 @@ public class ModelV3 implements SourceInstance {
         this.versions = versions;
     }
 
-    public List<Author> getContributors() { return contributors; }
-
-    public void setContributors(List<Author> contributors) { this.contributors = contributors; }
-
-    public List<Author> getCustodian() { return custodian; }
-
-    public void setCustodian(List<Author> custodian) { this.custodian = custodian; }
 }
