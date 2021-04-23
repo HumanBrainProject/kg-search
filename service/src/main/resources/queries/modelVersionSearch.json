@@ -17,7 +17,8 @@
   },
   "meta": {
     "name": "ModelVersion search query",
-    "type": "https://openminds.ebrains.eu/core/ModelVersion"
+    "type": "https://openminds.ebrains.eu/core/ModelVersion",
+    "responseVocab": "https://schema.hbp.eu/myQuery/"
   },
   "structure": [
     {

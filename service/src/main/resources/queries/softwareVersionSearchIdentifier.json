@@ -13,7 +13,8 @@
   },
   "meta": {
     "name": "SoftwareVersion search identifier query",
-    "type": "https://openminds.ebrains.eu/core/SoftwareVersion"
+    "type": "https://openminds.ebrains.eu/core/SoftwareVersion",
+    "responseVocab": "https://schema.hbp.eu/myQuery/"
   },
   "structure": [
     {

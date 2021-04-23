@@ -13,7 +13,8 @@
   },
   "meta": {
     "name": "ModelVersion search identifier query",
-    "type": "https://openminds.ebrains.eu/core/ModelVersion"
+    "type": "https://openminds.ebrains.eu/core/ModelVersion",
+    "responseVocab": "https://schema.hbp.eu/myQuery/"
   },
   "structure": [
     {
