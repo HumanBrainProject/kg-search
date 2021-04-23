@@ -16,7 +16,7 @@
     }
   },
   "meta": {
-    "name": "Software Version Query",
+    "name": "SoftwareVersion search query",
     "type": "https://openminds.ebrains.eu/core/SoftwareVersion"
   },
   "structure": [

@@ -16,7 +16,7 @@
     }
   },
   "meta": {
-    "name": "Model Version Search Query",
+    "name": "ModelVersion search query",
     "type": "https://openminds.ebrains.eu/core/ModelVersion"
   },
   "structure": [

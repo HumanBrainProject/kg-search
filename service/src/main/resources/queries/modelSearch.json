@@ -16,7 +16,7 @@
     }
   },
   "meta": {
-    "name": "Search Model Query",
+    "name": "Model search query",
     "type": "https://openminds.ebrains.eu/core/Model"
   },
   "structure": [

@@ -16,7 +16,7 @@
     }
   },
   "meta": {
-    "name": "Software Search Query",
+    "name": "Software search query",
     "type": "https://openminds.ebrains.eu/core/Software"
   },
   "structure": [
