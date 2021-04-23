@@ -1,7 +1,7 @@
 package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
@@ -16,49 +16,23 @@ import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.firstItemOrNull;
 
-public class DatasetOfKGV3Translator implements Translator<DatasetVersionV3, Dataset>{
+public class DatasetOfKGV3Translator implements Translator<DatasetV3, Dataset>{
 
-    public Dataset translate(DatasetVersionV3 datasetVersion, DataStage dataStage, boolean liveMode) {
+    public Dataset translate(DatasetV3 dataset, DataStage dataStage, boolean liveMode) {
         Dataset d = new Dataset();
-        DatasetVersionV3.DatasetVersions dataset = datasetVersion.getDataset();
-        d.setVersion(datasetVersion.getVersion());
-        d.setId(IdUtils.getUUID(datasetVersion.getId()));
-        d.setIdentifier(IdUtils.getUUID(datasetVersion.getIdentifier()));
-        if (dataset != null && !CollectionUtils.isEmpty(dataset.getVersions())) {
-            List<Version> sortedVersions = Helpers.sort(dataset.getVersions());
-            List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
-            d.setVersions(references);
-        }
-        if (!StringUtils.isBlank(datasetVersion.getDescription())) {
-            d.setDescription(datasetVersion.getDescription());
-        } else if (dataset != null) {
-            d.setDescription(dataset.getDescription());
-        }
-//        if (!StringUtils.isBlank(datasetVersion.getFullName())) {
-//            d.setTitle(datasetVersion.getFullName());
-//        } else if (dataset != null {
-//            d.setTitle(datasetV3.getFullName());
-//        }
-        // For the UI we don't need the version number in the title as it is set in de dropdown
-        if (dataset != null) {
-            d.setTitle(dataset.getFullName());
-            d.setDatasetVersions(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), dataset.getFullName()));
-        }
-        if (!CollectionUtils.isEmpty(datasetVersion.getAuthor())) {
-            d.setContributors(datasetVersion.getAuthor().stream()
-                    .map(a -> new TargetInternalReference(
-                            IdUtils.getUUID(a.getId()),
-                            Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
-                    )).collect(Collectors.toList()));
-        } else if (dataset != null && !CollectionUtils.isEmpty(dataset.getAuthor())) {
-            d.setContributors(dataset.getAuthor().stream()
+        d.setId(IdUtils.getUUID(dataset.getId()));
+        d.setIdentifier(IdUtils.getUUID(dataset.getIdentifier()));
+        d.setDescription(dataset.getDescription());
+        d.setTitle(dataset.getFullName());
+        if (!CollectionUtils.isEmpty(dataset.getAuthor())) {
+            d.setAuthors(dataset.getAuthor().stream()
                     .map(a -> new TargetInternalReference(
                             IdUtils.getUUID(a.getId()),
                             Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
                     )).collect(Collectors.toList()));
         }
-        String citation = datasetVersion.getHowToCite();
-        String digitalIdentifier = firstItemOrNull(datasetVersion.getDigitalIdentifier());
+        String citation = dataset.getHowToCite();
+        String digitalIdentifier = firstItemOrNull(dataset.getDigitalIdentifier());
         if (digitalIdentifier != null) {
             if (StringUtils.isNotBlank(citation) && StringUtils.isNotBlank(digitalIdentifier)) {
                 String url = URLEncoder.encode(digitalIdentifier, StandardCharsets.UTF_8);
@@ -67,6 +41,11 @@ public class DatasetOfKGV3Translator implements Translator<DatasetVersionV3, Dat
             if (StringUtils.isNotBlank(digitalIdentifier)) {
                 d.setDoi(digitalIdentifier);
             }
+        }
+        if (!CollectionUtils.isEmpty(dataset.getVersions())) {
+            List<Version> sortedVersions = Helpers.sort(dataset.getVersions());                                         //v.getFullName()
+            List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
+            d.setDatasets(references);
         }
         return d;
     }

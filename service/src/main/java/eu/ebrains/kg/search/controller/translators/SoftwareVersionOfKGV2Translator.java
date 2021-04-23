@@ -2,7 +2,7 @@ package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.Software;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.SoftwareVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.firstItemOrNull;
 
-public class SoftwareOfKGV2Translator implements Translator<SoftwareV2, Software> {
+public class SoftwareVersionOfKGV2Translator implements Translator<SoftwareV2, SoftwareVersion> {
 
-    public Software translate(SoftwareV2 softwareV2, DataStage dataStage, boolean liveMode) {
-        Software s = new Software();
+    public SoftwareVersion translate(SoftwareV2 softwareV2, DataStage dataStage, boolean liveMode) {
+        SoftwareVersion s = new SoftwareVersion();
         String uuid = IdUtils.getUUID(softwareV2.getId());
         s.setId(uuid);
         List<String> identifiers = Arrays.asList(uuid, String.format("Software/%s", softwareV2.getIdentifier()));

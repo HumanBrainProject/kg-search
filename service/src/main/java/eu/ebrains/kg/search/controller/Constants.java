@@ -38,15 +38,15 @@ public class Constants {
 
     public final static List<Class<?>> TARGET_MODELS_ORDER = Arrays.asList(
             Project.class,
-            Dataset.class,
+            DatasetVersion.class,
             Subject.class,
             Sample.class,
-            Model.class,
-            Software.class,
+            ModelVersion.class,
+            SoftwareVersion.class,
             Contributor.class,
-            DatasetVersions.class,
-            ModelVersions.class,
-            SoftwareVersions.class
+            Dataset.class,
+            Model.class,
+            Software.class
     );
 
     public final static List<Map<String, String>> GROUPS = Arrays.asList(

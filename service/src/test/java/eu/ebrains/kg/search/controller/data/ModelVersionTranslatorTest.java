@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ModelTranslatorTest {
+public class ModelVersionTranslatorTest {
     private final KGServiceClient kgServiceClient;
 
-    public ModelTranslatorTest(KGServiceClient kgServiceClient) {
+    public ModelVersionTranslatorTest(KGServiceClient kgServiceClient) {
         this.kgServiceClient = kgServiceClient;
     }
 

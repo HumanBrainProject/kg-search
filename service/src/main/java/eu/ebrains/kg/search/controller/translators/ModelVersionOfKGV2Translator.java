@@ -3,7 +3,7 @@ package eu.ebrains.kg.search.controller.translators;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.commonsV1andV2.SourceExternalReference;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.Model;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.ModelVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.utils.IdUtils;
@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
-public class ModelOfKGV2Translator implements Translator<ModelV2, Model> {
+public class ModelVersionOfKGV2Translator implements Translator<ModelV2, ModelVersion> {
 
-    public Model translate(ModelV2 modelV2, DataStage dataStage, boolean liveMode) {
-        Model m = new Model();
+    public ModelVersion translate(ModelV2 modelV2, DataStage dataStage, boolean liveMode) {
+        ModelVersion m = new ModelVersion();
         String uuid = IdUtils.getUUID(modelV2.getId());
         m.setId(uuid);
         List<String> identifiers = Arrays.asList(uuid, String.format("Model/%s", modelV2.getIdentifier()));

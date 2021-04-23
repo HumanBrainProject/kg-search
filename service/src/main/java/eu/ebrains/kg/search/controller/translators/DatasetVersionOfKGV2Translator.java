@@ -3,7 +3,7 @@ package eu.ebrains.kg.search.controller.translators;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.commonsV1andV2.SourceExternalReference;
 import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.DatasetVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
@@ -20,10 +20,10 @@ import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
-public class DatasetOfKGV2Translator implements Translator<DatasetV1, Dataset> {
+public class DatasetVersionOfKGV2Translator implements Translator<DatasetV1, DatasetVersion> {
 
-    public Dataset translate(DatasetV1 datasetV1, DataStage dataStage, boolean liveMode) {
-        Dataset d = new Dataset();
+    public DatasetVersion translate(DatasetV1 datasetV1, DataStage dataStage, boolean liveMode) {
+        DatasetVersion d = new DatasetVersion();
         String uuid = IdUtils.getUUID(datasetV1.getId());
         d.setId(uuid);
         List<String> identifiers = Arrays.asList(uuid, String.format("Dataset/%s", datasetV1.getIdentifier()));
@@ -172,7 +172,7 @@ public class DatasetOfKGV2Translator implements Translator<DatasetV1, Dataset> {
         if (!CollectionUtils.isEmpty(datasetV1.getSubjects())) {
             d.setSubjects(datasetV1.getSubjects().stream()
                     .map(s ->
-                            new Dataset.Subject(
+                            new DatasetVersion.Subject(
                                     new TargetInternalReference(
                                             liveMode ? s.getRelativeUrl() : s.getIdentifier(),
                                             s.getName(),
