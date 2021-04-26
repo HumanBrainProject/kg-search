@@ -2,7 +2,7 @@ package eu.ebrains.kg.search.model.source;
 
 import java.util.List;
 
-public class ResultOfKGv3<E> {
+public class ResultsOfKGv3<E> {
 
     public static class Error{
         private Integer code;
@@ -25,7 +25,7 @@ public class ResultOfKGv3<E> {
         }
     }
 
-    private E data;
+    private List<E> data;
     private String message;
     private Error error;
     private Long startTime;
@@ -34,11 +34,11 @@ public class ResultOfKGv3<E> {
     private Integer size;
     private Integer from;
 
-    public E getData() {
+    public List<E> getData() {
         return data;
     }
 
-    public void setData(E data) {
+    public void setData(List<E> data) {
         this.data = data;
     }
 

@@ -2,7 +2,7 @@ package eu.ebrains.kg.search.controller.data;
 
 import eu.ebrains.kg.search.controller.utils.TranslatorTestHelper;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.ResultOfKGv2;
+import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.services.KGServiceClient;
@@ -28,7 +28,7 @@ public class DatasetVersionOfKGV2TranslatorTest {
     @Value("${test.token}")
     String token;
 
-    private static class DatasetV1Result extends ResultOfKGv2<DatasetV1> {}
+    private static class DatasetV1Results extends ResultsOfKGv2<DatasetV1> {}
 
     @Test
     public void compareReleasedDatasets() {
@@ -47,7 +47,7 @@ public class DatasetVersionOfKGV2TranslatorTest {
 
     public void compareDatasets(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        DatasetV1Result queryResult = kgServiceClient.executeQueryForIndexing("query/minds/core/dataset/v1.0.0/search", dataStage, DatasetV1Result.class, token);
+        DatasetV1Results queryResult = kgServiceClient.executeQueryForIndexing("query/minds/core/dataset/v1.0.0/search", dataStage, DatasetV1Results.class, token);
         queryResult.getResults().forEach(dataset -> {
             String id = liveMode?dataset.getEditorId():dataset.getIdentifier();
             ElasticSearchDocument doc;

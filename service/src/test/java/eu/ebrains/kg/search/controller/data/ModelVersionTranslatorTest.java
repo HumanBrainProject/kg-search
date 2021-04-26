@@ -2,7 +2,7 @@ package eu.ebrains.kg.search.controller.data;
 
 import eu.ebrains.kg.search.controller.utils.TranslatorTestHelper;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.ResultOfKGv2;
+import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.services.KGServiceClient;
@@ -28,7 +28,7 @@ public class ModelVersionTranslatorTest {
     @Value("${test.token}")
     String token;
 
-    private static class ModelV2Result extends ResultOfKGv2<ModelV2> { }
+    private static class ModelV2Results extends ResultsOfKGv2<ModelV2> { }
 
     @Test
     public void compareReleasedModels() {
@@ -47,7 +47,7 @@ public class ModelVersionTranslatorTest {
 
     private void compareModels(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        ModelV2Result queryResult = kgServiceClient.executeQueryForIndexing("query/uniminds/core/modelinstance/v1.0.0/search", dataStage, ModelV2Result.class, token);
+        ModelV2Results queryResult = kgServiceClient.executeQueryForIndexing("query/uniminds/core/modelinstance/v1.0.0/search", dataStage, ModelV2Results.class, token);
         queryResult.getResults().forEach(project -> {
             String id = liveMode?project.getEditorId():project.getIdentifier();
             ElasticSearchDocument doc;

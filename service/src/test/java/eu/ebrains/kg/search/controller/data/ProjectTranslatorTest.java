@@ -2,7 +2,7 @@ package eu.ebrains.kg.search.controller.data;
 
 import eu.ebrains.kg.search.controller.utils.TranslatorTestHelper;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.ResultOfKGv2;
+import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.ProjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.services.KGServiceClient;
@@ -25,7 +25,7 @@ public class ProjectTranslatorTest {
         this.kgServiceClient = kgServiceClient;
     }
 
-    private static class ProjectV1Result extends ResultOfKGv2<ProjectV1> { }
+    private static class ProjectV1Results extends ResultsOfKGv2<ProjectV1> { }
 
     @Value("${test.token}")
     String token;
@@ -47,7 +47,7 @@ public class ProjectTranslatorTest {
 
     private void compareProjects(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        ProjectV1Result queryResult = kgServiceClient.executeQueryForIndexing("query/minds/core/placomponent/v1.0.0/search", dataStage, ProjectV1Result.class, token);
+        ProjectV1Results queryResult = kgServiceClient.executeQueryForIndexing("query/minds/core/placomponent/v1.0.0/search", dataStage, ProjectV1Results.class, token);
         queryResult.getResults().forEach(project -> {
             String id = liveMode?project.getEditorId():project.getIdentifier();
             ElasticSearchDocument doc;

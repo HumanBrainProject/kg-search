@@ -2,7 +2,7 @@ package eu.ebrains.kg.search.controller.data;
 
 import eu.ebrains.kg.search.controller.utils.TranslatorTestHelper;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.ResultOfKGv2;
+import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.services.KGServiceClient;
@@ -28,7 +28,7 @@ public class SoftwareVersionTranslatorTest {
     @Value("${test.token}")
     String token;
 
-    private static class SoftwareV2Result extends ResultOfKGv2<SoftwareV2> {}
+    private static class SoftwareV2Results extends ResultsOfKGv2<SoftwareV2> {}
 
     @Test
     public void compareReleasedSoftwares() { compareSoftware(DataStage.RELEASED, false); }
@@ -45,7 +45,7 @@ public class SoftwareVersionTranslatorTest {
 
     public void compareSoftware(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        SoftwareV2Result queryResult = kgServiceClient.executeQueryForIndexing("query/softwarecatalog/software/softwareproject/v1.0.0/search", dataStage, SoftwareV2Result.class, token);
+        SoftwareV2Results queryResult = kgServiceClient.executeQueryForIndexing("query/softwarecatalog/software/softwareproject/v1.0.0/search", dataStage, SoftwareV2Results.class, token);
         queryResult.getResults().forEach(software -> {
             String id = liveMode?software.getEditorId():software.getIdentifier();
             ElasticSearchDocument doc;

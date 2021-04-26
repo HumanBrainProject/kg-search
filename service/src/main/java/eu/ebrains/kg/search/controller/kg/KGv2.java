@@ -1,7 +1,7 @@
 package eu.ebrains.kg.search.controller.kg;
 
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.ResultOfKGv2;
+import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.SourceInstanceIdentifierV1andV2;
 import eu.ebrains.kg.search.services.KGServiceClient;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class KGv2 {
         return kgServiceClient.executeQueryForIndexing(query, dataStage, clazz, authorization);
     }
 
-    private static class ResultOfKGV2Source extends ResultOfKGv2<SourceInstanceIdentifierV1andV2> {}
+    private static class ResultsOfKGV2Source extends ResultsOfKGv2<SourceInstanceIdentifierV1andV2> {}
 
     public List<SourceInstanceIdentifierV1andV2> executeQueryForIndexing(DataStage dataStage, String query, String authorization){
         List<SourceInstanceIdentifierV1andV2> result = new ArrayList<>();
@@ -34,7 +34,7 @@ public class KGv2 {
         int from = 0;
         while (findMore) {
             logger.info(String.format("Starting to query %d instances from %d for v1", PAGE_SIZE, from));
-            ResultOfKGV2Source page = kgServiceClient.executeQueryForIndexing(query, dataStage, ResultOfKGV2Source.class, authorization, from, PAGE_SIZE);
+            ResultsOfKGV2Source page = kgServiceClient.executeQueryForIndexing(query, dataStage, ResultsOfKGV2Source.class, authorization, from, PAGE_SIZE);
             logger.info(String.format("Successfully queried %d instances from %d of a total of %d for v1", page.getResults().size(), from, page.getTotal()));
             result.addAll(page.getResults());
             from = page.getStart() + page.getSize();

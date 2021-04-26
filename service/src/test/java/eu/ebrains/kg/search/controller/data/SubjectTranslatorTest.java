@@ -2,7 +2,7 @@ package eu.ebrains.kg.search.controller.data;
 
 import eu.ebrains.kg.search.controller.utils.TranslatorTestHelper;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.ResultOfKGv2;
+import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.services.KGServiceClient;
@@ -29,7 +29,7 @@ public class SubjectTranslatorTest {
     String token;
 
 
-    private static class SubjectV1Result extends ResultOfKGv2<SubjectV1> { }
+    private static class SubjectV1Results extends ResultsOfKGv2<SubjectV1> { }
 
     @Test
     public void compareReleasedSubjects() {
@@ -48,7 +48,7 @@ public class SubjectTranslatorTest {
 
     private void compareSubjects(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        SubjectV1Result queryResult = kgServiceClient.executeQueryForIndexing("query/minds/experiment/subject/v1.0.0/search", dataStage, SubjectV1Result.class, token);
+        SubjectV1Results queryResult = kgServiceClient.executeQueryForIndexing("query/minds/experiment/subject/v1.0.0/search", dataStage, SubjectV1Results.class, token);
         queryResult.getResults().forEach(subject -> {
             String id = liveMode?subject.getEditorId():subject.getIdentifier();
             ElasticSearchDocument doc;

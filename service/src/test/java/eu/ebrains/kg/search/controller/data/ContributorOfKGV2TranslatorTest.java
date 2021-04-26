@@ -4,7 +4,7 @@ import eu.ebrains.kg.search.controller.utils.TranslatorTestHelper;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.PersonSources;
 import eu.ebrains.kg.search.model.source.PersonV1andV2;
-import eu.ebrains.kg.search.model.source.ResultOfKGv2;
+import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.PersonV1;
 import eu.ebrains.kg.search.model.source.openMINDSv2.PersonV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
@@ -31,9 +31,9 @@ public class ContributorOfKGV2TranslatorTest {
     @Value("${test.token}")
     String token;
 
-    private static class PersonV1Result extends ResultOfKGv2<PersonV1> {}
+    private static class PersonV1Results extends ResultsOfKGv2<PersonV1> {}
 
-    private static class PersonV2Result extends ResultOfKGv2<PersonV2> { }
+    private static class PersonV2Results extends ResultsOfKGv2<PersonV2> { }
 
     @Test
     public void compareReleasedContributors() {
@@ -54,8 +54,8 @@ public class ContributorOfKGV2TranslatorTest {
         Map<String, PersonSources> sourcesMap = new HashMap<>();
 
         List<String> result = new ArrayList<>();
-        ContributorOfKGV2TranslatorTest.PersonV1Result personV1Result = kgServiceClient.executeQueryForIndexing("query/minds/core/person/v1.0.0/search", dataStage, ContributorOfKGV2TranslatorTest.PersonV1Result.class, token);
-        ContributorOfKGV2TranslatorTest.PersonV2Result personV2Result = kgServiceClient.executeQueryForIndexing("query/uniminds/core/person/v1.0.0/search", dataStage, ContributorOfKGV2TranslatorTest.PersonV2Result.class, token);
+        PersonV1Results personV1Result = kgServiceClient.executeQueryForIndexing("query/minds/core/person/v1.0.0/search", dataStage, PersonV1Results.class, token);
+        PersonV2Results personV2Result = kgServiceClient.executeQueryForIndexing("query/uniminds/core/person/v1.0.0/search", dataStage, PersonV2Results.class, token);
 
         if (!CollectionUtils.isEmpty(personV1Result.getResults())) {
             personV1Result.getResults().forEach(person -> {

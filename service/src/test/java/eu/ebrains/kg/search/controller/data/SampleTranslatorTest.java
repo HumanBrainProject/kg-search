@@ -2,7 +2,7 @@ package eu.ebrains.kg.search.controller.data;
 
 import eu.ebrains.kg.search.controller.utils.TranslatorTestHelper;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.ResultOfKGv2;
+import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SampleV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.services.KGServiceClient;
@@ -25,7 +25,7 @@ public class SampleTranslatorTest {
         this.kgServiceClient = kgServiceClient;
     }
 
-    private static class SampleV1Result extends ResultOfKGv2<SampleV1> {}
+    private static class SampleV1Results extends ResultsOfKGv2<SampleV1> {}
 
     @Value("${test.token}")
     String token;
@@ -45,7 +45,7 @@ public class SampleTranslatorTest {
 
     private void compareSamples(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        SampleV1Result queryResult = kgServiceClient.executeQueryForIndexing("query/minds/experiment/sample/v1.0.0/search", dataStage, SampleV1Result.class, token);
+        SampleV1Results queryResult = kgServiceClient.executeQueryForIndexing("query/minds/experiment/sample/v1.0.0/search", dataStage, SampleV1Results.class, token);
         queryResult.getResults().forEach(sample -> {
             String id = liveMode?sample.getEditorId():sample.getIdentifier();
             ElasticSearchDocument doc;

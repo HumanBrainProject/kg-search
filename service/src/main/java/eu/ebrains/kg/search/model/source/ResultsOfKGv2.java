@@ -2,7 +2,7 @@ package eu.ebrains.kg.search.model.source;
 
 import java.util.List;
 
-public class ResultOfKGv2<E> {
+public class ResultsOfKGv2<E> {
 
     private List<E> results;
     private String apiName;
