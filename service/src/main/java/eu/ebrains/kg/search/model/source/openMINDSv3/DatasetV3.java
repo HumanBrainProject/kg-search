@@ -6,9 +6,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 
 import java.util.*;
 
-public class DatasetV3 implements SourceInstance {
-    private String id;
-    private List<String> identifier;
+public class DatasetV3 extends SourceInstanceV3 {
     private String description;
     private List<String> digitalIdentifier;
     private String howToCite;
@@ -17,18 +15,6 @@ public class DatasetV3 implements SourceInstance {
     private String shortName;
     private List<Version> versions;
     private List<Author> author; //TODO: use plural naming when having a list as soon as query bug is fixed (same alias in different structure)
-
-    public String getId() { return id; }
-
-    public void setId(String id) { this.id = id; }
-
-    public List<String> getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(List<String> identifier) {
-        this.identifier = identifier;
-    }
 
     public String getDescription() {
         return description;

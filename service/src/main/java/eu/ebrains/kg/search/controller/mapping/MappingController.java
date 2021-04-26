@@ -22,6 +22,7 @@ public class MappingController {
         Map<String, Object> mapping = new LinkedHashMap<>();
         Map<String, Object> properties = new LinkedHashMap<>();
         Map<String, Object> timestamp = new LinkedHashMap<>();
+        properties.put("id", Map.of("type", "keyword"));
         properties.put("identifier", Map.of("type", "keyword"));
         timestamp.put("type", "date");
         properties.put("@timestamp", timestamp);
@@ -37,6 +38,7 @@ public class MappingController {
         mapping.put("properties", properties);
         mapping.put("dynamic", false);
         timestamp.put("type", "date");
+        properties.put("id", Map.of("type", "keyword"));
         properties.put("@timestamp", timestamp);
         properties.putAll(handleType(clazz, null));
         return mapping;

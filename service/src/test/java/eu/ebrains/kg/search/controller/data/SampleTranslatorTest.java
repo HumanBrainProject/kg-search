@@ -45,7 +45,7 @@ public class SampleTranslatorTest {
 
     private void compareSamples(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        SampleV1Result queryResult = kgServiceClient.executeQuery("query/minds/experiment/sample/v1.0.0/search", dataStage, SampleV1Result.class, token);
+        SampleV1Result queryResult = kgServiceClient.executeQueryForIndexing("query/minds/experiment/sample/v1.0.0/search", dataStage, SampleV1Result.class, token);
         queryResult.getResults().forEach(sample -> {
             String id = liveMode?sample.getEditorId():sample.getIdentifier();
             ElasticSearchDocument doc;

@@ -6,4 +6,6 @@ public interface TargetInstance {
     String getId();
 
     List<String> getIdentifier();
+
+    boolean isSearchable();
 }

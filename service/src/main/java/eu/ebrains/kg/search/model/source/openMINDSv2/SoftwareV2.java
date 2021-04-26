@@ -1,36 +1,17 @@
 package eu.ebrains.kg.search.model.source.openMINDSv2;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.search.model.source.SourceInstance;
+import eu.ebrains.kg.search.model.source.SourceInstanceV1andV2;
 
-import java.util.Date;
 import java.util.List;
 
-public class SoftwareV2 implements SourceInstance {
-    private String id;
-    private Date firstReleaseAt;
+public class SoftwareV2 extends SourceInstanceV1andV2 {
     private String description;
-    private Date lastReleaseAt;
     private List<Version> versions;
     private String title;
-    private String identifier;
-    private String editorId;
-
-    public String getId() { return id; }
-
-    public void setId(String id) { this.id = id; }
-
-    public Date getFirstReleaseAt() { return firstReleaseAt; }
-
-    public void setFirstReleaseAt(Date firstReleaseAt) { this.firstReleaseAt = firstReleaseAt; }
 
     public String getDescription() { return description; }
 
     public void setDescription(String description) { this.description = description; }
-
-    public Date getLastReleaseAt() { return lastReleaseAt; }
-
-    public void setLastReleaseAt(Date lastReleaseAt) { this.lastReleaseAt = lastReleaseAt; }
 
     public List<Version> getVersions() { return versions; }
 
@@ -39,14 +20,6 @@ public class SoftwareV2 implements SourceInstance {
     public String getTitle() { return title; }
 
     public void setTitle(String title) { this.title = title; }
-
-    public String getIdentifier() { return identifier; }
-
-    public void setIdentifier(String identifier) { this.identifier = identifier; }
-
-    public String getEditorId() { return editorId; }
-
-    public void setEditorId(String editorId) { this.editorId = editorId; }
 
     public static class Version {
         private List<String> applicationCategory;

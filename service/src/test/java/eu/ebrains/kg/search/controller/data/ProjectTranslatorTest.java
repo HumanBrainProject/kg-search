@@ -47,7 +47,7 @@ public class ProjectTranslatorTest {
 
     private void compareProjects(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        ProjectV1Result queryResult = kgServiceClient.executeQuery("query/minds/core/placomponent/v1.0.0/search", dataStage, ProjectV1Result.class, token);
+        ProjectV1Result queryResult = kgServiceClient.executeQueryForIndexing("query/minds/core/placomponent/v1.0.0/search", dataStage, ProjectV1Result.class, token);
         queryResult.getResults().forEach(project -> {
             String id = liveMode?project.getEditorId():project.getIdentifier();
             ElasticSearchDocument doc;

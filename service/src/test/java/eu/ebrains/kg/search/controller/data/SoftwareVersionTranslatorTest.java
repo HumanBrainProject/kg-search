@@ -45,7 +45,7 @@ public class SoftwareVersionTranslatorTest {
 
     public void compareSoftware(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        SoftwareV2Result queryResult = kgServiceClient.executeQuery("query/softwarecatalog/software/softwareproject/v1.0.0/search", dataStage, SoftwareV2Result.class, token);
+        SoftwareV2Result queryResult = kgServiceClient.executeQueryForIndexing("query/softwarecatalog/software/softwareproject/v1.0.0/search", dataStage, SoftwareV2Result.class, token);
         queryResult.getResults().forEach(software -> {
             String id = liveMode?software.getEditorId():software.getIdentifier();
             ElasticSearchDocument doc;

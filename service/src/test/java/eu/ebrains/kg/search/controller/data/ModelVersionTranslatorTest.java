@@ -47,7 +47,7 @@ public class ModelVersionTranslatorTest {
 
     private void compareModels(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        ModelV2Result queryResult = kgServiceClient.executeQuery("query/uniminds/core/modelinstance/v1.0.0/search", dataStage, ModelV2Result.class, token);
+        ModelV2Result queryResult = kgServiceClient.executeQueryForIndexing("query/uniminds/core/modelinstance/v1.0.0/search", dataStage, ModelV2Result.class, token);
         queryResult.getResults().forEach(project -> {
             String id = liveMode?project.getEditorId():project.getIdentifier();
             ElasticSearchDocument doc;

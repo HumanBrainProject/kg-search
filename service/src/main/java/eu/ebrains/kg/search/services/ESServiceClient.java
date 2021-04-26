@@ -70,6 +70,27 @@ public class ESServiceClient {
                 "}", Constants.esQuerySize, id);
     }
 
+    private String getIdsOfPaginatedQuery(String id) {
+        if (id == null) {
+            return String.format("{\n" +
+                    " \"size\": %d,\n" +
+                    " \"sort\": [\n" +
+                    "    {\"_id\": \"asc\"}\n" +
+                    " ]\n" +
+                    "}", Constants.esQuerySize);
+        }
+        return String.format("{\n" +
+                " \"size\": %d,\n" +
+                " \"sort\": [\n" +
+                "    {\"_id\": \"asc\"}\n" +
+                "  ],\n" +
+                "  \"search_after\": [\n" +
+                "      \"%s\"\n" +
+                "   ],\n" +
+                " \"_source\": [\"id\"]\n" +
+                "}", Constants.esQuerySize, id);
+    }
+
     public ElasticSearchDocument getDocument(String index, String id) {
         ElasticSearchResult result = webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
@@ -104,8 +125,32 @@ public class ESServiceClient {
         return result;
     }
 
+    public List<String> getDocumentIds(String index) {
+        List<String> result = new ArrayList<>();
+        String searchAfter = null;
+        while (result.isEmpty() || searchAfter != null) {
+            ElasticSearchResult documents = getPaginatedDocumentIds(index, searchAfter);
+            List<ElasticSearchDocument> hits = documents.getHits().getHits();
+            hits.forEach(hit -> result.add(hit.getId()));
+            searchAfter = hits.size() < Constants.esQuerySize ? null:hits.get(hits.size()-1).getId();
+        }
+        return result;
+    }
+
+
     private ElasticSearchResult getPaginatedDocuments(String index, String searchAfter) {
         String paginatedQuery = getPaginatedQuery(searchAfter);
+        return webClient.post()
+                .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
+                .body(BodyInserters.fromValue(paginatedQuery))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_NDJSON_VALUE)
+                .retrieve()
+                .bodyToMono(ElasticSearchResult.class)
+                .block();
+    }
+
+    private ElasticSearchResult getPaginatedDocumentIds(String index, String searchAfter) {
+        String paginatedQuery = getIdsOfPaginatedQuery(searchAfter);
         return webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
                 .body(BodyInserters.fromValue(paginatedQuery))

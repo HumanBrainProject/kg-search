@@ -1,30 +1,62 @@
 package eu.ebrains.kg.search.controller.kg;
 
 import eu.ebrains.kg.search.model.DataStage;
+import eu.ebrains.kg.search.model.source.ResultOfKGv2;
+import eu.ebrains.kg.search.model.source.ResultOfKGv3;
+import eu.ebrains.kg.search.model.source.SourceInstanceIdentifierV1andV2;
+import eu.ebrains.kg.search.model.source.openMINDSv3.SourceInstanceV3;
 import eu.ebrains.kg.search.services.KGV3ServiceClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
 @Component
 public class KGv3 {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final KGV3ServiceClient kgServiceClient;
+
+    private final int PAGE_SIZE = 20;
 
     public KGv3(KGV3ServiceClient kgServiceClient) {
         this.kgServiceClient = kgServiceClient;
     }
 
-    public <T> T executeQueryForIndexing(Class<T> clazz, String queryId, DataStage dataStage){
-        return kgServiceClient.executeQueryForIndexing(queryId, dataStage, clazz);
+    public <T> T executeQueryForIndexing(Class<T> clazz, DataStage dataStage, String queryId, int from, int size){
+        return kgServiceClient.executeQueryForIndexing(clazz, dataStage, queryId, from, size);
     }
 
-    public <T> T executeQueryForLive(Class<T> clazz, String queryId, String id, DataStage dataStage) {
-        return  kgServiceClient.executeQueryForLiveMode(queryId, id, dataStage, clazz);
+    private static class ResultOfKGV3Source extends ResultOfKGv3<SourceInstanceV3> {}
+
+    public List<SourceInstanceV3> executeQueryForIndexing(DataStage dataStage, String queryId){
+        List<SourceInstanceV3> result = new ArrayList<>();
+        boolean findMore = true;
+        int from = 0;
+        while (findMore) {
+            logger.info(String.format("Starting to query %d instances from %d for v3", PAGE_SIZE, from));
+            ResultOfKGV3Source page = kgServiceClient.executeQueryForIndexing(ResultOfKGV3Source.class, dataStage, queryId, from, PAGE_SIZE);
+            logger.info(String.format("Successfully queried %d instances from %d of a total of %d for v3", page.getData().size(), from, page.getTotal()));
+            result.addAll(page.getData());
+            from = page.getFrom() + page.getSize();
+            findMore = from < page.getTotal();
+        }
+        return result;
     }
 
-    public Map fetchInstanceForLive(String id, DataStage dataStage) {
-        return  kgServiceClient.getInstanceForLiveMode(id, dataStage);
+    public <T> T executeQueryForIndexing(Class<T> clazz, DataStage dataStage, String queryId, String id) {
+        return  kgServiceClient.executeQueryForIndexing(clazz, dataStage, queryId, id);
+    }
+
+    public <T> T executeQuery(Class<T> clazz, DataStage dataStage, String queryId, String id) {
+        return  kgServiceClient.executeQuery(clazz, dataStage, queryId, id);
+    }
+
+    public Map fetchInstance(String id, DataStage dataStage) {
+        return  kgServiceClient.getInstance(id, dataStage);
     }
 
 }

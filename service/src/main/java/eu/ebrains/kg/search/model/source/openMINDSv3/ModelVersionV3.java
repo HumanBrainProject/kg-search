@@ -7,10 +7,8 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
 
 import java.util.List;
 
-public class ModelVersionV3 implements HasEmbargo, SourceInstance {
+public class ModelVersionV3 extends SourceInstanceV3 implements HasEmbargo {
     private String title;
-    private List<String> identifier;
-    private String id;
     private String version;
     private String description;
     private List<Author> developer;
@@ -31,22 +29,6 @@ public class ModelVersionV3 implements HasEmbargo, SourceInstance {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public List<String> getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(List<String> identifier) {
-        this.identifier = identifier;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getVersion() {

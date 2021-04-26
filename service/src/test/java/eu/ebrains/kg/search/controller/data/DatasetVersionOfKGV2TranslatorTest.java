@@ -47,7 +47,7 @@ public class DatasetVersionOfKGV2TranslatorTest {
 
     public void compareDatasets(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        DatasetV1Result queryResult = kgServiceClient.executeQuery("query/minds/core/dataset/v1.0.0/search", dataStage, DatasetV1Result.class, token);
+        DatasetV1Result queryResult = kgServiceClient.executeQueryForIndexing("query/minds/core/dataset/v1.0.0/search", dataStage, DatasetV1Result.class, token);
         queryResult.getResults().forEach(dataset -> {
             String id = liveMode?dataset.getEditorId():dataset.getIdentifier();
             ElasticSearchDocument doc;

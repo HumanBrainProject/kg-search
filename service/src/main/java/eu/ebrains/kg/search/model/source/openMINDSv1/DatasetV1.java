@@ -2,16 +2,13 @@ package eu.ebrains.kg.search.model.source.openMINDSv1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import eu.ebrains.kg.search.model.source.SourceInstance;
+import eu.ebrains.kg.search.model.source.SourceInstanceV1andV2;
 import eu.ebrains.kg.search.model.source.commonsV1andV2.*;
 
-import java.util.Date;
 import java.util.List;
 
-public class DatasetV1 implements HasEmbargo, SourceInstance {
-    private String id;
+public class DatasetV1 extends SourceInstanceV1andV2 implements HasEmbargo {
     private List<String> methods;
-    private Date lastReleaseAt;
     private List<SourceInternalReference> component;
     private List<String> embargoRestrictedAccess;
     @JsonProperty("external_datalink") //TODO: Capitalize the property
@@ -25,15 +22,12 @@ public class DatasetV1 implements HasEmbargo, SourceInstance {
     private List<Publication> publications;
     private List<Subject> subjects;
     private List<SourceInternalReference> contributors;
-    private String identifier;
     private List<String> speciesFilter;
-    private Date firstReleaseAt;
     private List<String> citation;
     @JsonProperty("brainviewer")
     private List<SourceExternalReference> brainViewer;
     private List<String> preparation;
     private String title;
-    private String editorId;
     private List<SourceInternalReference> owners;
     private boolean containerUrlAsZIP;
     private List<String> protocols;
@@ -47,10 +41,6 @@ public class DatasetV1 implements HasEmbargo, SourceInstance {
     private List<String> embargo;
     private boolean useHDG;
 
-    public String getId() { return id; }
-
-    public void setId(String id) { this.id = id; }
-
     public boolean isUseHDG() { return useHDG; }
 
     public void setUseHDG(boolean useHDG) { this.useHDG = useHDG; }
@@ -58,10 +48,6 @@ public class DatasetV1 implements HasEmbargo, SourceInstance {
     public List<String> getMethods() { return methods; }
 
     public void setMethods(List<String> methods) { this.methods = methods; }
-
-    public Date getLastReleaseAt() { return lastReleaseAt; }
-
-    public void setLastReleaseAt(Date lastReleaseAt) { this.lastReleaseAt = lastReleaseAt; }
 
     public List<SourceInternalReference> getComponent() { return component; }
 
@@ -107,17 +93,9 @@ public class DatasetV1 implements HasEmbargo, SourceInstance {
 
     public void setContributors(List<SourceInternalReference> contributors) { this.contributors = contributors; }
 
-    public String getIdentifier() { return identifier; }
-
-    public void setIdentifier(String identifier) { this.identifier = identifier; }
-
     public List<String> getSpeciesFilter() { return speciesFilter; }
 
     public void setSpeciesFilter(List<String> speciesFilter) { this.speciesFilter = speciesFilter; }
-
-    public Date getFirstReleaseAt() { return firstReleaseAt; }
-
-    public void setFirstReleaseAt(Date firstReleaseAt) { this.firstReleaseAt = firstReleaseAt; }
 
     public List<String> getCitation() { return citation; }
 
@@ -134,10 +112,6 @@ public class DatasetV1 implements HasEmbargo, SourceInstance {
     public String getTitle() { return title; }
 
     public void setTitle(String title) { this.title = title; }
-
-    public String getEditorId() { return editorId; }
-
-    public void setEditorId(String editorId) { this.editorId = editorId; }
 
     public List<SourceInternalReference> getOwners() { return owners; }
 

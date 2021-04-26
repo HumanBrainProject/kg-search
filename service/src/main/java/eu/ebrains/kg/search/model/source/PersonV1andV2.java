@@ -3,43 +3,15 @@ package eu.ebrains.kg.search.model.source;
 import eu.ebrains.kg.search.model.source.commonsV1andV2.Publication;
 import eu.ebrains.kg.search.model.source.commonsV1andV2.SourceInternalReference;
 
-import java.util.Date;
 import java.util.List;
 
-public class PersonV1andV2 implements SourceInstance {
-    private String id;
-    private String identifier;
-    private String editorId;
+public class PersonV1andV2 extends SourceInstanceV1andV2 {
     private String title;
     private List<CustodianOf> custodianOf;
     private List<CustodianOf> custodianOfModel;
     private List<Contribution> modelContributions;
     private List<Contribution> contributions;
     private List<Publication> publications;
-    private Date firstReleaseAt;
-    private Date lastReleaseAt;
-
-    public String getId() { return id; }
-
-    public void setId(String id) { this.id = id; }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
-
-    public String getEditorId() {
-        return editorId;
-    }
-
-    public void setEditorId(String editorId) {
-        this.editorId = editorId;
-    }
-
 
     public String getTitle() {
         return title;
@@ -94,28 +66,8 @@ public class PersonV1andV2 implements SourceInstance {
         this.publications = publications;
     }
 
+    public static class Contribution extends SourceInternalReference {}
 
-    public Date getFirstReleaseAt() {
-        return firstReleaseAt;
-    }
-
-    public void setFirstReleaseAt(Date firstReleaseAt) {
-        this.firstReleaseAt = firstReleaseAt;
-    }
-
-
-    public Date getLastReleaseAt() {
-        return lastReleaseAt;
-    }
-
-    public void setLastReleaseAt(Date lastReleaseAt) {
-        this.lastReleaseAt = lastReleaseAt;
-    }
-
-    public static class Contribution extends SourceInternalReference {
-    }
-
-    public static class CustodianOf extends SourceInternalReference {
-    }
+    public static class CustodianOf extends SourceInternalReference {}
 
 }

@@ -6,9 +6,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 
 import java.util.List;
 
-public class SoftwareV3 implements SourceInstance {
-    private String id;
-    private List<String> identifier;
+public class SoftwareV3 extends SourceInstanceV3 {
     private String description;
     private List<String> digitalIdentifier;
     private String howToCite;
@@ -16,22 +14,6 @@ public class SoftwareV3 implements SourceInstance {
     private List<Author> developer;
     private List<Author> custodian;
     private List<Version> versions;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public List<String> getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(List<String> identifier) {
-        this.identifier = identifier;
-    }
 
     public String getDescription() {
         return description;

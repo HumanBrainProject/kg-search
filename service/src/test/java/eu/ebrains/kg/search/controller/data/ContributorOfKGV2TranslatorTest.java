@@ -54,8 +54,8 @@ public class ContributorOfKGV2TranslatorTest {
         Map<String, PersonSources> sourcesMap = new HashMap<>();
 
         List<String> result = new ArrayList<>();
-        ContributorOfKGV2TranslatorTest.PersonV1Result personV1Result = kgServiceClient.executeQuery("query/minds/core/person/v1.0.0/search", dataStage, ContributorOfKGV2TranslatorTest.PersonV1Result.class, token);
-        ContributorOfKGV2TranslatorTest.PersonV2Result personV2Result = kgServiceClient.executeQuery("query/uniminds/core/person/v1.0.0/search", dataStage, ContributorOfKGV2TranslatorTest.PersonV2Result.class, token);
+        ContributorOfKGV2TranslatorTest.PersonV1Result personV1Result = kgServiceClient.executeQueryForIndexing("query/minds/core/person/v1.0.0/search", dataStage, ContributorOfKGV2TranslatorTest.PersonV1Result.class, token);
+        ContributorOfKGV2TranslatorTest.PersonV2Result personV2Result = kgServiceClient.executeQueryForIndexing("query/uniminds/core/person/v1.0.0/search", dataStage, ContributorOfKGV2TranslatorTest.PersonV2Result.class, token);
 
         if (!CollectionUtils.isEmpty(personV1Result.getResults())) {
             personV1Result.getResults().forEach(person -> {

@@ -48,7 +48,7 @@ public class SubjectTranslatorTest {
 
     private void compareSubjects(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        SubjectV1Result queryResult = kgServiceClient.executeQuery("query/minds/experiment/subject/v1.0.0/search", dataStage, SubjectV1Result.class, token);
+        SubjectV1Result queryResult = kgServiceClient.executeQueryForIndexing("query/minds/experiment/subject/v1.0.0/search", dataStage, SubjectV1Result.class, token);
         queryResult.getResults().forEach(subject -> {
             String id = liveMode?subject.getEditorId():subject.getIdentifier();
             ElasticSearchDocument doc;

@@ -25,11 +25,18 @@ public class Setup {
     public void uploadQueries() throws IOException {
         uploadQuery(Queries.DATASET_QUERY_ID, Queries.DATASET_QUERY_RESOURCE);
         uploadQuery(Queries.DATASET_VERSION_QUERY_ID, Queries.DATASET_VERSION_QUERY_RESOURCE);
+        uploadQuery(Queries.DATASET_VERSION_IDENTIFIER_QUERY_ID, Queries.DATASET_VERSION_IDENTIFIER_QUERY_RESOURCE);
         uploadQuery(Queries.CONTRIBUTOR_QUERY_ID, Queries.CONTRIBUTOR_QUERY_RESOURCE);
+        uploadQuery(Queries.CONTRIBUTOR_IDENTIFIER_QUERY_ID, Queries.CONTRIBUTOR_IDENTIFIER_QUERY_RESOURCE);
         uploadQuery(Queries.SOFTWARE_QUERY_ID, Queries.SOFTWARE_QUERY_RESOURCE);
         uploadQuery(Queries.SOFTWARE_VERSION_QUERY_ID, Queries.SOFTWARE_VERSION_QUERY_RESOURCE);
+        uploadQuery(Queries.SOFTWARE_VERSION_IDENTIFIER_QUERY_ID, Queries.SOFTWARE_VERSION_IDENTIFIER_QUERY_RESOURCE);
         uploadQuery(Queries.MODEL_QUERY_ID, Queries.MODEL_QUERY_RESOURCE);
         uploadQuery(Queries.MODEL_VERSION_QUERY_ID, Queries.MODEL_VERSION_QUERY_RESOURCE);
+        uploadQuery(Queries.MODEL_VERSION_IDENTIFIER_QUERY_ID, Queries.MODEL_VERSION_IDENTIFIER_QUERY_RESOURCE);
+        uploadQuery(Queries.PROJECT_IDENTIFIER_QUERY_ID, Queries.PROJECT_IDENTIFIER_QUERY_RESOURCE);
+        uploadQuery(Queries.SAMPLE_IDENTIFIER_QUERY_ID, Queries.SAMPLE_IDENTIFIER_QUERY_RESOURCE);
+        uploadQuery(Queries.SUBJECT_IDENTIFIER_QUERY_ID, Queries.SUBJECT_IDENTIFIER_QUERY_RESOURCE);
         logger.info("Queries successfully uploaded!");
     }
 

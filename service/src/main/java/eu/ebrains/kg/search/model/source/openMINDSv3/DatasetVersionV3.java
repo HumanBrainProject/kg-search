@@ -7,9 +7,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
 import java.util.Date;
 import java.util.List;
 
-public class DatasetVersionV3 implements SourceInstance {
-    private String id;
-    private List<String> identifier;
+public class DatasetVersionV3 extends SourceInstanceV3 {
     private List<String> digitalIdentifier;
     private String howToCite;
     private String description;
@@ -23,14 +21,6 @@ public class DatasetVersionV3 implements SourceInstance {
     private List<Author> author;
     private DatasetVersions dataset;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -38,10 +28,6 @@ public class DatasetVersionV3 implements SourceInstance {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public List<String> getIdentifier() { return identifier; }
-
-    public void setIdentifier(List<String> identifier) { this.identifier = identifier; }
 
     public List<String> getDigitalIdentifier() {
         return digitalIdentifier;

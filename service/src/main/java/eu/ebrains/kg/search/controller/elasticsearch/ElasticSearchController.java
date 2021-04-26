@@ -12,14 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class ElasticSearchController {
@@ -76,20 +69,20 @@ public class ElasticSearchController {
         });
         return result;
     }
-    private List<StringBuilder> getDeleteOperations(String index, List<TargetInstance> instances) {
-        HashSet<String> ids = new HashSet<>();
-        instances.forEach(instance -> ids.add(instance.getIdentifier().get(0)));
+
+    private List<StringBuilder> getDeleteOperations(String index, String type, Set<String> idsToKeep) {
         List<StringBuilder> result = new ArrayList<>();
         result.add(new StringBuilder());
-        List<ElasticSearchDocument> documents = esServiceClient.getDocuments(index);
-        documents.forEach(document -> {
+        //TODO: create elastic search query to get back only ids (not the full documents), using type
+        List<String> ids = esServiceClient.getDocumentIds(index);
+        ids.forEach(id -> {
             StringBuilder operations = result.get(result.size() - 1);
             if (operations.length() > ESOperationsMaxCharPayload) {
                 operations = new StringBuilder();
                 result.add(operations);
             }
-            if(!ids.contains(document.getId())) {
-                operations.append(String.format("{ \"delete\" : { \"_id\" : \"%s\" } } \n", document.getId()));
+            if(!idsToKeep.contains(id)) {
+                operations.append(String.format("{ \"delete\" : { \"_id\" : \"%s\" } } \n", id));
             }
         });
         if (result.get(result.size() - 1).length() == 0) {
@@ -98,40 +91,38 @@ public class ElasticSearchController {
         return result;
     }
 
-    private void indexDocuments(String index, List<TargetInstance> instances) {
-        List<StringBuilder> operationsList = getInsertOperations(instances);
-        if (!CollectionUtils.isEmpty(operationsList)) {
-            esServiceClient.updateIndex(index, operationsList);
-        }
-    }
-    public void indexSearchDocuments(List<TargetInstance> instances, String type, DataStage dataStage) {
-        String index = ESHelper.getSearchIndex(type, dataStage);
-        indexDocuments(index, instances);
-    }
-
-    public void indexIdentifierDocuments(List<TargetInstance> instances, DataStage dataStage) {
-        String index = ESHelper.getIdentifierIndex(dataStage);
-        indexDocuments(index, instances);
-    }
-
     private void updateIndex(String index, List<TargetInstance> instances) {
         List<StringBuilder> operationsList = getInsertOperations(instances);
-        List<StringBuilder> deleteOperationsList  = getDeleteOperations(index, instances);
-        if (deleteOperationsList.size() > 0) {
-            operationsList.addAll(deleteOperationsList);
-        }
         if (!CollectionUtils.isEmpty(operationsList)) {
             esServiceClient.updateIndex(index, operationsList);
         }
     }
+
+    private void removeDeprecatedDocuments(String index, String type, Set<String> idsToKeep) {
+        List<StringBuilder> operationsList = getDeleteOperations(index, type, idsToKeep);
+        if (!CollectionUtils.isEmpty(operationsList)) {
+            esServiceClient.updateIndex(index, operationsList);
+        }
+    }
+
     public void updateSearchIndex(List<TargetInstance> instances, String type, DataStage dataStage) {
         String index = ESHelper.getSearchIndex(type, dataStage);
         updateIndex(index, instances);
     }
 
-    public void updateIdentifiersIndex(List<TargetInstance> instances, String type, DataStage dataStage) {
+    public void updateIdentifiersIndex(List<TargetInstance> instances, DataStage dataStage) {
         String index = ESHelper.getIdentifierIndex(dataStage);
         updateIndex(index, instances);
+    }
+
+    public void removeDeprecatedDocumentsFromSearchIndex(String type, DataStage dataStage, Set<String> idsToKeep) {
+        String index = ESHelper.getSearchIndex(type, dataStage);
+        removeDeprecatedDocuments(index, type, idsToKeep);
+    }
+
+    public void removeDeprecatedDocumentsFromIdentifiersIndex(String type, DataStage dataStage, Set<String> idsToKeep) {
+        String index = ESHelper.getIdentifierIndex(dataStage);
+        removeDeprecatedDocuments(index, type, idsToKeep);
     }
 
 }
