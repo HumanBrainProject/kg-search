@@ -33,9 +33,9 @@ public class KGv2 {
         boolean findMore = true;
         int from = 0;
         while (findMore) {
-            logger.info(String.format("Starting to query %d instances from %d for v1", PAGE_SIZE, from));
+            logger.debug(String.format("Starting to query %d instances from %d for v1", PAGE_SIZE, from));
             ResultsOfKGV2Source page = kgServiceClient.executeQueryForIndexing(query, dataStage, ResultsOfKGV2Source.class, authorization, from, PAGE_SIZE);
-            logger.info(String.format("Successfully queried %d instances from %d of a total of %d for v1", page.getResults().size(), from, page.getTotal()));
+            logger.debug(String.format("Successfully queried %d instances from %d of a total of %d for v1", page.getResults().size(), from, page.getTotal()));
             result.addAll(page.getResults());
             from = page.getStart() + page.getSize();
             findMore = from < page.getTotal();

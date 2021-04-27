@@ -135,9 +135,11 @@ public class IndexingController {
         Set<String> nonSearchableIds = new HashSet<>();
         List<TargetInstance> searchableInstances = new ArrayList<>();
         List<TargetInstance> nonSearchableInstances = new ArrayList<>();
+        int counter = 0;
         for (IdSources source : sources) {
             TargetInstance instance = translationController.createInstanceCombinedForIndexing(clazz, dataStage, false, legacyAuthorization, source);
             if (instance != null) {
+                counter++;
                 if (instance.isSearchable()) {
                     searchableInstances.add(instance);
                 } else {
@@ -161,6 +163,7 @@ public class IndexingController {
             elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
         }
         elasticSearchController.removeDeprecatedDocumentsFromIdentifiersIndex(type, dataStage, nonSearchableIds);
+        logger.info(String.format("Created %d instances for type %s!", counter, type));
     }
 
     public void fullReplacementFromV3ByType(Class<?> clazz, DataStage dataStage) {

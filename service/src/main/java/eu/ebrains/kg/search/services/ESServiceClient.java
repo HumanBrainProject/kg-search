@@ -11,7 +11,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
@@ -70,7 +69,7 @@ public class ESServiceClient {
                 "}", Constants.esQuerySize, id);
     }
 
-    private String getIdsOfPaginatedQuery(String id) {
+    private String getIdsOfPaginatedQuery(String id, String type) {
         if (id == null) {
             return String.format("{\n" +
                     " \"size\": %d,\n" +
@@ -86,9 +85,18 @@ public class ESServiceClient {
                 "  ],\n" +
                 "  \"search_after\": [\n" +
                 "      \"%s\"\n" +
-                "   ],\n" +
-                " \"_source\": [\"id\"]\n" +
-                "}", Constants.esQuerySize, id);
+                "  ],\n" +
+                "  \"query\": {\n" +
+                "    \"bool\": {\n" +
+                "      \"must\": {\n" +
+                "          \"term\": {\n" +
+                "            \"type.value\": \"%s\"\n" +
+                "          }\n" +
+                "        }\n" +
+                "    }\n" +
+                "  },\n" +
+                " \"_source\": \"false\"\n" +
+                "}", Constants.esQuerySize, id, type);
     }
 
     public ElasticSearchDocument getDocument(String index, String id) {
@@ -116,23 +124,27 @@ public class ESServiceClient {
     public List<ElasticSearchDocument> getDocuments(String index) {
         List<ElasticSearchDocument> result = new ArrayList<>();
         String searchAfter = null;
-        while (result.isEmpty() || searchAfter != null) {
+        boolean continueSearch = true;
+        while (continueSearch) {
             ElasticSearchResult documents = getPaginatedDocuments(index, searchAfter);
             List<ElasticSearchDocument> hits = documents.getHits().getHits();
             result.addAll(hits);
             searchAfter = hits.size() < Constants.esQuerySize ? null:hits.get(hits.size()-1).getId();
+            continueSearch = searchAfter != null;
         }
         return result;
     }
 
-    public List<String> getDocumentIds(String index) {
+    public List<String> getDocumentIds(String index, String type) {
         List<String> result = new ArrayList<>();
         String searchAfter = null;
-        while (result.isEmpty() || searchAfter != null) {
-            ElasticSearchResult documents = getPaginatedDocumentIds(index, searchAfter);
+        boolean continueSearch = true;
+        while (continueSearch) {
+            ElasticSearchResult documents = getPaginatedDocumentIds(index, searchAfter, type);
             List<ElasticSearchDocument> hits = documents.getHits().getHits();
             hits.forEach(hit -> result.add(hit.getId()));
             searchAfter = hits.size() < Constants.esQuerySize ? null:hits.get(hits.size()-1).getId();
+            continueSearch = searchAfter != null;
         }
         return result;
     }
@@ -149,8 +161,8 @@ public class ESServiceClient {
                 .block();
     }
 
-    private ElasticSearchResult getPaginatedDocumentIds(String index, String searchAfter) {
-        String paginatedQuery = getIdsOfPaginatedQuery(searchAfter);
+    private ElasticSearchResult getPaginatedDocumentIds(String index, String searchAfter, String type) {
+        String paginatedQuery = getIdsOfPaginatedQuery(searchAfter, type);
         return webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
                 .body(BodyInserters.fromValue(paginatedQuery))
@@ -209,5 +221,6 @@ public class ESServiceClient {
         operationsList.forEach(operations -> {
             this.updateIndex(index, operations.toString());
         });
+        logger.info(String.format("Done updating index %s", index));
     }
 }

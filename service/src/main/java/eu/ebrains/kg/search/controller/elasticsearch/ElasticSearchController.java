@@ -3,7 +3,6 @@ package eu.ebrains.kg.search.controller.elasticsearch;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
@@ -12,7 +11,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 public class ElasticSearchController {
@@ -73,8 +75,7 @@ public class ElasticSearchController {
     private List<StringBuilder> getDeleteOperations(String index, String type, Set<String> idsToKeep) {
         List<StringBuilder> result = new ArrayList<>();
         result.add(new StringBuilder());
-        //TODO: create elastic search query to get back only ids (not the full documents), using type
-        List<String> ids = esServiceClient.getDocumentIds(index);
+        List<String> ids = esServiceClient.getDocumentIds(index, type);
         ids.forEach(id -> {
             StringBuilder operations = result.get(result.size() - 1);
             if (operations.length() > ESOperationsMaxCharPayload) {
