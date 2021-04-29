@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
 
-public class SubjectTranslator implements Translator<SubjectV1, Subject> {
+public class SubjectOfKGV2Translator implements Translator<SubjectV1, Subject> {
 
     public Subject translate(SubjectV1 subject, DataStage dataStage, boolean liveMode) {
         Subject s = new Subject();

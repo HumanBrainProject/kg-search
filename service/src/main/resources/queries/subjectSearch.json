@@ -1,0 +1,124 @@
+{
+  "@context": {
+    "@vocab": "https://core.kg.ebrains.eu/vocab/query/",
+    "query": "https://schema.hbp.eu/myQuery/",
+    "propertyName": {
+      "@id": "propertyName",
+      "@type": "@id"
+    },
+    "merge": {
+      "@type": "@id",
+      "@id": "merge"
+    },
+    "path": {
+      "@id": "path",
+      "@type": "@id"
+    }
+  },
+  "meta": {
+    "type": "https://openminds.ebrains.eu/core/Subject"
+  },
+  "structure": [
+    {
+      "propertyName": "query:identifier",
+      "path": "http://schema.org/identifier",
+      "required": true
+    },
+    {
+      "propertyName": "query:id",
+      "path": "@id",
+      "required": true
+    },
+    {
+      "propertyName": "query:title",
+      "path": "https://openminds.ebrains.eu/vocab/lookupLabel"
+    },
+    {
+      "propertyName": "query:species",
+      "path": [
+        "https://openminds.ebrains.eu/vocab/species",
+        "https://openminds.ebrains.eu/vocab/name"
+      ]
+    },
+    {
+      "propertyName": "query:sex",
+      "path": [
+        "https://openminds.ebrains.eu/vocab/biologicalSex",
+        "https://openminds.ebrains.eu/vocab/name"
+      ]
+    },
+    {
+      "propertyName": "query:studiedState",
+      "path": "https://openminds.ebrains.eu/vocab/studiedState",
+      "structure": [
+        {
+          "propertyName": "query:age",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/age",
+            "https://openminds.ebrains.eu/vocab/value"
+          ],
+          "singleValue": "FIRST"
+        },
+        {
+          "propertyName": "query:ageCategory",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/ageCategory",
+            "https://openminds.ebrains.eu/vocab/name"
+          ]
+        },
+        {
+          "propertyName": "query:weight",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/weight",
+            "https://openminds.ebrains.eu/vocab/value"
+          ],
+          "singleValue": "FIRST"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:strain",
+      "path": [
+        "https://openminds.ebrains.eu/vocab/strain",
+        "https://openminds.ebrains.eu/vocab/name"
+      ],
+      "singleValue": "FIRST"
+    },
+    {
+      "propertyName": "query:genotype",
+      "path": [
+        "https://openminds.ebrains.eu/vocab/genotype",
+        "https://openminds.ebrains.eu/vocab/name"
+      ],
+      "singleValue": "FIRST"
+    },
+    {
+      "propertyName": "query:datasets",
+      "path": {
+        "@id": "https://openminds.ebrains.eu/vocab/studiedSpecimen",
+        "reverse": true
+      },
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id",
+          "required": true
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:componentName",
+          "path": [
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+              "reverse": true
+            },
+            "https://openminds.ebrains.eu/vocab/fullName"
+          ]
+        }
+      ]
+    }
+  ]
+}

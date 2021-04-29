@@ -498,23 +498,24 @@ public class TranslationController {
         return translator.translate(sample, dataStage, liveMode);
     }
 
+    private static class ResultOfKGV3SubjectV3V3 extends ResultOfKGv3<SubjectV3> {}
+
     public TargetInstance createSubjectForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
-//        if (StringUtils.isNotBlank(ids.getIdV3())) {
-//            String id = ids.getIdV3();
-//            logger.info(String.format("Starting to query subject %s for v3", id));
-//            ResultOfKGv3<SubjectV3> queryResult = kgV3.executeQueryForIndexing(ResultOfKGV3SubjectV3.class, dataStage, Queries.SAMPLE_QUERY_ID, id);
-//            SubjectV3 subject = queryResult.getData();
-//            if (subject != null) {
-//                logger.debug(String.format("Successfully queried subject %s for v3", id));
-//                SubjectOfKGV3Translator translator = new SubjectOfKGV3Translator();
-//                return translator.translate(subject, dataStage, liveMode);
-//            } else {
-//                ResultOfKGv3.Error error = queryResult.getError();
-//                String e = error == null?"":String.format("([%d] %s)", error.getCode(), error.getMessage());
-//                logger.debug(String.format("Failed to query subject %s for v3%s", id, e));
-//            }
-//        } else
-        if (StringUtils.isNotBlank(ids.getIdV1())) {
+        if (StringUtils.isNotBlank(ids.getIdV3())) {
+            String id = ids.getIdV3();
+            logger.info(String.format("Starting to query subject %s for v3", id));
+            ResultOfKGv3<SubjectV3> queryResult = kgV3.executeQueryForIndexing(ResultOfKGV3SubjectV3V3.class, dataStage, Queries.SAMPLE_QUERY_ID, id);
+            SubjectV3 subject = queryResult.getData();
+            if (subject != null) {
+                logger.debug(String.format("Successfully queried subject %s for v3", id));
+                SubjectOfKGV3Translator translator = new SubjectOfKGV3Translator();
+                return translator.translate(subject, dataStage, liveMode);
+            } else {
+                ResultOfKGv3.Error error = queryResult.getError();
+                String e = error == null?"":String.format("([%d] %s)", error.getCode(), error.getMessage());
+                logger.debug(String.format("Failed to query subject %s for v3%s", id, e));
+            }
+        } else if (StringUtils.isNotBlank(ids.getIdV1())) {
             String query = "query/minds/experiment/subject/v1.0.0/search";
             String id = ids.getIdV1();
             logger.info(String.format("Starting to query subject %s for v1", id));
@@ -522,7 +523,7 @@ public class TranslationController {
                 SubjectV1 subject = kgV2.executeQuery(SubjectV1.class, dataStage, query, id, legacyAuthorization);
                 if (subject != null) {
                     logger.info(String.format("Successfully query subject %s for v1", id));
-                    SubjectTranslator translator = new SubjectTranslator();
+                    SubjectOfKGV2Translator translator = new SubjectOfKGV2Translator();
                     return translator.translate(subject, dataStage, liveMode);
                 } else {
                     logger.debug(String.format("Failed to query subject %s for v1", id));
@@ -541,7 +542,7 @@ public class TranslationController {
 
     public Subject createSubjectFromKGv2(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
         SubjectV1 subject = kgV2.executeQuery(SubjectV1.class, dataStage, query, id, authorization);
-        SubjectTranslator translator = new SubjectTranslator();
+        SubjectOfKGV2Translator translator = new SubjectOfKGV2Translator();
         return translator.translate(subject, dataStage, liveMode);
     }
 

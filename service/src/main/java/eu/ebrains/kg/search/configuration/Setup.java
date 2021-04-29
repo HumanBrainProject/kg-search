@@ -36,6 +36,7 @@ public class Setup {
         uploadQuery(Queries.MODEL_VERSION_IDENTIFIER_QUERY_ID, Queries.MODEL_VERSION_IDENTIFIER_QUERY_RESOURCE);
         uploadQuery(Queries.PROJECT_IDENTIFIER_QUERY_ID, Queries.PROJECT_IDENTIFIER_QUERY_RESOURCE);
         uploadQuery(Queries.SAMPLE_IDENTIFIER_QUERY_ID, Queries.SAMPLE_IDENTIFIER_QUERY_RESOURCE);
+        uploadQuery(Queries.SUBJECT_QUERY_ID, Queries.SUBJECT_QUERY_RESOURCE);
         uploadQuery(Queries.SUBJECT_IDENTIFIER_QUERY_ID, Queries.SUBJECT_IDENTIFIER_QUERY_RESOURCE);
         logger.info("Queries successfully uploaded!");
     }
