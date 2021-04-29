@@ -17,7 +17,8 @@
   },
   "meta": {
     "type": "https://openminds.ebrains.eu/core/Project",
-    "name": "ProjectSearch Giannis"
+    "name": "Project search query",
+    "responseVocab": "https://schema.hbp.eu/myQuery/"
   },
   "structure": [
     {
@@ -71,11 +72,12 @@
       },
       "structure": [
         {
-          "propertyName": "query:relatedPublication",
+          "propertyName": "query:identifier",
           "path": [
             "https://openminds.ebrains.eu/vocab/relatedPublication",
             "https://openminds.ebrains.eu/vocab/identifier"
-          ]
+          ],
+          "singleValue": "FIRST"
         },
         {
           "propertyName": "query:howToCite",

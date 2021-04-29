@@ -24,7 +24,7 @@ public class ProjectOfKGV3Translator  implements Translator<ProjectV3, Project>{
             p.setDataset(project.getDatasets().stream()
                     .map(dataset ->
                             new TargetInternalReference(
-                                    dataset.getId(),
+                                    IdUtils.getUUID(dataset.getId()),
                                     dataset.getFullName()))
                     .collect(Collectors.toList()));
         }

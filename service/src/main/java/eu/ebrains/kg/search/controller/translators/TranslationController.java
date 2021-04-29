@@ -39,7 +39,7 @@ public class TranslationController {
         this.kgV3 = kgV3;
     }
 
-    private static class ResultOfKGV3PersonV3 extends ResultOfKGv3<PersonV3> {}
+    private static class ResultsOfKGV3PersonV3 extends ResultsOfKGv3<PersonV3> {}
 
     private static class PersonV2Results extends ResultsOfKGv2<PersonV2> {}
 
@@ -85,15 +85,18 @@ public class TranslationController {
         }
         if (StringUtils.isNotBlank(idV3)) {
             logger.info(String.format("Starting to query contributor %s for v3", idV3));
-            ResultOfKGv3<PersonV3> queryResult = kgV3.executeQueryForIndexing(ResultOfKGV3PersonV3.class, dataStage, Queries.CONTRIBUTOR_QUERY_ID, idV3);
-            PersonV3 person = queryResult.getData();
-            if (person != null) {
-                source.setPersonV3(person);
-                logger.debug(String.format("Successfully queried contributor %s for v3", idV3));
-            } else {
-                ResultOfKGv3.Error error = queryResult.getError();
-                String e = error == null ? "" : String.format("([%d] %s)", error.getCode(), error.getMessage());
-                logger.debug(String.format("Failed to query contributor %s for v3%s", idV3, e));
+            ResultsOfKGv3<PersonV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3PersonV3.class, dataStage, Queries.CONTRIBUTOR_QUERY_ID, idV3);
+            if(queryResult != null) {
+                List<PersonV3> persons = queryResult.getData();
+                if (!CollectionUtils.isEmpty(persons)) {
+                    logger.debug(String.format("Successfully queried contributor %s for v3", idV3));
+                    PersonV3 person = persons.get(0);
+                    source.setPersonV3(person);
+                } else {
+                    ResultsOfKGv3.Error error = queryResult.getError();
+                    String e = error == null ? "" : String.format("([%d] %s)", error.getCode(), error.getMessage());
+                    logger.debug(String.format("Failed to query contributor %s for v3%s", idV3, e));
+                }
             }
         }
 
@@ -134,11 +137,14 @@ public class TranslationController {
     }
 
     public Contributor createContributorFromKGv3(DataStage dataStage, boolean liveMode, String id) {
-        ResultOfKGV3PersonV3 result = kgV3.executeQuery(ResultOfKGV3PersonV3.class, dataStage, Queries.CONTRIBUTOR_QUERY_ID, id);
-        PersonV3 person = result.getData();
-        if (person != null) {
-            ContributorOfKgV3Translator translator = new ContributorOfKgV3Translator();
-            return translator.translate(person, dataStage, liveMode);
+        ResultsOfKGV3PersonV3 result = kgV3.executeQuery(ResultsOfKGV3PersonV3.class, dataStage, Queries.CONTRIBUTOR_QUERY_ID, id);
+        if(result != null) {
+            List<PersonV3> persons = result.getData();
+            if(!CollectionUtils.isEmpty(persons)) {
+                PersonV3 person = persons.get(0);
+                ContributorOfKgV3Translator translator = new ContributorOfKgV3Translator();
+                return translator.translate(person, dataStage, liveMode);
+            }
         }
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Person %s does not exist!", id));
     }
@@ -147,16 +153,19 @@ public class TranslationController {
         if (StringUtils.isNotBlank(ids.getIdV3())) {
             String id = ids.getIdV3();
             logger.info(String.format("Starting to query software %s for v3", id));
-            ResultOfKGv3<SoftwareVersionV3> queryResult = kgV3.executeQueryForIndexing(ResultOfKGV3SoftwareVersionV3.class, dataStage, Queries.SOFTWARE_VERSION_QUERY_ID, id);
-            SoftwareVersionV3 software = queryResult.getData();
-            if (software != null) {
-                logger.debug(String.format("Successfully queried software %s for v3", id));
-                SoftwareVersionOfKGV3Translator translator = new SoftwareVersionOfKGV3Translator();
-                return translator.translate(software, dataStage, liveMode);
-            } else {
-                ResultOfKGv3.Error error = queryResult.getError();
-                String e = error == null ? "" : String.format("([%d] %s)", error.getCode(), error.getMessage());
-                logger.debug(String.format("Failed to query software %s for v3%s", id, e));
+            ResultsOfKGv3<SoftwareVersionV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3SoftwareVersionV3.class, dataStage, Queries.SOFTWARE_VERSION_QUERY_ID, id);
+            if(queryResult != null) {
+                List<SoftwareVersionV3> softwares = queryResult.getData();
+                if (!CollectionUtils.isEmpty(softwares)) {
+                    logger.debug(String.format("Successfully queried software %s for v3", id));
+                    SoftwareVersionV3 software = softwares.get(0);
+                    SoftwareVersionOfKGV3Translator translator = new SoftwareVersionOfKGV3Translator();
+                    return translator.translate(software, dataStage, liveMode);
+                } else {
+                    ResultsOfKGv3.Error error = queryResult.getError();
+                    String e = error == null ? "" : String.format("([%d] %s)", error.getCode(), error.getMessage());
+                    logger.debug(String.format("Failed to query software %s for v3%s", id, e));
+                }
             }
         } else if (StringUtils.isNotBlank(ids.getIdV2())) {
             String query = "query/softwarecatalog/software/softwareproject/v1.0.0/search";
@@ -188,30 +197,31 @@ public class TranslationController {
         return translator.translate(software, dataStage, liveMode);
     }
 
-    private static class ResultOfKGV3DatasetV3 extends ResultOfKGv3<DatasetV3> {
-    }
-
     private static class ResultsOfKGV3DatasetV3 extends ResultsOfKGv3<DatasetV3> {
     }
 
-    private static class ResultOfKGV3DatasetVersionV3 extends ResultOfKGv3<DatasetVersionV3> {
+    private static class ResultsOfKGV3DatasetVersionV3 extends ResultsOfKGv3<DatasetVersionV3> {
     }
 
     public TargetInstance createDatasetVersionForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
         if (StringUtils.isNotBlank(ids.getIdV3())) {
             String id = ids.getIdV3();
             logger.info(String.format("Starting to query datasetVersion %s for v3", id));
-            ResultOfKGv3<DatasetVersionV3> queryResult = kgV3.executeQueryForIndexing(ResultOfKGV3DatasetVersionV3.class, dataStage, Queries.DATASET_VERSION_QUERY_ID, id);
-            DatasetVersionV3 datasetVersion = queryResult.getData();
-            if (datasetVersion != null) {
-                logger.debug(String.format("Successfully queried datasetVersion %s for v3", id));
-                DatasetVersionOfKGV3Translator translator = new DatasetVersionOfKGV3Translator();
-                return translator.translate(datasetVersion, dataStage, liveMode);
-            } else {
-                ResultOfKGv3.Error error = queryResult.getError();
-                String e = error == null ? "" : String.format("([%d] %s)", error.getCode(), error.getMessage());
-                logger.debug(String.format("Failed to query datasetVersion %s for v3%s", id, e));
+            ResultsOfKGv3<DatasetVersionV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3DatasetVersionV3.class, dataStage, Queries.DATASET_VERSION_QUERY_ID, id);
+            if(queryResult != null) {
+                List<DatasetVersionV3> datasetVersions = queryResult.getData();
+                if (!CollectionUtils.isEmpty(datasetVersions)) {
+                    logger.debug(String.format("Successfully queried datasetVersion %s for v3", id));
+                    DatasetVersionV3 datasetVersion = datasetVersions.get(0);
+                    DatasetVersionOfKGV3Translator translator = new DatasetVersionOfKGV3Translator();
+                    return translator.translate(datasetVersion, dataStage, liveMode);
+                } else {
+                    ResultsOfKGv3.Error error = queryResult.getError();
+                    String e = error == null ? "" : String.format("([%d] %s)", error.getCode(), error.getMessage());
+                    logger.debug(String.format("Failed to query datasetVersion %s for v3%s", id, e));
+                }
             }
+
         } else if (StringUtils.isNotBlank(ids.getIdV1())) {
             String id = ids.getIdV1();
             logger.info(String.format("Starting to query dataset %s for v1", id));
@@ -244,36 +254,46 @@ public class TranslationController {
     }
 
     public DatasetVersion createDatasetVersionFromKGv3(DataStage dataStage, boolean liveMode, String id) {
-        ResultOfKGV3DatasetVersionV3 result = kgV3.executeQuery(ResultOfKGV3DatasetVersionV3.class, dataStage, Queries.DATASET_VERSION_QUERY_ID, id);
-        DatasetVersionV3 datasetVersion = result.getData();
-        if (datasetVersion != null) {
-            DatasetVersionOfKGV3Translator translator = new DatasetVersionOfKGV3Translator();
-            return translator.translate(datasetVersion, dataStage, liveMode);
+        ResultsOfKGV3DatasetVersionV3 result = kgV3.executeQuery(ResultsOfKGV3DatasetVersionV3.class, dataStage, Queries.DATASET_VERSION_QUERY_ID, id);
+        if(result != null) {
+            List<DatasetVersionV3> datasetVersions = result.getData();
+            if (!CollectionUtils.isEmpty(datasetVersions)) {
+                DatasetVersionV3 datasetVersion = datasetVersions.get(0);
+                DatasetVersionOfKGV3Translator translator = new DatasetVersionOfKGV3Translator();
+                return translator.translate(datasetVersion, dataStage, liveMode);
+            }
         }
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("DatasetVersion %s does not exist!", id));
     }
 
-    private static class ResultOfKGV3ModelVersionV3 extends ResultOfKGv3<ModelVersionV3> {}
+    private static class ResultsOfKGV3ModelVersionV3 extends ResultsOfKGv3<ModelVersionV3> {}
 
     public ModelVersion createModelVersionFromKGv3(DataStage dataStage, boolean liveMode, String id) {
-        ResultOfKGV3ModelVersionV3 result = kgV3.executeQuery(ResultOfKGV3ModelVersionV3.class, dataStage, Queries.MODEL_VERSION_QUERY_ID, id);
-        ModelVersionV3 modelVersion = result.getData();
-        if (modelVersion != null) {
-            ModelVersionOfKGV3Translator translator = new ModelVersionOfKGV3Translator();
-            return translator.translate(modelVersion, dataStage, liveMode);
+        ResultsOfKGV3ModelVersionV3 result = kgV3.executeQuery(ResultsOfKGV3ModelVersionV3.class, dataStage, Queries.MODEL_VERSION_QUERY_ID, id);
+        if(result != null) {
+            List<ModelVersionV3> modelVersions = result.getData();
+            if (!CollectionUtils.isEmpty(modelVersions)) {
+                ModelVersionV3 modelVersion = modelVersions.get(0);
+                ModelVersionOfKGV3Translator translator = new ModelVersionOfKGV3Translator();
+                return translator.translate(modelVersion, dataStage, liveMode);
+            }
         }
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("ModelVersion %s does not exist!", id));
     }
 
-    private static class ResultOfKGV3SoftwareVersionV3 extends ResultOfKGv3<SoftwareVersionV3> {}
+    private static class ResultsOfKGV3SoftwareVersionV3 extends ResultsOfKGv3<SoftwareVersionV3> {}
 
     public SoftwareVersion createSoftwareVersionFromKGv3(DataStage dataStage, boolean liveMode, String id) {
-        ResultOfKGV3SoftwareVersionV3 result = kgV3.executeQuery(ResultOfKGV3SoftwareVersionV3.class, dataStage, Queries.SOFTWARE_VERSION_QUERY_ID, id);
-        SoftwareVersionV3 softwareVersion = result.getData();
-        if (softwareVersion != null) {
-            SoftwareVersionOfKGV3Translator translator = new SoftwareVersionOfKGV3Translator();
-            return translator.translate(softwareVersion, dataStage, liveMode);
+        ResultsOfKGV3SoftwareVersionV3 result = kgV3.executeQuery(ResultsOfKGV3SoftwareVersionV3.class, dataStage, Queries.SOFTWARE_VERSION_QUERY_ID, id);
+        if(result != null) {
+            List<SoftwareVersionV3> softwareVersions = result.getData();
+            if (!CollectionUtils.isEmpty(softwareVersions)) {
+                SoftwareVersionV3 softwareVersion = softwareVersions.get(0);
+                SoftwareVersionOfKGV3Translator translator = new SoftwareVersionOfKGV3Translator();
+                return translator.translate(softwareVersion, dataStage, liveMode);
+            }
         }
+
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("SoftwareVersion %s does not exist!", id));
     }
 
@@ -321,39 +341,44 @@ public class TranslationController {
     }
 
     public Dataset createDatasetFromKGv3(DataStage dataStage, boolean liveMode, String id) {
-        ResultOfKGV3DatasetV3 result = kgV3.executeQuery(ResultOfKGV3DatasetV3.class, dataStage, Queries.DATASET_QUERY_ID, id);
-        DatasetV3 dataset = result.getData();
-        if (dataset != null) {
-            DatasetOfKGV3Translator translator = new DatasetOfKGV3Translator();
-            return translator.translate(dataset, dataStage, liveMode);
+        ResultsOfKGV3DatasetV3 result = kgV3.executeQuery(ResultsOfKGV3DatasetV3.class, dataStage, Queries.DATASET_QUERY_ID, id);
+        if(result != null) {
+            List<DatasetV3> datasets = result.getData();
+            if (!CollectionUtils.isEmpty(datasets)) {
+                DatasetV3 dataset = datasets.get(0);
+                DatasetOfKGV3Translator translator = new DatasetOfKGV3Translator();
+                return translator.translate(dataset, dataStage, liveMode);
+            }
         }
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Dataset %s does not exist!", id));
     }
 
-    private static class ResultOfKGV3ModelV3 extends ResultOfKGv3<ModelV3> {}
-
     private static class ResultsOfKGV3ModelV3 extends ResultsOfKGv3<ModelV3> {}
 
     public Model createModelFromKGv3(DataStage dataStage, boolean liveMode, String id) {
-        ResultOfKGV3ModelV3 result = kgV3.executeQuery(ResultOfKGV3ModelV3.class, dataStage, Queries.MODEL_QUERY_ID, id);
-        ModelV3 model = result.getData();
-        if (model != null) {
-            ModelOfKGV3Translator translator = new ModelOfKGV3Translator();
-            return translator.translate(model, dataStage, liveMode);
+        ResultsOfKGV3ModelV3 result = kgV3.executeQuery(ResultsOfKGV3ModelV3.class, dataStage, Queries.MODEL_QUERY_ID, id);
+        if(result != null) {
+            List<ModelV3> models = result.getData();
+            if (!CollectionUtils.isEmpty(models)) {
+                ModelV3 model = models.get(0);
+                ModelOfKGV3Translator translator = new ModelOfKGV3Translator();
+                return translator.translate(model, dataStage, liveMode);
+            }
         }
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Model %s does not exist!", id));
     }
 
-    private static class ResultOfKGV3SoftwareV3 extends ResultOfKGv3<SoftwareV3> {}
-
     private static class ResultsOfKGV3SoftwareV3 extends ResultsOfKGv3<SoftwareV3> {}
 
     public Software createSoftwareFromKGv3(DataStage dataStage, boolean liveMode, String id) {
-        ResultOfKGV3SoftwareV3 result = kgV3.executeQuery(ResultOfKGV3SoftwareV3.class, dataStage, Queries.SOFTWARE_QUERY_ID, id);
-        SoftwareV3 software = result.getData();
-        if (software != null) {
-            SoftwareOfKGV3Translator translator = new SoftwareOfKGV3Translator();
-            return translator.translate(software, dataStage, liveMode);
+        ResultsOfKGV3SoftwareV3 result = kgV3.executeQuery(ResultsOfKGV3SoftwareV3.class, dataStage, Queries.SOFTWARE_QUERY_ID, id);
+        if(result != null) {
+            List<SoftwareV3> softwares = result.getData();
+            if (!CollectionUtils.isEmpty(softwares)) {
+                SoftwareV3 software = softwares.get(0);
+                SoftwareOfKGV3Translator translator = new SoftwareOfKGV3Translator();
+                return translator.translate(software, dataStage, liveMode);
+            }
         }
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Software %s does not exist!", id));
     }
@@ -362,16 +387,19 @@ public class TranslationController {
         if (StringUtils.isNotBlank(ids.getIdV3())) {
             String id = ids.getIdV3();
             logger.info(String.format("Starting to query modelVersion %s for v3", id));
-            ResultOfKGv3<ModelVersionV3> queryResult = kgV3.executeQueryForIndexing(ResultOfKGV3ModelVersionV3.class, dataStage, Queries.MODEL_VERSION_QUERY_ID, id);
-            ModelVersionV3 modelVersion = queryResult.getData();
-            if (modelVersion != null) {
-                logger.debug(String.format("Successfully queried modelVersion %s for v3", id));
-                ModelVersionOfKGV3Translator translator = new ModelVersionOfKGV3Translator();
-                return translator.translate(modelVersion, dataStage, liveMode);
-            } else {
-                ResultOfKGv3.Error error = queryResult.getError();
-                String e = error == null ? "" : String.format("([%d] %s)", error.getCode(), error.getMessage());
-                logger.debug(String.format("Failed to query modelVersion %s for v3%s", id, e));
+            ResultsOfKGv3<ModelVersionV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3ModelVersionV3.class, dataStage, Queries.MODEL_VERSION_QUERY_ID, id);
+            if(queryResult != null) {
+                List<ModelVersionV3> modelVersions = queryResult.getData();
+                if (!CollectionUtils.isEmpty(modelVersions)) {
+                    logger.debug(String.format("Successfully queried modelVersion %s for v3", id));
+                    ModelVersionV3 modelVersion = modelVersions.get(0);
+                    ModelVersionOfKGV3Translator translator = new ModelVersionOfKGV3Translator();
+                    return translator.translate(modelVersion, dataStage, liveMode);
+                } else {
+                    ResultsOfKGv3.Error error = queryResult.getError();
+                    String e = error == null ? "" : String.format("([%d] %s)", error.getCode(), error.getMessage());
+                    logger.debug(String.format("Failed to query modelVersion %s for v3%s", id, e));
+                }
             }
         } else if (StringUtils.isNotBlank(ids.getIdV2())) {
             String query = "query/uniminds/core/modelinstance/v1.0.0/search";
@@ -404,22 +432,25 @@ public class TranslationController {
         return translator.translate(model, dataStage, liveMode);
     }
 
-    private static class ResultOfKGV3ProjectV3 extends ResultOfKGv3<ProjectV3> {}
+    private static class ResultsOfKGV3ProjectV3 extends ResultsOfKGv3<ProjectV3> {}
 
     public TargetInstance createProjectForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
         if (StringUtils.isNotBlank(ids.getIdV3())) {
             String id = ids.getIdV3();
             logger.info(String.format("Starting to query project %s for v3", id));
-            ResultOfKGv3<ProjectV3> queryResult = kgV3.executeQueryForIndexing(ResultOfKGV3ProjectV3.class, dataStage, Queries.PROJECT_QUERY_ID, id);
-            ProjectV3 project  = queryResult.getData();
-            if (project != null) {
-                logger.debug(String.format("Successfully queried project %s for v3", id));
-                ProjectOfKGV3Translator translator = new ProjectOfKGV3Translator();
-                return translator.translate(project, dataStage, liveMode);
-            } else {
-                ResultOfKGv3.Error error = queryResult.getError();
-                String e = error == null?"":String.format("([%d] %s)", error.getCode(), error.getMessage());
-                logger.debug(String.format("Failed to query project %s for v3%s", id, e));
+            ResultsOfKGv3<ProjectV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3ProjectV3.class, dataStage, Queries.PROJECT_QUERY_ID, id);
+            if(queryResult != null) {
+                List<ProjectV3> projects  = queryResult.getData();
+                if (!CollectionUtils.isEmpty(projects)) {
+                    logger.debug(String.format("Successfully queried project %s for v3", id));
+                    ProjectV3 project = projects.get(0);
+                    ProjectOfKGV3Translator translator = new ProjectOfKGV3Translator();
+                    return translator.translate(project, dataStage, liveMode);
+                } else {
+                    ResultsOfKGv3.Error error = queryResult.getError();
+                    String e = error == null?"":String.format("([%d] %s)", error.getCode(), error.getMessage());
+                    logger.debug(String.format("Failed to query project %s for v3%s", id, e));
+                }
             }
         } else if (StringUtils.isNotBlank(ids.getIdV1())) {
             String id = ids.getIdV1();
@@ -452,22 +483,25 @@ public class TranslationController {
         return translator.translate(project, dataStage, liveMode);
     }
 
-    private static class ResultOfKGV3SampleV3 extends ResultOfKGv3<SampleV3> {}
+    private static class ResultsOfKGV3SampleV3 extends ResultsOfKGv3<SampleV3> {}
 
     public TargetInstance createSampleForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
         if (StringUtils.isNotBlank(ids.getIdV3())) {
             String id = ids.getIdV3();
             logger.info(String.format("Starting to query sample %s for v3", id));
-            ResultOfKGv3<SampleV3> queryResult = kgV3.executeQueryForIndexing(ResultOfKGV3SampleV3.class, dataStage, Queries.SAMPLE_QUERY_ID, id);
-            SampleV3 sample = queryResult.getData();
-            if (sample != null) {
-                logger.debug(String.format("Successfully queried sample %s for v3", id));
-                SampleOfKGV3Translator translator = new SampleOfKGV3Translator();
-                return translator.translate(sample, dataStage, liveMode);
-            } else {
-                ResultOfKGv3.Error error = queryResult.getError();
-                String e = error == null?"":String.format("([%d] %s)", error.getCode(), error.getMessage());
-                logger.debug(String.format("Failed to query sample %s for v3%s", id, e));
+            ResultsOfKGv3<SampleV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3SampleV3.class, dataStage, Queries.SAMPLE_QUERY_ID, id);
+            if(queryResult != null) {
+                List<SampleV3> samples = queryResult.getData();
+                if (!CollectionUtils.isEmpty(samples)) {
+                    logger.debug(String.format("Successfully queried sample %s for v3", id));
+                    SampleV3 sample = samples.get(0);
+                    SampleOfKGV3Translator translator = new SampleOfKGV3Translator();
+                    return translator.translate(sample, dataStage, liveMode);
+                } else {
+                    ResultsOfKGv3.Error error = queryResult.getError();
+                    String e = error == null?"":String.format("([%d] %s)", error.getCode(), error.getMessage());
+                    logger.debug(String.format("Failed to query sample %s for v3%s", id, e));
+                }
             }
         } else if (StringUtils.isNotBlank(ids.getIdV1())) {
             String query = "query/minds/experiment/sample/v1.0.0/search";
@@ -499,22 +533,25 @@ public class TranslationController {
         return translator.translate(sample, dataStage, liveMode);
     }
 
-    private static class ResultOfKGV3SubjectV3V3 extends ResultOfKGv3<SubjectV3> {}
+    private static class ResultsOfKGV3SubjectV3V3 extends ResultsOfKGv3<SubjectV3> {}
 
     public TargetInstance createSubjectForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
         if (StringUtils.isNotBlank(ids.getIdV3())) {
             String id = ids.getIdV3();
             logger.info(String.format("Starting to query subject %s for v3", id));
-            ResultOfKGv3<SubjectV3> queryResult = kgV3.executeQueryForIndexing(ResultOfKGV3SubjectV3V3.class, dataStage, Queries.SAMPLE_QUERY_ID, id);
-            SubjectV3 subject = queryResult.getData();
-            if (subject != null) {
-                logger.debug(String.format("Successfully queried subject %s for v3", id));
-                SubjectOfKGV3Translator translator = new SubjectOfKGV3Translator();
-                return translator.translate(subject, dataStage, liveMode);
-            } else {
-                ResultOfKGv3.Error error = queryResult.getError();
-                String e = error == null?"":String.format("([%d] %s)", error.getCode(), error.getMessage());
-                logger.debug(String.format("Failed to query subject %s for v3%s", id, e));
+            ResultsOfKGv3<SubjectV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3SubjectV3V3.class, dataStage, Queries.SAMPLE_QUERY_ID, id);
+            if(queryResult != null) {
+                List<SubjectV3> subjects = queryResult.getData();
+                if (!CollectionUtils.isEmpty(subjects)) {
+                    logger.debug(String.format("Successfully queried subject %s for v3", id));
+                    SubjectV3 subject = subjects.get(0);
+                    SubjectOfKGV3Translator translator = new SubjectOfKGV3Translator();
+                    return translator.translate(subject, dataStage, liveMode);
+                } else {
+                    ResultsOfKGv3.Error error = queryResult.getError();
+                    String e = error == null?"":String.format("([%d] %s)", error.getCode(), error.getMessage());
+                    logger.debug(String.format("Failed to query subject %s for v3%s", id, e));
+                }
             }
         } else if (StringUtils.isNotBlank(ids.getIdV1())) {
             String query = "query/minds/experiment/subject/v1.0.0/search";
