@@ -39,20 +39,9 @@ public class TranslationController {
         this.kgV3 = kgV3;
     }
 
-    private static class ResultsOfKGV2PersonV1 extends ResultsOfKGv2<PersonV1> {
-    }
+    private static class ResultOfKGV3PersonV3 extends ResultOfKGv3<PersonV3> {}
 
-    private static class ResultsOfKGV2PersonV2 extends ResultsOfKGv2<PersonV2> {
-    }
-
-    private static class ResultOfKGV3PersonV3 extends ResultOfKGv3<PersonV3> {
-    }
-
-    private static class ResultsOfKGV3PersonV3 extends ResultsOfKGv3<PersonV3> {
-    }
-
-    private static class PersonV2Results extends ResultsOfKGv2<PersonV2> {
-    }
+    private static class PersonV2Results extends ResultsOfKGv2<PersonV2> {}
 
     private TargetInstance createContributorForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
         String queryForV1 = "query/minds/core/person/v1.0.0/search";
@@ -154,9 +143,6 @@ public class TranslationController {
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Person %s does not exist!", id));
     }
 
-    private static class ResultsOfKGV2SoftwareV2 extends ResultsOfKGv2<SoftwareV2> {
-    }
-
     public TargetInstance createSoftwareVersionForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
         if (StringUtils.isNotBlank(ids.getIdV3())) {
             String id = ids.getIdV3();
@@ -200,9 +186,6 @@ public class TranslationController {
         SoftwareV2 software = kgV2.executeQuery(SoftwareV2.class, dataStage, query, id, authorization);
         SoftwareVersionOfKGV2Translator translator = new SoftwareVersionOfKGV2Translator();
         return translator.translate(software, dataStage, liveMode);
-    }
-
-    private static class ResultsOfKGV2DatasetV1 extends ResultsOfKGv2<DatasetV1> {
     }
 
     private static class ResultOfKGV3DatasetV3 extends ResultOfKGv3<DatasetV3> {
@@ -270,8 +253,7 @@ public class TranslationController {
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("DatasetVersion %s does not exist!", id));
     }
 
-    private static class ResultOfKGV3ModelVersionV3 extends ResultOfKGv3<ModelVersionV3> {
-    }
+    private static class ResultOfKGV3ModelVersionV3 extends ResultOfKGv3<ModelVersionV3> {}
 
     public ModelVersion createModelVersionFromKGv3(DataStage dataStage, boolean liveMode, String id) {
         ResultOfKGV3ModelVersionV3 result = kgV3.executeQuery(ResultOfKGV3ModelVersionV3.class, dataStage, Queries.MODEL_VERSION_QUERY_ID, id);
@@ -283,8 +265,7 @@ public class TranslationController {
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("ModelVersion %s does not exist!", id));
     }
 
-    private static class ResultOfKGV3SoftwareVersionV3 extends ResultOfKGv3<SoftwareVersionV3> {
-    }
+    private static class ResultOfKGV3SoftwareVersionV3 extends ResultOfKGv3<SoftwareVersionV3> {}
 
     public SoftwareVersion createSoftwareVersionFromKGv3(DataStage dataStage, boolean liveMode, String id) {
         ResultOfKGV3SoftwareVersionV3 result = kgV3.executeQuery(ResultOfKGV3SoftwareVersionV3.class, dataStage, Queries.SOFTWARE_VERSION_QUERY_ID, id);
@@ -349,11 +330,9 @@ public class TranslationController {
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Dataset %s does not exist!", id));
     }
 
-    private static class ResultOfKGV3ModelV3 extends ResultOfKGv3<ModelV3> {
-    }
+    private static class ResultOfKGV3ModelV3 extends ResultOfKGv3<ModelV3> {}
 
-    private static class ResultsOfKGV3ModelV3 extends ResultsOfKGv3<ModelV3> {
-    }
+    private static class ResultsOfKGV3ModelV3 extends ResultsOfKGv3<ModelV3> {}
 
     public Model createModelFromKGv3(DataStage dataStage, boolean liveMode, String id) {
         ResultOfKGV3ModelV3 result = kgV3.executeQuery(ResultOfKGV3ModelV3.class, dataStage, Queries.MODEL_QUERY_ID, id);
@@ -365,11 +344,9 @@ public class TranslationController {
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Model %s does not exist!", id));
     }
 
-    private static class ResultOfKGV3SoftwareV3 extends ResultOfKGv3<SoftwareV3> {
-    }
+    private static class ResultOfKGV3SoftwareV3 extends ResultOfKGv3<SoftwareV3> {}
 
-    private static class ResultsOfKGV3SoftwareV3 extends ResultsOfKGv3<SoftwareV3> {
-    }
+    private static class ResultsOfKGV3SoftwareV3 extends ResultsOfKGv3<SoftwareV3> {}
 
     public Software createSoftwareFromKGv3(DataStage dataStage, boolean liveMode, String id) {
         ResultOfKGV3SoftwareV3 result = kgV3.executeQuery(ResultOfKGV3SoftwareV3.class, dataStage, Queries.SOFTWARE_QUERY_ID, id);
@@ -380,10 +357,6 @@ public class TranslationController {
         }
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Software %s does not exist!", id));
     }
-
-    private static class ResultsOfKGV2ModelV2 extends ResultsOfKGv2<ModelV2> {
-    }
-
 
     public TargetInstance createModelVersionForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
         if (StringUtils.isNotBlank(ids.getIdV3())) {
@@ -429,9 +402,6 @@ public class TranslationController {
         ModelV2 model = kgV2.executeQuery(ModelV2.class, dataStage, query, id, authorization);
         ModelVersionOfKGV2Translator translator = new ModelVersionOfKGV2Translator();
         return translator.translate(model, dataStage, liveMode);
-    }
-
-    private static class ResultsOfKGV2ProjectV1 extends ResultsOfKGv2<ProjectV1> {
     }
 
     public TargetInstance createProjectForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
@@ -481,9 +451,6 @@ public class TranslationController {
         return translator.translate(project, dataStage, liveMode);
     }
 
-    private static class ResultsOfKGV2SampleV1 extends ResultsOfKGv2<SampleV1> {
-    }
-
     public TargetInstance createSampleForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
 //        if (StringUtils.isNotBlank(ids.getIdV3())) {
 //            String id = ids.getIdV3();
@@ -528,9 +495,6 @@ public class TranslationController {
         SampleV1 sample = kgV2.executeQuery(SampleV1.class, dataStage, query, id, authorization);
         SampleTranslator translator = new SampleTranslator();
         return translator.translate(sample, dataStage, liveMode);
-    }
-
-    private static class ResultsOfKGV2SubjectV1 extends ResultsOfKGv2<SubjectV1> {
     }
 
     public TargetInstance createSubjectForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {

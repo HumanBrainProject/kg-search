@@ -165,13 +165,6 @@
           "path": "https://openminds.ebrains.eu/vocab/description"
         },
         {
-          "propertyName": "query:studyTarget",
-          "path": [
-            "https://openminds.ebrains.eu/vocab/studyTarget",
-            "https://openminds.ebrains.eu/vocab/name"
-          ]
-        },
-        {
           "propertyName": "query:modelScope",
           "path": [
             "https://openminds.ebrains.eu/vocab/modelScope",
@@ -225,20 +218,6 @@
           "propertyName": "query:studyTarget",
           "path": [
             "https://openminds.ebrains.eu/vocab/studyTarget",
-            "https://openminds.ebrains.eu/vocab/name"
-          ]
-        },
-        {
-          "propertyName": "query:modelScope",
-          "path": [
-            "https://openminds.ebrains.eu/vocab/scope",
-            "https://openminds.ebrains.eu/vocab/name"
-          ]
-        },
-        {
-          "propertyName": "query:abstractionLevel",
-          "path": [
-            "https://openminds.ebrains.eu/vocab/abstractionLevel",
             "https://openminds.ebrains.eu/vocab/name"
           ]
         }
