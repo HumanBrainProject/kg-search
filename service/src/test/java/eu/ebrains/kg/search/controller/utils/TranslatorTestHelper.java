@@ -109,7 +109,7 @@ public class TranslatorTestHelper {
     }
 
     public static List<String> compareSample(SampleV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        SampleTranslator translator = new SampleTranslator();
+        SampleOfKGV2Translator translator = new SampleOfKGV2Translator();
         Sample target = translator.translate(source, dataStage, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
-public class SampleTranslator implements Translator<SampleV1, Sample> {
+public class SampleOfKGV2Translator implements Translator<SampleV1, Sample> {
 
     public Sample translate(SampleV1 sample, DataStage dataStage, boolean liveMode) {
         Sample s = new Sample();

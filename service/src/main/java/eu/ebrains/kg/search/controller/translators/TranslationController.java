@@ -452,23 +452,24 @@ public class TranslationController {
         return translator.translate(project, dataStage, liveMode);
     }
 
+    private static class ResultOfKGV3SampleV3 extends ResultOfKGv3<SampleV3> {}
+
     public TargetInstance createSampleForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
-//        if (StringUtils.isNotBlank(ids.getIdV3())) {
-//            String id = ids.getIdV3();
-//            logger.info(String.format("Starting to query sample %s for v3", id));
-//            ResultOfKGv3<SampleV3> queryResult = kgV3.executeQueryForIndexing(ResultOfKGV3SampleV3.class, dataStage, Queries.SAMPLE_QUERY_ID, id);
-//            SampleV3 sample = queryResult.getData();
-//            if (sample != null) {
-//                logger.debug(String.format("Successfully queried sample %s for v3", id));
-//                SampleOfKGV3Translator translator = new SampleOfKGV3Translator();
-//                return translator.translate(sample, dataStage, liveMode);
-//            } else {
-//                ResultOfKGv3.Error error = queryResult.getError();
-//                String e = error == null?"":String.format("([%d] %s)", error.getCode(), error.getMessage());
-//                logger.debug(String.format("Failed to query sample %s for v3%s", id, e));
-//            }
-//        } else
-        if (StringUtils.isNotBlank(ids.getIdV1())) {
+        if (StringUtils.isNotBlank(ids.getIdV3())) {
+            String id = ids.getIdV3();
+            logger.info(String.format("Starting to query sample %s for v3", id));
+            ResultOfKGv3<SampleV3> queryResult = kgV3.executeQueryForIndexing(ResultOfKGV3SampleV3.class, dataStage, Queries.SAMPLE_QUERY_ID, id);
+            SampleV3 sample = queryResult.getData();
+            if (sample != null) {
+                logger.debug(String.format("Successfully queried sample %s for v3", id));
+                SampleOfKGV3Translator translator = new SampleOfKGV3Translator();
+                return translator.translate(sample, dataStage, liveMode);
+            } else {
+                ResultOfKGv3.Error error = queryResult.getError();
+                String e = error == null?"":String.format("([%d] %s)", error.getCode(), error.getMessage());
+                logger.debug(String.format("Failed to query sample %s for v3%s", id, e));
+            }
+        } else if (StringUtils.isNotBlank(ids.getIdV1())) {
             String query = "query/minds/experiment/sample/v1.0.0/search";
             String id = ids.getIdV1();
             logger.info(String.format("Starting to query sample %s for v1", id));
@@ -476,7 +477,7 @@ public class TranslationController {
                 SampleV1 sample = kgV2.executeQuery(SampleV1.class, dataStage, query, id, legacyAuthorization);
                 if (sample != null) {
                     logger.info(String.format("Successfully query sample %s for v1", id));
-                    SampleTranslator translator = new SampleTranslator();
+                    SampleOfKGV2Translator translator = new SampleOfKGV2Translator();
                     return translator.translate(sample, dataStage, liveMode);
                 } else {
                     logger.debug(String.format("Failed to query sample %s for v1", id));
@@ -494,7 +495,7 @@ public class TranslationController {
 
     public Sample createSampleFromKGv2(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
         SampleV1 sample = kgV2.executeQuery(SampleV1.class, dataStage, query, id, authorization);
-        SampleTranslator translator = new SampleTranslator();
+        SampleOfKGV2Translator translator = new SampleOfKGV2Translator();
         return translator.translate(sample, dataStage, liveMode);
     }
 
