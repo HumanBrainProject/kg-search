@@ -1,0 +1,91 @@
+{
+  "@context": {
+    "@vocab": "https://core.kg.ebrains.eu/vocab/query/",
+    "query": "https://schema.hbp.eu/myQuery/",
+    "propertyName": {
+      "@id": "propertyName",
+      "@type": "@id"
+    },
+    "merge": {
+      "@type": "@id",
+      "@id": "merge"
+    },
+    "path": {
+      "@id": "path",
+      "@type": "@id"
+    }
+  },
+  "meta": {
+    "type": "https://openminds.ebrains.eu/core/Project",
+    "name": "ProjectSearch Giannis"
+  },
+  "structure": [
+    {
+      "propertyName": "query:identifier",
+      "path": "http://schema.org/identifier",
+      "required": true
+    },
+    {
+      "propertyName": "query:title",
+      "path": "https://openminds.ebrains.eu/vocab/fullName",
+      "required": true
+    },
+    {
+      "propertyName": "query:description",
+      "path": "https://openminds.ebrains.eu/vocab/description"
+    },
+    {
+      "propertyName": "query:datasets",
+      "path": {
+        "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+        "typeFilter": [
+          {
+            "@id": "https://openminds.ebrains.eu/core/DatasetVersion"
+          },
+          {
+            "@id": "https://openminds.ebrains.eu/core/Dataset"
+          }
+        ]
+      },
+      "required": true,
+      "structure": [
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:publications",
+      "path": {
+        "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+        "typeFilter": [
+          {
+            "@id": "https://openminds.ebrains.eu/core/DatasetVersion"
+          }
+        ]
+      },
+      "structure": [
+        {
+          "propertyName": "query:relatedPublication",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/relatedPublication",
+            "https://openminds.ebrains.eu/vocab/identifier"
+          ]
+        },
+        {
+          "propertyName": "query:howToCite",
+          "path": "https://openminds.ebrains.eu/vocab/howToCite"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:id",
+      "path": "@id"
+    }
+  ]
+}

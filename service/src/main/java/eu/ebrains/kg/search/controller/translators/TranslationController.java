@@ -404,23 +404,24 @@ public class TranslationController {
         return translator.translate(model, dataStage, liveMode);
     }
 
+    private static class ResultOfKGV3ProjectV3 extends ResultOfKGv3<ProjectV3> {}
+
     public TargetInstance createProjectForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
-//        if (StringUtils.isNotBlank(ids.getIdV3())) {
-//            String id = ids.getIdV3();
-//            logger.info(String.format("Starting to query project %s for v3", id));
-//            ResultOfKGv3<ProjectV3> queryResult = kgV3.executeQueryForIndexing(ResultOfKGV3ProjectV3.class, dataStage, Queries.PROJECT_QUERY_ID, id);
-//            ProjectV3 project  = queryResult.getData();
-//            if (project != null) {
-//                logger.debug(String.format("Successfully queried project %s for v3", id));
-//                ProjectOfKGV3Translator translator = new ProjectOfKGV3Translator();
-//                return translator.translate(project, dataStage, liveMode);
-//            } else {
-//                ResultOfKGv3.Error error = queryResult.getError();
-//                String e = error == null?"":String.format("([%d] %s)", error.getCode(), error.getMessage());
-//                logger.debug(String.format("Failed to query project %s for v3%s", id, e));
-//            }
-//        } else
-        if (StringUtils.isNotBlank(ids.getIdV1())) {
+        if (StringUtils.isNotBlank(ids.getIdV3())) {
+            String id = ids.getIdV3();
+            logger.info(String.format("Starting to query project %s for v3", id));
+            ResultOfKGv3<ProjectV3> queryResult = kgV3.executeQueryForIndexing(ResultOfKGV3ProjectV3.class, dataStage, Queries.PROJECT_QUERY_ID, id);
+            ProjectV3 project  = queryResult.getData();
+            if (project != null) {
+                logger.debug(String.format("Successfully queried project %s for v3", id));
+                ProjectOfKGV3Translator translator = new ProjectOfKGV3Translator();
+                return translator.translate(project, dataStage, liveMode);
+            } else {
+                ResultOfKGv3.Error error = queryResult.getError();
+                String e = error == null?"":String.format("([%d] %s)", error.getCode(), error.getMessage());
+                logger.debug(String.format("Failed to query project %s for v3%s", id, e));
+            }
+        } else if (StringUtils.isNotBlank(ids.getIdV1())) {
             String id = ids.getIdV1();
             logger.info(String.format("Starting to query project %s for v1", id));
             try {
@@ -428,7 +429,7 @@ public class TranslationController {
                 ProjectV1 project = kgV2.executeQuery(ProjectV1.class, dataStage, query, id, legacyAuthorization);
                 if (project != null) {
                     logger.debug(String.format("Successfully queried project %s for v1", id));
-                    ProjectTranslator translator = new ProjectTranslator();
+                    ProjectOfKGV2Translator translator = new ProjectOfKGV2Translator();
                     return translator.translate(project, dataStage, liveMode);
                 } else {
                     logger.debug(String.format("Failed to query project %s for v1", id));
@@ -447,7 +448,7 @@ public class TranslationController {
 
     public Project createProjectFromKGv2(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
         ProjectV1 project = kgV2.executeQuery(ProjectV1.class, dataStage, query, id, authorization);
-        ProjectTranslator translator = new ProjectTranslator();
+        ProjectOfKGV2Translator translator = new ProjectOfKGV2Translator();
         return translator.translate(project, dataStage, liveMode);
     }
 

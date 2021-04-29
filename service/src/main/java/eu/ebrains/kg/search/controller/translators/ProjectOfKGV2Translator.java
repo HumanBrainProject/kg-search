@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProjectTranslator implements Translator<ProjectV1, Project> {
+public class ProjectOfKGV2Translator implements Translator<ProjectV1, Project> {
 
     public Project translate(ProjectV1 projectSource, DataStage dataStage, boolean liveMode) {
         Project p = new Project();

@@ -26,6 +26,24 @@
       "propertyName": "query:identifier",
       "path": "http://schema.org/identifier",
       "required": true
+    },
+    {
+      "propertyName": "query:datasets",
+      "path": [
+        {
+          "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+          "typeFilter": [
+            {
+              "@id": "https://openminds.ebrains.eu/core/DatasetVersion"
+            },
+            {
+              "@id": "https://openminds.ebrains.eu/core/Dataset"
+            }
+          ]
+        },
+        "@id"
+      ],
+      "required": true
     }
   ]
 }

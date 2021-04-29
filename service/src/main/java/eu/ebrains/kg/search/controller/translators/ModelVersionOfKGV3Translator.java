@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
 
-public class ModelVersionOfKGV3Translator implements Translator<ModelVersionV3, ModelVersion>{
+public class ModelVersionOfKGV3Translator implements Translator<ModelVersionV3, ModelVersion> {
 
     public ModelVersion translate(ModelVersionV3 modelVersion, DataStage dataStage, boolean liveMode) {
-      ModelVersion m = new ModelVersion();
+        ModelVersion m = new ModelVersion();
         ModelVersionV3.ModelVersions model = modelVersion.getModel();
         m.setVersion(modelVersion.getVersion());
         m.setId(IdUtils.getUUID(modelVersion.getId()));
@@ -80,7 +80,7 @@ public class ModelVersionOfKGV3Translator implements Translator<ModelVersionV3, 
         }
         m.setModelFormat(emptyToNull(modelVersion.getFormat()));
         m.setDescription(modelVersion.getDescription());
-        
+
         ModelVersionV3.License license = firstItemOrNull(modelVersion.getLicense());
         if (license != null) {
             m.setLicenseInfo(new TargetExternalReference(license.getWebpage(), license.getFullName()));
