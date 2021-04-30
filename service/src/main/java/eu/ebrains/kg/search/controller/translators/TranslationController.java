@@ -693,7 +693,7 @@ public class TranslationController {
         logger.info(String.format("Queried %s sample's ids for v1", sourceInstanceV1.size()));
         logger.info("Starting to query sample's ids for v3");
         List<SourceInstanceV3> sourceInstanceV3 = kgV3.executeQueryForIndexing(dataStage, Queries.SAMPLE_IDENTIFIER_QUERY_ID);
-        logger.debug(String.format("Successfully queried %s sample's ids for v3", sourceInstanceV3.size()));
+        logger.info(String.format("Successfully queried %s sample's ids for v3", sourceInstanceV3.size()));
         List<IdSources> sources = new ArrayList<>();
 
         Map<String, IdSources> sourcesIdentifiers = new HashMap<>();
@@ -724,7 +724,7 @@ public class TranslationController {
         logger.info(String.format("Queried %s subject's ids for v1", sourceInstanceV1.size()));
         logger.info("Starting to query subject's ids for v3");
         List<SourceInstanceV3> sourceInstanceV3 = kgV3.executeQueryForIndexing(dataStage, Queries.SUBJECT_IDENTIFIER_QUERY_ID);
-        logger.debug(String.format("Successfully queried %s subject's ids for v3", sourceInstanceV3.size()));
+        logger.info(String.format("Successfully queried %s subject's ids for v3", sourceInstanceV3.size()));
         List<IdSources> sources = new ArrayList<>();
 
         Map<String, IdSources> sourcesIdentifiers = new HashMap<>();
@@ -786,7 +786,7 @@ public class TranslationController {
         logger.info(String.format("Queried %s software's ids for v2", sourceInstanceV2.size()));
         logger.info("Starting to query softwareVersion's ids for v3");
         List<SourceInstanceV3> sourceInstanceV3 = kgV3.executeQueryForIndexing(dataStage, Queries.SOFTWARE_VERSION_IDENTIFIER_QUERY_ID);
-        logger.debug(String.format("Successfully queried %s softwareVersion's ids for v3", sourceInstanceV3.size()));
+        logger.info(String.format("Successfully queried %s softwareVersion's ids for v3", sourceInstanceV3.size()));
         List<IdSources> sources = new ArrayList<>();
 
         Map<String, IdSources> sourcesIdentifiers = new HashMap<>();
@@ -817,7 +817,7 @@ public class TranslationController {
         logger.info(String.format("Queried %s model's ids for v2", sourceInstanceV2.size()));
         logger.info("Starting to query modelVersion's ids for v3");
         List<SourceInstanceV3> sourceInstanceV3 = kgV3.executeQueryForIndexing(dataStage, Queries.MODEL_VERSION_IDENTIFIER_QUERY_ID);
-        logger.debug(String.format("Successfully queried %s modelVersion's ids for v3", sourceInstanceV3.size()));
+        logger.info(String.format("Successfully queried %s modelVersion's ids for v3", sourceInstanceV3.size()));
         List<IdSources> sources = new ArrayList<>();
 
         Map<String, IdSources> sourcesIdentifiers = new HashMap<>();
@@ -846,48 +846,46 @@ public class TranslationController {
         String queryForV2 = "query/uniminds/core/person/v1.0.0/searchIdentifier";
         logger.info("Starting to query contributor's ids for v1");
         List<SourceInstanceIdentifierV1andV2> sourceInstanceV1 = kgV2.executeQueryForIndexing(dataStage, queryForV1, legacyAuthorization);
-        logger.debug(String.format("Successfully queried %s contributor's ids for v1", sourceInstanceV1.size()));
+        logger.info(String.format("Successfully queried %s contributor's ids for v1", sourceInstanceV1.size()));
         logger.info("Done querying contributors for v1");
         logger.info("Starting to query contributor's ids for v2");
         List<SourceInstanceIdentifierV1andV2> sourceInstanceV2 = kgV2.executeQueryForIndexing(dataStage, queryForV2, legacyAuthorization);
-        logger.debug(String.format("Successfully queried %s contributor's ids for v2", sourceInstanceV2.size()));
+        logger.info(String.format("Successfully queried %s contributor's ids for v2", sourceInstanceV2.size()));
 
         logger.info("Starting to query contributor's ids for v3");
         List<SourceInstanceV3> sourceInstanceV3 = kgV3.executeQueryForIndexing(dataStage, Queries.CONTRIBUTOR_IDENTIFIER_QUERY_ID);
         logger.info(String.format("Successfully Successfully queried  %s contributor's ids for v3", sourceInstanceV3.size()));
 
-        Map<String, IdSources> sourcesByV1AndV2Identifier = new HashMap<>();
+        Map<String, IdSources> sourcesIdentifiers = new HashMap<>();
         List<IdSources> sources = new ArrayList<>();
 
-        for (SourceInstanceIdentifierV1andV2 s : sourceInstanceV1) {
+        sourceInstanceV3.forEach(dv -> {
             IdSources source = new IdSources();
             sources.add(source);
-            source.setIdV1(IdUtils.getUUID(s.getId()));
-            sourcesByV1AndV2Identifier.put(s.getIdentifier(), source);
-        }
+            String id = IdUtils.getUUID(dv.getId());
+            source.setIdV3(id);
+            dv.getIdentifier().forEach(identifier -> sourcesIdentifiers.put(IdUtils.getUUID(identifier), source));
+        });
 
         sourceInstanceV2.forEach(p -> {
             String identifier = p.getIdentifier();
-            IdSources source = sourcesByV1AndV2Identifier.get(identifier);
+            IdSources source = sourcesIdentifiers.get(identifier);
             if (source == null) {
                 source = new IdSources();
                 sources.add(source);
-                sourcesByV1AndV2Identifier.put(p.getIdentifier(), source);
+                sourcesIdentifiers.put(identifier, source);
             }
             source.setIdV2(IdUtils.getUUID(p.getId()));
         });
 
-        sourceInstanceV3.forEach(p -> {
-            String id = IdUtils.getUUID(p.getId());
-            String identifier = sourcesByV1AndV2Identifier.containsKey(id) ? id : p.getIdentifier().stream().filter(i -> sourcesByV1AndV2Identifier.containsKey(IdUtils.getUUID(i))).findFirst().orElse(null);
-            if (identifier != null) {
-                IdSources source = sourcesByV1AndV2Identifier.get(identifier);
-                source.setIdV3(id);
-            } else {
-                IdSources source = new IdSources();
-                source.setIdV3(id);
+        sourceInstanceV1.forEach(p -> {
+            String identifier = p.getIdentifier();
+            IdSources source = sourcesIdentifiers.get(identifier);
+            if (source == null) {
+                source = new IdSources();
                 sources.add(source);
             }
+            source.setIdV1(IdUtils.getUUID(p.getId()));
         });
         return sources;
     }
@@ -899,7 +897,7 @@ public class TranslationController {
         logger.debug(String.format("Successfully queried %s dataset's ids for v1", sourceInstanceV1.size()));
         logger.info("Starting to query datasetVersion's ids for v3");
         List<SourceInstanceV3> sourceInstanceV3 = kgV3.executeQueryForIndexing(dataStage, Queries.DATASET_VERSION_IDENTIFIER_QUERY_ID);
-        logger.debug(String.format("Successfully queried %s datasetVersion's ids for v3", sourceInstanceV3.size()));
+        logger.info(String.format("Successfully queried %s datasetVersion's ids for v3", sourceInstanceV3.size()));
         List<IdSources> sources = new ArrayList<>();
 
         Map<String, IdSources> sourcesIdentifiers = new HashMap<>();

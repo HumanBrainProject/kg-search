@@ -46,7 +46,10 @@
     },
     {
       "propertyName": "query:digitalIdentifier",
-      "path": "https://openminds.ebrains.eu/vocab/digitalIdentifier"
+      "path": [
+        "https://openminds.ebrains.eu/vocab/digitalIdentifier",
+        "https://openminds.ebrains.eu/vocab/identifier"
+      ]
     },
     {
       "propertyName": "query:howToCite",

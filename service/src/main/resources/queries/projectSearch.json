@@ -72,7 +72,7 @@
       },
       "structure": [
         {
-          "propertyName": "query:identifier",
+          "propertyName": "query:digitalIdentifier",
           "path": [
             "https://openminds.ebrains.eu/vocab/relatedPublication",
             "https://openminds.ebrains.eu/vocab/identifier"

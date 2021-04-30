@@ -27,7 +27,7 @@ public class MappingController {
         Map<String, Object> timestamp = new LinkedHashMap<>();
         properties.put("id", Map.of("type", "keyword"));
         properties.put("identifier", Map.of("type", "keyword"));
-        properties.put("type", Map.of("type", "keyword"));
+        properties.put("type", Map.of("properties", Map.of("value", Map.of("type", "keyword"))));
         timestamp.put("type", "date");
         properties.put("@timestamp", timestamp);
         mapping.put("properties", properties);

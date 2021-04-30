@@ -1,6 +1,6 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
-import eu.ebrains.kg.search.model.source.SourceInstance;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
 
@@ -119,6 +119,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
 
     public static class DatasetVersions extends Versions {
 
+        @JsonProperty("datasetAuthor")
         private List<Author> author;
 
         public List<Author> getAuthor() {
