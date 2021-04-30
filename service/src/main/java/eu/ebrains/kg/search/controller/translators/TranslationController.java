@@ -297,6 +297,45 @@ public class TranslationController {
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("SoftwareVersion %s does not exist!", id));
     }
 
+    public Project createProjectFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultsOfKGV3ProjectV3 result = kgV3.executeQuery(ResultsOfKGV3ProjectV3.class, dataStage, Queries.PROJECT_QUERY_ID, id);
+        if(result != null) {
+            List<ProjectV3> projects = result.getData();
+            if (!CollectionUtils.isEmpty(projects)) {
+                ProjectV3 project = projects.get(0);
+                ProjectOfKGV3Translator translator = new ProjectOfKGV3Translator();
+                return translator.translate(project, dataStage, liveMode);
+            }
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("SoftwareVersion %s does not exist!", id));
+    }
+
+    public Subject createSubjectFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultsOfKGV3SubjectV3 result = kgV3.executeQuery(ResultsOfKGV3SubjectV3.class, dataStage, Queries.SUBJECT_QUERY_ID, id);
+        if(result != null) {
+            List<SubjectV3> subjects = result.getData();
+            if (!CollectionUtils.isEmpty(subjects)) {
+                SubjectV3 subject = subjects.get(0);
+                SubjectOfKGV3Translator translator = new SubjectOfKGV3Translator();
+                return translator.translate(subject, dataStage, liveMode);
+            }
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("SoftwareVersion %s does not exist!", id));
+    }
+
+    public Sample createSampleFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultsOfKGV3SampleV3 result = kgV3.executeQuery(ResultsOfKGV3SampleV3.class, dataStage, Queries.SAMPLE_QUERY_ID, id);
+        if(result != null) {
+            List<SampleV3> samples = result.getData();
+            if (!CollectionUtils.isEmpty(samples)) {
+                SampleV3 sample = samples.get(0);
+                SampleOfKGV3Translator translator = new SampleOfKGV3Translator();
+                return translator.translate(sample, dataStage, liveMode);
+            }
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("SoftwareVersion %s does not exist!", id));
+    }
+
     public TargetInstancesResult createDatasetsForIndexing(DataStage dataStage, boolean liveMode, int from, int size) {
         logger.info("Starting to query datasets for v3");
         ResultsOfKGv3<DatasetV3> datasets = kgV3.executeQueryForIndexing(ResultsOfKGV3DatasetV3.class, dataStage, Queries.DATASET_QUERY_ID, from, size);
@@ -533,13 +572,13 @@ public class TranslationController {
         return translator.translate(sample, dataStage, liveMode);
     }
 
-    private static class ResultsOfKGV3SubjectV3V3 extends ResultsOfKGv3<SubjectV3> {}
+    private static class ResultsOfKGV3SubjectV3 extends ResultsOfKGv3<SubjectV3> {}
 
     public TargetInstance createSubjectForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
         if (StringUtils.isNotBlank(ids.getIdV3())) {
             String id = ids.getIdV3();
             logger.info(String.format("Starting to query subject %s for v3", id));
-            ResultsOfKGv3<SubjectV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3SubjectV3V3.class, dataStage, Queries.SAMPLE_QUERY_ID, id);
+            ResultsOfKGv3<SubjectV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3SubjectV3.class, dataStage, Queries.SAMPLE_QUERY_ID, id);
             if(queryResult != null) {
                 List<SubjectV3> subjects = queryResult.getData();
                 if (!CollectionUtils.isEmpty(subjects)) {
@@ -635,13 +674,16 @@ public class TranslationController {
                 case Constants.SOURCE_MODEL_SOFTWARE_VERSION:
                     return this.createSoftwareVersionFromKGv3(dataStage, liveMode, id);
                 case Constants.SOURCE_MODEL_PROJECT:
+                    return this.createProjectFromKGv3(dataStage, liveMode, id);
                 case Constants.SOURCE_MODEL_SUBJECT:
+                    return this.createSubjectFromKGv3(dataStage, liveMode, id);
                 case Constants.SOURCE_MODEL_SAMPLE:
-                    //TODO to be implemented
+                    return this.createSampleFromKGv3(dataStage, liveMode, id);
+                default:
                     return null;
             }
         }
-        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Type %s is not recognized as a valid search resource!", type));
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Type is not recognized as a valid search resource!");
     }
 
     private List<IdSources> getSamplesIdSources(DataStage dataStage, String legacyAuthorization) {
