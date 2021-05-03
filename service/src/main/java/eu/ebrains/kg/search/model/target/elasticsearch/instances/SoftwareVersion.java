@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @MetaInfo(name="Software", identifier = "softwarecatalog/software/softwareproject/v1.0.0/search", order=6)
-public class SoftwareVersion implements TargetInstance {
+public class SoftwareVersion implements TargetInstance, Searchable {
     @ElasticSearchInfo(type = "keyword")
     private final Value<String> type = new Value<>("Software");
 
@@ -77,9 +77,6 @@ public class SoftwareVersion implements TargetInstance {
     private ISODateValue lastRelease;
 
     private List<TargetInternalReference> versions;
-
-    @Override
-    public boolean isSearchable() { return true; }
 
     @Override
     public String getId() { return id; }
