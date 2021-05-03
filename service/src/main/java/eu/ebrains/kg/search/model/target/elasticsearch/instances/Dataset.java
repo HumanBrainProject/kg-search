@@ -51,9 +51,6 @@ public class Dataset implements TargetInstance {
     private List<TargetInternalReference> datasets;
 
     @Override
-    public boolean isSearchable() { return false; }
-
-    @Override
     public String getId() { return id; }
 
     public void setId(String id) { this.id = id; }

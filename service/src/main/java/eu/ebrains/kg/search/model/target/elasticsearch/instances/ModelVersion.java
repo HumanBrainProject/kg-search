@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @MetaInfo(name = "Model", identifier = "uniminds/core/modelinstance/v1.0.0/search", order = 5)
-public class ModelVersion implements TargetInstance {
+public class ModelVersion implements TargetInstance, Searchable {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Model");
 
@@ -94,9 +94,6 @@ public class ModelVersion implements TargetInstance {
     private TargetExternalReference licenseInfo;
 
     private List<TargetInternalReference> versions;
-
-    @Override
-    public boolean isSearchable() { return true; }
 
     @Override
     public String getId() { return id; }
