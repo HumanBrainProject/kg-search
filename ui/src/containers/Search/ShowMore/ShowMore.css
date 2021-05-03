@@ -1,5 +1,5 @@
 /*
-*   Copyright (c) 2018, EPFL/Human Brain Project PCO
+*   Copyright (c) 2021, EPFL/Human Brain Project PCO
 *
 *   Licensed under the Apache License, Version 2.0 (the "License");
 *   you may not use this file except in compliance with the License.
@@ -14,20 +14,17 @@
 *   limitations under the License.
 */
 
-import React from "react";
-import { ShareButtons } from "../../Share/ShareButtons";
-import { TermsShortNotice } from "../../Notice/TermsShortNotice";
-import "./Footer.css";
+.kgs-show-more {
+    text-align: center;
+}
 
-export const Footer = () => {
-  return (
-    <div className="kgs-footer">
-      <TermsShortNotice className="kgs-footer__terms-short-notice" />
-      <div className="kgs-footer-nav">
-        <ShareButtons/>
-        <div className="kgs-space" />
-        <div className="kgs-space2" />
-      </div>
-    </div>
-  );
-};
+.kgs-show-more-btn {
+    margin: 0 0 0 30px;
+    padding: 10px 15px;
+    border: 1px solid var(--link-highlight-color);
+    border-radius: 2px;
+    background-color: var(--link-highlight-color);
+    color: var(--color-32);
+    font-size: 15px;
+    transition: box-shadow 0.2s ease-in;
+}

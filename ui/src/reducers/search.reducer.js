@@ -387,7 +387,7 @@ const loadSearchResult = (state, action) => {
   };
 
   const total = isNaN(Number(action.results?.hits?.total?.value))?0:Number(action.results.hits.total.value);
-
+  const hits = Array.isArray(action.results?.hits?.hits) ? action.results.hits.hits : [];
   return {
     ...state,
     message: "",
@@ -395,7 +395,7 @@ const loadSearchResult = (state, action) => {
     isLoading: false,
     facets: getUpdatedFacets(state.facets, action.results),
     types: getUpdatedTypes(state.types, state.selectedType, state.group, state.groupsSettings, state.facetTypesOrder, action.results),
-    hits: Array.isArray(action.results?.hits?.hits) ? action.results.hits.hits : [],
+    hits: state.page === 1 ? hits: [...state.hits, ...hits],
     total: total,
     totalPages: Math.ceil(total / state.hitsPerPage)
   };

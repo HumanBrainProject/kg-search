@@ -15,19 +15,31 @@
 */
 
 import React from "react";
-import { ShareButtons } from "../../Share/ShareButtons";
-import { TermsShortNotice } from "../../Notice/TermsShortNotice";
-import "./Footer.css";
+import { connect } from "react-redux";
 
-export const Footer = () => {
+import * as actionsSearch from "../../../actions/actions.search";
+import "./ShowMore.css";
+
+const ShowMoreComponent = ({ next, totalPages, onClick }) => {
+
+  if (next > totalPages) {
+    return null;
+  }
+
   return (
-    <div className="kgs-footer">
-      <TermsShortNotice className="kgs-footer__terms-short-notice" />
-      <div className="kgs-footer-nav">
-        <ShareButtons/>
-        <div className="kgs-space" />
-        <div className="kgs-space2" />
-      </div>
+    <div className="kgs-show-more">
+      <button type="button" className="kgs-show-more-btn" onClick={() => onClick(next)}>Show more results</button>
     </div>
   );
 };
+
+export const ShowMore = connect(
+  state => ({
+    totalPages: state.search.totalPages,
+    next: state.search.page + 1
+  }),
+  dispatch => ({
+    onClick: value => dispatch(actionsSearch.setPage(value))
+  })
+)(ShowMoreComponent);
+

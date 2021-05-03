@@ -137,8 +137,6 @@ const groupHitsByScore = hits => {
 };
 
 const mapStateToProps = state => {
-  const test = groupHitsByField(state.search.hits, "title");
-  window.console.log(state.search.hits, test);
   return {
     lists: groupHitsByScore(groupHitsByField(state.search.hits, "title")),
     itemComponent: Hit,

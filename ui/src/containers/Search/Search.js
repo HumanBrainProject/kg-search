@@ -34,6 +34,7 @@ import { getUpdatedQuery, getLocationFromQuery } from "../../helpers/BrowserHelp
 
 import "./Search.css";
 import { history } from "../../store";
+import { ShowMore } from "./ShowMore/ShowMore";
 
 const SearchComponent = ({show}) => (
   <div className = "kgs-search-container" >
@@ -48,6 +49,7 @@ const SearchComponent = ({show}) => (
             <div className = "kgs-search__main" >
               <ResultsHeader />
               <HitsPanel />
+              <ShowMore />
             </div>
           </div>
           <Footer />
