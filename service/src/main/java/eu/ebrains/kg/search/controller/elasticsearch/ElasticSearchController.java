@@ -27,7 +27,7 @@ public class ElasticSearchController {
     }
 
     public void recreateSearchIndex(Map<String, Object> mapping, String type, DataStage dataStage) {
-        String index = ESHelper.getSearchIndex(type, dataStage);
+        String index = ESHelper.getIndex(dataStage, type);
         try {
             esServiceClient.deleteIndex(index);
         } catch (WebClientResponseException e) {
@@ -107,7 +107,7 @@ public class ElasticSearchController {
     }
 
     public void updateSearchIndex(List<TargetInstance> instances, String type, DataStage dataStage) {
-        String index = ESHelper.getSearchIndex(type, dataStage);
+        String index = ESHelper.getIndex(dataStage, type);
         updateIndex(index, instances);
     }
 
@@ -117,7 +117,7 @@ public class ElasticSearchController {
     }
 
     public void removeDeprecatedDocumentsFromSearchIndex(String type, DataStage dataStage, Set<String> idsToKeep) {
-        String index = ESHelper.getSearchIndex(type, dataStage);
+        String index = ESHelper.getIndex(dataStage, type);
         removeDeprecatedDocuments(index, type, idsToKeep);
     }
 

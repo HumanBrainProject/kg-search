@@ -13,25 +13,20 @@ public class ESHelper {
         return dataStage == DataStage.IN_PROGRESS ? INDEX_PREFIX_IN_PROGRESS : INDEX_PREFIX_PUBLICLY_RELEASED;
     }
 
-    private static String getIndexPrefix(String group) {
-        DataStage dataStage = group.equals("curated")?DataStage.IN_PROGRESS:DataStage.RELEASED;
-        return getIndexPrefix(dataStage);
-    }
-
-    public static String getSearchIndex(String type, DataStage dataStage) {
-        return String.format("%s_%s", getIndexPrefix(dataStage), type.toLowerCase());
+    public static String getIndex(DataStage dataStage, String type) {
+        return String.format("%s_searchable_%s", getIndexPrefix(dataStage), type.toLowerCase());
     }
 
     public static String getIdentifierIndex(DataStage dataStage) {
         return String.format("%s_%s", getIndexPrefix(dataStage), INDEX_SUFFIX_IDENTIFIERS);
     }
 
-    public static String getAllIndex(DataStage dataStage) {
+    public static String getIndexesForDocument(DataStage dataStage) {
         return String.format("%s_*", getIndexPrefix(dataStage));
     }
 
-    public static String getIndexFromGroup(String type, String group) {
-        return String.format("%s_%s", getIndexPrefix(group), type.toLowerCase());
+    public static String getIndexesForSearch(DataStage dataStage) {
+        return String.format("%s_searchable_*", getIndexPrefix(dataStage));
     }
 
 }
