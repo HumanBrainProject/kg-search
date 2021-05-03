@@ -111,7 +111,7 @@ public class IndexingController {
     }
     public void fullReplacementCombinedByType(Class<?> clazz, DataStage dataStage, String legacyAuthorization) {
         String type = utils.getNameForClass(clazz);
-        if (!TargetInstance.isSearchable(clazz)) {
+        if (TargetInstance.isSearchable(clazz)) {
             logger.info(String.format("Creating index %s_%s for %s", dataStage, type.toLowerCase(), type));
             recreateSearchIndex(dataStage, type, clazz);
             logger.info(String.format("Successfully created index %s_%s for %s", dataStage, type.toLowerCase(), type));
