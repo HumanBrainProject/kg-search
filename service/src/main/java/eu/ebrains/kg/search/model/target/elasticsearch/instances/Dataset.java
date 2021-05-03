@@ -1,17 +1,15 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
-import eu.ebrains.kg.search.model.target.elasticsearch.*;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
-import eu.ebrains.kg.search.utils.IdUtils;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
+import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
+import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
+import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @MetaInfo(name = "DatasetVersions", identifier = "https://openminds.ebrains.eu/core/Dataset", order = 2)

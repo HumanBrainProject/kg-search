@@ -54,7 +54,7 @@
       "path": "https://openminds.ebrains.eu/vocab/howToCite"
     },
     {
-      "propertyName": "query:datasetVersions",
+      "propertyName": "query:versions",
       "path": "https://openminds.ebrains.eu/vocab/hasVersion",
       "structure": [
         {
@@ -71,7 +71,7 @@
           "required": false
         },
         {
-          "propertyName": "query:previousVersionIdentifier",
+          "propertyName": "query:isNewVersionOf",
           "path": [
             "https://openminds.ebrains.eu/vocab/isNewVersionOf",
             "https://openminds.ebrains.eu/vocab/versionIdentifier"
