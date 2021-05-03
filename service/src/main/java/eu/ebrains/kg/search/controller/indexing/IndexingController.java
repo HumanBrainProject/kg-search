@@ -111,9 +111,11 @@ public class IndexingController {
     }
     public void fullReplacementCombinedByType(Class<?> clazz, DataStage dataStage, String legacyAuthorization) {
         String type = utils.getNameForClass(clazz);
-        logger.info(String.format("Creating index %s_%s for %s", dataStage, type.toLowerCase(), type));
-        recreateSearchIndex(dataStage, type, clazz);
-        logger.info(String.format("Successfully created index %s_%s for %s", dataStage, type.toLowerCase(), type));
+        if (!TargetInstance.isSearchable(clazz)) {
+            logger.info(String.format("Creating index %s_%s for %s", dataStage, type.toLowerCase(), type));
+            recreateSearchIndex(dataStage, type, clazz);
+            logger.info(String.format("Successfully created index %s_%s for %s", dataStage, type.toLowerCase(), type));
+        }
         List<IdSources> sources = translationController.getIdSources(clazz, dataStage, legacyAuthorization);
         Set<String> ids = new HashSet<>();
         List<TargetInstance> instances = new ArrayList<>();
@@ -147,9 +149,11 @@ public class IndexingController {
 
     public void fullReplacementFromV3ByType(Class<?> clazz, DataStage dataStage) {
         String type = utils.getNameForClass(clazz);
-        logger.info(String.format("Creating index %s_%s for %s", dataStage, type.toLowerCase(), type));
-        recreateSearchIndex(dataStage, type, clazz);
-        logger.info(String.format("Successfully created index %s_%s for %s", dataStage, type.toLowerCase(), type));
+        if (TargetInstance.isSearchable(clazz)) {
+            logger.info(String.format("Creating index %s_%s for %s", dataStage, type.toLowerCase(), type));
+            recreateSearchIndex(dataStage, type, clazz);
+            logger.info(String.format("Successfully created index %s_%s for %s", dataStage, type.toLowerCase(), type));
+        }
         Set<String> ids = new HashSet<>();
         boolean hasMore = true;
         int from = 0;
