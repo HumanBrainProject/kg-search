@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @MetaInfo(name = "Sample", identifier = "minds/experiment/sample/v1.0.0/search", order = 4)
-public class Sample implements TargetInstance, Searchable {
+public class Sample implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Sample");
 
@@ -67,6 +67,11 @@ public class Sample implements TargetInstance, Searchable {
     @JsonProperty("last_release")
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
+
+    @Override
+    public boolean isSearchable() {
+        return true;
+    }
 
     @Override
     public String getId() { return id; }

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 
 @MetaInfo(name="Contributor", identifier = "uniminds/core/person/v1.0.0/search", order=7)
-public class Contributor implements TargetInstance, Searchable {
+public class Contributor implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Contributor");
 
@@ -57,6 +57,11 @@ public class Contributor implements TargetInstance, Searchable {
 
     @Override
     public String getId() { return id; }
+
+    @Override
+    public boolean isSearchable() {
+        return true;
+    }
 
     public void setId(String id) { this.id = id; }
 

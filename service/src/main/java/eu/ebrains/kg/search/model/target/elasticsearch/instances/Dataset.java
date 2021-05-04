@@ -53,6 +53,11 @@ public class Dataset implements TargetInstance {
     @Override
     public String getId() { return id; }
 
+    @Override
+    public boolean isSearchable() {
+        return false;
+    }
+
     public void setId(String id) { this.id = id; }
 
     public void setIdentifier(List<String> identifier) {

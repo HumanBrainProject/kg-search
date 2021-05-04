@@ -28,6 +28,9 @@ public class SoftwareVersionOfKGV3Translator implements Translator<SoftwareVersi
             List<Version> sortedVersions = Helpers.sort(software.getVersions());
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             s.setVersions(references);
+            s.setSearchable(sortedVersions.get(0).getId().equals(softwareVersion.getId()));
+        } else {
+            s.setSearchable(true);
         }
         if (!StringUtils.isBlank(softwareVersion.getDescription())) {
             s.setDescription(softwareVersion.getDescription());

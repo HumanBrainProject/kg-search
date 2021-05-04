@@ -28,7 +28,11 @@ public class DatasetVersionOfKGV3Translator implements Translator<DatasetVersion
             List<Version> sortedVersions = Helpers.sort(dataset.getVersions());
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             d.setVersions(references);
+            d.setSearchable(sortedVersions.get(0).getId().equals(datasetVersion.getId()));
+        } else {
+            d.setSearchable(true);
         }
+
         if (!StringUtils.isBlank(datasetVersion.getDescription())) {
             d.setDescription(datasetVersion.getDescription());
         } else if (dataset != null) {

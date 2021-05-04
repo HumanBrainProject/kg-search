@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 //@MetaInfo(name = "DatasetVersions", identifier = "https://openminds.ebrains.eu/core/DatasetVersion", defaultSelection = true, order = 2)
 @MetaInfo(name = "Dataset", identifier = "minds/core/dataset/v1.0.0/search", defaultSelection = true, order = 2)
 @RibbonInfo(content = "Downloadable Data", aggregation = "count", dataField = "search:files", singular = "file", plural = "files", icon = "download")
-public class DatasetVersion implements TargetInstance, Searchable {
+public class DatasetVersion implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Dataset");
 
@@ -116,11 +116,20 @@ public class DatasetVersion implements TargetInstance, Searchable {
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 
-    // TODO: Add fieldInfo
-
     private String version;
 
     private List<TargetInternalReference> versions;
+
+    private boolean isSearchable;
+
+    @Override
+    public boolean isSearchable() {
+        return isSearchable;
+    }
+
+    public void setSearchable(boolean searchable) {
+        isSearchable = searchable;
+    }
 
     @Override
     public String getId() { return id; }

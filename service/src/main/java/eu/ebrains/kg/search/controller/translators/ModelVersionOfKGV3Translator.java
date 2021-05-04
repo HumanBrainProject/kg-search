@@ -31,6 +31,9 @@ public class ModelVersionOfKGV3Translator implements Translator<ModelVersionV3, 
             List<Version> sortedVersions = Helpers.sort(model.getVersions());
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             m.setVersions(references);
+            m.setSearchable(sortedVersions.get(0).getId().equals(modelVersion.getId()));
+        } else {
+            m.setSearchable(true);
         }
         if (!StringUtils.isBlank(modelVersion.getDescription())) {
             m.setDescription(modelVersion.getDescription());

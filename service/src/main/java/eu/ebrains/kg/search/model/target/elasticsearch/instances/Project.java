@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @MetaInfo(name="Project", identifier = "minds/core/placomponent/v1.0.0/search", order=1)
 @RibbonInfo(content="Datasets", aggregation="count", dataField="search:datasets", singular="dataset", plural="datasets", icon="download")
-public class Project implements TargetInstance, Searchable {
+public class Project implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Project");
 
@@ -45,6 +45,11 @@ public class Project implements TargetInstance, Searchable {
     @JsonProperty("last_release")
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
+
+    @Override
+    public boolean isSearchable() {
+        return true;
+    }
 
     @Override
     public String getId() { return id; }

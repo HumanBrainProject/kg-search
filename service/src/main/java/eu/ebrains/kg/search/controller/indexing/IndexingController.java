@@ -49,56 +49,76 @@ public class IndexingController {
     public void incrementalUpdateCombinedByType(Class<?> clazz, DataStage dataStage, String legacyAuthorization) {
         String type = utils.getNameForClass(clazz);
         List<IdSources> sources = translationController.getIdSources(clazz, dataStage, legacyAuthorization);
-        Set<String> ids = new HashSet<>();
-        List<TargetInstance> instances = new ArrayList<>();
+        Set<String> searchableIds = new HashSet<>();
+        Set<String> nonSearchableIds = new HashSet<>();
+        List<TargetInstance> searchableInstances = new ArrayList<>();
+        List<TargetInstance> nonSearchableInstances = new ArrayList<>();
         int counter = 0;
         for (IdSources source : sources) {
             TargetInstance instance = translationController.createInstanceCombinedForIndexing(clazz, dataStage, false, legacyAuthorization, source);
             if (instance != null) {
                 counter++;
-                    ids.add(instance.getId());
-                    instances.add(instance);
-                if (instances.size() == BULK_INSTANCES_SIZE) {
-                    elasticSearchController.updateSearchIndex(instances, type, dataStage);
-                    instances = new ArrayList<>();
+                if (instance.isSearchable()) {
+                    searchableIds.add(instance.getId());
+                    searchableInstances.add(instance);
+                } else {
+                    nonSearchableIds.add(instance.getId());
+                    nonSearchableInstances.add(instance);
+                }
+                if (searchableInstances.size() == BULK_INSTANCES_SIZE) {
+                    elasticSearchController.updateSearchIndex(searchableInstances, type, dataStage);
+                    searchableInstances = new ArrayList<>();
+                }
+                if (nonSearchableInstances.size() == BULK_INSTANCES_SIZE) {
+                    elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
+                    nonSearchableInstances = new ArrayList<>();
                 }
             }
         }
-        if (instances.size() > 0) {
-            elasticSearchController.updateSearchIndex(instances, type, dataStage);
+        if (searchableInstances.size() > 0) {
+            elasticSearchController.updateSearchIndex(searchableInstances, type, dataStage);
         }
-        if (TargetInstance.isSearchable(clazz)) {
-            elasticSearchController.removeDeprecatedDocumentsFromSearchIndex(type, dataStage, ids);
-        } else {
-            elasticSearchController.removeDeprecatedDocumentsFromIdentifiersIndex(type, dataStage, ids);
+        if (nonSearchableInstances.size() > 0) {
+            elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
         }
+        elasticSearchController.removeDeprecatedDocumentsFromSearchIndex(type, dataStage, searchableIds);
+        elasticSearchController.removeDeprecatedDocumentsFromIdentifiersIndex(type, dataStage, nonSearchableIds);
         logger.info(String.format("Created %d instances for type %s!", counter, type));
     }
 
     public void incrementalUpdateFromV3ByType(Class<?> clazz, DataStage dataStage) {
         String type = utils.getNameForClass(clazz);
-        Set<String> ids = new HashSet<>();
+        Set<String> searchableIds = new HashSet<>();
+        Set<String> nonSearchableIds = new HashSet<>();
         boolean hasMore = true;
         int from = 0;
         while (hasMore) {
             TargetInstancesResult result = translationController.createInstancesFromV3ForIndexing(clazz, dataStage, false, from, BULK_INSTANCES_SIZE);
             List<TargetInstance> instances = result.getTargetInstances();
-            if (!CollectionUtils.isEmpty(instances)) {
-                instances.forEach(i -> ids.add(i.getId()));
-                if (TargetInstance.isSearchable(clazz)) {
-                    elasticSearchController.updateSearchIndex(instances, type, dataStage);
-                } else {
-                    elasticSearchController.updateIdentifiersIndex(instances, dataStage);
+            if (instances != null) {
+                List<TargetInstance> searchableInstances = new ArrayList<>();
+                List<TargetInstance> nonSearchableInstances = new ArrayList<>();
+                instances.forEach(instance -> {
+                    if (instance.isSearchable()) {
+                        searchableIds.add(instance.getId());
+                        searchableInstances.add(instance);
+                    } else {
+                        nonSearchableIds.add(instance.getId());
+                        nonSearchableInstances.add(instance);
+                    }
+                });
+                if (!CollectionUtils.isEmpty(searchableInstances)) {
+                    elasticSearchController.updateSearchIndex(searchableInstances, type, dataStage);
+                }
+                if (!CollectionUtils.isEmpty(nonSearchableInstances)) {
+                    elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
                 }
             }
             from = result.getFrom() + result.getSize();
             hasMore = from < result.getTotal();
         }
-        if (TargetInstance.isSearchable(clazz)) {
-            elasticSearchController.removeDeprecatedDocumentsFromSearchIndex(type, dataStage, ids);
-        } else {
-            elasticSearchController.removeDeprecatedDocumentsFromIdentifiersIndex(type, dataStage, ids);
-        }
+        elasticSearchController.removeDeprecatedDocumentsFromSearchIndex(type, dataStage, searchableIds);
+        elasticSearchController.removeDeprecatedDocumentsFromIdentifiersIndex(type, dataStage, nonSearchableIds);
     }
 
 
@@ -111,69 +131,77 @@ public class IndexingController {
     }
     public void fullReplacementCombinedByType(Class<?> clazz, DataStage dataStage, String legacyAuthorization) {
         String type = utils.getNameForClass(clazz);
-        if (TargetInstance.isSearchable(clazz)) {
-            logger.info(String.format("Creating index %s_%s for %s", dataStage, type.toLowerCase(), type));
-            recreateSearchIndex(dataStage, type, clazz);
-            logger.info(String.format("Successfully created index %s_%s for %s", dataStage, type.toLowerCase(), type));
-        }
+        logger.info(String.format("Creating index %s_searchable_%s for %s", dataStage, type.toLowerCase(), type));
+        recreateSearchIndex(dataStage, type, clazz);
+        logger.info(String.format("Successfully created index %s_searchable_%s for %s", dataStage, type.toLowerCase(), type));
         List<IdSources> sources = translationController.getIdSources(clazz, dataStage, legacyAuthorization);
-        Set<String> ids = new HashSet<>();
-        List<TargetInstance> instances = new ArrayList<>();
+        Set<String> nonSearchableIds = new HashSet<>();
+        List<TargetInstance> searchableInstances = new ArrayList<>();
+        List<TargetInstance> nonSearchableInstances = new ArrayList<>();
+        int counter = 0;
         for (IdSources source : sources) {
             TargetInstance instance = translationController.createInstanceCombinedForIndexing(clazz, dataStage, false, legacyAuthorization, source);
             if (instance != null) {
-                ids.add(instance.getId());
-                instances.add(instance);
-                if (instances.size() == BULK_INSTANCES_SIZE) {
-                    if (TargetInstance.isSearchable(clazz)) {
-                        elasticSearchController.updateSearchIndex(instances, type, dataStage);
-                    } else {
-                        elasticSearchController.updateIdentifiersIndex(instances, dataStage);
-                    }
-                    instances = new ArrayList<>();
+                counter++;
+                if (instance.isSearchable()) {
+                    searchableInstances.add(instance);
+                } else {
+                    nonSearchableIds.add(instance.getId());
+                    nonSearchableInstances.add(instance);
+                }
+                if (searchableInstances.size() == BULK_INSTANCES_SIZE) {
+                    elasticSearchController.updateSearchIndex(searchableInstances, type, dataStage);
+                    searchableInstances = new ArrayList<>();
+                }
+                if (nonSearchableInstances.size() == BULK_INSTANCES_SIZE) {
+                    elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
+                    nonSearchableInstances = new ArrayList<>();
                 }
             }
         }
-        if (instances.size() > 0) {
-            if (TargetInstance.isSearchable(clazz)) {
-                elasticSearchController.updateSearchIndex(instances, type, dataStage);
-            } else {
-                elasticSearchController.updateIdentifiersIndex(instances, dataStage);
-            }
+        if (searchableInstances.size() > 0) {
+            elasticSearchController.updateSearchIndex(searchableInstances, type, dataStage);
         }
-        if (!TargetInstance.isSearchable(clazz)) {
-            elasticSearchController.removeDeprecatedDocumentsFromIdentifiersIndex(type, dataStage, ids);
+        if (nonSearchableInstances.size() > 0) {
+            elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
         }
-        logger.info(String.format("Created %d instances for type %s!", ids.size(), type));
+        elasticSearchController.removeDeprecatedDocumentsFromIdentifiersIndex(type, dataStage, nonSearchableIds);
+        logger.info(String.format("Created %d instances for type %s!", counter, type));
     }
 
     public void fullReplacementFromV3ByType(Class<?> clazz, DataStage dataStage) {
         String type = utils.getNameForClass(clazz);
-        if (TargetInstance.isSearchable(clazz)) {
-            logger.info(String.format("Creating index %s_%s for %s", dataStage, type.toLowerCase(), type));
-            recreateSearchIndex(dataStage, type, clazz);
-            logger.info(String.format("Successfully created index %s_%s for %s", dataStage, type.toLowerCase(), type));
-        }
-        Set<String> ids = new HashSet<>();
+        logger.info(String.format("Creating index %s_searchable_%s for %s", dataStage, type.toLowerCase(), type));
+        recreateSearchIndex(dataStage, type, clazz);
+        logger.info(String.format("Successfully created index %s_searchable_%s for %s", dataStage, type.toLowerCase(), type));
+        Set<String> nonSearchableIds = new HashSet<>();
         boolean hasMore = true;
         int from = 0;
         while (hasMore) {
             TargetInstancesResult result = translationController.createInstancesFromV3ForIndexing(clazz, dataStage, false, from, BULK_INSTANCES_SIZE);
             List<TargetInstance> instances = result.getTargetInstances();
-            if (!CollectionUtils.isEmpty(instances)) {
-                instances.forEach(i -> ids.add(i.getId()));
-                if (TargetInstance.isSearchable(clazz)) {
-                    elasticSearchController.updateSearchIndex(instances, type, dataStage);
-                } else {
-                    elasticSearchController.updateIdentifiersIndex(instances, dataStage);
+            if (instances != null) {
+                List<TargetInstance> searchableInstances = new ArrayList<>();
+                List<TargetInstance> nonSearchableInstances = new ArrayList<>();
+                instances.forEach(instance -> {
+                    if (instance.isSearchable()) {
+                        searchableInstances.add(instance);
+                    } else {
+                        nonSearchableIds.add(instance.getId());
+                        nonSearchableInstances.add(instance);
+                    }
+                });
+                if (!CollectionUtils.isEmpty(searchableInstances)) {
+                    elasticSearchController.updateSearchIndex(searchableInstances, type, dataStage);
+                }
+                if (!CollectionUtils.isEmpty(nonSearchableInstances)) {
+                    elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
                 }
             }
             from = result.getFrom() + result.getSize();
             hasMore = from < result.getTotal();
         }
-        if (!TargetInstance.isSearchable(clazz)) {
-            elasticSearchController.removeDeprecatedDocumentsFromIdentifiersIndex(type, dataStage, ids);
-        }
+        elasticSearchController.removeDeprecatedDocumentsFromIdentifiersIndex(type, dataStage, nonSearchableIds);
     }
 
     public void recreateIdentifiersIndex(DataStage dataStage) {

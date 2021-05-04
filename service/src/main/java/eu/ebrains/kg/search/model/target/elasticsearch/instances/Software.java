@@ -42,6 +42,11 @@ public class Software implements TargetInstance {
     @FieldInfo(label = "Versions")
     private List<TargetInternalReference> versions;
 
+    @Override
+    public boolean isSearchable() {
+        return false;
+    }
+
     public void setTitle(String title) {
         setTitle(StringUtils.isBlank(title) ? null : new Value<>(title));
     }

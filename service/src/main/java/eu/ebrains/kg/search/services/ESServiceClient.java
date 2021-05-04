@@ -75,8 +75,18 @@ public class ESServiceClient {
                     " \"size\": %d,\n" +
                     " \"sort\": [\n" +
                     "    {\"_id\": \"asc\"}\n" +
-                    " ]\n" +
-                    "}", Constants.esQuerySize);
+                    " ],\n" +
+                    "  \"query\": {\n" +
+                    "    \"bool\": {\n" +
+                    "      \"must\": {\n" +
+                    "          \"term\": {\n" +
+                    "            \"type.value\": \"%s\"\n" +
+                    "          }\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "  },\n" +
+                    " \"_source\": \"false\"\n" +
+                    "}", Constants.esQuerySize, type);
         }
         return String.format("{\n" +
                 " \"size\": %d,\n" +
