@@ -32,34 +32,10 @@ const HitsPanelBase = ({ lists, itemComponent, getKey, onClick }) => (
 );
 
 
-const groupHitsByField = (hits, field) => {
-  return Object.values(hits.reduce((acc, hit, index) => {
-    const f = hit._source && hit._source[field];
-    const value = f && !Array.isArray(f) && (typeof f === "object"?f.value:value);
-    //console.log(value, value.startsWith("Probabilistic cytoarchitectonic"));
-    if (!value) {
-      acc[uniqueId()] = {
-        hits: [hit],
-        index: index
-      };
-      return acc;
-    }
-    const reg = /(Probabilistic cytoarchitectonic map of\s[^\s]+)\s.*/;
-    const [, test] = (typeof value === "string" && reg.test(value))?value.match(reg):[null, null];
-    const key = test?test: uniqueId(); // TODO: remove test and use value
-    if (!acc[key]) {
-      acc[key] = {
-        hits: [hit],
-        index: index
-      };
-    } else {
-      acc[key].hits.push(hit);
-    }
-    return acc;
-  }, {})).sort((a, b) => a.index < b.index).map(group => group.hits.length == 1?group.hits[0]:group.hits);
-};
+const mapStateToProps = state => {
+  //const { hits } = props;
+  const hits = state.search.hits;
 
-const groupHitsByScore = hits => {
   let trySplitResult = true;
   let isSortedByRelevance = false;
   try {
@@ -82,14 +58,7 @@ const groupHitsByScore = hits => {
   let limit = -1;
   if (trySplitResult) {
     try {
-      const values = hits.reduce((acc, hit) => {
-        if (Array.isArray(hit)) {
-          acc.push(...hit.map(h => h._score));
-        } else {
-          acc.push(hit._score);
-        }
-        return acc;
-      }, []);
+      const values = hits.map(hit => hit._score);
       const average = StatsHelpers.average(values);
       const standardDeviation = StatsHelpers.standardDeviation(values);
       limit = average + 2 * standardDeviation;
@@ -106,13 +75,7 @@ const groupHitsByScore = hits => {
   const moreHits = [];
   isSortedByRelevance ?
     hits.forEach(hit => {
-      let score = 0;
-      if (Array.isArray(hit)) {
-        score = hit.reduce((acc, h) => h._score > acc?h.score:acc, 0);
-      } else {
-        score = hit._score;
-      }
-      if (limit !== -1 && score > limit) {
+      if (limit !== -1 && hit._score > limit) {
         topMatchHits.push(hit);
       } else {
         moreHits.push(hit);
@@ -122,25 +85,19 @@ const groupHitsByScore = hits => {
       topMatchHits.push(hit);
     });
 
-  return [
-    {
-      id: 0,
-      title: null,
-      items: topMatchHits
-    },
-    {
-      id: 1,
-      title: (topMatchHits.length && moreHits.length) ? "Other results" : null,
-      items: moreHits
-    }
-  ];
-};
-
-const mapStateToProps = state => {
-  const test = groupHitsByField(state.search.hits, "title");
-  window.console.log(state.search.hits, test);
   return {
-    lists: groupHitsByScore(groupHitsByField(state.search.hits, "title")),
+    lists: [
+      {
+        id: 0,
+        title: null,
+        items: topMatchHits
+      },
+      {
+        id: 1,
+        title: (topMatchHits.length && moreHits.length) ? "Other results" : null,
+        items: moreHits
+      }
+    ],
     itemComponent: Hit,
     getKey: data => `${data?._source?.type?.value}/${data._id ? data._id : uniqueId()}`
   };
