@@ -41,8 +41,16 @@
       "path": "https://openminds.ebrains.eu/vocab/description"
     },
     {
-      "propertyName": "query:digitalIdentifier",
-      "path": "https://openminds.ebrains.eu/vocab/digitalIdentifier"
+      "propertyName": "query:doi",
+      "path": {
+        "@id": "https://openminds.ebrains.eu/vocab/digitalIdentifier",
+        "typeFilter": [
+          {
+            "@id": "https://openminds.ebrains.eu/core/DOI"
+          }
+        ]
+      },
+      "singleValue": "FIRST"
     },
     {
       "propertyName": "query:howToCite",

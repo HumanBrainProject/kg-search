@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 public class DatasetVersionV3 extends SourceInstanceV3 {
-    private List<String> digitalIdentifier;
+    private String doi;
     private String howToCite;
     private String description;
     private String fullName;
@@ -29,12 +29,12 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
         this.description = description;
     }
 
-    public List<String> getDigitalIdentifier() {
-        return digitalIdentifier;
+    public String getDoi() {
+        return doi;
     }
 
-    public void setDigitalIdentifier(List<String> digitalIdentifier) {
-        this.digitalIdentifier = digitalIdentifier;
+    public void setDoi(String doi) {
+        this.doi = doi;
     }
 
     public String getHowToCite() {

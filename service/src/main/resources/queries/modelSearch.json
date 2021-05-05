@@ -45,11 +45,19 @@
       "path": "https://openminds.ebrains.eu/vocab/homepage"
     },
     {
-      "propertyName": "query:digitalIdentifier",
+      "propertyName": "query:doi",
       "path": [
-        "https://openminds.ebrains.eu/vocab/digitalIdentifier",
+        {
+          "@id": "https://openminds.ebrains.eu/vocab/digitalIdentifier",
+          "typeFilter": [
+            {
+              "@id": "https://openminds.ebrains.eu/core/DOI"
+            }
+          ]
+        },
         "https://openminds.ebrains.eu/vocab/identifier"
-      ]
+      ],
+      "singleValue": "FIRST"
     },
     {
       "propertyName": "query:howToCite",

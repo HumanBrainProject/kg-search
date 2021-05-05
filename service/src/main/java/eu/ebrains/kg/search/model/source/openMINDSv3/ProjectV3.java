@@ -43,15 +43,15 @@ public class ProjectV3 extends SourceInstanceV3 {
     }
 
     public static class Publication {
-        private String digitalIdentifier;
+        private String doi;
         private String howToCite;
 
-        public String getDigitalIdentifier() {
-            return digitalIdentifier;
+        public String getDoi() {
+            return doi;
         }
 
-        public void setDigitalIdentifier(String digitalIdentifier) {
-            this.digitalIdentifier = digitalIdentifier;
+        public void setDoi(String doi) {
+            this.doi = doi;
         }
 
         public String getHowToCite() {
