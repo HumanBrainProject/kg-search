@@ -41,6 +41,13 @@ import java.util.stream.Collectors;
 
 class MappingControllerTest {
 
+    private final MetaModelUtils utils;
+
+
+    public MappingControllerTest(MetaModelUtils utils) {
+        this.utils = utils;
+    }
+
     @Test
     void generateMapping() {
         //Given
@@ -48,7 +55,8 @@ class MappingControllerTest {
         MappingController mappingController = new MappingController(new MetaModelUtils());
 
         //When
-        Constants.TARGET_MODELS_MAP.forEach((type, clazz) -> {
+        Constants.TARGET_MODELS_ORDER.forEach(clazz -> {
+            String type = utils.getNameForClass(clazz);
             System.out.printf("Now handling type: %s%n", type);
             Path path;
             String json;

@@ -27,6 +27,8 @@ import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.utils.MetaModelUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.ParameterizedType;
@@ -35,6 +37,7 @@ import java.util.*;
 
 @Component
 public class MappingController {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final MetaModelUtils utils;
 
     public MappingController(MetaModelUtils utils) {
@@ -45,11 +48,14 @@ public class MappingController {
         Map<String, Object> mapping = new LinkedHashMap<>();
         Map<String, Object> properties = new LinkedHashMap<>();
         Map<String, Object> timestamp = new LinkedHashMap<>();
+        properties.put("id", Map.of("type", "keyword"));
         properties.put("identifier", Map.of("type", "keyword"));
+        properties.put("type", Map.of("properties", Map.of("value", Map.of("type", "keyword"))));
         timestamp.put("type", "date");
         properties.put("@timestamp", timestamp);
         mapping.put("properties", properties);
         mapping.put("dynamic", false);
+        logger.info(String.format("Mapping created: %s", mapping));
         return mapping;
     }
 
@@ -60,8 +66,11 @@ public class MappingController {
         mapping.put("properties", properties);
         mapping.put("dynamic", false);
         timestamp.put("type", "date");
+        properties.put("id", Map.of("type", "keyword"));
+        properties.put("type", Map.of("type", "keyword"));
         properties.put("@timestamp", timestamp);
         properties.putAll(handleType(clazz, null));
+        logger.info(String.format("Mapping created: %s", mapping));
         return mapping;
     }
 

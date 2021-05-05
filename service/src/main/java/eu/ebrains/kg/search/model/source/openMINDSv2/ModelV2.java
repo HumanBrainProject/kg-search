@@ -23,21 +23,18 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv2;
 
-import eu.ebrains.kg.search.model.source.SourceInstance;
-import eu.ebrains.kg.search.model.source.commons.*;
+import eu.ebrains.kg.search.model.source.SourceInstanceV1andV2;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.*;
 
-import java.util.Date;
 import java.util.List;
 
-public class ModelV2 implements HasEmbargo, SourceInstance {
-    private String id;
+public class ModelV2 extends SourceInstanceV1andV2 implements HasEmbargo {
     private List<SourceExternalReference> fileBundle;
     private List<SourceInternalReference> custodian;
     private List<SourceInternalReference> mainContact;
     private String title;
     private List<String> modelFormat;
     private List<String> cellularTarget;
-    private String editorId;
     private String version;
     private List<String> studyTarget;
     private List<SourceInternalReference> usedDataset; //TODO: validate the type.
@@ -50,21 +47,6 @@ public class ModelV2 implements HasEmbargo, SourceInstance {
     private List<String> brainStructure;
     private List<SourceInternalReference> contributors;
     private List<String> embargo;
-    private String identifier;
-    private Date lastReleaseAt;
-    private Date firstReleaseAt;
-
-    public String getId() { return id; }
-
-    public void setId(String id) { this.id = id; }
-
-    public Date getLastReleaseAt() { return lastReleaseAt; }
-
-    public void setLastReleaseAt(Date lastReleaseAt) { this.lastReleaseAt = lastReleaseAt; }
-
-    public Date getFirstReleaseAt() { return firstReleaseAt; }
-
-    public void setFirstReleaseAt(Date firstReleaseAt) { this.firstReleaseAt = firstReleaseAt; }
 
     public List<SourceExternalReference> getFileBundle() { return fileBundle; }
 
@@ -89,10 +71,6 @@ public class ModelV2 implements HasEmbargo, SourceInstance {
     public List<String> getCellularTarget() { return cellularTarget; }
 
     public void setCellularTarget(List<String> cellularTarget) { this.cellularTarget = cellularTarget; }
-
-    public String getEditorId() { return editorId; }
-
-    public void setEditorId(String editorId) { this.editorId = editorId; }
 
     public String getVersion() { return version; }
 
@@ -138,10 +116,6 @@ public class ModelV2 implements HasEmbargo, SourceInstance {
     public List<String> getEmbargo() { return embargo; }
 
     public void setEmbargo(List<String> embargo) { this.embargo = embargo; }
-
-    public String getIdentifier() { return identifier; }
-
-    public void setIdentifier(String identifier) { this.identifier = identifier; }
 
     public List<SourceInternalReference> getUsedDataset() { return usedDataset; }
 

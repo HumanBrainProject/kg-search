@@ -49,6 +49,7 @@ import {faStickyNote} from "@fortawesome/free-solid-svg-icons/faStickyNote";
 import {faUnlock} from "@fortawesome/free-solid-svg-icons/faUnlock";
 import {faMoon} from "@fortawesome/free-solid-svg-icons/faMoon";
 import {faSun} from "@fortawesome/free-solid-svg-icons/faSun";
+import {faAngleDoubleDown} from "@fortawesome/free-solid-svg-icons/faAngleDoubleDown";
 
 library.add(
   faBan,
@@ -76,5 +77,6 @@ library.add(
   faStickyNote,
   faUnlock,
   faSun,
-  faMoon
+  faMoon,
+  faAngleDoubleDown
 );

@@ -23,35 +23,19 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
-import eu.ebrains.kg.search.model.source.SourceInstance;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
-public class DatasetV3 implements SourceInstance {
-    private String id;
-    private List<String> identifier;
+public class DatasetV3 extends SourceInstanceV3 {
     private String description;
-    private List<DigitalIdentifierV3> digitalIdentifier;
+    private String doi;
+    private String howToCite;
     private String fullName;
-    private List<DatasetVersionV3> datasetVersions;
     private String homepage;
-    private String shortName;
-
-    public String getId() { return id; }
-
-    public void setId(String id) { this.id = id; }
-
-    public List<String> getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(List<String> identifier) {
-        this.identifier = identifier;
-    }
+    private List<Version> versions;
+    private List<Author> author; //TODO: use plural naming when having a list as soon as query bug is fixed (same alias in different structure)
 
     public String getDescription() {
         return description;
@@ -61,44 +45,32 @@ public class DatasetV3 implements SourceInstance {
         this.description = description;
     }
 
-    public List<DigitalIdentifierV3> getDigitalIdentifier() {
-        return digitalIdentifier;
+    public String getDoi() {
+        return doi;
     }
 
-    public void setDigitalIdentifier(List<DigitalIdentifierV3> digitalIdentifier) {
-        this.digitalIdentifier = digitalIdentifier;
+    public void setDoi(String doi) {
+        this.doi = doi;
+    }
+
+    public String getHowToCite() {
+        return howToCite;
+    }
+
+    public void setHowToCite(String howToCite) {
+        this.howToCite = howToCite;
     }
 
     public String getFullName() {
         return fullName;
     }
 
-    public List<DatasetVersionV3> getDatasetVersions() {
-        return datasetVersions;
+    public List<Version> getVersions() {
+        return versions;
     }
 
-    public void setDatasetVersions(List<DatasetVersionV3> datasetVersions) {
-        LinkedList<String> result = new LinkedList<>();
-        Map<String, DatasetVersionV3> lookup = new HashMap<>();
-        datasetVersions.forEach(dv -> {
-            lookup.put(dv.getVersionIdentifier(), dv);
-            if(result.isEmpty()) {
-                result.add(dv.getVersionIdentifier());
-            } else {
-                String previousVersionIdentifier = dv.getPreviousVersionIdentifier();
-                if(previousVersionIdentifier != null) {
-                    int i = result.indexOf(previousVersionIdentifier);
-                    if(i == -1) {
-                        result.addLast(dv.getVersionIdentifier());
-                    } else {
-                        result.add(i, dv.getVersionIdentifier());
-                    }
-                } else {
-                    result.addFirst(dv.getVersionIdentifier());
-                }
-            }
-        });
-        this.datasetVersions = result.stream().map(lookup::get).collect(Collectors.toList());
+    public void setVersions(List<Version> versions) {
+        this.versions = versions;
     }
 
     public void setFullName(String fullName) {
@@ -113,11 +85,12 @@ public class DatasetV3 implements SourceInstance {
         this.homepage = homepage;
     }
 
-    public String getShortName() {
-        return shortName;
+    public List<Author> getAuthor() {
+        return author;
     }
 
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
+    public void setAuthor(List<Author> author) {
+        this.author = author;
     }
+
 }

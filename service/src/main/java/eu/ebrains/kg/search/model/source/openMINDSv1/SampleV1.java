@@ -24,22 +24,17 @@
 package eu.ebrains.kg.search.model.source.openMINDSv1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Date;
+
 import java.util.List;
 
-import eu.ebrains.kg.search.model.source.SourceInstance;
-import eu.ebrains.kg.search.model.source.commons.*;
+import eu.ebrains.kg.search.model.source.SourceInstanceV1andV2;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.*;
 
-public class SampleV1 implements HasEmbargo, SourceInstance {
-    private String id;
-    private String identifier;
-    private String editorId;
+public class SampleV1 extends SourceInstanceV1andV2 implements HasEmbargo {
     private String title;
     @JsonProperty("container_url") // TODO: get rid of _
     private String containerUrl;
     private String weightPreFixation;
-    private Date firstReleaseAt;
-    private Date lastReleaseAt;
     private List<SpecimenGroup> specimenGroups;
     private List<Subject> subjects;
     private List<String> methods;
@@ -50,26 +45,6 @@ public class SampleV1 implements HasEmbargo, SourceInstance {
     private List<String> parcellationAtlas;
     private List<SourceFile> files;
     private List<String> embargo;
-
-    public String getId() { return id; }
-
-    public void setId(String id) { this.id = id; }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
-    public String getEditorId() {
-        return editorId;
-    }
-
-    public void setEditorId(String editorId) {
-        this.editorId = editorId;
-    }
 
     public String getTitle() {
         return title;
@@ -93,22 +68,6 @@ public class SampleV1 implements HasEmbargo, SourceInstance {
 
     public void setWeightPreFixation(String weightPreFixation) {
         this.weightPreFixation = weightPreFixation;
-    }
-
-    public Date getFirstReleaseAt() {
-        return firstReleaseAt;
-    }
-
-    public void setFirstReleaseAt(Date firstReleaseAt) {
-        this.firstReleaseAt = firstReleaseAt;
-    }
-
-    public Date getLastReleaseAt() {
-        return lastReleaseAt;
-    }
-
-    public void setLastReleaseAt(Date lastReleaseAt) {
-        this.lastReleaseAt = lastReleaseAt;
     }
 
     public List<SpecimenGroup> getSpecimenGroups() {

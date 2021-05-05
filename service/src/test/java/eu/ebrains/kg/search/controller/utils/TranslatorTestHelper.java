@@ -86,8 +86,8 @@ public class TranslatorTestHelper {
     }
 
     public static List<String> compareModel(ModelV2 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        ModelTranslator translator = new ModelTranslator();
-        Model target = translator.translate(source, dataStage, liveMode);
+        ModelVersionOfKGV2Translator translator = new ModelVersionOfKGV2Translator();
+        ModelVersion target = translator.translate(source, dataStage, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
 
@@ -101,7 +101,7 @@ public class TranslatorTestHelper {
     }
 
     public static List<String> compareSubject(SubjectV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        SubjectTranslator translator = new SubjectTranslator();
+        SubjectOfKGV2Translator translator = new SubjectOfKGV2Translator();
         Subject target = translator.translate(source, dataStage, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
@@ -117,8 +117,8 @@ public class TranslatorTestHelper {
 
 
     public static List<String> compareSoftware(SoftwareV2 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        SoftwareTranslator translator = new SoftwareTranslator();
-        Software target = translator.translate(source, dataStage, liveMode);
+        SoftwareVersionOfKGV2Translator translator = new SoftwareVersionOfKGV2Translator();
+        SoftwareVersion target = translator.translate(source, dataStage, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
 
@@ -132,7 +132,7 @@ public class TranslatorTestHelper {
     }
 
     public static List<String> compareSample(SampleV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        SampleTranslator translator = new SampleTranslator();
+        SampleOfKGV2Translator translator = new SampleOfKGV2Translator();
         Sample target = translator.translate(source, dataStage, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
@@ -148,7 +148,7 @@ public class TranslatorTestHelper {
 
 
     public static List<String> compareProject(ProjectV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        ProjectTranslator translator = new ProjectTranslator();
+        ProjectOfKGV2Translator translator = new ProjectOfKGV2Translator();
         Project target = translator.translate(source, dataStage, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
@@ -162,8 +162,8 @@ public class TranslatorTestHelper {
     }
 
     public static List<String> compareDataset(DatasetV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        DatasetOfKGV2Translator translator = new DatasetOfKGV2Translator();
-        Dataset target = translator.translate(source, dataStage, liveMode);
+        DatasetVersionOfKGV2Translator translator = new DatasetVersionOfKGV2Translator();
+        DatasetVersion target = translator.translate(source, dataStage, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
         return compareResults(targetExpected, targetResult);

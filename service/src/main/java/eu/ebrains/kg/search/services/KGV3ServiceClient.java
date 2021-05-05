@@ -54,12 +54,22 @@ public class KGV3ServiceClient {
         return executeCallForIndexing(clazz, url);
     }
 
-    public <T> T executeQueryForLiveMode(String queryId, String id, DataStage dataStage, Class<T> clazz) {
+    public <T> T executeQueryForIndexing(Class<T> clazz, DataStage dataStage, String queryId, int from, int size) {
+        String url = String.format("%s/queries/%s/instances?stage=%s&from=%d&size=%d", kgCoreEndpoint, queryId, dataStage, from, size);
+        return executeCallForIndexing(clazz, url);
+    }
+
+    public <T> T executeQueryForIndexing(Class<T> clazz, DataStage dataStage, String queryId, String id) {
+        String url = String.format("%s/queries/%s/instances?stage=%s&instanceId=%s", kgCoreEndpoint, queryId, dataStage, id);
+        return executeCallForIndexing(clazz, url);
+    }
+
+    public <T> T executeQuery(Class<T> clazz, DataStage dataStage, String queryId, String id) {
         String url = String.format("%s/queries/%s/instances?stage=%s&instanceId=%s", kgCoreEndpoint, queryId, dataStage, id);
         return executeCallForLive(clazz, url);
     }
 
-    public Map getInstanceForLiveMode(String id, DataStage dataStage) {
+    public Map getInstance(String id, DataStage dataStage) {
         String url = String.format("%s/instances/%s?stage=%s&returnIncomingLinks=true", kgCoreEndpoint, id, dataStage);
         return executeCallForLive(Map.class, url);
     }

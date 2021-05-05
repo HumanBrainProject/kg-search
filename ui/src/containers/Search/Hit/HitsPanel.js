@@ -25,7 +25,7 @@ import React from "react";
 import uniqueId from "lodash/uniqueId";
 import { connect } from "react-redux";
 import * as actionsInstances from "../../../actions/actions.instances";
-import { ChevronList } from "../../../components/ChevronList/ChevronList";
+import { HitsList } from "../../../components/HitsList/HitsList";
 import { Hit } from "./Hit";
 import { StatsHelpers } from "../../../helpers/StatsHelpers";
 
@@ -33,10 +33,11 @@ import { StatsHelpers } from "../../../helpers/StatsHelpers";
 const HitsPanelBase = ({ lists, itemComponent, getKey, onClick }) => (
   <React.Fragment>
     {lists.map(list =>
-      <ChevronList key={list.id} title={list.title} items={list.items} itemComponent={itemComponent} getKey={getKey} onClick={onClick} />
+      <HitsList key={list.id} title={list.title} items={list.items} itemComponent={itemComponent} getKey={getKey} onClick={onClick} />
     )}
   </React.Fragment>
 );
+
 
 const mapStateToProps = state => {
   //const { hits } = props;

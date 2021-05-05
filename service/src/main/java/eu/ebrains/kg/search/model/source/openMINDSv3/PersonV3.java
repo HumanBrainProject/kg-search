@@ -25,9 +25,7 @@ package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import java.util.List;
 
-public class PersonV3 {
-    private String id;
-    private List<String> identifier;
+public class PersonV3 extends SourceInstanceV3 {
     private String familyName;
     private String givenName;
     private List<CustodianOfModel> custodianOfModel;
@@ -35,22 +33,6 @@ public class PersonV3 {
     private List<RelatedPublication> publications;
     private List<ModelContribution> modelContributions;
     private List<Contribution> contributions;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public List<String> getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(List<String> identifier) {
-        this.identifier = identifier;
-    }
 
     public String getFamilyName() {
         return familyName;

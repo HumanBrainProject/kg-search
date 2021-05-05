@@ -70,9 +70,15 @@ public class KGServiceClient {
         }
     }
 
-    public <T> T executeQuery(String query, DataStage dataStage, Class<T> clazz, String token) {
+    public <T> T executeQueryForIndexing(String query, DataStage dataStage, Class<T> clazz, String token) {
         DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
         String url = String.format("%s/%s/instances/?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, databaseScope, vocab);
+        return executeCall(clazz, token, url);
+    }
+
+    public <T> T executeQueryForIndexing(String query, DataStage dataStage, Class<T> clazz, String token, int from, int size) {
+        DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
+        String url = String.format("%s/%s/instances/?databaseScope=%s&vocab=%s&start=%d&size=%d", kgQueryEndpoint, query, databaseScope, vocab, from, size);
         return executeCall(clazz, token, url);
     }
 

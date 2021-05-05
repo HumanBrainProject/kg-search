@@ -24,11 +24,11 @@
 package eu.ebrains.kg.search.model.source;
 
 import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
-import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
 
 public class DatasetSources {
     private DatasetV1 datasetV1;
-    private DatasetV3 datasetV3;
+    private DatasetVersionV3 datasetVersionV3;
 
     public DatasetV1 getDatasetV1() {
         return datasetV1;
@@ -38,11 +38,11 @@ public class DatasetSources {
         this.datasetV1 = datasetV1;
     }
 
-    public DatasetV3 getDatasetV3() {
-        return datasetV3;
+    public DatasetVersionV3 getDatasetVersionV3() {
+        return datasetVersionV3;
     }
 
-    public void setDatasetV3(DatasetV3 datasetV3) {
-        this.datasetV3 = datasetV3;
+    public void setDatasetVersionV3(DatasetVersionV3 datasetVersionV3) {
+        this.datasetVersionV3 = datasetVersionV3;
     }
 }

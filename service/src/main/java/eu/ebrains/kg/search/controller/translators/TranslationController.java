@@ -29,32 +29,25 @@ import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.controller.kg.KGv2;
 import eu.ebrains.kg.search.controller.kg.KGv3;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.DatasetSources;
-import eu.ebrains.kg.search.model.source.PersonSources;
-import eu.ebrains.kg.search.model.source.ResultOfKGv2;
-import eu.ebrains.kg.search.model.source.ResultOfKGv3;
+import eu.ebrains.kg.search.model.source.*;
 import eu.ebrains.kg.search.model.source.openMINDSv1.*;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.PersonV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
-import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.PersonV3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstances;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.*;
 import eu.ebrains.kg.search.utils.IdUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -69,104 +62,95 @@ public class TranslationController {
         this.kgV3 = kgV3;
     }
 
-    private static class ResultOfKGV2PersonV1 extends ResultOfKGv2<PersonV1> {}
-    private static class ResultOfKGV2PersonV2 extends ResultOfKGv2<PersonV2> {}
-    private static class ResultOfKGV3PersonV3 extends ResultOfKGv3<PersonV3> {}
+    private static class ResultsOfKGV3PersonV3 extends ResultsOfKGv3<PersonV3> {}
 
-    private TargetInstances createContributors(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
+    private static class PersonV2Results extends ResultsOfKGv2<PersonV2> {}
+
+    private TargetInstance createContributorForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
         String queryForV1 = "query/minds/core/person/v1.0.0/search";
         String queryForV2 = "query/uniminds/core/person/v1.0.0/search";
-        logger.info("Starting to query contributors for v1");
-        ResultOfKGV2PersonV1 personsFromV1 = kgV2.executeQueryForIndexing(ResultOfKGV2PersonV1.class, queryForV1, legacyAuthorization, dataStage);
-        logger.info(String.format("Queried %s contributors for v1", CollectionUtils.isEmpty(personsFromV1.getResults()) ? 0 : personsFromV1.getResults().size()));
-        logger.info("Done querying contributors for v1");
-        logger.info("Starting to query contributors for v2");
-        ResultOfKGv2<PersonV2> personsFromV2 = kgV2.executeQueryForIndexing(ResultOfKGV2PersonV2.class, queryForV2, legacyAuthorization, dataStage);
-        logger.info(String.format("Queried %s contributors for v2", CollectionUtils.isEmpty(personsFromV2.getResults()) ? 0 : personsFromV2.getResults().size()));
-
-        logger.info("Starting to query contributors for v3");
-        ResultOfKGv3<PersonV3> personsFromV3 = kgV3.executeQueryForIndexing(ResultOfKGV3PersonV3.class, Queries.CONTRIBUTOR_QUERY_ID, dataStage);
-        logger.info("Done querying contributors for v3");
-
-        List<PersonSources> personSources = new ArrayList<>();
-        personsFromV1.getResults().forEach(p -> {
-            PersonSources source = new PersonSources();
-            personSources.add(source);
-            source.setPersonV1(p);
-        });
-
-        Map<String, PersonSources> personSourcesByV1Identifier = personSources.stream().collect(Collectors.toMap(k -> k.getPersonV1().getIdentifier(), v -> v));
-
-        personsFromV2.getResults().forEach(p -> {
-            PersonSources source = personSourcesByV1Identifier.get(p.getIdentifier());
-            if (source == null) {
-                source = new PersonSources();
-                personSources.add(source);
-            }
-            source.setPersonV2(p);
-        });
-
-        personsFromV3.getData().forEach(p -> {
-            String id = p.getIdentifier().stream().reduce(null, (found, i) -> {
-                if (found == null) {
-                    String uuid = IdUtils.getUUID(i);
-                    PersonSources source = personSourcesByV1Identifier.get(uuid);
-                    if (source != null) {
-                        source.setPersonV3(p);
-                        return uuid;
-                    }
+        PersonSources source = new PersonSources();
+        String idV1 = ids.getIdV1();
+        String idV2 = ids.getIdV2();
+        String idV3 = ids.getIdV3();
+        if (StringUtils.isNotBlank(idV1)) {
+            logger.info(String.format("Starting to query contributor %s for v1", idV1));
+            try {
+                PersonV1 personV1 = kgV2.executeQuery(PersonV1.class, dataStage, queryForV1, idV1, legacyAuthorization);
+                if (personV1 != null) {
+                    source.setPersonV1(personV1);
+                    logger.debug(String.format("Successfully queried contributor %s for v1", idV1));
+                } else {
+                    logger.debug(String.format("Failed to query contributor %s for v1", idV1));
                 }
-                return found;
-            });
-            if (id == null) {
-                PersonSources source = new PersonSources();
-                source.setPersonV3(p);
-                personSources.add(source);
+            } catch (WebClientResponseException e) {
+                if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                    logger.debug(String.format("The contributor %s for v1 is skipped because it is missing mandatory fields", idV1));
+                }
             }
-        });
+        }
+        if (StringUtils.isNotBlank(idV2)) {
+            logger.info(String.format("Starting to query contributor %s for v2", idV2));
+            try {
+                PersonV2 personV2 = kgV2.executeQuery(PersonV2.class, dataStage, queryForV2, idV2, legacyAuthorization);
+                if (personV2 != null) {
+                    source.setPersonV2(personV2);
+                    logger.debug(String.format("Successfully queried contributor %s for v2", idV2));
+                } else {
+                    logger.debug(String.format("Failed to query contributor %s for v2", idV2));
+                }
+            } catch (WebClientResponseException e) {
+                if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                    logger.debug(String.format("The contributor %s for v2 is skipped because it is missing mandatory fields", idV2));
+                }
+            }
 
-        ContributorOfKGV2Translator kgv2Translator = new ContributorOfKGV2Translator();
-        ContributorOfKgV3Translator kgV3Translator = new ContributorOfKgV3Translator();
-        List<TargetInstance> list = personSources.stream().map(p -> {
-            if (p.getPersonV3() != null) {
-                return kgV3Translator.translate(p.getPersonV3(), dataStage, liveMode);
+        }
+        if (StringUtils.isNotBlank(idV3)) {
+            logger.info(String.format("Starting to query contributor %s for v3", idV3));
+            ResultsOfKGv3<PersonV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3PersonV3.class, dataStage, Queries.CONTRIBUTOR_QUERY_ID, idV3);
+            if(queryResult != null) {
+                List<PersonV3> persons = queryResult.getData();
+                if (!CollectionUtils.isEmpty(persons)) {
+                    logger.debug(String.format("Successfully queried contributor %s for v3", idV3));
+                    PersonV3 person = persons.get(0);
+                    source.setPersonV3(person);
+                } else {
+                    ResultsOfKGv3.Error error = queryResult.getError();
+                    String e = error == null ? "" : String.format("([%d] %s)", error.getCode(), error.getMessage());
+                    logger.debug(String.format("Failed to query contributor %s for v3%s", idV3, e));
+                }
             }
-            return kgv2Translator.translate(p, dataStage, liveMode);
-        }).collect(Collectors.toList());
-        TargetInstances result = new TargetInstances();
-        result.setSearchableInstances(list);
-        result.setAllInstances(list);
-        return result;
+        }
+
+        Contributor ContributorOfKGV2 = null;
+        Contributor ContributorOfKGV3 = null;
+        if (source.getPersonV1() != null || source.getPersonV2() != null) {
+            ContributorOfKGV2Translator translator = new ContributorOfKGV2Translator();
+            ContributorOfKGV2 = translator.translate(source, dataStage, liveMode);
+        }
+        if (source.getPersonV3() != null) {
+            ContributorOfKgV3Translator translator = new ContributorOfKgV3Translator();
+            ContributorOfKGV3 = translator.translate(source.getPersonV3(), dataStage, liveMode);
+        }
+        return ContributorHelpers.merge(ContributorOfKGV2, ContributorOfKGV3);
     }
 
     public Contributor createContributorFromKGv2(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
-        PersonV2 personV2 = kgV2.fetchInstance(PersonV2.class, query, id, authorization, dataStage);
+        PersonV2 personV2 = kgV2.executeQuery(PersonV2.class, dataStage, query, id, authorization);
         ContributorOfKGV2Translator translator = new ContributorOfKGV2Translator();
         PersonSources personSource = new PersonSources();
         personSource.setPersonV2(personV2);
         return translator.translate(personSource, dataStage, liveMode);
     }
 
-    public Contributor createContributorFromKGv3(DataStage dataStage, boolean liveMode, String id) {
-        ResultOfKGV3PersonV3 resultOfKGV3PersonV3 = kgV3.executeQueryForLive(ResultOfKGV3PersonV3.class, Queries.CONTRIBUTOR_QUERY_ID, id, dataStage);
-        PersonV3 personV3 = resultOfKGV3PersonV3.getData().stream().findFirst().orElse(null);
-        if (personV3 != null) {
-            ContributorOfKgV3Translator translator = new ContributorOfKgV3Translator();
-            return translator.translate(personV3, dataStage, liveMode);
-        }
-        return null;
-    }
-
-    private static class PersonV2Result extends ResultOfKGv2<PersonV2> {
-    }
-
     public Contributor createContributorFromKGv2(DataStage dataStage, boolean liveMode, List<String> queries, String id, String authorization) {
         String personV1Query = queries.get(0);
         String personV2Query = queries.get(1);
         PersonSources personSource = new PersonSources();
-        PersonV1 personV1 = kgV2.fetchInstance(PersonV1.class, personV1Query, id, authorization, dataStage);
+        PersonV1 personV1 = kgV2.executeQuery(PersonV1.class, dataStage, personV1Query, id, authorization);
         personSource.setPersonV1(personV1);
-        PersonV2Result personV2Result = kgV2.fetchInstanceByIdentifier(PersonV2Result.class, personV2Query, personV1.getIdentifier(), authorization, dataStage);
+        PersonV2Results personV2Result = kgV2.executeQueryByIdentifier(PersonV2Results.class, dataStage, personV2Query, personV1.getIdentifier(), authorization);
         if (personV2Result != null && !CollectionUtils.isEmpty(personV2Result.getResults())) {
             PersonV2 personV2 = personV2Result.getResults().get(0);
             personSource.setPersonV2(personV2);
@@ -175,190 +159,490 @@ public class TranslationController {
         return translator.translate(personSource, dataStage, liveMode);
     }
 
-    private static class ResultOfKGV2SoftwareV2 extends ResultOfKGv2<SoftwareV2> {
-    }
-
-    public TargetInstances createSoftwares(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
-        String query = "query/softwarecatalog/software/softwareproject/v1.0.0/search";
-        logger.info("Starting to query software for v1");
-        ResultOfKGV2SoftwareV2 software = kgV2.executeQueryForIndexing(ResultOfKGV2SoftwareV2.class, query, legacyAuthorization, dataStage);
-        logger.info(String.format("Queried %s software for v1", CollectionUtils.isEmpty(software.getResults()) ? 0 : software.getResults().size()));
-        SoftwareTranslator translator = new SoftwareTranslator();
-        List<TargetInstance> list = software.getResults().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
-        TargetInstances result = new TargetInstances();
-        result.setSearchableInstances(list);
-        result.setAllInstances(list);
-        return result;
-    }
-
-    public Software createSoftwareFromKGv2(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
-        SoftwareV2 software = kgV2.fetchInstance(SoftwareV2.class, query, id, authorization, dataStage);
-        SoftwareTranslator translator = new SoftwareTranslator();
-        return translator.translate(software, dataStage, liveMode);
-    }
-
-    private static class ResultOfKGV2DatasetV1 extends ResultOfKGv2<DatasetV1> {
-    }
-
-    private static class ResultOfKGV3DatasetV3 extends ResultOfKGv3<DatasetV3> {
-    }
-
-    public TargetInstances createDatasets(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
-        String query = "query/minds/core/dataset/v1.0.0/search";
-        logger.info("Starting to query datasets for v1");
-        ResultOfKGV2DatasetV1 datasetV1 = kgV2.executeQueryForIndexing(ResultOfKGV2DatasetV1.class, query, legacyAuthorization, dataStage);
-        logger.info(String.format("Queried %s datasets for v1", CollectionUtils.isEmpty(datasetV1.getResults()) ? 0 : datasetV1.getResults().size()));
-        logger.info("Starting to query datasets for v3");
-        ResultOfKGv3<DatasetV3> datasetV3 = kgV3.executeQueryForIndexing(ResultOfKGV3DatasetV3.class, Queries.DATASET_QUERY_ID, dataStage);
-        logger.info(String.format("Queried %s datasets for v3", CollectionUtils.isEmpty(datasetV3.getData()) ? 0 : datasetV3.getData().size()));
-        List<DatasetSources> datasetSources = new ArrayList<>();
-        datasetV1.getResults().forEach(p -> {
-            DatasetSources source = new DatasetSources();
-            datasetSources.add(source);
-            source.setDatasetV1(p);
-        });
-
-        Map<String, DatasetSources> datasetSourcesByV1Identifier = datasetSources.stream().collect(Collectors.toMap(k -> k.getDatasetV1().getIdentifier(), v -> v));
-
-        datasetV3.getData().forEach(d -> {
-            String id = d.getIdentifier().stream().reduce(null, (found, i) -> {
-                if (found == null) {
-                    String uuid = IdUtils.getUUID(i);
-                    DatasetSources source = datasetSourcesByV1Identifier.get(uuid);
-                    if (source != null) {
-                        source.setDatasetV3(d);
-                        return uuid;
-                    }
-                }
-                return found;
-            });
-            if (id == null) {
-                DatasetSources source = new DatasetSources();
-                source.setDatasetV3(d);
-                datasetSources.add(source);
+    public Contributor createContributorFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultsOfKGV3PersonV3 result = kgV3.executeQuery(ResultsOfKGV3PersonV3.class, dataStage, Queries.CONTRIBUTOR_QUERY_ID, id);
+        if(result != null) {
+            List<PersonV3> persons = result.getData();
+            if(!CollectionUtils.isEmpty(persons)) {
+                PersonV3 person = persons.get(0);
+                ContributorOfKgV3Translator translator = new ContributorOfKgV3Translator();
+                return translator.translate(person, dataStage, liveMode);
             }
-        });
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Person %s does not exist!", id));
+    }
 
-        DatasetOfKGV2Translator kgv2Translator = new DatasetOfKGV2Translator();
-        DatasetOfKGV3Translator kgv3Translator = new DatasetOfKGV3Translator();
-        TargetInstances targetInstances = new TargetInstances();
-        datasetSources.forEach(d -> {
-            if (d.getDatasetV3() != null) {
-                targetInstances.addInstance(kgv3Translator.translate(d.getDatasetV3(), dataStage, liveMode, null), true);
-                List<DatasetVersionV3> datasetVersions = d.getDatasetV3().getDatasetVersions();
-                for (DatasetVersionV3 datasetVersion : datasetVersions) {
-                    String versionIdentifiers = datasetVersion.getVersionIdentifier();
-                    Dataset dataset = kgv3Translator.translate(d.getDatasetV3(), dataStage, liveMode, versionIdentifiers);
-                    targetInstances.addInstance(dataset, false);
+    public TargetInstance createSoftwareVersionForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
+        if (StringUtils.isNotBlank(ids.getIdV3())) {
+            String id = ids.getIdV3();
+            logger.info(String.format("Starting to query software %s for v3", id));
+            ResultsOfKGv3<SoftwareVersionV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3SoftwareVersionV3.class, dataStage, Queries.SOFTWARE_VERSION_QUERY_ID, id);
+            if(queryResult != null) {
+                List<SoftwareVersionV3> softwares = queryResult.getData();
+                if (!CollectionUtils.isEmpty(softwares)) {
+                    logger.debug(String.format("Successfully queried software %s for v3", id));
+                    SoftwareVersionV3 software = softwares.get(0);
+                    SoftwareVersionOfKGV3Translator translator = new SoftwareVersionOfKGV3Translator();
+                    return translator.translate(software, dataStage, liveMode);
+                } else {
+                    ResultsOfKGv3.Error error = queryResult.getError();
+                    String e = error == null ? "" : String.format("([%d] %s)", error.getCode(), error.getMessage());
+                    logger.debug(String.format("Failed to query software %s for v3%s", id, e));
                 }
-            } else {
-                targetInstances.addInstance(kgv2Translator.translate(d.getDatasetV1(), dataStage, liveMode), true);
             }
-        });
-        return targetInstances;
-    }
-
-    public Dataset createDatasetFromKGv2(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
-        DatasetV1 datasetV1 = kgV2.fetchInstance(DatasetV1.class, query, id, authorization, dataStage);
-        DatasetOfKGV2Translator translator = new DatasetOfKGV2Translator();
-        return translator.translate(datasetV1, dataStage, liveMode);
-    }
-
-    public Dataset createDatasetFromKGv3(DataStage dataStage, boolean liveMode, String id, String versionIdentifier) {
-        ResultOfKGV3DatasetV3 resultOfKGV3DatasetV3 = kgV3.executeQueryForLive(ResultOfKGV3DatasetV3.class, Queries.DATASET_QUERY_ID, id, dataStage);
-        DatasetV3 datasetV3 = resultOfKGV3DatasetV3.getData().stream().findFirst().orElse(null);
-        if (datasetV3 != null) {
-            DatasetOfKGV3Translator translator = new DatasetOfKGV3Translator();
-            return translator.translate(datasetV3, dataStage, liveMode, versionIdentifier);
+        } else if (StringUtils.isNotBlank(ids.getIdV2())) {
+            String query = "query/softwarecatalog/software/softwareproject/v1.0.0/search";
+            String id = ids.getIdV2();
+            logger.info(String.format("Starting to query software %s for v2", id));
+            try {
+                SoftwareV2 software = kgV2.executeQuery(SoftwareV2.class, dataStage, query, id, legacyAuthorization);
+                if (software != null) {
+                    logger.debug(String.format("Successfully queried software %s for v2", id));
+                    SoftwareVersionOfKGV2Translator translator = new SoftwareVersionOfKGV2Translator();
+                    return translator.translate(software, dataStage, liveMode);
+                } else {
+                    logger.debug(String.format("Failed to query software %s for v2", id));
+                }
+            } catch (WebClientResponseException e) {
+                if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                    logger.debug(String.format("The software %s for v2 is skipped because it is missing mandatory fields", id));
+                } else {
+                    throw e;
+                }
+            }
         }
         return null;
     }
 
-    private static class ResultOfKGV2ModelV2 extends ResultOfKGv2<ModelV2> {
+    public SoftwareVersion createSoftwareVersionFromKGv2(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
+        SoftwareV2 software = kgV2.executeQuery(SoftwareV2.class, dataStage, query, id, authorization);
+        SoftwareVersionOfKGV2Translator translator = new SoftwareVersionOfKGV2Translator();
+        return translator.translate(software, dataStage, liveMode);
     }
 
-    public TargetInstances createModels(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
-        String query = "query/uniminds/core/modelinstance/v1.0.0/search";
-        logger.info("Starting to query models for v1");
-        ResultOfKGV2ModelV2 model = kgV2.executeQueryForIndexing(ResultOfKGV2ModelV2.class, query, legacyAuthorization, dataStage);
-        logger.info(String.format("Queried %s models for v1", CollectionUtils.isEmpty(model.getResults()) ? 0 : model.getResults().size()));
-        ModelTranslator translator = new ModelTranslator();
-        List<TargetInstance> list = model.getResults().stream().map(m -> (TargetInstance) translator.translate(m, dataStage, liveMode)).collect(Collectors.toList());
-        TargetInstances result = new TargetInstances();
-        result.setSearchableInstances(list);
-        result.setAllInstances(list);
+    private static class ResultsOfKGV3DatasetV3 extends ResultsOfKGv3<DatasetV3> {
+    }
+
+    private static class ResultsOfKGV3DatasetVersionV3 extends ResultsOfKGv3<DatasetVersionV3> {
+    }
+
+    public TargetInstance createDatasetVersionForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
+        if (StringUtils.isNotBlank(ids.getIdV3())) {
+            String id = ids.getIdV3();
+            logger.info(String.format("Starting to query datasetVersion %s for v3", id));
+            ResultsOfKGv3<DatasetVersionV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3DatasetVersionV3.class, dataStage, Queries.DATASET_VERSION_QUERY_ID, id);
+            if(queryResult != null) {
+                List<DatasetVersionV3> datasetVersions = queryResult.getData();
+                if (!CollectionUtils.isEmpty(datasetVersions)) {
+                    logger.debug(String.format("Successfully queried datasetVersion %s for v3", id));
+                    DatasetVersionV3 datasetVersion = datasetVersions.get(0);
+                    DatasetVersionOfKGV3Translator translator = new DatasetVersionOfKGV3Translator();
+                    return translator.translate(datasetVersion, dataStage, liveMode);
+                } else {
+                    ResultsOfKGv3.Error error = queryResult.getError();
+                    String e = error == null ? "" : String.format("([%d] %s)", error.getCode(), error.getMessage());
+                    logger.debug(String.format("Failed to query datasetVersion %s for v3%s", id, e));
+                }
+            }
+
+        } else if (StringUtils.isNotBlank(ids.getIdV1())) {
+            String id = ids.getIdV1();
+            logger.info(String.format("Starting to query dataset %s for v1", id));
+            try {
+                String query = "query/minds/core/dataset/v1.0.0/search";
+                DatasetV1 dataset = kgV2.executeQuery(DatasetV1.class, dataStage, query, id, legacyAuthorization);
+                if (dataset != null) {
+                    logger.debug(String.format("Successfully queried dataset %s for v1", id));
+                    DatasetVersionOfKGV2Translator translator = new DatasetVersionOfKGV2Translator();
+                    return translator.translate(dataset, dataStage, liveMode);
+                } else {
+                    logger.debug(String.format("Failed to query dataset %s for v1", id));
+                }
+            } catch (WebClientResponseException e) {
+                if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                    logger.debug(String.format("The dataset %s for v1 is skipped because it is missing mandatory fields", id));
+                } else {
+                    throw e;
+                }
+            }
+
+        }
+        return null;
+    }
+
+    public DatasetVersion createDatasetVersionFromKGv2(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
+        DatasetV1 datasetV1 = kgV2.executeQuery(DatasetV1.class, dataStage, query, id, authorization);
+        DatasetVersionOfKGV2Translator translator = new DatasetVersionOfKGV2Translator();
+        return translator.translate(datasetV1, dataStage, liveMode);
+    }
+
+    public DatasetVersion createDatasetVersionFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultsOfKGV3DatasetVersionV3 result = kgV3.executeQuery(ResultsOfKGV3DatasetVersionV3.class, dataStage, Queries.DATASET_VERSION_QUERY_ID, id);
+        if(result != null) {
+            List<DatasetVersionV3> datasetVersions = result.getData();
+            if (!CollectionUtils.isEmpty(datasetVersions)) {
+                DatasetVersionV3 datasetVersion = datasetVersions.get(0);
+                DatasetVersionOfKGV3Translator translator = new DatasetVersionOfKGV3Translator();
+                return translator.translate(datasetVersion, dataStage, liveMode);
+            }
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("DatasetVersion %s does not exist!", id));
+    }
+
+    private static class ResultsOfKGV3ModelVersionV3 extends ResultsOfKGv3<ModelVersionV3> {}
+
+    public ModelVersion createModelVersionFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultsOfKGV3ModelVersionV3 result = kgV3.executeQuery(ResultsOfKGV3ModelVersionV3.class, dataStage, Queries.MODEL_VERSION_QUERY_ID, id);
+        if(result != null) {
+            List<ModelVersionV3> modelVersions = result.getData();
+            if (!CollectionUtils.isEmpty(modelVersions)) {
+                ModelVersionV3 modelVersion = modelVersions.get(0);
+                ModelVersionOfKGV3Translator translator = new ModelVersionOfKGV3Translator();
+                return translator.translate(modelVersion, dataStage, liveMode);
+            }
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("ModelVersion %s does not exist!", id));
+    }
+
+    private static class ResultsOfKGV3SoftwareVersionV3 extends ResultsOfKGv3<SoftwareVersionV3> {}
+
+    public SoftwareVersion createSoftwareVersionFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultsOfKGV3SoftwareVersionV3 result = kgV3.executeQuery(ResultsOfKGV3SoftwareVersionV3.class, dataStage, Queries.SOFTWARE_VERSION_QUERY_ID, id);
+        if(result != null) {
+            List<SoftwareVersionV3> softwareVersions = result.getData();
+            if (!CollectionUtils.isEmpty(softwareVersions)) {
+                SoftwareVersionV3 softwareVersion = softwareVersions.get(0);
+                SoftwareVersionOfKGV3Translator translator = new SoftwareVersionOfKGV3Translator();
+                return translator.translate(softwareVersion, dataStage, liveMode);
+            }
+        }
+
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("SoftwareVersion %s does not exist!", id));
+    }
+
+    public Project createProjectFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultsOfKGV3ProjectV3 result = kgV3.executeQuery(ResultsOfKGV3ProjectV3.class, dataStage, Queries.PROJECT_QUERY_ID, id);
+        if(result != null) {
+            List<ProjectV3> projects = result.getData();
+            if (!CollectionUtils.isEmpty(projects)) {
+                ProjectV3 project = projects.get(0);
+                ProjectOfKGV3Translator translator = new ProjectOfKGV3Translator();
+                return translator.translate(project, dataStage, liveMode);
+            }
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("SoftwareVersion %s does not exist!", id));
+    }
+
+    public Subject createSubjectFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultsOfKGV3SubjectV3 result = kgV3.executeQuery(ResultsOfKGV3SubjectV3.class, dataStage, Queries.SUBJECT_QUERY_ID, id);
+        if(result != null) {
+            List<SubjectV3> subjects = result.getData();
+            if (!CollectionUtils.isEmpty(subjects)) {
+                SubjectV3 subject = subjects.get(0);
+                SubjectOfKGV3Translator translator = new SubjectOfKGV3Translator();
+                return translator.translate(subject, dataStage, liveMode);
+            }
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("SoftwareVersion %s does not exist!", id));
+    }
+
+    public Sample createSampleFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultsOfKGV3SampleV3 result = kgV3.executeQuery(ResultsOfKGV3SampleV3.class, dataStage, Queries.SAMPLE_QUERY_ID, id);
+        if(result != null) {
+            List<SampleV3> samples = result.getData();
+            if (!CollectionUtils.isEmpty(samples)) {
+                SampleV3 sample = samples.get(0);
+                SampleOfKGV3Translator translator = new SampleOfKGV3Translator();
+                return translator.translate(sample, dataStage, liveMode);
+            }
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("SoftwareVersion %s does not exist!", id));
+    }
+
+    public TargetInstancesResult createDatasetsForIndexing(DataStage dataStage, boolean liveMode, int from, int size) {
+        logger.info("Starting to query datasets for v3");
+        ResultsOfKGv3<DatasetV3> datasets = kgV3.executeQueryForIndexing(ResultsOfKGV3DatasetV3.class, dataStage, Queries.DATASET_QUERY_ID, from, size);
+        logger.info(String.format("Queried %d datasets for v3", CollectionUtils.isEmpty(datasets.getData()) ? 0 : datasets.getData().size()));
+        DatasetOfKGV3Translator translator = new DatasetOfKGV3Translator();
+        List<TargetInstance> instances = datasets.getData().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).filter(Objects::nonNull).collect(Collectors.toList());
+        TargetInstancesResult result = new TargetInstancesResult();
+        result.setTargetInstances(instances);
+        result.setFrom(datasets.getFrom());
+        result.setSize(datasets.getSize());
+        result.setTotal(datasets.getTotal());
         return result;
     }
 
-    public Model createModelFromKGv2(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
-        ModelV2 model = kgV2.fetchInstance(ModelV2.class, query, id, authorization, dataStage);
-        ModelTranslator translator = new ModelTranslator();
+    public TargetInstancesResult createModelsForIndexing(DataStage dataStage, boolean liveMode, int from, int size) {
+        logger.info("Starting to query models for v3");
+        ResultsOfKGv3<ModelV3> models = kgV3.executeQueryForIndexing(ResultsOfKGV3ModelV3.class, dataStage, Queries.MODEL_QUERY_ID, from, size);
+        logger.info(String.format("Queried %d models for v3", CollectionUtils.isEmpty(models.getData()) ? 0 : models.getData().size()));
+        ModelOfKGV3Translator translator = new ModelOfKGV3Translator();
+        List<TargetInstance> instances = models.getData().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).filter(Objects::nonNull).collect(Collectors.toList());
+        TargetInstancesResult result = new TargetInstancesResult();
+        result.setTargetInstances(instances);
+        result.setFrom(models.getFrom());
+        result.setSize(models.getSize());
+        result.setTotal(models.getTotal());
+        return result;
+    }
+
+
+    public TargetInstancesResult createSoftwaresForIndexing(DataStage dataStage, boolean liveMode, int from, int size) {
+        logger.info("Starting to query softwares for v3");
+        ResultsOfKGv3<SoftwareV3> softwares = kgV3.executeQueryForIndexing(ResultsOfKGV3SoftwareV3.class, dataStage, Queries.SOFTWARE_QUERY_ID, from, size);
+        logger.info(String.format("Queried %d softwares for v3", CollectionUtils.isEmpty(softwares.getData()) ? 0 : softwares.getData().size()));
+        SoftwareOfKGV3Translator translator = new SoftwareOfKGV3Translator();
+        List<TargetInstance> instances = softwares.getData().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).filter(Objects::nonNull).collect(Collectors.toList());
+        TargetInstancesResult result = new TargetInstancesResult();
+        result.setTargetInstances(instances);
+        result.setFrom(softwares.getFrom());
+        result.setSize(softwares.getSize());
+        result.setTotal(softwares.getTotal());
+        return result;
+    }
+
+    public Dataset createDatasetFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultsOfKGV3DatasetV3 result = kgV3.executeQuery(ResultsOfKGV3DatasetV3.class, dataStage, Queries.DATASET_QUERY_ID, id);
+        if(result != null) {
+            List<DatasetV3> datasets = result.getData();
+            if (!CollectionUtils.isEmpty(datasets)) {
+                DatasetV3 dataset = datasets.get(0);
+                DatasetOfKGV3Translator translator = new DatasetOfKGV3Translator();
+                return translator.translate(dataset, dataStage, liveMode);
+            }
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Dataset %s does not exist!", id));
+    }
+
+    private static class ResultsOfKGV3ModelV3 extends ResultsOfKGv3<ModelV3> {}
+
+    public Model createModelFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultsOfKGV3ModelV3 result = kgV3.executeQuery(ResultsOfKGV3ModelV3.class, dataStage, Queries.MODEL_QUERY_ID, id);
+        if(result != null) {
+            List<ModelV3> models = result.getData();
+            if (!CollectionUtils.isEmpty(models)) {
+                ModelV3 model = models.get(0);
+                ModelOfKGV3Translator translator = new ModelOfKGV3Translator();
+                return translator.translate(model, dataStage, liveMode);
+            }
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Model %s does not exist!", id));
+    }
+
+    private static class ResultsOfKGV3SoftwareV3 extends ResultsOfKGv3<SoftwareV3> {}
+
+    public Software createSoftwareFromKGv3(DataStage dataStage, boolean liveMode, String id) {
+        ResultsOfKGV3SoftwareV3 result = kgV3.executeQuery(ResultsOfKGV3SoftwareV3.class, dataStage, Queries.SOFTWARE_QUERY_ID, id);
+        if(result != null) {
+            List<SoftwareV3> softwares = result.getData();
+            if (!CollectionUtils.isEmpty(softwares)) {
+                SoftwareV3 software = softwares.get(0);
+                SoftwareOfKGV3Translator translator = new SoftwareOfKGV3Translator();
+                return translator.translate(software, dataStage, liveMode);
+            }
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Software %s does not exist!", id));
+    }
+
+    public TargetInstance createModelVersionForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
+        if (StringUtils.isNotBlank(ids.getIdV3())) {
+            String id = ids.getIdV3();
+            logger.info(String.format("Starting to query modelVersion %s for v3", id));
+            ResultsOfKGv3<ModelVersionV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3ModelVersionV3.class, dataStage, Queries.MODEL_VERSION_QUERY_ID, id);
+            if(queryResult != null) {
+                List<ModelVersionV3> modelVersions = queryResult.getData();
+                if (!CollectionUtils.isEmpty(modelVersions)) {
+                    logger.debug(String.format("Successfully queried modelVersion %s for v3", id));
+                    ModelVersionV3 modelVersion = modelVersions.get(0);
+                    ModelVersionOfKGV3Translator translator = new ModelVersionOfKGV3Translator();
+                    return translator.translate(modelVersion, dataStage, liveMode);
+                } else {
+                    ResultsOfKGv3.Error error = queryResult.getError();
+                    String e = error == null ? "" : String.format("([%d] %s)", error.getCode(), error.getMessage());
+                    logger.debug(String.format("Failed to query modelVersion %s for v3%s", id, e));
+                }
+            }
+        } else if (StringUtils.isNotBlank(ids.getIdV2())) {
+            String query = "query/uniminds/core/modelinstance/v1.0.0/search";
+            String id = ids.getIdV2();
+            logger.info(String.format("Starting to query model %s for v2", id));
+            try {
+                ModelV2 model = kgV2.executeQuery(ModelV2.class, dataStage, query, id, legacyAuthorization);
+                if (model != null) {
+                    logger.debug(String.format("Successfully queried model %s for v2", id));
+                    ModelVersionOfKGV2Translator translator = new ModelVersionOfKGV2Translator();
+                    return translator.translate(model, dataStage, liveMode);
+                } else {
+                    logger.debug(String.format("Failed to query model %s for v2", id));
+                }
+            } catch (WebClientResponseException e) {
+                if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                    logger.debug(String.format("The model %s for v2 is skipped because it is missing mandatory fields", id));
+                } else {
+                    throw e;
+                }
+            }
+        }
+        return null;
+    }
+
+
+    public ModelVersion createModelVersionFromKGv2(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
+        ModelV2 model = kgV2.executeQuery(ModelV2.class, dataStage, query, id, authorization);
+        ModelVersionOfKGV2Translator translator = new ModelVersionOfKGV2Translator();
         return translator.translate(model, dataStage, liveMode);
     }
 
-    private static class ResultOfKGV2ProjectV1 extends ResultOfKGv2<ProjectV1> {
-    }
+    private static class ResultsOfKGV3ProjectV3 extends ResultsOfKGv3<ProjectV3> {}
 
-    public TargetInstances createProjects(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
-        String query = "query/minds/core/placomponent/v1.0.0/search";
-        logger.info("Starting to query projects for v1");
-        ResultOfKGV2ProjectV1 project = kgV2.executeQueryForIndexing(ResultOfKGV2ProjectV1.class, query, legacyAuthorization, dataStage);
-        logger.info(String.format("Queried %s projects for v1", CollectionUtils.isEmpty(project.getResults()) ? 0 : project.getResults().size()));
-        ProjectTranslator translator = new ProjectTranslator();
-        List<TargetInstance> list = project.getResults().stream().map(p -> (TargetInstance) translator.translate(p, dataStage, liveMode)).collect(Collectors.toList());
-        TargetInstances result = new TargetInstances();
-        result.setSearchableInstances(list);
-        result.setAllInstances(list);
-        return result;
+    public TargetInstance createProjectForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
+        if (StringUtils.isNotBlank(ids.getIdV3())) {
+            String id = ids.getIdV3();
+            logger.info(String.format("Starting to query project %s for v3", id));
+            ResultsOfKGv3<ProjectV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3ProjectV3.class, dataStage, Queries.PROJECT_QUERY_ID, id);
+            if(queryResult != null) {
+                List<ProjectV3> projects  = queryResult.getData();
+                if (!CollectionUtils.isEmpty(projects)) {
+                    logger.debug(String.format("Successfully queried project %s for v3", id));
+                    ProjectV3 project = projects.get(0);
+                    ProjectOfKGV3Translator translator = new ProjectOfKGV3Translator();
+                    return translator.translate(project, dataStage, liveMode);
+                } else {
+                    ResultsOfKGv3.Error error = queryResult.getError();
+                    String e = error == null?"":String.format("([%d] %s)", error.getCode(), error.getMessage());
+                    logger.debug(String.format("Failed to query project %s for v3%s", id, e));
+                }
+            }
+        } else if (StringUtils.isNotBlank(ids.getIdV1())) {
+            String id = ids.getIdV1();
+            logger.info(String.format("Starting to query project %s for v1", id));
+            try {
+                String query = "query/minds/core/placomponent/v1.0.0/search";
+                ProjectV1 project = kgV2.executeQuery(ProjectV1.class, dataStage, query, id, legacyAuthorization);
+                if (project != null) {
+                    logger.debug(String.format("Successfully queried project %s for v1", id));
+                    ProjectOfKGV2Translator translator = new ProjectOfKGV2Translator();
+                    return translator.translate(project, dataStage, liveMode);
+                } else {
+                    logger.debug(String.format("Failed to query project %s for v1", id));
+                }
+            } catch (WebClientResponseException e) {
+                if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                    logger.debug(String.format("The project %s for v1 is skipped because it is missing mandatory fields", id));
+                } else {
+                    throw e;
+                }
+            }
+
+        }
+        return null;
     }
 
     public Project createProjectFromKGv2(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
-        ProjectV1 project = kgV2.fetchInstance(ProjectV1.class, query, id, authorization, dataStage);
-        ProjectTranslator translator = new ProjectTranslator();
+        ProjectV1 project = kgV2.executeQuery(ProjectV1.class, dataStage, query, id, authorization);
+        ProjectOfKGV2Translator translator = new ProjectOfKGV2Translator();
         return translator.translate(project, dataStage, liveMode);
     }
 
-    private static class ResultOfKGV2SampleV1 extends ResultOfKGv2<SampleV1> {
-    }
+    private static class ResultsOfKGV3SampleV3 extends ResultsOfKGv3<SampleV3> {}
 
-    public TargetInstances createSamples(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
-        String query = "query/minds/experiment/sample/v1.0.0/search";
-        logger.info("Starting to query samples for v1");
-        ResultOfKGV2SampleV1 sample = kgV2.executeQueryForIndexing(ResultOfKGV2SampleV1.class, query, legacyAuthorization, dataStage);
-        logger.info(String.format("Queried %s samples for v1", CollectionUtils.isEmpty(sample.getResults()) ? 0 : sample.getResults().size()));
-        SampleTranslator translator = new SampleTranslator();
-        List<TargetInstance> list = sample.getResults().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
-        TargetInstances result = new TargetInstances();
-        result.setSearchableInstances(list);
-        result.setAllInstances(list);
-        return result;
+    public TargetInstance createSampleForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
+        if (StringUtils.isNotBlank(ids.getIdV3())) {
+            String id = ids.getIdV3();
+            logger.info(String.format("Starting to query sample %s for v3", id));
+            ResultsOfKGv3<SampleV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3SampleV3.class, dataStage, Queries.SAMPLE_QUERY_ID, id);
+            if(queryResult != null) {
+                List<SampleV3> samples = queryResult.getData();
+                if (!CollectionUtils.isEmpty(samples)) {
+                    logger.debug(String.format("Successfully queried sample %s for v3", id));
+                    SampleV3 sample = samples.get(0);
+                    SampleOfKGV3Translator translator = new SampleOfKGV3Translator();
+                    return translator.translate(sample, dataStage, liveMode);
+                } else {
+                    ResultsOfKGv3.Error error = queryResult.getError();
+                    String e = error == null?"":String.format("([%d] %s)", error.getCode(), error.getMessage());
+                    logger.debug(String.format("Failed to query sample %s for v3%s", id, e));
+                }
+            }
+        } else if (StringUtils.isNotBlank(ids.getIdV1())) {
+            String query = "query/minds/experiment/sample/v1.0.0/search";
+            String id = ids.getIdV1();
+            logger.info(String.format("Starting to query sample %s for v1", id));
+            try {
+                SampleV1 sample = kgV2.executeQuery(SampleV1.class, dataStage, query, id, legacyAuthorization);
+                if (sample != null) {
+                    logger.info(String.format("Successfully query sample %s for v1", id));
+                    SampleOfKGV2Translator translator = new SampleOfKGV2Translator();
+                    return translator.translate(sample, dataStage, liveMode);
+                } else {
+                    logger.debug(String.format("Failed to query sample %s for v1", id));
+                }
+            } catch (WebClientResponseException e) {
+                if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                    logger.debug(String.format("The sample %s for v1 is skipped because it is missing mandatory fields", id));
+                } else {
+                    throw e;
+                }
+            }
+        }
+        return null;
     }
 
     public Sample createSampleFromKGv2(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
-        SampleV1 sample = kgV2.fetchInstance(SampleV1.class, query, id, authorization, dataStage);
-        SampleTranslator translator = new SampleTranslator();
+        SampleV1 sample = kgV2.executeQuery(SampleV1.class, dataStage, query, id, authorization);
+        SampleOfKGV2Translator translator = new SampleOfKGV2Translator();
         return translator.translate(sample, dataStage, liveMode);
     }
 
-    private static class ResultOfKGV2SubjectV1 extends ResultOfKGv2<SubjectV1> {
-    }
+    private static class ResultsOfKGV3SubjectV3 extends ResultsOfKGv3<SubjectV3> {}
 
-    public TargetInstances createSubjects(DataStage dataStage, boolean liveMode, String legacyAuthorization) {
-        String query = "query/minds/experiment/subject/v1.0.0/search";
-        logger.info("Starting to query subjects for v1");
-        ResultOfKGV2SubjectV1 subject = kgV2.executeQueryForIndexing(ResultOfKGV2SubjectV1.class, query, legacyAuthorization, dataStage);
-        logger.info(String.format("Queried %s subjects for v1", CollectionUtils.isEmpty(subject.getResults()) ? 0 : subject.getResults().size()));
-        SubjectTranslator translator = new SubjectTranslator();
-        List<TargetInstance> list = subject.getResults().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
-        TargetInstances result = new TargetInstances();
-        result.setSearchableInstances(list);
-        result.setAllInstances(list);
-        return result;
+    public TargetInstance createSubjectForIndexing(DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources ids) {
+        if (StringUtils.isNotBlank(ids.getIdV3())) {
+            String id = ids.getIdV3();
+            logger.info(String.format("Starting to query subject %s for v3", id));
+            ResultsOfKGv3<SubjectV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3SubjectV3.class, dataStage, Queries.SAMPLE_QUERY_ID, id);
+            if(queryResult != null) {
+                List<SubjectV3> subjects = queryResult.getData();
+                if (!CollectionUtils.isEmpty(subjects)) {
+                    logger.debug(String.format("Successfully queried subject %s for v3", id));
+                    SubjectV3 subject = subjects.get(0);
+                    SubjectOfKGV3Translator translator = new SubjectOfKGV3Translator();
+                    return translator.translate(subject, dataStage, liveMode);
+                } else {
+                    ResultsOfKGv3.Error error = queryResult.getError();
+                    String e = error == null?"":String.format("([%d] %s)", error.getCode(), error.getMessage());
+                    logger.debug(String.format("Failed to query subject %s for v3%s", id, e));
+                }
+            }
+        } else if (StringUtils.isNotBlank(ids.getIdV1())) {
+            String query = "query/minds/experiment/subject/v1.0.0/search";
+            String id = ids.getIdV1();
+            logger.info(String.format("Starting to query subject %s for v1", id));
+            try {
+                SubjectV1 subject = kgV2.executeQuery(SubjectV1.class, dataStage, query, id, legacyAuthorization);
+                if (subject != null) {
+                    logger.info(String.format("Successfully query subject %s for v1", id));
+                    SubjectOfKGV2Translator translator = new SubjectOfKGV2Translator();
+                    return translator.translate(subject, dataStage, liveMode);
+                } else {
+                    logger.debug(String.format("Failed to query subject %s for v1", id));
+                }
+            } catch (WebClientResponseException e) {
+                if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                    logger.debug(String.format("The subject %s for v1 is skipped because it is missing mandatory fields", id));
+                } else {
+                    throw e;
+                }
+            }
+
+        }
+        return null;
     }
 
     public Subject createSubjectFromKGv2(DataStage dataStage, boolean liveMode, String query, String id, String authorization) {
-        SubjectV1 subject = kgV2.fetchInstance(SubjectV1.class, query, id, authorization, dataStage);
-        SubjectTranslator translator = new SubjectTranslator();
+        SubjectV1 subject = kgV2.executeQuery(SubjectV1.class, dataStage, query, id, authorization);
+        SubjectOfKGV2Translator translator = new SubjectOfKGV2Translator();
         return translator.translate(subject, dataStage, liveMode);
     }
 
@@ -367,7 +651,7 @@ public class TranslationController {
         String query = String.format("query/%s/search", type);
         switch (type) {
             case "minds/core/dataset/v1.0.0":
-                return this.createDatasetFromKGv2(dataStage, liveMode, query, id, legacyAuthorization);
+                return this.createDatasetVersionFromKGv2(dataStage, liveMode, query, id, legacyAuthorization);
             case "minds/core/person/v1.0.0":
                 return this.createContributorFromKGv2(dataStage, liveMode, Arrays.asList(query, "query/uniminds/core/person/v1.0.0/search"), id, legacyAuthorization);
             case "uniminds/core/person/v1.0.0":
@@ -375,9 +659,9 @@ public class TranslationController {
             case "minds/core/placomponent/v1.0.0":
                 return this.createProjectFromKGv2(dataStage, liveMode, query, id, legacyAuthorization);
             case "uniminds/core/modelinstance/v1.0.0":
-                return this.createModelFromKGv2(dataStage, liveMode, query, id, legacyAuthorization);
+                return this.createModelVersionFromKGv2(dataStage, liveMode, query, id, legacyAuthorization);
             case "softwarecatalog/software/softwareproject/v1.0.0":
-                return this.createSoftwareFromKGv2(dataStage, liveMode, query, id, legacyAuthorization);
+                return this.createSoftwareVersionFromKGv2(dataStage, liveMode, query, id, legacyAuthorization);
             case "minds/experiment/subject/v1.0.0":
                 return this.createSubjectFromKGv2(dataStage, liveMode, query, id, legacyAuthorization);
             case "minds/experiment/sample/v1.0.0":
@@ -387,63 +671,343 @@ public class TranslationController {
     }
 
     public TargetInstance createLiveInstanceFromKGv3(DataStage dataStage, boolean liveMode, String id) {
-        Map instance = kgV3.fetchInstanceForLive(id, dataStage);
-        Map data = (Map) instance.get("data");
-        List<String> types = (List<String>) data.get("@type");
-        String type = types.stream().filter(Constants.TYPES_FOR_LIVE::contains).collect(Collectors.toList()).stream().findFirst().orElse(null);
+        Map instance = kgV3.fetchInstance(id, dataStage);
+        String type;
+        try {
+            Map data = (Map) instance.get("data");
+            List<String> types = (List<String>) data.get("@type");
+            type = types.stream().filter(Constants.SOURCE_MODELS::contains).collect(Collectors.toList()).stream().findFirst().orElse(null);
+        } catch (Exception e) {
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Instance %s does not exist!", id));
+        }
         if (type != null) {
             switch (type) {
-                case "https://openminds.ebrains.eu/core/Dataset":
-                    return this.createDatasetFromKGv3(dataStage, liveMode, id, null);
-                case "https://openminds.ebrains.eu/core/DatasetVersion":
-                    String datasetId = retrieveDatasetV3IdFromDatasetVersion(data);
-                    String versionIdentifier = (String) data.get("https://openminds.ebrains.eu/vocab/versionIdentifier");
-                    if(datasetId == null || versionIdentifier == null) {
-                        return null;
-                    }
-                    return this.createDatasetFromKGv3(dataStage, liveMode, datasetId, versionIdentifier);
-                case "https://openminds.ebrains.eu/core/Person":
+                case Constants.SOURCE_MODEL_DATASET:
+                    return this.createDatasetFromKGv3(dataStage, liveMode, id);
+                case Constants.SOURCE_MODEL_DATASET_VERSIONS:
+                    return this.createDatasetVersionFromKGv3(dataStage, liveMode, id);
+                case Constants.SOURCE_MODEL_PERSON:
                     return this.createContributorFromKGv3(dataStage, liveMode, id);
-                case "https://openminds.ebrains.eu/core/Project":
-                case "https://openminds.ebrains.eu/core/Model":
-                case "https://openminds.ebrains.eu/core/Software":
-                case "https://openminds.ebrains.eu/core/Subject":
-                case "https://openminds.ebrains.eu/core/Sample":
-                    //TODO to be implemented
+                case Constants.SOURCE_MODEL_MODEL:
+                    return this.createModelFromKGv3(dataStage, liveMode, id);
+                case Constants.SOURCE_MODEL_MODEL_VERSION:
+                    return this.createModelVersionFromKGv3(dataStage, liveMode, id);
+                case Constants.SOURCE_MODEL_SOFTWARE:
+                    return this.createSoftwareFromKGv3(dataStage, liveMode, id);
+                case Constants.SOURCE_MODEL_SOFTWARE_VERSION:
+                    return this.createSoftwareVersionFromKGv3(dataStage, liveMode, id);
+                case Constants.SOURCE_MODEL_PROJECT:
+                    return this.createProjectFromKGv3(dataStage, liveMode, id);
+                case Constants.SOURCE_MODEL_SUBJECT:
+                    return this.createSubjectFromKGv3(dataStage, liveMode, id);
+                case Constants.SOURCE_MODEL_SAMPLE:
+                    return this.createSampleFromKGv3(dataStage, liveMode, id);
+                default:
                     return null;
             }
         }
-        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Type %s is not recognized as a valid search resource!", type));
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Type is not recognized as a valid search resource!");
     }
 
-    private String retrieveDatasetV3IdFromDatasetVersion(Map<String, Object> data) {
-        Map<String, Object> incomingLinks = (Map<String, Object>) data.get("https://core.kg.ebrains.eu/vocab/meta/incomingLinks");
-        List versions = (List)incomingLinks.get("https://openminds.ebrains.eu/vocab/hasVersion");
-        Map<String, Object> dataset = (Map<String, Object>) versions.stream().findFirst().orElse(null);
-        if(dataset == null) {
-            return  null;
+    private List<IdSources> getSamplesIdSources(DataStage dataStage, String legacyAuthorization) {
+        String query = "query/minds/experiment/sample/v1.0.0/searchIdentifier";
+        logger.info("Starting to query sample's ids for v1");
+        List<SourceInstanceIdentifierV1andV2> sourceInstanceV1 = kgV2.executeQueryForIndexing(dataStage, query, legacyAuthorization);
+        logger.info(String.format("Queried %s sample's ids for v1", sourceInstanceV1.size()));
+        logger.info("Starting to query sample's ids for v3");
+        List<SourceInstanceV3> sourceInstanceV3 = kgV3.executeQueryForIndexing(dataStage, Queries.SAMPLE_IDENTIFIER_QUERY_ID);
+        logger.info(String.format("Successfully queried %s sample's ids for v3", sourceInstanceV3.size()));
+        List<IdSources> sources = new ArrayList<>();
+
+        Map<String, IdSources> sourcesIdentifiers = new HashMap<>();
+
+        sourceInstanceV3.forEach(dv -> {
+            IdSources source = new IdSources();
+            sources.add(source);
+            String id = IdUtils.getUUID(dv.getId());
+            source.setIdV3(id);
+            dv.getIdentifier().forEach(identifier -> sourcesIdentifiers.put(IdUtils.getUUID(identifier), source));
+        });
+
+        sourceInstanceV1.forEach(d -> {
+            String identifier = d.getIdentifier();
+            if (!sourcesIdentifiers.containsKey(identifier)) {
+                IdSources source = new IdSources();
+                source.setIdV1(IdUtils.getUUID(d.getId()));
+                sources.add(source);
+            }
+        });
+        return sources;
+    }
+
+    private List<IdSources> getSubjectsIdSources(DataStage dataStage, String legacyAuthorization) {
+        String query = "query/minds/experiment/subject/v1.0.0/searchIdentifier";
+        logger.info("Starting to query subject's ids for v1");
+        List<SourceInstanceIdentifierV1andV2> sourceInstanceV1 = kgV2.executeQueryForIndexing(dataStage, query, legacyAuthorization);
+        logger.info(String.format("Queried %s subject's ids for v1", sourceInstanceV1.size()));
+        logger.info("Starting to query subject's ids for v3");
+        List<SourceInstanceV3> sourceInstanceV3 = kgV3.executeQueryForIndexing(dataStage, Queries.SUBJECT_IDENTIFIER_QUERY_ID);
+        logger.info(String.format("Successfully queried %s subject's ids for v3", sourceInstanceV3.size()));
+        List<IdSources> sources = new ArrayList<>();
+
+        Map<String, IdSources> sourcesIdentifiers = new HashMap<>();
+
+        sourceInstanceV3.forEach(dv -> {
+            IdSources source = new IdSources();
+            sources.add(source);
+            String id = IdUtils.getUUID(dv.getId());
+            source.setIdV3(id);
+            dv.getIdentifier().forEach(identifier -> sourcesIdentifiers.put(IdUtils.getUUID(identifier), source));
+        });
+
+        sourceInstanceV1.forEach(d -> {
+            String identifier = d.getIdentifier();
+            if (!sourcesIdentifiers.containsKey(identifier)) {
+                IdSources source = new IdSources();
+                source.setIdV1(IdUtils.getUUID(d.getId()));
+                sources.add(source);
+            }
+        });
+        return sources;
+    }
+
+    private List<IdSources> getProjectsIdSources(DataStage dataStage, String legacyAuthorization) {
+        String query = "query/minds/core/placomponent/v1.0.0/searchIdentifier";
+        logger.info("Starting to query project's ids for v1");
+        List<SourceInstanceIdentifierV1andV2> sourceInstanceV1 = kgV2.executeQueryForIndexing(dataStage, query, legacyAuthorization);
+        logger.info(String.format("Successfully Queried %s project's ids for v1", sourceInstanceV1.size()));
+        logger.info("Starting to query project's ids for v3");
+        List<SourceInstanceV3> sourceInstanceV3 = kgV3.executeQueryForIndexing(dataStage, Queries.PROJECT_IDENTIFIER_QUERY_ID);
+        logger.info(String.format("Successfully queried %s project's ids for v3", sourceInstanceV3.size()));
+        List<IdSources> sources = new ArrayList<>();
+
+        Map<String, IdSources> sourcesIdentifiers = new HashMap<>();
+
+        sourceInstanceV3.forEach(dv -> {
+            IdSources source = new IdSources();
+            sources.add(source);
+            String id = IdUtils.getUUID(dv.getId());
+            source.setIdV3(id);
+            dv.getIdentifier().forEach(identifier -> sourcesIdentifiers.put(IdUtils.getUUID(identifier), source));
+        });
+
+        sourceInstanceV1.forEach(d -> {
+            String identifier = d.getIdentifier();
+            if (!sourcesIdentifiers.containsKey(identifier)) {
+                IdSources source = new IdSources();
+                source.setIdV1(IdUtils.getUUID(d.getId()));
+                sources.add(source);
+            }
+        });
+        return sources;
+    }
+
+    private List<IdSources> getSoftwareVersionsIdSources(DataStage dataStage, String legacyAuthorization) {
+        String query = "query/softwarecatalog/software/softwareproject/v1.0.0/searchIdentifier";
+        logger.info("Starting to query software's ids for v2");
+        List<SourceInstanceIdentifierV1andV2> sourceInstanceV2 = kgV2.executeQueryForIndexing(dataStage, query, legacyAuthorization);
+        logger.info(String.format("Queried %s software's ids for v2", sourceInstanceV2.size()));
+        logger.info("Starting to query softwareVersion's ids for v3");
+        List<SourceInstanceV3> sourceInstanceV3 = kgV3.executeQueryForIndexing(dataStage, Queries.SOFTWARE_VERSION_IDENTIFIER_QUERY_ID);
+        logger.info(String.format("Successfully queried %s softwareVersion's ids for v3", sourceInstanceV3.size()));
+        List<IdSources> sources = new ArrayList<>();
+
+        Map<String, IdSources> sourcesIdentifiers = new HashMap<>();
+
+        sourceInstanceV3.forEach(dv -> {
+            IdSources source = new IdSources();
+            sources.add(source);
+            String id = IdUtils.getUUID(dv.getId());
+            source.setIdV3(id);
+            dv.getIdentifier().forEach(identifier -> sourcesIdentifiers.put(IdUtils.getUUID(identifier), source));
+        });
+
+        sourceInstanceV2.forEach(d -> {
+            String identifier = d.getIdentifier();
+            if (!sourcesIdentifiers.containsKey(identifier)) {
+                IdSources source = new IdSources();
+                source.setIdV2(IdUtils.getUUID(d.getId()));
+                sources.add(source);
+            }
+        });
+        return sources;
+    }
+
+    private List<IdSources> getModelVersionsIdSources(DataStage dataStage, String legacyAuthorization) {
+        String query = "query/uniminds/core/modelinstance/v1.0.0/searchIdentifier";
+        logger.info("Starting to query model's ids for v2");
+        List<SourceInstanceIdentifierV1andV2> sourceInstanceV2 = kgV2.executeQueryForIndexing(dataStage, query, legacyAuthorization);
+        logger.info(String.format("Queried %s model's ids for v2", sourceInstanceV2.size()));
+        logger.info("Starting to query modelVersion's ids for v3");
+        List<SourceInstanceV3> sourceInstanceV3 = kgV3.executeQueryForIndexing(dataStage, Queries.MODEL_VERSION_IDENTIFIER_QUERY_ID);
+        logger.info(String.format("Successfully queried %s modelVersion's ids for v3", sourceInstanceV3.size()));
+        List<IdSources> sources = new ArrayList<>();
+
+        Map<String, IdSources> sourcesIdentifiers = new HashMap<>();
+
+        sourceInstanceV3.forEach(dv -> {
+            IdSources source = new IdSources();
+            sources.add(source);
+            String id = IdUtils.getUUID(dv.getId());
+            source.setIdV3(id);
+            dv.getIdentifier().forEach(identifier -> sourcesIdentifiers.put(IdUtils.getUUID(identifier), source));
+        });
+
+        sourceInstanceV2.forEach(d -> {
+            String identifier = d.getIdentifier();
+            if (!sourcesIdentifiers.containsKey(identifier)) {
+                IdSources source = new IdSources();
+                source.setIdV2(IdUtils.getUUID(d.getId()));
+                sources.add(source);
+            }
+        });
+        return sources;
+    }
+
+    private List<IdSources> getContributorsIdSources(DataStage dataStage, String legacyAuthorization) {
+        String queryForV1 = "query/minds/core/person/v1.0.0/searchIdentifier";
+        String queryForV2 = "query/uniminds/core/person/v1.0.0/searchIdentifier";
+        logger.info("Starting to query contributor's ids for v1");
+        List<SourceInstanceIdentifierV1andV2> sourceInstanceV1 = kgV2.executeQueryForIndexing(dataStage, queryForV1, legacyAuthorization);
+        logger.info(String.format("Successfully queried %s contributor's ids for v1", sourceInstanceV1.size()));
+        logger.info("Done querying contributors for v1");
+        logger.info("Starting to query contributor's ids for v2");
+        List<SourceInstanceIdentifierV1andV2> sourceInstanceV2 = kgV2.executeQueryForIndexing(dataStage, queryForV2, legacyAuthorization);
+        logger.info(String.format("Successfully queried %s contributor's ids for v2", sourceInstanceV2.size()));
+
+        logger.info("Starting to query contributor's ids for v3");
+        List<SourceInstanceV3> sourceInstanceV3 = kgV3.executeQueryForIndexing(dataStage, Queries.CONTRIBUTOR_IDENTIFIER_QUERY_ID);
+        logger.info(String.format("Successfully Successfully queried  %s contributor's ids for v3", sourceInstanceV3.size()));
+
+        Map<String, IdSources> sourcesIdentifiers = new HashMap<>();
+        List<IdSources> sources = new ArrayList<>();
+
+        sourceInstanceV3.forEach(dv -> {
+            IdSources source = new IdSources();
+            sources.add(source);
+            String id = IdUtils.getUUID(dv.getId());
+            source.setIdV3(id);
+            dv.getIdentifier().forEach(identifier -> sourcesIdentifiers.put(IdUtils.getUUID(identifier), source));
+        });
+
+        sourceInstanceV2.forEach(p -> {
+            String identifier = p.getIdentifier();
+            IdSources source = sourcesIdentifiers.get(identifier);
+            if (source == null) {
+                source = new IdSources();
+                sources.add(source);
+                sourcesIdentifiers.put(identifier, source);
+            }
+            source.setIdV2(IdUtils.getUUID(p.getId()));
+        });
+
+        sourceInstanceV1.forEach(p -> {
+            String identifier = p.getIdentifier();
+            IdSources source = sourcesIdentifiers.get(identifier);
+            if (source == null) {
+                source = new IdSources();
+                sources.add(source);
+            }
+            source.setIdV1(IdUtils.getUUID(p.getId()));
+        });
+        return sources;
+    }
+
+    private List<IdSources> getDatasetVersionsIdSources(DataStage dataStage, String legacyAuthorization) {
+        String query = "query/minds/core/dataset/v1.0.0/searchIdentifier";
+        logger.info("Starting to query dataset's ids for v1");
+        List<SourceInstanceIdentifierV1andV2> sourceInstanceV1 = kgV2.executeQueryForIndexing(dataStage, query, legacyAuthorization);
+        logger.debug(String.format("Successfully queried %s dataset's ids for v1", sourceInstanceV1.size()));
+        logger.info("Starting to query datasetVersion's ids for v3");
+        List<SourceInstanceV3> sourceInstanceV3 = kgV3.executeQueryForIndexing(dataStage, Queries.DATASET_VERSION_IDENTIFIER_QUERY_ID);
+        logger.info(String.format("Successfully queried %s datasetVersion's ids for v3", sourceInstanceV3.size()));
+        List<IdSources> sources = new ArrayList<>();
+
+        Map<String, IdSources> sourcesIdentifiers = new HashMap<>();
+
+        sourceInstanceV3.forEach(dv -> {
+            IdSources source = new IdSources();
+            sources.add(source);
+            String id = IdUtils.getUUID(dv.getId());
+            source.setIdV3(id);
+            dv.getIdentifier().forEach(identifier -> sourcesIdentifiers.put(IdUtils.getUUID(identifier), source));
+        });
+
+        sourceInstanceV1.forEach(d -> {
+            String identifier = d.getIdentifier();
+            if (!sourcesIdentifiers.containsKey(identifier)) {
+                IdSources source = new IdSources();
+                source.setIdV1(IdUtils.getUUID(d.getId()));
+                sources.add(source);
+            }
+        });
+        return sources;
+    }
+
+    public TargetInstance createInstanceCombinedForIndexing(Class<?> clazz, DataStage dataStage, boolean liveMode, String legacyAuthorization, IdSources source) {
+        if (clazz == DatasetVersion.class) {
+            return this.createDatasetVersionForIndexing(dataStage, liveMode, legacyAuthorization, source);
         }
-        return IdUtils.getUUID((String) dataset.get("@id"));
-    }
-
-    public TargetInstances createInstancesCombined(DataStage dataStage, boolean liveMode, String type, String legacyAuthorization) {
-        switch (type) {
-            case "Dataset":
-                return this.createDatasets(dataStage, liveMode, legacyAuthorization);
-            case "Contributor":
-                return this.createContributors(dataStage, liveMode, legacyAuthorization);
-            case "Project":
-                return this.createProjects(dataStage, liveMode, legacyAuthorization);
-            case "Model":
-                return this.createModels(dataStage, liveMode, legacyAuthorization);
-            case "Subject":
-                return this.createSubjects(dataStage, liveMode, legacyAuthorization);
-            case "Sample":
-                return this.createSamples(dataStage, liveMode, legacyAuthorization);
-            case "Software":
-                return this.createSoftwares(dataStage, liveMode, legacyAuthorization);
+        if (clazz == Contributor.class) {
+            return this.createContributorForIndexing(dataStage, liveMode, legacyAuthorization, source);
         }
-        return new TargetInstances();
+        if (clazz == Project.class) {
+            return this.createProjectForIndexing(dataStage, liveMode, legacyAuthorization, source);
+        }
+        if (clazz == Subject.class) {
+            return this.createSubjectForIndexing(dataStage, liveMode, legacyAuthorization, source);
+        }
+        if (clazz == Sample.class) {
+            return this.createSampleForIndexing(dataStage, liveMode, legacyAuthorization, source);
+        }
+        if (clazz == ModelVersion.class) {
+            return this.createModelVersionForIndexing(dataStage, liveMode, legacyAuthorization, source);
+        }
+        if (clazz == SoftwareVersion.class) {
+            return this.createSoftwareVersionForIndexing(dataStage, liveMode, legacyAuthorization, source);
+        }
+        return null;
     }
 
+    public TargetInstancesResult createInstancesFromV3ForIndexing(Class<?> clazz, DataStage dataStage, boolean liveMode, int from, int size) {
+        if (clazz == Dataset.class) {
+            return this.createDatasetsForIndexing(dataStage, liveMode, from, size);
+        }
+        if (clazz == Model.class) {
+            return this.createModelsForIndexing(dataStage, liveMode, from, size);
+        }
+        if (clazz == Software.class) {
+            return this.createSoftwaresForIndexing(dataStage, liveMode, from, size);
+        }
+        return new TargetInstancesResult();
+    }
+
+    public List<IdSources> getIdSources(Class<?> clazz, DataStage dataStage, String legacyAuthorization) {
+        if (clazz == DatasetVersion.class) {
+            return this.getDatasetVersionsIdSources(dataStage, legacyAuthorization);
+        }
+        if (clazz == Contributor.class) {
+            return this.getContributorsIdSources(dataStage, legacyAuthorization);
+        }
+        if (clazz == Project.class) {
+            return this.getProjectsIdSources(dataStage, legacyAuthorization);
+        }
+        if (clazz == Subject.class) {
+            return this.getSubjectsIdSources(dataStage, legacyAuthorization);
+        }
+        if (clazz == Sample.class) {
+            return this.getSamplesIdSources(dataStage, legacyAuthorization);
+        }
+        if (clazz == ModelVersion.class) {
+            return this.getModelVersionsIdSources(dataStage, legacyAuthorization);
+        }
+        if (clazz == SoftwareVersion.class) {
+            return this.getSoftwareVersionsIdSources(dataStage, legacyAuthorization);
+        }
+        return Collections.emptyList();
+    }
+
+    public boolean isTypeCombined(Class<?> clazz) {
+        return clazz != Dataset.class && clazz != Model.class && clazz != Software.class;
+    }
 }
