@@ -62,14 +62,12 @@ public class DatasetVersionOfKGV3Translator implements Translator<DatasetVersion
                     )).collect(Collectors.toList()));
         }
         String citation = datasetVersion.getHowToCite();
-        String digitalIdentifier = firstItemOrNull(datasetVersion.getDigitalIdentifier());
-        if (digitalIdentifier != null) {
-            if (StringUtils.isNotBlank(citation) && StringUtils.isNotBlank(digitalIdentifier)) {
-                String url = URLEncoder.encode(digitalIdentifier, StandardCharsets.UTF_8);
-                d.setCitation(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", digitalIdentifier, digitalIdentifier, url));
-            }
-            if (StringUtils.isNotBlank(digitalIdentifier)) {
-                d.setDoi(digitalIdentifier);
+        String doi = datasetVersion.getDoi();
+        if (StringUtils.isNotBlank(doi)) {
+            d.setDoi(doi);
+            if (StringUtils.isNotBlank(citation)) {
+                String url = URLEncoder.encode(doi, StandardCharsets.UTF_8);
+                d.setCitation(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url));
             }
         }
         return d;

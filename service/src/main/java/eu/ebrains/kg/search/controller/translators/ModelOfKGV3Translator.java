@@ -54,14 +54,12 @@ public class ModelOfKGV3Translator implements Translator<ModelV3, Model>{
         }
 
         String citation = model.getHowToCite();
-        String digitalIdentifier = firstItemOrNull(model.getDigitalIdentifier());
-        if (digitalIdentifier != null) {
-            if (StringUtils.isNotBlank(citation) && StringUtils.isNotBlank(digitalIdentifier)) {
-                String url = URLEncoder.encode(digitalIdentifier, StandardCharsets.UTF_8);
-                m.setCitation(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", digitalIdentifier, digitalIdentifier, url));
-            }
-            if (StringUtils.isNotBlank(digitalIdentifier)) {
-                m.setDoi(digitalIdentifier);
+        String doi = model.getDoi();
+        if (StringUtils.isNotBlank(doi)) {
+            m.setDoi(doi);
+            if (StringUtils.isNotBlank(citation)) {
+                String url = URLEncoder.encode(doi, StandardCharsets.UTF_8);
+                m.setCitation(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url));
             }
         }
         if (!CollectionUtils.isEmpty(model.getVersions())) {

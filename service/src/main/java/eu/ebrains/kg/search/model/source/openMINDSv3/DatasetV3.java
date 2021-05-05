@@ -1,6 +1,5 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
-import eu.ebrains.kg.search.model.source.SourceInstance;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 
@@ -8,7 +7,7 @@ import java.util.*;
 
 public class DatasetV3 extends SourceInstanceV3 {
     private String description;
-    private List<String> digitalIdentifier;
+    private String doi;
     private String howToCite;
     private String fullName;
     private String homepage;
@@ -24,12 +23,12 @@ public class DatasetV3 extends SourceInstanceV3 {
         this.description = description;
     }
 
-    public List<String> getDigitalIdentifier() {
-        return digitalIdentifier;
+    public String getDoi() {
+        return doi;
     }
 
-    public void setDigitalIdentifier(List<String> digitalIdentifier) {
-        this.digitalIdentifier = digitalIdentifier;
+    public void setDoi(String doi) {
+        this.doi = doi;
     }
 
     public String getHowToCite() {

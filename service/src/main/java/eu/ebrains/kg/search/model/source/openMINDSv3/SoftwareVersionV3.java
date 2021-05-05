@@ -1,6 +1,5 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
-import eu.ebrains.kg.search.model.source.SourceInstance;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
 
@@ -8,7 +7,7 @@ import java.util.List;
 
 public class SoftwareVersionV3 extends SourceInstanceV3 {
     private String version;
-    private String digitalIdentifier;
+    private String doi;
     private String howToCite;
     private String description;
     private String title;
@@ -27,12 +26,12 @@ public class SoftwareVersionV3 extends SourceInstanceV3 {
 
     public void setVersion(String version) { this.version = version; }
 
-    public String getDigitalIdentifier() {
-        return digitalIdentifier;
+    public String getDoi() {
+        return doi;
     }
 
-    public void setDigitalIdentifier(String digitalIdentifier) {
-        this.digitalIdentifier = digitalIdentifier;
+    public void setDoi(String doi) {
+        this.doi = doi;
     }
 
     public String getHowToCite() {

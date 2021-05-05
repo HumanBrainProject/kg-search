@@ -40,14 +40,12 @@ public class SoftwareOfKGV3Translator implements Translator<SoftwareV3, Software
         }
 
         String citation = software.getHowToCite();
-        String digitalIdentifier = firstItemOrNull(software.getDigitalIdentifier());
-        if (digitalIdentifier != null) {
-            if (StringUtils.isNotBlank(citation) && StringUtils.isNotBlank(digitalIdentifier)) {
-                String url = URLEncoder.encode(digitalIdentifier, StandardCharsets.UTF_8);
-                s.setCitation(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", digitalIdentifier, digitalIdentifier, url));
-            }
-            if (StringUtils.isNotBlank(digitalIdentifier)) {
-                s.setDoi(digitalIdentifier);
+        String doi = software.getDoi();
+        if (StringUtils.isNotBlank(doi)) {
+            s.setDoi(doi);
+            if (StringUtils.isNotBlank(citation)) {
+                String url = URLEncoder.encode(doi, StandardCharsets.UTF_8);
+                s.setCitation(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url));
             }
         }
         if (!CollectionUtils.isEmpty(software.getVersions())) {

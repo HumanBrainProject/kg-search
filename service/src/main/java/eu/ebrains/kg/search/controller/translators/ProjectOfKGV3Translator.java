@@ -33,9 +33,9 @@ public class ProjectOfKGV3Translator  implements Translator<ProjectV3, Project>{
             p.setPublications(project.getPublications().stream()
                     .map(publication -> {
                         String doi;
-                        if(StringUtils.isNotBlank(publication.getDigitalIdentifier())) {
-                            String url = URLEncoder.encode(publication.getDigitalIdentifier(), StandardCharsets.UTF_8);
-                            doi = String.format("[DOI: %s]\n[DOI: %s]: %s", publication.getDigitalIdentifier(), publication.getDigitalIdentifier(), url);
+                        if(StringUtils.isNotBlank(publication.getDoi())) {
+                            String url = URLEncoder.encode(publication.getDoi(), StandardCharsets.UTF_8);
+                            doi = String.format("[DOI: %s]\n[DOI: %s]: %s", publication.getDoi(), publication.getDoi(), url);
                         } else {
                             doi = "[DOI: null]\n[DOI: null]: https://doi.org/null";
                         }
