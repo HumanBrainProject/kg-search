@@ -14,17 +14,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.firstItemOrNull;
-
-public class DatasetVersionOfKGV3Translator implements Translator<DatasetVersionV3, DatasetVersion>{
+public class DatasetVersionOfKGV3Translator implements Translator<DatasetVersionV3, DatasetVersion> {
 
     public DatasetVersion translate(DatasetVersionV3 datasetVersion, DataStage dataStage, boolean liveMode) {
         DatasetVersion d = new DatasetVersion();
         DatasetVersionV3.DatasetVersions dataset = datasetVersion.getDataset();
-        d.setVersion(datasetVersion.getVersion());
         d.setId(IdUtils.getUUID(datasetVersion.getId()));
         d.setIdentifier(IdUtils.getUUID(datasetVersion.getIdentifier()));
-        if (dataset != null && !CollectionUtils.isEmpty(dataset.getVersions())) {
+        if (dataset != null && !CollectionUtils.isEmpty(dataset.getVersions()) && dataset.getVersions().size() > 1) {
+            d.setVersion(datasetVersion.getVersion());
+            d.setDataset(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), dataset.getFullName()));
             List<Version> sortedVersions = Helpers.sort(dataset.getVersions());
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             d.setVersions(references);
@@ -38,15 +37,10 @@ public class DatasetVersionOfKGV3Translator implements Translator<DatasetVersion
         } else if (dataset != null) {
             d.setDescription(dataset.getDescription());
         }
-//        if (!StringUtils.isBlank(datasetVersion.getFullName())) {
-//            d.setTitle(datasetVersion.getFullName());
-//        } else if (dataset != null {
-//            d.setTitle(datasetV3.getFullName());
-//        }
-        // For the UI we don't need the version number in the title as it is set in de dropdown
-        if (dataset != null) {
+        if (dataset != null && StringUtils.isNotBlank(dataset.getFullName())) {
             d.setTitle(dataset.getFullName());
-            d.setDataset(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), dataset.getFullName()));
+        } else if (StringUtils.isNotBlank(datasetVersion.getFullName())) {
+            d.setTitle(datasetVersion.getFullName());
         }
         if (!CollectionUtils.isEmpty(datasetVersion.getAuthor())) {
             d.setContributors(datasetVersion.getAuthor().stream()

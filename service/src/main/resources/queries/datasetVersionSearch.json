@@ -65,10 +65,6 @@
       "path": "https://openminds.ebrains.eu/vocab/keyword"
     },
     {
-      "propertyName": "query:shortName",
-      "path": "https://openminds.ebrains.eu/vocab/shortName"
-    },
-    {
       "propertyName": "query:version",
       "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
     },

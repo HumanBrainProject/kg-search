@@ -11,7 +11,6 @@ public class DatasetV3 extends SourceInstanceV3 {
     private String howToCite;
     private String fullName;
     private String homepage;
-    private String shortName;
     private List<Version> versions;
     private List<Author> author; //TODO: use plural naming when having a list as soon as query bug is fixed (same alias in different structure)
 
@@ -61,14 +60,6 @@ public class DatasetV3 extends SourceInstanceV3 {
 
     public void setHomepage(String homepage) {
         this.homepage = homepage;
-    }
-
-    public String getShortName() {
-        return shortName;
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
     }
 
     public List<Author> getAuthor() {

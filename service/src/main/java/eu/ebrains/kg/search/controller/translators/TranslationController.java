@@ -341,7 +341,7 @@ public class TranslationController {
         ResultsOfKGv3<DatasetV3> datasets = kgV3.executeQueryForIndexing(ResultsOfKGV3DatasetV3.class, dataStage, Queries.DATASET_QUERY_ID, from, size);
         logger.info(String.format("Queried %d datasets for v3", CollectionUtils.isEmpty(datasets.getData()) ? 0 : datasets.getData().size()));
         DatasetOfKGV3Translator translator = new DatasetOfKGV3Translator();
-        List<TargetInstance> instances = datasets.getData().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
+        List<TargetInstance> instances = datasets.getData().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).filter(Objects::nonNull).collect(Collectors.toList());
         TargetInstancesResult result = new TargetInstancesResult();
         result.setTargetInstances(instances);
         result.setFrom(datasets.getFrom());
@@ -355,7 +355,7 @@ public class TranslationController {
         ResultsOfKGv3<ModelV3> models = kgV3.executeQueryForIndexing(ResultsOfKGV3ModelV3.class, dataStage, Queries.MODEL_QUERY_ID, from, size);
         logger.info(String.format("Queried %d models for v3", CollectionUtils.isEmpty(models.getData()) ? 0 : models.getData().size()));
         ModelOfKGV3Translator translator = new ModelOfKGV3Translator();
-        List<TargetInstance> instances = models.getData().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
+        List<TargetInstance> instances = models.getData().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).filter(Objects::nonNull).collect(Collectors.toList());
         TargetInstancesResult result = new TargetInstancesResult();
         result.setTargetInstances(instances);
         result.setFrom(models.getFrom());
@@ -370,7 +370,7 @@ public class TranslationController {
         ResultsOfKGv3<SoftwareV3> softwares = kgV3.executeQueryForIndexing(ResultsOfKGV3SoftwareV3.class, dataStage, Queries.SOFTWARE_QUERY_ID, from, size);
         logger.info(String.format("Queried %d softwares for v3", CollectionUtils.isEmpty(softwares.getData()) ? 0 : softwares.getData().size()));
         SoftwareOfKGV3Translator translator = new SoftwareOfKGV3Translator();
-        List<TargetInstance> instances = softwares.getData().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).collect(Collectors.toList());
+        List<TargetInstance> instances = softwares.getData().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).filter(Objects::nonNull).collect(Collectors.toList());
         TargetInstancesResult result = new TargetInstancesResult();
         result.setTargetInstances(instances);
         result.setFrom(softwares.getFrom());

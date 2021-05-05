@@ -14,37 +14,38 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.firstItemOrNull;
-
-public class DatasetOfKGV3Translator implements Translator<DatasetV3, Dataset>{
+public class DatasetOfKGV3Translator implements Translator<DatasetV3, Dataset> {
 
     public Dataset translate(DatasetV3 dataset, DataStage dataStage, boolean liveMode) {
-        Dataset d = new Dataset();
-        d.setId(IdUtils.getUUID(dataset.getId()));
-        d.setIdentifier(IdUtils.getUUID(dataset.getIdentifier()));
-        d.setDescription(dataset.getDescription());
-        d.setTitle(dataset.getFullName());
-        if (!CollectionUtils.isEmpty(dataset.getAuthor())) {
-            d.setAuthors(dataset.getAuthor().stream()
-                    .map(a -> new TargetInternalReference(
-                            IdUtils.getUUID(a.getId()),
-                            Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
-                    )).collect(Collectors.toList()));
-        }
-        String citation = dataset.getHowToCite();
-        String doi = dataset.getDoi();
-        if (StringUtils.isNotBlank(doi)) {
-            if (StringUtils.isNotBlank(citation)) {
-                d.setDoi(doi);
-                String url = URLEncoder.encode(doi, StandardCharsets.UTF_8);
-                d.setCitation(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url));
-            }
-        }
-        if (!CollectionUtils.isEmpty(dataset.getVersions())) {
-            List<Version> sortedVersions = Helpers.sort(dataset.getVersions());                                         //v.getFullName()
+        if (!CollectionUtils.isEmpty(dataset.getVersions()) && dataset.getVersions().size() > 1) {
+            Dataset d = new Dataset();
+            List<Version> sortedVersions = Helpers.sort(dataset.getVersions());
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             d.setDatasets(references);
+            d.setId(IdUtils.getUUID(dataset.getId()));
+            d.setIdentifier(IdUtils.getUUID(dataset.getIdentifier()));
+            d.setDescription(dataset.getDescription());
+            if (StringUtils.isNotBlank(dataset.getFullName())) {
+                d.setTitle(dataset.getFullName());
+            }
+            if (!CollectionUtils.isEmpty(dataset.getAuthor())) {
+                d.setAuthors(dataset.getAuthor().stream()
+                        .map(a -> new TargetInternalReference(
+                                IdUtils.getUUID(a.getId()),
+                                Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
+                        )).collect(Collectors.toList()));
+            }
+            String citation = dataset.getHowToCite();
+            String doi = dataset.getDoi();
+            if (StringUtils.isNotBlank(doi)) {
+                if (StringUtils.isNotBlank(citation)) {
+                    d.setDoi(doi);
+                    String url = URLEncoder.encode(doi, StandardCharsets.UTF_8);
+                    d.setCitation(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url));
+                }
+            }
+            return d;
         }
-        return d;
+        return null;
     }
 }

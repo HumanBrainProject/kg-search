@@ -15,7 +15,6 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private String homepage;
     private List<String> keyword;
     private Date releaseDate;
-    private String shortName;
     private String version;
     private String versionInnovation;
     private List<Author> author;
@@ -75,14 +74,6 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
 
     public void setReleaseDate(Date releaseDate) {
         this.releaseDate = releaseDate;
-    }
-
-    public String getShortName() {
-        return shortName;
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
     }
 
     public String getVersion() {

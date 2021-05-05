@@ -38,10 +38,6 @@
       "path": "https://openminds.ebrains.eu/vocab/fullName"
     },
     {
-      "propertyName": "query:shortName",
-      "path": "https://openminds.ebrains.eu/vocab/shortName"
-    },
-    {
       "propertyName": "query:homepage",
       "path": "https://openminds.ebrains.eu/vocab/homepage"
     },
