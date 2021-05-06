@@ -43,6 +43,7 @@ public class Model implements TargetInstance {
     @FieldInfo(ignoreForSearch = true, visible = false)
     private String id;
 
+    @ElasticSearchInfo(type = "keyword")
     @FieldInfo(ignoreForSearch = true, visible = false)
     private List<String> identifier;
 

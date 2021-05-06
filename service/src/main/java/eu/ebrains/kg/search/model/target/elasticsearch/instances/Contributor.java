@@ -46,6 +46,7 @@ public class Contributor implements TargetInstance {
     @FieldInfo(ignoreForSearch = true, visible = false)
     private String id;
 
+    @ElasticSearchInfo(type = "keyword")
     @FieldInfo(visible = false)
     private List<String> identifier;
 

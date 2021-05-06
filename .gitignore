@@ -9,3 +9,4 @@ node_modules
 build/
 .history/
 .metals
+/service/.bsp

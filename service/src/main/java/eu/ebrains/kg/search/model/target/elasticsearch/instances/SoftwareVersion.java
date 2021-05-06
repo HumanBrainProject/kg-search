@@ -46,6 +46,7 @@ public class SoftwareVersion implements TargetInstance {
     @FieldInfo(ignoreForSearch = true, visible = false)
     private String id;
 
+    @ElasticSearchInfo(type = "keyword")
     @FieldInfo(visible = false, ignoreForSearch = true)
     private List<String> identifier;
 
