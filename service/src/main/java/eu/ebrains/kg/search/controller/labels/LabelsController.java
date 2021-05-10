@@ -197,6 +197,9 @@ public class LabelsController {
             if (info.isTable() != defaultFieldInfo.isTable()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "isTable", info.isTable());
             }
+            if (info.isDirectDownload() != defaultFieldInfo.isDirectDownload()) {
+                propertyDefinition.put(SEARCH_UI_NAMESPACE + "isDirectDownload", info.isDirectDownload());
+            }
             Map<String, Object> children = handleChildren(topTypeToHandle);
             propertyDefinition.putAll(children);
         }

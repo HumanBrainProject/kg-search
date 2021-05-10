@@ -67,6 +67,14 @@ const Download = ({data, showTermsOfUse, isListOfUrl}) => {
   );
 };
 
+
+const DirectDownload = ({url, value}) => {
+  const [name,] = value.split(" ");
+  return (
+    <a className="btn kgs-fields-buttons__button kgs-fields-buttons__link" href={url} rel="noreferrer" target="_blank"><FontAwesomeIcon icon="file" />&nbsp;{name}</a>
+  );
+};
+
 const Cite = ({content}) => {
   if (!content) {
     return null;
@@ -114,7 +122,6 @@ const Content = ({onClose, field}) => {
   const isListOfUrl = Array.isArray(field.data) && field.data.some(u => u.url);
   const {url, value} = field.data;
   const {termsOfUse} = field.mapping;
-
   return (
     <div className="kgs-fields-buttons__details">
       <div className="kgs-field-fields-buttons__details__panel">
@@ -140,11 +147,15 @@ export const FieldsButtons = ({className, fields}) => {
   if (!fields || !fields.length) {
     return null;
   }
+
   return (
     <div className={`kgs-fields-buttons ${className?className:""}`}>
       <div className="kgs-fields-buttons__selectors">
         {fields.map(field => (
-          <Button key={field.name} field={field} type="button" active={field === value} onClick={handleClick} />
+          field.mapping.isDirectDownload?
+            <DirectDownload url={field.data.url} value={field.mapping.value} />
+            :
+            <Button key={field.name} field={field} type="button" active={field === value} onClick={handleClick} />
         ))}
       </div>
       <div className="kgs-fields-buttons__content">

@@ -64,7 +64,7 @@ public class DatasetVersion implements TargetInstance {
     @FieldInfo(label = "Cite dataset", isButton = true, markdown = true, icon="quote-left")
     private Value<String> citation;
 
-    @FieldInfo(label = "Data-descriptor", isButton = true, icon="sticky-note")
+    @FieldInfo(label = "Data-descriptor", isButton = true, icon="sticky-note", isDirectDownload=true)
     private TargetExternalReference dataDescriptor;
 
     @FieldInfo(label = "DOI", hint = "This is the dataset DOI you must cite if you reuse this data in a way that leads to a publication")
