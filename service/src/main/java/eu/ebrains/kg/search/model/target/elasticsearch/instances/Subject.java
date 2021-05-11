@@ -95,9 +95,7 @@ public class Subject implements TargetInstance {
     private ISODateValue lastRelease;
 
     @Override
-    public boolean isSearchable() {
-        return true;
-    }
+    public boolean isSearchable() { return false; }
 
     @Override
     public String getId() { return id; }
