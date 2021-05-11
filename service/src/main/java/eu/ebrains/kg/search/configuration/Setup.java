@@ -63,6 +63,7 @@ public class Setup {
         uploadQuery(Queries.SAMPLE_IDENTIFIER_QUERY_ID, Queries.SAMPLE_IDENTIFIER_QUERY_RESOURCE);
         uploadQuery(Queries.SUBJECT_QUERY_ID, Queries.SUBJECT_QUERY_RESOURCE);
         uploadQuery(Queries.SUBJECT_IDENTIFIER_QUERY_ID, Queries.SUBJECT_IDENTIFIER_QUERY_RESOURCE);
+        uploadQuery(Queries.FILE_REPOSITORY_QUERY_ID, Queries.FILE_REPOSITORY_QUERY_RESOURCE);
         logger.info("Queries successfully uploaded!");
     }
 

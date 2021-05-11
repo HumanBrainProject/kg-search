@@ -74,4 +74,8 @@ public class Queries {
 
     public static final String SOFTWARE_VERSION_IDENTIFIER_QUERY_ID = "cd93dbe5-2bc8-4f2b-8689-23c28039f4df";
     public static final String SOFTWARE_VERSION_IDENTIFIER_QUERY_RESOURCE = "/queries/softwareVersionIdentifierSearch.json";
+
+    public static final String FILE_REPOSITORY_QUERY_ID = "536c37ed-f8cd-40b1-91ab-d193509e348c";
+    public static final String FILE_REPOSITORY_QUERY_RESOURCE = "/queries/fileRepositorySearch.json";
+
 }
