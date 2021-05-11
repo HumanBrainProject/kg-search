@@ -46,7 +46,6 @@ public class SubjectOfKGV2Translator implements Translator<SubjectV1, Subject> {
         s.setIdentifier(identifiers);
         s.setAge(subject.getAge());
         s.setAgeCategory(emptyToNull(subject.getAgeCategory()));
-        s.setDatasetExists(emptyToNull(subject.getDatasetExists()));
         if (dataStage == DataStage.IN_PROGRESS) {
             s.setEditorId(subject.getEditorId());
         }

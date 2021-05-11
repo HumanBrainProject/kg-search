@@ -51,7 +51,6 @@ public class SampleOfKGV2Translator implements Translator<SampleV1, Sample> {
         s.setTitle(title);
         s.setFirstRelease(sample.getFirstReleaseAt());
         s.setLastRelease(sample.getLastReleaseAt());
-        s.setDatasetExists(emptyToNull(sample.getDatasetExists()));
         if (dataStage == DataStage.IN_PROGRESS) {
             s.setEditorId(sample.getEditorId());
         }

@@ -55,10 +55,10 @@ public class Subject implements TargetInstance {
     @FieldInfo(layout = FieldInfo.Layout.HEADER)
     private Value<String> editorId;
 
-    @FieldInfo(label = "Species", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, overview = true)
+    @FieldInfo(label = "Species", type = FieldInfo.Type.TEXT, overview = true)
     private List<Value<String>> species;
 
-    @FieldInfo(label = "Sex", facet = FieldInfo.Facet.LIST, overview = true)
+    @FieldInfo(label = "Sex", overview = true)
     private List<Value<String>> sex;
 
     @FieldInfo(label = "Age", overview = true)
@@ -71,17 +71,14 @@ public class Subject implements TargetInstance {
     @FieldInfo(label = "Weight")
     private Value<String> weight;
 
-    @FieldInfo(label = "Strain", facet = FieldInfo.Facet.LIST, overview = true)
+    @FieldInfo(label = "Strain", overview = true)
     private Value<String> strain;
 
-    @FieldInfo(label = "Genotype", facet = FieldInfo.Facet.LIST, overview = true)
+    @FieldInfo(label = "Genotype", overview = true)
     private Value<String> genotype;
 
     @FieldInfo(label = "Samples", layout = FieldInfo.Layout.GROUP, hint = "List of samples that have been obtained from a given subject.", aggregate = FieldInfo.Aggregate.COUNT)
     private List<TargetInternalReference> samples;
-
-    @FieldInfo(label = "Datasets", visible = false, facet = FieldInfo.Facet.EXISTS)
-    private List<Value<String>> datasetExists;
 
     @FieldInfo(label = "Datasets", layout = FieldInfo.Layout.GROUP, type = FieldInfo.Type.TEXT, hint = "List of datasets in which the subject was used to produce data.")
     private List<Children<Dataset>> datasets;
@@ -225,14 +222,6 @@ public class Subject implements TargetInstance {
 
     public void setSamples(List<TargetInternalReference> samples) {
         this.samples = samples;
-    }
-
-    public List<Value<String>> getDatasetExists() {
-        return datasetExists;
-    }
-
-    public void setDatasetExists(List<String> datasetExists) {
-        this.datasetExists = datasetExists == null ? null : datasetExists.stream().map(Value::new).collect(Collectors.toList());
     }
 
     public List<Children<Dataset>> getDatasets() {

@@ -78,9 +78,6 @@ public class Sample implements TargetInstance {
     @FieldInfo(label = "Subject", overview = true, hint = "Experimental subject that this sample was obtained from.")
     private List<Children<Subject>> subject;
 
-    @FieldInfo(label = "Datasets", visible = false, facet = FieldInfo.Facet.EXISTS)
-    private List<Value<String>> datasetExists;
-
     @FieldInfo(label = "Datasets", layout = FieldInfo.Layout.GROUP, type = FieldInfo.Type.TEXT, hint = "List of datasets in which the sample was used to produce data.")
     private List<Children<Dataset>> datasets;
 
@@ -213,14 +210,6 @@ public class Sample implements TargetInstance {
         this.subject = subject != null ? subject.stream().map(Children::new).collect(Collectors.toList()) : null;
     }
 
-    public List<Value<String>> getDatasetExists() {
-        return datasetExists;
-    }
-
-    public void setDatasetExists(List<String> datasetExists) {
-        this.datasetExists = datasetExists != null ? datasetExists.stream().map(Value::new).collect(Collectors.toList()) : null;
-    }
-
     public List<Children<Dataset>> getDatasets() {
         return datasets;
     }
@@ -311,10 +300,10 @@ public class Sample implements TargetInstance {
         @FieldInfo(label = "Name")
         private TargetInternalReference subjectName;
 
-        @FieldInfo(label = "Species", facet = FieldInfo.Facet.LIST, type = FieldInfo.Type.TEXT, overview = true, facetOrder = FieldInfo.FacetOrder.BYCOUNT)
+        @FieldInfo(label = "Species", type = FieldInfo.Type.TEXT, overview = true)
         private List<Value<String>> species;
 
-        @FieldInfo(label = "Sex", facet = FieldInfo.Facet.LIST)
+        @FieldInfo(label = "Sex")
         private List<Value<String>> sex;
 
         @FieldInfo(label = "Age")
