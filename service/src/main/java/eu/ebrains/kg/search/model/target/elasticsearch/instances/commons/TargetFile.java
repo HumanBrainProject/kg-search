@@ -36,6 +36,13 @@ public class TargetFile {
         this.fileSize = fileSize;
     }
 
+    public TargetFile(String url, String value, String fileSize, String format) {
+        this.url = url;
+        this.value = value;
+        this.fileSize = fileSize;
+        this.format = format;
+    }
+
     public TargetFile(String url, String value, String fileSize, FileImage staticImageUrl, FileImage previewUrl, FileImage thumbnailUrl) {
         this.url = url;
         this.value = value;
@@ -48,15 +55,22 @@ public class TargetFile {
 
     @ElasticSearchInfo(ignoreAbove = 256)
     private String url;
+
     private String value;
+
     @ElasticSearchInfo(ignoreAbove = 256)
     private String fileSize;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private FileImage staticImageUrl;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private FileImage previewUrl;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private FileImage thumbnailUrl;
+
+    private String format;
 
     public String getFileSize() {
         return fileSize;
@@ -104,6 +118,14 @@ public class TargetFile {
 
     public void setThumbnailUrl(FileImage thumbnailUrl) {
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
     }
 
     public static class FileImage {

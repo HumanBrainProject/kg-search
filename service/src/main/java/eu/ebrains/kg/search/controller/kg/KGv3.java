@@ -51,6 +51,10 @@ public class KGv3 {
         return kgServiceClient.executeQueryForIndexing(clazz, dataStage, queryId, from, size);
     }
 
+    public <T> T executeQueryForIndexing(Class<T> clazz, DataStage dataStage, String queryId, int from, int size, Map<String, String> params){
+        return kgServiceClient.executeQueryForIndexing(clazz, dataStage, queryId, from, size, params);
+    }
+
     private static class ResultsOfKGV3Source extends ResultsOfKGv3<SourceInstanceV3> {}
 
     public List<SourceInstanceV3> executeQueryForIndexing(DataStage dataStage, String queryId){

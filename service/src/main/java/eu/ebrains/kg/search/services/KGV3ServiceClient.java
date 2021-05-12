@@ -34,6 +34,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Component
@@ -56,6 +58,15 @@ public class KGV3ServiceClient {
 
     public <T> T executeQueryForIndexing(Class<T> clazz, DataStage dataStage, String queryId, int from, int size) {
         String url = String.format("%s/queries/%s/instances?stage=%s&from=%d&size=%d", kgCoreEndpoint, queryId, dataStage, from, size);
+        return executeCallForIndexing(clazz, url);
+    }
+
+    public <T> T executeQueryForIndexing(Class<T> clazz, DataStage dataStage, String queryId, int from, int size, Map<String, String> params) {
+        StringBuilder p = new StringBuilder();
+        for (Map.Entry<String, String> param : params.entrySet()) {
+            p.append(String.format("&%s=%s", param.getKey(), URLEncoder.encode(param.getValue(), StandardCharsets.UTF_8)));
+        }
+        String url = String.format("%s/queries/%s/instances?stage=%s&from=%d&size=%d%s", kgCoreEndpoint, queryId, dataStage, from, size, p);
         return executeCallForIndexing(clazz, url);
     }
 

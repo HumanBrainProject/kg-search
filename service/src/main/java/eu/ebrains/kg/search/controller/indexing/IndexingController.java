@@ -152,6 +152,7 @@ public class IndexingController {
             fullReplacementFromV3ByType(clazz, dataStage);
         }
     }
+
     public void fullReplacementCombinedByType(Class<?> clazz, DataStage dataStage, String legacyAuthorization) {
         String type = utils.getNameForClass(clazz);
         logger.info(String.format("Creating index %s_searchable_%s for %s", dataStage, type.toLowerCase(), type));

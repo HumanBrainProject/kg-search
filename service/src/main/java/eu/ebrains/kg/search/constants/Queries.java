@@ -78,4 +78,7 @@ public class Queries {
     public static final String FILE_REPOSITORY_QUERY_ID = "536c37ed-f8cd-40b1-91ab-d193509e348c";
     public static final String FILE_REPOSITORY_QUERY_RESOURCE = "/queries/fileRepositorySearch.json";
 
+    public static final String FILE_QUERY_ID = "b96f11b3-1bcb-44c1-8d12-d33dbec3b990";
+    public static final String FILE_QUERY_RESOURCE = "/queries/fileSearch.json";
+
 }

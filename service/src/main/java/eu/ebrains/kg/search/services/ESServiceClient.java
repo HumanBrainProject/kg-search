@@ -232,14 +232,14 @@ public class ESServiceClient {
     }
 
     public void updateIndex(String index, String operations) {
-        Map<String, Object> result = webClient.post()
+        Map result = webClient.post()
                 .uri(String.format("%s/%s/_bulk", elasticSearchEndpoint, index))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_NDJSON_VALUE)
                 .body(BodyInserters.fromValue(operations))
                 .retrieve()
                 .bodyToMono(Map.class)
                 .block();
-        if ((boolean) result.get("errors")) {
+        if (result != null && ((boolean) result.get("errors"))) {
             ((List<Map<String, Object>>) result.get("items")).forEach(item -> {
                 Map<String, Object> instance = (Map) item.get("index");
                 if ((int) instance.get("status") >= 400) {
@@ -251,9 +251,7 @@ public class ESServiceClient {
 
     public void updateIndex(String index, List<StringBuilder> operationsList) {
         logger.info(String.format("Updating index %s with %s bulk operations", index, operationsList.size()));
-        operationsList.forEach(operations -> {
-            this.updateIndex(index, operations.toString());
-        });
+        operationsList.forEach(operations -> this.updateIndex(index, operations.toString()));
         logger.info(String.format("Done updating index %s", index));
     }
 }

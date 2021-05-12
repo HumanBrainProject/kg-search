@@ -1,0 +1,79 @@
+{
+  "@context": {
+    "@vocab": "https://core.kg.ebrains.eu/vocab/query/",
+    "query": "https://schema.hbp.eu/myQuery/",
+    "propertyName": {
+      "@id": "propertyName",
+      "@type": "@id"
+    },
+    "merge": {
+      "@type": "@id",
+      "@id": "merge"
+    },
+    "path": {
+      "@id": "path",
+      "@type": "@id"
+    }
+  },
+  "meta": {
+    "name": "File search query",
+    "type": "https://openminds.ebrains.eu/core/File",
+    "responseVocab": "https://schema.hbp.eu/myQuery/"
+  },
+  "structure": [
+    {
+      "propertyName": "query:name",
+      "path": "https://openminds.ebrains.eu/vocab/name",
+      "required": true
+    },
+    {
+      "propertyName": "query:IRI",
+      "path": "https://openminds.ebrains.eu/vocab/IRI",
+      "required": true
+    },
+    {
+      "propertyName": "query:size",
+      "path": "https://openminds.ebrains.eu/vocab/storageSize",
+      "singleValue": "FIRST",
+      "structure": [
+        {
+          "propertyName": "query:value",
+          "path": {
+            "@id": "https://openminds.ebrains.eu/vocab/value",
+            "reverse": true
+          },
+          "singleValue": "FIRST"
+        },
+        {
+          "propertyName": "query:unit",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/unit",
+            "https://openminds.ebrains.eu/vocab/name"
+          ],
+          "singleValue": "FIRST"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:format",
+      "path": [
+        "https://openminds.ebrains.eu/vocab/format",
+        "https://openminds.ebrains.eu/vocab/name"
+      ],
+      "singleValue": "FIRST"
+    },
+    {
+      "propertyName":"query:fileRepository",
+      "path":[
+        "https://openminds.ebrains.eu/vocab/fileRepository",
+        "@id"
+      ],
+      "filter":{
+        "op": "EQUALS",
+        "parameter": "fileRepositoryId"
+      },
+      "required": true,
+      "singleValue": "FIRST"
+    }
+  ]
+}

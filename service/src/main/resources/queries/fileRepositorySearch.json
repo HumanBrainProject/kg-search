@@ -17,7 +17,8 @@
   },
   "meta": {
     "name": "FileRepository search query",
-    "type": "https://openminds.ebrains.eu/core/FileRepository"
+    "type": "https://openminds.ebrains.eu/core/FileRepository",
+    "responseVocab": "https://schema.hbp.eu/myQuery/"
   },
   "structure": [
     {
@@ -36,55 +37,15 @@
       "required": true
     },
     {
-      "propertyName": "query:files",
-      "path": {
-        "@id": "https://openminds.ebrains.eu/vocab/fileRepository",
-        "reverse": true
-      },
-      "required": true,
-      "structure": [
+      "propertyName": "query:filesStatus",
+      "path": [
         {
-          "propertyName": "query:name",
-          "path": "https://openminds.ebrains.eu/vocab/name",
-          "required": true
+          "@id": "https://openminds.ebrains.eu/vocab/fileRepository",
+          "reverse": true
         },
-        {
-          "propertyName": "query:IRI",
-          "path": "https://openminds.ebrains.eu/vocab/IRI",
-          "required": true
-        },
-        {
-          "propertyName": "query:storageSize",
-          "path": "https://openminds.ebrains.eu/vocab/storageSize",
-          "singleValue": "FIRST",
-          "structure": [
-            {
-              "propertyName": "query:value",
-              "path": {
-                "@id": "https://openminds.ebrains.eu/vocab/value",
-                "reverse": true
-              },
-              "singleValue": "FIRST"
-            },
-            {
-              "propertyName": "query:unit",
-              "path": [
-                "https://openminds.ebrains.eu/vocab/unit",
-                "https://openminds.ebrains.eu/vocab/name"
-              ],
-              "singleValue": "FIRST"
-            }
-          ]
-        },
-        {
-          "propertyName": "query:format",
-          "path": [
-            "https://openminds.ebrains.eu/vocab/format",
-            "https://openminds.ebrains.eu/vocab/name"
-          ],
-          "singleValue": "FIRST"
-        }
-      ]
+        "@id"
+      ],
+      "singleValue": "FIRST"
     }
   ]
 }

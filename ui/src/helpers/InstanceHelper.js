@@ -40,7 +40,7 @@ export const getTitle = (data, id) => {
       return `${data._source.title.value}`;
     }
     if (data._source?.type?.value ) {
-      return `${data._soure.type.value} ${data._id}`;
+      return `${data._source.type.value} ${data._id}`;
     }
   }
   if (!id) {
