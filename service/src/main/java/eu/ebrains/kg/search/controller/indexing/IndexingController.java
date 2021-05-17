@@ -38,6 +38,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class IndexingController {
@@ -48,7 +49,9 @@ public class IndexingController {
     private final TranslationController translationController;
     private final MetaModelUtils utils;
 
-    private final int BULK_INSTANCES_SIZE = 20;
+    private int getBulkSize(Class<?> clazz) {
+        return Constants.isSourceModelBig(clazz) ? 100 : 1000;
+    }
 
     public IndexingController(MappingController mappingController, ElasticSearchController elasticSearchController, TranslationController translationController, MetaModelUtils utils) {
         this.mappingController = mappingController;
@@ -57,8 +60,28 @@ public class IndexingController {
         this.utils = utils;
     }
 
-    public void incrementalUpdateAll(DataStage dataStage, String legacyAuthorization){
+    public void incrementalUpdateAll(DataStage dataStage, String legacyAuthorization) {
         Constants.TARGET_MODELS_ORDER.forEach(clazz -> incrementalUpdateByType(clazz, dataStage, legacyAuthorization));
+    }
+
+    public void incrementalUpdateAutoRelease() {
+        Constants.AUTO_RELEASED_MODELS_ORDER.forEach(clazz -> {
+            String type = utils.getNameForClass(clazz);
+            Set<String> ids = new HashSet<>();
+            boolean hasMore = true;
+            int from = 10;
+            while (hasMore) {
+                TargetInstancesResult result = translationController.createInstancesFromV3ForIndexing(clazz, DataStage.IN_PROGRESS, false, from, getBulkSize(clazz)); //TODO: Change to RELEASED
+                List<TargetInstance> instances = result.getTargetInstances();
+                if (instances != null) {
+                    ids.addAll(instances.stream().map(TargetInstance::getId).collect(Collectors.toList()));
+                    elasticSearchController.updateAutoReleasedIndex(instances, type);
+                }
+                from = result.getFrom() + result.getSize();
+                hasMore = from < result.getTotal();
+            }
+            elasticSearchController.removeDeprecatedDocumentsFromAutoReleasedIndex(type, ids);
+        });
     }
 
     public void incrementalUpdateByType(Class<?> clazz, DataStage dataStage, String legacyAuthorization) {
@@ -88,11 +111,11 @@ public class IndexingController {
                     nonSearchableIds.add(instance.getId());
                     nonSearchableInstances.add(instance);
                 }
-                if (searchableInstances.size() == BULK_INSTANCES_SIZE) {
+                if (searchableInstances.size() == getBulkSize(clazz)) {
                     elasticSearchController.updateSearchIndex(searchableInstances, type, dataStage);
                     searchableInstances = new ArrayList<>();
                 }
-                if (nonSearchableInstances.size() == BULK_INSTANCES_SIZE) {
+                if (nonSearchableInstances.size() == getBulkSize(clazz)) {
                     elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
                     nonSearchableInstances = new ArrayList<>();
                 }
@@ -114,9 +137,9 @@ public class IndexingController {
         Set<String> searchableIds = new HashSet<>();
         Set<String> nonSearchableIds = new HashSet<>();
         boolean hasMore = true;
-        int from = 0;
+        int from = 10;
         while (hasMore) {
-            TargetInstancesResult result = translationController.createInstancesFromV3ForIndexing(clazz, dataStage, false, from, BULK_INSTANCES_SIZE);
+            TargetInstancesResult result = translationController.createInstancesFromV3ForIndexing(clazz, dataStage, false, from, getBulkSize(clazz));
             List<TargetInstance> instances = result.getTargetInstances();
             if (instances != null) {
                 List<TargetInstance> searchableInstances = new ArrayList<>();
@@ -153,6 +176,24 @@ public class IndexingController {
         }
     }
 
+    public void fullReplacementAutoReleasedByType(Class<?> clazz) {
+        String type = utils.getNameForClass(clazz);
+        logger.info(String.format("Creating index auto_released_%s for %s", type.toLowerCase(), type));
+        recreateAutoReleasedIndex(type, clazz);
+        logger.info(String.format("Successfully created index auto_released_%s for %s", type.toLowerCase(), type));
+        boolean hasMore = true;
+        int from = 0;
+        while (hasMore) {
+            TargetInstancesResult result = translationController.createInstancesFromV3ForIndexing(clazz, DataStage.IN_PROGRESS, false, from, getBulkSize(clazz)); //TODO: Change Datastage to RELEASED
+            List<TargetInstance> instances = result.getTargetInstances();
+            if (instances != null) {
+                elasticSearchController.updateAutoReleasedIndex(instances, type);
+            }
+            from = result.getFrom() + result.getSize();
+            hasMore = from < result.getTotal();
+        }
+    }
+
     public void fullReplacementCombinedByType(Class<?> clazz, DataStage dataStage, String legacyAuthorization) {
         String type = utils.getNameForClass(clazz);
         logger.info(String.format("Creating index %s_searchable_%s for %s", dataStage, type.toLowerCase(), type));
@@ -173,11 +214,11 @@ public class IndexingController {
                     nonSearchableIds.add(instance.getId());
                     nonSearchableInstances.add(instance);
                 }
-                if (searchableInstances.size() == BULK_INSTANCES_SIZE) {
+                if (searchableInstances.size() == getBulkSize(clazz)) {
                     elasticSearchController.updateSearchIndex(searchableInstances, type, dataStage);
                     searchableInstances = new ArrayList<>();
                 }
-                if (nonSearchableInstances.size() == BULK_INSTANCES_SIZE) {
+                if (nonSearchableInstances.size() == getBulkSize(clazz)) {
                     elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
                     nonSearchableInstances = new ArrayList<>();
                 }
@@ -202,7 +243,7 @@ public class IndexingController {
         boolean hasMore = true;
         int from = 0;
         while (hasMore) {
-            TargetInstancesResult result = translationController.createInstancesFromV3ForIndexing(clazz, dataStage, false, from, BULK_INSTANCES_SIZE);
+            TargetInstancesResult result = translationController.createInstancesFromV3ForIndexing(clazz, dataStage, false, from, getBulkSize(clazz));
             List<TargetInstance> instances = result.getTargetInstances();
             if (instances != null) {
                 List<TargetInstance> searchableInstances = new ArrayList<>();
@@ -238,5 +279,11 @@ public class IndexingController {
         Map<String, Object> mapping = mappingController.generateMapping(clazz);
         Map<String, Object> mappingResult = Map.of("mappings", mapping);
         elasticSearchController.recreateSearchIndex(mappingResult, type, dataStage);
+    }
+
+    private void recreateAutoReleasedIndex(String type, Class<?> clazz) {
+        Map<String, Object> mapping = mappingController.generateMapping(clazz);
+        Map<String, Object> mappingResult = Map.of("mappings", mapping);
+        elasticSearchController.recreateAutoReleasedIndex(mappingResult, type);
     }
 }

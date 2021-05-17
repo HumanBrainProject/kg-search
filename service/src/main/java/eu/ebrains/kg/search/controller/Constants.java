@@ -26,6 +26,7 @@ package eu.ebrains.kg.search.controller;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -75,10 +76,18 @@ public class Constants {
             FileRepository.class
     );
 
+    public final static List<Class<?>> AUTO_RELEASED_MODELS_ORDER = Collections.singletonList(
+            File.class
+    );
+
     public final static List<Map<String, String>> GROUPS = Arrays.asList(
             Map.of("name", "curated",
                     "label", "in progress"),
             Map.of("name", "public",
                     "label", "publicly released")
     );
+
+    public static boolean isSourceModelBig(Class<?> clazz) {
+        return clazz != File.class;
+    }
 }

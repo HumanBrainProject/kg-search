@@ -24,7 +24,6 @@
 package eu.ebrains.kg.search.utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.search.controller.labels.LabelsController;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import org.springframework.stereotype.Component;
@@ -34,6 +33,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Component
@@ -143,5 +143,15 @@ public class MetaModelUtils {
         }
         return type;
 
+    }
+
+    private final static Pattern UUID_REGEX_PATTERN =
+            Pattern.compile("^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$");
+
+    public static boolean isValidUUID(String str) {
+        if (str == null) {
+            return false;
+        }
+        return UUID_REGEX_PATTERN.matcher(str).matches();
     }
 }

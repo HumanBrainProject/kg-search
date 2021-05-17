@@ -26,12 +26,8 @@ package eu.ebrains.kg.search.controller.translators;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv3.FileRepositoryV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.FileRepository;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.utils.IdUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.CollectionUtils;
-
-import java.util.stream.Collectors;
 
 public class FileRepositoryOfKGV3Translator implements Translator<FileRepositoryV3, FileRepository> {
 
@@ -40,14 +36,17 @@ public class FileRepositoryOfKGV3Translator implements Translator<FileRepository
         f.setId(IdUtils.getUUID(fileRepository.getId()));
         f.setIdentifier(IdUtils.getUUID(fileRepository.getIdentifier()));
         f.setIRI(fileRepository.getIRI());
-        if(!CollectionUtils.isEmpty(fileRepository.getFiles())) {
-            f.setFiles(fileRepository.getFiles().stream().map(file -> {
-                FileRepositoryV3.Size size = file.getSize();
-                if(size != null && StringUtils.isNotBlank(size.getUnit())) {
-                    return new TargetFile(file.getIRI(), file.getName(), String.format("%d %s", size.getValue(), size.getUnit()), file.getFormat());
-                }
-                return new TargetFile(file.getIRI(), file.getName(),null, file.getFormat());
-            }).collect(Collectors.toList()));
+        if (fileRepository.getDatasetVersion() != null) {
+            f.setDatasetVersion(new TargetInternalReference(IdUtils.getUUID(fileRepository.getDatasetVersion().getId()), fileRepository.getDatasetVersion().getFullName()));
+        }
+        if (fileRepository.getMetaDataModelVersion() != null) {
+            f.setMetaDataModelVersion(new TargetInternalReference(IdUtils.getUUID(fileRepository.getMetaDataModelVersion().getId()), fileRepository.getMetaDataModelVersion().getFullName()));
+        }
+        if (fileRepository.getModelVersion() != null) {
+            f.setModelVersion(new TargetInternalReference(IdUtils.getUUID(fileRepository.getModelVersion().getId()), fileRepository.getModelVersion().getFullName()));
+        }
+        if (fileRepository.getSoftwareVersion() != null) {
+            f.setSoftwareVersion(new TargetInternalReference(IdUtils.getUUID(fileRepository.getSoftwareVersion().getId()), fileRepository.getSoftwareVersion().getFullName()));
         }
         return f;
     }

@@ -101,6 +101,9 @@ public class DatasetVersion implements TargetInstance {
     @FieldInfo(label = "Files", layout = FieldInfo.Layout.GROUP, isHierarchicalFiles = true, termsOfUse = true)
     private List<TargetFile> files;
 
+    @FieldInfo(label = "File repository")
+    private TargetInternalReference fileRepository;
+
     @JsonProperty("external_datalink")
     @FieldInfo(label = "Data download", layout = FieldInfo.Layout.GROUP)
     private List<TargetExternalReference> externalDatalink;
@@ -474,6 +477,14 @@ public class DatasetVersion implements TargetInstance {
 
     public void setDataset(TargetInternalReference dataset) {
         this.dataset = dataset;
+    }
+
+    public TargetInternalReference getFileRepository() {
+        return fileRepository;
+    }
+
+    public void setFileRepository(TargetInternalReference fileRepository) {
+        this.fileRepository = fileRepository;
     }
 
     public static class Subject {

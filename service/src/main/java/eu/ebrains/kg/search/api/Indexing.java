@@ -64,6 +64,17 @@ public class Indexing {
         }
     }
 
+    @PostMapping("/autorelease")
+    public ResponseEntity<?> fullReplacementAutoRelease() {
+        try {
+            Constants.AUTO_RELEASED_MODELS_ORDER.forEach(indexingController::fullReplacementAutoReleasedByType);
+            return ResponseEntity.ok().build();
+        } catch (WebClientResponseException e) {
+            logger.info("Unsuccessful autorelease indexing", e);
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
+    }
+
     @PutMapping
     public ResponseEntity<?> incrementalUpdate(@RequestParam("databaseScope") DataStage dataStage,
                                                @RequestHeader("X-Legacy-Authorization") String legacyAuthorization) {
@@ -73,6 +84,17 @@ public class Indexing {
             return ResponseEntity.ok().build();
         } catch (WebClientResponseException e) {
             logger.info("Unsuccessful incremental indexing", e);
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
+    }
+
+    @PutMapping("/autorelease")
+    public ResponseEntity<?> incrementalUpdateAutoRelease() {
+        try {
+            indexingController.incrementalUpdateAutoRelease();
+            return ResponseEntity.ok().build();
+        } catch (WebClientResponseException e) {
+            logger.info("Unsuccessful incremental autorelease indexing", e);
             return ResponseEntity.status(e.getStatusCode()).build();
         }
     }

@@ -92,6 +92,44 @@ public class ESServiceClient {
                 "}", Constants.esQuerySize, id);
     }
 
+    private String getPaginatedFilesQuery(String fileRepositoryId, String searchAfter, int size) {
+        if(searchAfter == null) {
+            return String.format("{\n" +
+                    " \"size\": %d,\n" +
+                    " \"sort\": [\n" +
+                    "    {\"_id\": \"asc\"}\n" +
+                    "  ],\n" +
+                    "  \"query\": {\n" +
+                    "    \"bool\": {\n" +
+                    "      \"must\": {\n" +
+                    "          \"term\": {\n" +
+                    "            \"fileRepository\": \"%s\"\n" +
+                    "          }\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}", size, fileRepositoryId);
+        }
+        return String.format("{\n" +
+                " \"size\": %d,\n" +
+                " \"sort\": [\n" +
+                "    {\"_id\": \"asc\"}\n" +
+                "  ],\n" +
+                "  \"search_after\": [\n" +
+                "      \"%s\"\n" +
+                "  ],\n" +
+                "  \"query\": {\n" +
+                "    \"bool\": {\n" +
+                "      \"must\": {\n" +
+                "          \"term\": {\n" +
+                "            \"fileRepository\": \"%s\"\n" +
+                "          }\n" +
+                "        }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}", size, searchAfter, fileRepositoryId);
+    }
+
     private String getIdsOfPaginatedQuery(String id, String type) {
         if (id == null) {
             return String.format("{\n" +
@@ -185,6 +223,17 @@ public class ESServiceClient {
 
     private ElasticSearchResult getPaginatedDocuments(String index, String searchAfter) {
         String paginatedQuery = getPaginatedQuery(searchAfter);
+        return webClient.post()
+                .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
+                .body(BodyInserters.fromValue(paginatedQuery))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_NDJSON_VALUE)
+                .retrieve()
+                .bodyToMono(ElasticSearchResult.class)
+                .block();
+    }
+
+    public ElasticSearchResult getFilesFromRepo(String index, String fileRepositoryId, String searchAfter, int size) {
+        String paginatedQuery = getPaginatedFilesQuery(fileRepositoryId, searchAfter, size);
         return webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
                 .body(BodyInserters.fromValue(paginatedQuery))

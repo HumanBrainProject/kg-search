@@ -423,38 +423,36 @@ public class TranslationController {
     private static class ResultsOfKGV3FileRepositoryV3 extends ResultsOfKGv3<FileRepositoryV3> {
     }
 
-    private static class ResultsOfKGV3FileV3 extends ResultsOfKGv3<FileRepositoryV3.File> {
-    }
-
     public TargetInstancesResult createFileRepositoriesForIndexing(DataStage dataStage, boolean liveMode, int from, int size) {
         logger.info("Starting to query fileRepositories for v3");
         ResultsOfKGv3<FileRepositoryV3> fileRepositories = kgV3.executeQueryForIndexing(ResultsOfKGV3FileRepositoryV3.class, dataStage, Queries.FILE_REPOSITORY_QUERY_ID, from, size);
         logger.info(String.format("Queried %d fileRepositories for v3", CollectionUtils.isEmpty(fileRepositories.getData()) ? 0 : fileRepositories.getData().size()));
         FileRepositoryOfKGV3Translator translator = new FileRepositoryOfKGV3Translator();
-        List<TargetInstance> instances = fileRepositories.getData().stream().map(fileRepository -> {
-            if (fileRepository.hasFiles()) {
-                List<FileRepositoryV3.File> files = new ArrayList<>();
-                boolean hasMore = true;
-                int fileFrom = 0;
-                logger.info(String.format("Starting to query files for repository: %s for v3", IdUtils.getUUID(fileRepository.getId())));
-                while (hasMore) {
-                    ResultsOfKGV3FileV3 result = kgV3.executeQueryForIndexing(ResultsOfKGV3FileV3.class, dataStage, Queries.FILE_QUERY_ID, fileFrom, size, Map.of("fileRepositoryId", fileRepository.getId()));
-                    logger.info(String.format("Queried %d files for repository: %s from %d of a total of %d for v3", result.getSize(), IdUtils.getUUID(fileRepository.getId()), fileFrom, result.getTotal()));
-                    files.addAll(result.getData());
-                    fileFrom = result.getFrom() + result.getSize();
-                    hasMore = fileFrom < result.getTotal();
-                }
-                if (!CollectionUtils.isEmpty(files)) {
-                    fileRepository.setFiles(files);
-                }
-            }
-            return (TargetInstance) translator.translate(fileRepository, dataStage, liveMode);
-        }).filter(Objects::nonNull).collect(Collectors.toList());
+        List<TargetInstance> instances = fileRepositories.getData().stream().map(fileRepository -> (TargetInstance) translator.translate(fileRepository, dataStage, liveMode)).filter(Objects::nonNull).collect(Collectors.toList());
         TargetInstancesResult result = new TargetInstancesResult();
         result.setTargetInstances(instances);
         result.setFrom(fileRepositories.getFrom());
         result.setSize(fileRepositories.getSize());
         result.setTotal(fileRepositories.getTotal());
+        return result;
+    }
+
+
+
+    private static class ResultsOfKGV3FileV3 extends ResultsOfKGv3<FileV3> {
+    }
+
+    public TargetInstancesResult createFileForIndexing(DataStage dataStage, boolean liveMode, int from, int size) {
+        logger.info("Starting to query files for v3");
+        ResultsOfKGv3<FileV3> files = kgV3.executeQueryForIndexing(ResultsOfKGV3FileV3.class, dataStage, Queries.FILE_QUERY_ID, from, size);
+        logger.info(String.format("Queried %d files for v3", CollectionUtils.isEmpty(files.getData()) ? 0 : files.getData().size()));
+        FileOfKGV3Translator translator = new FileOfKGV3Translator();
+        List<TargetInstance> instances = files.getData().stream().map(file -> (TargetInstance) translator.translate(file, dataStage, liveMode)).filter(Objects::nonNull).collect(Collectors.toList());
+        TargetInstancesResult result = new TargetInstancesResult();
+        result.setTargetInstances(instances);
+        result.setFrom(files.getFrom());
+        result.setSize(files.getSize());
+        result.setTotal(files.getTotal());
         return result;
     }
 
@@ -1044,6 +1042,9 @@ public class TranslationController {
         }
         if (clazz == FileRepository.class) {
             return this.createFileRepositoriesForIndexing(dataStage, liveMode, from, size);
+        }
+        if (clazz == File.class) {
+            return this.createFileForIndexing(dataStage, liveMode, from, size);
         }
         return new TargetInstancesResult();
     }

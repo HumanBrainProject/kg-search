@@ -87,6 +87,9 @@ public class DatasetVersionOfKGV3Translator implements Translator<DatasetVersion
                 d.setCitation(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url));
             }
         }
+        if (datasetVersion.getFileRepository() != null) {
+            d.setFileRepository(new TargetInternalReference(datasetVersion.getFileRepository().getId(), datasetVersion.getFileRepository().getFullName()));
+        }
         return d;
     }
 }

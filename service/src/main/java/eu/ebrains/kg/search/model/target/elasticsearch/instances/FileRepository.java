@@ -27,7 +27,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
 import java.util.List;
@@ -47,8 +47,17 @@ public class FileRepository implements TargetInstance {
     @FieldInfo(label = "File repository", layout = FieldInfo.Layout.HEADER)
     private String IRI;
 
-    @FieldInfo(label = "Files", layout = FieldInfo.Layout.GROUP, isHierarchicalFiles = true, termsOfUse = true)
-    private List<TargetFile> files;
+    @FieldInfo(label = "Dataset")
+    private TargetInternalReference datasetVersion;
+
+    @FieldInfo(label = "(Meta) Data Model Version")
+    private TargetInternalReference metaDataModelVersion;
+
+    @FieldInfo(label = "Model Version")
+    private TargetInternalReference modelVersion;
+
+    @FieldInfo(label = "Software Version")
+    private TargetInternalReference softwareVersion;
 
     public Value<String> getType() { return type; }
 
@@ -69,7 +78,35 @@ public class FileRepository implements TargetInstance {
 
     public void setIRI(String IRI) { this.IRI = IRI; }
 
-    public List<TargetFile> getFiles() { return files; }
+    public TargetInternalReference getDatasetVersion() {
+        return datasetVersion;
+    }
 
-    public void setFiles(List<TargetFile> files) { this.files = files; }
+    public void setDatasetVersion(TargetInternalReference datasetVersion) {
+        this.datasetVersion = datasetVersion;
+    }
+
+    public TargetInternalReference getMetaDataModelVersion() {
+        return metaDataModelVersion;
+    }
+
+    public void setMetaDataModelVersion(TargetInternalReference metaDataModelVersion) {
+        this.metaDataModelVersion = metaDataModelVersion;
+    }
+
+    public TargetInternalReference getModelVersion() {
+        return modelVersion;
+    }
+
+    public void setModelVersion(TargetInternalReference modelVersion) {
+        this.modelVersion = modelVersion;
+    }
+
+    public TargetInternalReference getSoftwareVersion() {
+        return softwareVersion;
+    }
+
+    public void setSoftwareVersion(TargetInternalReference softwareVersion) {
+        this.softwareVersion = softwareVersion;
+    }
 }

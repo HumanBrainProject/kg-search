@@ -25,6 +25,7 @@ package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.SourceInternalReference;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
 
 import java.util.Date;
@@ -42,6 +43,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private String versionInnovation;
     private List<Author> author;
     private DatasetVersions dataset;
+    private SourceInternalReference fileRepository;
 
     public String getDescription() {
         return description;
@@ -129,6 +131,14 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
 
     public void setDataset(DatasetVersions dataset) {
         this.dataset = dataset;
+    }
+
+    public SourceInternalReference getFileRepository() {
+        return fileRepository;
+    }
+
+    public void setFileRepository(SourceInternalReference fileRepository) {
+        this.fileRepository = fileRepository;
     }
 
     public static class DatasetVersions extends Versions {

@@ -23,70 +23,48 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.List;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.SourceInternalReference;
 
 public class FileRepositoryV3 extends SourceInstanceV3 {
     private String IRI;
-    private List<File> files;
-    private String filesStatus; // Workaround to check if a repo contains files
+    private SourceInternalReference datasetVersion;
+    private SourceInternalReference metaDataModelVersion;
+    private SourceInternalReference modelVersion;
+    private SourceInternalReference softwareVersion;
 
     public String getIRI() { return IRI; }
 
     public void setIRI(String IRI) { this.IRI = IRI; }
 
-    public List<File> getFiles() { return files; }
-
-    public void setFiles(List<File> files) { this.files = files; }
-
-    public String getFilesStatus() { return filesStatus; }
-
-    public boolean hasFiles() { return StringUtils.isNotBlank(filesStatus); }
-
-    public void setFilesStatus(String filesStatus) { this.filesStatus = filesStatus; }
-
-    public static class File {
-        private String name;
-        private String IRI;
-        private Size size;
-        private String format;
-
-        public String getName() { return name; }
-
-        public void setName(String name) { this.name = name; }
-
-        public String getIRI() { return IRI; }
-
-        public void setIRI(String IRI) { this.IRI = IRI; }
-
-        public Size getSize() { return size; }
-
-        public void setSize(Size size) { this.size = size; }
-
-        public String getFormat() { return format; }
-
-        public void setFormat(String format) { this.format = format; }
+    public SourceInternalReference getDatasetVersion() {
+        return datasetVersion;
     }
 
-    public static class Size {
-        private int value;
-        private String unit;
+    public void setDatasetVersion(SourceInternalReference datasetVersion) {
+        this.datasetVersion = datasetVersion;
+    }
 
-        public int getValue() {
-            return value;
-        }
+    public SourceInternalReference getMetaDataModelVersion() {
+        return metaDataModelVersion;
+    }
 
-        public void setValue(int value) {
-            this.value = value;
-        }
+    public void setMetaDataModelVersion(SourceInternalReference metaDataModelVersion) {
+        this.metaDataModelVersion = metaDataModelVersion;
+    }
 
-        public String getUnit() {
-            return unit;
-        }
+    public SourceInternalReference getModelVersion() {
+        return modelVersion;
+    }
 
-        public void setUnit(String unit) {
-            this.unit = unit;
-        }
+    public void setModelVersion(SourceInternalReference modelVersion) {
+        this.modelVersion = modelVersion;
+    }
+
+    public SourceInternalReference getSoftwareVersion() {
+        return softwareVersion;
+    }
+
+    public void setSoftwareVersion(SourceInternalReference softwareVersion) {
+        this.softwareVersion = softwareVersion;
     }
 }

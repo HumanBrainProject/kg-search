@@ -73,6 +73,18 @@ public class ElasticSearchController {
         esServiceClient.createIndex(index, mapping);
     }
 
+    public void recreateAutoReleasedIndex(Map<String, Object> mapping, String type) {
+        String index = ESHelper.getAutoReleasedIndex(type);
+        try {
+            esServiceClient.deleteIndex(index);
+        } catch (WebClientResponseException e) {
+            if(e.getStatusCode() != HttpStatus.NOT_FOUND) {
+                throw  e;
+            }
+        }
+        esServiceClient.createIndex(index, mapping);
+    }
+
     private List<StringBuilder> getInsertOperations(List<TargetInstance> instances) {
         List<StringBuilder> result = new ArrayList<>();
         if (CollectionUtils.isEmpty(instances)) {
@@ -139,6 +151,11 @@ public class ElasticSearchController {
         updateIndex(index, instances);
     }
 
+    public void updateAutoReleasedIndex(List<TargetInstance> instances, String type) {
+        String index = ESHelper.getAutoReleasedIndex(type);
+        updateIndex(index, instances);
+    }
+
     public void removeDeprecatedDocumentsFromSearchIndex(String type, DataStage dataStage, Set<String> idsToKeep) {
         String index = ESHelper.getIndex(dataStage, type);
         removeDeprecatedDocuments(index, type, idsToKeep);
@@ -146,6 +163,11 @@ public class ElasticSearchController {
 
     public void removeDeprecatedDocumentsFromIdentifiersIndex(String type, DataStage dataStage, Set<String> idsToKeep) {
         String index = ESHelper.getIdentifierIndex(dataStage);
+        removeDeprecatedDocuments(index, type, idsToKeep);
+    }
+
+    public void removeDeprecatedDocumentsFromAutoReleasedIndex(String type, Set<String> idsToKeep) {
+        String index = ESHelper.getAutoReleasedIndex(type);
         removeDeprecatedDocuments(index, type, idsToKeep);
     }
 

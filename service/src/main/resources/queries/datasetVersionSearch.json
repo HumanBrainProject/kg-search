@@ -161,6 +161,21 @@
               "singleValue": "FIRST"
             }
           ]
+        },
+        {
+          "propertyName": "query:repository",
+          "path": "https://openminds.ebrains.eu/vocab/repository",
+          "singleValue": "FIRST",
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:fullName",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            }
+          ]
         }
       ]
     }
