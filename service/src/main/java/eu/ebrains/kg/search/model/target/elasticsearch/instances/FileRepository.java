@@ -28,7 +28,6 @@ import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
@@ -61,9 +60,7 @@ public class FileRepository implements TargetInstance {
     @FieldInfo(label = "Software Version")
     private TargetInternalReference softwareVersion;
 
-    @FieldInfo(label = "Files", isHierarchicalFiles = true, asyncUrlKey="filesAsyncUrl")
-    private List<TargetFile> files;
-
+    @FieldInfo(label = "Files", isHierarchicalFiles = true, isAsync=true)
     private String filesAsyncUrl;
 
     public Value<String> getType() { return type; }
@@ -125,4 +122,5 @@ public class FileRepository implements TargetInstance {
     public void setFilesAsyncUrl(String filesAsyncUrl) {
         this.filesAsyncUrl = filesAsyncUrl;
     }
+
 }
