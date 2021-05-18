@@ -59,7 +59,7 @@ const setupSearch = (state, action) => {
     const facetTypesOrder = ElasticSearchHelpers.getFacetTypesOrder(definition);
     const defaultType = ElasticSearchHelpers.getDefaultSelectedType(definition, facetTypesOrder);
     const facets = ElasticSearchHelpers.constructFacets(definition);
-    const types = Object.entries(definition).map(([type, typeDefinition]) => ({
+    const types = Object.entries(definition).filter(([, typeDefinition]) => typeDefinition.searchable).map(([type, typeDefinition]) => ({
       type: type,
       label: typeDefinition.name,
       count: 0

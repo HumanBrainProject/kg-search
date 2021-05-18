@@ -114,7 +114,7 @@ const getTree = files => {
   return tree;
 };
 
-export default class HierarchicalFiles extends React.Component {
+class HierarchicalFiles extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -125,11 +125,9 @@ export default class HierarchicalFiles extends React.Component {
   }
 
   componentDidMount() {
-    const {show, data} = this.props;
-    if (show) {
-      const tree = getTree(data);
-      this.setState({tree: tree });
-    }
+    const {data} = this.props;
+    const tree = getTree(data);
+    this.setState({tree: tree });
   }
 
   onToggle = (node, toggled) => {
@@ -155,10 +153,6 @@ export default class HierarchicalFiles extends React.Component {
   }
 
   render() {
-    const {show} = this.props;
-    if(!show) {
-      return null;
-    }
     const {node, tree, showTermsOfUse} = this.state;
     const name = node && node.name;
     const size = node && node.size;
@@ -194,3 +188,5 @@ export default class HierarchicalFiles extends React.Component {
     );
   }
 }
+
+export default HierarchicalFiles;

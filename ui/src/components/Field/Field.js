@@ -30,6 +30,7 @@ import { ValueField, PrintViewValueField } from "./ValueField";
 import { TableField, PrintViewTableField } from "./TableField";
 import HierarchicalFiles from "./Files/HierarchicalFiles";
 import "./Field.css";
+import { AsyncHierarchicalFiles } from "../../containers/Files/AsyncHierarchicalFiles";
 
 const FieldBase = (renderUserInteractions = true) => {
 
@@ -48,6 +49,7 @@ const FieldBase = (renderUserInteractions = true) => {
     const isList = Array.isArray(data);
     const isTable = mapping.isTable;
     const isHierarchicalFiles = mapping.isHierarchicalFiles;
+    const asyncUrl = mapping.isAsync?data:null;
     const isButton = mapping.isButton;
     const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
     const className = "kgs-field" + (name?" kgs-field__" + name:"") + (mapping.layout?" kgs-field__layout-" + mapping.layout:"") + (isTable?" kgs-field__table":"") + (isHierarchicalFiles?" kgs-field__hierarchical-files":"");
@@ -87,10 +89,14 @@ const FieldBase = (renderUserInteractions = true) => {
       group: group
     };
     const hierarchicalFileProps = {
-      show: isHierarchicalFiles,
       data: data,
       mapping: mapping,
       group: group
+    };
+    const asyncHierarchicalFileProps = {
+      mapping: mapping,
+      group: group,
+      url: asyncUrl
     };
 
     return (
@@ -101,7 +107,12 @@ const FieldBase = (renderUserInteractions = true) => {
         <ListFieldComponent {...listProps} />
         <ObjectFieldComponent {...objectProps} />
         <TableFieldComponent {...tableProps} />
-        <HierarchicalFiles  {...hierarchicalFileProps} />
+        {isHierarchicalFiles && (
+          asyncUrl?
+            <AsyncHierarchicalFiles  {...asyncHierarchicalFileProps} />
+            :
+            <HierarchicalFiles  {...hierarchicalFileProps} />
+        )}
       </span>
     );
   };
