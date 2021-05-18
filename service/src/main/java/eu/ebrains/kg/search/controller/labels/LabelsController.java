@@ -200,6 +200,9 @@ public class LabelsController {
             if (info.isDirectDownload() != defaultFieldInfo.isDirectDownload()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "isDirectDownload", info.isDirectDownload());
             }
+            if (!info.asyncUrlKey().equals(defaultFieldInfo.asyncUrlKey())) {
+                propertyDefinition.put(SEARCH_UI_NAMESPACE + "asyncUrlKey", info.asyncUrlKey());
+            }
             Map<String, Object> children = handleChildren(topTypeToHandle);
             propertyDefinition.putAll(children);
         }

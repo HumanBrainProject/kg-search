@@ -63,16 +63,16 @@ public class Constants {
     );
 
     public final static List<Class<?>> TARGET_MODELS_ORDER = Arrays.asList(
-            Project.class,
-            DatasetVersion.class,
-            Subject.class,
-            Sample.class,
-            ModelVersion.class,
-            SoftwareVersion.class,
-            Contributor.class,
-            Dataset.class,
-            Model.class,
-            Software.class,
+//            Project.class,
+//            DatasetVersion.class,
+//            Subject.class,
+//            Sample.class,
+//            ModelVersion.class,
+//            SoftwareVersion.class,
+//            Contributor.class,
+//            Dataset.class,
+//            Model.class,
+//            Software.class,
             FileRepository.class
     );
 

@@ -34,6 +34,7 @@ public @interface FieldInfo {
     String label() default "";
     String hint() default "";
     String icon() default "";
+    String asyncUrlKey() default "";
     boolean optional() default true;
     boolean sort() default false;
     boolean visible() default true;

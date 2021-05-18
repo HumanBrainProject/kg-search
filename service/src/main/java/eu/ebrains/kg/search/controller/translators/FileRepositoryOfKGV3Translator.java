@@ -48,6 +48,7 @@ public class FileRepositoryOfKGV3Translator implements Translator<FileRepository
         if (fileRepository.getSoftwareVersion() != null) {
             f.setSoftwareVersion(new TargetInternalReference(IdUtils.getUUID(fileRepository.getSoftwareVersion().getId()), fileRepository.getSoftwareVersion().getFullName()));
         }
+        f.setFilesAsyncUrl(String.format("/api/groups/public/repositories/%s/files", IdUtils.getUUID(fileRepository.getId())));
         return f;
     }
 }
