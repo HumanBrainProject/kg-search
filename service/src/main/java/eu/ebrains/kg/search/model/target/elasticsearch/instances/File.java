@@ -23,8 +23,8 @@
 
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
-import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
@@ -33,14 +33,13 @@ import java.util.List;
 
 @MetaInfo(name = "File", identifier = "https://openminds.ebrains.eu/core/File", order = 12)
 public class    File implements TargetInstance {
-    @ElasticSearchInfo(type = "keyword")
+    @JsonIgnore
     private final Value<String> type = new Value<>("File");
 
-    @FieldInfo(ignoreForSearch = true, visible = false)
+    @JsonIgnore
     private String id;
 
-    @ElasticSearchInfo(type = "keyword")
-    @FieldInfo(ignoreForSearch = true, visible = false)
+    @JsonIgnore
     private List<String> identifier;
 
     private String name;
@@ -73,6 +72,7 @@ public class    File implements TargetInstance {
     }
 
     @Override
+    @JsonIgnore
     public boolean isSearchable() {
         return false;
     }

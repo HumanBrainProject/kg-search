@@ -31,6 +31,8 @@ import eu.ebrains.kg.search.controller.labels.LabelsController;
 import eu.ebrains.kg.search.controller.search.SearchController;
 import eu.ebrains.kg.search.controller.translators.TranslationController;
 import eu.ebrains.kg.search.model.DataStage;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.File;
 import eu.ebrains.kg.search.services.ESServiceClient;
@@ -46,9 +48,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.security.Principal;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
@@ -146,7 +147,37 @@ public class Search {
         String type = utils.getNameForClass(File.class);
         String index = ESHelper.getAutoReleasedIndex(type);
         try {
-            return ResponseEntity.ok(esServiceClient.getFilesFromRepo(index, id, searchAfter, size));
+            ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(index, id, searchAfter, size);
+            Map<String, Object> result = new HashMap<>();
+            if (filesFromRepo.getHits() != null && filesFromRepo.getHits().getHits() != null) {
+                List<ElasticSearchDocument> hits = filesFromRepo.getHits().getHits();
+                List<Object> data = hits.stream().map(e -> {
+                    if (e.getSource() != null) {
+                        Map<String, Object> item = new HashMap<>();
+                        Map<String, Object> source = e.getSource();
+                        item.put("value", source.get("name"));
+                        item.put("url", source.get("iri"));
+                        if (source.get("size") != null) {
+                            item.put("fileSize", source.get("size"));
+                        }
+                        if (source.get("format") != null) {
+                            item.put("format", source.get("format"));
+                        }
+                        return item;
+                    }
+                    return null;
+                }).filter(Objects::nonNull).collect(Collectors.toList());
+                ElasticSearchResult.Total total = filesFromRepo.getHits().getTotal();
+                result.put("total", total.getValue());
+                result.put("data", data);
+                if (hits.size() > 0) {
+                    result.put("searchAfter", hits.get(hits.size() - 1).getId());
+                }
+            } else {
+                result.put("total", 0);
+                result.put("data", Collections.emptyList());
+            }
+            return ResponseEntity.ok(result);
         } catch (WebClientResponseException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
         }

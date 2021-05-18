@@ -123,7 +123,7 @@ public class ElasticSearchResult {
 
     }
 
-    private static class Total {
+    public static class Total {
         private int value;
         private String relation;
 

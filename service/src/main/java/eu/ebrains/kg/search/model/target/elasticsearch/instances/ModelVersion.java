@@ -23,6 +23,7 @@
 
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
@@ -119,6 +120,7 @@ public class ModelVersion implements TargetInstance {
 
     private List<TargetInternalReference> versions;
 
+    @JsonIgnore
     private boolean isSearchable;
 
     @Override
