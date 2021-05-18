@@ -36,7 +36,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@MetaInfo(name = "Model", identifier = "uniminds/core/modelinstance/v1.0.0/search", order = 5)
+@MetaInfo(name = "Model", identifier = "uniminds/core/modelinstance/v1.0.0/search", order = 5, searchable=true)
 public class ModelVersion implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Model");

@@ -35,4 +35,5 @@ public @interface MetaInfo {
     String identifier();
     int order();
     boolean defaultSelection() default false;
+    boolean searchable() default false;
 }

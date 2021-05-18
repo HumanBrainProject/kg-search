@@ -33,8 +33,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@MetaInfo(name = "DatasetVersions", identifier = "https://openminds.ebrains.eu/core/DatasetVersion", defaultSelection = true, order = 2)
-@MetaInfo(name = "Dataset", identifier = "minds/core/dataset/v1.0.0/search", defaultSelection = true, order = 2)
+@MetaInfo(name = "Dataset", identifier = "minds/core/dataset/v1.0.0/search", defaultSelection = true, order = 2, searchable=true)
 @RibbonInfo(content = "Downloadable Data", aggregation = "count", dataField = "search:files", singular = "file", plural = "files", icon = "download")
 public class DatasetVersion implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")

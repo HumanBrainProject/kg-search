@@ -39,7 +39,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@MetaInfo(name="Software", identifier = "softwarecatalog/software/softwareproject/v1.0.0/search", order=6)
+@MetaInfo(name="Software", identifier = "softwarecatalog/software/softwareproject/v1.0.0/search", order=6, searchable=true)
 public class SoftwareVersion implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private final Value<String> type = new Value<>("Software");

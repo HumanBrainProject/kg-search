@@ -66,6 +66,9 @@ public class LabelsController {
             if (metaInfo.defaultSelection()) {
                 result.put(SEARCH_UI_NAMESPACE + "defaultSelection", true);
             }
+            if (metaInfo.searchable()) {
+                result.put(SEARCH_UI_NAMESPACE + "searchable", true);
+            }
         }
         RibbonInfo ribbonInfo = clazz.getAnnotation(RibbonInfo.class);
         if (ribbonInfo != null) {
