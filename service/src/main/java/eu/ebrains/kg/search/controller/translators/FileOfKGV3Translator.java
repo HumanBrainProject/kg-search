@@ -32,20 +32,26 @@ import org.apache.commons.lang3.StringUtils;
 public class FileOfKGV3Translator implements Translator<FileV3, File> {
 
     public File translate(FileV3 file, DataStage dataStage, boolean liveMode) {
-        if(file.getFileRepository() == null) {
+        String fileRepository = file.getFileRepository();
+
+        if(StringUtils.isBlank(fileRepository) || StringUtils.isBlank(file.getIri()) || StringUtils.isBlank(file.getName())) {
             return null;
         }
+
         File f = new File();
-        f.setFileRepository(IdUtils.getUUID(file.getFileRepository()));
-        f.setIri(file.getIri());
         f.setId(IdUtils.getUUID(file.getId()));
         f.setIdentifier(IdUtils.getUUID(file.getIdentifier()));
-        f.setName(file.getName());
+        f.setFileRepository(IdUtils.getUUID(fileRepository));
+        f.setName(file.isPrivateAccess() ? String.format("ACCESS PROTECTED: %s", file.getName()) : file.getName());
+        f.setIri(file.isPrivateAccess() ? String.format("%s/files/cscs?url=%s", Translator.fileProxy, file.getIri()) : file.getIri());
         FileV3.Size size = file.getSize();
         if(size != null && StringUtils.isNotBlank(size.getUnit())) {
             f.setSize(String.format("%d %s", size.getValue(), size.getUnit()));
         }
         f.setFormat(file.getFormat());
+        //f.setStaticImageUrl(, false); //TODO: file.getStaticImageUrl()
+        //f.setPreviewUrl(); //TODO: file.getPreviewUrl(), !file.getPreviewAnimated().isEmpty() && file.getPreviewAnimated().get(0))
+        //f.setThumbnailUrl(, false); //TODO: file.getThumbnailUrl()
         return f;
     }
 }

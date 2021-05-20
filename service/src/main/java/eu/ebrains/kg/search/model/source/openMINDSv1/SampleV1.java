@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 import eu.ebrains.kg.search.model.source.SourceInstanceV1andV2;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.HasEmbargo;
 import eu.ebrains.kg.search.model.source.commonsV1andV2.*;
 
 public class SampleV1 extends SourceInstanceV1andV2 implements HasEmbargo {

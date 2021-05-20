@@ -23,8 +23,10 @@
 
 package eu.ebrains.kg.search.controller.translators;
 
+import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -80,5 +82,13 @@ public class Helpers {
         List<Version> result = versions.stream().map(lookup::get).collect(Collectors.toList());
         result.addAll(datasetVersionsWithoutVersion);
         return result;
+    }
+
+    public static <E> Stats getStats(ResultsOfKGv3<E> result, int from, int size) {
+        int pageSize =  CollectionUtils.isEmpty(result.getData()) ? 0 : result.getData().size();
+        int cumulatedSize = from + pageSize;
+        String percentage = (CollectionUtils.isEmpty(result.getData()) || result.getTotal() == 0)?"unknown%":String.format("%d%s", Math.round(100 * cumulatedSize/result.getTotal()), "%");
+        String info = String.format("%d out of %d, %s", cumulatedSize, result.getTotal(), percentage);
+        return new Stats(pageSize, info);
     }
 }

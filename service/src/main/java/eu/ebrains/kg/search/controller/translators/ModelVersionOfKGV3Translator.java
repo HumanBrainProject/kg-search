@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
+import static eu.ebrains.kg.search.controller.translators.TranslatorOfKGV3Commons.*;
 
 public class ModelVersionOfKGV3Translator implements Translator<ModelVersionV3, ModelVersion> {
 
@@ -74,7 +74,7 @@ public class ModelVersionOfKGV3Translator implements Translator<ModelVersionV3, 
             m.setModel(new TargetInternalReference(IdUtils.getUUID(model.getId()), model.getFullName()));
         }
 
-        if (hasEmbargoStatus(modelVersion, EMBARGOED)) {
+        if (hasEmbargoStatus(modelVersion, UNDER_EMBARGO)) {
             if (dataStage == DataStage.RELEASED) {
                 m.setEmbargo("This model is temporarily under embargo. The data will become available for download after the embargo period.");
             } else {
@@ -88,7 +88,7 @@ public class ModelVersionOfKGV3Translator implements Translator<ModelVersionV3, 
                 }
             }
         }
-        if (!hasEmbargoStatus(modelVersion, EMBARGOED) && !CollectionUtils.isEmpty(modelVersion.getFileBundle())) {
+        if (!hasEmbargoStatus(modelVersion, UNDER_EMBARGO) && !CollectionUtils.isEmpty(modelVersion.getFileBundle())) {
             m.setAllFiles(modelVersion.getFileBundle().stream()
                     .map(fb -> {
                         if (fb.startsWith("https://object.cscs.ch")) {

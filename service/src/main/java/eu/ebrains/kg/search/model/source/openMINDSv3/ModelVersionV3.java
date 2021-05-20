@@ -23,7 +23,7 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
-import eu.ebrains.kg.search.model.source.commonsV1andV2.HasEmbargo;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.HasEmbargo;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
 

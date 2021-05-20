@@ -23,48 +23,55 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.HasEmbargo;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.SourceInternalReference;
+
+import java.util.List;
 
 public class FileRepositoryV3 extends SourceInstanceV3 {
     private String IRI;
-    private SourceInternalReference datasetVersion;
-    private SourceInternalReference metaDataModelVersion;
-    private SourceInternalReference modelVersion;
-    private SourceInternalReference softwareVersion;
+    private FileRepositoryOfReference fileRepositoryOf;
 
     public String getIRI() { return IRI; }
 
     public void setIRI(String IRI) { this.IRI = IRI; }
 
-    public SourceInternalReference getDatasetVersion() {
-        return datasetVersion;
+    public FileRepositoryOfReference getFileRepositoryOf() {
+        return fileRepositoryOf;
     }
 
-    public void setDatasetVersion(SourceInternalReference datasetVersion) {
-        this.datasetVersion = datasetVersion;
+    public void setFileRepositoryOf(FileRepositoryOfReference fileRepositoryOf) {
+        this.fileRepositoryOf = fileRepositoryOf;
     }
 
-    public SourceInternalReference getMetaDataModelVersion() {
-        return metaDataModelVersion;
-    }
+    public static class FileRepositoryOfReference extends SourceInternalReference implements HasEmbargo {
+        private List<String> type;
+        private List<String> embargo;
+        private boolean useHDG;
 
-    public void setMetaDataModelVersion(SourceInternalReference metaDataModelVersion) {
-        this.metaDataModelVersion = metaDataModelVersion;
-    }
+        public List<String> getType() {
+            return type;
+        }
 
-    public SourceInternalReference getModelVersion() {
-        return modelVersion;
-    }
+        public void setType(List<String> type) {
+            this.type = type;
+        }
 
-    public void setModelVersion(SourceInternalReference modelVersion) {
-        this.modelVersion = modelVersion;
-    }
+        public List<String> getEmbargo() {
+            return embargo;
+        }
 
-    public SourceInternalReference getSoftwareVersion() {
-        return softwareVersion;
-    }
+        public void setEmbargo(List<String> embargo) {
+            this.embargo = embargo;
+        }
 
-    public void setSoftwareVersion(SourceInternalReference softwareVersion) {
-        this.softwareVersion = softwareVersion;
+        public boolean isUseHDG() {
+            return useHDG;
+        }
+
+        public void setUseHDG(boolean useHDG) {
+            this.useHDG = useHDG;
+        }
+
     }
 }

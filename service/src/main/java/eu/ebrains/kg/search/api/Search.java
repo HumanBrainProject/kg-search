@@ -23,7 +23,6 @@
 
 package eu.ebrains.kg.search.api;
 
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
@@ -39,6 +38,7 @@ import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.services.KGServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
 import eu.ebrains.kg.search.utils.MetaModelUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -137,47 +137,72 @@ public class Search {
         }
     }
 
+    private Map<String, Object> formatFilesResponse(ElasticSearchResult filesFromRepo) {
+        Map<String, Object> result = new HashMap<>();
+        if (filesFromRepo != null && filesFromRepo.getHits() != null && filesFromRepo.getHits().getHits() != null) {
+            List<ElasticSearchDocument> hits = filesFromRepo.getHits().getHits();
+            List<Object> data = hits.stream().map(e -> {
+                if (e.getSource() != null) {
+                    Map<String, Object> item = new HashMap<>();
+                    Map<String, Object> source = e.getSource();
+                    item.put("value", source.get("name"));
+                    item.put("url", source.get("iri"));
+                    if (source.get("size") != null) {
+                        item.put("fileSize", source.get("size"));
+                    }
+                    if (source.get("format") != null) {
+                        item.put("format", source.get("format"));
+                    }
+                    return item;
+                }
+                return null;
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+            ElasticSearchResult.Total total = filesFromRepo.getHits().getTotal();
+            result.put("total", total.getValue());
+            result.put("data", data);
+            if (hits.size() > 0) {
+                result.put("searchAfter", hits.get(hits.size() - 1).getId());
+            }
+        } else {
+            result.put("total", 0);
+            result.put("data", Collections.emptyList());
+        }
+        return result;
+    }
+
     @GetMapping("/groups/public/repositories/{id}/files")
     public ResponseEntity<?> getFilesFromRepoForPublic(@PathVariable("id") String id,
                                                        @RequestParam(required = false, name = "searchAfter") String searchAfter,
-                                                       @RequestParam(required = false, defaultValue = "10000", name = "size") int size) {
+                                                       @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
+                                                       Principal principal) {
         if ((searchAfter != null && !MetaModelUtils.isValidUUID(searchAfter)) || !MetaModelUtils.isValidUUID(id) || size > 10000) {
             return ResponseEntity.badRequest().build();
         }
-        String type = utils.getNameForClass(File.class);
-        String index = ESHelper.getAutoReleasedIndex(type);
         try {
-            ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(index, id, searchAfter, size);
-            Map<String, Object> result = new HashMap<>();
-            if (filesFromRepo.getHits() != null && filesFromRepo.getHits().getHits() != null) {
-                List<ElasticSearchDocument> hits = filesFromRepo.getHits().getHits();
-                List<Object> data = hits.stream().map(e -> {
-                    if (e.getSource() != null) {
-                        Map<String, Object> item = new HashMap<>();
-                        Map<String, Object> source = e.getSource();
-                        item.put("value", source.get("name"));
-                        item.put("url", source.get("iri"));
-                        if (source.get("size") != null) {
-                            item.put("fileSize", source.get("size"));
-                        }
-                        if (source.get("format") != null) {
-                            item.put("format", source.get("format"));
-                        }
-                        return item;
-                    }
-                    return null;
-                }).filter(Objects::nonNull).collect(Collectors.toList());
-                ElasticSearchResult.Total total = filesFromRepo.getHits().getTotal();
-                result.put("total", total.getValue());
-                result.put("data", data);
-                if (hits.size() > 0) {
-                    result.put("searchAfter", hits.get(hits.size() - 1).getId());
-                }
+            String index = ESHelper.getIndexesForDocument(DataStage.RELEASED);
+            ElasticSearchDocument document = esServiceClient.getDocument(index, id);
+            Map<String, Object> source = document.getSource();
+            if (source == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             } else {
-                result.put("total", 0);
-                result.put("data", Collections.emptyList());
+                Map<String, Object> typeValue = (Map<String, Object>) source.get("type");
+                String type = typeValue != null?((String) typeValue.get("value")):null;
+                if (StringUtils.isEmpty(type) || !type.equals("FileRepository")) {
+                    return ResponseEntity.badRequest().build();
+                } else {
+                    String embargo = (String) source.get("embargo");
+                    String useHDG = (String) source.get("useHDG");
+                    if (StringUtils.isNotEmpty(useHDG) || (!isInInProgressRole(principal) && StringUtils.isNotEmpty(embargo))) {
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                    } else {
+                        String fileType = utils.getNameForClass(File.class);
+                        String fileIndex = ESHelper.getAutoReleasedIndex(fileType);
+                        ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size);
+                        Map<String, Object> result = formatFilesResponse(filesFromRepo);
+                        return ResponseEntity.ok(result);
+                    }
+                }
             }
-            return ResponseEntity.ok(result);
         } catch (WebClientResponseException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
         }
@@ -185,17 +210,37 @@ public class Search {
 
     @GetMapping("/groups/curated/repositories/{id}/files")
     public ResponseEntity<?> getFilesFromRepoForCurated(@PathVariable("id") String id,
-                                                        @RequestParam("searchAfter") String searchAfter,
-                                                        @RequestParam("size") int size,
+                                                        @RequestParam(required = false, name = "searchAfter") String searchAfter,
+                                                        @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
                                                         Principal principal) {
         if (isInInProgressRole(principal)) {
-            if ((searchAfter != null && !MetaModelUtils.isValidUUID(searchAfter)) || !MetaModelUtils.isValidUUID(id) || size > 100) {
+            if ((searchAfter != null && !MetaModelUtils.isValidUUID(searchAfter)) || !MetaModelUtils.isValidUUID(id) || size > 10000) {
                 return ResponseEntity.badRequest().build();
             }
-            String type = utils.getNameForClass(File.class);
-            String index = ESHelper.getAutoReleasedIndex(type);
             try {
-                return ResponseEntity.ok(esServiceClient.getFilesFromRepo(index, id, searchAfter, size));
+                String index = ESHelper.getIndexesForDocument(DataStage.IN_PROGRESS);
+                ElasticSearchDocument document = esServiceClient.getDocument(index, id);
+                Map<String, Object> source = document.getSource();
+                if (source == null) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                } else {
+                    Map<String, Object> typeValue = (Map<String, Object>) source.get("type");
+                    String type = typeValue != null?((String) typeValue.get("value")):null;
+                    if (StringUtils.isEmpty(type) || !type.equals("FileRepository")) {
+                        return ResponseEntity.badRequest().build();
+                    } else {
+                        String useHDG = (String) source.get("useHDG");
+                        if (StringUtils.isNotEmpty(useHDG)) {
+                            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                        } else {
+                            String fileType = utils.getNameForClass(File.class);
+                            String fileIndex = ESHelper.getAutoReleasedIndex(fileType);
+                            ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size);
+                            Map<String, Object> result = formatFilesResponse(filesFromRepo);
+                            return ResponseEntity.ok(result);
+                        }
+                    }
+                }
             } catch (WebClientResponseException e) {
                 return ResponseEntity.status(e.getStatusCode()).build();
             }

@@ -50,6 +50,8 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static eu.ebrains.kg.search.controller.translators.Helpers.getStats;
+
 @Component
 public class TranslationController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -377,10 +379,12 @@ public class TranslationController {
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("SoftwareVersion %s does not exist!", id));
     }
 
+
     public TargetInstancesResult createDatasetsForIndexing(DataStage dataStage, boolean liveMode, int from, int size) {
-        logger.info("Starting to query datasets for v3");
+        logger.info(String.format("Starting to query %d datasets from %d for v3", size, from));
         ResultsOfKGv3<DatasetV3> datasets = kgV3.executeQueryForIndexing(ResultsOfKGV3DatasetV3.class, dataStage, Queries.DATASET_QUERY_ID, from, size);
-        logger.info(String.format("Queried %d datasets for v3", CollectionUtils.isEmpty(datasets.getData()) ? 0 : datasets.getData().size()));
+        Stats stats = getStats(datasets, from, size);
+        logger.info(String.format("Queried %d datasets (%s) for v3", stats.getPageSize(), stats.getInfo()));
         DatasetOfKGV3Translator translator = new DatasetOfKGV3Translator();
         List<TargetInstance> instances = datasets.getData().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).filter(Objects::nonNull).collect(Collectors.toList());
         TargetInstancesResult result = new TargetInstancesResult();
@@ -392,9 +396,10 @@ public class TranslationController {
     }
 
     public TargetInstancesResult createModelsForIndexing(DataStage dataStage, boolean liveMode, int from, int size) {
-        logger.info("Starting to query models for v3");
+        logger.info(String.format("Starting to query %d models from %d for v3", size, from));
         ResultsOfKGv3<ModelV3> models = kgV3.executeQueryForIndexing(ResultsOfKGV3ModelV3.class, dataStage, Queries.MODEL_QUERY_ID, from, size);
-        logger.info(String.format("Queried %d models for v3", CollectionUtils.isEmpty(models.getData()) ? 0 : models.getData().size()));
+        Stats stats = getStats(models, from, size);
+        logger.info(String.format("Queried %d models (%s) for v3", stats.getPageSize(), stats.getInfo()));
         ModelOfKGV3Translator translator = new ModelOfKGV3Translator();
         List<TargetInstance> instances = models.getData().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).filter(Objects::nonNull).collect(Collectors.toList());
         TargetInstancesResult result = new TargetInstancesResult();
@@ -407,9 +412,10 @@ public class TranslationController {
 
 
     public TargetInstancesResult createSoftwaresForIndexing(DataStage dataStage, boolean liveMode, int from, int size) {
-        logger.info("Starting to query softwares for v3");
+        logger.info(String.format("Starting to query %d softwares from %d for v3", size, from));
         ResultsOfKGv3<SoftwareV3> softwares = kgV3.executeQueryForIndexing(ResultsOfKGV3SoftwareV3.class, dataStage, Queries.SOFTWARE_QUERY_ID, from, size);
-        logger.info(String.format("Queried %d softwares for v3", CollectionUtils.isEmpty(softwares.getData()) ? 0 : softwares.getData().size()));
+        Stats stats = getStats(softwares, from, size);
+        logger.info(String.format("Queried %d softwares (%s) for v3", stats.getPageSize(), stats.getInfo()));
         SoftwareOfKGV3Translator translator = new SoftwareOfKGV3Translator();
         List<TargetInstance> instances = softwares.getData().stream().map(s -> (TargetInstance) translator.translate(s, dataStage, liveMode)).filter(Objects::nonNull).collect(Collectors.toList());
         TargetInstancesResult result = new TargetInstancesResult();
@@ -424,9 +430,10 @@ public class TranslationController {
     }
 
     public TargetInstancesResult createFileRepositoriesForIndexing(DataStage dataStage, boolean liveMode, int from, int size) {
-        logger.info("Starting to query fileRepositories for v3");
+        logger.info(String.format("Starting to query %d fileRepositories from %d for v3", size, from));
         ResultsOfKGv3<FileRepositoryV3> fileRepositories = kgV3.executeQueryForIndexing(ResultsOfKGV3FileRepositoryV3.class, dataStage, Queries.FILE_REPOSITORY_QUERY_ID, from, size);
-        logger.info(String.format("Queried %d fileRepositories for v3", CollectionUtils.isEmpty(fileRepositories.getData()) ? 0 : fileRepositories.getData().size()));
+        Stats stats = getStats(fileRepositories, from, size);
+        logger.info(String.format("Queried %d fileRepositories (%s) for v3", stats.getPageSize(), stats.getInfo()));
         FileRepositoryOfKGV3Translator translator = new FileRepositoryOfKGV3Translator();
         List<TargetInstance> instances = fileRepositories.getData().stream().map(fileRepository -> (TargetInstance) translator.translate(fileRepository, dataStage, liveMode)).filter(Objects::nonNull).collect(Collectors.toList());
         TargetInstancesResult result = new TargetInstancesResult();
@@ -443,9 +450,10 @@ public class TranslationController {
     }
 
     public TargetInstancesResult createFileForIndexing(DataStage dataStage, boolean liveMode, int from, int size) {
-        logger.info("Starting to query files for v3");
+        logger.info(String.format("Starting to query %d files from %d for v3", size, from));
         ResultsOfKGv3<FileV3> files = kgV3.executeQueryForIndexing(ResultsOfKGV3FileV3.class, dataStage, Queries.FILE_QUERY_ID, from, size);
-        logger.info(String.format("Queried %d files for v3", CollectionUtils.isEmpty(files.getData()) ? 0 : files.getData().size()));
+        Stats stats = getStats(files, from, size);
+        logger.info(String.format("Queried %d files (%s) for v3", stats.getPageSize(), stats.getInfo()));
         FileOfKGV3Translator translator = new FileOfKGV3Translator();
         List<TargetInstance> instances = files.getData().stream().map(file -> (TargetInstance) translator.translate(file, dataStage, liveMode)).filter(Objects::nonNull).collect(Collectors.toList());
         TargetInstancesResult result = new TargetInstancesResult();

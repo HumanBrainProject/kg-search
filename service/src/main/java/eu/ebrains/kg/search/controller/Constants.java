@@ -44,6 +44,7 @@ public class Constants {
     public final static String SOURCE_MODEL_SAMPLE = OPENMINDS_CORE_NAMESPACE + "Sample";
     public final static String SOURCE_MODEL_MODEL = OPENMINDS_CORE_NAMESPACE + "Model";
     public final static String SOURCE_MODEL_MODEL_VERSION = OPENMINDS_CORE_NAMESPACE + "ModelVersion";
+    public final static String SOURCE_MODEL_META_DATA_MODEL_VERSION = OPENMINDS_CORE_NAMESPACE + "MetaDataModelVersion";
     public final static String SOURCE_MODEL_SOFTWARE = OPENMINDS_CORE_NAMESPACE + "Software";
     public final static String SOURCE_MODEL_SOFTWARE_VERSION = OPENMINDS_CORE_NAMESPACE + "SoftwareVersion";
     public final static String SOURCE_MODEL_FILE_REPOSITORY = OPENMINDS_CORE_NAMESPACE + "FileRepository";
@@ -63,16 +64,16 @@ public class Constants {
     );
 
     public final static List<Class<?>> TARGET_MODELS_ORDER = Arrays.asList(
-//            Project.class,
-//            DatasetVersion.class,
-//            Subject.class,
-//            Sample.class,
-//            ModelVersion.class,
-//            SoftwareVersion.class,
-//            Contributor.class,
-//            Dataset.class,
-//            Model.class,
-//            Software.class,
+            Project.class,
+            Dataset.class,
+            DatasetVersion.class,
+            Subject.class,
+            Sample.class,
+            ModelVersion.class,
+            SoftwareVersion.class,
+            Contributor.class,
+            Model.class,
+            Software.class,
             FileRepository.class
     );
 

@@ -42,6 +42,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
+import static eu.ebrains.kg.search.controller.translators.TranslatorOfKGV2Commons.*;
 
 public class DatasetVersionOfKGV2Translator implements Translator<DatasetV1, DatasetVersion> {
 

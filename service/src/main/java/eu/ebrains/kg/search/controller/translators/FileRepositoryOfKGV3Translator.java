@@ -23,11 +23,17 @@
 
 package eu.ebrains.kg.search.controller.translators;
 
+import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv3.FileRepositoryV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.FileRepository;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.utils.IdUtils;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+
+import static eu.ebrains.kg.search.controller.translators.TranslatorOfKGV3Commons.*;
 
 public class FileRepositoryOfKGV3Translator implements Translator<FileRepositoryV3, FileRepository> {
 
@@ -36,19 +42,48 @@ public class FileRepositoryOfKGV3Translator implements Translator<FileRepository
         f.setId(IdUtils.getUUID(fileRepository.getId()));
         f.setIdentifier(IdUtils.getUUID(fileRepository.getIdentifier()));
         f.setIRI(fileRepository.getIRI());
-        if (fileRepository.getDatasetVersion() != null) {
-            f.setDatasetVersion(new TargetInternalReference(IdUtils.getUUID(fileRepository.getDatasetVersion().getId()), fileRepository.getDatasetVersion().getFullName()));
+        FileRepositoryV3.FileRepositoryOfReference fileRepositoryOf = fileRepository.getFileRepositoryOf();
+        if (fileRepositoryOf != null) {
+            List<String> types = fileRepositoryOf.getType();
+            if (!CollectionUtils.isEmpty(types)) {
+                String type = types.get(0);
+                if (type != null) {
+                    TargetInternalReference reference = new TargetInternalReference(IdUtils.getUUID(fileRepositoryOf.getId()), fileRepositoryOf.getFullName());
+                    switch (type) {
+                        case Constants.SOURCE_MODEL_DATASET_VERSIONS:
+                            f.setDatasetVersion(reference);
+                            break;
+                        case Constants.SOURCE_MODEL_MODEL_VERSION:
+                            f.setModelVersion(reference);
+                            break;
+                        case Constants.SOURCE_MODEL_SOFTWARE_VERSION:
+                            f.setSoftwareVersion(reference);
+                            break;
+                        case Constants.SOURCE_MODEL_META_DATA_MODEL_VERSION:
+                            f.setMetaDataModelVersion(reference);
+                            break;
+                    }
+                }
+            }
+
+            if (hasEmbargoStatus(fileRepositoryOf, RESTRICTED_ACCESS) || fileRepositoryOf.isUseHDG()) { //TODO: check if useHDG still exist
+                String hdgMessage = String.format("This data requires you to explicitly **[request access](https://hdg.kg.ebrains.eu/request_access?kg_id=%s)** with your EBRAINS account. If you don't have such an account yet, please **[register](https://ebrains.eu/register/)**.", IdUtils.getUUID(fileRepositoryOf.getId()));
+                String hdgMessageHTML = String.format("This data requires you to explicitly <b><a href=\"https://hdg.kg.ebrains.eu/request_access?kg_id=%s\" target=\"_blank\">request access</a></b> with your EBRAINS account. If you don't have such an account yet, please <b><a href=\"https://ebrains.eu/register/\" target=\"_blank\">register</a></b>.", IdUtils.getUUID(fileRepositoryOf.getId()));
+                f.setUseHDG(hdgMessage);
+                f.setEmbargo(hdgMessageHTML);
+            } else {
+                if (dataStage == DataStage.RELEASED) {
+                    if (hasEmbargoStatus(fileRepositoryOf, UNDER_EMBARGO)) {
+                        f.setEmbargo("Those files are temporarily under embargo. The data will become available for download after the embargo period.");
+                    } else if (hasEmbargoStatus(fileRepositoryOf, CONTROLLED_ACCESS)) {
+                        f.setEmbargo("Those files are currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.");
+                    }
+                }
+                if ((dataStage == DataStage.IN_PROGRESS || (dataStage == DataStage.RELEASED && hasEmbargoStatus(fileRepositoryOf, FREE_ACCESS)))) {
+                    f.setFilesAsyncUrl(String.format("/api/groups/%s/repositories/%s/files", dataStage.equals(DataStage.IN_PROGRESS)?"curated":"public", IdUtils.getUUID(fileRepository.getId())));
+                }
+            }
         }
-        if (fileRepository.getMetaDataModelVersion() != null) {
-            f.setMetaDataModelVersion(new TargetInternalReference(IdUtils.getUUID(fileRepository.getMetaDataModelVersion().getId()), fileRepository.getMetaDataModelVersion().getFullName()));
-        }
-        if (fileRepository.getModelVersion() != null) {
-            f.setModelVersion(new TargetInternalReference(IdUtils.getUUID(fileRepository.getModelVersion().getId()), fileRepository.getModelVersion().getFullName()));
-        }
-        if (fileRepository.getSoftwareVersion() != null) {
-            f.setSoftwareVersion(new TargetInternalReference(IdUtils.getUUID(fileRepository.getSoftwareVersion().getId()), fileRepository.getSoftwareVersion().getFullName()));
-        }
-        f.setFilesAsyncUrl(String.format("/api/groups/public/repositories/%s/files", IdUtils.getUUID(fileRepository.getId())));
-        return f;
+      return f;
     }
 }

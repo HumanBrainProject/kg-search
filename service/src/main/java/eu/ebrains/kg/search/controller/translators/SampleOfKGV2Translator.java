@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
+import static eu.ebrains.kg.search.controller.translators.TranslatorOfKGV2Commons.*;
 
 public class SampleOfKGV2Translator implements Translator<SampleV1, Sample> {
 

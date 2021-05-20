@@ -29,6 +29,7 @@ public class FileV3 extends SourceInstanceV3 {
     private String fileRepository;
     private Size size;
     private String format;
+    private boolean privateAccess;
 
     public String getName() {
         return name;
@@ -68,6 +69,14 @@ public class FileV3 extends SourceInstanceV3 {
 
     public void setFileRepository(String fileRepository) {
         this.fileRepository = fileRepository;
+    }
+
+    public boolean isPrivateAccess() {
+        return privateAccess;
+    }
+
+    public void setPrivateAccess(boolean privateAccess) {
+        this.privateAccess = privateAccess;
     }
 
     public static class Size {

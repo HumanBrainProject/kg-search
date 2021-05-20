@@ -30,6 +30,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -60,8 +61,14 @@ public class FileRepository implements TargetInstance {
     @FieldInfo(label = "Software Version")
     private TargetInternalReference softwareVersion;
 
+    @FieldInfo(label = "Files")
+    private Value<String> embargo;
+
     @FieldInfo(label = "Files", isHierarchicalFiles = true, isAsync=true)
     private String filesAsyncUrl;
+
+    @FieldInfo(label= "Access Files", markdown = true, isButton = true, termsOfUse = true, icon="unlock")
+    private Value<String> useHDG;
 
     public Value<String> getType() { return type; }
 
@@ -78,6 +85,30 @@ public class FileRepository implements TargetInstance {
     @Override
     @JsonIgnore
     public boolean isSearchable() { return false; }
+
+    public Value<String> getEmbargo() {
+        return embargo;
+    }
+
+    public void setEmbargo(Value<String> embargo) {
+        this.embargo = embargo;
+    }
+
+    public void setEmbargo(String embargo) {
+        setEmbargo(StringUtils.isBlank(embargo) ? null : new Value<>(embargo));
+    }
+
+    public Value<String> getUseHDG() {
+        return useHDG;
+    }
+
+    public void setUseHDG(Value<String> useHDG) {
+        this.useHDG = useHDG;
+    }
+
+    public void setUseHDG(String useHDG) {
+        setUseHDG(StringUtils.isBlank(useHDG) ? null : new Value<>(useHDG));
+    }
 
     public String getIRI() { return IRI; }
 

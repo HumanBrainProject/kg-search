@@ -24,6 +24,7 @@
 package eu.ebrains.kg.search.model.source.openMINDSv2;
 
 import eu.ebrains.kg.search.model.source.SourceInstanceV1andV2;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.HasEmbargo;
 import eu.ebrains.kg.search.model.source.commonsV1andV2.*;
 
 import java.util.List;
