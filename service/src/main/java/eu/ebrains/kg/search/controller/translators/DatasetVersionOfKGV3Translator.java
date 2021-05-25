@@ -126,9 +126,6 @@ public class DatasetVersionOfKGV3Translator implements Translator<DatasetVersion
 
         }
 
-        datasetVersion.getA
-
-
         return d;
     }
 }
