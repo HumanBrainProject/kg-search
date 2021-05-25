@@ -110,10 +110,10 @@ public class DatasetVersionOfKGV3Translator implements Translator<DatasetVersion
         }
 
         List<PersonOrOrganizationRef> custodians = datasetVersion.getCustodians();
-        if(CollectionUtils.isEmpty(custodians)){
+        if(CollectionUtils.isEmpty(custodians) ){
             custodians = datasetVersion.getDataset().getCustodians();
         }
-        if(!CollectionUtils.isEmpty(custodians)){
+        if(!CollectionUtils.isEmpty(custodians) && dataset != null){
             d.setCustodians(custodians.stream().map(c -> new TargetInternalReference(IdUtils.getUUID(c.getId()), Helpers.getFullName(c.getFullName(), c.getFamilyName(), c.getGivenName()))).collect(Collectors.toList()));
         }
 
