@@ -32,17 +32,31 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Helpers {
+    public static String abbreviateGivenName(String givenName){
+        if(givenName!=null){
+            return Arrays.stream(givenName.split(" ")).filter(e -> e.length()>0).
+                    map(e -> String.format("%s.", e.charAt(0))).
+                    collect(Collectors.joining(" "));
+        }
+        return null;
+
+    }
+
     public static String getFullName(String familyName, String givenName) {
-        if(familyName == null && givenName == null) {
+        if(familyName == null) {
             return  null;
         }
-        if(familyName != null && givenName == null) {
-            return familyName;
+        return givenName == null ? familyName : String.format("%s, %s", familyName, abbreviateGivenName(givenName));
+    }
+
+    public static String stripDOIPrefix(String doi){
+        if(doi!=null){
+            int indexToCrop = doi.indexOf("/10.");
+            if(indexToCrop!=-1){
+                return doi.substring(indexToCrop+1);
+            }
         }
-        if(familyName == null) {
-            return givenName;
-        }
-        return String.format("%s, %s", familyName, givenName);
+        return doi;
     }
 
     public static String getFullName(String fullName, String familyName, String givenName) {
@@ -52,36 +66,22 @@ public class Helpers {
         return getFullName(familyName, givenName);
     }
 
+    private static Version getByPreviousVersion(String previousVersion, List<Version> versions){
+        Optional<Version> previous = versions.stream().filter(v -> previousVersion == null ? v.getIsNewVersionOf() == null : v.getIsNewVersionOf() != null && v.getIsNewVersionOf().equals(previousVersion)).findFirst();
+        return previous.orElse(null);
+    }
+
+
     public static List<Version> sort(List<Version> datasetVersions) {
-        LinkedList<String> versions = new LinkedList<>();
-        List<Version> datasetVersionsWithoutVersion = new ArrayList<>();
-        Map<String, Version> lookup = new HashMap<>();
-        datasetVersions.forEach(dv -> {
-            String id = dv.getVersionIdentifier();
-            if (id != null) {
-                lookup.put(id, dv);
-                if (versions.isEmpty()) {
-                    versions.add(id);
-                } else {
-                    String previousVersionIdentifier = dv.getIsNewVersionOf();
-                    if (previousVersionIdentifier != null) {
-                        int i = versions.indexOf(previousVersionIdentifier);
-                        if (i == -1) {
-                            versions.addLast(id);
-                        } else {
-                            versions.add(i, id);
-                        }
-                    } else {
-                        versions.addFirst(id);
-                    }
-                }
-            } else {
-                datasetVersionsWithoutVersion.add(dv);
-            }
-        });
-        List<Version> result = versions.stream().map(lookup::get).collect(Collectors.toList());
-        result.addAll(datasetVersionsWithoutVersion);
-        return result;
+        List<Version> versions = new ArrayList<>();
+        String previousVersion = null;
+        Version v;
+        while((v = getByPreviousVersion(previousVersion, datasetVersions)) != null){
+            versions.add(v);
+            previousVersion = v.getVersionIdentifier();
+        }
+        Collections.reverse(versions);
+        return versions;
     }
 
     public static <E> Stats getStats(ResultsOfKGv3<E> result, int from, int size) {

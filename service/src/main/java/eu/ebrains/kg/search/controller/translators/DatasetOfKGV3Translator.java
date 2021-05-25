@@ -27,7 +27,9 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -43,16 +45,28 @@ public class DatasetOfKGV3Translator implements Translator<DatasetV3, Dataset> {
         if (!CollectionUtils.isEmpty(dataset.getVersions()) && dataset.getVersions().size() > 1) {
             Dataset d = new Dataset();
             List<Version> sortedVersions = Helpers.sort(dataset.getVersions());
-            List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
-            d.setDatasets(references);
+            List<Children<Dataset.Version>> datasetVersions = sortedVersions.stream().map(v -> {
+                Dataset.Version version = new Dataset.Version();
+                version.setVersion(new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier()));
+                version.setInnovation(v.getVersionInnovation() != null ? new Value<>(v.getVersionInnovation()) : null);
+                return new Children<>(version);
+            }).collect(Collectors.toList());
+            d.setDatasets(datasetVersions);
             d.setId(IdUtils.getUUID(dataset.getId()));
             d.setIdentifier(IdUtils.getUUID(dataset.getIdentifier()));
             d.setDescription(dataset.getDescription());
             if (StringUtils.isNotBlank(dataset.getFullName())) {
                 d.setTitle(dataset.getFullName());
             }
-            if (!CollectionUtils.isEmpty(dataset.getAuthor())) {
-                d.setAuthors(dataset.getAuthor().stream()
+            if (!CollectionUtils.isEmpty(dataset.getAuthors())) {
+                d.setAuthors(dataset.getAuthors().stream()
+                        .map(a -> new TargetInternalReference(
+                                IdUtils.getUUID(a.getId()),
+                                Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
+                        )).collect(Collectors.toList()));
+            }
+            if (!CollectionUtils.isEmpty(dataset.getCustodians())) {
+                d.setCustodians(dataset.getCustodians().stream()
                         .map(a -> new TargetInternalReference(
                                 IdUtils.getUUID(a.getId()),
                                 Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())

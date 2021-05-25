@@ -72,7 +72,7 @@ public class DatasetVersionOfKGV2Translator implements Translator<DatasetV1, Dat
             d.setLicenseInfo(new TargetExternalReference(license.getUrl(), license.getName()));
         }
         if (!CollectionUtils.isEmpty(datasetV1.getOwners())) {
-            d.setOwners(datasetV1.getOwners().stream()
+            d.setCustodians(datasetV1.getOwners().stream()
                     .map(o -> new TargetInternalReference(
                             liveMode ? o.getRelativeUrl() : o.getIdentifier(),
                             o.getName(),
@@ -91,7 +91,7 @@ public class DatasetVersionOfKGV2Translator implements Translator<DatasetV1, Dat
             String hdgMessageHTML = String.format("This data requires you to explicitly <b><a href=\"https://hdg.kg.ebrains.eu/request_access?kg_id=%s\" target=\"_blank\">request access</a></b> with your EBRAINS account. If you don't have such an account yet, please <b><a href=\"https://ebrains.eu/register/\" target=\"_blank\">register</a></b>.", datasetV1.getEditorId());
             d.setUseHDG(hdgMessage);
             d.setEmbargo(hdgMessageHTML);
-            d.setEmbargoForFilter("Controlled access");
+            d.setDataAccessibility("Controlled access");
         } else {
             if (dataStage == DataStage.RELEASED) {
                 if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
@@ -100,7 +100,7 @@ public class DatasetVersionOfKGV2Translator implements Translator<DatasetV1, Dat
                     d.setEmbargo("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.");
                 }
             }
-            d.setEmbargoForFilter(firstItemOrNull(datasetV1.getEmbargoForFilter()));
+            d.setDataAccessibility(firstItemOrNull(datasetV1.getEmbargoForFilter()));
             if (!CollectionUtils.isEmpty(datasetV1.getFiles()) && (dataStage == DataStage.IN_PROGRESS || (dataStage == DataStage.RELEASED && !hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW)))) {
                 d.setFiles(emptyToNull(datasetV1.getFiles().stream()
                         .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
@@ -169,14 +169,14 @@ public class DatasetVersionOfKGV2Translator implements Translator<DatasetV1, Dat
 
         d.setPreparation(emptyToNull(datasetV1.getPreparation()));
         if (!CollectionUtils.isEmpty(datasetV1.getComponent())) {
-            d.setComponent(datasetV1.getComponent().stream()
+            d.setProjects(datasetV1.getComponent().stream()
                     .map(c -> new TargetInternalReference(
                             liveMode ? c.getRelativeUrl() : c.getIdentifier(),
                             c.getName(),
                             null
                     )).collect(Collectors.toList()));
         }
-        d.setProtocol(emptyToNull(datasetV1.getProtocols()));
+        d.setKeywords(emptyToNull(datasetV1.getProtocols()));
 
         if (!CollectionUtils.isEmpty(datasetV1.getBrainViewer())) {
             d.setViewer(datasetV1.getBrainViewer().stream()

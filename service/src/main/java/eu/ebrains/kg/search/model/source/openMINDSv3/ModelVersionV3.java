@@ -24,7 +24,7 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.HasEmbargo;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
 
 import java.util.List;
@@ -33,8 +33,8 @@ public class ModelVersionV3 extends SourceInstanceV3 implements HasEmbargo {
     private String title;
     private String version;
     private String description;
-    private List<Author> developer;
-    private List<Author> custodian;
+    private List<PersonOrOrganizationRef> developer;
+    private List<PersonOrOrganizationRef> custodian;
     private ModelVersions model;
     private List<String> applicationCategory;
     private List<String> operatingSystem;
@@ -69,19 +69,19 @@ public class ModelVersionV3 extends SourceInstanceV3 implements HasEmbargo {
         this.description = description;
     }
 
-    public List<Author> getCustodian() {
+    public List<PersonOrOrganizationRef> getCustodian() {
         return custodian;
     }
 
-    public void setCustodian(List<Author> custodian) {
+    public void setCustodian(List<PersonOrOrganizationRef> custodian) {
         this.custodian = custodian;
     }
 
-    public List<Author> getDeveloper() {
+    public List<PersonOrOrganizationRef> getDeveloper() {
         return developer;
     }
 
-    public void setDeveloper(List<Author> developer) {
+    public void setDeveloper(List<PersonOrOrganizationRef> developer) {
         this.developer = developer;
     }
 

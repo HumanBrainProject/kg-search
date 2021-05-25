@@ -24,9 +24,11 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.SourceInternalReference;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
 import java.util.Date;
 import java.util.List;
@@ -37,13 +39,17 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private String description;
     private String fullName;
     private String homepage;
+    private List<FullNameRef> projects;
     private List<String> keyword;
     private Date releaseDate;
     private String version;
     private String versionInnovation;
-    private List<Author> author;
+    private List<PersonOrOrganizationRef> author;
+    private List<PersonOrOrganizationRef> custodians;
     private DatasetVersions dataset;
     private SourceInternalReference fileRepository;
+    private License license;
+    private List<Specimen> studiedSpecimen;
 
     public String getDescription() {
         return description;
@@ -117,11 +123,11 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
         this.versionInnovation = versionInnovation;
     }
 
-    public List<Author> getAuthor() {
+    public List<PersonOrOrganizationRef> getAuthor() {
         return author;
     }
 
-    public void setAuthor(List<Author> author) {
+    public void setAuthor(List<PersonOrOrganizationRef> author) {
         this.author = author;
     }
 
@@ -141,17 +147,159 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
         this.fileRepository = fileRepository;
     }
 
+    public List<FullNameRef> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<FullNameRef> projects) {
+        this.projects = projects;
+    }
+
+    public License getLicense() {
+        return license;
+    }
+
+    public void setLicense(License license) {
+        this.license = license;
+    }
+
+    public List<PersonOrOrganizationRef> getCustodians() {
+        return custodians;
+    }
+
+    public void setCustodians(List<PersonOrOrganizationRef> custodians) {
+        this.custodians = custodians;
+    }
+
+    public List<Specimen> getStudiedSpecimen() {
+        return studiedSpecimen;
+    }
+
+    public void setStudiedSpecimen(List<Specimen> studiedSpecimen) {
+        this.studiedSpecimen = studiedSpecimen;
+    }
+
+    public static class Specimen {
+        private String specimenId;
+        private String species;
+        private List<Age> ages;
+        private List<String> biologicalSex;
+
+        public String getSpecimenId() {
+            return specimenId;
+        }
+
+        public void setSpecimenId(String specimenId) {
+            this.specimenId = specimenId;
+        }
+
+        public String getSpecies() {
+            return species;
+        }
+
+        public void setSpecies(String species) {
+            this.species = species;
+        }
+
+        public List<Age> getAges() {
+            return ages;
+        }
+
+        public void setAges(List<Age> ages) {
+            this.ages = ages;
+        }
+
+        public List<String> getBiologicalSex() {
+            return biologicalSex;
+        }
+
+        public void setBiologicalSex(List<String> biologicalSex) {
+            this.biologicalSex = biologicalSex;
+        }
+    }
+
+    public static class Age{
+        private Double value;
+        private Double maxValue;
+        private Double minValue;
+        private String unit;
+
+        public Double getValue() {
+            return value;
+        }
+
+        public void setValue(Double value) {
+            this.value = value;
+        }
+
+        public Double getMaxValue() {
+            return maxValue;
+        }
+
+        public void setMaxValue(Double maxValue) {
+            this.maxValue = maxValue;
+        }
+
+        public Double getMinValue() {
+            return minValue;
+        }
+
+        public void setMinValue(Double minValue) {
+            this.minValue = minValue;
+        }
+
+        public String getUnit() {
+            return unit;
+        }
+
+        public void setUnit(String unit) {
+            this.unit = unit;
+        }
+    }
+
+    public static class License {
+        private String fullName;
+        private String legalCode;
+
+        public String getFullName() {
+            return fullName;
+        }
+
+        public void setFullName(String fullName) {
+            this.fullName = fullName;
+        }
+
+        public String getLegalCode() {
+            return legalCode;
+        }
+
+        public void setLegalCode(String legalCode) {
+            this.legalCode = legalCode;
+        }
+    }
+
     public static class DatasetVersions extends Versions {
 
         @JsonProperty("datasetAuthor")
-        private List<Author> author;
+        private List<PersonOrOrganizationRef> author;
 
-        public List<Author> getAuthor() {
+        @JsonProperty("datasetCustodian")
+        private List<PersonOrOrganizationRef> custodians;
+
+        public List<PersonOrOrganizationRef> getAuthor() {
             return author;
         }
 
-        public void setAuthor(List<Author> author) {
+        public void setAuthor(List<PersonOrOrganizationRef> author) {
             this.author = author;
+        }
+
+        public List<PersonOrOrganizationRef> getCustodians() {
+            return custodians;
+        }
+
+        public void setCustodians(List<PersonOrOrganizationRef> custodians) {
+            this.custodians = custodians;
         }
     }
 

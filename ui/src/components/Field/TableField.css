@@ -26,6 +26,10 @@
     display: none;
 }
 
+.kgs-field__table .table th{
+    white-space: nowrap;
+}
+
 .kgs-field button[role="link"].kgs-field__viewMore-button {
     -webkit-appearance: none;
     margin: 0 0 0 20px;
