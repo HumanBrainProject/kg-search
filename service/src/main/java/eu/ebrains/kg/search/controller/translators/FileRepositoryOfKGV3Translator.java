@@ -66,21 +66,25 @@ public class FileRepositoryOfKGV3Translator implements Translator<FileRepository
                 }
             }
 
-            if (hasEmbargoStatus(fileRepositoryOf, RESTRICTED_ACCESS)) {
-                String hdgMessage = String.format("This data requires you to explicitly **[request access](https://hdg.kg.ebrains.eu/request_access?kg_id=%s)** with your EBRAINS account. If you don't have such an account yet, please **[register](https://ebrains.eu/register/)**.", IdUtils.getUUID(fileRepositoryOf.getId()));
-                String hdgMessageHTML = String.format("This data requires you to explicitly <b><a href=\"https://hdg.kg.ebrains.eu/request_access?kg_id=%s\" target=\"_blank\">request access</a></b> with your EBRAINS account. If you don't have such an account yet, please <b><a href=\"https://ebrains.eu/register/\" target=\"_blank\">register</a></b>.", IdUtils.getUUID(fileRepositoryOf.getId()));
-                f.setUseHDG(hdgMessage);
-                f.setEmbargo(hdgMessageHTML);
+            if (liveMode) {
+                f.setFilesAsyncUrl(String.format("/api/repositories/%s/files/live", IdUtils.getUUID(fileRepository.getId())));
             } else {
-                if (dataStage == DataStage.RELEASED) {
-                    if (hasEmbargoStatus(fileRepositoryOf, UNDER_EMBARGO)) {
-                        f.setEmbargo("Those files are temporarily under embargo. The data will become available for download after the embargo period.");
-                    } else if (hasEmbargoStatus(fileRepositoryOf, CONTROLLED_ACCESS)) {
-                        f.setEmbargo("Those files are currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.");
+                if (hasEmbargoStatus(fileRepositoryOf, RESTRICTED_ACCESS)) {
+                    String hdgMessage = String.format("This data requires you to explicitly **[request access](https://hdg.kg.ebrains.eu/request_access?kg_id=%s)** with your EBRAINS account. If you don't have such an account yet, please **[register](https://ebrains.eu/register/)**.", IdUtils.getUUID(fileRepositoryOf.getId()));
+                    String hdgMessageHTML = String.format("This data requires you to explicitly <b><a href=\"https://hdg.kg.ebrains.eu/request_access?kg_id=%s\" target=\"_blank\">request access</a></b> with your EBRAINS account. If you don't have such an account yet, please <b><a href=\"https://ebrains.eu/register/\" target=\"_blank\">register</a></b>.", IdUtils.getUUID(fileRepositoryOf.getId()));
+                    f.setUseHDG(hdgMessage);
+                    f.setEmbargo(hdgMessageHTML);
+                } else {
+                    if (dataStage == DataStage.RELEASED) {
+                        if (hasEmbargoStatus(fileRepositoryOf, UNDER_EMBARGO)) {
+                            f.setEmbargo("Those files are temporarily under embargo. The data will become available for download after the embargo period.");
+                        } else if (hasEmbargoStatus(fileRepositoryOf, CONTROLLED_ACCESS)) {
+                            f.setEmbargo("Those files are currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.");
+                        }
                     }
-                }
-                if ((dataStage == DataStage.IN_PROGRESS || (dataStage == DataStage.RELEASED && hasEmbargoStatus(fileRepositoryOf, FREE_ACCESS)))) {
-                    f.setFilesAsyncUrl(String.format("/api/groups/%s/repositories/%s/files", dataStage.equals(DataStage.IN_PROGRESS)?"curated":"public", IdUtils.getUUID(fileRepository.getId())));
+                    if ((dataStage == DataStage.IN_PROGRESS || (dataStage == DataStage.RELEASED && hasEmbargoStatus(fileRepositoryOf, FREE_ACCESS)))) {
+                        f.setFilesAsyncUrl(String.format("/api/groups/%s/repositories/%s/files", dataStage.equals(DataStage.IN_PROGRESS) ? "curated" : "public", IdUtils.getUUID(fileRepository.getId())));
+                    }
                 }
             }
         }

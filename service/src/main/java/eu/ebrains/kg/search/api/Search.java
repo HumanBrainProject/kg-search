@@ -170,6 +170,17 @@ public class Search {
         return result;
     }
 
+
+    @GetMapping("/repositories/{id}/files/live")
+    public ResponseEntity<?> getFilesFromRepoForPublic(@PathVariable("id") String id,
+                                                       @RequestParam(required = false, name = "searchAfter") String searchAfter,
+                                                       @RequestParam(required = false, defaultValue = "10000", name = "size") int size) {
+        if ((searchAfter != null && !MetaModelUtils.isValidUUID(searchAfter)) || !MetaModelUtils.isValidUUID(id) || size > 10000) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build(); // TODO: implement live for files
+    }
+
     @GetMapping("/groups/public/repositories/{id}/files")
     public ResponseEntity<?> getFilesFromRepoForPublic(@PathVariable("id") String id,
                                                        @RequestParam(required = false, name = "searchAfter") String searchAfter,
