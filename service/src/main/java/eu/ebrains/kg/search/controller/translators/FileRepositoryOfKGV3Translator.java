@@ -66,7 +66,7 @@ public class FileRepositoryOfKGV3Translator implements Translator<FileRepository
                 }
             }
 
-            if (hasEmbargoStatus(fileRepositoryOf, RESTRICTED_ACCESS) || fileRepositoryOf.isUseHDG()) { //TODO: check if useHDG still exist
+            if (hasEmbargoStatus(fileRepositoryOf, RESTRICTED_ACCESS)) {
                 String hdgMessage = String.format("This data requires you to explicitly **[request access](https://hdg.kg.ebrains.eu/request_access?kg_id=%s)** with your EBRAINS account. If you don't have such an account yet, please **[register](https://ebrains.eu/register/)**.", IdUtils.getUUID(fileRepositoryOf.getId()));
                 String hdgMessageHTML = String.format("This data requires you to explicitly <b><a href=\"https://hdg.kg.ebrains.eu/request_access?kg_id=%s\" target=\"_blank\">request access</a></b> with your EBRAINS account. If you don't have such an account yet, please <b><a href=\"https://ebrains.eu/register/\" target=\"_blank\">register</a></b>.", IdUtils.getUUID(fileRepositoryOf.getId()));
                 f.setUseHDG(hdgMessage);

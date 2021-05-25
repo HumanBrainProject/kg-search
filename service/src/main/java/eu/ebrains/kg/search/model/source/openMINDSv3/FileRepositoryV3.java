@@ -47,7 +47,6 @@ public class FileRepositoryV3 extends SourceInstanceV3 {
     public static class FileRepositoryOfReference extends SourceInternalReference implements HasEmbargo {
         private List<String> type;
         private List<String> embargo;
-        private boolean useHDG;
 
         public List<String> getType() {
             return type;
@@ -64,14 +63,5 @@ public class FileRepositoryV3 extends SourceInstanceV3 {
         public void setEmbargo(List<String> embargo) {
             this.embargo = embargo;
         }
-
-        public boolean isUseHDG() {
-            return useHDG;
-        }
-
-        public void setUseHDG(boolean useHDG) {
-            this.useHDG = useHDG;
-        }
-
     }
 }
