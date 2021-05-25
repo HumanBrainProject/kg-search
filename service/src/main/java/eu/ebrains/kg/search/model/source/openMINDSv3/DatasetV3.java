@@ -23,7 +23,7 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 
 import java.util.*;
@@ -35,7 +35,8 @@ public class DatasetV3 extends SourceInstanceV3 {
     private String fullName;
     private String homepage;
     private List<Version> versions;
-    private List<Author> author; //TODO: use plural naming when having a list as soon as query bug is fixed (same alias in different structure)
+    private List<PersonOrOrganizationRef> authors;
+    private List<PersonOrOrganizationRef> custodians;
 
     public String getDescription() {
         return description;
@@ -85,12 +86,19 @@ public class DatasetV3 extends SourceInstanceV3 {
         this.homepage = homepage;
     }
 
-    public List<Author> getAuthor() {
-        return author;
+    public List<PersonOrOrganizationRef> getAuthors() {
+        return authors;
     }
 
-    public void setAuthor(List<Author> author) {
-        this.author = author;
+    public void setAuthors(List<PersonOrOrganizationRef> authors) {
+        this.authors = authors;
     }
 
+    public List<PersonOrOrganizationRef> getCustodians() {
+        return custodians;
+    }
+
+    public void setCustodians(List<PersonOrOrganizationRef> custodians) {
+        this.custodians = custodians;
+    }
 }

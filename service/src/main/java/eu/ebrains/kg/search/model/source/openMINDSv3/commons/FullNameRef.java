@@ -23,7 +23,7 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3.commons;
 
-public class Component {
+public class FullNameRef {
 
     private String id;
     private String fullName;

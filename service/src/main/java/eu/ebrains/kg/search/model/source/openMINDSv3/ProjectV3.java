@@ -23,7 +23,7 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Component;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class ProjectV3 extends SourceInstanceV3 {
     private String title;
     private String description;
     private List<Publication> publications;
-    private List<Component> datasets;
+    private List<FullNameRef> datasets;
 
     public String getTitle() {
         return title;
@@ -57,11 +57,11 @@ public class ProjectV3 extends SourceInstanceV3 {
         this.publications = publications;
     }
 
-    public List<Component> getDatasets() {
+    public List<FullNameRef> getDatasets() {
         return datasets;
     }
 
-    public void setDatasets(List<Component> datasets) {
+    public void setDatasets(List<FullNameRef> datasets) {
         this.datasets = datasets;
     }
 

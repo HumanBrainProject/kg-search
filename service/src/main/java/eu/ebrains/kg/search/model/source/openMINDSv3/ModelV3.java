@@ -23,7 +23,7 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 
 import java.util.List;
@@ -33,8 +33,8 @@ public class ModelV3 extends SourceInstanceV3 {
     private String description;
     private String doi;
     private String howToCite;
-    private List<Author> developer;
-    private List<Author> custodian;
+    private List<PersonOrOrganizationRef> developer;
+    private List<PersonOrOrganizationRef> custodian;
     private List<String> studyTarget;
     private List<String> modelScope;
     private List<String> abstractionLevel;
@@ -73,13 +73,13 @@ public class ModelV3 extends SourceInstanceV3 {
         this.howToCite = howToCite;
     }
 
-    public List<Author> getDeveloper() { return developer; }
+    public List<PersonOrOrganizationRef> getDeveloper() { return developer; }
 
-    public void setDeveloper(List<Author> developer) { this.developer = developer; }
+    public void setDeveloper(List<PersonOrOrganizationRef> developer) { this.developer = developer; }
 
-    public List<Author> getCustodian() { return custodian; }
+    public List<PersonOrOrganizationRef> getCustodian() { return custodian; }
 
-    public void setCustodian(List<Author> custodian) { this.custodian = custodian; }
+    public void setCustodian(List<PersonOrOrganizationRef> custodian) { this.custodian = custodian; }
 
     public List<String> getStudyTarget() {
         return studyTarget;

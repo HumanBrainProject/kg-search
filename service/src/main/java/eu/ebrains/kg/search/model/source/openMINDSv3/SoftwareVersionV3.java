@@ -23,7 +23,7 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Author;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
 
 import java.util.List;
@@ -38,8 +38,8 @@ public class SoftwareVersionV3 extends SourceInstanceV3 {
     private List<String> applicationCategory;
     private List<String> operatingSystem;
     private String homepage;
-    private List<Author> developer;
-    private List<Author> custodian;
+    private List<PersonOrOrganizationRef> developer;
+    private List<PersonOrOrganizationRef> custodian;
     private List<String> sourceCode;
     private List<String> documentation;
     private List<String> features;
@@ -113,19 +113,19 @@ public class SoftwareVersionV3 extends SourceInstanceV3 {
         this.homepage = homepage;
     }
 
-    public List<Author> getDeveloper() {
+    public List<PersonOrOrganizationRef> getDeveloper() {
         return developer;
     }
 
-    public void setDeveloper(List<Author> developer) {
+    public void setDeveloper(List<PersonOrOrganizationRef> developer) {
         this.developer = developer;
     }
 
-    public List<Author> getCustodian() {
+    public List<PersonOrOrganizationRef> getCustodian() {
         return custodian;
     }
 
-    public void setCustodian(List<Author> custodian) {
+    public void setCustodian(List<PersonOrOrganizationRef> custodian) {
         this.custodian = custodian;
     }
 
@@ -163,22 +163,22 @@ public class SoftwareVersionV3 extends SourceInstanceV3 {
 
     public static class SoftwareVersions extends Versions {
 
-        private List<Author> custodian;
-        private List<Author> developer;
+        private List<PersonOrOrganizationRef> custodian;
+        private List<PersonOrOrganizationRef> developer;
 
-        public List<Author> getCustodian() {
+        public List<PersonOrOrganizationRef> getCustodian() {
             return custodian;
         }
 
-        public void setCustodian(List<Author> custodian) {
+        public void setCustodian(List<PersonOrOrganizationRef> custodian) {
             this.custodian = custodian;
         }
 
-        public List<Author> getDeveloper() {
+        public List<PersonOrOrganizationRef> getDeveloper() {
             return developer;
         }
 
-        public void setDeveloper(List<Author> developer) {
+        public void setDeveloper(List<PersonOrOrganizationRef> developer) {
             this.developer = developer;
         }
     }

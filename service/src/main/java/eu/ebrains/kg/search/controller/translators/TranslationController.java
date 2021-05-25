@@ -954,12 +954,6 @@ public class TranslationController {
         if (clazz == Project.class) {
             return this.createProjectForIndexing(dataStage, liveMode, legacyAuthorization, source);
         }
-        if (clazz == Subject.class) {
-            return this.createSubjectForIndexing(dataStage, liveMode, legacyAuthorization, source);
-        }
-        if (clazz == Sample.class) {
-            return this.createSampleForIndexing(dataStage, liveMode, legacyAuthorization, source);
-        }
         if (clazz == ModelVersion.class) {
             return this.createModelVersionForIndexing(dataStage, liveMode, legacyAuthorization, source);
         }

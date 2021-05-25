@@ -27,6 +27,7 @@ public class Version {
     private String id;
     private String fullName;
     private String versionIdentifier;
+    private String versionInnovation;
     private String isNewVersionOf;
 
     public String getId() {
@@ -51,6 +52,14 @@ public class Version {
 
     public void setVersionIdentifier(String versionIdentifier) {
         this.versionIdentifier = versionIdentifier;
+    }
+
+    public String getVersionInnovation() {
+        return versionInnovation;
+    }
+
+    public void setVersionInnovation(String versionInnovation) {
+        this.versionInnovation = versionInnovation;
     }
 
     public String getIsNewVersionOf() { return isNewVersionOf; }

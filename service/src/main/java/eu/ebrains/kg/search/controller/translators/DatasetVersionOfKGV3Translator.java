@@ -25,15 +25,19 @@ package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.DatasetVersion;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,20 +50,26 @@ public class DatasetVersionOfKGV3Translator implements Translator<DatasetVersion
         d.setIdentifier(IdUtils.getUUID(datasetVersion.getIdentifier()));
         if (dataset != null && !CollectionUtils.isEmpty(dataset.getVersions()) && dataset.getVersions().size() > 1) {
             d.setVersion(datasetVersion.getVersion());
-            d.setDataset(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), dataset.getFullName()));
             List<Version> sortedVersions = Helpers.sort(dataset.getVersions());
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
+            references.add(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), "All versions"));
             d.setVersions(references);
             d.setSearchable(sortedVersions.get(0).getId().equals(datasetVersion.getId()));
         } else {
             d.setSearchable(true);
         }
 
-        if (!StringUtils.isBlank(datasetVersion.getDescription())) {
+        String description = null;
+        if (StringUtils.isNotBlank(datasetVersion.getDescription())) {
             d.setDescription(datasetVersion.getDescription());
         } else if (dataset != null) {
             d.setDescription(dataset.getDescription());
         }
+        if(StringUtils.isNotBlank(datasetVersion.getVersionInnovation())) {
+            d.setNewInThisVersion(new Value<>(datasetVersion.getVersionInnovation()));
+        }
+
+
         if (dataset != null && StringUtils.isNotBlank(dataset.getFullName())) {
             d.setTitle(dataset.getFullName());
         } else if (StringUtils.isNotBlank(datasetVersion.getFullName())) {
@@ -81,12 +91,44 @@ public class DatasetVersionOfKGV3Translator implements Translator<DatasetVersion
         String citation = datasetVersion.getHowToCite();
         String doi = datasetVersion.getDoi();
         if (StringUtils.isNotBlank(doi)) {
-            d.setDoi(doi);
             if (StringUtils.isNotBlank(citation)) {
-                String url = URLEncoder.encode(doi, StandardCharsets.UTF_8);
-                d.setCitation(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url));
+                d.setCitation(String.format("%s [DOI: %s](%s)", citation, Helpers.stripDOIPrefix(doi), doi));
+            }
+            else{
+                d.setCitation(String.format("[DOI: %s](%s)", Helpers.stripDOIPrefix(doi), doi));
             }
         }
+        else if (StringUtils.isNotBlank(citation)) {
+            d.setCitation(citation);
+        }
+
+        if(datasetVersion.getLicense()!=null && StringUtils.isNotBlank(datasetVersion.getLicense().getLegalCode())){
+            d.setLicenseInfo(new TargetExternalReference(datasetVersion.getLicense().getLegalCode(), datasetVersion.getLicense().getFullName()!=null ? datasetVersion.getLicense().getFullName() : datasetVersion.getLicense().getLegalCode()));
+        }
+
+        if(datasetVersion.getProjects()!=null){
+            d.setProjects(datasetVersion.getProjects().stream().map(r -> new TargetInternalReference(IdUtils.getUUID(r.getId()), r.getFullName())).collect(Collectors.toList()));
+        }
+
+        List<PersonOrOrganizationRef> custodians = datasetVersion.getCustodians();
+        if(CollectionUtils.isEmpty(custodians)){
+            custodians = datasetVersion.getDataset().getCustodians();
+        }
+        if(!CollectionUtils.isEmpty(custodians)){
+            d.setCustodians(custodians.stream().map(c -> new TargetInternalReference(IdUtils.getUUID(c.getId()), Helpers.getFullName(c.getFullName(), c.getFamilyName(), c.getGivenName()))).collect(Collectors.toList()));
+        }
+
+        if(!CollectionUtils.isEmpty(datasetVersion.getKeyword())){
+            d.setKeywords(datasetVersion.getKeyword());
+        }
+        if(!CollectionUtils.isEmpty(datasetVersion.getStudiedSpecimen())){
+            d.setSpeciesFilter(datasetVersion.getStudiedSpecimen().stream().map(DatasetVersionV3.Specimen::getSpecies).distinct().sorted().collect(Collectors.toList()));
+
+        }
+
+        datasetVersion.getA
+
+
         return d;
     }
 }

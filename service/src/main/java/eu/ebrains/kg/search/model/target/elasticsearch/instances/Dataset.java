@@ -27,6 +27,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
@@ -53,13 +54,13 @@ public class Dataset implements TargetInstance {
     @FieldInfo(label = "Name", sort = true, layout = FieldInfo.Layout.HEADER)
     private Value<String> title;
 
-    @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2)
-    private Value<String> description;
-
     @FieldInfo(label = "Authors", separator = "; ", layout = FieldInfo.Layout.HEADER, type = FieldInfo.Type.TEXT, labelHidden = true)
     private List<TargetInternalReference> authors;
 
-    @FieldInfo(label = "Cite dataset", isButton = true, markdown = true, icon="quote-left")
+    @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10)
+    private List<TargetInternalReference> custodians;
+
+    @FieldInfo(label = "Cite dataset", isButton = true, markdown = true, icon = "quote-left")
     private Value<String> citation;
 
     @FieldInfo(label = "DOI", hint = "This is the dataset DOI representing all the underlying datasets you must cite if you reuse this data in a way that leads to a publication")
@@ -68,21 +69,25 @@ public class Dataset implements TargetInstance {
     @FieldInfo(label = "Homepage")
     private TargetExternalReference homepage;
 
-    @FieldInfo(label = "Components")
-    private List<TargetInternalReference> components;
+    @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2)
+    private Value<String> description;
 
-    @FieldInfo(label = "Datasets")
-    private List<TargetInternalReference> datasets;
+    @FieldInfo(label = "Datasets", layout = FieldInfo.Layout.GROUP, hint = "List of existing versions of this dataset.", isTable = true)
+    private List<Children<Version>> datasets;
 
     @Override
-    public String getId() { return id; }
+    public String getId() {
+        return id;
+    }
 
     @Override
     public boolean isSearchable() {
         return false;
     }
 
-    public void setId(String id) { this.id = id; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public void setIdentifier(List<String> identifier) {
         this.identifier = identifier;
@@ -173,19 +178,50 @@ public class Dataset implements TargetInstance {
         this.homepage = homepage;
     }
 
-    public List<TargetInternalReference> getComponents() {
-        return components;
+    public List<TargetInternalReference> getCustodians() {
+        return custodians;
     }
 
-    public void setComponents(List<TargetInternalReference> components) {
-        this.components = components;
+    public void setCustodians(List<TargetInternalReference> custodians) {
+        this.custodians = custodians;
     }
 
-    public List<TargetInternalReference> getDatasets() {
+    public List<Children<Version>> getDatasets() {
         return datasets;
     }
 
-    public void setDatasets(List<TargetInternalReference> datasets) {
+    public void setDatasets(List<Children<Version>> datasets) {
         this.datasets = datasets;
     }
+
+
+
+    public static class Version {
+        public Version() {
+        }
+
+        @FieldInfo(label = "Version", groupBy = true)
+        private TargetInternalReference version;
+
+        @FieldInfo(label = "Innovation", markdown = true)
+        private Value<String> innovation;
+
+
+        public TargetInternalReference getVersion() {
+            return version;
+        }
+
+        public void setVersion(TargetInternalReference version) {
+            this.version = version;
+        }
+
+        public Value<String> getInnovation() {
+            return innovation;
+        }
+
+        public void setInnovation(Value<String> innovation) {
+            this.innovation = innovation;
+        }
+    }
+
 }

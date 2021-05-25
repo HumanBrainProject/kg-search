@@ -78,12 +78,62 @@
           "required": false
         },
         {
+          "propertyName": "query:versionInnovation",
+          "path": "https://openminds.ebrains.eu/vocab/versionInnovation"
+        },
+        {
           "propertyName": "query:isNewVersionOf",
           "path": [
             "https://openminds.ebrains.eu/vocab/isNewVersionOf",
             "https://openminds.ebrains.eu/vocab/versionIdentifier"
           ],
           "singleValue": "FIRST"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:authors",
+      "path": "https://openminds.ebrains.eu/vocab/author",
+      "ensureOrder": true,
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:familyName",
+          "path": "https://openminds.ebrains.eu/vocab/familyName"
+        },
+        {
+          "propertyName": "query:givenName",
+          "path": "https://openminds.ebrains.eu/vocab/givenName"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:custodians",
+      "path": "https://openminds.ebrains.eu/vocab/custodian",
+      "ensureOrder": true,
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:familyName",
+          "path": "https://openminds.ebrains.eu/vocab/familyName"
+        },
+        {
+          "propertyName": "query:givenName",
+          "path": "https://openminds.ebrains.eu/vocab/givenName"
         }
       ]
     }
