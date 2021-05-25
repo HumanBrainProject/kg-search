@@ -183,12 +183,12 @@ public class Search {
             ElasticSearchDocument document = esServiceClient.getDocument(index, id);
             Map<String, Object> source = document.getSource();
             if (source == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                return ResponseEntity.notFound().build();
             } else {
                 Map<String, Object> typeValue = (Map<String, Object>) source.get("type");
                 String type = typeValue != null?((String) typeValue.get("value")):null;
                 if (StringUtils.isEmpty(type) || !type.equals("FileRepository")) {
-                    return ResponseEntity.badRequest().build();
+                    return ResponseEntity.notFound().build();
                 } else {
                     String embargo = (String) source.get("embargo");
                     String useHDG = (String) source.get("useHDG");
@@ -222,12 +222,12 @@ public class Search {
                 ElasticSearchDocument document = esServiceClient.getDocument(index, id);
                 Map<String, Object> source = document.getSource();
                 if (source == null) {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                    return ResponseEntity.notFound().build();
                 } else {
                     Map<String, Object> typeValue = (Map<String, Object>) source.get("type");
                     String type = typeValue != null?((String) typeValue.get("value")):null;
                     if (StringUtils.isEmpty(type) || !type.equals("FileRepository")) {
-                        return ResponseEntity.badRequest().build();
+                        return ResponseEntity.notFound().build();
                     } else {
                         String useHDG = (String) source.get("useHDG");
                         if (StringUtils.isNotEmpty(useHDG)) {
