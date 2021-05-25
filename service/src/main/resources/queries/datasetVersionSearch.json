@@ -168,7 +168,8 @@
           "path": [
             "https://openminds.ebrains.eu/vocab/species",
             "https://openminds.ebrains.eu/vocab/name"
-          ]
+          ],
+          "singleValue": "FIRST"
         },
         {
           "propertyName": "query:age",
