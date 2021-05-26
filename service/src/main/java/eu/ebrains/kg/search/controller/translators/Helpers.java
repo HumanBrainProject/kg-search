@@ -26,15 +26,19 @@ package eu.ebrains.kg.search.controller.translators;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Helpers {
-    public static String abbreviateGivenName(String givenName){
-        if(givenName!=null){
-            return Arrays.stream(givenName.split(" ")).filter(e -> e.length()>0).
+    private final static Logger logger = LoggerFactory.getLogger(Helpers.class);
+
+    public static String abbreviateGivenName(String givenName) {
+        if (givenName != null) {
+            return Arrays.stream(givenName.split(" ")).filter(e -> e.length() > 0).
                     map(e -> String.format("%s.", e.charAt(0))).
                     collect(Collectors.joining(" "));
         }
@@ -43,17 +47,17 @@ public class Helpers {
     }
 
     public static String getFullName(String familyName, String givenName) {
-        if(familyName == null) {
-            return  null;
+        if (familyName == null) {
+            return null;
         }
         return givenName == null ? familyName : String.format("%s, %s", familyName, abbreviateGivenName(givenName));
     }
 
-    public static String stripDOIPrefix(String doi){
-        if(doi!=null){
+    public static String stripDOIPrefix(String doi) {
+        if (doi != null) {
             int indexToCrop = doi.indexOf("/10.");
-            if(indexToCrop!=-1){
-                return doi.substring(indexToCrop+1);
+            if (indexToCrop != -1) {
+                return doi.substring(indexToCrop + 1);
             }
         }
         return doi;
@@ -61,33 +65,48 @@ public class Helpers {
 
     public static String getFullName(String fullName, String familyName, String givenName) {
         if (StringUtils.isNotBlank(fullName)) {
-            return  fullName;
+            return fullName;
         }
         return getFullName(familyName, givenName);
     }
 
-    private static Version getByPreviousVersion(String previousVersion, List<Version> versions){
-        Optional<Version> previous = versions.stream().filter(v -> previousVersion == null ? v.getIsNewVersionOf() == null : v.getIsNewVersionOf() != null && v.getIsNewVersionOf().equals(previousVersion)).findFirst();
-        return previous.orElse(null);
+    private static Version getByPreviousVersion(String previousVersion, List<Version> versions) {
+        List<Version> previous = versions.stream().filter(v -> previousVersion == null ? v.getIsNewVersionOf() == null : v.getIsNewVersionOf() != null && v.getIsNewVersionOf().equals(previousVersion)).collect(Collectors.toList());
+        if (previous.size() > 1) {
+            logger.error(String.format("Ambiguous new versions detected. This is not valid. %s", previous.stream().filter(Objects::nonNull).map(Version::getId).collect(Collectors.joining(", "))));
+            return null;
+        } else if (CollectionUtils.isEmpty(previous)) {
+            return null;
+        } else {
+            return previous.get(0);
+        }
     }
 
 
-    public static List<Version> sort(List<Version> datasetVersions) {
+    public static List<Version> sort(List<Version> unsortedVersions) {
         List<Version> versions = new ArrayList<>();
         String previousVersion = null;
         Version v;
-        while((v = getByPreviousVersion(previousVersion, datasetVersions)) != null){
+        while ((v = getByPreviousVersion(previousVersion, unsortedVersions)) != null) {
+            if (versions.contains(v)) {
+                logger.error(String.format("Circular dependency detected in versions: %s", unsortedVersions.stream().filter(Objects::nonNull).map(Version::getId).collect(Collectors.joining(", "))));
+                return unsortedVersions;
+            }
             versions.add(v);
             previousVersion = v.getVersionIdentifier();
+            if (previousVersion == null) {
+                logger.error(String.format("Circular dependency detected in versions: %s", unsortedVersions.stream().filter(Objects::nonNull).map(Version::getId).collect(Collectors.joining(", "))));
+                return unsortedVersions;
+            }
         }
         Collections.reverse(versions);
         return versions;
     }
 
     public static <E> Stats getStats(ResultsOfKGv3<E> result, int from, int size) {
-        int pageSize =  CollectionUtils.isEmpty(result.getData()) ? 0 : result.getData().size();
+        int pageSize = CollectionUtils.isEmpty(result.getData()) ? 0 : result.getData().size();
         int cumulatedSize = from + pageSize;
-        String percentage = (CollectionUtils.isEmpty(result.getData()) || result.getTotal() == 0)?"unknown%":String.format("%d%s", Math.round(100 * cumulatedSize/result.getTotal()), "%");
+        String percentage = (CollectionUtils.isEmpty(result.getData()) || result.getTotal() == 0) ? "unknown%" : String.format("%d%s", Math.round(100 * cumulatedSize / result.getTotal()), "%");
         String info = String.format("%d out of %d, %s", cumulatedSize, result.getTotal(), percentage);
         return new Stats(pageSize, info);
     }
