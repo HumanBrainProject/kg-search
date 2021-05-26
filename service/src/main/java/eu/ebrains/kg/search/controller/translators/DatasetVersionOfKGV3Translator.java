@@ -34,6 +34,8 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -45,8 +47,8 @@ public class DatasetVersionOfKGV3Translator implements Translator<DatasetVersion
         DatasetVersionV3.DatasetVersions dataset = datasetVersion.getDataset();
         d.setId(IdUtils.getUUID(datasetVersion.getId()));
         d.setIdentifier(IdUtils.getUUID(datasetVersion.getIdentifier()));
-        List<Version> versions = dataset.getVersions();
-        if (dataset != null && !CollectionUtils.isEmpty(versions) && versions.size() > 1) {
+        List<Version> versions = dataset == null?null:dataset.getVersions();
+        if (!CollectionUtils.isEmpty(versions) && versions.size() > 1) {
             d.setVersion(datasetVersion.getVersion());
             List<Version> sortedVersions = Helpers.sort(versions);
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
