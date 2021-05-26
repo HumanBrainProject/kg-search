@@ -47,11 +47,13 @@ public class SoftwareVersionOfKGV3Translator implements Translator<SoftwareVersi
         s.setId(IdUtils.getUUID(softwareVersion.getId()));
         s.setIdentifier(IdUtils.getUUID(softwareVersion.getIdentifier()));
 
-        if (software != null && !CollectionUtils.isEmpty(software.getVersions())) {
-            List<Version> sortedVersions = Helpers.sort(software.getVersions());
+        List<Version> versions = software.getVersions();
+        if (software != null && !CollectionUtils.isEmpty(versions)) {
+            List<Version> sortedVersions = Helpers.sort(versions);
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             s.setVersions(references);
-            s.setSearchable(sortedVersions.get(0).getId().equals(softwareVersion.getId()));
+            // if versions cannot be sorted (sortedVersions == versions) we flag it as searchable
+            s.setSearchable(sortedVersions == versions || sortedVersions.get(0).getId().equals(softwareVersion.getId()));
         } else {
             s.setSearchable(true);
         }

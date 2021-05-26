@@ -45,13 +45,15 @@ public class DatasetVersionOfKGV3Translator implements Translator<DatasetVersion
         DatasetVersionV3.DatasetVersions dataset = datasetVersion.getDataset();
         d.setId(IdUtils.getUUID(datasetVersion.getId()));
         d.setIdentifier(IdUtils.getUUID(datasetVersion.getIdentifier()));
-        if (dataset != null && !CollectionUtils.isEmpty(dataset.getVersions()) && dataset.getVersions().size() > 1) {
+        List<Version> versions = dataset.getVersions();
+        if (dataset != null && !CollectionUtils.isEmpty(versions) && versions.size() > 1) {
             d.setVersion(datasetVersion.getVersion());
-            List<Version> sortedVersions = Helpers.sort(dataset.getVersions());
+            List<Version> sortedVersions = Helpers.sort(versions);
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             references.add(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), "All versions"));
             d.setVersions(references);
-            d.setSearchable(sortedVersions.get(0).getId().equals(datasetVersion.getId()));
+            // if versions cannot be sorted (sortedVersions == versions) we flag it as searchable
+            d.setSearchable(sortedVersions == versions || sortedVersions.get(0).getId().equals(datasetVersion.getId()));
         } else {
             d.setSearchable(true);
         }

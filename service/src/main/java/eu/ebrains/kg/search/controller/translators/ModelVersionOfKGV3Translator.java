@@ -50,11 +50,13 @@ public class ModelVersionOfKGV3Translator implements Translator<ModelVersionV3, 
         m.setId(IdUtils.getUUID(modelVersion.getId()));
         m.setIdentifier(IdUtils.getUUID(modelVersion.getIdentifier()));
 
-        if (model != null && !CollectionUtils.isEmpty(model.getVersions())) {
-            List<Version> sortedVersions = Helpers.sort(model.getVersions());
+        List<Version> versions = model.getVersions();
+        if (model != null && !CollectionUtils.isEmpty(versions)) {
+            List<Version> sortedVersions = Helpers.sort(versions);
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             m.setVersions(references);
-            m.setSearchable(sortedVersions.get(0).getId().equals(modelVersion.getId()));
+            // if versions cannot be sorted (sortedVersions == versions) we flag it as searchable
+            m.setSearchable(sortedVersions == versions || sortedVersions.get(0).getId().equals(modelVersion.getId()));
         } else {
             m.setSearchable(true);
         }
