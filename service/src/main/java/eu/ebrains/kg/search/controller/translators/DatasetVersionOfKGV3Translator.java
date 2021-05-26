@@ -35,6 +35,7 @@ import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class DatasetVersionOfKGV3Translator implements Translator<DatasetVersionV3, DatasetVersion> {
@@ -121,7 +122,7 @@ public class DatasetVersionOfKGV3Translator implements Translator<DatasetVersion
             d.setKeywords(datasetVersion.getKeyword());
         }
         if(!CollectionUtils.isEmpty(datasetVersion.getStudiedSpecimen())){
-            d.setSpeciesFilter(datasetVersion.getStudiedSpecimen().stream().map(DatasetVersionV3.Specimen::getSpecies).distinct().sorted().collect(Collectors.toList()));
+            d.setSpeciesFilter(datasetVersion.getStudiedSpecimen().stream().map(DatasetVersionV3.Specimen::getSpecies).filter(Objects::nonNull).distinct().sorted().collect(Collectors.toList()));
 
         }
 
