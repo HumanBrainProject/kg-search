@@ -37,6 +37,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
@@ -93,7 +94,7 @@ public class ModelVersionOfKGV3Translator implements Translator<ModelVersionV3, 
             }
         }
         if (!hasEmbargoStatus(modelVersion, UNDER_EMBARGO) && !CollectionUtils.isEmpty(modelVersion.getFileBundle())) {
-            m.setAllFiles(modelVersion.getFileBundle().stream()
+            m.setAllFiles(modelVersion.getFileBundle().stream().filter(Objects::nonNull)
                     .map(fb -> {
                         if (fb.startsWith("https://object.cscs.ch")) {
                             return new TargetExternalReference(

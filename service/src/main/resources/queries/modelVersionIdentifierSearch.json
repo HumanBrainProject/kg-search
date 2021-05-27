@@ -26,6 +26,11 @@
       "propertyName": "query:identifier",
       "path": "http://schema.org/identifier",
       "required": true
+    },
+    {
+      "propertyName": "query:title",
+      "path": "https://openminds.ebrains.eu/vocab/fullName",
+      "required": true
     }
   ]
 }

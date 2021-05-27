@@ -117,11 +117,10 @@
     },
     {
       "propertyName": "query:fileBundle",
-      "path": "https://openminds.ebrains.eu/vocab/repository",
-      "structure": {
-        "propertyName": "query:IRI",
-        "path": "https://openminds.ebrains.eu/vocab/IRI"
-      }
+      "path": [
+        "https://openminds.ebrains.eu/vocab/repository",
+        "https://openminds.ebrains.eu/vocab/IRI"
+      ]
     },
     {
       "propertyName": "query:license",

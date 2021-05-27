@@ -23,11 +23,13 @@
   "structure": [
     {
       "propertyName": "query:id",
-      "path": "@id"
+      "path": "@id",
+      "required": true
     },
     {
       "propertyName": "query:identifier",
-      "path": "http://schema.org/identifier"
+      "path": "http://schema.org/identifier",
+      "required": true
     },
     {
       "propertyName": "query:doi",
