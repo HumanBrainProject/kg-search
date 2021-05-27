@@ -1029,6 +1029,12 @@ public class TranslationController {
         if (clazz == SoftwareVersion.class) {
             return this.createSoftwareVersionForIndexing(dataStage, liveMode, legacyAuthorization, source);
         }
+        if (clazz == Subject.class) {
+            return this.createSubjectForIndexing(dataStage, liveMode, legacyAuthorization, source);
+        }
+        if (clazz == Sample.class) {
+            return this.createSampleForIndexing(dataStage, liveMode, legacyAuthorization, source);
+        }
         return null;
     }
 
