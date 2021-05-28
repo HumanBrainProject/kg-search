@@ -236,6 +236,7 @@ public class DatasetVersionOfKGV2Translator implements Translator<DatasetV1, Dat
         }
         d.setFirstRelease(datasetV1.getFirstReleaseAt());
         d.setLastRelease(datasetV1.getLastReleaseAt());
+        d.setSearchable(true);
         return d;
     }
 }

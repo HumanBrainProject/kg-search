@@ -81,6 +81,7 @@ public class SoftwareVersionOfKGV2Translator implements Translator<SoftwareV2, S
         }
         s.setFirstRelease(softwareV2.getFirstReleaseAt());
         s.setLastRelease(softwareV2.getLastReleaseAt());
+        s.setSearchable(true);
         return s;
     }
 }

@@ -151,6 +151,7 @@ public class ModelVersionOfKGV2Translator implements Translator<ModelV2, ModelVe
         m.setCellularTarget(emptyToNull(modelV2.getCellularTarget()));
         m.setFirstRelease(modelV2.getFirstReleaseAt());
         m.setLastRelease(modelV2.getLastReleaseAt());
+        m.setSearchable(true);
         return m;
     }
 }
