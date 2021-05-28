@@ -35,7 +35,7 @@ import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -57,6 +57,12 @@ public class DatasetVersionOfKGV3Translator implements Translator<DatasetVersion
             // if versions cannot be sorted (sortedVersions == versions) we flag it as searchable
             d.setSearchable(sortedVersions == versions || sortedVersions.get(0).getId().equals(datasetVersion.getId()));
         } else {
+            if(dataset != null) {
+                List<TargetInternalReference> references = new ArrayList<>();
+                references.add(new TargetInternalReference(IdUtils.getUUID(datasetVersion.getId()), datasetVersion.getVersion()));
+                references.add(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), "All versions"));
+                d.setVersions(references);
+            }
             d.setSearchable(true);
         }
 
