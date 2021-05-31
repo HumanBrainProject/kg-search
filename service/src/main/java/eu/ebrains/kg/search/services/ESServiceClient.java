@@ -109,7 +109,8 @@ public class ESServiceClient {
                     "          }\n" +
                     "        }\n" +
                     "    }\n" +
-                    "  }\n" +
+                    "  },\n" +
+                    " \"track_total_hits\": \"true\" " +
                     "}", size, fileRepositoryId);
         }
         return String.format("{\n" +
@@ -129,6 +130,7 @@ public class ESServiceClient {
                 "        }\n" +
                 "    }\n" +
                 "  }\n" +
+                " \"track_total_hits\": \"true\" " +
                 "}", size, searchAfter, fileRepositoryId);
     }
 
