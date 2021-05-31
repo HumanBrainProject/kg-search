@@ -32,22 +32,22 @@ const initialState = {
   searchAfter: null
 };
 
-const loadFilesRequest = state => {
+const loadFilesRequest = (state, action) => {
   return {
     ...state,
     isInitialized: true,
     isLoading: true,
-    files: [],
-    total: 0,
-    searchAfter: null,
+    files: action.reset?[]:state.files,
+    total: action.reset?0:state.total,
+    searchAfter: action.reset?null:state.searchAfter,
     error: null
   };
 };
 
 const loadFilesSuccess = (state, action) => {
-  return  {
+  return {
     ...state,
-    files: action.files,
+    files: action.reset?action.files:[...state.files, ...action.files],
     total: action.total,
     searchAfter: action.searchAfter,
     isLoading: false,
@@ -60,7 +60,9 @@ const loadFilesFailure = (state, action) => {
     ...state,
     error: action.error,
     isLoading: false,
-    files: []
+    files: [],
+    total: 0,
+    searchAfter: null
   };
 };
 
@@ -70,7 +72,9 @@ const clearFiles = state => {
     error: null,
     isInitialized: false,
     isLoading: false,
-    files: []
+    files: [],
+    total: 0,
+    searchAfter: null
   };
 };
 

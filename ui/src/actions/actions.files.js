@@ -25,18 +25,20 @@ import * as types from "./actions.types";
 import API from "../services/API";
 import { sessionFailure } from "./actions";
 
-export const loadFilesRequest = () => {
+export const loadFilesRequest = reset => {
   return {
-    type: types.LOAD_FILES_REQUEST
+    type: types.LOAD_FILES_REQUEST,
+    reset: reset
   };
 };
 
-export const loadFilesSuccess = result => {
+export const loadFilesSuccess = (result, reset) => {
   return {
     type: types.LOAD_FILES_SUCCESS,
     files: result.data,
     total: result.total,
-    searchAfter: result.searchAfter
+    searchAfter: result.searchAfter,
+    reset: reset
   };
 };
 
@@ -54,12 +56,12 @@ export const clearFiles = () => {
   };
 };
 
-export const loadFiles = url => {
+export const loadFiles = (url, reset) => {
   return dispatch => {
-    dispatch(loadFilesRequest());
+    dispatch(loadFilesRequest(reset));
     API.axios
       .get(url)
-      .then(response => dispatch(loadFilesSuccess(response.data)))
+      .then(response => dispatch(loadFilesSuccess(response.data, reset)))
       .catch(e => {
         const { response } = e;
         const { status } = response;

@@ -28,10 +28,23 @@ import { connect } from "react-redux";
 import * as actionsFiles from "../../actions/actions.files";
 import HierarchicalFiles from "../../components/Field/Files/HierarchicalFiles";
 
-const AsyncHierarchicalFilesComponent = ({ url, data, total, isInitialized, isLoading, error, mapping, group, fetch, clear }) => {
+const Label = ({isAllFetched, number, total}) => {
+
+  if (isAllFetched) {
+    return (
+      <span><i>{total}</i> files</span>
+    );
+  }
+
+  return (
+    <span>Showing <i>{number}</i> files out of <i>{total}</i>.</span>
+  );
+};
+
+const AsyncHierarchicalFilesComponent = ({ isLive, searchAfter, url, data, total, isInitialized, isLoading, error, mapping, group, fetch, clear }) => {
 
   useEffect(() => {
-    fetch(url);
+    fetch(url, true);
     return () => {
       clear();
     };
@@ -46,11 +59,24 @@ const AsyncHierarchicalFilesComponent = ({ url, data, total, isInitialized, isLo
     );
   }
 
+  const isAllFetched = data.length === total;
+
   if (!isInitialized || isLoading) {
     return (
-      <div className="spinner-border spinner-border-sm" role="status">
-        <span className="sr-only">Retrieving files...</span>
-      </div>
+      <>
+        {!!data.length && (
+          <>
+            <Label isAllFetched={isAllFetched} number={data.length} total={total} />
+            &nbsp;&nbsp;
+          </>
+        )}
+        <div className="spinner-border spinner-border-sm" role="status">
+          <span className="sr-only">Retrieving files...</span>
+        </div>
+        {!!data.length && (
+          <HierarchicalFiles data={data} mapping={mapping} group={group} />
+        )}
+      </>
     );
   }
 
@@ -60,11 +86,27 @@ const AsyncHierarchicalFilesComponent = ({ url, data, total, isInitialized, isLo
     );
   }
 
-  const label = data.length === total?`${total} files`:`showing ${data.length} files out of ${total}`;
+  const fetchFrom = () => {
+    const urlFrom = isLive?`${url}?from=${data.length}`:`${url}?searchAfter=${searchAfter}`;
+    fetch(urlFrom, false);
+  };
+
+  const showMoreStyle = {
+    display: "inline",
+    paddingTop: 0,
+    paddingBottom: 0,
+    border: 0,
+    verticalAlign: "baseline",
+    color: "var(--link-color-1)",
+    lineHeight: "1rem"
+  };
 
   return (
     <>
-      <span>{label}</span>
+      <Label isAllFetched={isAllFetched} number={data.length} total={total} />
+      {!isAllFetched && (
+        <button type="button" className="btn btn-link" onClick={fetchFrom} style={showMoreStyle}>show more</button>
+      )}
       <HierarchicalFiles data={data} mapping={mapping} group={group} />
     </>
   );
@@ -72,9 +114,11 @@ const AsyncHierarchicalFilesComponent = ({ url, data, total, isInitialized, isLo
 
 export const AsyncHierarchicalFiles = connect(
   (state, props) => ({
+    isLive: props.url.endsWith("/live"),
     url: props.url,
     data: state.files.files,
     total: state.files.total,
+    searchAfter: state.files.searchAfter,
     isInitialized: state.files.isInitialized,
     isLoading: state.files.isLoading,
     error: state.files.error,
@@ -82,7 +126,7 @@ export const AsyncHierarchicalFiles = connect(
     group: props.group
   }),
   dispatch => ({
-    fetch: url => dispatch(actionsFiles.loadFiles(url)),
+    fetch: (url, reset) => dispatch(actionsFiles.loadFiles(url, reset)),
     clear: () => dispatch(actionsFiles.clearFiles())
   })
 )(AsyncHierarchicalFilesComponent);
