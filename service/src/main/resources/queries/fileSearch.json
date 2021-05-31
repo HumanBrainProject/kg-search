@@ -73,6 +73,10 @@
         "https://openminds.ebrains.eu/vocab/fileRepository",
         "@id"
       ],
+      "filter":{
+        "op": "EQUALS",
+        "parameter": "fileRepositoryId"
+      },
       "singleValue": "FIRST"
     }
   ]
