@@ -29,18 +29,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import eu.ebrains.kg.search.constants.Queries;
+import eu.ebrains.kg.search.controller.kg.KGv3;
+import eu.ebrains.kg.search.controller.translators.FileOfKGV3Translator;
 import eu.ebrains.kg.search.model.DataStage;
+import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.FileV3;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.File;
 import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -54,9 +58,50 @@ public class SearchController {
             String.format("{\"%s\": {\"reverse_nested\": {}}}", parentCountLabel)
     );
     private final ESServiceClient esServiceClient;
+    private final KGv3 kgV3;
 
-    public SearchController(ESServiceClient esServiceClient) throws JsonProcessingException {
+    public SearchController(ESServiceClient esServiceClient, KGv3 kgV3) throws JsonProcessingException {
         this.esServiceClient = esServiceClient;
+        this.kgV3 = kgV3;
+    }
+
+    private static class ResultsOfKGV3FileV3 extends ResultsOfKGv3<FileV3> {}
+    public Map<String, Object> getFilesForLive(String repositoryId, int from, int size) {
+        Map<String, Object> result = new HashMap<>();
+        Map<String, String> params = Map.of("repositoryId", repositoryId);
+        ResultsOfKGv3<FileV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3FileV3.class, DataStage.IN_PROGRESS, Queries.FILE_QUERY_ID, from, size, params);
+        if (queryResult != null) {
+            List<FileV3> files = queryResult.getData();
+            if (!CollectionUtils.isEmpty(files)) {
+                FileOfKGV3Translator translator = new FileOfKGV3Translator();
+                List<File> translatedFiles = files.stream().map(file -> translator.translate(file, DataStage.IN_PROGRESS, true)).collect(Collectors.toList());
+                List<Object> data = translatedFiles.stream().map(file -> {
+                    Map<String, Object> item = new HashMap<>();
+                    if (StringUtils.isNotBlank(file.getName())) {
+                        item.put("value", file.getName());
+                    }
+                    if (StringUtils.isNotBlank(file.getIri())) {
+                        item.put("url", file.getIri());
+                    }
+                    if (StringUtils.isNotBlank(file.getSize())) {
+                        item.put("fileSize", file.getSize());
+                    }
+                    if (StringUtils.isNotBlank(file.getFormat())) {
+                        item.put("format", file.getFormat());
+                    }
+                    return item;
+                }).collect(Collectors.toList());
+                result.put("total", queryResult.getTotal());
+                result.put("data", data);
+            } else {
+                result.put("total", 0);
+                result.put("data", Collections.emptyList());
+            }
+        } else {
+            result.put("total", 0);
+            result.put("data", Collections.emptyList());
+        }
+        return result;
     }
 
     public JsonNode getResult(String payload, DataStage dataStage) throws JsonProcessingException {
