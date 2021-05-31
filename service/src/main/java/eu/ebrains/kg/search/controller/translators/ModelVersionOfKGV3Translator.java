@@ -35,7 +35,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -63,12 +62,6 @@ public class ModelVersionOfKGV3Translator implements Translator<ModelVersionV3, 
             // if versions cannot be sorted (sortedVersions == versions) we flag it as searchable
             m.setSearchable(sortedVersions == versions || sortedVersions.get(0).getId().equals(modelVersion.getId()));
         } else {
-            if(model != null) {
-                List<TargetInternalReference> references = new ArrayList<>();
-                references.add(new TargetInternalReference(IdUtils.getUUID(modelVersion.getId()), modelVersion.getVersion()));
-                references.add(new TargetInternalReference(IdUtils.getUUID(model.getId()), "All versions"));
-                m.setVersions(references);
-            }
             m.setSearchable(true);
         }
         if (!StringUtils.isBlank(modelVersion.getDescription())) {
