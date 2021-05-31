@@ -31,10 +31,12 @@ export const loadFilesRequest = () => {
   };
 };
 
-export const loadFilesSuccess = results => {
+export const loadFilesSuccess = result => {
   return {
     type: types.LOAD_FILES_SUCCESS,
-    results: results
+    files: result.data,
+    total: result.total,
+    searchAfter: result.searchAfter
   };
 };
 

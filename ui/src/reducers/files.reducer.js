@@ -27,7 +27,9 @@ const initialState = {
   error: null,
   isInitialized: false,
   isLoading: false,
-  files: []
+  files: [],
+  total: 0,
+  searchAfter: null
 };
 
 const loadFilesRequest = state => {
@@ -36,6 +38,8 @@ const loadFilesRequest = state => {
     isInitialized: true,
     isLoading: true,
     files: [],
+    total: 0,
+    searchAfter: null,
     error: null
   };
 };
@@ -43,7 +47,9 @@ const loadFilesRequest = state => {
 const loadFilesSuccess = (state, action) => {
   return  {
     ...state,
-    files: action.results.data,
+    files: action.files,
+    total: action.total,
+    searchAfter: action.searchAfter,
     isLoading: false,
     error: null
   };
