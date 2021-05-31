@@ -134,6 +134,7 @@ public class SampleOfKGV2Translator implements Translator<SampleV1, Sample> {
                             )
                     ).collect(Collectors.toList())));
         }
+        s.setSearchable(true);
         return s;
     }
 }

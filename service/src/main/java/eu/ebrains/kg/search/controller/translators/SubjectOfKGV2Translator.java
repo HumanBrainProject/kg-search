@@ -81,6 +81,7 @@ public class SubjectOfKGV2Translator implements Translator<SubjectV1, Subject> {
                             )
                     ).collect(Collectors.toList())));
         }
+        s.setSearchable(true);
         return s;
     }
 }

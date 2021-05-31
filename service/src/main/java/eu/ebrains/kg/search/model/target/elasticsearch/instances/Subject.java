@@ -92,9 +92,18 @@ public class Subject implements TargetInstance {
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 
-    @Override
     @JsonIgnore
-    public boolean isSearchable() { return false; }
+    private boolean isSearchable;
+
+    @Override
+    public boolean isSearchable() {
+        return isSearchable;
+    }
+
+    public void setSearchable(boolean searchable) {
+        isSearchable = searchable;
+    }
+
 
     @Override
     public String getId() { return id; }
