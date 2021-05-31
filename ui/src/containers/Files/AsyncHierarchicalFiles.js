@@ -28,7 +28,7 @@ import { connect } from "react-redux";
 import * as actionsFiles from "../../actions/actions.files";
 import HierarchicalFiles from "../../components/Field/Files/HierarchicalFiles";
 
-const AsyncHierarchicalFilesComponent = ({ url, data, isInitialized, isLoading, error, mapping, group, fetch, clear }) => {
+const AsyncHierarchicalFilesComponent = ({ url, data, total, isInitialized, isLoading, error, mapping, group, fetch, clear }) => {
 
   useEffect(() => {
     fetch(url);
@@ -60,8 +60,13 @@ const AsyncHierarchicalFilesComponent = ({ url, data, isInitialized, isLoading, 
     );
   }
 
+  const label = data.length === total?`${total} files`:`showing ${data.length} files out of ${total}`;
+
   return (
-    <HierarchicalFiles data={data} mapping={mapping} group={group} />
+    <>
+      <span>{label}</span>
+      <HierarchicalFiles data={data} mapping={mapping} group={group} />
+    </>
   );
 };
 
@@ -69,6 +74,7 @@ export const AsyncHierarchicalFiles = connect(
   (state, props) => ({
     url: props.url,
     data: state.files.files,
+    total: state.files.total,
     isInitialized: state.files.isInitialized,
     isLoading: state.files.isLoading,
     error: state.files.error,
