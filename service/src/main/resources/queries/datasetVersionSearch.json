@@ -136,6 +136,7 @@
     {
       "propertyName": "query:custodian",
       "path": "https://openminds.ebrains.eu/vocab/custodian",
+      "ensureOrder": true,
       "structure": [
         {
           "propertyName": "query:id",
@@ -225,6 +226,7 @@
         {
           "propertyName": "query:datasetAuthor",
           "path": "https://openminds.ebrains.eu/vocab/author",
+          "ensureOrder": true,
           "structure": [
             {
               "propertyName": "query:id",

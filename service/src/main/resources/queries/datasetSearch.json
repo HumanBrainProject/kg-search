@@ -94,6 +94,7 @@
     {
       "propertyName": "query:authors",
       "path": "https://openminds.ebrains.eu/vocab/author",
+      "ensureOrder": true,
       "structure": [
         {
           "propertyName": "query:id",
@@ -116,6 +117,7 @@
     {
       "propertyName": "query:custodians",
       "path": "https://openminds.ebrains.eu/vocab/custodian",
+      "ensureOrder": true,
       "structure": [
         {
           "propertyName": "query:id",
