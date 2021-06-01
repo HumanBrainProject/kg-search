@@ -68,7 +68,7 @@ public class SearchController {
     private static class ResultsOfKGV3FileV3 extends ResultsOfKGv3<FileV3> {}
     public Map<String, Object> getFilesForLive(String repositoryId, int from, int size) {
         Map<String, Object> result = new HashMap<>();
-        Map<String, String> params = Map.of("repositoryId", repositoryId);
+        Map<String, String> params = Map.of("fileRepositoryId", String.format("https://kg.ebrains.eu/api/instances/%s", repositoryId));
         ResultsOfKGv3<FileV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3FileV3.class, DataStage.IN_PROGRESS, Queries.FILE_QUERY_ID, from, size, params);
         if (queryResult != null) {
             List<FileV3> files = queryResult.getData();
