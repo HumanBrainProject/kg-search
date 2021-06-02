@@ -22,4 +22,4 @@
  *
  */
 
-export const notification = "";
+export const notification = "<strong>Maintenance</strong>: The EBRAINS Knowledge Graph services will be down <strong>Monday morning (7th of June 2021) from 8:00 CEST</strong> for an estimated 3.5 hours. <strong><a className='notification-link' href='https://wiki.ebrains.eu/bin/view/Collabs/the-collaboratory/Announcements/' target='_blank'>Read more</a></strong>";

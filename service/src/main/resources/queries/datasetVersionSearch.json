@@ -249,6 +249,7 @@
         {
           "propertyName": "query:datasetCustodian",
           "path": "https://openminds.ebrains.eu/vocab/custodian",
+          "ensureOrder": true,
           "structure": [
             {
               "propertyName": "query:id",
