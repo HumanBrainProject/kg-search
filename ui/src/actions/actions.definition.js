@@ -34,6 +34,13 @@ export const setAuthEndpoint = authEndpoint => {
   };
 };
 
+export const setCommit = commit => {
+  return {
+    type: types.SET_COMMIT,
+    commit: commit
+  };
+};
+
 export const loadDefinitionRequest = () => {
   return {
     type: types.LOAD_DEFINITION_REQUEST
@@ -179,6 +186,7 @@ export const loadDefinition = () => {
         const definition = data && data._source;
         simplifySemantics(definition);
         data.authEndpoint && dispatch(setAuthEndpoint(data.authEndpoint));
+        data.commit && dispatch(setCommit(data.commit));
         dispatch(loadDefinitionSuccess(definition));
       })
       .catch(e => {

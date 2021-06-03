@@ -64,7 +64,7 @@ class App extends React.Component {
           <SessionExpiredErrorPanel />
           <InfoPanel />
         </main>
-        <Footer />
+        <Footer commit={this.props.commit}/>
       </React.Fragment>
     );
   }
@@ -75,7 +75,8 @@ export default connect(
     location: state.router.location,
     defaultGroup: state.groups.defaultGroup,
     isReady: state.application.isReady && !state.auth.error,
-    authEndpoint: state.auth.authEndpoint
+    authEndpoint: state.auth.authEndpoint,
+    commit: state.definition.commit
   }),
   dispatch => ({
     initialize: location => dispatch(actions.initialize(location))

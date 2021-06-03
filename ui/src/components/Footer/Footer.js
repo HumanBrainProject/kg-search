@@ -25,7 +25,7 @@ import React from "react";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import "./Footer.css";
 
-const Footer = () => (
+const Footer = ({commit}) => (
   <footer className="site-footer">
     <div className="footer__header">
       <div className="footer__primary">
@@ -95,6 +95,9 @@ const Footer = () => (
     <div className="footer__end">
       <div className="footer__copyright">
         &copy;2019-{new Date().getFullYear()}&nbsp;ebrains.eu
+      </div>
+      <div>
+        {commit && <span>( build: <i>{commit}</i>)</span>}
       </div>
       <ul className="footer__social">
         <li>

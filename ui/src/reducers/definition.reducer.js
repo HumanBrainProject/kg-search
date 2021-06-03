@@ -63,6 +63,14 @@ const clearDefinitionError = state => {
   };
 };
 
+const setCommit = (state, action) => {
+  return {
+    ...state,
+    action: action.commit
+  };
+};
+
+
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case types.LOAD_DEFINITION_REQUEST:
@@ -73,6 +81,8 @@ export function reducer(state = initialState, action = {}) {
     return loadDefinitionFailure(state, action);
   case types.CLEAR_DEFINITION_ERROR:
     return clearDefinitionError(state, action);
+  case types.SET_COMMIT:
+    return setCommit(state, action);
   default:
     return state;
   }
