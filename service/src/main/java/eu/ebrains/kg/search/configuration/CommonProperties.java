@@ -26,10 +26,7 @@ package eu.ebrains.kg.search.configuration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-/**
- * A shared property file to configure the commonalities of all microservices
- */
 @Configuration
-@PropertySource({"classpath:shared.properties", "classpath:commit.properties"})
+@PropertySource({"classpath:commit.properties"})
 public class CommonProperties {
 }
