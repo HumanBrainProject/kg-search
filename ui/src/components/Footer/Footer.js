@@ -96,8 +96,8 @@ const Footer = ({commit}) => (
       <div className="footer__copyright">
         &copy;2019-{new Date().getFullYear()}&nbsp;ebrains.eu
       </div>
-      <div>
-        {commit && <span>( build: <i>{commit}</i>)</span>}
+      <div className="commit">
+        {commit && <span>build: <i>{commit}</i></span>}
       </div>
       <ul className="footer__social">
         <li>

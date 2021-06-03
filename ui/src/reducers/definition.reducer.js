@@ -66,7 +66,7 @@ const clearDefinitionError = state => {
 const setCommit = (state, action) => {
   return {
     ...state,
-    action: action.commit
+    commit: action.commit
   };
 };
 
