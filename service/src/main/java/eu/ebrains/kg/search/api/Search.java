@@ -24,17 +24,12 @@
 package eu.ebrains.kg.search.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import eu.ebrains.kg.search.constants.Queries;
 import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
 import eu.ebrains.kg.search.controller.labels.LabelsController;
 import eu.ebrains.kg.search.controller.search.SearchController;
-import eu.ebrains.kg.search.controller.translators.ModelVersionOfKGV3Translator;
 import eu.ebrains.kg.search.controller.translators.TranslationController;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.FileV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.ModelVersionV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
@@ -45,10 +40,10 @@ import eu.ebrains.kg.search.utils.ESHelper;
 import eu.ebrains.kg.search.utils.MetaModelUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -67,6 +62,9 @@ public class Search {
     private final UserInfoRoles userInfoRoles;
     private final TranslationController translationController;
     private final MetaModelUtils utils;
+
+    @Value("${eu.ebrains.kg.commit}")
+    String commit;
 
     public Search(KGServiceClient kgServiceClient, ESServiceClient esServiceClient, LabelsController labelsController, SearchController searchController, UserInfoRoles userInfoRoles, TranslationController translationController, MetaModelUtils utils) throws JsonProcessingException {
         this.kgServiceClient = kgServiceClient;
@@ -96,6 +94,9 @@ public class Search {
         Map<String, Object> result = new HashMap<>();
         result.put("_source", labelsController.generateLabels());
         result.put("authEndpoint", authEndpoint);
+        if(StringUtils.isNotBlank(commit)){
+            result.put("commit", commit);
+        }
         return result;
     }
 
