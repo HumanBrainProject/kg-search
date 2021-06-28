@@ -29,21 +29,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import eu.ebrains.kg.search.constants.Queries;
-import eu.ebrains.kg.search.controller.kg.KGv3;
-import eu.ebrains.kg.search.controller.translators.FileOfKGV3Translator;
+import eu.ebrains.kg.search.controller.authentication.UserInfoRoles;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.FileV3;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.File;
 import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
+import eu.ebrains.kg.search.utils.MetaModelUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,50 +62,120 @@ public class SearchController {
             String.format("{\"%s\": {\"reverse_nested\": {}}}", parentCountLabel)
     );
     private final ESServiceClient esServiceClient;
-    private final KGv3 kgV3;
+    private final MetaModelUtils utils;
+    private final UserInfoRoles userInfoRoles;
 
-    public SearchController(ESServiceClient esServiceClient, KGv3 kgV3) throws JsonProcessingException {
+    public SearchController(ESServiceClient esServiceClient, MetaModelUtils utils, UserInfoRoles userInfoRoles) throws JsonProcessingException {
         this.esServiceClient = esServiceClient;
-        this.kgV3 = kgV3;
+        this.utils = utils;
+        this.userInfoRoles = userInfoRoles;
     }
 
-    private static class ResultsOfKGV3FileV3 extends ResultsOfKGv3<FileV3> {}
-    public Map<String, Object> getFilesForLive(String repositoryId, int from, int size) {
+    public boolean isInInProgressRole(Principal principal) {
+        return userInfoRoles.isInAnyOfRoles((KeycloakAuthenticationToken) principal, "team", "collab-kg-search-in-progress-administrator", "collab-kg-search-in-progress-editor", "collab-kg-search-in-progress-viewer");
+    }
+
+    private Map<String, Object> formatFilesResponse(ElasticSearchResult filesFromRepo) {
         Map<String, Object> result = new HashMap<>();
-        Map<String, String> params = Map.of("fileRepositoryId", String.format("https://kg.ebrains.eu/api/instances/%s", repositoryId));
-        ResultsOfKGv3<FileV3> queryResult = kgV3.executeQueryForIndexing(ResultsOfKGV3FileV3.class, DataStage.IN_PROGRESS, Queries.FILE_QUERY_ID, from, size, params);
-        if (queryResult != null) {
-            List<FileV3> files = queryResult.getData();
-            if (!CollectionUtils.isEmpty(files)) {
-                FileOfKGV3Translator translator = new FileOfKGV3Translator();
-                List<File> translatedFiles = files.stream().map(file -> translator.translate(file, DataStage.IN_PROGRESS, true)).collect(Collectors.toList());
-                List<Object> data = translatedFiles.stream().map(file -> {
+        if (filesFromRepo != null && filesFromRepo.getHits() != null && filesFromRepo.getHits().getHits() != null) {
+            List<ElasticSearchDocument> hits = filesFromRepo.getHits().getHits();
+            List<Object> data = hits.stream().map(e -> {
+                if (e.getSource() != null) {
                     Map<String, Object> item = new HashMap<>();
-                    if (StringUtils.isNotBlank(file.getName())) {
-                        item.put("value", file.getName());
+                    Map<String, Object> source = e.getSource();
+                    item.put("value", source.get("name"));
+                    item.put("url", source.get("iri"));
+                    if (source.get("size") != null) {
+                        item.put("fileSize", source.get("size"));
                     }
-                    if (StringUtils.isNotBlank(file.getIri())) {
-                        item.put("url", file.getIri());
-                    }
-                    if (StringUtils.isNotBlank(file.getSize())) {
-                        item.put("fileSize", file.getSize());
-                    }
-                    if (StringUtils.isNotBlank(file.getFormat())) {
-                        item.put("format", file.getFormat());
+                    if (source.get("format") != null) {
+                        item.put("format", source.get("format"));
                     }
                     return item;
-                }).collect(Collectors.toList());
-                result.put("total", queryResult.getTotal());
-                result.put("data", data);
-            } else {
-                result.put("total", 0);
-                result.put("data", Collections.emptyList());
+                }
+                return null;
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+            ElasticSearchResult.Total total = filesFromRepo.getHits().getTotal();
+            result.put("total", total.getValue());
+            result.put("data", data);
+            if (hits.size() > 0) {
+                result.put("searchAfter", hits.get(hits.size() - 1).getId());
             }
         } else {
             result.put("total", 0);
             result.put("data", Collections.emptyList());
         }
         return result;
+    }
+
+
+    public ResponseEntity<?> getFilesFromRepoForPublic(String id, String searchAfter, int size, Principal principal) {
+        try {
+            String index = ESHelper.getIndexesForDocument(DataStage.RELEASED);
+            ElasticSearchDocument document = esServiceClient.getDocument(index, id);
+            Map<String, Object> source = document.getSource();
+            if (source == null) {
+                return ResponseEntity.notFound().build();
+            } else {
+                Map<String, Object> typeValue = (Map<String, Object>) source.get("type");
+                String type = typeValue != null?((String) typeValue.get("value")):null;
+                if (StringUtils.isEmpty(type) || !type.equals("FileRepository")) {
+                    return ResponseEntity.notFound().build();
+                } else {
+                    String embargo = (String) source.get("embargo");
+                    String useHDG = (String) source.get("useHDG");
+                    if (StringUtils.isNotEmpty(useHDG) || (!isInInProgressRole(principal) && StringUtils.isNotEmpty(embargo))) {
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                    } else {
+                        String fileType = utils.getNameForClass(File.class);
+                        String fileIndex = ESHelper.getAutoReleasedIndex(fileType);
+                        ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size);
+                        Map<String, Object> result = formatFilesResponse(filesFromRepo);
+                        return ResponseEntity.ok(result);
+                    }
+                }
+            }
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
+    }
+
+    public ResponseEntity<?> getFilesFromRepo(String id, String searchAfter, int size) {
+        try {
+            String fileType = utils.getNameForClass(File.class);
+            String fileIndex = ESHelper.getAutoReleasedIndex(fileType);
+            ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size);
+            Map<String, Object> result = formatFilesResponse(filesFromRepo);
+            return ResponseEntity.ok(result);
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
+    }
+
+    public ResponseEntity<?> getFilesFromRepoForInProgress(String id, String searchAfter, int size) {
+        try {
+            String index = ESHelper.getIndexesForDocument(DataStage.IN_PROGRESS);
+            ElasticSearchDocument document = esServiceClient.getDocument(index, id);
+            Map<String, Object> source = document.getSource();
+            if (source == null) {
+                return ResponseEntity.notFound().build();
+            } else {
+                Map<String, Object> typeValue = (Map<String, Object>) source.get("type");
+                String type = typeValue != null?((String) typeValue.get("value")):null;
+                if (StringUtils.isEmpty(type) || !type.equals("FileRepository")) {
+                    return ResponseEntity.notFound().build();
+                } else {
+                    String useHDG = (String) source.get("useHDG");
+                    if (StringUtils.isNotEmpty(useHDG)) {
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                    } else {
+                        return getFilesFromRepo(id, searchAfter, size);
+                    }
+                }
+            }
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
     }
 
     public JsonNode getResult(String payload, DataStage dataStage) throws JsonProcessingException {

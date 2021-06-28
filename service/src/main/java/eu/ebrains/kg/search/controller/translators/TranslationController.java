@@ -336,7 +336,7 @@ public class TranslationController {
                 return translator.translate(project, dataStage, liveMode);
             }
         }
-        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("SoftwareVersion %s does not exist!", id));
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Project %s does not exist!", id));
     }
 
     public Subject createSubjectFromKGv3(DataStage dataStage, boolean liveMode, String id) {
@@ -349,7 +349,7 @@ public class TranslationController {
                 return translator.translate(subject, dataStage, liveMode);
             }
         }
-        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("SoftwareVersion %s does not exist!", id));
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Subject %s does not exist!", id));
     }
 
     public Sample createSampleFromKGv3(DataStage dataStage, boolean liveMode, String id) {
@@ -362,7 +362,7 @@ public class TranslationController {
                 return translator.translate(sample, dataStage, liveMode);
             }
         }
-        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("SoftwareVersion %s does not exist!", id));
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Sample %s does not exist!", id));
     }
 
 
@@ -376,7 +376,7 @@ public class TranslationController {
                 return translator.translate(fileRepository, dataStage, liveMode);
             }
         }
-        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("SoftwareVersion %s does not exist!", id));
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("FileRepository %s does not exist!", id));
     }
 
 
