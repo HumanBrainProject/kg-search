@@ -41,7 +41,7 @@ const Label = ({isAllFetched, number, total}) => {
   );
 };
 
-const AsyncHierarchicalFilesComponent = ({ isLive, searchAfter, url, data, total, isInitialized, isLoading, error, mapping, group, fetch, clear }) => {
+const AsyncHierarchicalFilesComponent = ({ searchAfter, url, data, total, isInitialized, isLoading, error, mapping, group, fetch, clear }) => {
 
   useEffect(() => {
     fetch(url, true);
@@ -87,7 +87,7 @@ const AsyncHierarchicalFilesComponent = ({ isLive, searchAfter, url, data, total
   }
 
   const fetchFrom = () => {
-    const urlFrom = isLive?`${url}?from=${data.length}`:`${url}?searchAfter=${searchAfter}`;
+    const urlFrom = searchAfter?`${url}?searchAfter=${searchAfter}`:url;
     fetch(urlFrom, false);
   };
 
@@ -114,7 +114,6 @@ const AsyncHierarchicalFilesComponent = ({ isLive, searchAfter, url, data, total
 
 export const AsyncHierarchicalFiles = connect(
   (state, props) => ({
-    isLive: props.url.endsWith("/live"),
     url: props.url,
     data: state.files.files,
     total: state.files.total,
