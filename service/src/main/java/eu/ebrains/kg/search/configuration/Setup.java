@@ -71,6 +71,7 @@ public class Setup {
     private void uploadQuery(String queryId, String path) throws IOException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream(path), StandardCharsets.UTF_8);
         kgv3ServiceClient.uploadQuery(queryId, sourceJson);
+        kgv3ServiceClient.releaseQuery(queryId);
     }
 
 }

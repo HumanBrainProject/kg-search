@@ -96,6 +96,17 @@ public class KGV3ServiceClient {
                 .block();
     }
 
+    public void releaseQuery(String queryId){
+        String url = String.format("%s/instances/%s/release", kgCoreEndpoint, queryId);
+        serviceAccountWebClient.put()
+                .uri(url)
+                .headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+
     private <T> T executeCallForLive(Class<T> clazz, String url) {
         return userWebClient.get()
                 .uri(url)
