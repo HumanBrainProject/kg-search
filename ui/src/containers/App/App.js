@@ -26,7 +26,7 @@ import { connect } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 
 import * as actions from "../../actions/actions";
-import { Notification } from "../Notification/Notification";
+// import { Notification } from "../Notification/Notification";
 import { Search } from "../Search/Search";
 import { Instance } from "../Instance/Instance";
 import { NotFound } from "../../components/NotFound/NotFound";
@@ -49,7 +49,7 @@ class App extends React.Component {
       <React.Fragment>
         <Header />
         <main>
-          <Notification />
+          {/* <Notification /> */}
           {this.props.isReady && (
             <Switch>
               <Route path="/instances/:id" exact component={Instance} />

@@ -174,8 +174,3 @@ main .kgs-spinner-label {
         transform: rotateZ(360deg);
     }
 }
-
-
-.kgs-notification_text a{
-    color: var(--link-color-1);
-}
