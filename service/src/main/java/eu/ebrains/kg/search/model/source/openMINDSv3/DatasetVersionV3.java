@@ -38,18 +38,23 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private String howToCite;
     private String description;
     private String fullName;
-    private String homepage;
-    private List<FullNameRef> projects;
+    private List<String> homepage;
     private List<String> keyword;
-    private Date releaseDate;
     private String version;
     private String versionInnovation;
-    private List<PersonOrOrganizationRef> author;
-    private List<PersonOrOrganizationRef> custodians;
-    private DatasetVersions dataset;
-    private SourceInternalReference fileRepository;
+    private Date releaseDate;
     private License license;
+    private List<PersonOrOrganizationRef> author;
+    private List<FullNameRef> projects;
+    private List<PersonOrOrganizationRef> custodians;
     private List<Specimen> studiedSpecimen;
+    private DatasetVersions dataset;
+    private List<String> fullDocumentationUrl;
+    private List<String> fullDocumentationDOI;
+    private List<Protocol> protocols;
+    private NameWithIdentifier accessibility;
+    private FileRepository fileRepository;
+    private List<String> experimentalApproach;
 
     public String getDescription() {
         return description;
@@ -83,11 +88,11 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
         this.fullName = fullName;
     }
 
-    public String getHomepage() {
+    public List<String> getHomepage() {
         return homepage;
     }
 
-    public void setHomepage(String homepage) {
+    public void setHomepage(List<String> homepage) {
         this.homepage = homepage;
     }
 
@@ -139,14 +144,6 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
         this.dataset = dataset;
     }
 
-    public SourceInternalReference getFileRepository() {
-        return fileRepository;
-    }
-
-    public void setFileRepository(SourceInternalReference fileRepository) {
-        this.fileRepository = fileRepository;
-    }
-
     public List<FullNameRef> getProjects() {
         return projects;
     }
@@ -177,6 +174,54 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
 
     public void setStudiedSpecimen(List<Specimen> studiedSpecimen) {
         this.studiedSpecimen = studiedSpecimen;
+    }
+
+    public List<String> getFullDocumentationUrl() {
+        return fullDocumentationUrl;
+    }
+
+    public void setFullDocumentationUrl(List<String> fullDocumentationUrl) {
+        this.fullDocumentationUrl = fullDocumentationUrl;
+    }
+
+    public List<String> getFullDocumentationDOI() {
+        return fullDocumentationDOI;
+    }
+
+    public void setFullDocumentationDOI(List<String> fullDocumentationDOI) {
+        this.fullDocumentationDOI = fullDocumentationDOI;
+    }
+
+    public List<Protocol> getProtocols() {
+        return protocols;
+    }
+
+    public void setProtocols(List<Protocol> protocols) {
+        this.protocols = protocols;
+    }
+
+    public NameWithIdentifier getAccessibility() {
+        return accessibility;
+    }
+
+    public void setAccessibility(NameWithIdentifier accessibility) {
+        this.accessibility = accessibility;
+    }
+
+    public void setFileRepository(FileRepository fileRepository) {
+        this.fileRepository = fileRepository;
+    }
+
+    public FileRepository getFileRepository() {
+        return fileRepository;
+    }
+
+    public List<String> getExperimentalApproach() {
+        return experimentalApproach;
+    }
+
+    public void setExperimentalApproach(List<String> experimentalApproach) {
+        this.experimentalApproach = experimentalApproach;
     }
 
     public static class Specimen {
@@ -275,6 +320,90 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
 
         public void setLegalCode(String legalCode) {
             this.legalCode = legalCode;
+        }
+    }
+
+    public static class NameWithIdentifier {
+        private List<String> identifier;
+        private String name;
+
+        public List<String> getIdentifier() {
+            return identifier;
+        }
+
+        public void setIdentifier(List<String> identifier) {
+            this.identifier = identifier;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    public static class OntologicalTerm {
+        private String ontologyIdentifier;
+        private String name;
+
+        public String getOntologyIdentifier() {
+            return ontologyIdentifier;
+        }
+
+        public void setOntologyIdentifier(String ontologyIdentifier) {
+            this.ontologyIdentifier = ontologyIdentifier;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    public static class FileRepository extends SourceInternalReference{
+        private String iri;
+
+        public String getIri() {
+            return iri;
+        }
+
+        public void setIri(String iri) {
+            this.iri = iri;
+        }
+    }
+
+    public static class Protocol {
+        private List<OntologicalTerm> technique;
+        private List<OntologicalTerm> behavioralTask;
+        private List<String> studyOption;
+
+        public List<OntologicalTerm> getTechnique() {
+            return technique;
+        }
+
+        public void setTechnique(List<OntologicalTerm> technique) {
+            this.technique = technique;
+        }
+
+        public List<OntologicalTerm> getBehavioralTask() {
+            return behavioralTask;
+        }
+
+        public void setBehavioralTask(List<OntologicalTerm> behavioralTask) {
+            this.behavioralTask = behavioralTask;
+        }
+
+        public List<String> getStudyOption() {
+            return studyOption;
+        }
+
+        public void setStudyOption(List<String> studyOption) {
+            this.studyOption = studyOption;
         }
     }
 

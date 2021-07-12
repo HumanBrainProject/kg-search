@@ -87,15 +87,13 @@ public class DatasetVersionOfKGV2Translator implements Translator<DatasetV1, Dat
         d.setSpeciesFilter(emptyToNull(datasetV1.getSpeciesFilter()));
 
         if (datasetV1.isUseHDG()) {
-            String hdgMessage = String.format("This data requires you to explicitly **[request access](https://hdg.kg.ebrains.eu/request_access?kg_id=%s)** with your EBRAINS account. If you don't have such an account yet, please **[register](https://ebrains.eu/register/)**.", datasetV1.getEditorId());
-            String hdgMessageHTML = String.format("This data requires you to explicitly <b><a href=\"https://hdg.kg.ebrains.eu/request_access?kg_id=%s\" target=\"_blank\">request access</a></b> with your EBRAINS account. If you don't have such an account yet, please <b><a href=\"https://ebrains.eu/register/\" target=\"_blank\">register</a></b>.", datasetV1.getEditorId());
-            d.setUseHDG(hdgMessage);
-            d.setEmbargo(hdgMessageHTML);
+            d.setUseHDG(DatasetVersion.createHDGMessage(datasetV1.getEditorId(), false));
+            d.setEmbargo(DatasetVersion.createHDGMessage(datasetV1.getEditorId(), true));
             d.setDataAccessibility("Controlled access");
         } else {
             if (dataStage == DataStage.RELEASED) {
                 if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
-                    d.setEmbargo("This dataset is temporarily under embargo. The data will become available for download after the embargo period.");
+                    d.setEmbargo(DatasetVersion.EMBARGO_MESSAGE);
                 } else if (hasEmbargoStatus(datasetV1, UNDER_REVIEW)) {
                     d.setEmbargo("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.");
                 }

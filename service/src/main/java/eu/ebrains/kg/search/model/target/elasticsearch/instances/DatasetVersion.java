@@ -36,6 +36,22 @@ import java.util.stream.Collectors;
 @MetaInfo(name = "Dataset", identifier = "minds/core/dataset/v1.0.0/search", defaultSelection = true, order = 2, searchable=true)
 @RibbonInfo(content = "Downloadable Data", aggregation = "count", dataField = "search:files", singular = "file", plural = "files", icon = "download")
 public class DatasetVersion implements TargetInstance {
+
+    public final static String EMBARGO_MESSAGE =  "This dataset is temporarily under embargo. The data will become available for download after the embargo period.";
+    public final static String RESTRICTED_ACCESS_MESSAGE =  "This dataset has restricted access. Although the metadata is publicly available, the data remain on an access restricted server.";
+
+    public static String createEmbargoInProgressMessage(String containerUrl){
+        return String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", containerUrl);
+    }
+
+    public static String createHDGMessage(String id, boolean html){
+        return html ?
+                String.format("This data requires you to explicitly <b><a href=\"https://hdg.kg.ebrains.eu/request_access?kg_id=%s\" target=\"_blank\">request access</a></b> with your EBRAINS account. If you don't have such an account yet, please <b><a href=\"https://ebrains.eu/register/\" target=\"_blank\">register</a></b>.", id)
+                :
+                String.format("This data requires you to explicitly **[request access](https://hdg.kg.ebrains.eu/request_access?kg_id=%s)** with your EBRAINS account. If you don't have such an account yet, please **[register](https://ebrains.eu/register/)**.", id);
+    }
+
+
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Dataset");
 
@@ -63,6 +79,9 @@ public class DatasetVersion implements TargetInstance {
 
     @FieldInfo(label = "Download Dataset", isButton = true, termsOfUse = true, icon="download")
     private TargetExternalReference zip;
+
+    @FieldInfo(label = "Get data", isButton = true, icon="download", isDirectDownload = true)
+    private TargetInternalReference fileRepository;
 
     @FieldInfo(label = "Cite dataset", isButton = true, markdown = true, icon="quote-left")
     private Value<String> citation;
@@ -106,9 +125,6 @@ public class DatasetVersion implements TargetInstance {
 
     @FieldInfo(label = "Files", layout = FieldInfo.Layout.GROUP, isHierarchicalFiles = true, termsOfUse = true)
     private List<TargetFile> files;
-
-    @FieldInfo(label = "File repository")
-    private TargetInternalReference fileRepository;
 
     @JsonProperty("external_datalink")
     @FieldInfo(label = "Data download", layout = FieldInfo.Layout.GROUP)
