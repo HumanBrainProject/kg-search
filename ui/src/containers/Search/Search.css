@@ -146,6 +146,11 @@
         flex-grow:1;
         max-width: 50%;
     }
+
+    .kgs-search .kgs-hits-list .kgs-hit[data-type] .kgs-field__keywords{
+        flex-grow:1;
+        max-width: 50%;
+    }
 }
 
 @media (min-width: 2100px) {
