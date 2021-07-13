@@ -24,10 +24,12 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ISODateValue;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import org.apache.commons.lang3.StringUtils;
@@ -69,6 +71,14 @@ public class FileRepository implements TargetInstance {
 
     @FieldInfo(label= "Access Files", markdown = true, isButton = true, termsOfUse = true, icon="unlock")
     private Value<String> useHDG;
+
+    @JsonProperty("first_release")
+    @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
+    private ISODateValue firstRelease;
+
+    @JsonProperty("last_release")
+    @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
+    private ISODateValue lastRelease;
 
     public Value<String> getType() { return type; }
 

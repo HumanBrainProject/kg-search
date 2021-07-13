@@ -79,6 +79,10 @@ public class Sample implements TargetInstance {
     @FieldInfo(label = "Subject", overview = true, hint = "Experimental subject that this sample was obtained from.")
     private List<Children<Subject>> subject;
 
+    @FieldInfo(ignoreForSearch = true, visible = false, facet = FieldInfo.Facet.EXISTS)
+    private boolean datasetExists;
+
+
     @FieldInfo(label = "Datasets", layout = FieldInfo.Layout.GROUP, type = FieldInfo.Type.TEXT, hint = "List of datasets in which the sample was used to produce data.")
     private List<Children<Dataset>> datasets;
 
@@ -253,6 +257,14 @@ public class Sample implements TargetInstance {
         this.setLastRelease(lastRelease != null ? new ISODateValue(lastRelease) : null);
     }
 
+    public boolean isDatasetExists() {
+        return datasetExists;
+    }
+
+    public void setDatasetExists(boolean datasetExists) {
+        this.datasetExists = datasetExists;
+    }
+
     public static class Dataset {
         public Dataset() {
         }
@@ -311,10 +323,10 @@ public class Sample implements TargetInstance {
         @FieldInfo(label = "Name")
         private TargetInternalReference subjectName;
 
-        @FieldInfo(label = "Species", type = FieldInfo.Type.TEXT, overview = true)
+        @FieldInfo(label = "Species", type = FieldInfo.Type.TEXT, overview = true, facet = FieldInfo.Facet.LIST, facetOrder = FieldInfo.FacetOrder.BYCOUNT)
         private List<Value<String>> species;
 
-        @FieldInfo(label = "Sex")
+        @FieldInfo(label = "Sex", facet = FieldInfo.Facet.LIST)
         private List<Value<String>> sex;
 
         @FieldInfo(label = "Age")

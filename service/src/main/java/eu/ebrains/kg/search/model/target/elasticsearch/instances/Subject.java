@@ -56,10 +56,10 @@ public class Subject implements TargetInstance {
     @FieldInfo(layout = FieldInfo.Layout.HEADER)
     private Value<String> editorId;
 
-    @FieldInfo(label = "Species", type = FieldInfo.Type.TEXT, overview = true)
+    @FieldInfo(label = "Species", type = FieldInfo.Type.TEXT, overview = true, facet = FieldInfo.Facet.LIST)
     private List<Value<String>> species;
 
-    @FieldInfo(label = "Sex", overview = true)
+    @FieldInfo(label = "Sex", overview = true, facet = FieldInfo.Facet.LIST)
     private List<Value<String>> sex;
 
     @FieldInfo(label = "Age", overview = true)
@@ -72,10 +72,10 @@ public class Subject implements TargetInstance {
     @FieldInfo(label = "Weight")
     private Value<String> weight;
 
-    @FieldInfo(label = "Strain", overview = true)
+    @FieldInfo(label = "Strain", overview = true, facet = FieldInfo.Facet.LIST)
     private Value<String> strain;
 
-    @FieldInfo(label = "Genotype", overview = true)
+    @FieldInfo(label = "Genotype", overview = true, facet = FieldInfo.Facet.LIST)
     private Value<String> genotype;
 
     @FieldInfo(label = "Samples", layout = FieldInfo.Layout.GROUP, hint = "List of samples that have been obtained from a given subject.", aggregate = FieldInfo.Aggregate.COUNT)
@@ -92,6 +92,9 @@ public class Subject implements TargetInstance {
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 
+    @FieldInfo(ignoreForSearch = true, visible = false, facet = FieldInfo.Facet.EXISTS)
+    private boolean datasetExists;
+
     @JsonIgnore
     private boolean isSearchable;
 
@@ -104,6 +107,13 @@ public class Subject implements TargetInstance {
         isSearchable = searchable;
     }
 
+    public boolean isDatasetExists() {
+        return datasetExists;
+    }
+
+    public void setDatasetExists(boolean datasetExists) {
+        this.datasetExists = datasetExists;
+    }
 
     @Override
     public String getId() { return id; }

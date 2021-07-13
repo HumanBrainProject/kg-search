@@ -74,7 +74,7 @@ public class SampleOfKGV2Translator implements Translator<SampleV1, Sample> {
                     ).collect(Collectors.toList()));
         }
         if (!CollectionUtils.isEmpty(sample.getDatasets())) {
-            s.setDatasets(sample.getDatasets().stream()
+            final List<Sample.Dataset> datasets = sample.getDatasets().stream()
                     .map(d ->
                             new Sample.Dataset(
                                     CollectionUtils.isEmpty(d.getComponentName()) ? null : d.getComponentName(),
@@ -85,7 +85,9 @@ public class SampleOfKGV2Translator implements Translator<SampleV1, Sample> {
                                                             i.getName(), null)
                                             ).collect(Collectors.toList())
                             )
-                    ).collect(Collectors.toList()));
+                    ).collect(Collectors.toList());
+            s.setDatasets(datasets);
+            s.setDatasetExists(!datasets.isEmpty());
         }
         if (!CollectionUtils.isEmpty(sample.getSubjects())) {
             s.setSubject(sample.getSubjects().stream()

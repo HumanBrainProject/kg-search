@@ -66,20 +66,22 @@ public class SubjectOfKGV2Translator implements Translator<SubjectV1, Subject> {
                     ).collect(Collectors.toList()));
         }
         if(!CollectionUtils.isEmpty(subject.getDatasets())) {
-            s.setDatasets(emptyToNull(subject.getDatasets().stream()
+            final List<Subject.Dataset> datasets = subject.getDatasets().stream()
                     .filter(d -> !(CollectionUtils.isEmpty(d.getComponentName()) && CollectionUtils.isEmpty(d.getInstances())))
                     .map(d ->
                             new Subject.Dataset(
-                                    !CollectionUtils.isEmpty(d.getComponentName())?d.getComponentName():null,
+                                    !CollectionUtils.isEmpty(d.getComponentName()) ? d.getComponentName() : null,
                                     !CollectionUtils.isEmpty(d.getInstances()) ?
-                                    d.getInstances().stream()
-                                            .map(i ->
-                                                    new TargetInternalReference(
-                                                            liveMode ? i.getRelativeUrl() : i.getIdentifier(),
-                                                            i.getName(), null)
-                                            ).collect(Collectors.toList()) : null
+                                            d.getInstances().stream()
+                                                    .map(i ->
+                                                            new TargetInternalReference(
+                                                                    liveMode ? i.getRelativeUrl() : i.getIdentifier(),
+                                                                    i.getName(), null)
+                                                    ).collect(Collectors.toList()) : null
                             )
-                    ).collect(Collectors.toList())));
+                    ).collect(Collectors.toList());
+            s.setDatasetExists(!datasets.isEmpty());
+            s.setDatasets(emptyToNull(datasets));
         }
         s.setSearchable(true);
         return s;
