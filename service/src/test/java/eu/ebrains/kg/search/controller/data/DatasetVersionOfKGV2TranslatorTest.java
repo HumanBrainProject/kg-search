@@ -28,8 +28,8 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
-import eu.ebrains.kg.search.services.KGServiceClient;
-import eu.ebrains.kg.search.services.LegacySearchServiceClient;
+import eu.ebrains.kg.search.services.KGV2ServiceClient;
+import eu.ebrains.kg.search.services.KGV2SearchServiceClient;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -42,14 +42,11 @@ import java.util.List;
 import java.util.Map;
 
 public class DatasetVersionOfKGV2TranslatorTest {
-    private final KGServiceClient kgServiceClient;
+    private final KGV2ServiceClient KGV2ServiceClient;
 
-    public DatasetVersionOfKGV2TranslatorTest(KGServiceClient kgServiceClient) {
-        this.kgServiceClient = kgServiceClient;
+    public DatasetVersionOfKGV2TranslatorTest(KGV2ServiceClient KGV2ServiceClient) {
+        this.KGV2ServiceClient = KGV2ServiceClient;
     }
-
-    @Value("${test.token}")
-    String token;
 
     private static class DatasetV1Results extends ResultsOfKGv2<DatasetV1> {}
 
@@ -70,14 +67,14 @@ public class DatasetVersionOfKGV2TranslatorTest {
 
     public void compareDatasets(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        DatasetV1Results queryResult = kgServiceClient.executeQueryForIndexing("query/minds/core/dataset/v1.0.0/search", dataStage, DatasetV1Results.class, token);
+        DatasetV1Results queryResult = KGV2ServiceClient.executeQueryForIndexing("query/minds/core/dataset/v1.0.0/search", dataStage, DatasetV1Results.class);
         queryResult.getResults().forEach(dataset -> {
             String id = liveMode?dataset.getEditorId():dataset.getIdentifier();
             ElasticSearchDocument doc;
             if (liveMode) {
-                doc = LegacySearchServiceClient.getLiveDocument(id, ElasticSearchDocument.class);
+                doc = KGV2SearchServiceClient.getLiveDocument(id, ElasticSearchDocument.class);
             } else {
-                doc = LegacySearchServiceClient.getDocument(dataStage, "Dataset", id, ElasticSearchDocument.class);
+                doc = KGV2SearchServiceClient.getDocument(dataStage, "Dataset", id, ElasticSearchDocument.class);
             }
             if (doc == null) {
                 result.add("\n\n\tDataset: " + dataset.getIdentifier() + " (Fail to get expected document!)");

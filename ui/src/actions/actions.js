@@ -95,23 +95,17 @@ export const loadAuthEndpointFailure = () => {
 };
 
 
-export const authenticate = (group=null, isKeycloak=true) => {
+export const authenticate = (group=null) => {
   return dispatch => {
-    let authEndpoint = null;
-    if(isKeycloak) {
-      const state = store.getState();
-      authEndpoint = state.auth.authEndpoint;
-    } else {
-      authEndpoint = "https://services.humanbrainproject.eu/oidc/authorize";
-    }
+    const state = store.getState();
+    const authEndpoint = state.auth.authEndpoint;
     if(authEndpoint) {
       const stateKey= btoa(JSON.stringify({
         queryString: window.location.search
       }));
       const nonceKey=  generateKey();
       const redirectUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}${group?("?group=" + group):""}`;
-      const auth = isKeycloak?API.endpoints.keycloakAuth:API.endpoints.oidcAuth;
-      window.location.href = auth(authEndpoint, redirectUri, stateKey, nonceKey);
+      window.location.href = API.endpoints.keycloakAuth(authEndpoint, redirectUri, stateKey, nonceKey);
     } else {
       dispatch(sessionFailure("Restricted area is currently not available, please retry in a few minutes!"));
     }
@@ -125,7 +119,7 @@ export const getAuthEndpoint = (group=null) => {
       .get(API.endpoints.authEndpoint())
       .then(response => {
         dispatch(loadAuthEndpointSuccess(response.data && response.data.authEndpoint));
-        dispatch(authenticate(group, true));
+        dispatch(authenticate(group));
       })
       .catch(e => {
         const { response } = e;
@@ -166,12 +160,7 @@ export const initialize = location => {
         history.replace(url);
       }
       if((group && (group === "public" || group === "curated")) || location.pathname.startsWith("/live/")) {
-        const regLegacyIdReference = /^\/live\/(((.+)\/(.+)\/(.+)\/(.+))\/(.+))\??.*$/;
-        if (regLegacyIdReference.test(location.pathname)) {
-          dispatch(authenticate(group, false));
-        } else {
-          dispatch(getAuthEndpoint(group));
-        }
+        dispatch(getAuthEndpoint(group));
       } else {
         dispatch(setApplicationReady());
       }

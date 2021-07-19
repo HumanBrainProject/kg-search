@@ -32,7 +32,7 @@ import eu.ebrains.kg.search.controller.translators.TranslationController;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.services.ESServiceClient;
-import eu.ebrains.kg.search.services.KGServiceClient;
+import eu.ebrains.kg.search.services.KGV2ServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
 import eu.ebrains.kg.search.utils.MetaModelUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -50,7 +50,7 @@ import java.util.*;
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 public class Search {
-    private final KGServiceClient kgServiceClient;
+    private final KGV2ServiceClient KGV2ServiceClient;
     private final ESServiceClient esServiceClient;
     private final LabelsController labelsController;
     private final SearchController searchController;
@@ -60,8 +60,8 @@ public class Search {
     @Value("${eu.ebrains.kg.commit}")
     String commit;
 
-    public Search(KGServiceClient kgServiceClient, ESServiceClient esServiceClient, LabelsController labelsController, SearchController searchController, TranslationController translationController, KGv3 kgV3) throws JsonProcessingException {
-        this.kgServiceClient = kgServiceClient;
+    public Search(KGV2ServiceClient KGV2ServiceClient, ESServiceClient esServiceClient, LabelsController labelsController, SearchController searchController, TranslationController translationController, KGv3 kgV3) throws JsonProcessingException {
+        this.KGV2ServiceClient = KGV2ServiceClient;
         this.esServiceClient = esServiceClient;
         this.labelsController = labelsController;
         this.searchController = searchController;
@@ -72,14 +72,14 @@ public class Search {
     @GetMapping("/auth/endpoint")
     public Map<String, String> getAuthEndpoint() {
         Map<String, String> result = new HashMap<>();
-        String authEndpoint = kgServiceClient.getAuthEndpoint();
+        String authEndpoint = KGV2ServiceClient.getAuthEndpoint();
         result.put("authEndpoint", authEndpoint);
         return result;
     }
 
     @GetMapping("/labels")
     public Map<String, Object> getLabels() {
-        String authEndpoint = kgServiceClient.getAuthEndpoint();
+        String authEndpoint = KGV2ServiceClient.getAuthEndpoint();
         Map<String, Object> result = new HashMap<>();
         result.put("_source", labelsController.generateLabels());
         result.put("authEndpoint", authEndpoint);
@@ -103,10 +103,9 @@ public class Search {
                                          @PathVariable("domain") String domain,
                                          @PathVariable("schema") String schema,
                                          @PathVariable("version") String version,
-                                         @PathVariable("id") String id,
-                                         @RequestHeader("X-Legacy-Authorization") String legacyAuthorization) {
+                                         @PathVariable("id") String id) {
         try {
-            TargetInstance instance = translationController.createInstanceFromKGv2(DataStage.IN_PROGRESS, true, org, domain, schema, version, id, legacyAuthorization);
+            TargetInstance instance = translationController.createInstanceFromKGv2(DataStage.IN_PROGRESS, true, org, domain, schema, version, id);
             return ResponseEntity.ok(Map.of("_source", instance));
         } catch (HttpClientErrorException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
