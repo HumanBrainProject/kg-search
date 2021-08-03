@@ -58,7 +58,7 @@ public class ContributorOfKGV2Translator implements Translator<PersonSources, Co
             c.setContributions(person.getContributions().stream()
                     .map(contribution ->
                             new TargetInternalReference(
-                                    liveMode ? contribution.getRelativeUrl() : contribution.getIdentifier(),
+                                    liveMode ? contribution.getRelativeUrl() : String.format("Dataset/%s", contribution.getIdentifier()),
                                     contribution.getName(), null)).collect(Collectors.toList()));
         }
 
@@ -66,7 +66,7 @@ public class ContributorOfKGV2Translator implements Translator<PersonSources, Co
             c.setCustodianOf(person.getCustodianOf().stream()
                     .map(custodianOf ->
                             new TargetInternalReference(
-                                    liveMode ? custodianOf.getRelativeUrl() : custodianOf.getIdentifier(),
+                                    liveMode ? custodianOf.getRelativeUrl() : String.format("Contributor/%s", custodianOf.getIdentifier()),
                                     custodianOf.getName(), null)).collect(Collectors.toList()));
         }
 
@@ -74,14 +74,14 @@ public class ContributorOfKGV2Translator implements Translator<PersonSources, Co
             c.setCustodianOfModel(person.getCustodianOfModel().stream()
                     .map(custodianOfModel ->
                             new TargetInternalReference(
-                                    liveMode ? custodianOfModel.getRelativeUrl() : custodianOfModel.getIdentifier(),
+                                    liveMode ? custodianOfModel.getRelativeUrl() : String.format("Contributor/%s", custodianOfModel.getIdentifier()),
                                     custodianOfModel.getName(), null)).collect(Collectors.toList()));
         }
 
         if(!CollectionUtils.isEmpty(person.getModelContributions())) {
             c.setModelContributions(person.getModelContributions().stream()
                     .map(contribution -> new TargetInternalReference(
-                            liveMode ? contribution.getRelativeUrl() : contribution.getIdentifier(),
+                            liveMode ? contribution.getRelativeUrl() : String.format("Model/%s", contribution.getIdentifier()),
                             contribution.getName(), null
                     )).collect(Collectors.toList()));
         }
