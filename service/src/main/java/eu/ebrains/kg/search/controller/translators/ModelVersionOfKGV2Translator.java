@@ -71,7 +71,7 @@ public class ModelVersionOfKGV2Translator implements Translator<ModelV2, ModelVe
         if (!CollectionUtils.isEmpty(modelV2.getProducedDataset())) {
             m.setProducedDataset(modelV2.getProducedDataset().stream()
                     .map(pd -> new TargetInternalReference(
-                            liveMode ? pd.getRelativeUrl() : pd.getIdentifier(),
+                            liveMode ? pd.getRelativeUrl() : String.format("Dataset/%s", pd.getIdentifier()),
                             pd.getName()
                     )).collect(Collectors.toList()));
         }
@@ -102,7 +102,7 @@ public class ModelVersionOfKGV2Translator implements Translator<ModelV2, ModelVe
         if (!CollectionUtils.isEmpty(modelV2.getCustodian())) {
             m.setOwners(modelV2.getCustodian().stream()
                     .map(o -> new TargetInternalReference(
-                            liveMode ? o.getRelativeUrl() : o.getIdentifier(),
+                            liveMode ? o.getRelativeUrl() : String.format("Contributor/%s", o.getIdentifier()),
                             o.getName()
                     )).collect(Collectors.toList()));
         }
@@ -112,7 +112,7 @@ public class ModelVersionOfKGV2Translator implements Translator<ModelV2, ModelVe
         if (!CollectionUtils.isEmpty(modelV2.getMainContact())) {
             m.setMainContact(modelV2.getMainContact().stream()
                     .map(mc -> new TargetInternalReference(
-                            liveMode ? mc.getRelativeUrl() : mc.getIdentifier(),
+                            liveMode ? mc.getRelativeUrl() : String.format("Contributor/%s", mc.getIdentifier()),
                             mc.getName()
                     )).collect(Collectors.toList()));
         }
@@ -121,7 +121,7 @@ public class ModelVersionOfKGV2Translator implements Translator<ModelV2, ModelVe
         if (!CollectionUtils.isEmpty(modelV2.getUsedDataset())) {
             m.setUsedDataset(modelV2.getUsedDataset().stream()
                     .map(ud -> new TargetInternalReference(
-                            liveMode ? ud.getRelativeUrl() : ud.getIdentifier(),
+                            liveMode ? ud.getRelativeUrl() : String.format("Dataset/%s", ud.getIdentifier()),
                             ud.getName()
                     )).collect(Collectors.toList()));
         }
@@ -144,7 +144,7 @@ public class ModelVersionOfKGV2Translator implements Translator<ModelV2, ModelVe
         if (!CollectionUtils.isEmpty(modelV2.getContributors())) {
             m.setContributors(modelV2.getContributors().stream()
                     .map(c -> new TargetInternalReference(
-                            liveMode ? c.getRelativeUrl() : c.getIdentifier(),
+                            liveMode ? c.getRelativeUrl() : String.format("Contributor/%s", c.getIdentifier()),
                             c.getName()
                     )).collect(Collectors.toList()));
         }

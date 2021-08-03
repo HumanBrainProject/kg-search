@@ -61,7 +61,7 @@ public class SubjectOfKGV2Translator implements Translator<SubjectV1, Subject> {
             s.setSamples(subject.getSamples().stream()
                     .map(sample ->
                             new TargetInternalReference(
-                                    liveMode ? sample.getRelativeUrl() : sample.getIdentifier(),
+                                    liveMode ? sample.getRelativeUrl() : String.format("Sample/%s", sample.getIdentifier()),
                                     sample.getName(), null)
                     ).collect(Collectors.toList()));
         }
@@ -75,7 +75,7 @@ public class SubjectOfKGV2Translator implements Translator<SubjectV1, Subject> {
                                             d.getInstances().stream()
                                                     .map(i ->
                                                             new TargetInternalReference(
-                                                                    liveMode ? i.getRelativeUrl() : i.getIdentifier(),
+                                                                    liveMode ? i.getRelativeUrl() : String.format("Dataset/%s", i.getIdentifier()),
                                                                     i.getName(), null)
                                                     ).collect(Collectors.toList()) : null
                             )
