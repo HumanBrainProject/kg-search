@@ -47,7 +47,8 @@ public class Subject implements TargetInstance {
     @FieldInfo(ignoreForSearch = true, visible = false)
     private String id;
 
-    @FieldInfo(visible = false)
+    @ElasticSearchInfo(type = "keyword")
+    @FieldInfo(ignoreForSearch = true, visible = false)
     private List<String> identifier;
 
     @FieldInfo(label = "Name", sort = true, boost = 20)
