@@ -45,7 +45,7 @@ public class Sample implements TargetInstance {
     private String id;
 
     @ElasticSearchInfo(type = "keyword")
-    @FieldInfo(visible = false)
+    @FieldInfo(visible = false, ignoreForSearch = true)
     private List<String> identifier;
 
     @FieldInfo(label = "Name", sort = true, boost = 20)

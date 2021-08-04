@@ -45,7 +45,7 @@ public class Project implements TargetInstance {
     private String id;
 
     @ElasticSearchInfo(type = "keyword")
-    @FieldInfo(visible = false)
+    @FieldInfo(visible = false, ignoreForSearch = true)
     private List<String> identifier;
 
     @FieldInfo(sort = true, label = "Name", boost = 20)
