@@ -48,14 +48,12 @@ public class Indexing {
     }
 
     @PostMapping
-    public ResponseEntity<?> fullReplacement(@RequestParam("databaseScope") DataStage dataStage,
-                                             @RequestHeader("X-Legacy-Authorization") String legacyAuthorization
-                                             ) {
+    public ResponseEntity<?> fullReplacement(@RequestParam("databaseScope") DataStage dataStage) {
         try {
             logger.info(String.format("Creating index %s", ESHelper.getIdentifierIndex(dataStage)));
             indexingController.recreateIdentifiersIndex(dataStage);
             logger.info(String.format("Successfully created index %s", ESHelper.getIdentifierIndex(dataStage)));
-            Constants.TARGET_MODELS_ORDER.forEach(clazz -> indexingController.fullReplacementByType(clazz, dataStage, legacyAuthorization));
+            Constants.TARGET_MODELS_ORDER.forEach(clazz -> indexingController.fullReplacementByType(clazz, dataStage));
             sitemapController.updateSitemapCache(dataStage);
             return ResponseEntity.ok().build();
         } catch (WebClientResponseException e) {
@@ -76,10 +74,9 @@ public class Indexing {
     }
 
     @PutMapping
-    public ResponseEntity<?> incrementalUpdate(@RequestParam("databaseScope") DataStage dataStage,
-                                               @RequestHeader("X-Legacy-Authorization") String legacyAuthorization) {
+    public ResponseEntity<?> incrementalUpdate(@RequestParam("databaseScope") DataStage dataStage) {
         try {
-            indexingController.incrementalUpdateAll(dataStage, legacyAuthorization);
+            indexingController.incrementalUpdateAll(dataStage);
             sitemapController.updateSitemapCache(dataStage);
             return ResponseEntity.ok().build();
         } catch (WebClientResponseException e) {

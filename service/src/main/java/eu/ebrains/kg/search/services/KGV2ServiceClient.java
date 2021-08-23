@@ -27,6 +27,7 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.DatabaseScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
@@ -38,14 +39,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.Map;
 
 @Component
-public class KGServiceClient {
+public class KGV2ServiceClient {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final WebClient webClient;
     private final String kgQueryEndpoint;
     private final String kgCoreEndpoint;
 
-    public KGServiceClient(WebClient webClient, @Value("${kgquery.endpoint}") String kgQueryEndpoint,  @Value("${kgcore.endpoint}") String kgCoreEndpoint) {
-        this.webClient = webClient;
+    public KGV2ServiceClient(@Qualifier("asUser") WebClient userWebClient, @Value("${kgquery.endpoint}") String kgQueryEndpoint, @Value("${kgcore.endpoint}") String kgCoreEndpoint) {
+        this.webClient = userWebClient;
         this.kgQueryEndpoint = kgQueryEndpoint;
         this.kgCoreEndpoint = kgCoreEndpoint;
     }
@@ -70,38 +71,34 @@ public class KGServiceClient {
         }
     }
 
-    public <T> T executeQueryForIndexing(String query, DataStage dataStage, Class<T> clazz, String token) {
+    public <T> T executeQueryForIndexing(String query, DataStage dataStage, Class<T> clazz) {
         DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
         String url = String.format("%s/%s/instances/?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, databaseScope, vocab);
-        return executeCall(clazz, token, url);
+        return executeCall(clazz, url);
     }
 
-    public <T> T executeQueryForIndexing(String query, DataStage dataStage, Class<T> clazz, String token, int from, int size) {
+    public <T> T executeQueryForIndexing(String query, DataStage dataStage, Class<T> clazz, int from, int size) {
         DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
         String url = String.format("%s/%s/instances/?databaseScope=%s&vocab=%s&start=%d&size=%d", kgQueryEndpoint, query, databaseScope, vocab, from, size);
-        return executeCall(clazz, token, url);
+        return executeCall(clazz, url);
     }
 
-    public <T> T executeQuery(String query, String id, DataStage dataStage, Class<T> clazz, String token) {
+    public <T> T executeQuery(String query, String id, DataStage dataStage, Class<T> clazz) {
         DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
         String url = String.format("%s/%s/instances/%s?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, id, databaseScope, vocab);
-        return executeCall(clazz, token, url);
+        return executeCall(clazz, url);
     }
 
-    public <T> T executeQueryByIdentifier(String query, String identifier, DataStage dataStage, Class<T> clazz, String token) {
+    public <T> T executeQueryByIdentifier(String query, String identifier, DataStage dataStage, Class<T> clazz) {
         DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
         String url = String.format("%s/%s/instances?databaseScope=%s&vocab=%s&identifier=%s", kgQueryEndpoint, query, databaseScope, vocab, identifier);
-        return executeCall(clazz, token, url);
+        return executeCall(clazz, url);
     }
 
-    private <T> T executeCall(Class<T> clazz, String token, String url) {
+    private <T> T executeCall(Class<T> clazz, String url) {
         return webClient.get()
                 .uri(url)
-                .headers(h ->
-                {
-                    h.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-                    h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-                })
+                .headers(h -> h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
                 .retrieve()
                 .bodyToMono(clazz)
                 .block();

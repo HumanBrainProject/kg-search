@@ -30,12 +30,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LegacySearchServiceClient {
+public class KGV2SearchServiceClient {
     private static final ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
             .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1000000)).build();
     public static final WebClient webClient = WebClient.builder().exchangeStrategies(exchangeStrategies).build();
 
-    private static final String token = "";
     private static final String ebrainsUrl = "https://kg.ebrains.eu";
 
     private static final Pattern editorIdPattern = Pattern.compile("(.+)/(.+)/(.+)/(.+)/(.+)");
@@ -61,11 +60,7 @@ public class LegacySearchServiceClient {
     private static <T> T getDocument(String uri, Class<T> clazz) {
         return webClient.get()
                 .uri(String.format("%s%s", ebrainsUrl, uri))
-                .headers(h ->
-                {
-                    h.add("Authorization", "Bearer " + token);
-                    h.add("Accept", "application/json");
-                })
+                .headers(h -> h.add("Accept", "application/json"))
                 .retrieve()
                 .bodyToMono(clazz)
                 .block();

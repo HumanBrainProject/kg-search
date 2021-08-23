@@ -31,8 +31,8 @@ import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.PersonV1;
 import eu.ebrains.kg.search.model.source.openMINDSv2.PersonV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
-import eu.ebrains.kg.search.services.KGServiceClient;
-import eu.ebrains.kg.search.services.LegacySearchServiceClient;
+import eu.ebrains.kg.search.services.KGV2ServiceClient;
+import eu.ebrains.kg.search.services.KGV2SearchServiceClient;
 import org.apache.commons.io.IOUtils;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
@@ -45,14 +45,11 @@ import java.util.*;
 
 public class ContributorOfKGV2TranslatorTest {
 
-    private final KGServiceClient kgServiceClient;
+    private final KGV2ServiceClient KGV2ServiceClient;
 
-    public ContributorOfKGV2TranslatorTest(KGServiceClient kgServiceClient) {
-        this.kgServiceClient = kgServiceClient;
+    public ContributorOfKGV2TranslatorTest(KGV2ServiceClient KGV2ServiceClient) {
+        this.KGV2ServiceClient = KGV2ServiceClient;
     }
-
-    @Value("${test.token}")
-    String token;
 
     private static class PersonV1Results extends ResultsOfKGv2<PersonV1> {}
 
@@ -77,8 +74,8 @@ public class ContributorOfKGV2TranslatorTest {
         Map<String, PersonSources> sourcesMap = new HashMap<>();
 
         List<String> result = new ArrayList<>();
-        PersonV1Results personV1Result = kgServiceClient.executeQueryForIndexing("query/minds/core/person/v1.0.0/search", dataStage, PersonV1Results.class, token);
-        PersonV2Results personV2Result = kgServiceClient.executeQueryForIndexing("query/uniminds/core/person/v1.0.0/search", dataStage, PersonV2Results.class, token);
+        PersonV1Results personV1Result = KGV2ServiceClient.executeQueryForIndexing("query/minds/core/person/v1.0.0/search", dataStage, PersonV1Results.class);
+        PersonV2Results personV2Result = KGV2ServiceClient.executeQueryForIndexing("query/uniminds/core/person/v1.0.0/search", dataStage, PersonV2Results.class);
 
         if (!CollectionUtils.isEmpty(personV1Result.getResults())) {
             personV1Result.getResults().forEach(person -> {
@@ -112,9 +109,9 @@ public class ContributorOfKGV2TranslatorTest {
             String id = liveMode?person.getEditorId():person.getIdentifier();
             ElasticSearchDocument doc;
             if (liveMode) {
-                doc = LegacySearchServiceClient.getLiveDocument(id, ElasticSearchDocument.class);
+                doc = KGV2SearchServiceClient.getLiveDocument(id, ElasticSearchDocument.class);
             } else {
-                doc = LegacySearchServiceClient.getDocument(dataStage, "Contributor", id, ElasticSearchDocument.class);
+                doc = KGV2SearchServiceClient.getDocument(dataStage, "Contributor", id, ElasticSearchDocument.class);
             }
             if (doc == null) {
                 result.add("\n\n\tContributor: " + person.getIdentifier() + " (Fail to get expected document!)");

@@ -28,8 +28,8 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
-import eu.ebrains.kg.search.services.KGServiceClient;
-import eu.ebrains.kg.search.services.LegacySearchServiceClient;
+import eu.ebrains.kg.search.services.KGV2ServiceClient;
+import eu.ebrains.kg.search.services.KGV2SearchServiceClient;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -42,14 +42,11 @@ import java.util.List;
 import java.util.Map;
 
 public class SoftwareVersionTranslatorTest {
-    private final KGServiceClient kgServiceClient;
+    private final KGV2ServiceClient KGV2ServiceClient;
 
-    public SoftwareVersionTranslatorTest(KGServiceClient kgServiceClient) {
-        this.kgServiceClient = kgServiceClient;
+    public SoftwareVersionTranslatorTest(KGV2ServiceClient KGV2ServiceClient) {
+        this.KGV2ServiceClient = KGV2ServiceClient;
     }
-
-    @Value("${test.token}")
-    String token;
 
     private static class SoftwareV2Results extends ResultsOfKGv2<SoftwareV2> {}
 
@@ -68,14 +65,14 @@ public class SoftwareVersionTranslatorTest {
 
     public void compareSoftware(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        SoftwareV2Results queryResult = kgServiceClient.executeQueryForIndexing("query/softwarecatalog/software/softwareproject/v1.0.0/search", dataStage, SoftwareV2Results.class, token);
+        SoftwareV2Results queryResult = KGV2ServiceClient.executeQueryForIndexing("query/softwarecatalog/software/softwareproject/v1.0.0/search", dataStage, SoftwareV2Results.class);
         queryResult.getResults().forEach(software -> {
             String id = liveMode?software.getEditorId():software.getIdentifier();
             ElasticSearchDocument doc;
             if (liveMode) {
-                doc = LegacySearchServiceClient.getLiveDocument(id, ElasticSearchDocument.class);
+                doc = KGV2SearchServiceClient.getLiveDocument(id, ElasticSearchDocument.class);
             } else {
-                doc = LegacySearchServiceClient.getDocument(dataStage, "Software", id, ElasticSearchDocument.class);
+                doc = KGV2SearchServiceClient.getDocument(dataStage, "Software", id, ElasticSearchDocument.class);
             }
             if (doc == null) {
                 result.add("\n\n\tSoftware: " + software.getIdentifier() + " (Fail to get expected document!)");

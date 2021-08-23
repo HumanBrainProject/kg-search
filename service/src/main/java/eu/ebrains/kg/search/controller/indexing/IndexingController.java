@@ -60,8 +60,8 @@ public class IndexingController {
         this.utils = utils;
     }
 
-    public void incrementalUpdateAll(DataStage dataStage, String legacyAuthorization) {
-        Constants.TARGET_MODELS_ORDER.forEach(clazz -> incrementalUpdateByType(clazz, dataStage, legacyAuthorization));
+    public void incrementalUpdateAll(DataStage dataStage) {
+        Constants.TARGET_MODELS_ORDER.forEach(clazz -> incrementalUpdateByType(clazz, dataStage));
     }
 
     public void incrementalUpdateAutoRelease() {
@@ -84,24 +84,24 @@ public class IndexingController {
         });
     }
 
-    public void incrementalUpdateByType(Class<?> clazz, DataStage dataStage, String legacyAuthorization) {
+    public void incrementalUpdateByType(Class<?> clazz, DataStage dataStage) {
         if (translationController.isTypeCombined(clazz)) {
-            incrementalUpdateCombinedByType(clazz, dataStage, legacyAuthorization);
+            incrementalUpdateCombinedByType(clazz, dataStage);
         } else {
             incrementalUpdateFromV3ByType(clazz, dataStage);
         }
     }
 
-    public void incrementalUpdateCombinedByType(Class<?> clazz, DataStage dataStage, String legacyAuthorization) {
+    public void incrementalUpdateCombinedByType(Class<?> clazz, DataStage dataStage) {
         String type = utils.getNameForClass(clazz);
-        List<IdSources> sources = translationController.getIdSources(clazz, dataStage, legacyAuthorization);
+        List<IdSources> sources = translationController.getIdSources(clazz, dataStage);
         Set<String> searchableIds = new HashSet<>();
         Set<String> nonSearchableIds = new HashSet<>();
         List<TargetInstance> searchableInstances = new ArrayList<>();
         List<TargetInstance> nonSearchableInstances = new ArrayList<>();
         int counter = 0;
         for (IdSources source : sources) {
-            TargetInstance instance = translationController.createInstanceCombinedForIndexing(clazz, dataStage, false, legacyAuthorization, source);
+            TargetInstance instance = translationController.createInstanceCombinedForIndexing(clazz, dataStage, false, source);
             if (instance != null) {
                 counter++;
                 if (instance.isSearchable()) {
@@ -168,9 +168,9 @@ public class IndexingController {
     }
 
 
-    public void fullReplacementByType(Class<?> clazz, DataStage dataStage, String legacyAuthorization) {
+    public void fullReplacementByType(Class<?> clazz, DataStage dataStage) {
         if (translationController.isTypeCombined(clazz)) {
-            fullReplacementCombinedByType(clazz, dataStage, legacyAuthorization);
+            fullReplacementCombinedByType(clazz, dataStage);
         } else {
             fullReplacementFromV3ByType(clazz, dataStage);
         }
@@ -194,18 +194,18 @@ public class IndexingController {
         }
     }
 
-    public void fullReplacementCombinedByType(Class<?> clazz, DataStage dataStage, String legacyAuthorization) {
+    public void fullReplacementCombinedByType(Class<?> clazz, DataStage dataStage) {
         String type = utils.getNameForClass(clazz);
         logger.info(String.format("Creating index %s_searchable_%s for %s", dataStage, type.toLowerCase(), type));
         recreateSearchIndex(dataStage, type, clazz);
         logger.info(String.format("Successfully created index %s_searchable_%s for %s", dataStage, type.toLowerCase(), type));
-        List<IdSources> sources = translationController.getIdSources(clazz, dataStage, legacyAuthorization);
+        List<IdSources> sources = translationController.getIdSources(clazz, dataStage);
         Set<String> nonSearchableIds = new HashSet<>();
         List<TargetInstance> searchableInstances = new ArrayList<>();
         List<TargetInstance> nonSearchableInstances = new ArrayList<>();
         int counter = 0;
         for (IdSources source : sources) {
-            TargetInstance instance = translationController.createInstanceCombinedForIndexing(clazz, dataStage, false, legacyAuthorization, source);
+            TargetInstance instance = translationController.createInstanceCombinedForIndexing(clazz, dataStage, false, source);
             if (instance != null) {
                 counter++;
                 if (instance.isSearchable()) {
