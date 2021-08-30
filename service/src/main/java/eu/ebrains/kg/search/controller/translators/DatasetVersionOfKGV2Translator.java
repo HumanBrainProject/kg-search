@@ -87,8 +87,8 @@ public class DatasetVersionOfKGV2Translator implements Translator<DatasetV1, Dat
         d.setSpeciesFilter(emptyToNull(datasetV1.getSpeciesFilter()));
 
         if (datasetV1.isUseHDG()) {
-            d.setUseHDG(DatasetVersion.createHDGMessage(datasetV1.getEditorId(), false));
-            d.setEmbargo(DatasetVersion.createHDGMessage(datasetV1.getEditorId(), true));
+            d.setUseHDG(DatasetVersion.createHDGMessage(uuid, false));
+            d.setEmbargo(DatasetVersion.createHDGMessage(uuid, true));
             d.setDataAccessibility("Controlled access");
         } else {
             if (dataStage == DataStage.RELEASED) {
