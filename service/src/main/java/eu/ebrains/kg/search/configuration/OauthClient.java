@@ -23,12 +23,15 @@
 
 package eu.ebrains.kg.search.configuration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.oauth2.client.AuthorizedClientServiceOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.RemoveAuthorizedClientOAuth2AuthorizationFailureHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.ClientRequest;
@@ -44,6 +47,8 @@ public class OauthClient {
     private final ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
             .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1000000)).build();
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @Bean
     @Primary
     WebClient standardWebClient(){
@@ -55,6 +60,12 @@ public class OauthClient {
     WebClient serviceAccountWebClient(ClientRegistrationRepository clientRegistrations, OAuth2AuthorizedClientService authorizedClientService) {
         AuthorizedClientServiceOAuth2AuthorizedClientManager clientManager = new AuthorizedClientServiceOAuth2AuthorizedClientManager(clientRegistrations, authorizedClientService);
         ServletOAuth2AuthorizedClientExchangeFilterFunction oauth2 =  new ServletOAuth2AuthorizedClientExchangeFilterFunction(clientManager);
+        oauth2.setAuthorizationFailureHandler(new RemoveAuthorizedClientOAuth2AuthorizationFailureHandler(
+                (clientRegistrationId, principal, attributes) -> {
+                    logger.info("Resource server authorization failure for clientRegistrationId={}", clientRegistrationId);
+                    authorizedClientService.removeAuthorizedClient(clientRegistrationId, principal.getName());
+                })
+        );
         oauth2.setDefaultClientRegistrationId("kg");
         return WebClient.builder().exchangeStrategies(exchangeStrategies).apply(oauth2.oauth2Configuration()).filter((clientRequest, nextFilter) ->{
             ClientRequest updatedHeaders = ClientRequest.from(clientRequest).headers(h -> {
