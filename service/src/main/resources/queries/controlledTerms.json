@@ -1,0 +1,61 @@
+{
+  "@context": {
+    "@vocab": "https://core.kg.ebrains.eu/vocab/query/",
+    "query": "https://schema.hbp.eu/myQuery/",
+    "propertyName": {
+      "@id": "propertyName",
+      "@type": "@id"
+    },
+    "merge": {
+      "@type": "@id",
+      "@id": "merge"
+    },
+    "path": {
+      "@id": "path",
+      "@type": "@id"
+    }
+  },
+  "meta": {
+    "name": "${type} search query",
+    "responseVocab": "https://schema.hbp.eu/myQuery/",
+    "type": "${type}"
+  },
+  "structure": [
+    {
+      "propertyName": "query:id",
+      "path": "@id"
+    },
+    {
+      "propertyName": "query:identifier",
+      "path": "http://schema.org/identifier"
+    },
+    {
+      "propertyName": "query:name",
+      "path": "https://openminds.ebrains.eu/vocab/name"
+    },
+    {
+      "propertyName": "query:definition",
+      "path": "https://openminds.ebrains.eu/vocab/definition"
+    },
+    {
+      "propertyName": "query:description",
+      "path": "https://openminds.ebrains.eu/vocab/description"
+    },
+    {
+      "propertyName": "query:knowledgeSpaceLink",
+      "path": "https://openminds.ebrains.eu/vocab/knowledgeSpaceLink"
+    },
+    {
+      "propertyName": "query:interlexIdentifier",
+      "path": "https://openminds.ebrains.eu/vocab/interlexIdentifier"
+    },
+    {
+      "propertyName": "query:preferredOntologyIdentifier",
+      "path": "https://openminds.ebrains.eu/vocab/preferredOntologyIdentifier"
+    },
+    {
+      "propertyName": "query:synonym",
+      "path": "https://openminds.ebrains.eu/vocab/synonym"
+    }
+  ]
+}

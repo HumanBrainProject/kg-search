@@ -274,6 +274,37 @@ public class TranslationController {
         return null;
     }
 
+    private static class ResultsOfKGV3ControlledTermV3 extends ResultsOfKGv3<ControlledTermV3> {
+    }
+
+    public ControlledTerm createControlledTermFromKGv3(DataStage dataStage, boolean liveMode, String id, String type){
+        ResultsOfKGV3ControlledTermV3 result = kgV3.executeQuery(ResultsOfKGV3ControlledTermV3.class, dataStage, Queries.getTemplateQueryId(Queries.CONTROLLED_TERM_QUERY_ID, type), id);
+        if(result!=null){
+            List<ControlledTermV3> controlledTerms = result.getData();
+            if(!CollectionUtils.isEmpty(controlledTerms)){
+                ControlledTermV3 controlledTerm = controlledTerms.get(0);
+                ControlledTermTranslator translator = new ControlledTermTranslator();
+                return translator.translate(controlledTerm, dataStage, liveMode);
+            }
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Controlled term %s does not exist!", id));
+    }
+
+    public TargetInstancesResult createControlledTermForIndexing(DataStage dataStage, boolean liveMode, int from, int size) {
+        logger.info(String.format("Starting to query %d controlled terms from %d for v3", size, from));
+        ResultsOfKGv3<ControlledTermV3> controlledTerms = kgV3.executeQueryForIndexing(ResultsOfKGV3ControlledTermV3.class, dataStage, Queries.CONTROLLED_TERM_QUERY_ID, from, size);
+        Stats stats = getStats(controlledTerms, from, size);
+        logger.info(String.format("Queried %d controlled terms (%s) for v3", stats.getPageSize(), stats.getInfo()));
+        ControlledTermTranslator translator = new ControlledTermTranslator();
+        List<TargetInstance> instances = controlledTerms.getData().stream().map(file -> (TargetInstance) translator.translate(file, dataStage, liveMode)).filter(Objects::nonNull).collect(Collectors.toList());
+        TargetInstancesResult result = new TargetInstancesResult();
+        result.setTargetInstances(instances);
+        result.setFrom(controlledTerms.getFrom());
+        result.setSize(controlledTerms.getSize());
+        result.setTotal(controlledTerms.getTotal());
+        return result;
+    }
+
     public DatasetVersion createDatasetVersionFromKGv2(DataStage dataStage, boolean liveMode, String query, String id) {
         DatasetV1 datasetV1 = kgV2.executeQuery(DatasetV1.class, dataStage, query, id);
         DatasetVersionOfKGV2Translator translator = new DatasetVersionOfKGV2Translator();
@@ -743,7 +774,7 @@ public class TranslationController {
         try {
             Map data = (Map) instance.get("data");
             List<String> types = (List<String>) data.get("@type");
-            type = types.stream().filter(Constants.SOURCE_MODELS::contains).collect(Collectors.toList()).stream().findFirst().orElse(null);
+            type = types.stream().findFirst().orElse(null);
         } catch (Exception e) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, String.format("Instance %s does not exist!", id));
         }
@@ -771,8 +802,9 @@ public class TranslationController {
                     return this.createSampleFromKGv3(dataStage, liveMode, id);
                 case Constants.SOURCE_MODEL_FILE_REPOSITORY:
                     return this.createFileRepositoryFromKGv3(dataStage, liveMode, id);
-                default:
-                    return null;
+            }
+            if(Queries.CONTROLLED_TERM_TYPES.contains(type)){
+                return this.createControlledTermFromKGv3(dataStage, liveMode, id, type);
             }
         }
         throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Type is not recognized as a valid search resource!");
@@ -1053,6 +1085,9 @@ public class TranslationController {
         }
         if (clazz == File.class) {
             return this.createFileForIndexing(dataStage, liveMode, from, size);
+        }
+        if(clazz == ControlledTerm.class){
+            return this.createControlledTermForIndexing(dataStage, liveMode, from, size);
         }
         return new TargetInstancesResult();
     }

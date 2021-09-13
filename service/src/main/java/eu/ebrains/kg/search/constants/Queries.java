@@ -23,6 +23,13 @@
 
 package eu.ebrains.kg.search.constants;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class Queries {
     public static final String DATASET_QUERY_ID = "1967ced9-e3f9-4d8f-a2e6-296f3fb6329f";
     public static final String DATASET_QUERY_RESOURCE = "/queries/datasetSearch.json";
@@ -32,6 +39,56 @@ public class Queries {
 
     public static final String DATASET_VERSION_IDENTIFIER_QUERY_ID = "3f81411b-1d32-495b-944f-b88311ec6f69";
     public static final String DATASET_VERSION_IDENTIFIER_QUERY_RESOURCE = "/queries/datasetVersionIdentifierSearch.json";
+
+    public static final String CONTROLLED_TERM_QUERY_ID = "42405db5-6f86-4dea-baba-95a94105e74e";
+    public static final String CONTROLLED_TERM_QUERY_RESOURCE = "/queries/controlledTerms.json";
+    public static final List<String> CONTROLLED_TERM_TYPES = Stream.of(
+            "ActionStatusType",
+            "AgeCategory",
+            "AnatomicalAxesOrientation",
+            "BiologicalOrder",
+            "BiologicalSex",
+            "CellType",
+            "ContributionType",
+            "CriteriaQualityType",
+            "DataType",
+            "DeviceType",
+            "Disease",
+            "DiseaseModel",
+            "EthicsAssessment",
+            "ExperimentalApproach",
+            "FileBundleGrouping",
+            "FileRepositoryType",
+            "FileUsageRole",
+            "Handedness",
+            "Language",
+            "Laterality",
+            "MetaDataModelType",
+            "ModelAbstractionLevel",
+            "ModelScope",
+            "OperatingDevice",
+            "OperatingSystem",
+            "Organ",
+            "Phenotype",
+            "PreparationType",
+            "ProductAccessibility",
+            "ProgrammingLanguage",
+            "QualitativeOverlap",
+            "SemanticDataType",
+            "Service",
+            "SoftwareApplicationCategory",
+            "SoftwareFeature",
+            "Species",
+            "StimulationApproach",
+            "StimulusType",
+            "Strain",
+            "Technique",
+            "TermSuggestion",
+            "Terminology",
+            "TissueSampleType",
+            "TypeOfUncertainty",
+            "UBERONParcellation",
+            "UnitOfMeasurement").map(s -> String.format("%s/%s", "https://openminds.ebrains.eu/controlledTerms", s)).collect(Collectors.toList());
 
     public static final String CONTRIBUTOR_QUERY_ID = "b31f015f-9592-408a-b3e2-d6ed74abc5ce";
     public static final String CONTRIBUTOR_QUERY_RESOURCE = "/queries/contributorSearch.json";
@@ -80,5 +137,9 @@ public class Queries {
 
     public static final String FILE_QUERY_ID = "b96f11b3-1bcb-44c1-8d12-d33dbec3b990";
     public static final String FILE_QUERY_RESOURCE = "/queries/fileSearch.json";
+
+    public static String getTemplateQueryId(String queryId, String type){
+        return UUID.nameUUIDFromBytes(String.format("%s/%s", queryId, type).getBytes(StandardCharsets.UTF_8)).toString();
+    }
 
 }

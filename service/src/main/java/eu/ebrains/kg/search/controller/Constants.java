@@ -35,7 +35,6 @@ public class Constants {
     public final static Integer esQuerySize = 10000;
 
     public final static String OPENMINDS_CORE_NAMESPACE = "https://openminds.ebrains.eu/core/";
-
     public final static String SOURCE_MODEL_DATASET = OPENMINDS_CORE_NAMESPACE + "Dataset";
     public final static String SOURCE_MODEL_DATASET_VERSIONS = OPENMINDS_CORE_NAMESPACE + "DatasetVersion";
     public final static String SOURCE_MODEL_PERSON = OPENMINDS_CORE_NAMESPACE + "Person";
@@ -74,7 +73,8 @@ public class Constants {
             Contributor.class,
             Model.class,
             Software.class,
-            FileRepository.class
+            FileRepository.class,
+            ControlledTerm.class
     );
 
     public final static List<Class<?>> AUTO_RELEASED_MODELS_ORDER = Collections.singletonList(
