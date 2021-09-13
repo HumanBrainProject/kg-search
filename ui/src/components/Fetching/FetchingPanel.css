@@ -33,9 +33,7 @@
 
 .kgs-fetching-panel {
     position: absolute;
-    width: 360px;
-    height: 80px;
-    margin-top: calc(40% - 40px);
+    margin-top: 20%;
     margin-left: calc(50% - 180px);
     padding: 20px;
     border-radius: 4px;
@@ -43,4 +41,5 @@
     background-color: var(--background-color-2);
     transition: margin-top 0.25s ease-in;
     box-shadow: 3px 3px 6px var(--box-shadow-2);
+    text-align: center;
 }
