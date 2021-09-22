@@ -33,8 +33,6 @@ public class SourceInstanceV3 implements SourceInstance {
     private String id;
     private List<String> identifier;
 
-
-
     public String getUUID(){
         return IdUtils.getUUID(id);
     }

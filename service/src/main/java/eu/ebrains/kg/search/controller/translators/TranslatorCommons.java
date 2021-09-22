@@ -33,11 +33,11 @@ import java.util.List;
 
 public class TranslatorCommons {
 
-    static <T> T firstItemOrNull(List<T> list) {
+    public static <T> T firstItemOrNull(List<T> list) {
         return list != null && !list.isEmpty() ? list.get(0) : null;
     }
 
-    static <T> List<T> emptyToNull(List<T> list) {
+    public static <T> List<T> emptyToNull(List<T> list) {
         return CollectionUtils.isEmpty(list) ? null : list;
     }
 

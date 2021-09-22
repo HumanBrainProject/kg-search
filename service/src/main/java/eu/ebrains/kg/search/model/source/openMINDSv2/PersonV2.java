@@ -29,4 +29,24 @@ import java.util.Date;
 import java.util.List;
 
 public class PersonV2 extends PersonV1andV2 {
+    private List<Contribution> modelContributions;
+    private List<CustodianOf> custodianOfModel;
+
+
+    public List<CustodianOf> getCustodianOfModel() {
+        return custodianOfModel;
+    }
+
+    public void setCustodianOfModel(List<CustodianOf> custodianOfModel) {
+        this.custodianOfModel = custodianOfModel;
+    }
+
+
+    public List<Contribution> getModelContributions() {
+        return modelContributions;
+    }
+
+    public void setModelContributions(List<Contribution> modelContributions) {
+        this.modelContributions = modelContributions;
+    }
 }

@@ -65,6 +65,10 @@ public class DatasetV1 extends SourceInstanceV1andV2 implements HasEmbargo {
     private List<String> embargo;
     private boolean useHDG;
 
+    public boolean isContainerUrlAsZIP() {
+        return containerUrlAsZIP;
+    }
+
     public boolean isUseHDG() { return useHDG; }
 
     public void setUseHDG(boolean useHDG) { this.useHDG = useHDG; }
@@ -201,6 +205,18 @@ public class DatasetV1 extends SourceInstanceV1andV2 implements HasEmbargo {
 
         @JsonProperty("thumbnail_url")
         private List<String> thumbnailUrl;
+
+        public List<Boolean> getIsPreviewAnimated() {
+            return isPreviewAnimated;
+        }
+
+        public void setIsPreviewAnimated(List<Boolean> isPreviewAnimated) {
+            this.isPreviewAnimated = isPreviewAnimated;
+        }
+
+        public boolean isPrivateAccess() {
+            return privateAccess;
+        }
 
         public String getAbsolutePath() { return absolutePath; }
 

@@ -23,13 +23,20 @@
 
 package eu.ebrains.kg.search.controller.indexing;
 
-import eu.ebrains.kg.search.controller.Constants;
+import eu.ebrains.kg.search.configuration.OauthClient;
 import eu.ebrains.kg.search.controller.elasticsearch.ElasticSearchController;
+import eu.ebrains.kg.search.controller.kg.KG;
+import eu.ebrains.kg.search.controller.kg.KGv2;
+import eu.ebrains.kg.search.controller.kg.KGv3;
 import eu.ebrains.kg.search.controller.mapping.MappingController;
 import eu.ebrains.kg.search.controller.translators.TargetInstancesResult;
 import eu.ebrains.kg.search.controller.translators.TranslationController;
+import eu.ebrains.kg.search.controller.translators.Translator;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.IdSources;
+import eu.ebrains.kg.search.model.ErrorReport;
+import eu.ebrains.kg.search.model.TranslatorModel;
+import eu.ebrains.kg.search.model.source.ResultsOfKG;
+import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.utils.MetaModelUtils;
 import org.slf4j.Logger;
@@ -38,236 +45,156 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
 @Component
 public class IndexingController {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final MappingController mappingController;
     private final ElasticSearchController elasticSearchController;
     private final TranslationController translationController;
-    private final MetaModelUtils utils;
 
-    private int getBulkSize(Class<?> clazz) {
-        return Constants.isSourceModelBig(clazz) ? 100 : 1000;
-    }
+    private final KGv2 kgV2;
+    private final KGv3 kgV3;
 
-    public IndexingController(MappingController mappingController, ElasticSearchController elasticSearchController, TranslationController translationController, MetaModelUtils utils) {
+    public IndexingController(MappingController mappingController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3) {
         this.mappingController = mappingController;
         this.elasticSearchController = elasticSearchController;
         this.translationController = translationController;
-        this.utils = utils;
+        this.kgV2 = kgV2;
+        this.kgV3 = kgV3;
     }
 
-    public void incrementalUpdateAll(DataStage dataStage) {
-        Constants.TARGET_MODELS_ORDER.forEach(clazz -> incrementalUpdateByType(clazz, dataStage));
+    private <Source, Target extends TargetInstance> Target getRelatedInstance(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, Target instance, DataStage dataStage){
+        return instance.getIdentifier().stream().filter(id -> translator.getQueryIds().stream().anyMatch(id::contains))
+                .map(id -> {
+                    final String queryId = translator.getQueryIds().stream().filter(id::contains).findFirst().orElse(null);
+                    if (queryId != null) {
+                        final Source source = kg.executeQuery(translator.getSourceType(), dataStage, String.format("%s/search", queryId), id);
+                        if(source!=null){
+                            return translator.translate(source, dataStage, false);
+                        }
+                        return null;
+                    }
+                    return null;
+                }).filter(Objects::nonNull).findFirst().orElse(null);
     }
 
-    public void incrementalUpdateAutoRelease() {
-        Constants.AUTO_RELEASED_MODELS_ORDER.forEach(clazz -> {
-            String type = utils.getNameForClass(clazz);
-            Set<String> ids = new HashSet<>();
+
+    public <v1Input, v2Input, v3Input, Target extends TargetInstance> Map<String, ErrorReport> populateIndex(TranslatorModel<v1Input, v2Input, v3Input, Target> translatorModel, DataStage dataStage) {
+        Map<String, ErrorReport> errorReportBySourceType = new HashMap<>();
+        Set<String> handledIdentifiers = new HashSet<>();
+        Set<String> searchableIds = new HashSet<>();
+        Set<String> nonSearchableIds = new HashSet<>();
+        if(translatorModel.getV3translator()!=null) {
+            final UpdateResult updateResultV3 = update(kgV3, translatorModel.getTargetClass(), translatorModel.getV3translator(), translatorModel.getBulkSize(), dataStage, Collections.<String>emptySet(), instance -> {
+                if (translatorModel.getMerger() != null) {
+                    final Translator<v2Input, Target, ? extends ResultsOfKGv2<v2Input>> v2translator = translatorModel.getV2translator();
+                    final Target fromV2 = v2translator != null ? getRelatedInstance(kgV2, v2translator, instance, dataStage) : null;
+                    final Translator<v1Input, Target, ? extends ResultsOfKGv2<v1Input>> v1translator = translatorModel.getV1translator();
+                    final Target fromV1 = v1translator != null ? getRelatedInstance(kgV2, v1translator, instance, dataStage) : null;
+                    return translatorModel.getMerger().merge(fromV1, fromV2, instance);
+                } else {
+                    return instance;
+                }
+            }, translatorModel.isAutoRelease());
+            if (!updateResultV3.errors.isEmpty()) {
+                errorReportBySourceType.put(translatorModel.getV3translator().getSourceType().getSimpleName(), updateResultV3.errors);
+            }
+            handledIdentifiers.addAll(updateResultV3.handledIdentifiers);
+            searchableIds.addAll(updateResultV3.searchableIds);
+            nonSearchableIds.addAll(updateResultV3.nonSearchableIds);
+        }
+        if (translatorModel.getV2translator() != null) {
+            final UpdateResult updateResultV2 = update(kgV2, translatorModel.getTargetClass(), translatorModel.getV2translator(), translatorModel.getBulkSize(), dataStage, handledIdentifiers, instance -> {
+                if(translatorModel.getMerger()!=null){
+                    final Translator<v1Input, Target, ? extends ResultsOfKGv2<v1Input>> v1translator = translatorModel.getV1translator();
+                    final Target fromV1 = v1translator != null ? getRelatedInstance(kgV2, v1translator, instance, dataStage) : null;
+                    return translatorModel.getMerger().merge(fromV1, instance, null);
+                }
+                else {
+                    return instance;
+                }
+            }, translatorModel.isAutoRelease());
+            if(!updateResultV2.errors.isEmpty()) {
+                errorReportBySourceType.put(translatorModel.getV2translator().getSourceType().getSimpleName(), updateResultV2.errors);
+            }
+            handledIdentifiers.addAll(updateResultV2.handledIdentifiers);
+            searchableIds.addAll(updateResultV2.searchableIds);
+            nonSearchableIds.addAll(updateResultV2.nonSearchableIds);
+        }
+        if (translatorModel.getV1translator() != null) {
+            final UpdateResult updateResultV1 = update(kgV2, translatorModel.getTargetClass(), translatorModel.getV1translator(), translatorModel.getBulkSize(), dataStage, handledIdentifiers, null, translatorModel.isAutoRelease());
+            handledIdentifiers.addAll(updateResultV1.handledIdentifiers);
+            searchableIds.addAll(updateResultV1.searchableIds);
+            nonSearchableIds.addAll(updateResultV1.nonSearchableIds);
+            if(!updateResultV1.errors.isEmpty()) {
+                errorReportBySourceType.put(translatorModel.getV1translator().getSourceType().getSimpleName(), updateResultV1.errors);
+            }
+        }
+        if(translatorModel.isAutoRelease()){
+            elasticSearchController.removeDeprecatedDocumentsFromAutoReleasedIndex(translatorModel.getTargetClass(), nonSearchableIds);
+        }
+        else {
+            elasticSearchController.removeDeprecatedDocumentsFromSearchIndex(translatorModel.getTargetClass(), dataStage, searchableIds);
+            elasticSearchController.removeDeprecatedDocumentsFromIdentifiersIndex(translatorModel.getTargetClass(), dataStage, nonSearchableIds);
+        }
+        return errorReportBySourceType;
+    }
+
+    private static class UpdateResult {
+        private final Set<String> handledIdentifiers = new HashSet<>();
+        private final Set<String> searchableIds = new HashSet<>();
+        private final Set<String> nonSearchableIds = new HashSet<>();
+        private final ErrorReport errors = new ErrorReport();
+
+    }
+
+    private <Target extends TargetInstance> UpdateResult update(KG kg, Class<?> type, Translator<?, Target, ?> translator, int bulkSize, DataStage dataStage, Set<String> excludedIds, Function<Target, Target> instanceHandler, boolean autorelease) {
+        UpdateResult updateResult = new UpdateResult();
+        translator.getQueryIds().forEach(queryId -> {
             boolean hasMore = true;
-            int from = 10;
+            int from = 0;
             while (hasMore) {
-                TargetInstancesResult result = translationController.createInstancesFromV3ForIndexing(clazz, DataStage.IN_PROGRESS, false, from, getBulkSize(clazz)); //TODO: Change to RELEASED
-                List<TargetInstance> instances = result.getTargetInstances();
+                TargetInstancesResult<Target> result = translationController.translateToTargetInstances(kg, translator, queryId, dataStage, from, bulkSize);
+                if(result.getErrors()!=null){
+                    updateResult.errors.putAll(result.getErrors());
+                }
+                List<Target> instances = result.getTargetInstances();
                 if (instances != null) {
-                    ids.addAll(instances.stream().map(TargetInstance::getId).collect(Collectors.toList()));
-                    elasticSearchController.updateAutoReleasedIndex(instances, type);
+                    List<Target> searchableInstances = new ArrayList<>();
+                    List<Target> nonSearchableInstances = new ArrayList<>();
+                    instances.stream().filter(instance -> !excludedIds.contains(instance.getId())).forEach(instance -> {
+                        Target handledInstance = instanceHandler!=null ? instanceHandler.apply(instance) : instance;
+                        updateResult.handledIdentifiers.add(handledInstance.getId());
+                        updateResult.handledIdentifiers.addAll(handledInstance.getIdentifier());
+                        if (handledInstance.isSearchable()) {
+                            updateResult.searchableIds.add(handledInstance.getId());
+                            searchableInstances.add(handledInstance);
+                        } else {
+                            updateResult.nonSearchableIds.add(handledInstance.getId());
+                            nonSearchableInstances.add(handledInstance);
+                        }
+                    });
+                    if (!CollectionUtils.isEmpty(searchableInstances)) {
+                        elasticSearchController.updateSearchIndex(searchableInstances, type, dataStage);
+                    }
+                    if (!CollectionUtils.isEmpty(nonSearchableInstances)) {
+                        if(autorelease){
+                            elasticSearchController.updateAutoReleasedIndex(nonSearchableInstances, type);
+                        }
+                        else {
+                            elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
+                        }
+                    }
                 }
                 from = result.getFrom() + result.getSize();
                 hasMore = from < result.getTotal();
             }
-            elasticSearchController.removeDeprecatedDocumentsFromAutoReleasedIndex(type, ids);
         });
+        return updateResult;
     }
 
-    public void incrementalUpdateByType(Class<?> clazz, DataStage dataStage) {
-        if (translationController.isTypeCombined(clazz)) {
-            incrementalUpdateCombinedByType(clazz, dataStage);
-        } else {
-            incrementalUpdateFromV3ByType(clazz, dataStage);
-        }
-    }
-
-    public void incrementalUpdateCombinedByType(Class<?> clazz, DataStage dataStage) {
-        String type = utils.getNameForClass(clazz);
-        List<IdSources> sources = translationController.getIdSources(clazz, dataStage);
-        Set<String> searchableIds = new HashSet<>();
-        Set<String> nonSearchableIds = new HashSet<>();
-        List<TargetInstance> searchableInstances = new ArrayList<>();
-        List<TargetInstance> nonSearchableInstances = new ArrayList<>();
-        int counter = 0;
-        for (IdSources source : sources) {
-            TargetInstance instance = translationController.createInstanceCombinedForIndexing(clazz, dataStage, false, source);
-            if (instance != null) {
-                counter++;
-                if (instance.isSearchable()) {
-                    searchableIds.add(instance.getId());
-                    searchableInstances.add(instance);
-                } else {
-                    nonSearchableIds.add(instance.getId());
-                    nonSearchableInstances.add(instance);
-                }
-                if (searchableInstances.size() == getBulkSize(clazz)) {
-                    elasticSearchController.updateSearchIndex(searchableInstances, type, dataStage);
-                    searchableInstances = new ArrayList<>();
-                }
-                if (nonSearchableInstances.size() == getBulkSize(clazz)) {
-                    elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
-                    nonSearchableInstances = new ArrayList<>();
-                }
-            }
-        }
-        if (searchableInstances.size() > 0) {
-            elasticSearchController.updateSearchIndex(searchableInstances, type, dataStage);
-        }
-        if (nonSearchableInstances.size() > 0) {
-            elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
-        }
-        elasticSearchController.removeDeprecatedDocumentsFromSearchIndex(type, dataStage, searchableIds);
-        elasticSearchController.removeDeprecatedDocumentsFromIdentifiersIndex(type, dataStage, nonSearchableIds);
-        logger.info(String.format("Created %d instances for type %s!", counter, type));
-    }
-
-    public void incrementalUpdateFromV3ByType(Class<?> clazz, DataStage dataStage) {
-        String type = utils.getNameForClass(clazz);
-        Set<String> searchableIds = new HashSet<>();
-        Set<String> nonSearchableIds = new HashSet<>();
-        boolean hasMore = true;
-        int from = 10;
-        while (hasMore) {
-            TargetInstancesResult result = translationController.createInstancesFromV3ForIndexing(clazz, dataStage, false, from, getBulkSize(clazz));
-            List<TargetInstance> instances = result.getTargetInstances();
-            if (instances != null) {
-                List<TargetInstance> searchableInstances = new ArrayList<>();
-                List<TargetInstance> nonSearchableInstances = new ArrayList<>();
-                instances.forEach(instance -> {
-                    if (instance.isSearchable()) {
-                        searchableIds.add(instance.getId());
-                        searchableInstances.add(instance);
-                    } else {
-                        nonSearchableIds.add(instance.getId());
-                        nonSearchableInstances.add(instance);
-                    }
-                });
-                if (!CollectionUtils.isEmpty(searchableInstances)) {
-                    elasticSearchController.updateSearchIndex(searchableInstances, type, dataStage);
-                }
-                if (!CollectionUtils.isEmpty(nonSearchableInstances)) {
-                    elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
-                }
-            }
-            from = result.getFrom() + result.getSize();
-            hasMore = from < result.getTotal();
-        }
-        elasticSearchController.removeDeprecatedDocumentsFromSearchIndex(type, dataStage, searchableIds);
-        elasticSearchController.removeDeprecatedDocumentsFromIdentifiersIndex(type, dataStage, nonSearchableIds);
-    }
-
-
-    public void fullReplacementByType(Class<?> clazz, DataStage dataStage) {
-        if (translationController.isTypeCombined(clazz)) {
-            fullReplacementCombinedByType(clazz, dataStage);
-        } else {
-            fullReplacementFromV3ByType(clazz, dataStage);
-        }
-    }
-
-    public void fullReplacementAutoReleasedByType(Class<?> clazz) {
-        String type = utils.getNameForClass(clazz);
-        logger.info(String.format("Creating index auto_released_%s for %s", type.toLowerCase(), type));
-        recreateAutoReleasedIndex(type, clazz);
-        logger.info(String.format("Successfully created index auto_released_%s for %s", type.toLowerCase(), type));
-        boolean hasMore = true;
-        int from = 0;
-        while (hasMore) {
-            TargetInstancesResult result = translationController.createInstancesFromV3ForIndexing(clazz, DataStage.IN_PROGRESS, false, from, getBulkSize(clazz)); //TODO: Change Datastage to RELEASED
-            List<TargetInstance> instances = result.getTargetInstances();
-            if (instances != null) {
-                elasticSearchController.updateAutoReleasedIndex(instances, type);
-            }
-            from = result.getFrom() + result.getSize();
-            hasMore = from < result.getTotal();
-        }
-    }
-
-    public void fullReplacementCombinedByType(Class<?> clazz, DataStage dataStage) {
-        String type = utils.getNameForClass(clazz);
-        logger.info(String.format("Creating index %s_searchable_%s for %s", dataStage, type.toLowerCase(), type));
-        recreateSearchIndex(dataStage, type, clazz);
-        logger.info(String.format("Successfully created index %s_searchable_%s for %s", dataStage, type.toLowerCase(), type));
-        List<IdSources> sources = translationController.getIdSources(clazz, dataStage);
-        Set<String> nonSearchableIds = new HashSet<>();
-        List<TargetInstance> searchableInstances = new ArrayList<>();
-        List<TargetInstance> nonSearchableInstances = new ArrayList<>();
-        int counter = 0;
-        for (IdSources source : sources) {
-            TargetInstance instance = translationController.createInstanceCombinedForIndexing(clazz, dataStage, false, source);
-            if (instance != null) {
-                counter++;
-                if (instance.isSearchable()) {
-                    searchableInstances.add(instance);
-                } else {
-                    nonSearchableIds.add(instance.getId());
-                    nonSearchableInstances.add(instance);
-                }
-                if (searchableInstances.size() == getBulkSize(clazz)) {
-                    elasticSearchController.updateSearchIndex(searchableInstances, type, dataStage);
-                    searchableInstances = new ArrayList<>();
-                }
-                if (nonSearchableInstances.size() == getBulkSize(clazz)) {
-                    elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
-                    nonSearchableInstances = new ArrayList<>();
-                }
-            }
-        }
-        if (searchableInstances.size() > 0) {
-            elasticSearchController.updateSearchIndex(searchableInstances, type, dataStage);
-        }
-        if (nonSearchableInstances.size() > 0) {
-            elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
-        }
-        elasticSearchController.removeDeprecatedDocumentsFromIdentifiersIndex(type, dataStage, nonSearchableIds);
-        logger.info(String.format("Created %d instances for type %s!", counter, type));
-    }
-
-    public void fullReplacementFromV3ByType(Class<?> clazz, DataStage dataStage) {
-        String type = utils.getNameForClass(clazz);
-        logger.info(String.format("Creating index %s_searchable_%s for %s", dataStage, type.toLowerCase(), type));
-        recreateSearchIndex(dataStage, type, clazz);
-        logger.info(String.format("Successfully created index %s_searchable_%s for %s", dataStage, type.toLowerCase(), type));
-        Set<String> nonSearchableIds = new HashSet<>();
-        boolean hasMore = true;
-        int from = 0;
-        while (hasMore) {
-            TargetInstancesResult result = translationController.createInstancesFromV3ForIndexing(clazz, dataStage, false, from, getBulkSize(clazz));
-            List<TargetInstance> instances = result.getTargetInstances();
-            if (instances != null) {
-                List<TargetInstance> searchableInstances = new ArrayList<>();
-                List<TargetInstance> nonSearchableInstances = new ArrayList<>();
-                instances.forEach(instance -> {
-                    if (instance.isSearchable()) {
-                        searchableInstances.add(instance);
-                    } else {
-                        nonSearchableIds.add(instance.getId());
-                        nonSearchableInstances.add(instance);
-                    }
-                });
-                if (!CollectionUtils.isEmpty(searchableInstances)) {
-                    elasticSearchController.updateSearchIndex(searchableInstances, type, dataStage);
-                }
-                if (!CollectionUtils.isEmpty(nonSearchableInstances)) {
-                    elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
-                }
-            }
-            from = result.getFrom() + result.getSize();
-            hasMore = from < result.getTotal();
-        }
-        elasticSearchController.removeDeprecatedDocumentsFromIdentifiersIndex(type, dataStage, nonSearchableIds);
-    }
 
     public void recreateIdentifiersIndex(DataStage dataStage) {
         Map<String, Object> mapping = mappingController.generateIdentifierMapping();
@@ -275,15 +202,15 @@ public class IndexingController {
         elasticSearchController.recreateIdentifiersIndex(mappingResult, dataStage);
     }
 
-    private void recreateSearchIndex(DataStage dataStage, String type, Class<?> clazz) {
+    public void recreateSearchIndex(DataStage dataStage, Class<? extends TargetInstance> clazz) {
         Map<String, Object> mapping = mappingController.generateMapping(clazz);
         Map<String, Object> mappingResult = Map.of("mappings", mapping);
-        elasticSearchController.recreateSearchIndex(mappingResult, type, dataStage);
+        elasticSearchController.recreateSearchIndex(mappingResult, clazz, dataStage);
     }
 
-    private void recreateAutoReleasedIndex(String type, Class<?> clazz) {
+    public void recreateAutoReleasedIndex(Class<?> clazz) {
         Map<String, Object> mapping = mappingController.generateMapping(clazz);
         Map<String, Object> mappingResult = Map.of("mappings", mapping);
-        elasticSearchController.recreateAutoReleasedIndex(mappingResult, type);
+        elasticSearchController.recreateAutoReleasedIndex(mappingResult, clazz);
     }
 }

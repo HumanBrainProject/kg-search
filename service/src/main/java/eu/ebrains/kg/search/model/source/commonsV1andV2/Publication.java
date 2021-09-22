@@ -23,6 +23,8 @@
 
 package eu.ebrains.kg.search.model.source.commonsV1andV2;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 public class Publication {
 
     public Publication() {}
@@ -33,6 +35,7 @@ public class Publication {
     }
 
     private String citation;
+    @JsonDeserialize(using = ListOrSingleStringAsStringDeserializer.class)
     private String doi;
 
     public String getCitation() {

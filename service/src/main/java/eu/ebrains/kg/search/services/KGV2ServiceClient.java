@@ -23,8 +23,13 @@
 
 package eu.ebrains.kg.search.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.ebrains.kg.search.configuration.OauthClient;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.DatabaseScope;
+import eu.ebrains.kg.search.model.ErrorReport;
+import eu.ebrains.kg.search.model.source.ResultsOfKG;
+import eu.ebrains.kg.search.model.source.SourceInstanceV1andV2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,7 +41,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class KGV2ServiceClient {
@@ -44,6 +49,7 @@ public class KGV2ServiceClient {
     private final WebClient webClient;
     private final String kgQueryEndpoint;
     private final String kgCoreEndpoint;
+
 
     public KGV2ServiceClient(@Qualifier("asUser") WebClient userWebClient, @Value("${kgquery.endpoint}") String kgQueryEndpoint, @Value("${kgcore.endpoint}") String kgCoreEndpoint) {
         this.webClient = userWebClient;
@@ -73,25 +79,19 @@ public class KGV2ServiceClient {
 
     public <T> T executeQueryForIndexing(String query, DataStage dataStage, Class<T> clazz) {
         DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
-        String url = String.format("%s/%s/instances/?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, databaseScope, vocab);
+        String url = String.format("%s/query/%s/instances/?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, databaseScope, vocab);
         return executeCall(clazz, url);
     }
 
     public <T> T executeQueryForIndexing(String query, DataStage dataStage, Class<T> clazz, int from, int size) {
         DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
-        String url = String.format("%s/%s/instances/?databaseScope=%s&vocab=%s&start=%d&size=%d", kgQueryEndpoint, query, databaseScope, vocab, from, size);
+        String url = String.format("%s/query/%s/search/instances/?databaseScope=%s&vocab=%s&start=%d&size=%d", kgQueryEndpoint, query, databaseScope, vocab, from, size);
         return executeCall(clazz, url);
     }
 
     public <T> T executeQuery(String query, String id, DataStage dataStage, Class<T> clazz) {
         DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
-        String url = String.format("%s/%s/instances/%s?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, id, databaseScope, vocab);
-        return executeCall(clazz, url);
-    }
-
-    public <T> T executeQueryByIdentifier(String query, String identifier, DataStage dataStage, Class<T> clazz) {
-        DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
-        String url = String.format("%s/%s/instances?databaseScope=%s&vocab=%s&identifier=%s", kgQueryEndpoint, query, databaseScope, vocab, identifier);
+        String url = String.format("%s/query/%s/search/instances/%s?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, id, databaseScope, vocab);
         return executeCall(clazz, url);
     }
 
@@ -101,6 +101,7 @@ public class KGV2ServiceClient {
                 .headers(h -> h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
                 .retrieve()
                 .bodyToMono(clazz)
+                .doOnSuccess(KGServiceUtils::parsingErrorHandler).doFinally(t -> OauthClient.ERROR_REPORTING_THREAD_LOCAL.remove())
                 .block();
     }
 }

@@ -32,7 +32,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import java.util.List;
 
 @MetaInfo(name = "File", identifier = "https://openminds.ebrains.eu/core/File", order = 12)
-public class    File implements TargetInstance {
+public class File implements TargetInstance {
     @JsonIgnore
     private final Value<String> type = new Value<>("File");
 

@@ -26,8 +26,10 @@ package eu.ebrains.kg.search.utils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class IdUtils {
@@ -44,5 +46,9 @@ public class IdUtils {
             return ids;
         }
         return ids.stream().map(IdUtils::getUUID).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    public static String getTemplateQueryId(String queryId, String type){
+        return UUID.nameUUIDFromBytes(String.format("%s/%s", queryId, type).getBytes(StandardCharsets.UTF_8)).toString();
     }
 }

@@ -24,6 +24,7 @@
 package eu.ebrains.kg.search.model.source.commonsV1andV2;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
@@ -37,16 +38,16 @@ public class ListOrSingleStringAsStringDeserializer extends JsonDeserializer<Str
 
     @Override
     public String deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-        try {
-            return jsonParser.readValueAs(String.class);
-        } catch (MismatchedInputException e) {
-            List<?> list = jsonParser.readValueAs(List.class);
-            if(CollectionUtils.isEmpty(list)){
+        final TreeNode treeNode = jsonParser.readValueAsTree();
+        if(treeNode.isArray()){
+            List<?> asList = jsonParser.getCodec().treeToValue(treeNode, List.class);
+            if(asList == null){
                 return null;
             }
-            else {
-                return list.stream().map(Object::toString).collect(Collectors.joining(", "));
-            }
+            return asList.stream().map(Object::toString).collect(Collectors.joining(", "));
+        }
+        else{
+            return jsonParser.getCodec().treeToValue(treeNode, String.class);
         }
     }
 }

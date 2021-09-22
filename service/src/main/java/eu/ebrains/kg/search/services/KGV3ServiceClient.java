@@ -23,7 +23,11 @@
 
 package eu.ebrains.kg.search.services;
 
+import eu.ebrains.kg.search.configuration.OauthClient;
 import eu.ebrains.kg.search.model.DataStage;
+import eu.ebrains.kg.search.model.ErrorReport;
+import eu.ebrains.kg.search.model.source.ResultsOfKG;
+import eu.ebrains.kg.search.model.source.SourceInstanceV1andV2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,9 +37,11 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -96,32 +102,30 @@ public class KGV3ServiceClient {
                 .block();
     }
 
-    public void releaseQuery(String queryId){
-        String url = String.format("%s/instances/%s/release", kgCoreEndpoint, queryId);
-        serviceAccountWebClient.put()
-                .uri(url)
-                .headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
-    }
-
 
     private <T> T executeCallForLive(Class<T> clazz, String url) {
-        return userWebClient.get()
-                .uri(url)
-                .headers(h -> h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
-                .retrieve()
-                .bodyToMono(clazz)
-                .block();
+       try {
+           return userWebClient.get()
+                   .uri(url)
+                   .headers(h -> h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
+                   .retrieve()
+                   .bodyToMono(clazz)
+                   .doOnSuccess(KGServiceUtils::parsingErrorHandler)
+                   .doFinally(t -> OauthClient.ERROR_REPORTING_THREAD_LOCAL.remove())
+                   .block();
+       } catch (WebClientResponseException.NotFound e){
+           return null;
+       }
     }
+
 
     private <T> T executeCallForIndexing(Class<T> clazz, String url) {
         return serviceAccountWebClient.get()
                 .uri(url)
                 .headers(h -> h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
                 .retrieve()
-                .bodyToMono(clazz)
+                .bodyToMono(clazz).doOnSuccess(KGServiceUtils::parsingErrorHandler)
+                .doFinally(t -> OauthClient.ERROR_REPORTING_THREAD_LOCAL.remove())
                 .block();
     }
 }

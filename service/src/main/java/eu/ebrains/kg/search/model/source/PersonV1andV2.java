@@ -31,8 +31,6 @@ import java.util.List;
 public class PersonV1andV2 extends SourceInstanceV1andV2 {
     private String title;
     private List<CustodianOf> custodianOf;
-    private List<CustodianOf> custodianOfModel;
-    private List<Contribution> modelContributions;
     private List<Contribution> contributions;
     private List<Publication> publications;
 
@@ -51,24 +49,6 @@ public class PersonV1andV2 extends SourceInstanceV1andV2 {
 
     public void setCustodianOf(List<CustodianOf> custodianOf) {
         this.custodianOf = custodianOf;
-    }
-
-
-    public List<CustodianOf> getCustodianOfModel() {
-        return custodianOfModel;
-    }
-
-    public void setCustodianOfModel(List<CustodianOf> custodianOfModel) {
-        this.custodianOfModel = custodianOfModel;
-    }
-
-
-    public List<Contribution> getModelContributions() {
-        return modelContributions;
-    }
-
-    public void setModelContributions(List<Contribution> modelContributions) {
-        this.modelContributions = modelContributions;
     }
 
 

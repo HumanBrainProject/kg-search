@@ -23,7 +23,7 @@
 
 package eu.ebrains.kg.search.controller.labels;
 
-import eu.ebrains.kg.search.controller.Constants;
+import eu.ebrains.kg.search.model.TranslatorModel;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.RibbonInfo;
@@ -50,9 +50,9 @@ public class LabelsController {
 
     public Map<String, Object> generateLabels() {
         Map<String, Object> labels = new HashMap<>();
-        for (int i = 0; i < Constants.TARGET_MODELS_ORDER.size(); i++) {
-            Class<?> targetModel = Constants.TARGET_MODELS_ORDER.get(i);
-            labels.put(utils.getNameForClass(targetModel), generateLabels(targetModel, i + 1));
+        for (int i = 0; i < TranslatorModel.MODELS.size(); i++) {
+            Class<?> targetModel = TranslatorModel.MODELS.get(i).getTargetClass();
+            labels.put(MetaModelUtils.getNameForClass(targetModel), generateLabels(targetModel, i + 1));
         }
         return labels;
     }
@@ -95,7 +95,7 @@ public class LabelsController {
                 throw new RuntimeException(e);
             }
         });
-        result.put("http://schema.org/name", utils.getNameForClass(clazz));
+        result.put("http://schema.org/name", MetaModelUtils.getNameForClass(clazz));
         return result;
     }
 

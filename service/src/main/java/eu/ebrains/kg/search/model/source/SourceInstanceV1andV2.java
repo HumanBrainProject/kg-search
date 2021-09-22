@@ -23,20 +23,18 @@
 
 package eu.ebrains.kg.search.model.source;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import eu.ebrains.kg.search.model.source.SourceInstance;
 
 import java.util.Date;
 
 public class SourceInstanceV1andV2 implements SourceInstance {
-    private String id;
     private String identifier;
     private String editorId;
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Date firstReleaseAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Date lastReleaseAt;
-
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
 
     public String getIdentifier() {
         return identifier;
