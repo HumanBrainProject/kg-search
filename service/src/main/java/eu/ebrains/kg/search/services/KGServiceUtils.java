@@ -4,6 +4,7 @@ import eu.ebrains.kg.search.configuration.OauthClient;
 import eu.ebrains.kg.search.model.ErrorReport;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.source.SourceInstanceV1andV2;
+import eu.ebrains.kg.search.model.source.openMINDSv3.SourceInstanceV3;
 
 import java.util.List;
 import java.util.Map;
@@ -17,9 +18,18 @@ public class KGServiceUtils {
             final List<?> data = resultsOfKG.getData();
             for (Integer index : errorMap.keySet()) {
                 final Object instance = data.get(index);
-                if(instance instanceof SourceInstanceV1andV2){
-                    final String identifier = ((SourceInstanceV1andV2) instance).getIdentifier();
-                    if(resultsOfKG.getErrors()==null){
+                String identifier;
+                if(instance instanceof SourceInstanceV1andV2) {
+                    identifier = ((SourceInstanceV1andV2) instance).getIdentifier();
+                }
+                else if (instance instanceof SourceInstanceV3){
+                    identifier = ((SourceInstanceV3)instance).getId();
+                }
+                else{
+                    throw new RuntimeException(String.format("Unexpected type in error handling: %s", instance.getClass().getName()));
+                }
+                if(identifier!=null) {
+                    if (resultsOfKG.getErrors() == null) {
                         resultsOfKG.setErrors(new ErrorReport());
                     }
                     resultsOfKG.getErrors().put(identifier, errorMap.get(index));

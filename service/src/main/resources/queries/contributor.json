@@ -117,8 +117,13 @@
     {
       "propertyName": "query:modelContributions",
       "path": {
-        "@id": "https://openminds.ebrains.eu/vocab/custodian",
-        "reverse": true
+        "@id": "https://openminds.ebrains.eu/vocab/author",
+        "reverse": true,
+        "typeFilter": [
+          {
+            "@id": "https://openminds.ebrains.eu/core/ModelVersion"
+          }
+       ]
       },
       "structure": [
         {
@@ -141,8 +146,13 @@
     {
       "propertyName": "query:contributions",
       "path": {
-        "@id": "https://openminds.ebrains.eu/vocab/custodian",
-        "reverse": true
+        "@id": "https://openminds.ebrains.eu/vocab/author",
+        "reverse": true,
+        "typeFilter": [
+          {
+            "@id": "https://openminds.ebrains.eu/core/DatasetVersion"
+          }
+        ]
       },
       "structure": [
         {
