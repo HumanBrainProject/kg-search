@@ -26,7 +26,7 @@ package eu.ebrains.kg.search.api;
 import eu.ebrains.kg.search.controller.indexing.IndexingController;
 import eu.ebrains.kg.search.controller.sitemap.SitemapController;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.ErrorReport;
+import eu.ebrains.kg.search.model.ErrorReportResult;
 import eu.ebrains.kg.search.model.TranslatorModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +35,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RequestMapping("/indexing")
 @RestController
@@ -52,22 +53,16 @@ public class Indexing {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Map<String, ErrorReport>>> fullReplacement(@RequestParam("databaseScope") DataStage dataStage) {
+    public ResponseEntity<ErrorReportResult> fullReplacement(@RequestParam("databaseScope") DataStage dataStage) {
         try {
-            Map<String, Map<String, ErrorReport>> errorReportByTargetAndSourceType = new HashMap<>();
             indexingController.recreateIdentifiersIndex(dataStage);
-            TranslatorModel.MODELS.stream().filter(m -> !m.isAutoRelease()).forEach(m -> {
+            final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(m -> !m.isAutoRelease()).map(m -> {
                 indexingController.recreateSearchIndex(dataStage, m.getTargetClass());
-                final Map<String, ErrorReport> errorReportMap = indexingController.populateIndex(m, dataStage);
-                if(!errorReportMap.isEmpty()){
-                    errorReportByTargetAndSourceType.put(m.getTargetClass().getSimpleName(), errorReportMap);
-                }
-            });
-            if(!errorReportByTargetAndSourceType.isEmpty()){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorReportByTargetAndSourceType);
-            }
+                final List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, dataStage);
+                return handleErrorReportResultByTargetType(m, errorsBySource);
+            }).filter(Objects::nonNull).collect(Collectors.toList());
             sitemapController.updateSitemapCache(dataStage);
-            return ResponseEntity.ok().build();
+            return handleErrorReportResult(errorsByTarget);
         } catch (WebClientResponseException e) {
             logger.info("Unsuccessful indexing", e);
             return ResponseEntity.status(e.getStatusCode()).build();
@@ -75,21 +70,15 @@ public class Indexing {
     }
 
     @PostMapping("categories/{category}")
-    public ResponseEntity<Map<String, ErrorReport>> fullReplacementByType(@RequestParam("databaseScope") DataStage dataStage, @PathVariable("category") String category) {
+    public ResponseEntity<ErrorReportResult> fullReplacementByType(@RequestParam("databaseScope") DataStage dataStage, @PathVariable("category") String category) {
         try {
-            Map<String, ErrorReport> errorReportBySourceType = new HashMap<>();
-            TranslatorModel.MODELS.stream().filter(m -> !m.isAutoRelease() && m.getTargetClass().getSimpleName().equals(category)).forEach(m ->{
+            final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(m -> !m.isAutoRelease() && m.getTargetClass().getSimpleName().equals(category)).map(m -> {
                 indexingController.recreateSearchIndex(dataStage, m.getTargetClass());
-                final Map<String, ErrorReport> errorReportMap = indexingController.populateIndex(m, dataStage);
-                if(!errorReportMap.isEmpty()){
-                    errorReportBySourceType.putAll(errorReportMap);
-                }
-            } );
+                final List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource =  indexingController.populateIndex(m, dataStage);
+                return handleErrorReportResultByTargetType(m, errorsBySource);
+            }).filter(Objects::nonNull).collect(Collectors.toList());
             sitemapController.updateSitemapCache(dataStage);
-            if(!errorReportBySourceType.isEmpty()){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorReportBySourceType);
-            }
-            return ResponseEntity.ok().build();
+            return handleErrorReportResult(errorsByTarget);
         } catch (WebClientResponseException e) {
             logger.info("Unsuccessful indexing", e);
             return ResponseEntity.status(e.getStatusCode()).build();
@@ -97,20 +86,14 @@ public class Indexing {
     }
 
     @PostMapping("/autorelease")
-    public ResponseEntity<Map<String, Map<String, ErrorReport>>> fullReplacementAutoRelease() {
+    public ResponseEntity<ErrorReportResult> fullReplacementAutoRelease() {
         try {
-            Map<String, Map<String, ErrorReport>> errorReportByTargetAndSourceType = new HashMap<>();
-            TranslatorModel.MODELS.stream().filter(TranslatorModel::isAutoRelease).forEach(m -> {
+            final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(TranslatorModel::isAutoRelease).map(m -> {
                 indexingController.recreateAutoReleasedIndex(m.getTargetClass());
-                final Map<String, ErrorReport> errorReportMap = indexingController.populateIndex(m, DataStage.RELEASED);
-                if(!errorReportMap.isEmpty()){
-                    errorReportByTargetAndSourceType.put(m.getTargetClass().getSimpleName(), errorReportMap);
-                }
-            });
-            if(!errorReportByTargetAndSourceType.isEmpty()){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorReportByTargetAndSourceType);
-            }
-            return ResponseEntity.ok().build();
+                final List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, DataStage.RELEASED);
+                return handleErrorReportResultByTargetType(m, errorsBySource);
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+            return handleErrorReportResult(errorsByTarget);
         } catch (WebClientResponseException e) {
             logger.info("Unsuccessful autorelease indexing", e);
             return ResponseEntity.status(e.getStatusCode()).build();
@@ -118,20 +101,14 @@ public class Indexing {
     }
 
     @PutMapping
-    public ResponseEntity<Map<String, Map<String, ErrorReport>>> incrementalUpdate(@RequestParam("databaseScope") DataStage dataStage) {
+    public ResponseEntity<ErrorReportResult> incrementalUpdate(@RequestParam("databaseScope") DataStage dataStage) {
         try {
-            Map<String, Map<String, ErrorReport>> errorReportByTargetAndSourceType = new HashMap<>();
-            TranslatorModel.MODELS.stream().filter(m -> !m.isAutoRelease()).forEach(m -> {
-                final Map<String, ErrorReport> errorReportMap = indexingController.populateIndex(m, dataStage);
-                if(!errorReportMap.isEmpty()){
-                    errorReportByTargetAndSourceType.put(m.getTargetClass().getSimpleName(), errorReportMap);
-                }
-            });
+            final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(m -> !m.isAutoRelease()).map(m -> {
+                final List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, dataStage);
+                return handleErrorReportResultByTargetType(m, errorsBySource);
+            }).filter(Objects::nonNull).collect(Collectors.toList());
             sitemapController.updateSitemapCache(dataStage);
-            if(!errorReportByTargetAndSourceType.isEmpty()){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorReportByTargetAndSourceType);
-            }
-            return ResponseEntity.ok().build();
+            return handleErrorReportResult(errorsByTarget);
         } catch (WebClientResponseException e) {
             logger.info("Unsuccessful incremental indexing", e);
             return ResponseEntity.status(e.getStatusCode()).build();
@@ -139,20 +116,14 @@ public class Indexing {
     }
 
     @PutMapping("categories/{category}")
-    public ResponseEntity<Map<String, ErrorReport>> incrementalUpdateByType(@RequestParam("databaseScope") DataStage dataStage, @PathVariable("category") String category) {
+    public ResponseEntity<ErrorReportResult> incrementalUpdateByType(@RequestParam("databaseScope") DataStage dataStage, @PathVariable("category") String category) {
         try {
-            Map<String, ErrorReport> errorReportBySourceType = new HashMap<>();
-            TranslatorModel.MODELS.stream().filter(m -> !m.isAutoRelease() && m.getTargetClass().getSimpleName().equals(category)).forEach(m ->{
-                final Map<String, ErrorReport> errorReportMap = indexingController.populateIndex(m, dataStage);
-                if(!errorReportMap.isEmpty()){
-                    errorReportBySourceType.putAll(errorReportMap);
-                }
-            } );
+            final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(m -> !m.isAutoRelease() && m.getTargetClass().getSimpleName().equals(category)).map(m -> {
+                final List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource =  indexingController.populateIndex(m, dataStage);
+                return handleErrorReportResultByTargetType(m, errorsBySource);
+            }).filter(Objects::nonNull).collect(Collectors.toList());
             sitemapController.updateSitemapCache(dataStage);
-            if(!errorReportBySourceType.isEmpty()){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorReportBySourceType);
-            }
-            return ResponseEntity.ok().build();
+            return handleErrorReportResult(errorsByTarget);
         } catch (WebClientResponseException e) {
             logger.info("Unsuccessful incremental indexing", e);
             return ResponseEntity.status(e.getStatusCode()).build();
@@ -160,23 +131,36 @@ public class Indexing {
     }
 
     @PutMapping("/autorelease")
-    public ResponseEntity<Map<String, Map<String, ErrorReport>>> incrementalUpdateAutoRelease() {
+    public ResponseEntity<ErrorReportResult> incrementalUpdateAutoRelease() {
         try {
-            Map<String, Map<String, ErrorReport>> errorReportByTargetAndSourceType = new HashMap<>();
-            TranslatorModel.MODELS.stream().filter(TranslatorModel::isAutoRelease).forEach(m -> {
-                final Map<String, ErrorReport> errorReportMap = indexingController.populateIndex(m, DataStage.RELEASED);
-                if(!errorReportMap.isEmpty()){
-                    errorReportByTargetAndSourceType.put(m.getTargetClass().getSimpleName(), errorReportMap);
-                }
-            });
-            if(!errorReportByTargetAndSourceType.isEmpty()){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorReportByTargetAndSourceType);
-            }
-            return ResponseEntity.ok().build();
+            final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(TranslatorModel::isAutoRelease).map(m -> {
+                final List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, DataStage.RELEASED);
+                return  handleErrorReportResultByTargetType(m, errorsBySource);
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+            return handleErrorReportResult(errorsByTarget);
         } catch (WebClientResponseException e) {
             logger.info("Unsuccessful incremental autorelease indexing", e);
             return ResponseEntity.status(e.getStatusCode()).build();
         }
+    }
+
+    private ErrorReportResult.ErrorReportResultByTargetType handleErrorReportResultByTargetType(TranslatorModel<?, ?, ?, ?> m, List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource) {
+        if (!errorsBySource.isEmpty()) {
+            ErrorReportResult.ErrorReportResultByTargetType e = new ErrorReportResult.ErrorReportResultByTargetType();
+            e.setTargetType(m.getTargetClass().getSimpleName());
+            e.setErrorsBySource(errorsBySource);
+            return e;
+        }
+        return null;
+    }
+
+    private ResponseEntity<ErrorReportResult> handleErrorReportResult(List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget) {
+        if (!errorsByTarget.isEmpty()) {
+            final ErrorReportResult result = new ErrorReportResult();
+            result.setErrorsByTarget(errorsByTarget);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+        return ResponseEntity.ok().build();
     }
 
 

@@ -5,6 +5,7 @@ import eu.ebrains.kg.search.model.ErrorReport;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.source.SourceInstanceV1andV2;
 import eu.ebrains.kg.search.model.source.openMINDSv3.SourceInstanceV3;
+import eu.ebrains.kg.search.utils.IdUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ public class KGServiceUtils {
                     identifier = ((SourceInstanceV1andV2) instance).getIdentifier();
                 }
                 else if (instance instanceof SourceInstanceV3){
-                    identifier = ((SourceInstanceV3)instance).getId();
+                    identifier = IdUtils.getUUID(((SourceInstanceV3)instance).getId());
                 }
                 else{
                     throw new RuntimeException(String.format("Unexpected type in error handling: %s", instance.getClass().getName()));

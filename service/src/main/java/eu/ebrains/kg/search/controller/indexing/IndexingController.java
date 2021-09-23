@@ -33,6 +33,7 @@ import eu.ebrains.kg.search.controller.translators.TranslationController;
 import eu.ebrains.kg.search.controller.translators.Translator;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.ErrorReport;
+import eu.ebrains.kg.search.model.ErrorReportResult;
 import eu.ebrains.kg.search.model.TranslatorModel;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
@@ -77,8 +78,8 @@ public class IndexingController {
     }
 
 
-    public <v1Input, v2Input, v3Input, Target extends TargetInstance> Map<String, ErrorReport> populateIndex(TranslatorModel<v1Input, v2Input, v3Input, Target> translatorModel, DataStage dataStage) {
-        Map<String, ErrorReport> errorReportBySourceType = new HashMap<>();
+    public <v1Input, v2Input, v3Input, Target extends TargetInstance> List<ErrorReportResult.ErrorReportResultBySourceType> populateIndex(TranslatorModel<v1Input, v2Input, v3Input, Target> translatorModel, DataStage dataStage) {
+        List<ErrorReportResult.ErrorReportResultBySourceType> errorReportBySourceType = new ArrayList<>();
         Set<String> handledIdentifiers = new HashSet<>();
         Set<String> searchableIds = new HashSet<>();
         Set<String> nonSearchableIds = new HashSet<>();
@@ -95,7 +96,10 @@ public class IndexingController {
                 }
             }, translatorModel.isAutoRelease());
             if (!updateResultV3.errors.isEmpty()) {
-                errorReportBySourceType.put(translatorModel.getV3translator().getSourceType().getSimpleName(), updateResultV3.errors);
+                ErrorReportResult.ErrorReportResultBySourceType e = new ErrorReportResult.ErrorReportResultBySourceType();
+                e.setSourceType(translatorModel.getV3translator().getSourceType().getSimpleName());
+                e.setErrors(updateResultV3.errors);
+                errorReportBySourceType.add(e);
             }
             handledIdentifiers.addAll(updateResultV3.handledIdentifiers);
             searchableIds.addAll(updateResultV3.searchableIds);
@@ -113,7 +117,10 @@ public class IndexingController {
                 }
             }, translatorModel.isAutoRelease());
             if(!updateResultV2.errors.isEmpty()) {
-                errorReportBySourceType.put(translatorModel.getV2translator().getSourceType().getSimpleName(), updateResultV2.errors);
+                ErrorReportResult.ErrorReportResultBySourceType e = new ErrorReportResult.ErrorReportResultBySourceType();
+                e.setSourceType(translatorModel.getV2translator().getSourceType().getSimpleName());
+                e.setErrors(updateResultV2.errors);
+                errorReportBySourceType.add(e);
             }
             handledIdentifiers.addAll(updateResultV2.handledIdentifiers);
             searchableIds.addAll(updateResultV2.searchableIds);
@@ -125,7 +132,10 @@ public class IndexingController {
             searchableIds.addAll(updateResultV1.searchableIds);
             nonSearchableIds.addAll(updateResultV1.nonSearchableIds);
             if(!updateResultV1.errors.isEmpty()) {
-                errorReportBySourceType.put(translatorModel.getV1translator().getSourceType().getSimpleName(), updateResultV1.errors);
+                ErrorReportResult.ErrorReportResultBySourceType e = new ErrorReportResult.ErrorReportResultBySourceType();
+                e.setSourceType(translatorModel.getV1translator().getSourceType().getSimpleName());
+                e.setErrors(updateResultV1.errors);
+                errorReportBySourceType.add(e);
             }
         }
         if(translatorModel.isAutoRelease()){
