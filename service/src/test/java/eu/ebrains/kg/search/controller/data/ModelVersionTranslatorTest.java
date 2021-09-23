@@ -33,7 +33,6 @@ import eu.ebrains.kg.search.services.KGV2SearchServiceClient;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -67,7 +66,7 @@ public class ModelVersionTranslatorTest {
 
     private void compareModels(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        ModelV2Results queryResult = KGV2ServiceClient.executeQueryForIndexing("query/uniminds/core/modelinstance/v1.0.0/search", dataStage, ModelV2Results.class);
+        ModelV2Results queryResult = KGV2ServiceClient.executeQuery("query/uniminds/core/modelinstance/v1.0.0/search", dataStage, ModelV2Results.class);
         queryResult.getResults().forEach(project -> {
             String id = liveMode?project.getEditorId():project.getIdentifier();
             ElasticSearchDocument doc;

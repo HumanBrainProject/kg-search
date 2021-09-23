@@ -23,7 +23,6 @@
 
 package eu.ebrains.kg.search.controller.translators;
 
-import eu.ebrains.kg.search.configuration.OauthClient;
 import eu.ebrains.kg.search.controller.kg.KG;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.*;
@@ -63,10 +62,10 @@ public class TranslationController {
         logger.info(String.format("Starting to query id %s from %s for live mode", id, translator.getSourceType().getSimpleName()));
         Source source;
         if(useSourceType) {
-           source = kg.executeQuery(translator.getSourceType(), dataStage, queryId, id);
+           source = kg.executeQueryForInstance(translator.getSourceType(), dataStage, queryId, id, false);
         }
         else{
-            final ResultsOfKG<Source> resultsOfKG = kg.executeQuery(translator.getResultType(), dataStage, queryId, id);
+            final ResultsOfKG<Source> resultsOfKG = kg.executeQueryForInstance(translator.getResultType(), dataStage, queryId, id, false);
             if (resultsOfKG.getData() != null) {
                 if (resultsOfKG.getData().isEmpty()) {
                     return null;

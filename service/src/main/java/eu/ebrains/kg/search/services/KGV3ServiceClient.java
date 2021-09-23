@@ -23,11 +23,7 @@
 
 package eu.ebrains.kg.search.services;
 
-import eu.ebrains.kg.search.configuration.OauthClient;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.ErrorReport;
-import eu.ebrains.kg.search.model.source.ResultsOfKG;
-import eu.ebrains.kg.search.model.source.SourceInstanceV1andV2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,23 +33,18 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map;
 
 @Component
-public class KGV3ServiceClient {
+public class KGV3ServiceClient extends KGServiceClient{
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private final WebClient serviceAccountWebClient;
-    private final WebClient userWebClient;
     private final String kgCoreEndpoint;
 
     public KGV3ServiceClient(@Qualifier("asServiceAccount") WebClient serviceAccountWebClient, @Qualifier("asUser") WebClient userWebClient, @Value("${kgcore.endpoint}") String kgCoreEndpoint) {
-        this.serviceAccountWebClient = serviceAccountWebClient;
-        this.userWebClient = userWebClient;
+        super(serviceAccountWebClient, userWebClient);
         this.kgCoreEndpoint = kgCoreEndpoint;
     }
 
@@ -81,14 +72,14 @@ public class KGV3ServiceClient {
         return executeCallForIndexing(clazz, url);
     }
 
-    public <T> T executeQuery(Class<T> clazz, DataStage dataStage, String queryId, String id) {
+    public <T> T executeQueryForInstance(Class<T> clazz, DataStage dataStage, String queryId, String id, boolean asServiceAccount) {
         String url = String.format("%s/queries/%s/instances?stage=%s&instanceId=%s", kgCoreEndpoint, queryId, dataStage, id);
-        return executeCallForLive(clazz, url);
+        return executeCallForInstance(clazz, url, asServiceAccount);
     }
 
-    public Map getInstance(String id, DataStage dataStage) {
+    public Map getInstance(String id, DataStage dataStage, boolean asServiceAccount) {
         String url = String.format("%s/instances/%s?stage=%s&returnIncomingLinks=true", kgCoreEndpoint, id, dataStage);
-        return executeCallForLive(Map.class, url);
+        return executeCallForInstance(Map.class, url, asServiceAccount);
     }
 
     public void uploadQuery(String queryId, String payload) {
@@ -102,30 +93,4 @@ public class KGV3ServiceClient {
                 .block();
     }
 
-
-    private <T> T executeCallForLive(Class<T> clazz, String url) {
-       try {
-           return userWebClient.get()
-                   .uri(url)
-                   .headers(h -> h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
-                   .retrieve()
-                   .bodyToMono(clazz)
-                   .doOnSuccess(KGServiceUtils::parsingErrorHandler)
-                   .doFinally(t -> OauthClient.ERROR_REPORTING_THREAD_LOCAL.remove())
-                   .block();
-       } catch (WebClientResponseException.NotFound e){
-           return null;
-       }
-    }
-
-
-    private <T> T executeCallForIndexing(Class<T> clazz, String url) {
-        return serviceAccountWebClient.get()
-                .uri(url)
-                .headers(h -> h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
-                .retrieve()
-                .bodyToMono(clazz).doOnSuccess(KGServiceUtils::parsingErrorHandler)
-                .doFinally(t -> OauthClient.ERROR_REPORTING_THREAD_LOCAL.remove())
-                .block();
-    }
 }

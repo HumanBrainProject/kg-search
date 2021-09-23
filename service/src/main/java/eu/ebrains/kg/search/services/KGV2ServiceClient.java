@@ -23,36 +23,27 @@
 
 package eu.ebrains.kg.search.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.ebrains.kg.search.configuration.OauthClient;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.DatabaseScope;
-import eu.ebrains.kg.search.model.ErrorReport;
-import eu.ebrains.kg.search.model.source.ResultsOfKG;
-import eu.ebrains.kg.search.model.source.SourceInstanceV1andV2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.*;
+import java.util.Map;
 
 @Component
-public class KGV2ServiceClient {
+public class KGV2ServiceClient extends KGServiceClient {
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private final WebClient webClient;
     private final String kgQueryEndpoint;
     private final String kgCoreEndpoint;
 
 
-    public KGV2ServiceClient(@Qualifier("asUser") WebClient userWebClient, @Value("${kgquery.endpoint}") String kgQueryEndpoint, @Value("${kgcore.endpoint}") String kgCoreEndpoint) {
-        this.webClient = userWebClient;
+    public KGV2ServiceClient(@Qualifier("asServiceAccount") WebClient serviceAccountWebClient, @Qualifier("asUser") WebClient userWebClient, @Value("${kgquery.endpoint}") String kgQueryEndpoint, @Value("${kgcore.endpoint}") String kgCoreEndpoint) {
+        super(serviceAccountWebClient, userWebClient);
         this.kgQueryEndpoint = kgQueryEndpoint;
         this.kgCoreEndpoint = kgCoreEndpoint;
     }
@@ -63,7 +54,7 @@ public class KGV2ServiceClient {
     public String getAuthEndpoint() {
         String url = String.format("%s/users/authorization", kgCoreEndpoint);
         try {
-            Map result = webClient.get()
+            Map result = serviceAccountWebClient.get()
                     .uri(url)
                     .retrieve()
                     .bodyToMono(Map.class)
@@ -77,31 +68,22 @@ public class KGV2ServiceClient {
         }
     }
 
-    public <T> T executeQueryForIndexing(String query, DataStage dataStage, Class<T> clazz) {
+    public <T> T executeQuery(String query, DataStage dataStage, Class<T> clazz) {
         DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
         String url = String.format("%s/query/%s/instances/?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, databaseScope, vocab);
-        return executeCall(clazz, url);
+        return executeCallForIndexing(clazz, url);
     }
 
-    public <T> T executeQueryForIndexing(String query, DataStage dataStage, Class<T> clazz, int from, int size) {
+    public <T> T executeQuery(String query, DataStage dataStage, Class<T> clazz, int from, int size) {
         DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
         String url = String.format("%s/query/%s/search/instances/?databaseScope=%s&vocab=%s&start=%d&size=%d", kgQueryEndpoint, query, databaseScope, vocab, from, size);
-        return executeCall(clazz, url);
+        return executeCallForIndexing(clazz, url);
     }
 
-    public <T> T executeQuery(String query, String id, DataStage dataStage, Class<T> clazz) {
+    public <T> T executeQueryForInstance(String query, String id, DataStage dataStage, Class<T> clazz, boolean asServiceAccount) {
         DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
         String url = String.format("%s/query/%s/search/instances/%s?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, id, databaseScope, vocab);
-        return executeCall(clazz, url);
+        return executeCallForInstance(clazz, url, asServiceAccount);
     }
 
-    private <T> T executeCall(Class<T> clazz, String url) {
-        return webClient.get()
-                .uri(url)
-                .headers(h -> h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
-                .retrieve()
-                .bodyToMono(clazz)
-                .doOnSuccess(KGServiceUtils::parsingErrorHandler).doFinally(t -> OauthClient.ERROR_REPORTING_THREAD_LOCAL.remove())
-                .block();
-    }
 }

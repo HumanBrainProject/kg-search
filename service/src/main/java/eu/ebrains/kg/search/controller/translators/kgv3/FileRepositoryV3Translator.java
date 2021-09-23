@@ -30,6 +30,8 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.FileRepositoryV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.utils.IdUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -39,6 +41,7 @@ import static eu.ebrains.kg.search.controller.translators.kgv3.TranslatorOfKGV3C
 
 public class FileRepositoryV3Translator extends TranslatorV3<FileRepositoryV3, FileRepository, FileRepositoryV3Translator.Result> {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     public static class Result extends ResultsOfKGv3<FileRepositoryV3> {
     }
 
@@ -80,7 +83,10 @@ public class FileRepositoryV3Translator extends TranslatorV3<FileRepositoryV3, F
                 if (type != null) {
                     TargetInternalReference reference = new TargetInternalReference(IdUtils.getUUID(fileRepositoryOf.getId()), fileRepositoryOf.getFullName());
                     final TranslatorModel<?, ?, ?, ?> modelByType = TranslatorModel.getModelByType(type);
-                    if(modelByType.getTargetClass() == DatasetVersion.class){
+                    if(modelByType==null){
+                        logger.error(String.format("No model can be found for type %s - we skip", type));
+                    }
+                    else if(modelByType.getTargetClass() == DatasetVersion.class){
                         f.setDatasetVersion(reference);
                     }
                     else if(modelByType.getTargetClass() == ModelVersion.class){

@@ -24,11 +24,7 @@
 package eu.ebrains.kg.search.controller.kg;
 
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.SourceInstanceV3;
 import eu.ebrains.kg.search.services.KGV3ServiceClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -48,12 +44,12 @@ public class KGv3 implements KG {
     }
 
     @Override
-    public <T> T executeQuery(Class<T> clazz, DataStage dataStage, String queryId, String id) {
-        return kgServiceClient.executeQuery(clazz, dataStage, queryId, id);
+    public <T> T executeQueryForInstance(Class<T> clazz, DataStage dataStage, String queryId, String id, boolean asServiceAccount) {
+        return kgServiceClient.executeQueryForInstance(clazz, dataStage, queryId, id, asServiceAccount);
     }
 
-    public List<String> getTypesOfInstance(String instanceId, DataStage stage) {
-        final Map instance = kgServiceClient.getInstance(instanceId, stage);
+    public List<String> getTypesOfInstance(String instanceId, DataStage stage, boolean asServiceAccount) {
+        final Map instance = kgServiceClient.getInstance(instanceId, stage, asServiceAccount);
         if (instance != null) {
             final Object data = instance.get("data");
             if (data instanceof Map) {

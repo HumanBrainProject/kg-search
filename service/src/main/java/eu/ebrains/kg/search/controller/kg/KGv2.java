@@ -31,9 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
 public class KGv2 implements KG {
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -47,14 +44,14 @@ public class KGv2 implements KG {
 
     @Override
     public <T> T executeQuery(Class<T> clazz, DataStage dataStage, String queryId, int from, int size){
-        return kgV2ServiceClient.executeQueryForIndexing(queryId, dataStage, clazz, from, size);
+        return kgV2ServiceClient.executeQuery(queryId, dataStage, clazz, from, size);
     }
 
     private static class ResultsOfKGV2Source extends ResultsOfKGv2<SourceInstanceIdentifierV1andV2> {}
 
     @Override
-    public <T> T executeQuery(Class<T> clazz, DataStage dataStage, String query, String id) {
-        return  kgV2ServiceClient.executeQuery(query, id, dataStage, clazz);
+    public <T> T executeQueryForInstance(Class<T> clazz, DataStage dataStage, String query, String id, boolean asServiceAccount) {
+        return  kgV2ServiceClient.executeQueryForInstance(query, id, dataStage, clazz, asServiceAccount);
     }
 
 }

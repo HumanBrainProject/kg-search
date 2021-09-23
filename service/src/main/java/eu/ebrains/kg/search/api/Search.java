@@ -130,7 +130,7 @@ public class Search {
     @GetMapping("/{id}/live")
     public ResponseEntity<Map> translate(@PathVariable("id") String id) {
         try {
-            final List<String> typesOfInstance = kgV3.getTypesOfInstance(id, DataStage.IN_PROGRESS);
+            final List<String> typesOfInstance = kgV3.getTypesOfInstance(id, DataStage.IN_PROGRESS, false);
             final TranslatorModel<?, ?, ?, ?> translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator().semanticTypes().stream().anyMatch(typesOfInstance::contains)).findFirst().orElse(null);
             if(translatorModel!=null) {
                 final String queryId = typesOfInstance.stream().map(type -> translatorModel.getV3translator().getQueryIdByType(type)).findFirst().orElse(null);

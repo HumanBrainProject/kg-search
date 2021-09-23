@@ -33,7 +33,6 @@ import eu.ebrains.kg.search.services.KGV2SearchServiceClient;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -67,7 +66,7 @@ public class SubjectTranslatorTest {
 
     private void compareSubjects(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        SubjectV1Results queryResult = KGV2ServiceClient.executeQueryForIndexing("query/minds/experiment/subject/v1.0.0/search", dataStage, SubjectV1Results.class);
+        SubjectV1Results queryResult = KGV2ServiceClient.executeQuery("query/minds/experiment/subject/v1.0.0/search", dataStage, SubjectV1Results.class);
         queryResult.getResults().forEach(subject -> {
             String id = liveMode?subject.getEditorId():subject.getIdentifier();
             ElasticSearchDocument doc;
