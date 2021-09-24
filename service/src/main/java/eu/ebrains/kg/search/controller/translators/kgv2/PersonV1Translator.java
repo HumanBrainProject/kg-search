@@ -23,15 +23,11 @@
 
 package eu.ebrains.kg.search.controller.translators.kgv2;
 
-import eu.ebrains.kg.search.controller.translators.Translator;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.PersonSources;
-import eu.ebrains.kg.search.model.source.PersonV1andV2;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.PersonV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Contributor;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -43,7 +39,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
 
 public class PersonV1Translator extends TranslatorV2<PersonV1, Contributor, PersonV1Translator.Result> {
 
@@ -90,7 +86,7 @@ public class PersonV1Translator extends TranslatorV2<PersonV1, Contributor, Pers
             c.setCustodianOf(person.getCustodianOf().stream()
                     .map(custodianOf ->
                             new TargetInternalReference(
-                                    liveMode ? custodianOf.getRelativeUrl() : String.format("Contributor/%s", custodianOf.getIdentifier()),
+                                    liveMode ? custodianOf.getRelativeUrl() : String.format("Dataset/%s", custodianOf.getIdentifier()),
                                     custodianOf.getName(), null)).collect(Collectors.toList()));
         }
 
