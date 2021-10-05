@@ -26,7 +26,7 @@ package eu.ebrains.kg.search.model.source.openMINDSv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 
-import java.util.*;
+import java.util.List;
 
 public class DatasetV3 extends SourceInstanceV3 {
     private String description;

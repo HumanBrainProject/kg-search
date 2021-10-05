@@ -23,9 +23,11 @@
 
 package eu.ebrains.kg.search.model.source;
 
+import eu.ebrains.kg.search.model.ErrorReport;
+
 import java.util.List;
 
-public class ResultsOfKGv3<E> {
+public class ResultsOfKGv3<E> implements ResultsOfKG<E>{
 
     public static class Error{
         private Integer code;
@@ -56,6 +58,17 @@ public class ResultsOfKGv3<E> {
     private Integer total;
     private Integer size;
     private Integer from;
+    private ErrorReport errors;
+
+    @Override
+    public ErrorReport getErrors() {
+        return errors;
+    }
+
+    @Override
+    public void setErrors(ErrorReport errors) {
+        this.errors = errors;
+    }
 
     public List<E> getData() {
         return data;

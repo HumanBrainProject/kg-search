@@ -23,12 +23,13 @@
 
 package eu.ebrains.kg.search.controller.utils;
 
-import eu.ebrains.kg.search.controller.translators.*;
+import eu.ebrains.kg.search.controller.translators.kgv2.*;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.PersonSources;
-import eu.ebrains.kg.search.model.source.openMINDSv1.*;
+import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
+import eu.ebrains.kg.search.model.source.openMINDSv1.ProjectV1;
+import eu.ebrains.kg.search.model.source.openMINDSv1.SampleV1;
+import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
-import eu.ebrains.kg.search.model.source.openMINDSv2.PersonV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.*;
 
@@ -37,47 +38,47 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class TranslatorTestHelper {
     private static final JsonAdapter jsonAdapter = new JsonAdapter();
 
     private static final List<String> keysToIgnore = new ArrayList<>(Arrays.asList("@timestamp"));
 
-    public static List<String> compareContributor(List<String> sourcesJson, String expectedJson, DataStage dataStage, boolean liveMode) {
+//    public static List<String> compareContributor(List<String> sourcesJson, String expectedJson, DataStage dataStage, boolean liveMode) {
+//
+//        PersonSources sources = new PersonSources();
+//
+//        if (sourcesJson.size() >= 1) {
+//            String sourceJsonV1 = sourcesJson.get(0);
+//            if (sourceJsonV1 != null) {
+//                PersonV1 source = jsonAdapter.fromJson(sourceJsonV1, PersonV1.class);
+//                sources.setPersonV1(source);
+//            }
+//        }
+//
+//        if (sourcesJson.size() >= 2) {
+//            String sourceJsonV2 = sourcesJson.get(1);
+//            if (sourceJsonV2 != null) {
+//                PersonV2 source = jsonAdapter.fromJson(sourceJsonV2, PersonV2.class);
+//                sources.setPersonV2(source);
+//            }
+//        }
+//
+//        Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
+//
+//        return compareContributor(sources, targetExpected, dataStage, liveMode);
+//    }
 
-        PersonSources sources = new PersonSources();
-
-        if (sourcesJson.size() >= 1) {
-            String sourceJsonV1 = sourcesJson.get(0);
-            if (sourceJsonV1 != null) {
-                PersonV1 source = jsonAdapter.fromJson(sourceJsonV1, PersonV1.class);
-                sources.setPersonV1(source);
-            }
-        }
-
-        if (sourcesJson.size() >= 2) {
-            String sourceJsonV2 = sourcesJson.get(1);
-            if (sourceJsonV2 != null) {
-                PersonV2 source = jsonAdapter.fromJson(sourceJsonV2, PersonV2.class);
-                sources.setPersonV2(source);
-            }
-        }
-
-        Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
-
-        return compareContributor(sources, targetExpected, dataStage, liveMode);
-    }
-
-    public static List<String> compareContributor(PersonSources sources, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        ContributorOfKGV2Translator translator = new ContributorOfKGV2Translator();
-
-        Contributor target = translator.translate(sources, dataStage, liveMode);
-        String targetJson = jsonAdapter.toJson(target);
-        Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
-
-        return compareResults(targetExpected, targetResult);
-    }
+//    public static List<String> compareContributor(PersonSources sources, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
+//        ContributorOfKGV2FromPersonV1Translator translator = new ContributorOfKGV2FromPersonV1Translator();
+//
+//        Contributor target = translator.translate(sources, dataStage, liveMode);
+//        String targetJson = jsonAdapter.toJson(target);
+//        Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
+//
+//        return compareResults(targetExpected, targetResult);
+//    }
 
     public static List<String> compareModel(String sourceJson, String expectedJson, DataStage dataStage, boolean liveMode) {
         ModelV2 source = jsonAdapter.fromJson(sourceJson, ModelV2.class);
@@ -86,7 +87,7 @@ public class TranslatorTestHelper {
     }
 
     public static List<String> compareModel(ModelV2 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        ModelVersionOfKGV2Translator translator = new ModelVersionOfKGV2Translator();
+        ModelV2Translator translator = new ModelV2Translator();
         ModelVersion target = translator.translate(source, dataStage, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
@@ -101,7 +102,7 @@ public class TranslatorTestHelper {
     }
 
     public static List<String> compareSubject(SubjectV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        SubjectOfKGV2Translator translator = new SubjectOfKGV2Translator();
+        SubjectV1Translator translator = new SubjectV1Translator();
         Subject target = translator.translate(source, dataStage, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
@@ -117,7 +118,7 @@ public class TranslatorTestHelper {
 
 
     public static List<String> compareSoftware(SoftwareV2 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        SoftwareVersionOfKGV2Translator translator = new SoftwareVersionOfKGV2Translator();
+        SoftwareV2Translator translator = new SoftwareV2Translator();
         SoftwareVersion target = translator.translate(source, dataStage, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
@@ -132,7 +133,7 @@ public class TranslatorTestHelper {
     }
 
     public static List<String> compareSample(SampleV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        SampleOfKGV2Translator translator = new SampleOfKGV2Translator();
+        SampleV1Translator translator = new SampleV1Translator();
         Sample target = translator.translate(source, dataStage, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
@@ -148,7 +149,7 @@ public class TranslatorTestHelper {
 
 
     public static List<String> compareProject(ProjectV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        ProjectOfKGV2Translator translator = new ProjectOfKGV2Translator();
+        ProjectV1Translator translator = new ProjectV1Translator();
         Project target = translator.translate(source, dataStage, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
@@ -162,7 +163,7 @@ public class TranslatorTestHelper {
     }
 
     public static List<String> compareDataset(DatasetV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
-        DatasetVersionOfKGV2Translator translator = new DatasetVersionOfKGV2Translator();
+        DatasetV1Translator translator = new DatasetV1Translator();
         DatasetVersion target = translator.translate(source, dataStage, liveMode);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);

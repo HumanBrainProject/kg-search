@@ -24,13 +24,13 @@
 package eu.ebrains.kg.search.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import eu.ebrains.kg.search.controller.Constants;
+import eu.ebrains.kg.search.controller.kg.KGv2;
 import eu.ebrains.kg.search.controller.kg.KGv3;
 import eu.ebrains.kg.search.controller.labels.LabelsController;
 import eu.ebrains.kg.search.controller.search.SearchController;
 import eu.ebrains.kg.search.controller.translators.TranslationController;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.search.model.TranslatorModel;
 import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.services.KGV2ServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
@@ -55,18 +55,20 @@ public class Search {
     private final LabelsController labelsController;
     private final SearchController searchController;
     private final TranslationController translationController;
+    private final KGv2 kgV2;
     private final KGv3 kgV3;
 
     @Value("${eu.ebrains.kg.commit}")
     String commit;
 
-    public Search(KGV2ServiceClient KGV2ServiceClient, ESServiceClient esServiceClient, LabelsController labelsController, SearchController searchController, TranslationController translationController, KGv3 kgV3) throws JsonProcessingException {
+    public Search(KGV2ServiceClient KGV2ServiceClient, ESServiceClient esServiceClient, LabelsController labelsController, SearchController searchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3) throws JsonProcessingException {
         this.KGV2ServiceClient = KGV2ServiceClient;
         this.esServiceClient = esServiceClient;
         this.labelsController = labelsController;
         this.searchController = searchController;
         this.translationController = translationController;
         this.kgV3 = kgV3;
+        this.kgV2 = kgV2;
     }
 
     @GetMapping("/auth/endpoint")
@@ -92,7 +94,12 @@ public class Search {
     @GetMapping("/groups")
     public ResponseEntity<?> getGroups(Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
-            return ResponseEntity.ok(Constants.GROUPS);
+            return ResponseEntity.ok(Arrays.asList(
+                    Map.of("name", "curated",
+                            "label", "in progress"),
+                    Map.of("name", "public",
+                            "label", "publicly released")
+            ));
         } else {
             return ResponseEntity.ok(Collections.emptyList());
         }
@@ -105,8 +112,16 @@ public class Search {
                                          @PathVariable("version") String version,
                                          @PathVariable("id") String id) {
         try {
-            TargetInstance instance = translationController.createInstanceFromKGv2(DataStage.IN_PROGRESS, true, org, domain, schema, version, id);
-            return ResponseEntity.ok(Map.of("_source", instance));
+            String queryId = String.format("%s/%s/%s/%s", org, domain, schema, version);
+            TranslatorModel<?, ?, ?, ?> translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV2translator()!=null && m.getV2translator().getQueryIds().contains(queryId)).findFirst().orElse(null);
+            if(translatorModel!=null){
+                return ResponseEntity.ok(Map.of("_source", translationController.translateToTargetInstanceForLiveMode(kgV2, translatorModel.getV2translator(), queryId, DataStage.IN_PROGRESS, id, true)));
+            }
+            translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV1translator()!=null && m.getV1translator().getQueryIds().contains(queryId)).findFirst().orElse(null);
+            if(translatorModel!=null){
+                return ResponseEntity.ok(Map.of("_source", translationController.translateToTargetInstanceForLiveMode(kgV2, translatorModel.getV1translator(), queryId, DataStage.IN_PROGRESS, id, true)));
+            }
+            throw new RuntimeException(String.format("Was not able to find a translator for id %s", id));
         } catch (HttpClientErrorException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
         }
@@ -115,8 +130,13 @@ public class Search {
     @GetMapping("/{id}/live")
     public ResponseEntity<Map> translate(@PathVariable("id") String id) {
         try {
-            TargetInstance instance = translationController.createLiveInstanceFromKGv3(DataStage.IN_PROGRESS, true, id);
-            return ResponseEntity.ok(Map.of("_source", instance));
+            final List<String> typesOfInstance = kgV3.getTypesOfInstance(id, DataStage.IN_PROGRESS, false);
+            final TranslatorModel<?, ?, ?, ?> translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator().semanticTypes().stream().anyMatch(typesOfInstance::contains)).findFirst().orElse(null);
+            if(translatorModel!=null) {
+                final String queryId = typesOfInstance.stream().map(type -> translatorModel.getV3translator().getQueryIdByType(type)).findFirst().orElse(null);
+                return queryId == null ? null : ResponseEntity.ok(Map.of("_source", translationController.translateToTargetInstanceForLiveMode(kgV3, translatorModel.getV3translator(), queryId, DataStage.IN_PROGRESS, id, false)));
+            }
+            throw new RuntimeException(String.format("Was not able to find a translator for id %s", id));
         } catch (HttpClientErrorException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
         }
@@ -143,7 +163,8 @@ public class Search {
                 return ResponseEntity.badRequest().build();
             }
             try {
-                kgV3.fetchInstance(repositoryId, DataStage.IN_PROGRESS);
+                //FIXME fix the files for live mechanism
+                //kgV3.fetchInstance(repositoryId, DataStage.IN_PROGRESS);
                 return searchController.getFilesFromRepo(repositoryId, searchAfter, size);
                 
             } catch (WebClientResponseException e) {

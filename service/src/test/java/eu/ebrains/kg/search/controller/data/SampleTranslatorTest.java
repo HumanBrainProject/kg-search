@@ -28,12 +28,11 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SampleV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
-import eu.ebrains.kg.search.services.KGV2ServiceClient;
 import eu.ebrains.kg.search.services.KGV2SearchServiceClient;
+import eu.ebrains.kg.search.services.KGV2ServiceClient;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -65,7 +64,7 @@ public class SampleTranslatorTest {
 
     private void compareSamples(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        SampleV1Results queryResult = KGV2ServiceClient.executeQueryForIndexing("query/minds/experiment/sample/v1.0.0/search", dataStage, SampleV1Results.class);
+        SampleV1Results queryResult = KGV2ServiceClient.executeQuery("query/minds/experiment/sample/v1.0.0/search", dataStage, SampleV1Results.class);
         queryResult.getResults().forEach(sample -> {
             String id = liveMode?sample.getEditorId():sample.getIdentifier();
             ElasticSearchDocument doc;

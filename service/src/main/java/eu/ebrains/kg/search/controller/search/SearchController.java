@@ -127,8 +127,7 @@ public class SearchController {
                     if (StringUtils.isNotEmpty(useHDG) || (!isInInProgressRole(principal) && StringUtils.isNotEmpty(embargo))) {
                         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
                     } else {
-                        String fileType = utils.getNameForClass(File.class);
-                        String fileIndex = ESHelper.getAutoReleasedIndex(fileType);
+                        String fileIndex = ESHelper.getAutoReleasedIndex(File.class);
                         ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size);
                         Map<String, Object> result = formatFilesResponse(filesFromRepo);
                         return ResponseEntity.ok(result);
@@ -142,8 +141,7 @@ public class SearchController {
 
     public ResponseEntity<?> getFilesFromRepo(String id, String searchAfter, int size) {
         try {
-            String fileType = utils.getNameForClass(File.class);
-            String fileIndex = ESHelper.getAutoReleasedIndex(fileType);
+            String fileIndex = ESHelper.getAutoReleasedIndex(File.class);
             ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size);
             Map<String, Object> result = formatFilesResponse(filesFromRepo);
             return ResponseEntity.ok(result);

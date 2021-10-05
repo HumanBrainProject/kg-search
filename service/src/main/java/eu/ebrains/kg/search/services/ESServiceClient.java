@@ -24,9 +24,9 @@
 package eu.ebrains.kg.search.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import eu.ebrains.kg.search.controller.Constants;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
+import eu.ebrains.kg.search.utils.MetaModelUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,6 +45,9 @@ import java.util.Map;
 
 @Component
 public class ESServiceClient {
+
+    private final static Integer esQuerySize = 10000;
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final WebClient webClient;
@@ -81,7 +84,7 @@ public class ESServiceClient {
                     " \"sort\": [\n" +
                     "    {\"_id\": \"asc\"}\n" +
                     " ]\n" +
-                    "}", Constants.esQuerySize);
+                    "}", esQuerySize);
         }
         return String.format("{\n" +
                 " \"size\": %d,\n" +
@@ -91,7 +94,7 @@ public class ESServiceClient {
                 "  \"search_after\": [\n" +
                 "      \"%s\"\n" +
                 "   ]\n" +
-                "}", Constants.esQuerySize, id);
+                "}", esQuerySize, id);
     }
 
     private String getPaginatedFilesQuery(String fileRepositoryId, String searchAfter, int size) {
@@ -151,7 +154,7 @@ public class ESServiceClient {
                     "    }\n" +
                     "  },\n" +
                     " \"_source\": \"false\"\n" +
-                    "}", Constants.esQuerySize, type);
+                    "}", esQuerySize, type);
         }
         return String.format("{\n" +
                 " \"size\": %d,\n" +
@@ -171,7 +174,7 @@ public class ESServiceClient {
                 "    }\n" +
                 "  },\n" +
                 " \"_source\": \"false\"\n" +
-                "}", Constants.esQuerySize, id, type);
+                "}", esQuerySize, id, type);
     }
 
     public ElasticSearchDocument getDocument(String index, String id) {
@@ -204,13 +207,13 @@ public class ESServiceClient {
             ElasticSearchResult documents = getPaginatedDocuments(index, searchAfter);
             List<ElasticSearchDocument> hits = documents.getHits().getHits();
             result.addAll(hits);
-            searchAfter = hits.size() < Constants.esQuerySize ? null:hits.get(hits.size()-1).getId();
+            searchAfter = hits.size() < esQuerySize ? null:hits.get(hits.size()-1).getId();
             continueSearch = searchAfter != null;
         }
         return result;
     }
 
-    public List<String> getDocumentIds(String index, String type) {
+    public List<String> getDocumentIds(String index, Class<?> type) {
         List<String> result = new ArrayList<>();
         String searchAfter = null;
         boolean continueSearch = true;
@@ -218,7 +221,7 @@ public class ESServiceClient {
             ElasticSearchResult documents = getPaginatedDocumentIds(index, searchAfter, type);
             List<ElasticSearchDocument> hits = documents.getHits().getHits();
             hits.forEach(hit -> result.add(hit.getId()));
-            searchAfter = hits.size() < Constants.esQuerySize ? null:hits.get(hits.size()-1).getId();
+            searchAfter = hits.size() < esQuerySize ? null:hits.get(hits.size()-1).getId();
             continueSearch = searchAfter != null;
         }
         return result;
@@ -255,8 +258,8 @@ public class ESServiceClient {
         }
     }
 
-    private ElasticSearchResult getPaginatedDocumentIds(String index, String searchAfter, String type) {
-        String paginatedQuery = getIdsOfPaginatedQuery(searchAfter, type);
+    private ElasticSearchResult getPaginatedDocumentIds(String index, String searchAfter, Class<?> type) {
+        String paginatedQuery = getIdsOfPaginatedQuery(searchAfter, MetaModelUtils.getNameForClass(type));
         return webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
                 .body(BodyInserters.fromValue(paginatedQuery))

@@ -37,8 +37,8 @@ public class ESHelper {
         return dataStage == DataStage.IN_PROGRESS ? INDEX_PREFIX_IN_PROGRESS : INDEX_PREFIX_PUBLICLY_RELEASED;
     }
 
-    public static String getIndex(DataStage dataStage, String type) {
-        return String.format("%s_searchable_%s", getIndexPrefix(dataStage), type.toLowerCase());
+    public static String getIndex(DataStage dataStage, Class<?> type) {
+        return String.format("%s_searchable_%s", getIndexPrefix(dataStage), MetaModelUtils.getIndexNameForClass(type));
     }
 
     public static String getIdentifierIndex(DataStage dataStage) {
@@ -53,7 +53,7 @@ public class ESHelper {
         return String.format("%s_searchable_*", getIndexPrefix(dataStage));
     }
 
-    public static String getAutoReleasedIndex(String type) {
-        return String.format("%s_%s", INDEX_PREFIX_AUTO_RELEASED, type.toLowerCase());
+    public static String getAutoReleasedIndex(Class<?> type) {
+        return String.format("%s_%s", INDEX_PREFIX_AUTO_RELEASED, MetaModelUtils.getIndexNameForClass(type));
     }
 }

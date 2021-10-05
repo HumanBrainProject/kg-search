@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@MetaInfo(name="Contributor", identifier = "uniminds/core/person/v1.0.0/search", order=7, searchable=true)
+@MetaInfo(name="Contributor", order=7, searchable=true)
 public class Contributor implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Contributor");
@@ -85,7 +85,7 @@ public class Contributor implements TargetInstance {
 
     @Override
     @JsonIgnore
-    public boolean isSearchable() {
+    public boolean isSearchableInstance() {
         return true;
     }
 

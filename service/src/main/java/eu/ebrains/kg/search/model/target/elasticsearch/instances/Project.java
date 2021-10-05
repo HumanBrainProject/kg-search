@@ -35,7 +35,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@MetaInfo(name="Project", identifier = "minds/core/placomponent/v1.0.0/search", order=1, searchable=true)
+@MetaInfo(name="Project", order=1, searchable=true)
 @RibbonInfo(content="Datasets", aggregation="count", dataField="search:datasets", singular="dataset", plural="datasets", icon="download")
 public class Project implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
@@ -73,7 +73,7 @@ public class Project implements TargetInstance {
 
     @Override
     @JsonIgnore
-    public boolean isSearchable() {
+    public boolean isSearchableInstance() {
         return true;
     }
 

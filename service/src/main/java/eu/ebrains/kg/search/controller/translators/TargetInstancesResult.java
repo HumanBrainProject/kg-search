@@ -23,21 +23,30 @@
 
 package eu.ebrains.kg.search.controller.translators;
 
-import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.search.model.ErrorReport;
 
 import java.util.List;
 
-public class TargetInstancesResult {
-    private List<TargetInstance> targetInstances;
+public class TargetInstancesResult<Target> {
+    private List<Target> targetInstances;
+    private ErrorReport errors;
     private int from = 0;
     private int size = 0;
     private int total = 0;
 
-    public List<TargetInstance> getTargetInstances() {
+    public ErrorReport getErrors() {
+        return errors;
+    }
+
+    public void setErrors(ErrorReport errors) {
+        this.errors = errors;
+    }
+
+    public List<Target> getTargetInstances() {
         return targetInstances;
     }
 
-    public void setTargetInstances(List<TargetInstance> targetInstances) {
+    public void setTargetInstances(List<Target> targetInstances) {
         this.targetInstances = targetInstances;
     }
 

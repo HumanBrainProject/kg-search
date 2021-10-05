@@ -28,12 +28,11 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
-import eu.ebrains.kg.search.services.KGV2ServiceClient;
 import eu.ebrains.kg.search.services.KGV2SearchServiceClient;
+import eu.ebrains.kg.search.services.KGV2ServiceClient;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -65,7 +64,7 @@ public class SoftwareVersionTranslatorTest {
 
     public void compareSoftware(DataStage dataStage, boolean liveMode) {
         List<String> result = new ArrayList<>();
-        SoftwareV2Results queryResult = KGV2ServiceClient.executeQueryForIndexing("query/softwarecatalog/software/softwareproject/v1.0.0/search", dataStage, SoftwareV2Results.class);
+        SoftwareV2Results queryResult = KGV2ServiceClient.executeQuery("query/softwarecatalog/software/softwareproject/v1.0.0/search", dataStage, SoftwareV2Results.class);
         queryResult.getResults().forEach(software -> {
             String id = liveMode?software.getEditorId():software.getIdentifier();
             ElasticSearchDocument doc;

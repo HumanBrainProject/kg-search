@@ -112,8 +112,12 @@ public class MetaModelUtils {
         return Collections.emptyMap();
     }
 
+    public static String getIndexNameForClass(Class<?> clazz){
+        return getNameForClass(clazz).toLowerCase().replaceAll(" ", "_");
+    }
 
-    public String getNameForClass(Class<?> clazz) {
+
+    public static String getNameForClass(Class<?> clazz) {
         MetaInfo metaInfo = clazz.getAnnotation(MetaInfo.class);
         if (metaInfo != null && !metaInfo.name().isBlank()) {
             return metaInfo.name();

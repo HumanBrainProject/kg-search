@@ -24,12 +24,13 @@
 package eu.ebrains.kg.search.model.source.openMINDSv1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.List;
-
 import eu.ebrains.kg.search.model.source.SourceInstanceV1andV2;
 import eu.ebrains.kg.search.model.source.commonsV1andV2.HasEmbargo;
-import eu.ebrains.kg.search.model.source.commonsV1andV2.*;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.ParcellationRegion;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.SpecimenGroup;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.Subject;
+
+import java.util.List;
 
 public class SampleV1 extends SourceInstanceV1andV2 implements HasEmbargo {
     private String title;

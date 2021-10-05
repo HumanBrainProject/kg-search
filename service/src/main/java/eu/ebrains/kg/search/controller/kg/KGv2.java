@@ -31,47 +31,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
-public class KGv2 {
+public class KGv2 implements KG {
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private final KGV2ServiceClient KGV2ServiceClient;
+    private final KGV2ServiceClient kgV2ServiceClient;
 
     private final int PAGE_SIZE = 20;
 
     public KGv2(KGV2ServiceClient KGV2ServiceClient) {
-        this.KGV2ServiceClient = KGV2ServiceClient;
+        this.kgV2ServiceClient = KGV2ServiceClient;
     }
 
-    public <T> T executeQueryForIndexing(Class<T> clazz, DataStage dataStage, String query){
-        return KGV2ServiceClient.executeQueryForIndexing(query, dataStage, clazz);
+    @Override
+    public <T> T executeQuery(Class<T> clazz, DataStage dataStage, String queryId, int from, int size){
+        return kgV2ServiceClient.executeQuery(queryId, dataStage, clazz, from, size);
     }
 
     private static class ResultsOfKGV2Source extends ResultsOfKGv2<SourceInstanceIdentifierV1andV2> {}
 
-    public List<SourceInstanceIdentifierV1andV2> executeQueryForIndexing(DataStage dataStage, String query){
-        List<SourceInstanceIdentifierV1andV2> result = new ArrayList<>();
-        boolean findMore = true;
-        int from = 0;
-        while (findMore) {
-            logger.debug(String.format("Starting to query %d instances from %d for v1", PAGE_SIZE, from));
-            ResultsOfKGV2Source page = KGV2ServiceClient.executeQueryForIndexing(query, dataStage, ResultsOfKGV2Source.class, from, PAGE_SIZE);
-            logger.debug(String.format("Successfully queried %d instances from %d of a total of %d for v1", page.getResults().size(), from, page.getTotal()));
-            result.addAll(page.getResults());
-            from = page.getStart() + page.getSize();
-            findMore = from < page.getTotal();
-        }
-        return result;
-    }
-
-    public <T> T executeQuery(Class<T> clazz, DataStage dataStage, String query, String id) {
-        return  KGV2ServiceClient.executeQuery(query, id, dataStage, clazz);
-    }
-
-    public <T> T executeQueryByIdentifier(Class<T> clazz, DataStage dataStage, String query, String identifier) {
-        return  KGV2ServiceClient.executeQueryByIdentifier(query, identifier, dataStage, clazz);
+    @Override
+    public <T> T executeQueryForInstance(Class<T> clazz, DataStage dataStage, String query, String id, boolean asServiceAccount) {
+        return  kgV2ServiceClient.executeQueryForInstance(query, id, dataStage, clazz, asServiceAccount);
     }
 
 }

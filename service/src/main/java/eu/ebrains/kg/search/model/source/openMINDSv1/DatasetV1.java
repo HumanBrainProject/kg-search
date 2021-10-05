@@ -26,7 +26,6 @@ package eu.ebrains.kg.search.model.source.openMINDSv1;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import eu.ebrains.kg.search.model.source.SourceInstanceV1andV2;
-import eu.ebrains.kg.search.model.source.commonsV1andV2.HasEmbargo;
 import eu.ebrains.kg.search.model.source.commonsV1andV2.*;
 
 import java.util.List;
@@ -64,6 +63,10 @@ public class DatasetV1 extends SourceInstanceV1andV2 implements HasEmbargo {
     private List<String> modalityForFilter;
     private List<String> embargo;
     private boolean useHDG;
+
+    public boolean isContainerUrlAsZIP() {
+        return containerUrlAsZIP;
+    }
 
     public boolean isUseHDG() { return useHDG; }
 
@@ -201,6 +204,18 @@ public class DatasetV1 extends SourceInstanceV1andV2 implements HasEmbargo {
 
         @JsonProperty("thumbnail_url")
         private List<String> thumbnailUrl;
+
+        public List<Boolean> getIsPreviewAnimated() {
+            return isPreviewAnimated;
+        }
+
+        public void setIsPreviewAnimated(List<Boolean> isPreviewAnimated) {
+            this.isPreviewAnimated = isPreviewAnimated;
+        }
+
+        public boolean isPrivateAccess() {
+            return privateAccess;
+        }
 
         public String getAbsolutePath() { return absolutePath; }
 

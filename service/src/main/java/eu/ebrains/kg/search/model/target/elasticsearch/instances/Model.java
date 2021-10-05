@@ -38,7 +38,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@MetaInfo(name = "ModelVersions", identifier = "https://openminds.ebrains.eu/core/Model", order = 2)
+@MetaInfo(name = "ModelVersions")
 public class Model implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private final Value<String> type = new Value<>("ModelVersions");
@@ -93,7 +93,7 @@ public class Model implements TargetInstance {
 
     @Override
     @JsonIgnore
-    public boolean isSearchable() {
+    public boolean isSearchableInstance() {
         return false;
     }
 

@@ -23,8 +23,10 @@
 
 package eu.ebrains.kg.search.model.target.elasticsearch.instances.commons;
 
-import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
+
+import java.util.Objects;
 
 public class TargetInternalReference {
 
@@ -74,5 +76,18 @@ public class TargetInternalReference {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TargetInternalReference that = (TargetInternalReference) o;
+        return Objects.equals(reference, that.reference) && Objects.equals(value, that.value) && Objects.equals(uuid, that.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(reference, value, uuid);
     }
 }

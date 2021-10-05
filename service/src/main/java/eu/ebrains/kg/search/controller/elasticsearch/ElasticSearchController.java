@@ -29,6 +29,9 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
+import eu.ebrains.kg.search.utils.MetaModelUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -44,13 +47,15 @@ public class ElasticSearchController {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ESServiceClient esServiceClient;
     private final int ESOperationsMaxCharPayload = 1000000;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public ElasticSearchController(ESServiceClient esServiceClient) {
         this.esServiceClient = esServiceClient;
     }
 
-    public void recreateSearchIndex(Map<String, Object> mapping, String type, DataStage dataStage) {
+    public void recreateSearchIndex(Map<String, Object> mapping, Class<?> type, DataStage dataStage) {
         String index = ESHelper.getIndex(dataStage, type);
+        logger.info(String.format("Creating index %s for %s", index, MetaModelUtils.getNameForClass(type)));
         try {
             esServiceClient.deleteIndex(index);
         } catch (WebClientResponseException e) {
@@ -59,10 +64,12 @@ public class ElasticSearchController {
             }
         }
         esServiceClient.createIndex(index, mapping);
+        logger.info(String.format("Successfully created index %s for %s", index, MetaModelUtils.getNameForClass(type)));
     }
 
     public void recreateIdentifiersIndex(Map<String, Object> mapping, DataStage dataStage) {
         String index = ESHelper.getIdentifierIndex(dataStage);
+        logger.info(String.format("Creating identifier index %s", index));
         try {
             esServiceClient.deleteIndex(index);
         } catch (WebClientResponseException e) {
@@ -71,10 +78,12 @@ public class ElasticSearchController {
             }
         }
         esServiceClient.createIndex(index, mapping);
+        logger.info(String.format("Successfully created identifier index %s", index));
     }
 
-    public void recreateAutoReleasedIndex(Map<String, Object> mapping, String type) {
+    public void recreateAutoReleasedIndex(Map<String, Object> mapping, Class<?> type) {
         String index = ESHelper.getAutoReleasedIndex(type);
+        logger.info(String.format("Creating index %s for %s", index, MetaModelUtils.getNameForClass(type)));
         try {
             esServiceClient.deleteIndex(index);
         } catch (WebClientResponseException e) {
@@ -83,9 +92,10 @@ public class ElasticSearchController {
             }
         }
         esServiceClient.createIndex(index, mapping);
+        logger.info(String.format("Successfully created index %s for %s", index, MetaModelUtils.getNameForClass(type)));
     }
 
-    private List<StringBuilder> getInsertOperations(List<TargetInstance> instances) {
+    private List<StringBuilder> getInsertOperations(List<? extends TargetInstance> instances) {
         List<StringBuilder> result = new ArrayList<>();
         if (CollectionUtils.isEmpty(instances)) {
             return result;
@@ -107,7 +117,7 @@ public class ElasticSearchController {
         return result;
     }
 
-    private List<StringBuilder> getDeleteOperations(String index, String type, Set<String> idsToKeep) {
+    private List<StringBuilder> getDeleteOperations(String index, Class<?> type, Set<String> idsToKeep) {
         List<StringBuilder> result = new ArrayList<>();
         result.add(new StringBuilder());
         List<String> ids = esServiceClient.getDocumentIds(index, type);
@@ -127,48 +137,42 @@ public class ElasticSearchController {
         return result;
     }
 
-    private void updateIndex(String index, List<TargetInstance> instances) {
+    private void updateIndex(String index, List<? extends TargetInstance> instances) {
         List<StringBuilder> operationsList = getInsertOperations(instances);
         if (!CollectionUtils.isEmpty(operationsList)) {
             esServiceClient.updateIndex(index, operationsList);
         }
     }
 
-    private void removeDeprecatedDocuments(String index, String type, Set<String> idsToKeep) {
+    private void removeDeprecatedDocuments(String index,  Class<?> type, Set<String> idsToKeep) {
         List<StringBuilder> operationsList = getDeleteOperations(index, type, idsToKeep);
         if (!CollectionUtils.isEmpty(operationsList)) {
             esServiceClient.updateIndex(index, operationsList);
         }
     }
 
-    public void updateSearchIndex(List<TargetInstance> instances, String type, DataStage dataStage) {
-        String index = ESHelper.getIndex(dataStage, type);
-        updateIndex(index, instances);
+    public void updateSearchIndex(List<? extends TargetInstance> instances, Class<?> type, DataStage dataStage) {
+        updateIndex(ESHelper.getIndex(dataStage, type), instances);
     }
 
-    public void updateIdentifiersIndex(List<TargetInstance> instances, DataStage dataStage) {
-        String index = ESHelper.getIdentifierIndex(dataStage);
-        updateIndex(index, instances);
+    public void updateIdentifiersIndex(List<? extends TargetInstance> instances, DataStage dataStage) {
+        updateIndex(ESHelper.getIdentifierIndex(dataStage), instances);
     }
 
-    public void updateAutoReleasedIndex(List<TargetInstance> instances, String type) {
-        String index = ESHelper.getAutoReleasedIndex(type);
-        updateIndex(index, instances);
+    public void updateAutoReleasedIndex(List<? extends TargetInstance> instances, Class<?> type) {
+        updateIndex(ESHelper.getAutoReleasedIndex(type), instances);
     }
 
-    public void removeDeprecatedDocumentsFromSearchIndex(String type, DataStage dataStage, Set<String> idsToKeep) {
-        String index = ESHelper.getIndex(dataStage, type);
-        removeDeprecatedDocuments(index, type, idsToKeep);
+    public void removeDeprecatedDocumentsFromSearchIndex( Class<?> type, DataStage dataStage, Set<String> idsToKeep) {
+        removeDeprecatedDocuments(ESHelper.getIndex(dataStage, type), type, idsToKeep);
     }
 
-    public void removeDeprecatedDocumentsFromIdentifiersIndex(String type, DataStage dataStage, Set<String> idsToKeep) {
-        String index = ESHelper.getIdentifierIndex(dataStage);
-        removeDeprecatedDocuments(index, type, idsToKeep);
+    public void removeDeprecatedDocumentsFromIdentifiersIndex(Class<?> type, DataStage dataStage, Set<String> idsToKeep) {
+        removeDeprecatedDocuments(ESHelper.getIdentifierIndex(dataStage), type, idsToKeep);
     }
 
-    public void removeDeprecatedDocumentsFromAutoReleasedIndex(String type, Set<String> idsToKeep) {
-        String index = ESHelper.getAutoReleasedIndex(type);
-        removeDeprecatedDocuments(index, type, idsToKeep);
+    public void removeDeprecatedDocumentsFromAutoReleasedIndex(Class<?> type, Set<String> idsToKeep) {
+        removeDeprecatedDocuments(ESHelper.getAutoReleasedIndex(type), type, idsToKeep);
     }
 
 }

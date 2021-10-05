@@ -30,5 +30,13 @@ public interface TargetInstance {
 
     List<String> getIdentifier();
 
-    boolean isSearchable();
+    /**
+     * @return true if this instance shall be available for search.
+     * This allows to only flag a subset of a type for search-indexing
+     * (e.g. only the latest version of a {@link eu.ebrains.kg.search.model.target.elasticsearch.instances.DatasetVersion})
+     *
+     * Please note, that if any instance of a type is a searchable instance,
+     * you also need to specify this in its {@link MetaInfo}
+     */
+    boolean isSearchableInstance();
 }

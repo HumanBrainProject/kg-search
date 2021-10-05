@@ -39,15 +39,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Component
-public class KGV3ServiceClient {
+public class KGV3ServiceClient extends KGServiceClient{
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private final WebClient serviceAccountWebClient;
-    private final WebClient userWebClient;
     private final String kgCoreEndpoint;
 
     public KGV3ServiceClient(@Qualifier("asServiceAccount") WebClient serviceAccountWebClient, @Qualifier("asUser") WebClient userWebClient, @Value("${kgcore.endpoint}") String kgCoreEndpoint) {
-        this.serviceAccountWebClient = serviceAccountWebClient;
-        this.userWebClient = userWebClient;
+        super(serviceAccountWebClient, userWebClient);
         this.kgCoreEndpoint = kgCoreEndpoint;
     }
 
@@ -75,14 +72,14 @@ public class KGV3ServiceClient {
         return executeCallForIndexing(clazz, url);
     }
 
-    public <T> T executeQuery(Class<T> clazz, DataStage dataStage, String queryId, String id) {
+    public <T> T executeQueryForInstance(Class<T> clazz, DataStage dataStage, String queryId, String id, boolean asServiceAccount) {
         String url = String.format("%s/queries/%s/instances?stage=%s&instanceId=%s", kgCoreEndpoint, queryId, dataStage, id);
-        return executeCallForLive(clazz, url);
+        return executeCallForInstance(clazz, url, asServiceAccount);
     }
 
-    public Map getInstance(String id, DataStage dataStage) {
+    public Map getInstance(String id, DataStage dataStage, boolean asServiceAccount) {
         String url = String.format("%s/instances/%s?stage=%s&returnIncomingLinks=true", kgCoreEndpoint, id, dataStage);
-        return executeCallForLive(Map.class, url);
+        return executeCallForInstance(Map.class, url, asServiceAccount);
     }
 
     public void uploadQuery(String queryId, String payload) {
@@ -96,32 +93,4 @@ public class KGV3ServiceClient {
                 .block();
     }
 
-    public void releaseQuery(String queryId){
-        String url = String.format("%s/instances/%s/release", kgCoreEndpoint, queryId);
-        serviceAccountWebClient.put()
-                .uri(url)
-                .headers(h -> h.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
-    }
-
-
-    private <T> T executeCallForLive(Class<T> clazz, String url) {
-        return userWebClient.get()
-                .uri(url)
-                .headers(h -> h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
-                .retrieve()
-                .bodyToMono(clazz)
-                .block();
-    }
-
-    private <T> T executeCallForIndexing(Class<T> clazz, String url) {
-        return serviceAccountWebClient.get()
-                .uri(url)
-                .headers(h -> h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
-                .retrieve()
-                .bodyToMono(clazz)
-                .block();
-    }
 }

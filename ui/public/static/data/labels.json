@@ -3,7 +3,6 @@
     "_source": {
         "Project": {
             "https://schema.hbp.eu/searchUi/order": 1,
-            "http://schema.org/identifier": "minds/core/placomponent/v1.0.0/search",
             "https://schema.hbp.eu/searchUi/ribbon": {
                 "https://schema.hbp.eu/searchUi/icon": "download",
                 "https://schema.hbp.eu/searchUi/framed": {
@@ -61,7 +60,6 @@
         },
         "Dataset": {
             "https://schema.hbp.eu/searchUi/order": 2,
-            "http://schema.org/identifier": "minds/core/dataset/v1.0.0/search",
             "https://schema.hbp.eu/searchUi/defaultSelection": true,
             "https://schema.hbp.eu/searchUi/ribbon": {
                 "https://schema.hbp.eu/searchUi/icon": "download",
@@ -284,8 +282,7 @@
         },
         "Sample": {
             "https://schema.hbp.eu/searchUi/order": 4,
-            "http://schema.org/identifier": "minds/experiment/sample/v1.0.0/search",
-            "fields": {
+             "fields": {
                 "identifier": {
                     "https://schema.hbp.eu/searchUi/visible": false
                 },
@@ -400,7 +397,6 @@
         },
         "Model": {
             "https://schema.hbp.eu/searchUi/order": 5,
-            "http://schema.org/identifier": "uniminds/core/modelinstance/v1.0.0/search",
             "fields": {
                 "identifier": {
                     "https://schema.hbp.eu/searchUi/visible": false,
@@ -521,7 +517,6 @@
         },
         "Contributor": {
             "https://schema.hbp.eu/searchUi/order": 7,
-            "http://schema.org/identifier": "uniminds/core/person/v1.0.0/search",
             "fields": {
                 "identifier": {
                     "https://schema.hbp.eu/searchUi/visible": false
@@ -581,7 +576,6 @@
         },
         "Software": {
             "https://schema.hbp.eu/searchUi/order": 6,
-            "http://schema.org/identifier": "softwarecatalog/software/softwareproject/v1.0.0/search",
             "fields": {
                 "identifier": {
                     "https://schema.hbp.eu/searchUi/visible": false,
@@ -652,7 +646,6 @@
         },
         "Subject": {
             "https://schema.hbp.eu/searchUi/order": 3,
-            "http://schema.org/identifier": "minds/experiment/subject/v1.0.0/search",
             "fields": {
                 "identifier": {
                     "https://schema.hbp.eu/searchUi/visible": false

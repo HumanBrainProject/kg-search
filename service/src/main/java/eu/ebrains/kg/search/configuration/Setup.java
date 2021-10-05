@@ -23,9 +23,10 @@
 
 package eu.ebrains.kg.search.configuration;
 
-import eu.ebrains.kg.search.constants.Queries;
+import eu.ebrains.kg.search.model.TranslatorModel;
 import eu.ebrains.kg.search.services.KGV3ServiceClient;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 @Component
 public class Setup {
@@ -53,31 +53,26 @@ public class Setup {
     }
 
     @PostConstruct
-    public void uploadQueries() throws IOException {
+    public void uploadQueries() {
         if(uploadQueries) {
             logger.info("Now uploading queries for search...");
-            uploadQuery(Queries.DATASET_QUERY_ID, Queries.DATASET_QUERY_RESOURCE);
-            uploadQuery(Queries.DATASET_VERSION_QUERY_ID, Queries.DATASET_VERSION_QUERY_RESOURCE);
-            uploadQuery(Queries.DATASET_VERSION_IDENTIFIER_QUERY_ID, Queries.DATASET_VERSION_IDENTIFIER_QUERY_RESOURCE);
-            uploadQuery(Queries.CONTRIBUTOR_QUERY_ID, Queries.CONTRIBUTOR_QUERY_RESOURCE);
-            uploadQuery(Queries.CONTRIBUTOR_IDENTIFIER_QUERY_ID, Queries.CONTRIBUTOR_IDENTIFIER_QUERY_RESOURCE);
-            uploadQuery(Queries.SOFTWARE_QUERY_ID, Queries.SOFTWARE_QUERY_RESOURCE);
-            uploadQuery(Queries.SOFTWARE_VERSION_QUERY_ID, Queries.SOFTWARE_VERSION_QUERY_RESOURCE);
-            uploadQuery(Queries.SOFTWARE_VERSION_IDENTIFIER_QUERY_ID, Queries.SOFTWARE_VERSION_IDENTIFIER_QUERY_RESOURCE);
-            uploadQuery(Queries.MODEL_QUERY_ID, Queries.MODEL_QUERY_RESOURCE);
-            uploadQuery(Queries.MODEL_VERSION_QUERY_ID, Queries.MODEL_VERSION_QUERY_RESOURCE);
-            uploadQuery(Queries.MODEL_VERSION_IDENTIFIER_QUERY_ID, Queries.MODEL_VERSION_IDENTIFIER_QUERY_RESOURCE);
-            uploadQuery(Queries.PROJECT_QUERY_ID, Queries.PROJECT_QUERY_RESOURCE);
-            uploadQuery(Queries.PROJECT_IDENTIFIER_QUERY_ID, Queries.PROJECT_IDENTIFIER_QUERY_RESOURCE);
-            uploadQuery(Queries.SAMPLE_QUERY_ID, Queries.SAMPLE_QUERY_RESOURCE);
-            uploadQuery(Queries.SAMPLE_IDENTIFIER_QUERY_ID, Queries.SAMPLE_IDENTIFIER_QUERY_RESOURCE);
-            uploadQuery(Queries.SUBJECT_QUERY_ID, Queries.SUBJECT_QUERY_RESOURCE);
-            uploadQuery(Queries.SUBJECT_IDENTIFIER_QUERY_ID, Queries.SUBJECT_IDENTIFIER_QUERY_RESOURCE);
-            uploadQuery(Queries.FILE_REPOSITORY_QUERY_ID, Queries.FILE_REPOSITORY_QUERY_RESOURCE);
-            uploadQuery(Queries.FILE_QUERY_ID, Queries.FILE_QUERY_RESOURCE);
-            for (String controlledTermType : Queries.CONTROLLED_TERM_TYPES) {
-                uploadSharedQueryTemplate(Queries.CONTROLLED_TERM_QUERY_ID, controlledTermType, Queries.CONTROLLED_TERM_QUERY_RESOURCE);
-            }
+            TranslatorModel.MODELS.parallelStream().map(TranslatorModel::getV3translator).filter(Objects::nonNull).forEach(t -> {
+                final String simpleName = t.getClass().getSimpleName();
+                final String filename = StringUtils.uncapitalize(simpleName.substring(0, simpleName.indexOf("V3")));
+                try{
+                    String payload = loadQuery(filename);
+                    for (String semanticType : t.semanticTypes()) {
+                        final String queryId = t.getQueryIdByType(semanticType);
+                        logger.info(String.format("Uploading query %s from file %s for type %s", queryId, filename, semanticType));
+                        Map<String, Object> properties = new HashMap<>();
+                        properties.put("type", semanticType);
+                        kgv3ServiceClient.uploadQuery(queryId, StringSubstitutor.replace(payload, properties));
+                    }
+                }
+                catch (IOException e){
+                    throw new RuntimeException(e);
+                }
+            });
             logger.info("Queries successfully uploaded!");
         }
         else{
@@ -85,26 +80,14 @@ public class Setup {
         }
     }
 
-
-    private void uploadSharedQueryTemplate(String queryId, String type, String path) throws IOException {
-        String specificQueryId = Queries.getTemplateQueryId(queryId, type);
-        String query = loadQuery(path);
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("type", type);
-        logger.info(String.format("Uploading template query %s for type %s with id %s...", path, type, specificQueryId));
-        kgv3ServiceClient.uploadQuery(specificQueryId, StringSubstitutor.replace(query, properties));
-        kgv3ServiceClient.releaseQuery(specificQueryId);
-    }
-
-    private String loadQuery(String path) throws IOException {
-        return IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream(path)), StandardCharsets.UTF_8);
+    private String loadQuery(String fileName) throws IOException {
+        return IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream(String.format("/queries/%s.json", fileName))), StandardCharsets.UTF_8);
     }
 
 
     private void uploadQuery(String queryId, String path) throws IOException {
-        logger.info(String.format("Uploading %s with id %s...", path, queryId));
+
         kgv3ServiceClient.uploadQuery(queryId, loadQuery(path));
-        kgv3ServiceClient.releaseQuery(queryId);
     }
 
 }

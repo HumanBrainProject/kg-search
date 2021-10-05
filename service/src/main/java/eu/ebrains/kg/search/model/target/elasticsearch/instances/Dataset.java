@@ -35,7 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 
-@MetaInfo(name = "DatasetVersions", identifier = "https://openminds.ebrains.eu/core/Dataset", order = 2)
+@MetaInfo(name = "DatasetVersions", order = 2)
 public class Dataset implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private final Value<String> type = new Value<>("DatasetVersions");
@@ -89,7 +89,7 @@ public class Dataset implements TargetInstance {
 
     @Override
     @JsonIgnore
-    public boolean isSearchable() {
+    public boolean isSearchableInstance() {
         return false;
     }
 

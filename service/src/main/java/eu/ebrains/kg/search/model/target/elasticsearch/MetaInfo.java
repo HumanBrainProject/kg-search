@@ -27,13 +27,29 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface MetaInfo {
     String name();
-    String identifier();
-    int order();
+
+    /**
+     * @return an ordinal number which decides the sorting order of relative types.
+     * This is only required for searchable types which is why it defaults to -1 for all others.
+     */
+    int order() default -1;
+
+    /**
+     * @return true if this is the type that shall be preselected by a UI. This value should be true only for a single
+     * type to avoid ambiguity
+     */
     boolean defaultSelection() default false;
+    /**
+     * Defines if a target object is searchable as such
+     * (independent of the fact if all instances of this type are actually searchable ->
+     * e.g. for {@link eu.ebrains.kg.search.model.target.elasticsearch.instances.DatasetVersion} only the latest version is searchable,
+     * the annotation for the {@link eu.ebrains.kg.search.model.target.elasticsearch.instances.DatasetVersion} type is still searchable=true though)
+     *
+     * To define which individual instances are actually searchable, please specify {@link TargetInstance#isSearchableInstance()}
+     */
     boolean searchable() default false;
 }

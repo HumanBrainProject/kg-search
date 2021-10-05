@@ -23,21 +23,17 @@
 
 package eu.ebrains.kg.search.controller.translators;
 
-import eu.ebrains.kg.search.model.source.commonsV1andV2.HasEmbargo;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class TranslatorCommons {
 
-    static <T> T firstItemOrNull(List<T> list) {
+    public static <T> T firstItemOrNull(List<T> list) {
         return list != null && !list.isEmpty() ? list.get(0) : null;
     }
 
-    static <T> List<T> emptyToNull(List<T> list) {
+    public static <T> List<T> emptyToNull(List<T> list) {
         return CollectionUtils.isEmpty(list) ? null : list;
     }
 

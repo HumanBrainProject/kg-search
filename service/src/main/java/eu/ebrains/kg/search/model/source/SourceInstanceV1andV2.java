@@ -23,30 +23,33 @@
 
 package eu.ebrains.kg.search.model.source;
 
-import eu.ebrains.kg.search.model.source.SourceInstance;
-
 import java.util.Date;
 
 public class SourceInstanceV1andV2 implements SourceInstance {
-    private String id;
     private String identifier;
     private String editorId;
-
+    //TODO The dates in v1 are mixed -> They are saved in multiple formats. Not sure if we can apply a deserialization
+    //
+    //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private Date firstReleaseAt;
+    //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private Date lastReleaseAt;
-
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
 
     public String getIdentifier() {
         return identifier;
     }
+
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
 
-    public String getEditorId() { return editorId; }
-    public void setEditorId(String editorId) { this.editorId = editorId; }
+    public String getEditorId() {
+        return editorId;
+    }
+
+    public void setEditorId(String editorId) {
+        this.editorId = editorId;
+    }
 
     public Date getFirstReleaseAt() {
         return firstReleaseAt;

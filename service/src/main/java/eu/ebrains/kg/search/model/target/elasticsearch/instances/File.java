@@ -31,8 +31,8 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
 import java.util.List;
 
-@MetaInfo(name = "File", identifier = "https://openminds.ebrains.eu/core/File", order = 12)
-public class    File implements TargetInstance {
+@MetaInfo(name = "File")
+public class File implements TargetInstance {
     @JsonIgnore
     private final Value<String> type = new Value<>("File");
 
@@ -73,7 +73,7 @@ public class    File implements TargetInstance {
 
     @Override
     @JsonIgnore
-    public boolean isSearchable() {
+    public boolean isSearchableInstance() {
         return false;
     }
 
