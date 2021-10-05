@@ -28,6 +28,7 @@ import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 import {faEnvelope} from "@fortawesome/free-solid-svg-icons/faEnvelope";
 import {faFile} from "@fortawesome/free-solid-svg-icons/faFile";
 import {faFolder} from "@fortawesome/free-solid-svg-icons/faFolder";
+import {faCircleNotch} from "@fortawesome/free-solid-svg-icons/faCircleNotch";
 import {faClipboard} from "@fortawesome/free-solid-svg-icons/faClipboard";
 import {faDownload} from "@fortawesome/free-solid-svg-icons/faDownload";
 import {faBars} from "@fortawesome/free-solid-svg-icons/faBars";
@@ -58,6 +59,7 @@ library.add(
   faEnvelope,
   faFile,
   faFolder,
+  faCircleNotch,
   faClipboard,
   faDownload,
   faBars,
