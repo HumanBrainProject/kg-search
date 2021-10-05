@@ -45,8 +45,8 @@ public @interface MetaInfo {
     boolean defaultSelection() default false;
     /**
      * Defines if a target object is searchable as such
-     * (independent of the fact if all instances of this type are actually searchable ->
-     * e.g. for {@link eu.ebrains.kg.search.model.target.elasticsearch.instances.DatasetVersion} only the latest version is searchable,
+     * (independent of the fact if all instances of this type are actually searchable e.g. for
+     * {@link eu.ebrains.kg.search.model.target.elasticsearch.instances.DatasetVersion} only the latest version is searchable,
      * the annotation for the {@link eu.ebrains.kg.search.model.target.elasticsearch.instances.DatasetVersion} type is still searchable=true though)
      *
      * To define which individual instances are actually searchable, please specify {@link TargetInstance#isSearchableInstance()}
