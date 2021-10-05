@@ -32,7 +32,7 @@ import eu.ebrains.kg.search.utils.IdUtils;
 import java.util.Collections;
 import java.util.List;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
 public class SubjectV3Translator extends TranslatorV3<SubjectV3, Subject, SubjectV3Translator.Result> {
 

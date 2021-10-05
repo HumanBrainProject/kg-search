@@ -62,7 +62,6 @@ public class LabelsController {
         result.put(SEARCH_UI_NAMESPACE + "order", order);
         MetaInfo metaInfo = clazz.getAnnotation(MetaInfo.class);
         if (metaInfo != null) {
-            result.put("http://schema.org/identifier", metaInfo.identifier());
             if (metaInfo.defaultSelection()) {
                 result.put(SEARCH_UI_NAMESPACE + "defaultSelection", true);
             }

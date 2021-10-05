@@ -23,25 +23,10 @@
 
 package eu.ebrains.kg.search.controller.data;
 
-import eu.ebrains.kg.search.controller.utils.TranslatorTestHelper;
-import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.PersonSources;
-import eu.ebrains.kg.search.model.source.PersonV1andV2;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.PersonV1;
 import eu.ebrains.kg.search.model.source.openMINDSv2.PersonV2;
-import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.services.KGV2ServiceClient;
-import eu.ebrains.kg.search.services.KGV2SearchServiceClient;
-import org.apache.commons.io.IOUtils;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.util.CollectionUtils;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
 
 public class ContributorOfKGV2TranslatorTest {
 

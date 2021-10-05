@@ -42,10 +42,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.firstItemOrNull;
-import static eu.ebrains.kg.search.controller.translators.kgv3.TranslatorOfKGV3Commons.UNDER_EMBARGO;
-import static eu.ebrains.kg.search.controller.translators.kgv3.TranslatorOfKGV3Commons.hasEmbargoStatus;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
+import static eu.ebrains.kg.search.controller.translators.kgv3.TranslatorOfKGV3Commons.*;
 
 public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, ModelVersion, ModelVersionV3Translator.Result> {
 

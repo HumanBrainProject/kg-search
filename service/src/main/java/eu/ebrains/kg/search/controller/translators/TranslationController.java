@@ -25,16 +25,17 @@ package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.controller.kg.KG;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.*;
+import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.Helpers.getStats;
+import static eu.ebrains.kg.search.controller.translators.Helpers.*;
 
 @Component
 public class TranslationController {

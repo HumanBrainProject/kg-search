@@ -23,21 +23,6 @@
 
 package eu.ebrains.kg.search.controller.mapping;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import eu.ebrains.kg.search.utils.MetaModelUtils;
-import org.junit.Assert;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 class MappingControllerTest {
 
 

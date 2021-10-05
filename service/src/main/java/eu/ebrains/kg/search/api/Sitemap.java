@@ -24,8 +24,8 @@
 package eu.ebrains.kg.search.api;
 
 
-import eu.ebrains.kg.search.model.SitemapXML;
 import eu.ebrains.kg.search.controller.sitemap.SitemapController;
+import eu.ebrains.kg.search.model.SitemapXML;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

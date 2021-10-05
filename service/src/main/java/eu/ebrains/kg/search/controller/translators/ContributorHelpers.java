@@ -28,6 +28,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ISODate
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import org.springframework.util.CollectionUtils;
+
 import java.util.*;
 import java.util.stream.Collectors;
 

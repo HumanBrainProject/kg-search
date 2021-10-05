@@ -23,13 +23,11 @@
 
 package eu.ebrains.kg.search.controller.translators.kgv2;
 
-import eu.ebrains.kg.search.controller.translators.Translator;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Subject;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.search.utils.IdUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
@@ -37,7 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
 public class SubjectV1Translator extends TranslatorV2<SubjectV1, Subject, SubjectV1Translator.Result> {
 
@@ -108,7 +106,6 @@ public class SubjectV1Translator extends TranslatorV2<SubjectV1, Subject, Subjec
             s.setDatasetExists(!datasets.isEmpty());
             s.setDatasets(emptyToNull(datasets));
         }
-        s.setSearchable(true);
         return s;
     }
 }

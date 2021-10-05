@@ -26,8 +26,6 @@ package eu.ebrains.kg.search.controller.translators.kgv2;
 import eu.ebrains.kg.search.controller.translators.Translator;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 
-import java.util.List;
-
 public abstract class TranslatorV2<Source, Target, Result extends ResultsOfKG<Source>> implements Translator<Source, Target, Result> {
 
 }

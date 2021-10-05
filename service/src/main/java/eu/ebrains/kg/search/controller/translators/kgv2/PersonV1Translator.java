@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
 public class PersonV1Translator extends TranslatorV2<PersonV1, Contributor, PersonV1Translator.Result> {
 

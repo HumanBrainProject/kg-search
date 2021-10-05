@@ -24,7 +24,6 @@
 package eu.ebrains.kg.search.controller.translators.kgv3;
 
 import eu.ebrains.kg.search.controller.translators.Translator;
-import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 
 import java.util.List;

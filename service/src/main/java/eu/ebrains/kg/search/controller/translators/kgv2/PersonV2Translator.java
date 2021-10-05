@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
 public class PersonV2Translator extends TranslatorV2<PersonV2, Contributor, PersonV2Translator.Result> {
 
@@ -94,7 +94,7 @@ public class PersonV2Translator extends TranslatorV2<PersonV2, Contributor, Pers
             c.setCustodianOfModel(person.getCustodianOfModel().stream()
                     .map(custodianOfModel ->
                             new TargetInternalReference(
-                                    liveMode ? custodianOfModel.getRelativeUrl() : String.format("Contributor/%s", custodianOfModel.getIdentifier()),
+                                    liveMode ? custodianOfModel.getRelativeUrl() : String.format("Model/%s", custodianOfModel.getIdentifier()),
                                     custodianOfModel.getName(), null)).collect(Collectors.toList()));
         }
 

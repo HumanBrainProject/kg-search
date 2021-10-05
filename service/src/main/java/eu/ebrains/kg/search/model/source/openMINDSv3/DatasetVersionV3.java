@@ -24,11 +24,10 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.SourceInternalReference;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.SourceInternalReference;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
 import java.util.Date;
 import java.util.List;

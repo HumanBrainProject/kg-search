@@ -24,16 +24,16 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.search.model.target.elasticsearch.*;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
-import org.apache.commons.lang3.StringUtils;
+import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
+import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
+import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
+import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@MetaInfo(name = "Controlled term", identifier = "https://openminds.ebrains.eu/controlledTerms/*", order = 12)
+@MetaInfo(name = "Controlled term")
 public class ControlledTerm implements TargetInstance {
 
     @FieldInfo(ignoreForSearch = true, visible = false)
@@ -142,5 +142,5 @@ public class ControlledTerm implements TargetInstance {
 
     @Override
     @JsonIgnore
-    public boolean isSearchable() { return false; }
+    public boolean isSearchableInstance() { return false; }
 }

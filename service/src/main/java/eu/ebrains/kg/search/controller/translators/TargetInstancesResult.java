@@ -24,11 +24,8 @@
 package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.ErrorReport;
-import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class TargetInstancesResult<Target> {
     private List<Target> targetInstances;

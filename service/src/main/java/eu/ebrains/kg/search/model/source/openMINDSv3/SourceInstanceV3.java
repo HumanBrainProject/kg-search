@@ -27,7 +27,6 @@ import eu.ebrains.kg.search.model.source.SourceInstance;
 import eu.ebrains.kg.search.utils.IdUtils;
 
 import java.util.List;
-import java.util.UUID;
 
 public class SourceInstanceV3 implements SourceInstance {
     private String id;

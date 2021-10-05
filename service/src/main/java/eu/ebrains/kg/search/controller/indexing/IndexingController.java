@@ -174,7 +174,7 @@ public class IndexingController {
                         Target handledInstance = instanceHandler!=null ? instanceHandler.apply(instance) : instance;
                         updateResult.handledIdentifiers.add(handledInstance.getId());
                         updateResult.handledIdentifiers.addAll(handledInstance.getIdentifier());
-                        if (handledInstance.isSearchable()) {
+                        if (handledInstance.isSearchableInstance()) {
                             updateResult.searchableIds.add(handledInstance.getId());
                             searchableInstances.add(handledInstance);
                         } else {

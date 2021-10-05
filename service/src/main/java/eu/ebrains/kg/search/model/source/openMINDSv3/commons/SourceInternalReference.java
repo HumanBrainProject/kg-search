@@ -23,8 +23,6 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3.commons;
 
-import java.util.List;
-
 public class SourceInternalReference {
     private String id;
     private String fullName;

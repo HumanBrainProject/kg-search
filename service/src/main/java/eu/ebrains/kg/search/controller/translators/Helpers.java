@@ -24,8 +24,6 @@
 package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
-import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
-import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

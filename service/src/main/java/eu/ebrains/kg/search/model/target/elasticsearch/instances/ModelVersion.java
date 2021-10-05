@@ -29,14 +29,17 @@ import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ISODateValue;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@MetaInfo(name = "Model", identifier = "uniminds/core/modelinstance/v1.0.0/search", order = 5, searchable=true)
+@MetaInfo(name = "Model", order = 5, searchable=true)
 public class ModelVersion implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Model");
@@ -124,7 +127,7 @@ public class ModelVersion implements TargetInstance {
     private boolean isSearchable;
 
     @Override
-    public boolean isSearchable() {
+    public boolean isSearchableInstance() {
         return isSearchable;
     }
 

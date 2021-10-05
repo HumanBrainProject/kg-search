@@ -23,13 +23,11 @@
 
 package eu.ebrains.kg.search.controller.translators.kgv2;
 
-import eu.ebrains.kg.search.controller.translators.Translator;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.SoftwareVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
-import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -39,8 +37,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.firstItemOrNull;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
 public class SoftwareV2Translator extends TranslatorV2<SoftwareV2, SoftwareVersion, SoftwareV2Translator.Result> {
 

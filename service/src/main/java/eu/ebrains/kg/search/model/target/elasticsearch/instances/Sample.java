@@ -23,7 +23,6 @@
 
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
@@ -36,7 +35,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@MetaInfo(name = "Sample", identifier = "minds/experiment/sample/v1.0.0/search", order = 4, searchable=true)
+@MetaInfo(name = "Sample")
 public class Sample implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Sample");
@@ -94,16 +93,9 @@ public class Sample implements TargetInstance {
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 
-    @JsonIgnore
-    private boolean isSearchable;
-
     @Override
-    public boolean isSearchable() {
-        return isSearchable;
-    }
-
-    public void setSearchable(boolean searchable) {
-        isSearchable = searchable;
+    public boolean isSearchableInstance() {
+        return false;
     }
 
 

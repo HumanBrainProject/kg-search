@@ -36,7 +36,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
-@MetaInfo(name = "FileRepository", identifier = "https://openminds.ebrains.eu/core/FileRepository", order = 11)
+@MetaInfo(name = "FileRepository")
 public class FileRepository implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private final Value<String> type = new Value<>("FileRepository");
@@ -94,7 +94,7 @@ public class FileRepository implements TargetInstance {
 
     @Override
     @JsonIgnore
-    public boolean isSearchable() { return false; }
+    public boolean isSearchableInstance() { return false; }
 
     public Value<String> getEmbargo() {
         return embargo;

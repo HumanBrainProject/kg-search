@@ -25,8 +25,8 @@ package eu.ebrains.kg.search.model.source.openMINDSv1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import eu.ebrains.kg.search.model.source.commonsV1andV2.ListOrSingleStringAsStringDeserializer;
 import eu.ebrains.kg.search.model.source.SourceInstanceV1andV2;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.ListOrSingleStringAsStringDeserializer;
 import eu.ebrains.kg.search.model.source.commonsV1andV2.SourceInternalReference;
 import eu.ebrains.kg.search.model.source.commonsV1andV2.SpecimenGroup;
 

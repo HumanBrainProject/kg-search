@@ -23,7 +23,6 @@
 
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
@@ -39,7 +38,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@MetaInfo(name = "Subject", identifier = "minds/experiment/subject/v1.0.0/search", order = 3, searchable=true)
+@MetaInfo(name = "Subject")
 public class Subject implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Subject");
@@ -96,16 +95,9 @@ public class Subject implements TargetInstance {
     @FieldInfo(ignoreForSearch = true, visible = false, facet = FieldInfo.Facet.EXISTS)
     private boolean datasetExists;
 
-    @JsonIgnore
-    private boolean isSearchable;
-
     @Override
-    public boolean isSearchable() {
-        return isSearchable;
-    }
-
-    public void setSearchable(boolean searchable) {
-        isSearchable = searchable;
+    public boolean isSearchableInstance() {
+        return false;
     }
 
     public boolean isDatasetExists() {

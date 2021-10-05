@@ -3,7 +3,7 @@ package eu.ebrains.kg.search.model;
 import eu.ebrains.kg.search.controller.mergers.ContributorMerger;
 import eu.ebrains.kg.search.controller.mergers.Merger;
 import eu.ebrains.kg.search.controller.mergers.ProjectMerger;
-import eu.ebrains.kg.search.controller.translators.*;
+import eu.ebrains.kg.search.controller.translators.Translator;
 import eu.ebrains.kg.search.controller.translators.kgv2.*;
 import eu.ebrains.kg.search.controller.translators.kgv3.*;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv2;

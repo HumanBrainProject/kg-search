@@ -23,13 +23,13 @@
 
 package eu.ebrains.kg.search.controller.utils;
 
-import eu.ebrains.kg.search.controller.translators.*;
 import eu.ebrains.kg.search.controller.translators.kgv2.*;
 import eu.ebrains.kg.search.model.DataStage;
-import eu.ebrains.kg.search.model.source.PersonSources;
-import eu.ebrains.kg.search.model.source.openMINDSv1.*;
+import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
+import eu.ebrains.kg.search.model.source.openMINDSv1.ProjectV1;
+import eu.ebrains.kg.search.model.source.openMINDSv1.SampleV1;
+import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
-import eu.ebrains.kg.search.model.source.openMINDSv2.PersonV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.*;
 
@@ -38,7 +38,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class TranslatorTestHelper {
     private static final JsonAdapter jsonAdapter = new JsonAdapter();

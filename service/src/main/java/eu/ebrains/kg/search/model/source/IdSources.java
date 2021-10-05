@@ -23,9 +23,6 @@
 
 package eu.ebrains.kg.search.model.source;
 
-import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
-import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
-
 public class IdSources {
     private String idV1;
     private String idV2;

@@ -27,7 +27,9 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.services.KGV3ServiceClient;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 
 @Component
