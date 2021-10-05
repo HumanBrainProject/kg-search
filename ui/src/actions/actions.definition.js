@@ -125,10 +125,6 @@ export const loadDefinition = () => {
   };
 
   const simplifySemanticKeyForType = mapping => {
-    if (mapping[SCHEMA_ORG + "identifier"]) {
-      mapping.identifier = mapping[SCHEMA_ORG + "identifier"];
-      delete mapping[SCHEMA_ORG + "identifier"];
-    }
     if (mapping[SCHEMA_ORG + "name"]) {
       mapping.name = mapping[SCHEMA_ORG + "name"];
       delete mapping[SCHEMA_ORG + "name"];
