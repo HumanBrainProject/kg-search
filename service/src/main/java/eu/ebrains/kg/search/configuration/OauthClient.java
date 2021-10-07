@@ -62,7 +62,7 @@ public class OauthClient {
 
 
     public OauthClient(ObjectMapper objectMapper) {
-            this.objectMapper = objectMapper;
+        this.objectMapper = objectMapper;
         this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         this.objectMapper.addHandler(new DeserializationProblemHandler() {
             @Override

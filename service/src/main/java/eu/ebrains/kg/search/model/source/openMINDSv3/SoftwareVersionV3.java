@@ -23,6 +23,8 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.ListOrSingleStringAsStringDeserializer;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
 
@@ -30,6 +32,7 @@ import java.util.List;
 
 public class SoftwareVersionV3 extends SourceInstanceV3 {
     private String version;
+    @JsonDeserialize(using = ListOrSingleStringAsStringDeserializer.class)
     private String doi;
     private String howToCite;
     private String description;
@@ -37,6 +40,7 @@ public class SoftwareVersionV3 extends SourceInstanceV3 {
     private SoftwareVersions software;
     private List<String> applicationCategory;
     private List<String> operatingSystem;
+    @JsonDeserialize(using = ListOrSingleStringAsStringDeserializer.class)
     private String homepage;
     private List<PersonOrOrganizationRef> developer;
     private List<PersonOrOrganizationRef> custodian;
