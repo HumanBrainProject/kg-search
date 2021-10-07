@@ -39,12 +39,12 @@ import "./Instance.css";
 export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, previews, buttons, main, summary, groups, NavigationComponent, ImagePreviewsComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch }) => {
 
   useEffect(() => {
-    trackEvent("Opened");
-  }, [id, type, group]);
+    trackEvent(hasNoData);
+  }, [id, hasNoData, group]);
 
-  const trackEvent = reason => {
-    const relativeUrl = `${path}${type}/${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
-    ReactPiwik.push(["trackEvent", "Card", reason, relativeUrl]);
+  const trackEvent = hasNoData => {
+    const relativeUrl = `${path}/${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
+    ReactPiwik.push(["trackEvent", "Card", hasNoData?"NotFound":"Opened", relativeUrl]);
   };
 
   const onVersionChange = version => {
@@ -56,7 +56,6 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
   };
 
   if (hasNoData) {
-    trackEvent("NotFound");
     return(
       <BgError show={true} message="This data is currently not available." />
     );
