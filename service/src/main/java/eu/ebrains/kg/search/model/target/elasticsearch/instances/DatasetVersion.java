@@ -80,8 +80,8 @@ public class DatasetVersion implements TargetInstance {
     @FieldInfo(label = "Download Dataset", isButton = true, termsOfUse = true, icon="download")
     private TargetExternalReference zip;
 
-    @FieldInfo(label = "Get data", isButton = true, icon="download", isDirectDownload = true)
-    private TargetInternalReference fileRepository;
+    @FieldInfo(label = "Get data", isButton = true, markdown = true, icon="download")
+    private Value<String> fileRepository;
 
     @FieldInfo(label = "Cite dataset", isButton = true, markdown = true, icon="quote-left")
     private Value<String> citation;
@@ -126,6 +126,9 @@ public class DatasetVersion implements TargetInstance {
     @FieldInfo(label = "Files", layout = FieldInfo.Layout.GROUP, isHierarchicalFiles = true, termsOfUse = true)
     private List<TargetFile> files;
 
+    @FieldInfo(label = "Files", isHierarchicalFiles = true, isAsync=true, layout = FieldInfo.Layout.GROUP)
+    private String filesAsyncUrl;
+
     @JsonProperty("external_datalink")
     @FieldInfo(label = "Data download", layout = FieldInfo.Layout.GROUP)
     private List<TargetExternalReference> externalDatalink;
@@ -145,6 +148,12 @@ public class DatasetVersion implements TargetInstance {
     @FieldInfo(label = "Modality", type = FieldInfo.Type.TEXT, facet = FieldInfo.Facet.LIST)
     private List<Value<String>> modalityForFilter;
 
+    @FieldInfo(label = "Experimental approach")
+    private List<TargetInternalReference> experimentalApproach;
+
+    @FieldInfo(label = "Technique")
+    private List<TargetInternalReference> technique;
+
     @FieldInfo(label = "Methods", facet = FieldInfo.Facet.LIST, order = 2, layout = FieldInfo.Layout.SUMMARY, overview = true, isFilterableFacet = true, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>")
     private List<Value<String>> methods;
 
@@ -157,6 +166,8 @@ public class DatasetVersion implements TargetInstance {
     @FieldInfo(label = "Subjects", layout = FieldInfo.Layout.GROUP, hint = "List of experimental subjects that are a part of this dataset.", isTable = true)
     private List<Children<Subject>> subjects; //TODO: Explain the children structure
 
+    @FieldInfo(label = "Subjects", layout = FieldInfo.Layout.GROUP, hint = "List of experimental subjects that are a part of this dataset.", isTable = true)
+    private List<Children<NewSubject>> subjectsNew; //TODO: Explain the children structure
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
@@ -464,6 +475,13 @@ public class DatasetVersion implements TargetInstance {
         this.subjects = subject == null ? null : subject.stream().map(Children::new).collect(Collectors.toList());
     }
 
+    public void setSubjectsNew(List<NewSubject> subjectNew) {
+        this.subjectsNew = subjectNew == null ? null : subjectNew.stream().map(Children::new).collect(Collectors.toList());
+    }
+
+    public List<Children<NewSubject>> getSubjectsNew() {
+        return subjectsNew;
+    }
 
     public ISODateValue getFirstRelease() {
         return firstRelease;
@@ -511,11 +529,11 @@ public class DatasetVersion implements TargetInstance {
         this.dataset = dataset;
     }
 
-    public TargetInternalReference getFileRepository() {
+    public Value<String> getFileRepository() {
         return fileRepository;
     }
 
-    public void setFileRepository(TargetInternalReference fileRepository) {
+    public void setFileRepository(Value<String> fileRepository) {
         this.fileRepository = fileRepository;
     }
 
@@ -525,6 +543,31 @@ public class DatasetVersion implements TargetInstance {
 
     public void setNewInThisVersion(Value<String> newInThisVersion) {
         this.newInThisVersion = newInThisVersion;
+    }
+
+    public List<TargetInternalReference> getExperimentalApproach() {
+        return experimentalApproach;
+    }
+
+    public void setExperimentalApproach(List<TargetInternalReference> experimentalApproach) {
+        this.experimentalApproach = experimentalApproach;
+    }
+
+    public List<TargetInternalReference> getTechnique() {
+        return technique;
+    }
+
+    public void setTechnique(List<TargetInternalReference> technique) {
+        this.technique = technique;
+    }
+
+    public String getFilesAsyncUrl() {
+        return filesAsyncUrl;
+    }
+
+
+    public void setFilesAsyncUrl(String filesAsyncUrl) {
+        this.filesAsyncUrl = filesAsyncUrl;
     }
 
     public static class Subject {
@@ -651,6 +694,106 @@ public class DatasetVersion implements TargetInstance {
 
         public void setSamples(List<TargetInternalReference> samples) {
             this.samples = samples;
+        }
+    }
+
+
+    public static class NewSubject {
+        public NewSubject() {
+        }
+
+        public NewSubject(TargetInternalReference subjectName,
+                          List<TargetInternalReference> species,
+                       List<TargetInternalReference> sex,
+                       String age,
+                       List<TargetInternalReference> ageCategory,
+                       String weight, TargetInternalReference strain) {
+            this.subjectName = subjectName;
+            this.species = species;
+            this.sex = sex;
+            this.age = StringUtils.isBlank(age) ? null : new Value<>(age);
+            this.ageCategory = ageCategory;
+            this.weight = StringUtils.isBlank(weight) ? null : new Value<>(weight);
+            this.strain = strain;
+        }
+
+
+        @JsonProperty("subject_name")
+        @FieldInfo(label = "Name", groupBy = true) //TODO: convert groupby to groupBy
+        private TargetInternalReference subjectName;
+
+        @FieldInfo(label = "Species")
+        private List<TargetInternalReference> species;
+
+        @FieldInfo(label = "Sex")
+        private List<TargetInternalReference> sex;
+
+        @FieldInfo(label = "Age")
+        private Value<String> age;
+
+        @FieldInfo(label = "Age category")
+        private List<TargetInternalReference> ageCategory;
+
+        @FieldInfo(label = "Weight")
+        private Value<String> weight;
+
+        @FieldInfo(label = "Strain")
+        private TargetInternalReference strain;
+
+        public TargetInternalReference getSubjectName() {
+            return subjectName;
+        }
+
+        public void setSubjectName(TargetInternalReference subjectName) {
+            this.subjectName = subjectName;
+        }
+
+        public List<TargetInternalReference> getSpecies() {
+            return species;
+        }
+
+        public void setSpecies(List<TargetInternalReference> species) {
+            this.species = species;
+        }
+
+        public List<TargetInternalReference> getSex() {
+            return sex;
+        }
+
+        public void setSex(List<TargetInternalReference> sex) {
+            this.sex = sex;
+        }
+
+        public Value<String> getAge() {
+            return age;
+        }
+
+        public void setAge(Value<String> age) {
+            this.age = age;
+        }
+
+        public List<TargetInternalReference> getAgeCategory() {
+            return ageCategory;
+        }
+
+        public void setAgeCategory(List<TargetInternalReference> ageCategory) {
+            this.ageCategory = ageCategory;
+        }
+
+        public Value<String> getWeight() {
+            return weight;
+        }
+
+        public void setWeight(Value<String> weight) {
+            this.weight = weight;
+        }
+
+        public TargetInternalReference getStrain() {
+            return strain;
+        }
+
+        public void setStrain(TargetInternalReference strain) {
+            this.strain = strain;
         }
     }
 }

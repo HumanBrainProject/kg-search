@@ -169,12 +169,22 @@
           "path": "@id"
         },
         {
+          "propertyName": "query:internalIdentifier",
+          "path": "https://openminds.ebrains.eu/vocab/internalIdentifier"
+        },
+        {
           "propertyName": "query:species",
-          "path": [
-            "https://openminds.ebrains.eu/vocab/species",
-            "https://openminds.ebrains.eu/vocab/name"
-          ],
-          "singleValue": "FIRST"
+          "path": "https://openminds.ebrains.eu/vocab/species",
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:fullName",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            }
+          ]
         },
         {
           "propertyName": "query:ages",
@@ -207,9 +217,16 @@
         },
         {
           "propertyName": "query:biologicalSex",
-          "path": [
-            "https://openminds.ebrains.eu/vocab/biologicalSex",
-            "https://openminds.ebrains.eu/vocab/name"
+          "path": "https://openminds.ebrains.eu/vocab/biologicalSex",
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:fullName",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            }
           ]
         }
       ]
@@ -337,29 +354,36 @@
     },
     {
       "propertyName": "query:experimentalApproach",
-      "path": [
-        "https://openminds.ebrains.eu/vocab/experimentalApproach",
-        "https://openminds.ebrains.eu/vocab/name"
+      "path": "https://openminds.ebrains.eu/vocab/experimentalApproach",
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:technique",
+      "path": "https://openminds.ebrains.eu/vocab/technique",
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        }
       ]
     },
     {
       "propertyName": "query:protocols",
       "path": "https://openminds.ebrains.eu/vocab/protocol",
       "structure": [
-        {
-          "propertyName": "query:technique",
-          "path": "https://openminds.ebrains.eu/vocab/technique",
-          "structure": [
-            {
-              "propertyName": "query:ontologyIdentifier",
-              "path": "https://openminds.ebrains.eu/vocab/ontologyIdentifier"
-            },
-            {
-              "propertyName": "query:name",
-              "path": "https://openminds.ebrains.eu/vocab/name"
-            }
-          ]
-        },
         {
           "propertyName": "query:behavioralTask",
           "path": "https://openminds.ebrains.eu/vocab/behavioralTask",

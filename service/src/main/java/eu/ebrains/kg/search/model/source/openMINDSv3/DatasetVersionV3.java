@@ -53,7 +53,8 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private List<Protocol> protocols;
     private NameWithIdentifier accessibility;
     private FileRepository fileRepository;
-    private List<String> experimentalApproach;
+    private List<FullNameRef> experimentalApproach;
+    private List<FullNameRef> technique;
 
     public String getDescription() {
         return description;
@@ -215,19 +216,28 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
         return fileRepository;
     }
 
-    public List<String> getExperimentalApproach() {
+    public List<FullNameRef> getExperimentalApproach() {
         return experimentalApproach;
     }
 
-    public void setExperimentalApproach(List<String> experimentalApproach) {
+    public List<FullNameRef> getTechnique() {
+        return technique;
+    }
+
+    public void setTechnique(List<FullNameRef> technique) {
+        this.technique = technique;
+    }
+
+    public void setExperimentalApproach(List<FullNameRef> experimentalApproach) {
         this.experimentalApproach = experimentalApproach;
     }
 
     public static class Specimen {
         private String specimenId;
-        private String species;
+        private String internalIdentifier;
+        private List<FullNameRef> species;
         private List<Age> ages;
-        private List<String> biologicalSex;
+        private List<FullNameRef> biologicalSex;
 
         public String getSpecimenId() {
             return specimenId;
@@ -237,12 +247,8 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
             this.specimenId = specimenId;
         }
 
-        public String getSpecies() {
-            return species;
-        }
-
-        public void setSpecies(String species) {
-            this.species = species;
+        public String getInternalIdentifier() {
+            return internalIdentifier;
         }
 
         public List<Age> getAges() {
@@ -253,11 +259,19 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
             this.ages = ages;
         }
 
-        public List<String> getBiologicalSex() {
+        public List<FullNameRef> getSpecies() {
+            return species;
+        }
+
+        public void setSpecies(List<FullNameRef> species) {
+            this.species = species;
+        }
+
+        public List<FullNameRef> getBiologicalSex() {
             return biologicalSex;
         }
 
-        public void setBiologicalSex(List<String> biologicalSex) {
+        public void setBiologicalSex(List<FullNameRef> biologicalSex) {
             this.biologicalSex = biologicalSex;
         }
     }
@@ -377,17 +391,8 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     }
 
     public static class Protocol {
-        private List<OntologicalTerm> technique;
         private List<OntologicalTerm> behavioralTask;
         private List<String> studyOption;
-
-        public List<OntologicalTerm> getTechnique() {
-            return technique;
-        }
-
-        public void setTechnique(List<OntologicalTerm> technique) {
-            this.technique = technique;
-        }
 
         public List<OntologicalTerm> getBehavioralTask() {
             return behavioralTask;

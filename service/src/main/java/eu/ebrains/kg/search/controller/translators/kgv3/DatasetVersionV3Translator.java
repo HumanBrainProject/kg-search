@@ -116,6 +116,13 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                 case RESTRICTED_ACCESS:
                     d.setEmbargo(DatasetVersion.RESTRICTED_ACCESS_MESSAGE);
                     break;
+                default:
+                    if (datasetVersion.getFileRepository() != null) {
+                        //TODO handle indexed mode
+                        if (liveMode) {
+                            d.setFilesAsyncUrl(String.format("/api/repositories/%s/files/live", IdUtils.getUUID(datasetVersion.getFileRepository().getId())));
+                        }
+                    }
             }
             d.setEmbargoForFilter(new Value<>(datasetVersion.getAccessibility().getName()));
             d.setDataAccessibility(datasetVersion.getAccessibility().getName());
@@ -129,15 +136,22 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         //TODO d.setExternalDatalink
         //d.setFiles -> replaced with d.setFileRepository
 
-        if(datasetVersion.getProtocols() != null){
-            d.setMethods(datasetVersion.getProtocols().stream().map(DatasetVersionV3.Protocol::getTechnique)
-                    .filter(Objects::nonNull).flatMap(Collection::stream)
-                    .map(DatasetVersionV3.OntologicalTerm::getName)
-                    .filter(Objects::nonNull).distinct().sorted().collect(Collectors.toList()));
 
+        if(datasetVersion.getExperimentalApproach()!=null){
+            final List<TargetInternalReference> experimentalApproach = datasetVersion.getExperimentalApproach().stream().filter(Objects::nonNull).filter(e -> StringUtils.isNotBlank(e.getFullName()))
+                    .map(e -> new TargetInternalReference(IdUtils.getUUID(e.getId()), e.getFullName())).collect(Collectors.toList());
+            if(!experimentalApproach.isEmpty()){
+                d.setExperimentalApproach(experimentalApproach);
+            }
         }
 
-        d.setModalityForFilter(datasetVersion.getExperimentalApproach());
+        if(datasetVersion.getTechnique()!=null){
+            final List<TargetInternalReference> technique = datasetVersion.getTechnique().stream().filter(Objects::nonNull).filter(e -> StringUtils.isNotBlank(e.getFullName()))
+                    .map(e -> new TargetInternalReference(IdUtils.getUUID(e.getId()), e.getFullName())).collect(Collectors.toList());
+            if(!technique.isEmpty()){
+                d.setTechnique(technique);
+            }
+        }
 
         //TODO d.setZip -> goes to the file download section (file repository) -> shouldn't we materialize this?
         //TODO d.setDataDescriptor ->
@@ -175,11 +189,11 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setNewInThisVersion(new Value<>(datasetVersion.getVersionInnovation()));
         }
 
-
-        if (dataset != null && StringUtils.isNotBlank(dataset.getFullName())) {
-            d.setTitle(dataset.getFullName());
-        } else if (StringUtils.isNotBlank(datasetVersion.getFullName())) {
+        if (StringUtils.isNotBlank(datasetVersion.getFullName())) {
             d.setTitle(datasetVersion.getFullName());
+        }
+        else if (dataset != null && StringUtils.isNotBlank(dataset.getFullName())) {
+            d.setTitle(dataset.getFullName());
         }
         if (!CollectionUtils.isEmpty(datasetVersion.getAuthor())) {
             d.setContributors(datasetVersion.getAuthor().stream()
@@ -219,9 +233,8 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setProjects(datasetVersion.getProjects().stream().map(r -> new TargetInternalReference(IdUtils.getUUID(r.getId()), r.getFullName())).collect(Collectors.toList()));
         }
 
-        if (datasetVersion.getFileRepository() != null) {
-            d.setFileRepository(new TargetInternalReference(datasetVersion.getFileRepository().getId(), datasetVersion.getFileRepository().getFullName()));
-        }
+
+
 
         List<PersonOrOrganizationRef> custodians = datasetVersion.getCustodians();
         if(CollectionUtils.isEmpty(custodians) && datasetVersion.getDataset() != null){
@@ -237,8 +250,25 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setKeywords(datasetVersion.getKeyword());
         }
         if(!CollectionUtils.isEmpty(datasetVersion.getStudiedSpecimen())){
-            d.setSpeciesFilter(datasetVersion.getStudiedSpecimen().stream().map(DatasetVersionV3.Specimen::getSpecies).filter(Objects::nonNull).distinct().sorted().collect(Collectors.toList()));
+            d.setSpeciesFilter(datasetVersion.getStudiedSpecimen().stream().map(s -> s.getSpecies()).flatMap(Collection::stream).map(s -> s.getFullName()).filter(Objects::nonNull).distinct().sorted().collect(Collectors.toList()));
+            final List<DatasetVersion.NewSubject> subjects = datasetVersion.getStudiedSpecimen().stream().map(s ->
+                    new DatasetVersion.NewSubject(new TargetInternalReference(IdUtils.getUUID(s.getSpecimenId()), s.getInternalIdentifier()),
+                            s.getSpecies().stream().map(species -> new TargetInternalReference(IdUtils.getUUID(species.getId()), species.getFullName())).collect(Collectors.toList()),
+                            s.getBiologicalSex().stream().map(sex -> new TargetInternalReference(IdUtils.getUUID(sex.getId()), sex.getFullName())).collect(Collectors.toList()),
+                            null,
+                            null,
+                            null,
+                            null)
+
+            ).collect(Collectors.toList());
+            if(!subjects.isEmpty()) {
+                d.setSubjectsNew(subjects);
+            }
+
         }
+
+
+
 
         return d;
     }
