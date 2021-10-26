@@ -29,19 +29,29 @@ import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.SoftwareVersionV3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.SoftwareVersion;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
-
 public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3, SoftwareVersion, SoftwareVersionV3Translator.Result> {
+
+    private static Children<SoftwareVersion.FileFormat> translateFileFormat(SoftwareVersionV3.FileFormat i) {
+        SoftwareVersion.FileFormat f = new SoftwareVersion.FileFormat();
+        f.setName(i.getName() != null ? new Value<>(i.getName()) : null);
+        f.setRelatedMediaType(i.getRelatedMediaType() != null ? new Value<>(i.getRelatedMediaType()) : null);
+        f.setFileExtensions(!CollectionUtils.isEmpty(i.getFileExtension()) ? i.getFileExtension().stream().map(Value::new).collect(Collectors.toList()) : null);
+        return new Children<>(f);
+    }
 
     public static class Result extends ResultsOfKGv3<SoftwareVersionV3> {
     }
@@ -74,11 +84,11 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
     public SoftwareVersion translate(SoftwareVersionV3 softwareVersion, DataStage dataStage, boolean liveMode) {
         SoftwareVersion s = new SoftwareVersion();
         SoftwareVersionV3.SoftwareVersions software = softwareVersion.getSoftware();
-        s.setVersion(softwareVersion.getVersion());
+
         s.setId(IdUtils.getUUID(softwareVersion.getId()));
         s.setIdentifier(IdUtils.getUUID(softwareVersion.getIdentifier()));
 
-        List<Version> versions = software == null?null:software.getVersions();
+        List<Version> versions = software == null ? null:software.getVersions();
         if (!CollectionUtils.isEmpty(versions)) {
             List<Version> sortedVersions = Helpers.sort(versions);
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
@@ -89,21 +99,16 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         } else {
             s.setSearchable(true);
         }
-        if (!StringUtils.isBlank(softwareVersion.getDescription())) {
-            s.setDescription(softwareVersion.getDescription());
-        } else if (software != null) {
-            s.setDescription(software.getDescription());
+
+        // title
+        if(StringUtils.isNotBlank(softwareVersion.getFullName())){
+            s.setTitle(softwareVersion.getFullName());
         }
-//        if (!StringUtils.isBlank(softwareVersion.getFullName())) {
-//            s.setTitle(softwareVersion.getFullName());
-//        } else if (software != null {
-//            s.setTitle(software.getFullName());
-//        }
-        // For the UI we don't need the version number in the title as it is set in de dropdown
-        if (software != null) {
+        else if(software!=null && StringUtils.isNotBlank(software.getFullName())){
             s.setTitle(software.getFullName());
-            s.setSoftware(new TargetInternalReference(IdUtils.getUUID(software.getId()), software.getFullName()));
         }
+
+        // developers
         if (!CollectionUtils.isEmpty(softwareVersion.getDeveloper())) {
             s.setDevelopers(softwareVersion.getDeveloper().stream()
                     .map(a -> new TargetInternalReference(
@@ -117,6 +122,40 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
                             Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
                     )).collect(Collectors.toList()));
         }
+
+
+        if(StringUtils.isNotBlank(softwareVersion.getHowToCite())){
+            s.setCitation(new Value<>(softwareVersion.getHowToCite()));
+        }
+        else if(StringUtils.isNotBlank(softwareVersion.getDoi())){
+            //TODO resolve DOI with citation formatter
+            s.setCitation(new Value<>(softwareVersion.getDoi()));
+        }
+        else if(StringUtils.isNotBlank(softwareVersion.getSwhid())){
+            //TODO resolve SWHID with citation formatter
+            s.setCitation(new Value<>(softwareVersion.getSwhid()));
+        }
+
+        if(!CollectionUtils.isEmpty(softwareVersion.getLicense())){
+            s.setLicense(softwareVersion.getLicense().stream().map(l -> new TargetExternalReference(l.getUrl(), l.getLabel())).collect(Collectors.toList()));
+        }
+
+        if(softwareVersion.getCopyright()!=null){
+            final String copyrightHolders = softwareVersion.getCopyright().getHolder().stream().map(h -> Helpers.getFullName(h.getFullName(), h.getFamilyName(), h.getGivenName())).filter(Objects::nonNull).collect(Collectors.joining(", "));
+            s.setCopyright(new Value<>(String.format("%s %s", softwareVersion.getCopyright().getYear(), copyrightHolders)));
+        }
+
+        List<TargetInternalReference> projects = new ArrayList<>();
+        if(!CollectionUtils.isEmpty(softwareVersion.getProjects())){
+            projects.addAll(softwareVersion.getProjects().stream().map(p -> new TargetInternalReference(IdUtils.getUUID(p.getId()), p.getFullName())).collect(Collectors.toList()));
+        }
+        if(software!=null && !CollectionUtils.isEmpty(software.getProjects())){
+            projects.addAll(software.getProjects().stream().map(p -> new TargetInternalReference(IdUtils.getUUID(p.getId()), p.getFullName())).filter(p-> !projects.contains(p)).collect(Collectors.toList()));
+        }
+        if(!CollectionUtils.isEmpty(projects)){
+            s.setProjects(projects);
+        }
+
         if (!CollectionUtils.isEmpty(softwareVersion.getCustodian())) {
             s.setCustodians(softwareVersion.getCustodian().stream()
                     .map(a -> new TargetInternalReference(
@@ -130,25 +169,90 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
                             Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
                     )).collect(Collectors.toList()));
         }
-        s.setAppCategory(emptyToNull(softwareVersion.getApplicationCategory()));
 
-        if (!CollectionUtils.isEmpty(softwareVersion.getSourceCode())) {
-            s.setSourceCode(softwareVersion.getSourceCode().stream()
-                    .map(sc -> new TargetExternalReference(sc, sc))
-                    .collect(Collectors.toList()));
-        }
-        s.setFeatures(emptyToNull(softwareVersion.getFeatures()));
-        if (!CollectionUtils.isEmpty(softwareVersion.getDocumentation())) {
-            s.setDocumentation(softwareVersion.getDocumentation().stream()
-                    .map(d -> new TargetExternalReference(d, d))
-                    .collect(Collectors.toList()));
-        }
-        s.setLicense(emptyToNull(softwareVersion.getLicense()));
-        s.setOperatingSystem(emptyToNull(softwareVersion.getOperatingSystem()));
 
-        String homepage = softwareVersion.getHomepage();
-        if (StringUtils.isNotBlank(homepage)) {
-            s.setHomepage(Collections.singletonList(new TargetExternalReference(homepage, homepage)));
+        if (StringUtils.isNotBlank(softwareVersion.getDescription())) {
+            s.setDescription(softwareVersion.getDescription());
+        } else if (software != null) {
+            s.setDescription(software.getDescription());
+        }
+
+        if(StringUtils.isNotBlank(softwareVersion.getVersionInnovation())){
+            s.setNewInThisVersion(new Value<>(softwareVersion.getVersionInnovation()));
+        }
+
+        if(!CollectionUtils.isEmpty(softwareVersion.getPublications())){
+            //TODO resolve the dois with the citation formatter service
+            s.setPublications(softwareVersion.getPublications().stream().map(Value::new).collect(Collectors.toList()));
+        }
+
+        if(!CollectionUtils.isEmpty(softwareVersion.getApplicationCategory())){
+            s.setAppCategory(softwareVersion.getApplicationCategory().stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getFullName())).collect(Collectors.toList()));
+        }
+
+        if(!CollectionUtils.isEmpty(softwareVersion.getOperatingSystem())){
+            s.setOperatingSystem(softwareVersion.getOperatingSystem().stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getFullName())).collect(Collectors.toList()));
+        }
+
+        if(!CollectionUtils.isEmpty(softwareVersion.getDevice())){
+            s.setDevices(softwareVersion.getDevice().stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getFullName())).collect(Collectors.toList()));
+        }
+
+        if(!CollectionUtils.isEmpty(softwareVersion.getProgrammingLanguage())){
+            s.setProgrammingLanguages(softwareVersion.getProgrammingLanguage().stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getFullName())).collect(Collectors.toList()));
+        }
+
+        if(!CollectionUtils.isEmpty(softwareVersion.getRequirement())){
+            s.setRequirements(softwareVersion.getRequirement().stream().map(Value::new).collect(Collectors.toList()));
+        }
+
+        if(!CollectionUtils.isEmpty(softwareVersion.getFeature())){
+            s.setFeatures(softwareVersion.getFeature().stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getFullName())).collect(Collectors.toList()));
+        }
+
+        if(!CollectionUtils.isEmpty(softwareVersion.getLanguage())){
+            s.setLanguages(softwareVersion.getLanguage().stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getFullName())).collect(Collectors.toList()));
+        }
+
+        if(softwareVersion.getHomepage()!=null){
+            s.setHomepage(new TargetExternalReference(softwareVersion.getHomepage(), softwareVersion.getHomepage()));
+        }
+
+        if(softwareVersion.getRepository()!=null){
+            s.setSourceCode(new TargetExternalReference(softwareVersion.getRepository(), softwareVersion.getRepository()));
+        }
+
+        List<TargetExternalReference> documentationElements = new ArrayList<>();
+        if(softwareVersion.getDocumentationDOI()!=null){
+            documentationElements.add(new TargetExternalReference(softwareVersion.getDocumentationDOI(), softwareVersion.getDocumentationDOI()));
+        }
+        if(softwareVersion.getDocumentationURL()!=null){
+            documentationElements.add(new TargetExternalReference(softwareVersion.getDocumentationURL(), softwareVersion.getDocumentationURL()));
+        }
+        if(softwareVersion.getDocumentationFile()!=null){
+            //TODO make this a little bit prettier (maybe just show the relative file name or similar)
+            documentationElements.add(new TargetExternalReference(softwareVersion.getDocumentationFile(), softwareVersion.getDocumentationFile()));
+        }
+        if(!documentationElements.isEmpty()){
+            s.setDocumentation(documentationElements);
+        }
+        if(!CollectionUtils.isEmpty(softwareVersion.getSupportChannel())){
+            s.setSupport(softwareVersion.getSupportChannel().stream().map(Value::new).collect(Collectors.toList()));
+        }
+
+        if(!CollectionUtils.isEmpty(softwareVersion.getInputFormat())){
+            s.setInputFormat(softwareVersion.getInputFormat().stream().map(SoftwareVersionV3Translator::translateFileFormat).collect(Collectors.toList()));
+        }
+
+        if(!CollectionUtils.isEmpty(softwareVersion.getOutputFormat())){
+            s.setOutputFormats(softwareVersion.getOutputFormat().stream().map(SoftwareVersionV3Translator::translateFileFormat).collect(Collectors.toList()));
+        }
+
+        if(!CollectionUtils.isEmpty(softwareVersion.getComponents())){
+            s.setComponents(softwareVersion.getComponents().stream().map(c -> {
+                String name = StringUtils.isNotBlank(c.getFullName()) ? c.getFullName() : StringUtils.isNotBlank(c.getFallbackFullName()) ? c.getFallbackFullName() : null;
+                return new TargetInternalReference(IdUtils.getUUID(c.getId()), String.format("%s %s", name, c.getVersionIdentifier()));
+            }).collect(Collectors.toList()));
         }
         return s;
     }

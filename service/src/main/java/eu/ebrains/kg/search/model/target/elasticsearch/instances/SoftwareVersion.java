@@ -29,18 +29,16 @@ import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ISODateValue;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
+// To ensure backwards compatibility for the URLs, we can't just rename this - since it's a technical key only anyhow this has no direct impact though
 @MetaInfo(name="Software", order=6, searchable=true)
-public class SoftwareVersion implements TargetInstance {
+public class SoftwareVersion implements TargetInstance, VersionedInstance {
+
     @ElasticSearchInfo(type = "keyword")
     private final Value<String> type = new Value<>("Software");
 
@@ -54,44 +52,141 @@ public class SoftwareVersion implements TargetInstance {
     @FieldInfo(label = "Name", boost = 20, sort = true)
     private Value<String> title;
 
+    /**
+     * @deprecated  This is not needed for the new KG anymore since the id is consistent across search/editor
+     */
     @FieldInfo(layout = FieldInfo.Layout.HEADER)
+    @Deprecated
     private Value<String> editorId;
 
-    @FieldInfo(label = "Software Versions")
-    private TargetInternalReference software;
+    @FieldInfo(label = "Developers", separator = "; ", layout = FieldInfo.Layout.HEADER, type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true)
+    private List<TargetInternalReference> developers;
 
-    @FieldInfo(labelHidden = true, markdown = true, boost = 2)
-    private Value<String> description;
+    @FieldInfo(label = "Cite software", isButton = true, markdown = true, icon="quote-left")
+    private Value<String> citation;
 
-    @FieldInfo(label = "License")
-    private List<Value<String>> license;
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE, facet = FieldInfo.Facet.LIST)
+    private List<Value<String>> licenseOld;
 
-    @FieldInfo(label = "Latest Version", layout = FieldInfo.Layout.SUMMARY)
-    private Value<String> version;
+    @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE, facet = FieldInfo.Facet.LIST)
+    private List<TargetExternalReference> license;
 
-    @FieldInfo(label = "Application Category", layout = FieldInfo.Layout.SUMMARY, separator = ", ")
-    private List<Value<String>> appCategory;
+    @FieldInfo(label = "Copyright", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE, facet = FieldInfo.Facet.LIST)
+    private Value<String> copyright;
+
+    @FieldInfo(label = "Project", boost = 10, order = 3)
+    private List<TargetInternalReference> projects;
 
     @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10)
     private List<TargetInternalReference> custodians;
 
-    @FieldInfo(label = "Developers", separator = "; ", boost = 10)
-    private List<TargetInternalReference> developers;
+    /**
+     * @deprecated use homepage for openMINDS instead
+     */
+    @Deprecated
+    @FieldInfo(label = "Homepage")
+    private List<TargetExternalReference> homepageOld;
 
-    @FieldInfo(label = "Operating System", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>")
-    private List<Value<String>> operatingSystem;
+    @FieldInfo(label = "Homepage")
+    private TargetExternalReference homepage;
 
-    @FieldInfo(label = "Homepage", layout = FieldInfo.Layout.SUMMARY)
-    private List<TargetExternalReference> homepage;
+    /**
+     * @deprecated use sourceCode for openMINDS instead
+     */
+    @Deprecated
+    @FieldInfo(label = "Source code")
+    private List<TargetExternalReference> sourceCodeOld;
 
-    @FieldInfo(label = "Source code", layout = FieldInfo.Layout.SUMMARY)
-    private List<TargetExternalReference> sourceCode;
+    @FieldInfo(label = "Source code")
+    private TargetExternalReference sourceCode;
 
-    @FieldInfo(label = "Documentation", layout = FieldInfo.Layout.SUMMARY)
+    @FieldInfo(label = "Documentation")
     private List<TargetExternalReference> documentation;
 
+    @FieldInfo(label = "Support")
+    private List<Value<String>> support;
+
+    @FieldInfo(label = "New in this version", markdown = true, boost = 2)
+    private Value<String> newInThisVersion;
+
+    @FieldInfo(labelHidden = true, markdown = true, boost = 2)
+    private Value<String> description;
+
+
+    @FieldInfo(label = "Related publications", markdown = true, layout = FieldInfo.Layout.GROUP)
+    private List<Value<String>> publications;
+
+    /**
+     * @deprecated This is no longer in use for openMINDS
+     */
+    @Deprecated
+    @FieldInfo(label = "Latest Version", layout = FieldInfo.Layout.SUMMARY)
+    private Value<String> version;
+
+
+    /**
+     * @deprecated use appCategory for openMINDS instead
+     */
+    @Deprecated
+    @FieldInfo(label = "Application Category", layout = FieldInfo.Layout.SUMMARY, separator = ", ", facet = FieldInfo.Facet.LIST)
+    private List<Value<String>> appCategoryOld;
+
+    @FieldInfo(label = "Application Category", layout = FieldInfo.Layout.SUMMARY, separator = ", ", facet = FieldInfo.Facet.LIST)
+    private List<TargetInternalReference> appCategory;
+
+
+    /**
+     * @deprecated use operatingSystem for openMINDS instead
+     */
+    @Deprecated
+    @FieldInfo(label = "Operating System", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>")
+    private List<Value<String>> operatingSystemOld;
+
+    @FieldInfo(label = "Operating System", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
+    private List<TargetInternalReference> operatingSystem;
+
+    @FieldInfo(label = "Devices", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
+    private List<TargetInternalReference> devices;
+
+    @FieldInfo(label = "Programming languages", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
+    private List<TargetInternalReference> programmingLanguages;
+
+    @FieldInfo(label = "Requirements", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
+    private List<Value<String>> requirements;
+
     @FieldInfo(label = "Features", layout = FieldInfo.Layout.SUMMARY, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
-    private List<Value<String>> features;
+    @Deprecated
+    /**
+     * @deprecated features are now references to controlled terms
+     */
+    private List<Value<String>> featuresOld;
+
+    @FieldInfo(label = "Features", layout = FieldInfo.Layout.SUMMARY)
+    private List<TargetInternalReference> features;
+
+    @FieldInfo(label = "Languages", layout = FieldInfo.Layout.SUMMARY)
+    private List<TargetInternalReference> languages;
+
+    @FieldInfo(label = "Keywords", facet = FieldInfo.Facet.LIST, order = 1, overviewMaxDisplay = 3, layout = FieldInfo.Layout.SUMMARY, overview = true, isFilterableFacet = true, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
+    @Deprecated
+    /**
+     * @deprecated keywords are - although existing in openMINDS - not very suitable for Software. Additionally, they would be TargetInternalReferences if there would be any. Therefore, this field is used for the old structure only.
+     */
+    private List<Value<String>> keywords;
+
+
+    @FieldInfo(label = "Input formats", layout = FieldInfo.Layout.GROUP, isTable = true)
+    private List<Children<FileFormat>> inputFormat;
+
+    @FieldInfo(label = "Output formats", layout = FieldInfo.Layout.GROUP, isTable = true)
+    private List<Children<FileFormat>> outputFormats;
+
+    @FieldInfo(label = "Sub-components", layout = FieldInfo.Layout.GROUP)
+    private List<TargetInternalReference> components;
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
@@ -102,6 +197,42 @@ public class SoftwareVersion implements TargetInstance {
     private ISODateValue lastRelease;
 
     private List<TargetInternalReference> versions;
+
+    public static class FileFormat {
+        @FieldInfo(label = "Name", sort = true)
+        private Value<String> name;
+
+        @FieldInfo(label = "File extensions", sort = true)
+        private List<Value<String>> fileExtensions;
+
+        @FieldInfo(label = "Media type", sort = true)
+        private Value<String> relatedMediaType;
+
+        public Value<String> getName() {
+            return name;
+        }
+
+        public void setName(Value<String> name) {
+            this.name = name;
+        }
+
+        public List<Value<String>> getFileExtensions() {
+            return fileExtensions;
+        }
+
+        public void setFileExtensions(List<Value<String>> fileExtensions) {
+            this.fileExtensions = fileExtensions;
+        }
+
+        public Value<String> getRelatedMediaType() {
+            return relatedMediaType;
+        }
+
+        public void setRelatedMediaType(Value<String> relatedMediaType) {
+            this.relatedMediaType = relatedMediaType;
+        }
+    }
+
 
     @JsonIgnore
     private boolean isSearchable;
@@ -124,14 +255,6 @@ public class SoftwareVersion implements TargetInstance {
         this.identifier = identifier;
     }
 
-    public void setEditorId(String editorId){
-        setEditorId(StringUtils.isBlank(editorId) ? null : new Value<>(editorId));
-    }
-
-    public TargetInternalReference getSoftware() { return software; }
-
-    public void setSoftware(TargetInternalReference software) { this.software = software;  }
-
     public void setTitle(String title){
         setTitle(StringUtils.isBlank(title) ? null : new Value<>(title));
     }
@@ -144,16 +267,13 @@ public class SoftwareVersion implements TargetInstance {
         return editorId;
     }
 
+    @Deprecated
     public void setEditorId(Value<String> editorId) {
         this.editorId = editorId;
     }
 
-    public List<Value<String>> getAppCategory() {
-        return appCategory;
-    }
-
-    public void setAppCategory(List<String> appCategory) {
-        this.appCategory = appCategory == null ? null : appCategory.stream().map(Value::new).collect(Collectors.toList());
+    public List<Value<String>> getAppCategoryOld() {
+        return appCategoryOld;
     }
 
     public List<TargetInternalReference> getCustodians() {
@@ -185,20 +305,16 @@ public class SoftwareVersion implements TargetInstance {
         this.description = description;
     }
 
-    public List<TargetExternalReference> getSourceCode() {
-        return sourceCode;
+    public List<TargetExternalReference> getSourceCodeOld() {
+        return sourceCodeOld;
     }
 
-    public void setSourceCode(List<TargetExternalReference> sourceCode) {
-        this.sourceCode = sourceCode;
+    public void setSourceCodeOld(List<TargetExternalReference> sourceCodeOld) {
+        this.sourceCodeOld = sourceCodeOld;
     }
 
-    public List<Value<String>> getFeatures() {
-        return features;
-    }
-
-    public void setFeatures(List<String> features) {
-        this.features = features == null ? null : features.stream().map(Value::new).collect(Collectors.toList());
+    public List<Value<String>> getFeaturesOld() {
+        return featuresOld;
     }
 
     public List<TargetExternalReference> getDocumentation() {
@@ -209,41 +325,29 @@ public class SoftwareVersion implements TargetInstance {
         this.documentation =  documentation;
     }
 
-    public List<Value<String>> getLicense() {
-        return license;
+    public List<Value<String>> getLicenseOld() {
+        return licenseOld;
     }
 
-    public void setLicense(List<String> license) {
-        this.license = license == null ? null : license.stream().map(Value::new).collect(Collectors.toList());
-    }
-
-    public List<Value<String>> getOperatingSystem() {
-        return operatingSystem;
-    }
-
-    public void setOperatingSystem(List<String> operatingSystem) {
-
-        this.operatingSystem = operatingSystem == null ? null : operatingSystem.stream().map(Value::new).collect(Collectors.toList());
+    public List<Value<String>> getOperatingSystemOld() {
+        return operatingSystemOld;
     }
 
     public Value<String> getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
-        setVersion(StringUtils.isBlank(version) ? null : new Value<>(version));
-    }
-
+    @Deprecated
     public void setVersion(Value<String> version) {
         this.version = version;
     }
 
-    public List<TargetExternalReference> getHomepage() {
-        return homepage;
+    public List<TargetExternalReference> getHomepageOld() {
+        return homepageOld;
     }
 
-    public void setHomepage(List<TargetExternalReference> homepage) {
-        this.homepage = homepage;
+    public void setHomepageOld(List<TargetExternalReference> homepageOld) {
+        this.homepageOld = homepageOld;
     }
 
     public Value<String> getTitle() { return title; }
@@ -281,5 +385,193 @@ public class SoftwareVersion implements TargetInstance {
 
     public List<TargetInternalReference> getVersions() { return versions; }
 
+    public Value<String> getCitation() {
+        return citation;
+    }
+
+    public void setCitation(Value<String> citation) {
+        this.citation = citation;
+    }
+
+    @Deprecated
+    public void setLicenseOld(List<Value<String>> licenseOld) {
+        this.licenseOld = licenseOld;
+    }
+
+    public Value<String> getCopyright() {
+        return copyright;
+    }
+
+    public void setCopyright(Value<String> copyright) {
+        this.copyright = copyright;
+    }
+
+    public List<TargetInternalReference> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<TargetInternalReference> projects) {
+        this.projects = projects;
+    }
+
+    public Value<String> getNewInThisVersion() {
+        return newInThisVersion;
+    }
+
+    public void setNewInThisVersion(Value<String> newInThisVersion) {
+        this.newInThisVersion = newInThisVersion;
+    }
+
+    public List<Value<String>> getPublications() {
+        return publications;
+    }
+
+    public void setPublications(List<Value<String>> publications) {
+        this.publications = publications;
+    }
+
+    @Deprecated
+    public void setAppCategoryOld(List<Value<String>> appCategoryOld) {
+        this.appCategoryOld = appCategoryOld;
+    }
+
+    @Deprecated
+    public void setOperatingSystemOld(List<Value<String>> operatingSystemOld) {
+        this.operatingSystemOld = operatingSystemOld;
+    }
+
+
+
+    public List<Value<String>> getRequirements() {
+        return requirements;
+    }
+
+    public void setRequirements(List<Value<String>> requirements) {
+        this.requirements = requirements;
+    }
+
+    @Deprecated
+    public void setFeaturesOld(List<Value<String>> featuresOld) {
+        this.featuresOld = featuresOld;
+    }
+
+
+    public List<Value<String>> getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(List<Value<String>> keywords) {
+        this.keywords = keywords;
+    }
+
+    public List<Value<String>> getSupport() {
+        return support;
+    }
+
+    public void setSupport(List<Value<String>> support) {
+        this.support = support;
+    }
+
+    public List<Children<FileFormat>> getInputFormat() {
+        return inputFormat;
+    }
+
+    public void setInputFormat(List<Children<FileFormat>> inputFormat) {
+        this.inputFormat = inputFormat;
+    }
+
+    public List<Children<FileFormat>> getOutputFormats() {
+        return outputFormats;
+    }
+
+    public void setOutputFormats(List<Children<FileFormat>> outputFormats) {
+        this.outputFormats = outputFormats;
+    }
+
+    public List<TargetExternalReference> getLicense() {
+        return license;
+    }
+
+    public void setLicense(List<TargetExternalReference> license) {
+        this.license = license;
+    }
+
+    public List<TargetInternalReference> getAppCategory() {
+        return appCategory;
+    }
+
+    public void setAppCategory(List<TargetInternalReference> appCategory) {
+        this.appCategory = appCategory;
+    }
+
+    public List<TargetInternalReference> getOperatingSystem() {
+        return operatingSystem;
+    }
+
+    public void setOperatingSystem(List<TargetInternalReference> operatingSystem) {
+        this.operatingSystem = operatingSystem;
+    }
+
+    public List<TargetInternalReference> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(List<TargetInternalReference> devices) {
+        this.devices = devices;
+    }
+
+    public List<TargetInternalReference> getProgrammingLanguages() {
+        return programmingLanguages;
+    }
+
+    public void setProgrammingLanguages(List<TargetInternalReference> programmingLanguages) {
+        this.programmingLanguages = programmingLanguages;
+    }
+
+    public List<TargetInternalReference> getFeatures() {
+        return features;
+    }
+
+    public void setFeatures(List<TargetInternalReference> features) {
+        this.features = features;
+    }
+
+    public List<TargetInternalReference> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(List<TargetInternalReference> languages) {
+        this.languages = languages;
+    }
+
+    public List<TargetInternalReference> getComponents() {
+        return components;
+    }
+
+    public void setComponents(List<TargetInternalReference> components) {
+        this.components = components;
+    }
+
+    public boolean isSearchable() {
+        return isSearchable;
+    }
+
+    public TargetExternalReference getHomepage() {
+        return homepage;
+    }
+
+    public TargetExternalReference getSourceCode() {
+        return sourceCode;
+    }
+
+    public void setSourceCode(TargetExternalReference sourceCode) {
+        this.sourceCode = sourceCode;
+    }
+
+    public void setHomepage(TargetExternalReference homepage) {
+        this.homepage = homepage;
+    }
+
+    @Override
     public void setVersions(List<TargetInternalReference> versions) { this.versions = versions; }
 }

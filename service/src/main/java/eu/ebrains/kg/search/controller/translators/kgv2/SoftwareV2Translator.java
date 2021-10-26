@@ -75,29 +75,29 @@ public class SoftwareV2Translator extends TranslatorV2<SoftwareV2, SoftwareVersi
         SoftwareV2.Version version = firstItemOrNull(softwareV2.getVersions());
 
         if (dataStage == DataStage.IN_PROGRESS) {
-            s.setEditorId(softwareV2.getEditorId());
+            s.setEditorId(toValue(softwareV2.getEditorId()));
         }
-        s.setAppCategory(emptyToNull(version.getApplicationCategory()));
+        s.setAppCategoryOld( emptyToNullValueList(version.getApplicationCategory()));
         s.setTitle(softwareV2.getTitle());
 
         s.setDescription(softwareV2.getDescription() + (StringUtils.isBlank(version.getDescription())? "": ("\n\n" + version.getDescription())));
 
         if (!CollectionUtils.isEmpty(version.getSourceCode())) {
-            s.setSourceCode(version.getSourceCode().stream()
+            s.setSourceCodeOld(version.getSourceCode().stream()
                     .map(sc -> new TargetExternalReference(sc, sc))
                     .collect(Collectors.toList()));
         }
-        s.setFeatures(emptyToNull(version.getFeatures()));
+        s.setFeaturesOld(emptyToNullValueList(version.getFeatures()));
         if (!CollectionUtils.isEmpty(version.getDocumentation())) {
             s.setDocumentation(version.getDocumentation().stream()
                     .map(d -> new TargetExternalReference(d, d))
                     .collect(Collectors.toList()));
         }
-        s.setLicense(emptyToNull(version.getLicense()));
-        s.setOperatingSystem(emptyToNull(version.getOperatingSystem()));
-        s.setVersion(version.getVersion());
+        s.setLicenseOld(emptyToNullValueList(version.getLicense()));
+        s.setOperatingSystemOld(emptyToNullValueList(version.getOperatingSystem()));
+        s.setVersion(toValue(version.getVersion()));
         if (!CollectionUtils.isEmpty(version.getHomepage())) {
-            s.setHomepage(version.getHomepage().stream()
+            s.setHomepageOld(version.getHomepage().stream()
                     .map(h -> new TargetExternalReference(h, h))
                     .collect(Collectors.toList()));
         }

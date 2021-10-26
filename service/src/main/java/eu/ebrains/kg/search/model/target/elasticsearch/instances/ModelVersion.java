@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @MetaInfo(name = "Model", order = 5, searchable=true)
-public class ModelVersion implements TargetInstance {
+public class ModelVersion implements TargetInstance, VersionedInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Model");
 
@@ -363,5 +363,6 @@ public class ModelVersion implements TargetInstance {
 
     public List<TargetInternalReference> getVersions() { return versions; }
 
+    @Override
     public void setVersions(List<TargetInternalReference> versions) { this.versions = versions; }
 }

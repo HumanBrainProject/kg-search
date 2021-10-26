@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 
 @MetaInfo(name = "Dataset", defaultSelection = true, order = 2, searchable=true)
 @RibbonInfo(content = "Downloadable Data", aggregation = "count", dataField = "search:files", singular = "file", plural = "files", icon = "download")
-public class DatasetVersion implements TargetInstance {
+public class DatasetVersion implements TargetInstance, VersionedInstance{
 
     public final static String EMBARGO_MESSAGE =  "This dataset is temporarily under embargo. The data will become available for download after the embargo period.";
     public final static String RESTRICTED_ACCESS_MESSAGE =  "This dataset has restricted access. Although the metadata is publicly available, the data remain on an access restricted server.";
@@ -70,9 +70,6 @@ public class DatasetVersion implements TargetInstance {
 
     @FieldInfo(label = "Contributors", separator = "; ", layout = FieldInfo.Layout.HEADER, type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true)
     private List<TargetInternalReference> contributors;
-
-    @FieldInfo(label = "Other Versions", labelHidden = true, markdown = true, ignoreForSearch = true)
-    private Value<String> otherVersions;
 
     @FieldInfo(label = "Dataset Versions")
     private TargetInternalReference dataset;
@@ -319,14 +316,6 @@ public class DatasetVersion implements TargetInstance {
         this.speciesFilter = speciesFilter == null ? null : speciesFilter.stream().map(Value::new).collect(Collectors.toList());
     }
 
-    public Value<String> getOtherVersions() {
-        return otherVersions;
-    }
-
-    public void setOtherVersions(Value<String> otherVersions) {
-        this.otherVersions = otherVersions;
-    }
-
     public Value<String> getCitation() {
         return citation;
     }
@@ -517,6 +506,7 @@ public class DatasetVersion implements TargetInstance {
 
     public List<TargetInternalReference> getVersions() { return versions; }
 
+    @Override
     public void setVersions(List<TargetInternalReference> versions) {
         this.versions = versions;
     }

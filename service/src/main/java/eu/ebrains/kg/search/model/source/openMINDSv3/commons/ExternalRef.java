@@ -21,35 +21,26 @@
  *
  */
 
-package eu.ebrains.kg.search.controller.translators;
+package eu.ebrains.kg.search.model.source.openMINDSv3.commons;
 
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.CollectionUtils;
+public class ExternalRef {
 
-import java.util.List;
-import java.util.stream.Collectors;
+    private String url;
+    private String label;
 
-public class TranslatorCommons {
-
-    public static <T> T firstItemOrNull(List<T> list) {
-        return list != null && !list.isEmpty() ? list.get(0) : null;
+    public String getUrl() {
+        return url;
     }
 
-    public static Value<String> toValue(String value){
-        return StringUtils.isBlank(value) ? null : new Value<>(value);
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public static <T> Value<T> toValue(T value){
-        return value == null ? null : new Value<>(value);
+    public String getLabel() {
+        return label;
     }
 
-    public static <T> List<T> emptyToNull(List<T> list) {
-        return CollectionUtils.isEmpty(list) ? null : list;
+    public void setLabel(String label) {
+        this.label = label;
     }
-
-    public static <T> List<Value<T>> emptyToNullValueList(List<T> list) {
-        return CollectionUtils.isEmpty(list) ? null : list.stream().map(Value::new).collect(Collectors.toList());
-    }
-
 }

@@ -36,8 +36,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
+// To ensure backwards compatibility for the URLs, we can't just rename this to "Software" - since it's a technical
+// key only anyhow this has no direct impact though
 @MetaInfo(name = "SoftwareVersions")
 public class Software implements TargetInstance {
+
     @ElasticSearchInfo(type = "keyword")
     private final Value<String> type = new Value<>("SoftwareVersions");
 
