@@ -71,7 +71,7 @@ public class Dataset implements TargetInstance {
     @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2)
     private Value<String> description;
 
-    @FieldInfo(label = "Datasets", layout = FieldInfo.Layout.GROUP, hint = "List of existing versions of this dataset.", isTable = true)
+    @FieldInfo(label = "Dataset versions", layout = FieldInfo.Layout.GROUP, hint = "List of existing versions of this dataset.", isTable = true)
     private List<Children<Version>> datasets;
 
     @JsonProperty("first_release")

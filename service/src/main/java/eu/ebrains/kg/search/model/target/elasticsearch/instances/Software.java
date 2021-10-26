@@ -29,6 +29,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ISODateValue;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
@@ -69,8 +70,8 @@ public class Software implements TargetInstance {
     @FieldInfo(label = "DOI", hint = "This is the software DOI representing all the underlying software's versions you must cite if you reuse this data in a way that leads to a publication")
     private Value<String> doi;
 
-    @FieldInfo(label = "Versions")
-    private List<TargetInternalReference> versions;
+    @FieldInfo(label = "Software versions", layout = FieldInfo.Layout.GROUP, hint = "List of existing versions of this dataset.", isTable = true)
+    private List<Children<Version>> softwareVersions;
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
@@ -172,11 +173,55 @@ public class Software implements TargetInstance {
         this.doi = doi;
     }
 
-    public List<TargetInternalReference> getVersions() {
-        return versions;
+    public List<Children<Version>> getSoftwareVersions() {
+        return softwareVersions;
     }
 
-    public void setVersions(List<TargetInternalReference> versions) {
-        this.versions = versions;
+    public void setSoftwareVersions(List<Children<Version>> softwareVersions) {
+        this.softwareVersions = softwareVersions;
+    }
+
+    public ISODateValue getFirstRelease() {
+        return firstRelease;
+    }
+
+    public void setFirstRelease(ISODateValue firstRelease) {
+        this.firstRelease = firstRelease;
+    }
+
+    public ISODateValue getLastRelease() {
+        return lastRelease;
+    }
+
+    public void setLastRelease(ISODateValue lastRelease) {
+        this.lastRelease = lastRelease;
+    }
+
+    public static class Version {
+        public Version() {
+        }
+
+        @FieldInfo(label = "Version", groupBy = true)
+        private TargetInternalReference version;
+
+        @FieldInfo(label = "Innovation", markdown = true)
+        private Value<String> innovation;
+
+
+        public TargetInternalReference getVersion() {
+            return version;
+        }
+
+        public void setVersion(TargetInternalReference version) {
+            this.version = version;
+        }
+
+        public Value<String> getInnovation() {
+            return innovation;
+        }
+
+        public void setInnovation(Value<String> innovation) {
+            this.innovation = innovation;
+        }
     }
 }

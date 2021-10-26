@@ -29,7 +29,9 @@ import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.SoftwareV3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Software;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -71,6 +73,14 @@ public class SoftwareV3Translator extends TranslatorV3<SoftwareV3, Software, Sof
 
     public Software translate(SoftwareV3 software, DataStage dataStage, boolean liveMode) {
         Software s = new Software();
+        List<Version> sortedVersions = Helpers.sort(software.getVersions());
+        List<Children<Software.Version>> softwareVersions = sortedVersions.stream().map(v -> {
+            Software.Version version = new Software.Version();
+            version.setVersion(new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier()));
+            version.setInnovation(v.getVersionInnovation() != null ? new Value<>(v.getVersionInnovation()) : null);
+            return new Children<>(version);
+        }).collect(Collectors.toList());
+        s.setSoftwareVersions(softwareVersions);
         s.setId(IdUtils.getUUID(software.getId()));
         s.setIdentifier(IdUtils.getUUID(software.getIdentifier()));
         s.setDescription(software.getDescription());
@@ -98,11 +108,6 @@ public class SoftwareV3Translator extends TranslatorV3<SoftwareV3, Software, Sof
                 String url = URLEncoder.encode(doi, StandardCharsets.UTF_8);
                 s.setCitation(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url));
             }
-        }
-        if (!CollectionUtils.isEmpty(software.getVersions())) {
-            List<Version> sortedVersions = Helpers.sort(software.getVersions());                                         //v.getFullName()
-            List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
-            s.setVersions(references);
         }
         return s;
     }
