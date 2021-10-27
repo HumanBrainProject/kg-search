@@ -25,11 +25,18 @@ package eu.ebrains.kg.search.controller.translators.kgv3;
 
 import eu.ebrains.kg.search.controller.translators.Translator;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
 public abstract class TranslatorV3<Source, Target, Result extends ResultsOfKG<Source>> implements Translator<Source, Target, Result> {
     public abstract List<String> semanticTypes();
+
+    public String getQueryFileName(String semanticType){
+        final String simpleName = getClass().getSimpleName();
+        return StringUtils.uncapitalize(simpleName.substring(0, simpleName.indexOf("V3")));
+    }
+
     public String getQueryIdByType(String type){
         if(type!=null && semanticTypes().contains(type)){
             if(getQueryIds().size() == 1){

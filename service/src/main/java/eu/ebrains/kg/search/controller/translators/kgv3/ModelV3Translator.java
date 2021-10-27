@@ -31,6 +31,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Model;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -71,7 +72,7 @@ public class ModelV3Translator extends TranslatorV3<ModelV3, Model, ModelV3Trans
         return Collections.singletonList("https://openminds.ebrains.eu/core/Model");
     }
 
-    public Model translate(ModelV3 model, DataStage dataStage, boolean liveMode) {
+    public Model translate(ModelV3 model, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
         Model m = new Model();
         m.setId(IdUtils.getUUID(model.getId()));
         m.setIdentifier(IdUtils.getUUID(model.getIdentifier()));

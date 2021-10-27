@@ -38,6 +38,7 @@ import eu.ebrains.kg.search.model.TranslatorModel;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -50,16 +51,18 @@ public class IndexingController {
     private final MappingController mappingController;
     private final ElasticSearchController elasticSearchController;
     private final TranslationController translationController;
+    private final DOICitationFormatter doiCitationFormatter;
 
     private final KGv2 kgV2;
     private final KGv3 kgV3;
 
-    public IndexingController(MappingController mappingController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3) {
+    public IndexingController(MappingController mappingController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter) {
         this.mappingController = mappingController;
         this.elasticSearchController = elasticSearchController;
         this.translationController = translationController;
         this.kgV2 = kgV2;
         this.kgV3 = kgV3;
+        this.doiCitationFormatter = doiCitationFormatter;
     }
 
     private <Source, Target extends TargetInstance> Target getRelatedInstance(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, Target instance, DataStage dataStage){
@@ -69,7 +72,7 @@ public class IndexingController {
                     if (queryId != null) {
                         final Source source = kg.executeQueryForInstance(translator.getSourceType(), dataStage, String.format("%s/search", queryId), id, true);
                         if(source!=null){
-                            return translator.translate(source, dataStage, false);
+                            return translator.translate(source, dataStage, false, doiCitationFormatter);
                         }
                         return null;
                     }
@@ -105,7 +108,8 @@ public class IndexingController {
             searchableIds.addAll(updateResultV3.searchableIds);
             nonSearchableIds.addAll(updateResultV3.nonSearchableIds);
         }
-        if (translatorModel.getV2translator() != null) {
+        boolean indexDataFromOldKG = dataStage == DataStage.RELEASED || !translatorModel.isOnlyV3ForInProgress();
+        if (indexDataFromOldKG && translatorModel.getV2translator() != null) {
             final UpdateResult updateResultV2 = update(kgV2, translatorModel.getTargetClass(), translatorModel.getV2translator(), translatorModel.getBulkSize(), dataStage, handledIdentifiers, instance -> {
                 if(translatorModel.getMerger()!=null){
                     final Translator<v1Input, Target, ? extends ResultsOfKGv2<v1Input>> v1translator = translatorModel.getV1translator();
@@ -126,7 +130,7 @@ public class IndexingController {
             searchableIds.addAll(updateResultV2.searchableIds);
             nonSearchableIds.addAll(updateResultV2.nonSearchableIds);
         }
-        if (translatorModel.getV1translator() != null) {
+        if (indexDataFromOldKG && translatorModel.getV1translator() != null) {
             final UpdateResult updateResultV1 = update(kgV2, translatorModel.getTargetClass(), translatorModel.getV1translator(), translatorModel.getBulkSize(), dataStage, handledIdentifiers, null, translatorModel.isAutoRelease());
             handledIdentifiers.addAll(updateResultV1.handledIdentifiers);
             searchableIds.addAll(updateResultV1.searchableIds);

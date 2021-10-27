@@ -25,7 +25,18 @@ package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import java.util.List;
 
-public class PersonV3 extends SourceInstanceV3 {
+public class PersonOrOrganizationV3 extends SourceInstanceV3 {
+
+
+    //Organization
+    private String fullName;
+    private List<DynamicContribution> otherContribution;
+    private List<SimpleContribution> developer;
+    private List<SimpleContribution> author;
+    private List<SimpleContribution> custodian;
+
+
+    //Person
     private String familyName;
     private String givenName;
     private List<CustodianOfModel> custodianOfModel;
@@ -88,6 +99,46 @@ public class PersonV3 extends SourceInstanceV3 {
 
     public void setContributions(List<Contribution> contributions) {
         this.contributions = contributions;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public List<DynamicContribution> getOtherContribution() {
+        return otherContribution;
+    }
+
+    public void setOtherContribution(List<DynamicContribution> otherContribution) {
+        this.otherContribution = otherContribution;
+    }
+
+    public List<SimpleContribution> getDeveloper() {
+        return developer;
+    }
+
+    public void setDeveloper(List<SimpleContribution> developer) {
+        this.developer = developer;
+    }
+
+    public List<SimpleContribution> getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(List<SimpleContribution> author) {
+        this.author = author;
+    }
+
+    public List<SimpleContribution> getCustodian() {
+        return custodian;
+    }
+
+    public void setCustodian(List<SimpleContribution> custodian) {
+        this.custodian = custodian;
     }
 
     public static class CustodianOfModel {
@@ -248,4 +299,62 @@ public class PersonV3 extends SourceInstanceV3 {
             this.datasetComponent = datasetComponent;
         }
     }
+
+    public static class DynamicContribution{
+        private List<String> contributionTypes;
+        private SimpleContribution otherContribution;
+
+        public List<String> getContributionTypes() {
+            return contributionTypes;
+        }
+
+        public void setContributionTypes(List<String> contributionTypes) {
+            this.contributionTypes = contributionTypes;
+        }
+
+        public SimpleContribution getOtherContribution() {
+            return otherContribution;
+        }
+
+        public void setOtherContribution(SimpleContribution otherContribution) {
+            this.otherContribution = otherContribution;
+        }
+    }
+
+
+    public static class SimpleContribution{
+        private String id;
+        private String fullName;
+        private String fallbackName;
+        private List<String> type;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getFullName() {
+            return fullName;
+        }
+
+        public void setFullName(String fullName) {
+            this.fullName = fullName;
+        }
+
+        public String getFallbackName() {
+            return fallbackName;
+        }
+
+        public void setFallbackName(String fallbackName) {
+            this.fallbackName = fallbackName;
+        }
+
+        public List<String> getType() {
+            return type;
+        }
+    }
+
 }

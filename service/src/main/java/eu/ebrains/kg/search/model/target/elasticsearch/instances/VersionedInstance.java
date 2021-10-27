@@ -11,5 +11,9 @@ public interface VersionedInstance {
      */
     void setVersions(List<TargetInternalReference> versions);
 
+    /**
+     * @param version the current version of the instance (to select the right entry in the populated selection box)
+     */
+    void setVersion(String version);
 
 }

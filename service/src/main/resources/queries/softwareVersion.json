@@ -107,6 +107,10 @@
         {
           "propertyName": "query:label",
           "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:shortName",
+          "path": "https://openminds.ebrains.eu/vocab/shortName"
         }
       ]
     },
@@ -353,6 +357,10 @@
       "path": "https://openminds.ebrains.eu/vocab/supportChannel"
     },
     {
+      "propertyName": "query:version",
+      "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
+    },
+    {
       "propertyName": "query:inputFormat",
       "path": "https://openminds.ebrains.eu/vocab/inputFormat",
       "structure": [
@@ -418,11 +426,12 @@
       ]
     },
     {
-      "propertyName": "query:versions",
+      "propertyName": "query:software",
       "path": {
         "@id": "https://openminds.ebrains.eu/vocab/hasVersion",
         "reverse": true
       },
+      "singleValue": "FIRST",
       "structure": [
         {
           "propertyName": "query:id",
@@ -523,7 +532,7 @@
               "propertyName": "query:isNewVersionOf",
               "path": [
                 "https://openminds.ebrains.eu/vocab/isNewVersionOf",
-                "@id"
+                "https://openminds.ebrains.eu/vocab/versionIdentifier"
               ],
               "singleValue": "FIRST"
             }

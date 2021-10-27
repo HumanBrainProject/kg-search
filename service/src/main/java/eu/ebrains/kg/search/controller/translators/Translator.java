@@ -25,6 +25,7 @@ package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public interface Translator<Source, Target, ListResult extends ResultsOfKG<Sourc
     public static final String fileProxy = ""; //TODO: Should that be changed ?
 //    public static final String fileProxy = "https://kg.ebrains.eu";
 
-    Target translate(Source source, DataStage dataStage, boolean liveMode);
+    Target translate(Source source, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter);
 
     Class<Source> getSourceType();
 

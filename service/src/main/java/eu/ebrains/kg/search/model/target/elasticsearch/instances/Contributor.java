@@ -29,6 +29,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ISODateValue;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
@@ -71,6 +72,14 @@ public class Contributor implements TargetInstance {
 
     @FieldInfo(label = "Model contributions", facet = FieldInfo.Facet.EXISTS, layout = FieldInfo.Layout.GROUP, type = FieldInfo.Type.TEXT, overview = true)
     private List<TargetInternalReference> modelContributions;
+
+
+    @FieldInfo(label = "Custodian of", layout = FieldInfo.Layout.GROUP, isTable = true)
+    private List<Children<Contribution>> custodian;
+
+    @FieldInfo(label = "Contributions", layout = FieldInfo.Layout.GROUP, isTable = true)
+    private List<Children<Contribution>> contribution;
+
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
@@ -199,4 +208,48 @@ public class Contributor implements TargetInstance {
     public void setType(Value<String> type) {
         this.type = type;
     }
+
+
+    public List<Children<Contribution>> getCustodian() {
+        return custodian;
+    }
+
+    public void setCustodian(List<Children<Contribution>> custodian) {
+        this.custodian = custodian;
+    }
+
+    public List<Children<Contribution>> getContribution() {
+        return contribution;
+    }
+
+    public void setContribution(List<Children<Contribution>> contribution) {
+        this.contribution = contribution;
+    }
+
+    public static class Contribution{
+
+        @FieldInfo(sort = true, label="Type")
+        private Value<String> typeLabel;
+
+        @FieldInfo(sort = true, label="Instances")
+        private List<TargetInternalReference> instances;
+
+        public Value<String> getTypeLabel() {
+            return typeLabel;
+        }
+
+        public void setTypeLabel(Value<String> typeLabel) {
+            this.typeLabel = typeLabel;
+        }
+
+
+        public List<TargetInternalReference> getInstances() {
+            return instances;
+        }
+
+        public void setInstances(List<TargetInternalReference> instances) {
+            this.instances = instances;
+        }
+    }
+
 }

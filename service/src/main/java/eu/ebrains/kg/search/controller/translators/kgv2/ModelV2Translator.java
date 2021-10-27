@@ -30,6 +30,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.ModelVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -68,7 +69,7 @@ public class ModelV2Translator extends TranslatorV2<ModelV2, ModelVersion, Model
         return Collections.singletonList("uniminds/core/modelinstance/v1.0.0");
     }
 
-    public ModelVersion translate(ModelV2 modelV2, DataStage dataStage, boolean liveMode) {
+    public ModelVersion translate(ModelV2 modelV2, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
         ModelVersion m = new ModelVersion();
         m.setId(modelV2.getIdentifier());
         List<String> identifiers = Arrays.asList(modelV2.getIdentifier(), String.format("Model/%s", modelV2.getIdentifier()));

@@ -32,6 +32,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.FileRepository;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.ModelVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.SoftwareVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +74,7 @@ public class FileRepositoryV3Translator extends TranslatorV3<FileRepositoryV3, F
         return Collections.singletonList("https://openminds.ebrains.eu/core/FileRepository");
     }
 
-    public FileRepository translate(FileRepositoryV3 fileRepository, DataStage dataStage, boolean liveMode) {
+    public FileRepository translate(FileRepositoryV3 fileRepository, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
         FileRepository f = new FileRepository();
         f.setId(IdUtils.getUUID(fileRepository.getId()));
         f.setIdentifier(IdUtils.getUUID(fileRepository.getIdentifier()));

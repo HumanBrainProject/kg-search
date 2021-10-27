@@ -23,7 +23,7 @@
 
 package eu.ebrains.kg.search.model.target.elasticsearch.instances.commons;
 
-public class Value<T>{
+public class Value<T extends Comparable<T>> implements Comparable<Value<T>>{
 
     public Value() {
     }
@@ -36,5 +36,11 @@ public class Value<T>{
 
     public T getValue() {
         return value;
+    }
+
+    @Override
+    public int compareTo(Value<T> tValue) {
+        T otherValue = tValue==null ? null : tValue.getValue();
+        return value == null ? otherValue == null  ? 0 : 1 : otherValue == null ? 1 : value.compareTo(otherValue);
     }
 }

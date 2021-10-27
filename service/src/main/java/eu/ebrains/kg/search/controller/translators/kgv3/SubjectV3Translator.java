@@ -27,6 +27,7 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.SubjectV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Subject;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 
 import java.util.Collections;
@@ -64,7 +65,7 @@ public class SubjectV3Translator extends TranslatorV3<SubjectV3, Subject, Subjec
         return Collections.singletonList("https://openminds.ebrains.eu/core/Subject");
     }
 
-    public Subject translate(SubjectV3 subject, DataStage dataStage, boolean liveMode) {
+    public Subject translate(SubjectV3 subject, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
         Subject s = new Subject();
 
         String uuid = IdUtils.getUUID(subject.getId());

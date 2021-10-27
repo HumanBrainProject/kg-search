@@ -31,6 +31,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.Sample;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -67,7 +68,7 @@ public class SampleV1Translator extends TranslatorV2<SampleV1, Sample, SampleV1T
         return Collections.singletonList("minds/experiment/sample/v1.0.0");
     }
 
-    public Sample translate(SampleV1 sample, DataStage dataStage, boolean liveMode) {
+    public Sample translate(SampleV1 sample, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
         Sample s = new Sample();
         s.setId(sample.getIdentifier());
         List<String> identifiers = Arrays.asList(sample.getIdentifier(), String.format("Sample/%s", sample.getIdentifier()));

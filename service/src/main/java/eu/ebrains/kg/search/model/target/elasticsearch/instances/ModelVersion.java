@@ -164,6 +164,7 @@ public class ModelVersion implements TargetInstance, VersionedInstance {
         setDescription(StringUtils.isBlank(description) ? null : new Value<>(description));
     }
 
+    @Override
     public void setVersion(String version) {
         setVersion(StringUtils.isBlank(version) ? null : new Value<>(version));
     }

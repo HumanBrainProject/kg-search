@@ -28,6 +28,7 @@ import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Subject;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
@@ -62,7 +63,7 @@ public class SubjectV1Translator extends TranslatorV2<SubjectV1, Subject, Subjec
         return Collections.singletonList("minds/experiment/subject/v1.0.0");
     }
 
-    public Subject translate(SubjectV1 subject, DataStage dataStage, boolean liveMode) {
+    public Subject translate(SubjectV1 subject, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
         Subject s = new Subject();
         s.setId(subject.getIdentifier());
         List<String> identifiers = Arrays.asList(subject.getIdentifier(), String.format("Subject/%s", subject.getIdentifier()));

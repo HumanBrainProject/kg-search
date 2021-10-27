@@ -40,7 +40,7 @@ public class TranslatorCommons {
         return StringUtils.isBlank(value) ? null : new Value<>(value);
     }
 
-    public static <T> Value<T> toValue(T value){
+    public static <T extends Comparable<T>> Value<T> toValue(T value){
         return value == null ? null : new Value<>(value);
     }
 
@@ -48,7 +48,7 @@ public class TranslatorCommons {
         return CollectionUtils.isEmpty(list) ? null : list;
     }
 
-    public static <T> List<Value<T>> emptyToNullValueList(List<T> list) {
+    public static <T extends Comparable<T>> List<Value<T>> emptyToNullValueList(List<T> list) {
         return CollectionUtils.isEmpty(list) ? null : list.stream().map(Value::new).collect(Collectors.toList());
     }
 

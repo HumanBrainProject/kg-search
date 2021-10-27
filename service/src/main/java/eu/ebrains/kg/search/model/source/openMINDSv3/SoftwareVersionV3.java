@@ -24,6 +24,8 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.ListOrSingleStringAsListDeserializer;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ExternalRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
@@ -38,7 +40,7 @@ public class SoftwareVersionV3 extends SourceInstanceV3 {
     private String howToCite;
     private String doi;
     private String swhid;
-    private List<ExternalRef> license;
+    private List<License> license;
     private Copyright copyright;
     private List<FullNameRef> projects;
     private List<PersonOrOrganizationRef> custodian;
@@ -49,6 +51,8 @@ public class SoftwareVersionV3 extends SourceInstanceV3 {
     private List<FullNameRef> operatingSystem;
     private List<FullNameRef> device;
     private List<FullNameRef> programmingLanguage;
+
+    @JsonDeserialize(using=ListOrSingleStringAsListDeserializer.class)
     private List<String> requirement;
     private List<FullNameRef> feature;
     private List<FullNameRef> language;
@@ -59,6 +63,7 @@ public class SoftwareVersionV3 extends SourceInstanceV3 {
     private String documentationURL;
     private String documentationFile;
 
+    @JsonDeserialize(using=ListOrSingleStringAsListDeserializer.class)
     private List<String> supportChannel;
 
     private List<FileFormat> inputFormat;
@@ -66,6 +71,15 @@ public class SoftwareVersionV3 extends SourceInstanceV3 {
 
     private List<Component> components;
     private SoftwareVersions software;
+    private String version;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
     public String getFullName() {
         return fullName;
@@ -115,11 +129,11 @@ public class SoftwareVersionV3 extends SourceInstanceV3 {
         this.swhid = swhid;
     }
 
-    public List<ExternalRef> getLicense() {
+    public List<License> getLicense() {
         return license;
     }
 
-    public void setLicense(List<ExternalRef> license) {
+    public void setLicense(List<License> license) {
         this.license = license;
     }
 
@@ -362,6 +376,18 @@ public class SoftwareVersionV3 extends SourceInstanceV3 {
 
         public void setHolder(List<PersonOrOrganizationRef> holder) {
             this.holder = holder;
+        }
+    }
+
+    public static class License extends ExternalRef{
+        private String shortName;
+
+        public String getShortName() {
+            return shortName;
+        }
+
+        public void setShortName(String shortName) {
+            this.shortName = shortName;
         }
     }
 

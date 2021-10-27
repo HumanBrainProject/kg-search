@@ -32,6 +32,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -74,7 +75,7 @@ public class DatasetV3Translator extends TranslatorV3<DatasetV3, Dataset, Datase
         return Collections.singletonList("https://openminds.ebrains.eu/core/Dataset");
     }
 
-    public Dataset translate(DatasetV3 dataset, DataStage dataStage, boolean liveMode) {
+    public Dataset translate(DatasetV3 dataset, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
         if (!CollectionUtils.isEmpty(dataset.getVersions()) && dataset.getVersions().size() > 1) {
             Dataset d = new Dataset();
             List<Version> sortedVersions = Helpers.sort(dataset.getVersions());

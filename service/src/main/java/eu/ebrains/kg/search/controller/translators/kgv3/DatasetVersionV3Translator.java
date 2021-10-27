@@ -33,6 +33,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.DatasetVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -96,7 +97,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
     }
 
-    public DatasetVersion translate(DatasetVersionV3 datasetVersion, DataStage dataStage, boolean liveMode) {
+    public DatasetVersion translate(DatasetVersionV3 datasetVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
         DatasetVersion d = new DatasetVersion();
         DatasetVersionV3.DatasetVersions dataset = datasetVersion.getDataset();
         Accessibility accessibility = Accessibility.fromPayload(datasetVersion);

@@ -57,11 +57,10 @@ public class Setup {
         if(uploadQueries) {
             logger.info("Now uploading queries for search...");
             TranslatorModel.MODELS.parallelStream().map(TranslatorModel::getV3translator).filter(Objects::nonNull).forEach(t -> {
-                final String simpleName = t.getClass().getSimpleName();
-                final String filename = StringUtils.uncapitalize(simpleName.substring(0, simpleName.indexOf("V3")));
                 try{
-                    String payload = loadQuery(filename);
                     for (String semanticType : t.semanticTypes()) {
+                        String filename = t.getQueryFileName(semanticType);
+                        String payload = loadQuery(filename);
                         final String queryId = t.getQueryIdByType(semanticType);
                         logger.info(String.format("Uploading query %s from file %s for type %s", queryId, filename, semanticType));
                         Map<String, Object> properties = new HashMap<>();

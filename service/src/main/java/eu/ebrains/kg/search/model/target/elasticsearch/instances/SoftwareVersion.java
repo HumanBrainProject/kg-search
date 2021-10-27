@@ -72,10 +72,11 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE, facet = FieldInfo.Facet.LIST)
     private List<Value<String>> licenseOld;
 
-    @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE, facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "License", type = FieldInfo.Type.TEXT)
     private List<TargetExternalReference> license;
 
-    @FieldInfo(label = "Copyright", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE, facet = FieldInfo.Facet.LIST)
+
+    @FieldInfo(label = "Copyright", type = FieldInfo.Type.TEXT)
     private Value<String> copyright;
 
     @FieldInfo(label = "Project", boost = 10, order = 3)
@@ -108,10 +109,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
     private List<TargetExternalReference> documentation;
 
     @FieldInfo(label = "Support")
-    private List<Value<String>> support;
-
-    @FieldInfo(label = "New in this version", markdown = true, boost = 2)
-    private Value<String> newInThisVersion;
+    private List<TargetExternalReference> support;
 
     @FieldInfo(labelHidden = true, markdown = true, boost = 2)
     private Value<String> description;
@@ -125,7 +123,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
      */
     @Deprecated
     @FieldInfo(label = "Latest Version", layout = FieldInfo.Layout.SUMMARY)
-    private Value<String> version;
+    private Value<String> versionOld;
 
 
     /**
@@ -138,6 +136,9 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(label = "Application Category", layout = FieldInfo.Layout.SUMMARY, separator = ", ", facet = FieldInfo.Facet.LIST)
     private List<TargetInternalReference> appCategory;
 
+
+    @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, visible = false, facetOrder = FieldInfo.FacetOrder.BYCOUNT, facet = FieldInfo.Facet.LIST)
+    private List<Value<String>> licenseForFilter;
 
     /**
      * @deprecated use operatingSystem for openMINDS instead
@@ -155,7 +156,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(label = "Programming languages", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
     private List<TargetInternalReference> programmingLanguages;
 
-    @FieldInfo(label = "Requirements", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "Requirements")
     private List<Value<String>> requirements;
 
     @FieldInfo(label = "Features", layout = FieldInfo.Layout.SUMMARY, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
@@ -165,7 +166,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
      */
     private List<Value<String>> featuresOld;
 
-    @FieldInfo(label = "Features", layout = FieldInfo.Layout.SUMMARY)
+    @FieldInfo(label = "Features", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST, isFilterableFacet = true)
     private List<TargetInternalReference> features;
 
     @FieldInfo(label = "Languages", layout = FieldInfo.Layout.SUMMARY)
@@ -178,6 +179,11 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
      */
     private List<Value<String>> keywords;
 
+    @FieldInfo(label = "Input formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true)
+    private List<Value<String>> inputFormatsForFilter;
+
+    @FieldInfo(label = "Output formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true)
+    private List<Value<String>> outputFormatsForFilter;
 
     @FieldInfo(label = "Input formats", layout = FieldInfo.Layout.GROUP, isTable = true)
     private List<Children<FileFormat>> inputFormat;
@@ -195,6 +201,8 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
     @JsonProperty("last_release")
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
+
+    private String version;
 
     private List<TargetInternalReference> versions;
 
@@ -333,13 +341,13 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
         return operatingSystemOld;
     }
 
-    public Value<String> getVersion() {
-        return version;
+    public Value<String> getVersionOld() {
+        return versionOld;
     }
 
     @Deprecated
-    public void setVersion(Value<String> version) {
-        this.version = version;
+    public void setVersionOld(Value<String> versionOld) {
+        this.versionOld = versionOld;
     }
 
     public List<TargetExternalReference> getHomepageOld() {
@@ -414,14 +422,6 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
         this.projects = projects;
     }
 
-    public Value<String> getNewInThisVersion() {
-        return newInThisVersion;
-    }
-
-    public void setNewInThisVersion(Value<String> newInThisVersion) {
-        this.newInThisVersion = newInThisVersion;
-    }
-
     public List<Value<String>> getPublications() {
         return publications;
     }
@@ -464,11 +464,11 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
         this.keywords = keywords;
     }
 
-    public List<Value<String>> getSupport() {
+    public List<TargetExternalReference> getSupport() {
         return support;
     }
 
-    public void setSupport(List<Value<String>> support) {
+    public void setSupport(List<TargetExternalReference> support) {
         this.support = support;
     }
 
@@ -572,6 +572,39 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
         this.homepage = homepage;
     }
 
+    public List<Value<String>> getLicenseForFilter() {
+        return licenseForFilter;
+    }
+
+    public void setLicenseForFilter(List<Value<String>> licenseForFilter) {
+        this.licenseForFilter = licenseForFilter;
+    }
+
+    public List<Value<String>> getInputFormatsForFilter() {
+        return inputFormatsForFilter;
+    }
+
+    public void setInputFormatsForFilter(List<Value<String>> inputFormatsForFilter) {
+        this.inputFormatsForFilter = inputFormatsForFilter;
+    }
+
+    public List<Value<String>> getOutputFormatsForFilter() {
+        return outputFormatsForFilter;
+    }
+
+    public void setOutputFormatsForFilter(List<Value<String>> outputFormatsForFilter) {
+        this.outputFormatsForFilter = outputFormatsForFilter;
+    }
+
     @Override
     public void setVersions(List<TargetInternalReference> versions) { this.versions = versions; }
+
+    @Override
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getVersion() {
+        return version;
+    }
 }

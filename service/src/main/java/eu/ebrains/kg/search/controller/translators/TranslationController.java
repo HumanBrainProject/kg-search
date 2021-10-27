@@ -27,6 +27,7 @@ import eu.ebrains.kg.search.controller.kg.KG;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -41,13 +42,18 @@ import static eu.ebrains.kg.search.controller.translators.Helpers.*;
 public class TranslationController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private final DOICitationFormatter doiCitationFormatter;
+
+    public TranslationController(DOICitationFormatter doiCitationFormatter) {
+        this.doiCitationFormatter = doiCitationFormatter;
+    }
 
     public <Source, Target> TargetInstancesResult<Target> translateToTargetInstances(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, int from, int size) {
         logger.info(String.format("Starting to query %d %s from %d", size, translator.getSourceType().getSimpleName(), from));
         final ResultsOfKG<Source> instanceResults = kg.executeQuery(translator.getResultType(), dataStage, queryId, from, size);
         Stats stats = getStats(instanceResults, from);
         logger.info(String.format("Queried %d %s (%s)", stats.getPageSize(), translator.getSourceType().getSimpleName(), stats.getInfo()));
-        List<Target> instances = instanceResults.getData().stream().map(s -> translator.translate(s, dataStage, false)).filter(Objects::nonNull).collect(Collectors.toList());
+        List<Target> instances = instanceResults.getData().stream().map(s -> translator.translate(s, dataStage, false, doiCitationFormatter)).filter(Objects::nonNull).collect(Collectors.toList());
         TargetInstancesResult<Target> result = new TargetInstancesResult<>();
         result.setTargetInstances(instances);
         result.setFrom(instanceResults.getFrom());
@@ -80,7 +86,7 @@ public class TranslationController {
             }
         }
         logger.info(String.format("Done querying id %s from %s for live mode", id, translator.getSourceType().getSimpleName()));
-        return source != null ? translator.translate(source, dataStage, true) : null;
+        return source != null ? translator.translate(source, dataStage, true, doiCitationFormatter) : null;
     }
 
 

@@ -28,6 +28,7 @@ import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv1.ProjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Project;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -63,7 +64,7 @@ public class ProjectV1Translator extends TranslatorV2<ProjectV1, Project, Projec
         return Collections.singletonList("minds/core/placomponent/v1.0.0");
     }
 
-    public Project translate(ProjectV1 projectSource, DataStage dataStage, boolean liveMode) {
+    public Project translate(ProjectV1 projectSource, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
         Project p = new Project();
         p.setId(projectSource.getIdentifier());
         List<String> identifiers = Arrays.asList(projectSource.getIdentifier(), String.format("Project/%s", projectSource.getIdentifier()));

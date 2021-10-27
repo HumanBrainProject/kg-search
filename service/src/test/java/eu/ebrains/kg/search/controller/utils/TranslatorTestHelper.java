@@ -32,6 +32,8 @@ import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
 import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.*;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +46,9 @@ public class TranslatorTestHelper {
     private static final JsonAdapter jsonAdapter = new JsonAdapter();
 
     private static final List<String> keysToIgnore = new ArrayList<>(Arrays.asList("@timestamp"));
+
+    private static final DOICitationFormatter doiCitationFormatter = Mockito.mock(DOICitationFormatter.class);
+
 
 //    public static List<String> compareContributor(List<String> sourcesJson, String expectedJson, DataStage dataStage, boolean liveMode) {
 //
@@ -88,7 +93,7 @@ public class TranslatorTestHelper {
 
     public static List<String> compareModel(ModelV2 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
         ModelV2Translator translator = new ModelV2Translator();
-        ModelVersion target = translator.translate(source, dataStage, liveMode);
+        ModelVersion target = translator.translate(source, dataStage, liveMode, doiCitationFormatter);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
 
@@ -103,7 +108,7 @@ public class TranslatorTestHelper {
 
     public static List<String> compareSubject(SubjectV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
         SubjectV1Translator translator = new SubjectV1Translator();
-        Subject target = translator.translate(source, dataStage, liveMode);
+        Subject target = translator.translate(source, dataStage, liveMode, doiCitationFormatter);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
 
@@ -119,7 +124,7 @@ public class TranslatorTestHelper {
 
     public static List<String> compareSoftware(SoftwareV2 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
         SoftwareV2Translator translator = new SoftwareV2Translator();
-        SoftwareVersion target = translator.translate(source, dataStage, liveMode);
+        SoftwareVersion target = translator.translate(source, dataStage, liveMode, doiCitationFormatter);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
 
@@ -134,7 +139,7 @@ public class TranslatorTestHelper {
 
     public static List<String> compareSample(SampleV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
         SampleV1Translator translator = new SampleV1Translator();
-        Sample target = translator.translate(source, dataStage, liveMode);
+        Sample target = translator.translate(source, dataStage, liveMode, doiCitationFormatter);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
 
@@ -150,7 +155,7 @@ public class TranslatorTestHelper {
 
     public static List<String> compareProject(ProjectV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
         ProjectV1Translator translator = new ProjectV1Translator();
-        Project target = translator.translate(source, dataStage, liveMode);
+        Project target = translator.translate(source, dataStage, liveMode, doiCitationFormatter);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
         return compareResults(targetExpected, targetResult);
@@ -164,7 +169,7 @@ public class TranslatorTestHelper {
 
     public static List<String> compareDataset(DatasetV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
         DatasetV1Translator translator = new DatasetV1Translator();
-        DatasetVersion target = translator.translate(source, dataStage, liveMode);
+        DatasetVersion target = translator.translate(source, dataStage, liveMode, doiCitationFormatter);
         String targetJson = jsonAdapter.toJson(target);
         Map<String, Object> targetResult = jsonAdapter.fromJson(targetJson, Map.class);
         return compareResults(targetExpected, targetResult);

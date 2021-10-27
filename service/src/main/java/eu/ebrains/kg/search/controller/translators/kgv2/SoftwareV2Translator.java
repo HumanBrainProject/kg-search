@@ -28,6 +28,7 @@ import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.SoftwareVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -64,7 +65,7 @@ public class SoftwareV2Translator extends TranslatorV2<SoftwareV2, SoftwareVersi
         return Collections.singletonList("softwarecatalog/software/softwareproject/v1.0.0");
     }
 
-    public SoftwareVersion translate(SoftwareV2 softwareV2, DataStage dataStage, boolean liveMode) {
+    public SoftwareVersion translate(SoftwareV2 softwareV2, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
         SoftwareVersion s = new SoftwareVersion();
         s.setId(softwareV2.getIdentifier());
         List<String> identifiers = Arrays.asList(softwareV2.getIdentifier(), String.format("Software/%s", softwareV2.getIdentifier()));
@@ -95,7 +96,7 @@ public class SoftwareV2Translator extends TranslatorV2<SoftwareV2, SoftwareVersi
         }
         s.setLicenseOld(emptyToNullValueList(version.getLicense()));
         s.setOperatingSystemOld(emptyToNullValueList(version.getOperatingSystem()));
-        s.setVersion(toValue(version.getVersion()));
+        s.setVersionOld(toValue(version.getVersion()));
         if (!CollectionUtils.isEmpty(version.getHomepage())) {
             s.setHomepageOld(version.getHomepage().stream()
                     .map(h -> new TargetExternalReference(h, h))

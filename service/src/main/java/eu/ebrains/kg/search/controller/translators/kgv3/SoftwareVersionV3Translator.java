@@ -33,14 +33,12 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Childre
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3, SoftwareVersion, SoftwareVersionV3Translator.Result> {
@@ -81,7 +79,7 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         return Collections.singletonList("https://openminds.ebrains.eu/core/SoftwareVersion");
     }
 
-    public SoftwareVersion translate(SoftwareVersionV3 softwareVersion, DataStage dataStage, boolean liveMode) {
+    public SoftwareVersion translate(SoftwareVersionV3 softwareVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
         SoftwareVersion s = new SoftwareVersion();
         SoftwareVersionV3.SoftwareVersions software = softwareVersion.getSoftware();
 
@@ -89,7 +87,8 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         s.setIdentifier(IdUtils.getUUID(softwareVersion.getIdentifier()));
 
         List<Version> versions = software == null ? null:software.getVersions();
-        if (!CollectionUtils.isEmpty(versions)) {
+        if (!CollectionUtils.isEmpty(versions) && versions.size()>1) {
+            s.setVersion(softwareVersion.getVersion());
             List<Version> sortedVersions = Helpers.sort(versions);
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
             references.add(new TargetInternalReference(IdUtils.getUUID(software.getId()), "All versions"));
@@ -128,16 +127,20 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
             s.setCitation(new Value<>(softwareVersion.getHowToCite()));
         }
         else if(StringUtils.isNotBlank(softwareVersion.getDoi())){
-            //TODO resolve DOI with citation formatter
-            s.setCitation(new Value<>(softwareVersion.getDoi()));
+            final String formattedDOI = Helpers.getFormattedDOI(doiCitationFormatter, softwareVersion.getDoi());
+            if(formattedDOI!=null) {
+                s.setCitation(new Value<>(formattedDOI));
+            }
         }
-        else if(StringUtils.isNotBlank(softwareVersion.getSwhid())){
+        if(s.getCitation() == null && StringUtils.isNotBlank(softwareVersion.getSwhid())){
             //TODO resolve SWHID with citation formatter
             s.setCitation(new Value<>(softwareVersion.getSwhid()));
         }
 
+
         if(!CollectionUtils.isEmpty(softwareVersion.getLicense())){
             s.setLicense(softwareVersion.getLicense().stream().map(l -> new TargetExternalReference(l.getUrl(), l.getLabel())).collect(Collectors.toList()));
+            s.setLicenseForFilter(softwareVersion.getLicense().stream().map(l -> new Value<>(l.getShortName())).collect(Collectors.toList()));
         }
 
         if(softwareVersion.getCopyright()!=null){
@@ -177,13 +180,8 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
             s.setDescription(software.getDescription());
         }
 
-        if(StringUtils.isNotBlank(softwareVersion.getVersionInnovation())){
-            s.setNewInThisVersion(new Value<>(softwareVersion.getVersionInnovation()));
-        }
-
         if(!CollectionUtils.isEmpty(softwareVersion.getPublications())){
-            //TODO resolve the dois with the citation formatter service
-            s.setPublications(softwareVersion.getPublications().stream().map(Value::new).collect(Collectors.toList()));
+            s.setPublications(softwareVersion.getPublications().stream().map(p -> Helpers.getFormattedDOI(doiCitationFormatter, p)).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
         }
 
         if(!CollectionUtils.isEmpty(softwareVersion.getApplicationCategory())){
@@ -237,15 +235,28 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
             s.setDocumentation(documentationElements);
         }
         if(!CollectionUtils.isEmpty(softwareVersion.getSupportChannel())){
-            s.setSupport(softwareVersion.getSupportChannel().stream().map(Value::new).collect(Collectors.toList()));
+            final List<TargetExternalReference> links = softwareVersion.getSupportChannel().stream().filter(channel -> channel.startsWith("http")).
+                    map(url -> new TargetExternalReference(url, url)).collect(Collectors.toList());
+            if(links.isEmpty()){
+                //Decision from Oct 2th 2021: we only show e-mail addresses if there are no links available
+                final List<TargetExternalReference> emailAddresses = softwareVersion.getSupportChannel().stream().filter(channel -> channel.contains("@")).map(email -> new TargetExternalReference(String.format("mailto:%s", email), email)).collect(Collectors.toList());
+                if(!emailAddresses.isEmpty()){
+                    s.setSupport(emailAddresses);
+                }
+            }
+            else{
+                s.setSupport(links);
+            }
         }
 
         if(!CollectionUtils.isEmpty(softwareVersion.getInputFormat())){
             s.setInputFormat(softwareVersion.getInputFormat().stream().map(SoftwareVersionV3Translator::translateFileFormat).collect(Collectors.toList()));
+            s.setInputFormatsForFilter(softwareVersion.getInputFormat().stream().map(f -> new Value<>(f.getName())).collect(Collectors.toList()));
         }
 
         if(!CollectionUtils.isEmpty(softwareVersion.getOutputFormat())){
             s.setOutputFormats(softwareVersion.getOutputFormat().stream().map(SoftwareVersionV3Translator::translateFileFormat).collect(Collectors.toList()));
+            s.setOutputFormatsForFilter(softwareVersion.getOutputFormat().stream().map(f -> new Value<>(f.getName())).collect(Collectors.toList()));
         }
 
         if(!CollectionUtils.isEmpty(softwareVersion.getComponents())){

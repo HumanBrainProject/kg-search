@@ -28,6 +28,7 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.FileV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.File;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -63,7 +64,7 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
         return Collections.singletonList("https://openminds.ebrains.eu/core/File");
     }
 
-    public File translate(FileV3 file, DataStage dataStage, boolean liveMode) {
+    public File translate(FileV3 file, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
         String fileRepository = file.getFileRepository();
 
         if(StringUtils.isBlank(fileRepository) || StringUtils.isBlank(file.getIri()) || StringUtils.isBlank(file.getName())) {
