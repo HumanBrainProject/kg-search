@@ -29,6 +29,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 
@@ -48,7 +49,7 @@ public class ContentType implements TargetInstance {
     private Value<String> type = new Value<>("Content type");
 
     @FieldInfo(label = "Name", sort=true, layout = FieldInfo.Layout.HEADER, labelHidden = true)
-    private Value<String> name;
+    private Value<String> title;
 
     @FieldInfo(label = "Description")
     private Value<String> description;
@@ -57,7 +58,7 @@ public class ContentType implements TargetInstance {
     private List<Value<String>> fileExtensions;
 
     @FieldInfo(label = "Related media type")
-    private Value<String> relatedMediaType;
+    private TargetExternalReference relatedMediaType;
 
     @FieldInfo(label = "Specification")
     private Value<String> specification;
@@ -130,12 +131,12 @@ public class ContentType implements TargetInstance {
         this.type = type;
     }
 
-    public Value<String> getName() {
-        return name;
+    public Value<String> getTitle() {
+        return title;
     }
 
-    public void setName(Value<String> name) {
-        this.name = name;
+    public void setTitle(Value<String> title) {
+        this.title = title;
     }
 
     public Value<String> getDescription() {
@@ -154,11 +155,11 @@ public class ContentType implements TargetInstance {
         this.fileExtensions = fileExtensions;
     }
 
-    public Value<String> getRelatedMediaType() {
+    public TargetExternalReference getRelatedMediaType() {
         return relatedMediaType;
     }
 
-    public void setRelatedMediaType(Value<String> relatedMediaType) {
+    public void setRelatedMediaType(TargetExternalReference relatedMediaType) {
         this.relatedMediaType = relatedMediaType;
     }
 

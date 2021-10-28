@@ -208,7 +208,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
 
     public static class FileFormat {
         @FieldInfo(label = "Name", sort = true)
-        private Value<String> name;
+        private TargetInternalReference name;
 
         @FieldInfo(label = "File extensions", sort = true)
         private List<Value<String>> fileExtensions;
@@ -216,11 +216,11 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
         @FieldInfo(label = "Media type", sort = true)
         private Value<String> relatedMediaType;
 
-        public Value<String> getName() {
+        public TargetInternalReference getName() {
             return name;
         }
 
-        public void setName(Value<String> name) {
+        public void setName(TargetInternalReference name) {
             this.name = name;
         }
 

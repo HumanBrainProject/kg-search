@@ -365,7 +365,11 @@
       "path": "https://openminds.ebrains.eu/vocab/inputFormat",
       "structure": [
         {
-          "propertyName": "query:name",
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
           "path": "https://openminds.ebrains.eu/vocab/name"
         },
         {
@@ -383,7 +387,11 @@
       "path": "https://openminds.ebrains.eu/vocab/outputFormat",
       "structure": [
         {
-          "propertyName": "query:name",
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
           "path": "https://openminds.ebrains.eu/vocab/name"
         },
         {

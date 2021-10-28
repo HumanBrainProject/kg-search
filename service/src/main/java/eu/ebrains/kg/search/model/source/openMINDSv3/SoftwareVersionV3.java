@@ -391,18 +391,9 @@ public class SoftwareVersionV3 extends SourceInstanceV3 {
         }
     }
 
-    public static class FileFormat{
-        private String name;
+    public static class FileFormat extends FullNameRef{
         private List<String> fileExtension;
         private String relatedMediaType;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
 
         public List<String> getFileExtension() {
             return fileExtension;

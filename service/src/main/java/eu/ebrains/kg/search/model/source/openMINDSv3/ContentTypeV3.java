@@ -23,6 +23,8 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.ListOrSingleStringAsListDeserializer;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRefForResearchProductVersion;
 
@@ -32,9 +34,11 @@ public class ContentTypeV3 extends SourceInstanceV3 {
 
     private String name;
     private String description;
+    @JsonDeserialize(using= ListOrSingleStringAsListDeserializer.class)
     private List<String> fileExtension;
     private String relatedMediaType;
     private String specification;
+    @JsonDeserialize(using= ListOrSingleStringAsListDeserializer.class)
     private List<String> synonym;
     private FullNameRef dataType;
     private List<FullNameRef> inputFormat;

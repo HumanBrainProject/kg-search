@@ -27,6 +27,7 @@ import eu.ebrains.kg.search.controller.translators.Translator;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRefForResearchProductVersion;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.utils.IdUtils;
@@ -60,6 +61,13 @@ public abstract class TranslatorV3<Source, Target, Result extends ResultsOfKG<So
         return null;
     }
 
+
+    protected TargetExternalReference link(String url){
+        if(StringUtils.isNotBlank(url)){
+            return new TargetExternalReference(url.trim(), url.trim());
+        }
+        return null;
+    }
 
     protected TargetInternalReference ref(FullNameRef ref){
         if(ref!=null){

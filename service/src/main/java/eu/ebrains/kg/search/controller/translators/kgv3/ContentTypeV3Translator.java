@@ -26,26 +26,16 @@ package eu.ebrains.kg.search.controller.translators.kgv3;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.ContentTypeV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.ControlledTermV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.ContentType;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.ControlledTerm;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ContentTypeV3Translator extends TranslatorV3<ContentTypeV3, ContentType, ContentTypeV3Translator.Result> {
     private static final String QUERY_ID = "fba5b6dc-b047-4535-b3d2-8901fce8574b";
@@ -72,7 +62,7 @@ public class ContentTypeV3Translator extends TranslatorV3<ContentTypeV3, Content
 
     @Override
     public List<String> semanticTypes() {
-        return Collections.singletonList("https://openminds.ebrains.eu/core/Dataset");
+        return Collections.singletonList("https://openminds.ebrains.eu/core/ContentType");
     }
 
     public static class Result extends ResultsOfKGv3<ContentTypeV3> {
@@ -82,10 +72,10 @@ public class ContentTypeV3Translator extends TranslatorV3<ContentTypeV3, Content
        ContentType c = new ContentType();
        c.setId(IdUtils.getUUID(contentTypeV3.getId()));
        c.setIdentifier(IdUtils.getUUID(contentTypeV3.getIdentifier()));
-       c.setName(value(contentTypeV3.getName()));
+       c.setTitle(value(contentTypeV3.getName()));
        c.setDescription(value(contentTypeV3.getDescription()));
        c.setFileExtensions(value(contentTypeV3.getFileExtension()));
-       c.setRelatedMediaType(value(contentTypeV3.getRelatedMediaType()));
+       c.setRelatedMediaType(link(contentTypeV3.getRelatedMediaType()));
        c.setSpecification(value(contentTypeV3.getSpecification()));
        c.setSynonyms(value(contentTypeV3.getSynonym()));
        c.setDataType(ref(contentTypeV3.getDataType()));

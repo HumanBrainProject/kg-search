@@ -43,9 +43,9 @@ import java.util.stream.Collectors;
 
 public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3, SoftwareVersion, SoftwareVersionV3Translator.Result> {
 
-    private static Children<SoftwareVersion.FileFormat> translateFileFormat(SoftwareVersionV3.FileFormat i) {
+    private Children<SoftwareVersion.FileFormat> translateFileFormat(SoftwareVersionV3.FileFormat i) {
         SoftwareVersion.FileFormat f = new SoftwareVersion.FileFormat();
-        f.setName(i.getName() != null ? new Value<>(i.getName()) : null);
+        f.setName(ref(i));
         f.setRelatedMediaType(i.getRelatedMediaType() != null ? new Value<>(i.getRelatedMediaType()) : null);
         f.setFileExtensions(!CollectionUtils.isEmpty(i.getFileExtension()) ? i.getFileExtension().stream().map(Value::new).collect(Collectors.toList()) : null);
         return new Children<>(f);
@@ -250,13 +250,13 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         }
 
         if(!CollectionUtils.isEmpty(softwareVersion.getInputFormat())){
-            s.setInputFormat(softwareVersion.getInputFormat().stream().map(SoftwareVersionV3Translator::translateFileFormat).collect(Collectors.toList()));
-            s.setInputFormatsForFilter(softwareVersion.getInputFormat().stream().map(f -> new Value<>(f.getName())).collect(Collectors.toList()));
+            s.setInputFormat(softwareVersion.getInputFormat().stream().map(this::translateFileFormat).collect(Collectors.toList()));
+            s.setInputFormatsForFilter(softwareVersion.getInputFormat().stream().map(f -> new Value<>(f.getFullName())).collect(Collectors.toList()));
         }
 
         if(!CollectionUtils.isEmpty(softwareVersion.getOutputFormat())){
-            s.setOutputFormats(softwareVersion.getOutputFormat().stream().map(SoftwareVersionV3Translator::translateFileFormat).collect(Collectors.toList()));
-            s.setOutputFormatsForFilter(softwareVersion.getOutputFormat().stream().map(f -> new Value<>(f.getName())).collect(Collectors.toList()));
+            s.setOutputFormats(softwareVersion.getOutputFormat().stream().map(this::translateFileFormat).collect(Collectors.toList()));
+            s.setOutputFormatsForFilter(softwareVersion.getOutputFormat().stream().map(f -> new Value<>(f.getFullName())).collect(Collectors.toList()));
         }
 
         if(!CollectionUtils.isEmpty(softwareVersion.getComponents())){
