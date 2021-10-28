@@ -29,6 +29,7 @@ public class TranslatorModel<v1Input, v2Input, v3Input, Output extends TargetIns
             new TranslatorModel<>(Software.class, null, null, new SoftwareV3Translator(), null, false, false),
             new TranslatorModel<>(FileRepository.class, null, null, new FileRepositoryV3Translator(), null, false, false),
             new TranslatorModel<>(ControlledTerm.class, null, null, new ControlledTermV3Translator(), null, false, false),
+            new TranslatorModel<>(ContentType.class, null, null, new ContentTypeV3Translator(), null, false, false),
             new TranslatorModel<>(File.class, null, null, new FileV3Translator(), null, true, false)
     );
 
