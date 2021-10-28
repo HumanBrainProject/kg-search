@@ -112,8 +112,8 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
         d.setSpeciesFilter(emptyToNull(datasetV1.getSpeciesFilter()));
 
         if (datasetV1.isUseHDG()) {
-            d.setUseHDG(DatasetVersion.createHDGMessage(datasetV1.getIdentifier(), false));
-            d.setEmbargo(DatasetVersion.createHDGMessage(datasetV1.getIdentifier(), true));
+            d.setUseHDG(DatasetVersion.createHDGMessage(datasetV1.getEditorId(), false));
+            d.setEmbargo(DatasetVersion.createHDGMessage(datasetV1.getEditorId(), true));
             d.setDataAccessibility("Controlled access");
         } else {
             if (dataStage == DataStage.RELEASED) {
