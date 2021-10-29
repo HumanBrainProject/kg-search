@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /*
  * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
  *
@@ -22,7 +21,8 @@
  *
  */
 
-import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from "react";
 import { Field, PrintViewField } from "./Field";
 import { LIST_SMALL_SIZE_STOP,
   getNextSizeStop,
@@ -30,14 +30,22 @@ import { LIST_SMALL_SIZE_STOP,
   getShowMoreLabel } from "./helpers";
 import "./TableField.css";
 
-const CustomTableCell = ({field, viewComponent}) => {
+const CustomTableCell = ({field, isFirstCell, onCollapseToggle, viewComponent}) => {
   if (!field.data) {
-    return field.isHeaderRow ? <th>-</th>:<td>-</td>;
+    return field.isCollectionHeaderRow ? <th>-</th>:<td>-</td>;
   }
   const Component = viewComponent;
-  if (field.isHeaderRow) {
+
+  const handleClick = () => onCollapseToggle(field.collectionIndex, !field.isCollectionCollapsed);
+
+  if (field.isCollectionHeaderRow) {
     return (
-      <th><Component name={field.name} data={field.data} mapping={field.mapping} group={field.group} /></th>
+      <th>
+        {isFirstCell && field.isCollectionCollapsible && (
+          <button onClick={handleClick}><FontAwesomeIcon icon={field.isCollectionCollapsed?"chevron-right":"chevron-down"} /></button>
+        )}
+        <Component name={field.name} data={field.data} mapping={field.mapping} group={field.group} />
+      </th>
     );
   }
   return (
@@ -45,13 +53,16 @@ const CustomTableCell = ({field, viewComponent}) => {
   );
 };
 
-const CustomTableRow = ({row, viewComponent}) => (
-  <tr>
-    {row.map((field, index) => <CustomTableCell key={`${field.name}-${index}`} field={field} viewComponent={viewComponent} />)}
-  </tr>
-);
+const CustomTableRow = ({row, viewComponent, onCollapseToggle}) => {
+  const collapse = row[0].isCollectionCollapsed && !row[0].isCollectionHeaderRow;
+  return(
+    <tr className={collapse?"row-hidden":null}>
+      {row.map((field, index) => <CustomTableCell key={`${field.name}-${index}`} isFirstCell={!index} field={field} viewComponent={viewComponent} onCollapseToggle={onCollapseToggle} />)}
+    </tr>
+  );
+};
 
-const normalizeCells = (fields, data, group, isHeaderRow) => {
+const normalizeCells = (fields, data, group, collectionIndex, isCollectionHeaderRow, isCollectionCollapsed, isCollectionCollapsible) => {
   return Object.entries(fields)
     .filter(([, field]) =>
       field && field.visible
@@ -61,34 +72,50 @@ const normalizeCells = (fields, data, group, isHeaderRow) => {
       data: data && data[name],
       mapping: {...field, labelHidden:true},
       group: group,
-      isHeaderRow: isHeaderRow
+      isCollectionHeaderRow: isCollectionHeaderRow,
+      isCollectionCollapsed: isCollectionCollapsed,
+      collectionIndex: collectionIndex,
+      isCollectionCollapsible: isCollectionCollapsible
     }));
 };
 
-const normalizeRows = list => {
-  return list.reduce((acc, item) => {
+const normalizeRows = (list, collapsedRowIndexes) => {
+  return list.reduce((acc, item, index) => {
+    const isCollectionCollapsed = !!collapsedRowIndexes[index];
+    const hasChildren = item.data && item.data.children;
     if (item.isObject) {
-      acc.push(normalizeCells(item.mapping.children, item.data, item.group, true));
-      if (item.data && item.data.children) {
-        item.data.children.forEach(child => acc.push(normalizeCells(item.mapping.children, child, item.group, false)));
+      acc.push(normalizeCells(item.mapping.children, item.data, item.group, index, true, isCollectionCollapsed, hasChildren));
+      if (hasChildren) {
+        item.data.children.forEach(child => acc.push(normalizeCells(item.mapping.children, child, item.group, index, false, isCollectionCollapsed, false)));
       }
     } else {
       acc.push(item);
     }
     return acc;
-  }, []);};
+  }, []);
+};
 
 const TableFieldBase = (renderUserInteractions = true) => {
 
-  const TableFieldComponent = ({list, showToggle, toggleHandler, toggleLabel}) => {
+  const TableFieldComponent = ({list, showMoreToggle, showMoreToggleHandler, showMoreToggleLabel}) => {
+    const [collapsedRowIndexes, setCollapsedRowIndexes] = useState({});
     const FieldComponent = renderUserInteractions?Field:PrintViewField;
 
-    const rows = normalizeRows(list);
-    console.log(rows);
+    const rows = normalizeRows(list, collapsedRowIndexes);
 
     if (!rows.length || !rows[0].length) {
       return null;
     }
+
+    const onCollapseToggle = (index, collapse) => {
+      const values = {...collapsedRowIndexes};
+      if (collapse) {
+        values[index] = true;
+      } else {
+        delete values[index];
+      }
+      setCollapsedRowIndexes(values);
+    };
 
     return (
       <table className="table">
@@ -100,10 +127,10 @@ const TableFieldBase = (renderUserInteractions = true) => {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, index) => <CustomTableRow key={`${index}`} row={row} isFirst={!index} viewComponent={FieldComponent} />)}
-          {showToggle && (
+          {rows.map((row, index) => <CustomTableRow key={`${index}`} row={row} viewComponent={FieldComponent} onCollapseToggle={onCollapseToggle} />)}
+          {showMoreToggle && (
             <tr>
-              <th><button className="kgs-field__viewMore-button" onClick={toggleHandler} role="link">{toggleLabel}</button></th>
+              <th><button className="kgs-field__viewMore-button" onClick={showMoreToggleHandler} role="link">{showMoreToggleLabel}</button></th>
             </tr>
           )}
         </tbody>
@@ -178,7 +205,7 @@ const TableFieldBase = (renderUserInteractions = true) => {
       }
 
       return (
-        <TableFieldComponent list={this.state.items} showToggle={this.state.hasShowMoreToggle} toggleHandler={this.handleShowMoreClick} toggleLabel={this.state.showMoreLabel} />
+        <TableFieldComponent list={this.state.items} showMoreToggle={this.state.hasShowMoreToggle} showMoreToggleHandler={this.handleShowMoreClick} showMoreToggleLabel={this.state.showMoreLabel} />
       );
     }
   }

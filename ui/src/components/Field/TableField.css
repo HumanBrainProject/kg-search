@@ -26,8 +26,30 @@
     display: none;
 }
 
-.kgs-field__table .table th{
+.kgs-field__table .table th {
     white-space: nowrap;
+    padding-bottom: 0.55rem;
+    padding-top: 0.55rem;
+}
+
+.kgs-field__table .table th:first-child {
+    white-space:nowrap;
+}
+
+.kgs-field__table .table th > button {
+    display: inline-block;
+    border: 0;
+    margin: 0;
+    padding: 0 10px 0 0;
+    background: transparent;
+}
+
+.kgs-field__table .table th > button + span {
+    display: inline-block;
+}
+
+.kgs-field__table .table td {
+    border-top: 0;
     padding-bottom: 0.55rem;
     padding-top: 0.55rem;
 }
@@ -36,10 +58,8 @@
     padding-left: 40px;
 }
 
-.kgs-field__table .table td {
-    border-top: 0;
-    padding-bottom: 0.55rem;
-    padding-top: 0.55rem;
+.kgs-field__table .table tr.row-hidden {
+    display: none;
 }
 
 .kgs-field button[role="link"].kgs-field__viewMore-button {
