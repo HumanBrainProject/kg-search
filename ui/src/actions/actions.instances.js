@@ -120,12 +120,189 @@ export const goToSearch = (group, defaultGroup) => {
   };
 };
 
+const subject = {
+  "type": {
+    "value": "Dataset"
+  },
+  "id": "088a7717-76d2-4520-b9e8-3f2fecce1ee4",
+  "title": {
+    "value": "The essential role of feedback processing for figure-ground perception in mice"
+  },
+  "subjects": [
+    {
+      "children": {
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "age": {"value": "30 - 65 years"},
+        "ageCategory": {"value": "Adult"},
+        "weight": {"value": "10-100 grams"},
+        "strain": {"value":"xyz, abc"},
+        "subject_name": {"value":"bigbrain"},
+        "children": [
+          {
+            "species": [
+              {
+                "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+                "value": "Mus musculus"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "age": [{"value":"17 years"},
+              {"value":"65 years"}
+            ],
+            "ageCategory": [
+              {"value":"Young adult"},
+              {"value":"Adult"}
+            ],
+            "weight": [
+              {"value":"10 grams"},
+              {"value":"100 grams"}
+            ],
+            "strain": {"value":"xyz"},
+            "subject_name":{"value": "bigbrain-sub-20"}
+          },
+          {
+            "species": [
+              {
+                "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+                "value": "Mus musculus"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "age": {"value":"30 years"},
+            "ageCategory": {"value":"Adult"},
+            "weight": {"value":"10 grams"},
+            "strain": {"value":"abc"},
+            "subject_name": {"value":"bigbrain-sub-21"}
+          }
+        ]
+      }
+    },
+    {
+      "children": {
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          },
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "female"
+          }
+        ],
+        "age": {"value":"40 - 65 years"},
+        "ageCategory": {"value":"Juvenile"},
+        "weight": {"value":"20-200 grams"},
+        "strain": {"value":"def"},
+        "subject_name": {"value":"jubrain"},
+        "children": [
+          {
+            "species": [
+              {
+                "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+                "value": "Mus musculus"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "male"
+              }
+            ],
+            "age": [
+              {"value":"17 years"},
+              {"value":"65 years"}
+            ],
+            "ageCategory": [
+              {"value":"Young adult"},
+              {"value":"Adult"}
+            ],
+            "weight": [
+              {"value":"10 grams"},
+              {"value":"100 grams"}
+            ],
+            "strain": {"value":"def"},
+            "subject_name": {"value":"jubrain-sub-01"}
+          },
+          {
+            "species": [
+              {
+                "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+                "value": "Mus musculus"
+              }
+            ],
+            "sex": [
+              {
+                "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+                "value": "female"
+              }
+            ],
+            "age": {"value":"30 years"},
+            "ageCategory": {"value":"Adult"},
+            "weight": {"value":"10 grams"},
+            "strain": {"value":"abc"},
+            "subject_name": {"value":"jubrain-sub-02"}
+          }
+        ]
+      }
+    },
+    {
+      "children": {
+        "species": [
+          {
+            "reference": "d9875ebd-260e-4337-a637-b62fed4aa91d",
+            "value": "Mus musculus"
+          }
+        ],
+        "sex": [
+          {
+            "reference": "744c9204-4aea-4eff-a4f4-d79f008b355f",
+            "value": "male"
+          }
+        ],
+        "age": {"value":"37 years"},
+        "ageCategory": {"value":"FooBar"},
+        "weight": {"value":"30 grams"},
+        "strain": {"value":"feg"},
+        "subject_name": {"value":"otherbrain"}
+      }
+    }
+  ]
+};
+
 export const loadInstance = (group, id, shouldUpdateLocation=false) => {
   return dispatch => {
     dispatch(loadInstanceRequest());
     API.axios
       .get(API.endpoints.instance(group, id))
       .then(response => {
+        response.data._source = subject;
         dispatch(loadInstanceSuccess(response.data));
         if(shouldUpdateLocation) {
           dispatch(updateLocation());

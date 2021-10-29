@@ -28,6 +28,18 @@
 
 .kgs-field__table .table th{
     white-space: nowrap;
+    padding-bottom: 0.55rem;
+    padding-top: 0.55rem;
+}
+
+.kgs-field__table .table td:first-child {
+    padding-left: 40px;
+}
+
+.kgs-field__table .table td {
+    border-top: 0;
+    padding-bottom: 0.55rem;
+    padding-top: 0.55rem;
 }
 
 .kgs-field button[role="link"].kgs-field__viewMore-button {

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /*
  * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
  *
@@ -29,57 +30,84 @@ import { LIST_SMALL_SIZE_STOP,
   getShowMoreLabel } from "./helpers";
 import "./TableField.css";
 
-const CustomTableRow = ({item, viewComponent}) => {
-  let Component = viewComponent;
+const CustomTableCell = ({field, viewComponent}) => {
+  if (!field.data) {
+    return field.isHeaderRow ? <th>-</th>:<td>-</td>;
+  }
+  const Component = viewComponent;
+  if (field.isHeaderRow) {
+    return (
+      <th><Component name={field.name} data={field.data} mapping={field.mapping} group={field.group} /></th>
+    );
+  }
   return (
-    <tr>
-      {item.map((i, id) =>
-        <th key={`${i.name}-${id}`}>{i.data ?
-          <Component name={i.name} data={i.data} mapping={i.mapping} group={i.group} />:"-"}
-        </th>
-      )}
-    </tr>
+    <td><Component name={field.name} data={field.data} mapping={field.mapping} group={field.group} /></td>
   );
 };
+
+const CustomTableRow = ({row, viewComponent}) => (
+  <tr>
+    {row.map((field, index) => <CustomTableCell key={`${field.name}-${index}`} field={field} viewComponent={viewComponent} />)}
+  </tr>
+);
+
+const normalizeCells = (fields, data, group, isHeaderRow) => {
+  return Object.entries(fields)
+    .filter(([, field]) =>
+      field && field.visible
+    )
+    .map(([name, field]) => ({
+      name: name,
+      data: data && data[name],
+      mapping: {...field, labelHidden:true},
+      group: group,
+      isHeaderRow: isHeaderRow
+    }));
+};
+
+const normalizeRows = list => {
+  return list.reduce((acc, item) => {
+    if (item.isObject) {
+      acc.push(normalizeCells(item.mapping.children, item.data, item.group, true));
+      if (item.data && item.data.children) {
+        item.data.children.forEach(child => acc.push(normalizeCells(item.mapping.children, child, item.group, false)));
+      }
+    } else {
+      acc.push(item);
+    }
+    return acc;
+  }, []);};
 
 const TableFieldBase = (renderUserInteractions = true) => {
 
   const TableFieldComponent = ({list, showToggle, toggleHandler, toggleLabel}) => {
     const FieldComponent = renderUserInteractions?Field:PrintViewField;
-    const fields = list.map(item =>
-    {return item.isObject ?
-      Object.entries(item.mapping.children)
-        .filter(([, mapping]) =>
-          mapping && mapping.visible
-        )
-        .map(([name, mapping]) => ({
-          name: name,
-          data: item.data && item.data[name],
-          mapping: mapping,
-          group: item.group
-        })): item;
+
+    const rows = normalizeRows(list);
+    console.log(rows);
+
+    if (!rows.length || !rows[0].length) {
+      return null;
     }
-    );
 
     return (
-      fields && fields[0] && Array.isArray(fields[0]) ?
-        <table className="table">
-          <thead>
-            <tr>
-              {fields[0].map((el,id) =>
-                <th key={`${el.name}-${id}`}>{el.mapping.value}</th>
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {fields.map((item, index) => <CustomTableRow key={`${index}`}  item={item} isFirst={!index} viewComponent={FieldComponent} />)}
-            {showToggle && (
-              <tr>
-                <th><button className="kgs-field__viewMore-button" onClick={toggleHandler} role="link">{toggleLabel}</button></th>
-              </tr>
+      <table className="table">
+        <thead>
+          <tr>
+            {rows[0].map((el,id) =>
+              <th key={`${el.name}-${id}`}>{el.mapping.value}</th>
             )}
-          </tbody>
-        </table>:null
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, index) => <CustomTableRow key={`${index}`} row={row} isFirst={!index} viewComponent={FieldComponent} />)}
+          {showToggle && (
+            <tr>
+              <th><button className="kgs-field__viewMore-button" onClick={toggleHandler} role="link">{toggleLabel}</button></th>
+            </tr>
+          )}
+        </tbody>
+      </table>
     );
   };
 
