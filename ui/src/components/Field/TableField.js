@@ -45,6 +45,9 @@ const CustomTableCell = ({field, isFirstCell, onCollapseToggle, viewComponent}) 
           <button onClick={handleClick}><FontAwesomeIcon icon={field.isCollectionCollapsed?"chevron-right":"chevron-down"} /></button>
         )}
         <Component name={field.name} data={field.data} mapping={field.mapping} group={field.group} />
+        {isFirstCell && field.isCollectionCollapsible && field.collectionSize && (
+          <span className="badge badge-secondary">{field.collectionSize}</span>
+        )}
       </th>
     );
   }
@@ -62,7 +65,7 @@ const CustomTableRow = ({row, viewComponent, onCollapseToggle}) => {
   );
 };
 
-const normalizeCells = (fields, data, group, collectionIndex, isCollectionHeaderRow, isCollectionCollapsed, isCollectionCollapsible) => {
+const normalizeCells = (fields, data, group, collectionIndex, isCollectionHeaderRow, isCollectionCollapsed, isCollectionCollapsible, collectionSize) => {
   return Object.entries(fields)
     .filter(([, field]) =>
       field && field.visible
@@ -75,7 +78,8 @@ const normalizeCells = (fields, data, group, collectionIndex, isCollectionHeader
       isCollectionHeaderRow: isCollectionHeaderRow,
       isCollectionCollapsed: isCollectionCollapsed,
       collectionIndex: collectionIndex,
-      isCollectionCollapsible: isCollectionCollapsible
+      isCollectionCollapsible: isCollectionCollapsible,
+      collectionSize: collectionSize
     }));
 };
 
@@ -84,9 +88,10 @@ const normalizeRows = (list, collapsedRowIndexes) => {
     const isCollectionCollapsed = !!collapsedRowIndexes[index];
     const hasChildren = item.data && item.data.children;
     if (item.isObject) {
-      acc.push(normalizeCells(item.mapping.children, item.data, item.group, index, true, isCollectionCollapsed, hasChildren));
+      const collectionSize = hasChildren ? item.data.children.length:null;
+      acc.push(normalizeCells(item.mapping.children, item.data, item.group, index, true, isCollectionCollapsed, hasChildren, collectionSize));
       if (hasChildren) {
-        item.data.children.forEach(child => acc.push(normalizeCells(item.mapping.children, child, item.group, index, false, isCollectionCollapsed, false)));
+        item.data.children.forEach(child => acc.push(normalizeCells(item.mapping.children, child, item.group, index, false, isCollectionCollapsed, false, null)));
       }
     } else {
       acc.push(item);
@@ -98,7 +103,11 @@ const normalizeRows = (list, collapsedRowIndexes) => {
 const TableFieldBase = (renderUserInteractions = true) => {
 
   const TableFieldComponent = ({list, showMoreToggle, showMoreToggleHandler, showMoreToggleLabel}) => {
-    const [collapsedRowIndexes, setCollapsedRowIndexes] = useState({});
+    const initialiState = list.reduce((acc, _, index) => {
+      acc[index] = true;
+      return acc;
+    }, {});
+    const [collapsedRowIndexes, setCollapsedRowIndexes] = useState(initialiState);
     const FieldComponent = renderUserInteractions?Field:PrintViewField;
 
     const rows = normalizeRows(list, collapsedRowIndexes);

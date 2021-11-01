@@ -36,6 +36,20 @@
     white-space:nowrap;
 }
 
+.kgs-field__table .table th:first-child > span {
+    display: inline;
+}
+
+.kgs-field__table .table th:first-child span.badge {
+    margin-left: 5px;
+}
+
+
+.kgs-field__table .table ul {
+    list-style: none;
+    padding: 0;
+}
+
 .kgs-field__table .table th > button {
     display: inline-block;
     border: 0;
@@ -50,12 +64,12 @@
 
 .kgs-field__table .table td {
     border-top: 0;
-    padding-bottom: 0.55rem;
-    padding-top: 0.55rem;
+    padding-bottom: 0.20rem;
+    padding-top: 0.20rem;
 }
 
 .kgs-field__table .table td:first-child {
-    padding-left: 40px;
+    padding-left: 60px;
 }
 
 .kgs-field__table .table tr.row-hidden {
