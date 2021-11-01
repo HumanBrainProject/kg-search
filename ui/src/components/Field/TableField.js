@@ -45,9 +45,6 @@ const CustomTableCell = ({field, isFirstCell, onCollapseToggle, viewComponent}) 
           <button onClick={handleClick}><FontAwesomeIcon icon={field.isCollectionCollapsed?"chevron-right":"chevron-down"} /></button>
         )}
         <Component name={field.name} data={field.data} mapping={field.mapping} group={field.group} />
-        {isFirstCell && field.isCollectionCollapsible && field.collectionSize && (
-          <span className="badge badge-secondary">{field.collectionSize}</span>
-        )}
       </th>
     );
   }
@@ -65,7 +62,7 @@ const CustomTableRow = ({row, viewComponent, onCollapseToggle}) => {
   );
 };
 
-const normalizeCells = (fields, data, group, collectionIndex, isCollectionHeaderRow, isCollectionCollapsed, isCollectionCollapsible, collectionSize) => {
+const normalizeCells = (fields, data, group, collectionIndex, isCollectionHeaderRow, isCollectionCollapsed, isCollectionCollapsible) => {
   return Object.entries(fields)
     .filter(([, field]) =>
       field && field.visible
@@ -78,8 +75,7 @@ const normalizeCells = (fields, data, group, collectionIndex, isCollectionHeader
       isCollectionHeaderRow: isCollectionHeaderRow,
       isCollectionCollapsed: isCollectionCollapsed,
       collectionIndex: collectionIndex,
-      isCollectionCollapsible: isCollectionCollapsible,
-      collectionSize: collectionSize
+      isCollectionCollapsible: isCollectionCollapsible
     }));
 };
 
@@ -88,10 +84,9 @@ const normalizeRows = (list, collapsedRowIndexes) => {
     const isCollectionCollapsed = !!collapsedRowIndexes[index];
     const hasChildren = item.data && item.data.children;
     if (item.isObject) {
-      const collectionSize = hasChildren ? item.data.children.length:null;
-      acc.push(normalizeCells(item.mapping.children, item.data, item.group, index, true, isCollectionCollapsed, hasChildren, collectionSize));
+      acc.push(normalizeCells(item.mapping.children, item.data, item.group, index, true, isCollectionCollapsed, hasChildren));
       if (hasChildren) {
-        item.data.children.forEach(child => acc.push(normalizeCells(item.mapping.children, child, item.group, index, false, isCollectionCollapsed, false, null)));
+        item.data.children.forEach(child => acc.push(normalizeCells(item.mapping.children, child, item.group, index, false, isCollectionCollapsed, false)));
       }
     } else {
       acc.push(item);
