@@ -21,64 +21,79 @@
  *
  */
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import { Hint } from "../Hint/Hint";
+import { Field } from "../Field/Field";
 import "./Tabs.css";
 
 const Tab = ({tab, active, onClick}) => {
-  if (!tab) {
-    return null;
-  }
-  const handleClick = () => {
-    typeof onClick === "function" && onClick(tab);
-  };
-  const {title, counter, hint} = tab;
+
+  const handleClick = () => onClick(tab);
+
   const className = `kgs-tabs-button ${active?"is-active":""}`;
   return (
-    <button type="button" className={className} onClick={handleClick}>{title?title:""} {counter !== null?`(${counter})`:""} <Hint {...hint} /></button>
+    <button type="button" className={className} onClick={handleClick}>{tab.name?tab.name:""}</button>
   );
 };
 
-export const Tabs = ({id, className, tabs, viewComponent }) => {
-  const [value, setValue] = useState();
+
+export const TabsView = ({group}) => {
+  if (!group || !Array.isArray(group.fields)) {
+    return null;
+  }
+
+  if (group.name === "Overview") {
+
+    const mainFields = group.fields.filter(f => !f.mapping.layout);
+    const summaryFields = group.fields.filter(f => f.mapping.layout === "summary");
+
+    return (
+      // <div className={`kgs-instance-content kgs-instance__grid ${(buttons && buttons.length) ? "kgs-instance__with-buttons" : ""} ${(previews && previews.length) ? "kgs-instance__with-previews" : ""}`}>
+      <div className={"kgs-instance-content kgs-instance__grid"}>
+        <div className="kgs-instance__main">
+          {mainFields.map(f => <Field key={f.name} {...f} />)}
+        </div>
+        <div className="kgs-instance__summary">
+          {summaryFields.map(f => <Field key={f.name} {...f} />)}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {group.fields.map(f => <Field key={f.name} {...f} />)}
+    </>
+  );
+};
+
+export const Tabs = ({id, className, groups }) => {
+  const [group, setGroup] = useState();
 
   useEffect(() => {
-    setValue(Array.isArray(tabs) && tabs.length && tabs[0]);
+    setGroup(Array.isArray(groups) && groups.length && groups[0]);
   }, [id]);
 
-  const handleClick = value => setValue(value);
+  const handleClick = g => setGroup(g);
 
   const classNames = ["kgs-tabs", className].join(" ");
-  const Component = viewComponent;
 
-  if (!Array.isArray(tabs) || !tabs.length) {
+  if (!Array.isArray(groups) || !groups.length) {
     return null;
   }
 
   return (
     <div className={classNames}>
       <div className="kgs-tabs-buttons">
-        {tabs.map(tab => (
-          <Tab key={tab.id} tab={tab} active={value && tab.id === value.id} onClick={handleClick} />
+        {groups.map(g => (
+          <Tab key={g.name} tab={g} active={group && g.name === group.name} onClick={handleClick} />
         ))}
       </div>
-      <div className="kgs-tabs-content">
-        {value && value.data && Component && (
-          <Component key={value.id} {...value.data} />
-        )}
+      <div className="kgs-instance-scroll">
+        <div className="kgs-instance-scoll-content">
+          <TabsView group={group}/>
+        </div>
       </div>
     </div>
   );
-};
-
-Tabs.propTypes = {
-  className: PropTypes.string,
-  id: PropTypes.string,
-  tabs:  PropTypes.arrayOf(PropTypes.any),
-  viewComponent: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.func
-  ]).isRequired
 };
 
 export default Tabs;

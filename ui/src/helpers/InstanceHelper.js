@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 /*
  * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
  *
@@ -68,7 +69,7 @@ const getField = (group, type, name, data, mapping) => {
   }
 };
 
-const getFields = (group, type, data, mapping, filter) => {
+const getHeaderFields = (group, type, data, mapping) => {
   if (!data || !mapping) {
     return [];
   }
@@ -77,12 +78,40 @@ const getFields = (group, type, data, mapping, filter) => {
     .filter(([name, mapping]) =>
       mapping
       && (mapping.showIfEmpty || (data && data[name]))
-      && (!filter || (typeof filter === "function" && filter(type, name, data[name], mapping)))
+      && mapping.layout === "header" && name !== "title"
     )
     .map(([name, mapping]) => getField(group, type, name, data[name], mapping));
 
   return fields;
 };
+
+const getFieldsByGroups = (group, type, data, typeMapping) => {
+  if (!data || !typeMapping) {
+    return [];
+  }
+
+  const groups = Object.entries(typeMapping.fields || {})
+    .filter(([name, mapping]) =>
+      mapping
+      && (mapping.showIfEmpty || (data && data[name]))
+      && mapping.layout !== "header" && name !== "title"
+    )
+    .reduce((acc, [name, mapping]) => {
+      const groupName = (!mapping.layout || mapping.layout === "summary")?"Overview": mapping.layout;
+      if (!acc[groupName]) {
+        acc[groupName] = {
+          name: groupName,
+          order: groupName === "Overview" ? 0:(typeMapping.groupsOrder.indexOf(groupName) !== -1?typeMapping.groupsOrder.indexOf(groupName) + 1:100),
+          fields: []
+        };
+      }
+      const field = getField(group, type, name, data[name], mapping);
+      acc[groupName].fields.push(field);
+      return acc;
+    }, {});
+  return Object.values(groups).sort((a, b) => a.order - b.order).map(g => ({name: g.name, fields: g.fields}));
+};
+
 
 //const getPreviews = (data, mapping, idx=0) => {
 export const getPreviews = (data, mapping) => {
@@ -188,14 +217,15 @@ export const mapStateToProps = (state, props) => {
       groupLabel: (group !== state.groups.defaultGroup)?getGroupLabel(state.groups.groups, group):null,
       type: getField(group, type, "type"),
       title: getField(group, type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"]),
-      fields: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout === "header" && name !== "title"),
+      fields: getHeaderFields(group, type, source, mapping),
       version: version,
       versions: versions
     },
-    previews: getPreviews(source, { children: mapping.fields }),
-    buttons: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.isButton),
-    main: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout !== "header" && name !== "title" && !mapping.isButton),
-    summary: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout === "summary" && name !== "title" && !mapping.isButton),
-    groups: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title" && !mapping.isButton)
+    // previews: getPreviews(source, { children: mapping.fields }),
+    // buttons: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.isButton),
+    // main: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout !== "header" && name !== "title" && !mapping.isButton),
+    // summary: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout === "summary" && name !== "title" && !mapping.isButton),
+    // groups: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title" && !mapping.isButton)
+    groups: getFieldsByGroups(group, type, source, mapping)
   };
 };

@@ -28,15 +28,15 @@ import { getTags } from "../../helpers/InstanceHelper";
 import { Tags } from "../Tags/Tags";
 import { Field } from "../Field/Field";
 import { FieldsPanel } from "../Field/FieldsPanel";
-import { FieldsTabs } from "../Field/FieldsTabs";
-import { FieldsButtons } from "../Field/FieldsButtons";
 import { VersionSelector } from "../VersionSelector/VersionSelector";
 import { history } from "../../store";
 import { BgError } from "../BgError/BgError";
 
 import "./Instance.css";
+import Tabs from "../Tabs/Tabs";
 
-export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, previews, buttons, main, summary, groups, NavigationComponent, ImagePreviewsComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch }) => {
+// eslint-disable-next-line no-unused-vars
+export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, groups, NavigationComponent, ImagePreviewsComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch }) => {
 
   useEffect(() => {
     trackEvent(hasNoData);
@@ -82,22 +82,14 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
           <FieldsPanel fields={header.fields} fieldComponent={Field} />
         </div>
       </div>
-      <div className="kgs-instance-scroll">
-        <div className="kgs-instance-scoll-content">
-          <div className={`kgs-instance-content kgs-instance__grid ${(buttons && buttons.length) ? "kgs-instance__with-buttons" : ""} ${(previews && previews.length) ? "kgs-instance__with-previews" : ""}`}>
-            <FieldsButtons className="kgs-instance__buttons" fields={buttons} />
-            <div className="kgs-instance__highlights">
-              <ImagePreviewsComponent className={`kgs-instance__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
-              <FieldsPanel className="kgs-instance__summary" fields={summary} fieldComponent={Field} />
-            </div>
-            <FieldsPanel className="kgs-instance__main" fields={main} fieldComponent={Field} />
-            <FieldsTabs className="kgs-instance__groups" id={id} fields={groups} />
-          </div>
-          <strong className="kgs-instance-content-disclaimer">Disclaimer:
-Please alert us at <a href="mailto:curation-support@ebrains.eu">curation-support@ebrains.eu</a> for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible.</strong>
-          <TermsShortNoticeComponent />
-        </div>
+      <div className="kgs-instance-content">
+        <Tabs id={id} groups={groups} />
       </div>
+      <div>
+        <strong className="kgs-instance-content-disclaimer">Disclaimer:
+        Please alert us at <a href="mailto:curation-support@ebrains.eu">curation-support@ebrains.eu</a> for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible.</strong>
+      </div>
+      <TermsShortNoticeComponent />
       <ImagePopupComponent className="kgs-instance__image_popup" />
     </div>
   );
