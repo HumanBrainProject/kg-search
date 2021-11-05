@@ -36,7 +36,7 @@ import "./Instance.css";
 import Tabs from "../Tabs/Tabs";
 
 // eslint-disable-next-line no-unused-vars
-export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, groups, NavigationComponent, ImagePreviewsComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch }) => {
+export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, groups, NavigationComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch }) => {
 
   useEffect(() => {
     trackEvent(hasNoData);
@@ -83,11 +83,7 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
         </div>
       </div>
       <div className="kgs-instance-content">
-        <Tabs id={id} groups={groups} />
-      </div>
-      <div>
-        <strong className="kgs-instance-content-disclaimer">Disclaimer:
-        Please alert us at <a href="mailto:curation-support@ebrains.eu">curation-support@ebrains.eu</a> for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible.</strong>
+        <Tabs instanceId={id} groups={groups} />
       </div>
       <TermsShortNoticeComponent />
       <ImagePopupComponent className="kgs-instance__image_popup" />

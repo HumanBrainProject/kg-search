@@ -25,7 +25,6 @@ import { connect } from "react-redux";
 
 import * as actionsInstances from "../../actions/actions.instances";
 import { mapStateToProps } from "../../helpers/InstanceHelper";
-import { ImagePreviews } from "../Image/ImagePreviews";
 import { ImagePopup } from "../Image/ImagePopup";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { Instance as Component } from "../../components/Instance/Instance";
@@ -35,7 +34,6 @@ export const Instance = connect(
     ...mapStateToProps(state, props),
     path: "/instances/",
     defaultGroup: state.groups.defaultGroup,
-    ImagePreviewsComponent: ImagePreviews,
     ImagePopupComponent: ImagePopup,
     TermsShortNoticeComponent: TermsShortNotice,
     searchPage: true

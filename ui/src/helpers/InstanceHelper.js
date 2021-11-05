@@ -97,7 +97,7 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
       && mapping.layout !== "header" && name !== "title"
     )
     .reduce((acc, [name, mapping]) => {
-      const groupName = (!mapping.layout || mapping.layout === "summary")?"Overview": mapping.layout;
+      const groupName = (!mapping.layout || mapping.layout === "summary" || mapping.isButton)?"Overview": mapping.layout;
       if (!acc[groupName]) {
         acc[groupName] = {
           name: groupName,
@@ -109,11 +109,17 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
       acc[groupName].fields.push(field);
       return acc;
     }, {});
-  return Object.values(groups).sort((a, b) => a.order - b.order).map(g => ({name: g.name, fields: g.fields}));
+  return Object.values(groups).sort((a, b) => a.order - b.order).map(g => {
+    const group = {name: g.name, fields: g.fields};
+    if (g.name === "Overview") {
+      const previews = getPreviews(data, { children: typeMapping.fields });
+      group.previews = previews;
+    }
+    return group;
+  });
 };
 
 
-//const getPreviews = (data, mapping, idx=0) => {
 export const getPreviews = (data, mapping) => {
   if (Array.isArray(data)) {
     const previews = [];
@@ -221,11 +227,6 @@ export const mapStateToProps = (state, props) => {
       version: version,
       versions: versions
     },
-    // previews: getPreviews(source, { children: mapping.fields }),
-    // buttons: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.isButton),
-    // main: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout !== "header" && name !== "title" && !mapping.isButton),
-    // summary: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout === "summary" && name !== "title" && !mapping.isButton),
-    // groups: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title" && !mapping.isButton)
     groups: getFieldsByGroups(group, type, source, mapping)
   };
 };

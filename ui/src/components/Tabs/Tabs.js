@@ -22,15 +22,19 @@
  */
 import React, { useState, useEffect } from "react";
 import { Field } from "../Field/Field";
+import { FieldsPanel } from "../Field/FieldsPanel";
+import { FieldsButtons } from "../Field/FieldsButtons";
+import { ImagePreviews } from "../../containers/Image/ImagePreviews";
 import "./Tabs.css";
+import "./Overview.css";
 
-const Tab = ({tab, active, onClick}) => {
+const Tab = ({group, active, onClick}) => {
 
-  const handleClick = () => onClick(tab);
+  const handleClick = () => onClick(group);
 
   const className = `kgs-tabs-button ${active?"is-active":""}`;
   return (
-    <button type="button" className={className} onClick={handleClick}>{tab.name?tab.name:""}</button>
+    <button type="button" className={className} onClick={handleClick}>{group.name?group.name:""}</button>
   );
 };
 
@@ -42,53 +46,56 @@ export const TabsView = ({group}) => {
 
   if (group.name === "Overview") {
 
-    const mainFields = group.fields.filter(f => !f.mapping.layout);
-    const summaryFields = group.fields.filter(f => f.mapping.layout === "summary");
+    const buttons = group.fields.filter(f => f.mapping.isButton);
+    const previews = group.previews;
+    const mainFields = group.fields.filter(f => !f.mapping.isButton);
+    const summaryFields = group.fields.filter(f => !f.mapping.isButton && f.mapping.layout === "summary");
 
     return (
-      // <div className={`kgs-instance-content kgs-instance__grid ${(buttons && buttons.length) ? "kgs-instance__with-buttons" : ""} ${(previews && previews.length) ? "kgs-instance__with-previews" : ""}`}>
-      <div className={"kgs-instance-content kgs-instance__grid"}>
-        <div className="kgs-instance__main">
-          {mainFields.map(f => <Field key={f.name} {...f} />)}
+      <div className={`kgs-tabs-view kgs-overview kgs-overview__grid ${(buttons && buttons.length) ? "kgs-overview__with-buttons" : ""} ${(previews && previews.length) ? "kgs-overview__with-previews" : ""}`}>
+        <FieldsButtons className="kgs-overview__buttons" fields={buttons} />
+        <div className="kgs-overview__highlights">
+          <ImagePreviews className={`kgs-overview__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
+          <FieldsPanel className="kgs-overview__summary" fields={summaryFields} fieldComponent={Field} />
         </div>
-        <div className="kgs-instance__summary">
-          {summaryFields.map(f => <Field key={f.name} {...f} />)}
-        </div>
+        <FieldsPanel className="kgs-overview__main" fields={mainFields} fieldComponent={Field} />
       </div>
     );
   }
 
   return (
-    <>
-      {group.fields.map(f => <Field key={f.name} {...f} />)}
-    </>
+    <FieldsPanel className="kgs-tabs-view" fields={group.fields} fieldComponent={Field} />
   );
 };
 
-export const Tabs = ({id, className, groups }) => {
+export const Tabs = ({instanceId, groups }) => {
   const [group, setGroup] = useState();
 
   useEffect(() => {
     setGroup(Array.isArray(groups) && groups.length && groups[0]);
-  }, [id]);
+  }, [instanceId]);
 
   const handleClick = g => setGroup(g);
-
-  const classNames = ["kgs-tabs", className].join(" ");
 
   if (!Array.isArray(groups) || !groups.length) {
     return null;
   }
 
   return (
-    <div className={classNames}>
-      <div className="kgs-tabs-buttons">
-        {groups.map(g => (
-          <Tab key={g.name} tab={g} active={group && g.name === group.name} onClick={handleClick} />
-        ))}
+    <div className="kgs-tabs">
+      <div className="kgs-tabs-panel">
+        <div className="kgs-tabs-buttons">
+          {groups.map(g => (
+            <Tab key={g.name} group={g} active={group && g.name === group.name} onClick={handleClick} />
+          ))}
+        </div>
+        <div className="kgs-tabs-info">
+          <strong className="kgs-tabs-disclaimer">Disclaimer:
+          Please alert us at <a href="mailto:curation-support@ebrains.eu">curation-support@ebrains.eu</a> for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible.</strong>
+        </div>
       </div>
-      <div className="kgs-instance-scroll">
-        <div className="kgs-instance-scoll-content">
+      <div className="kgs-tabs-scroll">
+        <div className="kgs-tabs-scoll-content">
           <TabsView group={group}/>
         </div>
       </div>
