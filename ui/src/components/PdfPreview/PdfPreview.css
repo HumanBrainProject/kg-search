@@ -27,12 +27,19 @@
     justify-content: center;
  }
 
- .kgs-pdf-preview .kgs-pdf-preview-download {
+ .kgs-carousel__content .kgs-pdf-preview .kgs-pdf-preview-download {
     position: absolute;
     top: 4%;
     z-index: 1000;
-    right: 15%;
+    right: 10%;
  }
+
+ .kgs-pdf-preview .kgs-pdf-preview-download {
+   position: absolute;
+   top: 4%;
+   z-index: 1000;
+   right: 15%;
+}
  
  .kgs-pdf-preview .kgs-pdf-preview-document {
     display: flex;
