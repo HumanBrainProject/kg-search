@@ -23,8 +23,15 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.ListOrSingleStringAsListDeserializer;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
+@Getter
+@Setter
 public class ControlledTermV3 extends SourceInstanceV3 {
 
     private String name;
@@ -33,63 +40,8 @@ public class ControlledTermV3 extends SourceInstanceV3 {
     private String knowledgeSpaceLink;
     private String interlexIdentifier;
     private String preferredOntologyIdentifier;
+    @JsonDeserialize(using = ListOrSingleStringAsListDeserializer.class)
     private List<String> synonym;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDefinition() {
-        return definition;
-    }
-
-    public void setDefinition(String definition) {
-        this.definition = definition;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getKnowledgeSpaceLink() {
-        return knowledgeSpaceLink;
-    }
-
-    public void setKnowledgeSpaceLink(String knowledgeSpaceLink) {
-        this.knowledgeSpaceLink = knowledgeSpaceLink;
-    }
-
-    public String getInterlexIdentifier() {
-        return interlexIdentifier;
-    }
-
-    public void setInterlexIdentifier(String interlexIdentifier) {
-        this.interlexIdentifier = interlexIdentifier;
-    }
-
-    public String getPreferredOntologyIdentifier() {
-        return preferredOntologyIdentifier;
-    }
-
-    public void setPreferredOntologyIdentifier(String preferredOntologyIdentifier) {
-        this.preferredOntologyIdentifier = preferredOntologyIdentifier;
-    }
-
-    public List<String> getSynonym() {
-        return synonym;
-    }
-
-    public void setSynonym(List<String> synonym) {
-        this.synonym = synonym;
-    }
 }
 
 

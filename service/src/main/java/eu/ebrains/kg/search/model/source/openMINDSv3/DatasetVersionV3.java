@@ -24,14 +24,17 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.SourceInternalReference;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.*;
+import lombok.*;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+@Getter
+@Setter
 public class DatasetVersionV3 extends SourceInstanceV3 {
     private String doi;
     private String howToCite;
@@ -42,375 +45,235 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private String version;
     private String versionInnovation;
     private Date releaseDate;
-    private License license;
+    private ExternalRef license;
     private List<PersonOrOrganizationRef> author;
     private List<FullNameRef> projects;
     private List<PersonOrOrganizationRef> custodians;
-    private List<Specimen> studiedSpecimen;
+    private List<SubjectOrSubjectGroup> subjects;
     private DatasetVersions dataset;
-    private List<String> fullDocumentationUrl;
-    private List<String> fullDocumentationDOI;
+    private String fullDocumentationUrl;
+    private String fullDocumentationDOI;
+    private File fullDocumentationFile;
+    private List<FullNameRef> experimentalApproach;
+    private List<FullNameRef> technique;
     private List<Protocol> protocols;
     private NameWithIdentifier accessibility;
     private FileRepository fileRepository;
-    private List<FullNameRef> experimentalApproach;
-    private List<FullNameRef> technique;
+    private List<File> specialFiles;
+    private List<FullNameRefForResearchProductVersion> parcellationEntityFromStudyTarget;
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDoi() {
-        return doi;
-    }
-
-    public void setDoi(String doi) {
-        this.doi = doi;
-    }
-
-    public String getHowToCite() {
-        return howToCite;
-    }
-
-    public void setHowToCite(String howToCite) {
-        this.howToCite = howToCite;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public List<String> getHomepage() {
-        return homepage;
-    }
-
-    public void setHomepage(List<String> homepage) {
-        this.homepage = homepage;
-    }
-
-    public List<String> getKeyword() {
-        return keyword;
-    }
-
-    public void setKeyword(List<String> keyword) {
-        this.keyword = keyword;
-    }
-
-    public Date getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getVersionInnovation() {
-        return versionInnovation;
-    }
-
-    public void setVersionInnovation(String versionInnovation) {
-        this.versionInnovation = versionInnovation;
-    }
-
-    public List<PersonOrOrganizationRef> getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(List<PersonOrOrganizationRef> author) {
-        this.author = author;
-    }
-
-    public DatasetVersions getDataset() {
-        return dataset;
-    }
-
-    public void setDataset(DatasetVersions dataset) {
-        this.dataset = dataset;
-    }
-
-    public List<FullNameRef> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(List<FullNameRef> projects) {
-        this.projects = projects;
-    }
-
-    public License getLicense() {
-        return license;
-    }
-
-    public void setLicense(License license) {
-        this.license = license;
-    }
-
-    public List<PersonOrOrganizationRef> getCustodians() {
-        return custodians;
-    }
-
-    public void setCustodians(List<PersonOrOrganizationRef> custodians) {
-        this.custodians = custodians;
-    }
-
-    public List<Specimen> getStudiedSpecimen() {
-        return studiedSpecimen;
-    }
-
-    public void setStudiedSpecimen(List<Specimen> studiedSpecimen) {
-        this.studiedSpecimen = studiedSpecimen;
-    }
-
-    public List<String> getFullDocumentationUrl() {
-        return fullDocumentationUrl;
-    }
-
-    public void setFullDocumentationUrl(List<String> fullDocumentationUrl) {
-        this.fullDocumentationUrl = fullDocumentationUrl;
-    }
-
-    public List<String> getFullDocumentationDOI() {
-        return fullDocumentationDOI;
-    }
-
-    public void setFullDocumentationDOI(List<String> fullDocumentationDOI) {
-        this.fullDocumentationDOI = fullDocumentationDOI;
-    }
-
-    public List<Protocol> getProtocols() {
-        return protocols;
-    }
-
-    public void setProtocols(List<Protocol> protocols) {
-        this.protocols = protocols;
-    }
-
-    public NameWithIdentifier getAccessibility() {
-        return accessibility;
-    }
-
-    public void setAccessibility(NameWithIdentifier accessibility) {
-        this.accessibility = accessibility;
-    }
-
-    public void setFileRepository(FileRepository fileRepository) {
-        this.fileRepository = fileRepository;
-    }
-
-    public FileRepository getFileRepository() {
-        return fileRepository;
-    }
-
-    public List<FullNameRef> getExperimentalApproach() {
-        return experimentalApproach;
-    }
-
-    public List<FullNameRef> getTechnique() {
-        return technique;
-    }
-
-    public void setTechnique(List<FullNameRef> technique) {
-        this.technique = technique;
-    }
-
-    public void setExperimentalApproach(List<FullNameRef> experimentalApproach) {
-        this.experimentalApproach = experimentalApproach;
-    }
-
-    public static class Specimen {
-        private String specimenId;
-        private String internalIdentifier;
-        private List<FullNameRef> species;
-        private List<Age> ages;
-        private List<FullNameRef> biologicalSex;
-
-        public String getSpecimenId() {
-            return specimenId;
-        }
-
-        public void setSpecimenId(String specimenId) {
-            this.specimenId = specimenId;
-        }
-
-        public String getInternalIdentifier() {
-            return internalIdentifier;
-        }
-
-        public List<Age> getAges() {
-            return ages;
-        }
-
-        public void setAges(List<Age> ages) {
-            this.ages = ages;
-        }
-
-        public List<FullNameRef> getSpecies() {
-            return species;
-        }
-
-        public void setSpecies(List<FullNameRef> species) {
-            this.species = species;
-        }
-
-        public List<FullNameRef> getBiologicalSex() {
-            return biologicalSex;
-        }
-
-        public void setBiologicalSex(List<FullNameRef> biologicalSex) {
-            this.biologicalSex = biologicalSex;
-        }
-    }
-
-    public static class Age{
+    @Getter
+    @Setter
+    public static class QuantitativeValueOrRange{
         private Double value;
+        private FullNameRef unit;
         private Double maxValue;
         private Double minValue;
-        private String unit;
+        private FullNameRef maxValueUnit;
+        private FullNameRef minValueUnit;
 
-        public Double getValue() {
-            return value;
+        private String getValueDisplay(Double value){
+            if(value==null){
+                return null;
+            }
+            if(value%1==0){
+                //It's an integer -> let's remove the floats.
+                return String.valueOf(value.intValue());
+            }
+            else{
+                return String.format("%.2f", value);
+            }
         }
 
-        public void setValue(Double value) {
-            this.value = value;
-        }
-
-        public Double getMaxValue() {
-            return maxValue;
-        }
-
-        public void setMaxValue(Double maxValue) {
-            this.maxValue = maxValue;
-        }
-
-        public Double getMinValue() {
-            return minValue;
-        }
-
-        public void setMinValue(Double minValue) {
-            this.minValue = minValue;
-        }
-
-        public String getUnit() {
-            return unit;
-        }
-
-        public void setUnit(String unit) {
-            this.unit = unit;
-        }
-    }
-
-    public static class License {
-        private String fullName;
-        private String legalCode;
-
-        public String getFullName() {
-            return fullName;
-        }
-
-        public void setFullName(String fullName) {
-            this.fullName = fullName;
-        }
-
-        public String getLegalCode() {
-            return legalCode;
-        }
-
-        public void setLegalCode(String legalCode) {
-            this.legalCode = legalCode;
+        public String displayString(){
+            String valueStr = getValueDisplay(value);
+            if(valueStr!=null){
+                //Single value
+                return unit == null ? valueStr : String.format("%s %s", valueStr, unit.getFullName());
+            }
+            else{
+                //Value range
+                boolean sameUnit = (minValueUnit == null && maxValueUnit == null) || (minValueUnit != null && minValueUnit.equals(maxValueUnit));
+                String minValueStr = getValueDisplay(minValue);
+                String maxValueStr = getValueDisplay(maxValue);
+                return String.format("%s %s - %s %s",
+                        StringUtils.defaultString(minValueStr, ""),
+                        sameUnit ? "" : minValueUnit != null ? StringUtils.defaultString(minValueUnit.getFullName(), "") : "",
+                        StringUtils.defaultString(maxValueStr, ""),
+                        maxValueUnit!=null ? StringUtils.defaultString(maxValueUnit.getFullName(), "") : "").trim()
+                        .replaceAll(" {2,}", " ");
+            }
         }
     }
 
+    @Getter
+    @Setter
+    public static class SpecimenOrSpecimenGroupState {
+        private QuantitativeValueOrRange age;
+        private List<FullNameRef> ageCategory;
+        private List<FullNameRef> pathology;
+        private QuantitativeValueOrRange weight;
+        private List<String> fileRepositoryIds;
+    }
+
+
+    @Getter
+    @Setter
+    public static class SubjectOrSubjectGroup {
+        private String id;
+        private String internalIdentifier;
+        private Integer quantity;
+        private List<FullNameRef> species;
+        private List<SpecimenOrSpecimenGroupState> states;
+        private List<FullNameRef> biologicalSex;
+        private List<SubjectOrSubjectGroup> children;
+
+
+        public void calculateSubjectGroupInformationFromChildren(){
+            if(!CollectionUtils.isEmpty(children)) {
+                if(quantity==null){
+                    setQuantity(children.size());
+                }
+                if(CollectionUtils.isEmpty(species)){
+                    setSpecies(children.stream().map(SubjectOrSubjectGroup::getSpecies).flatMap(Collection::stream).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
+                }
+                if(CollectionUtils.isEmpty(biologicalSex)){
+                    setBiologicalSex(children.stream().map(SubjectOrSubjectGroup::getBiologicalSex).flatMap(Collection::stream).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
+                }
+                if(CollectionUtils.isEmpty(states)){
+                    //There is no direct relation between subject group states and subject states -> we therefore can't tell which subject states belong together.
+                    // If the states are therefore not explicitly stated, we create one "virtual" state to allow to show the aggregated information.
+                    SpecimenOrSpecimenGroupState virtualGroupState = new SpecimenOrSpecimenGroupState();
+                    final QuantitativeValueOrRange calculatedAgeRange = calculateRangeForGroup(SpecimenOrSpecimenGroupState::getAge, TIME_UNIT_ORDER, TIME_UNIT_TO_MS);
+                    if(calculatedAgeRange!=null){
+                        virtualGroupState.setAge(calculatedAgeRange);
+                    }
+                    final QuantitativeValueOrRange calculatedWeightRange = calculateRangeForGroup(SpecimenOrSpecimenGroupState::getWeight, WEIGHT_ORDER, WEIGHT_TO_GRAMS);
+                    if(calculatedWeightRange!=null){
+                        virtualGroupState.setWeight(calculatedWeightRange);
+                    }
+                    virtualGroupState.setPathology(children.stream().map(SubjectOrSubjectGroup::getStates).flatMap(Collection::stream).map(SpecimenOrSpecimenGroupState::getPathology).flatMap(Collection::stream).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
+                    virtualGroupState.setAgeCategory(children.stream().map(SubjectOrSubjectGroup::getStates).flatMap(Collection::stream).map(SpecimenOrSpecimenGroupState::getAgeCategory).flatMap(Collection::stream).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
+                    setStates(Collections.singletonList(virtualGroupState));
+                }
+            }
+        }
+
+
+        private QuantitativeValueOrRange calculateRangeForGroup(Function<SpecimenOrSpecimenGroupState, QuantitativeValueOrRange> f, List<String> orderList, List<Long> translate){
+            long minValueInMinimalUnit = Long.MAX_VALUE;
+            long maxValueInMinimalUnit = Long.MIN_VALUE;
+            QuantitativeValueOrRange range = new QuantitativeValueOrRange();
+            for (SubjectOrSubjectGroup child : children) {
+                if(!CollectionUtils.isEmpty(child.states)){
+                    for (SpecimenOrSpecimenGroupState state : child.states) {
+                        final QuantitativeValueOrRange val = f.apply(state);
+                        if(val!=null){
+                            if(val.unit !=null && val.value!=null){
+                                int indexOfUnit = orderList.indexOf(val.unit.getFullName());
+                                if(indexOfUnit!=-1){
+                                    Long toMinimalUnit = translate.get(indexOfUnit);
+                                    final long valueInMinimalUnit = Double.valueOf(val.value * toMinimalUnit).longValue();
+                                    if(valueInMinimalUnit<minValueInMinimalUnit){
+                                        minValueInMinimalUnit = valueInMinimalUnit;
+                                        range.setMinValue(val.value);
+                                        range.setMinValueUnit(val.unit);
+                                    }
+                                    if(valueInMinimalUnit>maxValueInMinimalUnit){
+                                        maxValueInMinimalUnit = valueInMinimalUnit;
+                                        range.setMaxValue(val.value);
+                                        range.setMaxValueUnit(val.unit);
+                                    }
+                                }
+                                else{
+                                    //Insufficient information -> we have to skip
+                                    return null;
+                                }
+                            }
+                            else if(val.minValueUnit != null && val.maxValueUnit!=null && val.minValue!=null && val.maxValue!=null){
+                                int indexOfMinUnit = orderList.indexOf(val.minValueUnit.getFullName());
+                                int indexOfMaxUnit = orderList.indexOf(val.maxValueUnit.getFullName());
+                                if(indexOfMinUnit!=-1 && indexOfMaxUnit!=-1){
+                                    final long minInMinimalUnit = Double.valueOf(val.minValue * translate.get(indexOfMinUnit)).longValue();
+                                    final long maxInMinimalUnit = Double.valueOf(val.maxValue * translate.get(indexOfMaxUnit)).longValue();
+                                    if(minInMinimalUnit<minValueInMinimalUnit){
+                                        minValueInMinimalUnit = minInMinimalUnit;
+                                        range.setMinValue(val.minValue);
+                                        range.setMinValueUnit(val.minValueUnit);
+                                    }
+                                    if(maxInMinimalUnit>maxValueInMinimalUnit){
+                                        maxValueInMinimalUnit = maxInMinimalUnit;
+                                        range.setMaxValue(val.maxValue);
+                                        range.setMaxValueUnit(val.maxValueUnit);
+                                    }
+                                }
+                                else{
+                                    //Insufficient information -> we have to skip
+                                    return null;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if(range.getMinValueUnit()!=null && range.getMinValue()!=null && range.getMinValueUnit()!=null && range.getMaxValue()!=null){
+                return range;
+            }
+            else{
+                return null;
+            }
+        }
+    }
+
+
+
+    //TODO this information should come from openMINDS
+    private final static List<String> TIME_UNIT_ORDER = Arrays.asList("millisecond", "second", "minute", "hour", "day", "week", "month", "year");
+    //Months are slightly problematic since they ar not stable (so are years) -> let's try to do it with good-enough approximations.
+    private final static List<Long> TIME_UNIT_TO_MS = Arrays.asList(1L, 1000L, 60L*1000L, 60*60*1000L, 24*60*60*1000L, 7*24*60*60*1000L, 28*24*60*60*1000L, 365*24*60*60*1000L);
+    private final static List<String> WEIGHT_ORDER = Arrays.asList("gram", "kilogram");
+    private final static List<Long> WEIGHT_TO_GRAMS = Arrays.asList(1L, 1000L);
+
+
+    @Getter
+    @Setter
     public static class NameWithIdentifier {
         private List<String> identifier;
         private String name;
-
-        public List<String> getIdentifier() {
-            return identifier;
-        }
-
-        public void setIdentifier(List<String> identifier) {
-            this.identifier = identifier;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
     }
 
+    @Getter
+    @Setter
     public static class OntologicalTerm {
         private String ontologyIdentifier;
         private String name;
-
-        public String getOntologyIdentifier() {
-            return ontologyIdentifier;
-        }
-
-        public void setOntologyIdentifier(String ontologyIdentifier) {
-            this.ontologyIdentifier = ontologyIdentifier;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
     }
 
-    public static class FileRepository extends SourceInternalReference{
+    @Getter
+    @Setter
+    public static class FileRepository extends FullNameRef{
         private String iri;
-
-        public String getIri() {
-            return iri;
-        }
-
-        public void setIri(String iri) {
-            this.iri = iri;
-        }
     }
 
+    @Getter
+    @Setter
     public static class Protocol {
         private List<OntologicalTerm> behavioralTask;
         private List<String> studyOption;
-
-        public List<OntologicalTerm> getBehavioralTask() {
-            return behavioralTask;
-        }
-
-        public void setBehavioralTask(List<OntologicalTerm> behavioralTask) {
-            this.behavioralTask = behavioralTask;
-        }
-
-        public List<String> getStudyOption() {
-            return studyOption;
-        }
-
-        public void setStudyOption(List<String> studyOption) {
-            this.studyOption = studyOption;
-        }
     }
 
+    @Getter
+    @Setter
+    public static class File {
+        private List<String> roles;
+        private String iri;
+        private List<String> formats;
+        private String name;
+    }
+
+
+    @Getter
+    @Setter
     public static class DatasetVersions extends Versions {
 
         @JsonProperty("datasetAuthor")
@@ -418,22 +281,6 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
 
         @JsonProperty("datasetCustodian")
         private List<PersonOrOrganizationRef> custodians;
-
-        public List<PersonOrOrganizationRef> getAuthor() {
-            return author;
-        }
-
-        public void setAuthor(List<PersonOrOrganizationRef> author) {
-            this.author = author;
-        }
-
-        public List<PersonOrOrganizationRef> getCustodians() {
-            return custodians;
-        }
-
-        public void setCustodians(List<PersonOrOrganizationRef> custodians) {
-            this.custodians = custodians;
-        }
     }
 
 }

@@ -87,10 +87,10 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
             ));
         }
         if (dataStage == DataStage.IN_PROGRESS) {
-            d.setEditorId(datasetV1.getEditorId());
+            d.setEditorId(value(datasetV1.getEditorId()));
         }
-        d.setMethods(emptyToNull(datasetV1.getMethods()));
-        d.setDescription(datasetV1.getDescription());
+        d.setMethods(value(emptyToNull(datasetV1.getMethods())));
+        d.setDescription(value(datasetV1.getDescription()));
 
         SourceExternalReference license = firstItemOrNull(datasetV1.getLicense());
         if (license != null) {
@@ -109,26 +109,26 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
                     datasetV1.getDataDescriptorURL(), datasetV1.getDataDescriptorURL()
             ));
         }
-        d.setSpeciesFilter(emptyToNull(datasetV1.getSpeciesFilter()));
+        d.setSpeciesFilter(value(emptyToNull(datasetV1.getSpeciesFilter())));
 
         if (datasetV1.isUseHDG()) {
             final String editorId = datasetV1.getEditorId();
             final String[] split = editorId.split("/");
             String uuid = split[split.length-1];
-            d.setUseHDG(DatasetVersion.createHDGMessage(uuid, false));
-            d.setEmbargo(DatasetVersion.createHDGMessage(uuid, true));
-            d.setDataAccessibility("Controlled access");
+            d.setUseHDG(value(DatasetVersion.createHDGMessage(uuid, false)));
+            d.setEmbargo(value(DatasetVersion.createHDGMessage(uuid, true)));
+            d.setDataAccessibility(value("Controlled access"));
         } else {
             if (dataStage == DataStage.RELEASED) {
                 if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
-                    d.setEmbargo(DatasetVersion.EMBARGO_MESSAGE);
+                    d.setEmbargo(value(DatasetVersion.EMBARGO_MESSAGE));
                 } else if (hasEmbargoStatus(datasetV1, UNDER_REVIEW)) {
-                    d.setEmbargo("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.");
+                    d.setEmbargo(value("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review."));
                 }
             }
-            d.setDataAccessibility(firstItemOrNull(datasetV1.getEmbargoForFilter()));
+            d.setDataAccessibility(value(firstItemOrNull(datasetV1.getEmbargoForFilter())));
             if (!CollectionUtils.isEmpty(datasetV1.getFiles()) && (dataStage == DataStage.IN_PROGRESS || (dataStage == DataStage.RELEASED && !hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW)))) {
-                d.setFiles(emptyToNull(datasetV1.getFiles().stream()
+                d.setFilesOld(emptyToNull(datasetV1.getFiles().stream()
                         .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
                         .map(f ->
                                 new TargetFile(
@@ -147,12 +147,12 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
         String doi = firstItemOrNull(datasetV1.getDoi());
         if (StringUtils.isNotBlank(citation) && StringUtils.isNotBlank(doi)) {
             String url = URLEncoder.encode(doi, StandardCharsets.UTF_8);
-            d.setCitation(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url));
+            d.setCitation(value(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url)));
         }
 
 
         if (!CollectionUtils.isEmpty(datasetV1.getPublications())) {
-            d.setPublications(emptyToNull(datasetV1.getPublications().stream()
+            d.setPublications(value(emptyToNull(datasetV1.getPublications().stream()
                     .map(publication -> {
                         String publicationResult = null;
                         if (StringUtils.isNotBlank(publication.getCitation()) && StringUtils.isNotBlank(publication.getDoi())) {
@@ -165,9 +165,9 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
                             publicationResult = String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
                         }
                         return publicationResult;
-                    }).filter(Objects::nonNull).collect(Collectors.toList())));
+                    }).filter(Objects::nonNull).collect(Collectors.toList()))));
         }
-        d.setAtlas(emptyToNull(datasetV1.getParcellationAtlas()));
+        d.setAtlas(value(emptyToNull(datasetV1.getParcellationAtlas())));
 
         if (!CollectionUtils.isEmpty(datasetV1.getExternalDatalink())) {
             d.setExternalDatalink(datasetV1.getExternalDatalink().stream()
@@ -180,9 +180,9 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
                             StringUtils.isBlank(r.getAlias()) ? r.getName() : r.getAlias()))
                     .collect(Collectors.toList()));
         }
-        d.setTitle(datasetV1.getTitle());
-        d.setModalityForFilter(emptyToNull(datasetV1.getModalityForFilter()));
-        d.setDoi(firstItemOrNull(datasetV1.getDoi()));
+        d.setTitle(value(datasetV1.getTitle()));
+        d.setModalityForFilter(value(emptyToNull(datasetV1.getModalityForFilter())));
+        d.setDoi(value(firstItemOrNull(datasetV1.getDoi())));
 
         if (!CollectionUtils.isEmpty(datasetV1.getContributors())) {
             d.setContributors(datasetV1.getContributors().stream()
@@ -193,7 +193,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
                     )).collect(Collectors.toList()));
         }
 
-        d.setPreparation(emptyToNull(datasetV1.getPreparation()));
+        d.setPreparation(value(emptyToNull(datasetV1.getPreparation())));
         if (!CollectionUtils.isEmpty(datasetV1.getComponent())) {
             d.setProjects(datasetV1.getComponent().stream()
                     .map(c -> new TargetInternalReference(
@@ -202,7 +202,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
                             null
                     )).collect(Collectors.toList()));
         }
-        d.setKeywords(emptyToNull(datasetV1.getProtocols()));
+        d.setKeywords(value(emptyToNull(datasetV1.getProtocols())));
 
         if (!CollectionUtils.isEmpty(datasetV1.getBrainViewer())) {
             d.setViewer(datasetV1.getBrainViewer().stream()
@@ -220,21 +220,21 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
         }
 
         if (!CollectionUtils.isEmpty(datasetV1.getSubjects())) {
-            d.setSubjects(datasetV1.getSubjects().stream()
+            d.setSubjectGroupOrSingleSubjectOld(children(datasetV1.getSubjects().stream()
                     .map(s ->
-                            new DatasetVersion.Subject(
+                            new DatasetVersion.OldSubject(
                                     new TargetInternalReference(
                                             liveMode ? s.getRelativeUrl() : String.format("Subject/%s", s.getIdentifier()),
                                             s.getName(),
                                             null
                                     ),
-                                    CollectionUtils.isEmpty(s.getSpecies()) ? null : s.getSpecies(),
-                                    CollectionUtils.isEmpty(s.getSex()) ? null : s.getSex(),
-                                    s.getAge(),
-                                    CollectionUtils.isEmpty(s.getAgeCategory()) ? null : s.getAgeCategory(),
-                                    s.getWeight(),
-                                    s.getStrain() != null ? s.getStrain() : s.getStrains(),
-                                    s.getGenotype(),
+                                    CollectionUtils.isEmpty(s.getSpecies()) ? null : value(s.getSpecies()),
+                                    CollectionUtils.isEmpty(s.getSex()) ? null : value(s.getSex()),
+                                    value(s.getAge()),
+                                    CollectionUtils.isEmpty(s.getAgeCategory()) ? null : value(s.getAgeCategory()),
+                                    value(s.getWeight()),
+                                    s.getStrain() != null ? value(s.getStrain()) : value(s.getStrains()),
+                                    value(s.getGenotype()),
                                     !CollectionUtils.isEmpty(s.getSamples()) ? s.getSamples().
                                             stream().
                                             map(sample -> new TargetInternalReference(
@@ -243,25 +243,25 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
                                                     null
                                             )).collect(Collectors.toList()) : null
                             )
-                    ).collect(Collectors.toList()));
+                    ).collect(Collectors.toList())));
         }
         if (dataStage == DataStage.IN_PROGRESS && !datasetV1.isUseHDG()) {
             if (containerUrl != null && containerUrl.startsWith("https://object.cscs.ch")) {
                 if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
-                    d.setEmbargoRestrictedAccess(String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", containerUrl));
+                    d.setEmbargoRestrictedAccess(value(String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", containerUrl)));
                 } else if (hasEmbargoStatus(datasetV1, UNDER_REVIEW)) {
-                    d.setEmbargoRestrictedAccess(String.format("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", containerUrl));
+                    d.setEmbargoRestrictedAccess(value(String.format("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", containerUrl)));
                 }
             } else {
                 if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
-                    d.setEmbargoRestrictedAccess("This dataset is temporarily under embargo. The data will become available for download after the embargo period.");
+                    d.setEmbargoRestrictedAccess(value("This dataset is temporarily under embargo. The data will become available for download after the embargo period."));
                 } else if (hasEmbargoStatus(datasetV1, UNDER_REVIEW)) {
-                    d.setEmbargoRestrictedAccess("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review.");
+                    d.setEmbargoRestrictedAccess(value("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review."));
                 }
             }
         }
-        d.setFirstRelease(datasetV1.getFirstReleaseAt());
-        d.setLastRelease(datasetV1.getLastReleaseAt());
+        d.setFirstRelease(value(datasetV1.getFirstReleaseAt()));
+        d.setLastRelease(value(datasetV1.getLastReleaseAt()));
         d.setSearchable(true);
         return d;
     }

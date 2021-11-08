@@ -27,6 +27,7 @@ import eu.ebrains.kg.search.controller.translators.Helpers;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetVersionV3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.DatasetVersion;
@@ -34,6 +35,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetE
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
+import eu.ebrains.kg.search.utils.AmbiguousDataException;
 import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -76,7 +78,8 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         return Collections.singletonList("https://openminds.ebrains.eu/core/DatasetVersion");
     }
 
-    private enum Accessibility{
+
+    private enum Accessibility {
         FREE_ACCESS("https://openminds.ebrains.eu/instances/productAccessibility/freeAccess"),
         CONTROLLED_ACCESS("https://openminds.ebrains.eu/instances/productAccessibility/controlledAccess"),
         RESTRICTED_ACCESS("https://openminds.ebrains.eu/instances/productAccessibility/restrictedAccess"),
@@ -84,12 +87,12 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
         private final String identifier;
 
-        Accessibility(String identifier){
+        Accessibility(String identifier) {
             this.identifier = identifier;
         }
 
-        public static Accessibility fromPayload(DatasetVersionV3 datasetVersion){
-            if(datasetVersion!=null && datasetVersion.getAccessibility()!=null && datasetVersion.getAccessibility().getIdentifier()!=null){
+        public static Accessibility fromPayload(DatasetVersionV3 datasetVersion) {
+            if (datasetVersion != null && datasetVersion.getAccessibility() != null && datasetVersion.getAccessibility().getIdentifier() != null) {
                 return Arrays.stream(Accessibility.values()).filter(a -> datasetVersion.getAccessibility().getIdentifier().contains(a.identifier)).findFirst().orElse(null);
             }
             return null;
@@ -101,21 +104,21 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         DatasetVersion d = new DatasetVersion();
         DatasetVersionV3.DatasetVersions dataset = datasetVersion.getDataset();
         Accessibility accessibility = Accessibility.fromPayload(datasetVersion);
-        String containerUrl = datasetVersion.getFileRepository()!=null ? datasetVersion.getFileRepository().getIri() : null;
-        if(accessibility!=null){
-            switch (accessibility){
+        String containerUrl = datasetVersion.getFileRepository() != null ? datasetVersion.getFileRepository().getIri() : null;
+        if (accessibility != null) {
+            switch (accessibility) {
                 case CONTROLLED_ACCESS:
-                    d.setUseHDG(DatasetVersion.createHDGMessage(datasetVersion.getUUID(), false));
-                    d.setEmbargo(DatasetVersion.createHDGMessage(datasetVersion.getUUID(), true));
+                    d.setUseHDG(value(DatasetVersion.createHDGMessage(datasetVersion.getUUID(), false)));
+                    d.setEmbargo(value(DatasetVersion.createHDGMessage(datasetVersion.getUUID(), true)));
                     break;
                 case UNDER_EMBARGO:
-                    d.setEmbargo(DatasetVersion.EMBARGO_MESSAGE);
-                    if(dataStage == DataStage.IN_PROGRESS && containerUrl!=null){
-                        d.setEmbargoRestrictedAccess(DatasetVersion.createEmbargoInProgressMessage(containerUrl));
+                    d.setEmbargo(value(DatasetVersion.EMBARGO_MESSAGE));
+                    if (dataStage == DataStage.IN_PROGRESS && containerUrl != null) {
+                        d.setEmbargoRestrictedAccess(value(DatasetVersion.createEmbargoInProgressMessage(containerUrl)));
                     }
                     break;
                 case RESTRICTED_ACCESS:
-                    d.setEmbargo(DatasetVersion.RESTRICTED_ACCESS_MESSAGE);
+                    d.setEmbargo(value(DatasetVersion.RESTRICTED_ACCESS_MESSAGE));
                     break;
                 default:
                     if (datasetVersion.getFileRepository() != null) {
@@ -125,50 +128,35 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                         }
                     }
             }
-            d.setEmbargoForFilter(new Value<>(datasetVersion.getAccessibility().getName()));
-            d.setDataAccessibility(datasetVersion.getAccessibility().getName());
+            d.setDataAccessibility(value(datasetVersion.getAccessibility().getName()));
         }
 
-        final String uuid = IdUtils.getUUID(datasetVersion.getId());
-        d.setId(uuid);
-        if (dataStage == DataStage.IN_PROGRESS) {
-            d.setEditorId(uuid);
-        }
+        d.setId(datasetVersion.getUUID());
         //TODO d.setExternalDatalink
         //d.setFiles -> replaced with d.setFileRepository
 
 
-        if(datasetVersion.getExperimentalApproach()!=null){
+
+
+
+
+        if (datasetVersion.getExperimentalApproach() != null) {
             final List<TargetInternalReference> experimentalApproach = datasetVersion.getExperimentalApproach().stream().filter(Objects::nonNull).filter(e -> StringUtils.isNotBlank(e.getFullName()))
                     .map(e -> new TargetInternalReference(IdUtils.getUUID(e.getId()), e.getFullName())).collect(Collectors.toList());
-            if(!experimentalApproach.isEmpty()){
+            if (!experimentalApproach.isEmpty()) {
                 d.setExperimentalApproach(experimentalApproach);
             }
         }
 
-        if(datasetVersion.getTechnique()!=null){
+        if (datasetVersion.getTechnique() != null) {
             final List<TargetInternalReference> technique = datasetVersion.getTechnique().stream().filter(Objects::nonNull).filter(e -> StringUtils.isNotBlank(e.getFullName()))
                     .map(e -> new TargetInternalReference(IdUtils.getUUID(e.getId()), e.getFullName())).collect(Collectors.toList());
-            if(!technique.isEmpty()){
+            if (!technique.isEmpty()) {
                 d.setTechnique(technique);
             }
         }
-
-        //TODO d.setZip -> goes to the file download section (file repository) -> shouldn't we materialize this?
-        //TODO d.setDataDescriptor ->
-        //TODO d.setPublications -> Where do we store the citation?
-        //TODO d.setAtlas
-        //TODO d.setRegion
-        //TODO d.setPreparation
-        //TODO d.setViewer -> Linked to files / filebundles (data missing)
-        //TODO d.setSubjects -> Becomes "specimens"
-        //TODO d.setFirstRelease
-        //TODO d.setLastRelease
-        //TODO d.setDataset
-
-
-        d.setIdentifier(IdUtils.getUUID(datasetVersion.getIdentifier()));
-        List<Version> versions = dataset == null?null:dataset.getVersions();
+        d.setIdentifier(datasetVersion.getSimpleIdentifiers());
+        List<Version> versions = dataset == null ? null : dataset.getVersions();
         if (!CollectionUtils.isEmpty(versions) && versions.size() > 1) {
             d.setVersion(datasetVersion.getVersion());
             List<Version> sortedVersions = Helpers.sort(versions);
@@ -182,19 +170,18 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
 
         if (StringUtils.isNotBlank(datasetVersion.getDescription())) {
-            d.setDescription(datasetVersion.getDescription());
+            d.setDescription(value(datasetVersion.getDescription()));
         } else if (dataset != null) {
-            d.setDescription(dataset.getDescription());
+            d.setDescription(value(dataset.getDescription()));
         }
-        if(StringUtils.isNotBlank(datasetVersion.getVersionInnovation())) {
+        if (StringUtils.isNotBlank(datasetVersion.getVersionInnovation())) {
             d.setNewInThisVersion(new Value<>(datasetVersion.getVersionInnovation()));
         }
 
         if (StringUtils.isNotBlank(datasetVersion.getFullName())) {
-            d.setTitle(datasetVersion.getFullName());
-        }
-        else if (dataset != null && StringUtils.isNotBlank(dataset.getFullName())) {
-            d.setTitle(dataset.getFullName());
+            d.setTitle(value(datasetVersion.getFullName()));
+        } else if (dataset != null && StringUtils.isNotBlank(dataset.getFullName())) {
+            d.setTitle(value(dataset.getFullName()));
         }
         if (!CollectionUtils.isEmpty(datasetVersion.getAuthor())) {
             d.setContributors(datasetVersion.getAuthor().stream()
@@ -214,63 +201,119 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if (StringUtils.isNotBlank(doi)) {
             final String doiWithoutPrefix = Helpers.stripDOIPrefix(doi);
             //TODO do we want to keep this one? It's actually redundant with what we have in "cite dataset"
-            d.setDoi(doiWithoutPrefix);
+            d.setDoi(value(doiWithoutPrefix));
             if (StringUtils.isNotBlank(citation)) {
-                d.setCitation(String.format("%s [DOI: %s](%s)", citation, doiWithoutPrefix, doi));
+                d.setCitation(value(String.format("%s [DOI: %s](%s)", citation, doiWithoutPrefix, doi)));
+            } else {
+                d.setCitation(value(String.format("[DOI: %s](%s)", doiWithoutPrefix, doi)));
             }
-            else{
-                d.setCitation(String.format("[DOI: %s](%s)", doiWithoutPrefix, doi));
-            }
-        }
-        else if (StringUtils.isNotBlank(citation)) {
-            d.setCitation(citation);
+        } else if (StringUtils.isNotBlank(citation)) {
+            d.setCitation(value(citation));
         }
 
-        if(datasetVersion.getLicense()!=null && StringUtils.isNotBlank(datasetVersion.getLicense().getLegalCode())){
-            d.setLicenseInfo(new TargetExternalReference(datasetVersion.getLicense().getLegalCode(), datasetVersion.getLicense().getFullName()!=null ? datasetVersion.getLicense().getFullName() : datasetVersion.getLicense().getLegalCode()));
-        }
-
-        if(datasetVersion.getProjects()!=null){
-            d.setProjects(datasetVersion.getProjects().stream().map(r -> new TargetInternalReference(IdUtils.getUUID(r.getId()), r.getFullName())).collect(Collectors.toList()));
-        }
-
-
+        d.setLicenseInfo(link(datasetVersion.getLicense()));
+        d.setProjects(ref(datasetVersion.getProjects()));
 
 
         List<PersonOrOrganizationRef> custodians = datasetVersion.getCustodians();
-        if(CollectionUtils.isEmpty(custodians) && datasetVersion.getDataset() != null){
+        if (CollectionUtils.isEmpty(custodians) && datasetVersion.getDataset() != null) {
             custodians = datasetVersion.getDataset().getCustodians();
         }
 
-        if(!CollectionUtils.isEmpty(custodians) ){
+        if (!CollectionUtils.isEmpty(custodians)) {
             d.setCustodians(custodians.stream().map(c -> new TargetInternalReference(IdUtils.getUUID(c.getId()), Helpers.getFullName(c.getFullName(), c.getFamilyName(), c.getGivenName()))).collect(Collectors.toList()));
         }
 
-        if(!CollectionUtils.isEmpty(datasetVersion.getKeyword())){
+        if (!CollectionUtils.isEmpty(datasetVersion.getKeyword())) {
             Collections.sort(datasetVersion.getKeyword());
-            d.setKeywords(datasetVersion.getKeyword());
+            d.setKeywords(value(datasetVersion.getKeyword()));
         }
-        if(!CollectionUtils.isEmpty(datasetVersion.getStudiedSpecimen())){
-            d.setSpeciesFilter(datasetVersion.getStudiedSpecimen().stream().map(s -> s.getSpecies()).flatMap(Collection::stream).map(s -> s.getFullName()).filter(Objects::nonNull).distinct().sorted().collect(Collectors.toList()));
-            final List<DatasetVersion.NewSubject> subjects = datasetVersion.getStudiedSpecimen().stream().map(s ->
-                    new DatasetVersion.NewSubject(new TargetInternalReference(IdUtils.getUUID(s.getSpecimenId()), s.getInternalIdentifier()),
-                            s.getSpecies().stream().map(species -> new TargetInternalReference(IdUtils.getUUID(species.getId()), species.getFullName())).collect(Collectors.toList()),
-                            s.getBiologicalSex().stream().map(sex -> new TargetInternalReference(IdUtils.getUUID(sex.getId()), sex.getFullName())).collect(Collectors.toList()),
-                            null,
-                            null,
-                            null,
-                            null)
+        if (!CollectionUtils.isEmpty(datasetVersion.getSubjects())) {
+            d.setSpeciesFilter(value(datasetVersion.getSubjects().stream().map(DatasetVersionV3.SubjectOrSubjectGroup::getSpecies).flatMap(Collection::stream).map(FullNameRef::getFullName).filter(Objects::nonNull).distinct().sorted().collect(Collectors.toList())));
+            final Set<String> groupedSubjects = datasetVersion.getSubjects().stream().map(DatasetVersionV3.SubjectOrSubjectGroup::getChildren).filter(children -> !CollectionUtils.isEmpty(children)).flatMap(Collection::stream).map(DatasetVersionV3.SubjectOrSubjectGroup::getId).collect(Collectors.toSet());
+            final List<DatasetVersion.SubjectGroupOrSingleSubject> subjects = datasetVersion.getSubjects().stream()
+                    //We don't want individual subjects to appear on the root hierarchy level if they also have a representation inside the groups...
+                    .filter(s -> !groupedSubjects.contains(s.getId()))
+                    .map(s ->
+                    {
+                        //Some subject groups contain individual subject information. Let's populate the values before we start to translate
+                        s.calculateSubjectGroupInformationFromChildren();
 
+                        DatasetVersion.SubjectGroupOrSingleSubject subj = new DatasetVersion.SubjectGroupOrSingleSubject();
+
+                        if (!CollectionUtils.isEmpty(s.getChildren())) {
+                            //This is a subject group with individual information.
+                            subj.setChildren(s.getChildren().stream().map(child -> fillIndividualSubjectInformation(new DatasetVersion.SingleSubject(), child)).collect(Collectors.toList()));
+                        }
+                        fillIndividualSubjectInformation(subj, s);
+                        return subj;
+                    }
             ).collect(Collectors.toList());
-            if(!subjects.isEmpty()) {
-                d.setSubjectsNew(subjects);
+            if (!subjects.isEmpty()) {
+                d.setSubjectGroupOrSingleSubject(children(subjects));
             }
-
         }
 
 
+        final List<DatasetVersionV3.File> specialFiles = datasetVersion.getSpecialFiles();
+        final List<DatasetVersionV3.File> dataDescriptors = specialFiles.stream().filter(s -> s.getRoles().contains("https://openminds.ebrains.eu/instances/fileUsageRole/dataDescriptor")).collect(Collectors.toList());
+        if(!dataDescriptors.isEmpty()) {
+            if (dataDescriptors.size() > 1) {
+                throw new AmbiguousDataException(String.format("The dataset version %s contains multiple data descriptors: %s", datasetVersion.getUUID(), dataDescriptors.stream().map(DatasetVersionV3.File::getIri).collect(Collectors.joining(", "))));
+            } else {
+                d.setDataDescriptor(new TargetExternalReference(dataDescriptors.get(0).getIri(), dataDescriptors.get(0).getName()));
+                if(datasetVersion.getFullDocumentationFile() != null && !dataDescriptors.get(0).getIri().equals(datasetVersion.getFullDocumentationFile().getIri())){
+                    throw new AmbiguousDataException(String.format("The dataset %s has a file (%s) flagged with the role data descriptor and another one (%s) for the full documentation. This is invalid!", datasetVersion.getUUID(), dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationFile().getIri()));
+                }
+                else if(datasetVersion.getFullDocumentationDOI()!=null){
+                    throw new AmbiguousDataException(String.format("The dataset %s has a file (%s) flagged with the role data descriptor and a DOI (%s) for the full documentation. This is invalid!", datasetVersion.getUUID(), dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationDOI()));
+                }
+                else if(datasetVersion.getFullDocumentationUrl()!=null){
+                    throw new AmbiguousDataException(String.format("The dataset %s has a file (%s) flagged with the role data descriptor and a DOI (%s) for the full documentation. This is invalid!", datasetVersion.getUUID(), dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationUrl()));
+                }
+            }
+        }
+        else if(datasetVersion.getFullDocumentationUrl()!=null){
+            d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationUrl(), datasetVersion.getFullDocumentationUrl()));
+        }
+        else if(datasetVersion.getFullDocumentationDOI()!=null){
+            //TODO resolve the DOI
+            d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationDOI(), datasetVersion.getFullDocumentationDOI()));
+        }
 
+        final List<String> galleryElements = specialFiles.stream().filter(s -> s.getRoles().contains("https://openminds.ebrains.eu/instances/fileUsageRole/preview") || s.getRoles().contains("https://openminds.ebrains.eu/instances/fileUsageRole/screenshot")).map(DatasetVersionV3.File::getIri).collect(Collectors.toList());
+        if(!galleryElements.isEmpty()){
+            d.setGallery(value(galleryElements));
+        }
+
+        d.setStudiedBrainRegion(refVersion(datasetVersion.getParcellationEntityFromStudyTarget()));
 
         return d;
     }
+
+
+    private <T extends DatasetVersion.SingleSubject> T fillIndividualSubjectInformation(T subj, DatasetVersionV3.SubjectOrSubjectGroup s) {
+        subj.setSubjectName(new TargetInternalReference(IdUtils.getUUID(s.getId()), s.getInternalIdentifier()));
+        subj.setNumberOfSubjects(value(s.getQuantity()!=null ? String.valueOf(s.getQuantity()) : null));
+        subj.setSpecies(ref(s.getSpecies()));
+        subj.setSex(ref(s.getBiologicalSex()));
+        List<DatasetVersionV3.SpecimenOrSpecimenGroupState> states = s.getStates();
+        //TODO sort states
+        //To represent states, we're going to provide a list for the state specific entries in a single "subject row".
+        List<String> ages = new ArrayList<>();
+        List<List<TargetInternalReference>> ageCategories = new ArrayList<>();
+        List<String> weights = new ArrayList<>();
+        for (DatasetVersionV3.SpecimenOrSpecimenGroupState state : states) {
+            ages.add(state.getAge()!=null ? state.getAge().displayString() : "-");
+            //TODO how can we enforce this inner list to be comma separated instead?
+            ageCategories.add(state.getAgeCategory()!=null ? ref(state.getAgeCategory()) : null);
+            weights.add(state.getWeight()!=null ? state.getWeight().displayString() : "-");
+        }
+        subj.setAge(value(ages));
+        subj.setAgeCategory(ageCategories);
+        subj.setWeight(value(weights));
+        return subj;
+    }
+
+
 }

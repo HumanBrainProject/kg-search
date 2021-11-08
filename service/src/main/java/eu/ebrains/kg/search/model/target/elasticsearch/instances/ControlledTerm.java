@@ -24,16 +24,21 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @MetaInfo(name = "Controlled term")
+@Getter
+@Setter
 public class ControlledTerm implements TargetInstance {
 
     @FieldInfo(ignoreForSearch = true, visible = false)
@@ -63,82 +68,6 @@ public class ControlledTerm implements TargetInstance {
 
     @FieldInfo(label = "Synonyms")
     private List<Value<String>> synonyms;
-
-
-
-    public Value<String> getType() {
-        return type;
-    }
-
-    public void setType(Value<String> type) {
-        this.type = type;
-    }
-
-    public Value<String> getTitle() {
-        return title;
-    }
-
-    public void setTitle(Value<String> title) {
-        this.title = title;
-    }
-
-    public Value<String> getOntologyIdentifier() {
-        return ontologyIdentifier;
-    }
-
-    public void setOntologyIdentifier(Value<String> ontologyIdentifier) {
-        this.ontologyIdentifier = ontologyIdentifier;
-    }
-
-    public Value<String> getDefinition() {
-        return definition;
-    }
-
-    public void setDefinition(Value<String> definition) {
-        this.definition = definition;
-    }
-
-    public Value<String> getDescription() {
-        return description;
-    }
-
-    public void setDescription(Value<String> description) {
-        this.description = description;
-    }
-
-    public List<TargetExternalReference> getExternalDefinitions() {
-        return externalDefinitions;
-    }
-
-    public void setExternalDefinitions(List<TargetExternalReference> externalDefinitions) {
-        this.externalDefinitions = externalDefinitions;
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public List<String> getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(List<String> identifier) {
-        this.identifier = identifier;
-    }
-
-    public List<Value<String>> getSynonyms() {
-        return synonyms;
-    }
-
-    public void setSynonyms(List<Value<String>> synonyms) {
-        this.synonyms = synonyms;
-    }
 
     @Override
     @JsonIgnore

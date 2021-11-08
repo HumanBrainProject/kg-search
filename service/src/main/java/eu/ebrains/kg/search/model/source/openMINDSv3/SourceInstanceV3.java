@@ -25,9 +25,13 @@ package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import eu.ebrains.kg.search.model.source.SourceInstance;
 import eu.ebrains.kg.search.utils.IdUtils;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+@Getter
+@Setter
 public class SourceInstanceV3 implements SourceInstance {
     private String id;
     private List<String> identifier;
@@ -36,19 +40,7 @@ public class SourceInstanceV3 implements SourceInstance {
         return IdUtils.getUUID(id);
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public List<String> getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(List<String> identifier) {
-        this.identifier = identifier;
+    public List<String> getSimpleIdentifiers(){
+        return IdUtils.getUUID(identifier);
     }
 }
