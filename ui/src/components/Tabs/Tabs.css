@@ -99,5 +99,24 @@
 }
 
 .kgs-tabs .kgs-tabs-view {
-    padding: 0 20px;
+    padding: 10px 20px;
+}
+
+.kgs-tabs .kgs-tabs-view .kgs-field__subjects .field-label,
+.kgs-tabs .kgs-tabs-view .kgs-field__publications .field-label {
+    display: none;
+}
+
+.kgs-tabs .kgs-tabs-view .kgs-field__subjects .kgs-hint,
+.kgs-tabs .kgs-tabs-view .kgs-field__publications .kgs-hint {
+    display: none;
+}
+
+.kgs-tabs .kgs-tabs-view .kgs-field__publications .kgs-field__list > ul {
+    list-style: none;
+    padding-inline-start: 0;
+}
+
+.kgs-tabs .kgs-tabs-view .kgs-field__publications .kgs-field__list > ul li {
+    padding-bottom: 10px;
 }
