@@ -101,7 +101,7 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
       if (!acc[groupName]) {
         acc[groupName] = {
           name: groupName,
-          order: groupName === "Overview" ? 0:(typeMapping.groupsOrder.indexOf(groupName) !== -1?typeMapping.groupsOrder.indexOf(groupName) + 1:100),
+          order: groupName === "Overview" ? 0:(typeMapping && typeMapping.groupsOrder && typeMapping.groupsOrder.indexOf(groupName) !== -1?typeMapping.groupsOrder.indexOf(groupName) + 1:100),
           fields: []
         };
       }
