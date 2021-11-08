@@ -103,6 +103,7 @@
 }
 
 .kgs-tabs .kgs-tabs-view .kgs-field__subjects .field-label,
+.kgs-tabs .kgs-tabs-view .kgs-field__dataDescriptor .field-label,
 .kgs-tabs .kgs-tabs-view .kgs-field__publications .field-label {
     display: none;
 }
@@ -118,5 +119,5 @@
 }
 
 .kgs-tabs .kgs-tabs-view .kgs-field__publications .kgs-field__list > ul li {
-    padding-bottom: 10px;
+    padding-bottom: 30px;
 }
