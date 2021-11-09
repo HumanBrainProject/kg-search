@@ -28,9 +28,7 @@ const FilePreview = ({ show, data }) => {
   }
 
   return (
-    <div className="kgs-file-preview">
-      <iframe src={data.url} height="850" style={{width:"100%"}}></iframe>
-    </div>
+    <iframe src={data.url} height="850" style={{width:"100%"}}></iframe>
   );
 };
 
