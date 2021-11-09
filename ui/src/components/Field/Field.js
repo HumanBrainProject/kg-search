@@ -31,7 +31,7 @@ import { TableField, PrintViewTableField } from "./TableField";
 import HierarchicalFiles from "./Files/HierarchicalFiles";
 import "./Field.css";
 import { AsyncHierarchicalFiles } from "../../containers/Files/AsyncHierarchicalFiles";
-import PdfPreview from "../PdfPreview/PdfPreview";
+import FilePreview from "../FilePreview/FilePreview";
 
 const FieldBase = (renderUserInteractions = true) => {
 
@@ -52,7 +52,7 @@ const FieldBase = (renderUserInteractions = true) => {
     const isHierarchicalFiles = mapping.isHierarchicalFiles;
     const asyncUrl = mapping.isAsync?data:null;
     const isButton = mapping.isButton;
-    const isPdfPreview = mapping.isPdfPreview && data.url;
+    const isFilePreview = mapping.isFilePreview && data.url;
     const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
     const className = "kgs-field" + (name?" kgs-field__" + name:"") + (mapping.layout?" kgs-field__layout-" + mapping.layout:"") + (isTable?" kgs-field__table":"") + (isHierarchicalFiles?" kgs-field__hierarchical-files":"");
 
@@ -73,7 +73,7 @@ const FieldBase = (renderUserInteractions = true) => {
       group: group
     };
     const valueProps = {
-      show: !isList && !isButton && !isHierarchicalFiles && !isPdfPreview,
+      show: !isList && !isButton && !isHierarchicalFiles && !isFilePreview,
       data: data,
       mapping: mapping,
       group: group
@@ -100,8 +100,8 @@ const FieldBase = (renderUserInteractions = true) => {
       group: group,
       url: asyncUrl
     };
-    const pdfPreviewProps = {
-      show: isPdfPreview,
+    const filePreviewProps = {
+      show: isFilePreview,
       mapping: mapping,
       data: data
     };
@@ -114,7 +114,7 @@ const FieldBase = (renderUserInteractions = true) => {
         <ListFieldComponent {...listProps} />
         <ObjectFieldComponent {...objectProps} />
         <TableFieldComponent {...tableProps} />
-        <PdfPreview {...pdfPreviewProps} />
+        <FilePreview {...filePreviewProps} />
         {isHierarchicalFiles && (
           asyncUrl?
             <AsyncHierarchicalFiles  {...asyncHierarchicalFileProps} />

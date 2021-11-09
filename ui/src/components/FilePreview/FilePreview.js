@@ -20,50 +20,16 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
+import React from "react";
 
+const PdfPreview = ({ show, data }) => {
+  if(!show) {
+    return null;
+  }
 
- .kgs-pdf-preview {
-    display: flex;
-    justify-content: center;
- }
+  return (
+    <iframe src={data.url} height="850" width="1120"></iframe>
+  );
+};
 
- .kgs-carousel__content .kgs-pdf-preview .kgs-pdf-preview-download {
-    position: absolute;
-    top: 4%;
-    z-index: 1000;
-    right: 10%;
- }
-
- .kgs-pdf-preview .kgs-pdf-preview-download {
-   position: absolute;
-   top: 4%;
-   z-index: 1000;
-   right: 15%;
-}
- 
- .kgs-pdf-preview .kgs-pdf-preview-document {
-    display: flex;
-    justify-content: center;
-    
- }
-
- .kgs-pdf-preview .kgs-pdf-preview-document .react-pdf__Page {
-    border: 1px#999 solid;
-    border-radius: 2px;
- }
-
- .kgs-pdf-preview .kgs-pdf-preview-controls {
-    border: none;
-    background: transparent;
- }
-
- .kgs-pdf-preview .kgs-pdf-preview-controls-container {
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    bottom: 10%;
- }
-
- .kgs-pdf-preview .kgs-pdf-preview-controls-container p {
-    margin-bottom: 0;
-}
+export default PdfPreview;

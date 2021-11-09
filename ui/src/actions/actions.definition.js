@@ -95,7 +95,7 @@ export const loadDefinition = () => {
     field.isHierarchicalFiles = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isHierarchicalFiles", false);
     field.isAsync = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isAsync", false);
     field.isButton = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isButton", false);
-    field.isPdfPreview = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isPdfPreview", false);
+    field.isFilePreview = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "isFilePreview", false);
     field.showIfEmpty = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "showIfEmpty", false);
     field.layout = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "layout", null);
     field.hint = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "hint", null);
@@ -398,7 +398,7 @@ export const loadDefinition = () => {
       },
       "Dataset": {
         "https://schema.hbp.eu/searchUi/order": 3,
-        "https://schema.hbp.eu/searchUi/groupsOrder": ["Overview", "Get data", "Subjects", "Publications"],
+        "https://schema.hbp.eu/searchUi/groupsOrder": ["Overview", "Data descriptor", "Get data", "Subjects", "Publications"],
         "https://schema.hbp.eu/searchUi/defaultSelection": true,
         "https://schema.hbp.eu/searchUi/searchable": true,
         "https://schema.hbp.eu/searchUi/ribbon": {
@@ -464,7 +464,7 @@ export const loadDefinition = () => {
             "https://schema.hbp.eu/searchUi/icon": "sticky-note",
             // "https://schema.hbp.eu/searchUi/isButton": true,
             "https://schema.hbp.eu/searchUi/isDirectDownload": true,
-            "https://schema.hbp.eu/searchUi/isPdfPreview": true
+            "https://schema.hbp.eu/searchUi/isFilePreview": true
           },
           "doi": {
             "https://schema.hbp.eu/graphQuery/label": "DOI",
