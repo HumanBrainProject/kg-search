@@ -22,14 +22,16 @@
  */
 import React from "react";
 
-const PdfPreview = ({ show, data }) => {
+const FilePreview = ({ show, data }) => {
   if(!show) {
     return null;
   }
 
   return (
-    <iframe src={data.url} height="850" width="1120"></iframe>
+    <div className="kgs-file-preview">
+      <iframe src={data.url} height="850" style={{width:"100%"}}></iframe>
+    </div>
   );
 };
 
-export default PdfPreview;
+export default FilePreview;

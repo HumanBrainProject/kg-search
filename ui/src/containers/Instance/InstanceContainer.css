@@ -113,19 +113,3 @@
   }
   
 }
-
-.kgs-instance-container .kgs-tabs .kgs-tabs-panel {
-  max-width: 180px;
-  min-width: 180px;
-  padding: 0 10px 0 0;
-}
-
-@media (min-width: 900px) {
-
-  .kgs-instance-container .kgs-tabs .kgs-tabs-panel {
-    max-width: 180px;
-    min-width: 180px;
-    padding: 0 10px 0 0;
-  }
-  
-} 
