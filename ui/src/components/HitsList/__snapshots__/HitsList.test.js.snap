@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ChevronList component renders initially 1`] = `
+exports[`HitsList component renders initially 1`] = `
 <div
   className="kgs-hits-list className"
 >
@@ -10,26 +10,22 @@ exports[`ChevronList component renders initially 1`] = `
   <ul>
     <li>
       <button
-        data-reference="1"
+        className="kgs-hit-button"
+        data-reference="3"
         onClick={[Function]}
         role="link"
       >
         <div />
-        <span
-          className="kgs-hits-list__chevron"
-        />
       </button>
     </li>
     <li>
       <button
-        data-reference="2"
+        className="kgs-hit-button"
+        data-reference="4"
         onClick={[Function]}
         role="link"
       >
         <div />
-        <span
-          className="kgs-hits-list__chevron"
-        />
       </button>
     </li>
   </ul>
