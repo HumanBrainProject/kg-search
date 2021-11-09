@@ -32,8 +32,7 @@ a.kgs-email-link {
     color: var(--color-19);
     font-size: 22px;
     text-align: center;
-    -webkit-transition: color 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
-    transition: box-shadow 0.2s ease-in, color 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in, color 0.2s ease-in;
     line-height: 1.5em;
 }
 

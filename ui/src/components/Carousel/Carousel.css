@@ -228,12 +228,6 @@
     font-weight: 500;
 }
 
-/* small hack to fix adjustment for ie 11 */
-@media all and (-ms-high-contrast:none) {
-    .kgs-carousel__close-button { margin-top: -5px; } /* IE10 */
-    *::-ms-backdrop, .kgs-carousel__close-button { margin-top: -5px; } /* IE11 */
-}
-
 .kgs-carousel__previous-button:hover {
     font-weight: bold;
 }
@@ -264,11 +258,6 @@
     font-weight: 500;
 }
 
-/* small hack to fix adjustment for ie 11 */
-@media all and (-ms-high-contrast:none) {
-    .kgs-carousel__close-button { margin-top: -8px; } /* IE10 */
-    *::-ms-backdrop, .kgs-carousel__close-button { margin-top: -8px; } /* IE11 */
-}
 
 .kgs-carousel__close-button:hover {
     font-weight: bold;

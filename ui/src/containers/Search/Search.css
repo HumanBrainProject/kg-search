@@ -60,9 +60,7 @@
 @media (min-width: 992px) {
     .kgs-search .kgs-search__panel {
         display: grid;
-        -ms-grid-columns: 400px 1fr;
         grid-template-columns: 400px 1fr;
-        -ms-grid-rows: max-content max-content 1fr;
         grid-template-rows: max-content max-content 1fr;
         grid-template-areas: "types main"
                             "filters main"

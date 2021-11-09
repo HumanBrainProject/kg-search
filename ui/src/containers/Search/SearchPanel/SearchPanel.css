@@ -54,7 +54,6 @@
 }
 
 .kgs-search-panel > div {
-    display: -ms-flexbox;
     display: flex;
     position: relative;
     width: 100%;
@@ -123,10 +122,6 @@
     color: #999 !important;
 }
 
-.kgs-search-panel input.kg-search-bar:-ms-input-placeholder {
-    color: #999 !important;
-}
-
 .kgs-search-panel input.kg-search-bar::-webkit-input-placeholder {
     color: #999 !important;
 }
@@ -141,11 +136,7 @@
     color: var(--color-32);
     font-size: 22px;
     text-transform: uppercase;
-    -webkit-transition: -webkit-box-shadow 0.2s ease-in;
-    transition: -webkit-box-shadow 0.2s ease-in;
-    -o-transition: box-shadow 0.2s ease-in;
     transition: box-shadow 0.2s ease-in;
-    transition: box-shadow 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
 }
 
 .kgs-search-panel .kgs-search-panel-button:hover {

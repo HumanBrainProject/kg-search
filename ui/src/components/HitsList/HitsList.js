@@ -22,19 +22,11 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
 import "./HitsList.css";
 import { HitButton } from "./HitButton";
-import { HitsStack } from "./HitsStack";
 
 
 const HitsListItem = ({item, itemComponent, getKey, onClick }) => {
-  if (Array.isArray(item)) {
-    const key = getKey(item[0]);
-    return (
-      <HitsStack reference={key} items={item} itemComponent={itemComponent} getKey={getKey} onClick={onClick} />
-    );
-  }
   const key = getKey(item);
   return (
     <HitButton reference={key} data={item} component={itemComponent} onClick={onClick} />
@@ -63,19 +55,6 @@ export const HitsList = ({ className, title, items, itemComponent, getKey, onCli
       </ul>
     </div>
   );
-};
-
-HitsList.propTypes = {
-  className: PropTypes.string,
-  title: PropTypes.string,
-  items: PropTypes.arrayOf(PropTypes.any),
-  itemComponent: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.func,
-    PropTypes.object
-  ]).isRequired,
-  getKey: PropTypes.func.isRequired,
-  onClick: PropTypes.func
 };
 
 export default HitsList;

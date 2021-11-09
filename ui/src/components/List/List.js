@@ -23,7 +23,6 @@
 
 import React from "react";
 
-import "./List.css";
 export class Item extends React.PureComponent {
 
   handleClick = e => {

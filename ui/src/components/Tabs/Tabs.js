@@ -84,15 +84,9 @@ export const Tabs = ({instanceId, groups }) => {
   return (
     <div className="kgs-tabs">
       <div className="kgs-tabs-panel">
-        <div className="kgs-tabs-buttons">
-          {groups.map(g => (
-            <Tab key={g.name} group={g} active={group && g.name === group.name} onClick={handleClick} />
-          ))}
-        </div>
-        {/* <div className="kgs-tabs-info">
-          <strong className="kgs-tabs-disclaimer">Disclaimer:
-          Please alert us at <a href="mailto:curation-support@ebrains.eu">curation-support@ebrains.eu</a> for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible.</strong>
-        </div> */}
+        {groups.map(g => (
+          <Tab key={g.name} group={g} active={group && g.name === group.name} onClick={handleClick} />
+        ))}
       </div>
       <div className="kgs-tabs-scroll">
         <div className="kgs-tabs-scoll-content">

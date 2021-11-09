@@ -234,3 +234,16 @@
 .kgs-instance[data-type] > div > div > div > .kgs-field:last-child {
     margin-bottom: 0px;
 }
+
+
+.kgs-instance .kgs-instance-disclaimer {
+    display: inline-block; 
+    font-size: small;
+    color: var(--color-8);
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.kgs-instance .kgs-instance-disclaimer a {
+    color: var(--link-color-1)
+}

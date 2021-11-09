@@ -57,10 +57,6 @@
     color: var(--color-12);
 }
 
-/* .kgs-field .field-label.as-block::after {
-    display: none;
-} */
-
 .kgs-field ul > li > ul {
     padding-left: 0;
 }

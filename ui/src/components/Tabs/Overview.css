@@ -1,3 +1,25 @@
+/*
+ * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * This open source software code was developed in part or in whole in the
+ * Human Brain Project, funded from the European Union's Horizon 2020
+ * Framework Programme for Research and Innovation under
+ * Specific Grant Agreements No. 720270, No. 785907, and No. 945539
+ * (Human Brain Project SGA1, SGA2 and SGA3).
+ *
+ */
 
 .kgs-overview__previews > div {
     display: inline-block;
@@ -20,8 +42,6 @@
 }
 
 .kgs-overview__grid .kgs-overview__buttons {
-    -ms-grid-column: 1;
-    -ms-grid-row: 1;
     grid-area: buttons;
     margin-bottom: 20px;
 }
@@ -32,15 +52,8 @@
 }
 
 .kgs-overview__grid .kgs-overview__main {
-    -ms-grid-column: 1;
-    -ms-grid-row: 2;
     grid-area: main;
 }
-
-.kgs-overview__grid .kgs-overview__groups {
-    display: none;
-    grid-area: groups;
-} 
 
 .kgs-overview__grid .kgs-overview__summary {
     display: none;
@@ -57,13 +70,10 @@
 @media (min-width: 768px) {
     
     .kgs-overview__grid.kgs-overview__with-previews {
-        display: -ms-grid;
         display: grid;
         grid-row-gap: 20px;
         grid-column-gap: 40px;
-        -ms-grid-columns: 1fr;
         grid-template-columns: 1fr;
-        -ms-grid-rows: max-content max-content;
         grid-template-rows: max-content max-content;
         grid-template-areas: "highlights"
                             "main";
@@ -71,8 +81,6 @@
 
     .kgs-overview__grid.kgs-overview__with-previews .kgs-overview__highlights {
         display: flex;
-        -ms-grid-column: 1;
-        -ms-grid-row: 1;
     }
 
     .kgs-overview__grid.kgs-overview__with-previews .kgs-overview__summary {
@@ -81,40 +89,17 @@
         flex: 1;
     }
 
-    .kgs-overview__grid.kgs-overview__with-previews .kgs-overview__main {
-        -ms-grid-column: 1;
-        -ms-grid-row: 2;
-    }
-
     .kgs-overview__grid.kgs-overview__with-previews .kgs-overview__main .kgs-field__layout-summary {
         display: none;
     }
 
     .kgs-overview__grid.kgs-overview__with-previews.kgs-overview__with-buttons {
-        display: -ms-grid;
         display: grid;
         grid-row-gap: 20px;
         grid-column-gap: 40px;
         grid-template-areas: "buttons"
                             "highlights"
                             "main";
-    }
-
-    .kgs-overview__grid.kgs-overview__with-previews.kgs-overview__with-buttons .kgs-overview__buttons {
-        -ms-grid-column: 1;
-        -ms-grid-row: 1;
-    }
-
-    .kgs-overview__grid.kgs-overview__with-previews.kgs-overview__with-buttons .kgs-overview__highlights {
-        -ms-grid-row: 2;
-    }
-
-    .kgs-overview__grid.kgs-overview__with-previews.kgs-overview__with-buttons .kgs-overview__highlights {
-        -ms-grid-row: 2;
-    }
-
-    .kgs-overview__grid.kgs-overview__with-previews.kgs-overview__with-buttons .kgs-overview__main {
-        -ms-grid-row: 3;
     }
 }
 
@@ -128,27 +113,18 @@
 @media (min-width: 1024px) {
 
     .kgs-overview.kgs-overview__grid {
-        display: -ms-grid;
         display: grid;
         grid-row-gap: 20px;
         grid-column-gap: 40px;
-        -ms-grid-columns: 7fr 3fr;
         grid-template-columns: 7fr 3fr;
-        -ms-grid-rows:  max-content max-content 1fr;
         grid-template-rows: max-content max-content 1fr;
-        grid-template-areas: "main highlights"
-                            "groups groups";
+        grid-template-areas: "main highlights";
     }
 
     .kgs-overview__grid .kgs-overview__buttons {
         margin-bottom: 0;
     }
-    
-    .kgs-overview__grid .kgs-overview__main {
-        -ms-grid-column: 1;
-        -ms-grid-row: 1;
-    }
-    
+
     .kgs-overview__grid.kgs-overview__with-previews .kgs-overview__main  {
         margin-top: 0;
     }
@@ -160,8 +136,6 @@
 
     .kgs-overview__grid .kgs-overview__highlights {
         display: block;
-        -ms-grid-column: 2;
-        -ms-grid-row: 1;
     }
 
     .kgs-overview__grid .kgs-overview__summary {
@@ -177,32 +151,10 @@
         margin-left: 0;
     }
 
-    .kgs-overview__grid .kgs-overview__groups {
-        display: flex;
-        -ms-grid-column: 1;
-        -ms-grid-row: 2;
-        -ms-grid-column-span: 2;
-    } 
-
     .kgs-overview.kgs-overview__grid.kgs-overview__with-buttons {
-        -ms-grid-rows:  max-content max-content 1fr;
         grid-template-rows: min-content 1fr min-content;
         grid-template-areas: "buttons highlights"
-                             "main highlights"
-                            "groups groups";
+                             "main highlights";
     }
 
-
-    .kgs-overview__grid.kgs-overview__with-buttons .kgs-overview__main {
-        -ms-grid-row: 2;
-    }
-
-    .kgs-overview__grid .kgs-overview__highlights {
-        -ms-grid-column: 2;
-        -ms-grid-row-span: 2;
-    }
-
-    .kgs-overview__grid .kgs-overview__groups {
-        -ms-grid-row: 3;
-    } 
 }

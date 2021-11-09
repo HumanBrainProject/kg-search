@@ -49,18 +49,12 @@
     padding: 9px  var(--site-margin) 9px 25px;
     cursor: pointer;
     -moz-user-select: none;
-    -ms-user-select: none;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
-    -o-transition: box-shadow 0.2s ease-in;
-    -webkit-transition: -webkit-box-shadow 0.2s ease-in;
-    transition: -webkit-box-shadow 0.2s ease-in;
     transition: box-shadow 0.2s ease-in;
-    transition: box-shadow 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
     -moz-appearance: none;
     -webkit-appearance: none;
-    /* text-transform: capitalize; */
 }
 
 .kgs-select select:hover,
@@ -80,15 +74,4 @@
     border-right: 6px solid transparent;
     border-left: 6px solid transparent;
     pointer-events: none;
-}
-
-/* Internet Explorer 10 & 11 */
-@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-    .kgs-select select {
-        padding: 9px;
-    }
-    
-    .kgs-select:after {
-        display: none;
-    }
 }

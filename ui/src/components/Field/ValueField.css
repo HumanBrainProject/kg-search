@@ -56,7 +56,6 @@
 }
 
 .kgs-field .field-value button[role="link"] {
-    -webkit-appearance: none;
     margin: 0;
     padding: 0;
     border: 0;
@@ -114,13 +113,6 @@
     font-size: 50px;
     color: #707070;
     padding: 5px 9px;
-}
-
-@media screen and (min-width:0\0) {  
-    /* IE9 and IE10 rule sets go here */  
-    .kgs-field__icon>div {
-        margin-top: -46px;
-    }
 }
 
 .kgs-field__icon>div>svg {

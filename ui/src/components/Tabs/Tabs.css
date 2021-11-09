@@ -29,6 +29,7 @@
 .kgs-tabs .kgs-tabs-panel {
     display: flex;
     flex-direction: column;
+    position: relative;
     max-width: 205px;
     min-width: 205px;
     padding: 0 10px 0 25px;
@@ -44,11 +45,7 @@
     
 }
  
-.kgs-tabs .kgs-tabs-buttons {
-    position: relative;
-}
-
-.kgs-tabs .kgs-tabs-buttons > button.kgs-tabs-button {
+.kgs-tabs .kgs-tabs-panel > button.kgs-tabs-button {
     display: block;
     width: 100%;
     margin: 0;
@@ -62,7 +59,7 @@
     text-align: left;
 }
 
-.kgs-tabs .kgs-tabs-buttons > button.kgs-tabs-button.is-active {
+.kgs-tabs .kgs-tabs-panel > button.kgs-tabs-button.is-active {
     color: var(--link-highlight-color);
     border-bottom-color: var(--link-highlight-color);
 }
@@ -86,16 +83,6 @@
 
 .kgs-tabs .kgs-tabs-info {
     padding-top: 20px;
-}
-
-.kgs-tabs .kgs-tabs-info .kgs-tabs-disclaimer {
-    display: inline-block; 
-    font-size: x-small;
-    color: var(--color-8);
-}
-
-.kgs-tabs .kgs-tabs-info .kgs-tabs-disclaimer a {
-    color: var(--link-color-1)
 }
 
 .kgs-tabs .kgs-tabs-view {

@@ -21,10 +21,8 @@
  *
  */
 main {
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     text-rendering: optimizeLegibility;
-    -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     font-weight: 400;
     font-family: var(--font-stack);
@@ -54,27 +52,9 @@ main a, main a:visited {
     }
 }
 
-/* Internet Explorer 10 & 11 */
-@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-    main {
-        text-rendering: initial;
-    }
-}
-
-/* Microsoft Edge 12 : Can use the @supports rule Here is a link with all the info about this rule */
-@supports (-ms-accelerator:true) {
-    main {
-        text-rendering: initial;
-    }
-}
-
 main input[type="button"],
 main button {
     -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
 }
 
@@ -117,43 +97,11 @@ main .kgs-spinner-label {
     padding-left: 8px;
 }
 
-@-ms-keyframes kgs-rotate {
-    0% {
-        -ms-transform: rotateZ(0deg);
-        transform: rotateZ(0deg);
-    }
-    100% {
-        -ms-transform: rotateZ(360deg);
-        transform: rotateZ(360deg);
-    }
-}
-
-@-webkit-keyframes kgs-rotate {
-    0% {
-        -ms-transform: rotateZ(0deg);
-        -webkit-transform: rotateZ(0deg);
-        transform: rotateZ(0deg);
-    }
-    100% {
-        -ms-transform: rotateZ(360deg);
-        -webkit-transform: rotateZ(360deg);
-        transform: rotateZ(360deg);
-    }
-}
-
 @keyframes kgs-rotate {
     0% {
-        -ms-transform: rotateZ(0deg);
-        -o-transform: rotateZ(0deg);
-        -moz-transform: rotateZ(0deg);
-        -webkit-transform: rotateZ(0deg);
         transform: rotateZ(0deg);
     }
     100% {
-        -ms-transform: rotateZ(360deg);
-        -o-transform: rotateZ(360deg);
-        -moz-transform: rotateZ(360deg);
-        -webkit-transform: rotateZ(360deg);
         transform: rotateZ(360deg);
     }
 }

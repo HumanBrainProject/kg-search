@@ -27,7 +27,6 @@
 }
 
 .kgs-toggle > div  {
-    display: -ms-flexbox;
     display: flex;
     max-height: 40px;
     align-content: center;
@@ -35,19 +34,8 @@
     border-radius: 3px;
     white-space: nowrap;
 }
-/* 
-.kgs-toggle > div:before {
-    content: "View as";
-    margin-top: 4px;
-    margin-right: 20px;
-    font-size: 22px;
-    line-height: 30px;
-    color: var(--color-15);
-    white-space: nowrap;
-} */
 
 .kgs-toggle > div button {
-    -ms-flex: 1 1;
     flex: 1 1;
     padding: 3px 35px; 
     background-color: var(--background-color-2);
@@ -60,11 +48,7 @@
     color: #000;
     text-decoration: none;
     white-space: nowrap;
-    -webkit-transition: -webkit-box-shadow 0.2s ease-in;
-    transition: -webkit-box-shadow 0.2s ease-in;
-    -o-transition: box-shadow 0.2s ease-in;
     transition: box-shadow 0.2s ease-in;
-    transition: box-shadow 0.2s ease-in, -webkit-box-shadow 0.2s ease-in;
 }
 
 .kgs-toggle > div > button:first-child {
