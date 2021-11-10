@@ -31,7 +31,6 @@ import Tabs from "../Tabs/Tabs";
 import "./Instance.css";
 import "./Fields.css";
 
-// eslint-disable-next-line no-unused-vars
 export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, groups, NavigationComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch }) => {
 
   useEffect(() => {
