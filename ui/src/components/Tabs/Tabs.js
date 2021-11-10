@@ -32,14 +32,14 @@ const Tab = ({group, active, onClick}) => {
 
   const handleClick = () => onClick(group);
 
-  const className = `kgs-tabs-button ${active?"is-active":""}`;
+  const className = `kgs-tabs__button ${active?"is-active":""}`;
   return (
     <button type="button" className={className} onClick={handleClick}>{group.name?group.name:""}</button>
   );
 };
 
 
-export const TabsView = ({group}) => {
+const TabsView = ({group}) => {
   if (!group || !Array.isArray(group.fields)) {
     return null;
   }
@@ -52,19 +52,19 @@ export const TabsView = ({group}) => {
     const summaryFields = group.fields.filter(f => !f.mapping.isButton && f.mapping.layout === "summary");
 
     return (
-      <div className={`kgs-tabs-view kgs-overview kgs-overview__grid ${(buttons && buttons.length) ? "kgs-overview__with-buttons" : ""} ${(previews && previews.length) ? "kgs-overview__with-previews" : ""}`}>
-        <FieldsButtons className="kgs-overview__buttons" fields={buttons} />
-        <div className="kgs-overview__highlights">
-          <ImagePreviews className={`kgs-overview__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
-          <FieldsPanel className="kgs-overview__summary" fields={summaryFields} fieldComponent={Field} />
+      <div className={`kgs-tabs__view kgs-tabs__overview kgs-tabs__overview__grid ${(buttons && buttons.length) ? "kgs-tabs__overview__with-buttons" : ""} ${(previews && previews.length) ? "kgs-tabs__overview__with-previews" : ""}`}>
+        <FieldsButtons className="kgs-tabs__overview__buttons" fields={buttons} />
+        <div className="kgs-tabs__overview__highlights">
+          <ImagePreviews className={`kgs-tabs__overview__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
+          <FieldsPanel className="kgs-tabs__overview__summary" fields={summaryFields} fieldComponent={Field} />
         </div>
-        <FieldsPanel className="kgs-overview__main" fields={mainFields} fieldComponent={Field} />
+        <FieldsPanel className="kgs-tabs__overview__main" fields={mainFields} fieldComponent={Field} />
       </div>
     );
   }
 
   return (
-    <FieldsPanel className="kgs-tabs-view" fields={group.fields} fieldComponent={Field} />
+    <FieldsPanel className="kgs-tabs__view" fields={group.fields} fieldComponent={Field} />
   );
 };
 
@@ -82,18 +82,20 @@ export const Tabs = ({instanceId, groups }) => {
   }
 
   return (
-    <div className="kgs-tabs">
-      <div className="kgs-tabs-panel">
+    <>
+      <div className="kgs-tabs__buttons">
         {groups.map(g => (
           <Tab key={g.name} group={g} active={group && g.name === group.name} onClick={handleClick} />
         ))}
       </div>
-      <div className="kgs-tabs-scroll">
-        <div className="kgs-tabs-scoll-content">
-          <TabsView group={group}/>
+      <div className="kgs-tabs__content">
+        <div className="kgs-tabs__content__scroll">
+          <div className="kgs-tabs__content__scroll__content">
+            <TabsView group={group}/>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

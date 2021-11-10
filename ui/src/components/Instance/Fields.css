@@ -1,0 +1,73 @@
+
+.kgs-instance[data-type] .kgs-instance__header .kgs-field {
+  color: var(--color-36);
+  margin-bottom: 0;
+}
+
+.kgs-instance[data-type] .kgs-instance-content .kgs-fields-panel > .kgs-field {
+  line-height: 1.75em;
+}
+
+.kgs-instance[data-type] .kgs-instance-content .kgs-fields-panel > .kgs-field:last-child {
+  margin-bottom: 0px;
+}
+
+
+
+.kgs-instance[data-type] .kgs-instance__header .kgs-field__type {
+  width: auto;
+  width: unset;
+  margin-bottom: 0px;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1em;
+}
+
+.kgs-instance[data-type] .kgs-instance__header .kgs-field__type .field-value {
+  margin-top: 8px;
+}
+
+.kgs-instance[data-type] .kgs-instance__header .kgs-field__icon + .kgs-field__type {
+  margin-top: 0;
+  flex: 1;
+}
+
+.kgs-instance[data-type] .kgs-instance__header .kgs-field__title {
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.3em !important;
+  margin-bottom: 3px !important;
+}
+
+.kgs-instance[data-type] .kgs-instance__header .kgs-field__title .field-label {
+  display: none;
+}
+
+.kgs-instance[data-type] .kgs-field__description {
+  text-align: justify;
+}
+
+.kgs-instance[data-type] .kgs-field + .kgs-field__description {
+  border-top: 1px solid lightgray;
+  padding-top: 10px;
+}
+
+.kgs-instance[data-type] .kgs-field__subjects .field-label,
+.kgs-instance[data-type] .kgs-field__dataDescriptor .field-label,
+.kgs-instance[data-type] .kgs-field__publications .field-label {
+    display: none;
+}
+
+.kgs-instance[data-type] .kgs-field__subjects .kgs-hint,
+.kgs-instance[data-type] .kgs-field__publications .kgs-hint {
+    display: none;
+}
+
+.kgs-instance[data-type] .kgs-field__publications .kgs-field__list > ul {
+    list-style: none;
+    padding-inline-start: 0;
+}
+
+.kgs-instance[data-type] .kgs-field__publications .kgs-field__list > ul li {
+    padding-bottom: 30px;
+}

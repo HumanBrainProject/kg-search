@@ -40,7 +40,7 @@ test('Tabs test number of tabs', () => {
     const component = render(
         <Tabs className="className" tabs={[{id: "an id", title: "a label", counter: 11, hint: {show: true, value: "a hint"}},{id: "another id", title: "another label", counter: 32, hint: {show: true, value: "another hint"}}]}  viewComponent={() => (<div></div>)} />
     );
-    expect(component.find(".kgs-tabs-button").length).toBe(2);
+    expect(component.find(".kgs-tabs__button").length).toBe(2);
 });
 
 test('Tabs test active tab', () => {
@@ -48,11 +48,11 @@ test('Tabs test active tab', () => {
         <Tabs className="className" tabs={[{id: "an id", title: "a label", counter: 11, hint: {show: true, value: "a hint"}},{id: "another id", title: "another label", counter: 32, hint: {show: true, value: "another hint"}}]}  viewComponent={() => (<div></div>)} />
     );
     
-    expect(component.find("button.kgs-tabs-button").at(0).hasClass("is-active"));
-    expect(component.find("button.kgs-tabs-button").at(1).hasClass("is-active")).toBe(false);
+    expect(component.find("button.kgs-tabs__button").at(0).hasClass("is-active"));
+    expect(component.find("button.kgs-tabs__button").at(1).hasClass("is-active")).toBe(false);
 
-    component.find('button.kgs-tabs-button').at(1).simulate('click');
+    component.find('button.kgs-tabs__button').at(1).simulate('click');
 
-    expect(component.find("button.kgs-tabs-button").at(0).hasClass("is-active")).toBe(false);
-    expect(component.find("button.kgs-tabs-button").at(1).hasClass("is-active"));
+    expect(component.find("button.kgs-tabs__button").at(0).hasClass("is-active")).toBe(false);
+    expect(component.find("button.kgs-tabs__button").at(1).hasClass("is-active"));
 });

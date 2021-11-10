@@ -21,31 +21,26 @@
  *
  */
 
-.kgs-tabs {
-    display: flex;
-    width: 100%;
-}
-
-.kgs-tabs .kgs-tabs-panel {
+.kgs-tabs__buttons {
     display: flex;
     flex-direction: column;
     position: relative;
-    max-width: 205px;
-    min-width: 205px;
+    /*max-width: 205px;
+    min-width: 205px;*/
     padding: 0 10px 0 25px;
 }
  
 @media (min-width: 900px) {
 
-    .kgs-tabs .kgs-tabs-panel {
-        max-width: 215px;
-        min-width: 215px;
+    .kgs-tabs__buttons {
+        /*max-width: 215px;
+        min-width: 215px;*/
         padding: 0 10px 0 35px;
     }
     
 }
  
-.kgs-tabs .kgs-tabs-panel > button.kgs-tabs-button {
+.kgs-tabs__buttons > button.kgs-tabs__button {
     display: block;
     width: 100%;
     margin: 0;
@@ -59,52 +54,32 @@
     text-align: left;
 }
 
-.kgs-tabs .kgs-tabs-panel > button.kgs-tabs-button.is-active {
+.kgs-tabs__buttons > button.kgs-tabs__button.is-active {
     color: var(--link-highlight-color);
     border-bottom-color: var(--link-highlight-color);
 }
 
-.kgs-tabs .kgs-tabs-content {
-    padding: 20px 20px 0 20px;
-    flex: 1;
+.kgs-tabs-info {
+    padding-top: 20px;
 }
 
-.kgs-tabs .kgs-tabs-scroll {
+.kgs-tabs__content {
+    position: relative;
+}
+
+.kgs-tabs__content__scroll {
     flex: 1;
     width: 100%;
     height: 100%;
 }
 
-.kgs-tabs .kgs-tabs-scoll-content {
+.kkgs-tabs__content__scroll__content {
     display: flex;
     flex-direction: column; 
     height: 100%;
 }
 
-.kgs-tabs .kgs-tabs-info {
-    padding-top: 20px;
-}
 
-.kgs-tabs .kgs-tabs-view {
+.kgs-tabs__view {
     padding: 10px 20px;
-}
-
-.kgs-tabs .kgs-tabs-view .kgs-field__subjects .field-label,
-.kgs-tabs .kgs-tabs-view .kgs-field__dataDescriptor .field-label,
-.kgs-tabs .kgs-tabs-view .kgs-field__publications .field-label {
-    display: none;
-}
-
-.kgs-tabs .kgs-tabs-view .kgs-field__subjects .kgs-hint,
-.kgs-tabs .kgs-tabs-view .kgs-field__publications .kgs-hint {
-    display: none;
-}
-
-.kgs-tabs .kgs-tabs-view .kgs-field__publications .kgs-field__list > ul {
-    list-style: none;
-    padding-inline-start: 0;
-}
-
-.kgs-tabs .kgs-tabs-view .kgs-field__publications .kgs-field__list > ul li {
-    padding-bottom: 30px;
 }

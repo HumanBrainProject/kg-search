@@ -24,16 +24,12 @@
 import React, { useEffect } from "react";
 import ReactPiwik from "react-piwik";
 
-import { getTags } from "../../helpers/InstanceHelper";
-import { Tags } from "../Tags/Tags";
-import { Field } from "../Field/Field";
-import { FieldsPanel } from "../Field/FieldsPanel";
-import { VersionSelector } from "../VersionSelector/VersionSelector";
-import { history } from "../../store";
 import { BgError } from "../BgError/BgError";
+import { Header } from "./Header/Header";
+import Tabs from "../Tabs/Tabs";
 
 import "./Instance.css";
-import Tabs from "../Tabs/Tabs";
+import "./Fields.css";
 
 // eslint-disable-next-line no-unused-vars
 export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, groups, NavigationComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch }) => {
@@ -45,14 +41,6 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
   const trackEvent = hasNoData => {
     const relativeUrl = `${path}/${id}${(group && group !== defaultGroup)?("?group=" + group):""}`;
     ReactPiwik.push(["trackEvent", "Card", hasNoData?"NotFound":"Opened", relativeUrl]);
-  };
-
-  const onVersionChange = version => {
-    if(searchPage) {
-      fetch(group, version, true);
-    } else {
-      history.push(`${path}${version}${group && group !== "public"?("?group=" + group ):""}`);
-    }
   };
 
   if (hasNoData) {
@@ -67,24 +55,10 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
     );
   }
 
-  const tags = getTags(header);
-
   return (
     <div className="kgs-instance" data-type={type}>
-      <div className="kgs-instance__header">
-        <NavigationComponent />
-        <div className="kgs-instance__header_fields">
-          <Tags tags={tags} />
-          <div className="kgs-instance__header_title">
-            <Field {...header.title} />
-            <VersionSelector version={header.version} versions={header.versions} onChange={onVersionChange} />
-          </div>
-          <FieldsPanel fields={header.fields} fieldComponent={Field} />
-        </div>
-      </div>
-      <div className="kgs-instance-content">
-        <Tabs instanceId={id} groups={groups} />
-      </div>
+      <Header header={header} group={group} path={path} fetch={fetch} NavigationComponent={NavigationComponent} searchPage={searchPage} />
+      <Tabs instanceId={id} groups={groups} />
       <strong className="kgs-instance-disclaimer">Disclaimer:
           Please alert us at <a href="mailto:curation-support@ebrains.eu">curation-support@ebrains.eu</a> for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible.</strong>
       <TermsShortNoticeComponent />
