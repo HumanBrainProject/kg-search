@@ -90,33 +90,42 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
     return [];
   }
 
+  const overviewFields = [];
   const groups = Object.entries(typeMapping.fields || {})
     .filter(([name, mapping]) =>
       mapping
       && (mapping.showIfEmpty || (data && data[name]))
-      && mapping.layout !== "header" && name !== "title"
+      && mapping.layout !== "header"
+      && !["id", "identifier", "title"].includes(name)
     )
     .reduce((acc, [name, mapping]) => {
-      const groupName = (!mapping.layout || mapping.layout === "summary" || mapping.isButton)?"Overview": mapping.layout;
-      if (!acc[groupName]) {
-        acc[groupName] = {
-          name: groupName,
-          order: groupName === "Overview" ? 0:(typeMapping && typeMapping.groupsOrder && typeMapping.groupsOrder.indexOf(groupName) !== -1?typeMapping.groupsOrder.indexOf(groupName) + 1:100),
-          fields: []
-        };
-      }
+      const groupName = (!mapping.layout || mapping.layout === "summary" || mapping.isButton)?null: mapping.layout;
       const field = getField(group, type, name, data[name], mapping);
-      acc[groupName].fields.push(field);
+      if (!groupName) {
+        overviewFields.push(field);
+      } else {
+        if (!acc[groupName]) {
+          acc[groupName] = {
+            name: groupName,
+            fields: []
+          };
+        }
+        acc[groupName].fields.push(field);
+      }
       return acc;
     }, {});
-  return Object.values(groups).sort((a, b) => a.order - b.order).map(g => {
-    const group = {name: g.name, fields: g.fields};
-    if (g.name === "Overview") {
-      const previews = getPreviews(data, { children: typeMapping.fields });
-      group.previews = previews;
-    }
-    return group;
-  });
+  if (overviewFields.length) {
+    const previews = getPreviews(data, { children: typeMapping.fields });
+    return [
+      {
+        name: "Overview",
+        fields: overviewFields,
+        previews: previews
+      },
+      ...Object.values(groups)
+    ];
+  }
+  return Object.values(groups);
 };
 
 

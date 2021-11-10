@@ -134,10 +134,6 @@ export const loadDefinition = () => {
       mapping.order = mapping[SEARCHUI_NAMESPACE + "order"];
       delete mapping[SEARCHUI_NAMESPACE + "order"];
     }
-    if (mapping[SEARCHUI_NAMESPACE + "groupsOrder"]) {
-      mapping.groupsOrder = mapping[SEARCHUI_NAMESPACE + "groupsOrder"];
-      delete mapping[SEARCHUI_NAMESPACE + "groupsOrder"];
-    }
     if (mapping[SEARCHUI_NAMESPACE + "ribbon"]) {
       const ribbon = mapping[SEARCHUI_NAMESPACE + "ribbon"];
       const framed = ribbon[SEARCHUI_NAMESPACE + "framed"];
@@ -398,7 +394,6 @@ export const loadDefinition = () => {
       },
       "Dataset": {
         "https://schema.hbp.eu/searchUi/order": 3,
-        "https://schema.hbp.eu/searchUi/groupsOrder": ["Overview", "Data descriptor", "Get data", "Subjects", "Publications"],
         "https://schema.hbp.eu/searchUi/defaultSelection": true,
         "https://schema.hbp.eu/searchUi/searchable": true,
         "https://schema.hbp.eu/searchUi/ribbon": {
