@@ -89,11 +89,7 @@ export const Tabs = ({instanceId, groups }) => {
         ))}
       </div>
       <div className="kgs-tabs__content">
-        <div className="kgs-tabs__content__scroll">
-          <div className="kgs-tabs__content__scroll__content">
-            <TabsView group={group}/>
-          </div>
-        </div>
+        <TabsView group={group}/>
       </div>
     </>
   );
