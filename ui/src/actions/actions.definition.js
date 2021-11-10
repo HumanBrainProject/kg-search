@@ -459,7 +459,8 @@ export const loadDefinition = () => {
             "https://schema.hbp.eu/searchUi/icon": "sticky-note",
             // "https://schema.hbp.eu/searchUi/isButton": true,
             "https://schema.hbp.eu/searchUi/isDirectDownload": true,
-            "https://schema.hbp.eu/searchUi/isFilePreview": true
+            "https://schema.hbp.eu/searchUi/isFilePreview": true,
+            "https://schema.hbp.eu/searchUi/label_hidden": true
           },
           "doi": {
             "https://schema.hbp.eu/graphQuery/label": "DOI",
@@ -516,19 +517,22 @@ export const loadDefinition = () => {
           },
           "embargo": {
             "https://schema.hbp.eu/graphQuery/label": "Files",
-            "https://schema.hbp.eu/searchUi/layout": "Get data"
+            "https://schema.hbp.eu/searchUi/layout": "Get data",
+            "https://schema.hbp.eu/searchUi/label_hidden": true
           },
           "files": {
             "https://schema.hbp.eu/graphQuery/label": "Files",
             "https://schema.hbp.eu/searchUi/layout": "Get data",
             "https://schema.hbp.eu/searchUi/isHierarchicalFiles": true,
-            "https://schema.hbp.eu/searchUi/termsOfUse": true
+            "https://schema.hbp.eu/searchUi/termsOfUse": true,
+            "https://schema.hbp.eu/searchUi/label_hidden": true
           },
           "filesAsyncUrl": {
             "https://schema.hbp.eu/graphQuery/label": "Files",
             "https://schema.hbp.eu/searchUi/layout": "Get data",
             "https://schema.hbp.eu/searchUi/isHierarchicalFiles": true,
-            "https://schema.hbp.eu/searchUi/isAsync": true
+            "https://schema.hbp.eu/searchUi/isAsync": true,
+            "https://schema.hbp.eu/searchUi/label_hidden": true
           },
           "external_datalink": {
             "https://schema.hbp.eu/graphQuery/label": "Data download",
@@ -536,9 +540,9 @@ export const loadDefinition = () => {
           },
           "publications": {
             "https://schema.hbp.eu/graphQuery/label": "Related publications",
-            "https://schema.hbp.eu/searchUi/hint": "List of publications that have been published as a part of this dataset.",
             "https://schema.hbp.eu/searchUi/markdown": true,
-            "https://schema.hbp.eu/searchUi/layout": "Publications"
+            "https://schema.hbp.eu/searchUi/layout": "Publications",
+            "https://schema.hbp.eu/searchUi/label_hidden": true
           },
           "atlas": {
             "https://schema.hbp.eu/graphQuery/label": "Brain atlas",
@@ -589,9 +593,9 @@ export const loadDefinition = () => {
           },
           "subjects": {
             "https://schema.hbp.eu/graphQuery/label": "Subjects",
-            "https://schema.hbp.eu/searchUi/hint": "List of experimental subjects that are a part of this dataset.",
             "https://schema.hbp.eu/searchUi/layout": "Subjects",
             "https://schema.hbp.eu/searchUi/isTable": true,
+            "https://schema.hbp.eu/searchUi/label_hidden": true,
             "children": {
               "subject_name": {
                 "https://schema.hbp.eu/graphQuery/label": "Name",
@@ -626,9 +630,9 @@ export const loadDefinition = () => {
           },
           "subjectsNew": {
             "https://schema.hbp.eu/graphQuery/label": "Subjects",
-            "https://schema.hbp.eu/searchUi/hint": "List of experimental subjects that are a part of this dataset.",
             "https://schema.hbp.eu/searchUi/layout": "Subjects",
             "https://schema.hbp.eu/searchUi/isTable": true,
+            "https://schema.hbp.eu/searchUi/label_hidden": true,
             "children": {
               "subject_name": {
                 "https://schema.hbp.eu/graphQuery/label": "Name",
