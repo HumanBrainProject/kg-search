@@ -22,4 +22,4 @@
  *
  */
 
-export const notification = "<h5><strong>Upcoming maintenance! </strong></h5>Dear user, <br/>Due to an upgrade on the infrastructure, the following EBRAINS services will be unavailable on <strong>next Tuesday, the 16th of November 2021</strong>: <br/> <ul><li>EBRAINS Knowledge Graph Search and API</li><li>Data proxy</li></ul>Thank you very much for your understanding!";
+export const notification = "<h5><strong>Upcoming maintenance! </strong></h5>Dear user, <br/>Due to an upgrade on the infrastructure, the following EBRAINS services will be unavailable on <strong>next Tuesday, the 16th of November 2021</strong>: <br/> <ul><li>EBRAINS Knowledge Graph Search and API</li></ul>Thank you very much for your understanding!";
