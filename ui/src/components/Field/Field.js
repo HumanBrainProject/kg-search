@@ -54,7 +54,7 @@ const FieldBase = (renderUserInteractions = true) => {
     const isButton = mapping.isButton;
     const isFilePreview = mapping.isFilePreview && data.url;
     const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
-    const className = "kgs-field" + (name?" kgs-field__" + name:"") + (mapping.layout?" kgs-field__layout-" + mapping.layout:"") + (isTable?" kgs-field__table":"") + (isHierarchicalFiles?" kgs-field__hierarchical-files":"");
+    const className = "kgs-field" + (name?" kgs-field__" + name:"") + (["header", "summary"].includes(mapping.layout)?" kgs-field__layout-" + mapping.layout:"") + (isTable?" kgs-field__table":"") + (isHierarchicalFiles?" kgs-field__hierarchical-files":"");
 
     const labelProps = {
       show: !!mapping.value && (!mapping.labelHidden || !renderUserInteractions) && !isButton,
