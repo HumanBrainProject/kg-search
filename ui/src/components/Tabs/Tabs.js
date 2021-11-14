@@ -52,12 +52,10 @@ const TabsView = ({group}) => {
     const summaryFields = group.fields.filter(f => !f.mapping.isButton && f.mapping.layout === "summary");
 
     return (
-      <div className={`kgs-tabs__view kgs-tabs__overview kgs-tabs__overview__grid ${(buttons && buttons.length) ? "kgs-tabs__overview__with-buttons" : ""} ${(previews && previews.length) ? "kgs-tabs__overview__with-previews" : ""}`}>
+      <div className={`kgs-tabs__view kgs-tabs__overview ${(buttons && buttons.length) ? "kgs-tabs__overview__with-buttons" : ""} ${(previews && previews.length) ? "kgs-tabs__overview__with-previews" : ""}  ${(summaryFields && summaryFields.length) ? "kgs-tabs__overview__with-summary" : ""}`}>
         <FieldsButtons className="kgs-tabs__overview__buttons" fields={buttons} />
-        <div className="kgs-tabs__overview__highlights">
-          <ImagePreviews className={`kgs-tabs__overview__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
-          <FieldsPanel className="kgs-tabs__overview__summary" fields={summaryFields} fieldComponent={Field} />
-        </div>
+        <ImagePreviews className={`kgs-tabs__overview__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
+        <FieldsPanel className="kgs-tabs__overview__summary" fields={summaryFields} fieldComponent={Field} />
         <FieldsPanel className="kgs-tabs__overview__main" fields={mainFields} fieldComponent={Field} />
       </div>
     );
