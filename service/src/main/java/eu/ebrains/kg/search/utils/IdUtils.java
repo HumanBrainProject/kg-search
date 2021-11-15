@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -43,7 +44,7 @@ public class IdUtils {
 
     public static List<String> getUUID(List<String> ids) {
         if (CollectionUtils.isEmpty(ids)) {
-            return ids;
+            return Collections.emptyList();
         }
         return ids.stream().map(IdUtils::getUUID).filter(Objects::nonNull).collect(Collectors.toList());
     }
