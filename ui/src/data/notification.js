@@ -22,4 +22,4 @@
  *
  */
 
-export const notification = "<h5><strong>Upcoming maintenance! </strong></h5>Dear user, <br/>Due to an upgrade on the infrastructure, the following EBRAINS services will be unavailable on <strong>next Wednesday, the 17th of November 2021</strong>: <br/> <ul><li>EBRAINS Knowledge Graph Search and API</li></ul>Thank you very much for your understanding!";
+export const notification = "<h5><strong>Announcement</strong></h5>Dear user, <br/>Due to an issue appearing during the migration of Wednesday, th 17th of November, the Nexus API and the Query API are temporarily unavailable. The Search UI as well as the KG v3 API are fully functional though.</li></ul>Thank you very much for your understanding!";
