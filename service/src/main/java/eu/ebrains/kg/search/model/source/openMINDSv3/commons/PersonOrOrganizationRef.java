@@ -23,24 +23,13 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3.commons;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class PersonOrOrganizationRef extends FullNameRef{
 
     private String familyName;
     private String givenName;
-
-    public String getFamilyName() {
-        return familyName;
-    }
-
-    public void setFamilyName(String familyName) {
-        this.familyName = familyName;
-    }
-
-    public String getGivenName() {
-        return givenName;
-    }
-
-    public void setGivenName(String givenName) {
-        this.givenName = givenName;
-    }
 }

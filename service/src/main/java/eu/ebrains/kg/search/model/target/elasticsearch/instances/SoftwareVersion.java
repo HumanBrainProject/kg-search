@@ -111,8 +111,6 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(label = "Support")
     private List<TargetExternalReference> support;
 
-    @FieldInfo(labelHidden = true, markdown = true, boost = 2)
-    private Value<String> description;
 
 
     @FieldInfo(label = "Related publications", markdown = true)
@@ -125,6 +123,27 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(label = "Latest Version", layout = "summary")
     private Value<String> versionOld;
 
+    @FieldInfo(label = "Features", layout = "summary", tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
+    @Deprecated
+    /**
+     * @deprecated features are now references to controlled terms
+     */
+    private List<Value<String>> featuresOld;
+
+    @FieldInfo(label = "Features", layout = "summary", facet = FieldInfo.Facet.LIST, isFilterableFacet = true)
+    private List<TargetInternalReference> features;
+
+    @FieldInfo(label = "Input formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true)
+    private List<Value<String>> inputFormatsForFilter;
+
+    @FieldInfo(label = "Output formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true)
+    private List<Value<String>> outputFormatsForFilter;
+
+    @FieldInfo(label = "Input formats", layout = "Input formats", isTable = true, labelHidden = true)
+    private List<Children<FileFormat>> inputFormat;
+
+    @FieldInfo(label = "Output formats", layout = "Output formats", isTable = true, labelHidden = true)
+    private List<Children<FileFormat>> outputFormats;
 
     /**
      * @deprecated use appCategory for openMINDS instead
@@ -136,9 +155,6 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(label = "Application Category", layout = "summary", separator = ", ", facet = FieldInfo.Facet.LIST)
     private List<TargetInternalReference> appCategory;
 
-
-    @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, visible = false, facetOrder = FieldInfo.FacetOrder.BYCOUNT, facet = FieldInfo.Facet.LIST)
-    private List<Value<String>> licenseForFilter;
 
     /**
      * @deprecated use operatingSystem for openMINDS instead
@@ -153,21 +169,16 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(label = "Devices", layout = "summary", facet = FieldInfo.Facet.LIST)
     private List<TargetInternalReference> devices;
 
+    @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, visible = false, facetOrder = FieldInfo.FacetOrder.BYCOUNT, facet = FieldInfo.Facet.LIST)
+    private List<Value<String>> licenseForFilter;
+
+
     @FieldInfo(label = "Programming languages", layout = "summary", facet = FieldInfo.Facet.LIST)
     private List<TargetInternalReference> programmingLanguages;
 
     @FieldInfo(label = "Requirements")
     private List<Value<String>> requirements;
 
-    @FieldInfo(label = "Features", layout = "summary", tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
-    @Deprecated
-    /**
-     * @deprecated features are now references to controlled terms
-     */
-    private List<Value<String>> featuresOld;
-
-    @FieldInfo(label = "Features", layout = "summary", facet = FieldInfo.Facet.LIST, isFilterableFacet = true)
-    private List<TargetInternalReference> features;
 
     @FieldInfo(label = "Languages", layout = "summary")
     private List<TargetInternalReference> languages;
@@ -179,20 +190,11 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
      */
     private List<Value<String>> keywords;
 
-    @FieldInfo(label = "Input formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true)
-    private List<Value<String>> inputFormatsForFilter;
-
-    @FieldInfo(label = "Output formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true)
-    private List<Value<String>> outputFormatsForFilter;
-
-    @FieldInfo(label = "Input formats", isTable = true, layout = "Input formats", labelHidden = true)
-    private List<Children<FileFormat>> inputFormat;
-
-    @FieldInfo(label = "Output formats", isTable = true, layout = "Output formats", labelHidden = true)
-    private List<Children<FileFormat>> outputFormats;
-
     @FieldInfo(label = "Sub-components", layout = "Sub-components", labelHidden = true)
     private List<TargetInternalReference> components;
+
+    @FieldInfo(labelHidden = true, markdown = true, boost = 2)
+    private Value<String> description;
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)

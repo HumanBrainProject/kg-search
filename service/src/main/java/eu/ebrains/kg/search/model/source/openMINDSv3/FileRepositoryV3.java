@@ -23,8 +23,8 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.HasEmbargo;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.SourceInternalReference;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class FileRepositoryV3 extends SourceInstanceV3 {
         this.fileRepositoryOf = fileRepositoryOf;
     }
 
-    public static class FileRepositoryOfReference extends SourceInternalReference implements HasEmbargo {
+    public static class FileRepositoryOfReference extends FullNameRef implements HasEmbargo {
         private List<String> type;
         private List<String> embargo;
 

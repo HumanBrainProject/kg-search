@@ -27,6 +27,7 @@ import eu.ebrains.kg.search.controller.translators.Translator;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRefForResearchProductVersion;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
@@ -38,66 +39,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public abstract class TranslatorV3<Source, Target, Result extends ResultsOfKG<Source>> implements Translator<Source, Target, Result> {
+public abstract class TranslatorV3<Source, Target, Result extends ResultsOfKG<Source>> extends Translator<Source, Target, Result> {
     public abstract List<String> semanticTypes();
-
-    public String getQueryFileName(String semanticType){
-        final String simpleName = getClass().getSimpleName();
-        return StringUtils.uncapitalize(simpleName.substring(0, simpleName.indexOf("V3")));
-    }
-
-    protected Value<String> value(String v){
-        if(StringUtils.isNotBlank(v)){
-            return new Value<>(v.trim());
-        }
-        return null;
-    }
-
-
-    protected List<Value<String>> value(List<String> values){
-        if(!CollectionUtils.isEmpty(values)){
-            return values.stream().map(this::value).filter(Objects::nonNull).collect(Collectors.toList());
-        }
-        return null;
-    }
-
-
-    protected TargetExternalReference link(String url){
-        if(StringUtils.isNotBlank(url)){
-            return new TargetExternalReference(url.trim(), url.trim());
-        }
-        return null;
-    }
-
-    protected TargetInternalReference ref(FullNameRef ref){
-        if(ref!=null){
-            final String uuid = IdUtils.getUUID(ref.getId());
-            return new TargetInternalReference(uuid, StringUtils.defaultString(ref.getFullName(), uuid));
-        }
-        return null;
-    }
-
-    protected List<TargetInternalReference> ref(List<FullNameRef> refs){
-        if(!CollectionUtils.isEmpty(refs)){
-            return refs.stream().map(this::ref).filter(Objects::nonNull).collect(Collectors.toList());
-        }
-        return null;
-    }
-
-
-
-    protected TargetInternalReference ref(FullNameRefForResearchProductVersion ref){
-        if(ref!=null){
-            String name = StringUtils.defaultString(ref.getFullName(), ref.getFallbackName());
-            String uuid = IdUtils.getUUID(ref.getId());
-            if(name==null){
-                name = uuid;
-            }
-            String versionedName = StringUtils.isNotBlank(ref.getVersionIdentifier()) ? String.format("%s %s", name, ref.getVersionIdentifier()) : name;
-            return new TargetInternalReference(uuid, versionedName);
-        }
-        return null;
-    }
 
     public String getQueryIdByType(String type){
         if(type!=null && semanticTypes().contains(type)){

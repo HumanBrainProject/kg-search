@@ -23,24 +23,19 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3.commons;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Comparator;
+
+@Getter
+@Setter
 public class FullNameRef {
 
     private String id;
     private String fullName;
 
-    public String getId() {
-        return id;
-    }
+    public final static Comparator<FullNameRef> COMPARATOR = Comparator.comparing(FullNameRef::getFullName, Comparator.nullsFirst(String::compareToIgnoreCase));
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
 }
