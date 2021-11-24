@@ -51,7 +51,7 @@ public class ModelVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(visible = false, ignoreForSearch = true)
     private List<String> identifier;
 
-    @FieldInfo(layout = FieldInfo.Layout.HEADER)
+    @FieldInfo(layout = "header")
     private Value<String> editorId;
 
     @FieldInfo(label = "Name", sort = true, boost = 20)
@@ -60,47 +60,47 @@ public class ModelVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true)
     private Value<String> description;
 
-    @FieldInfo(label = "Version", layout = FieldInfo.Layout.SUMMARY)
+    @FieldInfo(label = "Version", layout = "summary")
     private Value<String> version;
 
     @FieldInfo(label = "Model Versions")
     private TargetInternalReference model;
 
-    @FieldInfo(label = "Contributors", layout = FieldInfo.Layout.HEADER, separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10)
+    @FieldInfo(label = "Contributors", layout = "header", separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10)
     private List<TargetInternalReference> contributors;
 
-    @FieldInfo(label = "Custodian", layout = FieldInfo.Layout.SUMMARY, separator = "; ", type = FieldInfo.Type.TEXT, hint = "A custodian is the person responsible for the data bundle.")
+    @FieldInfo(label = "Custodian", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT, hint = "A custodian is the person responsible for the data bundle.")
     private List<TargetInternalReference> owners;
 
-    @FieldInfo(label = "Main contact", layout = FieldInfo.Layout.SUMMARY, separator = "; ", type = FieldInfo.Type.TEXT)
+    @FieldInfo(label = "Main contact", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT)
     private List<TargetInternalReference> mainContact;
 
-    @FieldInfo(label = "Files", layout = FieldInfo.Layout.GROUP, markdown = true)
+    @FieldInfo(label = "Files", markdown = true)
     private Value<String> embargo;
 
     @JsonProperty("allfiles") //TODO: capitalize
     @FieldInfo(label = "Download model", isButton = true, termsOfUse = true, icon="download")
     private List<TargetExternalReference> allFiles;
 
-    @FieldInfo(label = "Publications", layout = FieldInfo.Layout.GROUP, markdown = true, hint = "List of publications that have been published as a part of this model.")
+    @FieldInfo(label = "Publications", markdown = true, labelHidden = true, layout = "Publications")
     private List<Value<String>> publications;
 
-    @FieldInfo(label = "Brain structure", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "Brain structure", layout = "summary", facet = FieldInfo.Facet.LIST)
     private List<Value<String>> brainStructures;
 
-    @FieldInfo(label = "(Sub)cellular target", layout = FieldInfo.Layout.SUMMARY)
+    @FieldInfo(label = "(Sub)cellular target", layout = "summary")
     private List<Value<String>> cellularTarget;
 
-    @FieldInfo(label = "Study target", layout = FieldInfo.Layout.SUMMARY)
+    @FieldInfo(label = "Study target", layout = "summary")
     private List<Value<String>> studyTarget;
 
-    @FieldInfo(label = "Model scope", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "Model scope", layout = "summary", facet = FieldInfo.Facet.LIST)
     private List<Value<String>> modelScope;
 
-    @FieldInfo(label = "Abstraction level", layout = FieldInfo.Layout.SUMMARY, separator = "; ", facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "Abstraction level", layout = "summary", separator = "; ", facet = FieldInfo.Facet.LIST)
     private List<Value<String>> abstractionLevel;
 
-    @FieldInfo(label = "Model format", layout = FieldInfo.Layout.SUMMARY, separator = "; ")
+    @FieldInfo(label = "Model format", layout = "summary", separator = "; ")
     private List<Value<String>> modelFormat;
 
     @JsonProperty("first_release")
@@ -111,10 +111,10 @@ public class ModelVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
     private ISODateValue lastRelease;
 
-    @FieldInfo(label = "Used datasets", layout = FieldInfo.Layout.GROUP)
+    @FieldInfo(label = "Used datasets", layout = "Used datasets", labelHidden = true)
     private List<TargetInternalReference> usedDataset;
 
-    @FieldInfo(label = "Produced datasets", layout = FieldInfo.Layout.GROUP)
+    @FieldInfo(label = "Produced datasets", layout = "Produced datasets", labelHidden = true)
     private List<TargetInternalReference> producedDataset;
 
     @JsonProperty("license_info")

@@ -52,7 +52,7 @@ public class Software implements TargetInstance {
     @FieldInfo(ignoreForSearch = true, visible = false)
     private List<String> identifier;
 
-    @FieldInfo(label = "Name", sort = true, layout = FieldInfo.Layout.HEADER)
+    @FieldInfo(label = "Name", sort = true, layout = "header")
     private Value<String> title;
 
     @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2)
@@ -70,7 +70,7 @@ public class Software implements TargetInstance {
     @FieldInfo(label = "DOI", hint = "This is the software DOI representing all the underlying software's versions you must cite if you reuse this data in a way that leads to a publication")
     private Value<String> doi;
 
-    @FieldInfo(label = "Software versions", layout = FieldInfo.Layout.GROUP, hint = "List of existing versions of this dataset.", isTable = true)
+    @FieldInfo(label = "Software versions", isTable = true, layout = "Software versions")
     private List<Children<Version>> softwareVersions;
 
     @JsonProperty("first_release")

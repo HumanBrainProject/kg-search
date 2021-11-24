@@ -53,7 +53,7 @@ public class Subject implements TargetInstance {
     @FieldInfo(label = "Name", sort = true, boost = 20)
     private Value<String> title;
 
-    @FieldInfo(layout = FieldInfo.Layout.HEADER)
+    @FieldInfo(layout = "header")
     private Value<String> editorId;
 
     @FieldInfo(label = "Species", type = FieldInfo.Type.TEXT, overview = true, facet = FieldInfo.Facet.LIST)
@@ -78,10 +78,10 @@ public class Subject implements TargetInstance {
     @FieldInfo(label = "Genotype", overview = true, facet = FieldInfo.Facet.LIST)
     private Value<String> genotype;
 
-    @FieldInfo(label = "Samples", layout = FieldInfo.Layout.GROUP, hint = "List of samples that have been obtained from a given subject.", aggregate = FieldInfo.Aggregate.COUNT)
+    @FieldInfo(label = "Samples", aggregate = FieldInfo.Aggregate.COUNT, layout = "Samples")
     private List<TargetInternalReference> samples;
 
-    @FieldInfo(label = "Datasets", layout = FieldInfo.Layout.GROUP, type = FieldInfo.Type.TEXT, hint = "List of datasets in which the subject was used to produce data.")
+    @FieldInfo(label = "Datasets", type = FieldInfo.Type.TEXT, layout = "Datasets")
     private List<Children<Dataset>> datasets;
 
     @JsonProperty("first_release")

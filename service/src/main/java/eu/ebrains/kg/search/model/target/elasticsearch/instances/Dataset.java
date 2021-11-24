@@ -47,13 +47,13 @@ public class Dataset implements TargetInstance {
     @FieldInfo(ignoreForSearch = true, visible = false)
     private List<String> identifier;
 
-    @FieldInfo(layout = FieldInfo.Layout.HEADER)
+    @FieldInfo(layout = "header")
     private Value<String> editorId;
 
-    @FieldInfo(label = "Name", sort = true, layout = FieldInfo.Layout.HEADER)
+    @FieldInfo(label = "Name", sort = true, layout = "header")
     private Value<String> title;
 
-    @FieldInfo(label = "Authors", separator = "; ", layout = FieldInfo.Layout.HEADER, type = FieldInfo.Type.TEXT, labelHidden = true)
+    @FieldInfo(label = "Authors", separator = "; ", layout = "header", type = FieldInfo.Type.TEXT, labelHidden = true)
     private List<TargetInternalReference> authors;
 
     @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10)
@@ -71,7 +71,7 @@ public class Dataset implements TargetInstance {
     @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2)
     private Value<String> description;
 
-    @FieldInfo(label = "Dataset versions", layout = FieldInfo.Layout.GROUP, hint = "List of existing versions of this dataset.", isTable = true)
+    @FieldInfo(label = "Dataset versions", isTable = true, layout = "Dataset versions", labelHidden = true)
     private List<Children<Version>> datasets;
 
     @JsonProperty("first_release")

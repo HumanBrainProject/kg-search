@@ -55,11 +55,11 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
     /**
      * @deprecated  This is not needed for the new KG anymore since the id is consistent across search/editor
      */
-    @FieldInfo(layout = FieldInfo.Layout.HEADER)
+    @FieldInfo(layout = "header")
     @Deprecated
     private Value<String> editorId;
 
-    @FieldInfo(label = "Developers", separator = "; ", layout = FieldInfo.Layout.HEADER, type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true)
+    @FieldInfo(label = "Developers", separator = "; ", layout = "header", type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true)
     private List<TargetInternalReference> developers;
 
     @FieldInfo(label = "Cite software", isButton = true, markdown = true, icon="quote-left")
@@ -115,14 +115,14 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
     private Value<String> description;
 
 
-    @FieldInfo(label = "Related publications", markdown = true, layout = FieldInfo.Layout.GROUP)
+    @FieldInfo(label = "Related publications", markdown = true)
     private List<Value<String>> publications;
 
     /**
      * @deprecated This is no longer in use for openMINDS
      */
     @Deprecated
-    @FieldInfo(label = "Latest Version", layout = FieldInfo.Layout.SUMMARY)
+    @FieldInfo(label = "Latest Version", layout = "summary")
     private Value<String> versionOld;
 
 
@@ -130,10 +130,10 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
      * @deprecated use appCategory for openMINDS instead
      */
     @Deprecated
-    @FieldInfo(label = "Application Category", layout = FieldInfo.Layout.SUMMARY, separator = ", ", facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "Application Category", layout = "summary", separator = ", ", facet = FieldInfo.Facet.LIST)
     private List<Value<String>> appCategoryOld;
 
-    @FieldInfo(label = "Application Category", layout = FieldInfo.Layout.SUMMARY, separator = ", ", facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "Application Category", layout = "summary", separator = ", ", facet = FieldInfo.Facet.LIST)
     private List<TargetInternalReference> appCategory;
 
 
@@ -144,35 +144,35 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
      * @deprecated use operatingSystem for openMINDS instead
      */
     @Deprecated
-    @FieldInfo(label = "Operating System", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>")
+    @FieldInfo(label = "Operating System", layout = "summary", facet = FieldInfo.Facet.LIST, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 11.377083 13.05244\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 5.6585847,-3.1036376e-7 2.8334327,1.5730297 0.0088,3.1455497 0.0047,6.4719597 0,9.7983697 2.8323857,11.42515 l 2.831867,1.62729 1.070218,-0.60358 c 0.588756,-0.33201 1.874409,-1.06813 2.856675,-1.63608 L 11.377083,9.7797697 v -3.24735 -3.24786 l -0.992187,-0.62477 C 9.8391917,2.3160397 8.5525477,1.5769697 7.5256387,1.0175097 Z M 5.6580697,3.7398297 a 2.7061041,2.7144562 0 0 1 2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.706293,2.71456 2.7061041,2.7144562 0 0 1 -2.70578,-2.71456 2.7061041,2.7144562 0 0 1 2.70578,-2.71456 z\"/></svg>")
     private List<Value<String>> operatingSystemOld;
 
-    @FieldInfo(label = "Operating System", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "Operating System", layout = "summary", facet = FieldInfo.Facet.LIST)
     private List<TargetInternalReference> operatingSystem;
 
-    @FieldInfo(label = "Devices", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "Devices", layout = "summary", facet = FieldInfo.Facet.LIST)
     private List<TargetInternalReference> devices;
 
-    @FieldInfo(label = "Programming languages", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "Programming languages", layout = "summary", facet = FieldInfo.Facet.LIST)
     private List<TargetInternalReference> programmingLanguages;
 
     @FieldInfo(label = "Requirements")
     private List<Value<String>> requirements;
 
-    @FieldInfo(label = "Features", layout = FieldInfo.Layout.SUMMARY, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
+    @FieldInfo(label = "Features", layout = "summary", tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
     @Deprecated
     /**
      * @deprecated features are now references to controlled terms
      */
     private List<Value<String>> featuresOld;
 
-    @FieldInfo(label = "Features", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST, isFilterableFacet = true)
+    @FieldInfo(label = "Features", layout = "summary", facet = FieldInfo.Facet.LIST, isFilterableFacet = true)
     private List<TargetInternalReference> features;
 
-    @FieldInfo(label = "Languages", layout = FieldInfo.Layout.SUMMARY)
+    @FieldInfo(label = "Languages", layout = "summary")
     private List<TargetInternalReference> languages;
 
-    @FieldInfo(label = "Keywords", facet = FieldInfo.Facet.LIST, order = 1, overviewMaxDisplay = 3, layout = FieldInfo.Layout.SUMMARY, overview = true, isFilterableFacet = true, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
+    @FieldInfo(label = "Keywords", facet = FieldInfo.Facet.LIST, order = 1, overviewMaxDisplay = 3, layout = "summary", overview = true, isFilterableFacet = true, tagIcon = "<svg width=\"50\" height=\"50\" viewBox=\"0 0 1792 1792\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M576 448q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm1067 576q0 53-37 90l-491 492q-39 37-91 37-53 0-90-37l-715-716q-38-37-64.5-101t-26.5-117v-416q0-52 38-90t90-38h416q53 0 117 26.5t102 64.5l715 714q37 39 37 91z\"/></svg>")
     @Deprecated
     /**
      * @deprecated keywords are - although existing in openMINDS - not very suitable for Software. Additionally, they would be TargetInternalReferences if there would be any. Therefore, this field is used for the old structure only.
@@ -185,13 +185,13 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(label = "Output formats", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true)
     private List<Value<String>> outputFormatsForFilter;
 
-    @FieldInfo(label = "Input formats", layout = FieldInfo.Layout.GROUP, isTable = true)
+    @FieldInfo(label = "Input formats", isTable = true, layout = "Input formats", labelHidden = true)
     private List<Children<FileFormat>> inputFormat;
 
-    @FieldInfo(label = "Output formats", layout = FieldInfo.Layout.GROUP, isTable = true)
+    @FieldInfo(label = "Output formats", isTable = true, layout = "Output formats", labelHidden = true)
     private List<Children<FileFormat>> outputFormats;
 
-    @FieldInfo(label = "Sub-components", layout = FieldInfo.Layout.GROUP)
+    @FieldInfo(label = "Sub-components", layout = "Sub-components", labelHidden = true)
     private List<TargetInternalReference> components;
 
     @JsonProperty("first_release")

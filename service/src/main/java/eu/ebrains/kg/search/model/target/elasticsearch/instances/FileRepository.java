@@ -48,7 +48,7 @@ public class FileRepository implements TargetInstance {
     @FieldInfo(ignoreForSearch = true, visible = false)
     private List<String> identifier;
 
-    @FieldInfo(label = "File repository", layout = FieldInfo.Layout.HEADER)
+    @FieldInfo(label = "File repository", layout = "header")
     private String IRI;
 
     @FieldInfo(label = "Dataset")

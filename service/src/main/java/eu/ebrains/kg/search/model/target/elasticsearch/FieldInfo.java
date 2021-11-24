@@ -50,7 +50,7 @@ public @interface FieldInfo {
     boolean isTable() default false;
     boolean isDirectDownload() default false;
     Type type() default Type.UNDEFINED;
-    Layout layout() default Layout.UNDEFINED;
+    String layout() default "";
     String linkIcon() default "";
     String tagIcon() default "";
     String separator() default "";
@@ -76,9 +76,5 @@ public @interface FieldInfo {
 
     enum Type{
         UNDEFINED, TEXT, DATE
-    }
-
-    enum Layout{
-        UNDEFINED, GROUP, HEADER, SUMMARY
     }
 }

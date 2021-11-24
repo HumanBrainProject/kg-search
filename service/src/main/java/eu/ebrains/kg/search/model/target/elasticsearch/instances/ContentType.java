@@ -48,7 +48,7 @@ public class ContentType implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Content type");
 
-    @FieldInfo(label = "Name", sort=true, layout = FieldInfo.Layout.HEADER, labelHidden = true)
+    @FieldInfo(label = "Name", sort=true, layout = "header", labelHidden = true)
     private Value<String> title;
 
     @FieldInfo(label = "Description")
@@ -69,13 +69,13 @@ public class ContentType implements TargetInstance {
     @FieldInfo(label = "Data type")
     private TargetInternalReference dataType;
 
-    @FieldInfo(label = "Input format for software", layout = FieldInfo.Layout.GROUP)
+    @FieldInfo(label = "Input format for software")
     private List<TargetInternalReference> inputFormatForSoftware;
 
-    @FieldInfo(label = "Output format for software", layout = FieldInfo.Layout.GROUP)
+    @FieldInfo(label = "Output format for software")
     private List<TargetInternalReference> outputFormatForSoftware;
 
-    @FieldInfo(label = "Research products", isTable = true, layout = FieldInfo.Layout.GROUP)
+    @FieldInfo(label = "Research products", isTable = true)
     private List<Children<ResearchProduct>> researchProducts;
 
 

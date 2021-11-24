@@ -55,31 +55,29 @@ public class Contributor implements TargetInstance {
     @FieldInfo(sort = true, label = "Name", boost = 20)
     private Value<String> title;
 
-    @FieldInfo(layout = FieldInfo.Layout.HEADER)
+    @FieldInfo(layout = "header")
     private Value<String> editorId;
 
-    @FieldInfo(label = "Custodian of", layout = FieldInfo.Layout.GROUP, overview = true)
+    @FieldInfo(label = "Custodian of", overview = true)
     private List<TargetInternalReference> custodianOf;
 
-    @FieldInfo(label = "Custodian of models", layout = FieldInfo.Layout.GROUP, overview = true)
+    @FieldInfo(label = "Custodian of models", overview = true)
     private List<TargetInternalReference> custodianOfModel;
 
-    @FieldInfo(label = "Publications", markdown = true, facet = FieldInfo.Facet.EXISTS, layout = FieldInfo.Layout.GROUP)
+    @FieldInfo(label = "Publications", markdown = true, facet = FieldInfo.Facet.EXISTS, layout = "Publications", labelHidden = true)
     private List<Value<String>> publications;
 
-    @FieldInfo(label = "Contributions", facet = FieldInfo.Facet.EXISTS, layout = FieldInfo.Layout.GROUP, type = FieldInfo.Type.TEXT, overview = true)
+    @FieldInfo(label = "Contributions", facet = FieldInfo.Facet.EXISTS, type = FieldInfo.Type.TEXT, overview = true)
     private List<TargetInternalReference> contributions;
 
-    @FieldInfo(label = "Model contributions", facet = FieldInfo.Facet.EXISTS, layout = FieldInfo.Layout.GROUP, type = FieldInfo.Type.TEXT, overview = true)
+    @FieldInfo(label = "Model contributions", facet = FieldInfo.Facet.EXISTS, type = FieldInfo.Type.TEXT, overview = true)
     private List<TargetInternalReference> modelContributions;
 
-
-    @FieldInfo(label = "Custodian of", layout = FieldInfo.Layout.GROUP, isTable = true)
+    @FieldInfo(label = "Custodian of", isTable = true, layout = "Custodian of", labelHidden = true)
     private List<Children<Contribution>> custodian;
 
-    @FieldInfo(label = "Contributions", layout = FieldInfo.Layout.GROUP, isTable = true)
+    @FieldInfo(label = "Contributions", isTable = true, layout = "Contributions", labelHidden = true)
     private List<Children<Contribution>> contribution;
-
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)
