@@ -98,11 +98,29 @@ const ListFieldBase = (renderUserInteractions = true) => {
       const sizeStop = getNextSizeStop(Number.POSITIVE_INFINITY, this.props);
       this.state = {
         sizeStop: sizeStop,
-        items: getFilteredItems(sizeStop, this.maxSizeStop, this.props),
-        hasShowMoreToggle: this.hasShowMoreToggle,
+        items: this.props.mapping.layout === "summary"?getFilteredItems(sizeStop, this.maxSizeStop, this.props):this.getItems(),
+        hasShowMoreToggle: this.hasShowMoreToggle && this.props.mapping.layout === "summary",
         showMoreLabel: getShowMoreLabel(sizeStop, this.props)
       };
     }
+
+
+    getItems = () => {
+      const {items, mapping, group} = this.props;
+
+      if (!Array.isArray(items)) {
+        return [];
+      }
+      return items
+        .map((item, idx) => ({
+          isObject: !!item.children,
+          key: item.reference?item.reference:item.value?item.value:idx,
+          show: true,
+          data: item.children?item.children:item,
+          mapping: mapping,
+          group: group
+        }));
+    };
 
     get maxSizeStop() {
       const {items, mapping} = this.props;

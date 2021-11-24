@@ -183,11 +183,11 @@ const getFields = (group, type, data, highlight, mapping) => {
   if (!data || !mapping) {
     return [];
   }
-  const primaryFiels = ["title", "description"];
+  const primaryFields = ["title", "description"];
   const fields = Object.entries(mapping.fields || {})
     .filter(([name, mapping]) =>
       mapping
-      && (mapping.overview || primaryFiels.includes(name))
+      && (mapping.overview || primaryFields.includes(name))
       && (mapping.showIfEmpty || (data && data[name]))
     )
     .map(([name, mapping]) => getField(group, type, name, data[name], highlight, mapping));
