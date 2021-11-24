@@ -14,12 +14,12 @@
     "react-test-renderer": "^17.0.2"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.36",
-    "@fortawesome/free-solid-svg-icons": "^5.15.4",
-    "@fortawesome/react-fontawesome": "^0.1.16",
-    "@sentry/browser": "^6.14.1",
-    "axios": "^0.24.0",
-    "bootstrap": "^4.6.1",
+    "@fortawesome/fontawesome-svg-core": "^1.2.19",
+    "@fortawesome/free-solid-svg-icons": "^5.9.0",
+    "@fortawesome/react-fontawesome": "^0.1.4",
+    "@sentry/browser": "^6.2.1",
+    "axios": "^0.21.2",
+    "bootstrap": "^4.6.0",
     "connected-react-router": "^6.9.1",
     "env-cmd": "^10.1.0",
     "jquery": "^3.6.0",
