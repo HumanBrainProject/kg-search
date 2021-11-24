@@ -27,7 +27,7 @@ import { Hint} from "../Hint/Hint";
 import { ListField, PrintViewListField } from "./ListField";
 import { ObjectField, PrintViewObjectField } from "./ObjectField";
 import { ValueField, PrintViewValueField } from "./ValueField";
-import { TableField, PrintViewTableField } from "./TableField";
+import TableField from "./TableField";
 import HierarchicalFiles from "./Files/HierarchicalFiles";
 import "./Field.css";
 import { AsyncHierarchicalFiles } from "../../containers/Files/AsyncHierarchicalFiles";
@@ -38,7 +38,6 @@ const FieldBase = (renderUserInteractions = true) => {
   const ListFieldComponent = renderUserInteractions?ListField:PrintViewListField;
   const ObjectFieldComponent = renderUserInteractions?ObjectField:PrintViewObjectField;
   const ValueFieldComponent = renderUserInteractions?ValueField:PrintViewValueField;
-  const TableFieldComponent = renderUserInteractions?TableField:PrintViewTableField;
 
   const Field = ({name, data, mapping, group}) => {
     if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
@@ -113,7 +112,7 @@ const FieldBase = (renderUserInteractions = true) => {
         <ValueFieldComponent {...valueProps} />
         <ListFieldComponent {...listProps} />
         <ObjectFieldComponent {...objectProps} />
-        <TableFieldComponent {...tableProps} />
+        <TableField {...tableProps} />
         <FilePreview {...filePreviewProps} />
         {isHierarchicalFiles && (
           asyncUrl?

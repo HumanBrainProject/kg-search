@@ -23,18 +23,13 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import { Field, PrintViewField } from "./Field";
-import { LIST_SMALL_SIZE_STOP,
-  getNextSizeStop,
-  getFilteredItems,
-  getShowMoreLabel } from "./helpers";
+import { Field } from "./Field";
 import "./TableField.css";
 
-const CustomTableCell = ({field, isFirstCell, onCollapseToggle, viewComponent}) => {
+const CustomTableCell = ({field, isFirstCell, onCollapseToggle}) => {
   if (!field.data) {
     return field.isCollectionHeaderRow ? <th>-</th>:<td>-</td>;
   }
-  const Component = viewComponent;
 
   const handleClick = () => onCollapseToggle(field.collectionIndex, !field.isCollectionCollapsed);
 
@@ -44,20 +39,20 @@ const CustomTableCell = ({field, isFirstCell, onCollapseToggle, viewComponent}) 
         {isFirstCell && field.isCollectionCollapsible && (
           <button onClick={handleClick}><FontAwesomeIcon icon={field.isCollectionCollapsed?"chevron-right":"chevron-down"} /></button>
         )}
-        <Component name={field.name} data={field.data} mapping={field.mapping} group={field.group} />
+        <Field name={field.name} data={field.data} mapping={field.mapping} group={field.group} />
       </th>
     );
   }
   return (
-    <td><Component name={field.name} data={field.data} mapping={field.mapping} group={field.group} /></td>
+    <td><Field name={field.name} data={field.data} mapping={field.mapping} group={field.group} /></td>
   );
 };
 
-const CustomTableRow = ({row, viewComponent, onCollapseToggle}) => {
+const CustomTableRow = ({row, onCollapseToggle}) => {
   const collapse = row[0].isCollectionCollapsed && !row[0].isCollectionHeaderRow;
   return(
     <tr className={collapse?"row-hidden":null}>
-      {row.map((field, index) => <CustomTableCell key={`${field.name}-${index}`} isFirstCell={!index} field={field} viewComponent={viewComponent} onCollapseToggle={onCollapseToggle} />)}
+      {row.map((field, index) => <CustomTableCell key={`${field.name}-${index}`} isFirstCell={!index} field={field} onCollapseToggle={onCollapseToggle} />)}
     </tr>
   );
 };
@@ -95,126 +90,70 @@ const normalizeRows = (list, collapsedRowIndexes) => {
   }, []);
 };
 
-const TableFieldBase = (renderUserInteractions = true) => {
 
-  const TableFieldComponent = ({list, showMoreToggle, showMoreToggleHandler, showMoreToggleLabel}) => {
-    const initialiState = list.reduce((acc, _, index) => {
-      acc[index] = true;
-      return acc;
-    }, {});
-    const [collapsedRowIndexes, setCollapsedRowIndexes] = useState(initialiState);
-    const FieldComponent = renderUserInteractions?Field:PrintViewField;
+const TableFieldComponent = ({list}) => {
+  const initialiState = list.reduce((acc, _, index) => {
+    acc[index] = true;
+    return acc;
+  }, {});
+  const [collapsedRowIndexes, setCollapsedRowIndexes] = useState(initialiState);
 
-    const rows = normalizeRows(list, collapsedRowIndexes);
+  const rows = normalizeRows(list, collapsedRowIndexes);
 
-    if (!rows.length || !rows[0].length) {
+  if (!rows.length || !rows[0].length) {
+    return null;
+  }
+
+  const onCollapseToggle = (index, collapse) => {
+    const values = {...collapsedRowIndexes};
+    if (collapse) {
+      values[index] = true;
+    } else {
+      delete values[index];
+    }
+    setCollapsedRowIndexes(values);
+  };
+
+  return (
+    <table className="table">
+      <thead>
+        <tr>
+          {rows[0].map((el,id) =>
+            <th key={`${el.name}-${id}`}>{el.mapping.value}</th>
+          )}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, index) => <CustomTableRow key={`${index}`} row={row} onCollapseToggle={onCollapseToggle} />)}
+      </tbody>
+    </table>
+  );
+};
+
+class TableField extends React.Component {
+  getItems = () => {
+    const {items, mapping, group} = this.props;
+    const convertedItem = Array.isArray(items)?items:[items];
+    return convertedItem.map((item, idx) => ({
+      isObject: !!item.children,
+      key: item.reference?item.reference:item.value?item.value:idx,
+      show: true,
+      data: item.children?item.children:item,
+      mapping: mapping,
+      group: group
+    }));
+  }
+
+  render() {
+    const {show} = this.props;
+    if(!show) {
       return null;
     }
 
-    const onCollapseToggle = (index, collapse) => {
-      const values = {...collapsedRowIndexes};
-      if (collapse) {
-        values[index] = true;
-      } else {
-        delete values[index];
-      }
-      setCollapsedRowIndexes(values);
-    };
-
     return (
-      <table className="table">
-        <thead>
-          <tr>
-            {rows[0].map((el,id) =>
-              <th key={`${el.name}-${id}`}>{el.mapping.value}</th>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, index) => <CustomTableRow key={`${index}`} row={row} viewComponent={FieldComponent} onCollapseToggle={onCollapseToggle} />)}
-          {showMoreToggle && (
-            <tr>
-              <th><button className="kgs-field__viewMore-button" onClick={showMoreToggleHandler} role="link">{showMoreToggleLabel}</button></th>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <TableFieldComponent list={this.getItems()} />
     );
-  };
-
-  class TableField extends React.Component {
-    constructor(props) {
-      super(props);
-      const sizeStop = getNextSizeStop(Number.POSITIVE_INFINITY, this.props);
-      this.state = {
-        sizeStop: sizeStop,
-        items: Array.isArray(this.props.items) ? getFilteredItems(sizeStop, this.maxSizeStop, this.props) : this.getItems(),
-        hasShowMoreToggle: this.hasShowMoreToggle,
-        showMoreLabel: getShowMoreLabel(sizeStop, this.props)
-      };
-    }
-
-    get maxSizeStop() {
-      const {items, mapping} = this.props;
-
-      if (!Array.isArray(items)) {
-        return 0;
-      }
-
-      if (!renderUserInteractions && mapping && mapping.overviewMaxDisplay && mapping.overviewMaxDisplay < items.length) {
-        return mapping.overviewMaxDisplay;
-      }
-      return items.length;
-    }
-
-    get hasShowMoreToggle() {
-      const {items, mapping} = this.props;
-      if (!Array.isArray(items) || (mapping && mapping.separator) || !renderUserInteractions) {
-        return false;
-      }
-
-      return this.maxSizeStop > LIST_SMALL_SIZE_STOP;
-    }
-
-    getItems(){
-      const {items, mapping, group} = this.props;
-      let convertedItem = [];
-      convertedItem.push(items);
-      return convertedItem.map((item, idx) => ({
-        isObject: !!item.children,
-        key: item.reference?item.reference:item.value?item.value:idx,
-        show: true,
-        data: item.children?item.children:item,
-        mapping: mapping,
-        group: group
-      }));
-    }
-
-    handleShowMoreClick = () => {
-      this.setState((state,props) => {
-        const nextSizeStop = getNextSizeStop(state.sizeStop, props);
-        return {
-          sizeStop: nextSizeStop,
-          items: getFilteredItems(nextSizeStop, this.maxSizeStop, props),
-          hasShowMoreToggle: this.hasShowMoreToggle,
-          showMoreLabel: getShowMoreLabel(nextSizeStop, props)
-        };
-      });
-    }
-
-    render() {
-      const {show} = this.props;
-      if(!show) {
-        return null;
-      }
-
-      return (
-        <TableFieldComponent list={this.state.items} showMoreToggle={this.state.hasShowMoreToggle} showMoreToggleHandler={this.handleShowMoreClick} showMoreToggleLabel={this.state.showMoreLabel} />
-      );
-    }
   }
-  return TableField;
-};
+}
 
-export const TableField = TableFieldBase(true);
-export const PrintViewTableField = TableFieldBase(false);
+export default TableField;
