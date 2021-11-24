@@ -27,17 +27,17 @@ import { Hint} from "../Hint/Hint";
 import { ListField, PrintViewListField } from "./ListField";
 import { ObjectField, PrintViewObjectField } from "./ObjectField";
 import { ValueField, PrintViewValueField } from "./ValueField";
-import { TableField, PrintViewTableField } from "./TableField";
+import TableField from "./TableField";
 import HierarchicalFiles from "./Files/HierarchicalFiles";
 import "./Field.css";
 import { AsyncHierarchicalFiles } from "../../containers/Files/AsyncHierarchicalFiles";
+import FilePreview from "../FilePreview/FilePreview";
 
 const FieldBase = (renderUserInteractions = true) => {
 
   const ListFieldComponent = renderUserInteractions?ListField:PrintViewListField;
   const ObjectFieldComponent = renderUserInteractions?ObjectField:PrintViewObjectField;
   const ValueFieldComponent = renderUserInteractions?ValueField:PrintViewValueField;
-  const TableFieldComponent = renderUserInteractions?TableField:PrintViewTableField;
 
   const Field = ({name, data, mapping, group}) => {
     if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
@@ -51,8 +51,9 @@ const FieldBase = (renderUserInteractions = true) => {
     const isHierarchicalFiles = mapping.isHierarchicalFiles;
     const asyncUrl = mapping.isAsync?data:null;
     const isButton = mapping.isButton;
+    const isFilePreview = mapping.isFilePreview && data.url;
     const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
-    const className = "kgs-field" + (name?" kgs-field__" + name:"") + (mapping.layout?" kgs-field__layout-" + mapping.layout:"") + (isTable?" kgs-field__table":"") + (isHierarchicalFiles?" kgs-field__hierarchical-files":"");
+    const className = "kgs-field" + (name?" kgs-field__" + name:"") + (["header", "summary"].includes(mapping.layout)?" kgs-field__layout-" + mapping.layout:"") + (isTable?" kgs-field__table":"") + (isHierarchicalFiles?" kgs-field__hierarchical-files":"");
 
     const labelProps = {
       show: !!mapping.value && (!mapping.labelHidden || !renderUserInteractions) && !isButton,
@@ -71,7 +72,7 @@ const FieldBase = (renderUserInteractions = true) => {
       group: group
     };
     const valueProps = {
-      show: !isList && !isButton && !isHierarchicalFiles,
+      show: !isList && !isButton && !isHierarchicalFiles && !isFilePreview,
       data: data,
       mapping: mapping,
       group: group
@@ -98,6 +99,11 @@ const FieldBase = (renderUserInteractions = true) => {
       group: group,
       url: asyncUrl
     };
+    const filePreviewProps = {
+      show: isFilePreview,
+      mapping: mapping,
+      data: data
+    };
 
     return (
       <span style={style} className={className}>
@@ -106,7 +112,8 @@ const FieldBase = (renderUserInteractions = true) => {
         <ValueFieldComponent {...valueProps} />
         <ListFieldComponent {...listProps} />
         <ObjectFieldComponent {...objectProps} />
-        <TableFieldComponent {...tableProps} />
+        <TableField {...tableProps} />
+        <FilePreview {...filePreviewProps} />
         {isHierarchicalFiles && (
           asyncUrl?
             <AsyncHierarchicalFiles  {...asyncHierarchicalFileProps} />

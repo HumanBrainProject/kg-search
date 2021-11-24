@@ -37,7 +37,6 @@
 }
 
 .kgs-fieldsFilter .kgs-fieldsFilter-checkbox {
-    display: -ms-flexbox;
     display: flex;
     position: relative;
     cursor: pointer;
@@ -52,7 +51,6 @@
 }
 
 .kgs-fieldsFilter .kgs-fieldsFilter-checkbox .kgs-fieldsFilter-checkbox__text {
-    -ms-flex: auto;
     flex: auto;
     color: var(--color-8);
     font-size: var(--font-size);

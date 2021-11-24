@@ -58,8 +58,6 @@
   word-break: normal;
   white-space: pre-wrap;
   text-overflow: ellipsis;
-  -o-transition: all .35s ease-in-out;
-  -webkit-transition: all .35s ease-in-out;
   transition: all .35s ease-in-out;
   cursor: pointer;
 }
@@ -81,55 +79,6 @@
 
 .kgs-image_carousel .carousel .slide.selected .kgs-image_carousel-icon {
   display: block;
-}
-
-
-@-ms-keyframes kgs-image_carousel-icon {
-  0% {
-      opacity: 0.5
-  }
-  24% {
-      opacity: 0.5
-  }
-  25% {
-      opacity: 0.3
-  }
-  50% {
-      opacity: 0.3
-  }
-  75% {
-      opacity: 0.3
-  }
-  76% {
-      opacity: 0.5
-  }
-  100% {
-      opacity: 0.5
-  }
-}
-
-@-webkit-keyframes kgs-image_carousel-icon {
-  0% {
-      opacity: 0.5
-  }
-  24% {
-      opacity: 0.5
-  }
-  25% {
-      opacity: 0.3
-  }
-  50% {
-      opacity: 0.3
-  }
-  75% {
-      opacity: 0.3
-  }
-  76% {
-      opacity: 0.5
-  }
-  100% {
-      opacity: 0.5
-  }
 }
 
 @keyframes kgs-image_carousel-icon {
@@ -166,7 +115,5 @@
 .kgs-image_carousel .carousel:hover .slide.selected .kgs-image_carousel-icon.is-animated,
 .kgs-image_carousel .carousel .slide.selected:hover .kgs-image_carousel-icon.is-animated,
 .kgs-image_carousel .carousel .slide.selected.legend .legend:hover + .kgs-image_carousel-icon.is-animated {
-  -moz-animation: kgs-image_carousel-icon 1s infinite ease-in-out;
-  -webkit-animation: kgs-image_carousel-icon 1s infinite ease-in-out;
   animation: kgs-image_carousel-icon 1s infinite ease-in-out;
 }

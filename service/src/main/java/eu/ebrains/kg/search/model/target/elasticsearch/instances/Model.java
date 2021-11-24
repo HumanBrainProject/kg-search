@@ -65,19 +65,19 @@ public class Model implements TargetInstance {
     @FieldInfo(label = "Homepage")
     private TargetExternalReference homepage;
 
-    @FieldInfo(label = "Study target", layout = FieldInfo.Layout.SUMMARY)
+    @FieldInfo(label = "Study target", layout = "summary")
     private List<Value<String>> studyTarget;
 
-    @FieldInfo(label = "Scope", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "Scope", layout = "summary", facet = FieldInfo.Facet.LIST)
     private List<Value<String>> scope;
 
-    @FieldInfo(label = "Abstraction level", layout = FieldInfo.Layout.SUMMARY, facet = FieldInfo.Facet.LIST)
+    @FieldInfo(label = "Abstraction level", layout = "summary", facet = FieldInfo.Facet.LIST)
     private List<Value<String>> abstractionLevel;
 
-    @FieldInfo(label = "Contributors", layout = FieldInfo.Layout.HEADER, separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10)
+    @FieldInfo(label = "Contributors", layout = "header", separator = "; ", type = FieldInfo.Type.TEXT, labelHidden = true, boost = 10)
     private List<TargetInternalReference> contributors;
 
-    @FieldInfo(label = "Custodian", layout = FieldInfo.Layout.SUMMARY, separator = "; ", type = FieldInfo.Type.TEXT, hint = "A custodian is the person responsible for the data bundle.")
+    @FieldInfo(label = "Custodian", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT, hint = "A custodian is the person responsible for the data bundle.")
     private List<TargetInternalReference> owners;
 
     @FieldInfo(label = "Versions")

@@ -53,54 +53,6 @@
   color: var(--link-color-1);
 }
 
-@-ms-keyframes kgs-thumbnail-zoom-dynamic {
-  0% {
-      opacity: 1
-  }
-  24% {
-      opacity: 1
-  }
-  25% {
-      opacity: 0
-  }
-  50% {
-      opacity: 0
-  }
-  75% {
-      opacity: 0
-  }
-  76% {
-      opacity: 1
-  }
-  100% {
-      opacity: 1
-  }
-}
-
-@-webkit-keyframes kgs-thumbnail-zoom-dynamic {
-  0% {
-      opacity: 1
-  }
-  24% {
-      opacity: 1
-  }
-  25% {
-      opacity: 0
-  }
-  50% {
-      opacity: 0
-  }
-  75% {
-      opacity: 0
-  }
-  76% {
-      opacity: 1
-  }
-  100% {
-      opacity: 1
-  }
-}
-
 @keyframes kgs-thumbnail-zoom-dynamic {
   0% {
       opacity: 1
@@ -132,112 +84,26 @@
 
 .kgs-thumbnail--button:hover .kgs-thumbnail--zoom-dynamic {
   opacity: 1;
-  -moz-animation: kgs-thumbnail-zoom-dynamic 0.75s infinite ease-in-out;
-  -webkit-animation: kgs-thumbnail-zoom-dynamic 0.75s infinite ease-in-out;
   animation: kgs-thumbnail-zoom-dynamic 0.75s infinite ease-in-out;
-}
-
-@-ms-keyframes kgs-thumbnail-zoom-static {
-  0% {
-      -ms-transform: translate(0px, 0px);
-      transform: translate(0px, 0px);
-  }
-  5% {
-      -ms-transform: translate(3px, 3px);
-      transform: translate(3px, 3px);
-  }
-  35% {
-      -ms-transform: translate(-3px, 3px);
-      transform: translate(-3px, 3px);
-  }
-  65% {
-      -ms-transform: translate(-3px, -3px);
-      transform: translate(-3px, -3px);
-  }
-  95% {
-      -ms-transform: translate(3px, -3px);
-      transform: translate(3px, -3px);
-  }
-  100% {
-      -ms-transform: translate(0px, 0px);
-      transform: translate(0px, 0px);
-  }
-}
-
-@-webkit-keyframes kgs-thumbnail-zoom-static {
- 0% {
-      -ms-transform: translate(0px, 0px);
-      -webkit-transform: translate(0px, 0px);
-      transform: translate(0px, 0px);
-  }
-  5% {
-      -ms-transform: translate(3px, 3px);
-      -webkit-transform: translate(3px, 3px);
-      transform: translate(3px, 3px);
-  }
-  35% {
-      -ms-transform: translate(-3px, 3px);
-      -webkit-transform: translate(-3px, 3px);
-      transform: translate(-3px, 3px);
-  }
-  65% {
-      -ms-transform: translate(-3px, -3px);
-      -webkit-transform: translate(-3px, -3px);
-      transform: translate(-3px, -3px);
-  }
-  95% {
-      -ms-transform: translate(3px, -3px);
-      -webkit-transform: translate(3px, -3px);
-      transform: translate(3px, -3px);
-  }
-  100% {
-      -ms-transform: translate(0px, 0px);
-      -webkit-transform: translate(0px, 0px);
-      transform: translate(0px, 0px);
-  }
 }
 
 @keyframes kgs-thumbnail-zoom-static {
   0% {
-      -ms-transform: translate(0px, 0px);
-      -o-transform: translate(0px, 0px);
-      -moz-transform: translate(0px, 0px);
-      -webkit-transform: translate(0px, 0px);
       transform: translate(0px, 0px);
   }
   15% {
-      -ms-transform: translate(3px, 3px);
-      -o-transform: translate(3px, 3px);
-      -moz-transform: translate(3px, 3px);
-      -webkit-transform: translate(3px, 3px);
       transform: translate(3px, 3px);
   }
   40% {
-      -ms-transform: translate(-3px, 3px);
-      -o-transform: translate(-3px, 3px);
-      -moz-transform: translate(-3px, 3px);
-      -webkit-transform: translate(-3px, 3px);
       transform: translate(-3px, 3px);
   }
   65% {
-      -ms-transform: translate(-3px, -3px);
-      -o-transform: translate(-3px, -3px);
-      -moz-transform: translate(-3px, -3px);
-      -webkit-transform: translate(-3px, -3px);
       transform: translate(-3px, -3px);
   }
   90% {
-      -ms-transform: translate(3px, -3px);
-      -o-transform: translate(3px, -3px);
-      -moz-transform: translate(3px, -3px);
-      -webkit-transform: translate(3px, -3px);
       transform: translate(3px, -3px);
   }
   100% {
-      -ms-transform: translate(0px, 0px);
-      -o-transform: translate(0px, 0px);
-      -moz-transform: translate(0px, 0px);
-      -webkit-transform: translate(0px, 0px);
       transform: translate(0px, 0px);
   }
 }
@@ -250,8 +116,6 @@
 
 .kgs-thumbnail--button:hover .kgs-thumbnail--zoom-static {
   opacity: 1;
-  -moz-animation: kgs-thumbnail-zoom-static 5s infinite linear;
-  -webkit-animation: kgs-thumbnail-zoom-static 5s infinite linear;
   animation: kgs-thumbnail-zoom-static infinite 5s linear;
 }
 

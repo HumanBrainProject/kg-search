@@ -26,9 +26,3 @@
     display: inline-block;
     margin-top: 7px;
 }
-
-/* small hack to fix adjustment for ie 11 */
-@media all and (-ms-high-contrast:none) {
-    .kgs-detailView .kgs-share-links { margin-top: -3px; } /* IE10 */
-    *::-ms-backdrop, .kgs-detailView .kgs-share-links { margin-top: -3px; } /* IE11 */
-}

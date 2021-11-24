@@ -31,10 +31,7 @@ import eu.ebrains.kg.search.utils.MetaModelUtils;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class LabelsController {
@@ -157,8 +154,8 @@ public class LabelsController {
             if (!info.separator().equals(defaultFieldInfo.separator())) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "separator", info.separator());
             }
-            if (info.layout() != defaultFieldInfo.layout()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "layout", info.layout().name().toLowerCase());
+            if (!Objects.equals(info.layout(), defaultFieldInfo.layout())) {
+                propertyDefinition.put(SEARCH_UI_NAMESPACE + "layout", info.layout());
             }
             if (info.facetOrder() != defaultFieldInfo.facetOrder()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "facet_order", info.facetOrder().name().toLowerCase()); // TODO: change to camelCase (facetOrder)

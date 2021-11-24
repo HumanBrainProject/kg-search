@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 /*
  * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
  *
@@ -68,7 +69,7 @@ const getField = (group, type, name, data, mapping) => {
   }
 };
 
-const getFields = (group, type, data, mapping, filter) => {
+const getHeaderFields = (group, type, data, mapping) => {
   if (!data || !mapping) {
     return [];
   }
@@ -77,14 +78,57 @@ const getFields = (group, type, data, mapping, filter) => {
     .filter(([name, mapping]) =>
       mapping
       && (mapping.showIfEmpty || (data && data[name]))
-      && (!filter || (typeof filter === "function" && filter(type, name, data[name], mapping)))
+      && mapping.layout === "header" && name !== "title"
     )
     .map(([name, mapping]) => getField(group, type, name, data[name], mapping));
 
   return fields;
 };
 
-//const getPreviews = (data, mapping, idx=0) => {
+const getFieldsByGroups = (group, type, data, typeMapping) => {
+  if (!data || !typeMapping) {
+    return [];
+  }
+
+  const overviewFields = [];
+  const groups = Object.entries(typeMapping.fields || {})
+    .filter(([name, mapping]) =>
+      mapping
+      && (mapping.showIfEmpty || (data && data[name]))
+      && mapping.layout !== "header"
+      && !["id", "identifier", "title"].includes(name)
+    )
+    .reduce((acc, [name, mapping]) => {
+      const groupName = (!mapping.layout || mapping.layout === "summary" || mapping.isButton)?null: mapping.layout;
+      const field = getField(group, type, name, data[name], mapping);
+      if (!groupName) {
+        overviewFields.push(field);
+      } else {
+        if (!acc[groupName]) {
+          acc[groupName] = {
+            name: groupName,
+            fields: []
+          };
+        }
+        acc[groupName].fields.push(field);
+      }
+      return acc;
+    }, {});
+  if (overviewFields.length) {
+    const previews = getPreviews(data, { children: typeMapping.fields });
+    return [
+      {
+        name: "Overview",
+        fields: overviewFields,
+        previews: previews
+      },
+      ...Object.values(groups)
+    ];
+  }
+  return Object.values(groups);
+};
+
+
 export const getPreviews = (data, mapping) => {
   if (Array.isArray(data)) {
     const previews = [];
@@ -188,14 +232,10 @@ export const mapStateToProps = (state, props) => {
       groupLabel: (group !== state.groups.defaultGroup)?getGroupLabel(state.groups.groups, group):null,
       type: getField(group, type, "type"),
       title: getField(group, type, "title", source && source["title"], mapping && mapping.fields && mapping.fields["title"]),
-      fields: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout === "header" && name !== "title"),
+      fields: getHeaderFields(group, type, source, mapping),
       version: version,
       versions: versions
     },
-    previews: getPreviews(source, { children: mapping.fields }),
-    buttons: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.isButton),
-    main: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout !== "header" && name !== "title" && !mapping.isButton),
-    summary: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout === "summary" && name !== "title" && !mapping.isButton),
-    groups: getFields(group, type, source, mapping, (type, name, data, mapping) => mapping.layout === "group" && name !== "title" && !mapping.isButton)
+    groups: getFieldsByGroups(group, type, source, mapping)
   };
 };

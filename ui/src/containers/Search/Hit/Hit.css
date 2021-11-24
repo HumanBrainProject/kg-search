@@ -21,12 +21,9 @@
  *
  */
 
-.kgs-hit {
-    display: -ms-flexbox;
+.kgs-hit {    
     display: flex;
-    -ms-flex-flow: row wrap;
     flex-flow: row wrap;
-    -ms-flex-align: start;
     align-items: flex-start;
     align-content: flex-start;
     word-break: break-word;

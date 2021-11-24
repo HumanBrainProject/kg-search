@@ -26,7 +26,6 @@ import { connect } from "react-redux";
 import * as actionsGroups from "../../actions/actions.groups";
 import * as actionsInstances from "../../actions/actions.instances";
 import * as actionsDefinition from "../../actions/actions.definition";
-import { ImagePreviews } from "../Image/ImagePreviews";
 import { ImagePopup } from "../Image/ImagePopup";
 import { TermsShortNotice } from "../Notice/TermsShortNotice";
 import { mapStateToProps } from "../../helpers/InstanceHelper";
@@ -48,7 +47,6 @@ export const Preview = connect(
         }),
         path: "/live/",
         defaultGroup: state.groups.defaultGroup,
-        ImagePreviewsComponent: ImagePreviews,
         ImagePopupComponent: ImagePopup,
         TermsShortNoticeComponent: TermsShortNotice
       }

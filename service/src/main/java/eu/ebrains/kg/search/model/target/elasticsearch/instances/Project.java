@@ -51,16 +51,16 @@ public class Project implements TargetInstance {
     @FieldInfo(sort = true, label = "Name", boost = 20)
     private Value<String> title;
 
-    @FieldInfo(layout=FieldInfo.Layout.HEADER)
+    @FieldInfo(layout="header")
     private Value<String> editorId;
 
     @FieldInfo(label = "Description", markdown =  true, boost =  7.5f, labelHidden = true)
     private Value<String> description;
 
-    @FieldInfo(label = "Datasets", layout = FieldInfo.Layout.GROUP)
+    @FieldInfo(label = "Datasets", layout = "Datasets", labelHidden = true)
     private List<TargetInternalReference> dataset;
 
-    @FieldInfo(label = "Related publications", markdown = true, hint = "List of publications that have been published as a part of this project.", layout=FieldInfo.Layout.GROUP)
+    @FieldInfo(label = "Related publications", markdown = true, labelHidden = true, layout = "Publications")
     private List<Value<String>> publications;
 
     @JsonProperty("first_release")

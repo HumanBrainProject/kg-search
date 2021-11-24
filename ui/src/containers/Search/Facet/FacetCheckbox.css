@@ -22,7 +22,6 @@
  */
 
 .kgs-facet-checkbox {
-    display: -ms-flexbox;
     display: flex;
     position: relative;
     cursor: pointer;
@@ -35,13 +34,9 @@
 .kgs-facet-checkbox input[type="checkbox"] {
     margin: 1px 10px 0 1px;
     border: 0;
-    -ms-flex: 0 0 15px;
     flex: 0 0 15px;
     color: var(--color-8);
-    -moz-appearance: none;
     -webkit-appearance: none;
-    -webkit-transform: scale(.9);
-    -ms-transform: scale(.9);
     transform: scale(.9);
     pointer-events: none;
 }
@@ -81,7 +76,6 @@
 }
 
 .kgs-facet-checkbox .kgs-facet-checkbox__text {
-    -ms-flex: auto;
     flex: auto;
     color: var(--color-8);
     font-size: var(--font-size);

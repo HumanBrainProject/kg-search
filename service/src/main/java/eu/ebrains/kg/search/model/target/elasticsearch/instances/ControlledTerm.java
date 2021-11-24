@@ -51,7 +51,7 @@ public class ControlledTerm implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Controlled term");
 
-    @FieldInfo(label = "Name", sort=true, layout = FieldInfo.Layout.HEADER, labelHidden = true)
+    @FieldInfo(label = "Name", sort=true, layout = "header", labelHidden = true)
     private Value<String> title;
 
     @FieldInfo(label = "Ontology identifier")

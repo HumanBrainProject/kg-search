@@ -20,3 +20,16 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
+import React from "react";
+
+const FilePreview = ({ show, data }) => {
+  if(!show) {
+    return null;
+  }
+
+  return (
+    <iframe src={data.url} height="850" style={{width:"100%"}}></iframe>
+  );
+};
+
+export default FilePreview;

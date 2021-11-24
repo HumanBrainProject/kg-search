@@ -253,10 +253,7 @@
 html, body {
     scroll-behavior: smooth;
     overflow-x: hidden;
-    -ms-text-size-adjust: 100%;
-    -webkit-text-size-adjust: 100%;
     -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
 }
 
 body:before {
@@ -293,9 +290,8 @@ body {
   line-height: var(--line-height);
   background: var(--background-color-2);
   color: var(--color-1);
-  -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
+
   -webkit-font-smoothing: antialiased
 }
 

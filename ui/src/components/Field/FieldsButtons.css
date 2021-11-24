@@ -119,8 +119,6 @@
   font-size: 8px;
   cursor: pointer;
   color: var(--color-19);
-  -webkit-transition: color .2s ease-in;
-  -webkit-transition: box-shadow .2s ease-in;
   transition: box-shadow .2s ease-in;
 }
 

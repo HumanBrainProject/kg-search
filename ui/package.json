@@ -4,14 +4,14 @@
   "private": true,
   "homepage": "https://search.kg.ebrains.eu",
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.2.5",
-    "@testing-library/user-event": "^12.8.3",
+    "@testing-library/jest-dom": "^5.15.0",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.5.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "1.15.6",
-    "eslint-plugin-react": "^7.22.0",
-    "http-proxy-middleware": "^1.0.6",
-    "react-test-renderer": "^17.0.1"
+    "eslint-plugin-react": "^7.26.1",
+    "http-proxy-middleware": "^2.0.1",
+    "react-test-renderer": "^17.0.2"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.19",
@@ -28,19 +28,19 @@
     "normalize.css": "^8.0.1",
     "popper.js": "^1.16.1",
     "prop-types": "^15.7.2",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-piwik": "^1.11.0",
-    "react-redux": "^7.2.2",
-    "react-responsive-carousel": "^3.2.13",
+    "react-redux": "^7.2.6",
+    "react-responsive-carousel": "^3.2.22",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
-    "react-tooltip": "^4.2.15",
+    "react-tooltip": "^4.2.21",
     "react-treebeard": "^3.2.4",
-    "redux": "^4.0.5",
+    "redux": "^4.1.2",
     "redux-logger": "3.0.6",
-    "redux-thunk": "2.3.0",
-    "sanitize-html": "^2.3.2",
+    "redux-thunk": "2.4.0",
+    "sanitize-html": "^2.5.3",
     "showdown": "^1.9.0",
     "showdown-xss-filter": "^0.2.0"
   },
@@ -59,14 +59,19 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
+      ">0.3%",
+      "not ie 11",
       "not dead",
       "not op_mini all"
     ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
-      "last 1 safari version"
+      "last 1 safari version",
+      ">0.3%",
+      "not ie 11",
+      "not dead",
+      "not op_mini all"
     ]
   }
 }

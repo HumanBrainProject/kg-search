@@ -21,64 +21,76 @@
  *
  */
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import { Hint } from "../Hint/Hint";
+import { Field } from "../Field/Field";
+import { FieldsPanel } from "../Field/FieldsPanel";
+import { FieldsButtons } from "../Field/FieldsButtons";
+import { ImagePreviews } from "../../containers/Image/ImagePreviews";
 import "./Tabs.css";
+import "./Overview.css";
 
-const Tab = ({tab, active, onClick}) => {
-  if (!tab) {
-    return null;
-  }
-  const handleClick = () => {
-    typeof onClick === "function" && onClick(tab);
-  };
-  const {title, counter, hint} = tab;
-  const className = `kgs-tabs-button ${active?"is-active":""}`;
+const Tab = ({group, active, onClick}) => {
+
+  const handleClick = () => onClick(group);
+
+  const className = `kgs-tabs__button ${active?"is-active":""}`;
   return (
-    <button type="button" className={className} onClick={handleClick}>{title?title:""} {counter !== null?`(${counter})`:""} <Hint {...hint} /></button>
+    <button type="button" className={className} onClick={handleClick}>{group.name?group.name:""}</button>
   );
 };
 
-export const Tabs = ({id, className, tabs, viewComponent }) => {
-  const [value, setValue] = useState();
+
+const TabsView = ({group}) => {
+  if (!group || !Array.isArray(group.fields)) {
+    return null;
+  }
+
+  if (group.name === "Overview") {
+
+    const buttons = group.fields.filter(f => f.mapping.isButton);
+    const previews = group.previews;
+    const mainFields = group.fields.filter(f => !f.mapping.isButton);
+    const summaryFields = group.fields.filter(f => !f.mapping.isButton && f.mapping.layout === "summary");
+
+    return (
+      <div className={`kgs-tabs__view kgs-tabs__overview ${(buttons && buttons.length) ? "kgs-tabs__overview__with-buttons" : ""} ${(previews && previews.length) ? "kgs-tabs__overview__with-previews" : ""}  ${(summaryFields && summaryFields.length) ? "kgs-tabs__overview__with-summary" : ""}`}>
+        <FieldsButtons className="kgs-tabs__overview__buttons" fields={buttons} />
+        <ImagePreviews className={`kgs-tabs__overview__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
+        <FieldsPanel className="kgs-tabs__overview__summary" fields={summaryFields} fieldComponent={Field} />
+        <FieldsPanel className="kgs-tabs__overview__main" fields={mainFields} fieldComponent={Field} />
+      </div>
+    );
+  }
+
+  return (
+    <FieldsPanel className="kgs-tabs__view" fields={group.fields} fieldComponent={Field} />
+  );
+};
+
+export const Tabs = ({instanceId, groups }) => {
+  const [group, setGroup] = useState();
 
   useEffect(() => {
-    setValue(Array.isArray(tabs) && tabs.length && tabs[0]);
-  }, [id]);
+    setGroup(Array.isArray(groups) && groups.length && groups[0]);
+  }, [instanceId]);
 
-  const handleClick = value => setValue(value);
+  const handleClick = g => setGroup(g);
 
-  const classNames = ["kgs-tabs", className].join(" ");
-  const Component = viewComponent;
-
-  if (!Array.isArray(tabs) || !tabs.length) {
+  if (!Array.isArray(groups) || !groups.length) {
     return null;
   }
 
   return (
-    <div className={classNames}>
-      <div className="kgs-tabs-buttons">
-        {tabs.map(tab => (
-          <Tab key={tab.id} tab={tab} active={value && tab.id === value.id} onClick={handleClick} />
+    <>
+      <div className="kgs-tabs__buttons">
+        {groups.map(g => (
+          <Tab key={g.name} group={g} active={group && g.name === group.name} onClick={handleClick} />
         ))}
       </div>
-      <div className="kgs-tabs-content">
-        {value && value.data && Component && (
-          <Component key={value.id} {...value.data} />
-        )}
+      <div className="kgs-tabs__content">
+        <TabsView group={group}/>
       </div>
-    </div>
+    </>
   );
-};
-
-Tabs.propTypes = {
-  className: PropTypes.string,
-  id: PropTypes.string,
-  tabs:  PropTypes.arrayOf(PropTypes.any),
-  viewComponent: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.func
-  ]).isRequired
 };
 
 export default Tabs;
