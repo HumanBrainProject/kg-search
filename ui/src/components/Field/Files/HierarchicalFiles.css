@@ -28,7 +28,7 @@
 
 .kgs-hierarchical-files>ul {
     width: 50%;
-    height: 350px;
+    height: calc(100vh - 500px);
     overflow-y: auto;
     border: 1px solid var(--default-border-color);
     border-radius: 5px;

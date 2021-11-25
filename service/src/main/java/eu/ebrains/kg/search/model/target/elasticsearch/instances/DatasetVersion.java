@@ -82,10 +82,6 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "Dataset Versions")
     private TargetInternalReference dataset;
 
-    //TODO how could we provide this in a better way?
-    @FieldInfo(label = "Download Dataset", isButton = true, termsOfUse = true, icon="download", layout = "Get data")
-    private TargetExternalReference zip;
-
     @FieldInfo(label = "Cite dataset", markdown = true, layout = "How to cite", labelHidden = true)
     private Value<String> citation;
 
@@ -94,9 +90,6 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
 
     @FieldInfo(label = "DOI", hint = "This is the dataset DOI you must cite if you reuse this data in a way that leads to a publication")
     private Value<String> doi;
-
-    @FieldInfo(label= "Access Dataset", markdown = true, isButton = true, termsOfUse = true, icon="unlock")
-    private Value<String> useHDG;
 
     @JsonProperty("license_info")
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)

@@ -96,7 +96,7 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
       mapping
       && (mapping.showIfEmpty || (data && data[name]))
       && mapping.layout !== "header"
-      && !["id", "identifier", "title"].includes(name)
+      && !["id", "identifier", "title", "first_release", "last_release"].includes(name)
     )
     .reduce((acc, [name, mapping]) => {
       const groupName = (!mapping.layout || mapping.layout === "summary" || mapping.isButton)?null: mapping.layout;

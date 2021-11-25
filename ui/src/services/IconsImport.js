@@ -52,6 +52,7 @@ import {faMoon} from "@fortawesome/free-solid-svg-icons/faMoon";
 import {faSun} from "@fortawesome/free-solid-svg-icons/faSun";
 import {faAngleDoubleDown} from "@fortawesome/free-solid-svg-icons/faAngleDoubleDown";
 import {faSyncAlt} from "@fortawesome/free-solid-svg-icons/faSyncAlt";
+import {faLightbulb} from "@fortawesome/free-solid-svg-icons/faLightbulb";
 
 library.add(
   faBan,
@@ -82,5 +83,6 @@ library.add(
   faSun,
   faMoon,
   faAngleDoubleDown,
-  faSyncAlt
+  faSyncAlt,
+  faLightbulb
 );

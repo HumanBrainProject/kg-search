@@ -105,7 +105,8 @@ const getTree = files => {
     url: `/proxy/export?container=${url}`,
     type: "folder",
     paths: {},
-    toggled: true
+    toggled: true,
+    active: true
   };
   const nbOfPathToSkip = commonPath.length;
   const rootUrlSeparator = nbOfPathToSkip>rootPathIndex?"/":"?prefix=";
@@ -127,7 +128,7 @@ class HierarchicalFiles extends React.Component {
   componentDidMount() {
     const {data} = this.props;
     const tree = getTree(data);
-    this.setState({tree: tree });
+    this.setState({tree: tree, node: tree });
   }
 
   onToggle = (node, toggled) => {
@@ -159,6 +160,9 @@ class HierarchicalFiles extends React.Component {
     const type = node && node.type;
     return (
       <>
+        <div className="alert alert-secondary" role="alert">
+          <FontAwesomeIcon icon="lightbulb" />  Please select the folders and files you want to download!
+        </div>
         <div className="kgs-hierarchical-files">
           <Treebeard
             data={tree}
@@ -173,7 +177,8 @@ class HierarchicalFiles extends React.Component {
                 <div>
                   <div><strong>Name:</strong> {name}</div>
                   {size  && <div><strong>Size:</strong> {size}</div>}
-                  <a type="button" className="btn kgs-hierarchical-files__info_link" rel="noopener noreferrer" target="_blank" href={node.url} onClick={this.handleClick(node.url)} ><FontAwesomeIcon icon="download" /> Download {type}</a>
+                  <a type="button" className="btn kgs-hierarchical-files__info_link" rel="noopener noreferrer" target="_blank" href={node.url} onClick={this.handleClick(node.url)} >
+                    <FontAwesomeIcon icon="download" /> Download {this.state.node === this.state.tree?"dataset":type}</a>
                   <div className="kgs-hierarchical-files__info_agreement"><span>By downloading the {type} you agree to the <button onClick={this.toggleTermsOfUse}><strong>Terms of use</strong></button></span></div>
                 </div>
               </div>

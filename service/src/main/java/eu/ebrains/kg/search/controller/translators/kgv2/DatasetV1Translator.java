@@ -78,14 +78,6 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
         List<String> identifiers = Arrays.asList(datasetV1.getIdentifier(), String.format("Dataset/%s", datasetV1.getIdentifier()));
         d.setIdentifier(identifiers);
         String containerUrl = datasetV1.getContainerUrl();
-        boolean containerUrlAsZIP = datasetV1.getContainerUrlAsZIP();
-        List<DatasetV1.SourceFile> files = datasetV1.getFiles();
-        if (!datasetV1.isUseHDG() && !hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW) && (StringUtils.isNotBlank(containerUrl) && (containerUrlAsZIP || CollectionUtils.isEmpty(files)))) {
-            d.setZip(new TargetExternalReference(
-                    String.format("https://kg.ebrains.eu/proxy/export?container=%s", containerUrl), // TODO: Get rid of empty and containerUrlAsZip condition
-                    "Download all related data as ZIP"
-            ));
-        }
         if (dataStage == DataStage.IN_PROGRESS) {
             d.setEditorId(value(datasetV1.getEditorId()));
         }
@@ -115,7 +107,6 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
             final String editorId = datasetV1.getEditorId();
             final String[] split = editorId.split("/");
             String uuid = split[split.length-1];
-            d.setUseHDG(value(DatasetVersion.createHDGMessage(uuid, false)));
             d.setEmbargo(value(DatasetVersion.createHDGMessage(uuid, true)));
             d.setDataAccessibility(value("Controlled access"));
         } else {
