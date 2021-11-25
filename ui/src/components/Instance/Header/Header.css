@@ -30,7 +30,12 @@
     color: var(--color-36);
 }
 
-.kgs-instance__header_title .kgs-field__title, .kgs-instance__header_title .kgs-field__title .field-value {
+.kgs-instance__header_title {
+  padding-bottom: 10px;
+}
+
+.kgs-instance__header_title .kgs-field__title, 
+.kgs-instance__header_title .kgs-field__title .field-value {
   display: inline;
 }
 

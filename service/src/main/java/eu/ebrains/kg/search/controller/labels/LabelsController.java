@@ -184,6 +184,9 @@ public class LabelsController {
             if (info.isButton() != defaultFieldInfo.isButton()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "isButton", info.isButton());
             }
+            if (info.isFilePreview() != defaultFieldInfo.isFilePreview()) {
+                propertyDefinition.put(SEARCH_UI_NAMESPACE + "isFilePreview", info.isFilePreview());
+            }
             if (info.isHierarchicalFiles() != defaultFieldInfo.isHierarchicalFiles()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "isHierarchicalFiles", info.isHierarchicalFiles());
             }

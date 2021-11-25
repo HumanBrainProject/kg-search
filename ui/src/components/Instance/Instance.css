@@ -40,6 +40,7 @@
     overflow-wrap: break-word;
     word-break: break-word;
     white-space: pre-wrap;
+    grid-row-gap: 10px;
 }
 
 @media (min-width: 768px) {
