@@ -75,6 +75,7 @@
 }
 
 .kgs-instance[data-type] .kgs-field__dataset .kgs-field__list > ul,
+.kgs-instance[data-type] .kgs-field__contributions .kgs-field__list > ul,
 .kgs-instance[data-type] .kgs-field__publications .kgs-field__list > ul {
     list-style: none;
     padding-inline-start: 0;
@@ -83,4 +84,8 @@
 .kgs-instance[data-type] .kgs-field__dataset .kgs-field__list > ul li,
 .kgs-instance[data-type] .kgs-field__publications .kgs-field__list > ul li {
     padding-bottom: 30px;
+}
+
+.kgs-instance[data-type] .kgs-field__contributions .kgs-field__list > ul li {
+  padding-bottom: 5px;
 }
