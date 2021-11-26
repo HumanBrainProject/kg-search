@@ -24,7 +24,6 @@
 import React, { useRef } from "react";
 import PropTypes from "prop-types";
 import showdown from "showdown";
-/*import FilterXSS from 'xss';*/
 import xssFilter from "showdown-xss-filter";
 import "./InfoPanel.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -40,6 +39,8 @@ export const InfoPanel = ({text, onClose}) => {
     }
   };
 
+  const handleOnCloseButton = () => typeof onClose === "function" && onClose();
+
   if (!text) {
     return null;
   }
@@ -50,7 +51,7 @@ export const InfoPanel = ({text, onClose}) => {
       <div className="kgs-info__panel" ref={ref}>
         <div className="kgs-info__container">
           <span className="kgs-info__content" dangerouslySetInnerHTML={{__html:html}} />
-          <button className="kgs-info__closeButton" onClick={handleOnClose}>
+          <button className="kgs-info__closeButton" onClick={handleOnCloseButton}>
             <FontAwesomeIcon icon="times" />
           </button>
         </div>
