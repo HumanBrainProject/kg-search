@@ -24,10 +24,11 @@
 .kgs-hierarchical-files {
     display: flex;
     align-items: self-start;
+    flex-direction: column;
 }
 
 .kgs-hierarchical-files>ul {
-    width: 50%;
+    flex: 1;
     height: calc(100vh - 500px);
     overflow-y: auto;
     border: 1px solid var(--default-border-color);
@@ -36,7 +37,7 @@
 }
 
 .kgs-hierarchical-files .kgs-hierarchical-files__details {
-    width: 50%;
+    flex: 1;
     position: relative;
     margin: 9px 0 2px;
     padding: 10px;
@@ -159,15 +160,9 @@
     transform: translateY(-4px);
 }
 
-@media (min-width:768px) {
-    .kgs-hierarchical-files>ul {
-        width: 60%;
-    }
-    .kgs-hierarchical-files .kgs-hierarchical-files__details {
-        width: 40%;
-    }
-    
-    .kgs-hierarchical-files .kgs-hierarchical-files__node {
-        align-items: center;
+@media (min-width:992px) {
+    .kgs-hierarchical-files {
+        flex-direction: row;
     }
 }
+
