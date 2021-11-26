@@ -22,7 +22,6 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
 import showdown from "showdown";
 import xssFilter from "showdown-xss-filter";
 import "./Notification.css";
@@ -43,12 +42,6 @@ export const Notification = ({className, show, text}) => {
       <span className="kgs-notification_text" dangerouslySetInnerHTML={{__html:html}} />
     </div>
   );
-};
-
-Notification.propTypes = {
-  className: PropTypes.string,
-  show: PropTypes.number,
-  text: PropTypes.string
 };
 
 export default Notification;
