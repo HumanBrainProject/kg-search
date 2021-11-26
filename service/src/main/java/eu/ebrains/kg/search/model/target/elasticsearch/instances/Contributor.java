@@ -58,25 +58,25 @@ public class Contributor implements TargetInstance {
     @FieldInfo(layout = "header")
     private Value<String> editorId;
 
-    @FieldInfo(label = "Custodian of", layout = "Custodian of", labelHidden = true)
+    @FieldInfo(label = "Custodian of", layout = "Custodian of", labelHidden = true, overview = true, overviewMaxDisplay = 5)
     private List<TargetInternalReference> custodianOf;
 
-    @FieldInfo(label = "Custodian of models", layout = "Custodian of models", labelHidden = true)
+    @FieldInfo(label = "Custodian of models", layout = "Custodian of models", labelHidden = true, overview = true, overviewMaxDisplay = 5)
     private List<TargetInternalReference> custodianOfModel;
 
     @FieldInfo(label = "Publications", markdown = true, facet = FieldInfo.Facet.EXISTS, layout = "Publications", labelHidden = true)
     private List<Value<String>> publications;
 
-    @FieldInfo(label = "Contributions", facet = FieldInfo.Facet.EXISTS, type = FieldInfo.Type.TEXT, layout = "Contributions", labelHidden = true)
+    @FieldInfo(label = "Contributions", overview = true, facet = FieldInfo.Facet.EXISTS, type = FieldInfo.Type.TEXT, layout = "Contributions", labelHidden = true, overviewMaxDisplay = 5)
     private List<TargetInternalReference> contributions;
 
-    @FieldInfo(label = "Model contributions", facet = FieldInfo.Facet.EXISTS, type = FieldInfo.Type.TEXT, layout = "Model contributions", labelHidden = true)
+    @FieldInfo(label = "Model contributions", facet = FieldInfo.Facet.EXISTS, type = FieldInfo.Type.TEXT, layout = "Model contributions", labelHidden = true, overviewMaxDisplay = 5)
     private List<TargetInternalReference> modelContributions;
 
-    @FieldInfo(label = "Custodian of", isTable = true, layout = "Custodian of", labelHidden = true)
+    @FieldInfo(label = "Custodian of", isTable = true, layout = "Custodian of", labelHidden = true, overview = true, overviewMaxDisplay = 5)
     private List<Children<Contribution>> custodian;
 
-    @FieldInfo(label = "Contributions", isTable = true, layout = "Contributions", labelHidden = true)
+    @FieldInfo(label = "Contributions", isTable = true, layout = "Contributions", labelHidden = true, overview = true, overviewMaxDisplay = 5)
     private List<Children<Contribution>> contribution;
 
     @JsonProperty("first_release")

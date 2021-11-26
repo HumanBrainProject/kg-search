@@ -96,10 +96,12 @@ const ListFieldBase = (renderUserInteractions = true) => {
     constructor(props) {
       super(props);
       const sizeStop = getNextSizeStop(Number.POSITIVE_INFINITY, this.props);
+      const showMoreEnabled = this.props.mapping.layout === "summary" || !renderUserInteractions;
+      const showMoreToggle = this.hasShowMoreToggle && showMoreEnabled;
       this.state = {
         sizeStop: sizeStop,
-        items: this.props.mapping.layout === "summary"?getFilteredItems(sizeStop, this.maxSizeStop, this.props):this.getItems(),
-        hasShowMoreToggle: this.hasShowMoreToggle && this.props.mapping.layout === "summary",
+        items: showMoreEnabled?getFilteredItems(sizeStop, this.maxSizeStop, this.props):this.getItems(),
+        hasShowMoreToggle: showMoreToggle,
         showMoreLabel: getShowMoreLabel(sizeStop, this.props)
       };
     }
