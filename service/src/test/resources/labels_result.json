@@ -192,17 +192,14 @@
         "https://schema.hbp.eu/searchUi/label_hidden": true
       },
       "zip": {
-        "https://schema.hbp.eu/searchUi/isButton": true,
         "https://schema.hbp.eu/graphQuery/label": "Download Dataset",
         "https://schema.hbp.eu/searchUi/termsOfUse": true
       },
       "citation": {
-        "https://schema.hbp.eu/searchUi/isButton": true,
         "https://schema.hbp.eu/searchUi/markdown": true,
         "https://schema.hbp.eu/graphQuery/label": "Cite dataset"
       },
       "dataDescriptor": {
-        "https://schema.hbp.eu/searchUi/isButton": true,
         "https://schema.hbp.eu/graphQuery/label": "Data-descriptor",
         "https://schema.hbp.eu/searchUi/termsOfUse": false
       },
@@ -415,8 +412,7 @@
       },
       "allfiles": {
         "https://schema.hbp.eu/searchUi/termsOfUse": true,
-        "https://schema.hbp.eu/graphQuery/label": "Download model",
-        "https://schema.hbp.eu/searchUi/isButton": true
+        "https://schema.hbp.eu/graphQuery/label": "Download model"
       },
       "publications": {
         "https://schema.hbp.eu/searchUi/layout": "group",
@@ -579,7 +575,6 @@
         "https://schema.hbp.eu/searchUi/overview": true
       },
       "allfiles": {
-        "https://schema.hbp.eu/searchUi/isButton": true,
         "https://schema.hbp.eu/graphQuery/label": "Data download",
         "https://schema.hbp.eu/searchUi/termsOfUse": true
       },

@@ -50,13 +50,12 @@ const FieldBase = (renderUserInteractions = true) => {
     const isTable = mapping.isTable;
     const isHierarchicalFiles = mapping.isHierarchicalFiles;
     const asyncUrl = mapping.isAsync?data:null;
-    const isButton = mapping.isButton;
     const isFilePreview = mapping.isFilePreview && data.url;
     const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
     const className = "kgs-field" + (name?" kgs-field__" + name:"") + (["header", "summary"].includes(mapping.layout)?" kgs-field__layout-" + mapping.layout:"") + (isTable?" kgs-field__table":"") + (isHierarchicalFiles?" kgs-field__hierarchical-files":"");
 
     const labelProps = {
-      show: !!mapping.value && (!mapping.labelHidden || !renderUserInteractions) && !isButton,
+      show: !!mapping.value && (!mapping.labelHidden || !renderUserInteractions),
       showAsBlock: mapping.tagIcon,
       value: mapping.value,
       counter: (mapping.layout === "group" && isList)?data.length:0
@@ -72,7 +71,7 @@ const FieldBase = (renderUserInteractions = true) => {
       group: group
     };
     const valueProps = {
-      show: !isList && !isButton && !isHierarchicalFiles && !isFilePreview,
+      show: !isList && !isHierarchicalFiles && !isFilePreview,
       data: data,
       mapping: mapping,
       group: group

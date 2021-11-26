@@ -99,7 +99,7 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
       && !["id", "identifier", "title", "first_release", "last_release"].includes(name)
     )
     .reduce((acc, [name, mapping]) => {
-      const groupName = (!mapping.layout || mapping.layout === "summary" || mapping.isButton)?null: mapping.layout;
+      const groupName = (!mapping.layout || mapping.layout === "summary")?null: mapping.layout;
       const field = getField(group, type, name, data[name], mapping);
       if (!groupName) {
         overviewFields.push(field);

@@ -69,7 +69,7 @@ public class FileRepository implements TargetInstance {
     @FieldInfo(label = "Files", isHierarchicalFiles = true, isAsync=true)
     private String filesAsyncUrl;
 
-    @FieldInfo(label= "Access Files", markdown = true, isButton = true, termsOfUse = true, icon="unlock")
+    @FieldInfo(label= "Access Files", markdown = true,  termsOfUse = true, icon="unlock")
     private Value<String> useHDG;
 
     @JsonProperty("first_release")

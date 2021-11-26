@@ -23,7 +23,6 @@
 import React, { useState, useEffect } from "react";
 import { Field } from "../Field/Field";
 import { FieldsPanel } from "../Field/FieldsPanel";
-import { FieldsButtons } from "../Field/FieldsButtons";
 import { ImagePreviews } from "../../containers/Image/ImagePreviews";
 import "./Tabs.css";
 import "./Overview.css";
@@ -45,18 +44,14 @@ const TabsView = ({group}) => {
   }
 
   if (group.name === "Overview") {
-
-    const buttons = group.fields.filter(f => f.mapping.isButton);
     const previews = group.previews;
-    const mainFields = group.fields.filter(f => !f.mapping.isButton);
-    const summaryFields = group.fields.filter(f => !f.mapping.isButton && f.mapping.layout === "summary");
+    const summaryFields = group.fields.filter(f => f.mapping.layout === "summary");
 
     return (
-      <div className={`kgs-tabs__view kgs-tabs__overview ${(buttons && buttons.length) ? "kgs-tabs__overview__with-buttons" : ""} ${(previews && previews.length) ? "kgs-tabs__overview__with-previews" : ""}  ${(summaryFields && summaryFields.length) ? "kgs-tabs__overview__with-summary" : ""}`}>
-        <FieldsButtons className="kgs-tabs__overview__buttons" fields={buttons} />
+      <div className={`kgs-tabs__view kgs-tabs__overview ${(previews && previews.length) ? "kgs-tabs__overview__with-previews" : ""}  ${(summaryFields && summaryFields.length) ? "kgs-tabs__overview__with-summary" : ""}`}>
         <ImagePreviews className={`kgs-tabs__overview__previews ${(previews && previews.length > 1) ? "has-many" : ""}`} width="300px" images={previews} />
         <FieldsPanel className="kgs-tabs__overview__summary" fields={summaryFields} fieldComponent={Field} />
-        <FieldsPanel className="kgs-tabs__overview__main" fields={mainFields} fieldComponent={Field} />
+        <FieldsPanel className="kgs-tabs__overview__main" fields={group.fields} fieldComponent={Field} />
       </div>
     );
   }

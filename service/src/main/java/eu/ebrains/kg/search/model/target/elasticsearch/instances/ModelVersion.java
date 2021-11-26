@@ -79,7 +79,7 @@ public class ModelVersion implements TargetInstance, VersionedInstance {
     private Value<String> embargo;
 
     @JsonProperty("allfiles") //TODO: capitalize
-    @FieldInfo(label = "Download model", isButton = true, termsOfUse = true, icon="download")
+    @FieldInfo(label = "Download model", termsOfUse = true, icon="download")
     private List<TargetExternalReference> allFiles;
 
     @FieldInfo(label = "Publications", markdown = true, labelHidden = true, layout = "Publications")

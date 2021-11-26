@@ -69,7 +69,7 @@ public class Sample implements TargetInstance {
     private List<Value<String>> methods;
 
     @JsonProperty("allfiles") //TODO: capitalize
-    @FieldInfo(label = "Data download", isButton = true, termsOfUse = true, icon="download")
+    @FieldInfo(label = "Data download", termsOfUse = true, icon="download")
     private TargetExternalReference allFiles;
 
     @FieldInfo(label = "Files", termsOfUse = true, layout = "Get data")

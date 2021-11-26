@@ -42,7 +42,6 @@ public @interface FieldInfo {
     boolean markdown() default false;
     boolean overview() default false;
     boolean ignoreForSearch() default false;
-    boolean isButton() default false;
     boolean termsOfUse() default false;
     boolean isFilterableFacet() default false;
     boolean isHierarchicalFiles() default false;

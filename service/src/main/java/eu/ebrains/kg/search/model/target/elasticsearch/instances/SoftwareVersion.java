@@ -62,7 +62,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(label = "Developers", separator = "; ", layout = "header", type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true)
     private List<TargetInternalReference> developers;
 
-    @FieldInfo(label = "Cite software", isButton = true, markdown = true, icon="quote-left")
+    @FieldInfo(label = "Cite software", markdown = true, icon="quote-left")
     private Value<String> citation;
 
     /**

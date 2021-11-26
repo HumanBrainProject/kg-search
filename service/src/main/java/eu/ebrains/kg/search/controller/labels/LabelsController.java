@@ -181,9 +181,6 @@ public class LabelsController {
             if (info.aggregate() != defaultFieldInfo.aggregate()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "aggregate", info.aggregate().name().toLowerCase());
             }
-            if (info.isButton() != defaultFieldInfo.isButton()) {
-                propertyDefinition.put(SEARCH_UI_NAMESPACE + "isButton", info.isButton());
-            }
             if (info.isFilePreview() != defaultFieldInfo.isFilePreview()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "isFilePreview", info.isFilePreview());
             }
