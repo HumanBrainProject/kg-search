@@ -26,6 +26,7 @@ import { FieldsPanel } from "../Field/FieldsPanel";
 import { ImagePreviews } from "../../containers/Image/ImagePreviews";
 import "./Tabs.css";
 import "./Overview.css";
+import ReactPiwik from "react-piwik";
 
 const Tab = ({group, active, onClick}) => {
 
@@ -68,7 +69,10 @@ export const Tabs = ({instanceId, groups }) => {
     setGroup(Array.isArray(groups) && groups.length && groups[0]);
   }, [instanceId]);
 
-  const handleClick = g => setGroup(g);
+  const handleClick = g => {
+    setGroup(g);
+    ReactPiwik.push(["trackEvent", "Tab", `${g.name} clicked`, instanceId]);
+  };
 
   if (!Array.isArray(groups) || !groups.length) {
     return null;

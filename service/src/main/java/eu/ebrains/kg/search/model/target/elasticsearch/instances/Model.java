@@ -56,7 +56,7 @@ public class Model implements TargetInstance {
     @FieldInfo(label = "Description", markdown = true, boost = 2, labelHidden = true)
     private Value<String> description;
 
-    @FieldInfo(label = "Cite model", markdown = true, icon="quote-left")
+    @FieldInfo(label = "Cite model", markdown = true, layout = "How to cite", labelHidden = true)
     private Value<String> citation;
 
     @FieldInfo(label = "DOI", hint = "This is the model DOI representing all the underlying model's versions you must cite if you reuse this data in a way that leads to a publication")
