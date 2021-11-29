@@ -55,6 +55,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
                 String.format("This data requires you to explicitly **[request access](https://data-proxy.ebrains.eu/datasets/%s)** with your EBRAINS account. If you don't have such an account yet, please **[register](https://ebrains.eu/register/)**.", id);
     }
 
+    //Internal
 
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Dataset");
@@ -65,6 +66,28 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @ElasticSearchInfo(type = "keyword")
     @FieldInfo(ignoreForSearch = true, visible = false)
     private List<String> identifier;
+
+    @JsonProperty("first_release")
+    @FieldInfo(ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
+    private ISODateValue firstRelease;
+
+    @JsonProperty("last_release")
+    @FieldInfo(ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
+    private ISODateValue lastRelease;
+
+    private String version;
+
+    private List<TargetInternalReference> versions;
+
+    @JsonIgnore
+    private boolean isSearchable;
+
+    @Override
+    public boolean isSearchableInstance() {
+        return isSearchable;
+    }
+
+    //Global
 
     @FieldInfo(label = "Name", sort = true, layout = "header", boost = 20)
     private Value<String> title;
@@ -79,18 +102,11 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "Contributors", separator = "; ", layout = "header", type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true)
     private List<TargetInternalReference> contributors;
 
-    @FieldInfo(label = "Dataset Versions")
-    private TargetInternalReference dataset;
-
-    @FieldInfo(label = "Cite dataset", markdown = true, layout = "How to cite", labelHidden = true)
-    private Value<String> citation;
-
-    @FieldInfo(label = "Data-descriptor", isFilePreview=true, layout = "Data descriptor", labelHidden = true)
-    private TargetExternalReference dataDescriptor;
-
+    //Overview
     @FieldInfo(label = "DOI", hint = "This is the dataset DOI you must cite if you reuse this data in a way that leads to a publication")
     private Value<String> doi;
 
+    //TODO what about HDG terms of use?
     @JsonProperty("license_info")
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)
     private TargetExternalReference licenseInfo;
@@ -106,35 +122,6 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
 
     @FieldInfo(label = "New in this version", markdown = true, boost = 2)
     private Value<String> newInThisVersion;
-
-    @FieldInfo(label = "Species", facet = FieldInfo.Facet.LIST, visible = false, type = FieldInfo.Type.TEXT)
-    private List<Value<String>> speciesFilter;
-
-    @FieldInfo(label = "Restricted access", layout = "Get data")
-    private Value<String> embargoRestrictedAccess;
-
-    @FieldInfo(label = "Data accessibility", visible = false, facet = FieldInfo.Facet.LIST)
-    private Value<String> dataAccessibility;
-
-    @FieldInfo(label = "Files", layout = "Get data", labelHidden = true)
-    private Value<String> embargo;
-
-    /**
-     * Use filesAsyncUrl for openMINDS instead
-     */
-    @Deprecated
-    @FieldInfo(label = "Files", layout = "Get data", isHierarchicalFiles = true, termsOfUse = true, labelHidden = true)
-    private List<TargetFile> filesOld;
-
-    @FieldInfo(label = "Files", isHierarchicalFiles = true, isAsync=true, layout = "Get data", labelHidden = true)
-    private String filesAsyncUrl;
-
-    @JsonProperty("external_datalink")
-    @FieldInfo(label = "Data download")
-    private List<TargetExternalReference> externalDatalink;
-
-    @FieldInfo(label = "Related publications", markdown = true, layout = "Publications", labelHidden = true)
-    private List<Value<String>> publications;
 
 
     //TODO how to find in openMINDS? -> studiedSpecimen -> tisseSample(Collection) -> anatomicalLocation
@@ -157,7 +144,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "Studied brain region", layout = "summary")
     private List<TargetInternalReference> studiedBrainRegion;
 
-
+    //TODO how to find in openMINDS?
     //preparation design
     @FieldInfo(label = "Preparation", layout = "summary")
     private List<Value<String>> preparation;
@@ -166,6 +153,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     /**
      * @deprecated - split up in openMINDS -> see technique / experimental approach
      */
+    //TODO add experimental approaches and techniques during the hybrid phase for filter?
     @FieldInfo(label = "Modality", type = FieldInfo.Type.TEXT, facet = FieldInfo.Facet.LIST)
     private List<Value<String>> modalityForFilter;
 
@@ -175,8 +163,46 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "Technique")
     private List<TargetInternalReference> technique;
 
-    @FieldInfo(label="Gallery")
-    private List<Value<String>> gallery;
+
+    //Filter only
+    @FieldInfo(label = "Species", facet = FieldInfo.Facet.LIST, visible = false, type = FieldInfo.Type.TEXT)
+    private List<Value<String>> speciesFilter;
+
+    @FieldInfo(label = "Data accessibility", visible = false, facet = FieldInfo.Facet.LIST)
+    private Value<String> dataAccessibility;
+
+    //Data descriptor
+    //TODO test with file and doi
+    @FieldInfo(label = "Data-descriptor", isFilePreview=true, layout = "Data descriptor", labelHidden = true)
+    private TargetExternalReference dataDescriptor;
+
+    //How to cite
+    @FieldInfo(label = "Cite dataset", markdown = true, layout = "How to cite", labelHidden = true)
+    private Value<String> citation;
+
+    @FieldInfo(layout = "Get data", labelHidden = true)
+    private Value<String> embargoRestrictedAccess;
+
+    @FieldInfo(layout = "Get data", labelHidden = true)
+    private Value<String> embargo;
+
+    /**
+     * Use filesAsyncUrl for openMINDS instead
+     */
+    @Deprecated
+    @FieldInfo(layout = "Get data", isHierarchicalFiles = true, termsOfUse = true, labelHidden = true)
+    private List<TargetFile> filesOld;
+
+    @FieldInfo(layout = "Get data", isHierarchicalFiles = true, isAsync=true, labelHidden = true)
+    private String filesAsyncUrl;
+
+    @JsonProperty("external_datalink")
+    @FieldInfo(layout = "Get data", label = "Data download")
+    private List<TargetExternalReference> externalDatalink;
+
+    //Publications
+    @FieldInfo(layout = "Publications", markdown = true, labelHidden = true)
+    private List<Value<String>> publications;
 
 
     @Deprecated
@@ -197,35 +223,18 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
      * @deprecated  use subjects for openMINDS instead
      */
     @Deprecated
-    @FieldInfo(label = "Subjects", layout = "Subjects", labelHidden = true, isTable = true)
+    @FieldInfo(layout = "Subjects",  labelHidden = true, isTable = true)
     private List<Children<OldSubject>> subjectGroupOrSingleSubjectOld;
 
-    @FieldInfo(label = "Subjects", layout = "Subjects", labelHidden = true, isTable = true)
+    @FieldInfo(layout = "Subjects",  labelHidden = true, isTable = true)
     private List<Children<SubjectGroupOrSingleSubject>> subjectGroupOrSingleSubject;
 
-//    @FieldInfo(label = "TissueSample", layout = FieldInfo.Layout.GROUP, hint = "List of tissue samples that are a part of this dataset.", isTable = true)
-//    private List<Children<SubjectGroupOrSingleSubject>> tissueSamples;
+    @FieldInfo(layout = "TissueSample", hint = "List of tissue samples that are a part of this dataset.", isTable = true)
+    private List<Children<SubjectGroupOrSingleSubject>> tissueSamples;
 
-
-    @JsonProperty("first_release")
-    @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
-    private ISODateValue firstRelease;
-
-    @JsonProperty("last_release")
-    @FieldInfo(label = "Last release", ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
-    private ISODateValue lastRelease;
-
-    private String version;
-
-    private List<TargetInternalReference> versions;
-
-    @JsonIgnore
-    private boolean isSearchable;
-
-    @Override
-    public boolean isSearchableInstance() {
-        return isSearchable;
-    }
+    //Gallery
+    @FieldInfo(layout = "Gallery", labelHidden = true)
+    private List<Value<String>> gallery;
 
 
 
@@ -270,10 +279,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @Getter
     @Setter
     public static class SubjectGroupOrSingleSubject extends SingleSubject{
-
         private List<SingleSubject> children;
-
-
     }
 
 

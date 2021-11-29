@@ -1,6 +1,6 @@
 package eu.ebrains.kg.search.services;
 
-import eu.ebrains.kg.search.configuration.OauthClient;
+import eu.ebrains.kg.search.configuration.GracefulDeserializationProblemHandler;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -24,8 +24,8 @@ public abstract class KGServiceClient {
                     .headers(h -> h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
                     .retrieve()
                     .bodyToMono(clazz)
-                    .doOnSuccess(KGServiceUtils::parsingErrorHandler)
-                    .doFinally(t -> OauthClient.ERROR_REPORTING_THREAD_LOCAL.remove())
+                    .doOnSuccess(GracefulDeserializationProblemHandler::parsingErrorHandler)
+                    .doFinally(t -> GracefulDeserializationProblemHandler.ERROR_REPORTING_THREAD_LOCAL.remove())
                     .block();
         } catch (WebClientResponseException.NotFound e){
             return null;
@@ -38,8 +38,8 @@ public abstract class KGServiceClient {
                 .uri(url)
                 .headers(h -> h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
                 .retrieve()
-                .bodyToMono(clazz).doOnSuccess(KGServiceUtils::parsingErrorHandler)
-                .doFinally(t -> OauthClient.ERROR_REPORTING_THREAD_LOCAL.remove())
+                .bodyToMono(clazz).doOnSuccess(GracefulDeserializationProblemHandler::parsingErrorHandler)
+                .doFinally(t -> GracefulDeserializationProblemHandler.ERROR_REPORTING_THREAD_LOCAL.remove())
                 .block();
     }
 }

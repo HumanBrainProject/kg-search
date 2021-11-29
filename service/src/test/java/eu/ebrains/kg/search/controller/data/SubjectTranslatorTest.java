@@ -30,6 +30,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv1.SubjectV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.services.KGV2SearchServiceClient;
 import eu.ebrains.kg.search.services.KGV2ServiceClient;
+import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -47,28 +48,29 @@ public class SubjectTranslatorTest {
         this.KGV2ServiceClient = KGV2ServiceClient;
     }
 
-    private static class SubjectV1Results extends ResultsOfKGv2<SubjectV1> { }
+    private static class SubjectV1Results extends ResultsOfKGv2<SubjectV1> {
+    }
 
     @Test
-    public void compareReleasedSubjects() {
+    public void compareReleasedSubjects() throws TranslationException {
         compareSubjects(DataStage.RELEASED, false);
     }
 
     @Test
-    public void compareInferredSubjects() {
+    public void compareInferredSubjects() throws TranslationException {
         compareSubjects(DataStage.IN_PROGRESS, false);
     }
 
     @Test
-    public void compareInferredLiveSubjects() {
+    public void compareInferredLiveSubjects() throws TranslationException {
         compareSubjects(DataStage.IN_PROGRESS, true);
     }
 
-    private void compareSubjects(DataStage dataStage, boolean liveMode) {
+    private void compareSubjects(DataStage dataStage, boolean liveMode) throws TranslationException {
         List<String> result = new ArrayList<>();
         SubjectV1Results queryResult = KGV2ServiceClient.executeQuery("query/minds/experiment/subject/v1.0.0/search", dataStage, SubjectV1Results.class);
-        queryResult.getResults().forEach(subject -> {
-            String id = liveMode?subject.getEditorId():subject.getIdentifier();
+        for (SubjectV1 subject : queryResult.getResults()) {
+            String id = liveMode ? subject.getEditorId() : subject.getIdentifier();
             ElasticSearchDocument doc;
             if (liveMode) {
                 doc = KGV2SearchServiceClient.getLiveDocument(id, ElasticSearchDocument.class);
@@ -84,14 +86,14 @@ public class SubjectTranslatorTest {
                     result.add("\n\n\tSubject: " + subject.getIdentifier() + "\n\t\t" + String.join("\n\t\t", messages));
                 }
             }
-        });
+        }
         if (!result.isEmpty()) {
             Assert.fail(String.join("", result));
         }
     }
 
     @Test
-    public void compareReleasedSubject() throws IOException {
+    public void compareReleasedSubject() throws IOException, TranslationException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v1/subjectReleasedSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/subjectReleasedTarget.json"), StandardCharsets.UTF_8);
         List<String> result = TranslatorTestHelper.compareSubject(sourceJson, expectedJson, DataStage.RELEASED, false);
@@ -101,7 +103,7 @@ public class SubjectTranslatorTest {
     }
 
     @Test
-    public void compareInferredSubject() throws IOException {
+    public void compareInferredSubject() throws IOException, TranslationException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v1/subjectInferredSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/subjectInferredTarget.json"), StandardCharsets.UTF_8);
         List<String> result = TranslatorTestHelper.compareSubject(sourceJson, expectedJson, DataStage.IN_PROGRESS, false);
@@ -112,7 +114,7 @@ public class SubjectTranslatorTest {
     }
 
     @Test
-    public void compareInferredLiveSubject() throws IOException {
+    public void compareInferredLiveSubject() throws IOException, TranslationException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v1/subjectInferredSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/subjectInferredLiveTarget.json"), StandardCharsets.UTF_8);
         List<String> result = TranslatorTestHelper.compareSubject(sourceJson, expectedJson, DataStage.IN_PROGRESS, true);

@@ -1,7 +1,7 @@
 package eu.ebrains.kg.search.utils;
 
-public class AmbiguousDataException extends RuntimeException{
-    public AmbiguousDataException(String message) {
-        super(message);
+public class AmbiguousDataException extends TranslationException{
+    public AmbiguousDataException(String message, String identifier) {
+        super(message, identifier);
     }
 }

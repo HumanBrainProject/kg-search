@@ -35,6 +35,7 @@ import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.services.KGV2ServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
 import eu.ebrains.kg.search.utils.MetaModelUtils;
+import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -110,7 +111,7 @@ public class Search {
                                          @PathVariable("domain") String domain,
                                          @PathVariable("schema") String schema,
                                          @PathVariable("version") String version,
-                                         @PathVariable("id") String id) {
+                                         @PathVariable("id") String id) throws TranslationException{
         try {
             String queryId = String.format("%s/%s/%s/%s", org, domain, schema, version);
             TranslatorModel<?, ?, ?, ?> translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV2translator()!=null && m.getV2translator().getQueryIds().contains(queryId)).findFirst().orElse(null);
@@ -128,7 +129,7 @@ public class Search {
     }
 
     @GetMapping("/{id}/live")
-    public ResponseEntity<Map> translate(@PathVariable("id") String id) {
+    public ResponseEntity<Map> translate(@PathVariable("id") String id) throws TranslationException {
         try {
             final List<String> typesOfInstance = kgV3.getTypesOfInstance(id, DataStage.IN_PROGRESS, false);
             final TranslatorModel<?, ?, ?, ?> translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator() != null && m.getV3translator().semanticTypes().stream().anyMatch(typesOfInstance::contains)).findFirst().orElse(null);

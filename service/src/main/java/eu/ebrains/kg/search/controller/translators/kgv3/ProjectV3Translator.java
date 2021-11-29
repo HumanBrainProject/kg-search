@@ -30,6 +30,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.Project;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
+import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -70,7 +71,7 @@ public class ProjectV3Translator extends TranslatorV3<ProjectV3, Project, Projec
 
 
 
-    public Project translate(ProjectV3 project, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
+    public Project translate(ProjectV3 project, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Project p = new Project();
         String uuid = IdUtils.getUUID(project.getId());
         p.setId(uuid);

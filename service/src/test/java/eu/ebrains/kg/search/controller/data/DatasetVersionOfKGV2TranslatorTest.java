@@ -30,6 +30,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv1.DatasetV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.services.KGV2SearchServiceClient;
 import eu.ebrains.kg.search.services.KGV2ServiceClient;
+import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -50,24 +51,24 @@ public class DatasetVersionOfKGV2TranslatorTest {
     private static class DatasetV1Results extends ResultsOfKGv2<DatasetV1> {}
 
     @Test
-    public void compareReleasedDatasets() {
+    public void compareReleasedDatasets() throws TranslationException {
         compareDatasets(DataStage.RELEASED, false);
     }
 
     @Test
-    public void compareInferredDatasets() {
+    public void compareInferredDatasets() throws TranslationException {
         compareDatasets(DataStage.IN_PROGRESS, false);
     }
 
     @Test
-    public void compareInferredLiveDatasets() {
+    public void compareInferredLiveDatasets() throws TranslationException  {
         compareDatasets(DataStage.IN_PROGRESS, true);
     }
 
-    public void compareDatasets(DataStage dataStage, boolean liveMode) {
+    public void compareDatasets(DataStage dataStage, boolean liveMode) throws TranslationException {
         List<String> result = new ArrayList<>();
         DatasetV1Results queryResult = KGV2ServiceClient.executeQuery("query/minds/core/dataset/v1.0.0/search", dataStage, DatasetV1Results.class);
-        queryResult.getResults().forEach(dataset -> {
+        for (DatasetV1 dataset : queryResult.getResults()) {
             String id = liveMode?dataset.getEditorId():dataset.getIdentifier();
             ElasticSearchDocument doc;
             if (liveMode) {
@@ -84,7 +85,7 @@ public class DatasetVersionOfKGV2TranslatorTest {
                     result.add("\n\n\tDataset: " + dataset.getIdentifier() + "\n\t\t" + String.join("\n\t\t", messages));
                 }
             }
-        });
+        };
         if (!result.isEmpty()) {
             Assert.fail(String.join("", result));
         }
@@ -92,7 +93,7 @@ public class DatasetVersionOfKGV2TranslatorTest {
 
 
     @Test
-    public void compareReleasedDataset() throws IOException {
+    public void compareReleasedDataset() throws IOException, TranslationException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v1/datasetReleasedSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/datasetReleasedTarget.json"), StandardCharsets.UTF_8);
         List<String> result = TranslatorTestHelper.compareDataset(sourceJson, expectedJson, DataStage.RELEASED, false);
@@ -102,7 +103,7 @@ public class DatasetVersionOfKGV2TranslatorTest {
     }
 
     @Test
-    public void compareInferredDataset() throws IOException {
+    public void compareInferredDataset() throws IOException, TranslationException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v1/datasetInferredSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/datasetInferredTarget.json"), StandardCharsets.UTF_8);
         List<String> result = TranslatorTestHelper.compareDataset(sourceJson, expectedJson, DataStage.IN_PROGRESS, false);
@@ -112,7 +113,7 @@ public class DatasetVersionOfKGV2TranslatorTest {
     }
 
     @Test
-    public void compareInferredLiveDataset() throws IOException {
+    public void compareInferredLiveDataset() throws IOException, TranslationException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v1/datasetInferredSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/datasetInferredLiveTarget.json"), StandardCharsets.UTF_8);
         List<String> result = TranslatorTestHelper.compareDataset(sourceJson, expectedJson, DataStage.IN_PROGRESS, true);

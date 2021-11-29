@@ -30,6 +30,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv1.SampleV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.services.KGV2SearchServiceClient;
 import eu.ebrains.kg.search.services.KGV2ServiceClient;
+import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -50,22 +51,22 @@ public class SampleTranslatorTest {
     private static class SampleV1Results extends ResultsOfKGv2<SampleV1> {}
 
     @Test
-    public void compareReleasedSamples() { compareSamples(DataStage.RELEASED, false); }
+    public void compareReleasedSamples() throws TranslationException { compareSamples(DataStage.RELEASED, false); }
 
     @Test
-    public void compareInferredSamples() {
+    public void compareInferredSamples() throws TranslationException {
         compareSamples(DataStage.IN_PROGRESS, false);
     }
 
     @Test
-    public void compareInferredLiveSamples() {
+    public void compareInferredLiveSamples() throws TranslationException  {
         compareSamples(DataStage.IN_PROGRESS, true);
     }
 
-    private void compareSamples(DataStage dataStage, boolean liveMode) {
+    private void compareSamples(DataStage dataStage, boolean liveMode) throws TranslationException {
         List<String> result = new ArrayList<>();
         SampleV1Results queryResult = KGV2ServiceClient.executeQuery("query/minds/experiment/sample/v1.0.0/search", dataStage, SampleV1Results.class);
-        queryResult.getResults().forEach(sample -> {
+        for (SampleV1 sample : queryResult.getResults()) {
             String id = liveMode?sample.getEditorId():sample.getIdentifier();
             ElasticSearchDocument doc;
             if (liveMode) {
@@ -82,14 +83,14 @@ public class SampleTranslatorTest {
                     result.add("\n\n\tSample: " + sample.getIdentifier() + "\n\t\t" + String.join("\n\t\t", messages));
                 }
             }
-        });
+        }
         if (!result.isEmpty()) {
             Assert.fail(String.join("", result));
         }
     }
 
     @Test
-    public void compareReleasedSample() throws IOException {
+    public void compareReleasedSample() throws IOException, TranslationException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v1/sampleReleasedSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/sampleReleasedTarget.json"), StandardCharsets.UTF_8);
         List<String> result = TranslatorTestHelper.compareSample(sourceJson, expectedJson, DataStage.RELEASED, false);
@@ -99,7 +100,7 @@ public class SampleTranslatorTest {
     }
 
     @Test
-    public void compareInferredSample() throws IOException {
+    public void compareInferredSample() throws IOException, TranslationException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v1/sampleInferredSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/sampleInferredTarget.json"), StandardCharsets.UTF_8);
         List<String> result = TranslatorTestHelper.compareSample(sourceJson, expectedJson, DataStage.IN_PROGRESS, false);
@@ -109,7 +110,7 @@ public class SampleTranslatorTest {
     }
 
     @Test
-    public void compareInferredLiveSample() throws IOException {
+    public void compareInferredLiveSample() throws IOException, TranslationException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v1/sampleInferredSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/sampleInferredLiveTarget.json"), StandardCharsets.UTF_8);
         List<String> result = TranslatorTestHelper.compareSample(sourceJson, expectedJson, DataStage.IN_PROGRESS, true);

@@ -30,6 +30,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.services.KGV2SearchServiceClient;
 import eu.ebrains.kg.search.services.KGV2ServiceClient;
+import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -50,22 +51,22 @@ public class SoftwareVersionTranslatorTest {
     private static class SoftwareV2Results extends ResultsOfKGv2<SoftwareV2> {}
 
     @Test
-    public void compareReleasedSoftwares() { compareSoftware(DataStage.RELEASED, false); }
+    public void compareReleasedSoftwares() throws TranslationException { compareSoftware(DataStage.RELEASED, false); }
 
     @Test
-    public void compareInferredSoftwares() {
+    public void compareInferredSoftwares() throws TranslationException {
         compareSoftware(DataStage.IN_PROGRESS, false);
     }
 
     @Test
-    public void compareInferredLiveSoftwares() {
+    public void compareInferredLiveSoftwares() throws TranslationException {
         compareSoftware(DataStage.IN_PROGRESS, true);
     }
 
-    public void compareSoftware(DataStage dataStage, boolean liveMode) {
+    public void compareSoftware(DataStage dataStage, boolean liveMode) throws TranslationException {
         List<String> result = new ArrayList<>();
         SoftwareV2Results queryResult = KGV2ServiceClient.executeQuery("query/softwarecatalog/software/softwareproject/v1.0.0/search", dataStage, SoftwareV2Results.class);
-        queryResult.getResults().forEach(software -> {
+        for (SoftwareV2 software : queryResult.getResults()) {
             String id = liveMode?software.getEditorId():software.getIdentifier();
             ElasticSearchDocument doc;
             if (liveMode) {
@@ -82,14 +83,14 @@ public class SoftwareVersionTranslatorTest {
                     result.add("\n\n\tSoftware: " + software.getIdentifier() + "\n\t\t" + String.join("\n\t\t", messages));
                 }
             }
-        });
+        }
         if (!result.isEmpty()) {
             Assert.fail(String.join("", result));
         }
     }
 
     @Test
-    public void compareReleasedSoftware() throws IOException {
+    public void compareReleasedSoftware() throws TranslationException, IOException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareReleasedSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareReleasedTarget.json"), StandardCharsets.UTF_8);
         List<String> result = TranslatorTestHelper.compareSoftware(sourceJson, expectedJson, DataStage.RELEASED, false);
@@ -99,7 +100,7 @@ public class SoftwareVersionTranslatorTest {
     }
 
     @Test
-    public void compareInferredSoftware() throws IOException {
+    public void compareInferredSoftware() throws TranslationException, IOException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareInferredSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareInferredTarget.json"), StandardCharsets.UTF_8);
         List<String> result = TranslatorTestHelper.compareSoftware(sourceJson, expectedJson, DataStage.IN_PROGRESS, false);
@@ -109,7 +110,7 @@ public class SoftwareVersionTranslatorTest {
     }
 
     @Test
-    public void compareInferredLiveSoftware() throws IOException {
+    public void compareInferredLiveSoftware() throws TranslationException, IOException {
         String sourceJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareInferredSource.json"), StandardCharsets.UTF_8);
         String expectedJson = IOUtils.toString(this.getClass().getResourceAsStream("/v2/softwareInferredLiveTarget.json"), StandardCharsets.UTF_8);
         List<String> result = TranslatorTestHelper.compareSoftware(sourceJson, expectedJson, DataStage.IN_PROGRESS, true);

@@ -39,6 +39,9 @@ import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv2;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
+import eu.ebrains.kg.search.utils.TranslationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -47,6 +50,8 @@ import java.util.function.Function;
 
 @Component
 public class IndexingController {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final MappingController mappingController;
     private final ElasticSearchController elasticSearchController;
@@ -72,7 +77,13 @@ public class IndexingController {
                     if (queryId != null) {
                         final Source source = kg.executeQueryForInstance(translator.getSourceType(), dataStage, String.format("%s/search", queryId), id, true);
                         if(source!=null){
-                            return translator.translate(source, dataStage, false, doiCitationFormatter);
+                            try {
+                                return translator.translate(source, dataStage, false, doiCitationFormatter);
+                            } catch (TranslationException e) {
+                                //We don't take this error any further since only the "old" world is affected.
+                                logger.error(e.getMessage());
+                                return null;
+                            }
                         }
                         return null;
                     }

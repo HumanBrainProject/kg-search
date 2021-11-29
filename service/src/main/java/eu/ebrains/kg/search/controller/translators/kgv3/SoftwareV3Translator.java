@@ -34,6 +34,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetI
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
+import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -72,7 +73,7 @@ public class SoftwareV3Translator extends TranslatorV3<SoftwareV3, Software, Sof
         return Collections.singletonList("https://openminds.ebrains.eu/core/Software");
     }
 
-    public Software translate(SoftwareV3 software, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
+    public Software translate(SoftwareV3 software, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Software s = new Software();
         List<Version> sortedVersions = Helpers.sort(software.getVersions());
         List<Children<Software.Version>> softwareVersions = sortedVersions.stream().map(v -> {

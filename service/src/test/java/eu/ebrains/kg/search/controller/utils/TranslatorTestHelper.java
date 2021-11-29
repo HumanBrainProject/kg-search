@@ -33,6 +33,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv2.ModelV2;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.*;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
+import eu.ebrains.kg.search.utils.TranslationException;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
@@ -85,13 +86,13 @@ public class TranslatorTestHelper {
 //        return compareResults(targetExpected, targetResult);
 //    }
 
-    public static List<String> compareModel(String sourceJson, String expectedJson, DataStage dataStage, boolean liveMode) {
+    public static List<String> compareModel(String sourceJson, String expectedJson, DataStage dataStage, boolean liveMode) throws TranslationException {
         ModelV2 source = jsonAdapter.fromJson(sourceJson, ModelV2.class);
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
         return compareModel(source, targetExpected, dataStage, liveMode);
     }
 
-    public static List<String> compareModel(ModelV2 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
+    public static List<String> compareModel(ModelV2 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) throws TranslationException {
         ModelV2Translator translator = new ModelV2Translator();
         ModelVersion target = translator.translate(source, dataStage, liveMode, doiCitationFormatter);
         String targetJson = jsonAdapter.toJson(target);
@@ -100,13 +101,13 @@ public class TranslatorTestHelper {
         return compareResults(targetExpected, targetResult);
     }
 
-    public static List<String> compareSubject(String sourceJson, String expectedJson, DataStage dataStage, boolean liveMode) {
+    public static List<String> compareSubject(String sourceJson, String expectedJson, DataStage dataStage, boolean liveMode) throws TranslationException {
         SubjectV1 source = jsonAdapter.fromJson(sourceJson, SubjectV1.class);
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
         return compareSubject(source, targetExpected, dataStage, liveMode);
     }
 
-    public static List<String> compareSubject(SubjectV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
+    public static List<String> compareSubject(SubjectV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) throws TranslationException {
         SubjectV1Translator translator = new SubjectV1Translator();
         Subject target = translator.translate(source, dataStage, liveMode, doiCitationFormatter);
         String targetJson = jsonAdapter.toJson(target);
@@ -115,14 +116,14 @@ public class TranslatorTestHelper {
         return compareResults(targetExpected, targetResult);
     }
 
-    public static List<String> compareSoftware(String sourceJson, String expectedJson, DataStage dataStage, boolean liveMode) {
+    public static List<String> compareSoftware(String sourceJson, String expectedJson, DataStage dataStage, boolean liveMode) throws TranslationException {
         SoftwareV2 source = jsonAdapter.fromJson(sourceJson, SoftwareV2.class);
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
         return compareSoftware(source, targetExpected, dataStage, liveMode);
     }
 
 
-    public static List<String> compareSoftware(SoftwareV2 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
+    public static List<String> compareSoftware(SoftwareV2 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) throws TranslationException {
         SoftwareV2Translator translator = new SoftwareV2Translator();
         SoftwareVersion target = translator.translate(source, dataStage, liveMode, doiCitationFormatter);
         String targetJson = jsonAdapter.toJson(target);
@@ -131,13 +132,13 @@ public class TranslatorTestHelper {
         return compareResults(targetExpected, targetResult);
     }
 
-    public static List<String> compareSample(String sourceJson, String expectedJson, DataStage dataStage, boolean liveMode) {
+    public static List<String> compareSample(String sourceJson, String expectedJson, DataStage dataStage, boolean liveMode) throws TranslationException {
         SampleV1 source = jsonAdapter.fromJson(sourceJson, SampleV1.class);
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
         return compareSample(source, targetExpected, dataStage, liveMode);
     }
 
-    public static List<String> compareSample(SampleV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
+    public static List<String> compareSample(SampleV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) throws TranslationException {
         SampleV1Translator translator = new SampleV1Translator();
         Sample target = translator.translate(source, dataStage, liveMode, doiCitationFormatter);
         String targetJson = jsonAdapter.toJson(target);
@@ -146,14 +147,14 @@ public class TranslatorTestHelper {
         return compareResults(targetExpected, targetResult);
     }
 
-    public static List<String> compareProject(String sourceJson, String expectedJson, DataStage dataStage, boolean liveMode) {
+    public static List<String> compareProject(String sourceJson, String expectedJson, DataStage dataStage, boolean liveMode) throws TranslationException {
         ProjectV1 source = jsonAdapter.fromJson(sourceJson, ProjectV1.class);
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
         return compareProject(source, targetExpected, dataStage, liveMode);
     }
 
 
-    public static List<String> compareProject(ProjectV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
+    public static List<String> compareProject(ProjectV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) throws TranslationException {
         ProjectV1Translator translator = new ProjectV1Translator();
         Project target = translator.translate(source, dataStage, liveMode, doiCitationFormatter);
         String targetJson = jsonAdapter.toJson(target);
@@ -161,13 +162,13 @@ public class TranslatorTestHelper {
         return compareResults(targetExpected, targetResult);
     }
 
-    public static List<String> compareDataset(String sourceJson, String expectedJson, DataStage dataStage, boolean liveMode) {
+    public static List<String> compareDataset(String sourceJson, String expectedJson, DataStage dataStage, boolean liveMode) throws TranslationException {
         DatasetV1 source = jsonAdapter.fromJson(sourceJson, DatasetV1.class);
         Map<String, Object> targetExpected = jsonAdapter.fromJson(expectedJson, Map.class);
         return compareDataset(source, targetExpected, dataStage, liveMode);
     }
 
-    public static List<String> compareDataset(DatasetV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) {
+    public static List<String> compareDataset(DatasetV1 source, Map<String, Object> targetExpected, DataStage dataStage, boolean liveMode) throws TranslationException {
         DatasetV1Translator translator = new DatasetV1Translator();
         DatasetVersion target = translator.translate(source, dataStage, liveMode, doiCitationFormatter);
         String targetJson = jsonAdapter.toJson(target);

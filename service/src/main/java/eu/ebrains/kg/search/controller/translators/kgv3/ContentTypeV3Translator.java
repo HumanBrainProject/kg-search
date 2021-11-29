@@ -30,6 +30,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.ContentType;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
+import eu.ebrains.kg.search.utils.TranslationException;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
@@ -68,7 +69,7 @@ public class ContentTypeV3Translator extends TranslatorV3<ContentTypeV3, Content
     public static class Result extends ResultsOfKGv3<ContentTypeV3> {
     }
 
-    public ContentType translate(ContentTypeV3 contentTypeV3, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
+    public ContentType translate(ContentTypeV3 contentTypeV3, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
        ContentType c = new ContentType();
        c.setId(IdUtils.getUUID(contentTypeV3.getId()));
        c.setIdentifier(IdUtils.getUUID(contentTypeV3.getIdentifier()));

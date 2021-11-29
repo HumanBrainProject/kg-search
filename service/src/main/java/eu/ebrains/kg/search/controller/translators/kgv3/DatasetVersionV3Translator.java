@@ -37,6 +37,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.AmbiguousDataException;
 import eu.ebrains.kg.search.utils.IdUtils;
+import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -100,7 +101,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
     }
 
-    public DatasetVersion translate(DatasetVersionV3 datasetVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
+    public DatasetVersion translate(DatasetVersionV3 datasetVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         DatasetVersion d = new DatasetVersion();
         DatasetVersionV3.DatasetVersions dataset = datasetVersion.getDataset();
         Accessibility accessibility = Accessibility.fromPayload(datasetVersion);
@@ -258,19 +259,22 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         final List<DatasetVersionV3.File> dataDescriptors = specialFiles.stream().filter(s -> s.getRoles().contains("https://openminds.ebrains.eu/instances/fileUsageRole/dataDescriptor")).collect(Collectors.toList());
         if(!dataDescriptors.isEmpty()) {
             if (dataDescriptors.size() > 1) {
-                throw new AmbiguousDataException(String.format("The dataset version %s contains multiple data descriptors: %s", datasetVersion.getUUID(), dataDescriptors.stream().map(DatasetVersionV3.File::getIri).collect(Collectors.joining(", "))));
+                throw new AmbiguousDataException(String.format("The dataset version contains multiple data descriptors: %s", dataDescriptors.stream().map(DatasetVersionV3.File::getIri).collect(Collectors.joining(", "))), datasetVersion.getUUID());
             } else {
                 d.setDataDescriptor(new TargetExternalReference(dataDescriptors.get(0).getIri(), dataDescriptors.get(0).getName()));
                 if(datasetVersion.getFullDocumentationFile() != null && !dataDescriptors.get(0).getIri().equals(datasetVersion.getFullDocumentationFile().getIri())){
-                    throw new AmbiguousDataException(String.format("The dataset %s has a file (%s) flagged with the role data descriptor and another one (%s) for the full documentation. This is invalid!", datasetVersion.getUUID(), dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationFile().getIri()));
+                    throw new AmbiguousDataException(String.format("The dataset has a file (%s) flagged with the role data descriptor and another one (%s) for the full documentation. This is invalid!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationFile().getIri()), datasetVersion.getUUID());
                 }
                 else if(datasetVersion.getFullDocumentationDOI()!=null){
-                    throw new AmbiguousDataException(String.format("The dataset %s has a file (%s) flagged with the role data descriptor and a DOI (%s) for the full documentation. This is invalid!", datasetVersion.getUUID(), dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationDOI()));
+                    throw new AmbiguousDataException(String.format("The dataset has a file (%s) flagged with the role data descriptor and a DOI (%s) for the full documentation. This is invalid!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationDOI()), datasetVersion.getUUID());
                 }
                 else if(datasetVersion.getFullDocumentationUrl()!=null){
-                    throw new AmbiguousDataException(String.format("The dataset %s has a file (%s) flagged with the role data descriptor and a DOI (%s) for the full documentation. This is invalid!", datasetVersion.getUUID(), dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationUrl()));
+                    throw new AmbiguousDataException(String.format("The dataset has a file (%s) flagged with the role data descriptor and a DOI (%s) for the full documentation. This is invalid!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationUrl()), datasetVersion.getUUID());
                 }
             }
+        }
+        else if(datasetVersion.getFullDocumentationFile()!=null){
+            d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationFile().getIri(), datasetVersion.getFullDocumentationFile().getName()));
         }
         else if(datasetVersion.getFullDocumentationUrl()!=null){
             d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationUrl(), datasetVersion.getFullDocumentationUrl()));

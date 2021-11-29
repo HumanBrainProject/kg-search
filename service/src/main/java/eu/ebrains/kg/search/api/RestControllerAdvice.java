@@ -23,6 +23,7 @@
 
 package eu.ebrains.kg.search.api;
 
+import eu.ebrains.kg.search.utils.TranslationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -48,6 +49,12 @@ public class RestControllerAdvice {
     protected ResponseEntity<?> internalServerError(RuntimeException ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
+    @ExceptionHandler({TranslationException.class})
+    protected ResponseEntity<?> translationExceptionError(RuntimeException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+    }
+
 
     @ExceptionHandler({WebClientResponseException.NotFound.class})
     protected ResponseEntity<?> notFound(RuntimeException ex, WebRequest request) {

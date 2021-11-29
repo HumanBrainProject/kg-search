@@ -29,6 +29,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv1.PersonV1;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Contributor;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
+import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -68,7 +69,7 @@ public class PersonV1Translator extends TranslatorV2<PersonV1, Contributor, Pers
     }
 
     @Override
-    public Contributor translate(PersonV1 person, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
+    public Contributor translate(PersonV1 person, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Contributor c = new Contributor();
         c.setId(person.getIdentifier());
         c.setIdentifier(Arrays.asList(c.getId(), String.format("Contributor/%s", person.getIdentifier())));

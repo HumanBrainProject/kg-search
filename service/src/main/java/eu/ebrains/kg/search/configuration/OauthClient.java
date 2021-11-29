@@ -23,20 +23,14 @@
 
 package eu.ebrains.kg.search.configuration;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.security.oauth2.client.AuthorizedClientServiceOAuth2AuthorizedClientManager;
@@ -47,40 +41,19 @@ import org.springframework.security.oauth2.client.web.reactive.function.client.S
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.netty.http.client.HttpClient;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Configuration
 public class OauthClient {
 
     private final ObjectMapper objectMapper;
-    public static ThreadLocal<Map<Integer, List<String>>> ERROR_REPORTING_THREAD_LOCAL = new ThreadLocal<>();
-
 
     public OauthClient(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
         this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        this.objectMapper.addHandler(new DeserializationProblemHandler() {
-            @Override
-            public Object handleUnexpectedToken(DeserializationContext ctxt, JavaType targetType, JsonToken t, JsonParser p, String failureMsg) throws IOException {
-                final int rootObjectIndex = p.getParsingContext().pathAsPointer().tail().getMatchingIndex();
-                final String path = p.getParsingContext().pathAsPointer().tail().tail().toString();
-                if(ERROR_REPORTING_THREAD_LOCAL.get()==null){
-                    ERROR_REPORTING_THREAD_LOCAL.set(new HashMap<>());
-                }
-                final String error = String.format("Was not able to parse %s - target type is %s", path, targetType.getTypeName());
-                logger.error(error);
-                ERROR_REPORTING_THREAD_LOCAL.get().computeIfAbsent(rootObjectIndex, k -> new ArrayList<>());
-                ERROR_REPORTING_THREAD_LOCAL.get().get(rootObjectIndex).add(error);
-                return null;
-            }
-        });
+        this.objectMapper.addHandler(new GracefulDeserializationProblemHandler());
         this.exchangeStrategies = ExchangeStrategies.builder()
                 .codecs(configurer -> {
                     configurer.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(objectMapper));
@@ -89,10 +62,6 @@ public class OauthClient {
                 }).build();
     }
 
-
-//    private final ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
-//            .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1000000)).build();
-//
     private final ExchangeStrategies exchangeStrategies;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

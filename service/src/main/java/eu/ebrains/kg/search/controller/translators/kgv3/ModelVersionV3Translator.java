@@ -33,6 +33,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetE
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
+import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -77,7 +78,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
     }
 
 
-    public ModelVersion translate(ModelVersionV3 modelVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) {
+    public ModelVersion translate(ModelVersionV3 modelVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         ModelVersion m = new ModelVersion();
         ModelVersionV3.ModelVersions model = modelVersion.getModel();
         m.setVersion(modelVersion.getVersion());

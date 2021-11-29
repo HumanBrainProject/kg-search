@@ -28,10 +28,12 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
+import eu.ebrains.kg.search.utils.TranslationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -53,25 +55,39 @@ public class TranslationController {
         final ResultsOfKG<Source> instanceResults = kg.executeQuery(translator.getResultType(), dataStage, queryId, from, size);
         Stats stats = getStats(instanceResults, from);
         logger.info(String.format("Queried %d %s (%s)", stats.getPageSize(), translator.getSourceType().getSimpleName(), stats.getInfo()));
-        List<Target> instances = instanceResults.getData().stream().map(s -> translator.translate(s, dataStage, false, doiCitationFormatter)).filter(Objects::nonNull).collect(Collectors.toList());
+        List<Target> instances = instanceResults.getData().stream().map(s -> {
+                    try {
+                        return translator.translate(s, dataStage, false, doiCitationFormatter);
+                    } catch (TranslationException e) {
+                        if(instanceResults.getErrors().get(e.getIdentifier())!=null){
+                            instanceResults.getErrors().get(e.getIdentifier()).add(e.getMessage());
+                        }
+                        else{
+                            List<String> errors = new ArrayList<>();
+                            errors.add(e.getMessage());
+                            instanceResults.getErrors().put(e.getIdentifier(), errors);
+                        }
+                        return null;
+                    }
+                }
+        ).filter(Objects::nonNull).collect(Collectors.toList());
         TargetInstancesResult<Target> result = new TargetInstancesResult<>();
         result.setTargetInstances(instances);
         result.setFrom(instanceResults.getFrom());
         result.setSize(instanceResults.getSize());
         result.setTotal(instanceResults.getTotal());
-        if(instanceResults.getErrors()!=null){
+        if (instanceResults.getErrors() != null) {
             result.setErrors(instanceResults.getErrors());
         }
         return result;
     }
 
-    public <Source, Target extends TargetInstance> Target translateToTargetInstanceForLiveMode(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, String id, boolean useSourceType) {
+    public <Source, Target extends TargetInstance> Target translateToTargetInstanceForLiveMode(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, String id, boolean useSourceType) throws TranslationException {
         logger.info(String.format("Starting to query id %s from %s for live mode", id, translator.getSourceType().getSimpleName()));
         Source source;
-        if(useSourceType) {
-           source = kg.executeQueryForInstance(translator.getSourceType(), dataStage, queryId, id, false);
-        }
-        else{
+        if (useSourceType) {
+            source = kg.executeQueryForInstance(translator.getSourceType(), dataStage, queryId, id, false);
+        } else {
             final ResultsOfKG<Source> resultsOfKG = kg.executeQueryForInstance(translator.getResultType(), dataStage, queryId, id, false);
             if (resultsOfKG.getData() != null) {
                 if (resultsOfKG.getData().isEmpty()) {

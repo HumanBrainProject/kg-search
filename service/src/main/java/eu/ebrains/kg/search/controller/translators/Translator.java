@@ -31,6 +31,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRefForResea
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
+import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -43,7 +44,7 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
     public static final String fileProxy = ""; //TODO: Should that be changed ?
 //    public static final String fileProxy = "https://kg.ebrains.eu";
 
-    public abstract Target translate(Source source, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter);
+    public abstract Target translate(Source source, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException;
 
     public abstract Class<Source> getSourceType();
 
