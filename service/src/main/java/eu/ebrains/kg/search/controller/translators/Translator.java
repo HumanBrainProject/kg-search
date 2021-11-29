@@ -59,7 +59,12 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
         final String simpleName = getClass().getSimpleName();
         return StringUtils.uncapitalize(simpleName.substring(0, simpleName.indexOf("V3")));
     }
-
+    protected Value<Boolean> value(Boolean v){
+        if(v!=null){
+            return new Value<>(v);
+        }
+        return null;
+    }
 
     protected Value<String> value(String v){
         if(StringUtils.isNotBlank(v)){

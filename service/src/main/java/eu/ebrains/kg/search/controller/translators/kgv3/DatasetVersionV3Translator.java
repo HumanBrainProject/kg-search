@@ -160,9 +160,8 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if (!CollectionUtils.isEmpty(versions) && versions.size() > 1) {
             d.setVersion(datasetVersion.getVersion());
             List<Version> sortedVersions = Helpers.sort(versions);
-            List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
-            references.add(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), "All versions"));
-            d.setVersions(references);
+            d.setVersions(sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList()));
+            d.setAllVersionRef(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), "All versions"));
             // if versions cannot be sorted (sortedVersions == versions) we flag it as searchable
             d.setSearchable(sortedVersions == versions || sortedVersions.get(0).getId().equals(datasetVersion.getId()));
         } else {
@@ -205,6 +204,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             if (StringUtils.isNotBlank(citation)) {
                 d.setCitation(value(String.format("%s [DOI: %s](%s)", citation, doiWithoutPrefix, doi)));
             } else {
+                //TODO resolve by service
                 d.setCitation(value(String.format("[DOI: %s](%s)", doiWithoutPrefix, doi)));
             }
         } else if (StringUtils.isNotBlank(citation)) {
@@ -284,9 +284,18 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationDOI(), datasetVersion.getFullDocumentationDOI()));
         }
 
-        final List<String> galleryElements = specialFiles.stream().filter(s -> s.getRoles().contains("https://openminds.ebrains.eu/instances/fileUsageRole/preview") || s.getRoles().contains("https://openminds.ebrains.eu/instances/fileUsageRole/screenshot")).map(DatasetVersionV3.File::getIri).collect(Collectors.toList());
-        if(!galleryElements.isEmpty()){
-            d.setGallery(value(galleryElements));
+        final List<DatasetVersion.PreviewObject> previewObjects = specialFiles.stream().filter(s -> s.getRoles().contains("https://openminds.ebrains.eu/instances/fileUsageRole/preview") || s.getRoles().contains("https://openminds.ebrains.eu/instances/fileUsageRole/screenshot")).map(f -> {
+            DatasetVersion.PreviewObject o  = new DatasetVersion.PreviewObject();
+            o.setUrl(value(f.getIri()));
+            o.setValue(o.getValue());
+            o.setPreviewUrl(value(f.getIri()));
+            o.setThumbnailUrl(value(f.getIri()));
+            //TODO make this more reliable
+            o.setIsAnimated(value(f.getIri().endsWith(".mp4")));
+            return o;
+        }).collect(Collectors.toList());
+        if(!previewObjects.isEmpty()){
+            d.setPreviewObjects(previewObjects);
         }
 
         d.setStudiedBrainRegion(refVersion(datasetVersion.getParcellationEntityFromStudyTarget()));
