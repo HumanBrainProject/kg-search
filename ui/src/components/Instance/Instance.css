@@ -24,11 +24,10 @@
 .kgs-instance {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: max-content max-content max-content max-content max-content;
+    grid-template-rows: max-content max-content max-content max-content;
     grid-template-areas:
         "header"
         "menu"
-        "info"
         "body"
         "footer";
     position: relative;
@@ -45,22 +44,17 @@
 }
 
 .kgs-instance.kgs-outdated {
-    grid-template-rows: max-content max-content max-content max-content max-content max-content;
+    grid-template-rows: max-content max-content max-content max-content max-content;
     grid-template-areas:
         "header"
         "outdated"
         "menu"
-        "info"
         "body"
         "footer";
 }
 
 .kgs-outdated-alert {
     grid-area: outdated;
-}
-
-.kgs-instance-info {
-    grid-area: info;
 }
 
 .kgs-outdated-alert .alert {
@@ -86,22 +80,20 @@ button.kgs-instance-link {
 
     .kgs-instance {
         grid-template-columns: 250px 1fr;
-        grid-template-rows: max-content max-content 1fr max-content;
+        grid-template-rows: max-content 1fr max-content;
         grid-template-areas: 
             "header header"
             "menu body"
-            "info body"
             "footer footer";
     }
 
     .kgs-instance.kgs-outdated {
         grid-template-columns: 250px 1fr;
-        grid-template-rows: max-content max-content max-content 1fr max-content;
+        grid-template-rows: max-content max-content 1fr max-content;
         grid-template-areas: 
             "header header"
             "outdated outdated"
             "menu body"
-            "info body"
             "footer footer";
     }
 }

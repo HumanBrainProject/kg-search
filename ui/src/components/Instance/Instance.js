@@ -31,6 +31,7 @@ import Tabs from "../Tabs/Tabs";
 
 import "./Instance.css";
 import "./Fields.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUnknownData, header, groups, NavigationComponent, ImagePopupComponent, TermsShortNoticeComponent, searchPage, fetch, isOutdated, latestVersion, allVersions }) => {
@@ -67,20 +68,19 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
   return (
     <div className={`kgs-instance ${isOutdated?"kgs-outdated":""}`} data-type={type}>
       <Header header={header} group={group} path={path} fetch={fetch} NavigationComponent={NavigationComponent} searchPage={searchPage} onVersionChange={onVersionChange} />
-      {isOutdated &&
-      <div className="kgs-outdated-alert" >
-        <div className="alert alert-info" role="alert">
-          {type} {header.version} is outdated. Latest version is <button className="kgs-instance-link" onClick={() => onVersionChange(latestVersion.value)}><b>{latestVersion.label}</b></button>.
-        </div>
-      </div>}
+      {isOutdated && allVersions ? (
+        <div className="kgs-outdated-alert" >
+          <div className="alert alert-secondary" role="alert">
+            <FontAwesomeIcon icon="info-circle"/>&nbsp;This is not the newest version of this {type.toLowerCase()}.
+            <button className="kgs-instance-link" onClick={() => onVersionChange(latestVersion.value)}>
+              Visit {latestVersion.label}
+            </button> for the latest version or
+            <button className="kgs-instance-link" onClick={() => onVersionChange(allVersions.reference)}>
+              get an overview of all available versions
+            </button>.
+          </div>
+        </div>):null}
       <Tabs instanceId={id} groups={groups} />
-      <div className="kgs-instance-info">
-        {allVersions &&
-        <div className="kgs-all-versions">
-          You can view all the versions <button className="kgs-instance-link" onClick={() => onVersionChange(allVersions.reference)}>here</button>.
-        </div>
-        }
-      </div>
       <strong className="kgs-instance-disclaimer">Disclaimer:
           Please alert us at <a href="mailto:curation-support@ebrains.eu">curation-support@ebrains.eu</a> for errors or quality concerns regarding the dataset, so we can forward this information to the Data Custodian responsible.</strong>
       <TermsShortNoticeComponent />

@@ -51,9 +51,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
 
     public static String createHDGMessage(String id, boolean html){
         return html ?
-                String.format("This data requires you to explicitly <b><a href=\"https://data-proxy.ebrains.eu/datasets/%s\" target=\"_blank\">request access</a></b> with your EBRAINS account. If you don't have such an account yet, please <b><a href=\"https://ebrains.eu/register/\" target=\"_blank\">register</a></b>.", id)
+                String.format("This data requires you to explicitly <a href=\"https://data-proxy.ebrains.eu/datasets/%s\" target=\"_blank\">request access</a> with your EBRAINS account. If you don't have such an account yet, please <a href=\"https://ebrains.eu/register/\" target=\"_blank\">register</a>.", id)
                 :
-                String.format("This data requires you to explicitly **[request access](https://data-proxy.ebrains.eu/datasets/%s)** with your EBRAINS account. If you don't have such an account yet, please **[register](https://ebrains.eu/register/)**.", id);
+                String.format("This data requires you to explicitly [request access](https://data-proxy.ebrains.eu/datasets/%s) with your EBRAINS account. If you don't have such an account yet, please [register](https://ebrains.eu/register/).", id);
     }
 
     //Internal

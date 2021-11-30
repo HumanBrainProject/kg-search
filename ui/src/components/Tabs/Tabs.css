@@ -44,7 +44,7 @@
     background: none;
     border: 0;
     border-bottom: 3px solid transparent;
-    color: #999;
+    color: var(--color-7);
     font-size: var(--font-size-small);
     font-weight: bold;
     text-align: left;
