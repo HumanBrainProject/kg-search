@@ -28,21 +28,14 @@ import { Tags } from "../../Tags/Tags";
 import { Field } from "../../Field/Field";
 import { FieldsPanel } from "../../Field/FieldsPanel";
 import { VersionSelector } from "../../VersionSelector/VersionSelector";
-import { history } from "../../../store";
 
 import "./Header.css";
 
-export const Header = ({header, group, path, fetch, NavigationComponent, searchPage}) => {
-
-  const onVersionChange = version => {
-    if(searchPage) {
-      fetch(group, version, true);
-    } else {
-      history.push(`${path}${version}${group && group !== "public"?("?group=" + group ):""}`);
-    }
-  };
+export const Header = ({header, NavigationComponent, onVersionChange}) => {
 
   const tags = getTags(header);
+
+  const handleVersionChange = version => onVersionChange(version);
 
   return (
     <div className="kgs-instance__header">
@@ -51,7 +44,7 @@ export const Header = ({header, group, path, fetch, NavigationComponent, searchP
         <Tags tags={tags} />
         <div className="kgs-instance__header_title">
           <Field {...header.title} />
-          <VersionSelector version={header.version} versions={header.versions} onChange={onVersionChange} />
+          <VersionSelector version={header.version} versions={header.versions} onChange={handleVersionChange} />
         </div>
         <FieldsPanel fields={header.fields} fieldComponent={Field} />
       </div>

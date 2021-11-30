@@ -24,6 +24,7 @@
 .kgs-version_selector {
     display: inline-block;
     width: auto;
+    margin-left: 5px;
 }
 
 .kgs-version_selector .kgs-select {

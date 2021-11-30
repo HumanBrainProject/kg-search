@@ -221,6 +221,8 @@ export const mapStateToProps = (state, props) => {
     label: v.value?v.value:"Current",
     value: v.reference
   }));
+  const latestVersion = versions && versions.length && version && versions[0];
+  const allVersions = source && source.allVersionRef;
   return {
     id: data && data._id,
     type: type,
@@ -236,6 +238,9 @@ export const mapStateToProps = (state, props) => {
       version: version,
       versions: versions
     },
+    latestVersion: latestVersion,
+    isOutdated: latestVersion && latestVersion.label !== version,
+    allVersions: allVersions,
     groups: getFieldsByGroups(group, type, source, mapping)
   };
 };
