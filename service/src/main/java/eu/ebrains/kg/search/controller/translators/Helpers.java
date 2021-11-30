@@ -103,7 +103,6 @@ public class Helpers {
         if (CollectionUtils.isEmpty(versions)) {
             return unsortedVersions;
         }
-        Collections.reverse(versions);
         if (versions.size() != unsortedVersions.size()) {
             for (Version alt : unsortedVersions) {
                 if (!versions.contains(alt)) {

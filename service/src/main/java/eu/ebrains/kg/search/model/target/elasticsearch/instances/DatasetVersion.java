@@ -79,6 +79,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
 
     private String version;
 
+    @FieldInfo(ignoreForSearch = true, visible = false)
     private TargetInternalReference allVersionRef;
 
     private List<TargetInternalReference> versions;
