@@ -58,7 +58,7 @@ public class Contributor implements TargetInstance {
     @FieldInfo(layout = "header")
     private Value<String> editorId;
 
-    @FieldInfo(label = "Custodian of", layout = "Custodian of", labelHidden = true, overview = true, overviewMaxDisplay = 5)
+    @FieldInfo(label = "Custodian of datasets", layout = "Custodian of datasets", labelHidden = true, overview = true, overviewMaxDisplay = 5)
     private List<TargetInternalReference> custodianOf;
 
     @FieldInfo(label = "Custodian of models", layout = "Custodian of models", labelHidden = true, overview = true, overviewMaxDisplay = 5)
@@ -67,7 +67,7 @@ public class Contributor implements TargetInstance {
     @FieldInfo(label = "Publications", markdown = true, facet = FieldInfo.Facet.EXISTS, layout = "Publications", labelHidden = true)
     private List<Value<String>> publications;
 
-    @FieldInfo(label = "Contributions", overview = true, facet = FieldInfo.Facet.EXISTS, type = FieldInfo.Type.TEXT, layout = "Contributions", labelHidden = true, overviewMaxDisplay = 5)
+    @FieldInfo(label = "Dataset contributions", overview = true, facet = FieldInfo.Facet.EXISTS, type = FieldInfo.Type.TEXT, layout = "Dataset contributions", labelHidden = true, overviewMaxDisplay = 5)
     private List<TargetInternalReference> contributions;
 
     @FieldInfo(label = "Model contributions", facet = FieldInfo.Facet.EXISTS, type = FieldInfo.Type.TEXT, layout = "Model contributions", labelHidden = true, overviewMaxDisplay = 5)
