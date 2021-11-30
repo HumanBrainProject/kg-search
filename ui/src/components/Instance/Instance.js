@@ -73,10 +73,10 @@ export const Instance = ({ id, type, group, path, defaultGroup, hasNoData, hasUn
           <div className="alert alert-secondary" role="alert">
             <FontAwesomeIcon icon="info-circle"/>&nbsp;This is not the newest version of this {type.toLowerCase()}.
             <button className="kgs-instance-link" onClick={() => onVersionChange(latestVersion.value)}>
-              Visit {latestVersion.label}
+            &nbsp;Visit {latestVersion.label}
             </button> for the latest version or
             <button className="kgs-instance-link" onClick={() => onVersionChange(allVersions.reference)}>
-              get an overview of all available versions
+            &nbsp;get an overview of all available versions
             </button>.
           </div>
         </div>):null}
