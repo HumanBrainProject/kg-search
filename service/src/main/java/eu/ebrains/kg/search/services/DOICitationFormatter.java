@@ -22,6 +22,7 @@ public class DOICitationFormatter {
 
 
     @Cacheable(value="doiCitation",  unless="#result == null")
+    //TODO permanent caching
     public String getDOICitation(String doi){
         try{
             final String value = webClient.get().uri(doi).header("Accept", "text/x-bibliography; style=european-journal-of-neuroscience").retrieve().bodyToMono(String.class).block();

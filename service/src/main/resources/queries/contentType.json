@@ -22,15 +22,18 @@
   "structure": [
     {
       "propertyName": "query:id",
-      "path": "@id"
+      "path": "@id",
+      "required": true
     },
     {
       "propertyName": "query:identifier",
-      "path": "http://schema.org/identifier"
+      "path": "http://schema.org/identifier",
+      "required": true
     },
     {
       "propertyName": "query:name",
-      "path": "https://openminds.ebrains.eu/vocab/name"
+      "path": "https://openminds.ebrains.eu/vocab/name",
+      "required": true
     },
     {
       "propertyName": "query:description",
@@ -139,7 +142,8 @@
               "reverse": true
             },
             "https://openminds.ebrains.eu/vocab/fullName"
-          ]
+          ],
+          "singleValue": "FIRST"
         }
       ]
     }

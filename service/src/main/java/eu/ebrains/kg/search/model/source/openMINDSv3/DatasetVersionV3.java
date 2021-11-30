@@ -42,14 +42,17 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private String fullName;
     private List<String> homepage;
     private List<String> keyword;
+    private List<String> ethicsAssessment;
     private String version;
     private String versionInnovation;
     private Date releaseDate;
+    private List<String> relatedPublications;
     private ExternalRef license;
     private List<PersonOrOrganizationRef> author;
     private List<FullNameRef> projects;
     private List<PersonOrOrganizationRef> custodians;
     private List<SubjectOrSubjectGroup> subjects;
+    private List<TissueSampleOrTissueSampleCollection> tissueSamples;
     private DatasetVersions dataset;
     private String fullDocumentationUrl;
     private String fullDocumentationDOI;
@@ -119,10 +122,58 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
 
     @Getter
     @Setter
+    public static class AnatomicalLocation extends FullNameRef{
+        private String fallbackName;
+        private List<ParcellationTerminology> parcellationTerminology;
+        private List<DataLocation> dataLocation;
+        private List<ParcellationEntity> parcellationEntity;
+    }
+
+    @Getter
+    @Setter
+    public static class DataLocation{
+        private String openDataIn;
+        private FullNameRef service;
+    }
+
+    @Getter
+    @Setter
+    public static class ParcellationTerminology extends FullNameRef{
+        private List<FullNameRef> brainAtlas;
+    }
+
+    @Getter
+    @Setter
+    public static class ParcellationEntity{
+        private List<ParcellationTerminology> parcellationTerminology;
+    }
+
+
+    @Getter
+    @Setter
+    public static class TissueSampleOrTissueSampleCollection {
+        private String id;
+        private String internalIdentifier;
+        private Integer quantity;
+        private List<FullNameRef> strain;
+        private List<FullNameRef> species;
+        private List<SpecimenOrSpecimenGroupState> states;
+        private List<FullNameRef> origin;
+        private List<FullNameRef> biologicalSex;
+        private List<FullNameRef> laterality;
+        private List<AnatomicalLocation> anatomicalLocation;
+        private List<TissueSampleOrTissueSampleCollection> children;
+
+    }
+
+
+    @Getter
+    @Setter
     public static class SubjectOrSubjectGroup {
         private String id;
         private String internalIdentifier;
         private Integer quantity;
+        private List<FullNameRef> strain;
         private List<FullNameRef> species;
         private List<SpecimenOrSpecimenGroupState> states;
         private List<FullNameRef> biologicalSex;
@@ -133,6 +184,9 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
             if(!CollectionUtils.isEmpty(children)) {
                 if(quantity==null){
                     setQuantity(children.size());
+                }
+                if(CollectionUtils.isEmpty(strain)){
+                    setStrain(children.stream().map(SubjectOrSubjectGroup::getStrain).flatMap(Collection::stream).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
                 }
                 if(CollectionUtils.isEmpty(species)){
                     setSpecies(children.stream().map(SubjectOrSubjectGroup::getSpecies).flatMap(Collection::stream).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
@@ -283,6 +337,13 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
         private List<PersonOrOrganizationRef> custodians;
     }
 
+
+    @Getter
+    @Setter
+    public static class ParcellationEntityFromStudyTarget extends FullNameRefForResearchProductVersion{
+        private List<FullNameRefForResearchProductVersion> brainAtlasVersionForParcellationTerminologyVersion;
+        private List<FullNameRef> brainAtlasForParcellationEntity;
+    }
 }
 
 

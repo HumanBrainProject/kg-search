@@ -16,7 +16,9 @@
     }
   },
   "meta": {
-    "type": "https://openminds.ebrains.eu/core/ContentType"
+    "name": "${type} search query",
+    "responseVocab": "https://schema.hbp.eu/myQuery/",
+    "type": "${type}"
   },
   "structure": [
     {

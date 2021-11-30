@@ -101,6 +101,10 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
     }
 
+    private boolean isExternalLink(DatasetVersionV3.FileRepository repository){
+        return repository!=null && repository.getIri()!=null && !(repository.getIri().contains("object.cscs.ch") || repository.getIri().contains("data-proxy.ebrains.eu"));
+    }
+
     public DatasetVersion translate(DatasetVersionV3 datasetVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         DatasetVersion d = new DatasetVersion();
         DatasetVersionV3.DatasetVersions dataset = datasetVersion.getDataset();
@@ -122,9 +126,18 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                     break;
                 default:
                     if (datasetVersion.getFileRepository() != null) {
-                        //TODO handle indexed mode
-                        if (liveMode) {
-                            d.setFilesAsyncUrl(String.format("/api/repositories/%s/files/live", IdUtils.getUUID(datasetVersion.getFileRepository().getId())));
+                        if(isExternalLink(datasetVersion.getFileRepository())){
+                            d.setExternalDatalink(Collections.singletonList(new TargetExternalReference(datasetVersion.getFileRepository().getIri(), datasetVersion.getFileRepository().getIri())));
+                        }
+                        else{
+                            String endpoint;
+                            if(liveMode){
+                                endpoint = String.format("/api/repositories/%s/files/live", IdUtils.getUUID(datasetVersion.getFileRepository().getId()));
+                            }
+                            else{
+                                endpoint = String.format("/api/groups/%s/repositories/%s/files", dataStage == DataStage.IN_PROGRESS ? "curated" : "public", IdUtils.getUUID(datasetVersion.getFileRepository().getId()));
+                            }
+                            d.setFilesAsyncUrl(endpoint);
                         }
                     }
             }
@@ -132,12 +145,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
 
         d.setId(datasetVersion.getUUID());
-        //TODO d.setExternalDatalink
-        //d.setFiles -> replaced with d.setFileRepository
-
-
-
-
 
 
         if (datasetVersion.getExperimentalApproach() != null) {
@@ -204,16 +211,13 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             if (StringUtils.isNotBlank(citation)) {
                 d.setCitation(value(String.format("%s [DOI: %s](%s)", citation, doiWithoutPrefix, doi)));
             } else {
-                //TODO resolve by service
-                d.setCitation(value(String.format("[DOI: %s](%s)", doiWithoutPrefix, doi)));
+                d.setCitation(value(Helpers.getFormattedDOI(doiCitationFormatter, doi)));
             }
         } else if (StringUtils.isNotBlank(citation)) {
             d.setCitation(value(citation));
         }
-
         d.setLicenseInfo(link(datasetVersion.getLicense()));
         d.setProjects(ref(datasetVersion.getProjects()));
-
 
         List<PersonOrOrganizationRef> custodians = datasetVersion.getCustodians();
         if (CollectionUtils.isEmpty(custodians) && datasetVersion.getDataset() != null) {
@@ -222,6 +226,10 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
         if (!CollectionUtils.isEmpty(custodians)) {
             d.setCustodians(custodians.stream().map(c -> new TargetInternalReference(IdUtils.getUUID(c.getId()), Helpers.getFullName(c.getFullName(), c.getFamilyName(), c.getGivenName()))).collect(Collectors.toList()));
+        }
+
+        if(!CollectionUtils.isEmpty(datasetVersion.getRelatedPublications())){
+            d.setPublications(datasetVersion.getRelatedPublications().stream().map(p -> Helpers.getFormattedDOI(doiCitationFormatter, p)).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
         }
 
         if (!CollectionUtils.isEmpty(datasetVersion.getKeyword())) {
@@ -254,6 +262,17 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             }
         }
 
+        if(datasetVersion.getEthicsAssessment()!=null){
+            String ethicsAssessment = null;
+            if(datasetVersion.getEthicsAssessment().contains("https://openminds.ebrains.eu/instances/ethicsAssessment/notRequired")){
+                ethicsAssessment = "not-required";
+            }
+            else if (datasetVersion.getEthicsAssessment().contains("https://openminds.ebrains.eu/instances/ethicsAssessment/EUCompliantNonSensitive") || datasetVersion.getEthicsAssessment().contains("https://openminds.ebrains.eu/instances/ethicsAssessment/EUCompliantSensitive")){
+                ethicsAssessment = "EU-compliant";
+            }
+            d.setEthicsAssessment(value(ethicsAssessment));
+        }
+
 
         final List<DatasetVersionV3.File> specialFiles = datasetVersion.getSpecialFiles();
         final List<DatasetVersionV3.File> dataDescriptors = specialFiles.stream().filter(s -> s.getRoles().contains("https://openminds.ebrains.eu/instances/fileUsageRole/dataDescriptor")).collect(Collectors.toList());
@@ -280,7 +299,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationUrl(), datasetVersion.getFullDocumentationUrl()));
         }
         else if(datasetVersion.getFullDocumentationDOI()!=null){
-            //TODO resolve the DOI
             d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationDOI(), datasetVersion.getFullDocumentationDOI()));
         }
 
@@ -308,6 +326,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         subj.setSubjectName(new TargetInternalReference(IdUtils.getUUID(s.getId()), s.getInternalIdentifier()));
         subj.setNumberOfSubjects(value(s.getQuantity()!=null ? String.valueOf(s.getQuantity()) : null));
         subj.setSpecies(ref(s.getSpecies()));
+        subj.setStrain(ref(s.getStrain()));
         subj.setSex(ref(s.getBiologicalSex()));
         List<DatasetVersionV3.SpecimenOrSpecimenGroupState> states = s.getStates();
         //TODO sort states

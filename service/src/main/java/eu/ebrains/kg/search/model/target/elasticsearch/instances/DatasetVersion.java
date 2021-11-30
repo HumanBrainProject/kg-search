@@ -111,7 +111,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "DOI", hint = "This is the dataset DOI you must cite if you reuse this data in a way that leads to a publication")
     private Value<String> doi;
 
-    //TODO what about HDG terms of use?
+    //HDG terms of use are going to be a license too
     @JsonProperty("license_info")
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)
     private TargetExternalReference licenseInfo;
@@ -128,7 +128,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "New in this version", markdown = true, boost = 2)
     private Value<String> newInThisVersion;
 
-    //TODO populate
+    @FieldInfo(label = "Ethics assessment")
+    private Value<String> ethicsAssessment;
+
     @FieldInfo(labelHidden = true, boost = 2)
     private List<PreviewObject> previewObjects;
 
@@ -206,13 +208,11 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     private String filesAsyncUrl;
 
     @JsonProperty("external_datalink")
-    //TODO set for DatasetV3
     @FieldInfo(layout = "Get data", label = "Data download")
     private List<TargetExternalReference> externalDatalink;
 
     //Publications
     @FieldInfo(layout = "Publications", markdown = true, labelHidden = true)
-    //TODO set for DatasetV3
     private List<Value<String>> publications;
 
 
@@ -243,8 +243,6 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     //TODO implement for DatasetV3
     @FieldInfo(layout = "TissueSample", hint = "List of tissue samples that are a part of this dataset.", isTable = true)
     private List<Children<SubjectGroupOrSingleSubject>> tissueSamples;
-
-
 
 
     @Getter
@@ -326,7 +324,6 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
         private List<TargetInternalReference> sex;
 
         @FieldInfo(label = "Strain")
-        //TODO implement from DatasetV3
         private List<TargetInternalReference> strain;
 
         @FieldInfo(label = "Age")

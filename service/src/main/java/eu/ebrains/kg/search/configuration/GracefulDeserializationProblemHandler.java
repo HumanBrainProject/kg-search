@@ -35,6 +35,13 @@ public class GracefulDeserializationProblemHandler extends DeserializationProble
         logger.error(error);
         ERROR_REPORTING_THREAD_LOCAL.get().computeIfAbsent(rootObjectIndex, k -> new ArrayList<>());
         ERROR_REPORTING_THREAD_LOCAL.get().get(rootObjectIndex).add(error);
+        //We need to make sure we jump over to the next step, this is why we read the value as a tree
+        try{
+            p.readValueAsTree();
+        }
+        catch (IOException e){
+            logger.error("Was not able to read", e);
+        }
     }
 
     @Override
