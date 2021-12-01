@@ -32,6 +32,15 @@
     padding-top: 0.55rem;
 }
 
+.kgs-field__table th > .kgs-field .field-value button[role="link"],
+.kgs-field__table td > .kgs-field .field-value button[role="link"] {
+    line-height: initial;
+}
+
+.kgs-field__table .table tbody th {
+    padding-bottom: 0;
+}
+
 .kgs-field__table .table th:first-child {
     white-space:nowrap;
 }
@@ -44,6 +53,9 @@
     margin-left: 5px;
 }
 
+.kgs-field__table .table thead th {
+    border-bottom: 0;
+}
 
 .kgs-field__table .table ul {
     list-style: none;
@@ -68,8 +80,21 @@
     padding-top: 0.20rem;
 }
 
+.kgs-field__table .table tbody td {
+    padding-top: 0;
+}
+
+
+.kgs-field__table .table td > .kgs-field {
+    margin-bottom: 0;
+}
+
 .kgs-field__table .table td:first-child {
     padding-left: 60px;
+}
+
+.kgs-field__table .table td.kg-cell_level_3:first-child {
+    padding-left: 80px;
 }
 
 .kgs-field__table .table tr.row-hidden {
