@@ -28,6 +28,7 @@ import eu.ebrains.kg.search.controller.sitemap.SitemapController;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.ErrorReportResult;
 import eu.ebrains.kg.search.model.TranslatorModel;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -45,11 +46,17 @@ public class Indexing {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final IndexingController indexingController;
     private final SitemapController sitemapController;
+    private final DOICitationFormatter doiCitationFormatter;
 
-    public Indexing(IndexingController indexingController, SitemapController sitemapController) {
+    public Indexing(IndexingController indexingController, SitemapController sitemapController, DOICitationFormatter doiCitationFormatter) {
         this.indexingController = indexingController;
         this.sitemapController = sitemapController;
+        this.doiCitationFormatter = doiCitationFormatter;
+    }
 
+    @PostMapping("/doiCitations")
+    public void refreshDOICitation(@RequestParam("doi") String doi){
+        this.doiCitationFormatter.refreshDOICitation(doi);
     }
 
     @PostMapping
@@ -61,7 +68,9 @@ public class Indexing {
                 final List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, dataStage);
                 return handleErrorReportResultByTargetType(m, errorsBySource);
             }).filter(Objects::nonNull).collect(Collectors.toList());
-            sitemapController.updateSitemapCache(dataStage);
+            if(dataStage==DataStage.RELEASED) {
+                sitemapController.updateSitemapCache();
+            }
             return handleErrorReportResult(errorsByTarget);
         } catch (WebClientResponseException e) {
             logger.info("Unsuccessful indexing", e);
@@ -77,7 +86,9 @@ public class Indexing {
                 final List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource =  indexingController.populateIndex(m, dataStage);
                 return handleErrorReportResultByTargetType(m, errorsBySource);
             }).filter(Objects::nonNull).collect(Collectors.toList());
-            sitemapController.updateSitemapCache(dataStage);
+            if(dataStage==DataStage.RELEASED) {
+                sitemapController.updateSitemapCache();
+            }
             return handleErrorReportResult(errorsByTarget);
         } catch (WebClientResponseException e) {
             logger.info("Unsuccessful indexing", e);
@@ -107,7 +118,9 @@ public class Indexing {
                 final List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, dataStage);
                 return handleErrorReportResultByTargetType(m, errorsBySource);
             }).filter(Objects::nonNull).collect(Collectors.toList());
-            sitemapController.updateSitemapCache(dataStage);
+            if(dataStage==DataStage.RELEASED) {
+                sitemapController.updateSitemapCache();
+            }
             return handleErrorReportResult(errorsByTarget);
         } catch (WebClientResponseException e) {
             logger.info("Unsuccessful incremental indexing", e);
@@ -122,7 +135,9 @@ public class Indexing {
                 final List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource =  indexingController.populateIndex(m, dataStage);
                 return handleErrorReportResultByTargetType(m, errorsBySource);
             }).filter(Objects::nonNull).collect(Collectors.toList());
-            sitemapController.updateSitemapCache(dataStage);
+            if(dataStage == DataStage.RELEASED) {
+                sitemapController.updateSitemapCache();
+            }
             return handleErrorReportResult(errorsByTarget);
         } catch (WebClientResponseException e) {
             logger.info("Unsuccessful incremental indexing", e);

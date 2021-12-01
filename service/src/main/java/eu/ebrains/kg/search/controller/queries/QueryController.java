@@ -48,7 +48,6 @@ public class QueryController {
         logger.info("Queries successfully uploaded!");
     }
 
-
     private String loadQuery(String fileName) throws IOException {
         return IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream(String.format("/queries/%s.json", fileName))), StandardCharsets.UTF_8);
     }

@@ -23,80 +23,33 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
+@Getter
+@Setter
 public class FileV3 extends SourceInstanceV3 {
     private String name;
     private String iri;
     private String fileRepository;
     private Size size;
-    private String format;
     private boolean privateAccess;
+    private Format format;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getIri() {
-        return iri;
-    }
-
-    public void setIri(String iri) {
-        this.iri = iri;
-    }
-
-    public Size getSize() {
-        return size;
-    }
-
-    public void setSize(Size size) {
-        this.size = size;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
-    }
-
-    public String getFileRepository() {
-        return fileRepository;
-    }
-
-    public void setFileRepository(String fileRepository) {
-        this.fileRepository = fileRepository;
-    }
-
-    public boolean isPrivateAccess() {
-        return privateAccess;
-    }
-
-    public void setPrivateAccess(boolean privateAccess) {
-        this.privateAccess = privateAccess;
-    }
-
+    @Getter
+    @Setter
     public static class Size {
         private int value;
         private String unit;
-
-        public int getValue() {
-            return value;
-        }
-
-        public void setValue(int value) {
-            this.value = value;
-        }
-
-        public String getUnit() {
-            return unit;
-        }
-
-        public void setUnit(String unit) {
-            this.unit = unit;
-        }
     }
+
+    @Getter
+    @Setter
+    public static class Format extends FullNameRef{
+        private List<FullNameRef> inputFormatForSoftware;
+    }
+
 }

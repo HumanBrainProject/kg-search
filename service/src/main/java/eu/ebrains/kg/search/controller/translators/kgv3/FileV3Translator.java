@@ -82,10 +82,10 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
         if(size != null && StringUtils.isNotBlank(size.getUnit())) {
             f.setSize(String.format("%d %s", size.getValue(), size.getUnit()));
         }
-        f.setFormat(file.getFormat());
-        //f.setStaticImageUrl(, false); //TODO: file.getStaticImageUrl()
-        //f.setPreviewUrl(); //TODO: file.getPreviewUrl(), !file.getPreviewAnimated().isEmpty() && file.getPreviewAnimated().get(0))
-        //f.setThumbnailUrl(, false); //TODO: file.getThumbnailUrl()
+        if(file.getFormat()!=null){
+            f.setFormat(ref(file.getFormat()));
+            f.setInputTypeForSoftware(ref(file.getFormat().getInputFormatForSoftware()));
+        }
         return f;
     }
 }

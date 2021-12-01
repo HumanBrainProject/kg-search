@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,8 +23,16 @@ public class DOICitationFormatter {
 
 
     @Cacheable(value="doiCitation",  unless="#result == null")
-    //TODO permanent caching
     public String getDOICitation(String doi){
+       return doGetDOICitation(doi);
+    }
+
+    @CachePut(value="doiCitation",  unless="#result == null")
+    public String refreshDOICitation(String doi){
+        return doGetDOICitation(doi);
+    }
+
+    private String doGetDOICitation(String doi){
         try{
             final String value = webClient.get().uri(doi).header("Accept", "text/x-bibliography; style=european-journal-of-neuroscience").retrieve().bodyToMono(String.class).block();
             return value != null ? value.trim() : null;
@@ -31,12 +40,6 @@ public class DOICitationFormatter {
         catch (WebClientException e){
             return null;
         }
-    }
-
-    @Scheduled(cron="@weekly")
-    @CacheEvict("doiCitation")
-    public void clearDOICitationCache(){
-        logger.info("Clearing DOI citation cache");
     }
 
 }

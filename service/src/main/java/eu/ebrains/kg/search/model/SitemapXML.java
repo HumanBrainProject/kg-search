@@ -27,10 +27,11 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
+import java.io.Serializable;
 import java.util.List;
 
 @JacksonXmlRootElement(localName = "urlset")
-public class SitemapXML {
+public class SitemapXML implements Serializable {
     @JacksonXmlProperty(isAttribute = true)
     private String xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9";
 
@@ -46,7 +47,7 @@ public class SitemapXML {
     }
 
     @JacksonXmlRootElement(localName = "url")
-    public static class Url{
+    public static class Url implements Serializable {
 
         private String loc;
 

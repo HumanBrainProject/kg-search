@@ -32,6 +32,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class UserInfoRepository {
         this.userInfoUrl = userInfoUrl;
     }
 
-    public static class UserInfo{
+    public static class UserInfo implements Serializable {
         private RolesByClient roles;
         private String sub;
 

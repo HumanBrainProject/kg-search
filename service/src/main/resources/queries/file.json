@@ -60,14 +60,6 @@
       ]
     },
     {
-      "propertyName": "query:format",
-      "path": [
-        "https://openminds.ebrains.eu/vocab/format",
-        "https://openminds.ebrains.eu/vocab/name"
-      ],
-      "singleValue": "FIRST"
-    },
-    {
       "propertyName":"query:fileRepository",
       "path":[
         "https://openminds.ebrains.eu/vocab/fileRepository",
@@ -78,6 +70,38 @@
         "parameter": "fileRepositoryId"
       },
       "singleValue": "FIRST"
+    },
+    {
+      "propertyName": "query:format",
+      "path": "https://openminds.ebrains.eu/vocab/format",
+      "singleValue": "FIRST",
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        },
+        {
+          "propertyName": "query:inputFormatForSoftware",
+          "path": {
+            "@id": "https://openminds.ebrains.eu/vocab/inputFormat",
+            "reverse": true
+          },
+          "structure": [
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:fullName",
+              "path": "https://openminds.ebrains.eu/vocab/fullName"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

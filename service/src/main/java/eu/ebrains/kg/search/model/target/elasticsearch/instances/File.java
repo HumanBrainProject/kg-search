@@ -25,51 +25,37 @@ package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
+import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.lang.annotation.Target;
 import java.util.List;
 
+@Getter
+@Setter
 @MetaInfo(name = "File")
 public class File implements TargetInstance {
     @JsonIgnore
     private final Value<String> type = new Value<>("File");
-
     @JsonIgnore
     private String id;
-
     @JsonIgnore
     private List<String> identifier;
-
     private String name;
-
     private String iri;
-
     @ElasticSearchInfo(type = "keyword")
     private String fileRepository;
-
+    @FieldInfo(label = "Size")
     private String size;
-
-    private String format;
-
-    public Value<String> getType() {
-        return type;
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public List<String> getIdentifier() {
-        return identifier;
-    }
+    @FieldInfo(label = "Format")
+    private TargetInternalReference format;
+    @FieldInfo(label = "Software taking this file as input")
+    private List<TargetInternalReference> inputTypeForSoftware;
 
     @Override
     @JsonIgnore
@@ -77,47 +63,4 @@ public class File implements TargetInstance {
         return false;
     }
 
-    public void setIdentifier(List<String> identifier) {
-        this.identifier = identifier;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getIri() {
-        return iri;
-    }
-
-    public void setIri(String iri) {
-        this.iri = iri;
-    }
-
-    public String getFileRepository() {
-        return fileRepository;
-    }
-
-    public void setFileRepository(String fileRepository) {
-        this.fileRepository = fileRepository;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
-    }
 }

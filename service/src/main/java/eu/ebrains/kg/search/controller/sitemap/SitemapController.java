@@ -78,12 +78,9 @@ public class SitemapController {
         return sitemapXML;
     }
 
-    @CachePut(value = "sitemap")
-    public SitemapXML updateSitemapCache(DataStage dataStage) {
-        if (dataStage == DataStage.RELEASED) {
-            return fetchSitemap();
-        }
-        return null;
+    @CachePut(value = "sitemap", unless = "#result == null")
+    public SitemapXML updateSitemapCache() {
+        return fetchSitemap();
     }
 
 }
