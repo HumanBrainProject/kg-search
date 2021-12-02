@@ -109,39 +109,9 @@ public class SearchController {
     }
 
 
-    public ResponseEntity<?> getFilesFromRepoForPublic(String id, String searchAfter, int size, Principal principal) {
+    public ResponseEntity<?> getFilesFromRepo(DataStage stage, String id, String searchAfter, int size) {
         try {
-            String index = ESHelper.getIndexesForDocument(DataStage.RELEASED);
-            ElasticSearchDocument document = esServiceClient.getDocument(index, id);
-            Map<String, Object> source = document.getSource();
-            if (source == null) {
-                return ResponseEntity.notFound().build();
-            } else {
-                Map<String, Object> typeValue = (Map<String, Object>) source.get("type");
-                String type = typeValue != null?((String) typeValue.get("value")):null;
-                if (StringUtils.isEmpty(type) || !type.equals("FileRepository")) {
-                    return ResponseEntity.notFound().build();
-                } else {
-                    String embargo = (String) source.get("embargo");
-                    String useHDG = (String) source.get("useHDG");
-                    if (StringUtils.isNotEmpty(useHDG) || (!isInInProgressRole(principal) && StringUtils.isNotEmpty(embargo))) {
-                        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-                    } else {
-                        String fileIndex = ESHelper.getAutoReleasedIndex(File.class);
-                        ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size);
-                        Map<String, Object> result = formatFilesResponse(filesFromRepo);
-                        return ResponseEntity.ok(result);
-                    }
-                }
-            }
-        } catch (WebClientResponseException e) {
-            return ResponseEntity.status(e.getStatusCode()).build();
-        }
-    }
-
-    public ResponseEntity<?> getFilesFromRepo(String id, String searchAfter, int size) {
-        try {
-            String fileIndex = ESHelper.getAutoReleasedIndex(File.class);
+            String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class);
             ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size);
             Map<String, Object> result = formatFilesResponse(filesFromRepo);
             return ResponseEntity.ok(result);
@@ -150,31 +120,6 @@ public class SearchController {
         }
     }
 
-    public ResponseEntity<?> getFilesFromRepoForInProgress(String id, String searchAfter, int size) {
-        try {
-            String index = ESHelper.getIndexesForDocument(DataStage.IN_PROGRESS);
-            ElasticSearchDocument document = esServiceClient.getDocument(index, id);
-            Map<String, Object> source = document.getSource();
-            if (source == null) {
-                return ResponseEntity.notFound().build();
-            } else {
-                Map<String, Object> typeValue = (Map<String, Object>) source.get("type");
-                String type = typeValue != null?((String) typeValue.get("value")):null;
-                if (StringUtils.isEmpty(type) || !type.equals("FileRepository")) {
-                    return ResponseEntity.notFound().build();
-                } else {
-                    String useHDG = (String) source.get("useHDG");
-                    if (StringUtils.isNotEmpty(useHDG)) {
-                        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-                    } else {
-                        return getFilesFromRepo(id, searchAfter, size);
-                    }
-                }
-            }
-        } catch (WebClientResponseException e) {
-            return ResponseEntity.status(e.getStatusCode()).build();
-        }
-    }
 
     public JsonNode getResult(String payload, DataStage dataStage) throws JsonProcessingException {
         String index = ESHelper.getIndexesForSearch(dataStage);

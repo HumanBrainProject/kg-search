@@ -107,6 +107,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "Contributors", separator = "; ", layout = "header", type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true)
     private List<TargetInternalReference> contributors;
 
+
     //Overview
     @FieldInfo(label = "DOI", hint = "This is the dataset DOI you must cite if you reuse this data in a way that leads to a publication")
     private Value<String> doi;
@@ -198,6 +199,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
 
     @FieldInfo(layout = "Get data", labelHidden = true)
     private Value<String> embargo;
+
+    @FieldInfo(layout = "Get data", termsOfUse = true)
+    private TargetExternalReference downloadAsZip;
 
     /**
      * Use filesAsyncUrl for openMINDS instead

@@ -166,7 +166,7 @@ public class Search {
             try {
                 //FIXME fix the files for live mechanism
                 //kgV3.fetchInstance(repositoryId, DataStage.IN_PROGRESS);
-                return searchController.getFilesFromRepo(repositoryId, searchAfter, size);
+                return searchController.getFilesFromRepo(DataStage.IN_PROGRESS, repositoryId, searchAfter, size);
                 
             } catch (WebClientResponseException e) {
                 return ResponseEntity.status(e.getStatusCode()).build();
@@ -184,7 +184,7 @@ public class Search {
         if ((searchAfter != null && !MetaModelUtils.isValidUUID(searchAfter)) || !MetaModelUtils.isValidUUID(id) || size > 10000) {
             return ResponseEntity.badRequest().build();
         }
-        return searchController.getFilesFromRepoForPublic(id, searchAfter, size, principal);
+        return searchController.getFilesFromRepo(DataStage.RELEASED, id, searchAfter, size);
     }
 
     @GetMapping("/groups/curated/repositories/{id}/files")
@@ -196,7 +196,7 @@ public class Search {
             if ((searchAfter != null && !MetaModelUtils.isValidUUID(searchAfter)) || !MetaModelUtils.isValidUUID(id) || size > 10000) {
                 return ResponseEntity.badRequest().build();
             }
-            return searchController.getFilesFromRepoForInProgress(id, searchAfter, size);
+            return searchController.getFilesFromRepo(DataStage.IN_PROGRESS, id, searchAfter, size);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }

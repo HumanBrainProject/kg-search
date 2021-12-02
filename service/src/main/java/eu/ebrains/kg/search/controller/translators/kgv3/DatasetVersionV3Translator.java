@@ -42,12 +42,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 //Test ids
 // 4ac9f0bc-560d-47e0-8916-7b24da9bb0ce (multiple versions)
 // 4840dd00-058b-437c-9d0f-091b482d51b8 (experimental approaches and techniques)
 
+//Subjectgroup with subject group state: 40a998fb-9483-42ad-b46b-2f8d0bc5aa3e
+//Subjectgroup with individual subjects and single state 088a7717-76d2-4520-b9e8-3f2fecce1ee4
+//Subjectgroup with individual subjects and multiple states (on INT) 4840dd00-058b-437c-9d0f-091b482d51b8
+//Direct subjects with single states: ccc680a2-995d-48f7-904a-53a7190c6632
 
 public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, DatasetVersion, DatasetVersionV3Translator.Result> {
 
@@ -251,12 +256,12 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                         //Some subject groups contain individual subject information. Let's populate the values before we start to translate
                         s.calculateSubjectGroupInformationFromChildren();
                         DatasetVersion.SubjectGroupOrSingleSubject subj = new DatasetVersion.SubjectGroupOrSingleSubject();
+                        fillIndividualSubjectInformation(subj, s, null);
                         if (!CollectionUtils.isEmpty(s.getChildren())) {
                             //This is a subject group with individual information.
                             subj.setCollapsible(true);
-                            subj.setChildren(s.getChildren().stream().map(child -> fillIndividualSubjectInformation(new DatasetVersion.SingleSubject(), child)).collect(Collectors.toList()));
+                            subj.setChildren(s.getChildren().stream().map(child -> fillIndividualSubjectInformation(new DatasetVersion.SingleSubject(), child, subj)).sorted(Comparator.comparing(DatasetVersion.SingleSubject::getName)).collect(Collectors.toList()));
                         }
-                        fillIndividualSubjectInformation(subj, s);
                         subj.setNumberOfSubjects(value(s.getQuantity()!=null ? String.valueOf(s.getQuantity()) : null));
                         return subj;
                     }
@@ -332,10 +337,21 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         return d;
     }
 
+    private static <U, T extends DatasetVersion.AbstractSubject> boolean sameAsParent(Function<? super T, ? extends U> f, T child, T parent){
+        if(child == null || parent == null){
+            return false;
+        }
+        final U childValue = f.apply(child);
+        U parentValue = f.apply(parent);
+        if(!(childValue instanceof List) && parentValue instanceof List && ((List<?>)parentValue).size()==1){
+            parentValue = (U)((List<?>) parentValue).get(0);
+        }
+        return (childValue==null && parentValue == null) || (childValue!=null && childValue.equals(parentValue));
+    }
 
-    private <T extends DatasetVersion.AbstractSubject> T fillIndividualSubjectInformation(T subj, DatasetVersionV3.SubjectOrSubjectGroup s) {
+    private <T extends DatasetVersion.AbstractSubject> T fillIndividualSubjectInformation(T subj, DatasetVersionV3.SubjectOrSubjectGroup s, DatasetVersion.AbstractSubject parent) {
         subj.setName(new TargetInternalReference(IdUtils.getUUID(s.getId()), s.getInternalIdentifier()));
-        subj.setSpecies(ref(s.getSpecies()));
+        subj.setSpecies( ref(s.getSpecies()));
         subj.setStrain(ref(s.getStrain()));
         subj.setSex(ref(s.getBiologicalSex()));
         if(!CollectionUtils.isEmpty(s.getStates())){
@@ -343,7 +359,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                 //If we have more than one state, we're going to expand them.
                 subj.setChildren(new ArrayList());
                 for (int i = 0; i < s.getStates().size(); i++) {
-                    subj.getChildren().add(fillStateInformation(s.getStates().get(i), i));
+                    subj.getChildren().add(fillStateInformation(subj.getName().getValue(), s.getStates().get(i), i));
                 }
             }
             else{
@@ -357,12 +373,31 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                 }
             }
         }
+        if(sameAsParent(DatasetVersion.AbstractSubject::getSpecies, subj, parent)){
+            subj.setSpecies(null);
+        }
+        if(sameAsParent(DatasetVersion.AbstractSubject::getStrain, subj, parent)){
+            subj.setStrain(null);
+        }
+        if(sameAsParent(DatasetVersion.AbstractSubject::getSex, subj, parent)){
+            subj.setSex(null);
+        }
+        if(sameAsParent(DatasetVersion.AbstractSubject::getAge, subj, parent)){
+            subj.setAge(null);
+        }
+        if(sameAsParent(DatasetVersion.AbstractSubject::getAgeCategory, subj, parent)){
+            subj.setAgeCategory(null);
+        }
+        if(sameAsParent(DatasetVersion.AbstractSubject::getWeight, subj, parent)){
+            subj.setWeight(null);
+        }
+
         return subj;
     }
 
-    private DatasetVersion.SubjectState fillStateInformation(DatasetVersionV3.SpecimenOrSpecimenGroupState state, int index) {
+    private DatasetVersion.SubjectState fillStateInformation(String subjectName, DatasetVersionV3.SpecimenOrSpecimenGroupState state, int index) {
         DatasetVersion.SubjectState result = new DatasetVersion.SubjectState();
-        result.setName(new TargetInternalReference(null, String.format("State %d", index+1)));
+        result.setName(new TargetInternalReference(null, String.format("%s state %d", subjectName, index+1)));
         if(state.getAge()!=null) {
             result.setAge(value(state.getAge().displayString()));
         }
