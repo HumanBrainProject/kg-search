@@ -28,12 +28,12 @@ import "./TableField.css";
 
 const CustomTableCell = ({field, isFirstCell, onCollapseToggle}) => {
   if (!field.data) {
-    return field.isCollectionHeaderRow ? <th>-</th>:<td>-</td>;
+    return field.level === 1 ? <th></th>:<td className={`kg-cell_level_${field.level}`}></td>;
   }
 
   const handleClick = () => onCollapseToggle(field.collectionIndex, !field.isCollectionCollapsed);
 
-  if (field.isCollectionHeaderRow) {
+  if (field.level === 1) {
     return (
       <th>
         {isFirstCell && field.isCollectionCollapsible && (
@@ -44,12 +44,12 @@ const CustomTableCell = ({field, isFirstCell, onCollapseToggle}) => {
     );
   }
   return (
-    <td><Field name={field.name} data={field.data} mapping={field.mapping} group={field.group} /></td>
+    <td className={`kg-cell_level_${field.level}`}><Field name={field.name} data={field.data} mapping={field.mapping} group={field.group} /></td>
   );
 };
 
 const CustomTableRow = ({row, onCollapseToggle}) => {
-  const collapse = row[0].isCollectionCollapsed && !row[0].isCollectionHeaderRow;
+  const collapse = row[0].isCollectionCollapsed && row[0].level !== 1;
   return(
     <tr className={collapse?"row-hidden":null}>
       {row.map((field, index) => <CustomTableCell key={`${field.name}-${index}`} isFirstCell={!index} field={field} onCollapseToggle={onCollapseToggle} />)}
@@ -57,7 +57,7 @@ const CustomTableRow = ({row, onCollapseToggle}) => {
   );
 };
 
-const normalizeCells = (fields, data, group, collectionIndex, isCollectionHeaderRow, isCollectionCollapsed, isCollectionCollapsible) => {
+const normalizeCells = (fields, data, group, level, collectionIndex, isCollectionCollapsed, isCollectionCollapsible) => {
   return Object.entries(fields)
     .filter(([, field]) =>
       field && field.visible
@@ -67,7 +67,7 @@ const normalizeCells = (fields, data, group, collectionIndex, isCollectionHeader
       data: data && data[name],
       mapping: {...field, labelHidden:true},
       group: group,
-      isCollectionHeaderRow: isCollectionHeaderRow,
+      level: level,
       isCollectionCollapsed: isCollectionCollapsed,
       collectionIndex: collectionIndex,
       isCollectionCollapsible: isCollectionCollapsible
@@ -76,12 +76,20 @@ const normalizeCells = (fields, data, group, collectionIndex, isCollectionHeader
 
 const normalizeRows = (list, collapsedRowIndexes) => {
   return list.reduce((acc, item, index) => {
-    const isCollectionCollapsed = !!collapsedRowIndexes[index];
     const hasChildren = item.data && item.data.children;
+    const isCollapsible = hasChildren && item.data.collapsible;
+    const isCollectionCollapsed = isCollapsible && !!collapsedRowIndexes[index];
     if (item.isObject) {
-      acc.push(normalizeCells(item.mapping.children, item.data, item.group, index, true, isCollectionCollapsed, hasChildren));
+      acc.push(normalizeCells(item.mapping.children, item.data, item.group, 1, index, isCollectionCollapsed, isCollapsible));
       if (hasChildren) {
-        item.data.children.forEach(child => acc.push(normalizeCells(item.mapping.children, child, item.group, index, false, isCollectionCollapsed, false)));
+        item.data.children.forEach(child => {
+          acc.push(normalizeCells(item.mapping.children, child, item.group, 2, index, isCollectionCollapsed, false));
+          if(child.children) {
+            child.children.forEach(c => {
+              acc.push(normalizeCells(item.mapping.children, c, item.group, 3, index, isCollectionCollapsed, false));
+            });
+          }
+        });
       }
     } else {
       acc.push(item);
@@ -91,14 +99,32 @@ const normalizeRows = (list, collapsedRowIndexes) => {
 };
 
 
+const filterRows = table => {
+  const visibleColumns = table.reduce((acc, row) => {
+    row.forEach(cell => {
+      if (cell.data) {
+        acc[cell.name] = true;
+      }
+    });
+    return acc;
+  }, {});
+  return table.map(row =>
+    row.reduce((acc, cell) => {
+      if (visibleColumns[cell.name]) {
+        acc.push(cell);
+      }
+      return acc;
+    }, []));
+};
+
 const TableFieldComponent = ({list}) => {
-  const initialiState = list.reduce((acc, _, index) => {
+  const initialState = list.reduce((acc, _, index) => {
     acc[index] = true;
     return acc;
   }, {});
-  const [collapsedRowIndexes, setCollapsedRowIndexes] = useState(initialiState);
+  const [collapsedRowIndexes, setCollapsedRowIndexes] = useState(initialState);
 
-  const rows = normalizeRows(list, collapsedRowIndexes);
+  const rows = filterRows(normalizeRows(list, collapsedRowIndexes));
 
   if (!rows.length || !rows[0].length) {
     return null;
