@@ -81,9 +81,13 @@ public class ContentTypeV3Translator extends TranslatorV3<ContentTypeV3, Content
        c.setSynonyms(value(contentTypeV3.getSynonym()));
        c.setDataType(ref(contentTypeV3.getDataType()));
        c.setInputFormatForSoftware(refVersion(contentTypeV3.getInputFormat()));
-       Collections.sort(c.getInputFormatForSoftware());
+       if(c.getInputFormatForSoftware()!=null){
+           Collections.sort(c.getInputFormatForSoftware());
+       }
        c.setOutputFormatForSoftware(refVersion(contentTypeV3.getOutputFormat()));
-       Collections.sort(c.getOutputFormatForSoftware());
+       if(c.getOutputFormatForSoftware()!=null){
+           Collections.sort(c.getOutputFormatForSoftware());
+       }
        if(!CollectionUtils.isEmpty(contentTypeV3.getResearchProducts())){
            final List<TargetInternalReference> datasets = contentTypeV3.getResearchProducts().stream().filter(r -> r.getType().contains("https://openminds.ebrains.eu/core/DatasetVersion")).map(this::ref).sorted(Comparator.comparing(TargetInternalReference::getValue)).collect(Collectors.toList());
            if(!datasets.isEmpty()){
