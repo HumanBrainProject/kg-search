@@ -25,6 +25,7 @@ package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.*;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -63,8 +64,13 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private NameWithIdentifier accessibility;
     private FileRepository fileRepository;
     private List<File> specialFiles;
-    private List<FullNameRefForResearchProductVersion> parcellationEntityFromStudyTarget;
-
+    private List<StudyTarget> studyTarget;
+    @Getter
+    @Setter
+    public static class StudyTarget extends FullNameRefForResearchProductVersion {
+        private FullNameRefForResearchProductVersion parcellationTerminologyVersion;
+        private String parcellationTerminology;
+    }
     @Getter
     @Setter
     public static class QuantitativeValueOrRange{
