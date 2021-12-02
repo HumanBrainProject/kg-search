@@ -200,7 +200,7 @@
             "@id": "https://openminds.ebrains.eu/vocab/species",
             "typeFilter": [
               {
-                "@id": "https://openminds.ebrains.eu/core/Species"
+                "@id": "https://openminds.ebrains.eu/controlledTerms/Species"
               }
             ]
           },
