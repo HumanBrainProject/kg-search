@@ -52,7 +52,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private List<FullNameRef> projects;
     private List<PersonOrOrganizationRef> custodians;
     private List<SubjectOrSubjectGroup> subjects;
-    private List<TissueSampleOrTissueSampleCollection> tissueSamples;
+    private List<TissueSampleOrTissueSampleCollection> tissueSampleOrCollection;
     private DatasetVersions dataset;
     private String fullDocumentationUrl;
     private String fullDocumentationDOI;
@@ -186,13 +186,13 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
                     setQuantity(children.size());
                 }
                 if(CollectionUtils.isEmpty(strain)){
-                    setStrain(children.stream().map(SubjectOrSubjectGroup::getStrain).filter(Objects::nonNull).flatMap(Collection::stream).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
+                    setStrain(children.stream().map(SubjectOrSubjectGroup::getStrain).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
                 }
                 if(CollectionUtils.isEmpty(species)){
-                    setSpecies(children.stream().map(SubjectOrSubjectGroup::getSpecies).filter(Objects::nonNull).flatMap(Collection::stream).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
+                    setSpecies(children.stream().map(SubjectOrSubjectGroup::getSpecies).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
                 }
                 if(CollectionUtils.isEmpty(biologicalSex)){
-                    setBiologicalSex(children.stream().map(SubjectOrSubjectGroup::getBiologicalSex).filter(Objects::nonNull).flatMap(Collection::stream).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
+                    setBiologicalSex(children.stream().map(SubjectOrSubjectGroup::getBiologicalSex).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
                 }
                 if(CollectionUtils.isEmpty(states)){
                     //There is no direct relation between subject group states and subject states -> we therefore can't tell which subject states belong together.
@@ -206,8 +206,8 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
                     if(calculatedWeightRange!=null){
                         virtualGroupState.setWeight(calculatedWeightRange);
                     }
-                    virtualGroupState.setPathology(children.stream().map(SubjectOrSubjectGroup::getStates).filter(Objects::nonNull).flatMap(Collection::stream).map(SpecimenOrSpecimenGroupState::getPathology).flatMap(Collection::stream).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
-                    virtualGroupState.setAgeCategory(children.stream().map(SubjectOrSubjectGroup::getStates).filter(Objects::nonNull).flatMap(Collection::stream).map(SpecimenOrSpecimenGroupState::getAgeCategory).flatMap(Collection::stream).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
+                    virtualGroupState.setPathology(children.stream().map(SubjectOrSubjectGroup::getStates).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).map(SpecimenOrSpecimenGroupState::getPathology).flatMap(Collection::stream).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
+                    virtualGroupState.setAgeCategory(children.stream().map(SubjectOrSubjectGroup::getStates).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).map(SpecimenOrSpecimenGroupState::getAgeCategory).flatMap(Collection::stream).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
                     setStates(Collections.singletonList(virtualGroupState));
                 }
             }

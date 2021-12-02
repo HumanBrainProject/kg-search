@@ -23,11 +23,13 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3.commons;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 public class PersonOrOrganizationRef extends FullNameRef{
 
     private String familyName;

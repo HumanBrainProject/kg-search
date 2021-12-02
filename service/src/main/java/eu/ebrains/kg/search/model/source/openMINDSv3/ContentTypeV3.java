@@ -27,9 +27,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import eu.ebrains.kg.search.model.source.commonsV1andV2.ListOrSingleStringAsListDeserializer;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRefForResearchProductVersion;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+@Getter
+@Setter
 public class ContentTypeV3 extends SourceInstanceV3 {
 
     private String name;
@@ -41,101 +45,14 @@ public class ContentTypeV3 extends SourceInstanceV3 {
     @JsonDeserialize(using= ListOrSingleStringAsListDeserializer.class)
     private List<String> synonym;
     private FullNameRef dataType;
-    private List<FullNameRef> inputFormat;
-    private List<FullNameRef> outputFormat;
+    private List<FullNameRefForResearchProductVersion> inputFormat;
+    private List<FullNameRefForResearchProductVersion> outputFormat;
     private List<ResearchProduct> researchProducts;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<String> getFileExtension() {
-        return fileExtension;
-    }
-
-    public void setFileExtension(List<String> fileExtension) {
-        this.fileExtension = fileExtension;
-    }
-
-    public String getRelatedMediaType() {
-        return relatedMediaType;
-    }
-
-    public void setRelatedMediaType(String relatedMediaType) {
-        this.relatedMediaType = relatedMediaType;
-    }
-
-    public String getSpecification() {
-        return specification;
-    }
-
-    public void setSpecification(String specification) {
-        this.specification = specification;
-    }
-
-    public List<String> getSynonym() {
-        return synonym;
-    }
-
-    public void setSynonym(List<String> synonym) {
-        this.synonym = synonym;
-    }
-
-    public FullNameRef getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(FullNameRef dataType) {
-        this.dataType = dataType;
-    }
-
-    public List<FullNameRef> getInputFormat() {
-        return inputFormat;
-    }
-
-    public void setInputFormat(List<FullNameRef> inputFormat) {
-        this.inputFormat = inputFormat;
-    }
-
-    public List<FullNameRef> getOutputFormat() {
-        return outputFormat;
-    }
-
-    public void setOutputFormat(List<FullNameRef> outputFormat) {
-        this.outputFormat = outputFormat;
-    }
-
-    public List<ResearchProduct> getResearchProducts() {
-        return researchProducts;
-    }
-
-    public void setResearchProducts(List<ResearchProduct> researchProducts) {
-        this.researchProducts = researchProducts;
-    }
-
+    @Getter
+    @Setter
     public static class ResearchProduct extends FullNameRefForResearchProductVersion {
-
         private List<String> type;
-
-        public List<String> getType() {
-            return type;
-        }
-
-        public void setType(List<String> type) {
-            this.type = type;
-        }
     }
 
 

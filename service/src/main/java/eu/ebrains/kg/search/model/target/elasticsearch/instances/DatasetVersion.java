@@ -116,6 +116,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "License", type = FieldInfo.Type.TEXT, facetOrder = FieldInfo.FacetOrder.BYVALUE)
     private TargetExternalReference licenseInfo;
 
+    @FieldInfo(label = "Ethics assessment")
+    private Value<String> ethicsAssessment;
+
     @FieldInfo(label = "Project", boost = 10, order = 3)
     private List<TargetInternalReference> projects;
 
@@ -128,8 +131,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "New in this version", markdown = true, boost = 2)
     private Value<String> newInThisVersion;
 
-    @FieldInfo(label = "Ethics assessment")
-    private Value<String> ethicsAssessment;
+
 
     @FieldInfo(labelHidden = true, boost = 2)
     private List<PreviewObject> previewObjects;
@@ -167,10 +169,10 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "Modality", type = FieldInfo.Type.TEXT, facet = FieldInfo.Facet.LIST)
     private List<Value<String>> modalityForFilter;
 
-    @FieldInfo(label = "Experimental approach")
+    @FieldInfo(label = "Experimental approach", layout = "summary")
     private List<TargetInternalReference> experimentalApproach;
 
-    @FieldInfo(label = "Technique")
+    @FieldInfo(label = "Technique", layout = "summary")
     private List<TargetInternalReference> technique;
 
 
@@ -240,9 +242,8 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(layout = "Subjects",  labelHidden = true, isTable = true)
     private List<Children<SubjectGroupOrSingleSubject>> subjectGroupOrSingleSubject;
 
-    //TODO implement for DatasetV3
-    @FieldInfo(layout = "TissueSample", hint = "List of tissue samples that are a part of this dataset.", isTable = true)
-    private List<Children<SubjectGroupOrSingleSubject>> tissueSamples;
+    @FieldInfo(layout = "Tissue samples", isTable = true)
+    private List<Children<TissueSampleOrTissueSampleCollection>> tissueSamples;
 
 
     @Getter
@@ -299,28 +300,82 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     }
 
 
+
     @Getter
     @Setter
-    public static class SubjectGroupOrSingleSubject extends SingleSubject{
-        private List<SingleSubject> children;
+    public static class TissueSampleOrTissueSampleCollection extends AbstractTissueSampleOrTissueSampleCollection<SingleTissueSample>{    }
+
+
+    @Getter
+    @Setter
+    public abstract static class AbstractTissueSampleOrTissueSampleCollection<C> {
+        private List<C> children;
+        private boolean collapsible;
+
+
+        @FieldInfo(label = "Name")
+        private TargetInternalReference name;
+
+        @FieldInfo(label = "# of samples")
+        private Value<String> numberOfSamples;
+
+        @FieldInfo(label = "Species", separator = ", ")
+        private List<TargetInternalReference> species;
+
+        @FieldInfo(label = "Sex", separator = ", ")
+        private List<TargetInternalReference> sex;
+
+        @FieldInfo(label = "Strain")
+        private List<TargetInternalReference> strain;
+
+        @FieldInfo(label = "Origin")
+        private List<TargetInternalReference> origin;
+
+
+
+
     }
 
+    @Getter
+    @Setter
+    public static class SingleTissueSample extends AbstractTissueSampleOrTissueSampleCollection<TissueSampleState>{}
+
+    public static class TissueSampleState {
+        @FieldInfo(label = "Age")
+        private List<Value<String>> age;
+
+        @FieldInfo(label = "Pathology")
+        private List<TargetInternalReference> pathology;
+
+        @FieldInfo(label = "Weight")
+        private List<Value<String>> weight;
+
+    }
 
     @Getter
     @Setter
-    public static class SingleSubject {
+    public static class SubjectGroupOrSingleSubject extends AbstractSubject<SingleSubject> {}
 
-        @JsonProperty("subject_name")
-        @FieldInfo(label = "Name", groupBy = true) //TODO: convert groupby to groupBy
-        private TargetInternalReference subjectName;
+    @Getter
+    @Setter
+    public static class SingleSubject extends AbstractSubject<SubjectState>{}
+
+    @Getter
+    @Setter
+    public abstract static class AbstractSubject<C> {
+        private List<C> children;
+        private boolean collapsible;
+
+        @FieldInfo(label = "Name")
+        private TargetInternalReference name;
 
         @FieldInfo(label = "# of subjects")
         private Value<String> numberOfSubjects;
 
-        @FieldInfo(label = "Species", separator = ",")
+        @FieldInfo(label = "Species", separator = ", ")
         private List<TargetInternalReference> species;
 
-        @FieldInfo(label = "Sex", separator = ",")
+        @FieldInfo(label = "Sex", separator = ", ")
         private List<TargetInternalReference> sex;
 
         @FieldInfo(label = "Strain")
@@ -334,5 +389,24 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
 
         @FieldInfo(label = "Weight")
         private List<Value<String>> weight;
+    }
+
+
+    @Getter
+    @Setter
+    public static class SubjectState{
+
+
+        @FieldInfo(label = "Name")
+        private TargetInternalReference name;
+
+        @FieldInfo(label = "Age")
+        private Value<String> age;
+
+        @FieldInfo(label = "Age category")
+        private List<TargetInternalReference> ageCategory;
+
+        @FieldInfo(label = "Weight")
+        private Value<String> weight;
     }
 }

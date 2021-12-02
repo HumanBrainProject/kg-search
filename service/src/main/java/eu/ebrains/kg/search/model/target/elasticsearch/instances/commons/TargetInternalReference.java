@@ -25,10 +25,12 @@ package eu.ebrains.kg.search.model.target.elasticsearch.instances.commons;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
+import org.springframework.util.comparator.Comparators;
 
+import java.util.Comparator;
 import java.util.Objects;
 
-public class TargetInternalReference {
+public class TargetInternalReference implements Comparable<TargetInternalReference>{
 
     public TargetInternalReference() {
     }
@@ -89,5 +91,10 @@ public class TargetInternalReference {
     @Override
     public int hashCode() {
         return Objects.hash(reference, value, uuid);
+    }
+
+    @Override
+    public int compareTo(TargetInternalReference targetInternalReference) {
+        return Comparator.comparing(TargetInternalReference::getValue).compare(this, targetInternalReference);
     }
 }

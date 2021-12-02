@@ -116,9 +116,11 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                     d.setEmbargo(value(DatasetVersion.createHDGMessage(datasetVersion.getUUID(), true)));
                     break;
                 case UNDER_EMBARGO:
-                    d.setEmbargo(value(DatasetVersion.EMBARGO_MESSAGE));
                     if (dataStage == DataStage.IN_PROGRESS && containerUrl != null) {
                         d.setEmbargoRestrictedAccess(value(DatasetVersion.createEmbargoInProgressMessage(containerUrl)));
+                    }
+                    else{
+                        d.setEmbargo(value(DatasetVersion.EMBARGO_MESSAGE));
                     }
                     break;
                 case RESTRICTED_ACCESS:
@@ -167,7 +169,9 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if (!CollectionUtils.isEmpty(versions) && versions.size() > 1) {
             d.setVersion(datasetVersion.getVersion());
             List<Version> sortedVersions = Helpers.sort(versions);
-            d.setVersions(sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList()));
+            List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
+            references.add(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), "All versions"));
+            d.setVersions(references);
             d.setAllVersionRef(new TargetInternalReference(IdUtils.getUUID(dataset.getId()), "All versions"));
             // if versions cannot be sorted (sortedVersions == versions) we flag it as searchable
             d.setSearchable(sortedVersions == versions || sortedVersions.get(0).getId().equals(datasetVersion.getId()));
@@ -180,7 +184,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         } else if (dataset != null) {
             d.setDescription(value(dataset.getDescription()));
         }
-        if (StringUtils.isNotBlank(datasetVersion.getVersionInnovation())) {
+        if (StringUtils.isNotBlank(datasetVersion.getVersionInnovation()) && versions!=null && versions.size()>1) {
             d.setNewInThisVersion(new Value<>(datasetVersion.getVersionInnovation()));
         }
 
@@ -246,20 +250,29 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                     {
                         //Some subject groups contain individual subject information. Let's populate the values before we start to translate
                         s.calculateSubjectGroupInformationFromChildren();
-
                         DatasetVersion.SubjectGroupOrSingleSubject subj = new DatasetVersion.SubjectGroupOrSingleSubject();
-
                         if (!CollectionUtils.isEmpty(s.getChildren())) {
                             //This is a subject group with individual information.
+                            subj.setCollapsible(true);
                             subj.setChildren(s.getChildren().stream().map(child -> fillIndividualSubjectInformation(new DatasetVersion.SingleSubject(), child)).collect(Collectors.toList()));
                         }
                         fillIndividualSubjectInformation(subj, s);
+                        subj.setNumberOfSubjects(value(s.getQuantity()!=null ? String.valueOf(s.getQuantity()) : null));
                         return subj;
                     }
-            ).collect(Collectors.toList());
+            ).sorted(Comparator.comparing(DatasetVersion.SubjectGroupOrSingleSubject::getName)).collect(Collectors.toList());
             if (!subjects.isEmpty()) {
                 d.setSubjectGroupOrSingleSubject(children(subjects));
             }
+        }
+
+        if(!CollectionUtils.isEmpty(datasetVersion.getTissueSampleOrCollection())){
+            d.setTissueSamples(children(datasetVersion.getTissueSampleOrCollection().stream().map(t -> {
+                final DatasetVersion.TissueSampleOrTissueSampleCollection tissueSample = new DatasetVersion.TissueSampleOrTissueSampleCollection();
+                tissueSample.setName(new TargetInternalReference(IdUtils.getUUID(t.getId()), t.getInternalIdentifier()));
+                return tissueSample;
+            }).collect(Collectors.toList())));
+
         }
 
         if(datasetVersion.getEthicsAssessment()!=null){
@@ -315,36 +328,48 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if(!previewObjects.isEmpty()){
             d.setPreviewObjects(previewObjects);
         }
-
         d.setStudiedBrainRegion(refVersion(datasetVersion.getParcellationEntityFromStudyTarget()));
-
         return d;
     }
 
 
-    private <T extends DatasetVersion.SingleSubject> T fillIndividualSubjectInformation(T subj, DatasetVersionV3.SubjectOrSubjectGroup s) {
-        subj.setSubjectName(new TargetInternalReference(IdUtils.getUUID(s.getId()), s.getInternalIdentifier()));
-        subj.setNumberOfSubjects(value(s.getQuantity()!=null ? String.valueOf(s.getQuantity()) : null));
+    private <T extends DatasetVersion.AbstractSubject> T fillIndividualSubjectInformation(T subj, DatasetVersionV3.SubjectOrSubjectGroup s) {
+        subj.setName(new TargetInternalReference(IdUtils.getUUID(s.getId()), s.getInternalIdentifier()));
         subj.setSpecies(ref(s.getSpecies()));
         subj.setStrain(ref(s.getStrain()));
         subj.setSex(ref(s.getBiologicalSex()));
-        List<DatasetVersionV3.SpecimenOrSpecimenGroupState> states = s.getStates();
-        //TODO sort states
-        //To represent states, we're going to provide a list for the state specific entries in a single "subject row".
-        List<String> ages = new ArrayList<>();
-        List<List<TargetInternalReference>> ageCategories = new ArrayList<>();
-        List<String> weights = new ArrayList<>();
-        for (DatasetVersionV3.SpecimenOrSpecimenGroupState state : states) {
-            ages.add(state.getAge()!=null ? state.getAge().displayString() : "-");
-            //TODO how can we enforce this inner list to be comma separated instead?
-            ageCategories.add(state.getAgeCategory()!=null ? ref(state.getAgeCategory()) : null);
-            weights.add(state.getWeight()!=null ? state.getWeight().displayString() : "-");
+        if(!CollectionUtils.isEmpty(s.getStates())){
+            if(s.getStates().size()>1) {
+                //If we have more than one state, we're going to expand them.
+                subj.setChildren(new ArrayList());
+                for (int i = 0; i < s.getStates().size(); i++) {
+                    subj.getChildren().add(fillStateInformation(s.getStates().get(i), i));
+                }
+            }
+            else{
+                final DatasetVersionV3.SpecimenOrSpecimenGroupState onlyState = s.getStates().get(0);
+                if(onlyState.getAge()!=null) {
+                    subj.setAge(Collections.singletonList(value(onlyState.getAge().displayString())));
+                }
+                subj.setAgeCategory(Collections.singletonList(ref(onlyState.getAgeCategory())));
+                if(onlyState.getWeight()!=null) {
+                    subj.setWeight(Collections.singletonList(value(onlyState.getWeight().displayString())));
+                }
+            }
         }
-        subj.setAge(value(ages));
-        subj.setAgeCategory(ageCategories);
-        subj.setWeight(value(weights));
         return subj;
     }
 
-
+    private DatasetVersion.SubjectState fillStateInformation(DatasetVersionV3.SpecimenOrSpecimenGroupState state, int index) {
+        DatasetVersion.SubjectState result = new DatasetVersion.SubjectState();
+        result.setName(new TargetInternalReference(null, String.format("State %d", index+1)));
+        if(state.getAge()!=null) {
+            result.setAge(value(state.getAge().displayString()));
+        }
+        result.setAgeCategory(ref(state.getAgeCategory()));
+        if(state.getWeight()!=null) {
+            result.setWeight(value(state.getWeight().displayString()));
+        }
+        return result;
+    }
 }

@@ -23,23 +23,14 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3.commons;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@EqualsAndHashCode
 public class FullNameRefForResearchProductVersion extends FullNameRef {
     private String versionIdentifier;
     private String fallbackName;
-
-    public String getFallbackName() {
-        return fallbackName;
-    }
-
-    public void setFallbackName(String fallbackName) {
-        this.fallbackName = fallbackName;
-    }
-
-    public String getVersionIdentifier() {
-        return versionIdentifier;
-    }
-
-    public void setVersionIdentifier(String versionIdentifier) {
-        this.versionIdentifier = versionIdentifier;
-    }
 }

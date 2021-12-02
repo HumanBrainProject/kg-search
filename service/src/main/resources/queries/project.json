@@ -57,39 +57,39 @@
         {
           "propertyName": "query:id",
           "path": "@id"
+        },
+        {
+          "propertyName": "query:fallbackName",
+          "path": [
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/hasVersion",
+              "reverse": true
+            },
+            "https://openminds.ebrains.eu/vocab/name"
+          ]
         }
       ]
     },
     {
       "propertyName": "query:publications",
-      "path": {
-        "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
-        "typeFilter": [
-          {
-            "@id": "https://openminds.ebrains.eu/core/DatasetVersion"
-          }
-        ]
-      },
-      "structure": [
+      "path": [
         {
-          "propertyName": "query:doi",
-          "path": [
+          "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+          "typeFilter": [
             {
-              "@id": "https://openminds.ebrains.eu/vocab/relatedPublication",
-              "typeFilter": [
-                {
-                  "@id": "https://openminds.ebrains.eu/core/DOI"
-                }
-              ]
-            },
-            "https://openminds.ebrains.eu/vocab/identifier"
-          ],
-          "singleValue": "FIRST"
+              "@id": "https://openminds.ebrains.eu/core/DatasetVersion"
+            }
+          ]
         },
         {
-          "propertyName": "query:howToCite",
-          "path": "https://openminds.ebrains.eu/vocab/howToCite"
-        }
+          "@id": "https://openminds.ebrains.eu/vocab/relatedPublication",
+          "typeFilter": [
+            {
+              "@id": "https://openminds.ebrains.eu/core/DOI"
+            }
+          ]
+        },
+        "https://openminds.ebrains.eu/vocab/identifier"
       ]
     },
     {

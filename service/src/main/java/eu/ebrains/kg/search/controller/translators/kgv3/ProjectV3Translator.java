@@ -23,6 +23,7 @@
 
 package eu.ebrains.kg.search.controller.translators.kgv3;
 
+import eu.ebrains.kg.search.controller.translators.Helpers;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.ProjectV3;
@@ -34,10 +35,9 @@ import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ProjectV3Translator extends TranslatorV3<ProjectV3, Project, ProjectV3Translator.Result> {
@@ -89,19 +89,12 @@ public class ProjectV3Translator extends TranslatorV3<ProjectV3, Project, Projec
         if(!CollectionUtils.isEmpty(project.getPublications())) {
             p.setPublications(project.getPublications().stream()
                     .map(publication -> {
-                        String doi;
-                        if(StringUtils.isNotBlank(publication.getDoi())) {
-                            String url = URLEncoder.encode(publication.getDoi(), StandardCharsets.UTF_8);
-                            doi = String.format("[DOI: %s]\n[DOI: %s]: %s", publication.getDoi(), publication.getDoi(), url);
-                        } else {
-                            doi = "[DOI: null]\n[DOI: null]: https://doi.org/null";
+                        if (StringUtils.isNotBlank(publication)) {
+                            final String doiWithoutPrefix = Helpers.stripDOIPrefix(publication);
+                            return Helpers.getFormattedDOI(doiCitationFormatter, doiWithoutPrefix);
                         }
-                        if (StringUtils.isNotBlank(publication.getHowToCite())) {
-                            return publication.getHowToCite() + "\n" + doi;
-                        } else {
-                            return doi;
-                        }
-                    }).collect(Collectors.toList()));
+                        return null;
+                    }).filter(Objects::nonNull).collect(Collectors.toList()));
         }
         return p;
     }

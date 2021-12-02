@@ -23,6 +23,7 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3.commons;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,6 +31,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Versions {
     private String id;
     private String fullName;

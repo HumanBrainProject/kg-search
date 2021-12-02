@@ -24,65 +24,24 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRefForResearchProductVersion;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+@Getter
+@Setter
 public class ProjectV3 extends SourceInstanceV3 {
     private String title;
     private String description;
-    private List<Publication> publications;
-    private List<FullNameRef> datasets;
+    private List<String> publications;
+    private List<FullNameRefForResearchProductVersion> datasets;
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<Publication> getPublications() {
-        return publications;
-    }
-
-    public void setPublications(List<Publication> publications) {
-        this.publications = publications;
-    }
-
-    public List<FullNameRef> getDatasets() {
-        return datasets;
-    }
-
-    public void setDatasets(List<FullNameRef> datasets) {
-        this.datasets = datasets;
-    }
-
+    @Getter
+    @Setter
     public static class Publication {
         private String doi;
         private String howToCite;
-
-        public String getDoi() {
-            return doi;
-        }
-
-        public void setDoi(String doi) {
-            this.doi = doi;
-        }
-
-        public String getHowToCite() {
-            return howToCite;
-        }
-
-        public void setHowToCite(String howToCite) {
-            this.howToCite = howToCite;
-        }
     }
 }
