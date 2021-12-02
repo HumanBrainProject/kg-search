@@ -42,7 +42,7 @@ public class FileV3 extends SourceInstanceV3 {
     @Getter
     @Setter
     public static class Size {
-        private int value;
+        private Long value;
         private String unit;
     }
 
