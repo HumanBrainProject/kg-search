@@ -106,8 +106,8 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
     }
 
-    private boolean isExternalLink(DatasetVersionV3.FileRepository repository){
-        return repository!=null && repository.getIri()!=null && !(repository.getIri().contains("object.cscs.ch") || repository.getIri().contains("data-proxy.ebrains.eu"));
+    private boolean isExternalLink(DatasetVersionV3.FileRepository repository) {
+        return repository != null && repository.getIri() != null && !(repository.getIri().contains("object.cscs.ch") || repository.getIri().contains("data-proxy.ebrains.eu"));
     }
 
     public DatasetVersion translate(DatasetVersionV3 datasetVersion, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
@@ -123,8 +123,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                 case UNDER_EMBARGO:
                     if (dataStage == DataStage.IN_PROGRESS && containerUrl != null) {
                         d.setEmbargoRestrictedAccess(value(DatasetVersion.createEmbargoInProgressMessage(containerUrl)));
-                    }
-                    else{
+                    } else {
                         d.setEmbargo(value(DatasetVersion.EMBARGO_MESSAGE));
                     }
                     break;
@@ -133,15 +132,13 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                     break;
                 default:
                     if (datasetVersion.getFileRepository() != null) {
-                        if(isExternalLink(datasetVersion.getFileRepository())){
+                        if (isExternalLink(datasetVersion.getFileRepository())) {
                             d.setExternalDatalink(Collections.singletonList(new TargetExternalReference(datasetVersion.getFileRepository().getIri(), datasetVersion.getFileRepository().getIri())));
-                        }
-                        else{
+                        } else {
                             String endpoint;
-                            if(liveMode){
+                            if (liveMode) {
                                 endpoint = String.format("/api/repositories/%s/files/live", IdUtils.getUUID(datasetVersion.getFileRepository().getId()));
-                            }
-                            else{
+                            } else {
                                 endpoint = String.format("/api/groups/%s/repositories/%s/files", dataStage == DataStage.IN_PROGRESS ? "curated" : "public", IdUtils.getUUID(datasetVersion.getFileRepository().getId()));
                             }
                             d.setFilesAsyncUrl(endpoint);
@@ -171,7 +168,8 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
         d.setIdentifier(datasetVersion.getSimpleIdentifiers());
         List<Version> versions = dataset == null ? null : dataset.getVersions();
-        if (!CollectionUtils.isEmpty(versions) && versions.size() > 1) {
+        boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
+        if (hasMultipleVersions) {
             d.setVersion(datasetVersion.getVersion());
             List<Version> sortedVersions = Helpers.sort(versions);
             List<TargetInternalReference> references = sortedVersions.stream().map(v -> new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier())).collect(Collectors.toList());
@@ -189,14 +187,22 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         } else if (dataset != null) {
             d.setDescription(value(dataset.getDescription()));
         }
-        if (StringUtils.isNotBlank(datasetVersion.getVersionInnovation()) && versions!=null && versions.size()>1) {
+        if (StringUtils.isNotBlank(datasetVersion.getVersionInnovation()) && versions != null && versions.size() > 1) {
             d.setNewInThisVersion(new Value<>(datasetVersion.getVersionInnovation()));
         }
 
         if (StringUtils.isNotBlank(datasetVersion.getFullName())) {
-            d.setTitle(value(datasetVersion.getFullName()));
+            if (hasMultipleVersions || StringUtils.isBlank(datasetVersion.getVersion())) {
+                d.setTitle(value(datasetVersion.getFullName()));
+            } else {
+                d.setTitle(value(String.format("%s %s", datasetVersion.getFullName(), datasetVersion.getVersion())));
+            }
         } else if (dataset != null && StringUtils.isNotBlank(dataset.getFullName())) {
-            d.setTitle(value(dataset.getFullName()));
+            if (hasMultipleVersions || StringUtils.isBlank(datasetVersion.getVersion())) {
+                d.setTitle(value(dataset.getFullName()));
+            } else {
+                d.setTitle(value(String.format("%s %s", dataset.getFullName(), datasetVersion.getVersion())));
+            }
         }
         if (!CollectionUtils.isEmpty(datasetVersion.getAuthor())) {
             d.setContributors(datasetVersion.getAuthor().stream()
@@ -237,7 +243,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setCustodians(custodians.stream().map(c -> new TargetInternalReference(IdUtils.getUUID(c.getId()), Helpers.getFullName(c.getFullName(), c.getFamilyName(), c.getGivenName()))).collect(Collectors.toList()));
         }
 
-        if(!CollectionUtils.isEmpty(datasetVersion.getRelatedPublications())){
+        if (!CollectionUtils.isEmpty(datasetVersion.getRelatedPublications())) {
             d.setPublications(datasetVersion.getRelatedPublications().stream().map(p -> Helpers.getFormattedDOI(doiCitationFormatter, p)).filter(Objects::nonNull).map(Value::new).collect(Collectors.toList()));
         }
 
@@ -252,20 +258,20 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                     //We don't want individual subjects to appear on the root hierarchy level if they also have a representation inside the groups...
                     .filter(s -> !groupedSubjects.contains(s.getId()))
                     .map(s ->
-                    {
-                        //Some subject groups contain individual subject information. Let's populate the values before we start to translate
-                        s.calculateSubjectGroupInformationFromChildren();
-                        DatasetVersion.SubjectGroupOrSingleSubject subj = new DatasetVersion.SubjectGroupOrSingleSubject();
-                        fillIndividualSubjectInformation(subj, s, null);
-                        if (!CollectionUtils.isEmpty(s.getChildren())) {
-                            //This is a subject group with individual information.
-                            subj.setCollapsible(true);
-                            subj.setChildren(s.getChildren().stream().map(child -> fillIndividualSubjectInformation(new DatasetVersion.SingleSubject(), child, subj)).sorted(Comparator.comparing(DatasetVersion.SingleSubject::getName)).collect(Collectors.toList()));
-                        }
-                        subj.setNumberOfSubjects(value(s.getQuantity()!=null ? String.valueOf(s.getQuantity()) : null));
-                        return subj;
-                    }
-            ).sorted(Comparator.comparing(DatasetVersion.SubjectGroupOrSingleSubject::getName)).collect(Collectors.toList());
+                            {
+                                //Some subject groups contain individual subject information. Let's populate the values before we start to translate
+                                s.calculateSubjectGroupInformationFromChildren();
+                                DatasetVersion.SubjectGroupOrSingleSubject subj = new DatasetVersion.SubjectGroupOrSingleSubject();
+                                fillIndividualSubjectInformation(subj, s, null);
+                                if (!CollectionUtils.isEmpty(s.getChildren())) {
+                                    //This is a subject group with individual information.
+                                    subj.setCollapsible(true);
+                                    subj.setChildren(s.getChildren().stream().map(child -> fillIndividualSubjectInformation(new DatasetVersion.SingleSubject(), child, subj)).sorted(Comparator.comparing(DatasetVersion.SingleSubject::getName)).collect(Collectors.toList()));
+                                }
+                                subj.setNumberOfSubjects(value(s.getQuantity() != null ? String.valueOf(s.getQuantity()) : null));
+                                return subj;
+                            }
+                    ).sorted(Comparator.comparing(DatasetVersion.SubjectGroupOrSingleSubject::getName)).collect(Collectors.toList());
             if (!subjects.isEmpty()) {
                 d.setSubjectGroupOrSingleSubject(children(subjects));
             }
@@ -280,12 +286,11 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
         }
 
-        if(datasetVersion.getEthicsAssessment()!=null){
+        if (datasetVersion.getEthicsAssessment() != null) {
             String ethicsAssessment = null;
-            if(datasetVersion.getEthicsAssessment().contains("https://openminds.ebrains.eu/instances/ethicsAssessment/notRequired")){
+            if (datasetVersion.getEthicsAssessment().contains("https://openminds.ebrains.eu/instances/ethicsAssessment/notRequired")) {
                 ethicsAssessment = "not-required";
-            }
-            else if (datasetVersion.getEthicsAssessment().contains("https://openminds.ebrains.eu/instances/ethicsAssessment/EUCompliantNonSensitive") || datasetVersion.getEthicsAssessment().contains("https://openminds.ebrains.eu/instances/ethicsAssessment/EUCompliantSensitive")){
+            } else if (datasetVersion.getEthicsAssessment().contains("https://openminds.ebrains.eu/instances/ethicsAssessment/EUCompliantNonSensitive") || datasetVersion.getEthicsAssessment().contains("https://openminds.ebrains.eu/instances/ethicsAssessment/EUCompliantSensitive")) {
                 ethicsAssessment = "EU-compliant";
             }
             d.setEthicsAssessment(value(ethicsAssessment));
@@ -294,34 +299,29 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
         final List<DatasetVersionV3.File> specialFiles = datasetVersion.getSpecialFiles();
         final List<DatasetVersionV3.File> dataDescriptors = specialFiles.stream().filter(s -> s.getRoles().contains("https://openminds.ebrains.eu/instances/fileUsageRole/dataDescriptor")).collect(Collectors.toList());
-        if(!dataDescriptors.isEmpty()) {
+        if (!dataDescriptors.isEmpty()) {
             if (dataDescriptors.size() > 1) {
                 throw new AmbiguousDataException(String.format("The dataset version contains multiple data descriptors: %s", dataDescriptors.stream().map(DatasetVersionV3.File::getIri).collect(Collectors.joining(", "))), datasetVersion.getUUID());
             } else {
                 d.setDataDescriptor(new TargetExternalReference(dataDescriptors.get(0).getIri(), dataDescriptors.get(0).getName()));
-                if(datasetVersion.getFullDocumentationFile() != null && !dataDescriptors.get(0).getIri().equals(datasetVersion.getFullDocumentationFile().getIri())){
+                if (datasetVersion.getFullDocumentationFile() != null && !dataDescriptors.get(0).getIri().equals(datasetVersion.getFullDocumentationFile().getIri())) {
                     throw new AmbiguousDataException(String.format("The dataset has a file (%s) flagged with the role data descriptor and another one (%s) for the full documentation. This is invalid!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationFile().getIri()), datasetVersion.getUUID());
-                }
-                else if(datasetVersion.getFullDocumentationDOI()!=null){
+                } else if (datasetVersion.getFullDocumentationDOI() != null) {
                     throw new AmbiguousDataException(String.format("The dataset has a file (%s) flagged with the role data descriptor and a DOI (%s) for the full documentation. This is invalid!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationDOI()), datasetVersion.getUUID());
-                }
-                else if(datasetVersion.getFullDocumentationUrl()!=null){
+                } else if (datasetVersion.getFullDocumentationUrl() != null) {
                     throw new AmbiguousDataException(String.format("The dataset has a file (%s) flagged with the role data descriptor and a DOI (%s) for the full documentation. This is invalid!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationUrl()), datasetVersion.getUUID());
                 }
             }
-        }
-        else if(datasetVersion.getFullDocumentationFile()!=null){
+        } else if (datasetVersion.getFullDocumentationFile() != null) {
             d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationFile().getIri(), datasetVersion.getFullDocumentationFile().getName()));
-        }
-        else if(datasetVersion.getFullDocumentationUrl()!=null){
+        } else if (datasetVersion.getFullDocumentationUrl() != null) {
             d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationUrl(), datasetVersion.getFullDocumentationUrl()));
-        }
-        else if(datasetVersion.getFullDocumentationDOI()!=null){
+        } else if (datasetVersion.getFullDocumentationDOI() != null) {
             d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationDOI(), datasetVersion.getFullDocumentationDOI()));
         }
 
         final List<DatasetVersion.PreviewObject> previewObjects = specialFiles.stream().filter(s -> s.getRoles().contains("https://openminds.ebrains.eu/instances/fileUsageRole/preview") || s.getRoles().contains("https://openminds.ebrains.eu/instances/fileUsageRole/screenshot")).map(f -> {
-            DatasetVersion.PreviewObject o  = new DatasetVersion.PreviewObject();
+            DatasetVersion.PreviewObject o = new DatasetVersion.PreviewObject();
             o.setUrl(value(f.getIri()));
             o.setValue(o.getValue());
             o.setPreviewUrl(value(f.getIri()));
@@ -330,65 +330,78 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             o.setIsAnimated(value(f.getIri().endsWith(".mp4")));
             return o;
         }).collect(Collectors.toList());
-        if(!previewObjects.isEmpty()){
+        if (!previewObjects.isEmpty()) {
             d.setPreviewObjects(previewObjects);
         }
-        d.setStudiedBrainRegion(refVersion(datasetVersion.getParcellationEntityFromStudyTarget()));
+        if(!CollectionUtils.isEmpty(datasetVersion.getStudyTarget())){
+            d.setStudyTargets(datasetVersion.getStudyTarget().stream().map(s -> {
+                //TODO parcellationentity and parcellationentityversion need to be updated once their landing cards are available
+                if(StringUtils.isNotBlank(s.getParcellationTerminology())){
+                    return new TargetInternalReference(null, String.format("%s: %s", s.getParcellationTerminology(), StringUtils.isNotBlank(s.getFullName()) ? s.getFullName() : s.getFallbackName()));
+                }
+                else if(s.getParcellationTerminologyVersion() != null){
+                    String name = String.format("%s %s", StringUtils.isNotBlank(s.getParcellationTerminologyVersion().getFullName()) ? s.getParcellationTerminologyVersion().getFullName() : s.getParcellationTerminologyVersion().getFallbackName(), s.getParcellationTerminologyVersion().getVersionIdentifier());
+                    return new TargetInternalReference(null, String.format("%s: %s", name, StringUtils.isNotBlank(s.getFullName()) ? s.getFullName() : s.getFallbackName()));
+                }
+                else{
+                    return ref(s);
+                }
+            }).collect(Collectors.toList()));
+        }
         return d;
     }
 
-    private static <U, T extends DatasetVersion.AbstractSubject> boolean sameAsParent(Function<? super T, ? extends U> f, T child, T parent){
-        if(child == null || parent == null){
+    private static <U, T extends DatasetVersion.AbstractSubject> boolean sameAsParent(Function<? super T, ? extends U> f, T child, T parent) {
+        if (child == null || parent == null) {
             return false;
         }
         final U childValue = f.apply(child);
         U parentValue = f.apply(parent);
-        if(!(childValue instanceof List) && parentValue instanceof List && ((List<?>)parentValue).size()==1){
-            parentValue = (U)((List<?>) parentValue).get(0);
+        if (!(childValue instanceof List) && parentValue instanceof List && ((List<?>) parentValue).size() == 1) {
+            parentValue = (U) ((List<?>) parentValue).get(0);
         }
-        return (childValue==null && parentValue == null) || (childValue!=null && childValue.equals(parentValue));
+        return (childValue == null && parentValue == null) || (childValue != null && childValue.equals(parentValue));
     }
 
     private <T extends DatasetVersion.AbstractSubject> T fillIndividualSubjectInformation(T subj, DatasetVersionV3.SubjectOrSubjectGroup s, DatasetVersion.AbstractSubject parent) {
         subj.setName(new TargetInternalReference(IdUtils.getUUID(s.getId()), s.getInternalIdentifier()));
-        subj.setSpecies( ref(s.getSpecies()));
+        subj.setSpecies(ref(s.getSpecies()));
         subj.setStrain(ref(s.getStrain()));
         subj.setSex(ref(s.getBiologicalSex()));
-        if(!CollectionUtils.isEmpty(s.getStates())){
-            if(s.getStates().size()>1) {
+        if (!CollectionUtils.isEmpty(s.getStates())) {
+            if (s.getStates().size() > 1) {
                 //If we have more than one state, we're going to expand them.
                 subj.setChildren(new ArrayList());
                 for (int i = 0; i < s.getStates().size(); i++) {
                     subj.getChildren().add(fillStateInformation(subj.getName().getValue(), s.getStates().get(i), i));
                 }
-            }
-            else{
+            } else {
                 final DatasetVersionV3.SpecimenOrSpecimenGroupState onlyState = s.getStates().get(0);
-                if(onlyState.getAge()!=null) {
+                if (onlyState.getAge() != null) {
                     subj.setAge(Collections.singletonList(value(onlyState.getAge().displayString())));
                 }
                 subj.setAgeCategory(Collections.singletonList(ref(onlyState.getAgeCategory())));
-                if(onlyState.getWeight()!=null) {
+                if (onlyState.getWeight() != null) {
                     subj.setWeight(Collections.singletonList(value(onlyState.getWeight().displayString())));
                 }
             }
         }
-        if(sameAsParent(DatasetVersion.AbstractSubject::getSpecies, subj, parent)){
+        if (sameAsParent(DatasetVersion.AbstractSubject::getSpecies, subj, parent)) {
             subj.setSpecies(null);
         }
-        if(sameAsParent(DatasetVersion.AbstractSubject::getStrain, subj, parent)){
+        if (sameAsParent(DatasetVersion.AbstractSubject::getStrain, subj, parent)) {
             subj.setStrain(null);
         }
-        if(sameAsParent(DatasetVersion.AbstractSubject::getSex, subj, parent)){
+        if (sameAsParent(DatasetVersion.AbstractSubject::getSex, subj, parent)) {
             subj.setSex(null);
         }
-        if(sameAsParent(DatasetVersion.AbstractSubject::getAge, subj, parent)){
+        if (sameAsParent(DatasetVersion.AbstractSubject::getAge, subj, parent)) {
             subj.setAge(null);
         }
-        if(sameAsParent(DatasetVersion.AbstractSubject::getAgeCategory, subj, parent)){
+        if (sameAsParent(DatasetVersion.AbstractSubject::getAgeCategory, subj, parent)) {
             subj.setAgeCategory(null);
         }
-        if(sameAsParent(DatasetVersion.AbstractSubject::getWeight, subj, parent)){
+        if (sameAsParent(DatasetVersion.AbstractSubject::getWeight, subj, parent)) {
             subj.setWeight(null);
         }
 
@@ -397,12 +410,12 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
     private DatasetVersion.SubjectState fillStateInformation(String subjectName, DatasetVersionV3.SpecimenOrSpecimenGroupState state, int index) {
         DatasetVersion.SubjectState result = new DatasetVersion.SubjectState();
-        result.setName(new TargetInternalReference(null, String.format("%s state %d", subjectName, index+1)));
-        if(state.getAge()!=null) {
+        result.setName(new TargetInternalReference(null, String.format("%s state %d", subjectName, index + 1)));
+        if (state.getAge() != null) {
             result.setAge(value(state.getAge().displayString()));
         }
         result.setAgeCategory(ref(state.getAgeCategory()));
-        if(state.getWeight()!=null) {
+        if (state.getWeight() != null) {
             result.setWeight(value(state.getWeight().displayString()));
         }
         return result;
