@@ -159,7 +159,7 @@ public class IndexingController {
             }
         }
         if(translatorModel.isAutoRelease()){
-            elasticSearchController.removeDeprecatedDocumentsFromAutoReleasedIndex(translatorModel.getTargetClass(), nonSearchableIds);
+            elasticSearchController.removeDeprecatedDocumentsFromAutoReleasedIndex(translatorModel.getTargetClass(), dataStage, nonSearchableIds);
         }
         else {
             elasticSearchController.removeDeprecatedDocumentsFromSearchIndex(translatorModel.getTargetClass(), dataStage, searchableIds);
@@ -207,7 +207,7 @@ public class IndexingController {
                     }
                     if (!CollectionUtils.isEmpty(nonSearchableInstances)) {
                         if(autorelease){
-                            elasticSearchController.updateAutoReleasedIndex(nonSearchableInstances, type);
+                            elasticSearchController.updateAutoReleasedIndex(nonSearchableInstances, dataStage, type);
                         }
                         else {
                             elasticSearchController.updateIdentifiersIndex(nonSearchableInstances, dataStage);
@@ -234,9 +234,9 @@ public class IndexingController {
         elasticSearchController.recreateSearchIndex(mappingResult, clazz, dataStage);
     }
 
-    public void recreateAutoReleasedIndex(Class<?> clazz) {
+    public void recreateAutoReleasedIndex(DataStage stage, Class<?> clazz) {
         Map<String, Object> mapping = mappingController.generateMapping(clazz);
         Map<String, Object> mappingResult = Map.of("mappings", mapping);
-        elasticSearchController.recreateAutoReleasedIndex(mappingResult, clazz);
+        elasticSearchController.recreateAutoReleasedIndex(stage, mappingResult, clazz);
     }
 }

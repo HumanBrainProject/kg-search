@@ -60,13 +60,13 @@ public class ControlledTerm implements TargetInstance {
     @FieldInfo(label = "Definition")
     private Value<String> definition;
 
-    @FieldInfo(label = "Description")
+    @FieldInfo(markdown = true)
     private Value<String> description;
 
-    @FieldInfo(label = "External definitions")
+    @FieldInfo(label = "External definitions",  layout = "summary")
     private List<TargetExternalReference> externalDefinitions;
 
-    @FieldInfo(label = "Synonyms")
+    @FieldInfo(label = "Synonyms",  layout = "summary")
     private List<Value<String>> synonyms;
 
     @Override

@@ -73,6 +73,7 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
         return null;
     }
 
+
     protected ISODateValue value(Date date){
         if(date != null){
             return new ISODateValue(date);

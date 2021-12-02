@@ -86,7 +86,7 @@
       "propertyName": "query:relatedPublications",
       "path": [
         "https://openminds.ebrains.eu/vocab/relatedPublication",
-        "http://schema.org/identifier"
+        "https://openminds.ebrains.eu/vocab/identifier"
       ],
       "ensureOrder": true
     },
@@ -200,7 +200,7 @@
             "@id": "https://openminds.ebrains.eu/vocab/species",
             "typeFilter": [
               {
-                "@id": "https://openminds.ebrains.eu/core/Species"
+                "@id": "https://openminds.ebrains.eu/controlledTerms/Species"
               }
             ]
           },
@@ -239,6 +239,7 @@
         {
           "propertyName": "query:states",
           "path": "https://openminds.ebrains.eu/vocab/studiedState",
+          "ensureOrder": true,
           "structure": [
             {
               "propertyName": "query:age",
@@ -480,6 +481,7 @@
             {
               "propertyName": "query:states",
               "path": "https://openminds.ebrains.eu/vocab/studiedState",
+              "ensureOrder": true,
               "structure": [
                 {
                   "propertyName": "query:age",
@@ -728,6 +730,7 @@
         {
           "propertyName": "query:states",
           "path": "https://openminds.ebrains.eu/vocab/studiedState",
+          "ensureOrder": true,
           "structure": [
             {
               "propertyName": "query:age",
@@ -1053,6 +1056,7 @@
             {
               "propertyName": "query:states",
               "path": "https://openminds.ebrains.eu/vocab/studiedState",
+              "ensureOrder": true,
               "structure": [
                 {
                   "propertyName": "query:age",

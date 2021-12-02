@@ -100,8 +100,10 @@ public class Indexing {
     public ResponseEntity<ErrorReportResult> fullReplacementAutoRelease() {
         try {
             final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(TranslatorModel::isAutoRelease).map(m -> {
-                indexingController.recreateAutoReleasedIndex(m.getTargetClass());
-                final List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, DataStage.RELEASED);
+                indexingController.recreateAutoReleasedIndex(DataStage.IN_PROGRESS, m.getTargetClass());
+                List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, DataStage.IN_PROGRESS);
+                indexingController.recreateAutoReleasedIndex(DataStage.RELEASED, m.getTargetClass());
+                errorsBySource.addAll(indexingController.populateIndex(m, DataStage.RELEASED));
                 return handleErrorReportResultByTargetType(m, errorsBySource);
             }).filter(Objects::nonNull).collect(Collectors.toList());
             return handleErrorReportResult(errorsByTarget);
@@ -149,7 +151,8 @@ public class Indexing {
     public ResponseEntity<ErrorReportResult> incrementalUpdateAutoRelease() {
         try {
             final List<ErrorReportResult.ErrorReportResultByTargetType> errorsByTarget = TranslatorModel.MODELS.stream().filter(TranslatorModel::isAutoRelease).map(m -> {
-                final List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, DataStage.RELEASED);
+                List<ErrorReportResult.ErrorReportResultBySourceType> errorsBySource = indexingController.populateIndex(m, DataStage.IN_PROGRESS);
+                errorsBySource.addAll(indexingController.populateIndex(m, DataStage.RELEASED));
                 return  handleErrorReportResultByTargetType(m, errorsBySource);
             }).filter(Objects::nonNull).collect(Collectors.toList());
             return handleErrorReportResult(errorsByTarget);

@@ -53,7 +53,7 @@ public class ESHelper {
         return String.format("%s_searchable_*", getIndexPrefix(dataStage));
     }
 
-    public static String getAutoReleasedIndex(Class<?> type) {
-        return String.format("%s_%s", INDEX_PREFIX_AUTO_RELEASED, MetaModelUtils.getIndexNameForClass(type));
+    public static String getAutoReleasedIndex(DataStage dataStage, Class<?> type) {
+        return String.format("%s_%s", getIndexPrefix(dataStage), MetaModelUtils.getIndexNameForClass(type));
     }
 }
