@@ -118,11 +118,7 @@ export const loadFileBundlesRequest = () => {
 export const loadFileBundlesSuccess = result => {
   return {
     type: types.LOAD_FILE_BUNDLES_SUCCESS,
-    fileBundles: [
-      "hello",
-      "world",
-      ...result.data
-    ]
+    fileBundles: result.data
   };
 };
 
