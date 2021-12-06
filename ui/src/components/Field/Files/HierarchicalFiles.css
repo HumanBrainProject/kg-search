@@ -29,6 +29,7 @@
 
 .kgs-hierarchical-files>ul {
     flex: 1;
+    width: 100%;
     height: calc(100vh - 500px);
     overflow-y: auto;
     border: 1px solid var(--default-border-color);
@@ -39,6 +40,7 @@
 .kgs-hierarchical-files .kgs-hierarchical-files__details {
     flex: 1;
     position: relative;
+    width: 100%;
     margin: 9px 0 2px;
     padding: 10px;
 }
@@ -69,7 +71,7 @@
 } 
 
 .kgs-hierarchical-files__details .kgs-hierarchical-files__info > div {
-    text-align: left;
+    text-align: center;
 }
 
 .kgs-hierarchical-files__details .kgs-hierarchical-files__info .kgs-hierarchical-files__info_agreement {
@@ -127,6 +129,14 @@
 @media (min-width:992px) {
     .kgs-hierarchical-files {
         flex-direction: row;
+    }
+
+    .kgs-hierarchical-files > ul {
+        width: unset;
+    }
+
+    .kgs-hierarchical-files .kgs-hierarchical-files__details{
+        width: unset;
     }
 }
 
