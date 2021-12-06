@@ -47,7 +47,7 @@ class API {
     this._axios.interceptors.request.use(config => {
       const state = store.getState();
       const header = config.headers[config.method];
-      if (state.auth.accessToken && !config.url.endsWith("/labels")) {
+      if (state.auth.accessToken && config.url && !config.url.endsWith("/labels")) {
         header.Authorization = "Bearer " + state.auth.accessToken;
       }
       return Promise.resolve(config);

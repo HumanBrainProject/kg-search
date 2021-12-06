@@ -25,9 +25,12 @@ import * as types from "./actions.types";
 import API from "../services/API";
 import { sessionFailure } from "./actions";
 
-export const loadFilesRequest = reset => {
+export const loadFilesRequest = (searchAfter, fileBundle, fileFormat, reset) => {
   return {
     type: types.LOAD_FILES_REQUEST,
+    searchAfter: searchAfter,
+    fileBundle: fileBundle,
+    fileFormat: fileFormat,
     reset: reset
   };
 };
@@ -56,31 +59,171 @@ export const clearFiles = () => {
   };
 };
 
-export const loadFiles = (url, reset) => {
+export const loadFiles = (filesUrl, searchAfter, fileBundle, fileFormat, reset) => {
+  if (!filesUrl) {
+    throw "action loadFileFormats got a null url";
+  }
   return dispatch => {
-    dispatch(loadFilesRequest(reset));
+    dispatch(loadFilesRequest(searchAfter, fileBundle, fileFormat, reset));
+    const params = {};
+    if (searchAfter && !reset) {
+      params["searchAfter"] = searchAfter;
+    }
+    if (fileBundle) {
+      params["bundle"] = fileBundle;
+    }
+    if (fileFormat) {
+      params["format"] = fileFormat;
+    }
+    const paramsString = Object.entries(params).map(([k,v]) => `${k}=${encodeURIComponent(v)}`).join("&");
+    const url = filesUrl + (paramsString.length?`?${paramsString}`:"");
     API.axios
       .get(url)
       .then(response => dispatch(loadFilesSuccess(response.data, reset)))
       .catch(e => {
         const { response } = e;
-        const { status } = response;
-        switch (status) {
-        case 401: // Unauthorized
-        case 403: // Forbidden
-        case 511: // Network Authentication Required
-        {
-          const error = "Your session has expired. Please login again.";
-          dispatch(sessionFailure(error));
-          break;
-        }
-        case 500:
-        case 404:
-        default:
-        {
+        if (response) {
+          const { status } = response;
+          switch (status) {
+          case 401: // Unauthorized
+          case 403: // Forbidden
+          case 511: // Network Authentication Required
+          {
+            const error = "Your session has expired. Please login again.";
+            dispatch(sessionFailure(error));
+            break;
+          }
+          case 500:
+          case 404:
+          default:
+          {
+            const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
+            dispatch(loadFilesFailure(error));
+          }
+          }
+        } else {
           const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
           dispatch(loadFilesFailure(error));
         }
+      });
+  };
+};
+
+export const loadFileBundlesRequest = () => {
+  return {
+    type: types.LOAD_FILE_BUNDLES_REQUEST
+  };
+};
+
+export const loadFileBundlesSuccess = result => {
+  return {
+    type: types.LOAD_FILE_BUNDLES_SUCCESS,
+    fileBundles: [
+      "hello",
+      "world",
+      ...result.data
+    ]
+  };
+};
+
+export const loadFileBundlesFailure = error => {
+  return {
+    type: types.LOAD_FILE_BUNDLES_FAILURE,
+    error: error
+  };
+};
+
+export const loadFileBundles = url => {
+  if (!url) {
+    throw "action loadFileBundles got a null url";
+  }
+  return dispatch => {
+    dispatch(loadFileBundlesRequest());
+    API.axios
+      .get(url)
+      .then(response => dispatch(loadFileBundlesSuccess(response.data)))
+      .catch(e => {
+        const { response } = e;
+        if (response) {
+          const { status } = response;
+          switch (status) {
+          case 401: // Unauthorized
+          case 403: // Forbidden
+          case 511: // Network Authentication Required
+          {
+            const error = "Your session has expired. Please login again.";
+            dispatch(sessionFailure(error));
+            break;
+          }
+          case 500:
+          case 404:
+          default:
+          {
+            const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
+            dispatch(loadFileBundlesFailure(error));
+          }
+          }
+        } else {
+          const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
+          dispatch(loadFileBundlesFailure(error));
+        }
+      });
+  };
+};
+
+export const loadFileFormatsRequest = () => {
+  return {
+    type: types.LOAD_FILE_FORMATS_REQUEST
+  };
+};
+
+export const loadFileFormatsSuccess = result => {
+  return {
+    type: types.LOAD_FILE_FORMATS_SUCCESS,
+    fileFormats: result.data
+  };
+};
+
+export const loadFileFormatsFailure = error => {
+  return {
+    type: types.LOAD_FILE_FORMATS_FAILURE,
+    error: error
+  };
+};
+
+export const loadFileFormats = url => {
+  if (!url) {
+    throw "action loadFileFormats got a null url";
+  }
+  return dispatch => {
+    dispatch(loadFileFormatsRequest());
+    API.axios
+      .get(url)
+      .then(response => dispatch(loadFileFormatsSuccess(response.data)))
+      .catch(e => {
+        const { response } = e;
+        if (response) {
+          const { status } = response;
+          switch (status) {
+          case 401: // Unauthorized
+          case 403: // Forbidden
+          case 511: // Network Authentication Required
+          {
+            const error = "Your session has expired. Please login again.";
+            dispatch(sessionFailure(error));
+            break;
+          }
+          case 500:
+          case 404:
+          default:
+          {
+            const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
+            dispatch(loadFileFormatsFailure(error));
+          }
+          }
+        } else {
+          const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
+          dispatch(loadFileFormatsFailure(error));
         }
       });
   };

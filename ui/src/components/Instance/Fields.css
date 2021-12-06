@@ -91,3 +91,18 @@
 .kgs-instance[data-type] .kgs-field__contributions .kgs-field__list > ul li {
   padding-bottom: 5px;
 }
+
+
+.kgs-instance[data-type] .kgs-field__filesAsyncUrl {
+  height: calc(100vh - 500px);
+  display: flex;
+  flex-direction: column;
+}
+
+.kgs-instance[data-type] .kgs-field__filesAsyncUrl .kgs-hierarchical-files {
+  flex: 1;
+}
+
+.kgs-instance[data-type] .kgs-field__filesAsyncUrl .kgs-hierarchical-files>ul {
+  height: 100%;
+}

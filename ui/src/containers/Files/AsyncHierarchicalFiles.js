@@ -20,112 +20,54 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 
+import { FileFormatFilter } from "./FileFormatFilter";
+import { FileBundleFilter } from "./FileBundleFilter";
+import { ViewFiles } from "./ViewFiles";
 import * as actionsFiles from "../../actions/actions.files";
-import HierarchicalFiles from "../../components/Field/Files/HierarchicalFiles";
 
-const Label = ({isAllFetched, number, total}) => {
+export const AsyncHierarchicalFilesComponent = ({mapping, group, searchFilesAfter, fileBundle, fileFormat, fetchFiles, fetchFileFormats, fetchFileBundles}) => {
 
-  if (isAllFetched) {
-    return (
-      <span><i>{total}</i> files</span>
-    );
-  }
-
-  return (
-    <span>Showing <i>{number}</i> files out of <i>{total}</i>.</span>
-  );
-};
-
-const AsyncHierarchicalFilesComponent = ({ searchAfter, url, data, total, isInitialized, isLoading, error, mapping, group, fetch, clear }) => {
-
-  useEffect(() => {
-    fetch(url, true);
-    return () => {
-      clear();
-    };
-  }, []);
-
-  if (error) {
-    return (
-      <div>
-        <span style={{color: "var(--code-color)"}}><FontAwesomeIcon icon="exclamation-triangle"/>{error} </span>
-        <FontAwesomeIcon icon="sync-alt" onClick={() => fetch(url)} style={{cursor: "pointer"}}/>
-      </div>
-    );
-  }
-
-  const isAllFetched = data.length === total;
-
-  if (!isInitialized || isLoading) {
-    return (
-      <>
-        {!!data.length && (
-          <>
-            <Label isAllFetched={isAllFetched} number={data.length} total={total} />
-            &nbsp;&nbsp;
-          </>
-        )}
-        <div className="spinner-border spinner-border-sm" role="status">
-          <span className="sr-only">Retrieving files...</span>
-        </div>
-        {!!data.length && (
-          <HierarchicalFiles data={data} mapping={mapping} group={group} />
-        )}
-      </>
-    );
-  }
-
-  if (data.length === 0) {
-    return (
-      <span>No files available <FontAwesomeIcon icon="sync-alt" onClick={() => fetch(url)} style={{cursor: "pointer"}}/></span>
-    );
-  }
-
-  const fetchFrom = () => {
-    const urlFrom = searchAfter?`${url}?searchAfter=${searchAfter}`:url;
-    fetch(urlFrom, false);
+  const handleSelectFileFormat = format => {
+    console.log("format", format);
+    fetchFiles(searchFilesAfter, fileBundle, format, true);
   };
 
-  const showMoreStyle = {
-    display: "inline",
-    paddingTop: 0,
-    paddingBottom: 0,
-    border: 0,
-    verticalAlign: "baseline",
-    color: "var(--link-color-1)",
-    lineHeight: "1rem"
+  const handleSelectFileBundle = bundle => {
+    console.log("bundle", bundle);
+    fetchFiles(searchFilesAfter, bundle, fileFormat, true);
+  };
+
+  const handleFetchFiles = reset => {
+    fetchFiles(searchFilesAfter, fileBundle, fileFormat, reset);
   };
 
   return (
     <>
-      <Label isAllFetched={isAllFetched} number={data.length} total={total} />
-      {!isAllFetched && (
-        <button type="button" className="btn btn-link" onClick={fetchFrom} style={showMoreStyle}>show more</button>
-      )}
-      <HierarchicalFiles data={data} mapping={mapping} group={group} />
+      <FileFormatFilter onSelect={handleSelectFileFormat} fetch={fetchFileFormats} />
+      <FileBundleFilter onSelect={handleSelectFileBundle} fetch={fetchFileBundles} />
+      <ViewFiles mapping={mapping} group={group} fetch={handleFetchFiles} />
     </>
   );
 };
 
 export const AsyncHierarchicalFiles = connect(
   (state, props) => ({
-    url: props.url,
-    data: state.files.files,
-    total: state.files.total,
-    searchAfter: state.files.searchAfter,
-    isInitialized: state.files.isInitialized,
-    isLoading: state.files.isLoading,
-    error: state.files.error,
+    files: state.files.files,
+    searchFilesAfter: state.files.searchFilesAfter,
+    isFilesInitialized: state.files.isFilesInitialized,
+    isFilesLoading: state.files.isFilesLoading,
+    filesError: state.files.filesError,
+    fileFormat: state.files.fileFormat,
+    fileBundle: state.files.fileBundle,
     mapping: props.mapping,
     group: props.group
   }),
-  dispatch => ({
-    fetch: (url, reset) => dispatch(actionsFiles.loadFiles(url, reset)),
-    clear: () => dispatch(actionsFiles.clearFiles())
+  (dispatch, props) => ({
+    fetchFiles: (searchAfter, fileBundle, fileFilter, reset) => dispatch(actionsFiles.loadFiles(props.filesUrl, searchAfter, fileBundle, fileFilter, reset)),
+    fetchFileFormats: () => dispatch(actionsFiles.loadFileFormats(props.fileFormatsUrl)),
+    fetchFileBundles: () => dispatch(actionsFiles.loadFileBundles(props.fileBundlesUrl))
   })
 )(AsyncHierarchicalFilesComponent);

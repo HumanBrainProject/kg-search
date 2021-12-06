@@ -49,7 +49,9 @@ const FieldBase = (renderUserInteractions = true) => {
     const isList = Array.isArray(data);
     const isTable = mapping.isTable;
     const isHierarchicalFiles = mapping.isHierarchicalFiles;
-    const asyncUrl = mapping.isAsync?data:null;
+    const asyncFilesUrl = mapping.isAsync?data:null;
+    const asyncFileFormatsUrl = asyncFilesUrl?asyncFilesUrl.replace(/^(.+)files$/, "$1fileFormats"):null;
+    const asyncFileBundlesUrl = asyncFilesUrl?asyncFilesUrl.replace(/^(.+)files$/, "$1fileBundles"):null;
     const isFilePreview = mapping.isFilePreview && data.url;
     const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
     const className = "kgs-field" + (name?" kgs-field__" + name:"") + (["header", "summary"].includes(mapping.layout)?" kgs-field__layout-" + mapping.layout:"") + (isTable?" kgs-field__table":"") + (isHierarchicalFiles?" kgs-field__hierarchical-files":"");
@@ -96,7 +98,9 @@ const FieldBase = (renderUserInteractions = true) => {
     const asyncHierarchicalFileProps = {
       mapping: mapping,
       group: group,
-      url: asyncUrl
+      filesUrl: asyncFilesUrl,
+      fileBundlesUrl: asyncFileBundlesUrl,
+      fileFormatsUrl: asyncFileFormatsUrl
     };
     const filePreviewProps = {
       show: isFilePreview,
@@ -114,7 +118,7 @@ const FieldBase = (renderUserInteractions = true) => {
         <TableField {...tableProps} />
         <FilePreview {...filePreviewProps} />
         {isHierarchicalFiles && (
-          asyncUrl?
+          asyncFilesUrl?
             <AsyncHierarchicalFiles  {...asyncHierarchicalFileProps} />
             :
             <HierarchicalFiles  {...hierarchicalFileProps} />
