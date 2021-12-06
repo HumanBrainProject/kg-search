@@ -87,6 +87,7 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
             f.setFormat(ref(file.getFormat()));
             f.setInputTypeForSoftware(ref(file.getFormat().getInputFormatForSoftware()));
         }
+        f.setGroupingTypes(file.getGroupingTypes());
         return f;
     }
 }

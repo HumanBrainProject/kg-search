@@ -102,6 +102,14 @@
           ]
         }
       ]
+    },
+    {
+      "propertyName": "query:groupingTypes",
+      "path": [
+        "https://openminds.ebrains.eu/vocab/isPartOf",
+        "https://openminds.ebrains.eu/vocab/groupingType",
+        "https://openminds.ebrains.eu/vocab/name"
+      ]
     }
   ]
 }

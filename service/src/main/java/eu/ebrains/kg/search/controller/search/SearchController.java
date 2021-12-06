@@ -41,7 +41,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -73,6 +72,29 @@ public class SearchController {
 
     public boolean isInInProgressRole(Principal principal) {
         return userInfoRoles.isInAnyOfRoles((KeycloakAuthenticationToken) principal, "team", "collab-kg-search-in-progress-administrator", "collab-kg-search-in-progress-editor", "collab-kg-search-in-progress-viewer");
+    }
+
+    private Map<String, Object> formatAggregation(ElasticSearchResult esResult, String aggregation) {
+        Map<String, Object> result = new HashMap<>();
+        if (StringUtils.isNotBlank(aggregation) &&
+                esResult != null &&
+                esResult.getAggregations() != null &&
+                esResult.getAggregations().containsKey(aggregation) &&
+                esResult.getAggregations().get(aggregation) != null &&
+                esResult.getAggregations().get(aggregation).getBuckets() != null) {
+
+            List<String> formats = esResult.getAggregations().get(aggregation).getBuckets().stream()
+                    .map(bucket -> bucket.getKey())
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+            result.put("total", formats.size());
+            result.put("data", formats);
+        } else {
+            result.put("total", 0);
+            result.put("data", Collections.emptyList());
+        }
+        return result;
     }
 
     private Map<String, Object> formatFilesResponse(ElasticSearchResult filesFromRepo) {
@@ -108,11 +130,30 @@ public class SearchController {
         return result;
     }
 
-
-    public ResponseEntity<?> getFilesFromRepo(DataStage stage, String id, String searchAfter, int size) {
+    private ResponseEntity<?> getAggregationFromRepo(DataStage stage, String id, String field) {
         try {
             String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class);
-            ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size);
+            Map<String, String> aggs = Map.of("patterns", field);
+            ElasticSearchResult esResult = esServiceClient.getAggregationsFromRepo(fileIndex, id, aggs);
+            Map<String, Object> result = formatAggregation(esResult, "patterns");
+            return ResponseEntity.ok(result);
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
+        }
+    }
+
+    public ResponseEntity<?> getFileBundlesFromRepo(DataStage stage, String id) {
+        return getAggregationFromRepo(stage, id, "groupingTypes.keyword");
+    }
+
+    public ResponseEntity<?> getFileFormatsFromRepo(DataStage stage, String id) {
+        return getAggregationFromRepo(stage, id, "format.value.keyword");
+    }
+
+    public ResponseEntity<?> getFilesFromRepo(DataStage stage, String id, String searchAfter, int size, String format, String fileBundle) {
+        try {
+            String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class);
+            ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size, format, fileBundle);
             Map<String, Object> result = formatFilesResponse(filesFromRepo);
             return ResponseEntity.ok(result);
         } catch (WebClientResponseException e) {

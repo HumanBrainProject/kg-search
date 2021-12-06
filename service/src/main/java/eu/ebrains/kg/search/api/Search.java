@@ -156,8 +156,10 @@ public class Search {
 
     @GetMapping("/repositories/{id}/files/live")
     public ResponseEntity<?> getFilesFromRepoForLive(@PathVariable("id") String repositoryId,
-                                                       @RequestParam(required = false, name = "searchAfter") String searchAfter,
-                                                       @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
+                                                     @RequestParam(required = false, name = "searchAfter") String searchAfter,
+                                                     @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
+                                                     @RequestParam(required = false, name = "format") String format,
+                                                     @RequestParam(required = false, name = "fileBundle") String fileBundle,
                                                        Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
             if ((searchAfter != null && !MetaModelUtils.isValidUUID(searchAfter)) || !MetaModelUtils.isValidUUID(repositoryId) || size > 10000) {
@@ -166,7 +168,7 @@ public class Search {
             try {
                 //FIXME fix the files for live mechanism
                 //kgV3.fetchInstance(repositoryId, DataStage.IN_PROGRESS);
-                return searchController.getFilesFromRepo(DataStage.IN_PROGRESS, repositoryId, searchAfter, size);
+                return searchController.getFilesFromRepo(DataStage.IN_PROGRESS, repositoryId, searchAfter, size, format, fileBundle);
                 
             } catch (WebClientResponseException e) {
                 return ResponseEntity.status(e.getStatusCode()).build();
@@ -176,33 +178,64 @@ public class Search {
         }
     }
 
-    @GetMapping("/groups/public/repositories/{id}/files")
-    public ResponseEntity<?> getFilesFromRepoForPublic(@PathVariable("id") String id,
-                                                       @RequestParam(required = false, name = "searchAfter") String searchAfter,
-                                                       @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
-                                                       Principal principal) {
-        if ((searchAfter != null && !MetaModelUtils.isValidUUID(searchAfter)) || !MetaModelUtils.isValidUUID(id) || size > 10000) {
-            return ResponseEntity.badRequest().build();
-        }
-        return searchController.getFilesFromRepo(DataStage.RELEASED, id, searchAfter, size);
+    @GetMapping("/groups/public/repositories/{id}/fileFormats")
+    public ResponseEntity<?> getFileFormatsFromRepoForPublic(@PathVariable("id") String id) {
+        return searchController.getFileFormatsFromRepo(DataStage.RELEASED, id);
     }
 
-    @GetMapping("/groups/curated/repositories/{id}/files")
-    public ResponseEntity<?> getFilesFromRepoForCurated(@PathVariable("id") String id,
-                                                        @RequestParam(required = false, name = "searchAfter") String searchAfter,
-                                                        @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
+    @GetMapping("/groups/curated/repositories/{id}/fileFormats")
+    public ResponseEntity<?> getFileFormatsFromRepoForCurated(@PathVariable("id") String id,
                                                         Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
-            if ((searchAfter != null && !MetaModelUtils.isValidUUID(searchAfter)) || !MetaModelUtils.isValidUUID(id) || size > 10000) {
-                return ResponseEntity.badRequest().build();
-            }
-            return searchController.getFilesFromRepo(DataStage.IN_PROGRESS, id, searchAfter, size);
+            return searchController.getFileFormatsFromRepo(DataStage.IN_PROGRESS, id);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
-    
+    @GetMapping("/groups/public/repositories/{id}/fileBundles")
+    public ResponseEntity<?> getFileBundlesFromRepoForPublic(@PathVariable("id") String id) {
+        return searchController.getFileBundlesFromRepo(DataStage.RELEASED, id);
+    }
+
+    @GetMapping("/groups/curated/repositories/{id}/fileBundles")
+    public ResponseEntity<?> getFileBundlesFromRepoForCurated(@PathVariable("id") String id,
+                                                        Principal principal) {
+        if (searchController.isInInProgressRole(principal)) {
+            return searchController.getFileBundlesFromRepo(DataStage.IN_PROGRESS, id);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    @GetMapping("/groups/public/repositories/{id}/files")
+    public ResponseEntity<?> getFilesFromRepoForPublic(@PathVariable("id") String id,
+                                                       @RequestParam(required = false, defaultValue = "", name = "searchAfter") String searchAfter,
+                                                       @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
+                                                       @RequestParam(required = false, defaultValue = "", name = "format") String format,
+                                                       @RequestParam(required = false, defaultValue = "", name = "fileBundle") String fileBundle) {
+        if ((StringUtils.isNotBlank(searchAfter) && !MetaModelUtils.isValidUUID(searchAfter)) || !MetaModelUtils.isValidUUID(id) || size > 10000) {
+            return ResponseEntity.badRequest().build();
+        }
+        return searchController.getFilesFromRepo(DataStage.RELEASED, id, searchAfter, size, format, fileBundle);
+    }
+
+    @GetMapping("/groups/curated/repositories/{id}/files")
+    public ResponseEntity<?> getFilesFromRepoForCurated(@PathVariable("id") String id,
+                                                        @RequestParam(required = false, defaultValue = "", name = "searchAfter") String searchAfter,
+                                                        @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
+                                                        @RequestParam(required = false, defaultValue = "", name = "format") String format,
+                                                        @RequestParam(required = false, defaultValue = "", name = "bundle") String bundle,
+                                                        Principal principal) {
+        if (searchController.isInInProgressRole(principal)) {
+            if ((StringUtils.isNotBlank(searchAfter) && !MetaModelUtils.isValidUUID(searchAfter)) || !MetaModelUtils.isValidUUID(id) || size > 10000) {
+                return ResponseEntity.badRequest().build();
+            }
+            return searchController.getFilesFromRepo(DataStage.IN_PROGRESS, id, searchAfter, size, format, bundle);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
 
     @GetMapping("/groups/public/documents/{type}/{id}")
     public ResponseEntity<?> getDocumentForPublic(@PathVariable("type") String type, @PathVariable("id") String id) {

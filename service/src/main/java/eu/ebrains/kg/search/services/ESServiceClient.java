@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import eu.ebrains.kg.search.utils.MetaModelUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,10 +39,8 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class ESServiceClient {
@@ -97,44 +96,138 @@ public class ESServiceClient {
                 "}", esQuerySize, id);
     }
 
-    private String getPaginatedFilesQuery(String fileRepositoryId, String searchAfter, int size) {
-        if(searchAfter == null) {
-            return String.format("{\n" +
-                    " \"size\": %d,\n" +
-                    " \"sort\": [\n" +
-                    "    {\"_id\": \"asc\"}\n" +
-                    "  ],\n" +
-                    "  \"query\": {\n" +
-                    "    \"bool\": {\n" +
-                    "      \"must\": {\n" +
-                    "          \"term\": {\n" +
-                    "            \"fileRepository\": \"%s\"\n" +
-                    "          }\n" +
-                    "        }\n" +
-                    "    }\n" +
-                    "  },\n" +
-                    " \"track_total_hits\": \"true\" " +
-                    "}", size, fileRepositoryId);
+    private String getAgg(String field) {
+        if(StringUtils.isBlank(field)) {
+            return null;
         }
-        return String.format("{\n" +
-                " \"size\": %d,\n" +
-                " \"sort\": [\n" +
-                "    {\"_id\": \"asc\"}\n" +
-                "  ],\n" +
-                "  \"search_after\": [\n" +
-                "      \"%s\"\n" +
-                "  ],\n" +
-                "  \"query\": {\n" +
-                "    \"bool\": {\n" +
-                "      \"must\": {\n" +
-                "          \"term\": {\n" +
-                "            \"fileRepository\": \"%s\"\n" +
-                "          }\n" +
+        return String.format(
+            "{\n" +
+            "  \"terms\": {\n" +
+            "    \"field\": \"%s\",\n" +
+            "    \"size\": 1000000000\n" +
+            "  }\n" +
+            "}", field);
+    }
+
+    private String getAggs(Map<String, String> aggs) {
+        List<String> aggList = aggs.entrySet().stream().map(entry -> {
+                String name = entry.getKey();
+                String value = getAgg(entry.getValue());
+                if (StringUtils.isBlank(name) || StringUtils.isBlank(value)) {
+                    return null;
+                }
+                return String.format("\"%s\": %s", name, value);
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        if (aggList.size() == 0) {
+            return null;
+        }
+
+        return "{\n" + StringUtils.join(aggList, ",\n ") + "\n}";
+    }
+
+    private String getQueryTerm(String term, String value) {
+        if(StringUtils.isBlank(value)) {
+            return null;
+        }
+        return String.format(
+                "      {\n" +
+                "        \"term\": {\n" +
+                "          \"%s\": \"%s\"\n" +
                 "        }\n" +
+                "      }", term, value);
+    }
+
+    private String getQuery(Map<String, String> terms) {
+        List<String> termList = terms.entrySet().stream().map(entry -> getQueryTerm(entry.getKey(), entry.getValue()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        if (termList.size() == 0) {
+            return null;
+        }
+
+        String must = null;
+        if (termList.size() == 1) {
+            must = termList.get(0);
+        } else {
+            must = "[\n" + StringUtils.join(termList, ",\n ") + "\n]";
+        }
+
+        return String.format(
+                "  {\n" +
+                "    \"bool\": {\n" +
+                "      \"must\": %s\n" +
                 "    }\n" +
-                "  },\n" +
-                " \"track_total_hits\": \"true\" " +
-                "}", size, searchAfter, fileRepositoryId);
+                "  }", must);
+    }
+
+    private String getPayload(Map<String, String> parameters) {
+        List<String> list = parameters.entrySet().stream().map(entry -> {
+                    if (StringUtils.isBlank(entry.getValue())) {
+                        return null;
+                    }
+                    return String.format("\"%s\": %s", entry.getKey(), entry.getValue());
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        return "{\n" + StringUtils.join(list, ",\n ") + "\n}";
+    }
+
+    private String getPaginatedFilesQuery(String fileRepositoryId, String searchAfter, int size, String format, String fileBundle) {
+
+        String sizeValue = String.format("%d", size);
+
+        String sortValue =
+            "[\n" +
+            "    {\"_id\": \"asc\"}\n" +
+            "]";
+
+        String searchAfterValue = "";
+        if (StringUtils.isNotBlank(searchAfter)) {
+            searchAfterValue = String.format(
+                "  [\n" +
+                "    \"%s\"\n" +
+                "  ]", searchAfter);
+        }
+
+        Map<String, String> terms = Map.of(
+                "fileRepository", fileRepositoryId,
+                "format.value.keyword", format,
+                "groupingTypes.keyword", fileBundle
+        );
+        String queryValue = getQuery(terms);
+
+        Map<String, String> parameters = Map.of(
+                "size", sizeValue,
+                "sort", sortValue,
+                "search_after", searchAfterValue,
+                "query", queryValue,
+                "track_total_hits", "true"
+        );
+
+        return getPayload(parameters);
+    }
+
+    private String getAggregationsQuery(String fileRepositoryId, Map<String, String> aggs) {
+
+        String aggsValue = getAggs(aggs);
+
+        Map<String, String> terms = Map.of(
+                "fileRepository", fileRepositoryId
+        );
+        String queryValue = getQuery(terms);
+
+        Map<String, String> parameters = Map.of(
+                "size", "0",
+                "aggs", aggsValue,
+                "query", queryValue
+        );
+
+        return getPayload(parameters);
     }
 
     private String getIdsOfPaginatedQuery(String id, String type) {
@@ -239,8 +332,27 @@ public class ESServiceClient {
                 .block();
     }
 
-    public ElasticSearchResult getFilesFromRepo(String index, String fileRepositoryId, String searchAfter, int size) {
-        String paginatedQuery = getPaginatedFilesQuery(fileRepositoryId, searchAfter, size);
+    public ElasticSearchResult getAggregationsFromRepo(String index, String fileRepositoryId, Map<String, String> aggs) {
+        String query = getAggregationsQuery(fileRepositoryId, aggs);
+        try {
+            return webClient.post()
+                    .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
+                    .body(BodyInserters.fromValue(query))
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_NDJSON_VALUE)
+                    .retrieve()
+                    .bodyToMono(ElasticSearchResult.class)
+                    .block();
+        } catch(WebClientResponseException e){
+            if(e.getStatusCode() == HttpStatus.NOT_FOUND){
+                return null;
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    public ElasticSearchResult getFilesFromRepo(String index, String fileRepositoryId, String searchAfter, int size, String format, String fileBundle) {
+        String paginatedQuery = getPaginatedFilesQuery(fileRepositoryId, searchAfter, size, format, fileBundle);
         try {
             return webClient.post()
                     .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))

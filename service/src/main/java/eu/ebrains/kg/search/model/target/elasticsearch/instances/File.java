@@ -53,9 +53,11 @@ public class File implements TargetInstance {
     @FieldInfo(label = "Size")
     private String size;
     @FieldInfo(label = "Format")
-    private TargetInternalReference format;
+        private TargetInternalReference format;
     @FieldInfo(label = "Software taking this file as input")
     private List<TargetInternalReference> inputTypeForSoftware;
+    private List<String> groupingTypes;
+
 
     @Override
     @JsonIgnore

@@ -26,6 +26,7 @@ package eu.ebrains.kg.search.model.target.elasticsearch;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
+import java.util.Map;
 
 public class ElasticSearchResult {
     private int took;
@@ -35,6 +36,8 @@ public class ElasticSearchResult {
 
     @JsonProperty("_shards")
     private Shards shards;
+
+    private Map<String, Agg> aggregations;
 
     private Hits hits;
 
@@ -53,6 +56,14 @@ public class ElasticSearchResult {
     public Hits getHits() { return hits; }
 
     public void setHits(Hits hits) { this.hits = hits; }
+
+    public Map<String, Agg> getAggregations() {
+        return aggregations;
+    }
+
+    public void setAggregations(Map<String, Agg> aggregations) {
+        this.aggregations = aggregations;
+    }
 
     private static class Shards {
         private int total;
@@ -98,6 +109,64 @@ public class ElasticSearchResult {
         @JsonProperty("failed")
         public void setFailed(int failed) {
             this.failed = failed;
+        }
+    }
+
+    public static class Agg {
+        @JsonProperty("doc_count_error_upper_bound")
+        private double docCountErrorUpperBound;
+
+        @JsonProperty("sum_other_doc_count")
+        private double sumOtherDocCount;
+
+        private List<Bucket> buckets;
+
+        public double getDocCountErrorUpperBound() {
+            return docCountErrorUpperBound;
+        }
+
+        public void setDocCountErrorUpperBound(double docCountErrorUpperBound) {
+            this.docCountErrorUpperBound = docCountErrorUpperBound;
+        }
+
+        public double getSumOtherDocCount() {
+            return sumOtherDocCount;
+        }
+
+        public void setSumOtherDocCount(double sumOtherDocCount) {
+            this.sumOtherDocCount = sumOtherDocCount;
+        }
+
+        public List<Bucket> getBuckets() {
+            return buckets;
+        }
+
+        public void setBuckets(List<Bucket> buckets) {
+            this.buckets = buckets;
+        }
+    }
+
+    public static class Bucket {
+
+        private String key;
+
+        @JsonProperty("doc_count")
+        private double docCount;
+
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+
+        public double getDocCount() {
+            return docCount;
+        }
+
+        public void setDocCount(double docCount) {
+            this.docCount = docCount;
         }
     }
 
