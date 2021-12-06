@@ -31,6 +31,7 @@ import eu.ebrains.kg.search.controller.search.SearchController;
 import eu.ebrains.kg.search.controller.translators.TranslationController;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.TranslatorModel;
+import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.services.KGV2ServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
@@ -116,13 +117,19 @@ public class Search {
             String queryId = String.format("%s/%s/%s/%s", org, domain, schema, version);
             TranslatorModel<?, ?, ?, ?> translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV2translator()!=null && m.getV2translator().getQueryIds().contains(queryId)).findFirst().orElse(null);
             if(translatorModel!=null){
-                return ResponseEntity.ok(Map.of("_source", translationController.translateToTargetInstanceForLiveMode(kgV2, translatorModel.getV2translator(), queryId, DataStage.IN_PROGRESS, id, true)));
+                TargetInstance v = translationController.translateToTargetInstanceForLiveMode(kgV2, translatorModel.getV2translator(), queryId, DataStage.IN_PROGRESS, id, true, false);
+                if(v!=null){
+                   return ResponseEntity.ok(Map.of("_source", v));
+                }
             }
             translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV1translator()!=null && m.getV1translator().getQueryIds().contains(queryId)).findFirst().orElse(null);
             if(translatorModel!=null){
-                return ResponseEntity.ok(Map.of("_source", translationController.translateToTargetInstanceForLiveMode(kgV2, translatorModel.getV1translator(), queryId, DataStage.IN_PROGRESS, id, true)));
+                TargetInstance v = translationController.translateToTargetInstanceForLiveMode(kgV2, translatorModel.getV1translator(), queryId, DataStage.IN_PROGRESS, id, true, false);
+                if(v!=null){
+                    return ResponseEntity.ok(Map.of("_source", v));
+                }
             }
-            throw new RuntimeException(String.format("Was not able to find a translator for id %s", id));
+            return ResponseEntity.notFound().build();
         } catch (HttpClientErrorException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
         }
@@ -135,9 +142,12 @@ public class Search {
             final TranslatorModel<?, ?, ?, ?> translatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator() != null && m.getV3translator().semanticTypes().stream().anyMatch(typesOfInstance::contains)).findFirst().orElse(null);
             if(translatorModel!=null) {
                 final String queryId = typesOfInstance.stream().map(type -> translatorModel.getV3translator().getQueryIdByType(type)).findFirst().orElse(null);
-                return queryId == null ? null : ResponseEntity.ok(Map.of("_source", translationController.translateToTargetInstanceForLiveMode(kgV3, translatorModel.getV3translator(), queryId, DataStage.IN_PROGRESS, id, false)));
+                final TargetInstance v = translationController.translateToTargetInstanceForLiveMode(kgV3, translatorModel.getV3translator(), queryId, DataStage.IN_PROGRESS, id, false, true);
+                if(v!=null) {
+                    return queryId == null ? null : ResponseEntity.ok(Map.of("_source", v));
+                }
             }
-            throw new RuntimeException(String.format("Was not able to find a translator for id %s", id));
+            return ResponseEntity.notFound().build();
         } catch (HttpClientErrorException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
         }

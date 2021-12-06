@@ -135,6 +135,9 @@ public class ControlledTermV3Translator extends TranslatorV3<ControlledTermV3, C
         t.setId(IdUtils.getUUID(controlledTerm.getId()));
         t.setIdentifier(IdUtils.getUUID(controlledTerm.getIdentifier()));
         t.setTitle(StringUtils.isBlank(controlledTerm.getName()) ? null : new Value<>(controlledTerm.getName()));
+        if(StringUtils.isBlank(controlledTerm.getDefinition()) && StringUtils.isBlank(controlledTerm.getDescription())){
+            return null;
+        }
         t.setDescription(StringUtils.isBlank(controlledTerm.getDescription()) ? null : new Value<>(controlledTerm.getDescription()));
         t.setDefinition(StringUtils.isBlank(controlledTerm.getDefinition()) ? null : new Value<>(controlledTerm.getDefinition()));
         if(controlledTerm.getSynonym()!=null){

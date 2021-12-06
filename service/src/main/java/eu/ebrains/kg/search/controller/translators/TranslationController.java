@@ -24,18 +24,19 @@
 package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.controller.kg.KG;
+import eu.ebrains.kg.search.controller.kg.KGv3;
 import eu.ebrains.kg.search.model.DataStage;
+import eu.ebrains.kg.search.model.TranslatorModel;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.Helpers.*;
@@ -43,11 +44,12 @@ import static eu.ebrains.kg.search.controller.translators.Helpers.*;
 @Component
 public class TranslationController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
+    private final KGv3 kgV3;
     private final DOICitationFormatter doiCitationFormatter;
 
-    public TranslationController(DOICitationFormatter doiCitationFormatter) {
+    public TranslationController(KGv3 kgV3, DOICitationFormatter doiCitationFormatter) {
         this.doiCitationFormatter = doiCitationFormatter;
+        this.kgV3 = kgV3;
     }
 
     public <Source, Target> TargetInstancesResult<Target> translateToTargetInstances(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, int from, int size) {
@@ -55,7 +57,7 @@ public class TranslationController {
         final ResultsOfKG<Source> instanceResults = kg.executeQuery(translator.getResultType(), dataStage, queryId, from, size);
         Stats stats = getStats(instanceResults, from);
         logger.info(String.format("Queried %d %s (%s)", stats.getPageSize(), translator.getSourceType().getSimpleName(), stats.getInfo()));
-        List<Target> instances = instanceResults.getData().stream().map(s -> {
+        List<Target> instances = instanceResults.getData().stream().filter(Objects::nonNull).map(s -> {
                     try {
                         return translator.translate(s, dataStage, false, doiCitationFormatter);
                     } catch (TranslationException e) {
@@ -82,7 +84,8 @@ public class TranslationController {
         return result;
     }
 
-    public <Source, Target extends TargetInstance> Target translateToTargetInstanceForLiveMode(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, String id, boolean useSourceType) throws TranslationException {
+
+    public <Source, Target extends TargetInstance> Target translateToTargetInstanceForLiveMode(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, String queryId, DataStage dataStage, String id, boolean useSourceType, boolean checkReferences) throws TranslationException {
         logger.info(String.format("Starting to query id %s from %s for live mode", id, translator.getSourceType().getSimpleName()));
         Source source;
         if (useSourceType) {
@@ -102,7 +105,36 @@ public class TranslationController {
             }
         }
         logger.info(String.format("Done querying id %s from %s for live mode", id, translator.getSourceType().getSimpleName()));
-        return source != null ? translator.translate(source, dataStage, true, doiCitationFormatter) : null;
+        if(source==null){
+            return null;
+        }
+        final Target translateResult = translator.translate(source, dataStage, true, doiCitationFormatter);
+        if(checkReferences) {
+            //To allow the live preview to hide references to non-existent instances, we need to query them too.
+            final Set<TargetInternalReference> references = TargetInternalReference.getRegistry();
+            if(references!=null) {
+                final Set<TargetInternalReference> targetInternalReferences = new HashSet<>(references);
+                targetInternalReferences.forEach(t -> {
+                    TargetInstance reference = null;
+                    if (t.getReference() != null) {
+                        final List<String> typesOfReference = kgV3.getTypesOfInstance(t.getReference(), DataStage.IN_PROGRESS, false);
+                        final TranslatorModel<?, ?, ?, ?> referenceTranslatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator() != null && m.getV3translator().semanticTypes().stream().anyMatch(typesOfReference::contains)).findFirst().orElse(null);
+                        if (referenceTranslatorModel != null) {
+                            final String referenceQueryId = typesOfReference.stream().map(type -> referenceTranslatorModel.getV3translator().getQueryIdByType(type)).findFirst().orElse(null);
+                            try {
+                                reference = translateToTargetInstanceForLiveMode(kgV3, referenceTranslatorModel.getV3translator(), referenceQueryId, dataStage, t.getReference(), useSourceType, false);
+                            } catch (TranslationException e) {
+                            }
+                        }
+                    }
+                    if (reference == null) {
+                        t.setReference(null);
+                    }
+                });
+            }
+        }
+        TargetInternalReference.clearRegistry();
+        return source != null ? translateResult : null;
     }
 
 

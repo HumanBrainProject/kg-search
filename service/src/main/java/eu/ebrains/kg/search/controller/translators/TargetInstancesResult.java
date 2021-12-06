@@ -24,53 +24,17 @@
 package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.ErrorReport;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+@Getter
+@Setter
 public class TargetInstancesResult<Target> {
     private List<Target> targetInstances;
     private ErrorReport errors;
     private Integer from;
     private Integer size;
     private Integer total;
-
-    public List<Target> getTargetInstances() {
-        return targetInstances;
-    }
-
-    public void setTargetInstances(List<Target> targetInstances) {
-        this.targetInstances = targetInstances;
-    }
-
-    public ErrorReport getErrors() {
-        return errors;
-    }
-
-    public void setErrors(ErrorReport errors) {
-        this.errors = errors;
-    }
-
-    public Integer getFrom() {
-        return from;
-    }
-
-    public void setFrom(Integer from) {
-        this.from = from;
-    }
-
-    public Integer getSize() {
-        return size;
-    }
-
-    public void setSize(Integer size) {
-        this.size = size;
-    }
-
-    public Integer getTotal() {
-        return total;
-    }
-
-    public void setTotal(Integer total) {
-        this.total = total;
-    }
 }

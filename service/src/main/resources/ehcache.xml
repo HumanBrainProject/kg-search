@@ -73,4 +73,14 @@
         <key-type>java.lang.String</key-type>
         <value-type>java.lang.String</value-type>
     </cache>
+
+    <cache alias="internalIds" uses-template="permanentNoExpiry">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.util.Set</value-type>
+        <resources>
+            <heap>10000000</heap>
+            <offheap unit="MB">100</offheap>
+            <disk persistent="true" unit="MB">200</disk>
+        </resources>
+    </cache>
 </config>
