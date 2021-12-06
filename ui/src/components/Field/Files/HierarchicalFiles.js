@@ -24,12 +24,15 @@
 import React from "react";
 import ReactPiwik from "react-piwik";
 import { Treebeard, decorators } from "react-treebeard";
-import { Text } from "../../Text/Text";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+//import { Text } from "../../Text/Text";
+import { InfoPanel } from "../../InfoPanel/InfoPanel";
+
 import { termsOfUse } from "../../../data/termsOfUse.js";
 import "./HierarchicalFiles.css";
 import theme from "./Theme";
 import Header from "./Header";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const buildTreeStructureForFile = (tree, file, nbOfPathToSkip, rootUrlSeparator) => {
   const path = file.url.split("/").slice(nbOfPathToSkip);
@@ -144,7 +147,7 @@ class HierarchicalFiles extends React.Component {
   }
 
   toggleTermsOfUse = e => {
-    e.preventDefault();
+    e && e.preventDefault();
     this.setState(state => ({showTermsOfUse: !state.showTermsOfUse}));
   };
 
@@ -187,10 +190,9 @@ class HierarchicalFiles extends React.Component {
             </div>
           )}
         </div>
-        {showTermsOfUse &&
-          <div className="kgs-hierarchical-files__info_terms_of_use">
-            <Text content={termsOfUse} isMarkdown={true} />
-          </div>}
+        {showTermsOfUse && (
+          <InfoPanel text={termsOfUse} onClose={this.toggleTermsOfUse} />
+        )}
       </>
     );
   }

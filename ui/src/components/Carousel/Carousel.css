@@ -274,3 +274,16 @@
     font-size: var(--font-size-extra-small);
     color: var(--color-2);
 }
+
+.kgs-carousel .kgs-info .kgs-info__panel {
+    top: 0px;
+    right: 0;
+    bottom: 0px;
+    left: 0px;
+}
+
+@media (min-width: 992px) {
+    .kgs-carousel .kgs-info .kgs-info__panel  {
+        margin-left: calc(50% - 496px);
+    }
+}

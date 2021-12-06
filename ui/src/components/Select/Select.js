@@ -35,7 +35,7 @@ export const Select = ({className, label, value, list, onChange}) => {
         <div>{label}</div>
       )}
       <select onChange={e => onChange(e.target.value || null)} value={value || ""}>
-        {list.map(e => <option value={e.value} key={e.value}>{e.label}</option>)}
+        {list.map(e => <option value={e.value} key={`${e.value?e.value:e.label}`}>{e.label}{}</option>)}
       </select>
     </div>
   );

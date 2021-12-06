@@ -25,6 +25,7 @@
     display: block;
     position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0,0,0,0.15);    
@@ -46,7 +47,7 @@
     position: relative;
     width: 100%;
     height: 100%;
-    padding: 50px 0 20px 0;
+    padding: 42px 0 10px 0;
 }
 
 .kgs-info__content {
@@ -91,10 +92,6 @@
         box-shadow: 3px 3px 6px var(--box-shadow-2);
     }
     
-    .kgs-info__container {
-        padding: var(--site-margin) 0;
-    }
-    
     .kgs-info__content {
         padding: 0 var(--site-margin);
     }
@@ -103,6 +100,6 @@
 @media (min-width: 992px) {
     .kgs-info__panel {
         width: 992px;
-        margin-left: calc(50% - 496px);
+        margin-left: calc(50% - 496px - 20px);
     }
 }
