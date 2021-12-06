@@ -202,34 +202,4 @@ public class Dataset implements TargetInstance {
         this.datasets = datasets;
     }
 
-
-
-    public static class Version {
-        public Version() {
-        }
-
-        @FieldInfo(label = "Version", groupBy = true)
-        private TargetInternalReference version;
-
-        @FieldInfo(label = "Innovation", markdown = true)
-        private Value<String> innovation;
-
-
-        public TargetInternalReference getVersion() {
-            return version;
-        }
-
-        public void setVersion(TargetInternalReference version) {
-            this.version = version;
-        }
-
-        public Value<String> getInnovation() {
-            return innovation;
-        }
-
-        public void setInnovation(Value<String> innovation) {
-            this.innovation = innovation;
-        }
-    }
-
 }

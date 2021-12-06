@@ -27,11 +27,11 @@ import eu.ebrains.kg.search.controller.translators.Helpers;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.DatasetV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Dataset;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Version;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
@@ -79,9 +79,9 @@ public class DatasetV3Translator extends TranslatorV3<DatasetV3, Dataset, Datase
     public Dataset translate(DatasetV3 dataset, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         if (!CollectionUtils.isEmpty(dataset.getVersions()) && dataset.getVersions().size() > 1) {
             Dataset d = new Dataset();
-            List<Version> sortedVersions = Helpers.sort(dataset.getVersions());
-            List<Children<Dataset.Version>> datasetVersions = sortedVersions.stream().map(v -> {
-                Dataset.Version version = new Dataset.Version();
+            List<eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version> sortedVersions = Helpers.sort(dataset.getVersions());
+            List<Children<Version>> datasetVersions = sortedVersions.stream().map(v -> {
+                Version version = new Version();
                 version.setVersion(new TargetInternalReference(IdUtils.getUUID(v.getId()), v.getVersionIdentifier()));
                 version.setInnovation(v.getVersionInnovation() != null ? new Value<>(v.getVersionInnovation()) : null);
                 return new Children<>(version);
