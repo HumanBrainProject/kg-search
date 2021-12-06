@@ -23,52 +23,48 @@
 
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Version;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
-@MetaInfo(name = "Controlled term")
 @Getter
 @Setter
-public class ControlledTerm implements TargetInstance {
+@MetaInfo(name = "Parcellation entity", searchable=false)
+public class ParcellationEntity implements TargetInstance {
+    @ElasticSearchInfo(type = "keyword")
+    private Value<String> type = new Value<>("Parcellation entity");
 
-    @FieldInfo(ignoreForSearch = true, visible = false)
+    @FieldInfo(visible = false)
     private String id;
 
     @ElasticSearchInfo(type = "keyword")
-    @FieldInfo(ignoreForSearch = true, visible = false)
+    @FieldInfo(visible = false)
     private List<String> identifier;
 
-    @ElasticSearchInfo(type = "keyword")
-    private Value<String> type = new Value<>("Controlled term");
-
-    @FieldInfo(label = "Name", sort=true, layout = "header", labelHidden = true)
+    @FieldInfo(label = "Name", sort = true, layout = "header", boost = 20)
     private Value<String> title;
 
     @FieldInfo(label = "Ontology identifier")
-    private Value<String> ontologyIdentifier;
+    private List<Value<String>> ontologyIdentifier;
 
-    @FieldInfo(label = "Definition")
-    private Value<String> definition;
+    private List<Value<String>> brainAtlas;
 
-    @FieldInfo(markdown = true)
-    private Value<String> description;
-
-    @FieldInfo(label = "External definitions",  layout = "summary")
-    private List<TargetExternalReference> externalDefinitions;
-
-    @FieldInfo(label = "Synonyms",  layout = "summary")
-    private List<Value<String>> synonyms;
+    @FieldInfo(isTable = true, layout = "Versions")
+    private List<Children<Version>> versionsTable;
 
     @Override
-    @JsonIgnore
-    public boolean isSearchableInstance() { return false; }
+    public boolean isSearchableInstance() {
+        return false;
+    }
+
+
 }

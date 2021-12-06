@@ -121,7 +121,7 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
         return null;
     }
 
-    protected List<TargetInternalReference> refVersion(List<FullNameRefForResearchProductVersion> refs){
+    protected List<TargetInternalReference> refVersion(List<? extends FullNameRefForResearchProductVersion> refs){
         if(!CollectionUtils.isEmpty(refs)){
             return refs.stream().map(this::ref).filter(Objects::nonNull).collect(Collectors.toList());
         }

@@ -73,10 +73,10 @@ public class Contributor implements TargetInstance {
     @FieldInfo(label = "Model contributions", facet = FieldInfo.Facet.EXISTS, type = FieldInfo.Type.TEXT, layout = "Model contributions", labelHidden = true, overviewMaxDisplay = 5)
     private List<TargetInternalReference> modelContributions;
 
-    @FieldInfo(label = "Custodian of", isTable = true, layout = "Custodian of", labelHidden = true, overview = true, overviewMaxDisplay = 5)
+    @FieldInfo(label = "Custodian of", isTable = true, layout = "Custodian of", labelHidden = true)
     private List<Children<Contribution>> custodian;
 
-    @FieldInfo(label = "Contributions", isTable = true, layout = "Contributions", labelHidden = true, overview = true, overviewMaxDisplay = 5)
+    @FieldInfo(label = "Contributions", isTable = true, layout = "Contributions", labelHidden = true)
     private List<Children<Contribution>> contribution;
 
     @JsonProperty("first_release")
