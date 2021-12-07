@@ -81,7 +81,7 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
         f.setIri(file.isPrivateAccess() ? String.format("%s/files/cscs?url=%s", Translator.fileProxy, file.getIri()) : file.getIri());
         FileV3.Size size = file.getSize();
         if(size != null && StringUtils.isNotBlank(size.getUnit())) {
-            f.setSize(FileUtils.byteCountToDisplaySize(size.getValue()));
+            f.setSize(value(FileUtils.byteCountToDisplaySize(size.getValue())));
         }
         if(file.getFormat()!=null){
             f.setFormat(ref(file.getFormat()));

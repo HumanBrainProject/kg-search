@@ -53,7 +53,7 @@ public class File implements TargetInstance {
     @ElasticSearchInfo(type = "keyword")
     private String fileRepository;
     @FieldInfo(label = "Size")
-    private String size;
+    private Value<String> size;
     @FieldInfo(label = "Format")
     private TargetInternalReference format;
     @FieldInfo(label = "Software taking this file as input")
