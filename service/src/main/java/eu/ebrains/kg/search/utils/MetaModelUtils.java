@@ -28,10 +28,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -86,7 +83,7 @@ public class MetaModelUtils {
             //System.out.println(String.format("Getting fields for %s", type.getTypeName()));
             List<FieldWithGenericTypeInfo> result = new ArrayList<>(getAllFields(rawType.getGenericSuperclass()));
             Map<String, Type> genericTypes = genericTypes(type);
-            result.addAll(Arrays.stream(rawType.getDeclaredFields()).map(field ->
+            result.addAll(Arrays.stream(rawType.getDeclaredFields()).filter(field -> !Modifier.isStatic(field.getModifiers())).map(field ->
                     {
                         String typeName = field.getGenericType().getTypeName();
                         return new FieldWithGenericTypeInfo(field, genericTypes.get(typeName));
