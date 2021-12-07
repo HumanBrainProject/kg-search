@@ -66,11 +66,27 @@ export const Tabs = ({instanceId, groups }) => {
   const [group, setGroup] = useState();
 
   useEffect(() => {
-    setGroup(Array.isArray(groups) && groups.length && groups[0]);
+    if (!window.instanceTabSelection) {
+      window.instanceTabSelection = {};
+    }
+    let selectedGroup = null;
+    if (Array.isArray(groups) && groups.length) {
+      if (window.instanceTabSelection[instanceId]) {
+        selectedGroup = groups.find(g => g.name === window.instanceTabSelection[instanceId]);
+      }
+      if (!selectedGroup && Array.isArray(groups) && groups.length) {
+        selectedGroup = groups[0];
+      }
+    }
+    setGroup(selectedGroup);
   }, [instanceId]);
 
   const handleClick = g => {
     setGroup(g);
+    if (!window.instanceTabSelection) {
+      window.instanceTabSelection = {};
+    }
+    window.instanceTabSelection[instanceId] = g.name;
     ReactPiwik.push(["trackEvent", "Tab", `${g.name} clicked`, instanceId]);
   };
 

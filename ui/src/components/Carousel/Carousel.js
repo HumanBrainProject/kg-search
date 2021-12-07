@@ -71,6 +71,7 @@ const nbOfItems = 5;
 export class Carousel extends React.Component {
   constructor(props) {
     super(props);
+    window.instanceTabSelection = {};
     this.items =  Array.from(Array(nbOfItems)).map((x, idx) => ({
       id: idx,
       position: idx,

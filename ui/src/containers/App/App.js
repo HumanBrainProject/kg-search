@@ -41,6 +41,7 @@ import Header from "../Header/Header";
 class App extends React.Component {
   constructor(props) {
     super(props);
+    window.instanceTabSelection = {};
     this.props.initialize(this.props.location);
   }
 
