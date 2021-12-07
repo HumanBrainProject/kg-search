@@ -93,11 +93,13 @@ const FieldBase = (renderUserInteractions = true) => {
     const hierarchicalFileProps = {
       data: data,
       mapping: mapping,
-      group: group
+      group: group,
+      urlField: "url"
     };
     const asyncHierarchicalFileProps = {
       mapping: mapping,
       group: group,
+      urlField: "iri",
       filesUrl: asyncFilesUrl,
       fileBundlesUrl: asyncFileBundlesUrl,
       fileFormatsUrl: asyncFileFormatsUrl

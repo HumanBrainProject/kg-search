@@ -46,16 +46,19 @@ public class File implements TargetInstance {
     private String id;
     @JsonIgnore
     private List<String> identifier;
+    @FieldInfo(visible = false)
     private String name;
+    @FieldInfo(visible = false)
     private String iri;
     @ElasticSearchInfo(type = "keyword")
     private String fileRepository;
     @FieldInfo(label = "Size")
     private String size;
     @FieldInfo(label = "Format")
-        private TargetInternalReference format;
+    private TargetInternalReference format;
     @FieldInfo(label = "Software taking this file as input")
     private List<TargetInternalReference> inputTypeForSoftware;
+    @FieldInfo(visible = false)
     private List<String> groupingTypes;
 
 

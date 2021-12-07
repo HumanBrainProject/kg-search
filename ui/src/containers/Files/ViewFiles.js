@@ -41,7 +41,7 @@ const Label = ({isAllFetched, number, total}) => {
   );
 };
 
-const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoading, filesError, mapping, group, allowFolderDownload, fetchFiles, clear }) => {
+const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoading, filesError, mapping, group, urlField, fileMapping, allowFolderDownload, fetchFiles, clear }) => {
 
   useEffect(() => {
     fetchFiles(true);
@@ -65,9 +65,6 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
     return (
       <>
         {!!files.length && (
-          <HierarchicalFiles data={files} mapping={mapping} group={group} allowFolderDownload={allowFolderDownload} />
-        )}
-        {!!files.length && (
           <>
             <Label isAllFetched={isAllFetched} number={files.length} total={totalFiles} />
             &nbsp;&nbsp;
@@ -76,6 +73,9 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
         <div className="spinner-border spinner-border-sm" role="status">
           <span className="sr-only">Retrieving files...</span>
         </div>
+        {!!files.length && (
+          <HierarchicalFiles data={files} mapping={mapping} group={group} allowFolderDownload={allowFolderDownload} urlField={urlField} fileMapping={fileMapping} />
+        )}
       </>
     );
   }
@@ -104,7 +104,7 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
       {!isAllFetched && (
         <button type="button" className="btn btn-link" onClick={fetchMoreFiles} style={showMoreStyle}>show more</button>
       )}
-      <HierarchicalFiles data={files} mapping={mapping} group={group} allowFolderDownload={allowFolderDownload} />
+      <HierarchicalFiles data={files} mapping={mapping} group={group} allowFolderDownload={allowFolderDownload} urlField={urlField} fileMapping={fileMapping} />
     </>
   );
 };
@@ -118,6 +118,8 @@ export const ViewFiles = connect(
     filesError: state.files.filesError,
     mapping: props.mapping,
     group: props.group,
+    urlField: props.urlField,
+    fileMapping: props.fileMapping,
     allowFolderDownload: !state.files.fileBundle && !state.files.fileFormat
   }),
   (dispatch, props) => ({

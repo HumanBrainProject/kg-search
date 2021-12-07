@@ -101,22 +101,7 @@ public class SearchController {
         Map<String, Object> result = new HashMap<>();
         if (filesFromRepo != null && filesFromRepo.getHits() != null && filesFromRepo.getHits().getHits() != null) {
             List<ElasticSearchDocument> hits = filesFromRepo.getHits().getHits();
-            List<Object> data = hits.stream().map(e -> {
-                if (e.getSource() != null) {
-                    Map<String, Object> item = new HashMap<>();
-                    Map<String, Object> source = e.getSource();
-                    item.put("value", source.get("name"));
-                    item.put("url", source.get("iri"));
-                    if (source.get("size") != null) {
-                        item.put("fileSize", source.get("size"));
-                    }
-                    if (source.get("format") != null) {
-                        item.put("format", source.get("format"));
-                    }
-                    return item;
-                }
-                return null;
-            }).filter(Objects::nonNull).collect(Collectors.toList());
+            List<Object> data = hits.stream().map(e -> e.getSource()).filter(Objects::nonNull).collect(Collectors.toList());
             ElasticSearchResult.Total total = filesFromRepo.getHits().getTotal();
             result.put("total", total.getValue());
             result.put("data", data);
