@@ -28,7 +28,7 @@ import { FileBundleFilter } from "./FileBundleFilter";
 import { ViewFiles } from "./ViewFiles";
 import * as actionsFiles from "../../actions/actions.files";
 
-export const AsyncHierarchicalFilesComponent = ({mapping, group, urlField, fileMapping, searchFilesAfter, fileBundle, fileFormat, fetchFiles, fetchFileFormats, fetchFileBundles}) => {
+export const AsyncHierarchicalFilesComponent = ({mapping, group, urlField, searchFilesAfter, fileBundle, fileFormat, fetchFiles, fetchFileFormats, fetchFileBundles}) => {
 
   const handleSelectFileFormat = format => {
     console.log("format", format);
@@ -48,7 +48,7 @@ export const AsyncHierarchicalFilesComponent = ({mapping, group, urlField, fileM
     <>
       <FileFormatFilter onSelect={handleSelectFileFormat} fetch={fetchFileFormats} />
       <FileBundleFilter onSelect={handleSelectFileBundle} fetch={fetchFileBundles} />
-      <ViewFiles mapping={mapping} group={group} fetch={handleFetchFiles} urlField={urlField} fileMapping={fileMapping} />
+      <ViewFiles mapping={mapping} group={group} fetch={handleFetchFiles} urlField={urlField} />
     </>
   );
 };
@@ -64,8 +64,7 @@ export const AsyncHierarchicalFiles = connect(
     fileBundle: state.files.fileBundle,
     mapping: props.mapping,
     group: props.group,
-    urlField: props.urlField,
-    fileMapping: state.definition.typeMappings.File && state.definition.typeMappings.File.fields
+    urlField: props.urlField
   }),
   (dispatch, props) => ({
     fetchFiles: (searchAfter, fileBundle, fileFilter, reset) => dispatch(actionsFiles.loadFiles(props.filesUrl, searchAfter, fileBundle, fileFilter, reset)),

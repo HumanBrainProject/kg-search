@@ -38,7 +38,7 @@ const FileFilterItem = ({filter, selected, onClick}) => {
 
 const FileFilterFilterComponent = ({ list, current, title, onSelect }) => (
   <div className="kgs-fileFilter">
-    <div className="kgs-fileFilter__title">{title}</div>
+    <div className="kgs-fileFilter__title">{title}:</div>
     <ul className="kgs-fileFilter__list">
       {list.map(filter => <li key={filter}><FileFilterItem filter={filter} selected={filter === current} onClick={onSelect}/></li>)}
     </ul>

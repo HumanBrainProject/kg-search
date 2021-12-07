@@ -38,7 +38,7 @@ export const loadFilesRequest = (searchAfter, fileBundle, fileFormat, reset) => 
 export const loadFilesSuccess = (result, reset) => {
   return {
     type: types.LOAD_FILES_SUCCESS,
-    files: result.data,
+    files: Array.isArray(result.data)?result.data:[],
     total: result.total,
     searchAfter: result.searchAfter,
     reset: reset
@@ -118,7 +118,7 @@ export const loadFileBundlesRequest = () => {
 export const loadFileBundlesSuccess = result => {
   return {
     type: types.LOAD_FILE_BUNDLES_SUCCESS,
-    fileBundles: result.data
+    fileBundles: Array.isArray(result.data)?result.data.sort():[]
   };
 };
 
@@ -176,7 +176,7 @@ export const loadFileFormatsRequest = () => {
 export const loadFileFormatsSuccess = result => {
   return {
     type: types.LOAD_FILE_FORMATS_SUCCESS,
-    fileFormats: result.data
+    fileFormats: Array.isArray(result.data)?result.data.sort():[],
   };
 };
 

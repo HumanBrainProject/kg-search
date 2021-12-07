@@ -26,7 +26,7 @@ import FileFilter from "./FileFilter";
 
 export const FileFormatFilter = connect(
   state => ({
-    title:"Format",
+    title:"Filter by",
     files: state.files.files,
     fileFilters: state.files.fileFormats,
     isFilesInitialized: state.files.isFilesInitialized,

@@ -98,7 +98,7 @@ const getCommonPath = (files, key) => {
   return firstFilePath.splice(0, index);
 };
 
-const getTree = (files, urlField, fileMapping) => {
+const getTree = (files, rootFolderName, urlField, fileMapping) => {
   if(!Array.isArray(files)) {
     files = [files]; // To be checked with the new indexer
   }
@@ -106,7 +106,7 @@ const getTree = (files, urlField, fileMapping) => {
   const rootPathIndex = 6;
   const url = commonPath.length<=rootPathIndex?commonPath.join("/"):`${commonPath.slice(0,rootPathIndex).join("/")}?prefix=${commonPath.slice(rootPathIndex).join("/")}`;
   const tree = {
-    name: commonPath[commonPath.length-1],
+    name: rootFolderName?rootFolderName:commonPath[commonPath.length-1],
     url: `/proxy/export?container=${url}`,
     type: "folder",
     paths: {},
@@ -182,8 +182,8 @@ class HierarchicalFiles extends React.Component {
   }
 
   componentDidMount() {
-    const {data, urlField, fileMapping} = this.props;
-    const tree = getTree(data, urlField, fileMapping);
+    const {data, rootFolderName, urlField, fileMapping} = this.props;
+    const tree = getTree(data, rootFolderName, urlField, fileMapping);
     this.setState({tree: tree, node: tree });
   }
 
@@ -198,11 +198,6 @@ class HierarchicalFiles extends React.Component {
     }
     this.setState({node: node});
   }
-
-  toggleTermsOfUse = e => {
-    e && e.preventDefault();
-    this.setState(state => ({showTermsOfUse: !state.showTermsOfUse}));
-  };
 
   render() {
     return (

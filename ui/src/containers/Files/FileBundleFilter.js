@@ -27,7 +27,7 @@ import FileFilter from "./FileFilter";
 
 export const FileBundleFilter = connect(
   (state, props) => ({
-    title:"File bundle",
+    title:"Group by",
     filesUrl: props.filesUrl,
     fileFiltersUrl: props.fileBundlesUrl,
     files: state.files.files,

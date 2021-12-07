@@ -41,7 +41,7 @@ const Label = ({isAllFetched, number, total}) => {
   );
 };
 
-const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoading, filesError, mapping, group, urlField, fileMapping, allowFolderDownload, fetchFiles, clear }) => {
+const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoading, filesError, mapping, group, urlField, fileMapping, rootFolderName, allowFolderDownload, fetchFiles, clear }) => {
 
   useEffect(() => {
     fetchFiles(true);
@@ -74,7 +74,7 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
           <span className="sr-only">Retrieving files...</span>
         </div>
         {!!files.length && (
-          <HierarchicalFiles data={files} mapping={mapping} group={group} allowFolderDownload={allowFolderDownload} urlField={urlField} fileMapping={fileMapping} />
+          <HierarchicalFiles data={files} mapping={mapping} group={group} rootFolderName={rootFolderName} allowFolderDownload={allowFolderDownload} urlField={urlField} fileMapping={fileMapping} />
         )}
       </>
     );
@@ -104,7 +104,7 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
       {!isAllFetched && (
         <button type="button" className="btn btn-link" onClick={fetchMoreFiles} style={showMoreStyle}>show more</button>
       )}
-      <HierarchicalFiles data={files} mapping={mapping} group={group} allowFolderDownload={allowFolderDownload} urlField={urlField} fileMapping={fileMapping} />
+      <HierarchicalFiles data={files} mapping={mapping} group={group} rootFolderName={rootFolderName} allowFolderDownload={allowFolderDownload} urlField={urlField} fileMapping={fileMapping} />
     </>
   );
 };
@@ -119,7 +119,8 @@ export const ViewFiles = connect(
     mapping: props.mapping,
     group: props.group,
     urlField: props.urlField,
-    fileMapping: props.fileMapping,
+    fileMapping: state.definition.typeMappings.File && state.definition.typeMappings.File.fields,
+    rootFolderName: state.files.fileBundle,
     allowFolderDownload: !state.files.fileBundle && !state.files.fileFormat
   }),
   (dispatch, props) => ({
