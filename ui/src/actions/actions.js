@@ -25,7 +25,6 @@ import * as types from "./actions.types";
 import API from "../services/API";
 import { getHashKey, generateKey, getSearchKey } from "../helpers/BrowserHelpers";
 import { history, store } from "../store";
-import * as Sentry from "@sentry/browser";
 
 export const setApplicationReady = () => {
   return {
@@ -126,10 +125,6 @@ export const getAuthEndpoint = (group=null) => {
         const { status } = response;
         switch (status) {
         case 500:
-        {
-          Sentry.captureException(e);
-          break;
-        }
         case 404:
         default:
         {

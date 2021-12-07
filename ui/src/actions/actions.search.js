@@ -26,7 +26,6 @@ import API from "../services/API";
 import ReactPiwik from "react-piwik";
 import { ElasticSearchHelpers } from "../helpers/ElasticSearchHelpers";
 import { sessionFailure } from "./actions";
-import * as Sentry from "@sentry/browser";
 
 export const loadSearchBadRequest = error => {
   return {
@@ -160,14 +159,10 @@ export const search = () => {
           break;
         }
         case 500:
-        {
-          Sentry.captureException(e);
-          break;
-        }
         case 404:
         default:
         {
-          const error = `Your search query is not well formed. Please refine your request (${status})`;
+          const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
           dispatch(loadSearchServiceFailure(error));
         }
         }
