@@ -28,7 +28,6 @@ import { clearGroupError } from "./actions.groups";
 import { sessionFailure, logout } from "./actions";
 import { history, store } from "../store";
 import { getSearchKey } from "../helpers/BrowserHelpers";
-import * as Sentry from "@sentry/browser";
 
 export const loadInstanceRequest = () => {
   return {
@@ -150,11 +149,6 @@ export const loadInstance = (group, id, shouldUpdateLocation=false) => {
           dispatch(sessionFailure(error));
           break;
         }
-        case 500:
-        {
-          Sentry.captureException(e);
-          break;
-        }
         case 404:
         {
           const url = `${window.location.protocol}//${window.location.host}${window.location.pathname}?group=curated`;
@@ -165,6 +159,7 @@ export const loadInstance = (group, id, shouldUpdateLocation=false) => {
           dispatch(loadInstanceFailure(error));
           break;
         }
+        case 500:
         default:
         {
           const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
@@ -207,10 +202,6 @@ export const loadPreview = id => {
             break;
           }
           case 500:
-          {
-            Sentry.captureException(e.message);
-            break;
-          }
           case 404:
           default:
           {

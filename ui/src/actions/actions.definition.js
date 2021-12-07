@@ -24,7 +24,6 @@
 import * as types from "./actions.types";
 import API from "../services/API";
 import { sessionFailure } from "./actions";
-import * as Sentry from "@sentry/browser";
 
 
 export const setAuthEndpoint = authEndpoint => {
@@ -195,12 +194,8 @@ export const loadDefinition = () => {
           dispatch(sessionFailure(error));
           break;
         }
-        case 500:
-        {
-          Sentry.captureException(e);
-          break;
-        }
         case 404:
+        case 500:
         default:
         {
           const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
