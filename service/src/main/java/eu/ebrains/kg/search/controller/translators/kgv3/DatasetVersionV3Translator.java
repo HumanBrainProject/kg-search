@@ -266,12 +266,12 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                                 if (!CollectionUtils.isEmpty(s.getChildren())) {
                                     //This is a subject group with individual information.
                                     subj.setCollapsible(true);
-                                    subj.setChildren(s.getChildren().stream().map(child -> fillIndividualSubjectInformation(new DatasetVersion.SingleSubject(), child, subj)).sorted(Comparator.comparing(DatasetVersion.SingleSubject::getName)).collect(Collectors.toList()));
+                                    subj.setChildren(s.getChildren().stream().map(child -> fillIndividualSubjectInformation(new DatasetVersion.SingleSubject(), child, subj)).sorted(Comparator.comparing(DatasetVersion.SingleSubject::getLabel)).collect(Collectors.toList()));
                                 }
                                 subj.setNumberOfSubjects(value(s.getQuantity() != null ? String.valueOf(s.getQuantity()) : null));
                                 return subj;
                             }
-                    ).sorted(Comparator.comparing(DatasetVersion.SubjectGroupOrSingleSubject::getName)).collect(Collectors.toList());
+                    ).sorted(Comparator.comparing(DatasetVersion.SubjectGroupOrSingleSubject::getLabel)).collect(Collectors.toList());
             if (!subjects.isEmpty()) {
                 d.setSubjectGroupOrSingleSubject(children(subjects));
             }
@@ -364,17 +364,18 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
     }
 
     private <T extends DatasetVersion.AbstractSubject> T fillIndividualSubjectInformation(T subj, DatasetVersionV3.SubjectOrSubjectGroup s, DatasetVersion.AbstractSubject parent) {
-        subj.setName(new TargetInternalReference(IdUtils.getUUID(s.getId()), s.getInternalIdentifier()));
+        String type = "Subject";
+        if(s.getSubjectType()!=null && s.getSubjectType().contains("https://openminds.ebrains.eu/core/SubjectGroup")){
+            type = "Subject group";
+        }
+        subj.setLabel(new TargetInternalReference(IdUtils.getUUID(s.getId()), s.getInternalIdentifier() != null ? String.format("%s %s", type, s.getInternalIdentifier()) : type));
         subj.setSpecies(ref(s.getSpecies()));
         subj.setStrain(ref(s.getStrain()));
         subj.setSex(ref(s.getBiologicalSex()));
         if (!CollectionUtils.isEmpty(s.getStates())) {
             if (s.getStates().size() > 1) {
                 //If we have more than one state, we're going to expand them.
-                subj.setChildren(new ArrayList());
-                for (int i = 0; i < s.getStates().size(); i++) {
-                    subj.getChildren().add(fillStateInformation(subj.getName().getValue(), s.getStates().get(i), i));
-                }
+                subj.setChildren(s.getStates().stream().map(state -> fillStateInformation(s.getInternalIdentifier()!=null ? s.getInternalIdentifier():null, state)).collect(Collectors.toList()));
             } else {
                 final DatasetVersionV3.SpecimenOrSpecimenGroupState onlyState = s.getStates().get(0);
                 if (onlyState.getAge() != null) {
@@ -408,9 +409,9 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         return subj;
     }
 
-    private DatasetVersion.SubjectState fillStateInformation(String subjectName, DatasetVersionV3.SpecimenOrSpecimenGroupState state, int index) {
+    private DatasetVersion.SubjectState fillStateInformation(String subjectName, DatasetVersionV3.SpecimenOrSpecimenGroupState state) {
         DatasetVersion.SubjectState result = new DatasetVersion.SubjectState();
-        result.setName(new TargetInternalReference(null, String.format("%s state %d", subjectName, index + 1)));
+        result.setLabel(subjectName!=null ? value(String.format("Subject state of %s", subjectName)): value("Subject state"));
         if (state.getAge() != null) {
             result.setAge(value(state.getAge().displayString()));
         }

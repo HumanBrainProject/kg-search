@@ -370,8 +370,8 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
         private List<C> children;
         private boolean collapsible;
 
-        @FieldInfo(label = "Name")
-        private TargetInternalReference name;
+        @FieldInfo
+        private TargetInternalReference label;
 
         @FieldInfo(label = "# of subjects")
         private Value<String> numberOfSubjects;
@@ -400,9 +400,8 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @Setter
     public static class SubjectState{
 
-
-        @FieldInfo(label = "Name")
-        private TargetInternalReference name;
+        @FieldInfo
+        private Value<String> label;
 
         @FieldInfo(label = "Age")
         private Value<String> age;

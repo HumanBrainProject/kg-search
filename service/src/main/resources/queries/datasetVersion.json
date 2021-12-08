@@ -187,6 +187,10 @@
           "path": "@id"
         },
         {
+          "propertyName": "query:subjectType",
+          "path": "@type"
+        },
+        {
           "propertyName": "query:internalIdentifier",
           "path": "https://openminds.ebrains.eu/vocab/internalIdentifier"
         },
@@ -455,6 +459,10 @@
             {
               "propertyName": "query:id",
               "path": "@id"
+            },
+            {
+              "propertyName": "query:subjectType",
+              "path": "@type"
             },
             {
               "propertyName": "query:internalIdentifier",

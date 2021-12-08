@@ -68,7 +68,11 @@ public class SubjectV3Translator extends TranslatorV3<SubjectV3, Subject, Subjec
 
     public Subject translate(SubjectV3 subject, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Subject s = new Subject();
-
+        if(subject.getDatasets() == null || subject.getDatasets().size()<2){
+            //If a subject is not part of multiple datasets, we don't expose it as its own card because there is not
+            //enough additional value.
+            return null;
+        }
         String uuid = IdUtils.getUUID(subject.getId());
         s.setId(uuid);
         s.setIdentifier(subject.getIdentifier());

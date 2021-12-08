@@ -177,6 +177,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     @Setter
     public static class SubjectOrSubjectGroup {
         private String id;
+        private List<String> subjectType;
         private String internalIdentifier;
         private Integer quantity;
         private List<FullNameRef> strain;
