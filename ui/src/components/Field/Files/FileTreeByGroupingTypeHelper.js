@@ -66,7 +66,6 @@ export const getTreeByGroupingType = (files, nameField, urlField, fileMapping, g
         name: fileBundle,
         //url: `${groupingType}/${fileBundle}`,
         type: "folder",
-        toggled: true,
         children: children
       };
       return folder;
