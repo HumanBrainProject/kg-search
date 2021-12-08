@@ -104,6 +104,7 @@ export class Carousel extends React.Component {
 
   onClose = e => {
     if (this.wrapperRef && !this.wrapperRef.contains(e.target)) {
+      window.instanceTabSelection = {};
       const { onClose } = this.props;
       typeof onClose === "function" && onClose();
     }
