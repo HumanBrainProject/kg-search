@@ -26,6 +26,7 @@ package eu.ebrains.kg.search.controller.translators.kgv3;
 import eu.ebrains.kg.search.controller.translators.Translator;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
+import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.source.openMINDSv3.FileV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.File;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
@@ -99,9 +100,12 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
                 File.GroupingType groupingType = groupingTypes.get(groupingTypeName);
                 List<String> fileBundles = groupingType.getFileBundles();
                 fileBundles.add(fileBundle.getName());
+                Collections.sort(fileBundles);
             }
         });
-        f.setGroupingTypes(new ArrayList<>(groupingTypes.values()));
+        List<File.GroupingType> groupingTypeList = new ArrayList<>(groupingTypes.values());
+        groupingTypeList.sort(Comparator.comparing(File.GroupingType::getName));
+        f.setGroupingTypes(groupingTypeList);
         return f;
     }
 }

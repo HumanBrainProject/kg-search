@@ -86,6 +86,7 @@ public class SearchController {
             List<String> formats = esResult.getAggregations().get(aggregation).getBuckets().stream()
                     .map(bucket -> bucket.getKey())
                     .filter(Objects::nonNull)
+                    .sorted()
                     .collect(Collectors.toList());
 
             result.put("total", formats.size());
