@@ -54,6 +54,9 @@ import java.util.stream.Collectors;
 //Subjectgroup with individual subjects and multiple states (on INT) 4840dd00-058b-437c-9d0f-091b482d51b8
 //Direct subjects with single states: ccc680a2-995d-48f7-904a-53a7190c6632
 
+//Tissue sample collection b3d4234a-a014-47d2-8753-c64cb5042e51
+//Tissue sample collection with individual samples b4a37f80-e231-4a27-92ca-f47de7b2208d
+
 public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, DatasetVersion, DatasetVersionV3Translator.Result> {
 
     public static class Result extends ResultsOfKGv3<DatasetVersionV3> {
@@ -278,12 +281,26 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
 
         if(!CollectionUtils.isEmpty(datasetVersion.getTissueSampleOrCollection())){
-            d.setTissueSamples(children(datasetVersion.getTissueSampleOrCollection().stream().map(t -> {
-                final DatasetVersion.TissueSampleOrTissueSampleCollection tissueSample = new DatasetVersion.TissueSampleOrTissueSampleCollection();
-                tissueSample.setName(new TargetInternalReference(IdUtils.getUUID(t.getId()), t.getInternalIdentifier()));
-                return tissueSample;
-            }).collect(Collectors.toList())));
-
+            final Set<String> groupedSamples = datasetVersion.getTissueSampleOrCollection().stream().map(DatasetVersionV3.TissueSampleOrTissueSampleCollection::getChildren).filter(children -> !CollectionUtils.isEmpty(children)).flatMap(Collection::stream).map(DatasetVersionV3.TissueSampleOrTissueSampleCollection::getId).collect(Collectors.toSet());
+            final List<DatasetVersion.TissueSampleOrTissueSampleCollection> tissueSamples = datasetVersion.getTissueSampleOrCollection().stream()
+                    //We don't want individual subjects to appear on the root hierarchy level if they also have a representation inside the groups...
+                    .filter(s -> !groupedSamples.contains(s.getId()))
+                    .map(s ->
+                            {
+                                DatasetVersion.TissueSampleOrTissueSampleCollection tissueSample = new DatasetVersion.TissueSampleOrTissueSampleCollection();
+                                fillIndividualTissueSampleInformation(tissueSample, s, null);
+                                if (!CollectionUtils.isEmpty(s.getChildren())) {
+                                    //This is a subject group with individual information.
+                                    tissueSample.setCollapsible(true);
+                                    tissueSample.setChildren(s.getChildren().stream().map(child -> fillIndividualTissueSampleInformation(new DatasetVersion.SingleTissueSample(), child, tissueSample)).sorted(Comparator.comparing(DatasetVersion.SingleTissueSample::getLabel)).collect(Collectors.toList()));
+                                }
+                                tissueSample.setNumberOfSamples(value(s.getQuantity() != null ? String.valueOf(s.getQuantity()) : null));
+                                return tissueSample;
+                            }
+                    ).sorted(Comparator.comparing(DatasetVersion.TissueSampleOrTissueSampleCollection::getLabel)).collect(Collectors.toList());
+            if (!tissueSamples.isEmpty()) {
+                d.setTissueSamples(children(tissueSamples));
+            }
         }
 
         if (datasetVersion.getEthicsAssessment() != null) {
@@ -336,12 +353,12 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if(!CollectionUtils.isEmpty(datasetVersion.getStudyTarget())){
             d.setStudyTargets(datasetVersion.getStudyTarget().stream().map(s -> {
                 //TODO parcellationentity and parcellationentityversion need to be updated once their landing cards are available
-                if(StringUtils.isNotBlank(s.getParcellationTerminology())){
-                    return new TargetInternalReference(null, String.format("%s: %s", s.getParcellationTerminology(), StringUtils.isNotBlank(s.getFullName()) ? s.getFullName() : s.getFallbackName()));
+                if(StringUtils.isNotBlank(s.getBrainAtlas())){
+                    return new TargetInternalReference(null, String.format("%s (%s)", StringUtils.isNotBlank(s.getFullName()) ? s.getFullName() : s.getFallbackName(),  s.getBrainAtlas()));
                 }
-                else if(s.getParcellationTerminologyVersion() != null){
-                    String name = String.format("%s %s", StringUtils.isNotBlank(s.getParcellationTerminologyVersion().getFullName()) ? s.getParcellationTerminologyVersion().getFullName() : s.getParcellationTerminologyVersion().getFallbackName(), s.getParcellationTerminologyVersion().getVersionIdentifier());
-                    return new TargetInternalReference(null, String.format("%s: %s", name, StringUtils.isNotBlank(s.getFullName()) ? s.getFullName() : s.getFallbackName()));
+                else if(s.getBrainAtlasVersion() != null){
+                    String name = String.format("%s %s", StringUtils.isNotBlank(s.getBrainAtlasVersion().getFullName()) ? s.getBrainAtlasVersion().getFullName() : s.getBrainAtlasVersion().getFallbackName(), s.getBrainAtlasVersion().getVersionIdentifier());
+                    return new TargetInternalReference(null, String.format("%s (%s)", StringUtils.isNotBlank(s.getFullName()) ? s.getFullName() : s.getFallbackName(), name));
                 }
                 else{
                     return ref(s);
@@ -351,7 +368,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         return d;
     }
 
-    private static <U, T extends DatasetVersion.AbstractSubject> boolean sameAsParent(Function<? super T, ? extends U> f, T child, T parent) {
+    private static <U, T> boolean sameAsParent(Function<? super T, ? extends U> f, T child, T parent) {
         if (child == null || parent == null) {
             return false;
         }
@@ -362,6 +379,54 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
         return (childValue == null && parentValue == null) || (childValue != null && childValue.equals(parentValue));
     }
+
+    private <T extends DatasetVersion.AbstractTissueSampleOrTissueSampleCollection> T fillIndividualTissueSampleInformation(T tissueSample, DatasetVersionV3.TissueSampleOrTissueSampleCollection t, DatasetVersion.AbstractTissueSampleOrTissueSampleCollection parent) {
+        String type = "Tissue sample";
+        if(t.getTissueSampleType()!=null && t.getTissueSampleType().contains("https://openminds.ebrains.eu/core/TissueSampleCollection")){
+            type = "Tissue sample collection";
+        }
+        tissueSample.setLabel(new TargetInternalReference(IdUtils.getUUID(t.getId()), t.getInternalIdentifier() != null ? String.format("%s %s", type, t.getInternalIdentifier()) : type));
+        tissueSample.setSex(ref(t.getBiologicalSex()));
+        tissueSample.setSpecies(ref(t.getSpecies()));
+        tissueSample.setStrain(ref(t.getStrain()));
+        tissueSample.setOrigin(ref(t.getOrigin()));
+        tissueSample.setLaterality(ref(t.getLaterality()));
+
+        if (!CollectionUtils.isEmpty(t.getStates())) {
+            if (t.getStates().size() > 1) {
+                //If we have more than one state, we're going to expand them.
+                tissueSample.setChildren(t.getStates().stream().map(state -> fillTissueSampleStateInformation(t.getInternalIdentifier()!=null ? t.getInternalIdentifier():null, state)).collect(Collectors.toList()));
+            } else {
+                final DatasetVersionV3.SpecimenOrSpecimenGroupState onlyState = t.getStates().get(0);
+                if (onlyState.getAge() != null) {
+                    tissueSample.setAge(Collections.singletonList(value(onlyState.getAge().displayString())));
+                }
+                tissueSample.setAgeCategory(Collections.singletonList(ref(onlyState.getAgeCategory())));
+                if (onlyState.getWeight() != null) {
+                    tissueSample.setWeight(Collections.singletonList(value(onlyState.getWeight().displayString())));
+                }
+                tissueSample.setPathology(Collections.singletonList(ref(onlyState.getPathology())));
+            }
+        }
+        if (sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getSex, tissueSample, parent)) {
+            tissueSample.setSex(null);
+        }
+        if (sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getSpecies, tissueSample, parent)) {
+            tissueSample.setSpecies(null);
+        }
+        if (sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getStrain, tissueSample, parent)) {
+            tissueSample.setStrain(null);
+        }
+        if(sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getOrigin, tissueSample, parent)) {
+            tissueSample.setOrigin(null);
+        }
+        if(sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getLaterality, tissueSample, parent)) {
+            tissueSample.setLaterality(null);
+        }
+        //TODO anatomical location
+        return tissueSample;
+    }
+
 
     private <T extends DatasetVersion.AbstractSubject> T fillIndividualSubjectInformation(T subj, DatasetVersionV3.SubjectOrSubjectGroup s, DatasetVersion.AbstractSubject parent) {
         String type = "Subject";
@@ -375,7 +440,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if (!CollectionUtils.isEmpty(s.getStates())) {
             if (s.getStates().size() > 1) {
                 //If we have more than one state, we're going to expand them.
-                subj.setChildren(s.getStates().stream().map(state -> fillStateInformation(s.getInternalIdentifier()!=null ? s.getInternalIdentifier():null, state)).collect(Collectors.toList()));
+                subj.setChildren(s.getStates().stream().map(state -> fillSubjectStateInformation(s.getInternalIdentifier()!=null ? s.getInternalIdentifier():null, state)).collect(Collectors.toList()));
             } else {
                 final DatasetVersionV3.SpecimenOrSpecimenGroupState onlyState = s.getStates().get(0);
                 if (onlyState.getAge() != null) {
@@ -409,7 +474,21 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         return subj;
     }
 
-    private DatasetVersion.SubjectState fillStateInformation(String subjectName, DatasetVersionV3.SpecimenOrSpecimenGroupState state) {
+    private DatasetVersion.TissueSampleState fillTissueSampleStateInformation(String subjectName, DatasetVersionV3.SpecimenOrSpecimenGroupState state) {
+        DatasetVersion.TissueSampleState result = new DatasetVersion.TissueSampleState();
+        result.setLabel(subjectName!=null ? value(String.format("Tissue sample state of %s", subjectName)): value("Tissue sample state"));
+        if (state.getAge() != null) {
+            result.setAge(value(state.getAge().displayString()));
+        }
+        result.setAgeCategory(ref(state.getAgeCategory()));
+        if (state.getWeight() != null) {
+            result.setWeight(value(state.getWeight().displayString()));
+        }
+        result.setPathology(ref(state.getPathology()));
+        return result;
+    }
+
+    private DatasetVersion.SubjectState fillSubjectStateInformation(String subjectName, DatasetVersionV3.SpecimenOrSpecimenGroupState state) {
         DatasetVersion.SubjectState result = new DatasetVersion.SubjectState();
         result.setLabel(subjectName!=null ? value(String.format("Subject state of %s", subjectName)): value("Subject state"));
         if (state.getAge() != null) {

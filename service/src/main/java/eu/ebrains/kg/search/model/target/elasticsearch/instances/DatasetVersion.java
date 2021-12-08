@@ -317,8 +317,8 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
         private boolean collapsible;
 
 
-        @FieldInfo(label = "Name")
-        private TargetInternalReference name;
+        @FieldInfo
+        private TargetInternalReference label;
 
         @FieldInfo(label = "# of samples")
         private Value<String> numberOfSamples;
@@ -335,8 +335,20 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
         @FieldInfo(label = "Origin")
         private List<TargetInternalReference> origin;
 
+        @FieldInfo(label = "Laterality")
+        private List<TargetInternalReference> laterality;
 
+        @FieldInfo(label = "Age")
+        private List<Value<String>> age;
 
+        @FieldInfo(label = "Age category")
+        private List<List<TargetInternalReference>> ageCategory;
+
+        @FieldInfo(label = "Pathology")
+        private List<List<TargetInternalReference>> pathology;
+
+        @FieldInfo(label = "Weight")
+        private List<Value<String>> weight;
 
     }
 
@@ -344,15 +356,23 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @Setter
     public static class SingleTissueSample extends AbstractTissueSampleOrTissueSampleCollection<TissueSampleState>{}
 
+    @Getter
+    @Setter
     public static class TissueSampleState {
+        @FieldInfo
+        private Value<String> label;
+
         @FieldInfo(label = "Age")
-        private List<Value<String>> age;
+        private Value<String> age;
+
+        @FieldInfo(label = "Age category")
+        private List<TargetInternalReference> ageCategory;
 
         @FieldInfo(label = "Pathology")
         private List<TargetInternalReference> pathology;
 
         @FieldInfo(label = "Weight")
-        private List<Value<String>> weight;
+        private Value<String> weight;
 
     }
 

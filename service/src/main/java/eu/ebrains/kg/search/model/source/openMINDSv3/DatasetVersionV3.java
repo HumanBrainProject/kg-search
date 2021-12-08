@@ -68,8 +68,8 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     @Getter
     @Setter
     public static class StudyTarget extends FullNameRefForResearchProductVersion {
-        private FullNameRefForResearchProductVersion parcellationTerminologyVersion;
-        private String parcellationTerminology;
+        private FullNameRefForResearchProductVersion brainAtlasVersion;
+        private String brainAtlas;
     }
     @Getter
     @Setter
@@ -161,6 +161,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
         private String id;
         private String internalIdentifier;
         private Integer quantity;
+        private List<String> tissueSampleType;
         private List<FullNameRef> strain;
         private List<FullNameRef> species;
         private List<SpecimenOrSpecimenGroupState> states;
