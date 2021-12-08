@@ -21,6 +21,11 @@
  *
  */
 
+ .kgs-files-search .form-control {
+     width: 50%;
+     margin-bottom: 10px;
+ }
+
 .kgs-hierarchical-files {
     display: flex;
     align-items: self-start;

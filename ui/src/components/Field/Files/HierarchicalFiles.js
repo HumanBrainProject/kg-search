@@ -34,6 +34,8 @@ import Header from "./Header";
 
 import { getTreeByFolder } from "./FileTreeByFolderHelper";
 import { getTreeByGroupingType } from "./FileTreeByGroupingTypeHelper";
+import * as filters from "./helpers";
+
 
 const Node = ({node, isRootNode, group}) => {
   return (
@@ -60,14 +62,15 @@ class HierarchicalFiles extends React.Component {
     super(props);
     this.state = {
       node: {},
-      tree: {}
+      tree: {},
+      initialTree: {}
     };
   }
 
   componentDidMount() {
     const {data, groupingType, nameField, urlField, fileMapping, allowFolderDownload} = this.props;
     const tree = groupingType?getTreeByGroupingType(data, nameField, urlField, fileMapping, groupingType):getTreeByFolder(data, urlField, fileMapping, allowFolderDownload);
-    this.setState({tree: tree, node: tree });
+    this.setState({tree: tree, node: tree, initialTree: tree });
   }
 
   onToggle = (node, toggled) => {
@@ -82,19 +85,39 @@ class HierarchicalFiles extends React.Component {
     this.setState({node: node});
   }
 
+  onFilterMouseUp = ({target: {value}}) => {
+    const filter = value.trim();
+    if (!filter) {
+      return this.setState({tree: this.state.initialTree});
+    }
+    let filtered = filters.filterTree(this.state.initialTree, filter);
+    filtered = filters.expandFilteredNodes(filtered, filter);
+    this.setState({tree: filtered});
+  }
+
   render() {
     return (
-      <div className="kgs-hierarchical-files">
-        <Treebeard
-          data={this.state.tree}
-          onToggle={this.onToggle}
-          decorators={{...decorators, Header}}
-          style={{...theme}}
-        />
-        {this.state.node.active && (
-          <Node node={this.state.node} isRootNode={this.state.node === this.state.tree} group={this.props.group} />
-        )}
-      </div>
+      <>
+        <div className="kgs-files-search">
+          <input
+            className="form-control"
+            onKeyUp={this.onFilterMouseUp}
+            placeholder="Search the files..."
+            type="text"
+          />
+        </div>
+        <div className="kgs-hierarchical-files">
+          <Treebeard
+            data={this.state.tree}
+            onToggle={this.onToggle}
+            decorators={{...decorators, Header}}
+            style={{...theme}}
+          />
+          {this.state.node.active && (
+            <Node node={this.state.node} isRootNode={this.state.node === this.state.tree} group={this.props.group} />
+          )}
+        </div>
+      </>
     );
   }
 }
