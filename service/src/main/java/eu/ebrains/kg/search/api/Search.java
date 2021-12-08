@@ -168,8 +168,8 @@ public class Search {
     public ResponseEntity<?> getFilesFromRepoForLive(@PathVariable("id") String repositoryId,
                                                      @RequestParam(required = false, name = "searchAfter") String searchAfter,
                                                      @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
-                                                     @RequestParam(required = false, name = "format") String format,
-                                                     @RequestParam(required = false, name = "fileBundle") String fileBundle,
+                                                     @RequestParam(required = false, defaultValue = "", name = "format") String format,
+                                                     @RequestParam(required = false, defaultValue = "", name = "groupingType") String groupingType,
                                                        Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
             if ((searchAfter != null && !MetaModelUtils.isValidUUID(searchAfter)) || !MetaModelUtils.isValidUUID(repositoryId) || size > 10000) {
@@ -178,7 +178,7 @@ public class Search {
             try {
                 //FIXME fix the files for live mechanism
                 //kgV3.fetchInstance(repositoryId, DataStage.IN_PROGRESS);
-                return searchController.getFilesFromRepo(DataStage.IN_PROGRESS, repositoryId, searchAfter, size, format, fileBundle);
+                return searchController.getFilesFromRepo(DataStage.IN_PROGRESS, repositoryId, searchAfter, size, format, groupingType);
                 
             } catch (WebClientResponseException e) {
                 return ResponseEntity.status(e.getStatusCode()).build();
@@ -188,31 +188,73 @@ public class Search {
         }
     }
 
-    @GetMapping("/groups/public/repositories/{id}/fileFormats")
-    public ResponseEntity<?> getFileFormatsFromRepoForPublic(@PathVariable("id") String id) {
-        return searchController.getFileFormatsFromRepo(DataStage.RELEASED, id);
-    }
-
-    @GetMapping("/groups/curated/repositories/{id}/fileFormats")
-    public ResponseEntity<?> getFileFormatsFromRepoForCurated(@PathVariable("id") String id,
-                                                        Principal principal) {
+    @GetMapping("/repositories/{id}/files/formats/live")
+    public ResponseEntity<?> getFileFormatsFromRepoForLive(@PathVariable("id") String repositoryId,
+                                                     Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
-            return searchController.getFileFormatsFromRepo(DataStage.IN_PROGRESS, id);
+            if (!MetaModelUtils.isValidUUID(repositoryId)) {
+                return ResponseEntity.badRequest().build();
+            }
+            //FIXME fix the files for live mechanism
+            //kgV3.executeQueryForInstance("clazz", DataStage.IN_PROGRESS, "queryId", repositoryId, false)
+            return searchController.getFileFormatsFromRepo(DataStage.IN_PROGRESS, repositoryId);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
-    @GetMapping("/groups/public/repositories/{id}/groupingTypes")
-    public ResponseEntity<?> getGroupingTypesFromRepoForPublic(@PathVariable("id") String id) {
-        return searchController.getGroupingTypesFromRepo(DataStage.RELEASED, id);
+    @GetMapping("/repositories/{id}/files/groupingTypes/live")
+    public ResponseEntity<?> getGroupingTypesFromRepoForLive(@PathVariable("id") String repositoryId,
+                                                     Principal principal) {
+        if (searchController.isInInProgressRole(principal)) {
+            if (!MetaModelUtils.isValidUUID(repositoryId)) {
+                return ResponseEntity.badRequest().build();
+            }
+            //FIXME fix the files for live mechanism
+            //kgV3.executeQueryForInstance("clazz", DataStage.IN_PROGRESS, "queryId", repositoryId, false)
+            return searchController.getGroupingTypesFromRepo(DataStage.IN_PROGRESS, repositoryId);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
-    @GetMapping("/groups/curated/repositories/{id}/groupingTypes")
-    public ResponseEntity<?> getGroupingTypesFromRepoForCurated(@PathVariable("id") String id,
+    @GetMapping("/groups/public/repositories/{id}/files/formats")
+    public ResponseEntity<?> getFileFormatsFromRepoForPublic(@PathVariable("id") String repositoryId) {
+        if (!MetaModelUtils.isValidUUID(repositoryId)) {
+            return ResponseEntity.badRequest().build();
+        }
+        return searchController.getFileFormatsFromRepo(DataStage.RELEASED, repositoryId);
+    }
+
+    @GetMapping("/groups/curated/repositories/{id}/files/formats")
+    public ResponseEntity<?> getFileFormatsFromRepoForCurated(@PathVariable("id") String repositoryId,
                                                         Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
-            return searchController.getGroupingTypesFromRepo(DataStage.IN_PROGRESS, id);
+            if (!MetaModelUtils.isValidUUID(repositoryId)) {
+                return ResponseEntity.badRequest().build();
+            }
+            return searchController.getFileFormatsFromRepo(DataStage.IN_PROGRESS, repositoryId);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    @GetMapping("/groups/public/repositories/{id}/files/groupingTypes")
+    public ResponseEntity<?> getGroupingTypesFromRepoForPublic(@PathVariable("id") String repositoryId) {
+        if (!MetaModelUtils.isValidUUID(repositoryId)) {
+            return ResponseEntity.badRequest().build();
+        }
+        return searchController.getGroupingTypesFromRepo(DataStage.RELEASED, repositoryId);
+    }
+
+    @GetMapping("/groups/curated/repositories/{id}/files/groupingTypes")
+    public ResponseEntity<?> getGroupingTypesFromRepoForCurated(@PathVariable("id") String repositoryId,
+                                                        Principal principal) {
+        if (searchController.isInInProgressRole(principal)) {
+            if (!MetaModelUtils.isValidUUID(repositoryId)) {
+                return ResponseEntity.badRequest().build();
+            }
+            return searchController.getGroupingTypesFromRepo(DataStage.IN_PROGRESS, repositoryId);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }

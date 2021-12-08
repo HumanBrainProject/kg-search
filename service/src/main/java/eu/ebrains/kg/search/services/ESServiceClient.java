@@ -146,7 +146,7 @@ public class ESServiceClient {
                 .collect(Collectors.toList());
 
         if (termList.size() == 0) {
-            return null;
+            return "";
         }
 
         String must = null;

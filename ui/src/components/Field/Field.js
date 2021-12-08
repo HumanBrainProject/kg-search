@@ -33,6 +33,21 @@ import "./Field.css";
 import { AsyncHierarchicalFiles } from "../../containers/Files/AsyncHierarchicalFiles";
 import FilePreview from "../FilePreview/FilePreview";
 
+const filesUrlRegex = /^(.+\/files)$/;
+const liveFilesUrlRegex = /^(.+\/files)\/live$/;
+const getFileUrlFrom = (url, type) => {
+  if (!url || typeof url !== "string") {
+    return null;
+  }
+  if (liveFilesUrlRegex.test(url)) {
+    return url.replace(liveFilesUrlRegex, `$1/${type}/live`);
+  }
+  if (filesUrlRegex.test(url)) {
+    return url.replace(filesUrlRegex, `$1/${type}`);
+  }
+  return null;
+};
+
 const FieldBase = (renderUserInteractions = true) => {
 
   const ListFieldComponent = renderUserInteractions?ListField:PrintViewListField;
@@ -50,8 +65,8 @@ const FieldBase = (renderUserInteractions = true) => {
     const isTable = mapping.isTable;
     const isHierarchicalFiles = mapping.isHierarchicalFiles;
     const asyncFilesUrl = mapping.isAsync?data:null;
-    const asyncFileFormatsUrl = asyncFilesUrl?asyncFilesUrl.replace(/^(.+)files$/, "$1fileFormats"):null;
-    const asyncGroupingTypesUrl = asyncFilesUrl?asyncFilesUrl.replace(/^(.+)files$/, "$1groupingTypes"):null;
+    const asyncFileFormatsUrl = getFileUrlFrom(asyncFilesUrl, "formats");
+    const asyncGroupingTypesUrl = getFileUrlFrom(asyncFilesUrl, "groupingTypes");
     const isFilePreview = mapping.isFilePreview && data.url;
     const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
     const className = "kgs-field" + (name?" kgs-field__" + name:"") + (["header", "summary"].includes(mapping.layout)?" kgs-field__layout-" + mapping.layout:"") + (isTable?" kgs-field__table":"") + (isHierarchicalFiles?" kgs-field__hierarchical-files":"");
