@@ -21,9 +21,20 @@
  *
  */
 
+ .kgs-files-search {
+    margin-bottom: 5px;
+    margin-top: 5px
+ }
+
+ .kgs-files-search .kgs-files-search-icon {
+   position: absolute;  
+   margin: 10px;
+ }
+
  .kgs-files-search .form-control {
-     width: 50%;
-     margin-bottom: 10px;
+     border: 1px solid var(--default-border-color);
+     color: var(--color-7);
+     padding-left: 30px;
  }
 
 .kgs-hierarchical-files {
@@ -81,6 +92,10 @@
 }
 
 @media (min-width:992px) {
+    .kgs-files-search .form-control {
+        width: 50%;
+    }
+
     .kgs-hierarchical-files {
         flex-direction: row;
     }

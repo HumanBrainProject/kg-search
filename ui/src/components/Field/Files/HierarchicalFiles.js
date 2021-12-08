@@ -96,16 +96,19 @@ class HierarchicalFiles extends React.Component {
   }
 
   render() {
+    const fileLength = this.props.data && this.props.data.length;
     return (
       <>
-        <div className="kgs-files-search">
-          <input
-            className="form-control"
-            onKeyUp={this.onFilterMouseUp}
-            placeholder="Search the files..."
-            type="text"
-          />
-        </div>
+        {fileLength < 5000 && (
+          <div className="kgs-files-search">
+            <FontAwesomeIcon icon="search" className="kgs-files-search-icon" />
+            <input
+              className="form-control"
+              onKeyUp={this.onFilterMouseUp}
+              placeholder="Search the files..."
+              type="text"
+            />
+          </div>)}
         <div className="kgs-hierarchical-files">
           <Treebeard
             data={this.state.tree}
