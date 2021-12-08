@@ -104,11 +104,21 @@
       ]
     },
     {
-      "propertyName": "query:groupingTypes",
-      "path": [
-        "https://openminds.ebrains.eu/vocab/isPartOf",
-        "https://openminds.ebrains.eu/vocab/groupingType",
-        "https://openminds.ebrains.eu/vocab/name"
+      "propertyName": "query:fileBundles",
+      "path": "https://openminds.ebrains.eu/vocab/isPartOf",
+      "structure": [
+        {
+          "propertyName": "query:name",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        },
+        {
+          "propertyName": "query:groupingType",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/groupingType",
+            "https://openminds.ebrains.eu/vocab/name"
+          ],
+          "singleValue": "FIRST"
+        }
       ]
     }
   ]

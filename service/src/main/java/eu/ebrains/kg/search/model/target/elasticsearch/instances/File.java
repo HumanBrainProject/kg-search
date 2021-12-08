@@ -35,6 +35,7 @@ import lombok.Setter;
 
 import java.lang.annotation.Target;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -59,13 +60,17 @@ public class File implements TargetInstance {
     @FieldInfo(label = "Software taking this file as input")
     private List<TargetInternalReference> inputTypeForSoftware;
     @FieldInfo(visible = false)
-    private List<String> groupingTypes;
-
-
+    private List<GroupingType> groupingTypes;
     @Override
     @JsonIgnore
     public boolean isSearchableInstance() {
         return false;
     }
 
+    @Getter
+    @Setter
+    public static class GroupingType {
+        private String name;
+        private List<String> fileBundles;
+    }
 }

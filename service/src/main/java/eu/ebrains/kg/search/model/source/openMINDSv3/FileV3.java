@@ -38,7 +38,7 @@ public class FileV3 extends SourceInstanceV3 {
     private Size size;
     private boolean privateAccess;
     private Format format;
-    private List<String> groupingTypes;
+    private List<FileBundle> fileBundles;
 
     @Getter
     @Setter
@@ -53,4 +53,10 @@ public class FileV3 extends SourceInstanceV3 {
         private List<FullNameRef> inputFormatForSoftware;
     }
 
+    @Getter
+    @Setter
+    public static class FileBundle {
+        private String name;
+        private String groupingType;
+    }
 }

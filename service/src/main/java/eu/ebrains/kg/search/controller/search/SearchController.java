@@ -127,18 +127,18 @@ public class SearchController {
         }
     }
 
-    public ResponseEntity<?> getFileBundlesFromRepo(DataStage stage, String id) {
-        return getAggregationFromRepo(stage, id, "groupingTypes.keyword");
+    public ResponseEntity<?> getGroupingTypesFromRepo(DataStage stage, String id) {
+        return getAggregationFromRepo(stage, id, "groupingTypes.name.keyword");
     }
 
     public ResponseEntity<?> getFileFormatsFromRepo(DataStage stage, String id) {
         return getAggregationFromRepo(stage, id, "format.value.keyword");
     }
 
-    public ResponseEntity<?> getFilesFromRepo(DataStage stage, String id, String searchAfter, int size, String format, String fileBundle) {
+    public ResponseEntity<?> getFilesFromRepo(DataStage stage, String id, String searchAfter, int size, String format, String groupingType) {
         try {
             String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class);
-            ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size, format, fileBundle);
+            ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size, format, groupingType);
             Map<String, Object> result = formatFilesResponse(filesFromRepo);
             return ResponseEntity.ok(result);
         } catch (WebClientResponseException e) {

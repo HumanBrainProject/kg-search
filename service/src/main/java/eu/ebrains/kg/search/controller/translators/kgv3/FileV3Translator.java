@@ -34,8 +34,8 @@ import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translator.Result> {
     public static class Result extends ResultsOfKGv3<FileV3> {
@@ -87,7 +87,21 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
             f.setFormat(ref(file.getFormat()));
             f.setInputTypeForSoftware(ref(file.getFormat().getInputFormatForSoftware()));
         }
-        f.setGroupingTypes(file.getGroupingTypes());
+        Map<String, File.GroupingType> groupingTypes = new HashMap<>();
+        file.getFileBundles().forEach(fileBundle -> {
+            String groupingTypeName = fileBundle.getGroupingType();
+            if (!groupingTypes.containsKey(groupingTypeName)) {
+                File.GroupingType groupingType = new File.GroupingType();
+                groupingType.setName(groupingTypeName);
+                groupingType.setFileBundles(List.of(fileBundle.getName()));
+                groupingTypes.put(groupingTypeName, groupingType);
+            } else {
+                File.GroupingType groupingType = groupingTypes.get(groupingTypeName);
+                List<String> fileBundles = groupingType.getFileBundles();
+                fileBundles.add(fileBundle.getName());
+            }
+        });
+        f.setGroupingTypes(new ArrayList<>(groupingTypes.values()));
         return f;
     }
 }

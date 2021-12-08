@@ -203,16 +203,16 @@ public class Search {
         }
     }
 
-    @GetMapping("/groups/public/repositories/{id}/fileBundles")
-    public ResponseEntity<?> getFileBundlesFromRepoForPublic(@PathVariable("id") String id) {
-        return searchController.getFileBundlesFromRepo(DataStage.RELEASED, id);
+    @GetMapping("/groups/public/repositories/{id}/groupingTypes")
+    public ResponseEntity<?> getGroupingTypesFromRepoForPublic(@PathVariable("id") String id) {
+        return searchController.getGroupingTypesFromRepo(DataStage.RELEASED, id);
     }
 
-    @GetMapping("/groups/curated/repositories/{id}/fileBundles")
-    public ResponseEntity<?> getFileBundlesFromRepoForCurated(@PathVariable("id") String id,
+    @GetMapping("/groups/curated/repositories/{id}/groupingTypes")
+    public ResponseEntity<?> getGroupingTypesFromRepoForCurated(@PathVariable("id") String id,
                                                         Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
-            return searchController.getFileBundlesFromRepo(DataStage.IN_PROGRESS, id);
+            return searchController.getGroupingTypesFromRepo(DataStage.IN_PROGRESS, id);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -223,11 +223,11 @@ public class Search {
                                                        @RequestParam(required = false, defaultValue = "", name = "searchAfter") String searchAfter,
                                                        @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
                                                        @RequestParam(required = false, defaultValue = "", name = "format") String format,
-                                                       @RequestParam(required = false, defaultValue = "", name = "fileBundle") String fileBundle) {
+                                                       @RequestParam(required = false, defaultValue = "", name = "groupingType") String groupingType) {
         if ((StringUtils.isNotBlank(searchAfter) && !MetaModelUtils.isValidUUID(searchAfter)) || !MetaModelUtils.isValidUUID(id) || size > 10000) {
             return ResponseEntity.badRequest().build();
         }
-        return searchController.getFilesFromRepo(DataStage.RELEASED, id, searchAfter, size, format, fileBundle);
+        return searchController.getFilesFromRepo(DataStage.RELEASED, id, searchAfter, size, format, groupingType);
     }
 
     @GetMapping("/groups/curated/repositories/{id}/files")
@@ -235,13 +235,13 @@ public class Search {
                                                         @RequestParam(required = false, defaultValue = "", name = "searchAfter") String searchAfter,
                                                         @RequestParam(required = false, defaultValue = "10000", name = "size") int size,
                                                         @RequestParam(required = false, defaultValue = "", name = "format") String format,
-                                                        @RequestParam(required = false, defaultValue = "", name = "bundle") String bundle,
+                                                        @RequestParam(required = false, defaultValue = "", name = "groupingType") String groupingType,
                                                         Principal principal) {
         if (searchController.isInInProgressRole(principal)) {
             if ((StringUtils.isNotBlank(searchAfter) && !MetaModelUtils.isValidUUID(searchAfter)) || !MetaModelUtils.isValidUUID(id) || size > 10000) {
                 return ResponseEntity.badRequest().build();
             }
-            return searchController.getFilesFromRepo(DataStage.IN_PROGRESS, id, searchAfter, size, format, bundle);
+            return searchController.getFilesFromRepo(DataStage.IN_PROGRESS, id, searchAfter, size, format, groupingType);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }

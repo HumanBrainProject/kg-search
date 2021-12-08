@@ -177,7 +177,7 @@ public class ESServiceClient {
         return "{\n" + StringUtils.join(list, ",\n ") + "\n}";
     }
 
-    private String getPaginatedFilesQuery(String fileRepositoryId, String searchAfter, int size, String format, String fileBundle) {
+    private String getPaginatedFilesQuery(String fileRepositoryId, String searchAfter, int size, String format, String groupingType) {
 
         String sizeValue = String.format("%d", size);
 
@@ -197,7 +197,7 @@ public class ESServiceClient {
         Map<String, String> terms = Map.of(
                 "fileRepository", fileRepositoryId,
                 "format.value.keyword", format,
-                "groupingTypes.keyword", fileBundle
+                "groupingTypes.name.keyword", groupingType
         );
         String queryValue = getQuery(terms);
 
@@ -351,8 +351,8 @@ public class ESServiceClient {
         }
     }
 
-    public ElasticSearchResult getFilesFromRepo(String index, String fileRepositoryId, String searchAfter, int size, String format, String fileBundle) {
-        String paginatedQuery = getPaginatedFilesQuery(fileRepositoryId, searchAfter, size, format, fileBundle);
+    public ElasticSearchResult getFilesFromRepo(String index, String fileRepositoryId, String searchAfter, int size, String format, String groupingType) {
+        String paginatedQuery = getPaginatedFilesQuery(fileRepositoryId, searchAfter, size, format, groupingType);
         try {
             return webClient.post()
                     .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
