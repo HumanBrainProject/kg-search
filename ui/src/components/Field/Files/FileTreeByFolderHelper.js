@@ -22,30 +22,32 @@
  */
 
 const buildTreeStructureForFile = (tree, file, nbOfPathToSkip, rootUrlSeparator, urlField, fileMapping, allowFolderDownload) => {
-  const path = file[urlField].split("/").slice(nbOfPathToSkip);
-  let node = tree;
-  path.forEach((name, index) => {
-    if(index === (path.length - 1)) { // file
-      node.paths[name] = {
-        name: name,
-        url: file[urlField],
-        type: "file",
-        size: file.fileSize, // v1
-        thumbnail: file.thumbnailUrl && file.thumbnailUrl.url, //"https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000041_VervetMonkey_3D-PLI_CoroSagiSec_dev/VervetThumbnail.jpg"
-        details: fileMapping?{data: file, mapping: fileMapping}:null
-      };
-    } else { // folder
-      if(!node.paths[name]) { // is not already created
+  if (file[urlField]) {
+    const path = file[urlField].split("/").slice(nbOfPathToSkip);
+    let node = tree;
+    path.forEach((name, index) => {
+      if(index === (path.length - 1)) { // file
         node.paths[name] = {
           name: name,
-          url: allowFolderDownload?`${node[urlField]}${node === tree?rootUrlSeparator:"/"}${name}`:null,
-          type: "folder",
-          paths: {}
+          url: file[urlField],
+          type: "file",
+          size: file.fileSize, // v1
+          thumbnail: file.thumbnailUrl && file.thumbnailUrl.url, //"https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000041_VervetMonkey_3D-PLI_CoroSagiSec_dev/VervetThumbnail.jpg"
+          details: fileMapping?{data: file, mapping: fileMapping}:null
         };
+      } else { // folder
+        if(!node.paths[name]) { // is not already created
+          node.paths[name] = {
+            name: name,
+            url: allowFolderDownload?`${node[urlField]}${node === tree?rootUrlSeparator:"/"}${name}`:null,
+            type: "folder",
+            paths: {}
+          };
+        }
+        node = node.paths[name];
       }
-      node = node.paths[name];
-    }
-  });
+    });
+  }
 };
 
 const setChildren = node => {

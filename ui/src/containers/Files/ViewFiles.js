@@ -61,26 +61,33 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
 
   const isAllFetched = files.length === totalFiles;
 
-  if (!isFilesInitialized || isFilesLoading) {
-    return (
-      <>
-        {!!files.length && (
-          <>
-            <Label isAllFetched={isAllFetched} number={files.length} total={totalFiles} />
-            &nbsp;&nbsp;
-          </>
-        )}
+  // if (!isFilesInitialized || isFilesLoading) {
+  //   return (
+  //     <>
+  //       {!!files.length && (
+  //         <>
+  //           <Label isAllFetched={isAllFetched} number={files.length} total={totalFiles} />
+  //           &nbsp;&nbsp;
+  //         </>
+  //       )}
+  //       <div className="spinner-border spinner-border-sm" role="status">
+  //         <span className="sr-only">Retrieving files...</span>
+  //       </div>
+  //       {!!files.length && (
+  //         <HierarchicalFiles data={files} mapping={mapping} group={group} groupingType={groupingType} allowFolderDownload={allowFolderDownload} nameField={nameField} urlField={urlField} fileMapping={fileMapping} />
+  //       )}
+  //     </>
+  //   );
+  // }
+
+  if (files.length === 0) {
+    if (!isFilesInitialized || isFilesLoading) {
+      return (
         <div className="spinner-border spinner-border-sm" role="status">
           <span className="sr-only">Retrieving files...</span>
         </div>
-        {!!files.length && (
-          <HierarchicalFiles data={files} mapping={mapping} group={group} groupingType={groupingType} allowFolderDownload={allowFolderDownload} nameField={nameField} urlField={urlField} fileMapping={fileMapping} />
-        )}
-      </>
-    );
-  }
-
-  if (files.length === 0) {
+      );
+    }
     return (
       <span>No files available <FontAwesomeIcon icon="sync-alt" onClick={() => fetchFiles(true)} style={{cursor: "pointer"}}/></span>
     );
@@ -90,8 +97,7 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
 
   const showMoreStyle = {
     display: "inline",
-    paddingTop: 0,
-    paddingBottom: 0,
+    padding: 0,
     border: 0,
     verticalAlign: "baseline",
     color: "var(--link-color-1)",
@@ -100,10 +106,18 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
 
   return (
     <>
-      <Label isAllFetched={isAllFetched} number={files.length} total={totalFiles} />
-      {!isAllFetched && (
-        <button type="button" className="btn btn-link" onClick={fetchMoreFiles} style={showMoreStyle}>show more</button>
-      )}
+      <div>
+        <Label isAllFetched={isAllFetched} number={files.length} total={totalFiles} />&nbsp;
+        {isFilesLoading?
+          <div className="spinner-border spinner-border-sm" role="status">
+            <span className="sr-only">Retrieving files...</span>
+          </div>
+          :
+          !isAllFetched && (
+            <button type="button" className="btn btn-link" onClick={fetchMoreFiles} style={showMoreStyle}>show more</button>
+          )
+        }
+      </div>
       <HierarchicalFiles data={files} mapping={mapping} group={group} groupingType={groupingType} allowFolderDownload={allowFolderDownload} nameField={nameField} urlField={urlField} fileMapping={fileMapping} />
     </>
   );
