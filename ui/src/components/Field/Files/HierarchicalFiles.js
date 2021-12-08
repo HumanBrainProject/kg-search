@@ -34,8 +34,11 @@ import Header from "./Header";
 
 import { getTreeByFolder } from "./FileTreeByFolderHelper";
 import { getTreeByGroupingType } from "./FileTreeByGroupingTypeHelper";
+import * as filters from "./helpers";
+import { debounce } from "lodash";
 
-const Node = ({node, isRootNode, group}) => {
+
+const Node = ({node, isRootNode, group, hasFilter}) => {
   return (
     <div className="kgs-hierarchical-files__details">
       <div>{node.thumbnail ? <img height="80" src={node.thumbnail} alt={node.url} />:<FontAwesomeIcon icon={node.type} size="5x"/>}</div>
@@ -43,9 +46,10 @@ const Node = ({node, isRootNode, group}) => {
         <div>
           <div><strong>Name:</strong> {node.name}</div>
           {node.size  && <div><strong>Size:</strong> {node.size}</div>}
-          {node.url && (
-            <Download name={`Download ${isRootNode?"dataset":node.type}`} type={node.type} url={node.url} />
-          )}
+          {hasFilter && node.type === "folder" ? null:
+            node.url && (
+              <Download name={`Download ${isRootNode?"dataset":node.type}`} type={node.type} url={node.url} />
+            )}
           {node.type === "file" && node.details && node.details.data && node.details.mapping && (
             <File data={node.details.data} mapping={node.details.mapping} group={group} />
           )}
@@ -60,14 +64,16 @@ class HierarchicalFiles extends React.Component {
     super(props);
     this.state = {
       node: {},
-      tree: {}
+      tree: {},
+      initialTree: {},
+      filter: ""
     };
   }
 
   componentDidMount() {
     const {data, groupingType, nameField, urlField, fileMapping, allowFolderDownload} = this.props;
     const tree = groupingType?getTreeByGroupingType(data, nameField, urlField, fileMapping, groupingType):getTreeByFolder(data, urlField, fileMapping, allowFolderDownload);
-    this.setState({tree: tree, node: tree });
+    this.setState({tree: tree, node: tree, initialTree: tree });
   }
 
   onToggle = (node, toggled) => {
@@ -82,19 +88,43 @@ class HierarchicalFiles extends React.Component {
     this.setState({node: node});
   }
 
+  onFilterMouseUp = debounce(({target: {value}}) => {
+    const filter = value.trim();
+    this.setState({filter: filter});
+    if (!filter) {
+      this.setState({tree: this.state.initialTree});
+    }
+    let filtered = filters.filterTree(this.state.initialTree, filter);
+    filtered = filters.expandFilteredNodes(filtered, filter);
+    this.setState({tree: filtered});
+  }, 150)
+
   render() {
+    const filesLength = this.props.data && this.props.data.length;
     return (
-      <div className="kgs-hierarchical-files">
-        <Treebeard
-          data={this.state.tree}
-          onToggle={this.onToggle}
-          decorators={{...decorators, Header}}
-          style={{...theme}}
-        />
-        {this.state.node.active && (
-          <Node node={this.state.node} isRootNode={this.state.node === this.state.tree} group={this.props.group} />
-        )}
-      </div>
+      <>
+        {filesLength < 5000 && (
+          <div className="kgs-files-search">
+            <FontAwesomeIcon icon="search" className="kgs-files-search-icon" />
+            <input
+              className="form-control"
+              onKeyUp={this.onFilterMouseUp}
+              placeholder="Search the files..."
+              type="text"
+            />
+          </div>)}
+        <div className="kgs-hierarchical-files">
+          <Treebeard
+            data={this.state.tree}
+            onToggle={this.onToggle}
+            decorators={{...decorators, Header}}
+            style={{...theme}}
+          />
+          {this.state.node.active && (
+            <Node node={this.state.node} isRootNode={this.state.node.isRootNode} group={this.props.group} hasFilter={this.state.filter !== ""} />
+          )}
+        </div>
+      </>
     );
   }
 }

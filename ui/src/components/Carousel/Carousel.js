@@ -79,31 +79,32 @@ export class Carousel extends React.Component {
       data: null
     }));
   }
+
   componentDidMount() {
     if (!isMobile) {
       window.addEventListener("keyup", this._keyupHandler.bind(this), false);
     }
   }
+
   componentWillUnmount() {
     if (!isMobile) {
       window.removeEventListener("keyup", this._keyupHandler);
     }
   }
-  _keyupHandler(event) {
-    const {onPrevious, onClose} = this.props;
+
+  _keyupHandler = event => {
+    const {onClose} = this.props;
     if (this.props.show) {
       if (event.keyCode === 27) {
         event.preventDefault();
         typeof onClose === "function" && onClose();
-      } else if (event.keyCode === 8) {
-        event.preventDefault();
-        typeof onPrevious === "function" && onPrevious();
       }
     }
   }
 
   onClose = e => {
     if (this.wrapperRef && !this.wrapperRef.contains(e.target)) {
+      window.instanceTabSelection = {};
       const { onClose } = this.props;
       typeof onClose === "function" && onClose();
     }

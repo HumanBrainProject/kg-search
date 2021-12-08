@@ -61,25 +61,6 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
 
   const isAllFetched = files.length === totalFiles;
 
-  // if (!isFilesInitialized || isFilesLoading) {
-  //   return (
-  //     <>
-  //       {!!files.length && (
-  //         <>
-  //           <Label isAllFetched={isAllFetched} number={files.length} total={totalFiles} />
-  //           &nbsp;&nbsp;
-  //         </>
-  //       )}
-  //       <div className="spinner-border spinner-border-sm" role="status">
-  //         <span className="sr-only">Retrieving files...</span>
-  //       </div>
-  //       {!!files.length && (
-  //         <HierarchicalFiles data={files} mapping={mapping} group={group} groupingType={groupingType} allowFolderDownload={allowFolderDownload} nameField={nameField} urlField={urlField} fileMapping={fileMapping} />
-  //       )}
-  //     </>
-  //   );
-  // }
-
   if (files.length === 0) {
     if (!isFilesInitialized || isFilesLoading) {
       return (

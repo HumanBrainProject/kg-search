@@ -96,6 +96,7 @@ export const getTreeByFolder = (files, urlField, fileMapping, allowFolderDownloa
   const tree = {
     name: commonPath[commonPath.length-1],
     url: allowFolderDownload?`/proxy/export?container=${url}`:null,
+    isRootNode: true,
     type: "folder",
     paths: {},
     toggled: true,

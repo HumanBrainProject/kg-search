@@ -95,7 +95,8 @@ const FieldBase = (renderUserInteractions = true) => {
       mapping: mapping,
       group: group,
       nameField: "value",
-      urlField: "url"
+      urlField: "url",
+      allowFolderDownload: true
     };
     const asyncHierarchicalFileProps = {
       mapping: mapping,
