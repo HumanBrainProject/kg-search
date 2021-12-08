@@ -30,15 +30,15 @@ const initialState = {
   fileFormatsError: null,
   isFileFormatsInitialized: false,
   isFileFormatsLoading: false,
-  fileBundlesError: null,
-  isFileBundlesInitialized: false,
-  isFileBundlesLoading: false,
+  groupingTypesError: null,
+  isGroupingTypesInitialized: false,
+  isGroupingTypesLoading: false,
   files: [],
-  fileBundles: [],
+  groupingTypes: [],
   fileFormats: [],
   totalFiles: 0,
   searchFilesAfter: null,
-  fileBundle: null,
+  groupingType: null,
   fileFormat: null
 };
 
@@ -51,7 +51,7 @@ const loadFilesRequest = (state, action) => {
     totalFiles: action.reset?0:state.totalFiles,
     searchFilesAfter: action.reset?null:state.searchFilesAfter,
     filesError: null,
-    fileBundle: action.fileBundle,
+    groupingType: action.groupingType,
     fileFormat: action.fileFormat
   };
 };
@@ -78,31 +78,31 @@ const loadFilesFailure = (state, action) => {
   };
 };
 
-const loadFileBundlesRequest = state => {
+const loadGroupingTypesRequest = state => {
   return {
     ...state,
-    isFileBundlesInitialized: true,
-    isFileBundlesLoading: true,
-    fileBundles: state.fileBundles,
-    fileBundlesError: null
+    isGroupingTypesInitialized: true,
+    isGroupingTypesLoading: true,
+    groupingTypes: state.groupingTypes,
+    groupingTypesError: null
   };
 };
 
-const loadFileBundlesSuccess = (state, action) => {
+const loadGroupingTypesSuccess = (state, action) => {
   return {
     ...state,
-    fileBundles: action.fileBundles,
-    isFileBundlesLoading: false,
-    fileBundlesError: null
+    groupingTypes: action.groupingTypes,
+    isGroupingTypesLoading: false,
+    groupingTypesError: null
   };
 };
 
-const loadFileBundlesFailure = (state, action) => {
+const loadGroupingTypesFailure = (state, action) => {
   return {
     ...state,
-    fileBundlesError: action.error,
-    isFileBundlesLoading: false,
-    fileBundles: []
+    groupingTypesError: action.error,
+    isGroupingTypesLoading: false,
+    groupingTypes: []
   };
 };
 
@@ -140,18 +140,18 @@ const clearFiles = state => {
     filesError: null,
     isFilesInitialized: false,
     isFilesLoading: false,
-    fileBundlesError: null,
-    isFileBundlesInitialized: false,
-    isFileBundlesLoading: false,
+    groupingTypesError: null,
+    isGroupingTypesInitialized: false,
+    isGroupingTypesLoading: false,
     fileFormatsError: null,
     isFileFormatsInitialized: false,
     isFileFormatsLoading: false,
     files: [],
-    fileBundles: [],
+    groupingTypes: [],
     fileFormats: [],
     totalFiles: 0,
     searchFilesAfter: null,
-    fileBundle: null,
+    groupingType: null,
     fileFormat: null
   };
 };
@@ -164,12 +164,12 @@ export function reducer(state = initialState, action = {}) {
     return loadFilesSuccess(state, action);
   case types.LOAD_FILES_FAILURE:
     return loadFilesFailure(state, action);
-  case types.LOAD_FILE_BUNDLES_REQUEST:
-    return loadFileBundlesRequest(state, action);
-  case types.LOAD_FILE_BUNDLES_SUCCESS:
-    return loadFileBundlesSuccess(state, action);
-  case types.LOAD_FILE_BUNDLES_FAILURE:
-    return loadFileBundlesFailure(state, action);
+  case types.LOAD_GROUPING_TYPES_REQUEST:
+    return loadGroupingTypesRequest(state, action);
+  case types.LOAD_GROUPING_TYPES_SUCCESS:
+    return loadGroupingTypesSuccess(state, action);
+  case types.LOAD_GROUPING_TYPES_FAILURE:
+    return loadGroupingTypesFailure(state, action);
   case types.LOAD_FILE_FORMATS_REQUEST:
     return loadFileFormatsRequest(state, action);
   case types.LOAD_FILE_FORMATS_SUCCESS:

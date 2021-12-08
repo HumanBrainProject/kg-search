@@ -24,31 +24,29 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { FileFormatFilter } from "./FileFormatFilter";
-import { FileBundleFilter } from "./FileBundleFilter";
+import { GroupingTypeFilter } from "./GroupingTypeFilter";
 import { ViewFiles } from "./ViewFiles";
 import * as actionsFiles from "../../actions/actions.files";
 
-export const AsyncHierarchicalFilesComponent = ({mapping, group, urlField, searchFilesAfter, fileBundle, fileFormat, fetchFiles, fetchFileFormats, fetchFileBundles}) => {
+export const AsyncHierarchicalFilesComponent = ({mapping, group, nameField, urlField, searchFilesAfter, groupingType, fileFormat, fetchFiles, fetchFileFormats, fetchGroupingTypes}) => {
 
   const handleSelectFileFormat = format => {
-    console.log("format", format);
-    fetchFiles(searchFilesAfter, fileBundle, format, true);
+    fetchFiles(searchFilesAfter, groupingType, format, true);
   };
 
-  const handleSelectFileBundle = bundle => {
-    console.log("bundle", bundle);
-    fetchFiles(searchFilesAfter, bundle, fileFormat, true);
+  const handleSelectGroupingType = type => {
+    fetchFiles(searchFilesAfter, type, fileFormat, true);
   };
 
   const handleFetchFiles = reset => {
-    fetchFiles(searchFilesAfter, fileBundle, fileFormat, reset);
+    fetchFiles(searchFilesAfter, groupingType, fileFormat, reset);
   };
 
   return (
     <>
       <FileFormatFilter onSelect={handleSelectFileFormat} fetch={fetchFileFormats} />
-      <FileBundleFilter onSelect={handleSelectFileBundle} fetch={fetchFileBundles} />
-      <ViewFiles mapping={mapping} group={group} fetch={handleFetchFiles} urlField={urlField} />
+      <GroupingTypeFilter onSelect={handleSelectGroupingType} fetch={fetchGroupingTypes} />
+      <ViewFiles mapping={mapping} group={group} fetch={handleFetchFiles} nameField={nameField} urlField={urlField} />
     </>
   );
 };
@@ -61,14 +59,15 @@ export const AsyncHierarchicalFiles = connect(
     isFilesLoading: state.files.isFilesLoading,
     filesError: state.files.filesError,
     fileFormat: state.files.fileFormat,
-    fileBundle: state.files.fileBundle,
+    groupingType: state.files.groupingType,
     mapping: props.mapping,
     group: props.group,
+    nameField: props.nameField,
     urlField: props.urlField
   }),
   (dispatch, props) => ({
-    fetchFiles: (searchAfter, fileBundle, fileFilter, reset) => dispatch(actionsFiles.loadFiles(props.filesUrl, searchAfter, fileBundle, fileFilter, reset)),
+    fetchFiles: (searchAfter, groupingType, fileFilter, reset) => dispatch(actionsFiles.loadFiles(props.filesUrl, searchAfter, groupingType, fileFilter, reset)),
     fetchFileFormats: () => dispatch(actionsFiles.loadFileFormats(props.fileFormatsUrl)),
-    fetchFileBundles: () => dispatch(actionsFiles.loadFileBundles(props.fileBundlesUrl))
+    fetchGroupingTypes: () => dispatch(actionsFiles.loadGroupingTypes(props.groupingTypesUrl))
   })
 )(AsyncHierarchicalFilesComponent);

@@ -51,7 +51,7 @@ const FieldBase = (renderUserInteractions = true) => {
     const isHierarchicalFiles = mapping.isHierarchicalFiles;
     const asyncFilesUrl = mapping.isAsync?data:null;
     const asyncFileFormatsUrl = asyncFilesUrl?asyncFilesUrl.replace(/^(.+)files$/, "$1fileFormats"):null;
-    const asyncFileBundlesUrl = asyncFilesUrl?asyncFilesUrl.replace(/^(.+)files$/, "$1fileBundles"):null;
+    const asyncGroupingTypesUrl = asyncFilesUrl?asyncFilesUrl.replace(/^(.+)files$/, "$1groupingTypes"):null;
     const isFilePreview = mapping.isFilePreview && data.url;
     const style = (mapping.order && !renderUserInteractions)?{order: mapping.order}:null;
     const className = "kgs-field" + (name?" kgs-field__" + name:"") + (["header", "summary"].includes(mapping.layout)?" kgs-field__layout-" + mapping.layout:"") + (isTable?" kgs-field__table":"") + (isHierarchicalFiles?" kgs-field__hierarchical-files":"");
@@ -94,14 +94,16 @@ const FieldBase = (renderUserInteractions = true) => {
       data: data,
       mapping: mapping,
       group: group,
+      nameField: "value",
       urlField: "url"
     };
     const asyncHierarchicalFileProps = {
       mapping: mapping,
       group: group,
+      nameField: "name",
       urlField: "iri",
       filesUrl: asyncFilesUrl,
-      fileBundlesUrl: asyncFileBundlesUrl,
+      groupingTypesUrl: asyncGroupingTypesUrl,
       fileFormatsUrl: asyncFileFormatsUrl
     };
     const filePreviewProps = {

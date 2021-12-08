@@ -1,0 +1,73 @@
+/*
+ * Copyright 2018 - 2021 Swiss Federal Institute of Technology Lausanne (EPFL)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * This open source software code was developed in part or in whole in the
+ * Human Brain Project, funded from the European Union's Horizon 2020
+ * Framework Programme for Research and Innovation under
+ * Specific Grant Agreements No. 720270, No. 785907, and No. 945539
+ * (Human Brain Project SGA1, SGA2 and SGA3).
+ *
+ */
+
+.kgs-hierarchical-files__info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: small;
+}
+
+.kgs-hierarchical-files__info > div > div {
+  word-break: break-all;
+  line-height: 1.3em;
+} 
+
+.kgs-hierarchical-files__info > div > div + div {
+  margin-top: 4px;
+} 
+
+.kgs-hierarchical-files__info > div {
+  text-align: center;
+}
+
+.kgs-hierarchical-files__info .kgs-hierarchical-files__info_agreement {
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+.kgs-hierarchical-files__info .kgs-hierarchical-files__info_agreement > span > button {
+  border: 0;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  color: var(--link-color-1);
+}
+
+.kgs-hierarchical-files__info  .kgs-hierarchical-files__info_link {
+  position: relative;
+  background-color: var(--button-default-background-color);
+  border-color: var(--button-default-border-color);
+  font-size: var(--font-size);
+  color: var(--color-36);
+  margin-top: 20px;
+}
+
+.kgs-hierarchical-files__info  .kgs-hierarchical-files__info_link:hover,
+.kgs-hierarchical-files__info  .kgs-hierarchical-files__info_link:focus,
+.kgs-hierarchical-files__info  .kgs-hierarchical-files__info_link:active  {
+  background-color: var(--button-default-background-color-hover);
+  border-color: var(--button-default-border-color);
+  color: var(--color-33);   
+}

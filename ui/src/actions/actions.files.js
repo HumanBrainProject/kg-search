@@ -25,11 +25,11 @@ import * as types from "./actions.types";
 import API from "../services/API";
 import { sessionFailure } from "./actions";
 
-export const loadFilesRequest = (searchAfter, fileBundle, fileFormat, reset) => {
+export const loadFilesRequest = (searchAfter, groupingType, fileFormat, reset) => {
   return {
     type: types.LOAD_FILES_REQUEST,
     searchAfter: searchAfter,
-    fileBundle: fileBundle,
+    groupingType: groupingType,
     fileFormat: fileFormat,
     reset: reset
   };
@@ -59,18 +59,18 @@ export const clearFiles = () => {
   };
 };
 
-export const loadFiles = (filesUrl, searchAfter, fileBundle, fileFormat, reset) => {
+export const loadFiles = (filesUrl, searchAfter, groupingType, fileFormat, reset) => {
   if (!filesUrl) {
     throw "action loadFileFormats got a null url";
   }
   return dispatch => {
-    dispatch(loadFilesRequest(searchAfter, fileBundle, fileFormat, reset));
+    dispatch(loadFilesRequest(searchAfter, groupingType, fileFormat, reset));
     const params = {};
     if (searchAfter && !reset) {
       params["searchAfter"] = searchAfter;
     }
-    if (fileBundle) {
-      params["bundle"] = fileBundle;
+    if (groupingType) {
+      params["groupingType"] = groupingType;
     }
     if (fileFormat) {
       params["format"] = fileFormat;
@@ -109,35 +109,35 @@ export const loadFiles = (filesUrl, searchAfter, fileBundle, fileFormat, reset) 
   };
 };
 
-export const loadFileBundlesRequest = () => {
+export const loadGroupingTypesRequest = () => {
   return {
-    type: types.LOAD_FILE_BUNDLES_REQUEST
+    type: types.LOAD_GROUPING_TYPES_REQUEST
   };
 };
 
-export const loadFileBundlesSuccess = result => {
+export const loadGroupingTypesSuccess = result => {
   return {
-    type: types.LOAD_FILE_BUNDLES_SUCCESS,
-    fileBundles: Array.isArray(result.data)?result.data.sort():[]
+    type: types.LOAD_GROUPING_TYPES_SUCCESS,
+    groupingTypes: Array.isArray(result.data)?result.data.sort():[]
   };
 };
 
-export const loadFileBundlesFailure = error => {
+export const loadGroupingTypesFailure = error => {
   return {
-    type: types.LOAD_FILE_BUNDLES_FAILURE,
+    type: types.LOAD_GROUPING_TYPES_FAILURE,
     error: error
   };
 };
 
-export const loadFileBundles = url => {
+export const loadGroupingTypes = url => {
   if (!url) {
-    throw "action loadFileBundles got a null url";
+    throw "action loadGroupingTypes got a null url";
   }
   return dispatch => {
-    dispatch(loadFileBundlesRequest());
+    dispatch(loadGroupingTypesRequest());
     API.axios
       .get(url)
-      .then(response => dispatch(loadFileBundlesSuccess(response.data)))
+      .then(response => dispatch(loadGroupingTypesSuccess(response.data)))
       .catch(e => {
         const { response } = e;
         if (response) {
@@ -156,12 +156,12 @@ export const loadFileBundles = url => {
           default:
           {
             const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
-            dispatch(loadFileBundlesFailure(error));
+            dispatch(loadGroupingTypesFailure(error));
           }
           }
         } else {
           const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
-          dispatch(loadFileBundlesFailure(error));
+          dispatch(loadGroupingTypesFailure(error));
         }
       });
   };

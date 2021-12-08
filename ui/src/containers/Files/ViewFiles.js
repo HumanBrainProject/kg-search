@@ -41,7 +41,7 @@ const Label = ({isAllFetched, number, total}) => {
   );
 };
 
-const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoading, filesError, mapping, group, urlField, fileMapping, rootFolderName, allowFolderDownload, fetchFiles, clear }) => {
+const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoading, filesError, mapping, group, nameField, urlField, fileMapping, groupingType, allowFolderDownload, fetchFiles, clear }) => {
 
   useEffect(() => {
     fetchFiles(true);
@@ -74,7 +74,7 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
           <span className="sr-only">Retrieving files...</span>
         </div>
         {!!files.length && (
-          <HierarchicalFiles data={files} mapping={mapping} group={group} rootFolderName={rootFolderName} allowFolderDownload={allowFolderDownload} urlField={urlField} fileMapping={fileMapping} />
+          <HierarchicalFiles data={files} mapping={mapping} group={group} groupingType={groupingType} allowFolderDownload={allowFolderDownload} nameField={nameField} urlField={urlField} fileMapping={fileMapping} />
         )}
       </>
     );
@@ -104,7 +104,7 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
       {!isAllFetched && (
         <button type="button" className="btn btn-link" onClick={fetchMoreFiles} style={showMoreStyle}>show more</button>
       )}
-      <HierarchicalFiles data={files} mapping={mapping} group={group} rootFolderName={rootFolderName} allowFolderDownload={allowFolderDownload} urlField={urlField} fileMapping={fileMapping} />
+      <HierarchicalFiles data={files} mapping={mapping} group={group} groupingType={groupingType} allowFolderDownload={allowFolderDownload} nameField={nameField} urlField={urlField} fileMapping={fileMapping} />
     </>
   );
 };
@@ -118,10 +118,11 @@ export const ViewFiles = connect(
     filesError: state.files.filesError,
     mapping: props.mapping,
     group: props.group,
+    nameField: props.nameField,
     urlField: props.urlField,
     fileMapping: state.definition.typeMappings.File && state.definition.typeMappings.File.fields,
-    rootFolderName: state.files.fileBundle,
-    allowFolderDownload: !state.files.fileBundle && !state.files.fileFormat
+    groupingType: state.files.groupingType,
+    allowFolderDownload: !state.files.groupingType && !state.files.fileFormat
   }),
   (dispatch, props) => ({
     fetchFiles: reset => props.fetch(reset),

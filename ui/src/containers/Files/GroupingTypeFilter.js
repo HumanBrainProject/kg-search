@@ -25,21 +25,21 @@ import { connect } from "react-redux";
 
 import FileFilter from "./FileFilter";
 
-export const FileBundleFilter = connect(
+export const GroupingTypeFilter = connect(
   (state, props) => ({
     title:"Group by",
     filesUrl: props.filesUrl,
-    fileFiltersUrl: props.fileBundlesUrl,
+    fileFiltersUrl: props.groupingTypesUrl,
     files: state.files.files,
-    fileFilters: state.files.fileBundles,
+    fileFilters: state.files.groupingTypes,
     searchFilesAfter: state.files.searchFilesAfter,
     isFilesInitialized: state.files.isFilesInitialized,
-    isFileFiltersInitialized: state.files.isFileBundlesInitialized,
+    isFileFiltersInitialized: state.files.isGroupingTypesInitialized,
     isFilesLoading: state.files.isFilesLoading,
-    isFileFiltersLoading: state.files.isFileBundlesLoading,
+    isFileFiltersLoading: state.files.isGroupingTypesLoading,
     filesError: state.files.filesError,
-    fileFiltersError: state.files.fileBundlesError,
-    fileFilter: state.files.fileBundle
+    fileFiltersError: state.files.groupingTypesError,
+    fileFilter: state.files.groupingType
   }),
   (dispatch, props) => ({
     onSelect: filter => props.onSelect(filter),
