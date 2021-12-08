@@ -56,17 +56,18 @@ public class ControlledTerm implements TargetInstance {
     @FieldInfo(label = "Ontology identifier")
     private Value<String> ontologyIdentifier;
 
-    @FieldInfo(label = "Definition")
-    private Value<String> definition;
+    @FieldInfo(label = "External definitions")
+    private List<TargetExternalReference> externalDefinitions;
+
+    @FieldInfo(label = "Synonyms")
+    private List<Value<String>> synonyms;
 
     @FieldInfo(markdown = true)
     private Value<String> description;
 
-    @FieldInfo(label = "External definitions",  layout = "summary")
-    private List<TargetExternalReference> externalDefinitions;
+    @FieldInfo(label = "Definition")
+    private Value<String> definition;
 
-    @FieldInfo(label = "Synonyms",  layout = "summary")
-    private List<Value<String>> synonyms;
 
     @Override
     @JsonIgnore
