@@ -200,7 +200,8 @@ public class IndexingController {
                 //We remove references to non-existing references. Please note that depending on the indexing order,
                 //this could potentially remove links although they are correct (since their counterpart is going to
                 //be indexed afterwards). However, thanks to the permanent caching, this will self-heal in a second run.
-                TargetInternalReference.clearNonExistingReferences(getAllRegisteredIds(dataStage));
+                //TODO reactivate after it has been clarified what is wrong with this logic for legacy structures.
+                //TargetInternalReference.clearNonExistingReferences(getAllRegisteredIds(dataStage));
                 List<Target> instances = result.getTargetInstances();
                 if (instances != null) {
                     List<Target> searchableInstances = new ArrayList<>();
