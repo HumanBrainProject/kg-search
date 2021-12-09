@@ -38,20 +38,20 @@ import * as filters from "./helpers";
 import { debounce } from "lodash";
 
 
-const Node = ({node, isRootNode, group, hasFilter}) => {
+const Node = ({node, isRootNode, group, type, fileMapping, hasFilter}) => {
+  const isFile = node.type === "file";
+  const icon = isFile?"file":"folder";
   return (
     <div className="kgs-hierarchical-files__details">
-      <div>{node.thumbnail ? <img height="80" src={node.thumbnail} alt={node.url} />:<FontAwesomeIcon icon={node.type} size="5x"/>}</div>
+      <div>{node.thumbnail ? <img height="80" src={node.thumbnail} alt={node.url} />:<FontAwesomeIcon icon={icon} size="5x"/>}</div>
       <div className="kgs-hierarchical-files__info">
         <div>
           <div><strong>Name:</strong> {node.name}</div>
-          {node.size  && <div><strong>Size:</strong> {node.size}</div>}
-          {hasFilter && node.type === "folder" ? null:
-            node.url && (
-              <Download name={`Download ${isRootNode?"dataset":node.type}`} type={node.type} url={node.url} />
-            )}
-          {node.type === "file" && node.details && node.details.data && node.details.mapping && (
-            <File data={node.details.data} mapping={node.details.mapping} group={group} />
+          {node.url && (isFile || !hasFilter) && (
+            <Download name={`Download ${isRootNode?(typeof type === "string"?type.toLowerCase():"Dataset"):node.type}`} type={type} url={node.url} />
+          )}
+          {node.type === "file" && (
+            <File data={node.data} mapping={fileMapping} group={group} type={type} />
           )}
         </div>
       </div>
@@ -71,8 +71,8 @@ class HierarchicalFiles extends React.Component {
   }
 
   componentDidMount() {
-    const {data, groupingType, nameField, urlField, fileMapping, allowFolderDownload} = this.props;
-    const tree = groupingType?getTreeByGroupingType(data, nameField, urlField, fileMapping, groupingType):getTreeByFolder(data, urlField, fileMapping, allowFolderDownload);
+    const {data, groupingType, nameField, urlField} = this.props;
+    const tree = groupingType?getTreeByGroupingType(data, nameField, urlField, groupingType):getTreeByFolder(data, urlField);
     this.setState({tree: tree, node: tree, initialTree: tree });
   }
 
@@ -121,7 +121,7 @@ class HierarchicalFiles extends React.Component {
             style={{...theme}}
           />
           {this.state.node.active && (
-            <Node node={this.state.node} isRootNode={this.state.node.isRootNode} group={this.props.group} hasFilter={this.state.filter !== ""} />
+            <Node node={this.state.node} isRootNode={this.state.node.isRootNode} group={this.props.group} type={this.props.type} fileMapping={this.props.fileMapping} hasFilter={this.props.hasDataFilter || this.state.filter !== ""} />
           )}
         </div>
       </>

@@ -82,7 +82,7 @@ export const loadDefinition = () => {
   };
 
   const simplifySemanticKeysForField = field => {
-    field.value = getFieldAndRemove(field, GRAPHQUERY_NAMESPACE + "label", null);
+    field.label = getFieldAndRemove(field, GRAPHQUERY_NAMESPACE + "label", null);
     field.sort = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "sort", false);
     field.markdown = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "markdown", false);
     field.labelHidden = getFieldAndRemove(field, SEARCHUI_NAMESPACE + "label_hidden", false);

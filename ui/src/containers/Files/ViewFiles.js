@@ -41,7 +41,7 @@ const Label = ({isAllFetched, number, total}) => {
   );
 };
 
-const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoading, filesError, mapping, group, nameField, urlField, fileMapping, groupingType, allowFolderDownload, fetchFiles, clear }) => {
+const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoading, filesError, mapping, group, type, nameField, urlField, fileMapping, groupingType, hasDataFilter, fetchFiles, clear }) => {
 
   useEffect(() => {
     fetchFiles(true);
@@ -99,7 +99,7 @@ const ViewFilesComponent = ({ files, totalFiles, isFilesInitialized, isFilesLoad
           )
         }
       </div>
-      <HierarchicalFiles data={files} mapping={mapping} group={group} groupingType={groupingType} allowFolderDownload={allowFolderDownload} nameField={nameField} urlField={urlField} fileMapping={fileMapping} />
+      <HierarchicalFiles data={files} mapping={mapping} group={group} type={type} groupingType={groupingType} hasDataFilter={hasDataFilter} nameField={nameField} urlField={urlField} fileMapping={fileMapping} />
     </>
   );
 };
@@ -113,11 +113,12 @@ export const ViewFiles = connect(
     filesError: state.files.filesError,
     mapping: props.mapping,
     group: props.group,
+    type: props.type,
     nameField: props.nameField,
     urlField: props.urlField,
     fileMapping: state.definition.typeMappings.File && state.definition.typeMappings.File.fields,
     groupingType: state.files.groupingType,
-    allowFolderDownload: !state.files.groupingType && !state.files.fileFormat
+    hasDataFilter: state.files.groupingType || state.files.fileFormat
   }),
   (dispatch, props) => ({
     fetchFiles: reset => props.fetch(reset),

@@ -54,7 +54,7 @@ const ObjectFieldBase = (renderUserInteractions = true) => {
     </span>
   );
 
-  const ObjectField = ({show, data, mapping, group}) => {
+  const ObjectField = ({show, data, mapping, group, type}) => {
     if (!show || !mapping || !mapping.visible) {
       return null;
     }
@@ -81,7 +81,7 @@ const ObjectFieldBase = (renderUserInteractions = true) => {
         {
           fields.map(({name, data, mapping, group}, idx) => (
             <ListItem key={name} separator={mapping.separator} isFirst={!idx}>
-              <FieldComponent name={name} data={data} mapping={mapping} group={group} />
+              <FieldComponent name={name} data={data} mapping={mapping} group={group} type={type} />
             </ListItem>
           ))
         }

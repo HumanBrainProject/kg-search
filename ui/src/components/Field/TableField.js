@@ -145,7 +145,7 @@ const TableFieldComponent = ({list}) => {
       <thead>
         <tr>
           {rows[0].map((el,id) =>
-            <th key={`${el.name}-${id}`}>{el.mapping.value}</th>
+            <th key={`${el.name}-${id}`}>{el.mapping.label}</th>
           )}
         </tr>
       </thead>
@@ -158,7 +158,7 @@ const TableFieldComponent = ({list}) => {
 
 class TableField extends React.Component {
   getItems = () => {
-    const {items, mapping, group} = this.props;
+    const {items, mapping, group, type} = this.props;
     const convertedItem = Array.isArray(items)?items:[items];
     return convertedItem.map((item, idx) => ({
       isObject: !!item.children,
@@ -166,7 +166,8 @@ class TableField extends React.Component {
       show: true,
       data: item.children?item.children:item,
       mapping: mapping,
-      group: group
+      group: group,
+      type: type
     }));
   }
 

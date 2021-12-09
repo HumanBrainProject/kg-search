@@ -28,7 +28,7 @@ import { GroupingTypeFilter } from "./GroupingTypeFilter";
 import { ViewFiles } from "./ViewFiles";
 import * as actionsFiles from "../../actions/actions.files";
 
-export const AsyncHierarchicalFilesComponent = ({mapping, group, nameField, urlField, searchFilesAfter, groupingType, fileFormat, fetchFiles, fetchFileFormats, fetchGroupingTypes}) => {
+export const AsyncHierarchicalFilesComponent = ({mapping, group, type, nameField, urlField, searchFilesAfter, groupingType, fileFormat, fetchFiles, fetchFileFormats, fetchGroupingTypes}) => {
 
   const handleSelectFileFormat = format => {
     fetchFiles(searchFilesAfter, groupingType, format, true);
@@ -46,7 +46,7 @@ export const AsyncHierarchicalFilesComponent = ({mapping, group, nameField, urlF
     <>
       <FileFormatFilter onSelect={handleSelectFileFormat} fetch={fetchFileFormats} />
       <GroupingTypeFilter onSelect={handleSelectGroupingType} fetch={fetchGroupingTypes} />
-      <ViewFiles mapping={mapping} group={group} fetch={handleFetchFiles} nameField={nameField} urlField={urlField} />
+      <ViewFiles mapping={mapping} group={group} type={type} fetch={handleFetchFiles} nameField={nameField} urlField={urlField} />
     </>
   );
 };
@@ -62,6 +62,7 @@ export const AsyncHierarchicalFiles = connect(
     groupingType: state.files.groupingType,
     mapping: props.mapping,
     group: props.group,
+    type: props.type,
     nameField: props.nameField,
     urlField: props.urlField
   }),

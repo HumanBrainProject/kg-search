@@ -54,7 +54,7 @@ const FieldBase = (renderUserInteractions = true) => {
   const ObjectFieldComponent = renderUserInteractions?ObjectField:PrintViewObjectField;
   const ValueFieldComponent = renderUserInteractions?ValueField:PrintViewValueField;
 
-  const Field = ({name, data, mapping, group}) => {
+  const Field = ({name, data, mapping, group, type}) => {
     if (!mapping || !mapping.visible || !(data || mapping.showIfEmpty)) {
       return null;
     }
@@ -72,9 +72,9 @@ const FieldBase = (renderUserInteractions = true) => {
     const className = "kgs-field" + (name?" kgs-field__" + name:"") + (["header", "summary"].includes(mapping.layout)?" kgs-field__layout-" + mapping.layout:"") + (isTable?" kgs-field__table":"") + (isHierarchicalFiles?" kgs-field__hierarchical-files":"");
 
     const labelProps = {
-      show: !!mapping.value && (!mapping.labelHidden || !renderUserInteractions),
+      show: !!mapping.label && (!mapping.labelHidden || !renderUserInteractions),
       showAsBlock: mapping.tagIcon,
-      value: mapping.value,
+      value: mapping.label,
       counter: (mapping.layout === "group" && isList)?data.length:0
     };
     const hintProps = {
@@ -85,37 +85,42 @@ const FieldBase = (renderUserInteractions = true) => {
       show: isList && !isHierarchicalFiles,
       items: data,
       mapping: mapping,
-      group: group
+      group: group,
+      type: type
     };
     const valueProps = {
       show: !isList && !isHierarchicalFiles && !isFilePreview,
       data: data,
       mapping: mapping,
-      group: group
+      group: group,
+      type: type
     };
     const objectProps = {
       show: !isList && !!mapping.children,
       data: data && data.children,
       mapping: mapping,
-      group: group
+      group: group,
+      type: type
     };
     const tableProps = {
       show: isTable && !isHierarchicalFiles,
       items: data,
       mapping: mapping,
-      group: group
+      group: group,
+      type: type
     };
     const hierarchicalFileProps = {
       data: data,
       mapping: mapping,
       group: group,
+      type: type,
       nameField: "value",
-      urlField: "url",
-      allowFolderDownload: true
+      urlField: "url"
     };
     const asyncHierarchicalFileProps = {
       mapping: mapping,
       group: group,
+      type: type,
       nameField: "name",
       urlField: "iri",
       filesUrl: asyncFilesUrl,

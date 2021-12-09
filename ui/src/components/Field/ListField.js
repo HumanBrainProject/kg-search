@@ -108,7 +108,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
 
 
     getItems = () => {
-      const {items, mapping, group} = this.props;
+      const {items, mapping, group, type} = this.props;
 
       if (!Array.isArray(items)) {
         return [];
@@ -120,7 +120,8 @@ const ListFieldBase = (renderUserInteractions = true) => {
           show: true,
           data: item.children?item.children:item,
           mapping: mapping,
-          group: group
+          group: group,
+          type: type
         }));
     };
 

@@ -21,7 +21,7 @@
  *
  */
 
-export const getTreeByGroupingType = (files, nameField, urlField, fileMapping, groupingType) => {
+export const getTreeByGroupingType = (files, nameField, urlField, groupingType) => {
   if(!Array.isArray(files)) {
     files = [files]; // To be checked with the new indexer
   }
@@ -57,15 +57,14 @@ export const getTreeByGroupingType = (files, nameField, urlField, fileMapping, g
           name: file[nameField],
           url: file[urlField],
           type: "file",
-          size: file.fileSize, // v1
           thumbnail: file.thumbnailUrl && file.thumbnailUrl.url, //"https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000041_VervetMonkey_3D-PLI_CoroSagiSec_dev/VervetThumbnail.jpg"
-          details: fileMapping?{data: file, mapping: fileMapping}:null
+          data: file
         }))
         .sort((a, b) => a.name.localeCompare(b.name));
       const folder = {
         name: fileBundle,
         //url: `${groupingType}/${fileBundle}`,
-        type: "folder",
+        type: "fileBundle",
         children: children
       };
       return folder;

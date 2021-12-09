@@ -30,8 +30,8 @@ export const FieldsPanel = ({className, fields, fieldComponent}) =>{
   const FieldComponent = fieldComponent;
   return (
     <div className={`kgs-fields-panel ${className?className:""}`}>
-      {fields && fields.map(({name, data, mapping, group}) => (
-        <FieldComponent key={name} name={name} data={data} mapping={mapping} group={group} />
+      {fields && fields.map(({name, data, mapping, group, type}) => (
+        <FieldComponent key={name} name={name} data={data} mapping={mapping} group={group} type={type} />
       ))}
     </div>
   );

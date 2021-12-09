@@ -56,14 +56,16 @@ const getField = (group, type, name, data, mapping) => {
       name: "type",
       data: { value: type },
       mapping: { visible: true },
-      group: group
+      group: group,
+      type: type
     };
   default:
     return {
       name: name,
       data: data,
       mapping: mapping,
-      group: group
+      group: group,
+      type: type
     };
   }
 };

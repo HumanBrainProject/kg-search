@@ -26,9 +26,24 @@ import React from "react";
 import { Field } from "../Field";
 import { FieldsPanel } from "../FieldsPanel";
 
-const File = ({data, mapping, group}) => {
-  if (!mapping || typeof mapping !== "object" || !data || typeof data !== "object") {
+const File = ({data, mapping, group, type}) => {
+  if (!data || typeof data !== "object") {
     return null;
+  }
+  if (!mapping || typeof mapping !== "object") {
+    if (!data || !data.fileSize) {// v1
+      return null;
+    }
+    mapping = {
+      size: {
+        label: "Size",
+        order: 13,
+        visible: true
+      }
+    };
+    data.size = {
+      value: data.fileSize
+    };
   }
   const fields = Object.entries(mapping)
     .filter(([name, mapping]) =>
@@ -39,7 +54,8 @@ const File = ({data, mapping, group}) => {
       name: name,
       data: data[name],
       mapping: mapping,
-      group: group
+      group: group,
+      type: type
     }));
   return (
     <FieldsPanel className="kgs-hierarchical-files__file" fields={fields} fieldComponent={Field} />
