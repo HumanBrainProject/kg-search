@@ -125,8 +125,8 @@ public class Helpers {
         return new Stats(pageSize, info);
     }
 
-    public static String getFormattedDOI(DOICitationFormatter doiCitationFormatter, String doi){
-        if(StringUtils.isNotBlank(doi)) {
+    public static String getFormattedDOI(DOICitationFormatter doiCitationFormatter, String doi) {
+        if (StringUtils.isNotBlank(doi)) {
             final String doiCitation = doiCitationFormatter.getDOICitation(doi);
             final String[] split = doi.split("doi\\.org/");
             String simpleDOI;
@@ -147,9 +147,9 @@ public class Helpers {
     }
 
 
-    private synchronized static Set<Field> getNonStaticNonTransientFields(Class<?> clazz){
+    private synchronized static Set<Field> getNonStaticNonTransientFields(Class<?> clazz) {
         Set<Field> fields = nonStaticTransientFields.get(clazz);
-        if(fields==null){
+        if (fields == null) {
             fields = new HashSet<>();
             collectAllNonStaticNonTransientFields(clazz, fields);
             nonStaticTransientFields.put(clazz, fields);
@@ -171,12 +171,12 @@ public class Helpers {
     }
 
     public static void collectAllTargetInternalReferences(Object obj, Set<TargetInternalReference> collector, Set<Object> handledObjects) {
-        if (handledObjects.contains(obj)) {
+        if (obj == null || handledObjects.contains(obj)) {
             //Break the circle
             return;
         }
         handledObjects.add(obj);
-        if(obj instanceof TargetInternalReference){
+        if (obj instanceof TargetInternalReference) {
             collector.add((TargetInternalReference) obj);
             return;
         }

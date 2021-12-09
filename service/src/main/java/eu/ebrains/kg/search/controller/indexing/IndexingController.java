@@ -183,7 +183,7 @@ public class IndexingController {
         Set<TargetInternalReference> references = new HashSet<>();
         collectAllTargetInternalReferences(instance, references, new HashSet<>());
         references.forEach(r -> {
-            if(!elasticSearchController.documentExists(r.getReference(), dataStage)){
+            if(r.getReference()!=null && !elasticSearchController.documentExists(r.getReference(), dataStage)){
                 logger.warn(String.format("Was not able to find instance %s in database for stage %s - remove reference in %s", r.getReference(), dataStage, instance.getId()));
                 r.setReference(null);
             }
