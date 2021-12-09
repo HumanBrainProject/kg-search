@@ -37,10 +37,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class ElasticSearchController {
@@ -51,6 +48,11 @@ public class ElasticSearchController {
 
     public ElasticSearchController(ESServiceClient esServiceClient) {
         this.esServiceClient = esServiceClient;
+    }
+
+    public boolean documentExists(String reference, DataStage stage){
+        String index = ESHelper.getIndexesForDocument(stage);
+        return esServiceClient.documentExists(index, reference);
     }
 
     public void recreateSearchIndex(Map<String, Object> mapping, Class<?> type, DataStage dataStage) {
@@ -174,6 +176,8 @@ public class ElasticSearchController {
     public void removeDeprecatedDocumentsFromAutoReleasedIndex(Class<?> type, DataStage dataStage, Set<String> idsToKeep) {
         removeDeprecatedDocuments(ESHelper.getAutoReleasedIndex(dataStage, type), type, idsToKeep);
     }
+
+
 
 }
 

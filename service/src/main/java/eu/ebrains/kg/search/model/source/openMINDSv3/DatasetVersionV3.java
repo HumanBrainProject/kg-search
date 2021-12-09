@@ -123,6 +123,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
         private List<FullNameRef> pathology;
         private QuantitativeValueOrRange weight;
         private List<String> fileRepositoryIds;
+        private List<String> attribute;
     }
 
 

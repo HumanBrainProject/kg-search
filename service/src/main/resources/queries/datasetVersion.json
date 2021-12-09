@@ -246,6 +246,10 @@
           "ensureOrder": true,
           "structure": [
             {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
               "propertyName": "query:age",
               "singleValue": "FIRST",
               "path": "https://openminds.ebrains.eu/vocab/age",
@@ -402,6 +406,13 @@
               ]
             },
             {
+              "propertyName": "query:attribute",
+              "path": [
+                "https://openminds.ebrains.eu/vocab/attribute",
+                "https://openminds.ebrains.eu/vocab/name"
+              ]
+            },
+            {
               "propertyName": "query:fileRepository",
               "path": [
                 {
@@ -491,6 +502,10 @@
               "path": "https://openminds.ebrains.eu/vocab/studiedState",
               "ensureOrder": true,
               "structure": [
+                {
+                  "propertyName": "query:id",
+                  "path": "@id"
+                },
                 {
                   "propertyName": "query:age",
                   "singleValue": "FIRST",
@@ -644,6 +659,13 @@
                           "path": "https://openminds.ebrains.eu/vocab/name"
                         }
                       ]
+                    },
+                    {
+                      "propertyName": "query:attribute",
+                      "path": [
+                        "https://openminds.ebrains.eu/vocab/attribute",
+                        "https://openminds.ebrains.eu/vocab/name"
+                      ]
                     }
                   ]
                 }
@@ -745,10 +767,15 @@
           "ensureOrder": true,
           "structure": [
             {
+            "propertyName": "query:id",
+            "path": "@id"
+            },
+            {
               "propertyName": "query:age",
               "path": "https://openminds.ebrains.eu/vocab/age",
               "singleValue": "FIRST",
               "structure": [
+
                 {
                   "propertyName": "query:value",
                   "path": "https://openminds.ebrains.eu/vocab/value"
@@ -1075,6 +1102,10 @@
               "path": "https://openminds.ebrains.eu/vocab/studiedState",
               "ensureOrder": true,
               "structure": [
+                {
+                  "propertyName": "query:id",
+                  "path": "@id"
+                },
                 {
                   "propertyName": "query:age",
                   "path": "https://openminds.ebrains.eu/vocab/age",

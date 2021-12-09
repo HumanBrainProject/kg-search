@@ -49,7 +49,8 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
+
+import static eu.ebrains.kg.search.controller.translators.Helpers.*;
 
 @Component
 public class IndexingController {
@@ -63,14 +64,12 @@ public class IndexingController {
 
     private final KGv2 kgV2;
     private final KGv3 kgV3;
-    private final IdRegistry idRegistry;
 
 
-    public IndexingController(IdRegistry idRegistry, MappingController mappingController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter) {
+    public IndexingController(MappingController mappingController, ElasticSearchController elasticSearchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter) {
         this.mappingController = mappingController;
         this.elasticSearchController = elasticSearchController;
         this.translationController = translationController;
-        this.idRegistry  = idRegistry;
         this.kgV2 = kgV2;
         this.kgV3 = kgV3;
         this.doiCitationFormatter = doiCitationFormatter;
@@ -107,7 +106,6 @@ public class IndexingController {
         Set<String> handledIdentifiers = new HashSet<>();
         Set<String> searchableIds = new HashSet<>();
         Set<String> nonSearchableIds = new HashSet<>();
-        Set<String> allIds = new HashSet<>();
         if(translatorModel.getV3translator()!=null) {
             final UpdateResult updateResultV3 = update(kgV3, translatorModel.getTargetClass(), translatorModel.getV3translator(), translatorModel.getBulkSize(), dataStage, Collections.<String>emptySet(), instance -> {
                 if (translatorModel.getMerger() != null) {
@@ -126,7 +124,6 @@ public class IndexingController {
                 e.setErrors(updateResultV3.errors);
                 errorReportBySourceType.add(e);
             }
-            allIds.addAll(updateResultV3.allIds);
             handledIdentifiers.addAll(updateResultV3.handledIdentifiers);
             searchableIds.addAll(updateResultV3.searchableIds);
             nonSearchableIds.addAll(updateResultV3.nonSearchableIds);
@@ -149,14 +146,12 @@ public class IndexingController {
                 e.setErrors(updateResultV2.errors);
                 errorReportBySourceType.add(e);
             }
-            allIds.addAll(updateResultV2.allIds);
             handledIdentifiers.addAll(updateResultV2.handledIdentifiers);
             searchableIds.addAll(updateResultV2.searchableIds);
             nonSearchableIds.addAll(updateResultV2.nonSearchableIds);
         }
         if (indexDataFromOldKG && translatorModel.getV1translator() != null) {
             final UpdateResult updateResultV1 = update(kgV2, translatorModel.getTargetClass(), translatorModel.getV1translator(), translatorModel.getBulkSize(), dataStage, handledIdentifiers, null, translatorModel.isAutoRelease());
-            allIds.addAll(updateResultV1.allIds);
             handledIdentifiers.addAll(updateResultV1.handledIdentifiers);
             searchableIds.addAll(updateResultV1.searchableIds);
             nonSearchableIds.addAll(updateResultV1.nonSearchableIds);
@@ -174,17 +169,25 @@ public class IndexingController {
             elasticSearchController.removeDeprecatedDocumentsFromSearchIndex(translatorModel.getTargetClass(), dataStage, searchableIds);
             elasticSearchController.removeDeprecatedDocumentsFromIdentifiersIndex(translatorModel.getTargetClass(), dataStage, nonSearchableIds);
         }
-        idRegistry.addIds(dataStage, translatorModel.getTargetClass().getSimpleName(), allIds);
         return errorReportBySourceType;
     }
 
     private static class UpdateResult {
-        private final Set<String> allIds = new HashSet<>();
         private final Set<String> handledIdentifiers = new HashSet<>();
         private final Set<String> searchableIds = new HashSet<>();
         private final Set<String> nonSearchableIds = new HashSet<>();
         private final ErrorReport errors = new ErrorReport();
+    }
 
+    private <Target extends TargetInstance> void clearNonResolvableReferences(Target instance, DataStage dataStage){
+        Set<TargetInternalReference> references = new HashSet<>();
+        collectAllTargetInternalReferences(instance, references, new HashSet<>());
+        references.forEach(r -> {
+            if(!elasticSearchController.documentExists(r.getReference(), dataStage)){
+                logger.warn(String.format("Was not able to find instance %s in database for stage %s - remove reference in %s", r.getReference(), dataStage, instance.getId()));
+                r.setReference(null);
+            }
+        });
     }
 
     private <Target extends TargetInstance> UpdateResult update(KG kg, Class<?> type, Translator<?, Target, ?> translator, int bulkSize, DataStage dataStage, Set<String> excludedIds, Function<Target, Target> instanceHandler, boolean autorelease) {
@@ -197,18 +200,13 @@ public class IndexingController {
                 if(result.getErrors()!=null){
                     updateResult.errors.putAll(result.getErrors());
                 }
-                //We remove references to non-existing references. Please note that depending on the indexing order,
-                //this could potentially remove links although they are correct (since their counterpart is going to
-                //be indexed afterwards). However, thanks to the permanent caching, this will self-heal in a second run.
-                //TODO reactivate after it has been clarified what is wrong with this logic for legacy structures.
-                //TargetInternalReference.clearNonExistingReferences(getAllRegisteredIds(dataStage));
                 List<Target> instances = result.getTargetInstances();
                 if (instances != null) {
                     List<Target> searchableInstances = new ArrayList<>();
                     List<Target> nonSearchableInstances = new ArrayList<>();
                     instances.stream().filter(instance -> !excludedIds.contains(instance.getId())).forEach(instance -> {
+                        clearNonResolvableReferences(instance, dataStage);
                         Target handledInstance = instanceHandler!=null ? instanceHandler.apply(instance) : instance;
-                        updateResult.allIds.add(handledInstance.getId());
                         updateResult.handledIdentifiers.add(handledInstance.getId());
                         updateResult.handledIdentifiers.addAll(handledInstance.getIdentifier());
                         if (handledInstance.isSearchableInstance()) {
@@ -255,12 +253,6 @@ public class IndexingController {
         Map<String, Object> mapping = mappingController.generateMapping(clazz);
         Map<String, Object> mappingResult = Map.of("mappings", mapping);
         elasticSearchController.recreateAutoReleasedIndex(stage, mappingResult, clazz);
-    }
-
-    private Set<String> getAllRegisteredIds(DataStage dataStage){
-        return TranslatorModel.MODELS.stream().map(m -> m.getTargetClass().getSimpleName())
-                .map(type -> idRegistry.getIds(dataStage, type))
-                .flatMap(Collection::stream).collect(Collectors.toSet());
     }
 
 }

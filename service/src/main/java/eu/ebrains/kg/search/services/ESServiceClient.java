@@ -27,6 +27,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchDocument;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchResult;
 import eu.ebrains.kg.search.utils.MetaModelUtils;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -268,6 +270,24 @@ public class ESServiceClient {
                 "  },\n" +
                 " \"_source\": \"false\"\n" +
                 "}", esQuerySize, id, type);
+    }
+
+    @Getter
+    @Setter
+    public static class ESCountResult {
+        private Long count;
+    }
+
+
+    public boolean documentExists(String index, String id) {
+        ESCountResult result = webClient.post()
+                .uri(String.format("%s/%s/_count", elasticSearchEndpoint, index))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(BodyInserters.fromValue(getQuery(id)))
+                .retrieve()
+                .bodyToMono(ESCountResult.class)
+                .block();
+        return result != null && result.getCount()>0;
     }
 
     public ElasticSearchDocument getDocument(String index, String id) {

@@ -25,17 +25,21 @@ package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Helpers {
     private final static Logger logger = LoggerFactory.getLogger(Helpers.class);
+    private final static Map<Class<?>, Set<Field>> nonStaticTransientFields = new HashMap<>();
 
     public static String abbreviateGivenName(String givenName) {
         if (givenName != null) {
@@ -140,6 +144,60 @@ public class Helpers {
             }
         }
         return null;
+    }
+
+
+    private synchronized static Set<Field> getNonStaticNonTransientFields(Class<?> clazz){
+        Set<Field> fields = nonStaticTransientFields.get(clazz);
+        if(fields==null){
+            fields = new HashSet<>();
+            collectAllNonStaticNonTransientFields(clazz, fields);
+            nonStaticTransientFields.put(clazz, fields);
+        }
+        return fields;
+    }
+
+
+    private static void collectAllNonStaticNonTransientFields(Class<?> clazz, Set<Field> collector) {
+        if (clazz.getCanonicalName().startsWith("eu.ebrains.kg")) {
+            final Field[] declaredFields = clazz.getDeclaredFields();
+            for (Field declaredField : declaredFields) {
+                if (!Modifier.isTransient(declaredField.getModifiers()) && !Modifier.isStatic(declaredField.getModifiers())) {
+                    collector.add(declaredField);
+                }
+            }
+            collectAllNonStaticNonTransientFields(clazz.getSuperclass(), collector);
+        }
+    }
+
+    public static void collectAllTargetInternalReferences(Object obj, Set<TargetInternalReference> collector, Set<Object> handledObjects) {
+        if (handledObjects.contains(obj)) {
+            //Break the circle
+            return;
+        }
+        handledObjects.add(obj);
+        if(obj instanceof TargetInternalReference){
+            collector.add((TargetInternalReference) obj);
+            return;
+        }
+        getNonStaticNonTransientFields(obj.getClass()).forEach(f -> {
+            try {
+                f.setAccessible(true);
+                Object value = f.get(obj);
+                if (value != null) {
+                    if (value instanceof Collection) {
+                        ((Collection<?>) value).forEach(c -> collectAllTargetInternalReferences(c, collector, handledObjects));
+                    } else if (value instanceof Map) {
+                        ((Map<?, ?>) value).forEach((k, v) -> collectAllTargetInternalReferences(v, collector, handledObjects));
+                    } else {
+                        collectAllTargetInternalReferences(value, collector, handledObjects);
+                    }
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 
 }

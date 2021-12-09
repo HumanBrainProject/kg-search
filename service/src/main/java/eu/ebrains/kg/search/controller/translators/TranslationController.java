@@ -61,10 +61,9 @@ public class TranslationController {
                     try {
                         return translator.translate(s, dataStage, false, doiCitationFormatter);
                     } catch (TranslationException e) {
-                        if(instanceResults.getErrors().get(e.getIdentifier())!=null){
+                        if (instanceResults.getErrors().get(e.getIdentifier()) != null) {
                             instanceResults.getErrors().get(e.getIdentifier()).add(e.getMessage());
-                        }
-                        else{
+                        } else {
                             List<String> errors = new ArrayList<>();
                             errors.add(e.getMessage());
                             instanceResults.getErrors().put(e.getIdentifier(), errors);
@@ -105,36 +104,51 @@ public class TranslationController {
             }
         }
         logger.info(String.format("Done querying id %s from %s for live mode", id, translator.getSourceType().getSimpleName()));
-        if(source==null){
+        if (source == null) {
             return null;
         }
         final Target translateResult = translator.translate(source, dataStage, true, doiCitationFormatter);
-        if(checkReferences) {
+        checkReferences(dataStage, useSourceType, checkReferences, translateResult);
+        return translateResult;
+    }
+
+    private void checkReferences(DataStage dataStage, boolean useSourceType, boolean checkReferences, Object result) {
+        if (checkReferences) {
             //To allow the live preview to hide references to non-existent instances, we need to query them too.
-            final Set<TargetInternalReference> references = TargetInternalReference.getRegistry();
-            if(references!=null) {
-                final Set<TargetInternalReference> targetInternalReferences = new HashSet<>(references);
-                targetInternalReferences.forEach(t -> {
-                    TargetInstance reference = null;
-                    if (t.getReference() != null) {
-                        final List<String> typesOfReference = kgV3.getTypesOfInstance(t.getReference(), DataStage.IN_PROGRESS, false);
-                        final TranslatorModel<?, ?, ?, ?> referenceTranslatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator() != null && m.getV3translator().semanticTypes().stream().anyMatch(typesOfReference::contains)).findFirst().orElse(null);
-                        if (referenceTranslatorModel != null) {
-                            final String referenceQueryId = typesOfReference.stream().map(type -> referenceTranslatorModel.getV3translator().getQueryIdByType(type)).findFirst().orElse(null);
-                            try {
-                                reference = translateToTargetInstanceForLiveMode(kgV3, referenceTranslatorModel.getV3translator(), referenceQueryId, dataStage, t.getReference(), useSourceType, false);
-                            } catch (TranslationException e) {
-                            }
+            final Set<TargetInternalReference> references = new HashSet<>();
+            collectAllTargetInternalReferences(result, references, new HashSet<>());
+            Map<String, Boolean> cachedReferences = new HashMap<>();
+            references.forEach(t -> {
+                boolean reset = false;
+                if (t.getReference() != null) {
+                    final Boolean fromCache = cachedReferences.get(t.getReference());
+                    if(fromCache !=null){
+                        if(fromCache){
+                           reset = true;
                         }
                     }
-                    if (reference == null) {
-                        t.setReference(null);
+                    else {
+                        TargetInstance reference = null;
+                        final List<String> typesOfReference = kgV3.getTypesOfInstance(t.getReference(), DataStage.IN_PROGRESS, false);
+                        if (typesOfReference != null) {
+                            final TranslatorModel<?, ?, ?, ?> referenceTranslatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator() != null && m.getV3translator().semanticTypes().stream().anyMatch(typesOfReference::contains)).findFirst().orElse(null);
+                            if (referenceTranslatorModel != null) {
+                                final String referenceQueryId = typesOfReference.stream().map(type -> referenceTranslatorModel.getV3translator().getQueryIdByType(type)).findFirst().orElse(null);
+                                try {
+                                    reference = translateToTargetInstanceForLiveMode(kgV3, referenceTranslatorModel.getV3translator(), referenceQueryId, dataStage, t.getReference(), useSourceType, false);
+                                } catch (TranslationException e) {
+                                }
+                            }
+                        }
+                        reset = reference == null;
+                        cachedReferences.put(t.getReference(), reset);
                     }
-                });
-            }
+                }
+                if (reset) {
+                    t.setReference(null);
+                }
+            });
         }
-        TargetInternalReference.clearRegistry();
-        return source != null ? translateResult : null;
     }
 
 

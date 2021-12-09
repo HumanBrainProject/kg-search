@@ -32,51 +32,16 @@ import org.springframework.util.CollectionUtils;
 import java.util.*;
 
 public class TargetInternalReference implements Comparable<TargetInternalReference> {
-    private final static Logger logger = LoggerFactory.getLogger(TargetInternalReference.class);
-    private static ThreadLocal<Set<TargetInternalReference>> TARGET_INTERNAL_REFERENCES = new ThreadLocal<>();
-
-    private static void addToRegistry(TargetInternalReference ref){
-        final Set<TargetInternalReference> targetInternalReferences = TARGET_INTERNAL_REFERENCES.get();
-        if(targetInternalReferences==null){
-            TARGET_INTERNAL_REFERENCES.set(new HashSet<>());
-        }
-        TARGET_INTERNAL_REFERENCES.get().add(ref);
-    }
-
-    public static Set<TargetInternalReference> getRegistry(){
-        return TARGET_INTERNAL_REFERENCES.get();
-    }
-
-    public static void clearRegistry(){
-       TARGET_INTERNAL_REFERENCES.set(null);
-    }
-
-    public static void clearNonExistingReferences(Set<String> ids){
-        final Set<TargetInternalReference> targetInternalReferences = TARGET_INTERNAL_REFERENCES.get();
-        if(!CollectionUtils.isEmpty(targetInternalReferences)){
-            targetInternalReferences.stream().filter(t -> t.getReference()!=null && !ids.contains(t.getReference())).forEach(t -> {
-                logger.warn(String.format("The reference %s for the internal reference was not found - deactivating the link", t.getReference()));
-                t.setReference(null);
-            });
-        }
-        clearRegistry();
-    }
-
-    public TargetInternalReference() {
-        addToRegistry(this);
-    }
 
     public TargetInternalReference(String reference, String value) {
         this.reference = reference;
         this.value = value;
-        addToRegistry(this);
     }
 
     public TargetInternalReference(String reference, String value, String uuid) {
         this.reference = reference;
         this.value = value;
         this.uuid = uuid;
-        addToRegistry(this);
     }
 
     @ElasticSearchInfo(ignoreAbove = 256)
@@ -111,19 +76,6 @@ public class TargetInternalReference implements Comparable<TargetInternalReferen
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TargetInternalReference that = (TargetInternalReference) o;
-        return Objects.equals(reference, that.reference) && Objects.equals(value, that.value) && Objects.equals(uuid, that.uuid);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(reference, value, uuid);
     }
 
     @Override
