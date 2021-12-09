@@ -24,14 +24,12 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -44,6 +42,14 @@ public class ContentType implements TargetInstance {
 
     @FieldInfo(ignoreForSearch = true, visible = false)
     private String id;
+
+    @JsonProperty("first_release")
+    @FieldInfo(ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
+    private ISODateValue firstRelease;
+
+    @JsonProperty("last_release")
+    @FieldInfo(ignoreForSearch = true, visible = false, type = FieldInfo.Type.DATE)
+    private ISODateValue lastRelease;
 
     @ElasticSearchInfo(type = "keyword")
     @FieldInfo(ignoreForSearch = true, visible = false)
