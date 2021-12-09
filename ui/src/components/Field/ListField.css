@@ -41,6 +41,10 @@
     color: var(--link-color-active);
 }
 
+.kgs-field .kgs-field__list > ul > li > .field-value {
+    vertical-align: top;
+}
+
 .kgs-field .kgs-field__list.items-as-tags {
     display: flex;
     padding: 0;
