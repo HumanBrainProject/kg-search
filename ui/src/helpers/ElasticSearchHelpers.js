@@ -265,8 +265,8 @@ export class ElasticSearchHelpers {
           const res = {};
           res[key] = "asc";
           sortFields[fieldName] = {
-            key: field.value,
-            label: field.value,
+            key: field.label,
+            label: field.label,
             fields: [res],
             param: `${key}_${res[key]}`
           };
@@ -289,7 +289,7 @@ export class ElasticSearchHelpers {
             filterOrder: field.facetOrder,
             exclusiveSelection: field.facetExclusiveSelection,
             fieldType: field.type,
-            fieldLabel: field.value,
+            fieldLabel: field.label,
             isChild: false,
             isFilterable: field.isFilterableFacet,
             count: 0,
@@ -311,7 +311,7 @@ export class ElasticSearchHelpers {
                   filterOrder: child.facetOrder,
                   exclusiveSelection: field.facetExclusiveSelection,
                   fieldType: child.type,
-                  fieldLabel: field.value,
+                  fieldLabel: field.label,
                   isChild: true,
                   isHierarchical: true,
                   isFilterable: false,
@@ -333,7 +333,7 @@ export class ElasticSearchHelpers {
                   filterOrder: child.facetOrder,
                   exclusiveSelection: field.facetExclusiveSelection,
                   fieldType: child.type,
-                  fieldLabel: child.value,
+                  fieldLabel: child.label,
                   isChild: true,
                   isHierarchical: false,
                   isFilterable: false,

@@ -97,7 +97,7 @@ class HierarchicalFiles extends React.Component {
     let filtered = filters.filterTree(this.state.initialTree, filter);
     filtered = filters.expandFilteredNodes(filtered, filter);
     this.setState({tree: filtered});
-  }, 150)
+  }, 500)
 
   render() {
     const filesLength = this.props.data && this.props.data.length;
