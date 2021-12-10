@@ -26,15 +26,15 @@
     position: fixed;
     top: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     background-color: transparent;  
     z-index: 1800;
 }
 
 .kgs-fetching-panel {
     position: absolute;
-    margin-top: 20%;
-    margin-left: calc(50% - 180px);
+    top: 50%;
+    left: 50%;
     padding: 20px;
     border-radius: 4px;
     box-sizing: border-box;
@@ -42,4 +42,5 @@
     transition: margin-top 0.25s ease-in;
     box-shadow: 3px 3px 6px var(--box-shadow-2);
     text-align: center;
+    transform: translate(-50%, -50%);
 }

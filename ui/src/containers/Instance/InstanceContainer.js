@@ -111,7 +111,7 @@ export class InstanceContainer extends React.Component {
       definitionIsReady, definitionHasError, definitionIsLoading,
       isGroupsReady, isGroupLoading, shouldLoadGroups, groupsHasError,
       instanceIsLoading, id, group, previousInstance, setPreviousInstance,
-      loadDefinition, loadGroups, fetch
+      loadDefinition, loadGroups, fetch, instanceHasError
     } = this.props;
 
     if (!definitionIsReady) {
@@ -129,7 +129,9 @@ export class InstanceContainer extends React.Component {
             previousGroup === group) {
           setPreviousInstance();
         } else {
-          fetch(group, id);
+          if(!instanceHasError) {
+            fetch(group, id);
+          }
         }
       }
     }

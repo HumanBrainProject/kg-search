@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.Map;
 
@@ -81,9 +82,13 @@ public class KGV2ServiceClient extends KGServiceClient {
     }
 
     public <T> T executeQueryForInstance(String query, String id, DataStage dataStage, Class<T> clazz, boolean asServiceAccount) {
-        DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED: DatabaseScope.RELEASED;
+        DatabaseScope databaseScope = dataStage.equals(DataStage.IN_PROGRESS) ? DatabaseScope.INFERRED : DatabaseScope.RELEASED;
         String url = String.format("%s/query/%s/search/instances/%s?databaseScope=%s&vocab=%s", kgQueryEndpoint, query, id, databaseScope, vocab);
-        return executeCallForInstance(clazz, url, asServiceAccount);
+        try {
+            return executeCallForInstance(clazz, url, asServiceAccount);
+        } catch (WebClientResponseException.NotFound e){
+            return null;
+        }
     }
 
 }

@@ -35,6 +35,7 @@ import eu.ebrains.kg.search.utils.TranslationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -129,19 +130,20 @@ public class TranslationController {
                     }
                     else {
                         TargetInstance reference = null;
-                        final List<String> typesOfReference = kgV3.getTypesOfInstance(t.getReference(), DataStage.IN_PROGRESS, false);
-                        if (typesOfReference != null) {
-                            final TranslatorModel<?, ?, ?, ?> referenceTranslatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator() != null && m.getV3translator().semanticTypes().stream().anyMatch(typesOfReference::contains)).findFirst().orElse(null);
-                            if (referenceTranslatorModel != null) {
-                                final String referenceQueryId = typesOfReference.stream().map(type -> referenceTranslatorModel.getV3translator().getQueryIdByType(type)).findFirst().orElse(null);
-                                try {
-                                    reference = translateToTargetInstanceForLiveMode(kgV3, referenceTranslatorModel.getV3translator(), referenceQueryId, dataStage, t.getReference(), useSourceType, false);
-                                } catch (TranslationException e) {
+                        try {
+                            final List<String> typesOfReference = kgV3.getTypesOfInstance(t.getReference(), DataStage.IN_PROGRESS, false);
+                            if (typesOfReference != null) {
+                                final TranslatorModel<?, ?, ?, ?> referenceTranslatorModel = TranslatorModel.MODELS.stream().filter(m -> m.getV3translator() != null && m.getV3translator().semanticTypes().stream().anyMatch(typesOfReference::contains)).findFirst().orElse(null);
+                                if (referenceTranslatorModel != null) {
+                                    final String referenceQueryId = typesOfReference.stream().map(type -> referenceTranslatorModel.getV3translator().getQueryIdByType(type)).findFirst().orElse(null);
+                                    try {
+                                        reference = translateToTargetInstanceForLiveMode(kgV3, referenceTranslatorModel.getV3translator(), referenceQueryId, dataStage, t.getReference(), useSourceType, false);
+                                    } catch (TranslationException ignored) {}
                                 }
                             }
-                        }
-                        reset = reference == null;
-                        cachedReferences.put(t.getReference(), reset);
+                            reset = reference == null;
+                            cachedReferences.put(t.getReference(), reset);
+                        } catch (WebClientResponseException ignored){}
                     }
                 }
                 if (reset) {

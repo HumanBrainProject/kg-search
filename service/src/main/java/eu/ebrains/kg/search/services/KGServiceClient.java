@@ -4,7 +4,6 @@ import eu.ebrains.kg.search.configuration.GracefulDeserializationProblemHandler;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 public abstract class KGServiceClient {
 
@@ -17,21 +16,16 @@ public abstract class KGServiceClient {
     }
 
     protected <T> T executeCallForInstance(Class<T> clazz, String url, boolean asServiceAccount) {
-        try {
-            WebClient webClient = asServiceAccount ? this.serviceAccountWebClient : this.userWebClient;
-            return webClient.get()
-                    .uri(url)
-                    .headers(h -> h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
-                    .retrieve()
-                    .bodyToMono(clazz)
-                    .doOnSuccess(GracefulDeserializationProblemHandler::parsingErrorHandler)
-                    .doFinally(t -> GracefulDeserializationProblemHandler.ERROR_REPORTING_THREAD_LOCAL.remove())
-                    .block();
-        } catch (WebClientResponseException.NotFound e){
-            return null;
-        }
+        WebClient webClient = asServiceAccount ? this.serviceAccountWebClient : this.userWebClient;
+        return webClient.get()
+                .uri(url)
+                .headers(h -> h.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
+                .retrieve()
+                .bodyToMono(clazz)
+                .doOnSuccess(GracefulDeserializationProblemHandler::parsingErrorHandler)
+                .doFinally(t -> GracefulDeserializationProblemHandler.ERROR_REPORTING_THREAD_LOCAL.remove())
+                .block();
     }
-
 
     protected <T> T executeCallForIndexing(Class<T> clazz, String url) {
         return serviceAccountWebClient.get()

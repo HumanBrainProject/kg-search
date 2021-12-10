@@ -148,6 +148,8 @@ public class Search {
                 }
             }
             return ResponseEntity.notFound().build();
+        } catch (WebClientResponseException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
         } catch (HttpClientErrorException e) {
             return ResponseEntity.status(e.getStatusCode()).build();
         }

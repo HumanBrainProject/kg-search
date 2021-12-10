@@ -33,6 +33,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -74,7 +75,11 @@ public class KGV3ServiceClient extends KGServiceClient{
 
     public <T> T executeQueryForInstance(Class<T> clazz, DataStage dataStage, String queryId, String id, boolean asServiceAccount) {
         String url = String.format("%s/queries/%s/instances?stage=%s&instanceId=%s", kgCoreEndpoint, queryId, dataStage, id);
-        return executeCallForInstance(clazz, url, asServiceAccount);
+        try {
+            return executeCallForInstance(clazz, url, asServiceAccount);
+        } catch (WebClientResponseException.NotFound e){
+            return null;
+        }
     }
 
     public Map getInstance(String id, DataStage dataStage, boolean asServiceAccount) {

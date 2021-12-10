@@ -159,7 +159,6 @@ export const loadInstance = (group, id, shouldUpdateLocation=false) => {
           dispatch(loadInstanceFailure(error));
           break;
         }
-        case 500:
         default:
         {
           const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;
@@ -201,8 +200,12 @@ export const loadPreview = id => {
             dispatch(sessionFailure(error));
             break;
           }
-          case 500:
           case 404:
+          {
+            const error = "The page you requested was not found.";
+            dispatch(loadInstanceFailure(error));
+            break;
+          }
           default:
           {
             const error = `The service is temporarily unavailable. Please retry in a few minutes. (${e.message?e.message:e})`;

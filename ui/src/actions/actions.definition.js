@@ -194,8 +194,6 @@ export const loadDefinition = () => {
           dispatch(sessionFailure(error));
           break;
         }
-        case 404:
-        case 500:
         default:
         {
           const error = `The service is temporary unavailable. Please retry in a moment. (${e.message?e.message:e})`;
