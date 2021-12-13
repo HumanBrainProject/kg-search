@@ -25,6 +25,7 @@ package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ExtendedFullNameRefForResearchProductVersion;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ExternalRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRefForResearchProductVersion;
@@ -128,6 +129,13 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
         return null;
     }
 
+    protected List<TargetInternalReference> refExtendedVersion(List<? extends ExtendedFullNameRefForResearchProductVersion> refs){
+        if(!CollectionUtils.isEmpty(refs)){
+            return refs.stream().map(this::ref).filter(Objects::nonNull).collect(Collectors.toList());
+        }
+        return null;
+    }
+
 
     protected TargetInternalReference ref(FullNameRefForResearchProductVersion ref){
         if(ref!=null){
@@ -138,6 +146,13 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
             }
             String versionedName = StringUtils.isNotBlank(ref.getVersionIdentifier()) ? String.format("%s %s", name, ref.getVersionIdentifier()) : name;
             return new TargetInternalReference(uuid, versionedName);
+        }
+        return null;
+    }
+
+    protected TargetInternalReference ref(ExtendedFullNameRefForResearchProductVersion ref){
+        if(ref!=null){
+            return ref(ref.getRelevantReference());
         }
         return null;
     }

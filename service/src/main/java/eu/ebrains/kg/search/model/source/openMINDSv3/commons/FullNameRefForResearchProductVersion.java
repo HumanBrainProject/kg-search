@@ -33,4 +33,7 @@ import lombok.Setter;
 public class FullNameRefForResearchProductVersion extends FullNameRef {
     private String versionIdentifier;
     private String fallbackName;
+
+
+
 }

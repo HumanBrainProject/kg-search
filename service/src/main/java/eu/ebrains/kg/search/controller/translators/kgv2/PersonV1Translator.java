@@ -30,18 +30,12 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.Contributor;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.TranslationException;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
 
 public class PersonV1Translator extends TranslatorV2<PersonV1, Contributor, PersonV1Translator.Result> {
 
@@ -73,11 +67,11 @@ public class PersonV1Translator extends TranslatorV2<PersonV1, Contributor, Pers
         Contributor c = new Contributor();
         c.setId(person.getIdentifier());
         c.setIdentifier(Arrays.asList(c.getId(), String.format("Contributor/%s", person.getIdentifier())));
-        c.setFirstRelease(person.getFirstReleaseAt());
-        c.setLastRelease(person.getLastReleaseAt());
-        c.setTitle(person.getTitle());
+        c.setFirstRelease(value(person.getFirstReleaseAt()));
+        c.setLastRelease(value(person.getLastReleaseAt()));
+        c.setTitle(value(person.getTitle()));
         if(!CollectionUtils.isEmpty(person.getContributions())) {
-            c.setContributions(person.getContributions().stream()
+            c.setDatasetContributions(person.getContributions().stream()
                     .map(contribution ->
                             new TargetInternalReference(
                                     liveMode ? contribution.getRelativeUrl() : String.format("Dataset/%s", contribution.getIdentifier()),
@@ -85,31 +79,14 @@ public class PersonV1Translator extends TranslatorV2<PersonV1, Contributor, Pers
         }
 
         if(!CollectionUtils.isEmpty(person.getCustodianOf())) {
-            c.setCustodianOf(person.getCustodianOf().stream()
+            c.setCustodianOfDataset(person.getCustodianOf().stream()
                     .map(custodianOf ->
                             new TargetInternalReference(
                                     liveMode ? custodianOf.getRelativeUrl() : String.format("Dataset/%s", custodianOf.getIdentifier()),
                                     custodianOf.getName(), null)).collect(Collectors.toList()));
         }
-
-        if(!CollectionUtils.isEmpty(person.getPublications())) {
-            c.setPublications(emptyToNull(person.getPublications().stream()
-                    .map(publication -> {
-                        String publicationResult = null;
-                        if (StringUtils.isNotBlank(publication.getCitation()) && StringUtils.isNotBlank(publication.getDoi())) {
-                            String url = URLEncoder.encode(publication.getDoi(), StandardCharsets.UTF_8);
-                            publicationResult = publication.getCitation() + "\n" + String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
-                        } else if (StringUtils.isNotBlank(publication.getCitation()) && StringUtils.isBlank(publication.getDoi())) {
-                            publicationResult = publication.getCitation().trim().replaceAll(",$", "");
-                        } else if (StringUtils.isBlank(publication.getCitation()) && StringUtils.isNotBlank(publication.getDoi())) {
-                            String url = URLEncoder.encode(publication.getDoi(), StandardCharsets.UTF_8);
-                            publicationResult = String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
-                        }
-                        return publicationResult;
-                    }).filter(Objects::nonNull).collect(Collectors.toList())));
-        }
         if (dataStage == DataStage.IN_PROGRESS) {
-            c.setEditorId(person.getEditorId());
+            c.setEditorId(value(person.getEditorId()));
         }
         return c;
     }

@@ -28,17 +28,17 @@ public class ContributorMerger extends Merger<Contributor> {
                 parent.setLastRelease(child.getLastRelease());
             }
         }
-        if (child.getContributions() != null) {
-            if (parent.getContributions() == null) {
-                parent.setContributions(new ArrayList<>());
+        if (child.getDatasetContributions() != null) {
+            if (parent.getDatasetContributions() == null) {
+                parent.setDatasetContributions(new ArrayList<>());
             }
-            parent.getContributions().addAll(child.getContributions().stream().filter(d -> !parent.getContributions().contains(d)).collect(Collectors.toList()));
+            parent.getDatasetContributions().addAll(child.getDatasetContributions().stream().filter(d -> !parent.getDatasetContributions().contains(d)).collect(Collectors.toList()));
         }
-        if (child.getCustodianOf() != null) {
-            if (parent.getCustodianOf() == null) {
-                parent.setCustodianOf(new ArrayList<>());
+        if (child.getCustodianOfDataset() != null) {
+            if (parent.getCustodianOfDataset() == null) {
+                parent.setCustodianOfDataset(new ArrayList<>());
             }
-            parent.getCustodianOf().addAll(child.getCustodianOf().stream().filter(d -> !parent.getCustodianOf().contains(d)).collect(Collectors.toList()));
+            parent.getCustodianOfDataset().addAll(child.getCustodianOfDataset().stream().filter(d -> !parent.getCustodianOfDataset().contains(d)).collect(Collectors.toList()));
         }
         if (child.getCustodianOfModel() != null) {
             if (parent.getCustodianOfModel() == null) {
@@ -51,12 +51,6 @@ public class ContributorMerger extends Merger<Contributor> {
                 parent.setModelContributions(new ArrayList<>());
             }
             parent.getModelContributions().addAll(child.getModelContributions().stream().filter(d -> !parent.getModelContributions().contains(d)).collect(Collectors.toList()));
-        }
-        if (child.getPublications() != null) {
-            if (parent.getPublications() == null) {
-                parent.setPublications(new ArrayList<>());
-            }
-            parent.getPublications().addAll(child.getPublications().stream().filter(d -> !parent.getPublications().contains(d)).collect(Collectors.toList()));
         }
     }
 }

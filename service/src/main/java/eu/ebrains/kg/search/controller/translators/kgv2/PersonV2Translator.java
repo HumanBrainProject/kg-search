@@ -73,11 +73,11 @@ public class PersonV2Translator extends TranslatorV2<PersonV2, Contributor, Pers
         Contributor c = new Contributor();
         c.setId(person.getIdentifier());
         c.setIdentifier(Arrays.asList(c.getId(), String.format("Contributor/%s", person.getIdentifier())));
-        c.setFirstRelease(person.getFirstReleaseAt());
-        c.setLastRelease(person.getLastReleaseAt());
-        c.setTitle(person.getTitle());
+        c.setFirstRelease(value(person.getFirstReleaseAt()));
+        c.setLastRelease(value(person.getLastReleaseAt()));
+        c.setTitle(value(person.getTitle()));
         if(!CollectionUtils.isEmpty(person.getContributions())) {
-            c.setContributions(person.getContributions().stream()
+            c.setDatasetContributions(person.getContributions().stream()
                     .map(contribution ->
                             new TargetInternalReference(
                                     liveMode ? contribution.getRelativeUrl() : String.format("Dataset/%s", contribution.getIdentifier()),
@@ -85,7 +85,7 @@ public class PersonV2Translator extends TranslatorV2<PersonV2, Contributor, Pers
         }
 
         if(!CollectionUtils.isEmpty(person.getCustodianOf())) {
-            c.setCustodianOf(person.getCustodianOf().stream()
+            c.setCustodianOfDataset(person.getCustodianOf().stream()
                     .map(custodianOf ->
                             new TargetInternalReference(
                                     liveMode ? custodianOf.getRelativeUrl() : String.format("Dataset/%s", custodianOf.getIdentifier()),
@@ -107,24 +107,8 @@ public class PersonV2Translator extends TranslatorV2<PersonV2, Contributor, Pers
                             contribution.getName(), null
                     )).collect(Collectors.toList()));
         }
-        if(!CollectionUtils.isEmpty(person.getPublications())) {
-            c.setPublications(emptyToNull(person.getPublications().stream()
-                    .map(publication -> {
-                        String publicationResult = null;
-                        if (StringUtils.isNotBlank(publication.getCitation()) && StringUtils.isNotBlank(publication.getDoi())) {
-                            String url = URLEncoder.encode(publication.getDoi(), StandardCharsets.UTF_8);
-                            publicationResult = publication.getCitation() + "\n" + String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
-                        } else if (StringUtils.isNotBlank(publication.getCitation()) && StringUtils.isBlank(publication.getDoi())) {
-                            publicationResult = publication.getCitation().trim().replaceAll(",$", "");
-                        } else if (StringUtils.isBlank(publication.getCitation()) && StringUtils.isNotBlank(publication.getDoi())) {
-                            String url = URLEncoder.encode(publication.getDoi(), StandardCharsets.UTF_8);
-                            publicationResult = String.format("[DOI: %s]\n[DOI: %s]: https://doi.org/%s", publication.getDoi(), publication.getDoi(), url);
-                        }
-                        return publicationResult;
-                    }).filter(Objects::nonNull).collect(Collectors.toList())));
-        }
         if (dataStage == DataStage.IN_PROGRESS) {
-            c.setEditorId(person.getEditorId());
+            c.setEditorId(value(person.getEditorId()));
         }
         return c;
     }

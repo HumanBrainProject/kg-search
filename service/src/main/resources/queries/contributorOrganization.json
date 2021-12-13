@@ -16,6 +16,7 @@
     }
   },
   "meta": {
+    "name": "Organization search query",
     "type": "https://openminds.ebrains.eu/core/Organization",
     "responseVocab": "https://schema.hbp.eu/myQuery/"
   },
@@ -32,127 +33,207 @@
     },
     {
       "propertyName": "query:fullName",
-      "path": "https://openminds.ebrains.eu/vocab/fullName",
-      "required": true
+      "path": "https://openminds.ebrains.eu/vocab/fullName"
     },
     {
-      "propertyName": "query:otherContribution",
-      "path": {
-        "@id": "https://openminds.ebrains.eu/vocab/contributor",
-        "reverse": true
-      },
-      "structure": [
-        {
-          "propertyName": "query:contribution",
-          "path": {
-            "@id": "https://openminds.ebrains.eu/vocab/otherContribution",
-            "reverse": true
-          },
-          "singleValue": "FIRST",
-          "structure": [
-            {
-              "propertyName": "query:id",
-              "path": "@id"
-            },
-            {
-              "propertyName": "query:fullName",
-              "path": "https://openminds.ebrains.eu/vocab/fullName"
-            },
-            {
-              "propertyName": "query:fallbackName",
-              "path": [
-                {
-                  "@id": "https://openminds.ebrains.eu/vocab/hasVersion",
-                  "reverse": true
-                },
-                "https://openminds.ebrains.eu/vocab/fullName"
-              ],
-              "singleValue": "FIRST"
-            },
-            {
-              "propertyName": "query:type",
-              "path": "@type"
-            }
-          ]
-        },
-        {
-          "propertyName": "query:contributionType",
-          "path": [
-            "https://openminds.ebrains.eu/vocab/contributionType",
-            "https://openminds.ebrains.eu/vocab/name"
-          ]
-        }
-      ]
-    },
-    {
-      "propertyName": "query:developer",
-      "path": {
-        "@id": "https://openminds.ebrains.eu/vocab/developer",
-        "reverse": true
-      },
-      "structure": [
-        {
-          "propertyName": "query:id",
-          "path": "@id"
-        },
-        {
-          "propertyName": "query:fullName",
-          "path": "https://openminds.ebrains.eu/vocab/fullName"
-        },
-        {
-          "propertyName": "query:fallbackName",
-          "path": [
-            {
-              "@id": "https://openminds.ebrains.eu/vocab/hasVersion",
-              "reverse": true
-            },
-            "https://openminds.ebrains.eu/vocab/fullName"
-          ],
-          "singleValue": "FIRST"
-        },
-        {
-          "propertyName": "query:type",
-          "path": "@type"
-        }
-      ]
-    },
-    {
-      "propertyName": "query:author",
-      "path": {
-        "@id": "https://openminds.ebrains.eu/vocab/author",
-        "reverse": true
-      },
-      "structure": [
-        {
-          "propertyName": "query:id",
-          "path": "@id"
-        },
-        {
-          "propertyName": "query:fullName",
-          "path": "https://openminds.ebrains.eu/vocab/fullName"
-        },
-        {
-          "propertyName": "query:fallbackName",
-          "path": [
-            {
-              "@id": "https://openminds.ebrains.eu/vocab/hasVersion",
-              "reverse": true
-            },
-            "https://openminds.ebrains.eu/vocab/fullName"
-          ],
-          "singleValue": "FIRST"
-        },
-        {
-          "propertyName": "query:type",
-          "path": "@type"
-        }
-      ]
-    },
-    {
-      "propertyName": "query:custodian",
+      "propertyName": "query:custodianOfModel",
       "path": {
         "@id": "https://openminds.ebrains.eu/vocab/custodian",
-        "reverse": true
+        "reverse": true,
+        "typeFilter": [
+          {
+            "@id": "https://openminds.ebrains.eu/core/Model"
+          },
+          {
+            "@id": "https://openminds.ebrains.eu/core/ModelVersion"
+          }
+        ]
+      },
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id",
+          "required": true
+        },
+        {
+          "propertyName": "query:identifier",
+          "path": "http://schema.org/identifier",
+          "required": true
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:fallbackName",
+          "path": [
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/hasVersion",
+              "reverse": true
+            },
+            "https://openminds.ebrains.eu/vocab/name"
+          ],
+          "singleValue": "FIRST"
+        },
+        {
+          "propertyName": "query:versionIdentifier",
+          "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:custodianOfDataset",
+      "path": {
+        "@id": "https://openminds.ebrains.eu/vocab/custodian",
+        "reverse": true,
+        "typeFilter": [
+          {
+            "@id": "https://openminds.ebrains.eu/core/Dataset"
+          },
+          {
+            "@id": "https://openminds.ebrains.eu/core/DatasetVersion"
+          }
+        ]
+      },
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id",
+          "required": true
+        },
+        {
+          "propertyName": "query:identifier",
+          "path": "http://schema.org/identifier",
+          "required": true
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/fullName",
+          "sort": true
+        },
+        {
+          "propertyName": "query:fallbackName",
+          "path": [
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/hasVersion",
+              "reverse": true
+            },
+            "https://openminds.ebrains.eu/vocab/name"
+          ],
+          "singleValue": "FIRST"
+        },
+        {
+          "propertyName": "query:versionIdentifier",
+          "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:modelContributions",
+      "path": {
+        "@id": "https://openminds.ebrains.eu/vocab/developer",
+        "reverse": true,
+        "typeFilter": [
+          {
+            "@id": "https://openminds.ebrains.eu/core/Model"
+          },
+          {
+            "@id": "https://openminds.ebrains.eu/core/ModelVersion"
+          }
+        ]
+      },
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id",
+          "required": true
+        },
+        {
+          "propertyName": "query:identifier",
+          "path": "http://schema.org/identifier",
+          "required": true
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/fullName",
+          "sort": true
+        },
+        {
+          "propertyName": "query:fallbackName",
+          "path": [
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/hasVersion",
+              "reverse": true
+            },
+            "https://openminds.ebrains.eu/vocab/name"
+          ],
+          "singleValue": "FIRST"
+        },
+        {
+          "propertyName": "query:versionIdentifier",
+          "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:datasetContributions",
+      "path": {
+        "@id": "https://openminds.ebrains.eu/vocab/author",
+        "reverse": true,
+        "typeFilter": [
+          {
+            "@id": "https://openminds.ebrains.eu/core/Dataset"
+          },
+          {
+            "@id": "https://openminds.ebrains.eu/core/DatasetVersion"
+          }
+        ]
+      },
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id",
+          "required": true
+        },
+        {
+          "propertyName": "query:identifier",
+          "path": "http://schema.org/identifier",
+          "required": true
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:fallbackName",
+          "path": [
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/hasVersion",
+              "reverse": true
+            },
+            "https://openminds.ebrains.eu/vocab/name"
+          ],
+          "singleValue": "FIRST"
+        },
+        {
+          "propertyName": "query:versionIdentifier",
+          "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:custodianOfSoftware",
+      "path": {
+        "@id": "https://openminds.ebrains.eu/vocab/custodian",
+        "reverse": true,
+        "typeFilter": [
+          {
+            "@id": "https://openminds.ebrains.eu/core/Software"
+          },
+          {
+            "@id": "https://openminds.ebrains.eu/core/SoftwareVersion"
+          }
+        ]
       },
       "structure": [
         {
@@ -171,12 +252,50 @@
               "reverse": true
             },
             "https://openminds.ebrains.eu/vocab/fullName"
-          ],
-          "singleValue": "FIRST"
+          ]
         },
         {
-          "propertyName": "query:type",
-          "path": "@type"
+          "propertyName": "query:versionIdentifier",
+          "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:softwareContribution",
+      "path": {
+        "@id": "https://openminds.ebrains.eu/vocab/developer",
+        "reverse": true,
+        "typeFilter": [
+          {
+            "@id": "https://openminds.ebrains.eu/core/Software"
+          },
+          {
+            "@id": "https://openminds.ebrains.eu/core/SoftwareVersion"
+          }
+        ]
+      },
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/fullName"
+        },
+        {
+          "propertyName": "query:fallbackName",
+          "path": [
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/hasVersion",
+              "reverse": true
+            },
+            "https://openminds.ebrains.eu/vocab/fullName"
+          ]
+        },
+        {
+          "propertyName": "query:versionIdentifier",
+          "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
         }
       ]
     }
