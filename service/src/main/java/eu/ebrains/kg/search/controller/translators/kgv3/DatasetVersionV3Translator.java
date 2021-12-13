@@ -464,6 +464,9 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if (sameAsParent(DatasetVersion.AbstractSubject::getAge, subj, parent)) {
             subj.setAge(null);
         }
+        if (sameAsParent(DatasetVersion.AbstractSubject::getAttributes, subj, parent)) {
+            subj.setAttributes(null);
+        }
         if (sameAsParent(DatasetVersion.AbstractSubject::getAgeCategory, subj, parent)) {
             subj.setAgeCategory(null);
         }
@@ -494,6 +497,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if (state.getAge() != null) {
             result.setAge(value(state.getAge().displayString()));
         }
+        result.setAttributes(value(state.getAttribute()));
         result.setAgeCategory(ref(state.getAgeCategory()));
         if (state.getWeight() != null) {
             result.setWeight(value(state.getWeight().displayString()));

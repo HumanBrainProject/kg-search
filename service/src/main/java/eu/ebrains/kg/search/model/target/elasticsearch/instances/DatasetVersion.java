@@ -411,6 +411,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
         @FieldInfo(label = "Age category")
         private List<List<TargetInternalReference>> ageCategory;
 
+        @FieldInfo(label = "Attributes", separator = ", ")
+        private List<Value<String>> attributes;
+
         @FieldInfo(label = "Weight")
         private List<Value<String>> weight;
     }
@@ -428,6 +431,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
 
         @FieldInfo(label = "Age category")
         private List<TargetInternalReference> ageCategory;
+
+        @FieldInfo(label = "Attributes", separator = ", ")
+        private List<Value<String>> attributes;
 
         @FieldInfo(label = "Weight")
         private Value<String> weight;
