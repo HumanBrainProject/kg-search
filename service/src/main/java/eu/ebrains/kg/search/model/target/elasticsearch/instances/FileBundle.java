@@ -28,49 +28,30 @@ import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.lang.annotation.Target;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
-@MetaInfo(name = "File")
-public class File implements TargetInstance {
+@MetaInfo(name = "FileBundle")
+public class FileBundle implements TargetInstance {
     @JsonIgnore
-    private final Value<String> type = new Value<>("File");
+    private final Value<String> type = new Value<>("FileBundle");
     @JsonIgnore
     private String id;
     @JsonIgnore
     private List<String> identifier;
     @FieldInfo(visible = false)
     private String name;
-    @FieldInfo(visible = false)
-    private String iri;
-    @ElasticSearchInfo(type = "keyword")
-    private String fileRepository;
-    @FieldInfo(label = "Size")
-    private Value<String> size;
-    @FieldInfo(label = "Format")
-    private TargetInternalReference format;
-    @FieldInfo(label = "Software taking this file as input")
-    private List<TargetInternalReference> inputTypeForSoftware;
-    @FieldInfo(visible = false)
-    private List<GroupingType> groupingTypes;
+    @FieldInfo(label = "Open data in")
+    private TargetExternalReference dataLocation;
     @Override
     @JsonIgnore
     public boolean isSearchableInstance() {
         return false;
-    }
-
-    @Getter
-    @Setter
-    public static class GroupingType {
-        private String name;
-        private List<TargetInternalReference> fileBundles;
     }
 }

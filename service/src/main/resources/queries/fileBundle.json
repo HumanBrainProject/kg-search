@@ -1,0 +1,60 @@
+{
+  "@context": {
+    "@vocab": "https://core.kg.ebrains.eu/vocab/query/",
+    "query": "https://schema.hbp.eu/myQuery/",
+    "propertyName": {
+      "@id": "propertyName",
+      "@type": "@id"
+    },
+    "merge": {
+      "@type": "@id",
+      "@id": "merge"
+    },
+    "path": {
+      "@id": "path",
+      "@type": "@id"
+    }
+  },
+  "meta": {
+    "type": "https://openminds.ebrains.eu/core/FileBundle",
+    "responseVocab": "https://schema.hbp.eu/myQuery/"
+  },
+  "structure": [
+    {
+      "propertyName": "query:id",
+      "path": "@id",
+      "required": true
+    },
+    {
+      "propertyName": "query:identifier",
+      "path": "http://schema.org/identifier",
+      "required": true
+    },
+    {
+      "propertyName": "query:name",
+      "path": "https://openminds.ebrains.eu/vocab/name"
+    },
+    {
+      "propertyName": "query:dataLocation",
+      "path": {
+        "@id": "https://openminds.ebrains.eu/vocab/dataLocation",
+        "reverse": true
+      },
+      "singleValue": "FIRST",
+      "structure": [
+        {
+          "propertyName": "query:label",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        },
+        {
+          "propertyName": "query:url",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/openDataIn",
+            "https://openminds.ebrains.eu/vocab/URL"
+          ],
+          "singleValue": "FIRST"
+        }
+      ]
+    }
+  ]
+}

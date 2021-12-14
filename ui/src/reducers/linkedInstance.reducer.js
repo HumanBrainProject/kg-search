@@ -21,45 +21,50 @@
  *
  */
 
-import React from "react";
+import * as types from "../actions/actions.types";
 
-import { Field } from "../Field";
-import { FieldsPanel } from "../FieldsPanel";
-
-const File = ({data, mapping, group, type}) => {
-  if (!data || typeof data !== "object") {
-    return null;
-  }
-  if (!mapping || typeof mapping !== "object") {
-    if (!data || !data.fileSize) {// v1
-      return null;
-    }
-    mapping = {
-      size: {
-        label: "Size",
-        order: 13,
-        visible: true
-      }
-    };
-    data.size = {
-      value: data.fileSize
-    };
-  }
-  const fields = Object.entries(mapping)
-    .filter(([name, mapping]) =>
-      mapping
-      && (mapping.showIfEmpty || (data && data[name]))
-    )
-    .map(([name, mapping]) => ({
-      name: name,
-      data: data[name],
-      mapping: mapping,
-      group: group,
-      type: type
-    }));
-  return (
-    <FieldsPanel className="kgs-hierarchical-files__file" fields={fields} fieldComponent={Field} />
-  );
+const initialState = {
+  error: null,
+  isLoading: false,
+  data: null
 };
 
-export default File;
+const loadInstanceRequest = state => {
+  return {
+    ...state,
+    isLoading: true,
+    data: null,
+    error: null
+  };
+};
+
+const loadInstanceSuccess = (state, action) => {
+  return  {
+    ...state,
+    isLoading: false,
+    data: action.data,
+    error: null
+  };
+};
+
+const loadInstanceFailure = (state, action) => {
+  return {
+    ...state,
+    error: action.error,
+    isLoading: false,
+    data: null
+  };
+};
+
+export function reducer(state = initialState, action = {}) {
+  switch (action.type) {
+  case types.LOAD_LINKED_INSTANCE_REQUEST:
+    return loadInstanceRequest(state, action);
+  case types.LOAD_LINKED_INSTANCE_SUCCESS:
+    return loadInstanceSuccess(state, action);
+  case types.LOAD_LINKED_INSTANCE_FAILURE:
+    return loadInstanceFailure(state, action);
+  default:
+    return state;
+  }
+}

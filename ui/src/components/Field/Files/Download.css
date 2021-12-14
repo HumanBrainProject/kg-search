@@ -21,28 +21,8 @@
  *
  */
 
-.kgs-hierarchical-files__info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: small;
-}
-
-.kgs-hierarchical-files__info > div > div {
-  word-break: break-all;
-  line-height: 1.3em;
-} 
-
-.kgs-hierarchical-files__info > div > div + div {
-  margin-top: 4px;
-} 
-
-.kgs-hierarchical-files__info > div {
-  text-align: center;
-}
-
 .kgs-hierarchical-files__info .kgs-hierarchical-files__info_agreement {
-  margin: 10px 0;
+  margin-top: 10px;
   cursor: pointer;
 }
 

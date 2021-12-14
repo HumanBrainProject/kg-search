@@ -1,0 +1,23 @@
+
+.kgs-async-linked-instance__loading {
+  margin-top: 20px;
+}
+
+.kgs-async-linked-instance__loading > svg {
+  transform: translateY(1px);
+}
+
+.kgs-async-linked-instance__error {
+  margin-top: 20px;
+  color: var(--code-color);
+}
+
+.kgs-async-linked-instance__error > svg {
+  transform: translateY(1px);
+}
+
+.kgs-async-linked-instance__error > button {
+  border: 0;
+  color: var(--color-8);
+  background: transparent;
+}

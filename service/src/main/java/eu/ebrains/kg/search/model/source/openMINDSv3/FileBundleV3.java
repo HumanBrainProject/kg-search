@@ -21,31 +21,19 @@
  *
  */
 
-import { combineReducers } from "redux";
-import { connectRouter } from "connected-react-router";
+package eu.ebrains.kg.search.model.source.openMINDSv3;
 
-import { reducer as application } from "./application.reducer";
-import { reducer as definition } from "./definition.reducer";
-import { reducer as groups } from "./groups.reducer";
-import { reducer as search } from "./search.reducer";
-import { reducer as instances } from "./instances.reducer";
-import { reducer as fetching } from "./fetching.reducer";
-import { reducer as auth } from "./auth.reducer";
-import { reducer as files } from "./files.reducer";
-import { reducer as linkedInstance } from "./linkedInstance.reducer";
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ExternalRef;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.List;
 
-const createRootReducer = (history) => combineReducers({
-  application,
-  definition,
-  groups,
-  search,
-  instances,
-  fetching,
-  auth,
-  files,
-  linkedInstance,
-  router: connectRouter(history)
-});
+@Getter
+@Setter
+public class FileBundleV3 extends SourceInstanceV3 {
+    private String name;
 
-export default createRootReducer;
+    private ExternalRef dataLocation;
+}

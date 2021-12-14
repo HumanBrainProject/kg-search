@@ -30,9 +30,9 @@ import { ShareButtons } from "../Share/ShareButtons";
 import { Instance } from "../../components/Instance/Instance";
 import { Tags } from "../../components/Tags/Tags";
 import { DefinitionErrorPanel, GroupErrorPanel, InstanceErrorPanel } from "../Error/ErrorPanel";
+import { getUpdatedQuery, getLocationFromQuery } from "../../helpers/BrowserHelpers";
 
 import "./InstanceContainer.css";
-import { getUpdatedQuery, getLocationFromQuery } from "../../helpers/BrowserHelpers";
 
 const BackLinkButton = () => {
 

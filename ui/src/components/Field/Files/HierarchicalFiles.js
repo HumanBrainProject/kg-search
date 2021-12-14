@@ -26,7 +26,8 @@ import { Treebeard, decorators } from "react-treebeard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Download from "./Download";
-import File from "./File";
+import LinkedInstance from "../../../containers/LinkedInstance";
+import AsyncLinkedInstance from "../../../containers/AsyncLinkedInstance";
 
 import "./HierarchicalFiles.css";
 import theme from "./Theme";
@@ -38,7 +39,7 @@ import * as filters from "./helpers";
 import { debounce } from "lodash";
 
 
-const Node = ({node, isRootNode, group, type, fileMapping, hasFilter}) => {
+const Node = ({node, isRootNode, group, type, hasFilter}) => {
   const isFile = node.type === "file";
   const icon = isFile?"file":"folder";
   return (
@@ -51,7 +52,10 @@ const Node = ({node, isRootNode, group, type, fileMapping, hasFilter}) => {
             <Download name={`Download ${isRootNode?(typeof type === "string"?type.toLowerCase():"Dataset"):node.type}`} type={type} url={node.url} />
           )}
           {node.type === "file" && (
-            <File data={node.data} mapping={fileMapping} group={group} type={type} />
+            <LinkedInstance data={node.data} group={group} type="File" />
+          )}
+          {node.type === "fileBundle" && node.reference && (
+            <AsyncLinkedInstance id={node.reference} name={node.name} group={group} type="FileBundle" />
           )}
         </div>
       </div>
@@ -121,7 +125,7 @@ class HierarchicalFiles extends React.Component {
             style={{...theme}}
           />
           {this.state.node.active && (
-            <Node node={this.state.node} isRootNode={this.state.node.isRootNode} group={this.props.group} type={this.props.type} fileMapping={this.props.fileMapping} hasFilter={this.props.hasDataFilter || this.state.filter !== ""} />
+            <Node node={this.state.node} isRootNode={this.state.node.isRootNode} group={this.props.group} type={this.props.type} hasFilter={this.props.hasDataFilter || this.state.filter !== ""} />
           )}
         </div>
       </>

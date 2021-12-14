@@ -33,10 +33,16 @@ export const getTreeByGroupingType = (files, nameField, urlField, groupingType) 
         .forEach(type => {
           if (Array.isArray(type.fileBundles) && type.fileBundles.length) {
             type.fileBundles.forEach(fileBundle => {
-              if (!filesByFileBundles[fileBundle]) {
-                filesByFileBundles[fileBundle] = [];
+              if (typeof fileBundle === "object"  && fileBundle.reference) {
+                if (!filesByFileBundles[fileBundle.reference]) {
+                  filesByFileBundles[fileBundle.reference] = {
+                    name: fileBundle.value,
+                    reference: fileBundle.reference,
+                    files: []
+                  };
+                }
+                filesByFileBundles[fileBundle.reference].files.push(file);
               }
-              filesByFileBundles[fileBundle].push(file);
             });
           }
         });
@@ -49,10 +55,10 @@ export const getTreeByGroupingType = (files, nameField, urlField, groupingType) 
     toggled: true,
     active: true
   };
-  tree.children = Object.entries(filesByFileBundles)
-    .sort(([fileBundleA], [fileBundleB]) => fileBundleA.localeCompare(fileBundleB))
-    .map(([fileBundle, files]) => {
-      const children = files
+  tree.children = Object.values(filesByFileBundles)
+    .sort((fileBundleA, fileBundleB) => fileBundleA.name.localeCompare(fileBundleB.name))
+    .map((fileBundle) => {
+      const children = fileBundle.files
         .map(file => ({
           name: file[nameField],
           url: file[urlField],
@@ -62,9 +68,10 @@ export const getTreeByGroupingType = (files, nameField, urlField, groupingType) 
         }))
         .sort((a, b) => a.name.localeCompare(b.name));
       const folder = {
-        name: fileBundle,
+        name: fileBundle.name,
         //url: `${groupingType}/${fileBundle}`,
         type: "fileBundle",
+        reference: fileBundle.reference,
         children: children
       };
       return folder;

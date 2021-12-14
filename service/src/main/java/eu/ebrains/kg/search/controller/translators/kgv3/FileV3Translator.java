@@ -23,17 +23,20 @@
 
 package eu.ebrains.kg.search.controller.translators.kgv3;
 
+import eu.ebrains.kg.search.controller.translators.Helpers;
 import eu.ebrains.kg.search.controller.translators.Translator;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.source.openMINDSv3.FileV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.File;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -91,21 +94,25 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
         Map<String, File.GroupingType> groupingTypes = new HashMap<>();
         file.getFileBundles().forEach(fileBundle -> {
             String groupingTypeName = fileBundle.getGroupingType();
+            TargetInternalReference fb =  new TargetInternalReference(
+                    IdUtils.getUUID(fileBundle.getId()), fileBundle.getName());
             if (!groupingTypes.containsKey(groupingTypeName)) {
                 File.GroupingType groupingType = new File.GroupingType();
                 groupingType.setName(groupingTypeName);
-                groupingType.setFileBundles(List.of(fileBundle.getName()));
+                groupingType.setFileBundles(List.of(fb));
                 groupingTypes.put(groupingTypeName, groupingType);
             } else {
                 File.GroupingType groupingType = groupingTypes.get(groupingTypeName);
-                List<String> fileBundles = groupingType.getFileBundles();
-                fileBundles.add(fileBundle.getName());
+                List<TargetInternalReference> fileBundles = groupingType.getFileBundles();
+                fileBundles.add(fb);
                 Collections.sort(fileBundles);
             }
         });
         List<File.GroupingType> groupingTypeList = new ArrayList<>(groupingTypes.values());
-        groupingTypeList.sort(Comparator.comparing(File.GroupingType::getName));
-        f.setGroupingTypes(groupingTypeList);
+        if (!groupingTypeList.isEmpty()) {
+            groupingTypeList.sort(Comparator.comparing(File.GroupingType::getName));
+            f.setGroupingTypes(groupingTypeList);
+        }
         return f;
     }
 }

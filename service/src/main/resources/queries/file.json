@@ -108,6 +108,10 @@
       "path": "https://openminds.ebrains.eu/vocab/isPartOf",
       "structure": [
         {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
           "propertyName": "query:name",
           "path": "https://openminds.ebrains.eu/vocab/name"
         },

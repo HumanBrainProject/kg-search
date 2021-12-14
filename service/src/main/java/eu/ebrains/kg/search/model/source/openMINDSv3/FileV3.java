@@ -56,6 +56,7 @@ public class FileV3 extends SourceInstanceV3 {
     @Getter
     @Setter
     public static class FileBundle {
+        private String id;
         private String name;
         private String groupingType;
     }

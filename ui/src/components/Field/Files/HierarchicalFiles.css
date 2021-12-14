@@ -109,3 +109,21 @@
     }
 }
 
+.kgs-hierarchical-files__info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: small;
+  }
+  
+  .kgs-hierarchical-files__info > div {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .kgs-hierarchical-files__info > div > div {
+    word-break: break-all;
+    line-height: 1.3em;
+  } 
+  
+  
