@@ -23,6 +23,7 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ExtendedFullNameRefForResearchProductVersion;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRefForResearchProductVersion;
 import lombok.Getter;
@@ -36,7 +37,9 @@ public class ProjectV3 extends SourceInstanceV3 {
     private String title;
     private String description;
     private List<String> publications;
-    private List<FullNameRefForResearchProductVersion> datasets;
+    private List<ExtendedFullNameRefForResearchProductVersion> datasets;
+    private List<ExtendedFullNameRefForResearchProductVersion> models;
+    private List<ExtendedFullNameRefForResearchProductVersion> software;
 
     @Getter
     @Setter

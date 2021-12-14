@@ -29,12 +29,16 @@ import eu.ebrains.kg.search.model.target.elasticsearch.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ISODateValue;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 @MetaInfo(name="Project", order=1, searchable=true)
 @RibbonInfo(content="Datasets", aggregation="count", dataField="search:datasets", singular="dataset", plural="datasets", icon="download")
 public class Project implements TargetInstance {
@@ -60,6 +64,12 @@ public class Project implements TargetInstance {
     @FieldInfo(label = "Datasets", layout = "Datasets", labelHidden = true)
     private List<TargetInternalReference> dataset;
 
+    @FieldInfo(label = "Models", layout = "Models", labelHidden = true)
+    private List<TargetInternalReference> models;
+
+    @FieldInfo(label = "Software", layout = "Software", labelHidden = true)
+    private List<TargetInternalReference> software;
+
     @FieldInfo(label = "Related publications", markdown = true, labelHidden = true, layout = "Publications")
     private List<Value<String>> publications;
 
@@ -77,105 +87,4 @@ public class Project implements TargetInstance {
         return true;
     }
 
-    @Override
-    public String getId() { return id; }
-
-    public void setId(String id) { this.id = id; }
-
-    public void setType(String type) {
-        setType(StringUtils.isBlank(type) ? null : new Value<>(type));
-    }
-
-    public void setIdentifier(List<String> identifier) {
-        this.identifier = identifier;
-    }
-
-    public void setEditorId(String editorId){
-        setEditorId(StringUtils.isBlank(editorId) ? null : new Value<>(editorId));
-    }
-
-    public void setTitle(String title){
-        setTitle(StringUtils.isBlank(title) ? null : new Value<>(title));
-    }
-
-    public void setDescription(String description){
-        setDescription(StringUtils.isBlank(description) ? null : new Value<>(description));
-    }
-
-    public List<Value<String>> getPublications() {
-        return publications;
-    }
-
-    public void setPublications(List<String> publications) {
-        this.publications = publications == null ? null : publications.stream().map(Value::new).collect(Collectors.toList());
-    }
-
-    public Value<String> getType() {
-        return type;
-    }
-
-    public void setType(Value<String> type) {
-        this.type = type;
-    }
-
-    @Override
-    public List<String> getIdentifier() {
-        return identifier;
-    }
-
-    public Value<String> getDescription() {
-        return description;
-    }
-
-    public void setDescription(Value<String> description) {
-        this.description = description;
-    }
-
-    public List<TargetInternalReference> getDataset() {
-        return dataset;
-    }
-
-    public void setDataset(List<TargetInternalReference> dataset) {
-        this.dataset = dataset;
-    }
-
-    public Value<String> getTitle() {
-        return title;
-    }
-
-    public void setTitle(Value<String> title) {
-        this.title = title;
-    }
-
-    public ISODateValue getFirstRelease() {
-        return firstRelease;
-    }
-
-    public void setFirstRelease(ISODateValue firstRelease) {
-        this.firstRelease = firstRelease;
-    }
-
-    public void setFirstRelease(Date firstRelease) {
-        this.setFirstRelease(firstRelease != null ? new ISODateValue(firstRelease) : null);
-    }
-
-    public ISODateValue getLastRelease() {
-        return lastRelease;
-    }
-
-    public void setLastRelease(ISODateValue lastRelease) {
-        this.lastRelease = lastRelease;
-    }
-
-    public void setLastRelease(Date lastRelease) {
-        this.setLastRelease(lastRelease != null ? new ISODateValue(lastRelease) : null);
-    }
-
-    public Value<String> getEditorId() {
-        return editorId;
-    }
-
-    public void setEditorId(Value<String> editorId) {
-        this.editorId = editorId;
-    }
 }

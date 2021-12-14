@@ -69,32 +69,25 @@ public class ProjectV3Translator extends TranslatorV3<ProjectV3, Project, Projec
         return Collections.singletonList("https://openminds.ebrains.eu/core/Project");
     }
 
-
-
     public Project translate(ProjectV3 project, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Project p = new Project();
         String uuid = IdUtils.getUUID(project.getId());
         p.setId(uuid);
         p.setIdentifier(project.getIdentifier());
-        p.setDescription(project.getDescription());
-        if(!CollectionUtils.isEmpty(project.getDatasets())) {
-            p.setDataset(project.getDatasets().stream()
-                    .map(dataset ->
-                            new TargetInternalReference(
-                                    IdUtils.getUUID(dataset.getId()),
-                                    dataset.getFullName()))
-                    .collect(Collectors.toList()));
-        }
-        p.setTitle(project.getTitle());
+        p.setDescription(value(project.getDescription()));
+        p.setDataset(refExtendedVersion(project.getDatasets()));
+        p.setModels(refExtendedVersion(project.getModels()));
+        p.setSoftware(refExtendedVersion(project.getSoftware()));
+        p.setTitle(value(project.getTitle()));
         if(!CollectionUtils.isEmpty(project.getPublications())) {
-            p.setPublications(project.getPublications().stream()
+            p.setPublications(value(project.getPublications().stream()
                     .map(publication -> {
                         if (StringUtils.isNotBlank(publication)) {
                             final String doiWithoutPrefix = Helpers.stripDOIPrefix(publication);
                             return Helpers.getFormattedDOI(doiCitationFormatter, doiWithoutPrefix);
                         }
                         return null;
-                    }).filter(Objects::nonNull).collect(Collectors.toList()));
+                    }).filter(Objects::nonNull).collect(Collectors.toList())));
         }
         return p;
     }

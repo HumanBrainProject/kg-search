@@ -70,9 +70,9 @@ public class ProjectV1Translator extends TranslatorV2<ProjectV1, Project, Projec
         p.setId(projectSource.getIdentifier());
         List<String> identifiers = Arrays.asList(projectSource.getIdentifier(), String.format("Project/%s", projectSource.getIdentifier()));
         p.setIdentifier(identifiers);
-        p.setFirstRelease(projectSource.getFirstReleaseAt());
-        p.setDescription(projectSource.getDescription());
-        p.setLastRelease(projectSource.getLastReleaseAt());
+        p.setFirstRelease(value(projectSource.getFirstReleaseAt()));
+        p.setDescription(value(projectSource.getDescription()));
+        p.setLastRelease(value(projectSource.getLastReleaseAt()));
         if(!CollectionUtils.isEmpty(projectSource.getDatasets())) {
             p.setDataset(projectSource.getDatasets().stream()
                     .map(dataset ->
@@ -81,9 +81,9 @@ public class ProjectV1Translator extends TranslatorV2<ProjectV1, Project, Projec
                                     dataset.getName(), null))
                     .collect(Collectors.toList()));
         }
-        p.setTitle(projectSource.getTitle());
+        p.setTitle(value(projectSource.getTitle()));
         if(!CollectionUtils.isEmpty(projectSource.getPublications())) {
-            p.setPublications(projectSource.getPublications().stream()
+            p.setPublications(value(projectSource.getPublications().stream()
                     .map(publication -> {
                         String doi;
                         if(StringUtils.isNotBlank(publication.getDoi())) {
@@ -97,10 +97,10 @@ public class ProjectV1Translator extends TranslatorV2<ProjectV1, Project, Projec
                         } else {
                             return doi;
                         }
-                    }).collect(Collectors.toList()));
+                    }).collect(Collectors.toList())));
         }
         if (dataStage == DataStage.IN_PROGRESS) {
-            p.setEditorId(projectSource.getEditorId());
+            p.setEditorId(value(projectSource.getEditorId()));
         }
         return p;
     }
