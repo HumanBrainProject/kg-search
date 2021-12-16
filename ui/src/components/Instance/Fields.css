@@ -75,8 +75,12 @@
 }
 
 .kgs-instance[data-type] .kgs-field__dataset .kgs-field__list > ul,
+.kgs-instance[data-type] .kgs-field__datasetContributions .kgs-field__list > ul,
+.kgs-instance[data-type] .kgs-field__softwareContributions .kgs-field__list > ul,
+.kgs-instance[data-type] .kgs-field__modelContributions .kgs-field__list > ul,
 .kgs-instance[data-type] .kgs-field__contributions .kgs-field__list > ul,
 .kgs-instance[data-type] .kgs-field__custodianOf .kgs-field__list > ul,
+.kgs-instance[data-type] .kgs-field__custodianOfDataset .kgs-field__list > ul,
 .kgs-instance[data-type] .kgs-field__publications .kgs-field__list > ul {
     list-style: none;
     padding-inline-start: 0;
@@ -88,6 +92,10 @@
 
 .kgs-instance[data-type] .kgs-field__dataset .kgs-field__list > ul li,
 .kgs-instance[data-type] .kgs-field__custodianOf .kgs-field__list > ul li,
+.kgs-instance[data-type] .kgs-field__custodianOfDataset .kgs-field__list > ul li,
+.kgs-instance[data-type] .kgs-field__datasetContributions .kgs-field__list > ul li,
+.kgs-instance[data-type] .kgs-field__modelContributions .kgs-field__list > ul li,
+.kgs-instance[data-type] .kgs-field__softwareContributions .kgs-field__list > ul li,
 .kgs-instance[data-type] .kgs-field__contributions .kgs-field__list > ul li {
   padding-bottom: 5px;
 }
