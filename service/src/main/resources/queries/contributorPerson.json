@@ -364,7 +364,8 @@
               "reverse": true
             },
             "https://openminds.ebrains.eu/vocab/fullName"
-          ]
+          ],
+          "singleValue": "FIRST"
         },
         {
           "propertyName": "query:versionIdentifier",
@@ -439,7 +440,8 @@
               "reverse": true
             },
             "https://openminds.ebrains.eu/vocab/fullName"
-          ]
+          ],
+          "singleValue": "FIRST"
         },
         {
           "propertyName": "query:versionIdentifier",

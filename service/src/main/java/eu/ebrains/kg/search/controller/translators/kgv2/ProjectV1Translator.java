@@ -68,10 +68,9 @@ public class ProjectV1Translator extends TranslatorV2<ProjectV1, Project, Projec
     public Project translate(ProjectV1 projectSource, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Project p = new Project();
 
-        p.setAllIdentifiers(Collections.singletonList(projectSource.getIdentifier()));
+        p.setAllIdentifiers(createList(projectSource.getIdentifier()));
         p.setId(projectSource.getIdentifier());
-        List<String> identifiers = Arrays.asList(projectSource.getIdentifier(), String.format("Project/%s", projectSource.getIdentifier()));
-        p.setIdentifier(identifiers);
+        p.setIdentifier(createList(projectSource.getIdentifier(), String.format("Project/%s", projectSource.getIdentifier())));
         p.setFirstRelease(value(projectSource.getFirstReleaseAt()));
         p.setDescription(value(projectSource.getDescription()));
         p.setLastRelease(value(projectSource.getLastReleaseAt()));

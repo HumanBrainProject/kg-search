@@ -73,8 +73,8 @@ public class PersonV2Translator extends TranslatorV2<PersonV2, Contributor, Pers
         Contributor c = new Contributor();
         c.setId(person.getIdentifier());
 
-        c.setAllIdentifiers(Collections.singletonList(person.getIdentifier()));
-        c.setIdentifier(Arrays.asList(c.getId(), String.format("Contributor/%s", person.getIdentifier())));
+        c.setAllIdentifiers(createList(person.getIdentifier()));
+        c.setIdentifier(createList(c.getId(), String.format("Contributor/%s", person.getIdentifier())));
         c.setFirstRelease(value(person.getFirstReleaseAt()));
         c.setLastRelease(value(person.getLastReleaseAt()));
         c.setTitle(value(person.getTitle()));
