@@ -115,7 +115,7 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
 
 
 
-    @FieldInfo(label = "Related publications", markdown = true)
+    @FieldInfo(labelHidden = true, layout = "Publications", markdown = true)
     private List<Value<String>> publications;
 
     /**
