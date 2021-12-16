@@ -36,6 +36,7 @@ import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -162,6 +163,14 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
             return new TargetExternalReference(ref.getUrl(), ref.getUrl() != null ? ref.getLabel() : ref.getUrl());
         }
         return null;
+    }
+
+    public <T> List<T> createList(T... items){
+        List<T> l = new ArrayList<>();
+        for (T item : items) {
+            l.add(item);
+        }
+        return l;
     }
 
 }

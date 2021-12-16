@@ -84,6 +84,7 @@ public class SoftwareV3Translator extends TranslatorV3<SoftwareV3, Software, Sof
         }).collect(Collectors.toList());
         s.setSoftwareVersions(softwareVersions);
         s.setId(IdUtils.getUUID(software.getId()));
+        s.setAllIdentifiers(software.getIdentifier());
         s.setIdentifier(IdUtils.getUUID(software.getIdentifier()));
         s.setDescription(software.getDescription());
         s.setTitle(software.getTitle());

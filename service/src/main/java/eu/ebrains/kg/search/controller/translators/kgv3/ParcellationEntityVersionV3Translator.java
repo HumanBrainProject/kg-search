@@ -80,6 +80,8 @@ public class ParcellationEntityVersionV3Translator extends TranslatorV3<Parcella
         final Versions parcellationEntity = parcellationEntityVersion.getParcellationEntity();
         List<Version> versions = parcellationEntity == null ? null : parcellationEntity.getVersions();
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
+
+        pev.setAllIdentifiers(pev.getIdentifier());
         if (hasMultipleVersions) {
             pev.setVersion(parcellationEntityVersion.getVersion());
             List<Version> sortedVersions = Helpers.sort(versions);

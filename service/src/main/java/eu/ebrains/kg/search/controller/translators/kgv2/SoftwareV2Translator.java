@@ -68,8 +68,10 @@ public class SoftwareV2Translator extends TranslatorV2<SoftwareV2, SoftwareVersi
 
     public SoftwareVersion translate(SoftwareV2 softwareV2, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         SoftwareVersion s = new SoftwareVersion();
+
+        s.setAllIdentifiers(createList(softwareV2.getIdentifier()));
         s.setId(softwareV2.getIdentifier());
-        List<String> identifiers = Arrays.asList(softwareV2.getIdentifier(), String.format("Software/%s", softwareV2.getIdentifier()));
+        List<String> identifiers = createList(softwareV2.getIdentifier(), String.format("Software/%s", softwareV2.getIdentifier()));
         s.setIdentifier(identifiers);
         if (!CollectionUtils.isEmpty(softwareV2.getVersions())) {
             softwareV2.getVersions().sort(Comparator.comparing(SoftwareV2.Version::getVersion).reversed());

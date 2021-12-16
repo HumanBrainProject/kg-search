@@ -76,7 +76,8 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
     public DatasetVersion translate(DatasetV1 datasetV1, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         DatasetVersion d = new DatasetVersion();
         d.setId(datasetV1.getIdentifier());
-        List<String> identifiers = Arrays.asList(datasetV1.getIdentifier(), String.format("Dataset/%s", datasetV1.getIdentifier()));
+        d.setAllIdentifiers(createList(datasetV1.getIdentifier()));
+        List<String> identifiers = createList(datasetV1.getIdentifier(), String.format("Dataset/%s", datasetV1.getIdentifier()));
         d.setIdentifier(identifiers);
         String containerUrl = datasetV1.getContainerUrl();
         List<DatasetV1.SourceFile> files = datasetV1.getFiles();

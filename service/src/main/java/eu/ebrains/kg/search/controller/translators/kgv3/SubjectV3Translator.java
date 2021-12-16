@@ -75,6 +75,8 @@ public class SubjectV3Translator extends TranslatorV3<SubjectV3, Subject, Subjec
         }
         String uuid = IdUtils.getUUID(subject.getId());
         s.setId(uuid);
+
+        s.setAllIdentifiers(subject.getIdentifier());
         s.setIdentifier(subject.getIdentifier());
         s.setAge(subject.getAge());
         s.setAgeCategory(emptyToNull(subject.getAgeCategory()));

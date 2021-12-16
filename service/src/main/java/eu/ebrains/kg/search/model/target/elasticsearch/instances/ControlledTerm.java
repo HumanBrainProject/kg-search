@@ -41,6 +41,8 @@ import java.util.List;
 @Getter
 @Setter
 public class ControlledTerm implements TargetInstance {
+    @JsonIgnore
+    private List<String> allIdentifiers;
 
     @FieldInfo(ignoreForSearch = true, visible = false)
     private String id;

@@ -72,6 +72,7 @@ public class ContentTypeV3Translator extends TranslatorV3<ContentTypeV3, Content
     public ContentType translate(ContentTypeV3 contentTypeV3, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
        ContentType c = new ContentType();
        c.setId(IdUtils.getUUID(contentTypeV3.getId()));
+       c.setAllIdentifiers(contentTypeV3.getIdentifier());
        c.setIdentifier(IdUtils.getUUID(contentTypeV3.getIdentifier()));
        c.setTitle(value(contentTypeV3.getName()));
        c.setDescription(value(contentTypeV3.getDescription()));

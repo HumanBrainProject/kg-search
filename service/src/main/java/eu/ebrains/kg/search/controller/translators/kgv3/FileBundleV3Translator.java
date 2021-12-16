@@ -70,6 +70,8 @@ public class FileBundleV3Translator extends TranslatorV3<FileBundleV3, FileBundl
         FileBundle fb = new FileBundle();
         fb.setId(IdUtils.getUUID(fileBundle.getId()));
         fb.setName(fileBundle.getName());
+
+        fb.setAllIdentifiers(fileBundle.getIdentifier());
         fb.setIdentifier(IdUtils.getUUID(fileBundle.getIdentifier()));
         if (fileBundle.getDataLocation() != null && StringUtils.isNotBlank(fileBundle.getDataLocation().getUrl())) {
             fb.setDataLocation(new TargetExternalReference(fileBundle.getDataLocation().getUrl(), fileBundle.getDataLocation().getLabel()));

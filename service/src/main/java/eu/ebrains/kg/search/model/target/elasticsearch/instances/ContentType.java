@@ -33,12 +33,16 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.beans.Transient;
 import java.util.List;
 
 @Getter
 @Setter
 @MetaInfo(name = "Content type")
 public class ContentType implements TargetInstance {
+
+    @JsonIgnore
+    private List<String> allIdentifiers;
 
     @FieldInfo(ignoreForSearch = true, visible = false)
     private String id;

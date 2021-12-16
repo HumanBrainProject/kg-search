@@ -48,7 +48,6 @@
           }
         ]
       },
-      "required": true,
       "structure": [
         {
           "propertyName": "query:fullName",
@@ -124,7 +123,6 @@
           }
         ]
       },
-      "required": true,
       "structure": [
         {
           "propertyName": "query:fullName",
@@ -200,7 +198,6 @@
           }
         ]
       },
-      "required": true,
       "structure": [
         {
           "propertyName": "query:fullName",
@@ -282,7 +279,7 @@
             }
           ]
         },
-        "http://schema.org/identifier"
+        "https://openminds.ebrains.eu/vocab/identifier"
       ]
     },
     {

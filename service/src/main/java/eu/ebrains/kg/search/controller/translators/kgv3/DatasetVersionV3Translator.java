@@ -59,6 +59,9 @@ import java.util.stream.Collectors;
 
 public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, DatasetVersion, DatasetVersionV3Translator.Result> {
 
+    public static final String OPENMINDS_ROOT = "https://openminds.ebrains.eu/";
+    public static final String OPENMINDS_INSTANCES = OPENMINDS_ROOT + "instances";
+
     public static class Result extends ResultsOfKGv3<DatasetVersionV3> {
     }
 
@@ -84,15 +87,15 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
     @Override
     public List<String> semanticTypes() {
-        return Collections.singletonList("https://openminds.ebrains.eu/core/DatasetVersion");
+        return Collections.singletonList(OPENMINDS_ROOT + "core/DatasetVersion");
     }
 
 
     private enum Accessibility {
-        FREE_ACCESS("https://openminds.ebrains.eu/instances/productAccessibility/freeAccess"),
-        CONTROLLED_ACCESS("https://openminds.ebrains.eu/instances/productAccessibility/controlledAccess"),
-        RESTRICTED_ACCESS("https://openminds.ebrains.eu/instances/productAccessibility/restrictedAccess"),
-        UNDER_EMBARGO("https://openminds.ebrains.eu/instances/productAccessibility/underEmbargo");
+        FREE_ACCESS(OPENMINDS_INSTANCES + "/productAccessibility/freeAccess"),
+        CONTROLLED_ACCESS(OPENMINDS_INSTANCES + "/productAccessibility/controlledAccess"),
+        RESTRICTED_ACCESS(OPENMINDS_INSTANCES + "/productAccessibility/restrictedAccess"),
+        UNDER_EMBARGO(OPENMINDS_INSTANCES + "/productAccessibility/underEmbargo");
 
         private final String identifier;
 
@@ -152,23 +155,11 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
 
         d.setId(datasetVersion.getUUID());
+        d.setExperimentalApproach(ref(datasetVersion.getExperimentalApproach()));
+        d.setBehavioralProtocols(ref(datasetVersion.getBehavioralProtocol()));
+        d.setTechnique(ref(datasetVersion.getTechnique()));
 
-
-        if (datasetVersion.getExperimentalApproach() != null) {
-            final List<TargetInternalReference> experimentalApproach = datasetVersion.getExperimentalApproach().stream().filter(Objects::nonNull).filter(e -> StringUtils.isNotBlank(e.getFullName()))
-                    .map(e -> new TargetInternalReference(IdUtils.getUUID(e.getId()), e.getFullName())).collect(Collectors.toList());
-            if (!experimentalApproach.isEmpty()) {
-                d.setExperimentalApproach(experimentalApproach);
-            }
-        }
-
-        if (datasetVersion.getTechnique() != null) {
-            final List<TargetInternalReference> technique = datasetVersion.getTechnique().stream().filter(Objects::nonNull).filter(e -> StringUtils.isNotBlank(e.getFullName()))
-                    .map(e -> new TargetInternalReference(IdUtils.getUUID(e.getId()), e.getFullName())).collect(Collectors.toList());
-            if (!technique.isEmpty()) {
-                d.setTechnique(technique);
-            }
-        }
+        d.setAllIdentifiers(datasetVersion.getIdentifier());
         d.setIdentifier(datasetVersion.getSimpleIdentifiers());
         List<Version> versions = dataset == null ? null : dataset.getVersions();
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
@@ -305,9 +296,9 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
         if (datasetVersion.getEthicsAssessment() != null) {
             String ethicsAssessment = null;
-            if (datasetVersion.getEthicsAssessment().contains("https://openminds.ebrains.eu/instances/ethicsAssessment/notRequired")) {
+            if (datasetVersion.getEthicsAssessment().contains(OPENMINDS_INSTANCES + "/ethicsAssessment/notRequired")) {
                 ethicsAssessment = "not-required";
-            } else if (datasetVersion.getEthicsAssessment().contains("https://openminds.ebrains.eu/instances/ethicsAssessment/EUCompliantNonSensitive") || datasetVersion.getEthicsAssessment().contains("https://openminds.ebrains.eu/instances/ethicsAssessment/EUCompliantSensitive")) {
+            } else if (datasetVersion.getEthicsAssessment().contains(OPENMINDS_INSTANCES + "/ethicsAssessment/EUCompliantNonSensitive") || datasetVersion.getEthicsAssessment().contains(OPENMINDS_INSTANCES + "/ethicsAssessment/EUCompliantSensitive")) {
                 ethicsAssessment = "EU-compliant";
             }
             d.setEthicsAssessment(value(ethicsAssessment));
@@ -315,7 +306,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
 
         final List<DatasetVersionV3.File> specialFiles = datasetVersion.getSpecialFiles();
-        final List<DatasetVersionV3.File> dataDescriptors = specialFiles.stream().filter(s -> s.getRoles().contains("https://openminds.ebrains.eu/instances/fileUsageRole/dataDescriptor")).collect(Collectors.toList());
+        final List<DatasetVersionV3.File> dataDescriptors = specialFiles.stream().filter(s -> s.getRoles().contains(OPENMINDS_INSTANCES + "/fileUsageRole/dataDescriptor")).collect(Collectors.toList());
         if (!dataDescriptors.isEmpty()) {
             if (dataDescriptors.size() > 1) {
                 throw new AmbiguousDataException(String.format("The dataset version contains multiple data descriptors: %s", dataDescriptors.stream().map(DatasetVersionV3.File::getIri).collect(Collectors.joining(", "))), datasetVersion.getUUID());
@@ -337,7 +328,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationDOI(), datasetVersion.getFullDocumentationDOI()));
         }
 
-        final List<DatasetVersion.PreviewObject> previewObjects = specialFiles.stream().filter(s -> s.getRoles().contains("https://openminds.ebrains.eu/instances/fileUsageRole/preview") || s.getRoles().contains("https://openminds.ebrains.eu/instances/fileUsageRole/screenshot")).map(f -> {
+        final List<DatasetVersion.PreviewObject> previewObjects = specialFiles.stream().filter(s -> s.getRoles().contains(OPENMINDS_INSTANCES + "/fileUsageRole/preview") || s.getRoles().contains(OPENMINDS_INSTANCES + "/fileUsageRole/screenshot")).map(f -> {
             DatasetVersion.PreviewObject o = new DatasetVersion.PreviewObject();
             o.setUrl(value(f.getIri()));
             o.setValue(o.getValue());
@@ -350,8 +341,13 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if (!previewObjects.isEmpty()) {
             d.setPreviewObjects(previewObjects);
         }
-        if(!CollectionUtils.isEmpty(datasetVersion.getStudyTarget())){
-            d.setStudyTargets(datasetVersion.getStudyTarget().stream().map(s -> {
+
+        List<String> brainRegionStudyTargets = Arrays.asList(OPENMINDS_ROOT+"controlledTerms/UBERONParcellation", OPENMINDS_ROOT+"sands/ParcellationEntityVersion", OPENMINDS_ROOT+"sands/ParcellationEntity", OPENMINDS_ROOT+"sands/CustomAnatomicalEntity");
+
+        final Map<Boolean, List<DatasetVersionV3.StudyTarget>> brainRegionOrNot = datasetVersion.getStudyTarget().stream().collect(Collectors.groupingBy(s -> s.getType() != null && s.getType().stream().anyMatch(brainRegionStudyTargets::contains)));
+        d.setStudyTargets(refVersion(brainRegionOrNot.get(Boolean.FALSE)));
+        if(!CollectionUtils.isEmpty(brainRegionOrNot.get(Boolean.TRUE))){
+            d.setStudyTargets(brainRegionOrNot.get(Boolean.TRUE).stream().map(s -> {
                 //TODO parcellationentity and parcellationentityversion need to be updated once their landing cards are available
                 if(StringUtils.isNotBlank(s.getBrainAtlas())){
                     return new TargetInternalReference(null, String.format("%s (%s)", StringUtils.isNotBlank(s.getFullName()) ? s.getFullName() : s.getFallbackName(),  s.getBrainAtlas()));
@@ -382,7 +378,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
     private <T extends DatasetVersion.AbstractTissueSampleOrTissueSampleCollection> T fillIndividualTissueSampleInformation(T tissueSample, DatasetVersionV3.TissueSampleOrTissueSampleCollection t, DatasetVersion.AbstractTissueSampleOrTissueSampleCollection parent) {
         String type = "Tissue sample";
-        if(t.getTissueSampleType()!=null && t.getTissueSampleType().contains("https://openminds.ebrains.eu/core/TissueSampleCollection")){
+        if(t.getTissueSampleType()!=null && t.getTissueSampleType().contains(OPENMINDS_ROOT + "core/TissueSampleCollection")){
             type = "Tissue sample collection";
         }
         tissueSample.setLabel(new TargetInternalReference(IdUtils.getUUID(t.getId()), t.getInternalIdentifier() != null ? String.format("%s %s", type, t.getInternalIdentifier()) : type));
@@ -430,7 +426,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
     private <T extends DatasetVersion.AbstractSubject> T fillIndividualSubjectInformation(T subj, DatasetVersionV3.SubjectOrSubjectGroup s, DatasetVersion.AbstractSubject parent) {
         String type = "Subject";
-        if(s.getSubjectType()!=null && s.getSubjectType().contains("https://openminds.ebrains.eu/core/SubjectGroup")){
+        if(s.getSubjectType()!=null && s.getSubjectType().contains(OPENMINDS_ROOT + "core/SubjectGroup")){
             type = "Subject group";
         }
         subj.setLabel(new TargetInternalReference(IdUtils.getUUID(s.getId()), s.getInternalIdentifier() != null ? String.format("%s %s", type, s.getInternalIdentifier()) : type));

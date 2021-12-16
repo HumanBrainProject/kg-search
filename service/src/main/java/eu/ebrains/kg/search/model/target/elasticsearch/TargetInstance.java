@@ -28,6 +28,9 @@ import java.util.List;
 public interface TargetInstance {
     String getId();
 
+    List<String> getAllIdentifiers();
+
+
     List<String> getIdentifier();
 
     /**

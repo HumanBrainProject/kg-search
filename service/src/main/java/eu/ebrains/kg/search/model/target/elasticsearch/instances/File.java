@@ -42,6 +42,8 @@ import java.util.Map;
 @MetaInfo(name = "File")
 public class File implements TargetInstance {
     @JsonIgnore
+    private List<String> allIdentifiers;
+    @JsonIgnore
     private final Value<String> type = new Value<>("File");
     @JsonIgnore
     private String id;

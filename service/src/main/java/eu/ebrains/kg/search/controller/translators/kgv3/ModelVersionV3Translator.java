@@ -83,6 +83,8 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
         ModelVersionV3.ModelVersions model = modelVersion.getModel();
         m.setVersion(modelVersion.getVersion());
         m.setId(IdUtils.getUUID(modelVersion.getId()));
+
+        m.setAllIdentifiers(modelVersion.getIdentifier());
         m.setIdentifier(IdUtils.getUUID(modelVersion.getIdentifier()));
 
         List<Version> versions = model == null?null:model.getVersions();

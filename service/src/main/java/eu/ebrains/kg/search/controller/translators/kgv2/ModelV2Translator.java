@@ -73,8 +73,9 @@ public class ModelV2Translator extends TranslatorV2<ModelV2, ModelVersion, Model
     public ModelVersion translate(ModelV2 modelV2, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         ModelVersion m = new ModelVersion();
         m.setId(modelV2.getIdentifier());
-        List<String> identifiers = Arrays.asList(modelV2.getIdentifier(), String.format("Model/%s", modelV2.getIdentifier()));
+        List<String> identifiers = createList(modelV2.getIdentifier(), String.format("Model/%s", modelV2.getIdentifier()));
         m.setIdentifier(identifiers);
+        m.setAllIdentifiers(createList(modelV2.getIdentifier()));
         if (dataStage == DataStage.IN_PROGRESS) {
             m.setEditorId(modelV2.getEditorId());
         }

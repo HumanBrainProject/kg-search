@@ -41,6 +41,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.SoftwareVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
+import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static eu.ebrains.kg.search.controller.translators.Helpers.*;
 
@@ -75,13 +77,13 @@ public class IndexingController {
         this.doiCitationFormatter = doiCitationFormatter;
     }
 
-    private <Source, Target extends TargetInstance> Target getRelatedInstance(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, Target instance, DataStage dataStage){
-        return instance.getIdentifier().stream().filter(id -> translator.getQueryIds().stream().anyMatch(id::contains))
+    private <Source, Target extends TargetInstance> List<Target> getRelatedInstance(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, Target instance, DataStage dataStage){
+       return instance.getAllIdentifiers().stream().filter(id -> translator.getQueryIds().stream().anyMatch(id::contains))
                 .map(id -> {
                     final String queryId = translator.getQueryIds().stream().filter(id::contains).findFirst().orElse(null);
                     if (queryId != null) {
-                        final Source source = kg.executeQueryForInstance(translator.getSourceType(), dataStage, String.format("%s/search", queryId), id, true);
-                        if(source!=null){
+                        final Source source = kg.executeQueryForInstance(translator.getSourceType(), dataStage, queryId, IdUtils.getUUID(id), true);
+                        if (source != null) {
                             try {
                                 return translator.translate(source, dataStage, false, doiCitationFormatter);
                             } catch (TranslationException e) {
@@ -93,7 +95,7 @@ public class IndexingController {
                         return null;
                     }
                     return null;
-                }).filter(Objects::nonNull).findFirst().orElse(null);
+                }).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
 
@@ -110,9 +112,9 @@ public class IndexingController {
             final UpdateResult updateResultV3 = update(kgV3, translatorModel.getTargetClass(), translatorModel.getV3translator(), translatorModel.getBulkSize(), dataStage, Collections.<String>emptySet(), instance -> {
                 if (translatorModel.getMerger() != null) {
                     final Translator<v2Input, Target, ? extends ResultsOfKGv2<v2Input>> v2translator = translatorModel.getV2translator();
-                    final Target fromV2 = v2translator != null ? getRelatedInstance(kgV2, v2translator, instance, dataStage) : null;
+                    final List<Target> fromV2 = v2translator != null ? getRelatedInstance(kgV2, v2translator, instance, dataStage) : null;
                     final Translator<v1Input, Target, ? extends ResultsOfKGv2<v1Input>> v1translator = translatorModel.getV1translator();
-                    final Target fromV1 = v1translator != null ? getRelatedInstance(kgV2, v1translator, instance, dataStage) : null;
+                    final List<Target> fromV1 = v1translator != null ? getRelatedInstance(kgV2, v1translator, instance, dataStage) : null;
                     return translatorModel.getMerger().merge(fromV1, fromV2, instance);
                 } else {
                     return instance;
@@ -133,8 +135,8 @@ public class IndexingController {
             final UpdateResult updateResultV2 = update(kgV2, translatorModel.getTargetClass(), translatorModel.getV2translator(), translatorModel.getBulkSize(), dataStage, handledIdentifiers, instance -> {
                 if(translatorModel.getMerger()!=null){
                     final Translator<v1Input, Target, ? extends ResultsOfKGv2<v1Input>> v1translator = translatorModel.getV1translator();
-                    final Target fromV1 = v1translator != null ? getRelatedInstance(kgV2, v1translator, instance, dataStage) : null;
-                    return translatorModel.getMerger().merge(fromV1, instance, null);
+                    final List<Target> fromV1 = v1translator != null ? getRelatedInstance(kgV2, v1translator, instance, dataStage) : null;
+                    return translatorModel.getMerger().merge(fromV1, Collections.singletonList(instance), null);
                 }
                 else {
                     return instance;

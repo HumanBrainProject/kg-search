@@ -63,12 +63,14 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private NameWithIdentifier accessibility;
     private FileRepository fileRepository;
     private List<File> specialFiles;
+    private List<FullNameRef> behavioralProtocol;
     private List<StudyTarget> studyTarget;
     @Getter
     @Setter
     public static class StudyTarget extends FullNameRefForResearchProductVersion {
         private FullNameRefForResearchProductVersion brainAtlasVersion;
         private String brainAtlas;
+        private List<String> type;
     }
     @Getter
     @Setter
@@ -214,9 +216,9 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
                     if(calculatedWeightRange!=null){
                         virtualGroupState.setWeight(calculatedWeightRange);
                     }
-                    virtualGroupState.setAttribute(children.stream().map(SubjectOrSubjectGroup::getStates).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).map(SpecimenOrSpecimenGroupState::getAttribute).flatMap(Collection::stream).distinct().sorted().collect(Collectors.toList()));
-                    virtualGroupState.setPathology(children.stream().map(SubjectOrSubjectGroup::getStates).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).map(SpecimenOrSpecimenGroupState::getPathology).flatMap(Collection::stream).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
-                    virtualGroupState.setAgeCategory(children.stream().map(SubjectOrSubjectGroup::getStates).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).map(SpecimenOrSpecimenGroupState::getAgeCategory).flatMap(Collection::stream).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
+                    virtualGroupState.setAttribute(children.stream().map(SubjectOrSubjectGroup::getStates).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).map(SpecimenOrSpecimenGroupState::getAttribute).filter(Objects::nonNull).flatMap(Collection::stream).distinct().sorted().collect(Collectors.toList()));
+                    virtualGroupState.setPathology(children.stream().map(SubjectOrSubjectGroup::getStates).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).map(SpecimenOrSpecimenGroupState::getPathology).filter(Objects::nonNull).flatMap(Collection::stream).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
+                    virtualGroupState.setAgeCategory(children.stream().map(SubjectOrSubjectGroup::getStates).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).map(SpecimenOrSpecimenGroupState::getAgeCategory).filter(Objects::nonNull).flatMap(Collection::stream).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
                     setStates(Collections.singletonList(virtualGroupState));
                 }
             }

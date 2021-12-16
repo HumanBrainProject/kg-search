@@ -76,6 +76,8 @@ public class ModelV3Translator extends TranslatorV3<ModelV3, Model, ModelV3Trans
     public Model translate(ModelV3 model, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Model m = new Model();
         m.setId(IdUtils.getUUID(model.getId()));
+
+        m.setAllIdentifiers(model.getIdentifier());
         m.setIdentifier(IdUtils.getUUID(model.getIdentifier()));
         m.setDescription(model.getDescription());
         m.setTitle(model.getTitle());

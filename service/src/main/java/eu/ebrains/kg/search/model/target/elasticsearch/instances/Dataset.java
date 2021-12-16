@@ -37,6 +37,9 @@ import java.util.List;
 
 @MetaInfo(name = "DatasetVersions", order = 2)
 public class Dataset implements TargetInstance {
+    @JsonIgnore
+    private List<String> allIdentifiers;
+
     @ElasticSearchInfo(type = "keyword")
     private final Value<String> type = new Value<>("DatasetVersions");
 
@@ -202,4 +205,12 @@ public class Dataset implements TargetInstance {
         this.datasets = datasets;
     }
 
+    @Override
+    public List<String> getAllIdentifiers() {
+        return allIdentifiers;
+    }
+
+    public void setAllIdentifiers(List<String> allIdentifiers) {
+        this.allIdentifiers = allIdentifiers;
+    }
 }

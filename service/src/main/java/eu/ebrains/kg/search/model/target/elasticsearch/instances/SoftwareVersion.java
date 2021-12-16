@@ -38,6 +38,8 @@ import java.util.List;
 // To ensure backwards compatibility for the URLs, we can't just rename this - since it's a technical key only anyhow this has no direct impact though
 @MetaInfo(name="Software", order=6, searchable=true)
 public class SoftwareVersion implements TargetInstance, VersionedInstance {
+    @JsonIgnore
+    private List<String> allIdentifiers;
 
     @ElasticSearchInfo(type = "keyword")
     private final Value<String> type = new Value<>("Software");
@@ -608,5 +610,14 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
 
     public String getVersion() {
         return version;
+    }
+
+    @Override
+    public List<String> getAllIdentifiers() {
+        return allIdentifiers;
+    }
+
+    public void setAllIdentifiers(List<String> allIdentifiers) {
+        this.allIdentifiers = allIdentifiers;
     }
 }

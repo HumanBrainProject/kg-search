@@ -28,6 +28,8 @@ import eu.ebrains.kg.search.controller.kg.KGv3;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.TranslatorModel;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
+import eu.ebrains.kg.search.model.source.SourceInstanceV1andV2;
+import eu.ebrains.kg.search.model.source.openMINDSv3.SourceInstanceV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
@@ -58,6 +60,7 @@ public class TranslationController {
         final ResultsOfKG<Source> instanceResults = kg.executeQuery(translator.getResultType(), dataStage, queryId, from, size);
         Stats stats = getStats(instanceResults, from);
         logger.info(String.format("Queried %d %s (%s)", stats.getPageSize(), translator.getSourceType().getSimpleName(), stats.getInfo()));
+
         List<Target> instances = instanceResults.getData().stream().filter(Objects::nonNull).map(s -> {
                     try {
                         return translator.translate(s, dataStage, false, doiCitationFormatter);
@@ -69,6 +72,17 @@ public class TranslationController {
                             errors.add(e.getMessage());
                             instanceResults.getErrors().put(e.getIdentifier(), errors);
                         }
+                        return null;
+                    } catch (Exception e){
+                        String id = "unknown";
+                        if(s instanceof SourceInstanceV3){
+                            id = ((SourceInstanceV3)s).getId();
+                        }
+                        else if(s instanceof SourceInstanceV1andV2){
+                            id = ((SourceInstanceV1andV2)s).getIdentifier();
+                        }
+                        instanceResults.getErrors().put(id, Collections.singletonList(String.format("Unexpected exception: %s", e.getMessage())));
+                        logger.error(String.format("Unexpected exception for instance %s in translation", id), e);
                         return null;
                     }
                 }

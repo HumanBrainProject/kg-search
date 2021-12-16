@@ -42,6 +42,8 @@ import java.util.stream.Collectors;
 @MetaInfo(name="Project", order=1, searchable=true)
 @RibbonInfo(content="Datasets", aggregation="count", dataField="search:datasets", singular="dataset", plural="datasets", icon="download")
 public class Project implements TargetInstance {
+    @JsonIgnore
+    private List<String> allIdentifiers;
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Project");
 

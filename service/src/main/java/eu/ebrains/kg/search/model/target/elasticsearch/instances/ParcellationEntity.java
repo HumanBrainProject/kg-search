@@ -23,6 +23,7 @@
 
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
@@ -40,6 +41,8 @@ import java.util.List;
 @Setter
 @MetaInfo(name = "Parcellation entity", searchable=false)
 public class ParcellationEntity implements TargetInstance {
+    @JsonIgnore
+    private List<String> allIdentifiers;
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Parcellation entity");
 
