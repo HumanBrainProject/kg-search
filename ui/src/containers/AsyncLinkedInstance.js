@@ -59,7 +59,7 @@ const AsyncLinkedInstanceComponent = ({id, name, group, type, data, error, isLoa
   }
 
   return (
-    <LinkedInstance data={data} group={group} type={type} />
+    <LinkedInstance data={data} group={group} type={data.type?.value || type} />
   );
 };
 
