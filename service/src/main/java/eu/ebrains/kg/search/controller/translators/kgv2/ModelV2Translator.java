@@ -75,6 +75,7 @@ public class ModelV2Translator extends TranslatorV2<ModelV2, ModelVersion, Model
         m.setId(modelV2.getIdentifier());
         List<String> identifiers = Arrays.asList(modelV2.getIdentifier(), String.format("Model/%s", modelV2.getIdentifier()));
         m.setIdentifier(identifiers);
+        m.setAllIdentifiers(Collections.singletonList(modelV2.getIdentifier()));
         if (dataStage == DataStage.IN_PROGRESS) {
             m.setEditorId(modelV2.getEditorId());
         }

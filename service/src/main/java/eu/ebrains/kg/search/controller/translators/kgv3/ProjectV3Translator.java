@@ -73,6 +73,8 @@ public class ProjectV3Translator extends TranslatorV3<ProjectV3, Project, Projec
         Project p = new Project();
         String uuid = IdUtils.getUUID(project.getId());
         p.setId(uuid);
+
+        p.setAllIdentifiers(project.getIdentifier());
         p.setIdentifier(project.getIdentifier());
         p.setDescription(value(project.getDescription()));
         p.setDataset(refExtendedVersion(project.getDatasets()));

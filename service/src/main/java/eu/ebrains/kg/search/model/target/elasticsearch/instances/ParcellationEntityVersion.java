@@ -45,6 +45,8 @@ import java.util.stream.Collectors;
 @Setter
 @MetaInfo(name = "Parcellation entity version", searchable=false)
 public class ParcellationEntityVersion implements TargetInstance, VersionedInstance {
+    @JsonIgnore
+    private List<String> allIdentifiers;
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Parcellation entity version");
 

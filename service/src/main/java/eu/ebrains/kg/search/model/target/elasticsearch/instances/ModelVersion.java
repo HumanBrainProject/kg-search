@@ -33,6 +33,8 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ISODate
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
@@ -41,6 +43,9 @@ import java.util.stream.Collectors;
 
 @MetaInfo(name = "Model", order = 5, searchable=true)
 public class ModelVersion implements TargetInstance, VersionedInstance {
+    @JsonIgnore
+    private List<String> allIdentifiers;
+
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Model");
 
@@ -366,4 +371,13 @@ public class ModelVersion implements TargetInstance, VersionedInstance {
 
     @Override
     public void setVersions(List<TargetInternalReference> versions) { this.versions = versions; }
+
+    @Override
+    public List<String> getAllIdentifiers() {
+        return allIdentifiers;
+    }
+
+    public void setAllIdentifiers(List<String> allIdentifiers) {
+        this.allIdentifiers = allIdentifiers;
+    }
 }

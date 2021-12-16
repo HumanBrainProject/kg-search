@@ -23,6 +23,7 @@
 
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
@@ -40,6 +41,9 @@ import java.util.stream.Collectors;
 
 @MetaInfo(name = "Subject")
 public class Subject implements TargetInstance {
+    @JsonIgnore
+    private List<String> allIdentifiers;
+
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Subject");
 
@@ -302,4 +306,12 @@ public class Subject implements TargetInstance {
         }
     }
 
+    @Override
+    public List<String> getAllIdentifiers() {
+        return allIdentifiers;
+    }
+
+    public void setAllIdentifiers(List<String> allIdentifiers) {
+        this.allIdentifiers = allIdentifiers;
+    }
 }

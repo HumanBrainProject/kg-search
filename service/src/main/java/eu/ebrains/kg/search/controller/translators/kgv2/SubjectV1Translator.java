@@ -66,6 +66,8 @@ public class SubjectV1Translator extends TranslatorV2<SubjectV1, Subject, Subjec
 
     public Subject translate(SubjectV1 subject, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Subject s = new Subject();
+
+        s.setAllIdentifiers(Collections.singletonList(subject.getIdentifier()));
         s.setId(subject.getIdentifier());
         List<String> identifiers = Arrays.asList(subject.getIdentifier(), String.format("Subject/%s", subject.getIdentifier()));
         s.setIdentifier(identifiers);

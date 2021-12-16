@@ -1645,6 +1645,20 @@
       ]
     },
     {
+      "propertyName": "query:behavioralProtocol",
+      "path": "https://openminds.ebrains.eu/vocab/behavioralProtocol",
+      "structure": [
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        },
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        }
+      ]
+    },
+    {
       "propertyName": "query:studyTarget",
       "path": {
         "@id": "https://openminds.ebrains.eu/vocab/studyTarget"
@@ -1666,6 +1680,10 @@
         {
           "propertyName": "query:id",
           "path": "@id"
+        },
+        {
+          "propertyName": "query:studyTargetType",
+          "path": "@type"
         },
         {
           "propertyName": "query:fullName",

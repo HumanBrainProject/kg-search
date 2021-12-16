@@ -88,6 +88,8 @@ public class ParcellationEntityV3Translator extends TranslatorV3<ParcellationEnt
         }).collect(Collectors.toList());
         pe.setVersionsTable(parcellationEntityVersions);
         pe.setId(IdUtils.getUUID(pe.getId()));
+
+        pe.setAllIdentifiers(pe.getIdentifier());
         pe.setIdentifier(IdUtils.getUUID(pe.getIdentifier()));
         if (StringUtils.isNotBlank(parcellationEntity.getName())) {
             pe.setTitle(value(parcellationEntity.getName()));

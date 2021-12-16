@@ -42,6 +42,9 @@ import java.util.List;
 @MetaInfo(name="Contributor", order=7, searchable=true)
 
 public class Contributor implements TargetInstance {
+    @JsonIgnore
+    private List<String> allIdentifiers;
+
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Contributor");
 

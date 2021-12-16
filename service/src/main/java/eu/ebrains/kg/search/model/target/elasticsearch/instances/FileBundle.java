@@ -40,6 +40,8 @@ import java.util.List;
 @MetaInfo(name = "FileBundle")
 public class FileBundle implements TargetInstance {
     @JsonIgnore
+    private List<String> allIdentifiers;
+    @JsonIgnore
     private final Value<String> type = new Value<>("FileBundle");
     @JsonIgnore
     private String id;

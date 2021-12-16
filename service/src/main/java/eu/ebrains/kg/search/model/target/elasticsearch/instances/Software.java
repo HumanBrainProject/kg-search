@@ -42,6 +42,9 @@ import java.util.List;
 @MetaInfo(name = "SoftwareVersions")
 public class Software implements TargetInstance {
 
+    @JsonIgnore
+    private List<String> allIdentifiers;
+
     @ElasticSearchInfo(type = "keyword")
     private final Value<String> type = new Value<>("SoftwareVersions");
 
@@ -195,6 +198,15 @@ public class Software implements TargetInstance {
 
     public void setLastRelease(ISODateValue lastRelease) {
         this.lastRelease = lastRelease;
+    }
+
+    @Override
+    public List<String> getAllIdentifiers() {
+        return allIdentifiers;
+    }
+
+    public void setAllIdentifiers(List<String> allIdentifiers) {
+        this.allIdentifiers = allIdentifiers;
     }
 
     public static class Version {

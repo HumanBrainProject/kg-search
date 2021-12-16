@@ -41,6 +41,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.SoftwareVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
+import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,12 +76,12 @@ public class IndexingController {
         this.doiCitationFormatter = doiCitationFormatter;
     }
 
-    private <Source, Target extends TargetInstance> Target getRelatedInstance(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, Target instance, DataStage dataStage){
-        return instance.getIdentifier().stream().filter(id -> translator.getQueryIds().stream().anyMatch(id::contains))
+    public <Source, Target extends TargetInstance> Target getRelatedInstance(KG kg, Translator<Source, Target, ? extends ResultsOfKG<Source>> translator, Target instance, DataStage dataStage){
+        return instance.getAllIdentifiers().stream().filter(id -> translator.getQueryIds().stream().anyMatch(id::contains))
                 .map(id -> {
                     final String queryId = translator.getQueryIds().stream().filter(id::contains).findFirst().orElse(null);
                     if (queryId != null) {
-                        final Source source = kg.executeQueryForInstance(translator.getSourceType(), dataStage, String.format("%s/search", queryId), id, true);
+                        final Source source = kg.executeQueryForInstance(translator.getSourceType(), dataStage, queryId, IdUtils.getUUID(id), true);
                         if(source!=null){
                             try {
                                 return translator.translate(source, dataStage, false, doiCitationFormatter);

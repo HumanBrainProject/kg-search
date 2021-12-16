@@ -40,6 +40,8 @@ import java.util.stream.Collectors;
 
 @MetaInfo(name = "ModelVersions")
 public class Model implements TargetInstance {
+    @JsonIgnore
+    private List<String> allIdentifiers;
     @ElasticSearchInfo(type = "keyword")
     private final Value<String> type = new Value<>("ModelVersions");
 
@@ -221,5 +223,14 @@ public class Model implements TargetInstance {
 
     public void setVersions(List<TargetInternalReference> versions) {
         this.versions = versions;
+    }
+
+    @Override
+    public List<String> getAllIdentifiers() {
+        return allIdentifiers;
+    }
+
+    public void setAllIdentifiers(List<String> allIdentifiers) {
+        this.allIdentifiers = allIdentifiers;
     }
 }

@@ -133,6 +133,8 @@ public class ControlledTermV3Translator extends TranslatorV3<ControlledTermV3, C
     public ControlledTerm translate(ControlledTermV3 controlledTerm, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         ControlledTerm t = new ControlledTerm();
         t.setId(IdUtils.getUUID(controlledTerm.getId()));
+
+        t.setAllIdentifiers(controlledTerm.getIdentifier());
         t.setIdentifier(IdUtils.getUUID(controlledTerm.getIdentifier()));
         t.setTitle(StringUtils.isBlank(controlledTerm.getName()) ? null : new Value<>(controlledTerm.getName()));
         if(StringUtils.isBlank(controlledTerm.getDefinition()) &&

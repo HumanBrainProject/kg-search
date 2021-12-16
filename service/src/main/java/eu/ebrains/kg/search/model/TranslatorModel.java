@@ -17,6 +17,7 @@ import java.util.List;
 public class TranslatorModel<v1Input, v2Input, v3Input, Output extends TargetInstance> {
 
     public static final List<TranslatorModel<?,?,?,?>> MODELS = Arrays.asList(
+            new TranslatorModel<>(Contributor.class, new PersonV1Translator(), new PersonV2Translator(), new ContributorV3Translator(), new ContributorMerger(), false, false),
             new TranslatorModel<>(Project.class, new ProjectV1Translator(), null, new ProjectV3Translator(), new ProjectMerger(), false, false),
             new TranslatorModel<>(Dataset.class, null, null, new DatasetV3Translator(), null, false, false),
             new TranslatorModel<>(DatasetVersion.class, new DatasetV1Translator(), null, new DatasetVersionV3Translator(), null, false, false),
@@ -24,7 +25,6 @@ public class TranslatorModel<v1Input, v2Input, v3Input, Output extends TargetIns
             new TranslatorModel<>(Sample.class, new SampleV1Translator(), null, null, null, false, false),
             new TranslatorModel<>(ModelVersion.class, null, new ModelV2Translator(), new ModelVersionV3Translator(), null, false, false),
             new TranslatorModel<>(SoftwareVersion.class, null, new SoftwareV2Translator(), new SoftwareVersionV3Translator(), null, false, true),
-            new TranslatorModel<>(Contributor.class, new PersonV1Translator(), new PersonV2Translator(), new ContributorV3Translator(), new ContributorMerger(), false, false),
             new TranslatorModel<>(Model.class, null, null, new ModelV3Translator(), null, false, false),
             new TranslatorModel<>(Software.class, null, null, new SoftwareV3Translator(), null, false, false),
             new TranslatorModel<>(ControlledTerm.class, null, null, new ControlledTermV3Translator(), null, false, false),

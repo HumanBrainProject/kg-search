@@ -71,6 +71,8 @@ public class SampleV1Translator extends TranslatorV2<SampleV1, Sample, SampleV1T
 
     public Sample translate(SampleV1 sample, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         Sample s = new Sample();
+
+        s.setAllIdentifiers(Collections.singletonList(sample.getIdentifier()));
         s.setId(sample.getIdentifier());
         List<String> identifiers = Arrays.asList(sample.getIdentifier(), String.format("Sample/%s", sample.getIdentifier()));
         s.setIdentifier(identifiers);

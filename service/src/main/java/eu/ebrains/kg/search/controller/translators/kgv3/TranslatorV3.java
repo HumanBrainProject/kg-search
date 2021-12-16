@@ -40,6 +40,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class TranslatorV3<Source, Target, Result extends ResultsOfKG<Source>> extends Translator<Source, Target, Result> {
+
     public abstract List<String> semanticTypes();
 
     public String getQueryIdByType(String type){
