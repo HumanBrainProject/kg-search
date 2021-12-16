@@ -84,8 +84,7 @@ public class ProjectV3Translator extends TranslatorV3<ProjectV3, Project, Projec
             p.setPublications(value(project.getPublications().stream()
                     .map(publication -> {
                         if (StringUtils.isNotBlank(publication)) {
-                            final String doiWithoutPrefix = Helpers.stripDOIPrefix(publication);
-                            return Helpers.getFormattedDOI(doiCitationFormatter, doiWithoutPrefix);
+                            return Helpers.getFormattedDOI(doiCitationFormatter, publication);
                         }
                         return null;
                     }).filter(Objects::nonNull).collect(Collectors.toList())));
