@@ -32,7 +32,8 @@
     },
     {
       "propertyName": "query:name",
-      "path": "https://openminds.ebrains.eu/vocab/name"
+      "path": "https://openminds.ebrains.eu/vocab/name",
+      "required": true
     },
     {
       "propertyName": "query:dataLocation",
