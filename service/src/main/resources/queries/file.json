@@ -27,6 +27,11 @@
       "required": true
     },
     {
+      "propertyName": "query:identifier",
+      "path": "http://schema.org/identifier",
+      "required": true
+    },
+    {
       "propertyName": "query:name",
       "path": "https://openminds.ebrains.eu/vocab/name",
       "required": true

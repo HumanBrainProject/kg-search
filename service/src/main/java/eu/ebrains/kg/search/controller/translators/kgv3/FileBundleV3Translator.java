@@ -69,8 +69,7 @@ public class FileBundleV3Translator extends TranslatorV3<FileBundleV3, FileBundl
     public FileBundle translate(FileBundleV3 fileBundle, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
         FileBundle fb = new FileBundle();
         fb.setId(IdUtils.getUUID(fileBundle.getId()));
-        fb.setName(fileBundle.getName());
-
+        fb.setTitle(value(fileBundle.getName()));
         fb.setAllIdentifiers(fileBundle.getIdentifier());
         fb.setIdentifier(IdUtils.getUUID(fileBundle.getIdentifier()));
         if (fileBundle.getDataLocation() != null && StringUtils.isNotBlank(fileBundle.getDataLocation().getUrl())) {

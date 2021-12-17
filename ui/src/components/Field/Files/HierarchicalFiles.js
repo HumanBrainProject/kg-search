@@ -52,7 +52,7 @@ const Node = ({node, isRootNode, group, type, hasFilter}) => {
             <Download name={`Download ${isRootNode?(typeof type === "string"?type.toLowerCase():"Dataset"):node.type}`} type={type} url={node.url} />
           )}
           {node.type === "file" && (
-            <LinkedInstance data={node.data} group={group} type="File" />
+            <LinkedInstance data={node.data} group={group} type={node.data?.type?.value || "File"} />
           )}
           {node.type === "fileBundle" && node.reference && (
             <AsyncLinkedInstance id={node.reference} name={node.name} group={group} type="FileBundle" />
@@ -75,8 +75,8 @@ class HierarchicalFiles extends React.Component {
   }
 
   componentDidMount() {
-    const {data, groupingType, nameField, urlField} = this.props;
-    const tree = groupingType?getTreeByGroupingType(data, nameField, urlField, groupingType):getTreeByFolder(data, urlField);
+    const {data, groupingType, nameFieldPath, urlFieldPath} = this.props;
+    const tree = groupingType?getTreeByGroupingType(data, nameFieldPath, urlFieldPath, groupingType):getTreeByFolder(data, urlFieldPath);
     this.setState({tree: tree, node: tree, initialTree: tree });
   }
 

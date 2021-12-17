@@ -21,15 +21,18 @@
  *
  */
 
-const buildTreeStructureForFile = (rootNode, file, nbOfPathToSkip, rootUrlSeparator, urlField) => {
-  if (file[urlField]) {
-    const path = file[urlField].split("/").slice(nbOfPathToSkip);
+import { JSONPath } from "./FileTreeByGroupingTypeHelper";
+
+const buildTreeStructureForFile = (rootNode, file, nbOfPathToSkip, rootUrlSeparator, urlFieldPath) => {
+  const fileUrl = JSONPath(file, urlFieldPath);
+  if (fileUrl && typeof fileUrl === "string") {
+    const path = fileUrl.split("/").slice(nbOfPathToSkip);
     let node = rootNode;
     path.forEach((name, index) => {
       if(index === (path.length - 1)) { // file
         node.paths[name] = {
           name: name,
-          url: file[urlField],
+          url: fileUrl,
           type: "file",
           thumbnail: file.thumbnailUrl && file.thumbnailUrl.url, //"https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000041_VervetMonkey_3D-PLI_CoroSagiSec_dev/VervetThumbnail.jpg"
           data: file
@@ -38,7 +41,7 @@ const buildTreeStructureForFile = (rootNode, file, nbOfPathToSkip, rootUrlSepara
         if(!node.paths[name]) { // is not already created
           node.paths[name] = {
             name: name,
-            url: `${node[urlField]}${node === rootNode?rootUrlSeparator:"/"}${name}`,
+            url: `${node.url}${node === rootNode?rootUrlSeparator:"/"}${name}`,
             type: "folder",
             paths: {}
           };
@@ -86,11 +89,11 @@ const getCommonPath = (files, key) => {
   return firstFilePath.splice(0, index);
 };
 
-export const getTreeByFolder = (files, urlField) => {
+export const getTreeByFolder = (files, urlFieldPath) => {
   if(!Array.isArray(files)) {
     files = [files]; // To be checked with the new indexer
   }
-  const commonPath = getCommonPath(files, urlField);
+  const commonPath = getCommonPath(files, urlFieldPath);
   const rootPathIndex = 6;
   const url = commonPath.length<=rootPathIndex?commonPath.join("/"):`${commonPath.slice(0,rootPathIndex).join("/")}?prefix=${commonPath.slice(rootPathIndex).join("/")}`;
   const tree = {
@@ -104,7 +107,7 @@ export const getTreeByFolder = (files, urlField) => {
   };
   const nbOfPathToSkip = commonPath.length;
   const rootUrlSeparator = nbOfPathToSkip>rootPathIndex?"/":"?prefix=";
-  files.forEach(file => buildTreeStructureForFile(tree, file, nbOfPathToSkip, rootUrlSeparator, urlField));
+  files.forEach(file => buildTreeStructureForFile(tree, file, nbOfPathToSkip, rootUrlSeparator, urlFieldPath));
   setChildren(tree);
   return tree;
 };

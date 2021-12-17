@@ -21,7 +21,35 @@
  *
  */
 
-export const getTreeByGroupingType = (files, nameField, urlField, groupingType) => {
+const JSONPathRegex = /^(.+)\[(\d+)\]$/;
+export const JSONPath = (data, path) => {
+  if (!path) {
+    return data;
+  }
+  if (typeof path == "string") {
+    return JSONPath(data, path.split("."));
+  }
+  if (Array.isArray(path) && path.length) {
+    if (typeof data === "object") {
+      const [current, ...next] = path;
+      if (JSONPathRegex.test(current)) {
+        const [, prop, index] = current.match(JSONPathRegex);
+        const list = data[prop];
+        const number = parseInt(index);
+        if (!Array.isArray(list) || isNaN(number) || number < 0 || number >= data.length) {
+          return undefined;
+        }
+        return JSONPath(list[number], next);
+      } else {
+        return JSONPath(data[current], next);
+      }
+    }
+    return undefined;
+  }
+  return data;
+};
+
+export const getTreeByGroupingType = (files, nameFieldPath, urlFieldPath, groupingType) => {
   if(!Array.isArray(files)) {
     files = [files]; // To be checked with the new indexer
   }
@@ -33,7 +61,7 @@ export const getTreeByGroupingType = (files, nameField, urlField, groupingType) 
         .forEach(type => {
           if (Array.isArray(type.fileBundles) && type.fileBundles.length) {
             type.fileBundles.forEach(fileBundle => {
-              if (typeof fileBundle === "object"  && fileBundle.reference) {
+              if (typeof fileBundle === "object" && fileBundle.reference) {
                 if (!filesByFileBundles[fileBundle.reference]) {
                   filesByFileBundles[fileBundle.reference] = {
                     name: fileBundle.value,
@@ -60,8 +88,8 @@ export const getTreeByGroupingType = (files, nameField, urlField, groupingType) 
     .map((fileBundle) => {
       const children = fileBundle.files
         .map(file => ({
-          name: file[nameField],
-          url: file[urlField],
+          name: JSONPath(file, nameFieldPath),
+          url: JSONPath(file, urlFieldPath),
           type: "file",
           thumbnail: file.thumbnailUrl && file.thumbnailUrl.url, //"https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/hbp-d000041_VervetMonkey_3D-PLI_CoroSagiSec_dev/VervetThumbnail.jpg"
           data: file

@@ -69,12 +69,24 @@ const LinkedInstanceComponent = ({data, mapping, group, type}) => {
 
 
 export const LinkedInstance = connect(
-  (state, props) => ({
-    data: props.data,
-    mapping: props.type && state.definition.typeMappings[props.type] && state.definition.typeMappings[props.type].fields,
-    group: props.group,
-    type: props.type
-  })
+  (state, props) => {
+    const mapping = Object.entries((props.type && state.definition.typeMappings[props.type] && state.definition.typeMappings[props.type].fields)?state.definition.typeMappings[props.type].fields:{}).reduce((acc, [name, mapping]) => {
+      if (
+        name !== "title" && // filter title as we only want to show the details of the linked instance
+        !mapping.isAsync && // filter async data in linked instance
+        !(props.type === "File" && name === "iri") // filter iri in file linked instance
+      ) {
+        acc[name] = mapping;
+      }
+      return acc;
+    }, {});
+    return {
+      data: props.data,
+      mapping: mapping,
+      group: props.group,
+      type: props.type
+    };
+  }
 )(LinkedInstanceComponent);
 
 export default LinkedInstance;

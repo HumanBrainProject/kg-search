@@ -41,14 +41,16 @@ import java.util.List;
 public class FileBundle implements TargetInstance {
     @JsonIgnore
     private List<String> allIdentifiers;
-    @JsonIgnore
+    //Internal
+    @ElasticSearchInfo(type = "keyword")
     private final Value<String> type = new Value<>("FileBundle");
-    @JsonIgnore
+    @FieldInfo(ignoreForSearch = true, visible = false)
     private String id;
-    @JsonIgnore
+    @ElasticSearchInfo(type = "keyword")
+    @FieldInfo(ignoreForSearch = true, visible = false)
     private List<String> identifier;
-    @FieldInfo(visible = false)
-    private String name;
+    @FieldInfo(label = "Name", layout = "header")
+    private Value<String> title;
     @FieldInfo(label = "Open data in")
     private TargetExternalReference dataLocation;
     @Override

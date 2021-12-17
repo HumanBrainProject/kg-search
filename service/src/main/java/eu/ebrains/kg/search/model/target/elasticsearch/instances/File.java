@@ -28,6 +28,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import lombok.Getter;
@@ -43,25 +44,28 @@ import java.util.Map;
 public class File implements TargetInstance {
     @JsonIgnore
     private List<String> allIdentifiers;
-    @JsonIgnore
-    private final Value<String> type = new Value<>("File");
-    @JsonIgnore
-    private String id;
-    @JsonIgnore
-    private List<String> identifier;
-    @FieldInfo(visible = false)
-    private String name;
-    @FieldInfo(visible = false)
-    private String iri;
+    //Internal
     @ElasticSearchInfo(type = "keyword")
+    private final Value<String> type = new Value<>("File");
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private String id;
+    @ElasticSearchInfo(type = "keyword")
+    @FieldInfo(ignoreForSearch = true, visible = false)
+    private List<String> identifier;
+    @FieldInfo(label = "Name", layout = "header")
+    private Value<String> title;
+    @FieldInfo(label = "IRI", visible = false)
+    private TargetExternalReference iri;
+    @ElasticSearchInfo(type = "keyword")
+    @FieldInfo(label = "fileRepository", visible = false)
     private String fileRepository;
-    @FieldInfo(label = "Size")
+    @FieldInfo(label = "Size", layout = "header")
     private Value<String> size;
     @FieldInfo(label = "Format")
     private TargetInternalReference format;
     @FieldInfo(label = "Software taking this file as input")
     private List<TargetInternalReference> inputTypeForSoftware;
-    @FieldInfo(visible = false)
+    @FieldInfo(label = "GroupingTypes", visible = false)
     private List<GroupingType> groupingTypes;
     @Override
     @JsonIgnore

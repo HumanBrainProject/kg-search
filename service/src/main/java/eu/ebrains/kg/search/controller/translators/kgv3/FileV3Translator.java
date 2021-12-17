@@ -30,6 +30,7 @@ import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.source.openMINDSv3.FileV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.File;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
@@ -82,8 +83,11 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
         f.setAllIdentifiers(file.getIdentifier());
         f.setIdentifier(IdUtils.getUUID(file.getIdentifier()));
         f.setFileRepository(IdUtils.getUUID(fileRepository));
-        f.setName(file.isPrivateAccess() ? String.format("ACCESS PROTECTED: %s", file.getName()) : file.getName());
-        f.setIri(file.isPrivateAccess() ? String.format("%s/files/cscs?url=%s", Translator.fileProxy, file.getIri()) : file.getIri());
+        f.setTitle(value(file.isPrivateAccess() ? String.format("ACCESS PROTECTED: %s", file.getName()) : file.getName()));
+        String iri = file.isPrivateAccess() ? String.format("%s/files/cscs?url=%s", Translator.fileProxy, file.getIri()) : file.getIri();
+        if (StringUtils.isNotBlank(iri)) {
+            f.setIri(new TargetExternalReference(iri, iri));
+        }
         FileV3.Size size = file.getSize();
         if(size != null && StringUtils.isNotBlank(size.getUnit())) {
             f.setSize(value(FileUtils.byteCountToDisplaySize(size.getValue())));

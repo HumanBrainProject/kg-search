@@ -114,15 +114,15 @@ const FieldBase = (renderUserInteractions = true) => {
       mapping: mapping,
       group: group,
       type: type,
-      nameField: "value",
-      urlField: "url"
+      nameFieldPath: "value",
+      urlFieldPath: "url"
     };
     const asyncHierarchicalFileProps = {
       mapping: mapping,
       group: group,
       type: type,
-      nameField: "name",
-      urlField: "iri",
+      nameFieldPath: "title.value",
+      urlFieldPath: "iri.url",
       filesUrl: asyncFilesUrl,
       groupingTypesUrl: asyncGroupingTypesUrl,
       fileFormatsUrl: asyncFileFormatsUrl
