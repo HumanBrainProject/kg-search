@@ -22,14 +22,21 @@
  */
 
 .kgs-field__table .table {
-    width: 100%;
     display: none;
+    overflow-x: auto;
+    width: -moz-fit-content;
+    width: fit-content;
 }
 
 .kgs-field__table .table th {
     white-space: nowrap;
     padding-bottom: 0.55rem;
     padding-top: 0.55rem;
+}
+
+.kgs-field__table th > .kgs-field .field-value,
+.kgs-field__table td > .kgs-field .field-value {
+    white-space: nowrap;
 }
 
 .kgs-field__table th > .kgs-field .field-value button[role="link"],
