@@ -95,6 +95,7 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
   const groups = Object.entries(typeMapping.fields || {})
     .filter(([name, mapping]) =>
       mapping
+      && mapping.visible
       && (mapping.showIfEmpty || (data && data[name]))
       && mapping.layout !== "header"
       && !["id", "identifier", "title", "first_release", "last_release"].includes(name)
@@ -115,6 +116,7 @@ const getFieldsByGroups = (group, type, data, typeMapping) => {
       }
       return acc;
     }, {});
+
   if (overviewFields.length) {
     const previews = getPreviews(data, { children: typeMapping.fields });
     return [
