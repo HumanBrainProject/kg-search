@@ -77,8 +77,8 @@ const getPath = url => {
   return segments.slice(0, segments.length-1);
 };
 
-const getCommonPath = (files, key) => {
-  const urls = files.map(file => file[key]).sort();
+const getCommonPath = (files, urlFieldPath) => {
+  const urls = files.map(file => JSONPath(file, urlFieldPath)).sort();
   const firstFilePath = getPath(urls[0]);
   const lastFilePath = getPath(urls.pop());
   const max = firstFilePath.length > lastFilePath.length?lastFilePath.length:firstFilePath.length;
