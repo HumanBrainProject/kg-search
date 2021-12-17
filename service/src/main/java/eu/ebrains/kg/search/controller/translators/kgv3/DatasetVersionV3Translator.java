@@ -160,7 +160,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         d.setTechnique(ref(datasetVersion.getTechnique()));
 
         d.setAllIdentifiers(datasetVersion.getIdentifier());
-        d.setIdentifier(datasetVersion.getSimpleIdentifiers());
+        d.setIdentifier(IdUtils.getIdentifiersWithPrefix("Dataset", datasetVersion.getIdentifier()));
         List<Version> versions = dataset == null ? null : dataset.getVersions();
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
         if (hasMultipleVersions) {
@@ -395,13 +395,17 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             } else {
                 final DatasetVersionV3.SpecimenOrSpecimenGroupState onlyState = t.getStates().get(0);
                 if (onlyState.getAge() != null) {
-                    tissueSample.setAge(Collections.singletonList(value(onlyState.getAge().displayString())));
+                    final Value<String> age = value(onlyState.getAge().displayString());
+                    tissueSample.setAge(age == null ? null : Collections.singletonList(age));
                 }
-                tissueSample.setAgeCategory(Collections.singletonList(ref(onlyState.getAgeCategory())));
+                final List<TargetInternalReference> ageCategories = ref(onlyState.getAgeCategory());
+                tissueSample.setAgeCategory(CollectionUtils.isEmpty(ageCategories) ? null : Collections.singletonList(ageCategories));
                 if (onlyState.getWeight() != null) {
-                    tissueSample.setWeight(Collections.singletonList(value(onlyState.getWeight().displayString())));
+                    final Value<String> weight = value(onlyState.getWeight().displayString());
+                    tissueSample.setWeight(weight == null ? null : Collections.singletonList(weight));
                 }
-                tissueSample.setPathology(Collections.singletonList(ref(onlyState.getPathology())));
+                final List<TargetInternalReference> ref = ref(onlyState.getPathology());
+                tissueSample.setPathology(CollectionUtils.isEmpty(ref) ? null : Collections.singletonList(ref));
             }
         }
         if (sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getSex, tissueSample, parent)) {

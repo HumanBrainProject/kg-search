@@ -100,7 +100,7 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
         c.setId(uuid);
 
         c.setAllIdentifiers(personOrOrganization.getIdentifier());
-        List<String> identifiers = IdUtils.getUUID(personOrOrganization.getIdentifier());
+        List<String> identifiers = IdUtils.getIdentifiersWithPrefix("Contributor", personOrOrganization.getIdentifier());
         identifiers.add(uuid);
         c.setIdentifier(identifiers.stream().distinct().collect(Collectors.toList()));
         c.setTitle(value(Helpers.getFullName(personOrOrganization.getFullName(), personOrOrganization.getFamilyName(), personOrOrganization.getGivenName())));

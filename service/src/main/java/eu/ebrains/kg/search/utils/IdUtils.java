@@ -42,6 +42,16 @@ public class IdUtils {
         return splitId[splitId.length - 1];
     }
 
+    /**
+     * @return a list of all uuids as well as a prefixed variant of those. Please note, that this is only for compatibility reasons with the ids of the previous system.
+     */
+    public static List<String> getIdentifiersWithPrefix(String prefix, List<String> ids){
+        final List<String> uuids = getUUID(ids);
+        final List<String> prefixes = uuids.stream().map(uuid -> String.format("%s/%s", prefix, uuid)).collect(Collectors.toList());
+        uuids.addAll(prefixes);
+        return uuids;
+    }
+
     public static List<String> getUUID(List<String> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return Collections.emptyList();
