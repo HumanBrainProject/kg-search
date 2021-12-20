@@ -193,7 +193,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
                     )).collect(Collectors.toList()));
         }
 
-        d.setPreparation(value(emptyToNull(datasetV1.getPreparation())));
+        d.setPreparation(emptyRef(emptyToNull(datasetV1.getPreparation())));
         if (!CollectionUtils.isEmpty(datasetV1.getComponent())) {
             d.setProjects(datasetV1.getComponent().stream()
                     .map(c -> new TargetInternalReference(

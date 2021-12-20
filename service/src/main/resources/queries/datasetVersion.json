@@ -1659,6 +1659,20 @@
       ]
     },
     {
+      "propertyName": "query:preparationDesign",
+      "path": "https://openminds.ebrains.eu/vocab/preparationDesign",
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        }
+      ]
+    },
+    {
       "propertyName": "query:studyTarget",
       "path": {
         "@id": "https://openminds.ebrains.eu/vocab/studyTarget"

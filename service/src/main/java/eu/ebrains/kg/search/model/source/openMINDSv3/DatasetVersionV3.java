@@ -65,12 +65,14 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private List<File> specialFiles;
     private List<FullNameRef> behavioralProtocol;
     private List<StudyTarget> studyTarget;
+    private List<FullNameRef> preparationDesign;
+
     @Getter
     @Setter
     public static class StudyTarget extends FullNameRefForResearchProductVersion {
         private FullNameRefForResearchProductVersion brainAtlasVersion;
         private String brainAtlas;
-        private List<String> type;
+        private List<String> studyTargetType;
     }
     @Getter
     @Setter

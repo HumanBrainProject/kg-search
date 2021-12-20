@@ -157,6 +157,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         d.setId(datasetVersion.getUUID());
         d.setExperimentalApproach(ref(datasetVersion.getExperimentalApproach()));
         d.setBehavioralProtocols(ref(datasetVersion.getBehavioralProtocol()));
+        d.setPreparation(ref(datasetVersion.getPreparationDesign()));
         d.setTechnique(ref(datasetVersion.getTechnique()));
 
         d.setAllIdentifiers(datasetVersion.getIdentifier());
@@ -344,10 +345,10 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
         List<String> brainRegionStudyTargets = Arrays.asList(OPENMINDS_ROOT+"controlledTerms/UBERONParcellation", OPENMINDS_ROOT+"sands/ParcellationEntityVersion", OPENMINDS_ROOT+"sands/ParcellationEntity", OPENMINDS_ROOT+"sands/CustomAnatomicalEntity");
 
-        final Map<Boolean, List<DatasetVersionV3.StudyTarget>> brainRegionOrNot = datasetVersion.getStudyTarget().stream().collect(Collectors.groupingBy(s -> s.getType() != null && s.getType().stream().anyMatch(brainRegionStudyTargets::contains)));
+        final Map<Boolean, List<DatasetVersionV3.StudyTarget>> brainRegionOrNot = datasetVersion.getStudyTarget().stream().collect(Collectors.groupingBy(s -> s.getStudyTargetType() != null && s.getStudyTargetType().stream().anyMatch(brainRegionStudyTargets::contains)));
         d.setStudyTargets(refVersion(brainRegionOrNot.get(Boolean.FALSE)));
         if(!CollectionUtils.isEmpty(brainRegionOrNot.get(Boolean.TRUE))){
-            d.setStudyTargets(brainRegionOrNot.get(Boolean.TRUE).stream().map(s -> {
+            d.setStudiedBrainRegion(brainRegionOrNot.get(Boolean.TRUE).stream().map(s -> {
                 //TODO parcellationentity and parcellationentityversion need to be updated once their landing cards are available
                 if(StringUtils.isNotBlank(s.getBrainAtlas())){
                     return new TargetInternalReference(null, String.format("%s (%s)", StringUtils.isNotBlank(s.getFullName()) ? s.getFullName() : s.getFallbackName(),  s.getBrainAtlas()));

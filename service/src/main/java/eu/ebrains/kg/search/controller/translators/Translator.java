@@ -116,6 +116,18 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
         return null;
     }
 
+    protected TargetInternalReference emptyRef(String ref){
+        return new TargetInternalReference(null, ref);
+    }
+
+    protected List<TargetInternalReference> emptyRef(List<String> refs){
+        if(!CollectionUtils.isEmpty(refs)){
+            return refs.stream().filter(Objects::nonNull).map(this::emptyRef).filter(Objects::nonNull).collect(Collectors.toList());
+        }
+        return null;
+    }
+
+
     protected List<TargetInternalReference> ref(List<FullNameRef> refs){
         if(!CollectionUtils.isEmpty(refs)){
             return refs.stream().map(this::ref).filter(Objects::nonNull).collect(Collectors.toList());

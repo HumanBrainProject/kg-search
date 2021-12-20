@@ -165,10 +165,8 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "Behavioral protocols", layout = "summary")
     private List<TargetInternalReference> behavioralProtocols;
 
-    //TODO how to find in openMINDS?
-    //preparation design
     @FieldInfo(label = "Preparation", layout = "summary")
-    private List<Value<String>> preparation;
+    private List<TargetInternalReference> preparation;
 
     @Deprecated
     /**
