@@ -394,12 +394,14 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
         tissueSample.setLabel(new TargetInternalReference(IdUtils.getUUID(t.getId()), t.getInternalIdentifier() != null ? String.format("%s %s", type, t.getInternalIdentifier()) : type));
         tissueSample.setSex(ref(t.getBiologicalSex()));
+        tissueSample.setTsType(ref(t.getTsType()));
         List<FullNameRef> species = t.getSpecies();
         if(CollectionUtils.isEmpty(species)){
             species = t.getStrain().stream().map(DatasetVersionV3.Strain::getSpecies).filter(Objects::nonNull).distinct().collect(Collectors.toList());
         }
         tissueSample.setSpecies(ref(species));
         tissueSample.setStrain(ref(t.getStrain()));
+        tissueSample.setGeneticStrainType(ref(t.getStrain().stream().map(DatasetVersionV3.Strain::getGeneticStrainType).filter(Objects::nonNull).collect(Collectors.toList())));
         tissueSample.setOrigin(ref(t.getOrigin()));
         tissueSample.setLaterality(ref(t.getLaterality()));
         if(!CollectionUtils.isEmpty(t.getAnatomicalLocation())){
@@ -424,6 +426,12 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                 final List<TargetInternalReference> ref = ref(onlyState.getPathology());
                 tissueSample.setPathology(CollectionUtils.isEmpty(ref) ? null : Collections.singletonList(ref));
             }
+        }
+        if (sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getTsType, tissueSample, parent)) {
+            tissueSample.setTsType(null);
+        }
+        if (sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getGeneticStrainType, tissueSample, parent)) {
+            tissueSample.setGeneticStrainType(null);
         }
         if (sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getSex, tissueSample, parent)) {
             tissueSample.setSex(null);
@@ -459,6 +467,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
         subj.setSpecies(ref(species));
         subj.setStrain(ref(s.getStrain()));
+        subj.setGeneticStrainType(ref(s.getStrain().stream().map(DatasetVersionV3.Strain::getGeneticStrainType).filter(Objects::nonNull).collect(Collectors.toList())));
         subj.setSex(ref(s.getBiologicalSex()));
         if (!CollectionUtils.isEmpty(s.getStates())) {
             if (s.getStates().size() > 1) {

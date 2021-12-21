@@ -158,6 +158,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
         private String internalIdentifier;
         private Integer quantity;
         private List<String> tissueSampleType;
+        private FullNameRef tsType;
         private List<Strain> strain;
         private List<FullNameRef> species;
         private List<SpecimenOrSpecimenGroupState> states;
@@ -173,6 +174,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     @Setter
     public static class Strain extends FullNameRef{
         private FullNameRef species;
+        private FullNameRef geneticStrainType;
     }
 
 

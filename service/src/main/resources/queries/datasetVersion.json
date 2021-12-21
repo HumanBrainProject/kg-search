@@ -239,6 +239,21 @@
               "path": "https://openminds.ebrains.eu/vocab/name"
             },
             {
+              "propertyName": "query:geneticStrainType",
+              "path": "https://openminds.ebrains.eu/vocab/geneticStrainType",
+              "structure": [
+                {
+                  "propertyName": "query:id",
+                  "path": "@id"
+                },
+                {
+                  "propertyName": "query:fullName",
+                  "path": "https://openminds.ebrains.eu/vocab/name"
+                }
+              ],
+              "singleValue": "FIRST"
+            },
+            {
               "propertyName": "query:species",
               "path": "https://openminds.ebrains.eu/vocab/species",
               "structure": [
@@ -727,6 +742,21 @@
           "path": "@type"
         },
         {
+          "propertyName": "query:tsType",
+          "path": "https://openminds.ebrains.eu/vocab/type",
+          "singleValue": "FIRST",
+          "structure": [
+            {
+              "propertyName": "query:fullName",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            },
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            }
+          ]
+        },
+        {
           "propertyName": "query:internalIdentifier",
           "path": "https://openminds.ebrains.eu/vocab/internalIdentifier"
         },
@@ -773,6 +803,21 @@
             {
               "propertyName": "query:fullName",
               "path": "https://openminds.ebrains.eu/vocab/name"
+            },
+            {
+              "propertyName": "query:geneticStrainType",
+              "path": "https://openminds.ebrains.eu/vocab/geneticStrainType",
+              "structure": [
+                {
+                  "propertyName": "query:id",
+                  "path": "@id"
+                },
+                {
+                  "propertyName": "query:fullName",
+                  "path": "https://openminds.ebrains.eu/vocab/name"
+                }
+              ],
+              "singleValue": "FIRST"
             },
             {
               "propertyName": "query:species",
@@ -1022,6 +1067,21 @@
               "path": "@type"
             },
             {
+              "propertyName": "query:tsType",
+              "path": "https://openminds.ebrains.eu/vocab/type",
+              "singleValue": "FIRST",
+              "structure": [
+                {
+                  "propertyName": "query:fullName",
+                  "path": "https://openminds.ebrains.eu/vocab/name"
+                },
+                {
+                  "propertyName": "query:id",
+                  "path": "@id"
+                }
+              ]
+            },
+            {
               "propertyName": "query:internalIdentifier",
               "path": "https://openminds.ebrains.eu/vocab/internalIdentifier"
             },
@@ -1068,6 +1128,21 @@
                 {
                   "propertyName": "query:fullName",
                   "path": "https://openminds.ebrains.eu/vocab/name"
+                },
+                {
+                  "propertyName": "query:geneticStrainType",
+                  "path": "https://openminds.ebrains.eu/vocab/geneticStrainType",
+                  "structure": [
+                    {
+                      "propertyName": "query:id",
+                      "path": "@id"
+                    },
+                    {
+                      "propertyName": "query:fullName",
+                      "path": "https://openminds.ebrains.eu/vocab/name"
+                    }
+                  ],
+                  "singleValue": "FIRST"
                 },
                 {
                   "propertyName": "query:species",

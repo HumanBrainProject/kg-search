@@ -332,6 +332,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
         @FieldInfo(label = "# of samples")
         private Value<String> numberOfSamples;
 
+        @FieldInfo(label = "Type")
+        private TargetInternalReference tsType;
+
         @FieldInfo(label = "Species", separator = ", ")
         private List<TargetInternalReference> species;
 
@@ -349,6 +352,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
 
         @FieldInfo(label = "Strain")
         private List<TargetInternalReference> strain;
+
+        @FieldInfo(label = "Genetic strain type")
+        private List<TargetInternalReference> geneticStrainType;
 
         @FieldInfo(label = "Age")
         private List<Value<String>> age;
@@ -417,6 +423,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
 
         @FieldInfo(label = "Strain")
         private List<TargetInternalReference> strain;
+
+        @FieldInfo(label = "Genetic strain type")
+        private List<TargetInternalReference> geneticStrainType;
 
         @FieldInfo(label = "Age")
         private List<Value<String>> age;
