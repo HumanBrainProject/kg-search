@@ -170,7 +170,7 @@ public class Helpers {
         }
     }
 
-    public static void collectAllTargetInternalReferences(Object obj, Set<TargetInternalReference> collector, Set<Object> handledObjects) {
+    public static void collectAllTargetInternalReferences(Object obj, List<TargetInternalReference> collector, List<Object> handledObjects) {
         if (obj == null || handledObjects.contains(obj)) {
             //Break the circle
             return;

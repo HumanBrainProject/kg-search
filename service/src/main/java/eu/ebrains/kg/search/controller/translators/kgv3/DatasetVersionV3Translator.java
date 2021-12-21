@@ -248,7 +248,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setKeywords(value(datasetVersion.getKeyword()));
         }
         if (!CollectionUtils.isEmpty(datasetVersion.getSubjects())) {
-            d.setSpeciesFilter(value(datasetVersion.getSubjects().stream().map(DatasetVersionV3.SubjectOrSubjectGroup::getSpecies).flatMap(Collection::stream).map(FullNameRef::getFullName).filter(Objects::nonNull).distinct().sorted().collect(Collectors.toList())));
             final Set<String> groupedSubjects = datasetVersion.getSubjects().stream().map(DatasetVersionV3.SubjectOrSubjectGroup::getChildren).filter(children -> !CollectionUtils.isEmpty(children)).flatMap(Collection::stream).map(DatasetVersionV3.SubjectOrSubjectGroup::getId).collect(Collectors.toSet());
             final List<DatasetVersion.SubjectGroupOrSingleSubject> subjects = datasetVersion.getSubjects().stream()
                     //We don't want individual subjects to appear on the root hierarchy level if they also have a representation inside the groups...
@@ -271,6 +270,10 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             if (!subjects.isEmpty()) {
                 d.setSubjectGroupOrSingleSubject(children(subjects));
             }
+
+            //TODO set the right species filter
+            d.setSpeciesFilter(value(datasetVersion.getSubjects().stream().map(DatasetVersionV3.SubjectOrSubjectGroup::getSpecies).flatMap(Collection::stream).map(FullNameRef::getFullName).filter(Objects::nonNull).distinct().sorted().collect(Collectors.toList())));
+
         }
 
         if(!CollectionUtils.isEmpty(datasetVersion.getTissueSampleOrCollection())){
@@ -352,9 +355,12 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setStudiedBrainRegion(brainRegionOrNot.get(Boolean.TRUE).stream().map(this::refAnatomical).collect(Collectors.toList()));
         }
 
-        final List<TargetInternalReference> collectedAnatomicalLocations = d.getTissueSamples().stream().map(Children::getChildren).map(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getAnatomicalLocation).flatMap(Collection::stream).map(TargetInternalReference.Wrapper::new).distinct().map(TargetInternalReference.Wrapper::getReference).sorted().collect(Collectors.toList());
+        final List<TargetInternalReference> collectedAnatomicalLocations = d.getTissueSamples()==null ? Collections.emptyList() : d.getTissueSamples().stream().map(Children::getChildren).map(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getAnatomicalLocation).flatMap(Collection::stream).distinct().sorted().collect(Collectors.toList());
         if(!CollectionUtils.isEmpty(collectedAnatomicalLocations)){
             d.setAnatomicalLocationOfTissueSamples(collectedAnatomicalLocations);
+        }
+        if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinks())){
+            d.setViewer(datasetVersion.getServiceLinks().stream().map(s -> new TargetExternalReference(s.getUrl(), String.format("Open %s in %s", s.getName(), s.getService()))).collect(Collectors.toList()));
         }
         return d;
     }
@@ -401,7 +407,9 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
         tissueSample.setSpecies(ref(species));
         tissueSample.setStrain(ref(t.getStrain()));
-        tissueSample.setGeneticStrainType(ref(t.getStrain().stream().map(DatasetVersionV3.Strain::getGeneticStrainType).filter(Objects::nonNull).collect(Collectors.toList())));
+        if(t.getStrain()!=null) {
+            tissueSample.setGeneticStrainType(ref(t.getStrain().stream().map(DatasetVersionV3.Strain::getGeneticStrainType).filter(Objects::nonNull).collect(Collectors.toList())));
+        }
         tissueSample.setOrigin(ref(t.getOrigin()));
         tissueSample.setLaterality(ref(t.getLaterality()));
         if(!CollectionUtils.isEmpty(t.getAnatomicalLocation())){
@@ -467,7 +475,9 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
         subj.setSpecies(ref(species));
         subj.setStrain(ref(s.getStrain()));
-        subj.setGeneticStrainType(ref(s.getStrain().stream().map(DatasetVersionV3.Strain::getGeneticStrainType).filter(Objects::nonNull).collect(Collectors.toList())));
+        if(s.getStrain()!=null) {
+            subj.setGeneticStrainType(ref(s.getStrain().stream().map(DatasetVersionV3.Strain::getGeneticStrainType).filter(Objects::nonNull).collect(Collectors.toList())));
+        }
         subj.setSex(ref(s.getBiologicalSex()));
         if (!CollectionUtils.isEmpty(s.getStates())) {
             if (s.getStates().size() > 1) {
@@ -501,6 +511,9 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
         if (sameAsParent(DatasetVersion.AbstractSubject::getAgeCategory, subj, parent)) {
             subj.setAgeCategory(null);
+        }
+        if (sameAsParent(DatasetVersion.AbstractSubject::getGeneticStrainType, subj, parent)) {
+            subj.setGeneticStrainType(null);
         }
         if (sameAsParent(DatasetVersion.AbstractSubject::getWeight, subj, parent)) {
             subj.setWeight(null);

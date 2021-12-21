@@ -24,6 +24,8 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.ListOrSingleStringAsListDeserializer;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.*;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +43,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private String description;
     private String fullName;
     private List<String> homepage;
+    @JsonDeserialize(using = ListOrSingleStringAsListDeserializer.class)
     private List<String> keyword;
     private List<String> ethicsAssessment;
     private String version;
@@ -66,6 +69,16 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private List<FullNameRef> behavioralProtocol;
     private List<StudyTarget> studyTarget;
     private List<FullNameRef> preparationDesign;
+    private List<ServiceLink> serviceLinks;
+
+
+    @Getter
+    @Setter
+    public static class ServiceLink{
+        private String url;
+        private String service;
+        private String name;
+    }
 
 
     @Getter
@@ -201,7 +214,13 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
                     setStrain(children.stream().map(SubjectOrSubjectGroup::getStrain).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
                 }
                 if(CollectionUtils.isEmpty(species)){
-                    setSpecies(children.stream().map(SubjectOrSubjectGroup::getSpecies).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
+                    final List<FullNameRef> speciesFromStrain = children.stream().map(SubjectOrSubjectGroup::getStrain).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).map(Strain::getSpecies).filter(Objects::nonNull).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList());
+                    if(!CollectionUtils.isEmpty(speciesFromStrain)){
+                        setSpecies(speciesFromStrain);
+                    }
+                    else {
+                        setSpecies(children.stream().map(SubjectOrSubjectGroup::getSpecies).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));
+                    }
                 }
                 if(CollectionUtils.isEmpty(biologicalSex)){
                     setBiologicalSex(children.stream().map(SubjectOrSubjectGroup::getBiologicalSex).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().sorted(FullNameRef.COMPARATOR).collect(Collectors.toList()));

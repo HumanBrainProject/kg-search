@@ -169,6 +169,42 @@
       ]
     },
     {
+      "propertyName": "query:serviceLinks",
+      "path": [
+        "https://openminds.ebrains.eu/vocab/repository",
+        {
+          "@id": "https://openminds.ebrains.eu/vocab/isPartOf",
+          "reverse": true
+        },
+        {
+          "@id": "https://openminds.ebrains.eu/vocab/dataLocation",
+          "reverse": true
+        }
+      ],
+      "structure": [
+        {
+          "propertyName": "query:url",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/openDataIn",
+            "https://openminds.ebrains.eu/vocab/URL"
+          ],
+          "singleValue": "FIRST"
+        },
+        {
+          "propertyName": "query:service",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/service",
+            "https://openminds.ebrains.eu/vocab/name"
+          ],
+          "singleValue": "FIRST"
+        },
+        {
+          "propertyName": "query:name",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        }
+      ]
+    },
+    {
       "propertyName": "query:subjects",
       "path": {
         "@id": "https://openminds.ebrains.eu/vocab/studiedSpecimen",
@@ -515,7 +551,14 @@
             },
             {
               "propertyName": "query:species",
-              "path": "https://openminds.ebrains.eu/vocab/species",
+              "path": {
+                "@id": "https://openminds.ebrains.eu/vocab/species",
+                "typeFilter": [
+                  {
+                    "@id": "https://openminds.ebrains.eu/controlledTerms/Species"
+                  }
+                ]
+              },
               "structure": [
                 {
                   "propertyName": "query:id",
@@ -524,6 +567,57 @@
                 {
                   "propertyName": "query:fullName",
                   "path": "https://openminds.ebrains.eu/vocab/name"
+                }
+              ]
+            },
+            {
+              "propertyName": "query:strain",
+              "path": {
+                "@id": "https://openminds.ebrains.eu/vocab/species",
+                "typeFilter": [
+                  {
+                    "@id": "https://openminds.ebrains.eu/core/Strain"
+                  }
+                ]
+              },
+              "structure": [
+                {
+                  "propertyName": "query:id",
+                  "path": "@id"
+                },
+                {
+                  "propertyName": "query:fullName",
+                  "path": "https://openminds.ebrains.eu/vocab/name"
+                },
+                {
+                  "propertyName": "query:geneticStrainType",
+                  "path": "https://openminds.ebrains.eu/vocab/geneticStrainType",
+                  "structure": [
+                    {
+                      "propertyName": "query:id",
+                      "path": "@id"
+                    },
+                    {
+                      "propertyName": "query:fullName",
+                      "path": "https://openminds.ebrains.eu/vocab/name"
+                    }
+                  ],
+                  "singleValue": "FIRST"
+                },
+                {
+                  "propertyName": "query:species",
+                  "path": "https://openminds.ebrains.eu/vocab/species",
+                  "structure": [
+                    {
+                      "propertyName": "query:fullName",
+                      "path": "https://openminds.ebrains.eu/vocab/name"
+                    },
+                    {
+                      "propertyName": "query:id",
+                      "path": "@id"
+                    }
+                  ],
+                  "singleValue": "FIRST"
                 }
               ]
             },
