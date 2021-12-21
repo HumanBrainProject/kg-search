@@ -25,13 +25,36 @@ package eu.ebrains.kg.search.model.target.elasticsearch.instances.commons;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
+import lombok.Getter;
 
 import java.util.*;
 
 public class TargetInternalReference implements Comparable<TargetInternalReference> {
+
+    @Getter
+    public static class Wrapper{
+        private TargetInternalReference reference;
+
+        public Wrapper(TargetInternalReference reference){
+            this.reference = reference;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Wrapper wrapper = (Wrapper) o;
+            if(reference == null){
+                return wrapper.reference == null;
+            }
+            return Objects.equals(reference.getValue(), wrapper.reference.getValue());
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(reference == null ? null : reference.getValue());
+        }
+    }
 
     public TargetInternalReference(String reference, String value) {
         this.reference = reference;
@@ -82,4 +105,6 @@ public class TargetInternalReference implements Comparable<TargetInternalReferen
     public int compareTo(TargetInternalReference targetInternalReference) {
         return targetInternalReference==null ? -1 : Comparator.comparing(TargetInternalReference::getValue).compare(this, targetInternalReference);
     }
+
+
 }

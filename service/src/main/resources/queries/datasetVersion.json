@@ -237,6 +237,21 @@
             {
               "propertyName": "query:fullName",
               "path": "https://openminds.ebrains.eu/vocab/name"
+            },
+            {
+              "propertyName": "query:species",
+              "path": "https://openminds.ebrains.eu/vocab/species",
+              "structure": [
+                {
+                  "propertyName": "query:fullName",
+                  "path": "https://openminds.ebrains.eu/vocab/name"
+                },
+                {
+                  "propertyName": "query:id",
+                  "path": "@id"
+                }
+              ],
+              "singleValue": "FIRST"
             }
           ]
         },
@@ -758,6 +773,21 @@
             {
               "propertyName": "query:fullName",
               "path": "https://openminds.ebrains.eu/vocab/name"
+            },
+            {
+              "propertyName": "query:species",
+              "path": "https://openminds.ebrains.eu/vocab/species",
+              "structure": [
+                {
+                  "propertyName": "query:fullName",
+                  "path": "https://openminds.ebrains.eu/vocab/name"
+                },
+                {
+                  "propertyName": "query:id",
+                  "path": "@id"
+                }
+              ],
+              "singleValue": "FIRST"
             }
           ]
         },
@@ -1038,6 +1068,21 @@
                 {
                   "propertyName": "query:fullName",
                   "path": "https://openminds.ebrains.eu/vocab/name"
+                },
+                {
+                  "propertyName": "query:species",
+                  "path": "https://openminds.ebrains.eu/vocab/species",
+                  "structure": [
+                    {
+                      "propertyName": "query:fullName",
+                      "path": "https://openminds.ebrains.eu/vocab/name"
+                    },
+                    {
+                      "propertyName": "query:id",
+                      "path": "@id"
+                    }
+                  ],
+                  "singleValue": "FIRST"
                 }
               ]
             },

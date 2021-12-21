@@ -31,6 +31,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.DatasetVersion;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
@@ -350,6 +351,11 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if(!CollectionUtils.isEmpty(brainRegionOrNot.get(Boolean.TRUE))){
             d.setStudiedBrainRegion(brainRegionOrNot.get(Boolean.TRUE).stream().map(this::refAnatomical).collect(Collectors.toList()));
         }
+
+        final List<TargetInternalReference> collectedAnatomicalLocations = d.getTissueSamples().stream().map(Children::getChildren).map(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getAnatomicalLocation).flatMap(Collection::stream).map(TargetInternalReference.Wrapper::new).distinct().map(TargetInternalReference.Wrapper::getReference).sorted().collect(Collectors.toList());
+        if(!CollectionUtils.isEmpty(collectedAnatomicalLocations)){
+            d.setAnatomicalLocationOfTissueSamples(collectedAnatomicalLocations);
+        }
         return d;
     }
 
@@ -388,7 +394,11 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         }
         tissueSample.setLabel(new TargetInternalReference(IdUtils.getUUID(t.getId()), t.getInternalIdentifier() != null ? String.format("%s %s", type, t.getInternalIdentifier()) : type));
         tissueSample.setSex(ref(t.getBiologicalSex()));
-        tissueSample.setSpecies(ref(t.getSpecies()));
+        List<FullNameRef> species = t.getSpecies();
+        if(CollectionUtils.isEmpty(species)){
+            species = t.getStrain().stream().map(DatasetVersionV3.Strain::getSpecies).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+        }
+        tissueSample.setSpecies(ref(species));
         tissueSample.setStrain(ref(t.getStrain()));
         tissueSample.setOrigin(ref(t.getOrigin()));
         tissueSample.setLaterality(ref(t.getLaterality()));
@@ -443,7 +453,11 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             type = "Subject group";
         }
         subj.setLabel(new TargetInternalReference(IdUtils.getUUID(s.getId()), s.getInternalIdentifier() != null ? String.format("%s %s", type, s.getInternalIdentifier()) : type));
-        subj.setSpecies(ref(s.getSpecies()));
+        List<FullNameRef> species =s.getSpecies();
+        if(CollectionUtils.isEmpty(species)){
+            species = s.getStrain().stream().map(DatasetVersionV3.Strain::getSpecies).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+        }
+        subj.setSpecies(ref(species));
         subj.setStrain(ref(s.getStrain()));
         subj.setSex(ref(s.getBiologicalSex()));
         if (!CollectionUtils.isEmpty(s.getStates())) {
