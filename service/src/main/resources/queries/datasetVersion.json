@@ -199,7 +199,7 @@
           "singleValue": "FIRST"
         },
         {
-          "propertyName": "query:name",
+          "propertyName": "query:label",
           "path": "https://openminds.ebrains.eu/vocab/name"
         }
       ]
@@ -406,6 +406,10 @@
                   "path": "https://openminds.ebrains.eu/vocab/name"
                 }
               ]
+            },
+            {
+              "propertyName": "query:additionalRemarks",
+              "path": "https://openminds.ebrains.eu/vocab/additionalRemarks"
             },
             {
               "propertyName": "query:weight",

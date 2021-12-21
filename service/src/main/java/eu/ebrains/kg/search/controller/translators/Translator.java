@@ -111,7 +111,7 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
     protected TargetInternalReference ref(FullNameRef ref){
         if(ref!=null){
             final String uuid = IdUtils.getUUID(ref.getId());
-            return new TargetInternalReference(uuid, StringUtils.defaultString(ref.getFullName(), uuid));
+            return new TargetInternalReference(uuid, StringUtils.defaultIfBlank(ref.getFullName(), uuid));
         }
         return null;
     }
@@ -152,7 +152,7 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
 
     protected TargetInternalReference ref(FullNameRefForResearchProductVersion ref){
         if(ref!=null){
-            String name = StringUtils.defaultString(ref.getFullName(), ref.getFallbackName());
+            String name = StringUtils.defaultIfBlank(ref.getFullName(), ref.getFallbackName());
             String uuid = IdUtils.getUUID(ref.getId());
             if(name==null){
                 name = uuid;

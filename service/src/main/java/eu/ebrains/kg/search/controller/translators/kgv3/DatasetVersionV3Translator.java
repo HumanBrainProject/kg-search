@@ -63,6 +63,8 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
     public static final String OPENMINDS_ROOT = "https://openminds.ebrains.eu/";
     public static final String OPENMINDS_INSTANCES = OPENMINDS_ROOT + "instances";
 
+    private final static List<String> VERSION_INNOVATION_DEFAULTS = Arrays.asList("this is the first version of this research product.", "this is the only version of this dataset.");
+
     public static class Result extends ResultsOfKGv3<DatasetVersionV3> {
     }
 
@@ -183,7 +185,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         } else if (dataset != null) {
             d.setDescription(value(dataset.getDescription()));
         }
-        if (StringUtils.isNotBlank(datasetVersion.getVersionInnovation()) && versions != null && versions.size() > 1) {
+        if (StringUtils.isNotBlank(datasetVersion.getVersionInnovation()) && !VERSION_INNOVATION_DEFAULTS.contains(StringUtils.trim(datasetVersion.getVersionInnovation()).toLowerCase())) {
             d.setNewInThisVersion(new Value<>(datasetVersion.getVersionInnovation()));
         }
 
@@ -360,7 +362,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setAnatomicalLocationOfTissueSamples(collectedAnatomicalLocations);
         }
         if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinks())){
-            d.setViewer(datasetVersion.getServiceLinks().stream().map(s -> new TargetExternalReference(s.getUrl(), String.format("Open %s in %s", s.getName(), s.getService()))).collect(Collectors.toList()));
+            d.setViewer(datasetVersion.getServiceLinks().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
         }
         return d;
     }
@@ -542,6 +544,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if (state.getAge() != null) {
             result.setAge(value(state.getAge().displayString()));
         }
+        result.setAdditionalRemarks(value(state.getAdditionalRemarks()));
         result.setAttributes(value(state.getAttribute()));
         result.setAgeCategory(ref(state.getAgeCategory()));
         if (state.getWeight() != null) {

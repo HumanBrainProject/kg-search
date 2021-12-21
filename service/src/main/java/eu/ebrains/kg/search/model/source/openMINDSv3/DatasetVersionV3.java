@@ -72,14 +72,6 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private List<ServiceLink> serviceLinks;
 
 
-    @Getter
-    @Setter
-    public static class ServiceLink{
-        private String url;
-        private String service;
-        private String name;
-    }
-
 
     @Getter
     @Setter
@@ -134,6 +126,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
         private QuantitativeValueOrRange weight;
         private List<String> fileRepositoryIds;
         private List<String> attribute;
+        private String additionalRemarks;
     }
 
 

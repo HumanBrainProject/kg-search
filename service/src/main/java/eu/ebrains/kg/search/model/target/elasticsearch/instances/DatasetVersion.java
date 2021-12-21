@@ -128,13 +128,11 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10)
     private List<TargetInternalReference> custodians;
 
-    @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2)
-    private Value<String> description;
-
     @FieldInfo(label = "New in this version", markdown = true, boost = 2)
     private Value<String> newInThisVersion;
 
-
+    @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2)
+    private Value<String> description;
 
     @FieldInfo(labelHidden = true, boost = 2)
     private List<PreviewObject> previewObjects;
@@ -436,6 +434,11 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
 
         @FieldInfo(label = "Weight")
         private List<Value<String>> weight;
+
+        @FieldInfo(label = "Additional remarks", separator = ", ")
+        private List<Value<String>> additionalRemarks;
+
+
     }
 
 
@@ -457,6 +460,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
 
         @FieldInfo(label = "Weight")
         private Value<String> weight;
+
+        @FieldInfo(label = "Additional remarks", separator = ", ")
+        private Value<String> additionalRemarks;
     }
 
 
