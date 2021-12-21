@@ -191,13 +191,13 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             if (hasMultipleVersions || StringUtils.isBlank(datasetVersion.getVersion())) {
                 d.setTitle(value(datasetVersion.getFullName()));
             } else {
-                d.setTitle(value(String.format("%s %s", datasetVersion.getFullName(), datasetVersion.getVersion())));
+                d.setTitle(value(String.format("%s (%s)", datasetVersion.getFullName(), datasetVersion.getVersion())));
             }
         } else if (dataset != null && StringUtils.isNotBlank(dataset.getFullName())) {
             if (hasMultipleVersions || StringUtils.isBlank(datasetVersion.getVersion())) {
                 d.setTitle(value(dataset.getFullName()));
             } else {
-                d.setTitle(value(String.format("%s %s", dataset.getFullName(), datasetVersion.getVersion())));
+                d.setTitle(value(String.format("%s (%s)", dataset.getFullName(), datasetVersion.getVersion())));
             }
         }
         if (!CollectionUtils.isEmpty(datasetVersion.getAuthor())) {
