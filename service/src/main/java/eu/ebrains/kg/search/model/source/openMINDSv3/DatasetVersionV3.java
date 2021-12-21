@@ -67,13 +67,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private List<StudyTarget> studyTarget;
     private List<FullNameRef> preparationDesign;
 
-    @Getter
-    @Setter
-    public static class StudyTarget extends FullNameRefForResearchProductVersion {
-        private FullNameRefForResearchProductVersion brainAtlasVersion;
-        private String brainAtlas;
-        private List<String> studyTargetType;
-    }
+
     @Getter
     @Setter
     public static class QuantitativeValueOrRange{
@@ -132,19 +126,17 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
 
     @Getter
     @Setter
-    public static class AnatomicalLocation extends FullNameRef{
-        private String fallbackName;
-        private List<ParcellationTerminology> parcellationTerminology;
-        private List<DataLocation> dataLocation;
-        private List<ParcellationEntity> parcellationEntity;
+    public static class AnatomicalLocation extends FullNameRefForResearchProductVersion{
+        private FullNameRefForResearchProductVersion brainAtlasVersion;
+        private String brainAtlas;
     }
 
     @Getter
     @Setter
-    public static class DataLocation{
-        private String openDataIn;
-        private FullNameRef service;
+    public static class StudyTarget extends AnatomicalLocation {
+        private List<String> studyTargetType;
     }
+
 
     @Getter
     @Setter

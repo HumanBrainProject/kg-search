@@ -348,19 +348,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         final Map<Boolean, List<DatasetVersionV3.StudyTarget>> brainRegionOrNot = datasetVersion.getStudyTarget().stream().collect(Collectors.groupingBy(s -> s.getStudyTargetType() != null && s.getStudyTargetType().stream().anyMatch(brainRegionStudyTargets::contains)));
         d.setStudyTargets(refVersion(brainRegionOrNot.get(Boolean.FALSE)));
         if(!CollectionUtils.isEmpty(brainRegionOrNot.get(Boolean.TRUE))){
-            d.setStudiedBrainRegion(brainRegionOrNot.get(Boolean.TRUE).stream().map(s -> {
-                //TODO parcellationentity and parcellationentityversion need to be updated once their landing cards are available
-                if(StringUtils.isNotBlank(s.getBrainAtlas())){
-                    return new TargetInternalReference(null, String.format("%s (%s)", StringUtils.isNotBlank(s.getFullName()) ? s.getFullName() : s.getFallbackName(),  s.getBrainAtlas()));
-                }
-                else if(s.getBrainAtlasVersion() != null){
-                    String name = String.format("%s %s", StringUtils.isNotBlank(s.getBrainAtlasVersion().getFullName()) ? s.getBrainAtlasVersion().getFullName() : s.getBrainAtlasVersion().getFallbackName(), s.getBrainAtlasVersion().getVersionIdentifier());
-                    return new TargetInternalReference(null, String.format("%s (%s)", StringUtils.isNotBlank(s.getFullName()) ? s.getFullName() : s.getFallbackName(), name));
-                }
-                else{
-                    return ref(s);
-                }
-            }).collect(Collectors.toList()));
+            d.setStudiedBrainRegion(brainRegionOrNot.get(Boolean.TRUE).stream().map(this::refAnatomical).collect(Collectors.toList()));
         }
         return d;
     }
@@ -377,6 +365,22 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         return (childValue == null && parentValue == null) || (childValue != null && childValue.equals(parentValue));
     }
 
+    private TargetInternalReference refAnatomical(DatasetVersionV3.AnatomicalLocation a){
+        if(StringUtils.isNotBlank(a.getBrainAtlas())){
+            return new TargetInternalReference(null, String.format("%s (%s)", StringUtils.isNotBlank(a.getFullName()) ? a.getFullName() : a.getFallbackName(),  a.getBrainAtlas()));
+        }
+        else if(a.getBrainAtlasVersion() != null){
+            //String name = String.format("%s %s", StringUtils.isNotBlank(a.getBrainAtlasVersion().getFullName()) ? a.getBrainAtlasVersion().getFullName() : a.getBrainAtlasVersion().getFallbackName(), a.getBrainAtlasVersion().getVersionIdentifier());
+            //TODO Currently, the names of the brain atlas versions also contain the version number -> this is expected to be fixed in openMINDS at some point. Once this is done, we need to change the logic here, so we reflect the version identifier instead.
+            String name = StringUtils.isNotBlank(a.getBrainAtlasVersion().getFullName()) ? a.getBrainAtlasVersion().getFullName() : a.getBrainAtlasVersion().getFallbackName();
+            return new TargetInternalReference(null, String.format("%s (%s)", StringUtils.isNotBlank(a.getFullName()) ? a.getFullName() : a.getFallbackName(), name));
+        }
+        else{
+            return ref(a);
+        }
+    }
+
+
     private <T extends DatasetVersion.AbstractTissueSampleOrTissueSampleCollection> T fillIndividualTissueSampleInformation(T tissueSample, DatasetVersionV3.TissueSampleOrTissueSampleCollection t, DatasetVersion.AbstractTissueSampleOrTissueSampleCollection parent) {
         String type = "Tissue sample";
         if(t.getTissueSampleType()!=null && t.getTissueSampleType().contains(OPENMINDS_ROOT + "core/TissueSampleCollection")){
@@ -388,7 +392,9 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         tissueSample.setStrain(ref(t.getStrain()));
         tissueSample.setOrigin(ref(t.getOrigin()));
         tissueSample.setLaterality(ref(t.getLaterality()));
-
+        if(!CollectionUtils.isEmpty(t.getAnatomicalLocation())){
+            tissueSample.setAnatomicalLocation(t.getAnatomicalLocation().stream().filter(Objects::nonNull).map(this::refAnatomical).filter(Objects::nonNull).collect(Collectors.toList()));
+        }
         if (!CollectionUtils.isEmpty(t.getStates())) {
             if (t.getStates().size() > 1) {
                 //If we have more than one state, we're going to expand them.
@@ -424,7 +430,9 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if(sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getLaterality, tissueSample, parent)) {
             tissueSample.setLaterality(null);
         }
-        //TODO anatomical location
+        if(sameAsParent(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getAnatomicalLocation, tissueSample, parent)) {
+            tissueSample.setAnatomicalLocation(null);
+        }
         return tissueSample;
     }
 

@@ -904,6 +904,10 @@
               "path": "https://openminds.ebrains.eu/vocab/name"
             },
             {
+              "propertyName": "query:versionIdentifier",
+              "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
+            },
+            {
               "propertyName": "query:fallbackName",
               "path": [
                 {
@@ -915,115 +919,55 @@
               "singleValue": "FIRST"
             },
             {
-              "propertyName": "query:parcellationTerminology",
-              "path": {
-                "@id": "https://openminds.ebrains.eu/vocab/hasEntity",
-                "reverse": true
-              },
+              "propertyName": "query:brainAtlas",
+              "path": [
+                {
+                  "@id": "https://openminds.ebrains.eu/vocab/hasEntity",
+                  "reverse": true
+                },
+                {
+                  "@id": "https://openminds.ebrains.eu/vocab/hasTerminology",
+                  "reverse": true
+                },
+                "https://openminds.ebrains.eu/vocab/shortName"
+              ],
+              "singleValue": "FIRST"
+            },
+            {
+              "propertyName": "query:brainAtlasVersion",
+              "path": [
+                {
+                  "@id": "https://openminds.ebrains.eu/vocab/hasEntityVersion",
+                  "reverse": true
+                },
+                {
+                  "@id": "https://openminds.ebrains.eu/vocab/hasTerminologyVersion",
+                  "reverse": true
+                }
+              ],
+              "singleValue": "FIRST",
               "structure": [
+                {
+                  "propertyName": "query:fallbackName",
+                  "path": [
+                    "https://openminds.ebrains.eu/vocab/hasEntity",
+                    "https://openminds.ebrains.eu/vocab/name"
+                  ],
+                  "singleValue": "FIRST"
+                },
                 {
                   "propertyName": "query:id",
                   "path": "@id"
                 },
                 {
+                  "propertyName": "query:versionIdentifier",
+                  "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
+                },
+                {
                   "propertyName": "query:fullName",
-                  "path": "https://openminds.ebrains.eu/vocab/fullName"
-                },
-                {
-                  "propertyName": "query:brainAtlas",
-                  "path": {
-                    "@id": "https://openminds.ebrains.eu/vocab/hasTerminology",
-                    "reverse": true
-                  },
-                  "structure": [
-                    {
-                      "propertyName": "query:id",
-                      "path": "@id"
-                    },
-                    {
-                      "propertyName": "query:fullName",
-                      "path": "https://openminds.ebrains.eu/vocab/fullName"
-                    }
-                  ]
+                  "path": "https://openminds.ebrains.eu/vocab/shortName"
                 }
               ]
-            },
-            {
-              "propertyName": "query:dataLocation",
-              "path": {
-                "@id": "https://openminds.ebrains.eu/vocab/dataLocation",
-                "reverse": true
-              },
-              "structure": [
-                {
-                  "propertyName": "query:openDataIn",
-                  "path": [
-                    "https://openminds.ebrains.eu/vocab/openDataIn",
-                    "https://openminds.ebrains.eu/vocab/URL"
-                  ],
-                  "singleValue": "FIRST"
-                },
-                {
-                  "propertyName": "query:service",
-                  "path": "https://openminds.ebrains.eu/vocab/service",
-                  "structure": [
-                    {
-                      "propertyName": "query:fullName",
-                      "path": "https://openminds.ebrains.eu/vocab/name"
-                    },
-                    {
-                      "propertyName": "query:id",
-                      "path": "@id"
-                    }
-                  ],
-                  "singleValue": "FIRST"
-                },
-                {
-                  "propertyName": "query:name",
-                  "path": "https://openminds.ebrains.eu/vocab/name"
-                }
-              ]
-            },
-            {
-              "propertyName": "query:parcellationEntity",
-              "path": {
-                "@id": "https://openminds.ebrains.eu/vocab/hasVersion",
-                "reverse": true
-              },
-              "structure": {
-                "propertyName": "query:parcellationTerminology",
-                "path": {
-                  "@id": "https://openminds.ebrains.eu/vocab/hasEntity",
-                  "reverse": true
-                },
-                "structure": [
-                  {
-                    "propertyName": "query:id",
-                    "path": "@id"
-                  },
-                  {
-                    "propertyName": "query:fullName",
-                    "path": "https://openminds.ebrains.eu/vocab/fullName"
-                  },
-                  {
-                    "propertyName": "query:brainAtlas",
-                    "path": {
-                      "@id": "https://openminds.ebrains.eu/vocab/hasTerminology",
-                      "reverse": true
-                    },
-                    "structure": [
-                      {
-                        "propertyName": "query:id",
-                        "path": "@id"
-                      },
-                      {
-                        "propertyName": "query:fullName",
-                        "path": "https://openminds.ebrains.eu/vocab/fullName"
-                      }
-                    ]
-                  }
-                ]
-              }
             }
           ]
         },

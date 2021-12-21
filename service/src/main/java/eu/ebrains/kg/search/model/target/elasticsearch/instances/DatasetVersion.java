@@ -162,6 +162,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "Study targets", layout = "summary")
     private List<TargetInternalReference> studyTargets;
 
+    @FieldInfo(label = "Anatomical location of tissue samples", layout = "summary", hint = " Please see the section \"Tissue samples\" for distribution")
+    private List<TargetInternalReference> anatomicalLocationOfTissueSamples;
+
     @FieldInfo(label = "Behavioral protocols", layout = "summary")
     private List<TargetInternalReference> behavioralProtocols;
 
@@ -344,6 +347,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
         @FieldInfo(label = "Laterality")
         private List<TargetInternalReference> laterality;
 
+        @FieldInfo(label = "Anatomical location")
+        private List<TargetInternalReference> anatomicalLocation;
+
         @FieldInfo(label = "Age")
         private List<Value<String>> age;
 
@@ -355,6 +361,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
 
         @FieldInfo(label = "Weight")
         private List<Value<String>> weight;
+
 
     }
 
