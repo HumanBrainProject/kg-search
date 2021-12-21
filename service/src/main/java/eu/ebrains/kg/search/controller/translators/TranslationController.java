@@ -131,7 +131,7 @@ public class TranslationController {
         if (checkReferences) {
             //To allow the live preview to hide references to non-existent instances, we need to query them too.
             final List<TargetInternalReference> references = new ArrayList<>();
-            collectAllTargetInternalReferences(result, references, new ArrayList<>());
+            collectAllTargetInternalReferences(result, references);
             Map<String, Boolean> cachedReferences = new HashMap<>();
             references.forEach(t -> {
                 boolean reset = false;

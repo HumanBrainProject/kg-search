@@ -179,7 +179,7 @@ public class IndexingController {
 
     private <Target extends TargetInstance> void clearNonResolvableReferences(Target instance, DataStage dataStage){
         List<TargetInternalReference> references = new ArrayList<>();
-        collectAllTargetInternalReferences(instance, references, new ArrayList<>());
+        collectAllTargetInternalReferences(instance, references);
         references.forEach(r -> {
             if(r.getReference()!=null && !elasticSearchController.documentExists(r.getReference(), dataStage)){
                 logger.warn(String.format("Was not able to find instance %s in database for stage %s - remove reference in %s", r.getReference(), dataStage, instance.getId()));

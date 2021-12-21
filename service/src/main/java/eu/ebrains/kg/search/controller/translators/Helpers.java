@@ -170,12 +170,7 @@ public class Helpers {
         }
     }
 
-    public static void collectAllTargetInternalReferences(Object obj, List<TargetInternalReference> collector, List<Object> handledObjects) {
-        if (obj == null || handledObjects.contains(obj)) {
-            //Break the circle
-            return;
-        }
-        handledObjects.add(obj);
+    public static void collectAllTargetInternalReferences(Object obj, List<TargetInternalReference> collector) {
         if (obj instanceof TargetInternalReference) {
             collector.add((TargetInternalReference) obj);
             return;
@@ -186,11 +181,11 @@ public class Helpers {
                 Object value = f.get(obj);
                 if (value != null) {
                     if (value instanceof Collection) {
-                        ((Collection<?>) value).forEach(c -> collectAllTargetInternalReferences(c, collector, handledObjects));
+                        ((Collection<?>) value).forEach(c -> collectAllTargetInternalReferences(c, collector));
                     } else if (value instanceof Map) {
-                        ((Map<?, ?>) value).forEach((k, v) -> collectAllTargetInternalReferences(v, collector, handledObjects));
+                        ((Map<?, ?>) value).forEach((k, v) -> collectAllTargetInternalReferences(v, collector));
                     } else {
-                        collectAllTargetInternalReferences(value, collector, handledObjects);
+                        collectAllTargetInternalReferences(value, collector);
                     }
                 }
             } catch (IllegalAccessException e) {
