@@ -355,7 +355,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setStudiedBrainRegion(brainRegionOrNot.get(Boolean.TRUE).stream().map(this::refAnatomical).collect(Collectors.toList()));
         }
 
-        final List<TargetInternalReference> collectedAnatomicalLocations = d.getTissueSamples()==null ? Collections.emptyList() : d.getTissueSamples().stream().map(Children::getChildren).map(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getAnatomicalLocation).flatMap(Collection::stream).distinct().sorted().collect(Collectors.toList());
+        final List<TargetInternalReference> collectedAnatomicalLocations = d.getTissueSamples()==null ? Collections.emptyList() : d.getTissueSamples().stream().filter(Objects::nonNull).map(Children::getChildren).filter(Objects::nonNull).map(DatasetVersion.AbstractTissueSampleOrTissueSampleCollection::getAnatomicalLocation).filter(Objects::nonNull).flatMap(Collection::stream).distinct().sorted().collect(Collectors.toList());
         if(!CollectionUtils.isEmpty(collectedAnatomicalLocations)){
             d.setAnatomicalLocationOfTissueSamples(collectedAnatomicalLocations);
         }
