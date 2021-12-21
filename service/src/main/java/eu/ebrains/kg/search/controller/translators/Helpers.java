@@ -171,6 +171,9 @@ public class Helpers {
     }
 
     public static void collectAllTargetInternalReferences(Object obj, List<TargetInternalReference> collector) {
+        if(obj == null){
+            return;
+        }
         if (obj instanceof TargetInternalReference) {
             collector.add((TargetInternalReference) obj);
             return;
