@@ -48,7 +48,7 @@
     overflow-wrap: break-word;
     word-break: break-word;
     white-space: pre-wrap;
-    vertical-align: baseline;
+    vertical-align: bottom;
     line-height: 1.5em;
 }
 
