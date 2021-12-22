@@ -340,9 +340,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                     reference = new TargetExternalReference(dataDescriptors.get(0).getIri(), dataDescriptors.get(0).getName());
                 }
             }
-            if(reference==null) {
-                d.setDataDescriptor(reference);
-            }
+            d.setDataDescriptor(reference);
         } else if (!privateFiles && datasetVersion.getFullDocumentationFile() != null) {
             d.setDataDescriptor(new TargetExternalReference(datasetVersion.getFullDocumentationFile().getIri(), datasetVersion.getFullDocumentationFile().getName()));
         } else if (datasetVersion.getFullDocumentationUrl() != null) {
