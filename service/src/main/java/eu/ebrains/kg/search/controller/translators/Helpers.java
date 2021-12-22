@@ -127,15 +127,16 @@ public class Helpers {
 
     public static String getFormattedDOI(DOICitationFormatter doiCitationFormatter, String doi) {
         if (StringUtils.isNotBlank(doi)) {
-            final String doiCitation = doiCitationFormatter.getDOICitation(doi);
-            final String[] split = doi.split("doi\\.org/");
+            String absoluteDOI = doi.contains("http") && doi.contains("doi.org") ? doi : String.format("https://doi.org/%s", doi);
+            final String doiCitation = doiCitationFormatter.getDOICitation(absoluteDOI);
+            final String[] split = absoluteDOI.split("doi\\.org/");
             String simpleDOI;
             if (split.length == 2) {
                 simpleDOI = split[1];
             } else {
                 simpleDOI = doi;
             }
-            String doiLink = String.format("[DOI: %s]\n[DOI: %s]: %s", simpleDOI, simpleDOI, doi);
+            String doiLink = String.format("[DOI: %s]\n[DOI: %s]: %s", simpleDOI, simpleDOI, absoluteDOI);
 
             if (doiCitation != null) {
                 return String.format("%s\n%s", doiCitation, doiLink);

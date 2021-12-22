@@ -64,8 +64,12 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(label = "Developers", separator = "; ", layout = "header", type = FieldInfo.Type.TEXT, boost = 10, labelHidden = true)
     private List<TargetInternalReference> developers;
 
-    @FieldInfo(label = "Cite software", markdown = true, icon="quote-left")
+    @FieldInfo(labelHidden = true, markdown = true, icon="quote-left", layout = "How to cite")
     private Value<String> citation;
+
+    //Overview
+    @FieldInfo(label = "DOI")
+    private Value<String> doi;
 
     /**
      * @deprecated
@@ -619,5 +623,13 @@ public class SoftwareVersion implements TargetInstance, VersionedInstance {
 
     public void setAllIdentifiers(List<String> allIdentifiers) {
         this.allIdentifiers = allIdentifiers;
+    }
+
+    public Value<String> getDoi() {
+        return doi;
+    }
+
+    public void setDoi(Value<String> doi) {
+        this.doi = doi;
     }
 }

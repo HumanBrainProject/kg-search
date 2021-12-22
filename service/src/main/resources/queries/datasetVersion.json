@@ -787,14 +787,14 @@
                           "path": "https://openminds.ebrains.eu/vocab/name"
                         }
                       ]
-                    },
-                    {
-                      "propertyName": "query:attribute",
-                      "path": [
-                        "https://openminds.ebrains.eu/vocab/attribute",
-                        "https://openminds.ebrains.eu/vocab/name"
-                      ]
                     }
+                  ]
+                },
+                {
+                  "propertyName": "query:attribute",
+                  "path": [
+                    "https://openminds.ebrains.eu/vocab/attribute",
+                    "https://openminds.ebrains.eu/vocab/name"
                   ]
                 }
               ]

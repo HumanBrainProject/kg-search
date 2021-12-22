@@ -123,16 +123,19 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
                             Helpers.getFullName(a.getFullName(), a.getFamilyName(), a.getGivenName())
                     )).collect(Collectors.toList()));
         }
-
-
-        if(StringUtils.isNotBlank(softwareVersion.getHowToCite())){
-            s.setCitation(new Value<>(softwareVersion.getHowToCite()));
-        }
-        else if(StringUtils.isNotBlank(softwareVersion.getDoi())){
-            final String formattedDOI = Helpers.getFormattedDOI(doiCitationFormatter, softwareVersion.getDoi());
-            if(formattedDOI!=null) {
-                s.setCitation(new Value<>(formattedDOI));
+        String citation = softwareVersion.getHowToCite();
+        String doi = softwareVersion.getDoi();
+        if (StringUtils.isNotBlank(doi)) {
+            final String doiWithoutPrefix = Helpers.stripDOIPrefix(doi);
+            //TODO do we want to keep this one? It's actually redundant with what we have in "cite dataset"
+            s.setDoi(value(doiWithoutPrefix));
+            if (StringUtils.isNotBlank(citation)) {
+                s.setCitation(value(String.format("%s [DOI: %s](%s)", citation, doiWithoutPrefix, doi)));
+            } else {
+                s.setCitation(value(Helpers.getFormattedDOI(doiCitationFormatter, doi)));
             }
+        } else if (StringUtils.isNotBlank(citation)) {
+            s.setCitation(value(citation));
         }
         if(s.getCitation() == null && StringUtils.isNotBlank(softwareVersion.getSwhid())){
             //TODO resolve SWHID with citation formatter

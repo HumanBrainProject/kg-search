@@ -128,11 +128,11 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "Custodians", separator = "; ", hint = "A custodian is the person responsible for the data bundle.", boost = 10)
     private List<TargetInternalReference> custodians;
 
-    @FieldInfo(label = "New in this version", markdown = true, boost = 2)
-    private Value<String> newInThisVersion;
-
     @FieldInfo(label = "Description", labelHidden = true, markdown = true, boost = 2)
     private Value<String> description;
+
+    @FieldInfo(label = "New in this version", markdown = true, boost = 2)
+    private Value<String> newInThisVersion;
 
     @FieldInfo(labelHidden = true, boost = 2)
     private List<PreviewObject> previewObjects;
@@ -183,7 +183,6 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "Technique", layout = "summary")
     private List<TargetInternalReference> technique;
 
-
     //Filter only
     @FieldInfo(label = "Species", facet = FieldInfo.Facet.LIST, visible = false, type = FieldInfo.Type.TEXT)
     private List<Value<String>> speciesFilter;
@@ -191,13 +190,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "Data accessibility", visible = false, facet = FieldInfo.Facet.LIST)
     private Value<String> dataAccessibility;
 
-    //Data descriptor
-    //TODO test with file and doi
     @FieldInfo(label = "Data-descriptor", isFilePreview=true, layout = "Data descriptor", labelHidden = true)
     private TargetExternalReference dataDescriptor;
 
-    //How to cite
-    //TODO resolve by service for V3
     @FieldInfo(label = "Cite dataset", markdown = true, layout = "How to cite", labelHidden = true)
     private Value<String> citation;
 
@@ -437,7 +432,6 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
 
         @FieldInfo(label = "Additional remarks", separator = ", ")
         private List<Value<String>> additionalRemarks;
-
 
     }
 
