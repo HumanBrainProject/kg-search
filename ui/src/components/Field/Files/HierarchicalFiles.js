@@ -85,7 +85,7 @@ class HierarchicalFiles extends React.Component {
     if (node.children) {
       node.toggled = toggled;
     }
-    if(node.url !== this.state.node.url) {
+    if(node.url !== this.state.node.url || node.reference !== this.state.node.reference) {
       const previousNode = this.state.node;
       previousNode.active = false;
     }
