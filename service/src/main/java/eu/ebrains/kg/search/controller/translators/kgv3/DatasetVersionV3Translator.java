@@ -322,7 +322,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         //If the container is restricted (and the files are private), we can't take any files into account for data descriptors although they might be registered as such. Otherwise, we would end up in a inaccessible resource
         final List<DatasetVersionV3.File> dataDescriptors = privateFiles ? Collections.emptyList() : specialFiles.stream().filter(s -> s.getRoles().contains(OPENMINDS_INSTANCES + "/fileUsageRole/dataDescriptor")).collect(Collectors.toList());
         if (!dataDescriptors.isEmpty()) {
-            TargetExternalReference reference = null;
+            TargetExternalReference reference;
             if (dataDescriptors.size() > 1) {
                 logger.error(String.format("The dataset version contains multiple data descriptors: %s - picking the first one", dataDescriptors.stream().map(DatasetVersionV3.File::getIri).collect(Collectors.joining(", "))), datasetVersion.getUUID());
                 reference = new TargetExternalReference(dataDescriptors.get(0).getIri(), dataDescriptors.get(0).getName());
@@ -336,6 +336,8 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
                 } else if (datasetVersion.getFullDocumentationUrl() != null) {
                     logger.error(String.format("The dataset has a file (%s) flagged with the role data descriptor and a URL (%s) for the full documentation. Falling back to the full documentation URL!", dataDescriptors.get(0).getIri(), datasetVersion.getFullDocumentationUrl()), datasetVersion.getUUID());
                     reference = new TargetExternalReference(datasetVersion.getFullDocumentationUrl(), datasetVersion.getFullDocumentationUrl());
+                }  else{
+                    reference = new TargetExternalReference(dataDescriptors.get(0).getIri(), dataDescriptors.get(0).getName());
                 }
             }
             if(reference==null) {
