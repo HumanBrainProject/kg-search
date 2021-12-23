@@ -237,7 +237,18 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             d.setCitation(value(citation));
         }
         d.setLicenseInfo(link(datasetVersion.getLicense()));
-        d.setProjects(ref(datasetVersion.getProjects()));
+
+        List<FullNameRef> projects = null;
+        if(datasetVersion.getProjects()!=null && dataset.getDatasetProjects() != null){
+            projects = Stream.concat(datasetVersion.getProjects().stream(), dataset.getDatasetProjects().stream()).distinct().collect(Collectors.toList());
+        }
+        else if(datasetVersion.getProjects()!=null){
+            projects = datasetVersion.getProjects();
+        }
+        else if(dataset.getDatasetProjects()!=null){
+            projects = dataset.getDatasetProjects();
+        }
+        d.setProjects(ref(projects));
 
         List<PersonOrOrganizationRef> custodians = datasetVersion.getCustodians();
         if (CollectionUtils.isEmpty(custodians) && datasetVersion.getDataset() != null) {

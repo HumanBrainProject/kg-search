@@ -360,6 +360,8 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
 
         @JsonProperty("datasetCustodian")
         private List<PersonOrOrganizationRef> custodians;
+
+        private List<FullNameRef> datasetProjects;
     }
 
 

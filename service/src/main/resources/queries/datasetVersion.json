@@ -1556,6 +1556,23 @@
           "path": "https://openminds.ebrains.eu/vocab/description"
         },
         {
+          "propertyName": "query:datasetProjects",
+          "path": {
+            "@id": "https://openminds.ebrains.eu/vocab/hasResearchProducts",
+            "reverse": true
+          },
+          "structure": [
+            {
+              "propertyName": "query:fullName",
+              "path": "https://openminds.ebrains.eu/vocab/fullName"
+            },
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            }
+          ]
+        },
+        {
           "propertyName": "query:datasetAuthor",
           "path": "https://openminds.ebrains.eu/vocab/author",
           "ensureOrder": true,
