@@ -29,6 +29,7 @@ import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ExtendedFullNameRef
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ExternalRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRefForResearchProductVersion;
+import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
@@ -41,6 +42,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<Source>> {
     public static final String fileProxy = ""; //TODO: Should that be changed ?
@@ -57,104 +59,108 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
     public abstract List<String> getQueryIds();
 
 
-    public String getQueryFileName(String semanticType){
+    public String getQueryFileName(String semanticType) {
         final String simpleName = getClass().getSimpleName();
         return StringUtils.uncapitalize(simpleName.substring(0, simpleName.indexOf("V3")));
     }
-    protected Value<Boolean> value(Boolean v){
-        if(v!=null){
+
+    protected Value<Boolean> value(Boolean v) {
+        if (v != null) {
             return new Value<>(v);
         }
         return null;
     }
 
-    protected Value<String> value(String v){
-        if(StringUtils.isNotBlank(v)){
+    protected Value<String> value(String v) {
+        if (StringUtils.isNotBlank(v)) {
             return new Value<>(v.trim());
         }
         return null;
     }
 
 
-    protected ISODateValue value(Date date){
-        if(date != null){
+    protected ISODateValue value(Date date) {
+        if (date != null) {
             return new ISODateValue(date);
-        }
-        else{
+        } else {
             return null;
         }
 
     }
 
-    protected <T> List<Children<T>> children(List<T> values){
-        if(!CollectionUtils.isEmpty(values)){
+    protected <T> List<Children<T>> children(List<T> values) {
+        if (!CollectionUtils.isEmpty(values)) {
             return values.stream().map(Children::new).collect(Collectors.toList());
         }
         return null;
     }
 
-    protected List<Value<String>> value(List<String> values){
-        if(!CollectionUtils.isEmpty(values)){
+    protected List<Value<String>> value(List<String> values) {
+        if (!CollectionUtils.isEmpty(values)) {
             return values.stream().map(this::value).filter(Objects::nonNull).collect(Collectors.toList());
         }
         return null;
     }
 
 
-    protected TargetExternalReference link(String url){
-        if(StringUtils.isNotBlank(url)){
+    protected TargetExternalReference link(String url) {
+        if (StringUtils.isNotBlank(url)) {
             return new TargetExternalReference(url.trim(), url.trim());
         }
         return null;
     }
 
-    protected TargetInternalReference ref(FullNameRef ref){
-        if(ref!=null){
+    protected TargetInternalReference ref(FullNameRef ref) {
+        if (ref != null) {
             final String uuid = IdUtils.getUUID(ref.getId());
             return new TargetInternalReference(uuid, StringUtils.defaultIfBlank(ref.getFullName(), uuid));
         }
         return null;
     }
 
-    protected TargetInternalReference emptyRef(String ref){
+    protected TargetInternalReference emptyRef(String ref) {
         return new TargetInternalReference(null, ref);
     }
 
-    protected List<TargetInternalReference> emptyRef(List<String> refs){
-        if(!CollectionUtils.isEmpty(refs)){
+    protected List<TargetInternalReference> emptyRef(List<String> refs) {
+        if (!CollectionUtils.isEmpty(refs)) {
             return refs.stream().filter(Objects::nonNull).map(this::emptyRef).filter(Objects::nonNull).collect(Collectors.toList());
         }
         return null;
     }
 
 
-    protected List<TargetInternalReference> ref(List<? extends FullNameRef> refs){
-        if(!CollectionUtils.isEmpty(refs)){
+    protected List<TargetInternalReference> ref(List<? extends FullNameRef> refs) {
+        if (!CollectionUtils.isEmpty(refs)) {
             return refs.stream().map(this::ref).filter(Objects::nonNull).collect(Collectors.toList());
         }
         return null;
     }
 
-    protected List<TargetInternalReference> refVersion(List<? extends FullNameRefForResearchProductVersion> refs){
-        if(!CollectionUtils.isEmpty(refs)){
+    protected List<TargetInternalReference> refVersion(List<? extends FullNameRefForResearchProductVersion> refs) {
+        if (!CollectionUtils.isEmpty(refs)) {
             return refs.stream().map(this::ref).filter(Objects::nonNull).collect(Collectors.toList());
         }
         return null;
     }
 
-    protected List<TargetInternalReference> refExtendedVersion(List<? extends ExtendedFullNameRefForResearchProductVersion> refs){
-        if(!CollectionUtils.isEmpty(refs)){
-            return refs.stream().map(this::ref).filter(Objects::nonNull).collect(Collectors.toList());
+    protected List<TargetInternalReference> refExtendedVersion(List<? extends ExtendedFullNameRefForResearchProductVersion> refs, boolean sort) {
+        if (!CollectionUtils.isEmpty(refs)) {
+            Stream<TargetInternalReference> targetInternalReferenceStream = refs.stream().map(this::ref).filter(Objects::nonNull);
+            if (sort) {
+                targetInternalReferenceStream = targetInternalReferenceStream.sorted();
+            }
+            return targetInternalReferenceStream.collect(Collectors.toList());
         }
         return null;
     }
 
 
-    protected TargetInternalReference ref(FullNameRefForResearchProductVersion ref){
-        if(ref!=null){
+    protected TargetInternalReference ref(FullNameRefForResearchProductVersion ref) {
+        if (ref != null) {
             String name = StringUtils.defaultIfBlank(ref.getFullName(), ref.getFallbackName());
             String uuid = IdUtils.getUUID(ref.getId());
-            if(name==null){
+            if (name == null) {
                 name = uuid;
             }
             String versionedName = StringUtils.isNotBlank(ref.getVersionIdentifier()) ? String.format("%s %s", name, ref.getVersionIdentifier()) : name;
@@ -163,21 +169,21 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
         return null;
     }
 
-    protected TargetInternalReference ref(ExtendedFullNameRefForResearchProductVersion ref){
-        if(ref!=null){
+    protected TargetInternalReference ref(ExtendedFullNameRefForResearchProductVersion ref) {
+        if (ref != null) {
             return ref(ref.getRelevantReference());
         }
         return null;
     }
 
-    protected TargetExternalReference link(ExternalRef ref){
-        if(ref!=null && StringUtils.isNotBlank(ref.getUrl())) {
+    protected TargetExternalReference link(ExternalRef ref) {
+        if (ref != null && StringUtils.isNotBlank(ref.getUrl())) {
             return new TargetExternalReference(ref.getUrl(), ref.getUrl() != null ? ref.getLabel() : ref.getUrl());
         }
         return null;
     }
 
-    public <T> List<T> createList(T... items){
+    public <T> List<T> createList(T... items) {
         List<T> l = new ArrayList<>();
         for (T item : items) {
             l.add(item);

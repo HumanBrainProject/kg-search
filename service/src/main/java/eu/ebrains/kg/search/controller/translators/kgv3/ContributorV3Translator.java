@@ -27,14 +27,17 @@ import eu.ebrains.kg.search.controller.translators.Helpers;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.PersonOrOrganizationV3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ExtendedFullNameRefForResearchProductVersion;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRefForResearchProductVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Contributor;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3, Contributor, ContributorV3Translator.Result> {
@@ -115,15 +118,32 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
             return null;
         }
 
-        c.setCustodianOfDataset(refExtendedVersion(personOrOrganization.getCustodianOfDataset()));
-        c.setCustodianOfModel(refExtendedVersion(personOrOrganization.getCustodianOfModel()));
-        c.setCustodianOfSoftware(refExtendedVersion(personOrOrganization.getCustodianOfSoftware()));
+        c.setCustodianOfDataset(getReferences(personOrOrganization.getCustodianOfDataset()));
+        c.setCustodianOfModel(getReferences(personOrOrganization.getCustodianOfModel()));
+        c.setCustodianOfSoftware(getReferences(personOrOrganization.getCustodianOfSoftware()));
 
-        c.setDatasetContributions(refExtendedVersion(personOrOrganization.getDatasetContributions()));
-        c.setModelContributions(refExtendedVersion(personOrOrganization.getModelContributions()));
-        c.setSoftwareContributions(refExtendedVersion(personOrOrganization.getSoftwareContributions()));
+        c.setDatasetContributions(getReferences(personOrOrganization.getDatasetContributions()));
+        c.setModelContributions(getReferences(personOrOrganization.getModelContributions()));
+        c.setSoftwareContributions(getReferences(personOrOrganization.getSoftwareContributions()));
 
         return c;
+    }
+
+
+    private List<TargetInternalReference> getReferences(List<ExtendedFullNameRefForResearchProductVersion> references){
+        if(references == null){
+            return null;
+        }
+        final List<TargetInternalReference> result = references.stream().map(r -> {
+            //Add all children elements
+            final List<TargetInternalReference> refs = refVersion(r.getResearchProductVersions());
+            if (r.getResearchProductVersions().size() > 1) {
+                refs.add(ref((FullNameRefForResearchProductVersion) r));
+            }
+            return refs;
+        }).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().sorted().collect(Collectors.toList());
+        return CollectionUtils.isEmpty(result) ? null : result;
+
     }
 
 
