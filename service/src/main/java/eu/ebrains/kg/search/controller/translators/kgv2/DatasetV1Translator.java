@@ -32,6 +32,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.DatasetVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetFile;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
@@ -115,9 +116,9 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
         if (datasetV1.isUseHDG()) {
             final String editorId = datasetV1.getEditorId();
             final String[] split = editorId.split("/");
-            String uuid = split[split.length-1];
+            String uuid = split[split.length - 1];
             d.setEmbargo(value(DatasetVersion.createHDGMessage(uuid, true)));
-            d.setDataAccessibility(value("Controlled access"));
+            d.setDataAccessibility(translateAccessibility(value("Controlled access")));
         } else {
             if (dataStage == DataStage.RELEASED) {
                 if (hasEmbargoStatus(datasetV1, EMBARGOED)) {
@@ -126,7 +127,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
                     d.setEmbargo(value("This dataset is currently reviewed by the Data Protection Office regarding GDPR compliance. The data will be available after this review."));
                 }
             }
-            d.setDataAccessibility(value(firstItemOrNull(datasetV1.getEmbargoForFilter())));
+            d.setDataAccessibility(translateAccessibility(value(firstItemOrNull(datasetV1.getEmbargoForFilter()))));
             if (!CollectionUtils.isEmpty(datasetV1.getFiles()) && (dataStage == DataStage.IN_PROGRESS || (dataStage == DataStage.RELEASED && !hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW)))) {
                 d.setFilesOld(emptyToNull(datasetV1.getFiles().stream()
                         .filter(v -> v.getAbsolutePath() != null && v.getName() != null)
@@ -264,5 +265,18 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
         d.setLastRelease(value(datasetV1.getLastReleaseAt()));
         d.setSearchable(true);
         return d;
+    }
+
+    private Value<String> translateAccessibility(Value<String> oldValue) {
+        if (oldValue != null && oldValue.getValue() != null) {
+            final String value = oldValue.getValue();
+            switch (value.toLowerCase()) {
+                case "free":
+                    return value("free access");
+                case "embargoed":
+                    return value("under embargo");
+            }
+        }
+        return oldValue;
     }
 }

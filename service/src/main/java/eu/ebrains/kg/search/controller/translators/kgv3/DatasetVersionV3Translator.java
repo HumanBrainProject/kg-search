@@ -47,6 +47,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 //Test ids
 // 4ac9f0bc-560d-47e0-8916-7b24da9bb0ce (multiple versions)
@@ -278,10 +279,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             if (!subjects.isEmpty()) {
                 d.setSubjectGroupOrSingleSubject(children(subjects));
             }
-
-            //TODO set the right species filter
-            d.setSpeciesFilter(value(datasetVersion.getSubjects().stream().map(DatasetVersionV3.SubjectOrSubjectGroup::getSpecies).flatMap(Collection::stream).map(FullNameRef::getFullName).filter(Objects::nonNull).distinct().sorted().collect(Collectors.toList())));
-
         }
 
         if(!CollectionUtils.isEmpty(datasetVersion.getTissueSampleOrCollection())){
@@ -378,6 +375,11 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinks())){
             d.setViewer(datasetVersion.getServiceLinks().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
         }
+
+        final List<TargetInternalReference> speciesFromSG = d.getSubjectGroupOrSingleSubject()!=null ? d.getSubjectGroupOrSingleSubject().stream().filter(sg -> sg.getChildren() != null).map(sg -> sg.getChildren().getSpecies()).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().collect(Collectors.toList()) : Collections.emptyList();
+        final List<TargetInternalReference> speciesFromTS = d.getTissueSamples()!=null ? d.getTissueSamples().stream().filter(ts -> ts.getChildren() != null).map(ts -> ts.getChildren().getSpecies()).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().collect(Collectors.toList()) : Collections.emptyList();
+        List<TargetInternalReference> species = Stream.concat(speciesFromSG.stream(), speciesFromTS.stream()).distinct().collect(Collectors.toList());
+        d.setSpeciesFilter(value(species.stream().map(TargetInternalReference::getValue).filter(Objects::nonNull).collect(Collectors.toList())));
         return d;
     }
 
