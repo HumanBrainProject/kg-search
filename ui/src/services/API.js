@@ -35,7 +35,8 @@ const endpoints = {
   "search": group => `/api/groups/${group}/search`,
   "instance": (group, id) => `/api/groups/${group}/documents/${id}`,
   "preview": id => `/api/${id}/live`,
-  "keycloakAuth": (authEndpoint, redirectUri, stateKey, nonceKey) => `${authEndpoint}/realms/hbp/protocol/openid-connect/auth?client_id=${keycloakClientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${stateKey}&nonce=${nonceKey}&response_type=token`
+  "keycloakAuth": (authEndpoint, redirectUri, stateKey, nonceKey) => `${authEndpoint}/realms/hbp/protocol/openid-connect/auth?client_id=${keycloakClientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${stateKey}&nonce=${nonceKey}&response_type=token`,
+  "citation": (doi, citationStyle) => `https://citation.crosscite.org/format?doi=${encodeURIComponent(doi)}&style=${citationStyle}&lang=en-US`
 };
 
 //&response_mode=fragment

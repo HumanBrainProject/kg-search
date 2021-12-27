@@ -40,13 +40,13 @@ import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.firstItemOrNull;
 import static eu.ebrains.kg.search.controller.translators.kgv2.TranslatorOfKGV2Commons.*;
 
 public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion, DatasetV1Translator.Result> {
@@ -143,12 +143,9 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
                         ).collect(Collectors.toList())));
             }
         }
-
-        String citation = firstItemOrNull(datasetV1.getCitation());
         String doi = firstItemOrNull(datasetV1.getDoi());
-        if (StringUtils.isNotBlank(citation) && StringUtils.isNotBlank(doi)) {
-            String url = URLEncoder.encode(doi, StandardCharsets.UTF_8);
-            d.setCitation(value(citation + String.format(" [DOI: %s]\n[DOI: %s]: https://doi.org/%s", doi, doi, url)));
+        if (StringUtils.isNotBlank(doi)) {
+            d.setCitation(value(doi));
         }
 
 

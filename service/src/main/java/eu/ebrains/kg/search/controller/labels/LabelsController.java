@@ -187,6 +187,9 @@ public class LabelsController {
             if (info.isHierarchicalFiles() != defaultFieldInfo.isHierarchicalFiles()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "isHierarchicalFiles", info.isHierarchicalFiles());
             }
+            if (info.isCitation() != defaultFieldInfo.isCitation()) {
+                propertyDefinition.put(SEARCH_UI_NAMESPACE + "isCitation", info.isCitation());
+            }
             if (info.termsOfUse() != defaultFieldInfo.termsOfUse()) {
                 propertyDefinition.put(SEARCH_UI_NAMESPACE + "termsOfUse", info.termsOfUse());
             }

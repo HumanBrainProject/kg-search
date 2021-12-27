@@ -45,6 +45,7 @@ public @interface FieldInfo {
     boolean termsOfUse() default false;
     boolean isFilterableFacet() default false;
     boolean isHierarchicalFiles() default false;
+    boolean isCitation() default false;
     boolean groupBy() default false;
     boolean isTable() default false;
     boolean isDirectDownload() default false;
