@@ -193,7 +193,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(label = "Data-descriptor", isFilePreview=true, layout = "Data descriptor", labelHidden = true)
     private TargetExternalReference dataDescriptor;
 
-    @FieldInfo(label = "Cite dataset", markdown = true, layout = "How to cite", labelHidden = true)
+    @FieldInfo(label = "Cite dataset", markdown = true, layout = "How to cite", labelHidden = true, isCitation=true)
     private Value<String> citation;
 
     @FieldInfo(layout = "Get data", labelHidden = true)
