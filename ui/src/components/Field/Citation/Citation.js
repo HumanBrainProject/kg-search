@@ -22,11 +22,10 @@
  */
 
 import React, {useState, useEffect} from "react";
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import API from "../../../services/API";
 import Select from "../../Select/Select";
 import "./Citation.css";
+import API from "../../../services/API";
 
 const CITATION_STYLES = [
   {label: "european-journal-of-neuroscience", value: "european-journal-of-neuroscience"},
@@ -49,30 +48,16 @@ const Citation = ({show, data}) => {
   const getCitation = async () => {
     setIsLoading(true);
     setError(null);
-    try {
-      const _citation = await axios.get(API.endpoints.citation(doi, citationStyle));
-      const result = _citation && _citation.data?_citation.data:null;
+    const _citation = await API.axios.get(API.endpoints.citation(doi, citationStyle));
+    const result = _citation && _citation.data?_citation.data:null;
+    if (result) {
       setIsLoading(false);
       setError(null);
       setCitation(result);
-    } catch(e) {
+    } else {
       setIsLoading(false);
       setCitation(null);
-      const { response } = e;
-      const { status } = response;
-      switch (status) {
-      case 404:
-      {
-        const error = `The citation for doi ${doi} was not found.`;
-        setError(error);
-        break;
-      }
-      default:
-      {
-        const error = "Something went wrong. Please try again!";
-        setError(error);
-      }
-      }
+      setError(`The citation for doi ${doi} was not found.`);
     }
   };
 

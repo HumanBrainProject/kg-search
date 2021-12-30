@@ -36,11 +36,8 @@ const endpoints = {
   "instance": (group, id) => `/api/groups/${group}/documents/${id}`,
   "preview": id => `/api/${id}/live`,
   "keycloakAuth": (authEndpoint, redirectUri, stateKey, nonceKey) => `${authEndpoint}/realms/hbp/protocol/openid-connect/auth?client_id=${keycloakClientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${stateKey}&nonce=${nonceKey}&response_type=token`,
-  "citation": (doi, citationStyle) => `https://citation.crosscite.org/format?doi=${encodeURIComponent(doi)}&style=${citationStyle}&lang=en-US`
+  "citation": (doi, citationStyle) => `/api/citation?doi=${encodeURIComponent(doi)}&style=${citationStyle}`
 };
-
-//&response_mode=fragment
-//&scope=openid
 
 class API {
   constructor() {
@@ -48,7 +45,7 @@ class API {
     this._axios.interceptors.request.use(config => {
       const state = store.getState();
       const header = config.headers[config.method];
-      if (state.auth.accessToken && config.url && !config.url.endsWith("/labels")) {
+      if (state.auth.accessToken && config.url && !config.url.endsWith("/labels") && !config.url.startsWith("/api/citation")) {
         header.Authorization = "Bearer " + state.auth.accessToken;
       }
       return Promise.resolve(config);

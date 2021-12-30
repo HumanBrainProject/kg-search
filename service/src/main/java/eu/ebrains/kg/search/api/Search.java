@@ -32,6 +32,7 @@ import eu.ebrains.kg.search.controller.translators.TranslationController;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.TranslatorModel;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.services.ESServiceClient;
 import eu.ebrains.kg.search.services.KGV2ServiceClient;
 import eu.ebrains.kg.search.utils.ESHelper;
@@ -59,11 +60,12 @@ public class Search {
     private final TranslationController translationController;
     private final KGv2 kgV2;
     private final KGv3 kgV3;
+    private final DOICitationFormatter doiCitationFormatter;
 
     @Value("${eu.ebrains.kg.commit}")
     String commit;
 
-    public Search(KGV2ServiceClient KGV2ServiceClient, ESServiceClient esServiceClient, LabelsController labelsController, SearchController searchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3) throws JsonProcessingException {
+    public Search(KGV2ServiceClient KGV2ServiceClient, ESServiceClient esServiceClient, LabelsController labelsController, SearchController searchController, TranslationController translationController, KGv2 kgV2, KGv3 kgV3, DOICitationFormatter doiCitationFormatter) throws JsonProcessingException {
         this.KGV2ServiceClient = KGV2ServiceClient;
         this.esServiceClient = esServiceClient;
         this.labelsController = labelsController;
@@ -71,6 +73,7 @@ public class Search {
         this.translationController = translationController;
         this.kgV3 = kgV3;
         this.kgV2 = kgV2;
+        this.doiCitationFormatter = doiCitationFormatter;
     }
 
     @GetMapping("/auth/endpoint")
@@ -79,6 +82,12 @@ public class Search {
         String authEndpoint = KGV2ServiceClient.getAuthEndpoint();
         result.put("authEndpoint", authEndpoint);
         return result;
+    }
+
+    @GetMapping("/citation")
+    public String getCitation(@RequestParam("doi") String doiWithoutPrefix, @RequestParam("style") String style) {
+        String doi = String.format("https://doi.org/%s", doiWithoutPrefix);
+        return doiCitationFormatter.getDOICitationWithStyle(doi, style);
     }
 
     @GetMapping("/labels")
