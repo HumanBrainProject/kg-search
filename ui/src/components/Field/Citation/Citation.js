@@ -94,7 +94,7 @@ const Citation = ({show, data}) => {
           <span className="sr-only">Retrieving citation...</span>
         </div>:
         <div className="kgs-citation">
-          <pre>{citation}</pre>
+          <pre>{citation}<a href={`https://doi.org/${doi}`}>DOI: {doi}</a></pre>
         </div>}
     </div>
   );

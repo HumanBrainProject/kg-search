@@ -53,6 +53,11 @@
     padding-top: 10px;
  }
 
+ .kgs-field__citation .kgs-citation a {
+   text-decoration: none;
+   color: var(--link-color-1);
+ }
+
  .kgs-field__citation .kgs-citation pre {
     padding: 10px;
     white-space: pre-line;

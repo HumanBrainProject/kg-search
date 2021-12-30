@@ -180,7 +180,6 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
         }
         d.setTitle(value(datasetV1.getTitle()));
         d.setModalityForFilter(value(emptyToNull(datasetV1.getModalityForFilter())));
-        d.setDoi(value(firstItemOrNull(datasetV1.getDoi())));
 
         if (!CollectionUtils.isEmpty(datasetV1.getContributors())) {
             d.setContributors(datasetV1.getContributors().stream()

@@ -224,8 +224,6 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         String doi = datasetVersion.getDoi();
         if (StringUtils.isNotBlank(doi)) {
             final String doiWithoutPrefix = Helpers.stripDOIPrefix(doi);
-            //TODO do we want to keep this one? It's actually redundant with what we have in "cite dataset"
-            d.setDoi(value(doiWithoutPrefix));
             d.setCitation(value(doiWithoutPrefix));
         }
         d.setLicenseInfo(link(datasetVersion.getLicense()));
