@@ -87,7 +87,7 @@ public class Search {
     @GetMapping("/citation")
     public String getCitation(@RequestParam("doi") String doiWithoutPrefix, @RequestParam("style") String style) {
         String doi = String.format("https://doi.org/%s", doiWithoutPrefix);
-        return doiCitationFormatter.getDOICitationWithStyle(doi, style);
+        return doiCitationFormatter.getDOICitation(doi, style);
     }
 
     @GetMapping("/labels")

@@ -2,6 +2,7 @@ package eu.ebrains.kg.search.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
@@ -19,25 +20,22 @@ public class DOICitationFormatter {
             )).build();;
 
 
-    @Cacheable(value="doiCitation",  unless="#result == null")
-    public String getDOICitation(String doi){
-       return doGetDOICitation(doi);
+    @Cacheable(value="doiCitation",  unless="#result == null", key = "#doi.concat('-').concat(#style)")
+    public String getDOICitation(String doi, String style){
+       return doGetDOICitation(doi, style);
     }
 
-    public String getDOICitationWithStyle(String doi, String style) {
-        return getCitation(doi, style);
+    @CachePut(value="doiCitation",  unless="#result == null", key = "#doi.concat('-').concat(#style)")
+    public String refreshDOICitation(String doi, String style){
+        return doGetDOICitation(doi, style);
     }
 
-    @CachePut(value="doiCitation",  unless="#result == null")
-    public String refreshDOICitation(String doi){
-        return doGetDOICitation(doi);
+    @CacheEvict(value="doiCitation", allEntries = true)
+    public void evictAll() {
+        logger.info("Wiping all citation cache");
     }
 
-    private String doGetDOICitation(String doi){
-        return getCitation(doi, "european-journal-of-neuroscience");
-    }
-
-    private String getCitation(String doi, String style) {
+    private String doGetDOICitation(String doi, String style){
         try{
             final String value = webClient.get().uri(doi).header("Accept", String.format("text/x-bibliography; style=%s", style)).retrieve().bodyToMono(String.class).block();
             return value != null ? value.trim() : null;

@@ -128,7 +128,7 @@ public class Helpers {
     public static String getFormattedDOI(DOICitationFormatter doiCitationFormatter, String doi) {
         if (StringUtils.isNotBlank(doi)) {
             String absoluteDOI = doi.contains("http") && doi.contains("doi.org") ? doi : String.format("https://doi.org/%s", doi);
-            final String doiCitation = doiCitationFormatter.getDOICitation(absoluteDOI);
+            final String doiCitation = doiCitationFormatter.getDOICitation(absoluteDOI, "european-journal-of-neuroscience");
             final String[] split = absoluteDOI.split("doi\\.org/");
             String simpleDOI;
             if (split.length == 2) {
