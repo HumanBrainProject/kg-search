@@ -1852,6 +1852,18 @@
       ]
     },
     {
+      "propertyName": "query:contentTypes",
+      "path": [
+        "https://openminds.ebrains.eu/vocab/repository",
+        {
+          "@id": "https://openminds.ebrains.eu/vocab/fileRepository",
+          "reverse": true
+        },
+        "https://openminds.ebrains.eu/vocab/format",
+        "https://openminds.ebrains.eu/vocab/name"
+      ]
+    },
+    {
       "propertyName": "query:studyTarget",
       "path": {
         "@id": "https://openminds.ebrains.eu/vocab/studyTarget"

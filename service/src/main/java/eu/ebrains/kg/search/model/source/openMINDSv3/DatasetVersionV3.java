@@ -67,6 +67,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private FileRepository fileRepository;
     private List<File> specialFiles;
     private List<FullNameRef> behavioralProtocol;
+    private List<String> contentTypes;
     private List<StudyTarget> studyTarget;
     private List<FullNameRef> preparationDesign;
     private List<ServiceLink> serviceLinks;
