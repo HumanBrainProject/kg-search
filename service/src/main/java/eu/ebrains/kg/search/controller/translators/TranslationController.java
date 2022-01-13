@@ -26,6 +26,7 @@ package eu.ebrains.kg.search.controller.translators;
 import eu.ebrains.kg.search.controller.kg.KG;
 import eu.ebrains.kg.search.controller.kg.KGv3;
 import eu.ebrains.kg.search.model.DataStage;
+import eu.ebrains.kg.search.model.ErrorReport;
 import eu.ebrains.kg.search.model.TranslatorModel;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
 import eu.ebrains.kg.search.model.source.SourceInstanceV1andV2;
@@ -60,7 +61,7 @@ public class TranslationController {
         final ResultsOfKG<Source> instanceResults = kg.executeQuery(translator.getResultType(), dataStage, queryId, from, size);
         Stats stats = getStats(instanceResults, from);
         logger.info(String.format("Queried %d %s (%s)", stats.getPageSize(), translator.getSourceType().getSimpleName(), stats.getInfo()));
-
+        instanceResults.setErrors(new ErrorReport());
         List<Target> instances = instanceResults.getData().stream().filter(Objects::nonNull).map(s -> {
                     try {
                         return translator.translate(s, dataStage, false, doiCitationFormatter);
@@ -92,7 +93,7 @@ public class TranslationController {
         result.setFrom(instanceResults.getFrom());
         result.setSize(instanceResults.getSize());
         result.setTotal(instanceResults.getTotal());
-        if (instanceResults.getErrors() != null) {
+        if (instanceResults.getErrors() != null && !instanceResults.getErrors().isEmpty()) {
             result.setErrors(instanceResults.getErrors());
         }
         return result;

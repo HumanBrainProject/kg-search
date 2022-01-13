@@ -104,7 +104,7 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
             if (!groupingTypes.containsKey(groupingTypeName)) {
                 File.GroupingType groupingType = new File.GroupingType();
                 groupingType.setName(groupingTypeName);
-                groupingType.setFileBundles(List.of(fb));
+                groupingType.setFileBundles(new ArrayList<>(Collections.singletonList(fb)));
                 groupingTypes.put(groupingTypeName, groupingType);
             } else {
                 File.GroupingType groupingType = groupingTypes.get(groupingTypeName);
