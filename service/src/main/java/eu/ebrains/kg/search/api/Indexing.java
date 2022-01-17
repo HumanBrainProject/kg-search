@@ -55,8 +55,8 @@ public class Indexing {
     }
 
     @PostMapping("/doiCitations")
-    public void refreshDOICitation(@RequestParam("doi") String doi, @RequestParam("style") String style){
-        this.doiCitationFormatter.refreshDOICitation(doi, style);
+    public String refreshDOICitation(@RequestParam("doi") String doi, @RequestParam("style") String style){
+        return this.doiCitationFormatter.refreshDOICitation(doi, style);
     }
 
     @PostMapping("/evictDoiCitations")
