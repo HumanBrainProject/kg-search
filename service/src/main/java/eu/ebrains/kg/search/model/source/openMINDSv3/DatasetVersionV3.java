@@ -129,21 +129,6 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
         private String additionalRemarks;
     }
 
-
-    @Getter
-    @Setter
-    public static class AnatomicalLocation extends FullNameRefForResearchProductVersion{
-        private FullNameRefForResearchProductVersion brainAtlasVersion;
-        private String brainAtlas;
-    }
-
-    @Getter
-    @Setter
-    public static class StudyTarget extends AnatomicalLocation {
-        private List<String> studyTargetType;
-    }
-
-
     @Getter
     @Setter
     public static class ParcellationTerminology extends FullNameRef{
@@ -305,7 +290,6 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     }
 
 
-
     //TODO this information should come from openMINDS
     private final static List<String> TIME_UNIT_ORDER = Arrays.asList("millisecond", "second", "minute", "hour", "day", "week", "month", "year");
     //Months are slightly problematic since they ar not stable (so are years) -> let's try to do it with good-enough approximations.
@@ -316,13 +300,6 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
 
     @Getter
     @Setter
-    public static class NameWithIdentifier {
-        private List<String> identifier;
-        private String name;
-    }
-
-    @Getter
-    @Setter
     public static class OntologicalTerm {
         private String ontologyIdentifier;
         private String name;
@@ -330,24 +307,9 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
 
     @Getter
     @Setter
-    public static class FileRepository extends FullNameRef{
-        private String iri;
-    }
-
-    @Getter
-    @Setter
     public static class Protocol {
         private List<OntologicalTerm> behavioralTask;
         private List<String> studyOption;
-    }
-
-    @Getter
-    @Setter
-    public static class File {
-        private List<String> roles;
-        private String iri;
-        private List<String> formats;
-        private String name;
     }
 
 

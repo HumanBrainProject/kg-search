@@ -25,10 +25,7 @@ package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ExtendedFullNameRefForResearchProductVersion;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ExternalRef;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRefForResearchProductVersion;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
@@ -102,6 +99,12 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
         return null;
     }
 
+    protected List<TargetExternalReference> link(List<ExternalRef> urls){
+        if (!CollectionUtils.isEmpty(urls)) {
+            return urls.stream().map(this::link).filter(Objects::nonNull).collect(Collectors.toList());
+        }
+        return null;
+    }
 
     protected TargetExternalReference link(String url) {
         if (StringUtils.isNotBlank(url)) {
@@ -175,6 +178,12 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
         }
         return null;
     }
+    protected TargetExternalReference link(FileRepository ref) {
+        if (ref != null && StringUtils.isNotBlank(ref.getIri())) {
+            return new TargetExternalReference(ref.getIri(), ref.getIri() != null ? ref.getFullName() : ref.getIri());
+        }
+        return null;
+    }
 
     protected TargetExternalReference link(ExternalRef ref) {
         if (ref != null && StringUtils.isNotBlank(ref.getUrl())) {
@@ -186,7 +195,9 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
     public <T> List<T> createList(T... items) {
         List<T> l = new ArrayList<>();
         for (T item : items) {
-            l.add(item);
+            if(item!=null) {
+                l.add(item);
+            }
         }
         return l;
     }

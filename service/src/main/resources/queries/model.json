@@ -41,10 +41,6 @@
       "path": "https://openminds.ebrains.eu/vocab/description"
     },
     {
-      "propertyName": "query:homepage",
-      "path": "https://openminds.ebrains.eu/vocab/homepage"
-    },
-    {
       "propertyName": "query:doi",
       "path": [
         {
@@ -66,27 +62,59 @@
     {
       "propertyName": "query:studyTarget",
       "path": [
-        "https://openminds.ebrains.eu/vocab/studyTarget",
-        "https://openminds.ebrains.eu/vocab/name"
+        "https://openminds.ebrains.eu/vocab/studyTarget"
+      ],
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        }
       ]
     },
     {
       "propertyName": "query:modelScope",
       "path": [
-        "https://openminds.ebrains.eu/vocab/modelScope",
-        "https://openminds.ebrains.eu/vocab/name"
-      ]
+        "https://openminds.ebrains.eu/vocab/modelScope"
+      ],
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        }
+      ],
+      "singleValue": "FIRST"
     },
     {
       "propertyName": "query:abstractionLevel",
       "path": [
-        "https://openminds.ebrains.eu/vocab/abstractionLevel",
-        "https://openminds.ebrains.eu/vocab/name"
-      ]
+        "https://openminds.ebrains.eu/vocab/abstractionLevel"
+      ],
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        }
+      ],
+      "singleValue": "FIRST"
     },
     {
       "propertyName": "query:homepage",
-      "path": "https://openminds.ebrains.eu/vocab/homepage"
+      "path": [
+        "https://openminds.ebrains.eu/vocab/homepage",
+        "https://openminds.ebrains.eu/vocab/URL"
+      ]
     },
     {
       "propertyName": "query:hasVersion",

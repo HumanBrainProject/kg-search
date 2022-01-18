@@ -26,10 +26,7 @@ package eu.ebrains.kg.search.model.source.openMINDSv3;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import eu.ebrains.kg.search.model.source.commonsV1andV2.ListOrSingleStringAsListDeserializer;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ExternalRef;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Versions;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.*;
 
 import java.util.List;
 
@@ -354,28 +351,6 @@ public class SoftwareVersionV3 extends SourceInstanceV3 {
 
         public void setDeveloper(List<PersonOrOrganizationRef> developer) {
             this.developer = developer;
-        }
-    }
-
-
-    public static class Copyright  {
-        private String year;
-        List<PersonOrOrganizationRef> holder;
-
-        public String getYear() {
-            return year;
-        }
-
-        public void setYear(String year) {
-            this.year = year;
-        }
-
-        public List<PersonOrOrganizationRef> getHolder() {
-            return holder;
-        }
-
-        public void setHolder(List<PersonOrOrganizationRef> holder) {
-            this.holder = holder;
         }
     }
 
