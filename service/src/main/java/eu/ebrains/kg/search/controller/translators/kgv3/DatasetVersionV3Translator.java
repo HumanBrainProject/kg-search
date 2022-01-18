@@ -36,7 +36,6 @@ import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetE
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
-import eu.ebrains.kg.search.utils.AmbiguousDataException;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
@@ -239,13 +238,13 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         d.setLicenseInfo(link(datasetVersion.getLicense()));
 
         List<FullNameRef> projects = null;
-        if(datasetVersion.getProjects()!=null && dataset.getDatasetProjects() != null){
+        if(datasetVersion.getProjects()!=null && (dataset != null && dataset.getDatasetProjects() != null)){
             projects = Stream.concat(datasetVersion.getProjects().stream(), dataset.getDatasetProjects().stream()).distinct().collect(Collectors.toList());
         }
         else if(datasetVersion.getProjects()!=null){
             projects = datasetVersion.getProjects();
         }
-        else if(dataset.getDatasetProjects()!=null){
+        else if(dataset != null && dataset.getDatasetProjects()!=null){
             projects = dataset.getDatasetProjects();
         }
         d.setProjects(ref(projects));
