@@ -83,12 +83,77 @@
           "path": "https://openminds.ebrains.eu/vocab/versionInnovation"
         },
         {
-          "propertyName": "query:isNewVersionOf",
+          "propertyName": "query:brainAtlasVersion",
           "path": [
-            "https://openminds.ebrains.eu/vocab/isNewVersionOf",
-            "https://openminds.ebrains.eu/vocab/versionIdentifier"
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/hasEntityVersion",
+              "reverse": true
+            },
+            {
+              "@id": "https://openminds.ebrains.eu/vocab/hasTerminologyVersion",
+              "reverse": true
+            }
           ],
-          "singleValue": "FIRST"
+          "singleValue": "FIRST",
+          "structure": [
+            {
+              "propertyName": "query:isAlternativeVersionOf",
+              "path": [
+                "https://openminds.ebrains.eu/vocab/isAlternativeVersionOf",
+                "https://openminds.ebrains.eu/vocab/versionIdentifier"
+              ]
+            },
+            {
+              "propertyName": "query:isNewVersionOf",
+              "path": [
+                "https://openminds.ebrains.eu/vocab/isNewVersionOf",
+                "https://openminds.ebrains.eu/vocab/versionIdentifier"
+              ],
+              "singleValue": "FIRST"
+            },
+            {
+              "propertyName": "query:versionIdentifier",
+              "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
+            },
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            },
+            {
+              "propertyName": "query:fullName",
+              "path": "https://openminds.ebrains.eu/vocab/fullName"
+            }
+          ]
+        },
+        {
+          "propertyName": "query:viewer",
+          "path": {
+            "@id": "https://openminds.ebrains.eu/vocab/dataLocation",
+            "reverse": true
+          },
+          "singleValue": "FIRST",
+          "structure": [
+            {
+              "propertyName": "query:service",
+              "path": [
+                "https://openminds.ebrains.eu/vocab/service",
+                "https://openminds.ebrains.eu/vocab/name"
+              ],
+              "singleValue": "FIRST"
+            },
+            {
+              "propertyName": "query:url",
+              "path": [
+                "https://openminds.ebrains.eu/vocab/openDataIn",
+                "https://openminds.ebrains.eu/vocab/URL"
+              ],
+              "singleValue": "FIRST"
+            },
+            {
+              "propertyName": "query:label",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            }
+          ]
         }
       ]
     }

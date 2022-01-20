@@ -22,10 +22,11 @@
  */
 
 package eu.ebrains.kg.search.model.source.openMINDSv3.commons;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -36,4 +37,5 @@ public class Version {
     private String versionIdentifier;
     private String versionInnovation;
     private String isNewVersionOf;
+    private List<String> isAlternativeVersionOf;
 }

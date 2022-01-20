@@ -28,10 +28,7 @@ import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Version;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,10 +36,11 @@ import java.util.List;
 
 @Getter
 @Setter
-@MetaInfo(name = "Parcellation entity", searchable=false)
+@MetaInfo(name = "Parcellation entity")
 public class ParcellationEntity implements TargetInstance {
     @JsonIgnore
     private List<String> allIdentifiers;
+
     @ElasticSearchInfo(type = "keyword")
     private Value<String> type = new Value<>("Parcellation entity");
 
@@ -62,12 +60,24 @@ public class ParcellationEntity implements TargetInstance {
     private List<Value<String>> brainAtlas;
 
     @FieldInfo(isTable = true, layout = "Versions")
-    private List<Children<Version>> versionsTable;
+    private List<Children<VersionWithServiceLink>> versionsTable;
 
     @Override
     public boolean isSearchableInstance() {
         return false;
     }
+
+
+    @Getter
+    @Setter
+    public static class VersionWithServiceLink {
+        @FieldInfo(label = "Version")
+        private Value<String> version;
+
+        @FieldInfo
+        private TargetExternalReference viewer;
+    }
+
 
 
 }

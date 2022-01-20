@@ -45,17 +45,17 @@ public class Helpers {
     private final static Map<Class<?>, Set<Field>> nonStaticTransientFields = new HashMap<>();
 
     public static String createEmbargoMessage(String type, FileRepository fileRepository, DataStage stage){
-       if(fileRepository!=null && fileRepository.getIri()!=null) {
-           final String message = String.format("This %s is temporarily under embargo. It will become available for download after the embargo period.", type);
-           if (stage == DataStage.IN_PROGRESS) {
-               final String url = translateInternalFileRepoToUrl(fileRepository);
-               if(url!=null){
-                   return String.format("%s <br/><br/>If you are an authenticated user, <a href=\"%s\" target=\"_blank\"> you should be able to access the data here</a>", message, url);
-               }
-           }
-           return String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", fileRepository.getIri());
-       }
-       return null;
+        if(fileRepository!=null && fileRepository.getIri()!=null) {
+            final String message = String.format("This %s is temporarily under embargo. It will become available for download after the embargo period.", type);
+            if (stage == DataStage.IN_PROGRESS) {
+                final String url = translateInternalFileRepoToUrl(fileRepository);
+                if(url!=null){
+                    return String.format("%s <br/><br/>If you are an authenticated user, <a href=\"%s\" target=\"_blank\"> you should be able to access the data here</a>", message, url);
+                }
+            }
+            return String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", fileRepository.getIri());
+        }
+        return null;
     }
 
 
@@ -74,16 +74,16 @@ public class Helpers {
     }
 
     public static String translateInternalFileRepoToUrl(FileRepository repository){
-       if(repository!=null && repository.getIri()!=null) {
-           if (isDataProxyBucket(repository)) {
-               String id = repository.getIri().replace("https://data-proxy.ebrains.eu/api/buckets/", "");
-               return String.format("https://data-proxy.ebrains.eu/%s", id);
-           }
-           else if(isCscsContainer(repository)){
-               return String.format("https://kg.ebrains.eu/files/cscs/list?url=%s", repository.getIri());
-           }
-       }
-       return null;
+        if(repository!=null && repository.getIri()!=null) {
+            if (isDataProxyBucket(repository)) {
+                String id = repository.getIri().replace("https://data-proxy.ebrains.eu/api/buckets/", "");
+                return String.format("https://data-proxy.ebrains.eu/%s", id);
+            }
+            else if(isCscsContainer(repository)){
+                return String.format("https://kg.ebrains.eu/files/cscs/list?url=%s", repository.getIri());
+            }
+        }
+        return null;
     }
 
 

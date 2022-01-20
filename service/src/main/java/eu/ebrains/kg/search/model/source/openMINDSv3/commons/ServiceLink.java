@@ -9,6 +9,6 @@ public class ServiceLink extends ExternalRef{
     private String service;
 
     public String displayLabel(){
-        return String.format("Open %s in %s", this.getLabel(), this.getService());
+        return this.getLabel()!=null && this.getService() != null ? String.format("Open %s in %s", this.getLabel(), this.getService()) : null;
     }
 }
