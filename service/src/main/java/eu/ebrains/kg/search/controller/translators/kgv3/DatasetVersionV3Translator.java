@@ -138,9 +138,23 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
         d.setId(datasetVersion.getUUID());
         d.setExperimentalApproach(ref(datasetVersion.getExperimentalApproach()));
+        if(!CollectionUtils.isEmpty(datasetVersion.getExperimentalApproach())){
+            final List<String> experimentalApproachesForFilter = datasetVersion.getExperimentalApproach().stream().map(FullNameRef::getFullName).filter(Objects::nonNull).collect(Collectors.toList());
+            if(!CollectionUtils.isEmpty(experimentalApproachesForFilter)){
+                d.setModalityForFilter(value(experimentalApproachesForFilter));
+            }
+        }
         d.setBehavioralProtocols(ref(datasetVersion.getBehavioralProtocol()));
         d.setPreparation(ref(datasetVersion.getPreparationDesign()));
         d.setTechnique(ref(datasetVersion.getTechnique()));
+        if(!CollectionUtils.isEmpty(datasetVersion.getTechnique())){
+            final List<String> techniquesForFilter = datasetVersion.getTechnique().stream().map(FullNameRef::getFullName).filter(Objects::nonNull).collect(Collectors.toList());
+            if(!CollectionUtils.isEmpty(techniquesForFilter)){
+                d.setMethodsForFilter(value(techniquesForFilter));
+            }
+
+        }
+
 
         d.setAllIdentifiers(datasetVersion.getIdentifier());
         d.setIdentifier(IdUtils.getIdentifiersWithPrefix("Dataset", datasetVersion.getIdentifier()));

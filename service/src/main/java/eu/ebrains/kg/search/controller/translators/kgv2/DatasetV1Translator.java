@@ -92,6 +92,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
             d.setEditorId(value(datasetV1.getEditorId()));
         }
         d.setMethods(value(emptyToNull(datasetV1.getMethods())));
+        d.setMethodsForFilter(value(emptyToNull(datasetV1.getMethods())));
         d.setDescription(value(datasetV1.getDescription()));
 
         SourceExternalReference license = firstItemOrNull(datasetV1.getLicense());
@@ -182,6 +183,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
                     .collect(Collectors.toList()));
         }
         d.setTitle(value(datasetV1.getTitle()));
+        d.setModality(value(emptyToNull(datasetV1.getModalityForFilter())));
         d.setModalityForFilter(value(emptyToNull(datasetV1.getModalityForFilter())));
         d.setDoi(value(firstItemOrNull(datasetV1.getDoi())));
 
