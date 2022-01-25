@@ -358,6 +358,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinks())){
             d.setViewer(datasetVersion.getServiceLinks().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
         }
+        d.setContentTypes(value(datasetVersion.getContentTypes()));
 
         final List<TargetInternalReference> speciesFromSG = d.getSubjectGroupOrSingleSubject()!=null ? d.getSubjectGroupOrSingleSubject().stream().filter(sg -> sg.getChildren() != null).map(sg -> sg.getChildren().getSpecies()).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().collect(Collectors.toList()) : Collections.emptyList();
         final List<TargetInternalReference> speciesFromTS = d.getTissueSamples()!=null ? d.getTissueSamples().stream().filter(ts -> ts.getChildren() != null).map(ts -> ts.getChildren().getSpecies()).filter(Objects::nonNull).flatMap(Collection::stream).filter(Objects::nonNull).distinct().collect(Collectors.toList()) : Collections.emptyList();

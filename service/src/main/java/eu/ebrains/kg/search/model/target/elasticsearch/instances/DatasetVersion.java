@@ -249,6 +249,9 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(layout = "Tissue samples", isTable = true)
     private List<Children<TissueSampleOrTissueSampleCollection>> tissueSamples;
 
+    @FieldInfo(label = "Content types", facet = FieldInfo.Facet.LIST, visible = false,  isFilterableFacet = true)
+    private List<Value<String>> contentTypes;
+
 
     @Getter
     @Setter

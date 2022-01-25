@@ -70,7 +70,7 @@ public class DatasetVersionV3 extends SourceInstanceV3 {
     private List<StudyTarget> studyTarget;
     private List<FullNameRef> preparationDesign;
     private List<ServiceLink> serviceLinks;
-
+    private List<String> contentTypes;
 
 
     @Getter
