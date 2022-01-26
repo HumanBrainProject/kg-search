@@ -93,6 +93,7 @@ export const getTreeByFolder = (files, urlFieldPath) => {
   if(!Array.isArray(files)) {
     files = [files]; // To be checked with the new indexer
   }
+  files.sort((a, b) => JSONPath(a, urlFieldPath).toLowerCase().localeCompare(JSONPath(b, urlFieldPath).toLowerCase()));
   const commonPath = getCommonPath(files, urlFieldPath);
   const rootPathIndex = 6;
   const url = commonPath.length<=rootPathIndex?commonPath.join("/"):`${commonPath.slice(0,rootPathIndex).join("/")}?prefix=${commonPath.slice(rootPathIndex).join("/")}`;
