@@ -167,7 +167,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
             //TODO do we want to keep this one? It's actually redundant with what we have in "cite dataset"
             m.setDoi(value(doiWithoutPrefix));
             if (StringUtils.isNotBlank(citation)) {
-                m.setCitation(value(String.format("%s [DOI: %s](%s)", citation, doiWithoutPrefix, doi)));
+                m.setCitation(value(citation));
             } else {
                 m.setCitation(value(Helpers.getFormattedDOI(doiCitationFormatter, doi)));
             }
