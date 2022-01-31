@@ -51,8 +51,8 @@ public class FileBundle implements TargetInstance {
     private List<String> identifier;
     @FieldInfo(label = "Name", layout = "header")
     private Value<String> title;
-    @FieldInfo(label = "Open data in")
-    private TargetExternalReference dataLocation;
+    @FieldInfo(labelHidden = true)
+    private List<TargetExternalReference> viewer;
     @Override
     @JsonIgnore
     public boolean isSearchableInstance() {

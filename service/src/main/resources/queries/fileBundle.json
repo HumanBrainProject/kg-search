@@ -36,17 +36,12 @@
       "required": true
     },
     {
-      "propertyName": "query:dataLocation",
+      "propertyName": "query:serviceLinks",
       "path": {
         "@id": "https://openminds.ebrains.eu/vocab/dataLocation",
         "reverse": true
       },
-      "singleValue": "FIRST",
       "structure": [
-        {
-          "propertyName": "query:label",
-          "path": "https://openminds.ebrains.eu/vocab/name"
-        },
         {
           "propertyName": "query:url",
           "path": [
@@ -54,6 +49,18 @@
             "https://openminds.ebrains.eu/vocab/URL"
           ],
           "singleValue": "FIRST"
+        },
+        {
+          "propertyName": "query:service",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/service",
+            "https://openminds.ebrains.eu/vocab/name"
+          ],
+          "singleValue": "FIRST"
+        },
+        {
+          "propertyName": "query:label",
+          "path": "https://openminds.ebrains.eu/vocab/name"
         }
       ]
     }

@@ -63,6 +63,8 @@ public class File implements TargetInstance {
     private Value<String> size;
     @FieldInfo(label = "Format")
     private TargetInternalReference format;
+    @FieldInfo(labelHidden = true)
+    private List<TargetExternalReference> viewer;
     @FieldInfo(label = "Software taking this file as input")
     private List<TargetInternalReference> inputTypeForSoftware;
     @FieldInfo(label = "GroupingTypes", visible = false)

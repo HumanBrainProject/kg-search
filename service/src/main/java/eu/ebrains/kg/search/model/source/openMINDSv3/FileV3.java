@@ -24,6 +24,7 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ServiceLink;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,6 +40,7 @@ public class FileV3 extends SourceInstanceV3 {
     private boolean privateAccess;
     private Format format;
     private List<FileBundle> fileBundles;
+    private List<ServiceLink> serviceLinks;
 
     @Getter
     @Setter

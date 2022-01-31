@@ -369,8 +369,17 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         if(!CollectionUtils.isEmpty(collectedAnatomicalLocations)){
             d.setAnatomicalLocationOfTissueSamples(collectedAnatomicalLocations);
         }
+
+        List<TargetExternalReference> serviceLinks = new ArrayList<>();
         if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinks())){
-            d.setViewer(datasetVersion.getServiceLinks().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
+            serviceLinks.addAll(datasetVersion.getServiceLinks().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
+        }
+        if(!CollectionUtils.isEmpty(datasetVersion.getServiceLinksFromFiles())){
+            serviceLinks.addAll(datasetVersion.getServiceLinksFromFiles().stream().map(s -> new TargetExternalReference(s.getUrl(), s.displayLabel())).collect(Collectors.toList()));
+        }
+        if(!CollectionUtils.isEmpty(serviceLinks)){
+            serviceLinks.sort(Comparator.comparing(TargetExternalReference::getValue));
+            d.setViewer(serviceLinks);
         }
         d.setContentTypes(value(datasetVersion.getContentTypes()));
 

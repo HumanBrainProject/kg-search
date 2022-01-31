@@ -23,8 +23,7 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ExternalRef;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ServiceLink;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,5 +34,5 @@ import java.util.List;
 public class FileBundleV3 extends SourceInstanceV3 {
     private String name;
 
-    private ExternalRef dataLocation;
+    private List<ServiceLink> serviceLinks;
 }

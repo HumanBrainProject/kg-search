@@ -23,12 +23,11 @@
 
 package eu.ebrains.kg.search.controller.translators.kgv3;
 
-import eu.ebrains.kg.search.controller.translators.Helpers;
 import eu.ebrains.kg.search.controller.translators.Translator;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
-import eu.ebrains.kg.search.model.source.openMINDSv2.SoftwareV2;
 import eu.ebrains.kg.search.model.source.openMINDSv3.FileV3;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ServiceLink;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.File;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
@@ -84,6 +83,9 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
         f.setIdentifier(IdUtils.getUUID(file.getIdentifier()));
         f.setFileRepository(IdUtils.getUUID(fileRepository));
         f.setTitle(value(file.isPrivateAccess() ? String.format("ACCESS PROTECTED: %s", file.getName()) : file.getName()));
+        if(!CollectionUtils.isEmpty(file.getServiceLinks())){
+            f.setViewer(file.getServiceLinks().stream().sorted(Comparator.comparing(ServiceLink::displayLabel)).map(s -> new TargetExternalReference(s.getUrl(), String.format("Open in %s", s.getService()))).collect(Collectors.toList()));
+        }
         String iri = file.isPrivateAccess() ? String.format("%s/files/cscs?url=%s", Translator.fileProxy, file.getIri()) : file.getIri();
         if (StringUtils.isNotBlank(iri)) {
             f.setIri(new TargetExternalReference(iri, iri));
