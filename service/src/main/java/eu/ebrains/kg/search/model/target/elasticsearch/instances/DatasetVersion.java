@@ -236,7 +236,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     /**
      * @deprecated - split up in openMINDS -> see technique / experimental approach
      */
-    @FieldInfo(label = "Methods", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true)
+    @FieldInfo(label = "Methods", visible = false, facet = FieldInfo.Facet.LIST, isFilterableFacet = true, type = FieldInfo.Type.TEXT)
     private List<Value<String>> methodsForFilter;
 
     @Deprecated
@@ -265,7 +265,7 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     @FieldInfo(layout = "Tissue samples", isTable = true)
     private List<Children<TissueSampleOrTissueSampleCollection>> tissueSamples;
 
-    @FieldInfo(label = "Content types", facet = FieldInfo.Facet.LIST, visible = false,  isFilterableFacet = true)
+    @FieldInfo(label = "Content types", facet = FieldInfo.Facet.LIST, visible = false,  isFilterableFacet = true, type = FieldInfo.Type.TEXT)
     private List<Value<String>> contentTypes;
 
 

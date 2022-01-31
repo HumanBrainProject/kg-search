@@ -25,7 +25,6 @@ package eu.ebrains.kg.search.controller.translators;
 
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.File;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FileRepository;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
@@ -140,13 +139,15 @@ public class Helpers {
         Version v;
         while ((v = getByPreviousVersion(previousVersion, unsortedVersions)) != null) {
             if (versions.contains(v)) {
-                logger.error(String.format("Circular dependency detected in versions: %s", unsortedVersions.stream().filter(Objects::nonNull).map(Version::getId).collect(Collectors.joining(", "))));
+                logger.error(String.format("Circular dependency detected in versions - sorting by natural order: %s", unsortedVersions.stream().filter(Objects::nonNull).map(Version::getId).collect(Collectors.joining(", "))));
+                versions.sort(Comparator.comparing(Version::getNaturalSortValue));
                 return unsortedVersions;
             }
             versions.add(v);
             previousVersion = v.getVersionIdentifier();
             if (previousVersion == null) {
-                logger.error(String.format("Circular dependency detected in versions: %s", unsortedVersions.stream().filter(Objects::nonNull).map(Version::getId).collect(Collectors.joining(", "))));
+                logger.error(String.format("Circular dependency detected in versions - sorting by natural order: %s", unsortedVersions.stream().filter(Objects::nonNull).map(Version::getId).collect(Collectors.joining(", "))));
+                versions.sort(Comparator.comparing(Version::getNaturalSortValue));
                 return unsortedVersions;
             }
         }
