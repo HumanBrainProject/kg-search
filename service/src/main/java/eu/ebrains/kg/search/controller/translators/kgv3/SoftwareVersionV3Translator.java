@@ -219,6 +219,9 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         if(softwareVersion.getHomepage()!=null){
             s.setHomepage(new TargetExternalReference(softwareVersion.getHomepage(), softwareVersion.getHomepage()));
         }
+        else if(software!=null && software.getHomepage()!=null){
+            s.setHomepage(new TargetExternalReference(software.getHomepage(), software.getHomepage()));
+        }
 
         if(softwareVersion.getRepository()!=null){
             s.setSourceCode(new TargetExternalReference(softwareVersion.getRepository(), softwareVersion.getRepository()));
