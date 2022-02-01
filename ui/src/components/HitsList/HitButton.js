@@ -25,13 +25,20 @@ import React from "react";
 import "./HitButton.css";
 
 export const HitButton = ({ reference, data, component, onClick }) => {
-  const handleClick = (event) => {
-    onClick(data, event.currentTarget);
+  const handleClick = e => {
+    if (!e.ctrlKey) {
+      onClick(data, e.currentTarget);
+    }
+  };
+
+  const handleContextMenu = e => {
+    e.preventDefault();
+    onClick(data, "_blank");
   };
 
   const Component = component;
   return (
-    <button role="link" className="kgs-hit-button" onClick={handleClick} data-reference={reference}>
+    <button role="link" className="kgs-hit-button" onClick={handleClick} onContextMenu={handleContextMenu} data-reference={reference} >
       <Component data={data} />
     </button>
   );

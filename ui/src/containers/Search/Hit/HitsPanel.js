@@ -24,19 +24,26 @@
 import React from "react";
 import uniqueId from "lodash/uniqueId";
 import { connect } from "react-redux";
+import ReactPiwik from "react-piwik";
+
 import * as actionsInstances from "../../../actions/actions.instances";
 import { HitsList } from "../../../components/HitsList/HitsList";
 import { Hit } from "./Hit";
 import { StatsHelpers } from "../../../helpers/StatsHelpers";
 
 
-const HitsPanelBase = ({ lists, itemComponent, getKey, onClick }) => (
-  <React.Fragment>
-    {lists.map(list =>
-      <HitsList key={list.id} title={list.title} items={list.items} itemComponent={itemComponent} getKey={getKey} onClick={onClick} />
-    )}
-  </React.Fragment>
-);
+const HitsPanelBase = ({ lists, itemComponent, getKey, group, onClick }) => {
+
+  const handleClick = (data, target) => onClick(data, target, group);
+
+  return (
+    <React.Fragment>
+      {lists.map(list =>
+        <HitsList key={list.id} title={list.title} items={list.items} itemComponent={itemComponent} getKey={getKey} onClick={handleClick} />
+      )}
+    </React.Fragment>
+  );
+};
 
 
 const mapStateToProps = state => {
@@ -106,16 +113,23 @@ const mapStateToProps = state => {
       }
     ],
     itemComponent: Hit,
-    getKey: data => `${data?._source?.type?.value}/${data._id ? data._id : uniqueId()}`
+    getKey: data => `${data?._source?.type?.value}/${data._id ? data._id : uniqueId()}`,
+    group: state.groups.group !== state.groups.defaultGroup?state.groups.group:null
   };
 };
 
 export const HitsPanel = connect(
   mapStateToProps,
   dispatch => ({
-    onClick: (data, target) => {
-      dispatch(actionsInstances.setInstance(data, target));
-      dispatch(actionsInstances.updateLocation());
+    onClick: (data, target, group) => {
+      if (target === "_blank") {
+        const relativeUrl = `/instances/${data._id}${group?("?group=" + group):""}`;
+        ReactPiwik.push(["trackEvent", "Card", "Open in new tab", relativeUrl]);
+        window.open(relativeUrl, "_blank");
+      } else {
+        dispatch(actionsInstances.setInstance(data, target));
+        dispatch(actionsInstances.updateLocation());
+      }
     }
   })
 )(HitsPanelBase);
