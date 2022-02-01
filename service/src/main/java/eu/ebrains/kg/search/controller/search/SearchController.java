@@ -118,7 +118,7 @@ public class SearchController {
 
     private ResponseEntity<?> getAggregationFromRepo(DataStage stage, String id, String field) {
         try {
-            String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class);
+            String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class, false);
             Map<String, String> aggs = Map.of("patterns", field);
             ElasticSearchResult esResult = esServiceClient.getAggregationsFromRepo(fileIndex, id, aggs);
             Map<String, Object> result = formatAggregation(esResult, "patterns");
@@ -138,7 +138,7 @@ public class SearchController {
 
     public ResponseEntity<?> getFilesFromRepo(DataStage stage, String id, String searchAfter, int size, String format, String groupingType) {
         try {
-            String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class);
+            String fileIndex = ESHelper.getAutoReleasedIndex(stage, File.class, false);
             ElasticSearchResult filesFromRepo = esServiceClient.getFilesFromRepo(fileIndex, id, searchAfter, size, format, groupingType);
             Map<String, Object> result = formatFilesResponse(filesFromRepo);
             return ResponseEntity.ok(result);

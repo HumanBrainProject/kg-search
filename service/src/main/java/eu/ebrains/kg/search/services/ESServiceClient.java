@@ -279,17 +279,6 @@ public class ESServiceClient {
     }
 
 
-    public boolean documentExists(String index, String id) {
-        ESCountResult result = webClient.post()
-                .uri(String.format("%s/%s/_count", elasticSearchEndpoint, index))
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .body(BodyInserters.fromValue(getQuery(id)))
-                .retrieve()
-                .bodyToMono(ESCountResult.class)
-                .block();
-        return result != null && result.getCount()>0;
-    }
-
     public ElasticSearchDocument getDocument(String index, String id) {
         ElasticSearchResult result = webClient.post()
                 .uri(String.format("%s/%s/_search", elasticSearchEndpoint, index))
@@ -418,6 +407,13 @@ public class ESServiceClient {
                 .block();
     }
 
+    public void reindex(String source, String target){
+        final Map<String, Map<String, String>> payload = Map.of("source", Map.of("index", source), "dest", Map.of("index", target));
+         webClient.post().uri(String.format("%s/_reindex", elasticSearchEndpoint))
+                .body(BodyInserters.fromValue(payload)).retrieve().bodyToMono(Void.class).block();
+    }
+
+
     public void createIndex(String index, Map<String, Object> mapping) {
         webClient.put()
                 .uri(String.format("%s/%s", elasticSearchEndpoint, index))
@@ -450,4 +446,32 @@ public class ESServiceClient {
         operationsList.forEach(operations -> this.updateIndex(index, operations.toString()));
         logger.info(String.format("Done updating index %s", index));
     }
+
+    public Set<String> existingDocuments(String index, List<String> identifiers){
+        int pageSize = 2000;
+        int numberOfPages = (identifiers.size()/pageSize)+1;
+        Set<String> result = new HashSet<>();
+        for(int p = 0; p<numberOfPages; p++){
+            Object query = Map.of("query",
+                    Map.of("ids",
+                            Map.of("values", identifiers.subList(p*pageSize, Math.min(identifiers.size(), (p+1)*pageSize)))
+                    ),
+                    "_source", false);
+            ElasticSearchResult r = webClient.post()
+                    .uri(String.format("%s/%s/_search?size=%d", elasticSearchEndpoint, index, pageSize))
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    .body(BodyInserters.fromValue(query))
+                    .retrieve()
+                    .bodyToMono(ElasticSearchResult.class)
+                    .block();
+            if(r!=null && r.getHits()!=null && r.getHits().getHits()!=null){
+                result.addAll(r.getHits().getHits().stream().map(ElasticSearchDocument::getId).collect(Collectors.toSet()));
+            }
+            else{
+                throw new RuntimeException("Wasn't able to read existing documents from elasticsearch");
+            }
+        }
+        return result;
+    }
+
 }

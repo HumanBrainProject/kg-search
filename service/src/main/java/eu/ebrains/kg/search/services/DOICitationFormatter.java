@@ -65,7 +65,6 @@ public class DOICitationFormatter {
             }
         }
         return value != null ? value.trim() : null;
-
     }
 
 }
