@@ -181,7 +181,6 @@
           "reverse": true
         }
       ],
-      "required": true,
       "structure": [
         {
           "propertyName": "query:url",

@@ -215,7 +215,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
             //TODO do we want to keep this one? It's actually redundant with what we have in "cite dataset"
             d.setDoi(value(doiWithoutPrefix));
             if (StringUtils.isNotBlank(citation)) {
-                d.setCitation(value(String.format(citation)));
+                d.setCitation(value(citation));
             } else {
                 d.setCitation(value(Helpers.getFormattedDOI(doiCitationFormatter, doi)));
             }
