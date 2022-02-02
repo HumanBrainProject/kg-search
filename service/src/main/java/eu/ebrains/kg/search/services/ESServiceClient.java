@@ -453,10 +453,10 @@ public class ESServiceClient {
         Set<String> result = new HashSet<>();
         for(int p = 0; p<numberOfPages; p++){
             Object query = Map.of("query",
-                    Map.of("ids",
-                            Map.of("values", identifiers.subList(p*pageSize, Math.min(identifiers.size(), (p+1)*pageSize)))
+                    Map.of("terms",
+                            Map.of("identifier", identifiers.subList(p*pageSize, Math.min(identifiers.size(), (p+1)*pageSize)))
                     ),
-                    "_source", false);
+                    "_source", Collections.singletonList("identifier"));
             ElasticSearchResult r = webClient.post()
                     .uri(String.format("%s/%s/_search?size=%d", elasticSearchEndpoint, index, pageSize))
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -465,7 +465,11 @@ public class ESServiceClient {
                     .bodyToMono(ElasticSearchResult.class)
                     .block();
             if(r!=null && r.getHits()!=null && r.getHits().getHits()!=null){
-                result.addAll(r.getHits().getHits().stream().map(ElasticSearchDocument::getId).collect(Collectors.toSet()));
+                r.getHits().getHits().forEach(esDocument -> {
+                    if(esDocument != null && esDocument.getSource() !=null) {
+                        result.addAll((List)esDocument.getSource().get("identifier"));
+                    }
+                });
             }
             else{
                 throw new RuntimeException("Wasn't able to read existing documents from elasticsearch");
