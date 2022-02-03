@@ -1,8 +1,10 @@
 package eu.ebrains.kg.search.controller.mergers;
 
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Contributor;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ContributorMerger extends Merger<Contributor> {
@@ -32,25 +34,29 @@ public class ContributorMerger extends Merger<Contributor> {
             if (parent.getDatasetContributions() == null) {
                 parent.setDatasetContributions(new ArrayList<>());
             }
-            parent.getDatasetContributions().addAll(child.getDatasetContributions().stream().filter(d -> !parent.getDatasetContributions().contains(d)).collect(Collectors.toList()));
+            final Set<String> parentContributions = parent.getDatasetContributions().stream().map(TargetInternalReference::getReference).collect(Collectors.toSet());
+            parent.getDatasetContributions().addAll(child.getDatasetContributions().stream().filter(d -> parentContributions.contains(d.getReference())).collect(Collectors.toList()));
         }
         if (child.getCustodianOfDataset() != null) {
             if (parent.getCustodianOfDataset() == null) {
                 parent.setCustodianOfDataset(new ArrayList<>());
             }
-            parent.getCustodianOfDataset().addAll(child.getCustodianOfDataset().stream().filter(d -> !parent.getCustodianOfDataset().contains(d)).collect(Collectors.toList()));
+            final Set<String> parentCustodians = parent.getCustodianOfDataset().stream().map(TargetInternalReference::getReference).collect(Collectors.toSet());
+            parent.getCustodianOfDataset().addAll(child.getCustodianOfDataset().stream().filter(d -> !parentCustodians.contains(d.getReference())).collect(Collectors.toList()));
         }
         if (child.getCustodianOfModel() != null) {
             if (parent.getCustodianOfModel() == null) {
                 parent.setCustodianOfModel(new ArrayList<>());
             }
-            parent.getCustodianOfModel().addAll(child.getCustodianOfModel().stream().filter(d -> !parent.getCustodianOfModel().contains(d)).collect(Collectors.toList()));
+            final Set<String> parentCustodians = parent.getCustodianOfModel().stream().map(TargetInternalReference::getReference).collect(Collectors.toSet());
+            parent.getCustodianOfModel().addAll(child.getCustodianOfModel().stream().filter(d -> !parentCustodians.contains(d.getReference())).collect(Collectors.toList()));
         }
         if (child.getModelContributions() != null) {
             if (parent.getModelContributions() == null) {
                 parent.setModelContributions(new ArrayList<>());
             }
-            parent.getModelContributions().addAll(child.getModelContributions().stream().filter(d -> !parent.getModelContributions().contains(d)).collect(Collectors.toList()));
+            final Set<String> parentContributions = parent.getModelContributions().stream().map(TargetInternalReference::getReference).collect(Collectors.toSet());
+            parent.getModelContributions().addAll(child.getModelContributions().stream().filter(d -> !parentContributions.contains(d.getReference())).collect(Collectors.toList()));
         }
     }
 }
