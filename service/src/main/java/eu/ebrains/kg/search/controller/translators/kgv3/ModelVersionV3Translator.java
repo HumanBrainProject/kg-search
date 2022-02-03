@@ -149,12 +149,18 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
                 if (allowEmbedding) {
                     m.setEmbeddedModelSource(new TargetExternalReference(iri, modelVersion.getFileRepository().getFullName()));
                 } else {
-                    if (Helpers.isCscsContainer(modelVersion.getFileRepository())) {
-                        m.setInternalDownload(link(modelVersion.getFileRepository()));
-                    } else if (Helpers.isDataProxyBucket(modelVersion.getFileRepository())) {
-                        m.setInternalDownload(link(Helpers.translateInternalFileRepoToUrl(modelVersion.getFileRepository())));
-                    } else {
-                        m.setExternalDownload(link(modelVersion.getFileRepository()));
+                    if (modelVersion.getFileRepository() != null) {
+                        if (Helpers.isCscsContainer(modelVersion.getFileRepository()) || Helpers.isDataProxyBucket(modelVersion.getFileRepository())) {
+                            String endpoint;
+                            if (liveMode) {
+                                endpoint = String.format("/api/repositories/%s/files/live", IdUtils.getUUID(modelVersion.getFileRepository().getId()));
+                            } else {
+                                endpoint = String.format("/api/groups/%s/repositories/%s/files", dataStage == DataStage.IN_PROGRESS ? "curated" : "public", IdUtils.getUUID(modelVersion.getFileRepository().getId()));
+                            }
+                            m.setFilesAsyncUrl(endpoint);
+                        } else {
+                            m.setExternalDownload(link(modelVersion.getFileRepository()));
+                        }
                     }
                 }
             }

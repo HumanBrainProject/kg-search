@@ -149,6 +149,9 @@ public class ModelVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(layout = "Get model", termsOfUse = true)
     private TargetExternalReference internalDownload;
 
+    @FieldInfo(layout = "Get model", isHierarchicalFiles = true, isAsync=true, labelHidden = true)
+    private String filesAsyncUrl;
+
     @FieldInfo(layout = "Get model")
     private Value<String> embargo;
 
