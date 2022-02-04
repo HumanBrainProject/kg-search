@@ -209,6 +209,8 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
             Collections.sort(modelVersion.getKeyword());
             m.setKeywords(value(modelVersion.getKeyword()));
         }
+        m.setUsedDataset(refVersion(modelVersion.getUsedDatasets()));
+        m.setProducedDataset(refVersion(modelVersion.getProducedDatasets()));
         m.setModelFormat(ref(createList(modelVersion.getModelFormat())));
         if (modelVersion.getModel() != null) {
             m.setAbstractionLevel(ref(createList(modelVersion.getModel().getAbstractionLevel())));
