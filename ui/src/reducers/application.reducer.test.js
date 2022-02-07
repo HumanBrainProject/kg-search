@@ -22,13 +22,13 @@
  */
 
 import { reducer as applicationReducer} from "./application.reducer";
-describe('application reducer', () => {
-    describe('unknown action', () => {
-        it('should return same state', () => {
-            const state = {a: {c: 1, d: 2}, b: [{e:3}, {e:4}]};
-            const action = {type: "ABCDEFGH"};
-            const newState = applicationReducer(state, action);
-            expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
-        });
+describe("application reducer", () => {
+  describe("unknown action", () => {
+    it("should return same state", () => {
+      const state = {a: {c: 1, d: 2}, b: [{e:3}, {e:4}]};
+      const action = {type: "ABCDEFGH"};
+      const newState = applicationReducer(state, action);
+      expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
     });
+  });
 });

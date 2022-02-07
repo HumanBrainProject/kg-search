@@ -23,36 +23,36 @@
 
 import * as actions from "../actions/actions.definition";
 import { reducer as definitionReducer} from "./definition.reducer";
-describe('definition reducer', () => {
-    describe('unknown action', () => {
-        it('should return same state', () => {
-            const state = {a: {c: 1, d: 2}, b: [{e:3}, {e:4}]};
-            const action = {type: "ABCDEFGH"};
-            const newState = definitionReducer(state, action);
-            expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
-        });
+describe("definition reducer", () => {
+  describe("unknown action", () => {
+    it("should return same state", () => {
+      const state = {a: {c: 1, d: 2}, b: [{e:3}, {e:4}]};
+      const action = {type: "ABCDEFGH"};
+      const newState = definitionReducer(state, action);
+      expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
     });
-    describe('load definition success', () => {
-        it('should set current definition', () => {
-            const state = undefined;
-            const definition = {a: 1, b: 2, c: 4};
-            const action = actions.loadDefinitionSuccess(definition);
-            const newState = definitionReducer(state, action);
-            expect(newState.typeMappings).toBe(definition);
-        });
-        it('should set is ready to true', () => {
-            const state = {isReady: false};
-            const action = actions.loadDefinitionSuccess(null);
-            const newState = definitionReducer(state, action);
-            expect(newState.isReady).toBe(true);
-        });
+  });
+  describe("load definition success", () => {
+    it("should set current definition", () => {
+      const state = undefined;
+      const definition = {a: 1, b: 2, c: 4};
+      const action = actions.loadDefinitionSuccess(definition);
+      const newState = definitionReducer(state, action);
+      expect(newState.typeMappings).toBe(definition);
     });
-    describe('load definition failure', () => {
-        it('should set ready to false', () => {
-            const state = {error: null};
-            const action = actions.loadDefinitionFailure("error");
-            const newState = definitionReducer(state, action);
-            expect(newState.error).toBe("error");
-        });
+    it("should set is ready to true", () => {
+      const state = {isReady: false};
+      const action = actions.loadDefinitionSuccess(null);
+      const newState = definitionReducer(state, action);
+      expect(newState.isReady).toBe(true);
     });
+  });
+  describe("load definition failure", () => {
+    it("should set ready to false", () => {
+      const state = {error: null};
+      const action = actions.loadDefinitionFailure("error");
+      const newState = definitionReducer(state, action);
+      expect(newState.error).toBe("error");
+    });
+  });
 });

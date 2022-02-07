@@ -21,30 +21,29 @@
  *
  */
 
-import * as actionsDefinition from "../actions/actions.definition";
 import * as actionsSearch from "../actions/actions.search";
 import { reducer as searchReducer} from "./search.reducer";
-describe('search reducer', () => {
-    describe('unknown action', () => {
-        it('should return same state', () => {
-            const state = {a: {c: 1, d: 2}, b: [{e:3}, {e:4}]};
-            const action = {type: "ABCDEFGH"};
-            const newState = searchReducer(state, action);
-            expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
-        });
+describe("search reducer", () => {
+  describe("unknown action", () => {
+    it("should return same state", () => {
+      const state = {a: {c: 1, d: 2}, b: [{e:3}, {e:4}]};
+      const action = {type: "ABCDEFGH"};
+      const newState = searchReducer(state, action);
+      expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
     });
-    describe('load search result', () => {
-        it('should set results', () => {
-            const state = undefined;
-            const hits = [2123, 1212, 23423];
-            const results = {
-                hits: {
-                    hits: hits
-                }
-            };
-            const action = actionsSearch.loadSearchResult(results);
-            const newState = searchReducer(state, action);
-            expect(newState.hits).toBe(hits);
-        });
+  });
+  describe("load search result", () => {
+    it("should set results", () => {
+      const state = undefined;
+      const hits = [2123, 1212, 23423];
+      const results = {
+        hits: {
+          hits: hits
+        }
+      };
+      const action = actionsSearch.loadSearchResult(results);
+      const newState = searchReducer(state, action);
+      expect(newState.hits).toBe(hits);
     });
+  });
 });

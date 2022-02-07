@@ -113,7 +113,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
         hasShowMoreToggle: showMoreToggle,
         showMoreLabel: getShowMoreLabel(sizeStop, this.props)
       });
-    }
+    };
 
     componentDidMount() {
       this.setItemsState();
@@ -175,7 +175,7 @@ const ListFieldBase = (renderUserInteractions = true) => {
           showMoreLabel: getShowMoreLabel(nextSizeStop, props)
         };
       });
-    }
+    };
 
     render() {
       const {show, mapping} = this.props;

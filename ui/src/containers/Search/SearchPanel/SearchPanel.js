@@ -57,7 +57,7 @@ class SeachPanelBaseComponent extends React.Component {
   handleChange = e => {
     this.textInput.current.focus();
     this.setState({value: e.target.value});
-  }
+  };
 
   handleSearch = () => this.props.onQueryStringChange(this.state.value);
 
@@ -65,7 +65,7 @@ class SeachPanelBaseComponent extends React.Component {
     if(e.key === "Enter") {
       this.props.onQueryStringChange(this.state.value);
     }
-  }
+  };
 
   render() {
     const { isFloating, onHelp } = this.props;

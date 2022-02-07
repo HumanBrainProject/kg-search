@@ -29,17 +29,17 @@ import ShareButtons from "./ShareButtons";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-test('ShareButtons component renders initially', () => {
-    const component = renderer.create(
-        <ShareButtons className="className" clipboardContent="a clipboard content" emailToLink="email to link" />
-    );
-  
-    expect(component.toJSON()).toMatchSnapshot();
+test("ShareButtons component renders initially", () => {
+  const component = renderer.create(
+    <ShareButtons className="className" clipboardContent="a clipboard content" emailToLink="email to link" />
+  );
+
+  expect(component.toJSON()).toMatchSnapshot();
 });
 
-test('ShareButtons test className"', () => {
-    const component = shallow(
-        <ShareButtons className="className" clipboardContent="a clipboard content" emailToLink="email to link" />
-    );
-    expect(component.hasClass("className"));
+test("ShareButtons test className\"", () => {
+  const component = shallow(
+    <ShareButtons className="className" clipboardContent="a clipboard content" emailToLink="email to link" />
+  );
+  expect(component.hasClass("className")).toBe(true);
 });

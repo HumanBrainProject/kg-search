@@ -70,7 +70,7 @@ export class Thumbnail extends React.Component {
       this.setState({ show: false });
       this.unlistenClickOutHandler();
     }
-  }
+  };
 
   clickOutHandler = e => {
     if (this.wrapperRef  && this.wrapperRef.contains(e.target)) {

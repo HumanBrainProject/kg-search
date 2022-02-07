@@ -23,30 +23,30 @@
 
 import React from "react";
 import renderer from "react-test-renderer";
-import Enzyme, { shallow, render } from "enzyme";
+import Enzyme, { shallow } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import FetchingPanel from "./FetchingPanel";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-test('FetchingPanel component renders initially', () => {
-    const component = renderer.create(
-        <FetchingPanel show={true} message="some message" />
-    );
-  
-    expect(component.toJSON()).toMatchSnapshot();
+test("FetchingPanel component renders initially", () => {
+  const component = renderer.create(
+    <FetchingPanel show={true} message="some message" />
+  );
+
+  expect(component.toJSON()).toMatchSnapshot();
 });
 
-test('FetchingPanel test show false"', () => {
-    const component = renderer.create(
-        <FetchingPanel show={false} message="some message" />
-    );
-    expect(component.toJSON()).toBe(null);
+test("FetchingPanel test show false\"", () => {
+  const component = renderer.create(
+    <FetchingPanel show={false} message="some message" />
+  );
+  expect(component.toJSON()).toBe(null);
 });
-  
-test('FetchingPanel test message', () => {
-    const component = shallow(
-        <FetchingPanel show={true} message="some message" />
-    );
-    expect(component.find("span.kgs-spinner-label").text()).toEqual('some message');
+
+test("FetchingPanel test message", () => {
+  const component = shallow(
+    <FetchingPanel show={true} message="some message" />
+  );
+  expect(component.find("span.kgs-spinner-label").text()).toEqual("some message");
 });

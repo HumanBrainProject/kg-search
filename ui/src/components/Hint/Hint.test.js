@@ -29,16 +29,16 @@ import Hint from "./Hint";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-test('Hint test show false"', () => {
-    const component = renderer.create(
-        <Hint className="test" show={false} value="some text" />
-    );
-    expect(component.toJSON()).toBe(null);
+test("Hint test show false\"", () => {
+  const component = renderer.create(
+    <Hint className="test" show={false} value="some text" />
+  );
+  expect(component.toJSON()).toBe(null);
 });
-  
-test('Hint test value', () => {
-    const component = render(
-        <Hint className="test" show={true} value="some text" />
-    );
-    expect(component.find("span").text()).toEqual('some text');
+
+test("Hint test value", () => {
+  const component = render(
+    <Hint className="test" show={true} value="some text" />
+  );
+  expect(component.find("span").text()).toEqual("some text");
 });

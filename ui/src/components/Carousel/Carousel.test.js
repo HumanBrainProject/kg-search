@@ -23,49 +23,49 @@
 
 import React from "react";
 import renderer from "react-test-renderer";
-import Enzyme, { mount, shallow, render } from "enzyme";
+import Enzyme, { shallow, render } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import Carousel from "./Carousel";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-test('Carousel component renders initially', () => {
-    const component = renderer.create(
-        <Carousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
-    );
-  
-    expect(component.toJSON()).toMatchSnapshot();
+test("Carousel component renders initially", () => {
+  const component = renderer.create(
+    <Carousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
+  );
+
+  expect(component.toJSON()).toMatchSnapshot();
 });
 
-test('Carousel test show false"', () => {
-    const component = renderer.create(
-        <Carousel className="className" show={false} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
-    );
-    expect(component.toJSON()).toBe(null);
-});
-  
-test('Carousel test className"', () => {
-    const component = shallow(
-        <Carousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
-    );
-    expect(component.hasClass("className"));
+test("Carousel test show false\"", () => {
+  const component = renderer.create(
+    <Carousel className="className" show={false} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
+  );
+  expect(component.toJSON()).toBe(null);
 });
 
-test('Carousel test number of items', () => {
-    const component = render(
-        <Carousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
-    );
-    expect(component.find(".kgs-carousel__item").length).toBe(5);
+test("Carousel test className\"", () => {
+  const component = shallow(
+    <Carousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
+  );
+  expect(component.hasClass("className")).toBe(true);
 });
 
-test('Carousel test items', () => {
-    const component = renderer.create(
-        <Carousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
-    );
-    const instance = component.getInstance();
+test("Carousel test number of items", () => {
+  const component = render(
+    <Carousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
+  );
+  expect(component.find(".kgs-carousel__item").length).toBe(5);
+});
 
-    expect(instance.items.length).toBe(5);
-    expect(instance.items[1].position).toBe(0);
-    expect(instance.items[1].isActive);
-    expect(instance.items[1].data.label).toBe("another label");
+test("Carousel test items", () => {
+  const component = renderer.create(
+    <Carousel className="className" show={true} value="a value" data={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onPrevious={() => {}} onClose={() => {}} itemComponent={() => (<div></div>)} navigationComponent={() => (<div></div>)} />
+  );
+  const instance = component.getInstance();
+
+  expect(instance.items.length).toBe(5);
+  expect(instance.items[1].position).toBe(0);
+  expect(instance.items[1].isActive).toBe(true);
+  expect(instance.items[1].data.label).toBe("another label");
 });

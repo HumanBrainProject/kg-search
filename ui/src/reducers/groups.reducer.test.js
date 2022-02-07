@@ -20,16 +20,14 @@
  * (Human Brain Project SGA1, SGA2 and SGA3).
  *
  */
-
-import * as actions from "../actions/actions.groups";
 import { reducer as groupsReducer} from "./groups.reducer";
-describe('groups reducer', () => {
-    describe('unknown action', () => {
-        it('should return same state', () => {
-            const state = {a: {c: 1, d: 2}, b: [{e:3}, {e:4}]};
-            const action = {type: "ABCDEFGH"};
-            const newState = groupsReducer(state, action);
-            expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
-        });
+describe("groups reducer", () => {
+  describe("unknown action", () => {
+    it("should return same state", () => {
+      const state = {a: {c: 1, d: 2}, b: [{e:3}, {e:4}]};
+      const action = {type: "ABCDEFGH"};
+      const newState = groupsReducer(state, action);
+      expect(JSON.stringify(newState)).toBe(JSON.stringify(state));
     });
+  });
 });

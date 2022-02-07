@@ -34,7 +34,7 @@ class PageLinkButton extends React.PureComponent {
   onClick = () => {
     const { page: { value },  onClick} = this.props;
     onClick(value);
-  }
+  };
 
   render() {
     const { page: { name, title, active, readOnly}} = this.props;

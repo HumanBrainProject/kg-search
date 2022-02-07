@@ -104,7 +104,7 @@ export class InstanceContainer extends React.Component {
       const url = getLocationFromQuery(query, location);
       history.push(url);
     }
-  }
+  };
 
   initialize(previousGroup) {
     const {

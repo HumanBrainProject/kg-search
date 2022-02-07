@@ -44,7 +44,7 @@ export class FilteredList extends React.Component {
       .call(this.hiddenInputRef, JSON.stringify(this.state.filter));
     const event = new Event("input", { bubbles: true });
     this.hiddenInputRef.dispatchEvent(event);
-  }
+  };
 
   handleInputKeyStrokes = e => {
     if (e.keyCode === 40) {
@@ -63,21 +63,21 @@ export class FilteredList extends React.Component {
       //escape or tab key -> we want to close the dropdown menu
       this.closeDropdown();
     }
-  }
+  };
 
   handleChangeUserInput = e => {
     this.setState({ filter: e.target.value });
-  }
+  };
 
   handleFocus = () => {
     this.listenClickOutHandler();
     this.setState({ hasFocus: true });
-  }
+  };
 
   handleItemClick = item => {
     this.props.onItemClick && this.props.onItemClick(item);
     this.closeDropdown();
-  }
+  };
 
   closeDropdown() {
     this.unlistenClickOutHandler();
@@ -89,7 +89,7 @@ export class FilteredList extends React.Component {
     if (!this.wrapperRef || !this.wrapperRef.contains(e.target)) {
       this.closeDropdown();
     }
-  }
+  };
 
   listenClickOutHandler() {
     window.addEventListener("mouseup", this.clickOutHandler, false);

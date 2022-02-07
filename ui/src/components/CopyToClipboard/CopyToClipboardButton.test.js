@@ -29,45 +29,45 @@ import CopyToClipboardButton from "./CopyToClipboardButton";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-test('CopyToClipboardButton component renders initially', () => {
-    const component = renderer.create(
-        <CopyToClipboardButton className="className" text="text" icon="times" title="title" confirmationText="confirmation text" content="content" />
-    );
-  
-    expect(component.toJSON()).toMatchSnapshot();
+test("CopyToClipboardButton component renders initially", () => {
+  const component = renderer.create(
+    <CopyToClipboardButton className="className" text="text" icon="times" title="title" confirmationText="confirmation text" content="content" />
+  );
+
+  expect(component.toJSON()).toMatchSnapshot();
 });
 
-test('CopyToClipboardButton test className"', () => {
-    const component = shallow(
-        <CopyToClipboardButton className="className" text="text" icon="times" title="title" confirmationText="confirmation text" content="content" />
-    );
-    expect(component.hasClass("className"));
+test("CopyToClipboardButton test className\"", () => {
+  const component = shallow(
+    <CopyToClipboardButton className="className" text="text" icon="times" title="title" confirmationText="confirmation text" content="content" />
+  );
+  expect(component.hasClass("className")).toBe(true);
 });
-  
-test('CopyToClipboardButton test icon"', () => {
-    const component = shallow(
-        <CopyToClipboardButton className="className" text="text" icon="times" title="title" confirmationText="confirmation text" content="content" />
-    );
-    expect(component.find("svg"));
+
+test("CopyToClipboardButton test icon\"", () => {
+  const component = shallow(
+    <CopyToClipboardButton className="className" text="text" icon="times" title="title" confirmationText="confirmation text" content="content" />
+  );
+  expect(component.find("svg")).toBe(true);
 });
-  
-test('CopyToClipboardButton test title', () => {
-    const component = shallow(
-        <CopyToClipboardButton className="className" text="text" icon="times" title="title" confirmationText="confirmation text" content="content" />
-    );
-    expect(component.find("button").prop("title")).toEqual('title');
+
+test("CopyToClipboardButton test title", () => {
+  const component = shallow(
+    <CopyToClipboardButton className="className" text="text" icon="times" title="title" confirmationText="confirmation text" content="content" />
+  );
+  expect(component.find("button").prop("title")).toEqual("title");
 });
-  
-test('CopyToClipboardButton test text', () => {
-    const component = shallow(
-        <CopyToClipboardButton className="className" text="text" icon="times" title="title" confirmationText="confirmation text" content="content" />
-    );
-    expect(component.find("button span").text()).toContain('text');
+
+test("CopyToClipboardButton test text", () => {
+  const component = shallow(
+    <CopyToClipboardButton className="className" text="text" icon="times" title="title" confirmationText="confirmation text" content="content" />
+  );
+  expect(component.find("button span").text()).toContain("text");
 });
-  
-test('CopyToClipboardButton test confirmationText', () => {
-    const component = shallow(
-        <CopyToClipboardButton className="className" text="text" icon="times" title="title" confirmationText="confirmation text" content="content" />
-    );
-    expect(component.find("div").text()).toEqual('confirmation text');
+
+test("CopyToClipboardButton test confirmationText", () => {
+  const component = shallow(
+    <CopyToClipboardButton className="className" text="text" icon="times" title="title" confirmationText="confirmation text" content="content" />
+  );
+  expect(component.find("div").text()).toEqual("confirmation text");
 });

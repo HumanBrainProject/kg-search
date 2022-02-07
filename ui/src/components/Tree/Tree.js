@@ -54,7 +54,7 @@ class NodeItem extends React.PureComponent {
       e.stopPropagation();
       onClick(item);
     }
-  }
+  };
 
   handleKeyDown = e => {
     const { item, onClick, readOnly } = this.props;
@@ -62,7 +62,7 @@ class NodeItem extends React.PureComponent {
       e.stopPropagation();
       onClick(item);
     }
-  }
+  };
 
   render() {
     const { item, ItemComponent, readOnly } = this.props;

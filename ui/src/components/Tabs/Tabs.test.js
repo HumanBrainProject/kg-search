@@ -22,37 +22,36 @@
  */
 
 import React from "react";
-import renderer from "react-test-renderer";
 import Enzyme, { mount, shallow, render } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import Tabs from "./Tabs";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-test('Tabs test className"', () => {
-    const component = shallow(
-        <Tabs className="className" tabs={[{id: "an id", title: "a label", counter: 11, hint: {show: true, value: "a hint"}},{id: "another id", title: "another label", counter: 32, hint: {show: true, value: "another hint"}}]}  viewComponent={() => (<div></div>)} />
-    );
-    expect(component.hasClass("className"));
+test("Tabs test className\"", () => {
+  const component = shallow(
+    <Tabs className="className" tabs={[{id: "an id", title: "a label", counter: 11, hint: {show: true, value: "a hint"}},{id: "another id", title: "another label", counter: 32, hint: {show: true, value: "another hint"}}]}  viewComponent={() => (<div></div>)} />
+  );
+  expect(component.hasClass("className")).toBe(true);
 });
 
-test('Tabs test number of tabs', () => {
-    const component = render(
-        <Tabs className="className" tabs={[{id: "an id", title: "a label", counter: 11, hint: {show: true, value: "a hint"}},{id: "another id", title: "another label", counter: 32, hint: {show: true, value: "another hint"}}]}  viewComponent={() => (<div></div>)} />
-    );
-    expect(component.find(".kgs-tabs__button").length).toBe(2);
+test("Tabs test number of tabs", () => {
+  const component = render(
+    <Tabs className="className" tabs={[{id: "an id", title: "a label", counter: 11, hint: {show: true, value: "a hint"}},{id: "another id", title: "another label", counter: 32, hint: {show: true, value: "another hint"}}]}  viewComponent={() => (<div></div>)} />
+  );
+  expect(component.find(".kgs-tabs__button").length).toBe(2);
 });
 
-test('Tabs test active tab', () => {
-    const component = mount(
-        <Tabs className="className" tabs={[{id: "an id", title: "a label", counter: 11, hint: {show: true, value: "a hint"}},{id: "another id", title: "another label", counter: 32, hint: {show: true, value: "another hint"}}]}  viewComponent={() => (<div></div>)} />
-    );
-    
-    expect(component.find("button.kgs-tabs__button").at(0).hasClass("is-active"));
-    expect(component.find("button.kgs-tabs__button").at(1).hasClass("is-active")).toBe(false);
+test("Tabs test active tab", () => {
+  const component = mount(
+    <Tabs className="className" tabs={[{id: "an id", title: "a label", counter: 11, hint: {show: true, value: "a hint"}},{id: "another id", title: "another label", counter: 32, hint: {show: true, value: "another hint"}}]}  viewComponent={() => (<div></div>)} />
+  );
 
-    component.find('button.kgs-tabs__button').at(1).simulate('click');
+  expect(component.find("button.kgs-tabs__button").at(0).hasClass("is-active")).toBe(true);
+  expect(component.find("button.kgs-tabs__button").at(1).hasClass("is-active")).toBe(false);
 
-    expect(component.find("button.kgs-tabs__button").at(0).hasClass("is-active")).toBe(false);
-    expect(component.find("button.kgs-tabs__button").at(1).hasClass("is-active"));
+  component.find("button.kgs-tabs__button").at(1).simulate("click");
+
+  expect(component.find("button.kgs-tabs__button").at(0).hasClass("is-active")).toBe(false);
+  expect(component.find("button.kgs-tabs__button").at(1).hasClass("is-active")).toBe(true);
 });
