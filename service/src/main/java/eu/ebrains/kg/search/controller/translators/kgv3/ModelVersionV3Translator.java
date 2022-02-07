@@ -31,6 +31,7 @@ import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.ModelVersionV3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.StudyTarget;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.ModelVersion;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
@@ -42,9 +43,7 @@ import eu.ebrains.kg.search.utils.TranslationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -214,7 +213,12 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
         m.setModelFormat(ref(createList(modelVersion.getModelFormat())));
         if (modelVersion.getModel() != null) {
             m.setAbstractionLevel(ref(createList(modelVersion.getModel().getAbstractionLevel())));
-            m.setStudyTargets(ref(modelVersion.getModel().getStudyTarget()));
+            List<String> brainStructureStudyTargets = Arrays.asList(Constants.OPENMINDS_ROOT+"controlledTerms/UBERONParcellation");
+            final Map<Boolean, List<StudyTarget>> brainStructureOrNot = modelVersion.getModel().getStudyTarget().stream().collect(Collectors.groupingBy(s -> s.getStudyTargetType() != null && s.getStudyTargetType().stream().anyMatch(brainStructureStudyTargets::contains)));
+            m.setStudyTargets(refVersion(brainStructureOrNot.get(Boolean.FALSE)));
+            if(!CollectionUtils.isEmpty(brainStructureOrNot.get(Boolean.TRUE))){
+                m.setStudiedBrainRegion(brainStructureOrNot.get(Boolean.TRUE).stream().map(this::refAnatomical).collect(Collectors.toList()));
+            }
             m.setModelScope(ref(createList(modelVersion.getModel().getScope())));
         }
         return m;

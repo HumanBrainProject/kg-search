@@ -25,19 +25,11 @@ package eu.ebrains.kg.search.controller.translators.kgv3;
 
 import eu.ebrains.kg.search.controller.translators.Translator;
 import eu.ebrains.kg.search.model.source.ResultsOfKG;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRefForResearchProductVersion;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.AnatomicalLocation;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
-import eu.ebrains.kg.search.utils.IdUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public abstract class TranslatorV3<Source, Target, Result extends ResultsOfKG<Source>> extends Translator<Source, Target, Result> {
 
@@ -55,4 +47,18 @@ public abstract class TranslatorV3<Source, Target, Result extends ResultsOfKG<So
         return type;
     }
 
+    protected TargetInternalReference refAnatomical(AnatomicalLocation a){
+        if(StringUtils.isNotBlank(a.getBrainAtlas())){
+            return new TargetInternalReference(null, String.format("%s (%s)", StringUtils.isNotBlank(a.getFullName()) ? a.getFullName() : a.getFallbackName(),  a.getBrainAtlas()));
+        }
+        else if(a.getBrainAtlasVersion() != null){
+            //String name = String.format("%s %s", StringUtils.isNotBlank(a.getBrainAtlasVersion().getFullName()) ? a.getBrainAtlasVersion().getFullName() : a.getBrainAtlasVersion().getFallbackName(), a.getBrainAtlasVersion().getVersionIdentifier());
+            //TODO Currently, the names of the brain atlas versions also contain the version number -> this is expected to be fixed in openMINDS at some point. Once this is done, we need to change the logic here, so we reflect the version identifier instead.
+            String name = StringUtils.isNotBlank(a.getBrainAtlasVersion().getFullName()) ? a.getBrainAtlasVersion().getFullName() : a.getBrainAtlasVersion().getFallbackName();
+            return new TargetInternalReference(null, String.format("%s (%s)", StringUtils.isNotBlank(a.getFullName()) ? a.getFullName() : a.getFallbackName(), name));
+        }
+        else{
+            return ref(a);
+        }
+    }
 }
