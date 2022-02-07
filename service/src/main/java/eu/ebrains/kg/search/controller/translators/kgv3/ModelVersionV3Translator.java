@@ -217,7 +217,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
             final Map<Boolean, List<StudyTarget>> brainStructureOrNot = modelVersion.getModel().getStudyTarget().stream().collect(Collectors.groupingBy(s -> s.getStudyTargetType() != null && s.getStudyTargetType().stream().anyMatch(brainStructureStudyTargets::contains)));
             m.setStudyTargets(refVersion(brainStructureOrNot.get(Boolean.FALSE)));
             if(!CollectionUtils.isEmpty(brainStructureOrNot.get(Boolean.TRUE))){
-                m.setStudiedBrainRegion(brainStructureOrNot.get(Boolean.TRUE).stream().map(this::refAnatomical).collect(Collectors.toList()));
+                m.setBrainStructures(brainStructureOrNot.get(Boolean.TRUE).stream().map(this::refAnatomical).collect(Collectors.toList()));
             }
             m.setModelScope(ref(createList(modelVersion.getModel().getScope())));
         }
