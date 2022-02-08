@@ -121,7 +121,6 @@ const ListFieldBase = (renderUserInteractions = true) => {
 
     componentDidUpdate(prevProps) {
       if(JSON.stringify(prevProps.items) !== JSON.stringify(this.props.items)) {
-        console.log("did update");
         this.setItemsState();
       }
     }
