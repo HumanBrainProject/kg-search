@@ -101,10 +101,6 @@ public class IndexingController {
 
     public <v1Input, v2Input, v3Input, Target extends TargetInstance> List<ErrorReportResult.ErrorReportResultBySourceType> populateIndex(TranslatorModel<v1Input, v2Input, v3Input, Target> translatorModel, DataStage dataStage, boolean temporary) {
         List<ErrorReportResult.ErrorReportResultBySourceType> errorReportBySourceType = new ArrayList<>();
-        //Temporarily skip model indexing
-        if(translatorModel.getTargetClass() == ModelVersion.class){
-            return errorReportBySourceType;
-        }
         Set<String> handledIdentifiers = new HashSet<>();
         Set<String> searchableIds = new HashSet<>();
         Set<String> nonSearchableIds = new HashSet<>();

@@ -63,6 +63,8 @@ public class ModelVersionV3 extends SourceInstanceV3 {
     private String fullDocumentationDOI;
     private File fullDocumentationFile;
     private ModelVersions model;
+    private List<FullNameRefForResearchProductVersion> usedDatasets;
+    private List<FullNameRefForResearchProductVersion> producedDatasets;
 
 
     @Getter

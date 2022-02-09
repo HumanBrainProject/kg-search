@@ -141,7 +141,7 @@ public class ModelV2Translator extends TranslatorV2<ModelV2, ModelVersion, Model
                             mc.getName()
                     )).collect(Collectors.toList()));
         }
-        m.setBrainStructures(value(modelV2.getBrainStructure()));
+        //m.setBrainStructures(value(modelV2.getBrainStructure()));
 
         if (!CollectionUtils.isEmpty(modelV2.getUsedDataset())) {
             m.setUsedDataset(modelV2.getUsedDataset().stream()

@@ -167,7 +167,7 @@ public class ModelVersion implements TargetInstance, VersionedInstance {
     private List<Value<String>> keywords;
 
     @FieldInfo(label = "Brain structure", layout = "summary", facet = FieldInfo.Facet.LIST)
-    private List<Value<String>> brainStructures;
+    private List<TargetInternalReference> brainStructures;
 
     @FieldInfo(label = "(Sub)cellular target", layout = "summary")
     private List<Value<String>> cellularTarget;

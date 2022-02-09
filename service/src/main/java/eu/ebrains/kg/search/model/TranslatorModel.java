@@ -22,7 +22,7 @@ public class TranslatorModel<v1Input, v2Input, v3Input, Output extends TargetIns
             new TranslatorModel<>(DatasetVersion.class, new DatasetV1Translator(), null, new DatasetVersionV3Translator(), null, false, false),
             new TranslatorModel<>(Subject.class, new SubjectV1Translator(), null, new SubjectV3Translator(), null, false, false),
             new TranslatorModel<>(Sample.class, new SampleV1Translator(), null, null, null, false, false),
-            new TranslatorModel<>(ModelVersion.class, null, new ModelV2Translator(), new ModelVersionV3Translator(), null, false, false),
+            new TranslatorModel<>(ModelVersion.class, null, null, new ModelVersionV3Translator(), null, false, false),
             new TranslatorModel<>(SoftwareVersion.class, null, null, new SoftwareVersionV3Translator(), null, false, true),
             new TranslatorModel<>(Model.class, null, null, new ModelV3Translator(), null, false, false),
             new TranslatorModel<>(Software.class, null, null, new SoftwareV3Translator(), null, false, false),
