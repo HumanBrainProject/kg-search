@@ -24,61 +24,54 @@
 package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.FieldInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.MetaInfo;
 import eu.ebrains.kg.search.model.target.elasticsearch.TargetInstance;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.ISODateValue;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.lang.annotation.Target;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
-@MetaInfo(name = "File")
-public class File implements TargetInstance {
+@MetaInfo(name = "Behavioral protocol")
+public class BehavioralProtocol implements TargetInstance {
+
     @JsonIgnore
     private List<String> allIdentifiers;
-    //Internal
-    @ElasticSearchInfo(type = "keyword")
-    private final Value<String> type = new Value<>("File");
+
     @FieldInfo(ignoreForSearch = true, visible = false)
     private String id;
+
     @ElasticSearchInfo(type = "keyword")
     @FieldInfo(ignoreForSearch = true, visible = false)
     private List<String> identifier;
-    @FieldInfo(label = "Name", layout = "header")
-    private Value<String> title;
-    @FieldInfo(label = "IRI", visible = false)
-    private TargetExternalReference iri;
+
     @ElasticSearchInfo(type = "keyword")
-    @FieldInfo(label = "fileRepository", visible = false)
-    private String fileRepository;
-    @FieldInfo(label = "Size", layout = "header")
-    private Value<String> size;
-    @FieldInfo(label = "Format")
-    private TargetInternalReference format;
-    @FieldInfo(isDirectDownload = true, label = "View data")
-    private List<TargetExternalReference> viewer;
-    @FieldInfo(label = "Software taking this file as input")
-    private List<TargetInternalReference> inputTypeForSoftware;
-    @FieldInfo(label = "GroupingTypes", visible = false)
-    private List<GroupingType> groupingTypes;
+    private Value<String> type = new Value<>("Behavioral protocol");
+
+    @FieldInfo(label = "Name", sort=true, layout = "header", labelHidden = true)
+    private Value<String> title;
+
+    @FieldInfo(label = "Official abbreviation")
+    private Value<String> officialAbbreviation;
+
+    @FieldInfo(markdown = true)
+    private Value<String> description;
+
+    @FieldInfo(label = "Described in", markdown = true)
+    private Value<String> describedIn;
+
+    @FieldInfo(label = "Described in")
+    private TargetExternalReference describedInLink;
+
     @Override
     @JsonIgnore
-    public boolean isSearchableInstance() {
-        return false;
-    }
-
-    @Getter
-    @Setter
-    public static class GroupingType {
-        private String name;
-        private List<TargetInternalReference> fileBundles;
-    }
+    public boolean isSearchableInstance() { return false; }
 }

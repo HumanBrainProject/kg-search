@@ -360,7 +360,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
         List<String> brainRegionStudyTargets = Arrays.asList(Constants.OPENMINDS_ROOT+"controlledTerms/UBERONParcellation", Constants.OPENMINDS_ROOT+"sands/ParcellationEntityVersion", Constants.OPENMINDS_ROOT+"sands/ParcellationEntity", Constants.OPENMINDS_ROOT+"sands/CustomAnatomicalEntity");
 
         final Map<Boolean, List<StudyTarget>> brainRegionOrNot = datasetVersion.getStudyTarget().stream().collect(Collectors.groupingBy(s -> s.getStudyTargetType() != null && s.getStudyTargetType().stream().anyMatch(brainRegionStudyTargets::contains)));
-        d.setStudyTargets(refVersion(brainRegionOrNot.get(Boolean.FALSE)));
+        d.setStudyTargets(refVersion(brainRegionOrNot.get(Boolean.FALSE), false));
         if(!CollectionUtils.isEmpty(brainRegionOrNot.get(Boolean.TRUE))){
             d.setStudiedBrainRegion(brainRegionOrNot.get(Boolean.TRUE).stream().map(this::refAnatomical).collect(Collectors.toList()));
         }

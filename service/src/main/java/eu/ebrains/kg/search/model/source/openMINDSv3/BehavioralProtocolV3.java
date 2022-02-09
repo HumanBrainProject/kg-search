@@ -23,9 +23,9 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRefForResearchProductVersion;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ServiceLink;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import eu.ebrains.kg.search.model.source.commonsV1andV2.ListOrSingleStringAsListDeserializer;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.File;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,34 +33,14 @@ import java.util.List;
 
 @Getter
 @Setter
-public class FileV3 extends SourceInstanceV3 {
+public class BehavioralProtocolV3 extends SourceInstanceV3 {
+
     private String name;
-    private String iri;
-    private String fileRepository;
-    private Size size;
-    private boolean privateAccess;
-    private Format format;
-    private List<FileBundle> fileBundles;
-    private List<ServiceLink> serviceLinks;
-
-    @Getter
-    @Setter
-    public static class Size {
-        private Long value;
-        private String unit;
-    }
-
-    @Getter
-    @Setter
-    public static class Format extends FullNameRef{
-        private List<FullNameRefForResearchProductVersion> inputFormatForSoftware;
-    }
-
-    @Getter
-    @Setter
-    public static class FileBundle {
-        private String id;
-        private String name;
-        private String groupingType;
-    }
+    private String internalIdentifier;
+    private String description;
+    private String describedInUrl;
+    private String describedInDOI;
+    private File describedInFile;
 }
+
+

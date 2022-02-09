@@ -84,7 +84,7 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
         f.setFileRepository(IdUtils.getUUID(fileRepository));
         f.setTitle(value(file.isPrivateAccess() ? String.format("ACCESS PROTECTED: %s", file.getName()) : file.getName()));
         if(!CollectionUtils.isEmpty(file.getServiceLinks())){
-            f.setViewer(file.getServiceLinks().stream().sorted(Comparator.comparing(ServiceLink::displayLabel)).map(s -> new TargetExternalReference(s.getUrl(), String.format("Open in %s", s.getService()))).collect(Collectors.toList()));
+            f.setViewer(file.getServiceLinks().stream().sorted(Comparator.comparing(ServiceLink::displayLabel)).map(s -> new TargetExternalReference(s.getUrl(), String.format("Open %s in %s", s.getLabel(), s.getService()))).collect(Collectors.toList()));
         }
         String iri = file.isPrivateAccess() ? String.format("%s/files/cscs?url=%s", Translator.fileProxy, file.getIri()) : file.getIri();
         if (StringUtils.isNotBlank(iri)) {
@@ -96,7 +96,7 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
         }
         if(file.getFormat()!=null){
             f.setFormat(ref(file.getFormat()));
-            f.setInputTypeForSoftware(ref(file.getFormat().getInputFormatForSoftware()));
+            f.setInputTypeForSoftware(refVersion(file.getFormat().getInputFormatForSoftware(), true));
         }
         Map<String, File.GroupingType> groupingTypes = new HashMap<>();
         file.getFileBundles().forEach(fileBundle -> {

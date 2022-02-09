@@ -23,6 +23,7 @@
 
 package eu.ebrains.kg.search.model.target.elasticsearch.instances.commons;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import eu.ebrains.kg.search.model.target.elasticsearch.ElasticSearchInfo;
 import lombok.EqualsAndHashCode;
@@ -66,6 +67,12 @@ public class TargetInternalReference implements Comparable<TargetInternalReferen
         return value;
     }
 
+    @JsonIgnore
+    private String getLowerCaseValue(){
+        return value != null ? value.toLowerCase() : null;
+    }
+
+
     public void setValue(String value) {
         this.value = value;
     }
@@ -80,7 +87,7 @@ public class TargetInternalReference implements Comparable<TargetInternalReferen
 
     @Override
     public int compareTo(TargetInternalReference targetInternalReference) {
-        return targetInternalReference==null ? -1 : Comparator.comparing(TargetInternalReference::getValue).compare(this, targetInternalReference);
+        return targetInternalReference==null ? -1 : Comparator.comparing(TargetInternalReference::getLowerCaseValue).compare(this, targetInternalReference);
     }
 
 

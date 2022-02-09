@@ -33,8 +33,8 @@ public class TranslatorModel<v1Input, v2Input, v3Input, Output extends TargetIns
             new TranslatorModel<>(FileBundle.class, null, null, new FileBundleV3Translator(), null, true, false),
 //            ,
 //            new TranslatorModel<>(ParcellationEntityVersion.class, null, null, new ParcellationEntityVersionV3Translator(), null, false, false),
-            new TranslatorModel<>(ParcellationEntity.class, null, null, new ParcellationEntityV3Translator(), null, false, false)
-
+            new TranslatorModel<>(ParcellationEntity.class, null, null, new ParcellationEntityV3Translator(), null, false, false),
+            new TranslatorModel<>(BehavioralProtocol.class, null, null, new BehavioralProtocolV3Translator(), null, false, false)
     );
 
     public static TranslatorModel<?,?,?,?> getModelByType(String type){

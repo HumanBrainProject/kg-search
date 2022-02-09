@@ -54,13 +54,27 @@ public class ParcellationEntity implements TargetInstance {
     @FieldInfo(label = "Name", sort = true, layout = "header", boost = 20)
     private Value<String> title;
 
+    @FieldInfo(label = "Brain atlas")
+    private Value<String> brainAtlas;
+
+    @FieldInfo(label = "Related UBERON parcellation")
+    private TargetInternalReference relatedUberonTerm;
+
+    @FieldInfo(label = "Is child structure of")
+    private List<TargetInternalReference> parents;
+
+    @FieldInfo(label = "Is a parent structure of")
+    private List<TargetInternalReference> children;
+
     @FieldInfo(label = "Ontology identifier")
     private List<Value<String>> ontologyIdentifier;
 
-    private List<Value<String>> brainAtlas;
-
     @FieldInfo(isTable = true, layout = "Versions")
     private List<Children<VersionWithServiceLink>> versionsTable;
+
+    @FieldInfo(isTable = true, layout = "Viewers")
+    private List<Children<VersionWithServiceLink>> viewerLinks;
+
 
     @Override
     public boolean isSearchableInstance() {
@@ -76,6 +90,9 @@ public class ParcellationEntity implements TargetInstance {
 
         @FieldInfo
         private TargetExternalReference viewer;
+
+        @FieldInfo(label="Laterality")
+        private TargetInternalReference laterality;
     }
 
 

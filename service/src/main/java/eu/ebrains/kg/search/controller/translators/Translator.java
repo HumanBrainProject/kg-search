@@ -132,17 +132,28 @@ public abstract class Translator<Source, Target, ListResult extends ResultsOfKG<
         return null;
     }
 
-
     protected List<TargetInternalReference> ref(List<? extends FullNameRef> refs) {
+        return ref(refs, false);
+    }
+
+    protected List<TargetInternalReference> ref(List<? extends FullNameRef> refs, boolean sorted) {
         if (!CollectionUtils.isEmpty(refs)) {
-            return refs.stream().map(this::ref).filter(Objects::nonNull).collect(Collectors.toList());
+            Stream<TargetInternalReference> targetInternalReferenceStream = refs.stream().map(this::ref).filter(Objects::nonNull);
+            if(sorted){
+                targetInternalReferenceStream = targetInternalReferenceStream.sorted();
+            }
+            return targetInternalReferenceStream.collect(Collectors.toList());
         }
         return null;
     }
 
-    protected List<TargetInternalReference> refVersion(List<? extends FullNameRefForResearchProductVersion> refs) {
+    protected List<TargetInternalReference> refVersion(List<? extends FullNameRefForResearchProductVersion> refs, boolean sorted) {
         if (!CollectionUtils.isEmpty(refs)) {
-            return refs.stream().map(this::ref).filter(Objects::nonNull).collect(Collectors.toList());
+            Stream<TargetInternalReference> targetInternalReferenceStream = refs.stream().map(this::ref).filter(Objects::nonNull);
+            if(sorted){
+                targetInternalReferenceStream = targetInternalReferenceStream.sorted();
+            }
+            return targetInternalReferenceStream.collect(Collectors.toList());
         }
         return null;
     }
