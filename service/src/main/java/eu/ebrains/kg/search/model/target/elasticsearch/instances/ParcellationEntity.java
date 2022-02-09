@@ -91,8 +91,15 @@ public class ParcellationEntity implements TargetInstance {
         @FieldInfo
         private TargetExternalReference viewer;
 
-        @FieldInfo(label="Laterality")
-        private TargetInternalReference laterality;
+        @FieldInfo(label="Laterality", separator = ", ")
+        private List<TargetInternalReference> laterality;
+
+        @FieldInfo(label="Inspired by", separator = ", ")
+        private List<TargetInternalReference> inspiredBy;
+
+        @FieldInfo(label="Visualized in", separator = ", ")
+        private List<TargetInternalReference> visualizedIn;
+
     }
 
 

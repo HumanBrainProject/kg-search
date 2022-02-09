@@ -77,6 +77,18 @@ public class ParcellationEntityV3Translator extends TranslatorV3<ParcellationEnt
         ParcellationEntity.VersionWithServiceLink version = new ParcellationEntity.VersionWithServiceLink();
         version.setVersion(value(s.getVersionIdentifier()));
         version.setLaterality(ref(s.getLaterality()));
+        if(!CollectionUtils.isEmpty(s.getInspiredBy())){
+            version.setInspiredBy(s.getInspiredBy().stream().map(i -> {
+                TargetInternalReference reference = ref(i.getDataset());
+                return reference;
+            }).distinct().sorted().collect(Collectors.toList()));
+        }
+        if(!CollectionUtils.isEmpty(s.getVisualizedIn())){
+            version.setVisualizedIn(s.getVisualizedIn().stream().map(i -> {
+                TargetInternalReference reference = ref(i.getDataset());
+                return reference;
+            }).distinct().sorted().collect(Collectors.toList()));
+        }
         collector.add(new Children<>(version));
     }
 
@@ -175,6 +187,9 @@ public class ParcellationEntityV3Translator extends TranslatorV3<ParcellationEnt
                 collector.add(new Children<>(emptyCategory));
             }
         }
+        if(collector.size()>0 && StringUtils.isBlank(collector.get(collector.size()-1).getChildren().getVersion().getValue())){
+            collector.remove(collector.size()-1);
+        }
         return collector;
     }
 
@@ -207,6 +222,7 @@ public class ParcellationEntityV3Translator extends TranslatorV3<ParcellationEnt
         pe.setChildren(ref(parcellationEntity.getIsParentOf(), true));
         pe.setRelatedUberonTerm(ref(parcellationEntity.getRelatedUBERONTerm()));
         pe.setOntologyIdentifier(value(parcellationEntity.getOntologyIdentifier()));
+
         return pe;
     }
 }

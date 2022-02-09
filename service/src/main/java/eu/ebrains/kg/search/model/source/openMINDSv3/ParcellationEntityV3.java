@@ -28,8 +28,20 @@ public class ParcellationEntityV3 extends SourceInstanceV3{
         private String versionInnovation;
         private ServiceLink viewer;
         private Version brainAtlasVersion;
-        private FullNameRef laterality;
+        private List<FullNameRef> laterality;
+        private List<FileWithDataset> inspiredBy;
+        private List<FileWithDataset> visualizedIn;
     }
+
+    @Getter
+    @Setter
+    @EqualsAndHashCode
+    public static class FileWithDataset {
+        private String IRI;
+        private String name;
+        private FullNameRefForResearchProductVersion dataset;
+    }
+
 
 
 

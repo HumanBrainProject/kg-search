@@ -135,12 +135,117 @@
           "path": "https://openminds.ebrains.eu/vocab/versionInnovation"
         },
         {
+          "propertyName": "query:inspiredBy",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/hasAnnotation",
+            "https://openminds.ebrains.eu/vocab/inspiredBy"
+          ],
+          "structure": [
+            {
+              "propertyName": "query:IRI",
+              "path": "https://openminds.ebrains.eu/vocab/IRI"
+            },
+            {
+              "propertyName": "query:name",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            },
+            {
+              "propertyName": "query:dataset",
+              "singleValue": "FIRST",
+              "path": [
+                "https://openminds.ebrains.eu/vocab/fileRepository",
+                {
+                  "@id": "https://openminds.ebrains.eu/vocab/repository",
+                  "reverse": true
+                }
+              ],
+              "structure": [
+                {
+                  "propertyName": "query:id",
+                  "path": "@id"
+                },
+                {
+                  "propertyName": "query:fullName",
+                  "path": "https://openminds.ebrains.eu/vocab/fullName"
+                },
+                {
+                  "propertyName": "query:versionIdentifier",
+                  "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
+                },
+                {
+                  "propertyName": "query:fallbackName",
+                  "path": [
+                    {
+                      "@id": "https://openminds.ebrains.eu/vocab/hasVersion",
+                      "reverse": true
+                    },
+                    "https://openminds.ebrains.eu/vocab/fullName"
+                  ],
+                  "singleValue": "FIRST"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "propertyName": "query:visualizedIn",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/hasAnnotation",
+            "https://openminds.ebrains.eu/vocab/visualizedIn"
+          ],
+          "structure": [
+            {
+              "propertyName": "query:IRI",
+              "path": "https://openminds.ebrains.eu/vocab/IRI"
+            },
+            {
+              "propertyName": "query:name",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            },
+            {
+              "propertyName": "query:dataset",
+              "singleValue": "FIRST",
+              "path": [
+                "https://openminds.ebrains.eu/vocab/fileRepository",
+                {
+                  "@id": "https://openminds.ebrains.eu/vocab/repository",
+                  "reverse": true
+                }
+              ],
+              "structure": [
+                {
+                  "propertyName": "query:id",
+                  "path": "@id"
+                },
+                {
+                  "propertyName": "query:fullName",
+                  "path": "https://openminds.ebrains.eu/vocab/fullName"
+                },
+                {
+                  "propertyName": "query:versionIdentifier",
+                  "path": "https://openminds.ebrains.eu/vocab/versionIdentifier"
+                },
+                {
+                  "propertyName": "query:fallbackName",
+                  "path": [
+                    {
+                      "@id": "https://openminds.ebrains.eu/vocab/hasVersion",
+                      "reverse": true
+                    },
+                    "https://openminds.ebrains.eu/vocab/fullName"
+                  ],
+                  "singleValue": "FIRST"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "propertyName": "query:laterality",
           "path": [
             "https://openminds.ebrains.eu/vocab/hasAnnotation",
             "https://openminds.ebrains.eu/vocab/laterality"
           ],
-          "singleValue": "FIRST",
           "structure": [
             {
               "propertyName": "query:fullName",
