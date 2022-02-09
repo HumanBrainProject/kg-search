@@ -39,7 +39,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@MetaInfo(name="Contributor", order=7, searchable=true)
+@MetaInfo(name="Contributor", order=8, searchable=true)
 
 public class Contributor implements TargetInstance {
     @JsonIgnore
@@ -70,6 +70,9 @@ public class Contributor implements TargetInstance {
     @FieldInfo(label = "Custodian of software", layout = "Custodian of software", labelHidden = true)
     private List<TargetInternalReference> custodianOfSoftware;
 
+    @FieldInfo(label = "Custodian of (meta)data models", layout = "Custodian of (meta)data models", labelHidden = true)
+    private List<TargetInternalReference> custodianOfMetaDataModels;
+
     @FieldInfo(type = FieldInfo.Type.TEXT, layout = "Dataset contributions", labelHidden = true)
     private List<TargetInternalReference> datasetContributions;
 
@@ -78,6 +81,9 @@ public class Contributor implements TargetInstance {
 
     @FieldInfo(type = FieldInfo.Type.TEXT, layout = "Software contributions", labelHidden = true)
     private List<TargetInternalReference> softwareContributions;
+
+    @FieldInfo(type = FieldInfo.Type.TEXT, layout = "(Meta)Data model contributions", labelHidden = true)
+    private List<TargetInternalReference> metaDataModelContributions;
 
     @JsonProperty("first_release")
     @FieldInfo(label = "First release", ignoreForSearch = true, visible = false, type=FieldInfo.Type.DATE)

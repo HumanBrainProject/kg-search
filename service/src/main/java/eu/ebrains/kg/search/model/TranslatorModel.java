@@ -34,8 +34,10 @@ public class TranslatorModel<v1Input, v2Input, v3Input, Output extends TargetIns
 //            ,
 //            new TranslatorModel<>(ParcellationEntityVersion.class, null, null, new ParcellationEntityVersionV3Translator(), null, false, false),
             new TranslatorModel<>(ParcellationEntity.class, null, null, new ParcellationEntityV3Translator(), null, false, false),
-            new TranslatorModel<>(BehavioralProtocol.class, null, null, new BehavioralProtocolV3Translator(), null, false, false)
-    );
+            new TranslatorModel<>(BehavioralProtocol.class, null, null, new BehavioralProtocolV3Translator(), null, false, false),
+            new TranslatorModel<>(MetaDataModel.class, null, null, new MetaDataModelV3Translator(), null, false, false),
+            new TranslatorModel<>(MetaDataModelVersion.class, null, null, new MetaDataModelVersionV3Translator(), null, false, false)
+            );
 
     public static TranslatorModel<?,?,?,?> getModelByType(String type){
         return MODELS.stream().filter(m -> m.getV3translator()!=null && m.getV3translator().semanticTypes().contains(type)).findFirst().orElse(null);

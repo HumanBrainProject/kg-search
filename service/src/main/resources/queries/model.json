@@ -142,8 +142,8 @@
       "path": "https://openminds.ebrains.eu/vocab/custodian",
       "structure": [
         {
-          "propertyName": "query:identifier",
-          "path": "http://schema.org/identifier"
+          "propertyName": "query:id",
+          "path": "@id"
         },
         {
           "propertyName": "query:fullName",
@@ -164,8 +164,8 @@
       "path": "https://openminds.ebrains.eu/vocab/developer",
       "structure": [
         {
-          "propertyName": "query:identifier",
-          "path": "http://schema.org/identifier"
+          "propertyName": "query:id",
+          "path": "@id"
         },
         {
           "propertyName": "query:fullName",

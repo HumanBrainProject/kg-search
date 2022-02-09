@@ -79,6 +79,7 @@ public class ProjectV3Translator extends TranslatorV3<ProjectV3, Project, Projec
         p.setDataset(refExtendedVersion(project.getDatasets(), true));
         p.setModels(refExtendedVersion(project.getModels(), true));
         p.setSoftware(refExtendedVersion(project.getSoftware(), true));
+        p.setMetaDataModels(refExtendedVersion(project.getMetaDataModels(), true));
         p.setTitle(value(project.getTitle()));
         if(!CollectionUtils.isEmpty(project.getPublications())) {
             p.setPublications(value(project.getPublications().stream()

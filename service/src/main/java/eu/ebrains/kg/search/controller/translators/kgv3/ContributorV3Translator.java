@@ -109,10 +109,12 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
         c.setTitle(value(Helpers.getFullName(personOrOrganization.getFullName(), personOrOrganization.getFamilyName(), personOrOrganization.getGivenName())));
         if (CollectionUtils.isEmpty(personOrOrganization.getCustodianOfDataset()) &&
                         CollectionUtils.isEmpty(personOrOrganization.getCustodianOfSoftware()) &&
+                        CollectionUtils.isEmpty(personOrOrganization.getCustodianOfMetaDataModel())&&
                         CollectionUtils.isEmpty(personOrOrganization.getCustodianOfModel()) &&
                         CollectionUtils.isEmpty(personOrOrganization.getDatasetContributions()) &&
                         CollectionUtils.isEmpty(personOrOrganization.getModelContributions()) &&
-                        CollectionUtils.isEmpty(personOrOrganization.getSoftwareContributions())
+                        CollectionUtils.isEmpty(personOrOrganization.getSoftwareContributions()) &&
+                    CollectionUtils.isEmpty(personOrOrganization.getMetaDataModelContributions())
         ) {
             //No contributions to anything - we don't index it...
             return null;
@@ -121,10 +123,12 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
         c.setCustodianOfDataset(getReferences(personOrOrganization.getCustodianOfDataset()));
         c.setCustodianOfModel(getReferences(personOrOrganization.getCustodianOfModel()));
         c.setCustodianOfSoftware(getReferences(personOrOrganization.getCustodianOfSoftware()));
+        c.setCustodianOfMetaDataModels(getReferences(personOrOrganization.getCustodianOfMetaDataModel()));
 
         c.setDatasetContributions(getReferences(personOrOrganization.getDatasetContributions()));
         c.setModelContributions(getReferences(personOrOrganization.getModelContributions()));
         c.setSoftwareContributions(getReferences(personOrOrganization.getSoftwareContributions()));
+        c.setMetaDataModelContributions(getReferences(personOrOrganization.getMetaDataModelContributions()));
 
         return c;
     }

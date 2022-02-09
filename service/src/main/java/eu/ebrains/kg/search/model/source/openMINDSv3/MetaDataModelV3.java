@@ -23,8 +23,9 @@
 
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ExtendedFullNameRefForResearchProductVersion;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRefForResearchProductVersion;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.PersonOrOrganizationRef;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,24 +33,13 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PersonOrOrganizationV3 extends SourceInstanceV3 {
-
-    //Organization
-    private String fullName;
-
-    //Person
-    private String familyName;
-    private String givenName;
-
-    //Common
-    private List<ExtendedFullNameRefForResearchProductVersion> custodianOfModel;
-    private List<ExtendedFullNameRefForResearchProductVersion> custodianOfMetaDataModel;
-    private List<ExtendedFullNameRefForResearchProductVersion> custodianOfDataset;
-    private List<ExtendedFullNameRefForResearchProductVersion> custodianOfSoftware;
-    private List<ExtendedFullNameRefForResearchProductVersion> modelContributions;
-    private List<ExtendedFullNameRefForResearchProductVersion> metaDataModelContributions;
-    private List<ExtendedFullNameRefForResearchProductVersion> datasetContributions;
-    private List<ExtendedFullNameRefForResearchProductVersion> softwareContributions;
-
-
+public class MetaDataModelV3 extends SourceInstanceV3 {
+    private String title;
+    private String description;
+    private String doi;
+    private String howToCite;
+    private List<PersonOrOrganizationRef> developer;
+    private List<PersonOrOrganizationRef> custodian;
+    private String homepage;
+    private List<Version> versions;
 }
