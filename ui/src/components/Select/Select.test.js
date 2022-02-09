@@ -23,11 +23,8 @@
 
 import React from "react";
 import renderer from "react-test-renderer";
-import Enzyme, { mount, shallow, render } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
 import Select from "./Select";
 
-Enzyme.configure({ adapter: new Adapter() });
 
 test("Select component renders initially", () => {
   const component = renderer.create(
@@ -35,20 +32,6 @@ test("Select component renders initially", () => {
   );
 
   expect(component.toJSON()).toMatchSnapshot();
-});
-
-test("Select test className", () => {
-  const component = shallow(
-    <Select className="className" label="a label" list={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onChange={() => {}} />
-  );
-  expect(component.hasClass("className")).toBe(true);
-});
-
-test("Select test label", () => {
-  const component = shallow(
-    <Select className="className" label="a label" list={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} onChange={() => {}} />
-  );
-  expect(component.find("div div").text()).toBe("a label");
 });
 
 test("Select test number of items", () => {

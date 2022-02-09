@@ -23,11 +23,7 @@
 
 import React from "react";
 import renderer from "react-test-renderer";
-import Enzyme, { shallow } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
 import CopyToClipboardButton from "./CopyToClipboardButton";
-
-Enzyme.configure({ adapter: new Adapter() });
 
 test("CopyToClipboardButton component renders initially", () => {
   const component = renderer.create(
@@ -35,39 +31,4 @@ test("CopyToClipboardButton component renders initially", () => {
   );
 
   expect(component.toJSON()).toMatchSnapshot();
-});
-
-test("CopyToClipboardButton test className\"", () => {
-  const component = shallow(
-    <CopyToClipboardButton className="className" text="text" icon="times" title="title" confirmationText="confirmation text" content="content" />
-  );
-  expect(component.hasClass("className")).toBe(true);
-});
-
-test("CopyToClipboardButton test icon\"", () => {
-  const component = shallow(
-    <CopyToClipboardButton className="className" text="text" icon="times" title="title" confirmationText="confirmation text" content="content" />
-  );
-  expect(component.find("svg")).toBe(true);
-});
-
-test("CopyToClipboardButton test title", () => {
-  const component = shallow(
-    <CopyToClipboardButton className="className" text="text" icon="times" title="title" confirmationText="confirmation text" content="content" />
-  );
-  expect(component.find("button").prop("title")).toEqual("title");
-});
-
-test("CopyToClipboardButton test text", () => {
-  const component = shallow(
-    <CopyToClipboardButton className="className" text="text" icon="times" title="title" confirmationText="confirmation text" content="content" />
-  );
-  expect(component.find("button span").text()).toContain("text");
-});
-
-test("CopyToClipboardButton test confirmationText", () => {
-  const component = shallow(
-    <CopyToClipboardButton className="className" text="text" icon="times" title="title" confirmationText="confirmation text" content="content" />
-  );
-  expect(component.find("div").text()).toEqual("confirmation text");
 });

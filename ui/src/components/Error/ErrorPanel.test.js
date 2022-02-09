@@ -23,11 +23,7 @@
 
 import React from "react";
 import renderer from "react-test-renderer";
-import Enzyme, { shallow } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
 import ErrorPanel from "./ErrorPanel";
-
-Enzyme.configure({ adapter: new Adapter() });
 
 test("ErrorPanel component renders initially", () => {
   const component = renderer.create(
@@ -42,45 +38,4 @@ test("ErrorPanel test show false\"", () => {
     <ErrorPanel show={false} message="some message" retryLabel="retry label" retryAction={{}} cancelLabel="cancel label" cancelAction={{}} onAction={() => {}} />
   );
   expect(component.toJSON()).toBe(null);
-});
-
-test("ErrorPanel test message", () => {
-  const component = shallow(
-    <ErrorPanel show={true} message="some message" retryLabel="retry label" retryAction={{}} cancelLabel="cancel label" cancelAction={{}} onAction={() => {}} />
-  );
-  expect(component.find("span.kgs-error-message").text()).toEqual("some message");
-});
-
-test("ErrorPanel test retry button label", () => {
-  const component = shallow(
-    <ErrorPanel show={true} message="some message" retryLabel="retry label" retryAction={{}} cancelLabel="cancel label" cancelAction={{}} onAction={() => {}} />
-  );
-  expect(component.find("button").at(1).text()).toEqual("retry label");
-});
-
-test("ErrorPanel test cancel button label", () => {
-  const component = shallow(
-    <ErrorPanel show={true} message="some message" retryLabel="retry label" retryAction={{}} cancelLabel="cancel label" cancelAction={{}} onAction={() => {}} />
-  );
-  expect(component.find("button").at(0).text()).toEqual("cancel label");
-});
-
-test("ErrorPanel test retry button click", () => {
-  const fn = jest.fn();
-  const retryAction = {};
-  const component = shallow(
-    <ErrorPanel show={true} message="some message" retryLabel="retry label" retryAction={retryAction} cancelLabel="cancel label" cancelAction={{}} onAction={fn} />
-  );
-  component.find("button").at(1).simulate("click");
-  expect(fn.mock.calls[0][0]).toBe(retryAction);
-});
-
-test("ErrorPanel test cancel button click", () => {
-  const fn = jest.fn();
-  const cancelAction = {};
-  const component = shallow(
-    <ErrorPanel show={true} message="some message" retryLabel="retry label" retryAction={{}} cancelLabel="cancel label" cancelAction={cancelAction} onAction={fn} />
-  );
-  component.find("button").at(0).simulate("click");
-  expect(fn.mock.calls[0][0]).toBe(cancelAction);
 });

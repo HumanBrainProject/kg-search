@@ -23,11 +23,8 @@
 
 import React from "react";
 import renderer from "react-test-renderer";
-import Enzyme, { shallow } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
 import EmailToLink from "./EmailToLink";
 
-Enzyme.configure({ adapter: new Adapter() });
 
 test("EmailToLink component renders initially", () => {
   const component = renderer.create(
@@ -35,32 +32,4 @@ test("EmailToLink component renders initially", () => {
   );
 
   expect(component.toJSON()).toMatchSnapshot();
-});
-
-test("EmailToLink test className\"", () => {
-  const component = shallow(
-    <EmailToLink className="test" title="title" text="text" link="link" icon="times" />
-  );
-  expect(component.hasClass("test")).toBe(true);
-});
-
-test("EmailToLink test text", () => {
-  const component = shallow(
-    <EmailToLink className="test" title="title" text="text" link="link" icon="times" />
-  );
-  expect(component.text()).toContain("text");
-});
-
-test("EmailToLink test title", () => {
-  const component = shallow(
-    <EmailToLink className="test" title="title" text="text" link="link" icon="times" />
-  );
-  expect(component.prop("title")).toEqual("title");
-});
-
-test("EmailToLink test icon", () => {
-  const component = shallow(
-    <EmailToLink className="test" title="title" text="text" link="link" icon="times" />
-  );
-  expect(component.find("svg")).toBe(true);
 });

@@ -24,11 +24,7 @@
 import React from "react";
 import uniqueId from "lodash/uniqueId";
 import renderer from "react-test-renderer";
-import Enzyme, { mount, shallow, render } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
 import HitsList from "./HitsList";
-
-Enzyme.configure({ adapter: new Adapter() });
 
 test("HitsList component renders initially", () => {
   const component = renderer.create(
@@ -36,20 +32,6 @@ test("HitsList component renders initially", () => {
   );
 
   expect(component.toJSON()).toMatchSnapshot();
-});
-
-test("HitsList test className\"", () => {
-  const component = shallow(
-    <HitsList className="className" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={() => {}} itemComponent={() => (<div></div>)} />
-  );
-  expect(component.hasClass("className")).toBe(true);
-});
-
-test("HitsList test title\"", () => {
-  const component = shallow(
-    <HitsList className="className" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={() => {}} itemComponent={() => (<div></div>)} />
-  );
-  expect(component.find("div div").text()).toBe("a title");
 });
 
 test("HitsList test number of items", () => {
