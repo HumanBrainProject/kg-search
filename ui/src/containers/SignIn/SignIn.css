@@ -49,6 +49,10 @@ body[theme="dark"] .navbar >.nav-item > button.kgs-login {
     color: var(--color-8);
 }
 
+.kgs-sign__in, .kgs-sign__in + .dropdown-menu > .dropdown-item:active{
+    background-color: transparent;
+}
+
 .kgs-sign__in, .kgs-sign__in + .dropdown-menu > .dropdown-item > button {
     width: 100%;
     border: none;
@@ -80,13 +84,13 @@ body[theme="dark"] .navbar >.nav-item > button.kgs-login {
     margin-right: 22px;
 }
 
-.dropleft .kgs-sign__in.dropdown-toggle::before {
+.dropdown .kgs-sign__in.dropdown-toggle::after {
     display: none;
 }
 
 @media (min-width: 992px) {
-    .dropleft .kgs-sign__in + .dropdown-menu {
-        margin-top: 40px;
-        margin-right: -45px;
+    .dropdown .kgs-sign__in + .dropdown-menu {
+        left:unset;
+        right: 0;
     }
 }

@@ -91,6 +91,10 @@
     padding-top: 0.20rem;
 }
 
+.kgs-field__table .table>:not(:first-child) {
+    border-top: 1px solid var(--border-color-6);
+}
+
 .kgs-field__table .table tbody td {
     padding-top: 0;
 }
