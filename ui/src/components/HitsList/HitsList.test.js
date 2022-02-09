@@ -33,20 +33,3 @@ test("HitsList component renders initially", () => {
 
   expect(component.toJSON()).toMatchSnapshot();
 });
-
-test("HitsList test number of items", () => {
-  const component = render(
-    <HitsList className="className" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={() => {}} itemComponent={() => (<div></div>)} />
-  );
-  expect(component.find("li").length).toBe(2);
-});
-
-test("Toggle test  button click", () => {
-  const fn = jest.fn();
-  const component = mount(
-    <HitsList className="className" title="a title" items={[{label: "a label", value: "a value"},{label: "another label", value: "another value"}]} getKey={() => uniqueId()} onClick={fn} itemComponent={() => (<div></div>)} />
-  );
-  component.find("button").at(1).simulate("click");
-  expect(fn.mock.calls.length).toBe(1);
-  expect(fn.mock.calls[0][0].value).toBe("another value");
-});

@@ -26,10 +26,9 @@ import renderer from "react-test-renderer";
 import Icon from "./Icon";
 
 test("Icon component renders initially", () => {
-    const component = renderer.create(
-      <Icon />
-    );
-  
-    expect(component.toJSON()).toMatchSnapshot();
-  });
-  
+  const component = renderer.create(
+    <Icon />
+  );
+
+  expect(component.toJSON()).toMatchSnapshot();
+});

@@ -31,10 +31,3 @@ test("Hint test show false\"", () => {
   );
   expect(component.toJSON()).toBe(null);
 });
-
-test("Hint test value", () => {
-  const component = render(
-    <Hint className="test" show={true} value="some text" />
-  );
-  expect(component.find("span").text()).toEqual("some text");
-});
