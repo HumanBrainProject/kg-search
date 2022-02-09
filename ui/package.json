@@ -25,7 +25,7 @@
     "lodash": "^4.17.21",
     "lucene-query-parser": "^1.2.0",
     "normalize.css": "^8.0.1",
-    "popper.js": "^1.16.1",
+    "@popperjs/core": "^2.11.2",
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
