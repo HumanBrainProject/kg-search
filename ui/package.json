@@ -40,7 +40,7 @@
     "redux-logger": "3.0.6",
     "redux-thunk": "2.4.1",
     "sanitize-html": "^2.7.0",
-    "showdown": "^1.9.0",
+    "showdown": "^2.0.0-alpha",
     "showdown-xss-filter": "^0.2.0"
   },
   "scripts": {
