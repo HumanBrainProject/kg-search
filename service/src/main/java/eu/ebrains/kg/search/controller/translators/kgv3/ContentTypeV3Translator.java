@@ -81,11 +81,11 @@ public class ContentTypeV3Translator extends TranslatorV3<ContentTypeV3, Content
        c.setSpecification(value(contentTypeV3.getSpecification()));
        c.setSynonyms(value(contentTypeV3.getSynonym()));
        c.setDataType(ref(contentTypeV3.getDataType()));
-       c.setInputFormatForSoftware(refVersion(contentTypeV3.getInputFormat()));
+       c.setInputFormatForSoftware(refVersion(contentTypeV3.getInputFormat(), true));
        if(c.getInputFormatForSoftware()!=null){
            Collections.sort(c.getInputFormatForSoftware());
        }
-       c.setOutputFormatForSoftware(refVersion(contentTypeV3.getOutputFormat()));
+       c.setOutputFormatForSoftware(refVersion(contentTypeV3.getOutputFormat(), true));
        if(c.getOutputFormatForSoftware()!=null){
            Collections.sort(c.getOutputFormatForSoftware());
        }

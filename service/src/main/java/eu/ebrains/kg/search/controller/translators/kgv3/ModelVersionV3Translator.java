@@ -208,14 +208,14 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
             Collections.sort(modelVersion.getKeyword());
             m.setKeywords(value(modelVersion.getKeyword()));
         }
-        m.setUsedDataset(refVersion(modelVersion.getUsedDatasets()));
-        m.setProducedDataset(refVersion(modelVersion.getProducedDatasets()));
+        m.setUsedDataset(refVersion(modelVersion.getUsedDatasets(), true));
+        m.setProducedDataset(refVersion(modelVersion.getProducedDatasets(), true));
         m.setModelFormat(ref(createList(modelVersion.getModelFormat())));
         if (modelVersion.getModel() != null) {
             m.setAbstractionLevel(ref(createList(modelVersion.getModel().getAbstractionLevel())));
             List<String> brainStructureStudyTargets = Arrays.asList(Constants.OPENMINDS_ROOT+"controlledTerms/UBERONParcellation");
             final Map<Boolean, List<StudyTarget>> brainStructureOrNot = modelVersion.getModel().getStudyTarget().stream().collect(Collectors.groupingBy(s -> s.getStudyTargetType() != null && s.getStudyTargetType().stream().anyMatch(brainStructureStudyTargets::contains)));
-            m.setStudyTargets(refVersion(brainStructureOrNot.get(Boolean.FALSE)));
+            m.setStudyTargets(refVersion(brainStructureOrNot.get(Boolean.FALSE), false));
             if(!CollectionUtils.isEmpty(brainStructureOrNot.get(Boolean.TRUE))){
                 m.setBrainStructures(brainStructureOrNot.get(Boolean.TRUE).stream().map(this::refAnatomical).collect(Collectors.toList()));
             }

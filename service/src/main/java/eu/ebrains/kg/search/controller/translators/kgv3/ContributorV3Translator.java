@@ -136,7 +136,7 @@ public class ContributorV3Translator extends TranslatorV3<PersonOrOrganizationV3
         }
         final List<TargetInternalReference> result = references.stream().map(r -> {
             //Add all children elements
-            final List<TargetInternalReference> refs = refVersion(r.getResearchProductVersions());
+            final List<TargetInternalReference> refs = refVersion(r.getResearchProductVersions(), true);
             if (r.getResearchProductVersions().size() > 1) {
                 refs.add(ref((FullNameRefForResearchProductVersion) r));
             }

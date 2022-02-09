@@ -24,6 +24,7 @@
 package eu.ebrains.kg.search.model.source.openMINDSv3;
 
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
+import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRefForResearchProductVersion;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.ServiceLink;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,7 +53,7 @@ public class FileV3 extends SourceInstanceV3 {
     @Getter
     @Setter
     public static class Format extends FullNameRef{
-        private List<FullNameRef> inputFormatForSoftware;
+        private List<FullNameRefForResearchProductVersion> inputFormatForSoftware;
     }
 
     @Getter

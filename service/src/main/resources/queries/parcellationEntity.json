@@ -39,6 +39,57 @@
       "path": "https://openminds.ebrains.eu/vocab/ontologyIdentifier"
     },
     {
+      "propertyName": "query:relatedUBERONTerm",
+      "path": "https://openminds.ebrains.eu/vocab/relatedUBERONTerm",
+      "singleValue": "FIRST",
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:parents",
+      "path": "https://openminds.ebrains.eu/vocab/hasParent",
+      "structure": [
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        },
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        }
+      ]
+    },
+    {
+      "propertyName": "query:isParentOf",
+      "path": {
+        "@id": "https://openminds.ebrains.eu/vocab/hasParent",
+        "reverse": true,
+        "typeFilter": [
+          {
+            "@id": "https://openminds.ebrains.eu/sands/ParcellationEntity"
+          }
+        ]
+      },
+      "structure": [
+        {
+          "propertyName": "query:id",
+          "path": "@id"
+        },
+        {
+          "propertyName": "query:fullName",
+          "path": "https://openminds.ebrains.eu/vocab/name"
+        }
+      ]
+    },
+    {
       "propertyName": "query:brainAtlas",
       "path": [
         {
@@ -50,6 +101,7 @@
           "reverse": true
         }
       ],
+      "singleValue": "FIRST",
       "structure": [
         {
           "propertyName": "query:id",
@@ -81,6 +133,24 @@
         {
           "propertyName": "query:versionInnovation",
           "path": "https://openminds.ebrains.eu/vocab/versionInnovation"
+        },
+        {
+          "propertyName": "query:laterality",
+          "path": [
+            "https://openminds.ebrains.eu/vocab/hasAnnotation",
+            "https://openminds.ebrains.eu/vocab/laterality"
+          ],
+          "singleValue": "FIRST",
+          "structure": [
+            {
+              "propertyName": "query:fullName",
+              "path": "https://openminds.ebrains.eu/vocab/name"
+            },
+            {
+              "propertyName": "query:id",
+              "path": "@id"
+            }
+          ]
         },
         {
           "propertyName": "query:brainAtlasVersion",

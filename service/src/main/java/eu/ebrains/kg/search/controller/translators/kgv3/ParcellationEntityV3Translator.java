@@ -38,6 +38,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ParcellationEntityV3Translator extends TranslatorV3<ParcellationEntityV3, ParcellationEntity, ParcellationEntityV3Translator.Result> {
@@ -70,30 +72,34 @@ public class ParcellationEntityV3Translator extends TranslatorV3<ParcellationEnt
         return Collections.singletonList("https://openminds.ebrains.eu/sands/ParcellationEntity");
     }
 
-    private void handleVersionsWithServiceLink(List<ParcellationEntityV3.VersionWithServiceLink> versions, List<Children<ParcellationEntity.VersionWithServiceLink>> collector){
-        if(!CollectionUtils.isEmpty(versions)) {
-            versions.forEach(s -> {
-                ParcellationEntity.VersionWithServiceLink version = new ParcellationEntity.VersionWithServiceLink();
-                version.setVersion(value(s.getVersionIdentifier()));
-                if (s.getViewer() != null) {
-                    version.setViewer(new TargetExternalReference(s.getViewer().getUrl(), String.format("Show in %s", s.getViewer().getService())));
-                }
-                collector.add(new Children<>(version));
-            });
+
+    private void handleVersion(ParcellationEntityV3.VersionWithServiceLink s, List<Children<ParcellationEntity.VersionWithServiceLink>> collector) {
+        ParcellationEntity.VersionWithServiceLink version = new ParcellationEntity.VersionWithServiceLink();
+        version.setVersion(value(s.getVersionIdentifier()));
+        version.setLaterality(ref(s.getLaterality()));
+        collector.add(new Children<>(version));
+    }
+
+    private void handleVersionWithServiceLink(ParcellationEntityV3.VersionWithServiceLink s, List<Children<ParcellationEntity.VersionWithServiceLink>> collector) {
+        ParcellationEntity.VersionWithServiceLink version = new ParcellationEntity.VersionWithServiceLink();
+        version.setVersion(value(s.getVersionIdentifier()));
+        if (s.getViewer() != null) {
+            version.setViewer(new TargetExternalReference(s.getViewer().getUrl(), String.format("Show in %s", s.getViewer().getService())));
+            collector.add(new Children<>(version));
         }
     }
 
 
-    private void findNewVersion(List<Version> versions, String versionIdentifier, List<String> collector){
+    private void findNewVersion(List<Version> versions, String versionIdentifier, List<String> collector) {
         final Optional<Version> version = versions.stream().filter(v -> v.getIsNewVersionOf() != null && v.getIsNewVersionOf().equals(versionIdentifier)).findFirst();
-        if(version.isPresent()){
+        if (version.isPresent()) {
             final String identifier = version.get().getVersionIdentifier();
             collector.add(identifier);
             findNewVersion(versions, identifier, collector);
         }
     }
 
-    private List<List<String>> sortDependencyChains(List<Version> versions){
+    private List<List<String>> sortDependencyChains(List<Version> versions) {
         Set<String> containedVersions = versions.stream().map(Version::getVersionIdentifier).filter(Objects::nonNull).collect(Collectors.toSet());
         final List<Version> startingPoints = versions.stream().filter(v -> v.getIsNewVersionOf() == null || !containedVersions.contains(v.getIsNewVersionOf())).collect(Collectors.toList());
         Map<String, List<String>> dependencyChains = new HashMap<>();
@@ -107,10 +113,10 @@ public class ParcellationEntityV3Translator extends TranslatorV3<ParcellationEnt
 
     }
 
-    private List<List<String>> sortIdentifierGroups(List<ParcellationEntityV3.VersionWithServiceLink> versions){
+    private List<List<String>> sortIdentifierGroups(List<ParcellationEntityV3.VersionWithServiceLink> versions) {
         List<List<String>> versionIdentifierGroups = new ArrayList<>();
         //We exclude versions which do not have a brainAtlasVersion, since they are not complete...
-         for (ParcellationEntityV3.VersionWithServiceLink v : versions) {
+        for (ParcellationEntityV3.VersionWithServiceLink v : versions) {
             final Version brainAtlasVersion = v.getBrainAtlasVersion();
             List<String> versionIdentifiers = new ArrayList<>();
             versionIdentifiers.add(brainAtlasVersion.getVersionIdentifier());
@@ -127,19 +133,19 @@ public class ParcellationEntityV3Translator extends TranslatorV3<ParcellationEnt
         List<List<String>> sortedVersionIdentifierGroups = new ArrayList<>(versionIdentifierGroups.size());
         //Ensure that we're having a steady progress - otherwise, we end up in a infinite loop
         Integer lastSize = null;
-        while(versionIdentifierGroups.size()>0 && (lastSize == null ||  lastSize > versionIdentifierGroups.size())){
-            lastSize =  versionIdentifierGroups.size();
+        while (versionIdentifierGroups.size() > 0 && (lastSize == null || lastSize > versionIdentifierGroups.size())) {
+            lastSize = versionIdentifierGroups.size();
             for (List<String> v : versionIdentifierGroups) {
                 int maxIndex = 0;
                 for (String identifier : v) {
                     for (List<String> dependencyChain : dependencyChains) {
                         final int index = dependencyChain.indexOf(identifier);
-                        if(index>maxIndex){
+                        if (index > maxIndex) {
                             maxIndex = index;
                         }
                     }
                 }
-                if(maxIndex==0){
+                if (maxIndex == 0) {
                     sortedVersionIdentifierGroups.add(v);
                     dependencyChains.forEach(d -> d.removeAll(v));
                     versionIdentifierGroups.remove(v);
@@ -150,26 +156,42 @@ public class ParcellationEntityV3Translator extends TranslatorV3<ParcellationEnt
         return sortedVersionIdentifierGroups;
     }
 
-    public ParcellationEntity translate(ParcellationEntityV3 parcellationEntity, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
-        ParcellationEntity pe = new ParcellationEntity();
-
-        final List<ParcellationEntityV3.VersionWithServiceLink> versions = parcellationEntity.getVersions().stream().filter(v -> v.getBrainAtlasVersion()!=null && v.getBrainAtlasVersion().getVersionIdentifier()!=null).collect(Collectors.toList());
-        List<Children<ParcellationEntity.VersionWithServiceLink>> parcellationEntityVersions = new ArrayList<>();
+    private List<Children<ParcellationEntity.VersionWithServiceLink>> sortAndHandleGroups(List<ParcellationEntityV3.VersionWithServiceLink> versions, BiConsumer<ParcellationEntityV3.VersionWithServiceLink, List<Children<ParcellationEntity.VersionWithServiceLink>>> consumer) {
+        List<Children<ParcellationEntity.VersionWithServiceLink>> collector = new ArrayList<>();
         for (List<String> versionIdentifierGroup : sortIdentifierGroups(versions)) {
             List<ParcellationEntityV3.VersionWithServiceLink> group = new ArrayList<>();
             for (ParcellationEntityV3.VersionWithServiceLink version : versions) {
-                if(versionIdentifierGroup.contains(version.getBrainAtlasVersion().getVersionIdentifier())){
+                if (versionIdentifierGroup.contains(version.getBrainAtlasVersion().getVersionIdentifier())) {
                     group.add(version);
                 }
             }
             group.sort(Comparator.comparing(ParcellationEntityV3.VersionWithServiceLink::getVersionIdentifier));
-            handleVersionsWithServiceLink(group, parcellationEntityVersions);
-            final ParcellationEntity.VersionWithServiceLink emptyCategory = new ParcellationEntity.VersionWithServiceLink();
-            emptyCategory.setVersion(new Value<>(" "));
-            parcellationEntityVersions.add(new Children<>(emptyCategory));
+            if (!CollectionUtils.isEmpty(group)) {
+                group.forEach(s -> consumer.accept(s, collector));
+            }
+            if(collector.size()>0 && StringUtils.isNotBlank(collector.get(collector.size()-1).getChildren().getVersion().getValue())){
+                final ParcellationEntity.VersionWithServiceLink emptyCategory = new ParcellationEntity.VersionWithServiceLink();
+                emptyCategory.setVersion(new Value<>(" "));
+                collector.add(new Children<>(emptyCategory));
+            }
         }
+        return collector;
+    }
 
-        pe.setVersionsTable(parcellationEntityVersions);
+    public ParcellationEntity translate(ParcellationEntityV3 parcellationEntity, DataStage dataStage, boolean liveMode, DOICitationFormatter doiCitationFormatter) throws TranslationException {
+        ParcellationEntity pe = new ParcellationEntity();
+
+
+        final List<ParcellationEntityV3.VersionWithServiceLink> versions = parcellationEntity.getVersions().stream().filter(v -> v.getBrainAtlasVersion() != null && v.getBrainAtlasVersion().getVersionIdentifier() != null).collect(Collectors.toList());
+
+        final List<Children<ParcellationEntity.VersionWithServiceLink>> versionTable = sortAndHandleGroups(versions, this::handleVersion);
+        if (!CollectionUtils.isEmpty(versionTable)) {
+            pe.setVersionsTable(versionTable);
+        }
+        final List<Children<ParcellationEntity.VersionWithServiceLink>> viewerLinks = sortAndHandleGroups(versions, this::handleVersionWithServiceLink);
+        if (!CollectionUtils.isEmpty(viewerLinks)) {
+            pe.setViewerLinks(viewerLinks);
+        }
         pe.setId(IdUtils.getUUID(pe.getId()));
 
         pe.setAllIdentifiers(pe.getIdentifier());
@@ -178,9 +200,12 @@ public class ParcellationEntityV3Translator extends TranslatorV3<ParcellationEnt
             pe.setTitle(value(parcellationEntity.getName()));
         }
         //TODO switch to link once the brain atlas has its own representation
-        if (!CollectionUtils.isEmpty(parcellationEntity.getBrainAtlas())) {
-            pe.setBrainAtlas(value(parcellationEntity.getBrainAtlas().stream().map(FullNameRef::getFullName).collect(Collectors.toList())));
+        if (parcellationEntity.getBrainAtlas() != null) {
+            pe.setBrainAtlas(value(parcellationEntity.getBrainAtlas().getFullName()));
         }
+        pe.setParents(ref(parcellationEntity.getParents(), true));
+        pe.setChildren(ref(parcellationEntity.getIsParentOf(), true));
+        pe.setRelatedUberonTerm(ref(parcellationEntity.getRelatedUBERONTerm()));
         pe.setOntologyIdentifier(value(parcellationEntity.getOntologyIdentifier()));
         return pe;
     }
