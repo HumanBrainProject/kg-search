@@ -144,10 +144,10 @@ public class MetaDataModelVersion implements TargetInstance, VersionedInstance {
     @FieldInfo(label = "Support", layout = "summary", separator = "; ", type = FieldInfo.Type.TEXT)
     private List<TargetExternalReference> support;
 
-    @FieldInfo(layout = "Serialization format")
+    @FieldInfo(label = "Serialization format", layout = "summary")
     private List<TargetInternalReference> serializationFormat;
 
-    @FieldInfo(layout = "Specification format")
+    @FieldInfo(label = "Specification format", layout = "summary")
     private List<TargetInternalReference> specificationFormat;
 
 }
