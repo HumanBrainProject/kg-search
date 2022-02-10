@@ -28,6 +28,10 @@ import java.util.List;
 public interface TargetInstance {
     String getId();
 
+    /**
+     *
+     * @return all identifiers to identify duplicates across the multiple KG versions.
+     */
     List<String> getAllIdentifiers();
 
 
