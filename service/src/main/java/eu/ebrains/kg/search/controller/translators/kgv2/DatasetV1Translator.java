@@ -40,13 +40,13 @@ import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.firstItemOrNull;
 import static eu.ebrains.kg.search.controller.translators.kgv2.TranslatorOfKGV2Commons.*;
 
 public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion, DatasetV1Translator.Result> {
@@ -79,7 +79,7 @@ public class DatasetV1Translator extends TranslatorV2<DatasetV1, DatasetVersion,
         d.setId(datasetV1.getIdentifier());
         d.setAllIdentifiers(createList(datasetV1.getIdentifier()));
         List<String> identifiers = createList(datasetV1.getIdentifier(), String.format("Dataset/%s", datasetV1.getIdentifier()));
-        d.setIdentifier(identifiers);
+        d.setIdentifier(identifiers.stream().distinct().collect(Collectors.toList()));
         String containerUrl = datasetV1.getContainerUrl();
         List<DatasetV1.SourceFile> files = datasetV1.getFiles();
         if (!datasetV1.isUseHDG() && !hasEmbargoStatus(datasetV1, EMBARGOED, UNDER_REVIEW) && StringUtils.isNotBlank(containerUrl) && CollectionUtils.isEmpty(datasetV1.getExternalDatalink()) && CollectionUtils.isEmpty(files)) {

@@ -28,7 +28,6 @@ import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.ProjectV3;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.Project;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
@@ -74,7 +73,7 @@ public class ProjectV3Translator extends TranslatorV3<ProjectV3, Project, Projec
         String uuid = IdUtils.getUUID(project.getId());
         p.setId(uuid);
         p.setAllIdentifiers(project.getIdentifier());
-        p.setIdentifier(IdUtils.getIdentifiersWithPrefix("Project", project.getIdentifier()));
+        p.setIdentifier(IdUtils.getIdentifiersWithPrefix("Project", project.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         p.setDescription(value(project.getDescription()));
         p.setDataset(refExtendedVersion(project.getDatasets(), true));
         p.setModels(refExtendedVersion(project.getModels(), true));

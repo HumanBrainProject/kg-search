@@ -86,7 +86,7 @@ public class MetaDataModelVersionV3Translator extends TranslatorV3<MetadataModel
         Accessibility accessibility = Accessibility.fromPayload(metadataModelVersionV3);
         m.setId(IdUtils.getUUID(metadataModelVersionV3.getId()));
         m.setAllIdentifiers(metadataModelVersionV3.getIdentifier());
-        m.setIdentifier(IdUtils.getUUID(metadataModelVersionV3.getIdentifier()));
+        m.setIdentifier(IdUtils.getUUID(metadataModelVersionV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         List<Version> versions = metaDataModel == null ? null : metaDataModel.getVersions();
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
         if (hasMultipleVersions) {

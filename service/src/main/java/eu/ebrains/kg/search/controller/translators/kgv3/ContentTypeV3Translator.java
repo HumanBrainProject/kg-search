@@ -73,7 +73,7 @@ public class ContentTypeV3Translator extends TranslatorV3<ContentTypeV3, Content
        ContentType c = new ContentType();
        c.setId(IdUtils.getUUID(contentTypeV3.getId()));
        c.setAllIdentifiers(contentTypeV3.getIdentifier());
-       c.setIdentifier(IdUtils.getUUID(contentTypeV3.getIdentifier()));
+       c.setIdentifier(IdUtils.getUUID(contentTypeV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
        c.setTitle(value(contentTypeV3.getName()));
        c.setDescription(value(contentTypeV3.getDescription()));
        c.setFileExtensions(value(contentTypeV3.getFileExtension()));

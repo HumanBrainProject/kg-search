@@ -90,7 +90,7 @@ public class DatasetV3Translator extends TranslatorV3<DatasetV3, Dataset, Datase
             d.setId(IdUtils.getUUID(dataset.getId()));
 
             d.setAllIdentifiers(dataset.getIdentifier());
-            d.setIdentifier(IdUtils.getUUID(dataset.getIdentifier()));
+            d.setIdentifier(IdUtils.getUUID(dataset.getIdentifier()).stream().distinct().collect(Collectors.toList()));
             d.setDescription(dataset.getDescription());
             if (StringUtils.isNotBlank(dataset.getFullName())) {
                 d.setTitle(dataset.getFullName());

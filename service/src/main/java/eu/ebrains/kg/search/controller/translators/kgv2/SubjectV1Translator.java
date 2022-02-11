@@ -32,12 +32,11 @@ import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.*;
+import static eu.ebrains.kg.search.controller.translators.TranslatorCommons.emptyToNull;
 
 public class SubjectV1Translator extends TranslatorV2<SubjectV1, Subject, SubjectV1Translator.Result> {
 
@@ -70,7 +69,7 @@ public class SubjectV1Translator extends TranslatorV2<SubjectV1, Subject, Subjec
         s.setAllIdentifiers(createList(subject.getIdentifier()));
         s.setId(subject.getIdentifier());
         List<String> identifiers = createList(subject.getIdentifier(), String.format("Subject/%s", subject.getIdentifier()));
-        s.setIdentifier(identifiers);
+        s.setIdentifier(identifiers.stream().distinct().collect(Collectors.toList()));
         s.setAge(subject.getAge());
         s.setAgeCategory(emptyToNull(subject.getAgeCategory()));
         if (dataStage == DataStage.IN_PROGRESS) {

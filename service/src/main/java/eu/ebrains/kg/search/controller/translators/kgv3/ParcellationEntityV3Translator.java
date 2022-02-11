@@ -27,10 +27,12 @@ package eu.ebrains.kg.search.controller.translators.kgv3;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.ParcellationEntityV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.FullNameRef;
 import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.ParcellationEntity;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
+import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Value;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
@@ -39,7 +41,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ParcellationEntityV3Translator extends TranslatorV3<ParcellationEntityV3, ParcellationEntity, ParcellationEntityV3Translator.Result> {
@@ -210,7 +211,7 @@ public class ParcellationEntityV3Translator extends TranslatorV3<ParcellationEnt
         pe.setId(IdUtils.getUUID(pe.getId()));
 
         pe.setAllIdentifiers(pe.getIdentifier());
-        pe.setIdentifier(IdUtils.getUUID(pe.getIdentifier()));
+        pe.setIdentifier(IdUtils.getUUID(pe.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         if (StringUtils.isNotBlank(parcellationEntity.getName())) {
             pe.setTitle(value(parcellationEntity.getName()));
         }

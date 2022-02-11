@@ -32,7 +32,6 @@ import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.TranslationException;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,7 +66,7 @@ public class PersonV1Translator extends TranslatorV2<PersonV1, Contributor, Pers
         Contributor c = new Contributor();
         c.setId(person.getIdentifier());
         c.setAllIdentifiers(createList(person.getIdentifier()));
-        c.setIdentifier(createList(c.getId(), String.format("Contributor/%s", person.getIdentifier())));
+        c.setIdentifier(createList(c.getId(), String.format("Contributor/%s", person.getIdentifier())).stream().distinct().collect(Collectors.toList()));
         c.setFirstRelease(value(person.getFirstReleaseAt()));
         c.setLastRelease(value(person.getLastReleaseAt()));
         c.setTitle(value(person.getTitle()));

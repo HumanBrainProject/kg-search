@@ -157,7 +157,7 @@ public class DatasetVersionV3Translator extends TranslatorV3<DatasetVersionV3, D
 
 
         d.setAllIdentifiers(datasetVersion.getIdentifier());
-        d.setIdentifier(IdUtils.getIdentifiersWithPrefix("Dataset", datasetVersion.getIdentifier()));
+        d.setIdentifier(IdUtils.getIdentifiersWithPrefix("Dataset", datasetVersion.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         List<Version> versions = dataset == null ? null : dataset.getVersions();
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
         if (hasMultipleVersions) {

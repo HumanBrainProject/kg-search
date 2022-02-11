@@ -27,10 +27,7 @@ import eu.ebrains.kg.search.controller.translators.Helpers;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.MetaDataModelV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.ModelV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.Version;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.MetaDataModel;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.Model;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.Children;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
@@ -88,7 +85,7 @@ public class MetaDataModelV3Translator extends TranslatorV3<MetaDataModelV3, Met
         m.setId(IdUtils.getUUID(model.getId()));
 
         m.setAllIdentifiers(model.getIdentifier());
-        m.setIdentifier(IdUtils.getUUID(model.getIdentifier()));
+        m.setIdentifier(IdUtils.getUUID(model.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         m.setDescription(value(model.getDescription()));
         m.setTitle(value(model.getTitle()));
         String homepage = model.getHomepage();

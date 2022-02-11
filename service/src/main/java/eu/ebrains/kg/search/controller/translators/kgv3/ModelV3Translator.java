@@ -76,7 +76,7 @@ public class ModelV3Translator extends TranslatorV3<ModelV3, Model, ModelV3Trans
         m.setId(IdUtils.getUUID(model.getId()));
 
         m.setAllIdentifiers(model.getIdentifier());
-        m.setIdentifier(IdUtils.getUUID(model.getIdentifier()));
+        m.setIdentifier(IdUtils.getUUID(model.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         m.setDescription(value(model.getDescription()));
         m.setTitle(value(model.getTitle()));
         String homepage = model.getHomepage();

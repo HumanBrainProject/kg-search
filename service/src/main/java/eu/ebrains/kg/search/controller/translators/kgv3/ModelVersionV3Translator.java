@@ -84,7 +84,7 @@ public class ModelVersionV3Translator extends TranslatorV3<ModelVersionV3, Model
         Accessibility accessibility = Accessibility.fromPayload(modelVersion);
         m.setId(IdUtils.getUUID(modelVersion.getId()));
         m.setAllIdentifiers(modelVersion.getIdentifier());
-        m.setIdentifier(IdUtils.getIdentifiersWithPrefix("Model", modelVersion.getIdentifier()));
+        m.setIdentifier(IdUtils.getIdentifiersWithPrefix("Model", modelVersion.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         List<Version> versions = model == null ? null : model.getVersions();
         boolean hasMultipleVersions = !CollectionUtils.isEmpty(versions) && versions.size() > 1;
         if (hasMultipleVersions) {

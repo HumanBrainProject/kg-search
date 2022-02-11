@@ -80,7 +80,7 @@ public class FileV3Translator extends TranslatorV3<FileV3, File, FileV3Translato
         File f = new File();
         f.setId(IdUtils.getUUID(file.getId()));
         f.setAllIdentifiers(file.getIdentifier());
-        f.setIdentifier(IdUtils.getUUID(file.getIdentifier()));
+        f.setIdentifier(IdUtils.getUUID(file.getIdentifier()).stream().distinct().collect(Collectors.toList()));
         f.setFileRepository(IdUtils.getUUID(fileRepository));
         f.setTitle(value(file.isPrivateAccess() ? String.format("ACCESS PROTECTED: %s", file.getName()) : file.getName()));
         if(!CollectionUtils.isEmpty(file.getServiceLinks())){

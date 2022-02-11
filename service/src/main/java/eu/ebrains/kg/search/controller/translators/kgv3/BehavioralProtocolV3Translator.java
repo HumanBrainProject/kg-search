@@ -27,19 +27,13 @@ import eu.ebrains.kg.search.controller.translators.Helpers;
 import eu.ebrains.kg.search.model.DataStage;
 import eu.ebrains.kg.search.model.source.ResultsOfKGv3;
 import eu.ebrains.kg.search.model.source.openMINDSv3.BehavioralProtocolV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.ContentTypeV3;
-import eu.ebrains.kg.search.model.source.openMINDSv3.commons.File;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.BehavioralProtocol;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.ContentType;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetExternalReference;
-import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.TargetInternalReference;
 import eu.ebrains.kg.search.services.DOICitationFormatter;
 import eu.ebrains.kg.search.utils.IdUtils;
 import eu.ebrains.kg.search.utils.TranslationException;
-import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,7 +72,7 @@ public class BehavioralProtocolV3Translator extends TranslatorV3<BehavioralProto
        BehavioralProtocol b = new BehavioralProtocol();
        b.setId(IdUtils.getUUID(behavioralProtocolV3.getId()));
        b.setAllIdentifiers(behavioralProtocolV3.getIdentifier());
-       b.setIdentifier(IdUtils.getUUID(behavioralProtocolV3.getIdentifier()));
+       b.setIdentifier(IdUtils.getUUID(behavioralProtocolV3.getIdentifier()).stream().distinct().collect(Collectors.toList()));
        b.setOfficialAbbreviation(value(behavioralProtocolV3.getInternalIdentifier()));
        b.setTitle(value(behavioralProtocolV3.getName()));
        b.setDescription(value(behavioralProtocolV3.getDescription()));
