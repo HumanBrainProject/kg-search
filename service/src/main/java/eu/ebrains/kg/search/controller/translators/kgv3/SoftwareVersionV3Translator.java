@@ -257,12 +257,12 @@ public class SoftwareVersionV3Translator extends TranslatorV3<SoftwareVersionV3,
         }
 
         if(!CollectionUtils.isEmpty(softwareVersion.getInputFormat())){
-            s.setInputFormat(softwareVersion.getInputFormat().stream().map(this::translateFileFormat).collect(Collectors.toList()));
+            s.setInputFormat(softwareVersion.getInputFormat().stream().map(this::translateFileFormat).sorted(Comparator.comparing(e -> e.getChildren().getName())).collect(Collectors.toList()));
             s.setInputFormatsForFilter(softwareVersion.getInputFormat().stream().map(f -> new Value<>(f.getFullName())).collect(Collectors.toList()));
         }
 
         if(!CollectionUtils.isEmpty(softwareVersion.getOutputFormat())){
-            s.setOutputFormats(softwareVersion.getOutputFormat().stream().map(this::translateFileFormat).collect(Collectors.toList()));
+            s.setOutputFormats(softwareVersion.getOutputFormat().stream().map(this::translateFileFormat).sorted(Comparator.comparing(e -> e.getChildren().getName())).collect(Collectors.toList()));
             s.setOutputFormatsForFilter(softwareVersion.getOutputFormat().stream().map(f -> new Value<>(f.getFullName())).collect(Collectors.toList()));
         }
 
