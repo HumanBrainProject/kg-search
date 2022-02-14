@@ -144,7 +144,7 @@
                   "@id": "https://openminds.ebrains.eu/vocab/hasVersion",
                   "reverse": true
                 },
-                "https://openminds.ebrains.eu/vocab/name"
+                "https://openminds.ebrains.eu/vocab/fullName"
               ],
               "singleValue": "FIRST"
             }
