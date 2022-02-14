@@ -66,8 +66,12 @@ public class Helpers {
     }
 
     public static boolean isDataProxyBucket(FileRepository repository){
-        if(repository!=null && repository.getIri()!=null){
-            return repository.getIri().startsWith("https://data-proxy.ebrains.eu");
+        return repository != null && isDataProxyBucket(repository.getIri());
+    }
+
+    public static boolean isDataProxyBucket(String repositoryIri){
+        if(repositoryIri!=null){
+            return repositoryIri.startsWith("https://data-proxy.ebrains.eu");
         }
         return false;
     }

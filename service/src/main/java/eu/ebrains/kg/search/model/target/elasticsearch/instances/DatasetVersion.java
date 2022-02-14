@@ -25,6 +25,7 @@ package eu.ebrains.kg.search.model.target.elasticsearch.instances;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.ebrains.kg.search.controller.translators.Helpers;
 import eu.ebrains.kg.search.model.target.elasticsearch.*;
 import eu.ebrains.kg.search.model.target.elasticsearch.instances.commons.*;
 import lombok.AllArgsConstructor;
@@ -48,7 +49,8 @@ public class DatasetVersion implements TargetInstance, VersionedInstance{
     public final static String RESTRICTED_ACCESS_MESSAGE =  "This dataset has restricted access. Although the metadata is publicly available, the data remain on an access restricted server.";
 
     public static String createEmbargoInProgressMessage(String containerUrl){
-        return String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"https://kg.ebrains.eu/files/cscs/list?url=%s\" target=\"_blank\"> you should be able to access the data here</a>", containerUrl);
+        String endpoint = Helpers.isDataProxyBucket(containerUrl) ? containerUrl.replaceAll("api/buckets/", "") : String.format("https://kg.ebrains.eu/files/cscs/list?url=%s", containerUrl);
+        return String.format("This dataset is temporarily under embargo. The data will become available for download after the embargo period.<br/><br/>If you are an authenticated user, <a href=\"%s\" target=\"_blank\"> you should be able to access the data here</a>", endpoint);
     }
 
     public static String createHDGMessage(String id, boolean html){
